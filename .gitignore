@@ -8,8 +8,6 @@ capybara-*.html
 /coverage/
 /spec/tmp
 **.orig
-rerun.txt
-pickle-email-*.html
 config/initializers/secret_token.rb
 config/secrets.yml
 
