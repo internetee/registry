@@ -46,9 +46,18 @@ group :development do
 end
 
 group :development, :test do
+  # Replacement for fixtures
   gem 'fabrication', '~> 2.11.3'
+
+  # Library to generate fake data
   gem 'faker', '~> 1.3.0'
+
+  # For debugging
   gem 'pry'
+
+  # Testing framework
   gem 'rspec-rails', '~> 3.0.1'
+
+  # Additional matchers for RSpec
   gem 'shoulda-matchers', '~> 2.6.1', require: false
 end
