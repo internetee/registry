@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!-- This is an example EPP greeting from mod_epp -->
+
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0
+     epp-1.0.xsd">
+  <greeting>
+    <svID>Example mod_epp server</svID>
+    <svDate>2002-10-28T22:00:00.0Z</svDate>
+    <svcMenu>
+      <version>1.0</version>
+      <lang>en</lang>
+    </svcMenu>
+  </greeting>
+</epp>
