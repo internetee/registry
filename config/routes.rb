@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   namespace(:epp) do
-    get 'session/:command', to: 'sessions#index', defaults: { format: :xml }
-    post 'session/:command', to: 'sessions#create', defaults: { format: :xml }
+    get 'session/hello', to: 'sessions#greeting', defaults: { format: :xml }
+    post 'session/:command', to: 'sessions#proxy', defaults: { format: :xml }
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

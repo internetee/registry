@@ -1,9 +1,14 @@
 class Epp::SessionsController < ApplicationController
-  def index
-    render 'hello'
+  protect_from_forgery with: :null_session
+
+  def greeting; end
+
+  def proxy
+    send(params[:command])
   end
 
-  def create
+  private
+  def login
     render 'login'
   end
 end
