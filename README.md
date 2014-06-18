@@ -10,13 +10,48 @@ registry
 * Download [mod_epp 1.10](http://sourceforge.net/projects/aepps/)
 * `tar -xzf mod_epp-1.10.tar.gz`
 * `cd mod_epp-1.10`
+
+**NB! Beacause Rack multipart parser expects specifically formatted content boundaries, the mod_epp needs to be modified before building**
+
+```diff
+diff --git a/mod_epp.c b/mod_epp.c
+index 60c0004..bf2b6ab 100644
+--- a/mod_epp.c
++++ b/mod_epp.c
+@@ -756,7 +756,7 @@ sprintf(content_length, "%lu", strlen(EPP_CONTENT_FRAME_CGI)
+                                strlen(conf->raw_frame)
+                                + er->orig_xml_size) : 0));
+
+-apr_table_set(r->headers_in, "Content-Type", "multipart/form-data; boundary=--BOUNDARY--");
++apr_table_set(r->headers_in, "Content-Type", EPP_CONTENT_TYPE_CGI);
+ apr_table_set(r->headers_in, "Content-Length", content_length);
+ apr_table_set(r->headers_in, "Cookie", er->ur->cookie);
+
+diff --git a/mod_epp.h b/mod_epp.h
+index d8c463e..7f6e320 100644
+--- a/mod_epp.h
++++ b/mod_epp.h
+@@ -96,10 +96,10 @@ module AP_MODULE_DECLARE_DATA epp_module;
+ #define EPP_DEFAULT_RC_HEADER "X-EPP-Returncode"
+
+
+-#define EPP_CONTENT_TYPE_CGI "multipart/form-data; boundary=--BOUNDARY--"
+-#define EPP_CONTENT_FRAME_CGI "----BOUNDARY--\r\nContent-Disposition: form-data; name=\"frame\"\r\n\r\n"
+-#define EPP_CONTENT_RAW_CGI "\r\n----BOUNDARY--\r\nContent-Disposition: form-data; name=\"%s\"\r\n\r\n"
+-#define EPP_CONTENT_CLTRID_CGI "\r\n----BOUNDARY--\r\nContent-Disposition: form-data; name=\"clTRID\"\r\n\r\n"
++#define EPP_CONTENT_TYPE_CGI "multipart/form-data; boundary=--BOUNDARY"
++#define EPP_CONTENT_FRAME_CGI "----BOUNDARY\r\nContent-Disposition: form-data; name=\"frame\"\r\n\r\n"
++#define EPP_CONTENT_RAW_CGI "\r\n----BOUNDARY\r\nContent-Disposition: form-data; name=\"%s\"\r\n\r\n"
++#define EPP_CONTENT_CLTRID_CGI "\r\n----BOUNDARY\r\nContent-Disposition: form-data; name=\"clTRID\"\r\n\r\n"
+ #define EPP_CONTENT_POSTFIX_CGI "\r\n----BOUNDARY--\r\n"
+```
+
 * `sudo apxs2 -a -c -i mod_epp.c`
 * `sudo a2enmod cgi`
 * `sudo a2enmod authn_file`
 * `sudo a2enmod proxy_http`
 * `sudo htpasswd -c /etc/apache2/htpasswd test`
 * Type "test" when prompted
-
 * `cd /usr/lib/cgi-bin`
 * `mkdir epp`
 * Copy the files from $mod_epp/examples/cgis to /usr/lib/cgi-bin/epp (this is just for now)
@@ -24,7 +59,7 @@ registry
 * `nano epp.conf`
 
 Add:
-```
+```apache
 <IfModule mod_epp.c>
   <Directory "/usr/lib/cgi-bin/epp">
     Options ExecCGI
@@ -50,16 +85,27 @@ Add:
 
 Try it out:
 
+* Fire up your appserver (I tested this setup with Unicorn)
 * `cd $mod_epp`
 * `./epptelnet.pl localhost 1701`
 
-You should receive the freeting from the registry server.
+You should receive the greeting from the registry server.
+Wait for a complete paragraph of text on STDIN before sending EPP/TCP frame.
 
+```xml
+<epp><command>
+  <login>
+    <clID>test</clID>
+    <pw>test</pw>
+  </login>
+  <clTRID>sample1trid</clTRID>
+</command></epp>
+```
 
 Alternative virtual host config is as follows:
 This needs a static greeting file, so you will have to make /var/www writable.
 
-```
+```apache
 <IfModule mod_epp.c>
     <Directory "/usr/lib/cgi-bin/epp">
         Options ExecCGI
