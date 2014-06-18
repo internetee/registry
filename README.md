@@ -81,7 +81,7 @@ Add:
 </IfModule>
 ```
 
-* `a2ensite epp`
+* `sudo a2ensite epp`
 * `sudo service apache2 restart`
 
 Try it out:
