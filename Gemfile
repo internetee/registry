@@ -49,11 +49,18 @@ group :development do
 end
 
 group :development, :test do
+  #EPP client
+  gem 'epp', '~> 1.4.0'
+
+
   # Replacement for fixtures
   gem 'fabrication', '~> 2.11.3'
 
   # Library to generate fake data
   gem 'faker', '~> 1.3.0'
+
+  #For XML parsing
+  gem 'nokogiri', '~> 1.6.2.1'
 
   # For debugging
   gem 'pry'
@@ -64,4 +71,7 @@ group :development, :test do
 
   # Additional matchers for RSpec
   gem 'shoulda-matchers', '~> 2.6.1', require: false
+
+  # For unique IDs (used by the epp gem)
+  gem 'uuidtools', '~> 2.1.4'
 end

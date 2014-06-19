@@ -48,15 +48,71 @@ index d8c463e..7f6e320 100644
 
 * `sudo apxs2 -a -c -i mod_epp.c`
 * `sudo a2enmod cgi`
-* `sudo a2enmod authn_file`
+* `sudo a2enmod authn_file` (Will be used for non implicit authentication URIs, can be removed in the future)
 * `sudo a2enmod proxy_http`
-* `sudo htpasswd -c /etc/apache2/htpasswd test`
+* `sudo htpasswd -c /etc/apache2/htpasswd test` (can be removed in the future)
 * Type "test" when prompted
 * `cd /usr/lib/cgi-bin`
 * `mkdir epp`
-* Copy the files from $mod_epp/examples/cgis to /usr/lib/cgi-bin/epp (this is just for now)
-* `cd /etc/apache2/sites-available`
-* `nano epp.conf`
+* Copy the files from $mod_epp/examples/cgis to /usr/lib/cgi-bin/epp (once in production, majority of these scripts will not be needed (maybe only double the error script for failover))
+* sudo mkdir /etc/apache2/ssl
+* sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
+* `sudo nano /etc/apache2/sites-available/epp_ssl.conf`
+
+For development configuration, add:
+```apache
+<IfModule mod_epp.c>
+  <Directory "/usr/lib/cgi-bin/epp">
+    Options ExecCGI
+    SetHandler cgi-script
+  </Directory>
+
+  Listen 700
+  <VirtualHost *:700>
+    SSLEngine on
+    SSLCipherSuite ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP:+eNULL
+    SSLCertificateFile /etc/apache2/ssl/apache.crt
+    SSLCertificateKeyFile /etc/apache2/ssl/apache.key
+
+    SSLVerifyClient optional_no_ca
+
+    EPPEngine On
+    EPPCommandRoot          /proxy/command
+    EPPSessionRoot          /proxy/session
+    ProxyPass /proxy/ http://localhost:8080/epp/
+
+    EPPErrorRoot            /cgi-bin/epp/error
+    EPPAuthURI              implicit
+    EPPReturncodeHeader     X-EPP-Returncode
+  </VirtualHost>
+</IfModule>
+```
+
+For plain TCP EPP configuration, see below (may be useful for debugging purposes).
+
+* `sudo a2ensite epp_ssl`
+* `sudo service apache2 restart`
+
+Try it out:
+
+* Fire up your appserver (This setup is tested with Unicorn)
+* `cd $mod_epp`
+* `./epptelnet.pl localhost 1701`
+
+You should receive the greeting from the registry server. 
+Wait for the greeting message on the STD, then send EPP/TCP frame:
+
+```xml
+<epp><command>
+  <login>
+    <clID>test</clID>
+    <pw>test</pw>
+  </login>
+  <clTRID>sample1trid</clTRID>
+</command></epp>
+```
+
+Configuration on plain TCP EPP is as follows:
 
 Add:
 ```apache
@@ -81,29 +137,7 @@ Add:
 </IfModule>
 ```
 
-* `sudo a2ensite epp`
-* `sudo service apache2 restart`
-
-Try it out:
-
-* Fire up your appserver (I tested this setup with Unicorn)
-* `cd $mod_epp`
-* `./epptelnet.pl localhost 1701`
-
-You should receive the greeting from the registry server.
-Wait for a complete paragraph of text on STDIN before sending EPP/TCP frame.
-
-```xml
-<epp><command>
-  <login>
-    <clID>test</clID>
-    <pw>test</pw>
-  </login>
-  <clTRID>sample1trid</clTRID>
-</command></epp>
-```
-
-Alternative virtual host config is as follows:
+For debugging purposes, standalone CGI scripts can be used: 
 This needs a static greeting file, so you will have to make /var/www writable.
 
 ```apache
@@ -120,11 +154,9 @@ This needs a static greeting file, so you will have to make /var/www writable.
         EPPCommandRoot          /cgi-bin/epp/command
         EPPSessionRoot          /cgi-bin/epp/session
         EPPErrorRoot            /cgi-bin/epp/error
-        # we can redirect to static pages.
+
         Alias /cgi-bin/epp/session/hello /var/www/html/epp/session-hello
 
-
-        # or to specialized scripts
         Alias /cgi-bin/epp/session/login /usr/lib/cgi-bin/epp/session-login
         Alias /cgi-bin/epp/session/logout /usr/lib/cgi-bin/epp/session-logout
         Alias /cgi-bin/epp/error/schema /usr/lib/cgi-bin/epp/error-schema

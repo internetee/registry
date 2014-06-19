@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <command>
+    <login>
+      <clID>test</clID>
+      <pw>test</pw>
+      <options>
+        <version>1.0</version>
+        <lang>en</lang>
+      </options>
+      <svcs>
+        <objURI>http://www.nic.cz/xml/epp/contact-1.6</objURI>
+        <objURI>http://www.nic.cz/xml/epp/nsset-1.2</objURI>
+        <objURI>http://www.nic.cz/xml/epp/domain-1.4</objURI>
+        <objURI>http://www.nic.cz/xml/epp/keyset-1.3</objURI>
+        <svcExtension>
+          <extURI>http://www.nic.cz/xml/epp/enumval-1.2</extURI>
+        </svcExtension>
+      </svcs>
+    </login>
+    <clTRID>wgyn001#10-02-08at13:58:06</clTRID>
+  </command>
+</epp>
