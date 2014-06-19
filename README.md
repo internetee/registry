@@ -11,7 +11,7 @@ registry
 * `tar -xzf mod_epp-1.10.tar.gz`
 * `cd mod_epp-1.10`
 
-**NB! Beacause Rack multipart parser expects specifically formatted content boundaries, the mod_epp needs to be modified before building**
+**NB! Beacause Rack multipart parser expects specifically formatted content boundaries, the mod_epp needs to be modified before building:**
 
 ```diff
 diff --git a/mod_epp.c b/mod_epp.c
@@ -55,8 +55,8 @@ index d8c463e..7f6e320 100644
 * `cd /usr/lib/cgi-bin`
 * `mkdir epp`
 * Copy the files from $mod_epp/examples/cgis to /usr/lib/cgi-bin/epp (once in production, majority of these scripts will not be needed (maybe only double the error script for failover))
-* sudo mkdir /etc/apache2/ssl
-* sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
+* `sudo mkdir /etc/apache2/ssl`
+* `sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt`
 * `sudo nano /etc/apache2/sites-available/epp_ssl.conf`
 
 For development configuration, add:
@@ -111,6 +111,11 @@ Wait for the greeting message on the STD, then send EPP/TCP frame:
   <clTRID>sample1trid</clTRID>
 </command></epp>
 ```
+
+Run tests:
+`rspec`
+
+---
 
 Configuration on plain TCP EPP is as follows:
 
