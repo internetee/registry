@@ -112,8 +112,7 @@ Wait for the greeting message on the STD, then send EPP/TCP frame:
 </command></epp>
 ```
 
-Run tests:
-`rspec`
+* `rspec` to run tests
 
 ---
 
