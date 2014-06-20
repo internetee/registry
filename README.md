@@ -97,7 +97,7 @@ Try it out:
 
 * Fire up your appserver on port 8989 (This setup is tested with Unicorn)
 * `cd $mod_epp`
-* `./epptelnet.pl localhost`
+* `./epptelnet.pl localhost 700 -s`
 
 You should receive the greeting from the registry server.  
 Wait for the greeting message on the STD, then send EPP/TCP frame:
