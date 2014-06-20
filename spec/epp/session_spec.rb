@@ -17,7 +17,6 @@ describe 'EPP Session', type: :epp do
 
     it 'logs in epp user' do
       response = Nokogiri::XML(server.send_request(read_body('login.xml')))
-
       result = response.css('epp response result').first
       expect(result[:code]).to eq('1000')
 

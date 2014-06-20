@@ -79,7 +79,7 @@ For development configuration, add:
     EPPEngine On
     EPPCommandRoot          /proxy/command
     EPPSessionRoot          /proxy/session
-    ProxyPass /proxy/ http://localhost:8080/epp/
+    ProxyPass /proxy/ http://localhost:8989/epp/
 
     EPPErrorRoot            /cgi-bin/epp/error
     EPPAuthURI              implicit
@@ -95,11 +95,11 @@ For plain TCP EPP configuration, see below (may be useful for debugging purposes
 
 Try it out:
 
-* Fire up your appserver (This setup is tested with Unicorn)
+* Fire up your appserver on port 8989 (This setup is tested with Unicorn)
 * `cd $mod_epp`
-* `./epptelnet.pl localhost 1701`
+* `./epptelnet.pl localhost`
 
-You should receive the greeting from the registry server. 
+You should receive the greeting from the registry server.  
 Wait for the greeting message on the STD, then send EPP/TCP frame:
 
 ```xml
@@ -112,7 +112,10 @@ Wait for the greeting message on the STD, then send EPP/TCP frame:
 </command></epp>
 ```
 
-* `rspec` to run tests
+Because Apache can not call the same process where the rspec is running (worker is busy), another instance of the appserver must be initialized before running tests.
+
+* `unicorn -p 8989 -E test`
+* `rspec`
 
 ---
 
@@ -141,7 +144,7 @@ Add:
 </IfModule>
 ```
 
-For debugging purposes, standalone CGI scripts can be used: 
+For debugging purposes, standalone CGI scripts can be used:  
 This needs a static greeting file, so you will have to make /var/www writable.
 
 ```apache

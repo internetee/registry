@@ -49,9 +49,11 @@ group :development do
 end
 
 group :development, :test do
-  #EPP client
-  gem 'epp', '~> 1.4.0'
+  # For cleaning db in feature and epp tests
+  gem 'database_cleaner', '~> 1.3.0'
 
+  # EPP client
+  gem 'epp', '~> 1.4.0'
 
   # Replacement for fixtures
   gem 'fabrication', '~> 2.11.3'
