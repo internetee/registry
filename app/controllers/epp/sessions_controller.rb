@@ -1,9 +1,6 @@
 class Epp::SessionsController < ApplicationController
-  protect_from_forgery with: :null_session
-
-  def proxy
-    send(params[:command])
-  end
+  include Epp::Common
+  include Epp::SessionsHelper
 
   private
   def hello
@@ -11,11 +8,7 @@ class Epp::SessionsController < ApplicationController
   end
 
   def login
-    login_params = parsed_frame.css('epp command login')
-    username = login_params.css('clID').text
-    password = login_params.css('pw').text
-
-    @epp_user = EppUser.find_by(username: username, password: password)
+    @epp_user = EppUser.find_by(login_params)
 
     if @epp_user.try(:active)
       render 'login_success'
@@ -23,9 +16,5 @@ class Epp::SessionsController < ApplicationController
       response.headers['X-EPP-Returncode'] = '2200'
       render 'login_fail'
     end
-  end
-
-  def parsed_frame
-    Nokogiri::XML(params[:frame]).remove_namespaces!
   end
 end
