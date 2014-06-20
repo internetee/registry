@@ -31,6 +31,9 @@ gem 'jbuilder', '~> 2.0'
 # Replacement for erb
 gem 'haml-rails', '~> 0.5.3'
 
+#For XML parsing
+gem 'nokogiri', '~> 1.6.2.1'
+
 group :assets do
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   gem 'therubyracer',  platforms: :ruby
@@ -60,9 +63,6 @@ group :development, :test do
 
   # Library to generate fake data
   gem 'faker', '~> 1.3.0'
-
-  #For XML parsing
-  gem 'nokogiri', '~> 1.6.2.1'
 
   # For debugging
   gem 'pry'
