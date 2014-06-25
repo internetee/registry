@@ -8,6 +8,8 @@ describe 'EPP Domain', epp: true do
 
     it 'creates a domain' do
       response = epp_request('create_domain.xml')
+      expect(response[:result_code]).to eq('1000')
+      expect(response[:msg]).to eq('Command completed successfully')
     end
 
   end
