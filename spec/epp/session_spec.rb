@@ -16,61 +16,46 @@ describe 'EPP Session', epp: true do
     after(:each) { server.close_connection }
 
     it 'does not log in with invalid user' do
-      response = Nokogiri::XML(server.send_request(read_body('login.xml')))
-      result = response.css('epp response result').first
-      expect(result[:code]).to eq('2501')
-
-      msg = response.css('epp response result msg').text
-      expect(msg).to eq('Authentication error; server closing connection')
+      response = epp_request('login.xml')
+      expect(response[:result_code]).to eq('2501')
+      expect(response[:msg]).to eq('Authentication error; server closing connection')
 
       Fabricate(:epp_user, active: false)
 
-      response = Nokogiri::XML(server.send_request(read_body('login.xml')))
-      result = response.css('epp response result').first
-      expect(result[:code]).to eq('2501')
+      response = epp_request('login.xml')
+      expect(response[:result_code]).to eq('2501')
     end
 
     it 'prohibits further actions unless logged in' do
-      response = Nokogiri::XML(server.send_request(read_body('create_domain.xml')))
-      expect(parse_result_code(response)).to eq('2002')
-
-      msg = response.css('epp response result msg').text
-      expect(msg).to eq('You need to login first.')
+      response = epp_request('create_domain.xml')
+      expect(response[:result_code]).to eq('2002')
+      expect(response[:msg]).to eq('You need to login first.')
     end
 
-    it 'logs in epp user' do
-      Fabricate(:epp_user)
+    context 'with valid user' do
+      before(:each) { Fabricate(:epp_user) }
 
-      response = Nokogiri::XML(server.send_request(read_body('login.xml')))
+      it 'logs in epp user' do
+        response = epp_request('login.xml')
+        expect(response[:result_code]).to eq('1000')
+        expect(response[:msg]).to eq('Command completed successfully')
+      end
 
-      result = response.css('epp response result').first
-      expect(result[:code]).to eq('1000')
+      it 'logs out epp user' do
+        epp_request('login.xml')
 
-      msg = response.css('epp response result msg').text
-      expect(msg).to eq('Command completed successfully')
-    end
+        response = epp_request('logout.xml')
+        expect(response[:result_code]).to eq('1500')
+        expect(response[:msg]).to eq('Command completed successfully; ending session')
+      end
 
-    it 'logs out epp user' do
-      Fabricate(:epp_user)
-      server.send_request(read_body('login.xml'))
-      response = Nokogiri::XML(server.send_request(read_body('logout.xml')))
-      result = response.css('epp response result').first
-      expect(result[:code]).to eq('1500')
+      it 'does not log in twice' do
+        epp_request('login.xml')
 
-      msg = response.css('epp response result msg').text
-      expect(msg).to eq('Command completed successfully; ending session')
-    end
-
-    it 'does not log in twice' do
-      Fabricate(:epp_user)
-      server.send_request(read_body('login.xml'))
-      response = Nokogiri::XML(server.send_request(read_body('login.xml')))
-
-      result = response.css('epp response result').first
-      expect(result[:code]).to eq('2002')
-
-      msg = response.css('epp response result msg').text
-      expect(msg).to match(/Already logged in. Use/)
+        response = epp_request('login.xml')
+        expect(response[:result_code]).to eq('2002')
+        expect(response[:msg]).to match(/Already logged in. Use/)
+      end
     end
   end
 end
