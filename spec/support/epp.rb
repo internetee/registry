@@ -1,6 +1,10 @@
 module Epp
-  def read_body(filename)
+  def read_body filename
     File.read("spec/epp/requests/#{filename}")
+  end
+
+  def parse_result_code response
+    response.css('epp response result').first[:code]
   end
 end
 

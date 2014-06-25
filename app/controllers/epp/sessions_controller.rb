@@ -17,4 +17,9 @@ class Epp::SessionsController < ApplicationController
       render 'login_fail'
     end
   end
+
+  def logout
+    response.headers['X-EPP-Returncode'] = '1500'
+    render 'logout'
+  end
 end

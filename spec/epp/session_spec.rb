@@ -30,6 +30,14 @@ describe 'EPP Session', epp: true do
       expect(result[:code]).to eq('2501')
     end
 
+    it 'prohibits further actions unless logged in' do
+      response = Nokogiri::XML(server.send_request(read_body('create_domain.xml')))
+      expect(parse_result_code(response)).to eq('2002')
+
+      msg = response.css('epp response result msg').text
+      expect(msg).to eq('You need to login first.')
+    end
+
     it 'logs in epp user' do
       Fabricate(:epp_user)
 
@@ -40,6 +48,17 @@ describe 'EPP Session', epp: true do
 
       msg = response.css('epp response result msg').text
       expect(msg).to eq('Command completed successfully')
+    end
+
+    it 'logs out epp user' do
+      Fabricate(:epp_user)
+      server.send_request(read_body('login.xml'))
+      response = Nokogiri::XML(server.send_request(read_body('logout.xml')))
+      result = response.css('epp response result').first
+      expect(result[:code]).to eq('1500')
+
+      msg = response.css('epp response result msg').text
+      expect(msg).to eq('Command completed successfully; ending session')
     end
 
     it 'does not log in twice' do
