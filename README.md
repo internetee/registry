@@ -112,8 +112,8 @@ Wait for the greeting message on the STD, then send EPP/TCP frame:
 </command></epp>
 ```
 
-Run tests: `rake`
-Run all but EPP tests: `rake test:other`
+* Run tests: `rake`
+* Run all but EPP tests: `rake test:other`
 
 ---
 
