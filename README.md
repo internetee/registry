@@ -112,10 +112,8 @@ Wait for the greeting message on the STD, then send EPP/TCP frame:
 </command></epp>
 ```
 
-Because Apache can not call the same process where the rspec is running (worker is busy), another instance of the appserver must be initialized before running tests.
-
-* `unicorn -p 8989 -E test`
-* `rspec`
+Run tests: `rake`
+Run all but EPP tests: `rake test:other`
 
 ---
 
