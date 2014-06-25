@@ -5,5 +5,5 @@ module Epp
 end
 
 RSpec.configure do |c|
-  c.include Epp, type: :epp
+  c.include Epp, epp: true
 end

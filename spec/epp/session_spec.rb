@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'EPP Session', type: :epp do
+describe 'EPP Session', epp: true do
   let(:server) { server = Epp::Server.new({server: 'localhost', tag: 'test', password: 'test'}) }
 
   context 'when not connected' do
