@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   namespace(:epp) do
     match 'session/:command', to: 'sessions#proxy', defaults: { format: :xml }, via: [:get, :post]
     match 'command/:command', to: 'commands#proxy', defaults: { format: :xml }, via: [:post, :get]
+    get 'error/:command', to: 'errors#error', defaults: { format: :xml }
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

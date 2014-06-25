@@ -79,9 +79,10 @@ For development configuration, add:
     EPPEngine On
     EPPCommandRoot          /proxy/command
     EPPSessionRoot          /proxy/session
+    EPPErrorRoot            /proxy/error
+    
     ProxyPass /proxy/ http://localhost:8989/epp/
 
-    EPPErrorRoot            /cgi-bin/epp/error
     EPPAuthURI              implicit
     EPPReturncodeHeader     X-EPP-Returncode
   </VirtualHost>
@@ -114,6 +115,10 @@ Wait for the greeting message on the STD, then send EPP/TCP frame:
 
 * Run tests: `rake`
 * Run all but EPP tests: `rake test:other`
+
+To see internal errors while testing EPP
+* `unicorn -E test -p 8989`
+* `rake spec:epp`
 
 ---
 

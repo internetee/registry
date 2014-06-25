@@ -12,8 +12,4 @@ module Epp::Common
   def parsed_frame
     Nokogiri::XML(params[:frame]).remove_namespaces!
   end
-
-  def error
-    render 'error'
-  end
 end
