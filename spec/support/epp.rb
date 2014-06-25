@@ -3,12 +3,21 @@ module Epp
     File.read("spec/epp/requests/#{filename}")
   end
 
+  # handles connection and login automatically
   def epp_request filename
-    response = Nokogiri::XML(server.send_request(read_body(filename)))
+    res = Nokogiri::XML(server.request(read_body(filename)))
+    parse_response(res)
+  end
 
+  def epp_plain_request filename
+    res = Nokogiri::XML(server.send_request(read_body(filename)))
+    parse_response(res)
+  end
+
+  def parse_response res
     {
-      result_code: response.css('epp response result').first[:code],
-      msg: response.css('epp response result msg').text
+      result_code: res.css('epp response result').first[:code],
+      msg: res.css('epp response result msg').text
     }
   end
 
