@@ -19,6 +19,7 @@ describe 'EPP Session', epp: true do
       response = epp_plain_request('login.xml')
       expect(response[:result_code]).to eq('2501')
       expect(response[:msg]).to eq('Authentication error; server closing connection')
+      expect(response[:clTRID]).to eq('wgyn001#10-02-08at13:58:06')
 
       Fabricate(:epp_user, active: false)
 
@@ -30,6 +31,7 @@ describe 'EPP Session', epp: true do
       response = epp_plain_request('create_domain.xml')
       expect(response[:result_code]).to eq('2002')
       expect(response[:msg]).to eq('You need to login first.')
+      expect(response[:clTRID]).to eq('dpbx005#10-01-29at19:21:47')
     end
 
     context 'with valid user' do
@@ -39,6 +41,7 @@ describe 'EPP Session', epp: true do
         response = epp_plain_request('login.xml')
         expect(response[:result_code]).to eq('1000')
         expect(response[:msg]).to eq('Command completed successfully')
+        expect(response[:clTRID]).to eq('wgyn001#10-02-08at13:58:06')
       end
 
       it 'logs out epp user' do

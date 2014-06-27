@@ -17,7 +17,8 @@ module Epp
   def parse_response res
     {
       result_code: res.css('epp response result').first[:code],
-      msg: res.css('epp response result msg').text
+      msg: res.css('epp response result msg').text,
+      clTRID: res.css('epp trID clTRID').text
     }
   end
 
