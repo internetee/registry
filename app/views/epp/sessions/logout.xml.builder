@@ -8,5 +8,6 @@ xml.epp('xmlns' => 'urn:ietf:params:xml:ns:epp-1.0', 'xmlns:xsi' => 'http://www.
 
   xml.trID do
     xml.clTRID params[:clTRID]
+    xml.svTRID @svTRID
   end
 end

@@ -6,6 +6,7 @@ module Epp::Common
   end
 
   def proxy
+    @svTRID = "ccReg-#{'%010d' % rand(10 ** 10)}"
     send(params[:command])
   end
 

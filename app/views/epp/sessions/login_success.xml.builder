@@ -6,7 +6,7 @@ xml.epp('xmlns' => 'urn:ietf:params:xml:ns:epp-1.0', 'xmlns:xsi' => 'http://www.
     end
     xml.trID do
       xml.clTRID params[:clTRID]
-      xml.svTRID 'ccReg-0003012027'
+      xml.svTRID @svTRID
     end
   end
 end
