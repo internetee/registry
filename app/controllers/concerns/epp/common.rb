@@ -3,7 +3,6 @@ module Epp::Common
 
   included do
     protect_from_forgery with: :null_session
-    helper_method :current_epp_user
   end
 
   def proxy
