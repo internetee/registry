@@ -6,7 +6,9 @@ module Epp::DomainsHelper
 
   def check_domain
     cp = command_params_for('check')
+
     @domain = cp[:name]
+    @avail = Domain.find_by(name: @domain) ? '0' : '1'
 
     render '/epp/domains/check'
   end

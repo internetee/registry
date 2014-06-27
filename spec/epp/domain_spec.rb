@@ -6,6 +6,7 @@ describe 'EPP Domain', epp: true do
   context 'with valid user' do
     before(:each) { Fabricate(:epp_user) }
 
+    # incomplete
     it 'creates a domain' do
       response = epp_request('domains/create.xml')
       expect(response[:result_code]).to eq('1000')
@@ -14,10 +15,22 @@ describe 'EPP Domain', epp: true do
       expect(Domain.first.registrar.name).to eq('Zone Media OÜ')
     end
 
+    # incomplete
     it 'checks domain' do
       response = epp_request('domains/check.xml')
       expect(response[:result_code]).to eq('1000')
       expect(response[:msg]).to eq('Command completed successfully')
+
+      domain = response[:parsed].css('resData chkData cd name').first
+      expect(domain.text).to eq('test.ee')
+      expect(domain[:avail]).to eq('1')
+
+      Fabricate(:domain, name: 'test.ee')
+
+      response = epp_request('domains/check.xml')
+      domain = response[:parsed].css('resData chkData cd name').first
+      expect(domain.text).to eq('test.ee')
+      expect(domain[:avail]).to eq('0')
     end
 
   end

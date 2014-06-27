@@ -18,7 +18,8 @@ module Epp
     {
       result_code: res.css('epp response result').first[:code],
       msg: res.css('epp response result msg').text,
-      clTRID: res.css('epp trID clTRID').text
+      clTRID: res.css('epp trID clTRID').text,
+      parsed: res.remove_namespaces!
     }
   end
 
