@@ -1,6 +1,5 @@
 class Epp::SessionsController < ApplicationController
   include Epp::Common
-  include Epp::SessionsHelper
 
   private
   def hello
@@ -23,5 +22,12 @@ class Epp::SessionsController < ApplicationController
     epp_session[:epp_user_id] = nil
     response.headers['X-EPP-Returncode'] = '1500'
     render 'logout'
+  end
+
+  ### HELPER METHODS ###
+
+  def login_params
+    login_params = parsed_frame.css('epp command login')
+    { username: login_params.css('clID').text, password: login_params.css('pw').text }
   end
 end
