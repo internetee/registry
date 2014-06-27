@@ -3,7 +3,6 @@ module Epp::Common
 
   included do
     protect_from_forgery with: :null_session
-    helper_method :epp_head
   end
 
   def proxy
@@ -22,12 +21,4 @@ module Epp::Common
   def current_epp_user
     @current_epp_user ||= EppUser.find(epp_session[:epp_user_id]) if epp_session[:epp_user_id]
   end
-
-  def epp_head xml
-    xml.instruct!
-    xml.epp('xmlns' => 'urn:ietf:params:xml:ns:epp-1.0', 'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance', 'xsi:schemaLocation' => 'urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd') do
-      yield
-    end
-  end
-
 end

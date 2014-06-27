@@ -1,4 +1,4 @@
-epp_head(xml) do
+xml.epp_head do
   xml.greeting do
     xml.svID 'EPP server (DSDng)'
     xml.svDate '2014-06-18T17:46:59+03:00'
