@@ -3,7 +3,7 @@ require "rails_helper"
 describe EppSession do
   let(:epp_session) { Fabricate(:epp_session) }
 
-  it 'has encrypted data' do
+  it 'has marshalled data' do
     expect(epp_session.read_attribute(:data)).to_not be_blank
     expect(epp_session.read_attribute(:data).class).to eq(String)
     expect(epp_session.data.class).to eq(Hash)

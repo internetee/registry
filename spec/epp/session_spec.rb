@@ -44,9 +44,13 @@ describe 'EPP Session', epp: true do
       it 'logs out epp user' do
         epp_plain_request('login.xml')
 
+        expect(EppSession.first[:epp_user_id]).to eq(1)
+
         response = epp_plain_request('logout.xml')
         expect(response[:result_code]).to eq('1500')
         expect(response[:msg]).to eq('Command completed successfully; ending session')
+
+        expect(EppSession.first[:epp_user_id]).to eq(nil)
       end
 
       it 'does not log in twice' do
