@@ -6,7 +6,6 @@ xml.epp('xmlns' => 'urn:ietf:params:xml:ns:epp-1.0', 'xmlns:xsi' => 'http://www.
     xml.svcMenu do
       xml.version '1.0'
       xml.lang 'en'
-      xml.lang 'cs'
       xml.objURI 'http://www.nic.cz/xml/epp/contact-1.6'
       xml.objURI 'http://www.nic.cz/xml/epp/domain-1.4'
       xml.objURI 'http://www.nic.cz/xml/epp/nsset-1.2'
