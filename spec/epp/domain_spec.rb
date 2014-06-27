@@ -10,6 +10,7 @@ describe 'EPP Domain', epp: true do
       response = epp_request('create_domain.xml')
       expect(response[:result_code]).to eq('1000')
       expect(response[:msg]).to eq('Command completed successfully')
+      expect(Domain.first.registrar.name).to eq('Zone Media OÜ')
     end
 
   end

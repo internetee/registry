@@ -11,6 +11,7 @@ class Epp::SessionsController < ApplicationController
     @epp_user = EppUser.find_by(login_params)
 
     if @epp_user.try(:active)
+      epp_session[:epp_user_id] = @epp_user.id
       render 'login_success'
     else
       response.headers['X-EPP-Returncode'] = '2200'
@@ -19,6 +20,7 @@ class Epp::SessionsController < ApplicationController
   end
 
   def logout
+    epp_session[:epp_user_id] = nil
     response.headers['X-EPP-Returncode'] = '1500'
     render 'logout'
   end

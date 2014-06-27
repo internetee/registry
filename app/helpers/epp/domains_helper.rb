@@ -8,7 +8,7 @@ module Epp::DomainsHelper
     cp = command_params
     {
       name: cp[:name],
-      registrar: nil, #well come from current_epp_user
+      registrar_id: current_epp_user.registrar.try(:id),
       registered_at: Time.now,
       valid_from: Date.today,
       valid_to: Date.today + cp[:period].to_i.years,
