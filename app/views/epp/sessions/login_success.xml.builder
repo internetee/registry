@@ -3,9 +3,7 @@ xml.epp_head do
     xml.result('code' => '1000') do
       xml.msg 'Command completed successfully'
     end
-    xml.trID do
-      xml.clTRID params[:clTRID]
-      xml.svTRID @svTRID
-    end
+
+    xml << render('/epp/shared/trID')
   end
 end

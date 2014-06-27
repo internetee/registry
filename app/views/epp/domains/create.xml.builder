@@ -5,8 +5,5 @@ xml.epp_head do
     end
   end
 
-  xml.trID do
-    xml.clTRID params[:clTRID]
-    xml.svTRID @svTRID
-  end
+  xml << render('/epp/shared/trID')
 end
