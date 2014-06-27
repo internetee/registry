@@ -67,8 +67,8 @@ For development configuration, add:
     SetHandler cgi-script
   </Directory>
 
-  Listen 700
-  <VirtualHost *:700>
+  Listen 701
+  <VirtualHost *:701>
     SSLEngine on
     SSLCipherSuite ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP:+eNULL
     SSLCertificateFile /etc/apache2/ssl/apache.crt
@@ -89,6 +89,8 @@ For development configuration, add:
 </IfModule>
 ```
 
+Note: Its best to go with two virtual hosts, one for test and one for dev, then you don't have to worry about quitting the dev appserver for running tests (because of colliding ports).
+
 For plain TCP EPP configuration, see below (may be useful for debugging purposes).
 
 * `sudo a2ensite epp_ssl`
@@ -98,7 +100,7 @@ Try it out:
 
 * Fire up your appserver on port 8989 (This setup is tested with Unicorn)
 * `cd $mod_epp`
-* `./epptelnet.pl localhost 700 -s`
+* `./epptelnet.pl localhost 701 -s`
 
 You should receive the greeting from the registry server.  
 Wait for the greeting message on the STD, then send EPP/TCP frame:

@@ -4,8 +4,17 @@ module Epp::DomainsHelper
     render '/epp/domains/create'
   end
 
+  def check_domain
+    cp = command_params_for('check')
+    @domain = cp[:name]
+
+    render '/epp/domains/check'
+  end
+
+  ### HELPER METHODS ###
+
   def domain_params
-    cp = command_params
+    cp = command_params_for('create')
     {
       name: cp[:name],
       registrar_id: current_epp_user.registrar.try(:id),

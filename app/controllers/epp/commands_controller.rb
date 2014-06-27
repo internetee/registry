@@ -12,4 +12,9 @@ class Epp::CommandsController < ApplicationController
     type = OBJECT_TYPES[parsed_frame.css('create create').attr('schemaLocation').value]
     send("create_#{type}")
   end
+
+  def check
+    type = OBJECT_TYPES[parsed_frame.css('check check').attr('schemaLocation').value]
+    send("check_#{type}")
+  end
 end
