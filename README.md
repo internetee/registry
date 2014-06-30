@@ -1,51 +1,36 @@
-registry
-========
+Domain Registry
+===============
 
-### To install and configure mod_epp (on Ubuntu 14.04 LTS)
+Installation
+------------
 
+### Registry 
+
+Usual Rails 4 app installation, rvm and bundler are your friends. 
+
+* `git clone git@github.com:internetee/registry.git`
+* `cd registry`
+* `rvm install ruby-2.1.2`
+* `bundle`
+
+### Apache installation with mod_epp (Debian 7 Wheezy or Ubuntu 14.04 LTS)
+
+# Apache
 * `sudo apt-get install apache2`
-* `sudo apt-get install apache2-threaded-dev`
-* `sudo apt-get install apache2-utils`
-* Download [mod_epp 1.10](http://sourceforge.net/projects/aepps/)
-* `tar -xzf mod_epp-1.10.tar.gz`
+
+# Apache mod_epp with rack friendly patch
+* `sudo apt-get install apache2-threaded-dev` # needed to compile mod_epp
+* `wget sourceforge.net/projects/aepps/files/mod_epp/1.10/mod_epp-1.10.tar.gz`
+* `tar -xzvf mod_epp-1.10.tar.gz`
 * `cd mod_epp-1.10`
 
-**NB! Beacause Rack multipart parser expects specifically formatted content boundaries, the mod_epp needs to be modified before building:**
-
-```diff
-diff --git a/mod_epp.c b/mod_epp.c
-index 60c0004..bf2b6ab 100644
---- a/mod_epp.c
-+++ b/mod_epp.c
-@@ -756,7 +756,7 @@ sprintf(content_length, "%lu", strlen(EPP_CONTENT_FRAME_CGI)
-                                strlen(conf->raw_frame)
-                                + er->orig_xml_size) : 0));
-
--apr_table_set(r->headers_in, "Content-Type", "multipart/form-data; boundary=--BOUNDARY--");
-+apr_table_set(r->headers_in, "Content-Type", EPP_CONTENT_TYPE_CGI);
- apr_table_set(r->headers_in, "Content-Length", content_length);
- apr_table_set(r->headers_in, "Cookie", er->ur->cookie);
-
-diff --git a/mod_epp.h b/mod_epp.h
-index d8c463e..7f6e320 100644
---- a/mod_epp.h
-+++ b/mod_epp.h
-@@ -96,10 +96,10 @@ module AP_MODULE_DECLARE_DATA epp_module;
- #define EPP_DEFAULT_RC_HEADER "X-EPP-Returncode"
+***NB! Patch mod_epp for Rack. Beacause Rack multipart parser expects specifically formatted content 
+boundaries, the mod_epp needs to be modified before building:**
+* `wget https://github.com/internetee/registry/raw/master/doc/patches/mod_epp_1.10-rack-friendly.patch`
+* `patch < mod_epp_1.10-rack-friendly.patch`
 
 
--#define EPP_CONTENT_TYPE_CGI "multipart/form-data; boundary=--BOUNDARY--"
--#define EPP_CONTENT_FRAME_CGI "----BOUNDARY--\r\nContent-Disposition: form-data; name=\"frame\"\r\n\r\n"
--#define EPP_CONTENT_RAW_CGI "\r\n----BOUNDARY--\r\nContent-Disposition: form-data; name=\"%s\"\r\n\r\n"
--#define EPP_CONTENT_CLTRID_CGI "\r\n----BOUNDARY--\r\nContent-Disposition: form-data; name=\"clTRID\"\r\n\r\n"
-+#define EPP_CONTENT_TYPE_CGI "multipart/form-data; boundary=--BOUNDARY"
-+#define EPP_CONTENT_FRAME_CGI "----BOUNDARY\r\nContent-Disposition: form-data; name=\"frame\"\r\n\r\n"
-+#define EPP_CONTENT_RAW_CGI "\r\n----BOUNDARY\r\nContent-Disposition: form-data; name=\"%s\"\r\n\r\n"
-+#define EPP_CONTENT_CLTRID_CGI "\r\n----BOUNDARY\r\nContent-Disposition: form-data; name=\"clTRID\"\r\n\r\n"
- #define EPP_CONTENT_POSTFIX_CGI "\r\n----BOUNDARY--\r\n"
-```
-
-* `sudo apxs2 -a -c -i mod_epp.c`
+* `apxs2 -a -c -i mod_epp.c`  
 * `sudo a2enmod cgi`
 * `sudo a2enmod proxy_http`
 * `sudo mkdir /etc/apache2/ssl`
@@ -139,10 +124,14 @@ Add:
 ```
 
 
-### Depricated old conf
+### Manual mod_epp testing/debugging without Rails app
+
 
 Actually I don't think this is needed, but while debugging I installed this too
 * `sudo apt-get install apache2-dbg` 
+
+For htpasswd for manipulate basic authentication files
+* `sudo apt-get install apache2-utils`      
 
 For manual debugging purposes, standalone CGI scripts can be used:  
 This needs a static greeting file, so you will have to make /var/www writable.
