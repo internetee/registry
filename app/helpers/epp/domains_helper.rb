@@ -1,21 +1,17 @@
 module Epp::DomainsHelper
   def create_domain
-    domain = Domain.create!(domain_params)
+    domain = Domain.create!(domain_create_params)
     render '/epp/domains/create'
   end
 
   def check_domain
-    cp = command_params_for('check')
-
-    @domain = cp[:name]
-    @avail = Domain.find_by(name: @domain) ? '0' : '1'
-
+    @domains = Domain.check_availability(domain_check_params[:names])
     render '/epp/domains/check'
   end
 
   ### HELPER METHODS ###
 
-  def domain_params
+  def domain_create_params
     cp = command_params_for('create')
     {
       name: cp[:name],
@@ -25,5 +21,10 @@ module Epp::DomainsHelper
       valid_to: Date.today + cp[:period].to_i.years,
       auth_info: cp[:authInfo]
     }
+  end
+
+  def domain_check_params
+    node_set = parsed_frame.css('epp command check check name')
+    node_set.inject({names: []}){ |hash, obj| hash[:names] << obj.text; hash }
   end
 end

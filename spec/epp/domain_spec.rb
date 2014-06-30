@@ -16,7 +16,7 @@ describe 'EPP Domain', epp: true do
     end
 
     # incomplete
-    it 'checks domain' do
+    it 'checks a domain' do
       response = epp_request('domains/check.xml')
       expect(response[:result_code]).to eq('1000')
       expect(response[:msg]).to eq('Command completed successfully')
@@ -31,6 +31,38 @@ describe 'EPP Domain', epp: true do
       domain = response[:parsed].css('resData chkData cd name').first
       expect(domain.text).to eq('test.ee')
       expect(domain[:avail]).to eq('0')
+    end
+
+    it 'checks multiple domains' do
+      response = epp_request('domains/check_multiple.xml')
+      expect(response[:result_code]).to eq('1000')
+      expect(response[:msg]).to eq('Command completed successfully')
+
+      domain = response[:parsed].css('resData chkData cd name').first
+      expect(domain.text).to eq('test.ee')
+      expect(domain[:avail]).to eq('1')
+
+      domain = response[:parsed].css('resData chkData cd name').last
+      expect(domain.text).to eq('bla.ee')
+      expect(domain[:avail]).to eq('1')
+    end
+
+    it 'checks invalid format domain' do
+      response = epp_request('domains/check_multiple_with_invalid.xml')
+      expect(response[:result_code]).to eq('1000')
+      expect(response[:msg]).to eq('Command completed successfully')
+
+      domain = response[:parsed].css('resData chkData cd name').first
+      expect(domain.text).to eq('test.ee')
+      expect(domain[:avail]).to eq('1')
+
+      domain = response[:parsed].css('resData chkData cd').last
+      name = domain.css('name').first
+      reason = domain.css('reason').first
+
+      expect(name.text).to eq('asdasd')
+      expect(name[:avail]).to eq('0')
+      expect(reason.text).to eq('invalid format')
     end
 
   end
