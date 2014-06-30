@@ -30,10 +30,8 @@ Usual Rails 4 app installation, rvm and bundler are your friends.
 boundaries, the mod_epp needs to be modified before building:***
 * `wget https://github.com/internetee/registry/raw/master/doc/patches/mod_epp_1.10-rack-friendly.patch`
 * `patch < mod_epp_1.10-rack-friendly.patch`
+* `apxs2 -a -c -i mod_epp.c`
 
-
-* `apxs2 -a -c -i mod_epp.c`  
-* `sudo a2enmod cgi`
 * `sudo a2enmod proxy_http`
 * `sudo mkdir /etc/apache2/ssl`
 * `sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt`
@@ -59,6 +57,30 @@ For development configuration, add:
     ProxyPass /proxy/ http://localhost:8989/epp/
 
     EPPAuthURI              implicit
+    EPPReturncodeHeader     X-EPP-Returncode
+  </VirtualHost>
+</IfModule>
+```
+
+Configuration on plain TCP EPP is as follows:
+Add:
+```apache
+<IfModule mod_epp.c>
+  <Directory "/usr/lib/cgi-bin/epp">
+    Options ExecCGI
+    SetHandler cgi-script
+  </Directory>
+
+  Listen  1701
+  <VirtualHost *:1701>
+    EPPEngine On
+    EPPCommandRoot          /proxy/command
+    EPPSessionRoot          /proxy/session
+    ProxyPass /proxy/ http://localhost:8080/epp/
+
+    EPPErrorRoot         /cgi-bin/epp/error
+
+    EPPAuthURI implicit
     EPPReturncodeHeader     X-EPP-Returncode
   </VirtualHost>
 </IfModule>
@@ -92,6 +114,7 @@ Wait for the greeting message on the STD, then send EPP/TCP frame:
 ```
 
 * Run tests: `rake`
+* Run EPP tests: `rake test:epp`
 * Run all but EPP tests: `rake test:other`
 
 To see internal errors while testing EPP
@@ -100,40 +123,14 @@ To see internal errors while testing EPP
 
 ---
 
-Configuration on plain TCP EPP is as follows:
-
-Add:
-```apache
-<IfModule mod_epp.c>
-  <Directory "/usr/lib/cgi-bin/epp">
-    Options ExecCGI
-    SetHandler cgi-script
-  </Directory>
-
-  Listen  1701
-  <VirtualHost *:1701>
-    EPPEngine On
-    EPPCommandRoot          /proxy/command
-    EPPSessionRoot          /proxy/session
-    ProxyPass /proxy/ http://localhost:8080/epp/
-
-    EPPErrorRoot         /cgi-bin/epp/error
-
-    EPPAuthURI implicit
-    EPPReturncodeHeader     X-EPP-Returncode
-  </VirtualHost>
-</IfModule>
-```
-
-
 ### Manual mod_epp testing/debugging without Rails app
 
 
 Actually I don't think this is needed, but while debugging I installed this too
 * `sudo apt-get install apache2-dbg` 
 
-For htpasswd for manipulate basic authentication files
-* `sudo apt-get install apache2-utils`      
+Includes htpasswd command to generate authentication files
+* `sudo apt-get install apache2-utils`
 
 For manual debugging purposes, standalone CGI scripts can be used:  
 This needs a static greeting file, so you will have to make /var/www writable.
@@ -172,8 +169,8 @@ This needs a static greeting file, so you will have to make /var/www writable.
 </IfModule>
 ```
 
+* `sudo a2enmod cgi`
 * `sudo a2enmod authn_file` (Will be used for non implicit authentication URIs, can be removed in the future)
-
 * `sudo htpasswd -c /etc/apache2/htpasswd test` (can be removed in the future)
 * Type "test" when prompted
 * `cd /usr/lib/cgi-bin`
