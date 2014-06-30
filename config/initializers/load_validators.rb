@@ -1,1 +1,1 @@
-Dir[File.join(Rails.root, "app", "validators", "*.rb")].each {|x| require x }
+Internetee::Application.config.autoload_paths += %W(#{Internetee::Application.config.root}/app/validators/)
