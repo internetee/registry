@@ -11,6 +11,11 @@ class Domain < ActiveRecord::Base
     def check_availability(domains)
       res = []
       domains.each do |x|
+        if !DomainNameValidator.validate(x)
+          res << {name: x, avail: 0, reason: 'invalid format'}
+          next
+        end
+
         res << {name: x, avail: Domain.find_by(name: x) ? 0 : 1}
       end
 

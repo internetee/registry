@@ -9,6 +9,7 @@ xml.epp_head do
         @domains.each do |x|
           xml.tag!('domain:cd') do
             xml.tag!('domain:name', x[:name], 'avail' => x[:avail])
+            xml.tag!('domain:reason', x[:reason]) if x[:reason].present?
           end
         end
       end
