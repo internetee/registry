@@ -1,6 +1,5 @@
 class Epp::CommandsController < ApplicationController
   include Epp::Common
-  include Epp::CommandsHelper
   include Epp::DomainsHelper
 
   OBJECT_TYPES = {

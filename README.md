@@ -63,7 +63,6 @@ For development configuration, add:
 ```
 
 Configuration on plain TCP EPP is as follows:
-Add:
 ```apache
 <IfModule mod_epp.c>
   <Directory "/usr/lib/cgi-bin/epp">

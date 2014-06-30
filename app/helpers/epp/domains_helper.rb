@@ -12,14 +12,16 @@ module Epp::DomainsHelper
   ### HELPER METHODS ###
 
   def domain_create_params
-    cp = command_params_for('create')
+    node_set = parsed_frame.css("epp command create create").children.select(&:element?)
+    command_params = node_set.inject({}) {|hash, obj| hash[obj.name.to_sym] = obj.text;hash }
+
     {
-      name: cp[:name],
+      name: command_params[:name],
       registrar_id: current_epp_user.registrar.try(:id),
       registered_at: Time.now,
       valid_from: Date.today,
-      valid_to: Date.today + cp[:period].to_i.years,
-      auth_info: cp[:authInfo]
+      valid_to: Date.today + command_params[:period].to_i.years,
+      auth_info: command_params[:authInfo]
     }
   end
 
