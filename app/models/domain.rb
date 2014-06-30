@@ -5,6 +5,8 @@ class Domain < ActiveRecord::Base
   belongs_to :technical_contact, class_name: 'Contact'
   belongs_to :admin_contact, class_name: 'Contact'
 
+  validates :name, domain_name: true
+
   class << self
     def check_availability(domains)
       res = []
