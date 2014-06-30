@@ -1,12 +1,11 @@
 registry
 ========
 
-###To install and configure mod_epp (on Ubuntu 14.04 LTS)
+### To install and configure mod_epp (on Ubuntu 14.04 LTS)
 
 * `sudo apt-get install apache2`
 * `sudo apt-get install apache2-threaded-dev`
 * `sudo apt-get install apache2-utils`
-* `sudo apt-get install apache2-dbg` (Actually I don't think this is needed, but while debugging I installed this too)
 * Download [mod_epp 1.10](http://sourceforge.net/projects/aepps/)
 * `tar -xzf mod_epp-1.10.tar.gz`
 * `cd mod_epp-1.10`
@@ -48,13 +47,7 @@ index d8c463e..7f6e320 100644
 
 * `sudo apxs2 -a -c -i mod_epp.c`
 * `sudo a2enmod cgi`
-* `sudo a2enmod authn_file` (Will be used for non implicit authentication URIs, can be removed in the future)
 * `sudo a2enmod proxy_http`
-* `sudo htpasswd -c /etc/apache2/htpasswd test` (can be removed in the future)
-* Type "test" when prompted
-* `cd /usr/lib/cgi-bin`
-* `mkdir epp`
-* Copy the files from $mod_epp/examples/cgis to /usr/lib/cgi-bin/epp (once in production, majority of these scripts will not be needed (maybe only double the error script for failover))
 * `sudo mkdir /etc/apache2/ssl`
 * `sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt`
 * `sudo nano /etc/apache2/sites-available/epp_ssl.conf`
@@ -62,11 +55,6 @@ index d8c463e..7f6e320 100644
 For development configuration, add:
 ```apache
 <IfModule mod_epp.c>
-  <Directory "/usr/lib/cgi-bin/epp">
-    Options ExecCGI
-    SetHandler cgi-script
-  </Directory>
-
   Listen 701
   <VirtualHost *:701>
     SSLEngine on
@@ -89,7 +77,8 @@ For development configuration, add:
 </IfModule>
 ```
 
-Note: Its best to go with two virtual hosts, one for test and one for dev, then you don't have to worry about quitting the dev appserver for running tests (because of colliding ports).
+Note: Its best to go with two virtual hosts, one for test and one for dev, 
+then you don't have to worry about quitting the dev appserver for running tests (because of colliding ports).
 
 For plain TCP EPP configuration, see below (may be useful for debugging purposes).
 
@@ -149,7 +138,13 @@ Add:
 </IfModule>
 ```
 
-For debugging purposes, standalone CGI scripts can be used:  
+
+### Depricated old conf
+
+Actually I don't think this is needed, but while debugging I installed this too
+* `sudo apt-get install apache2-dbg` 
+
+For manual debugging purposes, standalone CGI scripts can be used:  
 This needs a static greeting file, so you will have to make /var/www writable.
 
 ```apache
@@ -185,3 +180,11 @@ This needs a static greeting file, so you will have to make /var/www writable.
     </VirtualHost>
 </IfModule>
 ```
+
+* `sudo a2enmod authn_file` (Will be used for non implicit authentication URIs, can be removed in the future)
+
+* `sudo htpasswd -c /etc/apache2/htpasswd test` (can be removed in the future)
+* Type "test" when prompted
+* `cd /usr/lib/cgi-bin`
+* `mkdir epp`
+* Copy the files from $mod_epp/examples/cgis to /usr/lib/cgi-bin/epp (once in production, majority of these scripts will not be needed (maybe only double the error script for failover))
