@@ -16,7 +16,11 @@ class Domain < ActiveRecord::Base
           next
         end
 
-        res << {name: x, avail: Domain.find_by(name: x) ? 0 : 1}
+        if Domain.find_by(name: x)
+          res << {name: x, avail: 0, reason: 'in use'}
+        else
+          res << {name: x, avail: 1}
+        end
       end
 
       res

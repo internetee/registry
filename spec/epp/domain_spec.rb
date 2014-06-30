@@ -28,9 +28,13 @@ describe 'EPP Domain', epp: true do
       Fabricate(:domain, name: 'test.ee')
 
       response = epp_request('domains/check.xml')
-      domain = response[:parsed].css('resData chkData cd name').first
-      expect(domain.text).to eq('test.ee')
-      expect(domain[:avail]).to eq('0')
+      domain = response[:parsed].css('resData chkData cd').first
+      name = domain.css('name').first
+      reason = domain.css('reason').first
+
+      expect(name.text).to eq('test.ee')
+      expect(name[:avail]).to eq('0')
+      expect(reason.text).to eq('in use')
     end
 
     it 'checks multiple domains' do
