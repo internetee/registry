@@ -4,4 +4,15 @@ class Domain < ActiveRecord::Base
   belongs_to :owner_contact, class_name: 'Contact'
   belongs_to :technical_contact, class_name: 'Contact'
   belongs_to :admin_contact, class_name: 'Contact'
+
+  class << self
+    def check_availability(domains)
+      res = []
+      domains.each do |x|
+        res << {name: x, avail: Domain.find_by(name: x) ? 0 : 1}
+      end
+
+      res
+    end
+  end
 end
