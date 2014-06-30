@@ -4,7 +4,7 @@ Domain Registry
 Installation
 ------------
 
-### Registry 
+## Registry 
 
 Usual Rails 4 app installation, rvm and bundler are your friends. 
 
@@ -13,19 +13,21 @@ Usual Rails 4 app installation, rvm and bundler are your friends.
 * `rvm install ruby-2.1.2`
 * `bundle`
 
-### Apache installation with mod_epp (Debian 7 Wheezy or Ubuntu 14.04 LTS)
+## Apache installation with mod_epp 
 
-# Apache
+### Debian 7 Wheezy or Ubuntu 14.04 LTS
+
+### Apache
 * `sudo apt-get install apache2`
 
-# Apache mod_epp with rack friendly patch
+### Apache mod_epp with rack friendly patch
 * `sudo apt-get install apache2-threaded-dev` # needed to compile mod_epp
 * `wget sourceforge.net/projects/aepps/files/mod_epp/1.10/mod_epp-1.10.tar.gz`
 * `tar -xzvf mod_epp-1.10.tar.gz`
 * `cd mod_epp-1.10`
 
 ***NB! Patch mod_epp for Rack. Beacause Rack multipart parser expects specifically formatted content 
-boundaries, the mod_epp needs to be modified before building:**
+boundaries, the mod_epp needs to be modified before building:***
 * `wget https://github.com/internetee/registry/raw/master/doc/patches/mod_epp_1.10-rack-friendly.patch`
 * `patch < mod_epp_1.10-rack-friendly.patch`
 
