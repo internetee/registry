@@ -34,7 +34,7 @@ describe 'EPP Domain', epp: true do
 
       expect(name.text).to eq('test.ee')
       expect(name[:avail]).to eq('0')
-      expect(reason.text).to eq('in use')
+      expect(reason.text).to eq('in use') #confirm this with current API
     end
 
     it 'checks multiple domains' do

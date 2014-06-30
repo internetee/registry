@@ -17,7 +17,7 @@ class Domain < ActiveRecord::Base
         end
 
         if Domain.find_by(name: x)
-          res << {name: x, avail: 0, reason: 'in use'}
+          res << {name: x, avail: 0, reason: 'in use'} #confirm reason with current API
         else
           res << {name: x, avail: 1}
         end
