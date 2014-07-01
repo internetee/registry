@@ -1,41 +1,44 @@
 Domain Registry
 ===============
 
+Full stack registry system desingned for a top-level domain (TLD) management.
+
+
 Installation
 ------------
 
-## Registry 
+### Registry app 
 
 Usual Rails 4 app installation, rvm and bundler are your friends. 
 
-* `git clone git@github.com:internetee/registry.git`
-* `cd registry`
-* `rvm install ruby-2.1.2`
-* `bundle`
+    git clone git@github.com:internetee/registry.git
 
-## Apache installation with mod_epp 
+    cd registry
+    rvm install ruby-2.1.2
+    bundle
 
-### Debian 7 Wheezy or Ubuntu 14.04 LTS
+### Apache with patched mod_epp (Debian 7/Ubuntu 14.04 LTS)
 
-### Apache
-* `sudo apt-get install apache2`
+    sudo apt-get install apache2
 
-### Apache mod_epp with rack friendly patch
-* `sudo apt-get install apache2-threaded-dev` # needed to compile mod_epp
-* `wget sourceforge.net/projects/aepps/files/mod_epp/1.10/mod_epp-1.10.tar.gz`
-* `tar -xzvf mod_epp-1.10.tar.gz`
-* `cd mod_epp-1.10`
+    sudo apt-get install apache2-threaded-dev # needed to compile mod_epp
+    wget sourceforge.net/projects/aepps/files/mod_epp/1.10/mod_epp-1.10.tar.gz
+    tar -xzvf mod_epp-1.10.tar.gz
+    cd mod_epp-1.10
 
-***NB! Patch mod_epp for Rack. Beacause Rack multipart parser expects specifically formatted content 
-boundaries, the mod_epp needs to be modified before building:***
-* `wget https://github.com/internetee/registry/raw/master/doc/patches/mod_epp_1.10-rack-friendly.patch`
-* `patch < mod_epp_1.10-rack-friendly.patch`
-* `apxs2 -a -c -i mod_epp.c`
+Patch mod_epp for Rack. Beacause Rack multipart parser expects specifically 
+formatted content boundaries, the mod_epp needs to be modified before building:
 
-* `sudo a2enmod proxy_http`
-* `sudo mkdir /etc/apache2/ssl`
-* `sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt`
-* `sudo nano /etc/apache2/sites-available/epp_ssl.conf`
+    wget https://github.com/internetee/registry/raw/master/doc/patches/mod_epp_1.10-rack-friendly.patch    
+    patch < mod_epp_1.10-rack-friendly.patch
+    apxs2 -a -c -i mod_epp.c
+
+Enable ssl:
+
+    sudo a2enmod proxy_http
+    sudo mkdir /etc/apache2/ssl
+    sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
+    sudo nano /etc/apache2/sites-available/epp_ssl.conf
 
 For development configuration, add:
 ```apache
@@ -86,18 +89,20 @@ Configuration on plain TCP EPP is as follows:
 ```
 
 Note: Its best to go with two virtual hosts, one for test and one for dev, 
-then you don't have to worry about quitting the dev appserver for running tests (because of colliding ports).
+then you don't have to worry about quitting 
+the dev appserver for running tests (because of colliding ports).
 
 For plain TCP EPP configuration, see below (may be useful for debugging purposes).
 
-* `sudo a2ensite epp_ssl`
-* `sudo service apache2 restart`
+    sudo a2ensite epp_ssl
+    sudo service apache2 restart
 
 Try it out:
 
-* Fire up your appserver on port 8989 (This setup is tested with Unicorn)
-* `cd $mod_epp`
-* `./epptelnet.pl localhost 701 -s`
+Fire up your appserver on port 8989 (This setup is tested with Unicorn)
+
+    cd $mod_epp
+    ./epptelnet.pl localhost 701 -s
 
 You should receive the greeting from the registry server.  
 Wait for the greeting message on the STD, then send EPP/TCP frame:
@@ -117,19 +122,21 @@ Wait for the greeting message on the STD, then send EPP/TCP frame:
 * Run all but EPP tests: `rake test:other`
 
 To see internal errors while testing EPP
-* `unicorn -E test -p 8989`
-* `rake spec:epp`
-
----
-
-### Manual mod_epp testing/debugging without Rails app
+    
+    unicorn -E test -p 8989
+    rake spec:epp
 
 
-Actually I don't think this is needed, but while debugging I installed this too
-* `sudo apt-get install apache2-dbg` 
+Apache mod_epp testing/debugging
+--------------------------------
+
+Testing Apache mod_epp without Registry app.
+
+    sudo apt-get install apache2-dbg 
 
 Includes htpasswd command to generate authentication files
-* `sudo apt-get install apache2-utils`
+
+    sudo apt-get install apache2-utils
 
 For manual debugging purposes, standalone CGI scripts can be used:  
 This needs a static greeting file, so you will have to make /var/www writable.
@@ -168,10 +175,12 @@ This needs a static greeting file, so you will have to make /var/www writable.
 </IfModule>
 ```
 
-* `sudo a2enmod cgi`
-* `sudo a2enmod authn_file` (Will be used for non implicit authentication URIs, can be removed in the future)
-* `sudo htpasswd -c /etc/apache2/htpasswd test` (can be removed in the future)
-* Type "test" when prompted
-* `cd /usr/lib/cgi-bin`
-* `mkdir epp`
-* Copy the files from $mod_epp/examples/cgis to /usr/lib/cgi-bin/epp (once in production, majority of these scripts will not be needed (maybe only double the error script for failover))
+    sudo a2enmod cgi
+    sudo a2enmod authn_file # will be used for non implicit authentication URIs
+    sudo htpasswd -c /etc/apache2/htpasswd test
+    Type "test" when prompted
+    cd /usr/lib/cgi-bin
+    mkdir epp
+
+Copy the files from $mod_epp/examples/cgis to /usr/lib/cgi-bin/epp 
+
