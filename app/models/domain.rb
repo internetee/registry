@@ -1,7 +1,6 @@
 class Domain < ActiveRecord::Base
   #TODO whois requests ip whitelist for full info for own domains and partial info for other domains
   #TODO most inputs should be trimmed before validatation, probably some global logic?
- 
 
   belongs_to :registrar
   belongs_to :ns_set
@@ -10,6 +9,13 @@ class Domain < ActiveRecord::Base
   belongs_to :admin_contact, class_name: 'Contact'
 
   validates :name, domain_name: true
+
+  def name=(value)
+    value.strip!
+    write_attribute(:name, SimpleIDN.to_unicode(value))
+    write_attribute(:name_puny, SimpleIDN.to_ascii(value))
+    write_attribute(:name_dirty, value)
+  end
 
   class << self
     def check_availability(domains)

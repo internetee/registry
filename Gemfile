@@ -31,8 +31,11 @@ gem 'jbuilder', '~> 2.0'
 # Replacement for erb
 gem 'haml-rails', '~> 0.5.3'
 
-#For XML parsing
+# For XML parsing
 gem 'nokogiri', '~> 1.6.2.1'
+
+# For punycode
+gem 'simpleidn', '~> 0.0.5'
 
 group :assets do
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes

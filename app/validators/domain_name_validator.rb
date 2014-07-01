@@ -17,10 +17,19 @@ class DomainNameValidator < ActiveModel::EachValidator
       value = value.mb_chars.downcase.strip
 
       general_domains = /(.pri.ee|.edu.ee|.aip.ee|.org.ee|.med.ee|.riik.ee|.ee)/ #TODO Add more general domains here
-      unicode_chars = /\u00E4\u00F5\u00F6\u00FC\u0161\u017E/ #äõöüšž
-      ok = value =~ /\A[a-zA-Z0-9#{unicode_chars}][a-zA-Z0-9#{unicode_chars}-]{0,61}[a-zA-Z0-9#{unicode_chars}]#{general_domains}\z/
 
-      ok &&= !(value[2] == '-' && value[3] == '-')
+      # it's punycode
+      if value[2] == '-' && value[3] == '-'
+        regexp = /\Axn--[a-zA-Z0-9-]{0,61}#{general_domains}\z/
+        return false unless value =~ regexp
+        value = SimpleIDN.to_unicode(value)
+      end
+
+      unicode_chars = /\u00E4\u00F5\u00F6\u00FC\u0161\u017E/ #äõöüšž
+      regexp = /\A[a-zA-Z0-9#{unicode_chars}][a-zA-Z0-9#{unicode_chars}-]{0,61}[a-zA-Z0-9#{unicode_chars}]#{general_domains}\z/
+
+      value =~ regexp
     end
+
   end
 end
