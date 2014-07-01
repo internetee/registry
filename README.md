@@ -1,6 +1,9 @@
 Domain Registry
 ===============
 
+Full stack registry system desingned for a top-level domain (TLD) management.
+
+
 Installation
 ------------
 
@@ -24,11 +27,13 @@ Usual Rails 4 app installation, rvm and bundler are your friends.
     cd mod_epp-1.10
 
 Patch mod_epp for Rack. Beacause Rack multipart parser expects specifically 
-formatted content boundaries, the modepp needs to be modified before building:
+formatted content boundaries, the mod_epp needs to be modified before building:
 
     wget https://github.com/internetee/registry/raw/master/doc/patches/mod_epp_1.10-rack-friendly.patch    
     patch < mod_epp_1.10-rack-friendly.patch
     apxs2 -a -c -i mod_epp.c
+
+Enable ssl:
 
     sudo a2enmod proxy_http
     sudo mkdir /etc/apache2/ssl
@@ -178,3 +183,4 @@ This needs a static greeting file, so you will have to make /var/www writable.
     mkdir epp
 
 Copy the files from $mod_epp/examples/cgis to /usr/lib/cgi-bin/epp 
+
