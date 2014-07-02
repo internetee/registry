@@ -116,7 +116,7 @@ Wait for the greeting message on the STD, then send EPP/TCP frame:
   <clTRID>sample1trid</clTRID>
 </command></epp>
 ```
-
+* Before running tests for the first time: `rake db:seed`
 * Run tests: `rake`
 * Run EPP tests: `rake test:epp`
 * Run all but EPP tests: `rake test:other`
