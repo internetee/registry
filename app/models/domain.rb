@@ -20,6 +20,8 @@ class Domain < ActiveRecord::Base
 
   class << self
     def check_availability(domains)
+      domains = [domains] if domains.is_a?(String)
+
       res = []
       domains.each do |x|
         if !DomainNameValidator.validate(x)

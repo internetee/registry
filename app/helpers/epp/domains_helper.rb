@@ -5,28 +5,23 @@ module Epp::DomainsHelper
   end
 
   def check_domain
-    @domains = Domain.check_availability(domain_check_params[:names])
+    ph = get_params_hash('epp command check check')[:check]
+    @domains = Domain.check_availability(ph[:name])
     render '/epp/domains/check'
   end
 
   ### HELPER METHODS ###
 
   def domain_create_params
-    node_set = parsed_frame.css("epp command create create").children.select(&:element?)
-    command_params = node_set.inject({}) {|hash, obj| hash[obj.name.to_sym] = obj.text;hash }
+    ph = get_params_hash('epp command create create')[:create]
 
     {
-      name: command_params[:name],
+      name: ph[:name],
       registrar_id: current_epp_user.registrar.try(:id),
       registered_at: Time.now,
       valid_from: Date.today,
-      valid_to: Date.today + command_params[:period].to_i.years,
-      auth_info: command_params[:authInfo]
+      valid_to: Date.today + ph[:period].to_i.years,
+      auth_info: ph[:authInfo]
     }
-  end
-
-  def domain_check_params
-    node_set = parsed_frame.css('epp command check check name')
-    node_set.inject({names: []}){ |hash, obj| hash[:names] << obj.text; hash }
   end
 end

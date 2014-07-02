@@ -1,13 +1,5 @@
 module Epp::ContactsHelper
   def create_contact
-    ccp = contact_create_params
-  end
-
-  ### HELPER METHODS ###
-
-  def contact_create_params
-    {
-      addr: get_params_hash('epp command create create postalInfo addr')
-    }
+    cp = Hash.from_xml(parsed_frame.css("epp command create create").to_xml).with_indifferent_access
   end
 end

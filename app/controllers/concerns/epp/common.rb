@@ -15,19 +15,7 @@ module Epp::Common
   end
 
   def get_params_hash(path)
-    node_set = parsed_frame.css(path).children.select{ |x| x.element? && x.element_children.empty? }
-
-    node_set.inject({}) do |hash, obj|
-      #convert to array if 1 or more attributes with same name
-      if hash[obj.name.to_sym] && !hash[obj.name.to_sym].is_a?(Array)
-        hash[obj.name.to_sym] = [hash[obj.name.to_sym]]
-        hash[obj.name.to_sym] << obj.text.strip
-      else
-        hash[obj.name.to_sym] = obj.text.strip
-      end
-
-      hash
-    end
+    Hash.from_xml(parsed_frame.css(path).to_xml).with_indifferent_access
   end
 
   def epp_session
