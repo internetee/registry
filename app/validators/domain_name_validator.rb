@@ -16,19 +16,19 @@ class DomainNameValidator < ActiveModel::EachValidator
     def validate(value)
       value = value.mb_chars.downcase.strip
 
-      general_domains = /(.pri.ee|.edu.ee|.aip.ee|.org.ee|.med.ee|.riik.ee|.ee)/ #TODO Add more general domains here
+      general_domains = /(.pri.ee|.com.ee|.fie.ee|.med.ee|.ee)/ #TODO Add more general domains here
 
       # it's punycode
       if value[2] == '-' && value[3] == '-'
-        regexp = /\Axn--[a-zA-Z0-9-]{0,61}#{general_domains}\z/
+        regexp = /\Axn--[a-zA-Z0-9-]{0,59}#{general_domains}\z/
         return false unless value =~ regexp
-        value = SimpleIDN.to_unicode(value)
+        value = SimpleIDN.to_unicode(value).mb_chars.downcase.strip
       end
 
       unicode_chars = /\u00E4\u00F5\u00F6\u00FC\u0161\u017E/ #äõöüšž
       regexp = /\A[a-zA-Z0-9#{unicode_chars}][a-zA-Z0-9#{unicode_chars}-]{0,61}[a-zA-Z0-9#{unicode_chars}]#{general_domains}\z/
 
-      value =~ regexp
+      !!(value =~ regexp)
     end
 
   end
