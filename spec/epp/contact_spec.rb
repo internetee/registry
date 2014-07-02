@@ -11,7 +11,9 @@ describe 'EPP Contact', epp: true do
       response = epp_request('contacts/create.xml')
       expect(response[:result_code]).to eq('1000')
       expect(response[:msg]).to eq('Command completed successfully')
-      expect(response[:clTRID]).to eq('ABC-12345')
+      expect(response[:clTRID]).to eq('neka005#10-02-08at13:51:37')
+
+      expect(Contact.count).to eq(1)
     end
 
   end

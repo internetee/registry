@@ -5,3 +5,6 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+Country.where(name: 'Estonia', iso: 'EE').first_or_create
+EppUser.where(username: 'gitlab', password: 'ghyt9e4fu', active: true).first_or_create

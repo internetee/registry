@@ -6,8 +6,8 @@ xml.epp_head do
 
     xml.resData do
       xml.tag!('contact:creData', 'xmlns:contact' => 'http://www.nic.cz/xml/epp/contact-1.6', 'xsi:schemaLocation' => 'http://www.nic.cz/xml/epp/contact-1.6 contact-1.6.xsd') do
-         xml.tag!('contact:id', @id)
-         xml.tag!('contact:crDate', @crDate)
+         xml.tag!('contact:id', @contact.code)
+         xml.tag!('contact:crDate', @contact.created_at)
       end
     end
 
