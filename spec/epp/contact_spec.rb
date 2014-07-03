@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe 'EPP Contact', epp: true do
-  let(:server) { Epp::Server.new({server: 'localhost', tag: 'test', password: 'test', port: 701}) }
+  let(:server) { Epp::Server.new({server: 'localhost', tag: 'gitlab', password: 'ghyt9e4fu', port: 701}) }
 
   context 'with valid user' do
     before(:each) { Fabricate(:epp_user) }

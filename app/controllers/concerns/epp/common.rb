@@ -3,6 +3,7 @@ module Epp::Common
 
   included do
     protect_from_forgery with: :null_session
+    before_action :validate_request, only: [:proxy]
   end
 
   def proxy
@@ -24,5 +25,16 @@ module Epp::Common
 
   def current_epp_user
     @current_epp_user ||= EppUser.find(epp_session[:epp_user_id]) if epp_session[:epp_user_id]
+  end
+
+  def validate_request
+    xsd = Nokogiri::XML::Schema(File.read('doc/schemas/epp-1.0.xsd'))
+    doc = Nokogiri::XML(params[:frame])
+    @extValues = xsd.validate(doc)
+    if @extValues.any?
+      @code = '2001'
+      @msg = 'Command syntax error'
+      render '/epp/error' and return
+    end
   end
 end

@@ -5,21 +5,30 @@ module Epp
 
   # handles connection and login automatically
   def epp_request filename
-    res = Nokogiri::XML(server.request(read_body(filename)))
-    parse_response(res)
+    begin
+      parse_response(server.request(read_body(filename)))
+    rescue Exception => e
+      e
+    end
   end
 
   def epp_plain_request filename
-    res = Nokogiri::XML(server.send_request(read_body(filename)))
-    parse_response(res)
+    begin
+      parse_response(server.send_request(read_body(filename)))
+    rescue Exception => e
+      e
+    end
   end
 
-  def parse_response res
+  def parse_response raw
+    res = Nokogiri::XML(raw)
+
     {
       result_code: res.css('epp response result').first[:code],
       msg: res.css('epp response result msg').text,
       clTRID: res.css('epp trID clTRID').text,
-      parsed: res.remove_namespaces!
+      parsed: res.remove_namespaces!,
+      raw: raw
     }
   end
 

@@ -1,6 +1,6 @@
 Fabricator(:epp_user) do
-  username 'test'
-  password 'test'
+  username 'gitlab'
+  password 'ghyt9e4fu'
   registrar
   active true
 end
