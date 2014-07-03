@@ -5,7 +5,7 @@ module Epp::DomainsHelper
   end
 
   def check_domain
-    ph = get_params_hash('epp command check check')[:check]
+    ph = params_hash['epp']['command']['check']['check']
     @domains = Domain.check_availability(ph[:name])
     render '/epp/domains/check'
   end
@@ -13,7 +13,7 @@ module Epp::DomainsHelper
   ### HELPER METHODS ###
 
   def domain_create_params
-    ph = get_params_hash('epp command create create')[:create]
+    ph = params_hash['epp']['command']['create']['create']
 
     {
       name: ph[:name],
@@ -21,7 +21,7 @@ module Epp::DomainsHelper
       registered_at: Time.now,
       valid_from: Date.today,
       valid_to: Date.today + ph[:period].to_i.years,
-      auth_info: ph[:authInfo]
+      auth_info: ph[:authInfo][:pw]
     }
   end
 end

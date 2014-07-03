@@ -4,20 +4,16 @@ class Epp::CommandsController < ApplicationController
   include Epp::ContactsHelper
 
   OBJECT_TYPES = {
-    'http://www.nic.cz/xml/epp/domain-1.4 domain-1.4.xsd' => 'domain',
-    'http://www.nic.cz/xml/epp/contact-1.6 contact-1.6.xsd' => 'contact'
+    'urn:ietf:params:xml:ns:contact-1.0' => 'contact',
+    'urn:ietf:params:xml:ns:domain-1.0' => 'domain'
   }
 
   private
   def create
-    ph = get_params_hash('create create')[:create]
-    type = OBJECT_TYPES[ph[:schemaLocation]]
-    send("create_#{type}")
+    send("create_#{OBJECT_TYPES[params_hash['epp']['xmlns:ns2']]}")
   end
 
   def check
-    ph = get_params_hash('check check')[:check]
-    type = OBJECT_TYPES[ph[:schemaLocation]]
-    send("check_#{type}")
+    send("check_#{OBJECT_TYPES[params_hash['epp']['xmlns:ns2']]}")
   end
 end

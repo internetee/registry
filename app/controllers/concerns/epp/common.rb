@@ -11,12 +11,8 @@ module Epp::Common
     send(params[:command])
   end
 
-  def parsed_frame
-    Nokogiri::XML(params[:frame]).remove_namespaces!
-  end
-
-  def get_params_hash(path)
-    Hash.from_xml(parsed_frame.css(path).to_xml).with_indifferent_access
+  def params_hash
+    @params_hash ||= Hash.from_xml(params[:frame]).with_indifferent_access
   end
 
   def epp_session
@@ -28,13 +24,13 @@ module Epp::Common
   end
 
   def validate_request
-    xsd = Nokogiri::XML::Schema(File.read('doc/schemas/epp-1.0.xsd'))
-    doc = Nokogiri::XML(params[:frame])
-    @extValues = xsd.validate(doc)
-    if @extValues.any?
-      @code = '2001'
-      @msg = 'Command syntax error'
-      render '/epp/error' and return
-    end
+    # xsd = Nokogiri::XML::Schema(File.read('doc/schemas/contact-1.0.xsd'))
+    # doc = Nokogiri::XML(params[:frame])
+    # @extValues = xsd.validate(doc)
+    # if @extValues.any?
+    #   @code = '2001'
+    #   @msg = 'Command syntax error'
+    #   render '/epp/error' and return
+    # end
   end
 end

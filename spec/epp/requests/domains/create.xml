@@ -1,21 +1,23 @@
-<?xml version="1.0" encoding="utf-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="http://www.nic.cz/xml/epp/domain-1.4" xsi:schemaLocation="http://www.nic.cz/xml/epp/domain-1.4 domain-1.4.xsd">
-        <domain:name>testing.ee</domain:name>
+      <domain:create
+       xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
+        <domain:name>example.ee</domain:name>
         <domain:period unit="y">1</domain:period>
-        <domain:nsset>name_server_set1</domain:nsset>
-        <domain:registrant>domain_registrator1</domain:registrant>
-        <domain:admin>administrative_contact1</domain:admin>
-        <domain:authInfo>password</domain:authInfo>
+        <domain:ns>
+          <domain:hostObj>ns1.example.net</domain:hostObj>
+          <domain:hostObj>ns2.example.net</domain:hostObj>
+        </domain:ns>
+        <domain:registrant>jd1234</domain:registrant>
+        <domain:contact type="admin">sh8013</domain:contact>
+        <domain:contact type="tech">sh8013</domain:contact>
+        <domain:authInfo>
+          <domain:pw>2fooBAR</domain:pw>
+        </domain:authInfo>
       </domain:create>
     </create>
-    <extension>
-      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0" xsi:schemaLocation="urn:ee:eis:xml:epp:eis-1.0 eis-1.0.xsd">
-        <eis:legalDocument type="ddoc">.... base64 encoded document ....</eis:legalDocument>
-      </eis:extdata>
-    </extension>
-    <clTRID>dpbx005#10-01-29at19:21:47</clTRID>
+    <clTRID>ABC-12345</clTRID>
   </command>
 </epp>

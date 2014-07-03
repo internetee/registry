@@ -27,7 +27,7 @@ class Epp::SessionsController < ApplicationController
   ### HELPER METHODS ###
 
   def login_params
-    ph = get_params_hash('epp command login')[:login]
+    ph = params_hash['epp']['command']['login']
     { username: ph[:clID], password: ph[:pw] }
   end
 end

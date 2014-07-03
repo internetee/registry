@@ -1,6 +1,12 @@
-<?xml version="1.0" encoding="utf-8" standalone="no"?><epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd"><command><check><domain:check xmlns:domain="http://www.nic.cz/xml/epp/domain-1.4" xsi:schemaLocation="http://www.nic.cz/xml/epp/domain-1.4 domain-1.4.xsd"><domain:name>test.ee</domain:name>
-</domain:check>
-</check>
-<clTRID>imkt004#14-06-27at16:13:33</clTRID>
-</command>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <check>
+      <domain:check
+       xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
+        <domain:name>one.ee</domain:name>
+      </domain:check>
+    </check>
+    <clTRID>ABC-12345</clTRID>
+  </command>
 </epp>

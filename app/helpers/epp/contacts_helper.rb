@@ -1,6 +1,6 @@
 module Epp::ContactsHelper
   def create_contact
-    ph = get_params_hash('epp command create create')[:create]
+    ph = params_hash
 
     @contact = Contact.new(
       code: ph[:id],
