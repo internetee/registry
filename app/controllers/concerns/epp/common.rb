@@ -1,6 +1,11 @@
 module Epp::Common
   extend ActiveSupport::Concern
 
+  OBJECT_TYPES = {
+    'urn:ietf:params:xml:ns:contact-1.0' => 'contact',
+    'urn:ietf:params:xml:ns:domain-1.0' => 'domain'
+  }
+
   included do
     protect_from_forgery with: :null_session
     before_action :validate_request, only: [:proxy]
@@ -24,13 +29,17 @@ module Epp::Common
   end
 
   def validate_request
-    # xsd = Nokogiri::XML::Schema(File.read('doc/schemas/contact-1.0.xsd'))
-    # doc = Nokogiri::XML(params[:frame])
-    # @extValues = xsd.validate(doc)
-    # if @extValues.any?
-    #   @code = '2001'
-    #   @msg = 'Command syntax error'
-    #   render '/epp/error' and return
-    # end
+    type = OBJECT_TYPES[params_hash['epp']['xmlns:ns2']]
+    return unless type
+
+    xsd = Nokogiri::XML::Schema(File.read("doc/schemas/#{type}-1.0.xsd"))
+    doc = Nokogiri::XML(params[:frame])
+    @extValues = xsd.validate(doc)
+    if @extValues.any?
+      binding.pry
+      @code = '2001'
+      @msg = 'Command syntax error'
+      render '/epp/error' and return
+    end
   end
 end
