@@ -31,7 +31,7 @@ describe 'EPP Session', epp: true do
       response = epp_plain_request('domains/create.xml')
       expect(response[:result_code]).to eq('2002')
       expect(response[:msg]).to eq('You need to login first.')
-      expect(response[:clTRID]).to eq('dpbx005#10-01-29at19:21:47')
+      expect(response[:clTRID]).to eq('ABC-12345')
     end
 
     context 'with valid user' do
