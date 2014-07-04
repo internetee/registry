@@ -36,7 +36,6 @@ module Epp::Common
     doc = Nokogiri::XML(params[:frame])
     @extValues = xsd.validate(doc)
     if @extValues.any?
-      binding.pry
       @code = '2001'
       @msg = 'Command syntax error'
       render '/epp/error' and return
