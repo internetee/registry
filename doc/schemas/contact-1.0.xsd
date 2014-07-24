@@ -72,6 +72,12 @@
        </restriction>
     </simpleType>
 
+    <simpleType name="identType">
+      <restriction base="normalizedString">
+        <maxLength value="11"/>
+      </restriction>
+    </simpleType>
+
    <!--
    Child elements of the <create> command.
    -->
@@ -85,6 +91,8 @@
         <element name="fax" type="contact:e164Type"
          minOccurs="0"/>
         <element name="email" type="eppcom:minTokenType"/>
+        <element name="ident" type="contact:identType"
+          minOccurs="0"/> 
         <element name="authInfo" type="contact:authInfoType"/>
         <element name="disclose" type="contact:discloseType"
          minOccurs="0"/>
