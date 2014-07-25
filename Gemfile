@@ -37,6 +37,9 @@ gem 'nokogiri', '~> 1.6.2.1'
 # For punycode
 gem 'simpleidn', '~> 0.0.5'
 
+#for EE-id validation
+gem 'isikukood'
+
 group :assets do
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   gem 'therubyracer',  platforms: :ruby
