@@ -3,4 +3,5 @@ Fabricator(:contact) do
   phone '+372.12345678'
   email Faker::Internet.email
   ident '37605030299'  
+  code 'sh8913'
 end

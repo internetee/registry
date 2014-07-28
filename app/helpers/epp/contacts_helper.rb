@@ -22,4 +22,22 @@ module Epp::ContactsHelper
     @contact.save
     render '/epp/contacts/create'
   end
+
+  def delete_contact
+    ph = params_hash['epp']['command']['delete']['delete']
+
+    begin
+      @contact = Contact.where(code: ph[:id]).first
+      @contact.destroy
+      render '/epp/contacts/delete'
+    rescue NoMethodError => e
+      @code = '2303'
+      @msg = "Object does not exist"
+      render '/epp/error'
+    rescue
+      @code = '2400'
+      @msg = "Command failed"
+      render '/epp/error'
+    end
+  end
 end
