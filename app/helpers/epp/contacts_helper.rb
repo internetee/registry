@@ -40,4 +40,17 @@ module Epp::ContactsHelper
       render '/epp/error'
     end
   end
+
+  def check_contact
+    ph = params_hash['epp']['command']['check']['check']
+    @contacts = Contact.check_availability( ph[:id] )
+
+    if @contacts.any?
+      render '/epp/contacts/check'
+    else
+      @code = '2303'
+      @msg = "Object does not exist"
+      render 'epp/error'
+    end
+  end
 end

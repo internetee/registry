@@ -45,6 +45,16 @@ describe 'EPP Contact', epp: true do
       expect(response[:msg]).to eq('Object does not exist')
     end
 
+    it 'checks contacts' do
+      Fabricate(:contact)
+      Fabricate(:contact, id:'sh8914')
+      
+      response = epp_request('contacts/check.xml')
+      expect(response[:result_code]).to eq('1000')
+      expect(response[:msg]).to eq('Command completed successfully')
+
+    end
+
   end
 
 end

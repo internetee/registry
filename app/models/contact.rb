@@ -14,4 +14,22 @@ class Contact < ActiveRecord::Base
     code = Isikukood.new(ident)
     errors.add(:ident, 'bad format') unless code.valid?
   end
+
+  class << self
+    def check_availability(codes)
+      codes = [codes] if codes.is_a?(String)
+
+      res = []
+      codes.each do |x|
+        if Contact.find_by(code: x)
+          res << {code: x, avail: 0, reason: 'in use'} 
+        else
+          res << {code: x, avail: 1}
+        end
+      end
+
+      res
+    end
+  end
+
 end
