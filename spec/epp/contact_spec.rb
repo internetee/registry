@@ -56,6 +56,14 @@ describe 'EPP Contact', epp: true do
 
     end
 
+    #TODO replace after implementing info commad for contact
+    it 'returns error unimplemented command on info_contact' do
+      Fabricate(:contact)
+      response = epp_request('contacts/info.xml')
+      expect(response[:result_code]).to eq('2101')
+      expect(response[:msg]).to eq('Unimplemented command')
+    end
+
   end
 
 end
