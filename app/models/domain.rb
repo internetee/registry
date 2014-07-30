@@ -30,7 +30,7 @@ class Domain < ActiveRecord::Base
         end
 
         if !DomainNameValidator.validate_reservation(x)
-          res << {name: x, avail: 0, reason: 'Domain name is reserved or restricted'}
+          res << {name: x, avail: 0, reason: I18n.t('errors.messages.epp_domain_reserved')}
           next
         end
 

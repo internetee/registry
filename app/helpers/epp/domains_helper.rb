@@ -8,7 +8,11 @@ module Epp::DomainsHelper
       if domain.errors.added?(:name, :taken)
         @code = '2302'
         @msg = 'Domain name already exists'
+      elsif domain.errors.added?(:name, :epp_domain_reserved)
+        @code = '2302'
+        @msg = domain.errors[:name].first
       end
+
       render '/epp/error'
     end
   end

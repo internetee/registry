@@ -23,6 +23,14 @@ describe 'EPP Domain', epp: true do
       expect(response[:clTRID]).to eq('ABC-12345')
     end
 
+    it 'does not create reserved domain' do
+      Fabricate(:reserved_domain)
+      response = epp_request('domains/create_reserved.xml')
+      expect(response[:result_code]).to eq('2302')
+      expect(response[:msg]).to eq('Domain name is reserved or restricted')
+      expect(response[:clTRID]).to eq('ABC-12345')
+    end
+
     it 'checks a domain' do
       response = epp_request('domains/check.xml')
       expect(response[:result_code]).to eq('1000')

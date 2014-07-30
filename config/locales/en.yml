@@ -20,4 +20,7 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  errors:
+    messages:
+      epp_domain_reserved: 'Domain name is reserved or restricted'
   hello: "Hello world"
