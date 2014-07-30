@@ -25,6 +25,7 @@ module Epp::DomainsHelper
       name: ph[:name],
       registrar_id: current_epp_user.registrar.try(:id),
       registered_at: Time.now,
+      period: ph[:period].to_i,
       valid_from: Date.today,
       valid_to: Date.today + ph[:period].to_i.years,
       auth_info: ph[:authInfo][:pw]

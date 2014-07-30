@@ -10,6 +10,7 @@ class Domain < ActiveRecord::Base
 
   validates :name, domain_name: true, uniqueness: { message: I18n.t('errors.messages.epp_domain_taken') }
   validates :name_puny, domain_name: true
+  validates :period, numericality: { only_integer: true, greater_than: 0, less_than: 100 }
 
   def name=(value)
     value.strip!

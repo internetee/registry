@@ -40,4 +40,10 @@ describe Domain do
     Fabricate(:reserved_domain)
     expect(Fabricate.build(:domain, name: '1162.ee').valid?).to be false
   end
+
+  it 'validates period' do
+    expect(Fabricate.build(:domain, period: 0).valid?).to be false
+    expect(Fabricate.build(:domain, period: 120).valid?).to be false
+    expect(Fabricate.build(:domain, period: 99).valid?).to be true
+  end
 end

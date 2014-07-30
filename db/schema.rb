@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140730082532) do
+ActiveRecord::Schema.define(version: 20140730104916) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(version: 20140730082532) do
     t.datetime "updated_at"
     t.string   "name_dirty"
     t.string   "name_puny"
+    t.integer  "period"
   end
 
   create_table "epp_sessions", force: true do |t|
