@@ -72,9 +72,20 @@
        </restriction>
     </simpleType>
 
-    <simpleType name="identType">
-      <restriction base="normalizedString">
-        <maxLength value="11"/>
+   <complexType name="identType">
+      <simpleContent>
+        <extension base="eppcom:clIDType">
+          <attribute name="type" type="contact:identAttrType"/>
+        </extension>
+      </simpleContent>
+    </complexType>
+
+    <simpleType name="identAttrType">
+      <restriction base="token">
+        <enumeration value="ico"/>
+        <enumeration value="op"/>
+        <enumeration value="passport"/>
+        <enumeration value="birthday"/>
       </restriction>
     </simpleType>
 

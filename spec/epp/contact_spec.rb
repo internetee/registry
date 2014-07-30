@@ -24,6 +24,7 @@ describe 'EPP Contact', epp: true do
       expect(response[:clTRID]).to eq('ABC-12345')
 
       expect(Contact.first.name).to eq("John Doe")
+      expect(Contact.first.ident_type).to eq("op")
 
       expect(Contact.count).to eq(1)
     end
