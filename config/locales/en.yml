@@ -20,6 +20,22 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  activerecord:
+    errors:
+      models:
+        contact:
+          attributes:
+            code:
+              blank: "Required parameter missing - code"
+            name:
+              blank: "Required parameter missing - name"
+            phone:
+              blank: "Required parameter missing - phone"
+            email:
+              blank: "Required parameter missing - email"
+            ident:
+              blank: "Required parameter missing - ident"
+
   errors:
     messages:
       epp_domain_reserved: 'Domain name is reserved or restricted'
