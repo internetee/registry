@@ -4,6 +4,8 @@ class Contact < ActiveRecord::Base
   
   has_many :addresses
 
+  validates_presence_of :code, :name, :phone, :email, :ident
+
   validate :ident_must_be_valid 
   validates :phone, format: { with: /\+\d{3}\.\d+/, message: "bad format" }
 

@@ -15,6 +15,19 @@ describe Contact do
       @contact.ident = "123abc"
       expect(@contact.valid?).to be false
     end
+
+    it 'should return missing parameter error messages' do
+      @contact = Contact.new
+      expect(@contact.valid?).to eq false
+
+      expect(@contact.errors.messages).to match_array({
+         :code=>["Required parameter missing - code"],
+         :name=>["Required parameter missing - name"],
+         :phone=>["Required parameter missing - phone", "bad format"],
+         :email=>["Required parameter missing - email"],
+         :ident=>["Required parameter missing - ident"]
+      })
+    end
   end
 
   context 'with valid attributes' do
