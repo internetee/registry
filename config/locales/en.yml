@@ -23,4 +23,5 @@ en:
   errors:
     messages:
       epp_domain_reserved: 'Domain name is reserved or restricted'
+      epp_domain_taken: 'Domain name already exists'
   hello: "Hello world"

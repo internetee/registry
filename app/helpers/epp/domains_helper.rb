@@ -1,18 +1,11 @@
 module Epp::DomainsHelper
   def create_domain
-    domain = Domain.new(domain_create_params)
+    @domain = Domain.new(domain_create_params)
 
-    if domain.save
+    if @domain.save
       render '/epp/domains/create'
     else
-      if domain.errors.added?(:name, :taken)
-        @code = '2302'
-        @msg = 'Domain name already exists'
-      elsif domain.errors.added?(:name, :epp_domain_reserved)
-        @code = '2302'
-        @msg = domain.errors[:name].first
-      end
-
+      handle_domain_name_errors
       render '/epp/error'
     end
   end
@@ -37,4 +30,14 @@ module Epp::DomainsHelper
       auth_info: ph[:authInfo][:pw]
     }
   end
+
+  def handle_domain_name_errors
+    [:epp_domain_taken, :epp_domain_reserved].each do |x|
+      if @domain.errors.added?(:name, x)
+        @code = '2302'
+        @msg = @domain.errors[:name].first
+      end
+    end
+  end
+
 end
