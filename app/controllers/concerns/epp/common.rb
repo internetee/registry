@@ -12,6 +12,7 @@ module Epp::Common
   end
 
   def proxy
+    @errors = []
     @svTRID = "ccReg-#{'%010d' % rand(10 ** 10)}"
     send(params[:command])
   end
@@ -34,10 +35,10 @@ module Epp::Common
 
     xsd = Nokogiri::XML::Schema(File.read("doc/schemas/#{type}-1.0.xsd"))
     doc = Nokogiri::XML(params[:frame])
-    @extValues = xsd.validate(doc)
-    if @extValues.any?
-      @code = '2001'
-      @msg = 'Command syntax error'
+    ext_values = xsd.validate(doc)
+    @errors = []
+    if ext_values.any?
+      @errors << {code: '2001', msg: 'Command syntax error', ext_values: ext_values}
       render '/epp/error' and return
     end
   end

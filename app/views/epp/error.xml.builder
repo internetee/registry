@@ -1,19 +1,22 @@
 xml.epp_head do
   xml.response do
-    xml.result('code' => @code) do
-      xml.msg(@msg, 'lang' => 'en')
-    end
-  end
+    @errors.each do |x|
+      xml.result('code' => x[:code]) do
+        xml.msg(x[:msg], 'lang' => 'en')
 
-  @extValues.each do |x|
-    xml.extValue do
-      xml.value do
-        # xml.tag!()
-        xml.reason x.to_s
+        x[:ext_values].each do |y|
+          xml.extValue do
+            xml.value do
+              # xml.tag!()
+              xml.reason y.to_s
+            end
+          end
+        end if x[:ext_values]
+
       end
     end
 
-  end if @extValues && @extValues.any?
+  end
 
   xml << render('/epp/shared/trID')
 end

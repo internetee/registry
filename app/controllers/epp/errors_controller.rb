@@ -2,7 +2,8 @@ class Epp::ErrorsController < ApplicationController
   include Epp::Common
 
   def error
-    @code, @msg = params[:code], params[:msg]
+    @errors = []
+    @errors << {code: params[:code], msg: params[:msg]}
     render '/epp/error'
   end
 end

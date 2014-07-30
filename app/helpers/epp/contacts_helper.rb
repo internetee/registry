@@ -2,7 +2,7 @@ module Epp::ContactsHelper
   def create_contact
     ph = params_hash['epp']['command']['create']['create']
 
-    ph[:ident] ? @contact = Contact.where(ident: ph[:ident]).first_or_initialize : @contact = Contact.new  
+    ph[:ident] ? @contact = Contact.where(ident: ph[:ident]).first_or_initialize : @contact = Contact.new
     if @contact.new_record?
       @contact.assign_attributes(
         code: ph[:id],
@@ -10,7 +10,7 @@ module Epp::ContactsHelper
         ident: ph[:ident],
         email: ph[:email]
       )
-    end   
+    end
     @contact.name = ph[:postalInfo][:name]
     @contact.ident_type = ident_type
 
@@ -32,12 +32,10 @@ module Epp::ContactsHelper
       @contact.destroy
       render '/epp/contacts/delete'
     rescue NoMethodError => e
-      @code = '2303'
-      @msg = "Object does not exist"
+      @errors << {code: '2303', msg: "Object does not exist"}
       render '/epp/error'
     rescue
-      @code = '2400'
-      @msg = "Command failed"
+      @errors << {code: '2400', msg: "Command failed"}
       render '/epp/error'
     end
   end
@@ -49,8 +47,7 @@ module Epp::ContactsHelper
     if @contacts.any?
       render '/epp/contacts/check'
     else
-      @code = '2303'
-      @msg = "Object does not exist"
+      @errors << {code: '2303', msg: "Object does not exist"}
       render 'epp/error'
     end
   end
@@ -59,9 +56,9 @@ module Epp::ContactsHelper
 
   def ident_type
     result = params[:frame].slice(/(?<=\<ns2:ident type=)(.*)(?=<)/)
-    
+
     return nil unless result
-    
+
     Contact::IDENT_TYPES.any? { |type| return type if result.include?(type) }
     return nil
   end

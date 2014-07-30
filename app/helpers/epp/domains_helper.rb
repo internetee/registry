@@ -35,8 +35,7 @@ module Epp::DomainsHelper
   def handle_domain_name_errors
     [:epp_domain_taken, :epp_domain_reserved].each do |x|
       if @domain.errors.added?(:name, x)
-        @code = '2302'
-        @msg = @domain.errors[:name].first
+        @errors << {code: '2302', msg: @domain.errors[:name].first}
       end
     end
   end
