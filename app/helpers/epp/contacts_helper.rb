@@ -52,6 +52,11 @@ module Epp::ContactsHelper
     end
   end
 
+  def info_contact
+    epp_errors << { code: '2101', msg: 'Unimplemented command' }
+    render 'epp/error'
+  end
+
   private
 
   def ident_type

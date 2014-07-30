@@ -15,4 +15,8 @@ class Epp::CommandsController < ApplicationController
   def delete
     send("delete_#{OBJECT_TYPES[params_hash['epp']['xmlns:ns2']]}")
   end
+
+  def info
+    send("info_#{OBJECT_TYPES[params_hash['epp']['xmlns:ns2']]}")
+  end
 end
