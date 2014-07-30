@@ -1,7 +1,16 @@
 module Epp::DomainsHelper
   def create_domain
-    domain = Domain.create!(domain_create_params)
-    render '/epp/domains/create'
+    domain = Domain.new(domain_create_params)
+
+    if domain.save
+      render '/epp/domains/create'
+    else
+      if domain.errors.added?(:name_dirty, :taken)
+        @code = '2302'
+        @msg = 'Domain name already exists'
+      end
+      render '/epp/error'
+    end
   end
 
   def check_domain
