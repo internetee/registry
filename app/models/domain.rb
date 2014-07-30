@@ -21,6 +21,12 @@ class Domain < ActiveRecord::Base
     write_attribute(:name_dirty, value)
   end
 
+  def create_contacts(contacts)
+    contacts[:tech].each do |x|
+
+    end
+  end
+
   class << self
     def check_availability(domains)
       domains = [domains] if domains.is_a?(String)
