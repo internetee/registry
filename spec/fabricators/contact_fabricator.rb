@@ -4,4 +4,5 @@ Fabricator(:contact) do
   email Faker::Internet.email
   ident '37605030299'  
   code 'sh8913'
+  ident_type 'op'
 end

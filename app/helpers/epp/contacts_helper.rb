@@ -12,6 +12,7 @@ module Epp::ContactsHelper
       )
     end   
     @contact.name = ph[:postalInfo][:name]
+    @contact.ident_type = ident_type
 
     @contact.addresses << Address.new(
       country_id: Country.find_by(iso: ph[:postalInfo][:cc]),
@@ -53,4 +54,16 @@ module Epp::ContactsHelper
       render 'epp/error'
     end
   end
+
+  private
+
+  def ident_type
+    result = params[:frame].slice(/(?<=\<ns2:ident type=)(.*)(?=<)/)
+    
+    return nil unless result
+    
+    Contact::IDENT_TYPES.any? { |type| return type if result.include?(type) }
+    return nil
+  end
+
 end
