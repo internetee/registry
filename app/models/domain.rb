@@ -9,8 +9,8 @@ class Domain < ActiveRecord::Base
   belongs_to :admin_contact, class_name: 'Contact'
 
   validates :name, domain_name: true
-  validates :name_dirty, uniqueness: true
   validates :name_puny, domain_name: true
+  validates :name_dirty, uniqueness: true
 
   def name=(value)
     value.strip!
