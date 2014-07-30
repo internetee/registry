@@ -5,8 +5,17 @@ class Domain < ActiveRecord::Base
   belongs_to :registrar
   belongs_to :ns_set
   belongs_to :owner_contact, class_name: 'Contact'
-  belongs_to :technical_contact, class_name: 'Contact'
-  belongs_to :admin_contact, class_name: 'Contact'
+
+  has_many :domain_contacts
+
+  has_many :tech_contacts, -> {
+    where(domain_contacts: {contact_type: Contact::CONTACT_TYPE_TECH})
+  }, through: :domain_contacts, source: :contact
+
+  has_many :admin_contacts, -> {
+    where(domain_contacts: {contact_type: Contact::CONTACT_TYPE_ADMIN})
+  }, through: :domain_contacts, source: :contact
+
 
   validates_presence_of :name
 
@@ -21,9 +30,19 @@ class Domain < ActiveRecord::Base
     write_attribute(:name_dirty, value)
   end
 
-  def create_contacts(contacts)
+  def attach_contacts(contacts)
     contacts[:tech].each do |x|
+      domain_contacts.create(
+        contact: Contact.find_by(code: x[:contact]),
+        contact_type: Contact::CONTACT_TYPE_TECH
+      )
+    end
 
+    contacts[:admin].each do |x|
+      domain_contacts.create(
+        contact: Contact.find_by(code: x[:contact]),
+        contact_type: Contact::CONTACT_TYPE_ADMIN
+      )
     end
   end
 

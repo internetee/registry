@@ -1,13 +1,14 @@
 module Epp::DomainsHelper
   def create_domain
     @domain = Domain.new(domain_create_params)
-    @domain.create_contacts(domain_contacts)
 
-    if @domain.save
-      render '/epp/domains/create'
-    else
-      handle_domain_name_errors
-      render '/epp/error'
+    Domain.transaction do
+      if @domain.save && @domain.attach_contacts(domain_contacts)
+        render '/epp/domains/create'
+      else
+        handle_domain_name_errors
+        render '/epp/error'
+      end
     end
   end
 
@@ -37,11 +38,11 @@ module Epp::DomainsHelper
 
     res = {tech: [], admin: []}
     parsed_frame.css('contact[type="tech"]').each do |x|
-      res[:tech] << Hash.from_xml(x.to_s)
+      res[:tech] << Hash.from_xml(x.to_s).with_indifferent_access
     end
 
     parsed_frame.css('contact[type="admin"]').each do |x|
-      res[:admin] << Hash.from_xml(x.to_s)
+      res[:admin] << Hash.from_xml(x.to_s).with_indifferent_access
     end
 
     res

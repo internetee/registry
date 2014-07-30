@@ -1,23 +1,29 @@
 class Contact < ActiveRecord::Base
   #TODO Foreign contact will get email with activation link/username/temp password
   #TODO Phone number validation, in first phase very minimam in order to support current registries
-  
+
   has_many :addresses
+  has_many :domain_contacts
+  has_many :domains, through: :domain_contacts
 
   validates_presence_of :code, :name, :phone, :email, :ident
 
-  validate :ident_must_be_valid 
+  validate :ident_must_be_valid
   validates :phone, format: { with: /\+\d{3}\.\d+/, message: "bad format" }
 
   IDENT_TYPES = [
     "ico",          #Company registry code (or similar)
-    "op",           #Estonian ID 
+    "op",           #Estonian ID
     "passport",     #Passport number
     "birthday"      #Birthday date
   ]
-  
+
+  CONTACT_TYPE_TECH = 'tech'
+  CONTACT_TYPE_ADMIN = 'admin'
+  CONTACT_TYPES = [CONTACT_TYPE_TECH, CONTACT_TYPE_ADMIN]
+
   def ident_must_be_valid
-    #TODO Ident can also be passport number or company registry code. 
+    #TODO Ident can also be passport number or company registry code.
     #so have to make changes to validations (and doc/schema) accordingly
     return true unless ident.present? && ident_type.present? && ident_type == "op"
     code = Isikukood.new(ident)
@@ -31,7 +37,7 @@ class Contact < ActiveRecord::Base
       res = []
       codes.each do |x|
         if Contact.find_by(code: x)
-          res << {code: x, avail: 0, reason: 'in use'} 
+          res << {code: x, avail: 0, reason: 'in use'}
         else
           res << {code: x, avail: 1}
         end

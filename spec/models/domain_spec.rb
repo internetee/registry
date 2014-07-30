@@ -3,9 +3,9 @@ require "rails_helper"
 describe Domain do
   it { should belong_to(:registrar) }
   it { should belong_to(:ns_set) }
-  it { should belong_to(:admin_contact) }
   it { should belong_to(:owner_contact) }
-  it { should belong_to(:technical_contact) }
+  it { should have_many(:tech_contacts) }
+  it { should have_many(:admin_contacts) }
 
   it 'validates domain name' do
     d = Fabricate(:domain)

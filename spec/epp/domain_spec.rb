@@ -31,6 +31,19 @@ describe 'EPP Domain', epp: true do
       expect(response[:clTRID]).to eq('ABC-12345')
     end
 
+    it 'creates a domain with contacts' do
+      Fabricate(:contact, code: 'sh8013')
+      Fabricate(:contact, code: 'sh801333')
+
+      response = epp_request('domains/create.xml')
+      expect(response[:result_code]).to eq('1000')
+      expect(response[:msg]).to eq('Command completed successfully')
+      expect(response[:clTRID]).to eq('ABC-12345')
+
+      expect(Domain.first.tech_contacts.count).to eq 2
+      expect(Domain.first.admin_contacts.count).to eq 1
+    end
+
     it 'checks a domain' do
       response = epp_request('domains/check.xml')
       expect(response[:result_code]).to eq('1000')
