@@ -7,13 +7,15 @@ class DomainNameValidator < ActiveModel::EachValidator
   # lower level domains are fixed for .ee and can add statically into settings
 
   def validate_each(record, attribute, value)
-    unless self.class.validate(value)
+    if !self.class.validate_format(value)
       record.errors[attribute] << (options[:message] || 'invalid format')
+    elsif !self.class.validate_reservation(value)
+      record.errors[attribute] << (options[:message] || 'Domain name is reserved or restricted')
     end
   end
 
   class << self
-    def validate(value)
+    def validate_format(value)
       value = value.mb_chars.downcase.strip
 
       general_domains = /(.pri.ee|.com.ee|.fie.ee|.med.ee|.ee)/
@@ -31,5 +33,8 @@ class DomainNameValidator < ActiveModel::EachValidator
       !!(value =~ regexp)
     end
 
+      def validate_reservation(value)
+      !ReservedDomain.exists?(name: value.mb_chars.downcase.strip)
+    end
   end
 end

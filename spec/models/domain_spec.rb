@@ -35,4 +35,9 @@ describe Domain do
       expect(Fabricate.build(:domain, name: x).valid?).to be true
     end
   end
+
+  it 'does not create a reserved domain' do
+    Fabricate(:reserved_domain)
+    expect(Fabricate.build(:domain, name: '1162.ee').valid?).to be false
+  end
 end

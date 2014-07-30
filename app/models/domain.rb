@@ -8,9 +8,8 @@ class Domain < ActiveRecord::Base
   belongs_to :technical_contact, class_name: 'Contact'
   belongs_to :admin_contact, class_name: 'Contact'
 
-  validates :name, domain_name: true
+  validates :name, domain_name: true, uniqueness: true
   validates :name_puny, domain_name: true
-  validates :name_dirty, uniqueness: true
 
   def name=(value)
     value.strip!
@@ -25,8 +24,13 @@ class Domain < ActiveRecord::Base
 
       res = []
       domains.each do |x|
-        if !DomainNameValidator.validate(x)
+        if !DomainNameValidator.validate_format(x)
           res << {name: x, avail: 0, reason: 'invalid format'}
+          next
+        end
+
+        if !DomainNameValidator.validate_reservation(x)
+          res << {name: x, avail: 0, reason: 'Domain name is reserved or restricted'}
           next
         end
 

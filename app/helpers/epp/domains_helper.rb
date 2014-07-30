@@ -5,7 +5,7 @@ module Epp::DomainsHelper
     if domain.save
       render '/epp/domains/create'
     else
-      if domain.errors.added?(:name_dirty, :taken)
+      if domain.errors.added?(:name, :taken)
         @code = '2302'
         @msg = 'Domain name already exists'
       end
