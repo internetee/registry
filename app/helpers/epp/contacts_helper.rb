@@ -32,10 +32,10 @@ module Epp::ContactsHelper
       @contact.destroy
       render '/epp/contacts/delete'
     rescue NoMethodError => e
-      @errors << {code: '2303', msg: "Object does not exist"}
+      epp_errors << {code: '2303', msg: "Object does not exist"}
       render '/epp/error'
     rescue
-      @errors << {code: '2400', msg: "Command failed"}
+      epp_errors << {code: '2400', msg: "Command failed"}
       render '/epp/error'
     end
   end
@@ -47,7 +47,7 @@ module Epp::ContactsHelper
     if @contacts.any?
       render '/epp/contacts/check'
     else
-      @errors << {code: '2303', msg: "Object does not exist"}
+      epp_errors << {code: '2303', msg: "Object does not exist"}
       render 'epp/error'
     end
   end
