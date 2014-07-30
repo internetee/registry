@@ -7,7 +7,7 @@ describe Domain do
   it { should belong_to(:owner_contact) }
   it { should belong_to(:technical_contact) }
 
-  it 'creates a resource' do
+  it 'validates domain name' do
     d = Fabricate(:domain)
     expect(d.name).to_not be_nil
 
@@ -34,6 +34,14 @@ describe Domain do
     valid_punycode.each do |x|
       expect(Fabricate.build(:domain, name: x).valid?).to be true
     end
+
+    d = Domain.new
+    expect(d.valid?).to be false
+
+    expect(d.errors.messages).to match_array({
+      name: ['Required parameter missing - name'],
+      period: ['is not a number']
+    })
   end
 
   it 'does not create a reserved domain' do
@@ -46,4 +54,5 @@ describe Domain do
     expect(Fabricate.build(:domain, period: 120).valid?).to be false
     expect(Fabricate.build(:domain, period: 99).valid?).to be true
   end
+
 end

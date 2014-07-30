@@ -31,10 +31,6 @@ describe 'EPP Domain', epp: true do
       expect(response[:clTRID]).to eq('ABC-12345')
     end
 
-    it 'does not create a domain with false period' do
-
-    end
-
     it 'checks a domain' do
       response = epp_request('domains/check.xml')
       expect(response[:result_code]).to eq('1000')

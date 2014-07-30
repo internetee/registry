@@ -16,6 +16,7 @@ class DomainNameValidator < ActiveModel::EachValidator
 
   class << self
     def validate_format(value)
+      return true unless value
       value = value.mb_chars.downcase.strip
 
       general_domains = /(.pri.ee|.com.ee|.fie.ee|.med.ee|.ee)/
@@ -33,7 +34,8 @@ class DomainNameValidator < ActiveModel::EachValidator
       !!(value =~ regexp)
     end
 
-      def validate_reservation(value)
+    def validate_reservation(value)
+      return true unless value
       !ReservedDomain.exists?(name: value.mb_chars.downcase.strip)
     end
   end
