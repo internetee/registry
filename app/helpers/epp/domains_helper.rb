@@ -29,7 +29,8 @@ module Epp::DomainsHelper
       period: ph[:period].to_i,
       valid_from: Date.today,
       valid_to: Date.today + ph[:period].to_i.years,
-      auth_info: ph[:authInfo][:pw]
+      auth_info: ph[:authInfo][:pw],
+      owner_contact_id: Contact.find_by(code: ph[:registrant]).try(:id)
     }
   end
 

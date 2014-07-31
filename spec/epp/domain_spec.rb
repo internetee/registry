@@ -32,6 +32,7 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'creates a domain with contacts' do
+      Fabricate(:contact, code: 'jd1234')
       Fabricate(:contact, code: 'sh8013')
       Fabricate(:contact, code: 'sh801333')
 
@@ -42,6 +43,7 @@ describe 'EPP Domain', epp: true do
 
       expect(Domain.first.tech_contacts.count).to eq 2
       expect(Domain.first.admin_contacts.count).to eq 1
+      expect(Domain.first.owner_contact).to_not be nil
     end
 
     it 'checks a domain' do
