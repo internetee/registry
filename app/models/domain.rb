@@ -31,18 +31,13 @@ class Domain < ActiveRecord::Base
   end
 
   def attach_contacts(contacts)
-    contacts[:tech].each do |x|
-      domain_contacts.create(
-        contact: Contact.find_by(code: x[:contact]),
-        contact_type: Contact::CONTACT_TYPE_TECH
-      )
-    end
-
-    contacts[:admin].each do |x|
-      domain_contacts.create(
-        contact: Contact.find_by(code: x[:contact]),
-        contact_type: Contact::CONTACT_TYPE_ADMIN
-      )
+    contacts.each do |k, v|
+      v.each do |x|
+        domain_contacts.create(
+          contact: Contact.find_by(code: x[:contact]),
+          contact_type: k
+        )
+      end
     end
   end
 

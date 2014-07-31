@@ -36,13 +36,12 @@ module Epp::DomainsHelper
   def domain_contacts
     parsed_frame = Nokogiri::XML(params[:frame]).remove_namespaces!
 
-    res = {tech: [], admin: []}
-    parsed_frame.css('contact[type="tech"]').each do |x|
-      res[:tech] << Hash.from_xml(x.to_s).with_indifferent_access
-    end
-
-    parsed_frame.css('contact[type="admin"]').each do |x|
-      res[:admin] << Hash.from_xml(x.to_s).with_indifferent_access
+    res = {}
+    Contact::CONTACT_TYPES.each do |ct|
+      res[ct.to_sym] ||= []
+      parsed_frame.css("contact[type='#{ct}']").each do |x|
+        res[ct.to_sym] << Hash.from_xml(x.to_s).with_indifferent_access
+      end
     end
 
     res
