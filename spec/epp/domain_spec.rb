@@ -39,8 +39,7 @@ describe 'EPP Domain', epp: true do
         expect(response[:clTRID]).to eq('ABC-12345')
       end
 
-      it 'creates a domain with contacts' do
-        Fabricate(:contact, code: 'jd1234')
+      it 'creates a domain with other contacts' do
         Fabricate(:contact, code: 'sh8013')
         Fabricate(:contact, code: 'sh801333')
 
@@ -57,9 +56,9 @@ describe 'EPP Domain', epp: true do
 
     context 'with juridical persion as an owner' do
       before(:each) {
+        Fabricate(:contact, code: 'jd1234', ident_type: 'ico')
         Fabricate(:contact, code: 'sh8013')
         Fabricate(:contact, code: 'sh801333')
-        Fabricate(:contact, code: 'jd1234', ident_type: 'ico')
       }
 
       it 'creates a domain with contacts' do
