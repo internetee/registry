@@ -7,7 +7,9 @@ module Epp::DomainsHelper
         render '/epp/domains/create'
       else
         handle_domain_name_errors
+        handle_contact_errors
         render '/epp/error'
+        raise ActiveRecord::Rollback
       end
     end
   end
@@ -53,6 +55,12 @@ module Epp::DomainsHelper
       if @domain.errors.added?(:name, x)
         epp_errors << {code: '2302', msg: @domain.errors[:name].first}
       end
+    end
+  end
+
+  def handle_contact_errors
+    if @domain.errors.added?(:admin_contacts, :blank)
+      epp_errors << {code: '2306', msg: @domain.errors[:admin_contacts].first}
     end
   end
 

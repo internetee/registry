@@ -41,6 +41,8 @@ en:
               blank: 'Required parameter missing - name'
             owner_contact:
               blank: 'Required parameter missing - owner contact'
+            admin_contacts:
+              blank: 'Required parameter missing - admin contact'
 
 
   errors:

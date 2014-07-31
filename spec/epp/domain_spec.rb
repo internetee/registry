@@ -56,12 +56,13 @@ describe 'EPP Domain', epp: true do
     end
 
     context 'with juridical persion as an owner' do
-      before(:each) { Fabricate(:contact, code: 'jd1234', ident_type: 'ico')}
-
-      it 'creates a domain with contacts' do
+      before(:each) {
         Fabricate(:contact, code: 'sh8013')
         Fabricate(:contact, code: 'sh801333')
+        Fabricate(:contact, code: 'jd1234', ident_type: 'ico')
+      }
 
+      it 'creates a domain with contacts' do
         response = epp_request('domains/create_wo_tech_contact.xml')
         expect(response[:result_code]).to eq('1000')
         expect(response[:msg]).to eq('Command completed successfully')
@@ -72,6 +73,16 @@ describe 'EPP Domain', epp: true do
 
         tech_contact = Domain.first.tech_contacts.first
         expect(tech_contact.code).to eq('jd1234')
+      end
+
+      it 'does not create a domain without admin contact' do
+        response = epp_request('domains/create_wo_contacts.xml')
+        expect(response[:result_code]).to eq('2306')
+        expect(response[:msg]).to eq('Required parameter missing - admin contact')
+        expect(response[:clTRID]).to eq('ABC-12345')
+
+        expect(Domain.count).to eq 0
+        expect(DomainContact.count).to eq 0
       end
     end
 

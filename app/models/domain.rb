@@ -24,7 +24,7 @@ class Domain < ActiveRecord::Base
   validates :period, numericality: { only_integer: true, greater_than: 0, less_than: 100 }
   validates :owner_contact, presence: true
   # validates :tech_contacts_count
-  # validates :admin_contacts_count
+  #validate :admin_contacts_count, on: :update
 
   def name=(value)
     value.strip!
@@ -46,7 +46,9 @@ class Domain < ActiveRecord::Base
       attach_contact(Contact::CONTACT_TYPE_ADMIN, owner_contact) if admin_contacts.empty?
     end
 
-    true
+    validate_admin_contacts_count
+
+    errors.empty?
   end
 
   def attach_contact(type, contact)
@@ -54,6 +56,10 @@ class Domain < ActiveRecord::Base
       contact: contact,
       contact_type: type
     )
+  end
+
+  def validate_admin_contacts_count
+    errors.add(:admin_contacts, :blank) if admin_contacts.empty?
   end
 
   class << self
