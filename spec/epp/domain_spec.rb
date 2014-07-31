@@ -14,7 +14,13 @@ describe 'EPP Domain', epp: true do
         expect(response[:result_code]).to eq('1000')
         expect(response[:msg]).to eq('Command completed successfully')
         expect(response[:clTRID]).to eq('ABC-12345')
+
         expect(Domain.first.registrar.name).to eq('Zone Media OÜ')
+        expect(Domain.first.tech_contacts.count).to eq 1
+        expect(Domain.first.admin_contacts.count).to eq 1
+
+        tech_contact = Domain.first.tech_contacts.first
+        expect(tech_contact.code).to eq('jd1234')
       end
 
       it 'does not create duplicate domain' do

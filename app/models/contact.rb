@@ -11,8 +11,9 @@ class Contact < ActiveRecord::Base
   validate :ident_must_be_valid
   validates :phone, format: { with: /\+\d{3}\.\d+/, message: "bad format" }
 
+  IDENT_TYPE_ICO = 'ico'
   IDENT_TYPES = [
-    "ico",          #Company registry code (or similar)
+    IDENT_TYPE_ICO, #Company registry code (or similar)
     "op",           #Estonian ID
     "passport",     #Passport number
     "birthday"      #Birthday date
@@ -28,6 +29,14 @@ class Contact < ActiveRecord::Base
     return true unless ident.present? && ident_type.present? && ident_type == "op"
     code = Isikukood.new(ident)
     errors.add(:ident, 'bad format') unless code.valid?
+  end
+
+  def juridical?
+    ident == IDENT_TYPE_ICO
+  end
+
+  def citizen?
+    ident != IDENT_TYPE_ICO
   end
 
   class << self

@@ -36,12 +36,23 @@ class Domain < ActiveRecord::Base
   def attach_contacts(contacts)
     contacts.each do |k, v|
       v.each do |x|
-        domain_contacts.create(
-          contact: Contact.find_by(code: x[:contact]),
-          contact_type: k
-        )
+        attach_contact(k, Contact.find_by(code: x[:contact]))
       end
     end
+
+    if owner_contact.citizen?
+      attach_contact(Contact::CONTACT_TYPE_TECH, owner_contact) if tech_contacts.empty?
+      attach_contact(Contact::CONTACT_TYPE_ADMIN, owner_contact) if admin_contacts.empty?
+    end
+
+    true
+  end
+
+  def attach_contact(type, contact)
+    domain_contacts.create(
+      contact: contact,
+      contact_type: type
+    )
   end
 
   class << self
