@@ -14,6 +14,7 @@ describe 'EPP Contact', epp: true do
       expect(response[:clTRID]).to eq('ABC-12345')
 
       expect(Contact.count).to eq(1)
+      expect(Contact.first.org_name).to eq('Example Inc.')
     end
 
     it 'updates a contact with same ident' do
@@ -56,14 +57,23 @@ describe 'EPP Contact', epp: true do
 
     end
 
-    #TODO replace after implementing info commad for contact
-    it 'returns error unimplemented command on info_contact' do
-      Fabricate(:contact)
+    it 'returns error when object does not exist' do
       response = epp_request('contacts/info.xml')
-      expect(response[:result_code]).to eq('2101')
-      expect(response[:msg]).to eq('Unimplemented command')
+      expect(response[:result_code]).to eq('2303')
+      expect(response[:msg]).to eq('Object does not exist')
     end
 
-  end
+    it 'returns info about contact' do
+      contact = Fabricate(:contact, :name => "Johnny Awesome")
+      Fabricate(:address)
 
+      response = epp_request('contacts/info.xml')
+      contact_res = response[:parsed].css('resData chkData')
+
+      expect(response[:result_code]).to eq('1000')
+      expect(response[:msg]).to eq('Command completed successfully')
+      expect(contact_res.css('name').first.text).to eq('Johnny Awesome')
+
+    end
+  end
 end
