@@ -3,7 +3,6 @@ class Domain < ActiveRecord::Base
   #TODO most inputs should be trimmed before validatation, probably some global logic?
 
   belongs_to :registrar
-  belongs_to :ns_set
   belongs_to :owner_contact, class_name: 'Contact'
 
   has_many :domain_contacts
@@ -16,6 +15,7 @@ class Domain < ActiveRecord::Base
     where(domain_contacts: {contact_type: Contact::CONTACT_TYPE_ADMIN})
   }, through: :domain_contacts, source: :contact
 
+  has_and_belongs_to_many :nameservers
 
   validates_presence_of :name
 

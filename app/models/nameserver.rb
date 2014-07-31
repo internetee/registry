@@ -1,3 +1,4 @@
 class Nameserver < ActiveRecord::Base
-  has_and_belongs_to_many :ns_sets
+  belongs_to :registrar
+  has_and_belongs_to_many :domains
 end

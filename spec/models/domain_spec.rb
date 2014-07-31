@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe Domain do
   it { should belong_to(:registrar) }
-  it { should belong_to(:ns_set) }
+  it { should have_and_belong_to_many(:nameservers)}
   it { should belong_to(:owner_contact) }
   it { should have_many(:tech_contacts) }
   it { should have_many(:admin_contacts) }

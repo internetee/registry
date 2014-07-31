@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140730141443) do
+ActiveRecord::Schema.define(version: 20140731081816) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,6 +72,11 @@ ActiveRecord::Schema.define(version: 20140730141443) do
     t.string   "name_dirty"
     t.string   "name_puny"
     t.integer  "period"
+  end
+
+  create_table "domains_nameservers", force: true do |t|
+    t.integer "domain_id"
+    t.integer "nameserver_id"
   end
 
   create_table "epp_sessions", force: true do |t|
