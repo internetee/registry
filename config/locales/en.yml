@@ -39,6 +39,9 @@ en:
           attributes:
             name:
               blank: 'Required parameter missing - name'
+            owner_contact:
+              blank: 'Required parameter missing - owner contact'
+
 
   errors:
     messages:

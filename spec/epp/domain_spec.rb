@@ -6,44 +6,47 @@ describe 'EPP Domain', epp: true do
   context 'with valid user' do
     before(:each) { Fabricate(:epp_user) }
 
-    # incomplete
-    it 'creates a domain' do
-      response = epp_request('domains/create.xml')
-      expect(response[:result_code]).to eq('1000')
-      expect(response[:msg]).to eq('Command completed successfully')
-      expect(response[:clTRID]).to eq('ABC-12345')
-      expect(Domain.first.registrar.name).to eq('Zone Media OÜ')
-    end
+    context 'with citizen as an owner' do
+      before(:each) { Fabricate(:contact, code: 'jd1234') }
 
-    it 'does not create duplicate domain' do
-      epp_request('domains/create.xml')
-      response = epp_request('domains/create.xml')
-      expect(response[:result_code]).to eq('2302')
-      expect(response[:msg]).to eq('Domain name already exists')
-      expect(response[:clTRID]).to eq('ABC-12345')
-    end
+      it 'creates a domain' do
+        response = epp_request('domains/create.xml')
+        expect(response[:result_code]).to eq('1000')
+        expect(response[:msg]).to eq('Command completed successfully')
+        expect(response[:clTRID]).to eq('ABC-12345')
+        expect(Domain.first.registrar.name).to eq('Zone Media OÜ')
+      end
 
-    it 'does not create reserved domain' do
-      Fabricate(:reserved_domain)
-      response = epp_request('domains/create_reserved.xml')
-      expect(response[:result_code]).to eq('2302')
-      expect(response[:msg]).to eq('Domain name is reserved or restricted')
-      expect(response[:clTRID]).to eq('ABC-12345')
-    end
+      it 'does not create duplicate domain' do
+        epp_request('domains/create.xml')
+        response = epp_request('domains/create.xml')
+        expect(response[:result_code]).to eq('2302')
+        expect(response[:msg]).to eq('Domain name already exists')
+        expect(response[:clTRID]).to eq('ABC-12345')
+      end
 
-    it 'creates a domain with contacts' do
-      Fabricate(:contact, code: 'jd1234')
-      Fabricate(:contact, code: 'sh8013')
-      Fabricate(:contact, code: 'sh801333')
+      it 'does not create reserved domain' do
+        Fabricate(:reserved_domain)
+        response = epp_request('domains/create_reserved.xml')
+        expect(response[:result_code]).to eq('2302')
+        expect(response[:msg]).to eq('Domain name is reserved or restricted')
+        expect(response[:clTRID]).to eq('ABC-12345')
+      end
 
-      response = epp_request('domains/create.xml')
-      expect(response[:result_code]).to eq('1000')
-      expect(response[:msg]).to eq('Command completed successfully')
-      expect(response[:clTRID]).to eq('ABC-12345')
+      it 'creates a domain with contacts' do
+        Fabricate(:contact, code: 'jd1234')
+        Fabricate(:contact, code: 'sh8013')
+        Fabricate(:contact, code: 'sh801333')
 
-      expect(Domain.first.tech_contacts.count).to eq 2
-      expect(Domain.first.admin_contacts.count).to eq 1
-      expect(Domain.first.owner_contact).to_not be nil
+        response = epp_request('domains/create.xml')
+        expect(response[:result_code]).to eq('1000')
+        expect(response[:msg]).to eq('Command completed successfully')
+        expect(response[:clTRID]).to eq('ABC-12345')
+
+        expect(Domain.first.tech_contacts.count).to eq 2
+        expect(Domain.first.admin_contacts.count).to eq 1
+        expect(Domain.first.owner_contact).to_not be nil
+      end
     end
 
     it 'checks a domain' do

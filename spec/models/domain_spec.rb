@@ -40,7 +40,8 @@ describe Domain do
 
     expect(d.errors.messages).to match_array({
       name: ['Required parameter missing - name'],
-      period: ['is not a number']
+      period: ['is not a number'],
+      owner_contact: ['Required parameter missing - owner contact']
     })
   end
 
