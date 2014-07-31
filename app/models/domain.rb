@@ -40,8 +40,9 @@ class Domain < ActiveRecord::Base
       end
     end
 
+    attach_contact(Contact::CONTACT_TYPE_TECH, owner_contact) if tech_contacts.empty?
+
     if owner_contact.citizen?
-      attach_contact(Contact::CONTACT_TYPE_TECH, owner_contact) if tech_contacts.empty?
       attach_contact(Contact::CONTACT_TYPE_ADMIN, owner_contact) if admin_contacts.empty?
     end
 

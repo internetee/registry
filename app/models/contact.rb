@@ -32,11 +32,11 @@ class Contact < ActiveRecord::Base
   end
 
   def juridical?
-    ident == IDENT_TYPE_ICO
+    ident_type == IDENT_TYPE_ICO
   end
 
   def citizen?
-    ident != IDENT_TYPE_ICO
+    ident_type != IDENT_TYPE_ICO
   end
 
   class << self
