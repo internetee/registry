@@ -8,7 +8,8 @@ module Epp::ContactsHelper
         code: ph[:id],
         phone: ph[:voice],
         ident: ph[:ident],
-        email: ph[:email]
+        email: ph[:email],
+        org_name: ph[:postalInfo][:org]
       )
     end
     @contact.name = ph[:postalInfo][:name]
@@ -53,8 +54,17 @@ module Epp::ContactsHelper
   end
 
   def info_contact
-    epp_errors << { code: '2101', msg: 'Unimplemented command' }
-    render 'epp/error'
+    #TODO add data missing from contacts/info builder ( marked with 'if false' in said view ) 
+    current_epp_user
+    ph = params_hash['epp']['command']['info']['info']
+
+    @contact = Contact.where(code: ph[:id]).first 
+    if @contact
+      render '/epp/contacts/info'
+    else
+      epp_errors << { code: '2303', msg: 'Object does not exist' }
+      render 'epp/error'
+    end
   end
 
   private

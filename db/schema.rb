@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 20140731081816) do
     t.datetime "updated_at"
     t.string   "ident"
     t.string   "ident_type"
+    t.string   "org_name"
   end
 
   create_table "countries", force: true do |t|

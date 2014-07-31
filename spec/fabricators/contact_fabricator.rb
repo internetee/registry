@@ -5,4 +5,5 @@ Fabricator(:contact) do
   ident '37605030299'  
   code 'sh8913'
   ident_type 'op'
+  addresses(count: 2)
 end
