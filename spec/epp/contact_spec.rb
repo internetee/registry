@@ -54,6 +54,13 @@ describe 'EPP Contact', epp: true do
       response = epp_request('contacts/check.xml')
       expect(response[:result_code]).to eq('1000')
       expect(response[:msg]).to eq('Command completed successfully')
+      ids = response[:parsed].css('resData chkData id')
+
+      expect(ids[0].attributes['avail'].text).to eq('0')
+      expect(ids[1].attributes['avail'].text).to eq('1')
+
+      expect(ids[0].text).to eq('sh8913')
+      expect(ids[1].text).to eq('sh8914')
 
     end
 
@@ -64,15 +71,15 @@ describe 'EPP Contact', epp: true do
     end
 
     it 'returns info about contact' do
-      contact = Fabricate(:contact, :name => "Johnny Awesome")
+      Fabricate(:contact, :name => "Johnny Awesome")
       Fabricate(:address)
 
       response = epp_request('contacts/info.xml')
-      contact_res = response[:parsed].css('resData chkData')
+      contact = response[:parsed].css('resData chkData')
 
       expect(response[:result_code]).to eq('1000')
       expect(response[:msg]).to eq('Command completed successfully')
-      expect(contact_res.css('name').first.text).to eq('Johnny Awesome')
+      expect(contact.css('name').first.text).to eq('Johnny Awesome')
 
     end
   end
