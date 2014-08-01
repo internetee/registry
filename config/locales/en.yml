@@ -51,3 +51,4 @@ en:
       epp_domain_taken: 'Domain name already exists'
       epp_obj_does_not_exist: 'Object does not exist'
       epp_command_failed: 'Command failed'
+      epp_contact_not_found: "Contact was not found"

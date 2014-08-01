@@ -17,14 +17,9 @@ class Domain < ActiveRecord::Base
 
   has_and_belongs_to_many :nameservers
 
-  validates_presence_of :name
-
-  validates :name, domain_name: true, uniqueness: { message: I18n.t('errors.messages.epp_domain_taken') }
-  validates :name_puny, domain_name: true
+  validates :name_dirty, domain_name: true, uniqueness: { message: I18n.t('errors.messages.epp_domain_taken') }
   validates :period, numericality: { only_integer: true, greater_than: 0, less_than: 100 }
-  validates :owner_contact, presence: true
-  # validates :tech_contacts_count
-  #validate :admin_contacts_count, on: :update
+  validates :name, :owner_contact, presence: true
 
   def name=(value)
     value.strip!
@@ -36,7 +31,9 @@ class Domain < ActiveRecord::Base
   def attach_contacts(contacts)
     contacts.each do |k, v|
       v.each do |x|
-        attach_contact(k, Contact.find_by(code: x[:contact]))
+        contact = Contact.find_by(code: x[:contact])
+        attach_contact(k, contact) and next if contact
+        errors.add(:domain_contacts, I18n.t('errors.messages.epp_contact_not_found'))
       end
     end
 

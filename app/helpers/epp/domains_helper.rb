@@ -6,8 +6,7 @@ module Epp::DomainsHelper
       if @domain.save && @domain.attach_contacts(domain_contacts)
         render '/epp/domains/create'
       else
-        handle_domain_name_errors
-        handle_contact_errors
+        handle_errors
         render '/epp/error'
         raise ActiveRecord::Rollback
       end
@@ -50,17 +49,17 @@ module Epp::DomainsHelper
     res
   end
 
-  def handle_domain_name_errors
-    [:epp_domain_taken, :epp_domain_reserved].each do |x|
-      if @domain.errors.added?(:name, x)
-        epp_errors << {code: '2302', msg: @domain.errors[:name].first}
-      end
-    end
-  end
+  def handle_errors
+    error_code_map = {
+      '2302' => [:epp_domain_taken, :epp_domain_reserved],
+      '2306' => [:blank],
+      '2303' => [:epp_contact_not_found]
+    }
 
-  def handle_contact_errors
-    if @domain.errors.added?(:admin_contacts, :blank)
-      epp_errors << {code: '2306', msg: @domain.errors[:admin_contacts].first}
+    @domain.errors.each do |key, err|
+      error_code_map.each do |code, values|
+        epp_errors << {code: code, msg: err} and break if values.any? {|x| @domain.errors.added?(key, x) }
+      end
     end
   end
 

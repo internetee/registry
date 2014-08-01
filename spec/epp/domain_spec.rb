@@ -6,8 +6,28 @@ describe 'EPP Domain', epp: true do
   context 'with valid user' do
     before(:each) { Fabricate(:epp_user) }
 
+    it 'returns error if contact does not exists' do
+      Fabricate(:contact, code: 'jd1234')
+
+      response = epp_request('domains/create.xml')
+      expect(response[:results][0][:result_code]).to eq('2303')
+      expect(response[:results][0][:msg]).to eq('Contact was not found')
+
+      expect(response[:results][1][:result_code]).to eq('2303')
+      expect(response[:results][1][:msg]).to eq('Contact was not found')
+
+      expect(response[:results][2][:result_code]).to eq('2303')
+      expect(response[:results][2][:msg]).to eq('Contact was not found')
+
+      expect(response[:clTRID]).to eq('ABC-12345')
+    end
+
     context 'with citizen as an owner' do
-      before(:each) { Fabricate(:contact, code: 'jd1234') }
+      before(:each) {
+        Fabricate(:contact, code: 'jd1234')
+        Fabricate(:contact, code: 'sh8013')
+        Fabricate(:contact, code: 'sh801333')
+      }
 
       it 'creates a domain' do
         response = epp_request('domains/create.xml')
@@ -16,11 +36,8 @@ describe 'EPP Domain', epp: true do
         expect(response[:clTRID]).to eq('ABC-12345')
 
         expect(Domain.first.registrar.name).to eq('Zone Media OÜ')
-        expect(Domain.first.tech_contacts.count).to eq 1
+        expect(Domain.first.tech_contacts.count).to eq 2
         expect(Domain.first.admin_contacts.count).to eq 1
-
-        tech_contact = Domain.first.tech_contacts.first
-        expect(tech_contact.code).to eq('jd1234')
       end
 
       it 'does not create duplicate domain' do
@@ -39,18 +56,9 @@ describe 'EPP Domain', epp: true do
         expect(response[:clTRID]).to eq('ABC-12345')
       end
 
-      it 'creates a domain with other contacts' do
-        Fabricate(:contact, code: 'sh8013')
-        Fabricate(:contact, code: 'sh801333')
-
-        response = epp_request('domains/create.xml')
-        expect(response[:result_code]).to eq('1000')
-        expect(response[:msg]).to eq('Command completed successfully')
-        expect(response[:clTRID]).to eq('ABC-12345')
-
-        expect(Domain.first.tech_contacts.count).to eq 2
-        expect(Domain.first.admin_contacts.count).to eq 1
-        expect(Domain.first.owner_contact).to_not be nil
+      it 'does not create domain without contacts and registrant' do
+        response = epp_request('domains/create_wo_contacts_and_registrant.xml')
+        expect(response[:result_code]).to eq('2306')
       end
     end
 
