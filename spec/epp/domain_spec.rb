@@ -62,6 +62,7 @@ describe 'EPP Domain', epp: true do
       it 'does not create domain without contacts and registrant' do
         response = epp_request('domains/create_wo_contacts_and_registrant.xml')
         expect(response[:result_code]).to eq('2306')
+        expect(response[:msg]).to eq('Required parameter missing - registrant')
       end
     end
 

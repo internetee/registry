@@ -17,7 +17,7 @@ class Domain < ActiveRecord::Base
 
   has_and_belongs_to_many :nameservers
 
-  validates :name_dirty, domain_name: true, uniqueness: { message: I18n.t('errors.messages.epp_domain_taken') }
+  validates :name_dirty, domain_name: true, uniqueness: { message: :epp_domain_taken }
   validates :period, numericality: { only_integer: true, greater_than: 0, less_than: 100 }
   validates :name, :owner_contact, presence: true
 

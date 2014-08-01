@@ -40,7 +40,7 @@ en:
             name:
               blank: 'Required parameter missing - name'
             owner_contact:
-              blank: 'Required parameter missing - owner contact'
+              blank: 'Required parameter missing - registrant'
             admin_contacts:
               blank: 'Required parameter missing - admin contact'
 
@@ -51,4 +51,4 @@ en:
       epp_domain_taken: 'Domain name already exists'
       epp_obj_does_not_exist: 'Object does not exist'
       epp_command_failed: 'Command failed'
-      epp_contact_not_found: "Contact was not found"
+      epp_contact_not_found: 'Contact was not found'
