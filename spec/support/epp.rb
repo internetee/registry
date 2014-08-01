@@ -31,7 +31,7 @@ module Epp
     }
 
     res.css('epp response result').each do |x|
-      obj[:results] << {result_code: x[:code], msg: x.css('msg').text}
+      obj[:results] << {result_code: x[:code], msg: x.css('msg').text, value: x.css('value > *').try(:first).try(:text)}
     end
 
     obj[:result_code] = obj[:results][0][:result_code]

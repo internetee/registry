@@ -35,7 +35,19 @@ module Epp::Common
   def handle_errors(error_code_map, obj)
     obj.errors.each do |key, err|
       error_code_map.each do |code, values|
-        epp_errors << {code: code, msg: err} and break if values.any? {|x| obj.errors.added?(key, x) }
+        if err.is_a?(Hash)
+          epp_errors << {
+            code: code,
+            msg: err[:msg],
+            value: {obj: err[:obj], val: err[:val]},
+          } and break if values.any? {|x| I18n.t("errors.messages.#{x}") == err[:msg] }
+        else
+          epp_errors << {
+            code: code,
+            msg: err,
+          } and break if values.any? {|x| obj.errors.added?(key, x) }
+        end
+
       end
     end
   end

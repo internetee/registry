@@ -4,6 +4,10 @@ xml.epp_head do
       xml.result('code' => x[:code]) do
         xml.msg(x[:msg], 'lang' => 'en')
 
+        xml.value('xmlns:obj' => 'urn:ietf:params:xml:ns:obj') do
+          xml.tag!("obj:#{x[:value][:obj]}", x[:value][:val])
+        end if x[:value]
+
         x[:ext_values].each do |y|
           xml.extValue do
             xml.value do

@@ -33,7 +33,13 @@ class Domain < ActiveRecord::Base
       v.each do |x|
         contact = Contact.find_by(code: x[:contact])
         attach_contact(k, contact) and next if contact
-        errors.add(:domain_contacts, I18n.t('errors.messages.epp_contact_not_found'))
+
+        # Detailed error message with value to display in EPP response
+        errors.add(:domain_contacts, {
+          obj: 'contact',
+          val: x[:contact],
+          msg: I18n.t('errors.messages.epp_contact_not_found')
+        })
       end
     end
 

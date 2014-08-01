@@ -12,12 +12,15 @@ describe 'EPP Domain', epp: true do
       response = epp_request('domains/create.xml')
       expect(response[:results][0][:result_code]).to eq('2303')
       expect(response[:results][0][:msg]).to eq('Contact was not found')
+      expect(response[:results][0][:value]).to eq('sh8013')
 
       expect(response[:results][1][:result_code]).to eq('2303')
       expect(response[:results][1][:msg]).to eq('Contact was not found')
+      expect(response[:results][1][:value]).to eq('sh801333')
 
       expect(response[:results][2][:result_code]).to eq('2303')
       expect(response[:results][2][:msg]).to eq('Contact was not found')
+      expect(response[:results][2][:value]).to eq('sh8013')
 
       expect(response[:clTRID]).to eq('ABC-12345')
     end
