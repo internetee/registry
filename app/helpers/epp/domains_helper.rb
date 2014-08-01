@@ -20,6 +20,7 @@ module Epp::DomainsHelper
   end
 
   ### HELPER METHODS ###
+  private
 
   def domain_create_params
     ph = params_hash['epp']['command']['create']['create']
@@ -50,17 +51,12 @@ module Epp::DomainsHelper
   end
 
   def handle_errors
-    error_code_map = {
+    super({
       '2302' => [:epp_domain_taken, :epp_domain_reserved],
       '2306' => [:blank],
       '2303' => [:epp_contact_not_found]
-    }
-
-    @domain.errors.each do |key, err|
-      error_code_map.each do |code, values|
-        epp_errors << {code: code, msg: err} and break if values.any? {|x| @domain.errors.added?(key, x) }
-      end
-    end
+      }, @domain
+    )
   end
 
 end

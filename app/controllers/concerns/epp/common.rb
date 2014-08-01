@@ -32,6 +32,14 @@ module Epp::Common
     @current_epp_user ||= EppUser.find(epp_session[:epp_user_id]) if epp_session[:epp_user_id]
   end
 
+  def handle_errors(error_code_map, obj)
+    obj.errors.each do |key, err|
+      error_code_map.each do |code, values|
+        epp_errors << {code: code, msg: err} and break if values.any? {|x| obj.errors.added?(key, x) }
+      end
+    end
+  end
+
   def validate_request
     type = OBJECT_TYPES[params_hash['epp']['xmlns:ns2']]
     return unless type
