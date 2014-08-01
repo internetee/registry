@@ -41,6 +41,8 @@ describe 'EPP Domain', epp: true do
         expect(Domain.first.registrar.name).to eq('Zone Media OÜ')
         expect(Domain.first.tech_contacts.count).to eq 2
         expect(Domain.first.admin_contacts.count).to eq 1
+
+        expect(Domain.first.nameservers.count).to eq(2)
       end
 
       it 'does not create duplicate domain' do

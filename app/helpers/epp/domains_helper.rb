@@ -3,7 +3,7 @@ module Epp::DomainsHelper
     @domain = Domain.new(domain_create_params)
 
     Domain.transaction do
-      if @domain.save && @domain.attach_contacts(domain_contacts)
+      if @domain.save && @domain.attach_contacts(domain_contacts) && @domain.attach_nameservers(domain_nameservers)
         render '/epp/domains/create'
       else
         handle_errors
@@ -48,6 +48,11 @@ module Epp::DomainsHelper
     end
 
     res
+  end
+
+  def domain_nameservers
+    ph = params_hash['epp']['command']['create']['create']['ns']
+    ph[:hostObj]
   end
 
   def handle_errors

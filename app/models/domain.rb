@@ -61,6 +61,13 @@ class Domain < ActiveRecord::Base
     )
   end
 
+  def attach_nameservers(nameservers)
+    nameservers.each do |x|
+      self.nameservers << Nameserver.find_or_create_by(hostname: x)
+    end
+    save!
+  end
+
   def validate_admin_contacts_count
     errors.add(:admin_contacts, :blank) if admin_contacts.empty?
   end
