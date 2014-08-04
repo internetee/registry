@@ -52,6 +52,7 @@ module Epp::DomainsHelper
 
   def domain_nameservers
     ph = params_hash['epp']['command']['create']['create']['ns']
+    return [] unless ph
     ph[:hostObj]
   end
 

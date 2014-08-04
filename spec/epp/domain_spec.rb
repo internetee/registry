@@ -66,6 +66,18 @@ describe 'EPP Domain', epp: true do
         expect(response[:result_code]).to eq('2306')
         expect(response[:msg]).to eq('Required parameter missing - registrant')
       end
+
+      it 'does not create domain without nameservers' do
+        response = epp_request('domains/create_wo_nameservers.xml')
+        expect(response[:result_code]).to eq('2306')
+        expect(response[:msg]).to eq('Required parameter missing - nameserver')
+      end
+
+      it 'does not create domain with too many nameservers', pending: true do
+        response = epp_request('domains/create_w_too_many_nameservers.xml')
+        expect(response[:result_code]).to eq('2306')
+        expect(response[:msg]).to eq('Domain must have 1-13 nameservers')
+      end
     end
 
     context 'with juridical persion as an owner' do

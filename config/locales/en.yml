@@ -43,7 +43,8 @@ en:
               blank: 'Required parameter missing - registrant'
             admin_contacts:
               blank: 'Required parameter missing - admin contact'
-
+            nameservers:
+              blank: 'Required parameter missing - nameserver'
 
   errors:
     messages:
@@ -52,3 +53,4 @@ en:
       epp_obj_does_not_exist: 'Object does not exist'
       epp_command_failed: 'Command failed'
       epp_contact_not_found: 'Contact was not found'
+      epp_nameservers_range_fail: 'Domain must have %{min}-%{max} nameservers'
