@@ -3,27 +3,15 @@ module Epp::ContactsHelper
     ph = params_hash['epp']['command']['create']['create']
 
     ph[:ident] ? @contact = Contact.where(ident: ph[:ident]).first_or_initialize : @contact = Contact.new
-    if @contact.new_record?
-      @contact.assign_attributes(
-        code: ph[:id],
-        phone: ph[:voice],
-        ident: ph[:ident],
-        email: ph[:email],
-        org_name: ph[:postalInfo][:org]
-      )
-    end
-    @contact.name = ph[:postalInfo][:name]
-    @contact.ident_type = ident_type
 
-    @contact.addresses << Address.new(
-      country_id: Country.find_by(iso: ph[:postalInfo][:cc]),
-      street: ph[:postalInfo][:street],
-      zip: ph[:postalInfo][:pc]
-    )
+    @contact.assign_attributes(new_contact_info ) if @contact.new_record?
+    @contact.assign_attributes(name_and_ident_type)
 
+    @contact.addresses << new_address
     stamp @contact
 
     @contact.save
+
     render '/epp/contacts/create'
   end
 
@@ -70,6 +58,42 @@ module Epp::ContactsHelper
   end
 
   private
+
+  def new_address
+    ph = params_hash['epp']['command']['create']['create']
+
+    Address.new(
+      country_id: Country.find_by(iso: ph[:postalInfo][:addr][:cc]),
+      street: tidy_street,
+      zip: ph[:postalInfo][:addr][:pc]
+    )
+  end
+
+  def name_and_ident_type
+    ph = params_hash['epp']['command']['create']['create']
+    {
+      name: ph[:postalInfo][:name],
+      ident_type: ident_type
+    }
+  end
+
+  def new_contact_info
+    ph = params_hash['epp']['command']['create']['create']
+    {
+        code: ph[:id],
+        phone: ph[:voice],
+        ident: ph[:ident],
+        email: ph[:email],
+        org_name: ph[:postalInfo][:org]
+    }
+  end
+
+  def tidy_street
+    street = params_hash['epp']['command']['create']['create'][:postalInfo][:addr][:street] 
+    return street if street.is_a? String
+    return street.join(',') if street.is_a? Array
+    return nil
+  end
 
   def ident_type
     result = params[:frame].slice(/(?<=\<ns2:ident type=)(.*)(?=<)/)
