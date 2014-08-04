@@ -21,6 +21,8 @@ module Epp::ContactsHelper
       zip: ph[:postalInfo][:pc]
     )
 
+    stamp @contact
+
     @contact.save
     render '/epp/contacts/create'
   end

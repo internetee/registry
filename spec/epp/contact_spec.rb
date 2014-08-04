@@ -12,6 +12,8 @@ describe 'EPP Contact', epp: true do
       expect(response[:result_code]).to eq('1000')
       expect(response[:msg]).to eq('Command completed successfully')
       expect(response[:clTRID]).to eq('ABC-12345')
+      expect(Contact.first.created_by_id).to be 1
+      expect(Contact.first.updated_by_id).to be nil
 
       expect(Contact.count).to eq(1)
       expect(Contact.first.org_name).to eq('Example Inc.')
@@ -26,6 +28,10 @@ describe 'EPP Contact', epp: true do
 
       expect(Contact.first.name).to eq("John Doe")
       expect(Contact.first.ident_type).to eq("op")
+
+      expect(Contact.first.updated_by_id).to be 1
+      #nil because we fabricate, hence stamping in controller won't happen
+      expect(Contact.first.created_by_id).to be nil
 
       expect(Contact.count).to eq(1)
     end
