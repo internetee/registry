@@ -1,27 +1,19 @@
 module Epp::ContactsHelper
   def create_contact
     ph = params_hash['epp']['command']['create']['create']
+    #todo, remove the first_or_initialize logic, since it's redundant due to 
+    #<contact:id> from EPP api
 
-    ph[:ident] ? @contact = Contact.where(ident: ph[:ident]).first_or_initialize : @contact = Contact.new
-    if @contact.new_record?
-      @contact.assign_attributes(
-        code: ph[:id],
-        phone: ph[:voice],
-        ident: ph[:ident],
-        email: ph[:email],
-        org_name: ph[:postalInfo][:org]
-      )
-    end
-    @contact.name = ph[:postalInfo][:name]
-    @contact.ident_type = ident_type
+    @contact = Contact.new
+    @contact = Contact.where(ident: ph[:ident]).first_or_initialize( new_contact_info ) if ph[:ident]
 
-    @contact.addresses << Address.new(
-      country_id: Country.find_by(iso: ph[:postalInfo][:cc]),
-      street: ph[:postalInfo][:street],
-      zip: ph[:postalInfo][:pc]
-    )
+    @contact.assign_attributes(name: ph[:postalInfo][:name])
+
+    @contact.addresses << new_address
+    stamp @contact
 
     @contact.save
+
     render '/epp/contacts/create'
   end
 
@@ -68,6 +60,35 @@ module Epp::ContactsHelper
   end
 
   private
+
+  def new_address
+    ph = params_hash['epp']['command']['create']['create']
+
+    Address.new(
+      country_id: Country.find_by(iso: ph[:postalInfo][:addr][:cc]),
+      street: tidy_street,
+      zip: ph[:postalInfo][:addr][:pc]
+    )
+  end
+
+  def new_contact_info
+    ph = params_hash['epp']['command']['create']['create']
+    {
+        code: ph[:id],
+        phone: ph[:voice],
+        ident: ph[:ident],
+        ident_type: ident_type,
+        email: ph[:email],
+        org_name: ph[:postalInfo][:org]
+    }
+  end
+
+  def tidy_street
+    street = params_hash['epp']['command']['create']['create'][:postalInfo][:addr][:street] 
+    return street if street.is_a? String
+    return street.join(',') if street.is_a? Array
+    return nil
+  end
 
   def ident_type
     result = params[:frame].slice(/(?<=\<ns2:ident type=)(.*)(?=<)/)
