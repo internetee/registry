@@ -45,7 +45,7 @@ module Epp::Common
             code: code,
             msg: err[:msg],
             value: {obj: err[:obj], val: err[:val]},
-          } and break if values.any? {|x| I18n.t("errors.messages.#{x}") == err[:msg] }
+          } and break if values.any? {|x| obj.errors.generate_message(key, x) == err[:msg]}
         else
           epp_errors << {
             code: code,

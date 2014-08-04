@@ -38,7 +38,7 @@ class Domain < ActiveRecord::Base
         errors.add(:domain_contacts, {
           obj: 'contact',
           val: x[:contact],
-          msg: I18n.t('errors.messages.epp_contact_not_found')
+          msg: errors.generate_message(:domain_contacts, :not_found)
         })
       end
     end
