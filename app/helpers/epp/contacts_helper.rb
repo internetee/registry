@@ -1,11 +1,13 @@
 module Epp::ContactsHelper
   def create_contact
     ph = params_hash['epp']['command']['create']['create']
+    #todo, remove the first_or_initialize logic, since it's redundant due to 
+    #<contact:id> from EPP api
 
-    ph[:ident] ? @contact = Contact.where(ident: ph[:ident]).first_or_initialize : @contact = Contact.new
+    @contact = Contact.new
+    @contact = Contact.where(ident: ph[:ident]).first_or_initialize( new_contact_info ) if ph[:ident]
 
-    @contact.assign_attributes(new_contact_info ) if @contact.new_record?
-    @contact.assign_attributes(name_and_ident_type)
+    @contact.assign_attributes(name: ph[:postalInfo][:name])
 
     @contact.addresses << new_address
     stamp @contact
@@ -69,20 +71,13 @@ module Epp::ContactsHelper
     )
   end
 
-  def name_and_ident_type
-    ph = params_hash['epp']['command']['create']['create']
-    {
-      name: ph[:postalInfo][:name],
-      ident_type: ident_type
-    }
-  end
-
   def new_contact_info
     ph = params_hash['epp']['command']['create']['create']
     {
         code: ph[:id],
         phone: ph[:voice],
         ident: ph[:ident],
+        ident_type: ident_type,
         email: ph[:email],
         org_name: ph[:postalInfo][:org]
     }
