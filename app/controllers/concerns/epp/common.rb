@@ -35,6 +35,11 @@ module Epp::Common
   def handle_errors(error_code_map, obj)
     obj.errors.each do |key, err|
       error_code_map.each do |code, values|
+
+        has_error = Proc.new do |x|
+          x.is_a?(Array) ? obj.errors.added?(key, x[0], x[1]) : obj.errors.added?(key, x)
+        end
+
         if err.is_a?(Hash)
           epp_errors << {
             code: code,
@@ -45,7 +50,7 @@ module Epp::Common
           epp_errors << {
             code: code,
             msg: err,
-          } and break if values.any? {|x| obj.errors.added?(key, x) }
+          } and break if values.any? {|x| has_error.call(x)}
         end
 
       end

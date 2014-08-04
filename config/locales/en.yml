@@ -45,6 +45,7 @@ en:
               blank: 'Required parameter missing - admin contact'
             nameservers:
               blank: 'Required parameter missing - nameserver'
+              out_of_range: 'Domain must have %{min}-%{max} nameservers'
 
   errors:
     messages:

@@ -59,7 +59,7 @@ module Epp::DomainsHelper
   def handle_errors
     super({
       '2302' => [:epp_domain_taken, :epp_domain_reserved],
-      '2306' => [:blank],
+      '2306' => [:blank, [:out_of_range, {min: 1, max: 13}]],
       '2303' => [:epp_contact_not_found]
       }, @domain
     )

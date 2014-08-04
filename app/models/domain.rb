@@ -75,9 +75,11 @@ class Domain < ActiveRecord::Base
   def validate_nameservers_count
     errors.add(:nameservers, :blank) if nameservers.empty?
 
-    if nameservers.count <= 1 || nameservers.count > 13
-      errors.add(:nameservers, I18n.t('errors.messages.epp_nameservers_range_fail', min: 1, max: 13))
+    unless nameservers.count.between?(1, 13)
+      errors.add(:nameservers, :out_of_range, {min: 1, max: 13})
     end
+
+    errors.empty?
   end
 
   def validate_admin_contacts_count
