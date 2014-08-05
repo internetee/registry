@@ -6,6 +6,9 @@ class Contact < ActiveRecord::Base
   has_many :domain_contacts
   has_many :domains, through: :domain_contacts
 
+  belongs_to :created_by, class_name: 'EppUser', foreign_key: :created_by_id
+  belongs_to :updated_by, class_name: 'EppUser', foreign_key: :updated_by_id
+
   validates_presence_of :code, :name, :phone, :email, :ident
 
   validate :ident_must_be_valid
@@ -37,6 +40,14 @@ class Contact < ActiveRecord::Base
 
   def citizen?
     ident_type != IDENT_TYPE_ICO
+  end
+
+  def crID
+    created_by ? created_by.username : nil
+  end
+
+  def upID
+    updated_by ? updated_by.username : nil
   end
 
   class << self

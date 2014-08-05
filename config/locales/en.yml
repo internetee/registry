@@ -56,3 +56,4 @@ en:
       epp_obj_does_not_exist: 'Object does not exist'
       epp_command_failed: 'Command failed'
       epp_nameservers_range_fail: 'Domain must have %{min}-%{max} nameservers'
+      epp_authorization_error: 'Authorization error'
