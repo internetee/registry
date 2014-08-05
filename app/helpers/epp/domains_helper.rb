@@ -57,10 +57,11 @@ module Epp::DomainsHelper
   end
 
   def handle_errors
-    super({
+    handle_epp_errors({
       '2302' => [:epp_domain_taken, :epp_domain_reserved],
       '2306' => [:blank, [:out_of_range, {min: 1, max: 13}]],
-      '2303' => [:not_found]
+      '2303' => [:not_found],
+      '2005' => [:hostname_invalid]
       }, @domain
     )
   end

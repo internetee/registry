@@ -32,12 +32,15 @@ module Epp::Common
     @current_epp_user ||= EppUser.find(epp_session[:epp_user_id]) if epp_session[:epp_user_id]
   end
 
-  def handle_errors(error_code_map, obj)
+  def handle_epp_errors(error_code_map, obj)
     obj.errors.each do |key, err|
       error_code_map.each do |code, values|
-
         has_error = Proc.new do |x|
-          x.is_a?(Array) ? obj.errors.added?(key, x[0], x[1]) : obj.errors.added?(key, x)
+          if x.is_a?(Array)
+            obj.errors.generate_message(key, x[0], x[1]) == err
+          else
+            obj.errors.generate_message(key, x) == err
+          end
         end
 
         if err.is_a?(Hash)

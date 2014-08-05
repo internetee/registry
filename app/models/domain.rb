@@ -20,6 +20,7 @@ class Domain < ActiveRecord::Base
   validates :name_dirty, domain_name: true, uniqueness: { message: :epp_domain_taken }
   validates :period, numericality: { only_integer: true, greater_than: 0, less_than: 100 }
   validates :name, :owner_contact, presence: true
+  validates_associated :nameservers
 
   def name=(value)
     value.strip!
@@ -61,15 +62,36 @@ class Domain < ActiveRecord::Base
     )
   end
 
-  def attach_nameservers(nameservers)
-    nameservers.each do |x|
-      self.nameservers << Nameserver.find_or_create_by(hostname: x)
+  def attach_nameservers(ns_list)
+    ns_list.each do |x|
+      self.nameservers.build(hostname: x)
     end
-    save!
+
+    save
+
+    add_child_collection_errors(:nameservers, :ns)
 
     validate_nameservers_count
 
     errors.empty?
+  end
+
+  def add_child_collection_errors(attr_key, epp_obj_name)
+    send(attr_key).each do |obj|
+      obj.errors.keys.each do |key|
+        add_errors_with_value(attr_key, epp_obj_name, obj, key)
+      end
+    end
+  end
+
+  def add_errors_with_value(attr_key, epp_obj_name, obj, key)
+    obj.errors[key].each do |x|
+      errors.add(attr_key, {
+        obj: epp_obj_name,
+        val: obj.send(key),
+        msg: x
+      })
+    end
   end
 
   def validate_nameservers_count

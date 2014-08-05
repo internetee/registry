@@ -78,6 +78,12 @@ describe 'EPP Domain', epp: true do
         expect(response[:result_code]).to eq('2306')
         expect(response[:msg]).to eq('Domain must have 1-13 nameservers')
       end
+
+      it 'returns error when invalid nameservers are present' do
+        response = epp_request('domains/create_w_invalid_nameservers.xml')
+        expect(response[:result_code]).to eq('2005')
+        expect(response[:msg]).to eq('Hostname is invalid')
+      end
     end
 
     context 'with juridical persion as an owner' do
