@@ -9,7 +9,7 @@ module Epp::ContactsHelper
 
     @contact.assign_attributes(name: ph[:postalInfo][:name])
 
-    @contact.addresses << new_address
+    @contact.address = new_address
     stamp @contact
 
     @contact.save

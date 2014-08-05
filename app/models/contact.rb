@@ -2,7 +2,7 @@ class Contact < ActiveRecord::Base
   #TODO Foreign contact will get email with activation link/username/temp password
   #TODO Phone number validation, in first phase very minimam in order to support current registries
 
-  has_many :addresses
+  has_one :address
   has_many :domain_contacts
   has_many :domains, through: :domain_contacts
 
