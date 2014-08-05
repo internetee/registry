@@ -64,25 +64,7 @@ class Domain < ActiveRecord::Base
 
   def attach_nameservers(ns_list)
     ns_list.each do |ns|
-      #ns with detailed attributes
-      if ns.is_a?(Hash)
-        attrs = {hostname: ns[:hostName]}
-
-        if ns[:hostAddr]
-          if ns[:hostAddr].is_a?(Array)
-            ns[:hostAddr].each do |ip|
-              attrs[:ip] = ip unless attrs[:ip]
-            end
-          else
-            attrs[:ip] = ns[:hostAddr]
-          end
-        end
-
-        self.nameservers.build(attrs)
-      #ns with just hostname
-      else
-        self.nameservers.build(hostname: ns)
-      end
+      attach_nameserver(ns)
     end
 
     save
@@ -94,13 +76,23 @@ class Domain < ActiveRecord::Base
     errors.empty?
   end
 
-  # def validate_nameservers
-  #   nameservers.each do |x|
-  #     x.errors.each do |err|
-  #       errors.add(:nameservers)
-  #     end
-  #   end
-  # end
+  def attach_nameserver(ns)
+    self.nameservers.build(hostname: ns) and return if ns.is_a?(String)
+
+    attrs = {hostname: ns[:hostName]}
+
+    if ns[:hostAddr]
+      if ns[:hostAddr].is_a?(Array)
+        ns[:hostAddr].each do |ip|
+          attrs[:ip] = ip unless attrs[:ip]
+        end
+      else
+        attrs[:ip] = ns[:hostAddr]
+      end
+    end
+
+    self.nameservers.build(attrs)
+  end
 
   def add_child_collection_errors(attr_key, epp_obj_name)
     send(attr_key).each do |obj|
