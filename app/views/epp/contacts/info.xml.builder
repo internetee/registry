@@ -17,9 +17,9 @@ xml.epp_head do
         xml.tag!('contact:fax', @contact.fax)
         xml.tag!('contact:email', @contact.email)
         xml.tag!('contact:clID', @current_epp_user.username) if @current_epp_user
-        xml.tag!('contact:crID', '123') if false
+        xml.tag!('contact:crID', @contact.crID ) if @contact.crID
         xml.tag!('contact:crDate', @contact.created_at)
-        xml.tag!('contact:upID', '123') if false
+        xml.tag!('contact:upID', @contact.upID) if @contact.upID
         xml.tag!('contact:upDate', @contact.updated_at) unless @contact.updated_at == @contact.created_at
         xml.tag!('contact:trDate', '123') if false
         xml.tag!('contact:authInfo', '123') if false

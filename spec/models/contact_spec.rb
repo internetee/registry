@@ -39,6 +39,32 @@ describe Contact do
   end
 end
 
+describe Contact, '#crID' do
+  before(:each) { Fabricate(:contact, code: "asd12", created_by: Fabricate(:epp_user)) }
+
+  it 'should return username of creator' do
+    expect(Contact.first.crID).to eq('gitlab')
+  end
+
+  it 'should return nil when no creator' do
+    expect(Contact.new.crID).to be nil
+  end
+end
+
+
+describe Contact, '#upID' do
+  before(:each) { Fabricate(:contact, code: "asd12", created_by: Fabricate(:epp_user), updated_by: Fabricate(:epp_user)) }
+
+  it 'should return username of updater' do
+    expect(Contact.first.upID).to eq('gitlab')
+  end
+
+  it 'should return nil when no updater' do
+    expect(Contact.new.upID).to be nil
+  end
+end
+
+
 describe Contact, '.check_availability' do
 
   before(:each) {

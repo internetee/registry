@@ -77,7 +77,7 @@ describe 'EPP Contact', epp: true do
     end
 
     it 'returns info about contact' do
-      Fabricate(:contact, :name => "Johnny Awesome")
+      Fabricate(:contact, name: "Johnny Awesome", created_by_id: '1')
       Fabricate(:address)
 
       response = epp_request('contacts/info.xml')
@@ -87,6 +87,15 @@ describe 'EPP Contact', epp: true do
       expect(response[:msg]).to eq('Command completed successfully')
       expect(contact.css('name').first.text).to eq('Johnny Awesome')
 
+    end
+
+    it 'it doesn\'t display unassociated object' do
+      Fabricate(:contact, name:"Johnny Awesome", created_by_id: '240')
+      Fabricate(:epp_user, id: 240)
+
+      response = epp_request('contacts/info.xml')
+      expect(response[:result_code]).to eq('2201')
+      expect(response[:msg]).to eq('Authorization error')
     end
   end
 end

@@ -46,20 +46,32 @@ module Epp::ContactsHelper
   end
 
   def info_contact
+    #TODO do we reject contact without authInfo or display less info?
     #TODO add data missing from contacts/info builder ( marked with 'if false' in said view ) 
     current_epp_user
     ph = params_hash['epp']['command']['info']['info']
 
     @contact = Contact.where(code: ph[:id]).first 
-    if @contact
+    case has_rights
+    when true
       render '/epp/contacts/info'
-    else
-      epp_errors << { code: '2303', msg: t('errors.messages.epp_obj_does_not_exist') }
+    when false
+      epp_errors << { code: '2201', msg: t('errors.messages.epp_authorization_error') }
       render 'epp/error'
     end
+  rescue NoMethodError => e
+    epp_errors << { code: '2303', msg: t('errors.messages.epp_obj_does_not_exist') }
+    render 'epp/error'
   end
 
   private
+
+  def has_rights
+    if @contact.created_by.registrar == current_epp_user.registrar
+      return true
+    end
+    return false
+  end
 
   def new_address
     ph = params_hash['epp']['command']['create']['create']
