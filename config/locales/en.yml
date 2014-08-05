@@ -55,7 +55,7 @@ en:
             hostname:
               invalid: 'Hostname is invalid'
             ip:
-              ip_invalid: 'IP is invalid'
+              invalid: 'IP is invalid'
 
 
   errors:
