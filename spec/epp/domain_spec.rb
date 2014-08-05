@@ -84,6 +84,14 @@ describe 'EPP Domain', epp: true do
         expect(response[:result_code]).to eq('2005')
         expect(response[:msg]).to eq('Hostname is invalid')
       end
+
+
+      it 'creates domain with nameservers with ips' do
+        response = epp_request('domains/create_w_host_attrs.xml')
+        expect(Domain.first.nameservers.count).to eq(2)
+        ns = Domain.first.nameservers.first
+        expect(ns.ip).to eq('192.0.2.2')
+      end
     end
 
     context 'with juridical persion as an owner' do
