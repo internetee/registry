@@ -1,17 +1,8 @@
 module Epp::ContactsHelper
   def create_contact
-    ph = params_hash['epp']['command']['create']['create']
-    #todo, remove the first_or_initialize logic, since it's redundant due to 
-    #<contact:id> from EPP api
 
-    @contact = Contact.new
-    @contact = Contact.where(ident: ph[:ident]).first_or_initialize( new_contact_info ) if ph[:ident]
-
-    @contact.assign_attributes(name: ph[:postalInfo][:name])
-
-    @contact.addresses << new_address
+    @contact = Contact.new( contact_and_address_attributes ) 
     stamp @contact
-
     @contact.save
 
     render '/epp/contacts/create'
@@ -66,24 +57,7 @@ module Epp::ContactsHelper
 
   private
 
-  def has_rights
-    if @contact.created_by.registrar == current_epp_user.registrar
-      return true
-    end
-    return false
-  end
-
-  def new_address
-    ph = params_hash['epp']['command']['create']['create']
-
-    Address.new(
-      country_id: Country.find_by(iso: ph[:postalInfo][:addr][:cc]),
-      street: tidy_street,
-      zip: ph[:postalInfo][:addr][:pc]
-    )
-  end
-
-  def new_contact_info
+  def contact_and_address_attributes
     ph = params_hash['epp']['command']['create']['create']
     {
         code: ph[:id],
@@ -91,8 +65,21 @@ module Epp::ContactsHelper
         ident: ph[:ident],
         ident_type: ident_type,
         email: ph[:email],
-        org_name: ph[:postalInfo][:org]
+        name: ph[:postalInfo][:name], 
+        org_name: ph[:postalInfo][:org],
+        address_attributes: {
+          country_id: Country.find_by(iso: ph[:postalInfo][:addr][:cc]),
+          street: tidy_street,
+          zip: ph[:postalInfo][:addr][:pc]
+        }
     }
+  end
+
+  def has_rights
+    if @contact.created_by.registrar == current_epp_user.registrar
+      return true
+    end
+    return false
   end
 
   def tidy_street

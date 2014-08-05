@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe Contact do
-  it { should have_many(:addresses) }
+  it { should have_one(:address) }
 
   context 'with invalid attribute' do
     before(:each) { @contact = Fabricate(:contact) }

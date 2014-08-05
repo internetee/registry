@@ -10,8 +10,8 @@ xml.epp_head do
         xml.tag!('contact:name', @contact.name)
         xml.tag!('contact:org', @contact.org_name)
         xml.tag!('contact:addr') do
-          xml.tag!('contact:street', @contact.addresses.first.street)
-          xml.tag!('contact:street', @contact.addresses.first.city)
+          xml.tag!('contact:street', @contact.address.street)
+          xml.tag!('contact:street', @contact.address.city)
         end
         xml.tag!('contact:voice', @contact.phone)
         xml.tag!('contact:fax', @contact.fax)
