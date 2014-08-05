@@ -49,10 +49,13 @@ en:
               blank: 'Required parameter missing - nameserver'
               out_of_range: 'Domain must have %{min}-%{max} nameservers'
               hostname_invalid: 'Hostname is invalid'
+              ip_invalid: 'IP is invalid'
         nameserver:
           attributes:
             hostname:
               invalid: 'Hostname is invalid'
+            ip:
+              ip_invalid: 'IP is invalid'
 
 
   errors:

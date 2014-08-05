@@ -63,7 +63,7 @@ module Epp::DomainsHelper
       '2302' => [:epp_domain_taken, :epp_domain_reserved],
       '2306' => [:blank, [:out_of_range, {min: 1, max: 13}]],
       '2303' => [:not_found],
-      '2005' => [:hostname_invalid]
+      '2005' => [:hostname_invalid, :ip_invalid]
       }, @domain
     )
   end

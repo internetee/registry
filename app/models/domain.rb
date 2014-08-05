@@ -68,9 +68,15 @@ class Domain < ActiveRecord::Base
       if ns.is_a?(Hash)
         attrs = {hostname: ns[:hostName]}
 
-        ns[:hostAddr].each do |ip|
-          attrs[:ip] = ip unless attrs[:ip]
-        end if ns[:hostAddr]
+        if ns[:hostAddr]
+          if ns[:hostAddr].is_a?(Array)
+            ns[:hostAddr].each do |ip|
+              attrs[:ip] = ip unless attrs[:ip]
+            end
+          else
+            attrs[:ip] = ns[:hostAddr]
+          end
+        end
 
         self.nameservers.build(attrs)
       #ns with just hostname

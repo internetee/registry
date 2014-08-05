@@ -92,6 +92,12 @@ describe 'EPP Domain', epp: true do
         ns = Domain.first.nameservers.first
         expect(ns.ip).to eq('192.0.2.2')
       end
+
+      it 'returns error when nameserver has invalid ip' do
+        response = epp_request('domains/create_w_invalid_ns_ip.xml')
+        expect(response[:results][0][:result_code]).to eq '2005'
+        expect(response[:results][0][:msg]).to eq 'IP is invalid'
+      end
     end
 
     context 'with juridical persion as an owner' do
