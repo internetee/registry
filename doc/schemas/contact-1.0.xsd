@@ -48,7 +48,7 @@
 
     <simpleType name="e164StringType">
       <restriction base="token">
-        <pattern value="(\+[0-9]{1,3}\.[0-9]{1,14})?"/>
+        <!--<pattern value="(\+[0-9]{1,3}\.[0-9]{1,14})?"/> -->
         <maxLength value="17"/>
       </restriction>
     </simpleType>
@@ -235,6 +235,8 @@
         <element name="fax" type="contact:e164Type"
          minOccurs="0"/>
         <element name="email" type="eppcom:minTokenType"
+         minOccurs="0"/>
+        <element name="ident" type="contact:identType"
          minOccurs="0"/>
         <element name="authInfo" type="contact:authInfoType"
          minOccurs="0"/>

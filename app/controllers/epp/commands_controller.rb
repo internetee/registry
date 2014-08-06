@@ -20,4 +20,8 @@ class Epp::CommandsController < ApplicationController
   def info
     send("info_#{OBJECT_TYPES[params_hash['epp']['xmlns:ns2']]}")
   end
+
+  def update
+    send("update_#{OBJECT_TYPES[params_hash['epp']['xmlns:ns2']]}")
+  end
 end
