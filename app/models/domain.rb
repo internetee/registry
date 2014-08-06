@@ -124,6 +124,16 @@ class Domain < ActiveRecord::Base
     errors.add(:admin_contacts, :blank) if admin_contacts.empty?
   end
 
+  def renew(cur_exp_date, period, unit='y')
+    if cur_exp_date == valid_to
+      valid_to = period.to_i.years
+    else
+      errors[:base] << {msg: I18n.t('errors.messages.epp_exp_dates_do_not_match'), obj: 'domain', val: cur_exp_date}
+    end
+
+    save
+  end
+
   class << self
     def check_availability(domains)
       domains = [domains] if domains.is_a?(String)

@@ -131,6 +131,12 @@ describe 'EPP Domain', epp: true do
       end
     end
 
+    context 'with valid domain' do
+      before(:each) { Fabricate(:domain, name: 'example.ee') }
+
+
+    end
+
     it 'checks a domain' do
       response = epp_request('domains/check.xml')
       expect(response[:result_code]).to eq('1000')

@@ -19,6 +19,23 @@ module Epp::DomainsHelper
     render '/epp/domains/check'
   end
 
+  def renew_domain
+    ph = params_hash['epp']['command']['renew']['renew']
+
+    @domain = Domain.find_by(name: ph[:name])
+    unless @domain
+      epp_errors << {code: '2303', msg: I18n.t('errors.messages.epp_domain_not_found'), value: {obj: 'domain', val: ph[:name]}}
+      render '/epp/error' and return
+    end
+
+    if @domain.renew(ph[:curExpDate], ph[:period])
+      render '/epp/domains/renew'
+    else
+      handle_errors
+      render '/epp/error'
+    end
+  end
+
   ### HELPER METHODS ###
   private
 

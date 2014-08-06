@@ -9,6 +9,10 @@ class Epp::CommandsController < ApplicationController
     send("create_#{OBJECT_TYPES[params_hash['epp']['xmlns:ns2']]}")
   end
 
+  def renew
+    send("renew_#{OBJECT_TYPES[params_hash['epp']['xmlns:ns2']]}")
+  end
+
   def check
     send("check_#{OBJECT_TYPES[params_hash['epp']['xmlns:ns2']]}")
   end
