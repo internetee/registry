@@ -33,31 +33,28 @@ module Epp::Common
   end
 
   def handle_epp_errors(error_code_map, obj)
-    obj.errors.each do |key, err|
-      error_code_map.each do |code, values|
-        has_error = Proc.new do |x|
-          if x.is_a?(Array)
-            obj.errors.generate_message(key, x[0], x[1]) == err
-          else
-            obj.errors.generate_message(key, x) == err
-          end
-        end
-
-        if err.is_a?(Hash)
+    obj.errors.each do |key, msg|
+      if msg.is_a?(Hash)
           epp_errors << {
-            code: code,
-            msg: err[:msg],
-            value: {obj: err[:obj], val: err[:val]},
-          } and break if values.any? {|x| obj.errors.generate_message(key, x) == err[:msg]}
-        else
-          epp_errors << {
-            code: code,
-            msg: err,
-          } and break if values.any? {|x| has_error.call(x)}
-        end
-
+            code: find_code(msg[:msg]),
+            msg: msg[:msg],
+            value: {obj: msg[:obj], val: msg[:val]},
+          }
+      else
+        next unless code = find_code(msg)
+        epp_errors << {
+          code: code,
+          msg: msg
+        }
       end
     end
+  end
+
+  def find_code(msg)
+    error_code_map.each do |code, values|
+      return code if values.include?(msg)
+    end
+    nil
   end
 
   def validate_request

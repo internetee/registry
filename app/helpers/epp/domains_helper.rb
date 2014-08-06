@@ -60,12 +60,21 @@ module Epp::DomainsHelper
 
   def handle_errors
     handle_epp_errors({
-      '2302' => [:epp_domain_taken, :epp_domain_reserved],
+      '2302' => [:epp_domain_taken, :reserved],
       '2306' => [:blank, [:out_of_range, {min: 1, max: 13}]],
       '2303' => [:not_found],
       '2005' => [:hostname_invalid, :ip_invalid]
       }, @domain
     )
+  end
+
+  def error_code_map
+    {
+      '2302' => ['Domain name already exists', 'Domain name is reserved or restricted'],
+      '2306' => ['Registrant is missing', 'Nameservers count must be between 1-13', 'Admin contact is missing'],
+      '2303' => ['Contact was not found'],
+      '2005' => ['Hostname is invalid', 'IP is invalid']
+    }
   end
 
 end

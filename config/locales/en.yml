@@ -37,17 +37,17 @@ en:
               blank: "Required parameter missing - ident"
         domain:
           attributes:
-            name:
-              blank: 'Required parameter missing - name'
+            name_dirty:
+              reserved: 'Domain name is reserved or restricted'
+              taken: 'Domain name already exists'
             owner_contact:
-              blank: 'Required parameter missing - registrant'
-            admin_contacts:
-              blank: 'Required parameter missing - admin contact'
+              blank: 'Registrant is missing'
             domain_contacts:
               not_found: 'Contact was not found'
+            admin_contacts:
+              blank: 'Admin contact is missing'
             nameservers:
-              blank: 'Required parameter missing - nameserver'
-              out_of_range: 'Domain must have %{min}-%{max} nameservers'
+              out_of_range: 'Nameservers count must be between %{min}-%{max}'
               hostname_invalid: 'Hostname is invalid'
               ip_invalid: 'IP is invalid'
         nameserver:
@@ -56,10 +56,16 @@ en:
               invalid: 'Hostname is invalid'
             ip:
               invalid: 'IP is invalid'
-
+    attributes:
+      domain:
+        name: 'Domain name'
+        name_dirty: 'Domain name'
+        name_puny: 'Domain name'
+        owner_contact: 'Registrant'
 
   errors:
     messages:
+      blank: 'is missing'
       epp_domain_reserved: 'Domain name is reserved or restricted'
       epp_domain_taken: 'Domain name already exists'
       epp_obj_does_not_exist: 'Object does not exist'

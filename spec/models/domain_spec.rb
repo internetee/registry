@@ -39,9 +39,9 @@ describe Domain do
     expect(d.valid?).to be false
 
     expect(d.errors.messages).to match_array({
-      name: ['Required parameter missing - name'],
+      name: ['is missing'],
       period: ['is not a number'],
-      owner_contact: ['Required parameter missing - registrant']
+      owner_contact: ["Registrant is missing"]
     })
   end
 

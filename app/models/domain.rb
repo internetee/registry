@@ -17,7 +17,7 @@ class Domain < ActiveRecord::Base
 
   has_and_belongs_to_many :nameservers
 
-  validates :name_dirty, domain_name: true, uniqueness: { message: :epp_domain_taken }
+  validates :name_dirty, domain_name: true, uniqueness: true
   validates :period, numericality: { only_integer: true, greater_than: 0, less_than: 100 }
   validates :name, :owner_contact, presence: true
   validates_associated :nameservers
@@ -113,8 +113,6 @@ class Domain < ActiveRecord::Base
   end
 
   def validate_nameservers_count
-    errors.add(:nameservers, :blank) if nameservers.empty?
-
     unless nameservers.count.between?(1, 13)
       errors.add(:nameservers, :out_of_range, {min: 1, max: 13})
     end

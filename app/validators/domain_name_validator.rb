@@ -10,7 +10,7 @@ class DomainNameValidator < ActiveModel::EachValidator
     if !self.class.validate_format(value)
       record.errors[attribute] << (options[:message] || 'invalid format')
     elsif !self.class.validate_reservation(value)
-      record.errors[attribute] << (options[:message] || I18n.t('errors.messages.epp_domain_reserved'))
+      record.errors.add(attribute, (options[:message] || :reserved))
     end
   end
 

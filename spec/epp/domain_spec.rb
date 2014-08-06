@@ -64,19 +64,19 @@ describe 'EPP Domain', epp: true do
       it 'does not create domain without contacts and registrant' do
         response = epp_request('domains/create_wo_contacts_and_registrant.xml')
         expect(response[:result_code]).to eq('2306')
-        expect(response[:msg]).to eq('Required parameter missing - registrant')
+        expect(response[:msg]).to eq('Registrant is missing')
       end
 
       it 'does not create domain without nameservers' do
         response = epp_request('domains/create_wo_nameservers.xml')
         expect(response[:result_code]).to eq('2306')
-        expect(response[:msg]).to eq('Required parameter missing - nameserver')
+        expect(response[:msg]).to eq('Nameservers count must be between 1-13')
       end
 
       it 'does not create domain with too many nameservers' do
         response = epp_request('domains/create_w_too_many_nameservers.xml')
         expect(response[:result_code]).to eq('2306')
-        expect(response[:msg]).to eq('Domain must have 1-13 nameservers')
+        expect(response[:msg]).to eq('Nameservers count must be between 1-13')
       end
 
       it 'returns error when invalid nameservers are present' do
@@ -123,7 +123,7 @@ describe 'EPP Domain', epp: true do
       it 'does not create a domain without admin contact' do
         response = epp_request('domains/create_wo_contacts.xml')
         expect(response[:result_code]).to eq('2306')
-        expect(response[:msg]).to eq('Required parameter missing - admin contact')
+        expect(response[:msg]).to eq('Admin contact is missing')
         expect(response[:clTRID]).to eq('ABC-12345')
 
         expect(Domain.count).to eq 0
