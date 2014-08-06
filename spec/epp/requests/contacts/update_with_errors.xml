@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+  <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+    <command>
+      <update>
+        <contact:update
+         xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
+          <contact:id>sh8013</contact:id>
+          <contact:chg>
+            <contact:voice x="1234">123456798</contact:voice>
+            <contact:email>faulty</contact:email>
+         </contact:chg>
+       </contact:update>
+      </update>
+      <clTRID>ABC-12345</clTRID>
+    </command>
+  </epp>

@@ -29,24 +29,7 @@ describe 'EPP Contact', epp: true do
       expect(Contact.count).to eq(1)
     end
 
-    it 'updates a contact with same ident', pending: true do
-      pending 'fixing this as soon as contact#update is done'
-      Fabricate(:contact)
-      response = epp_request('contacts/create.xml')
-      expect(response[:result_code]).to eq('1000')
-      expect(response[:msg]).to eq('Command completed successfully')
-      expect(response[:clTRID]).to eq('ABC-12345')
-
-      expect(Contact.first.name).to eq("John Doe")
-      expect(Contact.first.ident_type).to eq("op")
-
-      expect(Contact.first.updated_by_id).to be 1
-      #nil because we fabricate, hence stamping in controller won't happen
-      expect(Contact.first.created_by_id).to be nil
-
-      expect(Contact.count).to eq(1)
-    end
-    #TODO tests for missing/invalid/etc ident
+   #TODO tests for missing/invalid/etc ident
 
     it 'deletes contact' do
       Fabricate(:contact)
@@ -106,6 +89,25 @@ describe 'EPP Contact', epp: true do
       response = epp_request('contacts/info.xml')
       expect(response[:result_code]).to eq('2201')
       expect(response[:msg]).to eq('Authorization error')
+    end
+
+    it 'updates contact succesfully' do
+      Fabricate(:contact, created_by_id: 1, email: 'not_updated@test.test', code: 'sh8013')
+      response = epp_request('contacts/update.xml')
+      expect(response[:msg]).to eq('Command completed successfully')
+      expect(Contact.first.name).to eq('John Doe')
+      expect(Contact.first.email).to eq('jdoe@example.com')
+    end
+
+    it 'returns phone and email error' do 
+      Fabricate(:contact, created_by_id: 1, email: 'not_updated@test.test', code: 'sh8013')
+      response = epp_request('contacts/update_with_errors.xml')
+
+      expect(response[:results][0][:result_code]).to eq('2005')
+      expect(response[:results][0][:msg]).to eq('Phone nr is invalid')
+
+      expect(response[:results][1][:result_code]).to eq('2005')
+      expect(response[:results][1][:msg]).to eq('Email is invalid')
     end
   end
 end

@@ -10,6 +10,17 @@ module Epp::ContactsHelper
     end
   end
 
+  def update_contact
+    code = params_hash['epp']['command']['update']['update'][:id]
+    @contact = Contact.where(code: code).first
+    if @contact.update_attributes(contact_and_address_attributes.delete_if { |k, v| v.nil? })
+      render 'epp/contacts/update'
+    else
+      handle_contact_errors
+      render '/epp/error'
+    end
+  end
+
   def delete_contact
     ph = params_hash['epp']['command']['delete']['delete']
 
@@ -60,21 +71,30 @@ module Epp::ContactsHelper
   private
 
   def contact_and_address_attributes
-    ph = params_hash['epp']['command']['create']['create']
-    {
-        code: ph[:id],
-        phone: ph[:voice],
-        ident: ph[:ident],
-        ident_type: ident_type,
-        email: ph[:email],
-        name: ph[:postalInfo][:name],
-        org_name: ph[:postalInfo][:org],
-        address_attributes: {
-          country_id: Country.find_by(iso: ph[:postalInfo][:addr][:cc]),
-          street: tidy_street,
-          zip: ph[:postalInfo][:addr][:pc]
-        }
+    ph = params_hash['epp']['command'][params[:command]][params[:command]]
+    ph = ph[:chg] if params[:command] == 'update'
+    contact_hash = {
+      code: ph[:id],
+      phone: ph[:voice],
+      ident: ph[:ident],
+      ident_type: ident_type,
+      email: ph[:email],
     }
+
+    contact_hash = contact_hash.merge({
+      name: ph[:postalInfo][:name], 
+      org_name: ph[:postalInfo][:org]
+    }) if ph[:postalInfo].is_a? Hash
+
+    contact_hash = contact_hash.merge({
+      address_attributes: {
+        country_id: Country.find_by(iso: ph[:postalInfo][:addr][:cc]),
+        street: tidy_street,
+        zip: ph[:postalInfo][:addr][:pc]
+      }
+    }) if ph[:postalInfo].is_a?(Hash) && ph[:postalInfo][:addr].is_a?(Hash)
+
+    contact_hash
   end
 
   def has_rights
@@ -85,9 +105,12 @@ module Epp::ContactsHelper
   end
 
   def tidy_street
-    street = params_hash['epp']['command']['create']['create'][:postalInfo][:addr][:street]
+    command = params[:command]
+    street = params_hash['epp']['command'][command][command][:postalInfo][:addr][:street]
     return street if street.is_a? String
     return street.join(',') if street.is_a? Array
+    return nil
+  rescue NoMethodError => e #refactor so wouldn't use rescue for flow control
     return nil
   end
 
@@ -103,7 +126,8 @@ module Epp::ContactsHelper
   def handle_contact_errors # handle_errors conflicted with domain logic
     handle_epp_errors({
       '2302' => ['Contact id already exists'],
-      '2303' => [:not_found, :epp_obj_does_not_exist]
+      '2303' => [:not_found, :epp_obj_does_not_exist],
+      '2005' => ['Phone nr is invalid', 'Email is invalid']
     },@contact)
   end
 end

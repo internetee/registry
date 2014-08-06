@@ -31,8 +31,10 @@ en:
               blank: "Required parameter missing - name"
             phone:
               blank: "Required parameter missing - phone"
+              invalid: "Phone nr is invalid"
             email:
               blank: "Required parameter missing - email"
+              invalid: "Email is invalid"
             ident:
               blank: "Required parameter missing - ident"
         domain:
