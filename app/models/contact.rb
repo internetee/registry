@@ -15,6 +15,7 @@ class Contact < ActiveRecord::Base
 
   validate :ident_must_be_valid
   validates :phone, format: { with: /\+\d{3}\.\d+/, message: "bad format" }
+  validates_uniqueness_of :code, message: :epp_id_taken
 
   IDENT_TYPE_ICO = 'ico'
   IDENT_TYPES = [

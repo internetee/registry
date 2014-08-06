@@ -19,6 +19,16 @@ describe 'EPP Contact', epp: true do
       expect(Contact.first.org_name).to eq('Example Inc.')
     end
 
+    it 'does not create duplicate contact' do
+      Fabricate(:contact, code: 'sh8013')
+
+      response = epp_request('contacts/create.xml')
+      expect(response[:result_code]).to eq('2302')
+      expect(response[:msg]).to eq('Contact id already exists')
+      
+      expect(Contact.count).to eq(1)
+    end
+
     it 'updates a contact with same ident', pending: true do
       pending 'fixing this as soon as contact#update is done'
       Fabricate(:contact)
@@ -56,7 +66,6 @@ describe 'EPP Contact', epp: true do
 
     it 'checks contacts' do
       Fabricate(:contact)
-      Fabricate(:contact, id:'sh8914')
       
       response = epp_request('contacts/check.xml')
       expect(response[:result_code]).to eq('1000')
