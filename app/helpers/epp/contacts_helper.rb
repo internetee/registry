@@ -1,6 +1,6 @@
 module Epp::ContactsHelper
   def create_contact
-    @contact = Contact.new( contact_and_address_attributes ) 
+    @contact = Contact.new( contact_and_address_attributes )
     stamp @contact
     if @contact.save
       render '/epp/contacts/create'
@@ -40,11 +40,11 @@ module Epp::ContactsHelper
 
   def info_contact
     #TODO do we reject contact without authInfo or display less info?
-    #TODO add data missing from contacts/info builder ( marked with 'if false' in said view ) 
+    #TODO add data missing from contacts/info builder ( marked with 'if false' in said view )
     current_epp_user
     ph = params_hash['epp']['command']['info']['info']
 
-    @contact = Contact.where(code: ph[:id]).first 
+    @contact = Contact.where(code: ph[:id]).first
     case has_rights
     when true
        render 'epp/contacts/info'
@@ -67,7 +67,7 @@ module Epp::ContactsHelper
         ident: ph[:ident],
         ident_type: ident_type,
         email: ph[:email],
-        name: ph[:postalInfo][:name], 
+        name: ph[:postalInfo][:name],
         org_name: ph[:postalInfo][:org],
         address_attributes: {
           country_id: Country.find_by(iso: ph[:postalInfo][:addr][:cc]),
@@ -85,7 +85,7 @@ module Epp::ContactsHelper
   end
 
   def tidy_street
-    street = params_hash['epp']['command']['create']['create'][:postalInfo][:addr][:street] 
+    street = params_hash['epp']['command']['create']['create'][:postalInfo][:addr][:street]
     return street if street.is_a? String
     return street.join(',') if street.is_a? Array
     return nil
@@ -102,11 +102,8 @@ module Epp::ContactsHelper
 
   def handle_contact_errors # handle_errors conflicted with domain logic
     handle_epp_errors({
-      '2302' => [:epp_id_taken],
+      '2302' => ['Contact id already exists'],
       '2303' => [:not_found, :epp_obj_does_not_exist]
-      }, @contact
-    )
+    },@contact)
   end
-
-
 end

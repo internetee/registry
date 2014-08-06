@@ -36,12 +36,12 @@ module Epp::Common
     obj.errors.each do |key, msg|
       if msg.is_a?(Hash)
           epp_errors << {
-            code: find_code(msg[:msg]),
+            code: find_code(error_code_map, msg[:msg]),
             msg: msg[:msg],
             value: {obj: msg[:obj], val: msg[:val]},
           }
       else
-        next unless code = find_code(msg)
+        next unless code = find_code(error_code_map, msg)
         epp_errors << {
           code: code,
           msg: msg
@@ -50,7 +50,7 @@ module Epp::Common
     end
   end
 
-  def find_code(msg)
+  def find_code(error_code_map, msg)
     error_code_map.each do |code, values|
       return code if values.include?(msg)
     end
