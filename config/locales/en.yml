@@ -72,3 +72,4 @@ en:
       epp_command_failed: 'Command failed'
       epp_nameservers_range_fail: 'Domain must have %{min}-%{max} nameservers'
       epp_authorization_error: 'Authorization error'
+      epp_id_taken: 'Contact id already exists'

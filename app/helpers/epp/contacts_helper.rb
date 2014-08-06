@@ -1,11 +1,13 @@
 module Epp::ContactsHelper
   def create_contact
-
     @contact = Contact.new( contact_and_address_attributes ) 
     stamp @contact
-    @contact.save
-
-    render '/epp/contacts/create'
+    if @contact.save
+      render '/epp/contacts/create'
+    else
+      handle_contact_errors
+      render '/epp/error'
+    end
   end
 
   def delete_contact
@@ -45,7 +47,7 @@ module Epp::ContactsHelper
     @contact = Contact.where(code: ph[:id]).first 
     case has_rights
     when true
-      render '/epp/contacts/info'
+       render 'epp/contacts/info'
     when false
       epp_errors << { code: '2201', msg: t('errors.messages.epp_authorization_error') }
       render 'epp/error'
@@ -97,5 +99,14 @@ module Epp::ContactsHelper
     Contact::IDENT_TYPES.any? { |type| return type if result.include?(type) }
     return nil
   end
+
+  def handle_contact_errors # handle_errors conflicted with domain logic
+    handle_epp_errors({
+      '2302' => [:epp_id_taken],
+      '2303' => [:not_found, :epp_obj_does_not_exist]
+      }, @contact
+    )
+  end
+
 
 end
