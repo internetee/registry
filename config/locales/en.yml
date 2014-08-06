@@ -67,9 +67,7 @@ en:
     messages:
       blank: 'is missing'
       epp_domain_reserved: 'Domain name is reserved or restricted'
-      epp_domain_taken: 'Domain name already exists'
       epp_obj_does_not_exist: 'Object does not exist'
       epp_command_failed: 'Command failed'
-      epp_nameservers_range_fail: 'Domain must have %{min}-%{max} nameservers'
       epp_authorization_error: 'Authorization error'
       epp_id_taken: 'Contact id already exists'
