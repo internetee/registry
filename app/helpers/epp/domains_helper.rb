@@ -6,10 +6,7 @@ module Epp::DomainsHelper
       if @domain.save && @domain.attach_contacts(domain_contacts) && @domain.attach_nameservers(domain_nameservers)
         render '/epp/domains/create'
       else
-        @domain.construct_epp_errors
-
-        handle_errors
-        render '/epp/error'
+        handle_errors(@domain)
         raise ActiveRecord::Rollback
       end
     end
@@ -75,14 +72,5 @@ module Epp::DomainsHelper
     return ph[:hostObj] if ph[:hostObj]
     return ph[:hostAttr] if ph[:hostAttr]
     []
-  end
-
-  def handle_errors
-    handle_epp_errors({
-      '2302' => ['Domain name already exists', 'Domain name is reserved or restricted'],
-      '2306' => ['Registrant is missing', 'Nameservers count must be between 1-13', 'Admin contact is missing'],
-      '2303' => ['Contact was not found'],
-      '2005' => ['Hostname is invalid', 'IP is invalid']
-    }, @domain)
   end
 end

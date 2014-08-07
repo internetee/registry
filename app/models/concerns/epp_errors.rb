@@ -1,7 +1,6 @@
 module EppErrors
   extend ActiveSupport::Concern
 
-
   EPP_CODE_MAP = {
     '2302' => ['Domain name already exists', 'Domain name is reserved or restricted'],
     '2306' => ['Registrant is missing', 'Nameservers count must be between 1-13', 'Admin contact is missing'],
@@ -18,10 +17,10 @@ module EppErrors
     epp_errors = []
     errors.messages.each do |key, values|
       if self.class.reflect_on_association(key)
-        epp_errors = collect_child_errors(key, values)
-      else
-        epp_errors = collect_parent_errors(key, values)
+        epp_errors << collect_child_errors(key)
       end
+
+      epp_errors << collect_parent_errors(key, values)
     end
 
     errors[:epp_errors] = epp_errors
@@ -34,15 +33,19 @@ module EppErrors
 
     values.each do |err|
       if err.is_a?(Hash)
-        epp_errors << {code: find_epp_code(err[:msg]), msg: err[:msg], value: {val: err[:val], obj: err[:obj]}}
+        next unless code = find_epp_code(err[:msg])
+        epp_errors << {code: code, msg: err[:msg], value: {val: err[:val], obj: err[:obj]}}
       else
-        epp_errors << {code: find_epp_code(err), msg: err, value: {val: send(key), obj: EPP_OBJ_MAP[key]}}
+        next unless code = find_epp_code(err)
+        err = {code: code, msg: err}
+        err[:value] = {val: send(key), obj: EPP_OBJ_MAP[key]} unless self.class.reflect_on_association(key)
+        epp_errors << err
       end
     end
     epp_errors
   end
 
-  def collect_child_errors(key, values)
+  def collect_child_errors(key)
     macro = self.class.reflect_on_association(key).macro
     multi = [:has_and_belongs_to_many, :has_many]
     single = [:belongs_to, :has_one]

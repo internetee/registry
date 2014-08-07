@@ -32,29 +32,10 @@ module Epp::Common
     @current_epp_user ||= EppUser.find(epp_session[:epp_user_id]) if epp_session[:epp_user_id]
   end
 
-  def handle_epp_errors(error_code_map, obj)
-    obj.errors.each do |key, msg|
-      if msg.is_a?(Hash)
-          epp_errors << {
-            code: find_code(error_code_map, msg[:msg]),
-            msg: msg[:msg],
-            value: {obj: msg[:obj], val: msg[:val]},
-          }
-      else
-        next unless code = find_code(error_code_map, msg)
-        epp_errors << {
-          code: code,
-          msg: msg
-        }
-      end
-    end
-  end
-
-  def find_code(error_code_map, msg)
-    error_code_map.each do |code, values|
-      return code if values.include?(msg)
-    end
-    nil
+  def handle_errors(obj)
+    obj.construct_epp_errors
+    @errors = obj.errors[:epp_errors]
+    render '/epp/error'
   end
 
   def validate_request
