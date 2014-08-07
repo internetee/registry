@@ -23,17 +23,15 @@ module Epp::ContactsHelper
   def delete_contact
     ph = params_hash['epp']['command']['delete']['delete']
 
-    begin
-      @contact = Contact.where(code: ph[:id]).first
-      @contact.destroy
-      render '/epp/contacts/delete'
-    rescue NoMethodError => e
-      epp_errors << { code: '2303', msg: t('errors.messages.epp_obj_does_not_exist') }
-      render '/epp/error'
-    rescue
-      epp_errors << {code: '2400', msg: t('errors.messages.epp_command_failed')}
-      render '/epp/error'
-    end
+    @contact = Contact.where(code: ph[:id]).first
+    @contact.destroy
+    render '/epp/contacts/delete'
+  rescue NoMethodError => e
+    epp_errors << { code: '2303', msg: t('errors.messages.epp_obj_does_not_exist') }
+    render '/epp/error'
+  rescue
+    epp_errors << {code: '2400', msg: t('errors.messages.epp_command_failed')}
+    render '/epp/error'
   end
 
   def check_contact
