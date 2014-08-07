@@ -120,12 +120,4 @@ module Epp::ContactsHelper
     Contact::IDENT_TYPES.any? { |type| return type if result.include?(type) }
     return nil
   end
-
-  def handle_contact_errors # handle_errors conflicted with domain logic
-    handle_epp_errors({
-      '2302' => ['Contact id already exists'],
-      '2303' => [:not_found, :epp_obj_does_not_exist],
-      '2005' => ['Phone nr is invalid', 'Email is invalid']
-    },@contact)
-  end
 end
