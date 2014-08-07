@@ -32,10 +32,6 @@ class Domain < ActiveRecord::Base
   validates :name, :owner_contact, presence: true
   validates_associated :nameservers
 
-  # after_validation :construct_epp_errors
-
-  attr_accessor :epp_errors
-
   def name=(value)
     value.strip!
     write_attribute(:name, SimpleIDN.to_unicode(value))
