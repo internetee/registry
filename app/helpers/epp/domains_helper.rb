@@ -6,6 +6,8 @@ module Epp::DomainsHelper
       if @domain.save && @domain.attach_contacts(domain_contacts) && @domain.attach_nameservers(domain_nameservers)
         render '/epp/domains/create'
       else
+        @domain.construct_epp_errors
+
         handle_errors
         render '/epp/error'
         raise ActiveRecord::Rollback
