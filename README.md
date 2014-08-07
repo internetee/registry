@@ -1,7 +1,7 @@
 Domain Registry
 ===============
 
-Full stack registry system desingned for a top-level domain (TLD) management.
+Full stack top-level domain (TLD) management.
 
 
 Installation
@@ -16,6 +16,7 @@ Usual Rails 4 app installation, rvm and bundler are your friends.
     cd registry
     rvm install ruby-2.1.2
     bundle
+    rake db:setup
 
 ### Apache with patched mod_epp (Debian 7/Ubuntu 14.04 LTS)
 
