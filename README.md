@@ -22,7 +22,7 @@ Usual Rails 4 app installation, rvm and bundler are your friends.
 
     sudo apt-get install apache2
 
-    sudo apt-get install apache2-threaded-dev # needed to compile mod_epp
+    sudo apt-get install apache2-threaded-dev     # needed to compile mod_epp
     wget sourceforge.net/projects/aepps/files/mod_epp/1.10/mod_epp-1.10.tar.gz
     tar -xzvf mod_epp-1.10.tar.gz
     cd mod_epp-1.10
