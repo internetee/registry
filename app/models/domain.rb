@@ -2,6 +2,10 @@ class Domain < ActiveRecord::Base
   #TODO whois requests ip whitelist for full info for own domains and partial info for other domains
   #TODO most inputs should be trimmed before validatation, probably some global logic?
 
+
+
+  include EppErrors
+
   belongs_to :registrar
   belongs_to :owner_contact, class_name: 'Contact'
 
@@ -25,58 +29,6 @@ class Domain < ActiveRecord::Base
   # after_validation :construct_epp_errors
 
   attr_accessor :epp_errors
-
-  EPP_CODE_MAP = {
-    '2302' => ['Domain name already exists', 'Domain name is reserved or restricted'],
-    '2306' => ['Registrant is missing', 'Nameservers count must be between 1-13', 'Admin contact is missing'],
-    '2303' => ['Contact was not found'],
-    '2005' => ['Hostname is invalid', 'IP is invalid']
-  }
-
-  EPP_OBJ_MAP = {
-    nameservers: 'ns',
-    name_dirty: 'domain'
-  }
-
-  def construct_epp_errors
-    epp_errors = []
-    errors.messages.each do |key, values|
-      if self.class.reflect_on_association(key)
-        epp_errors = collect_child_errors
-      else
-        epp_errors = collect_parent_errors(key, values)
-      end
-    end
-
-    errors[:epp_errors] = epp_errors
-    errors[:epp_errors].flatten!
-    # binding.pry
-  end
-
-  def collect_parent_errors(key, values)
-    epp_errors = []
-    values = [values] if values.is_a?(String)
-
-    values.each do |err|
-      if err.is_a?(Hash)
-        epp_errors << {code: find_epp_code(err[:msg]), msg: err[:msg], value: {val: err[:val], obj: err[:obj]}}
-      else
-        epp_errors << {code: find_epp_code(err), msg: err, value: {val: send(key), obj: EPP_OBJ_MAP[key]}}
-      end
-    end
-    epp_errors
-  end
-
-  def collect_child_errors
-
-  end
-
-  def find_epp_code(msg)
-    EPP_CODE_MAP.each do |code, values|
-      return code if values.include?(msg)
-    end
-    nil
-  end
 
   def name=(value)
     value.strip!
@@ -125,7 +77,7 @@ class Domain < ActiveRecord::Base
 
     save
 
-    add_child_collection_errors(:nameservers, :ns)
+    # add_child_collection_errors(:nameservers, :ns)
 
     validate_nameservers_count
 
