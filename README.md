@@ -1,7 +1,7 @@
 Domain Registry
 ===============
 
-Full stack registry system desingned for a top-level domain (TLD) management.
+Full stack top-level domain (TLD) management.
 
 
 Installation
@@ -16,12 +16,13 @@ Usual Rails 4 app installation, rvm and bundler are your friends.
     cd registry
     rvm install ruby-2.1.2
     bundle
+    rake db:setup
 
 ### Apache with patched mod_epp (Debian 7/Ubuntu 14.04 LTS)
 
     sudo apt-get install apache2
 
-    sudo apt-get install apache2-threaded-dev # needed to compile mod_epp
+    sudo apt-get install apache2-threaded-dev     # needed to compile mod_epp
     wget sourceforge.net/projects/aepps/files/mod_epp/1.10/mod_epp-1.10.tar.gz
     tar -xzvf mod_epp-1.10.tar.gz
     cd mod_epp-1.10
@@ -31,7 +32,7 @@ formatted content boundaries, the mod_epp needs to be modified before building:
 
     wget https://github.com/internetee/registry/raw/master/doc/patches/mod_epp_1.10-rack-friendly.patch    
     patch < mod_epp_1.10-rack-friendly.patch
-    apxs2 -a -c -i mod_epp.c
+    sudo apxs2 -a -c -i mod_epp.c
 
 Enable ssl:
 
