@@ -69,13 +69,13 @@ describe 'EPP Domain', epp: true do
 
       it 'does not create domain without nameservers' do
         response = epp_request('domains/create_wo_nameservers.xml')
-        expect(response[:result_code]).to eq('2306')
+        expect(response[:result_code]).to eq('2004')
         expect(response[:msg]).to eq('Nameservers count must be between 1-13')
       end
 
       it 'does not create domain with too many nameservers' do
         response = epp_request('domains/create_w_too_many_nameservers.xml')
-        expect(response[:result_code]).to eq('2306')
+        expect(response[:result_code]).to eq('2004')
         expect(response[:msg]).to eq('Nameservers count must be between 1-13')
       end
 
@@ -140,6 +140,12 @@ describe 'EPP Domain', epp: true do
         name = response[:parsed].css('renData name').text
         expect(exDate).to eq ('2015-08-07 00:00:00 UTC')
         expect(name).to eq ('example.ee')
+      end
+
+      it 'returns an error when given and current exp dates do not match' do
+        response = epp_request('domains/renew_w_not_matching_exp_dates.xml')
+        expect(response[:results][0][:result_code]).to eq('2306')
+        expect(response[:results][0][:msg]).to eq('Given and current expire dates do not match')
       end
     end
 
