@@ -125,13 +125,14 @@ class Domain < ActiveRecord::Base
   end
 
   def renew(cur_exp_date, period, unit='y')
-    if cur_exp_date == valid_to
-      valid_to = period.to_i.years
+    if cur_exp_date.to_date == valid_to
+      self.valid_to = self.valid_to + period.to_i.years
+      self.period = period
+      save
     else
       errors[:base] << {msg: I18n.t('errors.messages.epp_exp_dates_do_not_match'), obj: 'domain', val: cur_exp_date}
+      false
     end
-
-    save
   end
 
   class << self
