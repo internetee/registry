@@ -12,6 +12,7 @@ module Epp::ContactsHelper
   def update_contact
     code = params_hash['epp']['command']['update']['update'][:id]
     @contact = Contact.where(code: code).first
+    stamp @contact
     if @contact.update_attributes(contact_and_address_attributes.delete_if { |k, v| v.nil? })
       render 'epp/contacts/update'
     else
