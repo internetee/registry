@@ -5,9 +5,10 @@ class Domain < ActiveRecord::Base
   include EppErrors
 
   EPP_CODE_MAP = {
-    '2302' => ['Domain name already exists', 'Domain name is reserved or restricted'],
-    '2306' => ['Registrant is missing', 'Nameservers count must be between 1-13', 'Admin contact is missing'],
-    '2303' => ['Contact was not found']
+    '2302' => ['Domain name already exists', 'Domain name is reserved or restricted'], # Object exists
+    '2306' => ['Registrant is missing', 'Admin contact is missing', 'Given and current expire dates do not match'], # Parameter policy error
+    '2004' => ['Nameservers count must be between 1-13'], # Parameter value range error
+    '2303' => ['Contact was not found'] # Object does not exist
   }
 
   EPP_OBJ = 'domain'
@@ -31,10 +32,6 @@ class Domain < ActiveRecord::Base
   validates :period, numericality: { only_integer: true, greater_than: 0, less_than: 100 }
   validates :name, :owner_contact, presence: true
   validates_associated :nameservers
-
-  # after_validation :construct_epp_errors
-
-  attr_accessor :epp_errors
 
   def name=(value)
     value.strip!

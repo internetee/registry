@@ -30,8 +30,7 @@ module Epp::DomainsHelper
     if @domain.renew(ph[:curExpDate], ph[:period])
       render '/epp/domains/renew'
     else
-      handle_errors
-      render '/epp/error'
+      handle_errors(@domain)
     end
   end
 
