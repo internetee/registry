@@ -4,6 +4,14 @@ class Domain < ActiveRecord::Base
 
   include EppErrors
 
+  EPP_CODE_MAP = {
+    '2302' => ['Domain name already exists', 'Domain name is reserved or restricted'],
+    '2306' => ['Registrant is missing', 'Nameservers count must be between 1-13', 'Admin contact is missing'],
+    '2303' => ['Contact was not found']
+  }
+
+  EPP_OBJ = 'domain'
+
   belongs_to :registrar
   belongs_to :owner_contact, class_name: 'Contact'
 

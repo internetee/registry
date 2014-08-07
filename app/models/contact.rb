@@ -2,6 +2,16 @@ class Contact < ActiveRecord::Base
   #TODO Foreign contact will get email with activation link/username/temp password
   #TODO Phone number validation, in first phase very minimam in order to support current registries
 
+  include EppErrors
+
+  EPP_CODE_MAP = {
+    '2302' => ['Contact id already exists'],
+    '2303' => [:not_found, :epp_obj_does_not_exist],
+    '2005' => ['Phone nr is invalid', 'Email is invalid']
+  }
+
+  EPP_OBJ = 'contact'
+
   has_one :address
   has_many :domain_contacts
   has_many :domains, through: :domain_contacts

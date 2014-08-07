@@ -5,8 +5,7 @@ module Epp::ContactsHelper
     if @contact.save
       render '/epp/contacts/create'
     else
-      handle_contact_errors
-      render '/epp/error'
+      handle_errors(@contact)
     end
   end
 
@@ -16,8 +15,7 @@ module Epp::ContactsHelper
     if @contact.update_attributes(contact_and_address_attributes.delete_if { |k, v| v.nil? })
       render 'epp/contacts/update'
     else
-      handle_contact_errors
-      render '/epp/error'
+      handle_errors(@contact)
     end
   end
 
@@ -82,7 +80,7 @@ module Epp::ContactsHelper
     }
 
     contact_hash = contact_hash.merge({
-      name: ph[:postalInfo][:name], 
+      name: ph[:postalInfo][:name],
       org_name: ph[:postalInfo][:org]
     }) if ph[:postalInfo].is_a? Hash
 

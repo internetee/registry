@@ -1,6 +1,12 @@
 class Nameserver < ActiveRecord::Base
   include EppErrors
 
+  EPP_CODE_MAP = {
+    '2005' => ['Hostname is invalid', 'IP is invalid']
+  }
+
+  EPP_OBJ = 'ns'
+
   belongs_to :registrar
   has_and_belongs_to_many :domains
 
