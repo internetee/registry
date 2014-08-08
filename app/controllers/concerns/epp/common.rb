@@ -38,6 +38,19 @@ module Epp::Common
     render '/epp/error'
   end
 
+  def xml_attrs_present?(ph, attributes)
+    attributes.each do |x|
+      epp_errors << {code: '2003', msg: I18n.t('errors.messages.required_parameter_missing', key: x.last)} unless has_attribute(ph, x)
+    end
+    epp_errors.empty?
+  end
+
+  def has_attribute(ph, path)
+    path.inject(ph) do |location, key|
+      location.respond_to?(:keys) ? location[key] : nil
+    end
+  end
+
   def validate_request
     type = OBJECT_TYPES[params_hash['epp']['xmlns:ns2']]
     return unless type

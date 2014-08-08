@@ -123,7 +123,7 @@ class Domain < ActiveRecord::Base
       self.period = period
       save
     else
-      errors[:base] << {msg: I18n.t('errors.messages.epp_exp_dates_do_not_match'), obj: 'domain', val: cur_exp_date}
+      errors[:base] << {msg: I18n.t('errors.messages.epp_exp_dates_do_not_match'), obj: 'curExpDate', val: cur_exp_date}
       false
     end
   end

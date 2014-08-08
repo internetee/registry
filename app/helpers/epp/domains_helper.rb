@@ -1,6 +1,19 @@
 module Epp::DomainsHelper
   def create_domain
-    @domain = Domain.new(domain_create_params)
+    ph = params_hash['epp']['command']['create']['create']
+
+    unless xml_attrs_present?(ph, [['name'], ['ns'], ['authInfo'], ['contact'], ['registrant']])
+      render '/epp/error' and return
+    end
+
+    @domain = Domain.new(domain_create_params(ph))
+
+    if owner_contact_id = Contact.find_by(code: ph[:registrant]).try(:id)
+      @domain.owner_contact_id = owner_contact_id
+    else
+      epp_errors << {code: '2303', msg: I18n.t('errors.messages.epp_registrant_not_found'), value: {obj: 'registrant', val: ph[:registrant]}}
+      render '/epp/error' and return
+    end
 
     Domain.transaction do
       if @domain.save && @domain.attach_contacts(domain_contacts) && @domain.attach_nameservers(domain_nameservers)
@@ -23,7 +36,7 @@ module Epp::DomainsHelper
 
     @domain = Domain.find_by(name: ph[:name])
     unless @domain
-      epp_errors << {code: '2303', msg: I18n.t('errors.messages.epp_domain_not_found'), value: {obj: 'domain', val: ph[:name]}}
+      epp_errors << {code: '2303', msg: I18n.t('errors.messages.epp_domain_not_found'), value: {obj: 'name', val: ph[:name]}}
       render '/epp/error' and return
     end
 
@@ -37,8 +50,7 @@ module Epp::DomainsHelper
   ### HELPER METHODS ###
   private
 
-  def domain_create_params
-    ph = params_hash['epp']['command']['create']['create']
+  def domain_create_params(ph)
     {
       name: ph[:name],
       registrar_id: current_epp_user.registrar.try(:id),
@@ -46,8 +58,7 @@ module Epp::DomainsHelper
       period: ph[:period].to_i,
       valid_from: Date.today,
       valid_to: Date.today + ph[:period].to_i.years,
-      auth_info: ph[:authInfo][:pw],
-      owner_contact_id: Contact.find_by(code: ph[:registrant]).try(:id)
+      auth_info: ph[:authInfo][:pw]
     }
   end
 
