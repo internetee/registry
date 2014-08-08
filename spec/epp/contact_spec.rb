@@ -29,6 +29,16 @@ describe 'EPP Contact', epp: true do
       expect(Contact.count).to eq(1)
     end
 
+    it 'stamps updated_by succesfully' do
+      Fabricate(:contact, code: 'sh8013')
+     
+      expect(Contact.first.updated_by_id).to be nil
+
+      response = epp_request('contacts/update.xml')
+
+      expect(Contact.first.updated_by_id).to be 1
+    end
+
    #TODO tests for missing/invalid/etc ident
 
     it 'deletes contact' do
