@@ -11,7 +11,9 @@ class Domain < ActiveRecord::Base
     '2303' => ['Contact was not found'] # Object does not exist
   }
 
-  EPP_OBJ = 'domain'
+  EPP_ATTR_MAP = {
+    owner_contact: 'registrant'
+  }
 
   belongs_to :registrar
   belongs_to :owner_contact, class_name: 'Contact'

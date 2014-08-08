@@ -5,7 +5,9 @@ class Nameserver < ActiveRecord::Base
     '2005' => ['Hostname is invalid', 'IP is invalid']
   }
 
-  EPP_OBJ = 'ns'
+  EPP_ATTR_MAP = {
+    hostname: 'hostName'
+  }
 
   belongs_to :registrar
   has_and_belongs_to_many :domains

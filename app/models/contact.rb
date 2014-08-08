@@ -10,7 +10,7 @@ class Contact < ActiveRecord::Base
     '2005' => ['Phone nr is invalid', 'Email is invalid']
   }
 
-  EPP_OBJ = 'contact'
+  EPP_ATTR_MAP = {}
 
   has_one :address
   has_many :domain_contacts

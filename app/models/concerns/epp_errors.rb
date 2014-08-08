@@ -26,7 +26,7 @@ module EppErrors
       else
         next unless code = find_epp_code(err)
         err = {code: code, msg: err}
-        err[:value] = {val: send(key), obj: self.class::EPP_OBJ} unless self.class.reflect_on_association(key)
+        err[:value] = {val: send(key), obj: self.class::EPP_ATTR_MAP[key]} unless self.class.reflect_on_association(key)
         epp_errors << err
       end
     end
