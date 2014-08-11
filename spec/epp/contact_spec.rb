@@ -59,7 +59,7 @@ describe 'EPP Contact', epp: true do
    #TODO tests for missing/invalid/etc ident
 
     it 'deletes contact' do
-      Fabricate(:contact)
+      Fabricate(:contact, code: "dwa1234")
       response = epp_request('contacts/delete.xml')
       expect(response[:result_code]).to eq('1000')
       expect(response[:msg]).to eq('Command completed successfully')
@@ -75,7 +75,7 @@ describe 'EPP Contact', epp: true do
     end
 
     it 'checks contacts' do
-      Fabricate(:contact)
+      Fabricate(:contact, code: 'check-1234')
       
       response = epp_request('contacts/check.xml')
       expect(response[:result_code]).to eq('1000')
@@ -85,8 +85,8 @@ describe 'EPP Contact', epp: true do
       expect(ids[0].attributes['avail'].text).to eq('0')
       expect(ids[1].attributes['avail'].text).to eq('1')
 
-      expect(ids[0].text).to eq('sh8913')
-      expect(ids[1].text).to eq('sh8914')
+      expect(ids[0].text).to eq('check-1234')
+      expect(ids[1].text).to eq('check-4321')
 
     end
 
@@ -97,7 +97,7 @@ describe 'EPP Contact', epp: true do
     end
 
     it 'returns info about contact' do
-      Fabricate(:contact, name: "Johnny Awesome", created_by_id: '1')
+      Fabricate(:contact, name: "Johnny Awesome", created_by_id: '1', code: 'info-4444')
       Fabricate(:address)
 
       response = epp_request('contacts/info.xml')
@@ -110,7 +110,7 @@ describe 'EPP Contact', epp: true do
     end
 
     it 'it doesn\'t display unassociated object' do
-      Fabricate(:contact, name:"Johnny Awesome", created_by_id: '240')
+      Fabricate(:contact, name:"Johnny Awesome", created_by_id: '240', code: 'info-4444')
       Fabricate(:epp_user, id: 240)
 
       response = epp_request('contacts/info.xml')
