@@ -6,6 +6,7 @@ describe 'EPP Contact', epp: true do
   context 'with valid user' do
     before(:each) { Fabricate(:epp_user) }
 
+    #Tests for the new error system
     it "doesn't create contact with attributes missing" do
       response = epp_request('contacts/create_missing_attr.xml')
       expect(response[:results][0][:result_code]).to eq('2003')
@@ -13,6 +14,13 @@ describe 'EPP Contact', epp: true do
 
       expect(response[:results][0][:msg]).to eq('Required parameter missing: cc')
       expect(response[:results][1][:msg]).to eq('Required parameter missing: authInfo')
+    end
+
+    it "doesn't update contact with attributes missing" do
+      response = epp_request('contacts/update_missing_attr.xml')
+
+      expect(response[:results][0][:result_code]).to eq('2003')
+      expect(response[:results][0][:msg]).to eq('Required parameter missing: id')
     end
 
     # incomplete

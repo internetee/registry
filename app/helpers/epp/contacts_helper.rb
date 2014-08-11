@@ -10,6 +10,7 @@ module Epp::ContactsHelper
   end
 
   def update_contact
+    #TODO add support for rem and add
     code = params_hash['epp']['command']['update']['update'][:id]
     @contact = Contact.where(code: code).first
     stamp @contact
@@ -77,6 +78,27 @@ module Epp::ContactsHelper
                              ['postalInfo', 'addr', 'cc'], 
                              ['authInfo']])
   end
+
+  def validate_contact_update_request
+    @ph = params_hash['epp']['command']['update']['update']
+    xml_attrs_present?(@ph, [['id'] ])
+  end
+
+  def validate_contact_delete_request
+    @ph = params_hash['epp']['command']['delete']['delete']
+    xml_attrs_present?(@ph, [ ['id'] ] )
+  end
+
+  def validate_contact_check_request
+    @ph = params_hash['epp']['command']['check']['check']
+    xml_attrs_present?(@ph, [ ['id'] ])
+  end
+
+  def validate_contact_info_request
+    @ph = params_hash['epp']['command']['info']['info']
+    xml_attrs_present?(@ph, [ ['id'] ])
+  end
+
 
   def contact_and_address_attributes
     ph = params_hash['epp']['command'][params[:command]][params[:command]]
