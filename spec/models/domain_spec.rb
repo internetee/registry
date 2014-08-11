@@ -52,8 +52,8 @@ describe Domain do
 
   it 'validates period' do
     expect(Fabricate.build(:domain, period: 0).valid?).to be false
-    expect(Fabricate.build(:domain, period: 120).valid?).to be false
-    expect(Fabricate.build(:domain, period: 99).valid?).to be true
+    expect(Fabricate.build(:domain, period: 4).valid?).to be false
+    expect(Fabricate.build(:domain, period: 3).valid?).to be true
   end
 
 end

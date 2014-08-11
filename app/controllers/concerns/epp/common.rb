@@ -32,9 +32,11 @@ module Epp::Common
     @current_epp_user ||= EppUser.find(epp_session[:epp_user_id]) if epp_session[:epp_user_id]
   end
 
-  def handle_errors(obj)
-    obj.construct_epp_errors
-    @errors = obj.errors[:epp_errors]
+  def handle_errors(obj=nil)
+    if obj
+      obj.construct_epp_errors
+      @errors = obj.errors[:epp_errors]
+    end
     render '/epp/error'
   end
 
@@ -52,15 +54,9 @@ module Epp::Common
   end
 
   def validate_request
-    type = OBJECT_TYPES[params_hash['epp']['xmlns:ns2']]
-    return unless type
-
-    xsd = Nokogiri::XML::Schema(File.read("doc/schemas/#{type}-1.0.xsd"))
-    doc = Nokogiri::XML(params[:frame])
-    ext_values = xsd.validate(doc)
-    if ext_values.any?
-      epp_errors << {code: '2001', msg: 'Command syntax error', ext_values: ext_values}
-      render '/epp/error' and return
+    validation_method = "validate_#{OBJECT_TYPES[params_hash['epp']['xmlns:ns2']]}_#{params[:command]}_request"
+    if respond_to?(validation_method, true)
+      handle_errors and return unless send(validation_method)
     end
   end
 end

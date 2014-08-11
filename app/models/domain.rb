@@ -12,7 +12,8 @@ class Domain < ActiveRecord::Base
   }
 
   EPP_ATTR_MAP = {
-    owner_contact: 'registrant'
+    owner_contact: 'registrant',
+    name_dirty: 'name'
   }
 
   belongs_to :registrar
@@ -33,6 +34,7 @@ class Domain < ActiveRecord::Base
   validates :name_dirty, domain_name: true, uniqueness: true
   validates :period, numericality: { only_integer: true, greater_than: 0, less_than: 100 }
   validates :name, :owner_contact, presence: true
+  validate :validate_period
   validates_associated :nameservers
 
   def name=(value)
@@ -118,14 +120,40 @@ class Domain < ActiveRecord::Base
   end
 
   def renew(cur_exp_date, period, unit='y')
-    if cur_exp_date.to_date == valid_to
-      self.valid_to = self.valid_to + period.to_i.years
-      self.period = period
-      save
+    # TODO Check how much time before domain exp date can it be renewed
+    validate_exp_dates(cur_exp_date)
+    return false if errors.any?
+
+    p = period.to_i.days  if unit == 'd'
+    p = period.to_i.months if unit == 'm'
+    p = period.to_i.years if unit == 'y'
+
+    self.valid_to = self.valid_to + p
+    self.period = period
+    self.period_unit = unit
+    save
+  end
+
+  def validate_period
+    return unless period.present?
+
+    if period_unit == 'd'
+      valid_values = ['365', '366', '710', '712', '1065', '1068']
+    elsif period_unit == 'm'
+      valid_values = ['12', '24', '36']
     else
-      errors[:base] << {msg: I18n.t('errors.messages.epp_exp_dates_do_not_match'), obj: 'curExpDate', val: cur_exp_date}
-      false
+      valid_values = ['1', '2', '3']
     end
+
+    errors.add(:period, :step_error) unless valid_values.include?(period.to_s)
+  end
+
+  def validate_exp_dates(cur_exp_date)
+    errors.add(:valid_to, {
+      obj: 'curExpDate',
+      val: cur_exp_date,
+      msg: I18n.t('errors.messages.epp_exp_dates_do_not_match')
+    }) if cur_exp_date.to_date != valid_to
   end
 
   class << self

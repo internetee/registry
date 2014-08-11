@@ -32,23 +32,29 @@ module Epp::DomainsHelper
   end
 
   def renew_domain
-    ph = params_hash['epp']['command']['renew']['renew']
+    @domain = find_domain
 
-    @domain = Domain.find_by(name: ph[:name])
-    unless @domain
-      epp_errors << {code: '2303', msg: I18n.t('errors.messages.epp_domain_not_found'), value: {obj: 'name', val: ph[:name]}}
-      render '/epp/error' and return
-    end
+    handle_errors(@domain) and return unless @domain
+    handle_errors(@domain) and return unless @domain.renew(@ph[:curExpDate], @ph[:period])
 
-    if @domain.renew(ph[:curExpDate], ph[:period])
-      render '/epp/domains/renew'
-    else
-      handle_errors(@domain)
-    end
+    render '/epp/domains/renew'
   end
 
   ### HELPER METHODS ###
   private
+
+  def validate_domain_renew_request
+    @ph = params_hash['epp']['command']['renew']['renew']
+    xml_attrs_present?(@ph, [['name'], ['curExpDate'], ['period']])
+  end
+
+  def find_domain
+    @domain = Domain.find_by(name: @ph[:name])
+    unless @domain
+      epp_errors << {code: '2303', msg: I18n.t('errors.messages.epp_domain_not_found'), value: {obj: 'name', val: @ph[:name]}}
+    end
+    @domain
+  end
 
   def domain_create_params(ph)
     {
