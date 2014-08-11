@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <renew>
+      <domain:renew
+       xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
+        <domain:name>example.ee</domain:name>
+        <domain:curExpDate>2014-08-07</domain:curExpDate>
+        <domain:period unit="y">4</domain:period>
+      </domain:renew>
+    </renew>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>

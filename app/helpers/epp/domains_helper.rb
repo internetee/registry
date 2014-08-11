@@ -32,6 +32,7 @@ module Epp::DomainsHelper
   end
 
   def renew_domain
+    # TODO support period unit
     @domain = find_domain
 
     handle_errors(@domain) and return unless @domain
@@ -49,11 +50,11 @@ module Epp::DomainsHelper
   end
 
   def find_domain
-    @domain = Domain.find_by(name: @ph[:name])
-    unless @domain
+    domain = Domain.find_by(name: @ph[:name])
+    unless domain
       epp_errors << {code: '2303', msg: I18n.t('errors.messages.epp_domain_not_found'), value: {obj: 'name', val: @ph[:name]}}
     end
-    @domain
+    domain
   end
 
   def domain_create_params(ph)

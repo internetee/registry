@@ -7,7 +7,7 @@ class Domain < ActiveRecord::Base
   EPP_CODE_MAP = {
     '2302' => ['Domain name already exists', 'Domain name is reserved or restricted'], # Object exists
     '2306' => ['Registrant is missing', 'Admin contact is missing', 'Given and current expire dates do not match'], # Parameter policy error
-    '2004' => ['Nameservers count must be between 1-13'], # Parameter value range error
+    '2004' => ['Nameservers count must be between 1-13', 'Period must add up to 1, 2 or 3 years'], # Parameter value range error
     '2303' => ['Contact was not found'] # Object does not exist
   }
 
@@ -136,7 +136,6 @@ class Domain < ActiveRecord::Base
 
   def validate_period
     return unless period.present?
-
     if period_unit == 'd'
       valid_values = ['365', '366', '710', '712', '1065', '1068']
     elsif period_unit == 'm'
@@ -145,7 +144,7 @@ class Domain < ActiveRecord::Base
       valid_values = ['1', '2', '3']
     end
 
-    errors.add(:period, :step_error) unless valid_values.include?(period.to_s)
+    errors.add(:period, :out_of_range) unless valid_values.include?(period.to_s)
   end
 
   def validate_exp_dates(cur_exp_date)

@@ -150,6 +150,13 @@ describe 'EPP Domain', epp: true do
         expect(response[:results][0][:result_code]).to eq('2306')
         expect(response[:results][0][:msg]).to eq('Given and current expire dates do not match')
       end
+
+      it 'returns an error when given and current exp dates do not match' do
+        response = epp_request('domains/renew_w_invalid_period.xml')
+        expect(response[:results][0][:result_code]).to eq('2004')
+        expect(response[:results][0][:msg]).to eq('Period must add up to 1, 2 or 3 years')
+        expect(response[:results][0][:value]).to eq('4')
+      end
     end
 
     it 'checks a domain' do

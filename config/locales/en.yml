@@ -52,6 +52,8 @@ en:
               out_of_range: 'Nameservers count must be between %{min}-%{max}'
               hostname_invalid: 'Hostname is invalid'
               ip_invalid: 'IP is invalid'
+            period:
+              out_of_range: 'Period must add up to 1, 2 or 3 years'
         nameserver:
           attributes:
             hostname:
