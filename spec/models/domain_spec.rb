@@ -41,7 +41,9 @@ describe Domain do
     expect(d.errors.messages).to match_array({
       name: ['is missing'],
       period: ['is not a number'],
-      owner_contact: ["Registrant is missing"]
+      owner_contact: ["Registrant is missing"],
+      admin_contacts: ["Admin contact is missing"],
+      nameservers: ["Nameservers count must be between 1-13"]
     })
   end
 

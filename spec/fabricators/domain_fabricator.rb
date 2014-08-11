@@ -4,4 +4,6 @@ Fabricator(:domain) do
   period 1
   period_unit 'y'
   owner_contact(fabricator: :contact)
+  nameservers(count: 3)
+  admin_contacts(count: 1) { Fabricate(:contact) }
 end

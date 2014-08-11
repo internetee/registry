@@ -35,9 +35,14 @@ module Epp::Common
   def handle_errors(obj=nil)
     if obj
       obj.construct_epp_errors
-      @errors = obj.errors[:epp_errors]
+      @errors += obj.errors[:epp_errors]
     end
     render '/epp/error'
+  end
+
+  def append_errors(obj)
+    obj.construct_epp_errors
+    @errors += obj.errors[:epp_errors]
   end
 
   def xml_attrs_present?(ph, attributes)

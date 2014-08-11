@@ -34,8 +34,12 @@ class Domain < ActiveRecord::Base
   validates :name_dirty, domain_name: true, uniqueness: true
   validates :period, numericality: { only_integer: true, greater_than: 0, less_than: 100 }
   validates :name, :owner_contact, presence: true
-  validate :validate_period
+
   validates_associated :nameservers
+
+  validate :validate_period
+  validate :validate_nameservers_count
+  validate :validate_admin_contacts_count
 
   def name=(value)
     value.strip!
@@ -44,18 +48,37 @@ class Domain < ActiveRecord::Base
     write_attribute(:name_dirty, value)
   end
 
+  def attach_objects(ph, frame)
+    attach_owner_contact(ph[:registrant])
+    attach_contacts(self.class.parse_contacts_from_frame(frame))
+    attach_nameservers(self.class.parse_nameservers_from_params(ph[:ns]))
+
+    errors.empty?
+  end
+
+  def attach_owner_contact(code)
+    self.owner_contact = Contact.find_by(code: code)
+
+    errors.add(:owner_contact, {
+      obj: 'registrant',
+      val: code,
+      msg: I18n.t('errors.messages.epp_registrant_not_found')
+    }) unless owner_contact
+  end
+
   def attach_contacts(contacts)
     contacts.each do |k, v|
       v.each do |x|
-        contact = Contact.find_by(code: x[:contact])
-        attach_contact(k, contact) and next if contact
-
-        # Detailed error message with value to display in EPP response
-        errors.add(:domain_contacts, {
-          obj: 'contact',
-          val: x[:contact],
-          msg: errors.generate_message(:domain_contacts, :not_found)
-        })
+        if contact = Contact.find_by(code: x[:contact])
+          attach_contact(k, contact)
+        else
+          # Detailed error message with value to display in EPP response
+          errors.add(:domain_contacts, {
+            obj: 'contact',
+            val: x[:contact],
+            msg: errors.generate_message(:domain_contacts, :not_found)
+          })
+        end
       end
     end
 
@@ -64,29 +87,17 @@ class Domain < ActiveRecord::Base
     if owner_contact.citizen?
       attach_contact(Contact::CONTACT_TYPE_ADMIN, owner_contact) if admin_contacts.empty?
     end
-
-    validate_admin_contacts_count
-
-    errors.empty?
   end
 
   def attach_contact(type, contact)
-    domain_contacts.create(
-      contact: contact,
-      contact_type: type
-    )
+    tech_contacts << contact if type.to_sym == :tech
+    admin_contacts << contact if type.to_sym == :admin
   end
 
   def attach_nameservers(ns_list)
     ns_list.each do |ns|
       attach_nameserver(ns)
     end
-
-    save
-
-    validate_nameservers_count
-
-    errors.empty?
   end
 
   def attach_nameserver(ns)
@@ -107,12 +118,12 @@ class Domain < ActiveRecord::Base
     self.nameservers.build(attrs)
   end
 
+  ### VALIDATIONS ###
+
   def validate_nameservers_count
-    unless nameservers.count.between?(1, 13)
+    unless nameservers.length.between?(1, 13)
       errors.add(:nameservers, :out_of_range, {min: 1, max: 13})
     end
-
-    errors.empty?
   end
 
   def validate_admin_contacts_count
@@ -156,6 +167,27 @@ class Domain < ActiveRecord::Base
   end
 
   class << self
+    def parse_contacts_from_frame(frame)
+      parsed_frame = Nokogiri::XML(frame).remove_namespaces!
+
+      res = {}
+      Contact::CONTACT_TYPES.each do |ct|
+        res[ct.to_sym] ||= []
+        parsed_frame.css("contact[type='#{ct}']").each do |x|
+          res[ct.to_sym] << Hash.from_xml(x.to_s).with_indifferent_access
+        end
+      end
+
+      res
+    end
+
+    def parse_nameservers_from_params(ph)
+      return [] unless ph
+      return ph[:hostObj] if ph[:hostObj]
+      return ph[:hostAttr] if ph[:hostAttr]
+      []
+    end
+
     def check_availability(domains)
       domains = [domains] if domains.is_a?(String)
 
