@@ -8,7 +8,7 @@ class Domain < ActiveRecord::Base
     '2302' => ['Domain name already exists', 'Domain name is reserved or restricted'], # Object exists
     '2306' => ['Registrant is missing', 'Admin contact is missing', 'Given and current expire dates do not match'], # Parameter policy error
     '2004' => ['Nameservers count must be between 1-13', 'Period must add up to 1, 2 or 3 years'], # Parameter value range error
-    '2303' => ['Contact was not found'] # Object does not exist
+    '2303' => ['Registrant not found', 'Contact was not found'] # Object does not exist
   }
 
   EPP_ATTR_MAP = {
@@ -82,10 +82,12 @@ class Domain < ActiveRecord::Base
       end
     end
 
-    attach_contact(Contact::CONTACT_TYPE_TECH, owner_contact) if tech_contacts.empty?
+    if owner_contact
+      attach_contact(Contact::CONTACT_TYPE_TECH, owner_contact) if tech_contacts.empty?
 
-    if owner_contact.citizen?
-      attach_contact(Contact::CONTACT_TYPE_ADMIN, owner_contact) if admin_contacts.empty?
+      if owner_contact.citizen?
+        attach_contact(Contact::CONTACT_TYPE_ADMIN, owner_contact) if admin_contacts.empty?
+      end
     end
   end
 
