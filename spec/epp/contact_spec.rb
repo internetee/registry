@@ -6,6 +6,15 @@ describe 'EPP Contact', epp: true do
   context 'with valid user' do
     before(:each) { Fabricate(:epp_user) }
 
+    it "doesn't create contact with attributes missing" do
+      response = epp_request('contacts/create_missing_attr.xml')
+      expect(response[:results][0][:result_code]).to eq('2003')
+      expect(response[:results][1][:result_code]).to eq('2003')
+
+      expect(response[:results][0][:msg]).to eq('Required parameter missing: cc')
+      expect(response[:results][1][:msg]).to eq('Required parameter missing: authInfo')
+    end
+
     # incomplete
     it 'creates a contact' do
       response = epp_request('contacts/create.xml')

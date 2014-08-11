@@ -67,6 +67,17 @@ module Epp::ContactsHelper
 
   private
 
+  def validate_contact_create_request
+    @ph = params_hash['epp']['command']['create']['create']
+    xml_attrs_present?(@ph, [['id'], 
+                             ['postalInfo'], 
+                             ['postalInfo', 'name'], 
+                             ['postalInfo', 'addr'],
+                             ['postalInfo', 'addr', 'city'], 
+                             ['postalInfo', 'addr', 'cc'], 
+                             ['authInfo']])
+  end
+
   def contact_and_address_attributes
     ph = params_hash['epp']['command'][params[:command]][params[:command]]
     ph = ph[:chg] if params[:command] == 'update'
