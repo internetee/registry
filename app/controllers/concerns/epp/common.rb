@@ -33,6 +33,7 @@ module Epp::Common
   end
 
   def handle_errors(obj=nil)
+    @errors ||= []
     if obj
       obj.construct_epp_errors
       @errors += obj.errors[:epp_errors]
