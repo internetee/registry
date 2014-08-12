@@ -94,6 +94,7 @@ describe 'EPP Contact', epp: true do
       response = epp_request('contacts/info.xml')
       expect(response[:result_code]).to eq('2303')
       expect(response[:msg]).to eq('Object does not exist')
+      expect(response[:results][0][:value]).to eq('info-4444')
     end
 
     it 'returns info about contact' do
