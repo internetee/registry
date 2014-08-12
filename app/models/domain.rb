@@ -48,6 +48,8 @@ class Domain < ActiveRecord::Base
     write_attribute(:name_dirty, value)
   end
 
+  ### CREATE ###
+
   def attach_objects(ph, frame)
     attach_owner_contact(ph[:registrant])
     attach_contacts(self.class.parse_contacts_from_frame(frame))
@@ -120,17 +122,7 @@ class Domain < ActiveRecord::Base
     self.nameservers.build(attrs)
   end
 
-  ### VALIDATIONS ###
-
-  def validate_nameservers_count
-    unless nameservers.length.between?(1, 13)
-      errors.add(:nameservers, :out_of_range, {min: 1, max: 13})
-    end
-  end
-
-  def validate_admin_contacts_count
-    errors.add(:admin_contacts, :blank) if admin_contacts.empty?
-  end
+  ### RENEW ###
 
   def renew(cur_exp_date, period, unit='y')
     # TODO Check how much time before domain exp date can it be renewed
@@ -145,6 +137,18 @@ class Domain < ActiveRecord::Base
     self.period = period
     self.period_unit = unit
     save
+  end
+
+  ### VALIDATIONS ###
+
+  def validate_nameservers_count
+    unless nameservers.length.between?(1, 13)
+      errors.add(:nameservers, :out_of_range, {min: 1, max: 13})
+    end
+  end
+
+  def validate_admin_contacts_count
+    errors.add(:admin_contacts, :blank) if admin_contacts.empty?
   end
 
   def validate_period
