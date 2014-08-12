@@ -20,6 +20,10 @@ module Epp::Common
     @params_hash ||= Hash.from_xml(params[:frame]).with_indifferent_access
   end
 
+  def parsed_frame
+    @parsed_frame ||= Nokogiri::XML(params[:frame]).remove_namespaces!
+  end
+
   def epp_session
     EppSession.find_or_initialize_by(session_id: cookies['session'])
   end

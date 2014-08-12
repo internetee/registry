@@ -13,7 +13,8 @@ class Domain < ActiveRecord::Base
 
   EPP_ATTR_MAP = {
     owner_contact: 'registrant',
-    name_dirty: 'name'
+    name_dirty: 'name',
+    period: 'period'
   }
 
   belongs_to :registrar
@@ -32,7 +33,7 @@ class Domain < ActiveRecord::Base
   has_and_belongs_to_many :nameservers
 
   validates :name_dirty, domain_name: true, uniqueness: true
-  validates :period, numericality: { only_integer: true, greater_than: 0, less_than: 100 }
+  validates :period, numericality: { only_integer: true }
   validates :name, :owner_contact, presence: true
 
   validates_associated :nameservers
@@ -50,9 +51,9 @@ class Domain < ActiveRecord::Base
 
   ### CREATE ###
 
-  def attach_objects(ph, frame)
+  def attach_objects(ph, parsed_frame)
     attach_owner_contact(ph[:registrant])
-    attach_contacts(self.class.parse_contacts_from_frame(frame))
+    attach_contacts(self.class.parse_contacts_from_frame(parsed_frame))
     attach_nameservers(self.class.parse_nameservers_from_params(ph[:ns]))
 
     errors.empty?
@@ -173,9 +174,7 @@ class Domain < ActiveRecord::Base
   end
 
   class << self
-    def parse_contacts_from_frame(frame)
-      parsed_frame = Nokogiri::XML(frame).remove_namespaces!
-
+    def parse_contacts_from_frame(parsed_frame)
       res = {}
       Contact::CONTACT_TYPES.each do |ct|
         res[ct.to_sym] ||= []
@@ -192,6 +191,12 @@ class Domain < ActiveRecord::Base
       return ph[:hostObj] if ph[:hostObj]
       return ph[:hostAttr] if ph[:hostAttr]
       []
+    end
+
+    def parse_period_unit_from_frame(parsed_frame)
+      p = parsed_frame.css('period').first
+      return nil unless p
+      p[:unit]
     end
 
     def check_availability(domains)

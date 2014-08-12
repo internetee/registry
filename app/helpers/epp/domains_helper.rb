@@ -3,7 +3,7 @@ module Epp::DomainsHelper
     Domain.transaction do
       @domain = Domain.new(domain_create_params)
 
-      handle_errors(@domain) and return unless @domain.attach_objects(@ph, params[:frame])
+      handle_errors(@domain) and return unless @domain.attach_objects(@ph, parsed_frame)
       handle_errors(@domain) and return unless @domain.save
 
       render '/epp/domains/create'
@@ -40,7 +40,8 @@ module Epp::DomainsHelper
       name: @ph[:name],
       registrar_id: current_epp_user.registrar.try(:id),
       registered_at: Time.now,
-      period: @ph[:period].to_i,
+      period: (@ph[:period].to_i == 0) ? 1 : @ph[:period].to_i,
+      period_unit: Domain.parse_period_unit_from_frame(parsed_frame) || 'y',
       valid_from: Date.today,
       valid_to: Date.today + @ph[:period].to_i.years,
       auth_info: @ph[:authInfo][:pw]
