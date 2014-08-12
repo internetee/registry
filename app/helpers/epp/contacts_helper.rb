@@ -22,6 +22,7 @@ module Epp::ContactsHelper
   end
 
   def delete_contact
+    #no deleting, implement PaperTrail or something similar. 
     ph = params_hash['epp']['command']['delete']['delete']
 
     @contact = Contact.where(code: ph[:id]).first
@@ -62,7 +63,7 @@ module Epp::ContactsHelper
       render 'epp/error'
     end
   rescue NoMethodError => e
-    epp_errors << { code: '2303', msg: t('errors.messages.epp_obj_does_not_exist') }
+    epp_errors << { code: '2303', msg: t('errors.messages.epp_obj_does_not_exist'), value: { obj: 'id', val: ph[:id] } }
     render 'epp/error'
   end
 
