@@ -5,7 +5,7 @@ xml.epp_head do
     end
 
     xml.resData do
-      xml.tag!('domain:chkData', 'xmlns:domain' => 'http://www.nic.cz/xml/epp/domain-1.4', 'xsi:schemaLocation' => 'http://www.nic.cz/xml/epp/domain-1.4 domain-1.4.xsd') do
+      xml.tag!('domain:chkData', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
         @domains.each do |x|
           xml.tag!('domain:cd') do
             xml.tag!('domain:name', x[:name], 'avail' => x[:avail])

@@ -5,8 +5,7 @@ xml.epp_head do
     end
 
     xml.resData do
-      xml.tag!('contact:chkData', 'xmlns:contact' => 'http://www.nic.cz/xml/epp/contact-1.6', 
-               'xsi:schemaLocation' => 'http://www.nic.cz/xml/epp/contact-1.6 contact-1.6.xsd') do
+      xml.tag!('contact:chkData', 'xmlns:contact' => 'urn:ietf:params:xml:ns:contact-1.0') do
         xml.tag!('contact:name', @contact.name)
         xml.tag!('contact:org', @contact.org_name)
         xml.tag!('contact:addr') do
@@ -24,7 +23,7 @@ xml.epp_head do
         xml.tag!('contact:trDate', '123') if false
         xml.tag!('contact:authInfo', '123') if false
         xml.tag!('contact:disclose', '123') if false
-        
+
       end
     end
 
