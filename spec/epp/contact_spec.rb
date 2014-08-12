@@ -36,6 +36,20 @@ describe 'EPP Contact', epp: true do
       expect(Contact.first.org_name).to eq('Example Inc.')
     end
 
+    it 'returns result data upon succesful contact creation' do
+      response = epp_request('contacts/create.xml')
+      expect(response[:result_code]).to eq('1000')
+      expect(response[:msg]).to eq('Command completed successfully')
+
+      id =  response[:parsed].css('resData creData id').first
+      crDate =  response[:parsed].css('resData creData crDate').first
+
+      expect(id.text).to eq('sh8013')
+      #5 seconds for what-ever weird lag reasons might happen
+      expect(crDate.text.to_time).to be_within(5).of(Time.now)
+ 
+    end
+
     it 'does not create duplicate contact' do
       Fabricate(:contact, code: 'sh8013')
 
