@@ -7,21 +7,48 @@ describe 'EPP Contact', epp: true do
     before(:each) { Fabricate(:epp_user) }
 
     #Tests for the new error system
-    it "doesn't create contact with attributes missing" do
+    it "doesn't create contact if request is invalid" do
       response = epp_request('contacts/create_missing_attr.xml')
       expect(response[:results][0][:result_code]).to eq('2003')
       expect(response[:results][1][:result_code]).to eq('2003')
 
       expect(response[:results][0][:msg]).to eq('Required parameter missing: cc')
       expect(response[:results][1][:msg]).to eq('Required parameter missing: authInfo')
+      expect(response[:results].count).to eq 2
     end
 
-    it "doesn't update contact with attributes missing" do
+    it "doesn't update contact if request is invalid" do
       response = epp_request('contacts/update_missing_attr.xml')
 
       expect(response[:results][0][:result_code]).to eq('2003')
       expect(response[:results][0][:msg]).to eq('Required parameter missing: id')
+      expect(response[:results].count).to eq 1
     end
+
+    it "doesn't delete contact if request is invalid" do
+      response = epp_request('contacts/delete_missing_attr.xml')
+
+      expect(response[:results][0][:result_code]).to eq('2003')
+      expect(response[:results][0][:msg]).to eq('Required parameter missing: id')
+      expect(response[:results].count).to eq 1
+    end
+
+    it "doesn't check contact if request is invalid" do
+      response = epp_request('contacts/delete_missing_attr.xml')
+
+      expect(response[:results][0][:result_code]).to eq('2003')
+      expect(response[:results][0][:msg]).to eq('Required parameter missing: id')
+      expect(response[:results].count).to eq 1
+    end
+
+    it "doesn't display info if request invalid" do
+      response = epp_request('contacts/delete_missing_attr.xml')
+
+      expect(response[:results][0][:result_code]).to eq('2003')
+      expect(response[:results][0][:msg]).to eq('Required parameter missing: id')
+      expect(response[:results].count).to eq 1
+    end
+
 
     # incomplete
     it 'creates a contact' do
@@ -34,6 +61,11 @@ describe 'EPP Contact', epp: true do
 
       expect(Contact.count).to eq(1)
       expect(Contact.first.org_name).to eq('Example Inc.')
+
+      expect(Contact.first.address.street).to eq('123 Example Dr.')
+      expect(Contact.first.address.street2).to eq('Suite 100')
+      expect(Contact.first.address.street3).to eq nil
+
     end
 
     it 'returns result data upon succesful contact creation' do
@@ -62,12 +94,12 @@ describe 'EPP Contact', epp: true do
 
     it 'stamps updated_by succesfully' do
       Fabricate(:contact, code: 'sh8013')
-     
+
       expect(Contact.first.updated_by_id).to be nil
 
       response = epp_request('contacts/update.xml')
 
-      expect(Contact.first.updated_by_id).to be 1
+      expect(Contact.first.updated_by_id).to eq 1
     end
 
    #TODO tests for missing/invalid/etc ident
