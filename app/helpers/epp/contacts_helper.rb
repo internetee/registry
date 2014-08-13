@@ -120,7 +120,9 @@ module Epp::ContactsHelper
     contact_hash = contact_hash.merge({
       address_attributes: {
         country_id: Country.find_by(iso: ph[:postalInfo][:addr][:cc]),
-        street: tidy_street,
+        street: ph[:postalInfo][:addr][:street][0],
+        street2: ph[:postalInfo][:addr][:street][1],
+        street3: ph[:postalInfo][:addr][:street][2],
         zip: ph[:postalInfo][:addr][:pc]
       }
     }) if ph[:postalInfo].is_a?(Hash) && ph[:postalInfo][:addr].is_a?(Hash)
@@ -133,16 +135,6 @@ module Epp::ContactsHelper
       return true
     end
     return false
-  end
-
-  def tidy_street
-    command = params[:command]
-    street = params_hash['epp']['command'][command][command][:postalInfo][:addr][:street]
-    return street if street.is_a? String
-    return street.join(',') if street.is_a? Array
-    return nil
-  rescue NoMethodError => e #refactor so wouldn't use rescue for flow control
-    return nil
   end
 
   def ident_type

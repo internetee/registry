@@ -61,6 +61,11 @@ describe 'EPP Contact', epp: true do
 
       expect(Contact.count).to eq(1)
       expect(Contact.first.org_name).to eq('Example Inc.')
+
+      expect(Contact.first.address.street).to eq('123 Example Dr.')
+      expect(Contact.first.address.street2).to eq('Suite 100')
+      expect(Contact.first.address.street3).to eq nil
+
     end
 
     it 'returns result data upon succesful contact creation' do
@@ -89,12 +94,12 @@ describe 'EPP Contact', epp: true do
 
     it 'stamps updated_by succesfully' do
       Fabricate(:contact, code: 'sh8013')
-     
+
       expect(Contact.first.updated_by_id).to be nil
 
       response = epp_request('contacts/update.xml')
 
-      expect(Contact.first.updated_by_id).to be 1
+      expect(Contact.first.updated_by_id).to eq 1
     end
 
    #TODO tests for missing/invalid/etc ident
