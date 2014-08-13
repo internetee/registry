@@ -36,6 +36,10 @@ module Epp::DomainsHelper
   end
 
   def domain_create_params
+    period = (@ph[:period].to_i == 0) ? 1 : @ph[:period].to_i
+    period_unit = Domain.parse_period_unit_from_frame(parsed_frame) || 'y'
+    valid_to = Date.today + Domain.convert_period_to_time(period, period_unit)
+
     {
       name: @ph[:name],
       registrar_id: current_epp_user.registrar.try(:id),
@@ -43,7 +47,7 @@ module Epp::DomainsHelper
       period: (@ph[:period].to_i == 0) ? 1 : @ph[:period].to_i,
       period_unit: Domain.parse_period_unit_from_frame(parsed_frame) || 'y',
       valid_from: Date.today,
-      valid_to: Date.today + @ph[:period].to_i.years,
+      valid_to: valid_to,
       auth_info: @ph[:authInfo][:pw]
     }
   end

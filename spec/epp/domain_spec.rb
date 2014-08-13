@@ -102,7 +102,7 @@ describe 'EPP Domain', epp: true do
         expect(response[:results][0][:msg]).to eq 'IP is invalid'
       end
 
-      it 'creates a domain with period in days', pending: true do
+      it 'creates a domain with period in days' do
         response = epp_request('domains/create_w_period_in_days.xml')
         expect(response[:result_code]).to eq('1000')
         expect(response[:msg]).to eq('Command completed successfully')

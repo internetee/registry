@@ -130,9 +130,7 @@ class Domain < ActiveRecord::Base
     validate_exp_dates(cur_exp_date)
     return false if errors.any?
 
-    p = period.to_i.days  if unit == 'd'
-    p = period.to_i.months if unit == 'm'
-    p = period.to_i.years if unit == 'y'
+    p = self.class.convert_period_to_time(period, unit)
 
     self.valid_to = self.valid_to + p
     self.period = period
@@ -174,6 +172,13 @@ class Domain < ActiveRecord::Base
   end
 
   class << self
+    def convert_period_to_time(period, unit)
+      p = period.to_i.days  if unit == 'd'
+      p = period.to_i.months if unit == 'm'
+      p = period.to_i.years if unit == 'y'
+      p
+    end
+
     def parse_contacts_from_frame(parsed_frame)
       res = {}
       Contact::CONTACT_TYPES.each do |ct|
