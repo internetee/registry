@@ -4,7 +4,7 @@ module Epp
   end
 
   # handles connection and login automatically
-  def epp_request(data)
+  def epp_request(filename)
     begin
       parse_response(server.request(read_body(filename)))
     rescue Exception => e
