@@ -8,13 +8,16 @@ describe 'EPP Contact', epp: true do
 
     #Tests for the new error system
     it "doesn't create contact if request is invalid" do
-      response = epp_request('contacts/create_missing_attr.xml')
+      response = epp_request(contact_create_xml( { authInfo: [false], addr: { cc: false, city: false } }  ), :xml)
+
       expect(response[:results][0][:result_code]).to eq('2003')
       expect(response[:results][1][:result_code]).to eq('2003')
+      expect(response[:results][2][:result_code]).to eq('2003')
 
-      expect(response[:results][0][:msg]).to eq('Required parameter missing: cc')
-      expect(response[:results][1][:msg]).to eq('Required parameter missing: authInfo')
-      expect(response[:results].count).to eq 2
+      expect(response[:results][0][:msg]).to eq('Required parameter missing: city')
+      expect(response[:results][1][:msg]).to eq('Required parameter missing: cc')
+      expect(response[:results][2][:msg]).to eq('Required parameter missing: authInfo')
+      expect(response[:results].count).to eq 3
     end
 
     it "doesn't update contact if request is invalid" do
@@ -52,7 +55,9 @@ describe 'EPP Contact', epp: true do
 
     # incomplete
     it 'creates a contact' do
-      response = epp_request('contacts/create.xml')
+      #response = epp_request('contacts/create.xml')
+      response = epp_request(contact_create_xml, :xml)
+
       expect(response[:result_code]).to eq('1000')
       expect(response[:msg]).to eq('Command completed successfully')
       expect(response[:clTRID]).to eq('ABC-12345')
@@ -69,7 +74,8 @@ describe 'EPP Contact', epp: true do
     end
 
     it 'returns result data upon succesful contact creation' do
-      response = epp_request('contacts/create.xml')
+      response = epp_request(contact_create_xml, :xml)
+      #response = epp_request('contacts/create.xml')
       expect(response[:result_code]).to eq('1000')
       expect(response[:msg]).to eq('Command completed successfully')
 
@@ -85,7 +91,8 @@ describe 'EPP Contact', epp: true do
     it 'does not create duplicate contact' do
       Fabricate(:contact, code: 'sh8013')
 
-      response = epp_request('contacts/create.xml')
+      response = epp_request(contact_create_xml, :xml)
+      #response = epp_request('contacts/create.xml')
       expect(response[:result_code]).to eq('2302')
       expect(response[:msg]).to eq('Contact id already exists')
       
