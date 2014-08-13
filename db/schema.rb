@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140813102245) do
+ActiveRecord::Schema.define(version: 20140813135408) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -108,10 +108,11 @@ ActiveRecord::Schema.define(version: 20140813102245) do
 
   create_table "nameservers", force: true do |t|
     t.string   "hostname"
-    t.string   "ip"
+    t.string   "ipv4"
     t.integer  "ns_set_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "ipv6"
   end
 
   create_table "nameservers_ns_sets", force: true do |t|

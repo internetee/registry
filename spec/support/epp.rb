@@ -43,8 +43,6 @@ module Epp
 
   ### REQUEST TEMPLATES ###
 
-  # THIS FEATURE IS EXPERIMENTAL AND NOT IN USE ATM
-
   def domain_create_xml(xml_params={})
     xml_params[:nameservers] = xml_params[:nameservers] || [{hostObj: 'ns1.example.net'}, {hostObj: 'ns2.example.net'}]
     xml_params[:contacts] = xml_params[:contacts] || [

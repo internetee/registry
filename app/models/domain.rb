@@ -113,10 +113,10 @@ class Domain < ActiveRecord::Base
     if ns[:hostAddr]
       if ns[:hostAddr].is_a?(Array)
         ns[:hostAddr].each do |ip|
-          attrs[:ip] = ip unless attrs[:ip]
+          attrs[:ipv4] = ip unless attrs[:ipv4]
         end
       else
-        attrs[:ip] = ns[:hostAddr]
+        attrs[:ipv4] = ns[:hostAddr]
       end
     end
 
