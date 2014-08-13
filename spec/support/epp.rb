@@ -63,7 +63,7 @@ module Epp
         xml.create do
           xml.tag!('domain:create', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
 
-            xml.tag!('domain:name', (xml_params[:name] || 'expample.ee')) if xml_params[:name] != false
+            xml.tag!('domain:name', (xml_params[:name] || 'example.ee')) if xml_params[:name] != false
 
             xml.tag!('domain:period', (xml_params[:period_value] || 1), 'unit' => (xml_params[:period_unit] || 'y')) if xml_params[:period] != false
 
@@ -82,6 +82,24 @@ module Epp
             xml.tag!('domain:authInfo') do
               xml.tag!('domain:pw', xml_params[:pw] || '2fooBAR')
             end if xml_params[:authInfo] != false
+          end
+        end
+        xml.clTRID 'ABC-12345'
+      end
+    end
+  end
+
+  def domain_renew_xml(xml_params={})
+    xml = Builder::XmlMarkup.new
+
+    xml.instruct!(:xml, :standalone => 'no')
+    xml.epp('xmlns' => 'urn:ietf:params:xml:ns:epp-1.0') do
+      xml.command do
+        xml.renew do
+          xml.tag!('domain:renew', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
+            xml.tag!('domain:name', (xml_params[:name] || 'example.ee')) if xml_params[:name] != false
+            xml.tag!('domain:curExpDate', (xml_params[:curExpDate] || '2014-08-07')) if xml_params[:curExpDate] != false
+            xml.tag!('domain:period', (xml_params[:period_value] || 1), 'unit' => (xml_params[:period_unit] || 'y')) if xml_params[:period] != false
           end
         end
         xml.clTRID 'ABC-12345'
