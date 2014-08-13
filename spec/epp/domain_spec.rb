@@ -140,7 +140,9 @@ describe 'EPP Domain', epp: true do
       }
 
       it 'creates a domain with contacts' do
-        response = epp_request('domains/create_wo_tech_contact.xml')
+        xml = domain_create_xml(contacts: [{contact_value: 'sh8013', contact_type: 'admin'}])
+
+        response = epp_request(xml, :xml)
         expect(response[:result_code]).to eq('1000')
         expect(response[:msg]).to eq('Command completed successfully')
         expect(response[:clTRID]).to eq('ABC-12345')
@@ -153,11 +155,11 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'does not create a domain without admin contact' do
-        xml = domain_create_xml(contacts: [])
+        xml = domain_create_xml(contacts: [{contact_value: 'sh8013', contact_type: 'tech'}])
 
         response = epp_request(xml, :xml)
-        expect(response[:result_code]).to eq('2003')
-        expect(response[:msg]).to eq('Required parameter missing: contact')
+        expect(response[:result_code]).to eq('2306')
+        expect(response[:msg]).to eq('Admin contact is missing')
         expect(response[:clTRID]).to eq('ABC-12345')
 
         expect(Domain.count).to eq 0
