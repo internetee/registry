@@ -173,10 +173,9 @@ class Domain < ActiveRecord::Base
 
   class << self
     def convert_period_to_time(period, unit)
-      p = period.to_i.days  if unit == 'd'
-      p = period.to_i.months if unit == 'm'
-      p = period.to_i.years if unit == 'y'
-      p
+      return period.to_i.days  if unit == 'd'
+      return period.to_i.months if unit == 'm'
+      return period.to_i.years if unit == 'y'
     end
 
     def parse_contacts_from_frame(parsed_frame)
