@@ -108,6 +108,13 @@ describe 'EPP Domain', epp: true do
         expect(response[:msg]).to eq('Command completed successfully')
         expect(Domain.first.valid_to).to eq(Date.today + 1.year)
       end
+
+      it 'does not create a domain with invalid period' do
+        response = epp_request('domains/create_w_invalid_period.xml')
+        expect(response[:results][0][:result_code]).to eq('2004')
+        expect(response[:results][0][:msg]).to eq('Period must add up to 1, 2 or 3 years')
+        expect(response[:results][0][:value]).to eq('843')
+      end
     end
 
     context 'with juridical persion as an owner' do
