@@ -7,21 +7,48 @@ describe 'EPP Contact', epp: true do
     before(:each) { Fabricate(:epp_user) }
 
     #Tests for the new error system
-    it "doesn't create contact with attributes missing" do
+    it "doesn't create contact if request is invalid" do
       response = epp_request('contacts/create_missing_attr.xml')
       expect(response[:results][0][:result_code]).to eq('2003')
       expect(response[:results][1][:result_code]).to eq('2003')
 
       expect(response[:results][0][:msg]).to eq('Required parameter missing: cc')
       expect(response[:results][1][:msg]).to eq('Required parameter missing: authInfo')
+      expect(response[:results].count).to eq 2
     end
 
-    it "doesn't update contact with attributes missing" do
+    it "doesn't update contact if request is invalid" do
       response = epp_request('contacts/update_missing_attr.xml')
 
       expect(response[:results][0][:result_code]).to eq('2003')
       expect(response[:results][0][:msg]).to eq('Required parameter missing: id')
+      expect(response[:results].count).to eq 1
     end
+
+    it "doesn't delete contact if request is invalid" do
+      response = epp_request('contacts/delete_missing_attr.xml')
+
+      expect(response[:results][0][:result_code]).to eq('2003')
+      expect(response[:results][0][:msg]).to eq('Required parameter missing: id')
+      expect(response[:results].count).to eq 1
+    end
+
+    it "doesn't check contact if request is invalid" do
+      response = epp_request('contacts/delete_missing_attr.xml')
+
+      expect(response[:results][0][:result_code]).to eq('2003')
+      expect(response[:results][0][:msg]).to eq('Required parameter missing: id')
+      expect(response[:results].count).to eq 1
+    end
+
+    it "doesn't display info if request invalid" do
+      response = epp_request('contacts/delete_missing_attr.xml')
+
+      expect(response[:results][0][:result_code]).to eq('2003')
+      expect(response[:results][0][:msg]).to eq('Required parameter missing: id')
+      expect(response[:results].count).to eq 1
+    end
+
 
     # incomplete
     it 'creates a contact' do
