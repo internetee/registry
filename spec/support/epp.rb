@@ -88,6 +88,7 @@ module Epp
       end
     end
   end
+
 end
 
 RSpec.configure do |c|

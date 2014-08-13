@@ -34,7 +34,7 @@ describe 'EPP Contact', epp: true do
     end
 
     it "doesn't check contact if request is invalid" do
-      response = epp_request('contacts/delete_missing_attr.xml')
+      response = epp_request(contact_check_xml( ids: [ false ] ), :xml)
 
       expect(response[:results][0][:result_code]).to eq('2003')
       expect(response[:results][0][:msg]).to eq('Required parameter missing: id')
@@ -123,7 +123,9 @@ describe 'EPP Contact', epp: true do
     it 'checks contacts' do
       Fabricate(:contact, code: 'check-1234')
       
-      response = epp_request('contacts/check.xml')
+      response = epp_request(contact_check_xml( ids: [{ id: 'check-1234'}, { id: 'check-4321' }]  ), :xml)
+
+      #response = epp_request('contacts/check.xml')
       expect(response[:result_code]).to eq('1000')
       expect(response[:msg]).to eq('Command completed successfully')
       ids = response[:parsed].css('resData chkData id')
