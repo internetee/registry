@@ -107,6 +107,24 @@ module Epp
     end
   end
 
+  def domain_check_xml(xml_params={})
+    xml_params[:names] = xml_params[:names] || ['example.ee']
+    xml = Builder::XmlMarkup.new
+
+    xml.instruct!(:xml, :standalone => 'no')
+    xml.epp('xmlns' => 'urn:ietf:params:xml:ns:epp-1.0') do
+      xml.command do
+        xml.check do
+          xml.tag!('domain:check', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
+            xml_params[:names].each do |x|
+              xml.tag!('domain:name', (x || 'example.ee'))
+            end if xml_params[:names].any?
+          end
+        end
+        xml.clTRID 'ABC-12345'
+      end
+    end
+  end
 end
 
 RSpec.configure do |c|

@@ -4,7 +4,7 @@
     <check>
       <domain:check
        xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>one.ee</domain:name>
+        <domain:name>example.ee</domain:name>
       </domain:check>
     </check>
     <clTRID>ABC-12345</clTRID>

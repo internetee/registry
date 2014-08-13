@@ -9,7 +9,7 @@ describe 'EPP Domain', epp: true do
     it 'returns error if contact does not exists' do
       Fabricate(:contact, code: 'jd1234')
 
-      response = epp_request(domain_create_xml, :xml)
+      response = epp_request('domains/create.xml')
       expect(response[:results][0][:result_code]).to eq('2303')
       expect(response[:results][0][:msg]).to eq('Contact was not found')
       expect(response[:results][0][:value]).to eq('sh8013')
@@ -202,23 +202,25 @@ describe 'EPP Domain', epp: true do
       expect(response[:msg]).to eq('Command completed successfully')
 
       domain = response[:parsed].css('resData chkData cd name').first
-      expect(domain.text).to eq('one.ee')
+      expect(domain.text).to eq('example.ee')
       expect(domain[:avail]).to eq('1')
 
-      Fabricate(:domain, name: 'one.ee')
+      Fabricate(:domain, name: 'example.ee')
 
       response = epp_request('domains/check.xml')
       domain = response[:parsed].css('resData chkData cd').first
       name = domain.css('name').first
       reason = domain.css('reason').first
 
-      expect(name.text).to eq('one.ee')
+      expect(name.text).to eq('example.ee')
       expect(name[:avail]).to eq('0')
       expect(reason.text).to eq('in use') #confirm this with current API
     end
 
     it 'checks multiple domains' do
-      response = epp_request('domains/check_multiple.xml')
+      xml = domain_check_xml(names: ['one.ee', 'two.ee', 'three.ee'])
+
+      response = epp_request(xml, :xml)
       expect(response[:result_code]).to eq('1000')
       expect(response[:msg]).to eq('Command completed successfully')
 
@@ -232,7 +234,9 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'checks invalid format domain' do
-      response = epp_request('domains/check_multiple_with_invalid.xml')
+      xml = domain_check_xml(names: ['one.ee', 'notcorrectdomain'])
+
+      response = epp_request(xml, :xml)
       expect(response[:result_code]).to eq('1000')
       expect(response[:msg]).to eq('Command completed successfully')
 
