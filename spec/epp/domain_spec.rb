@@ -9,7 +9,7 @@ describe 'EPP Domain', epp: true do
     it 'returns error if contact does not exists' do
       Fabricate(:contact, code: 'jd1234')
 
-      response = epp_request('domains/create.xml')
+      response = epp_request(domain_create_xml, :xml)
       expect(response[:results][0][:result_code]).to eq('2303')
       expect(response[:results][0][:msg]).to eq('Contact was not found')
       expect(response[:results][0][:value]).to eq('sh8013')
@@ -33,7 +33,7 @@ describe 'EPP Domain', epp: true do
       }
 
       it 'creates a domain' do
-        response = epp_request('domains/create.xml')
+        response = epp_request(domain_create_xml, :xml)
         expect(response[:result_code]).to eq('1000')
         expect(response[:msg]).to eq('Command completed successfully')
         expect(response[:clTRID]).to eq('ABC-12345')
@@ -46,8 +46,8 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'does not create duplicate domain' do
-        epp_request('domains/create.xml')
-        response = epp_request('domains/create.xml')
+        epp_request(domain_create_xml, :xml)
+        response = epp_request(domain_create_xml, :xml)
         expect(response[:result_code]).to eq('2302')
         expect(response[:msg]).to eq('Domain name already exists')
         expect(response[:clTRID]).to eq('ABC-12345')
@@ -55,14 +55,19 @@ describe 'EPP Domain', epp: true do
 
       it 'does not create reserved domain' do
         Fabricate(:reserved_domain)
-        response = epp_request('domains/create_reserved.xml')
+
+        xml = domain_create_xml(name: '1162.ee')
+
+        response = epp_request(xml, :xml)
         expect(response[:result_code]).to eq('2302')
         expect(response[:msg]).to eq('Domain name is reserved or restricted')
         expect(response[:clTRID]).to eq('ABC-12345')
       end
 
       it 'does not create domain without contacts and registrant' do
-        response = epp_request('domains/create_wo_contacts_and_registrant.xml')
+        xml = domain_create_xml(contacts: [], registrant: false)
+
+        response = epp_request(xml, :xml)
         expect(response[:results][0][:result_code]).to eq('2003')
         expect(response[:results][0][:msg]).to eq('Required parameter missing: contact')
 
@@ -71,23 +76,29 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'does not create domain without nameservers' do
-        response = epp_request('domains/create_wo_nameservers.xml')
+        xml = domain_create_xml(nameservers: [])
+        response = epp_request(xml, :xml)
         expect(response[:result_code]).to eq('2003')
         expect(response[:msg]).to eq('Required parameter missing: ns')
       end
 
       it 'does not create domain with too many nameservers' do
-        response = epp_request('domains/create_w_too_many_nameservers.xml')
+        nameservers = []
+        14.times {|i| nameservers << {hostObj: "ns#{i}.example.net"}}
+        xml = domain_create_xml(nameservers: nameservers)
+
+        response = epp_request(xml, :xml)
         expect(response[:result_code]).to eq('2004')
         expect(response[:msg]).to eq('Nameservers count must be between 1-13')
       end
 
       it 'returns error when invalid nameservers are present' do
-        response = epp_request('domains/create_w_invalid_nameservers.xml')
+        xml = domain_create_xml(nameservers: [{hostObj: 'invalid1-'}, {hostObj: '-invalid2'}])
+
+        response = epp_request(xml, :xml)
         expect(response[:result_code]).to eq('2005')
         expect(response[:msg]).to eq('Hostname is invalid')
       end
-
 
       it 'creates domain with nameservers with ips' do
         response = epp_request('domains/create_w_host_attrs.xml')
@@ -103,17 +114,21 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'creates a domain with period in days' do
-        response = epp_request('domains/create_w_period_in_days.xml')
+        xml = domain_create_xml(period_value: 365, period_unit: 'd')
+
+        response = epp_request(xml, :xml)
         expect(response[:result_code]).to eq('1000')
         expect(response[:msg]).to eq('Command completed successfully')
         expect(Domain.first.valid_to).to eq(Date.today + 1.year)
       end
 
       it 'does not create a domain with invalid period' do
-        response = epp_request('domains/create_w_invalid_period.xml')
+        xml = domain_create_xml(period_value: 367, period_unit: 'd')
+
+        response = epp_request(xml, :xml)
         expect(response[:results][0][:result_code]).to eq('2004')
         expect(response[:results][0][:msg]).to eq('Period must add up to 1, 2 or 3 years')
-        expect(response[:results][0][:value]).to eq('843')
+        expect(response[:results][0][:value]).to eq('367')
       end
     end
 
@@ -138,7 +153,9 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'does not create a domain without admin contact' do
-        response = epp_request('domains/create_wo_contacts.xml')
+        xml = domain_create_xml(contacts: [])
+
+        response = epp_request(xml, :xml)
         expect(response[:result_code]).to eq('2003')
         expect(response[:msg]).to eq('Required parameter missing: contact')
         expect(response[:clTRID]).to eq('ABC-12345')

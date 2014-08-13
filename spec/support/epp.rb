@@ -4,9 +4,10 @@ module Epp
   end
 
   # handles connection and login automatically
-  def epp_request(filename)
+  def epp_request(data, type=:filename)
     begin
-      parse_response(server.request(read_body(filename)))
+      return parse_response(server.request(read_body(data))) if type == :filename
+      return parse_response(server.request(data))
     rescue Exception => e
       e
     end
@@ -44,8 +45,8 @@ module Epp
 
   # THIS FEATURE IS EXPERIMENTAL AND NOT IN USE ATM
 
-  def domain_create_template(xml_params={})
-    xml_params[:nameservers] = xml_params[:ns] || [{hostObj: 'ns1.example.net'}, {hostObj: 'ns2.example.net'}]
+  def domain_create_xml(xml_params={})
+    xml_params[:nameservers] = xml_params[:nameservers] || [{hostObj: 'ns1.example.net'}, {hostObj: 'ns2.example.net'}]
     xml_params[:contacts] = xml_params[:contacts] || [
       {contact_value: 'sh8013', contact_type: 'admin'},
       {contact_value: 'sh8013', contact_type: 'tech'},
@@ -62,25 +63,25 @@ module Epp
         xml.create do
           xml.tag!('domain:create', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
 
-            xml.tag!('domain:name', (xml_params[:name] || 'expample.ee'))
+            xml.tag!('domain:name', (xml_params[:name] || 'expample.ee')) if xml_params[:name] != false
 
-            xml.tag!('domain:period', (xml_params[:period_value] || 1), 'unit' => (xml_params[:period_unit] || 'y'))
+            xml.tag!('domain:period', (xml_params[:period_value] || 1), 'unit' => (xml_params[:period_unit] || 'y')) if xml_params[:period] != false
 
             xml.tag!('domain:ns') do
               xml_params[:nameservers].each do |x|
                 xml.tag!('domain:hostObj', x[:hostObj])
               end
-            end
+            end if xml_params[:nameservers].any?
 
-            xml.tag!('domain:registrant', (xml_params[:registrant] || 'jd1234'))
+            xml.tag!('domain:registrant', (xml_params[:registrant] || 'jd1234')) if xml_params[:registrant] != false
 
             xml_params[:contacts].each do |x|
               xml.tag!('domain:contact', x[:contact_value], 'type' => (x[:contact_type]))
-            end
+            end if xml_params[:contacts].any?
 
             xml.tag!('domain:authInfo') do
               xml.tag!('domain:pw', xml_params[:pw] || '2fooBAR')
-            end
+            end if xml_params[:authInfo] != false
           end
         end
         xml.clTRID 'ABC-12345'
