@@ -6,4 +6,6 @@ Fabricator(:domain) do
   owner_contact(fabricator: :contact)
   nameservers(count: 3)
   admin_contacts(count: 1) { Fabricate(:contact) }
+  registrar
+  auth_info '98oiewslkfkd'
 end

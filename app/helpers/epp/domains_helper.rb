@@ -26,6 +26,12 @@ module Epp::DomainsHelper
     render '/epp/domains/renew'
   end
 
+  def info_domain
+    @domain = find_domain
+
+    render '/epp/domains/info'
+  end
+
   ### HELPER METHODS ###
   private
 
@@ -57,6 +63,13 @@ module Epp::DomainsHelper
     @ph = params_hash['epp']['command']['renew']['renew']
     xml_attrs_present?(@ph, [['name'], ['curExpDate'], ['period']])
   end
+
+  ## INFO
+  def validate_domain_info_request
+    @ph = params_hash['epp']['command']['info']['info']
+    xml_attrs_present?(@ph, [['name']])
+  end
+
 
   ## SHARED
   def find_domain

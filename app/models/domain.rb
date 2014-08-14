@@ -32,6 +32,9 @@ class Domain < ActiveRecord::Base
 
   has_and_belongs_to_many :nameservers
 
+  delegate :code, to: :owner_contact, prefix: true
+  delegate :name, to: :registrar, prefix: true
+
   validates :name_dirty, domain_name: true, uniqueness: true
   validates :period, numericality: { only_integer: true }
   validates :name, :owner_contact, presence: true

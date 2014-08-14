@@ -201,6 +201,39 @@ describe 'EPP Domain', epp: true do
         expect(response[:results][0][:msg]).to eq('Period must add up to 1, 2 or 3 years')
         expect(response[:results][0][:value]).to eq('4')
       end
+
+      it 'returns domain info' do
+        d = Domain.first
+
+        response = epp_request('domains/info.xml')
+        expect(response[:results][0][:result_code]).to eq('1000')
+        expect(response[:results][0][:msg]).to eq('Command completed successfully')
+
+        inf_data = response[:parsed].css('resData infData')
+        expect(inf_data.css('name').text).to eq('example.ee')
+        expect(inf_data.css('registrant').text).to eq(d.owner_contact_code)
+
+        admin_contacts_from_request = inf_data.css('contact[type="admin"]').collect{|x| x.text }
+        admin_contacts_existing = d.admin_contacts.pluck(:code)
+
+        expect(admin_contacts_from_request).to eq(admin_contacts_existing)
+
+        hosts_from_request = inf_data.css('hostObj').collect{|x| x.text }
+        hosts_existing = d.nameservers.pluck(:hostname)
+
+        expect(hosts_from_request).to eq(hosts_existing)
+        expect(inf_data.css('crDate').text).to eq(d.created_at.to_time.utc.to_s)
+        expect(inf_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
+
+        expect(inf_data.css('pw').text).to eq(d.auth_info)
+
+        d.touch
+
+        response = epp_request('domains/info.xml')
+        inf_data = response[:parsed].css('resData infData')
+
+        expect(inf_data.css('upDate').text).to eq(d.updated_at.to_time.utc.to_s)
+      end
     end
 
     it 'checks a domain' do
