@@ -12,7 +12,8 @@
             <domain:hostAddr ip="v4">192.0.2.2.invalid</domain:hostAddr>
           </domain:hostAttr>
           <domain:hostAttr>
-           <domain:hostName>ns2.example.net</domain:hostName>
+            <domain:hostName>ns2.example.net</domain:hostName>
+            <domain:hostAddr ip="v6">invalid_ipv6</domain:hostAddr>
          </domain:hostAttr>
         </domain:ns>
         <domain:registrant>jd1234</domain:registrant>

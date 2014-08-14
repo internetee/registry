@@ -105,12 +105,19 @@ describe 'EPP Domain', epp: true do
         expect(Domain.first.nameservers.count).to eq(2)
         ns = Domain.first.nameservers.first
         expect(ns.ipv4).to eq('192.0.2.2')
+        expect(ns.ipv6).to eq('1080:0:0:0:8:800:200C:417A')
       end
 
-      it 'returns error when nameserver has invalid ip' do
+      it 'returns error when nameserver has invalid ips' do
         response = epp_request('domains/create_w_invalid_ns_ip.xml')
         expect(response[:results][0][:result_code]).to eq '2005'
         expect(response[:results][0][:msg]).to eq 'IPv4 is invalid'
+        expect(response[:results][0][:value]).to eq '192.0.2.2.invalid'
+        expect(response[:results][1][:result_code]).to eq '2005'
+        expect(response[:results][1][:msg]).to eq 'IPv6 is invalid'
+        expect(response[:results][1][:value]).to eq 'invalid_ipv6'
+        expect(Domain.count).to eq(0)
+        expect(Nameserver.count).to eq(0)
       end
 
       it 'creates a domain with period in days' do

@@ -54,7 +54,7 @@ class Domain < ActiveRecord::Base
   def attach_objects(ph, parsed_frame)
     attach_owner_contact(ph[:registrant])
     attach_contacts(self.class.parse_contacts_from_frame(parsed_frame))
-    attach_nameservers(self.class.parse_nameservers_from_params(ph[:ns]))
+    attach_nameservers(self.class.parse_nameservers_from_frame(parsed_frame))
 
     errors.empty?
   end
@@ -100,27 +100,9 @@ class Domain < ActiveRecord::Base
   end
 
   def attach_nameservers(ns_list)
-    ns_list.each do |ns|
-      attach_nameserver(ns)
+    ns_list.each do |ns_attrs|
+      self.nameservers.build(ns_attrs)
     end
-  end
-
-  def attach_nameserver(ns)
-    self.nameservers.build(hostname: ns) and return if ns.is_a?(String)
-
-    attrs = {hostname: ns[:hostName]}
-
-    if ns[:hostAddr]
-      if ns[:hostAddr].is_a?(Array)
-        ns[:hostAddr].each do |ip|
-          attrs[:ipv4] = ip unless attrs[:ipv4]
-        end
-      else
-        attrs[:ipv4] = ns[:hostAddr]
-      end
-    end
-
-    self.nameservers.build(attrs)
   end
 
   ### RENEW ###
@@ -190,11 +172,23 @@ class Domain < ActiveRecord::Base
       res
     end
 
-    def parse_nameservers_from_params(ph)
-      return [] unless ph
-      return ph[:hostObj] if ph[:hostObj]
-      return ph[:hostAttr] if ph[:hostAttr]
-      []
+    def parse_nameservers_from_frame(parsed_frame)
+      res = []
+      parsed_frame.css('hostAttr').each do |x|
+        res << {
+          hostname: x.css('hostName').first.try(:text),
+          ipv4: x.css('hostAddr[ip="v4"]').first.try(:text),
+          ipv6: x.css('hostAddr[ip="v6"]').first.try(:text)
+        }
+      end
+
+      parsed_frame.css('hostObj').each do |x|
+        res << {
+          hostname: x.text
+        }
+      end
+
+      res
     end
 
     def parse_period_unit_from_frame(parsed_frame)

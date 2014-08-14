@@ -60,6 +60,8 @@ en:
               invalid: 'Hostname is invalid'
             ipv4:
               invalid: 'IPv4 is invalid'
+            ipv6:
+              invalid: 'IPv6 is invalid'
     attributes:
       domain:
         name: 'Domain name'
