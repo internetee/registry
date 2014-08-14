@@ -28,7 +28,7 @@ describe 'EPP Session', epp: true do
     end
 
     it 'prohibits further actions unless logged in' do
-      response = epp_plain_request('domains/create.xml')
+      response = epp_plain_request(domain_create_xml, :xml)
       expect(response[:result_code]).to eq('2002')
       expect(response[:msg]).to eq('You need to login first.')
       expect(response[:clTRID]).to eq('ABC-12345')

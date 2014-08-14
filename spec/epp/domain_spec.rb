@@ -9,7 +9,7 @@ describe 'EPP Domain', epp: true do
     it 'returns error if contact does not exists' do
       Fabricate(:contact, code: 'jd1234')
 
-      response = epp_request('domains/create.xml')
+      response = epp_request(domain_create_xml, :xml)
       expect(response[:results][0][:result_code]).to eq('2303')
       expect(response[:results][0][:msg]).to eq('Contact was not found')
       expect(response[:results][0][:value]).to eq('sh8013')

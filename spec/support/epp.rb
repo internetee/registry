@@ -13,9 +13,10 @@ module Epp
     end
   end
 
-  def epp_plain_request filename
+  def epp_plain_request(data, type=:filename)
     begin
-      parse_response(server.send_request(read_body(filename)))
+      return parse_response(server.send_request(read_body(data))) if type == :filename
+      return parse_response(server.send_request(data))
     rescue Exception => e
       e
     end
