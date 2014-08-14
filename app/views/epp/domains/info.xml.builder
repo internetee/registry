@@ -28,7 +28,7 @@ xml.epp_head do
 
         xml.tag!('domain:clID', @domain.owner_contact_code)
 
-        xml.tag!('domain:crID', @domain.registrar_name)
+        xml.tag!('domain:crID', @domain.registrar_name) if @domain.registrar #TODO Registrar has to be specified
 
         xml.tag!('domain:crDate', @domain.created_at)
 
