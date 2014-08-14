@@ -105,5 +105,43 @@ describe 'EPP Helper', epp: true do
       generated = Nokogiri::XML(xml).to_s.squish
       expect(generated).to eq(expected)
     end
+
+    it 'creates valid info request' do
+      expected = Nokogiri::XML('<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+        <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+          <command>
+            <info>
+              <domain:info
+               xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
+                <domain:name hosts="all">example.ee</domain:name>
+              </domain:info>
+            </info>
+            <clTRID>ABC-12345</clTRID>
+          </command>
+        </epp>
+      ').to_s.squish
+
+
+      generated = Nokogiri::XML(domain_info_xml).to_s.squish
+      expect(generated).to eq(expected)
+
+      expected = Nokogiri::XML('<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+        <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+          <command>
+            <info>
+              <domain:info
+               xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
+                <domain:name hosts="sub">one.ee</domain:name>
+              </domain:info>
+            </info>
+            <clTRID>ABC-12345</clTRID>
+          </command>
+        </epp>
+      ').to_s.squish
+
+
+      generated = Nokogiri::XML(domain_info_xml(name_value: 'one.ee', name_hosts: 'sub')).to_s.squish
+      expect(generated).to eq(expected)
+    end
   end
 end

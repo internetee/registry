@@ -124,6 +124,25 @@ module Epp
       end
     end
   end
+
+  def domain_info_xml(xml_params={})
+    xml_params[:name_value] = xml_params[:name_value] || 'example.ee'
+    xml_params[:name_hosts] = xml_params[:name_hosts] || 'all'
+
+    xml = Builder::XmlMarkup.new
+
+    xml.instruct!(:xml, :standalone => 'no')
+    xml.epp('xmlns' => 'urn:ietf:params:xml:ns:epp-1.0') do
+      xml.command do
+        xml.info do
+          xml.tag!('domain:info', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
+            xml.tag!('domain:name', xml_params[:name_value], 'hosts' => xml_params[:name_hosts]) if xml_params[:name] != false
+          end
+        end
+        xml.clTRID 'ABC-12345'
+      end
+    end
+  end
 end
 
 RSpec.configure do |c|
