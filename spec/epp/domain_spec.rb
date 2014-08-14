@@ -178,7 +178,7 @@ describe 'EPP Domain', epp: true do
       before(:each) { Fabricate(:domain, name: 'example.ee') }
 
       it 'renews a domain' do
-        response = epp_request('domains/renew.xml')
+        response = epp_request(domain_renew_xml, :xml)
         exDate = response[:parsed].css('renData exDate').text
         name = response[:parsed].css('renData name').text
         expect(exDate).to eq ('2015-08-07 00:00:00 UTC')
