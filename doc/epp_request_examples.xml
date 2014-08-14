@@ -64,6 +64,9 @@
       <domain:info
        xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
         <domain:name hosts="all">example.ee</domain:name>
+        <domain:authInfo>
+          <domain:pw>2fooBAR</domain:pw>
+        </domain:authInfo>
       </domain:info>
     </info>
     <clTRID>ABC-12345</clTRID>
