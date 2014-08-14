@@ -243,7 +243,7 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'checks a domain' do
-      response = epp_request('domains/check.xml')
+      response = epp_request(domain_check_xml, :xml)
       expect(response[:result_code]).to eq('1000')
       expect(response[:msg]).to eq('Command completed successfully')
 
@@ -253,7 +253,7 @@ describe 'EPP Domain', epp: true do
 
       Fabricate(:domain, name: 'example.ee')
 
-      response = epp_request('domains/check.xml')
+      response = epp_request(domain_check_xml, :xml)
       domain = response[:parsed].css('resData chkData cd').first
       name = domain.css('name').first
       reason = domain.css('reason').first
