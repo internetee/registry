@@ -13,10 +13,10 @@ module Epp::ContactsHelper
     #TODO add support for rem and add
     code = params_hash['epp']['command']['update']['update'][:id]
     @contact = Contact.where(code: code).first
-    stamp @contact
-    if @contact.update_attributes(contact_and_address_attributes.delete_if { |k, v| v.nil? })
+    if stamp(@contact) && @contact.update_attributes(contact_and_address_attributes.delete_if { |k, v| v.nil? })
       render 'epp/contacts/update'
     else
+      epp_errors << { code: '2303', msg: t('errors.messages.epp_obj_does_not_exist'), value: { obj: 'id', val: code } } if @contact == []
       handle_errors(@contact)
     end
   end

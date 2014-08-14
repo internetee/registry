@@ -72,6 +72,64 @@ module EppContactXmlBuilder
     end
   end
 
+  #CONTACT UPDATE NEEDS WORK USE ON YOUR OWN RISK
+  def contact_update_xml(xml_params={})
+    xml = Builder::XmlMarkup.new
+
+    #postalInfo = xml_params.try(:chg).try(:postalInfo)
+    #addr = postalInfo.try(:addr)
+    postalInfo = xml_params[:chg][:postalInfo] rescue nil
+    addr = postalInfo[:addr] rescue nil
+
+    if !addr
+      addr = { street: 'Downtown', city: 'Stockholm', cc: 'SE' }
+    end
+    
+    if !postalInfo
+      postalInfo = { name: 'Jane Doe', org: 'Fake Inc.', voice: '+321.12345', fax: '12312312', addr: addr  }
+    end
+
+    xml_params[:chg] = xml_params[:chg] || { postalInfo: postalInfo }
+
+    xml_params[:chg][:postalInfo] = postalInfo
+    xml_params[:chg][:postalInfo][:addr] = addr
+
+
+    xml.instruct!(:xml, standalone: 'no')
+     xml.epp('xmlns' => 'urn:ietf:params:xml:ns:epp-1.0') do
+      xml.command do
+        xml.update do
+          xml.tag!('contact:update', 'xmlns:contact' => 'urn:ietf:params:xml:ns:contact-1.0') do
+            xml.tag!('contact:id', (xml_params[:id] || 'sh8013') ) unless xml_params[:id] == false
+            unless xml_params[:chg] == [ false ]
+              xml.tag!('contact:chg') do
+                xml.tag!('contact:voice', xml_params[:chg][:phone] || '+123.321123' ) unless xml_params[:chg][:phone] == false
+                xml.tag!('contact:email', xml_params[:chg][:email] || 'jane@doe.com' ) unless xml_params[:chg][:email] == false
+                unless xml_params[:chg][:postalInfo] == false
+                  xml.tag!('contact:postalInfo') do
+                    xml.tag!('contact:name', xml_params[:chg][:postalInfo][:name] ) unless xml_params[:chg][:postalInfo][:name] == false
+                    xml.tag!('contact:org', xml_params[:chg][:postalInfo][:org] ) unless xml_params[:chg][:postalInfo][:org] == false
+                    unless xml_params[:chg][:postalInfo][:addr] == false
+                      xml.tag!('contact:addr') do
+                        xml.tag!('contact:street', xml_params[:chg][:postalInfo][:addr][:street]   ) unless xml_params[:chg][:postalInfo][:addr][:street] == false
+                        xml.tag!('contact:street', xml_params[:chg][:postalInfo][:addr][:street2]  ) unless xml_params[:chg][:postalInfo][:addr][:street2] == false
+                        xml.tag!('contact:street', xml_params[:chg][:postalInfo][:addr][:street3]  ) unless xml_params[:chg][:postalInfo][:addr][:street3] == false
+                        xml.tag!('contact:city'  , xml_params[:chg][:postalInfo][:addr][:city]     ) unless xml_params[:chg][:postalInfo][:addr][:city] == false
+                        xml.tag!('contact:sp'    , xml_params[:chg][:postalInfo][:addr][:sp]       ) unless xml_params[:chg][:postalInfo][:addr][:sp] == false
+                        xml.tag!('contact:pc'    , xml_params[:chg][:postalInfo][:addr][:pc]       ) unless xml_params[:chg][:postalInfo][:addr][:pc] == false
+                        xml.tag!('contact:cc'    , xml_params[:chg][:postalInfo][:addr][:cc]       ) unless xml_params[:chg][:postalInfo][:addr][:cc] == false
+                      end
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
+        xml.clTRID 'ABC-12345'
+      end
+    end
+  end
 end
 
 RSpec.configure do |c|
