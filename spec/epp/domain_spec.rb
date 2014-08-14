@@ -234,6 +234,12 @@ describe 'EPP Domain', epp: true do
 
         expect(inf_data.css('upDate').text).to eq(d.updated_at.to_time.utc.to_s)
       end
+
+      it 'returns error when domain can not be found' do
+        response = epp_request(domain_info_xml(name_value: 'test.ee'), :xml)
+        expect(response[:results][0][:result_code]).to eq('2303')
+        expect(response[:results][0][:msg]).to eq('Domain not found')
+      end
     end
 
     it 'checks a domain' do

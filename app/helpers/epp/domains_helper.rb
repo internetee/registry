@@ -29,6 +29,8 @@ module Epp::DomainsHelper
   def info_domain
     @domain = find_domain
 
+    handle_errors(@domain) and return unless @domain
+
     render '/epp/domains/info'
   end
 

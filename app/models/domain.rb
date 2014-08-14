@@ -8,7 +8,8 @@ class Domain < ActiveRecord::Base
     '2302' => ['Domain name already exists', 'Domain name is reserved or restricted'], # Object exists
     '2306' => ['Registrant is missing', 'Admin contact is missing', 'Given and current expire dates do not match'], # Parameter policy error
     '2004' => ['Nameservers count must be between 1-13', 'Period must add up to 1, 2 or 3 years'], # Parameter value range error
-    '2303' => ['Registrant not found', 'Contact was not found'] # Object does not exist
+    '2303' => ['Registrant not found', 'Contact was not found'], # Object does not exist
+    '2200' => ['Authentication error']
   }
 
   EPP_ATTR_MAP = {
@@ -154,6 +155,14 @@ class Domain < ActiveRecord::Base
       val: cur_exp_date,
       msg: I18n.t('errors.messages.epp_exp_dates_do_not_match')
     }) if cur_exp_date.to_date != valid_to
+  end
+
+  ## SHARED
+
+  # For domain transfer
+  def authenticate(pw)
+    errors.add(:auth_info, {msg: errors.generate_message(:auth_info, :wrong_pw)}) if pw != auth_info
+    errors.empty?
   end
 
   class << self

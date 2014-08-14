@@ -114,6 +114,9 @@ describe 'EPP Helper', epp: true do
               <domain:info
                xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
                 <domain:name hosts="all">example.ee</domain:name>
+                <domain:authInfo>
+                  <domain:pw>2fooBAR</domain:pw>
+                </domain:authInfo>
               </domain:info>
             </info>
             <clTRID>ABC-12345</clTRID>
@@ -132,6 +135,9 @@ describe 'EPP Helper', epp: true do
               <domain:info
                xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
                 <domain:name hosts="sub">one.ee</domain:name>
+                <domain:authInfo>
+                  <domain:pw>b3rafsla</domain:pw>
+                </domain:authInfo>
               </domain:info>
             </info>
             <clTRID>ABC-12345</clTRID>
@@ -140,7 +146,7 @@ describe 'EPP Helper', epp: true do
       ').to_s.squish
 
 
-      generated = Nokogiri::XML(domain_info_xml(name_value: 'one.ee', name_hosts: 'sub')).to_s.squish
+      generated = Nokogiri::XML(domain_info_xml(name_value: 'one.ee', name_hosts: 'sub', pw: 'b3rafsla')).to_s.squish
       expect(generated).to eq(expected)
     end
   end
