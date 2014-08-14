@@ -205,7 +205,7 @@ describe 'EPP Domain', epp: true do
       it 'returns domain info' do
         d = Domain.first
 
-        response = epp_request('domains/info.xml')
+        response = epp_request(domain_info_xml, :xml)
         expect(response[:results][0][:result_code]).to eq('1000')
         expect(response[:results][0][:msg]).to eq('Command completed successfully')
 
@@ -229,7 +229,7 @@ describe 'EPP Domain', epp: true do
 
         d.touch
 
-        response = epp_request('domains/info.xml')
+        response = epp_request(domain_info_xml, :xml)
         inf_data = response[:parsed].css('resData infData')
 
         expect(inf_data.css('upDate').text).to eq(d.updated_at.to_time.utc.to_s)
