@@ -76,6 +76,34 @@ describe 'EPP Helper', epp: true do
 
       generated = Nokogiri::XML(xml).to_s.squish
       expect(generated).to eq(expected)
+
+      ###
+
+      expected = Nokogiri::XML('<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+        <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+          <command>
+            <create>
+              <domain:create
+               xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
+                <domain:name>one.ee</domain:name>
+              </domain:create>
+            </create>
+            <clTRID>ABC-12345</clTRID>
+          </command>
+        </epp>
+      ').to_s.squish
+
+      xml = domain_create_xml(
+        name: 'one.ee',
+        period: false,
+        nameservers: [],
+        registrant: false,
+        contacts: [],
+        authInfo: false
+      )
+
+      generated = Nokogiri::XML(xml).to_s.squish
+      expect(generated).to eq(expected)
     end
   end
 end
