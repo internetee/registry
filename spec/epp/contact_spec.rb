@@ -55,7 +55,6 @@ describe 'EPP Contact', epp: true do
 
     # incomplete
     it 'creates a contact' do
-      #response = epp_request('contacts/create.xml')
       response = epp_request(contact_create_xml, :xml)
 
       expect(response[:result_code]).to eq('1000')
@@ -75,7 +74,7 @@ describe 'EPP Contact', epp: true do
 
     it 'returns result data upon succesful contact creation' do
       response = epp_request(contact_create_xml, :xml)
-      #response = epp_request('contacts/create.xml')
+
       expect(response[:result_code]).to eq('1000')
       expect(response[:msg]).to eq('Command completed successfully')
 
@@ -92,7 +91,7 @@ describe 'EPP Contact', epp: true do
       Fabricate(:contact, code: 'sh8013')
 
       response = epp_request(contact_create_xml, :xml)
-      #response = epp_request('contacts/create.xml')
+
       expect(response[:result_code]).to eq('2302')
       expect(response[:msg]).to eq('Contact id already exists')
       
@@ -132,7 +131,6 @@ describe 'EPP Contact', epp: true do
       
       response = epp_request(contact_check_xml( ids: [{ id: 'check-1234'}, { id: 'check-4321' }]  ), :xml)
 
-      #response = epp_request('contacts/check.xml')
       expect(response[:result_code]).to eq('1000')
       expect(response[:msg]).to eq('Command completed successfully')
       ids = response[:parsed].css('resData chkData id')
