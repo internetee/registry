@@ -65,6 +65,18 @@ describe Contact, '#upID' do
 end
 
 
+describe Contact, '.extract_params' do
+  it 'returns params hash'do
+    ph = { id: '123123', email: 'jdoe@example.com', postalInfo: { name: "fred", addr: { cc: 'EE' } }  }
+    expect(Contact.extract_attributes(ph)).to eq( {
+      code: '123123',
+      email: 'jdoe@example.com',
+      name: 'fred'
+    } )
+  end
+end
+
+
 describe Contact, '.check_availability' do
 
   before(:each) {

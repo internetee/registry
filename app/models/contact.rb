@@ -67,6 +67,25 @@ class Contact < ActiveRecord::Base
   end
 
   class << self
+
+    def extract_attributes ph, type=:create
+  
+      contact_hash = {
+        phone: ph[:voice],
+        ident: ph[:ident],
+        email: ph[:email]
+      }
+  
+      contact_hash = contact_hash.merge({
+        name: ph[:postalInfo][:name],
+        org_name: ph[:postalInfo][:org]
+      }) if ph[:postalInfo].is_a? Hash
+  
+      contact_hash[:code] = ph[:id] if type == :create
+  
+      contact_hash.delete_if { |k, v| v.nil? }
+    end
+  
     def check_availability(codes)
       codes = [codes] if codes.is_a?(String)
 

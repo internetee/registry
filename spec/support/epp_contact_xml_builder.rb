@@ -58,7 +58,7 @@ module EppContactXmlBuilder
             xml.tag!('contact:voice', (xml_params[:voice] || '+372.1234567')) unless xml_params[:voice] == false
             xml.tag!('contact:fax', (xml_params[:fax] || '123123' )) unless xml_params[:fax] == false
             xml.tag!('contact:email', (xml_params[:email] || 'example@test.example')) unless xml_params[:email] == false
-            xml.tag!('contact:ident', (xml_params[:ident] || '37605030299')) unless xml_params[:ident] == false
+            xml.tag!('contact:ident', (xml_params[:ident] || '37605030299'), type: 'op') unless xml_params[:ident] == false
             unless xml_params[:authInfo] == [false]
               xml.tag!('contact:authInfo') do
                 xml.tag!('contact:pw', xml_params[:authInfo][:pw] ) unless xml_params[:authInfo][:pw] == false

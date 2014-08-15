@@ -31,6 +31,8 @@ describe 'EPP Contact', epp: true do
 
         expect(Contact.count).to eq(1)
         expect(Contact.first.org_name).to eq('Example Inc.')
+        expect(Contact.first.ident).to eq '37605030299'
+        expect(Contact.first.ident_type).to eq 'op'
 
         expect(Contact.first.address.street).to eq('123 Example Dr.')
         expect(Contact.first.address.street2).to eq('Suite 100')
@@ -68,8 +70,8 @@ describe 'EPP Contact', epp: true do
 
     context 'update command' do
       it "fails if request is invalid" do
-        #response = epp_request('contacts/update_missing_attr.xml')
-        response = epp_request(contact_update_xml( {id: false} ), :xml)
+        response = epp_request('contacts/update_missing_attr.xml')
+        #response = epp_request(contact_update_xml( {id: false} ), :xml)
   
         expect(response[:results][0][:result_code]).to eq('2003')
         expect(response[:results][0][:msg]).to eq('Required parameter missing: id')
@@ -88,16 +90,20 @@ describe 'EPP Contact', epp: true do
   
       it 'is succesful' do
         Fabricate(:contact, created_by_id: 1, email: 'not_updated@test.test', code: 'sh8013')
-        response = epp_request(contact_update_xml( { chg: { email: 'fred@bloggers.ee', postalInfo: { name: 'Fred Bloggers' } } } ), :xml)
+        #response = epp_request(contact_update_xml( { chg: { email: 'fred@bloggers.ee', postalInfo: { name: 'Fred Bloggers' } } } ), :xml)
+        response = epp_request('contacts/update.xml')
 
         expect(response[:msg]).to eq('Command completed successfully')
-        expect(Contact.first.name).to eq('Fred Bloggers')
-        expect(Contact.first.email).to eq('fred@bloggers.ee')
+        expect(Contact.first.name).to eq('John Doe')
+        expect(Contact.first.email).to eq('jdoe@example.com')
+        expect(Contact.first.ident).to eq('J836954')
+        expect(Contact.first.ident_type).to eq('passport')
       end
   
       it 'returns phone and email error' do 
         Fabricate(:contact, created_by_id: 1, email: 'not_updated@test.test', code: 'sh8013')
-        response = epp_request(contact_update_xml( { chg: { email: "qwe", phone: "123qweasd" } }), :xml)
+        #response = epp_request(contact_update_xml( { chg: { email: "qwe", phone: "123qweasd" } }), :xml)
+        response = epp_request('contacts/update_with_errors.xml')
   
         expect(response[:results][0][:result_code]).to eq('2005')
         expect(response[:results][0][:msg]).to eq('Phone nr is invalid')
@@ -189,7 +195,8 @@ describe 'EPP Contact', epp: true do
 
       end
 
-      it 'doesn\'t display unassociated object' do
+      it 'doesn\'t display unassociated object', pending: true do
+        pending 'until new contact rights systems is implemented'
         Fabricate(:contact, name:"Johnny Awesome", created_by_id: '240', code: 'info-4444')
         Fabricate(:epp_user, id: 240)
 
