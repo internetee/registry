@@ -83,3 +83,33 @@ en:
       epp_exp_dates_do_not_match: 'Given and current expire dates do not match'
       epp_registrant_not_found: 'Registrant not found'
       required_parameter_missing: 'Required parameter missing: %{key}'
+
+  setting_groups:
+    codes:
+      domain_statuses: 'Domain statuses'
+
+    index:
+      setting_group: 'Setting group'
+      edit_settings: 'Edit settings'
+    show:
+      setting: 'Setting'
+
+  settings:
+    codes:
+      ns_min_count: 'Nameserver minimum count'
+      ns_max_count: 'Nameserver maximum count'
+
+  shared:
+    code: 'Code'
+    value: 'Value'
+    setting_groups: 'Setting groups'
+    action: 'Action'
+    edit: 'Edit'
+    save: 'Save'
+    dashboard: 'Dashboard'
+    log_out: 'Log out'
+    system: 'System'
+    settings: 'Settings'
+    domains: 'Domains'
+    epp_users: 'EPP Users'
+    registrars: 'Registrars'

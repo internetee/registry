@@ -40,6 +40,8 @@ gem 'simpleidn', '~> 0.0.5'
 #for EE-id validation
 gem 'isikukood'
 
+gem 'bootstrap-sass', '~> 3.2.0.1'
+
 group :assets do
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   gem 'therubyracer',  platforms: :ruby

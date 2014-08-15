@@ -6,7 +6,7 @@ module Epp::DomainsHelper
       handle_errors(@domain) and return unless @domain.attach_objects(@ph, parsed_frame)
       handle_errors(@domain) and return unless @domain.save
 
-      render '/epp/domains/create'
+      render '/epp/domains/success'
     end
   end
 
@@ -32,6 +32,14 @@ module Epp::DomainsHelper
     handle_errors(@domain) and return unless @domain
 
     render '/epp/domains/info'
+  end
+
+  def update_domain
+    @domain = find_domain
+
+    handle_errors(@domain) and return unless @domain
+
+    render '/epp/domains/success'
   end
 
   ### HELPER METHODS ###
@@ -72,6 +80,11 @@ module Epp::DomainsHelper
     xml_attrs_present?(@ph, [['name']])
   end
 
+  ## UPDATE
+  def validate_domain_update_request
+    @ph = params_hash['epp']['command']['update']['update']
+    xml_attrs_present?(@ph, [['name']])
+  end
 
   ## SHARED
   def find_domain

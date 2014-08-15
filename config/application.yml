@@ -1,0 +1,14 @@
+defaults: &defaults
+  app_name: .EE Registry
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+staging:
+  <<: *defaults
+
+production:
+  <<: *defaults

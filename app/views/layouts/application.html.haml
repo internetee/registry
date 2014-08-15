@@ -1,0 +1,54 @@
+%html{lang: "en"}
+  %head
+    %meta{charset: "utf-8"}/
+    %meta{content: "IE=edge", "http-equiv" => "X-UA-Compatible"}/
+    %meta{content: "width=device-width, initial-scale=1", name: "viewport"}/
+    %meta{content: "Full stack top-level domain (TLD) management.", name: "description"}/
+    %meta{content: "Gitlab LTD", name: "author"}/
+    = csrf_meta_tags
+    = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true
+    = javascript_include_tag 'application', 'data-turbolinks-track' => true
+    %link{href: "../../favicon.ico", rel: "icon"}/
+    %title Eesti Interneti SA
+  %body
+    / Static navbar
+    .navbar.navbar-default.navbar-static-top{role: "navigation"}
+      .container
+        .navbar-header
+          %button.navbar-toggle{"data-target" => ".navbar-collapse", "data-toggle" => "collapse", type: "button"}
+            %span.sr-only Toggle navigation
+            %span.icon-bar
+            %span.icon-bar
+            %span.icon-bar
+          = link_to APP_CONFIG['app_name'], root_path, class: 'navbar-brand'
+        .navbar-collapse.collapse
+          %ul.nav.navbar-nav
+            %li
+              = link_to t('shared.dashboard'), root_path
+            %li
+              = link_to t('shared.registrars'), root_path
+            %li
+              = link_to t('shared.domains'), root_path
+            %li.dropdown
+              %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
+                = t('shared.settings')
+                %span.caret
+              %ul.dropdown-menu{role: "menu"}
+                %li.dropdown-header= t('shared.system')
+                %li
+                  = link_to t('shared.setting_groups'), setting_groups_path
+                %li
+                  = link_to t('shared.users'), '#'
+                %li
+                  = link_to t('shared.epp_users'), '#'
+                %li.divider
+                %li.dropdown-header= 'Something else'
+                %li
+                  %a{href: "#"} Link
+          %ul.nav.navbar-nav.navbar-right
+            %li= link_to t('shared.log_out'), '/logout'
+        / /.nav-collapse
+    .container
+      = yield
+
+

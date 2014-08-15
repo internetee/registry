@@ -240,6 +240,15 @@ describe 'EPP Domain', epp: true do
         expect(response[:results][0][:result_code]).to eq('2303')
         expect(response[:results][0][:msg]).to eq('Domain not found')
       end
+
+      it 'updates domain', pending: true do
+        response = epp_request('domains/update.xml')
+        expect(response[:results][0][:result_code]).to eq('1000')
+
+        d = Domain.first
+        new_ns = d.nameservers.find_by(hostname: 'ns2.example.com')
+        expect(new_ns).to be_truthy
+      end
     end
 
     it 'checks a domain' do

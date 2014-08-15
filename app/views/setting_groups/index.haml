@@ -1,0 +1,14 @@
+%h2= t('shared.setting_groups')
+%hr
+- @setting_groups.each do |x|
+  .row
+    .col-md-12
+      %table.table.table-striped.table-bordered
+        %tr
+          %th{class: 'col-xs-9'}
+            = t('.setting_group')
+          %th{class: 'col-xs-2'}
+            = t('shared.action')
+        %tr
+          %td= t("setting_groups.codes.#{x.code}")
+          %td= link_to(t('.edit_settings'), setting_group_path(x), class: 'btn btn-primary btn-xs')

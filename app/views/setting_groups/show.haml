@@ -1,0 +1,19 @@
+%h2= t("setting_groups.codes.#{@setting_group.code}")
+%hr
+= form_for(@setting_group) do |f|
+  .row
+    .col-md-12
+      %table.table.table-striped.table-bordered
+        %tr
+          %th{class: 'col-xs-9'}
+            = t('.setting')
+          %th{class: 'col-xs-2'}
+            = t('shared.value')
+        - @setting_group.settings.each do |setting|
+          = f.fields_for :settings, setting do |sf|
+            %tr
+              %td= t("settings.codes.#{sf.object.code}")
+              %td= sf.text_field(:value, autocomplete: 'off')
+  .row
+    .col-md-12.text-right
+      %button.btn.btn-primary=t('shared.save')
