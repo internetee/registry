@@ -13,7 +13,7 @@ module Epp::ContactsHelper
     #TODO add support for rem and add
     code = params_hash['epp']['command']['update']['update'][:id]
     @contact = Contact.where(code: code).first
-    if stamp(@contact) && @contact.update_attributes(contact_and_address_attributes.delete_if { |k, v| v.nil? })
+    if stamp(@contact) && @contact.update_attributes(contact_and_address_attributes(:update))
       render 'epp/contacts/update'
     else
       epp_errors << { code: '2303', msg: t('errors.messages.epp_obj_does_not_exist'), value: { obj: 'id', val: code } } if @contact == []
@@ -101,32 +101,17 @@ module Epp::ContactsHelper
   end
 
 
-  def contact_and_address_attributes
-    ph = params_hash['epp']['command'][params[:command]][params[:command]]
-    ph = ph[:chg] if params[:command] == 'update'
-    contact_hash = {
-      code: ph[:id],
-      phone: ph[:voice],
-      ident: ph[:ident],
-      ident_type: ident_type,
-      email: ph[:email],
-    }
-
-    contact_hash = contact_hash.merge({
-      name: ph[:postalInfo][:name],
-      org_name: ph[:postalInfo][:org]
-    }) if ph[:postalInfo].is_a? Hash
-
-    contact_hash = contact_hash.merge({
-      address_attributes: {
-        country_id: Country.find_by(iso: ph[:postalInfo][:addr][:cc]),
-        street: ph[:postalInfo][:addr][:street][0],
-        street2: ph[:postalInfo][:addr][:street][1],
-        street3: ph[:postalInfo][:addr][:street][2],
-        zip: ph[:postalInfo][:addr][:pc]
-      }
-    }) if ph[:postalInfo].is_a?(Hash) && ph[:postalInfo][:addr].is_a?(Hash)
-
+  def contact_and_address_attributes( type=:create )
+    case type
+    when :update
+      contact_hash = Contact.extract_attributes(@ph[:chg], type)
+      contact_hash[:address_attributes] = 
+        Address.extract_attributes(( @ph.try(:[], :chg).try(:[], :postalInfo).try(:[], :addr) || [] ),  type)
+    else
+      contact_hash = Contact.extract_attributes(@ph, type)
+      contact_hash[:address_attributes] = 
+        Address.extract_attributes(( @ph.try(:[], :postalInfo).try(:[], :addr) || [] ),  type)
+    end
     contact_hash
   end
 

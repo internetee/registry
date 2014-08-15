@@ -68,8 +68,8 @@ describe 'EPP Contact', epp: true do
 
     context 'update command' do
       it "fails if request is invalid" do
-        #response = epp_request('contacts/update_missing_attr.xml')
-        response = epp_request(contact_update_xml( {id: false} ), :xml)
+        response = epp_request('contacts/update_missing_attr.xml')
+        #response = epp_request(contact_update_xml( {id: false} ), :xml)
   
         expect(response[:results][0][:result_code]).to eq('2003')
         expect(response[:results][0][:msg]).to eq('Required parameter missing: id')
@@ -88,16 +88,18 @@ describe 'EPP Contact', epp: true do
   
       it 'is succesful' do
         Fabricate(:contact, created_by_id: 1, email: 'not_updated@test.test', code: 'sh8013')
-        response = epp_request(contact_update_xml( { chg: { email: 'fred@bloggers.ee', postalInfo: { name: 'Fred Bloggers' } } } ), :xml)
+        #response = epp_request(contact_update_xml( { chg: { email: 'fred@bloggers.ee', postalInfo: { name: 'Fred Bloggers' } } } ), :xml)
+        response = epp_request('contacts/update.xml')
 
         expect(response[:msg]).to eq('Command completed successfully')
-        expect(Contact.first.name).to eq('Fred Bloggers')
-        expect(Contact.first.email).to eq('fred@bloggers.ee')
+        expect(Contact.first.name).to eq('John Doe')
+        expect(Contact.first.email).to eq('jdoe@example.com')
       end
   
       it 'returns phone and email error' do 
         Fabricate(:contact, created_by_id: 1, email: 'not_updated@test.test', code: 'sh8013')
-        response = epp_request(contact_update_xml( { chg: { email: "qwe", phone: "123qweasd" } }), :xml)
+        #response = epp_request(contact_update_xml( { chg: { email: "qwe", phone: "123qweasd" } }), :xml)
+        response = epp_request('contacts/update_with_errors.xml')
   
         expect(response[:results][0][:result_code]).to eq('2005')
         expect(response[:results][0][:msg]).to eq('Phone nr is invalid')
