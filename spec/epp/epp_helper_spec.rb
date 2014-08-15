@@ -106,7 +106,7 @@ describe 'EPP Helper', epp: true do
       expect(generated).to eq(expected)
     end
 
-    it 'creates valid info request' do
+    it 'generates valid info xml' do
       expected = Nokogiri::XML('<?xml version="1.0" encoding="UTF-8" standalone="no"?>
         <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
           <command>
@@ -114,6 +114,9 @@ describe 'EPP Helper', epp: true do
               <domain:info
                xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
                 <domain:name hosts="all">example.ee</domain:name>
+                <domain:authInfo>
+                  <domain:pw>2fooBAR</domain:pw>
+                </domain:authInfo>
               </domain:info>
             </info>
             <clTRID>ABC-12345</clTRID>
@@ -132,6 +135,9 @@ describe 'EPP Helper', epp: true do
               <domain:info
                xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
                 <domain:name hosts="sub">one.ee</domain:name>
+                <domain:authInfo>
+                  <domain:pw>b3rafsla</domain:pw>
+                </domain:authInfo>
               </domain:info>
             </info>
             <clTRID>ABC-12345</clTRID>
@@ -140,7 +146,89 @@ describe 'EPP Helper', epp: true do
       ').to_s.squish
 
 
-      generated = Nokogiri::XML(domain_info_xml(name_value: 'one.ee', name_hosts: 'sub')).to_s.squish
+      generated = Nokogiri::XML(domain_info_xml(name_value: 'one.ee', name_hosts: 'sub', pw: 'b3rafsla')).to_s.squish
+      expect(generated).to eq(expected)
+    end
+
+    it 'generates valid check xml' do
+      expected = Nokogiri::XML('<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+        <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+          <command>
+            <check>
+              <domain:check
+               xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
+                <domain:name>example.ee</domain:name>
+              </domain:check>
+            </check>
+            <clTRID>ABC-12345</clTRID>
+          </command>
+        </epp>
+      ').to_s.squish
+
+
+      generated = Nokogiri::XML(domain_check_xml).to_s.squish
+      expect(generated).to eq(expected)
+
+      expected = Nokogiri::XML('<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+        <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+          <command>
+            <check>
+              <domain:check
+               xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
+                <domain:name>example.ee</domain:name>
+                <domain:name>example2.ee</domain:name>
+                <domain:name>example3.ee</domain:name>
+              </domain:check>
+            </check>
+            <clTRID>ABC-12345</clTRID>
+          </command>
+        </epp>
+      ').to_s.squish
+
+
+      generated = Nokogiri::XML(domain_check_xml(names: ['example.ee', 'example2.ee', 'example3.ee'])).to_s.squish
+      expect(generated).to eq(expected)
+    end
+
+    it 'generates valid renew xml' do
+      expected = Nokogiri::XML('<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+        <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+          <command>
+            <renew>
+              <domain:renew
+               xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
+                <domain:name>example.ee</domain:name>
+                <domain:curExpDate>2014-08-07</domain:curExpDate>
+                <domain:period unit="y">1</domain:period>
+              </domain:renew>
+            </renew>
+            <clTRID>ABC-12345</clTRID>
+          </command>
+        </epp>
+      ').to_s.squish
+
+
+      generated = Nokogiri::XML(domain_renew_xml).to_s.squish
+      expect(generated).to eq(expected)
+
+      expected = Nokogiri::XML('<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+        <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+          <command>
+            <renew>
+              <domain:renew
+               xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
+                <domain:name>one.ee</domain:name>
+                <domain:curExpDate>2009-11-15</domain:curExpDate>
+                <domain:period unit="d">365</domain:period>
+              </domain:renew>
+            </renew>
+            <clTRID>ABC-12345</clTRID>
+          </command>
+        </epp>
+      ').to_s.squish
+
+
+      generated = Nokogiri::XML(domain_renew_xml(name: 'one.ee', curExpDate: '2009-11-15', period_value: '365', period_unit: 'd')).to_s.squish
       expect(generated).to eq(expected)
     end
   end

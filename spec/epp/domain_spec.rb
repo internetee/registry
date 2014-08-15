@@ -178,7 +178,7 @@ describe 'EPP Domain', epp: true do
       before(:each) { Fabricate(:domain, name: 'example.ee') }
 
       it 'renews a domain' do
-        response = epp_request('domains/renew.xml')
+        response = epp_request(domain_renew_xml, :xml)
         exDate = response[:parsed].css('renData exDate').text
         name = response[:parsed].css('renData name').text
         expect(exDate).to eq ('2015-08-07 00:00:00 UTC')
@@ -234,10 +234,16 @@ describe 'EPP Domain', epp: true do
 
         expect(inf_data.css('upDate').text).to eq(d.updated_at.to_time.utc.to_s)
       end
+
+      it 'returns error when domain can not be found' do
+        response = epp_request(domain_info_xml(name_value: 'test.ee'), :xml)
+        expect(response[:results][0][:result_code]).to eq('2303')
+        expect(response[:results][0][:msg]).to eq('Domain not found')
+      end
     end
 
     it 'checks a domain' do
-      response = epp_request('domains/check.xml')
+      response = epp_request(domain_check_xml, :xml)
       expect(response[:result_code]).to eq('1000')
       expect(response[:msg]).to eq('Command completed successfully')
 
@@ -247,7 +253,7 @@ describe 'EPP Domain', epp: true do
 
       Fabricate(:domain, name: 'example.ee')
 
-      response = epp_request('domains/check.xml')
+      response = epp_request(domain_check_xml, :xml)
       domain = response[:parsed].css('resData chkData cd').first
       name = domain.css('name').first
       reason = domain.css('reason').first
