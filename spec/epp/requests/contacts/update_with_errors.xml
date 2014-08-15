@@ -8,6 +8,9 @@
           <contact:chg>
             <contact:voice x="1234">123456798</contact:voice>
             <contact:email>faulty</contact:email>
+            <contact:authInfo>
+              <contact:pw>2fooBAR</contact:pw>
+            </contact:authInfo>
          </contact:chg>
        </contact:update>
       </update>

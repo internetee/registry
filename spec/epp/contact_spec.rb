@@ -7,6 +7,7 @@ describe 'EPP Contact', epp: true do
     before(:each) { Fabricate(:epp_user) }
 
     context 'create command' do
+
       it "fails if request is invalid" do
         response = epp_request(contact_create_xml( { authInfo: [false], addr: { cc: false, city: false } }  ), :xml)
 
@@ -14,9 +15,9 @@ describe 'EPP Contact', epp: true do
         expect(response[:results][1][:result_code]).to eq('2003')
         expect(response[:results][2][:result_code]).to eq('2003')
 
-        expect(response[:results][0][:msg]).to eq('Required parameter missing: city')
-        expect(response[:results][1][:msg]).to eq('Required parameter missing: cc')
-        expect(response[:results][2][:msg]).to eq('Required parameter missing: authInfo')
+        expect(response[:results][0][:msg]).to eq('Required parameter missing: pw')
+        expect(response[:results][1][:msg]).to eq('Required parameter missing: city')
+        expect(response[:results][2][:msg]).to eq('Required parameter missing: cc')
         expect(response[:results].count).to eq 3
       end
 
@@ -37,7 +38,6 @@ describe 'EPP Contact', epp: true do
         expect(Contact.first.address.street).to eq('123 Example Dr.')
         expect(Contact.first.address.street2).to eq('Suite 100')
         expect(Contact.first.address.street3).to eq nil
-
       end
 
       it 'returns result data upon success' do
@@ -77,7 +77,16 @@ describe 'EPP Contact', epp: true do
         expect(response[:results][0][:msg]).to eq('Required parameter missing: id')
         expect(response[:results].count).to eq 1
       end
-  
+
+      it 'fails with wrong authentication info' do
+        Fabricate(:contact, code: 'sh8013', auth_info: 'secure_password')
+
+        response = epp_request('contacts/update.xml')
+
+        expect(response[:msg]).to eq('Authorization error')
+        expect(response[:result_code]).to eq('2201')
+      end
+
       it 'stamps updated_by succesfully' do
         Fabricate(:contact, code: 'sh8013')
   
@@ -89,7 +98,7 @@ describe 'EPP Contact', epp: true do
       end
   
       it 'is succesful' do
-        Fabricate(:contact, created_by_id: 1, email: 'not_updated@test.test', code: 'sh8013')
+        Fabricate(:contact, created_by_id: 1, email: 'not_updated@test.test', code: 'sh8013', auth_info: '2fooBAR')
         #response = epp_request(contact_update_xml( { chg: { email: 'fred@bloggers.ee', postalInfo: { name: 'Fred Bloggers' } } } ), :xml)
         response = epp_request('contacts/update.xml')
 
@@ -101,7 +110,7 @@ describe 'EPP Contact', epp: true do
       end
   
       it 'returns phone and email error' do 
-        Fabricate(:contact, created_by_id: 1, email: 'not_updated@test.test', code: 'sh8013')
+        Fabricate(:contact, created_by_id: 1, email: 'not_updated@test.test', code: 'sh8013', auth_info: '2fooBAR')
         #response = epp_request(contact_update_xml( { chg: { email: "qwe", phone: "123qweasd" } }), :xml)
         response = epp_request('contacts/update_with_errors.xml')
   
@@ -123,7 +132,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'deletes contact' do
-        Fabricate(:contact, code: "dwa1234")
+        Fabricate(:contact, code: "dwa1234", auth_info: '2fooBAR')
         response = epp_request('contacts/delete.xml')
         expect(response[:result_code]).to eq('1000')
         expect(response[:msg]).to eq('Command completed successfully')

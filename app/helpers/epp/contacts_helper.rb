@@ -1,18 +1,15 @@
 module Epp::ContactsHelper
   def create_contact
     @contact = Contact.new( contact_and_address_attributes )
-    stamp @contact
-    if @contact.save
-      render '/epp/contacts/create'
-    else
-      handle_errors(@contact)
-    end
+    render '/epp/contacts/create' and return if stamp(@contact) && @contact.save
+
+    handle_errors(@contact)
   end
 
   def update_contact
     code = params_hash['epp']['command']['update']['update'][:id]
     @contact = Contact.where(code: code).first
-    if stamp(@contact) && @contact.update_attributes(contact_and_address_attributes(:update))
+    if has_rights? && stamp(@contact) && @contact.update_attributes(contact_and_address_attributes(:update))
       render 'epp/contacts/update'
     else
       epp_errors << { code: '2303', msg: t('errors.messages.epp_obj_does_not_exist'), value: { obj: 'id', val: code } } if @contact == []
@@ -22,6 +19,7 @@ module Epp::ContactsHelper
 
   def delete_contact
     #no deleting, implement PaperTrail or something similar. 
+    #TODO check for relation before 'destroying'
     @contact = find_contact
     handle_errors(@contact) and return unless @contact
     @contact.destroy
@@ -47,12 +45,10 @@ module Epp::ContactsHelper
   def validate_contact_create_request
     @ph = params_hash['epp']['command']['create']['create']
     xml_attrs_present?(@ph, [['id'], 
-                             ['postalInfo'], 
+                             ['authInfo', 'pw'],
                              ['postalInfo', 'name'], 
-                             ['postalInfo', 'addr'],
                              ['postalInfo', 'addr', 'city'], 
-                             ['postalInfo', 'addr', 'cc'], 
-                             ['authInfo']])
+                             ['postalInfo', 'addr', 'cc']])
   end
   
   ## UPDATE
@@ -89,6 +85,14 @@ module Epp::ContactsHelper
     contact
   end
 
+  def has_rights?
+    authInfo = @ph.try(:[], :authInfo).try(:[], :pw) || @ph.try(:[], :chg).try(:[], :authInfo).try(:[], :pw) || []
+    id = @ph[:id]
+    return true if (id && authInfo && find_contact.auth_info == authInfo)
+
+    epp_errors << { code: '2201', msg: t('errors.messages.epp_authorization_error'), value: { obj: 'pw', val: authInfo } }
+    return false
+  end
 
   def contact_and_address_attributes( type=:create )
     case type
@@ -103,13 +107,6 @@ module Epp::ContactsHelper
     end
     contact_hash[:ident_type] = ident_type unless ident_type.nil?
     contact_hash
-  end
-
-  def has_rights
-    if @contact.created_by.registrar == current_epp_user.registrar
-      return true
-    end
-    return false
   end
 
   def ident_type
