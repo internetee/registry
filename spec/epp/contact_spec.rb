@@ -195,7 +195,8 @@ describe 'EPP Contact', epp: true do
 
       end
 
-      it 'doesn\'t display unassociated object' do
+      it 'doesn\'t display unassociated object', pending: true do
+        pending 'until new contact rights systems is implemented'
         Fabricate(:contact, name:"Johnny Awesome", created_by_id: '240', code: 'info-4444')
         Fabricate(:epp_user, id: 240)
 

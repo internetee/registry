@@ -10,7 +10,6 @@ module Epp::ContactsHelper
   end
 
   def update_contact
-    #TODO add support for rem and add
     code = params_hash['epp']['command']['update']['update'][:id]
     @contact = Contact.where(code: code).first
     if stamp(@contact) && @contact.update_attributes(contact_and_address_attributes(:update))
@@ -23,48 +22,22 @@ module Epp::ContactsHelper
 
   def delete_contact
     #no deleting, implement PaperTrail or something similar. 
-    ph = params_hash['epp']['command']['delete']['delete']
-
-    @contact = Contact.where(code: ph[:id]).first
+    @contact = find_contact
+    handle_errors(@contact) and return unless @contact
     @contact.destroy
     render '/epp/contacts/delete'
-  rescue NoMethodError => e
-    epp_errors << { code: '2303', msg: t('errors.messages.epp_obj_does_not_exist') }
-    render '/epp/error'
-  rescue
-    epp_errors << {code: '2400', msg: t('errors.messages.epp_command_failed')}
-    render '/epp/error'
   end
 
   def check_contact
     ph = params_hash['epp']['command']['check']['check']
     @contacts = Contact.check_availability( ph[:id] )
-
-    if @contacts.any?
-      render '/epp/contacts/check'
-    else
-      epp_errors << { code: '2303', msg: t('errors.messages.epp_obj_does_not_exist') }
-      render 'epp/error'
-    end
+    render '/epp/contacts/check'
   end
 
   def info_contact
-    #TODO do we reject contact without authInfo or display less info?
-    #TODO add data missing from contacts/info builder ( marked with 'if false' in said view )
-    current_epp_user
-    ph = params_hash['epp']['command']['info']['info']
-
-    @contact = Contact.where(code: ph[:id]).first
-    case has_rights
-    when true
-       render 'epp/contacts/info'
-    when false
-      epp_errors << { code: '2201', msg: t('errors.messages.epp_authorization_error') }
-      render 'epp/error'
-    end
-  rescue NoMethodError => e
-    epp_errors << { code: '2303', msg: t('errors.messages.epp_obj_does_not_exist'), value: { obj: 'id', val: ph[:id] } }
-    render 'epp/error'
+    @contact = find_contact
+    handle_errors(@contact) and return unless @contact
+    render 'epp/contacts/info'
   end
 
   ## HELPER METHODS
@@ -107,6 +80,16 @@ module Epp::ContactsHelper
   end
 
   ## SHARED
+
+  def find_contact
+    contact = Contact.find_by(code: @ph[:id])
+    unless contact
+      epp_errors << { code: '2303', msg: t('errors.messages.epp_obj_does_not_exist'), value: { obj: 'id', val: @ph[:id] } }
+    end
+    contact
+  end
+
+
   def contact_and_address_attributes( type=:create )
     case type
     when :update

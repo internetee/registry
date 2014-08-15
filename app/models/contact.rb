@@ -71,10 +71,8 @@ class Contact < ActiveRecord::Base
     def extract_attributes ph, type=:create
   
       contact_hash = {
-        #code: ph[:id],
         phone: ph[:voice],
         ident: ph[:ident],
-        #ident_type: ident_type,
         email: ph[:email]
       }
   
@@ -88,11 +86,6 @@ class Contact < ActiveRecord::Base
       contact_hash.delete_if { |k, v| v.nil? }
     end
   
-
-    def ident_type code
-      
-    end
-
     def check_availability(codes)
       codes = [codes] if codes.is_a?(String)
 
