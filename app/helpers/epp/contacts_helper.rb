@@ -67,8 +67,10 @@ module Epp::ContactsHelper
     render 'epp/error'
   end
 
+  ## HELPER METHODS
   private
-
+ 
+  ## CREATE
   def validate_contact_create_request
     @ph = params_hash['epp']['command']['create']['create']
     xml_attrs_present?(@ph, [['id'], 
@@ -79,28 +81,32 @@ module Epp::ContactsHelper
                              ['postalInfo', 'addr', 'cc'], 
                              ['authInfo']])
   end
-
+  
+  ## UPDATE
   def validate_contact_update_request
     @ph = params_hash['epp']['command']['update']['update']
     xml_attrs_present?(@ph, [['id'] ])
   end
 
+  ## DELETE
   def validate_contact_delete_request
     @ph = params_hash['epp']['command']['delete']['delete']
     xml_attrs_present?(@ph, [ ['id'] ] )
   end
 
+  ## CHECK
   def validate_contact_check_request
     @ph = params_hash['epp']['command']['check']['check']
     xml_attrs_present?(@ph, [ ['id'] ])
   end
 
+  ## INFO
   def validate_contact_info_request
     @ph = params_hash['epp']['command']['info']['info']
     xml_attrs_present?(@ph, [ ['id'] ])
   end
 
-
+  ## SHARED
   def contact_and_address_attributes( type=:create )
     case type
     when :update
