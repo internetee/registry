@@ -112,6 +112,7 @@ module Epp::ContactsHelper
       contact_hash[:address_attributes] = 
         Address.extract_attributes(( @ph.try(:[], :postalInfo).try(:[], :addr) || [] ),  type)
     end
+    contact_hash[:ident_type] = ident_type unless ident_type.nil?
     contact_hash
   end
 

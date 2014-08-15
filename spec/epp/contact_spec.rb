@@ -31,6 +31,8 @@ describe 'EPP Contact', epp: true do
 
         expect(Contact.count).to eq(1)
         expect(Contact.first.org_name).to eq('Example Inc.')
+        expect(Contact.first.ident).to eq '37605030299'
+        expect(Contact.first.ident_type).to eq 'op'
 
         expect(Contact.first.address.street).to eq('123 Example Dr.')
         expect(Contact.first.address.street2).to eq('Suite 100')
@@ -94,6 +96,8 @@ describe 'EPP Contact', epp: true do
         expect(response[:msg]).to eq('Command completed successfully')
         expect(Contact.first.name).to eq('John Doe')
         expect(Contact.first.email).to eq('jdoe@example.com')
+        expect(Contact.first.ident).to eq('J836954')
+        expect(Contact.first.ident_type).to eq('passport')
       end
   
       it 'returns phone and email error' do 
