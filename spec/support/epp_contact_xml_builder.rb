@@ -94,6 +94,8 @@ module EppContactXmlBuilder
     xml_params[:chg][:postalInfo] = postalInfo
     xml_params[:chg][:postalInfo][:addr] = addr
 
+    xml_params[:chg][:authInfo] = xml_params[:chg][:authInfo] || { pw: 'ccds4324pok' }
+
 
     xml.instruct!(:xml, standalone: 'no')
      xml.epp('xmlns' => 'urn:ietf:params:xml:ns:epp-1.0') do
@@ -120,6 +122,11 @@ module EppContactXmlBuilder
                         xml.tag!('contact:cc'    , xml_params[:chg][:postalInfo][:addr][:cc]       ) unless xml_params[:chg][:postalInfo][:addr][:cc] == false
                       end
                     end
+                  end
+                end
+                unless xml_params[:chg][:authInfo] == [false]
+                  xml.tag!('contact:authInfo') do
+                    xml.tag!('contact:pw', xml_params[:chg][:authInfo][:pw] ) unless xml_params[:chg][:authInfo][:pw] == false
                   end
                 end
               end

@@ -66,6 +66,11 @@ class Contact < ActiveRecord::Base
     updated_by ? updated_by.username : nil
   end
 
+  def auth_info_matches pw
+    return true if auth_info == pw
+    return false
+  end
+
   class << self
 
     def extract_attributes ph, type=:create

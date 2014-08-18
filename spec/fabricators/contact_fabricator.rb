@@ -5,5 +5,6 @@ Fabricator(:contact) do
   ident '37605030299'
   code { "sh#{Faker::Number.number(4)}" }
   ident_type 'op'
+  auth_info 'ccds4324pok'
   address
 end
