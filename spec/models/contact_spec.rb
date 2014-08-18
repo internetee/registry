@@ -34,7 +34,7 @@ describe Contact do
     before(:each) { @contact = Fabricate(:contact) }
 
     it 'should return true' do
-      expect(@contact.valid?).to be true 
+      expect(@contact.valid?).to be true
     end
   end
 end

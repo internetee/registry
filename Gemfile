@@ -60,6 +60,11 @@ group :development do
 end
 
 group :development, :test do
+  gem 'capybara', '~> 2.4.1'
+  # For feature testing
+  # gem 'capybara-webkit', '1.2.0' # Webkit driver didn't work with turbolinks
+  gem 'poltergeist', '~> 1.5.1' # We are using PhantomJS instead
+
   # For cleaning db in feature and epp tests
   gem 'database_cleaner', '~> 1.3.0'
 
@@ -73,11 +78,11 @@ group :development, :test do
   gem 'faker', '~> 1.3.0'
 
   # For debugging
-  gem 'pry'
-  gem 'pry-byebug'
+  gem 'pry', '~> 0.10.1'
+  gem 'pry-byebug', '~> 1.3.3'
 
   # Testing framework
-  gem 'rspec-rails', '~> 3.0.1'
+  gem 'rspec-rails', '~> 3.0.2'
 
   # Additional matchers for RSpec
   gem 'shoulda-matchers', '~> 2.6.1', require: false
