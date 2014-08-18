@@ -4,14 +4,6 @@ class Domain < ActiveRecord::Base
 
   include EppErrors
 
-  EPP_CODE_MAP = {
-    '2302' => ['Domain name already exists', 'Domain name is reserved or restricted'], # Object exists
-    '2306' => ['Registrant is missing', 'Admin contact is missing', 'Given and current expire dates do not match'], # Parameter policy error
-    '2004' => ['Nameservers count must be between 1-13', 'Period must add up to 1, 2 or 3 years'], # Parameter value range error
-    '2303' => ['Registrant not found', 'Contact was not found'], # Object does not exist
-    '2200' => ['Authentication error']
-  }
-
   EPP_ATTR_MAP = {
     owner_contact: 'registrant',
     name_dirty: 'name',
@@ -157,6 +149,33 @@ class Domain < ActiveRecord::Base
       val: cur_exp_date,
       msg: I18n.t('errors.messages.epp_exp_dates_do_not_match')
     }) if cur_exp_date.to_date != valid_to
+  end
+
+  def epp_code_map
+    domain_validation_sg = SettingGroup.find_by(code: SettingGroup::DOMAIN_VALIDATION_CODE)
+
+    {
+      '2302' => [ # Object exists
+        [:name_dirty, :taken],
+        [:name_dirty, :reserved]
+      ],
+      '2306' => [ # Parameter policy error
+        [:owner_contact, :blank],
+        [:admin_contacts, :blank],
+        [:valid_to, :epp_exp_dates_do_not_match]
+      ],
+      '2004' => [ # Parameter value range error
+        [:nameservers, :out_of_range, {min: domain_validation_sg.get(:ns_min_count), max: domain_validation_sg.get(:ns_max_count)}],
+        [:period, :out_of_range]
+      ],
+      '2303' => [ # Object does not exist
+        [:owner_contact, :epp_registrant_not_found],
+        [:domain_contacts, :not_found]
+      ],
+      '2200' => [
+        [:auth_info, :wrong_pw]
+      ]
+    }
   end
 
   ## SHARED
