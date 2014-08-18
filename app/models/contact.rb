@@ -71,7 +71,31 @@ class Contact < ActiveRecord::Base
     return false
   end
 
+  def get_relation( model = :domain_contacts )
+    send(model)
+  rescue NoMethodError => e
+    nil
+  end
+
+  def has_relation( model = :domain_contacts )
+    relation = get_relation(model)
+    return true unless relation.nil? || relation.blank?
+    false
+  end 
+
+
+
+  #should use only in transaction
+  def destroy_and_clean
+    clean_up_address
+    destroy
+  rescue
+    errors.add(:contact, msg: I18n.t('errors.messages.epp_command_failed'), value: { obj: 'contact', val: code })
+    false
+  end
+
   class << self
+
 
     def extract_attributes ph, type=:create
   
@@ -106,5 +130,12 @@ class Contact < ActiveRecord::Base
       res
     end
   end
+
+  private
+
+  def clean_up_address
+    address.destroy if address
+  end
+
 
 end

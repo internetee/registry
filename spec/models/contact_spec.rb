@@ -39,6 +39,29 @@ describe Contact do
   end
 end
 
+describe Contact, '#get_relation' do
+  before(:each) { Fabricate(:contact) }
+  it 'should return nil if no method' do
+    expect(Contact.first.get_relation(:chewbacca)).to eq nil
+  end
+
+  it 'should return domain_contacts by default' do
+    expect(Contact.first.get_relation).to eq []
+  end
+end
+
+describe Contact, '#has_relation' do
+  before(:each) { Fabricate(:domain) }
+  it 'should return false if no relation' do
+    expect(Contact.last.has_relation(:chewbacca)).to eq false
+  end
+
+  it 'should return true if relation' do
+    expect(Contact.last.has_relation).to eq true
+    expect(Contact.last.has_relation(:address)).to eq true
+  end
+end
+
 describe Contact, '#crID' do
   before(:each) { Fabricate(:contact, code: "asd12", created_by: Fabricate(:epp_user)) }
 
