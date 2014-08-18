@@ -48,6 +48,19 @@ describe Domain do
         admin_contacts: ["Admin contact is missing"],
         nameservers: ["Nameservers count must be between 1-13"]
       })
+
+      sg = SettingGroup.domain_validation
+      min = sg.setting(:ns_min_count)
+      max = sg.setting(:ns_max_count)
+
+      min.value = 2
+      min.save
+
+      max.value = 7
+      max.save
+
+      expect(d.valid?).to be false
+      expect(d.errors.messages[:nameservers]).to eq(['Nameservers count must be between 2-7'])
     end
 
     it 'does not create a reserved domain' do

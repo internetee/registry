@@ -119,8 +119,9 @@ class Domain < ActiveRecord::Base
   ### VALIDATIONS ###
 
   def validate_nameservers_count
-    sg = SettingGroup.find_by(code: SettingGroup::DOMAIN_VALIDATION_CODE)
-    min, max = sg.get(:ns_min_count).to_i, sg.get(:ns_max_count).to_i
+    sg = SettingGroup.domain_validation
+    min, max = sg.setting(:ns_min_count).value.to_i, sg.setting(:ns_max_count).value.to_i
+
     unless nameservers.length.between?(min, max)
       errors.add(:nameservers, :out_of_range, {min: min, max: max})
     end
@@ -152,7 +153,7 @@ class Domain < ActiveRecord::Base
   end
 
   def epp_code_map
-    domain_validation_sg = SettingGroup.find_by(code: SettingGroup::DOMAIN_VALIDATION_CODE)
+    domain_validation_sg = SettingGroup.domain_validation
 
     {
       '2302' => [ # Object exists
@@ -165,7 +166,7 @@ class Domain < ActiveRecord::Base
         [:valid_to, :epp_exp_dates_do_not_match]
       ],
       '2004' => [ # Parameter value range error
-        [:nameservers, :out_of_range, {min: domain_validation_sg.get(:ns_min_count), max: domain_validation_sg.get(:ns_max_count)}],
+        [:nameservers, :out_of_range, {min: domain_validation_sg.setting(:ns_min_count).value, max: domain_validation_sg.setting(:ns_max_count).value}],
         [:period, :out_of_range]
       ],
       '2303' => [ # Object does not exist
