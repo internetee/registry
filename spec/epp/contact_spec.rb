@@ -52,7 +52,7 @@ describe 'EPP Contact', epp: true do
         expect(id.text).to eq('sh8013')
         #5 seconds for what-ever weird lag reasons might happen
         expect(crDate.text.to_time).to be_within(5).of(Time.now)
- 
+
       end
 
       it 'does not create duplicate contact' do
@@ -62,7 +62,7 @@ describe 'EPP Contact', epp: true do
 
         expect(response[:result_code]).to eq('2302')
         expect(response[:msg]).to eq('Contact id already exists')
-        
+
         expect(Contact.count).to eq(1)
       end
     end
@@ -72,11 +72,12 @@ describe 'EPP Contact', epp: true do
       it "fails if request is invalid" do
         response = epp_request('contacts/update_missing_attr.xml')
         #response = epp_request(contact_update_xml( {id: false} ), :xml)
-  
+
         expect(response[:results][0][:result_code]).to eq('2003')
         expect(response[:results][0][:msg]).to eq('Required parameter missing: id')
         expect(response[:results].count).to eq 1
       end
+
 
       it 'fails with wrong authentication info' do
         Fabricate(:contact, code: 'sh8013', auth_info: 'secure_password')
@@ -89,14 +90,14 @@ describe 'EPP Contact', epp: true do
 
       it 'stamps updated_by succesfully' do
         Fabricate(:contact, code: 'sh8013')
-  
+
         expect(Contact.first.updated_by_id).to be nil
-  
+
         response = epp_request(contact_update_xml, :xml)
 
         expect(Contact.first.updated_by_id).to eq 1
       end
-  
+
       it 'is succesful' do
         Fabricate(:contact, created_by_id: 1, email: 'not_updated@test.test', code: 'sh8013', auth_info: '2fooBAR')
         #response = epp_request(contact_update_xml( { chg: { email: 'fred@bloggers.ee', postalInfo: { name: 'Fred Bloggers' } } } ), :xml)
@@ -108,19 +109,19 @@ describe 'EPP Contact', epp: true do
         expect(Contact.first.ident).to eq('J836954')
         expect(Contact.first.ident_type).to eq('passport')
       end
-  
-      it 'returns phone and email error' do 
+
+      it 'returns phone and email error' do
         Fabricate(:contact, created_by_id: 1, email: 'not_updated@test.test', code: 'sh8013', auth_info: '2fooBAR')
         #response = epp_request(contact_update_xml( { chg: { email: "qwe", phone: "123qweasd" } }), :xml)
         response = epp_request('contacts/update_with_errors.xml')
-  
+
         expect(response[:results][0][:result_code]).to eq('2005')
         expect(response[:results][0][:msg]).to eq('Phone nr is invalid')
-  
+
         expect(response[:results][1][:result_code]).to eq('2005')
         expect(response[:results][1][:msg]).to eq('Email is invalid')
       end
-    end 
+    end
 
     context 'delete command' do
       it "fails if request is invalid" do
@@ -160,7 +161,7 @@ describe 'EPP Contact', epp: true do
 
       it 'returns info about contact availability' do
         Fabricate(:contact, code: 'check-1234')
-        
+
         response = epp_request(contact_check_xml( ids: [{ id: 'check-1234'}, { id: 'check-4321' }]  ), :xml)
 
         expect(response[:result_code]).to eq('1000')
@@ -174,7 +175,7 @@ describe 'EPP Contact', epp: true do
         expect(ids[1].text).to eq('check-4321')
       end
     end
- 
+
     context 'info command' do
       it "fails if request invalid" do
         response = epp_request('contacts/delete_missing_attr.xml')

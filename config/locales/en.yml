@@ -86,7 +86,7 @@ en:
 
   setting_groups:
     codes:
-      domain_statuses: 'Domain statuses'
+      domain_validation: 'Domain validation'
 
     index:
       setting_group: 'Setting group'

@@ -12,7 +12,7 @@
         - @setting_group.settings.each do |setting|
           = f.fields_for :settings, setting do |sf|
             %tr
-              %td= t("settings.codes.#{sf.object.code}")
+              %td= sf.label :value, t("settings.codes.#{sf.object.code}")
               %td= sf.text_field(:value, autocomplete: 'off')
   .row
     .col-md-12.text-right
