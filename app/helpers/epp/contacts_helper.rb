@@ -18,12 +18,13 @@ module Epp::ContactsHelper
   end
 
   def delete_contact
-    #no deleting, implement PaperTrail or something similar. 
-    #TODO check for relation before 'destroying'
-    @contact = find_contact
-    handle_errors(@contact) and return unless @contact
-    @contact.destroy
-    render '/epp/contacts/delete'
+    Contact.transaction do
+      @contact = find_contact
+      handle_errors(@contact) and return unless @contact
+      handle_errors(@contact) and return unless @contact.destroy_and_clean
+
+      render '/epp/contacts/delete'
+    end
   end
 
   def check_contact
