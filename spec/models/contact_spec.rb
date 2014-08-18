@@ -51,7 +51,11 @@ describe Contact, '#get_relation' do
 end
 
 describe Contact, '#has_relation' do
-  before(:each) { Fabricate(:domain) }
+  before(:each) do
+    Fabricate(:domain_validation_setting_group)
+    Fabricate(:domain)
+  end
+
   it 'should return false if no relation' do
     expect(Contact.last.has_relation(:chewbacca)).to eq false
   end

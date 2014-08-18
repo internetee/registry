@@ -4,7 +4,10 @@ describe 'EPP Domain', epp: true do
   let(:server) { server = Epp::Server.new({server: 'localhost', tag: 'gitlab', password: 'ghyt9e4fu', port: 701}) }
 
   context 'with valid user' do
-    before(:each) { Fabricate(:epp_user) }
+    before(:each) do
+      Fabricate(:epp_user)
+      Fabricate(:domain_validation_setting_group)
+    end
 
     it 'returns error if contact does not exists' do
       Fabricate(:contact, code: 'jd1234')

@@ -127,8 +127,10 @@ class Domain < ActiveRecord::Base
   ### VALIDATIONS ###
 
   def validate_nameservers_count
-    unless nameservers.length.between?(1, 13)
-      errors.add(:nameservers, :out_of_range, {min: 1, max: 13})
+    sg = SettingGroup.find_by(code: SettingGroup::DOMAIN_VALIDATION_CODE)
+    min, max = sg.get(:ns_min_count).to_i, sg.get(:ns_max_count).to_i
+    unless nameservers.length.between?(min, max)
+      errors.add(:nameservers, :out_of_range, {min: min, max: max})
     end
   end
 
