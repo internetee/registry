@@ -158,7 +158,7 @@ describe 'EPP Contact', epp: true do
         expect(response[:results].count).to eq 1
       end
 
-      it 'returns info about contact' do
+      it 'returns info about contact availability' do
         Fabricate(:contact, code: 'check-1234')
         
         response = epp_request(contact_check_xml( ids: [{ id: 'check-1234'}, { id: 'check-4321' }]  ), :xml)
@@ -192,7 +192,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'returns info about contact' do
-        Fabricate(:contact, name: "Johnny Awesome", created_by_id: '1', code: 'info-4444')
+        Fabricate(:contact, name: "Johnny Awesome", created_by_id: '1', code: 'info-4444', auth_info: '2fooBAR')
         Fabricate(:address)
 
         response = epp_request('contacts/info.xml')
@@ -204,10 +204,8 @@ describe 'EPP Contact', epp: true do
 
       end
 
-      it 'doesn\'t display unassociated object', pending: true do
-        pending 'until new contact rights systems is implemented'
-        Fabricate(:contact, name:"Johnny Awesome", created_by_id: '240', code: 'info-4444')
-        Fabricate(:epp_user, id: 240)
+      it 'doesn\'t display unassociated object' do
+        Fabricate(:contact, name:"Johnny Awesome", code: 'info-4444')
 
         response = epp_request('contacts/info.xml')
         expect(response[:result_code]).to eq('2201')

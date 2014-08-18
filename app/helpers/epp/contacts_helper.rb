@@ -33,6 +33,7 @@ module Epp::ContactsHelper
   end
 
   def info_contact
+    handle_errors and return unless has_rights?
     @contact = find_contact
     handle_errors(@contact) and return unless @contact
     render 'epp/contacts/info'
@@ -88,7 +89,8 @@ module Epp::ContactsHelper
   def has_rights?
     authInfo = @ph.try(:[], :authInfo).try(:[], :pw) || @ph.try(:[], :chg).try(:[], :authInfo).try(:[], :pw) || []
     id = @ph[:id]
-    return true if (id && authInfo && find_contact.auth_info == authInfo)
+
+    return true if (id && authInfo && !find_contact.nil? && find_contact.auth_info == authInfo)
 
     epp_errors << { code: '2201', msg: t('errors.messages.epp_authorization_error'), value: { obj: 'pw', val: authInfo } }
     return false
