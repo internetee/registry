@@ -25,6 +25,12 @@ class Domain < ActiveRecord::Base
 
   has_and_belongs_to_many :nameservers
 
+  has_many :domain_statuses
+
+  has_many :statuses, -> {
+    where(setting_group: SettingGroup.domain_statuses)
+  }, through: :domain_statuses, source: :setting
+
   delegate :code, to: :owner_contact, prefix: true
   delegate :name, to: :registrar, prefix: true
 

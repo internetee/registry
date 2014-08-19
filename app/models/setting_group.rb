@@ -11,5 +11,9 @@ class SettingGroup < ActiveRecord::Base
     def domain_validation
       find_by(code: 'domain_validation')
     end
+
+    def domain_statuses
+      find_by(code: 'domain_statuses')
+    end
   end
 end
