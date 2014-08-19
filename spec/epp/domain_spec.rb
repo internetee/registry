@@ -244,13 +244,23 @@ describe 'EPP Domain', epp: true do
         expect(response[:results][0][:msg]).to eq('Domain not found')
       end
 
-      it 'updates domain', pending: true do
+      it 'updates domain' do
+        response = epp_request('domains/update.xml')
+        expect(response[:results][0][:result_code]).to eq('2303')
+        expect(response[:results][0][:msg]).to eq('Contact was not found')
+
+        Fabricate(:contact, code: 'mak21')
+
         response = epp_request('domains/update.xml')
         expect(response[:results][0][:result_code]).to eq('1000')
 
         d = Domain.first
+
         new_ns = d.nameservers.find_by(hostname: 'ns2.example.com')
         expect(new_ns).to be_truthy
+
+        new_contact = d.tech_contacts.find_by(code: 'mak21')
+        expect(new_contact).to be_truthy
       end
     end
 

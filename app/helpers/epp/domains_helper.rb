@@ -38,6 +38,8 @@ module Epp::DomainsHelper
     @domain = find_domain
 
     handle_errors(@domain) and return unless @domain
+    handle_errors(@domain) and return unless @domain.attach_objects(@ph, parsed_frame.css('add'))
+    handle_errors(@domain) and return unless @domain.save
 
     render '/epp/domains/success'
   end

@@ -54,7 +54,7 @@ class Domain < ActiveRecord::Base
   ### CREATE ###
 
   def attach_objects(ph, parsed_frame)
-    attach_owner_contact(ph[:registrant])
+    attach_owner_contact(ph[:registrant]) if ph[:registrant]
     attach_contacts(self.class.parse_contacts_from_frame(parsed_frame))
     attach_nameservers(self.class.parse_nameservers_from_frame(parsed_frame))
 
