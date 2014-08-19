@@ -28,7 +28,7 @@ class Domain < ActiveRecord::Base
   has_many :domain_statuses
 
   has_many :statuses, -> {
-    where(setting_group: SettingGroup.domain_statuses)
+    where(setting_group: SettingGroup.domain_statuses).uniq
   }, through: :domain_statuses, source: :setting
 
   delegate :code, to: :owner_contact, prefix: true
@@ -57,6 +57,7 @@ class Domain < ActiveRecord::Base
     attach_owner_contact(ph[:registrant]) if ph[:registrant]
     attach_contacts(self.class.parse_contacts_from_frame(parsed_frame))
     attach_nameservers(self.class.parse_nameservers_from_frame(parsed_frame))
+    attach_statuses(self.class.parse_statuses_from_frame(parsed_frame))
 
     errors.empty?
   end
@@ -104,6 +105,12 @@ class Domain < ActiveRecord::Base
   def attach_nameservers(ns_list)
     ns_list.each do |ns_attrs|
       self.nameservers.build(ns_attrs)
+    end
+  end
+
+  def attach_statuses(status_list)
+    status_list.each do |x|
+      statuses << SettingGroup.domain_statuses.settings.find_by(value: x[:value])
     end
   end
 
@@ -235,6 +242,19 @@ class Domain < ActiveRecord::Base
       p = parsed_frame.css('period').first
       return nil unless p
       p[:unit]
+    end
+
+    def parse_statuses_from_frame(parsed_frame)
+      res = []
+
+      parsed_frame.css('status').each do |x|
+        res << {
+          value: x['s'],
+          description: x.text
+        }
+      end
+
+      res
     end
 
     def check_availability(domains)

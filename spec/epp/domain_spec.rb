@@ -7,6 +7,7 @@ describe 'EPP Domain', epp: true do
     before(:each) do
       Fabricate(:epp_user)
       Fabricate(:domain_validation_setting_group)
+      Fabricate(:domain_statuses_setting_group)
     end
 
     it 'returns error if contact does not exists' do
