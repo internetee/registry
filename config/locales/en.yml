@@ -66,6 +66,10 @@ en:
           attributes:
             code:
               taken: 'Code already exists'
+        domain_status:
+          attributes:
+            setting:
+              taken: 'Status already exists on this domain'
     attributes:
       domain:
         name: 'Domain name'

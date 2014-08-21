@@ -262,6 +262,15 @@ describe 'EPP Domain', epp: true do
 
         new_contact = d.tech_contacts.find_by(code: 'mak21')
         expect(new_contact).to be_truthy
+
+        expect(d.domain_statuses.count).to eq(1)
+        expect(d.domain_statuses.first.description).to eq('Payment overdue.')
+        expect(d.domain_statuses.first.value).to eq('clientHold')
+        expect(d.domain_statuses.first.code).to eq('client_hold')
+
+        response = epp_request('domains/update.xml')
+
+        expect(d.domain_statuses.count).to eq(1)
       end
     end
 
@@ -283,7 +292,7 @@ describe 'EPP Domain', epp: true do
 
       expect(name.text).to eq('example.ee')
       expect(name[:avail]).to eq('0')
-      expect(reason.text).to eq('in use') #confirm this with current API
+      expect(reason.text).to eq('in use')
     end
 
     it 'checks multiple domains' do

@@ -1,6 +1,7 @@
 class PopulateDomainStatuses < ActiveRecord::Migration
   def change
-    SettingGroup.create(code: 'domain_statuses', settings: [
+    sg = SettingGroup.create(code: 'domain_statuses')
+    sg.settings = [
       Setting.create(code: 'clientDeleteProhibited'.underscore, value: 'clientDeleteProhibited'),
       Setting.create(code: 'serverDeleteProhibited'.underscore, value: 'serverDeleteProhibited'),
       Setting.create(code: 'clientHold'.underscore, value: 'clientHold'),
@@ -18,6 +19,7 @@ class PopulateDomainStatuses < ActiveRecord::Migration
       Setting.create(code: 'pendingRenew'.underscore, value: 'pendingRenew'),
       Setting.create(code: 'pendingTransfer'.underscore, value: 'pendingTransfer'),
       Setting.create(code: 'pendingUpdate'.underscore, value: 'pendingUpdate')
-    ])
+    ]
+    sg.save
   end
 end

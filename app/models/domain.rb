@@ -25,11 +25,9 @@ class Domain < ActiveRecord::Base
 
   has_and_belongs_to_many :nameservers
 
-  has_many :domain_statuses
-
-  has_many :statuses, -> {
-    where(setting_group: SettingGroup.domain_statuses).uniq
-  }, through: :domain_statuses, source: :setting
+  has_many :domain_statuses, -> {
+    joins(:setting).where(settings: {setting_group_id: SettingGroup.domain_statuses.id})
+  }
 
   delegate :code, to: :owner_contact, prefix: true
   delegate :name, to: :registrar, prefix: true
@@ -110,7 +108,11 @@ class Domain < ActiveRecord::Base
 
   def attach_statuses(status_list)
     status_list.each do |x|
-      statuses << SettingGroup.domain_statuses.settings.find_by(value: x[:value])
+      setting = SettingGroup.domain_statuses.settings.find_by(value: x[:value])
+      self.domain_statuses.build(
+        setting: setting,
+        description: x[:description]
+      )
     end
   end
 

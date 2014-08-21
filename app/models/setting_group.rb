@@ -3,6 +3,8 @@ class SettingGroup < ActiveRecord::Base
 
   accepts_nested_attributes_for :settings
 
+  validates :code, uniqueness: true
+
   def setting(key)
     settings.find_by(code: key.to_s)
   end

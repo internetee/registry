@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(version: 20140819103517) do
   create_table "domain_statuses", force: true do |t|
     t.integer "domain_id"
     t.integer "setting_id"
+    t.string  "description"
   end
 
   create_table "domains", force: true do |t|
