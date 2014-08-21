@@ -270,6 +270,8 @@ describe 'EPP Domain', epp: true do
 
         response = epp_request('domains/update.xml')
 
+        expect(response[:results][0][:result_code]).to eq('2302')
+        expect(response[:results][0][:msg]).to eq('Status already exists on this domain')
         expect(d.domain_statuses.count).to eq(1)
       end
     end
