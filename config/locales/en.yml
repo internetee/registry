@@ -70,6 +70,8 @@ en:
           attributes:
             setting:
               taken: 'Status already exists on this domain'
+            value:
+              taken: 'Status already exists on this domain'
     attributes:
       domain:
         name: 'Domain name'

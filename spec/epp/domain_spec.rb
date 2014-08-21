@@ -245,34 +245,51 @@ describe 'EPP Domain', epp: true do
         expect(response[:results][0][:msg]).to eq('Domain not found')
       end
 
-      it 'updates domain' do
-        response = epp_request('domains/update.xml')
+      it 'updates domain and adds objects' do
+        response = epp_request('domains/update_add_objects.xml')
         expect(response[:results][0][:result_code]).to eq('2303')
         expect(response[:results][0][:msg]).to eq('Contact was not found')
 
         Fabricate(:contact, code: 'mak21')
 
-        response = epp_request('domains/update.xml')
+        response = epp_request('domains/update_add_objects.xml')
         expect(response[:results][0][:result_code]).to eq('1000')
 
         d = Domain.first
 
-        new_ns = d.nameservers.find_by(hostname: 'ns2.example.com')
-        expect(new_ns).to be_truthy
+        new_ns_count = d.nameservers.where(hostname: ['ns1.example.com', 'ns2.example.com']).count
+        expect(new_ns_count).to eq(2)
 
         new_contact = d.tech_contacts.find_by(code: 'mak21')
         expect(new_contact).to be_truthy
 
-        expect(d.domain_statuses.count).to eq(1)
+        expect(d.domain_statuses.count).to eq(2)
         expect(d.domain_statuses.first.description).to eq('Payment overdue.')
         expect(d.domain_statuses.first.value).to eq('clientHold')
         expect(d.domain_statuses.first.code).to eq('client_hold')
 
-        response = epp_request('domains/update.xml')
+        expect(d.domain_statuses.last.value).to eq('clientUpdateProhibited')
+
+        response = epp_request('domains/update_add_objects.xml')
 
         expect(response[:results][0][:result_code]).to eq('2302')
         expect(response[:results][0][:msg]).to eq('Status already exists on this domain')
-        expect(d.domain_statuses.count).to eq(1)
+        expect(d.domain_statuses.count).to eq(2)
+      end
+
+      it 'updates a domain and removes objects' do
+        Fabricate(:contact, code: 'mak21')
+        epp_request('domains/update_add_objects.xml')
+
+        d = Domain.last
+
+        new_ns = d.nameservers.find_by(hostname: 'ns1.example.com')
+        expect(new_ns).to be_truthy
+
+        response = epp_request('domains/update_remove_objects.xml')
+
+        rem_ns = d.nameservers.find_by(hostname: 'ns1.example.com')
+        expect(rem_ns).to be_falsey
       end
     end
 

@@ -17,6 +17,7 @@ end
 Fabricator(:domain_statuses_setting_group, from: :setting_group) do
   code 'domain_statuses'
   settings { [
-    Fabricate(:setting, code: 'client_hold', value: 'clientHold')
+    Fabricate(:setting, code: 'client_hold', value: 'clientHold'),
+    Fabricate(:setting, code: 'client_update_prohibited', value: 'clientUpdateProhibited')
   ]}
 end

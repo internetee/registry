@@ -49,7 +49,7 @@ class Domain < ActiveRecord::Base
     write_attribute(:name_dirty, value)
   end
 
-  ### CREATE ###
+  ### CREATE & UPDATE ###
 
   def attach_objects(ph, parsed_frame)
     attach_owner_contact(ph[:registrant]) if ph[:registrant]
@@ -58,6 +58,10 @@ class Domain < ActiveRecord::Base
     attach_statuses(self.class.parse_statuses_from_frame(parsed_frame))
 
     errors.empty?
+  end
+
+  def detach_objects(ph, parsed_frame)
+    detach_nameservers(self.class.parse_nameservers_from_frame(parsed_frame))
   end
 
   def attach_owner_contact(code)
@@ -114,6 +118,15 @@ class Domain < ActiveRecord::Base
         description: x[:description]
       )
     end
+  end
+
+  def detach_nameservers(ns_list)
+    to_delete = []
+    ns_list.each do |ns_attrs|
+      to_delete << self.nameservers.where(ns_attrs)
+    end
+
+    self.nameservers.delete(to_delete)
   end
 
   ### RENEW ###
@@ -255,7 +268,6 @@ class Domain < ActiveRecord::Base
           description: x.text
         }
       end
-
       res
     end
 
@@ -275,7 +287,7 @@ class Domain < ActiveRecord::Base
         end
 
         if Domain.find_by(name: x)
-          res << {name: x, avail: 0, reason: 'in use'} #confirm reason with current API
+          res << {name: x, avail: 0, reason: 'in use'}
         else
           res << {name: x, avail: 1}
         end

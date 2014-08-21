@@ -39,6 +39,7 @@ module Epp::DomainsHelper
 
     handle_errors(@domain) and return unless @domain
     handle_errors(@domain) and return unless @domain.attach_objects(@ph, parsed_frame.css('add'))
+    handle_errors(@domain) and return unless @domain.detach_objects(@ph, parsed_frame.css('rem'))
     handle_errors(@domain) and return unless @domain.save
 
     render '/epp/domains/success'

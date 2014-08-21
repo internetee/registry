@@ -13,10 +13,6 @@ class DomainStatus < ActiveRecord::Base
 
   validates :setting, uniqueness: { scope: :domain_id }
 
-  def setting_uniqueness
-
-  end
-
   def epp_code_map
     {
       '2302' => [[:setting, :taken]]
