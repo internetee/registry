@@ -88,7 +88,8 @@ class Contact < ActiveRecord::Base
     clean_up_address
 
     if has_relation(:domain_contacts) || domains_owned.present?
-      errors.add(:contact, msg: I18n.t('errors.messages.epp_obj_association_error'), value: { obj: 'contact', val: code })
+      #errors.add(:contact, msg: I18n.t('errors.messages.epp_obj_association_error'), value: { obj: 'contact', val: code })
+      errors.add(:domains, :exist)
       return false
     end
     destroy
@@ -96,10 +97,18 @@ class Contact < ActiveRecord::Base
 
   def epp_code_map
     {
-      '2302' => [[:code, :epp_id_taken]],
-      '2303' => [:not_found, :epp_obj_does_not_exist],
-      '2305' => ['Object association prohibits operation' ],
-      '2005' => ['Phone nr is invalid', 'Email is invalid']
+      '2302' => [ #Object exists
+        [:code, :epp_id_taken]
+      ],
+      '2303' => #Object does not exist 
+        [:not_found, :epp_obj_does_not_exist],
+      '2305' => [ #Association exists
+        [:domains, :exist]
+       ],
+      '2005' => [ #Value syntax error
+        [:phone, :invalid],
+        [:email, :invalid]
+      ]
     }
   end
 
