@@ -271,9 +271,11 @@ describe 'EPP Domain', epp: true do
         expect(d.domain_statuses.last.value).to eq('clientUpdateProhibited')
 
         response = epp_request('domains/update_add_objects.xml')
-
         expect(response[:results][0][:result_code]).to eq('2302')
         expect(response[:results][0][:msg]).to eq('Status already exists on this domain')
+        expect(response[:results][0][:value]).to eq('clientHold')
+        expect(response[:results][1][:msg]).to eq('Status already exists on this domain')
+        expect(response[:results][1][:value]).to eq('clientUpdateProhibited')
         expect(d.domain_statuses.count).to eq(2)
       end
 
