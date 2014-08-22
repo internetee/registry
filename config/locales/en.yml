@@ -70,9 +70,7 @@ en:
               taken: 'Code already exists'
         domain_status:
           attributes:
-            setting:
-              taken: 'Status already exists on this domain'
-            value:
+            setting_id:
               taken: 'Status already exists on this domain'
     attributes:
       domain:
@@ -83,6 +81,7 @@ en:
 
   errors:
     messages:
+      taken: 'Status already exists on this domain'
       blank: 'is missing'
       epp_domain_reserved: 'Domain name is reserved or restricted'
       epp_obj_does_not_exist: 'Object does not exist'
