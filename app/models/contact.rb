@@ -65,6 +65,12 @@ class Contact < ActiveRecord::Base
     return false
   end
 
+  #Find a way to use self.domains with contact
+  def domains_owned
+    Domain.find_by(owner_contact_id: id)
+  end
+
+  #TODO Refactor the relation methods to something more sensible
   def get_relation( model = :domain_contacts )
     send(model)
   rescue NoMethodError => e
@@ -77,21 +83,22 @@ class Contact < ActiveRecord::Base
     false
   end
 
-
-
   #should use only in transaction
   def destroy_and_clean
     clean_up_address
+
+    if has_relation(:domain_contacts) || domains_owned.present?
+      errors.add(:contact, msg: I18n.t('errors.messages.epp_obj_association_error'), value: { obj: 'contact', val: code })
+      return false
+    end
     destroy
-  rescue
-    errors.add(:contact, msg: I18n.t('errors.messages.epp_command_failed'), value: { obj: 'contact', val: code })
-    false
   end
 
   def epp_code_map
     {
       '2302' => [[:code, :epp_id_taken]],
       '2303' => [:not_found, :epp_obj_does_not_exist],
+      '2305' => ['Object association prohibits operation' ],
       '2005' => ['Phone nr is invalid', 'Email is invalid']
     }
   end

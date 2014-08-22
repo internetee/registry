@@ -4,8 +4,10 @@ describe 'EPP Contact', epp: true do
   let(:server) { Epp::Server.new({server: 'localhost', tag: 'gitlab', password: 'ghyt9e4fu', port: 701}) }
 
   context 'with valid user' do
-    before(:each) { Fabricate(:epp_user) }
-
+    before(:each) { 
+    Fabricate(:epp_user) 
+    Fabricate(:domain_validation_setting_group)
+    }
     context 'create command' do
 
       it "fails if request is invalid" do
@@ -133,7 +135,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'deletes contact' do
-        Fabricate(:contact, code: "dwa1234", auth_info: '2fooBAR')
+        Fabricate(:contact, code: "dwa1234")
         response = epp_request('contacts/delete.xml')
         expect(response[:result_code]).to eq('1000')
         expect(response[:msg]).to eq('Command completed successfully')
@@ -146,6 +148,18 @@ describe 'EPP Contact', epp: true do
         response = epp_request('contacts/delete.xml')
         expect(response[:result_code]).to eq('2303')
         expect(response[:msg]).to eq('Object does not exist')
+      end
+
+      it 'fails if contact has associated domain' do
+        Fabricate(:domain, owner_contact: Fabricate(:contact, code: 'dwa1234'))
+        expect(Domain.first.owner_contact.address.present?).to be true
+        response = epp_request('contacts/delete.xml')
+
+        expect(response[:result_code]).to eq('2305')
+        expect(response[:msg]).to eq('Object association prohibits operation')
+
+        expect(Domain.first.owner_contact.present?).to be true
+
       end
     end
 

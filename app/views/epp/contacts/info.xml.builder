@@ -9,12 +9,11 @@ xml.epp_head do
         xml.tag!('contact:name', @contact.name)
         xml.tag!('contact:org', @contact.org_name)
         xml.tag!('contact:addr') do
-          @contact.address do |address|
-            xml.tag!('contact:street', address.street) if address.street
-            xml.tag!('contact:street', address.street2) if address.street2
-            xml.tag!('contact:street', address.street3) if address.street3
-            xml.tag!('contact:cc', address.try(:country).try(:iso)) unless address.try(:country).nil?
-          end
+          address = @contact.address
+          xml.tag!('contact:street', address.street) if address.street
+          xml.tag!('contact:street', address.street2) if address.street2
+          xml.tag!('contact:street', address.street3) if address.street3
+          xml.tag!('contact:cc', address.try(:country).try(:iso)) unless address.try(:country).nil?
         end
         xml.tag!('contact:voice', @contact.phone)
         xml.tag!('contact:fax', @contact.fax)
