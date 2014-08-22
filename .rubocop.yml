@@ -1,0 +1,11 @@
+Style/LineLength:
+  Max: 120
+
+Documentation:
+  Enabled: false
+
+Style/CyclomaticComplexity:
+  Severity: warning
+
+Style/Semicolon:
+  AllowAsExpressionSeparator: true
