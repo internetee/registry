@@ -70,25 +70,16 @@ class Contact < ActiveRecord::Base
     Domain.find_by(owner_contact_id: id)
   end
 
-  #TODO Refactor the relation methods to something more sensible
-  def get_relation( model = :domain_contacts )
-    send(model)
-  rescue NoMethodError => e
-    nil
-  end
-
-  def has_relation( model = :domain_contacts )
-    relation = get_relation(model)
-    return true unless relation.nil? || relation.blank?
-    false
+  def relations_with_domain?
+    return true if domain_contacts.present? || domains_owned.present?
+    return false
   end
 
   #should use only in transaction
   def destroy_and_clean
     clean_up_address
 
-    if has_relation(:domain_contacts) || domains_owned.present?
-      #errors.add(:contact, msg: I18n.t('errors.messages.epp_obj_association_error'), value: { obj: 'contact', val: code })
+    if relations_with_domain?
       errors.add(:domains, :exist)
       return false
     end
