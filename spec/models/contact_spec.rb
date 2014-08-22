@@ -39,30 +39,23 @@ describe Contact do
   end
 end
 
-describe Contact, '#get_relation' do
-  before(:each) { Fabricate(:contact) }
-  it 'should return nil if no method' do
-    expect(Contact.first.get_relation(:chewbacca)).to eq nil
+describe Contact, '#relations_with_domain?' do
+  context 'with no relation' do
+    before(:each) { Fabricate(:contact) } 
+    it 'should return false' do
+      expect(Contact.first.relations_with_domain?).to be false
+    end
   end
 
-  it 'should return domain_contacts by default' do
-    expect(Contact.first.get_relation).to eq []
-  end
-end
-
-describe Contact, '#has_relation' do
-  before(:each) do
-    Fabricate(:domain_validation_setting_group)
-    Fabricate(:domain)
-  end
-
-  it 'should return false if no relation' do
-    expect(Contact.last.has_relation(:chewbacca)).to eq false
-  end
-
-  it 'should return true if relation' do
-    expect(Contact.last.has_relation).to eq true
-    expect(Contact.last.has_relation(:address)).to eq true
+  context 'with relation' do
+    before(:each) do
+      Fabricate(:domain_validation_setting_group)
+      Fabricate(:domain)
+    end
+  
+    it 'should return true' do
+      expect(Contact.first.relations_with_domain?).to be true
+    end
   end
 end
 
