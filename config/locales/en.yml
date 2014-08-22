@@ -37,6 +37,8 @@ en:
               invalid: "Email is invalid"
             ident:
               blank: "Required parameter missing - ident"
+            domains:
+              exist: 'Object association prohibits operation'
         domain:
           attributes:
             name_dirty:
@@ -91,7 +93,6 @@ en:
       epp_exp_dates_do_not_match: 'Given and current expire dates do not match'
       epp_registrant_not_found: 'Registrant not found'
       required_parameter_missing: 'Required parameter missing: %{key}'
-      epp_obj_association_error: 'Object association prohibits operation'
 
   setting_groups:
     codes:
