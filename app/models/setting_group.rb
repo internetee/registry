@@ -3,10 +3,19 @@ class SettingGroup < ActiveRecord::Base
 
   accepts_nested_attributes_for :settings
 
-  DOMAIN_VALIDATION_CODE = 'domain_validation'
+  validates :code, uniqueness: true
 
-  def get(key)
-    s = settings.find_by(code: key.to_s)
-    s.try(:value)
+  def setting(key)
+    settings.find_by(code: key.to_s)
+  end
+
+  class << self
+    def domain_validation
+      find_by(code: 'domain_validation')
+    end
+
+    def domain_statuses
+      find_by(code: 'domain_statuses')
+    end
   end
 end

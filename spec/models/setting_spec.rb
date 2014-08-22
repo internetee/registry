@@ -13,7 +13,7 @@ describe Setting do
     err = sg.settings.last.errors[:code].first
     expect(err).to eq('Code already exists')
 
-    sg_2 = Fabricate(:setting_group)
+    sg_2 = Fabricate(:setting_group, code: 'domain_statuses')
 
     sg_2.settings.build(code: 'this_is_code')
     expect(sg_2.save).to be true

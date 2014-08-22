@@ -51,8 +51,12 @@ module EppErrors
   end
 
   def find_epp_code(msg)
-    self.class::EPP_CODE_MAP.each do |code, values|
-      return code if values.include?(msg)
+    epp_code_map.each do |code, values|
+      values.each do |x|
+        t = errors.generate_message(*x) if x.is_a?(Array)
+        t = x if x.is_a?(String)
+        return code if t == msg
+      end
     end
     nil
   end

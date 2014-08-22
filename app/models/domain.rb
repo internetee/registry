@@ -4,14 +4,6 @@ class Domain < ActiveRecord::Base
 
   include EppErrors
 
-  EPP_CODE_MAP = {
-    '2302' => ['Domain name already exists', 'Domain name is reserved or restricted'], # Object exists
-    '2306' => ['Registrant is missing', 'Admin contact is missing', 'Given and current expire dates do not match'], # Parameter policy error
-    '2004' => ['Nameservers count must be between 1-13', 'Period must add up to 1, 2 or 3 years'], # Parameter value range error
-    '2303' => ['Registrant not found', 'Contact was not found'], # Object does not exist
-    '2200' => ['Authentication error']
-  }
-
   EPP_ATTR_MAP = {
     owner_contact: 'registrant',
     name_dirty: 'name',
@@ -33,6 +25,10 @@ class Domain < ActiveRecord::Base
 
   has_and_belongs_to_many :nameservers
 
+  has_many :domain_statuses, -> {
+    joins(:setting).where(settings: {setting_group_id: SettingGroup.domain_statuses.id})
+  }
+
   delegate :code, to: :owner_contact, prefix: true
   delegate :name, to: :registrar, prefix: true
 
@@ -53,14 +49,19 @@ class Domain < ActiveRecord::Base
     write_attribute(:name_dirty, value)
   end
 
-  ### CREATE ###
+  ### CREATE & UPDATE ###
 
   def attach_objects(ph, parsed_frame)
-    attach_owner_contact(ph[:registrant])
+    attach_owner_contact(ph[:registrant]) if ph[:registrant]
     attach_contacts(self.class.parse_contacts_from_frame(parsed_frame))
     attach_nameservers(self.class.parse_nameservers_from_frame(parsed_frame))
+    attach_statuses(self.class.parse_statuses_from_frame(parsed_frame))
 
     errors.empty?
+  end
+
+  def detach_objects(ph, parsed_frame)
+    detach_nameservers(self.class.parse_nameservers_from_frame(parsed_frame))
   end
 
   def attach_owner_contact(code)
@@ -109,6 +110,25 @@ class Domain < ActiveRecord::Base
     end
   end
 
+  def attach_statuses(status_list)
+    status_list.each do |x|
+      setting = SettingGroup.domain_statuses.settings.find_by(value: x[:value])
+      self.domain_statuses.build(
+        setting: setting,
+        description: x[:description]
+      )
+    end
+  end
+
+  def detach_nameservers(ns_list)
+    to_delete = []
+    ns_list.each do |ns_attrs|
+      to_delete << self.nameservers.where(ns_attrs)
+    end
+
+    self.nameservers.delete(to_delete)
+  end
+
   ### RENEW ###
 
   def renew(cur_exp_date, period, unit='y')
@@ -127,8 +147,9 @@ class Domain < ActiveRecord::Base
   ### VALIDATIONS ###
 
   def validate_nameservers_count
-    sg = SettingGroup.find_by(code: SettingGroup::DOMAIN_VALIDATION_CODE)
-    min, max = sg.get(:ns_min_count).to_i, sg.get(:ns_max_count).to_i
+    sg = SettingGroup.domain_validation
+    min, max = sg.setting(:ns_min_count).value.to_i, sg.setting(:ns_max_count).value.to_i
+
     unless nameservers.length.between?(min, max)
       errors.add(:nameservers, :out_of_range, {min: min, max: max})
     end
@@ -157,6 +178,33 @@ class Domain < ActiveRecord::Base
       val: cur_exp_date,
       msg: I18n.t('errors.messages.epp_exp_dates_do_not_match')
     }) if cur_exp_date.to_date != valid_to
+  end
+
+  def epp_code_map
+    domain_validation_sg = SettingGroup.domain_validation
+
+    {
+      '2302' => [ # Object exists
+        [:name_dirty, :taken],
+        [:name_dirty, :reserved]
+      ],
+      '2306' => [ # Parameter policy error
+        [:owner_contact, :blank],
+        [:admin_contacts, :blank],
+        [:valid_to, :epp_exp_dates_do_not_match]
+      ],
+      '2004' => [ # Parameter value range error
+        [:nameservers, :out_of_range, {min: domain_validation_sg.setting(:ns_min_count).value, max: domain_validation_sg.setting(:ns_max_count).value}],
+        [:period, :out_of_range]
+      ],
+      '2303' => [ # Object does not exist
+        [:owner_contact, :epp_registrant_not_found],
+        [:domain_contacts, :not_found]
+      ],
+      '2200' => [
+        [:auth_info, :wrong_pw]
+      ]
+    }
   end
 
   ## SHARED
@@ -211,6 +259,18 @@ class Domain < ActiveRecord::Base
       p[:unit]
     end
 
+    def parse_statuses_from_frame(parsed_frame)
+      res = []
+
+      parsed_frame.css('status').each do |x|
+        res << {
+          value: x['s'],
+          description: x.text
+        }
+      end
+      res
+    end
+
     def check_availability(domains)
       domains = [domains] if domains.is_a?(String)
 
@@ -227,7 +287,7 @@ class Domain < ActiveRecord::Base
         end
 
         if Domain.find_by(name: x)
-          res << {name: x, avail: 0, reason: 'in use'} #confirm reason with current API
+          res << {name: x, avail: 0, reason: 'in use'}
         else
           res << {name: x, avail: 1}
         end

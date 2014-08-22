@@ -4,13 +4,6 @@ class Contact < ActiveRecord::Base
 
   include EppErrors
 
-  EPP_CODE_MAP = {
-    '2302' => ['Contact id already exists'],
-    '2303' => [:not_found, :epp_obj_does_not_exist],
-    '2305' => ['Object association prohibits operation'],
-    '2005' => ['Phone nr is invalid', 'Email is invalid']
-  }
-
   EPP_ATTR_MAP = {}
 
   has_one :address
@@ -88,7 +81,7 @@ class Contact < ActiveRecord::Base
     relation = get_relation(model)
     return true unless relation.nil? || relation.blank?
     false
-  end 
+  end
 
   #should use only in transaction
   def destroy_and_clean
@@ -101,27 +94,35 @@ class Contact < ActiveRecord::Base
     destroy
   end
 
+  def epp_code_map
+    {
+      '2302' => [[:code, :epp_id_taken]],
+      '2303' => [:not_found, :epp_obj_does_not_exist],
+      '2005' => ['Phone nr is invalid', 'Email is invalid']
+    }
+  end
+
   class << self
 
 
     def extract_attributes ph, type=:create
-  
+
       contact_hash = {
         phone: ph[:voice],
         ident: ph[:ident],
         email: ph[:email]
       }
-  
+
       contact_hash = contact_hash.merge({
         name: ph[:postalInfo][:name],
         org_name: ph[:postalInfo][:org]
       }) if ph[:postalInfo].is_a? Hash
-  
+
       contact_hash[:code] = ph[:id] if type == :create
-  
+
       contact_hash.delete_if { |k, v| v.nil? }
     end
-  
+
     def check_availability(codes)
       codes = [codes] if codes.is_a?(String)
 
