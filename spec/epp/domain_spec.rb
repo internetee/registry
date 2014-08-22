@@ -285,13 +285,23 @@ describe 'EPP Domain', epp: true do
 
         d = Domain.last
 
-        new_ns = d.nameservers.find_by(hostname: 'ns1.example.com')
-        expect(new_ns).to be_truthy
-
         response = epp_request('domains/update_remove_objects.xml')
 
         rem_ns = d.nameservers.find_by(hostname: 'ns1.example.com')
         expect(rem_ns).to be_falsey
+
+        rem_cnt = d.tech_contacts.find_by(code: 'mak21')
+        expect(rem_cnt).to be_falsey
+
+        response = epp_request('domains/update_remove_objects.xml')
+
+        expect(response[:results][0][:result_code]).to eq('2303')
+        expect(response[:results][0][:msg]).to eq('Contact was not found')
+        expect(response[:results][0][:value]).to eq('mak21')
+
+        expect(response[:results][1][:result_code]).to eq('2303')
+        expect(response[:results][1][:msg]).to eq('Nameserver was not found')
+        expect(response[:results][1][:value]).to eq('ns1.example.com')
       end
     end
 

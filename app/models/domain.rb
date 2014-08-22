@@ -61,7 +61,10 @@ class Domain < ActiveRecord::Base
   end
 
   def detach_objects(ph, parsed_frame)
+    detach_contacts(self.class.parse_contacts_from_frame(parsed_frame))
     detach_nameservers(self.class.parse_nameservers_from_frame(parsed_frame))
+
+    errors.empty?
   end
 
   def attach_owner_contact(code)
@@ -120,10 +123,39 @@ class Domain < ActiveRecord::Base
     end
   end
 
+  def detach_contacts(contact_list)
+    to_delete = []
+    contact_list.each do |k, v|
+      v.each do |x|
+        contact = domain_contacts.joins(:contact).where(contacts: {code: x[:contact]})
+        if contact.blank?
+          errors.add(:domain_contacts, {
+            obj: 'contact',
+            val: x[:contact],
+            msg: errors.generate_message(:domain_contacts, :not_found)
+          })
+        else
+          to_delete << contact
+        end
+      end
+    end
+
+    self.domain_contacts.delete(to_delete)
+  end
+
   def detach_nameservers(ns_list)
     to_delete = []
     ns_list.each do |ns_attrs|
-      to_delete << self.nameservers.where(ns_attrs)
+      nameserver = self.nameservers.where(ns_attrs)
+      if nameserver.blank?
+        errors.add(:nameservers, {
+          obj: 'hostObj',
+          val: ns_attrs[:hostname],
+          msg: errors.generate_message(:nameservers, :not_found)
+        })
+      else
+        to_delete << nameserver
+      end
     end
 
     self.nameservers.delete(to_delete)
@@ -199,7 +231,8 @@ class Domain < ActiveRecord::Base
       ],
       '2303' => [ # Object does not exist
         [:owner_contact, :epp_registrant_not_found],
-        [:domain_contacts, :not_found]
+        [:domain_contacts, :not_found],
+        [:nameservers, :not_found]
       ],
       '2200' => [
         [:auth_info, :wrong_pw]
