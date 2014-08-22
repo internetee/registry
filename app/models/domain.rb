@@ -63,6 +63,7 @@ class Domain < ActiveRecord::Base
   def detach_objects(ph, parsed_frame)
     detach_contacts(self.class.parse_contacts_from_frame(parsed_frame))
     detach_nameservers(self.class.parse_nameservers_from_frame(parsed_frame))
+    detach_statuses(self.class.parse_statuses_from_frame(parsed_frame))
 
     errors.empty?
   end
@@ -161,6 +162,24 @@ class Domain < ActiveRecord::Base
     self.nameservers.delete(to_delete)
   end
 
+  def detach_statuses(status_list)
+    to_delete = []
+    status_list.each do |x|
+      status = domain_statuses.joins(:setting).where(settings: {value: x[:value]})
+      if status.blank?
+        errors.add(:domain_statuses, {
+          obj: 'status',
+          val: x[:value],
+          msg: errors.generate_message(:domain_statuses, :not_found)
+        })
+      else
+        to_delete << status
+      end
+    end
+
+    self.domain_statuses.delete(to_delete)
+  end
+
   ### RENEW ###
 
   def renew(cur_exp_date, period, unit='y')
@@ -232,7 +251,8 @@ class Domain < ActiveRecord::Base
       '2303' => [ # Object does not exist
         [:owner_contact, :epp_registrant_not_found],
         [:domain_contacts, :not_found],
-        [:nameservers, :not_found]
+        [:nameservers, :not_found],
+        [:domain_statuses, :not_found]
       ],
       '2200' => [
         [:auth_info, :wrong_pw]

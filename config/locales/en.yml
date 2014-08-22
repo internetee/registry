@@ -57,6 +57,8 @@ en:
               out_of_range: 'Period must add up to 1, 2 or 3 years'
             auth_info:
               wrong_pw: 'Authentication error'
+            domain_statuses:
+              not_found: 'Status was not found'
         nameserver:
           attributes:
             hostname:

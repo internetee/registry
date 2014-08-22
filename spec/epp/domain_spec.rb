@@ -287,6 +287,9 @@ describe 'EPP Domain', epp: true do
 
         response = epp_request('domains/update_remove_objects.xml')
 
+        expect(d.domain_statuses.count).to eq(1)
+        expect(d.domain_statuses.first.value).to eq('clientUpdateProhibited')
+
         rem_ns = d.nameservers.find_by(hostname: 'ns1.example.com')
         expect(rem_ns).to be_falsey
 
@@ -302,6 +305,11 @@ describe 'EPP Domain', epp: true do
         expect(response[:results][1][:result_code]).to eq('2303')
         expect(response[:results][1][:msg]).to eq('Nameserver was not found')
         expect(response[:results][1][:value]).to eq('ns1.example.com')
+
+        expect(response[:results][2][:result_code]).to eq('2303')
+        expect(response[:results][2][:msg]).to eq('Status was not found')
+        expect(response[:results][2][:value]).to eq('clientHold')
+
       end
     end
 
