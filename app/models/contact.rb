@@ -98,6 +98,7 @@ class Contact < ActiveRecord::Base
     {
       '2302' => [[:code, :epp_id_taken]],
       '2303' => [:not_found, :epp_obj_does_not_exist],
+      '2305' => ['Object association prohibits operation' ],
       '2005' => ['Phone nr is invalid', 'Email is invalid']
     }
   end
