@@ -22,21 +22,21 @@ module EppErrors
     values.each do |err|
       if err.is_a?(Hash)
         next unless code = find_epp_code(err[:msg])
-        err_msg = {code: code, msg: err[:msg]}
-        err_msg[:value] = {val: err[:val], obj: err[:obj]} if err[:val]
+        err_msg = { code: code, msg: err[:msg] }
+        err_msg[:value] = { val: err[:val], obj: err[:obj] } if err[:val]
         epp_errors << err_msg
       else
         next unless code = find_epp_code(err)
-        err = {code: code, msg: err}
+        err = { code: code, msg: err }
 
         # If we have setting relation, then still add the value to the error message
         # If this sort of exception happens again, some other logic has to be implemented
         if self.class.reflect_on_association(key) && key == :setting
-          err[:value] = {val: send(key).value, obj: self.class::EPP_ATTR_MAP[key]}
+          err[:value] = { val: send(key).value, obj: self.class::EPP_ATTR_MAP[key] }
 
-        #if the key represents other relations, skip value
+        # if the key represents other relations, skip value
         elsif !self.class.reflect_on_association(key)
-          err[:value] = {val: send(key), obj: self.class::EPP_ATTR_MAP[key]}
+          err[:value] = { val: send(key), obj: self.class::EPP_ATTR_MAP[key] }
         end
 
         epp_errors << err

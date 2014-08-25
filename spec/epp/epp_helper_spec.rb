@@ -64,12 +64,12 @@ describe 'EPP Helper', epp: true do
         name: 'one.ee',
         period_value: '345',
         period_unit: 'd',
-        nameservers: [{hostObj: 'ns1.test.net'}, {hostObj: 'ns2.test.net'}],
+        nameservers: [{ hostObj: 'ns1.test.net' }, { hostObj: 'ns2.test.net' }],
         registrant: '32fsdaf',
         contacts: [
-          {contact_value: '2323rafaf', contact_type: 'admin'},
-          {contact_value: '3dgxx', contact_type: 'tech'},
-          {contact_value: '345xxv', contact_type: 'tech'}
+          { contact_value: '2323rafaf', contact_type: 'admin' },
+          { contact_value: '3dgxx', contact_type: 'tech' },
+          { contact_value: '345xxv', contact_type: 'tech' }
         ],
         pw: 'sdgdgd4esfsa'
       )
@@ -124,7 +124,6 @@ describe 'EPP Helper', epp: true do
         </epp>
       ').to_s.squish
 
-
       generated = Nokogiri::XML(domain_info_xml).to_s.squish
       expect(generated).to eq(expected)
 
@@ -145,7 +144,6 @@ describe 'EPP Helper', epp: true do
         </epp>
       ').to_s.squish
 
-
       generated = Nokogiri::XML(domain_info_xml(name_value: 'one.ee', name_hosts: 'sub', pw: 'b3rafsla')).to_s.squish
       expect(generated).to eq(expected)
     end
@@ -165,7 +163,6 @@ describe 'EPP Helper', epp: true do
         </epp>
       ').to_s.squish
 
-
       generated = Nokogiri::XML(domain_check_xml).to_s.squish
       expect(generated).to eq(expected)
 
@@ -184,7 +181,6 @@ describe 'EPP Helper', epp: true do
           </command>
         </epp>
       ').to_s.squish
-
 
       generated = Nokogiri::XML(domain_check_xml(names: ['example.ee', 'example2.ee', 'example3.ee'])).to_s.squish
       expect(generated).to eq(expected)
@@ -207,7 +203,6 @@ describe 'EPP Helper', epp: true do
         </epp>
       ').to_s.squish
 
-
       generated = Nokogiri::XML(domain_renew_xml).to_s.squish
       expect(generated).to eq(expected)
 
@@ -226,7 +221,6 @@ describe 'EPP Helper', epp: true do
           </command>
         </epp>
       ').to_s.squish
-
 
       generated = Nokogiri::XML(domain_renew_xml(name: 'one.ee', curExpDate: '2009-11-15', period_value: '365', period_unit: 'd')).to_s.squish
       expect(generated).to eq(expected)

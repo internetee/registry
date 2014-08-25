@@ -2,6 +2,7 @@ class Epp::SessionsController < ApplicationController
   include Epp::Common
 
   private
+
   def hello
     render 'greeting'
   end

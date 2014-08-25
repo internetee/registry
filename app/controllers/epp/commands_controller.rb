@@ -5,6 +5,7 @@ class Epp::CommandsController < ApplicationController
   include Shared::UserStamper
 
   private
+
   def create
     send("create_#{OBJECT_TYPES[params_hash['epp']['xmlns:ns2']]}")
   end

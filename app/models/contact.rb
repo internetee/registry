@@ -1,6 +1,6 @@
 class Contact < ActiveRecord::Base
-  #TODO Foreign contact will get email with activation link/username/temp password
-  #TODO Phone number validation, in first phase very minimam in order to support current registries
+  # TODO Foreign contact will get email with activation link/username/temp password
+  # TODO Phone number validation, in first phase very minimam in order to support current registries
 
   include EppErrors
 
@@ -19,23 +19,23 @@ class Contact < ActiveRecord::Base
 
   validate :ident_must_be_valid
 
-  validates :phone, format: /\+[0-9]{1,3}\.[0-9]{1,14}?/ #/\+\d{3}\.\d+/
+  validates :phone, format: /\+[0-9]{1,3}\.[0-9]{1,14}?/ # /\+\d{3}\.\d+/
   validates :email, format: /@/
 
   validates_uniqueness_of :code, message: :epp_id_taken
 
   IDENT_TYPE_ICO = 'ico'
   IDENT_TYPES = [
-    IDENT_TYPE_ICO, #Company registry code (or similar)
-    "op",           #Estonian ID
-    "passport",     #Passport number
-    "birthday"      #Birthday date
+    IDENT_TYPE_ICO, # Company registry code (or similar)
+    'op',           # Estonian ID
+    'passport',     # Passport number
+    'birthday'      # Birthday date
   ]
 
   def ident_must_be_valid
-    #TODO Ident can also be passport number or company registry code.
-    #so have to make changes to validations (and doc/schema) accordingly
-    return true unless ident.present? && ident_type.present? && ident_type == "op"
+    # TODO Ident can also be passport number or company registry code.
+    # so have to make changes to validations (and doc/schema) accordingly
+    return true unless ident.present? && ident_type.present? && ident_type == 'op'
     code = Isikukood.new(ident)
     errors.add(:ident, 'bad format') unless code.valid?
   end
@@ -56,22 +56,22 @@ class Contact < ActiveRecord::Base
     updated_by ? updated_by.username : nil
   end
 
-  def auth_info_matches pw
+  def auth_info_matches(pw)
     return true if auth_info == pw
-    return false
+    false
   end
 
-  #Find a way to use self.domains with contact
+  # Find a way to use self.domains with contact
   def domains_owned
     Domain.find_by(owner_contact_id: id)
   end
 
   def relations_with_domain?
     return true if domain_contacts.present? || domains_owned.present?
-    return false
+    false
   end
 
-  #should use only in transaction
+  # should use only in transaction
   def destroy_and_clean
     clean_up_address
 
@@ -84,15 +84,15 @@ class Contact < ActiveRecord::Base
 
   def epp_code_map
     {
-      '2302' => [ #Object exists
+      '2302' => [ # Object exists
         [:code, :epp_id_taken]
       ],
-      '2303' => #Object does not exist
+      '2303' => # Object does not exist
         [:not_found, :epp_obj_does_not_exist],
-      '2305' => [ #Association exists
+      '2305' => [ # Association exists
         [:domains, :exist]
-       ],
-      '2005' => [ #Value syntax error
+      ],
+      '2005' => [ # Value syntax error
         [:phone, :invalid],
         [:email, :invalid]
       ]
@@ -100,10 +100,7 @@ class Contact < ActiveRecord::Base
   end
 
   class << self
-
-
-    def extract_attributes ph, type=:create
-
+    def extract_attributes(ph, type = :create)
       contact_hash = {
         phone: ph[:voice],
         ident: ph[:ident],
@@ -117,7 +114,7 @@ class Contact < ActiveRecord::Base
 
       contact_hash[:code] = ph[:id] if type == :create
 
-      contact_hash.delete_if { |k, v| v.nil? }
+      contact_hash.delete_if { |_k, v| v.nil? }
     end
 
     def check_availability(codes)
@@ -126,9 +123,9 @@ class Contact < ActiveRecord::Base
       res = []
       codes.each do |x|
         if Contact.find_by(code: x)
-          res << {code: x, avail: 0, reason: 'in use'}
+          res << { code: x, avail: 0, reason: 'in use' }
         else
-          res << {code: x, avail: 1}
+          res << { code: x, avail: 1 }
         end
       end
 
@@ -141,6 +138,4 @@ class Contact < ActiveRecord::Base
   def clean_up_address
     address.destroy if address
   end
-
-
 end

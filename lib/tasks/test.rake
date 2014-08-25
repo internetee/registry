@@ -13,7 +13,7 @@ end
 
 desc 'Run all but EPP specs'
 RSpec::Core::RakeTask.new('test:other') do |t|
-  t.rspec_opts = "--tag ~epp"
+  t.rspec_opts = '--tag ~epp'
 end
 
 Rake::Task[:default].prerequisites.clear

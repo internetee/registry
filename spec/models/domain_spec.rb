@@ -1,8 +1,8 @@
-require "rails_helper"
+require 'rails_helper'
 
 describe Domain do
   it { should belong_to(:registrar) }
-  it { should have_and_belong_to_many(:nameservers)}
+  it { should have_and_belong_to_many(:nameservers) }
   it { should belong_to(:owner_contact) }
   it { should have_many(:tech_contacts) }
   it { should have_many(:admin_contacts) }
@@ -44,9 +44,9 @@ describe Domain do
       expect(d.errors.messages).to match_array({
         name: ['is missing'],
         period: ['is not a number'],
-        owner_contact: ["Registrant is missing"],
-        admin_contacts: ["Admin contact is missing"],
-        nameservers: ["Nameservers count must be between 1-13"]
+        owner_contact: ['Registrant is missing'],
+        admin_contacts: ['Admin contact is missing'],
+        nameservers: ['Nameservers count must be between 1-13']
       })
 
       sg = SettingGroup.domain_validation

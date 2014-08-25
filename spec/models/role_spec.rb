@@ -1,4 +1,4 @@
-require "rails_helper"
+require 'rails_helper'
 
 describe Role do
   it { should have_and_belong_to_many(:rights) }

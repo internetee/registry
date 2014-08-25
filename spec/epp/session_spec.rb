@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe 'EPP Session', epp: true do
-  let(:server) { server = Epp::Server.new({server: 'localhost', tag: 'gitlab', password: 'ghyt9e4fu', port: 701}) }
+  let(:server) { server = Epp::Server.new({ server: 'localhost', tag: 'gitlab', password: 'ghyt9e4fu', port: 701 }) }
 
   context 'when not connected' do
     it 'greets client upon connection' do

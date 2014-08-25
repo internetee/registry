@@ -1,5 +1,5 @@
 class DomainNameValidator < ActiveModel::EachValidator
-  #TODO
+  # TODO
   # validates lenght of 2-63
   # validates/honours Estonian additional letters zäõüö
   # honours punicode and all interfces honors utf8

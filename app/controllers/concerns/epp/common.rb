@@ -12,7 +12,7 @@ module Epp::Common
   end
 
   def proxy
-    @svTRID = "ccReg-#{'%010d' % rand(10 ** 10)}"
+    @svTRID = "ccReg-#{'%010d' % rand(10**10)}"
     send(params[:command])
   end
 
@@ -36,7 +36,7 @@ module Epp::Common
     @current_epp_user ||= EppUser.find(epp_session[:epp_user_id]) if epp_session[:epp_user_id]
   end
 
-  def handle_errors(obj=nil)
+  def handle_errors(obj = nil)
     @errors ||= []
     if obj
       obj.construct_epp_errors
@@ -44,7 +44,7 @@ module Epp::Common
     end
 
     # for debugging
-    @errors << {code: '1', msg: 'handle_errors was executed when there were actually no errors'} if @errors.blank?
+    @errors << { code: '1', msg: 'handle_errors was executed when there were actually no errors' } if @errors.blank?
     render '/epp/error'
   end
 
@@ -55,13 +55,13 @@ module Epp::Common
 
   def xml_attrs_present?(ph, attributes)
     attributes.each do |x|
-      epp_errors << {code: '2003', msg: I18n.t('errors.messages.required_parameter_missing', key: x.last)} unless has_attribute(ph, x)
+      epp_errors << { code: '2003', msg: I18n.t('errors.messages.required_parameter_missing', key: x.last) } unless has_attribute(ph, x)
     end
     epp_errors.empty?
   end
 
   def has_attribute(ph, path)
-    path.inject(ph) do |location, key|
+    path.reduce(ph) do |location, key|
       location.respond_to?(:keys) ? location[key] : nil
     end
   end

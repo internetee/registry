@@ -48,6 +48,7 @@ module Epp::DomainsHelper
   end
 
   ### HELPER METHODS ###
+
   private
 
   ## CREATE
@@ -95,7 +96,7 @@ module Epp::DomainsHelper
   def find_domain
     domain = Domain.find_by(name: @ph[:name])
     unless domain
-      epp_errors << {code: '2303', msg: I18n.t('errors.messages.epp_domain_not_found'), value: {obj: 'name', val: @ph[:name]}}
+      epp_errors << { code: '2303', msg: I18n.t('errors.messages.epp_domain_not_found'), value: { obj: 'name', val: @ph[:name] } }
     end
     domain
   end

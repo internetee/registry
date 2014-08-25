@@ -37,7 +37,7 @@ gem 'nokogiri', '~> 1.6.2.1'
 # For punycode
 gem 'simpleidn', '~> 0.0.5'
 
-#for EE-id validation
+# for EE-id validation
 gem 'isikukood'
 
 gem 'bootstrap-sass', '~> 3.2.0.1'

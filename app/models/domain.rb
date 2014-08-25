@@ -1,6 +1,6 @@
 class Domain < ActiveRecord::Base
-  #TODO whois requests ip whitelist for full info for own domains and partial info for other domains
-  #TODO most inputs should be trimmed before validatation, probably some global logic?
+  # TODO whois requests ip whitelist for full info for own domains and partial info for other domains
+  # TODO most inputs should be trimmed before validatation, probably some global logic?
 
   include EppErrors
 
@@ -15,18 +15,18 @@ class Domain < ActiveRecord::Base
 
   has_many :domain_contacts
 
-  has_many :tech_contacts, -> {
-    where(domain_contacts: {contact_type: DomainContact::TECH})
-  }, through: :domain_contacts, source: :contact
+  has_many :tech_contacts, -> do
+    where(domain_contacts: { contact_type: DomainContact::TECH })
+  end, through: :domain_contacts, source: :contact
 
-  has_many :admin_contacts, -> {
-    where(domain_contacts: {contact_type: DomainContact::ADMIN})
-  }, through: :domain_contacts, source: :contact
+  has_many :admin_contacts, -> do
+    where(domain_contacts: { contact_type: DomainContact::ADMIN })
+  end, through: :domain_contacts, source: :contact
 
   has_and_belongs_to_many :nameservers
 
   has_many :domain_statuses, -> {
-    joins(:setting).where(settings: {setting_group_id: SettingGroup.domain_statuses.id})
+    joins(:setting).where(settings: { setting_group_id: SettingGroup.domain_statuses.id })
   }
 
   delegate :code, to: :owner_contact, prefix: true
@@ -123,14 +123,14 @@ class Domain < ActiveRecord::Base
 
   def attach_nameservers(ns_list)
     ns_list.each do |ns_attrs|
-      self.nameservers.build(ns_attrs)
+      nameservers.build(ns_attrs)
     end
   end
 
   def attach_statuses(status_list)
     status_list.each do |x|
       setting = SettingGroup.domain_statuses.settings.find_by(value: x[:value])
-      self.domain_statuses.build(
+      domain_statuses.build(
         setting: setting,
         description: x[:description]
       )
@@ -139,9 +139,9 @@ class Domain < ActiveRecord::Base
 
   def detach_contacts(contact_list)
     to_delete = []
-    contact_list.each do |k, v|
+    contact_list.each do |_k, v|
       v.each do |x|
-        contact = domain_contacts.joins(:contact).where(contacts: {code: x[:contact]})
+        contact = domain_contacts.joins(:contact).where(contacts: { code: x[:contact] })
         if contact.blank?
           errors.add(:domain_contacts, {
             obj: 'contact',
@@ -154,13 +154,13 @@ class Domain < ActiveRecord::Base
       end
     end
 
-    self.domain_contacts.delete(to_delete)
+    domain_contacts.delete(to_delete)
   end
 
   def detach_nameservers(ns_list)
     to_delete = []
     ns_list.each do |ns_attrs|
-      nameserver = self.nameservers.where(ns_attrs)
+      nameserver = nameservers.where(ns_attrs)
       if nameserver.blank?
         errors.add(:nameservers, {
           obj: 'hostObj',
@@ -172,13 +172,13 @@ class Domain < ActiveRecord::Base
       end
     end
 
-    self.nameservers.delete(to_delete)
+    nameservers.delete(to_delete)
   end
 
   def detach_statuses(status_list)
     to_delete = []
     status_list.each do |x|
-      status = domain_statuses.joins(:setting).where(settings: {value: x[:value]})
+      status = domain_statuses.joins(:setting).where(settings: { value: x[:value] })
       if status.blank?
         errors.add(:domain_statuses, {
           obj: 'status',
@@ -190,19 +190,19 @@ class Domain < ActiveRecord::Base
       end
     end
 
-    self.domain_statuses.delete(to_delete)
+    domain_statuses.delete(to_delete)
   end
 
   ### RENEW ###
 
-  def renew(cur_exp_date, period, unit='y')
+  def renew(cur_exp_date, period, unit = 'y')
     # TODO Check how much time before domain exp date can it be renewed
     validate_exp_dates(cur_exp_date)
     return false if errors.any?
 
     p = self.class.convert_period_to_time(period, unit)
 
-    self.valid_to = self.valid_to + p
+    self.valid_to = valid_to + p
     self.period = period
     self.period_unit = unit
     save
@@ -215,7 +215,7 @@ class Domain < ActiveRecord::Base
     min, max = sg.setting(:ns_min_count).value.to_i, sg.setting(:ns_max_count).value.to_i
 
     unless nameservers.length.between?(min, max)
-      errors.add(:nameservers, :out_of_range, {min: min, max: max})
+      errors.add(:nameservers, :out_of_range, { min: min, max: max })
     end
   end
 
@@ -226,11 +226,11 @@ class Domain < ActiveRecord::Base
   def validate_period
     return unless period.present?
     if period_unit == 'd'
-      valid_values = ['365', '366', '710', '712', '1065', '1068']
+      valid_values = %w(365 366 710 712 1065 1068)
     elsif period_unit == 'm'
-      valid_values = ['12', '24', '36']
+      valid_values = %w(12 24 36)
     else
-      valid_values = ['1', '2', '3']
+      valid_values = %w(1 2 3)
     end
 
     errors.add(:period, :out_of_range) unless valid_values.include?(period.to_s)
@@ -258,7 +258,7 @@ class Domain < ActiveRecord::Base
         [:valid_to, :epp_exp_dates_do_not_match]
       ],
       '2004' => [ # Parameter value range error
-        [:nameservers, :out_of_range, {min: domain_validation_sg.setting(:ns_min_count).value, max: domain_validation_sg.setting(:ns_max_count).value}],
+        [:nameservers, :out_of_range, { min: domain_validation_sg.setting(:ns_min_count).value, max: domain_validation_sg.setting(:ns_max_count).value }],
         [:period, :out_of_range]
       ],
       '2303' => [ # Object does not exist
@@ -277,7 +277,7 @@ class Domain < ActiveRecord::Base
 
   # For domain transfer
   def authenticate(pw)
-    errors.add(:auth_info, {msg: errors.generate_message(:auth_info, :wrong_pw)}) if pw != auth_info
+    errors.add(:auth_info, { msg: errors.generate_message(:auth_info, :wrong_pw) }) if pw != auth_info
     errors.empty?
   end
 
@@ -351,20 +351,20 @@ class Domain < ActiveRecord::Base
 
       res = []
       domains.each do |x|
-        if !DomainNameValidator.validate_format(x)
-          res << {name: x, avail: 0, reason: 'invalid format'}
+        unless DomainNameValidator.validate_format(x)
+          res << { name: x, avail: 0, reason: 'invalid format' }
           next
         end
 
-        if !DomainNameValidator.validate_reservation(x)
-          res << {name: x, avail: 0, reason: I18n.t('errors.messages.epp_domain_reserved')}
+        unless DomainNameValidator.validate_reservation(x)
+          res << { name: x, avail: 0, reason: I18n.t('errors.messages.epp_domain_reserved') }
           next
         end
 
         if Domain.find_by(name: x)
-          res << {name: x, avail: 0, reason: 'in use'}
+          res << { name: x, avail: 0, reason: 'in use' }
         else
-          res << {name: x, avail: 1}
+          res << { name: x, avail: 1 }
         end
       end
 

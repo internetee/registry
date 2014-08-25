@@ -16,11 +16,12 @@ class SettingGroupsController < ApplicationController
   end
 
   private
+
   def set_setting_group
     @setting_group = SettingGroup.find(params[:id])
   end
 
   def setting_group_params
-    params.require(:setting_group).permit(settings_attributes: [ :value, :id ])
+    params.require(:setting_group).permit(settings_attributes: [:value, :id])
   end
 end

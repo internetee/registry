@@ -1,17 +1,17 @@
 require 'rails_helper'
 
 describe 'EPP Contact', epp: true do
-  let(:server) { Epp::Server.new({server: 'localhost', tag: 'gitlab', password: 'ghyt9e4fu', port: 701}) }
+  let(:server) { Epp::Server.new({ server: 'localhost', tag: 'gitlab', password: 'ghyt9e4fu', port: 701 }) }
 
   context 'with valid user' do
-    before(:each) { 
-    Fabricate(:epp_user) 
-    Fabricate(:domain_validation_setting_group)
-    }
+    before(:each) do
+      Fabricate(:epp_user)
+      Fabricate(:domain_validation_setting_group)
+    end
     context 'create command' do
 
-      it "fails if request is invalid" do
-        response = epp_request(contact_create_xml( { authInfo: [false], addr: { cc: false, city: false } }  ), :xml)
+      it 'fails if request is invalid' do
+        response = epp_request(contact_create_xml({ authInfo: [false], addr: { cc: false, city: false } }), :xml)
 
         expect(response[:results][0][:result_code]).to eq('2003')
         expect(response[:results][1][:result_code]).to eq('2003')
@@ -52,7 +52,7 @@ describe 'EPP Contact', epp: true do
         crDate =  response[:parsed].css('resData creData crDate').first
 
         expect(id.text).to eq('sh8013')
-        #5 seconds for what-ever weird lag reasons might happen
+        # 5 seconds for what-ever weird lag reasons might happen
         expect(crDate.text.to_time).to be_within(5).of(Time.now)
 
       end
@@ -69,17 +69,15 @@ describe 'EPP Contact', epp: true do
       end
     end
 
-
     context 'update command' do
-      it "fails if request is invalid" do
+      it 'fails if request is invalid' do
         response = epp_request('contacts/update_missing_attr.xml')
-        #response = epp_request(contact_update_xml( {id: false} ), :xml)
+        # response = epp_request(contact_update_xml( {id: false} ), :xml)
 
         expect(response[:results][0][:result_code]).to eq('2003')
         expect(response[:results][0][:msg]).to eq('Required parameter missing: id')
         expect(response[:results].count).to eq 1
       end
-
 
       it 'fails with wrong authentication info' do
         Fabricate(:contact, code: 'sh8013', auth_info: 'secure_password')
@@ -102,7 +100,7 @@ describe 'EPP Contact', epp: true do
 
       it 'is succesful' do
         Fabricate(:contact, created_by_id: 1, email: 'not_updated@test.test', code: 'sh8013', auth_info: '2fooBAR')
-        #response = epp_request(contact_update_xml( { chg: { email: 'fred@bloggers.ee', postalInfo: { name: 'Fred Bloggers' } } } ), :xml)
+        # response = epp_request(contact_update_xml( { chg: { email: 'fred@bloggers.ee', postalInfo: { name: 'Fred Bloggers' } } } ), :xml)
         response = epp_request('contacts/update.xml')
 
         expect(response[:msg]).to eq('Command completed successfully')
@@ -114,7 +112,7 @@ describe 'EPP Contact', epp: true do
 
       it 'returns phone and email error' do
         Fabricate(:contact, created_by_id: 1, email: 'not_updated@test.test', code: 'sh8013', auth_info: '2fooBAR')
-        #response = epp_request(contact_update_xml( { chg: { email: "qwe", phone: "123qweasd" } }), :xml)
+        # response = epp_request(contact_update_xml( { chg: { email: "qwe", phone: "123qweasd" } }), :xml)
         response = epp_request('contacts/update_with_errors.xml')
 
         expect(response[:results][0][:result_code]).to eq('2005')
@@ -126,7 +124,7 @@ describe 'EPP Contact', epp: true do
     end
 
     context 'delete command' do
-      it "fails if request is invalid" do
+      it 'fails if request is invalid' do
         response = epp_request('contacts/delete_missing_attr.xml')
 
         expect(response[:results][0][:result_code]).to eq('2003')
@@ -135,7 +133,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'deletes contact' do
-        Fabricate(:contact, code: "dwa1234")
+        Fabricate(:contact, code: 'dwa1234')
         response = epp_request('contacts/delete.xml')
         expect(response[:result_code]).to eq('1000')
         expect(response[:msg]).to eq('Command completed successfully')
@@ -163,10 +161,9 @@ describe 'EPP Contact', epp: true do
       end
     end
 
-
     context 'check command' do
-      it "fails if request is invalid" do
-        response = epp_request(contact_check_xml( ids: [ false ] ), :xml)
+      it 'fails if request is invalid' do
+        response = epp_request(contact_check_xml(ids: [false]), :xml)
 
         expect(response[:results][0][:result_code]).to eq('2003')
         expect(response[:results][0][:msg]).to eq('Required parameter missing: id')
@@ -176,7 +173,7 @@ describe 'EPP Contact', epp: true do
       it 'returns info about contact availability' do
         Fabricate(:contact, code: 'check-1234')
 
-        response = epp_request(contact_check_xml( ids: [{ id: 'check-1234'}, { id: 'check-4321' }]  ), :xml)
+        response = epp_request(contact_check_xml(ids: [{ id: 'check-1234' }, { id: 'check-4321' }]), :xml)
 
         expect(response[:result_code]).to eq('1000')
         expect(response[:msg]).to eq('Command completed successfully')
@@ -191,7 +188,7 @@ describe 'EPP Contact', epp: true do
     end
 
     context 'info command' do
-      it "fails if request invalid" do
+      it 'fails if request invalid' do
         response = epp_request('contacts/delete_missing_attr.xml')
 
         expect(response[:results][0][:result_code]).to eq('2003')
@@ -207,7 +204,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'returns info about contact' do
-        Fabricate(:contact, name: "Johnny Awesome", created_by_id: '1', code: 'info-4444', auth_info: '2fooBAR')
+        Fabricate(:contact, name: 'Johnny Awesome', created_by_id: '1', code: 'info-4444', auth_info: '2fooBAR')
         Fabricate(:address)
 
         response = epp_request('contacts/info.xml')
@@ -220,7 +217,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'doesn\'t display unassociated object' do
-        Fabricate(:contact, name:"Johnny Awesome", code: 'info-4444')
+        Fabricate(:contact, name: 'Johnny Awesome', code: 'info-4444')
 
         response = epp_request('contacts/info.xml')
         expect(response[:result_code]).to eq('2201')

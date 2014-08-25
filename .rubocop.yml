@@ -1,11 +1,20 @@
-Style/LineLength:
+AllCops:
+  RunRailsCops: true
+
+Metrics/LineLength:
   Max: 120
 
 Documentation:
   Enabled: false
 
-Style/CyclomaticComplexity:
-  Severity: warning
-
 Style/Semicolon:
   AllowAsExpressionSeparator: true
+
+Style/AndOr:
+  Enabled: false
+
+Style/BracesAroundHashParameters:
+  Enabled: false
+
+Style/IndentHash:
+  Enabled: false

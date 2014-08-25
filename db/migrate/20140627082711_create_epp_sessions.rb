@@ -6,7 +6,7 @@ class CreateEppSessions < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index :epp_sessions, :session_id, :unique => true
+    add_index :epp_sessions, :session_id, unique: true
     add_index :epp_sessions, :updated_at
   end
 end

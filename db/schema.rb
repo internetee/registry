@@ -11,181 +11,181 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140819103517) do
+ActiveRecord::Schema.define(version: 20_140_819_103_517) do
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+  enable_extension 'plpgsql'
 
-  create_table "addresses", force: true do |t|
-    t.integer  "contact_id"
-    t.integer  "country_id"
-    t.string   "city"
-    t.string   "street"
-    t.string   "zip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "street2"
-    t.string   "street3"
+  create_table 'addresses', force: true do |t|
+    t.integer 'contact_id'
+    t.integer 'country_id'
+    t.string 'city'
+    t.string 'street'
+    t.string 'zip'
+    t.datetime 'created_at'
+    t.datetime 'updated_at'
+    t.string 'street2'
+    t.string 'street3'
   end
 
-  create_table "contacts", force: true do |t|
-    t.string   "code"
-    t.string   "name"
-    t.string   "type"
-    t.string   "reg_no"
-    t.string   "phone"
-    t.string   "email"
-    t.string   "fax"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "ident"
-    t.string   "ident_type"
-    t.string   "org_name"
-    t.integer  "created_by_id"
-    t.integer  "updated_by_id"
-    t.string   "auth_info"
+  create_table 'contacts', force: true do |t|
+    t.string 'code'
+    t.string 'name'
+    t.string 'type'
+    t.string 'reg_no'
+    t.string 'phone'
+    t.string 'email'
+    t.string 'fax'
+    t.datetime 'created_at'
+    t.datetime 'updated_at'
+    t.string 'ident'
+    t.string 'ident_type'
+    t.string 'org_name'
+    t.integer 'created_by_id'
+    t.integer 'updated_by_id'
+    t.string 'auth_info'
   end
 
-  create_table "countries", force: true do |t|
-    t.string   "iso"
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table 'countries', force: true do |t|
+    t.string 'iso'
+    t.string 'name'
+    t.datetime 'created_at'
+    t.datetime 'updated_at'
   end
 
-  create_table "domain_contacts", force: true do |t|
-    t.integer  "contact_id"
-    t.integer  "domain_id"
-    t.string   "contact_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table 'domain_contacts', force: true do |t|
+    t.integer 'contact_id'
+    t.integer 'domain_id'
+    t.string 'contact_type'
+    t.datetime 'created_at'
+    t.datetime 'updated_at'
   end
 
-  create_table "domain_statuses", force: true do |t|
-    t.integer "domain_id"
-    t.integer "setting_id"
-    t.string  "description"
+  create_table 'domain_statuses', force: true do |t|
+    t.integer 'domain_id'
+    t.integer 'setting_id'
+    t.string 'description'
   end
 
-  create_table "domains", force: true do |t|
-    t.string   "name"
-    t.integer  "registrar_id"
-    t.datetime "registered_at"
-    t.string   "status"
-    t.datetime "valid_from"
-    t.datetime "valid_to"
-    t.integer  "owner_contact_id"
-    t.integer  "admin_contact_id"
-    t.integer  "technical_contact_id"
-    t.integer  "ns_set_id"
-    t.string   "auth_info"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "name_dirty"
-    t.string   "name_puny"
-    t.integer  "period"
-    t.string   "period_unit",          limit: 1
+  create_table 'domains', force: true do |t|
+    t.string 'name'
+    t.integer 'registrar_id'
+    t.datetime 'registered_at'
+    t.string 'status'
+    t.datetime 'valid_from'
+    t.datetime 'valid_to'
+    t.integer 'owner_contact_id'
+    t.integer 'admin_contact_id'
+    t.integer 'technical_contact_id'
+    t.integer 'ns_set_id'
+    t.string 'auth_info'
+    t.datetime 'created_at'
+    t.datetime 'updated_at'
+    t.string 'name_dirty'
+    t.string 'name_puny'
+    t.integer 'period'
+    t.string 'period_unit',          limit: 1
   end
 
-  create_table "domains_nameservers", force: true do |t|
-    t.integer "domain_id"
-    t.integer "nameserver_id"
+  create_table 'domains_nameservers', force: true do |t|
+    t.integer 'domain_id'
+    t.integer 'nameserver_id'
   end
 
-  create_table "epp_sessions", force: true do |t|
-    t.string   "session_id"
-    t.text     "data"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table 'epp_sessions', force: true do |t|
+    t.string 'session_id'
+    t.text 'data'
+    t.datetime 'created_at'
+    t.datetime 'updated_at'
   end
 
-  add_index "epp_sessions", ["session_id"], name: "index_epp_sessions_on_session_id", unique: true, using: :btree
-  add_index "epp_sessions", ["updated_at"], name: "index_epp_sessions_on_updated_at", using: :btree
+  add_index 'epp_sessions', ['session_id'], name: 'index_epp_sessions_on_session_id', unique: true, using: :btree
+  add_index 'epp_sessions', ['updated_at'], name: 'index_epp_sessions_on_updated_at', using: :btree
 
-  create_table "epp_users", force: true do |t|
-    t.integer  "registrar_id"
-    t.string   "username"
-    t.string   "password"
-    t.boolean  "active",       default: false
-    t.text     "csr"
-    t.text     "crt"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table 'epp_users', force: true do |t|
+    t.integer 'registrar_id'
+    t.string 'username'
+    t.string 'password'
+    t.boolean 'active',       default: false
+    t.text 'csr'
+    t.text 'crt'
+    t.datetime 'created_at'
+    t.datetime 'updated_at'
   end
 
-  create_table "nameservers", force: true do |t|
-    t.string   "hostname"
-    t.string   "ipv4"
-    t.integer  "ns_set_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "ipv6"
+  create_table 'nameservers', force: true do |t|
+    t.string 'hostname'
+    t.string 'ipv4'
+    t.integer 'ns_set_id'
+    t.datetime 'created_at'
+    t.datetime 'updated_at'
+    t.string 'ipv6'
   end
 
-  create_table "nameservers_ns_sets", force: true do |t|
-    t.integer "nameserver_id"
-    t.integer "ns_set_id"
+  create_table 'nameservers_ns_sets', force: true do |t|
+    t.integer 'nameserver_id'
+    t.integer 'ns_set_id'
   end
 
-  create_table "ns_sets", force: true do |t|
-    t.string   "code"
-    t.integer  "registrar_id"
-    t.string   "auth_info"
-    t.string   "report_level"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table 'ns_sets', force: true do |t|
+    t.string 'code'
+    t.integer 'registrar_id'
+    t.string 'auth_info'
+    t.string 'report_level'
+    t.datetime 'created_at'
+    t.datetime 'updated_at'
   end
 
-  create_table "registrars", force: true do |t|
-    t.string   "name"
-    t.string   "reg_no"
-    t.string   "vat_no"
-    t.string   "address"
-    t.integer  "country_id"
-    t.string   "billing_address"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table 'registrars', force: true do |t|
+    t.string 'name'
+    t.string 'reg_no'
+    t.string 'vat_no'
+    t.string 'address'
+    t.integer 'country_id'
+    t.string 'billing_address'
+    t.datetime 'created_at'
+    t.datetime 'updated_at'
   end
 
-  create_table "reserved_domains", force: true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table 'reserved_domains', force: true do |t|
+    t.string 'name'
+    t.datetime 'created_at'
+    t.datetime 'updated_at'
   end
 
-  create_table "rights", force: true do |t|
-    t.string   "code"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table 'rights', force: true do |t|
+    t.string 'code'
+    t.datetime 'created_at'
+    t.datetime 'updated_at'
   end
 
-  create_table "rights_roles", force: true do |t|
-    t.integer "right_id"
-    t.integer "role_id"
+  create_table 'rights_roles', force: true do |t|
+    t.integer 'right_id'
+    t.integer 'role_id'
   end
 
-  create_table "roles", force: true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table 'roles', force: true do |t|
+    t.string 'name'
+    t.datetime 'created_at'
+    t.datetime 'updated_at'
   end
 
-  create_table "setting_groups", force: true do |t|
-    t.string "code"
+  create_table 'setting_groups', force: true do |t|
+    t.string 'code'
   end
 
-  create_table "settings", force: true do |t|
-    t.integer "setting_group_id"
-    t.string  "code"
-    t.string  "value"
+  create_table 'settings', force: true do |t|
+    t.integer 'setting_group_id'
+    t.string 'code'
+    t.string 'value'
   end
 
-  create_table "users", force: true do |t|
-    t.string   "username"
-    t.string   "password"
-    t.integer  "role_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table 'users', force: true do |t|
+    t.string 'username'
+    t.string 'password'
+    t.integer 'role_id'
+    t.datetime 'created_at'
+    t.datetime 'updated_at'
   end
 
 end

@@ -1,6 +1,6 @@
 module Epp::ContactsHelper
   def create_contact
-    @contact = Contact.new( contact_and_address_attributes )
+    @contact = Contact.new(contact_and_address_attributes)
     render '/epp/contacts/create' and return if stamp(@contact) && @contact.save
 
     handle_errors(@contact)
@@ -29,7 +29,7 @@ module Epp::ContactsHelper
 
   def check_contact
     ph = params_hash['epp']['command']['check']['check']
-    @contacts = Contact.check_availability( ph[:id] )
+    @contacts = Contact.check_availability(ph[:id])
     render '/epp/contacts/check'
   end
 
@@ -41,40 +41,41 @@ module Epp::ContactsHelper
   end
 
   ## HELPER METHODS
+
   private
- 
+
   ## CREATE
   def validate_contact_create_request
     @ph = params_hash['epp']['command']['create']['create']
-    xml_attrs_present?(@ph, [['id'], 
-                             ['authInfo', 'pw'],
-                             ['postalInfo', 'name'], 
-                             ['postalInfo', 'addr', 'city'], 
-                             ['postalInfo', 'addr', 'cc']])
+    xml_attrs_present?(@ph, [['id'],
+                             %w(authInfo pw),
+                             %w(postalInfo name),
+                             %w(postalInfo addr city),
+                             %w(postalInfo addr cc)])
   end
-  
+
   ## UPDATE
   def validate_contact_update_request
     @ph = params_hash['epp']['command']['update']['update']
-    xml_attrs_present?(@ph, [['id'] ])
+    xml_attrs_present?(@ph, [['id']])
   end
 
   ## DELETE
   def validate_contact_delete_request
     @ph = params_hash['epp']['command']['delete']['delete']
-    xml_attrs_present?(@ph, [ ['id'] ] )
+    xml_attrs_present?(@ph, [['id']])
   end
 
   ## CHECK
   def validate_contact_check_request
     @ph = params_hash['epp']['command']['check']['check']
-    xml_attrs_present?(@ph, [ ['id'] ])
+    xml_attrs_present?(@ph, [['id']])
   end
 
   ## INFO
   def validate_contact_info_request
     @ph = params_hash['epp']['command']['info']['info']
-    xml_attrs_present?(@ph, [ ['id'] ])
+    xml_attrs_present?(@ph, [['id']])
   end
 
   ## SHARED
@@ -91,22 +92,22 @@ module Epp::ContactsHelper
     pw = @ph.try(:[], :authInfo).try(:[], :pw) || @ph.try(:[], :chg).try(:[], :authInfo).try(:[], :pw) || []
     id = @ph[:id]
 
-    return true if ( !find_contact.nil? && find_contact.auth_info_matches(pw) )
+    return true if  !find_contact.nil? && find_contact.auth_info_matches(pw)
 
     epp_errors << { code: '2201', msg: t('errors.messages.epp_authorization_error'), value: { obj: 'pw', val: pw } }
-    return false
+    false
   end
 
-  def contact_and_address_attributes( type=:create )
+  def contact_and_address_attributes(type = :create)
     case type
     when :update
       contact_hash = Contact.extract_attributes(@ph[:chg], type)
-      contact_hash[:address_attributes] = 
-        Address.extract_attributes(( @ph.try(:[], :chg).try(:[], :postalInfo).try(:[], :addr) || [] ),  type)
+      contact_hash[:address_attributes] =
+        Address.extract_attributes(( @ph.try(:[], :chg).try(:[], :postalInfo).try(:[], :addr) || []),  type)
     else
       contact_hash = Contact.extract_attributes(@ph, type)
-      contact_hash[:address_attributes] = 
-        Address.extract_attributes(( @ph.try(:[], :postalInfo).try(:[], :addr) || [] ),  type)
+      contact_hash[:address_attributes] =
+        Address.extract_attributes(( @ph.try(:[], :postalInfo).try(:[], :addr) || []),  type)
     end
     contact_hash[:ident_type] = ident_type unless ident_type.nil?
     contact_hash
@@ -118,6 +119,6 @@ module Epp::ContactsHelper
     return nil unless result
 
     Contact::IDENT_TYPES.any? { |type| return type if result.include?(type) }
-    return nil
+    nil
   end
 end

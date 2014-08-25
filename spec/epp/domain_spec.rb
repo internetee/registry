@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe 'EPP Domain', epp: true do
-  let(:server) { server = Epp::Server.new({server: 'localhost', tag: 'gitlab', password: 'ghyt9e4fu', port: 701}) }
+  let(:server) { server = Epp::Server.new({ server: 'localhost', tag: 'gitlab', password: 'ghyt9e4fu', port: 701 }) }
 
   context 'with valid user' do
     before(:each) do
@@ -30,11 +30,11 @@ describe 'EPP Domain', epp: true do
     end
 
     context 'with citizen as an owner' do
-      before(:each) {
+      before(:each) do
         Fabricate(:contact, code: 'jd1234')
         Fabricate(:contact, code: 'sh8013')
         Fabricate(:contact, code: 'sh801333')
-      }
+      end
 
       it 'creates a domain' do
         response = epp_request(domain_create_xml, :xml)
@@ -88,7 +88,7 @@ describe 'EPP Domain', epp: true do
 
       it 'does not create domain with too many nameservers' do
         nameservers = []
-        14.times {|i| nameservers << {hostObj: "ns#{i}.example.net"}}
+        14.times { |i| nameservers << { hostObj: "ns#{i}.example.net" } }
         xml = domain_create_xml(nameservers: nameservers)
 
         response = epp_request(xml, :xml)
@@ -97,7 +97,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'returns error when invalid nameservers are present' do
-        xml = domain_create_xml(nameservers: [{hostObj: 'invalid1-'}, {hostObj: '-invalid2'}])
+        xml = domain_create_xml(nameservers: [{ hostObj: 'invalid1-' }, { hostObj: '-invalid2' }])
 
         response = epp_request(xml, :xml)
         expect(response[:result_code]).to eq('2005')
@@ -144,14 +144,14 @@ describe 'EPP Domain', epp: true do
     end
 
     context 'with juridical persion as an owner' do
-      before(:each) {
+      before(:each) do
         Fabricate(:contact, code: 'jd1234', ident_type: 'ico')
         Fabricate(:contact, code: 'sh8013')
         Fabricate(:contact, code: 'sh801333')
-      }
+      end
 
       it 'creates a domain with contacts' do
-        xml = domain_create_xml(contacts: [{contact_value: 'sh8013', contact_type: 'admin'}])
+        xml = domain_create_xml(contacts: [{ contact_value: 'sh8013', contact_type: 'admin' }])
 
         response = epp_request(xml, :xml)
         expect(response[:result_code]).to eq('1000')
@@ -166,7 +166,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'does not create a domain without admin contact' do
-        xml = domain_create_xml(contacts: [{contact_value: 'sh8013', contact_type: 'tech'}])
+        xml = domain_create_xml(contacts: [{ contact_value: 'sh8013', contact_type: 'tech' }])
 
         response = epp_request(xml, :xml)
         expect(response[:result_code]).to eq('2306')
@@ -217,12 +217,12 @@ describe 'EPP Domain', epp: true do
         expect(inf_data.css('name').text).to eq('example.ee')
         expect(inf_data.css('registrant').text).to eq(d.owner_contact_code)
 
-        admin_contacts_from_request = inf_data.css('contact[type="admin"]').collect{|x| x.text }
+        admin_contacts_from_request = inf_data.css('contact[type="admin"]').map { |x| x.text }
         admin_contacts_existing = d.admin_contacts.pluck(:code)
 
         expect(admin_contacts_from_request).to eq(admin_contacts_existing)
 
-        hosts_from_request = inf_data.css('hostObj').collect{|x| x.text }
+        hosts_from_request = inf_data.css('hostObj').map { |x| x.text }
         hosts_existing = d.nameservers.pluck(:hostname)
 
         expect(hosts_from_request).to eq(hosts_existing)
