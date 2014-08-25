@@ -309,7 +309,19 @@ describe 'EPP Domain', epp: true do
         expect(response[:results][2][:result_code]).to eq('2303')
         expect(response[:results][2][:msg]).to eq('Status was not found')
         expect(response[:results][2][:value]).to eq('clientHold')
+      end
 
+      it 'updates a domain' do
+        Fabricate(:contact, code: 'mak21')
+        epp_request('domains/update_add_objects.xml')
+        response = epp_request('domains/update.xml')
+
+        expect(response[:results][0][:result_code]).to eq('1000')
+
+        d = Domain.last
+
+        expect(d.owner_contact_code).to eq('mak21')
+        expect(d.auth_info).to eq('2BARfoo')
       end
     end
 

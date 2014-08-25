@@ -51,7 +51,7 @@ class Domain < ActiveRecord::Base
 
   ### CREATE & UPDATE ###
 
-  def attach_objects(ph, parsed_frame)
+  def parse_and_attach_domain_dependencies(ph, parsed_frame)
     attach_owner_contact(ph[:registrant]) if ph[:registrant]
     attach_contacts(self.class.parse_contacts_from_frame(parsed_frame))
     attach_nameservers(self.class.parse_nameservers_from_frame(parsed_frame))
@@ -60,10 +60,23 @@ class Domain < ActiveRecord::Base
     errors.empty?
   end
 
-  def detach_objects(ph, parsed_frame)
+  def parse_and_detach_domain_dependencies(parsed_frame)
     detach_contacts(self.class.parse_contacts_from_frame(parsed_frame))
     detach_nameservers(self.class.parse_nameservers_from_frame(parsed_frame))
     detach_statuses(self.class.parse_statuses_from_frame(parsed_frame))
+
+    errors.empty?
+  end
+
+  def parse_and_update_domain_dependencies(parsed_frame)
+    owner_contact_code = parsed_frame.css('registrant').try(:text)
+    attach_owner_contact(owner_contact_code) if owner_contact_code.present?
+
+    errors.empty?
+  end
+
+  def parse_and_update_domain_attributes(parsed_frame)
+    assign_attributes(self.class.parse_update_params_from_frame(parsed_frame))
 
     errors.empty?
   end
@@ -322,6 +335,15 @@ class Domain < ActiveRecord::Base
         }
       end
       res
+    end
+
+    def parse_update_params_from_frame(parsed_frame)
+      ret = {}
+      return ret if parsed_frame.blank?
+
+      ret[:auth_info] = parsed_frame.css('pw').try(:text)
+
+      ret.compact
     end
 
     def check_availability(domains)

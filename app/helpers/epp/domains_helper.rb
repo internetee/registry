@@ -3,7 +3,7 @@ module Epp::DomainsHelper
     Domain.transaction do
       @domain = Domain.new(domain_create_params)
 
-      handle_errors(@domain) and return unless @domain.attach_objects(@ph, parsed_frame)
+      handle_errors(@domain) and return unless @domain.parse_and_attach_domain_dependencies(@ph, parsed_frame)
       handle_errors(@domain) and return unless @domain.save
 
       render '/epp/domains/success'
@@ -38,8 +38,10 @@ module Epp::DomainsHelper
     @domain = find_domain
 
     handle_errors(@domain) and return unless @domain
-    handle_errors(@domain) and return unless @domain.attach_objects(@ph, parsed_frame.css('add'))
-    handle_errors(@domain) and return unless @domain.detach_objects(@ph, parsed_frame.css('rem'))
+    handle_errors(@domain) and return unless @domain.parse_and_attach_domain_dependencies(@ph, parsed_frame.css('add'))
+    handle_errors(@domain) and return unless @domain.parse_and_detach_domain_dependencies(parsed_frame.css('rem'))
+    handle_errors(@domain) and return unless @domain.parse_and_update_domain_dependencies(parsed_frame.css('chg'))
+    handle_errors(@domain) and return unless @domain.parse_and_update_domain_attributes(parsed_frame.css('chg'))
     handle_errors(@domain) and return unless @domain.save
 
     render '/epp/domains/success'

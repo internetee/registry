@@ -42,6 +42,9 @@ module Epp::Common
       obj.construct_epp_errors
       @errors += obj.errors[:epp_errors]
     end
+
+    # for debugging
+    @errors << {code: '1', msg: 'handle_errors was executed when there were actually no errors'} if @errors.blank?
     render '/epp/error'
   end
 

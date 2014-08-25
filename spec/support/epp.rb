@@ -42,6 +42,11 @@ module Epp
     obj
   end
 
+  #print output
+  def po(r)
+    puts r[:parsed].to_s
+  end
+
   ### REQUEST TEMPLATES ###
 
   def domain_create_xml(xml_params={})
