@@ -120,14 +120,6 @@ Wait for the greeting message on the STD, then send EPP/TCP frame:
 
 Testing
 ---
-For feature testing, PhantomJS is used.
-
-* Install phantomjs from npm with (skip next 2 steps)
-
-    npm install -g phantomjs
-
-* [Download](https://bitbucket.org/ariya/phantomjs/downloads/) the correct binary for your OS
-* Move the binary to `/usr/local/bin`
 * Before running tests for the first time: `rake db:seed`
 * Run tests: `rake`
 * Run EPP tests: `rake test:epp`
