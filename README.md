@@ -130,6 +130,9 @@ To see internal errors while testing EPP
     unicorn -E test -p 8989
     rake spec:epp
 
+Visual testing
+---
+* For visual testing, install this [application](https://github.com/mlensment/epp-tester)
 
 Apache mod_epp testing/debugging
 --------------------------------
