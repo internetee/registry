@@ -225,5 +225,30 @@ describe 'EPP Helper', epp: true do
       generated = Nokogiri::XML(domain_renew_xml(name: 'one.ee', curExpDate: '2009-11-15', period_value: '365', period_unit: 'd')).to_s.squish
       expect(generated).to eq(expected)
     end
+
+    it 'generates valid update xml' do
+      expected = Nokogiri::XML('<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+        <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+          <command>
+            <update>
+              <domain:update
+               xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
+                <domain:name>example.ee</domain:name>
+                <domain:chg>
+                  <domain:registrant>mak21</domain:registrant>
+                  <domain:authInfo>
+                    <domain:pw>2BARfoo</domain:pw>
+                  </domain:authInfo>
+                </domain:chg>
+              </domain:update>
+            </update>
+            <clTRID>ABC-12345</clTRID>
+          </command>
+        </epp>
+      ').to_s.squish
+
+      generated = Nokogiri::XML(domain_update_xml).to_s.squish
+      expect(generated).to eq(expected)
+    end
   end
 end

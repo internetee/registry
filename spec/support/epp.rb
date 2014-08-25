@@ -46,7 +46,11 @@ module Epp
   ### REQUEST TEMPLATES ###
 
   def domain_create_xml(xml_params = {})
-    xml_params[:nameservers] = xml_params[:nameservers] || [{ hostObj: 'ns1.example.net' }, { hostObj: 'ns2.example.net' }]
+    xml_params[:nameservers] = xml_params[:nameservers] || [
+      { hostObj: 'ns1.example.net' },
+      { hostObj: 'ns2.example.net' }
+    ]
+
     xml_params[:contacts] = xml_params[:contacts] || [
       { contact_value: 'sh8013', contact_type: 'admin' },
       { contact_value: 'sh8013', contact_type: 'tech' },
@@ -65,7 +69,9 @@ module Epp
 
             xml.tag!('domain:name', (xml_params[:name] || 'example.ee')) if xml_params[:name] != false
 
-            xml.tag!('domain:period', (xml_params[:period_value] || 1), 'unit' => (xml_params[:period_unit] || 'y')) if xml_params[:period] != false
+            if xml_params[:period] != false
+              xml.tag!('domain:period', (xml_params[:period_value] || 1), 'unit' => (xml_params[:period_unit] || 'y'))
+            end
 
             xml.tag!('domain:ns') do
               xml_params[:nameservers].each do |x|
@@ -99,7 +105,10 @@ module Epp
           xml.tag!('domain:renew', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
             xml.tag!('domain:name', (xml_params[:name] || 'example.ee')) if xml_params[:name] != false
             xml.tag!('domain:curExpDate', (xml_params[:curExpDate] || '2014-08-07')) if xml_params[:curExpDate] != false
-            xml.tag!('domain:period', (xml_params[:period_value] || 1), 'unit' => (xml_params[:period_unit] || 'y')) if xml_params[:period] != false
+
+            if xml_params[:period] != false
+              xml.tag!('domain:period', (xml_params[:period_value] || 1), 'unit' => (xml_params[:period_unit] || 'y'))
+            end
           end
         end
         xml.clTRID 'ABC-12345'
@@ -138,9 +147,41 @@ module Epp
       xml.command do
         xml.info do
           xml.tag!('domain:info', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
-            xml.tag!('domain:name', xml_params[:name_value], 'hosts' => xml_params[:name_hosts]) if xml_params[:name] != false
+            if xml_params[:name] != false
+              xml.tag!('domain:name', xml_params[:name_value], 'hosts' => xml_params[:name_hosts])
+            end
             xml.tag!('domain:authInfo') do
               xml.tag!('domain:pw', xml_params[:pw])
+            end
+          end
+        end
+        xml.clTRID 'ABC-12345'
+      end
+    end
+  end
+
+  def domain_update_xml(xml_params = {})
+    xml_params[:name_value] = xml_params[:name_value] || 'example.ee'
+    xml_params[:registrant] = xml_params[:registrant] || 'mak21'
+    xml_params[:pw] = xml_params[:pw] || '2BARfoo'
+
+    xml = Builder::XmlMarkup.new
+
+    xml.instruct!(:xml, standalone: 'no')
+    xml.epp('xmlns' => 'urn:ietf:params:xml:ns:epp-1.0') do
+      xml.command do
+        xml.update do
+          xml.tag!('domain:update', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
+            if xml_params[:name] != false
+              xml.tag!('domain:name', xml_params[:name_value])
+            end
+
+            xml.tag!('domain:chg') do
+              xml.tag!('domain:registrant', xml_params[:registrant]) if xml_params[:registrant] != false
+
+              xml.tag!('domain:authInfo') do
+                xml.tag!('domain:pw', xml_params[:pw])
+              end if xml_params[:authInfo] != false
             end
           end
         end
