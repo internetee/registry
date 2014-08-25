@@ -314,7 +314,7 @@ describe 'EPP Domain', epp: true do
       it 'updates a domain' do
         Fabricate(:contact, code: 'mak21')
         epp_request('domains/update_add_objects.xml')
-        response = epp_request('domains/update.xml')
+        response = epp_request(domain_update_xml, :xml)
 
         expect(response[:results][0][:result_code]).to eq('1000')
 
