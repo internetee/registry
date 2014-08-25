@@ -161,7 +161,7 @@ module Epp
   end
 
   def domain_update_xml(xml_params = {})
-    xml_params[:name_value] = xml_params[:name_value] || 'example.ee'
+    xml_params[:name] = xml_params[:name] || 'example.ee'
     xml_params[:registrant] = xml_params[:registrant] || 'mak21'
     xml_params[:pw] = xml_params[:pw] || '2BARfoo'
 
@@ -173,7 +173,7 @@ module Epp
         xml.update do
           xml.tag!('domain:update', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
             if xml_params[:name] != false
-              xml.tag!('domain:name', xml_params[:name_value])
+              xml.tag!('domain:name', xml_params[:name])
             end
 
             xml.tag!('domain:chg') do
