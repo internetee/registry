@@ -285,7 +285,7 @@ describe 'EPP Domain', epp: true do
 
         d = Domain.last
 
-        response = epp_request('domains/update_remove_objects.xml')
+        epp_request('domains/update_remove_objects.xml')
 
         expect(d.domain_statuses.count).to eq(1)
         expect(d.domain_statuses.first.value).to eq('clientUpdateProhibited')

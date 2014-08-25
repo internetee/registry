@@ -102,3 +102,36 @@
     <clTRID>ABC-12345</clTRID>
   </command>
 </epp>
+
+<!-- CREATE CONTACT -->
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <create>
+      <contact:create xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
+        <contact:id>sh8013</contact:id>
+        <contact:postalInfo>
+          <contact:name>Sillius Soddus</contact:name>
+          <contact:org>Example Inc.</contact:org>
+          <contact:addr>
+            <contact:street>123 Example Dr.</contact:street>
+            <contact:street>Suite 100</contact:street>
+            <contact:street/>
+            <contact:city>Megaton</contact:city>
+            <contact:sp>F3 </contact:sp>
+            <contact:pc>201-33</contact:pc>
+            <contact:cc>EE</contact:cc>
+          </contact:addr>
+        </contact:postalInfo>
+        <contact:voice>+372.1234567</contact:voice>
+        <contact:fax>123123</contact:fax>
+        <contact:email>example@test.example</contact:email>
+        <contact:ident type="op">37605030299</contact:ident>
+        <contact:authInfo>
+          <contact:pw>Aas34fq</contact:pw>
+        </contact:authInfo>
+      </contact:create>
+    </create>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
