@@ -6,15 +6,7 @@ xml.epp_head do
 
     xml.resData do
       xml.tag!('contact:chkData', 'xmlns:contact' => 'urn:ietf:params:xml:ns:contact-1.0') do
-        xml.tag!('contact:name', @contact.name)
-        xml.tag!('contact:org', @contact.org_name)
-        xml.tag!('contact:addr') do
-          address = @contact.address
-          xml.tag!('contact:street', address.street) if address.street
-          xml.tag!('contact:street', address.street2) if address.street2
-          xml.tag!('contact:street', address.street3) if address.street3
-          xml.tag!('contact:cc', address.try(:country).try(:iso)) unless address.try(:country).nil?
-        end
+        xml << render('/epp/contacts/postal_info')
         xml.tag!('contact:voice', @contact.phone)
         xml.tag!('contact:fax', @contact.fax)
         xml.tag!('contact:email', @contact.email)

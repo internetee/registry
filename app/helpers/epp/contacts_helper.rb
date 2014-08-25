@@ -48,9 +48,14 @@ module Epp::ContactsHelper
     @ph = params_hash['epp']['command']['create']['create']
     xml_attrs_present?(@ph, [['id'], 
                              ['authInfo', 'pw'],
-                             ['postalInfo', 'name'], 
-                             ['postalInfo', 'addr', 'city'], 
-                             ['postalInfo', 'addr', 'cc']])
+                             ['postalInfo']])
+#                             ['postalInfo', 'addr', 'city'], 
+#                             ['postalInfo', 'addr', 'cc']])
+    if @ph['postalInfo'].is_a?(Hash) || @ph['postalInfo'].is_a?(Array)
+      xml_nested_attrs_present?( @ph['postalInfo'], [['name'],
+                                                     ['addr', 'city'],
+                                                     ['addr', 'cc']] )
+    end
   end
   
   ## UPDATE
@@ -101,12 +106,17 @@ module Epp::ContactsHelper
     case type
     when :update
       contact_hash = Contact.extract_attributes(@ph[:chg], type)
-      contact_hash[:address_attributes] = 
-        Address.extract_attributes(( @ph.try(:[], :chg).try(:[], :postalInfo).try(:[], :addr) || [] ),  type)
+      #contact_hash[:address_attributes] = 
+      contact_hash = contact_hash.merge(
+        Address.extract_attributes(( @ph.try(:[], :chg).try(:[], :postalInfo) || [] ),  type)
+      )
     else
       contact_hash = Contact.extract_attributes(@ph, type)
-      contact_hash[:address_attributes] = 
-        Address.extract_attributes(( @ph.try(:[], :postalInfo).try(:[], :addr) || [] ),  type)
+      #contact_hash[:address_attributes] = 
+      #  Address.extract_attributes(( @ph.try(:[], :postalInfo) || [] ),  type)
+      contact_hash = contact_hash.merge(
+        Address.extract_attributes(( @ph.try(:[], :postalInfo) || [] ),  type)
+      )
     end
     contact_hash[:ident_type] = ident_type unless ident_type.nil?
     contact_hash
