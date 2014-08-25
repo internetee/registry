@@ -17,7 +17,7 @@ module Epp::DomainsHelper
   end
 
   def renew_domain
-    # TODO support period unit
+    # TODO: support period unit
     @domain = find_domain
 
     handle_errors(@domain) and return unless @domain

@@ -94,7 +94,8 @@ class Domain < ActiveRecord::Base
   def attach_contacts(contacts)
     contacts.each do |k, v|
       v.each do |x|
-        if contact = Contact.find_by(code: x[:contact])
+        contact = Contact.find_by(code: x[:contact])
+        if contact
           attach_contact(k, contact)
         else
           # Detailed error message with value to display in EPP response
@@ -107,13 +108,10 @@ class Domain < ActiveRecord::Base
       end
     end
 
-    if owner_contact
-      attach_contact(DomainContact::TECH, owner_contact) if tech_contacts.empty?
+    return unless owner_contact
 
-      if owner_contact.citizen?
-        attach_contact(DomainContact::ADMIN, owner_contact) if admin_contacts.empty?
-      end
-    end
+    attach_contact(DomainContact::TECH, owner_contact) if tech_contacts.empty?
+    attach_contact(DomainContact::ADMIN, owner_contact) if admin_contacts.empty? if owner_contact.citizen?
   end
 
   def attach_contact(type, contact)
@@ -196,7 +194,7 @@ class Domain < ActiveRecord::Base
   ### RENEW ###
 
   def renew(cur_exp_date, period, unit = 'y')
-    # TODO Check how much time before domain exp date can it be renewed
+    # TODO: Check how much time before domain exp date can it be renewed
     validate_exp_dates(cur_exp_date)
     return false if errors.any?
 
@@ -214,9 +212,8 @@ class Domain < ActiveRecord::Base
     sg = SettingGroup.domain_validation
     min, max = sg.setting(:ns_min_count).value.to_i, sg.setting(:ns_max_count).value.to_i
 
-    unless nameservers.length.between?(min, max)
-      errors.add(:nameservers, :out_of_range, { min: min, max: max })
-    end
+    return if nameservers.length.between?(min, max)
+    errors.add(:nameservers, :out_of_range, { min: min, max: max })
   end
 
   def validate_admin_contacts_count
@@ -258,7 +255,12 @@ class Domain < ActiveRecord::Base
         [:valid_to, :epp_exp_dates_do_not_match]
       ],
       '2004' => [ # Parameter value range error
-        [:nameservers, :out_of_range, { min: domain_validation_sg.setting(:ns_min_count).value, max: domain_validation_sg.setting(:ns_max_count).value }],
+        [:nameservers, :out_of_range,
+          {
+            min: domain_validation_sg.setting(:ns_min_count).value,
+            max: domain_validation_sg.setting(:ns_max_count).value
+          }
+        ],
         [:period, :out_of_range]
       ],
       '2303' => [ # Object does not exist
