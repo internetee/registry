@@ -32,10 +32,6 @@ class Contact < ActiveRecord::Base
     "birthday"      #Birthday date
   ]
 
-  CONTACT_TYPE_TECH = 'tech'
-  CONTACT_TYPE_ADMIN = 'admin'
-  CONTACT_TYPES = [CONTACT_TYPE_TECH, CONTACT_TYPE_ADMIN]
-
   def ident_must_be_valid
     #TODO Ident can also be passport number or company registry code.
     #so have to make changes to validations (and doc/schema) accordingly
@@ -91,7 +87,7 @@ class Contact < ActiveRecord::Base
       '2302' => [ #Object exists
         [:code, :epp_id_taken]
       ],
-      '2303' => #Object does not exist 
+      '2303' => #Object does not exist
         [:not_found, :epp_obj_does_not_exist],
       '2305' => [ #Association exists
         [:domains, :exist]

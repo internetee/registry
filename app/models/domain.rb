@@ -16,11 +16,11 @@ class Domain < ActiveRecord::Base
   has_many :domain_contacts
 
   has_many :tech_contacts, -> {
-    where(domain_contacts: {contact_type: Contact::CONTACT_TYPE_TECH})
+    where(domain_contacts: {contact_type: DomainContact::TECH})
   }, through: :domain_contacts, source: :contact
 
   has_many :admin_contacts, -> {
-    where(domain_contacts: {contact_type: Contact::CONTACT_TYPE_ADMIN})
+    where(domain_contacts: {contact_type: DomainContact::ADMIN})
   }, through: :domain_contacts, source: :contact
 
   has_and_belongs_to_many :nameservers
@@ -108,10 +108,10 @@ class Domain < ActiveRecord::Base
     end
 
     if owner_contact
-      attach_contact(Contact::CONTACT_TYPE_TECH, owner_contact) if tech_contacts.empty?
+      attach_contact(DomainContact::TECH, owner_contact) if tech_contacts.empty?
 
       if owner_contact.citizen?
-        attach_contact(Contact::CONTACT_TYPE_ADMIN, owner_contact) if admin_contacts.empty?
+        attach_contact(DomainContact::ADMIN, owner_contact) if admin_contacts.empty?
       end
     end
   end
@@ -290,7 +290,7 @@ class Domain < ActiveRecord::Base
 
     def parse_contacts_from_frame(parsed_frame)
       res = {}
-      Contact::CONTACT_TYPES.each do |ct|
+      DomainContact::TYPES.each do |ct|
         res[ct.to_sym] ||= []
         parsed_frame.css("contact[type='#{ct}']").each do |x|
           res[ct.to_sym] << Hash.from_xml(x.to_s).with_indifferent_access
