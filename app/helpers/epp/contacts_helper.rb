@@ -53,9 +53,9 @@ module Epp
                                %w(postalInfo)])
       return epp_errors.empty? unless @ph['postalInfo'].is_a?(Hash) || @ph['postalInfo'].is_a?(Array)
 
-      xml_nested_attrs_present?(@ph['postalInfo'], [%w(name),
-                                                    %w(addr city),
-                                                    %w(addr cc)])
+      xml_attrs_array_present?(@ph['postalInfo'], [%w(name),
+                                                   %w(addr city),
+                                                   %w(addr cc)])
     end
 
     ## UPDATE
