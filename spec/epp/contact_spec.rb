@@ -29,17 +29,30 @@ describe 'EPP Contact', epp: true do
         expect(response[:result_code]).to eq('1000')
         expect(response[:msg]).to eq('Command completed successfully')
         expect(response[:clTRID]).to eq('ABC-12345')
-        expect(Contact.first.created_by_id).to be 1
-        expect(Contact.first.updated_by_id).to be nil
+        expect(Contact.first.created_by_id).to eq 1
+        expect(Contact.first.updated_by_id).to eq nil
 
         expect(Contact.count).to eq(1)
-        expect(Contact.first.org_name).to eq('Example Inc.')
+
+
+        expect(Contact.first.international_address.org_name).to eq('Example Inc.')
         expect(Contact.first.ident).to eq '37605030299'
         expect(Contact.first.ident_type).to eq 'op'
 
-        expect(Contact.first.address.street).to eq('123 Example Dr.')
-        expect(Contact.first.address.street2).to eq('Suite 100')
-        expect(Contact.first.address.street3).to eq nil
+        expect(Contact.first.international_address.street).to eq('123 Example Dr.')
+        expect(Contact.first.international_address.street2).to eq('Suite 100')
+        expect(Contact.first.international_address.street3).to eq nil
+      end
+
+      it 'successfully creates contact with 2 addresses' do
+        response = epp_request('contacts/create_with_two_addresses.xml')
+
+        expect(response[:result_code]).to eq('1000')
+
+        expect(Contact.count).to eq(1)
+        expect(Contact.first.address).to_not eq Contact.first.local_address
+        expect(Address.count).to eq(2)
+        expect(LocalAddress.count).to eq(1)
       end
 
       it 'returns result data upon success' do
@@ -61,6 +74,7 @@ describe 'EPP Contact', epp: true do
         Fabricate(:contact, code: 'sh8013')
 
         response = epp_request(contact_create_xml, :xml)
+
 
         expect(response[:result_code]).to eq('2302')
         expect(response[:msg]).to eq('Contact id already exists')
@@ -204,8 +218,8 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'returns info about contact' do
-        Fabricate(:contact, name: 'Johnny Awesome', created_by_id: '1', code: 'info-4444', auth_info: '2fooBAR')
-        Fabricate(:address)
+        Fabricate(:contact, created_by_id: '1', code: 'info-4444', auth_info: '2fooBAR', 
+                 international_address: Fabricate(:international_address, name: 'Johnny Awesome'))
 
         response = epp_request('contacts/info.xml')
         contact = response[:parsed].css('resData chkData')
@@ -217,7 +231,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'doesn\'t display unassociated object' do
-        Fabricate(:contact, name: 'Johnny Awesome', code: 'info-4444')
+        Fabricate(:contact, code: 'info-4444')
 
         response = epp_request('contacts/info.xml')
         expect(response[:result_code]).to eq('2201')

@@ -1,0 +1,3 @@
+class LocalAddress < Address
+
+end

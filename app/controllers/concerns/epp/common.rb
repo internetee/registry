@@ -60,6 +60,15 @@ module Epp::Common
     epp_errors.empty?
   end
 
+  def xml_nested_attrs_present?(array_ph, attributes )
+    [array_ph].flatten.each do |ph|
+      attributes.each do |x|
+        epp_errors << {code: '2003', msg: I18n.t('errors.messages.required_parameter_missing', key: x.last)} unless has_attribute(ph, x)
+      end
+    end
+    epp_errors.empty?
+  end
+
   def has_attribute(ph, path)
     path.reduce(ph) do |location, key|
       location.respond_to?(:keys) ? location[key] : nil
