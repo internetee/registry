@@ -34,7 +34,6 @@ describe 'EPP Contact', epp: true do
 
         expect(Contact.count).to eq(1)
 
-
         expect(Contact.first.international_address.org_name).to eq('Example Inc.')
         expect(Contact.first.ident).to eq '37605030299'
         expect(Contact.first.ident_type).to eq 'op'
@@ -62,11 +61,11 @@ describe 'EPP Contact', epp: true do
         expect(response[:msg]).to eq('Command completed successfully')
 
         id =  response[:parsed].css('resData creData id').first
-        crDate =  response[:parsed].css('resData creData crDate').first
+        cr_date =  response[:parsed].css('resData creData crDate').first
 
         expect(id.text).to eq('sh8013')
         # 5 seconds for what-ever weird lag reasons might happen
-        expect(crDate.text.to_time).to be_within(5).of(Time.now)
+        expect(cr_date.text.to_time).to be_within(5).of(Time.now)
 
       end
 
@@ -74,7 +73,6 @@ describe 'EPP Contact', epp: true do
         Fabricate(:contact, code: 'sh8013')
 
         response = epp_request(contact_create_xml, :xml)
-
 
         expect(response[:result_code]).to eq('2302')
         expect(response[:msg]).to eq('Contact id already exists')
@@ -107,14 +105,13 @@ describe 'EPP Contact', epp: true do
 
         expect(Contact.first.updated_by_id).to be nil
 
-        response = epp_request(contact_update_xml, :xml)
+        epp_request(contact_update_xml, :xml)
 
         expect(Contact.first.updated_by_id).to eq 1
       end
 
       it 'is succesful' do
         Fabricate(:contact, created_by_id: 1, email: 'not_updated@test.test', code: 'sh8013', auth_info: '2fooBAR')
-        # response = epp_request(contact_update_xml( { chg: { email: 'fred@bloggers.ee', postalInfo: { name: 'Fred Bloggers' } } } ), :xml)
         response = epp_request('contacts/update.xml')
 
         expect(response[:msg]).to eq('Command completed successfully')
@@ -218,7 +215,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'returns info about contact' do
-        Fabricate(:contact, created_by_id: '1', code: 'info-4444', auth_info: '2fooBAR', 
+        Fabricate(:contact, created_by_id: '1', code: 'info-4444', auth_info: '2fooBAR',
                  international_address: Fabricate(:international_address, name: 'Johnny Awesome'))
 
         response = epp_request('contacts/info.xml')

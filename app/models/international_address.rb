@@ -1,3 +1,2 @@
 class InternationalAddress < Address
-
 end

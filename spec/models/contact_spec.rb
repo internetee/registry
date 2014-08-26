@@ -59,27 +59,29 @@ describe Contact, '#relations_with_domain?' do
   end
 end
 
-describe Contact, '#crID' do
+describe Contact, '#cr_id' do
   before(:each) { Fabricate(:contact, code: 'asd12', created_by: Fabricate(:epp_user)) }
 
   it 'should return username of creator' do
-    expect(Contact.first.crID).to eq('gitlab')
+    expect(Contact.first.cr_id).to eq('gitlab')
   end
 
   it 'should return nil when no creator' do
-    expect(Contact.new.crID).to be nil
+    expect(Contact.new.cr_id).to be nil
   end
 end
 
-describe Contact, '#upID' do
-  before(:each) { Fabricate(:contact, code: 'asd12', created_by: Fabricate(:epp_user), updated_by: Fabricate(:epp_user)) }
+describe Contact, '#up_id' do
+  before(:each) do
+    Fabricate(:contact, code: 'asd12', created_by: Fabricate(:epp_user), updated_by: Fabricate(:epp_user))
+  end
 
   it 'should return username of updater' do
-    expect(Contact.first.upID).to eq('gitlab')
+    expect(Contact.first.up_id).to eq('gitlab')
   end
 
   it 'should return nil when no updater' do
-    expect(Contact.new.upID).to be nil
+    expect(Contact.new.up_id).to be nil
   end
 end
 
@@ -89,7 +91,7 @@ describe Contact, '.extract_params' do
     expect(Contact.extract_attributes(ph)).to eq({
       code: '123123',
       email: 'jdoe@example.com'
-    } )
+    })
   end
 end
 

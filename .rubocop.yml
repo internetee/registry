@@ -3,6 +3,7 @@ AllCops:
 
   Exclude:
     - 'db/schema.rb'
+    - 'db/migrate/*'
 
 Metrics/LineLength:
   Max: 120
@@ -21,3 +22,9 @@ Style/BracesAroundHashParameters:
 
 Style/IndentHash:
   Enabled: false
+
+# No need to force reduce to use |a, e| as parameters.
+# Configuration parameters: Methods.
+Style/SingleLineBlockParams:
+  Enabled: false
+

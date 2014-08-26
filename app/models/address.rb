@@ -10,7 +10,8 @@ class Address < ActiveRecord::Base
   belongs_to :contact
   belongs_to :country
 
-  #validates_inclusion_of :type, in: TYPES
+  # TODO: validate inclusion of :type in LONG_TYPES or smth similar
+  # validates_inclusion_of :type, in: TYPES
 
   class << self
     def extract_attributes(ah)
@@ -31,8 +32,7 @@ class Address < ActiveRecord::Base
 
     def addr_hash_from_params(addr)
       return {} unless addr[:addr].is_a?(Hash)
-      {
-        name: addr[:name],
+      { name: addr[:name],
         org_name: addr[:org],
         country_id: Country.find_by(iso: addr[:addr][:cc]).try(:id),
         city: addr[:addr][:city],
@@ -40,7 +40,7 @@ class Address < ActiveRecord::Base
         street2: addr[:addr][:street][1],
         street3: addr[:addr][:street][2],
         zip: addr[:addr][:pc]
-      }.delete_if { |k, v| v.nil? }
+      }.delete_if { |_k, v| v.nil? }
     end
   end
 end

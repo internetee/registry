@@ -1,12 +1,12 @@
 class Contact < ActiveRecord::Base
-  # TODO Foreign contact will get email with activation link/username/temp password
-  # TODO Phone number validation, in first phase very minimam in order to support current registries
+  # TODO: Foreign contact will get email with activation link/username/temp password
+  # TODO: Phone number validation, in first phase very minimam in order to support current registries
 
   include EppErrors
 
   EPP_ATTR_MAP = {}
 
-  has_one :local_address#, class_name: 'Address'#, foreign_key: 'local_address_id'
+  has_one :local_address
   has_one :international_address
 
   has_many :domain_contacts
@@ -17,14 +17,18 @@ class Contact < ActiveRecord::Base
 
   accepts_nested_attributes_for :local_address, :international_address
 
-  validates_presence_of :code, :phone, :email, :ident
+  # validates_presence_of :code, :phone, :email, :ident
+  validates :code, :phone, :email, :ident, presence: true
 
   validate :ident_must_be_valid
 
   validates :phone, format: /\+[0-9]{1,3}\.[0-9]{1,14}?/ # /\+\d{3}\.\d+/
   validates :email, format: /@/
 
-  validates_uniqueness_of :code, message: :epp_id_taken
+  # validates_uniqueness_of :code, message: :epp_id_taken
+  validates :code, uniqueness: { message: :epp_id_taken }
+
+  delegate :name, to: :international_address
 
   IDENT_TYPE_ICO = 'ico'
   IDENT_TYPES = [
@@ -38,18 +42,14 @@ class Contact < ActiveRecord::Base
   CONTACT_TYPE_ADMIN = 'admin'
   CONTACT_TYPES = [CONTACT_TYPE_TECH, CONTACT_TYPE_ADMIN]
 
-  #TEMP METHODS for transaction to STI
-  def name
-    international_address.name
-  end
-
+  # TEMP METHOD for transaction to STI
   def address
     international_address
   end
   ##
-  
+
   def ident_must_be_valid
-    # TODO Ident can also be passport number or company registry code.
+    # TODO: Ident can also be passport number or company registry code.
     # so have to make changes to validations (and doc/schema) accordingly
     return true unless ident.present? && ident_type.present? && ident_type == 'op'
     code = Isikukood.new(ident)
@@ -64,11 +64,11 @@ class Contact < ActiveRecord::Base
     ident_type != IDENT_TYPE_ICO
   end
 
-  def crID
+  def cr_id
     created_by ? created_by.username : nil
   end
 
-  def upID
+  def up_id
     updated_by ? updated_by.username : nil
   end
 
