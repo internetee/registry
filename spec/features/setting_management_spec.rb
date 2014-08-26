@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'Setting management' do
+feature 'Setting management', type: :feature do
   background { Fabricate(:domain_validation_setting_group) }
 
   scenario 'User changes a setting', js: true do

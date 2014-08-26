@@ -6,16 +6,18 @@ class Contact < ActiveRecord::Base
 
   EPP_ATTR_MAP = {}
 
-  has_one :address
+  has_one :local_address#, class_name: 'Address'#, foreign_key: 'local_address_id'
+  has_one :international_address
+
   has_many :domain_contacts
   has_many :domains, through: :domain_contacts
 
   belongs_to :created_by, class_name: 'EppUser', foreign_key: :created_by_id
   belongs_to :updated_by, class_name: 'EppUser', foreign_key: :updated_by_id
 
-  accepts_nested_attributes_for :address
+  accepts_nested_attributes_for :local_address, :international_address
 
-  validates_presence_of :code, :name, :phone, :email, :ident
+  validates_presence_of :code, :phone, :email, :ident
 
   validate :ident_must_be_valid
 
@@ -32,6 +34,20 @@ class Contact < ActiveRecord::Base
     'birthday'      # Birthday date
   ]
 
+  CONTACT_TYPE_TECH = 'tech'
+  CONTACT_TYPE_ADMIN = 'admin'
+  CONTACT_TYPES = [CONTACT_TYPE_TECH, CONTACT_TYPE_ADMIN]
+
+  #TEMP METHODS for transaction to STI
+  def name
+    international_address.name
+  end
+
+  def address
+    international_address
+  end
+  ##
+  
   def ident_must_be_valid
     # TODO Ident can also be passport number or company registry code.
     # so have to make changes to validations (and doc/schema) accordingly
@@ -106,11 +122,6 @@ class Contact < ActiveRecord::Base
         ident: ph[:ident],
         email: ph[:email]
       }
-
-      contact_hash = contact_hash.merge({
-        name: ph[:postalInfo][:name],
-        org_name: ph[:postalInfo][:org]
-      }) if ph[:postalInfo].is_a? Hash
 
       contact_hash[:code] = ph[:id] if type == :create
 

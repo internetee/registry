@@ -26,11 +26,13 @@ ActiveRecord::Schema.define(version: 20140826103454) do
     t.datetime "updated_at"
     t.string   "street2"
     t.string   "street3"
+    t.string   "name"
+    t.string   "org_name"
+    t.string   "type"
   end
 
   create_table "contacts", force: true do |t|
     t.string   "code"
-    t.string   "name"
     t.string   "type"
     t.string   "reg_no"
     t.string   "phone"
@@ -40,7 +42,6 @@ ActiveRecord::Schema.define(version: 20140826103454) do
     t.datetime "updated_at"
     t.string   "ident"
     t.string   "ident_type"
-    t.string   "org_name"
     t.integer  "created_by_id"
     t.integer  "updated_by_id"
     t.string   "auth_info"

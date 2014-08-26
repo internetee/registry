@@ -17,6 +17,8 @@ Usual Rails 4 app installation, rvm and bundler are your friends.
     rvm install ruby-2.1.2
     bundle
     rake db:setup
+    mv config/secrets-example.yml config/secrets.yml # generate your own keys
+
 
 ### Apache with patched mod_epp (Debian 7/Ubuntu 14.04 LTS)
 
@@ -39,7 +41,8 @@ Enable ssl:
     sudo a2enmod proxy_http
     sudo mkdir /etc/apache2/ssl
     sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
-    sudo nano /etc/apache2/sites-available/epp_ssl.conf
+    sudo a2enmod ssl
+    sudo nano /etc/apache2/sites-enabled/epp_ssl.conf
 
 For development configuration, add:
 ```apache
@@ -120,7 +123,7 @@ Wait for the greeting message on the STD, then send EPP/TCP frame:
 
 Testing
 ---
-* Before running tests for the first time: `rake db:seed`
+* Before running tests for the first time: `RAILS_ENV=test rake db:seed`
 * Run tests: `rake`
 * Run EPP tests: `rake test:epp`
 * Run all but EPP tests: `rake test:other`
