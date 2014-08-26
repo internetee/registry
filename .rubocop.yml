@@ -22,3 +22,9 @@ Style/BracesAroundHashParameters:
 
 Style/IndentHash:
   Enabled: false
+
+# No need to force reduce to use |a, e| as parameters.
+# Configuration parameters: Methods.
+Style/SingleLineBlockParams:
+  Enabled: false
+
