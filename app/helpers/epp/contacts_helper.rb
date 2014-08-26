@@ -61,6 +61,7 @@ module Epp
     ## UPDATE
     def validate_contact_update_request
       @ph = params_hash['epp']['command']['update']['update']
+      update_attrs_present?
       xml_attrs_present?(@ph, [['id']])
     end
 
@@ -68,6 +69,13 @@ module Epp
       return true if @contact.is_a?(Contact)
       epp_errors << { code: '2303', msg: t('errors.messages.epp_obj_does_not_exist'),
                       value: { obj: 'id', val: code } }
+    end
+
+    def update_attrs_present?
+      return true if parsed_frame.css('add').present?
+      return true if parsed_frame.css('rem').present?
+      return true if parsed_frame.css('chg').present?
+      epp_errors << { code: '2003', msg: I18n.t('errors.messages.required_parameter_missing', key: 'add, rem or chg') }
     end
 
     ## DELETE
