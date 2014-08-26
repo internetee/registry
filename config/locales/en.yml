@@ -46,6 +46,7 @@ en:
               taken: 'Domain name already exists'
             owner_contact:
               blank: 'Registrant is missing'
+              not_found: 'Registrant not found'
             domain_contacts:
               not_found: 'Contact was not found'
             admin_contacts:

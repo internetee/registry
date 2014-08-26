@@ -4,6 +4,7 @@ module EppErrors
   def construct_epp_errors
     epp_errors = []
     errors.messages.each do |key, values|
+      next if key == :epp_errors
       if self.class.reflect_on_association(key)
         epp_errors << collect_child_errors(key)
       end
@@ -70,5 +71,12 @@ module EppErrors
       end
     end
     nil
+  end
+
+  def add_epp_error(code, obj, val, msg)
+    errors[:epp_errors] ||= []
+    t = errors.generate_message(*msg) if msg.is_a?(Array)
+    t = msg if msg.is_a?(String)
+    errors[:epp_errors] << { code: code, msg: t, value: { val: val, obj: obj } }
   end
 end

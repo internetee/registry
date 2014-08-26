@@ -296,7 +296,6 @@ describe 'EPP Domain', epp: true do
         expect(rem_cnt).to be_falsey
 
         response = epp_request('domains/update_remove_objects.xml')
-
         expect(response[:results][0][:result_code]).to eq('2303')
         expect(response[:results][0][:msg]).to eq('Contact was not found')
         expect(response[:results][0][:value]).to eq('mak21')

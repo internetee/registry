@@ -85,11 +85,9 @@ class Domain < ActiveRecord::Base
   def attach_owner_contact(code)
     self.owner_contact = Contact.find_by(code: code)
 
-    errors.add(:owner_contact, {
-      obj: 'registrant',
-      val: code,
-      msg: I18n.t('errors.messages.epp_registrant_not_found')
-    }) unless owner_contact
+    return if owner_contact
+
+    add_epp_error('2303', 'registrant', code, [:owner_contact, :not_found])
   end
 
   def attach_contacts(contacts)
@@ -100,11 +98,7 @@ class Domain < ActiveRecord::Base
           attach_contact(k, contact)
         else
           # Detailed error message with value to display in EPP response
-          errors.add(:domain_contacts, {
-            obj: 'contact',
-            val: x[:contact],
-            msg: errors.generate_message(:domain_contacts, :not_found)
-          })
+          add_epp_error('2303', 'contact', x[:contact], [:domain_contacts, :not_found])
         end
       end
     end
@@ -127,13 +121,7 @@ class Domain < ActiveRecord::Base
       nameservers.build(ns_attrs)
 
       next if existing.empty?
-
-      errors.add(:nameservers, {
-        code: '2302',
-        obj: 'hostObj',
-        val: ns_attrs[:hostname],
-        msg: errors.generate_message(:nameservers, :taken)
-      })
+      add_epp_error('2302', 'hostObj', ns_attrs[:hostname], [:nameservers, :taken])
     end
   end
 
@@ -153,11 +141,7 @@ class Domain < ActiveRecord::Base
       v.each do |x|
         contact = domain_contacts.joins(:contact).where(contacts: { code: x[:contact] })
         if contact.blank?
-          errors.add(:domain_contacts, {
-            obj: 'contact',
-            val: x[:contact],
-            msg: errors.generate_message(:domain_contacts, :not_found)
-          })
+          add_epp_error('2303', 'contact', x[:contact], [:domain_contacts, :not_found])
         else
           to_delete << contact
         end
@@ -172,11 +156,7 @@ class Domain < ActiveRecord::Base
     ns_list.each do |ns_attrs|
       nameserver = nameservers.where(ns_attrs)
       if nameserver.blank?
-        errors.add(:nameservers, {
-          obj: 'hostObj',
-          val: ns_attrs[:hostname],
-          msg: errors.generate_message(:nameservers, :not_found)
-        })
+        add_epp_error('2303', 'hostObj', ns_attrs[:hostname], [:nameservers, :not_found])
       else
         to_delete << nameserver
       end
@@ -190,11 +170,7 @@ class Domain < ActiveRecord::Base
     status_list.each do |x|
       status = domain_statuses.joins(:setting).where(settings: { value: x[:value] })
       if status.blank?
-        errors.add(:domain_statuses, {
-          obj: 'status',
-          val: x[:value],
-          msg: errors.generate_message(:domain_statuses, :not_found)
-        })
+        add_epp_error('2303', 'status', x[:value], [:domain_statuses, :not_found])
       else
         to_delete << status
       end
@@ -246,11 +222,8 @@ class Domain < ActiveRecord::Base
   end
 
   def validate_exp_dates(cur_exp_date)
-    errors.add(:valid_to, {
-      obj: 'curExpDate',
-      val: cur_exp_date,
-      msg: I18n.t('errors.messages.epp_exp_dates_do_not_match')
-    }) if cur_exp_date.to_date != valid_to
+    return if cur_exp_date.to_date == valid_to
+    add_epp_error('2306', 'curExpDate', cur_exp_date, I18n.t('errors.messages.epp_exp_dates_do_not_match'))
   end
 
   def epp_code_map
@@ -263,8 +236,7 @@ class Domain < ActiveRecord::Base
       ],
       '2306' => [ # Parameter policy error
         [:owner_contact, :blank],
-        [:admin_contacts, :blank],
-        [:valid_to, :epp_exp_dates_do_not_match]
+        [:admin_contacts, :blank]
       ],
       '2004' => [ # Parameter value range error
         [:nameservers, :out_of_range,
@@ -274,12 +246,6 @@ class Domain < ActiveRecord::Base
           }
         ],
         [:period, :out_of_range]
-      ],
-      '2303' => [ # Object does not exist
-        [:owner_contact, :epp_registrant_not_found],
-        [:domain_contacts, :not_found],
-        [:nameservers, :not_found],
-        [:domain_statuses, :not_found]
       ],
       '2200' => [
         [:auth_info, :wrong_pw]
