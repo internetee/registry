@@ -21,7 +21,8 @@ module EppErrors
 
     values.each do |err|
       if err.is_a?(Hash)
-        next unless code = find_epp_code(err[:msg])
+        code = err[:code] || find_epp_code(err[:msg])
+        next unless code
         err_msg = { code: code, msg: err[:msg] }
         err_msg[:value] = { val: err[:val], obj: err[:obj] } if err[:val]
         epp_errors << err_msg

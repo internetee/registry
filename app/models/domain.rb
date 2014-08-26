@@ -23,7 +23,8 @@ class Domain < ActiveRecord::Base
     where(domain_contacts: { contact_type: DomainContact::ADMIN })
   end, through: :domain_contacts, source: :contact
 
-  has_and_belongs_to_many :nameservers
+  has_many :domain_nameservers
+  has_many :nameservers, through: :domain_nameservers
 
   has_many :domain_statuses, -> {
     joins(:setting).where(settings: { setting_group_id: SettingGroup.domain_statuses.id })
@@ -121,7 +122,18 @@ class Domain < ActiveRecord::Base
 
   def attach_nameservers(ns_list)
     ns_list.each do |ns_attrs|
+      existing = nameservers.select { |x| x.hostname == ns_attrs[:hostname] }
+
       nameservers.build(ns_attrs)
+
+      next if existing.empty?
+
+      errors.add(:nameservers, {
+        code: '2302',
+        obj: 'hostObj',
+        val: ns_attrs[:hostname],
+        msg: errors.generate_message(:nameservers, :taken)
+      })
     end
   end
 

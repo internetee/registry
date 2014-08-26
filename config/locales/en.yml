@@ -53,6 +53,7 @@ en:
             nameservers:
               out_of_range: 'Nameservers count must be between %{min}-%{max}'
               not_found: 'Nameserver was not found'
+              taken: 'Nameserver already exists on this domain'
             period:
               out_of_range: 'Period must add up to 1, 2 or 3 years'
             auth_info:

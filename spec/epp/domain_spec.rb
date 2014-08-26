@@ -272,10 +272,9 @@ describe 'EPP Domain', epp: true do
 
         response = epp_request('domains/update_add_objects.xml')
         expect(response[:results][0][:result_code]).to eq('2302')
-        expect(response[:results][0][:msg]).to eq('Status already exists on this domain')
-        expect(response[:results][0][:value]).to eq('clientHold')
-        expect(response[:results][1][:msg]).to eq('Status already exists on this domain')
-        expect(response[:results][1][:value]).to eq('clientUpdateProhibited')
+        expect(response[:results][0][:msg]).to eq('Nameserver already exists on this domain')
+        expect(response[:results][0][:value]).to eq('ns1.example.com')
+        expect(response[:results][1][:msg]).to eq('Nameserver already exists on this domain')
         expect(d.domain_statuses.count).to eq(2)
       end
 
@@ -309,6 +308,16 @@ describe 'EPP Domain', epp: true do
         expect(response[:results][2][:result_code]).to eq('2303')
         expect(response[:results][2][:msg]).to eq('Status was not found')
         expect(response[:results][2][:value]).to eq('clientHold')
+      end
+
+      it 'does not add duplicate objects to domain' do
+        Fabricate(:contact, code: 'mak21')
+        epp_request('domains/update_add_objects.xml')
+        response = epp_request('domains/update_add_objects.xml')
+
+        expect(response[:results][0][:result_code]).to eq('2302')
+        expect(response[:results][0][:msg]).to eq('Nameserver already exists on this domain')
+        expect(response[:results][0][:value]).to eq('ns1.example.com')
       end
 
       it 'updates a domain' do
