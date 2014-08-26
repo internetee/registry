@@ -13,7 +13,7 @@ class Address < ActiveRecord::Base
   #validates_inclusion_of :type, in: TYPES
 
   class << self
-    def extract_attributes(ah, _type = :create)
+    def extract_attributes(ah)
       address_hash = {}
       [ah].flatten.each do |pi|
         address_hash[local?(pi)] = addr_hash_from_params(pi)
@@ -27,7 +27,7 @@ class Address < ActiveRecord::Base
     def local?(postal_info)
       return :local_address_attributes if postal_info[:type] == LOCAL_TYPE_SHORT
       :international_address_attributes
-    end 
+    end
 
     def addr_hash_from_params(addr)
       return {} unless addr[:addr].is_a?(Hash)
