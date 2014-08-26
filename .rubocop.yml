@@ -1,6 +1,9 @@
 AllCops:
   RunRailsCops: true
 
+  Exclude:
+    - 'db/schema.rb'
+
 Metrics/LineLength:
   Max: 120
 
