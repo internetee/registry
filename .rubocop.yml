@@ -3,6 +3,7 @@ AllCops:
 
   Exclude:
     - 'db/schema.rb'
+    - 'db/migrate/*'
 
 Metrics/LineLength:
   Max: 120

@@ -11,5 +11,5 @@ module Shared::UserStamper
     end
 
     true
-   end
+  end
 end
