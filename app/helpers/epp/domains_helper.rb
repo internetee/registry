@@ -35,16 +35,18 @@ module Epp::DomainsHelper
   end
 
   def update_domain
-    @domain = find_domain
+    Domain.transaction do
+      @domain = find_domain
 
-    handle_errors(@domain) and return unless @domain
-    handle_errors(@domain) and return unless @domain.parse_and_attach_domain_dependencies(@ph, parsed_frame.css('add'))
-    handle_errors(@domain) and return unless @domain.parse_and_detach_domain_dependencies(parsed_frame.css('rem'))
-    handle_errors(@domain) and return unless @domain.parse_and_update_domain_dependencies(parsed_frame.css('chg'))
-    handle_errors(@domain) and return unless @domain.parse_and_update_domain_attributes(parsed_frame.css('chg'))
-    handle_errors(@domain) and return unless @domain.save
+      handle_errors(@domain) and return unless @domain
+      handle_errors(@domain) and return unless @domain.parse_and_attach_domain_dependencies(@ph, parsed_frame.css('add'))
+      handle_errors(@domain) and return unless @domain.parse_and_detach_domain_dependencies(parsed_frame.css('rem'))
+      handle_errors(@domain) and return unless @domain.parse_and_update_domain_dependencies(parsed_frame.css('chg'))
+      handle_errors(@domain) and return unless @domain.parse_and_update_domain_attributes(parsed_frame.css('chg'))
+      handle_errors(@domain) and return unless @domain.save
 
-    render '/epp/domains/success'
+      render '/epp/domains/success'
+    end
   end
 
   ### HELPER METHODS ###

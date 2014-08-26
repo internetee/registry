@@ -50,7 +50,7 @@ en:
             domain_contacts:
               not_found: 'Contact was not found'
             admin_contacts:
-              blank: 'Admin contact is missing'
+              out_of_range: 'Admin contacts count must be between 1 - infinity'
             nameservers:
               out_of_range: 'Nameservers count must be between %{min}-%{max}'
               not_found: 'Nameserver was not found'
