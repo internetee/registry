@@ -9,6 +9,8 @@ module Epp::Common
   included do
     protect_from_forgery with: :null_session
     before_action :validate_request, only: [:proxy]
+
+    helper_method :current_epp_user
   end
 
   def proxy

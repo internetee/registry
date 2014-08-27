@@ -349,6 +349,10 @@ describe 'EPP Domain', epp: true do
         expect(d.owner_contact_code).to eq('mak21')
         expect(d.auth_info).to eq('2BARfoo')
       end
+
+      it 'transfers a domain' do
+        response = epp_request('domains/transfer.xml')
+      end
     end
 
     it 'checks a domain' do

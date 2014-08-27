@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140826103454) do
+ActiveRecord::Schema.define(version: 20140827140759) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,7 +90,10 @@ ActiveRecord::Schema.define(version: 20140826103454) do
     t.string   "name_dirty"
     t.string   "name_puny"
     t.integer  "period"
-    t.string   "period_unit",          limit: 1
+    t.string   "period_unit",           limit: 1
+    t.datetime "transferred_at"
+    t.datetime "transfer_requested_at"
+    t.integer  "transfer_to"
   end
 
   create_table "epp_sessions", force: true do |t|

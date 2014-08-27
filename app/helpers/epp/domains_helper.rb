@@ -59,6 +59,18 @@ module Epp::DomainsHelper
     end
   end
 
+  def transfer_domain
+    @domain = find_domain
+
+    handle_errors(@domain) and return unless @domain
+
+    @domain.transfer_requested_at = Time.now
+    @domain.transferred_at = Time.now
+    @domain.save
+
+    render '/epp/domains/transfer'
+  end
+
   ### HELPER METHODS ###
 
   private
@@ -101,6 +113,12 @@ module Epp::DomainsHelper
   ## UPDATE
   def validate_domain_update_request
     @ph = params_hash['epp']['command']['update']['update']
+    xml_attrs_present?(@ph, [['name']])
+  end
+
+  ## TRANSFER
+  def validate_domain_transfer_request
+    @ph = params_hash['epp']['command']['transfer']['transfer']
     xml_attrs_present?(@ph, [['name']])
   end
 
