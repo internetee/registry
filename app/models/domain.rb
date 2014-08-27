@@ -105,13 +105,13 @@ class Domain < ActiveRecord::Base
 
     return unless owner_contact
 
-    attach_contact(DomainContact::TECH, owner_contact) if tech_contacts.empty?
-    attach_contact(DomainContact::ADMIN, owner_contact) if admin_contacts.empty? if owner_contact.citizen?
+    attach_contact(DomainContact::TECH, owner_contact) if tech_contacts_count.zero?
+    attach_contact(DomainContact::ADMIN, owner_contact) if admin_contacts_count.zero? && owner_contact.citizen?
   end
 
   def attach_contact(type, contact)
-    tech_contacts << contact if type.to_sym == :tech
-    admin_contacts << contact if type.to_sym == :admin
+    domain_contacts.build(contact: contact, contact_type: DomainContact::TECH) if type.to_sym == :tech
+    domain_contacts.build(contact: contact, contact_type: DomainContact::ADMIN) if type.to_sym == :admin
   end
 
   def attach_nameservers(ns_list)
@@ -127,7 +127,15 @@ class Domain < ActiveRecord::Base
 
   def attach_statuses(status_list)
     status_list.each do |x|
+      existing = domain_statuses.select { |o| o.value == x[:value] }
+
+      if existing.any?
+        add_epp_error('2302', 'status', x[:value], [:domain_statuses, :taken])
+        next
+      end
+
       setting = SettingGroup.domain_statuses.settings.find_by(value: x[:value])
+
       domain_statuses.build(
         setting: setting,
         description: x[:description]
@@ -137,9 +145,9 @@ class Domain < ActiveRecord::Base
 
   def detach_contacts(contact_list)
     to_delete = []
-    contact_list.each do |_k, v|
+    contact_list.each do |k, v|
       v.each do |x|
-        contact = domain_contacts.joins(:contact).where(contacts: { code: x[:contact] })
+        contact = domain_contacts.joins(:contact).where(contacts: { code: x[:contact] }, contact_type: k.to_s)
         if contact.blank?
           add_epp_error('2303', 'contact', x[:contact], [:domain_contacts, :not_found])
         else
@@ -205,7 +213,7 @@ class Domain < ActiveRecord::Base
   end
 
   def validate_admin_contacts_count
-    errors.add(:admin_contacts, :blank) if admin_contacts.empty?
+    errors.add(:admin_contacts, :out_of_range) if admin_contacts_count.zero?
   end
 
   def validate_period
@@ -236,7 +244,7 @@ class Domain < ActiveRecord::Base
       ],
       '2306' => [ # Parameter policy error
         [:owner_contact, :blank],
-        [:admin_contacts, :blank]
+        [:admin_contacts, :out_of_range]
       ],
       '2004' => [ # Parameter value range error
         [:nameservers, :out_of_range,
@@ -259,6 +267,14 @@ class Domain < ActiveRecord::Base
   def authenticate(pw)
     errors.add(:auth_info, { msg: errors.generate_message(:auth_info, :wrong_pw) }) if pw != auth_info
     errors.empty?
+  end
+
+  def tech_contacts_count
+    domain_contacts.select { |x| x.contact_type == DomainContact::TECH }.count
+  end
+
+  def admin_contacts_count
+    domain_contacts.select { |x| x.contact_type == DomainContact::ADMIN }.count
   end
 
   class << self

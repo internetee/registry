@@ -45,6 +45,7 @@ module Epp::Common
 
     # for debugging
     @errors << { code: '1', msg: 'handle_errors was executed when there were actually no errors' } if @errors.blank?
+
     render '/epp/error'
   end
 
