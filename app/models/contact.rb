@@ -124,7 +124,7 @@ class Contact < ActiveRecord::Base
       }
 
       contact_hash[:code] = ph[:id] if type == :create
-
+      contact_hash[:auth_info] = ph[:authInfo][:pw] if type == :create
       contact_hash.delete_if { |_k, v| v.nil? }
     end
 
