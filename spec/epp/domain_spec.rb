@@ -208,13 +208,15 @@ describe 'EPP Domain', epp: true do
 
       it 'returns domain info' do
         d = Domain.first
-
+        d.domain_statuses.create(setting: Setting.find_by(code: 'client_hold'), description: 'Payment overdue.')
         response = epp_request(domain_info_xml, :xml)
         expect(response[:results][0][:result_code]).to eq('1000')
         expect(response[:results][0][:msg]).to eq('Command completed successfully')
 
         inf_data = response[:parsed].css('resData infData')
         expect(inf_data.css('name').text).to eq('example.ee')
+        expect(inf_data.css('status').text).to eq('Payment overdue.')
+        expect(inf_data.css('status').first[:s]).to eq('clientHold')
         expect(inf_data.css('registrant').text).to eq(d.owner_contact_code)
 
         admin_contacts_from_request = inf_data.css('contact[type="admin"]').map { |x| x.text }
