@@ -57,6 +57,11 @@ group :development do
 
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', '~> 0.4.0'
+
+  gem 'guard', '~> 2.6.1'
+
+  gem 'guard-rspec', '~> 4.3.1'
+  gem 'guard-rubocop', '~> 1.1.0'
 end
 
 group :development, :test do
