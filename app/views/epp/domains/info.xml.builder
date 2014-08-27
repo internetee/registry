@@ -7,7 +7,11 @@ xml.epp_head do
     xml.resData do
       xml.tag!('domain:infData', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
         xml.tag!('domain:name', @domain.name)
-        xml.tag!('domain:status', 's' => @domain.status) if @domain.status
+        @domain.domain_statuses.each do |x|
+          xml.tag!('domain:status', x.description, 's' => x.value) unless x.description.blank?
+          xml.tag!('domain:status', 's' => x.value) if x.description.blank?
+        end
+
         xml.tag!('domain:registrant', @domain.owner_contact_code)
 
         @domain.tech_contacts.each do |x|
