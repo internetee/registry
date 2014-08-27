@@ -61,6 +61,7 @@ en:
               wrong_pw: 'Authentication error'
             domain_statuses:
               not_found: 'Status was not found'
+              taken: 'Status already exists on this domain'
         nameserver:
           attributes:
             hostname:

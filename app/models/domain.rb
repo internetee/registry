@@ -127,7 +127,15 @@ class Domain < ActiveRecord::Base
 
   def attach_statuses(status_list)
     status_list.each do |x|
+      existing = domain_statuses.select { |o| o.value == x[:value] }
+
+      if existing.any?
+        add_epp_error('2302', 'status', x[:value], [:domain_statuses, :taken])
+        next
+      end
+
       setting = SettingGroup.domain_statuses.settings.find_by(value: x[:value])
+
       domain_statuses.build(
         setting: setting,
         description: x[:description]
