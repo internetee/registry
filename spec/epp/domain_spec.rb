@@ -209,6 +209,8 @@ describe 'EPP Domain', epp: true do
       it 'returns domain info' do
         d = Domain.first
         d.domain_statuses.create(setting: Setting.find_by(code: 'client_hold'), description: 'Payment overdue.')
+        d.nameservers.create(hostname: 'ns1.example.com', ipv4: '192.168.1.1', ipv6: '1080:0:0:0:8:800:200C:417A')
+
         response = epp_request(domain_info_xml, :xml)
         expect(response[:results][0][:result_code]).to eq('1000')
         expect(response[:results][0][:msg]).to eq('Command completed successfully')
@@ -225,9 +227,13 @@ describe 'EPP Domain', epp: true do
         expect(admin_contacts_from_request).to eq(admin_contacts_existing)
 
         hosts_from_request = inf_data.css('hostObj').map { |x| x.text }
-        hosts_existing = d.nameservers.pluck(:hostname)
+        hosts_existing = d.nameservers.where(ipv4: nil).pluck(:hostname)
 
         expect(hosts_from_request).to eq(hosts_existing)
+
+        expect(inf_data.css('hostName').first.text).to eq('ns1.example.com')
+        expect(inf_data.css('hostAddr').first.text).to eq('192.168.1.1')
+        expect(inf_data.css('hostAddr').last.text).to eq('1080:0:0:0:8:800:200C:417A')
         expect(inf_data.css('crDate').text).to eq(d.created_at.to_time.utc.to_s)
         expect(inf_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
 
