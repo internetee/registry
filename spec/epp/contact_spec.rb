@@ -84,11 +84,12 @@ describe 'EPP Contact', epp: true do
     context 'update command' do
       it 'fails if request is invalid' do
         response = epp_request('contacts/update_missing_attr.xml')
-        # response = epp_request(contact_update_xml( {id: false} ), :xml)
 
         expect(response[:results][0][:result_code]).to eq('2003')
-        expect(response[:results][0][:msg]).to eq('Required parameter missing: id')
-        expect(response[:results].count).to eq 1
+        expect(response[:results][0][:msg]).to eq('Required parameter missing: add, rem or chg')
+        expect(response[:results][1][:result_code]).to eq('2003')
+        expect(response[:results][1][:msg]).to eq('Required parameter missing: id')
+        expect(response[:results].count).to eq 2
       end
 
       it 'fails with wrong authentication info' do
