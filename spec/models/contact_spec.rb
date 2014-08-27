@@ -87,10 +87,12 @@ end
 
 describe Contact, '.extract_params' do
   it 'returns params hash'do
-    ph = { id: '123123', email: 'jdoe@example.com', postalInfo: { name: 'fred', addr: { cc: 'EE' } }  }
+    ph = { id: '123123', email: 'jdoe@example.com', authInfo: { pw: 'asde' },
+           postalInfo: { name: 'fred', addr: { cc: 'EE' } }  }
     expect(Contact.extract_attributes(ph)).to eq({
       code: '123123',
-      email: 'jdoe@example.com'
+      email: 'jdoe@example.com',
+      auth_info: 'asde'
     })
   end
 end
