@@ -6,7 +6,7 @@ module Epp::DomainsHelper
       handle_errors(@domain) and return unless @domain.parse_and_attach_domain_dependencies(@ph, parsed_frame)
       handle_errors(@domain) and return unless @domain.save
 
-      render '/epp/domains/success'
+      render '/epp/domains/create'
     end
   end
 

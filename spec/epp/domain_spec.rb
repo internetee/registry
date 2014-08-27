@@ -38,15 +38,25 @@ describe 'EPP Domain', epp: true do
 
       it 'creates a domain' do
         response = epp_request(domain_create_xml, :xml)
+
+        d = Domain.first
+
         expect(response[:result_code]).to eq('1000')
         expect(response[:msg]).to eq('Command completed successfully')
+
+        cre_data = response[:parsed].css('creData')
+
+        expect(cre_data.css('name').text).to eq('example.ee')
+        expect(cre_data.css('crDate').text).to eq(d.created_at.to_time.utc.to_s)
+        expect(cre_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
+
         expect(response[:clTRID]).to eq('ABC-12345')
 
-        expect(Domain.first.registrar.name).to eq('Zone Media OÜ')
-        expect(Domain.first.tech_contacts.count).to eq 2
-        expect(Domain.first.admin_contacts.count).to eq 1
+        expect(d.registrar.name).to eq('Zone Media OÜ')
+        expect(d.tech_contacts.count).to eq 2
+        expect(d.admin_contacts.count).to eq 1
 
-        expect(Domain.first.nameservers.count).to eq(2)
+        expect(d.nameservers.count).to eq(2)
       end
 
       it 'does not create duplicate domain' do
