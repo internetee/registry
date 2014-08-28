@@ -189,6 +189,33 @@ module Epp
       end
     end
   end
+
+  def domain_transfer_xml(xml_params = {})
+    xml_params[:name] = xml_params[:name] || 'example.ee'
+    xml_params[:pw] = xml_params[:pw] || '98oiewslkfkd'
+    xml_params[:op] = xml_params[:op] || 'query'
+    xml_params[:roid] = xml_params[:roid] || 'JD1234-REP'
+
+    xml = Builder::XmlMarkup.new
+
+    xml.instruct!(:xml, standalone: 'no')
+    xml.epp('xmlns' => 'urn:ietf:params:xml:ns:epp-1.0') do
+      xml.command do
+        xml.transfer('op' => xml_params[:op]) do
+          xml.tag!('domain:transfer', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
+            if xml_params[:name] != false
+              xml.tag!('domain:name', xml_params[:name])
+            end
+
+            xml.tag!('domain:authInfo') do
+              xml.tag!('domain:pw', xml_params[:pw], 'roid' => xml_params[:roid])
+            end if xml_params[:authInfo] != false
+          end
+        end
+        xml.clTRID 'ABC-12345'
+      end
+    end
+  end
 end
 
 RSpec.configure do |c|

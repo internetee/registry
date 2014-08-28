@@ -46,7 +46,7 @@ describe Domain do
         name: ['is missing'],
         period: ['is not a number'],
         owner_contact: ['Registrant is missing'],
-        admin_contacts: ['Admin contact is missing'],
+        admin_contacts: ['Admin contacts count must be between 1 - infinity'],
         nameservers: ['Nameservers count must be between 1-13']
       })
 
