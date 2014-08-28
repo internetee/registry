@@ -60,7 +60,7 @@ module Epp::DomainsHelper
   end
 
   def transfer_domain
-    @domain = find_domain
+    @domain = find_domain(secure: false)
 
     handle_errors(@domain) and return unless @domain
     handle_errors(@domain) and return unless @domain.transfer(domain_transfer_params)
@@ -128,8 +128,10 @@ module Epp::DomainsHelper
   end
 
   ## SHARED
-  def find_domain
-    domain = Domain.find_by(name: @ph[:name])
+  def find_domain(secure = { secure: true })
+    domain = Domain.find_by(name: @ph[:name], registrar: current_epp_user.registrar) if secure[:secure] == true
+    domain = Domain.find_by(name: @ph[:name]) if secure[:secure] == false
+
     unless domain
       epp_errors << { code: '2303', msg: I18n.t('errors.messages.epp_domain_not_found'), value: { obj: 'name', val: @ph[:name] } }
     end

@@ -205,12 +205,15 @@ class Domain < ActiveRecord::Base
   end
 
   ### TRANSFER ###
+
   def transfer(params)
     return false unless authenticate(params[:pw])
 
     if pending_transfer && params[:action] == 'approve'
       approve_pending_transfer and return true
     end
+
+    return true if pending_transfer
 
     wait_time = SettingGroup.domain_general.setting(:transfer_wait_time).value.to_i
 

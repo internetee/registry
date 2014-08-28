@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe 'EPP Domain', epp: true do
-  let(:server) { server = Epp::Server.new({ server: 'localhost', tag: 'gitlab', password: 'ghyt9e4fu', port: 701 }) }
+  let(:server) { Epp::Server.new({ server: 'localhost', tag: 'gitlab', password: 'ghyt9e4fu', port: 701 }) }
 
   context 'with valid user' do
     before(:each) do
@@ -46,7 +46,6 @@ describe 'EPP Domain', epp: true do
 
         d = Domain.first
         dtl = d.domain_transfers.last
-
         trn_data = response[:parsed].css('trnData')
         expect(trn_data.css('name').text).to eq('example.ee')
         expect(trn_data.css('trStatus').text).to eq('serverApproved')
@@ -61,25 +60,28 @@ describe 'EPP Domain', epp: true do
 
         response = epp_request(domain_transfer_xml, :xml)
         trn_data = response[:parsed].css('trnData')
+
         d = Domain.first
+        dtl = d.domain_transfers.last
+
+        expect(d.domain_transfers.count).to eq(2)
 
         expect(trn_data.css('name').text).to eq('example.ee')
         expect(trn_data.css('trStatus').text).to eq('pending')
         expect(trn_data.css('reID').text).to eq('10577829')
-        req_time = dtl.transfer_requested_at.to_time.utc.to_s
-        expect(trn_data.css('reDate').text).to eq(req_time)
+        expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
         expect(trn_data.css('acID').text).to eq('10577829')
         expect(trn_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
 
         # should return same data if pending already
         response = epp_request(domain_transfer_xml, :xml)
         trn_data = response[:parsed].css('trnData')
-        d = Domain.first
 
+        expect(d.domain_transfers.count).to eq(2)
         expect(trn_data.css('name').text).to eq('example.ee')
         expect(trn_data.css('trStatus').text).to eq('pending')
         expect(trn_data.css('reID').text).to eq('10577829')
-        expect(trn_data.css('reDate').text).to eq(req_time)
+        expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
         expect(trn_data.css('acID').text).to eq('10577829')
         expect(trn_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
       end
@@ -196,7 +198,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'creates domain with nameservers with ips' do
-        response = epp_request('domains/create_w_host_attrs.xml')
+        epp_request('domains/create_w_host_attrs.xml')
         expect(Domain.first.nameservers.count).to eq(2)
         ns = Domain.first.nameservers.first
         expect(ns.ipv4).to eq('192.0.2.2')
@@ -270,14 +272,14 @@ describe 'EPP Domain', epp: true do
     end
 
     context 'with valid domain' do
-      before(:each) { Fabricate(:domain, name: 'example.ee') }
+      before(:each) { Fabricate(:domain, name: 'example.ee', registrar: EppUser.first.registrar) }
 
       it 'renews a domain' do
         response = epp_request(domain_renew_xml, :xml)
-        exDate = response[:parsed].css('renData exDate').text
+        ex_date = response[:parsed].css('renData exDate').text
         name = response[:parsed].css('renData name').text
-        expect(exDate).to eq ('2015-08-07 00:00:00 UTC')
-        expect(name).to eq ('example.ee')
+        expect(ex_date).to eq('2015-08-07 00:00:00 UTC')
+        expect(name).to eq('example.ee')
       end
 
       it 'returns an error when given and current exp dates do not match' do
