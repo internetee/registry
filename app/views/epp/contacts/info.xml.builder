@@ -16,7 +16,9 @@ xml.epp_head do
         xml.tag!('contact:upID', @contact.up_id) if @contact.up_id
         xml.tag!('contact:upDate', @contact.updated_at) unless @contact.updated_at == @contact.created_at
         xml.tag!('contact:trDate', '123') if false
-        xml.tag!('contact:authInfo', '123') if false
+        xml.tag!('contact:authInfo') do
+          xml.tag!('contact:pw', @contact.auth_info) # Doc says we have to return this but is it necessary?
+        end
         xml.tag!('contact:disclose', '123') if false
 
       end
