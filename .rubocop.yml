@@ -35,3 +35,6 @@ Style/IndentHash:
 Style/SingleLineBlockParams:
   Enabled: false
 
+# No need for nested module/class definition as far as I know
+Style/ClassAndModuleChildren:
+  Enabled: false

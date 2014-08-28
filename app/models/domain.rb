@@ -285,7 +285,7 @@ class Domain < ActiveRecord::Base
     add_epp_error('2306', 'curExpDate', cur_exp_date, I18n.t('errors.messages.epp_exp_dates_do_not_match'))
   end
 
-  def epp_code_map
+  def epp_code_map # rubocop:disable Metrics/MethodLength
     domain_validation_sg = SettingGroup.domain_validation
 
     {
