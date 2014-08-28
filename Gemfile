@@ -71,7 +71,7 @@ group :development, :test do
   gem 'capybara', '~> 2.4.1'
   # For feature testing
   # gem 'capybara-webkit', '1.2.0' # Webkit driver didn't work with turbolinks
-  gem 'phantomjs', :require => 'phantomjs/poltergeist'
+  gem 'phantomjs', require: 'phantomjs/poltergeist'
   gem 'poltergeist', '~> 1.5.1' # We are using PhantomJS instead
 
   # For cleaning db in feature and epp tests

@@ -98,7 +98,7 @@ class Contact < ActiveRecord::Base
     destroy
   end
 
-  def epp_code_map
+  def epp_code_map # rubocop:disable Metrics/MethodLength
     {
       '2302' => [ # Object exists
         [:code, :epp_id_taken]
