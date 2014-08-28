@@ -41,6 +41,11 @@ module Epp
       render 'epp/contacts/info'
     end
 
+    def renew_contact
+      epp_errors << { code: '2101', msg: t(:'errors.messages.unimplemented_command') }
+      handle_errors
+    end
+
     ## HELPER METHODS
 
     private

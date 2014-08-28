@@ -101,6 +101,7 @@ en:
       attr_missing: 'Required parameter missing: %{key}'
       repeating_postal_info: 'Only one of each postal info types may be provided'
       invalid_type: 'PostalInfo type is invalid'
+      unimplemented_command: 'Unimplemented command'
 
   setting_groups:
     codes:

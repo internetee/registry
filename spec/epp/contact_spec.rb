@@ -236,5 +236,14 @@ describe 'EPP Contact', epp: true do
         expect(response[:msg]).to eq('Authorization error')
       end
     end
+
+    context 'renew command' do
+      it 'returns 2101-unimplemented command' do
+        response = epp_request('contacts/renew.xml')
+
+        expect(response[:result_code]).to eq('2101')
+        expect(response[:msg]).to eq('Unimplemented command')
+      end
+    end
   end
 end
