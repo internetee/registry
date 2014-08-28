@@ -297,7 +297,6 @@ describe 'EPP Helper', epp: true do
       generated = Nokogiri::XML(domain_transfer_xml).to_s.squish
       expect(generated).to eq(expected)
 
-
       expected = Nokogiri::XML('<?xml version="1.0" encoding="UTF-8" standalone="no"?>
         <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
           <command>
