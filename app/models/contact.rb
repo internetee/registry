@@ -73,8 +73,7 @@ class Contact < ActiveRecord::Base
   end
 
   def auth_info_matches(pw)
-    return true if auth_info == pw
-    false
+    auth_info == pw
   end
 
   # Find a way to use self.domains with contact

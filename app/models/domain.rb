@@ -205,9 +205,12 @@ class Domain < ActiveRecord::Base
   end
 
   ### TRANSFER ###
-  def transfer(pw, current_user)
-    return false unless authenticate(pw)
-    return true if pending_transfer
+  def transfer(params)
+    return false unless authenticate(params[:pw])
+
+    if pending_transfer && params[:action] == 'approve'
+      approve_pending_transfer and return true
+    end
 
     wait_time = SettingGroup.domain_general.setting(:transfer_wait_time).value.to_i
 
@@ -215,7 +218,7 @@ class Domain < ActiveRecord::Base
       domain_transfers.create(
         status: DomainTransfer::PENDING,
         transfer_requested_at: Time.zone.now,
-        transfer_to: current_user.registrar,
+        transfer_to: params[:current_user].registrar,
         transfer_from: registrar
       )
     else
@@ -223,13 +226,24 @@ class Domain < ActiveRecord::Base
         status: DomainTransfer::SERVER_APPROVED,
         transfer_requested_at: Time.zone.now,
         transferred_at: Time.zone.now,
-        transfer_to: current_user.registrar,
+        transfer_to: params[:current_user].registrar,
         transfer_from: registrar
       )
 
-      self.registrar = current_user.registrar
+      self.registrar = params[:current_user].registrar
       save
     end
+  end
+
+  def approve_pending_transfer
+    p = pending_transfer
+    p.update(
+      status: DomainTransfer::CLIENT_APPROVED,
+      transferred_at: Time.zone.now
+    )
+
+    self.registrar = p.transfer_to
+    save
   end
 
   def pending_transfer
