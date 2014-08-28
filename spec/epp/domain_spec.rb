@@ -41,6 +41,12 @@ describe 'EPP Domain', epp: true do
         Fabricate(:domain, name: 'example.ee', registrar: elkdata)
       end
 
+      it 'can not see other registrar domains' do
+        response = epp_request(domain_info_xml, :xml)
+        expect(response[:result_code]).to eq('2303')
+        expect(response[:msg]).to eq('Domain not found')
+      end
+
       it 'transfers a domain' do
         response = epp_request(domain_transfer_xml, :xml)
 
