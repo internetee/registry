@@ -82,6 +82,11 @@ describe 'EPP Domain', epp: true do
         expect(trn_data.css('acID').text).to eq('10577829')
         expect(trn_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
       end
+
+      it 'does not transfer with invalid pw' do
+        response = epp_request('domains/transfer.xml')
+
+      end
     end
 
     context 'with citizen as an owner' do
