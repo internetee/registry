@@ -36,7 +36,7 @@ module EppContactXmlBuilder
           xml.tag!('contact:create', 'xmlns:contact' => 'urn:ietf:params:xml:ns:contact-1.0') do
             xml.tag!('contact:id', xml_params[:id], 'sh8013') unless xml_params[:id] == false
             unless xml_params[:postalInfo] == [false]
-              xml.tag!('contact:postalInfo') do
+              xml.tag!('contact:postalInfo', type: 'int') do
                 xml.tag!('contact:name', ( xml_params[:name] || 'Sillius Soddus'))  unless xml_params[:name] == false
                 xml.tag!('contact:org', ( xml_params[:org_name] || 'Example Inc.'))  unless xml_params[:org_name] == false
                 unless xml_params[:addr] == [false]
