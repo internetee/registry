@@ -63,7 +63,7 @@ module Epp::DomainsHelper
     @domain = find_domain
 
     handle_errors(@domain) and return unless @domain
-    handle_errors(@domain) and return unless @domain.transfer(@ph[:authInfo][:pw], current_epp_user)
+    handle_errors(@domain) and return unless @domain.transfer(domain_transfer_params)
 
     render '/epp/domains/transfer'
   end
@@ -93,6 +93,14 @@ module Epp::DomainsHelper
       valid_to: valid_to,
       auth_info: @ph[:authInfo][:pw]
     }
+  end
+
+  def domain_transfer_params
+    res = {}
+    res[:pw] = parsed_frame.css('pw').first.try(:text)
+    res[:action] = parsed_frame.css('transfer').first[:op]
+    res[:current_user] = current_epp_user
+    res
   end
 
   ## RENEW

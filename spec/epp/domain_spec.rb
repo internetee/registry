@@ -84,7 +84,7 @@ describe 'EPP Domain', epp: true do
         expect(trn_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
       end
 
-      it 'approves the transfer request', pending: true do
+      it 'approves the transfer request' do
         s = Setting.find_by(code: 'transfer_wait_time')
         s.update(value: 1)
 
@@ -93,12 +93,13 @@ describe 'EPP Domain', epp: true do
         response = epp_request(xml, :xml)
         trn_data = response[:parsed].css('trnData')
         d = Domain.first
+        dtl = d.domain_transfers.last
 
         expect(trn_data.css('name').text).to eq('example.ee')
-        expect(trn_data.css('trStatus').text).to eq('serverApproved')
+        expect(trn_data.css('trStatus').text).to eq('clientApproved')
         expect(trn_data.css('reID').text).to eq('10577829')
         expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
-        expect(trn_data.css('acID').text).to eq('10577829')
+        expect(trn_data.css('acID').text).to eq('123')
         expect(trn_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
       end
 
