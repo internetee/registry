@@ -27,3 +27,12 @@ Fabricator(:domain_statuses_setting_group, from: :setting_group) do
     ]
   end
 end
+
+Fabricator(:domain_general_setting_group, from: :setting_group) do
+  code 'domain_general'
+  settings do
+    [
+      Fabricate(:setting, code: 'transfer_wait_time', value: '0')
+    ]
+  end
+end

@@ -63,10 +63,7 @@ module Epp::DomainsHelper
     @domain = find_domain
 
     handle_errors(@domain) and return unless @domain
-
-    @domain.transfer_requested_at = Time.now
-    @domain.transferred_at = Time.now
-    @domain.save
+    handle_errors(@domain) and return unless @domain.transfer(@ph[:authInfo][:pw], current_epp_user)
 
     render '/epp/domains/transfer'
   end

@@ -17,5 +17,9 @@ class SettingGroup < ActiveRecord::Base
     def domain_statuses
       find_by(code: 'domain_statuses')
     end
+
+    def domain_general
+      find_by(code: 'domain_general')
+    end
   end
 end

@@ -6,6 +6,7 @@ describe Domain do
   it { should belong_to(:owner_contact) }
   it { should have_many(:tech_contacts) }
   it { should have_many(:admin_contacts) }
+  it { should have_many(:domain_transfers) }
 
   context 'with sufficient settings' do
     before(:each) { Fabricate(:domain_validation_setting_group) }

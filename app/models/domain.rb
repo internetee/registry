@@ -30,6 +30,8 @@ class Domain < ActiveRecord::Base
     joins(:setting).where(settings: { setting_group_id: SettingGroup.domain_statuses.id })
   }
 
+  has_many :domain_transfers
+
   delegate :code, to: :owner_contact, prefix: true
   delegate :name, to: :registrar, prefix: true
 
@@ -200,6 +202,38 @@ class Domain < ActiveRecord::Base
     self.period = period
     self.period_unit = unit
     save
+  end
+
+  ### TRANSFER ###
+  def transfer(pw, current_user)
+    return false unless authenticate(pw)
+    return true if pending_transfer
+
+    wait_time = SettingGroup.domain_general.setting(:transfer_wait_time).value.to_i
+
+    if wait_time > 0
+      domain_transfers.create(
+        status: DomainTransfer::PENDING,
+        transfer_requested_at: Time.zone.now,
+        transfer_to: current_user.registrar,
+        transfer_from: registrar
+      )
+    else
+      domain_transfers.create(
+        status: DomainTransfer::SERVER_APPROVED,
+        transfer_requested_at: Time.zone.now,
+        transferred_at: Time.zone.now,
+        transfer_to: current_user.registrar,
+        transfer_from: registrar
+      )
+
+      self.registrar = current_user.registrar
+      save
+    end
+  end
+
+  def pending_transfer
+    domain_transfers.find_by(status: DomainTransfer::PENDING)
   end
 
   ### VALIDATIONS ###

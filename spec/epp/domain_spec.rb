@@ -29,6 +29,61 @@ describe 'EPP Domain', epp: true do
       expect(response[:clTRID]).to eq('ABC-12345')
     end
 
+    context 'with two epp users' do
+      before(:each) do
+        elkdata = Fabricate(:registrar,
+          name: 'Elkdata',
+          reg_no: '123'
+        )
+
+        Fabricate(:epp_user, username: 'elkdata_user', registrar: elkdata)
+        Fabricate(:domain_general_setting_group)
+        Fabricate(:domain, name: 'example.ee', registrar: elkdata)
+      end
+
+      it 'transfers a domain' do
+        response = epp_request('domains/transfer.xml')
+
+        d = Domain.first
+        dtl = d.domain_transfers.last
+
+        trn_data = response[:parsed].css('trnData')
+        expect(trn_data.css('name').text).to eq('example.ee')
+        expect(trn_data.css('trStatus').text).to eq('serverApproved')
+        expect(trn_data.css('reID').text).to eq('10577829')
+        expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
+        expect(trn_data.css('acID').text).to eq('123')
+        expect(trn_data.css('acDate').text).to eq(dtl.transferred_at.to_time.utc.to_s)
+        expect(trn_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
+
+        s = Setting.find_by(code: 'transfer_wait_time')
+        s.update(value: 1)
+
+        response = epp_request('domains/transfer.xml')
+        trn_data = response[:parsed].css('trnData')
+        d = Domain.first
+
+        expect(trn_data.css('name').text).to eq('example.ee')
+        expect(trn_data.css('trStatus').text).to eq('pending')
+        expect(trn_data.css('reID').text).to eq('10577829')
+        expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
+        expect(trn_data.css('acID').text).to eq('10577829')
+        expect(trn_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
+
+        # should return same data if pending already
+        response = epp_request('domains/transfer.xml')
+        trn_data = response[:parsed].css('trnData')
+        d = Domain.first
+
+        expect(trn_data.css('name').text).to eq('example.ee')
+        expect(trn_data.css('trStatus').text).to eq('pending')
+        expect(trn_data.css('reID').text).to eq('10577829')
+        expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
+        expect(trn_data.css('acID').text).to eq('10577829')
+        expect(trn_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
+      end
+    end
+
     context 'with citizen as an owner' do
       before(:each) do
         Fabricate(:contact, code: 'jd1234')
@@ -348,10 +403,6 @@ describe 'EPP Domain', epp: true do
 
         expect(d.owner_contact_code).to eq('mak21')
         expect(d.auth_info).to eq('2BARfoo')
-      end
-
-      it 'transfers a domain' do
-        response = epp_request('domains/transfer.xml')
       end
     end
 
