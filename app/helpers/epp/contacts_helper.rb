@@ -48,14 +48,12 @@ module Epp
     ## CREATE
     def validate_contact_create_request
       @ph = params_hash['epp']['command']['create']['create']
-      xml_attrs_present?(@ph, [%w(id),
-                               %w(authInfo pw),
-                               %w(postalInfo)])
+      xml_attrs_present?(@ph, [%w(id), %w(authInfo pw), %w(postalInfo)])
+
       return epp_errors.empty? unless @ph['postalInfo'].is_a?(Hash) || @ph['postalInfo'].is_a?(Array)
 
-      xml_attrs_array_present?(@ph['postalInfo'], [%w(name),
-                                                   %w(addr city),
-                                                   %w(addr cc)])
+      (epp_errors << Address.validate_postal_info_types(parsed_frame)).flatten!
+      xml_attrs_array_present?(@ph['postalInfo'], [%w(name), %w(addr city), %w(addr cc)])
     end
 
     ## UPDATE
