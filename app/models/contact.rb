@@ -8,6 +8,7 @@ class Contact < ActiveRecord::Base
 
   has_one :local_address
   has_one :international_address
+  has_one :disclosure, class_name: 'ContactDisclosure'
 
   has_many :domain_contacts
   has_many :domains, through: :domain_contacts
@@ -15,9 +16,8 @@ class Contact < ActiveRecord::Base
   belongs_to :created_by, class_name: 'EppUser', foreign_key: :created_by_id
   belongs_to :updated_by, class_name: 'EppUser', foreign_key: :updated_by_id
 
-  accepts_nested_attributes_for :local_address, :international_address
+  accepts_nested_attributes_for :local_address, :international_address, :disclosure
 
-  # validates_presence_of :code, :phone, :email, :ident
   validates :code, :phone, :email, :ident, presence: true
 
   validate :ident_must_be_valid
@@ -25,7 +25,6 @@ class Contact < ActiveRecord::Base
   validates :phone, format: /\+[0-9]{1,3}\.[0-9]{1,14}?/ # /\+\d{3}\.\d+/
   validates :email, format: /@/
 
-  # validates_uniqueness_of :code, message: :epp_id_taken
   validates :code, uniqueness: { message: :epp_id_taken }
 
   delegate :name, to: :international_address

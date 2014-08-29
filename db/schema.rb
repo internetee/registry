@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140828080320) do
+ActiveRecord::Schema.define(version: 20140828133057) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,21 @@ ActiveRecord::Schema.define(version: 20140828080320) do
     t.string   "name"
     t.string   "org_name"
     t.string   "type"
+  end
+
+  create_table "contact_disclosures", force: true do |t|
+    t.integer  "contact_id"
+    t.boolean  "int_name",     default: false
+    t.boolean  "int_org_name", default: false
+    t.boolean  "int_addr",     default: false
+    t.boolean  "loc_name",     default: false
+    t.boolean  "loc_org_name", default: false
+    t.boolean  "loc_addr",     default: false
+    t.boolean  "phone",        default: false
+    t.boolean  "fax",          default: false
+    t.boolean  "email",        default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "contacts", force: true do |t|
@@ -102,6 +117,11 @@ ActiveRecord::Schema.define(version: 20140828080320) do
     t.string   "name_puny"
     t.integer  "period"
     t.string   "period_unit",          limit: 1
+  end
+
+  create_table "domains_nameservers", force: true do |t|
+    t.integer "domain_id"
+    t.integer "nameserver_id"
   end
 
   create_table "epp_sessions", force: true do |t|

@@ -135,6 +135,9 @@ module Epp::ContactsHelper
     contact_hash = contact_hash.merge(
       Address.extract_attributes((prms.try(:[], :postalInfo) || []))
     )
+    contact_hash[:disclosure_attributes] =
+      ContactDisclosure.extract_attributes(parsed_frame)
+
     contact_hash
   end
 
