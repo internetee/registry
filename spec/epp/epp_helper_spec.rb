@@ -222,7 +222,8 @@ describe 'EPP Helper', epp: true do
         </epp>
       ').to_s.squish
 
-      generated = Nokogiri::XML(domain_renew_xml(name: 'one.ee', curExpDate: '2009-11-15', period_value: '365', period_unit: 'd')).to_s.squish
+      generated = Nokogiri::XML(domain_renew_xml(name: 'one.ee', curExpDate: '2009-11-15',
+                                                 period_value: '365', period_unit: 'd')).to_s.squish
       expect(generated).to eq(expected)
     end
 

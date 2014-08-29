@@ -14,10 +14,8 @@ class Address < ActiveRecord::Base
   # validates_inclusion_of :type, in: TYPES
 
   class << self
-
     def validate_postal_info_types(parsed_frame)
       errors, used = [], []
-
       parsed_frame.css('postalInfo').each do |pi|
         attr = pi.attributes['type'].try(:value)
         errors << { code: 2003, msg: I18n.t('errors.messages.attr_missing', key: 'type') } and next unless attr
@@ -27,8 +25,7 @@ class Address < ActiveRecord::Base
         end
         errors << { code: 2005, msg: I18n.t('errors.messages.repeating_postal_info') } and next if used.include?(attr)
         used << attr
-      end
-      errors
+      end; errors
     end
 
     def extract_attributes(ah)

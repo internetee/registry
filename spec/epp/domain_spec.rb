@@ -31,7 +31,8 @@ describe 'EPP Domain', epp: true do
 
     context 'with two epp users' do
       before(:each) do
-        elkdata = Fabricate(:registrar,
+        elkdata = Fabricate(
+          :registrar,
           name: 'Elkdata',
           reg_no: '123'
         )

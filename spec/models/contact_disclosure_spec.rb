@@ -25,4 +25,3 @@ describe '.extract_attributes' do
     expect(result).to eq({ phone: '0', email: '0' })
   end
 end
-

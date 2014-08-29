@@ -19,13 +19,13 @@ class EppSession < ActiveRecord::Base
   end
 
   class << self
-     def marshal(data)
-       ::Base64.encode64(Marshal.dump(data)) if data
-      end
+    def marshal(data)
+      ::Base64.encode64(Marshal.dump(data)) if data
+    end
 
-     def unmarshal(data)
-       return data unless data.is_a? String
-       Marshal.load(::Base64.decode64(data)) if data
-     end
+    def unmarshal(data)
+      return data unless data.is_a? String
+      Marshal.load(::Base64.decode64(data)) if data
+    end
   end
 end
