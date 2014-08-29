@@ -6,4 +6,5 @@ Fabricator(:contact) do
   ident_type 'op'
   auth_info 'ccds4324pok'
   international_address
+  disclosure { Fabricate(:contact_disclosure) }
 end

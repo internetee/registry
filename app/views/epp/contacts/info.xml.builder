@@ -7,9 +7,9 @@ xml.epp_head do
     xml.resData do
       xml.tag!('contact:chkData', 'xmlns:contact' => 'urn:ietf:params:xml:ns:contact-1.0') do
         xml << render('/epp/contacts/postal_info')
-        xml.tag!('contact:voice', @contact.phone)
-        xml.tag!('contact:fax', @contact.fax)
-        xml.tag!('contact:email', @contact.email)
+        xml.tag!('contact:voice', @contact.phone) if @contact.disclosure.phone
+        xml.tag!('contact:fax', @contact.fax) if @contact.disclosure.fax
+        xml.tag!('contact:email', @contact.email) if @contact.disclosure.email
         xml.tag!('contact:clID', @current_epp_user.username) if @current_epp_user
         xml.tag!('contact:crID', @contact.cr_id ) if @contact.cr_id
         xml.tag!('contact:crDate', @contact.created_at)

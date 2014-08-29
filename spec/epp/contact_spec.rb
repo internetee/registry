@@ -228,6 +228,19 @@ describe 'EPP Contact', epp: true do
 
       end
 
+      it 'doesn\'t disclose private elements' do
+        Fabricate(:contact, code: 'info-4444', auth_info: '2fooBAR',
+                  disclosure: Fabricate(:contact_disclosure, email: false, phone: false))
+        response = epp_request('contacts/info.xml')
+        contact = response[:parsed].css('resData chkData')
+
+        expect(response[:result_code]).to eq('1000')
+
+        expect(contact.css('phone').present?).to eq(false)
+        expect(contact.css('email').present?).to eq(false)
+        expect(contact.css('name').present?).to be(true)
+      end
+
       it 'doesn\'t display unassociated object' do
         Fabricate(:contact, code: 'info-4444')
 
