@@ -133,6 +133,16 @@ describe 'EPP Contact', epp: true do
         expect(response[:results][1][:result_code]).to eq('2005')
         expect(response[:results][1][:msg]).to eq('Email is invalid')
       end
+
+      it 'updates disclosure items' do
+        Fabricate(:contact, code: 'sh8013', auth_info: '2fooBAR',
+                  disclosure: Fabricate(:contact_disclosure, phone:true, email:true))
+        epp_request('contacts/update.xml')
+
+        expect(Contact.last.disclosure.phone).to eq(false)
+        expect(Contact.last.disclosure.email).to eq(false)
+        expect(Contact.count).to eq(1)
+      end
     end
 
     context 'delete command' do

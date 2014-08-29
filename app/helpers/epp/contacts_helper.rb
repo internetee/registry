@@ -7,12 +7,13 @@ module Epp::ContactsHelper
   end
 
   def update_contact
+    # FIXME: Update returns 2303 update multiple times
     code = params_hash['epp']['command']['update']['update'][:id]
     @contact = Contact.where(code: code).first
     if rights? && stamp(@contact) && @contact.update_attributes(contact_and_address_attributes(:update))
       render 'epp/contacts/update'
     else
-      contact_exists?
+      contact_exists?(code)
       handle_errors(@contact)
     end
   end
@@ -67,7 +68,7 @@ module Epp::ContactsHelper
     xml_attrs_present?(@ph, [['id']])
   end
 
-  def contact_exists?
+  def contact_exists?(code)
     return true if @contact.is_a?(Contact)
     epp_errors << { code: '2303', msg: t('errors.messages.epp_obj_does_not_exist'),
                     value: { obj: 'id', val: code } }
