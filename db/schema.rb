@@ -119,11 +119,6 @@ ActiveRecord::Schema.define(version: 20140828133057) do
     t.string   "period_unit",          limit: 1
   end
 
-  create_table "domains_nameservers", force: true do |t|
-    t.integer "domain_id"
-    t.integer "nameserver_id"
-  end
-
   create_table "epp_sessions", force: true do |t|
     t.string   "session_id"
     t.text     "data"

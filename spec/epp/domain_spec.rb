@@ -439,6 +439,15 @@ describe 'EPP Domain', epp: true do
         expect(d.owner_contact_code).to eq('mak21')
         expect(d.auth_info).to eq('2BARfoo')
       end
+
+      it 'does not delete domain if there are relations' do
+        expect(DomainContact.count).to eq(1)
+        response = epp_request('domains/delete.xml')
+        expect(response[:result_code]).to eq('1000')
+
+        expect(Domain.first).to eq(nil)
+        expect(DomainContact.count).to eq(0)
+      end
     end
 
     it 'checks a domain' do
