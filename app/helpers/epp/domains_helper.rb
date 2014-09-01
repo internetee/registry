@@ -68,6 +68,15 @@ module Epp::DomainsHelper
     render '/epp/domains/transfer'
   end
 
+  def delete_domain
+    @domain = find_domain
+
+    handle_errors(@domain) and return unless @domain
+    handle_errors(@domain) and return unless @domain.destroy
+
+    render '/epp/domains/success'
+  end
+
   ### HELPER METHODS ###
 
   private
@@ -124,6 +133,12 @@ module Epp::DomainsHelper
   ## TRANSFER
   def validate_domain_transfer_request
     @ph = params_hash['epp']['command']['transfer']['transfer']
+    xml_attrs_present?(@ph, [['name']])
+  end
+
+  ## DELETE
+  def validate_domain_delete_request
+    @ph = params_hash['epp']['command']['delete']['delete']
     xml_attrs_present?(@ph, [['name']])
   end
 

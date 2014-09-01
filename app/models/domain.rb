@@ -13,7 +13,7 @@ class Domain < ActiveRecord::Base
   belongs_to :registrar
   belongs_to :owner_contact, class_name: 'Contact'
 
-  has_many :domain_contacts
+  has_many :domain_contacts, dependent: :delete_all
 
   has_many :tech_contacts, -> do
     where(domain_contacts: { contact_type: DomainContact::TECH })
@@ -23,14 +23,14 @@ class Domain < ActiveRecord::Base
     where(domain_contacts: { contact_type: DomainContact::ADMIN })
   end, through: :domain_contacts, source: :contact
 
-  has_many :domain_nameservers
+  has_many :domain_nameservers, dependent: :delete_all
   has_many :nameservers, through: :domain_nameservers
 
   has_many :domain_statuses, -> {
     joins(:setting).where(settings: { setting_group_id: SettingGroup.domain_statuses.id })
-  }
+  }, dependent: :delete_all
 
-  has_many :domain_transfers
+  has_many :domain_transfers, dependent: :delete_all
 
   delegate :code, to: :owner_contact, prefix: true
   delegate :name, to: :registrar, prefix: true
@@ -38,8 +38,6 @@ class Domain < ActiveRecord::Base
   validates :name_dirty, domain_name: true, uniqueness: true
   validates :period, numericality: { only_integer: true }
   validates :name, :owner_contact, presence: true
-
-  validates_associated :nameservers
 
   validate :validate_period
   validate :validate_nameservers_count
