@@ -102,7 +102,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'stamps updated_by succesfully' do
-        Fabricate(:contact, code: 'sh8013')
+        Fabricate(:contact, code: 'sh8013', created_by_id: EppUser.first.id)
 
         expect(Contact.first.updated_by_id).to be nil
 
@@ -135,8 +135,8 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'updates disclosure items' do
-        Fabricate(:contact, code: 'sh8013', auth_info: '2fooBAR',
-                  disclosure: Fabricate(:contact_disclosure, phone:true, email:true))
+        Fabricate(:contact, code: 'sh8013', auth_info: '2fooBAR', created_by_id: EppUser.first.id,
+                  disclosure: Fabricate(:contact_disclosure, phone: true, email: true))
         epp_request('contacts/update.xml')
 
         expect(Contact.last.disclosure.phone).to eq(false)
@@ -155,7 +155,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'deletes contact' do
-        Fabricate(:contact, code: 'dwa1234')
+        Fabricate(:contact, code: 'dwa1234', created_by_id: EppUser.first.id)
         response = epp_request('contacts/delete.xml')
         expect(response[:result_code]).to eq('1000')
         expect(response[:msg]).to eq('Command completed successfully')
@@ -171,7 +171,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if contact has associated domain' do
-        Fabricate(:domain, owner_contact: Fabricate(:contact, code: 'dwa1234'))
+        Fabricate(:domain, owner_contact: Fabricate(:contact, code: 'dwa1234', created_by_id: EppUser.first.id))
         expect(Domain.first.owner_contact.address.present?).to be true
         response = epp_request('contacts/delete.xml')
 

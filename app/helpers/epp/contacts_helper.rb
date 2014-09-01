@@ -10,7 +10,7 @@ module Epp::ContactsHelper
     # FIXME: Update returns 2303 update multiple times
     code = params_hash['epp']['command']['update']['update'][:id]
     @contact = Contact.where(code: code).first
-    if rights? && stamp(@contact) && @contact.update_attributes(contact_and_address_attributes(:update))
+    if owner? && stamp(@contact) && @contact.update_attributes(contact_and_address_attributes(:update))
       render 'epp/contacts/update'
     else
       contact_exists?(code)
@@ -21,6 +21,7 @@ module Epp::ContactsHelper
   def delete_contact
     Contact.transaction do
       @contact = find_contact
+      handle_errors(@contact) and return unless owner?
       handle_errors(@contact) and return unless @contact
       handle_errors(@contact) and return unless @contact.destroy_and_clean
 
@@ -111,8 +112,15 @@ module Epp::ContactsHelper
     contact
   end
 
+  def owner?
+    return false unless find_contact
+    return true if current_epp_user.registrar == find_contact.created_by.try(:registrar)
+    epp_errors << { code: '2201', msg: t('errors.messages.epp_authorization_error') }
+    false
+  end
+
   def rights?
-    pw = @ph.try(:[], :authInfo).try(:[], :pw) || @ph.try(:[], :chg).try(:[], :authInfo).try(:[], :pw) || []
+    pw = @ph.try(:[], :authInfo).try(:[], :pw)
 
     return true if  !find_contact.nil? && find_contact.auth_info_matches(pw)
 
