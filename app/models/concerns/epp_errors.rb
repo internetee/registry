@@ -4,7 +4,9 @@ module EppErrors
   def construct_epp_errors
     epp_errors = []
     errors.messages.each do |key, values|
+      key = key.to_s.split('.')[0].to_sym
       next if key == :epp_errors
+
       if self.class.reflect_on_association(key)
         epp_errors << collect_child_errors(key)
       end
