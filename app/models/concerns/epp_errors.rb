@@ -33,13 +33,8 @@ module EppErrors
         next unless code = find_epp_code(err)
         err = { code: code, msg: err }
 
-        # If we have setting relation, then still add the value to the error message
-        # If this sort of exception happens again, some other logic has to be implemented
-        if self.class.reflect_on_association(key) && key == :setting
-          err[:value] = { val: send(key).value, obj: self.class::EPP_ATTR_MAP[key] }
-
-        # if the key represents other relations, skip value
-        elsif !self.class.reflect_on_association(key)
+        # if the key represents relations, skip value
+        unless self.class.reflect_on_association(key)
           err[:value] = { val: send(key), obj: self.class::EPP_ATTR_MAP[key] }
         end
 
