@@ -308,7 +308,7 @@ describe 'EPP Domain', epp: true do
 
       it 'returns domain info' do
         d = Domain.first
-        d.domain_statuses.create(setting: Setting.find_by(code: 'client_hold'), description: 'Payment overdue.')
+        d.domain_statuses.create(value: DomainStatus::CLIENT_HOLD, description: 'Payment overdue.')
         d.nameservers.create(hostname: 'ns1.example.com', ipv4: '192.168.1.1', ipv6: '1080:0:0:0:8:800:200C:417A')
 
         response = epp_request(domain_info_xml, :xml)
@@ -374,7 +374,6 @@ describe 'EPP Domain', epp: true do
         expect(d.domain_statuses.count).to eq(2)
         expect(d.domain_statuses.first.description).to eq('Payment overdue.')
         expect(d.domain_statuses.first.value).to eq('clientHold')
-        expect(d.domain_statuses.first.code).to eq('client_hold')
 
         expect(d.domain_statuses.last.value).to eq('clientUpdateProhibited')
 
@@ -383,6 +382,10 @@ describe 'EPP Domain', epp: true do
         expect(response[:results][0][:msg]).to eq('Nameserver already exists on this domain')
         expect(response[:results][0][:value]).to eq('ns1.example.com')
         expect(response[:results][1][:msg]).to eq('Nameserver already exists on this domain')
+        expect(response[:results][2][:msg]).to eq('Status already exists on this domain')
+        expect(response[:results][2][:value]).to eq('clientHold')
+        expect(response[:results][3][:msg]).to eq('Status already exists on this domain')
+        expect(response[:results][3][:value]).to eq('clientUpdateProhibited')
         expect(d.domain_statuses.count).to eq(2)
       end
 

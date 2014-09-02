@@ -26,9 +26,7 @@ class Domain < ActiveRecord::Base
   has_many :domain_nameservers, dependent: :delete_all
   has_many :nameservers, through: :domain_nameservers
 
-  has_many :domain_statuses, -> {
-    joins(:setting).where(settings: { setting_group_id: SettingGroup.domain_statuses.id })
-  }, dependent: :delete_all
+  has_many :domain_statuses, dependent: :delete_all
 
   has_many :domain_transfers, dependent: :delete_all
 
@@ -134,10 +132,13 @@ class Domain < ActiveRecord::Base
         next
       end
 
-      setting = SettingGroup.domain_statuses.settings.find_by(value: x[:value])
+      unless DomainStatus::STATUSES.include?(x[:value])
+        add_epp_error('2302', 'status', x[:value], [:domain_statuses, :not_found])
+        next
+      end
 
       domain_statuses.build(
-        setting: setting,
+        value: x[:value],
         description: x[:description]
       )
     end
@@ -176,7 +177,7 @@ class Domain < ActiveRecord::Base
   def detach_statuses(status_list)
     to_delete = []
     status_list.each do |x|
-      status = domain_statuses.joins(:setting).where(settings: { value: x[:value] })
+      status = domain_statuses.find_by(value: x[:value])
       if status.blank?
         add_epp_error('2303', 'status', x[:value], [:domain_statuses, :not_found])
       else
