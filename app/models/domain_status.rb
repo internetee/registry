@@ -1,5 +1,4 @@
 class DomainStatus < ActiveRecord::Base
-  # Domain statuses are stored as settings
   include EppErrors
 
   belongs_to :domain

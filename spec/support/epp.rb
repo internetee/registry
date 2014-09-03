@@ -161,9 +161,57 @@ module Epp
   end
 
   def domain_update_xml(xml_params = {})
-    xml_params[:name] = xml_params[:name] || 'example.ee'
-    xml_params[:registrant] = xml_params[:registrant] || 'mak21'
-    xml_params[:pw] = xml_params[:pw] || '2BARfoo'
+
+    # defaults = {
+    #   name: {value: 'example.ee'},
+    #   add: {
+    #     ns: [
+    #       { hostObj: { value: 'ns1.example.com' } },
+    #       { hostObj: { value: 'ns2.example.com' } }
+    #     ],
+    #     contact: [
+    #       {
+    #         attrs: { type: 'tech' },
+    #         value: 'mak21'
+    #       }
+    #     ],
+    #     status: [
+    #       { attrs: {s: 'clientHold', lang: 'en'}, value: 'Payment overdue.'},
+    #       { attrs: {s: 'clientUpdateProhibited' }}
+    #     ]
+    #   }
+    # }
+
+    defaults = {
+      name: { value: 'example.ee' },
+      chg: [
+        { registrant: { value: 'mak21' } }
+      ],
+      add: {
+        ns: [
+          { hostObj: { value: 'ns1.example.com' } },
+          { hostObj: { value: 'ns2.example.com' } }
+        ],
+        _statuses: [
+          { status: { attrs: { s: 'clientHold', lang: 'en' }, value: 'Payment overdue.' } },
+          { status: { attrs: { s: 'clientUpdateProhibited' }, value: '' } }
+        ],
+        _contacts: [
+          { contact: { attrs: { type: 'tech' }, value: 'mak21' } }
+        ]
+      }
+    }
+
+    xml_params = defaults.deep_merge(xml_params)
+
+    # xml_params[:name] = xml_params[:name] || 'example.ee'
+
+    # xml_params[:add] = xml_params[:add] || {}
+
+    # xml_params[:add][:ns] = xml_params[:add][:ns] || {}
+    # xml_params[:add][:ns][:hostObj] = 'ns1.example.com'
+    # xml_params[:registrant] = xml_params[:registrant] || 'mak21'
+    # xml_params[:pw] = xml_params[:pw] || '2BARfoo'
 
     xml = Builder::XmlMarkup.new
 
@@ -172,23 +220,42 @@ module Epp
       xml.command do
         xml.update do
           xml.tag!('domain:update', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
-            if xml_params[:name] != false
-              xml.tag!('domain:name', xml_params[:name])
-            end
-
-            xml.tag!('domain:chg') do
-              xml.tag!('domain:registrant', xml_params[:registrant]) if xml_params[:registrant] != false
-
-              xml.tag!('domain:authInfo') do
-                xml.tag!('domain:pw', xml_params[:pw])
-              end if xml_params[:authInfo] != false
-            end
+            generate_xml_from_hash(xml_params, xml, 'domain')
           end
         end
         xml.clTRID 'ABC-12345'
       end
     end
   end
+
+  def generate_xml_from_hash(xml_params, xml, ns)
+    xml_params.each do |k, v|
+      # Value is a hash which has string type value
+      if v.is_a?(Hash) && v[:value].is_a?(String)
+        xml.tag!("#{ns}:#{k}", v[:value], v[:attrs])
+      # Value is a hash which is nested
+      elsif v.is_a?(Hash)
+        xml.tag!("#{ns}:#{k}") do
+          generate_xml_from_hash(v, xml, ns)
+        end
+      # Value is an array
+      elsif v.is_a?(Array)
+        # underscore marks "internal" variable, not converted into xml
+        if k[0] == '_'
+          v.each do |x|
+            generate_xml_from_hash(x, xml, ns)
+          end
+        else
+          xml.tag!("#{ns}:#{k}") do
+            v.each do |x|
+              generate_xml_from_hash(x, xml, ns)
+            end
+          end
+        end
+      end
+    end
+  end
+
 
   def domain_transfer_xml(xml_params = {})
     xml_params[:name] = xml_params[:name] || 'example.ee'
