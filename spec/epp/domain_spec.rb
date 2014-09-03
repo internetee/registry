@@ -354,13 +354,27 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'updates domain and adds objects' do
-        response = epp_request('domains/update_add_objects.xml')
+        xml = domain_update_xml({
+          add: [
+            {
+              ns: [
+                { hostObj: { value: 'ns1.example.com' } },
+                { hostObj: { value: 'ns2.example.com' } }
+              ]
+            },
+            { contact: { value: 'mak21', attrs: { type: 'tech' } } },
+            { status: { value: 'Payment overdue.', attrs: { s: 'clientHold', lang: 'en' } } },
+            { status: { value: '', attrs: { s: 'clientUpdateProhibited' } } }
+          ]
+        })
+
+        response = epp_request(xml, :xml)
         expect(response[:results][0][:result_code]).to eq('2303')
         expect(response[:results][0][:msg]).to eq('Contact was not found')
 
         Fabricate(:contact, code: 'mak21')
 
-        response = epp_request('domains/update_add_objects.xml')
+        response = epp_request(xml, :xml)
         expect(response[:results][0][:result_code]).to eq('1000')
 
         d = Domain.first
@@ -377,7 +391,7 @@ describe 'EPP Domain', epp: true do
 
         expect(d.domain_statuses.last.value).to eq('clientUpdateProhibited')
 
-        response = epp_request('domains/update_add_objects.xml')
+        response = epp_request(xml, :xml)
         expect(response[:results][0][:result_code]).to eq('2302')
         expect(response[:results][0][:msg]).to eq('Nameserver already exists on this domain')
         expect(response[:results][0][:value]).to eq('ns1.example.com')
@@ -391,11 +405,38 @@ describe 'EPP Domain', epp: true do
 
       it 'updates a domain and removes objects' do
         Fabricate(:contact, code: 'mak21')
-        epp_request('domains/update_add_objects.xml')
+
+        xml = domain_update_xml({
+          add: [
+            {
+              ns: [
+                { hostObj: { value: 'ns1.example.com' } },
+                { hostObj: { value: 'ns2.example.com' } }
+              ]
+            },
+            { contact: { value: 'mak21', attrs: { type: 'tech' } } },
+            { status: { value: 'Payment overdue.', attrs: { s: 'clientHold', lang: 'en' } } },
+            { status: { value: '', attrs: { s: 'clientUpdateProhibited' } } }
+          ]
+        })
+
+        epp_request(xml, :xml)
+
+        xml = domain_update_xml({
+          rem: [
+            {
+              ns: [
+                { hostObj: { value: 'ns1.example.com' } }
+              ]
+            },
+            { contact: { value: 'mak21', attrs: { type: 'tech' } } },
+            { status: { value: '', attrs: { s: 'clientHold' } } }
+          ]
+        })
 
         d = Domain.last
 
-        epp_request('domains/update_remove_objects.xml')
+        epp_request(xml, :xml)
 
         expect(d.domain_statuses.count).to eq(1)
         expect(d.domain_statuses.first.value).to eq('clientUpdateProhibited')
@@ -406,7 +447,7 @@ describe 'EPP Domain', epp: true do
         rem_cnt = d.tech_contacts.find_by(code: 'mak21')
         expect(rem_cnt).to be_falsey
 
-        response = epp_request('domains/update_remove_objects.xml')
+        response = epp_request(xml, :xml)
         expect(response[:results][0][:result_code]).to eq('2303')
         expect(response[:results][0][:msg]).to eq('Contact was not found')
         expect(response[:results][0][:value]).to eq('mak21')
@@ -441,7 +482,6 @@ describe 'EPP Domain', epp: true do
 
       it 'updates a domain' do
         Fabricate(:contact, code: 'mak21')
-        epp_request('domains/update_add_objects.xml')
 
         xml_params = {
           chg: [
