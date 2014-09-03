@@ -133,7 +133,7 @@ class Domain < ActiveRecord::Base
       end
 
       unless DomainStatus::STATUSES.include?(x[:value])
-        add_epp_error('2302', 'status', x[:value], [:domain_statuses, :not_found])
+        add_epp_error('2303', 'status', x[:value], [:domain_statuses, :not_found])
         next
       end
 

@@ -501,6 +501,19 @@ describe 'EPP Domain', epp: true do
         expect(d.auth_info).to eq('2BARfoo')
       end
 
+      it 'does not assign invalid status to domain' do
+        xml = domain_update_xml({
+          add: [
+            status: { value: '', attrs: { s: 'invalidStatus' } }
+          ]
+        })
+
+        response = epp_request(xml, :xml)
+        expect(response[:results][0][:result_code]).to eq('2303')
+        expect(response[:results][0][:msg]).to eq('Status was not found')
+        expect(response[:results][0][:value]).to eq('invalidStatus')
+      end
+
       it 'deletes domain' do
         expect(DomainContact.count).to eq(1)
         response = epp_request(domain_delete_xml, :xml)
