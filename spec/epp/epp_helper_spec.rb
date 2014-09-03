@@ -248,7 +248,8 @@ describe 'EPP Helper', epp: true do
         </epp>
       ').to_s.squish
 
-      generated = Nokogiri::XML(domain_update_xml).to_s.squish
+      xml = domain_update_xml(add: nil)
+      generated = Nokogiri::XML(xml).to_s.squish
       expect(generated).to eq(expected)
 
       expected = Nokogiri::XML('<?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -271,7 +272,16 @@ describe 'EPP Helper', epp: true do
         </epp>
       ').to_s.squish
 
-      xml = domain_update_xml(name: 'one.ee', registrant: 'sh8013', pw: 'b3rafsla')
+      xml = domain_update_xml(
+        name: { value: 'one.ee' },
+        add: nil,
+        chg: [
+          registrant: { value: 'sh8013' },
+          authInfo: [
+            pw: { value: 'b3rafsla' }
+          ]
+        ]
+      )
 
       generated = Nokogiri::XML(xml).to_s.squish
       expect(generated).to eq(expected)

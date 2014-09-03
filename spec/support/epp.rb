@@ -161,57 +161,26 @@ module Epp
   end
 
   def domain_update_xml(xml_params = {})
-
-    # defaults = {
-    #   name: {value: 'example.ee'},
-    #   add: {
-    #     ns: [
-    #       { hostObj: { value: 'ns1.example.com' } },
-    #       { hostObj: { value: 'ns2.example.com' } }
-    #     ],
-    #     contact: [
-    #       {
-    #         attrs: { type: 'tech' },
-    #         value: 'mak21'
-    #       }
-    #     ],
-    #     status: [
-    #       { attrs: {s: 'clientHold', lang: 'en'}, value: 'Payment overdue.'},
-    #       { attrs: {s: 'clientUpdateProhibited' }}
-    #     ]
-    #   }
-    # }
-
     defaults = {
       name: { value: 'example.ee' },
       chg: [
-        { registrant: { value: 'mak21' } }
-      ],
-      add: {
-        ns: [
-          { hostObj: { value: 'ns1.example.com' } },
-          { hostObj: { value: 'ns2.example.com' } }
-        ],
-        _statuses: [
-          { status: { attrs: { s: 'clientHold', lang: 'en' }, value: 'Payment overdue.' } },
-          { status: { attrs: { s: 'clientUpdateProhibited' }, value: '' } }
-        ],
-        _contacts: [
-          { contact: { attrs: { type: 'tech' }, value: 'mak21' } }
+        registrant: { value: 'mak21' },
+        authInfo: [
+          pw: { value: '2BARfoo' }
         ]
-      }
+      ],
+      add: [
+        ns: [
+          hostObj: { value: 'ns1.example.com' },
+          hostObj: { value: 'ns2.example.com' }
+        ],
+        status: { attrs: { s: 'clientHold', lang: 'en' }, value: 'Payment overdue.' },
+        status: { attrs: { s: 'clientUpdateProhibited' }, value: '' },
+        contact: { attrs: { type: 'tech' }, value: 'mak21' }
+      ]
     }
 
     xml_params = defaults.deep_merge(xml_params)
-
-    # xml_params[:name] = xml_params[:name] || 'example.ee'
-
-    # xml_params[:add] = xml_params[:add] || {}
-
-    # xml_params[:add][:ns] = xml_params[:add][:ns] || {}
-    # xml_params[:add][:ns][:hostObj] = 'ns1.example.com'
-    # xml_params[:registrant] = xml_params[:registrant] || 'mak21'
-    # xml_params[:pw] = xml_params[:pw] || '2BARfoo'
 
     xml = Builder::XmlMarkup.new
 
@@ -240,16 +209,9 @@ module Epp
         end
       # Value is an array
       elsif v.is_a?(Array)
-        # underscore marks "internal" variable, not converted into xml
-        if k[0] == '_'
+        xml.tag!("#{ns}:#{k}") do
           v.each do |x|
             generate_xml_from_hash(x, xml, ns)
-          end
-        else
-          xml.tag!("#{ns}:#{k}") do
-            v.each do |x|
-              generate_xml_from_hash(x, xml, ns)
-            end
           end
         end
       end
