@@ -162,31 +162,7 @@ module Epp
 
   def domain_update_xml(xml_params = {})
     defaults = {
-      name: { value: 'example.ee' },
-      add: [
-        { ns:
-          [
-            hostObj: { value: 'ns1.example.com' },
-            hostObj: { value: 'ns2.example.com' }
-          ]
-        },
-        { contact: { attrs: { type: 'tech' }, value: 'mak21' } },
-        { status: { attrs: { s: 'clientUpdateProhibited' }, value: '' } },
-        { status: { attrs: { s: 'clientHold', lang: 'en' }, value: 'Payment overdue.' } }
-      ],
-      rem: [
-        ns: [
-          hostObj: { value: 'ns1.example.com' }
-        ],
-        contact: { attrs: { type: 'tech' }, value: 'sh8013' },
-        status: { attrs: { s: 'clientUpdateProhibited' }, value: '' }
-      ],
-      chg: [
-        registrant: { value: 'mak21' },
-        authInfo: [
-          pw: { value: '2BARfoo' }
-        ]
-      ]
+      name: { value: 'example.ee' }
     }
 
     xml_params = defaults.deep_merge(xml_params)

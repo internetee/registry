@@ -422,8 +422,17 @@ describe 'EPP Domain', epp: true do
 
       it 'does not add duplicate objects to domain' do
         Fabricate(:contact, code: 'mak21')
-        epp_request('domains/update_add_objects.xml')
-        response = epp_request('domains/update_add_objects.xml')
+
+        xml = domain_update_xml({
+          add: [
+            ns: [
+              { hostObj: { value: 'ns1.example.com' } }
+            ]
+          ]
+        })
+
+        epp_request(xml, :xml)
+        response = epp_request(xml, :xml)
 
         expect(response[:results][0][:result_code]).to eq('2302')
         expect(response[:results][0][:msg]).to eq('Nameserver already exists on this domain')
@@ -433,8 +442,17 @@ describe 'EPP Domain', epp: true do
       it 'updates a domain' do
         Fabricate(:contact, code: 'mak21')
         epp_request('domains/update_add_objects.xml')
-        response = epp_request(domain_update_xml, :xml)
 
+        xml_params = {
+          chg: [
+            registrant: { value: 'mak21' },
+            authInfo: [
+              pw: { value: '2BARfoo' }
+            ]
+          ]
+        }
+
+        response = epp_request(domain_update_xml(xml_params), :xml)
         expect(response[:results][0][:result_code]).to eq('1000')
 
         d = Domain.last

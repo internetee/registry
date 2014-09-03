@@ -265,10 +265,38 @@ describe 'EPP Helper', epp: true do
         </epp>
       ').to_s.squish
 
-      generated = Nokogiri::XML(domain_update_xml).to_s.squish
+      xml = domain_update_xml(
+        name: { value: 'example.ee' },
+        add: [
+          { ns:
+            [
+              hostObj: { value: 'ns1.example.com' },
+              hostObj: { value: 'ns2.example.com' }
+            ]
+          },
+          { contact: { attrs: { type: 'tech' }, value: 'mak21' } },
+          { status: { attrs: { s: 'clientUpdateProhibited' }, value: '' } },
+          { status: { attrs: { s: 'clientHold', lang: 'en' }, value: 'Payment overdue.' } }
+        ],
+        rem: [
+          ns: [
+            hostObj: { value: 'ns1.example.com' }
+          ],
+          contact: { attrs: { type: 'tech' }, value: 'sh8013' },
+          status: { attrs: { s: 'clientUpdateProhibited' }, value: '' }
+        ],
+        chg: [
+          registrant: { value: 'mak21' },
+          authInfo: [
+            pw: { value: '2BARfoo' }
+          ]
+        ]
+      )
+
+      generated = Nokogiri::XML(xml).to_s.squish
       expect(generated).to eq(expected)
 
-      # Edited detailed update
+      # Update with NS IP-s
 
       expected = Nokogiri::XML('<?xml version="1.0" encoding="UTF-8" standalone="no"?>
         <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
@@ -335,7 +363,7 @@ describe 'EPP Helper', epp: true do
       generated = Nokogiri::XML(xml).to_s.squish
       expect(generated).to eq(expected)
 
-      ## Update without add and rem
+      ## Update with chg
 
       expected = Nokogiri::XML('<?xml version="1.0" encoding="UTF-8" standalone="no"?>
         <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
@@ -357,42 +385,14 @@ describe 'EPP Helper', epp: true do
         </epp>
       ').to_s.squish
 
-      xml = domain_update_xml(add: nil, rem: nil)
-      generated = Nokogiri::XML(xml).to_s.squish
-      expect(generated).to eq(expected)
-
-      expected = Nokogiri::XML('<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-        <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
-          <command>
-            <update>
-              <domain:update
-               xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-                <domain:name>one.ee</domain:name>
-                <domain:chg>
-                  <domain:registrant>sh8013</domain:registrant>
-                  <domain:authInfo>
-                    <domain:pw>b3rafsla</domain:pw>
-                  </domain:authInfo>
-                </domain:chg>
-              </domain:update>
-            </update>
-            <clTRID>ABC-12345</clTRID>
-          </command>
-        </epp>
-      ').to_s.squish
-
       xml = domain_update_xml(
-        name: { value: 'one.ee' },
-        add: nil,
-        rem: nil,
         chg: [
-          registrant: { value: 'sh8013' },
+          registrant: { value: 'mak21' },
           authInfo: [
-            pw: { value: 'b3rafsla' }
+            pw: { value: '2BARfoo' }
           ]
         ]
       )
-
       generated = Nokogiri::XML(xml).to_s.squish
       expect(generated).to eq(expected)
     end
