@@ -74,6 +74,8 @@ module EppErrors
     errors[:epp_errors] ||= []
     t = errors.generate_message(*msg) if msg.is_a?(Array)
     t = msg if msg.is_a?(String)
-    errors[:epp_errors] << { code: code, msg: t, value: { val: val, obj: obj } }
+    err = { code: code, msg: t }
+    err[:value] = { val: val, obj: obj } if val.present?
+    errors[:epp_errors] << err
   end
 end

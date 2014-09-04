@@ -37,9 +37,11 @@ describe 'EPP Domain', epp: true do
     end
 
     context 'with two epp users' do
+      let(:domain) { Domain.first }
+
       before(:each) do
         Fabricate(:domain_general_setting_group)
-        Fabricate(:domain, name: 'example.ee', registrar: zone) # belongs to zone
+        Fabricate(:domain, name: 'example.ee', registrar: zone)
       end
 
       it 'can not see other registrar domains' do
@@ -49,12 +51,13 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'transfers a domain' do
-        pw = Domain.first.auth_info
+        pw = domain.auth_info
         xml = domain_transfer_xml(pw: pw)
         response = epp_request(xml, :xml, :elkdata)
 
-        d = Domain.first
-        dtl = d.domain_transfers.last
+        domain.reload
+        dtl = domain.domain_transfers.last
+
         trn_data = response[:parsed].css('trnData')
         expect(trn_data.css('name').text).to eq('example.ee')
         expect(trn_data.css('trStatus').text).to eq('serverApproved')
@@ -62,69 +65,85 @@ describe 'EPP Domain', epp: true do
         expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
         expect(trn_data.css('acID').text).to eq('10577829')
         expect(trn_data.css('acDate').text).to eq(dtl.transferred_at.to_time.utc.to_s)
-        expect(trn_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
+        expect(trn_data.css('exDate').text).to eq(domain.valid_to.to_time.utc.to_s)
 
-        expect(d.registrar).to eq(elkdata)
+        expect(domain.registrar).to eq(elkdata)
 
         s = Setting.find_by(code: 'transfer_wait_time')
         s.update(value: 1)
 
-        pw = Domain.first.auth_info
+        domain.reload
+        pw = domain.auth_info
         xml = domain_transfer_xml(pw: pw) # request with new password
 
         response = epp_request(xml, :xml, :zone)
         trn_data = response[:parsed].css('trnData')
 
-        d = Domain.first
-        dtl = d.domain_transfers.last
+        domain.reload
+        dtl = domain.domain_transfers.last
 
-        expect(d.domain_transfers.count).to eq(2)
+        expect(domain.domain_transfers.count).to eq(2)
 
         expect(trn_data.css('name').text).to eq('example.ee')
         expect(trn_data.css('trStatus').text).to eq('pending')
         expect(trn_data.css('reID').text).to eq('10577829')
         expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
         expect(trn_data.css('acID').text).to eq('123')
-        expect(trn_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
+        expect(trn_data.css('exDate').text).to eq(domain.valid_to.to_time.utc.to_s)
 
-        expect(d.registrar).to eq(elkdata)
+        expect(domain.registrar).to eq(elkdata)
 
         # should return same data if pending already
         response = epp_request(xml, :xml, :zone)
         trn_data = response[:parsed].css('trnData')
 
-        expect(d.domain_transfers.count).to eq(2)
+        expect(domain.domain_transfers.count).to eq(2)
         expect(trn_data.css('name').text).to eq('example.ee')
         expect(trn_data.css('trStatus').text).to eq('pending')
         expect(trn_data.css('reID').text).to eq('10577829')
         expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
         expect(trn_data.css('acID').text).to eq('123')
-        expect(trn_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
+        expect(trn_data.css('exDate').text).to eq(domain.valid_to.to_time.utc.to_s)
 
-        expect(d.registrar).to eq(elkdata)
+        expect(domain.registrar).to eq(elkdata)
       end
 
-      it 'approves the transfer request', pending: true do
-        fail 'Check if domain belongs to approving user'
-        s = Setting.find_by(code: 'transfer_wait_time')
-        s.update(value: 1)
+      it 'prohibits wrong registrar from approving tranfer' do
+        domain.domain_transfers.create({
+          status: DomainTransfer::PENDING,
+          transfer_requested_at: Time.zone.now,
+          transfer_to: elkdata,
+          transfer_from: zone
+        })
 
-        pw = Domain.first.auth_info
-        xml = domain_transfer_xml(pw: pw)
-
-        epp_request(xml, :xml)
-        xml = domain_transfer_xml(op: 'approve', pw: pw)
+        xml = domain_transfer_xml(pw: domain.auth_info, op: 'approve')
         response = epp_request(xml, :xml, :elkdata)
+        expect(response[:result_code]).to eq('2304')
+        expect(response[:msg]).to eq('Transfer can be approved only by current domain registrar')
+      end
+
+      it 'approves the transfer request' do
+        domain.domain_transfers.create({
+          status: DomainTransfer::PENDING,
+          transfer_requested_at: Time.zone.now,
+          transfer_to: elkdata,
+          transfer_from: zone
+        })
+
+        xml = domain_transfer_xml(pw: domain.auth_info, op: 'approve')
+        response = epp_request(xml, :xml, :zone)
+
+        domain.reload
+        dtl = domain.domain_transfers.last
+
         trn_data = response[:parsed].css('trnData')
-        d = Domain.first
-        dtl = d.domain_transfers.last
 
         expect(trn_data.css('name').text).to eq('example.ee')
         expect(trn_data.css('trStatus').text).to eq('clientApproved')
-        expect(trn_data.css('reID').text).to eq('10577829') # TODO See if this is correct
+        expect(trn_data.css('reID').text).to eq('123')
         expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
-        expect(trn_data.css('acID').text).to eq('10577829') # TODO See if this is correct
-        expect(trn_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
+        expect(trn_data.css('acID').text).to eq('10577829')
+        expect(trn_data.css('exDate').text).to eq(domain.valid_to.to_time.utc.to_s)
       end
 
       it 'does not transfer with invalid pw' do
@@ -134,7 +153,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'creates new pw after successful transfer' do
-        pw = Domain.first.auth_info
+        pw = domain.auth_info
         xml = domain_transfer_xml(pw: pw)
         epp_request(xml, :xml) # transfer domain
         response = epp_request(xml, :xml) # attempt second transfer

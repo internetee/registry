@@ -132,3 +132,5 @@ en:
     domains: 'Domains'
     epp_users: 'EPP Users'
     registrars: 'Registrars'
+
+  transfer_can_be_approved_only_by_current_registrar: 'Transfer can be approved only by current domain registrar'
