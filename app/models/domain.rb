@@ -76,8 +76,10 @@ class Domain < ActiveRecord::Base
     errors.empty?
   end
 
+  # TODO: Find out if there are any attributes that can be changed
+  # if not, delete this method
   def parse_and_update_domain_attributes(parsed_frame)
-    assign_attributes(self.class.parse_update_params_from_frame(parsed_frame))
+    #assign_attributes(self.class.parse_update_params_from_frame(parsed_frame))
 
     errors.empty?
   end
@@ -389,15 +391,6 @@ class Domain < ActiveRecord::Base
         }
       end
       res
-    end
-
-    def parse_update_params_from_frame(parsed_frame)
-      ret = {}
-      return ret if parsed_frame.blank?
-
-      ret[:auth_info] = parsed_frame.css('pw').try(:text)
-
-      ret.compact
     end
 
     def check_availability(domains)

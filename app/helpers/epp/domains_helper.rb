@@ -43,7 +43,6 @@ module Epp::DomainsHelper
       @domain.parse_and_attach_domain_dependencies(@ph, parsed_frame.css('add'))
       @domain.parse_and_detach_domain_dependencies(parsed_frame.css('rem'))
       @domain.parse_and_update_domain_dependencies(parsed_frame.css('chg'))
-      @domain.parse_and_update_domain_attributes(parsed_frame.css('chg'))
 
       if @domain.errors.any?
         handle_errors(@domain)

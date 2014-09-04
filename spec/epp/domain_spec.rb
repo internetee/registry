@@ -488,6 +488,7 @@ describe 'EPP Domain', epp: true do
 
       it 'updates a domain' do
         Fabricate(:contact, code: 'mak21')
+        existing_pw = Domain.first.auth_info
 
         xml_params = {
           chg: [
@@ -504,7 +505,7 @@ describe 'EPP Domain', epp: true do
         d = Domain.last
 
         expect(d.owner_contact_code).to eq('mak21')
-        expect(d.auth_info).to eq('2BARfoo')
+        expect(d.auth_info).to eq(existing_pw)
       end
 
       it 'does not assign invalid status to domain' do
