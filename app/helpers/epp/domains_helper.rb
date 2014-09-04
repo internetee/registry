@@ -84,7 +84,7 @@ module Epp::DomainsHelper
   ## CREATE
   def validate_domain_create_request
     @ph = params_hash['epp']['command']['create']['create']
-    xml_attrs_present?(@ph, [['name'], ['ns'], ['authInfo'], ['contact'], ['registrant']])
+    xml_attrs_present?(@ph, [['name'], ['ns'], ['contact'], ['registrant']])
   end
 
   def domain_create_params

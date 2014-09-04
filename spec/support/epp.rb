@@ -84,10 +84,6 @@ module Epp
             xml_params[:contacts].each do |x|
               xml.tag!('domain:contact', x[:contact_value], 'type' => (x[:contact_type]))
             end if xml_params[:contacts].any?
-
-            xml.tag!('domain:authInfo') do
-              xml.tag!('domain:pw', xml_params[:pw] || '2fooBAR')
-            end if xml_params[:authInfo] != false
           end
         end
         xml.clTRID 'ABC-12345'

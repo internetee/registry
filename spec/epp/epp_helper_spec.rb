@@ -19,9 +19,6 @@ describe 'EPP Helper', epp: true do
                 <domain:contact type="admin">sh8013</domain:contact>
                 <domain:contact type="tech">sh8013</domain:contact>
                 <domain:contact type="tech">sh801333</domain:contact>
-                <domain:authInfo>
-                  <domain:pw>2fooBAR</domain:pw>
-                </domain:authInfo>
               </domain:create>
             </create>
             <clTRID>ABC-12345</clTRID>
@@ -50,9 +47,6 @@ describe 'EPP Helper', epp: true do
                 <domain:contact type="admin">2323rafaf</domain:contact>
                 <domain:contact type="tech">3dgxx</domain:contact>
                 <domain:contact type="tech">345xxv</domain:contact>
-                <domain:authInfo>
-                  <domain:pw>sdgdgd4esfsa</domain:pw>
-                </domain:authInfo>
               </domain:create>
             </create>
             <clTRID>ABC-12345</clTRID>
@@ -70,8 +64,7 @@ describe 'EPP Helper', epp: true do
           { contact_value: '2323rafaf', contact_type: 'admin' },
           { contact_value: '3dgxx', contact_type: 'tech' },
           { contact_value: '345xxv', contact_type: 'tech' }
-        ],
-        pw: 'sdgdgd4esfsa'
+        ]
       )
 
       generated = Nokogiri::XML(xml).to_s.squish
@@ -98,8 +91,7 @@ describe 'EPP Helper', epp: true do
         period: false,
         nameservers: [],
         registrant: false,
-        contacts: [],
-        authInfo: false
+        contacts: []
       )
 
       generated = Nokogiri::XML(xml).to_s.squish
