@@ -33,6 +33,8 @@ class Domain < ActiveRecord::Base
   delegate :code, to: :owner_contact, prefix: true
   delegate :name, to: :registrar, prefix: true
 
+  before_create :generate_auth_info
+
   validates :name_dirty, domain_name: true, uniqueness: true
   validates :period, numericality: { only_integer: true }
   validates :name, :owner_contact, presence: true
@@ -312,6 +314,12 @@ class Domain < ActiveRecord::Base
   end
 
   ## SHARED
+
+  def generate_auth_info
+    begin
+      self.auth_info = SecureRandom.hex
+    end while self.class.exists?(auth_info: auth_info)
+  end
 
   # For domain transfer
   def authenticate(pw)

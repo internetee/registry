@@ -99,8 +99,7 @@ module Epp::DomainsHelper
       period: (@ph[:period].to_i == 0) ? 1 : @ph[:period].to_i,
       period_unit: Domain.parse_period_unit_from_frame(parsed_frame) || 'y',
       valid_from: Date.today,
-      valid_to: valid_to,
-      auth_info: @ph[:authInfo][:pw]
+      valid_to: valid_to
     }
   end
 

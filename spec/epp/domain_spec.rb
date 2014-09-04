@@ -49,7 +49,9 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'transfers a domain' do
-        response = epp_request(domain_transfer_xml, :xml)
+        pw = Domain.first.auth_info
+        xml = domain_transfer_xml(pw: pw)
+        response = epp_request(xml, :xml)
 
         d = Domain.first
         dtl = d.domain_transfers.last
@@ -65,7 +67,7 @@ describe 'EPP Domain', epp: true do
         s = Setting.find_by(code: 'transfer_wait_time')
         s.update(value: 1)
 
-        response = epp_request(domain_transfer_xml, :xml)
+        response = epp_request(xml, :xml)
         trn_data = response[:parsed].css('trnData')
 
         d = Domain.first
@@ -81,7 +83,7 @@ describe 'EPP Domain', epp: true do
         expect(trn_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
 
         # should return same data if pending already
-        response = epp_request(domain_transfer_xml, :xml)
+        response = epp_request(xml, :xml)
         trn_data = response[:parsed].css('trnData')
 
         expect(d.domain_transfers.count).to eq(2)
@@ -97,8 +99,11 @@ describe 'EPP Domain', epp: true do
         s = Setting.find_by(code: 'transfer_wait_time')
         s.update(value: 1)
 
-        epp_request(domain_transfer_xml, :xml)
-        xml = domain_transfer_xml(op: 'approve')
+        pw = Domain.first.auth_info
+        xml = domain_transfer_xml(pw: pw)
+
+        epp_request(xml, :xml)
+        xml = domain_transfer_xml(op: 'approve', pw: pw)
         response = epp_request(xml, :xml)
         trn_data = response[:parsed].css('trnData')
         d = Domain.first
@@ -147,6 +152,7 @@ describe 'EPP Domain', epp: true do
         expect(d.admin_contacts.count).to eq 1
 
         expect(d.nameservers.count).to eq(2)
+        expect(d.auth_info).not_to be_empty
       end
 
       it 'does not create duplicate domain' do

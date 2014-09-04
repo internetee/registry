@@ -76,5 +76,10 @@ describe Domain do
       expect(Fabricate.build(:domain, period: 4).valid?).to be false
       expect(Fabricate.build(:domain, period: 3).valid?).to be true
     end
+
+    it 'generates auth info' do
+      d = Fabricate(:domain)
+      expect(d.auth_info).to_not be_empty
+    end
   end
 end
