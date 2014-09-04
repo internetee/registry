@@ -4,16 +4,24 @@ module Epp
   end
 
   # handles connection and login automatically
-  def epp_request(data, type = :filename)
-    return parse_response(server.request(read_body(data))) if type == :filename
-    return parse_response(server.request(data))
+  def epp_request(data, *args)
+    server = server_gitlab
+    server = server_elkdata if args.include?(:elkdata)
+    server = server_zone if args.include?(:zone)
+
+    return parse_response(server.request(data)) if args.include?(:xml)
+    return parse_response(server.request(read_body(data)))
   rescue => e
     e
   end
 
-  def epp_plain_request(data, type = :filename)
-    return parse_response(server.send_request(read_body(data))) if type == :filename
-    return parse_response(server.send_request(data))
+  def epp_plain_request(data, *args)
+    server = server_gitlab
+    server = server_elkdata if args.include?(:elkdata)
+    server = server_zone if args.include?(:zone)
+
+    return parse_response(server.send_request(data)) if args.include?(:xml)
+    return parse_response(server.send_request(read_body(data)))
   rescue => e
     e
   end

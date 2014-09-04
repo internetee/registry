@@ -1,11 +1,18 @@
 require 'rails_helper'
 
 describe 'EPP Domain', epp: true do
-  let(:server) { Epp::Server.new({ server: 'localhost', tag: 'gitlab', password: 'ghyt9e4fu', port: 701 }) }
+  let(:server_gitlab) { Epp::Server.new({ server: 'localhost', tag: 'gitlab', password: 'ghyt9e4fu', port: 701 }) }
+  let(:server_zone) { Epp::Server.new({ server: 'localhost', tag: 'zone', password: 'ghyt9e4fu', port: 701 }) }
+  let(:server_elkdata) { Epp::Server.new({ server: 'localhost', tag: 'elkdata', password: 'ghyt9e4fu', port: 701 }) }
+  let(:elkdata) { Fabricate(:registrar, { name: 'Elkdata', reg_no: '123' }) }
+  let(:zone) { Fabricate(:registrar) }
 
   context 'with valid user' do
     before(:each) do
       Fabricate(:epp_user)
+      Fabricate(:epp_user, username: 'zone', registrar: zone)
+      Fabricate(:epp_user, username: 'elkdata', registrar: elkdata)
+
       Fabricate(:domain_validation_setting_group)
       Fabricate(:domain_statuses_setting_group)
     end
@@ -31,19 +38,12 @@ describe 'EPP Domain', epp: true do
 
     context 'with two epp users' do
       before(:each) do
-        elkdata = Fabricate(
-          :registrar,
-          name: 'Elkdata',
-          reg_no: '123'
-        )
-
-        Fabricate(:epp_user, username: 'elkdata_user', registrar: elkdata)
         Fabricate(:domain_general_setting_group)
-        Fabricate(:domain, name: 'example.ee', registrar: elkdata)
+        Fabricate(:domain, name: 'example.ee', registrar: zone) # belongs to zone
       end
 
       it 'can not see other registrar domains' do
-        response = epp_request(domain_info_xml, :xml)
+        response = epp_request(domain_info_xml, :xml, :elkdata)
         expect(response[:result_code]).to eq('2303')
         expect(response[:msg]).to eq('Domain not found')
       end
@@ -51,23 +51,28 @@ describe 'EPP Domain', epp: true do
       it 'transfers a domain' do
         pw = Domain.first.auth_info
         xml = domain_transfer_xml(pw: pw)
-        response = epp_request(xml, :xml)
+        response = epp_request(xml, :xml, :elkdata)
 
         d = Domain.first
         dtl = d.domain_transfers.last
         trn_data = response[:parsed].css('trnData')
         expect(trn_data.css('name').text).to eq('example.ee')
         expect(trn_data.css('trStatus').text).to eq('serverApproved')
-        expect(trn_data.css('reID').text).to eq('10577829')
+        expect(trn_data.css('reID').text).to eq('123')
         expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
-        expect(trn_data.css('acID').text).to eq('123')
+        expect(trn_data.css('acID').text).to eq('10577829')
         expect(trn_data.css('acDate').text).to eq(dtl.transferred_at.to_time.utc.to_s)
         expect(trn_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
+
+        expect(d.registrar).to eq(elkdata)
 
         s = Setting.find_by(code: 'transfer_wait_time')
         s.update(value: 1)
 
-        response = epp_request(xml, :xml)
+        pw = Domain.first.auth_info
+        xml = domain_transfer_xml(pw: pw) # request with new password
+
+        response = epp_request(xml, :xml, :zone)
         trn_data = response[:parsed].css('trnData')
 
         d = Domain.first
@@ -79,11 +84,13 @@ describe 'EPP Domain', epp: true do
         expect(trn_data.css('trStatus').text).to eq('pending')
         expect(trn_data.css('reID').text).to eq('10577829')
         expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
-        expect(trn_data.css('acID').text).to eq('10577829')
+        expect(trn_data.css('acID').text).to eq('123')
         expect(trn_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
 
+        expect(d.registrar).to eq(elkdata)
+
         # should return same data if pending already
-        response = epp_request(xml, :xml)
+        response = epp_request(xml, :xml, :zone)
         trn_data = response[:parsed].css('trnData')
 
         expect(d.domain_transfers.count).to eq(2)
@@ -91,11 +98,14 @@ describe 'EPP Domain', epp: true do
         expect(trn_data.css('trStatus').text).to eq('pending')
         expect(trn_data.css('reID').text).to eq('10577829')
         expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
-        expect(trn_data.css('acID').text).to eq('10577829')
+        expect(trn_data.css('acID').text).to eq('123')
         expect(trn_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
+
+        expect(d.registrar).to eq(elkdata)
       end
 
-      it 'approves the transfer request' do
+      it 'approves the transfer request', pending: true do
+        fail 'Check if domain belongs to approving user'
         s = Setting.find_by(code: 'transfer_wait_time')
         s.update(value: 1)
 
@@ -104,16 +114,16 @@ describe 'EPP Domain', epp: true do
 
         epp_request(xml, :xml)
         xml = domain_transfer_xml(op: 'approve', pw: pw)
-        response = epp_request(xml, :xml)
+        response = epp_request(xml, :xml, :elkdata)
         trn_data = response[:parsed].css('trnData')
         d = Domain.first
         dtl = d.domain_transfers.last
 
         expect(trn_data.css('name').text).to eq('example.ee')
         expect(trn_data.css('trStatus').text).to eq('clientApproved')
-        expect(trn_data.css('reID').text).to eq('10577829')
+        expect(trn_data.css('reID').text).to eq('10577829') # TODO See if this is correct
         expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
-        expect(trn_data.css('acID').text).to eq('123')
+        expect(trn_data.css('acID').text).to eq('10577829') # TODO See if this is correct
         expect(trn_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
       end
 

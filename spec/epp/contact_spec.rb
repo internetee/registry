@@ -1,11 +1,17 @@
 require 'rails_helper'
 
 describe 'EPP Contact', epp: true do
-  let(:server) { Epp::Server.new({ server: 'localhost', tag: 'gitlab', password: 'ghyt9e4fu', port: 701 }) }
+  let(:server_gitlab) { Epp::Server.new({ server: 'localhost', tag: 'gitlab', password: 'ghyt9e4fu', port: 701 }) }
+  let(:server_zone) { Epp::Server.new({ server: 'localhost', tag: 'zone', password: 'ghyt9e4fu', port: 701 }) }
+  let(:server_elkdata) { Epp::Server.new({ server: 'localhost', tag: 'elkdata', password: 'ghyt9e4fu', port: 701 }) }
+  let(:elkdata) { Fabricate(:registrar, { name: 'Elkdata', reg_no: '123' }) }
+  let(:zone) { Fabricate(:registrar) }
 
   context 'with valid user' do
     before(:each) do
       Fabricate(:epp_user)
+      Fabricate(:epp_user, username: 'zone', registrar: zone)
+      Fabricate(:epp_user, username: 'elkdata', registrar: elkdata)
       Fabricate(:domain_validation_setting_group)
     end
     context 'create command' do
