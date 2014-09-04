@@ -122,6 +122,16 @@ describe 'EPP Domain', epp: true do
         expect(response[:result_code]).to eq('2200')
         expect(response[:msg]).to eq('Authentication error')
       end
+
+      it 'creates new pw after successful transfer' do
+        pw = Domain.first.auth_info
+        xml = domain_transfer_xml(pw: pw)
+        epp_request(xml, :xml) # transfer domain
+        response = epp_request(xml, :xml) # attempt second transfer
+
+        expect(response[:result_code]).to eq('2200')
+        expect(response[:msg]).to eq('Authentication error')
+      end
     end
 
     context 'with citizen as an owner' do

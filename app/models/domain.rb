@@ -236,6 +236,8 @@ class Domain < ActiveRecord::Base
         transfer_from: registrar
       )
 
+      generate_auth_info
+
       self.registrar = params[:current_user].registrar
       save
     end
@@ -247,6 +249,8 @@ class Domain < ActiveRecord::Base
       status: DomainTransfer::CLIENT_APPROVED,
       transferred_at: Time.zone.now
     )
+
+    generate_auth_info
 
     self.registrar = p.transfer_to
     save
