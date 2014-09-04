@@ -492,10 +492,7 @@ describe 'EPP Domain', epp: true do
 
         xml_params = {
           chg: [
-            registrant: { value: 'mak21' },
-            authInfo: [
-              pw: { value: '2BARfoo' }
-            ]
+            registrant: { value: 'mak21' }
           ]
         }
 

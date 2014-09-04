@@ -246,9 +246,6 @@ describe 'EPP Helper', epp: true do
                 </domain:rem>
                 <domain:chg>
                   <domain:registrant>mak21</domain:registrant>
-                  <domain:authInfo>
-                    <domain:pw>2BARfoo</domain:pw>
-                  </domain:authInfo>
                 </domain:chg>
               </domain:update>
             </update>
@@ -278,10 +275,7 @@ describe 'EPP Helper', epp: true do
           status: { attrs: { s: 'clientUpdateProhibited' }, value: '' }
         ],
         chg: [
-          registrant: { value: 'mak21' },
-          authInfo: [
-            pw: { value: '2BARfoo' }
-          ]
+          registrant: { value: 'mak21' }
         ]
       )
 
@@ -315,9 +309,6 @@ describe 'EPP Helper', epp: true do
                 </domain:rem>
                 <domain:chg>
                   <domain:registrant>sh8013</domain:registrant>
-                  <domain:authInfo>
-                    <domain:pw>b3rafsla</domain:pw>
-                  </domain:authInfo>
                 </domain:chg>
               </domain:update>
             </update>
@@ -345,10 +336,7 @@ describe 'EPP Helper', epp: true do
           status: { attrs: { s: 'clientUpdateProhibited' }, value: '' }
         ],
         chg: [
-          registrant: { value: 'sh8013' },
-          authInfo: [
-            pw: { value: 'b3rafsla' }
-          ]
+          registrant: { value: 'sh8013' }
         ]
       )
 
@@ -366,9 +354,6 @@ describe 'EPP Helper', epp: true do
                 <domain:name>example.ee</domain:name>
                 <domain:chg>
                   <domain:registrant>mak21</domain:registrant>
-                  <domain:authInfo>
-                    <domain:pw>2BARfoo</domain:pw>
-                  </domain:authInfo>
                 </domain:chg>
               </domain:update>
             </update>
@@ -379,10 +364,7 @@ describe 'EPP Helper', epp: true do
 
       xml = domain_update_xml(
         chg: [
-          registrant: { value: 'mak21' },
-          authInfo: [
-            pw: { value: '2BARfoo' }
-          ]
+          registrant: { value: 'mak21' }
         ]
       )
       generated = Nokogiri::XML(xml).to_s.squish
