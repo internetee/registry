@@ -211,18 +211,13 @@ class Domain < ActiveRecord::Base
 
   def transfer(params)
     return false unless authenticate(params[:pw])
+
     pt = pending_transfer
-
     if pt && params[:action] == 'approve'
-      if params[:current_user].registrar != pt.transfer_from
-        add_epp_error('2304', nil, nil, I18n.t('transfer_can_be_approved_only_by_current_registrar'))
-        return false
-      end
-
-      approve_pending_transfer and return true
+      return approve_pending_transfer(params[:current_user])
     end
 
-    return true if pending_transfer
+    return true if pt
 
     wait_time = SettingGroup.domain_general.setting(:transfer_wait_time).value.to_i
 
@@ -249,16 +244,21 @@ class Domain < ActiveRecord::Base
     end
   end
 
-  def approve_pending_transfer
-    p = pending_transfer
-    p.update(
+  def approve_pending_transfer(current_user)
+    pt = pending_transfer
+    if current_user.registrar != pt.transfer_from
+      add_epp_error('2304', nil, nil, I18n.t('transfer_can_be_approved_only_by_current_registrar'))
+      return false
+    end
+
+    pt.update(
       status: DomainTransfer::CLIENT_APPROVED,
       transferred_at: Time.zone.now
     )
 
     generate_auth_info
 
-    self.registrar = p.transfer_to
+    self.registrar = pt.transfer_to
     save
   end
 
