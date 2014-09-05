@@ -83,7 +83,8 @@ module Epp::DomainsHelper
   ## CREATE
   def validate_domain_create_request
     @ph = params_hash['epp']['command']['create']['create']
-    xml_attrs_present?(@ph, [['name'], ['ns'], ['contact'], ['registrant']])
+    # TODO: Verify contact presence if registrant is juridical
+    xml_attrs_present?(@ph, [['name'], ['ns'], ['registrant']])
   end
 
   def domain_create_params

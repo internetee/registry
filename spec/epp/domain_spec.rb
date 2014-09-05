@@ -218,10 +218,7 @@ describe 'EPP Domain', epp: true do
 
         response = epp_request(xml, :xml)
         expect(response[:results][0][:result_code]).to eq('2003')
-        expect(response[:results][0][:msg]).to eq('Required parameter missing: contact')
-
-        expect(response[:results][1][:result_code]).to eq('2003')
-        expect(response[:results][1][:msg]).to eq('Required parameter missing: registrant')
+        expect(response[:results][0][:msg]).to eq('Required parameter missing: registrant')
       end
 
       it 'does not create domain without nameservers' do

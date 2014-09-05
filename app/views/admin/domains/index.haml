@@ -1,0 +1,24 @@
+%h2= t('shared.domains')
+%hr
+.row
+  .col-md-12
+    .table-responsive
+      %table.table.table-striped.table-bordered.table-condensed
+        %tr
+          %th{class: 'col-xs-2'}
+            = t('shared.name')
+          %th{class: 'col-xs-2'}
+            = t('shared.registrar')
+          %th{class: 'col-xs-2'}
+            = t('shared.owner')
+          %th{class: 'col-xs-1'}
+            = t('shared.valid_to')
+          %th{class: 'col-xs-1'}
+            = t('shared.action')
+        - @domains.each do |x|
+          %tr
+            %td= link_to(x, admin_domain_path(x))
+            %td= link_to(x.registrar, root_path) if x.registrar
+            %td= link_to(x.owner_contact, root_path)
+            %td= l(x.valid_to, format: :short)
+            %td= link_to(t('shared.edit'), edit_admin_domain_path(x), class: 'btn btn-primary btn-xs')

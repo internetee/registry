@@ -327,6 +327,10 @@ class Domain < ActiveRecord::Base
 
   ## SHARED
 
+  def to_s
+    name
+  end
+
   def generate_auth_info
     begin
       self.auth_info = SecureRandom.hex

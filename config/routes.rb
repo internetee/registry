@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   end
 
   namespace(:admin) do
+    resources :domains
     resources :setting_groups
   end
 
@@ -13,7 +14,7 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'admin/setting_groups#index'
+  root 'admin/domains#index'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

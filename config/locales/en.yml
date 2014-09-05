@@ -20,6 +20,17 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  time:
+    formats:
+      default: "%d. %B %Y, %H:%M"
+      longer: "%a, %e. %b %Y, %H:%M"
+      long: "%A, %e. %B %Y, %H:%M"
+      short: "%d.%m.%y, %H:%M"
+
+  date:
+    formats:
+      year_and_month: "%Y %B"
+
   activerecord:
     errors:
       models:
@@ -127,8 +138,12 @@ en:
     domains: 'Domains'
     epp_users: 'EPP Users'
     registrars: 'Registrars'
+    valid_to: 'Valid to'
+    name: 'Name'
 
     transfer_can_be_approved_only_by_current_registrar: 'Transfer can be approved only by current domain registrar'
     edit_settings: 'Edit settings'
     setting_group: 'Setting group'
     setting: 'Setting'
+    registrar: 'Registrar'
+    owner: 'Owner'

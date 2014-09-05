@@ -113,6 +113,10 @@ class Contact < ActiveRecord::Base
     }
   end
 
+  def to_s
+    name
+  end
+
   class << self
     def extract_attributes(ph, type = :create)
       contact_hash = {
