@@ -5,10 +5,10 @@
     %table.table.table-striped.table-bordered
       %tr
         %th{class: 'col-xs-9'}
-          = t('.setting_group')
+          = t('shared.setting_group')
         %th{class: 'col-xs-2'}
           = t('shared.action')
       - @setting_groups.each do |x|
         %tr
           %td= t("setting_groups.codes.#{x.code}")
-          %td= link_to(t('.edit_settings'), setting_group_path(x), class: 'btn btn-primary btn-xs')
+          %td= link_to(t('shared.edit_settings'), admin_setting_group_path(x), class: 'btn btn-primary btn-xs')

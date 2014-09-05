@@ -106,12 +106,7 @@ en:
   setting_groups:
     codes:
       domain_validation: 'Domain validation'
-
-    index:
-      setting_group: 'Setting group'
-      edit_settings: 'Edit settings'
-    show:
-      setting: 'Setting'
+      domain_general: 'Domain general'
 
   settings:
     codes:
@@ -133,4 +128,7 @@ en:
     epp_users: 'EPP Users'
     registrars: 'Registrars'
 
-  transfer_can_be_approved_only_by_current_registrar: 'Transfer can be approved only by current domain registrar'
+    transfer_can_be_approved_only_by_current_registrar: 'Transfer can be approved only by current domain registrar'
+    edit_settings: 'Edit settings'
+    setting_group: 'Setting group'
+    setting: 'Setting'

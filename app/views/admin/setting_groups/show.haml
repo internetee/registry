@@ -1,14 +1,14 @@
 %h2= t("setting_groups.codes.#{@setting_group.code}")
 %hr
-= form_for(@setting_group) do |f|
+= form_for([:admin, @setting_group]) do |f|
   .row
     .col-md-12
       %table.table.table-striped.table-bordered
         %tr
           %th{class: 'col-xs-9'}
-            = t('.setting')
+            = t('setting')
           %th{class: 'col-xs-2'}
-            = t('shared.value')
+            = t('value')
         - @setting_group.settings.each do |setting|
           = f.fields_for :settings, setting do |sf|
             %tr

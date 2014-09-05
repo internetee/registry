@@ -1,4 +1,4 @@
-class SettingGroupsController < ApplicationController
+class Admin::SettingGroupsController < ApplicationController
   before_action :set_setting_group, only: [:show, :update]
 
   def index
@@ -9,7 +9,7 @@ class SettingGroupsController < ApplicationController
 
   def update
     if @setting_group.update(setting_group_params)
-      redirect_to @setting_group
+      redirect_to [:admin, @setting_group]
     else
       render 'show'
     end
