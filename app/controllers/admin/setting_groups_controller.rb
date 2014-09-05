@@ -2,7 +2,8 @@ class Admin::SettingGroupsController < ApplicationController
   before_action :set_setting_group, only: [:show, :update]
 
   def index
-    @setting_groups = SettingGroup.all
+    @q = SettingGroup.search(params[:q])
+    @setting_groups = @q.result.page(params[:page])
   end
 
   def show; end
