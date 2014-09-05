@@ -22,3 +22,6 @@
             %td= link_to(x.owner_contact, root_path)
             %td= l(x.valid_to, format: :short)
             %td= link_to(t('shared.edit'), edit_admin_domain_path(x), class: 'btn btn-primary btn-xs')
+.row
+  .col-md-12
+    = paginate @domains

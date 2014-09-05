@@ -1,5 +1,5 @@
 class Admin::DomainsController < ApplicationController
   def index
-    @domains = Domain.all
+    @domains = Domain.order(:name).page(params[:page])
   end
 end

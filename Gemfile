@@ -42,7 +42,11 @@ gem 'isikukood'
 
 gem 'bootstrap-sass', '~> 3.2.0.1'
 
+# for visual loader
 gem 'nprogress-rails', '~> 0.1.3.1'
+
+# for pagination
+gem 'kaminari', '~> 0.16.1'
 
 group :assets do
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes

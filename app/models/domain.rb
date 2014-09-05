@@ -3,7 +3,6 @@ class Domain < ActiveRecord::Base
   # TODO most inputs should be trimmed before validatation, probably some global logic?
 
   include EppErrors
-
   EPP_ATTR_MAP = {
     owner_contact: 'registrant',
     name_dirty: 'name',
