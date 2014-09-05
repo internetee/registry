@@ -1,0 +1,11 @@
+%h2= "#{t('shared.domain_details')}"
+%hr
+.row
+  .col-md-6= render 'admin/domains/partials/general'
+  .col-md-6= render 'admin/domains/partials/owner'
+.row
+  .col-md-12= render 'admin/domains/partials/tech_contacts'
+.row
+  .col-md-12= render 'admin/domains/partials/admin_contacts'
+.row
+  .col-md-12= render 'admin/domains/partials/nameservers'

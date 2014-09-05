@@ -30,6 +30,9 @@ class Domain < ActiveRecord::Base
   has_many :domain_transfers, dependent: :delete_all
 
   delegate :code, to: :owner_contact, prefix: true
+  delegate :email, to: :owner_contact, prefix: true
+  delegate :ident, to: :owner_contact, prefix: true
+  delegate :phone, to: :owner_contact, prefix: true
   delegate :name, to: :registrar, prefix: true
 
   before_create :generate_auth_info

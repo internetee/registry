@@ -23,4 +23,8 @@ class Nameserver < ActiveRecord::Base
       ]
     }
   end
+
+  def to_s
+    hostname
+  end
 end

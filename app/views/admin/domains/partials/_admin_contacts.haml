@@ -1,0 +1,15 @@
+.panel.panel-default
+  .panel-heading= t('shared.admin_contacts')
+  .table-responsive
+    %table.table.table-hover.table-bordered.table-condensed
+      %thead
+        %tr
+          %th{class: 'col-xs-4'}= t('shared.name')
+          %th{class: 'col-xs-5'}= t('shared.email')
+          %th{class: 'col-xs-3'}= t('shared.action')
+      %tbody
+        - @domain.admin_contacts.each do |x|
+          %tr
+            %td= link_to(x, root_path)
+            %td= x.email
+            %td= link_to(t('shared.edit'), root_path, class: 'btn btn-primary btn-xs')

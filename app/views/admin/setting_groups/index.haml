@@ -3,13 +3,15 @@
 .row
   .col-md-12
     .table-responsive
-      %table.table.table-striped.table-bordered.table-condensed
-        %tr
-          %th{class: 'col-xs-9'}
-            = sort_link(@q, 'code', t('shared.setting_group'))
-          %th{class: 'col-xs-2'}
-            = t('shared.action')
-        - @setting_groups.each do |x|
+      %table.table.table-hover.table-bordered.table-condensed
+        %thead
           %tr
-            %td= t("setting_groups.codes.#{x.code}")
-            %td= link_to(t('shared.edit_settings'), admin_setting_group_path(x), class: 'btn btn-primary btn-xs')
+            %th{class: 'col-xs-9'}
+              = sort_link(@q, 'code', t('shared.setting_group'))
+            %th{class: 'col-xs-2'}
+              = t('shared.action')
+        %tbody
+          - @setting_groups.each do |x|
+            %tr
+              %td= t("setting_groups.codes.#{x.code}")
+              %td= link_to(t('shared.edit_settings'), admin_setting_group_path(x), class: 'btn btn-primary btn-xs')
