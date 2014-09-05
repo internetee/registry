@@ -42,6 +42,8 @@ gem 'isikukood'
 
 gem 'bootstrap-sass', '~> 3.2.0.1'
 
+gem 'nprogress-rails', '~> 0.1.3.1'
+
 group :assets do
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   gem 'therubyracer',  platforms: :ruby
@@ -71,7 +73,7 @@ group :development, :test do
   gem 'capybara', '~> 2.4.1'
   # For feature testing
   # gem 'capybara-webkit', '1.2.0' # Webkit driver didn't work with turbolinks
-  gem 'phantomjs', require: 'phantomjs/poltergeist'
+  gem 'phantomjs', '~> 1.9.7.1', require: 'phantomjs/poltergeist'
   gem 'poltergeist', '~> 1.5.1' # We are using PhantomJS instead
 
   # For cleaning db in feature and epp tests
