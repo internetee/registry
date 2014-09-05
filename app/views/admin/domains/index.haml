@@ -6,13 +6,13 @@
       %table.table.table-striped.table-bordered.table-condensed
         %tr
           %th{class: 'col-xs-2'}
-            = t('shared.name')
+            = sort_link(@q, 'name')
           %th{class: 'col-xs-2'}
-            = t('shared.registrar')
+            = sort_link(@q, 'registrar_name', t('shared.registrar'))
           %th{class: 'col-xs-2'}
-            = t('shared.owner')
+            = sort_link(@q, 'owner_contact_international_address_name', t('shared.owner'))
           %th{class: 'col-xs-1'}
-            = t('shared.valid_to')
+            = sort_link(@q, 'valid_to', t('shared.valid_to'))
           %th{class: 'col-xs-1'}
             = t('shared.action')
         - @domains.each do |x|

@@ -48,6 +48,9 @@ gem 'nprogress-rails', '~> 0.1.3.1'
 # for pagination
 gem 'kaminari', '~> 0.16.1'
 
+# for searching
+gem 'ransack', '~> 1.3.0'
+
 group :assets do
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   gem 'therubyracer',  platforms: :ruby
