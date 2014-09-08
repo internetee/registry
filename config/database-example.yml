@@ -3,13 +3,17 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: 5
-  username: internetee
-  password: internetee_pwd
+  username: registry
+  password: registry_pwd
 
 development:
   <<: *default
-  database: internetee_development
+  database: registry_development
 
 test:
   <<: *default
-  database: internetee_test
+  database: registry_test
+
+production:
+  <<: *default
+  database: registry_production
