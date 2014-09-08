@@ -4,6 +4,7 @@
 #= require bootstrap-sprockets
 #= require nprogress
 #= require nprogress-turbolinks
+#= require bootstrap3-typeahead.min
 #= require_tree .
 
 NProgress.configure

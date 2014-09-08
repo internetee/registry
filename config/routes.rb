@@ -8,6 +8,17 @@ Rails.application.routes.draw do
   namespace(:admin) do
     resources :domains
     resources :setting_groups
+    resources :registrars do
+      collection do
+        get :search
+      end
+    end
+
+    resources :contacts do
+      collection do
+        get 'search'
+      end
+    end
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

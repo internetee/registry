@@ -181,3 +181,6 @@ en:
     delete: 'Delete'
     are_you_sure: 'Are you sure?'
     back: 'Back'
+    new_domain: 'New domain'
+    registrar_name: 'Registrar name'
+    contact_code: 'Contact code'

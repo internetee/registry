@@ -7,7 +7,6 @@
     %meta{content: "Gitlab LTD", name: "author"}/
     = csrf_meta_tags
     = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true
-    = javascript_include_tag 'application', 'data-turbolinks-track' => true
     %link{href: "../../favicon.ico", rel: "icon"}/
     %title Eesti Interneti SA
   %body
@@ -51,4 +50,5 @@
     .container
       = yield
 
+    = javascript_include_tag 'application', 'data-turbolinks-track' => true
 
