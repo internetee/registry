@@ -176,3 +176,8 @@ en:
     hostname: 'Hostname'
     ipv4: 'IPv4'
     ipv6: 'IPv6'
+    statuses: 'Statuses'
+    description: 'Description'
+    delete: 'Delete'
+    are_you_sure: 'Are you sure?'
+    back: 'Back'

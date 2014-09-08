@@ -12,4 +12,7 @@
           %tr
             %td= link_to(x, root_path)
             %td= x.email
-            %td= link_to(t('shared.edit'), root_path, class: 'btn btn-primary btn-xs')
+            %td
+              = link_to(t('shared.edit'), root_path, class: 'btn btn-primary btn-xs')
+              = link_to(t('shared.detach'), root_path, method: :delete, data: { confirm: t('shared.are_you_sure') }, class: 'btn btn-warning btn-xs')
+
