@@ -10,9 +10,11 @@
         = f.label :period
         = f.text_field(:period, class: 'form-control')
     .col-md-6
-      .form-group
+      .form-group.has-feedback
         = f.label :registrar
-        = f.text_field(:registrar, class: 'form-control js-registrars-typeahead', placeholder: t('shared.registrar_name'), autocomplete: 'off')
+        = f.text_field(:registrar, class: 'form-control js-typeahead js-registrars-typeahead', placeholder: t('shared.registrar_name'), autocomplete: 'off')
+        %span.glyphicon.glyphicon-remove.form-control-feedback.js-registrar-unselected
+        %span.glyphicon.glyphicon-ok.form-control-feedback.js-registrar-selected.hidden
         = f.hidden_field(:registrar_id)
       .form-group
         = f.label :owner_contact

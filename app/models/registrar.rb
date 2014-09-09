@@ -11,7 +11,7 @@ class Registrar < ActiveRecord::Base
   class << self
     def search_by_query(query)
       res = Registrar.search(name_or_reg_no_cont: query).result
-      res.reduce([]) { |o, v| o << { id: v[:id], display: "#{v[:name]} (#{v[:reg_no]})" } }
+      res.reduce([]) { |o, v| o << { id: v[:id], display_key: "#{v[:name]} (#{v[:reg_no]})" } }
     end
   end
 end

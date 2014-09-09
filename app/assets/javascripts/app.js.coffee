@@ -1,19 +1,20 @@
-$(".js-registrars-typeahead").typeahead
-  source: (query, process) ->
-    $.get "/admin/registrars/search", {query: query}, (data) ->
-      map = {}
-      registrars = []
+registrarSource = new Bloodhound(
+  datumTokenizer: (d) ->
+    Bloodhound.tokenizers.whitespace d.display_key
 
-      $.each data, (i, registrar) ->
-        map[registrar.id] = registrar
-        registrars.push registrar.display
+  queryTokenizer: Bloodhound.tokenizers.whitespace
+  remote: "/admin/registrars/search?q=%QUERY"
+)
 
-      process registrars
-  updater: (item) ->
-    $('input[name="domain[registrar_id]"]').val()
-
-$(".js-contacts-typeahead").typeahead
-  source: (query, process) ->
-    $.get "/admin/contacts/search", {query: query}, (data) ->
-      process data
-
+registrarSource.initialize()
+$(".js-registrars-typeahead").typeahead(
+  highlight: true,
+  hint: false
+,
+  displayKey: "display_key"
+  source: registrarSource.ttAdapter()
+).on('typeahead:selected', (e, obj) ->
+  $('input[name="domain[registrar_id]"]').val obj.id
+  $('.js-registrar-selected').removeClass('hidden')
+  $('.js-registrar-unselected').addClass('hidden')
+)
