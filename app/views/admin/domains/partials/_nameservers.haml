@@ -1,5 +1,9 @@
 .panel.panel-default
-  .panel-heading= t('shared.nameservers')
+  .panel-heading.clearfix
+    .pull-left
+      = t('shared.nameservers')
+    .pull-right
+      = link_to(t('shared.add'), new_admin_domain_nameserver_path(@domain), class: 'btn btn-primary btn-xs')
   .table-responsive
     %table.table.table-hover.table-bordered.table-condensed
       %thead
@@ -17,3 +21,7 @@
             %td
               = link_to(t('shared.edit'), root_path, class: 'btn btn-primary btn-xs')
               = link_to(t('shared.delete'), root_path, method: :delete, data: { confirm: t('shared.are_you_sure') }, class: 'btn btn-danger btn-xs')
+      %tfoot
+        %tr
+          %td{colspan: 4}
+            Nameservers count must be between %{min}-%{max}

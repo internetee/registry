@@ -12,7 +12,11 @@
     .col-md-6
       .form-group
         = f.label :registrar
-        = f.text_field(:registrar, class: 'form-control js-registrars-typeahead', placeholder: t('shared.registrar_name'))
+        = f.text_field(:registrar, class: 'form-control js-registrars-typeahead', placeholder: t('shared.registrar_name'), autocomplete: 'off')
+        = f.hidden_field(:registrar_id)
       .form-group
         = f.label :owner_contact
-        = f.text_field(:owner_contact, class: 'form-control js-contacts-typeahead', placeholder: t('shared.contact_code'))
+        = f.text_field(:owner_contact, class: 'form-control js-contacts-typeahead', placeholder: t('shared.contact_code'), autocomplete: 'off')
+  .row
+    .col-md-12.text-right
+      = button_tag(t('shared.save'), class: 'btn btn-primary')
