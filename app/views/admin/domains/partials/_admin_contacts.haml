@@ -1,4 +1,5 @@
-.panel.panel-default
+- panel_class = @domain.errors.messages[:admin_contacts] ? 'panel-danger' : 'panel-default'
+.panel{class: panel_class}
   .panel-heading= t('shared.admin_contacts')
   .table-responsive
     %table.table.table-hover.table-bordered.table-condensed
@@ -15,4 +16,8 @@
             %td
               = link_to(t('shared.edit'), root_path, class: 'btn btn-primary btn-xs')
               = link_to(t('shared.detach'), root_path, method: :delete, data: { confirm: t('shared.are_you_sure') }, class: 'btn btn-warning btn-xs')
-
+      - if @domain.errors.messages[:admin_contacts]
+        %tfoot
+          - @domain.errors.messages[:admin_contacts].each do |x|
+            %tr
+              %td{colspan: 4}= x

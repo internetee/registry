@@ -1,6 +1,6 @@
 class Admin::NameserversController < ApplicationController
   def new
-    @domain = Domain.find_by(params[:id])
+    @domain = Domain.find(params[:domain_id])
     @nameserver = @domain.nameservers.build
   end
 

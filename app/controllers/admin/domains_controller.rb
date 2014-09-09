@@ -6,7 +6,11 @@ class Admin::DomainsController < ApplicationController
   end
 
   def create
-    @domain = Domain.new(domain_params)
+    @domain = Domain.new({
+      valid_from: Date.today,
+      valid_to: Date.today + 1.year,
+      registered_at: Time.zone.now
+    }.merge(domain_params))
 
     if @domain.save
       redirect_to [:admin, @domain]
@@ -18,6 +22,10 @@ class Admin::DomainsController < ApplicationController
   def index
     @q = Domain.search(params[:q])
     @domains = @q.result.page(params[:page])
+  end
+
+  def show
+    @domain.all_dependencies_valid?
   end
 
   private

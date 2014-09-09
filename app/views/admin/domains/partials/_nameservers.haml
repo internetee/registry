@@ -1,4 +1,5 @@
-.panel.panel-default
+- panel_class = @domain.errors.messages[:nameservers] ? 'panel-danger' : 'panel-default'
+.panel{class: panel_class}
   .panel-heading.clearfix
     .pull-left
       = t('shared.nameservers')
@@ -21,7 +22,9 @@
             %td
               = link_to(t('shared.edit'), root_path, class: 'btn btn-primary btn-xs')
               = link_to(t('shared.delete'), root_path, method: :delete, data: { confirm: t('shared.are_you_sure') }, class: 'btn btn-danger btn-xs')
-      %tfoot
-        %tr
-          %td{colspan: 4}
-            Nameservers count must be between %{min}-%{max}
+      - if @domain.errors.messages[:nameservers]
+        %tfoot
+          - @domain.errors.messages[:nameservers].each do |x|
+            %tr
+              %td{colspan: 4}= x
+
