@@ -6,6 +6,13 @@ class Admin::DomainsController < ApplicationController
   end
 
   def create
+    @domain = Domain.new(domain_params)
+
+    if @domain.save
+      redirect_to [:admin, @domain]
+    else
+      render 'new'
+    end
   end
 
   def index
@@ -20,6 +27,6 @@ class Admin::DomainsController < ApplicationController
   end
 
   def domain_params
-    params.require(:domain).permit(:name, :period, :registrar, :owner_contact)
+    params.require(:domain).permit(:name, :period, :registrar_id, :owner_contact_id)
   end
 end

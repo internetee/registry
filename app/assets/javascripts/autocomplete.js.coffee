@@ -1,5 +1,6 @@
 class @Autocomplete
   @bindTypeahead: (obj) ->
+    Autocomplete.toggleOkFeedback(obj.hiddenSelector)
     $(obj.selector).typeahead(
       highlight: true,
       hint: false
@@ -8,12 +9,7 @@ class @Autocomplete
       source: Autocomplete.constructSourceAdapter(obj.remote)
     ).on('typeahead:selected', (e, item) ->
       $(obj.hiddenSelector).val item.id
-
-      ok = $(obj.hiddenSelector).parent('div.has-feedback').find('.js-typeahead-ok')
-      remove = $(obj.hiddenSelector).parents('div.has-feedback').find('.js-typeahead-remove')
-
-      ok.removeClass('hidden')
-      remove.addClass('hidden')
+      Autocomplete.toggleOkFeedback(obj.hiddenSelector)
     )
 
   @constructSourceAdapter: (remote) ->
@@ -27,3 +23,11 @@ class @Autocomplete
 
     source.initialize()
     source.ttAdapter()
+
+  @toggleOkFeedback: (hiddenSelector) ->
+    if $(hiddenSelector).val()
+      ok = $(hiddenSelector).parent('div.has-feedback').find('.js-typeahead-ok')
+      remove = $(hiddenSelector).parents('div.has-feedback').find('.js-typeahead-remove')
+
+      ok.removeClass('hidden')
+      remove.addClass('hidden')

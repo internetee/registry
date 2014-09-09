@@ -80,7 +80,7 @@ en:
             admin_contacts:
               out_of_range: 'Admin contacts count must be between 1 - infinity'
             nameservers:
-              out_of_range: 'Nameservers count must be between %{min}-%{max}'
+              out_of_range: 'count must be between %{min}-%{max}'
               not_found: 'Nameserver was not found'
               taken: 'Nameserver already exists on this domain'
             period:
@@ -112,6 +112,7 @@ en:
         name_dirty: 'Domain name'
         name_puny: 'Domain name'
         owner_contact: 'Registrant'
+        nameservers: 'Nameservers'
 
   errors:
     messages:
