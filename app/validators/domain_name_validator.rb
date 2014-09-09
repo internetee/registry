@@ -8,9 +8,9 @@ class DomainNameValidator < ActiveModel::EachValidator
 
   def validate_each(record, attribute, value)
     if !self.class.validate_format(value)
-      record.errors[attribute] << (options[:message] || 'invalid format')
+      record.errors[attribute] << (options[:message] || record.errors.generate_message(attribute, :invalid))
     elsif !self.class.validate_reservation(value)
-      record.errors.add(attribute, (options[:message] || :reserved))
+      record.errors.add(attribute, (options[:message] || record.errors.generate_message(attribute, :reserved)))
     end
   end
 

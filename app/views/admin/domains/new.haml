@@ -1,9 +1,10 @@
 %h2= t('shared.new_domain')
 %hr
 = form_for([:admin, @domain]) do |f|
+  = @domain.errors.inspect
   - if @domain.errors.any?
-    - @domain.errors.full_messages.each do |x|
-      = x
+    - @domain.errors.each do |attr, err|
+      = err
       %br
 
 

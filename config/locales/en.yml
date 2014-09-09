@@ -70,6 +70,7 @@ en:
         domain:
           attributes:
             name_dirty:
+              invalid: 'Domain name is invalid'
               reserved: 'Domain name is reserved or restricted'
               taken: 'Domain name already exists'
             owner_contact:
@@ -80,11 +81,12 @@ en:
             admin_contacts:
               out_of_range: 'Admin contacts count must be between 1 - infinity'
             nameservers:
-              out_of_range: 'count must be between %{min}-%{max}'
+              out_of_range: 'Nameservers count must be between %{min}-%{max}'
               not_found: 'Nameserver was not found'
               taken: 'Nameserver already exists on this domain'
             period:
               out_of_range: 'Period must add up to 1, 2 or 3 years'
+              not_a_number: 'Period is not a number'
             auth_info:
               wrong_pw: 'Authentication error'
             domain_statuses:

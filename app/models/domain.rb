@@ -39,11 +39,9 @@ class Domain < ActiveRecord::Base
 
   validates :name_dirty, domain_name: true, uniqueness: true
   validates :period, numericality: { only_integer: true }
-  validates :name, :owner_contact, presence: true
+  validates :owner_contact, presence: true
 
   validate :validate_period
-  validate :validate_nameservers_count
-  validate :validate_admin_contacts_count
 
   def name=(value)
     value.strip!
@@ -54,8 +52,7 @@ class Domain < ActiveRecord::Base
 
   ### CREATE & UPDATE ###
 
-  def parse_and_attach_domain_dependencies(ph, parsed_frame)
-    attach_owner_contact(ph[:registrant]) if ph[:registrant]
+  def parse_and_attach_domain_dependencies(parsed_frame)
     attach_contacts(self.class.parse_contacts_from_frame(parsed_frame))
     attach_nameservers(self.class.parse_nameservers_from_frame(parsed_frame))
     attach_statuses(self.class.parse_statuses_from_frame(parsed_frame))
@@ -298,6 +295,13 @@ class Domain < ActiveRecord::Base
   def validate_exp_dates(cur_exp_date)
     return if cur_exp_date.to_date == valid_to
     add_epp_error('2306', 'curExpDate', cur_exp_date, I18n.t('errors.messages.epp_exp_dates_do_not_match'))
+  end
+
+  def all_dependencies_valid?
+    validate_nameservers_count
+    validate_admin_contacts_count
+
+    errors.empty?
   end
 
   def epp_code_map # rubocop:disable Metrics/MethodLength

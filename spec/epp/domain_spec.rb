@@ -172,7 +172,6 @@ describe 'EPP Domain', epp: true do
 
       it 'creates a domain' do
         response = epp_request(domain_create_xml, :xml)
-
         d = Domain.first
 
         expect(response[:result_code]).to eq('1000')

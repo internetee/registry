@@ -3,8 +3,20 @@ module Epp::DomainsHelper
     Domain.transaction do
       @domain = Domain.new(domain_create_params)
 
-      handle_errors(@domain) and return unless @domain.parse_and_attach_domain_dependencies(@ph, parsed_frame)
-      handle_errors(@domain) and return unless @domain.save
+      @domain.attach_owner_contact(@ph[:registrant]) if @ph[:registrant]
+      @domain.save
+      @domain.parse_and_attach_domain_dependencies(parsed_frame)
+      @domain.all_dependencies_valid?
+
+      if @domain.errors.any?
+        handle_errors(@domain)
+        raise ActiveRecord::Rollback and return
+      end
+
+      unless @domain.save
+        handle_errors(@domain)
+        raise ActiveRecord::Rollback and return
+      end
 
       render '/epp/domains/create'
     end
@@ -40,7 +52,7 @@ module Epp::DomainsHelper
 
       handle_errors(@domain) and return unless @domain
 
-      @domain.parse_and_attach_domain_dependencies(@ph, parsed_frame.css('add'))
+      @domain.parse_and_attach_domain_dependencies(parsed_frame.css('add'))
       @domain.parse_and_detach_domain_dependencies(parsed_frame.css('rem'))
       @domain.parse_and_update_domain_dependencies(parsed_frame.css('chg'))
 
