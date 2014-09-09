@@ -1,20 +1,9 @@
-registrarSource = new Bloodhound(
-  datumTokenizer: (d) ->
-    Bloodhound.tokenizers.whitespace d.display_key
+Autocomplete.bindTypeahead
+  remote: '/admin/registrars/search'
+  selector: '.js-registrar-typeahead'
+  hiddenSelector: '.js-registrar-id'
 
-  queryTokenizer: Bloodhound.tokenizers.whitespace
-  remote: "/admin/registrars/search?q=%QUERY"
-)
-
-registrarSource.initialize()
-$(".js-registrars-typeahead").typeahead(
-  highlight: true,
-  hint: false
-,
-  displayKey: "display_key"
-  source: registrarSource.ttAdapter()
-).on('typeahead:selected', (e, obj) ->
-  $('input[name="domain[registrar_id]"]').val obj.id
-  $('.js-registrar-selected').removeClass('hidden')
-  $('.js-registrar-unselected').addClass('hidden')
-)
+Autocomplete.bindTypeahead
+  remote: '/admin/contacts/search'
+  selector: '.js-contact-typeahead'
+  hiddenSelector: '.js-contact-id'

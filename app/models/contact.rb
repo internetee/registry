@@ -144,6 +144,11 @@ class Contact < ActiveRecord::Base
 
       res
     end
+
+    def search_by_query(query)
+      res = search(code_cont: query).result
+      res.reduce([]) { |o, v| o << { id: v[:id], display_key: "#{v.name} (#{v.code})" } }
+    end
   end
 
   private

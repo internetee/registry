@@ -5,7 +5,8 @@
 #= require nprogress
 #= require nprogress-turbolinks
 #= require typeahead.bundle.min
-#= require_tree .
+#= require autocomplete
+#= require app
 
 NProgress.configure
   showSpinner: false
