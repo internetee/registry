@@ -1,0 +1,28 @@
+= form_for([:admin, @domain, @nameserver]) do |f|
+  = render 'admin/shared/errors', object: @domain
+  = render 'admin/shared/errors', object: f.object
+
+  - if @domain.errors.any?
+    %hr
+
+  .row
+    .col-md-6
+      .form-group
+        = label_tag t('shared.domain')
+        = text_field_tag :domain, @domain.name, disabled: true, class: 'form-control'
+    .col-md-6
+      .form-group
+        = f.label :hostname
+        = f.text_field(:hostname, class: 'form-control', autocomplete: 'off')
+  .row
+    .col-md-6
+      .form-group
+        = f.label :ipv4
+        = f.text_field(:ipv4, class: 'form-control', autocomplete: 'off')
+    .col-md-6
+      .form-group
+        = f.label :ipv6
+        = f.text_field(:ipv6, class: 'form-control', autocomplete: 'off')
+  .row
+    .col-md-12.text-right
+      = button_tag(t('shared.save'), class: 'btn btn-primary')

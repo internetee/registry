@@ -1,4 +1,9 @@
-%h2= t('shared.domains')
+.row
+  .col-sm-6
+    %h2.text-center-xs= t('shared.domains')
+  .col-sm-6
+    %h2.text-right.text-center-xs
+      = link_to(t('shared.add'), new_admin_domain_path, class: 'btn btn-primary')
 %hr
 .row
   .col-md-12

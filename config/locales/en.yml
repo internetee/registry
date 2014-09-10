@@ -190,3 +190,5 @@ en:
     contact_code: 'Contact code'
     add: 'Add'
     domain: 'Domain'
+    new_nameserver: 'New nameserver'
+    edit_nameserver: 'Edit nameserver'

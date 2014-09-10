@@ -20,8 +20,8 @@
             %td= x.ipv4
             %td= x.ipv6
             %td
-              = link_to(t('shared.edit'), root_path, class: 'btn btn-primary btn-xs')
-              = link_to(t('shared.delete'), [:admin, x], method: :delete, data: { confirm: t('shared.are_you_sure') }, class: 'btn btn-danger btn-xs')
+              = link_to(t('shared.edit'), edit_admin_domain_nameserver_path(@domain, x), class: 'btn btn-primary btn-xs')
+              = link_to(t('shared.delete'), admin_domain_nameserver_path(@domain, x), method: :delete, data: { confirm: t('shared.are_you_sure') }, class: 'btn btn-danger btn-xs')
       - if @domain.errors.messages[:nameservers]
         %tfoot
           - @domain.errors.messages[:nameservers].each do |x|

@@ -7,8 +7,7 @@ Rails.application.routes.draw do
 
   namespace(:admin) do
     resources :domains do
-      resources :nameservers, shallow: true
-
+      resources :nameservers
     end
     resources :setting_groups
     resources :registrars do
