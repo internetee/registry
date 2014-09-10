@@ -6,11 +6,21 @@ class Admin::NameserversController < ApplicationController
 
   def create
     @domain = Domain.find(params[:domain_id])
-    if @domain.nameservers.create(nameserver_params)
+    @nameserver = @domain.nameservers.build(nameserver_params)
+
+    if @domain.save
       redirect_to [:admin, @domain]
     else
       render 'new'
     end
+  end
+
+  def destroy
+    # TODO: Refactor this
+    @nameserver = Nameserver.find(params[:id])
+    @domain = @nameserver.domains.first
+    @nameserver.destroy
+    redirect_to [:admin, @domain]
   end
 
   private

@@ -1,0 +1,5 @@
+- if object.errors.any?
+  - object.errors.each do |attr, err|
+    - next if attr == :epp_errors
+    = err
+    %br

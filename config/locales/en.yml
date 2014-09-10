@@ -81,6 +81,7 @@ en:
             admin_contacts:
               out_of_range: 'Admin contacts count must be between 1 - infinity'
             nameservers:
+              invalid: 'Nameserver is invalid'
               out_of_range: 'Nameservers count must be between %{min}-%{max}'
               not_found: 'Nameserver was not found'
               taken: 'Nameserver already exists on this domain'
@@ -188,3 +189,4 @@ en:
     registrar_name: 'Registrar name'
     contact_code: 'Contact code'
     add: 'Add'
+    domain: 'Domain'
