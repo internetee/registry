@@ -4,7 +4,12 @@ module Epp::DomainsHelper
       @domain = Domain.new(domain_create_params)
 
       @domain.attach_owner_contact(@ph[:registrant]) if @ph[:registrant]
-      @domain.save
+
+      unless @domain.save
+        handle_errors(@domain)
+        raise ActiveRecord::Rollback and return
+      end
+
       @domain.parse_and_attach_domain_dependencies(parsed_frame)
       @domain.all_dependencies_valid?
 

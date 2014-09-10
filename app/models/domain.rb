@@ -42,6 +42,8 @@ class Domain < ActiveRecord::Base
   validates :owner_contact, presence: true
 
   validate :validate_period
+  validate :validate_nameservers_uniqueness
+  validate :validate_statuses_uniqueness
 
   def name=(value)
     value.strip!
@@ -117,24 +119,12 @@ class Domain < ActiveRecord::Base
 
   def attach_nameservers(ns_list)
     ns_list.each do |ns_attrs|
-      existing = nameservers.select { |x| x.hostname == ns_attrs[:hostname] }
-
       nameservers.build(ns_attrs)
-
-      next if existing.empty?
-      add_epp_error('2302', 'hostObj', ns_attrs[:hostname], [:nameservers, :taken])
     end
   end
 
   def attach_statuses(status_list)
     status_list.each do |x|
-      existing = domain_statuses.select { |o| o.value == x[:value] }
-
-      if existing.any?
-        add_epp_error('2302', 'status', x[:value], [:domain_statuses, :taken])
-        next
-      end
-
       unless DomainStatus::STATUSES.include?(x[:value])
         add_epp_error('2303', 'status', x[:value], [:domain_statuses, :not_found])
         next
@@ -273,6 +263,34 @@ class Domain < ActiveRecord::Base
 
     return if nameservers.length.between?(min, max)
     errors.add(:nameservers, :out_of_range, { min: min, max: max })
+  end
+
+  def validate_statuses_uniqueness
+    validated = []
+    domain_statuses.each do |status|
+      next if validated.include?(status.value)
+
+      existing = domain_statuses.select { |x| x.value == status.value }
+      if existing.length > 1
+        validated << status.value
+        errors.add(:domain_statuses, :taken)
+        add_epp_error('2302', 'status', status.value, [:domain_statuses, :taken])
+      end
+    end
+  end
+
+  def validate_nameservers_uniqueness
+    validated = []
+    nameservers.each do |ns|
+      next if validated.include?(ns.hostname)
+
+      existing = nameservers.select { |x| x.hostname == ns.hostname }
+      if existing.length > 1
+        validated << ns.hostname
+        errors.add(:nameservers, :taken)
+        add_epp_error('2302', 'hostObj', ns.hostname, [:nameservers, :taken])
+      end
+    end
   end
 
   def validate_admin_contacts_count
