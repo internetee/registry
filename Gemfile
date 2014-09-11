@@ -76,16 +76,19 @@ group :development do
   gem 'guard-rubocop', '~> 1.1.0'
 end
 
-group :test do
+group :development, :test do
   gem 'capybara', '~> 2.4.1'
   # For feature testing
   # gem 'capybara-webkit', '1.2.0' # Webkit driver didn't work with turbolinks
+  gem 'phantomjs-binaries', '~> 1.9.2.4'
   gem 'phantomjs', '~> 1.9.7.1', require: 'phantomjs/poltergeist'
   gem 'poltergeist', '~> 1.5.1' # We are using PhantomJS instead
-  gem 'phantomjs-binaries', '~> 1.9.2.4'
 
   # For cleaning db in feature and epp tests
   gem 'database_cleaner', '~> 1.3.0'
+
+  # EPP client
+  gem 'epp', '~> 1.4.0'
 
   # Replacement for fixtures
   gem 'fabrication', '~> 2.11.3'
@@ -93,21 +96,17 @@ group :test do
   # Library to generate fake data
   gem 'faker', '~> 1.3.0'
 
+  # For debugging
+  gem 'pry', '~> 0.10.1'
+  gem 'pry-byebug', '~> 1.3.3'
+
   # Testing framework
   gem 'rspec-rails', '~> 3.0.2'
 
   # Additional matchers for RSpec
   gem 'shoulda-matchers', '~> 2.6.1', require: false
-end
-
-group :development, :test do
-  # EPP client
-  gem 'epp', '~> 1.4.0'
-
-  # For debugging
-  gem 'pry', '~> 0.10.1'
-  gem 'pry-byebug', '~> 1.3.3'
 
   # For unique IDs (used by the epp gem)
   gem 'uuidtools', '~> 2.1.4'
 end
+
