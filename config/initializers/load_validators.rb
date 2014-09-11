@@ -1,1 +1,1 @@
-Internetee::Application.config.autoload_paths += %W(#{Internetee::Application.config.root}/app/validators/)
+Registry::Application.config.autoload_paths += %W(#{Registry::Application.config.root}/app/validators/)
