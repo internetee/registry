@@ -82,6 +82,7 @@ group :test do
   # gem 'capybara-webkit', '1.2.0' # Webkit driver didn't work with turbolinks
   gem 'phantomjs', '~> 1.9.7.1', require: 'phantomjs/poltergeist'
   gem 'poltergeist', '~> 1.5.1' # We are using PhantomJS instead
+  gem 'phantomjs-binaries', '~> 1.9.2.4'
 
   # For cleaning db in feature and epp tests
   gem 'database_cleaner', '~> 1.3.0'
