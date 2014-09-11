@@ -33,7 +33,7 @@ class Domain < ActiveRecord::Base
   validates :owner_contact, presence: true
 
   validate :validate_period
-  validate :validate_nameservers_uniqueness
+  #validate :validate_nameservers_uniqueness
 
   def name=(value)
     value.strip!

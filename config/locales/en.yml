@@ -99,6 +99,7 @@ en:
           attributes:
             hostname:
               invalid: 'Hostname is invalid'
+              taken: 'Nameserver already exists on this domain'
             ipv4:
               invalid: 'IPv4 is invalid'
             ipv6:
