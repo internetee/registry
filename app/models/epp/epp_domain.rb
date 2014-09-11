@@ -1,4 +1,4 @@
-class EppDomain < Domain
+class Epp::EppDomain < Domain
   include EppErrors
 
   EPP_ATTR_MAP = {
