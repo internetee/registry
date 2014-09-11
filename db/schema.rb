@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140902121843) do
+ActiveRecord::Schema.define(version: 20140911101604) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -77,11 +77,6 @@ ActiveRecord::Schema.define(version: 20140902121843) do
     t.datetime "updated_at"
   end
 
-  create_table "domain_nameservers", id: false, force: true do |t|
-    t.integer "domain_id"
-    t.integer "nameserver_id"
-  end
-
   create_table "domain_statuses", force: true do |t|
     t.integer "domain_id"
     t.string  "description"
@@ -107,16 +102,13 @@ ActiveRecord::Schema.define(version: 20140902121843) do
     t.datetime "valid_from"
     t.datetime "valid_to"
     t.integer  "owner_contact_id"
-    t.integer  "admin_contact_id"
-    t.integer  "technical_contact_id"
-    t.integer  "ns_set_id"
     t.string   "auth_info"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name_dirty"
     t.string   "name_puny"
     t.integer  "period"
-    t.string   "period_unit",          limit: 1
+    t.string   "period_unit",      limit: 1
   end
 
   create_table "epp_sessions", force: true do |t|
@@ -143,24 +135,10 @@ ActiveRecord::Schema.define(version: 20140902121843) do
   create_table "nameservers", force: true do |t|
     t.string   "hostname"
     t.string   "ipv4"
-    t.integer  "ns_set_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "ipv6"
-  end
-
-  create_table "nameservers_ns_sets", force: true do |t|
-    t.integer "nameserver_id"
-    t.integer "ns_set_id"
-  end
-
-  create_table "ns_sets", force: true do |t|
-    t.string   "code"
-    t.integer  "registrar_id"
-    t.string   "auth_info"
-    t.string   "report_level"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer  "domain_id"
   end
 
   create_table "registrars", force: true do |t|

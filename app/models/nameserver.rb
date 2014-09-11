@@ -6,9 +6,7 @@ class Nameserver < ActiveRecord::Base
   }
 
   belongs_to :registrar
-
-  has_many :domain_nameservers, dependent: :delete_all
-  has_many :domains, through: :domain_nameservers
+  belongs_to :domain
 
   validates :hostname, format: { with: /\A(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\z/ }
   validates :ipv4, format: { with: /\A(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\z/, allow_blank: true }

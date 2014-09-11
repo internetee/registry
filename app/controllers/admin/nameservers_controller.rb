@@ -1,5 +1,4 @@
 class Admin::NameserversController < ApplicationController
-  # TODO: Refactor this to domain_nameservers controller!
   before_action :set_domain
   before_action :set_nameserver, only: [:edit, :update, :destroy]
 
