@@ -33,7 +33,6 @@ class Domain < ActiveRecord::Base
   validates :owner_contact, presence: true
 
   validate :validate_period
-  #validate :validate_nameservers_uniqueness
 
   def name=(value)
     value.strip!
@@ -54,20 +53,6 @@ class Domain < ActiveRecord::Base
 
     return if nameservers.length.between?(min, max)
     errors.add(:nameservers, :out_of_range, { min: min, max: max })
-  end
-
-  def validate_nameservers_uniqueness
-    validated = []
-    nameservers.each do |ns|
-      next if validated.include?(ns.hostname)
-
-      existing = nameservers.select { |x| x.hostname == ns.hostname }
-      if existing.length > 1
-        validated << ns.hostname
-        errors.add(:nameservers, :taken)
-        add_epp_error('2302', 'hostObj', ns.hostname, [:nameservers, :taken])
-      end
-    end
   end
 
   def validate_admin_contacts_count
