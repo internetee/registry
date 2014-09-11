@@ -7,7 +7,11 @@ class EppDomain < Domain
     period: 'period'
   }
 
+  validate :validate_nameservers_count
+  validate :validate_admin_contacts_count
+
   def parse_and_attach_domain_dependencies(parsed_frame)
+    attach_owner_contact(self.class.parse_owner_contact_from_frame(parsed_frame))
     attach_contacts(self.class.parse_contacts_from_frame(parsed_frame))
     attach_nameservers(self.class.parse_nameservers_from_frame(parsed_frame))
     attach_statuses(self.class.parse_statuses_from_frame(parsed_frame))
@@ -39,6 +43,7 @@ class EppDomain < Domain
   end
 
   def attach_owner_contact(code)
+    return unless code
     self.owner_contact = Contact.find_by(code: code)
 
     return if owner_contact
@@ -276,6 +281,10 @@ class EppDomain < Domain
       end
 
       res
+    end
+
+    def parse_owner_contact_from_frame(parsed_frame)
+      parsed_frame.css('registrant').first.try(:text)
     end
 
     def parse_period_unit_from_frame(parsed_frame)

@@ -103,13 +103,6 @@ class Domain < ActiveRecord::Base
     errors.add(:period, :out_of_range) unless valid_values.include?(period.to_s)
   end
 
-  def all_dependencies_valid?
-    validate_nameservers_count
-    validate_admin_contacts_count
-
-    errors.empty?
-  end
-
   ## SHARED
 
   def to_s
