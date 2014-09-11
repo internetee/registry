@@ -32,9 +32,6 @@ class Admin::NameserversController < ApplicationController
   end
 
   def destroy
-    # TODO: Refactor this
-    @nameserver = Nameserver.find(params[:id])
-    @domain = @nameserver.domains.first
     @nameserver.destroy
     redirect_to [:admin, @domain]
   end
