@@ -46,6 +46,21 @@ class Domain < ActiveRecord::Base
   end
 
   ### VALIDATIONS ###
+  def can_remove_nameserver?
+    sg = SettingGroup.domain_validation
+    min = sg.setting(:ns_min_count).value.to_i
+    return true if nameservers.length > min
+    errors.add(:nameservers, :greater_than_or_equal_to, { count: min })
+    false
+  end
+
+  def can_add_nameserver?
+    sg = SettingGroup.domain_validation
+    max = sg.setting(:ns_max_count).value.to_i
+    return true if nameservers.length < max
+    errors.add(:nameservers, :less_than_or_equal_to, { count: max })
+    false
+  end
 
   def validate_nameservers_count
     sg = SettingGroup.domain_validation
@@ -75,6 +90,8 @@ class Domain < ActiveRecord::Base
   def all_dependencies_valid?
     validate_nameservers_count
     validate_admin_contacts_count
+
+    errors.empty?
   end
 
   ## SHARED

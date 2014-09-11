@@ -85,6 +85,8 @@ en:
               out_of_range: 'Nameservers count must be between %{min}-%{max}'
               not_found: 'Nameserver was not found'
               taken: 'Nameserver already exists on this domain'
+              less_than_or_equal_to: 'Nameservers count must be less than or equal to %{count}'
+              greater_than_or_equal_to: 'Nameservers count must be greater than or equal to %{count}'
             period:
               out_of_range: 'Period must add up to 1, 2 or 3 years'
               not_a_number: 'Period is not a number'
@@ -198,3 +200,8 @@ en:
     domain: 'Domain'
     new_nameserver: 'New nameserver'
     edit_nameserver: 'Edit nameserver'
+    nameserver_deleted: 'Nameserver deleted!'
+    failed_to_delete_nameserver: 'Failed to delete nameserver!'
+    failed_to_add_nameserver: 'Failed to add nameserver!'
+    nameserver_added: 'Nameserver added!'
+    back_to_domain: 'Back to domain'
