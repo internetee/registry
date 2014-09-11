@@ -38,3 +38,4 @@ class Admin::DomainsController < ApplicationController
     params.require(:domain).permit(:name, :period, :registrar_id, :owner_contact_id)
   end
 end
+

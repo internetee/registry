@@ -67,7 +67,7 @@ en:
               blank: "Required parameter missing - ident"
             domains:
               exist: 'Object association prohibits operation'
-        epp_domain:
+        epp_domain: &epp_domain_ar_attributes
           attributes:
             name_dirty:
               invalid: 'Domain name is invalid'
@@ -93,6 +93,8 @@ en:
             domain_statuses:
               not_found: 'Status was not found'
               taken: 'Status already exists on this domain'
+        domain:
+          <<: *epp_domain_ar_attributes
         nameserver:
           attributes:
             hostname:
@@ -110,12 +112,15 @@ en:
             setting_id:
               taken: 'Status already exists on this domain'
     attributes:
-      epp_domain:
+      epp_domain: &epp_domain_attributes
         name: 'Domain name'
         name_dirty: 'Domain name'
         name_puny: 'Domain name'
         owner_contact: 'Registrant'
         nameservers: 'Nameservers'
+      domain:
+        <<: *epp_domain_attributes
+
 
   errors:
     messages:
