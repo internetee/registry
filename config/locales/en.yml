@@ -67,7 +67,7 @@ en:
               blank: "Required parameter missing - ident"
             domains:
               exist: 'Object association prohibits operation'
-        domain:
+        epp_domain:
           attributes:
             name_dirty:
               invalid: 'Domain name is invalid'
@@ -110,7 +110,7 @@ en:
             setting_id:
               taken: 'Status already exists on this domain'
     attributes:
-      domain:
+      epp_domain:
         name: 'Domain name'
         name_dirty: 'Domain name'
         name_puny: 'Domain name'

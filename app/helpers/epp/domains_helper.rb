@@ -1,7 +1,7 @@
 module Epp::DomainsHelper
   def create_domain
-    Domain.transaction do
-      @domain = Domain.new(domain_create_params)
+    EppDomain.transaction do
+      @domain = EppDomain.new(domain_create_params)
 
       @domain.attach_owner_contact(@ph[:registrant]) if @ph[:registrant]
 
@@ -29,7 +29,7 @@ module Epp::DomainsHelper
 
   def check_domain
     ph = params_hash['epp']['command']['check']['check']
-    @domains = Domain.check_availability(ph[:name])
+    @domains = EppDomain.check_availability(ph[:name])
     render '/epp/domains/check'
   end
 
@@ -52,7 +52,7 @@ module Epp::DomainsHelper
   end
 
   def update_domain
-    Domain.transaction do
+    EppDomain.transaction do
       @domain = find_domain
 
       handle_errors(@domain) and return unless @domain
@@ -106,15 +106,15 @@ module Epp::DomainsHelper
 
   def domain_create_params
     period = (@ph[:period].to_i == 0) ? 1 : @ph[:period].to_i
-    period_unit = Domain.parse_period_unit_from_frame(parsed_frame) || 'y'
-    valid_to = Date.today + Domain.convert_period_to_time(period, period_unit)
+    period_unit = EppDomain.parse_period_unit_from_frame(parsed_frame) || 'y'
+    valid_to = Date.today + EppDomain.convert_period_to_time(period, period_unit)
 
     {
       name: @ph[:name],
       registrar_id: current_epp_user.registrar.try(:id),
       registered_at: Time.now,
       period: (@ph[:period].to_i == 0) ? 1 : @ph[:period].to_i,
-      period_unit: Domain.parse_period_unit_from_frame(parsed_frame) || 'y',
+      period_unit: EppDomain.parse_period_unit_from_frame(parsed_frame) || 'y',
       valid_from: Date.today,
       valid_to: valid_to
     }
@@ -160,8 +160,8 @@ module Epp::DomainsHelper
 
   ## SHARED
   def find_domain(secure = { secure: true })
-    domain = Domain.find_by(name: @ph[:name], registrar: current_epp_user.registrar) if secure[:secure] == true
-    domain = Domain.find_by(name: @ph[:name]) if secure[:secure] == false
+    domain = EppDomain.find_by(name: @ph[:name], registrar: current_epp_user.registrar) if secure[:secure] == true
+    domain = EppDomain.find_by(name: @ph[:name]) if secure[:secure] == false
 
     unless domain
       epp_errors << { code: '2303', msg: I18n.t('errors.messages.epp_domain_not_found'), value: { obj: 'name', val: @ph[:name] } }
