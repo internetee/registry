@@ -35,7 +35,6 @@ class Domain < ActiveRecord::Base
 
   validate :validate_period
   validate :validate_nameservers_uniqueness
-  validate :validate_statuses_uniqueness
 
   def name=(value)
     value.strip!
@@ -56,20 +55,6 @@ class Domain < ActiveRecord::Base
 
     return if nameservers.length.between?(min, max)
     errors.add(:nameservers, :out_of_range, { min: min, max: max })
-  end
-
-  def validate_statuses_uniqueness
-    validated = []
-    domain_statuses.each do |status|
-      next if validated.include?(status.value)
-
-      existing = domain_statuses.select { |x| x.value == status.value }
-      if existing.length > 1
-        validated << status.value
-        errors.add(:domain_statuses, :taken)
-        add_epp_error('2302', 'status', status.value, [:domain_statuses, :taken])
-      end
-    end
   end
 
   def validate_nameservers_uniqueness

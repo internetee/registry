@@ -22,4 +22,18 @@ class DomainStatus < ActiveRecord::Base
   PENDING_UPDATE = 'pendingUpdate'
 
   STATUSES = [CLIENT_DELETE_PROHIBITED, SERVER_DELETE_PROHIBITED, CLIENT_HOLD, SERVER_HOLD, CLIENT_RENEW_PROHIBITED, SERVER_RENEW_PROHIBITED, CLIENT_TRANSFER_PROHIBITED, SERVER_TRANSFER_PROHIBITED, CLIENT_UPDATE_PROHIBITED, SERVER_UPDATE_PROHIBITED, INACTIVE, OK, PENDING_CREATE, PENDING_DELETE, PENDING_RENEW, PENDING_TRANSFER, PENDING_UPDATE]
+
+  EPP_ATTR_MAP = {
+    value: 'status'
+  }
+
+  validates :value, uniqueness: { scope: :domain_id }
+
+  def epp_code_map
+    {
+      '2302' => [ # Object exists
+        [:value, :taken]
+      ]
+    }
+  end
 end
