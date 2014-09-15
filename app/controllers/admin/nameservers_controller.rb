@@ -10,12 +10,18 @@ class Admin::NameserversController < ApplicationController
   def create
     @domain = Domain.find(params[:domain_id])
 
-    if @domain.can_add_nameserver?
-      @domain.nameservers.build(nameserver_params)
-      flash[:notice] = I18n.t('shared.nameserver_added')
-      redirect_to [:admin, @domain] and return if @domain.save
-    else
+    unless @domain.can_add_nameserver?
       @nameserver = @domain.nameservers.build(nameserver_params)
+      flash.now[:alert] = I18n.t('shared.failed_to_add_nameserver')
+      render 'new' and return
+    end
+
+    @domain.nameservers.build(nameserver_params)
+
+    if @domain.save
+      flash[:notice] = I18n.t('shared.nameserver_added')
+      redirect_to [:admin, @domain]
+    else
       flash.now[:alert] = I18n.t('shared.failed_to_add_nameserver')
       render 'new'
     end

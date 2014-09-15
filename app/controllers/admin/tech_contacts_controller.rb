@@ -2,9 +2,7 @@ class Admin::TechContactsController < ApplicationController
   before_action :set_domain
   before_action :set_contact, only: [:destroy]
 
-  def new
-
-  end
+  def new; end
 
   def create
     contact = Contact.find_by(id: params[:tech_contact_id])
