@@ -106,9 +106,7 @@ module Epp::DomainsHelper
       registrar_id: current_epp_user.registrar.try(:id),
       registered_at: Time.now,
       period: (@ph[:period].to_i == 0) ? 1 : @ph[:period].to_i,
-      period_unit: Epp::EppDomain.parse_period_unit_from_frame(parsed_frame) || 'y',
-      valid_from: Date.today,
-      valid_to: valid_to
+      period_unit: Epp::EppDomain.parse_period_unit_from_frame(parsed_frame) || 'y'
     }
   end
 

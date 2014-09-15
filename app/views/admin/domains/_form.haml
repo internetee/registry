@@ -11,7 +11,11 @@
         = f.text_field(:name, class: 'form-control')
       .form-group
         = f.label :period
-        = f.text_field(:period, class: 'form-control')
+        .row
+          .col-md-6
+            = f.text_field(:period, class: 'form-control')
+          .col-md-6
+            = f.select :period_unit, options_for_select(['y', 'm', 'd'], @domain.period_unit), {}, {class: 'form-control'}
     .col-md-6
       .form-group.has-feedback
         = f.label :registrar

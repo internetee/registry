@@ -6,11 +6,7 @@ class Admin::DomainsController < ApplicationController
   end
 
   def create
-    @domain = Domain.new({
-      valid_from: Date.today,
-      valid_to: Date.today + 1.year,
-      registered_at: Time.zone.now
-    }.merge(domain_params))
+    @domain = Domain.new(domain_params)
 
     if @domain.save
       redirect_to [:admin, @domain]
@@ -48,7 +44,7 @@ class Admin::DomainsController < ApplicationController
   end
 
   def domain_params
-    params.require(:domain).permit(:name, :period, :registrar_id, :owner_contact_id)
+    params.require(:domain).permit(:name, :period, :period_unit, :registrar_id, :owner_contact_id)
   end
 end
 

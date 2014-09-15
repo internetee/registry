@@ -323,10 +323,12 @@ describe 'EPP Domain', epp: true do
       before(:each) { Fabricate(:domain, name: 'example.ee', registrar: EppUser.first.registrar) }
 
       it 'renews a domain' do
-        response = epp_request(domain_renew_xml, :xml)
+        exp_date = (Date.today + 1.year)
+        xml = domain_renew_xml(curExpDate: exp_date.to_s)
+        response = epp_request(xml, :xml)
         ex_date = response[:parsed].css('renData exDate').text
         name = response[:parsed].css('renData name').text
-        expect(ex_date).to eq('2015-08-07 00:00:00 UTC')
+        expect(ex_date).to eq("#{(exp_date + 1.year)} 00:00:00 UTC")
         expect(name).to eq('example.ee')
       end
 
@@ -339,7 +341,8 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'returns an error when period is invalid' do
-        xml = domain_renew_xml(period_value: 4)
+        exp_date = (Date.today + 1.year)
+        xml = domain_renew_xml(period_value: 4, curExpDate: exp_date.to_s)
 
         response = epp_request(xml, :xml)
         expect(response[:results][0][:result_code]).to eq('2004')
@@ -554,7 +557,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'deletes domain' do
-        expect(DomainContact.count).to eq(1)
+        expect(DomainContact.count).to eq(2)
         response = epp_request(domain_delete_xml, :xml)
         expect(response[:result_code]).to eq('1000')
 

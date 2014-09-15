@@ -27,6 +27,7 @@ class Domain < ActiveRecord::Base
   delegate :name, to: :registrar, prefix: true
 
   before_create :generate_auth_info
+  before_create :set_validity_dates
   after_create :attach_default_contacts
 
   validates :name_dirty, domain_name: true, uniqueness: true
@@ -110,6 +111,12 @@ class Domain < ActiveRecord::Base
   def attach_default_contacts
     tech_contacts << owner_contact if tech_contacts_count.zero?
     admin_contacts << owner_contact if admin_contacts_count.zero? && owner_contact.citizen?
+  end
+
+  def set_validity_dates
+    self.registered_at = Time.zone.now
+    self.valid_from = Date.today
+    self.valid_to = valid_from + self.class.convert_period_to_time(period, period_unit)
   end
 
   def tech_contacts_count
