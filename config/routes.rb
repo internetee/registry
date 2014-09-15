@@ -8,7 +8,9 @@ Rails.application.routes.draw do
   namespace(:admin) do
     resources :domains do
       resources :nameservers
+      resources :tech_contacts
     end
+
     resources :setting_groups
     resources :registrars do
       collection do

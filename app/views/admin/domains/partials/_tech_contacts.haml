@@ -1,5 +1,10 @@
-.panel.panel-default
-  .panel-heading= t('shared.tech_contacts')
+- panel_class = @domain.errors.messages[:tech_contacts] ? 'panel-danger' : 'panel-default'
+.panel{class: panel_class}
+  .panel-heading.clearfix
+    .pull-left
+      = t('shared.tech_contacts')
+    .pull-right
+      = link_to(t('shared.add'), new_admin_domain_tech_contact_path(@domain), class: 'btn btn-primary btn-xs')
   .table-responsive
     %table.table.table-hover.table-bordered.table-condensed
       %thead
@@ -14,4 +19,9 @@
             %td= x.email
             %td
               = link_to(t('shared.edit'), root_path, class: 'btn btn-primary btn-xs')
-              = link_to(t('shared.detach'), root_path, method: :delete, data: { confirm: t('shared.are_you_sure') }, class: 'btn btn-warning btn-xs')
+              = link_to(t('shared.detach'), admin_domain_tech_contact_path(@domain, x), method: :delete, data: { confirm: t('shared.are_you_sure') }, class: 'btn btn-warning btn-xs')
+      - if @domain.errors.messages[:tech_contacts]
+        %tfoot
+          - @domain.errors.messages[:tech_contacts].each do |x|
+            %tr
+              %td{colspan: 4}= x
