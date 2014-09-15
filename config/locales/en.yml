@@ -80,6 +80,8 @@ en:
               not_found: 'Contact was not found'
             admin_contacts:
               out_of_range: 'Admin contacts count must be between 1 - infinity'
+              less_than_or_equal_to: 'Admin contacts count must be less than or equal to %{count}'
+              greater_than_or_equal_to: 'Admin contacts count must be greater than or equal to %{count}'
             nameservers:
               invalid: 'Nameserver is invalid'
               out_of_range: 'Nameservers count must be between %{min}-%{max}'

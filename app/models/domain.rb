@@ -64,6 +64,12 @@ class Domain < ActiveRecord::Base
     false
   end
 
+  def can_remove_admin_contact?
+    return true if admin_contacts.length > 1
+    errors.add(:admin_contacts, :less_than_or_equal_to, { count: 1 })
+    false
+  end
+
   def validate_nameservers_count
     sg = SettingGroup.domain_validation
     min, max = sg.setting(:ns_min_count).value.to_i, sg.setting(:ns_max_count).value.to_i

@@ -1,12 +1,12 @@
 .row
   .col-sm-6
     %h2.text-center-xs
-      = "#{t('shared.new_tech_contact')}"
+      = "#{t('shared.new_admin_contact')}"
   .col-sm-6
     %h2.text-right.text-center-xs
       = link_to(t('shared.back_to_domain'), [:admin, @domain], class: 'btn btn-default')
 %hr
-= form_tag(admin_domain_tech_contacts_path(@domain)) do |f|
+= form_tag(admin_domain_admin_contacts_path(@domain)) do |f|
   .row
     .col-md-12
       .form-group.has-feedback
