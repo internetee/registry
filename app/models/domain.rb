@@ -27,6 +27,7 @@ class Domain < ActiveRecord::Base
   delegate :name, to: :registrar, prefix: true
 
   before_create :generate_auth_info
+  after_create :attach_default_contacts
 
   validates :name_dirty, domain_name: true, uniqueness: true
   validates :period, numericality: { only_integer: true }
@@ -104,6 +105,11 @@ class Domain < ActiveRecord::Base
     begin
       self.auth_info = SecureRandom.hex
     end while self.class.exists?(auth_info: auth_info)
+  end
+
+  def attach_default_contacts
+    tech_contacts << owner_contact if tech_contacts_count.zero?
+    admin_contacts << owner_contact if admin_contacts_count.zero? && owner_contact.citizen?
   end
 
   def tech_contacts_count
