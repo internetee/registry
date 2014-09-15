@@ -1,0 +1,30 @@
+= form_for([:admin, @domain]) do |f|
+  - if @domain.errors.any?
+    - @domain.errors.each do |attr, err|
+      = err
+      %br
+
+  .row
+    .col-md-6
+      .form-group
+        = f.label :name
+        = f.text_field(:name, class: 'form-control')
+      .form-group
+        = f.label :period
+        = f.text_field(:period, class: 'form-control')
+    .col-md-6
+      .form-group.has-feedback
+        = f.label :registrar
+        = text_field_tag(:domain_registrar, params[:registrar], class: 'form-control js-registrar-typeahead', placeholder: t('shared.registrar_name'), autocomplete: 'off')
+        %span.glyphicon.glyphicon-ok.form-control-feedback.js-typeahead-ok.hidden
+        %span.glyphicon.glyphicon-remove.form-control-feedback.js-typeahead-remove
+        = f.hidden_field(:registrar_id, class: 'js-registrar-id')
+      .form-group.has-feedback
+        = f.label :owner_contact
+        = text_field_tag(:domain_owner_contact, params[:owner_contact], class: 'form-control js-contact-typeahead', placeholder: t('shared.contact_code'), autocomplete: 'off')
+        %span.glyphicon.glyphicon-ok.form-control-feedback.js-typeahead-ok.hidden
+        %span.glyphicon.glyphicon-remove.form-control-feedback.js-typeahead-remove
+        = f.hidden_field(:owner_contact_id, class: 'js-contact-id')
+  .row
+    .col-md-12.text-right
+      = button_tag(t('shared.save'), class: 'btn btn-primary')

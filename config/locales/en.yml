@@ -205,3 +205,4 @@ en:
     failed_to_add_nameserver: 'Failed to add nameserver!'
     nameserver_added: 'Nameserver added!'
     back_to_domain: 'Back to domain'
+    edit_domain: 'Edit domain'

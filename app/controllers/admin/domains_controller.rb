@@ -1,5 +1,5 @@
 class Admin::DomainsController < ApplicationController
-  before_action :set_domain, only: [:show]
+  before_action :set_domain, only: [:show, :edit, :update]
 
   def new
     @domain = Domain.new
@@ -26,6 +26,19 @@ class Admin::DomainsController < ApplicationController
 
   def show
     @domain.all_dependencies_valid?
+  end
+
+  def edit
+    params[:registrar] = @domain.registrar
+    params[:owner_contact] = @domain.owner_contact_code
+  end
+
+  def update
+    if @domain.update(domain_params)
+      redirect_to [:admin, @domain]
+    else
+      render 'edit'
+    end
   end
 
   private

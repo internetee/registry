@@ -4,7 +4,7 @@
       = "#{t('shared.domain_details')}"
   .col-sm-6
     %h2.text-right.text-center-xs
-      = link_to(t('shared.edit'), root_path, class: 'btn btn-primary')
+      = link_to(t('shared.edit'), edit_admin_domain_path(@domain), class: 'btn btn-primary')
       = link_to(t('shared.delete'), root_path, method: :delete, data: { confirm: t('shared.are_you_sure') }, class: 'btn btn-danger')
 
 %hr
