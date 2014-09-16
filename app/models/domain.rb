@@ -6,8 +6,6 @@ class Domain < ActiveRecord::Base
 
   has_many :domain_contacts, dependent: :delete_all, autosave: true
 
-  accepts_nested_attributes_for :domain_contacts, allow_destroy: true
-
   has_many :tech_contacts, -> do
     where(domain_contacts: { contact_type: DomainContact::TECH })
   end, through: :domain_contacts, source: :contact
@@ -49,6 +47,9 @@ class Domain < ActiveRecord::Base
 
   attr_accessor :deleting_nameserver
   validate :validate_nameserver_min_count, if: :deleting_nameserver
+
+  attr_accessor :adding_tech_contact
+  validate :validate_tech_contacts_max_count, if: :adding_tech_contact
 
   def name=(value)
     value.strip!

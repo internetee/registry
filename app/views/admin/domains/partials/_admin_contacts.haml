@@ -4,7 +4,7 @@
     .pull-left
       = t('shared.admin_contacts')
     .pull-right
-      = link_to(t('shared.add'), new_admin_domain_admin_contact_path(@domain), class: 'btn btn-primary btn-xs')
+      = link_to(t('shared.add'), new_admin_domain_domain_contact_path(@domain, type: DomainContact::ADMIN), class: 'btn btn-primary btn-xs')
   .table-responsive
     %table.table.table-hover.table-bordered.table-condensed
       %thead

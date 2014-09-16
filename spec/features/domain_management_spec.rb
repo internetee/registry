@@ -103,14 +103,14 @@ feature 'Domain management', type: :feature do
     within('#tech_contacts') { click_on 'Add' }
 
     c = Contact.last
-    fill_in('Tech contact', with: c.code, fill_options: { blur: false })
+    fill_in('Contact', with: c.code, fill_options: { blur: false })
     # TODO: Wait for poltergeist to support blur option, then uncomment these lines:
     # expect(page).to have_text(c.code)
     # click_on(c.code)
     # expect(find_field('Tech contact').value).to eq(c.code)
 
     # temporary solution:
-    page.execute_script("$('#contact_id').val('#{c.id}')")
+    page.execute_script("$('#domain_contact_contact_id').val('#{c.id}')")
 
     click_on 'Save'
 

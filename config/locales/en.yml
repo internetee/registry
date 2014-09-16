@@ -51,6 +51,7 @@ en:
   activerecord:
     errors:
       models:
+
         contact:
           attributes:
             code:
@@ -67,6 +68,7 @@ en:
               blank: "Required parameter missing - ident"
             domains:
               exist: 'Object association prohibits operation'
+
         epp_domain: &epp_domain_ar_attributes
           attributes:
             name_dirty:
@@ -98,8 +100,10 @@ en:
               invalid: 'Status is invalid'
               not_found: 'Status was not found'
               taken: 'Status already exists on this domain'
+
         domain:
           <<: *epp_domain_ar_attributes
+
         nameserver:
           attributes:
             hostname:
@@ -109,14 +113,22 @@ en:
               invalid: 'IPv4 is invalid'
             ipv6:
               invalid: 'IPv6 is invalid'
+
+        domain_contact:
+          attributes:
+            contact:
+              taken: 'Contact already exists on this domain!'
+
         setting:
           attributes:
             code:
               taken: 'Code already exists'
+
         domain_status:
           attributes:
             setting_id:
               taken: 'Status already exists on this domain'
+
     attributes:
       epp_domain: &epp_domain_attributes
         name: 'Domain name'
@@ -130,7 +142,7 @@ en:
 
   errors:
     messages:
-      taken: 'Status already exists on this domain'
+      #taken: 'Status already exists on this domain'
       blank: 'is missing'
       epp_domain_reserved: 'Domain name is reserved or restricted'
       epp_obj_does_not_exist: 'Object does not exist'
@@ -211,9 +223,8 @@ en:
     edit_domain: 'Edit domain'
     contact_was_not_found: 'Contact was not found!'
     contact_already_exists: 'Contact already exists on this domain!'
+    failed_to_add_contact: 'Failed to add contact!'
     contact_added: 'Contact added!'
-    new_tech_contact: 'New tech contact'
-    new_admin_contact: 'New admin contact'
     contact_detached: 'Contact detached!'
     failed_to_detach_contact: 'Failed to detach contact!'
     new_domain_status: 'New domain status'
@@ -225,3 +236,4 @@ en:
     status_deleted: 'Status deleted!'
     failed_to_delete_status: 'Failed to delete status!'
     tech_contact: 'Tech contact'
+    new_domain_contact: 'New contact'

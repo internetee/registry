@@ -7,6 +7,11 @@
       = link_to(t('shared.back_to_domain'), [:admin, @domain], class: 'btn btn-default')
 %hr
 = form_for([:admin, @domain, @domain_contact]) do |f|
+  = render 'admin/shared/errors', object: @domain
+  / = render 'admin/shared/errors', object: f.object
+
+  - if @domain.errors.any?
+    %hr
   .row
     .col-md-6
       .form-group
@@ -14,7 +19,7 @@
         = f.select :contact_type, options_for_select(DomainContact::TYPES, @domain_contact.contact_type), {}, {class: 'form-control'}
     .col-md-6
       .form-group.has-feedback
-        = f.label :contact
+        = label_tag :contact
         = text_field_tag(:contact, params[:contact], class: 'form-control js-contact-typeahead', placeholder: t('shared.contact_code'), autocomplete: 'off')
         %span.glyphicon.glyphicon-ok.form-control-feedback.js-typeahead-ok.hidden
         %span.glyphicon.glyphicon-remove.form-control-feedback.js-typeahead-remove
