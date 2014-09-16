@@ -1,0 +1,18 @@
+= form_for([:admin, @domain, @domain_status]) do |f|
+  = render 'admin/shared/errors', object: @domain
+  = render 'admin/shared/errors', object: f.object
+
+  - if @domain.errors.any?
+    %hr
+  .row
+    .col-md-6
+      .form-group
+        = f.label :value
+        = f.select :value, options_for_select(DomainStatus::STATUSES, @domain_status.value), {}, {class: 'form-control'}
+    .col-md-6
+      .form-group
+        = f.label :description
+        = f.text_field :description, class: 'form-control', autocomplete: 'off'
+  .row
+    .col-md-12.text-right
+      = button_tag(t('shared.save'), class: 'btn btn-primary')

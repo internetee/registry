@@ -95,6 +95,7 @@ en:
             auth_info:
               wrong_pw: 'Authentication error'
             domain_statuses:
+              invalid: 'Status is invalid'
               not_found: 'Status was not found'
               taken: 'Status already exists on this domain'
         domain:
@@ -215,3 +216,11 @@ en:
     new_admin_contact: 'New admin contact'
     contact_detached: 'Contact detached!'
     failed_to_detach_contact: 'Failed to detach contact!'
+    new_domain_status: 'New domain status'
+    status_added: 'Status added!'
+    failed_to_add_status: 'Failed to add status!'
+    edit_domain_status: 'Edit domain status'
+    status_updated: 'Status updated!'
+    failed_to_update_status: 'Failed to update status!'
+    status_deleted: 'Status deleted!'
+    failed_to_delete_status: 'Failed to delete status!'

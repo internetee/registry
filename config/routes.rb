@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       resources :nameservers
       resources :tech_contacts
       resources :admin_contacts
+      resources :domain_statuses
     end
 
     resources :setting_groups
