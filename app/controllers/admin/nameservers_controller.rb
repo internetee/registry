@@ -3,13 +3,10 @@ class Admin::NameserversController < ApplicationController
   before_action :set_nameserver, only: [:edit, :update, :destroy]
 
   def new
-    @domain = Domain.find(params[:domain_id])
     @nameserver = @domain.nameservers.build
   end
 
   def create
-    @domain = Domain.find(params[:domain_id])
-
     unless @domain.can_add_nameserver?
       @nameserver = @domain.nameservers.build(nameserver_params)
       flash.now[:alert] = I18n.t('shared.failed_to_add_nameserver')
@@ -28,7 +25,6 @@ class Admin::NameserversController < ApplicationController
   end
 
   def edit
-    @domain = Domain.find(params[:domain_id])
     @nameserver = Nameserver.find(params[:id])
   end
 

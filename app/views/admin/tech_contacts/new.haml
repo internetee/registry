@@ -11,7 +11,7 @@
     .col-md-12
       .form-group.has-feedback
       .form-group.has-feedback
-        = label_tag :tech_contact
+        = label_tag :domain_contact, t('shared.tech_contact')
         = text_field_tag(:domain_contact, params[:domain_contact], class: 'form-control js-contact-typeahead', placeholder: t('shared.contact_code'), autocomplete: 'off')
         %span.glyphicon.glyphicon-ok.form-control-feedback.js-typeahead-ok.hidden
         %span.glyphicon.glyphicon-remove.form-control-feedback.js-typeahead-remove

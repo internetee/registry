@@ -224,3 +224,4 @@ en:
     failed_to_update_status: 'Failed to update status!'
     status_deleted: 'Status deleted!'
     failed_to_delete_status: 'Failed to delete status!'
+    tech_contact: 'Tech contact'
