@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   namespace(:admin) do
     resources :domains do
       resources :nameservers
+      resources :domain_contacts
       resources :tech_contacts
       resources :admin_contacts
       resources :domain_statuses

@@ -7,13 +7,8 @@ class Admin::NameserversController < ApplicationController
   end
 
   def create
-    unless @domain.can_add_nameserver?
-      @nameserver = @domain.nameservers.build(nameserver_params)
-      flash.now[:alert] = I18n.t('shared.failed_to_add_nameserver')
-      render 'new' and return
-    end
-
-    @domain.nameservers.build(nameserver_params)
+    @domain.adding_nameserver = true
+    @nameserver = @domain.nameservers.build(nameserver_params)
 
     if @domain.save
       flash[:notice] = I18n.t('shared.nameserver_added')
@@ -29,7 +24,7 @@ class Admin::NameserversController < ApplicationController
   end
 
   def update
-    if @nameserver.update(nameserver_params) && @domain.valid?
+    if @nameserver.update(nameserver_params)
       redirect_to [:admin, @domain]
     else
       render 'edit'
@@ -37,12 +32,11 @@ class Admin::NameserversController < ApplicationController
   end
 
   def destroy
-    if @domain.can_remove_nameserver?
-      if @nameserver.destroy
-        flash[:notice] = I18n.t('shared.nameserver_deleted')
-      else
-        flash[:alert] = I18n.t('shared.failed_to_delete_nameserver')
-      end
+    @domain.deleting_nameserver = true
+    @domain.nameservers.select { |x| x == @nameserver }[0].mark_for_destruction
+
+    if @domain.save
+      flash[:notice] = I18n.t('shared.nameserver_deleted')
     else
       flash[:alert] = @domain.errors[:nameservers].first
     end

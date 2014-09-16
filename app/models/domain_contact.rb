@@ -5,4 +5,7 @@ class DomainContact < ActiveRecord::Base
   TECH = 'tech'
   ADMIN = 'admin'
   TYPES = [TECH, ADMIN]
+
+  scope :admin, -> { where(contact_type: ADMIN) }
+  scope :tech, -> { where(contact_type: TECH) }
 end

@@ -13,13 +13,13 @@
           %th{class: 'col-xs-5'}= t('shared.email')
           %th{class: 'col-xs-3'}= t('shared.action')
       %tbody
-        - @domain.admin_contacts.each do |x|
+        - @domain.domain_contacts.admin.each do |x|
           %tr
-            %td= link_to(x, root_path)
-            %td= x.email
+            %td= link_to(x.contact, root_path)
+            %td= x.contact.email
             %td
               = link_to(t('shared.edit'), root_path, class: 'btn btn-primary btn-xs')
-              = link_to(t('shared.detach'), admin_domain_admin_contact_path(@domain, x), method: :delete, data: { confirm: t('shared.are_you_sure') }, class: 'btn btn-warning btn-xs')
+              = link_to(t('shared.detach'), admin_domain_domain_contact_path(@domain, x), method: :delete, data: { confirm: t('shared.are_you_sure') }, class: 'btn btn-warning btn-xs')
       - if @domain.errors.messages[:admin_contacts]
         %tfoot
           - @domain.errors.messages[:admin_contacts].each do |x|

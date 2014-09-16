@@ -4,7 +4,9 @@ class Domain < ActiveRecord::Base
   belongs_to :registrar
   belongs_to :owner_contact, class_name: 'Contact'
 
-  has_many :domain_contacts, dependent: :delete_all
+  has_many :domain_contacts, dependent: :delete_all, autosave: true
+
+  accepts_nested_attributes_for :domain_contacts, allow_destroy: true
 
   has_many :tech_contacts, -> do
     where(domain_contacts: { contact_type: DomainContact::TECH })
@@ -14,7 +16,7 @@ class Domain < ActiveRecord::Base
     where(domain_contacts: { contact_type: DomainContact::ADMIN })
   end, through: :domain_contacts, source: :contact
 
-  has_many :nameservers, dependent: :delete_all
+  has_many :nameservers, dependent: :delete_all, autosave: true
 
   has_many :domain_statuses, dependent: :delete_all
 
@@ -36,6 +38,18 @@ class Domain < ActiveRecord::Base
 
   validate :validate_period
 
+  attr_accessor :adding_admin_contact
+  validate :validate_admin_contacts_max_count, if: :adding_admin_contact
+
+  attr_accessor :deleting_admin_contact
+  validate :validate_admin_contacts_min_count, if: :deleting_admin_contact
+
+  attr_accessor :adding_nameserver
+  validate :validate_nameserver_max_count, if: :adding_nameserver
+
+  attr_accessor :deleting_nameserver
+  validate :validate_nameserver_min_count, if: :deleting_nameserver
+
   def name=(value)
     value.strip!
     write_attribute(:name, SimpleIDN.to_unicode(value))
@@ -48,20 +62,28 @@ class Domain < ActiveRecord::Base
   end
 
   ### VALIDATIONS ###
-  def can_remove_nameserver?
-    sg = SettingGroup.domain_validation
-    min = sg.setting(:ns_min_count).value.to_i
-    return true if nameservers.length > min
-    errors.add(:nameservers, :greater_than_or_equal_to, { count: min })
-    false
+  def validate_admin_contacts_max_count
+    return if admin_contacts_count < 4
+    errors.add(:admin_contacts, :out_of_range)
   end
 
-  def can_add_nameserver?
+  def validate_admin_contacts_min_count
+    return if admin_contacts_count > 2
+    errors.add(:admin_contacts, :out_of_range)
+  end
+
+  def validate_nameserver_max_count
     sg = SettingGroup.domain_validation
     max = sg.setting(:ns_max_count).value.to_i
-    return true if nameservers.length < max
+    return if nameservers.length <= max
     errors.add(:nameservers, :less_than_or_equal_to, { count: max })
-    false
+  end
+
+  def validate_nameserver_min_count
+    sg = SettingGroup.domain_validation
+    min = sg.setting(:ns_min_count).value.to_i
+    return if nameservers.reject(&:marked_for_destruction?).length >= min
+    errors.add(:nameservers, :greater_than_or_equal_to, { count: min })
   end
 
   def can_remove_admin_contact?

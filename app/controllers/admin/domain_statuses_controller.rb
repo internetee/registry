@@ -2,7 +2,6 @@ class Admin::DomainStatusesController < ApplicationController
   before_action :set_domain
   before_action :set_domain_status, only: [:edit, :update, :destroy]
 
-
   def new
     @domain_status = @domain.domain_statuses.build(value: DomainStatus::OK)
   end
