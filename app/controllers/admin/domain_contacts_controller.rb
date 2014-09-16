@@ -32,7 +32,7 @@ class Admin::DomainContactsController < ApplicationController
     @domain.deleting_tech_contact = true if @domain_contact.tech?
 
     if @domain.save
-      flash[:notice] = I18n.t('shared.contact_deleted')
+      flash[:notice] = I18n.t('shared.contact_detached')
     else
       flash[:alert] = @domain.errors.first[1]
     end

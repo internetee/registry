@@ -51,6 +51,9 @@ class Domain < ActiveRecord::Base
   attr_accessor :adding_tech_contact
   validate :validate_tech_contacts_max_count, if: :adding_tech_contact
 
+  attr_accessor :deleting_tech_contact
+  # validate :validate_tech_contacts_min_count, if: :deleting_tech_contact
+
   def name=(value)
     value.strip!
     write_attribute(:name, SimpleIDN.to_unicode(value))
@@ -85,12 +88,6 @@ class Domain < ActiveRecord::Base
     min = sg.setting(:ns_min_count).value.to_i
     return if nameservers.reject(&:marked_for_destruction?).length >= min
     errors.add(:nameservers, :greater_than_or_equal_to, { count: min })
-  end
-
-  def can_remove_admin_contact?
-    return true if admin_contacts.length > 1
-    errors.add(:admin_contacts, :less_than_or_equal_to, { count: 1 })
-    false
   end
 
   def validate_nameservers_count
