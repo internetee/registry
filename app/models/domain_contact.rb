@@ -1,6 +1,19 @@
 class DomainContact < ActiveRecord::Base
+  include EppErrors
   belongs_to :contact
   belongs_to :domain
+
+  EPP_ATTR_MAP = {
+    hostname: 'hostObj'
+  }
+
+  def epp_code_map
+    {
+      '2302' => [
+        [:contact, :taken]
+      ]
+    }
+  end
 
   TECH = 'tech'
   ADMIN = 'admin'
