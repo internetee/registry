@@ -1,14 +1,35 @@
 class Epp::EppDomain < Domain
   include EppErrors
 
-  EPP_ATTR_MAP = {
-    owner_contact: 'registrant',
-    name_dirty: 'name',
-    period: 'period'
-  }
-
   validate :validate_nameservers_count
   validate :validate_admin_contacts_count
+
+  def epp_code_map # rubocop:disable Metrics/MethodLength
+    domain_validation_sg = SettingGroup.domain_validation
+
+    {
+      '2302' => [ # Object exists
+        [:name_dirty, :taken, { value: { obj: 'name', val: name_dirty } }],
+        [:name_dirty, :reserved, { value: { obj: 'name', val: name_dirty } }]
+      ],
+      '2306' => [ # Parameter policy error
+        [:owner_contact, :blank],
+        [:admin_contacts, :out_of_range]
+      ],
+      '2004' => [ # Parameter value range error
+        [:nameservers, :out_of_range,
+          {
+            min: domain_validation_sg.setting(:ns_min_count).value,
+            max: domain_validation_sg.setting(:ns_max_count).value
+          }
+        ],
+        [:period, :out_of_range, { value: { obj: 'period', val: period } }]
+      ],
+      '2200' => [
+        [:auth_info, :wrong_pw]
+      ]
+    }
+  end
 
   def parse_and_attach_domain_dependencies(parsed_frame)
     attach_owner_contact(self.class.parse_owner_contact_from_frame(parsed_frame))
@@ -216,38 +237,11 @@ class Epp::EppDomain < Domain
     add_epp_error('2306', 'curExpDate', cur_exp_date, I18n.t('errors.messages.epp_exp_dates_do_not_match'))
   end
 
-  def epp_code_map # rubocop:disable Metrics/MethodLength
-    domain_validation_sg = SettingGroup.domain_validation
-
-    {
-      '2302' => [ # Object exists
-        [:name_dirty, :taken],
-        [:name_dirty, :reserved]
-      ],
-      '2306' => [ # Parameter policy error
-        [:owner_contact, :blank],
-        [:admin_contacts, :out_of_range]
-      ],
-      '2004' => [ # Parameter value range error
-        [:nameservers, :out_of_range,
-          {
-            min: domain_validation_sg.setting(:ns_min_count).value,
-            max: domain_validation_sg.setting(:ns_max_count).value
-          }
-        ],
-        [:period, :out_of_range]
-      ],
-      '2200' => [
-        [:auth_info, :wrong_pw]
-      ]
-    }
-  end
-
   ## SHARED
 
   # For domain transfer
   def authenticate(pw)
-    errors.add(:auth_info, { msg: errors.generate_message(:auth_info, :wrong_pw) }) if pw != auth_info
+    errors.add(:auth_info, :wrong_pw) if pw != auth_info
     errors.empty?
   end
 

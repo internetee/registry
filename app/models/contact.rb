@@ -101,8 +101,6 @@ class Contact < ActiveRecord::Base
       '2302' => [ # Object exists
         [:code, :epp_id_taken]
       ],
-      '2303' => # Object does not exist
-        [:not_found, :epp_obj_does_not_exist],
       '2305' => [ # Association exists
         [:domains, :exist]
       ],

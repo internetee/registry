@@ -11,35 +11,21 @@ module EppErrors
         epp_errors << collect_child_errors(key)
       end
 
-      epp_errors << collect_parent_errors(key, values)
+      epp_errors << collect_parent_errors(values)
     end
 
     errors[:epp_errors] = epp_errors
     errors[:epp_errors].flatten!
   end
 
-  def collect_parent_errors(key, values)
+  def collect_parent_errors(values)
     epp_errors = []
     values = [values] if values.is_a?(String)
 
     values.each do |err|
-      if err.is_a?(Hash)
-        code = err[:code] || find_epp_code(err[:msg])
-        next unless code
-        err_msg = { code: code, msg: err[:msg] }
-        err_msg[:value] = { val: err[:val], obj: err[:obj] } if err[:val]
-        epp_errors << err_msg
-      else
-        next unless code = find_epp_code(err)
-        err = { code: code, msg: err }
-
-        # if the key represents relations, skip value
-        unless self.class.reflect_on_association(key)
-          err[:value] = { val: send(key), obj: self.class::EPP_ATTR_MAP[key] }
-        end
-
-        epp_errors << err
-      end
+      code, value = find_epp_code_and_value(err)
+      next unless code
+      epp_errors << { code: code, msg: err, value: value}
     end
     epp_errors
   end
@@ -52,22 +38,36 @@ module EppErrors
     epp_errors = []
     send(key).each do |x|
       x.errors.messages.each do |key, values|
-        epp_errors << x.collect_parent_errors(key, values)
+        epp_errors << x.collect_parent_errors(values)
       end
     end if multi.include?(macro)
 
     epp_errors
   end
 
-  def find_epp_code(msg)
+  def find_epp_code_and_value(msg)
     epp_code_map.each do |code, values|
       values.each do |x|
-        t = errors.generate_message(*x) if x.is_a?(Array)
-        t = x if x.is_a?(String)
-        return code if t == msg
+        msg_args, value = construct_msg_args_and_value(x)
+        t = errors.generate_message(*msg_args)
+        return [code, value] if t == msg
       end
     end
     nil
+  end
+
+  def construct_msg_args_and_value(epp_error_args)
+    args = {}
+    args = epp_error_args.delete_at(-1) if epp_error_args.last.is_a?(Hash)
+    msg_args = epp_error_args
+
+    value = args.delete(:value) if args.key?(:value)
+
+    interpolation = args[:interpolation] || args
+
+    msg_args << interpolation
+
+    [msg_args, value]
   end
 
   def add_epp_error(code, obj, val, msg)

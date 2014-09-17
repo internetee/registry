@@ -437,13 +437,16 @@ describe 'EPP Domain', epp: true do
 
         response = epp_request(xml, :xml)
         expect(response[:results][0][:result_code]).to eq('2302')
-        expect(response[:results][0][:msg]).to eq('Nameserver already exists on this domain')
-        expect(response[:results][0][:value]).to eq('ns1.example.com')
+        expect(response[:results][0][:msg]).to eq('Contact already exists on this domain!')
+        expect(response[:results][0][:value]).to eq('mak21')
+        expect(response[:results][1][:result_code]).to eq('2302')
         expect(response[:results][1][:msg]).to eq('Nameserver already exists on this domain')
-        expect(response[:results][2][:msg]).to eq('Status already exists on this domain')
-        expect(response[:results][2][:value]).to eq('clientHold')
+        expect(response[:results][1][:value]).to eq('ns1.example.com')
+        expect(response[:results][2][:msg]).to eq('Nameserver already exists on this domain')
         expect(response[:results][3][:msg]).to eq('Status already exists on this domain')
-        expect(response[:results][3][:value]).to eq('clientUpdateProhibited')
+        expect(response[:results][3][:value]).to eq('clientHold')
+        expect(response[:results][4][:msg]).to eq('Status already exists on this domain')
+        expect(response[:results][4][:value]).to eq('clientUpdateProhibited')
         expect(d.domain_statuses.count).to eq(2)
       end
 

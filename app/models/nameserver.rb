@@ -1,10 +1,6 @@
 class Nameserver < ActiveRecord::Base
   include EppErrors
 
-  EPP_ATTR_MAP = {
-    hostname: 'hostObj'
-  }
-
   belongs_to :registrar
   belongs_to :domain
 
@@ -17,12 +13,12 @@ class Nameserver < ActiveRecord::Base
   def epp_code_map
     {
       '2302' => [
-        [:hostname, :taken]
+        [:hostname, :taken, { value: { obj: 'hostObj', val: hostname } }]
       ],
       '2005' => [
-        [:hostname, :invalid],
-        [:ipv4, :invalid],
-        [:ipv6, :invalid]
+        [:hostname, :invalid, { value: { obj: 'hostObj', val: hostname } }],
+        [:ipv4, :invalid, { value: { obj: 'hostAddr', val: ipv4 } }],
+        [:ipv6, :invalid, { value: { obj: 'hostAddr', val: ipv6 } }]
       ]
     }
   end
