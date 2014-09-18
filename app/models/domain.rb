@@ -65,6 +65,13 @@ class Domain < ActiveRecord::Base
     domain_transfers.find_by(status: DomainTransfer::PENDING)
   end
 
+  def can_be_deleted?
+    (domain_statuses.pluck(:value) & %W(
+      #{DomainStatus::CLIENT_DELETE_PROHIBITED}
+      #{DomainStatus::SERVER_DELETE_PROHIBITED}
+    )).empty?
+  end
+
   ### VALIDATIONS ###
   def validate_admin_contacts_max_count
     return if admin_contacts_count < 4
