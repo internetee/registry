@@ -243,3 +243,4 @@ en:
     domain_status_prohibits_deleting: 'Domain status prohibits deleting'
     domain_deleted: 'Domain deleted!'
     failed_to_delete_domain: 'Failed to delete domain!'
+    email: 'Email'
