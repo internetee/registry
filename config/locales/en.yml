@@ -157,6 +157,7 @@ en:
       repeating_postal_info: 'Only one of each postal info types may be provided'
       invalid_type: 'PostalInfo type is invalid'
       unimplemented_command: 'Unimplemented command'
+      domain_exists_but_belongs_to_other_registrar: 'Domain exists but belongs to other registrar'
 
   setting_groups:
     codes:

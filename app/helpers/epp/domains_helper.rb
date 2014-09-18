@@ -146,12 +146,18 @@ module Epp::DomainsHelper
 
   ## SHARED
   def find_domain(secure = { secure: true })
-    domain = Epp::EppDomain.find_by(name: @ph[:name], registrar: current_epp_user.registrar) if secure[:secure] == true
-    domain = Epp::EppDomain.find_by(name: @ph[:name]) if secure[:secure] == false
+    domain = Epp::EppDomain.find_by(name: @ph[:name])
 
     unless domain
       epp_errors << { code: '2303', msg: I18n.t('errors.messages.epp_domain_not_found'), value: { obj: 'name', val: @ph[:name] } }
+      return nil
     end
+
+    if domain.registrar != current_epp_user.registrar && secure[:secure] == true
+      epp_errors << { code: '2302', msg: I18n.t('errors.messages.domain_exists_but_belongs_to_other_registrar'), value: { obj: 'name', val: @ph[:name] } }
+      return nil
+    end
+
     domain
   end
 end

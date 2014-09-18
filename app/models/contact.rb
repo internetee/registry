@@ -4,8 +4,6 @@ class Contact < ActiveRecord::Base
 
   include EppErrors
 
-  EPP_ATTR_MAP = {}
-
   has_one :local_address
   has_one :international_address
   has_one :disclosure, class_name: 'ContactDisclosure'

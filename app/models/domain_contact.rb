@@ -3,10 +3,6 @@ class DomainContact < ActiveRecord::Base
   belongs_to :contact
   belongs_to :domain
 
-  EPP_ATTR_MAP = {
-    hostname: 'hostObj'
-  }
-
   def epp_code_map
     {
       '2302' => [

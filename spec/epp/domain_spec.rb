@@ -46,8 +46,8 @@ describe 'EPP Domain', epp: true do
 
       it 'can not see other registrar domains' do
         response = epp_request(domain_info_xml, :xml, :elkdata)
-        expect(response[:result_code]).to eq('2303')
-        expect(response[:msg]).to eq('Domain not found')
+        expect(response[:result_code]).to eq('2302')
+        expect(response[:msg]).to eq('Domain exists but belongs to other registrar')
       end
 
       it 'transfers a domain' do
