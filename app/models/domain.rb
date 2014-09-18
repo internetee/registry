@@ -67,7 +67,6 @@ class Domain < ActiveRecord::Base
 
   def can_be_deleted?
     (domain_statuses.pluck(:value) & %W(
-      #{DomainStatus::CLIENT_DELETE_PROHIBITED}
       #{DomainStatus::SERVER_DELETE_PROHIBITED}
     )).empty?
   end

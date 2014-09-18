@@ -567,6 +567,14 @@ describe 'EPP Domain', epp: true do
         expect(Domain.first).to eq(nil)
         expect(DomainContact.count).to eq(0)
       end
+
+      it 'does not delete domain with specific status' do
+        d = Domain.first
+        d.domain_statuses.create(value: DomainStatus::CLIENT_DELETE_PROHIBITED)
+        response = epp_request(domain_delete_xml, :xml)
+        expect(response[:result_code]).to eq('2304')
+        expect(response[:msg]).to eq('Domain status prohibits operation')
+      end
     end
 
     it 'checks a domain' do

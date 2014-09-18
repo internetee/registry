@@ -71,6 +71,8 @@ en:
 
         epp_domain: &epp_domain_ar_attributes
           attributes:
+            base:
+              domain_status_prohibits_operation: 'Domain status prohibits operation'
             name_dirty:
               invalid: 'Domain name is invalid'
               reserved: 'Domain name is reserved or restricted'
@@ -238,3 +240,6 @@ en:
     failed_to_delete_status: 'Failed to delete status!'
     tech_contact: 'Tech contact'
     new_domain_contact: 'New contact'
+    domain_status_prohibits_deleting: 'Domain status prohibits deleting'
+    domain_deleted: 'Domain deleted!'
+    failed_to_delete_domain: 'Failed to delete domain!'

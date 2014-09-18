@@ -80,6 +80,7 @@ module Epp::DomainsHelper
     @domain = find_domain
 
     handle_errors(@domain) and return unless @domain
+    handle_errors(@domain) and return unless @domain.can_be_deleted?
     handle_errors(@domain) and return unless @domain.destroy
 
     render '/epp/domains/success'

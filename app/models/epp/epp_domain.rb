@@ -12,6 +12,9 @@ class Epp::EppDomain < Domain
         [:name_dirty, :taken, { value: { obj: 'name', val: name_dirty } }],
         [:name_dirty, :reserved, { value: { obj: 'name', val: name_dirty } }]
       ],
+      '2304' => [
+        [:base, :domain_status_prohibits_operation]
+      ],
       '2306' => [ # Parameter policy error
         [:owner_contact, :blank],
         [:admin_contacts, :out_of_range]
@@ -235,6 +238,18 @@ class Epp::EppDomain < Domain
   def validate_exp_dates(cur_exp_date)
     return if cur_exp_date.to_date == valid_to
     add_epp_error('2306', 'curExpDate', cur_exp_date, I18n.t('errors.messages.epp_exp_dates_do_not_match'))
+  end
+
+  ### ABILITIES ###
+  def can_be_deleted?
+    begin
+      errors.add(:base, :domain_status_prohibits_operation)
+      return false
+    end if (domain_statuses.pluck(:value) & %W(
+      #{DomainStatus::CLIENT_DELETE_PROHIBITED}
+    )).any?
+
+    true
   end
 
   ## SHARED
