@@ -3,15 +3,19 @@ class Admin::DomainsController < ApplicationController
   before_action :verify_deletion, only: [:destroy]
 
   def new
-    @domain = Domain.new
+    owner_contact = Contact.find(params[:owner_contact_id]) if params[:owner_contact_id]
+    @domain = Domain.new(owner_contact: owner_contact)
+    params[:domain_owner_contact] = owner_contact
   end
 
   def create
     @domain = Domain.new(domain_params)
 
     if @domain.save
+      flash[:notice] = I18n.t('shared.domain_added')
       redirect_to [:admin, @domain]
     else
+      flash.now[:alert] = I18n.t('shared.failed_to_add_domain')
       render 'new'
     end
   end
@@ -27,7 +31,7 @@ class Admin::DomainsController < ApplicationController
 
   def edit
     params[:registrar] = @domain.registrar
-    params[:owner_contact] = @domain.owner_contact_code
+    params[:domain_owner_contact] = @domain.owner_contact
   end
 
   def update

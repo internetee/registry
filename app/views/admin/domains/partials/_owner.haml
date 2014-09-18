@@ -4,7 +4,7 @@
   .panel-body
     %dl.dl-horizontal
       %dt= t('shared.name')
-      %dd= link_to(@domain.owner_contact, root_path)
+      %dd= link_to(@domain.owner_contact, [:admin, @domain.owner_contact])
 
       %dt= t('shared.code')
       %dd= @domain.owner_contact_code

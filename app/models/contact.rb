@@ -26,6 +26,11 @@ class Contact < ActiveRecord::Base
   validates :code, uniqueness: { message: :epp_id_taken }
 
   delegate :name, to: :international_address
+  delegate :country, to: :address, prefix: true
+  delegate :city, to: :address, prefix: true
+  delegate :street, to: :address, prefix: true
+  delegate :zip, to: :address, prefix: true
+  delegate :org_name, to: :address, prefix: true
 
   IDENT_TYPE_ICO = 'ico'
   IDENT_TYPES = [
@@ -75,7 +80,7 @@ class Contact < ActiveRecord::Base
 
   # Find a way to use self.domains with contact
   def domains_owned
-    Domain.find_by(owner_contact_id: id)
+    Domain.where(owner_contact_id: id)
   end
 
   def relations_with_domain?

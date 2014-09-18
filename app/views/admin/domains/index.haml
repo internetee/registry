@@ -26,7 +26,7 @@
             %tr
               %td= link_to(x, admin_domain_path(x))
               %td= link_to(x.registrar, root_path) if x.registrar
-              %td= link_to(x.owner_contact, root_path)
+              %td= link_to(x.owner_contact, [:admin, x.owner_contact])
               %td= l(x.valid_to, format: :short)
               %td= link_to(t('shared.edit'), edit_admin_domain_path(x), class: 'btn btn-primary btn-xs')
 .row

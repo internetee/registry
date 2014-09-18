@@ -1,0 +1,21 @@
+.row
+  .col-sm-6
+    %h2.text-center-xs
+      = "#{t('shared.contact_details')}"
+  .col-sm-6
+    %h2.text-right.text-center-xs
+      = link_to(t('shared.edit'), edit_admin_contact_path(@contact), class: 'btn btn-primary')
+      = link_to(t('shared.delete'), admin_contact_path(@contact), method: :delete, data: { confirm: t('shared.are_you_sure') }, class: 'btn btn-danger')
+
+%hr
+.row
+  .col-md-6= render 'admin/contacts/partials/general'
+  .col-md-6= render 'admin/contacts/partials/address'
+.row
+  .col-md-12= render 'admin/contacts/partials/domains'
+/ .row
+/   .col-md-12= render 'admin/contacts/partials/addresses'
+/ .row
+/   .col-md-12= render 'admin/contacts/partials/tech_contacts'
+/ .row
+/   .col-md-12= render 'admin/contacts/partials/admin_contacts'
