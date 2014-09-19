@@ -108,7 +108,7 @@ describe 'EPP Domain', epp: true do
         expect(domain.registrar).to eq(elkdata)
       end
 
-      it 'prohibits wrong registrar from approving tranfer' do
+      it 'prohibits wrong registrar from approving transfer' do
         domain.domain_transfers.create({
           status: DomainTransfer::PENDING,
           transfer_requested_at: Time.zone.now,
@@ -132,7 +132,6 @@ describe 'EPP Domain', epp: true do
 
         xml = domain_transfer_xml(pw: domain.auth_info, op: 'approve')
         response = epp_request(xml, :xml, :zone)
-
         domain.reload
         dtl = domain.domain_transfers.last
 
@@ -150,6 +149,21 @@ describe 'EPP Domain', epp: true do
         response = epp_request(domain_transfer_xml(pw: 'test'), :xml)
         expect(response[:result_code]).to eq('2200')
         expect(response[:msg]).to eq('Authentication error')
+      end
+
+      it 'ignores transfer when owner registrar requests transfer' do
+        pw = domain.auth_info
+        xml = domain_transfer_xml(pw: pw)
+        response = epp_request(xml, :xml, :zone)
+
+        expect(response[:result_code]).to eq('2002')
+        expect(response[:msg]).to eq('Domain already belongs to the querying registrar')
+      end
+
+      it 'returns an error for incorrect op attribute' do
+        response = epp_request(domain_transfer_xml(op: 'bla'), :xml, :zone)
+        expect(response[:result_code]).to eq('2306')
+        expect(response[:msg]).to eq('Attribute op is invalid')
       end
 
       it 'creates new pw after successful transfer' do

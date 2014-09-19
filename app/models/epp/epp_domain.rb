@@ -8,6 +8,9 @@ class Epp::EppDomain < Domain
     domain_validation_sg = SettingGroup.domain_validation
 
     {
+      '2002' => [
+        [:base, :domain_already_belongs_to_the_querying_registrar]
+      ],
       '2302' => [ # Object exists
         [:name_dirty, :taken, { value: { obj: 'name', val: name_dirty } }],
         [:name_dirty, :reserved, { value: { obj: 'name', val: name_dirty } }]
@@ -188,6 +191,10 @@ class Epp::EppDomain < Domain
       return approve_pending_transfer(params[:current_user])
     end
 
+    if !pt && params[:action] == 'query'
+      return false unless can_be_transferred_to?(params[:current_user].registrar)
+    end
+
     return true if pt
 
     wait_time = SettingGroup.domain_general.setting(:transfer_wait_time).value.to_i
@@ -249,6 +256,14 @@ class Epp::EppDomain < Domain
       #{DomainStatus::CLIENT_DELETE_PROHIBITED}
     )).any?
 
+    true
+  end
+
+  def can_be_transferred_to?(new_registrar)
+    if new_registrar == registrar
+      errors.add(:base, :domain_already_belongs_to_the_querying_registrar)
+      return false
+    end
     true
   end
 

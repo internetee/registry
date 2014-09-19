@@ -10,4 +10,9 @@ class DomainTransfer < ActiveRecord::Base
   CLIENT_REJECTED = 'clientRejected'
   SERVER_APPROVED = 'serverApproved'
   SERVER_CANCELLED = 'serverCancelled'
+
+  def transfer_confirm_time
+    wait_time = SettingGroup.domain_general.setting(:transfer_wait_time).value.to_i
+    transfer_requested_at + wait_time.hours
+  end
 end

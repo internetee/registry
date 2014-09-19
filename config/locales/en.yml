@@ -73,6 +73,7 @@ en:
           attributes:
             base:
               domain_status_prohibits_operation: 'Domain status prohibits operation'
+              domain_already_belongs_to_the_querying_registrar: 'Domain already belongs to the querying registrar'
             name_dirty:
               invalid: 'Domain name is invalid'
               reserved: 'Domain name is reserved or restricted'
@@ -160,6 +161,7 @@ en:
       invalid_type: 'PostalInfo type is invalid'
       unimplemented_command: 'Unimplemented command'
       domain_exists_but_belongs_to_other_registrar: 'Domain exists but belongs to other registrar'
+      attribute_op_is_invalid: 'Attribute op is invalid'
 
   setting_groups:
     codes:
@@ -256,3 +258,4 @@ en:
     org_name: 'Organisation name'
     failed_to_add_domain: 'Failed to add domain!'
     domain_added: 'Domain added!'
+    new_contact: 'New contact'

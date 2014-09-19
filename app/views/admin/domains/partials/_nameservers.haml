@@ -16,7 +16,7 @@
       %tbody
         - @domain.nameservers.each do |x|
           %tr
-            %td= link_to(x, root_path)
+            %td= x
             %td= x.ipv4
             %td= x.ipv6
             %td

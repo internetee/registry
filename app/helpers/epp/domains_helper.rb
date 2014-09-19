@@ -136,7 +136,13 @@ module Epp::DomainsHelper
   ## TRANSFER
   def validate_domain_transfer_request
     @ph = params_hash['epp']['command']['transfer']['transfer']
-    xml_attrs_present?(@ph, [['name']])
+    attrs_present = xml_attrs_present?(@ph, [['name']])
+    return false unless attrs_present
+
+    op = parsed_frame.css('transfer').first[:op]
+    return true if %w(approve query).include?(op)
+    epp_errors << { code: '2306', msg: I18n.t('errors.messages.attribute_op_is_invalid') }
+    false
   end
 
   ## DELETE

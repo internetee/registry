@@ -1,6 +1,10 @@
 class Admin::ContactsController < ApplicationController
   before_action :set_contact, only: [:show]
 
+  def new
+    @contact = Contact.new
+  end
+
   def index
     @q = Contact.search(params[:q])
     @contacts = @q.result.page(params[:page])
