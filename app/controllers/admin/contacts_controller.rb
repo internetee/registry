@@ -15,7 +15,6 @@ class Admin::ContactsController < ApplicationController
 
   def create
     @contact = Contact.new(contact_params)
-    binding.pry
     @contact.generate_code
     if @contact.save
       flash[:notice] = I18n.t('shared.contact_added')
