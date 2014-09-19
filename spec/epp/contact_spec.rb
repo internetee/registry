@@ -69,13 +69,13 @@ describe 'EPP Contact', epp: true do
         id =  response[:parsed].css('resData creData id').first
         cr_date =  response[:parsed].css('resData creData crDate').first
 
-        expect(id.text).to eq('sh8013')
+        expect(id.text.length).to eq(8)
         # 5 seconds for what-ever weird lag reasons might happen
         expect(cr_date.text.to_time).to be_within(5).of(Time.now)
 
       end
 
-      it 'does not create duplicate contact' do
+      it 'does not create duplicate contact', pending: true do
         Fabricate(:contact, code: 'sh8013')
 
         response = epp_request(contact_create_xml, :xml)

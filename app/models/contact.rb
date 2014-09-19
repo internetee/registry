@@ -4,8 +4,8 @@ class Contact < ActiveRecord::Base
 
   include EppErrors
 
-  has_one :local_address
-  has_one :international_address
+  has_one :local_address, dependent: :destroy
+  has_one :international_address, dependent: :destroy
   has_one :disclosure, class_name: 'ContactDisclosure'
 
   has_many :domain_contacts
@@ -78,6 +78,12 @@ class Contact < ActiveRecord::Base
     auth_info == pw
   end
 
+  # generate random id for contact
+  #
+  def generate_code
+    self.code = SecureRandom.hex(4)
+  end
+
   # Find a way to use self.domains with contact
   def domains_owned
     Domain.where(owner_contact_id: id)
@@ -90,7 +96,6 @@ class Contact < ActiveRecord::Base
 
   # should use only in transaction
   def destroy_and_clean
-    clean_up_address
 
     if relations_with_domain?
       errors.add(:domains, :exist)
@@ -153,8 +158,4 @@ class Contact < ActiveRecord::Base
   end
 
   private
-
-  def clean_up_address
-    address.destroy if address
-  end
 end
