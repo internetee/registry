@@ -78,6 +78,12 @@ class Contact < ActiveRecord::Base
     auth_info == pw
   end
 
+  # generate random id for contact
+  #
+  def generate_code
+    self.code = SecureRandom.hex(4)
+  end
+
   # Find a way to use self.domains with contact
   def domains_owned
     Domain.where(owner_contact_id: id)
