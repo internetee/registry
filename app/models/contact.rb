@@ -19,6 +19,7 @@ class Contact < ActiveRecord::Base
   validates :code, :phone, :email, :ident, presence: true
 
   validate :ident_must_be_valid
+  validate :presence_of_one_address
 
   validates :phone, format: /\+[0-9]{1,3}\.[0-9]{1,14}?/ # /\+\d{3}\.\d+/
   validates :email, format: /@/
@@ -49,6 +50,12 @@ class Contact < ActiveRecord::Base
     international_address
   end
   ##
+
+  def presence_of_one_address
+    return true if local_address || international_address
+    errors.add(:local_address, 'Local or international address must be present')
+    errors.add(:international_address, 'Local or international address must be present')
+  end
 
   def ident_must_be_valid
     # TODO: Ident can also be passport number or company registry code.

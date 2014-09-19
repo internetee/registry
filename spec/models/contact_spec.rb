@@ -25,7 +25,9 @@ describe Contact do
          code: ['Required parameter missing - code'],
          phone: ['Required parameter missing - phone', 'Phone nr is invalid'],
          email: ['Required parameter missing - email', 'Email is invalid'],
-         ident: ['Required parameter missing - ident']
+         ident: ['Required parameter missing - ident'],
+         local_address: ['Local or international address must be present'],
+         international_address: ['Local or international address must be present']
       })
     end
   end
