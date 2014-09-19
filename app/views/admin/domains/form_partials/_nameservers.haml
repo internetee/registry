@@ -1,0 +1,30 @@
+#nameservers
+  = f.fields_for :nameservers do |ns_fields|
+    .panel.panel-default
+      .panel-heading.text-right
+        = link_to(t('shared.add_another'), '#', class: 'btn btn-primary btn-xs add-nameserver')
+        = link_to(t('shared.delete'), '#', class: 'btn btn-danger btn-xs destroy')
+      .panel-body
+        .errors
+          = render 'admin/shared/errors', object: ns_fields.object
+        .row
+          .col-md-12
+            .form-group
+              = ns_fields.label :hostname
+              = ns_fields.text_field :hostname, class: 'form-control'
+        .row
+          .col-md-6
+            .form-group
+              = ns_fields.label :ipv4
+              = ns_fields.text_field :ipv4, class: 'form-control'
+          .col-md-6
+            .form-group
+              = ns_fields.label :ipv6
+              = ns_fields.text_field :ipv6, class: 'form-control'
+:javascript
+  $("#nameservers").nestedAttributes({
+    bindAddTo: $(".add-nameserver"),
+    afterAdd: function(item) {
+      item.find('.errors').html('');
+    }
+  });

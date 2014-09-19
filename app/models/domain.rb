@@ -14,7 +14,8 @@ class Domain < ActiveRecord::Base
     where(domain_contacts: { contact_type: DomainContact::ADMIN })
   end, through: :domain_contacts, source: :contact
 
-  has_many :nameservers, dependent: :delete_all, autosave: true
+  has_many :nameservers, dependent: :delete_all
+  accepts_nested_attributes_for :nameservers, allow_destroy: true
 
   has_many :domain_statuses, dependent: :delete_all
 

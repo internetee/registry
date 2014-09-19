@@ -7,30 +7,33 @@
     %hr
 
   .row
-    .col-md-6
-      .form-group
-        = f.label :name
-        = f.text_field(:name, class: 'form-control')
-      .form-group
-        = f.label :period
-        .row
-          .col-md-6
-            = f.text_field(:period, class: 'form-control')
-          .col-md-6
-            = f.select :period_unit, options_for_select(['y', 'm', 'd'], @domain.period_unit), {}, {class: 'form-control'}
-    .col-md-6
-      .form-group.has-feedback
-        = f.label :registrar
-        = text_field_tag(:domain_registrar, params[:registrar], class: 'form-control js-registrar-typeahead', placeholder: t('shared.registrar_name'), autocomplete: 'off')
-        %span.glyphicon.glyphicon-ok.form-control-feedback.js-typeahead-ok.hidden
-        %span.glyphicon.glyphicon-remove.form-control-feedback.js-typeahead-remove
-        = f.hidden_field(:registrar_id, class: 'js-registrar-id')
-      .form-group.has-feedback
-        = f.label :owner_contact
-        = text_field_tag(:domain_owner_contact, params[:domain_owner_contact], class: 'form-control js-contact-typeahead', placeholder: t('shared.contact_code'), autocomplete: 'off')
-        %span.glyphicon.glyphicon-ok.form-control-feedback.js-typeahead-ok.hidden
-        %span.glyphicon.glyphicon-remove.form-control-feedback.js-typeahead-remove
-        = f.hidden_field(:owner_contact_id, class: 'js-contact-id')
+    .col-md-12
+      / Nav tabs
+      %ul.nav.nav-tabs{:role => "tablist", id: 'tabs'}
+        %li.active
+          %a{"data-toggle" => "tab", :href => "#general-tab", :role => "tab"} general-tab
+        %li
+          %a{"data-toggle" => "tab", :href => "#nameservers-tab", :role => "tab"} nameservers-tab
+        %li
+          %a{"data-toggle" => "tab", :href => "#tech-contacts-tab", :role => "tab"} tech-contacts-tab
+        %li
+          %a{"data-toggle" => "tab", :href => "#admin-contacts", :role => "tab"} admin-contacts-tab
+        %li
+          %a{"data-toggle" => "tab", :href => "#statuses-tab", :role => "tab"} statuses-tab
+      / Tab panes
+      .tab-content{style:'margin-top: 20px;'}
+        #general-tab.tab-pane.active
+          = render 'admin/domains/form_partials/general', f: f
+        #nameservers-tab.tab-pane
+          = render 'admin/domains/form_partials/nameservers', f: f
+        #tech-contacts-tab.tab-pane
+        #admin-contacts-tab.tab-pane ...
+        #statuses-tab.tab-pane ...
   .row
     .col-md-12.text-right
       = button_tag(t('shared.save'), class: 'btn btn-primary')
+
+:javascript
+  $(function () {
+    $('#tabs a:first').tab('show')
+  })
