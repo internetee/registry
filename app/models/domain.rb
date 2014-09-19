@@ -4,7 +4,8 @@ class Domain < ActiveRecord::Base
   belongs_to :registrar
   belongs_to :owner_contact, class_name: 'Contact'
 
-  has_many :domain_contacts, dependent: :delete_all, autosave: true
+  has_many :domain_contacts, dependent: :delete_all
+  accepts_nested_attributes_for :domain_contacts, allow_destroy: true
 
   has_many :tech_contacts, -> do
     where(domain_contacts: { contact_type: DomainContact::TECH })

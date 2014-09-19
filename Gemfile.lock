@@ -32,9 +32,6 @@ GEM
     bootstrap-sass (3.2.0.1)
       sass (~> 3.2)
     builder (3.2.2)
-    byebug (2.7.0)
-      columnize (~> 0.3)
-      debugger-linecache (~> 1.2)
     capybara (2.4.1)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
@@ -52,9 +49,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.7.0)
-    columnize (0.8.9)
     database_cleaner (1.3.0)
-    debugger-linecache (1.2.0)
     diff-lcs (1.2.5)
     epp (1.4.0)
       hpricot
@@ -136,9 +131,6 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-    pry-byebug (1.3.3)
-      byebug (~> 2.7)
-      pry (~> 0.10)
     rack (1.5.2)
     rack-test (0.6.2)
       rack (>= 1.0)
@@ -272,7 +264,6 @@ DEPENDENCIES
   phantomjs (~> 1.9.7.1)
   poltergeist (~> 1.5.1)
   pry (~> 0.10.1)
-  pry-byebug (~> 1.3.3)
   rails (= 4.1.4)
   ransack (~> 1.3.0)
   rspec-rails (~> 3.0.2)

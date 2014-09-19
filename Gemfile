@@ -97,7 +97,7 @@ group :development, :test do
 
   # For debugging
   gem 'pry', '~> 0.10.1'
-  gem 'pry-byebug', '~> 1.3.3'
+  # gem 'pry-byebug', '~> 1.3.3'
 
   # Testing framework
   gem 'rspec-rails', '~> 3.0.2'

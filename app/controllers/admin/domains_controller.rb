@@ -8,6 +8,7 @@ class Admin::DomainsController < ApplicationController
     params[:domain_owner_contact] = owner_contact
 
     @domain.nameservers.build
+    @domain.domain_contacts.build
   end
 
   def create
@@ -61,7 +62,14 @@ class Admin::DomainsController < ApplicationController
   end
 
   def domain_params
-    params.require(:domain).permit(:name, :period, :period_unit, :registrar_id, :owner_contact_id, nameservers_attributes: [:id, :hostname, :ipv4, :ipv6, :_destroy])
+    params.require(:domain).permit(
+      :name,
+      :period,
+      :period_unit,
+      :registrar_id,
+      :owner_contact_id,
+      nameservers_attributes: [:id, :hostname, :ipv4, :ipv6, :_destroy],
+      domain_contacts_attributes: [:id, :contact_type, :contact_id, :_destroy])
   end
 
   def verify_deletion
