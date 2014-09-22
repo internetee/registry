@@ -40,6 +40,8 @@ class Domain < ActiveRecord::Base
   validate :validate_period
   validate :validate_nameservers_count
   validate :validate_nameservers_uniqueness, if: :new_record?
+  validate :validate_tech_contacts_uniqueness, if: :new_record?
+  validate :validate_admin_contacts_uniqueness, if: :new_record?
   # validates_associated :nameservers
 
   attr_accessor :adding_admin_contact
@@ -123,6 +125,27 @@ class Domain < ActiveRecord::Base
       validated << ns.hostname
       errors.add(:'nameservers.hostname', 'duplicate')
       ns.errors.add(:hostname, :taken)
+    end
+  end
+
+  def validate_tech_contacts_uniqueness
+    contacts = domain_contacts.select { |x| x.contact_type == DomainContact::TECH }
+    validate_domain_contacts_uniqueness(contacts)
+  end
+
+  def validate_admin_contacts_uniqueness
+    contacts = domain_contacts.select { |x| x.contact_type == DomainContact::ADMIN }
+    validate_domain_contacts_uniqueness(contacts)
+  end
+
+  def validate_domain_contacts_uniqueness(contacts)
+    validated = []
+    contacts.each do |dc|
+      existing = contacts.select { |x| x.contact_id == dc.contact_id }
+      next unless existing.length > 1
+      validated << dc
+      errors.add(:'domain_contacts.contact', 'duplicate')
+      dc.errors.add(:contact, :taken)
     end
   end
 
