@@ -15,9 +15,7 @@
         %li
           %a{"data-toggle" => "tab", :href => "#nameservers-tab", :role => "tab"} nameservers-tab
         %li
-          %a{"data-toggle" => "tab", :href => "#tech-contacts-tab", :role => "tab"} tech-contacts-tab
-        %li
-          %a{"data-toggle" => "tab", :href => "#admin-contacts", :role => "tab"} admin-contacts-tab
+          %a{"data-toggle" => "tab", :href => "#contacts-tab", :role => "tab"} contacts-tab
         %li
           %a{"data-toggle" => "tab", :href => "#statuses-tab", :role => "tab"} statuses-tab
       / Tab panes
@@ -26,9 +24,8 @@
           = render 'admin/domains/form_partials/general', f: f
         #nameservers-tab.tab-pane
           = render 'admin/domains/form_partials/nameservers', f: f
-        #tech-contacts-tab.tab-pane
-          = render 'admin/domains/form_partials/tech_contacts', f: f
-        #admin-contacts-tab.tab-pane ...
+        #contacts-tab.tab-pane
+          = render 'admin/domains/form_partials/contacts', f: f
         #statuses-tab.tab-pane ...
   .row
     .col-md-12.text-right

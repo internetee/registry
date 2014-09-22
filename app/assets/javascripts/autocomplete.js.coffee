@@ -9,7 +9,7 @@ class @Autocomplete
       displayKey: "display_key"
       source: Autocomplete.constructSourceAdapter(obj.remote)
     ).on('typeahead:selected', (e, item) ->
-      parent = $(e.currentTarget).parents('div.has-feedback')
+      parent = $(e.currentTarget).parents('div.js-typeahead-container')
       jObj = parent.find(obj.hiddenSelector).val item.id
       Autocomplete.toggleOkFeedback(jObj)
     )
@@ -27,8 +27,8 @@ class @Autocomplete
     source.ttAdapter()
 
   @toggleOkFeedback: (jObj) ->
-    ok = jObj.parents('div.has-feedback').find('.js-typeahead-ok')
-    remove = jObj.parents('div.has-feedback').find('.js-typeahead-remove')
+    ok = jObj.parents('div.js-typeahead-container').find('.js-typeahead-ok')
+    remove = jObj.parents('div.js-typeahead-container').find('.js-typeahead-remove')
 
     if jObj.val()
       ok.removeClass('hidden')

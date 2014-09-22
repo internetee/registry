@@ -14,8 +14,8 @@
               = contact_fields.select :contact_type, options_for_select(DomainContact::TYPES, contact_fields.object.contact_type), {}, {class: 'form-control'}
           .col-md-6
             .form-group.has-feedback.js-typeahead-container
-              = label_tag :contact
-              = text_field_tag(:contact, params[:contact], class: 'form-control js-contact-typeahead', placeholder: t('shared.contact_code'), autocomplete: 'off')
+              = contact_fields.label :typeahead_value
+              = contact_fields.text_field(:typeahead_value, class: 'form-control js-contact-typeahead', placeholder: t('shared.contact_code'), autocomplete: 'off')
               %span.glyphicon.glyphicon-ok.form-control-feedback.js-typeahead-ok.hidden
               %span.glyphicon.glyphicon-remove.form-control-feedback.js-typeahead-remove
               = contact_fields.hidden_field(:contact_id, class: 'js-contact-id')
