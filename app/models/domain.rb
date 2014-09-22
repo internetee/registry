@@ -1,6 +1,8 @@
 class Domain < ActiveRecord::Base
   # TODO whois requests ip whitelist for full info for own domains and partial info for other domains
   # TODO most inputs should be trimmed before validatation, probably some global logic?
+  paginates_per 10 # just for showoff
+
   belongs_to :registrar
   belongs_to :owner_contact, class_name: 'Contact'
 
@@ -41,7 +43,7 @@ class Domain < ActiveRecord::Base
 
   validate :validate_period
   validate :validate_nameservers_count
-  validate :validate_admin_contacts_count, if: :new_record?
+  validate :validate_admin_contacts_count
   validate :validate_nameservers_uniqueness, if: :new_record?
   validate :validate_tech_contacts_uniqueness, if: :new_record?
   validate :validate_admin_contacts_uniqueness, if: :new_record?

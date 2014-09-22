@@ -43,13 +43,13 @@ describe Domain do
 
       d = Domain.new
       expect(d.valid?).to be false
-
       expect(d.errors.messages).to match_array({
-        name: ['is missing'],
         period: ['is not a number'],
         owner_contact: ['Registrant is missing'],
         admin_contacts: ['Admin contacts count must be between 1 - infinity'],
-        nameservers: ['Nameservers count must be between 1-13']
+        nameservers: ['Nameservers count must be between 1-13'],
+        registrar: ['Registrar is missing'],
+        period: ['Period is not a number']
       })
 
       sg = SettingGroup.domain_validation

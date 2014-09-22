@@ -81,7 +81,7 @@ class Admin::DomainsController < ApplicationController
   def build_associations
     @domain.nameservers.build if @domain.nameservers.empty?
     @domain.domain_contacts.build if @domain.domain_contacts.empty?
-    @domain.domain_statuses.build if @domain.domain_contacts.empty?
+    @domain.domain_statuses.build if @domain.domain_statuses.empty?
   end
 
   def verify_deletion
