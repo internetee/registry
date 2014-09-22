@@ -36,7 +36,7 @@ class Domain < ActiveRecord::Base
 
   validates :name_dirty, domain_name: true, uniqueness: true
   validates :period, numericality: { only_integer: true }
-  validates :owner_contact, presence: true
+  validates :owner_contact, :registrar, presence: true
 
   validate :validate_period
   validate :validate_nameservers_count
@@ -44,25 +44,6 @@ class Domain < ActiveRecord::Base
   validate :validate_tech_contacts_uniqueness, if: :new_record?
   validate :validate_admin_contacts_uniqueness, if: :new_record?
   validate :validate_domain_statuses_uniqueness, if: :new_record?
-  # validates_associated :nameservers
-
-  attr_accessor :adding_admin_contact
-  validate :validate_admin_contacts_max_count, if: :adding_admin_contact
-
-  attr_accessor :deleting_admin_contact
-  validate :validate_admin_contacts_min_count, if: :deleting_admin_contact
-
-  attr_accessor :adding_nameserver
-  validate :validate_nameserver_max_count, if: :adding_nameserver
-
-  attr_accessor :deleting_nameserver
-  validate :validate_nameserver_min_count, if: :deleting_nameserver
-
-  attr_accessor :adding_tech_contact
-  validate :validate_tech_contacts_max_count, if: :adding_tech_contact
-
-  attr_accessor :deleting_tech_contact
-  validate :validate_tech_contacts_min_count, if: :deleting_tech_contact
 
   def name=(value)
     value.strip!
@@ -82,30 +63,6 @@ class Domain < ActiveRecord::Base
   end
 
   ### VALIDATIONS ###
-  def validate_admin_contacts_max_count
-    return if admin_contacts_count < 4
-    errors.add(:admin_contacts, :out_of_range)
-  end
-
-  def validate_admin_contacts_min_count
-    return if admin_contacts_count > 2
-    errors.add(:admin_contacts, :out_of_range)
-  end
-
-  def validate_nameserver_max_count
-    sg = SettingGroup.domain_validation
-    max = sg.setting(:ns_max_count).value.to_i
-    return if nameservers.length <= max
-    errors.add(:nameservers, :less_than_or_equal_to, { count: max })
-  end
-
-  def validate_nameserver_min_count
-    sg = SettingGroup.domain_validation
-    min = sg.setting(:ns_min_count).value.to_i
-    return if nameservers.reject(&:marked_for_destruction?).length >= min
-    errors.add(:nameservers, :greater_than_or_equal_to, { count: min })
-  end
-
   def validate_nameservers_count
     sg = SettingGroup.domain_validation
     min, max = sg.setting(:ns_min_count).value.to_i, sg.setting(:ns_max_count).value.to_i
@@ -125,7 +82,7 @@ class Domain < ActiveRecord::Base
       existing = nameservers.select { |x| x.hostname == ns.hostname }
       next unless existing.length > 1
       validated << ns.hostname
-      errors.add(:'nameservers.hostname', 'duplicate')
+      errors.add(:nameservers, :invalid) if errors[:nameservers].blank?
       ns.errors.add(:hostname, :taken)
     end
   end
@@ -146,7 +103,7 @@ class Domain < ActiveRecord::Base
       existing = contacts.select { |x| x.contact_id == dc.contact_id }
       next unless existing.length > 1
       validated << dc
-      errors.add(:'domain_contacts.contact', 'duplicate')
+      errors.add(:domain_contacts, :invalid) if errors[:domain_contacts].blank?
       dc.errors.add(:contact, :taken)
     end
   end
@@ -192,6 +149,16 @@ class Domain < ActiveRecord::Base
   # used for highlighting form tabs
   def associations_valid?(name)
     !errors.keys.any? { |x| x.match(/#{name.to_s}/) }
+  end
+
+  def general_tab_errors
+    collect_errors_with_keys([:name_dirty, :period, :period_unit, :registrar, :owner_contact])
+  end
+
+  def collect_errors_with_keys(keys)
+    res = []
+    errors.each { |attr, err| res << err if keys.include?(attr) }
+    res
   end
 
   ## SHARED

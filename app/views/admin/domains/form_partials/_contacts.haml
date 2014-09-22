@@ -1,3 +1,6 @@
+= render 'admin/shared/errors_array', errors: @domain.errors[:domain_contacts]
+- if @domain.errors[:domain_contacts].any?
+  %hr
 #domain_contacts
   = f.fields_for :domain_contacts do |contact_fields|
     .panel.panel-default

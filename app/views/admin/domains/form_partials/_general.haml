@@ -1,4 +1,9 @@
 .row
+  .col-md-12
+    = render 'admin/shared/errors_array', errors: @domain.general_tab_errors
+    - if @domain.general_tab_errors.any?
+      %hr
+.row
   .col-md-6
     .form-group
       = f.label :name

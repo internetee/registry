@@ -1,3 +1,6 @@
+= render 'admin/shared/errors_array', errors: @domain.errors[:nameservers]
+- if @domain.errors[:nameservers].any?
+  %hr
 #nameservers
   = f.fields_for :nameservers do |ns_fields|
     .panel.panel-default
