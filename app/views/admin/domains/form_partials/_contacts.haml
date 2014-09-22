@@ -1,5 +1,7 @@
 = render 'admin/shared/errors_array', errors: @domain.errors[:domain_contacts]
-- if @domain.errors[:domain_contacts].any?
+= render 'admin/shared/errors_array', errors: @domain.errors[:admin_contacts]
+= render 'admin/shared/errors_array', errors: @domain.errors[:tech_contacts]
+- if (@domain.errors[:domain_contacts] + @domain.errors[:admin_contacts] + @domain.errors[:tech_contacts]).any?
   %hr
 #domain_contacts
   = f.fields_for :domain_contacts do |contact_fields|
@@ -19,8 +21,8 @@
               = contact_fields.select :contact_type, options_for_select(DomainContact::TYPES, contact_fields.object.contact_type), {}, {class: 'form-control'}
           .col-md-6
             .form-group.has-feedback.js-typeahead-container
-              = contact_fields.label :typeahead_value
-              = contact_fields.text_field(:typeahead_value, class: 'form-control js-contact-typeahead', placeholder: t('shared.contact_code'), autocomplete: 'off')
+              = contact_fields.label :value_typeahead
+              = contact_fields.text_field(:value_typeahead, class: 'form-control js-contact-typeahead', placeholder: t('shared.contact_code'), autocomplete: 'off')
               %span.glyphicon.glyphicon-ok.form-control-feedback.js-typeahead-ok.hidden
               %span.glyphicon.glyphicon-remove.form-control-feedback.js-typeahead-remove
               = contact_fields.hidden_field(:contact_id, class: 'js-contact-id')

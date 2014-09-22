@@ -103,6 +103,8 @@ en:
               invalid: 'Status is invalid'
               not_found: 'Status was not found'
               taken: 'Status already exists on this domain'
+            registrar:
+              blank: 'Registrar is missing'
 
         domain:
           <<: *epp_domain_ar_attributes
@@ -261,3 +263,5 @@ en:
     domain_added: 'Domain added!'
     new_contact: 'New contact'
     add_another: 'Add another'
+    domain_updated: 'Domain updated!'
+    failed_to_update_domain: 'Failed to update domain'

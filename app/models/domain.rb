@@ -16,7 +16,8 @@ class Domain < ActiveRecord::Base
   end, through: :domain_contacts, source: :contact
 
   has_many :nameservers, dependent: :delete_all
-  accepts_nested_attributes_for :nameservers, allow_destroy: true
+  accepts_nested_attributes_for :nameservers, allow_destroy: true,
+    reject_if: proc { |attrs| attrs[:hostname].blank? }
 
   has_many :domain_statuses, dependent: :delete_all
   accepts_nested_attributes_for :domain_statuses, allow_destroy: true,
@@ -40,6 +41,7 @@ class Domain < ActiveRecord::Base
 
   validate :validate_period
   validate :validate_nameservers_count
+  validate :validate_admin_contacts_count, if: :new_record?
   validate :validate_nameservers_uniqueness, if: :new_record?
   validate :validate_tech_contacts_uniqueness, if: :new_record?
   validate :validate_admin_contacts_uniqueness, if: :new_record?
@@ -78,7 +80,7 @@ class Domain < ActiveRecord::Base
     sg = SettingGroup.domain_validation
     min, max = sg.setting(:ns_min_count).value.to_i, sg.setting(:ns_max_count).value.to_i
 
-    return if nameservers.length.between?(min, max)
+    return if nameservers.reject(&:marked_for_destruction?).length.between?(min, max)
     errors.add(:nameservers, :out_of_range, { min: min, max: max })
   end
 
@@ -88,9 +90,9 @@ class Domain < ActiveRecord::Base
 
   def validate_nameservers_uniqueness
     validated = []
-    nameservers.each do |ns|
+    nameservers.reject(&:marked_for_destruction?).each do |ns|
       next if ns.hostname.blank?
-      existing = nameservers.select { |x| x.hostname == ns.hostname }
+      existing = nameservers.reject(&:marked_for_destruction?).select { |x| x.hostname == ns.hostname }
       next unless existing.length > 1
       validated << ns.hostname
       errors.add(:nameservers, :invalid) if errors[:nameservers].blank?
@@ -99,12 +101,12 @@ class Domain < ActiveRecord::Base
   end
 
   def validate_tech_contacts_uniqueness
-    contacts = domain_contacts.select { |x| x.contact_type == DomainContact::TECH }
+    contacts = domain_contacts.reject(&:marked_for_destruction?).select { |x| x.contact_type == DomainContact::TECH }
     validate_domain_contacts_uniqueness(contacts)
   end
 
   def validate_admin_contacts_uniqueness
-    contacts = domain_contacts.select { |x| x.contact_type == DomainContact::ADMIN }
+    contacts = domain_contacts.reject(&:marked_for_destruction?).select { |x| x.contact_type == DomainContact::ADMIN }
     validate_domain_contacts_uniqueness(contacts)
   end
 
@@ -121,12 +123,12 @@ class Domain < ActiveRecord::Base
 
   def validate_domain_statuses_uniqueness
     validated = []
-    domain_statuses.each do |status|
+    domain_statuses.reject(&:marked_for_destruction?).each do |status|
       next if status.value.blank?
       existing = domain_statuses.select { |x| x.value == status.value }
       next unless existing.length > 1
       validated << status.value
-      errors.add(:'domain_statuses.value', 'duplicate')
+      errors.add(:domain_statuses, :invalid)
       status.errors.add(:value, :taken)
     end
   end
@@ -166,6 +168,14 @@ class Domain < ActiveRecord::Base
     collect_errors_with_keys([:name_dirty, :period, :period_unit, :registrar, :owner_contact])
   end
 
+  def contacts_tab_valid?
+    (
+      associations_valid?(:domain_contacts) &&
+      associations_valid?(:admin_contacts) &&
+      associations_valid?(:tech_contacts)
+    )
+  end
+
   def collect_errors_with_keys(keys)
     res = []
     errors.each { |attr, err| res << err if keys.include?(attr) }
@@ -196,11 +206,11 @@ class Domain < ActiveRecord::Base
   end
 
   def tech_contacts_count
-    domain_contacts.select { |x| x.contact_type == DomainContact::TECH }.count
+    domain_contacts.reject(&:marked_for_destruction?).select { |x| x.contact_type == DomainContact::TECH }.count
   end
 
   def admin_contacts_count
-    domain_contacts.select { |x| x.contact_type == DomainContact::ADMIN }.count
+    domain_contacts.reject(&:marked_for_destruction?).select { |x| x.contact_type == DomainContact::ADMIN }.count
   end
 
   class << self

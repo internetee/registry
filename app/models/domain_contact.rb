@@ -3,7 +3,7 @@ class DomainContact < ActiveRecord::Base
   belongs_to :contact
   belongs_to :domain
 
-  attr_accessor :typeahead_value
+  attr_accessor :value_typeahead
 
   def epp_code_map
     {
@@ -31,7 +31,7 @@ class DomainContact < ActiveRecord::Base
     contact_type == TECH
   end
 
-  def typeahead_value
-    @typeahead_value || contact.try(:name) || nil
+  def value_typeahead
+    @value_typeahead || contact.try(:name) || nil
   end
 end

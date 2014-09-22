@@ -9,7 +9,7 @@
         - li_class = @domain.associations_valid?(:nameservers) ? nil : 'error-tab'
         %li{class: li_class}
           %a{"data-toggle" => "tab", :href => "#nameservers-tab", :role => "tab"}= t('shared.nameservers')
-        - li_class = @domain.associations_valid?(:domain_contacts) ? nil : 'error-tab'
+        - li_class = @domain.contacts_tab_valid? ? nil : 'error-tab'
         %li{class: li_class}
           %a{"data-toggle" => "tab", :href => "#contacts-tab", :role => "tab"}= t('shared.contacts')
         - li_class = @domain.associations_valid?(:domain_statuses) ? nil : 'error-tab'

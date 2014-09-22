@@ -7,9 +7,7 @@ class Admin::DomainsController < ApplicationController
     @domain = Domain.new(owner_contact: owner_contact)
     params[:domain_owner_contact] = owner_contact
 
-    @domain.nameservers.build
-    @domain.domain_contacts.build
-    @domain.domain_statuses.build
+    build_associations
   end
 
   def create
@@ -19,7 +17,7 @@ class Admin::DomainsController < ApplicationController
       flash[:notice] = I18n.t('shared.domain_added')
       redirect_to [:admin, @domain]
     else
-      @domain.domain_statuses.build if @domain.domain_statuses.empty?
+      build_associations
       flash.now[:alert] = I18n.t('shared.failed_to_add_domain')
       render 'new'
     end
@@ -35,17 +33,16 @@ class Admin::DomainsController < ApplicationController
   end
 
   def edit
-    @domain.domain_statuses.build if @domain.domain_statuses.empty?
-
-    params[:registrar] = @domain.registrar
-    params[:domain_owner_contact] = @domain.owner_contact
+    build_associations
   end
 
   def update
     if @domain.update(domain_params)
+      flash[:notice] = I18n.t('shared.domain_updated')
       redirect_to [:admin, @domain]
     else
-      @domain.domain_statuses.build if @domain.domain_statuses.empty?
+      build_associations
+      flash[:alert] = I18n.t('shared.failed_to_update_domain')
       render 'edit'
     end
   end
@@ -76,9 +73,15 @@ class Admin::DomainsController < ApplicationController
       :owner_contact_typeahead,
       :registrar_typeahead,
       nameservers_attributes: [:id, :hostname, :ipv4, :ipv6, :_destroy],
-      domain_contacts_attributes: [:id, :contact_type, :contact_id, :typeahead_value, :_destroy],
+      domain_contacts_attributes: [:id, :contact_type, :contact_id, :value_typeahead, :_destroy],
       domain_statuses_attributes: [:id, :value, :description, :_destroy]
     )
+  end
+
+  def build_associations
+    @domain.nameservers.build if @domain.nameservers.empty?
+    @domain.domain_contacts.build if @domain.domain_contacts.empty?
+    @domain.domain_statuses.build if @domain.domain_contacts.empty?
   end
 
   def verify_deletion
