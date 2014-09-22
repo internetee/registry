@@ -45,6 +45,9 @@ class Contact < ActiveRecord::Base
   CONTACT_TYPE_ADMIN = 'admin'
   CONTACT_TYPES = [CONTACT_TYPE_TECH, CONTACT_TYPE_ADMIN]
 
+  # TEMP Scope until confusion with contact name is sorted out
+  # scope :named, -> { joins(:international_address).uniq.all }
+
   # TEMP METHOD for transaction to STI
   def address
     international_address
@@ -86,7 +89,6 @@ class Contact < ActiveRecord::Base
   end
 
   # generate random id for contact
-  #
   def generate_code
     self.code = SecureRandom.hex(4)
   end
@@ -131,6 +133,9 @@ class Contact < ActiveRecord::Base
   end
 
   class << self
+    # non-EPP
+
+    # EPP
     def extract_attributes(ph, type = :create)
       contact_hash = {
         phone: ph[:voice],

@@ -1,6 +1,7 @@
 .row
   .col-sm-6
     %h2.text-center-xs= t('shared.contacts')
+    = render 'admin/contacts/partials/search'
   .col-sm-6
     %h2.text-right.text-center-xs
       = link_to(t('shared.add'), new_admin_contact_path, class: 'btn btn-primary')
