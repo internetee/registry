@@ -272,4 +272,7 @@ en:
     failed_to_update_contact: 'Failed to update contact'
     contact_updated: 'Contact updated'
     search: 'Search'
-    reg_no: 'Reg no.'
+    reg_no: 'Reg. no'
+    setting_updated: 'Setting updated!'
+    failed_to_update_setting: 'Failed to update setting'
+

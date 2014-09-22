@@ -10,8 +10,10 @@ class Admin::SettingGroupsController < ApplicationController
 
   def update
     if @setting_group.update(setting_group_params)
+      flash[:notice] = I18n.t('shared.setting_updated')
       redirect_to [:admin, @setting_group]
     else
+      flash[:alert] = I18n.t('shared.failed_to_update_setting')
       render 'show'
     end
   end
