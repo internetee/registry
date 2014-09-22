@@ -7,6 +7,8 @@
       .panel-body
         .errors
           = render 'admin/shared/errors', object: status_fields.object
+          - if status_fields.object.errors.any?
+            %hr
         .row
           .col-md-6
             .form-group

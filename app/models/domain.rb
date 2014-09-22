@@ -38,6 +38,9 @@ class Domain < ActiveRecord::Base
   validates :owner_contact, presence: true
 
   validate :validate_period
+  validate :validate_nameservers_count
+  validate :validate_nameservers_uniqueness, if: :new_record?
+  # validates_associated :nameservers
 
   attr_accessor :adding_admin_contact
   validate :validate_admin_contacts_max_count, if: :adding_admin_contact
@@ -55,7 +58,7 @@ class Domain < ActiveRecord::Base
   validate :validate_tech_contacts_max_count, if: :adding_tech_contact
 
   attr_accessor :deleting_tech_contact
-  # validate :validate_tech_contacts_min_count, if: :deleting_tech_contact
+  validate :validate_tech_contacts_min_count, if: :deleting_tech_contact
 
   def name=(value)
     value.strip!
@@ -111,6 +114,18 @@ class Domain < ActiveRecord::Base
     errors.add(:admin_contacts, :out_of_range) if admin_contacts_count.zero?
   end
 
+  def validate_nameservers_uniqueness
+    validated = []
+    nameservers.each do |ns|
+      next if ns.hostname.blank?
+      existing = nameservers.select { |x| x.hostname == ns.hostname }
+      next unless existing.length > 1
+      validated << ns.hostname
+      errors.add(:'nameservers.hostname', 'duplicate')
+      ns.errors.add(:hostname, :taken)
+    end
+  end
+
   def validate_period
     return unless period.present?
     if period_unit == 'd'
@@ -129,6 +144,10 @@ class Domain < ActiveRecord::Base
     validate_admin_contacts_count
 
     errors.empty?
+  end
+
+  def associations_valid?(name)
+    !errors.keys.any? { |x| x.match(/#{name.to_s}/) }
   end
 
   ## SHARED

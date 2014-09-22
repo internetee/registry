@@ -1,23 +1,24 @@
 = form_for([:admin, @domain]) do |f|
-  - if @domain.errors.any?
-    - @domain.errors.each do |attr, err|
-      = err
-      %br
-  - if @domain.errors.any?
-    %hr
-
+  .row
+    .col-md-12
+      = render 'admin/shared/errors', object: f.object
+      - if f.object.errors.any?
+        %hr
   .row
     .col-md-12
       / Nav tabs
       %ul.nav.nav-tabs{:role => "tablist", id: 'tabs'}
         %li.active
-          %a{"data-toggle" => "tab", :href => "#general-tab", :role => "tab"} general-tab
-        %li
-          %a{"data-toggle" => "tab", :href => "#nameservers-tab", :role => "tab"} nameservers-tab
-        %li
-          %a{"data-toggle" => "tab", :href => "#contacts-tab", :role => "tab"} contacts-tab
-        %li
-          %a{"data-toggle" => "tab", :href => "#statuses-tab", :role => "tab"} statuses-tab
+          %a{"data-toggle" => "tab", :href => "#general-tab", :role => "tab"}= t('shared.general')
+        - li_class = @domain.associations_valid?(:nameservers) ? nil : 'error-tab'
+        %li{class: li_class}
+          %a{"data-toggle" => "tab", :href => "#nameservers-tab", :role => "tab"}= t('shared.nameservers')
+        - li_class = @domain.associations_valid?(:domain_contacts) ? nil : 'error-tab'
+        %li{class: li_class}
+          %a{"data-toggle" => "tab", :href => "#contacts-tab", :role => "tab"}= t('shared.contacts')
+        - li_class = @domain.associations_valid?(:domain_statuses) ? nil : 'error-tab'
+        %li{class: li_class}
+          %a{"data-toggle" => "tab", :href => "#statuses-tab", :role => "tab"}= t('shared.statuses')
       / Tab panes
       .tab-content{style:'margin-top: 20px;'}
         #general-tab.tab-pane.active
