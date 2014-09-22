@@ -19,6 +19,7 @@ class Contact < ActiveRecord::Base
   validates :code, :phone, :email, :ident, presence: true
 
   validate :ident_must_be_valid
+  validate :presence_of_one_address
 
   validates :phone, format: /\+[0-9]{1,3}\.[0-9]{1,14}?/ # /\+\d{3}\.\d+/
   validates :email, format: /@/
@@ -44,11 +45,20 @@ class Contact < ActiveRecord::Base
   CONTACT_TYPE_ADMIN = 'admin'
   CONTACT_TYPES = [CONTACT_TYPE_TECH, CONTACT_TYPE_ADMIN]
 
+  # TEMP Scope until confusion with contact name is sorted out
+  # scope :named, -> { joins(:international_address).uniq.all }
+
   # TEMP METHOD for transaction to STI
   def address
     international_address
   end
   ##
+
+  def presence_of_one_address
+    return true if local_address || international_address
+    errors.add(:local_address, 'Local or international address must be present')
+    errors.add(:international_address, 'Local or international address must be present')
+  end
 
   def ident_must_be_valid
     # TODO: Ident can also be passport number or company registry code.
@@ -79,7 +89,6 @@ class Contact < ActiveRecord::Base
   end
 
   # generate random id for contact
-  #
   def generate_code
     self.code = SecureRandom.hex(4)
   end
@@ -124,6 +133,9 @@ class Contact < ActiveRecord::Base
   end
 
   class << self
+    # non-EPP
+
+    # EPP
     def extract_attributes(ph, type = :create)
       contact_hash = {
         phone: ph[:voice],

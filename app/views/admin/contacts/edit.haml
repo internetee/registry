@@ -1,0 +1,9 @@
+.row
+  .col-sm-6
+    %h2.text-center-xs
+      = "#{t('shared.edit_contact')}"
+  .col-sm-6
+    %h2.text-right.text-center-xs
+      = link_to(t('shared.back_to_contact'), [:admin, @contact], class: 'btn btn-default')
+%hr
+= render 'form'
