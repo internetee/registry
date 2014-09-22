@@ -19,6 +19,7 @@ class Domain < ActiveRecord::Base
   accepts_nested_attributes_for :nameservers, allow_destroy: true
 
   has_many :domain_statuses, dependent: :delete_all
+  accepts_nested_attributes_for :domain_statuses, allow_destroy: true
 
   has_many :domain_transfers, dependent: :delete_all
 

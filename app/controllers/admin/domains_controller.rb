@@ -9,6 +9,7 @@ class Admin::DomainsController < ApplicationController
 
     @domain.nameservers.build
     @domain.domain_contacts.build
+    @domain.domain_statuses.build
   end
 
   def create
@@ -69,7 +70,9 @@ class Admin::DomainsController < ApplicationController
       :registrar_id,
       :owner_contact_id,
       nameservers_attributes: [:id, :hostname, :ipv4, :ipv6, :_destroy],
-      domain_contacts_attributes: [:id, :contact_type, :contact_id, :typeahead_value, :_destroy])
+      domain_contacts_attributes: [:id, :contact_type, :contact_id, :typeahead_value, :_destroy],
+      domain_statuses_attributes: [:id, :value, :description, :_destroy]
+    )
   end
 
   def verify_deletion
