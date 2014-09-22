@@ -45,11 +45,22 @@ class Domain < ActiveRecord::Base
   validate :validate_admin_contacts_uniqueness, if: :new_record?
   validate :validate_domain_statuses_uniqueness, if: :new_record?
 
+  attr_accessor :owner_contact_typeahead
+  attr_accessor :registrar_typeahead
+
   def name=(value)
     value.strip!
     write_attribute(:name, SimpleIDN.to_unicode(value))
     write_attribute(:name_puny, SimpleIDN.to_ascii(value))
     write_attribute(:name_dirty, value)
+  end
+
+  def owner_contact_typeahead
+    @owner_contact_typeahead || owner_contact.try(:name) || nil
+  end
+
+  def registrar_typeahead
+    @registrar_typeahead || registrar || nil
   end
 
   def pending_transfer

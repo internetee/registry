@@ -73,6 +73,8 @@ class Admin::DomainsController < ApplicationController
       :period_unit,
       :registrar_id,
       :owner_contact_id,
+      :owner_contact_typeahead,
+      :registrar_typeahead,
       nameservers_attributes: [:id, :hostname, :ipv4, :ipv6, :_destroy],
       domain_contacts_attributes: [:id, :contact_type, :contact_id, :typeahead_value, :_destroy],
       domain_statuses_attributes: [:id, :value, :description, :_destroy]
