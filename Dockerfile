@@ -1,32 +1,45 @@
-FROM gitlab/registry
+# FROM gitlab/registry
+FROM slimmed
 MAINTAINER Gitlab <info@gitlab.eu>
 
-# Set correct environment variables.
-ENV HOME /home/app
+# Initial build
+# SSH authorized keys setup
+# ADD ./doc/docker/ssh/authorized_keys /root/.ssh/authorized_keys
+#
+# Apache2 setup
+# ADD ./doc/docker/apache2/ /etc/apache2/sites-enabled
 
 # Use baseimage-docker's init process.
 CMD ["/sbin/my_init"]
 
-# App
+# Set correct environment variables.
+ENV RAILS_ENV production 
+ENV HOME /home/app
+
+# Registry
 WORKDIR /home/app/registry
 ADD . /home/app/registry
-RUN bundle install --deployment
+RUN chown -R app:www-data .; chmod -R 750 .; chmod g+s .; umask 027
+RUN setuser app ls -la /home/app/registry/vendor/
+# RUN setuser app ls -la /home/app/registry/vendor/bundle
+RUN rm /home/app/registry/vendor/bundle -rf
+RUN setuser app bundle install --deployment
+RUN setuser app rake assets:precompile
 
-# Setup nginx
-# RUN rm /etc/nginx/sites-enabled/default
-# ADD nginx.conf /etc/nginx/sites-enabled/webapp.conf
-# RUN rm -f /etc/services/nginx/down
+# Registry test
+WORKDIR /home/app/registry-test
+ADD . /home/app/registry-test
+RUN chown -R app:www-data .; chmod -R 750 .; chmod g+s .; umask 027
+RUN setuser app bundle install
 
-# RUN rm /etc/nginx/sites-enabled/default
-# ADD ./nginx.conf /etc/nginx/sites-enabled/webapp.conf
-# RUN rm -f /etc/services/nginx/down
+# Ports
+# Registry admin:
+EXPOSE 80  
+# EPP:
+EXPOSE 700 
+# Test env what jenkins uses
+# for debugging only:
+# EXPOSE 81
 
-# Clean up APT when done.
+# Clean up when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-## Install an SSH public keys
-ADD ./doc/docker/authorized_keys /tmp/authorized_keys
-RUN cat /tmp/authorized_keys > /root/.ssh/authorized_keys && rm -f /tmp/authorized_keys
-
-EXPOSE 80
-EXPOSE 700
