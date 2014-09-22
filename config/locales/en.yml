@@ -120,6 +120,7 @@ en:
         domain_contact:
           attributes:
             contact:
+              blank: 'Contact was not found'
               taken: 'Contact already exists on this domain!'
 
         setting:

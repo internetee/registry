@@ -6,7 +6,7 @@ class DomainContact < ActiveRecord::Base
   def epp_code_map
     {
       '2302' => [
-        [:contact, :taken, {value: {obj: 'contact', val: contact.code}}]
+        [:contact, :taken, { value: { obj: 'contact', val: contact.code } }]
       ]
     }
   end
@@ -15,7 +15,7 @@ class DomainContact < ActiveRecord::Base
   ADMIN = 'admin'
   TYPES = [TECH, ADMIN]
 
-  # TODO: Fix EPP problems
+  validates :contact, presence: true
   validates :contact, uniqueness: { scope: [:domain_id, :contact_type] }
 
   scope :admin, -> { where(contact_type: ADMIN) }

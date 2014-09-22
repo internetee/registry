@@ -1,6 +1,7 @@
 class @Autocomplete
   @bindTypeahead: (obj) ->
-    Autocomplete.toggleOkFeedback(obj.hiddenSelector)
+    Autocomplete.toggleOkFeedbacksOnLoad(obj)
+    # Autocomplete.toggleOkFeedback(obj.hiddenSelector)
     $(obj.selector).typeahead(
       highlight: true,
       hint: false
@@ -8,8 +9,9 @@ class @Autocomplete
       displayKey: "display_key"
       source: Autocomplete.constructSourceAdapter(obj.remote)
     ).on('typeahead:selected', (e, item) ->
-      $(obj.hiddenSelector).val item.id
-      Autocomplete.toggleOkFeedback(obj.hiddenSelector)
+      parent = $(e.currentTarget).parents('div.has-feedback')
+      jObj = parent.find(obj.hiddenSelector).val item.id
+      Autocomplete.toggleOkFeedback(jObj)
     )
 
   @constructSourceAdapter: (remote) ->
@@ -24,10 +26,29 @@ class @Autocomplete
     source.initialize()
     source.ttAdapter()
 
-  @toggleOkFeedback: (hiddenSelector) ->
-    if $(hiddenSelector).val()
-      ok = $(hiddenSelector).parent('div.has-feedback').find('.js-typeahead-ok')
-      remove = $(hiddenSelector).parents('div.has-feedback').find('.js-typeahead-remove')
+  @toggleOkFeedback: (jObj) ->
+    ok = jObj.parents('div.has-feedback').find('.js-typeahead-ok')
+    remove = jObj.parents('div.has-feedback').find('.js-typeahead-remove')
 
+    if jObj.val()
       ok.removeClass('hidden')
       remove.addClass('hidden')
+    else
+      remove.removeClass('hidden')
+      ok.addClass('hidden')
+
+  @toggleOkFeedbacksOnLoad: (obj) ->
+    $.each $(obj.hiddenSelector), (k, v) ->
+      Autocomplete.toggleOkFeedback($(v))
+
+  @bindContactSearch: ->
+    Autocomplete.bindTypeahead
+      remote: '/admin/contacts/search'
+      selector: '.js-contact-typeahead'
+      hiddenSelector: '.js-contact-id'
+
+  @bindRegistrarSearch: ->
+    Autocomplete.bindTypeahead
+      remote: '/admin/registrars/search'
+      selector: '.js-registrar-typeahead'
+      hiddenSelector: '.js-registrar-id'
