@@ -80,6 +80,7 @@ group :development, :test do
   gem 'capybara', '~> 2.4.1'
   # For feature testing
   # gem 'capybara-webkit', '1.2.0' # Webkit driver didn't work with turbolinks
+  gem 'phantomjs-binaries', '~> 1.9.2.4'
   gem 'phantomjs', '~> 1.9.7.1', require: 'phantomjs/poltergeist'
   gem 'poltergeist', '~> 1.5.1' # We are using PhantomJS instead
 
@@ -108,3 +109,4 @@ group :development, :test do
   # For unique IDs (used by the epp gem)
   gem 'uuidtools', '~> 2.1.4'
 end
+
