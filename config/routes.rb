@@ -6,14 +6,7 @@ Rails.application.routes.draw do
   end
 
   namespace(:admin) do
-    resources :domains do
-      resources :nameservers
-      resources :domain_contacts
-      resources :tech_contacts
-      resources :admin_contacts
-      resources :domain_statuses
-    end
-
+    resources :domains
     resources :setting_groups
     resources :registrars do
       collection do
