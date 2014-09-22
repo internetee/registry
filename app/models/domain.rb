@@ -19,7 +19,7 @@ class Domain < ActiveRecord::Base
   accepts_nested_attributes_for :nameservers, allow_destroy: true
 
   has_many :domain_statuses, dependent: :delete_all
-  accepts_nested_attributes_for :domain_statuses, allow_destroy: true
+  accepts_nested_attributes_for :domain_statuses, allow_destroy: true, reject_if: proc {|attrs| attrs[:value].blank?}
 
   has_many :domain_transfers, dependent: :delete_all
 
@@ -42,6 +42,7 @@ class Domain < ActiveRecord::Base
   validate :validate_nameservers_uniqueness, if: :new_record?
   validate :validate_tech_contacts_uniqueness, if: :new_record?
   validate :validate_admin_contacts_uniqueness, if: :new_record?
+  validate :validate_domain_statuses_uniqueness, if: :new_record?
   # validates_associated :nameservers
 
   attr_accessor :adding_admin_contact
@@ -146,6 +147,18 @@ class Domain < ActiveRecord::Base
       validated << dc
       errors.add(:'domain_contacts.contact', 'duplicate')
       dc.errors.add(:contact, :taken)
+    end
+  end
+
+  def validate_domain_statuses_uniqueness
+    validated = []
+    domain_statuses.each do |status|
+      next if status.value.blank?
+      existing = domain_statuses.select { |x| x.value == status.value }
+      next unless existing.length > 1
+      validated << status.value
+      errors.add(:'domain_statuses.value', 'duplicate')
+      status.errors.add(:value, :taken)
     end
   end
 

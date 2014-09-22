@@ -19,6 +19,7 @@ class Admin::DomainsController < ApplicationController
       flash[:notice] = I18n.t('shared.domain_added')
       redirect_to [:admin, @domain]
     else
+      @domain.domain_statuses.build if @domain.domain_statuses.empty?
       flash.now[:alert] = I18n.t('shared.failed_to_add_domain')
       render 'new'
     end
@@ -34,6 +35,8 @@ class Admin::DomainsController < ApplicationController
   end
 
   def edit
+    @domain.domain_statuses.build if @domain.domain_statuses.empty?
+
     params[:registrar] = @domain.registrar
     params[:domain_owner_contact] = @domain.owner_contact
   end
@@ -42,6 +45,7 @@ class Admin::DomainsController < ApplicationController
     if @domain.update(domain_params)
       redirect_to [:admin, @domain]
     else
+      @domain.domain_statuses.build if @domain.domain_statuses.empty?
       render 'edit'
     end
   end
