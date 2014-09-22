@@ -1,25 +1,20 @@
 - panel_class = @domain.errors.messages[:admin_contacts] ? 'panel-danger' : 'panel-default'
 .panel{class: panel_class}
   .panel-heading.clearfix
-    .pull-left
-      = t('shared.admin_contacts')
-    .pull-right
-      = link_to(t('shared.add'), new_admin_domain_domain_contact_path(@domain, type: DomainContact::ADMIN), class: 'btn btn-primary btn-xs')
+    = t('shared.admin_contacts')
   .table-responsive
     %table.table.table-hover.table-bordered.table-condensed
       %thead
         %tr
           %th{class: 'col-xs-4'}= t('shared.name')
-          %th{class: 'col-xs-5'}= t('shared.email')
-          %th{class: 'col-xs-3'}= t('shared.action')
+          %th{class: 'col-xs-4'}= t('shared.code')
+          %th{class: 'col-xs-4'}= t('shared.email')
       %tbody
         - @domain.domain_contacts.admin.each do |x|
           %tr
-            %td= link_to(x.contact, root_path)
+            %td= link_to(x.contact, admin_contact_path(x.contact))
+            %td= x.contact.code
             %td= x.contact.email
-            %td
-              = link_to(t('shared.edit'), root_path, class: 'btn btn-primary btn-xs')
-              = link_to(t('shared.detach'), admin_domain_domain_contact_path(@domain, x), method: :delete, data: { confirm: t('shared.are_you_sure') }, class: 'btn btn-warning btn-xs')
       - if @domain.errors.messages[:admin_contacts]
         %tfoot
           - @domain.errors.messages[:admin_contacts].each do |x|

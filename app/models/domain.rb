@@ -19,7 +19,8 @@ class Domain < ActiveRecord::Base
   accepts_nested_attributes_for :nameservers, allow_destroy: true
 
   has_many :domain_statuses, dependent: :delete_all
-  accepts_nested_attributes_for :domain_statuses, allow_destroy: true, reject_if: proc {|attrs| attrs[:value].blank?}
+  accepts_nested_attributes_for :domain_statuses, allow_destroy: true,
+    reject_if: proc { |attrs| attrs[:value].blank? }
 
   has_many :domain_transfers, dependent: :delete_all
 
@@ -182,6 +183,13 @@ class Domain < ActiveRecord::Base
     errors.empty?
   end
 
+  # used for highlighting form tabs
+  def parent_valid?
+    assoc_errors = errors.keys.select { |x| x.match(/\./) }
+    (errors.keys - assoc_errors).empty?
+  end
+
+  # used for highlighting form tabs
   def associations_valid?(name)
     !errors.keys.any? { |x| x.match(/#{name.to_s}/) }
   end

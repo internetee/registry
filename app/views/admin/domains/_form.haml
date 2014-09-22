@@ -8,7 +8,8 @@
     .col-md-12
       / Nav tabs
       %ul.nav.nav-tabs{:role => "tablist", id: 'tabs'}
-        %li.active
+        - li_class = @domain.parent_valid? ? nil : 'error-tab'
+        %li.active{class: li_class}
           %a{"data-toggle" => "tab", :href => "#general-tab", :role => "tab"}= t('shared.general')
         - li_class = @domain.associations_valid?(:nameservers) ? nil : 'error-tab'
         %li{class: li_class}
