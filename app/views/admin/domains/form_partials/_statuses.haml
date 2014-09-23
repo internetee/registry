@@ -1,12 +1,11 @@
-= render 'admin/shared/errors_array', errors: @domain.errors[:domain_statuses]
-- if @domain.errors[:domain_statuses].any?
-  %hr
 #domain_statuses
   = f.fields_for :domain_statuses do |status_fields|
     .panel.panel-default
-      .panel-heading.text-right
-        = link_to(t('shared.add_another'), '#', class: 'btn btn-primary btn-xs add-domain-status')
-        = link_to(t('shared.delete'), '#', class: 'btn btn-danger btn-xs destroy')
+      .panel-heading.clearfix
+        .pull-left= t('shared.status')
+        .pull-right
+          = link_to(t('shared.add_another'), '#', class: 'btn btn-primary btn-xs add-domain-status')
+          = link_to(t('shared.delete'), '#', class: 'btn btn-danger btn-xs destroy')
       .panel-body
         .errors
           = render 'admin/shared/errors', object: status_fields.object

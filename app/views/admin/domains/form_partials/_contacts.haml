@@ -1,14 +1,11 @@
-= render 'admin/shared/errors_array', errors: @domain.errors[:domain_contacts]
-= render 'admin/shared/errors_array', errors: @domain.errors[:admin_contacts]
-= render 'admin/shared/errors_array', errors: @domain.errors[:tech_contacts]
-- if (@domain.errors[:domain_contacts] + @domain.errors[:admin_contacts] + @domain.errors[:tech_contacts]).any?
-  %hr
 #domain_contacts
   = f.fields_for :domain_contacts do |contact_fields|
     .panel.panel-default
-      .panel-heading.text-right
-        = link_to(t('shared.add_another'), '#', class: 'btn btn-primary btn-xs add-domain-contact')
-        = link_to(t('shared.delete'), '#', class: 'btn btn-danger btn-xs destroy')
+      .panel-heading.clearfix
+        .pull-left= t('shared.contact')
+        .pull-right
+          = link_to(t('shared.add_another'), '#', class: 'btn btn-primary btn-xs add-domain-contact')
+          = link_to(t('shared.delete'), '#', class: 'btn btn-danger btn-xs destroy')
       .panel-body
         .errors
           = render 'admin/shared/errors', object: contact_fields.object

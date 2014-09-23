@@ -1,12 +1,11 @@
-= render 'admin/shared/errors_array', errors: @domain.errors[:nameservers]
-- if @domain.errors[:nameservers].any?
-  %hr
 #nameservers
   = f.fields_for :nameservers do |ns_fields|
     .panel.panel-default
-      .panel-heading.text-right
-        = link_to(t('shared.add_another'), '#', class: 'btn btn-primary btn-xs add-nameserver')
-        = link_to(t('shared.delete'), '#', class: 'btn btn-danger btn-xs destroy')
+      .panel-heading.clearfix
+        .pull-left= t('shared.nameserver')
+        .pull-right
+          = link_to(t('shared.add_another'), '#', class: 'btn btn-primary btn-xs add-nameserver')
+          = link_to(t('shared.delete'), '#', class: 'btn btn-danger btn-xs destroy')
       .panel-body
         .errors
           = render 'admin/shared/errors', object: ns_fields.object

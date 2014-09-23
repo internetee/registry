@@ -161,29 +161,6 @@ class Domain < ActiveRecord::Base
     (errors.keys - assoc_errors).empty?
   end
 
-  # used for highlighting form tabs
-  def associations_valid?(name)
-    !errors.keys.any? { |x| x.match(/#{name.to_s}/) }
-  end
-
-  def general_tab_errors
-    collect_errors_with_keys([:name_dirty, :period, :period_unit, :registrar, :owner_contact])
-  end
-
-  def contacts_tab_valid?
-    (
-      associations_valid?(:domain_contacts) &&
-      associations_valid?(:admin_contacts) &&
-      associations_valid?(:tech_contacts)
-    )
-  end
-
-  def collect_errors_with_keys(keys)
-    res = []
-    errors.each { |attr, err| res << err if keys.include?(attr) }
-    res
-  end
-
   ## SHARED
 
   def to_s
