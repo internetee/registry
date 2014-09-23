@@ -130,7 +130,7 @@ class Domain < ActiveRecord::Base
       existing = domain_statuses.select { |x| x.value == status.value }
       next unless existing.length > 1
       validated << status.value
-      errors.add(:domain_statuses, :invalid)
+      errors.add(:domain_statuses, :invalid) if errors[:domain_statuses].blank?
       status.errors.add(:value, :taken)
     end
   end
@@ -159,6 +159,15 @@ class Domain < ActiveRecord::Base
   def parent_valid?
     assoc_errors = errors.keys.select { |x| x.match(/\./) }
     (errors.keys - assoc_errors).empty?
+  end
+
+  def general_tab_valid?
+    status_errors = errors.keys.collect { |x| x.match(/domain_statuses/) }
+    (errors.keys - status_errors).empty?
+  end
+
+  def statuses_tab_valid?
+    !errors.keys.any? { |x| x.match(/domain_statuses/) }
   end
 
   ## SHARED
