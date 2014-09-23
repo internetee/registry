@@ -8,7 +8,7 @@
           = link_to(t('shared.delete'), '#', class: 'btn btn-danger btn-xs destroy')
       .panel-body
         .errors
-          = render 'admin/shared/errors', object: ns_fields.object
+          = render 'shared/errors', object: ns_fields.object
           - if ns_fields.object.errors.any?
             %hr
         .row

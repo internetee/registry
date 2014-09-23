@@ -1,0 +1,19 @@
+.panel.panel-default
+  .panel-heading
+    %h3.panel-title= t('shared.owner')
+  .panel-body
+    %dl.dl-horizontal
+      %dt= t('shared.name')
+      %dd= link_to(@domain.owner_contact, '#')
+
+      %dt= t('shared.code')
+      %dd= @domain.owner_contact_code
+
+      %dt= t('shared.identity_code')
+      %dd= @domain.owner_contact_ident
+
+      %dt= t('shared.email')
+      %dd= @domain.owner_contact_email
+
+      %dt= t('shared.phone')
+      %dd= @domain.owner_contact_phone

@@ -41,14 +41,26 @@ class @Autocomplete
     $.each $(obj.hiddenSelector), (k, v) ->
       Autocomplete.toggleOkFeedback($(v))
 
-  @bindContactSearch: ->
+  @bindAdminContactSearch: ->
     Autocomplete.bindTypeahead
       remote: '/admin/contacts/search'
       selector: '.js-contact-typeahead'
       hiddenSelector: '.js-contact-id'
 
-  @bindRegistrarSearch: ->
+  @bindAdminRegistrarSearch: ->
     Autocomplete.bindTypeahead
       remote: '/admin/registrars/search'
+      selector: '.js-registrar-typeahead'
+      hiddenSelector: '.js-registrar-id'
+
+  @bindClientContactSearch: ->
+    Autocomplete.bindTypeahead
+      remote: '/client/contacts/search'
+      selector: '.js-contact-typeahead'
+      hiddenSelector: '.js-contact-id'
+
+  @bindClientRegistrarSearch: ->
+    Autocomplete.bindTypeahead
+      remote: '/client/registrars/search'
       selector: '.js-registrar-typeahead'
       hiddenSelector: '.js-registrar-id'

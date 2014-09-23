@@ -1,0 +1,21 @@
+.row
+  .col-sm-6
+    %h2.text-center-xs
+      = "#{t('shared.domain_details')}"
+  .col-sm-6
+    %h2.text-right.text-center-xs
+      = link_to(t('shared.edit'), edit_client_domain_path(@domain), class: 'btn btn-primary')
+      = link_to(t('shared.delete'), client_domain_path(@domain), method: :delete, data: { confirm: t('shared.are_you_sure') }, class: 'btn btn-danger')
+
+%hr
+.row
+  .col-md-6= render 'client/domains/partials/general'
+  .col-md-6= render 'client/domains/partials/owner'
+.row
+  .col-md-12= render 'admin/domains/partials/nameservers'
+.row
+  .col-md-12= render 'admin/domains/partials/statuses'
+.row
+  .col-md-12= render 'client/domains/partials/tech_contacts'
+.row
+  .col-md-12= render 'client/domains/partials/admin_contacts'

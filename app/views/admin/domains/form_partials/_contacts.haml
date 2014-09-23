@@ -8,7 +8,7 @@
           = link_to(t('shared.delete'), '#', class: 'btn btn-danger btn-xs destroy')
       .panel-body
         .errors
-          = render 'admin/shared/errors', object: contact_fields.object
+          = render 'shared/errors', object: contact_fields.object
           - if contact_fields.object.errors.any?
             %hr
         .row
@@ -23,12 +23,3 @@
               %span.glyphicon.glyphicon-ok.form-control-feedback.js-typeahead-ok.hidden
               %span.glyphicon.glyphicon-remove.form-control-feedback.js-typeahead-remove
               = contact_fields.hidden_field(:contact_id, class: 'js-contact-id')
-:javascript
-  $("#domain_contacts").nestedAttributes({
-    bindAddTo: $(".add-domain-contact"),
-    afterAdd: function(item) {
-      item.find('.errors').html('');
-      item.find('.js-contact-id').val('')
-      Autocomplete.bindContactSearch();
-    }
-  });

@@ -23,6 +23,12 @@ Rails.application.routes.draw do
 
   namespace(:client) do
     resources :domains
+
+    resources :contacts do
+      collection do
+        get 'search'
+      end
+    end
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

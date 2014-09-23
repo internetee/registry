@@ -1,4 +1,4 @@
-= form_for([:admin, @domain]) do |f|
+= form_for([:client, @domain]) do |f|
   = render 'shared/errors', object: @domain
   - unless @domain.parent_valid?
     %hr
@@ -15,7 +15,7 @@
       / Tab panes
       .tab-content{style:'margin-top: 20px;'}
         #general-tab.tab-pane.active
-          = render 'admin/domains/form_partials/general', f: f
+          = render 'client/domains/form_partials/general', f: f
           %hr
           = render 'admin/domains/form_partials/contacts', f: f
           %hr
@@ -27,7 +27,7 @@
       = button_tag(t('shared.save'), class: 'btn btn-primary')
 
 :javascript
-  $(function() {
+  $(function () {
     $('#tabs a:first').tab('show')
   })
 
@@ -36,6 +36,8 @@
     afterAdd: function(item) {
       item.find('.errors').html('');
       item.find('.js-contact-id').val('')
-      Autocomplete.bindAdminContactSearch();
+      Autocomplete.bindClientContactSearch();
     }
   });
+
+  Autocomplete.bindClientContactSearch();

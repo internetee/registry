@@ -162,7 +162,7 @@ class Domain < ActiveRecord::Base
   end
 
   def general_tab_valid?
-    status_errors = errors.keys.collect { |x| x.match(/domain_statuses/) }
+    status_errors = errors.keys.select { |x| x.match(/domain_statuses/) }
     (errors.keys - status_errors).empty?
   end
 

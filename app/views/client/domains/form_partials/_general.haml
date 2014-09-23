@@ -1,0 +1,20 @@
+.row
+  .col-md-6
+    .form-group
+      = f.label :name
+      = f.text_field(:name, class: 'form-control')
+    .form-group
+      = f.label :period
+      .row
+        .col-md-6
+          = f.text_field(:period, class: 'form-control')
+        .col-md-6
+          = f.select :period_unit, options_for_select(['y', 'm', 'd'], @domain.period_unit), {}, {class: 'form-control'}
+  .col-md-6
+    .form-group.has-feedback.js-typeahead-container
+      = f.label :owner_contact_typeahead
+      = f.text_field(:owner_contact_typeahead, class: 'form-control js-contact-typeahead', placeholder: t('shared.contact_code'), autocomplete: 'off')
+      %span.glyphicon.glyphicon-ok.form-control-feedback.js-typeahead-ok.hidden
+      %span.glyphicon.glyphicon-remove.form-control-feedback.js-typeahead-remove
+      = f.hidden_field(:owner_contact_id, class: 'js-contact-id')
+

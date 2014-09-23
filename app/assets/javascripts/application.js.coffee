@@ -7,7 +7,6 @@
 #= require typeahead.bundle.min
 #= require autocomplete
 #= require jquery.nested_attributes
-#= require app
 
 NProgress.configure
   showSpinner: false
