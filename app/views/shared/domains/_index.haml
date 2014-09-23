@@ -1,0 +1,27 @@
+.row
+  .col-md-12
+    .table-responsive
+      %table.table.table-hover.table-bordered.table-condensed
+        %thead
+          %tr
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'name')
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'registrar_name', t('shared.registrar'))
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'owner_contact_international_address_name', t('shared.owner'))
+            %th{class: 'col-xs-1'}
+              = sort_link(@q, 'valid_to', t('shared.valid_to'))
+            %th{class: 'col-xs-1'}
+              = t('shared.action')
+        %tbody
+          - @domains.each do |x|
+            %tr
+              %td= link_to(x, admin_domain_path(x))
+              %td= link_to(x.registrar, root_path) if x.registrar
+              %td= link_to(x.owner_contact, [:admin, x.owner_contact])
+              %td= l(x.valid_to, format: :short)
+              %td= link_to(t('shared.edit'), edit_admin_domain_path(x), class: 'btn btn-primary btn-xs')
+.row
+  .col-md-12
+    = paginate @domains
