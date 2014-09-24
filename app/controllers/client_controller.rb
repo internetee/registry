@@ -1,5 +1,5 @@
 class ClientController < ApplicationController
   def current_user
-    EppUser.first
+    EppUser.last
   end
 end

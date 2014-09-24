@@ -20,11 +20,11 @@ class DomainTransfer < ActiveRecord::Base
     transaction do
       self.status = DomainTransfer::CLIENT_APPROVED
       self.transferred_at = Time.zone.now
-      save!
+      save
 
       domain.generate_auth_info
       domain.registrar = transfer_to
-      domain.save!
+      domain.save(validate: false)
     end
   end
 end

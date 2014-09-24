@@ -113,8 +113,6 @@ en:
           attributes:
             base:
               transfer_can_be_approved_only_by_current_registrar: 'Transfer can be approved only by current domain registrar'
-            domain:
-              not_found: 'Domain was not found'
 
         nameserver:
           attributes:
@@ -295,3 +293,5 @@ en:
     transferred_at: 'Transferred at'
     transfer_confirm_time: 'Transfer confirm time'
     request_domain_transfer: 'Request domain transfer'
+    password_invalid: 'Password invalid!'
+    domain_was_not_found: 'Domain was not found!'
