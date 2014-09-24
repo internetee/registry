@@ -295,3 +295,5 @@ en:
     request_domain_transfer: 'Request domain transfer'
     password_invalid: 'Password invalid!'
     domain_was_not_found: 'Domain was not found!'
+    domain_list: 'Domain list'
+    register_new_domain: 'Register new domain'

@@ -29,9 +29,11 @@
                 %span.caret
               %ul.dropdown-menu{role: "menu"}
                 %li
-                  = link_to t('shared.check'), client_domains_path
+                  = link_to t('shared.domain_list'), client_domains_path
                 %li
-                  = link_to t('shared.register'), '#'
+                  = link_to t('shared.register_new_domain'), new_client_domain_path
+                %li
+                  = link_to t('shared.transfer_domain'), new_client_domain_transfer_path
 
             %li.dropdown
               %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
