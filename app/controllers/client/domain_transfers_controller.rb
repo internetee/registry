@@ -1,5 +1,5 @@
 class Client::DomainTransfersController < ClientController
-  before_action :set_domain_transfer, only: :show
+  before_action :set_domain_transfer, only: [:show, :approve]
   before_action :set_domain, only: [:create]
 
   def new
@@ -12,9 +12,20 @@ class Client::DomainTransfersController < ClientController
       flash[:notice] = I18n.t('shared.domain_transfer_requested')
       redirect_to [:client, @domain_transfer]
     else
-      flash[:alert] = I18n.t('shared.other_registrar_has_already_requested_to_transfer_this_domain')
+      flash.now[:alert] = I18n.t('shared.other_registrar_has_already_requested_to_transfer_this_domain')
       render 'new'
     end
+  end
+
+  def approve
+    if can? :approve_as_client, @domain_transfer
+      @domain_transfer.approve_as_client
+      flash[:notice] = I18n.t('shared.domain_transfer_approved')
+    else
+      flash[:alert] = I18n.t('shared.failed_to_approve_domain_transfer')
+    end
+
+    redirect_to [:client, @domain_transfer]
   end
 
   private
@@ -45,11 +56,17 @@ class Client::DomainTransfersController < ClientController
     @domain_transfer = DomainTransfer.new
     @domain = Domain.find_by(name: params[:domain_name])
     if @domain
-      return if  @domain.auth_info == params[:domain_pw]
-      flash[:alert] = I18n.t('shared.password_invalid')
-      render 'new'
+      if @domain.auth_info != params[:domain_pw]
+        flash.now[:alert] = I18n.t('shared.password_invalid')
+        render 'new' and return
+      end
+
+      if @domain.registrar == current_user.registrar
+        flash.now[:alert] = I18n.t('shared.domain_already_belongs_to_the_querying_registrar')
+        render 'new' and return
+      end
     else
-      flash[:alert] = I18n.t('shared.domain_was_not_found')
+      flash.now[:alert] = I18n.t('shared.domain_was_not_found')
       render 'new'
     end
   end

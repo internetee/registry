@@ -4,6 +4,8 @@
       = "#{t('shared.domain_transfer')}"
   .col-sm-6
     %h2.text-right.text-center-xs
+      - if can? :approve_as_client, @domain_transfer
+        = button_to(t('shared.approve'), approve_client_domain_transfer_path, class: 'btn btn-primary')
 
 %hr
 .row

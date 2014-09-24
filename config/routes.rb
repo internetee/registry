@@ -23,7 +23,11 @@ Rails.application.routes.draw do
 
   namespace(:client) do
     resources :domains
-    resources :domain_transfers
+    resources :domain_transfers do
+      member do
+        post 'approve'
+      end
+    end
 
     resources :contacts do
       collection do

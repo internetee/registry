@@ -15,4 +15,16 @@ class DomainTransfer < ActiveRecord::Base
     wait_time = SettingGroup.domain_general.setting(:transfer_wait_time).value.to_i
     transfer_requested_at + wait_time.hours
   end
+
+  def approve_as_client
+    transaction do
+      self.status = DomainTransfer::CLIENT_APPROVED
+      self.transferred_at = Time.zone.now
+      save!
+
+      domain.generate_auth_info
+      domain.registrar = transfer_to
+      domain.save!
+    end
+  end
 end
