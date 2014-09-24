@@ -4,6 +4,7 @@
       = "#{t('shared.domain_details')}"
   .col-sm-6
     %h2.text-right.text-center-xs
+      = link_to(t('shared.transfer'), new_client_domain_domain_transfer_path(@domain), class: 'btn btn-primary')
       = link_to(t('shared.edit'), edit_client_domain_path(@domain), class: 'btn btn-primary')
       = link_to(t('shared.delete'), client_domain_path(@domain), method: :delete, data: { confirm: t('shared.are_you_sure') }, class: 'btn btn-danger')
 

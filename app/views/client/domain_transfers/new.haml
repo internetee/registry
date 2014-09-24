@@ -1,0 +1,19 @@
+%h2= t('shared.transfer_domain')
+%hr
+= form_for([:client, @domain_transfer]) do |f|
+  = render 'shared/errors', object: @domain_transfer
+  - if @domain_transfer.errors.any?
+    %hr
+  .row
+    .col-md-6
+      .form-group
+        = label_tag :domain_name
+        = text_field_tag(:domain_name, params[:domain_name], class: 'form-control')
+    .row
+      .col-md-6
+        .form-group
+          = label_tag :domain_pw
+          = text_field_tag(:domain_pw, params[:domain_pw], class: 'form-control')
+  .row
+    .col-md-12.text-right
+      = button_tag(t('shared.save'), class: 'btn btn-primary', name: 'request')

@@ -109,6 +109,13 @@ en:
         domain:
           <<: *epp_domain_ar_attributes
 
+        domain_transfer:
+          attributes:
+            base:
+              transfer_can_be_approved_only_by_current_registrar: 'Transfer can be approved only by current domain registrar'
+            domain:
+              not_found: 'Domain was not found'
+
         nameserver:
           attributes:
             hostname:
@@ -272,4 +279,15 @@ en:
     failed_to_update_setting: 'Failed to update setting'
     status: 'Status'
     eedirekt: 'EEDirekt'
-
+    domain_transfer_requested: 'Domain transfer requested!'
+    other_registrar_has_already_requested_to_transfer_this_domain: 'Other registrar has already requested to transfer this domain.'
+    transfer: 'Transfer'
+    transfer_domain: 'Transfer domain'
+    failed_to_request_domain_transfer: 'Failed to request domain transfer'
+    domain_transfer: 'Domain transfer'
+    domain_valid_to: 'Domain valid to'
+    transfer_requested_at: 'Transfer requested at'
+    transfer_from: 'Transfer from'
+    transferred_at: 'Transferred at'
+    transfer_confirm_time: 'Transfer confirm time'
+    request_domain_transfer: 'Request domain transfer'

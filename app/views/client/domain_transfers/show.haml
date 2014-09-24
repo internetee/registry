@@ -1,0 +1,32 @@
+.row
+  .col-sm-6
+    %h2.text-center-xs
+      = "#{t('shared.domain_transfer')}"
+  .col-sm-6
+    %h2.text-right.text-center-xs
+
+%hr
+.row
+  .col-md-12
+    %dl.dl-horizontal
+      %dt= t('shared.domain')
+      %dd= @domain_transfer.domain.name
+
+      %dt= t('shared.status')
+      %dd= @domain_transfer.status
+
+      %dt= t('shared.transfer_requested_at')
+      %dd= l(@domain_transfer.transfer_requested_at)
+
+      %dt= t('shared.transfer_from')
+      %dd= @domain_transfer.transfer_from
+
+      - if @domain_transfer.transferred_at
+        %dt= t('shared.transferred_at')
+        %dd= l(@domain_transfer.transferred_at)
+      - else
+        %dt= t('shared.transfer_confirm_time')
+        %dd= l(@domain_transfer.transfer_confirm_time)
+
+      %dt= t('shared.domain_valid_to')
+      %dd= l(@domain_transfer.domain.valid_to)

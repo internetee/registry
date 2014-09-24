@@ -51,6 +51,9 @@ gem 'kaminari', '~> 0.16.1'
 # for searching
 gem 'ransack', '~> 1.3.0'
 
+# for rights
+gem 'cancan', '~> 1.6.10'
+
 group :assets do
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   gem 'therubyracer',  platforms: :ruby
