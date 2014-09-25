@@ -4,7 +4,6 @@ class Ability
   def initialize(user)
 
     # user ||= EppUser.last
-
     can :read, DomainTransfer, transfer_to_id: user.registrar.id
     can :approve_as_client, DomainTransfer, transfer_from_id: user.registrar.id, status: DomainTransfer::PENDING
     # Define abilities for the passed in user here. For example:

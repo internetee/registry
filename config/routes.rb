@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     get 'error/:command', to: 'errors#error', defaults: { format: :xml }
   end
 
+  ## ADMIN ROUTES
   namespace(:admin) do
     resources :domains
     resources :setting_groups
@@ -19,8 +20,11 @@ Rails.application.routes.draw do
         get 'search'
       end
     end
+
+    root 'domains#index'
   end
 
+  ## CLIENT ROUTES
   namespace(:client) do
     resources :domains
     resources :domain_transfers do
@@ -34,13 +38,29 @@ Rails.application.routes.draw do
         get 'search'
       end
     end
+
+    root 'domains#index'
   end
+
+  devise_for :users
+
+  devise_scope :user do
+    resources :sessions
+    get 'logout' => 'devise/sessions#destroy'
+    get 'login' => 'sessions#login'
+  end
+
+  authenticated :user do
+    root :to => 'admin/domains#index', :as => :authenticated_root
+  end
+
+  root :to => redirect('login')
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'admin/domains#index'
+  # root 'admin/domains#index'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

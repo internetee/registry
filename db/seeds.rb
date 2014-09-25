@@ -23,3 +23,5 @@ elkdata = Registrar.where(
 ).first_or_create
 
 EppUser.where(username: 'elkdata', password: '8932iods', active: true, registrar: elkdata).first_or_create
+
+User.where(username: 'gitlab', password: '12345', email: 'enquiries@gitlab.eu', admin: true, identity_code: '37810013855').first_or_create
