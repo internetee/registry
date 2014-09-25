@@ -1,4 +1,4 @@
-class Admin::RegistrarsController < ApplicationController
+class Admin::RegistrarsController < AdminController
   def search
     render json: Registrar.search_by_query(params[:q])
   end

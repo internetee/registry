@@ -1,4 +1,4 @@
-class Admin::DomainsController < ApplicationController
+class Admin::DomainsController < AdminController
   before_action :set_domain, only: [:show, :edit, :update, :destroy]
   before_action :verify_deletion, only: [:destroy]
 

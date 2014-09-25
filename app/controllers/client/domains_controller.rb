@@ -2,7 +2,8 @@ class Client::DomainsController < ClientController
   include Shared::CommonDomain
 
   def index
-    @q = current_user.registrar.domains.search(params[:q])
+    @q = Domain.search(params[:q]) if current_user.admin?
+    @q = current_user.registrar.domains.search(params[:q]) unless current_user.admin?
     @domains = @q.result.page(params[:page])
   end
 
