@@ -4,23 +4,13 @@
     %hr
   .row
     .col-md-12
-      / Nav tabs
       %ul.nav.nav-tabs{:role => "tablist", id: 'tabs'}
-        - li_class = @domain.general_tab_valid? ? nil : 'error-tab'
-        %li.active{class: li_class}
-          %a{"data-toggle" => "tab", :href => "#general-tab", :role => "tab"}= t('shared.general')
         - li_class = @domain.statuses_tab_valid? ? nil : 'error-tab'
         %li{class: li_class}
           %a{"data-toggle" => "tab", :href => "#statuses-tab", :role => "tab"}= t('shared.statuses')
-      / Tab panes
+        / Tab panes
       .tab-content{style:'margin-top: 20px;'}
         #general-tab.tab-pane.active
-          = render 'admin/domains/form_partials/general', f: f
-          %hr
-          = render 'admin/domains/form_partials/contacts', f: f
-          %hr
-          = render 'admin/domains/form_partials/nameservers', f: f
-        #statuses-tab.tab-pane
           = render 'admin/domains/form_partials/statuses', f: f
   .row
     .col-md-12.text-right
@@ -30,15 +20,3 @@
   $(function() {
     $('#tabs a:first').tab('show')
   })
-
-  $("#domain_contacts").nestedAttributes({
-    bindAddTo: $(".add-domain-contact"),
-    afterAdd: function(item) {
-      item.find('.errors').html('');
-      item.find('.js-contact-id').val('')
-      Autocomplete.bindAdminContactSearch();
-    }
-  });
-
-  Autocomplete.bindAdminContactSearch()
-  Autocomplete.bindAdminRegistrarSearch()
