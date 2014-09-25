@@ -1,5 +1,7 @@
 class Client::DomainsController < ClientController
-  include Shared::CommonDomain
+    load_and_authorize_resource
+    before_action :set_domain, only: [:show, :edit, :update, :destroy]
+    before_action :verify_deletion, only: [:destroy]
 
   def index
     @q = Domain.search(params[:q]) if current_user.admin?
@@ -29,6 +31,10 @@ class Client::DomainsController < ClientController
     end
   end
 
+  def edit
+    build_associations
+  end
+
   def update
     if @domain.update(domain_params)
       flash[:notice] = I18n.t('shared.domain_updated')
@@ -49,10 +55,25 @@ class Client::DomainsController < ClientController
       :period_unit,
       :owner_contact_id,
       :owner_contact_typeahead,
-      :registrar_typeahead,
       nameservers_attributes: [:id, :hostname, :ipv4, :ipv6, :_destroy],
       domain_contacts_attributes: [:id, :contact_type, :contact_id, :value_typeahead, :_destroy],
       domain_statuses_attributes: [:id, :value, :description, :_destroy]
     )
+  end
+
+  def set_domain
+    @domain = Domain.find(params[:id])
+  end
+
+  def build_associations
+    @domain.nameservers.build if @domain.nameservers.empty?
+    @domain.domain_contacts.build if @domain.domain_contacts.empty?
+    @domain.domain_statuses.build if @domain.domain_statuses.empty?
+  end
+
+  def verify_deletion
+    return if @domain.can_be_deleted?
+    flash[:alert] = I18n.t('shared.domain_status_prohibits_deleting')
+    redirect_to [:admin, @domain]
   end
 end

@@ -17,11 +17,11 @@
         #general-tab.tab-pane.active
           = render 'client/domains/form_partials/general', f: f
           %hr
-          = render 'admin/domains/form_partials/contacts', f: f
+          = render 'client/domains/form_partials/contacts', f: f
           %hr
-          = render 'admin/domains/form_partials/nameservers', f: f
+          = render 'client/domains/form_partials/nameservers', f: f
         #statuses-tab.tab-pane
-          = render 'admin/domains/form_partials/statuses', f: f
+          = render 'client/domains/form_partials/statuses', f: f
   .row
     .col-md-12.text-right
       = button_tag(t('shared.save'), class: 'btn btn-primary')
