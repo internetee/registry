@@ -18,9 +18,9 @@ set :branch, 'master'
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
 # They will be linked in the 'deploy:link_shared_paths' step.
 set :shared_paths, [
-  'config/database.yml', 
-  'config/secrets.yml', 
-  'log', 
+  'config/database.yml',
+  'config/secrets.yml',
+  'log',
   'public/system'
 ]
 
@@ -42,25 +42,25 @@ end
 # Put any custom mkdir's in here for when `mina setup` is ran.
 # For Rails apps, we'll make some of the shared paths that are shared between
 # all releases.
-task :setup => :environment do
-  queue! %[mkdir -p "#{deploy_to}/shared/log"]
-  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/log"]
+task setup: :environment do
+  queue! %(mkdir -p "#{deploy_to}/shared/log")
+  queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/log")
 
-  queue! %[mkdir -p "#{deploy_to}/shared/config"]
-  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/config"]
+  queue! %(mkdir -p "#{deploy_to}/shared/config")
+  queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/config")
 
-  queue! %[mkdir -p "#{deploy_to}/shared/public"]
-  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/public"]
+  queue! %(mkdir -p "#{deploy_to}/shared/public")
+  queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/public")
 
-  queue! %[mkdir -p "#{deploy_to}/shared/public/system"]
-  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/public/system"]
+  queue! %(mkdir -p "#{deploy_to}/shared/public/system")
+  queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/public/system")
 
-  queue! %[touch "#{deploy_to}/shared/config/database.yml"]
-  queue  %[echo "-----> Be sure to edit 'shared/config/database.yml'."]
+  queue! %(touch "#{deploy_to}/shared/config/database.yml")
+  queue  %(echo '-----> Be sure to edit 'shared/config/database.yml'.')
 end
 
-desc "Deploys the current version to the server."
-task :deploy => :environment do
+desc 'Deploys the current version to the server.'
+task deploy: :environment do
   deploy do
     # Put things that will set up an empty directory into a fully set-up
     # instance of your project.
@@ -82,4 +82,3 @@ end
 #  - http://nadarei.co/mina/tasks
 #  - http://nadarei.co/mina/settings
 #  - http://nadarei.co/mina/helpers
-

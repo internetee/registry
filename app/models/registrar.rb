@@ -3,6 +3,7 @@ class Registrar < ActiveRecord::Base
   has_many :domains
   has_many :ns_sets
   has_many :epp_users
+  has_many :users
   has_many :domain_transfers, foreign_key: 'transfer_to_id'
 
   def to_s

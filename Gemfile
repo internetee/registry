@@ -54,6 +54,9 @@ gem 'ransack', '~> 1.3.0'
 # for rights
 gem 'cancan', '~> 1.6.10'
 
+# for login
+gem 'devise', '~> 3.3.0'
+
 group :assets do
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   gem 'therubyracer',  platforms: :ruby
@@ -112,4 +115,3 @@ group :development, :test do
   # For unique IDs (used by the epp gem)
   gem 'uuidtools', '~> 2.1.4'
 end
-
