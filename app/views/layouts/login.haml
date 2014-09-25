@@ -14,9 +14,13 @@
   %body
     .container
       .form-signin
+        - display = (flash.empty?) ? 'none' : 'block'
+        #flash{style: "display: #{display};"}
+          - type = (flash[:notice]) ? 'bg-success' : 'bg-danger'
+          .alert{class: type}= flash[:notice] || flash[:alert]
         %h2.form-signin-heading.text-center Eesti Interneti SA
         %hr
-        - if Rails.env.development?
+        - if Rails.env.development? || Rails.env.test?
           = button_to 'ID card (gitlab)', 'sessions', class: 'btn btn-lg btn-primary btn-block', name: 'gitlab'
           = button_to 'ID card (zone)', 'sessions', class: 'btn btn-lg btn-primary btn-block', name: 'zone'
         -else

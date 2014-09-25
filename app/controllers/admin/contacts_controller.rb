@@ -1,4 +1,4 @@
-class Admin::ContactsController < ApplicationController
+class Admin::ContactsController < AdminController
   # TODO created_by and updated_by ids
   before_action :set_contact, only: [:show, :destroy, :edit, :update]
 
