@@ -4,16 +4,24 @@
   .panel-body
     %dl.dl-horizontal
       %dt= t('shared.country')
-      %dd= @contact.address_country
+      %dd= @contact.address.country
 
       %dt= t('shared.city')
-      %dd= @contact.address_city
+      %dd= @contact.address.city
 
       %dt= t('shared.street')
-      %dd= @contact.address_street
+      %dd= @contact.address.street
+
+      - if @contact.address.street2
+        %dt= t('shared.street')
+        %dd= @contact.address.street2
+
+      - if @contact.address.street3
+        %dt= t('shared.street')
+        %dd= @contact.address.street3
+
+
 
       %dt= t('shared.zip')
-      %dd= @contact.address_zip
+      %dd= @contact.address.zip
 
-      %dt= t('shared.org_name')
-      %dd= @contact.address_org_name

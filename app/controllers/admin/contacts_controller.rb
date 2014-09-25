@@ -9,8 +9,7 @@ class Admin::ContactsController < ApplicationController
 
   def new
     @contact = Contact.new
-    @contact.build_local_address
-    @contact.build_international_address
+    @contact.build_address
   end
 
   def create
@@ -56,8 +55,7 @@ class Admin::ContactsController < ApplicationController
   end
 
   def contact_params
-    params.require(:contact).permit( :email, :phone, :fax, :ident_type, :ident, :auth_info,
-                                    local_address_attributes: [:city, :street, :zip, :street2, :street3, :name, :org_name, :country_id],
-                                    international_address_attributes: [:city, :street, :zip, :street2, :street3, :name, :org_name, :country_id])
+    params.require(:contact).permit( :email, :phone, :fax, :ident_type, :ident, :auth_info, :name, :org_name,
+                                    address_attributes: [:city, :street, :zip, :street2, :street3, :country_id])
   end
 end
