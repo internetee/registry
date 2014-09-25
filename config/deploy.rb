@@ -21,8 +21,7 @@ set :shared_paths, [
   'config/database.yml', 
   'config/secrets.yml', 
   'log', 
-  'public/system',
-  'public/assets'
+  'public/system'
 ]
 
 # Optional settings:
@@ -49,6 +48,12 @@ task :setup => :environment do
 
   queue! %[mkdir -p "#{deploy_to}/shared/config"]
   queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/config"]
+
+  queue! %[mkdir -p "#{deploy_to}/shared/public"]
+  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/public"]
+
+  queue! %[mkdir -p "#{deploy_to}/shared/public/system"]
+  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/public/system"]
 
   queue! %[touch "#{deploy_to}/shared/config/database.yml"]
   queue  %[echo "-----> Be sure to edit 'shared/config/database.yml'."]
