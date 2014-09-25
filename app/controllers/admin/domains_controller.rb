@@ -1,6 +1,4 @@
 class Admin::DomainsController < ApplicationController
-  load_and_authorize_resource
-
   before_action :set_domain, only: [:show, :edit, :update, :destroy]
   before_action :verify_deletion, only: [:destroy]
 

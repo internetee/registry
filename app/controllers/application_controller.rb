@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   def after_sign_in_path_for(resource)
-    if current_user.admin?
+    if resource.admin?
       (session[:user_return_to].nil?) ? admin_root_path : session[:user_return_to].to_s
     else
       (session[:user_return_to].nil?) ? client_root_path : session[:user_return_to].to_s

@@ -7,4 +7,5 @@ class User < ActiveRecord::Base
   # TODO Estonian id validation
 
   belongs_to :role
+  belongs_to :registrar
 end

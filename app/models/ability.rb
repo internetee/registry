@@ -7,6 +7,7 @@ class Ability
     if user.admin?
       can :manage, Domain
     else
+      can :manage, Domain, registrar_id: user.registrar.id
       can :read, DomainTransfer, transfer_to_id: user.registrar.id
       can :approve_as_client, DomainTransfer, transfer_from_id: user.registrar.id, status: DomainTransfer::PENDING
     end
