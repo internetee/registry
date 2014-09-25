@@ -1,4 +1,4 @@
-if Rails.env.test?
+if Rails.env.test? || Rails.env.development?
   require 'rspec/core/rake_task'
   require 'open3'
 
