@@ -4,6 +4,8 @@ class Epp::CommandsController < ApplicationController
   include Epp::ContactsHelper
   include Shared::UserStamper
 
+  layout false
+
   private
 
   def create

@@ -1,5 +1,6 @@
 class Epp::SessionsController < ApplicationController
   include Epp::Common
+  layout false
 
   private
 

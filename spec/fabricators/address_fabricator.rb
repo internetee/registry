@@ -1,5 +1,4 @@
-Fabricator(:international_address) do
-  name Faker::Name.name
+Fabricator(:address) do
   city Faker::Address.city
   street Faker::Address.street_name
   street2 Faker::Address.street_name

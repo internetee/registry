@@ -4,8 +4,9 @@ class Contact < ActiveRecord::Base
 
   include EppErrors
 
-  has_one :local_address, dependent: :destroy
-  has_one :international_address, dependent: :destroy
+  #has_one :local_address, dependent: :destroy
+  #has_one :international_address, dependent: :destroy
+  has_one :address, dependent: :destroy
   has_one :disclosure, class_name: 'ContactDisclosure'
 
   has_many :domain_contacts
@@ -14,24 +15,22 @@ class Contact < ActiveRecord::Base
   belongs_to :created_by, class_name: 'EppUser', foreign_key: :created_by_id
   belongs_to :updated_by, class_name: 'EppUser', foreign_key: :updated_by_id
 
-  accepts_nested_attributes_for :local_address, :international_address, :disclosure
+  accepts_nested_attributes_for :address, :disclosure
 
-  validates :code, :phone, :email, :ident, presence: true
+  validates :code, :phone, :email, :ident, :address, presence: true
 
   validate :ident_must_be_valid
-  validate :presence_of_one_address
+  #validate :presence_of_one_address
 
   validates :phone, format: /\+[0-9]{1,3}\.[0-9]{1,14}?/ # /\+\d{3}\.\d+/
   validates :email, format: /@/
 
   validates :code, uniqueness: { message: :epp_id_taken }
 
-  delegate :name, to: :international_address
-  delegate :country, to: :address, prefix: true
-  delegate :city, to: :address, prefix: true
-  delegate :street, to: :address, prefix: true
-  delegate :zip, to: :address, prefix: true
-  delegate :org_name, to: :address, prefix: true
+  delegate :country, to: :address#, prefix: true
+  delegate :city, to: :address#, prefix: true
+  delegate :street, to: :address#, prefix: true
+  delegate :zip, to: :address#, prefix: true
 
   IDENT_TYPE_ICO = 'ico'
   IDENT_TYPES = [
@@ -49,16 +48,16 @@ class Contact < ActiveRecord::Base
   # scope :named, -> { joins(:international_address).uniq.all }
 
   # TEMP METHOD for transaction to STI
-  def address
-    international_address
-  end
+  #def address
+  #  international_address
+  #end
   ##
 
-  def presence_of_one_address
-    return true if local_address || international_address
-    errors.add(:local_address, 'Local or international address must be present')
-    errors.add(:international_address, 'Local or international address must be present')
-  end
+  #def presence_of_one_address
+  #  return true if local_address || international_address
+  #  errors.add(:local_address, 'Local or international address must be present')
+  #  errors.add(:international_address, 'Local or international address must be present')
+  #end
 
   def ident_must_be_valid
     # TODO: Ident can also be passport number or company registry code.
@@ -137,13 +136,14 @@ class Contact < ActiveRecord::Base
 
     # EPP
     def extract_attributes(ph, type = :create)
+      ph[:postalInfo] = ph[:postalInfo].first if ph[:postalInfo].is_a?(Array)
       contact_hash = {
         phone: ph[:voice],
         ident: ph[:ident],
-        email: ph[:email]
+        email: ph[:email],
+        name: ph[:postalInfo].try(:[], :name),
+        org_name: ph[:postalInfo].try(:[], :org)
       }
-
-      contact_hash[:code] = ph[:id] if type == :create
       contact_hash[:auth_info] = ph[:authInfo][:pw] if type == :create
       contact_hash.delete_if { |_k, v| v.nil? }
     end

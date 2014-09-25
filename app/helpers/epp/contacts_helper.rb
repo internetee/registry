@@ -59,7 +59,7 @@ module Epp::ContactsHelper
 
     return epp_errors.empty? unless @ph['postalInfo'].is_a?(Hash) || @ph['postalInfo'].is_a?(Array)
 
-    (epp_errors << Address.validate_postal_info_types(parsed_frame)).flatten!
+    #(epp_errors << Address.validate_postal_info_types(parsed_frame)).flatten!
     xml_attrs_array_present?(@ph['postalInfo'], [%w(name), %w(addr city), %w(addr cc)])
   end
 

@@ -1,8 +1,7 @@
 require 'rails_helper'
 
 describe Contact do
-  it { should have_one(:local_address) }
-  it { should have_one(:international_address) }
+  it { should have_one(:address) }
 
   context 'with invalid attribute' do
     before(:each) { @contact = Fabricate(:contact) }
@@ -26,8 +25,7 @@ describe Contact do
          phone: ['Required parameter missing - phone', 'Phone nr is invalid'],
          email: ['Required parameter missing - email', 'Email is invalid'],
          ident: ['Required parameter missing - ident'],
-         local_address: ['Local or international address must be present'],
-         international_address: ['Local or international address must be present']
+         address: ['is missing']
       })
     end
   end
@@ -92,7 +90,7 @@ describe Contact, '.extract_params' do
     ph = { id: '123123', email: 'jdoe@example.com', authInfo: { pw: 'asde' },
            postalInfo: { name: 'fred', addr: { cc: 'EE' } }  }
     expect(Contact.extract_attributes(ph)).to eq({
-      code: '123123',
+      name: 'fred',
       email: 'jdoe@example.com',
       auth_info: 'asde'
     })
