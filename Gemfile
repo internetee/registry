@@ -115,4 +115,3 @@ group :development, :test do
   # For unique IDs (used by the epp gem)
   gem 'uuidtools', '~> 2.1.4'
 end
-
