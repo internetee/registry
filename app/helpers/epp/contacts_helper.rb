@@ -20,14 +20,12 @@ module Epp::ContactsHelper
   end
 
   def delete_contact
-    Contact.transaction do
-      @contact = find_contact
-      handle_errors(@contact) and return unless owner?
-      handle_errors(@contact) and return unless @contact
-      handle_errors(@contact) and return unless @contact.destroy_and_clean
+    @contact = find_contact
+    handle_errors(@contact) and return unless owner?
+    handle_errors(@contact) and return unless @contact
+    handle_errors(@contact) and return unless @contact.destroy_and_clean
 
-      render '/epp/contacts/delete'
-    end
+    render '/epp/contacts/delete'
   end
 
   def check_contact
