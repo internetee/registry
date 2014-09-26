@@ -15,7 +15,7 @@
           .col-md-6
             .form-group
               = status_fields.label :value
-              = status_fields.select :value, options_for_select(DomainStatus::STATUSES, status_fields.object.value), {include_blank: true}, {class: 'form-control'}
+              = status_fields.select :value, options_for_select(DomainStatus.statuses_for_admin, status_fields.object.value.sub('server', '')), {include_blank: true}, {class: 'form-control'}
           .col-md-6
             .form-group
               = status_fields.label :description

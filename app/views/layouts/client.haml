@@ -9,7 +9,7 @@
     = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
     %link{href: "../../favicon.ico", rel: "icon"}/
-    %title EPP Client
+    %title= t('shared.eedirekt')
   %body
     / Static navbar
     .navbar.navbar-inverse.navbar-static-top{role: "navigation"}
@@ -20,7 +20,7 @@
             %span.icon-bar
             %span.icon-bar
             %span.icon-bar
-          = link_to 'EPP Client', client_domains_path, class: 'navbar-brand'
+          = link_to t('shared.eedirekt'), client_domains_path, class: 'navbar-brand'
         .navbar-collapse.collapse
           %ul.nav.navbar-nav
             %li.dropdown.active
@@ -44,8 +44,9 @@
                   = link_to t('shared.check'), '#'
                 %li
                   = link_to t('shared.register'), '#'
-            %li
-              = link_to 'Admin', '/'
+            - if current_user.admin?
+              %li
+                = link_to 'Admin', admin_root_path
           %ul.nav.navbar-nav.navbar-right
             %li= link_to t('shared.log_out'), '/logout'
         / /.nav-collapse

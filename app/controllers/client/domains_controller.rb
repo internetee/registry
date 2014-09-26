@@ -1,7 +1,7 @@
 class Client::DomainsController < ClientController
-    load_and_authorize_resource
-    before_action :set_domain, only: [:show, :edit, :update, :destroy]
-    before_action :verify_deletion, only: [:destroy]
+  load_and_authorize_resource
+  before_action :set_domain, only: [:show, :edit, :update, :destroy]
+  before_action :verify_deletion, only: [:destroy]
 
   def index
     @q = Domain.search(params[:q]) if current_user.admin?
@@ -18,6 +18,8 @@ class Client::DomainsController < ClientController
   end
 
   def create
+    add_prefix_to_statuses
+
     @domain = Domain.new(domain_params)
     @domain.registrar = current_user.registrar
 
@@ -36,6 +38,8 @@ class Client::DomainsController < ClientController
   end
 
   def update
+    add_prefix_to_statuses
+
     if @domain.update(domain_params)
       flash[:notice] = I18n.t('shared.domain_updated')
       redirect_to [:client, @domain]
@@ -43,6 +47,16 @@ class Client::DomainsController < ClientController
       build_associations
       flash[:alert] = I18n.t('shared.failed_to_update_domain')
       render 'edit'
+    end
+  end
+
+  def destroy
+    if @domain.destroy
+      flash[:notice] = I18n.t('shared.domain_deleted')
+      redirect_to client_domains_path
+    else
+      flash[:alert] = I18n.t('shared.failed_to_delete_domain')
+      redirect_to [:client, @domain]
     end
   end
 
@@ -61,6 +75,12 @@ class Client::DomainsController < ClientController
     )
   end
 
+  def add_prefix_to_statuses
+    domain_params[:domain_statuses_attributes].each do |_k, hash|
+      hash[:value] = hash[:value].prepend('client')
+    end
+  end
+
   def set_domain
     @domain = Domain.find(params[:id])
   end
@@ -74,6 +94,6 @@ class Client::DomainsController < ClientController
   def verify_deletion
     return if @domain.can_be_deleted?
     flash[:alert] = I18n.t('shared.domain_status_prohibits_deleting')
-    redirect_to [:admin, @domain]
+    redirect_to [:client, @domain]
   end
 end

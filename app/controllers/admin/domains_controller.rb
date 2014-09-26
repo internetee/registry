@@ -15,6 +15,8 @@ class Admin::DomainsController < AdminController
   end
 
   def update
+    add_prefix_to_statuses
+
     if @domain.update(domain_params)
       flash[:notice] = I18n.t('shared.domain_updated')
       redirect_to [:admin, @domain]
@@ -35,5 +37,11 @@ class Admin::DomainsController < AdminController
     params.require(:domain).permit(
       domain_statuses_attributes: [:id, :value, :description, :_destroy]
     )
+  end
+
+  def add_prefix_to_statuses
+    domain_params[:domain_statuses_attributes].each do |_k, hash|
+      hash[:value] = hash[:value].prepend('server')
+    end
   end
 end
