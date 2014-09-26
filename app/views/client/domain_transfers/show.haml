@@ -5,8 +5,7 @@
   .col-sm-6
     %h2.text-right.text-center-xs
       - if can? :approve_as_client, @domain_transfer
-        = button_to(t('shared.approve'), approve_client_domain_transfer_path, class: 'btn btn-primary')
-
+        = button_to(t('shared.approve'), approve_client_domain_transfer_path, class: 'btn btn-success')
 %hr
 .row
   .col-md-12
@@ -22,6 +21,9 @@
 
       %dt= t('shared.transfer_from')
       %dd= @domain_transfer.transfer_from
+
+      %dt= t('shared.transfer_to')
+      %dd= @domain_transfer.transfer_to
 
       - if @domain_transfer.transferred_at
         %dt= t('shared.transferred_at')

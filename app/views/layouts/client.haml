@@ -43,6 +43,15 @@
             - if current_user.admin?
               %li
                 = link_to 'Admin', admin_root_path
+              %li.dropdown
+                %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
+                  = current_registrar
+                  %span.caret
+                %ul.dropdown-menu{role: "menu"}
+                  - Registrar.all.each do |x|
+                    - next if x == current_registrar
+                    %li
+                      = link_to x,  switch_registrar_sessions_path(registrar_id: x)
           %ul.nav.navbar-nav.navbar-right
             %li= link_to t('shared.log_out'), '/logout'
         / /.nav-collapse

@@ -7,9 +7,10 @@ class Client::DomainTransfersController < ClientController
   end
 
   def create
-    @domain_transfer = @domain.pending_transfer || @domain.domain_transfers.create(domain_transfer_params)
+    @domain_transfer = @domain.pending_transfer || @domain.domain_transfers.build(domain_transfer_params)
     if can? :read, @domain_transfer
-      flash[:notice] = I18n.t('shared.domain_transfer_requested')
+      @domain_transfer.save
+      flash[:notice] = I18n.t('shared.domain_transfer_requested') if @domain.registrar != current_registrar
       redirect_to [:client, @domain_transfer]
     else
       flash.now[:alert] = I18n.t('shared.other_registrar_has_already_requested_to_transfer_this_domain')
@@ -38,7 +39,7 @@ class Client::DomainTransfersController < ClientController
     ret = {
       status: DomainTransfer::PENDING,
       transfer_requested_at: Time.zone.now,
-      transfer_to: current_user.registrar,
+      transfer_to: current_registrar,
       transfer_from: @domain.registrar
     }
 
@@ -61,7 +62,7 @@ class Client::DomainTransfersController < ClientController
         render 'new' and return
       end
 
-      if @domain.registrar == current_user.registrar
+      if @domain.registrar == current_registrar && !@domain.pending_transfer
         flash.now[:alert] = I18n.t('shared.domain_already_belongs_to_the_querying_registrar')
         render 'new' and return
       end

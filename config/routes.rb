@@ -45,7 +45,10 @@ Rails.application.routes.draw do
   devise_for :users
 
   devise_scope :user do
-    resources :sessions
+    resources :sessions do
+      get :switch_registrar, on: :collection
+    end
+
     get 'logout' => 'devise/sessions#destroy'
     get 'login' => 'sessions#login'
   end

@@ -4,14 +4,13 @@ class Client::DomainsController < ClientController
   before_action :verify_deletion, only: [:destroy]
 
   def index
-    @q = Domain.search(params[:q]) if current_user.admin?
-    @q = current_user.registrar.domains.search(params[:q]) unless current_user.admin?
+    @q = current_registrar.domains.search(params[:q])
     @domains = @q.result.page(params[:page])
   end
 
   def new
     owner_contact = Contact.find(params[:owner_contact_id]) if params[:owner_contact_id]
-    @domain = Domain.new(owner_contact: owner_contact, registrar: current_user.registrar)
+    @domain = Domain.new(owner_contact: owner_contact, registrar: current_registrar)
     params[:domain_owner_contact] = owner_contact
 
     build_associations
@@ -21,7 +20,7 @@ class Client::DomainsController < ClientController
     add_prefix_to_statuses
 
     @domain = Domain.new(domain_params)
-    @domain.registrar = current_user.registrar
+    @domain.registrar = current_registrar
 
     if @domain.save
       flash[:notice] = I18n.t('shared.domain_added')

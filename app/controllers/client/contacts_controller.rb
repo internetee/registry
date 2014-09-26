@@ -24,7 +24,7 @@ class Client::ContactsController < ClientController
     end
   end
 
-    def destroy
+  def destroy
     if @contact.destroy_and_clean
       flash[:notice] = I18n.t('shared.contact_deleted')
       redirect_to client_contacts_path
