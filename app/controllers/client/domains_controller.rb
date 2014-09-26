@@ -18,6 +18,8 @@ class Client::DomainsController < ClientController
   end
 
   def create
+    add_prefix_to_statuses
+
     @domain = Domain.new(domain_params)
     @domain.registrar = current_user.registrar
 
@@ -36,6 +38,8 @@ class Client::DomainsController < ClientController
   end
 
   def update
+    add_prefix_to_statuses
+
     if @domain.update(domain_params)
       flash[:notice] = I18n.t('shared.domain_updated')
       redirect_to [:client, @domain]
@@ -69,6 +73,12 @@ class Client::DomainsController < ClientController
       domain_contacts_attributes: [:id, :contact_type, :contact_id, :value_typeahead, :_destroy],
       domain_statuses_attributes: [:id, :value, :description, :_destroy]
     )
+  end
+
+  def add_prefix_to_statuses
+    domain_params[:domain_statuses_attributes].each do |_k, hash|
+      hash[:value] = hash[:value].prepend('client')
+    end
   end
 
   def set_domain

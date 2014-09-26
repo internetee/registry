@@ -40,4 +40,15 @@ class DomainStatus < ActiveRecord::Base
       ]
     }
   end
+
+  class << self
+    def statuses_for_client
+      ret = []
+      STATUSES.each do |x|
+        next unless x.start_with?('client')
+        ret << x.sub('client', '')
+      end
+      ret
+    end
+  end
 end
