@@ -39,7 +39,6 @@ class Client::DomainsController < ClientController
 
   def update
     add_prefix_to_statuses
-
     if @domain.update(domain_params)
       flash[:notice] = I18n.t('shared.domain_updated')
       redirect_to [:client, @domain]
@@ -77,7 +76,7 @@ class Client::DomainsController < ClientController
 
   def add_prefix_to_statuses
     domain_params[:domain_statuses_attributes].each do |_k, hash|
-      hash[:value] = hash[:value].prepend('client')
+      hash[:value] = hash[:value].prepend('client') if hash[:value].present?
     end
   end
 
@@ -88,7 +87,9 @@ class Client::DomainsController < ClientController
   def build_associations
     @domain.nameservers.build if @domain.nameservers.empty?
     @domain.domain_contacts.build if @domain.domain_contacts.empty?
-    @domain.domain_statuses.build if @domain.domain_statuses.empty?
+
+    @client_statuses = @domain.domain_statuses.select(&:client_status?)
+    @client_statuses << @domain.domain_statuses.build if @client_statuses.empty?
   end
 
   def verify_deletion

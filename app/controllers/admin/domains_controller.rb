@@ -11,7 +11,7 @@ class Admin::DomainsController < AdminController
   end
 
   def edit
-    @domain.domain_statuses.build if @domain.domain_statuses.empty?
+    build_associations
   end
 
   def update
@@ -39,9 +39,15 @@ class Admin::DomainsController < AdminController
     )
   end
 
+  def build_associations
+    @domain.domain_statuses.build if @domain.domain_statuses.empty?
+    @server_statuses = @domain.domain_statuses.select(&:server_status?)
+    @server_statuses << @domain.domain_statuses.build if @server_statuses.empty?
+  end
+
   def add_prefix_to_statuses
     domain_params[:domain_statuses_attributes].each do |_k, hash|
-      hash[:value] = hash[:value].prepend('server')
+      hash[:value] = hash[:value].prepend('server') if hash[:value].present?
     end
   end
 end
