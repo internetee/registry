@@ -30,6 +30,8 @@ class DomainStatus < ActiveRecord::Base
   EXPIRED = 'expired'
 
   STATUSES = [CLIENT_DELETE_PROHIBITED, SERVER_DELETE_PROHIBITED, CLIENT_HOLD, SERVER_HOLD, CLIENT_RENEW_PROHIBITED, SERVER_RENEW_PROHIBITED, CLIENT_TRANSFER_PROHIBITED, SERVER_TRANSFER_PROHIBITED, CLIENT_UPDATE_PROHIBITED, SERVER_UPDATE_PROHIBITED, INACTIVE, OK, PENDING_CREATE, PENDING_DELETE, PENDING_RENEW, PENDING_TRANSFER, PENDING_UPDATE, SERVER_MANUAL_INZONE, SERVER_REGISTRANT_CHANGE_PROHIBITED, SERVER_ADMIN_CHANGE_PROHIBITED, SERVER_TECH_CHANGE_PROHIBITED, FORCE_DELETE, DELETE_CANDIDATE, EXPIRED]
+  CLIENT_STATUSES = [CLIENT_DELETE_PROHIBITED, CLIENT_HOLD, CLIENT_RENEW_PROHIBITED, CLIENT_TRANSFER_PROHIBITED, CLIENT_UPDATE_PROHIBITED]
+  SERVER_STATUSES = [SERVER_DELETE_PROHIBITED, SERVER_HOLD, SERVER_RENEW_PROHIBITED, SERVER_TRANSFER_PROHIBITED, SERVER_UPDATE_PROHIBITED, SERVER_MANUAL_INZONE, SERVER_REGISTRANT_CHANGE_PROHIBITED, SERVER_ADMIN_CHANGE_PROHIBITED, SERVER_TECH_CHANGE_PROHIBITED]
 
   validates :value, uniqueness: { scope: :domain_id }
 
@@ -41,23 +43,21 @@ class DomainStatus < ActiveRecord::Base
     }
   end
 
+  def server_status?
+    SERVER_STATUSES.include?(value)
+  end
+
+  def client_status?
+    CLIENT_STATUSES.include?(value)
+  end
+
   class << self
     def statuses_for_client
-      ret = []
-      STATUSES.each do |x|
-        next unless x.start_with?('client')
-        ret << x.sub('client', '')
-      end
-      ret
+      CLIENT_STATUSES.map { |x| x.sub('client', '') }
     end
 
     def statuses_for_admin
-      ret = []
-      STATUSES.each do |x|
-        next unless x.start_with?('server')
-        ret << x.sub('server', '')
-      end
-      ret
+      SERVER_STATUSES.map { |x| x.sub('server', '') }
     end
   end
 end
