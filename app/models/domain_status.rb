@@ -50,5 +50,14 @@ class DomainStatus < ActiveRecord::Base
       end
       ret
     end
+
+    def statuses_for_admin
+      ret = []
+      STATUSES.each do |x|
+        next unless x.start_with?('server')
+        ret << x.sub('server', '')
+      end
+      ret
+    end
   end
 end
