@@ -4,7 +4,7 @@
     = render 'admin/contacts/partials/search'
   .col-sm-6
     %h2.text-right.text-center-xs
-      = link_to(t('shared.add'), new_admin_contact_path, class: 'btn btn-primary')
+      = link_to(t('shared.create_new_contact'), new_client_contact_path, class: 'btn btn-primary')
 %hr
 .row
   .col-md-12
@@ -23,7 +23,7 @@
         %tbody
           - @contacts.each do |x|
             %tr
-              %td= link_to(x, admin_contact_path(x))
+              %td= link_to(x, [:client, x])
               %td= x.code
               %td= x.ident
               %td= x.email

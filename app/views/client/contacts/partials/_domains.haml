@@ -1,5 +1,9 @@
 #contacts.panel.panel-default
-  .panel-heading= t('shared.domains')
+  .panel-heading.clearfix
+    .pull-left
+      = t('shared.domains')
+    .pull-right
+      = link_to(t('shared.create_new_domain'), new_client_domain_path(owner_contact_id: @contact), class: 'btn btn-primary btn-xs')
   .table-responsive
     %table.table.table-hover.table-bordered.table-condensed
       %thead
