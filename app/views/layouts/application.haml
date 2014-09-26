@@ -43,6 +43,19 @@
                   = link_to t('shared.epp_users'), admin_epp_users_path
                 %li
                   = link_to t('shared.users'), admin_users_path
+
+            %li.dropdown
+              %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
+                = t('shared.archives')
+                %span.caret
+              %ul.dropdown-menu{role: "menu"}
+                %li.dropdown-header= t('shared.domain')
+                %li
+                  = link_to t('shared.domains'), '#'
+                %li.dropdown-header= t('shared.contact')
+                %li
+                  = link_to t('shared.contacts'), admin_contact_versions_path
+
           %ul.nav.navbar-nav.navbar-right
             %li= link_to t('shared.log_out', user: current_user), '/logout'
         / /.nav-collapse

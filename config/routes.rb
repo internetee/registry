@@ -23,9 +23,12 @@ Rails.application.routes.draw do
 
     resources :users
     resources :epp_users
+    resources :contact_versions
+    resources :address_versions
 
     root 'domains#index'
-  end
+
+ end
 
   ## CLIENT ROUTES
   namespace(:client) do

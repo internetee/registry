@@ -1,0 +1,65 @@
+.row
+  .col-sm-6
+    %h2.text-center-xs
+      = "#{t('shared.contact_details')}"
+  .col-sm-6
+    %h2.text-right.text-center-xs
+
+%hr
+.row
+  .col-md-12
+    .table-responsive
+      %table.table.table-hover.table-bordered.table-condensed
+        %thead
+          %tr
+            %th
+              whodunnit
+            %th
+              event
+            %th
+              created_at
+
+
+
+
+        %tbody
+          - @versions.each_with_index do |version, index|
+            - contact = version.reify(has_one: true)
+            - if contact
+              %tr.clickable{"data-target" => "#accordion-#{index}", "data-toggle" => "collapse"}
+                %td=version.whodunnit #contact.name if contact
+                %td=version.event #contact.ident if contact
+                %td=version.created_at #contact.email if contact
+
+              %tr
+                %td{colspan: "3"}
+                  .collapse{ id: "accordion-#{index}" }
+                    .row
+                      .col-md-6
+                        %dl.dl-horizontal
+                          %dt= t('shared.name')
+                          %dd= contact.name
+                          %dt= t('shared.ident')
+                          %dd= contact.ident
+                          %dt= t('shared.phone')
+                          %dd= contact.phone
+                          %dt= t('shared.email')
+                          %dd= contact.email
+                          %dt= t('shared.fax')
+                          %dd= contact.fax
+                          %dt= t('shared.org_name')
+                          %dd= contact.org_name
+                      .col-md-6
+                        %dl.dl-horizontal
+                          - if contact.address
+                            %dt= t('shared.city')
+                            %dd= contact.address.city
+                            %dt= t('shared.street')
+                            %dd= contact.address.street
+
+            - else
+              %tr
+                %td=version.whodunnit #contact.name if contact
+                %td=version.event #contact.ident if contact
+                %td=version.created_at #contact.email if contact
+

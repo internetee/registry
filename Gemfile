@@ -58,6 +58,9 @@ gem 'cancan', '~> 1.6.10'
 # for login
 gem 'devise', '~> 3.3.0'
 
+# for archiving
+gem 'paper_trail', '~> 3.0.5'
+
 group :assets do
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   gem 'therubyracer',  platforms: :ruby

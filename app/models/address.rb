@@ -10,8 +10,7 @@ class Address < ActiveRecord::Base
   belongs_to :contact
   belongs_to :country
 
-  # TODO: validate inclusion of :type in LONG_TYPES or smth similar
-  # validates_inclusion_of :type, in: TYPES
+  has_paper_trail class_name: 'AddressVersion'
 
   class << self
 #    def validate_postal_info_types(parsed_frame)

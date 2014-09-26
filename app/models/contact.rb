@@ -1,6 +1,7 @@
 class Contact < ActiveRecord::Base
   # TODO: Foreign contact will get email with activation link/username/temp password
   # TODO: Phone number validation, in first phase very minimam in order to support current registries
+  # TODO: Validate presence of name
 
   include EppErrors
 
@@ -31,6 +32,9 @@ class Contact < ActiveRecord::Base
   delegate :city, to: :address#, prefix: true
   delegate :street, to: :address#, prefix: true
   delegate :zip, to: :address#, prefix: true
+
+  # archiving
+  has_paper_trail class_name: 'AddressVersion'
 
   IDENT_TYPE_ICO = 'ico'
   IDENT_TYPES = [

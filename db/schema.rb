@@ -16,6 +16,17 @@ ActiveRecord::Schema.define(version: 20141001085322) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "address_versions", force: true do |t|
+    t.string   "item_type",  null: false
+    t.integer  "item_id",    null: false
+    t.string   "event",      null: false
+    t.string   "whodunnit"
+    t.text     "object"
+    t.datetime "created_at"
+  end
+
+  add_index "address_versions", ["item_type", "item_id"], name: "index_address_versions_on_item_type_and_item_id", using: :btree
+
   create_table "addresses", force: true do |t|
     t.integer  "contact_id"
     t.integer  "country_id"
@@ -42,6 +53,17 @@ ActiveRecord::Schema.define(version: 20141001085322) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "contact_versions", force: true do |t|
+    t.string   "item_type",  null: false
+    t.integer  "item_id",    null: false
+    t.string   "event",      null: false
+    t.string   "whodunnit"
+    t.text     "object"
+    t.datetime "created_at"
+  end
+
+  add_index "contact_versions", ["item_type", "item_id"], name: "index_contact_versions_on_item_type_and_item_id", using: :btree
 
   create_table "contacts", force: true do |t|
     t.string   "code"
@@ -84,6 +106,17 @@ ActiveRecord::Schema.define(version: 20141001085322) do
     t.datetime "updated_at"
   end
 
+  create_table "domain_status_versions", force: true do |t|
+    t.string   "item_type",  null: false
+    t.integer  "item_id",    null: false
+    t.string   "event",      null: false
+    t.string   "whodunnit"
+    t.text     "object"
+    t.datetime "created_at"
+  end
+
+  add_index "domain_status_versions", ["item_type", "item_id"], name: "index_domain_status_versions_on_item_type_and_item_id", using: :btree
+
   create_table "domain_statuses", force: true do |t|
     t.integer "domain_id"
     t.string  "description"
@@ -101,6 +134,17 @@ ActiveRecord::Schema.define(version: 20141001085322) do
     t.datetime "updated_at"
     t.datetime "wait_until"
   end
+
+  create_table "domain_versions", force: true do |t|
+    t.string   "item_type",  null: false
+    t.integer  "item_id",    null: false
+    t.string   "event",      null: false
+    t.string   "whodunnit"
+    t.text     "object"
+    t.datetime "created_at"
+  end
+
+  add_index "domain_versions", ["item_type", "item_id"], name: "index_domain_versions_on_item_type_and_item_id", using: :btree
 
   create_table "domains", force: true do |t|
     t.string   "name"
@@ -139,6 +183,17 @@ ActiveRecord::Schema.define(version: 20141001085322) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "nameserver_versions", force: true do |t|
+    t.string   "item_type",  null: false
+    t.integer  "item_id",    null: false
+    t.string   "event",      null: false
+    t.string   "whodunnit"
+    t.text     "object"
+    t.datetime "created_at"
+  end
+
+  add_index "nameserver_versions", ["item_type", "item_id"], name: "index_nameserver_versions_on_item_type_and_item_id", using: :btree
 
   create_table "nameservers", force: true do |t|
     t.string   "hostname"
@@ -210,5 +265,16 @@ ActiveRecord::Schema.define(version: 20141001085322) do
     t.integer  "registrar_id"
     t.integer  "country_id"
   end
+
+  create_table "versions", force: true do |t|
+    t.string   "item_type",  null: false
+    t.integer  "item_id",    null: false
+    t.string   "event",      null: false
+    t.string   "whodunnit"
+    t.text     "object"
+    t.datetime "created_at"
+  end
+
+  add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
 
 end
