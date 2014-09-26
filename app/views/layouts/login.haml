@@ -20,9 +20,6 @@
           .alert{class: type}= flash[:notice] || flash[:alert]
         %h2.form-signin-heading.text-center Eesti Interneti SA
         %hr
-        - if Rails.env.development? || Rails.env.test?
-          = button_to 'ID card (gitlab)', 'sessions', class: 'btn btn-lg btn-primary btn-block', name: 'gitlab'
-          = button_to 'ID card (zone)', 'sessions', class: 'btn btn-lg btn-primary btn-block', name: 'zone'
-        -else
-          = button_to 'ID card', 'sessions', class: 'btn btn-lg btn-primary btn-block'
-          = button_to 'Mobile ID', 'sessions', class: 'btn btn-lg btn-primary btn-block'
+        / TODO: Refactor this when ID card login is done
+        = button_to 'ID card (gitlab)', 'sessions', class: 'btn btn-lg btn-primary btn-block', name: 'gitlab'
+        = button_to 'ID card (zone)', 'sessions', class: 'btn btn-lg btn-primary btn-block', name: 'zone'
