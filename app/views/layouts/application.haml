@@ -12,7 +12,7 @@
     %title Eesti Interneti SA
   %body
     / Static navbar
-    .navbar.navbar-default.navbar-static-top{role: "navigation"}
+    .navbar.navbar-inverse.navbar-static-top{role: "navigation"}
       .container
         .navbar-header
           %button.navbar-toggle{"data-target" => ".navbar-collapse", "data-toggle" => "collapse", type: "button"}
@@ -24,15 +24,11 @@
         .navbar-collapse.collapse
           %ul.nav.navbar-nav
             %li
-              = link_to t('shared.dashboard'), root_path
-            %li
-              = link_to t('shared.registrars'), admin_registrars_path
-            %li
               = link_to t('shared.domains'), admin_domains_path
             %li
               = link_to t('shared.contacts'), admin_contacts_path
             %li
-              = link_to t('shared.eedirekt'), client_domains_path
+              = link_to t('shared.registrars'), admin_registrars_path
             %li.dropdown
               %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
                 = t('shared.settings')

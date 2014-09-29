@@ -12,8 +12,8 @@
     .row
       .col-md-6
         .form-group
-          = label_tag :domain_pw
+          = label_tag :domain_pw, t('shared.domain_pw')
           = text_field_tag(:domain_pw, params[:domain_pw], class: 'form-control')
   .row
     .col-md-12.text-right
-      = button_tag(t('shared.save'), class: 'btn btn-primary', name: 'request')
+      = button_tag(t('shared.request_domain_transfer'), class: 'btn btn-primary', name: 'request')

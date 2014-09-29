@@ -12,7 +12,7 @@
     %title= t('shared.eedirekt')
   %body
     / Static navbar
-    .navbar.navbar-inverse.navbar-static-top{role: "navigation"}
+    .navbar.navbar-default.navbar-static-top{role: "navigation"}
       .container
         .navbar-header
           %button.navbar-toggle{"data-target" => ".navbar-collapse", "data-toggle" => "collapse", type: "button"}
@@ -23,7 +23,8 @@
           = link_to t('shared.eedirekt'), client_domains_path, class: 'navbar-brand'
         .navbar-collapse.collapse
           %ul.nav.navbar-nav
-            %li.dropdown.active
+            - active_class = ['client/domains', 'client/domain_transfers'].include?(params[:controller]) ? 'active' :nil
+            %li.dropdown{class: active_class}
               %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
                 = t('shared.domains')
                 %span.caret
@@ -33,16 +34,16 @@
                 %li
                   = link_to t('shared.transfer_domain'), new_client_domain_transfer_path
 
-            %li.dropdown
+            - active_class = ['client/contacts'].include?(params[:controller]) ? 'active' :nil
+            %li.dropdown{class: active_class}
               %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
                 = t('shared.contacts')
                 %span.caret
               %ul.dropdown-menu{role: "menu"}
                 %li
                   = link_to t('shared.contact_list'), client_contacts_path
+          %ul.nav.navbar-nav.navbar-right
             - if current_user.admin?
-              %li
-                = link_to 'Admin', admin_root_path
               %li.dropdown
                 %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
                   = current_registrar
@@ -52,7 +53,6 @@
                     - next if x == current_registrar
                     %li
                       = link_to x,  switch_registrar_sessions_path(registrar_id: x)
-          %ul.nav.navbar-nav.navbar-right
             %li= link_to t('shared.log_out'), '/logout'
         / /.nav-collapse
     .container

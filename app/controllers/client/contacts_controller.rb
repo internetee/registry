@@ -2,8 +2,7 @@ class Client::ContactsController < ClientController
   before_action :set_contact, only: [:show, :destroy, :edit, :update]
 
   def index
-    @q = Contact.search(params[:q]) if current_user.admin?
-    @q = current_user.registrar.contacts.search(params[:q]) unless current_user.admin?
+    @q = Contact.search(params[:q])
     @contacts = @q.result.page(params[:page])
   end
 

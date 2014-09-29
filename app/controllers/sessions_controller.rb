@@ -5,6 +5,7 @@ class SessionsController < Devise::SessionsController
     # if Rails.env.development? || Rails.env.test?
     @user = User.find_by(username: 'gitlab') if params[:gitlab]
     @user = User.find_by(username: 'zone') if params[:zone]
+    @user = User.find_by(username: 'elkdata') if params[:elkdata]
 
     session[:current_user_registrar_id] = Registrar.first.id if @user.admin?
 

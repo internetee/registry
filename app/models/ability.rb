@@ -14,6 +14,7 @@ class Ability
     elsif user.persisted?
       can :manage, Domain, registrar_id: user.registrar.id
       can :read, DomainTransfer, transfer_to_id: user.registrar.id
+      can :read, DomainTransfer, transfer_from_id: user.registrar.id
       can :approve_as_client, DomainTransfer, transfer_from_id: user.registrar.id, status: DomainTransfer::PENDING
     end
     # Define abilities for the passed in user here. For example:
