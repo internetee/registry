@@ -4,7 +4,15 @@ class Registrar < ActiveRecord::Base
   has_many :ns_sets
   has_many :epp_users
   has_many :users
-  has_many :domain_transfers, foreign_key: 'transfer_to_id'
+
+  def domain_transfers
+    at = DomainTransfer.arel_table
+    DomainTransfer.where(
+      at[:transfer_to_id].eq(id).or(
+        at[:transfer_from_id].eq(id)
+      )
+    )
+  end
 
   def to_s
     name

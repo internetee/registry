@@ -15,7 +15,8 @@ feature 'Domain transfer', type: :feature do
   scenario 'Registrar requests transfer on own domain', js: true do
     sign_in zone_user
     click_on 'Domains'
-    click_on 'Transfer domain'
+    click_on 'Domain transfers list'
+    click_on 'Request domain transfer'
 
     fill_in 'Domain name', with: 'false'
     click_on 'Request domain transfer'
@@ -81,6 +82,10 @@ feature 'Domain transfer', type: :feature do
   end
 
   scenario 'Domain owner approves request' do
+    s = Setting.find_by(code: 'transfer_wait_time')
+    s.value = 1
+    s.save
+
     d = Domain.first
     d.domain_transfers.create(
       status: DomainTransfer::PENDING,
@@ -105,7 +110,7 @@ feature 'Domain transfer', type: :feature do
     fill_in 'Domain password', with: d.auth_info
     click_on 'Request domain transfer'
 
-    expect(page).to have_button('Approve')
+    expect(page).to have_link('Approve')
 
     click_on 'Approve'
     expect(page).to have_text('Domain transfer approved!')

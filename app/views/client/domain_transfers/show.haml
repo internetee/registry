@@ -4,14 +4,18 @@
       = "#{t('shared.domain_transfer')}"
   .col-sm-6
     %h2.text-right.text-center-xs
+      = link_to(t('shared.domain_transfers'), client_domain_transfers_path, class: 'btn btn-default')
       - if can? :approve_as_client, @domain_transfer
-        = button_to(t('shared.approve'), approve_client_domain_transfer_path, class: 'btn btn-success')
+        = link_to(t('shared.approve'), approve_client_domain_transfer_path, method: :post, class: 'btn btn-success')
 %hr
 .row
   .col-md-12
     %dl.dl-horizontal
       %dt= t('shared.domain')
-      %dd= @domain_transfer.domain.name
+      - if current_registrar == @domain_transfer.domain.registrar
+        %dd= link_to(@domain_transfer.domain, client_domain_path(@domain_transfer.domain))
+      - else
+        %dd= @domain_transfer.domain
 
       %dt= t('shared.status')
       %dd= @domain_transfer.status
@@ -25,12 +29,11 @@
       %dt= t('shared.transfer_to')
       %dd= @domain_transfer.transfer_to
 
+      %dt= t('shared.accept_time')
       - if @domain_transfer.transferred_at
-        %dt= t('shared.transferred_at')
         %dd= l(@domain_transfer.transferred_at)
       - else
-        %dt= t('shared.transfer_confirm_time')
-        %dd= l(@domain_transfer.transfer_confirm_time)
+        %dd= l(@domain_transfer.wait_until)
 
       %dt= t('shared.domain_valid_to')
       %dd= l(@domain_transfer.domain.valid_to)

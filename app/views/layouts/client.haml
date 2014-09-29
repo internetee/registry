@@ -32,7 +32,7 @@
                 %li
                   = link_to t('shared.domain_list'), client_domains_path
                 %li
-                  = link_to t('shared.transfer_domain'), new_client_domain_transfer_path
+                  = link_to t('shared.domain_transfers_list'), client_domain_transfers_path
 
             - active_class = ['client/contacts'].include?(params[:controller]) ? 'active' :nil
             %li.dropdown{class: active_class}

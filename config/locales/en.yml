@@ -288,10 +288,11 @@ en:
     domain_transfer: 'Domain transfer'
     request_domain_transfer: 'Request domain transfer'
     domain_valid_to: 'Domain valid to'
-    transfer_requested_at: 'Transfer requested at'
+    accept_time: 'Accept time'
     transfer_from: 'Transfer from'
     transferred_at: 'Transferred at'
-    transfer_confirm_time: 'Transfer confirm time'
+    domain_transfers_list: 'Domain transfers list'
+    domain_transfers: 'Domain transfers'
 
     password_invalid: 'Password invalid!'
     domain_was_not_found: 'Domain was not found!'

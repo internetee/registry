@@ -11,13 +11,16 @@ class DomainTransfer < ActiveRecord::Base
   SERVER_APPROVED = 'serverApproved'
   SERVER_CANCELLED = 'serverCancelled'
 
-  def approved?
-    status == CLIENT_APPROVED || status == SERVER_APPROVED
+  before_create :set_wait_until
+
+  def set_wait_until
+    wait_time = SettingGroup.domain_general.setting(:transfer_wait_time).value.to_i
+    return if wait_time == 0
+    self.wait_until = transfer_requested_at + wait_time.hours
   end
 
-  def transfer_confirm_time
-    wait_time = SettingGroup.domain_general.setting(:transfer_wait_time).value.to_i
-    transfer_requested_at + wait_time.hours
+  def approved?
+    status == CLIENT_APPROVED || status == SERVER_APPROVED
   end
 
   def approve_as_client

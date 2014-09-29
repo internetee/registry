@@ -1,4 +1,10 @@
-%h2= t('shared.transfer_domain')
+.row
+  .col-sm-6
+    %h2.text-center-xs= t('shared.transfer_domain')
+  .col-sm-6
+    %h2.text-right.text-center-xs
+      = link_to(t('shared.domain_transfers'), client_domain_transfers_path, class: 'btn btn-default')
+
 %hr
 = form_for([:client, @domain_transfer]) do |f|
   = render 'shared/errors', object: @domain_transfer

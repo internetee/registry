@@ -2,6 +2,12 @@ class Client::DomainTransfersController < ClientController
   before_action :set_domain_transfer, only: [:show, :approve]
   before_action :set_domain, only: [:create]
 
+  def index
+    @q = current_registrar.domain_transfers.search(params[:q])
+    @q.sorts = 'created_at desc' if @q.sorts.empty?
+    @domain_transfers = @q.result.page(params[:page])
+  end
+
   def new
     @domain_transfer = DomainTransfer.new
   end
