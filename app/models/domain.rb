@@ -36,6 +36,7 @@ class Domain < ActiveRecord::Base
   before_create :generate_auth_info
   before_create :set_validity_dates
   after_create :attach_default_contacts
+  after_save :manage_automatic_statuses
 
   validates :name_dirty, domain_name: true, uniqueness: true
   validates :period, numericality: { only_integer: true }
@@ -199,6 +200,14 @@ class Domain < ActiveRecord::Base
 
   def admin_contacts_count
     domain_contacts.reject(&:marked_for_destruction?).select { |x| x.contact_type == DomainContact::ADMIN }.count
+  end
+
+  def manage_automatic_statuses
+    if domain_statuses.empty? && valid?
+      domain_statuses.create(value: DomainStatus::OK)
+    else
+      domain_statuses.find_by(value: DomainStatus::OK).try(:destroy)
+    end
   end
 
   class << self

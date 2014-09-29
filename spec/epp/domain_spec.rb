@@ -366,10 +366,17 @@ describe 'EPP Domain', epp: true do
         expect(response[:results][0][:value]).to eq('4')
       end
 
+      it 'sets ok status by default' do
+        response = epp_request(domain_info_xml, :xml)
+        inf_data = response[:parsed].css('resData infData')
+        expect(inf_data.css('status').first[:s]).to eq('ok')
+      end
+
       it 'returns domain info' do
         d = Domain.first
-        d.domain_statuses.create(value: DomainStatus::CLIENT_HOLD, description: 'Payment overdue.')
-        d.nameservers.create(hostname: 'ns1.example.com', ipv4: '192.168.1.1', ipv6: '1080:0:0:0:8:800:200C:417A')
+        d.domain_statuses.build(value: DomainStatus::CLIENT_HOLD, description: 'Payment overdue.')
+        d.nameservers.build(hostname: 'ns1.example.com', ipv4: '192.168.1.1', ipv6: '1080:0:0:0:8:800:200C:417A')
+        d.save
 
         response = epp_request(domain_info_xml, :xml)
         expect(response[:results][0][:result_code]).to eq('1000')
