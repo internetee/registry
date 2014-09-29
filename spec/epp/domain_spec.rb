@@ -88,7 +88,7 @@ describe 'EPP Domain', epp: true do
         expect(trn_data.css('trStatus').text).to eq('pending')
         expect(trn_data.css('reID').text).to eq('10577829')
         expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
-        expect(trn_data.css('acDate').text).to eq(dtl.transfer_confirm_time.to_time.utc.to_s)
+        expect(trn_data.css('acDate').text).to eq(dtl.wait_until.to_time.utc.to_s)
         expect(trn_data.css('acID').text).to eq('123')
         expect(trn_data.css('exDate').text).to eq(domain.valid_to.to_time.utc.to_s)
 
@@ -103,7 +103,7 @@ describe 'EPP Domain', epp: true do
         expect(trn_data.css('trStatus').text).to eq('pending')
         expect(trn_data.css('reID').text).to eq('10577829')
         expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
-        expect(trn_data.css('acDate').text).to eq(dtl.transfer_confirm_time.to_time.utc.to_s)
+        expect(trn_data.css('acDate').text).to eq(dtl.wait_until.to_time.utc.to_s)
         expect(trn_data.css('acID').text).to eq('123')
         expect(trn_data.css('exDate').text).to eq(domain.valid_to.to_time.utc.to_s)
 

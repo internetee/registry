@@ -12,7 +12,7 @@ xml.epp_head do
         xml.tag!('domain:reID', ldt.transfer_to.reg_no)
         xml.tag!('domain:reDate', ldt.transfer_requested_at)
         xml.tag!('domain:acID', ldt.transfer_from.reg_no)
-        xml.tag!('domain:acDate', ldt.transferred_at || ldt.transfer_confirm_time)
+        xml.tag!('domain:acDate', ldt.transferred_at || ldt.wait_until)
         xml.tag!('domain:exDate', @domain.valid_to)
       end
     end
