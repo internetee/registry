@@ -1,0 +1,56 @@
+%tr.clickable{"data-target" => "#accordion-#{index}", "data-toggle" => "collapse"}
+  %td=version.whodunnit #contact.name if contact
+  %td=version.event #contact.ident if contact
+  %td=version.created_at #contact.email if contact
+
+%tr
+  %td{colspan: "3"}
+    .collapse{ id: "accordion-#{index}" }
+      .row
+        .col-md-6
+          %dl.dl-horizontal
+            %dt= t('shared.name')
+            %dd= domain.name
+            %dt= t('shared.status')
+            %dd= domain.status
+            %dt= t('shared.valid_from')
+            %dd= domain.valid_from
+            %dt= t('shared.valid_to')
+            %dd= domain.valid_to
+            %dt= t('shared.period')
+            %dd= domain.period
+            %dt= t('shared.period_unit')
+            %dd= domain.period_unit
+            %dt= t('shared.status')
+            %dd= domain.status
+        .col-md-6
+          %dl.dl-horizontal
+            - if domain.nameservers
+              - domain.nameservers.each do |ns|
+                %dt= t('shared.hostname')
+                %dd= ns.hostname
+                %dt= t('shared.ipv4')
+                %dd= ns.ipv4
+            - if domain.domain_statuses
+              - domain.domain_statuses.each do |ds|
+                %dt= t('shared.value')
+                %dd= ds.value
+                %dt= t('shared.description')
+                %dd= ds.description
+
+      .row
+        .col-md-12
+          - if domain.owner_contact
+            %h2= t('shared.contacts')
+            = render 'admin/contact_versions/history', contact: domain.owner_contact
+
+      .row
+        .col-md-12
+          - if domain.domain_contacts
+            .row
+              - if domain.tech_contacts
+                - domain.tech_contacts.each do |contact|
+                  = render 'admin/contact_versions/history', contact: contact
+              - if domain.admin_contacts
+                - domain.admin_contacts.each do |contact|
+                  = render 'admin/contact_versions/history', contact: contact

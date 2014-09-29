@@ -1,0 +1,23 @@
+.row
+  .col-md-6
+    %dl.dl-horizontal
+      %dt= t('shared.name')
+      %dd= contact.name
+      %dt= t('shared.ident')
+      %dd= contact.ident
+      %dt= t('shared.phone')
+      %dd= contact.phone
+      %dt= t('shared.email')
+      %dd= contact.email
+      %dt= t('shared.fax')
+      %dd= contact.fax
+      %dt= t('shared.org_name')
+      %dd= contact.org_name
+  .col-md-6
+    %dl.dl-horizontal
+      - if contact.address
+        %dt= t('shared.city')
+        %dd= contact.address.city
+        %dt= t('shared.street')
+        %dd= contact.address.street
+

@@ -56,6 +56,9 @@ class Domain < ActiveRecord::Base
 
   attr_accessor :owner_contact_typeahead
 
+  # archiving
+  has_paper_trail class_name: 'DomainVersion'
+
   def name=(value)
     value.strip!
     write_attribute(:name, SimpleIDN.to_unicode(value))

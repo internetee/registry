@@ -21,17 +21,9 @@
 
         %tbody
           - @versions.each_with_index do |version, index|
-            - contact = version.reify(has_one: true)
-            - if contact
-              %tr.clickable{"data-target" => "#accordion-#{index}", "data-toggle" => "collapse"}
-                %td=version.whodunnit #contact.name if contact
-                %td=version.event #contact.ident if contact
-                %td=version.created_at #contact.email if contact
-
-              %tr
-                %td
-                  .collapse{ id: "accordion-#{index}" }
-                    = render 'admin/contact_versions/history', contact: contact
+            -  domain = version.reify(has_multiple: true)
+            - if domain
+              = render 'admin/domain_versions/history', version: version, index: index, domain: domain
             - else
               %tr
                 %td=version.whodunnit #contact.name if contact

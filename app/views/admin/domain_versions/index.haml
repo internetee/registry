@@ -1,0 +1,39 @@
+.row
+  .col-sm-12
+    %h2.text-center-xs= t('shared.domains')
+%hr
+.row
+  .col-md-12
+    .table-responsive
+      %table.table.table-hover.table-bordered.table-condensed
+        %thead
+          %tr
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'name')
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'registrar_name', t('shared.registrar'))
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'owner_contact_name', t('shared.owner'))
+            %th{class: 'col-xs-1'}
+              whodunnit
+            %th{class: 'col-xs1'}
+              event
+            %th{class: 'col-xs1'}
+              created_at
+            %th{class: 'col-xs1'}
+              = t('shared.action')
+
+        %tbody
+          - @domains.each do |domain|
+            %tr
+              %td= domain.name
+              %td= domain.registrar.name if domain.registrar
+              %td= domain.owner_contact.name if domain.owner_contact
+              %td= domain.versions.last.whodunnit if domain.versions.last
+              %td= domain.versions.last.event if domain.versions.last
+              %td= domain.versions.last.created_at if domain.versions.last
+              %td= link_to(t('shared.history'), admin_domain_version_path(domain), class: 'btn btn-primary btn-xs')
+
+.row
+  .col-md-12
+    = paginate @domains

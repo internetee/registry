@@ -24,7 +24,8 @@ Rails.application.routes.draw do
     resources :users
     resources :epp_users
     resources :contact_versions
-    resources :address_versions
+    #resources :address_versions
+    resources :domain_versions
 
     root 'domains#index'
 
