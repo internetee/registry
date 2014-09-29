@@ -1,0 +1,34 @@
+= form_for([:admin, @registrar]) do |f|
+  - if @registrar.errors.any?
+    - @registrar.errors.each do |attr, err|
+      = err
+      %br
+  - if @registrar.errors.any?
+    %hr
+
+  .row
+    .col-md-6
+      .form-group
+        = f.label :name
+        = f.text_field(:name, class: 'form-control')
+      .form-group
+        = f.label :reg_no
+        = f.text_field(:reg_no, class: 'form-control')
+      .form-group
+        = f.label :vat_no
+        = f.text_field(:vat_no, class: 'form-control')
+
+    .col-md-6.text-left
+      .form-group
+        = f.label :country_id
+        = f.select :country_id, options_for_select(Country.all.map{|x| [x.name, x.id]}, @registrar.country_id), {}, {class: 'form-control'}
+      .form-group
+        = f.label :address
+        = f.text_field(:address, class: 'form-control')
+      .form-group
+        = f.label :billing_address
+        = f.text_field(:billing_address, class: 'form-control')
+  %hr
+  .row
+    .col-md-12.text-right
+      = button_tag(t('shared.save'), class: 'btn btn-primary')

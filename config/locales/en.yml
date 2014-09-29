@@ -140,6 +140,22 @@ en:
             setting_id:
               taken: 'Status already exists on this domain'
 
+
+        registrar:
+          attributes:
+            name:
+              blank: 'Name is missing'
+              taken: 'Name already exists'
+            reg_no:
+              blank: 'Reg. number is missing'
+              taken: 'Reg no. already exists'
+            vat_no:
+              blank: 'Vat number is missing'
+            country:
+              blank: 'Country is missing'
+            address:
+              blank: 'Address is missing'
+
     attributes:
       epp_domain: &epp_domain_attributes
         name: 'Domain name'
@@ -303,3 +319,16 @@ en:
     contact_list: 'Contact list'
     create_new_contact: 'Create new contact'
     domain_pw: 'Domain password'
+
+    new_registrar: 'New registrar'
+    registrar_added: 'Registrar added!'
+    failed_to_add_registrar: 'Failed to add registrar'
+    registrar_details: 'Registrar details'
+    vat_no: 'Vat no'
+    edit_registrar: 'Edit registrar'
+    back_to_registrar: 'Back to registrar'
+    registrar_updated: 'Registrar updated'
+    failed_to_update_registrar: 'Failed to update registrar'
+    registrar_deleted: 'Registrar deleted'
+    failed_to_delete_registrar: 'Failed to delete registrar'
+

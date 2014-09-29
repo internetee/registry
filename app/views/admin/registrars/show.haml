@@ -1,0 +1,46 @@
+.row
+  .col-sm-6
+    %h2.text-center-xs
+      = "#{t('shared.registrar_details')}"
+  .col-sm-6
+    %h2.text-right.text-center-xs
+      = link_to(t('shared.edit'), edit_admin_registrar_path(@registrar), class: 'btn btn-primary')
+      = link_to(t('shared.delete'), admin_registrar_path(@registrar), method: :delete, data: { confirm: t('shared.are_you_sure') }, class: 'btn btn-danger')
+
+%hr
+- if @registrar.errors.any?
+  - @registrar.errors.each do |attr, err|
+    = err
+    %br
+- if @registrar.errors.any?
+  %hr
+.row
+  .col-md-6
+    .panel.panel-default
+      .panel-heading
+        %h3.panel-title= t('shared.general')
+      .panel-body
+        %dl.dl-horizontal
+          %dt= t('shared.name')
+          %dd= @registrar.name
+
+          %dt= t('shared.reg_no')
+          %dd= @registrar.reg_no
+
+          %dt= t('shared.vat_no')
+          %dd= @registrar.vat_no
+
+  .col-md-6
+    .panel.panel-default
+      .panel-heading
+        %h3.panel-title= t('shared.address')
+      .panel-body
+        %dl.dl-horizontal
+          %dt= t('shared.country')
+          %dd= @registrar.country
+
+          %dt= t('shared.address')
+          %dd= @registrar.address
+
+          %dt= t('shared.billing_address')
+          %dd= @registrar.billing_address

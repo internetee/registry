@@ -3,7 +3,7 @@
     %h2.text-center-xs= t('shared.registrars')
   .col-sm-6
     %h2.text-right.text-center-xs
-      = link_to(t('shared.add'), '#', class: 'btn btn-primary')
+      = link_to(t('shared.add'), new_admin_registrar_path, class: 'btn btn-primary')
 %hr
 .row
   .col-md-12
@@ -20,7 +20,7 @@
         %tbody
           - @registrars.each do |x|
             %tr
-              %td= link_to(x, '#')
+              %td= link_to(x, [:admin, x])
               %td= x.reg_no
               %td= link_to(t('shared.edit'), '#', class: 'btn btn-primary btn-xs')
 .row
