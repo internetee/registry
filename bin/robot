@@ -3,6 +3,10 @@
 #
 # Build and run everything for automatic tests 
 #
+
+# cd to current script directory
+cd "$(dirname "$0")"
+
 git pull origin master
 bundle install --deployment 
 
