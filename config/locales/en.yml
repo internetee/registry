@@ -229,7 +229,7 @@ en:
     action: 'Action'
     edit: 'Edit'
     save: 'Save'
-    log_out: 'Log out'
+    log_out: 'Log out (%{user})'
     system: 'System'
     settings: 'Settings'
     domains: 'Domains'

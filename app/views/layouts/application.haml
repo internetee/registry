@@ -44,7 +44,7 @@
                 %li
                   = link_to t('shared.users'), admin_users_path
           %ul.nav.navbar-nav.navbar-right
-            %li= link_to t('shared.log_out'), '/logout'
+            %li= link_to t('shared.log_out', user: current_user), '/logout'
         / /.nav-collapse
     .container
       - display = (flash.empty?) ? 'none' : 'block'
