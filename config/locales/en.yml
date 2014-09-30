@@ -164,6 +164,7 @@ en:
             password:
               blank: 'Password is missing'
             identity_code:
+              blank: 'Identity code is missing'
               taken: 'Identity code already exists'
             email:
               blank: 'Email is missing'
