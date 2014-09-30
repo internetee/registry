@@ -4,19 +4,20 @@ describe 'EPP Contact', epp: true do
   let(:server_zone) { Epp::Server.new({ server: 'localhost', tag: 'zone', password: 'ghyt9e4fu', port: 701 }) }
   let(:server_elkdata) { Epp::Server.new({ server: 'localhost', tag: 'elkdata', password: 'ghyt9e4fu', port: 701 }) }
   let(:elkdata) { Fabricate(:registrar, { name: 'Elkdata', reg_no: '123' }) }
-  let(:zone) { Fabricate(:registrar) }
+  let(:zone) { Registrar.where(reg_no: '10577829').first || Fabricate(:registrar) }
 
   context 'with valid user' do
     before(:each) do
-      Fabricate(:epp_user, username: 'zone', registrar: zone)
-      Fabricate(:epp_user, username: 'elkdata', registrar: elkdata)
+      Fabricate(:epp_user)
+      #Fabricate(:epp_user, username: 'zone', registrar: zone)
+      #Fabricate(:epp_user, username: 'elkdata', registrar: elkdata)
       Fabricate(:domain_validation_setting_group)
     end
+
     context 'create command' do
 
       it 'fails if request is invalid' do
         response = epp_request(contact_create_xml({ authInfo: [false], addr: { cc: false, city: false } }), :xml)
-
         expect(response[:results][0][:result_code]).to eq('2003')
         expect(response[:results][1][:result_code]).to eq('2003')
         expect(response[:results][2][:result_code]).to eq('2003')
@@ -173,7 +174,13 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if contact has associated domain' do
+<<<<<<< HEAD
         Fabricate(:domain, owner_contact: Fabricate(:contact, code: 'dwa1234', created_by_id: EppUser.first.id), registrar: zone)
+=======
+        Fabricate(:domain,
+                  registrar: elkdata,
+                  owner_contact: Fabricate(:contact, code: 'dwa1234', created_by_id: EppUser.first.id))
+>>>>>>> reworked contact tests
         expect(Domain.first.owner_contact.address.present?).to be true
         response = epp_request('contacts/delete.xml')
 
