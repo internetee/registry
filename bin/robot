@@ -3,7 +3,6 @@
 #
 # Build and run everything for automatic tests 
 #
-cd ../test-registry
 git pull origin master
 bundle install --deployment 
 
