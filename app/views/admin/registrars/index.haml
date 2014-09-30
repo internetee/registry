@@ -11,18 +11,15 @@
       %table.table.table-hover.table-bordered.table-condensed
         %thead
           %tr
-            %th{class: 'col-xs-5'}
+            %th{class: 'col-xs-6'}
               = sort_link(@q, 'name')
-            %th{class: 'col-xs-5'}
+            %th{class: 'col-xs-6'}
               = sort_link(@q, 'reg_no', t('shared.reg_no'))
-            %th{class: 'col-xs-2'}
-              = t('shared.action')
         %tbody
           - @registrars.each do |x|
             %tr
               %td= link_to(x, [:admin, x])
               %td= x.reg_no
-              %td= link_to(t('shared.edit'), '#', class: 'btn btn-primary btn-xs')
 .row
   .col-md-12
     = paginate @registrars
