@@ -7,6 +7,7 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 Country.where(name: 'Estonia', iso: 'EE').first_or_create
+Country.where(name: 'Latvia', iso: 'LV').first_or_create
 
 zone = Registrar.where(
   name: 'Zone Media OÜ',

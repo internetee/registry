@@ -12,8 +12,9 @@ class User < ActiveRecord::Base
 
   validates :username, :password, presence: true
   validates :identity_code, uniqueness: true, allow_blank: true
-  validates :identity_code, presence: true, if: -> { country.iso == 'EE' && identity_code.blank? }
-  validates :registrar, presence: true, if: -> { !admin && !registrar }
+  validates :identity_code, presence: true, if: -> { country.iso == 'EE' }
+  validates :email, presence: true, if: -> { country.iso == 'LV' }
+  validates :registrar, presence: true, if: -> { !admin }
 
   before_save -> { self.registrar = nil if admin? }
 

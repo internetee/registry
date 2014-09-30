@@ -356,5 +356,9 @@ en:
     edit_user: 'Edit user'
     back_to_user: 'Back to user'
 
+    record_created: 'Record created'
+    failed_to_create_record: 'Failed to create record'
     record_updated: 'Record updated'
     failed_to_update_record: 'Failed to update record'
+    record_deleted: 'Record deleted'
+    failed_to_delete_record: 'Failed to delete record'
