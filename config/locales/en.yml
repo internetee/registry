@@ -349,12 +349,16 @@ en:
 
     users: 'Users'
     create_new_user: 'Create new user'
-    user_added: 'User added!'
-    failed_to_add_user: 'Failed to add user'
     admin: 'Admin'
     user_details: 'User details'
     edit_user: 'Edit user'
     back_to_user: 'Back to user'
+
+    create_new_epp_user: 'Create new EPP user'
+    crt: 'Certificate'
+    epp_user_details: 'EPP user details'
+    edit_epp_user: 'Edit EPP user'
+    back_to_epp_user: 'Back to EPP user'
 
     record_created: 'Record created'
     failed_to_create_record: 'Failed to create record'

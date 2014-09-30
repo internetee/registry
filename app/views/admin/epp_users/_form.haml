@@ -1,0 +1,40 @@
+= form_for([:admin, @epp_user]) do |f|
+  - if @epp_user.errors.any?
+    - @epp_user.errors.each do |attr, err|
+      = err
+      %br
+  - if @epp_user.errors.any?
+    %hr
+
+  .row
+    .col-md-6
+      .form-group
+        = f.label :username
+        = f.text_field(:username, class: 'form-control')
+      .form-group
+        = f.label :password
+        = f.text_field(:password, class: 'form-control')
+      .form-group
+        .form-group.has-feedback.js-typeahead-container
+          = f.label :registrar_typeahead
+          = f.text_field(:registrar_typeahead, class: 'form-control js-registrar-typeahead', placeholder: t('shared.registrar'), autocomplete: 'off')
+          %span.glyphicon.glyphicon-ok.form-control-feedback.js-typeahead-ok.hidden
+          %span.glyphicon.glyphicon-remove.form-control-feedback.js-typeahead-remove
+          = f.hidden_field(:registrar_id, class: 'js-registrar-id')
+      .form-group
+        .checkbox
+          %label{for: 'epp_user_active'}
+            = f.check_box(:active)
+            = t('shared.active')
+
+    .col-md-6.text-left
+      .form-group
+        = f.label :crt, t('shared.crt')
+        = f.text_area :crt, class: 'form-control'
+  %hr
+  .row
+    .col-md-12.text-right
+      = button_tag(t('shared.save'), class: 'btn btn-primary')
+
+:javascript
+  Autocomplete.bindAdminRegistrarSearch();

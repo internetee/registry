@@ -1,0 +1,9 @@
+.row
+  .col-sm-6
+    %h2.text-center-xs
+      = "#{t('shared.edit_epp_user')}"
+  .col-sm-6
+    %h2.text-right.text-center-xs
+      = link_to(t('shared.back_to_epp_user'), [:admin, @epp_user], class: 'btn btn-default')
+%hr
+= render 'form'
