@@ -9,14 +9,13 @@
         %thead
           %tr
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'name', t('shared.name'))
+              = t('shared.name')
             %th{class: 'col-xs-1'}
-              = sort_link(@q, 'code', t('shared.code'))
+              = t('shared.contact_id')
             %th{class: 'col-xs-1'}
-              whodunnit
-              = #sort_link(@q, 'ident', t('shared.identity_code'))
+              = sort_link(@q, 'whodunnit', t('shared.whodunnit'))
             %th{class: 'col-xs-2'}
-              deleted_at
+              = sort_link(@q, 'created_at', t('shared.created_at'))
         %tbody
           - @contacts.each do |version|
             - contact = version.reify
@@ -25,7 +24,7 @@
               %td= contact.name #link_to(x, admin_contact_path(x))
               %td= contact.code #link_to(x, admin_contact_path(x))
               %td= version.whodunnit if version
-              %td= version.created_at if version
+              %td= l(version.created_at, format: :short) if version
 .row
   .col-md-12
     = paginate @contacts

@@ -31,7 +31,7 @@
               %td= domain.owner_contact.name if domain.owner_contact
               %td= domain.versions.last.whodunnit if domain.versions.last
               %td= domain.versions.last.event if domain.versions.last
-              %td= domain.versions.last.created_at if domain.versions.last
+              %td= l(domain.versions.last.created_at, format: :short) if domain.versions.last
               %td= link_to(t('shared.history'), admin_domain_version_path(domain), class: 'btn btn-primary btn-xs')
 
 .row
