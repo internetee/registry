@@ -27,7 +27,7 @@
         = f.text_field(:email, class: 'form-control')
       .form-group
         .form-group.has-feedback.js-typeahead-container
-          = f.label :registrar_typeahead
+          = f.label :registrar_typeahead, t('shared.registrar')
           = f.text_field(:registrar_typeahead, class: 'form-control js-registrar-typeahead', placeholder: t('shared.registrar'), autocomplete: 'off')
           %span.glyphicon.glyphicon-ok.form-control-feedback.js-typeahead-ok.hidden
           %span.glyphicon.glyphicon-remove.form-control-feedback.js-typeahead-remove

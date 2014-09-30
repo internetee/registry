@@ -171,6 +171,16 @@ en:
             registrar:
               blank: 'Registrar is missing'
 
+        epp_user:
+          attributes:
+            username:
+              blank: 'Username is missing'
+              taken: 'Username already exists'
+            password:
+              blank: 'Password is missing'
+            registrar:
+              blank: 'Registrar is missing'
+
     attributes:
       epp_domain: &epp_domain_attributes
         name: 'Domain name'
@@ -355,7 +365,9 @@ en:
     back_to_user: 'Back to user'
 
     create_new_epp_user: 'Create new EPP user'
-    crt: 'Certificate'
+    certificate_signing_req: 'Certificate signing request'
+    csr: 'CSR'
+    crt: 'CRT'
     epp_user_details: 'EPP user details'
     edit_epp_user: 'Edit EPP user'
     back_to_epp_user: 'Back to EPP user'

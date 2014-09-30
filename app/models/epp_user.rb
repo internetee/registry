@@ -3,6 +3,9 @@ class EppUser < ActiveRecord::Base
   belongs_to :registrar
   has_many :contacts
 
+  validates :username, :password, :registrar, presence: true
+  validates :username, uniqueness: true
+
   attr_accessor :registrar_typeahead
 
   def registrar_typeahead

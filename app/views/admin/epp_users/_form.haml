@@ -16,7 +16,7 @@
         = f.text_field(:password, class: 'form-control')
       .form-group
         .form-group.has-feedback.js-typeahead-container
-          = f.label :registrar_typeahead
+          = f.label :registrar_typeahead, t('shared.registrar')
           = f.text_field(:registrar_typeahead, class: 'form-control js-registrar-typeahead', placeholder: t('shared.registrar'), autocomplete: 'off')
           %span.glyphicon.glyphicon-ok.form-control-feedback.js-typeahead-ok.hidden
           %span.glyphicon.glyphicon-remove.form-control-feedback.js-typeahead-remove
@@ -29,8 +29,8 @@
 
     .col-md-6.text-left
       .form-group
-        = f.label :crt, t('shared.crt')
-        = f.text_area :crt, class: 'form-control'
+        = f.label :csr, t('shared.certificate_signing_req')
+        = f.text_area :csr, class: 'form-control'
   %hr
   .row
     .col-md-12.text-right
