@@ -12,7 +12,8 @@ Country.where(name: 'Latvia', iso: 'LV').first_or_create
 zone = Registrar.where(
   name: 'Zone Media OÜ',
   reg_no: '10577829',
-  address: 'Lõõtsa 2, Tallinna linn, Harju maakond, 11415'
+  address: 'Lõõtsa 2, Tallinna linn, Harju maakond, 11415',
+  country: Country.first
 ).first_or_create
 
 EppUser.where(username: 'zone', password: 'ghyt9e4fu', active: true, registrar: zone).first_or_create
@@ -20,7 +21,8 @@ EppUser.where(username: 'zone', password: 'ghyt9e4fu', active: true, registrar: 
 elkdata = Registrar.where(
   name: 'Elkdata OÜ',
   reg_no: '10510593',
-  address: 'Tondi 51-10, 11316 Tallinn'
+  address: 'Tondi 51-10, 11316 Tallinn',
+  country: Country.first
 ).first_or_create
 
 EppUser.where(username: 'elkdata', password: '8932iods', active: true, registrar: elkdata).first_or_create
