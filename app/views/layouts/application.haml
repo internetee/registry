@@ -51,10 +51,15 @@
               %ul.dropdown-menu{role: "menu"}
                 %li.dropdown-header= t('shared.domain')
                 %li
-                  = link_to t('shared.domains'), admin_domain_versions_path
+                  = link_to t('shared.versions'), admin_domain_versions_path
+                %li
+                  = link_to t('shared.deleted'), admin_domain_histories_path
+
                 %li.dropdown-header= t('shared.contact')
                 %li
-                  = link_to t('shared.contacts'), admin_contact_versions_path
+                  = link_to t('shared.versions'), admin_contact_versions_path
+                %li
+                  = link_to t('shared.deleted'), admin_contact_histories_path
 
           %ul.nav.navbar-nav.navbar-right
             %li= link_to t('shared.log_out', user: current_user), '/logout'

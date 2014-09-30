@@ -34,7 +34,7 @@ class Contact < ActiveRecord::Base
   delegate :zip, to: :address#, prefix: true
 
   # archiving
-  has_paper_trail class_name: 'AddressVersion'
+  has_paper_trail class_name: 'ContactVersion'
 
   IDENT_TYPE_ICO = 'ico'
   IDENT_TYPES = [
