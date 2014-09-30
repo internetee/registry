@@ -5,9 +5,8 @@ module Epp
 
   # handles connection and login automatically
   def epp_request(data, *args)
-    server = server_gitlab
+    server = server_zone
     server = server_elkdata if args.include?(:elkdata)
-    server = server_zone if args.include?(:zone)
 
     return parse_response(server.request(data)) if args.include?(:xml)
     return parse_response(server.request(read_body(data)))

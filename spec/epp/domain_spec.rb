@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe 'EPP Domain', epp: true do
-  let(:server_gitlab) { Epp::Server.new({ server: 'localhost', tag: 'gitlab', password: 'ghyt9e4fu', port: 701 }) }
   let(:server_zone) { Epp::Server.new({ server: 'localhost', tag: 'zone', password: 'ghyt9e4fu', port: 701 }) }
   let(:server_elkdata) { Epp::Server.new({ server: 'localhost', tag: 'elkdata', password: 'ghyt9e4fu', port: 701 }) }
   let(:elkdata) { Fabricate(:registrar, { name: 'Elkdata', reg_no: '123' }) }
@@ -9,7 +8,6 @@ describe 'EPP Domain', epp: true do
 
   context 'with valid user' do
     before(:each) do
-      Fabricate(:epp_user)
       Fabricate(:epp_user, username: 'zone', registrar: zone)
       Fabricate(:epp_user, username: 'elkdata', registrar: elkdata)
 
@@ -171,9 +169,8 @@ describe 'EPP Domain', epp: true do
       it 'creates new pw after successful transfer' do
         pw = domain.auth_info
         xml = domain_transfer_xml(pw: pw)
-        epp_request(xml, :xml) # transfer domain
-        response = epp_request(xml, :xml) # attempt second transfer
-
+        response = epp_request(xml, :xml, :elkdata) # transfer domain
+        response = epp_request(xml, :xml, :elkdata) # attempt second transfer
         expect(response[:result_code]).to eq('2200')
         expect(response[:msg]).to eq('Authentication error')
       end
@@ -609,7 +606,7 @@ describe 'EPP Domain', epp: true do
       expect(domain.text).to eq('example.ee')
       expect(domain[:avail]).to eq('1')
 
-      Fabricate(:domain, name: 'example.ee')
+      Fabricate(:domain, name: 'example.ee', registrar: zone)
 
       response = epp_request(domain_check_xml, :xml)
       domain = response[:parsed].css('resData chkData cd').first

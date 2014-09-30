@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe 'EPP Contact', epp: true do
-  let(:server_gitlab) { Epp::Server.new({ server: 'localhost', tag: 'gitlab', password: 'ghyt9e4fu', port: 701 }) }
   let(:server_zone) { Epp::Server.new({ server: 'localhost', tag: 'zone', password: 'ghyt9e4fu', port: 701 }) }
   let(:server_elkdata) { Epp::Server.new({ server: 'localhost', tag: 'elkdata', password: 'ghyt9e4fu', port: 701 }) }
   let(:elkdata) { Fabricate(:registrar, { name: 'Elkdata', reg_no: '123' }) }
@@ -9,7 +8,6 @@ describe 'EPP Contact', epp: true do
 
   context 'with valid user' do
     before(:each) do
-      Fabricate(:epp_user)
       Fabricate(:epp_user, username: 'zone', registrar: zone)
       Fabricate(:epp_user, username: 'elkdata', registrar: elkdata)
       Fabricate(:domain_validation_setting_group)
@@ -175,7 +173,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if contact has associated domain' do
-        Fabricate(:domain, owner_contact: Fabricate(:contact, code: 'dwa1234', created_by_id: EppUser.first.id))
+        Fabricate(:domain, owner_contact: Fabricate(:contact, code: 'dwa1234', created_by_id: EppUser.first.id), registrar: zone)
         expect(Domain.first.owner_contact.address.present?).to be true
         response = epp_request('contacts/delete.xml')
 
