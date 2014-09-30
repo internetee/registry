@@ -156,6 +156,20 @@ en:
             address:
               blank: 'Address is missing'
 
+        user:
+          attributes:
+            username:
+              blank: 'Username is missing'
+              taken: 'Username already exists'
+            password:
+              blank: 'Password is missing'
+            identity_code:
+              taken: 'Identity code already exists'
+            email:
+              blank: 'Email is missing'
+            registrar:
+              blank: 'Registrar is missing'
+
     attributes:
       epp_domain: &epp_domain_attributes
         name: 'Domain name'
@@ -332,3 +346,14 @@ en:
     registrar_deleted: 'Registrar deleted'
     failed_to_delete_registrar: 'Failed to delete registrar'
 
+    users: 'Users'
+    create_new_user: 'Create new user'
+    user_added: 'User added!'
+    failed_to_add_user: 'Failed to add user'
+    admin: 'Admin'
+    user_details: 'User details'
+    edit_user: 'Edit user'
+    back_to_user: 'Back to user'
+
+    record_updated: 'Record updated'
+    failed_to_update_record: 'Failed to update record'

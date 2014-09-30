@@ -1,0 +1,56 @@
+= form_for([:admin, @user]) do |f|
+  - if @user.errors.any?
+    - @user.errors.each do |attr, err|
+      = err
+      %br
+  - if @user.errors.any?
+    %hr
+
+  .row
+    .col-md-6
+      .form-group
+        = f.label :username
+        = f.text_field(:username, class: 'form-control')
+      .form-group
+        = f.label :password
+        = f.text_field(:password, class: 'form-control')
+      .form-group
+        = f.label :identity_code
+        = f.text_field(:identity_code, class: 'form-control')
+
+    .col-md-6.text-left
+      .form-group
+        = f.label :email
+        = f.text_field(:email, class: 'form-control')
+      .form-group
+        .form-group.has-feedback.js-typeahead-container
+          = f.label :registrar_typeahead
+          = f.text_field(:registrar_typeahead, class: 'form-control js-registrar-typeahead', placeholder: t('shared.registrar'), autocomplete: 'off')
+          %span.glyphicon.glyphicon-ok.form-control-feedback.js-typeahead-ok.hidden
+          %span.glyphicon.glyphicon-remove.form-control-feedback.js-typeahead-remove
+          = f.hidden_field(:registrar_id, class: 'js-registrar-id')
+      .form-group
+        .checkbox
+          %label{for: 'user_admin'}
+            = f.check_box(:admin, class: 'js-admin')
+            = t('shared.admin')
+  %hr
+  .row
+    .col-md-12.text-right
+      = button_tag(t('shared.save'), class: 'btn btn-primary')
+
+:javascript
+  Autocomplete.bindAdminRegistrarSearch();
+  toggleRegistrar();
+
+  $('#user_admin').click(function() {
+    toggleRegistrar();
+  });
+
+  function toggleRegistrar() {
+    if($('.js-admin').is(':checked')) {
+      $('.js-registrar-typeahead, .js-registrar-id').attr('disabled', true);
+    } else {
+      $('.js-registrar-typeahead, .js-registrar-id').attr('disabled', false);
+    }
+  }
