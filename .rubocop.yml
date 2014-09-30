@@ -9,6 +9,7 @@ AllCops:
     # epp support files until 'complexity issues' will be solved
     - 'spec/support/epp.rb'
     - 'spec/support/epp_contact_xml_builder.rb'
+    - 'vendor/bundle/**/*'
 
 Metrics/LineLength:
   Max: 120
