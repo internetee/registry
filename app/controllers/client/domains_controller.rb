@@ -43,7 +43,7 @@ class Client::DomainsController < ClientController
       redirect_to [:client, @domain]
     else
       build_associations
-      flash[:alert] = I18n.t('shared.failed_to_update_domain')
+      flash.now[:alert] = I18n.t('shared.failed_to_update_domain')
       render 'edit'
     end
   end

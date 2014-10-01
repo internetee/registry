@@ -42,6 +42,7 @@ class Epp::EppDomain < Domain
     attach_contacts(self.class.parse_contacts_from_frame(parsed_frame))
     attach_nameservers(self.class.parse_nameservers_from_frame(parsed_frame))
     attach_statuses(self.class.parse_statuses_from_frame(parsed_frame))
+    attach_dnskeys(self.class.parse_dnskeys_from_frame(parsed_frame))
 
     errors.empty?
   end
@@ -164,6 +165,12 @@ class Epp::EppDomain < Domain
     end
 
     domain_statuses.delete(to_delete)
+  end
+
+  def attach_dnskeys(dnskey_list)
+    dnskey_list.each do |dnskey_attrs|
+      dnskeys.build(dnskey_attrs)
+    end
   end
 
   ### RENEW ###
@@ -327,6 +334,12 @@ class Epp::EppDomain < Domain
         }
       end
       res
+    end
+
+    def parse_dnskeys_from_frame(parsed_frame)
+      res = []
+
+
     end
 
     def check_availability(domains)

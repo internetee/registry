@@ -204,14 +204,14 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'validates nameserver ipv4 when in same zone as domain' do
-        xml_params = {
-          nameservers: [
-            { hostObj: 'ns1.example.ee' },
-            { hostObj: 'ns2.example.ee' }
+        xml = domain_create_xml({
+          ns: [
+            { hostObj: { value: 'ns1.example.ee' } },
+            { hostObj: { value: 'ns2.example.ee' } }
           ]
-        }
+        })
 
-        response = epp_request(domain_create_xml(xml_params), :xml)
+        response = epp_request(xml, :xml)
 
         expect(response[:result_code]).to eq('2306')
         expect(response[:msg]).to eq('IPv4 is missing')
@@ -228,7 +228,7 @@ describe 'EPP Domain', epp: true do
       it 'does not create reserved domain' do
         Fabricate(:reserved_domain)
 
-        xml = domain_create_xml(name: '1162.ee')
+        xml = domain_create_xml(name: { value: '1162.ee' })
 
         response = epp_request(xml, :xml)
         expect(response[:result_code]).to eq('2302')
@@ -245,7 +245,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'does not create domain without nameservers' do
-        xml = domain_create_xml(nameservers: [])
+        xml = domain_create_xml(ns: [])
         response = epp_request(xml, :xml)
         expect(response[:result_code]).to eq('2003')
         expect(response[:msg]).to eq('Required parameter missing: ns')
@@ -253,8 +253,8 @@ describe 'EPP Domain', epp: true do
 
       it 'does not create domain with too many nameservers' do
         nameservers = []
-        14.times { |i| nameservers << { hostObj: "ns#{i}.example.net" } }
-        xml = domain_create_xml(nameservers: nameservers)
+        14.times { |i| nameservers << { hostObj: { value: "ns#{i}.example.net" } } }
+        xml = domain_create_xml(ns: nameservers)
 
         response = epp_request(xml, :xml)
         expect(response[:result_code]).to eq('2004')
@@ -262,7 +262,13 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'returns error when invalid nameservers are present' do
-        xml = domain_create_xml(nameservers: [{ hostObj: 'invalid1-' }, { hostObj: '-invalid2' }])
+        xml = domain_create_xml({
+          ns: [
+            { hostObj: { value: 'invalid1-' } },
+            { hostObj: { value: '-invalid2' } },
+          ]
+
+        })
 
         response = epp_request(xml, :xml)
         expect(response[:result_code]).to eq('2005')
@@ -299,7 +305,9 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'does not create a domain with invalid period' do
-        xml = domain_create_xml(period_value: 367, period_unit: 'd')
+        xml = domain_create_xml({
+          period: {value: '367', attrs: { unit: 'd' } }
+        })
 
         response = epp_request(xml, :xml)
         expect(response[:results][0][:result_code]).to eq('2004')
@@ -316,7 +324,11 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'creates a domain with contacts' do
-        xml = domain_create_xml(contacts: [{ contact_value: 'sh8013', contact_type: 'admin' }])
+        xml = domain_create_xml({
+          _other: [
+            { contact: { value: 'sh8013', attrs: { type: 'admin' } } }
+          ]
+        })
 
         response = epp_request(xml, :xml)
         expect(response[:result_code]).to eq('1000')
@@ -331,7 +343,11 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'does not create a domain without admin contact' do
-        xml = domain_create_xml(contacts: [{ contact_value: 'sh8013', contact_type: 'tech' }])
+        xml = domain_create_xml({
+          _other: [
+            { contact: { value: 'sh8013', attrs: { type: 'tech' } } }
+          ]
+        })
 
         response = epp_request(xml, :xml)
         expect(response[:result_code]).to eq('2306')

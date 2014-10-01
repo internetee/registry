@@ -53,18 +53,33 @@ module Epp
   ### REQUEST TEMPLATES ###
 
   def domain_create_xml(xml_params = {})
-    xml_params[:nameservers] = xml_params[:nameservers] || [
-      { hostObj: 'ns1.example.net' },
-      { hostObj: 'ns2.example.net' }
-    ]
 
-    xml_params[:contacts] = xml_params[:contacts] || [
-      { contact_value: 'sh8013', contact_type: 'admin' },
-      { contact_value: 'sh8013', contact_type: 'tech' },
-      { contact_value: 'sh801333', contact_type: 'tech' }
-    ]
+    defaults = {
+      name: { value: 'example.ee' },
+      period: { value: '1', attrs: { unit: 'y' } },
+      ns: [
+        { hostObj: { value: 'ns1.example.com' } },
+        { hostObj: { value: 'ns2.example.com' } }
+      ],
+      registrant: { value: 'jd1234' },
+      dnssec: [
+        {
+          dnskey: {
+            flags: { value: '257' },
+            protocol: { value: '3' },
+            alg: { value: '5' },
+            pubKey: { value: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8' }
+          }
+        }
+      ],
+      _other: [
+        { contact: { value: 'sh8013', attrs: { type: 'admin' } } },
+        { contact: { value: 'sh8013', attrs: { type: 'tech' } } },
+        { contact: { value: 'sh801333', attrs: { type: 'tech' } } }
+      ],
+    }
 
-    # {hostAttr: {hostName: 'ns1.example.net', hostAddr_value: '192.0.2.2', hostAddr_ip}}
+    xml_params = defaults.deep_merge(xml_params)
 
     xml = Builder::XmlMarkup.new
 
@@ -73,24 +88,7 @@ module Epp
       xml.command do
         xml.create do
           xml.tag!('domain:create', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
-
-            xml.tag!('domain:name', (xml_params[:name] || 'example.ee')) if xml_params[:name] != false
-
-            if xml_params[:period] != false
-              xml.tag!('domain:period', (xml_params[:period_value] || 1), 'unit' => (xml_params[:period_unit] || 'y'))
-            end
-
-            xml.tag!('domain:ns') do
-              xml_params[:nameservers].each do |x|
-                xml.tag!('domain:hostObj', x[:hostObj])
-              end
-            end if xml_params[:nameservers].any?
-
-            xml.tag!('domain:registrant', (xml_params[:registrant] || 'jd1234')) if xml_params[:registrant] != false
-
-            xml_params[:contacts].each do |x|
-              xml.tag!('domain:contact', x[:contact_value], 'type' => (x[:contact_type]))
-            end if xml_params[:contacts].any?
+            generate_xml_from_hash(xml_params, xml, 'domain')
           end
         end
         xml.clTRID 'ABC-12345'
@@ -197,9 +195,15 @@ module Epp
         end
       # Value is an array
       elsif v.is_a?(Array)
-        xml.tag!("#{ns}:#{k}") do
+        if k.to_s.start_with?('_')
           v.each do |x|
             generate_xml_from_hash(x, xml, ns)
+          end
+        else
+          xml.tag!("#{ns}:#{k}") do
+            v.each do |x|
+              generate_xml_from_hash(x, xml, ns)
+            end
           end
         end
       end
