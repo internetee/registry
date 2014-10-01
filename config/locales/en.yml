@@ -82,13 +82,14 @@ en:
               blank: 'Registrant is missing'
               not_found: 'Registrant not found'
             domain_contacts:
+              invalid: 'Contacts are invalid'
               not_found: 'Contact was not found'
             admin_contacts:
               out_of_range: 'Admin contacts count must be between 1 - infinity'
               less_than_or_equal_to: 'Admin contacts count must be less than or equal to %{count}'
               greater_than_or_equal_to: 'Admin contacts count must be greater than or equal to %{count}'
             nameservers:
-              invalid: 'Nameserver is invalid'
+              invalid: 'Nameservers are invalid'
               out_of_range: 'Nameservers count must be between %{min}-%{max}'
               not_found: 'Nameserver was not found'
               taken: 'Nameserver already exists on this domain'
@@ -100,7 +101,7 @@ en:
             auth_info:
               wrong_pw: 'Authentication error'
             domain_statuses:
-              invalid: 'Status is invalid'
+              invalid: 'Statuses are invalid'
               not_found: 'Status was not found'
               taken: 'Status already exists on this domain'
             registrar:
