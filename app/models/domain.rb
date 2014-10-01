@@ -45,9 +45,9 @@ class Domain < ActiveRecord::Base
   validate :validate_period
   validate :validate_nameservers_count
   validate :validate_admin_contacts_count
-  validate :validate_nameservers_uniqueness, if: :new_record?
-  validate :validate_tech_contacts_uniqueness, if: :new_record?
-  validate :validate_admin_contacts_uniqueness, if: :new_record?
+  validate :validate_nameservers_uniqueness
+  validate :validate_tech_contacts_uniqueness
+  validate :validate_admin_contacts_uniqueness
   validate :validate_domain_statuses_uniqueness
 
   attr_accessor :owner_contact_typeahead

@@ -18,7 +18,6 @@ class DomainContact < ActiveRecord::Base
   TYPES = [TECH, ADMIN]
 
   validates :contact, presence: true
-  validates :contact, uniqueness: { scope: [:domain_id, :contact_type] }
 
   scope :admin, -> { where(contact_type: ADMIN) }
   scope :tech, -> { where(contact_type: TECH) }
