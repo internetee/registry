@@ -9,8 +9,8 @@ describe 'EPP Contact', epp: true do
   context 'with valid user' do
     before(:each) do
       Fabricate(:epp_user)
-      #Fabricate(:epp_user, username: 'zone', registrar: zone)
-      #Fabricate(:epp_user, username: 'elkdata', registrar: elkdata)
+      Fabricate(:epp_user, username: 'zone', registrar: zone)
+      Fabricate(:epp_user, username: 'elkdata', registrar: elkdata)
       Fabricate(:domain_validation_setting_group)
     end
 
@@ -34,7 +34,7 @@ describe 'EPP Contact', epp: true do
         expect(response[:result_code]).to eq('1000')
         expect(response[:msg]).to eq('Command completed successfully')
         #expect(response[:clTRID]).to eq('ABC-12345')
-        expect(Contact.first.created_by_id).to eq 1
+        expect(Contact.first.created_by_id).to eq 2
         expect(Contact.first.updated_by_id).to eq nil
 
         expect(Contact.count).to eq(1)
@@ -105,13 +105,13 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'stamps updated_by succesfully' do
-        Fabricate(:contact, code: 'sh8013', created_by_id: EppUser.first.id)
+        Fabricate(:contact, code: 'sh8013', created_by_id: zone.id)
 
         expect(Contact.first.updated_by_id).to be nil
 
         epp_request(contact_update_xml, :xml)
 
-        expect(Contact.first.updated_by_id).to eq 1
+        expect(Contact.first.updated_by_id).to eq 2
       end
 
       it 'is succesful' do
@@ -174,13 +174,10 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if contact has associated domain' do
-<<<<<<< HEAD
-        Fabricate(:domain, owner_contact: Fabricate(:contact, code: 'dwa1234', created_by_id: EppUser.first.id), registrar: zone)
-=======
-        Fabricate(:domain,
-                  registrar: elkdata,
-                  owner_contact: Fabricate(:contact, code: 'dwa1234', created_by_id: EppUser.first.id))
->>>>>>> reworked contact tests
+        Fabricate(:domain, owner_contact: Fabricate(:contact, code: 'dwa1234', created_by_id: zone.id), registrar: zone)
+        #Fabricate(:domain,
+        #          registrar: elkdata,
+        #          owner_contact: Fabricate(:contact, code: 'dwa1234', created_by_id: EppUser.first.id))
         expect(Domain.first.owner_contact.address.present?).to be true
         response = epp_request('contacts/delete.xml')
 
