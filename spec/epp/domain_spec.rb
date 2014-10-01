@@ -203,6 +203,20 @@ describe 'EPP Domain', epp: true do
         expect(d.auth_info).not_to be_empty
       end
 
+      it 'validates nameserver ipv4 when in same zone as domain' do
+        xml_params = {
+          nameservers: [
+            { hostObj: 'ns1.example.ee' },
+            { hostObj: 'ns2.example.ee' }
+          ]
+        }
+
+        response = epp_request(domain_create_xml(xml_params), :xml)
+
+        expect(response[:result_code]).to eq('2306')
+        expect(response[:msg]).to eq('IPv4 is missing')
+      end
+
       it 'does not create duplicate domain' do
         epp_request(domain_create_xml, :xml)
         response = epp_request(domain_create_xml, :xml)

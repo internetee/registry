@@ -49,6 +49,7 @@ class Domain < ActiveRecord::Base
   validate :validate_tech_contacts_uniqueness
   validate :validate_admin_contacts_uniqueness
   validate :validate_domain_statuses_uniqueness
+  validate :validate_nameserver_ips
 
   attr_accessor :owner_contact_typeahead
 
@@ -95,6 +96,15 @@ class Domain < ActiveRecord::Base
       validated << ns.hostname
       errors.add(:nameservers, :invalid) if errors[:nameservers].blank?
       ns.errors.add(:hostname, :taken)
+    end
+  end
+
+  def validate_nameserver_ips
+    nameservers.each do |ns|
+      next if !ns.hostname.end_with?(name)
+      next if ns.ipv4.present?
+      errors.add(:nameservers, :invalid) if errors[:nameservers].blank?
+      ns.errors.add(:ipv4, :blank)
     end
   end
 
