@@ -31,7 +31,7 @@
             %tr
               %td= x.name #link_to(x, admin_contact_path(x))
               %td= x.code #link_to(x, admin_contact_path(x))
-              %td= x.versions.last.whodunnit if x.versions.last
+              %td= link_to_whodunnit(x.versions.last.whodunnit) if x.versions.last
               %td= x.versions.last.event if x.versions.last
               %td= l(x.versions.last.created_at, format: :short) if x.versions.last
               %td= link_to(t('shared.history'), admin_contact_version_path(x), class: 'btn btn-primary btn-xs')

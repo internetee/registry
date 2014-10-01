@@ -23,7 +23,7 @@
             %tr
               %td= domain.name #link_to(x, admin_contact_path(x))
               %td= domain.status #link_to(x, admin_contact_path(x))
-              %td= version.whodunnit if version
+              %td= link_to_whodunnit(version.whodunnit) if version
               %td= l(version.created_at, format: :short) if version
 .row
   .col-md-12

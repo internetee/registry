@@ -3,6 +3,7 @@ class Epp::CommandsController < ApplicationController
   include Epp::DomainsHelper
   include Epp::ContactsHelper
   include Shared::UserStamper
+  helper WhodunnitHelper
 
   layout false
 
@@ -34,5 +35,9 @@ class Epp::CommandsController < ApplicationController
 
   def update
     send("update_#{OBJECT_TYPES[params_hash['epp']['xmlns:ns2']]}")
+  end
+
+  def user_for_paper_trail
+    current_epp_user ? "#{current_epp_user.id}-EppUser" : nil
   end
 end
