@@ -339,7 +339,15 @@ class Epp::EppDomain < Domain
     def parse_dnskeys_from_frame(parsed_frame)
       res = []
 
-
+      parsed_frame.css('dnskey').each do |x|
+        res << {
+          flags: x.css('flags').first.try(:text),
+          protocol: x.css('protocol').first.try(:text),
+          alg: x.css('alg').first.try(:text),
+          public_key: x.css('pubKey').first.try(:text)
+        }
+      end
+      res
     end
 
     def check_availability(domains)

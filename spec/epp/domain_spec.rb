@@ -201,6 +201,14 @@ describe 'EPP Domain', epp: true do
 
         expect(d.nameservers.count).to eq(2)
         expect(d.auth_info).not_to be_empty
+
+        expect(d.dnskeys.count).to eq(1)
+        key = d.dnskeys.first
+
+        expect(key.flags).to eq(257)
+        expect(key.protocol).to eq(3)
+        expect(key.alg).to eq(5)
+        expect(key.public_key).to eq('AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8')
       end
 
       it 'validates nameserver ipv4 when in same zone as domain' do
@@ -313,6 +321,49 @@ describe 'EPP Domain', epp: true do
         expect(response[:results][0][:result_code]).to eq('2004')
         expect(response[:results][0][:msg]).to eq('Period must add up to 1, 2 or 3 years')
         expect(response[:results][0][:value]).to eq('367')
+      end
+
+      it 'creates a domain with multiple dnskeys' do
+        xml = domain_create_xml({
+          dnssec: [
+            {
+              dnskey: {
+                flags: { value: '257' },
+                protocol: { value: '3' },
+                alg: { value: '3' },
+                pubKey: { value: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8' }
+              }
+            },
+            {
+              dnskey: {
+                flags: { value: '0' },
+                protocol: { value: '3' },
+                alg: { value: '5' },
+                pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+              }
+            },
+            {
+              dnskey: {
+                flags: { value: '256' },
+                protocol: { value: '3' },
+                alg: { value: '254' },
+                pubKey: { value: '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0' }
+              }
+            }
+          ]
+        })
+
+        response = epp_request(xml, :xml)
+        d = Domain.first
+
+        expect(d.dnskeys.pluck(:flags)).to match_array([257, 0, 256])
+        expect(d.dnskeys.pluck(:protocol)).to match_array([3, 3, 3])
+        expect(d.dnskeys.pluck(:alg)).to match_array([3, 5, 254])
+        expect(d.dnskeys.pluck(:public_key)).to match_array(%w(
+          AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8
+          700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f
+          841936717ae427ace63c28d04918569a841936717ae427ace63c28d0
+        ))
       end
     end
 
