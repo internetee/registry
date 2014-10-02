@@ -36,6 +36,17 @@ xml.epp_head do
           end
         end
 
+        xml.tag!('domain:dnssec') do
+          @domain.dnskeys.each do |x|
+            xml.tag!('domain:dnskey') do
+              xml.tag!('domain:flags', x.flags)
+              xml.tag!('domain:protocol', x.protocol)
+              xml.tag!('domain:alg', x.alg)
+              xml.tag!('domain:pubKey', x.public_key)
+            end
+          end
+        end if @domain.dnskeys.any?
+
         ## TODO Find out what this domain:host is all about
 
         xml.tag!('domain:clID', @domain.owner_contact_code)

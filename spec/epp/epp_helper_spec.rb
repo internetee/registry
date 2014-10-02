@@ -16,6 +16,14 @@ describe 'EPP Helper', epp: true do
                   <domain:hostObj>ns2.example.net</domain:hostObj>
                 </domain:ns>
                 <domain:registrant>jd1234</domain:registrant>
+                <domain:dnssec>
+                  <domain:dnskey>
+                    <domain:flags>257</domain:flags>
+                    <domain:protocol>3</domain:protocol>
+                    <domain:alg>5</domain:alg>
+                    <domain:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</domain:pubKey>
+                  </domain:dnskey>
+                </domain:dnssec>
                 <domain:contact type="admin">sh8013</domain:contact>
                 <domain:contact type="tech">sh8013</domain:contact>
                 <domain:contact type="tech">sh801333</domain:contact>
@@ -44,6 +52,14 @@ describe 'EPP Helper', epp: true do
                   <domain:hostObj>ns2.test.net</domain:hostObj>
                 </domain:ns>
                 <domain:registrant>32fsdaf</domain:registrant>
+                <domain:dnssec>
+                  <domain:dnskey>
+                    <domain:flags>257</domain:flags>
+                    <domain:protocol>3</domain:protocol>
+                    <domain:alg>5</domain:alg>
+                    <domain:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</domain:pubKey>
+                  </domain:dnskey>
+                </domain:dnssec>
                 <domain:contact type="admin">2323rafaf</domain:contact>
                 <domain:contact type="tech">3dgxx</domain:contact>
                 <domain:contact type="tech">345xxv</domain:contact>
@@ -54,18 +70,20 @@ describe 'EPP Helper', epp: true do
         </epp>
       ').to_s.squish
 
-      xml = domain_create_xml(
-        name: 'one.ee',
-        period_value: '345',
-        period_unit: 'd',
-        nameservers: [{ hostObj: 'ns1.test.net' }, { hostObj: 'ns2.test.net' }],
-        registrant: '32fsdaf',
-        contacts: [
-          { contact_value: '2323rafaf', contact_type: 'admin' },
-          { contact_value: '3dgxx', contact_type: 'tech' },
-          { contact_value: '345xxv', contact_type: 'tech' }
+      xml = domain_create_xml({
+        name: { value: 'one.ee' },
+        period: {value: '345', attrs: { unit: 'd' } },
+        ns: [
+          { hostObj: {value: 'ns1.test.net' } },
+          { hostObj: {value: 'ns2.test.net' } }
+        ],
+        registrant: { value: '32fsdaf' },
+        _other: [
+          { contact: {value: '2323rafaf', attrs: { type: 'admin' } } },
+          { contact: {value: '3dgxx', attrs: { type: 'tech' } } },
+          { contact: {value: '345xxv', attrs: { type: 'tech' } } }
         ]
-      )
+      })
 
       generated = Nokogiri::XML(xml).to_s.squish
       expect(generated).to eq(expected)
@@ -86,13 +104,14 @@ describe 'EPP Helper', epp: true do
         </epp>
       ').to_s.squish
 
-      xml = domain_create_xml(
-        name: 'one.ee',
-        period: false,
-        nameservers: [],
-        registrant: false,
-        contacts: []
-      )
+      xml = domain_create_xml({
+        name: { value: 'one.ee' },
+        period: nil,
+        ns: nil,
+        registrant: nil,
+        _other: nil,
+        dnssec: nil
+      })
 
       generated = Nokogiri::XML(xml).to_s.squish
       expect(generated).to eq(expected)

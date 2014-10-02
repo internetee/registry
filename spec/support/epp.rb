@@ -58,8 +58,8 @@ module Epp
       name: { value: 'example.ee' },
       period: { value: '1', attrs: { unit: 'y' } },
       ns: [
-        { hostObj: { value: 'ns1.example.com' } },
-        { hostObj: { value: 'ns2.example.com' } }
+        { hostObj: { value: 'ns1.example.net' } },
+        { hostObj: { value: 'ns2.example.net' } }
       ],
       registrant: { value: 'jd1234' },
       dnssec: [
