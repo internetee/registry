@@ -51,6 +51,7 @@ class Epp::EppDomain < Domain
     detach_contacts(self.class.parse_contacts_from_frame(parsed_frame))
     detach_nameservers(self.class.parse_nameservers_from_frame(parsed_frame))
     detach_statuses(self.class.parse_statuses_from_frame(parsed_frame))
+    detach_dnskeys(self.class.parse_dnskeys_from_frame(parsed_frame))
 
     errors.empty?
   end
@@ -171,6 +172,20 @@ class Epp::EppDomain < Domain
     dnskey_list.each do |dnskey_attrs|
       dnskeys.build(dnskey_attrs)
     end
+  end
+
+  def detach_dnskeys(dnskey_list)
+    to_delete = []
+    dnskey_list.each do |x|
+      dnskey = dnskeys.where(public_key: x[:public_key])
+      if dnskey.blank?
+        add_epp_error('2303', 'pubKey', x[:public_key], [:dnskeys, :not_found])
+      else
+        to_delete << dnskey
+      end
+    end
+
+    dnskeys.delete(to_delete)
   end
 
   ### RENEW ###

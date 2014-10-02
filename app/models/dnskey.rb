@@ -15,6 +15,9 @@ class Dnskey < ActiveRecord::Base
         [:protocol, :invalid, { value: { obj: 'protocol', val: protocol } }],
         [:flags, :invalid, { value: { obj: 'flags', val: flags } }]
       ],
+      '2303' => [
+        [:base, :dnskey_not_found, { value: { obj: 'pubKey', val: public_key } }]
+      ],
       '2306' => [
         [:alg, :blank],
         [:protocol, :blank],

@@ -571,9 +571,29 @@ describe 'EPP Domain', epp: true do
                 { hostObj: { value: 'ns2.example.com' } }
               ]
             },
-            { contact: { value: 'mak21', attrs: { type: 'tech' } } },
-            { status: { value: 'Payment overdue.', attrs: { s: 'clientHold', lang: 'en' } } },
-            { status: { value: '', attrs: { s: 'clientUpdateProhibited' } } }
+            dnssec: [
+              {
+                dnskey: {
+                  flags: { value: '0' },
+                  protocol: { value: '3' },
+                  alg: { value: '5' },
+                  pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+                }
+              },
+              {
+                dnskey: {
+                  flags: { value: '256' },
+                  protocol: { value: '3' },
+                  alg: { value: '254' },
+                  pubKey: { value: '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0' }
+                }
+              }
+            ],
+            _other: [
+              { contact: { value: 'mak21', attrs: { type: 'tech' } } },
+              { status: { value: 'Payment overdue.', attrs: { s: 'clientHold', lang: 'en' } } },
+              { status: { value: '', attrs: { s: 'clientUpdateProhibited' } } }
+            ]
           ]
         })
 
@@ -599,6 +619,8 @@ describe 'EPP Domain', epp: true do
         expect(d.domain_statuses.first.value).to eq('clientHold')
 
         expect(d.domain_statuses.last.value).to eq('clientUpdateProhibited')
+
+        expect(d.dnskeys.count).to eq(2)
 
         response = epp_request(xml, :xml)
 
@@ -633,9 +655,29 @@ describe 'EPP Domain', epp: true do
                 { hostObj: { value: 'ns2.example.com' } }
               ]
             },
-            { contact: { value: 'mak21', attrs: { type: 'tech' } } },
-            { status: { value: 'Payment overdue.', attrs: { s: 'clientHold', lang: 'en' } } },
-            { status: { value: '', attrs: { s: 'clientUpdateProhibited' } } }
+            dnssec: [
+              {
+                dnskey: {
+                  flags: { value: '0' },
+                  protocol: { value: '3' },
+                  alg: { value: '5' },
+                  pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+                }
+              },
+              {
+                dnskey: {
+                  flags: { value: '256' },
+                  protocol: { value: '3' },
+                  alg: { value: '254' },
+                  pubKey: { value: '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0' }
+                }
+              }
+            ],
+            _other: [
+              { contact: { value: 'mak21', attrs: { type: 'tech' } } },
+              { status: { value: 'Payment overdue.', attrs: { s: 'clientHold', lang: 'en' } } },
+              { status: { value: '', attrs: { s: 'clientUpdateProhibited' } } }
+            ]
           ]
         })
 
@@ -648,14 +690,28 @@ describe 'EPP Domain', epp: true do
                 { hostObj: { value: 'ns1.example.com' } }
               ]
             },
-            { contact: { value: 'mak21', attrs: { type: 'tech' } } },
-            { status: { value: '', attrs: { s: 'clientHold' } } }
+            dnssec: [
+              {
+                dnskey: {
+                  flags: { value: '0' },
+                  protocol: { value: '3' },
+                  alg: { value: '5' },
+                  pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+                }
+              }
+            ],
+            _other: [
+              { contact: { value: 'mak21', attrs: { type: 'tech' } } },
+              { status: { value: '', attrs: { s: 'clientHold' } } }
+            ]
           ]
         })
 
         d = Domain.last
+        expect(d.dnskeys.count).to eq(2)
 
-        epp_request(xml, :xml)
+        response = epp_request(xml, :xml)
+        expect(d.dnskeys.count).to eq(1)
 
         expect(d.domain_statuses.count).to eq(1)
         expect(d.domain_statuses.first.value).to eq('clientUpdateProhibited')

@@ -106,6 +106,8 @@ en:
               taken: 'Status already exists on this domain'
             registrar:
               blank: 'Registrar is missing'
+            dnskeys:
+              not_found: 'Dnskey was not found'
 
         domain:
           <<: *epp_domain_ar_attributes
