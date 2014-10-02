@@ -76,7 +76,7 @@ module Epp
         { contact: { value: 'sh8013', attrs: { type: 'admin' } } },
         { contact: { value: 'sh8013', attrs: { type: 'tech' } } },
         { contact: { value: 'sh801333', attrs: { type: 'tech' } } }
-      ],
+      ]
     }
 
     xml_params = defaults.deep_merge(xml_params)
