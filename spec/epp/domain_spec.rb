@@ -353,7 +353,7 @@ describe 'EPP Domain', epp: true do
           ]
         })
 
-        response = epp_request(xml, :xml)
+        epp_request(xml, :xml)
         d = Domain.first
 
         expect(d.dnskeys.pluck(:flags)).to match_array([257, 0, 256])
@@ -364,6 +364,45 @@ describe 'EPP Domain', epp: true do
           700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f
           841936717ae427ace63c28d04918569a841936717ae427ace63c28d0
         ))
+      end
+
+      it 'does not create a domain when dnskeys are invalid' do
+        xml = domain_create_xml({
+          dnssec: [
+            {
+              dnskey: {
+                flags: { value: '257' },
+                protocol: { value: '3' },
+                alg: { value: '9' },
+                pubKey: { value: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8' }
+              }
+            },
+            {
+              dnskey: {
+                flags: { value: '0' },
+                protocol: { value: '3' },
+                alg: { value: '10' },
+                pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+              }
+            },
+            {
+              dnskey: {
+                flags: { value: '256' },
+                protocol: { value: '3' },
+                alg: { value: '254' },
+                pubKey: { value: '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0' }
+              }
+            }
+          ]
+        })
+
+        response = epp_request(xml, :xml)
+
+        expect(response[:results][0][:msg]).to eq('Algorithm is invalid')
+        expect(response[:results][0][:value]).to eq('9')
+        expect(response[:results][1][:msg]).to eq('Algorithm is invalid')
+        expect(response[:results][1][:value]).to eq('10')
+        po response
       end
     end
 

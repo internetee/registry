@@ -183,6 +183,11 @@ en:
             registrar:
               blank: 'Registrar is missing'
 
+        dnskey:
+          attributes:
+            alg:
+              invalid: 'Algorithm is invalid'
+
     attributes:
       epp_domain: &epp_domain_attributes
         name: 'Domain name'
