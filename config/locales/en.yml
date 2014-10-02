@@ -391,6 +391,13 @@ en:
     edit_epp_user: 'Edit EPP user'
     back_to_epp_user: 'Back to EPP user'
 
+    dnskey: 'DNS key'
+    dnskeys: 'DNS Keys'
+    flag: 'Flag'
+    protocol: 'Protocol'
+    algorithm: 'Algorithm'
+    public_key: 'Public key'
+
     record_created: 'Record created'
     failed_to_create_record: 'Failed to create record'
     record_updated: 'Record updated'

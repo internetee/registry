@@ -28,6 +28,7 @@ class Domain < ActiveRecord::Base
   has_many :domain_transfers, dependent: :delete_all
 
   has_many :dnskeys, dependent: :delete_all
+  accepts_nested_attributes_for :dnskeys, allow_destroy: true
 
   delegate :code, to: :owner_contact, prefix: true
   delegate :email, to: :owner_contact, prefix: true

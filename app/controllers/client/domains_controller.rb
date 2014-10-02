@@ -69,7 +69,8 @@ class Client::DomainsController < ClientController
       :owner_contact_typeahead,
       nameservers_attributes: [:id, :hostname, :ipv4, :ipv6, :_destroy],
       domain_contacts_attributes: [:id, :contact_type, :contact_id, :value_typeahead, :_destroy],
-      domain_statuses_attributes: [:id, :value, :description, :_destroy]
+      domain_statuses_attributes: [:id, :value, :description, :_destroy],
+      dnskeys_attributes: [:id, :flags, :alg, :protocol, :public_key]
     )
   end
 
@@ -85,6 +86,7 @@ class Client::DomainsController < ClientController
 
   def build_associations
     @domain.nameservers.build if @domain.nameservers.empty?
+    @domain.dnskeys.build if @domain.dnskeys.empty?
     @domain.domain_contacts.build if @domain.domain_contacts.empty?
 
     @client_statuses = @domain.domain_statuses.select(&:client_status?)
