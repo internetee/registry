@@ -187,8 +187,16 @@ en:
           attributes:
             alg:
               invalid: 'Algorithm is invalid'
+              blank: 'Algorithm is missing'
             protocol:
               invalid: 'Protocol is invalid'
+              blank: 'Protocol is missing'
+            flags:
+              invalid: 'Flag is invalid'
+              blank: 'Flag is missing'
+            public_key:
+              blank: 'Public key is missing'
+
 
     attributes:
       epp_domain: &epp_domain_attributes

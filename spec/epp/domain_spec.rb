@@ -371,7 +371,7 @@ describe 'EPP Domain', epp: true do
           dnssec: [
             {
               dnskey: {
-                flags: { value: '257' },
+                flags: { value: '250' },
                 protocol: { value: '4' },
                 alg: { value: '9' },
                 pubKey: { value: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8' }
@@ -379,7 +379,7 @@ describe 'EPP Domain', epp: true do
             },
             {
               dnskey: {
-                flags: { value: '0' },
+                flags: { value: '1' },
                 protocol: { value: '3' },
                 alg: { value: '10' },
                 pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
@@ -390,14 +390,13 @@ describe 'EPP Domain', epp: true do
                 flags: { value: '256' },
                 protocol: { value: '5' },
                 alg: { value: '254' },
-                pubKey: { value: '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0' }
+                pubKey: { value: '' }
               }
             }
           ]
         })
 
         response = epp_request(xml, :xml)
-        po response
 
         expect(response[:results][0][:msg]).to eq('Algorithm is invalid')
         expect(response[:results][0][:value]).to eq('9')
@@ -405,11 +404,19 @@ describe 'EPP Domain', epp: true do
         expect(response[:results][1][:msg]).to eq('Protocol is invalid')
         expect(response[:results][1][:value]).to eq('4')
 
-        expect(response[:results][2][:msg]).to eq('Algorithm is invalid')
-        expect(response[:results][2][:value]).to eq('10')
+        expect(response[:results][2][:msg]).to eq('Flag is invalid')
+        expect(response[:results][2][:value]).to eq('250')
 
-        expect(response[:results][3][:msg]).to eq('Protocol is invalid')
-        expect(response[:results][3][:value]).to eq('5')
+        expect(response[:results][3][:msg]).to eq('Algorithm is invalid')
+        expect(response[:results][3][:value]).to eq('10')
+
+        expect(response[:results][4][:msg]).to eq('Flag is invalid')
+        expect(response[:results][4][:value]).to eq('1')
+
+        expect(response[:results][5][:msg]).to eq('Public key is missing')
+
+        expect(response[:results][6][:msg]).to eq('Protocol is invalid')
+        expect(response[:results][6][:value]).to eq('5')
       end
     end
 

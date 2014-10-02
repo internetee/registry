@@ -3,17 +3,23 @@ class Dnskey < ActiveRecord::Base
 
   belongs_to :domain
 
+  validates :alg, :protocol, :flags, :public_key, presence: true
   validate :validate_algorithm
   validate :validate_protocol
+  validate :validate_flags
 
   def epp_code_map
     {
       '2005' => [
         [:alg, :invalid, { value: { obj: 'alg', val: alg } }],
         [:protocol, :invalid, { value: { obj: 'protocol', val: protocol } }],
+        [:flags, :invalid, { value: { obj: 'flags', val: flags } }]
       ],
       '2306' => [
-        [:ipv4, :blank]
+        [:alg, :blank],
+        [:protocol, :blank],
+        [:flags, :blank],
+        [:public_key, :blank]
       ]
     }
   end
@@ -26,5 +32,10 @@ class Dnskey < ActiveRecord::Base
   def validate_protocol
     return if %w(3).include?(protocol.to_s)
     errors.add(:protocol, :invalid)
+  end
+
+  def validate_flags
+    return if %w(0 256 257).include?(flags.to_s)
+    errors.add(:flags, :invalid)
   end
 end
