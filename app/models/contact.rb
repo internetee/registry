@@ -48,21 +48,6 @@ class Contact < ActiveRecord::Base
   CONTACT_TYPE_ADMIN = 'admin'
   CONTACT_TYPES = [CONTACT_TYPE_TECH, CONTACT_TYPE_ADMIN]
 
-  # TEMP Scope until confusion with contact name is sorted out
-  # scope :named, -> { joins(:international_address).uniq.all }
-
-  # TEMP METHOD for transaction to STI
-  #def address
-  #  international_address
-  #end
-  ##
-
-  #def presence_of_one_address
-  #  return true if local_address || international_address
-  #  errors.add(:local_address, 'Local or international address must be present')
-  #  errors.add(:international_address, 'Local or international address must be present')
-  #end
-
   def ident_must_be_valid
     # TODO: Ident can also be passport number or company registry code.
     # so have to make changes to validations (and doc/schema) accordingly

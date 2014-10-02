@@ -48,6 +48,8 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :contact_versions
+
     root 'domains#index'
   end
 

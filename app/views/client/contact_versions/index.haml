@@ -1,0 +1,33 @@
+.row
+  .col-sm-6
+    %h2.text-center-xs= t('shared.contacts')
+    =# render 'admin/contacts/partials/search'
+  .col-sm-6
+    %h2.text-right.text-center-xs
+      = link_to(t('shared.create_new_contact'), new_client_contact_path, class: 'btn btn-primary')
+%hr
+.row
+  .col-md-12
+    .table-responsive
+      %table.table.table-hover.table-bordered.table-condensed
+        %thead
+          %tr
+            %th{class: 'col-xs-2'}
+              = t('shared.event')
+            %th{class: 'col-xs-2'}
+              = t('shared.whodunnit')
+            %th{class: 'col-xs-2'}
+              = t('shared.created_at')
+            %th{class: 'col-xs-1'}
+              = t('shared.details')
+              =# sort_link(@q, 'email', t('shared.email'))
+        %tbody
+          - @versions.each do |x|
+            %tr
+              %td= x.event
+              %td= x.whodunnit
+              %td= l(x.created_at, format: :short)
+              %td= link_to(t('shared.details'), client_contact_version_path(x, event: x.event))
+.row
+  .col-md-12
+    =# paginate @contacts
