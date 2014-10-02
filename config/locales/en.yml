@@ -187,6 +187,8 @@ en:
           attributes:
             alg:
               invalid: 'Algorithm is invalid'
+            protocol:
+              invalid: 'Protocol is invalid'
 
     attributes:
       epp_domain: &epp_domain_attributes

@@ -372,7 +372,7 @@ describe 'EPP Domain', epp: true do
             {
               dnskey: {
                 flags: { value: '257' },
-                protocol: { value: '3' },
+                protocol: { value: '4' },
                 alg: { value: '9' },
                 pubKey: { value: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8' }
               }
@@ -388,7 +388,7 @@ describe 'EPP Domain', epp: true do
             {
               dnskey: {
                 flags: { value: '256' },
-                protocol: { value: '3' },
+                protocol: { value: '5' },
                 alg: { value: '254' },
                 pubKey: { value: '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0' }
               }
@@ -397,12 +397,19 @@ describe 'EPP Domain', epp: true do
         })
 
         response = epp_request(xml, :xml)
+        po response
 
         expect(response[:results][0][:msg]).to eq('Algorithm is invalid')
         expect(response[:results][0][:value]).to eq('9')
-        expect(response[:results][1][:msg]).to eq('Algorithm is invalid')
-        expect(response[:results][1][:value]).to eq('10')
-        po response
+
+        expect(response[:results][1][:msg]).to eq('Protocol is invalid')
+        expect(response[:results][1][:value]).to eq('4')
+
+        expect(response[:results][2][:msg]).to eq('Algorithm is invalid')
+        expect(response[:results][2][:value]).to eq('10')
+
+        expect(response[:results][3][:msg]).to eq('Protocol is invalid')
+        expect(response[:results][3][:value]).to eq('5')
       end
     end
 
