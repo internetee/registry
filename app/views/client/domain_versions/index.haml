@@ -1,7 +1,6 @@
 .row
   .col-sm-6
-    %h2.text-center-xs= t('shared.contacts')
-    =# render 'admin/contacts/partials/search'
+    %h2.text-center-xs= t('shared.domains')
   .col-sm-6
     %h2.text-right.text-center-xs
       = link_to(t('shared.create_new_contact'), new_client_domain_path, class: 'btn btn-primary')
@@ -28,7 +27,7 @@
           - @versions.each do |x|
             %tr
               %td= x.event
-              %td= x.whodunnit
+              %td= link_to_whodunnit(x.whodunnit)
               %td= l(x.created_at, format: :short)
               %td= link_to(t('shared.domain'), client_domain_path(x.item_id))
               %td= link_to(t('shared.details'), client_domain_version_path(x, event: x.event))
