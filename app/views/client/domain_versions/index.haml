@@ -4,7 +4,7 @@
     =# render 'admin/contacts/partials/search'
   .col-sm-6
     %h2.text-right.text-center-xs
-      = link_to(t('shared.create_new_contact'), new_client_contact_path, class: 'btn btn-primary')
+      = link_to(t('shared.create_new_contact'), new_client_domain_path, class: 'btn btn-primary')
 %hr
 .row
   .col-md-12
@@ -19,18 +19,19 @@
             %th{class: 'col-xs-2'}
               = t('shared.created_at')
             %th{class: 'col-xs-1'}
-              = t('shared.contact')
+              = t('shared.item_id')
+              =# sort_link(@q, 'email', t('shared.email'))
             %th{class: 'col-xs-1'}
               = t('shared.details')
-              =# sort_link(@q, 'email', t('shared.email'))
+
         %tbody
           - @versions.each do |x|
             %tr
               %td= x.event
-              %td= link_to_whodunnit(x.whodunnit)
+              %td= x.whodunnit
               %td= l(x.created_at, format: :short)
-              %td= link_to(t('shared.contact'), client_contact_path(x.item_id))
-              %td= link_to(t('shared.details'), client_contact_version_path(x, event: x.event))
+              %td= link_to(t('shared.domain'), client_domain_path(x.item_id))
+              %td= link_to(t('shared.details'), client_domain_version_path(x, event: x.event))
 .row
   .col-md-12
     =# paginate @contacts

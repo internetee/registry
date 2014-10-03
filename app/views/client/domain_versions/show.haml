@@ -1,0 +1,24 @@
+.row
+  .col-sm-6
+    %h2.text-center-xs= t('shared.domains')
+%hr
+.row
+  - if @event != 'create'
+    .col-sm-6= render 'client/domains/partials/general'
+  - if @event != 'create' && @domain.owner_contact
+    .col-sm-6= render 'client/domains/partials/owner'
+  - if @event != 'create' && @domain.tech_contacts
+    .col-sm-6= render 'client/domains/partials/tech_contacts'
+  .col-sm-6
+    .panel.panel-default
+      .panel-heading
+        %h3.panel-title= t('shared.version')
+      .panel-body
+        %dl.dl-horizontal
+          %dt= t('shared.whodunnit')
+          %dd= @version.whodunnit
+          %dt= t('shared.event')
+          %dd= @version.event
+          %dt= t('shared.created_at')
+          %dd= l(@version.created_at, format: :short)
+

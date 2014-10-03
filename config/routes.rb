@@ -49,6 +49,7 @@ Rails.application.routes.draw do
     end
 
     resources :contact_versions
+    resources :domain_versions
 
     root 'domains#index'
   end

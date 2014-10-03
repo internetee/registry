@@ -1,4 +1,6 @@
 class DomainVersion < PaperTrail::Version
+  include UserEvents
+
   scope :deleted, -> { where(event: 'destroy') }
 
   self.table_name = :domain_versions
