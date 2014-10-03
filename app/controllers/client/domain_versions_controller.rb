@@ -2,7 +2,7 @@ class Client::DomainVersionsController < ClientController
   before_action :set_version, only: [:show]
 
   def index
-    @versions = DomainVersion.registrar_events(current_user.registrar.id)
+    @versions = DomainVersion.registrar_events(current_registrar.id)
     @versions.flatten!
   end
 

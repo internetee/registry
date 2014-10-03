@@ -2,7 +2,7 @@ class Client::ContactVersionsController < ClientController
   before_action :set_version, only: [:show]
 
   def index
-    @versions = ContactVersion.registrar_events(current_user.registrar.id)
+    @versions = ContactVersion.registrar_events(current_registrar.id)
     @versions.flatten!
   end
 
