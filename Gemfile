@@ -40,6 +40,7 @@ gem 'simpleidn', '~> 0.0.5'
 # for EE-id validation
 gem 'isikukood'
 
+# for using bootstrap
 gem 'bootstrap-sass', '~> 3.2.0.1'
 
 # for visual loader
