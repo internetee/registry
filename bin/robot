@@ -1,13 +1,15 @@
-#!/bin/bash -e
-
+#!/bin/bash
 #
 # Build and run everything for automatic tests 
 #
+set -o pipefail
 
-# cd to current script directory
-cd "$(dirname "$0")"
+# cd to Rails root directory
+cd "$(dirname "$0")"; cd ..
 
 git pull origin master
+git --git-dir=. --work-tree=$PWD/.. reset --hard
+
 bundle install --deployment 
 
 # cp config/secrets-example.yml config/secrets.yml
@@ -27,6 +29,5 @@ echo "END_OF_RUBOCOP_RESULTS"
 
 # run tests 
 echo "TEST_RESULTS"
-RAILS_ENV=test bundle exec rake test:other
+RAILS_ENV=test bundle exec rake test
 echo "END_OF_TEST_RESULTS"
-
