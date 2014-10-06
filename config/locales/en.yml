@@ -107,6 +107,7 @@ en:
             registrar:
               blank: 'Registrar is missing'
             dnskeys:
+              invalid: 'DNS keys are invalid'
               not_found: 'Dnskey was not found'
 
         domain:
@@ -197,6 +198,7 @@ en:
               invalid: 'Flag is invalid'
               blank: 'Flag is missing'
             public_key:
+              taken: 'Public key already exists'
               blank: 'Public key is missing'
 
 

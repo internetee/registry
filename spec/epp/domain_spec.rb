@@ -418,6 +418,35 @@ describe 'EPP Domain', epp: true do
         expect(response[:results][6][:msg]).to eq('Protocol is invalid')
         expect(response[:results][6][:value]).to eq('5')
       end
+
+      it 'does not create a domain with two identical dnskeys' do
+         xml = domain_create_xml({
+          dnssec: [
+            {
+              dnskey: {
+                flags: { value: '257' },
+                protocol: { value: '3' },
+                alg: { value: '3' },
+                pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+              }
+            },
+            {
+              dnskey: {
+                flags: { value: '0' },
+                protocol: { value: '3' },
+                alg: { value: '5' },
+                pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+              }
+            }
+          ]
+        })
+
+        response = epp_request(xml, :xml)
+
+        expect(response[:result_code]).to eq('2302')
+        expect(response[:msg]).to eq('Public key already exists')
+        expect(response[:results][0][:value]).to eq('700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f')
+      end
     end
 
     context 'with juridical persion as an owner' do

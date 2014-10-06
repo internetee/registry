@@ -15,6 +15,9 @@ class Dnskey < ActiveRecord::Base
         [:protocol, :invalid, { value: { obj: 'protocol', val: protocol } }],
         [:flags, :invalid, { value: { obj: 'flags', val: flags } }]
       ],
+      '2302' => [
+        [:public_key, :taken, { value: { obj: 'pubKye', val: public_key } }]
+      ],
       '2303' => [
         [:base, :dnskey_not_found, { value: { obj: 'pubKey', val: public_key } }]
       ],
@@ -28,16 +31,19 @@ class Dnskey < ActiveRecord::Base
   end
 
   def validate_algorithm
+    return if alg.blank?
     return if %w(3 5 6 7 8 252 253 254 255).include?(alg.to_s)
     errors.add(:alg, :invalid)
   end
 
   def validate_protocol
+    return if protocol.blank?
     return if %w(3).include?(protocol.to_s)
     errors.add(:protocol, :invalid)
   end
 
   def validate_flags
+    return if flags.blank?
     return if %w(0 256 257).include?(flags.to_s)
     errors.add(:flags, :invalid)
   end
