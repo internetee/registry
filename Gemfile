@@ -118,4 +118,7 @@ group :development, :test do
 
   # For unique IDs (used by the epp gem)
   gem 'uuidtools', '~> 2.1.4'
+
+  # For code review
+  gem 'simplecov', '~> 0.9.1', :require => false
 end
