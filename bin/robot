@@ -3,6 +3,7 @@
 # Build and run everything for automatic tests 
 #
 set -o pipefail
+HOME=/home/app
 
 # cd to Rails root directory
 cd "$(dirname "$0")"; cd ..
