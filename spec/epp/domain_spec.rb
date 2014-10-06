@@ -447,6 +447,38 @@ describe 'EPP Domain', epp: true do
         expect(response[:msg]).to eq('Public key already exists')
         expect(response[:results][0][:value]).to eq('700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f')
       end
+
+      it 'validated dnskeys count' do
+        s = Setting.find_by(code: 'dnskeys_max_count')
+        s.value = 1
+        s.save
+
+        xml = domain_create_xml({
+          dnssec: [
+            {
+              dnskey: {
+                flags: { value: '257' },
+                protocol: { value: '3' },
+                alg: { value: '3' },
+                pubKey: { value: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8' }
+              }
+            },
+            {
+              dnskey: {
+                flags: { value: '0' },
+                protocol: { value: '3' },
+                alg: { value: '5' },
+                pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+              }
+            }
+          ]
+        })
+
+        response = epp_request(xml, :xml)
+
+        expect(response[:result_code]).to eq('2004')
+        expect(response[:msg]).to eq('DNS keys count must be between 0-1')
+      end
     end
 
     context 'with juridical persion as an owner' do

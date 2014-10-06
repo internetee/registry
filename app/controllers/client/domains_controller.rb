@@ -32,6 +32,10 @@ class Client::DomainsController < ClientController
     end
   end
 
+  def show
+    @domain.all_dependencies_valid?
+  end
+
   def edit
     build_associations
   end
@@ -70,7 +74,7 @@ class Client::DomainsController < ClientController
       nameservers_attributes: [:id, :hostname, :ipv4, :ipv6, :_destroy],
       domain_contacts_attributes: [:id, :contact_type, :contact_id, :value_typeahead, :_destroy],
       domain_statuses_attributes: [:id, :value, :description, :_destroy],
-      dnskeys_attributes: [:id, :flags, :alg, :protocol, :public_key]
+      dnskeys_attributes: [:id, :flags, :alg, :protocol, :public_key, :_destroy]
     )
   end
 

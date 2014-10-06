@@ -49,6 +49,7 @@ class Domain < ActiveRecord::Base
   validate :validate_period
   validate :validate_nameservers_count
   validate :validate_admin_contacts_count
+  validate :validate_dnskeys_count
   validate :validate_nameservers_uniqueness
   validate :validate_tech_contacts_uniqueness
   validate :validate_admin_contacts_uniqueness
@@ -93,6 +94,13 @@ class Domain < ActiveRecord::Base
 
   def validate_admin_contacts_count
     errors.add(:admin_contacts, :out_of_range) if admin_contacts_count.zero?
+  end
+
+  def validate_dnskeys_count
+    sg = SettingGroup.domain_validation
+    min, max = sg.setting(:dnskeys_min_count).value.to_i, sg.setting(:dnskeys_max_count).value.to_i
+    return if dnskeys.reject(&:marked_for_destruction?).length.between?(min, max)
+    errors.add(:dnskeys, :out_of_range, { min: min, max: max })
   end
 
   def validate_nameservers_uniqueness
@@ -176,6 +184,7 @@ class Domain < ActiveRecord::Base
 
   def all_dependencies_valid?
     validate_nameservers_count
+    validate_dnskeys_count
     validate_admin_contacts_count
 
     errors.empty?

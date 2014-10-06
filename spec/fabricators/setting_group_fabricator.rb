@@ -13,7 +13,9 @@ Fabricator(:domain_validation_setting_group, from: :setting_group) do
   settings do
     [
       Fabricate(:setting, code: 'ns_min_count', value: 1),
-      Fabricate(:setting, code: 'ns_max_count', value: 13)
+      Fabricate(:setting, code: 'ns_max_count', value: 13),
+      Fabricate(:setting, code: 'dnskeys_min_count', value: 0),
+      Fabricate(:setting, code: 'dnskeys_max_count', value: 9)
     ]
   end
 end
