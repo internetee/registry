@@ -1,21 +1,24 @@
 .row
   .col-md-12
-    .table-responsive
-      %table.table.table-hover.table-bordered.table-condensed
-        %thead
-          %tr
-            %th
-              =t('shared.whodunnit')
-            %th
-              =t('shared.event')
-            %th
-              =t('shared.created_at')
-
-        %tbody
-          -versions.each do |version|
+    #nameservers.panel{ class: 'panel-default' }
+      .panel-heading.clearfix
+        = t('shared.history')
+      .table-responsive
+        %table.table.table-hover.table-bordered.table-condensed
+          %thead
             %tr
-              %td= whodunnit_with_protocol(version.whodunnit)
-              %td= version.event
-              %td= version.created_at
+              %th
+                =t('shared.whodunnit')
+              %th
+                =t('shared.event')
+              %th
+                =t('shared.created_at')
+
+          %tbody
+            -versions.each do |version|
+              %tr
+                %td= whodunnit_with_protocol(version.whodunnit)
+                %td= version.event
+                %td= version.created_at
 
 
