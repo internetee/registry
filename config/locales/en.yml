@@ -248,6 +248,8 @@ en:
     codes:
       ns_min_count: 'Nameserver minimum count'
       ns_max_count: 'Nameserver maximum count'
+      dnskeys_min_count: 'DNS keys minimum count'
+      dnskeys_max_count: 'DNS keys maximum count'
 
   shared:
     code: 'Code'
