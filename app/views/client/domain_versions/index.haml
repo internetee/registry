@@ -17,7 +17,7 @@
               = t('shared.whodunnit')
             %th{class: 'col-xs-2'}
               = t('shared.created_at')
-            %th{class: 'col-xs-1'}
+            -#%th{class: 'col-xs-1'}
               = t('shared.item_id')
               =# sort_link(@q, 'email', t('shared.email'))
             %th{class: 'col-xs-1'}
@@ -27,9 +27,9 @@
           - @versions.each do |x|
             %tr
               %td= x.event
-              %td= link_to_whodunnit(x.whodunnit)
+              %td= whodunnit_with_protocol(x.whodunnit)
               %td= l(x.created_at, format: :short)
-              %td= link_to(t('shared.domain'), client_domain_path(x.item_id))
+              -#%td= link_to(t('shared.domain'), client_domain_path(x.item_id))
               %td= link_to(t('shared.details'), client_domain_version_path(x, event: x.event))
 .row
   .col-md-12

@@ -10,4 +10,16 @@ module WhodunnitHelper
   rescue ActiveRecord::RecordNotFound
     return nil
   end
+
+  def whodunnit_with_protocol(whodunnit)
+    return nil unless whodunnit
+    if whodunnit.include?('-EppUser')
+      user = EppUser.find(whodunnit)
+      return "#{user.username} (EPP)"
+    end
+    user = User.find(whodunnit)
+    return user.username
+  rescue ActiveRecord::RecordNotFound
+    return nil
+  end
 end

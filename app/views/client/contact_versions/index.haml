@@ -26,7 +26,7 @@
           - @versions.each do |x|
             %tr
               %td= x.event
-              %td= link_to_whodunnit(x.whodunnit)
+              %td= whodunnit_with_protocol(x.whodunnit)
               %td= l(x.created_at, format: :short)
               %td= link_to(t('shared.contact'), client_contact_path(x.item_id))
               %td= link_to(t('shared.details'), client_contact_version_path(x, event: x.event))
