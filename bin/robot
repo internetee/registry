@@ -16,7 +16,10 @@ setuser app bundle install --deployment
 # cp config/secrets-example.yml config/secrets.yml
 # create manually config/database.yml
 
-RAILS_ENV=test bundle exec rake db:reset
+RAILS_ENV=test bundle exec rake db:drop
+RAILS_ENV=test bundle exec rake db:create
+RAILS_ENV=test bundle exec rake db:schema:load
+RAILS_ENV=test bundle exec rake db:seed
 RAILS_ENV=test bundle exec rake assets:precompile
 
 echo "GIT_LAST_COMMITS"
