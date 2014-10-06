@@ -11,7 +11,7 @@ git pull origin master
 git reset --hard
 unset GIT_DIR GIT_WORK_TREE
 
-setuser app bundle install --deployment 
+bundle install --deployment 
 
 # cp config/secrets-example.yml config/secrets.yml
 # create manually config/database.yml
