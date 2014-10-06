@@ -8,7 +8,8 @@ set -o pipefail
 cd "$(dirname "$0")"; cd ..
 
 git pull origin master
-git --git-dir=. --work-tree=$PWD/.. reset --hard
+git reset --hard
+unset GIT_DIR GIT_WORK_TREE
 
 setuser app bundle install --deployment 
 
