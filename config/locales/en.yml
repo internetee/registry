@@ -347,6 +347,7 @@ en:
     failed_to_update_setting: 'Failed to update setting'
     status: 'Status'
     eedirekt: 'EEDirekt'
+    contact: 'Contact'
 
     domain_transfer_requested: 'Domain transfer requested!'
     domain_transfer_approved: 'Domain transfer approved!'

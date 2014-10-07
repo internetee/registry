@@ -11,20 +11,18 @@
           = render 'shared/errors', object: ns_fields.object
           - if ns_fields.object.errors.any?
             %hr
-        .row
-          .col-md-12
-            .form-group
-              = ns_fields.label :hostname
-              = ns_fields.text_field :hostname, class: 'form-control'
-        .row
-          .col-md-6
-            .form-group
-              = ns_fields.label :ipv4
-              = ns_fields.text_field :ipv4, class: 'form-control'
-          .col-md-6
-            .form-group
-              = ns_fields.label :ipv6
-              = ns_fields.text_field :ipv6, class: 'form-control'
+        .form-group
+          = ns_fields.label :hostname, class: 'col-md-2 control-label'
+          .col-md-10
+            = ns_fields.text_field :hostname, class: 'form-control'
+        .form-group
+          = ns_fields.label :ipv4, class: 'col-md-2 control-label'
+          .col-md-10
+            = ns_fields.text_field :ipv4, class: 'form-control'
+        .form-group
+          = ns_fields.label :ipv6, class: 'col-md-2 control-label'
+          .col-md-10
+            = ns_fields.text_field :ipv6, class: 'form-control'
 :javascript
   $("#nameservers").nestedAttributes({
     bindAddTo: $(".add-nameserver"),

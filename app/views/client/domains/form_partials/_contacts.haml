@@ -1,4 +1,4 @@
-#domain_contacts
+#domain-contacts
   = f.fields_for :domain_contacts do |contact_fields|
     .panel.panel-default
       .panel-heading.clearfix
@@ -11,15 +11,12 @@
           = render 'shared/errors', object: contact_fields.object
           - if contact_fields.object.errors.any?
             %hr
-        .row
-          .col-md-6
-            .form-group
-              = contact_fields.label :contact_type
-              = contact_fields.select :contact_type, options_for_select(DomainContact::TYPES, contact_fields.object.contact_type), {}, {class: 'form-control'}
-          .col-md-6
-            .form-group.has-feedback.js-typeahead-container
-              = contact_fields.label :value_typeahead
-              = contact_fields.text_field(:value_typeahead, class: 'form-control js-contact-typeahead', placeholder: t('shared.contact_code'), autocomplete: 'off')
-              %span.glyphicon.glyphicon-ok.form-control-feedback.js-typeahead-ok.hidden
-              %span.glyphicon.glyphicon-remove.form-control-feedback.js-typeahead-remove
-              = contact_fields.hidden_field(:contact_id, class: 'js-contact-id')
+        .form-group
+          = contact_fields.label :contact_type, t('shared.contact'), class: 'col-md-2 control-label'
+          .col-md-5
+            = contact_fields.select :contact_type, options_for_select(DomainContact::TYPES, contact_fields.object.contact_type), {}, {class: 'form-control'}
+          .col-md-5.has-feedback.js-typeahead-container
+            = contact_fields.text_field(:value_typeahead, class: 'form-control js-contact-typeahead', placeholder: t('shared.contact_code'), autocomplete: 'off')
+            %span.glyphicon.glyphicon-ok.form-control-feedback.js-typeahead-ok.hidden
+            %span.glyphicon.glyphicon-remove.form-control-feedback.js-typeahead-remove
+            = contact_fields.hidden_field(:contact_id, class: 'js-contact-id')

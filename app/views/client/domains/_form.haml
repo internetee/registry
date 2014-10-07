@@ -1,4 +1,4 @@
-= form_for([:client, @domain]) do |f|
+= form_for([:client, @domain], html: { class: 'form-horizontal' }) do |f|
   = render 'shared/errors', object: @domain
   - unless @domain.parent_valid?
     %hr
