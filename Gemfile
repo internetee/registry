@@ -61,6 +61,9 @@ gem 'devise', '~> 3.3.0'
 # for archiving
 gem 'paper_trail', '~> 3.0.5'
 
+# for select
+gem 'selectize-rails', '~> 0.11.0'
+
 group :assets do
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   gem 'therubyracer',  platforms: :ruby

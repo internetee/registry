@@ -21,7 +21,7 @@
     .col-md-6.text-left
       .form-group
         = f.label :country_id
-        = f.select :country_id, options_for_select(Country.all.map{|x| [x.name, x.id]}, @registrar.country_id), {}, {class: 'form-control'}
+        = f.select :country_id, options_for_select(Country.all.map{|x| [x.name, x.id]}, @registrar.country_id), {}, {class: 'form-control selectize'}
       .form-group
         = f.label :address
         = f.text_field(:address, class: 'form-control')
