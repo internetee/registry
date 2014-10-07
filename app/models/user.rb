@@ -16,6 +16,8 @@ class User < ActiveRecord::Base
   validates :email, presence: true, if: -> { country.iso != 'EE' }
   validates :registrar, presence: true, if: -> { !admin }
 
+  validate :validate_identity_code
+
   before_save -> { self.registrar = nil if admin? }
 
   attr_accessor :registrar_typeahead
@@ -26,5 +28,13 @@ class User < ActiveRecord::Base
 
   def registrar_typeahead
     @registrar_typeahead || registrar || nil
+  end
+
+  private
+
+  def validate_identity_code
+    return unless identity_code.present?
+    code = Isikukood.new(identity_code)
+    errors.add(:identity_code, :invalid) unless code.valid?
   end
 end
