@@ -49,6 +49,7 @@ class Domain < ActiveRecord::Base
   validate :validate_period
   validate :validate_nameservers_count
   validate :validate_admin_contacts_count
+  validate :validate_dnskeys_count
   validate :validate_nameservers_uniqueness
   validate :validate_tech_contacts_uniqueness
   validate :validate_admin_contacts_uniqueness
@@ -95,11 +96,19 @@ class Domain < ActiveRecord::Base
     errors.add(:admin_contacts, :out_of_range) if admin_contacts_count.zero?
   end
 
+  def validate_dnskeys_count
+    sg = SettingGroup.domain_validation
+    min, max = sg.setting(:dnskeys_min_count).value.to_i, sg.setting(:dnskeys_max_count).value.to_i
+    return if dnskeys.reject(&:marked_for_destruction?).length.between?(min, max)
+    errors.add(:dnskeys, :out_of_range, { min: min, max: max })
+  end
+
   def validate_nameservers_uniqueness
     validated = []
-    nameservers.reject(&:marked_for_destruction?).each do |ns|
+    list = nameservers.reject(&:marked_for_destruction?)
+    list.each do |ns|
       next if ns.hostname.blank?
-      existing = nameservers.reject(&:marked_for_destruction?).select { |x| x.hostname == ns.hostname }
+      existing = list.select { |x| x.hostname == ns.hostname }
       next unless existing.length > 1
       validated << ns.hostname
       errors.add(:nameservers, :invalid) if errors[:nameservers].blank?
@@ -139,9 +148,10 @@ class Domain < ActiveRecord::Base
 
   def validate_domain_statuses_uniqueness
     validated = []
-    domain_statuses.reject(&:marked_for_destruction?).each do |status|
+    list = domain_statuses.reject(&:marked_for_destruction?)
+    list.each do |status|
       next if status.value.blank?
-      existing = domain_statuses.select { |x| x.value == status.value }
+      existing = list.select { |x| x.value == status.value }
       next unless existing.length > 1
       validated << status.value
       errors.add(:domain_statuses, :invalid) if errors[:domain_statuses].blank?
@@ -151,9 +161,10 @@ class Domain < ActiveRecord::Base
 
   def validate_dnskeys_uniqueness
     validated = []
-    dnskeys.reject(&:marked_for_destruction?).each do |dnskey|
+    list = dnskeys.reject(&:marked_for_destruction?)
+    list.each do |dnskey|
       next if dnskey.public_key.blank?
-      existing = dnskeys.select { |x| x.public_key == dnskey.public_key }
+      existing = list.select { |x| x.public_key == dnskey.public_key }
       next unless existing.length > 1
       validated << dnskey.public_key
       errors.add(:dnskeys, :invalid) if errors[:dnskeys].blank?
@@ -176,6 +187,7 @@ class Domain < ActiveRecord::Base
 
   def all_dependencies_valid?
     validate_nameservers_count
+    validate_dnskeys_count
     validate_admin_contacts_count
 
     errors.empty?

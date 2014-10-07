@@ -109,6 +109,7 @@ en:
             dnskeys:
               invalid: 'DNS keys are invalid'
               not_found: 'Dnskey was not found'
+              out_of_range: 'DNS keys count must be between %{min}-%{max}'
 
         domain:
           <<: *epp_domain_ar_attributes
@@ -211,6 +212,11 @@ en:
         nameservers: 'Nameservers'
       domain:
         <<: *epp_domain_attributes
+      dnskey:
+        flags: 'Flag'
+        protocol: 'Protocol'
+        alg: 'Algorithm'
+        public_key: 'Public key'
 
 
   errors:
@@ -242,6 +248,8 @@ en:
     codes:
       ns_min_count: 'Nameserver minimum count'
       ns_max_count: 'Nameserver maximum count'
+      dnskeys_min_count: 'DNS keys minimum count'
+      dnskeys_max_count: 'DNS keys maximum count'
 
   shared:
     code: 'Code'

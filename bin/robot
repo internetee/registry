@@ -2,6 +2,7 @@
 #
 # Build and run everything for automatic tests 
 #
+
 set -o pipefail
 
 # cd to Rails root directory
@@ -11,7 +12,12 @@ git pull origin master
 git reset --hard
 unset GIT_DIR GIT_WORK_TREE
 
-setuser app bundle install --deployment 
+# run rubocop
+echo "RUBOCOP_RESULTS"
+rubocop
+echo "END_OF_RUBOCOP_RESULTS"
+
+bundle install --deployment 
 
 # cp config/secrets-example.yml config/secrets.yml
 # create manually config/database.yml
@@ -25,11 +31,6 @@ RAILS_ENV=test bundle exec rake assets:precompile
 echo "GIT_LAST_COMMITS"
 git log origin/master -n 15 --pretty=oneline | sed -r '/^.{40} Merge branch/d' | sed -r 's/^.{40}/Latests: /' 
 echo "END_OF_GIT_LAST_COMMITS"
-
-# run rubocop
-echo "RUBOCOP_RESULTS"
-rubocop
-echo "END_OF_RUBOCOP_RESULTS"
 
 # run tests 
 echo "TEST_RESULTS"
