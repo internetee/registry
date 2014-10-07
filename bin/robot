@@ -2,6 +2,7 @@
 #
 # Build and run everything for automatic tests 
 #
+
 set -o pipefail
 
 # cd to Rails root directory

@@ -25,7 +25,8 @@ describe Contact do
          phone: ['Required parameter missing - phone', 'Phone nr is invalid'],
          email: ['Required parameter missing - email', 'Email is invalid'],
          ident: ['Required parameter missing - ident'],
-         address: ['is missing']
+         address: ['is missing'],
+         registrar: ['is missing']
       })
     end
   end
@@ -73,11 +74,13 @@ end
 
 describe Contact, '#up_id' do
   before(:each) do
-    Fabricate(:contact, code: 'asd12', created_by: Fabricate(:epp_user), updated_by: Fabricate(:epp_user))
+    #Fabricate(:contact, code: 'asd12', created_by: Fabricate(:epp_user), updated_by: Fabricate(:epp_user), registrar: zone)
+    @epp_user = Fabricate(:epp_user)
+    @contact = Fabricate.build(:contact, code: 'asd12', created_by: @epp_user, updated_by: @epp_user)
   end
 
   it 'should return username of updater' do
-    expect(Contact.first.up_id).to eq('gitlab')
+    expect(@contact.up_id).to eq('gitlab')
   end
 
   it 'should return nil when no updater' do
