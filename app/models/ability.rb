@@ -6,7 +6,7 @@ class Ability
     alias_action :create, :read, :update, :destroy, :to => :crud
 
     user ||= User.new
-    if user.admin?
+    if REGISTRY_ENV == :admin && user.admin?
       can :manage, Domain
       can :switch, :registrar
       can :crud, DomainTransfer
