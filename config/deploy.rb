@@ -15,9 +15,14 @@ set :deploy_to, '/home/app/registry'
 set :repository, 'https://github.com/internetee/registry'
 set :branch, 'master'
 
+task :admin do
+  set :deploy_to, '/home/app/admin-registry'
+end
+
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
 # They will be linked in the 'deploy:link_shared_paths' step.
 set :shared_paths, [
+  'config/initializers/env.rb',
   'config/database.yml',
   'config/secrets.yml',
   'log',
@@ -48,6 +53,9 @@ task setup: :environment do
 
   queue! %(mkdir -p "#{deploy_to}/shared/config")
   queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/config")
+
+  queue! %(mkdir -p "#{deploy_to}/shared/config/initializers")
+  queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/config/initializers")
 
   queue! %(mkdir -p "#{deploy_to}/shared/public")
   queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/public")
