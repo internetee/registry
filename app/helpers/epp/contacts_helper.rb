@@ -2,6 +2,7 @@ module Epp::ContactsHelper
   def create_contact
     @contact = Contact.new(contact_and_address_attributes)
     @contact.generate_code
+    @contact.registrar = current_epp_user.registrar
     render '/epp/contacts/create' and return if stamp(@contact) && @contact.save
 
     handle_errors(@contact)
@@ -113,7 +114,8 @@ module Epp::ContactsHelper
 
   def owner?
     return false unless find_contact
-    return true if current_epp_user.registrar == find_contact.created_by.try(:registrar)
+    #return true if current_epp_user.registrar == find_contact.created_by.try(:registrar)
+    return true if @contact.registrar == current_epp_user.registrar
     epp_errors << { code: '2201', msg: t('errors.messages.epp_authorization_error') }
     false
   end

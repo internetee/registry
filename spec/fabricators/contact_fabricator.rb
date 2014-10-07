@@ -7,5 +7,6 @@ Fabricator(:contact) do
   ident_type 'op'
   auth_info 'ccds4324pok'
   address
+  registrar { Fabricate(:registrar, name: Faker::Company.name, reg_no: Faker::Company.duns_number) }
   disclosure { Fabricate(:contact_disclosure) }
 end

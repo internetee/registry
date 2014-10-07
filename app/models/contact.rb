@@ -13,12 +13,14 @@ class Contact < ActiveRecord::Base
   has_many :domain_contacts
   has_many :domains, through: :domain_contacts
 
+  # TODO remove the x_by
   belongs_to :created_by, class_name: 'EppUser', foreign_key: :created_by_id
   belongs_to :updated_by, class_name: 'EppUser', foreign_key: :updated_by_id
+  belongs_to :registrar
 
   accepts_nested_attributes_for :address, :disclosure
 
-  validates :code, :phone, :email, :ident, :address, presence: true
+  validates :code, :phone, :email, :ident, :address, :registrar,presence: true
 
   validate :ident_must_be_valid
   #validate :presence_of_one_address
@@ -33,6 +35,8 @@ class Contact < ActiveRecord::Base
   delegate :street, to: :address#, prefix: true
   delegate :zip, to: :address#, prefix: true
 
+  #scopes
+  scope :current_registrars, ->(id) { where(registrar_id: id) }
   # archiving
   has_paper_trail class_name: 'ContactVersion'
 

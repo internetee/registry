@@ -2,7 +2,7 @@ class Client::ContactsController < ClientController
   before_action :set_contact, only: [:show, :destroy, :edit, :update]
 
   def index
-    @q = Contact.search(params[:q])
+    @q = Contact.current_registrars(current_registrar.id).search(params[:q])
     @contacts = @q.result.page(params[:page])
   end
 
@@ -11,9 +11,17 @@ class Client::ContactsController < ClientController
     @contact.build_address
   end
 
+  def show
+    if @contact.registrar != current_registrar
+      flash[:alert] = I18n.t('shared.authentication_error')
+      redirect_to client_contacts_path
+    end
+  end
+
   def create
     @contact = Contact.new(contact_params)
     @contact.generate_code
+    @contact.registrar = current_registrar
     if @contact.save
       flash[:notice] = I18n.t('shared.contact_added')
       redirect_to [:client, @contact]

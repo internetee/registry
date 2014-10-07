@@ -406,3 +406,6 @@ en:
     failed_to_update_record: 'Failed to update record'
     record_deleted: 'Record deleted'
     failed_to_delete_record: 'Failed to delete record'
+
+    # sorry these need to be refactored - Andres
+    authentication_error: 'Authentication error'

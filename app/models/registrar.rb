@@ -4,6 +4,7 @@ class Registrar < ActiveRecord::Base
   has_many :ns_sets
   has_many :epp_users
   has_many :users
+  has_many :contacts
 
   validates :name, :reg_no, :address, :country, presence: true
   validates :name, :reg_no, uniqueness: true
