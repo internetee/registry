@@ -16,8 +16,8 @@ class Dnskey < ActiveRecord::Base
     {
       '2005' => [
         [:alg, :invalid, { value: { obj: 'alg', val: alg }, values: ALGORITHMS.join(', ') }],
-        [:protocol, :invalid, { value: { obj: 'protocol', val: protocol } }],
-        [:flags, :invalid, { value: { obj: 'flags', val: flags } }]
+        [:protocol, :invalid, { value: { obj: 'protocol', val: protocol }, values: PROTOCOLS.join(', ') }],
+        [:flags, :invalid, { value: { obj: 'flags', val: flags }, values: FLAGS.join(', ') }]
       ],
       '2302' => [
         [:public_key, :taken, { value: { obj: 'pubKye', val: public_key } }]
@@ -42,13 +42,13 @@ class Dnskey < ActiveRecord::Base
 
   def validate_protocol
     return if protocol.blank?
-    return if %w(3).include?(protocol.to_s)
-    errors.add(:protocol, :invalid)
+    return if PROTOCOLS.include?(protocol.to_s)
+    errors.add(:protocol, :invalid, values: PROTOCOLS.join(', '))
   end
 
   def validate_flags
     return if flags.blank?
-    return if %w(0 256 257).include?(flags.to_s)
-    errors.add(:flags, :invalid)
+    return if FLAGS.include?(flags.to_s)
+    errors.add(:flags, :invalid, values: FLAGS.join(', '))
   end
 end

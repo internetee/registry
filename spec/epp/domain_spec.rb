@@ -398,24 +398,24 @@ describe 'EPP Domain', epp: true do
 
         response = epp_request(xml, :xml)
 
-        expect(response[:results][0][:msg]).to eq('Valid algorithms are 3, 5, 6, 7, 8, 252, 253, 254, 255')
+        expect(response[:results][0][:msg]).to eq('Valid algorithms are: 3, 5, 6, 7, 8, 252, 253, 254, 255')
         expect(response[:results][0][:value]).to eq('9')
 
-        expect(response[:results][1][:msg]).to eq('Protocol is invalid')
+        expect(response[:results][1][:msg]).to eq('Valid protocols are: 3')
         expect(response[:results][1][:value]).to eq('4')
 
-        expect(response[:results][2][:msg]).to eq('Flag is invalid')
+        expect(response[:results][2][:msg]).to eq('Valid flags are: 0, 256, 257')
         expect(response[:results][2][:value]).to eq('250')
 
-        expect(response[:results][3][:msg]).to eq('Valid algorithms are 3, 5, 6, 7, 8, 252, 253, 254, 255')
+        expect(response[:results][3][:msg]).to eq('Valid algorithms are: 3, 5, 6, 7, 8, 252, 253, 254, 255')
         expect(response[:results][3][:value]).to eq('10')
 
-        expect(response[:results][4][:msg]).to eq('Flag is invalid')
+        expect(response[:results][4][:msg]).to eq('Valid flags are: 0, 256, 257')
         expect(response[:results][4][:value]).to eq('1')
 
         expect(response[:results][5][:msg]).to eq('Public key is missing')
 
-        expect(response[:results][6][:msg]).to eq('Protocol is invalid')
+        expect(response[:results][6][:msg]).to eq('Valid protocols are: 3')
         expect(response[:results][6][:value]).to eq('5')
       end
 

@@ -191,13 +191,13 @@ en:
         dnskey:
           attributes:
             alg:
-              invalid: 'Valid algorithms are %{values}'
+              invalid: 'Valid algorithms are: %{values}'
               blank: 'Algorithm is missing'
             protocol:
-              invalid: 'Protocol is invalid'
+              invalid: 'Valid protocols are: %{values}'
               blank: 'Protocol is missing'
             flags:
-              invalid: 'Flag is invalid'
+              invalid: 'Valid flags are: %{values}'
               blank: 'Flag is missing'
             public_key:
               taken: 'Public key already exists'
