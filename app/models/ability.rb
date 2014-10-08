@@ -10,8 +10,11 @@ class Ability
     # public user abilites
     can :create, :session
 
-    if (Rails.env.production? ? REGISTRY_ENV == :admin && user.admin? : user.admin?)
+    if REGISTRY_ENV == :admin
       can :create, :admin_session
+    end
+
+    if (Rails.env.production? ? REGISTRY_ENV == :admin && user.admin? : user.admin?)
       can :manage, Domain
       can :switch, :registrar
       can :crud, DomainTransfer
