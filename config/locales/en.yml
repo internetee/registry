@@ -191,7 +191,7 @@ en:
         dnskey:
           attributes:
             alg:
-              invalid: 'Algorithm is invalid'
+              invalid: 'Valid algorithms are %{values}'
               blank: 'Algorithm is missing'
             protocol:
               invalid: 'Protocol is invalid'

@@ -15,7 +15,7 @@ class Dnskey < ActiveRecord::Base
   def epp_code_map
     {
       '2005' => [
-        [:alg, :invalid, { value: { obj: 'alg', val: alg } }],
+        [:alg, :invalid, { value: { obj: 'alg', val: alg }, values: ALGORITHMS.join(', ') }],
         [:protocol, :invalid, { value: { obj: 'protocol', val: protocol } }],
         [:flags, :invalid, { value: { obj: 'flags', val: flags } }]
       ],
@@ -36,8 +36,8 @@ class Dnskey < ActiveRecord::Base
 
   def validate_algorithm
     return if alg.blank?
-    return if %w(3 5 6 7 8 252 253 254 255).include?(alg.to_s)
-    errors.add(:alg, :invalid)
+    return if ALGORITHMS.include?(alg.to_s)
+    errors.add(:alg, :invalid, values: ALGORITHMS.join(', '))
   end
 
   def validate_protocol
