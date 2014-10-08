@@ -4,7 +4,7 @@
 %hr
 .row
   .col-md-12
-    = search_form_for [:client, @q], html: { class: 'form-horizontal' } do |f|
+    = search_form_for [:admin, @q], html: { class: 'form-horizontal' } do |f|
       .col-md-11
         .form-group
           = f.search_field :name_cont, class: 'form-control'
