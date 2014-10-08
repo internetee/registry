@@ -7,14 +7,22 @@ class Ability
 
     user ||= User.new
 
-    # public user abilites
-    can :create, :session
-
-    if REGISTRY_ENV == :admin
+    if Rails.env.production?
+      case REGISTRY_ENV
+      when :client
+        can :create, :session
+        admin = false
+      when :admin
+        can :create, :admin_session
+        admin = user.admin?
+      end
+    else
+      can :create, :session
       can :create, :admin_session
+      admin = user.admin?
     end
 
-    if (Rails.env.production? ? REGISTRY_ENV == :admin && user.admin? : user.admin?)
+    if admin
       can :manage, Domain
       can :switch, :registrar
       can :crud, DomainTransfer

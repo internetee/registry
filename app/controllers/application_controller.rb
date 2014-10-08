@@ -10,10 +10,12 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for(resource)
-    if REGISTRY_ENV == :admin && resource.admin?
-      (session[:user_return_to].nil?) ? admin_root_path : session[:user_return_to].to_s
+    return session[:user_return_to].to_s if session[:user_return_to]
+
+    if resource.admin? && can?(:create, :admin_session)
+      admin_root_path
     else
-      (session[:user_return_to].nil?) ? client_root_path : session[:user_return_to].to_s
+      client_root_path
     end
   end
 end
