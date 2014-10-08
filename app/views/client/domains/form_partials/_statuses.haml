@@ -1,4 +1,4 @@
-#domain_statuses
+#domain-statuses
   = f.fields_for :domain_statuses, @client_statuses do |status_fields|
     .panel.panel-default
       .panel-heading.clearfix
@@ -11,17 +11,17 @@
           = render 'shared/errors', object: status_fields.object
           - if status_fields.object.errors.any?
             %hr
-        .row
-          .col-md-6
-            .form-group
-              = status_fields.label :value
-              = status_fields.select :value, options_for_select(DomainStatus.statuses_for_client, status_fields.object.value.try(:sub, 'client', '')), {include_blank: true}, {class: 'form-control'}
-          .col-md-6
-            .form-group
-              = status_fields.label :description
-              = status_fields.text_field :description, class: 'form-control', autocomplete: 'off'
+        .form-group
+          = status_fields.label :value, class: 'col-md-2 control-label'
+          .col-md-10
+            = status_fields.select :value, options_for_select(DomainStatus.statuses_for_client, status_fields.object.value.try(:sub, 'client', '')), {include_blank: true}, {class: 'form-control'}
+
+        .form-group
+          = status_fields.label :description, class: 'col-md-2 control-label'
+          .col-md-10
+            = status_fields.text_field :description, class: 'form-control', autocomplete: 'off'
 :javascript
-  $("#domain_statuses").nestedAttributes({
+  $("#domain-statuses").nestedAttributes({
     bindAddTo: $(".add-domain-status"),
     afterAdd: function(item) {
       item.find('.errors').html('');
