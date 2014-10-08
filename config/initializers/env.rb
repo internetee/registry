@@ -1,2 +1,2 @@
-# options: :admin, :client
-REGISTRY_ENV = :client
+# options: :admin, :eedirect
+REGISTRY_ENV = :eedirect
