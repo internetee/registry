@@ -4,6 +4,19 @@
 %hr
 .row
   .col-md-12
+    = search_form_for [:client, @q], html: { class: 'form-horizontal' } do |f|
+      .col-md-11
+        .form-group
+          = f.search_field :name_cont, class: 'form-control'
+      .col-md-1.text-right.text-center-xs
+        .form-group
+          %button.btn.btn-primary
+            &nbsp;
+            %span.glyphicon.glyphicon-search
+            &nbsp;
+%hr
+.row
+  .col-md-12
     .table-responsive
       %table.table.table-hover.table-bordered.table-condensed
         %thead
