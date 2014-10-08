@@ -12,6 +12,9 @@ class Ability
       when :eedirekt
         can :create, :session
         admin = false
+      when :registrar
+        can :create, :session
+        admin = false
       when :admin
         can :create, :admin_session
         admin = user.admin?
