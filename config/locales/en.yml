@@ -244,6 +244,7 @@ en:
     codes:
       domain_validation: 'Domain validation'
       domain_general: 'Domain general'
+      dnskeys: 'DNS keys'
 
   settings:
     codes:
@@ -251,6 +252,10 @@ en:
       ns_max_count: 'Nameserver maximum count'
       dnskeys_min_count: 'DNS keys minimum count'
       dnskeys_max_count: 'DNS keys maximum count'
+      allow_ds_data: 'Allow DS data'
+      allow_ds_data_with_keys: 'Allow DS data with keys'
+      allow_key_data: 'Allow key data'
+      ds_algorithm: 'DS algorithm'
 
   shared:
     code: 'Code'

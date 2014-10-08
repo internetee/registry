@@ -16,19 +16,21 @@ describe 'EPP Helper', epp: true do
                   <domain:hostObj>ns2.example.net</domain:hostObj>
                 </domain:ns>
                 <domain:registrant>jd1234</domain:registrant>
-                <domain:dnssec>
-                  <domain:dnskey>
-                    <domain:flags>257</domain:flags>
-                    <domain:protocol>3</domain:protocol>
-                    <domain:alg>5</domain:alg>
-                    <domain:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</domain:pubKey>
-                  </domain:dnskey>
-                </domain:dnssec>
                 <domain:contact type="admin">sh8013</domain:contact>
                 <domain:contact type="tech">sh8013</domain:contact>
                 <domain:contact type="tech">sh801333</domain:contact>
               </domain:create>
             </create>
+            <extension>
+            <secDNS:create xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1">
+              <secDNS:keyData>
+                <secDNS:flags>257</secDNS:flags>
+                <secDNS:protocol>3</secDNS:protocol>
+                <secDNS:alg>5</secDNS:alg>
+                <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
+              </secDNS:keyData>
+            </secDNS:create>
+            </extension>
             <clTRID>ABC-12345</clTRID>
           </command>
         </epp>
@@ -52,19 +54,21 @@ describe 'EPP Helper', epp: true do
                   <domain:hostObj>ns2.test.net</domain:hostObj>
                 </domain:ns>
                 <domain:registrant>32fsdaf</domain:registrant>
-                <domain:dnssec>
-                  <domain:dnskey>
-                    <domain:flags>257</domain:flags>
-                    <domain:protocol>3</domain:protocol>
-                    <domain:alg>5</domain:alg>
-                    <domain:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</domain:pubKey>
-                  </domain:dnskey>
-                </domain:dnssec>
                 <domain:contact type="admin">2323rafaf</domain:contact>
                 <domain:contact type="tech">3dgxx</domain:contact>
                 <domain:contact type="tech">345xxv</domain:contact>
               </domain:create>
             </create>
+            <extension>
+            <secDNS:create xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1">
+              <secDNS:keyData>
+                <secDNS:flags>257</secDNS:flags>
+                <secDNS:protocol>3</secDNS:protocol>
+                <secDNS:alg>5</secDNS:alg>
+                <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
+              </secDNS:keyData>
+            </secDNS:create>
+            </extension>
             <clTRID>ABC-12345</clTRID>
           </command>
         </epp>
@@ -109,9 +113,8 @@ describe 'EPP Helper', epp: true do
         period: nil,
         ns: nil,
         registrant: nil,
-        _other: nil,
-        dnssec: nil
-      })
+        _other: nil
+      }, false)
 
       generated = Nokogiri::XML(xml).to_s.squish
       expect(generated).to eq(expected)
