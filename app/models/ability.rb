@@ -6,7 +6,12 @@ class Ability
     alias_action :create, :read, :update, :destroy, :to => :crud
 
     user ||= User.new
-    if Rails.env.development? || Rails.env.test? || (REGISTRY_ENV == :admin && user.admin?)
+
+    # public user abilites
+    can :create, :session
+
+    if (Rails.env.production? ? REGISTRY_ENV == :admin && user.admin? : user.admin?)
+      can :create, :admin_session
       can :manage, Domain
       can :switch, :registrar
       can :crud, DomainTransfer
@@ -15,8 +20,10 @@ class Ability
       can :manage, Domain, registrar_id: user.registrar.id
       can :read, DomainTransfer, transfer_to_id: user.registrar.id
       can :read, DomainTransfer, transfer_from_id: user.registrar.id
-      can :approve_as_client, DomainTransfer, transfer_from_id: user.registrar.id, status: DomainTransfer::PENDING
+      can :approve_as_client, DomainTransfer, 
+        transfer_from_id: user.registrar.id, status: DomainTransfer::PENDING
     end
+
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)
