@@ -14,17 +14,17 @@
         .form-group
           = key_fields.label :flags, class: 'col-md-2 control-label'
           .col-md-10
-            = key_fields.text_field :flags, class: 'form-control'
+            = key_fields.select :flags, options_for_select(Dnskey::FLAGS, key_fields.object.flags), {}, {class: 'form-control'}
 
         .form-group
           = key_fields.label :protocol, class: 'col-md-2 control-label'
           .col-md-10
-            = key_fields.text_field :protocol, class: 'form-control'
+            = key_fields.select :protocol, options_for_select(Dnskey::PROTOCOLS, key_fields.object.protocol), {}, {class: 'form-control'}
 
         .form-group
           = key_fields.label :alg, class: 'col-md-2 control-label'
           .col-md-10
-            = key_fields.text_field :alg, class: 'form-control'
+            = key_fields.select :alg, options_for_select(Dnskey::ALGORITHMS, key_fields.object.alg), {}, {class: 'form-control'}
 
         .form-group
           = key_fields.label :public_key, class: 'col-md-2 control-label'
