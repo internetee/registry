@@ -33,13 +33,4 @@
     $('#tabs a:first').tab('show')
   })
 
-  $("#domain_contacts").nestedAttributes({
-    bindAddTo: $(".add-domain-contact"),
-    afterAdd: function(item) {
-      item.find('.errors').html('');
-      item.find('.js-contact-id').val('')
-      Autocomplete.bindClientContactSearch();
-    }
-  });
-
   Autocomplete.bindClientContactSearch();
