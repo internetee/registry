@@ -10,9 +10,11 @@ class Ability
     if Rails.env.production?
       case REGISTRY_ENV
       when :eedirekt
+        can :view, :eedirekt
         can :create, :session
         admin = false
       when :registrar
+        can :view, :registrar
         can :create, :session
         admin = false
       when :admin

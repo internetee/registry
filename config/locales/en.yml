@@ -419,3 +419,5 @@ en:
 
     # sorry these need to be refactored - Andres
     authentication_error: 'Authentication error'
+
+  registrar: Registrar
