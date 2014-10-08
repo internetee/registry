@@ -10,7 +10,7 @@ require 'mina/git'
 #   repository   - Git repo to clone from. (needed by mina/git)
 #   branch       - Branch name to deploy. (needed by mina/git)
 
-set :domain, 'localregistry'
+set :domain, 'testregistry'
 set :deploy_to, '/home/app/eedirekt'
 set :repository, 'https://github.com/internetee/registry'
 set :branch, 'master'
