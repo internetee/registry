@@ -29,6 +29,11 @@ Style/BracesAroundHashParameters:
 Style/IndentHash:
   Enabled: false
 
+# allow == operator used in void context in specs
+Void:
+  Exclude:
+    - 'spec/**/*'
+
 # No need to force reduce to use |a, e| as parameters.
 # Configuration parameters: Methods.
 Style/SingleLineBlockParams:
