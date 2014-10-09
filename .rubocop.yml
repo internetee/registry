@@ -43,6 +43,9 @@ Void:
 Style/SingleLineBlockParams:
   Enabled: false
 
-# No need for nested module/class definition as far as I know
+# allow prefix for models and controllers, 
+# otherwise we have to intent all body 4 spaces
 Style/ClassAndModuleChildren:
-  Enabled: false
+  Exclude:
+    - 'app/controllers/**/*'
+    - 'app/models/**/*'
