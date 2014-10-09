@@ -38,3 +38,15 @@ Fabricator(:domain_general_setting_group, from: :setting_group) do
     ]
   end
 end
+
+Fabricator(:dnskeys_setting_group, from: :setting_group) do
+  code 'dnskeys'
+  settings do
+    [
+      Fabricate(:setting, code: Setting::DS_ALGORITHM, value: 1),
+      Fabricate(:setting, code: Setting::ALLOW_DS_DATA, value: 1),
+      Fabricate(:setting, code: Setting::ALLOW_DS_DATA_WITH_KEYS, value: 1),
+      Fabricate(:setting, code: Setting::ALLOW_KEY_DATA, value: 1)
+    ]
+  end
+end

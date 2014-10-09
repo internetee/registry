@@ -74,6 +74,9 @@ en:
             base:
               domain_status_prohibits_operation: 'Domain status prohibits operation'
               domain_already_belongs_to_the_querying_registrar: 'Domain already belongs to the querying registrar'
+              ds_data_not_allowed: 'dsData object is not allowed'
+              ds_data_with_keys_not_allowed: 'dsData object with key data is not allowed'
+              key_data_not_allowed: 'keyData object is not allowed'
             name_dirty:
               invalid: 'Domain name is invalid'
               reserved: 'Domain name is reserved or restricted'
@@ -424,3 +427,4 @@ en:
 
     # sorry these need to be refactored - Andres
     authentication_error: 'Authentication error'
+    ds_data_and_key_data_must_not_exists_together: 'dsData and keyData objects must not exists together'

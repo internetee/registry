@@ -2,6 +2,7 @@ class Dnskey < ActiveRecord::Base
   include EppErrors
 
   belongs_to :domain
+  belongs_to :delegation_signer
 
   validates :alg, :protocol, :flags, :public_key, presence: true
   validate :validate_algorithm

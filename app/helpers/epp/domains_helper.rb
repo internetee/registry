@@ -94,7 +94,14 @@ module Epp::DomainsHelper
   def validate_domain_create_request
     @ph = params_hash['epp']['command']['create']['create']
     # TODO: Verify contact presence if registrant is juridical
-    xml_attrs_present?(@ph, [['name'], ['ns'], ['registrant']])
+    attrs_present = xml_attrs_present?(@ph, [['name'], ['ns'], ['registrant']])
+    return false unless attrs_present
+
+    if parsed_frame.css('dsData').count > 0 && parsed_frame.css('create > keyData').count > 0
+      epp_errors << { code: '2306', msg: I18n.t('shared.ds_data_and_key_data_must_not_exists_together') }
+      return false
+    end
+    true
   end
 
   def domain_create_params

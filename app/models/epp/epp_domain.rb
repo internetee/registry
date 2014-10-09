@@ -174,9 +174,48 @@ class Epp::EppDomain < Domain
     domain_statuses.delete(to_delete)
   end
 
-  def attach_dnskeys(dnskey_list)
-    dnskey_list.each do |dnskey_attrs|
-      dnskeys.build(dnskey_attrs)
+  def attach_dnskeys(dnssec_data)
+    sg = SettingGroup.dnskeys
+    ds_data_allowed = sg.setting(Setting::ALLOW_DS_DATA) == '0' ? false : true
+    ds_data_with_keys_allowed = sg.setting(Setting::ALLOW_DS_DATA_WITH_KEYS) == '0' ? false : true
+    key_data_allowed = sg.setting(Setting::ALLOW_KEY_DATA) == '0' ? false : true
+
+    if dnssec_data[:ds_data].any? && !ds_data_allowed
+      errors.add(:base, :ds_data_not_allowed)
+      return
+    end
+
+    dnssec_data[:ds_data].each do |ds_data|
+      if ds_data[:key_data].any? && !ds_data_with_keys_allowed
+        errors.add(:base, :ds_data_with_keys_not_allowed)
+        next
+      else
+        attach_ds(ds_data)
+      end
+    end
+
+    if dnssec_data[:key_data].any? && !key_data_allowed
+      errors.add(:base, :key_data_not_allowed)
+      return
+    end
+
+    attach_ds({
+      keyTag: SecureRandom.hex(5),
+      alg: 3,
+      digestType: sg.setting(Setting::DS_ALGORITHM),
+      key_data: dnssec_data[:key_data]
+    })
+
+    # dnskey_list.each do |dnskey_attrs|
+    #   dnskeys.build(dnskey_attrs)
+    # end
+  end
+
+  def attach_ds(ds_data)
+    key_data = ds_data.delete(:key_data)
+    ds = delegation_signers.build(ds_data)
+    key_data.each do |x|
+      ds.dnskeys.build(x)
     end
   end
 
@@ -358,16 +397,39 @@ class Epp::EppDomain < Domain
     end
 
     def parse_dnskeys_from_frame(parsed_frame)
-      res = []
+      res = { ds_data: [], key_data: [] }
 
-      parsed_frame.css('dnskey').each do |x|
-        res << {
+      res[:max_sig_life] = parsed_frame.css('maxSigLife').first.try(:text)
+
+      parsed_frame.css('dsData').each do |x|
+        keys = []
+        x.css('keyData').each do |kd|
+          keys << {
+            flags: kd.css('flags').first.try(:text),
+            protocol: kd.css('protocol').first.try(:text),
+            alg: kd.css('alg').first.try(:text),
+            public_key: kd.css('pubKey').first.try(:text)
+          }
+        end
+
+        res[:ds_data] << {
+          key_tag: x.css('keyTag').first.try(:text),
+          alg: x.css('alg').first.try(:text),
+          digest_type: x.css('digestType').first.try(:text),
+          digest: x.css('digest').first.try(:text),
+          key_data: keys
+        }
+      end
+
+      parsed_frame.css('create > keyData').each do |x|
+        res[:key_data] << {
           flags: x.css('flags').first.try(:text),
           protocol: x.css('protocol').first.try(:text),
           alg: x.css('alg').first.try(:text),
           public_key: x.css('pubKey').first.try(:text)
         }
       end
+
       res
     end
 

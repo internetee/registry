@@ -13,6 +13,7 @@ describe 'EPP Domain', epp: true do
 
       Fabricate(:domain_validation_setting_group)
       Fabricate(:domain_statuses_setting_group)
+      Fabricate(:dnskeys_setting_group)
     end
 
     it 'returns error if contact does not exists' do
@@ -314,7 +315,7 @@ describe 'EPP Domain', epp: true do
 
       it 'does not create a domain with invalid period' do
         xml = domain_create_xml({
-          period: {value: '367', attrs: { unit: 'd' } }
+          period: { value: '367', attrs: { unit: 'd' } }
         })
 
         response = epp_request(xml, :xml)
@@ -324,18 +325,17 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'creates a domain with multiple dnskeys' do
-        xml = domain_create_xml({
-          dnssec: [
-            {
-              dnskey: {
+        xml = domain_create_xml({}, {
+          _other: [
+            { keyData: {
                 flags: { value: '257' },
                 protocol: { value: '3' },
-                alg: { value: '3' },
+                alg: { value: '5' },
                 pubKey: { value: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8' }
               }
             },
             {
-              dnskey: {
+              keyData: {
                 flags: { value: '0' },
                 protocol: { value: '3' },
                 alg: { value: '5' },
@@ -343,7 +343,7 @@ describe 'EPP Domain', epp: true do
               }
             },
             {
-              dnskey: {
+              keyData: {
                 flags: { value: '256' },
                 protocol: { value: '3' },
                 alg: { value: '254' },

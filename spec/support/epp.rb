@@ -72,12 +72,14 @@ module Epp
     xml_params = defaults.deep_merge(xml_params)
 
     dsnsec_defaults = {
-      keyData: [
-        flags: { value: '257' },
-        protocol: { value: '3' },
-        alg: { value: '5' },
-        pubKey: { value: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8' }
-      ]
+      _other: [
+        {  keyData: {
+          flags: { value: '257' },
+          protocol: { value: '3' },
+          alg: { value: '5' },
+          pubKey: { value: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8' }
+        }
+      }]
     }
 
     dnssec_params = dsnsec_defaults.deep_merge(dnssec_params) if dnssec_params != false
