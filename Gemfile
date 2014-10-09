@@ -88,6 +88,9 @@ group :development do
 
   # for quick debugging
   gem 'web-console', '~> 2.0.0.beta4'
+
+  # for finding dead routes and unused actions
+  gem 'traceroute', '~> 0.4.0'
 end
 
 group :development, :test do
