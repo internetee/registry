@@ -18,6 +18,8 @@ rubocop
 echo "END_OF_RUBOCOP_RESULTS"
 
 bundle install --deployment 
+bundle-audit update
+bundle-audit
 
 # cp config/secrets-example.yml config/secrets.yml
 # create manually config/database.yml

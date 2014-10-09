@@ -131,4 +131,7 @@ group :development, :test do
 
   # for finding database optimizations
   gem 'bullet', '~> 4.14.0'
+
+  # for finding future vulnerable gems
+  gem 'bundler-audit'
 end
