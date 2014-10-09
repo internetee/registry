@@ -203,8 +203,12 @@ describe 'EPP Domain', epp: true do
         expect(d.nameservers.count).to eq(2)
         expect(d.auth_info).not_to be_empty
 
-        expect(d.dnskeys.count).to eq(1)
-        key = d.dnskeys.first
+        expect(d.delegation_signers.count).to eq(1)
+        ds = d.delegation_signers.first
+
+        expect(ds.dnskeys.count).to eq(1)
+
+        key = ds.dnskeys.first
 
         expect(key.flags).to eq(257)
         expect(key.protocol).to eq(3)
@@ -221,7 +225,7 @@ describe 'EPP Domain', epp: true do
         })
 
         response = epp_request(xml, :xml)
-
+        po response
         expect(response[:result_code]).to eq('2306')
         expect(response[:msg]).to eq('IPv4 is missing')
       end
@@ -373,10 +377,10 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'does not create a domain when dnskeys are invalid' do
-        xml = domain_create_xml({
-          dnssec: [
-            {
-              dnskey: {
+
+         xml = domain_create_xml({}, {
+          _other: [
+            { keyData: {
                 flags: { value: '250' },
                 protocol: { value: '4' },
                 alg: { value: '9' },
@@ -384,7 +388,7 @@ describe 'EPP Domain', epp: true do
               }
             },
             {
-              dnskey: {
+              keyData: {
                 flags: { value: '1' },
                 protocol: { value: '3' },
                 alg: { value: '10' },
@@ -392,7 +396,7 @@ describe 'EPP Domain', epp: true do
               }
             },
             {
-              dnskey: {
+              keyData: {
                 flags: { value: '256' },
                 protocol: { value: '5' },
                 alg: { value: '254' },
@@ -426,10 +430,9 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'does not create a domain with two identical dnskeys' do
-         xml = domain_create_xml({
-          dnssec: [
-            {
-              dnskey: {
+         xml = domain_create_xml({}, {
+          _other: [
+            { keyData: {
                 flags: { value: '257' },
                 protocol: { value: '3' },
                 alg: { value: '3' },
@@ -437,15 +440,14 @@ describe 'EPP Domain', epp: true do
               }
             },
             {
-              dnskey: {
+              keyData: {
                 flags: { value: '0' },
                 protocol: { value: '3' },
                 alg: { value: '5' },
                 pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
               }
-            }
-          ]
-        })
+            }]
+          })
 
         response = epp_request(xml, :xml)
 

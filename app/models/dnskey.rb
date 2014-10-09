@@ -9,6 +9,8 @@ class Dnskey < ActiveRecord::Base
   validate :validate_protocol
   validate :validate_flags
 
+  # after_validation :generate_epp_errors
+
   ALGORITHMS = %w(3 5 6 7 8 252 253 254 255)
   PROTOCOLS = %w(3)
   FLAGS = %w(0 256 257)

@@ -54,7 +54,6 @@ class Domain < ActiveRecord::Base
   validate :validate_tech_contacts_uniqueness
   validate :validate_admin_contacts_uniqueness
   validate :validate_domain_statuses_uniqueness
-  #validate :validate_dnskeys_uniqueness
   validate :validate_nameserver_ips
 
   attr_accessor :owner_contact_typeahead
@@ -156,19 +155,6 @@ class Domain < ActiveRecord::Base
       validated << status.value
       errors.add(:domain_statuses, :invalid) if errors[:domain_statuses].blank?
       status.errors.add(:value, :taken)
-    end
-  end
-
-  def validate_dnskeys_uniqueness
-    validated = []
-    list = dnskeys.reject(&:marked_for_destruction?)
-    list.each do |dnskey|
-      next if dnskey.public_key.blank?
-      existing = list.select { |x| x.public_key == dnskey.public_key }
-      next unless existing.length > 1
-      validated << dnskey.public_key
-      errors.add(:dnskeys, :invalid) if errors[:dnskeys].blank?
-      dnskey.errors.add(:public_key, :taken)
     end
   end
 

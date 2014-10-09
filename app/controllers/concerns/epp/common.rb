@@ -41,7 +41,7 @@ module Epp::Common
   def handle_errors(obj = nil)
     @errors ||= []
     if obj
-      obj.construct_epp_errors
+      obj.generate_epp_errors
       @errors += obj.errors[:epp_errors]
     end
 

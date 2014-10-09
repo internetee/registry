@@ -1,6 +1,36 @@
 module EppErrors
   extend ActiveSupport::Concern
 
+  def generate_epp_errors
+    epp_errors = []
+    errors.messages.each do |key, values|
+      key = key.to_s.split('.')[0].to_sym
+      if self.class.reflect_on_association(key)
+        send(key).each do |x|
+          epp_errors << x.generate_epp_errors
+        end
+      end
+
+      epp_errors << collect_parent_errors(values)
+    end
+
+    errors[:epp_errors] = epp_errors
+    errors[:epp_errors].flatten!
+    # epp_errors = []
+    # errors.messages.each do |key, values|
+    #   if self.class.reflect_on_association(key)
+    #     send(key).each do |x|
+    #       epp_errors << x.errors[:epp_errors]
+    #     end
+    #   end
+
+    #   epp_errors << collect_parent_errors(values)
+    # end
+
+    # errors[:epp_errors] = epp_errors
+    # errors[:epp_errors].flatten!
+  end
+
   def construct_epp_errors
     epp_errors = []
     errors.messages.each do |key, values|
