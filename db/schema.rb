@@ -94,6 +94,7 @@ ActiveRecord::Schema.define(version: 20141009101337) do
   create_table "delegation_signers", force: true do |t|
     t.integer "domain_id"
     t.string  "key_tag"
+    t.integer "alg"
     t.integer "digest_type"
     t.string  "digest"
   end

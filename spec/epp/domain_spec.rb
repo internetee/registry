@@ -330,7 +330,7 @@ describe 'EPP Domain', epp: true do
             { keyData: {
                 flags: { value: '257' },
                 protocol: { value: '3' },
-                alg: { value: '5' },
+                alg: { value: '3' },
                 pubKey: { value: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8' }
               }
             },
@@ -356,10 +356,16 @@ describe 'EPP Domain', epp: true do
         epp_request(xml, :xml)
         d = Domain.first
 
-        expect(d.dnskeys.pluck(:flags)).to match_array([257, 0, 256])
-        expect(d.dnskeys.pluck(:protocol)).to match_array([3, 3, 3])
-        expect(d.dnskeys.pluck(:alg)).to match_array([3, 5, 254])
-        expect(d.dnskeys.pluck(:public_key)).to match_array(%w(
+        ds = d.delegation_signers.first
+
+        expect(ds.key_tag).to_not be_blank
+        expect(ds.alg).to eq(3)
+        expect(ds.digest_type).to eq(SettingGroup.dnskeys.setting(Setting::DS_ALGORITHM).value.to_i)
+
+        expect(ds.dnskeys.pluck(:flags)).to match_array([257, 0, 256])
+        expect(ds.dnskeys.pluck(:protocol)).to match_array([3, 3, 3])
+        expect(ds.dnskeys.pluck(:alg)).to match_array([3, 5, 254])
+        expect(ds.dnskeys.pluck(:public_key)).to match_array(%w(
           AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8
           700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f
           841936717ae427ace63c28d04918569a841936717ae427ace63c28d0

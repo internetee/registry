@@ -29,12 +29,6 @@ class Epp::EppDomain < Domain
             max: domain_validation_sg.setting(:ns_max_count).value
           }
         ],
-        [:dnskeys, :out_of_range,
-          {
-            min: domain_validation_sg.setting(:dnskeys_min_count).value,
-            max: domain_validation_sg.setting(:dnskeys_max_count).value
-          }
-        ],
         [:period, :out_of_range, { value: { obj: 'period', val: period } }]
       ],
       '2200' => [
@@ -176,9 +170,9 @@ class Epp::EppDomain < Domain
 
   def attach_dnskeys(dnssec_data)
     sg = SettingGroup.dnskeys
-    ds_data_allowed = sg.setting(Setting::ALLOW_DS_DATA) == '0' ? false : true
-    ds_data_with_keys_allowed = sg.setting(Setting::ALLOW_DS_DATA_WITH_KEYS) == '0' ? false : true
-    key_data_allowed = sg.setting(Setting::ALLOW_KEY_DATA) == '0' ? false : true
+    ds_data_allowed = sg.setting(Setting::ALLOW_DS_DATA).value == '0' ? false : true
+    ds_data_with_keys_allowed = sg.setting(Setting::ALLOW_DS_DATA_WITH_KEYS).value == '0' ? false : true
+    key_data_allowed = sg.setting(Setting::ALLOW_KEY_DATA).value == '0' ? false : true
 
     if dnssec_data[:ds_data].any? && !ds_data_allowed
       errors.add(:base, :ds_data_not_allowed)
@@ -200,15 +194,11 @@ class Epp::EppDomain < Domain
     end
 
     attach_ds({
-      keyTag: SecureRandom.hex(5),
+      key_tag: SecureRandom.hex(5),
       alg: 3,
-      digestType: sg.setting(Setting::DS_ALGORITHM),
+      digest_type: sg.setting(Setting::DS_ALGORITHM).value,
       key_data: dnssec_data[:key_data]
     })
-
-    # dnskey_list.each do |dnskey_attrs|
-    #   dnskeys.build(dnskey_attrs)
-    # end
   end
 
   def attach_ds(ds_data)
