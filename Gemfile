@@ -64,10 +64,8 @@ gem 'paper_trail', '~> 3.0.5'
 # for select
 gem 'selectize-rails', '~> 0.11.0'
 
-group :assets do
-  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  gem 'therubyracer',  platforms: :ruby
-end
+# See https://github.com/sstephenson/execjs#readme for more supported runtimes
+gem 'therubyracer',  platforms: :ruby
 
 group :development do
   # faster dev load time
@@ -87,6 +85,9 @@ group :development do
   gem 'guard-rspec', '~> 4.3.1'
   # rubocop support for guard
   gem 'guard-rubocop', '~> 1.1.0'
+
+  # for quick debugging
+  gem 'web-console', '~> 2.0.0.beta4'
 end
 
 group :development, :test do
