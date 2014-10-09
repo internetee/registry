@@ -128,6 +128,7 @@ group :development, :test do
 
   # For code review
   gem 'simplecov', '~> 0.9.1', :require => false
+  gem 'rubycritic', '~> 1.1.1'
 
   # for finding database optimizations
   gem 'bullet', '~> 4.14.0'
