@@ -17,7 +17,7 @@ echo "RUBOCOP_RESULTS"
 rubocop
 echo "END_OF_RUBOCOP_RESULTS"
 
-bundle install --deployment 
+bundle install 
 
 echo "SECURITY_RESULTS"
 bundle-audit update
