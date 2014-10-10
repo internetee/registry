@@ -135,4 +135,7 @@ group :development, :test do
 
   # for finding future vulnerable gems
   gem 'bundler-audit'
+
+  # for security audit'
+  gem 'brakeman', '~> 2.6.2', :require => false
 end
