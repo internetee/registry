@@ -27,7 +27,7 @@ RCODE=$?
 echo "END_OF_RUBOCOP_RESULTS"
 
 echo "TEST_RESULTS"
-ROBOT=true bundle exec rake test
+bundle exec ROBOT=true rake test
 TCODE=$?
 echo "END_OF_TEST_RESULTS"
 
