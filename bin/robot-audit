@@ -42,8 +42,8 @@ echo "END_OF_SECURITY_RESULTS"
 bundle exec rubycritic app lib
 
 if [ $RCODE == 0 ] && [ $TCODE == 0 ] &&[ $BCODE == 0 ]; then
-  echo "FAILURE"
   exit 0
 else
+  echo "FAILURE"
   exit 1
 fi
