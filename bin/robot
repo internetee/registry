@@ -3,6 +3,11 @@
 # Build and run everything for automatic tests 
 #
 
+# default locations
+export LANGUAGE=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
 # fail later
 set -o pipefail
 
@@ -40,7 +45,7 @@ echo "END_OF_GIT_LAST_COMMITS"
 
 # run tests 
 echo "TEST_RESULTS"
-RAILS_ENV=test ROBOT=true bundle exec rake test
+ROBOT=true bundle exec rake test
 echo "END_OF_TEST_RESULTS"
 
 # update code review
