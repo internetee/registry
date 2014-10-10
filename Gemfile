@@ -83,7 +83,7 @@ group :development do
 
   # rspec support for guard
   gem 'guard-rspec', '~> 4.3.1'
-  # rubocop support for guard
+  gem 'rubocop', '~> 0.26.1'
   gem 'guard-rubocop', '~> 1.1.0'
 
   # for quick debugging
