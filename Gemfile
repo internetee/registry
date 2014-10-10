@@ -127,7 +127,7 @@ group :development, :test do
   gem 'uuidtools', '~> 2.1.4'
 
   # For code review
-  gem 'simplecov', '~> 0.9.1', :require => false
+  gem 'simplecov', '~> 0.9.1', require: false
   gem 'rubycritic', '~> 1.1.1'
 
   # for finding database optimizations
@@ -137,5 +137,5 @@ group :development, :test do
   gem 'bundler-audit'
 
   # for security audit'
-  gem 'brakeman', '~> 2.6.2', :require => false
+  gem 'brakeman', '~> 2.6.2', require: false
 end
