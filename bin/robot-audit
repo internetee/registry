@@ -44,6 +44,6 @@ bundle exec rubycritic app lib
 if [ $RCODE == 0 ] && [ $TCODE == 0 ] &&[ $BCODE == 0 ]; then
   exit 0
 else
-  echo "FAILURE"
+  echo "ROBOTEXITWITHFAILURE"
   exit 1
 fi
