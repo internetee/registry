@@ -9,4 +9,7 @@ class Setting < ActiveRecord::Base
   ALLOW_DS_DATA = 'allow_ds_data'
   ALLOW_DS_DATA_WITH_KEYS = 'allow_ds_data_with_keys'
   ALLOW_KEY_DATA = 'allow_key_data'
+  DNSKEYS_MAX_COUNT = 'dnskeys_max_count'
+  DNSKEYS_MIN_COUNT = 'dnskeys_min_count'
+
 end

@@ -112,7 +112,6 @@ en:
             dnskeys:
               invalid: 'DNS keys are invalid'
               not_found: 'Dnskey was not found'
-              out_of_range: 'DNS keys count must be between %{min}-%{max}'
 
         domain:
           <<: *epp_domain_ar_attributes
@@ -205,6 +204,12 @@ en:
             public_key:
               taken: 'Public key already exists'
               blank: 'Public key is missing'
+
+
+        delegation_signer:
+          attributes:
+            dnskeys:
+              out_of_range: 'DNS keys count must be between %{min}-%{max}'
 
 
     attributes:
