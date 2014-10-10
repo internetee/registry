@@ -23,17 +23,26 @@ echo "END_OF_GIT_LAST_COMMITS"
 
 echo "RUBOCOP_RESULTS"
 bundle exec rubocop
+RCODE=$?
 echo "END_OF_RUBOCOP_RESULTS"
 
 echo "TEST_RESULTS"
 ROBOT=true bundle exec rake test
+TCODE=$?
 echo "END_OF_TEST_RESULTS"
 
 echo "SECURITY_RESULTS"
 bundle exec bundle-audit update
 bundle exec bundle-audit
+BCODE=$?
 bundle exec brakeman
 echo "END_OF_SECURITY_RESULTS"
 
 # update code review
 bundle exec rubycritic app lib
+
+if [ $RCODE == 0 ] && [ $TCODE == 0 ] &&[ $BCODE == 0 ]; then
+  exit 0
+else
+  exit 1
+fi
