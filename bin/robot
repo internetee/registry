@@ -25,7 +25,7 @@ bundle install
 
 RAILS_ENV=test bundle exec rake db:drop
 RAILS_ENV=test bundle exec rake db:create
-RAILS_ENV=test bundle exec rake db:schema:load
+RAILS_ENV=test bundle exec rake db:schema:load &> /dev/null
 RAILS_ENV=test bundle exec rake db:seed
 RAILS_ENV=test bundle exec rake assets:precompile
 
@@ -33,14 +33,13 @@ echo "GIT_LAST_COMMITS"
 git log origin/master -n 10 --pretty=oneline | sed -r '/^.{40} Merge branch/d' | sed -r 's/^.{40}/Latest: /' 
 echo "END_OF_GIT_LAST_COMMITS"
 
-# run tests 
-echo "TEST_RESULTS"
-ROBOT=true bundle exec rake test
-echo "END_OF_TEST_RESULTS"
-
 echo "RUBOCOP_RESULTS"
 bundle exec rubocop
 echo "END_OF_RUBOCOP_RESULTS"
+
+echo "TEST_RESULTS"
+ROBOT=true bundle exec rake test
+echo "END_OF_TEST_RESULTS"
 
 echo "SECURITY_RESULTS"
 bundle exec bundle-audit update
