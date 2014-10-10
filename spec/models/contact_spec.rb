@@ -74,7 +74,7 @@ end
 
 describe Contact, '#up_id' do
   before(:each) do
-    #Fabricate(:contact, code: 'asd12', created_by: Fabricate(:epp_user), updated_by: Fabricate(:epp_user), registrar: zone)
+    # Fabricate(:contact, code: 'asd12', created_by: Fabricate(:epp_user), updated_by: Fabricate(:epp_user), registrar: zone)
     @epp_user = Fabricate(:epp_user)
     @contact = Fabricate.build(:contact, code: 'asd12', created_by: @epp_user, updated_by: @epp_user)
   end

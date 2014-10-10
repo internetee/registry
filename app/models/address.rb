@@ -13,19 +13,19 @@ class Address < ActiveRecord::Base
   has_paper_trail class_name: 'AddressVersion'
 
   class << self
-#    def validate_postal_info_types(parsed_frame)
-#      errors, used = [], []
-#      parsed_frame.css('postalInfo').each do |pi|
-#        attr = pi.attributes['type'].try(:value)
-#        errors << { code: 2003, msg: I18n.t('errors.messages.attr_missing', key: 'type') } and next unless attr
-#        unless TYPES.include?(attr)
-#          errors << { code: 2005, msg: I18n.t('errors.messages.invalid_type'), value: { obj: 'type', val: attr } }
-#          next
-#        end
-#        errors << { code: 2005, msg: I18n.t('errors.messages.repeating_postal_info') } and next if used.include?(attr)
-#        used << attr
-#      end; errors
-#    end
+    #    def validate_postal_info_types(parsed_frame)
+    #      errors, used = [], []
+    #      parsed_frame.css('postalInfo').each do |pi|
+    #        attr = pi.attributes['type'].try(:value)
+    #        errors << { code: 2003, msg: I18n.t('errors.messages.attr_missing', key: 'type') } and next unless attr
+    #        unless TYPES.include?(attr)
+    #          errors << { code: 2005, msg: I18n.t('errors.messages.invalid_type'), value: { obj: 'type', val: attr } }
+    #          next
+    #        end
+    #        errors << { code: 2005, msg: I18n.t('errors.messages.repeating_postal_info') } and next if used.include?(attr)
+    #        used << attr
+    #      end; errors
+    #    end
 
     def extract_attributes(ah)
       address_hash = {}
@@ -36,10 +36,10 @@ class Address < ActiveRecord::Base
 
     private
 
-#    def local?(postal_info)
-#      return :local_address_attributes if postal_info[:type] == LOCAL_TYPE_SHORT
-#      :international_address_attributes
-#    end
+    #    def local?(postal_info)
+    #      return :local_address_attributes if postal_info[:type] == LOCAL_TYPE_SHORT
+    #      :international_address_attributes
+    #    end
 
     def addr_hash_from_params(addr)
       return {} if addr.nil?

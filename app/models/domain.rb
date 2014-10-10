@@ -19,17 +19,17 @@ class Domain < ActiveRecord::Base
 
   has_many :nameservers, dependent: :delete_all
   accepts_nested_attributes_for :nameservers, allow_destroy: true,
-    reject_if: proc { |attrs| attrs[:hostname].blank? }
+                                              reject_if: proc { |attrs| attrs[:hostname].blank? }
 
   has_many :domain_statuses, dependent: :delete_all
   accepts_nested_attributes_for :domain_statuses, allow_destroy: true,
-    reject_if: proc { |attrs| attrs[:value].blank? }
+                                                  reject_if: proc { |attrs| attrs[:value].blank? }
 
   has_many :domain_transfers, dependent: :delete_all
 
   has_many :dnskeys, dependent: :delete_all
   accepts_nested_attributes_for :dnskeys, allow_destroy: true,
-    reject_if: proc { |attrs| attrs[:public_key].blank? }
+                                          reject_if: proc { |attrs| attrs[:public_key].blank? }
 
   delegate :code, to: :owner_contact, prefix: true
   delegate :email, to: :owner_contact, prefix: true
@@ -118,7 +118,7 @@ class Domain < ActiveRecord::Base
 
   def validate_nameserver_ips
     nameservers.each do |ns|
-      next if !ns.hostname.end_with?(name)
+      next unless ns.hostname.end_with?(name)
       next if ns.ipv4.present?
       errors.add(:nameservers, :invalid) if errors[:nameservers].blank?
       ns.errors.add(:ipv4, :blank)

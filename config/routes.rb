@@ -31,7 +31,7 @@ Rails.application.routes.draw do
 
     root 'domains#index'
 
- end
+  end
 
   ## CLIENT ROUTES
   namespace(:client) do
@@ -66,10 +66,10 @@ Rails.application.routes.draw do
   end
 
   authenticated :user do
-    root :to => 'admin/domains#index', :as => :authenticated_root
+    root to: 'admin/domains#index', as: :authenticated_root
   end
 
-  root :to => redirect('login')
+  root to: redirect('login')
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

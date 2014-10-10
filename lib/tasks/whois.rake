@@ -2,12 +2,12 @@ desc 'Commands for whois'
 
 desc 'generate whois files'
 task 'whois:generate' => :environment do
-  Dir.mkdir("./tmp/whois") unless File.exists?("./tmp/whois") #a folder for ze stuff
+  Dir.mkdir('./tmp/whois') unless File.exist?('./tmp/whois') # a folder for ze stuff
 
-  alphabet = (("a".."z").to_a << %w(ö õ ü ä) ).flatten!
+  alphabet = (('a'..'z').to_a << %w(ö õ ü ä)).flatten!
   @domains = {}
   alphabet.each do |letter|
-    domains = Domain.where([ 'name LIKE ?', "#{letter}%" ])
+    domains = Domain.where(['name LIKE ?', "#{letter}%"])
     @domains[letter] = {}
 
     domains.each do |domain|
@@ -22,9 +22,8 @@ task 'whois:generate' => :environment do
     end
   end
 
-  @domains.each do |k,v|
+  @domains.each do |k, v|
     file = File.open("tmp/whois/#{k}_domain.yaml", 'w') { |f| f.write(v.to_yaml) }
   end
 
 end
-

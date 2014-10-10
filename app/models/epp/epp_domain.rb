@@ -24,16 +24,16 @@ class Epp::EppDomain < Domain
       ],
       '2004' => [ # Parameter value range error
         [:nameservers, :out_of_range,
-          {
-            min: domain_validation_sg.setting(:ns_min_count).value,
-            max: domain_validation_sg.setting(:ns_max_count).value
-          }
+         {
+           min: domain_validation_sg.setting(:ns_min_count).value,
+           max: domain_validation_sg.setting(:ns_max_count).value
+         }
         ],
         [:dnskeys, :out_of_range,
-          {
-            min: domain_validation_sg.setting(:dnskeys_min_count).value,
-            max: domain_validation_sg.setting(:dnskeys_max_count).value
-          }
+         {
+           min: domain_validation_sg.setting(:dnskeys_min_count).value,
+           max: domain_validation_sg.setting(:dnskeys_max_count).value
+         }
         ],
         [:period, :out_of_range, { value: { obj: 'period', val: period } }]
       ],
@@ -71,8 +71,8 @@ class Epp::EppDomain < Domain
 
   # TODO: Find out if there are any attributes that can be changed
   # if not, delete this method
-  def parse_and_update_domain_attributes(parsed_frame)
-    #assign_attributes(self.class.parse_update_params_from_frame(parsed_frame))
+  def parse_and_update_domain_attributes(_parsed_frame)
+    # assign_attributes(self.class.parse_update_params_from_frame(parsed_frame))
 
     errors.empty?
   end

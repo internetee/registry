@@ -33,7 +33,7 @@ describe 'EPP Contact', epp: true do
 
         expect(response[:result_code]).to eq('1000')
         expect(response[:msg]).to eq('Command completed successfully')
-        #expect(response[:clTRID]).to eq('ABC-12345')
+        # expect(response[:clTRID]).to eq('ABC-12345')
         expect(Contact.first.created_by_id).to eq 2
         expect(Contact.first.updated_by_id).to eq nil
 

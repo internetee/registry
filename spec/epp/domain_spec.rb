@@ -273,7 +273,7 @@ describe 'EPP Domain', epp: true do
         xml = domain_create_xml({
           ns: [
             { hostObj: { value: 'invalid1-' } },
-            { hostObj: { value: '-invalid2' } },
+            { hostObj: { value: '-invalid2' } }
           ]
 
         })
@@ -314,7 +314,7 @@ describe 'EPP Domain', epp: true do
 
       it 'does not create a domain with invalid period' do
         xml = domain_create_xml({
-          period: {value: '367', attrs: { unit: 'd' } }
+          period: { value: '367', attrs: { unit: 'd' } }
         })
 
         response = epp_request(xml, :xml)
@@ -420,26 +420,26 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'does not create a domain with two identical dnskeys' do
-         xml = domain_create_xml({
-          dnssec: [
-            {
-              dnskey: {
-                flags: { value: '257' },
-                protocol: { value: '3' },
-                alg: { value: '3' },
-                pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
-              }
-            },
-            {
-              dnskey: {
-                flags: { value: '0' },
-                protocol: { value: '3' },
-                alg: { value: '5' },
-                pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
-              }
-            }
-          ]
-        })
+        xml = domain_create_xml({
+         dnssec: [
+           {
+             dnskey: {
+               flags: { value: '257' },
+               protocol: { value: '3' },
+               alg: { value: '3' },
+               pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+             }
+           },
+           {
+             dnskey: {
+               flags: { value: '0' },
+               protocol: { value: '3' },
+               alg: { value: '5' },
+               pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+             }
+           }
+         ]
+       })
 
         response = epp_request(xml, :xml)
 
@@ -580,12 +580,12 @@ describe 'EPP Domain', epp: true do
         expect(inf_data.css('status').first[:s]).to eq('clientHold')
         expect(inf_data.css('registrant').text).to eq(d.owner_contact_code)
 
-        admin_contacts_from_request = inf_data.css('contact[type="admin"]').map { |x| x.text }
+        admin_contacts_from_request = inf_data.css('contact[type="admin"]').map(&:text)
         admin_contacts_existing = d.admin_contacts.pluck(:code)
 
         expect(admin_contacts_from_request).to eq(admin_contacts_existing)
 
-        hosts_from_request = inf_data.css('hostObj').map { |x| x.text }
+        hosts_from_request = inf_data.css('hostObj').map(&:text)
         hosts_existing = d.nameservers.where(ipv4: nil).pluck(:hostname)
 
         expect(hosts_from_request).to eq(hosts_existing)

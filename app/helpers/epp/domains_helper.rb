@@ -7,12 +7,12 @@ module Epp::DomainsHelper
 
       if @domain.errors.any?
         handle_errors(@domain)
-        raise ActiveRecord::Rollback and return
+        fail ActiveRecord::Rollback and return
       end
 
       unless @domain.save
         handle_errors(@domain)
-        raise ActiveRecord::Rollback and return
+        fail ActiveRecord::Rollback and return
       end
 
       render '/epp/domains/create'
@@ -55,12 +55,12 @@ module Epp::DomainsHelper
 
       if @domain.errors.any?
         handle_errors(@domain)
-        raise ActiveRecord::Rollback and return
+        fail ActiveRecord::Rollback and return
       end
 
       unless @domain.save
         handle_errors(@domain)
-        raise ActiveRecord::Rollback and return
+        fail ActiveRecord::Rollback and return
       end
 
       render '/epp/domains/success'
