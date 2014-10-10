@@ -225,7 +225,6 @@ describe 'EPP Domain', epp: true do
         })
 
         response = epp_request(xml, :xml)
-        po response
         expect(response[:result_code]).to eq('2306')
         expect(response[:msg]).to eq('IPv4 is missing')
       end
@@ -572,8 +571,10 @@ describe 'EPP Domain', epp: true do
         d.domain_statuses.build(value: DomainStatus::CLIENT_HOLD, description: 'Payment overdue.')
         d.nameservers.build(hostname: 'ns1.example.com', ipv4: '192.168.1.1', ipv6: '1080:0:0:0:8:800:200C:417A')
 
-        d.dnskeys.build(flags: 257, protocol: 3, alg: 3, public_key: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8')
-        d.dnskeys.build(flags: 0, protocol: 3, alg: 5, public_key: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f')
+        ds = d.delegation_signers.build(key_tag: '123', alg: 3, digest_type: 1, digest: 'abc')
+
+        ds.dnskeys.build(flags: 257, protocol: 3, alg: 3, public_key: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8')
+        ds.dnskeys.build(flags: 0, protocol: 3, alg: 5, public_key: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f')
         d.save
 
         response = epp_request(domain_info_xml, :xml)
@@ -603,13 +604,20 @@ describe 'EPP Domain', epp: true do
         expect(inf_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
         expect(inf_data.css('pw').text).to eq(d.auth_info)
 
-        dnskey_1 = inf_data.css('dnskey')[0]
+        ds_data = response[:parsed].css('dsData')[0]
+
+        expect(ds_data.css('keyTag').first.text).to eq('123')
+        expect(ds_data.css('alg').first.text).to eq('3')
+        expect(ds_data.css('digestType').first.text).to eq('1')
+        expect(ds_data.css('digest').first.text).to eq('abc')
+
+        dnskey_1 = ds_data.css('keyData')[0]
         expect(dnskey_1.css('flags').first.text).to eq('257')
         expect(dnskey_1.css('protocol').first.text).to eq('3')
         expect(dnskey_1.css('alg').first.text).to eq('3')
         expect(dnskey_1.css('pubKey').first.text).to eq('AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8')
 
-        dnskey_2 = inf_data.css('dnskey')[1]
+        dnskey_2 = ds_data.css('keyData')[1]
         expect(dnskey_2.css('flags').first.text).to eq('0')
         expect(dnskey_2.css('protocol').first.text).to eq('3')
         expect(dnskey_2.css('alg').first.text).to eq('5')
