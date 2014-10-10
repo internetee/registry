@@ -21,7 +21,7 @@ git pull origin master &> /dev/null
 git reset --hard &> /dev/null
 unset GIT_DIR GIT_WORK_TREE
 
-bundle install 
+bundle install &> /dev/null
 
 RAILS_ENV=test bundle exec rake db:drop
 RAILS_ENV=test bundle exec rake db:create
