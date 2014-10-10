@@ -23,16 +23,6 @@ unset GIT_DIR GIT_WORK_TREE
 
 bundle install 
 
-echo "RUBOCOP_RESULTS"
-bundle exec rubocop
-echo "END_OF_RUBOCOP_RESULTS"
-
-echo "SECURITY_RESULTS"
-bundle exec bundle-audit update
-bundle exec bundle-audit
-bundle exec brakeman
-echo "END_OF_SECURITY_RESULTS"
-
 RAILS_ENV=test bundle exec rake db:drop
 RAILS_ENV=test bundle exec rake db:create
 RAILS_ENV=test bundle exec rake db:schema:load
@@ -47,6 +37,16 @@ echo "END_OF_GIT_LAST_COMMITS"
 echo "TEST_RESULTS"
 ROBOT=true bundle exec rake test
 echo "END_OF_TEST_RESULTS"
+
+echo "RUBOCOP_RESULTS"
+bundle exec rubocop
+echo "END_OF_RUBOCOP_RESULTS"
+
+echo "SECURITY_RESULTS"
+bundle exec bundle-audit update
+bundle exec bundle-audit
+bundle exec brakeman
+echo "END_OF_SECURITY_RESULTS"
 
 # update code review
 bundle exec rubycritic app lib
