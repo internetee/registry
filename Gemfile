@@ -67,32 +67,6 @@ gem 'selectize-rails', '~> 0.11.0'
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 gem 'therubyracer',  platforms: :ruby
 
-group :development do
-  # faster dev load time
-  gem 'unicorn'
-
-  # Spring speeds up development by keeping your application running in the background.
-  # Read more: https://github.com/rails/spring
-  gem 'spring'
-
-  # bundle exec rake doc:rails generates the API under doc/api.
-  gem 'sdoc', '~> 0.4.0'
-
-  # run tests automatically
-  gem 'guard', '~> 2.6.1'
-
-  # rspec support for guard
-  gem 'guard-rspec', '~> 4.3.1'
-  gem 'rubocop', '~> 0.26.1'
-  gem 'guard-rubocop', '~> 1.1.0'
-
-  # for quick debugging
-  gem 'web-console', '~> 2.0.0.beta4'
-
-  # for finding dead routes and unused actions
-  gem 'traceroute', '~> 0.4.0'
-end
-
 group :development, :test do
   gem 'capybara', '~> 2.4.1'
   # For feature testing
@@ -138,4 +112,28 @@ group :development, :test do
 
   # for security audit'
   gem 'brakeman', '~> 2.6.2', require: false
+
+  # Spring speeds up development by keeping your application running in the background.
+  # Read more: https://github.com/rails/spring
+  gem 'spring'
+
+  # bundle exec rake doc:rails generates the API under doc/api.
+  gem 'sdoc', '~> 0.4.0'
+
+  # run tests automatically
+  gem 'guard', '~> 2.6.1'
+
+  # rspec support for guard
+  gem 'guard-rspec', '~> 4.3.1'
+  gem 'rubocop', '~> 0.26.1'
+  gem 'guard-rubocop', '~> 1.1.0'
+
+  # for quick debugging
+  gem 'web-console', '~> 2.0.0.beta4'
+
+  # for finding dead routes and unused actions
+  gem 'traceroute', '~> 0.4.0'
+
+  # faster dev load time
+  gem 'unicorn'
 end
