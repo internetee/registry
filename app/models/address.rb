@@ -17,12 +17,20 @@ class Address < ActiveRecord::Base
     #      errors, used = [], []
     #      parsed_frame.css('postalInfo').each do |pi|
     #        attr = pi.attributes['type'].try(:value)
-    #        errors << { code: 2003, msg: I18n.t('errors.messages.attr_missing', key: 'type') } and next unless attr
+    #        errors << { 
+    #          code: 2003, msg: I18n.t('errors.messages.attr_missing', key: 'type') 
+    #        } and next unless attr
     #        unless TYPES.include?(attr)
-    #          errors << { code: 2005, msg: I18n.t('errors.messages.invalid_type'), value: { obj: 'type', val: attr } }
+    #          errors << { 
+    #            code: 2005, 
+    #            msg: I18n.t('errors.messages.invalid_type'), value: { obj: 'type', val: attr } 
+    #          }
     #          next
     #        end
-    #        errors << { code: 2005, msg: I18n.t('errors.messages.repeating_postal_info') } and next if used.include?(attr)
+    #        errors << { 
+    #          code: 2005, 
+    #          msg: I18n.t('errors.messages.repeating_postal_info')
+    #        } and next if used.include?(attr)
     #        used << attr
     #      end; errors
     #    end

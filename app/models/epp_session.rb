@@ -2,7 +2,7 @@ class EppSession < ActiveRecord::Base
   before_save :marshal_data!
 
   def data
-    @data ||= self.class.unmarshal(read_attribute(:data)) || {}
+    @data ||= self.class.unmarshal(self[:data]) || {}
   end
 
   def [](key)

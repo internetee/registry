@@ -1,6 +1,6 @@
 class Domain < ActiveRecord::Base
-  # TODO whois requests ip whitelist for full info for own domains and partial info for other domains
-  # TODO most inputs should be trimmed before validatation, probably some global logic?
+  # TODO: whois requests ip whitelist for full info for own domains and partial info for other domains
+  # TODO: most inputs should be trimmed before validatation, probably some global logic?
   paginates_per 10 # just for showoff
 
   belongs_to :registrar
@@ -9,13 +9,13 @@ class Domain < ActiveRecord::Base
   has_many :domain_contacts, dependent: :delete_all
   accepts_nested_attributes_for :domain_contacts, allow_destroy: true
 
-  has_many :tech_contacts, -> do
-    where(domain_contacts: { contact_type: DomainContact::TECH })
-  end, through: :domain_contacts, source: :contact
+  has_many :tech_contacts, 
+           -> { where(domain_contacts: { contact_type: DomainContact::TECH }) },
+           through: :domain_contacts, source: :contact
 
-  has_many :admin_contacts, -> do
-    where(domain_contacts: { contact_type: DomainContact::ADMIN })
-  end, through: :domain_contacts, source: :contact
+  has_many :admin_contacts, 
+           -> { where(domain_contacts: { contact_type: DomainContact::ADMIN }) },
+           through: :domain_contacts, source: :contact
 
   has_many :nameservers, dependent: :delete_all
   accepts_nested_attributes_for :nameservers, allow_destroy: true,
@@ -64,9 +64,9 @@ class Domain < ActiveRecord::Base
 
   def name=(value)
     value.strip!
-    write_attribute(:name, SimpleIDN.to_unicode(value))
-    write_attribute(:name_puny, SimpleIDN.to_ascii(value))
-    write_attribute(:name_dirty, value)
+    self[:name] = SimpleIDN.to_unicode(value)
+    self[:name_puny] = SimpleIDN.to_ascii(value)
+    self[:name_dirty] = value
   end
 
   def owner_contact_typeahead
@@ -214,11 +214,13 @@ class Domain < ActiveRecord::Base
     name
   end
 
+  # rubocop:disable Lint/Loop
   def generate_auth_info
     begin
       self.auth_info = SecureRandom.hex
     end while self.class.exists?(auth_info: auth_info)
   end
+  # rubocop:enable Lint/Loop
 
   def attach_default_contacts
     tech_contacts << owner_contact if tech_contacts_count.zero?

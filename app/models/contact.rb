@@ -13,7 +13,7 @@ class Contact < ActiveRecord::Base
   has_many :domain_contacts
   has_many :domains, through: :domain_contacts
 
-  # TODO remove the x_by
+  # TODO: remove the x_by
   belongs_to :created_by, class_name: 'EppUser', foreign_key: :created_by_id
   belongs_to :updated_by, class_name: 'EppUser', foreign_key: :updated_by_id
   belongs_to :registrar
@@ -160,6 +160,4 @@ class Contact < ActiveRecord::Base
       res.reduce([]) { |o, v| o << { id: v[:id], display_key: "#{v.name} (#{v.code})" } }
     end
   end
-
-  private
 end

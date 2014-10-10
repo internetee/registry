@@ -43,6 +43,7 @@ module Epp::DomainsHelper
     render '/epp/domains/info'
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
   def update_domain
     Epp::EppDomain.transaction do
       @domain = find_domain
@@ -66,6 +67,7 @@ module Epp::DomainsHelper
       render '/epp/domains/success'
     end
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   def transfer_domain
     @domain = find_domain(secure: false)
@@ -76,6 +78,7 @@ module Epp::DomainsHelper
     render '/epp/domains/transfer'
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
   def delete_domain
     @domain = find_domain
 
@@ -85,6 +88,7 @@ module Epp::DomainsHelper
 
     render '/epp/domains/success'
   end
+  # rubocop:enbale Metrics/CyclomaticComplexity
 
   ### HELPER METHODS ###
 
@@ -156,12 +160,20 @@ module Epp::DomainsHelper
     domain = Epp::EppDomain.find_by(name: @ph[:name])
 
     unless domain
-      epp_errors << { code: '2303', msg: I18n.t('errors.messages.epp_domain_not_found'), value: { obj: 'name', val: @ph[:name] } }
+      epp_errors << {
+        code: '2303', 
+        msg: I18n.t('errors.messages.epp_domain_not_found'), 
+        value: { obj: 'name', val: @ph[:name] } 
+      }
       return nil
     end
 
     if domain.registrar != current_epp_user.registrar && secure[:secure] == true
-      epp_errors << { code: '2302', msg: I18n.t('errors.messages.domain_exists_but_belongs_to_other_registrar'), value: { obj: 'name', val: @ph[:name] } }
+      epp_errors << { 
+        code: '2302',
+        msg: I18n.t('errors.messages.domain_exists_but_belongs_to_other_registrar'), 
+        value: { obj: 'name', val: @ph[:name] } 
+      }
       return nil
     end
 

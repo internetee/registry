@@ -166,7 +166,7 @@ describe 'EPP Domain', epp: true do
       it 'creates new pw after successful transfer' do
         pw = domain.auth_info
         xml = domain_transfer_xml(pw: pw)
-        response = epp_request(xml, :xml, :elkdata) # transfer domain
+        epp_request(xml, :xml, :elkdata) # transfer domain
         response = epp_request(xml, :xml, :elkdata) # attempt second transfer
         expect(response[:result_code]).to eq('2200')
         expect(response[:msg]).to eq('Authentication error')
@@ -566,8 +566,19 @@ describe 'EPP Domain', epp: true do
         d.domain_statuses.build(value: DomainStatus::CLIENT_HOLD, description: 'Payment overdue.')
         d.nameservers.build(hostname: 'ns1.example.com', ipv4: '192.168.1.1', ipv6: '1080:0:0:0:8:800:200C:417A')
 
-        d.dnskeys.build(flags: 257, protocol: 3, alg: 3, public_key: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8')
-        d.dnskeys.build(flags: 0, protocol: 3, alg: 5, public_key: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f')
+        d.dnskeys.build(
+          flags: 257,
+          protocol: 3,
+          alg: 3,
+          public_key: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8'
+        )
+
+        d.dnskeys.build(
+          flags: 0,
+          protocol: 3,
+          alg: 5,
+          public_key: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
+        )
         d.save
 
         response = epp_request(domain_info_xml, :xml)
@@ -768,7 +779,8 @@ describe 'EPP Domain', epp: true do
         d = Domain.last
         expect(d.dnskeys.count).to eq(2)
 
-        response = epp_request(xml, :xml)
+        epp_request(xml, :xml)
+
         expect(d.dnskeys.count).to eq(1)
 
         expect(d.domain_statuses.count).to eq(1)

@@ -1,3 +1,4 @@
+# rubocop: disable Metrics/ClassLength
 class Epp::EppDomain < Domain
   include EppErrors
 
@@ -211,6 +212,9 @@ class Epp::EppDomain < Domain
 
   ### TRANSFER ###
 
+  # rubocop: disable Metrics/PerceivedComplexity
+  # rubocop: disable Metrics/MethodLength
+  # rubocop: disable Metrics/CyclomaticComplexity
   def transfer(params)
     return false unless authenticate(params[:pw])
 
@@ -249,6 +253,9 @@ class Epp::EppDomain < Domain
       save
     end
   end
+  # rubocop: enable Metrics/PerceivedComplexity
+  # rubocop: enable Metrics/MethodLength
+  # rubocop: enable Metrics/CyclomaticComplexity
 
   def approve_pending_transfer(current_user)
     pt = pending_transfer
@@ -397,3 +404,4 @@ class Epp::EppDomain < Domain
     end
   end
 end
+# rubocop: enable Metrics/ClassLength

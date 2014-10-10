@@ -126,7 +126,14 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'is succesful' do
-        Fabricate(:contact, created_by_id: 1, registrar: zone, email: 'not_updated@test.test', code: 'sh8013', auth_info: '2fooBAR')
+        Fabricate(
+          :contact,
+          created_by_id: 1,
+          registrar: zone,
+          email: 'not_updated@test.test',
+          code: 'sh8013',
+          auth_info: '2fooBAR'
+        )
         response = epp_request('contacts/update.xml')
 
         expect(response[:msg]).to eq('Command completed successfully')
@@ -137,7 +144,14 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'returns phone and email error' do
-        Fabricate(:contact, registrar: zone, created_by_id: 1, email: 'not_updated@test.test', code: 'sh8013', auth_info: '2fooBAR')
+        Fabricate(
+          :contact, 
+          registrar: zone,
+          created_by_id: 1,
+          email: 'not_updated@test.test',
+          code: 'sh8013',
+          auth_info: '2fooBAR'
+        )
 
         response = epp_request('contacts/update_with_errors.xml')
 
@@ -185,7 +199,15 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if contact has associated domain' do
-        Fabricate(:domain, owner_contact: Fabricate(:contact, code: 'dwa1234', created_by_id: zone.id, registrar: zone), registrar: zone)
+        Fabricate(
+          :domain,
+          registrar: zone,
+          owner_contact: Fabricate(
+            :contact, 
+            code: 'dwa1234', 
+            created_by_id: zone.id, 
+            registrar: zone)
+        )
         expect(Domain.first.owner_contact.address.present?).to be true
         response = epp_request('contacts/delete.xml')
 

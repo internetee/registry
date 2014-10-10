@@ -23,7 +23,6 @@ task 'whois:generate' => :environment do
   end
 
   @domains.each do |k, v|
-    file = File.open("tmp/whois/#{k}_domain.yaml", 'w') { |f| f.write(v.to_yaml) }
+    File.open("tmp/whois/#{k}_domain.yaml", 'w') { |f| f.write(v.to_yaml) }
   end
-
 end

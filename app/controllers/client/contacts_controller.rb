@@ -12,10 +12,12 @@ class Client::ContactsController < ClientController
   end
 
   def show
+    # rubocop: disable Style/GuardClause
     if @contact.registrar != current_registrar
       flash[:alert] = I18n.t('shared.authentication_error')
       redirect_to client_contacts_path
     end
+    # rubocop: enable Style/GuardClause
   end
 
   def create

@@ -33,7 +33,7 @@ module EppErrors
   def collect_child_errors(key)
     macro = self.class.reflect_on_association(key).macro
     multi = [:has_and_belongs_to_many, :has_many]
-    single = [:belongs_to, :has_one]
+    # single = [:belongs_to, :has_one]
 
     epp_errors = []
     send(key).each do |x|

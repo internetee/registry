@@ -20,6 +20,7 @@ module Epp::ContactsHelper
     end
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
   def delete_contact
     @contact = find_contact
     handle_errors(@contact) and return unless owner?
@@ -28,6 +29,7 @@ module Epp::ContactsHelper
 
     render '/epp/contacts/delete'
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   def check_contact
     ph = params_hash['epp']['command']['check']['check']
