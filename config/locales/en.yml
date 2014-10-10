@@ -110,8 +110,9 @@ en:
             registrar:
               blank: 'Registrar is missing'
             dnskeys:
+              not_found: 'DS was not found'
               invalid: 'DNS keys are invalid'
-              not_found: 'Dnskey was not found'
+              out_of_range: 'DNS keys count must be between %{min}-%{max}'
 
         domain:
           <<: *epp_domain_ar_attributes

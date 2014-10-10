@@ -63,24 +63,22 @@ xml.epp_head do
 
   xml.extension do
     xml.tag!('secDNS:infData', 'xmlns:secDNS' => 'urn:ietf:params:xml:ns:secDNS-1.1') do
-      @domain.delegation_signers.each do |x|
+      @domain.dnskeys.each do |x|
         xml.tag!('secDNS:dsData') do
-          xml.tag!('secDNS:keyTag', x.key_tag)
-          xml.tag!('secDNS:alg', x.alg)
-          xml.tag!('secDNS:digestType', x.digest_type)
-          xml.tag!('secDNS:digest', x.digest)
-          x.dnskeys.each do |key|
-            xml.tag!('secDNS:keyData') do
-              xml.tag!('secDNS:flags', key.flags)
-              xml.tag!('secDNS:protocol', key.protocol)
-              xml.tag!('secDNS:alg', key.alg)
-              xml.tag!('secDNS:pubKey', key.public_key)
-            end
-          end if x.dnskeys.any?
+          xml.tag!('secDNS:keyTag', x.ds_key_tag)
+          xml.tag!('secDNS:alg', x.ds_alg)
+          xml.tag!('secDNS:digestType', x.ds_digest_type)
+          xml.tag!('secDNS:digest', x.ds_digest)
+          xml.tag!('secDNS:keyData') do
+            xml.tag!('secDNS:flags', x.flags)
+            xml.tag!('secDNS:protocol', x.protocol)
+            xml.tag!('secDNS:alg', x.alg)
+            xml.tag!('secDNS:pubKey', x.public_key)
+          end
         end
       end
     end
-  end if @domain.delegation_signers.any?
+  end if @domain.dnskeys.any?
 
   xml << render('/epp/shared/trID')
 end

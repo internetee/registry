@@ -27,7 +27,7 @@ class Domain < ActiveRecord::Base
 
   has_many :domain_transfers, dependent: :delete_all
 
-  has_many :delegation_signers, dependent: :delete_all
+  has_many :dnskeys, dependent: :delete_all
   # accepts_nested_attributes_for :delegation_signers, allow_destroy: true,
   #   reject_if: proc { |attrs| attrs[:public_key].blank? }
 
@@ -49,12 +49,12 @@ class Domain < ActiveRecord::Base
   validate :validate_period
   validate :validate_nameservers_count
   validate :validate_admin_contacts_count
-  #validate :validate_dnskeys_count
+  validate :validate_dnskeys_count
   validate :validate_nameservers_uniqueness
   validate :validate_tech_contacts_uniqueness
   validate :validate_admin_contacts_uniqueness
   validate :validate_domain_statuses_uniqueness
-  # validate :validate_dnskeys_uniqueness
+  validate :validate_dnskeys_uniqueness
   validate :validate_nameserver_ips
 
   attr_accessor :owner_contact_typeahead

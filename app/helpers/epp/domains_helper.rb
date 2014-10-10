@@ -4,6 +4,7 @@ module Epp::DomainsHelper
       @domain = Epp::EppDomain.new(domain_create_params)
 
       @domain.parse_and_attach_domain_dependencies(parsed_frame)
+      @domain.parse_and_attach_ds_data(parsed_frame.css('extension create'))
 
       if @domain.errors.any?
         handle_errors(@domain)
@@ -50,6 +51,7 @@ module Epp::DomainsHelper
       handle_errors(@domain) and return unless @domain
 
       @domain.parse_and_attach_domain_dependencies(parsed_frame.css('add'))
+      @domain.parse_and_attach_ds_data(parsed_frame.css('extension add'))
       @domain.parse_and_detach_domain_dependencies(parsed_frame.css('rem'))
       @domain.parse_and_update_domain_dependencies(parsed_frame.css('chg'))
 

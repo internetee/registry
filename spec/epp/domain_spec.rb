@@ -203,13 +203,14 @@ describe 'EPP Domain', epp: true do
         expect(d.nameservers.count).to eq(2)
         expect(d.auth_info).not_to be_empty
 
-        expect(d.delegation_signers.count).to eq(1)
-        ds = d.delegation_signers.first
+        expect(d.dnskeys.count).to eq(1)
 
-        expect(ds.dnskeys.count).to eq(1)
+        key = d.dnskeys.first
 
-        key = ds.dnskeys.first
-
+        expect(key.ds_alg).to eq(3)
+        expect(key.ds_key_tag).to_not be_blank
+        sg = SettingGroup.dnskeys
+        expect(key.ds_digest_type).to eq(sg.setting(Setting::DS_ALGORITHM).value.to_i)
         expect(key.flags).to eq(257)
         expect(key.protocol).to eq(3)
         expect(key.alg).to eq(5)
@@ -359,16 +360,17 @@ describe 'EPP Domain', epp: true do
         epp_request(xml, :xml)
         d = Domain.first
 
-        ds = d.delegation_signers.first
+        expect(d.dnskeys.count).to eq(3)
 
-        expect(ds.key_tag).to_not be_blank
-        expect(ds.alg).to eq(3)
-        expect(ds.digest_type).to eq(SettingGroup.dnskeys.setting(Setting::DS_ALGORITHM).value.to_i)
+        key_1 = d.dnskeys[0]
+        expect(key_1.ds_key_tag).to_not be_blank
+        expect(key_1.ds_alg).to eq(3)
+        expect(key_1.ds_digest_type).to eq(SettingGroup.dnskeys.setting(Setting::DS_ALGORITHM).value.to_i)
 
-        expect(ds.dnskeys.pluck(:flags)).to match_array([257, 0, 256])
-        expect(ds.dnskeys.pluck(:protocol)).to match_array([3, 3, 3])
-        expect(ds.dnskeys.pluck(:alg)).to match_array([3, 5, 254])
-        expect(ds.dnskeys.pluck(:public_key)).to match_array(%w(
+        expect(d.dnskeys.pluck(:flags)).to match_array([257, 0, 256])
+        expect(d.dnskeys.pluck(:protocol)).to match_array([3, 3, 3])
+        expect(d.dnskeys.pluck(:alg)).to match_array([3, 5, 254])
+        expect(d.dnskeys.pluck(:public_key)).to match_array(%w(
           AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8
           700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f
           841936717ae427ace63c28d04918569a841936717ae427ace63c28d0
@@ -571,10 +573,28 @@ describe 'EPP Domain', epp: true do
         d.domain_statuses.build(value: DomainStatus::CLIENT_HOLD, description: 'Payment overdue.')
         d.nameservers.build(hostname: 'ns1.example.com', ipv4: '192.168.1.1', ipv6: '1080:0:0:0:8:800:200C:417A')
 
-        ds = d.delegation_signers.build(key_tag: '123', alg: 3, digest_type: 1, digest: 'abc')
+        d.dnskeys.build(
+          ds_key_tag: '123',
+          ds_alg: 3,
+          ds_digest_type: 1,
+          ds_digest: 'abc',
+          flags: 257,
+          protocol: 3,
+          alg: 3,
+          public_key: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8'
+        )
 
-        ds.dnskeys.build(flags: 257, protocol: 3, alg: 3, public_key: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8')
-        ds.dnskeys.build(flags: 0, protocol: 3, alg: 5, public_key: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f')
+        d.dnskeys.build(
+          ds_key_tag: '123',
+          ds_alg: 3,
+          ds_digest_type: 1,
+          ds_digest: 'abc',
+          flags: 0,
+          protocol: 3,
+          alg: 5,
+          public_key: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
+        )
+
         d.save
 
         response = epp_request(domain_info_xml, :xml)
@@ -604,20 +624,22 @@ describe 'EPP Domain', epp: true do
         expect(inf_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
         expect(inf_data.css('pw').text).to eq(d.auth_info)
 
-        ds_data = response[:parsed].css('dsData')[0]
+        ds_data_1 = response[:parsed].css('dsData')[0]
 
-        expect(ds_data.css('keyTag').first.text).to eq('123')
-        expect(ds_data.css('alg').first.text).to eq('3')
-        expect(ds_data.css('digestType').first.text).to eq('1')
-        expect(ds_data.css('digest').first.text).to eq('abc')
+        expect(ds_data_1.css('keyTag').first.text).to eq('123')
+        expect(ds_data_1.css('alg').first.text).to eq('3')
+        expect(ds_data_1.css('digestType').first.text).to eq('1')
+        expect(ds_data_1.css('digest').first.text).to eq('abc')
 
-        dnskey_1 = ds_data.css('keyData')[0]
+        dnskey_1 = ds_data_1.css('keyData')[0]
         expect(dnskey_1.css('flags').first.text).to eq('257')
         expect(dnskey_1.css('protocol').first.text).to eq('3')
         expect(dnskey_1.css('alg').first.text).to eq('3')
         expect(dnskey_1.css('pubKey').first.text).to eq('AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8')
 
-        dnskey_2 = ds_data.css('keyData')[1]
+        ds_data_2 = response[:parsed].css('dsData')[1]
+
+        dnskey_2 = ds_data_2.css('keyData')[0]
         expect(dnskey_2.css('flags').first.text).to eq('0')
         expect(dnskey_2.css('protocol').first.text).to eq('3')
         expect(dnskey_2.css('alg').first.text).to eq('5')
@@ -646,29 +668,29 @@ describe 'EPP Domain', epp: true do
                 { hostObj: { value: 'ns2.example.com' } }
               ]
             },
-            dnssec: [
-              {
-                dnskey: {
-                  flags: { value: '0' },
-                  protocol: { value: '3' },
-                  alg: { value: '5' },
-                  pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
-                }
-              },
-              {
-                dnskey: {
-                  flags: { value: '256' },
-                  protocol: { value: '3' },
-                  alg: { value: '254' },
-                  pubKey: { value: '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0' }
-                }
-              }
-            ],
             _other: [
               { contact: { value: 'mak21', attrs: { type: 'tech' } } },
               { status: { value: 'Payment overdue.', attrs: { s: 'clientHold', lang: 'en' } } },
               { status: { value: '', attrs: { s: 'clientUpdateProhibited' } } }
             ]
+          ]
+        }, {
+          add: [
+            { keyData: {
+                flags: { value: '0' },
+                protocol: { value: '3' },
+                alg: { value: '5' },
+                pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+              }
+            },
+            {
+              keyData: {
+                flags: { value: '256' },
+                protocol: { value: '3' },
+                alg: { value: '254' },
+                pubKey: { value: '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0' }
+              }
+            }
           ]
         })
 
@@ -694,11 +716,12 @@ describe 'EPP Domain', epp: true do
         expect(d.domain_statuses.first.value).to eq('clientHold')
 
         expect(d.domain_statuses.last.value).to eq('clientUpdateProhibited')
+        expect(d.delegation_signers.count).to eq(1)
 
-        expect(d.dnskeys.count).to eq(2)
+        ds = d.delegation_signers.first
+        expect(ds.dnskeys.count).to eq(2)
 
         response = epp_request(xml, :xml)
-
         expect(response[:results][0][:result_code]).to eq('2302')
         expect(response[:results][0][:msg]).to eq('Nameserver already exists on this domain')
         expect(response[:results][0][:value]).to eq('ns1.example.com')
@@ -730,29 +753,29 @@ describe 'EPP Domain', epp: true do
                 { hostObj: { value: 'ns2.example.com' } }
               ]
             },
-            dnssec: [
-              {
-                dnskey: {
-                  flags: { value: '0' },
-                  protocol: { value: '3' },
-                  alg: { value: '5' },
-                  pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
-                }
-              },
-              {
-                dnskey: {
-                  flags: { value: '256' },
-                  protocol: { value: '3' },
-                  alg: { value: '254' },
-                  pubKey: { value: '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0' }
-                }
-              }
-            ],
             _other: [
               { contact: { value: 'mak21', attrs: { type: 'tech' } } },
               { status: { value: 'Payment overdue.', attrs: { s: 'clientHold', lang: 'en' } } },
               { status: { value: '', attrs: { s: 'clientUpdateProhibited' } } }
             ]
+          ]
+        }, {
+          add: [
+            { keyData: {
+                flags: { value: '0' },
+                protocol: { value: '3' },
+                alg: { value: '5' },
+                pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+              }
+            },
+            {
+              keyData: {
+                flags: { value: '256' },
+                protocol: { value: '3' },
+                alg: { value: '254' },
+                pubKey: { value: '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0' }
+              }
+            }
           ]
         })
 
@@ -777,13 +800,21 @@ describe 'EPP Domain', epp: true do
               { status: { value: '', attrs: { s: 'clientHold' } } }
             ]
           ]
+        }, {
+          rem: [
+            { keyData: {
+                pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+              }
+            }
+          ]
         })
 
         d = Domain.last
-        expect(d.dnskeys.count).to eq(2)
+        expect(d.delegation_signers.count).to eq(1)
 
         response = epp_request(xml, :xml)
-        expect(d.dnskeys.count).to eq(1)
+        ds = d.delegation_signers.first
+        expect(ds.dnskeys.count).to eq(1)
 
         expect(d.domain_statuses.count).to eq(1)
         expect(d.domain_statuses.first.value).to eq('clientUpdateProhibited')

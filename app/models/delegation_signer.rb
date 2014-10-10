@@ -1,6 +1,6 @@
 class DelegationSigner < ActiveRecord::Base
   include EppErrors
-  has_many :dnskeys
+  has_one :dnskeys
 
   validate :validate_dnskeys_uniqueness
   validate :validate_dnskeys_count

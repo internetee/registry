@@ -5,7 +5,12 @@ module EppErrors
     epp_errors = []
     errors.messages.each do |key, values|
       key = key.to_s.split('.')[0].to_sym
-      if self.class.reflect_on_association(key)
+
+      macro = self.class.reflect_on_association(key).try(:macro)
+      multi = [:has_and_belongs_to_many, :has_many]
+      single = [:belongs_to, :has_one]
+
+      if macro && multi.include?(macro)
         send(key).each do |x|
           epp_errors << x.generate_epp_errors
         end

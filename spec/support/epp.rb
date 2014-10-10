@@ -169,7 +169,7 @@ module Epp
     end
   end
 
-  def domain_update_xml(xml_params = {})
+  def domain_update_xml(xml_params = {}, dnssec_params = false)
     defaults = {
       name: { value: 'example.ee' }
     }
@@ -186,6 +186,12 @@ module Epp
             generate_xml_from_hash(xml_params, xml, 'domain')
           end
         end
+
+        xml.extension do
+          xml.tag!('secDNS:create', 'xmlns:secDNS' => 'urn:ietf:params:xml:ns:secDNS-1.1') do
+            generate_xml_from_hash(dnssec_params, xml, 'secDNS')
+          end
+        end if dnssec_params != false
         xml.clTRID 'ABC-12345'
       end
     end
