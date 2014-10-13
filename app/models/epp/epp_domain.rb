@@ -1,3 +1,4 @@
+# rubocop: disable Metrics/ClassLength
 class Epp::EppDomain < Domain
   include EppErrors
 
@@ -24,10 +25,10 @@ class Epp::EppDomain < Domain
       ],
       '2004' => [ # Parameter value range error
         [:nameservers, :out_of_range,
-          {
-            min: domain_validation_sg.setting(:ns_min_count).value,
-            max: domain_validation_sg.setting(:ns_max_count).value
-          }
+         {
+           min: domain_validation_sg.setting(:ns_min_count).value,
+           max: domain_validation_sg.setting(:ns_max_count).value
+         }
         ],
         [:period, :out_of_range, { value: { obj: 'period', val: period } }],
         [:dnskeys, :out_of_range,
@@ -81,8 +82,8 @@ class Epp::EppDomain < Domain
 
   # TODO: Find out if there are any attributes that can be changed
   # if not, delete this method
-  def parse_and_update_domain_attributes(parsed_frame)
-    #assign_attributes(self.class.parse_update_params_from_frame(parsed_frame))
+  def parse_and_update_domain_attributes(_parsed_frame)
+    # assign_attributes(self.class.parse_update_params_from_frame(parsed_frame))
 
     errors.empty?
   end
@@ -276,6 +277,9 @@ class Epp::EppDomain < Domain
 
   ### TRANSFER ###
 
+  # rubocop: disable Metrics/PerceivedComplexity
+  # rubocop: disable Metrics/MethodLength
+  # rubocop: disable Metrics/CyclomaticComplexity
   def transfer(params)
     return false unless authenticate(params[:pw])
 
@@ -314,6 +318,9 @@ class Epp::EppDomain < Domain
       save
     end
   end
+  # rubocop: enable Metrics/PerceivedComplexity
+  # rubocop: enable Metrics/MethodLength
+  # rubocop: enable Metrics/CyclomaticComplexity
 
   def approve_pending_transfer(current_user)
     pt = pending_transfer
@@ -479,3 +486,4 @@ class Epp::EppDomain < Domain
     end
   end
 end
+# rubocop: enable Metrics/ClassLength

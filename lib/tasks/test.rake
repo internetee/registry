@@ -26,7 +26,7 @@ if Rails.env.test? || Rails.env.development?
   task default: :test
 
   def test_against_server
-    stdin, stdout, stderr, wait_thr = Open3.popen3('unicorn -E test -p 8989')
+    _stdin, _stdout, _stderr, wait_thr = Open3.popen3('unicorn -E test -p 8989')
     pid = wait_thr.pid
     begin
       yield

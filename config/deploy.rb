@@ -11,12 +11,16 @@ require 'mina/git'
 #   branch       - Branch name to deploy. (needed by mina/git)
 
 set :domain, 'testregistry'
-set :deploy_to, '/home/app/registry'
+set :deploy_to, '/home/app/eedirekt'
 set :repository, 'https://github.com/internetee/registry'
 set :branch, 'master'
 
 task :admin do
-  set :deploy_to, '/home/app/admin-registry'
+  set :deploy_to, '/home/app/registry'
+end
+
+task :registrar do
+  set :deploy_to, '/home/app/registrar'
 end
 
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.

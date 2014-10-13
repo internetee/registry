@@ -1,38 +1,18 @@
 #!/bin/bash
 #
-# Build and run everything for automatic tests 
+# Update repo 
 #
 
-set -o pipefail
+# default locations
+export LANGUAGE=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
 
 # cd to Rails root directory
 cd "$(dirname "$0")"; cd ..
 
-git pull origin master
-git reset --hard
+git pull origin master &> /dev/null
+git reset --hard &> /dev/null
 unset GIT_DIR GIT_WORK_TREE
 
-# run rubocop
-echo "RUBOCOP_RESULTS"
-rubocop
-echo "END_OF_RUBOCOP_RESULTS"
-
-bundle install --deployment 
-
-# cp config/secrets-example.yml config/secrets.yml
-# create manually config/database.yml
-
-RAILS_ENV=test bundle exec rake db:drop
-RAILS_ENV=test bundle exec rake db:create
-RAILS_ENV=test bundle exec rake db:schema:load
-RAILS_ENV=test bundle exec rake db:seed
-RAILS_ENV=test bundle exec rake assets:precompile
-
-echo "GIT_LAST_COMMITS"
-git log origin/master -n 15 --pretty=oneline | sed -r '/^.{40} Merge branch/d' | sed -r 's/^.{40}/Latests: /' 
-echo "END_OF_GIT_LAST_COMMITS"
-
-# run tests 
-echo "TEST_RESULTS"
-RAILS_ENV=test ROBOT=true bundle exec rake test
-echo "END_OF_TEST_RESULTS"
+bin/robot-audit

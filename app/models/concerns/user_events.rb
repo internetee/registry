@@ -18,7 +18,5 @@ module UserEvents
     def epp_user_events(id)
       where(whodunnit: "#{id}-EppUser")
     end
-
-
   end
 end

@@ -12,6 +12,8 @@ class Client::DomainTransfersController < ClientController
     @domain_transfer = DomainTransfer.new
   end
 
+  # rubocop: disable Metrics/PerceivedComplexity
+  # rubocop: disable Metrics/CyclomaticComplexity
   def create
     @domain_transfer = @domain.pending_transfer
 
@@ -36,6 +38,8 @@ class Client::DomainTransfersController < ClientController
       redirect_to [:client, @domain_transfer]
     end
   end
+  # rubocop: enable Metrics/PerceivedComplexity
+  # rubocop: enable Metrics/CyclomaticComplexity
 
   def approve
     if can? :approve_as_client, @domain_transfer
@@ -63,6 +67,8 @@ class Client::DomainTransfersController < ClientController
     }
   end
 
+  # rubocop: disable Metrics/PerceivedComplexity
+  # rubocop: disable Metrics/CyclomaticComplexity
   def set_domain
     @domain_transfer = DomainTransfer.new
     @domain = Domain.find_by(name: params[:domain_name])
@@ -81,4 +87,6 @@ class Client::DomainTransfersController < ClientController
       render 'new'
     end
   end
+  # rubocop: enbale Metrics/PerceivedComplexity
+  # rubocop: enable Metrics/CyclomaticComplexity
 end

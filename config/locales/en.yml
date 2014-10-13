@@ -434,3 +434,5 @@ en:
     # sorry these need to be refactored - Andres
     authentication_error: 'Authentication error'
     ds_data_and_key_data_must_not_exists_together: 'dsData and keyData objects must not exists together'
+
+  registrar: Registrar

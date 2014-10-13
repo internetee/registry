@@ -11,6 +11,7 @@ class Admin::DomainVersionsController < AdminController
   end
 
   private
+
   def set_domain
     @domain = Domain.find(params[:id])
   end

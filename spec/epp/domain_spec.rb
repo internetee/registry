@@ -167,7 +167,7 @@ describe 'EPP Domain', epp: true do
       it 'creates new pw after successful transfer' do
         pw = domain.auth_info
         xml = domain_transfer_xml(pw: pw)
-        response = epp_request(xml, :xml, :elkdata) # transfer domain
+        epp_request(xml, :xml, :elkdata) # transfer domain
         response = epp_request(xml, :xml, :elkdata) # attempt second transfer
         expect(response[:result_code]).to eq('2200')
         expect(response[:msg]).to eq('Authentication error')
@@ -278,7 +278,7 @@ describe 'EPP Domain', epp: true do
         xml = domain_create_xml({
           ns: [
             { hostObj: { value: 'invalid1-' } },
-            { hostObj: { value: '-invalid2' } },
+            { hostObj: { value: '-invalid2' } }
           ]
 
         })
@@ -607,12 +607,12 @@ describe 'EPP Domain', epp: true do
         expect(inf_data.css('status').first[:s]).to eq('clientHold')
         expect(inf_data.css('registrant').text).to eq(d.owner_contact_code)
 
-        admin_contacts_from_request = inf_data.css('contact[type="admin"]').map { |x| x.text }
+        admin_contacts_from_request = inf_data.css('contact[type="admin"]').map(&:text)
         admin_contacts_existing = d.admin_contacts.pluck(:code)
 
         expect(admin_contacts_from_request).to eq(admin_contacts_existing)
 
-        hosts_from_request = inf_data.css('hostObj').map { |x| x.text }
+        hosts_from_request = inf_data.css('hostObj').map(&:text)
         hosts_existing = d.nameservers.where(ipv4: nil).pluck(:hostname)
 
         expect(hosts_from_request).to eq(hosts_existing)

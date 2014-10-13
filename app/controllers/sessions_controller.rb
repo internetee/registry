@@ -1,6 +1,6 @@
 class SessionsController < Devise::SessionsController
   def create
-    #TODO: Create ID Card login here:
+    # TODO: Create ID Card login here:
     # this is just testing config
     # if Rails.env.development? || Rails.env.test?
     @user = User.find_by(username: 'gitlab') if params[:gitlab]
@@ -10,8 +10,7 @@ class SessionsController < Devise::SessionsController
     session[:current_user_registrar_id] = Registrar.first.id if @user.admin?
 
     flash[:notice] = I18n.t('shared.welcome')
-    sign_in_and_redirect @user, :event => :authentication
-    return
+    sign_in_and_redirect @user, event: :authentication
     # end
   end
 

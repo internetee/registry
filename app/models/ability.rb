@@ -1,15 +1,21 @@
 class Ability
   include CanCan::Ability
 
+  # rubocop: disable Metrics/MethodLength
+  # rubocop: disable Metrics/CyclomaticComplexity
   def initialize(user)
-
-    alias_action :create, :read, :update, :destroy, :to => :crud
+    alias_action :create, :read, :update, :destroy, to: :crud
 
     user ||= User.new
 
     if Rails.env.production?
       case REGISTRY_ENV
-      when :client
+      when :eedirekt
+        can :view, :eedirekt
+        can :create, :session
+        admin = false
+      when :registrar
+        can :view, :registrar
         can :create, :session
         admin = false
       when :admin
@@ -32,7 +38,7 @@ class Ability
       can :read, DomainTransfer, transfer_to_id: user.registrar.id
       can :read, DomainTransfer, transfer_from_id: user.registrar.id
       can :approve_as_client, DomainTransfer, 
-        transfer_from_id: user.registrar.id, status: DomainTransfer::PENDING
+          transfer_from_id: user.registrar.id, status: DomainTransfer::PENDING
     end
 
     # Define abilities for the passed in user here. For example:
@@ -62,4 +68,6 @@ class Ability
     # See the wiki for details:
     # https://github.com/ryanb/cancan/wiki/Defining-Abilities
   end
+  # rubocop: enable Metrics/MethodLength
+  # rubocop: enable Metrics/CyclomaticComplexity
 end

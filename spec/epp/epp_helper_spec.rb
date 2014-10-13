@@ -76,16 +76,16 @@ describe 'EPP Helper', epp: true do
 
       xml = domain_create_xml({
         name: { value: 'one.ee' },
-        period: {value: '345', attrs: { unit: 'd' } },
+        period: { value: '345', attrs: { unit: 'd' } },
         ns: [
-          { hostObj: {value: 'ns1.test.net' } },
-          { hostObj: {value: 'ns2.test.net' } }
+          { hostObj: { value: 'ns1.test.net' } },
+          { hostObj: { value: 'ns2.test.net' } }
         ],
         registrant: { value: '32fsdaf' },
         _other: [
-          { contact: {value: '2323rafaf', attrs: { type: 'admin' } } },
-          { contact: {value: '3dgxx', attrs: { type: 'tech' } } },
-          { contact: {value: '345xxv', attrs: { type: 'tech' } } }
+          { contact: { value: '2323rafaf', attrs: { type: 'admin' } } },
+          { contact: { value: '3dgxx', attrs: { type: 'tech' } } },
+          { contact: { value: '345xxv', attrs: { type: 'tech' } } }
         ]
       })
 
@@ -454,7 +454,6 @@ describe 'EPP Helper', epp: true do
 
       generated = Nokogiri::XML(domain_delete_xml).to_s.squish
       expect(generated).to eq(expected)
-
 
       expected = Nokogiri::XML('<?xml version="1.0" encoding="UTF-8" standalone="no"?>
         <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">

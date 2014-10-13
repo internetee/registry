@@ -20,6 +20,7 @@ module Epp::ContactsHelper
     end
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
   def delete_contact
     @contact = find_contact
     handle_errors(@contact) and return unless owner?
@@ -28,6 +29,7 @@ module Epp::ContactsHelper
 
     render '/epp/contacts/delete'
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   def check_contact
     ph = params_hash['epp']['command']['check']['check']
@@ -54,11 +56,11 @@ module Epp::ContactsHelper
   ## CREATE
   def validate_contact_create_request
     @ph = params_hash['epp']['command']['create']['create']
-    xml_attrs_present?(@ph, [ %w(authInfo pw), %w(postalInfo)])
+    xml_attrs_present?(@ph, [%w(authInfo pw), %w(postalInfo)])
 
     return epp_errors.empty? unless @ph['postalInfo'].is_a?(Hash) || @ph['postalInfo'].is_a?(Array)
 
-    #(epp_errors << Address.validate_postal_info_types(parsed_frame)).flatten!
+    # (epp_errors << Address.validate_postal_info_types(parsed_frame)).flatten!
     xml_attrs_array_present?(@ph['postalInfo'], [%w(name), %w(addr city), %w(addr cc)])
   end
 
@@ -114,7 +116,7 @@ module Epp::ContactsHelper
 
   def owner?
     return false unless find_contact
-    #return true if current_epp_user.registrar == find_contact.created_by.try(:registrar)
+    # return true if current_epp_user.registrar == find_contact.created_by.try(:registrar)
     return true if @contact.registrar == current_epp_user.registrar
     epp_errors << { code: '2201', msg: t('errors.messages.epp_authorization_error') }
     false

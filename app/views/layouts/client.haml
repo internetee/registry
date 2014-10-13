@@ -9,7 +9,11 @@
     = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
     %link{href: "../../favicon.ico", rel: "icon"}/
-    %title= t('shared.eedirekt')
+    %title
+      - if can? :view, :registrar
+        = t(:registrar)
+      - else
+        = t('shared.eedirekt')
   %body
     / Static navbar
     .navbar.navbar-default.navbar-static-top{role: "navigation"}
@@ -20,7 +24,11 @@
             %span.icon-bar
             %span.icon-bar
             %span.icon-bar
-          = link_to t('shared.eedirekt'), client_domains_path, class: 'navbar-brand'
+          - if can? :view, :registrar
+            = link_to t(:registrar), client_domains_path, class: 'navbar-brand'
+          - else
+            = link_to t('shared.eedirekt'), client_domains_path, class: 'navbar-brand'
+
         .navbar-collapse.collapse
           %ul.nav.navbar-nav
             - active_class = ['client/domains', 'client/domain_transfers'].include?(params[:controller]) ? 'active' :nil

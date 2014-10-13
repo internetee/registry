@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 feature 'Contact management', type: :feature do
-  #background do
-  #end
+  # background do
+  # end
 
   before(:each) do
     Fabricate(:user, country: Fabricate(:country, iso: 'EE'), admin: false, username: 'zone')
