@@ -53,6 +53,7 @@ module Epp::DomainsHelper
       @domain.parse_and_attach_domain_dependencies(parsed_frame.css('add'))
       @domain.parse_and_attach_ds_data(parsed_frame.css('extension add'))
       @domain.parse_and_detach_domain_dependencies(parsed_frame.css('rem'))
+      @domain.parse_and_detach_ds_data(parsed_frame.css('extension rem'))
       @domain.parse_and_update_domain_dependencies(parsed_frame.css('chg'))
 
       if @domain.errors.any?

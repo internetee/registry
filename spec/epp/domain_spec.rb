@@ -716,10 +716,7 @@ describe 'EPP Domain', epp: true do
         expect(d.domain_statuses.first.value).to eq('clientHold')
 
         expect(d.domain_statuses.last.value).to eq('clientUpdateProhibited')
-        expect(d.delegation_signers.count).to eq(1)
-
-        ds = d.delegation_signers.first
-        expect(ds.dnskeys.count).to eq(2)
+        expect(d.dnskeys.count).to eq(2)
 
         response = epp_request(xml, :xml)
         expect(response[:results][0][:result_code]).to eq('2302')
@@ -780,6 +777,8 @@ describe 'EPP Domain', epp: true do
         })
 
         epp_request(xml, :xml)
+        d = Domain.last
+        expect(d.dnskeys.count).to eq(2)
 
         xml = domain_update_xml({
           rem: [
@@ -788,13 +787,6 @@ describe 'EPP Domain', epp: true do
                 { hostObj: { value: 'ns1.example.com' } }
               ]
             },
-            dnssec: [
-              {
-                dnskey: {
-                  pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
-                }
-              }
-            ],
             _other: [
               { contact: { value: 'mak21', attrs: { type: 'tech' } } },
               { status: { value: '', attrs: { s: 'clientHold' } } }
@@ -809,12 +801,9 @@ describe 'EPP Domain', epp: true do
           ]
         })
 
-        d = Domain.last
-        expect(d.delegation_signers.count).to eq(1)
-
         response = epp_request(xml, :xml)
-        ds = d.delegation_signers.first
-        expect(ds.dnskeys.count).to eq(1)
+
+        expect(d.dnskeys.count).to eq(1)
 
         expect(d.domain_statuses.count).to eq(1)
         expect(d.domain_statuses.first.value).to eq('clientUpdateProhibited')

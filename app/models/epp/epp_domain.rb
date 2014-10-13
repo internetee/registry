@@ -66,6 +66,12 @@ class Epp::EppDomain < Domain
     errors.empty?
   end
 
+  def parse_and_detach_ds_data(parsed_frame)
+    detach_dnskeys(self.class.parse_dnskeys_from_frame(parsed_frame))
+
+    errors.empty?
+  end
+
   def parse_and_update_domain_dependencies(parsed_frame)
     owner_contact_code = parsed_frame.css('registrant').try(:text)
     attach_owner_contact(owner_contact_code) if owner_contact_code.present?
@@ -230,6 +236,21 @@ class Epp::EppDomain < Domain
       ds = dnskeys.where(ds_key_tag: x[:ds_key_tag])
       if ds.blank?
         add_epp_error('2303', 'keyTag', x[:key_tag], [:dnskeys, :not_found])
+      else
+        to_delete << ds
+      end
+    end
+
+    if dnssec_data[:key_data].any? && !key_data_allowed
+      errors.add(:base, :key_data_not_allowed)
+      return
+    end
+
+    to_delete = []
+    dnssec_data[:key_data].each do |x|
+      ds = dnskeys.where(public_key: x[:public_key])
+      if ds.blank?
+        add_epp_error('2303', 'publicKey', x[:public_key], [:dnskeys, :not_found])
       else
         to_delete << ds
       end
