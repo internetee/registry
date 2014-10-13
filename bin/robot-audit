@@ -22,7 +22,7 @@ git log origin/master -n 10 --pretty=oneline | sed -r '/^.{40} Merge branch/d' |
 echo "END_OF_GIT_LAST_COMMITS"
 
 echo "RUBOCOP_RESULTS"
-bundle exec rubocop
+bundle exec rubocop -D
 RCODE=$?
 echo "END_OF_RUBOCOP_RESULTS"
 
