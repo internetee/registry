@@ -44,6 +44,11 @@ Void:
   Exclude:
     - 'spec/**/*'
 
+# allow should == nil in spec
+Style/NilComparison:
+  Exclude:
+    - 'spec/**/*'
+
 # No need to force reduce to use |a, e| as parameters.
 # Configuration parameters: Methods.
 Style/SingleLineBlockParams:

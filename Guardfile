@@ -1,5 +1,5 @@
-group :red_green_refactor, halt_on_fail:true do
-  guard :rspec, cmd: 'bundle exec rspec' do
+group :red_green_refactor, halt_on_fail: true do
+  guard :rspec, cmd: 'bundle exec rspec', notification: false do
     watch(%r{^spec/.+_spec\.rb$})
     watch(%r{^lib/(.+)\.rb$})     { |m| "spec/lib/#{m[1]}_spec.rb" }
     watch('spec/spec_helper.rb')  { "spec" }
@@ -26,7 +26,7 @@ group :red_green_refactor, halt_on_fail:true do
 
   # Martin does not want rubocop
   unless Socket.gethostname == 'martin'
-    guard :rubocop, cli: '--display-cop-names -c .rubocop-guard.yml' do
+    guard :rubocop, cli: '--display-cop-names -c .rubocop-guard.yml', notification: false do
       watch(%r{.+\.rb$})
       watch(%r{(?:.+/)?\.rubocop\.yml$}) { |m| File.dirname(m[0]) }
       watch(%r{(?:.+/)?\.rubocop-guard\.yml$}) { |m| File.dirname(m[0]) }
