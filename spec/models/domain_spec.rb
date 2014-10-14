@@ -7,6 +7,7 @@ describe Domain do
   it { should have_many(:tech_contacts) }
   it { should have_many(:admin_contacts) }
   it { should have_many(:domain_transfers) }
+  it { should have_many(:dnskeys) }
 
   context 'with sufficient settings' do
     before(:each) { Fabricate(:domain_validation_setting_group) }
