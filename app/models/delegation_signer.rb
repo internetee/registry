@@ -5,17 +5,16 @@ class DelegationSigner < ActiveRecord::Base
   validate :validate_dnskeys_uniqueness
   validate :validate_dnskeys_count
 
-
   def epp_code_map
     sg = SettingGroup.domain_validation
 
     {
       '2004' => [ # Parameter value range error
         [:dnskeys, :out_of_range,
-          {
-            min: sg.setting(Setting::DNSKEYS_MIN_COUNT).value,
-            max: sg.setting(Setting::DNSKEYS_MAX_COUNT).value
-          }
+         {
+           min: sg.setting(Setting::DNSKEYS_MIN_COUNT).value,
+           max: sg.setting(Setting::DNSKEYS_MAX_COUNT).value
+         }
         ]
       ]
     }

@@ -51,6 +51,7 @@ describe Contact, '#relations_with_domain?' do
   context 'with relation' do
     before(:each) do
       Fabricate(:domain_validation_setting_group)
+      Fabricate(:dnskeys_setting_group)
       Fabricate(:domain)
     end
 
@@ -74,8 +75,8 @@ end
 
 describe Contact, '#up_id' do
   before(:each) do
-    # Fabricate(:contact, code: 'asd12', 
-    # created_by: Fabricate(:epp_user), 
+    # Fabricate(:contact, code: 'asd12',
+    # created_by: Fabricate(:epp_user),
     # updated_by: Fabricate(:epp_user), registrar: zone)
     @epp_user = Fabricate(:epp_user)
     @contact = Fabricate.build(:contact, code: 'asd12', created_by: @epp_user, updated_by: @epp_user)

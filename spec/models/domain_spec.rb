@@ -10,7 +10,10 @@ describe Domain do
   it { should have_many(:dnskeys) }
 
   context 'with sufficient settings' do
-    before(:each) { Fabricate(:domain_validation_setting_group) }
+    before(:each) do
+      Fabricate(:domain_validation_setting_group)
+      Fabricate(:dnskeys_setting_group)
+    end
 
     it 'validates domain name' do
       d = Fabricate(:domain)

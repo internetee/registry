@@ -32,10 +32,10 @@ class Epp::EppDomain < Domain
         ],
         [:period, :out_of_range, { value: { obj: 'period', val: period } }],
         [:dnskeys, :out_of_range,
-          {
-            min: domain_validation_sg.setting(Setting::DNSKEYS_MIN_COUNT).value,
-            max: domain_validation_sg.setting(Setting::DNSKEYS_MAX_COUNT).value
-          }
+         {
+           min: domain_validation_sg.setting(Setting::DNSKEYS_MIN_COUNT).value,
+           max: domain_validation_sg.setting(Setting::DNSKEYS_MAX_COUNT).value
+         }
         ]
       ],
       '2200' => [

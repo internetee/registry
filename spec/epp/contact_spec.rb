@@ -12,6 +12,7 @@ describe 'EPP Contact', epp: true do
       Fabricate(:epp_user, username: 'zone', registrar: zone)
       Fabricate(:epp_user, username: 'elkdata', registrar: elkdata)
       Fabricate(:domain_validation_setting_group)
+      Fabricate(:dnskeys_setting_group)
     end
 
     context 'create command' do
@@ -145,7 +146,7 @@ describe 'EPP Contact', epp: true do
 
       it 'returns phone and email error' do
         Fabricate(
-          :contact, 
+          :contact,
           registrar: zone,
           created_by_id: 1,
           email: 'not_updated@test.test',
@@ -203,9 +204,9 @@ describe 'EPP Contact', epp: true do
           :domain,
           registrar: zone,
           owner_contact: Fabricate(
-            :contact, 
-            code: 'dwa1234', 
-            created_by_id: zone.id, 
+            :contact,
+            code: 'dwa1234',
+            created_by_id: zone.id,
             registrar: zone)
         )
         expect(Domain.first.owner_contact.address.present?).to be true
