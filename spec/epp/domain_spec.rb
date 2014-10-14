@@ -217,6 +217,27 @@ describe 'EPP Domain', epp: true do
         expect(key.public_key).to eq('AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8')
       end
 
+      it 'creates ria.ee with valid ds record' do
+        xml = domain_create_xml({
+          name: { value: 'ria.ee' }
+        }, {
+          _other: [
+            { keyData: {
+                flags: { value: '257' },
+                protocol: { value: '3' },
+                alg: { value: '8' },
+                pubKey: { value: 'AwEAAaOf5+lz3ftsL+0CCvfJbhUF/NVsNh8BKo61oYs5fXVbuWDiH872 LC8uKDO92TJy7Q4TF9XMAKMMlf1GMAxlRspD749SOCTN00sqfWx1OMTu a28L1PerwHq7665oDJDKqR71btcGqyLKhe2QDvCdA0mENimF1NudX1BJ DDFi6oOZ0xE/0CuveB64I3ree7nCrwLwNs56kXC4LYoX3XdkOMKiJLL/ MAhcxXa60CdZLoRtTEW3z8/oBq4hEAYMCNclpbd6y/exScwBxFTdUfFk KsdNcmvai1lyk9vna0WQrtpYpHKMXvY9LFHaJxCOLR4umfeQ42RuTd82 lqfU6ClMeXs=' }
+              }
+            }
+          ]
+        })
+
+        response = epp_request(xml, :xml)
+        d = Domain.first
+        ds = d.dnskeys.first
+        expect(ds.ds_digest).to eq('0B62D1BC64EFD1EE652FB102BDF1011BF514CCD9A1A0CFB7472AEA3B01F38C92')
+      end
+
       it 'validates nameserver ipv4 when in same zone as domain' do
         xml = domain_create_xml({
           ns: [
@@ -532,7 +553,7 @@ describe 'EPP Domain', epp: true do
     end
 
     context 'with valid domain' do
-      before(:each) { Fabricate(:domain, name: 'example.ee', registrar: EppUser.first.registrar) }
+      before(:each) { Fabricate(:domain, name: 'example.ee', registrar: EppUser.first.registrar, dnskeys: []) }
 
       it 'renews a domain' do
         exp_date = (Date.today + 1.year)

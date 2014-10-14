@@ -3,16 +3,12 @@ require 'rails_helper'
 describe Dnskey do
   before(:each) do
     Fabricate(:domain_validation_setting_group)
-
-    Fabricate(:setting_group, code: 'dnskeys', settings: [
-      Fabricate(:setting, code: Setting::DS_ALGORITHM, value: 2)
-    ])
+    Fabricate(:dnskeys_setting_group)
   end
 
   it { should belong_to(:domain) }
 
   it 'generates digest' do
-
     d = Fabricate(:domain, name: 'ria.ee')
     ds = d.dnskeys.first
 
