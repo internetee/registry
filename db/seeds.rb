@@ -74,7 +74,13 @@ s_1.value = 1
 s_2 = Setting.where(code: 'ns_max_count').first_or_create
 s_2.value = 13
 
-sg.settings = [s_1, s_2]
+s_3 = Setting.where(code: 'dnskeys_min_count').first_or_create
+s_3.value = 0
+
+s_4 = Setting.where(code: 'dnskeys_max_count').first_or_create
+s_4.value = 9
+
+sg.settings = [s_1, s_2, s_3, s_4]
 sg.save
 
 sg = SettingGroup.where(code: 'domain_general').first_or_create
@@ -84,4 +90,3 @@ s_1.value = 0
 
 sg.settings = [s_1]
 sg.save
-

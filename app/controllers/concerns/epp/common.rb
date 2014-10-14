@@ -48,9 +48,9 @@ module Epp::Common
     end
 
     # for debugging
-    @errors << { 
-      code: '1', 
-      msg: 'handle_errors was executed when there were actually no errors' 
+    @errors << {
+      code: '1',
+      msg: 'handle_errors was executed when there were actually no errors'
     } if @errors.blank?
 
     @errors.uniq!
@@ -65,9 +65,9 @@ module Epp::Common
 
   def xml_attrs_present?(ph, attributes)
     attributes.each do |x|
-      epp_errors << { 
+      epp_errors << {
         code: '2003',
-        msg: I18n.t('errors.messages.required_parameter_missing', key: x.last) 
+        msg: I18n.t('errors.messages.required_parameter_missing', key: x.last)
       } unless has_attribute(ph, x)
     end
     epp_errors.empty?
@@ -77,7 +77,7 @@ module Epp::Common
     [array_ph].flatten.each do |ph|
       attributes.each do |x|
         next if has_attribute(ph, x)
-        epp_errors << { 
+        epp_errors << {
           code: '2003',
           msg: I18n.t('errors.messages.required_parameter_missing', key: x.last)
         }
