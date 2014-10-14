@@ -171,18 +171,18 @@ module Epp::DomainsHelper
 
     unless domain
       epp_errors << {
-        code: '2303', 
-        msg: I18n.t('errors.messages.epp_domain_not_found'), 
-        value: { obj: 'name', val: @ph[:name] } 
+        code: '2303',
+        msg: I18n.t('errors.messages.epp_domain_not_found'),
+        value: { obj: 'name', val: @ph[:name] }
       }
       return nil
     end
 
     if domain.registrar != current_epp_user.registrar && secure[:secure] == true
-      epp_errors << { 
+      epp_errors << {
         code: '2302',
-        msg: I18n.t('errors.messages.domain_exists_but_belongs_to_other_registrar'), 
-        value: { obj: 'name', val: @ph[:name] } 
+        msg: I18n.t('errors.messages.domain_exists_but_belongs_to_other_registrar'),
+        value: { obj: 'name', val: @ph[:name] }
       }
       return nil
     end

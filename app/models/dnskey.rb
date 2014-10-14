@@ -8,7 +8,7 @@ class Dnskey < ActiveRecord::Base
   validate :validate_protocol
   validate :validate_flags
 
-  before_save -> { generate_digest unless digest.present? }
+  before_save -> { generate_digest unless ds_digest.present? }
 
   ALGORITHMS = %w(3 5 6 7 8 252 253 254 255)
   PROTOCOLS = %w(3)
@@ -61,7 +61,7 @@ class Dnskey < ActiveRecord::Base
 
     hex = [domain.name_in_wire_format, flags_hex, protocol_hex, alg_hex, public_key_hex].join
     bin = self.class.hex_to_bin(hex)
-    self.digest = Digest::SHA256.hexdigest(bin).upcase
+    self.ds_digest = Digest::SHA256.hexdigest(bin).upcase
   end
 
   def public_key_hex
