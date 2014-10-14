@@ -232,7 +232,7 @@ describe 'EPP Domain', epp: true do
           ]
         })
 
-        response = epp_request(xml, :xml)
+        epp_request(xml, :xml)
         d = Domain.first
         ds = d.dnskeys.first
         expect(ds.ds_digest).to eq('0B62D1BC64EFD1EE652FB102BDF1011BF514CCD9A1A0CFB7472AEA3B01F38C92')
@@ -822,7 +822,7 @@ describe 'EPP Domain', epp: true do
           ]
         })
 
-        response = epp_request(xml, :xml)
+        epp_request(xml, :xml)
 
         expect(d.dnskeys.count).to eq(1)
 
