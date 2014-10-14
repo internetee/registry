@@ -210,6 +210,19 @@ class Domain < ActiveRecord::Base
 
   ## SHARED
 
+  def name_in_wire_format
+    res = ''
+    parts = name.split('.')
+    parts.each do |x|
+      res += sprintf('%02X', x.length)
+      res += x.each_byte.map { |b| sprintf('%02X', b) }.join
+    end
+
+    res += '00'
+
+    res
+  end
+
   def to_s
     name
   end

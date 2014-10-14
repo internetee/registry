@@ -218,7 +218,6 @@ class Epp::EppDomain < Domain
       }.merge(x))
     end
 
-
     errors.any?
   end
 

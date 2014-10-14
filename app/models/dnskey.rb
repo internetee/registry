@@ -8,7 +8,7 @@ class Dnskey < ActiveRecord::Base
   validate :validate_protocol
   validate :validate_flags
 
-  # after_validation :generate_epp_errors
+  before_save -> { generate_digest unless digest.present? }
 
   ALGORITHMS = %w(3 5 6 7 8 252 253 254 255)
   PROTOCOLS = %w(3)
@@ -22,7 +22,7 @@ class Dnskey < ActiveRecord::Base
         [:flags, :invalid, { value: { obj: 'flags', val: flags }, values: FLAGS.join(', ') }]
       ],
       '2302' => [
-        [:public_key, :taken, { value: { obj: 'pubKye', val: public_key } }]
+        [:public_key, :taken, { value: { obj: 'pubKey', val: public_key } }]
       ],
       '2303' => [
         [:base, :dnskey_not_found, { value: { obj: 'pubKey', val: public_key } }]
@@ -52,5 +52,34 @@ class Dnskey < ActiveRecord::Base
     return if flags.blank?
     return if FLAGS.include?(flags.to_s)
     errors.add(:flags, :invalid, values: FLAGS.join(', '))
+  end
+
+  def generate_digest
+    flags_hex = self.class.int_to_hex(flags)
+    protocol_hex = self.class.int_to_hex(protocol)
+    alg_hex = self.class.int_to_hex(alg)
+
+    hex = [domain.name_in_wire_format, flags_hex, protocol_hex, alg_hex, public_key_hex].join
+    bin = self.class.hex_to_bin(hex)
+    self.digest = Digest::SHA256.hexdigest(bin).upcase
+  end
+
+  def public_key_hex
+    self.class.bin_to_hex(Base64.decode64(public_key))
+  end
+
+  class << self
+    def int_to_hex(s)
+      s = s.to_s(16)
+      s.prepend('0') if s.length.odd?
+    end
+
+    def hex_to_bin(s)
+      s.scan(/../).map(&:hex).pack('c*')
+    end
+
+    def bin_to_hex(s)
+      s.each_byte.map { |b| sprintf('%02X', b) }.join
+    end
   end
 end
