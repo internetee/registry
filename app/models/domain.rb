@@ -69,9 +69,9 @@ class Domain < ActiveRecord::Base
     oc = owner_contact.snapshot if owner_contact.is_a?(Contact)
     {
       owner_contact: oc,
-      tech_contacts: tech_contacts.map{ |tc| tc.snapshot },
-      admin_contacts: admin_contacts.map{ |ac| ac.snapshot },
-      nameservers: nameservers.map{ |ns| ns.snapshot },
+      tech_contacts: tech_contacts.map(&:snapshot),
+      admin_contacts: admin_contacts.map(&:snapshot),
+      nameservers: nameservers.map(&:snapshot),
       domain: make_snapshot
     }.to_yaml
   end
@@ -293,25 +293,24 @@ class Domain < ActiveRecord::Base
 
   private
 
-  #for archiving
-  #def version_owner
+  # for archiving
+  # def version_owner
   #  return nil unless owner_contact
   #  owner_contact.id
-  #end
+  # end
 
-  #def version_admin_contacts
+  # def version_admin_contacts
   #  return nil unless admin_contacts
   #  return admin_contacts.map { |ns| ns.id }
-  #end
+  # end
 
-  #def version_tech_contacts
+  # def version_tech_contacts
   #  return nil unless tech_contacts
   #  return tech_contacts.map { |ns| ns.id }
-  #end
+  # end
 
-  #def version_nameservers
+  # def version_nameservers
   #  return nil unless nameservers
   #  return nameservers.map { |ns| ns.id }
-  #end
-
+  # end
 end
