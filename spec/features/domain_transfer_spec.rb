@@ -3,12 +3,15 @@ require 'rails_helper'
 feature 'Domain transfer', type: :feature do
   let(:elkdata) { Fabricate(:registrar, { name: 'Elkdata', reg_no: '123' }) }
   let(:zone) { Fabricate(:registrar) }
-  let(:zone_user) { Fabricate(:user, registrar: zone, username: 'zone', admin: false) }
-  let(:elkdata_user) { Fabricate(:user, registrar: elkdata, username: 'elkdata', admin: false) }
+  let(:zone_user) { Fabricate(:user, registrar: zone, username: 'zone', admin: false, identity_code: '37810013087') }
+  let(:elkdata_user) {
+    Fabricate(:user, registrar: elkdata, username: 'elkdata', admin: false, identity_code: '37810013261')
+  }
 
   background do
     Fabricate(:domain_validation_setting_group)
     Fabricate(:domain_general_setting_group)
+    Fabricate(:dnskeys_setting_group)
     Fabricate(:domain, registrar: zone)
   end
 

@@ -245,13 +245,8 @@ class Epp::EppDomain < Domain
 
   def detach_dnskeys(dnssec_data)
     sg = SettingGroup.dnskeys
-    ds_data_allowed = sg.setting(Setting::ALLOW_DS_DATA).value == '0' ? false : true
-    key_data_allowed = sg.setting(Setting::ALLOW_KEY_DATA).value == '0' ? false : true
 
-    if dnssec_data[:ds_data].any? && !ds_data_allowed
-      errors.add(:base, :ds_data_not_allowed)
-      return
-    end
+    return false unless validate_dnssec_data(dnssec_data, sg)
 
     to_delete = []
     dnssec_data[:ds_data].each do |x|
@@ -261,11 +256,6 @@ class Epp::EppDomain < Domain
       else
         to_delete << ds
       end
-    end
-
-    if dnssec_data[:key_data].any? && !key_data_allowed
-      errors.add(:base, :key_data_not_allowed)
-      return
     end
 
     to_delete = []
@@ -455,6 +445,24 @@ class Epp::EppDomain < Domain
 
       res[:max_sig_life] = parsed_frame.css('maxSigLife').first.try(:text)
 
+      res = parse_ds_data_from_frame(parsed_frame, res)
+      parse_key_data_from_frame(parsed_frame, res)
+    end
+
+    def parse_key_data_from_frame(parsed_frame, res)
+      parsed_frame.xpath('keyData').each do |x|
+        res[:key_data] << {
+          flags: x.css('flags').first.try(:text),
+          protocol: x.css('protocol').first.try(:text),
+          alg: x.css('alg').first.try(:text),
+          public_key: x.css('pubKey').first.try(:text)
+        }
+      end
+
+      res
+    end
+
+    def parse_ds_data_from_frame(parsed_frame, res)
       parsed_frame.css('dsData').each do |x|
         data = {
           ds_key_tag: x.css('keyTag').first.try(:text),
@@ -472,15 +480,6 @@ class Epp::EppDomain < Domain
         }) if kd
 
         res[:ds_data] << data
-      end
-
-      parsed_frame.xpath('keyData').each do |x|
-        res[:key_data] << {
-          flags: x.css('flags').first.try(:text),
-          protocol: x.css('protocol').first.try(:text),
-          alg: x.css('alg').first.try(:text),
-          public_key: x.css('pubKey').first.try(:text)
-        }
       end
 
       res

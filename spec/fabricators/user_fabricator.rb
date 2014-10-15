@@ -4,5 +4,6 @@ Fabricator(:user) do
   email 'info@gitlab.eu'
   identity_code '37810013108'
   admin true
+  country
   registrar
 end
