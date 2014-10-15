@@ -22,7 +22,9 @@ class Epp::EppDomain < Domain
       '2306' => [ # Parameter policy error
         [:owner_contact, :blank],
         [:admin_contacts, :out_of_range],
-        [:base, :ds_data_with_key_not_allowed]
+        [:base, :ds_data_with_key_not_allowed],
+        [:base, :ds_data_not_allowed],
+        [:base, :key_data_not_allowed]
       ],
       '2004' => [ # Parameter value range error
         [:nameservers, :out_of_range,

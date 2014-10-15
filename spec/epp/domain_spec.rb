@@ -566,7 +566,7 @@ describe 'EPP Domain', epp: true do
         expect(ds.public_key).to eq('700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f')
       end
 
-      it 'does not create domain with ds data when it is not allowed' do
+      it 'prohibits dsData with key' do
         sg = SettingGroup.dnskeys
         s = sg.setting(Setting::ALLOW_DS_DATA_WITH_KEYS)
         s.value = 0
@@ -592,6 +592,55 @@ describe 'EPP Domain', epp: true do
         response = epp_request(xml, :xml)
         expect(response[:result_code]).to eq('2306')
         expect(response[:msg]).to eq('dsData object with key data is not allowed')
+      end
+
+      it 'prohibits dsData' do
+        sg = SettingGroup.dnskeys
+        s = sg.setting(Setting::ALLOW_DS_DATA)
+        s.value = 0
+        s.save
+
+        xml = domain_create_xml({}, {
+          _other: [
+            { dsData: {
+                keyTag: { value: '12345' },
+                alg: { value: '3' },
+                digestType: { value: '1' },
+                digest: { value: '49FD46E6C4B45C55D4AC' },
+                keyData: {
+                  flags: { value: '0' },
+                  protocol: { value: '3' },
+                  alg: { value: '5' },
+                  pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+                }
+              }
+            }]
+          })
+
+        response = epp_request(xml, :xml)
+        expect(response[:result_code]).to eq('2306')
+        expect(response[:msg]).to eq('dsData object is not allowed')
+      end
+
+      it 'prohibits keyData' do
+        sg = SettingGroup.dnskeys
+        s = sg.setting(Setting::ALLOW_KEY_DATA)
+        s.value = 0
+        s.save
+
+        xml = domain_create_xml({}, {
+          _other: [
+            keyData: {
+              flags: { value: '0' },
+              protocol: { value: '3' },
+              alg: { value: '5' },
+              pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+            }]
+          })
+
+        response = epp_request(xml, :xml)
+        expect(response[:result_code]).to eq('2306')
+        expect(response[:msg]).to eq('keyData object is not allowed')
       end
     end
 
