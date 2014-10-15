@@ -507,6 +507,66 @@ describe 'EPP Domain', epp: true do
         expect(response[:result_code]).to eq('2004')
         expect(response[:msg]).to eq('DNS keys count must be between 0-1')
       end
+
+      it 'creates domain with ds data' do
+        pending true
+        xml = domain_create_xml({}, {
+          _other: [
+            { dsData: {
+                keyTag: { value: '12345' },
+                alg: { value: '3' },
+                digestType: { value: '1' },
+                digest: { value: '49FD46E6C4B45C55D4AC' }
+              }
+            }]
+          })
+
+        epp_request(xml, :xml)
+
+        d = Domain.first
+        ds = d.dnskeys.first
+        expect(ds.ds_key_tag).to eq('12345')
+        expect(ds.ds_alg).to eq(3)
+        expect(ds.ds_digest_type).to eq(1)
+        expect(ds.ds_digest).to eq('49FD46E6C4B45C55D4AC')
+        expect(ds.flags).to be_nil
+        expect(ds.protocol).to be_nil
+        expect(ds.alg).to be_nil
+        expect(ds.public_key).to be_nil
+      end
+
+      it 'creates domain with ds data with key' do
+        xml = domain_create_xml({}, {
+          _other: [
+            { dsData: {
+                keyTag: { value: '12345' },
+                alg: { value: '3' },
+                digestType: { value: '1' },
+                digest: { value: '49FD46E6C4B45C55D4AC' },
+                keyData: {
+                  flags: { value: '0' },
+                  protocol: { value: '3' },
+                  alg: { value: '5' },
+                  pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+                }
+              }
+            }]
+          })
+
+        r = epp_request(xml, :xml)
+
+        d = Domain.first
+        ds = d.dnskeys.first
+        expect(ds.ds_key_tag).to eq('12345')
+        expect(ds.ds_alg).to eq(3)
+        expect(ds.ds_digest_type).to eq(1)
+        expect(ds.ds_digest).to eq('49FD46E6C4B45C55D4AC')
+        expect(ds.flags).to eq(0)
+        expect(ds.protocol).to eq(3)
+        expect(ds.alg).to eq(5)
+        expect(ds.public_key).to eq('700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f')
+      end
+
     end
 
     context 'with juridical persion as an owner' do

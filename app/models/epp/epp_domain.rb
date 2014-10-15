@@ -197,7 +197,7 @@ class Epp::EppDomain < Domain
     end
 
     dnssec_data[:ds_data].each do |ds_data|
-      if ds_data[:key_data].any? && !ds_data_with_keys_allowed
+      if ds_data[:public_key] && !ds_data_with_keys_allowed
         errors.add(:base, :ds_data_with_keys_not_allowed)
         next
       else
@@ -434,20 +434,25 @@ class Epp::EppDomain < Domain
       res[:max_sig_life] = parsed_frame.css('maxSigLife').first.try(:text)
 
       parsed_frame.css('dsData').each do |x|
-        kd = x.css('keyData').first
-        res[:ds_data] << {
+        data = {
           ds_key_tag: x.css('keyTag').first.try(:text),
           ds_alg: x.css('alg').first.try(:text),
           ds_digest_type: x.css('digestType').first.try(:text),
-          ds_digest: x.css('digest').first.try(:text),
+          ds_digest: x.css('digest').first.try(:text)
+        }
+
+        kd = x.css('keyData').first
+        data.merge!({
           flags: kd.css('flags').first.try(:text),
           protocol: kd.css('protocol').first.try(:text),
           alg: kd.css('alg').first.try(:text),
           public_key: kd.css('pubKey').first.try(:text)
-        }
+        }) if kd
+
+        res[:ds_data] << data
       end
 
-      parsed_frame.css('* > keyData').each do |x|
+      parsed_frame.xpath('keyData').each do |x|
         res[:key_data] << {
           flags: x.css('flags').first.try(:text),
           protocol: x.css('protocol').first.try(:text),
