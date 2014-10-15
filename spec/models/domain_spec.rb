@@ -82,4 +82,29 @@ describe Domain do
       expect(d.auth_info).to_not be_empty
     end
   end
+
+  with_versioning do
+    context 'when not saved' do
+      it 'does not create domain version' do
+        Fabricate.build(:domain)
+        expect(DomainVersion.count).to eq(0)
+      end
+
+      it 'does not create child versions' do
+        Fabricate.build(:domain)
+        expect(ContactVersion.count).to eq(0)
+        expect(NameserverVersion.count).to eq(0)
+      end
+    end
+
+    context 'when saved' do
+      before(:each) { Fabricate(:domain_validation_setting_group); Fabricate(:domain) }
+      it 'creates domain version' do
+
+        expect(DomainVersion.count).to eq(1)
+        expect(ContactVersion.count).to eq(2)
+        expect(NameserverVersion.count).to eq(3)
+      end
+    end
+  end
 end

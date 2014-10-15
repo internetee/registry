@@ -1,5 +1,5 @@
 class Client::DomainVersionsController < ClientController
-  before_action :set_version, only: [:show]
+  before_action :set_domain, only: [:show]
 
   def index
     @versions = DomainVersion.registrar_events(current_registrar.id)
@@ -7,13 +7,12 @@ class Client::DomainVersionsController < ClientController
   end
 
   def show
-    @event = params[:event]
-    @domain = @version.reify(has_multiple: true) unless @event == 'create'
+    @versions = @domain.versions.reverse
   end
 
   private
 
-  def set_version
-    @version = DomainVersion.find(params[:id])
+  def set_domain
+    @domain = Domain.find(params[:id])
   end
 end

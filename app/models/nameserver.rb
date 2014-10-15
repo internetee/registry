@@ -27,6 +27,14 @@ class Nameserver < ActiveRecord::Base
     }
   end
 
+  def snapshot
+    {
+      hostname: hostname,
+      ipv4: ipv4,
+      ipv6: ipv6
+    }
+  end
+
   def to_s
     hostname
   end

@@ -2,23 +2,58 @@
   .col-sm-6
     %h2.text-center-xs= t('shared.domains')
 %hr
+
 .row
-  - if @event != 'create'
-    .col-sm-6= render 'client/domains/partials/general'
-  - if @event != 'create' && @domain.owner_contact
-    .col-sm-6= render 'client/domains/partials/owner'
-  - if @event != 'create' && @domain.tech_contacts
-    .col-sm-6= render 'client/domains/partials/tech_contacts'
-  .col-sm-6
-    .panel.panel-default
-      .panel-heading
-        %h3.panel-title= t('shared.version')
-      .panel-body
-        %dl.dl-horizontal
-          %dt= t('shared.whodunnit')
-          %dd= @version.whodunnit
-          %dt= t('shared.event')
-          %dd= @version.event
-          %dt= t('shared.created_at')
-          %dd= l(@version.created_at, format: :short)
+  .col-md-12
+    .table-responsive
+      %table.table-hover.table-bordered.table-condensed
+        %thead
+          %tr
+            %th{class: 'col-xs-1'}= 'domain'
+            %th{class: 'col-xs-2'}= 'owner'
+            %th{class: 'col-xs-2'}= 'admins'
+            %th{class: 'col-xs-2'}= 'techs'
+            %th{class: 'col-xs-2'}= 'ns'
+            %th{class: 'col-xs-1'}= 'datetime'
+        %tbody
+          - @versions.each do |version|
+            - children = YAML.load(version.snapshot)
+            - next unless children.is_a?(Hash)
+            - children = HashWithIndifferentAccess.new(children)
+            %tr
+              %td
+                - if children[:domain]
+                  = children[:domain][:name]
+                  = children[:domain][:status]
+              %td
+                - if children[:owner_contact]
+                  %p{:style => "font-size:x-small;"}
+                    = children[:owner_contact][:name] + ","
+                    = children[:owner_contact][:phone] + ","
+                    = children[:owner_contact][:email] + ","
+                    = children[:owner_contact][:code]
+              %td
+                - if children[:admin_contacts]
+                  - children[:admin_contacts].each do |ac|
+                    %p{:style => "font-size:x-small;"}
+                      = ac[:name] + ","
+                      = ac[:phone] + ","
+                      = ac[:email] + ","
+                      = ac[:code]
+              %td
+                - if children[:tech_contacts]
+                  - children[:tech_contacts].each do |tc|
+                    %p{:style => "font-size:x-small;"}
+                      = tc[:name] + ","
+                      = tc[:phone] + ","
+                      = tc[:email] + ","
+                      = tc[:code]
+              %td
+                - if children[:nameservers]
+                  - children[:nameservers].each do |ns|
+                    %p{:style => "font-size:x-small;"}
+                      = ns[:hostname] + ","
+                      = ns[:ipv4] || ns[:ipv6]
+
+              %td= l(version.created_at, format: :short)
 
