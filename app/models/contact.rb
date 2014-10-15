@@ -11,34 +11,34 @@ class Contact < ActiveRecord::Base
   has_many :domain_contacts
   has_many :domains, through: :domain_contacts
 
-  # TODO remove the x_by
+  # TODO: remove the x_by
   belongs_to :created_by, class_name: 'EppUser', foreign_key: :created_by_id
   belongs_to :updated_by, class_name: 'EppUser', foreign_key: :updated_by_id
   belongs_to :registrar
 
   accepts_nested_attributes_for :address, :disclosure
 
-  validates :code, :phone, :email, :ident, :address, :registrar,presence: true
+  validates :code, :phone, :email, :ident, :address, :registrar, presence: true
 
   validate :ident_must_be_valid
-  #validate :presence_of_one_address
+  # validate :presence_of_one_address
 
   validates :phone, format: /\+[0-9]{1,3}\.[0-9]{1,14}?/ # /\+\d{3}\.\d+/
   validates :email, format: /@/
 
   validates :code, uniqueness: { message: :epp_id_taken }
 
-  delegate :country, to: :address#, prefix: true
-  delegate :city, to: :address#, prefix: true
-  delegate :street, to: :address#, prefix: true
-  delegate :zip, to: :address#, prefix: true
+  delegate :country, to: :address # , prefix: true
+  delegate :city, to: :address # , prefix: true
+  delegate :street, to: :address # , prefix: true
+  delegate :zip, to: :address # , prefix: true
 
   # callbacks
-  #after_commit :domains_snapshot
+  # after_commit :domains_snapshot
   after_update :domains_snapshot
   after_destroy :domains_snapshot
 
-  #scopes
+  # scopes
   scope :current_registrars, ->(id) { where(registrar_id: id) }
   # archiving
   has_paper_trail class_name: 'ContactVersion'
@@ -107,7 +107,6 @@ class Contact < ActiveRecord::Base
 
   # should use only in transaction
   def destroy_and_clean
-
     if relations_with_domain?
       errors.add(:domains, :exist)
       return false
@@ -182,6 +181,4 @@ class Contact < ActiveRecord::Base
       res.reduce([]) { |o, v| o << { id: v[:id], display_key: "#{v.name} (#{v.code})" } }
     end
   end
-
-  private
 end

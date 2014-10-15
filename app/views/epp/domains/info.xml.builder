@@ -36,17 +36,6 @@ xml.epp_head do
           end
         end
 
-        xml.tag!('domain:dnssec') do
-          @domain.dnskeys.each do |x|
-            xml.tag!('domain:dnskey') do
-              xml.tag!('domain:flags', x.flags)
-              xml.tag!('domain:protocol', x.protocol)
-              xml.tag!('domain:alg', x.alg)
-              xml.tag!('domain:pubKey', x.public_key)
-            end
-          end
-        end if @domain.dnskeys.any?
-
         ## TODO Find out what this domain:host is all about
 
         xml.tag!('domain:clID', @domain.owner_contact_code)
@@ -72,5 +61,28 @@ xml.epp_head do
     end
   end
 
+  xml.extension do
+    xml.tag!('secDNS:infData', 'xmlns:secDNS' => 'urn:ietf:params:xml:ns:secDNS-1.1') do
+      @domain.dnskeys.each do |x|
+        xml.tag!('secDNS:dsData') do
+          xml.tag!('secDNS:keyTag', x.ds_key_tag)
+          xml.tag!('secDNS:alg', x.ds_alg)
+          xml.tag!('secDNS:digestType', x.ds_digest_type)
+          xml.tag!('secDNS:digest', x.ds_digest)
+          xml.tag!('secDNS:keyData') do
+            xml.tag!('secDNS:flags', x.flags)
+            xml.tag!('secDNS:protocol', x.protocol)
+            xml.tag!('secDNS:alg', x.alg)
+            xml.tag!('secDNS:pubKey', x.public_key)
+          end
+        end
+      end
+    end
+  end if @domain.dnskeys.any?
+
   xml << render('/epp/shared/trID')
 end
+
+
+9032
+72056

@@ -4,15 +4,16 @@ module Epp::DomainsHelper
       @domain = Epp::EppDomain.new(domain_create_params)
 
       @domain.parse_and_attach_domain_dependencies(parsed_frame)
+      @domain.parse_and_attach_ds_data(parsed_frame.css('extension create'))
 
       if @domain.errors.any?
         handle_errors(@domain)
-        raise ActiveRecord::Rollback and return
+        fail ActiveRecord::Rollback and return
       end
 
       unless @domain.save
         handle_errors(@domain)
-        raise ActiveRecord::Rollback and return
+        fail ActiveRecord::Rollback and return
       end
 
       render '/epp/domains/create'
@@ -43,6 +44,7 @@ module Epp::DomainsHelper
     render '/epp/domains/info'
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
   def update_domain
     Epp::EppDomain.transaction do
       @domain = find_domain
@@ -50,22 +52,25 @@ module Epp::DomainsHelper
       handle_errors(@domain) and return unless @domain
 
       @domain.parse_and_attach_domain_dependencies(parsed_frame.css('add'))
+      @domain.parse_and_attach_ds_data(parsed_frame.css('extension add'))
       @domain.parse_and_detach_domain_dependencies(parsed_frame.css('rem'))
+      @domain.parse_and_detach_ds_data(parsed_frame.css('extension rem'))
       @domain.parse_and_update_domain_dependencies(parsed_frame.css('chg'))
 
       if @domain.errors.any?
         handle_errors(@domain)
-        raise ActiveRecord::Rollback and return
+        fail ActiveRecord::Rollback and return
       end
 
       unless @domain.save
         handle_errors(@domain)
-        raise ActiveRecord::Rollback and return
+        fail ActiveRecord::Rollback and return
       end
 
       render '/epp/domains/success'
     end
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   def transfer_domain
     @domain = find_domain(secure: false)
@@ -76,6 +81,7 @@ module Epp::DomainsHelper
     render '/epp/domains/transfer'
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
   def delete_domain
     @domain = find_domain
 
@@ -85,6 +91,7 @@ module Epp::DomainsHelper
 
     render '/epp/domains/success'
   end
+  # rubocop:enbale Metrics/CyclomaticComplexity
 
   ### HELPER METHODS ###
 
@@ -94,7 +101,14 @@ module Epp::DomainsHelper
   def validate_domain_create_request
     @ph = params_hash['epp']['command']['create']['create']
     # TODO: Verify contact presence if registrant is juridical
-    xml_attrs_present?(@ph, [['name'], ['ns'], ['registrant']])
+    attrs_present = xml_attrs_present?(@ph, [['name'], ['ns'], ['registrant']])
+    return false unless attrs_present
+
+    if parsed_frame.css('dsData').count > 0 && parsed_frame.css('create > keyData').count > 0
+      epp_errors << { code: '2306', msg: I18n.t('shared.ds_data_and_key_data_must_not_exists_together') }
+      return false
+    end
+    true
   end
 
   def domain_create_params
@@ -156,12 +170,20 @@ module Epp::DomainsHelper
     domain = Epp::EppDomain.find_by(name: @ph[:name])
 
     unless domain
-      epp_errors << { code: '2303', msg: I18n.t('errors.messages.epp_domain_not_found'), value: { obj: 'name', val: @ph[:name] } }
+      epp_errors << {
+        code: '2303',
+        msg: I18n.t('errors.messages.epp_domain_not_found'),
+        value: { obj: 'name', val: @ph[:name] }
+      }
       return nil
     end
 
     if domain.registrar != current_epp_user.registrar && secure[:secure] == true
-      epp_errors << { code: '2302', msg: I18n.t('errors.messages.domain_exists_but_belongs_to_other_registrar'), value: { obj: 'name', val: @ph[:name] } }
+      epp_errors << {
+        code: '2302',
+        msg: I18n.t('errors.messages.domain_exists_but_belongs_to_other_registrar'),
+        value: { obj: 'name', val: @ph[:name] }
+      }
       return nil
     end
 

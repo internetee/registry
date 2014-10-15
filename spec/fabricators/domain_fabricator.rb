@@ -8,4 +8,5 @@ Fabricator(:domain) do
   admin_contacts(count: 1) { Fabricate(:contact) }
   registrar
   auth_info '98oiewslkfkd'
+  dnskeys(count: 1)
 end

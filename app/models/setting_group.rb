@@ -14,12 +14,12 @@ class SettingGroup < ActiveRecord::Base
       find_by(code: 'domain_validation')
     end
 
-    def domain_statuses
-      find_by(code: 'domain_statuses')
-    end
-
     def domain_general
       find_by(code: 'domain_general')
+    end
+
+    def dnskeys
+      find_by(code: 'dnskeys')
     end
   end
 end

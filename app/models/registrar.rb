@@ -1,13 +1,12 @@
 class Registrar < ActiveRecord::Base
   belongs_to :country
-  has_many :domains, :dependent => :restrict_with_error
-  has_many :contacts, :dependent => :restrict_with_error
-  has_many :epp_users, :dependent => :restrict_with_error
-  has_many :users, :dependent => :restrict_with_error
+  has_many :domains, dependent: :restrict_with_error
+  has_many :contacts, dependent: :restrict_with_error
+  has_many :epp_users, dependent: :restrict_with_error
+  has_many :users, dependent: :restrict_with_error
 
   validates :name, :reg_no, :address, :country, presence: true
   validates :name, :reg_no, uniqueness: true
-
 
   def domain_transfers
     at = DomainTransfer.arel_table

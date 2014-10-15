@@ -74,6 +74,9 @@ en:
             base:
               domain_status_prohibits_operation: 'Domain status prohibits operation'
               domain_already_belongs_to_the_querying_registrar: 'Domain already belongs to the querying registrar'
+              ds_data_not_allowed: 'dsData object is not allowed'
+              ds_data_with_keys_not_allowed: 'dsData object with key data is not allowed'
+              key_data_not_allowed: 'keyData object is not allowed'
             name_dirty:
               invalid: 'Domain name is invalid'
               reserved: 'Domain name is reserved or restricted'
@@ -107,8 +110,8 @@ en:
             registrar:
               blank: 'Registrar is missing'
             dnskeys:
+              not_found: 'DS was not found'
               invalid: 'DNS keys are invalid'
-              not_found: 'Dnskey was not found'
               out_of_range: 'DNS keys count must be between %{min}-%{max}'
 
         domain:
@@ -204,6 +207,12 @@ en:
               blank: 'Public key is missing'
 
 
+        delegation_signer:
+          attributes:
+            dnskeys:
+              out_of_range: 'DNS keys count must be between %{min}-%{max}'
+
+
     attributes:
       epp_domain: &epp_domain_attributes
         name: 'Domain name'
@@ -244,6 +253,7 @@ en:
     codes:
       domain_validation: 'Domain validation'
       domain_general: 'Domain general'
+      dnskeys: 'DNS keys'
 
   settings:
     codes:
@@ -251,6 +261,10 @@ en:
       ns_max_count: 'Nameserver maximum count'
       dnskeys_min_count: 'DNS keys minimum count'
       dnskeys_max_count: 'DNS keys maximum count'
+      allow_ds_data: 'Allow DS data'
+      allow_ds_data_with_keys: 'Allow DS data with keys'
+      allow_key_data: 'Allow key data'
+      ds_algorithm: 'DS algorithm'
 
   shared:
     code: 'Code'
@@ -419,6 +433,7 @@ en:
     failed_to_delete_record: 'Failed to delete record'
 
     authentication_error: 'Authentication error'
+    ds_data_and_key_data_must_not_exists_together: 'dsData and keyData objects must not exists together'
 
   registrar: Registrar
 

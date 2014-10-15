@@ -13,6 +13,7 @@ describe 'EPP Domain', epp: true do
 
       Fabricate(:domain_validation_setting_group)
       Fabricate(:domain_statuses_setting_group)
+      Fabricate(:dnskeys_setting_group)
     end
 
     it 'returns error if contact does not exists' do
@@ -166,7 +167,7 @@ describe 'EPP Domain', epp: true do
       it 'creates new pw after successful transfer' do
         pw = domain.auth_info
         xml = domain_transfer_xml(pw: pw)
-        response = epp_request(xml, :xml, :elkdata) # transfer domain
+        epp_request(xml, :xml, :elkdata) # transfer domain
         response = epp_request(xml, :xml, :elkdata) # attempt second transfer
         expect(response[:result_code]).to eq('2200')
         expect(response[:msg]).to eq('Authentication error')
@@ -203,12 +204,38 @@ describe 'EPP Domain', epp: true do
         expect(d.auth_info).not_to be_empty
 
         expect(d.dnskeys.count).to eq(1)
+
         key = d.dnskeys.first
 
+        expect(key.ds_alg).to eq(3)
+        expect(key.ds_key_tag).to_not be_blank
+        sg = SettingGroup.dnskeys
+        expect(key.ds_digest_type).to eq(sg.setting(Setting::DS_ALGORITHM).value.to_i)
         expect(key.flags).to eq(257)
         expect(key.protocol).to eq(3)
         expect(key.alg).to eq(5)
         expect(key.public_key).to eq('AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8')
+      end
+
+      it 'creates ria.ee with valid ds record' do
+        xml = domain_create_xml({
+          name: { value: 'ria.ee' }
+        }, {
+          _other: [
+            { keyData: {
+                flags: { value: '257' },
+                protocol: { value: '3' },
+                alg: { value: '8' },
+                pubKey: { value: 'AwEAAaOf5+lz3ftsL+0CCvfJbhUF/NVsNh8BKo61oYs5fXVbuWDiH872 LC8uKDO92TJy7Q4TF9XMAKMMlf1GMAxlRspD749SOCTN00sqfWx1OMTu a28L1PerwHq7665oDJDKqR71btcGqyLKhe2QDvCdA0mENimF1NudX1BJ DDFi6oOZ0xE/0CuveB64I3ree7nCrwLwNs56kXC4LYoX3XdkOMKiJLL/ MAhcxXa60CdZLoRtTEW3z8/oBq4hEAYMCNclpbd6y/exScwBxFTdUfFk KsdNcmvai1lyk9vna0WQrtpYpHKMXvY9LFHaJxCOLR4umfeQ42RuTd82 lqfU6ClMeXs=' }
+              }
+            }
+          ]
+        })
+
+        epp_request(xml, :xml)
+        d = Domain.first
+        ds = d.dnskeys.first
+        expect(ds.ds_digest).to eq('0B62D1BC64EFD1EE652FB102BDF1011BF514CCD9A1A0CFB7472AEA3B01F38C92')
       end
 
       it 'validates nameserver ipv4 when in same zone as domain' do
@@ -220,7 +247,6 @@ describe 'EPP Domain', epp: true do
         })
 
         response = epp_request(xml, :xml)
-
         expect(response[:result_code]).to eq('2306')
         expect(response[:msg]).to eq('IPv4 is missing')
       end
@@ -273,7 +299,7 @@ describe 'EPP Domain', epp: true do
         xml = domain_create_xml({
           ns: [
             { hostObj: { value: 'invalid1-' } },
-            { hostObj: { value: '-invalid2' } },
+            { hostObj: { value: '-invalid2' } }
           ]
 
         })
@@ -314,7 +340,7 @@ describe 'EPP Domain', epp: true do
 
       it 'does not create a domain with invalid period' do
         xml = domain_create_xml({
-          period: {value: '367', attrs: { unit: 'd' } }
+          period: { value: '367', attrs: { unit: 'd' } }
         })
 
         response = epp_request(xml, :xml)
@@ -324,10 +350,9 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'creates a domain with multiple dnskeys' do
-        xml = domain_create_xml({
-          dnssec: [
-            {
-              dnskey: {
+        xml = domain_create_xml({}, {
+          _other: [
+            { keyData: {
                 flags: { value: '257' },
                 protocol: { value: '3' },
                 alg: { value: '3' },
@@ -335,7 +360,7 @@ describe 'EPP Domain', epp: true do
               }
             },
             {
-              dnskey: {
+              keyData: {
                 flags: { value: '0' },
                 protocol: { value: '3' },
                 alg: { value: '5' },
@@ -343,7 +368,7 @@ describe 'EPP Domain', epp: true do
               }
             },
             {
-              dnskey: {
+              keyData: {
                 flags: { value: '256' },
                 protocol: { value: '3' },
                 alg: { value: '254' },
@@ -356,6 +381,13 @@ describe 'EPP Domain', epp: true do
         epp_request(xml, :xml)
         d = Domain.first
 
+        expect(d.dnskeys.count).to eq(3)
+
+        key_1 = d.dnskeys[0]
+        expect(key_1.ds_key_tag).to_not be_blank
+        expect(key_1.ds_alg).to eq(3)
+        expect(key_1.ds_digest_type).to eq(SettingGroup.dnskeys.setting(Setting::DS_ALGORITHM).value.to_i)
+
         expect(d.dnskeys.pluck(:flags)).to match_array([257, 0, 256])
         expect(d.dnskeys.pluck(:protocol)).to match_array([3, 3, 3])
         expect(d.dnskeys.pluck(:alg)).to match_array([3, 5, 254])
@@ -367,34 +399,34 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'does not create a domain when dnskeys are invalid' do
-        xml = domain_create_xml({
-          dnssec: [
-            {
-              dnskey: {
-                flags: { value: '250' },
-                protocol: { value: '4' },
-                alg: { value: '9' },
-                pubKey: { value: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8' }
-              }
-            },
-            {
-              dnskey: {
-                flags: { value: '1' },
-                protocol: { value: '3' },
-                alg: { value: '10' },
-                pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
-              }
-            },
-            {
-              dnskey: {
-                flags: { value: '256' },
-                protocol: { value: '5' },
-                alg: { value: '254' },
-                pubKey: { value: '' }
-              }
-            }
-          ]
-        })
+
+        xml = domain_create_xml({}, {
+         _other: [
+           { keyData: {
+               flags: { value: '250' },
+               protocol: { value: '4' },
+               alg: { value: '9' },
+               pubKey: { value: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8' }
+             }
+           },
+           {
+             keyData: {
+               flags: { value: '1' },
+               protocol: { value: '3' },
+               alg: { value: '10' },
+               pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+             }
+           },
+           {
+             keyData: {
+               flags: { value: '256' },
+               protocol: { value: '5' },
+               alg: { value: '254' },
+               pubKey: { value: '' }
+             }
+           }
+         ]
+       })
 
         response = epp_request(xml, :xml)
 
@@ -420,26 +452,24 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'does not create a domain with two identical dnskeys' do
-         xml = domain_create_xml({
-          dnssec: [
-            {
-              dnskey: {
-                flags: { value: '257' },
-                protocol: { value: '3' },
-                alg: { value: '3' },
-                pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
-              }
-            },
-            {
-              dnskey: {
-                flags: { value: '0' },
-                protocol: { value: '3' },
-                alg: { value: '5' },
-                pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
-              }
-            }
-          ]
-        })
+        xml = domain_create_xml({}, {
+         _other: [
+           { keyData: {
+               flags: { value: '257' },
+               protocol: { value: '3' },
+               alg: { value: '3' },
+               pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+             }
+           },
+           {
+             keyData: {
+               flags: { value: '0' },
+               protocol: { value: '3' },
+               alg: { value: '5' },
+               pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+             }
+           }]
+         })
 
         response = epp_request(xml, :xml)
 
@@ -453,25 +483,23 @@ describe 'EPP Domain', epp: true do
         s.value = 1
         s.save
 
-        xml = domain_create_xml({
-          dnssec: [
-            {
-              dnskey: {
-                flags: { value: '257' },
-                protocol: { value: '3' },
-                alg: { value: '3' },
-                pubKey: { value: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8' }
-              }
-            },
-            {
-              dnskey: {
-                flags: { value: '0' },
-                protocol: { value: '3' },
-                alg: { value: '5' },
-                pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
-              }
+        xml = domain_create_xml({}, {
+        _other: [
+          { keyData: {
+              flags: { value: '257' },
+              protocol: { value: '3' },
+              alg: { value: '3' },
+              pubKey: { value: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8' }
             }
-          ]
+          },
+          {
+            keyData: {
+              flags: { value: '0' },
+              protocol: { value: '3' },
+              alg: { value: '5' },
+              pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+            }
+          }]
         })
 
         response = epp_request(xml, :xml)
@@ -479,6 +507,66 @@ describe 'EPP Domain', epp: true do
         expect(response[:result_code]).to eq('2004')
         expect(response[:msg]).to eq('DNS keys count must be between 0-1')
       end
+
+      it 'creates domain with ds data' do
+        pending true
+        xml = domain_create_xml({}, {
+          _other: [
+            { dsData: {
+                keyTag: { value: '12345' },
+                alg: { value: '3' },
+                digestType: { value: '1' },
+                digest: { value: '49FD46E6C4B45C55D4AC' }
+              }
+            }]
+          })
+
+        epp_request(xml, :xml)
+
+        d = Domain.first
+        ds = d.dnskeys.first
+        expect(ds.ds_key_tag).to eq('12345')
+        expect(ds.ds_alg).to eq(3)
+        expect(ds.ds_digest_type).to eq(1)
+        expect(ds.ds_digest).to eq('49FD46E6C4B45C55D4AC')
+        expect(ds.flags).to be_nil
+        expect(ds.protocol).to be_nil
+        expect(ds.alg).to be_nil
+        expect(ds.public_key).to be_nil
+      end
+
+      it 'creates domain with ds data with key' do
+        xml = domain_create_xml({}, {
+          _other: [
+            { dsData: {
+                keyTag: { value: '12345' },
+                alg: { value: '3' },
+                digestType: { value: '1' },
+                digest: { value: '49FD46E6C4B45C55D4AC' },
+                keyData: {
+                  flags: { value: '0' },
+                  protocol: { value: '3' },
+                  alg: { value: '5' },
+                  pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+                }
+              }
+            }]
+          })
+
+        r = epp_request(xml, :xml)
+
+        d = Domain.first
+        ds = d.dnskeys.first
+        expect(ds.ds_key_tag).to eq('12345')
+        expect(ds.ds_alg).to eq(3)
+        expect(ds.ds_digest_type).to eq(1)
+        expect(ds.ds_digest).to eq('49FD46E6C4B45C55D4AC')
+        expect(ds.flags).to eq(0)
+        expect(ds.protocol).to eq(3)
+        expect(ds.alg).to eq(5)
+        expect(ds.public_key).to eq('700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f')
+      end
+
     end
 
     context 'with juridical persion as an owner' do
@@ -525,7 +613,7 @@ describe 'EPP Domain', epp: true do
     end
 
     context 'with valid domain' do
-      before(:each) { Fabricate(:domain, name: 'example.ee', registrar: EppUser.first.registrar) }
+      before(:each) { Fabricate(:domain, name: 'example.ee', registrar: EppUser.first.registrar, dnskeys: []) }
 
       it 'renews a domain' do
         exp_date = (Date.today + 1.year)
@@ -566,8 +654,28 @@ describe 'EPP Domain', epp: true do
         d.domain_statuses.build(value: DomainStatus::CLIENT_HOLD, description: 'Payment overdue.')
         d.nameservers.build(hostname: 'ns1.example.com', ipv4: '192.168.1.1', ipv6: '1080:0:0:0:8:800:200C:417A')
 
-        d.dnskeys.build(flags: 257, protocol: 3, alg: 3, public_key: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8')
-        d.dnskeys.build(flags: 0, protocol: 3, alg: 5, public_key: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f')
+        d.dnskeys.build(
+          ds_key_tag: '123',
+          ds_alg: 3,
+          ds_digest_type: 1,
+          ds_digest: 'abc',
+          flags: 257,
+          protocol: 3,
+          alg: 3,
+          public_key: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8'
+        )
+
+        d.dnskeys.build(
+          ds_key_tag: '123',
+          ds_alg: 3,
+          ds_digest_type: 1,
+          ds_digest: 'abc',
+          flags: 0,
+          protocol: 3,
+          alg: 5,
+          public_key: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
+        )
+
         d.save
 
         response = epp_request(domain_info_xml, :xml)
@@ -580,12 +688,12 @@ describe 'EPP Domain', epp: true do
         expect(inf_data.css('status').first[:s]).to eq('clientHold')
         expect(inf_data.css('registrant').text).to eq(d.owner_contact_code)
 
-        admin_contacts_from_request = inf_data.css('contact[type="admin"]').map { |x| x.text }
+        admin_contacts_from_request = inf_data.css('contact[type="admin"]').map(&:text)
         admin_contacts_existing = d.admin_contacts.pluck(:code)
 
         expect(admin_contacts_from_request).to eq(admin_contacts_existing)
 
-        hosts_from_request = inf_data.css('hostObj').map { |x| x.text }
+        hosts_from_request = inf_data.css('hostObj').map(&:text)
         hosts_existing = d.nameservers.where(ipv4: nil).pluck(:hostname)
 
         expect(hosts_from_request).to eq(hosts_existing)
@@ -597,13 +705,22 @@ describe 'EPP Domain', epp: true do
         expect(inf_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
         expect(inf_data.css('pw').text).to eq(d.auth_info)
 
-        dnskey_1 = inf_data.css('dnskey')[0]
+        ds_data_1 = response[:parsed].css('dsData')[0]
+
+        expect(ds_data_1.css('keyTag').first.text).to eq('123')
+        expect(ds_data_1.css('alg').first.text).to eq('3')
+        expect(ds_data_1.css('digestType').first.text).to eq('1')
+        expect(ds_data_1.css('digest').first.text).to eq('abc')
+
+        dnskey_1 = ds_data_1.css('keyData')[0]
         expect(dnskey_1.css('flags').first.text).to eq('257')
         expect(dnskey_1.css('protocol').first.text).to eq('3')
         expect(dnskey_1.css('alg').first.text).to eq('3')
         expect(dnskey_1.css('pubKey').first.text).to eq('AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8')
 
-        dnskey_2 = inf_data.css('dnskey')[1]
+        ds_data_2 = response[:parsed].css('dsData')[1]
+
+        dnskey_2 = ds_data_2.css('keyData')[0]
         expect(dnskey_2.css('flags').first.text).to eq('0')
         expect(dnskey_2.css('protocol').first.text).to eq('3')
         expect(dnskey_2.css('alg').first.text).to eq('5')
@@ -632,29 +749,29 @@ describe 'EPP Domain', epp: true do
                 { hostObj: { value: 'ns2.example.com' } }
               ]
             },
-            dnssec: [
-              {
-                dnskey: {
-                  flags: { value: '0' },
-                  protocol: { value: '3' },
-                  alg: { value: '5' },
-                  pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
-                }
-              },
-              {
-                dnskey: {
-                  flags: { value: '256' },
-                  protocol: { value: '3' },
-                  alg: { value: '254' },
-                  pubKey: { value: '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0' }
-                }
-              }
-            ],
             _other: [
               { contact: { value: 'mak21', attrs: { type: 'tech' } } },
               { status: { value: 'Payment overdue.', attrs: { s: 'clientHold', lang: 'en' } } },
               { status: { value: '', attrs: { s: 'clientUpdateProhibited' } } }
             ]
+          ]
+        }, {
+          add: [
+            { keyData: {
+                flags: { value: '0' },
+                protocol: { value: '3' },
+                alg: { value: '5' },
+                pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+              }
+            },
+            {
+              keyData: {
+                flags: { value: '256' },
+                protocol: { value: '3' },
+                alg: { value: '254' },
+                pubKey: { value: '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0' }
+              }
+            }
           ]
         })
 
@@ -680,11 +797,9 @@ describe 'EPP Domain', epp: true do
         expect(d.domain_statuses.first.value).to eq('clientHold')
 
         expect(d.domain_statuses.last.value).to eq('clientUpdateProhibited')
-
         expect(d.dnskeys.count).to eq(2)
 
         response = epp_request(xml, :xml)
-
         expect(response[:results][0][:result_code]).to eq('2302')
         expect(response[:results][0][:msg]).to eq('Nameserver already exists on this domain')
         expect(response[:results][0][:value]).to eq('ns1.example.com')
@@ -716,33 +831,35 @@ describe 'EPP Domain', epp: true do
                 { hostObj: { value: 'ns2.example.com' } }
               ]
             },
-            dnssec: [
-              {
-                dnskey: {
-                  flags: { value: '0' },
-                  protocol: { value: '3' },
-                  alg: { value: '5' },
-                  pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
-                }
-              },
-              {
-                dnskey: {
-                  flags: { value: '256' },
-                  protocol: { value: '3' },
-                  alg: { value: '254' },
-                  pubKey: { value: '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0' }
-                }
-              }
-            ],
             _other: [
               { contact: { value: 'mak21', attrs: { type: 'tech' } } },
               { status: { value: 'Payment overdue.', attrs: { s: 'clientHold', lang: 'en' } } },
               { status: { value: '', attrs: { s: 'clientUpdateProhibited' } } }
             ]
           ]
+        }, {
+          add: [
+            { keyData: {
+                flags: { value: '0' },
+                protocol: { value: '3' },
+                alg: { value: '5' },
+                pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+              }
+            },
+            {
+              keyData: {
+                flags: { value: '256' },
+                protocol: { value: '3' },
+                alg: { value: '254' },
+                pubKey: { value: '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0' }
+              }
+            }
+          ]
         })
 
         epp_request(xml, :xml)
+        d = Domain.last
+        expect(d.dnskeys.count).to eq(2)
 
         xml = domain_update_xml({
           rem: [
@@ -751,24 +868,22 @@ describe 'EPP Domain', epp: true do
                 { hostObj: { value: 'ns1.example.com' } }
               ]
             },
-            dnssec: [
-              {
-                dnskey: {
-                  pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
-                }
-              }
-            ],
             _other: [
               { contact: { value: 'mak21', attrs: { type: 'tech' } } },
               { status: { value: '', attrs: { s: 'clientHold' } } }
             ]
           ]
+        }, {
+          rem: [
+            { keyData: {
+                pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+              }
+            }
+          ]
         })
 
-        d = Domain.last
-        expect(d.dnskeys.count).to eq(2)
+        epp_request(xml, :xml)
 
-        response = epp_request(xml, :xml)
         expect(d.dnskeys.count).to eq(1)
 
         expect(d.domain_statuses.count).to eq(1)

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141010085152) do
+ActiveRecord::Schema.define(version: 20141014073435) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -91,12 +91,25 @@ ActiveRecord::Schema.define(version: 20141010085152) do
     t.datetime "updated_at"
   end
 
+  create_table "delegation_signers", force: true do |t|
+    t.integer "domain_id"
+    t.string  "key_tag"
+    t.integer "alg"
+    t.integer "digest_type"
+    t.string  "digest"
+  end
+
   create_table "dnskeys", force: true do |t|
     t.integer "domain_id"
     t.integer "flags"
     t.integer "protocol"
     t.integer "alg"
-    t.string  "public_key"
+    t.text    "public_key"
+    t.integer "delegation_signer_id"
+    t.string  "ds_key_tag"
+    t.integer "ds_alg"
+    t.integer "ds_digest_type"
+    t.string  "ds_digest"
   end
 
   create_table "domain_contacts", force: true do |t|

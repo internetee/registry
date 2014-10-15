@@ -25,7 +25,7 @@ module EppErrors
     values.each do |err|
       code, value = find_epp_code_and_value(err)
       next unless code
-      epp_errors << { code: code, msg: err, value: value}
+      epp_errors << { code: code, msg: err, value: value }
     end
     epp_errors
   end
@@ -33,11 +33,11 @@ module EppErrors
   def collect_child_errors(key)
     macro = self.class.reflect_on_association(key).macro
     multi = [:has_and_belongs_to_many, :has_many]
-    single = [:belongs_to, :has_one]
+    # single = [:belongs_to, :has_one]
 
     epp_errors = []
     send(key).each do |x|
-      x.errors.messages.each do |key, values|
+      x.errors.messages.each do |_key, values|
         epp_errors << x.collect_parent_errors(values)
       end
     end if multi.include?(macro)

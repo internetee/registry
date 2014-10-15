@@ -14,7 +14,9 @@ module Epp::Common
   end
 
   def proxy
-    @svTRID = "ccReg-#{'%010d' % rand(10**10)}"
+    # rubocop: disable Style/VariableName
+    @svTRID = "ccReg-#{format('%010d', rand(10**10))}"
+    # rubocop: enable Style/VariableName
     send(params[:command])
   end
 
@@ -46,7 +48,10 @@ module Epp::Common
     end
 
     # for debugging
-    @errors << { code: '1', msg: 'handle_errors was executed when there were actually no errors' } if @errors.blank?
+    @errors << {
+      code: '1',
+      msg: 'handle_errors was executed when there were actually no errors'
+    } if @errors.blank?
 
     @errors.uniq!
 
@@ -60,7 +65,10 @@ module Epp::Common
 
   def xml_attrs_present?(ph, attributes)
     attributes.each do |x|
-      epp_errors << { code: '2003', msg: I18n.t('errors.messages.required_parameter_missing', key: x.last) } unless has_attribute(ph, x)
+      epp_errors << {
+        code: '2003',
+        msg: I18n.t('errors.messages.required_parameter_missing', key: x.last)
+      } unless has_attribute(ph, x)
     end
     epp_errors.empty?
   end
@@ -68,24 +76,27 @@ module Epp::Common
   def xml_attrs_array_present?(array_ph, attributes)
     [array_ph].flatten.each do |ph|
       attributes.each do |x|
-        unless has_attribute(ph, x)
-          epp_errors << { code: '2003', msg: I18n.t('errors.messages.required_parameter_missing', key: x.last) }
-        end
+        next if has_attribute(ph, x)
+        epp_errors << {
+          code: '2003',
+          msg: I18n.t('errors.messages.required_parameter_missing', key: x.last)
+        }
       end
     end
     epp_errors.empty?
   end
 
+  # rubocop: disable Style/PredicateName
   def has_attribute(ph, path)
     path.reduce(ph) do |location, key|
       location.respond_to?(:keys) ? location[key] : nil
     end
   end
+  # rubocop: enable Style/PredicateName
 
   def validate_request
     validation_method = "validate_#{OBJECT_TYPES[params_hash['epp']['xmlns:ns2']]}_#{params[:command]}_request"
-    if respond_to?(validation_method, true)
-      handle_errors and return unless send(validation_method)
-    end
+    return unless respond_to?(validation_method, true)
+    handle_errors and return unless send(validation_method)
   end
 end

@@ -12,10 +12,12 @@ class Client::ContactsController < ClientController
   end
 
   def show
+    # rubocop: disable Style/GuardClause
     if @contact.registrar != current_registrar
       flash[:alert] = I18n.t('shared.authentication_error')
       redirect_to client_contacts_path
     end
+    # rubocop: enable Style/GuardClause
   end
 
   def create
@@ -27,7 +29,7 @@ class Client::ContactsController < ClientController
       redirect_to [:client, @contact]
     else
       flash[:alert] = I18n.t('shared.failed_to_create_contact')
-      render "new"
+      render 'new'
     end
   end
 
@@ -63,7 +65,7 @@ class Client::ContactsController < ClientController
   end
 
   def contact_params
-    params.require(:contact).permit( :email, :phone, :fax, :ident_type, :ident, :auth_info, :name, :org_name,
+    params.require(:contact).permit(:email, :phone, :fax, :ident_type, :ident, :auth_info, :name, :org_name,
                                     address_attributes: [:city, :street, :zip, :street2, :street3, :country_id])
   end
 end
