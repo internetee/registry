@@ -21,7 +21,10 @@ class Epp::EppDomain < Domain
       ],
       '2306' => [ # Parameter policy error
         [:owner_contact, :blank],
-        [:admin_contacts, :out_of_range]
+        [:admin_contacts, :out_of_range],
+        [:base, :ds_data_with_key_not_allowed],
+        [:base, :ds_data_not_allowed],
+        [:base, :key_data_not_allowed]
       ],
       '2004' => [ # Parameter value range error
         [:nameservers, :out_of_range,
@@ -187,27 +190,10 @@ class Epp::EppDomain < Domain
 
   def attach_dnskeys(dnssec_data)
     sg = SettingGroup.dnskeys
-    ds_data_allowed = sg.setting(Setting::ALLOW_DS_DATA).value == '0' ? false : true
-    ds_data_with_keys_allowed = sg.setting(Setting::ALLOW_DS_DATA_WITH_KEYS).value == '0' ? false : true
-    key_data_allowed = sg.setting(Setting::ALLOW_KEY_DATA).value == '0' ? false : true
-
-    if dnssec_data[:ds_data].any? && !ds_data_allowed
-      errors.add(:base, :ds_data_not_allowed)
-      return
-    end
+    return false unless validate_dnssec_data(dnssec_data, sg)
 
     dnssec_data[:ds_data].each do |ds_data|
-      if ds_data[:public_key] && !ds_data_with_keys_allowed
-        errors.add(:base, :ds_data_with_keys_not_allowed)
-        next
-      else
-        dnskeys.build(ds_data)
-      end
-    end
-
-    if dnssec_data[:key_data].any? && !key_data_allowed
-      errors.add(:base, :key_data_not_allowed)
-      return
+      dnskeys.build(ds_data)
     end
 
     dnssec_data[:key_data].each do |x|
@@ -217,8 +203,44 @@ class Epp::EppDomain < Domain
         ds_digest_type: sg.setting(Setting::DS_ALGORITHM).value
       }.merge(x))
     end
+  end
 
-    errors.any?
+  def validate_dnssec_data(dnssec_data, sg)
+    ds_data_allowed?(dnssec_data, sg)
+    ds_data_with_keys_allowed?(dnssec_data, sg)
+    key_data_allowed?(dnssec_data, sg)
+
+    errors.empty?
+  end
+
+  def ds_data_allowed?(dnssec_data, sg)
+    ds_data_allowed = sg.setting(Setting::ALLOW_DS_DATA).value == '0' ? false : true
+
+    return if (dnssec_data[:ds_data].any? && ds_data_allowed) || dnssec_data[:ds_data].empty?
+    errors.add(:base, :ds_data_not_allowed)
+  end
+
+  def ds_data_with_keys_allowed?(dnssec_data, sg)
+    ds_data_with_keys_allowed = sg.setting(Setting::ALLOW_DS_DATA_WITH_KEYS).value == '0' ? false : true
+
+    dnssec_data[:ds_data].each do |ds_data|
+      if key_data?(ds_data) && !ds_data_with_keys_allowed
+        errors.add(:base, :ds_data_with_key_not_allowed)
+        return
+      end
+    end
+  end
+
+  def key_data_allowed?(dnssec_data, sg)
+    key_data_allowed = sg.setting(Setting::ALLOW_KEY_DATA).value == '0' ? false : true
+
+    return if (dnssec_data[:key_data].any? && key_data_allowed) || dnssec_data[:key_data].empty?
+    errors.add(:base, :key_data_not_allowed)
+  end
+
+  def key_data?(data)
+    key_data_attrs = [:public_key, :alg, :protocol, :flags]
+    (data.keys & key_data_attrs).any?
   end
 
   def detach_dnskeys(dnssec_data)
