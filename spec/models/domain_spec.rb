@@ -11,8 +11,7 @@ describe Domain do
 
   context 'with sufficient settings' do
     before(:each) do
-      Fabricate(:domain_validation_setting_group)
-      Fabricate(:dnskeys_setting_group)
+      create_settings
     end
 
     it 'validates domain name' do
@@ -51,20 +50,13 @@ describe Domain do
         period: ['is not a number'],
         owner_contact: ['Registrant is missing'],
         admin_contacts: ['Admin contacts count must be between 1 - infinity'],
-        nameservers: ['Nameservers count must be between 1-13'],
+        nameservers: ['Nameservers count must be between 2-11'],
         registrar: ['Registrar is missing'],
         period: ['Period is not a number']
       })
 
-      sg = SettingGroup.domain_validation
-      min = sg.setting(:ns_min_count)
-      max = sg.setting(:ns_max_count)
-
-      min.value = 2
-      min.save
-
-      max.value = 7
-      max.save
+      Setting.ns_min_count = 2
+      Setting.ns_max_count = 7
 
       expect(d.valid?).to be false
       expect(d.errors.messages[:nameservers]).to eq(['Nameservers count must be between 2-7'])

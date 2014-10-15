@@ -67,6 +67,9 @@ gem 'selectize-rails', '~> 0.11.0'
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 gem 'therubyracer',  platforms: :ruby
 
+# for settings
+gem "rails-settings-cached", '0.4.1'
+
 group :development, :test do
   gem 'capybara', '~> 2.4.1'
   # For feature testing

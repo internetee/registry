@@ -6,14 +6,12 @@ describe 'EPP Domain', epp: true do
   let(:elkdata) { Fabricate(:registrar, { name: 'Elkdata', reg_no: '123' }) }
   let(:zone) { Fabricate(:registrar) }
 
+  before(:each) { create_settings }
+
   context 'with valid user' do
     before(:each) do
       Fabricate(:epp_user, username: 'zone', registrar: zone)
       Fabricate(:epp_user, username: 'elkdata', registrar: elkdata)
-
-      Fabricate(:domain_validation_setting_group)
-      Fabricate(:domain_statuses_setting_group)
-      Fabricate(:dnskeys_setting_group)
     end
 
     it 'returns error if contact does not exists' do
@@ -36,7 +34,6 @@ describe 'EPP Domain', epp: true do
       let(:domain) { Domain.first }
 
       before(:each) do
-        Fabricate(:domain_general_setting_group)
         Fabricate(:domain, name: 'example.ee', registrar: zone)
       end
 
@@ -65,8 +62,7 @@ describe 'EPP Domain', epp: true do
 
         expect(domain.registrar).to eq(elkdata)
 
-        s = Setting.find_by(code: 'transfer_wait_time')
-        s.update(value: 1)
+        Setting.transfer_wait_time = 1
 
         domain.reload
         pw = domain.auth_info
@@ -209,8 +205,8 @@ describe 'EPP Domain', epp: true do
 
         expect(key.ds_alg).to eq(3)
         expect(key.ds_key_tag).to_not be_blank
-        sg = SettingGroup.dnskeys
-        expect(key.ds_digest_type).to eq(sg.setting(Setting::DS_ALGORITHM).value.to_i)
+
+        expect(key.ds_digest_type).to eq(Setting.ds_algorithm)
         expect(key.flags).to eq(257)
         expect(key.protocol).to eq(3)
         expect(key.alg).to eq(5)
@@ -297,7 +293,7 @@ describe 'EPP Domain', epp: true do
 
         response = epp_request(xml, :xml)
         expect(response[:result_code]).to eq('2004')
-        expect(response[:msg]).to eq('Nameservers count must be between 1-13')
+        expect(response[:msg]).to eq('Nameservers count must be between 2-11')
       end
 
       it 'returns error when invalid nameservers are present' do
@@ -391,7 +387,7 @@ describe 'EPP Domain', epp: true do
         key_1 = d.dnskeys[0]
         expect(key_1.ds_key_tag).to_not be_blank
         expect(key_1.ds_alg).to eq(3)
-        expect(key_1.ds_digest_type).to eq(SettingGroup.dnskeys.setting(Setting::DS_ALGORITHM).value.to_i)
+        expect(key_1.ds_digest_type).to eq(Setting.ds_algorithm)
 
         expect(d.dnskeys.pluck(:flags)).to match_array([257, 0, 256])
         expect(d.dnskeys.pluck(:protocol)).to match_array([3, 3, 3])
@@ -484,9 +480,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'validated dnskeys count' do
-        s = Setting.find_by(code: 'dnskeys_max_count')
-        s.value = 1
-        s.save
+        Setting.dnskeys_max_count = 1
 
         xml = domain_create_xml({}, {
         _other: [
@@ -572,10 +566,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'prohibits dsData with key' do
-        sg = SettingGroup.dnskeys
-        s = sg.setting(Setting::ALLOW_DS_DATA_WITH_KEYS)
-        s.value = 0
-        s.save
+        Setting.ds_data_with_key_allowed = false
 
         xml = domain_create_xml({}, {
           _other: [
@@ -600,10 +591,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'prohibits dsData' do
-        sg = SettingGroup.dnskeys
-        s = sg.setting(Setting::ALLOW_DS_DATA)
-        s.value = 0
-        s.save
+        Setting.ds_data_allowed = false
 
         xml = domain_create_xml({}, {
           _other: [
@@ -628,10 +616,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'prohibits keyData' do
-        sg = SettingGroup.dnskeys
-        s = sg.setting(Setting::ALLOW_KEY_DATA)
-        s.value = 0
-        s.save
+        Setting.key_data_allowed = false
 
         xml = domain_create_xml({}, {
           _other: [

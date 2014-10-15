@@ -85,9 +85,7 @@ class Domain < ActiveRecord::Base
 
   ### VALIDATIONS ###
   def validate_nameservers_count
-    sg = SettingGroup.domain_validation
-    min, max = sg.setting(:ns_min_count).value.to_i, sg.setting(:ns_max_count).value.to_i
-
+    min, max = Setting.ns_min_count, Setting.ns_max_count
     return if nameservers.reject(&:marked_for_destruction?).length.between?(min, max)
     errors.add(:nameservers, :out_of_range, { min: min, max: max })
   end
@@ -97,8 +95,7 @@ class Domain < ActiveRecord::Base
   end
 
   def validate_dnskeys_count
-    sg = SettingGroup.domain_validation
-    min, max = sg.setting(:dnskeys_min_count).value.to_i, sg.setting(:dnskeys_max_count).value.to_i
+    min, max = Setting.dnskeys_min_count, Setting.dnskeys_max_count
     return if dnskeys.reject(&:marked_for_destruction?).length.between?(min, max)
     errors.add(:dnskeys, :out_of_range, { min: min, max: max })
   end

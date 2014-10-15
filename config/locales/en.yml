@@ -261,9 +261,9 @@ en:
       ns_max_count: 'Nameserver maximum count'
       dnskeys_min_count: 'DNS keys minimum count'
       dnskeys_max_count: 'DNS keys maximum count'
-      allow_ds_data: 'Allow DS data'
-      allow_ds_data_with_keys: 'Allow DS data with keys'
-      allow_key_data: 'Allow key data'
+      ds_data_allowed: 'DS data allowed'
+      ds_data_with_key_allowed: 'Allow DS data with key'
+      key_data_allowed: 'Allow key data'
       ds_algorithm: 'DS algorithm'
 
   shared:

@@ -66,27 +66,16 @@ User.where(
   country: Country.where(name: 'Estonia').first
 ).first_or_create
 
-sg = SettingGroup.where(code: 'domain_validation').first_or_create
+Setting.destroy_all
 
-s_1 = Setting.where(code: 'ns_min_count').first_or_create
-s_1.value = 1
+Setting.create(code: Setting::DS_ALGORITHM, value: 2)
+Setting.create(code: Setting::ALLOW_DS_DATA, value: 1)
+Setting.create(code: Setting::ALLOW_DS_DATA_WITH_KEY, value: 1)
+Setting.create(code: Setting::ALLOW_KEY_DATA, value: 1)
 
-s_2 = Setting.where(code: 'ns_max_count').first_or_create
-s_2.value = 13
+Setting.create(code: Setting::DNSKEYS_MIN_COUNT, value: 9)
+Setting.create(code: Setting::DNSKEYS_MAX_COUNT, value: 0)
+Setting.create(code: Setting::NS_MIN_COUNT, value: 2)
+Setting.create(code: Setting::NS_MAX_COUNT, value: 11)
 
-s_3 = Setting.where(code: 'dnskeys_min_count').first_or_create
-s_3.value = 0
-
-s_4 = Setting.where(code: 'dnskeys_max_count').first_or_create
-s_4.value = 9
-
-sg.settings = [s_1, s_2, s_3, s_4]
-sg.save
-
-sg = SettingGroup.where(code: 'domain_general').first_or_create
-
-s_1 = Setting.where(code: 'transfer_wait_time').first_or_create
-s_1.value = 0
-
-sg.settings = [s_1]
-sg.save
+Setting.create(code: Setting::TRANSFER_WAIT_TIME, value: 0)
