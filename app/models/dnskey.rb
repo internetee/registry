@@ -3,7 +3,7 @@ class Dnskey < ActiveRecord::Base
 
   belongs_to :domain
 
-  validates :alg, :protocol, :flags, :public_key, presence: true
+  validates :alg, :protocol, :flags, :public_key, presence: true, if: :validate_key_data
   validate :validate_algorithm
   validate :validate_protocol
   validate :validate_flags
@@ -34,6 +34,10 @@ class Dnskey < ActiveRecord::Base
         [:public_key, :blank]
       ]
     }
+  end
+
+  def validate_key_data
+    alg.present? || protocol.present? || flags.present? || public_key.present?
   end
 
   def validate_algorithm
