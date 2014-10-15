@@ -5,8 +5,8 @@ feature 'Sessions', type: :feature do
   let(:zone) { Fabricate(:registrar) }
 
   background do
-    Fabricate(:user, registrar: zone)
-    Fabricate(:user, registrar: zone, username: 'zone', admin: false)
+    Fabricate(:user, registrar: zone, username: 'elkdata', identity_code: '37810013261')
+    Fabricate(:user, registrar: zone, username: 'zone', admin: false, identity_code: '37810013087')
     Fabricate(:domain_validation_setting_group)
     Fabricate.times(2, :domain, registrar: zone)
     Fabricate.times(2, :domain, registrar: elkdata)

@@ -4,9 +4,9 @@ feature 'Domain transfer', type: :feature do
   let(:elkdata) { Fabricate(:registrar, { name: 'Elkdata', reg_no: '123' }) }
   let(:zone) { Fabricate(:registrar) }
   let(:zone_user) { Fabricate(:user, registrar: zone, username: 'zone', admin: false, identity_code: '37810013087') }
-  let(:elkdata_user) {
+  let(:elkdata_user) do
     Fabricate(:user, registrar: elkdata, username: 'elkdata', admin: false, identity_code: '37810013261')
-  }
+  end
 
   background do
     Fabricate(:domain_validation_setting_group)
