@@ -5,7 +5,7 @@ class DomainContact < ActiveRecord::Base
 
   after_create :domain_snapshot
   after_destroy :domain_snapshot
-#  after_save :domain_snapshot
+  #  after_save :domain_snapshot
 
   attr_accessor :value_typeahead
 

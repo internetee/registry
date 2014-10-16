@@ -62,9 +62,6 @@ class Domain < ActiveRecord::Base
   # archiving
   has_paper_trail class_name: 'DomainVersion', meta: { snapshot: :create_snapshot }
 
-  # TODO Add touch_with_version hook to the DomainContact as well to track add/delete(?) of contact
-  # Not sure what hook to use since Contact.destroy fires update from here so possibly after_create
-
   def create_snapshot
     oc = owner_contact.snapshot if owner_contact.is_a?(Contact)
     {
@@ -290,27 +287,4 @@ class Domain < ActiveRecord::Base
       return period.to_i.years if unit == 'y'
     end
   end
-
-  private
-
-  # for archiving
-  # def version_owner
-  #  return nil unless owner_contact
-  #  owner_contact.id
-  # end
-
-  # def version_admin_contacts
-  #  return nil unless admin_contacts
-  #  return admin_contacts.map { |ns| ns.id }
-  # end
-
-  # def version_tech_contacts
-  #  return nil unless tech_contacts
-  #  return tech_contacts.map { |ns| ns.id }
-  # end
-
-  # def version_nameservers
-  #  return nil unless nameservers
-  #  return nameservers.map { |ns| ns.id }
-  # end
 end
