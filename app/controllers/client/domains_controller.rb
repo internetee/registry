@@ -4,7 +4,7 @@ class Client::DomainsController < ClientController
   before_action :verify_deletion, only: [:destroy]
 
   def index
-    @q = current_registrar.domains.search(params[:q])
+    @q = current_registrar.domains.includes(:owner_contact).search(params[:q])
     @domains = @q.result.page(params[:page])
   end
 
