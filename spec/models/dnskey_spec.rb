@@ -2,8 +2,7 @@ require 'rails_helper'
 
 describe Dnskey do
   before(:each) do
-    Fabricate(:domain_validation_setting_group)
-    Fabricate(:dnskeys_setting_group)
+    create_settings
   end
 
   it { should belong_to(:domain) }

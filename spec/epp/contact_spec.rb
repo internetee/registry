@@ -11,8 +11,7 @@ describe 'EPP Contact', epp: true do
       Fabricate(:epp_user)
       Fabricate(:epp_user, username: 'zone', registrar: zone)
       Fabricate(:epp_user, username: 'elkdata', registrar: elkdata)
-      Fabricate(:domain_validation_setting_group)
-      Fabricate(:dnskeys_setting_group)
+      create_settings
     end
 
     context 'create command' do

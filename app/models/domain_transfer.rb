@@ -14,7 +14,7 @@ class DomainTransfer < ActiveRecord::Base
   before_create :set_wait_until
 
   def set_wait_until
-    wait_time = SettingGroup.domain_general.setting(:transfer_wait_time).value.to_i
+    wait_time = Setting.transfer_wait_time
     return if wait_time == 0
     self.wait_until = transfer_requested_at + wait_time.hours
   end

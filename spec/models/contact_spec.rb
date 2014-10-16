@@ -50,8 +50,7 @@ describe Contact, '#relations_with_domain?' do
 
   context 'with relation' do
     before(:each) do
-      Fabricate(:domain_validation_setting_group)
-      Fabricate(:dnskeys_setting_group)
+      create_settings
       Fabricate(:domain)
     end
 

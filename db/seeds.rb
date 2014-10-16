@@ -66,27 +66,14 @@ User.where(
   country: Country.where(name: 'Estonia').first
 ).first_or_create
 
-sg = SettingGroup.where(code: 'domain_validation').first_or_create
+Setting.ds_algorithm = 2
+Setting.ds_data_allowed = true
+Setting.ds_data_with_key_allowed = true
+Setting.key_data_allowed = true
 
-s_1 = Setting.where(code: 'ns_min_count').first_or_create
-s_1.value = 1
+Setting.dnskeys_min_count = 0
+Setting.dnskeys_max_count = 9
+Setting.ns_min_count = 2
+Setting.ns_max_count = 11
 
-s_2 = Setting.where(code: 'ns_max_count').first_or_create
-s_2.value = 13
-
-s_3 = Setting.where(code: 'dnskeys_min_count').first_or_create
-s_3.value = 0
-
-s_4 = Setting.where(code: 'dnskeys_max_count').first_or_create
-s_4.value = 9
-
-sg.settings = [s_1, s_2, s_3, s_4]
-sg.save
-
-sg = SettingGroup.where(code: 'domain_general').first_or_create
-
-s_1 = Setting.where(code: 'transfer_wait_time').first_or_create
-s_1.value = 0
-
-sg.settings = [s_1]
-sg.save
+Setting.transfer_wait_time = 0

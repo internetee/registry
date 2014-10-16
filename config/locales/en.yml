@@ -139,11 +139,6 @@ en:
               blank: 'Contact was not found'
               taken: 'Contact already exists on this domain!'
 
-        setting:
-          attributes:
-            code:
-              taken: 'Code already exists'
-
         domain_status:
           attributes:
             setting_id:
@@ -249,27 +244,10 @@ en:
       domain_exists_but_belongs_to_other_registrar: 'Domain exists but belongs to other registrar'
       attribute_op_is_invalid: 'Attribute op is invalid'
 
-  setting_groups:
-    codes:
-      domain_validation: 'Domain validation'
-      domain_general: 'Domain general'
-      dnskeys: 'DNS keys'
-
-  settings:
-    codes:
-      ns_min_count: 'Nameserver minimum count'
-      ns_max_count: 'Nameserver maximum count'
-      dnskeys_min_count: 'DNS keys minimum count'
-      dnskeys_max_count: 'DNS keys maximum count'
-      allow_ds_data: 'Allow DS data'
-      allow_ds_data_with_keys: 'Allow DS data with keys'
-      allow_key_data: 'Allow key data'
-      ds_algorithm: 'DS algorithm'
 
   shared:
     code: 'Code'
     value: 'Value'
-    setting_groups: 'Setting groups'
     action: 'Action'
     edit: 'Edit'
     save: 'Save'
@@ -282,9 +260,6 @@ en:
     valid_to: 'Valid to'
     name: 'Name'
     transfer_can_be_approved_only_by_current_registrar: 'Transfer can be approved only by current domain registrar'
-    edit_settings: 'Edit settings'
-    setting_group: 'Setting group'
-    setting: 'Setting'
     registrar: 'Registrar'
     owner: 'Owner'
     domain_details: 'Domain details'
@@ -357,8 +332,6 @@ en:
     contact_updated: 'Contact updated'
     search: 'Search'
     reg_no: 'Reg. no'
-    setting_updated: 'Setting updated!'
-    failed_to_update_setting: 'Failed to update setting'
     status: 'Status'
     eedirekt: 'EEDirekt'
     contact: 'Contact'
@@ -428,12 +401,23 @@ en:
     record_created: 'Record created'
     failed_to_create_record: 'Failed to create record'
     record_updated: 'Record updated'
+    records_updated: 'Records updated'
     failed_to_update_record: 'Failed to update record'
     record_deleted: 'Record deleted'
     failed_to_delete_record: 'Failed to delete record'
 
     authentication_error: 'Authentication error'
     ds_data_and_key_data_must_not_exists_together: 'dsData and keyData objects must not exists together'
+
+    ns_min_count: 'Nameserver minimum count'
+    ns_max_count: 'Nameserver maximum count'
+    dnskeys_min_count: 'DNS keys minimum count'
+    dnskeys_max_count: 'DNS keys maximum count'
+    ds_data_allowed: 'DS data allowed'
+    ds_data_with_key_allowed: 'Allow DS data with key'
+    key_data_allowed: 'Allow key data'
+    ds_algorithm: 'DS algorithm'
+    setting: 'Setting'
 
   registrar: Registrar
 

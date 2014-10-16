@@ -6,8 +6,6 @@ class Epp::EppDomain < Domain
   validate :validate_admin_contacts_count
 
   def epp_code_map # rubocop:disable Metrics/MethodLength
-    domain_validation_sg = SettingGroup.domain_validation
-
     {
       '2002' => [
         [:base, :domain_already_belongs_to_the_querying_registrar]
@@ -29,15 +27,15 @@ class Epp::EppDomain < Domain
       '2004' => [ # Parameter value range error
         [:nameservers, :out_of_range,
          {
-           min: domain_validation_sg.setting(:ns_min_count).value,
-           max: domain_validation_sg.setting(:ns_max_count).value
+           min: Setting.ns_min_count,
+           max: Setting.ns_max_count
          }
         ],
         [:period, :out_of_range, { value: { obj: 'period', val: period } }],
         [:dnskeys, :out_of_range,
          {
-           min: domain_validation_sg.setting(Setting::DNSKEYS_MIN_COUNT).value,
-           max: domain_validation_sg.setting(Setting::DNSKEYS_MAX_COUNT).value
+           min: Setting.dnskeys_min_count,
+           max: Setting.dnskeys_max_count
          }
         ]
       ],
@@ -189,8 +187,7 @@ class Epp::EppDomain < Domain
   end
 
   def attach_dnskeys(dnssec_data)
-    sg = SettingGroup.dnskeys
-    return false unless validate_dnssec_data(dnssec_data, sg)
+    return false unless validate_dnssec_data(dnssec_data)
 
     dnssec_data[:ds_data].each do |ds_data|
       dnskeys.build(ds_data)
@@ -200,41 +197,35 @@ class Epp::EppDomain < Domain
       dnskeys.build({
         ds_key_tag: SecureRandom.hex(5),
         ds_alg: 3,
-        ds_digest_type: sg.setting(Setting::DS_ALGORITHM).value
+        ds_digest_type: Setting.ds_algorithm
       }.merge(x))
     end
   end
 
-  def validate_dnssec_data(dnssec_data, sg)
-    ds_data_allowed?(dnssec_data, sg)
-    ds_data_with_keys_allowed?(dnssec_data, sg)
-    key_data_allowed?(dnssec_data, sg)
+  def validate_dnssec_data(dnssec_data)
+    ds_data_allowed?(dnssec_data)
+    ds_data_with_keys_allowed?(dnssec_data)
+    key_data_allowed?(dnssec_data)
 
     errors.empty?
   end
 
-  def ds_data_allowed?(dnssec_data, sg)
-    ds_data_allowed = sg.setting(Setting::ALLOW_DS_DATA).value == '0' ? false : true
-
-    return if (dnssec_data[:ds_data].any? && ds_data_allowed) || dnssec_data[:ds_data].empty?
+  def ds_data_allowed?(dnssec_data)
+    return if (dnssec_data[:ds_data].any? && Setting.ds_data_allowed) || dnssec_data[:ds_data].empty?
     errors.add(:base, :ds_data_not_allowed)
   end
 
-  def ds_data_with_keys_allowed?(dnssec_data, sg)
-    ds_data_with_keys_allowed = sg.setting(Setting::ALLOW_DS_DATA_WITH_KEYS).value == '0' ? false : true
-
+  def ds_data_with_keys_allowed?(dnssec_data)
     dnssec_data[:ds_data].each do |ds_data|
-      if key_data?(ds_data) && !ds_data_with_keys_allowed
+      if key_data?(ds_data) && !Setting.ds_data_with_key_allowed
         errors.add(:base, :ds_data_with_key_not_allowed)
         return
       end
     end
   end
 
-  def key_data_allowed?(dnssec_data, sg)
-    key_data_allowed = sg.setting(Setting::ALLOW_KEY_DATA).value == '0' ? false : true
-
-    return if (dnssec_data[:key_data].any? && key_data_allowed) || dnssec_data[:key_data].empty?
+  def key_data_allowed?(dnssec_data)
+    return if (dnssec_data[:key_data].any? && Setting.key_data_allowed) || dnssec_data[:key_data].empty?
     errors.add(:base, :key_data_not_allowed)
   end
 
@@ -244,9 +235,7 @@ class Epp::EppDomain < Domain
   end
 
   def detach_dnskeys(dnssec_data)
-    sg = SettingGroup.dnskeys
-
-    return false unless validate_dnssec_data(dnssec_data, sg)
+    return false unless validate_dnssec_data(dnssec_data)
 
     to_delete = []
     dnssec_data[:ds_data].each do |x|
@@ -305,9 +294,7 @@ class Epp::EppDomain < Domain
 
     return true if pt
 
-    wait_time = SettingGroup.domain_general.setting(:transfer_wait_time).value.to_i
-
-    if wait_time > 0
+    if Setting.transfer_wait_time > 0
       domain_transfers.create(
         status: DomainTransfer::PENDING,
         transfer_requested_at: Time.zone.now,

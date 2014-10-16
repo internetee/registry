@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   ## ADMIN ROUTES
   namespace(:admin) do
     resources :domains
-    resources :setting_groups
+    resources :settings
     resources :registrars do
       collection do
         get :search
