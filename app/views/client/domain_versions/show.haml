@@ -55,5 +55,9 @@
                       = ns[:hostname] + ","
                       = ns[:ipv4] || ns[:ipv6]
 
-              %td= l(version.created_at, format: :short)
+              %td
+                %p{ :style => 'font-size:x-small;' }
+                  = l(version.created_at, format: :short)
+                  = version.whodunnit
+                  = version.event
 

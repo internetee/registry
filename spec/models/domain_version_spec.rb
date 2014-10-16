@@ -45,6 +45,53 @@ describe DomainVersion do
       end
     end
 
+    context 'when adding child' do
+      it 'contact creates a version' do
+        expect(DomainVersion.count).to eq(1)
+        expect(Domain.last.tech_contacts.count).to eq(1)
+        Domain.last.tech_contacts << Fabricate(:contact, name: 'tech contact 2', phone: '+371.12345678',
+                                                code: '123', email: 'tech2@v.ee')
+        expect(Domain.last.tech_contacts.count).to eq(2)
+        expect(DomainVersion.count).to eq(2)
+      end
+
+      it 'nameserver creates a version' do
+        expect(DomainVersion.count).to eq(1)
+        expect(Domain.last.nameservers.count).to eq(1)
+        Domain.last.nameservers << Fabricate(:nameserver, hostname: 'ns.server.ee')
+        expect(DomainVersion.count).to eq(2)
+      end
+    end
+
+    context 'when removing child' do
+      it('has one domain version before events'){ expect(DomainVersion.count).to eq(1) }
+      before(:each) { Domain.last.nameservers << Fabricate(:nameserver) }
+
+      it 'contact creates a version' do
+        # FIXME For some reason nameservers disappeared mid-test, but randomly stopped happening
+        expect(DomainVersion.count).to eq(1)
+        DomainContact.last.destroy
+        expect(Domain.last.valid?).to be(true)
+        expect(DomainVersion.count).to eq(2)
+      end
+
+      it 'nameserver creates a version' do
+        Domain.last.nameservers.last.destroy
+        expect(DomainVersion.count).to eq(1)
+        expect(Domain.last.nameservers.count).to eq(1)
+        expect(DomainVersion.load_snapshot).to eq(
+          admin_contacts: [{ name: 'admin_contact 1', phone: '+372.12345678',
+                             code: 'qwe', ident: '37605030299', email: 'admin1@v.ee' }],
+          domain: { name: 'version.ee', status: nil },
+          nameservers: [{ hostname: 'ns.test.ee', ipv4: nil, ipv6: nil }],
+          owner_contact: { name: 'owner_contact', phone: '+372.12345678',
+                           code: 'asd', ident: '37605030299', email: 'owner1@v.ee' },
+          tech_contacts: [{ name: 'tech_contact 1', phone: '+372.12345678',
+                            code: 'zxc', ident: '37605030299', email: 'tech1@v.ee' }]
+        )
+      end
+    end
+
     context 'when deleting children' do
       it 'creates a version' do
         expect(DomainVersion.count).to eq(1)

@@ -3,6 +3,10 @@ class DomainContact < ActiveRecord::Base
   belongs_to :contact
   belongs_to :domain
 
+  after_create :domain_snapshot
+  after_destroy :domain_snapshot
+#  after_save :domain_snapshot
+
   attr_accessor :value_typeahead
 
   def epp_code_map
@@ -32,5 +36,12 @@ class DomainContact < ActiveRecord::Base
 
   def value_typeahead
     @value_typeahead || contact.try(:name) || nil
+  end
+
+  def domain_snapshot
+    # We don't create a version unless domain is valid, is that a good idea?
+    return true unless PaperTrail.enabled?
+    domain.touch_with_version if domain.valid?
+    true
   end
 end
