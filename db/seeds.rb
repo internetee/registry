@@ -66,16 +66,14 @@ User.where(
   country: Country.where(name: 'Estonia').first
 ).first_or_create
 
-Setting.destroy_all
+Setting.ds_algorithm = 2
+Setting.ds_data_allowed = true
+Setting.ds_data_with_key_allowed = true
+Setting.key_data_allowed = true
 
-Setting.create(code: Setting::DS_ALGORITHM, value: 2)
-Setting.create(code: Setting::ALLOW_DS_DATA, value: 1)
-Setting.create(code: Setting::ALLOW_DS_DATA_WITH_KEY, value: 1)
-Setting.create(code: Setting::ALLOW_KEY_DATA, value: 1)
+Setting.dnskeys_min_count = 0
+Setting.dnskeys_max_count = 9
+Setting.ns_min_count = 2
+Setting.ns_max_count = 11
 
-Setting.create(code: Setting::DNSKEYS_MIN_COUNT, value: 9)
-Setting.create(code: Setting::DNSKEYS_MAX_COUNT, value: 0)
-Setting.create(code: Setting::NS_MIN_COUNT, value: 2)
-Setting.create(code: Setting::NS_MAX_COUNT, value: 11)
-
-Setting.create(code: Setting::TRANSFER_WAIT_TIME, value: 0)
+Setting.transfer_wait_time = 0

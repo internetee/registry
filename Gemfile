@@ -68,7 +68,7 @@ gem 'selectize-rails', '~> 0.11.0'
 gem 'therubyracer',  platforms: :ruby
 
 # for settings
-gem "rails-settings-cached", '0.4.1'
+gem 'rails-settings-cached', '0.4.1'
 
 group :development, :test do
   gem 'capybara', '~> 2.4.1'
