@@ -1,37 +1,30 @@
 require 'rails_helper'
 
 feature 'Setting management', type: :feature do
-  background { Fabricate(:domain_validation_setting_group) }
+  let(:zone) { Fabricate(:registrar) }
+  let(:zone_user) { Fabricate(:user, registrar: zone, username: 'zone', admin: true, identity_code: '37810013087') }
 
-  scenario 'User changes a setting', js: true do
-    visit root_path
+  background { create_settings }
 
-    # This ensures javascript works correctly
-    expect(page).to have_no_link 'Setting groups'
-    click_on 'Settings'
-    expect(page).to have_link 'Setting groups'
+  scenario 'User changes a setting' do
+    sign_in zone_user
+    visit admin_settings_path
 
-    click_on 'Setting groups'
-    expect(page).to have_text('Domain validation')
-    click_on 'Edit settings'
-    expect(page).to have_text('Nameserver minimum count')
-    expect(page).to have_text('Nameserver maximum count')
+    val_min = find_field('_settings_ns_min_count').value
+    val_max = find_field('_settings_ns_max_count').value
 
-    val_min = find_field('Nameserver minimum count').value
-    val_max = find_field('Nameserver maximum count').value
+    expect(val_min).to eq('2')
+    expect(val_max).to eq('11')
 
-    expect(val_min).to eq('1')
-    expect(val_max).to eq('13')
+    fill_in '_settings_ns_min_count', with: 0
+    fill_in '_settings_ns_max_count', with: 10
 
-    fill_in('Nameserver minimum count', with: '3')
-    fill_in('Nameserver maximum count', with: '10')
+    click_button 'Save'
 
-    click_on 'Save'
+    val_min = find_field('_settings_ns_min_count').value
+    val_max = find_field('_settings_ns_max_count').value
 
-    val_min = find_field('Nameserver minimum count').value
-    val_max = find_field('Nameserver maximum count').value
-
-    expect(val_min).to eq('3')
+    expect(val_min).to eq('0')
     expect(val_max).to eq('10')
   end
 end
