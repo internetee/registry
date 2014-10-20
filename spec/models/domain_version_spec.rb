@@ -2,9 +2,10 @@ require 'rails_helper'
 
 describe DomainVersion do
   with_versioning do
-    before(:each) { Fabricate(:domain_validation_setting_group); Fabricate(:dnskeys_setting_group) }
+    # before(:each) { Fabricate(:domain_validation_setting_group); Fabricate(:dnskeys_setting_group) }
     before(:each) do
-      Fabricate(:domain, name: 'version.ee') do
+      Setting.ns_min_count = 1
+      Fabricate(:domain, name: 'version.ee', dnskeys: []) do
         owner_contact { Fabricate(:contact, name: 'owner_contact', code: 'asd', email: 'owner1@v.ee') }
         nameservers(count: 1) { Fabricate(:nameserver, hostname: 'ns.test.ee') }
         admin_contacts(count: 1) { Fabricate(:contact, name: 'admin_contact 1', code: 'qwe', email: 'admin1@v.ee') }
@@ -58,7 +59,7 @@ describe DomainVersion do
       it 'nameserver creates a version' do
         expect(DomainVersion.count).to eq(1)
         expect(Domain.last.nameservers.count).to eq(1)
-        Domain.last.nameservers << Fabricate(:nameserver, hostname: 'ns.server.ee')
+        Domain.last.nameservers << Fabricate(:nameserver, hostname: 'ns.server.ee', created_at: Time.now - 20)
         expect(DomainVersion.count).to eq(2)
       end
     end
@@ -75,25 +76,10 @@ describe DomainVersion do
         expect(DomainVersion.count).to eq(2)
       end
 
-      it 'nameserver creates a version' do
-        Domain.last.nameservers.last.destroy
-        expect(DomainVersion.count).to eq(1)
-        expect(Domain.last.nameservers.count).to eq(1)
-        expect(DomainVersion.load_snapshot).to eq(
-          admin_contacts: [{ name: 'admin_contact 1', phone: '+372.12345678',
-                             code: 'qwe', ident: '37605030299', email: 'admin1@v.ee' }],
-          domain: { name: 'version.ee', status: nil },
-          nameservers: [{ hostname: 'ns.test.ee', ipv4: nil, ipv6: nil }],
-          owner_contact: { name: 'owner_contact', phone: '+372.12345678',
-                           code: 'asd', ident: '37605030299', email: 'owner1@v.ee' },
-          tech_contacts: [{ name: 'tech_contact 1', phone: '+372.12345678',
-                            code: 'zxc', ident: '37605030299', email: 'tech1@v.ee' }]
-        )
-      end
     end
 
-    context 'when deleting children' do
-      it 'creates a version' do
+    context 'when deleting child' do
+      it 'contact creates a version' do
         expect(DomainVersion.count).to eq(1)
         Contact.find_by(name: 'tech_contact 1').destroy
         expect(DomainVersion.count).to eq(2)
@@ -107,6 +93,24 @@ describe DomainVersion do
           tech_contacts: []
         })
       end
+
+      it 'nameserver creates a version' do
+        Domain.last.nameservers << Fabricate(:nameserver, created_at: Time.now - 30)
+        Domain.last.nameservers.last.destroy
+        expect(DomainVersion.count).to eq(3)
+        expect(Domain.last.nameservers.count).to eq(1)
+        expect(DomainVersion.last.load_snapshot).to eq(
+          admin_contacts: [{ name: 'admin_contact 1', phone: '+372.12345678',
+                             code: 'qwe', ident: '37605030299', email: 'admin1@v.ee' }],
+          domain: { name: 'version.ee', status: nil },
+          nameservers: [{ hostname: 'ns.test.ee', ipv4: nil, ipv6: nil }],
+          owner_contact: { name: 'owner_contact', phone: '+372.12345678',
+                           code: 'asd', ident: '37605030299', email: 'owner1@v.ee' },
+          tech_contacts: [{ name: 'tech_contact 1', phone: '+372.12345678',
+                            code: 'zxc', ident: '37605030299', email: 'tech1@v.ee' }]
+        )
+      end
+
     end
 
     context 'when editing children' do

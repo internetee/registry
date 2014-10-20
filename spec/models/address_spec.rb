@@ -13,7 +13,7 @@ describe Address, '.extract_params' do
     ph = { postalInfo: { name: 'fred', addr: { cc: 'EE', city: 'Village', street: %w(street1 street2) } }  }
     expect(Address.extract_attributes(ph[:postalInfo])).to eq({
       address_attributes: {
-        country_id: 1,
+        country_id: Country.find_by(iso: 'EE').id,
         city: 'Village',
         street: 'street1',
         street2: 'street2'

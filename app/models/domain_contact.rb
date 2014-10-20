@@ -41,6 +41,9 @@ class DomainContact < ActiveRecord::Base
   def domain_snapshot
     # We don't create a version unless domain is valid, is that a good idea?
     return true unless PaperTrail.enabled?
+    return true if domain.nil?
+    return true if contact.nil?
+    return true if domain.versions.last.try(:snapshot) == domain.try(:create_snapshot)
     domain.touch_with_version if domain.valid?
     true
   end

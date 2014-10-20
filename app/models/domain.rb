@@ -17,7 +17,8 @@ class Domain < ActiveRecord::Base
            -> { where(domain_contacts: { contact_type: DomainContact::ADMIN }) },
            through: :domain_contacts, source: :contact
 
-  has_many :nameservers, dependent: :delete_all
+  has_many :nameservers, dependent: :delete_all, after_add: :track_nameserver_add
+
   accepts_nested_attributes_for :nameservers, allow_destroy: true,
                                               reject_if: proc { |attrs| attrs[:hostname].blank? }
 
@@ -61,6 +62,11 @@ class Domain < ActiveRecord::Base
 
   # archiving
   has_paper_trail class_name: 'DomainVersion', meta: { snapshot: :create_snapshot }
+
+  def track_nameserver_add(nameserver)
+    # if we are not adding nameservers on create ( we don't care about ms so to_i )
+    touch_with_version if nameserver.created_at.to_i != created_at.to_i && valid?
+  end
 
   def create_snapshot
     oc = owner_contact.snapshot if owner_contact.is_a?(Contact)
