@@ -3,11 +3,6 @@
 # Update repo 
 #
 
-# default locations
-export LANGUAGE=en_US.UTF-8
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
-
 # cd to Rails root directory
 cd "$(dirname "$0")"; cd ..
 
