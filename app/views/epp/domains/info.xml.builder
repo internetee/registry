@@ -24,14 +24,10 @@ xml.epp_head do
 
         xml.tag!('domain:ns') do
           @domain.nameservers.each do |x|
-            if x.ipv4.present? || x.ipv6.present?
-              xml.tag!('domain:hostAttr') do
-                xml.tag!('domain:hostName', x.hostname)
-                xml.tag!('domain:hostAddr', x.ipv4, 'ip' => 'v4') if x.ipv4.present?
-                xml.tag!('domain:hostAddr', x.ipv6, 'ip' => 'v6') if x.ipv6.present?
-              end
-            else
-              xml.tag!('domain:hostObj', x.hostname)
+            xml.tag!('domain:hostAttr') do
+              xml.tag!('domain:hostName', x.hostname)
+              xml.tag!('domain:hostAddr', x.ipv4, 'ip' => 'v4') if x.ipv4.present?
+              xml.tag!('domain:hostAddr', x.ipv6, 'ip' => 'v6') if x.ipv6.present?
             end
           end
         end
