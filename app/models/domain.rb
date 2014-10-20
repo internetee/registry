@@ -37,6 +37,8 @@ class Domain < ActiveRecord::Base
   delegate :phone, to: :owner_contact, prefix: true
   delegate :name, to: :registrar, prefix: true
 
+  before_validation :downcase_attributes
+
   before_create :generate_auth_info
   before_create :set_validity_dates
   after_create :attach_default_contacts
@@ -68,6 +70,14 @@ class Domain < ActiveRecord::Base
     self[:name] = SimpleIDN.to_unicode(value)
     self[:name_puny] = SimpleIDN.to_ascii(value)
     self[:name_dirty] = value
+  end
+
+  def downcase_attributes
+    nameservers.each do |x|
+      x.hostname = x.hostname.try(:strip).try(:downcase)
+      x.ipv4 = x.ipv4.try(:strip)
+      x.ipv6 = x.ipv6.try(:strip).try(:upcase)
+    end
   end
 
   def owner_contact_typeahead
