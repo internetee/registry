@@ -13,6 +13,8 @@ class Nameserver < ActiveRecord::Base
   # archiving
   has_paper_trail class_name: 'NameserverVersion'
 
+  before_validation :normalize_attributes
+
   def epp_code_map
     {
       '2302' => [
@@ -27,6 +29,12 @@ class Nameserver < ActiveRecord::Base
         [:ipv4, :blank]
       ]
     }
+  end
+
+  def normalize_attributes
+    self.hostname = hostname.try(:strip).try(:downcase)
+    self.ipv4 = ipv4.try(:strip)
+    self.ipv6 = ipv6.try(:strip).try(:upcase)
   end
 
   def to_s
