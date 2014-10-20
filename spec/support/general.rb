@@ -14,7 +14,6 @@ module General
   end
 end
 
-
 RSpec.configure do |c|
   c.include General
 end
