@@ -34,9 +34,9 @@ xml.epp_head do
 
         ## TODO Find out what this domain:host is all about
 
-        xml.tag!('domain:clID', @domain.owner_contact_code)
+        xml.tag!('domain:clID', @domain.registrar_name)
 
-        xml.tag!('domain:crID', @domain.registrar_name) if @domain.registrar #TODO Registrar has to be specified
+        xml.tag!('domain:crID', @domain.versions.first.reify.registrar) #TODO Registrar has to be specified
 
         xml.tag!('domain:crDate', @domain.created_at)
 
