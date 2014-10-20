@@ -47,7 +47,7 @@ class Nameserver < ActiveRecord::Base
   end
 
   def domain_version
-    domain.touch_with_version if domain.valid?
+    domain.create_version
   end
 
   def to_s

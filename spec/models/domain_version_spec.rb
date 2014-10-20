@@ -2,7 +2,6 @@ require 'rails_helper'
 
 describe DomainVersion do
   with_versioning do
-    # before(:each) { Fabricate(:domain_validation_setting_group); Fabricate(:dnskeys_setting_group) }
     before(:each) do
       Setting.ns_min_count = 1
       Fabricate(:domain, name: 'version.ee', dnskeys: []) do
