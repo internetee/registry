@@ -62,6 +62,13 @@ describe Domain do
       expect(d.errors.messages[:nameservers]).to eq(['Nameservers count must be between 2-7'])
     end
 
+    it 'downcases domain' do
+      d = Domain.new(name: 'TesT.Ee')
+      expect(d.name).to eq('test.ee')
+      expect(d.name_puny).to eq('test.ee')
+      expect(d.name_dirty).to eq('test.ee')
+    end
+
     it 'does not create a reserved domain' do
       Fabricate(:reserved_domain)
       expect(Fabricate.build(:domain, name: '1162.ee').valid?).to be false

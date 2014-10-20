@@ -167,13 +167,13 @@ module Epp::DomainsHelper
 
   ## SHARED
   def find_domain(secure = { secure: true })
-    domain = Epp::EppDomain.find_by(name: @ph[:name])
+    domain = Epp::EppDomain.find_by(name: @ph[:name].strip.downcase)
 
     unless domain
       epp_errors << {
         code: '2303',
         msg: I18n.t('errors.messages.epp_domain_not_found'),
-        value: { obj: 'name', val: @ph[:name] }
+        value: { obj: 'name', val: @ph[:name].strip.downcase }
       }
       return nil
     end
@@ -182,7 +182,7 @@ module Epp::DomainsHelper
       epp_errors << {
         code: '2302',
         msg: I18n.t('errors.messages.domain_exists_but_belongs_to_other_registrar'),
-        value: { obj: 'name', val: @ph[:name] }
+        value: { obj: 'name', val: @ph[:name].strip.downcase }
       }
       return nil
     end

@@ -64,6 +64,7 @@ class Domain < ActiveRecord::Base
 
   def name=(value)
     value.strip!
+    value.downcase!
     self[:name] = SimpleIDN.to_unicode(value)
     self[:name_puny] = SimpleIDN.to_ascii(value)
     self[:name_dirty] = value
