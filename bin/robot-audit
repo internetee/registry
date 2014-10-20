@@ -10,6 +10,7 @@ set -o pipefail
 export LANGUAGE=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
+export RAILS_ENV=test
 
 # cp config/secrets-example.yml config/secrets.yml
 # create manually config/database.yml
