@@ -325,7 +325,7 @@ describe 'EPP Domain', epp: true do
         expect(response[:results][0][:value]).to eq '192.0.2.2.invalid'
         expect(response[:results][1][:result_code]).to eq '2005'
         expect(response[:results][1][:msg]).to eq 'IPv6 is invalid'
-        expect(response[:results][1][:value]).to eq 'invalid_ipv6'
+        expect(response[:results][1][:value]).to eq 'INVALID_IPV6'
         expect(Domain.count).to eq(0)
         expect(Nameserver.count).to eq(0)
       end
