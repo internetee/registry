@@ -102,7 +102,7 @@ en:
               out_of_range: 'Period must add up to 1, 2 or 3 years'
               not_a_number: 'Period is not a number'
             auth_info:
-              wrong_pw: 'Authentication error'
+              wrong_pw: 'Authorization error'
             domain_statuses:
               invalid: 'Statuses are invalid'
               not_found: 'Status was not found'

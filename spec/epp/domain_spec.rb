@@ -141,8 +141,8 @@ describe 'EPP Domain', epp: true do
 
       it 'does not transfer with invalid pw' do
         response = epp_request(domain_transfer_xml(pw: 'test'), :xml)
-        expect(response[:result_code]).to eq('2200')
-        expect(response[:msg]).to eq('Authentication error')
+        expect(response[:result_code]).to eq('2201')
+        expect(response[:msg]).to eq('Authorization error')
       end
 
       it 'ignores transfer when owner registrar requests transfer' do
@@ -165,8 +165,8 @@ describe 'EPP Domain', epp: true do
         xml = domain_transfer_xml(pw: pw)
         epp_request(xml, :xml, :elkdata) # transfer domain
         response = epp_request(xml, :xml, :elkdata) # attempt second transfer
-        expect(response[:result_code]).to eq('2200')
-        expect(response[:msg]).to eq('Authentication error')
+        expect(response[:result_code]).to eq('2201')
+        expect(response[:msg]).to eq('Authorization error')
       end
     end
 

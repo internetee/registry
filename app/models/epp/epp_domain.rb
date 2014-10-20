@@ -39,7 +39,7 @@ class Epp::EppDomain < Domain
          }
         ]
       ],
-      '2200' => [
+      '2201' => [
         [:auth_info, :wrong_pw]
       ]
     }
