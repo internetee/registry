@@ -47,7 +47,7 @@ class Nameserver < ActiveRecord::Base
   end
 
   def domain_version
-    domain.create_version
+    domain.create_version if domain
   end
 
   def to_s

@@ -61,10 +61,10 @@ class Domain < ActiveRecord::Base
   attr_accessor :owner_contact_typeahead, :update_me
 
   # archiving
+  # if proc works only on changes on domain sadly
   has_paper_trail class_name: 'DomainVersion', meta: { snapshot: :create_snapshot }, if: Proc.new{ |t| t.new_version }
 
   def new_version
-    #versions.try(:last).try(:snapshot) != create_snapshot
     return false if versions.try(:last).try(:snapshot) == create_snapshot
     true
   end
@@ -74,13 +74,13 @@ class Domain < ActiveRecord::Base
     # We don't create a version unless domain is valid, is that a good idea?
     return true unless valid?
     #return true if versions.try(:last).try(:snapshot) == create_snapshot
-    touch_with_version
+    touch_with_version if new_version
   end
 
   def track_nameserver_add(nameserver)
     # if we are not adding nameservers on create ( we don't care about ms so to_i )
     #return true if versions.try(:last).try(:snapshot) == create_snapshot
-    touch_with_version if nameserver.created_at.to_i != created_at.to_i && valid?
+    touch_with_version if nameserver.created_at.to_i != created_at.to_i && valid? && new_version
   end
 
   def create_snapshot
