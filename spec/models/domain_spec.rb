@@ -62,6 +62,24 @@ describe Domain do
       expect(d.errors.messages[:nameservers]).to eq(['Nameservers count must be between 2-7'])
     end
 
+    it 'downcases domain' do
+      d = Domain.new(name: 'TesT.Ee')
+      expect(d.name).to eq('test.ee')
+      expect(d.name_puny).to eq('test.ee')
+      expect(d.name_dirty).to eq('test.ee')
+    end
+
+    it 'normalizes ns attrs' do
+      d = Fabricate(:domain)
+      d.nameservers.build(hostname: 'BLA.EXAMPLE.EE', ipv4: '   192.168.1.1', ipv6: '1080:0:0:0:8:800:200c:417a')
+      d.save
+
+      ns = d.nameservers.last
+      expect(ns.hostname).to eq('bla.example.ee')
+      expect(ns.ipv4).to eq('192.168.1.1')
+      expect(ns.ipv6).to eq('1080:0:0:0:8:800:200C:417A')
+    end
+
     it 'does not create a reserved domain' do
       Fabricate(:reserved_domain)
       expect(Fabricate.build(:domain, name: '1162.ee').valid?).to be false

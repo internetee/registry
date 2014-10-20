@@ -477,6 +477,8 @@ class Epp::EppDomain < Domain
 
       res = []
       domains.each do |x|
+        x.strip!
+        x.downcase!
         unless DomainNameValidator.validate_format(x)
           res << { name: x, avail: 0, reason: 'invalid format' }
           next

@@ -325,7 +325,7 @@ describe 'EPP Domain', epp: true do
         expect(response[:results][0][:value]).to eq '192.0.2.2.invalid'
         expect(response[:results][1][:result_code]).to eq '2005'
         expect(response[:results][1][:msg]).to eq 'IPv6 is invalid'
-        expect(response[:results][1][:value]).to eq 'invalid_ipv6'
+        expect(response[:results][1][:value]).to eq 'INVALID_IPV6'
         expect(Domain.count).to eq(0)
         expect(Nameserver.count).to eq(0)
       end
@@ -743,7 +743,9 @@ describe 'EPP Domain', epp: true do
 
         d.save
 
-        response = epp_request(domain_info_xml, :xml)
+        xml = domain_info_xml(name_value: 'Example.ee')
+
+        response = epp_request(xml, :xml)
         expect(response[:results][0][:result_code]).to eq('1000')
         expect(response[:results][0][:msg]).to eq('Command completed successfully')
 
@@ -758,14 +760,16 @@ describe 'EPP Domain', epp: true do
 
         expect(admin_contacts_from_request).to eq(admin_contacts_existing)
 
-        hosts_from_request = inf_data.css('hostObj').map(&:text)
-        hosts_existing = d.nameservers.where(ipv4: nil).pluck(:hostname)
+        hosts_from_request = inf_data.css('hostName').map(&:text)
+        hosts_existing = d.nameservers.pluck(:hostname)
 
         expect(hosts_from_request).to eq(hosts_existing)
 
-        expect(inf_data.css('hostName').first.text).to eq('ns1.example.com')
-        expect(inf_data.css('hostAddr').first.text).to eq('192.168.1.1')
-        expect(inf_data.css('hostAddr').last.text).to eq('1080:0:0:0:8:800:200C:417A')
+        ns1 = inf_data.css('hostAttr').last
+
+        expect(ns1.css('hostName').last.text).to eq('ns1.example.com')
+        expect(ns1.css('hostAddr').first.text).to eq('192.168.1.1')
+        expect(ns1.css('hostAddr').last.text).to eq('1080:0:0:0:8:800:200C:417A')
         expect(inf_data.css('crDate').text).to eq(d.created_at.to_time.utc.to_s)
         expect(inf_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
         expect(inf_data.css('pw').text).to eq(d.auth_info)
@@ -865,6 +869,7 @@ describe 'EPP Domain', epp: true do
         expect(d.dnskeys.count).to eq(2)
 
         response = epp_request(xml, :xml)
+
         expect(response[:results][0][:result_code]).to eq('2302')
         expect(response[:results][0][:msg]).to eq('Nameserver already exists on this domain')
         expect(response[:results][0][:value]).to eq('ns1.example.com')

@@ -28,7 +28,7 @@ class Client::DomainTransfersController < ClientController
     end
 
     @domain_transfer = @domain.domain_transfers.create(domain_transfer_params)
-    @domain_transfer.approve_as_server if SettingGroup.domain_general.setting(:transfer_wait_time).value.to_i == 0
+    @domain_transfer.approve_as_server if Setting.transfer_wait_time == 0
 
     if @domain_transfer.approved?
       flash[:notice] = I18n.t('shared.domain_transfer_approved')
