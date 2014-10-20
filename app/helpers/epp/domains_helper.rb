@@ -178,7 +178,10 @@ module Epp::DomainsHelper
       return nil
     end
 
-    if domain.registrar != current_epp_user.registrar && secure[:secure] == true
+    @ph[:authInfo] ||= {}
+    return domain if domain.auth_info == @ph[:authInfo][:pw]
+
+    if (domain.registrar != current_epp_user.registrar && secure[:secure] == true) &&
       epp_errors << {
         code: '2302',
         msg: I18n.t('errors.messages.domain_exists_but_belongs_to_other_registrar'),
