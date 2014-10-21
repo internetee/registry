@@ -158,7 +158,14 @@ describe 'EPP Helper', epp: true do
         </epp>
       ').to_s.squish
 
-      generated = Nokogiri::XML(domain_info_xml(name_value: 'one.ee', name_hosts: 'sub', pw: 'b3rafsla')).to_s.squish
+      xml = domain_info_xml({
+        name: { value: 'one.ee', attrs: { hosts: 'sub' } },
+        authInfo: {
+          pw: { value: 'b3rafsla' }
+        }
+      })
+
+      generated = Nokogiri::XML(xml).to_s.squish
       expect(generated).to eq(expected)
     end
 

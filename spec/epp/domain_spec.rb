@@ -743,7 +743,7 @@ describe 'EPP Domain', epp: true do
 
         d.save
 
-        xml = domain_info_xml(name_value: 'Example.ee')
+        xml = domain_info_xml(name: { value: 'Example.ee' })
 
         response = epp_request(xml, :xml)
         expect(response[:results][0][:result_code]).to eq('1000')
@@ -804,7 +804,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'returns error when domain can not be found' do
-        response = epp_request(domain_info_xml(name_value: 'test.ee'), :xml)
+        response = epp_request(domain_info_xml(name:  { value: 'test.ee' }), :xml)
         expect(response[:results][0][:result_code]).to eq('2303')
         expect(response[:results][0][:msg]).to eq('Domain not found')
       end
@@ -951,6 +951,8 @@ describe 'EPP Domain', epp: true do
             }
           ]
         })
+
+        puts Nokogiri::XML(xml).to_s
 
         epp_request(xml, :xml)
 

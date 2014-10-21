@@ -145,9 +145,14 @@ module Epp
   end
 
   def domain_info_xml(xml_params = {})
-    xml_params[:name_value] = xml_params[:name_value] || 'example.ee'
-    xml_params[:name_hosts] = xml_params[:name_hosts] || 'all'
-    xml_params[:pw] = xml_params[:pw] || '2fooBAR'
+    defaults = {
+      name: { value: 'example.ee', attrs: { hosts: 'all' } },
+      authInfo: {
+        pw: { value: '2fooBAR' }
+      }
+    }
+
+    xml_params = defaults.deep_merge(xml_params)
 
     xml = Builder::XmlMarkup.new
 
@@ -156,17 +161,13 @@ module Epp
       xml.command do
         xml.info do
           xml.tag!('domain:info', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
-            if xml_params[:name] != false
-              xml.tag!('domain:name', xml_params[:name_value], 'hosts' => xml_params[:name_hosts])
-            end
-            xml.tag!('domain:authInfo') do
-              xml.tag!('domain:pw', xml_params[:pw])
-            end
+            generate_xml_from_hash(xml_params, xml, 'domain')
           end
         end
         xml.clTRID 'ABC-12345'
       end
     end
+
   end
 
   def domain_update_xml(xml_params = {}, dnssec_params = false)
