@@ -84,6 +84,9 @@ group :development, :test do
   # EPP client
   gem 'epp', '~> 1.4.0'
 
+  # EPP XMLs
+  gem 'epp-xml', git: 'git@github.com:gitlabeu/epp-xml.git'
+
   # Replacement for fixtures
   gem 'fabrication', '~> 2.11.3'
 
