@@ -5,7 +5,7 @@ describe Address do
   it { should belong_to(:country) }
 end
 
-describe Address, '.extract_params' do
+describe Address, '.extract_params', pending: true do
   it 'returns params hash'do
     Fabricate(:country, iso: 'EE')
     ph = { postalInfo: { name: 'fred', addr: { cc: 'EE', city: 'Village', street: %w(street1 street2) } }  }
