@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe 'EPP Session', epp: true do
   let(:server_gitlab) { Epp::Server.new({ server: 'localhost', tag: 'gitlab', password: 'ghyt9e4fu', port: 701 }) }
+  let(:login_xml_cache) { login_xml }
 
   context 'when not connected' do
     it 'greets client upon connection' do
@@ -16,14 +17,14 @@ describe 'EPP Session', epp: true do
     after(:each) { server_gitlab.close_connection }
 
     it 'does not log in with invalid user' do
-      response = epp_plain_request('login.xml')
+      response = epp_plain_request(login_xml_cache, :xml)
       expect(response[:result_code]).to eq('2501')
       expect(response[:msg]).to eq('Authentication error; server closing connection')
-      expect(response[:clTRID]).to eq('wgyn001#10-02-08at13:58:06')
+      expect(response[:clTRID]).to eq('ABC-12345')
 
       Fabricate(:epp_user, active: false)
 
-      response = epp_plain_request('login.xml')
+      response = epp_plain_request(login_xml_cache, :xml)
       expect(response[:result_code]).to eq('2501')
     end
 
@@ -38,14 +39,14 @@ describe 'EPP Session', epp: true do
       before(:each) { Fabricate(:epp_user) }
 
       it 'logs in epp user' do
-        response = epp_plain_request('login.xml')
+        response = epp_plain_request(login_xml_cache, :xml)
         expect(response[:result_code]).to eq('1000')
         expect(response[:msg]).to eq('Command completed successfully')
-        expect(response[:clTRID]).to eq('wgyn001#10-02-08at13:58:06')
+        expect(response[:clTRID]).to eq('ABC-12345')
       end
 
       it 'logs out epp user' do
-        epp_plain_request('login.xml')
+        epp_plain_request(login_xml_cache, :xml)
 
         expect(EppSession.first[:epp_user_id]).to eq(1)
 
@@ -57,9 +58,9 @@ describe 'EPP Session', epp: true do
       end
 
       it 'does not log in twice' do
-        epp_plain_request('login.xml')
+        epp_plain_request(login_xml_cache, :xml)
 
-        response = epp_plain_request('login.xml')
+        response = epp_plain_request(login_xml_cache, :xml)
         expect(response[:result_code]).to eq('2002')
         expect(response[:msg]).to match(/Already logged in. Use/)
       end
