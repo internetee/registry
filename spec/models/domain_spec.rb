@@ -113,13 +113,12 @@ describe Domain do
 
     context 'when saved' do
       before(:each) do
-        Fabricate(:domain_validation_setting_group)
-        Fabricate(:dnskeys_setting_group)
+        # Fabricate(:domain_validation_setting_group)
+        # Fabricate(:dnskeys_setting_group)
         Fabricate(:domain)
       end
 
       it 'creates domain version' do
-
         expect(DomainVersion.count).to eq(1)
         expect(ContactVersion.count).to eq(2)
         expect(NameserverVersion.count).to eq(3)

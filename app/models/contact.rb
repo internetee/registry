@@ -66,7 +66,8 @@ class Contact < ActiveRecord::Base
   def domains_snapshot
     (domains + domains_owned).uniq.each do |domain|
       next unless domain.is_a?(Domain)
-      domain.touch_with_version # Method from paper_trail
+      # next if domain.versions.last == domain.create_snapshot
+      domain.create_version # Method from paper_trail
     end
   end
 

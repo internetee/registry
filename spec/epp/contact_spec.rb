@@ -80,18 +80,6 @@ describe 'EPP Contact', epp: true do
         expect(id.text.length).to eq(8)
         # 5 seconds for what-ever weird lag reasons might happen
         expect(cr_date.text.to_time).to be_within(5).of(Time.now)
-
-      end
-
-      it 'does not create duplicate contact', pending: true do
-        Fabricate(:contact, code: 'sh8013')
-
-        response = epp_request(contact_create_xml, :xml)
-
-        expect(response[:result_code]).to eq('2302')
-        expect(response[:msg]).to eq('Contact id already exists')
-
-        expect(Contact.count).to eq(1)
       end
     end
 
@@ -113,16 +101,6 @@ describe 'EPP Contact', epp: true do
 
         expect(response[:msg]).to eq('Authorization error')
         expect(response[:result_code]).to eq('2201')
-      end
-
-      it 'stamps updated_by succesfully', pending: true do
-        Fabricate(:contact, code: 'sh8013', created_by_id: zone.id)
-
-        expect(Contact.first.updated_by_id).to be nil
-
-        epp_request(contact_update_xml, :xml)
-
-        expect(Contact.first.updated_by_id).to eq 2
       end
 
       it 'is succesful' do

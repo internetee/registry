@@ -1,4 +1,5 @@
 class Client::DomainVersionsController < ClientController
+  helper WhodunnitHelper
   before_action :set_domain, only: [:show]
 
   def index

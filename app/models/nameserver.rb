@@ -12,6 +12,7 @@ class Nameserver < ActiveRecord::Base
 
   # archiving
   has_paper_trail class_name: 'NameserverVersion'
+  after_destroy :domain_version
 
   before_validation :normalize_attributes
 
@@ -43,6 +44,10 @@ class Nameserver < ActiveRecord::Base
     self.hostname = hostname.try(:strip).try(:downcase)
     self.ipv4 = ipv4.try(:strip)
     self.ipv6 = ipv6.try(:strip).try(:upcase)
+  end
+
+  def domain_version
+    domain.create_version if domain
   end
 
   def to_s
