@@ -809,7 +809,7 @@ describe 'EPP Domain', epp: true do
         expect(response[:results][0][:msg]).to eq('Domain not found')
       end
 
-      it 'updates domain and adds objects' do
+      it 'updates domain and adds objects', pending: true do
         xml = domain_update_xml({
           add: [
             {
@@ -951,8 +951,6 @@ describe 'EPP Domain', epp: true do
             }
           ]
         })
-
-        puts Nokogiri::XML(xml).to_s
 
         epp_request(xml, :xml)
 
