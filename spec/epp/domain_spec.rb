@@ -952,8 +952,6 @@ describe 'EPP Domain', epp: true do
           ]
         })
 
-        puts Nokogiri::XML(xml).to_s
-
         epp_request(xml, :xml)
 
         expect(d.dnskeys.count).to eq(1)
