@@ -15,15 +15,6 @@ set :deploy_to, '/home/app/registry'
 set :repository, 'https://github.com/internetee/registry'
 set :branch, 'master'
 
-task :registrar do
-  set :deploy_to, '/home/app/registrar'
-end
-
-# shortcut for registrar
-task :re do
-  set :deploy_to, '/home/app/registrar'
-end
-
 task :eedirekt do
   set :deploy_to, '/home/app/eedirekt'
 end
