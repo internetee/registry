@@ -85,7 +85,7 @@ group :development, :test do
   gem 'epp', '~> 1.4.0'
 
   # EPP XMLs
-  #gem 'epp-xml', git: 'git@github.com:gitlabeu/epp-xml.git' # TODO: get this from rubygems
+  gem 'epp-xml', git: 'git@github.com:gitlabeu/epp-xml.git' # TODO: get this from rubygems
 
   # Replacement for fixtures
   gem 'fabrication', '~> 2.11.3'

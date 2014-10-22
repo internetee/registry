@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'EPP Session', epp: true do
   let(:server_gitlab) { Epp::Server.new({ server: 'localhost', tag: 'gitlab', password: 'ghyt9e4fu', port: 701 }) }
-  let(:login_xml_cache) { login_xml }
+  let(:login_xml_cache) { EppXml::Session.login(clID: { value: 'gitlab' }, pw: { value: 'ghyt9e4fu' }) }
 
   context 'when not connected' do
     it 'greets client upon connection' do
