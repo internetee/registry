@@ -92,32 +92,6 @@ module Epp
     end
   end
 
-  def domain_info_xml(xml_params = {})
-    defaults = {
-      name: { value: 'example.ee', attrs: { hosts: 'all' } },
-      authInfo: {
-        pw: { value: '2fooBAR' }
-      }
-    }
-
-    xml_params = defaults.deep_merge(xml_params)
-
-    xml = Builder::XmlMarkup.new
-
-    xml.instruct!(:xml, standalone: 'no')
-    xml.epp('xmlns' => 'urn:ietf:params:xml:ns:epp-1.0') do
-      xml.command do
-        xml.info do
-          xml.tag!('domain:info', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
-            generate_xml_from_hash(xml_params, xml, 'domain:')
-          end
-        end
-        xml.clTRID 'ABC-12345'
-      end
-    end
-
-  end
-
   def domain_update_xml(xml_params = {}, dnssec_params = false)
     defaults = {
       name: { value: 'example.ee' }

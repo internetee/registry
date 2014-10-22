@@ -38,7 +38,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'can not see other registrar domains' do
-        response = epp_request(domain_info_xml, :xml, :elkdata)
+        response = epp_request(EppXml::Domain.info, :xml, :elkdata)
         expect(response[:result_code]).to eq('2302')
         expect(response[:msg]).to eq('Domain exists but belongs to other registrar')
       end
@@ -709,7 +709,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'sets ok status by default' do
-        response = epp_request(domain_info_xml, :xml)
+        response = epp_request(EppXml::Domain.info, :xml)
         inf_data = response[:parsed].css('resData infData')
         expect(inf_data.css('status').first[:s]).to eq('ok')
       end
@@ -743,7 +743,7 @@ describe 'EPP Domain', epp: true do
 
         d.save
 
-        xml = domain_info_xml(name: { value: 'Example.ee' })
+        xml = EppXml::Domain.info(name: { value: 'Example.ee' })
 
         response = epp_request(xml, :xml)
         expect(response[:results][0][:result_code]).to eq('1000')
@@ -797,14 +797,14 @@ describe 'EPP Domain', epp: true do
 
         d.touch
 
-        response = epp_request(domain_info_xml, :xml)
+        response = epp_request(EppXml::Domain.info, :xml)
         inf_data = response[:parsed].css('resData infData')
 
         expect(inf_data.css('upDate').text).to eq(d.updated_at.to_time.utc.to_s)
       end
 
       it 'returns error when domain can not be found' do
-        response = epp_request(domain_info_xml(name:  { value: 'test.ee' }), :xml)
+        response = epp_request(EppXml::Domain.info(name:  { value: 'test.ee' }), :xml)
         expect(response[:results][0][:result_code]).to eq('2303')
         expect(response[:results][0][:msg]).to eq('Domain not found')
       end
