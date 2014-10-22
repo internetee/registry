@@ -1,0 +1,10 @@
+#!/bin/bash
+#
+# For docker
+#
+
+# cd to Rails root directory
+cd "$(dirname "$0")"; cd ..
+
+bin/update-repo
+bin/robot

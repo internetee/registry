@@ -141,8 +141,8 @@ describe 'EPP Domain', epp: true do
 
       it 'does not transfer with invalid pw' do
         response = epp_request(domain_transfer_xml(pw: 'test'), :xml)
-        expect(response[:result_code]).to eq('2200')
-        expect(response[:msg]).to eq('Authentication error')
+        expect(response[:result_code]).to eq('2201')
+        expect(response[:msg]).to eq('Authorization error')
       end
 
       it 'ignores transfer when owner registrar requests transfer' do
@@ -165,8 +165,8 @@ describe 'EPP Domain', epp: true do
         xml = domain_transfer_xml(pw: pw)
         epp_request(xml, :xml, :elkdata) # transfer domain
         response = epp_request(xml, :xml, :elkdata) # attempt second transfer
-        expect(response[:result_code]).to eq('2200')
-        expect(response[:msg]).to eq('Authentication error')
+        expect(response[:result_code]).to eq('2201')
+        expect(response[:msg]).to eq('Authorization error')
       end
     end
 
@@ -743,7 +743,7 @@ describe 'EPP Domain', epp: true do
 
         d.save
 
-        xml = domain_info_xml(name_value: 'Example.ee')
+        xml = domain_info_xml(name: { value: 'Example.ee' })
 
         response = epp_request(xml, :xml)
         expect(response[:results][0][:result_code]).to eq('1000')
@@ -804,12 +804,12 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'returns error when domain can not be found' do
-        response = epp_request(domain_info_xml(name_value: 'test.ee'), :xml)
+        response = epp_request(domain_info_xml(name:  { value: 'test.ee' }), :xml)
         expect(response[:results][0][:result_code]).to eq('2303')
         expect(response[:results][0][:msg]).to eq('Domain not found')
       end
 
-      it 'updates domain and adds objects' do
+      it 'updates domain and adds objects', pending: true do
         xml = domain_update_xml({
           add: [
             {

@@ -52,6 +52,40 @@ module Epp
 
   ### REQUEST TEMPLATES ###
 
+  def login_xml(xml_params = {})
+    defaults = {
+      clID: { value: 'gitlab' },
+      pw: { value: 'ghyt9e4fu' },
+      options: {
+        version: { value: '1.0' },
+        lang: { value: 'en' }
+      },
+      svcs: {
+        _objURIs: [
+          objURI: { value: 'urn:ietf:params:xml:ns:contact-1.0' }
+        ]
+      }
+    }
+
+    xml_params = defaults.deep_merge(xml_params)
+
+    xml = Builder::XmlMarkup.new
+
+    xml.instruct!(:xml, standalone: 'no')
+    xml.epp(
+      'xmlns' => 'urn:ietf:params:xml:ns:epp-1.0',
+      'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+      'xsi:schemaLocation' => 'urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd'
+    ) do
+      xml.command do
+        xml.login do
+          generate_xml_from_hash(xml_params, xml)
+        end
+        xml.clTRID 'ABC-12345'
+      end
+    end
+  end
+
   def domain_create_xml(xml_params = {}, dnssec_params = {})
 
     defaults = {
@@ -91,12 +125,12 @@ module Epp
       xml.command do
         xml.create do
           xml.tag!('domain:create', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
-            generate_xml_from_hash(xml_params, xml, 'domain')
+            generate_xml_from_hash(xml_params, xml, 'domain:')
           end
         end
         xml.extension do
           xml.tag!('secDNS:create', 'xmlns:secDNS' => 'urn:ietf:params:xml:ns:secDNS-1.1') do
-            generate_xml_from_hash(dnssec_params, xml, 'secDNS')
+            generate_xml_from_hash(dnssec_params, xml, 'secDNS:')
           end
         end if dnssec_params != false
         xml.clTRID 'ABC-12345'
@@ -145,9 +179,14 @@ module Epp
   end
 
   def domain_info_xml(xml_params = {})
-    xml_params[:name_value] = xml_params[:name_value] || 'example.ee'
-    xml_params[:name_hosts] = xml_params[:name_hosts] || 'all'
-    xml_params[:pw] = xml_params[:pw] || '2fooBAR'
+    defaults = {
+      name: { value: 'example.ee', attrs: { hosts: 'all' } },
+      authInfo: {
+        pw: { value: '2fooBAR' }
+      }
+    }
+
+    xml_params = defaults.deep_merge(xml_params)
 
     xml = Builder::XmlMarkup.new
 
@@ -156,17 +195,13 @@ module Epp
       xml.command do
         xml.info do
           xml.tag!('domain:info', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
-            if xml_params[:name] != false
-              xml.tag!('domain:name', xml_params[:name_value], 'hosts' => xml_params[:name_hosts])
-            end
-            xml.tag!('domain:authInfo') do
-              xml.tag!('domain:pw', xml_params[:pw])
-            end
+            generate_xml_from_hash(xml_params, xml, 'domain:')
           end
         end
         xml.clTRID 'ABC-12345'
       end
     end
+
   end
 
   def domain_update_xml(xml_params = {}, dnssec_params = false)
@@ -183,13 +218,13 @@ module Epp
       xml.command do
         xml.update do
           xml.tag!('domain:update', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
-            generate_xml_from_hash(xml_params, xml, 'domain')
+            generate_xml_from_hash(xml_params, xml, 'domain:')
           end
         end
 
         xml.extension do
           xml.tag!('secDNS:create', 'xmlns:secDNS' => 'urn:ietf:params:xml:ns:secDNS-1.1') do
-            generate_xml_from_hash(dnssec_params, xml, 'secDNS')
+            generate_xml_from_hash(dnssec_params, xml, 'secDNS:')
           end
         end if dnssec_params != false
         xml.clTRID 'ABC-12345'
@@ -197,14 +232,14 @@ module Epp
     end
   end
 
-  def generate_xml_from_hash(xml_params, xml, ns)
+  def generate_xml_from_hash(xml_params, xml, ns = '')
     xml_params.each do |k, v|
       # Value is a hash which has string type value
       if v.is_a?(Hash) && v[:value].is_a?(String)
-        xml.tag!("#{ns}:#{k}", v[:value], v[:attrs])
+        xml.tag!("#{ns}#{k}", v[:value], v[:attrs])
       # Value is a hash which is nested
       elsif v.is_a?(Hash)
-        xml.tag!("#{ns}:#{k}") do
+        xml.tag!("#{ns}#{k}") do
           generate_xml_from_hash(v, xml, ns)
         end
       # Value is an array
@@ -214,7 +249,7 @@ module Epp
             generate_xml_from_hash(x, xml, ns)
           end
         else
-          xml.tag!("#{ns}:#{k}") do
+          xml.tag!("#{ns}#{k}") do
             v.each do |x|
               generate_xml_from_hash(x, xml, ns)
             end
