@@ -62,7 +62,7 @@ class Domain < ActiveRecord::Base
 
   # archiving
   # if proc works only on changes on domain sadly
-  has_paper_trail class_name: 'DomainVersion', meta: { snapshot: :create_snapshot }, if: Proc.new{ |t| t.new_version }
+  has_paper_trail class_name: 'DomainVersion', meta: { snapshot: :create_snapshot }, if: proc(&:new_version)
 
   def new_version
     return false if versions.try(:last).try(:snapshot) == create_snapshot
@@ -75,10 +75,10 @@ class Domain < ActiveRecord::Base
     touch_with_version if new_version
   end
 
-  def track_nameserver_add(nameserver)
+  def track_nameserver_add(_nameserver)
+    return true if versions.count == 0
     return true unless valid? && new_version
-    ns_created = nameserver.created_at.to_i
-    return true if created_at.to_i.between?( ns_created, ns_created + 1 )
+
     touch_with_version
   end
 

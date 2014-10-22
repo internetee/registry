@@ -40,6 +40,7 @@ class DomainContact < ActiveRecord::Base
 
   def domain_snapshot
     return true if domain.nil?
+    return true if domain.versions.count == 0 # avoid snapshot on creation
     domain.create_version
     true
   end
