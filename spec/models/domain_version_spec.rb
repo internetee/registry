@@ -65,10 +65,8 @@ describe DomainVersion do
 
     context 'when removing child' do
       it('has one domain version before events') { expect(DomainVersion.count).to eq(1) }
-      before(:each) { Domain.last.nameservers << Fabricate(:nameserver) }
 
       it 'contact creates a version' do
-        # FIXME: For some reason nameservers disappeared mid-test, but randomly stopped happening
         expect(DomainVersion.count).to eq(1)
         DomainContact.last.destroy
         expect(Domain.last.valid?).to be(true)

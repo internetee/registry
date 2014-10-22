@@ -71,16 +71,15 @@ class Domain < ActiveRecord::Base
 
   def create_version
     return true unless PaperTrail.enabled?
-    # We don't create a version unless domain is valid, is that a good idea?
     return true unless valid?
-    #return true if versions.try(:last).try(:snapshot) == create_snapshot
     touch_with_version if new_version
   end
 
   def track_nameserver_add(nameserver)
-    # if we are not adding nameservers on create ( we don't care about ms so to_i )
-    #return true if versions.try(:last).try(:snapshot) == create_snapshot
-    touch_with_version if nameserver.created_at.to_i != created_at.to_i && valid? && new_version
+    return true unless valid? && new_version
+    ns_created = nameserver.created_at.to_i
+    return true if created_at.to_i.between?( ns_created, ns_created + 1 )
+    touch_with_version
   end
 
   def create_snapshot

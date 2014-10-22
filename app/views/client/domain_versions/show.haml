@@ -58,6 +58,7 @@
               %td
                 %p{ :style => 'font-size:x-small;' }
                   = l(version.created_at, format: :short)
-                  = version.whodunnit
-                  = version.event
+                  = whodunnit_with_protocol(version.whodunnit)
+                  =# version.whodunnit
+                  =# version.event
 
