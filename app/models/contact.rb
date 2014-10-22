@@ -5,8 +5,6 @@ class Contact < ActiveRecord::Base
 
   include EppErrors
 
-  # has_one :local_address, dependent: :destroy
-  # has_one :international_address, dependent: :destroy
   has_one :address, dependent: :destroy
   has_one :disclosure, class_name: 'ContactDisclosure'
 
@@ -35,6 +33,11 @@ class Contact < ActiveRecord::Base
   delegate :street, to: :address # , prefix: true
   delegate :zip, to: :address # , prefix: true
 
+  # callbacks
+  # after_commit :domains_snapshot
+  after_update :domains_snapshot
+  after_destroy :domains_snapshot
+
   # scopes
   scope :current_registrars, ->(id) { where(registrar_id: id) }
   # archiving
@@ -58,6 +61,14 @@ class Contact < ActiveRecord::Base
     return true unless ident.present? && ident_type.present? && ident_type == 'op'
     code = Isikukood.new(ident)
     errors.add(:ident, 'bad format') unless code.valid?
+  end
+
+  def domains_snapshot
+    (domains + domains_owned).uniq.each do |domain|
+      next unless domain.is_a?(Domain)
+      # next if domain.versions.last == domain.create_snapshot
+      domain.create_version # Method from paper_trail
+    end
   end
 
   def juridical?
@@ -121,6 +132,17 @@ class Contact < ActiveRecord::Base
 
   def to_s
     name
+  end
+
+  # for archiving
+  def snapshot
+    {
+      name: name,
+      phone: phone,
+      code: code,
+      ident: ident,
+      email: email
+    }
   end
 
   class << self

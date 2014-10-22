@@ -17,7 +17,8 @@ class Domain < ActiveRecord::Base
            -> { where(domain_contacts: { contact_type: DomainContact::ADMIN }) },
            through: :domain_contacts, source: :contact
 
-  has_many :nameservers, dependent: :delete_all
+  has_many :nameservers, dependent: :delete_all, after_add: :track_nameserver_add
+
   accepts_nested_attributes_for :nameservers, allow_destroy: true,
                                               reject_if: proc { |attrs| attrs[:hostname].blank? }
 
@@ -57,10 +58,47 @@ class Domain < ActiveRecord::Base
   validate :validate_dnskeys_uniqueness
   validate :validate_nameserver_ips
 
-  attr_accessor :owner_contact_typeahead
+  attr_accessor :owner_contact_typeahead, :update_me
 
   # archiving
-  has_paper_trail class_name: 'DomainVersion'
+  # if proc works only on changes on domain sadly
+  has_paper_trail class_name: 'DomainVersion', meta: { snapshot: :create_snapshot }, if: proc(&:new_version)
+
+  def new_version
+    return false if versions.try(:last).try(:snapshot) == create_snapshot
+    true
+  end
+
+  def create_version
+    return true unless PaperTrail.enabled?
+    return true unless valid?
+    touch_with_version if new_version
+  end
+
+  def track_nameserver_add(_nameserver)
+    return true if versions.count == 0
+    return true unless valid? && new_version
+
+    touch_with_version
+  end
+
+  def create_snapshot
+    oc = owner_contact.snapshot if owner_contact.is_a?(Contact)
+    {
+      owner_contact: oc,
+      tech_contacts: tech_contacts.map(&:snapshot),
+      admin_contacts: admin_contacts.map(&:snapshot),
+      nameservers: nameservers.map(&:snapshot),
+      domain: make_snapshot
+    }.to_yaml
+  end
+
+  def make_snapshot
+    {
+      name: name,
+      status: status
+    }
+  end
 
   def name=(value)
     value.strip!

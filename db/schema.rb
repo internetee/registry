@@ -156,6 +156,7 @@ ActiveRecord::Schema.define(version: 20141015135742) do
     t.string   "whodunnit"
     t.text     "object"
     t.datetime "created_at"
+    t.text     "snapshot"
   end
 
   add_index "domain_versions", ["item_type", "item_id"], name: "index_domain_versions_on_item_type_and_item_id", using: :btree

@@ -362,6 +362,7 @@ en:
     contact_list: 'Contact list'
     create_new_contact: 'Create new contact'
     domain_pw: 'Domain password'
+    history: 'History'
 
     new_registrar: 'New registrar'
     registrar_added: 'Registrar added!'
@@ -405,7 +406,6 @@ en:
     record_deleted: 'Record deleted'
     failed_to_delete_record: 'Failed to delete record'
 
-    # sorry these need to be refactored - Andres
     authentication_error: 'Authentication error'
     ds_data_and_key_data_must_not_exists_together: 'dsData and keyData objects must not exists together'
 
@@ -420,3 +420,4 @@ en:
     setting: 'Setting'
 
   registrar: Registrar
+
