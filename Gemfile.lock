@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:gitlabeu/epp-xml.git
-  revision: 4c506960b70246ece25a3e7352075b9aa9060d03
+  revision: bd353d79764ba10ce189add76dfd2f4672649175
   specs:
     epp-xml (0.0.1)
       activesupport (~> 4.1, >= 4.1.4)
