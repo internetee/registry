@@ -17,6 +17,7 @@
             %th{class: 'col-xs-1'}= 'datetime'
         %tbody
           - @versions.each do |version|
+            - next unless version.snapshot.is_a?(String)
             - children = YAML.load(version.snapshot)
             - next unless children.is_a?(Hash)
             - children = HashWithIndifferentAccess.new(children)
