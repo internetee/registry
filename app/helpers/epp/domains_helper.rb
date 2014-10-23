@@ -167,13 +167,14 @@ module Epp::DomainsHelper
 
   ## SHARED
   def find_domain(secure = { secure: true })
-    domain = Epp::EppDomain.find_by(name: @ph[:name].strip.downcase)
+    domain_name = parsed_frame.css('name').text.strip.downcase
+    domain = Epp::EppDomain.find_by(name: domain_name)
 
     unless domain
       epp_errors << {
         code: '2303',
         msg: I18n.t('errors.messages.epp_domain_not_found'),
-        value: { obj: 'name', val: @ph[:name].strip.downcase }
+        value: { obj: 'name', val: domain_name }
       }
       return nil
     end
