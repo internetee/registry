@@ -27,7 +27,7 @@ RAILS_ENV=test bundle exec rake db:seed
 RAILS_ENV=test bundle exec rake assets:precompile
 
 echo "GIT_LAST_COMMITS"
-git log origin/master -n 10 --pretty=oneline | sed -r '/^.{40} Merge branch/d' | sed -r 's/^.{40}/Latest: /' 
+git log --pretty='%s  (%cn, %cr)' --abbrev-commit --graph --decorate -n 20 --no-color
 echo "END_OF_GIT_LAST_COMMITS"
 
 echo "RUBOCOP_RESULTS"
