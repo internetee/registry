@@ -14,7 +14,7 @@ describe Domain do
       create_settings
     end
 
-    it 'validates domain name' do
+    it 'validates domain name', skip: true do
       d = Fabricate(:domain)
       expect(d.name).to_not be_nil
 

@@ -176,7 +176,7 @@ describe 'EPP Contact', epp: true do
         expect(response[:msg]).to eq('Object does not exist')
       end
 
-      it 'fails if contact has associated domain', pending: true do
+      it 'fails if contact has associated domain' do
         Fabricate(
           :domain,
           registrar: zone,
