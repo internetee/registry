@@ -2,44 +2,6 @@ require 'rails_helper'
 
 describe 'EPP Helper', epp: true do
   context 'in context of Domain' do
-    it 'generates valid check xml' do
-      expected = Nokogiri::XML('<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-        <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
-          <command>
-            <check>
-              <domain:check
-               xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-                <domain:name>example.ee</domain:name>
-              </domain:check>
-            </check>
-            <clTRID>ABC-12345</clTRID>
-          </command>
-        </epp>
-      ').to_s.squish
-
-      generated = Nokogiri::XML(domain_check_xml).to_s.squish
-      expect(generated).to eq(expected)
-
-      expected = Nokogiri::XML('<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-        <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
-          <command>
-            <check>
-              <domain:check
-               xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-                <domain:name>example.ee</domain:name>
-                <domain:name>example2.ee</domain:name>
-                <domain:name>example3.ee</domain:name>
-              </domain:check>
-            </check>
-            <clTRID>ABC-12345</clTRID>
-          </command>
-        </epp>
-      ').to_s.squish
-
-      generated = Nokogiri::XML(domain_check_xml(names: ['example.ee', 'example2.ee', 'example3.ee'])).to_s.squish
-      expect(generated).to eq(expected)
-    end
-
     it 'generates valid renew xml' do
       expected = Nokogiri::XML('<?xml version="1.0" encoding="UTF-8" standalone="no"?>
         <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
