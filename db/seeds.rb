@@ -10,46 +10,46 @@ Country.where(name: 'Estonia', iso: 'EE').first_or_create!
 Country.where(name: 'Latvia', iso: 'LV').first_or_create!
 
 zone = Registrar.where(
-  name: 'Zonedata AS',
+  name: 'Registrar First AS',
   reg_no: '10300220',
   address: 'Pärnu mnt 2, Tallinna linn, Harju maakond, 11415',
   country: Country.first
 ).first_or_create
 
 EppUser.where(
-  username: 'zone',
-  password: 'ghyt9e4fu',
+  username: 'registrar1',
+  password: 'test1',
   active: true,
   registrar: zone
 ).first_or_create
 
 elkdata = Registrar.where(
-  name: 'Elkservers OÜ',
+  name: 'Registrar Second AS',
   reg_no: '10529229',
   address: 'Vabaduse pst 32, 11316 Tallinn',
   country: Country.first
 ).first_or_create
 
 EppUser.where(
-  username: 'elkdata',
-  password: '8932iods',
+  username: 'registrar2',
+  password: 'test2',
   active: true,
   registrar: elkdata
 ).first_or_create
 
 User.where(
-  username: 'gitlab',
-  password: '12345',
-  email: 'info@gitlab.eu',
+  username: 'user1',
+  password: 'test1',
+  email: 'user1@example.ee',
   admin: true,
   identity_code: '37810013855',
   country: Country.where(name: 'Estonia').first
 ).first_or_create
 
 User.where(
-  username: 'zone',
-  password: '54321',
-  email: 'zone-info@example.ee',
+  username: 'user2',
+  password: 'test2',
+  email: 'user2@example.ee',
   admin: false,
   identity_code: '37810010085',
   registrar_id: zone.id,
@@ -57,9 +57,9 @@ User.where(
 ).first_or_create
 
 User.where(
-  username: 'elkdata',
-  password: '32154',
-  email: 'elk-info@example.ee',
+  username: 'user3',
+  password: 'test3',
+  email: 'user3@example.ee',
   admin: false,
   identity_code: '37810010727',
   registrar_id: elkdata.id,
