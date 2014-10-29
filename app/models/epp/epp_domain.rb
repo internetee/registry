@@ -39,6 +39,9 @@ class Epp::EppDomain < Domain
          }
         ]
       ],
+      '2005' => [
+        [:name_dirty, :invalid,  { obj: 'name', val: name_dirty }]
+      ],
       '2201' => [
         [:auth_info, :wrong_pw]
       ]
