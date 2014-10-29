@@ -112,11 +112,14 @@ module Epp::DomainsHelper
   end
 
   def domain_create_params
+    name = parsed_frame.css('name').text
+    period = parsed_frame.css('period').text
+
     {
-      name: @ph[:name],
+      name: name,
       registrar_id: current_epp_user.registrar.try(:id),
       registered_at: Time.now,
-      period: (@ph[:period].to_i == 0) ? 1 : @ph[:period].to_i,
+      period: (period.to_i == 0) ? 1 : period.to_i,
       period_unit: Epp::EppDomain.parse_period_unit_from_frame(parsed_frame) || 'y'
     }
   end
