@@ -171,7 +171,6 @@ class Epp::EppDomain < Domain
         to_delete << nameserver
       end
     end
-
     nameservers.delete(to_delete)
   end
 
@@ -239,7 +238,6 @@ class Epp::EppDomain < Domain
 
   def detach_dnskeys(dnssec_data)
     return false unless validate_dnssec_data(dnssec_data)
-
     to_delete = []
     dnssec_data[:ds_data].each do |x|
       ds = dnskeys.where(ds_key_tag: x[:ds_key_tag])
@@ -250,7 +248,6 @@ class Epp::EppDomain < Domain
       end
     end
 
-    to_delete = []
     dnssec_data[:key_data].each do |x|
       ds = dnskeys.where(public_key: x[:public_key])
       if ds.blank?
@@ -392,11 +389,13 @@ class Epp::EppDomain < Domain
     def parse_nameservers_from_frame(parsed_frame)
       res = []
       parsed_frame.css('hostAttr').each do |x|
-        res << {
+        host_attr = {
           hostname: x.css('hostName').first.try(:text),
           ipv4: x.css('hostAddr[ip="v4"]').first.try(:text),
           ipv6: x.css('hostAddr[ip="v6"]').first.try(:text)
         }
+
+        res << host_attr.delete_if { |_k, v| v.blank? }
       end
 
       parsed_frame.css('hostObj').each do |x|

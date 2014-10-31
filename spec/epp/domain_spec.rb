@@ -810,7 +810,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'updates domain and adds objects', pending: true do
-        xml = domain_update_xml({
+        xml = EppXml::Domain.update({
           add: [
             {
               ns: [
@@ -893,7 +893,7 @@ describe 'EPP Domain', epp: true do
       it 'updates a domain and removes objects' do
         Fabricate(:contact, code: 'mak21')
 
-        xml = domain_update_xml({
+        xml = EppXml::Domain.update({
           add: [
             {
               ns: [
@@ -931,7 +931,7 @@ describe 'EPP Domain', epp: true do
         d = Domain.last
         expect(d.dnskeys.count).to eq(2)
 
-        xml = domain_update_xml({
+        xml = EppXml::Domain.update({
           rem: [
             {
               ns: [
@@ -982,7 +982,7 @@ describe 'EPP Domain', epp: true do
       it 'does not add duplicate objects to domain' do
         Fabricate(:contact, code: 'mak21')
 
-        xml = domain_update_xml({
+        xml = EppXml::Domain.update({
           add: [
             ns: [
               { hostObj: { value: 'ns1.example.com' } }
@@ -1008,7 +1008,7 @@ describe 'EPP Domain', epp: true do
           ]
         }
 
-        response = epp_request(domain_update_xml(xml_params), :xml)
+        response = epp_request(EppXml::Domain.update(xml_params), :xml)
         expect(response[:results][0][:result_code]).to eq('1000')
 
         d = Domain.last
@@ -1018,7 +1018,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'does not assign invalid status to domain' do
-        xml = domain_update_xml({
+        xml = EppXml::Domain.update({
           add: [
             status: { value: '', attrs: { s: 'invalidStatus' } }
           ]
