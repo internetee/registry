@@ -73,53 +73,6 @@ module Epp
     end
   end
 
-  def domain_check_xml(xml_params = {})
-    xml_params[:names] = xml_params[:names] || ['example.ee']
-    xml = Builder::XmlMarkup.new
-
-    xml.instruct!(:xml, standalone: 'no')
-    xml.epp('xmlns' => 'urn:ietf:params:xml:ns:epp-1.0') do
-      xml.command do
-        xml.check do
-          xml.tag!('domain:check', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
-            xml_params[:names].each do |x|
-              xml.tag!('domain:name', (x || 'example.ee'))
-            end if xml_params[:names].any?
-          end
-        end
-        xml.clTRID 'ABC-12345'
-      end
-    end
-  end
-
-  def domain_update_xml(xml_params = {}, dnssec_params = false)
-    defaults = {
-      name: { value: 'example.ee' }
-    }
-
-    xml_params = defaults.deep_merge(xml_params)
-
-    xml = Builder::XmlMarkup.new
-
-    xml.instruct!(:xml, standalone: 'no')
-    xml.epp('xmlns' => 'urn:ietf:params:xml:ns:epp-1.0') do
-      xml.command do
-        xml.update do
-          xml.tag!('domain:update', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
-            generate_xml_from_hash(xml_params, xml, 'domain:')
-          end
-        end
-
-        xml.extension do
-          xml.tag!('secDNS:create', 'xmlns:secDNS' => 'urn:ietf:params:xml:ns:secDNS-1.1') do
-            generate_xml_from_hash(dnssec_params, xml, 'secDNS:')
-          end
-        end if dnssec_params != false
-        xml.clTRID 'ABC-12345'
-      end
-    end
-  end
-
   def generate_xml_from_hash(xml_params, xml, ns = '')
     xml_params.each do |k, v|
       # Value is a hash which has string type value
@@ -168,25 +121,6 @@ module Epp
             xml.tag!('domain:authInfo') do
               xml.tag!('domain:pw', xml_params[:pw], 'roid' => xml_params[:roid])
             end if xml_params[:authInfo] != false
-          end
-        end
-        xml.clTRID 'ABC-12345'
-      end
-    end
-  end
-
-  def domain_delete_xml(xml_params = {})
-    xml_params[:name] = xml_params[:name] || 'example.ee'
-    xml = Builder::XmlMarkup.new
-
-    xml.instruct!(:xml, standalone: 'no')
-    xml.epp('xmlns' => 'urn:ietf:params:xml:ns:epp-1.0') do
-      xml.command do
-        xml.delete do
-          xml.tag!('domain:delete', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
-            if xml_params[:name] != false
-              xml.tag!('domain:name', xml_params[:name])
-            end
           end
         end
         xml.clTRID 'ABC-12345'

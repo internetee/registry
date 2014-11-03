@@ -51,10 +51,10 @@ module Epp::DomainsHelper
 
       handle_errors(@domain) and return unless @domain
 
-      @domain.parse_and_attach_domain_dependencies(parsed_frame.css('add'))
-      @domain.parse_and_attach_ds_data(parsed_frame.css('extension add'))
       @domain.parse_and_detach_domain_dependencies(parsed_frame.css('rem'))
       @domain.parse_and_detach_ds_data(parsed_frame.css('extension rem'))
+      @domain.parse_and_attach_domain_dependencies(parsed_frame.css('add'))
+      @domain.parse_and_attach_ds_data(parsed_frame.css('extension add'))
       @domain.parse_and_update_domain_dependencies(parsed_frame.css('chg'))
 
       if @domain.errors.any?
@@ -112,11 +112,14 @@ module Epp::DomainsHelper
   end
 
   def domain_create_params
+    name = parsed_frame.css('name').text
+    period = parsed_frame.css('period').text
+
     {
-      name: @ph[:name],
+      name: name,
       registrar_id: current_epp_user.registrar.try(:id),
       registered_at: Time.now,
-      period: (@ph[:period].to_i == 0) ? 1 : @ph[:period].to_i,
+      period: (period.to_i == 0) ? 1 : period.to_i,
       period_unit: Epp::EppDomain.parse_period_unit_from_frame(parsed_frame) || 'y'
     }
   end
@@ -167,13 +170,14 @@ module Epp::DomainsHelper
 
   ## SHARED
   def find_domain(secure = { secure: true })
-    domain = Epp::EppDomain.find_by(name: @ph[:name].strip.downcase)
+    domain_name = parsed_frame.css('name').text.strip.downcase
+    domain = Epp::EppDomain.find_by(name: domain_name)
 
     unless domain
       epp_errors << {
         code: '2303',
         msg: I18n.t('errors.messages.epp_domain_not_found'),
-        value: { obj: 'name', val: @ph[:name].strip.downcase }
+        value: { obj: 'name', val: domain_name }
       }
       return nil
     end
