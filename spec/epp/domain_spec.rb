@@ -682,7 +682,12 @@ describe 'EPP Domain', epp: true do
 
       it 'renews a domain' do
         exp_date = (Date.today + 1.year)
-        xml = domain_renew_xml(curExpDate: exp_date.to_s)
+        xml = EppXml::Domain.renew(
+          name: { value: 'example.ee' },
+          curExpDate: { value: exp_date.to_s },
+          period: { value: '1', attrs: { unit: 'y' } }
+        )
+
         response = epp_request(xml, :xml)
         ex_date = response[:parsed].css('renData exDate').text
         name = response[:parsed].css('renData name').text
@@ -691,7 +696,11 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'returns an error when given and current exp dates do not match' do
-        xml = domain_renew_xml(curExpDate: '2016-08-07')
+        xml = EppXml::Domain.renew(
+          name: { value: 'example.ee' },
+          curExpDate: { value: '2016-08-07' },
+          period: { value: '1', attrs: { unit: 'y' } }
+        )
 
         response = epp_request(xml, :xml)
         expect(response[:results][0][:result_code]).to eq('2306')
@@ -700,7 +709,12 @@ describe 'EPP Domain', epp: true do
 
       it 'returns an error when period is invalid' do
         exp_date = (Date.today + 1.year)
-        xml = domain_renew_xml(period_value: 4, curExpDate: exp_date.to_s)
+
+        xml = EppXml::Domain.renew(
+          name: { value: 'example.ee' },
+          curExpDate: { value: exp_date.to_s },
+          period: { value: '4', attrs: { unit: 'y' } }
+        )
 
         response = epp_request(xml, :xml)
         expect(response[:results][0][:result_code]).to eq('2004')

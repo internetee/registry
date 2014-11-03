@@ -22,7 +22,8 @@ class Epp::EppDomain < Domain
         [:admin_contacts, :out_of_range],
         [:base, :ds_data_with_key_not_allowed],
         [:base, :ds_data_not_allowed],
-        [:base, :key_data_not_allowed]
+        [:base, :key_data_not_allowed],
+        [:period, :not_a_number]
       ],
       '2004' => [ # Parameter value range error
         [:nameservers, :out_of_range,
@@ -268,7 +269,6 @@ class Epp::EppDomain < Domain
     return false if errors.any?
 
     p = self.class.convert_period_to_time(period, unit)
-
     self.valid_to = valid_to + p
     self.period = period
     self.period_unit = unit
@@ -286,6 +286,11 @@ class Epp::EppDomain < Domain
     pt = pending_transfer
     if pt && params[:action] == 'approve'
       return approve_pending_transfer(params[:current_user])
+    end
+
+    if !pt && params[:action] != 'query'
+      add_epp_error('2306', nil, nil, I18n.t('errors.messages.attribute_op_is_invalid'))
+      return false
     end
 
     if !pt && params[:action] == 'query'
@@ -313,7 +318,7 @@ class Epp::EppDomain < Domain
       generate_auth_info
 
       self.registrar = params[:current_user].registrar
-      save
+      save(validate: false)
     end
   end
   # rubocop: enable Metrics/PerceivedComplexity
@@ -335,13 +340,18 @@ class Epp::EppDomain < Domain
     generate_auth_info
 
     self.registrar = pt.transfer_to
-    save
+    save(validate: false)
   end
 
   ### VALIDATIONS ###
 
   def validate_exp_dates(cur_exp_date)
-    return if cur_exp_date.to_date == valid_to
+    begin
+      return if cur_exp_date.to_date == valid_to
+    rescue
+      add_epp_error('2306', 'curExpDate', cur_exp_date, I18n.t('errors.messages.epp_exp_dates_do_not_match'))
+      return
+    end
     add_epp_error('2306', 'curExpDate', cur_exp_date, I18n.t('errors.messages.epp_exp_dates_do_not_match'))
   end
 
