@@ -45,7 +45,7 @@ describe 'EPP Domain', epp: true do
 
       it 'transfers a domain' do
         pw = domain.auth_info
-        xml = domain_transfer_xml(pw: pw)
+        xml = domain_transfer_xml({ authInfo: { pw: { value: pw } } })
         response = epp_request(xml, :xml, :elkdata)
 
         domain.reload
@@ -66,7 +66,7 @@ describe 'EPP Domain', epp: true do
 
         domain.reload
         pw = domain.auth_info
-        xml = domain_transfer_xml(pw: pw) # request with new password
+        xml = domain_transfer_xml({ authInfo: { pw: { value: pw } } }) # request with new password
 
         response = epp_request(xml, :xml, :zone)
         trn_data = response[:parsed].css('trnData')
@@ -110,7 +110,7 @@ describe 'EPP Domain', epp: true do
           transfer_from: zone
         })
 
-        xml = domain_transfer_xml(pw: domain.auth_info, op: 'approve')
+        xml = domain_transfer_xml({ authInfo: { pw: { value: domain.auth_info } } }, 'approve')
         response = epp_request(xml, :xml, :elkdata)
         expect(response[:result_code]).to eq('2304')
         expect(response[:msg]).to eq('Transfer can be approved only by current domain registrar')
@@ -124,7 +124,7 @@ describe 'EPP Domain', epp: true do
           transfer_from: zone
         })
 
-        xml = domain_transfer_xml(pw: domain.auth_info, op: 'approve')
+        xml = domain_transfer_xml({ authInfo: { pw: { value: domain.auth_info } } }, 'approve')
         response = epp_request(xml, :xml, :zone)
         domain.reload
         dtl = domain.domain_transfers.last
@@ -140,14 +140,15 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'does not transfer with invalid pw' do
-        response = epp_request(domain_transfer_xml(pw: 'test'), :xml)
+        xml = domain_transfer_xml({ authInfo: { pw: { value: 'test' } } })
+        response = epp_request(xml, :xml)
         expect(response[:result_code]).to eq('2201')
         expect(response[:msg]).to eq('Authorization error')
       end
 
       it 'ignores transfer when owner registrar requests transfer' do
         pw = domain.auth_info
-        xml = domain_transfer_xml(pw: pw)
+        xml = domain_transfer_xml({ authInfo: { pw: { value: pw } } })
         response = epp_request(xml, :xml, :zone)
 
         expect(response[:result_code]).to eq('2002')
@@ -155,7 +156,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'returns an error for incorrect op attribute' do
-        response = epp_request(domain_transfer_xml(op: 'bla'), :xml, :zone)
+        response = epp_request(domain_transfer_xml({}, 'bla'), :xml, :zone)
         expect(response[:result_code]).to eq('2306')
         expect(response[:msg]).to eq('Attribute op is invalid')
       end
