@@ -287,6 +287,11 @@ class Epp::EppDomain < Domain
       return approve_pending_transfer(params[:current_user])
     end
 
+    if !pt && params[:action] != 'query'
+      add_epp_error('2306', nil, nil, I18n.t('errors.messages.attribute_op_is_invalid'))
+      return false
+    end
+
     if !pt && params[:action] == 'query'
       return false unless can_be_transferred_to?(params[:current_user].registrar)
     end
@@ -312,7 +317,7 @@ class Epp::EppDomain < Domain
       generate_auth_info
 
       self.registrar = params[:current_user].registrar
-      save
+      save(validate: false)
     end
   end
   # rubocop: enable Metrics/PerceivedComplexity
@@ -334,7 +339,7 @@ class Epp::EppDomain < Domain
     generate_auth_info
 
     self.registrar = pt.transfer_to
-    save
+    save(validate: false)
   end
 
   ### VALIDATIONS ###
