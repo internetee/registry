@@ -77,3 +77,8 @@ Setting.ns_min_count = 2
 Setting.ns_max_count = 11
 
 Setting.transfer_wait_time = 0
+
+Setting['whois.host'] = '54.171.175.81'
+Setting['whois.username']= 'whois_app'
+Setting['whois.port'] = '20'
+Setting['whois.remote_path'] = 'whois/shared/data/'
