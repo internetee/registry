@@ -127,25 +127,6 @@ module Epp
       end
     end
   end
-
-  def domain_delete_xml(xml_params = {})
-    xml_params[:name] = xml_params[:name] || 'example.ee'
-    xml = Builder::XmlMarkup.new
-
-    xml.instruct!(:xml, standalone: 'no')
-    xml.epp('xmlns' => 'urn:ietf:params:xml:ns:epp-1.0') do
-      xml.command do
-        xml.delete do
-          xml.tag!('domain:delete', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
-            if xml_params[:name] != false
-              xml.tag!('domain:name', xml_params[:name])
-            end
-          end
-        end
-        xml.clTRID 'ABC-12345'
-      end
-    end
-  end
 end
 
 RSpec.configure do |c|
