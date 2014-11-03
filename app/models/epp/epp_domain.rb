@@ -268,7 +268,6 @@ class Epp::EppDomain < Domain
     return false if errors.any?
 
     p = self.class.convert_period_to_time(period, unit)
-
     self.valid_to = valid_to + p
     self.period = period
     self.period_unit = unit
@@ -341,7 +340,12 @@ class Epp::EppDomain < Domain
   ### VALIDATIONS ###
 
   def validate_exp_dates(cur_exp_date)
-    return if cur_exp_date.to_date == valid_to
+    begin
+      return if cur_exp_date.to_date == valid_to
+    rescue
+      add_epp_error('2306', 'curExpDate', cur_exp_date, I18n.t('errors.messages.epp_exp_dates_do_not_match'))
+      return
+    end
     add_epp_error('2306', 'curExpDate', cur_exp_date, I18n.t('errors.messages.epp_exp_dates_do_not_match'))
   end
 

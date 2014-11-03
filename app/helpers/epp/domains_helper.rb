@@ -31,7 +31,11 @@ module Epp::DomainsHelper
     @domain = find_domain
 
     handle_errors(@domain) and return unless @domain
-    handle_errors(@domain) and return unless @domain.renew(@ph[:curExpDate], @ph[:period])
+    handle_errors(@domain) and return unless @domain.renew(
+      parsed_frame.css('curExpDate').text,
+      parsed_frame.css('period').text,
+      parsed_frame.css('period').first['unit']
+    )
 
     render '/epp/domains/renew'
   end
