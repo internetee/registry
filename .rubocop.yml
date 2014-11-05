@@ -49,10 +49,6 @@ Style/NilComparison:
   Exclude:
     - 'spec/**/*'
 
-# allow comment out code with vim NerdCommenter 
-Style/CommentIndentation:
-  Enabled: false
-
 # No need to force reduce to use |a, e| as parameters.
 # Configuration parameters: Methods.
 Style/SingleLineBlockParams:
