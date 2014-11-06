@@ -52,6 +52,70 @@ module Epp
 
   ### REQUEST TEMPLATES ###
 
+  def domain_info_xml(xml_params = {})
+    defaults = {
+      name: { value: 'example.ee', attrs: { hosts: 'all' } },
+      authInfo: {
+        pw: { value: '2fooBAR' }
+      }
+    }
+
+    xml_params = defaults.deep_merge(xml_params)
+    EppXml::Domain.info(xml_params)
+  end
+
+  def domain_create_xml(xml_params = {}, dnssec_params = {})
+    defaults = {
+      name: { value: 'example.ee' },
+      period: { value: '1', attrs: { unit: 'y' } },
+      ns: [
+        { hostObj: { value: 'ns1.example.net' } },
+        { hostObj: { value: 'ns2.example.net' } }
+      ],
+      registrant: { value: 'jd1234' },
+      _anonymus: [
+        { contact: { value: 'sh8013', attrs: { type: 'admin' } } },
+        { contact: { value: 'sh8013', attrs: { type: 'tech' } } },
+        { contact: { value: 'sh801333', attrs: { type: 'tech' } } }
+      ]
+    }
+
+    xml_params = defaults.deep_merge(xml_params)
+
+    dnssec_defaults = {
+      _anonymus: [
+        { keyData: {
+          flags: { value: '257' },
+          protocol: { value: '3' },
+          alg: { value: '5' },
+          pubKey: { value: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8' }
+        }
+      }]
+    }
+
+    dnssec_params = dnssec_defaults.deep_merge(dnssec_params) if dnssec_params != false
+    EppXml::Domain.create(xml_params, dnssec_params)
+  end
+
+  def domain_update_xml(xml_params = {}, dnssec_params = false)
+    defaults = {
+      name: { value: 'example.ee' }
+    }
+
+    xml_params = defaults.deep_merge(xml_params)
+    EppXml::Domain.update(xml_params, dnssec_params)
+  end
+
+  def domain_check_xml(xml_params = {})
+    defaults = {
+      _anonymus: [
+        { name: { value: 'example.ee' } }
+      ]
+    }
+    xml_params = defaults.deep_merge(xml_params)
+    EppXml::Domain.check(xml_params)
+  end
+
   def domain_transfer_xml(xml_params = {}, op = 'query')
     defaults = {
       name: { value: 'example.ee' },

@@ -17,7 +17,7 @@ describe 'EPP Domain', epp: true do
     it 'returns error if contact does not exists' do
       Fabricate(:contact, code: 'jd1234')
 
-      response = epp_request(EppXml::Domain.create, :xml)
+      response = epp_request(domain_create_xml, :xml)
 
       expect(response[:results][0][:result_code]).to eq('2303')
       expect(response[:results][0][:msg]).to eq('Contact was not found')
@@ -38,7 +38,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'can not see other registrar domains' do
-        response = epp_request(EppXml::Domain.info, :xml, :elkdata)
+        response = epp_request(domain_info_xml, :xml, :elkdata)
         expect(response[:result_code]).to eq('2302')
         expect(response[:msg]).to eq('Domain exists but belongs to other registrar')
       end
@@ -179,7 +179,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'creates a domain' do
-        response = epp_request(EppXml::Domain.create, :xml)
+        response = epp_request(domain_create_xml, :xml)
         d = Domain.first
 
         expect(response[:result_code]).to eq('1000')
@@ -215,7 +215,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'creates ria.ee with valid ds record' do
-        xml = EppXml::Domain.create({
+        xml = domain_create_xml({
           name: { value: 'ria.ee' }
         }, {
           _anonymus: [
@@ -241,7 +241,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'validates nameserver ipv4 when in same zone as domain' do
-        xml = EppXml::Domain.create({
+        xml = domain_create_xml({
           ns: [
             { hostObj: { value: 'ns1.example.ee' } },
             { hostObj: { value: 'ns2.example.ee' } }
@@ -254,8 +254,8 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'does not create duplicate domain' do
-        epp_request(EppXml::Domain.create, :xml)
-        response = epp_request(EppXml::Domain.create, :xml)
+        epp_request(domain_create_xml, :xml)
+        response = epp_request(domain_create_xml, :xml)
         expect(response[:result_code]).to eq('2302')
         expect(response[:msg]).to eq('Domain name already exists')
         expect(response[:clTRID]).to eq('ABC-12345')
@@ -264,7 +264,7 @@ describe 'EPP Domain', epp: true do
       it 'does not create reserved domain' do
         Fabricate(:reserved_domain)
 
-        xml = EppXml::Domain.create(name: { value: '1162.ee' })
+        xml = domain_create_xml(name: { value: '1162.ee' })
 
         response = epp_request(xml, :xml)
         expect(response[:result_code]).to eq('2302')
@@ -273,7 +273,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'does not create domain without contacts and registrant' do
-        xml = EppXml::Domain.create(contacts: [], registrant: false)
+        xml = domain_create_xml(contacts: [], registrant: false)
 
         response = epp_request(xml, :xml)
         expect(response[:results][0][:result_code]).to eq('2003')
@@ -281,7 +281,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'does not create domain without nameservers' do
-        xml = EppXml::Domain.create(ns: [])
+        xml = domain_create_xml(ns: [])
         response = epp_request(xml, :xml)
         expect(response[:result_code]).to eq('2003')
         expect(response[:msg]).to eq('Required parameter missing: ns')
@@ -290,7 +290,7 @@ describe 'EPP Domain', epp: true do
       it 'does not create domain with too many nameservers' do
         nameservers = []
         14.times { |i| nameservers << { hostObj: { value: "ns#{i}.example.net" } } }
-        xml = EppXml::Domain.create(ns: nameservers)
+        xml = domain_create_xml(ns: nameservers)
 
         response = epp_request(xml, :xml)
         expect(response[:result_code]).to eq('2004')
@@ -298,7 +298,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'returns error when invalid nameservers are present' do
-        xml = EppXml::Domain.create({
+        xml = domain_create_xml({
           ns: [
             { hostObj: { value: 'invalid1-' } },
             { hostObj: { value: '-invalid2' } }
@@ -332,7 +332,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'creates a domain with period in days' do
-        xml = EppXml::Domain.create(period_value: 365, period_unit: 'd')
+        xml = domain_create_xml(period_value: 365, period_unit: 'd')
 
         response = epp_request(xml, :xml)
         expect(response[:result_code]).to eq('1000')
@@ -341,7 +341,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'does not create a domain with invalid period' do
-        xml = EppXml::Domain.create({
+        xml = domain_create_xml({
           period: { value: '367', attrs: { unit: 'd' } }
         })
 
@@ -352,7 +352,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'creates a domain with multiple dnskeys' do
-        xml = EppXml::Domain.create({}, {
+        xml = domain_create_xml({}, {
           _anonymus: [
             { keyData: {
                 flags: { value: '257' },
@@ -402,7 +402,7 @@ describe 'EPP Domain', epp: true do
 
       it 'does not create a domain when dnskeys are invalid' do
 
-        xml = EppXml::Domain.create({}, {
+        xml = domain_create_xml({}, {
          _anonymus: [
            { keyData: {
                flags: { value: '250' },
@@ -454,7 +454,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'does not create a domain with two identical dnskeys' do
-        xml = EppXml::Domain.create({}, {
+        xml = domain_create_xml({}, {
          _anonymus: [
            { keyData: {
                flags: { value: '257' },
@@ -483,7 +483,7 @@ describe 'EPP Domain', epp: true do
       it 'validated dnskeys count' do
         Setting.dnskeys_max_count = 1
 
-        xml = EppXml::Domain.create({}, {
+        xml = domain_create_xml({}, {
         _anonymus: [
           { keyData: {
               flags: { value: '257' },
@@ -509,7 +509,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'creates domain with ds data' do
-        xml = EppXml::Domain.create({}, {
+        xml = domain_create_xml({}, {
           _anonymus: [
             { dsData: {
                 keyTag: { value: '12345' },
@@ -535,7 +535,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'creates domain with ds data with key' do
-        xml = EppXml::Domain.create({}, {
+        xml = domain_create_xml({}, {
           _anonymus: [
             { dsData: {
                 keyTag: { value: '12345' },
@@ -569,7 +569,7 @@ describe 'EPP Domain', epp: true do
       it 'prohibits dsData with key' do
         Setting.ds_data_with_key_allowed = false
 
-        xml = EppXml::Domain.create({}, {
+        xml = domain_create_xml({}, {
           _anonymus: [
             { dsData: {
                 keyTag: { value: '12345' },
@@ -594,7 +594,7 @@ describe 'EPP Domain', epp: true do
       it 'prohibits dsData' do
         Setting.ds_data_allowed = false
 
-        xml = EppXml::Domain.create({}, {
+        xml = domain_create_xml({}, {
           _anonymus: [
             { dsData: {
                 keyTag: { value: '12345' },
@@ -619,7 +619,7 @@ describe 'EPP Domain', epp: true do
       it 'prohibits keyData' do
         Setting.key_data_allowed = false
 
-        xml = EppXml::Domain.create({}, {
+        xml = domain_create_xml({}, {
           _anonymus: [
             keyData: {
               flags: { value: '0' },
@@ -643,7 +643,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'creates a domain with contacts' do
-        xml = EppXml::Domain.create({
+        xml = domain_create_xml({
           _anonymus: [
             { contact: { value: 'sh8013', attrs: { type: 'admin' } } }
           ]
@@ -662,7 +662,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'does not create a domain without admin contact' do
-        xml = EppXml::Domain.create({
+        xml = domain_create_xml({
           _anonymus: [
             { contact: { value: 'sh8013', attrs: { type: 'tech' } } }
           ]
@@ -724,7 +724,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'sets ok status by default' do
-        response = epp_request(EppXml::Domain.info, :xml)
+        response = epp_request(domain_info_xml, :xml)
         inf_data = response[:parsed].css('resData infData')
         expect(inf_data.css('status').first[:s]).to eq('ok')
       end
@@ -758,7 +758,7 @@ describe 'EPP Domain', epp: true do
 
         d.save
 
-        xml = EppXml::Domain.info(name: { value: 'Example.ee' })
+        xml = domain_info_xml(name: { value: 'Example.ee' })
 
         response = epp_request(xml, :xml)
         expect(response[:results][0][:result_code]).to eq('1000')
@@ -812,20 +812,20 @@ describe 'EPP Domain', epp: true do
 
         d.touch
 
-        response = epp_request(EppXml::Domain.info, :xml)
+        response = epp_request(domain_info_xml, :xml)
         inf_data = response[:parsed].css('resData infData')
 
         expect(inf_data.css('upDate').text).to eq(d.updated_at.to_time.utc.to_s)
       end
 
       it 'returns error when domain can not be found' do
-        response = epp_request(EppXml::Domain.info(name:  { value: 'test.ee' }), :xml)
+        response = epp_request(domain_info_xml(name:  { value: 'test.ee' }), :xml)
         expect(response[:results][0][:result_code]).to eq('2303')
         expect(response[:results][0][:msg]).to eq('Domain not found')
       end
 
       it 'updates domain and adds objects', pending: true do
-        xml = EppXml::Domain.update({
+        xml = domain_update_xml({
           add: [
             {
               ns: [
@@ -908,7 +908,7 @@ describe 'EPP Domain', epp: true do
       it 'updates a domain and removes objects' do
         Fabricate(:contact, code: 'mak21')
 
-        xml = EppXml::Domain.update({
+        xml = domain_update_xml({
           add: [
             {
               ns: [
@@ -946,7 +946,7 @@ describe 'EPP Domain', epp: true do
         d = Domain.last
         expect(d.dnskeys.count).to eq(2)
 
-        xml = EppXml::Domain.update({
+        xml = domain_update_xml({
           rem: [
             {
               ns: [
@@ -997,7 +997,7 @@ describe 'EPP Domain', epp: true do
       it 'does not add duplicate objects to domain' do
         Fabricate(:contact, code: 'mak21')
 
-        xml = EppXml::Domain.update({
+        xml = domain_update_xml({
           add: [
             ns: [
               { hostObj: { value: 'ns1.example.com' } }
@@ -1023,7 +1023,7 @@ describe 'EPP Domain', epp: true do
           ]
         }
 
-        response = epp_request(EppXml::Domain.update(xml_params), :xml)
+        response = epp_request(domain_update_xml(xml_params), :xml)
         expect(response[:results][0][:result_code]).to eq('1000')
 
         d = Domain.last
@@ -1033,7 +1033,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'does not assign invalid status to domain' do
-        xml = EppXml::Domain.update({
+        xml = domain_update_xml({
           add: [
             status: { value: '', attrs: { s: 'invalidStatus' } }
           ]
@@ -1064,7 +1064,7 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'checks a domain' do
-      response = epp_request(EppXml::Domain.check, :xml)
+      response = epp_request(domain_check_xml, :xml)
       expect(response[:result_code]).to eq('1000')
       expect(response[:msg]).to eq('Command completed successfully')
 
@@ -1074,7 +1074,7 @@ describe 'EPP Domain', epp: true do
 
       Fabricate(:domain, name: 'example.ee', registrar: zone)
 
-      response = epp_request(EppXml::Domain.check, :xml)
+      response = epp_request(domain_check_xml, :xml)
       domain = response[:parsed].css('resData chkData cd').first
       name = domain.css('name').first
       reason = domain.css('reason').first
@@ -1085,7 +1085,7 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'checks multiple domains' do
-      xml = EppXml::Domain.check({
+      xml = domain_check_xml({
         _anonymus: [
           { name: { value: 'one.ee' } },
           { name: { value: 'two.ee' } },
@@ -1107,7 +1107,7 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'checks invalid format domain' do
-      xml = EppXml::Domain.check({
+      xml = domain_check_xml({
         _anonymus: [
           { name: { value: 'one.ee' } },
           { name: { value: 'notcorrectdomain' } }
