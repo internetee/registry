@@ -5,6 +5,7 @@ class CreateMessages < ActiveRecord::Migration
       t.string :body
       t.string :object_type
       t.string :object
+      t.boolean :queued
 
       t.timestamps
     end

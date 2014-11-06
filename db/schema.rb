@@ -204,6 +204,7 @@ ActiveRecord::Schema.define(version: 20141105150721) do
     t.string   "body"
     t.string   "object_type"
     t.string   "object"
+    t.boolean  "queued"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
