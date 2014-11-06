@@ -202,8 +202,8 @@ ActiveRecord::Schema.define(version: 20141105150721) do
   create_table "messages", force: true do |t|
     t.integer  "registrar_id"
     t.string   "body"
-    t.string   "object_type"
-    t.string   "object"
+    t.string   "attached_obj_type"
+    t.string   "attached_obj_id"
     t.boolean  "queued"
     t.datetime "created_at"
     t.datetime "updated_at"

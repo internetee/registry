@@ -16,5 +16,9 @@ class EppUser < ActiveRecord::Base
   def to_s
     username
   end
+
+  def queued_messages
+    registrar.messages.queued
+  end
 end
 # rubocop: enable Metrics/ClassLength

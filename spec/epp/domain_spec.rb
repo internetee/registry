@@ -100,6 +100,13 @@ describe 'EPP Domain', epp: true do
         expect(trn_data.css('exDate').text).to eq(domain.valid_to.to_time.utc.to_s)
 
         expect(domain.registrar).to eq(elkdata)
+
+        # should show up in other registrar's poll
+
+        response = epp_request(EppXml::Session.poll, :xml, :elkdata)
+        msg_q = response[:parsed].css('msgQ')
+        expect(msg_q.css('qDate').text).to_not be_blank
+        expect(msg_q.css('msg').text).to eq('Transfer requested.')
       end
 
       it 'prohibits wrong registrar from approving transfer' do

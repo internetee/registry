@@ -3,8 +3,8 @@ class CreateMessages < ActiveRecord::Migration
     create_table :messages do |t|
       t.integer :registrar_id
       t.string :body
-      t.string :object_type
-      t.string :object
+      t.string :attached_obj_type
+      t.string :attached_obj_id
       t.boolean :queued
 
       t.timestamps
