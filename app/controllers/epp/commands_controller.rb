@@ -2,6 +2,7 @@ class Epp::CommandsController < ApplicationController
   include Epp::Common
   include Epp::DomainsHelper
   include Epp::ContactsHelper
+  include Epp::PollHelper
   include Shared::UserStamper
   helper WhodunnitHelper
 

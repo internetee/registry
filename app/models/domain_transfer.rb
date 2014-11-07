@@ -13,6 +13,8 @@ class DomainTransfer < ActiveRecord::Base
 
   before_create :set_wait_until
 
+  delegate :name, :valid_to, to: :domain, prefix: true
+
   def set_wait_until
     wait_time = Setting.transfer_wait_time
     return if wait_time == 0

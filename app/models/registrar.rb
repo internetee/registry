@@ -4,6 +4,7 @@ class Registrar < ActiveRecord::Base
   has_many :contacts, dependent: :restrict_with_error
   has_many :epp_users, dependent: :restrict_with_error
   has_many :users, dependent: :restrict_with_error
+  has_many :messages
 
   validates :name, :reg_no, :address, :country, presence: true
   validates :name, :reg_no, uniqueness: true

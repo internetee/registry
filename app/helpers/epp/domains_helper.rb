@@ -80,7 +80,9 @@ module Epp::DomainsHelper
     @domain = find_domain(secure: false)
 
     handle_errors(@domain) and return unless @domain
-    handle_errors(@domain) and return unless @domain.transfer(domain_transfer_params)
+
+    @domain_transfer = @domain.transfer(domain_transfer_params)
+    handle_errors(@domain) and return unless @domain_transfer
 
     render '/epp/domains/transfer'
   end

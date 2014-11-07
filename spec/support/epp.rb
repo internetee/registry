@@ -52,80 +52,80 @@ module Epp
 
   ### REQUEST TEMPLATES ###
 
-  def domain_renew_xml(xml_params = {})
-    xml = Builder::XmlMarkup.new
+  def domain_info_xml(xml_params = {})
+    defaults = {
+      name: { value: 'example.ee', attrs: { hosts: 'all' } },
+      authInfo: {
+        pw: { value: '2fooBAR' }
+      }
+    }
 
-    xml.instruct!(:xml, standalone: 'no')
-    xml.epp('xmlns' => 'urn:ietf:params:xml:ns:epp-1.0') do
-      xml.command do
-        xml.renew do
-          xml.tag!('domain:renew', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
-            xml.tag!('domain:name', (xml_params[:name] || 'example.ee')) if xml_params[:name] != false
-            xml.tag!('domain:curExpDate', (xml_params[:curExpDate] || '2014-08-07')) if xml_params[:curExpDate] != false
-
-            if xml_params[:period] != false
-              xml.tag!('domain:period', (xml_params[:period_value] || 1), 'unit' => (xml_params[:period_unit] || 'y'))
-            end
-          end
-        end
-        xml.clTRID 'ABC-12345'
-      end
-    end
+    xml_params = defaults.deep_merge(xml_params)
+    EppXml::Domain.info(xml_params)
   end
 
-  def generate_xml_from_hash(xml_params, xml, ns = '')
-    xml_params.each do |k, v|
-      # Value is a hash which has string type value
-      if v.is_a?(Hash) && v[:value].is_a?(String)
-        xml.tag!("#{ns}#{k}", v[:value], v[:attrs])
-      # Value is a hash which is nested
-      elsif v.is_a?(Hash)
-        xml.tag!("#{ns}#{k}") do
-          generate_xml_from_hash(v, xml, ns)
-        end
-      # Value is an array
-      elsif v.is_a?(Array)
-        if k.to_s.start_with?('_')
-          v.each do |x|
-            generate_xml_from_hash(x, xml, ns)
-          end
-        else
-          xml.tag!("#{ns}#{k}") do
-            v.each do |x|
-              generate_xml_from_hash(x, xml, ns)
-            end
-          end
-        end
-      end
-    end
+  def domain_create_xml(xml_params = {}, dnssec_params = {})
+    defaults = {
+      name: { value: 'example.ee' },
+      period: { value: '1', attrs: { unit: 'y' } },
+      ns: [
+        { hostObj: { value: 'ns1.example.net' } },
+        { hostObj: { value: 'ns2.example.net' } }
+      ],
+      registrant: { value: 'jd1234' },
+      _anonymus: [
+        { contact: { value: 'sh8013', attrs: { type: 'admin' } } },
+        { contact: { value: 'sh8013', attrs: { type: 'tech' } } },
+        { contact: { value: 'sh801333', attrs: { type: 'tech' } } }
+      ]
+    }
+
+    xml_params = defaults.deep_merge(xml_params)
+
+    dnssec_defaults = {
+      _anonymus: [
+        { keyData: {
+          flags: { value: '257' },
+          protocol: { value: '3' },
+          alg: { value: '5' },
+          pubKey: { value: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8' }
+        }
+      }]
+    }
+
+    dnssec_params = dnssec_defaults.deep_merge(dnssec_params) if dnssec_params != false
+    EppXml::Domain.create(xml_params, dnssec_params)
   end
 
+  def domain_update_xml(xml_params = {}, dnssec_params = false)
+    defaults = {
+      name: { value: 'example.ee' }
+    }
 
-  def domain_transfer_xml(xml_params = {})
-    xml_params[:name] = xml_params[:name] || 'example.ee'
-    xml_params[:pw] = xml_params[:pw] || '98oiewslkfkd'
-    xml_params[:op] = xml_params[:op] || 'query'
-    xml_params[:roid] = xml_params[:roid] || 'JD1234-REP'
+    xml_params = defaults.deep_merge(xml_params)
+    EppXml::Domain.update(xml_params, dnssec_params)
+  end
 
-    xml = Builder::XmlMarkup.new
+  def domain_check_xml(xml_params = {})
+    defaults = {
+      _anonymus: [
+        { name: { value: 'example.ee' } }
+      ]
+    }
+    xml_params = defaults.deep_merge(xml_params)
+    EppXml::Domain.check(xml_params)
+  end
 
-    xml.instruct!(:xml, standalone: 'no')
-    xml.epp('xmlns' => 'urn:ietf:params:xml:ns:epp-1.0') do
-      xml.command do
-        xml.transfer('op' => xml_params[:op]) do
-          xml.tag!('domain:transfer', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
-            if xml_params[:name] != false
-              xml.tag!('domain:name', xml_params[:name])
-            end
+  def domain_transfer_xml(xml_params = {}, op = 'query')
+    defaults = {
+      name: { value: 'example.ee' },
+      authInfo: {
+        pw: { value: '98oiewslkfkd', attrs: { roid: 'JD1234-REP' } }
+      }
+    }
 
-            xml.tag!('domain:authInfo') do
-              xml.tag!('domain:pw', xml_params[:pw], 'roid' => xml_params[:roid])
-            end if xml_params[:authInfo] != false
-          end
-        end
-        xml.clTRID 'ABC-12345'
-      end
-    end
+    xml_params = defaults.deep_merge(xml_params)
+    EppXml::Domain.transfer(xml_params, op)
   end
 end
 

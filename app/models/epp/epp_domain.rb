@@ -285,7 +285,12 @@ class Epp::EppDomain < Domain
 
     pt = pending_transfer
     if pt && params[:action] == 'approve'
-      return approve_pending_transfer(params[:current_user])
+      if approve_pending_transfer(params[:current_user])
+        return pt.reload
+      else
+        return false
+      end
+
     end
 
     if !pt && params[:action] != 'query'
@@ -297,17 +302,24 @@ class Epp::EppDomain < Domain
       return false unless can_be_transferred_to?(params[:current_user].registrar)
     end
 
-    return true if pt
+    return pt if pt
 
     if Setting.transfer_wait_time > 0
-      domain_transfers.create(
+      dt = domain_transfers.create(
         status: DomainTransfer::PENDING,
         transfer_requested_at: Time.zone.now,
         transfer_to: params[:current_user].registrar,
         transfer_from: registrar
       )
+
+      registrar.messages.create(
+        body: I18n.t('transfer_requested'),
+        attached_obj_id: dt.id,
+        attached_obj_type: dt.class.to_s
+      )
+
     else
-      domain_transfers.create(
+      dt = domain_transfers.create(
         status: DomainTransfer::SERVER_APPROVED,
         transfer_requested_at: Time.zone.now,
         transferred_at: Time.zone.now,
@@ -320,6 +332,8 @@ class Epp::EppDomain < Domain
       self.registrar = params[:current_user].registrar
       save(validate: false)
     end
+
+    dt
   end
   # rubocop: enable Metrics/PerceivedComplexity
   # rubocop: enable Metrics/MethodLength
