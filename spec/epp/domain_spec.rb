@@ -113,7 +113,7 @@ describe 'EPP Domain', epp: true do
 
         # should show up in other registrar's poll
 
-        response = epp_request(EppXml::Session.poll, :xml, :zone)
+        response = epp_request(EppXml::Session.poll, :xml, :elkdata)
         expect(response[:msg]).to eq('Command completed successfully; ack to dequeue')
         msg_q = response[:parsed].css('msgQ')
         expect(msg_q.css('qDate').text).to_not be_blank
@@ -125,7 +125,7 @@ describe 'EPP Domain', epp: true do
           value: '', attrs: { op: 'ack', msgID: msg_q.first['id'] }
         })
 
-        response = epp_request(xml, :xml, :zone)
+        response = epp_request(xml, :xml, :elkdata)
         expect(response[:msg]).to eq('Command completed successfully')
         msg_q = response[:parsed].css('msgQ')
         expect(msg_q.first['id']).to_not be_blank
