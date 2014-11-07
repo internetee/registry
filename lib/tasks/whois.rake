@@ -7,15 +7,15 @@ desc 'generate whois file(s)'
 task 'whois:generate' => :environment do
   Dir.mkdir('./tmp/whois') unless File.exist?('./tmp/whois') # a folder for ze stuff
   letter = ENV['letter']
-  @path = "tmp/whois/"
+  @path = 'tmp/whois/'
   letter.nil? ? generate_whois : whois_data(letter)
 end
 
-# TODO refactor
+# TODO: refactor
 desc 'Generate and copy one file'
 task 'whois:handle_domain' => :environment do
   letter = ENV['letter']
-  @path = "tmp/whois/"
+  @path = 'tmp/whois/'
   whois_data(letter)
   copy_files(["tmp/whois/#{letter}_domain.yaml"])
 end
@@ -67,7 +67,7 @@ def copy_files(files)
   Net::SSH.start(@host, @username, port: @port) do |session|
     session.scp.upload!('tmp/whois/checklist.chk', @remote_path)
     files.each do |file|
-      session.scp.upload!(file, @remote_path ) do |ch, name, sent, total|
+      session.scp.upload!(file, @remote_path) do |_ch, name, sent, total|
         puts "#{name}: #{sent}/#{total}"
       end
     end
@@ -80,13 +80,10 @@ def generate_sum
 end
 
 # Describes the connection info for scp, ssh keys have to in order (passwordless login) for this to work
+# TODO: move to settings
 def connection_info
   @host = '95.215.45.231'
-  @username = 'whois_app'
-  @port = 65520
-  @remote_path = 'whois/shared/data/'
-  # @host ||= Setting['whois.host']
-  # @username ||= Setting['whois.username']
-  # @port ||= Setting['whois.port']
-  # @remote_path ||= Setting['whois.remote_path']
+  @username = 'whois'
+  @port = 22
+  @remote_path = 'app/shared/data/'
 end

@@ -21,19 +21,21 @@
             - children = YAML.load(version.snapshot)
             - next unless children.is_a?(Hash)
             - children = HashWithIndifferentAccess.new(children)
+            - changes = version.changed_elements
+
             %tr
-              %td
+              %td{ :class => ('edit-highlight' if changes.include?(:domain)) }
                 - if children[:domain]
                   = children[:domain][:name]
                   = children[:domain][:status]
-              %td
+              %td{ :class => ('edit-highlight' if changes.include?(:owner_contact)) }
                 - if children[:owner_contact]
                   %p{:style => "font-size:x-small;"}
                     = children[:owner_contact][:name] + ","
                     = children[:owner_contact][:phone] + ","
                     = children[:owner_contact][:email] + ","
                     = children[:owner_contact][:code]
-              %td
+              %td{ :class => ('edit-highlight' if changes.include?(:admin_contacts)) }
                 - if children[:admin_contacts]
                   - children[:admin_contacts].each do |ac|
                     %p{:style => "font-size:x-small;"}
@@ -41,7 +43,7 @@
                       = ac[:phone] + ","
                       = ac[:email] + ","
                       = ac[:code]
-              %td
+              %td{ :class => ('edit-highlight' if changes.include?(:tech_contacts)) }
                 - if children[:tech_contacts]
                   - children[:tech_contacts].each do |tc|
                     %p{:style => "font-size:x-small;"}
@@ -49,7 +51,7 @@
                       = tc[:phone] + ","
                       = tc[:email] + ","
                       = tc[:code]
-              %td
+              %td{ :class => ('edit-highlight' if changes.include?(:nameservers)) }
                 - if children[:nameservers]
                   - children[:nameservers].each do |ns|
                     %p{:style => "font-size:x-small;"}

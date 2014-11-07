@@ -1,10 +1,8 @@
 module Epp::ContactsHelper
   def create_contact
     @contact = Contact.new(contact_and_address_attributes)
-    @contact.generate_code
     @contact.registrar = current_epp_user.registrar
     render '/epp/contacts/create' and return if stamp(@contact) && @contact.save
-
     handle_errors(@contact)
   end
 
@@ -16,7 +14,7 @@ module Epp::ContactsHelper
       render 'epp/contacts/update'
     else
       contact_exists?(code)
-      handle_errors(@contact)
+      handle_errors(@contact) and return
     end
   end
 
@@ -38,7 +36,7 @@ module Epp::ContactsHelper
   end
 
   def info_contact
-    handle_errors and return unless rights?
+    # handle_errors and return unless rights?
     @contact = find_contact
     handle_errors(@contact) and return unless @contact
     render 'epp/contacts/info'
@@ -56,7 +54,7 @@ module Epp::ContactsHelper
   ## CREATE
   def validate_contact_create_request
     @ph = params_hash['epp']['command']['create']['create']
-    xml_attrs_present?(@ph, [%w(authInfo pw), %w(postalInfo)])
+    xml_attrs_present?(@ph, [%w(postalInfo)])
 
     return epp_errors.empty? unless @ph['postalInfo'].is_a?(Hash) || @ph['postalInfo'].is_a?(Array)
 

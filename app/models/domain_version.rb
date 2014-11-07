@@ -9,4 +9,21 @@ class DomainVersion < PaperTrail::Version
   def load_snapshot
     YAML.load(snapshot)
   end
+
+  def previous?
+    return true if previous
+    false
+  end
+
+  def changed_elements
+    return [] unless previous?
+    @changes = []
+    @previous_snap = previous.load_snapshot
+    @snap = load_snapshot
+    [:owner_contact, :tech_contacts, :admin_contacts, :nameservers, :domain].each do |key|
+      @changes << key unless @snap[key] == @previous_snap[key]
+    end
+
+    @changes
+  end
 end

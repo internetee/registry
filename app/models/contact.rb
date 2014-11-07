@@ -18,10 +18,9 @@ class Contact < ActiveRecord::Base
 
   accepts_nested_attributes_for :address, :disclosure
 
-  validates :code, :phone, :email, :ident, :address, :registrar, presence: true
+  validates :phone, :email, :ident, :address, :registrar, presence: true
 
   validate :ident_must_be_valid
-  # validate :presence_of_one_address
 
   validates :phone, format: /\+[0-9]{1,3}\.[0-9]{1,14}?/ # /\+\d{3}\.\d+/
   validates :email, format: /@/
@@ -37,6 +36,8 @@ class Contact < ActiveRecord::Base
   # after_commit :domains_snapshot
   after_update :domains_snapshot
   after_destroy :domains_snapshot
+  before_create :generate_code
+  before_create :generate_auth_info
 
   # scopes
   scope :current_registrars, ->(id) { where(registrar_id: id) }
@@ -96,6 +97,10 @@ class Contact < ActiveRecord::Base
     self.code = SecureRandom.hex(4)
   end
 
+  def generate_auth_info
+    self.auth_info = SecureRandom.hex(16)
+  end
+
   # Find a way to use self.domains with contact
   def domains_owned
     Domain.where(owner_contact_id: id)
@@ -149,16 +154,17 @@ class Contact < ActiveRecord::Base
     # non-EPP
 
     # EPP
-    def extract_attributes(ph, type = :create)
+    def extract_attributes(ph, _type = :create)
       ph[:postalInfo] = ph[:postalInfo].first if ph[:postalInfo].is_a?(Array)
       contact_hash = {
         phone: ph[:voice],
         ident: ph[:ident],
         email: ph[:email],
+        fax: ph[:fax],
         name: ph[:postalInfo].try(:[], :name),
         org_name: ph[:postalInfo].try(:[], :org)
       }
-      contact_hash[:auth_info] = ph[:authInfo][:pw] if type == :create
+      # contact_hash[:auth_info] = ph[:authInfo][:pw] if type == :create
       contact_hash.delete_if { |_k, v| v.nil? }
     end
 

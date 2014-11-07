@@ -17,18 +17,18 @@ class Address < ActiveRecord::Base
     #      errors, used = [], []
     #      parsed_frame.css('postalInfo').each do |pi|
     #        attr = pi.attributes['type'].try(:value)
-    #        errors << { 
-    #          code: 2003, msg: I18n.t('errors.messages.attr_missing', key: 'type') 
+    #        errors << {
+    #          code: 2003, msg: I18n.t('errors.messages.attr_missing', key: 'type')
     #        } and next unless attr
     #        unless TYPES.include?(attr)
-    #          errors << { 
-    #            code: 2005, 
-    #            msg: I18n.t('errors.messages.invalid_type'), value: { obj: 'type', val: attr } 
+    #          errors << {
+    #            code: 2005,
+    #            msg: I18n.t('errors.messages.invalid_type'), value: { obj: 'type', val: attr }
     #          }
     #          next
     #        end
-    #        errors << { 
-    #          code: 2005, 
+    #        errors << {
+    #          code: 2005,
     #          msg: I18n.t('errors.messages.repeating_postal_info')
     #        } and next if used.include?(attr)
     #        used << attr
@@ -54,11 +54,16 @@ class Address < ActiveRecord::Base
       return {} unless addr[:addr].is_a?(Hash)
       { country_id: Country.find_by(iso: addr[:addr][:cc]).try(:id),
         city: addr[:addr][:city],
-        street: addr[:addr][:street][0],
-        street2: addr[:addr][:street][1],
-        street3: addr[:addr][:street][2],
+        street: pretty_street(addr[:addr][:street]), # [0],
+        # street2: addr[:addr][:street][1],
+        # street3: addr[:addr][:street][2],
         zip: addr[:addr][:pc]
       }.delete_if { |_k, v| v.nil? }
+    end
+
+    def pretty_street(param_street)
+      return param_street.join(',') if param_street.is_a?(Array)
+      param_street
     end
   end
 end
