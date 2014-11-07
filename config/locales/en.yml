@@ -421,3 +421,4 @@ en:
 
   registrar: 'Registrar'
   transfer_requested: 'Transfer requested.'
+  message_was_not_found: 'Message was not found'

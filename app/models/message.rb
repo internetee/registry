@@ -4,4 +4,9 @@ class Message < ActiveRecord::Base
   before_create -> { self.queued = true }
 
   scope :queued, -> { where(queued: true) }
+
+  def dequeue
+    self.queued = false
+    save
+  end
 end
