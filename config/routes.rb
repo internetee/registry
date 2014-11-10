@@ -33,27 +33,6 @@ Rails.application.routes.draw do
 
   end
 
-  ## CLIENT ROUTES
-  namespace(:client) do
-    resources :domains
-    resources :domain_transfers do
-      member do
-        post 'approve'
-      end
-    end
-
-    resources :contacts do
-      collection do
-        get 'search'
-      end
-    end
-
-    resources :contact_versions
-    resources :domain_versions
-
-    root 'domains#index'
-  end
-
   devise_for :users
 
   devise_scope :user do

@@ -64,13 +64,24 @@ module Epp
     EppXml::Domain.info(xml_params)
   end
 
+  # rubocop: disable Metrics/MethodLength
   def domain_create_xml(xml_params = {}, dnssec_params = {})
     defaults = {
       name: { value: 'example.ee' },
       period: { value: '1', attrs: { unit: 'y' } },
       ns: [
-        { hostObj: { value: 'ns1.example.net' } },
-        { hostObj: { value: 'ns2.example.net' } }
+        {
+          hostAttr: [
+            { hostName: { value: 'ns1.example.net' } },
+            { hostAddr: { value: '192.0.2.2', attrs: { ip: 'v4' } } },
+            { hostAddr: { value: '1080:0:0:0:8:800:200C:417A', attrs: { ip: 'v6' } } }
+          ]
+        },
+        {
+          hostAttr: {
+            hostName: { value: 'ns2.example.net' }
+          }
+        }
       ],
       registrant: { value: 'jd1234' },
       _anonymus: [
@@ -95,6 +106,70 @@ module Epp
 
     dnssec_params = dnssec_defaults.deep_merge(dnssec_params) if dnssec_params != false
     EppXml::Domain.create(xml_params, dnssec_params)
+  end
+
+  def domain_create_with_invalid_ns_ip_xml
+    xml_params = {
+      name: { value: 'example.ee' },
+      period: { value: '1', attrs: { unit: 'y' } },
+      ns: [
+        {
+          hostAttr: {
+            hostName: { value: 'ns1.example.net' },
+            hostAddr: { value: '192.0.2.2.invalid', attrs: { ip: 'v4' } }
+          }
+        },
+        {
+          hostAttr: {
+            hostName: { value: 'ns2.example.net' },
+            hostAddr: { value: 'invalid_ipv6', attrs: { ip: 'v6' } }
+          }
+        }
+      ],
+      registrant: { value: 'jd1234' },
+      contact: { value: 'sh8013', attrs: { type: 'admin' } },
+      contact: { value: 'sh8013', attrs: { type: 'tech' } },
+      contact: { value: 'sh801333', attrs: { type: 'tech' } },
+      authInfo: {
+        pw: {
+          value: '2fooBAR'
+        }
+      }
+    }
+
+    EppXml::Domain.create(xml_params, false)
+  end
+
+  def domain_create_with_host_attrs
+    xml_params = {
+      name: { value: 'example.ee' },
+      period: { value: '1', attrs: { unit: 'y' } },
+      ns: [
+        {
+          hostAttr: [
+            { hostName: { value: 'ns1.example.net' } },
+            { hostAddr: { value: '192.0.2.2', attrs: { ip: 'v4' } } },
+            { hostAddr: { value: '1080:0:0:0:8:800:200C:417A', attrs: { ip: 'v6' } } }
+          ]
+        },
+        {
+          hostAttr: {
+            hostName: { value: 'ns2.example.net' }
+          }
+        }
+      ],
+      registrant: { value: 'jd1234' },
+      contact: { value: 'sh8013', attrs: { type: 'admin' } },
+      contact: { value: 'sh8013', attrs: { type: 'tech' } },
+      contact: { value: 'sh801333', attrs: { type: 'tech' } },
+      authInfo: {
+        pw: {
+          value: '2fooBAR'
+        }
+      }
+    }
+
+    EppXml::Domain.create(xml_params, false)
   end
 
   def domain_update_xml(xml_params = {}, dnssec_params = false)

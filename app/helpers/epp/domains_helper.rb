@@ -105,16 +105,23 @@ module Epp::DomainsHelper
 
   ## CREATE
   def validate_domain_create_request
+    ret = true
+
     @ph = params_hash['epp']['command']['create']['create']
     # TODO: Verify contact presence if registrant is juridical
     attrs_present = xml_attrs_present?(@ph, [['name'], ['ns'], ['registrant']])
-    return false unless attrs_present
+    ret = false unless attrs_present
+
+    if parsed_frame.css('hostObj').any?
+      epp_errors << { code: '2306', msg: I18n.t('host_obj_is_not_allowed') }
+      ret = false
+    end
 
     if parsed_frame.css('dsData').count > 0 && parsed_frame.css('create > keyData').count > 0
       epp_errors << { code: '2306', msg: I18n.t('shared.ds_data_and_key_data_must_not_exists_together') }
-      return false
+      ret = false
     end
-    true
+    ret
   end
 
   def domain_create_params

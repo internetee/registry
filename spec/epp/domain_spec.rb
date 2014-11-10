@@ -273,8 +273,16 @@ describe 'EPP Domain', epp: true do
       it 'validates nameserver ipv4 when in same zone as domain' do
         xml = domain_create_xml({
           ns: [
-            { hostObj: { value: 'ns1.example.ee' } },
-            { hostObj: { value: 'ns2.example.ee' } }
+            {
+              hostAttr: [
+                { hostName: { value: 'ns1.example.ee' } }
+              ]
+            },
+            {
+              hostAttr: {
+                hostName: { value: 'ns2.example.ee' }
+              }
+            }
           ]
         })
 
@@ -319,7 +327,13 @@ describe 'EPP Domain', epp: true do
 
       it 'does not create domain with too many nameservers' do
         nameservers = []
-        14.times { |i| nameservers << { hostObj: { value: "ns#{i}.example.net" } } }
+        14.times do |i|
+          nameservers << {
+            hostAttr: {
+              hostName: { value: "ns#{i}.example.net" }
+            }
+          }
+        end
         xml = domain_create_xml(ns: nameservers)
 
         response = epp_request(xml, :xml)
@@ -330,10 +344,17 @@ describe 'EPP Domain', epp: true do
       it 'returns error when invalid nameservers are present' do
         xml = domain_create_xml({
           ns: [
-            { hostObj: { value: 'invalid1-' } },
-            { hostObj: { value: '-invalid2' } }
+            {
+              hostAttr: {
+                hostName: { value: 'invalid1-' }
+              }
+            },
+            {
+              hostAttr: {
+                hostName: { value: '-invalid2' }
+              }
+            }
           ]
-
         })
 
         response = epp_request(xml, :xml)
@@ -341,8 +362,25 @@ describe 'EPP Domain', epp: true do
         expect(response[:msg]).to eq('Hostname is invalid')
       end
 
+      it 'does not allow hostObj' do
+        xml = domain_create_xml({
+          ns: [
+            {
+              hostObj: { value: 'ns1.example.ee' }
+            },
+            {
+              hostObj: { value: 'ns2.example.ee' }
+            }
+          ]
+        })
+
+        response = epp_request(xml, :xml)
+        expect(response[:result_code]).to eq('2306')
+        expect(response[:msg]).to eq('hostObj object is not allowed')
+      end
+
       it 'creates domain with nameservers with ips' do
-        epp_request('domains/create_w_host_attrs.xml')
+        epp_request(domain_create_with_host_attrs, :xml)
         expect(Domain.first.nameservers.count).to eq(2)
         ns = Domain.first.nameservers.first
         expect(ns.ipv4).to eq('192.0.2.2')
@@ -350,7 +388,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'returns error when nameserver has invalid ips' do
-        response = epp_request('domains/create_w_invalid_ns_ip.xml')
+        response = epp_request(domain_create_with_invalid_ns_ip_xml, :xml)
         expect(response[:results][0][:result_code]).to eq '2005'
         expect(response[:results][0][:msg]).to eq 'IPv4 is invalid'
         expect(response[:results][0][:value]).to eq '192.0.2.2.invalid'

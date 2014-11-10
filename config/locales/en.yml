@@ -422,3 +422,4 @@ en:
   registrar: 'Registrar'
   transfer_requested: 'Transfer requested.'
   message_was_not_found: 'Message was not found'
+  host_obj_is_not_allowed: 'hostObj object is not allowed'

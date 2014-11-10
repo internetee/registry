@@ -9,13 +9,8 @@ class ApplicationController < ActionController::Base
     params[resource] &&= send(method) if respond_to?(method, true)
   end
 
-  def after_sign_in_path_for(resource)
+  def after_sign_in_path_for(_resource)
     return session[:user_return_to].to_s if session[:user_return_to]
-
-    if resource.admin? && can?(:create, :admin_session)
-      admin_root_path
-    else
-      client_root_path
-    end
+    admin_root_path
   end
 end
