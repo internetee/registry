@@ -70,8 +70,18 @@ module Epp
       name: { value: 'example.ee' },
       period: { value: '1', attrs: { unit: 'y' } },
       ns: [
-        { hostObj: { value: 'ns1.example.net' } },
-        { hostObj: { value: 'ns2.example.net' } }
+        {
+          hostAttr: [
+            { hostName: { value: 'ns1.example.net' } },
+            { hostAddr: { value: '192.0.2.2', attrs: { ip: 'v4' } } },
+            { hostAddr: { value: '1080:0:0:0:8:800:200C:417A', attrs: { ip: 'v6' } } }
+          ]
+        },
+        {
+          hostAttr: {
+            hostName: { value: 'ns2.example.net' }
+          }
+        }
       ],
       registrant: { value: 'jd1234' },
       _anonymus: [
