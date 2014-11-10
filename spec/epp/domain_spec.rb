@@ -273,7 +273,7 @@ describe 'EPP Domain', epp: true do
                 hostName: { value: 'ns2.example.ee' }
               }
             }
-          ],
+          ]
         })
 
         response = epp_request(xml, :xml)
@@ -360,7 +360,7 @@ describe 'EPP Domain', epp: true do
             },
             {
               hostObj: { value: 'ns2.example.ee' }
-            },
+            }
           ]
         })
 
