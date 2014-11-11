@@ -1,5 +1,5 @@
 class Admin::DomainsController < AdminController
-  before_action :set_domain, only: [:show, :edit, :update]
+  before_action :set_domain, only: [:show, :edit, :update, :zonefile]
 
   def index
     @q = Domain.includes(:registrar, :owner_contact).search(params[:q])
@@ -25,6 +25,11 @@ class Admin::DomainsController < AdminController
       flash.now[:alert] = I18n.t('shared.failed_to_update_domain')
       render 'edit'
     end
+  end
+
+  def zonefile
+    @zonefile = @domain.generate_zonefile
+    # send_data @zonefile, filename: 'bla.txt'
   end
 
   private
