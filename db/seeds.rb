@@ -77,3 +77,5 @@ Setting.ns_min_count = 2
 Setting.ns_max_count = 11
 
 Setting.transfer_wait_time = 0
+
+Setting.whois_enabled = true

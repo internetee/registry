@@ -1,5 +1,6 @@
 class DomainVersion < PaperTrail::Version
   include UserEvents
+  include DomainVersionObserver if Setting.whois_enabled  # unless Setting.whois_enabled
 
   scope :deleted, -> { where(event: 'destroy') }
 
