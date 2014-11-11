@@ -5,6 +5,7 @@
   .col-sm-6
     %h2.text-right.text-center-xs
       = link_to(t('shared.edit_statuses'), edit_admin_domain_path(@domain), class: 'btn btn-primary')
+      = link_to(t('generate_zonefile'), zonefile_admin_domain_path(@domain), class: 'btn btn-primary')
 
 %hr
 .row
