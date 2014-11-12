@@ -29,11 +29,9 @@ Rails.application.routes.draw do
 
     resources :users
     resources :epp_users
-    resources :contact_versions
     resources :domain_versions
 
-    resources :contact_histories
-    resources :domain_histories
+    resources :delayed_jobs
 
     root 'domains#index'
 

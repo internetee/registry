@@ -17,3 +17,9 @@ test:
 production:
   <<: *default
   database: registry_production
+
+development_whois:
+  database: whois_development
+
+test_whois:
+  database: test_whois

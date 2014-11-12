@@ -1,6 +1,16 @@
 require 'rails_helper'
 
 describe 'EPP Domain', epp: true do
+  before do
+    # we don't really care about the code validations here, it's done in models
+    # dynamic Contact.code just makes it harder to test EPP
+    Contact.skip_callback(:create, :before, :generate_code)
+  end
+
+  after do
+    Contact.set_callback(:create, :before, :generate_code)
+  end
+
   let(:server_zone) { Epp::Server.new({ server: 'localhost', tag: 'zone', password: 'ghyt9e4fu', port: 701 }) }
   let(:server_elkdata) { Epp::Server.new({ server: 'localhost', tag: 'elkdata', password: 'ghyt9e4fu', port: 701 }) }
   let(:elkdata) { Fabricate(:registrar, { name: 'Elkdata', reg_no: '123' }) }

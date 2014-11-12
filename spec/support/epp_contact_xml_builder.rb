@@ -42,8 +42,8 @@ module EppContactXmlBuilder
                 unless xml_params[:addr] == [false]
                   xml.tag!('contact:addr') do
                     xml.tag!('contact:street', xml_params[:addr][:street]) unless xml_params[:addr][:street] == false
-                    xml.tag!('contact:street', xml_params[:addr][:street2]) unless xml_params[:addr][:street2] == false
-                    xml.tag!('contact:street', xml_params[:addr][:street3]) unless xml_params[:addr][:street3] == false
+                    #xml.tag!('contact:street', xml_params[:addr][:street2]) unless xml_params[:addr][:street2] == false
+                    #xml.tag!('contact:street', xml_params[:addr][:street3]) unless xml_params[:addr][:street3] == false
                     xml.tag!('contact:city', xml_params[:addr][:city]) unless xml_params[:addr][:city] == false
                     xml.tag!('contact:sp', xml_params[:addr][:sp]) unless xml_params[:addr][:sp] == false
                     xml.tag!('contact:pc', xml_params[:addr][:pc]) unless xml_params[:addr][:pc] == false
@@ -110,8 +110,8 @@ module EppContactXmlBuilder
                     unless xml_params[:chg][:postalInfo][:addr] == false
                       xml.tag!('contact:addr') do
                         xml.tag!('contact:street', xml_params[:chg][:postalInfo][:addr][:street]) unless xml_params[:chg][:postalInfo][:addr][:street] == false
-                        xml.tag!('contact:street', xml_params[:chg][:postalInfo][:addr][:street2]) unless xml_params[:chg][:postalInfo][:addr][:street2] == false
-                        xml.tag!('contact:street', xml_params[:chg][:postalInfo][:addr][:street3]) unless xml_params[:chg][:postalInfo][:addr][:street3] == false
+                        #xml.tag!('contact:street', xml_params[:chg][:postalInfo][:addr][:street2]) unless xml_params[:chg][:postalInfo][:addr][:street2] == false
+                        #xml.tag!('contact:street', xml_params[:chg][:postalInfo][:addr][:street3]) unless xml_params[:chg][:postalInfo][:addr][:street3] == false
                         xml.tag!('contact:city', xml_params[:chg][:postalInfo][:addr][:city]) unless xml_params[:chg][:postalInfo][:addr][:city] == false
                         xml.tag!('contact:sp', xml_params[:chg][:postalInfo][:addr][:sp]) unless xml_params[:chg][:postalInfo][:addr][:sp] == false
                         xml.tag!('contact:pc', xml_params[:chg][:postalInfo][:addr][:pc]) unless xml_params[:chg][:postalInfo][:addr][:pc] == false

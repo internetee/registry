@@ -21,7 +21,6 @@ describe Contact do
       expect(@contact.valid?).to eq false
 
       expect(@contact.errors.messages).to match_array({
-         code: ['Required parameter missing - code'],
          phone: ['Required parameter missing - phone', 'Phone nr is invalid'],
          email: ['Required parameter missing - email', 'Email is invalid'],
          ident: ['Required parameter missing - ident'],
@@ -37,6 +36,43 @@ describe Contact do
     it 'should return true' do
       expect(@contact.valid?).to be true
     end
+  end
+
+  context 'with callbacks' do
+    before(:each) { @contact = Fabricate.build(:contact, code: '123asd', auth_info: 'qwe321') }
+
+    context 'after create' do
+      it 'should generate code' do
+        expect(@contact.code).to eq('123asd')
+        @contact.save!
+        expect(@contact.code).to_not eq('123asd')
+      end
+
+      it 'should generate password' do
+        expect(@contact.auth_info).to eq('qwe321')
+        @contact.save!
+        expect(@contact.auth_info).to_not eq('qwe321')
+      end
+    end
+
+    context 'after update' do
+      before(:each) do
+        @contact.save!
+        @code = @contact.code
+        @auth_info = @contact.auth_info
+      end
+
+      it 'should not generate new code' do
+        @contact.update_attributes(name: 'qevciherot23')
+        expect(@contact.code).to eq(@code)
+      end
+
+      it 'should not generate new auth_info' do
+        @contact.update_attributes(name: 'fvrsgbqevciherot23')
+        expect(@contact.auth_info).to eq(@auth_info)
+      end
+    end
+
   end
 end
 
@@ -96,8 +132,7 @@ describe Contact, '.extract_params' do
            postalInfo: { name: 'fred', addr: { cc: 'EE' } }  }
     expect(Contact.extract_attributes(ph)).to eq({
       name: 'fred',
-      email: 'jdoe@example.com',
-      auth_info: 'asde'
+      email: 'jdoe@example.com'
     })
   end
 end
@@ -116,15 +151,18 @@ describe Contact, '.check_availability' do
   end
 
   it 'should return in_use and available codes' do
-    response = Contact.check_availability(%w(asd12 asd13 asd14))
+    code = Contact.first.code
+    code_ = Contact.last.code
+
+    response = Contact.check_availability([code, code_, 'asd14'])
     expect(response.class).to be Array
     expect(response.length).to eq(3)
 
     expect(response[0][:avail]).to eq(0)
-    expect(response[0][:code]).to eq('asd12')
+    expect(response[0][:code]).to eq(code)
 
     expect(response[1][:avail]).to eq(0)
-    expect(response[1][:code]).to eq('asd13')
+    expect(response[1][:code]).to eq(code_)
 
     expect(response[2][:avail]).to eq(1)
     expect(response[2][:code]).to eq('asd14')

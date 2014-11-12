@@ -70,6 +70,15 @@ gem 'therubyracer',  platforms: :ruby
 # for settings
 gem 'rails-settings-cached', '0.4.1'
 
+# for scp to whois server
+gem 'net-ssh'
+gem 'net-scp'
+
+# delayed job
+gem 'delayed_job_active_record', '~> 4.0.2'
+# to process delayed jobs
+gem 'daemons'
+
 group :development, :test do
   gem 'capybara', '~> 2.4.1'
   # For feature testing
