@@ -78,4 +78,4 @@ Setting.ns_max_count = 11
 
 Setting.transfer_wait_time = 0
 
-Setting.whois_enabled = true
+# Setting.whois_enabled = true only uncomment this if you wish whois
