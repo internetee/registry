@@ -5,8 +5,7 @@ class Admin::DomainVersionsController < AdminController
   end
 
   def show
-    # @q = DomainVersion.search(item_id_eq: params[:id])
     @versions = DomainVersion.where(item_id: params[:id])
-    @name = @versions.last.reify.try(:name) if @versions
+    @name = @versions.last.name
   end
 end

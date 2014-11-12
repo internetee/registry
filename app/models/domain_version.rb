@@ -16,6 +16,12 @@ class DomainVersion < PaperTrail::Version
     false
   end
 
+  def name
+    name = reify.try(:name)
+    name = load_snapshot[:domain].try(:[], :name) unless name
+    name
+  end
+
   def changed_elements
     return [] unless previous?
     @changes = []
