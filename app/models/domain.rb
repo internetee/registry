@@ -298,6 +298,35 @@ class Domain < ActiveRecord::Base
     end
   end
 
+  def generate_zonefile
+    zf = Zonefile.new
+    zf.ttl = '3600'
+    zf.origin = "#{name}."
+    ns = nameservers.first
+    zf.soa[:primary_ns] = "#{ns.hostname}."
+    zf.soa[:email] = 'hostmaster.internet.ee'
+    zf.soa[:origin] = "#{name}."
+    zf.soa[:refresh] = '10800'
+    zf.soa[:retry] = '3600'
+    zf.soa[:expire] = '604800'
+    zf.soa[:minimumTTL] = '3600'
+
+    nameservers.each do |x|
+      zf.ns << { name: "#{name}.", class: 'IN', host: "#{x.hostname}." }
+    end
+
+    dnskeys.each do |x|
+      zf.ds << { name: "#{name}.", ttl: '86400', class: 'IN', key_tag: x.ds_key_tag, algorithm: x.ds_alg,
+                 digest_type: x.ds_digest_type, digest: x.ds_digest }
+
+      zf.dnskey << { name: "#{name}.", ttl: '86400', class: 'IN', flag: x.flags,
+                     protocol: x.protocol, algorithm: x.alg, public_key: x.public_key }
+    end
+
+    zf.new_serial
+    zf.generate
+  end
+
   class << self
     def convert_period_to_time(period, unit)
       return period.to_i.days if unit == 'd'

@@ -423,3 +423,5 @@ en:
   transfer_requested: 'Transfer requested.'
   message_was_not_found: 'Message was not found'
   host_obj_is_not_allowed: 'hostObj object is not allowed'
+  generate_zonefile: 'Generate zonefile'
+  zonefile: 'Zonefile'
