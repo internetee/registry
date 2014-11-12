@@ -7,6 +7,8 @@ Rails.application.routes.draw do
 
   ## ADMIN ROUTES
   namespace(:admin) do
+    resources :zonefiles
+
     resources :domains do
       member do
         get 'zonefile'

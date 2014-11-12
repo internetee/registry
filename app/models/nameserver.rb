@@ -16,6 +16,8 @@ class Nameserver < ActiveRecord::Base
 
   before_validation :normalize_attributes
 
+  delegate :name, to: :domain, prefix: true
+
   def epp_code_map
     {
       '2302' => [

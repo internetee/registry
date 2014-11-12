@@ -1,0 +1,9 @@
+.row
+  .col-sm-12
+    %h2.text-center-xs
+      = "#{t('zonefile')}"
+%hr
+.row
+  .col-md-12
+    = preserve do
+      %pre= @zonefile
