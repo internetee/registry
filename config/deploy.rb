@@ -85,6 +85,8 @@ task deploy: :environment do
 
     to :launch do
       queue "mkdir -p #{deploy_to}/current/tmp; touch #{deploy_to}/current/tmp/restart.txt"
+      queue "RAILS_ENV=production bin/delayed_job stop"
+      queue "RAILS_ENV=production bin/delayed_job start"
     end
   end
 end
