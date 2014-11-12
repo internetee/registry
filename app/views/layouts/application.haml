@@ -47,6 +47,10 @@
             %li
               = link_to t('shared.domains_history'), admin_domain_versions_path
 
+            %li
+              = link_to t('shared.jobs'), admin_delayed_jobs_path
+
+
           %ul.nav.navbar-nav.navbar-right
             %li= link_to t('shared.log_out', user: current_user), '/logout'
         / /.nav-collapse
