@@ -8,31 +8,20 @@
       %table.table.table-hover.table-bordered.table-condensed
         %thead
           %tr
-            %th{class: 'col-xs-2'}
-              = sort_link(@q, 'name')
-            %th{class: 'col-xs-2'}
-              = sort_link(@q, 'registrar_name', t('shared.registrar'))
-            %th{class: 'col-xs-2'}
-              = sort_link(@q, 'owner_contact_name', t('shared.owner'))
             %th{class: 'col-xs-1'}
-              = t('shared.whodunnit')
-            %th{class: 'col-xs1'}
-              = t('shared.event')
-            %th{class: 'col-xs1'}
-              = t('shared.created_at')
-            %th{class: 'col-xs1'}
-              = t('shared.action')
+              = t('shared.name')
+            %th{class: 'col-xs-1'}
+              = sort_link(@q, 'whodunnit')
+            %th{class: 'col-xs-1'}
+              = sort_link(@q, 'created_at')
 
         %tbody
           - @domains.each do |domain|
+            - obj = domain.reify
             %tr
-              %td= domain.name
-              %td= domain.registrar.name if domain.registrar
-              %td= domain.owner_contact.name if domain.owner_contact
-              %td= link_to_whodunnit(domain.versions.last.whodunnit) if domain.versions.last
-              %td= domain.versions.last.event if domain.versions.last
-              %td= l(domain.versions.last.created_at, format: :short) if domain.versions.last
-              %td= link_to(t('shared.history'), admin_domain_version_path(domain), class: 'btn btn-primary btn-xs')
+              %td= link_to(obj.name, admin_domain_version_path(obj))
+              %td= whodunnit_with_protocol(domain.whodunnit) unless domain.whodunnit.nil?
+              %td= l(obj.created_at, format: :short)
 
 .row
   .col-md-12

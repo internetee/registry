@@ -1,18 +1,12 @@
 class Admin::DomainVersionsController < AdminController
-  before_action :set_domain, only: [:show]
-
   def index
-    @q = Domain.search(params[:q])
+    @q = DomainVersion.deleted.search(params[:q])
     @domains = @q.result.page(params[:page])
   end
 
   def show
-    @versions = @domain.versions
-  end
-
-  private
-
-  def set_domain
-    @domain = Domain.find(params[:id])
+    # @q = DomainVersion.search(item_id_eq: params[:id])
+    @versions = DomainVersion.where(item_id: params[:id])
+    @name = @versions.last.reify.try(:name) if @versions
   end
 end

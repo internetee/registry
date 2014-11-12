@@ -29,6 +29,7 @@
               = sort_link(@q, 'owner_contact_name', t('shared.owner'))
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'valid_to', t('shared.valid_to'))
+            %th{class: 'col-xs-1'}= t('shared.history')
         %tbody
           - @domains.each do |x|
             %tr
@@ -36,6 +37,7 @@
               %td= link_to(x.registrar, root_path) if x.registrar
               %td= link_to(x.owner_contact, [:admin, x.owner_contact])
               %td= l(x.valid_to, format: :short)
+              %td= button_to(t(:'shared.history'), admin_domain_version_path(x.id), method: :get)
 .row
   .col-md-12
     = paginate @domains

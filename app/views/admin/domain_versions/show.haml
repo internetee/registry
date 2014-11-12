@@ -1,7 +1,7 @@
 .row
   .col-sm-6
     %h2.text-center-xs
-      = "#{t('shared.contact_details')}"
+      = "#{t('shared.domain_history')} for " + @name.to_s
   .col-sm-6
     %h2.text-right.text-center-xs
 
@@ -9,24 +9,20 @@
 .row
   .col-md-12
     .table-responsive
-      %table.table.table-hover.table-bordered.table-condensed
+      %table.table-hover.table-bordered.table-condensed
         %thead
           %tr
-            %th
-              whodunnit
-            %th
-              event
-            %th
-              created_at
+            %th{class: 'col-xs-2'}= t(:'shared.owner_contact')
+            %th{class: 'col-xs-2'}= t(:'shared.admin_contacts')
+            %th{class: 'col-xs-2'}= t(:'shared.tech_contacts')
+            %th{class: 'col-xs-2'}= t(:'shared.nameservers')
+            %th{class: 'col-xs-1'}= t(:'shared.changes_info')
 
         %tbody
-          - @versions.each_with_index do |version, index|
-            -  domain = version.reify(has_multiple: true)
-            - if domain
-              = render 'admin/domain_versions/history', version: version, index: index, domain: domain
-            - else
-              %tr
-                %td=version.whodunnit #contact.name if contact
-                %td=version.event #contact.ident if contact
-                %td=version.created_at #contact.email if contact
-
+          - @versions.each do |version|
+            %tr
+              - children = YAML.load(version.snapshot)
+              - next unless children.is_a?(Hash)
+              - children = HashWithIndifferentAccess.new(children)
+              - changes = version.changed_elements
+              = render 'admin/domain_versions/version', children: children, version: version, changes: changes
