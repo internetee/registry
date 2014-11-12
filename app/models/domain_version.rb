@@ -8,7 +8,7 @@ class DomainVersion < PaperTrail::Version
   self.sequence_name = :domain_version_id_seq
 
   def load_snapshot
-    YAML.load(snapshot)
+    snapshot ? YAML.load(snapshot) : {}
   end
 
   def previous?

@@ -21,7 +21,7 @@
         %tbody
           - @versions.each do |version|
             %tr
-              - children = YAML.load(version.snapshot)
+              - children = version.load_snapshot
               - next unless children.is_a?(Hash)
               - children = HashWithIndifferentAccess.new(children)
               - changes = version.changed_elements
