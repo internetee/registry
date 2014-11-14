@@ -8,7 +8,7 @@ class Dnskey < ActiveRecord::Base
   validate :validate_protocol
   validate :validate_flags
 
-  before_save -> { generate_digest unless ds_digest.present? }
+  before_save -> { generate_digest if public_key_changed? && !ds_digest_changed? }
 
   ALGORITHMS = %w(3 5 6 7 8 252 253 254 255)
   PROTOCOLS = %w(3)
