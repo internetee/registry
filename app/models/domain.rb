@@ -29,6 +29,9 @@ class Domain < ActiveRecord::Base
   has_many :domain_transfers, dependent: :delete_all
 
   has_many :dnskeys, dependent: :delete_all
+
+  has_many :keyrelays
+
   accepts_nested_attributes_for :dnskeys, allow_destroy: true,
                                           reject_if: proc { |attrs| attrs[:public_key].blank? }
 

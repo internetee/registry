@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141111105931) do
+ActiveRecord::Schema.define(version: 20141114130737) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -211,6 +211,22 @@ ActiveRecord::Schema.define(version: 20141111105931) do
     t.boolean  "active",       default: false
     t.text     "csr"
     t.text     "crt"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "keyrelays", force: true do |t|
+    t.integer  "domain_id"
+    t.datetime "pa_date"
+    t.string   "key_data_flags"
+    t.string   "key_data_protocol"
+    t.string   "key_data_alg"
+    t.text     "key_data_public_key"
+    t.string   "auth_info_pw"
+    t.string   "expiry_relative"
+    t.datetime "expiry_absolute"
+    t.integer  "requester_id"
+    t.integer  "accepter_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
