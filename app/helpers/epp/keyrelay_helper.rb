@@ -1,11 +1,10 @@
 module Epp::KeyrelayHelper
   # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/CyclomaticComplexity
-
   def keyrelay
     handle_errors and return unless validate_keyrelay_request
 
-    @domain = find_domain
+    @domain = find_domain_for_keyrelay
 
     handle_errors(@domain) and return unless @domain
     handle_errors(@domain) and return unless @domain.authenticate(parsed_frame.css('pw').text)
@@ -36,7 +35,7 @@ module Epp::KeyrelayHelper
     epp_errors.empty?
   end
 
-  def find_domain
+  def find_domain_for_keyrelay
     domain_name = parsed_frame.css('name').text.strip.downcase
     domain = Epp::EppDomain.find_by(name: domain_name)
 
