@@ -357,6 +357,38 @@ class Epp::EppDomain < Domain
     save(validate: false)
   end
 
+  def keyrelay(parsed_frame, requester)
+    if registrar == requester
+      errors.add(:base, :domain_already_belongs_to_the_querying_registrar) and return false
+    end
+
+    abs_datetime = parsed_frame.css('absolute').text
+    abs_datetime = abs_datetime.to_date if abs_datetime
+
+    transaction do
+      kr = keyrelays.create(
+        pa_date: Time.now,
+        key_data_flags: parsed_frame.css('flags').text,
+        key_data_protocol: parsed_frame.css('protocol').text,
+        key_data_alg: parsed_frame.css('alg').text,
+        key_data_public_key: parsed_frame.css('pubKey').text,
+        auth_info_pw: parsed_frame.css('pw').text,
+        expiry_relative: parsed_frame.css('relative').text,
+        expiry_absolute: abs_datetime,
+        requester: requester,
+        accepter: registrar
+      )
+
+      registrar.messages.create(
+        body: 'Key Relay action completed successfully.',
+        attached_obj_type: kr.class.to_s,
+        attached_obj_id: kr.id
+      )
+
+      kr
+    end
+  end
+
   ### VALIDATIONS ###
 
   def validate_exp_dates(cur_exp_date)

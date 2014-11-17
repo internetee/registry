@@ -39,6 +39,5 @@ describe 'EPP Keyrelay', epp: true do
 
       expect(zone.messages.queued.count).to eq(1)
     end
-
   end
 end
