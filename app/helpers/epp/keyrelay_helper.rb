@@ -1,30 +1,53 @@
 module Epp::KeyrelayHelper
+  # rubocop: disable Metrics/PerceivedComplexity
+  # rubocop: disable Metrics/CyclomaticComplexity
   def keyrelay
-    domain = Domain.find_by(name: parsed_frame.css('name').text)
+    handle_errors and return unless validate_keyrelay_request
 
-    abs_datetime = parsed_frame.css('absolute').text
-    abs_datetime = abs_datetime.to_date if abs_datetime
+    @domain = find_domain_for_keyrelay
 
-    kr = domain.keyrelays.create(
-      domain: domain,
-      pa_date: Time.now,
-      key_data_flags: parsed_frame.css('flags').text,
-      key_data_protocol: parsed_frame.css('protocol').text,
-      key_data_alg: parsed_frame.css('alg').text,
-      key_data_public_key: parsed_frame.css('pubKey').text,
-      auth_info_pw: parsed_frame.css('pw').text,
-      expiry_relative: parsed_frame.css('relative').text,
-      expiry_absolute: abs_datetime,
-      requester: current_epp_user.registrar,
-      accepter: domain.registrar
-    )
-
-    domain.registrar.messages.create(
-      body: 'Key Relay action completed successfully.',
-      attached_obj_type: kr.class.to_s,
-      attached_obj_id: kr.id
-    )
+    handle_errors(@domain) and return unless @domain
+    handle_errors(@domain) and return unless @domain.authenticate(parsed_frame.css('pw').text)
+    handle_errors(@domain) and return unless @domain.keyrelay(parsed_frame, current_epp_user.registrar)
 
     render '/epp/shared/success'
+  end
+  # rubocop: enable Metrics/PerceivedComplexity
+  # rubocop: enable Metrics/CyclomaticComplexity
+
+  private
+
+  def validate_keyrelay_request
+    epp_request_valid?('pubKey', 'flags', 'protocol', 'algorithm', 'name', 'pw')
+
+    if parsed_frame.css('relative').text.present? && parsed_frame.css('absolute').text.present?
+      epp_errors << {
+        code: '2003',
+        msg: I18n.t('only_one_parameter_allowed', param_1: 'relative', param_2: 'absolute')
+      }
+    elsif parsed_frame.css('relative').text.empty? && parsed_frame.css('absolute').text.empty?
+      epp_errors << {
+        code: '2003',
+        msg: I18n.t('required_parameter_missing_choice', param_1: 'relative', param_2: 'absolute')
+      }
+    end
+
+    epp_errors.empty?
+  end
+
+  def find_domain_for_keyrelay
+    domain_name = parsed_frame.css('name').text.strip.downcase
+    domain = Epp::EppDomain.find_by(name: domain_name)
+
+    unless domain
+      epp_errors << {
+        code: '2303',
+        msg: I18n.t('errors.messages.epp_domain_not_found'),
+        value: { obj: 'name', val: domain_name }
+      }
+      return nil
+    end
+
+    domain
   end
 end

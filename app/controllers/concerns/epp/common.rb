@@ -63,6 +63,19 @@ module Epp::Common
     @errors += obj.errors[:epp_errors]
   end
 
+  def epp_request_valid?(*selectors)
+    selectors.each do |selector|
+      el = parsed_frame.css(selector).first
+      next unless el
+      epp_errors << {
+        code: '2003',
+        msg: I18n.t('errors.messages.required_parameter_missing', key: el.name)
+      } unless el.text.present?
+    end
+
+    epp_errors.empty?
+  end
+
   def xml_attrs_present?(ph, attributes)
     attributes.each do |x|
       epp_errors << {

@@ -11,7 +11,12 @@ module Epp::PollHelper
     if @message.attached_obj_type && @message.attached_obj_id
       @object = Object.const_get(@message.attached_obj_type).find(@message.attached_obj_id)
     end
-    render 'epp/poll/poll_req'
+
+    if @message.attached_obj_type == 'Keyrelay'
+      render 'epp/poll/poll_keyrelay'
+    else
+      render 'epp/poll/poll_req'
+    end
   end
 
   def ack_poll
