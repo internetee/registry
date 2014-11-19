@@ -43,6 +43,7 @@ en:
       longer: "%a, %e. %b %Y, %H:%M"
       long: "%A, %e. %B %Y, %H:%M"
       short: "%d.%m.%y, %H:%M"
+      date: "%d.%m.%y"
 
   date:
     formats:

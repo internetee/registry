@@ -54,7 +54,7 @@ describe DomainVersion do
         expect(DomainVersion.count).to eq(2)
         expect(DomainVersion.last.load_snapshot).to include({
           admin_contacts: [],
-          domain: { name: 'version.ee', status: nil },
+      #    domain: { name: 'version.ee', status: nil },
           nameservers: [],
           tech_contacts: []
         })
@@ -104,9 +104,15 @@ describe DomainVersion do
         expect(DomainVersion.last.load_snapshot[:admin_contacts].first).to include(
           name: 'admin_contact 1', phone: '+372.12345678', ident: '37605030299', email: 'admin1@v.ee'
         )
-        expect(DomainVersion.last.load_snapshot[:domain]).to eq(
-         { name: 'version.ee', status: nil }
-        )
+
+        expect(DomainVersion.last.load_snapshot[:domain][:name]).to eq('version.ee')
+        expect(DomainVersion.last.load_snapshot[:domain][:status]).to eq(nil)
+        expect(DomainVersion.last.load_snapshot[:domain][:period]).to eq(1)
+        expect(DomainVersion.last.load_snapshot[:domain][:period_unit]).to eq('y')
+        expect(DomainVersion.last.load_snapshot[:domain][:valid_from]).to eq(Time.now.utc.beginning_of_day)
+        expect(DomainVersion.last.load_snapshot[:domain][:valid_to]).to eq(Time.now.utc.beginning_of_day + 1.year)
+        expect(DomainVersion.last.load_snapshot[:domain][:period]).to eq(1)
+
         expect(DomainVersion.last.load_snapshot[:nameservers].size).to eq(1)
         expect(DomainVersion.last.load_snapshot[:nameservers].first).to include(
           hostname: 'ns.test.ee', ipv4: nil, ipv6: nil
@@ -127,9 +133,11 @@ describe DomainVersion do
         expect(DomainVersion.last.load_snapshot[:admin_contacts].first).to include(
           name: 'admin_contact 1', phone: '+372.12345678', ident: '37605030299', email: 'admin1@v.ee'
         )
-        expect(DomainVersion.last.load_snapshot[:domain]).to eq(
-         { name: 'version.ee', status: nil }
-        )
+        expect(DomainVersion.last.load_snapshot[:domain][:name]).to eq('version.ee')
+        expect(DomainVersion.last.load_snapshot[:domain][:status]).to eq(nil)
+        expect(DomainVersion.last.load_snapshot[:domain][:period]).to eq(1)
+        expect(DomainVersion.last.load_snapshot[:domain][:period_unit]).to eq('y')
+
         expect(DomainVersion.last.load_snapshot[:nameservers].size).to eq(1)
         expect(DomainVersion.last.load_snapshot[:nameservers].first).to include(
           hostname: 'ns.test.ee', ipv4: nil, ipv6: nil
@@ -163,9 +171,11 @@ describe DomainVersion do
         expect(DomainVersion.last.load_snapshot[:admin_contacts].first).to include(
           name: 'edited admin_contact', phone: '+372.12345678', ident: '37605030299', email: 'admin1@v.ee'
         )
-        expect(DomainVersion.last.load_snapshot[:domain]).to eq(
-         { name: 'version.ee', status: nil }
-        )
+        expect(DomainVersion.last.load_snapshot[:domain][:name]).to eq('version.ee')
+        expect(DomainVersion.last.load_snapshot[:domain][:status]).to eq(nil)
+        expect(DomainVersion.last.load_snapshot[:domain][:period]).to eq(1)
+        expect(DomainVersion.last.load_snapshot[:domain][:period_unit]).to eq('y')
+
         expect(DomainVersion.last.load_snapshot[:nameservers].size).to eq(1)
         expect(DomainVersion.last.load_snapshot[:nameservers].first).to include(
           hostname: 'ns.test.ee', ipv4: nil, ipv6: nil
