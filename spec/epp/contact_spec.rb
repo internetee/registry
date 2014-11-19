@@ -249,10 +249,11 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'returns info about contact' do
-        Fabricate(:contact, created_by_id: '1', code: 'info-4444', auth_info: '2fooBAR', name: 'Johnny Awesome',
+        @contact = Fabricate(:contact, registrar: zone, code: 'info-4444', name: 'Johnny Awesome',
                   address: Fabricate(:address))
 
-        response = epp_request('contacts/info.xml')
+        xml = EppXml::Contact.info(id: { value: @contact.code })
+        response = epp_request(xml, :xml, :zone)
         contact = response[:parsed].css('resData chkData')
 
         expect(response[:result_code]).to eq('1000')
@@ -275,14 +276,36 @@ describe 'EPP Contact', epp: true do
         expect(contact.css('name').present?).to be(true)
       end
 
-      it 'doesn\'t display unassociated object', pending: true do
-        pending 'Have to rework contact info request to have optional password requirement'
-        Fabricate(:contact, code: 'info-4444')
+      it 'doesn\'t display unassociated object without password' do
+        @contact = Fabricate(:contact, code: 'info-4444', registrar: zone)
 
-        response = epp_request('contacts/info.xml')
+        xml = EppXml::Contact.info(id: { value: @contact.code })
+        response = epp_request(xml, :xml, :elkdata)
+        expect(response[:result_code]).to eq('2003')
+        expect(response[:msg]).to eq('Required parameter missing: pw')
+      end
+
+      it 'doesn\'t display unassociated object with wrong password' do
+        @contact = Fabricate(:contact, code: 'info-4444', registrar: zone)
+
+        xml = EppXml::Contact.info(id: { value: @contact.code }, authInfo: { pw: { value: 'qwe321' } })
+        response = epp_request(xml, :xml, :elkdata)
         expect(response[:result_code]).to eq('2201')
         expect(response[:msg]).to eq('Authorization error')
       end
+
+      it 'doest display unassociated object with correct password' do
+        @contact = Fabricate(:contact, code: 'info-4444', registrar: zone, name: 'Johnny Awesome')
+
+        xml = EppXml::Contact.info(id: { value: @contact.code }, authInfo: { pw: { value: @contact.auth_info } })
+        response = epp_request(xml, :xml, :elkdata)
+        contact = response[:parsed].css('resData chkData')
+
+        expect(response[:result_code]).to eq('1000')
+        expect(response[:msg]).to eq('Command completed successfully')
+        expect(contact.css('name').first.text).to eq('Johnny Awesome')
+      end
+
     end
 
     context 'renew command' do

@@ -36,9 +36,8 @@ module Epp::ContactsHelper
   end
 
   def info_contact
-    # handle_errors and return unless rights?
-    @contact = find_contact
     handle_errors(@contact) and return unless @contact
+    handle_errors(@contact) and return unless rights?
     render 'epp/contacts/info'
   end
 
@@ -88,16 +87,20 @@ module Epp::ContactsHelper
     xml_attrs_present?(@ph, [['id']])
   end
 
-  ## CHECK
+  ## check
   def validate_contact_check_request
     @ph = params_hash['epp']['command']['check']['check']
     xml_attrs_present?(@ph, [['id']])
   end
 
-  ## INFO
-  def validate_contact_info_request
+  ## info
+  def validate_contact_info_request # and process
     @ph = params_hash['epp']['command']['info']['info']
     xml_attrs_present?(@ph, [['id']])
+    @contact = find_contact
+    return false unless @contact
+    return true if current_epp_user.registrar == @contact.registrar || xml_attrs_present?(@ph, [%w(authInfo pw)])
+    false
   end
 
   ## SHARED
@@ -123,7 +126,8 @@ module Epp::ContactsHelper
   def rights?
     pw = @ph.try(:[], :authInfo).try(:[], :pw)
 
-    return true if  !find_contact.nil? && find_contact.auth_info_matches(pw)
+    return true if current_epp_user.try(:registrar) == @contact.try(:registrar)
+    return true if @contact.auth_info_matches(pw)
 
     epp_errors << { code: '2201', msg: t('errors.messages.epp_authorization_error'), value: { obj: 'pw', val: pw } }
     false
