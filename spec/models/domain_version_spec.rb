@@ -54,7 +54,7 @@ describe DomainVersion do
         expect(DomainVersion.count).to eq(2)
         expect(DomainVersion.last.load_snapshot).to include({
           admin_contacts: [],
-      #    domain: { name: 'version.ee', status: nil },
+          #    domain: { name: 'version.ee', status: nil },
           nameservers: [],
           tech_contacts: []
         })
