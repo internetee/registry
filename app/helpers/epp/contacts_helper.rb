@@ -100,7 +100,7 @@ module Epp::ContactsHelper
   ## info
   def validate_contact_info_request # and process
     @ph = params_hash['epp']['command']['info']['info']
-    xml_attrs_present?(@ph, [['id']])
+    return false unless xml_attrs_present?(@ph, [['id']])
     @contact = find_contact
     return false unless @contact
     return true if current_epp_user.registrar == @contact.registrar || xml_attrs_present?(@ph, [%w(authInfo pw)])
