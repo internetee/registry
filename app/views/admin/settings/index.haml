@@ -14,7 +14,7 @@
           %tbody
             - @settings.each do |x|
               %tr
-                %td= t("shared.#{x.var}")
+                %td= t("#{x.var}")
                 - if [TrueClass, FalseClass].include?(x.value.class)
                   %td
                     = hidden_field_tag("[settings][#{x.var}]", '')

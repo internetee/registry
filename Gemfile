@@ -80,6 +80,9 @@ gem 'delayed_job_active_record', '~> 4.0.2'
 gem 'daemons'
 
 group :development, :test do
+  # for inserting dummy data
+  gem 'activerecord-import', '~> 0.6.0'
+
   gem 'capybara', '~> 2.4.1'
   # For feature testing
   # gem 'capybara-webkit', '1.2.0' # Webkit driver didn't work with turbolinks

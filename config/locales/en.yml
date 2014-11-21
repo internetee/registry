@@ -201,13 +201,6 @@ en:
               taken: 'Public key already exists'
               blank: 'Public key is missing'
 
-
-        delegation_signer:
-          attributes:
-            dnskeys:
-              out_of_range: 'DNS keys count must be between %{min}-%{max}'
-
-
     attributes:
       epp_domain: &epp_domain_attributes
         name: 'Domain name'
@@ -223,6 +216,13 @@ en:
         alg: 'Algorithm'
         public_key: 'Public key'
 
+      zonefile_setting:
+        ttl: 'TTL'
+        refresh: 'Refresh'
+        retry: 'Retry'
+        expire: 'Expire'
+        minimum_ttl: 'Minimum ttl'
+        email: 'E-Mail'
 
   errors:
     messages:
@@ -410,14 +410,6 @@ en:
     authentication_error: 'Authentication error'
     ds_data_and_key_data_must_not_exists_together: 'dsData and keyData objects must not exists together'
 
-    ns_min_count: 'Nameserver minimum count'
-    ns_max_count: 'Nameserver maximum count'
-    dnskeys_min_count: 'DNS keys minimum count'
-    dnskeys_max_count: 'DNS keys maximum count'
-    ds_data_allowed: 'DS data allowed'
-    ds_data_with_key_allowed: 'Allow DS data with key'
-    key_data_allowed: 'Allow key data'
-    ds_algorithm: 'DS algorithm'
     setting: 'Setting'
 
   registrar: 'Registrar'
@@ -428,3 +420,19 @@ en:
   zonefile: 'Zonefile'
   only_one_parameter_allowed: 'Only one parameter allowed: %{param_1} or %{param_2}'
   required_parameter_missing_choice: 'Required parameter missing: %{param_1} or %{param_2}'
+  zonefile_ttl: 'Zonefile TTL'
+  zonefile_refresh: 'Zonefile refresh'
+  zonefile_retry: 'Zonefile retry'
+  zonefile_expire: 'Zonefile expire'
+  zonefile_minimum_ttl: 'Zonefile minimum TTL'
+  zonefile_email: 'Zonefile e-mail'
+  transfer_wait_time: 'Transfer wait time'
+  ns_min_count: 'Nameserver minimum count'
+  ns_max_count: 'Nameserver maximum count'
+  dnskeys_min_count: 'DNS keys minimum count'
+  dnskeys_max_count: 'DNS keys maximum count'
+  ds_data_allowed: 'DS data allowed'
+  ds_data_with_key_allowed: 'Allow DS data with key'
+  key_data_allowed: 'Allow key data'
+  ds_algorithm: 'DS algorithm'
+  zonefile_settings: 'Zonefile settings'
