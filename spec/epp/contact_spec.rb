@@ -2,13 +2,13 @@ require 'rails_helper'
 
 describe 'EPP Contact', epp: true do
   before do
-    # we don't really care about the code validations here, it's done in models
-    # dynamic Contact.code just makes it harder to test EPP
     Contact.skip_callback(:create, :before, :generate_code)
+    Contact.skip_callback(:create, :before, :generate_auth_info)
   end
 
   after do
     Contact.set_callback(:create, :before, :generate_code)
+    Contact.set_callback(:create, :before, :generate_auth_info)
   end
 
   let(:server_zone) { Epp::Server.new({ server: 'localhost', tag: 'zone', password: 'ghyt9e4fu', port: 701 }) }
@@ -26,38 +26,55 @@ describe 'EPP Contact', epp: true do
 
     context 'create command' do
 
-      it 'fails if request is invalid' do
-        response = epp_request(contact_create_xml({ addr: { cc: false, city: false } }), :xml)
+      it 'fails if request xml is missing' do
+        xml = EppXml::Contact.create
+        response = epp_request(xml, :xml)
+        expect(response[:results][0][:result_code]).to eq('2001')
+
+        expect(response[:results][0][:msg]).to eq('Command syntax error')
+        expect(response[:results].count).to eq 1
+      end
+
+      it 'fails if request xml is missing' do
+        xml = EppXml::Contact.create(
+          postalInfo: { addr: { value: nil } }
+        )
+        response = epp_request(xml, :xml)
         expect(response[:results][0][:result_code]).to eq('2003')
         expect(response[:results][1][:result_code]).to eq('2003')
+        expect(response[:results][2][:result_code]).to eq('2003')
+        expect(response[:results][3][:result_code]).to eq('2003')
+        expect(response[:results][4][:result_code]).to eq('2003')
+        expect(response[:results][5][:result_code]).to eq('2003')
 
-        expect(response[:results][0][:msg]).to eq('Required parameter missing: city')
-        expect(response[:results][1][:msg]).to eq('Required parameter missing: cc')
-        expect(response[:results].count).to eq 2
+        expect(response[:results][0][:msg]).to eq('Required parameter missing: name')
+        expect(response[:results][1][:msg]).to eq('Required parameter missing: city')
+        expect(response[:results][2][:msg]).to eq('Required parameter missing: cc')
+        expect(response[:results][3][:msg]).to eq('Required parameter missing: ident')
+        expect(response[:results][4][:msg]).to eq('Required parameter missing: voice')
+        expect(response[:results][5][:msg]).to eq('Required parameter missing: email')
+        expect(response[:results].count).to eq 6
       end
 
       it 'successfully creates a contact' do
-        response = epp_request(contact_create_xml, :xml)
+        response = epp_request(create_contact_xml, :xml)
 
         expect(response[:result_code]).to eq('1000')
         expect(response[:msg]).to eq('Command completed successfully')
-        # expect(response[:clTRID]).to eq('ABC-12345')
-        expect(Contact.first.created_by_id).to eq 2
+
+        expect(Contact.first.registrar).to eq(zone)
+        expect(zone.epp_users).to include(Contact.first.created_by)
         expect(Contact.first.updated_by_id).to eq nil
 
         expect(Contact.count).to eq(1)
 
-        expect(Contact.first.org_name).to eq('Example Inc.')
         expect(Contact.first.ident).to eq '37605030299'
-        expect(Contact.first.ident_type).to eq 'op'
 
-        expect(Contact.first.address.street).to eq('123 Example Dr.')
-        # expect(Contact.first.address.street2).to eq('Suite 100')
-        # expect(Contact.first.address.street3).to eq nil
+        expect(Contact.first.address.street).to eq('123 Example')
       end
 
       it 'successfully adds registrar' do
-        response = epp_request(contact_create_xml, :xml)
+        response = epp_request(create_contact_xml, :xml)
 
         expect(response[:result_code]).to eq('1000')
         expect(response[:msg]).to eq('Command completed successfully')
@@ -67,17 +84,8 @@ describe 'EPP Contact', epp: true do
         expect(Contact.first.registrar).to eq(zone)
       end
 
-      it 'successfully creates contact with 2 addresses' do
-        response = epp_request('contacts/create_with_two_addresses.xml')
-
-        expect(response[:result_code]).to eq('1000')
-
-        expect(Contact.count).to eq(1)
-        expect(Address.count).to eq(1)
-      end
-
       it 'returns result data upon success' do
-        response = epp_request(contact_create_xml, :xml)
+        response = epp_request(create_contact_xml, :xml)
 
         expect(response[:result_code]).to eq('1000')
         expect(response[:msg]).to eq('Command completed successfully')
@@ -93,19 +101,22 @@ describe 'EPP Contact', epp: true do
 
     context 'update command' do
       it 'fails if request is invalid' do
-        response = epp_request('contacts/update_missing_attr.xml')
+        xml = EppXml::Contact.update
+        response = epp_request(xml, :xml) #epp_request('contacts/update_missing_attr.xml')
 
         expect(response[:results][0][:result_code]).to eq('2003')
         expect(response[:results][0][:msg]).to eq('Required parameter missing: add, rem or chg')
         expect(response[:results][1][:result_code]).to eq('2003')
         expect(response[:results][1][:msg]).to eq('Required parameter missing: id')
-        expect(response[:results].count).to eq 2
+        expect(response[:results][2][:result_code]).to eq('2003')
+        expect(response[:results][2][:msg]).to eq('Required parameter missing: pw')
+        expect(response[:results].count).to eq 3
       end
 
       it 'fails with wrong authentication info' do
-        Fabricate(:contact, code: 'sh8013', auth_info: 'secure_password')
+        Fabricate(:contact, code: 'sh8013', auth_info: 'password_wrong')
 
-        response = epp_request('contacts/update.xml')
+        response = epp_request(update_contact_xml({id: { value: 'sh8013'}}), :xml, :elkdata ) #('contacts/update.xml')
 
         expect(response[:msg]).to eq('Authorization error')
         expect(response[:result_code]).to eq('2201')
@@ -118,15 +129,13 @@ describe 'EPP Contact', epp: true do
           registrar: zone,
           email: 'not_updated@test.test',
           code: 'sh8013',
-          auth_info: '2fooBAR'
+          auth_info: 'password'
         )
-        response = epp_request('contacts/update.xml')
+        response = epp_request(update_contact_xml({id: { value: 'sh8013' }}), :xml)
 
         expect(response[:msg]).to eq('Command completed successfully')
-        expect(Contact.first.name).to eq('John Doe')
-        expect(Contact.first.email).to eq('jdoe@example.com')
-        expect(Contact.first.ident).to eq('J836954')
-        expect(Contact.first.ident_type).to eq('passport')
+        expect(Contact.first.name).to eq('John Doe Edited')
+        expect(Contact.first.email).to eq('edited@example.example')
       end
 
       it 'returns phone and email error' do
@@ -136,10 +145,18 @@ describe 'EPP Contact', epp: true do
           created_by_id: 1,
           email: 'not_updated@test.test',
           code: 'sh8013',
-          auth_info: '2fooBAR'
+          auth_info: 'password'
         )
 
-        response = epp_request('contacts/update_with_errors.xml')
+        xml = {
+          id: { value: 'sh8013' },
+          chg: {
+            voice: { value: '123213' },
+            email: { value: 'aaa' }
+          }
+        }
+
+        response = epp_request(update_contact_xml(xml), :xml)
 
         expect(response[:results][0][:result_code]).to eq('2005')
         expect(response[:results][0][:msg]).to eq('Phone nr is invalid')
@@ -162,7 +179,8 @@ describe 'EPP Contact', epp: true do
 
     context 'delete command' do
       it 'fails if request is invalid' do
-        response = epp_request('contacts/delete_missing_attr.xml')
+        xml = EppXml::Contact.delete({ uid: { value: '23123' } })
+        response = epp_request(xml, :xml)
 
         expect(response[:results][0][:result_code]).to eq('2003')
         expect(response[:results][0][:msg]).to eq('Required parameter missing: id')
@@ -171,7 +189,7 @@ describe 'EPP Contact', epp: true do
 
       it 'deletes contact' do
         Fabricate(:contact, code: 'dwa1234', created_by_id: EppUser.first.id, registrar: zone)
-        response = epp_request('contacts/delete.xml')
+        response = epp_request(delete_contact_xml({ id: { value: 'dwa1234' } }), :xml)
         expect(response[:result_code]).to eq('1000')
         expect(response[:msg]).to eq('Command completed successfully')
         expect(response[:clTRID]).to eq('ABC-12345')
@@ -180,7 +198,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'returns error if obj doesnt exist' do
-        response = epp_request('contacts/delete.xml')
+        response = epp_request(delete_contact_xml, :xml)
         expect(response[:result_code]).to eq('2303')
         expect(response[:msg]).to eq('Object does not exist')
       end
@@ -196,7 +214,7 @@ describe 'EPP Contact', epp: true do
             registrar: zone)
         )
         expect(Domain.first.owner_contact.address.present?).to be true
-        response = epp_request('contacts/delete.xml')
+        response = epp_request(delete_contact_xml({ id: { value: 'dwa1234' } }), :xml)
 
         expect(response[:result_code]).to eq('2305')
         expect(response[:msg]).to eq('Object association prohibits operation')
@@ -208,7 +226,8 @@ describe 'EPP Contact', epp: true do
 
     context 'check command' do
       it 'fails if request is invalid' do
-        response = epp_request(contact_check_xml(ids: [false]), :xml)
+        xml = EppXml::Contact.check( { uid: { value: '123asde' } } )
+        response = epp_request(xml, :xml)
 
         expect(response[:results][0][:result_code]).to eq('2003')
         expect(response[:results][0][:msg]).to eq('Required parameter missing: id')
@@ -218,7 +237,7 @@ describe 'EPP Contact', epp: true do
       it 'returns info about contact availability' do
         Fabricate(:contact, code: 'check-1234')
 
-        response = epp_request(contact_check_xml(ids: [{ id: 'check-1234' }, { id: 'check-4321' }]), :xml)
+        response = epp_request(check_multiple_contacts_xml, :xml)
 
         expect(response[:result_code]).to eq('1000')
         expect(response[:msg]).to eq('Command completed successfully')
@@ -234,7 +253,7 @@ describe 'EPP Contact', epp: true do
 
     context 'info command' do
       it 'fails if request invalid' do
-        response = epp_request('contacts/delete_missing_attr.xml')
+        response = epp_request(EppXml::Contact.info({ uid: { value: '123123' }}), :xml )
 
         expect(response[:results][0][:result_code]).to eq('2003')
         expect(response[:results][0][:msg]).to eq('Required parameter missing: id')
@@ -242,7 +261,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'returns error when object does not exist' do
-        response = epp_request('contacts/info.xml')
+        response = epp_request(info_contact_xml({ id: { value: 'info-4444' } }), :xml)
         expect(response[:result_code]).to eq('2303')
         expect(response[:msg]).to eq('Object does not exist')
         expect(response[:results][0][:value]).to eq('info-4444')
@@ -266,7 +285,7 @@ describe 'EPP Contact', epp: true do
         pending 'Disclosure needs to have some of the details worked out'
         Fabricate(:contact, code: 'info-4444', auth_info: '2fooBAR',
                   disclosure: Fabricate(:contact_disclosure, email: false, phone: false))
-        response = epp_request('contacts/info.xml')
+        response = epp_request(info_contact_xml( id: { value: 'info-4444' } ), :xml)
         contact = response[:parsed].css('resData chkData')
 
         expect(response[:result_code]).to eq('1000')

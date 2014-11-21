@@ -11,7 +11,7 @@ describe '.extract_attributes' do
   end
 
   it 'should return empty hash if no disclosure' do
-    parsed_frame =  Nokogiri::XML(contact_create_xml).remove_namespaces!
+    parsed_frame =  Nokogiri::XML(create_contact_xml).remove_namespaces!
     result = ContactDisclosure.extract_attributes(parsed_frame)
     expect(result).to eq({})
   end
