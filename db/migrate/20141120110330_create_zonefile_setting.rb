@@ -8,6 +8,7 @@ class CreateZonefileSetting < ActiveRecord::Migration
       t.integer :expire
       t.integer :minimum_ttl
       t.string :email
+      t.string :master_nameserver
 
       t.timestamps
     end
@@ -20,7 +21,19 @@ class CreateZonefileSetting < ActiveRecord::Migration
       retry: 900,
       expire: 1209600,
       minimum_ttl: 3600,
-      email: 'hostmaster.eestiinternet.ee'
+      email: 'hostmaster.eestiinternet.ee',
+      master_nameserver: 'ns.tld.ee'
+    })
+
+    ZonefileSetting.create({
+      origin: 'pri.ee',
+      ttl: 43200,
+      refresh: 3600,
+      retry: 900,
+      expire: 1209600,
+      minimum_ttl: 3600,
+      email: 'hostmaster.eestiinternet.ee',
+      master_nameserver: 'ns.tld.ee'
     })
   end
 end

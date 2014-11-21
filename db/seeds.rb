@@ -78,13 +78,4 @@ Setting.ns_max_count = 11
 
 Setting.transfer_wait_time = 0
 
-# rubocop: disable Style/NumericLiterals
-Setting.zonefile_ttl = 43200
-Setting.zonefile_refresh = 3600
-Setting.zonefile_retry = 900
-Setting.zonefile_expire = 1209600
-Setting.zonefile_minimum_ttl = 3600
-Setting.zonefile_email = 'hostmaster.eestiinternet.ee'
-# rubocop: enable Style/NumericLiterals
-
 # Setting.whois_enabled = true only uncomment this if you wish whois

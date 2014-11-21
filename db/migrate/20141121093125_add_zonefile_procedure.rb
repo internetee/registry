@@ -6,17 +6,29 @@ class AddZonefileProcedure < ActiveRecord::Migration
       RETURNS text AS $$
       DECLARE
         zone_header text := concat('$ORIGIN ', i_origin, '.');
-        tmp text := '';
+        include_filter varchar := '';
+        exclude_filter varchar := '';
         ns_records text := '';
         a_records text := '';
         a4_records text := '';
         ds_records text := '';
       BEGIN
+        -- define filters
+        include_filter = '%' || i_origin;
+
+        -- for %.%.%
+        IF i_origin ~ '\.' THEN
+          exclude_filter := '';
+        -- for %.%
+        ELSE
+          exclude_filter = '%.%.' || i_origin;
+        END IF;
+
         -- zonefile header
         SELECT concat(
           format('%-10s', '$ORIGIN'), i_origin, '.', chr(10),
           format('%-10s', '$TTL'), zf.ttl, chr(10), chr(10),
-          format('%-10s', i_origin || '.'), 'IN SOA ', 'ns.tld.ee', '. ', zf.email, '. (', chr(10),
+          format('%-10s', i_origin || '.'), 'IN SOA ', zf.master_nameserver, '. ', zf.email, '. (', chr(10),
           format('%-17s', ''), format('%-12s', '2014111210'), '; serial number', chr(10),
           format('%-17s', ''), format('%-12s', zf.refresh), '; refresh, seconds', chr(10),
           format('%-17s', ''), format('%-12s', zf.retry), '; retry, seconds', chr(10),
@@ -24,14 +36,14 @@ class AddZonefileProcedure < ActiveRecord::Migration
           format('%-17s', ''), format('%-12s', zf.minimum_ttl), '; minimum TTL, seconds', chr(10),
           format('%-17s', ''), ')'
         ) FROM zonefile_settings zf WHERE i_origin = zf.origin INTO zone_header;
-
+        RAISE NOTICE '%', include_filter;
         -- ns records
         SELECT array_to_string(
           array(
             SELECT concat(d.name, '. IN NS ', ns.hostname, '.')
             FROM domains d
             JOIN nameservers ns ON ns.domain_id = d.id
-            WHERE d.name LIKE '%' || i_origin
+            WHERE d.name LIKE include_filter
             ORDER BY
             CASE d.name
               WHEN i_origin THEN 1

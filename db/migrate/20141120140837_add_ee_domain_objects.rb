@@ -45,14 +45,26 @@ class AddEeDomainObjects < ActiveRecord::Migration
       admin_contacts: [c],
       registrar: r
     )
+
+    pri = Domain.new(
+      name: 'pri.ee',
+      valid_to: Date.new(9999, 1, 1),
+      period: 1,
+      period_unit: 'y',
+      owner_contact: c,
+      admin_contacts: [c],
+      registrar: r
+    )
+
+    pri.save(validate: false)
   end
   # rubocop:enable Metrics/MethodLength
 
   def down
     Domain.find_by(name: 'ee').destroy
+    Domain.find_by(name: 'pri.ee').destroy
     EppUser.find_by(username: 'testeis').destroy
     Contact.find_by(name: 'EIS').destroy
     Registrar.find_by(name: 'EIS').destroy
-
   end
 end

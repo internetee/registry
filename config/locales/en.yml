@@ -221,7 +221,7 @@ en:
         refresh: 'Refresh'
         retry: 'Retry'
         expire: 'Expire'
-        minimum_ttl: 'Minimum ttl'
+        minimum_ttl: 'Minimum TTL'
         email: 'E-Mail'
 
   errors:
@@ -420,12 +420,6 @@ en:
   zonefile: 'Zonefile'
   only_one_parameter_allowed: 'Only one parameter allowed: %{param_1} or %{param_2}'
   required_parameter_missing_choice: 'Required parameter missing: %{param_1} or %{param_2}'
-  zonefile_ttl: 'Zonefile TTL'
-  zonefile_refresh: 'Zonefile refresh'
-  zonefile_retry: 'Zonefile retry'
-  zonefile_expire: 'Zonefile expire'
-  zonefile_minimum_ttl: 'Zonefile minimum TTL'
-  zonefile_email: 'Zonefile e-mail'
   transfer_wait_time: 'Transfer wait time'
   ns_min_count: 'Nameserver minimum count'
   ns_max_count: 'Nameserver maximum count'
