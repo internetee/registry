@@ -1,5 +1,5 @@
 module EppContactXmlHelper
-  def create_contact_xml(xml_params={})
+  def create_contact_xml(xml_params = {})
     defaults = {
       postalInfo: {
         name: { value: 'John Doe' },
@@ -18,7 +18,7 @@ module EppContactXmlHelper
     EppXml::Contact.create(xml_params)
   end
 
-  def update_contact_xml(xml_params={})
+  def update_contact_xml(xml_params = {})
     defaults = {
       id: { value: 'asd123123er' },
       authInfo: { pw: { value: 'password' } },
@@ -34,19 +34,19 @@ module EppContactXmlHelper
     EppXml::Contact.update(xml_params)
   end
 
-  def delete_contact_xml(xml_params={})
+  def delete_contact_xml(xml_params = {})
     defaults = { id: { value: 'sh8012' } }
     xml_params = defaults.deep_merge(xml_params)
     EppXml::Contact.delete(xml_params)
   end
 
-  def info_contact_xml(xml_params={})
+  def info_contact_xml(xml_params = {})
     defaults = { id: { value: 'sh8012' }, authInfo: { pw: { value: 'password' } } }
     xml_params = defaults.deep_merge(xml_params)
     EppXml::Contact.info(xml_params)
   end
 
-  def check_contact_xml(xml_params={})
+  def check_contact_xml(xml_params = {})
     defaults = {
       id: { value: 'ad123c3' }
     }
@@ -69,9 +69,7 @@ module EppContactXmlHelper
       </command>
     </epp>'
   end
-
 end
-
 
 RSpec.configure do |c|
   c.include EppContactXmlHelper

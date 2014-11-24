@@ -102,7 +102,7 @@ describe 'EPP Contact', epp: true do
     context 'update command' do
       it 'fails if request is invalid' do
         xml = EppXml::Contact.update
-        response = epp_request(xml, :xml) #epp_request('contacts/update_missing_attr.xml')
+        response = epp_request(xml, :xml) # epp_request('contacts/update_missing_attr.xml')
 
         expect(response[:results][0][:result_code]).to eq('2003')
         expect(response[:results][0][:msg]).to eq('Required parameter missing: add, rem or chg')
@@ -116,7 +116,7 @@ describe 'EPP Contact', epp: true do
       it 'fails with wrong authentication info' do
         Fabricate(:contact, code: 'sh8013', auth_info: 'password_wrong')
 
-        response = epp_request(update_contact_xml({id: { value: 'sh8013'}}), :xml, :elkdata ) #('contacts/update.xml')
+        response = epp_request(update_contact_xml({ id: { value: 'sh8013' } }), :xml, :elkdata)
 
         expect(response[:msg]).to eq('Authorization error')
         expect(response[:result_code]).to eq('2201')
@@ -131,7 +131,7 @@ describe 'EPP Contact', epp: true do
           code: 'sh8013',
           auth_info: 'password'
         )
-        response = epp_request(update_contact_xml({id: { value: 'sh8013' }}), :xml)
+        response = epp_request(update_contact_xml({ id: { value: 'sh8013' } }), :xml)
 
         expect(response[:msg]).to eq('Command completed successfully')
         expect(Contact.first.name).to eq('John Doe Edited')
@@ -226,7 +226,7 @@ describe 'EPP Contact', epp: true do
 
     context 'check command' do
       it 'fails if request is invalid' do
-        xml = EppXml::Contact.check( { uid: { value: '123asde' } } )
+        xml = EppXml::Contact.check({ uid: { value: '123asde' } })
         response = epp_request(xml, :xml)
 
         expect(response[:results][0][:result_code]).to eq('2003')
@@ -253,7 +253,7 @@ describe 'EPP Contact', epp: true do
 
     context 'info command' do
       it 'fails if request invalid' do
-        response = epp_request(EppXml::Contact.info({ uid: { value: '123123' }}), :xml )
+        response = epp_request(EppXml::Contact.info({ uid: { value: '123123' } }), :xml)
 
         expect(response[:results][0][:result_code]).to eq('2003')
         expect(response[:results][0][:msg]).to eq('Required parameter missing: id')
@@ -285,7 +285,7 @@ describe 'EPP Contact', epp: true do
         pending 'Disclosure needs to have some of the details worked out'
         Fabricate(:contact, code: 'info-4444', auth_info: '2fooBAR',
                   disclosure: Fabricate(:contact_disclosure, email: false, phone: false))
-        response = epp_request(info_contact_xml( id: { value: 'info-4444' } ), :xml)
+        response = epp_request(info_contact_xml(id: { value: 'info-4444' }), :xml)
         contact = response[:parsed].css('resData chkData')
 
         expect(response[:result_code]).to eq('1000')

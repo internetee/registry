@@ -21,7 +21,7 @@ module Epp::ContactsHelper
   # rubocop:disable Metrics/CyclomaticComplexity
   def delete_contact
     @contact = find_contact
-    handle_errors(@contact) and return unless rights? #owner?
+    handle_errors(@contact) and return unless rights? # owner?
     handle_errors(@contact) and return unless @contact
     handle_errors(@contact) and return unless @contact.destroy_and_clean
 
@@ -54,15 +54,14 @@ module Epp::ContactsHelper
   def validate_contact_create_request
     @ph = params_hash['epp']['command']['create']['create']
     return false unless validate_params
-    #xml_attrs_present?(@ph, [%w(postalInfo)])
+    # xml_attrs_present?(@ph, [%w(postalInfo)])
     xml_attrs_present?(@ph, [%w(postalInfo name), %w(postalInfo addr city), %w(postalInfo addr cc),
                              %w(ident), %w(voice), %w(email)])
 
-
-    return epp_errors.empty? #unless @ph['postalInfo'].is_a?(Hash) || @ph['postalInfo'].is_a?(Array)
+    epp_errors.empty? # unless @ph['postalInfo'].is_a?(Hash) || @ph['postalInfo'].is_a?(Array)
 
     # (epp_errors << Address.validate_postal_info_types(parsed_frame)).flatten!
-    #xml_attrs_array_present?(@ph['postalInfo'], [%w(name), %w(addr city), %w(addr cc)])
+    # xml_attrs_array_present?(@ph['postalInfo'], [%w(name), %w(addr city), %w(addr cc)])
   end
 
   ## UPDATE
