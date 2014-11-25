@@ -14,9 +14,9 @@ feature 'Sessions', type: :feature do
 
   scenario 'Admin logs in' do
     visit root_path
-    expect(page).to have_button('ID card (gitlab)')
+    expect(page).to have_button('ID card (user1)')
 
-    click_on 'ID card (gitlab)'
+    click_on 'ID card (user1)'
     expect(page).to have_text('Welcome!')
 
     uri = URI.parse(current_url)

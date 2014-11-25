@@ -2,7 +2,7 @@ require 'rails_helper'
 
 feature 'Setting management', type: :feature do
   let(:zone) { Fabricate(:registrar) }
-  let(:zone_user) { Fabricate(:user, registrar: zone, username: 'gitlab', admin: true, identity_code: '37810013087') }
+  let(:zone_user) { Fabricate(:user, registrar: zone, username: 'user1', admin: true, identity_code: '37810013087') }
 
   background { create_settings }
 
