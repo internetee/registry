@@ -114,12 +114,34 @@ Wait for the greeting message on the STD, then send EPP/TCP frame:
 ```xml
 <epp><command>
   <login>
-    <clID>test</clID>
-    <pw>test</pw>
+    <clID>registrar1</clID>
+    <pw>test1</pw>
   </login>
   <clTRID>sample1trid</clTRID>
 </command></epp>
 ```
+
+All demo data locates at: 
+
+    db/seeds.rb
+
+There are two type of users: admin users and EPP users.
+
+
+### EPP web client
+
+Please follow EPP web client readme:
+
+    https://github.com/internetee/EPP-web-client
+
+
+### WHOIS server
+
+Please follow WHOIS server readme:
+
+    https://github.com/internetee/whois
+
+
 
 Testing
 ---
