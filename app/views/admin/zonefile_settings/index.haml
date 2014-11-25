@@ -17,4 +17,4 @@
             %tr
               %td= link_to(x, edit_admin_zonefile_setting_path(x))
               %td
-                = link_to(t('generate_zonefile'), admin_zonefiles_path, class: 'btn btn-xs btn-primary')
+                = link_to(t('generate_zonefile'), admin_zonefiles_path(origin: x.origin), method: 'post', class: 'btn btn-xs btn-primary')

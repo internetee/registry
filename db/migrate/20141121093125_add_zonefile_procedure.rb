@@ -17,11 +17,11 @@ class AddZonefileProcedure < ActiveRecord::Migration
         include_filter = '%' || i_origin;
 
         -- for %.%.%
-        IF i_origin ~ '\.' THEN
+        IF i_origin ~ '\\.' THEN
           exclude_filter := '';
         -- for %.%
         ELSE
-          exclude_filter = '%.%.' || i_origin;
+          exclude_filter := '%.%.' || i_origin;
         END IF;
 
         -- zonefile header
@@ -36,14 +36,14 @@ class AddZonefileProcedure < ActiveRecord::Migration
           format('%-17s', ''), format('%-12s', zf.minimum_ttl), '; minimum TTL, seconds', chr(10),
           format('%-17s', ''), ')'
         ) FROM zonefile_settings zf WHERE i_origin = zf.origin INTO zone_header;
-        RAISE NOTICE '%', include_filter;
+
         -- ns records
         SELECT array_to_string(
           array(
             SELECT concat(d.name, '. IN NS ', ns.hostname, '.')
             FROM domains d
             JOIN nameservers ns ON ns.domain_id = d.id
-            WHERE d.name LIKE include_filter
+            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
             ORDER BY
             CASE d.name
               WHEN i_origin THEN 1
@@ -52,17 +52,25 @@ class AddZonefileProcedure < ActiveRecord::Migration
           chr(10)
         ) INTO ns_records;
 
+        -- use caching
+
+          /*SELECT concat(cns.hostname, '. IN A ', cns.ipv4, '.') FROM cached_nameservers cns WHERE EXISTS (
+            SELECT 1
+            FROM nameservers ns
+            JOIN domains d ON d.id = ns.domain_id
+            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
+            AND ns.hostname = cns.hostname AND ns.ipv4 = cns.ipv4 AND ns.ipv6 = cns.ipv6
+            AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> ''
+          );*/
+
         -- a records
         SELECT array_to_string(
           array(
             SELECT concat(ns.hostname, '. IN A ', ns.ipv4, '.')
             FROM domains d
             JOIN nameservers ns ON ns.domain_id = d.id
-            WHERE d.name LIKE '%' || i_origin AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> ''
-            ORDER BY
-            CASE d.name
-              WHEN i_origin THEN 1
-            END
+            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
+            AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> ''
           ),
           chr(10)
         ) INTO a_records;
@@ -73,11 +81,8 @@ class AddZonefileProcedure < ActiveRecord::Migration
             SELECT concat(ns.hostname, '. IN AAAA ', ns.ipv6, '.')
             FROM domains d
             JOIN nameservers ns ON ns.domain_id = d.id
-            WHERE d.name LIKE '%' || i_origin AND ns.ipv6 IS NOT NULL AND ns.ipv6 <> ''
-            ORDER BY
-            CASE d.name
-              WHEN i_origin THEN 1
-            END
+            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
+            AND ns.ipv6 IS NOT NULL AND ns.ipv6 <> ''
           ),
           chr(10)
         ) INTO a4_records;
@@ -86,16 +91,12 @@ class AddZonefileProcedure < ActiveRecord::Migration
         SELECT array_to_string(
           array(
             SELECT concat(
-              d.name, '. 86400 IN ', dk.ds_key_tag, ' ',
+              d.name, '. 86400 IN DS ', dk.ds_key_tag, ' ',
               dk.ds_alg, ' ', dk.ds_digest_type, ' ', dk.ds_digest
             )
             FROM domains d
             JOIN dnskeys dk ON dk.domain_id = d.id
-            WHERE d.name LIKE '%' || i_origin
-            ORDER BY
-            CASE d.name
-              WHEN i_origin THEN 1
-            END
+            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
             ),
           chr(10)
         ) INTO ds_records;

@@ -1,14 +1,14 @@
 class AddEeDomainObjects < ActiveRecord::Migration
   # rubocop:disable Metrics/MethodLength
   def up
-    r = Registrar.create(
+    r = Registrar.create!(
       name: 'EIS',
       reg_no: '123321',
       address: 'Tallinn',
       country: Country.estonia
     )
 
-    c = Contact.create(
+    c = Contact.create!(
       name: 'EIS',
       phone: '+372.123321',
       email: 'info@testing.ee',
@@ -21,14 +21,14 @@ class AddEeDomainObjects < ActiveRecord::Migration
       registrar: r
     )
 
-    EppUser.create(
+    EppUser.create!(
       registrar: r,
       username: 'testeis',
       password: 'testeis',
       active: true
     )
 
-    Domain.create(
+    Domain.create!(
       name: 'ee',
       valid_to: Date.new(9999, 1, 1),
       period: 1,
@@ -46,17 +46,23 @@ class AddEeDomainObjects < ActiveRecord::Migration
       registrar: r
     )
 
-    pri = Domain.new(
+    Domain.create!(
       name: 'pri.ee',
       valid_to: Date.new(9999, 1, 1),
       period: 1,
       period_unit: 'y',
       owner_contact: c,
+      nameservers: [
+        Nameserver.create(hostname: 'ns.tld.ee', ipv4: '195.43.87.10'),
+        Nameserver.create(hostname: 'b.tld.ee', ipv4: '194.146.106.110', ipv6: '2001:67c:1010:28::53'),
+        Nameserver.create(hostname: 'e.tld.ee', ipv4: '204.61.216.36', ipv6: '2001:678:94:53::53'),
+        Nameserver.create(hostname: 'ee.aso.ee', ipv4: '213.184.51.122', ipv6: '2a02:88:0:21::2'),
+        Nameserver.create(hostname: 'ns.ut.ee', ipv4: '193.40.5.99', ipv6: ''),
+        Nameserver.create(hostname: 'sunic.sunet.se', ipv4: '195.80.103.202')
+      ],
       admin_contacts: [c],
       registrar: r
     )
-
-    pri.save(validate: false)
   end
   # rubocop:enable Metrics/MethodLength
 
