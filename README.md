@@ -19,6 +19,12 @@ Usual Rails 4 app installation, rvm and bundler are your friends.
     rake db:setup
     mv config/secrets-example.yml config/secrets.yml # generate your own keys
 
+If you desire other database locale, you have to create database manually first and
+skip rake db:setup. Example: 
+    
+    create database registry owner registry encoding 'UTF-8' LC_COLLATE 'et_EE.utf8' LC_CTYPE 'et_EE.utf8' template template0;
+    rake db:schema:load
+    rake db:seeds
 
 ### Apache with patched mod_epp (Debian 7/Ubuntu 14.04 LTS)
 
