@@ -1,10 +1,8 @@
 Fabricator(:contact_disclosure) do
   email true
   phone true
-  loc_addr true
-  loc_name true
-  loc_org_name true
-  int_name true
-  int_org_name true
-  int_addr true
+  fax true
+  address true
+  name true
+  org_name true
 end

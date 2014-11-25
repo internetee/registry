@@ -25,7 +25,6 @@ describe 'EPP Contact', epp: true do
     end
 
     context 'create command' do
-
       it 'fails if request xml is missing' do
         xml = EppXml::Contact.create
         response = epp_request(xml, :xml)
@@ -118,8 +117,8 @@ describe 'EPP Contact', epp: true do
 
         response = epp_request(update_contact_xml({ id: { value: 'sh8013' } }), :xml, :elkdata)
 
-        expect(response[:msg]).to eq('Authorization error')
-        expect(response[:result_code]).to eq('2201')
+        expect(response[:msg]).to eq('Authentication error')
+        expect(response[:result_code]).to eq('2200')
       end
 
       it 'is succesful' do
@@ -165,16 +164,21 @@ describe 'EPP Contact', epp: true do
         expect(response[:results][1][:msg]).to eq('Email is invalid')
       end
 
-      # it 'updates disclosure items', pending: true do
-      #   pending 'Disclosure needs to be remodeled a bit'
-      #   Fabricate(:contact, code: 'sh8013', auth_info: '2fooBAR', registrar: zone, created_by_id: EppUser.first.id,
-      #             disclosure: Fabricate(:contact_disclosure, phone: true, email: true))
-      #   epp_request('contacts/update.xml')
-      #
-      #   expect(Contact.last.disclosure.phone).to eq(false)
-      #   expect(Contact.last.disclosure.email).to eq(false)
-      #   expect(Contact.count).to eq(1)
-      # end
+      it 'updates disclosure items' do
+        Fabricate(:contact, code: 'sh8013', auth_info: '2fooBAR', registrar: zone, created_by_id: EppUser.first.id,
+                  disclosure: Fabricate(:contact_disclosure, phone: true, email: true))
+        xml = {
+          id: { value: 'sh8013' },
+          authInfo: { pw: { value: '2fooBAR' } }
+        }
+        @response = epp_request(update_contact_xml(xml), :xml)
+
+        expect(@response[:results][0][:result_code]).to eq('1000')
+
+        expect(Contact.last.disclosure.phone).to eq(false)
+        expect(Contact.last.disclosure.email).to eq(false)
+        expect(Contact.count).to eq(1)
+      end
     end
 
     context 'delete command' do
@@ -252,6 +256,58 @@ describe 'EPP Contact', epp: true do
     end
 
     context 'info command' do
+      it 'discloses items with wrong password when queried by owner' do
+        @contact = Fabricate(:contact, registrar: zone, code: 'info-4444', name: 'Johnny Awesome', auth_info: 'asde',
+                  address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
+
+        xml = EppXml::Contact.info({ id: { value: @contact.code } })
+        response = epp_request(xml, :xml, :zone)
+        contact = response[:parsed].css('resData chkData')
+
+        expect(response[:result_code]).to eq('1000')
+        expect(response[:msg]).to eq('Command completed successfully')
+        expect(contact.css('name').first.text).to eq('Johnny Awesome')
+      end
+
+      it 'returns auth error for non-owner with wrong password' do
+        @contact = Fabricate(:contact, registrar: elkdata, code: 'info-4444', name: 'Johnny Awesome', auth_info: 'asde',
+                  address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
+
+        xml = EppXml::Contact.info({ id: { value: @contact.code }, authInfo: { pw: { value: 'asdesde' } } })
+        response = epp_request(xml, :xml, :zone)
+
+        expect(response[:result_code]).to eq('2200')
+        expect(response[:msg]).to eq('Authentication error')
+      end
+
+      it 'doesn\'t disclose items to non-owner with right password' do
+        @contact = Fabricate(:contact, registrar: elkdata, code: 'info-4444',
+                  name: 'Johnny Awesome', auth_info: 'password',
+                  address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
+
+        xml = EppXml::Contact.info({ id: { value: @contact.code }, authInfo: { pw: { value: 'password' } } })
+        response = epp_request(xml, :xml, :zone)
+        contact = response[:parsed].css('resData chkData')
+
+        expect(response[:result_code]).to eq('1000')
+        expect(response[:msg]).to eq('Command completed successfully')
+        expect(contact.css('name').first).to eq(nil)
+      end
+
+      it 'discloses items to owner' do
+        @contact = Fabricate(:contact, registrar: zone, code: 'info-4444', name: 'Johnny Awesome',
+                  auth_info: 'password',
+                  address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
+
+        xml = EppXml::Contact.info({ id: { value: @contact.code } })
+        response = epp_request(xml, :xml, :zone)
+        contact = response[:parsed].css('resData chkData')
+
+        expect(response[:result_code]).to eq('1000')
+        expect(response[:msg]).to eq('Command completed successfully')
+        expect(contact.css('name').first.text).to eq('Johnny Awesome')
+      end
+
       it 'fails if request invalid' do
         response = epp_request(EppXml::Contact.info({ uid: { value: '123123' } }), :xml)
 
@@ -281,11 +337,13 @@ describe 'EPP Contact', epp: true do
 
       end
 
-      it 'doesn\'t disclose private elements', pending: true do
-        pending 'Disclosure needs to have some of the details worked out'
-        Fabricate(:contact, code: 'info-4444', auth_info: '2fooBAR',
-                  disclosure: Fabricate(:contact_disclosure, email: false, phone: false))
-        response = epp_request(info_contact_xml(id: { value: 'info-4444' }), :xml)
+      it 'doesn\'t disclose private elements' do
+        Fabricate(:contact, code: 'info-4444', auth_info: '2fooBAR', registrar: elkdata,
+                  disclosure: Fabricate(:contact_disclosure, name: true, email: false, phone: false))
+
+        xml = EppXml::Contact.info({ id: { value: 'info-4444' }, authInfo: { pw: { value: '2fooBAR' } } })
+
+        response = epp_request(xml, :xml, :zone)
         contact = response[:parsed].css('resData chkData')
 
         expect(response[:result_code]).to eq('1000')
@@ -309,22 +367,9 @@ describe 'EPP Contact', epp: true do
 
         xml = EppXml::Contact.info(id: { value: @contact.code }, authInfo: { pw: { value: 'qwe321' } })
         response = epp_request(xml, :xml, :elkdata)
-        expect(response[:result_code]).to eq('2201')
-        expect(response[:msg]).to eq('Authorization error')
+        expect(response[:result_code]).to eq('2200')
+        expect(response[:msg]).to eq('Authentication error')
       end
-
-      it 'doest display unassociated object with correct password' do
-        @contact = Fabricate(:contact, code: 'info-4444', registrar: zone, name: 'Johnny Awesome')
-
-        xml = EppXml::Contact.info(id: { value: @contact.code }, authInfo: { pw: { value: @contact.auth_info } })
-        response = epp_request(xml, :xml, :elkdata)
-        contact = response[:parsed].css('resData chkData')
-
-        expect(response[:result_code]).to eq('1000')
-        expect(response[:msg]).to eq('Command completed successfully')
-        expect(contact.css('name').first.text).to eq('Johnny Awesome')
-      end
-
     end
 
     context 'renew command' do

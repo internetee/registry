@@ -38,6 +38,8 @@ module Epp::ContactsHelper
   def info_contact
     handle_errors(@contact) and return unless @contact
     handle_errors(@contact) and return unless rights?
+    @disclosure = @contact.disclosure
+    @owner = owner?(false)
     render 'epp/contacts/info'
   end
 
@@ -54,14 +56,10 @@ module Epp::ContactsHelper
   def validate_contact_create_request
     @ph = params_hash['epp']['command']['create']['create']
     return false unless validate_params
-    # xml_attrs_present?(@ph, [%w(postalInfo)])
     xml_attrs_present?(@ph, [%w(postalInfo name), %w(postalInfo addr city), %w(postalInfo addr cc),
                              %w(ident), %w(voice), %w(email)])
 
-    epp_errors.empty? # unless @ph['postalInfo'].is_a?(Hash) || @ph['postalInfo'].is_a?(Array)
-
-    # (epp_errors << Address.validate_postal_info_types(parsed_frame)).flatten!
-    # xml_attrs_array_present?(@ph['postalInfo'], [%w(name), %w(addr city), %w(addr cc)])
+    epp_errors.empty?
   end
 
   ## UPDATE
@@ -118,10 +116,10 @@ module Epp::ContactsHelper
     contact
   end
 
-  def owner?
+  def owner?(with_errors = true)
     return false unless find_contact
-    # return true if current_epp_user.registrar == find_contact.created_by.try(:registrar)
     return true if @contact.registrar == current_epp_user.registrar
+    return false unless with_errors
     epp_errors << { code: '2201', msg: t('errors.messages.epp_authorization_error') }
     false
   end
@@ -132,14 +130,14 @@ module Epp::ContactsHelper
     return true if current_epp_user.try(:registrar) == @contact.try(:registrar)
     return true if pw && @contact.auth_info_matches(pw) # @contact.try(:auth_info_matches, pw)
 
-    epp_errors << { code: '2201', msg: t('errors.messages.epp_authorization_error'), value: { obj: 'pw', val: pw } }
+    epp_errors << { code: '2200', msg: t('errors.messages.epp_authentication_error') }
     false
   end
 
   def update_rights?
     pw = @ph.try(:[], :authInfo).try(:[], :pw)
     return true if pw && @contact.auth_info_matches(pw)
-    epp_errors << { code: '2201', msg: t('errors.messages.epp_authorization_error'), value: { obj: 'pw', val: pw } }
+    epp_errors << { code: '2200', msg: t('errors.messages.epp_authentication_error') }
     false
   end
 

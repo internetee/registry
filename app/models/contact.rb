@@ -5,7 +5,7 @@ class Contact < ActiveRecord::Base
   include EppErrors
 
   has_one :address, dependent: :destroy
-  has_one :disclosure, class_name: 'ContactDisclosure'
+  has_one :disclosure, class_name: 'ContactDisclosure', dependent: :destroy
 
   has_many :domain_contacts
   has_many :domains, through: :domain_contacts
