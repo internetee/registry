@@ -431,5 +431,6 @@ en:
   required_parameter_missing_choice: 'Required parameter missing: %{param_1} or %{param_2}'
   background_jobs: Background jobs
   domain_history: Domain history
+  domains_history: Domains history
   admin_users: Admin users
   epp_users: EPP users
