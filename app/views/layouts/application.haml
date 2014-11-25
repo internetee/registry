@@ -39,14 +39,12 @@
 
                 %li.divider
                 %li.dropdown-header= t('shared.users')
-                %li= link_to t('shared.epp_users'), admin_epp_users_path
-                %li= link_to t('shared.users'), admin_users_path
-
-
-
+                %li= link_to t(:admin_users), admin_users_path
+                %li= link_to t(:epp_users), admin_epp_users_path
 
           %ul.nav.navbar-nav.navbar-right
             %li= link_to t('shared.log_out', user: current_user), '/logout'
+
         / /.nav-collapse
     .container
       - display = (flash.empty?) ? 'none' : 'block'
