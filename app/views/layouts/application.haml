@@ -23,34 +23,26 @@
           = link_to APP_CONFIG['app_name'], root_path, class: 'navbar-brand'
         .navbar-collapse.collapse
           %ul.nav.navbar-nav
-            %li
-              = link_to t('shared.domains'), admin_domains_path
-            %li
-              = link_to t('shared.contacts'), admin_contacts_path
-            %li
-              = link_to t('shared.registrars'), admin_registrars_path
+            %li= link_to t('shared.domains'), admin_domains_path
+            %li= link_to t('shared.contacts'), admin_contacts_path
+            %li= link_to t('shared.registrars'), admin_registrars_path
             %li.dropdown
               %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
                 = t('shared.settings')
                 %span.caret
               %ul.dropdown-menu{role: "menu"}
                 %li.dropdown-header= t('shared.system')
-                %li
-                  = link_to t('shared.settings'), admin_settings_path
-                %li
-                  = link_to t('zonefile'), admin_zonefiles_path
+                %li= link_to t('shared.settings'), admin_settings_path
+                %li= link_to t(:zonefile), admin_zonefiles_path
+                %li= link_to t(:domains_history), admin_domain_versions_path
+                %li= link_to t(:background_jobs), admin_delayed_jobs_path
+
                 %li.divider
                 %li.dropdown-header= t('shared.users')
-                %li
-                  = link_to t('shared.epp_users'), admin_epp_users_path
-                %li
-                  = link_to t('shared.users'), admin_users_path
+                %li= link_to t('shared.epp_users'), admin_epp_users_path
+                %li= link_to t('shared.users'), admin_users_path
 
-            %li
-              = link_to t('shared.domains_history'), admin_domain_versions_path
 
-            %li
-              = link_to t('shared.jobs'), admin_delayed_jobs_path
 
 
           %ul.nav.navbar-nav.navbar-right

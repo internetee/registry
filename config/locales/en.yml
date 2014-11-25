@@ -265,7 +265,6 @@ en:
     registrar: 'Registrar'
     owner: 'Owner'
     domain_details: 'Domain details'
-    domain_history: 'Domain history'
     registered_at: 'Registered at'
     password: 'Password'
     valid_from: 'Valid from'
@@ -430,3 +429,5 @@ en:
   zonefile: 'Zonefile'
   only_one_parameter_allowed: 'Only one parameter allowed: %{param_1} or %{param_2}'
   required_parameter_missing_choice: 'Required parameter missing: %{param_1} or %{param_2}'
+  background_jobs: Background jobs
+  domain_history: Domain history
