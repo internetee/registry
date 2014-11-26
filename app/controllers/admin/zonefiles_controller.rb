@@ -2,7 +2,6 @@ class Admin::ZonefilesController < ApplicationController
   # TODO: Refactor this
   # rubocop:disable Metrics/MethodLength
   def index
-
   end
 
   def create
