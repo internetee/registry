@@ -22,6 +22,7 @@ describe 'EPP Contact', epp: true do
       Fabricate(:epp_user, username: 'zone', registrar: zone)
       Fabricate(:epp_user, username: 'elkdata', registrar: elkdata)
       create_settings
+      create_disclosure_settings
     end
 
     context 'create command' do
@@ -95,6 +96,50 @@ describe 'EPP Contact', epp: true do
         expect(id.text.length).to eq(8)
         # 5 seconds for what-ever weird lag reasons might happen
         expect(cr_date.text.to_time).to be_within(5).of(Time.now)
+      end
+
+      it 'creates disclosure data' do
+        xml = {
+          disclose: { value: {
+            voice: { value: '' },
+            addr: { value: '' },
+            name: { value: '' },
+            org_name: { value: '' },
+            email: { value: '' },
+            fax: { value: '' }
+          }, attrs: { flag: '1' }
+          }
+        }
+
+        response = epp_request(create_contact_xml(xml), :xml)
+        expect(response[:result_code]).to eq('1000')
+
+        expect(Contact.last.disclosure.name).to eq(true)
+        expect(Contact.last.disclosure.org_name).to eq(true)
+        expect(Contact.last.disclosure.phone).to eq(true)
+        expect(Contact.last.disclosure.fax).to eq(true)
+        expect(Contact.last.disclosure.email).to eq(true)
+        expect(Contact.last.disclosure.address).to eq(true)
+      end
+
+      it 'creates disclosure data merging with defaults' do
+        xml = {
+          disclose: { value: {
+            voice: { value: '' },
+            addr: { value: '' }
+          }, attrs: { flag: '1' }
+          }
+        }
+
+        response = epp_request(create_contact_xml(xml), :xml)
+        expect(response[:result_code]).to eq('1000')
+
+        expect(Contact.last.disclosure.name).to eq(true)
+        expect(Contact.last.disclosure.org_name).to eq(true)
+        expect(Contact.last.disclosure.phone).to eq(true)
+        expect(Contact.last.disclosure.fax).to eq(false)
+        expect(Contact.last.disclosure.email).to eq(true)
+        expect(Contact.last.disclosure.address).to eq(true)
       end
     end
 
