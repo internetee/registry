@@ -52,25 +52,17 @@ class AddZonefileProcedure < ActiveRecord::Migration
           chr(10)
         ) INTO ns_records;
 
-        -- use caching
-
-          /*SELECT concat(cns.hostname, '. IN A ', cns.ipv4, '.') FROM cached_nameservers cns WHERE EXISTS (
-            SELECT 1
-            FROM nameservers ns
-            JOIN domains d ON d.id = ns.domain_id
-            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
-            AND ns.hostname = cns.hostname AND ns.ipv4 = cns.ipv4 AND ns.ipv6 = cns.ipv6
-            AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> ''
-          );*/
-
         -- a records
         SELECT array_to_string(
           array(
-            SELECT concat(ns.hostname, '. IN A ', ns.ipv4, '.')
-            FROM domains d
-            JOIN nameservers ns ON ns.domain_id = d.id
-            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
-            AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> ''
+            SELECT concat(cns.hostname, '. IN A ', cns.ipv4, '.') FROM cached_nameservers cns WHERE EXISTS (
+              SELECT 1
+              FROM nameservers ns
+              JOIN domains d ON d.id = ns.domain_id
+              WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
+              AND ns.hostname = cns.hostname AND ns.ipv4 = cns.ipv4 AND ns.ipv6 = cns.ipv6
+              AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> ''
+            )
           ),
           chr(10)
         ) INTO a_records;
@@ -78,11 +70,14 @@ class AddZonefileProcedure < ActiveRecord::Migration
         -- aaaa records
         SELECT array_to_string(
           array(
-            SELECT concat(ns.hostname, '. IN AAAA ', ns.ipv6, '.')
-            FROM domains d
-            JOIN nameservers ns ON ns.domain_id = d.id
-            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
-            AND ns.ipv6 IS NOT NULL AND ns.ipv6 <> ''
+            SELECT concat(cns.hostname, '. IN AAAA ', cns.ipv6, '.') FROM cached_nameservers cns WHERE EXISTS (
+              SELECT 1
+              FROM nameservers ns
+              JOIN domains d ON d.id = ns.domain_id
+              WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
+              AND ns.hostname = cns.hostname AND ns.ipv6 = cns.ipv6 AND ns.ipv6 = cns.ipv6
+              AND ns.ipv6 IS NOT NULL AND ns.ipv6 <> ''
+            )
           ),
           chr(10)
         ) INTO a4_records;
