@@ -1,5 +1,5 @@
 class CreateNameserversCache < ActiveRecord::Migration
-  def change
+  def up
     create_table :cached_nameservers, id: false do |t|
       t.string :hostname
       t.string :ipv4
@@ -12,5 +12,9 @@ class CreateNameserversCache < ActiveRecord::Migration
         SELECT ns.hostname, ns.ipv4, ns.ipv6 FROM nameservers ns GROUP BY ns.hostname, ns.ipv4, ns.ipv6
       );
     SQL
+  end
+
+  def down
+    drop_table :cached_nameservers
   end
 end
