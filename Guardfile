@@ -26,7 +26,11 @@ group :red_green_refactor, halt_on_fail: true do
 
   # Martin does not want rubocop
   unless Socket.gethostname == 'martin'
-    guard :rubocop, cli: '--display-cop-names -c .rubocop-guard.yml -f fuubar', notification: false do
+    guard :rubocop, 
+      all_on_start: false,
+      cli: '--display-cop-names -c .rubocop-guard.yml -f fuubar',
+      notification: false do
+
       watch(%r{.+\.rb$})
       watch(%r{(?:.+/)?\.rubocop\.yml$}) { |m| File.dirname(m[0]) }
       watch(%r{(?:.+/)?\.rubocop-guard\.yml$}) { |m| File.dirname(m[0]) }

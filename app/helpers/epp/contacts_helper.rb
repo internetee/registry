@@ -10,7 +10,7 @@ module Epp::ContactsHelper
     # FIXME: Update returns 2303 update multiple times
     code = params_hash['epp']['command']['update']['update'][:id]
     @contact = Contact.where(code: code).first
-    if owner? && stamp(@contact) && @contact.update_attributes(contact_and_address_attributes(:update))
+    if update_rights? && stamp(@contact) && @contact.update_attributes(contact_and_address_attributes(:update))
       render 'epp/contacts/update'
     else
       contact_exists?(code)
@@ -21,7 +21,7 @@ module Epp::ContactsHelper
   # rubocop:disable Metrics/CyclomaticComplexity
   def delete_contact
     @contact = find_contact
-    handle_errors(@contact) and return unless owner?
+    handle_errors(@contact) and return unless rights? # owner?
     handle_errors(@contact) and return unless @contact
     handle_errors(@contact) and return unless @contact.destroy_and_clean
 
@@ -36,9 +36,8 @@ module Epp::ContactsHelper
   end
 
   def info_contact
-    # handle_errors and return unless rights?
-    @contact = find_contact
     handle_errors(@contact) and return unless @contact
+    handle_errors(@contact) and return unless rights?
     render 'epp/contacts/info'
   end
 
@@ -54,19 +53,22 @@ module Epp::ContactsHelper
   ## CREATE
   def validate_contact_create_request
     @ph = params_hash['epp']['command']['create']['create']
-    xml_attrs_present?(@ph, [%w(postalInfo)])
+    return false unless validate_params
+    # xml_attrs_present?(@ph, [%w(postalInfo)])
+    xml_attrs_present?(@ph, [%w(postalInfo name), %w(postalInfo addr city), %w(postalInfo addr cc),
+                             %w(ident), %w(voice), %w(email)])
 
-    return epp_errors.empty? unless @ph['postalInfo'].is_a?(Hash) || @ph['postalInfo'].is_a?(Array)
+    epp_errors.empty? # unless @ph['postalInfo'].is_a?(Hash) || @ph['postalInfo'].is_a?(Array)
 
     # (epp_errors << Address.validate_postal_info_types(parsed_frame)).flatten!
-    xml_attrs_array_present?(@ph['postalInfo'], [%w(name), %w(addr city), %w(addr cc)])
+    # xml_attrs_array_present?(@ph['postalInfo'], [%w(name), %w(addr city), %w(addr cc)])
   end
 
   ## UPDATE
   def validate_contact_update_request
     @ph = params_hash['epp']['command']['update']['update']
     update_attrs_present?
-    xml_attrs_present?(@ph, [['id']])
+    xml_attrs_present?(@ph, [['id'], %w(authInfo pw)])
   end
 
   def contact_exists?(code)
@@ -88,16 +90,20 @@ module Epp::ContactsHelper
     xml_attrs_present?(@ph, [['id']])
   end
 
-  ## CHECK
+  ## check
   def validate_contact_check_request
     @ph = params_hash['epp']['command']['check']['check']
     xml_attrs_present?(@ph, [['id']])
   end
 
-  ## INFO
-  def validate_contact_info_request
+  ## info
+  def validate_contact_info_request # and process
     @ph = params_hash['epp']['command']['info']['info']
-    xml_attrs_present?(@ph, [['id']])
+    return false unless xml_attrs_present?(@ph, [['id']])
+    @contact = find_contact
+    return false unless @contact
+    return true if current_epp_user.registrar == @contact.registrar || xml_attrs_present?(@ph, [%w(authInfo pw)])
+    false
   end
 
   ## SHARED
@@ -123,8 +129,16 @@ module Epp::ContactsHelper
   def rights?
     pw = @ph.try(:[], :authInfo).try(:[], :pw)
 
-    return true if  !find_contact.nil? && find_contact.auth_info_matches(pw)
+    return true if current_epp_user.try(:registrar) == @contact.try(:registrar)
+    return true if pw && @contact.auth_info_matches(pw) # @contact.try(:auth_info_matches, pw)
 
+    epp_errors << { code: '2201', msg: t('errors.messages.epp_authorization_error'), value: { obj: 'pw', val: pw } }
+    false
+  end
+
+  def update_rights?
+    pw = @ph.try(:[], :authInfo).try(:[], :pw)
+    return true if pw && @contact.auth_info_matches(pw)
     epp_errors << { code: '2201', msg: t('errors.messages.epp_authorization_error'), value: { obj: 'pw', val: pw } }
     false
   end
@@ -132,6 +146,7 @@ module Epp::ContactsHelper
   def contact_and_address_attributes(type = :create)
     case type
     when :update
+      # TODO: support for rem/add
       contact_hash = merge_attribute_hash(@ph[:chg], type)
     else
       contact_hash = merge_attribute_hash(@ph, type)
@@ -158,5 +173,11 @@ module Epp::ContactsHelper
 
     Contact::IDENT_TYPES.any? { |type| return type if result.include?(type) }
     nil
+  end
+
+  def validate_params
+    return true if @ph
+    epp_errors << { code: '2001', msg: t(:'errors.messages.epp_command_syntax_error') }
+    false
   end
 end

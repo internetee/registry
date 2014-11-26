@@ -1,3 +1,18 @@
+%td{ class: changes.include?(:domain) ? 'edit-highlight' : 'no-highlight' }
+  - if children[:domain]
+    %p{:style => "font-size:x-small;"}
+      = children[:domain][:period]
+      = children[:domain][:period_unit] if children[:domain][:period]
+      - if children[:domain][:valid_to] && children[:domain][:valid_from]
+        = ","
+        = l(children[:domain][:valid_from], format: :date) + '-' + l(children[:domain][:valid_to], format: :date)
+      - if children[:domain].try(:[], :registrar_id)
+        = ","
+        = Registrar.find(children[:domain][:registrar_id]).try(:name)
+      - if children[:domain][:status]
+        = ',' + children[:domain][:status]
+
+
 %td{ class: changes.include?(:owner_contact) ? 'edit-highlight' : 'no-highlight' }
   - if children[:owner_contact]
     %p{:style => "font-size:x-small;"}

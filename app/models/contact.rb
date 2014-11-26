@@ -1,7 +1,6 @@
 class Contact < ActiveRecord::Base
   # TODO: Foreign contact will get email with activation link/username/temp password
   # TODO: Phone number validation, in first phase very minimam in order to support current registries
-  # TODO: Validate presence of name
 
   include EppErrors
 
@@ -18,7 +17,7 @@ class Contact < ActiveRecord::Base
 
   accepts_nested_attributes_for :address, :disclosure
 
-  validates :phone, :email, :ident, :address, :registrar, presence: true
+  validates :name, :phone, :email, :ident, :address, :registrar, presence: true
 
   validate :ident_must_be_valid
 

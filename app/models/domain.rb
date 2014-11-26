@@ -99,7 +99,12 @@ class Domain < ActiveRecord::Base
   def make_snapshot
     {
       name: name,
-      status: status
+      status: status,
+      period: period,
+      period_unit: period_unit,
+      registrar_id: registrar.try(:id),
+      valid_to: valid_to,
+      valid_from: valid_from
     }
   end
 

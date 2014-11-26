@@ -21,6 +21,7 @@ describe Contact do
       expect(@contact.valid?).to eq false
 
       expect(@contact.errors.messages).to match_array({
+         name: ['Required parameter missing - name'],
          phone: ['Required parameter missing - phone', 'Phone nr is invalid'],
          email: ['Required parameter missing - email', 'Email is invalid'],
          ident: ['Required parameter missing - ident'],
