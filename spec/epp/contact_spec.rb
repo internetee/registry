@@ -134,11 +134,11 @@ describe 'EPP Contact', epp: true do
         response = epp_request(create_contact_xml(xml), :xml)
         expect(response[:result_code]).to eq('1000')
 
-        expect(Contact.last.disclosure.name).to eq(true)
-        expect(Contact.last.disclosure.org_name).to eq(true)
+        expect(Contact.last.disclosure.name).to eq(nil)
+        expect(Contact.last.disclosure.org_name).to eq(nil)
         expect(Contact.last.disclosure.phone).to eq(true)
-        expect(Contact.last.disclosure.fax).to eq(false)
-        expect(Contact.last.disclosure.email).to eq(true)
+        expect(Contact.last.disclosure.fax).to eq(nil)
+        expect(Contact.last.disclosure.email).to eq(nil)
         expect(Contact.last.disclosure.address).to eq(true)
       end
     end
@@ -212,6 +212,7 @@ describe 'EPP Contact', epp: true do
       it 'updates disclosure items' do
         Fabricate(:contact, code: 'sh8013', auth_info: '2fooBAR', registrar: zone, created_by_id: EppUser.first.id,
                   disclosure: Fabricate(:contact_disclosure, phone: true, email: true))
+
         xml = {
           id: { value: 'sh8013' },
           authInfo: { pw: { value: '2fooBAR' } }
@@ -336,7 +337,7 @@ describe 'EPP Contact', epp: true do
 
         expect(response[:result_code]).to eq('1000')
         expect(response[:msg]).to eq('Command completed successfully')
-        expect(contact.css('name').first).to eq(nil)
+        expect(contact.css('chkData postalInfo name').first).to eq(nil)
       end
 
       it 'discloses items to owner' do
@@ -393,9 +394,11 @@ describe 'EPP Contact', epp: true do
 
         expect(response[:result_code]).to eq('1000')
 
-        expect(contact.css('phone').present?).to eq(false)
-        expect(contact.css('email').present?).to eq(false)
-        expect(contact.css('name').present?).to be(true)
+        expect(contact.css('chkData phone')).to eq(contact.css('chkData disclose phone'))
+        expect(contact.css('chkData phone').count).to eq(1)
+        expect(contact.css('chkData email')).to eq(contact.css('chkData disclose email'))
+        expect(contact.css('chkData email').count).to eq(1)
+        expect(contact.css('postalInfo name').present?).to be(true)
       end
 
       it 'doesn\'t display unassociated object without password' do

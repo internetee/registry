@@ -22,7 +22,7 @@ xml.epp_head do
            xml.tag!('contact:pw', @contact.auth_info) # Doc says we have to return this but is it necessary?
           end
         end
-        xml.tag!('contact:disclose', '123') if false
+        xml << render('/epp/contacts/disclosure_policy')
       end
     end
 

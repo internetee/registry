@@ -39,13 +39,13 @@ describe Contact do
       expect(@contact.valid?).to be true
     end
 
-    it 'should have default disclosure'  do
-      expect(@contact.disclosure.name).to be true
-      expect(@contact.disclosure.org_name).to be true
-      expect(@contact.disclosure.email).to be true
-      expect(@contact.disclosure.phone).to be false
-      expect(@contact.disclosure.fax).to be false
-      expect(@contact.disclosure.address).to be false
+    it 'should have empty disclosure'  do
+      expect(@contact.disclosure.name).to be nil
+      expect(@contact.disclosure.org_name).to be nil
+      expect(@contact.disclosure.email).to be nil
+      expect(@contact.disclosure.phone).to be nil
+      expect(@contact.disclosure.fax).to be nil
+      expect(@contact.disclosure.address).to be nil
     end
 
     it 'should have custom disclosure' do

@@ -38,7 +38,8 @@ module Epp::ContactsHelper
   def info_contact
     handle_errors(@contact) and return unless @contact
     handle_errors(@contact) and return unless rights?
-    @disclosure = @contact.disclosure
+    @disclosure = ContactDisclosure.default_values.merge(@contact.disclosure.as_hash)
+    @disclosure_policy = @contact.disclosure.attributes_with_flag
     @owner = owner?(false)
     render 'epp/contacts/info'
   end
@@ -145,7 +146,7 @@ module Epp::ContactsHelper
     case type
     when :update
       # TODO: support for rem/add
-      contact_hash = merge_attribute_hash(@ph[:chg], type)
+      contact_hash = merge_attribute_hash(@ph[:chg], type).delete_if { |_k, v| v.empty? }
     else
       contact_hash = merge_attribute_hash(@ph, type)
     end

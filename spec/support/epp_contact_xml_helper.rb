@@ -27,7 +27,13 @@ module EppContactXmlHelper
           name: { value: 'John Doe Edited' }
         },
         voice: { value: '+372.7654321' },
-        email: { value: 'edited@example.example' }
+        email: { value: 'edited@example.example' },
+        disclose: {
+          value: {
+            voice: { value: '' },
+            email: { value: '' }
+          }, attrs: { flag: '0' }
+        }
       }
     }
     xml_params = defaults.deep_merge(xml_params)

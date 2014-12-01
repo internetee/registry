@@ -1,6 +1,24 @@
 class ContactDisclosure < ActiveRecord::Base
   belongs_to :contact
 
+  def attributes_with_flag
+    attrs, policy = { name: name, email: email, phone: phone, address: address, org_name: org_name, fax: fax }, {}
+    policy[0] = attrs.map { |k, v| k if v == false }.compact
+    policy[1] = attrs.map { |k, v| k if v }.compact
+    policy
+  end
+
+  def as_hash
+    {
+      name: name,
+      org_name: org_name,
+      phone: phone,
+      fax: fax,
+      email: email,
+      address: address
+    }
+  end
+
   # value is true or false depending on disclosure flag
   # rules are the contents of disclose element
   class << self
@@ -26,7 +44,7 @@ class ContactDisclosure < ActiveRecord::Base
       disclosure_hash.each do |k, _v| # provides a correct flag to disclosure elements
         disclosure_hash[k] = value
       end
-      default_values.merge(disclosure_hash)
+      disclosure_hash
     end
 
     private

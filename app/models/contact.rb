@@ -65,7 +65,7 @@ class Contact < ActiveRecord::Base
   end
 
   def ensure_disclosure
-    create_disclosure!(ContactDisclosure.default_values) unless disclosure
+    create_disclosure! unless disclosure
   end
 
   def domains_snapshot
