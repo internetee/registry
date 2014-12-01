@@ -27,11 +27,6 @@ class Admin::DomainsController < AdminController
     end
   end
 
-  def zonefile
-    @zonefile = @domain.generate_zonefile
-    # send_data @zonefile, filename: 'bla.txt'
-  end
-
   private
 
   def set_domain

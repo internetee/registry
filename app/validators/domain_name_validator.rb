@@ -16,6 +16,7 @@ class DomainNameValidator < ActiveModel::EachValidator
 
   class << self
     def validate_format(value)
+      return true if value == 'ee'
       return true unless value
       value = value.mb_chars.downcase.strip
 

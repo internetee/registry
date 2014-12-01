@@ -39,6 +39,14 @@ ActiveRecord::Schema.define(version: 20141127091027) do
     t.string   "street3"
   end
 
+  create_table "cached_nameservers", id: false, force: true do |t|
+    t.string "hostname"
+    t.string "ipv4"
+    t.string "ipv6"
+  end
+
+  add_index "cached_nameservers", ["hostname", "ipv4", "ipv6"], name: "index_cached_nameservers_on_hostname_and_ipv4_and_ipv6", unique: true, using: :btree
+
   create_table "contact_disclosures", force: true do |t|
     t.integer  "contact_id"
     t.boolean  "phone"
@@ -331,5 +339,18 @@ ActiveRecord::Schema.define(version: 20141127091027) do
   end
 
   add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
+
+  create_table "zonefile_settings", force: true do |t|
+    t.string   "origin"
+    t.integer  "ttl"
+    t.integer  "refresh"
+    t.integer  "retry"
+    t.integer  "expire"
+    t.integer  "minimum_ttl"
+    t.string   "email"
+    t.string   "master_nameserver"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end

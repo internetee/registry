@@ -9,11 +9,9 @@ Rails.application.routes.draw do
   namespace(:admin) do
     resources :zonefiles
 
-    resources :domains do
-      member do
-        get 'zonefile'
-      end
-    end
+    resources :zonefile_settings
+
+    resources :domains
     resources :settings
     resources :registrars do
       collection do
