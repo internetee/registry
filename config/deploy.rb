@@ -87,7 +87,7 @@ task deploy: :environment do
     invoke :'bundle:install'
     invoke :'rails:db_migrate'
     invoke :'rails:assets_precompile'
-    # invoke :'whenever:update'
+    invoke :'whenever:update'
 
     to :launch do
       queue "mkdir -p #{deploy_to}/current/tmp; touch #{deploy_to}/current/tmp/restart.txt"
