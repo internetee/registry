@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 describe Contact do
+  before { create_disclosure_settings }
   it { should have_one(:address) }
 
   context 'with invalid attribute' do
@@ -32,10 +33,29 @@ describe Contact do
   end
 
   context 'with valid attributes' do
-    before(:each) { @contact = Fabricate(:contact) }
+    before(:each) { @contact = Fabricate(:contact, disclosure: nil) }
 
     it 'should return true' do
       expect(@contact.valid?).to be true
+    end
+
+    it 'should have empty disclosure'  do
+      expect(@contact.disclosure.name).to be nil
+      expect(@contact.disclosure.org_name).to be nil
+      expect(@contact.disclosure.email).to be nil
+      expect(@contact.disclosure.phone).to be nil
+      expect(@contact.disclosure.fax).to be nil
+      expect(@contact.disclosure.address).to be nil
+    end
+
+    it 'should have custom disclosure' do
+      @contact = Fabricate(:contact, disclosure: Fabricate(:contact_disclosure))
+      expect(@contact.disclosure.name).to be true
+      expect(@contact.disclosure.org_name).to be true
+      expect(@contact.disclosure.email).to be true
+      expect(@contact.disclosure.phone).to be true
+      expect(@contact.disclosure.fax).to be true
+      expect(@contact.disclosure.address).to be true
     end
   end
 

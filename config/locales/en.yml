@@ -233,6 +233,7 @@ en:
       epp_obj_does_not_exist: 'Object does not exist'
       epp_command_failed: 'Command failed'
       epp_authorization_error: 'Authorization error'
+      epp_authentication_error: 'Authentication error'
       epp_id_taken: 'Contact id already exists'
       epp_domain_not_found: 'Domain not found'
       epp_exp_dates_do_not_match: 'Given and current expire dates do not match'

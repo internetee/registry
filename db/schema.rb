@@ -49,17 +49,14 @@ ActiveRecord::Schema.define(version: 20141202114457) do
 
   create_table "contact_disclosures", force: true do |t|
     t.integer  "contact_id"
-    t.boolean  "int_name",     default: false
-    t.boolean  "int_org_name", default: false
-    t.boolean  "int_addr",     default: false
-    t.boolean  "loc_name",     default: false
-    t.boolean  "loc_org_name", default: false
-    t.boolean  "loc_addr",     default: false
-    t.boolean  "phone",        default: false
-    t.boolean  "fax",          default: false
-    t.boolean  "email",        default: false
+    t.boolean  "phone"
+    t.boolean  "fax"
+    t.boolean  "email"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "name"
+    t.boolean  "org_name"
+    t.boolean  "address"
   end
 
   create_table "contact_versions", force: true do |t|

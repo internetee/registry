@@ -5,7 +5,7 @@ class Contact < ActiveRecord::Base
   include EppErrors
 
   has_one :address, dependent: :destroy
-  has_one :disclosure, class_name: 'ContactDisclosure'
+  has_one :disclosure, class_name: 'ContactDisclosure', dependent: :destroy
 
   has_many :domain_contacts
   has_many :domains, through: :domain_contacts
@@ -37,6 +37,7 @@ class Contact < ActiveRecord::Base
   after_destroy :domains_snapshot
   before_create :generate_code
   before_create :generate_auth_info
+  after_create :ensure_disclosure
 
   # scopes
   scope :current_registrars, ->(id) { where(registrar_id: id) }
@@ -61,6 +62,10 @@ class Contact < ActiveRecord::Base
     return true unless ident.present? && ident_type.present? && ident_type == 'op'
     code = Isikukood.new(ident)
     errors.add(:ident, 'bad format') unless code.valid?
+  end
+
+  def ensure_disclosure
+    create_disclosure! unless disclosure
   end
 
   def domains_snapshot
