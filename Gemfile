@@ -76,7 +76,7 @@ gem 'delayed_job_active_record', '~> 4.0.2'
 gem 'daemons'
 
 # cron
-gem 'whenever', '~> 0.9.4'
+gem 'whenever', '~> 0.9.4', require: false
 
 group :development, :test do
   # for inserting dummy data
