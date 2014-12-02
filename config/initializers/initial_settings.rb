@@ -1,4 +1,5 @@
 Setting.disclosure_name = true if Setting.disclosure_name.nil?
+Setting.disclosure_name = true if Setting.disclosure_name.nil?
 Setting.disclosure_org_name = true if Setting.disclosure_org_name.nil?
 Setting.disclosure_email = true if Setting.disclosure_email.nil?
 Setting.disclosure_phone = false if Setting.disclosure_phone.nil?
