@@ -1,5 +1,6 @@
 defaults: &defaults
   app_name: .EE Registry
+  zonefile_export_dir: 'export/zonefiles'
 
 development:
   <<: *defaults

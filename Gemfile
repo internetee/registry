@@ -75,6 +75,9 @@ gem 'delayed_job_active_record', '~> 4.0.2'
 # to process delayed jobs
 gem 'daemons'
 
+# cron
+gem 'whenever', '~> 0.9.4', require: false
+
 group :development, :test do
   # for inserting dummy data
   gem 'activerecord-import', '~> 0.6.0'

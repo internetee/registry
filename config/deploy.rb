@@ -1,6 +1,7 @@
 require 'mina/bundler'
 require 'mina/rails'
 require 'mina/git'
+require 'mina/whenever'
 # require 'mina/rbenv'  # for rbenv support. (http://rbenv.org)
 # require 'mina/rvm'    # for rvm support. (http://rvm.io)
 
@@ -31,7 +32,8 @@ set :shared_paths, [
   'config/database.yml',
   'config/secrets.yml',
   'log',
-  'public/system'
+  'public/system',
+  'export/zonefiles'
 ]
 
 # Optional settings:
@@ -68,6 +70,9 @@ task setup: :environment do
   queue! %(mkdir -p "#{deploy_to}/shared/public/system")
   queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/public/system")
 
+  queue! %(mkdir -p "#{deploy_to}/shared/export/zonefiles")
+  queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/export/zonefiles")
+
   queue! %(touch "#{deploy_to}/shared/config/database.yml")
   queue %(echo '-----> Be sure to edit 'shared/config/database.yml'.')
 end
@@ -82,6 +87,7 @@ task deploy: :environment do
     invoke :'bundle:install'
     invoke :'rails:db_migrate'
     invoke :'rails:assets_precompile'
+    invoke :'whenever:update'
 
     to :launch do
       queue "mkdir -p #{deploy_to}/current/tmp; touch #{deploy_to}/current/tmp/restart.txt"
