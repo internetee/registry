@@ -309,9 +309,6 @@ GEM
       temple (~> 0.6.6)
       tilt (>= 1.3.3, < 2.1)
     slop (3.6.0)
-    spring (1.2.0)
-    spring-commands-rspec (1.0.2)
-      spring (>= 0.9.1)
     sprockets (2.8.0)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -415,8 +412,6 @@ DEPENDENCIES
   shoulda-matchers (~> 2.6.1)
   simplecov (~> 0.9.1)
   simpleidn (~> 0.0.5)
-  spring (~> 1.2.0)
-  spring-commands-rspec (~> 1.0.2)
   therubyracer
   traceroute (~> 0.4.0)
   turbolinks
