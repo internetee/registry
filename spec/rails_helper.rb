@@ -5,6 +5,7 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 require 'shoulda/matchers'
 require 'capybara/poltergeist'
+require 'paper_trail/frameworks/rspec'
 
 if ENV['ROBOT']
   require 'simplecov'
