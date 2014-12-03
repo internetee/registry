@@ -145,8 +145,9 @@ group :development, :test do
   gem 'rubocop', '~> 0.26.1'
   gem 'guard-rubocop', '~> 1.1.0'
 
-  # for quick debugging
-  gem 'web-console', '~> 2.0.0.beta4'
+  # for improved errors
+  gem 'better_errors', '~> 2.0.0'
+  gem 'binding_of_caller', '~> 0.7.2'
 
   # for finding dead routes and unused actions
   gem 'traceroute', '~> 0.4.0'
