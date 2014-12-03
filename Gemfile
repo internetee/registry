@@ -161,4 +161,3 @@ group :development do
   gem 'rubocop', '~> 0.26.1'
   gem 'guard-rubocop', '~> 1.1.0'
 end
-
