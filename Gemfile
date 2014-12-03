@@ -130,12 +130,28 @@ group :development, :test do
   # for security audit'
   gem 'brakeman', '~> 2.6.2', require: false
 
+  # bundle exec rake doc:rails generates the API under doc/api.
+  gem 'sdoc', '~> 0.4.0'
+
+  # faster dev load time
+  gem 'unicorn'
+end
+
+group :development do
   # Spring speeds up development by keeping your application running in the background.
   # Read more: https://github.com/rails/spring
   gem 'spring', '~> 1.2.0'
+  gem 'spring-commands-rspec', '~> 1.0.2'
 
-  # bundle exec rake doc:rails generates the API under doc/api.
-  gem 'sdoc', '~> 0.4.0'
+  # for fast deployment
+  gem 'mina', '~> 0.3.1'
+
+  # for finding dead routes and unused actions
+  gem 'traceroute', '~> 0.4.0'
+
+  # for improved errors
+  gem 'better_errors', '~> 2.0.0'
+  gem 'binding_of_caller', '~> 0.7.2'
 
   # run tests automatically
   gem 'guard', '~> 2.6.1'
@@ -144,16 +160,4 @@ group :development, :test do
   gem 'guard-rspec', '~> 4.3.1'
   gem 'rubocop', '~> 0.26.1'
   gem 'guard-rubocop', '~> 1.1.0'
-
-  # for quick debugging
-  gem 'web-console', '~> 2.0.0.beta4'
-
-  # for finding dead routes and unused actions
-  gem 'traceroute', '~> 0.4.0'
-
-  # faster dev load time
-  gem 'unicorn'
-
-  # for fast deployment
-  gem 'mina', '~> 0.3.1'
 end
