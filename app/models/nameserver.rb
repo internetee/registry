@@ -11,7 +11,6 @@ class Nameserver < ActiveRecord::Base
   # rubocop: enable Metrics/LineLength
 
   # caching
-  after_commit :clear_cache
   after_commit :create_cache, on: [:create, :update]
 
   # archiving
@@ -60,10 +59,6 @@ class Nameserver < ActiveRecord::Base
     CachedNameserver.create(snapshot)
     rescue ActiveRecord::RecordNotUnique
       logger.info('Nameserver already exists in cache; not caching')
-  end
-
-  def clear_cache
-    CachedNameserver.find_by(snapshot).try(:delete)
   end
 
   def to_s
