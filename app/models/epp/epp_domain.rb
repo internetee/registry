@@ -198,7 +198,6 @@ class Epp::EppDomain < Domain
 
     dnssec_data[:key_data].each do |x|
       dnskeys.build({
-        ds_key_tag: SecureRandom.hex(5),
         ds_alg: 3,
         ds_digest_type: Setting.ds_algorithm
       }.merge(x))
