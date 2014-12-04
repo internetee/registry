@@ -7,21 +7,18 @@ describe Dnskey do
 
   it { should belong_to(:domain) }
 
-  it 'generates correct DS digest' do
+  # rubocop: disable Style/NumericLiterals
+  it 'generates correct DS digest and DS key tag for ria.ee' do
     d = Fabricate(:domain, name: 'ria.ee')
     dk = d.dnskeys.first
 
     dk.generate_digest
     expect(dk.ds_digest).to eq('0B62D1BC64EFD1EE652FB102BDF1011BF514CCD9A1A0CFB7472AEA3B01F38C92')
+    expect(dk.ds_key_tag).to eq(30607)
   end
 
-  # rubocop: disable Style/NumericLiterals
-  it 'generates correct DS key tag' do
-    d = Fabricate(:domain, name: 'ria.ee')
-    dk = d.dnskeys.first
-    expect(dk.ds_key_tag).to eq(30607)
-
-    d.name = 'emta.ee'
+  it 'generates correct DS digest and DS key tag for emta.ee' do
+    d = Fabricate(:domain, name: 'emta.ee')
 
     dk = d.dnskeys.first
     dk.public_key = 'AwEAAfB9jK8rj/FAdE3t9bYXiTLpelwlgUyxbHEtvMvhdxs+yHv0h9fE '\
@@ -38,7 +35,8 @@ describe Dnskey do
                     'y8a+dowd/fqOQA1jXR04g2PIfFYe0VudCEpmxSV9YDoqjghHeIKUX7Jn '\
                     'KiHL5gk404S5a/Bv'
 
-    d.save
+    dk.save
+    expect(dk.ds_digest).to eq('D7045D3C2EF7332409A132D935C8E2834A2AAB769B35BC370FA68C9445398288')
     expect(dk.ds_key_tag).to eq(31051)
   end
 end
