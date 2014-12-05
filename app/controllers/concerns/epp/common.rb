@@ -29,7 +29,8 @@ module Epp::Common
   end
 
   def epp_session
-    EppSession.find_or_initialize_by(session_id: cookies['session'])
+    cookie = env['rack.request.cookie_hash'] || {}
+    EppSession.find_or_initialize_by(session_id: cookie['session'])
   end
 
   def epp_errors
