@@ -6,17 +6,10 @@ that disables whois (effects should fully be loaded after restarting the app)
 What whois_enabled=false does is that the whois callback does not get included.
 Delayed jobs migration and everything else will still be installed tho.
 
-If you wish to use the whois module, tho, you need a whois database looking something like this
+Basic whois logic - we save whois data to 2 separate databases - whois private and public.
+Those two databases are streamed to appropriate whois servers.
 
-```ruby
-  create_table :domains do |t|
-    t.string :name
-    t.text   :body
-    t.timestamps
-  end
-```
-
-NB! Migration with rake tasks is available in whois app repo.
+NB! Migration with rake tasks for whois part of the code is available in whois app repo.
 
 For development, delayed_job queue can be handled by rake task
 `rake jobs:work` or if you wish to be fancy you can use a daemon with `bin/delayed_job start`
