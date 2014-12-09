@@ -14,7 +14,7 @@ describe 'EPP Contact', epp: true do
   let(:server_zone) { Epp::Server.new({ server: 'localhost', tag: 'zone', password: 'ghyt9e4fu', port: 701 }) }
   let(:server_elkdata) { Epp::Server.new({ server: 'localhost', tag: 'elkdata', password: 'ghyt9e4fu', port: 701 }) }
   let(:elkdata) { Fabricate(:registrar, { name: 'Elkdata', reg_no: '123' }) }
-  let(:zone) { Registrar.where(reg_no: '10577829').first || Fabricate(:registrar) }
+  let(:zone) { Registrar.where(reg_no: '12345678').first || Fabricate(:registrar) }
 
   context 'with valid user' do
     before(:each) do

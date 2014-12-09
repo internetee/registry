@@ -23,6 +23,6 @@ feature 'Sessions', type: :feature do
     expect(uri.path).to eq(admin_root_path)
 
     expect(page).to have_link('Elkdata', count: 2)
-    expect(page).to have_link('Zone Media OÜ', count: 2)
+    expect(page).to have_link('Registrar OÜ', count: 2)
   end
 end
