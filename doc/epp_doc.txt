@@ -3801,8 +3801,8 @@ RESPONSE:
             <hostName>ns.bahringer.ee</hostName>
           </hostAttr>
         </ns>
-        <clID>Zone Media OÜ</clID>
-        <crID>Zone Media OÜ</crID>
+        <clID>Registrar OÜ</clID>
+        <crID>Registrar OÜ</crID>
         <crDate>2014-12-09 14:04:59 UTC</crDate>
         <exDate>2015-12-09 00:00:00 UTC</exDate>
         <authInfo>
@@ -3868,8 +3868,8 @@ RESPONSE:
             <hostAddr ip="v6">1080:0:0:0:8:800:200C:417A</hostAddr>
           </hostAttr>
         </ns>
-        <clID>Zone Media OÜ</clID>
-        <crID>Zone Media OÜ</crID>
+        <clID>Registrar OÜ</clID>
+        <crID>Registrar OÜ</crID>
         <crDate>2014-12-09 14:05:01 UTC</crDate>
         <exDate>2015-12-09 00:00:00 UTC</exDate>
         <authInfo>
@@ -3958,8 +3958,8 @@ RESPONSE:
             <hostAddr ip="v6">1080:0:0:0:8:800:200C:417A</hostAddr>
           </hostAttr>
         </ns>
-        <clID>Zone Media OÜ</clID>
-        <crID>Zone Media OÜ</crID>
+        <clID>Registrar OÜ</clID>
+        <crID>Registrar OÜ</crID>
         <crDate>2014-12-09 14:05:01 UTC</crDate>
         <exDate>2015-12-09 00:00:00 UTC</exDate>
         <upDate>2014-12-09 14:05:01 UTC</upDate>
