@@ -301,7 +301,7 @@ class Domain < ActiveRecord::Base
   def manage_automatic_statuses
     if domain_statuses.empty? && valid?
       domain_statuses.create(value: DomainStatus::OK)
-    else
+    elsif domain_statuses.length > 1 || !valid?
       domain_statuses.find_by(value: DomainStatus::OK).try(:destroy)
     end
   end
