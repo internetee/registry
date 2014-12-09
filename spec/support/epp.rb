@@ -8,8 +8,16 @@ module Epp
     server = server_zone
     server = server_elkdata if args.include?(:elkdata)
 
-    return parse_response(server.request(data)) if args.include?(:xml)
-    return parse_response(server.request(read_body(data)))
+    res = parse_response(server.request(data)) if args.include?(:xml)
+    if res
+      log(data, res[:parsed])
+      return res
+    end
+
+    res = parse_response(server.request(read_body(data)))
+    log(data, res[:parsed])
+    return res
+
   rescue => e
     e
   end
@@ -201,6 +209,12 @@ module Epp
 
     xml_params = defaults.deep_merge(xml_params)
     EppXml::Domain.transfer(xml_params, op)
+  end
+
+  def log(req, res)
+    return unless ENV['EPP_DOC']
+    puts "\nREQUEST: #{Nokogiri(req)}\n"
+    puts "RESPONSE: #{res}"
   end
 end
 
