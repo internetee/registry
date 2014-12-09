@@ -1,5 +1,5 @@
 class EppDoc
-  RSpec::Core::Formatters.register self, :start, :example_started, :example_passed, :example_failed
+  RSpec::Core::Formatters.register self, :start, :example_started, :example_passed, :example_pending
 
   def initialize(output)
     @output = output
