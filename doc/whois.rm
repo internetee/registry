@@ -9,8 +9,15 @@ Delayed jobs migration and everything else will still be installed tho.
 Basic whois logic - we save whois data to 2 separate databases - whois private and public.
 Those two databases are streamed to appropriate whois servers.
 
-NB! Migration with rake tasks for whois part of the code is available in whois app repo.
+Setting the databases up
+__________________________________
+Make sure username and password in DATABASES at lib/tasks/whois.rb are correct ( match the ones
+in config/database.yml whois_public and whois_private attributes ). We don't load them from
+config/database.yml at the moment. So you might have to change them manually.
 
+Finally set the whois app to connect to your whois_public/whois_private database and you're good to go.
+
+Then run `rake whois:create` to create and migrate the databases.
 For development, delayed_job queue can be handled by rake task
 `rake jobs:work` or if you wish to be fancy you can use a daemon with `bin/delayed_job start`
  ``

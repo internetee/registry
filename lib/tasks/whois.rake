@@ -5,16 +5,14 @@ DATABASES = [
     pool: '5', username: 'whois', password: 'test', port: '5432' }
 ]
 
-
 namespace :whois do
   task :load_config do
     require 'active_record'
     require 'pg'
   end
 
-
   desc 'Create whois databases'
-  task :create => [ :load_config ] do
+  task create: [:load_config] do
     DATABASES.each do |conf|
       create_database(conf)
       migrate
@@ -22,7 +20,7 @@ namespace :whois do
   end
 
   task 'Migrate whois databases'
-  task :migrate => [ :load_config ] do
+  task migrate: [:load_config] do
     DATABASES.each do |conf|
       ActiveRecord::Base.establish_connection(conf)
       migrate
