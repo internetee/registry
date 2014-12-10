@@ -4,7 +4,7 @@ describe DomainVersion do
   with_versioning do
     before(:each) do
       Setting.ns_min_count = 1
-      Fabricate(:domain, name: 'version.ee', dnskeys: []) do
+      Fabricate(:domain, name: 'version.ee', dnskeys: [], domain_contacts: []) do
         owner_contact { Fabricate(:contact, name: 'owner_contact', code: 'asd', email: 'owner1@v.ee') }
         nameservers(count: 1) { Fabricate(:nameserver, hostname: 'ns.test.ee') }
         admin_contacts(count: 1) { Fabricate(:contact, name: 'admin_contact 1', code: 'qwe', email: 'admin1@v.ee') }
@@ -99,7 +99,6 @@ describe DomainVersion do
         expect(DomainVersion.count).to eq(1)
         Contact.find_by(name: 'tech_contact 1').destroy
         expect(DomainVersion.count).to eq(2)
-
         expect(DomainVersion.last.load_snapshot[:admin_contacts].size).to eq(1)
         expect(DomainVersion.last.load_snapshot[:admin_contacts].first).to include(
           name: 'admin_contact 1', phone: '+372.12345678', ident: '37605030299', email: 'admin1@v.ee'
