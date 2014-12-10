@@ -54,7 +54,6 @@ class Epp::EppDomain < Domain
     attach_contacts(self.class.parse_contacts_from_frame(parsed_frame))
     attach_nameservers(self.class.parse_nameservers_from_frame(parsed_frame))
     attach_statuses(self.class.parse_statuses_from_frame(parsed_frame))
-
     errors.empty?
   end
 
@@ -115,10 +114,7 @@ class Epp::EppDomain < Domain
       end
     end
 
-    return unless owner_contact
-
-    attach_contact(DomainContact::TECH, owner_contact) if tech_contacts_count.zero?
-    attach_contact(DomainContact::ADMIN, owner_contact) if admin_contacts_count.zero? && owner_contact.citizen?
+    attach_default_contacts if new_record? && owner_contact
   end
 
   def attach_nameservers(ns_list)
