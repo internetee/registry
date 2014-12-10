@@ -892,7 +892,7 @@ describe 'EPP Domain', epp: true do
         expect(response[:results][0][:msg]).to eq('Domain not found')
       end
 
-      it 'updates domain and adds objects', pending: true do
+      it 'updates domain and adds objects' do
         xml = domain_update_xml({
           add: [
             {

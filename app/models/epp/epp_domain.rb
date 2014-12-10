@@ -121,11 +121,6 @@ class Epp::EppDomain < Domain
     attach_contact(DomainContact::ADMIN, owner_contact) if admin_contacts_count.zero? && owner_contact.citizen?
   end
 
-  def attach_contact(type, contact)
-    domain_contacts.build(contact: contact, contact_type: DomainContact::TECH) if type.to_sym == :tech
-    domain_contacts.build(contact: contact, contact_type: DomainContact::ADMIN) if type.to_sym == :admin
-  end
-
   def attach_nameservers(ns_list)
     ns_list.each do |ns_attrs|
       nameservers.build(ns_attrs)
@@ -302,7 +297,6 @@ class Epp::EppDomain < Domain
     end
 
     return pt if pt
-
     if Setting.transfer_wait_time > 0
       dt = domain_transfers.create(
         status: DomainTransfer::PENDING,

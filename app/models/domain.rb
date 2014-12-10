@@ -43,7 +43,7 @@ class Domain < ActiveRecord::Base
 
   before_create :generate_auth_info
   before_create :set_validity_dates
-  after_create :attach_default_contacts
+  before_create :attach_default_contacts
   after_save :manage_automatic_statuses
 
   validates :name_dirty, domain_name: true, uniqueness: true
@@ -186,7 +186,7 @@ class Domain < ActiveRecord::Base
       next unless existing.length > 1
       validated << dc
       errors.add(:domain_contacts, :invalid) if errors[:domain_contacts].blank?
-      dc.errors.add(:contact, :taken)
+      dc.errors.add(:contact_code_cache, :taken)
     end
   end
 
@@ -280,8 +280,22 @@ class Domain < ActiveRecord::Base
   # rubocop:enable Lint/Loop
 
   def attach_default_contacts
-    tech_contacts << owner_contact if tech_contacts_count.zero?
-    admin_contacts << owner_contact if admin_contacts_count.zero? && owner_contact.citizen?
+    if tech_contacts_count.zero?
+      attach_contact(DomainContact::TECH, owner_contact)
+    end
+
+    return unless admin_contacts_count.zero? && owner_contact.citizen?
+    attach_contact(DomainContact::ADMIN, owner_contact)
+  end
+
+  def attach_contact(type, contact)
+    domain_contacts.build(
+      contact: contact, contact_type: DomainContact::TECH, contact_code_cache: contact.code
+    ) if type.to_sym == :tech
+
+    domain_contacts.build(
+      contact: contact, contact_type: DomainContact::ADMIN, contact_code_cache: contact.code
+    ) if type.to_sym == :admin
   end
 
   def set_validity_dates

@@ -12,7 +12,7 @@ class DomainContact < ActiveRecord::Base
   def epp_code_map
     {
       '2302' => [
-        [:contact, :taken, { value: { obj: 'contact', val: contact.code } }]
+        [:contact_code_cache, :taken, { value: { obj: 'contact', val: contact_code_cache } }]
       ]
     }
   end
