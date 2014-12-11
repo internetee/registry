@@ -9,11 +9,11 @@ class EppDoc
     @output.puts '# EPP REQUEST - RESPONSE DOCUMENTATION'
     @output.puts "GENERATED AT: #{Time.now}  "
     @output.puts "EXAMPLE COUNT: #{example_count.count}  "
-    @output.puts '---'
+    @output.puts "\n---\n\n"
   end
 
   def example_started(notification)
-    @output.puts "## #{notification.example.full_description}\n\n"
+    @output.puts "### #{notification.example.full_description}  \n\n"
   end
 
   def example_passed(_example)
