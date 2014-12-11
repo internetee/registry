@@ -102,8 +102,6 @@ Note: Its best to go with two virtual hosts, one for test and one for dev,
 then you don't have to worry about quitting 
 the dev appserver for running tests (because of colliding ports).
 
-For plain TCP EPP configuration, see below (may be useful for debugging purposes).
-
     sudo a2ensite epp_ssl
     sudo service apache2 restart
 
@@ -160,10 +158,6 @@ To see internal errors while testing EPP
     
     unicorn -E test -p 8989
     rake spec:epp
-
-Visual testing
----
-* For visual testing, install this [application](https://github.com/mlensment/epp-tester)
 
 Apache mod_epp testing/debugging
 --------------------------------
