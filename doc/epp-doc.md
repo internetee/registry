@@ -1,8 +1,10 @@
 # EPP REQUEST - RESPONSE DOCUMENTATION
-GENERATED AT: 2014-12-11 18:17:21 +0200  
+GENERATED AT: 2014-12-11 18:20:24 +0200  
 EXAMPLE COUNT: 91  
 
 ---
+
+### EPP Contact with valid user create command fails if request xml is missing  
 
 REQUEST:
 
@@ -34,6 +36,8 @@ RESPONSE:
 </trID>
 </epp>
 ```
+
+### EPP Contact with valid user create command fails if request xml is missing  
 
 REQUEST:
 
@@ -85,54 +89,7 @@ RESPONSE:
 </epp>
 ```
 
-REQUEST:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
-  <command>
-    <create>
-      <contact:create xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
-        <contact:postalInfo>
-          <contact:name>John Doe</contact:name>
-          <contact:addr>
-            <contact:street>123 Example</contact:street>
-            <contact:city>Tallinn</contact:city>
-            <contact:cc>EE</contact:cc>
-          </contact:addr>
-        </contact:postalInfo>
-        <contact:voice>+372.1234567</contact:voice>
-        <contact:email>test@example.example</contact:email>
-        <contact:ident>37605030299</contact:ident>
-      </contact:create>
-    </create>
-    <clTRID>ABC-12345</clTRID>
-  </command>
-</epp>
-```
-
-RESPONSE:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
-  <response>
-    <result code="1000">
-      <msg>Command completed successfully</msg>
-    </result>
-    <resData>
-      <creData>
-        <id>a9d1f1b4</id>
-        <crDate>2014-12-11 16:17:23 UTC</crDate>
-      </creData>
-    </resData>
-<trID>
-  <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1977810474</svTRID>
-</trID>
-  </response>
-</epp>
-```
+### EPP Contact with valid user create command successfully creates a contact  
 
 REQUEST:
 
@@ -171,17 +128,19 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <id>b2866bcd</id>
-        <crDate>2014-12-11 16:17:23 UTC</crDate>
+        <id>fa36aa3b</id>
+        <crDate>2014-12-11 16:20:26 UTC</crDate>
       </creData>
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3302923850</svTRID>
+  <svTRID>ccReg-7697716461</svTRID>
 </trID>
   </response>
 </epp>
 ```
+
+### EPP Contact with valid user create command successfully adds registrar  
 
 REQUEST:
 
@@ -220,17 +179,70 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <id>36bef51c</id>
-        <crDate>2014-12-11 16:17:23 UTC</crDate>
+        <id>fce689ed</id>
+        <crDate>2014-12-11 16:20:26 UTC</crDate>
       </creData>
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3477429846</svTRID>
+  <svTRID>ccReg-1860193727</svTRID>
 </trID>
   </response>
 </epp>
 ```
+
+### EPP Contact with valid user create command returns result data upon success  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <create>
+      <contact:create xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
+        <contact:postalInfo>
+          <contact:name>John Doe</contact:name>
+          <contact:addr>
+            <contact:street>123 Example</contact:street>
+            <contact:city>Tallinn</contact:city>
+            <contact:cc>EE</contact:cc>
+          </contact:addr>
+        </contact:postalInfo>
+        <contact:voice>+372.1234567</contact:voice>
+        <contact:email>test@example.example</contact:email>
+        <contact:ident>37605030299</contact:ident>
+      </contact:create>
+    </create>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+    <resData>
+      <creData>
+        <id>9a772ec1</id>
+        <crDate>2014-12-11 16:20:26 UTC</crDate>
+      </creData>
+    </resData>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-0028172314</svTRID>
+</trID>
+  </response>
+</epp>
+```
+
+### EPP Contact with valid user create command creates disclosure data  
 
 REQUEST:
 
@@ -277,17 +289,19 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <id>cb1934fc</id>
-        <crDate>2014-12-11 16:17:23 UTC</crDate>
+        <id>abc08ddb</id>
+        <crDate>2014-12-11 16:20:26 UTC</crDate>
       </creData>
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-8140487807</svTRID>
+  <svTRID>ccReg-6054774492</svTRID>
 </trID>
   </response>
 </epp>
 ```
+
+### EPP Contact with valid user create command creates disclosure data merging with defaults  
 
 REQUEST:
 
@@ -330,17 +344,19 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <id>665684ce</id>
-        <crDate>2014-12-11 16:17:24 UTC</crDate>
+        <id>3ee9cbf8</id>
+        <crDate>2014-12-11 16:20:27 UTC</crDate>
       </creData>
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9240660918</svTRID>
+  <svTRID>ccReg-4441923724</svTRID>
 </trID>
   </response>
 </epp>
 ```
+
+### EPP Contact with valid user update command fails if request is invalid  
 
 REQUEST:
 
@@ -378,6 +394,8 @@ RESPONSE:
 </trID>
 </epp>
 ```
+
+### EPP Contact with valid user update command fails with wrong authentication info  
 
 REQUEST:
 
@@ -421,10 +439,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4165506131</svTRID>
+  <svTRID>ccReg-1721556034</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Contact with valid user update command is succesful  
 
 REQUEST:
 
@@ -468,16 +488,18 @@ RESPONSE:
     <resData>
       <creData>
         <id>sh8013</id>
-        <crDate>2014-12-11 16:17:24 UTC</crDate>
+        <crDate>2014-12-11 16:20:28 UTC</crDate>
       </creData>
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4851346744</svTRID>
+  <svTRID>ccReg-8071685589</svTRID>
 </trID>
   </response>
 </epp>
 ```
+
+### EPP Contact with valid user update command returns phone and email error  
 
 REQUEST:
 
@@ -524,10 +546,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6357280129</svTRID>
+  <svTRID>ccReg-6397000244</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Contact with valid user update command updates disclosure items  
 
 REQUEST:
 
@@ -571,16 +595,18 @@ RESPONSE:
     <resData>
       <creData>
         <id>sh8013</id>
-        <crDate>2014-12-11 16:17:25 UTC</crDate>
+        <crDate>2014-12-11 16:20:28 UTC</crDate>
       </creData>
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2252255907</svTRID>
+  <svTRID>ccReg-8345300533</svTRID>
 </trID>
   </response>
 </epp>
 ```
+
+### EPP Contact with valid user delete command fails if request is invalid  
 
 REQUEST:
 
@@ -615,6 +641,8 @@ RESPONSE:
 </epp>
 ```
 
+### EPP Contact with valid user delete command deletes contact  
+
 REQUEST:
 
 ```xml
@@ -642,11 +670,13 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3608937537</svTRID>
+  <svTRID>ccReg-7637455514</svTRID>
 </trID>
   </response>
 </epp>
 ```
+
+### EPP Contact with valid user delete command returns error if obj doesnt exist  
 
 REQUEST:
 
@@ -682,10 +712,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9592288058</svTRID>
+  <svTRID>ccReg-1599902466</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Contact with valid user delete command fails if contact has associated domain  
 
 REQUEST:
 
@@ -715,10 +747,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9046380936</svTRID>
+  <svTRID>ccReg-0684303862</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Contact with valid user check command fails if request is invalid  
 
 REQUEST:
 
@@ -752,6 +786,8 @@ RESPONSE:
 </trID>
 </epp>
 ```
+
+### EPP Contact with valid user check command returns info about contact availability  
 
 REQUEST:
 
@@ -792,11 +828,13 @@ RESPONSE:
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9379661224</svTRID>
+  <svTRID>ccReg-7040209526</svTRID>
 </trID>
   </response>
 </epp>
 ```
+
+### EPP Contact with valid user info command discloses items with wrong password when queried by owner  
 
 REQUEST:
 
@@ -830,14 +868,14 @@ RESPONSE:
   <name>Johnny Awesome</name>
   <org/>
   <addr>
-    <street>Lemke Haven</street>
-    <city>Marquisborough</city>
+    <street>Remington Island</street>
+    <city>South Joyhaven</city>
   </addr>
 </postalInfo>
         <voice>+372.12345678</voice>
         <fax/>
-        <email>julien@rippinoreilly.net</email>
-        <crDate>2014-12-11 16:17:27 UTC</crDate>
+        <email>milo.wolff@metz.org</email>
+        <crDate>2014-12-11 16:20:30 UTC</crDate>
         <authInfo>
           <pw>asde</pw>
         </authInfo>
@@ -855,11 +893,13 @@ RESPONSE:
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-8144829752</svTRID>
+  <svTRID>ccReg-1559776629</svTRID>
 </trID>
   </response>
 </epp>
 ```
+
+### EPP Contact with valid user info command returns auth error for non-owner with wrong password  
 
 REQUEST:
 
@@ -892,10 +932,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9232263218</svTRID>
+  <svTRID>ccReg-1873167890</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Contact with valid user info command doesn't disclose items to non-owner with right password  
 
 REQUEST:
 
@@ -931,7 +973,7 @@ RESPONSE:
 <postalInfo type="int">
   <org/>
 </postalInfo>
-        <crDate>2014-12-11 16:17:28 UTC</crDate>
+        <crDate>2014-12-11 16:20:31 UTC</crDate>
 <disclose flag="0">
   <name/>
 </disclose>
@@ -946,11 +988,13 @@ RESPONSE:
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0813947817</svTRID>
+  <svTRID>ccReg-0831323617</svTRID>
 </trID>
   </response>
 </epp>
 ```
+
+### EPP Contact with valid user info command discloses items to owner  
 
 REQUEST:
 
@@ -984,14 +1028,14 @@ RESPONSE:
   <name>Johnny Awesome</name>
   <org/>
   <addr>
-    <street>Lemke Haven</street>
-    <city>Marquisborough</city>
+    <street>Remington Island</street>
+    <city>South Joyhaven</city>
   </addr>
 </postalInfo>
         <voice>+372.12345678</voice>
         <fax/>
-        <email>julien@rippinoreilly.net</email>
-        <crDate>2014-12-11 16:17:28 UTC</crDate>
+        <email>milo.wolff@metz.org</email>
+        <crDate>2014-12-11 16:20:31 UTC</crDate>
         <authInfo>
           <pw>password</pw>
         </authInfo>
@@ -1009,11 +1053,13 @@ RESPONSE:
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9005080246</svTRID>
+  <svTRID>ccReg-5686514838</svTRID>
 </trID>
   </response>
 </epp>
 ```
+
+### EPP Contact with valid user info command fails if request invalid  
 
 REQUEST:
 
@@ -1047,6 +1093,8 @@ RESPONSE:
 </trID>
 </epp>
 ```
+
+### EPP Contact with valid user info command returns error when object does not exist  
 
 REQUEST:
 
@@ -1087,6 +1135,8 @@ RESPONSE:
 </epp>
 ```
 
+### EPP Contact with valid user info command returns info about contact  
+
 REQUEST:
 
 ```xml
@@ -1119,14 +1169,14 @@ RESPONSE:
   <name>Johnny Awesome</name>
   <org/>
   <addr>
-    <street>Lemke Haven</street>
-    <city>Marquisborough</city>
+    <street>Remington Island</street>
+    <city>South Joyhaven</city>
   </addr>
 </postalInfo>
         <voice>+372.12345678</voice>
         <fax/>
-        <email>julien@rippinoreilly.net</email>
-        <crDate>2014-12-11 16:17:28 UTC</crDate>
+        <email>milo.wolff@metz.org</email>
+        <crDate>2014-12-11 16:20:32 UTC</crDate>
         <authInfo>
           <pw>ccds4324pok</pw>
         </authInfo>
@@ -1144,11 +1194,13 @@ RESPONSE:
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5730880876</svTRID>
+  <svTRID>ccReg-2940889775</svTRID>
 </trID>
   </response>
 </epp>
 ```
+
+### EPP Contact with valid user info command doesn't disclose private elements  
 
 REQUEST:
 
@@ -1182,10 +1234,10 @@ RESPONSE:
       <chkData>
         <id>info-4444</id>
 <postalInfo type="int">
-  <name>Destinee Adams</name>
+  <name>Dr. Fredy O'Conner</name>
   <org/>
 </postalInfo>
-        <crDate>2014-12-11 16:17:29 UTC</crDate>
+        <crDate>2014-12-11 16:20:32 UTC</crDate>
 <disclose flag="0">
   <email/>
   <phone/>
@@ -1200,11 +1252,13 @@ RESPONSE:
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6193875182</svTRID>
+  <svTRID>ccReg-2898092937</svTRID>
 </trID>
   </response>
 </epp>
 ```
+
+### EPP Contact with valid user info command doesn't display unassociated object without password  
 
 REQUEST:
 
@@ -1239,6 +1293,8 @@ RESPONSE:
 </epp>
 ```
 
+### EPP Contact with valid user info command doesn't display unassociated object with wrong password  
+
 REQUEST:
 
 ```xml
@@ -1270,10 +1326,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5654063943</svTRID>
+  <svTRID>ccReg-8569762985</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Contact with valid user renew command returns 2101-unimplemented command  
 
 REQUEST:
 
@@ -1306,10 +1364,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5680653693</svTRID>
+  <svTRID>ccReg-0607319096</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user returns error if contact does not exists  
 
 REQUEST:
 
@@ -1373,10 +1433,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2519995143</svTRID>
+  <svTRID>ccReg-8530047391</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user checks a domain  
 
 REQUEST:
 
@@ -1412,7 +1474,7 @@ RESPONSE:
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9135082961</svTRID>
+  <svTRID>ccReg-1225195134</svTRID>
 </trID>
   </response>
 </epp>
@@ -1453,11 +1515,13 @@ RESPONSE:
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1172008903</svTRID>
+  <svTRID>ccReg-6780330648</svTRID>
 </trID>
   </response>
 </epp>
 ```
+
+### EPP Domain with valid user checks multiple domains  
 
 REQUEST:
 
@@ -1501,11 +1565,13 @@ RESPONSE:
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7916331322</svTRID>
+  <svTRID>ccReg-7662843534</svTRID>
 </trID>
   </response>
 </epp>
 ```
+
+### EPP Domain with valid user checks invalid format domain  
 
 REQUEST:
 
@@ -1546,11 +1612,13 @@ RESPONSE:
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0269242414</svTRID>
+  <svTRID>ccReg-1902208602</svTRID>
 </trID>
   </response>
 </epp>
 ```
+
+### EPP Domain with valid user with two epp users can not see other registrar domains  
 
 REQUEST:
 
@@ -1586,10 +1654,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0259655173</svTRID>
+  <svTRID>ccReg-4195170399</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with two epp users transfers a domain  
 
 REQUEST:
 
@@ -1601,7 +1671,7 @@ REQUEST:
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
         <domain:name>example.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="JD1234-REP">2c51ce98dd8efb23581c17c8c86ec6c1</domain:pw>
+          <domain:pw roid="JD1234-REP">a1ce2838d62ea244d88d4157a1bec32b</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -1624,16 +1694,16 @@ RESPONSE:
         <name>example.ee</name>
         <trStatus>serverApproved</trStatus>
         <reID>123</reID>
-        <reDate>2014-12-11 16:17:31 UTC</reDate>
+        <reDate>2014-12-11 16:20:35 UTC</reDate>
         <acID>12345678</acID>
-        <acDate>2014-12-11 16:17:31 UTC</acDate>
+        <acDate>2014-12-11 16:20:35 UTC</acDate>
         <exDate>2015-12-11 00:00:00 UTC</exDate>
       </trnData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7337620603</svTRID>
+  <svTRID>ccReg-0361740772</svTRID>
 </trID>
 </epp>
 ```
@@ -1648,7 +1718,7 @@ REQUEST:
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
         <domain:name>example.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="JD1234-REP">36fc3e9bdb24a56a21c666005a9221b3</domain:pw>
+          <domain:pw roid="JD1234-REP">c019dfec29d5fa20c4c1455fee3c79ab</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -1671,16 +1741,16 @@ RESPONSE:
         <name>example.ee</name>
         <trStatus>pending</trStatus>
         <reID>12345678</reID>
-        <reDate>2014-12-11 16:17:31 UTC</reDate>
+        <reDate>2014-12-11 16:20:35 UTC</reDate>
         <acID>123</acID>
-        <acDate>2014-12-11 17:17:31 UTC</acDate>
+        <acDate>2014-12-11 17:20:35 UTC</acDate>
         <exDate>2015-12-11 00:00:00 UTC</exDate>
       </trnData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6965010610</svTRID>
+  <svTRID>ccReg-7578676645</svTRID>
 </trID>
 </epp>
 ```
@@ -1695,7 +1765,7 @@ REQUEST:
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
         <domain:name>example.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="JD1234-REP">36fc3e9bdb24a56a21c666005a9221b3</domain:pw>
+          <domain:pw roid="JD1234-REP">c019dfec29d5fa20c4c1455fee3c79ab</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -1718,16 +1788,16 @@ RESPONSE:
         <name>example.ee</name>
         <trStatus>pending</trStatus>
         <reID>12345678</reID>
-        <reDate>2014-12-11 16:17:31 UTC</reDate>
+        <reDate>2014-12-11 16:20:35 UTC</reDate>
         <acID>123</acID>
-        <acDate>2014-12-11 17:17:31 UTC</acDate>
+        <acDate>2014-12-11 17:20:35 UTC</acDate>
         <exDate>2015-12-11 00:00:00 UTC</exDate>
       </trnData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7940127799</svTRID>
+  <svTRID>ccReg-7801365816</svTRID>
 </trID>
 </epp>
 ```
@@ -1754,7 +1824,7 @@ RESPONSE:
       <msg>Command completed successfully; ack to dequeue</msg>
     </result>
     <msgQ count="1" id="1">
-      <qDate>2014-12-11 16:17:31 UTC</qDate>
+      <qDate>2014-12-11 16:20:35 UTC</qDate>
       <msg>Transfer requested.</msg>
     </msgQ>
     <resData>
@@ -1762,15 +1832,15 @@ RESPONSE:
         <name>example.ee</name>
         <trStatus>pending</trStatus>
         <reID>12345678</reID>
-        <reDate>2014-12-11 16:17:31 UTC</reDate>
+        <reDate>2014-12-11 16:20:35 UTC</reDate>
         <acID>123</acID>
-        <acDate>2014-12-11 17:17:31 UTC</acDate>
+        <acDate>2014-12-11 17:20:35 UTC</acDate>
         <exDate>2015-12-11 00:00:00 UTC</exDate>
       </trnData>
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5881959332</svTRID>
+  <svTRID>ccReg-8851045456</svTRID>
 </trID>
   </response>
 </epp>
@@ -1800,11 +1870,13 @@ RESPONSE:
     <msgQ count="0" id="1"/>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1386317792</svTRID>
+  <svTRID>ccReg-4770103758</svTRID>
 </trID>
   </response>
 </epp>
 ```
+
+### EPP Domain with valid user with two epp users prohibits wrong registrar from approving transfer  
 
 REQUEST:
 
@@ -1816,7 +1888,7 @@ REQUEST:
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
         <domain:name>example.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="JD1234-REP">bbc373364c78a8fc2e12594d667b3c2d</domain:pw>
+          <domain:pw roid="JD1234-REP">d46a56281253e87620d7bc541ca854a1</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -1837,10 +1909,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6599888186</svTRID>
+  <svTRID>ccReg-4952216468</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with two epp users approves the transfer request  
 
 REQUEST:
 
@@ -1852,7 +1926,7 @@ REQUEST:
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
         <domain:name>example.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="JD1234-REP">1aef3ff1e244a8acaf5ce4303abd10b7</domain:pw>
+          <domain:pw roid="JD1234-REP">095abdaf422865a773cf8fff8600ba12</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -1875,19 +1949,21 @@ RESPONSE:
         <name>example.ee</name>
         <trStatus>clientApproved</trStatus>
         <reID>123</reID>
-        <reDate>2014-12-11 16:17:32 UTC</reDate>
+        <reDate>2014-12-11 16:20:36 UTC</reDate>
         <acID>12345678</acID>
-        <acDate>2014-12-11 16:17:32 UTC</acDate>
+        <acDate>2014-12-11 16:20:36 UTC</acDate>
         <exDate>2015-12-11 00:00:00 UTC</exDate>
       </trnData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2501340864</svTRID>
+  <svTRID>ccReg-6668637481</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with two epp users does not transfer with invalid pw  
 
 REQUEST:
 
@@ -1920,10 +1996,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2468302207</svTRID>
+  <svTRID>ccReg-4599629460</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with two epp users ignores transfer when owner registrar requests transfer  
 
 REQUEST:
 
@@ -1935,7 +2013,7 @@ REQUEST:
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
         <domain:name>example.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="JD1234-REP">b8f017aee00d9a68a103b72df550b73e</domain:pw>
+          <domain:pw roid="JD1234-REP">41781009f2e898a864ae9fecf26361cf</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -1956,10 +2034,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6179771028</svTRID>
+  <svTRID>ccReg-7984355433</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with two epp users returns an error for incorrect op attribute  
 
 REQUEST:
 
@@ -1997,6 +2077,8 @@ RESPONSE:
 </epp>
 ```
 
+### EPP Domain with valid user with two epp users creates new pw after successful transfer  
+
 REQUEST:
 
 ```xml
@@ -2028,7 +2110,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2942159429</svTRID>
+  <svTRID>ccReg-8459353015</svTRID>
 </trID>
 </epp>
 ```
@@ -2064,10 +2146,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7339429331</svTRID>
+  <svTRID>ccReg-7385305313</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with citizen as an owner creates a domain  
 
 REQUEST:
 
@@ -2122,17 +2206,19 @@ RESPONSE:
     <resData>
       <creData>
         <name>example.ee</name>
-        <crDate>2014-12-11 16:17:34 UTC</crDate>
+        <crDate>2014-12-11 16:20:38 UTC</crDate>
         <exDate>2015-12-11 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4435358278</svTRID>
+  <svTRID>ccReg-8238226692</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with citizen as an owner creates ria.ee with valid ds record  
 
 REQUEST:
 
@@ -2187,17 +2273,19 @@ RESPONSE:
     <resData>
       <creData>
         <name>ria.ee</name>
-        <crDate>2014-12-11 16:17:34 UTC</crDate>
+        <crDate>2014-12-11 16:20:39 UTC</crDate>
         <exDate>2015-12-11 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5767554637</svTRID>
+  <svTRID>ccReg-1690833712</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with citizen as an owner validates nameserver ipv4 when in same zone as domain  
 
 REQUEST:
 
@@ -2250,10 +2338,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-8335044691</svTRID>
+  <svTRID>ccReg-7537804530</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with citizen as an owner does not create duplicate domain  
 
 REQUEST:
 
@@ -2308,14 +2398,14 @@ RESPONSE:
     <resData>
       <creData>
         <name>example.ee</name>
-        <crDate>2014-12-11 16:17:35 UTC</crDate>
+        <crDate>2014-12-11 16:20:39 UTC</crDate>
         <exDate>2015-12-11 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4563709990</svTRID>
+  <svTRID>ccReg-5387199132</svTRID>
 </trID>
 </epp>
 ```
@@ -2376,10 +2466,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7232951005</svTRID>
+  <svTRID>ccReg-0011869763</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with citizen as an owner does not create reserved domain  
 
 REQUEST:
 
@@ -2437,10 +2529,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-8210838702</svTRID>
+  <svTRID>ccReg-6506342257</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with citizen as an owner does not create domain without contacts and registrant  
 
 REQUEST:
 
@@ -2500,6 +2594,8 @@ RESPONSE:
 </epp>
 ```
 
+### EPP Domain with valid user with citizen as an owner does not create domain without nameservers  
+
 REQUEST:
 
 ```xml
@@ -2548,6 +2644,8 @@ RESPONSE:
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with citizen as an owner does not create domain with too many nameservers  
 
 REQUEST:
 
@@ -2636,10 +2734,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1797416271</svTRID>
+  <svTRID>ccReg-6626066081</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with citizen as an owner returns error when invalid nameservers are present  
 
 REQUEST:
 
@@ -2701,10 +2801,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4908943940</svTRID>
+  <svTRID>ccReg-1103893261</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with citizen as an owner does not allow hostObj  
 
 REQUEST:
 
@@ -2758,6 +2860,8 @@ RESPONSE:
 </epp>
 ```
 
+### EPP Domain with valid user with citizen as an owner creates domain with nameservers with ips  
+
 REQUEST:
 
 ```xml
@@ -2802,17 +2906,19 @@ RESPONSE:
     <resData>
       <creData>
         <name>example.ee</name>
-        <crDate>2014-12-11 16:17:37 UTC</crDate>
+        <crDate>2014-12-11 16:20:42 UTC</crDate>
         <exDate>2015-12-11 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1903822783</svTRID>
+  <svTRID>ccReg-9547254269</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with citizen as an owner returns error when nameserver has invalid ips  
 
 REQUEST:
 
@@ -2867,10 +2973,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2262372678</svTRID>
+  <svTRID>ccReg-6055025324</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with citizen as an owner creates a domain with period in days  
 
 REQUEST:
 
@@ -2925,17 +3033,19 @@ RESPONSE:
     <resData>
       <creData>
         <name>example.ee</name>
-        <crDate>2014-12-11 16:17:38 UTC</crDate>
+        <crDate>2014-12-11 16:20:42 UTC</crDate>
         <exDate>2015-12-11 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0125684103</svTRID>
+  <svTRID>ccReg-4049528710</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with citizen as an owner does not create a domain with invalid period  
 
 REQUEST:
 
@@ -2993,10 +3103,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0713632791</svTRID>
+  <svTRID>ccReg-7326753356</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with citizen as an owner creates a domain with multiple dnskeys  
 
 REQUEST:
 
@@ -3063,17 +3175,19 @@ RESPONSE:
     <resData>
       <creData>
         <name>example.ee</name>
-        <crDate>2014-12-11 16:17:38 UTC</crDate>
+        <crDate>2014-12-11 16:20:43 UTC</crDate>
         <exDate>2015-12-11 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0905123241</svTRID>
+  <svTRID>ccReg-3254834807</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with citizen as an owner does not create a domain when dnskeys are invalid  
 
 REQUEST:
 
@@ -3176,10 +3290,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9167914264</svTRID>
+  <svTRID>ccReg-8138217299</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with citizen as an owner does not create a domain with two identical dnskeys  
 
 REQUEST:
 
@@ -3243,10 +3359,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1186943204</svTRID>
+  <svTRID>ccReg-1746439289</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with citizen as an owner validated dnskeys count  
 
 REQUEST:
 
@@ -3307,10 +3425,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6766058311</svTRID>
+  <svTRID>ccReg-7256435212</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with citizen as an owner creates domain with ds data  
 
 REQUEST:
 
@@ -3365,17 +3485,19 @@ RESPONSE:
     <resData>
       <creData>
         <name>example.ee</name>
-        <crDate>2014-12-11 16:17:39 UTC</crDate>
+        <crDate>2014-12-11 16:20:44 UTC</crDate>
         <exDate>2015-12-11 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3302162551</svTRID>
+  <svTRID>ccReg-1890907855</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with citizen as an owner creates domain with ds data with key  
 
 REQUEST:
 
@@ -3436,17 +3558,19 @@ RESPONSE:
     <resData>
       <creData>
         <name>example.ee</name>
-        <crDate>2014-12-11 16:17:40 UTC</crDate>
+        <crDate>2014-12-11 16:20:45 UTC</crDate>
         <exDate>2015-12-11 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3070284775</svTRID>
+  <svTRID>ccReg-1593776295</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with citizen as an owner prohibits dsData with key  
 
 REQUEST:
 
@@ -3507,10 +3631,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5267570176</svTRID>
+  <svTRID>ccReg-1762700063</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with citizen as an owner prohibits dsData  
 
 REQUEST:
 
@@ -3571,10 +3697,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9659683825</svTRID>
+  <svTRID>ccReg-8143954365</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with citizen as an owner prohibits keyData  
 
 REQUEST:
 
@@ -3629,10 +3757,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4319696227</svTRID>
+  <svTRID>ccReg-7342675661</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with juridical persion as an owner creates a domain with contacts  
 
 REQUEST:
 
@@ -3685,17 +3815,19 @@ RESPONSE:
     <resData>
       <creData>
         <name>example.ee</name>
-        <crDate>2014-12-11 16:17:41 UTC</crDate>
+        <crDate>2014-12-11 16:20:46 UTC</crDate>
         <exDate>2015-12-11 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5743522641</svTRID>
+  <svTRID>ccReg-0446125784</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with juridical persion as an owner does not create a domain without admin contact  
 
 REQUEST:
 
@@ -3748,10 +3880,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4016184841</svTRID>
+  <svTRID>ccReg-4327524431</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with valid domain renews a domain  
 
 REQUEST:
 
@@ -3788,11 +3922,13 @@ RESPONSE:
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0403190636</svTRID>
+  <svTRID>ccReg-0249473353</svTRID>
 </trID>
   </response>
 </epp>
 ```
+
+### EPP Domain with valid user with valid domain returns an error when given and current exp dates do not match  
 
 REQUEST:
 
@@ -3827,10 +3963,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7170443814</svTRID>
+  <svTRID>ccReg-9203214486</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with valid domain returns an error when period is invalid  
 
 REQUEST:
 
@@ -3865,10 +4003,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9145832757</svTRID>
+  <svTRID>ccReg-0988421408</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with valid domain sets ok status by default  
 
 REQUEST:
 
@@ -3902,36 +4042,38 @@ RESPONSE:
       <infData>
         <name>example.ee</name>
         <status s="ok"/>
-        <registrant>sh0657</registrant>
-        <contact type="tech">sh0657</contact>
-        <contact type="admin">sh9799</contact>
+        <registrant>sh3643</registrant>
+        <contact type="tech">sh3643</contact>
+        <contact type="admin">sh6966</contact>
         <ns>
           <hostAttr>
-            <hostName>ns.jacobson.ee</hostName>
+            <hostName>ns.kuvalis.ee</hostName>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.walkerraynor.ee</hostName>
+            <hostName>ns.berge.ee</hostName>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.batz.ee</hostName>
+            <hostName>ns.huelskautzer.ee</hostName>
           </hostAttr>
         </ns>
         <clID>Registrar OÜ</clID>
         <crID>Registrar OÜ</crID>
-        <crDate>2014-12-11 16:17:42 UTC</crDate>
+        <crDate>2014-12-11 16:20:48 UTC</crDate>
         <exDate>2015-12-11 00:00:00 UTC</exDate>
         <authInfo>
-          <pw>3c6572e06742222c4e5e09b62492e69a</pw>
+          <pw>b8f4626d2f72691e4a9e620d0650e1ee</pw>
         </authInfo>
       </infData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0227451549</svTRID>
+  <svTRID>ccReg-9045873058</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with valid domain returns domain info  
 
 REQUEST:
 
@@ -3965,18 +4107,18 @@ RESPONSE:
       <infData>
         <name>example.ee</name>
         <status s="clientHold">Payment overdue.</status>
-        <registrant>sh8241</registrant>
-        <contact type="tech">sh8241</contact>
-        <contact type="admin">sh4458</contact>
+        <registrant>sh4036</registrant>
+        <contact type="tech">sh4036</contact>
+        <contact type="admin">sh5285</contact>
         <ns>
           <hostAttr>
-            <hostName>ns.west.ee</hostName>
+            <hostName>ns.zboncak.ee</hostName>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.ohara.ee</hostName>
+            <hostName>ns.kunze.ee</hostName>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.gulgowskiernser.ee</hostName>
+            <hostName>ns.kessler.ee</hostName>
           </hostAttr>
           <hostAttr>
             <hostName>ns1.example.com</hostName>
@@ -3986,10 +4128,10 @@ RESPONSE:
         </ns>
         <clID>Registrar OÜ</clID>
         <crID>Registrar OÜ</crID>
-        <crDate>2014-12-11 16:17:43 UTC</crDate>
+        <crDate>2014-12-11 16:20:48 UTC</crDate>
         <exDate>2015-12-11 00:00:00 UTC</exDate>
         <authInfo>
-          <pw>7d0f2f79a090d4e4514b59099b8ae938</pw>
+          <pw>36c3577949c4356016936df9264141e4</pw>
         </authInfo>
       </infData>
     </resData>
@@ -4024,7 +4166,7 @@ RESPONSE:
   </extension>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4009043399</svTRID>
+  <svTRID>ccReg-5663422587</svTRID>
 </trID>
 </epp>
 ```
@@ -4061,18 +4203,18 @@ RESPONSE:
       <infData>
         <name>example.ee</name>
         <status s="clientHold">Payment overdue.</status>
-        <registrant>sh8241</registrant>
-        <contact type="tech">sh8241</contact>
-        <contact type="admin">sh4458</contact>
+        <registrant>sh4036</registrant>
+        <contact type="tech">sh4036</contact>
+        <contact type="admin">sh5285</contact>
         <ns>
           <hostAttr>
-            <hostName>ns.west.ee</hostName>
+            <hostName>ns.zboncak.ee</hostName>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.ohara.ee</hostName>
+            <hostName>ns.kunze.ee</hostName>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.gulgowskiernser.ee</hostName>
+            <hostName>ns.kessler.ee</hostName>
           </hostAttr>
           <hostAttr>
             <hostName>ns1.example.com</hostName>
@@ -4082,11 +4224,11 @@ RESPONSE:
         </ns>
         <clID>Registrar OÜ</clID>
         <crID>Registrar OÜ</crID>
-        <crDate>2014-12-11 16:17:43 UTC</crDate>
+        <crDate>2014-12-11 16:20:48 UTC</crDate>
         <exDate>2015-12-11 00:00:00 UTC</exDate>
-        <upDate>2014-12-11 16:17:43 UTC</upDate>
+        <upDate>2014-12-11 16:20:48 UTC</upDate>
         <authInfo>
-          <pw>7d0f2f79a090d4e4514b59099b8ae938</pw>
+          <pw>36c3577949c4356016936df9264141e4</pw>
         </authInfo>
       </infData>
     </resData>
@@ -4121,10 +4263,12 @@ RESPONSE:
   </extension>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5156726853</svTRID>
+  <svTRID>ccReg-3688647717</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with valid domain returns error when domain can not be found  
 
 REQUEST:
 
@@ -4160,10 +4304,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7849771074</svTRID>
+  <svTRID>ccReg-1877937593</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with valid domain updates domain and adds objects  
 
 REQUEST:
 
@@ -4223,7 +4369,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9199123715</svTRID>
+  <svTRID>ccReg-8269044408</svTRID>
 </trID>
 </epp>
 ```
@@ -4283,7 +4429,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2436123902</svTRID>
+  <svTRID>ccReg-1036646901</svTRID>
 </trID>
 </epp>
 ```
@@ -4382,10 +4528,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2732231584</svTRID>
+  <svTRID>ccReg-1134341398</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with valid domain updates a domain and removes objects  
 
 REQUEST:
 
@@ -4442,7 +4590,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9169844932</svTRID>
+  <svTRID>ccReg-7339587229</svTRID>
 </trID>
 </epp>
 ```
@@ -4491,7 +4639,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2935142757</svTRID>
+  <svTRID>ccReg-0761964303</svTRID>
 </trID>
 </epp>
 ```
@@ -4555,10 +4703,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2535779687</svTRID>
+  <svTRID>ccReg-6009190382</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with valid domain does not add duplicate objects to domain  
 
 REQUEST:
 
@@ -4593,7 +4743,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2742818653</svTRID>
+  <svTRID>ccReg-0363595018</svTRID>
 </trID>
 </epp>
 ```
@@ -4634,10 +4784,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1267977133</svTRID>
+  <svTRID>ccReg-9563194621</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with valid domain updates a domain  
 
 REQUEST:
 
@@ -4670,10 +4822,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9194205979</svTRID>
+  <svTRID>ccReg-8337129972</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with valid domain does not assign invalid status to domain  
 
 REQUEST:
 
@@ -4709,10 +4863,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1266443305</svTRID>
+  <svTRID>ccReg-4280169040</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with valid domain deletes domain  
 
 REQUEST:
 
@@ -4742,10 +4898,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5710543495</svTRID>
+  <svTRID>ccReg-5732815987</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Domain with valid user with valid domain does not delete domain with specific status  
 
 REQUEST:
 
@@ -4775,10 +4933,14 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3938186614</svTRID>
+  <svTRID>ccReg-0127772864</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Helper in context of Domain generates valid transfer xml  
+
+### EPP Keyrelay with valid user makes a keyrelay request  
 
 REQUEST:
 
@@ -4795,7 +4957,7 @@ REQUEST:
         <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
       </ext:keyData>
       <ext:authInfo>
-        <domain:pw>bf24783904a79e5bce2189b298fe776a</domain:pw>
+        <domain:pw>ebbc0622a3cb7f4b6c27abb394e27c14</domain:pw>
       </ext:authInfo>
       <ext:expiry>
         <ext:relative>P1M13D</ext:relative>
@@ -4818,10 +4980,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-8154621015</svTRID>
+  <svTRID>ccReg-8305714971</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Poll with valid user returns no messages in poll  
 
 REQUEST:
 
@@ -4846,12 +5010,14 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0652192398</svTRID>
+  <svTRID>ccReg-0490029079</svTRID>
 </trID>
   </response>
 </epp>
 ```
 
+### EPP Poll with valid user queues and dequeues messages  
+
 REQUEST:
 
 ```xml
@@ -4875,7 +5041,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1998625511</svTRID>
+  <svTRID>ccReg-3737488607</svTRID>
 </trID>
   </response>
 </epp>
@@ -4903,12 +5069,12 @@ RESPONSE:
       <msg>Command completed successfully; ack to dequeue</msg>
     </result>
     <msgQ count="1" id="1">
-      <qDate>2014-12-11 16:17:47 UTC</qDate>
+      <qDate>2014-12-11 16:20:53 UTC</qDate>
       <msg>Balance low.</msg>
     </msgQ>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0327876732</svTRID>
+  <svTRID>ccReg-8138607881</svTRID>
 </trID>
   </response>
 </epp>
@@ -4941,7 +5107,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9886507095</svTRID>
+  <svTRID>ccReg-3670301280</svTRID>
 </trID>
 </epp>
 ```
@@ -4970,7 +5136,7 @@ RESPONSE:
     <msgQ count="0" id="1"/>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2313068805</svTRID>
+  <svTRID>ccReg-0571612506</svTRID>
 </trID>
   </response>
 </epp>
@@ -5003,10 +5169,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3057210282</svTRID>
+  <svTRID>ccReg-1239692616</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Poll with valid user returns an error on incorrect op  
 
 REQUEST:
 
@@ -5037,6 +5205,8 @@ RESPONSE:
 </epp>
 ```
 
+### EPP Poll with valid user dequeues multiple messages  
+
 REQUEST:
 
 ```xml
@@ -5059,12 +5229,12 @@ RESPONSE:
       <msg>Command completed successfully; ack to dequeue</msg>
     </result>
     <msgQ count="3" id="3">
-      <qDate>2014-12-11 16:17:48 UTC</qDate>
+      <qDate>2014-12-11 16:20:54 UTC</qDate>
       <msg>Smth else.</msg>
     </msgQ>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4615560346</svTRID>
+  <svTRID>ccReg-8009860176</svTRID>
 </trID>
   </response>
 </epp>
@@ -5094,7 +5264,7 @@ RESPONSE:
     <msgQ count="2" id="3"/>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1904412136</svTRID>
+  <svTRID>ccReg-8066995420</svTRID>
 </trID>
   </response>
 </epp>
@@ -5122,12 +5292,12 @@ RESPONSE:
       <msg>Command completed successfully; ack to dequeue</msg>
     </result>
     <msgQ count="2" id="2">
-      <qDate>2014-12-11 16:17:48 UTC</qDate>
+      <qDate>2014-12-11 16:20:54 UTC</qDate>
       <msg>Something.</msg>
     </msgQ>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5672602530</svTRID>
+  <svTRID>ccReg-9032842650</svTRID>
 </trID>
   </response>
 </epp>
@@ -5157,7 +5327,7 @@ RESPONSE:
     <msgQ count="1" id="2"/>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2190230353</svTRID>
+  <svTRID>ccReg-8851176265</svTRID>
 </trID>
   </response>
 </epp>
@@ -5185,12 +5355,12 @@ RESPONSE:
       <msg>Command completed successfully; ack to dequeue</msg>
     </result>
     <msgQ count="1" id="1">
-      <qDate>2014-12-11 16:17:48 UTC</qDate>
+      <qDate>2014-12-11 16:20:54 UTC</qDate>
       <msg>Balance low.</msg>
     </msgQ>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6062744767</svTRID>
+  <svTRID>ccReg-8636663930</svTRID>
 </trID>
   </response>
 </epp>
@@ -5220,7 +5390,7 @@ RESPONSE:
     <msgQ count="0" id="1"/>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-8123154877</svTRID>
+  <svTRID>ccReg-8512393226</svTRID>
 </trID>
   </response>
 </epp>
@@ -5249,9 +5419,52 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3678335037</svTRID>
+  <svTRID>ccReg-6055012885</svTRID>
 </trID>
   </response>
+</epp>
+```
+
+### EPP Session when not connected greets client upon connection  
+
+### EPP Session when connected does not log in with invalid user  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <command>
+    <login>
+      <clID>gitlab</clID>
+      <pw>ghyt9e4fu</pw>
+      <options>
+        <version>1.0</version>
+        <lang>en</lang>
+      </options>
+      <svcs>
+        <objURI>urn:ietf:params:xml:ns:contact-1.0</objURI>
+      </svcs>
+    </login>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="2501">
+      <msg>Authentication error; server closing connection</msg>
+    </result>
+  </response>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-9729176876</svTRID>
+</trID>
 </epp>
 ```
 
@@ -5289,49 +5502,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1860638959</svTRID>
+  <svTRID>ccReg-2042235305</svTRID>
 </trID>
 </epp>
 ```
 
-REQUEST:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
-  <command>
-    <login>
-      <clID>gitlab</clID>
-      <pw>ghyt9e4fu</pw>
-      <options>
-        <version>1.0</version>
-        <lang>en</lang>
-      </options>
-      <svcs>
-        <objURI>urn:ietf:params:xml:ns:contact-1.0</objURI>
-      </svcs>
-    </login>
-    <clTRID>ABC-12345</clTRID>
-  </command>
-</epp>
-```
-
-RESPONSE:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
-  <response>
-    <result code="2501">
-      <msg>Authentication error; server closing connection</msg>
-    </result>
-  </response>
-<trID>
-  <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0835423520</svTRID>
-</trID>
-</epp>
-```
+### EPP Session when connected prohibits further actions unless logged in  
 
 REQUEST:
 
@@ -5367,6 +5543,8 @@ RESPONSE:
 </epp>
 ```
 
+### EPP Session when connected with valid user logs in epp user  
+
 REQUEST:
 
 ```xml
@@ -5400,12 +5578,14 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1547839887</svTRID>
+  <svTRID>ccReg-8625841115</svTRID>
 </trID>
   </response>
 </epp>
 ```
 
+### EPP Session when connected with valid user logs out epp user  
+
 REQUEST:
 
 ```xml
@@ -5439,7 +5619,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3462462532</svTRID>
+  <svTRID>ccReg-1439009441</svTRID>
 </trID>
   </response>
 </epp>
@@ -5469,10 +5649,12 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7043130622</svTRID>
+  <svTRID>ccReg-9453592535</svTRID>
 </trID>
 </epp>
 ```
+
+### EPP Session when connected with valid user does not log in twice  
 
 REQUEST:
 
@@ -5507,7 +5689,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6207610320</svTRID>
+  <svTRID>ccReg-4606991463</svTRID>
 </trID>
   </response>
 </epp>
