@@ -260,29 +260,29 @@ All deploy code locates at config/deploy.rb file.
 First add 'testregistry' and 'registry' to your .ssh/config file:
 
 ```
-  # staging
-  Host testregistry
-    HostName YOUR-SERVER-IP
-    User registry
+# staging
+Host testregistry
+  HostName YOUR-SERVER-IP
+  User registry
 
-  # production
-  Host registry
-    HostName YOUR-SERVER-IP
-    User registry
+# production
+Host registry
+  HostName YOUR-SERVER-IP
+  User registry
 ```
 
 Mina help and all mina commands:
 
-  mina -h
-  mina -T
+    mina -h
+    mina -T
 
 Setup application directories for a new server:
 
-  mina setup     # staging
-  mina pr setup  # production 
+    mina setup     # staging
+    mina pr setup  # production 
 
 Deploy new code:
 
-  mina deploy    # staging
-  mina pr deploy # production
+    mina deploy    # staging
+    mina pr deploy # production
 
