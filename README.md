@@ -237,17 +237,27 @@ Officially Debian 7 is supported and tested.
 You can use or find ideas how to build up production servers using 
 sysadmin tool [Babushka](https://github.com/benhoskings/babushka).
 
-Unofficial scripts locate at: https://github.com/priit/babushka-deps
+Unofficial build scripts locate at: https://github.com/priit/babushka-deps
+Those scripts are not dedicated to Registry, but more focuse on general
+Ruby on Rails application deployment in various situatians.
 
 Quick overview. Use 'registry' for username and app name when asked.
 
+    # on server side
     apt-get install curl
     sh -c "`curl https://babushka.me/up`"
     babushka priit:app_user
     babushka priit:app
 
 Please inspect those scripts before running anything, 
-they might not be complete or might have bugs. You are free to fork it.
+they might not be complete or might have serious bugs. You are free to fork it.
+
+Alternatively you can build up everything manually, required components:
+
+Consider using RBENV: https://github.com/sstephenson/rbenv
+Compile requried ruby version: https://github.com/internetee/registry/blob/master/.ruby-version
+Phusion passenger with apache: https://www.phusionpassenger.com/documentation/Users%20guide%20Apache.html
+Postgresql documents: http://www.postgresql.org/docs/
 
 
 ### Application build and update
