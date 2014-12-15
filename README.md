@@ -234,8 +234,8 @@ Deployment
 
 Officially Debian 7 is supported and tested. 
 
-You can use or find indeas how to build up production servers using 
-sysadmin tool Babushka (https://github.com/benhoskings/babushka). 
+You can use or find ideas how to build up production servers using 
+sysadmin tool [Babushka](https://github.com/benhoskings/babushka).
 
 Unofficial scripts locate at: https://github.com/priit/babushka-deps
 
@@ -252,12 +252,12 @@ they might not be complete or might have bugs. You are free to fork it.
 
 ### Application build and update
 
-For application deployment we are using faster Mina (https://github.com/mina-deploy/mina) 
+For application deployment we are using faster [Mina](https://github.com/mina-deploy/mina) 
 instead of Capistrano.
 
 All deploy code locates at config/deploy.rb file.
 
-First add 'testregistry' and 'registry' to your ssh script:
+First add 'testregistry' and 'registry' to your .ssh/config file:
 
   # staging
   Host testregistry
@@ -274,7 +274,7 @@ Mina help and all mina commands:
   mina -h
   mina -T
 
-Setup application for new server:
+Setup application directories for a new server:
 
   mina setup     # staging
   mina pr setup  # production 
@@ -283,3 +283,4 @@ Deploy new code:
 
   mina deploy    # staging
   mina pr deploy # production
+
