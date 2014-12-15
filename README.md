@@ -3,6 +3,11 @@ Domain Registry
 
 Full stack top-level domain (TLD) management.
 
+* [Installation](https://github.com/internetee/registry#installation)
+* [Testing](https://github.com/internetee/registry#testing)
+* [Documentation](https://github.com/internetee/registry#documentation)
+* [Deployment](https://github.com/internetee/registry#deployment)
+
 
 Installation
 ------------
@@ -146,9 +151,9 @@ Please follow WHOIS server readme:
     https://github.com/internetee/whois
 
 
-
 Testing
----
+-------
+
 * Before running tests for the first time: `RAILS_ENV=test rake db:seed`
 * Run tests: `rake`
 * Run EPP tests: `rake test:epp`
@@ -159,8 +164,7 @@ To see internal errors while testing EPP
     unicorn -E test -p 8989
     rake spec:epp
 
-Apache mod_epp testing/debugging
---------------------------------
+### Apache mod_epp testing/debugging
 
 Testing Apache mod_epp without Registry app.
 
@@ -215,4 +219,80 @@ This needs a static greeting file, so you will have to make /var/www writable.
     mkdir epp
 
 Copy the files from $mod_epp/examples/cgis to /usr/lib/cgi-bin/epp 
+
+
+Documentation
+-------------
+
+[EPP request-response examples](https://github.com/internetee/registry/blob/master/doc/epp-doc.md)
+
+
+Deployment
+----------
+
+### System build
+
+Officially Debian 7 is supported and tested. 
+
+You can use or find ideas how to build up production servers using 
+sysadmin tool [Babushka](https://github.com/benhoskings/babushka).
+
+Unofficial build scripts locate at: https://github.com/priit/babushka-deps
+Those scripts are not dedicated to Registry, but more focuse on general
+Ruby on Rails application deployment in various situatians.
+
+Quick overview. Use 'registry' for username and app name when asked.
+
+    # on server side
+    apt-get install curl
+    sh -c "`curl https://babushka.me/up`"
+    babushka priit:app_user
+    babushka priit:app
+
+Please inspect those scripts before running anything, 
+they might not be complete or might have serious bugs. You are free to fork it.
+
+Alternatively you can build up everything manually, required components:
+
+Consider using RBENV: https://github.com/sstephenson/rbenv
+Compile requried ruby version: https://github.com/internetee/registry/blob/master/.ruby-version
+Phusion passenger with apache: https://www.phusionpassenger.com/documentation/Users%20guide%20Apache.html
+Postgresql documents: http://www.postgresql.org/docs/
+
+
+### Application build and update
+
+For application deployment we are using faster [Mina](https://github.com/mina-deploy/mina) 
+instead of Capistrano.
+
+All deploy code locates at config/deploy.rb file.
+
+First add 'testregistry' and 'registry' to your .ssh/config file:
+
+```
+# staging
+Host testregistry
+  HostName YOUR-SERVER-IP
+  User registry
+
+# production
+Host registry
+  HostName YOUR-SERVER-IP
+  User registry
+```
+
+Mina help and all mina commands:
+
+    mina -h
+    mina -T
+
+Setup application directories for a new server:
+
+    mina setup     # staging
+    mina pr setup  # production 
+
+Deploy new code:
+
+    mina deploy    # staging
+    mina pr deploy # production
 
