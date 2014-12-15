@@ -160,4 +160,7 @@ group :development do
   gem 'guard-rspec', '~> 4.3.1'
   gem 'rubocop', '~> 0.26.1'
   gem 'guard-rubocop', '~> 1.1.0'
+
+  # to generate database diagrams
+  gem 'railroady'
 end

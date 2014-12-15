@@ -225,6 +225,8 @@ Documentation
 -------------
 
 [EPP request-response examples](https://github.com/internetee/registry/blob/master/doc/epp-doc.md)
+[Database diagram](https://github.com/internetee/registry/blob/master/doc/models_complete.svg)
+[Controllers diagram](https://github.com/internetee/registry/blob/master/doc/controllers_complete.svg)
 
 
 Deployment
