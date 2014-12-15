@@ -254,10 +254,10 @@ they might not be complete or might have serious bugs. You are free to fork it.
 
 Alternatively you can build up everything manually, required components:
 
-Consider using RBENV: https://github.com/sstephenson/rbenv
-Compile requried ruby version: https://github.com/internetee/registry/blob/master/.ruby-version
-Phusion passenger with apache: https://www.phusionpassenger.com/documentation/Users%20guide%20Apache.html
-Postgresql documents: http://www.postgresql.org/docs/
+* Consider using [RBENV](https://github.com/sstephenson/rbenv)
+* Compile requried [ruby version](https://github.com/internetee/registry/blob/master/.ruby-version)
+* [Phusion passenger](https://www.phusionpassenger.com/documentation/Users%20guide%20Apache.html)
+* [Postgresql](http://www.postgresql.org/docs/)
 
 
 ### Application build and update
