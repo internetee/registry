@@ -259,6 +259,7 @@ All deploy code locates at config/deploy.rb file.
 
 First add 'testregistry' and 'registry' to your .ssh/config file:
 
+```
   # staging
   Host testregistry
     HostName YOUR-SERVER-IP
@@ -268,6 +269,7 @@ First add 'testregistry' and 'registry' to your .ssh/config file:
   Host registry
     HostName YOUR-SERVER-IP
     User registry
+```
 
 Mina help and all mina commands:
 
