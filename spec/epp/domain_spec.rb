@@ -1062,6 +1062,25 @@ describe 'EPP Domain', epp: true do
         expect(response[:results][2][:value]).to eq('clientHold')
       end
 
+      it 'does not remove server statuses' do
+        d = Domain.last
+        d.domain_statuses.create(value: DomainStatus::SERVER_HOLD)
+
+        xml = domain_update_xml({
+          rem: [
+            _anonymus: [
+              { status: { value: '', attrs: { s: 'serverHold' } } }
+            ]
+          ]
+        })
+
+        response = epp_request(xml, :xml)
+
+        expect(response[:results][0][:result_code]).to eq('2303')
+        expect(response[:results][0][:msg]).to eq('Status was not found')
+        expect(response[:results][0][:value]).to eq('serverHold')
+      end
+
       it 'does not add duplicate objects to domain' do
         Fabricate(:contact, code: 'mak21')
 

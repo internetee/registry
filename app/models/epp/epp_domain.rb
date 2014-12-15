@@ -125,7 +125,7 @@ class Epp::EppDomain < Domain
 
   def attach_statuses(status_list)
     status_list.each do |x|
-      unless DomainStatus::STATUSES.include?(x[:value])
+      unless DomainStatus::CLIENT_STATUSES.include?(x[:value])
         add_epp_error('2303', 'status', x[:value], [:domain_statuses, :not_found])
         next
       end
@@ -169,6 +169,11 @@ class Epp::EppDomain < Domain
   def detach_statuses(status_list)
     to_delete = []
     status_list.each do |x|
+      unless DomainStatus::CLIENT_STATUSES.include?(x[:value])
+        add_epp_error('2303', 'status', x[:value], [:domain_statuses, :not_found])
+        next
+      end
+
       status = domain_statuses.find_by(value: x[:value])
       if status.blank?
         add_epp_error('2303', 'status', x[:value], [:domain_statuses, :not_found])
