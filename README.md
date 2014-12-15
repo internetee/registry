@@ -3,6 +3,11 @@ Domain Registry
 
 Full stack top-level domain (TLD) management.
 
+* [Installation](https://github.com/internetee/registry#installation)
+* [Testing](https://github.com/internetee/registry#testing)
+* [Documentation](https://github.com/internetee/registry#documentation)
+* [Deployment](https://github.com/internetee/registry#deployment)
+
 
 Installation
 ------------
@@ -146,9 +151,9 @@ Please follow WHOIS server readme:
     https://github.com/internetee/whois
 
 
-
 Testing
----
+-------
+
 * Before running tests for the first time: `RAILS_ENV=test rake db:seed`
 * Run tests: `rake`
 * Run EPP tests: `rake test:epp`
@@ -159,8 +164,7 @@ To see internal errors while testing EPP
     unicorn -E test -p 8989
     rake spec:epp
 
-Apache mod_epp testing/debugging
---------------------------------
+### Apache mod_epp testing/debugging
 
 Testing Apache mod_epp without Registry app.
 
@@ -216,3 +220,66 @@ This needs a static greeting file, so you will have to make /var/www writable.
 
 Copy the files from $mod_epp/examples/cgis to /usr/lib/cgi-bin/epp 
 
+
+Documentation
+-------------
+
+[EPP request-response examples](https://github.com/internetee/registry/blob/master/doc/epp-doc.md)
+
+
+Deployment
+----------
+
+### System build
+
+Officially Debian 7 is supported and tested. 
+
+You can use or find indeas how to build up production servers using 
+sysadmin tool Babushka (https://github.com/benhoskings/babushka). 
+
+Unofficial scripts locate at: https://github.com/priit/babushka-deps
+
+Quick overview. Use 'registry' for username and app name when asked.
+
+    apt-get install curl
+    sh -c "`curl https://babushka.me/up`"
+    babushka priit:app_user
+    babushka priit:app
+
+Please inspect those scripts before running anything, 
+they might not be complete or might have bugs. You are free to fork it.
+
+
+### Application build and update
+
+For application deployment we are using faster Mina (https://github.com/mina-deploy/mina) 
+instead of Capistrano.
+
+All deploy code locates at config/deploy.rb file.
+
+First add 'testregistry' and 'registry' to your ssh script:
+
+  # staging
+  Host testregistry
+    HostName YOUR-SERVER-IP
+    User registry
+
+  # production
+  Host registry
+    HostName YOUR-SERVER-IP
+    User registry
+
+Mina help and all mina commands:
+
+  mina -h
+  mina -T
+
+Setup application for new server:
+
+  mina setup     # staging
+  mina pr setup  # production 
+
+Deploy new code:
+
+  mina deploy    # staging
+  mina pr deploy # production

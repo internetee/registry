@@ -16,13 +16,11 @@ set :deploy_to, '/home/app/registry'
 set :repository, 'https://github.com/internetee/registry'
 set :branch, 'master'
 
-task :eedirekt do
-  set :deploy_to, '/home/app/eedirekt'
-end
-
-# shortcut for eedirekt
-task :ee do
-  set :deploy_to, '/home/app/eedirekt'
+# production
+task :pr do
+  set :domain, 'registry'
+  set :deploy_to, '/home/registry/registry'
+  set :branch, 'master' # temp
 end
 
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
