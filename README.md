@@ -298,3 +298,7 @@ Deploy new code:
     mina deploy    # staging
     mina pr deploy # production
 
+Rollback to previous release:
+
+    mina rollback    # staging
+    mina pr rollback # production 
