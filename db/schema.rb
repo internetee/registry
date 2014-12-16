@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141215085117) do
+ActiveRecord::Schema.define(version: 20141216133831) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -326,7 +326,6 @@ ActiveRecord::Schema.define(version: 20141215085117) do
     t.inet     "last_sign_in_ip"
     t.boolean  "admin",              default: false
     t.string   "identity_code"
-    t.integer  "registrar_id"
     t.integer  "country_id"
   end
 

@@ -6,8 +6,8 @@ feature 'Sessions', type: :feature do
 
   background do
     create_settings
-    Fabricate(:user, registrar: nil, identity_code: '37810013261')
-    Fabricate(:user, registrar: zone, username: 'zone', admin: false, identity_code: '37810013087')
+    Fabricate(:user, identity_code: '37810013261')
+    Fabricate(:user, username: 'zone', admin: false, identity_code: '37810013087')
     Fabricate.times(2, :domain, registrar: zone)
     Fabricate.times(2, :domain, registrar: elkdata)
   end
