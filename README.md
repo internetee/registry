@@ -261,6 +261,9 @@ Alternatively you can build up everything manually, required components:
 * [Phusion passenger](https://www.phusionpassenger.com/documentation/Users%20guide%20Apache.html)
 * [Postgresql](http://www.postgresql.org/docs/)
 
+Registry application is not tested with multi-threaded system (such as Puma) and 
+it's not officially supported. Please use multi-process system instead (Passenger, Unicorn, Mongrel)
+
 
 ### Application build and update
 
