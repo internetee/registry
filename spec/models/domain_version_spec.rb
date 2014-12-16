@@ -6,7 +6,7 @@ describe DomainVersion do
       Setting.ns_min_count = 1
       Fabricate(:domain, name: 'version.ee', dnskeys: [], domain_contacts: []) do
         owner_contact { Fabricate(:contact, name: 'owner_contact', code: 'asd', email: 'owner1@v.ee') }
-        nameservers(count: 1) { Fabricate(:nameserver, hostname: 'ns.test.ee') }
+        nameservers(count: 1) { Fabricate(:nameserver, hostname: 'ns.test.ee', ipv4: nil) }
         admin_contacts(count: 1) { Fabricate(:contact, name: 'admin_contact 1', code: 'qwe', email: 'admin1@v.ee') }
         tech_contacts(count: 1) { Fabricate(:contact, name: 'tech_contact 1', code: 'zxc', email: 'tech1@v.ee') }
       end
