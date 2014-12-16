@@ -264,6 +264,8 @@ Alternatively you can build up everything manually, required components:
 Registry application is not tested with multi-threaded system (such as Puma) and 
 it's not officially supported. Please use multi-process system instead (Passenger, Unicorn, Mongrel)
 
+We also recommend to investigate 
+[Passenger Optimization Guide](https://www.phusionpassenger.com/documentation/ServerOptimizationGuide.html) for proper configuration.
 
 ### Application build and update
 
