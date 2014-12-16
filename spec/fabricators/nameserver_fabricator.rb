@@ -1,4 +1,4 @@
 Fabricator(:nameserver) do
-  hostname { "ns.#{Faker::Internet.domain_word}.ee" }
+  hostname { sequence(:hostname) { |i| "ns.#{Faker::Internet.domain_word}#{i}.ee" } }
   ipv4 '192.168.1.1'
 end
