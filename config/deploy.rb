@@ -86,11 +86,22 @@ task deploy: :environment do
     invoke :'rails:db_migrate'
     invoke :'rails:assets_precompile'
     invoke :'whenever:update'
-
-    to :launch do
-      queue "mkdir -p #{deploy_to}/current/tmp; touch #{deploy_to}/current/tmp/restart.txt"
-    end
+    invoke :restart
   end
+end
+
+desc 'Rolls back the latest release'
+task rollback: :environment do
+  queue! %[echo "-----> Rolling back to previous release for instance: #{domain}"]
+  queue %[ls "#{deploy_to}/releases" -Art | sort | tail -n 2 | head -n 1]
+  queue! %[ls -Art "#{deploy_to}/releases" | sort | tail -n 2 | head -n 1 | xargs -I active ln -nfs "#{deploy_to}/releases/active" "#{deploy_to}/current"]
+  invoke :'whenever:update'
+  invoke :restart
+end
+
+desc 'Restart Passenger application'
+task restart: :environment do
+  queue "mkdir -p #{deploy_to}/current/tmp; touch #{deploy_to}/current/tmp/restart.txt"
 end
 
 # For help in making your deploy script, see the Mina documentation:
