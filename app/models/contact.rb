@@ -9,6 +9,7 @@ class Contact < ActiveRecord::Base
 
   has_many :domain_contacts
   has_many :domains, through: :domain_contacts
+  has_many :statuses, class_name: 'ContactStatus'
 
   # TODO: remove the x_by
   belongs_to :created_by, class_name: 'EppUser', foreign_key: :created_by_id
