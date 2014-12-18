@@ -10,7 +10,7 @@ module Epp::ContactsHelper
     # FIXME: Update returns 2303 update multiple times
     code = params_hash['epp']['command']['update']['update'][:id]
     @contact = Contact.where(code: code).first
-    #if update_rights? && stamp(@contact) && @contact.update_attributes(contact_and_address_attributes(:update))
+    # if update_rights? && stamp(@contact) && @contact.update_attributes(contact_and_address_attributes(:update))
     if owner? && stamp(@contact) && @contact.update_attributes(contact_and_address_attributes(:update))
       render 'epp/contacts/update'
     else
@@ -68,7 +68,7 @@ module Epp::ContactsHelper
   def validate_contact_update_request
     @ph = params_hash['epp']['command']['update']['update']
     update_attrs_present?
-    #xml_attrs_present?(@ph, [['id'], %w(authInfo pw)])
+    # xml_attrs_present?(@ph, [['id'], %w(authInfo pw)])
     xml_attrs_present?(@ph, [['id']])
   end
 
