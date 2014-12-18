@@ -54,7 +54,6 @@ class Epp::EppDomain < Domain
     attach_contacts(self.class.parse_contacts_from_frame(parsed_frame))
     attach_nameservers(self.class.parse_nameservers_from_frame(parsed_frame))
     attach_statuses(self.class.parse_statuses_from_frame(parsed_frame))
-
     errors.empty?
   end
 
@@ -115,15 +114,7 @@ class Epp::EppDomain < Domain
       end
     end
 
-    return unless owner_contact
-
-    attach_contact(DomainContact::TECH, owner_contact) if tech_contacts_count.zero?
-    attach_contact(DomainContact::ADMIN, owner_contact) if admin_contacts_count.zero? && owner_contact.citizen?
-  end
-
-  def attach_contact(type, contact)
-    domain_contacts.build(contact: contact, contact_type: DomainContact::TECH) if type.to_sym == :tech
-    domain_contacts.build(contact: contact, contact_type: DomainContact::ADMIN) if type.to_sym == :admin
+    attach_default_contacts if new_record? && owner_contact
   end
 
   def attach_nameservers(ns_list)
@@ -134,7 +125,7 @@ class Epp::EppDomain < Domain
 
   def attach_statuses(status_list)
     status_list.each do |x|
-      unless DomainStatus::STATUSES.include?(x[:value])
+      unless DomainStatus::CLIENT_STATUSES.include?(x[:value])
         add_epp_error('2303', 'status', x[:value], [:domain_statuses, :not_found])
         next
       end
@@ -178,6 +169,11 @@ class Epp::EppDomain < Domain
   def detach_statuses(status_list)
     to_delete = []
     status_list.each do |x|
+      unless DomainStatus::CLIENT_STATUSES.include?(x[:value])
+        add_epp_error('2303', 'status', x[:value], [:domain_statuses, :not_found])
+        next
+      end
+
       status = domain_statuses.find_by(value: x[:value])
       if status.blank?
         add_epp_error('2303', 'status', x[:value], [:domain_statuses, :not_found])
@@ -198,7 +194,6 @@ class Epp::EppDomain < Domain
 
     dnssec_data[:key_data].each do |x|
       dnskeys.build({
-        ds_key_tag: SecureRandom.hex(5),
         ds_alg: 3,
         ds_digest_type: Setting.ds_algorithm
       }.merge(x))
@@ -303,7 +298,6 @@ class Epp::EppDomain < Domain
     end
 
     return pt if pt
-
     if Setting.transfer_wait_time > 0
       dt = domain_transfers.create(
         status: DomainTransfer::PENDING,

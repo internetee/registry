@@ -1,13 +1,12 @@
 require 'rails_helper'
 
 feature 'Setting management', type: :feature do
-  let(:zone) { Fabricate(:registrar) }
-  let(:zone_user) { Fabricate(:user, registrar: zone, username: 'user1', admin: true, identity_code: '37810013087') }
+  let(:user) { Fabricate(:user, username: 'user1', admin: true, identity_code: '37810013087') }
 
   background { create_settings }
 
   scenario 'User changes a setting' do
-    sign_in zone_user
+    sign_in user
     visit admin_settings_path
 
     val_min = find_field('_settings_ns_min_count').value

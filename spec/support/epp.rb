@@ -8,8 +8,16 @@ module Epp
     server = server_zone
     server = server_elkdata if args.include?(:elkdata)
 
-    return parse_response(server.request(data)) if args.include?(:xml)
-    return parse_response(server.request(read_body(data)))
+    res = parse_response(server.request(data)) if args.include?(:xml)
+    if res
+      log(data, res[:parsed])
+      return res
+    end
+
+    res = parse_response(server.request(read_body(data)))
+    log(read_body(data), res[:parsed])
+    return res
+
   rescue => e
     e
   end
@@ -19,8 +27,15 @@ module Epp
     server = server_elkdata if args.include?(:elkdata)
     server = server_zone if args.include?(:zone)
 
-    return parse_response(server.send_request(data)) if args.include?(:xml)
-    return parse_response(server.send_request(read_body(data)))
+    res = parse_response(server.send_request(data)) if args.include?(:xml)
+    if res
+      log(data, res[:parsed])
+      return res
+    end
+
+    res = parse_response(server.send_request(read_body(data)))
+    log(read_body(data), res[:parsed])
+    return res
   rescue => e
     e
   end
@@ -36,7 +51,9 @@ module Epp
     }
 
     res.css('epp response result').each do |x|
-      obj[:results] << { result_code: x[:code], msg: x.css('msg').text, value: x.css('value > *').try(:first).try(:text) }
+      obj[:results] << {
+        result_code: x[:code], msg: x.css('msg').text, value: x.css('value > *').try(:first).try(:text)
+      }
     end
 
     obj[:result_code] = obj[:results][0][:result_code]
@@ -201,6 +218,12 @@ module Epp
 
     xml_params = defaults.deep_merge(xml_params)
     EppXml::Domain.transfer(xml_params, op)
+  end
+
+  def log(req, res)
+    return unless ENV['EPP_DOC']
+    puts "REQUEST:\n\n```xml\n#{Nokogiri(req)}```\n\n"
+    puts "RESPONSE:\n\n```xml\n#{res}```\n\n"
   end
 end
 

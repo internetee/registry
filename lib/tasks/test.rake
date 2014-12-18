@@ -22,6 +22,12 @@ if Rails.env.test? || Rails.env.development?
     t.rspec_opts = '--tag ~feature'
   end
 
+  desc 'Generate EPP doc from specs'
+  RSpec::Core::RakeTask.new('test:epp_doc') do |t|
+    ENV['EPP_DOC'] = 'true'
+    t.rspec_opts = '--tag epp --require support/epp_doc.rb --format EppDoc'
+  end
+
   Rake::Task[:default].prerequisites.clear
   task default: :test
 

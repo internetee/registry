@@ -19,8 +19,6 @@
               = sort_link(@q, 'identity_code', t('shared.identity_code'))
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'admin', t('shared.admin'))
-            %th{class: 'col-xs-2'}
-              = sort_link(@q, 'registrar', t('shared.registrar'))
         %tbody
           - @users.each do |x|
             %tr
@@ -28,7 +26,6 @@
               %td= x.email
               %td= x.identity_code
               %td= x.admin
-              %td= x.registrar
 .row
   .col-md-12
     = paginate @users

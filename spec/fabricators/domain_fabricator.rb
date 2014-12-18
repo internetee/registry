@@ -5,7 +5,7 @@ Fabricator(:domain) do
   period_unit 'y'
   owner_contact(fabricator: :contact)
   nameservers(count: 3)
-  admin_contacts(count: 1) { Fabricate(:contact) }
+  domain_contacts(count: 1) { Fabricate(:domain_contact, contact_type: 'admin') }
   registrar
   auth_info '98oiewslkfkd'
   dnskeys(count: 1)

@@ -95,6 +95,28 @@ describe Domain do
       d = Fabricate(:domain)
       expect(d.auth_info).to_not be_empty
     end
+
+    it 'manages statuses automatically' do
+      d = Fabricate(:domain)
+      expect(d.domain_statuses.count).to eq(1)
+      expect(d.domain_statuses.first.value).to eq(DomainStatus::OK)
+
+      d.period = 2
+      d.save
+
+      d.reload
+
+      expect(d.domain_statuses.count).to eq(1)
+      expect(d.domain_statuses.first.reload.value).to eq(DomainStatus::OK)
+
+      d.domain_statuses.build(value: DomainStatus::CLIENT_DELETE_PROHIBITED)
+      d.save
+
+      d.reload
+
+      expect(d.domain_statuses.count).to eq(1)
+      expect(d.domain_statuses.first.value).to eq(DomainStatus::CLIENT_DELETE_PROHIBITED)
+    end
   end
 
   with_versioning do

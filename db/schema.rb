@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141216075056) do
+ActiveRecord::Schema.define(version: 20141216133831) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -147,6 +147,7 @@ ActiveRecord::Schema.define(version: 20141216075056) do
     t.string   "contact_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "contact_code_cache"
   end
 
   create_table "domain_status_versions", force: true do |t|
@@ -333,7 +334,6 @@ ActiveRecord::Schema.define(version: 20141216075056) do
     t.inet     "last_sign_in_ip"
     t.boolean  "admin",              default: false
     t.string   "identity_code"
-    t.integer  "registrar_id"
     t.integer  "country_id"
   end
 

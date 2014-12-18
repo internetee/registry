@@ -10,6 +10,12 @@ class Dnskey < ActiveRecord::Base
 
   before_save -> { generate_digest if public_key_changed? && !ds_digest_changed? }
 
+  before_save lambda {
+    if (public_key_changed? || flags_changed? || alg_changed? || protocol_changed?) && !ds_key_tag_changed?
+      generate_ds_key_tag
+    end
+  }
+
   ALGORITHMS = %w(3 5 6 7 8 252 253 254 255)
   PROTOCOLS = %w(3)
   FLAGS = %w(0 256 257)
@@ -75,6 +81,23 @@ class Dnskey < ActiveRecord::Base
 
   def public_key_hex
     self.class.bin_to_hex(Base64.decode64(public_key))
+  end
+
+  def generate_ds_key_tag
+    public_key.gsub!(' ', '')
+    wire_format = [flags, protocol, alg].pack('S!>CC')
+    wire_format += Base64.decode64(public_key)
+
+    c = 0
+    wire_format.each_byte.with_index do |b, i|
+      if i.even?
+        c += b << 8
+      else
+        c += b
+      end
+    end
+
+    self.ds_key_tag = ((c & 0xFFFF) + (c >> 16)) & 0xFFFF
   end
 
   class << self

@@ -1,6 +1,6 @@
 Fabricator(:registrar) do
-  name 'Zone Media OÜ'
-  reg_no '10577829'
-  address 'Lõõtsa 2, Tallinna linn, Harju maakond, 11415'
+  name 'Registrar OÜ'
+  reg_no '12345678'
+  address 'Street 999, Town, County, Postal'
   country
 end

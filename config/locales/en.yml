@@ -139,6 +139,8 @@ en:
             contact:
               blank: 'Contact was not found'
               taken: 'Contact already exists on this domain!'
+            contact_code_cache:
+              taken: 'Contact already exists on this domain!'
 
         domain_status:
           attributes:

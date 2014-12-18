@@ -1,4 +1,5 @@
 class CreateZonefileSetting < ActiveRecord::Migration
+  # rubocop:disable Metrics/MethodLength
   def change
     create_table :zonefile_settings do |t|
       t.string :origin
