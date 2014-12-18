@@ -9,6 +9,8 @@ Delayed jobs migration and everything else will still be installed tho.
 Basic whois logic - we save whois data to 2 separate databases - whois private and public.
 Those two databases are streamed to appropriate whois servers.
 
+This is still WIP and few whois details need to be sorted out.
+
 Setting the databases up
 __________________________________
 Make sure username and password in DATABASES at lib/tasks/whois.rb are correct ( match the ones
