@@ -15,6 +15,7 @@ describe 'EPP Domain', epp: true do
   let(:server_elkdata) { Epp::Server.new({ server: 'localhost', tag: 'elkdata', password: 'ghyt9e4fu', port: 701 }) }
   let(:elkdata) { Fabricate(:registrar, { name: 'Elkdata', reg_no: '123' }) }
   let(:zone) { Fabricate(:registrar) }
+  let(:epp_xml) { EppXml.new(cl_trid: 'ABC-12345') }
 
   before(:each) { create_settings }
 
@@ -113,7 +114,7 @@ describe 'EPP Domain', epp: true do
 
         # should show up in other registrar's poll
 
-        response = epp_request(EppXml::Session.poll, :xml, :elkdata)
+        response = epp_request(epp_xml.session.poll, :xml, :elkdata)
         expect(response[:msg]).to eq('Command completed successfully; ack to dequeue')
         msg_q = response[:parsed].css('msgQ')
         expect(msg_q.css('qDate').text).to_not be_blank
@@ -121,7 +122,7 @@ describe 'EPP Domain', epp: true do
         expect(msg_q.first['id']).to_not be_blank
         expect(msg_q.first['count']).to eq('1')
 
-        xml = EppXml::Session.poll(poll: {
+        xml = epp_xml.session.poll(poll: {
           value: '', attrs: { op: 'ack', msgID: msg_q.first['id'] }
         })
 
@@ -751,7 +752,7 @@ describe 'EPP Domain', epp: true do
 
       it 'renews a domain' do
         exp_date = (Date.today + 1.year)
-        xml = EppXml::Domain.renew(
+        xml = epp_xml.domain.renew(
           name: { value: 'example.ee' },
           curExpDate: { value: exp_date.to_s },
           period: { value: '1', attrs: { unit: 'y' } }
@@ -765,7 +766,7 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'returns an error when given and current exp dates do not match' do
-        xml = EppXml::Domain.renew(
+        xml = epp_xml.domain.renew(
           name: { value: 'example.ee' },
           curExpDate: { value: '2016-08-07' },
           period: { value: '1', attrs: { unit: 'y' } }
@@ -779,7 +780,7 @@ describe 'EPP Domain', epp: true do
       it 'returns an error when period is invalid' do
         exp_date = (Date.today + 1.year)
 
-        xml = EppXml::Domain.renew(
+        xml = epp_xml.domain.renew(
           name: { value: 'example.ee' },
           curExpDate: { value: exp_date.to_s },
           period: { value: '4', attrs: { unit: 'y' } }
@@ -1134,7 +1135,7 @@ describe 'EPP Domain', epp: true do
 
       it 'deletes domain' do
         expect(DomainContact.count).to eq(2)
-        response = epp_request(EppXml::Domain.delete(name: { value: 'example.ee' }), :xml)
+        response = epp_request(epp_xml.domain.delete(name: { value: 'example.ee' }), :xml)
         expect(response[:result_code]).to eq('1000')
 
         expect(Domain.first).to eq(nil)
@@ -1144,7 +1145,7 @@ describe 'EPP Domain', epp: true do
       it 'does not delete domain with specific status' do
         d = Domain.first
         d.domain_statuses.create(value: DomainStatus::CLIENT_DELETE_PROHIBITED)
-        response = epp_request(EppXml::Domain.delete(name: { value: 'example.ee' }), :xml)
+        response = epp_request(epp_xml.domain.delete(name: { value: 'example.ee' }), :xml)
         expect(response[:result_code]).to eq('2304')
         expect(response[:msg]).to eq('Domain status prohibits operation')
       end

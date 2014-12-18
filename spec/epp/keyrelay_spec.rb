@@ -6,6 +6,7 @@ describe 'EPP Keyrelay', epp: true do
   let(:elkdata) { Fabricate(:registrar, { name: 'Elkdata', reg_no: '123' }) }
   let(:zone) { Fabricate(:registrar) }
   let(:domain) { Fabricate(:domain, name: 'example.ee', registrar: zone, dnskeys: [Fabricate.build(:dnskey)]) }
+  let(:epp_xml) { EppXml::Keyrelay.new }
 
   before(:each) { create_settings }
 
@@ -16,7 +17,7 @@ describe 'EPP Keyrelay', epp: true do
     end
 
     it 'makes a keyrelay request' do
-      xml = EppXml::Keyrelay.keyrelay({
+      xml = epp_xml.keyrelay({
         name: { value: 'example.ee' },
         keyData: {
           flags: { value: '256' },

@@ -78,7 +78,9 @@ module Epp
     }
 
     xml_params = defaults.deep_merge(xml_params)
-    EppXml::Domain.info(xml_params)
+
+    epp_xml = EppXml::Domain.new(cl_trid: 'ABC-12345')
+    epp_xml.info(xml_params)
   end
 
   # rubocop: disable Metrics/MethodLength
@@ -122,7 +124,8 @@ module Epp
     }
 
     dnssec_params = dnssec_defaults.deep_merge(dnssec_params) if dnssec_params != false
-    EppXml::Domain.create(xml_params, dnssec_params)
+    epp_xml = EppXml::Domain.new(cl_trid: 'ABC-12345')
+    epp_xml.create(xml_params, dnssec_params)
   end
 
   def domain_create_with_invalid_ns_ip_xml
@@ -154,7 +157,8 @@ module Epp
       }
     }
 
-    EppXml::Domain.create(xml_params, false)
+    epp_xml = EppXml::Domain.new(cl_trid: 'ABC-12345')
+    epp_xml.create(xml_params, false)
   end
 
   def domain_create_with_host_attrs
@@ -186,7 +190,8 @@ module Epp
       }
     }
 
-    EppXml::Domain.create(xml_params, false)
+    epp_xml = EppXml::Domain.new(cl_trid: 'ABC-12345')
+    epp_xml.create(xml_params, false)
   end
 
   def domain_update_xml(xml_params = {}, dnssec_params = false)
@@ -195,7 +200,8 @@ module Epp
     }
 
     xml_params = defaults.deep_merge(xml_params)
-    EppXml::Domain.update(xml_params, dnssec_params)
+    epp_xml = EppXml::Domain.new(cl_trid: 'ABC-12345')
+    epp_xml.update(xml_params, dnssec_params)
   end
 
   def domain_check_xml(xml_params = {})
@@ -205,7 +211,8 @@ module Epp
       ]
     }
     xml_params = defaults.deep_merge(xml_params)
-    EppXml::Domain.check(xml_params)
+    epp_xml = EppXml::Domain.new(cl_trid: 'ABC-12345')
+    epp_xml.check(xml_params)
   end
 
   def domain_transfer_xml(xml_params = {}, op = 'query')
@@ -217,7 +224,8 @@ module Epp
     }
 
     xml_params = defaults.deep_merge(xml_params)
-    EppXml::Domain.transfer(xml_params, op)
+    epp_xml = EppXml::Domain.new(cl_trid: 'ABC-12345')
+    epp_xml.transfer(xml_params, op)
   end
 
   def log(req, res)

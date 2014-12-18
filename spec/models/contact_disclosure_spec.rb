@@ -18,7 +18,8 @@ describe '.extract_attributes' do
 
   # TODO: remodel create contact xml to support disclosure
   it 'should return disclosure has if disclosure' do
-    xml = EppXml::Contact.create(
+    epp_xml = EppXml::Contact.new
+    xml = epp_xml.create(
       {
         disclose: { value: {
           voice: { value: '' },
