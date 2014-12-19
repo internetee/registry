@@ -1,14 +1,13 @@
 require 'rails_helper'
 
 feature 'Setting management', type: :feature do
-  let(:user) { Fabricate(:user, username: 'user1', admin: true, identity_code: '37810013087') }
+  let(:user) { Fabricate(:user, username: 'user1', identity_code: '37810013087') }
 
   background { create_settings }
 
   scenario 'User changes a setting' do
     sign_in user
     visit admin_settings_path
-
     val_min = find_field('_settings_ns_min_count').value
     val_max = find_field('_settings_ns_max_count').value
 

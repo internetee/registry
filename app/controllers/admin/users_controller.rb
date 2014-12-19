@@ -1,4 +1,5 @@
 class Admin::UsersController < AdminController
+  load_and_authorize_resource
   before_action :set_user, only: [:show, :edit, :update, :destroy]
 
   def index
@@ -54,6 +55,6 @@ class Admin::UsersController < AdminController
 
   def user_params
     params.require(:user).permit(:username, :password, :identity_code, :email,
-                                 :admin, :country_id)
+                                 :role_id, :country_id)
   end
 end

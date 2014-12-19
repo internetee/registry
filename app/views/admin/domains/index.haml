@@ -33,7 +33,7 @@
           - @domains.each do |x|
             %tr
               %td= link_to(x, admin_domain_path(x))
-              %td= link_to(x.registrar, root_path) if x.registrar
+              %td= link_to(x.registrar, admin_registrar_path(x.registrar)) if x.registrar
               %td= link_to(x.owner_contact, [:admin, x.owner_contact])
               %td= l(x.valid_to, format: :short)
 .row

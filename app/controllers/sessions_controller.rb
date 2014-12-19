@@ -8,8 +8,6 @@ class SessionsController < Devise::SessionsController
 
     return redirect_to :back, alert: 'No user' if @user.blank?
 
-    session[:current_user_registrar_id] = Registrar.first.id if @user.admin?
-
     flash[:notice] = I18n.t('shared.welcome')
     sign_in_and_redirect @user, event: :authentication
     # end
@@ -17,11 +15,5 @@ class SessionsController < Devise::SessionsController
 
   def login
     render 'layouts/login', layout: false
-  end
-
-  def switch_registrar
-    authorize! :switch, :registrar
-    session[:current_user_registrar_id] = params[:registrar_id]
-    redirect_to client_root_path
   end
 end

@@ -1,4 +1,5 @@
 class Admin::ContactsController < AdminController
+  load_and_authorize_resource
   before_action :set_contact, only: [:show]
 
   def index

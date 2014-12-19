@@ -31,6 +31,8 @@ Rails.application.routes.draw do
 
     resources :delayed_jobs
 
+    resource :dashboard
+
     root 'domains#index'
 
   end
