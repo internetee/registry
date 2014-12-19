@@ -1,11 +1,11 @@
 .row
   .col-sm-6
     %h2.text-center-xs
-      = "#{t('shared.registrar_details')}"
+      = "#{t('registrar_details')}"
   .col-sm-6
     %h2.text-right.text-center-xs
-      = link_to(t('shared.edit'), edit_admin_registrar_path(@registrar), class: 'btn btn-primary')
-      = link_to(t('shared.delete'), admin_registrar_path(@registrar), method: :delete, data: { confirm: t('shared.are_you_sure') }, class: 'btn btn-danger')
+      = link_to(t('edit'), edit_admin_registrar_path(@registrar), class: 'btn btn-primary')
+      = link_to(t('delete'), admin_registrar_path(@registrar), method: :delete, data: { confirm: t('are_you_sure') }, class: 'btn btn-danger')
 
 %hr
 - if @registrar.errors.any?
@@ -18,44 +18,44 @@
   .col-md-6
     .panel.panel-default
       .panel-heading
-        %h3.panel-title= t('shared.general')
+        %h3.panel-title= t('general')
       .panel-body
         %dl.dl-horizontal
-          %dt= t('shared.name')
+          %dt= t('name')
           %dd= @registrar.name
 
-          %dt= t('shared.reg_no')
+          %dt= t('reg_no')
           %dd= @registrar.reg_no
 
-          %dt= t('shared.vat_no')
+          %dt= t('vat_no')
           %dd= @registrar.vat_no
 
   .col-md-6
     .panel.panel-default
       .panel-heading
-        %h3.panel-title= t('shared.address')
+        %h3.panel-title= t('address')
       .panel-body
         %dl.dl-horizontal
-          %dt= t('shared.country')
+          %dt= t('country')
           %dd= @registrar.country
 
-          %dt= t('shared.address')
+          %dt= t('address')
           %dd= @registrar.address
 
-          %dt= t('shared.billing_address')
+          %dt= t('billing_address')
           %dd= @registrar.billing_address
 
 .row
   .col-md-12
     #epp-users.panel.panel-default
       .panel-heading.clearfix
-        = t('shared.epp_users')
+        = t('epp_users')
       .table-responsive
         %table.table.table-hover.table-bordered.table-condensed
           %thead
             %tr
-              %th{class: 'col-xs-6'}= t('shared.username')
-              %th{class: 'col-xs-6'}= t('shared.active')
+              %th{class: 'col-xs-6'}= t('username')
+              %th{class: 'col-xs-6'}= t('active')
           %tbody
             - @registrar.epp_users.each do |x|
               %tr

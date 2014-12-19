@@ -1,14 +1,14 @@
 - panel_class = @domain.errors.messages[:nameservers] ? 'panel-danger' : 'panel-default'
 #nameservers.panel{class: panel_class}
   .panel-heading.clearfix
-    = t('shared.nameservers')
+    = t('nameservers')
   .table-responsive
     %table.table.table-hover.table-bordered.table-condensed
       %thead
         %tr
-          %th{class: 'col-xs-4'}= t('shared.hostname')
-          %th{class: 'col-xs-4'}= t('shared.ipv4')
-          %th{class: 'col-xs-4'}= t('shared.ipv6')
+          %th{class: 'col-xs-4'}= t('hostname')
+          %th{class: 'col-xs-4'}= t('ipv4')
+          %th{class: 'col-xs-4'}= t('ipv6')
       %tbody
         - @domain.nameservers.each do |x|
           %tr

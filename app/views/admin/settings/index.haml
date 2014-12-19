@@ -1,4 +1,4 @@
-%h2= t('shared.settings')
+%h2= t('settings')
 %hr
 = form_tag [:admin, :settings] do
   .row
@@ -8,9 +8,9 @@
           %thead
             %tr
               %th{class: 'col-xs-9'}
-                = t('shared.setting')
+                = t('setting')
               %th{class: 'col-xs-2'}
-                = t('shared.value')
+                = t('value')
           %tbody
             - @settings.each do |x|
               %tr
@@ -23,4 +23,4 @@
                   %td= text_field_tag("[settings][#{x.var}]", x.value)
   .row
     .col-md-12.text-right
-      %button.btn.btn-primary=t('shared.save')
+      %button.btn.btn-primary=t('save')

@@ -12,12 +12,12 @@
       %table.table-hover.table-bordered.table-condensed
         %thead
           %tr
-            %th{class: 'col-xs-2'}= t(:'shared.domain_info')
-            %th{class: 'col-xs-2'}= t(:'shared.owner_contact')
-            %th{class: 'col-xs-2'}= t(:'shared.admin_contacts')
-            %th{class: 'col-xs-2'}= t(:'shared.tech_contacts')
-            %th{class: 'col-xs-2'}= t(:'shared.nameservers')
-            %th{class: 'col-xs-1'}= t(:'shared.changes_info')
+            %th{class: 'col-xs-2'}= t(:'domain_info')
+            %th{class: 'col-xs-2'}= t(:'owner_contact')
+            %th{class: 'col-xs-2'}= t(:'admin_contacts')
+            %th{class: 'col-xs-2'}= t(:'tech_contacts')
+            %th{class: 'col-xs-2'}= t(:'nameservers')
+            %th{class: 'col-xs-1'}= t(:'changes_info')
 
         %tbody
           - @versions.each do |version|

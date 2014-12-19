@@ -19,6 +19,7 @@ describe User do
       it { should be_able_to(:manage, DomainVersion.new) }
       it { should be_able_to(:manage, User.new) }
       it { should be_able_to(:manage, EppUser.new) }
+      it { should be_able_to(:manage, Keyrelay.new) }
       it { should be_able_to(:index, :delayed_job) }
       it { should be_able_to(:create, :zonefile) }
       it { should be_able_to(:access, :settings_menu) }

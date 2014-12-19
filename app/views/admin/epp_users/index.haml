@@ -1,9 +1,9 @@
 .row
   .col-sm-6
-    %h2.text-center-xs= t('shared.epp_users')
+    %h2.text-center-xs= t('epp_users')
   .col-sm-6
     %h2.text-right.text-center-xs
-      = link_to(t('shared.create_new_epp_user'), new_admin_epp_user_path, class: 'btn btn-primary')
+      = link_to(t('create_new_epp_user'), new_admin_epp_user_path, class: 'btn btn-primary')
 %hr
 .row
   .col-md-12
@@ -14,9 +14,9 @@
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'username')
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'registrar', t('shared.registrar'))
+              = sort_link(@q, 'registrar', t('registrar'))
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'active', t('shared.active'))
+              = sort_link(@q, 'active', t('active'))
         %tbody
           - @epp_users.each do |x|
             %tr

@@ -1,11 +1,11 @@
 .row
   .col-sm-6
     %h2.text-center-xs
-      = "#{t('shared.domain_details')}"
+      = "#{t('domain_details')}"
   .col-sm-6
     %h2.text-right.text-center-xs
-      = link_to(t('shared.edit_statuses'), edit_admin_domain_path(@domain), class: 'btn btn-primary')
-      = link_to(t(:'shared.history'), admin_domain_version_path(@domain.id), method: :get, class: 'btn btn-primary')
+      = link_to(t('edit_statuses'), edit_admin_domain_path(@domain), class: 'btn btn-primary')
+      = link_to(t(:'history'), admin_domain_version_path(@domain.id), method: :get, class: 'btn btn-primary')
 
       /= link_to(t('generate_zonefile'), zonefile_admin_domain_path(@domain), class: 'btn btn-primary')
 
@@ -23,3 +23,5 @@
   .col-md-12= render 'admin/domains/partials/nameservers'
 .row
   .col-md-12= render 'admin/domains/partials/dnskeys'
+.row
+  .col-md-12= render 'admin/domains/partials/keyrelays'

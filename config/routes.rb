@@ -7,6 +7,8 @@ Rails.application.routes.draw do
 
   ## ADMIN ROUTES
   namespace(:admin) do
+    resources :keyrelays
+
     resources :zonefiles
 
     resources :zonefile_settings

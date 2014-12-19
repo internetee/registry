@@ -1,9 +1,9 @@
 .row
   .col-sm-6
-    %h2.text-center-xs= t('shared.registrars')
+    %h2.text-center-xs= t('registrars')
   .col-sm-6
     %h2.text-right.text-center-xs
-      = link_to(t('shared.add'), new_admin_registrar_path, class: 'btn btn-primary')
+      = link_to(t('add'), new_admin_registrar_path, class: 'btn btn-primary')
 %hr
 .row
   .col-md-12
@@ -14,7 +14,7 @@
             %th{class: 'col-xs-6'}
               = sort_link(@q, 'name')
             %th{class: 'col-xs-6'}
-              = sort_link(@q, 'reg_no', t('shared.reg_no'))
+              = sort_link(@q, 'reg_no', t('reg_no'))
         %tbody
           - @registrars.each do |x|
             %tr

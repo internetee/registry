@@ -1,6 +1,6 @@
 .row
   .col-sm-12
-    %h2.text-center-xs= t('shared.domains')
+    %h2.text-center-xs= t('domains')
 %hr
 .row
   .col-md-12
@@ -24,11 +24,11 @@
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'name')
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'registrar_name', t('shared.registrar'))
+              = sort_link(@q, 'registrar_name', t('registrar'))
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'owner_contact_name', t('shared.owner'))
+              = sort_link(@q, 'owner_contact_name', t('owner'))
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'valid_to', t('shared.valid_to'))
+              = sort_link(@q, 'valid_to', t('valid_to'))
         %tbody
           - @domains.each do |x|
             %tr

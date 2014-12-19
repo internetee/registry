@@ -8,7 +8,7 @@ class SessionsController < Devise::SessionsController
 
     return redirect_to :back, alert: 'No user' if @user.blank?
 
-    flash[:notice] = I18n.t('shared.welcome')
+    flash[:notice] = I18n.t('welcome')
     sign_in_and_redirect @user, event: :authentication
     # end
   end

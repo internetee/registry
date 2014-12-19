@@ -1,6 +1,6 @@
 .row
   .col-sm-12
-    %h2.text-center-xs= t('shared.jobs')
+    %h2.text-center-xs= t('jobs')
 
 %hr
 .row
@@ -9,11 +9,11 @@
       %table.table.table-hover.table-bordered.table-condensed
         %thead
           %tr
-            %th{class: 'col-xs-2'}= t('shared.priority')
-            %th{class: 'col-xs-2'}= t('shared.attempts')
-            %th{class: 'col-xs-2'}= t('shared.last_error')
-            %th{class: 'col-xs-1'}= t('shared.run_at')
-            %th{class: 'col-xs-1'}= t('shared.created_at')
+            %th{class: 'col-xs-2'}= t('priority')
+            %th{class: 'col-xs-2'}= t('attempts')
+            %th{class: 'col-xs-2'}= t('last_error')
+            %th{class: 'col-xs-1'}= t('run_at')
+            %th{class: 'col-xs-1'}= t('created_at')
         %tbody
           - @jobs.each do |job|
             %tr

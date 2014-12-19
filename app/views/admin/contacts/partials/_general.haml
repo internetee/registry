@@ -1,32 +1,32 @@
 .panel.panel-default
   .panel-heading
-    %h3.panel-title= t('shared.general')
+    %h3.panel-title= t('general')
   .panel-body
     %dl.dl-horizontal
-      %dt= t('shared.name')
+      %dt= t('name')
       %dd= @contact.name
 
-      %dt= t('shared.org_name')
+      %dt= t('org_name')
       %dd= @contact.org_name
 
-      %dt= t('shared.code')
+      %dt= t('code')
       %dd= @contact.code
 
-      %dt= t('shared.ident')
+      %dt= t('ident')
       %dd= @contact.ident
 
-      %dt= t('shared.ident_type')
+      %dt= t('ident_type')
       %dd= @contact.ident_type
 
-      %dt= t('shared.email')
+      %dt= t('email')
       %dd= @contact.email
 
-      %dt= t('shared.phone')
+      %dt= t('phone')
       %dd= @contact.phone
 
       - if @contact.fax
-        %dt= t('shared.fax')
+        %dt= t('fax')
         %dd= @contact.fax
 
-      %dt= t('shared.password')
+      %dt= t('password')
       %dd= @contact.auth_info

@@ -1,11 +1,11 @@
 .row
   .col-sm-6
     %h2.text-center-xs
-      = "#{t('shared.epp_user_details')}"
+      = "#{t('epp_user_details')}"
   .col-sm-6
     %h2.text-right.text-center-xs
-      = link_to(t('shared.edit'), edit_admin_epp_user_path(@epp_user), class: 'btn btn-primary')
-      = link_to(t('shared.delete'), admin_epp_user_path(@epp_user), method: :delete, data: { confirm: t('shared.are_you_sure') }, class: 'btn btn-danger')
+      = link_to(t('edit'), edit_admin_epp_user_path(@epp_user), class: 'btn btn-primary')
+      = link_to(t('delete'), admin_epp_user_path(@epp_user), method: :delete, data: { confirm: t('are_you_sure') }, class: 'btn btn-danger')
 
 %hr
 - if @epp_user.errors.any?
@@ -18,26 +18,26 @@
   .col-md-6
     .panel.panel-default
       .panel-heading
-        %h3.panel-title= t('shared.general')
+        %h3.panel-title= t('general')
       .panel-body
         %dl.dl-horizontal
-          %dt= t('shared.username')
+          %dt= t('username')
           %dd= @epp_user.username
 
-          %dt= t('shared.password')
+          %dt= t('password')
           %dd= @epp_user.password
 
-          %dt= t('shared.active')
+          %dt= t('active')
           %dd= @epp_user.active
 
   .col-md-6
     .panel.panel-default
       .panel-heading
-        %h3.panel-title= t('shared.certificates')
+        %h3.panel-title= t('certificates')
       .panel-body
         %dl.dl-horizontal
-          %dt= t('shared.csr')
+          %dt= t('csr')
           %dd= @epp_user.csr
 
-          %dt= t('shared.crt')
+          %dt= t('crt')
           %dd= @epp_user.crt

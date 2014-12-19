@@ -16,8 +16,8 @@
         = f.text_field(:password, class: 'form-control')
       .form-group
         .form-group.has-feedback.js-typeahead-container
-          = f.label :registrar_typeahead, t('shared.registrar')
-          = f.text_field(:registrar_typeahead, class: 'form-control js-registrar-typeahead', placeholder: t('shared.registrar'), autocomplete: 'off')
+          = f.label :registrar_typeahead, t('registrar')
+          = f.text_field(:registrar_typeahead, class: 'form-control js-registrar-typeahead', placeholder: t('registrar'), autocomplete: 'off')
           %span.glyphicon.glyphicon-ok.form-control-feedback.js-typeahead-ok.hidden
           %span.glyphicon.glyphicon-remove.form-control-feedback.js-typeahead-remove
           = f.hidden_field(:registrar_id, class: 'js-registrar-id')
@@ -25,16 +25,16 @@
         .checkbox
           %label{for: 'epp_user_active'}
             = f.check_box(:active)
-            = t('shared.active')
+            = t('active')
 
     .col-md-6.text-left
       .form-group
-        = f.label :csr, t('shared.certificate_signing_req')
+        = f.label :csr, t('certificate_signing_req')
         = f.text_area :csr, class: 'form-control'
   %hr
   .row
     .col-md-12.text-right
-      = button_tag(t('shared.save'), class: 'btn btn-primary')
+      = button_tag(t('save'), class: 'btn btn-primary')
 
 :javascript
   Autocomplete.bindAdminRegistrarSearch();

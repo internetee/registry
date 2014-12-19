@@ -1,13 +1,13 @@
 - panel_class = @domain.errors.messages[:domain_statuses] ? 'panel-danger' : 'panel-default'
 #domain_statuses.panel{class: panel_class}
   .panel-heading.clearfix
-    = t('shared.statuses')
+    = t('statuses')
   .table-responsive
     %table.table.table-hover.table-bordered.table-condensed
       %thead
         %tr
-          %th{class: 'col-xs-6'}= t('shared.status')
-          %th{class: 'col-xs-6'}= t('shared.description')
+          %th{class: 'col-xs-6'}= t('status')
+          %th{class: 'col-xs-6'}= t('description')
       %tbody
         - @domain.domain_statuses.each do |x|
           %tr
