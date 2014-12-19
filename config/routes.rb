@@ -32,17 +32,12 @@ Rails.application.routes.draw do
     resources :delayed_jobs
 
     resource :dashboard
-
-    root 'domains#index'
-
   end
 
   devise_for :users
 
   devise_scope :user do
-    resources :sessions do
-      get :switch_registrar, on: :collection
-    end
+    resources :sessions
 
     get 'logout' => 'devise/sessions#destroy'
     get 'login' => 'sessions#login'
