@@ -1,4 +1,5 @@
 class Admin::SettingsController < AdminController
+  load_and_authorize_resource
   before_action :set_setting_group, only: [:show, :update]
 
   def index

@@ -39,5 +39,8 @@
           %dt= t('shared.email')
           %dd= @user.email
 
-          %dt= t('shared.admin')
-          %dd= @user.admin
+          %dt= t('role')
+          - if @user.role
+            %dd= t(@user.role)
+          - else
+            %dd

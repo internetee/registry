@@ -3,4 +3,10 @@ class Role < ActiveRecord::Base
   # rubocop: disable Rails/HasAndBelongsToMany
   has_and_belongs_to_many :rights
   # rubocop: enbale Rails/HasAndBelongsToMany
+
+  validates :code, uniqueness: true
+
+  def to_s
+    code
+  end
 end

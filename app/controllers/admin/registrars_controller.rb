@@ -1,4 +1,5 @@
 class Admin::RegistrarsController < AdminController
+  load_and_authorize_resource
   before_action :set_registrar, only: [:show, :edit, :update, :destroy]
   def search
     render json: Registrar.search_by_query(params[:q])

@@ -21,15 +21,14 @@
         = f.label :identity_code
         = f.text_field(:identity_code, class: 'form-control')
 
-    .col-md-6.text-left
+    .col-md-6
       .form-group
         = f.label :email
         = f.text_field(:email, class: 'form-control')
       .form-group
-        .checkbox
-          %label{for: 'user_admin'}
-            = f.check_box(:admin, class: 'js-admin')
-            = t('shared.admin')
+        = f.label :role_id
+        = f.select(:role_id, Role.all.map {|x| [t(x.code), x.id] }, {}, { class: 'form-control selectize' })
+
   %hr
   .row
     .col-md-12.text-right

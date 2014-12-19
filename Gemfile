@@ -53,7 +53,7 @@ gem 'kaminari', '~> 0.16.1'
 gem 'ransack', '~> 1.3.0'
 
 # for rights
-gem 'cancan', '~> 1.6.10'
+gem 'cancancan', '~> 1.9.2'
 
 # for login
 gem 'devise', '~> 3.3.0'
@@ -96,7 +96,7 @@ group :development, :test do
   gem 'epp', '~> 1.4.0'
 
   # EPP XMLs
-  gem 'epp-xml', '~> 0.8.1'
+  gem 'epp-xml', '~> 0.10.1'
 
   # Replacement for fixtures
   gem 'fabrication', '~> 2.11.3'
@@ -135,6 +135,9 @@ group :development, :test do
 
   # faster dev load time
   gem 'unicorn'
+
+  # for opening browser automatically
+  gem 'launchy', '~> 2.4.3'
 end
 
 group :development do

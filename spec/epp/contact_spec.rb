@@ -15,6 +15,7 @@ describe 'EPP Contact', epp: true do
   let(:server_elkdata) { Epp::Server.new({ server: 'localhost', tag: 'elkdata', password: 'ghyt9e4fu', port: 701 }) }
   let(:elkdata) { Fabricate(:registrar, { name: 'Elkdata', reg_no: '123' }) }
   let(:zone) { Registrar.where(reg_no: '12345678').first || Fabricate(:registrar) }
+  let(:epp_xml) { EppXml::Contact.new(cl_trid: 'ABC-12345') }
 
   context 'with valid user' do
     before(:each) do
@@ -27,7 +28,7 @@ describe 'EPP Contact', epp: true do
 
     context 'create command' do
       it 'fails if request xml is missing' do
-        xml = EppXml::Contact.create
+        xml = epp_xml.create
         response = epp_request(xml, :xml)
         expect(response[:results][0][:result_code]).to eq('2001')
 
@@ -36,7 +37,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if request xml is missing' do
-        xml = EppXml::Contact.create(
+        xml = epp_xml.create(
           postalInfo: { addr: { value: nil } }
         )
         response = epp_request(xml, :xml)
@@ -145,7 +146,7 @@ describe 'EPP Contact', epp: true do
 
     context 'update command' do
       it 'fails if request is invalid' do
-        xml = EppXml::Contact.update
+        xml = epp_xml.update
         response = epp_request(xml, :xml) # epp_request('contacts/update_missing_attr.xml')
 
         expect(response[:results][0][:result_code]).to eq('2003')
@@ -227,7 +228,7 @@ describe 'EPP Contact', epp: true do
 
     context 'delete command' do
       it 'fails if request is invalid' do
-        xml = EppXml::Contact.delete({ uid: { value: '23123' } })
+        xml = epp_xml.delete({ uid: { value: '23123' } })
         response = epp_request(xml, :xml)
 
         expect(response[:results][0][:result_code]).to eq('2003')
@@ -274,7 +275,7 @@ describe 'EPP Contact', epp: true do
 
     context 'check command' do
       it 'fails if request is invalid' do
-        xml = EppXml::Contact.check({ uid: { value: '123asde' } })
+        xml = epp_xml.check({ uid: { value: '123asde' } })
         response = epp_request(xml, :xml)
 
         expect(response[:results][0][:result_code]).to eq('2003')
@@ -304,7 +305,7 @@ describe 'EPP Contact', epp: true do
         @contact = Fabricate(:contact, registrar: zone, code: 'info-4444', name: 'Johnny Awesome', auth_info: 'asde',
                   address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
 
-        xml = EppXml::Contact.info({ id: { value: @contact.code } })
+        xml = epp_xml.info({ id: { value: @contact.code } })
         response = epp_request(xml, :xml, :zone)
         contact = response[:parsed].css('resData chkData')
 
@@ -317,7 +318,7 @@ describe 'EPP Contact', epp: true do
         @contact = Fabricate(:contact, registrar: elkdata, code: 'info-4444', name: 'Johnny Awesome', auth_info: 'asde',
                   address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
 
-        xml = EppXml::Contact.info({ id: { value: @contact.code }, authInfo: { pw: { value: 'asdesde' } } })
+        xml = epp_xml.info({ id: { value: @contact.code }, authInfo: { pw: { value: 'asdesde' } } })
         response = epp_request(xml, :xml, :zone)
 
         expect(response[:result_code]).to eq('2200')
@@ -329,7 +330,7 @@ describe 'EPP Contact', epp: true do
                   name: 'Johnny Awesome', auth_info: 'password',
                   address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
 
-        xml = EppXml::Contact.info({ id: { value: @contact.code }, authInfo: { pw: { value: 'password' } } })
+        xml = epp_xml.info({ id: { value: @contact.code }, authInfo: { pw: { value: 'password' } } })
         response = epp_request(xml, :xml, :zone)
         contact = response[:parsed].css('resData chkData')
 
@@ -343,7 +344,7 @@ describe 'EPP Contact', epp: true do
                   auth_info: 'password',
                   address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
 
-        xml = EppXml::Contact.info({ id: { value: @contact.code } })
+        xml = epp_xml.info({ id: { value: @contact.code } })
         response = epp_request(xml, :xml, :zone)
         contact = response[:parsed].css('resData chkData')
 
@@ -353,7 +354,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if request invalid' do
-        response = epp_request(EppXml::Contact.info({ uid: { value: '123123' } }), :xml)
+        response = epp_request(epp_xml.info({ uid: { value: '123123' } }), :xml)
 
         expect(response[:results][0][:result_code]).to eq('2003')
         expect(response[:results][0][:msg]).to eq('Required parameter missing: id')
@@ -371,7 +372,7 @@ describe 'EPP Contact', epp: true do
         @contact = Fabricate(:contact, registrar: zone, code: 'info-4444', name: 'Johnny Awesome',
                   address: Fabricate(:address))
 
-        xml = EppXml::Contact.info(id: { value: @contact.code })
+        xml = epp_xml.info(id: { value: @contact.code })
         response = epp_request(xml, :xml, :zone)
         contact = response[:parsed].css('resData chkData')
 
@@ -385,7 +386,7 @@ describe 'EPP Contact', epp: true do
         Fabricate(:contact, code: 'info-4444', auth_info: '2fooBAR', registrar: elkdata,
                   disclosure: Fabricate(:contact_disclosure, name: true, email: false, phone: false))
 
-        xml = EppXml::Contact.info({ id: { value: 'info-4444' }, authInfo: { pw: { value: '2fooBAR' } } })
+        xml = epp_xml.info({ id: { value: 'info-4444' }, authInfo: { pw: { value: '2fooBAR' } } })
 
         response = epp_request(xml, :xml, :zone)
         contact = response[:parsed].css('resData chkData')
@@ -402,7 +403,7 @@ describe 'EPP Contact', epp: true do
       it 'doesn\'t display unassociated object without password' do
         @contact = Fabricate(:contact, code: 'info-4444', registrar: zone)
 
-        xml = EppXml::Contact.info(id: { value: @contact.code })
+        xml = epp_xml.info(id: { value: @contact.code })
         response = epp_request(xml, :xml, :elkdata)
         expect(response[:result_code]).to eq('2003')
         expect(response[:msg]).to eq('Required parameter missing: pw')
@@ -411,7 +412,7 @@ describe 'EPP Contact', epp: true do
       it 'doesn\'t display unassociated object with wrong password' do
         @contact = Fabricate(:contact, code: 'info-4444', registrar: zone)
 
-        xml = EppXml::Contact.info(id: { value: @contact.code }, authInfo: { pw: { value: 'qwe321' } })
+        xml = epp_xml.info(id: { value: @contact.code }, authInfo: { pw: { value: 'qwe321' } })
         response = epp_request(xml, :xml, :elkdata)
         expect(response[:result_code]).to eq('2200')
         expect(response[:msg]).to eq('Authentication error')

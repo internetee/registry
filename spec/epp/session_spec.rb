@@ -2,7 +2,8 @@ require 'rails_helper'
 
 describe 'EPP Session', epp: true do
   let(:server_gitlab) { Epp::Server.new({ server: 'localhost', tag: 'gitlab', password: 'ghyt9e4fu', port: 701 }) }
-  let(:login_xml_cache) { EppXml::Session.login(clID: { value: 'gitlab' }, pw: { value: 'ghyt9e4fu' }) }
+  let(:epp_xml) { EppXml.new(cl_trid: 'ABC-12345') }
+  let(:login_xml_cache) { epp_xml.session.login(clID: { value: 'gitlab' }, pw: { value: 'ghyt9e4fu' }) }
 
   context 'when not connected' do
     it 'greets client upon connection' do
@@ -29,7 +30,7 @@ describe 'EPP Session', epp: true do
     end
 
     it 'prohibits further actions unless logged in' do
-      response = epp_plain_request(EppXml::Domain.create, :xml)
+      response = epp_plain_request(epp_xml.domain.create, :xml)
       expect(response[:result_code]).to eq('2002')
       expect(response[:msg]).to eq('You need to login first.')
       expect(response[:clTRID]).to eq('ABC-12345')

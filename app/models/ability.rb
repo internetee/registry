@@ -8,38 +8,33 @@ class Ability
 
     user ||= User.new
 
-    if Rails.env.production?
-      case REGISTRY_ENV
-      when :eedirekt
-        can :view, :eedirekt
-        can :create, :session
-        admin = false
-      when :registrar
-        can :view, :registrar
-        can :create, :session
-        admin = false
-      when :admin
-        can :create, :admin_session
-        admin = user.admin?
-      end
-    else
-      can :create, :session
-      can :create, :admin_session
-      admin = user.admin?
+    admin_role = (user.role.try(:code) == 'admin')
+    user_role = (user.role.try(:code) == 'user')
+    customer_service_role = (user.role.try(:code) == 'customer_service')
+    no_role = user.role.nil?
+
+    if admin_role
+      can :manage, Domain
+      can :manage, Contact
+      can :manage, Registrar
+      can :manage, Setting
+      can :manage, ZonefileSetting
+      can :manage, DomainVersion
+      can :manage, User
+      can :manage, EppUser
+      can :index, :delayed_job
+      can :create, :zonefile
+      can :access, :settings_menu
+    elsif customer_service_role
+      can :manage, Domain
+      can :manage, Contact
+      can :manage, Registrar
+    elsif user_role
+    elsif no_role
+      can :show, :dashboard
     end
 
-    if admin
-      can :manage, Domain
-      can :switch, :registrar
-      can :crud, DomainTransfer
-      can :approve_as_client, DomainTransfer, status: DomainTransfer::PENDING
-    elsif user.persisted?
-      can :manage, Domain, registrar_id: user.registrar.id
-      can :read, DomainTransfer, transfer_to_id: user.registrar.id
-      can :read, DomainTransfer, transfer_from_id: user.registrar.id
-      can :approve_as_client, DomainTransfer, 
-          transfer_from_id: user.registrar.id, status: DomainTransfer::PENDING
-    end
+    can :show, :dashboard if user.persisted?
 
     # Define abilities for the passed in user here. For example:
     #

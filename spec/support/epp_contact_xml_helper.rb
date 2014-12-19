@@ -15,7 +15,8 @@ module EppContactXmlHelper
     }
 
     xml_params = defaults.deep_merge(xml_params)
-    EppXml::Contact.create(xml_params)
+    epp_xml = EppXml::Contact.new(cl_trid: 'ABC-12345')
+    epp_xml.create(xml_params)
   end
 
   def update_contact_xml(xml_params = {})
@@ -37,19 +38,22 @@ module EppContactXmlHelper
       }
     }
     xml_params = defaults.deep_merge(xml_params)
-    EppXml::Contact.update(xml_params)
+    epp_xml = EppXml::Contact.new(cl_trid: 'ABC-12345')
+    epp_xml.update(xml_params)
   end
 
   def delete_contact_xml(xml_params = {})
     defaults = { id: { value: 'sh8012' } }
     xml_params = defaults.deep_merge(xml_params)
-    EppXml::Contact.delete(xml_params)
+    epp_xml = EppXml::Contact.new(cl_trid: 'ABC-12345')
+    epp_xml.delete(xml_params)
   end
 
   def info_contact_xml(xml_params = {})
     defaults = { id: { value: 'sh8012' }, authInfo: { pw: { value: 'password' } } }
     xml_params = defaults.deep_merge(xml_params)
-    EppXml::Contact.info(xml_params)
+    epp_xml = EppXml::Contact.new(cl_trid: 'ABC-12345')
+    epp_xml.info(xml_params)
   end
 
   def check_contact_xml(xml_params = {})
@@ -57,7 +61,8 @@ module EppContactXmlHelper
       id: { value: 'ad123c3' }
     }
     xml_params = defaults.deep_merge(xml_params)
-    EppXml::Contact.check(xml_params)
+    epp_xml = EppXml::Contact.new(cl_trid: 'ABC-12345')
+    epp_xml.check(xml_params)
   end
 
   def check_multiple_contacts_xml

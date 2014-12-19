@@ -439,3 +439,7 @@ en:
   domains_history: Domains history
   admin_users: Admin users
   epp_users: EPP users
+  role: 'Role'
+  admin: 'Administrator'
+  user: 'User'
+  customer_service: 'Customer service'

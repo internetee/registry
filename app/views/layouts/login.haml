@@ -21,9 +21,8 @@
         %h2.form-signin-heading.text-center Eesti Interneti SA
         %hr
         / TODO: Refactor this when ID card login is done
-        - if can? :create, :admin_session
-          = button_to 'ID card (user1)', 'sessions',
-            class: 'btn btn-lg btn-primary btn-block', name: 'user1'
-          = button_to 'ID card (user2)', 'sessions',
-            class: 'btn btn-lg btn-primary btn-block', name: 'user2'
+        = button_to 'ID card (user1)', 'sessions',
+          class: 'btn btn-lg btn-primary btn-block', name: 'user1'
+        = button_to 'ID card (user2)', 'sessions',
+          class: 'btn btn-lg btn-primary btn-block', name: 'user2'
 

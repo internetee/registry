@@ -5,6 +5,7 @@ describe 'EPP Poll', epp: true do
   let(:server_elkdata) { Epp::Server.new({ server: 'localhost', tag: 'elkdata', password: 'ghyt9e4fu', port: 701 }) }
   let(:elkdata) { Fabricate(:registrar, { name: 'Elkdata', reg_no: '123' }) }
   let(:zone) { Fabricate(:registrar) }
+  let(:epp_xml) { EppXml::Session.new }
 
   before(:each) { create_settings }
 
@@ -15,7 +16,7 @@ describe 'EPP Poll', epp: true do
     end
 
     it 'returns no messages in poll' do
-      response = epp_request(EppXml::Session.poll, :xml)
+      response = epp_request(epp_xml.poll, :xml)
 
       expect(response[:msg]).to eq('Command completed successfully; no messages')
       expect(response[:result_code]).to eq('1300')
@@ -24,11 +25,11 @@ describe 'EPP Poll', epp: true do
     it 'queues and dequeues messages' do
       msg = zone.messages.create({ body: 'Balance low.' })
 
-      response = epp_request(EppXml::Session.poll, :xml, :elkdata)
+      response = epp_request(epp_xml.poll, :xml, :elkdata)
       expect(response[:msg]).to eq('Command completed successfully; no messages')
       expect(response[:result_code]).to eq('1300')
 
-      response = epp_request(EppXml::Session.poll, :xml, :zone)
+      response = epp_request(epp_xml.poll, :xml, :zone)
       expect(response[:msg]).to eq('Command completed successfully; ack to dequeue')
       expect(response[:result_code]).to eq('1301')
       msg_q = response[:parsed].css('msgQ')
@@ -37,7 +38,7 @@ describe 'EPP Poll', epp: true do
       expect(msg_q.first['count']).to eq('1')
       expect(msg_q.first['id']).to eq(msg.id.to_s)
 
-      xml = EppXml::Session.poll(poll: {
+      xml = epp_xml.poll(poll: {
         value: '', attrs: { op: 'ack', msgID: msg_q.first['id'] }
       })
 
@@ -59,7 +60,7 @@ describe 'EPP Poll', epp: true do
     end
 
     it 'returns an error on incorrect op' do
-      xml = EppXml::Session.poll(poll: {
+      xml = epp_xml.poll(poll: {
         value: '', attrs: { op: 'bla' }
       })
 
@@ -72,7 +73,7 @@ describe 'EPP Poll', epp: true do
       zone.messages.create({ body: 'Something.' })
       zone.messages.create({ body: 'Smth else.' })
 
-      response = epp_request(EppXml::Session.poll, :xml, :zone)
+      response = epp_request(epp_xml.poll, :xml, :zone)
       expect(response[:msg]).to eq('Command completed successfully; ack to dequeue')
       expect(response[:result_code]).to eq('1301')
       msg_q = response[:parsed].css('msgQ')
@@ -80,7 +81,7 @@ describe 'EPP Poll', epp: true do
       expect(msg_q.css('msg').text).to eq('Smth else.')
       expect(msg_q.first['count']).to eq('3')
 
-      xml = EppXml::Session.poll(poll: {
+      xml = epp_xml.poll(poll: {
         value: '', attrs: { op: 'ack', msgID: msg_q.first['id'] }
       })
 
@@ -90,7 +91,7 @@ describe 'EPP Poll', epp: true do
       expect(msg_q.first['id']).to_not be_blank
       expect(msg_q.first['count']).to eq('2')
 
-      response = epp_request(EppXml::Session.poll, :xml, :zone)
+      response = epp_request(epp_xml.poll, :xml, :zone)
       expect(response[:msg]).to eq('Command completed successfully; ack to dequeue')
       expect(response[:result_code]).to eq('1301')
       msg_q = response[:parsed].css('msgQ')
@@ -98,7 +99,7 @@ describe 'EPP Poll', epp: true do
       expect(msg_q.css('msg').text).to eq('Something.')
       expect(msg_q.first['count']).to eq('2')
 
-      xml = EppXml::Session.poll(poll: {
+      xml = epp_xml.poll(poll: {
         value: '', attrs: { op: 'ack', msgID: msg_q.first['id'] }
       })
 
@@ -108,7 +109,7 @@ describe 'EPP Poll', epp: true do
       expect(msg_q.first['id']).to_not be_blank
       expect(msg_q.first['count']).to eq('1')
 
-      response = epp_request(EppXml::Session.poll, :xml, :zone)
+      response = epp_request(epp_xml.poll, :xml, :zone)
       expect(response[:msg]).to eq('Command completed successfully; ack to dequeue')
       expect(response[:result_code]).to eq('1301')
       msg_q = response[:parsed].css('msgQ')
@@ -116,7 +117,7 @@ describe 'EPP Poll', epp: true do
       expect(msg_q.css('msg').text).to eq('Balance low.')
       expect(msg_q.first['count']).to eq('1')
 
-      xml = EppXml::Session.poll(poll: {
+      xml = epp_xml.poll(poll: {
         value: '', attrs: { op: 'ack', msgID: msg_q.first['id'] }
       })
 
@@ -126,7 +127,7 @@ describe 'EPP Poll', epp: true do
       expect(msg_q.first['id']).to_not be_blank
       expect(msg_q.first['count']).to eq('0')
 
-      response = epp_request(EppXml::Session.poll, :xml, :zone)
+      response = epp_request(epp_xml.poll, :xml, :zone)
       expect(response[:msg]).to eq('Command completed successfully; no messages')
       expect(response[:result_code]).to eq('1300')
     end
