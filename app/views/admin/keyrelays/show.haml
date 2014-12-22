@@ -16,6 +16,9 @@
           %dt= t('domain')
           %dd= link_to(@keyrelay.domain, [:admin, @keyrelay.domain])
 
+          %dt= t('status')
+          %dd= @keyrelay.status
+
           %dt= t('flag')
           %dd= @keyrelay.key_data_flags
 

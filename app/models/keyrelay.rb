@@ -18,14 +18,16 @@ class Keyrelay < ActiveRecord::Base
     }
   end
 
-  def status
+  def expiry
     if expiry_relative
-      exp_date = pa_date + ISO8601::Duration.new(expiry_relative).to_seconds
+      pa_date + ISO8601::Duration.new(expiry_relative).to_seconds
     elsif expiry_absolute
-      exp_date = expiry_positive
+      expiry_absolute
     end
+  end
 
-    if Time.now > exp_date
+  def status
+    if Time.now > expiry
       return 'expired'
     else
       return 'pending'
