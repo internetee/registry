@@ -78,6 +78,9 @@ gem 'daemons'
 # cron
 gem 'whenever', '~> 0.9.4', require: false
 
+# for dates and times
+gem 'iso8601', '~> 0.8.2'
+
 group :development, :test do
   # for inserting dummy data
   gem 'activerecord-import', '~> 0.6.0'

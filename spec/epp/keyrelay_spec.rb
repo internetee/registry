@@ -40,5 +40,29 @@ describe 'EPP Keyrelay', epp: true do
 
       expect(zone.messages.queued.count).to eq(1)
     end
+
+    it 'returns an error on invalid relative expiry' do
+      xml = epp_xml.keyrelay({
+        name: { value: 'example.ee' },
+        keyData: {
+          flags: { value: '256' },
+          protocol: { value: '3' },
+          alg: { value: '8' },
+          pubKey: { value: 'cmlraXN0aGViZXN0' }
+        },
+        authInfo: {
+          pw: { value: domain.auth_info }
+        },
+        expiry: {
+          relative: { value: 'Invalid Expiry' }
+        }
+      })
+
+      response = epp_request(xml, :xml, :elkdata)
+      expect(response[:msg]).to eq('Expiry relative must be compatible to ISO 8601')
+      expect(response[:results][0][:value]).to eq('Invalid Expiry')
+
+      expect(zone.messages.queued.count).to eq(0)
+    end
   end
 end

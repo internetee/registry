@@ -204,6 +204,11 @@ en:
               taken: 'Public key already exists'
               blank: 'Public key is missing'
 
+        keyrelay:
+          attributes:
+            expiry_relative:
+              unknown_pattern: 'Expiry relative must be compatible to ISO 8601'
+
     attributes:
       epp_domain: &epp_domain_attributes
         name: 'Domain name'

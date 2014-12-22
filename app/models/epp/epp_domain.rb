@@ -357,7 +357,7 @@ class Epp::EppDomain < Domain
     end
 
     abs_datetime = parsed_frame.css('absolute').text
-    abs_datetime = abs_datetime.to_date if abs_datetime
+    abs_datetime = DateTime.parse(abs_datetime) if abs_datetime.present?
 
     transaction do
       kr = keyrelays.create(
@@ -373,14 +373,16 @@ class Epp::EppDomain < Domain
         accepter: registrar
       )
 
-      registrar.messages.create(
+      return false unless valid?
+
+      registrar.messages.create!(
         body: 'Key Relay action completed successfully.',
         attached_obj_type: kr.class.to_s,
         attached_obj_id: kr.id
       )
-
-      kr
     end
+
+    true
   end
 
   ### VALIDATIONS ###
