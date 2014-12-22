@@ -351,6 +351,7 @@ class Epp::EppDomain < Domain
     save(validate: false)
   end
 
+  # rubocop:disable Metrics/MethodLength
   def keyrelay(parsed_frame, requester)
     if registrar == requester
       errors.add(:base, :domain_already_belongs_to_the_querying_registrar) and return false
@@ -384,6 +385,7 @@ class Epp::EppDomain < Domain
 
     true
   end
+  # rubocop:enable Metrics/MethodLength
 
   ### VALIDATIONS ###
 
