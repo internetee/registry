@@ -10,7 +10,8 @@ module Epp::ContactsHelper
     # FIXME: Update returns 2303 update multiple times
     code = params_hash['epp']['command']['update']['update'][:id]
     @contact = Contact.where(code: code).first
-    if update_rights? && stamp(@contact) && @contact.update_attributes(contact_and_address_attributes(:update))
+    # if update_rights? && stamp(@contact) && @contact.update_attributes(contact_and_address_attributes(:update))
+    if owner? && stamp(@contact) && @contact.update_attributes(contact_and_address_attributes(:update))
       render 'epp/contacts/update'
     else
       contact_exists?(code)
@@ -38,8 +39,8 @@ module Epp::ContactsHelper
   def info_contact
     handle_errors(@contact) and return unless @contact
     handle_errors(@contact) and return unless rights?
-    @disclosure = ContactDisclosure.default_values.merge(@contact.disclosure.as_hash)
-    @disclosure_policy = @contact.disclosure.attributes_with_flag
+    @disclosure = ContactDisclosure.default_values.merge(@contact.disclosure.try(:as_hash) || {})
+    @disclosure_policy = @contact.disclosure.try(:attributes_with_flag)
     @owner = owner?(false)
     render 'epp/contacts/info'
   end
@@ -67,7 +68,8 @@ module Epp::ContactsHelper
   def validate_contact_update_request
     @ph = params_hash['epp']['command']['update']['update']
     update_attrs_present?
-    xml_attrs_present?(@ph, [['id'], %w(authInfo pw)])
+    # xml_attrs_present?(@ph, [['id'], %w(authInfo pw)])
+    xml_attrs_present?(@ph, [['id']])
   end
 
   def contact_exists?(code)

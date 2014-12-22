@@ -18,8 +18,18 @@ production:
   <<: *default
   database: registry_production
 
-development_whois:
-  database: whois_development
+development_private_whois:
+  <<: *default
+  database: whois_private
 
-test_whois:
-  database: test_whois
+development_private_whois:
+  <<: *default
+  database: whois_public
+
+production_public_whois:
+  <<: *default
+  database: production_whois_public
+
+production_private_whois:
+  <<: *default
+  database: production_whois_private

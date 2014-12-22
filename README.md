@@ -307,3 +307,9 @@ Rollback to previous release:
 
     mina rollback    # staging
     mina pr rollback # production 
+
+General rake and mina tips:
+
+    rake -T     # list all rake commands
+    rake -T db  # list all database related commands
+    mina -T     # list all mina deploy commands

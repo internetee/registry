@@ -59,6 +59,14 @@ ActiveRecord::Schema.define(version: 20141218154829) do
     t.boolean  "address"
   end
 
+  create_table "contact_statuses", force: true do |t|
+    t.string   "value"
+    t.string   "description"
+    t.integer  "contact_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "contact_versions", force: true do |t|
     t.string   "item_type",  null: false
     t.integer  "item_id",    null: false
