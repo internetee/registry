@@ -3,10 +3,18 @@ Domain Registry
 
 Full stack top-level domain (TLD) management.
 
-* [Installation](https://github.com/internetee/registry#installation)
-* [Testing](https://github.com/internetee/registry#testing)
 * [Documentation](https://github.com/internetee/registry#documentation)
+* [Installation](https://github.com/internetee/registry#installation)
 * [Deployment](https://github.com/internetee/registry#deployment)
+* [Autotesting](https://github.com/internetee/registry#autotesting)
+
+
+Documentation
+-------------
+
+* [EPP request-response examples](https://github.com/internetee/registry/blob/master/doc/epp-doc.md)
+* [Database diagram](https://github.com/internetee/registry/blob/master/doc/models_complete.svg)
+* [Controllers diagram](https://github.com/internetee/registry/blob/master/doc/controllers_complete.svg)
 
 
 Installation
@@ -103,16 +111,16 @@ Configuration on plain TCP EPP is as follows:
 </IfModule>
 ```
 
-Note: Its best to go with two virtual hosts, one for test and one for dev, 
+Note: Its best to go with two virtual hosts, one for autotest and one for dev, 
 then you don't have to worry about quitting 
-the dev appserver for running tests (because of colliding ports).
+the dev appserver for running autotests (because of colliding ports).
 
     sudo a2ensite epp_ssl
     sudo service apache2 restart
 
 Try it out:
 
-Fire up your appserver on port 8989 (This setup is tested with Unicorn)
+Fire up your appserver on port 8989
 
     cd $mod_epp
     ./epptelnet.pl localhost 701 -s
@@ -151,8 +159,95 @@ Please follow WHOIS server readme:
     https://github.com/internetee/whois
 
 
-Testing
--------
+
+Deployment
+----------
+
+### System build
+
+Officially Debian 7 is supported and tested. 
+
+You can use or find ideas how to build up production servers using 
+sysadmin tool [Babushka](https://github.com/benhoskings/babushka).
+
+Unofficial build scripts locate at: https://github.com/priit/babushka-deps
+Those scripts are not dedicated to Registry, but more focuse on general
+Ruby on Rails application deployment in various situatians.
+
+Quick overview. Use 'registry' for username and app name when asked.
+
+    # on server side
+    apt-get install curl
+    sh -c "`curl https://babushka.me/up`"
+    babushka priit:app_user
+    babushka priit:app
+
+Please inspect those scripts before running anything, 
+they might not be complete or might have serious bugs. You are free to fork it.
+
+Alternatively you can build up everything manually, required components:
+
+* Consider using [RBENV](https://github.com/sstephenson/rbenv)
+* Compile requried [ruby version](https://github.com/internetee/registry/blob/master/.ruby-version)
+* [Phusion passenger](https://www.phusionpassenger.com/documentation/Users%20guide%20Apache.html)
+* [Postgresql](http://www.postgresql.org/docs/)
+
+Registry application is not tested with multi-threaded system (such as Puma) and 
+it's not officially supported. Please use multi-process system instead (Passenger, Unicorn, Mongrel)
+
+We also recommend to investigate 
+[Passenger Optimization Guide](https://www.phusionpassenger.com/documentation/ServerOptimizationGuide.html) for proper configuration.
+
+### Application build and update
+
+For application deployment we are using faster [Mina](https://github.com/mina-deploy/mina) 
+instead of Capistrano.
+
+All deploy code locates at config/deploy.rb file.
+
+First add 'registry-st' and 'registry' to your .ssh/config file:
+
+```
+# staging
+Host registry-st
+  HostName YOUR-SERVER-IP
+  User registry
+
+# production
+Host registry
+  HostName YOUR-SERVER-IP
+  User registry
+```
+
+Mina help and all mina commands:
+
+    mina -h
+    mina -T
+
+Setup application directories for a new server:
+
+    mina setup     # staging
+    mina pr setup  # production 
+
+Deploy new code:
+
+    mina deploy    # staging
+    mina pr deploy # production
+
+Rollback to previous release:
+
+    mina rollback    # staging
+    mina pr rollback # production 
+
+General rake and mina tips:
+
+    rake -T     # list all rake commands
+    rake -T db  # list all database related commands
+    mina -T     # list all mina deploy commands
+
+
+Autotesting
+-----------
 
 * Before running tests for the first time: `RAILS_ENV=test rake db:seed`
 * Run tests: `rake`
@@ -164,9 +259,9 @@ To see internal errors while testing EPP
     unicorn -E test -p 8989
     rake spec:epp
 
-### Apache mod_epp testing/debugging
+### Apache mod_epp autotesting/debugging
 
-Testing Apache mod_epp without Registry app.
+Autotesting Apache mod_epp without Registry app.
 
     sudo apt-get install apache2-dbg 
 
@@ -219,97 +314,3 @@ This needs a static greeting file, so you will have to make /var/www writable.
     mkdir epp
 
 Copy the files from $mod_epp/examples/cgis to /usr/lib/cgi-bin/epp 
-
-
-Documentation
--------------
-
-* [EPP request-response examples](https://github.com/internetee/registry/blob/master/doc/epp-doc.md)
-* [Database diagram](https://github.com/internetee/registry/blob/master/doc/models_complete.svg)
-* [Controllers diagram](https://github.com/internetee/registry/blob/master/doc/controllers_complete.svg)
-
-
-Deployment
-----------
-
-### System build
-
-Officially Debian 7 is supported and tested. 
-
-You can use or find ideas how to build up production servers using 
-sysadmin tool [Babushka](https://github.com/benhoskings/babushka).
-
-Unofficial build scripts locate at: https://github.com/priit/babushka-deps
-Those scripts are not dedicated to Registry, but more focuse on general
-Ruby on Rails application deployment in various situatians.
-
-Quick overview. Use 'registry' for username and app name when asked.
-
-    # on server side
-    apt-get install curl
-    sh -c "`curl https://babushka.me/up`"
-    babushka priit:app_user
-    babushka priit:app
-
-Please inspect those scripts before running anything, 
-they might not be complete or might have serious bugs. You are free to fork it.
-
-Alternatively you can build up everything manually, required components:
-
-* Consider using [RBENV](https://github.com/sstephenson/rbenv)
-* Compile requried [ruby version](https://github.com/internetee/registry/blob/master/.ruby-version)
-* [Phusion passenger](https://www.phusionpassenger.com/documentation/Users%20guide%20Apache.html)
-* [Postgresql](http://www.postgresql.org/docs/)
-
-Registry application is not tested with multi-threaded system (such as Puma) and 
-it's not officially supported. Please use multi-process system instead (Passenger, Unicorn, Mongrel)
-
-We also recommend to investigate 
-[Passenger Optimization Guide](https://www.phusionpassenger.com/documentation/ServerOptimizationGuide.html) for proper configuration.
-
-### Application build and update
-
-For application deployment we are using faster [Mina](https://github.com/mina-deploy/mina) 
-instead of Capistrano.
-
-All deploy code locates at config/deploy.rb file.
-
-First add 'testregistry' and 'registry' to your .ssh/config file:
-
-```
-# staging
-Host testregistry
-  HostName YOUR-SERVER-IP
-  User registry
-
-# production
-Host registry
-  HostName YOUR-SERVER-IP
-  User registry
-```
-
-Mina help and all mina commands:
-
-    mina -h
-    mina -T
-
-Setup application directories for a new server:
-
-    mina setup     # staging
-    mina pr setup  # production 
-
-Deploy new code:
-
-    mina deploy    # staging
-    mina pr deploy # production
-
-Rollback to previous release:
-
-    mina rollback    # staging
-    mina pr rollback # production 
-
-General rake and mina tips:
-
-    rake -T     # list all rake commands
-    rake -T db  # list all database related commands
-    mina -T     # list all mina deploy commands
