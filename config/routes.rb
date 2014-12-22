@@ -7,6 +7,8 @@ Rails.application.routes.draw do
 
   ## ADMIN ROUTES
   namespace(:admin) do
+    resources :keyrelays
+
     resources :zonefiles
 
     resources :zonefile_settings
@@ -34,15 +36,12 @@ Rails.application.routes.draw do
     resource :dashboard
 
     root 'domains#index'
-
   end
 
   devise_for :users
 
   devise_scope :user do
-    resources :sessions do
-      get :switch_registrar, on: :collection
-    end
+    resources :sessions
 
     get 'logout' => 'devise/sessions#destroy'
     get 'login' => 'sessions#login'

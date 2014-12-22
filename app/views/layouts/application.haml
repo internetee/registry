@@ -23,28 +23,28 @@
           = link_to APP_CONFIG['app_name'], root_path, class: 'navbar-brand'
         .navbar-collapse.collapse
           %ul.nav.navbar-nav
-            %li= link_to t('shared.domains'), admin_domains_path
-            %li= link_to t('shared.contacts'), admin_contacts_path
-            %li= link_to t('shared.registrars'), admin_registrars_path
+            %li= link_to t('domains'), admin_domains_path
+            %li= link_to t('contacts'), admin_contacts_path
+            %li= link_to t('registrars'), admin_registrars_path
             - if can?(:access, :settings_menu)
               %li.dropdown
                 %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
-                  = t('shared.settings')
+                  = t('settings')
                   %span.caret
                 %ul.dropdown-menu{role: "menu"}
-                  %li.dropdown-header= t('shared.system')
-                  %li= link_to t('shared.settings'), admin_settings_path
+                  %li.dropdown-header= t('system')
+                  %li= link_to t('settings'), admin_settings_path
                   %li= link_to t('zonefile'), admin_zonefile_settings_path
                   %li= link_to t(:domains_history), admin_domain_versions_path
                   %li= link_to t(:background_jobs), admin_delayed_jobs_path
 
                   %li.divider
-                  %li.dropdown-header= t('shared.users')
+                  %li.dropdown-header= t('users')
                   %li= link_to t(:admin_users), admin_users_path
                   %li= link_to t(:epp_users), admin_epp_users_path
 
           %ul.nav.navbar-nav.navbar-right
-            %li= link_to t('shared.log_out', user: current_user), '/logout'
+            %li= link_to t('log_out', user: current_user), '/logout'
 
         / /.nav-collapse
     .container

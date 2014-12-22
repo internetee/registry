@@ -19,11 +19,11 @@ class Admin::DomainsController < AdminController
     add_prefix_to_statuses
 
     if @domain.update(domain_params)
-      flash[:notice] = I18n.t('shared.domain_updated')
+      flash[:notice] = I18n.t('domain_updated')
       redirect_to [:admin, @domain]
     else
       @domain.domain_statuses.build if @domain.domain_statuses.empty?
-      flash.now[:alert] = I18n.t('shared.failed_to_update_domain')
+      flash.now[:alert] = I18n.t('failed_to_update_domain')
       render 'edit'
     end
   end

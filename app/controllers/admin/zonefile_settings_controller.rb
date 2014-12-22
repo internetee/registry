@@ -11,10 +11,10 @@ class Admin::ZonefileSettingsController < ApplicationController
 
   def update
     if @zonefile_setting.update(zonefile_setting_params)
-      flash[:notice] = I18n.t('shared.record_updated')
+      flash[:notice] = I18n.t('record_updated')
       redirect_to admin_zonefile_settings_path
     else
-      flash.now[:alert] = I18n.t('shared.failed_to_update_record')
+      flash.now[:alert] = I18n.t('failed_to_update_record')
       render 'edit'
     end
   end

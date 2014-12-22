@@ -118,7 +118,7 @@ module Epp::DomainsHelper
     end
 
     if parsed_frame.css('dsData').count > 0 && parsed_frame.css('create > keyData').count > 0
-      epp_errors << { code: '2306', msg: I18n.t('shared.ds_data_and_key_data_must_not_exists_together') }
+      epp_errors << { code: '2306', msg: I18n.t('ds_data_and_key_data_must_not_exists_together') }
       ret = false
     end
     ret

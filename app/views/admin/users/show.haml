@@ -1,11 +1,11 @@
 .row
   .col-sm-6
     %h2.text-center-xs
-      = "#{t('shared.user_details')}"
+      = "#{t('user_details')}"
   .col-sm-6
     %h2.text-right.text-center-xs
-      = link_to(t('shared.edit'), edit_admin_user_path(@user), class: 'btn btn-primary')
-      = link_to(t('shared.delete'), admin_user_path(@user), method: :delete, data: { confirm: t('shared.are_you_sure') }, class: 'btn btn-danger')
+      = link_to(t('edit'), edit_admin_user_path(@user), class: 'btn btn-primary')
+      = link_to(t('delete'), admin_user_path(@user), method: :delete, data: { confirm: t('are_you_sure') }, class: 'btn btn-danger')
 
 %hr
 - if @user.errors.any?
@@ -18,25 +18,25 @@
   .col-md-6
     .panel.panel-default
       .panel-heading
-        %h3.panel-title= t('shared.general')
+        %h3.panel-title= t('general')
       .panel-body
         %dl.dl-horizontal
-          %dt= t('shared.username')
+          %dt= t('username')
           %dd= @user.username
 
-          %dt= t('shared.password')
+          %dt= t('password')
           %dd= @user.password
 
-          %dt= t('shared.identity_code')
+          %dt= t('identity_code')
           %dd= @user.identity_code
 
   .col-md-6
     .panel.panel-default
       .panel-heading
-        %h3.panel-title= t('shared.address')
+        %h3.panel-title= t('address')
       .panel-body
         %dl.dl-horizontal
-          %dt= t('shared.email')
+          %dt= t('email')
           %dd= @user.email
 
           %dt= t('role')

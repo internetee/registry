@@ -18,10 +18,10 @@ class Admin::RegistrarsController < AdminController
     @registrar = Registrar.new(registrar_params)
 
     if @registrar.save
-      flash[:notice] = I18n.t('shared.registrar_added')
+      flash[:notice] = I18n.t('registrar_added')
       redirect_to [:admin, @registrar]
     else
-      flash.now[:alert] = I18n.t('shared.failed_to_add_registrar')
+      flash.now[:alert] = I18n.t('failed_to_add_registrar')
       render 'new'
     end
   end
@@ -30,20 +30,20 @@ class Admin::RegistrarsController < AdminController
 
   def update
     if @registrar.update(registrar_params)
-      flash[:notice] = I18n.t('shared.registrar_updated')
+      flash[:notice] = I18n.t('registrar_updated')
       redirect_to [:admin, @registrar]
     else
-      flash.now[:alert] = I18n.t('shared.failed_to_update_registrar')
+      flash.now[:alert] = I18n.t('failed_to_update_registrar')
       render 'edit'
     end
   end
 
   def destroy
     if @registrar.destroy
-      flash[:notice] = I18n.t('shared.registrar_deleted')
+      flash[:notice] = I18n.t('registrar_deleted')
       redirect_to admin_registrars_path
     else
-      flash.now[:alert] = I18n.t('shared.failed_to_delete_registrar')
+      flash.now[:alert] = I18n.t('failed_to_delete_registrar')
       render 'show'
     end
   end

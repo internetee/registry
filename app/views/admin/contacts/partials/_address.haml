@@ -1,28 +1,28 @@
 .panel.panel-default
   .panel-heading
-    %h3.panel-title= t('shared.address')
+    %h3.panel-title= t('address')
   .panel-body
     - unless @contact.address.nil?
       %dl.dl-horizontal
-        %dt= t('shared.country')
+        %dt= t('country')
         %dd= @contact.address.country
 
-        %dt= t('shared.city')
+        %dt= t('city')
         %dd= @contact.address.city
 
-        %dt= t('shared.street')
+        %dt= t('street')
         %dd= @contact.address.street
 
         - if @contact.address.street2
-          %dt= t('shared.street')
+          %dt= t('street')
           %dd= @contact.address.street2
 
         - if @contact.address.street3
-          %dt= t('shared.street')
+          %dt= t('street')
           %dd= @contact.address.street3
 
 
 
-        %dt= t('shared.zip')
+        %dt= t('zip')
         %dd= @contact.address.zip
 

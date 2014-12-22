@@ -15,10 +15,10 @@ class Admin::UsersController < AdminController
     @user = User.new(user_params)
 
     if @user.save
-      flash[:notice] = I18n.t('shared.record_created')
+      flash[:notice] = I18n.t('record_created')
       redirect_to [:admin, @user]
     else
-      flash.now[:alert] = I18n.t('shared.failed_to_create_record')
+      flash.now[:alert] = I18n.t('failed_to_create_record')
       render 'new'
     end
   end
@@ -29,20 +29,20 @@ class Admin::UsersController < AdminController
 
   def update
     if @user.update(user_params)
-      flash[:notice] = I18n.t('shared.record_updated')
+      flash[:notice] = I18n.t('record_updated')
       redirect_to [:admin, @user]
     else
-      flash.now[:alert] = I18n.t('shared.failed_to_update_record')
+      flash.now[:alert] = I18n.t('failed_to_update_record')
       render 'edit'
     end
   end
 
   def destroy
     if @user.destroy
-      flash[:notice] = I18n.t('shared.record_deleted')
+      flash[:notice] = I18n.t('record_deleted')
       redirect_to admin_users_path
     else
-      flash.now[:alert] = I18n.t('shared.failed_to_delete_record')
+      flash.now[:alert] = I18n.t('failed_to_delete_record')
       render 'show'
     end
   end

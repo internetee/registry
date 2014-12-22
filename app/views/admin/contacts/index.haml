@@ -1,6 +1,6 @@
 .row
   .col-sm-12
-    %h2.text-center-xs= t('shared.contacts')
+    %h2.text-center-xs= t('contacts')
 %hr
 .row
   .col-md-12
@@ -22,13 +22,13 @@
         %thead
           %tr
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'name', t('shared.name'))
+              = sort_link(@q, 'name', t('name'))
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'code', t('shared.code'))
+              = sort_link(@q, 'code', t('code'))
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'ident', t('shared.identity_code'))
+              = sort_link(@q, 'ident', t('identity_code'))
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'email', t('shared.email'))
+              = sort_link(@q, 'email', t('email'))
         %tbody
           - @contacts.each do |x|
             %tr
