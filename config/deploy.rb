@@ -11,7 +11,7 @@ require 'mina/whenever'
 #   repository   - Git repo to clone from. (needed by mina/git)
 #   branch       - Branch name to deploy. (needed by mina/git)
 
-set :domain, 'testregistry'
+set :domain, 'registry-st'
 set :deploy_to, '/home/app/registry'
 set :repository, 'https://github.com/internetee/registry'
 set :branch, 'master'
