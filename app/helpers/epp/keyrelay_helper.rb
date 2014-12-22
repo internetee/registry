@@ -32,6 +32,17 @@ module Epp::KeyrelayHelper
       }
     end
 
+    begin
+      abs_datetime = parsed_frame.css('absolute').text
+      abs_datetime = DateTime.parse(abs_datetime) if abs_datetime.present?
+    rescue => _e
+      epp_errors << {
+        code: '2005',
+        msg: I18n.t('unknown_expiry_absolute_pattern'),
+        value: { obj: 'expiry_absolute', val: abs_datetime }
+      }
+    end
+
     epp_errors.empty?
   end
 

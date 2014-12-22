@@ -454,3 +454,4 @@ en:
   requester: 'Requester'
   accepter: 'Accepter'
   keyrelay_details: 'Keyrelay details'
+  unknown_expiry_absolute_pattern: 'Expiry absolute must be compatible to ISO 8601'
