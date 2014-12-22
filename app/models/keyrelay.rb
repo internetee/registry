@@ -10,10 +10,15 @@ class Keyrelay < ActiveRecord::Base
 
   validates :expiry_relative, duration_iso8601: true
 
+  validate :validate_expiry_relative_xor_expiry_absolute
+
   def epp_code_map
     {
       '2005' => [
         [:expiry_relative, :unknown_pattern, { value: { obj: 'relative', val: expiry_relative } }]
+      ],
+      '2003' => [
+        [:base, :only_one_parameter_allowed, { param_1: 'relative', param_2: 'absolute' }]
       ]
     }
   end
@@ -32,5 +37,12 @@ class Keyrelay < ActiveRecord::Base
     else
       return 'pending'
     end
+  end
+
+  private
+
+  def validate_expiry_relative_xor_expiry_absolute
+    return  if expiry_relative.blank? ^ expiry_absolute.blank?
+    errors.add(:base, I18n.t(:only_one_parameter_allowed, param_1: 'relative', param_2: 'absolute'))
   end
 end

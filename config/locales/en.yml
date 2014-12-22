@@ -206,6 +206,8 @@ en:
 
         keyrelay:
           attributes:
+            base:
+              only_one_parameter_allowed: 'Only one parameter allowed: %{param_1} or %{param_2}'
             expiry_relative:
               unknown_pattern: 'Expiry relative must be compatible to ISO 8601'
 

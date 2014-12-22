@@ -64,5 +64,29 @@ describe 'EPP Keyrelay', epp: true do
 
       expect(zone.messages.queued.count).to eq(0)
     end
+
+    it 'does not allow both relative and absolute' do
+      xml = epp_xml.keyrelay({
+        name: { value: 'example.ee' },
+        keyData: {
+          flags: { value: '256' },
+          protocol: { value: '3' },
+          alg: { value: '8' },
+          pubKey: { value: 'cmlraXN0aGViZXN0' }
+        },
+        authInfo: {
+          pw: { value: domain.auth_info }
+        },
+        expiry: {
+          relative: { value: 'P1D' },
+          absolute: { value: '2014-12-23' }
+        }
+      })
+
+      response = epp_request(xml, :xml, :elkdata)
+      expect(response[:msg]).to eq('Only one parameter allowed: relative or absolute')
+
+      expect(zone.messages.queued.count).to eq(0)
+    end
   end
 end

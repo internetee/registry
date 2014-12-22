@@ -18,18 +18,6 @@ module Epp::KeyrelayHelper
   def validate_keyrelay_request
     epp_request_valid?('pubKey', 'flags', 'protocol', 'algorithm', 'name', 'pw')
 
-    if parsed_frame.css('relative').text.present? && parsed_frame.css('absolute').text.present?
-      epp_errors << {
-        code: '2003',
-        msg: I18n.t('only_one_parameter_allowed', param_1: 'relative', param_2: 'absolute')
-      }
-    elsif parsed_frame.css('relative').text.empty? && parsed_frame.css('absolute').text.empty?
-      epp_errors << {
-        code: '2003',
-        msg: I18n.t('required_parameter_missing_choice', param_1: 'relative', param_2: 'absolute')
-      }
-    end
-
     begin
       abs_datetime = parsed_frame.css('absolute').text
       abs_datetime = DateTime.parse(abs_datetime) if abs_datetime.present?
