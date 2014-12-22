@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for(_resource)
-    return session[:user_return_to].to_s if session[:user_return_to]
+    return session[:user_return_to].to_s if session[:user_return_to] && session[:user_return_to] != login_path
     admin_root_path
   end
 end

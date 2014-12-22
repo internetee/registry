@@ -19,7 +19,7 @@ class Keyrelay < ActiveRecord::Base
   end
 
   def expiry
-    if expiry_relative
+    if expiry_relative.present?
       pa_date + ISO8601::Duration.new(expiry_relative).to_seconds
     elsif expiry_absolute
       expiry_absolute

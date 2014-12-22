@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 
     resources :zonefile_settings
 
+    resources :keyrelays
     resources :domains
     resources :settings
     resources :registrars do
@@ -34,6 +35,7 @@ Rails.application.routes.draw do
     resources :delayed_jobs
 
     resource :dashboard
+
 
     root 'domains#index'
   end

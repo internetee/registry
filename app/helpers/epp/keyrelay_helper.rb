@@ -12,8 +12,6 @@ module Epp::KeyrelayHelper
 
     render '/epp/shared/success'
   end
-  # rubocop: enable Metrics/PerceivedComplexity
-  # rubocop: enable Metrics/CyclomaticComplexity
 
   private
 
@@ -45,6 +43,9 @@ module Epp::KeyrelayHelper
 
     epp_errors.empty?
   end
+
+  # rubocop: enable Metrics/PerceivedComplexity
+  # rubocop: enable Metrics/CyclomaticComplexity
 
   def find_domain_for_keyrelay
     domain_name = parsed_frame.css('name').text.strip.downcase
