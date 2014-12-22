@@ -36,7 +36,6 @@ Rails.application.routes.draw do
 
     resource :dashboard
 
-
     root 'domains#index'
   end
 
