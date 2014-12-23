@@ -245,6 +245,10 @@ General rake and mina tips:
     rake -T db  # list all database related commands
     mina -T     # list all mina deploy commands
 
+CRON
+----
+
+Crontab is automatically updated after each deploy. Jobs can be viewed [here](https://github.com/internetee/registry/blob/master/config/schedule.rb).
 
 Autotesting
 -----------
