@@ -210,6 +210,17 @@ en:
               only_one_parameter_allowed: 'Only one parameter allowed: %{param_1} or %{param_2}'
             expiry_relative:
               unknown_pattern: 'Expiry relative must be compatible to ISO 8601'
+            key_data_public_key:
+              blank: 'Public key is missing'
+            key_data_flags:
+              blank: 'Flag is missing'
+            key_data_protocol:
+              blank: 'Protocol is missing'
+            key_data_alg:
+              blank: 'Algorithm is missing'
+            auth_info_pw:
+              blank: 'Password is missing'
+
 
     attributes:
       epp_domain: &epp_domain_attributes

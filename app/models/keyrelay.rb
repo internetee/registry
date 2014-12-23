@@ -9,6 +9,7 @@ class Keyrelay < ActiveRecord::Base
   delegate :name, to: :domain, prefix: true
 
   validates :expiry_relative, duration_iso8601: true
+  validates :key_data_public_key, :key_data_flags, :key_data_protocol, :key_data_alg, :auth_info_pw, presence: true
 
   validate :validate_expiry_relative_xor_expiry_absolute
 
@@ -18,7 +19,12 @@ class Keyrelay < ActiveRecord::Base
         [:expiry_relative, :unknown_pattern, { value: { obj: 'relative', val: expiry_relative } }]
       ],
       '2003' => [
-        [:base, :only_one_parameter_allowed, { param_1: 'relative', param_2: 'absolute' }]
+        [:base, :only_one_parameter_allowed, { param_1: 'relative', param_2: 'absolute' }],
+        [:key_data_public_key, :blank],
+        [:key_data_flags, :blank],
+        [:key_data_protocol, :blank],
+        [:key_data_alg, :blank],
+        [:auth_info_pw, :blank]
       ]
     }
   end
