@@ -248,7 +248,9 @@ General rake and mina tips:
 CRON
 ----
 
-Crontab is automatically updated after each deploy. Jobs can be viewed [here](https://github.com/internetee/registry/blob/master/config/schedule.rb).
+Crontab is automatically updated after each deploy. Jobs can be viewed [here](https://github.com/internetee/registry/blob/master/config/schedule.rb).  
+
+Alternatively you can run `mina pr whenever:update` to update the crontab.
 
 Autotesting
 -----------
