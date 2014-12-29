@@ -360,7 +360,7 @@ module Epp
     }
 
     epp_xml = EppXml::Domain.new(cl_trid: 'ABC-12345')
-    epp_xml.create(xml_params, false)
+    epp_xml.create(xml_params, {})
   end
 
   def domain_create_with_host_attrs
@@ -393,10 +393,10 @@ module Epp
     }
 
     epp_xml = EppXml::Domain.new(cl_trid: 'ABC-12345')
-    epp_xml.create(xml_params, false)
+    epp_xml.create(xml_params, {})
   end
 
-  def domain_update_xml(xml_params = {}, dnssec_params = false)
+  def domain_update_xml(xml_params = {}, dnssec_params = {})
     defaults = {
       name: { value: 'example.ee' }
     }
