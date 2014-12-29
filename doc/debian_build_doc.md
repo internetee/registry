@@ -39,7 +39,7 @@ Alternatively you can build up everything manually, required components:
 Registry application is not tested with multi-threaded system (such as Puma) and 
 it's not officially supported. Please use multi-process system instead (Passenger, Unicorn, Mongrel)
 
-Use Phusion Passenger [official debian packages](https://www.phusionpassenger.com/documentation/Users%20guide%20Apache.html#install_on_debian_ubuntu) NB! Passenger runtime does not depend on ruby version, tuhs you can use multiple different ruby version apps with same passenger install. 
+Use Phusion Passenger [official debian packages](https://www.phusionpassenger.com/documentation/Users%20guide%20Apache.html#install_on_debian_ubuntu) NB! Passenger runtime does not depend on ruby version, thus you can use multiple different ruby version apps with same passenger install. 
 
 We also recommend to investigate 
 [Passenger Optimization Guide](https://www.phusionpassenger.com/documentation/ServerOptimizationGuide.html) for proper configuration.
