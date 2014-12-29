@@ -35,6 +35,8 @@ class Domain < ActiveRecord::Base
   accepts_nested_attributes_for :dnskeys, allow_destroy: true,
                                           reject_if: proc { |attrs| attrs[:public_key].blank? }
 
+  has_many :legal_documents, as: :documentable
+
   delegate :code, to: :owner_contact, prefix: true
   delegate :email, to: :owner_contact, prefix: true
   delegate :ident, to: :owner_contact, prefix: true

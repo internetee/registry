@@ -8,6 +8,7 @@ describe Domain do
   it { should have_many(:admin_contacts) }
   it { should have_many(:domain_transfers) }
   it { should have_many(:dnskeys) }
+  it { should have_many(:legal_documents) }
 
   context 'with sufficient settings' do
     before(:each) do

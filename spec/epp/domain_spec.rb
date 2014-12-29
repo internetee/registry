@@ -245,6 +245,15 @@ describe 'EPP Domain', epp: true do
         expect(key.public_key).to eq('AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8')
       end
 
+      it 'creates a domain with legal document' do
+        response = epp_request(domain_create_xml_with_legal_doc, :xml)
+
+        expect(response[:result_code]).to eq('1000')
+        expect(response[:msg]).to eq('Command completed successfully')
+        d = Domain.first
+        expect(d.legal_documents.count).to eq(1)
+      end
+
       it 'creates ria.ee with valid ds record' do
         xml = domain_create_xml({
           name: { value: 'ria.ee' }

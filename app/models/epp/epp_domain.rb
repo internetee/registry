@@ -54,6 +54,7 @@ class Epp::EppDomain < Domain
     attach_contacts(self.class.parse_contacts_from_frame(parsed_frame))
     attach_nameservers(self.class.parse_nameservers_from_frame(parsed_frame))
     attach_statuses(self.class.parse_statuses_from_frame(parsed_frame))
+    attach_legal_document(self.class.parse_legal_document_from_frame(parsed_frame))
     errors.empty?
   end
 
@@ -90,6 +91,15 @@ class Epp::EppDomain < Domain
     # assign_attributes(self.class.parse_update_params_from_frame(parsed_frame))
 
     errors.empty?
+  end
+
+  def attach_legal_document(legal_document_data)
+    return unless legal_document_data
+
+    legal_documents.build(
+      document_type: legal_document_data[:type],
+      body: legal_document_data[:body]
+    )
   end
 
   def attach_owner_contact(code)
@@ -526,6 +536,16 @@ class Epp::EppDomain < Domain
       end
 
       res
+    end
+
+    def parse_legal_document_from_frame(parsed_frame)
+      ld = parsed_frame.css('legalDocument').first
+      return nil unless ld
+
+      {
+        body: ld.text,
+        type: ld['type']
+      }
     end
 
     def check_availability(domains)
