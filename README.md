@@ -6,6 +6,7 @@ Full stack top-level domain (TLD) management.
 * [Documentation](https://github.com/internetee/registry#documentation)
 * [Installation](https://github.com/internetee/registry#installation)
 * [Deployment](https://github.com/internetee/registry#deployment)
+* [Staging deployment](https://github.com/internetee/registry#staging-deployment)
 * [Autotesting](https://github.com/internetee/registry#autotesting)
 
 
@@ -159,91 +160,11 @@ Please follow WHOIS server readme:
     https://github.com/internetee/whois
 
 
-
 Deployment
 ----------
 
-### System build
-
-Officially Debian 7 is supported and tested. 
-
-You can use or find ideas how to build up production servers using 
-sysadmin tool [Babushka](https://github.com/benhoskings/babushka).
-
-Unofficial build scripts locate at: https://github.com/priit/babushka-deps
-Those scripts are not dedicated to Registry, but more focuse on general
-Ruby on Rails application deployment in various situatians.
-
-Quick overview. Use 'registry' for username and app name when asked.
-
-    # on server side
-    apt-get install curl
-    sh -c "`curl https://babushka.me/up`"
-    babushka priit:app_user
-    babushka priit:app
-
-Please inspect those scripts before running anything, 
-they might not be complete or might have serious bugs. You are free to fork it.
-
-Alternatively you can build up everything manually, required components:
-
-* Consider using [RBENV](https://github.com/sstephenson/rbenv)
-* Compile requried [ruby version](https://github.com/internetee/registry/blob/master/.ruby-version)
-* [Phusion passenger](https://www.phusionpassenger.com/documentation/Users%20guide%20Apache.html)
-* [Postgresql](http://www.postgresql.org/docs/)
-
-Registry application is not tested with multi-threaded system (such as Puma) and 
-it's not officially supported. Please use multi-process system instead (Passenger, Unicorn, Mongrel)
-
-We also recommend to investigate 
-[Passenger Optimization Guide](https://www.phusionpassenger.com/documentation/ServerOptimizationGuide.html) for proper configuration.
-
-### Application build and update
-
-For application deployment we are using faster [Mina](https://github.com/mina-deploy/mina) 
-instead of Capistrano.
-
-All deploy code locates at config/deploy.rb file.
-
-First add 'registry-st' and 'registry' to your .ssh/config file:
-
-```
-# staging
-Host registry-st
-  HostName YOUR-SERVER-IP
-  User registry
-
-# production
-Host registry
-  HostName YOUR-SERVER-IP
-  User registry
-```
-
-Mina help and all mina commands:
-
-    mina -h
-    mina -T
-
-Setup application directories for a new server:
-
-    mina setup     # staging
-    mina pr setup  # production 
-
-Deploy new code:
-
-    mina deploy    # staging
-    mina pr deploy # production
-
-Rollback to previous release:
-
-    mina rollback    # staging
-    mina pr rollback # production 
-
-General rake and mina tips:
-
-    rake -T     # list all rake commands
-    rake -T db  # list all database related commands
-    mina -T     # list all mina deploy commands
+* [Debian build](https://github.com/internetee/registry/blob/master/doc/debian_build_doc.md)
+* [Application build and update](https://github.com/internetee/registry/blob/master/doc/application_build_doc.md)
 
 CRON
 ----
