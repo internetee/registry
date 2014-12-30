@@ -79,10 +79,16 @@ module Epp::DomainsHelper
 
   def transfer_domain
     @domain = find_domain(secure: false)
-
     handle_errors(@domain) and return unless @domain
 
-    @domain_transfer = @domain.transfer(domain_transfer_params)
+    Epp::EppDomain.transaction do
+      @domain_transfer = @domain.transfer(domain_transfer_params)
+      if @domain_transfer
+        @domain.attach_legal_document(Epp::EppDomain.parse_legal_document_from_frame(parsed_frame))
+        @domain.save
+      end
+    end
+
     handle_errors(@domain) and return unless @domain_transfer
 
     render '/epp/domains/transfer'
