@@ -13,6 +13,8 @@ Rails.application.routes.draw do
 
     resources :zonefile_settings
 
+    resources :legal_documents
+
     resources :keyrelays
     resources :domains
     resources :settings

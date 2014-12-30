@@ -469,3 +469,6 @@ en:
   keyrelay_details: 'Keyrelay details'
   unknown_expiry_absolute_pattern: 'Expiry absolute must be compatible to ISO 8601'
   domain_name: 'Domain name'
+  created_at: 'Created at'
+  type: 'Type'
+  legal_documents: 'Legal documents'

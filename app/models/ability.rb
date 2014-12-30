@@ -23,6 +23,7 @@ class Ability
       can :manage, User
       can :manage, EppUser
       can :manage, Keyrelay
+      can :manage, LegalDocument
       can :index, :delayed_job
       can :create, :zonefile
       can :access, :settings_menu
