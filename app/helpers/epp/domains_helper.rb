@@ -60,6 +60,7 @@ module Epp::DomainsHelper
       @domain.parse_and_attach_domain_dependencies(parsed_frame.css('add'))
       @domain.parse_and_attach_ds_data(parsed_frame.css('extension add'))
       @domain.parse_and_update_domain_dependencies(parsed_frame.css('chg'))
+      @domain.attach_legal_document(Epp::EppDomain.parse_legal_document_from_frame(parsed_frame))
 
       if @domain.errors.any?
         handle_errors(@domain)
