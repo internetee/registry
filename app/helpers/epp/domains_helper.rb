@@ -94,6 +94,10 @@ module Epp::DomainsHelper
 
     handle_errors(@domain) and return unless @domain
     handle_errors(@domain) and return unless @domain.can_be_deleted?
+
+    @domain.attach_legal_document(Epp::EppDomain.parse_legal_document_from_frame(parsed_frame))
+    @domain.save(validate: false)
+
     handle_errors(@domain) and return unless @domain.destroy
 
     render '/epp/domains/success'
