@@ -1110,7 +1110,7 @@ describe 'EPP Domain', epp: true do
         expect(response[:results][0][:value]).to eq('ns1.example.com')
       end
 
-      it 'updates a domain' do
+      it 'cannot change registrant without legal document' do
         Fabricate(:contact, code: 'mak21')
         existing_pw = Domain.first.auth_info
 
@@ -1121,6 +1121,26 @@ describe 'EPP Domain', epp: true do
         }
 
         response = epp_request(domain_update_xml(xml_params), :xml)
+        expect(response[:results][0][:msg]).to eq('Required parameter missing: legalDocument')
+        expect(response[:results][0][:result_code]).to eq('2003')
+      end
+
+      it 'updates a domain' do
+        Fabricate(:contact, code: 'mak21')
+        existing_pw = Domain.first.auth_info
+
+        xml_params = {
+          chg: [
+            registrant: { value: 'mak21' }
+          ]
+        }
+
+        response = epp_request(domain_update_xml(xml_params, {}, {
+          _anonymus: [
+            legalDocument: { value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==', attrs: { type: 'pdf' } }
+          ]
+        }), :xml)
+
         expect(response[:results][0][:result_code]).to eq('1000')
 
         d = Domain.last

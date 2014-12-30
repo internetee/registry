@@ -171,7 +171,12 @@ module Epp::DomainsHelper
   ## UPDATE
   def validate_domain_update_request
     @ph = params_hash['epp']['command']['update']['update']
-    xml_attrs_present?(@ph, [['name']])
+
+    if parsed_frame.css('chg registrant').present? && parsed_frame.css('legalDocument').blank?
+      xml_attrs_present?(@ph, [['name'], ['legalDocument']])
+    else
+      xml_attrs_present?(@ph, [['name']])
+    end
   end
 
   ## TRANSFER
