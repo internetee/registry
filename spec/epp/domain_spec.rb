@@ -1136,7 +1136,10 @@ describe 'EPP Domain', epp: true do
 
         response = epp_request(domain_update_xml(xml_params, {}, {
           _anonymus: [
-            legalDocument: { value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==', attrs: { type: 'pdf' } }
+            legalDocument: {
+              value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+              attrs: { type: 'pdf' }
+            }
           ]
         }), :xml)
 
