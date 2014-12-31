@@ -1112,7 +1112,6 @@ describe 'EPP Domain', epp: true do
 
       it 'cannot change registrant without legal document' do
         Fabricate(:contact, code: 'mak21')
-        existing_pw = Domain.first.auth_info
 
         xml_params = {
           chg: [
