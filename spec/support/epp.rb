@@ -263,18 +263,8 @@ module Epp
 
   def log(req, res)
     return unless ENV['EPP_DOC']
-    puts "REQUEST:
-
-    ```xml
-    #{Nokogiri(req)}```
-
-    "
-    puts "RESPONSE:
-
-    ```xml
-    #{res}```
-
-    "
+    puts "REQUEST:\n\n```xml\n#{Nokogiri(req)}```\n\n"
+    puts "RESPONSE:\n\n```xml\n#{res}```\n\n"
   end
 end
 
