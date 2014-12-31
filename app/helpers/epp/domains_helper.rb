@@ -1,21 +1,13 @@
 module Epp::DomainsHelper
   def create_domain
-    Epp::EppDomain.transaction do
-      @domain = Epp::EppDomain.new(domain_create_params)
+    @domain = Epp::EppDomain.new(domain_create_params)
 
-      @domain.parse_and_attach_domain_dependencies(parsed_frame)
-      @domain.parse_and_attach_ds_data(parsed_frame.css('extension create'))
+    @domain.parse_and_attach_domain_dependencies(parsed_frame)
+    @domain.parse_and_attach_ds_data(parsed_frame.css('extension create'))
 
-      if @domain.errors.any?
-        handle_errors(@domain)
-        fail ActiveRecord::Rollback and return
-      end
-
-      unless @domain.save
-        handle_errors(@domain)
-        fail ActiveRecord::Rollback and return
-      end
-
+    if @domain.errors.any? || !@domain.save
+      handle_errors(@domain)
+    else
       render '/epp/domains/create'
     end
   end
@@ -50,28 +42,20 @@ module Epp::DomainsHelper
 
   # rubocop:disable Metrics/CyclomaticComplexity
   def update_domain
-    Epp::EppDomain.transaction do
-      @domain = find_domain
+    @domain = find_domain
 
-      handle_errors(@domain) and return unless @domain
+    handle_errors(@domain) and return unless @domain
 
-      @domain.parse_and_detach_domain_dependencies(parsed_frame.css('rem'))
-      @domain.parse_and_detach_ds_data(parsed_frame.css('extension rem'))
-      @domain.parse_and_attach_domain_dependencies(parsed_frame.css('add'))
-      @domain.parse_and_attach_ds_data(parsed_frame.css('extension add'))
-      @domain.parse_and_update_domain_dependencies(parsed_frame.css('chg'))
-      @domain.attach_legal_document(Epp::EppDomain.parse_legal_document_from_frame(parsed_frame))
+    @domain.parse_and_detach_domain_dependencies(parsed_frame.css('rem'))
+    @domain.parse_and_detach_ds_data(parsed_frame.css('extension rem'))
+    @domain.parse_and_attach_domain_dependencies(parsed_frame.css('add'))
+    @domain.parse_and_attach_ds_data(parsed_frame.css('extension add'))
+    @domain.parse_and_update_domain_dependencies(parsed_frame.css('chg'))
+    @domain.attach_legal_document(Epp::EppDomain.parse_legal_document_from_frame(parsed_frame))
 
-      if @domain.errors.any?
-        handle_errors(@domain)
-        fail ActiveRecord::Rollback and return
-      end
-
-      unless @domain.save
-        handle_errors(@domain)
-        fail ActiveRecord::Rollback and return
-      end
-
+    if @domain.errors.any? || !@domain.save
+      handle_errors(@domain)
+    else
       render '/epp/domains/success'
     end
   end
@@ -81,12 +65,10 @@ module Epp::DomainsHelper
     @domain = find_domain(secure: false)
     handle_errors(@domain) and return unless @domain
 
-    Epp::EppDomain.transaction do
-      @domain_transfer = @domain.transfer(domain_transfer_params)
-      if @domain_transfer
-        @domain.attach_legal_document(Epp::EppDomain.parse_legal_document_from_frame(parsed_frame))
-        @domain.save
-      end
+    @domain_transfer = @domain.transfer(domain_transfer_params)
+    if @domain_transfer
+      @domain.attach_legal_document(Epp::EppDomain.parse_legal_document_from_frame(parsed_frame))
+      @domain.save
     end
 
     handle_errors(@domain) and return unless @domain_transfer
