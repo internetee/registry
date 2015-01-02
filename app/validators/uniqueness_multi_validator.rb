@@ -7,7 +7,8 @@ class UniquenessMultiValidator < ActiveModel::EachValidator
       existing = list.select { |y| x.send(options[:attribute]) == y.send(options[:attribute]) }
       next unless existing.length > 1
       validated << x.send(options[:attribute])
-      record.errors.add(attribute, :invalid) if record.errors[attribute].blank?
+      association = options[:association] || attribute
+      record.errors.add(association, :invalid) if record.errors[association].blank?
       x.errors.add(options[:attribute], :taken)
     end
   end
