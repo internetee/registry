@@ -980,6 +980,13 @@ describe 'EPP Domain', epp: true do
 
         expect(response[:results][4][:msg]).to eq('Status already exists on this domain')
         expect(response[:results][4][:value]).to eq('clientUpdateProhibited')
+
+        expect(response[:results][5][:msg]).to eq('Public key already exists')
+        expect(response[:results][5][:value]).to eq('700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f')
+
+        expect(response[:results][6][:msg]).to eq('Public key already exists')
+        expect(response[:results][6][:value]).to eq('841936717ae427ace63c28d04918569a841936717ae427ace63c28d0')
+
         expect(d.domain_statuses.count).to eq(2)
       end
 

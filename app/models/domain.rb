@@ -56,11 +56,13 @@ class Domain < ActiveRecord::Base
   validate :validate_nameservers_count
   validate :validate_admin_contacts_count
   validate :validate_dnskeys_count
-  validate :validate_nameservers_uniqueness
+
+  validates :nameservers, uniqueness_multi: { attribute: 'hostname' }
+
   validate :validate_tech_contacts_uniqueness
   validate :validate_admin_contacts_uniqueness
-  validate :validate_domain_statuses_uniqueness
-  validate :validate_dnskeys_uniqueness
+  validates :domain_statuses, uniqueness_multi: { attribute: 'value' }
+  validates :dnskeys, uniqueness_multi: { attribute: 'public_key' }
   validate :validate_nameserver_ips
 
   attr_accessor :owner_contact_typeahead, :update_me
@@ -149,19 +151,6 @@ class Domain < ActiveRecord::Base
     errors.add(:dnskeys, :out_of_range, { min: min, max: max })
   end
 
-  def validate_nameservers_uniqueness
-    validated = []
-    list = nameservers.reject(&:marked_for_destruction?)
-    list.each do |ns|
-      next if ns.hostname.blank?
-      existing = list.select { |x| x.hostname == ns.hostname }
-      next unless existing.length > 1
-      validated << ns.hostname
-      errors.add(:nameservers, :invalid) if errors[:nameservers].blank?
-      ns.errors.add(:hostname, :taken)
-    end
-  end
-
   def validate_nameserver_ips
     nameservers.each do |ns|
       next unless ns.hostname.end_with?(name)
@@ -189,32 +178,6 @@ class Domain < ActiveRecord::Base
       validated << dc
       errors.add(:domain_contacts, :invalid) if errors[:domain_contacts].blank?
       dc.errors.add(:contact_code_cache, :taken)
-    end
-  end
-
-  def validate_domain_statuses_uniqueness
-    validated = []
-    list = domain_statuses.reject(&:marked_for_destruction?)
-    list.each do |status|
-      next if status.value.blank?
-      existing = list.select { |x| x.value == status.value }
-      next unless existing.length > 1
-      validated << status.value
-      errors.add(:domain_statuses, :invalid) if errors[:domain_statuses].blank?
-      status.errors.add(:value, :taken)
-    end
-  end
-
-  def validate_dnskeys_uniqueness
-    validated = []
-    list = dnskeys.reject(&:marked_for_destruction?)
-    list.each do |dnskey|
-      next if dnskey.public_key.blank?
-      existing = list.select { |x| x.public_key == dnskey.public_key }
-      next unless existing.length > 1
-      validated << dnskey.public_key
-      errors.add(:dnskeys, :invalid) if errors[:dnskeys].blank?
-      dnskey.errors.add(:public_key, :taken)
     end
   end
 
