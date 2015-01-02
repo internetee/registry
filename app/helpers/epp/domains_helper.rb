@@ -100,9 +100,8 @@ module Epp::DomainsHelper
   def validate_domain_create_request
     ret = true
 
-    @ph = params_hash['epp']['command']['create']['create']
     # TODO: Verify contact presence if registrant is juridical
-    attrs_present = xml_attrs_present?(@ph, [['name'], ['ns'], ['registrant']])
+    attrs_present = epp_request_valid?('name', 'ns', 'registrant', 'legalDocument')
     ret = false unless attrs_present
 
     if parsed_frame.css('hostObj').any?

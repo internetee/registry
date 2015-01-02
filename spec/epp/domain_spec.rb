@@ -41,6 +41,24 @@ describe 'EPP Domain', epp: true do
       expect(response[:clTRID]).to eq('ABC-12345')
     end
 
+    it 'validates required parameters' do
+      epp_xml = EppXml::Domain.new(cl_trid: 'ABC-12345')
+      xml = epp_xml.create({
+        name: { value: 'test.ee' }
+      })
+
+      response = epp_request(xml, :xml)
+
+      expect(response[:results][0][:result_code]).to eq('2003')
+      expect(response[:results][0][:msg]).to eq('Required parameter missing: ns')
+
+      expect(response[:results][1][:result_code]).to eq('2003')
+      expect(response[:results][1][:msg]).to eq('Required parameter missing: registrant')
+
+      expect(response[:results][2][:result_code]).to eq('2003')
+      expect(response[:results][2][:msg]).to eq('Required parameter missing: legalDocument')
+    end
+
     context 'with two epp users' do
       let(:domain) { Domain.first }
 

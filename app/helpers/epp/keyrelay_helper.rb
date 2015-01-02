@@ -16,7 +16,7 @@ module Epp::KeyrelayHelper
   private
 
   def validate_keyrelay_request
-    epp_request_valid?('pubKey', 'flags', 'protocol', 'algorithm', 'name', 'pw')
+    epp_request_valid?('pubKey', 'flags', 'protocol', 'alg', 'name', 'pw')
 
     begin
       abs_datetime = parsed_frame.css('absolute').text

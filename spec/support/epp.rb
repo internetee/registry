@@ -124,8 +124,18 @@ module Epp
     }
 
     dnssec_params = dnssec_defaults.deep_merge(dnssec_params) if dnssec_params != false
+
+    custom_params = {
+      _anonymus: [
+        legalDocument: {
+          value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+          attrs: { type: 'pdf' }
+        }
+      ]
+    }
+
     epp_xml = EppXml::Domain.new(cl_trid: 'ABC-12345')
-    epp_xml.create(xml_params, dnssec_params)
+    epp_xml.create(xml_params, dnssec_params, custom_params)
   end
 
   def domain_create_xml_with_legal_doc
@@ -156,7 +166,10 @@ module Epp
       ]
     }, {}, {
       _anonymus: [
-        legalDocument: { value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==', attrs: { type: 'pdf' } }
+        legalDocument: {
+          value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+          attrs: { type: 'pdf' }
+        }
       ]
     })
   end
@@ -190,8 +203,17 @@ module Epp
       }
     }
 
+    custom_params = {
+      _anonymus: [
+        legalDocument: {
+          value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+          attrs: { type: 'pdf' }
+        }
+      ]
+    }
+
     epp_xml = EppXml::Domain.new(cl_trid: 'ABC-12345')
-    epp_xml.create(xml_params, {})
+    epp_xml.create(xml_params, {}, custom_params)
   end
 
   def domain_create_with_host_attrs
@@ -223,8 +245,17 @@ module Epp
       }
     }
 
+    custom_params = {
+      _anonymus: [
+        legalDocument: {
+          value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+          attrs: { type: 'pdf' }
+        }
+      ]
+    }
+
     epp_xml = EppXml::Domain.new(cl_trid: 'ABC-12345')
-    epp_xml.create(xml_params, {})
+    epp_xml.create(xml_params, {}, custom_params)
   end
 
   def domain_update_xml(xml_params = {}, dnssec_params = {}, custom_params = {})
