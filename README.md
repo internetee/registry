@@ -42,7 +42,7 @@ Create database manually, example:
     rake db:schema:load
     rake db:seeds
 
-Production install (requires database is already setuped)
+Production install (database schema should be loaded and seeds should be present)
 
     # at your local machine
     git clone https://github.com/internetee/EPP-web-client.git eppweb
