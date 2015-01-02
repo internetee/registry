@@ -16,6 +16,13 @@ set :deploy_to, '/home/app/registry'
 set :repository, 'https://github.com/internetee/registry'
 set :branch, 'master'
 
+# staging
+task :st do
+  set :domain, 'registry-st'
+  set :deploy_to, '/home/registry/registry'
+  set :branch, 'master' # temp
+end
+
 # production
 task :pr do
   set :domain, 'registry'

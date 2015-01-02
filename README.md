@@ -36,7 +36,13 @@ Manual demo install and database setup:
     mv config/secrets-example.yml config/secrets.yml # and generate your own key with 'rake secret'
     rake assets:precompile
 
-Production install (requires database is already setuped)
+Create database manually, example: 
+    
+    create database registry owner registry encoding 'UTF-8' LC_COLLATE 'et_EE.utf8' LC_CTYPE 'et_EE.utf8' template template0;
+    rake db:schema:load
+    rake db:seeds
+
+Production install (database schema should be loaded and seeds should be present)
 
     # at your local machine
     git clone https://github.com/internetee/EPP-web-client.git eppweb
@@ -53,12 +59,6 @@ Production install (requires database is already setuped)
     exit
     # at your local machine
     mina pr deploy # this is command you use in every application code update
-
-Create database manually, example: 
-    
-    create database registry owner registry encoding 'UTF-8' LC_COLLATE 'et_EE.utf8' LC_CTYPE 'et_EE.utf8' template template0;
-    rake db:schema:load
-    rake db:seeds
 
 ### Apache with patched mod_epp (Debian 7/Ubuntu 14.04 LTS)
 
