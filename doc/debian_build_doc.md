@@ -43,3 +43,11 @@ Use Phusion Passenger [official debian packages](https://www.phusionpassenger.co
 
 We also recommend to investigate 
 [Passenger Optimization Guide](https://www.phusionpassenger.com/documentation/ServerOptimizationGuide.html) for proper configuration.
+
+
+### RBENV install
+
+    cd /home/registry
+    git clone https://github.com/sstephenson/rbenv.git /home/registry/.rbenv
+    git clone https://github.com/sstephenson/ruby-build.git /home/registry/.rbenv/plugins/ruby-build
+
