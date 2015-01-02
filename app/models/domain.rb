@@ -59,8 +59,16 @@ class Domain < ActiveRecord::Base
 
   validates :nameservers, uniqueness_multi: { attribute: 'hostname' }
 
-  validate :validate_tech_contacts_uniqueness
-  validate :validate_admin_contacts_uniqueness
+  validates :tech_domain_contacts, uniqueness_multi: {
+    association: 'domain_contacts',
+    attribute: 'contact_code_cache'
+  }
+
+  validates :admin_domain_contacts, uniqueness_multi: {
+    association: 'domain_contacts',
+    attribute: 'contact_code_cache'
+  }
+
   validates :domain_statuses, uniqueness_multi: { attribute: 'value' }
   validates :dnskeys, uniqueness_multi: { attribute: 'public_key' }
   validate :validate_nameserver_ips
@@ -70,6 +78,14 @@ class Domain < ActiveRecord::Base
   # archiving
   # if proc works only on changes on domain sadly
   has_paper_trail class_name: 'DomainVersion', meta: { snapshot: :create_snapshot }, if: proc(&:new_version)
+
+  def tech_domain_contacts
+    domain_contacts.select { |x| x.contact_type == DomainContact::TECH }
+  end
+
+  def admin_domain_contacts
+    domain_contacts.select { |x| x.contact_type == DomainContact::ADMIN }
+  end
 
   def new_version
     return false if versions.try(:last).try(:snapshot) == create_snapshot
@@ -157,27 +173,6 @@ class Domain < ActiveRecord::Base
       next if ns.ipv4.present?
       errors.add(:nameservers, :invalid) if errors[:nameservers].blank?
       ns.errors.add(:ipv4, :blank)
-    end
-  end
-
-  def validate_tech_contacts_uniqueness
-    contacts = domain_contacts.reject(&:marked_for_destruction?).select { |x| x.contact_type == DomainContact::TECH }
-    validate_domain_contacts_uniqueness(contacts)
-  end
-
-  def validate_admin_contacts_uniqueness
-    contacts = domain_contacts.reject(&:marked_for_destruction?).select { |x| x.contact_type == DomainContact::ADMIN }
-    validate_domain_contacts_uniqueness(contacts)
-  end
-
-  def validate_domain_contacts_uniqueness(contacts)
-    validated = []
-    contacts.each do |dc|
-      existing = contacts.select { |x| x.contact_id == dc.contact_id }
-      next unless existing.length > 1
-      validated << dc
-      errors.add(:domain_contacts, :invalid) if errors[:domain_contacts].blank?
-      dc.errors.add(:contact_code_cache, :taken)
     end
   end
 
