@@ -25,12 +25,34 @@ Installation
 
 Usual Rails 4 app installation (rbenv install is under Debian build doc)
 
-    git clone git@github.com:internetee/registry.git
+Manual demo install and database setup:
 
-    cd registry
+    cd /home/registry
+    git clone git@github.com:internetee/registry.git demo-registry
+    cd demo-registry
     rbenv local 2.1.2
     bundle
-    mv config/secrets-example.yml config/secrets.yml # generate your own keys
+    mv config/database-example.yml config/database.yml # and update it
+    mv config/secrets-example.yml config/secrets.yml # and generate your own key with 'rake secret'
+    rake assets:precompile
+
+Production install (requires database is already setuped)
+
+    # at your local machine
+    git clone https://github.com/internetee/EPP-web-client.git eppweb
+    cd eppweb
+    rbenv local 2.1.2
+    gem install mina
+    mina pr setup # one time, only creates missing directories
+    ssh registry
+    # at your server
+    vi registry/shared/config/database.yml # add production database conf
+    vi registry/shared/config/secrets.yml  # add secret file (example: secrets-example.yml) 
+    vi /etc/apache2/sites-enabled/registry.conf # add conf and all needed serts
+    vi /etc/apache2/sites-enabled/epp.conf # add epp conf, restart apache
+    exit
+    # at your local machine
+    mina pr deploy # this is command you use in every application code update
 
 Create database manually, example: 
     
