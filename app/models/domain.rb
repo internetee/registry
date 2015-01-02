@@ -239,11 +239,11 @@ class Domain < ActiveRecord::Base
   # rubocop:enable Lint/Loop
 
   def attach_default_contacts
-    if tech_contacts_count.zero?
+    if tech_domain_contacts.count.zero?
       attach_contact(DomainContact::TECH, owner_contact)
     end
 
-    return unless admin_contacts_count.zero? && owner_contact.citizen?
+    return unless admin_domain_contacts.count.zero? && owner_contact.citizen?
     attach_contact(DomainContact::ADMIN, owner_contact)
   end
 
@@ -261,14 +261,6 @@ class Domain < ActiveRecord::Base
     self.registered_at = Time.zone.now
     self.valid_from = Date.today
     self.valid_to = valid_from + self.class.convert_period_to_time(period, period_unit)
-  end
-
-  def tech_contacts_count
-    domain_contacts.reject(&:marked_for_destruction?).select { |x| x.contact_type == DomainContact::TECH }.count
-  end
-
-  def admin_contacts_count
-    domain_contacts.reject(&:marked_for_destruction?).select { |x| x.contact_type == DomainContact::ADMIN }.count
   end
 
   def manage_automatic_statuses
