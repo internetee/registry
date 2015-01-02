@@ -1191,7 +1191,18 @@ describe 'EPP Domain', epp: true do
 
       it 'deletes domain' do
         expect(DomainContact.count).to eq(2)
-        response = epp_request(epp_xml.domain.delete(name: { value: 'example.ee' }), :xml)
+
+        response = epp_request(epp_xml.domain.delete({
+          name: { value: 'example.ee' }
+        }, {
+          _anonymus: [
+            legalDocument: {
+              value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+              attrs: { type: 'pdf' }
+            }
+          ]
+        }), :xml)
+
         expect(response[:result_code]).to eq('1000')
 
         expect(Domain.first).to eq(nil)
@@ -1201,9 +1212,26 @@ describe 'EPP Domain', epp: true do
       it 'does not delete domain with specific status' do
         d = Domain.first
         d.domain_statuses.create(value: DomainStatus::CLIENT_DELETE_PROHIBITED)
-        response = epp_request(epp_xml.domain.delete(name: { value: 'example.ee' }), :xml)
+
+        response = epp_request(epp_xml.domain.delete({
+          name: { value: 'example.ee' }
+        }, {
+          _anonymus: [
+            legalDocument: {
+              value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+              attrs: { type: 'pdf' }
+            }
+          ]
+        }), :xml)
+
         expect(response[:result_code]).to eq('2304')
         expect(response[:msg]).to eq('Domain status prohibits operation')
+      end
+
+      it 'does not delete domain without legal document' do
+        response = epp_request(epp_xml.domain.delete(name: { value: 'example.ee' }), :xml)
+        expect(response[:result_code]).to eq('2003')
+        expect(response[:msg]).to eq('Required parameter missing: legalDocument')
       end
     end
 

@@ -174,8 +174,7 @@ module Epp::DomainsHelper
 
   ## DELETE
   def validate_domain_delete_request
-    @ph = params_hash['epp']['command']['delete']['delete']
-    xml_attrs_present?(@ph, [['name']])
+    epp_request_valid?('name', 'legalDocument')
   end
 
   ## SHARED
@@ -192,14 +191,13 @@ module Epp::DomainsHelper
       return nil
     end
 
-    @ph[:authInfo] ||= {}
-    return domain if domain.auth_info == @ph[:authInfo][:pw]
+    return domain if domain.auth_info == parsed_frame.css('authInfo pw').text
 
     if (domain.registrar != current_epp_user.registrar && secure[:secure] == true) &&
       epp_errors << {
         code: '2302',
         msg: I18n.t('errors.messages.domain_exists_but_belongs_to_other_registrar'),
-        value: { obj: 'name', val: @ph[:name].strip.downcase }
+        value: { obj: 'name', val: parsed_frame.css('name').text.strip.downcase }
       }
       return nil
     end
