@@ -747,8 +747,8 @@ describe 'EPP Domain', epp: true do
         })
 
         response = epp_request(xml, :xml)
-        expect(response[:result_code]).to eq('2306')
-        expect(response[:msg]).to eq('Admin contacts count must be between 1 - infinity')
+        expect(response[:result_code]).to eq('2004')
+        expect(response[:msg]).to eq('Admin contacts count must be between 1-10')
         expect(response[:clTRID]).to eq('ABC-12345')
 
         expect(Domain.count).to eq 0

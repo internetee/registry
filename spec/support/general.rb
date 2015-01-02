@@ -11,6 +11,11 @@ module General
     Setting.ns_max_count = 11
 
     Setting.transfer_wait_time = 0
+
+    Setting.admin_contacts_min_count = 1
+    Setting.admin_contacts_max_count = 10
+    Setting.tech_contacts_min_count = 0
+    Setting.tech_contacts_max_count = 10
   end
 
   def create_disclosure_settings

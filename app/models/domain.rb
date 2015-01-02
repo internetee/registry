@@ -53,11 +53,32 @@ class Domain < ActiveRecord::Base
   validates :owner_contact, :registrar, presence: true
 
   validate :validate_period
-  validate :validate_nameservers_count
-  validate :validate_admin_contacts_count
-  validate :validate_dnskeys_count
 
-  validates :nameservers, uniqueness_multi: { attribute: 'hostname' }
+  validates :nameservers, object_count: {
+    min: -> { Setting.ns_min_count },
+    max: -> { Setting.ns_max_count }
+  }
+
+  validates :dnskeys, object_count: {
+    min: -> { Setting.dnskeys_min_count },
+    max: -> { Setting.dnskeys_max_count }
+  }
+
+  validates :admin_domain_contacts, object_count: {
+    association: 'admin_contacts',
+    min: -> { Setting.admin_contacts_min_count },
+    max: -> { Setting.admin_contacts_max_count }
+  }
+
+  validates :tech_domain_contacts, object_count: {
+    association: 'tech_contacts',
+    min: -> { Setting.tech_contacts_min_count },
+    max: -> { Setting.tech_contacts_max_count }
+  }
+
+  validates :nameservers, uniqueness_multi: {
+    attribute: 'hostname'
+  }
 
   validates :tech_domain_contacts, uniqueness_multi: {
     association: 'domain_contacts',
@@ -69,8 +90,14 @@ class Domain < ActiveRecord::Base
     attribute: 'contact_code_cache'
   }
 
-  validates :domain_statuses, uniqueness_multi: { attribute: 'value' }
-  validates :dnskeys, uniqueness_multi: { attribute: 'public_key' }
+  validates :domain_statuses, uniqueness_multi: {
+    attribute: 'value'
+  }
+
+  validates :dnskeys, uniqueness_multi: {
+    attribute: 'public_key'
+  }
+
   validate :validate_nameserver_ips
 
   attr_accessor :owner_contact_typeahead, :update_me
@@ -151,21 +178,6 @@ class Domain < ActiveRecord::Base
   end
 
   ### VALIDATIONS ###
-  def validate_nameservers_count
-    min, max = Setting.ns_min_count, Setting.ns_max_count
-    return if nameservers.reject(&:marked_for_destruction?).length.between?(min, max)
-    errors.add(:nameservers, :out_of_range, { min: min, max: max })
-  end
-
-  def validate_admin_contacts_count
-    errors.add(:admin_contacts, :out_of_range) if admin_contacts_count.zero?
-  end
-
-  def validate_dnskeys_count
-    min, max = Setting.dnskeys_min_count, Setting.dnskeys_max_count
-    return if dnskeys.reject(&:marked_for_destruction?).length.between?(min, max)
-    errors.add(:dnskeys, :out_of_range, { min: min, max: max })
-  end
 
   def validate_nameserver_ips
     nameservers.each do |ns|
@@ -187,14 +199,6 @@ class Domain < ActiveRecord::Base
     end
 
     errors.add(:period, :out_of_range) unless valid_values.include?(period.to_s)
-  end
-
-  def all_dependencies_valid?
-    validate_nameservers_count
-    validate_dnskeys_count
-    validate_admin_contacts_count
-
-    errors.empty?
   end
 
   # used for highlighting form tabs

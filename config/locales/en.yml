@@ -89,9 +89,11 @@ en:
               invalid: 'Contacts are invalid'
               not_found: 'Contact was not found'
             admin_contacts:
-              out_of_range: 'Admin contacts count must be between 1 - infinity'
+              out_of_range: 'Admin contacts count must be between %{min}-%{max}'
               less_than_or_equal_to: 'Admin contacts count must be less than or equal to %{count}'
               greater_than_or_equal_to: 'Admin contacts count must be greater than or equal to %{count}'
+            tech_contacts:
+              out_of_range: 'Tech contacts count must be between %{min}-%{max}'
             nameservers:
               invalid: 'Nameservers are invalid'
               out_of_range: 'Nameservers count must be between %{min}-%{max}'
@@ -472,3 +474,7 @@ en:
   created_at: 'Created at'
   type: 'Type'
   legal_documents: 'Legal documents'
+  admin_contacts_min_count: 'Admin contacts minimum count'
+  admin_contacts_max_count: 'Admin contacts maximum count'
+  tech_contacts_min_count: 'Tech contacts minimum count'
+  tech_contacts_max_count: 'Tech contacts maximum count'

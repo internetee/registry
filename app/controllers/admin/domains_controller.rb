@@ -8,7 +8,7 @@ class Admin::DomainsController < AdminController
   end
 
   def show
-    @domain.all_dependencies_valid?
+    @domain.valid?
   end
 
   def edit

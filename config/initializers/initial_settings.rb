@@ -6,4 +6,21 @@ if ActiveRecord::Base.connection.table_exists? 'settings' # otherwise rake not w
   Setting.disclosure_phone = false if Setting.disclosure_phone.nil?
   Setting.disclosure_fax = false if Setting.disclosure_fax.nil?
   Setting.disclosure_address = false if Setting.disclosure_address.nil?
+
+  Setting.save_default(:admin_contacts_min_count, 1)
+  Setting.save_default(:admin_contacts_max_count, 10)
+  Setting.save_default(:tech_contacts_min_count, 1)
+  Setting.save_default(:tech_contacts_max_count, 10)
+
+  Setting.save_default(:ds_algorithm, 2)
+  Setting.save_default(:ds_data_allowed, true)
+  Setting.save_default(:ds_data_with_key_allowed, true)
+  Setting.save_default(:key_data_allowed, true)
+
+  Setting.save_default(:dnskeys_min_count, 0)
+  Setting.save_default(:dnskeys_max_count, 9)
+  Setting.save_default(:ns_min_count, 2)
+  Setting.save_default(:ns_max_count, 11)
+
+  Setting.save_default(:transfer_wait_time, 0)
 end
