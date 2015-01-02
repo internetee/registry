@@ -23,18 +23,16 @@ Installation
 
 ### Registry app 
 
-Usual Rails 4 app installation, rvm and bundler are your friends. 
+Usual Rails 4 app installation (rbenv install is under Debian build doc)
 
     git clone git@github.com:internetee/registry.git
 
     cd registry
-    rvm install ruby-2.1.2
+    rbenv local 2.1.2
     bundle
-    rake db:setup
     mv config/secrets-example.yml config/secrets.yml # generate your own keys
 
-If you desire other database locale, you have to create database manually first and
-skip rake db:setup. Example: 
+Create database manually, example: 
     
     create database registry owner registry encoding 'UTF-8' LC_COLLATE 'et_EE.utf8' LC_CTYPE 'et_EE.utf8' template template0;
     rake db:schema:load
@@ -64,11 +62,57 @@ Enable ssl:
     sudo a2enmod ssl
     sudo nano /etc/apache2/sites-enabled/epp_ssl.conf
 
-For development configuration, add:
+For Apache, registry admin goes to port 443 in production, /etc/apache2/sites-enabled/registry.conf short example:
+```
+<VirtualHost *:443>
+  ServerName your-domain
+  ServerAdmin your@example.com
+
+  PassengerEnabled on
+  PassengerMinInstances 10
+  PassengerMaxPoolSize 10
+  PassengerPoolIdleTime 0
+  PassengerMaxRequests 1000
+
+  RailsEnv production
+  DocumentRoot /home/registry/registry/current/public
+  
+	# Possible values include: debug, info, notice, warn, error, crit,
+  LogLevel info ssl:warn
+  ErrorLog /var/log/apache2/registry.error.log
+  CustomLog /var/log/apache2/registry.access.log combined
+  
+  <Directory /home/registry/registry/current/public>
+    Require all granted
+    Options -MultiViews
+  </Directory>
+
+  SSLEngine On
+  SSLCertificateFile    /etc/ssl/certs/your.crt
+  SSLCertificateKeyFile /etc/ssl/private/your.key
+  SSLCertificateChainFile /etc/ssl/certs/your-chain-fail.pem
+  SSLCACertificateFile /etc/ssl/certs/ca.pem
+
+  SSLProtocol TLSv1
+  SSLHonorCipherOrder On
+  SSLCipherSuite RC4-SHA:HIGH:!ADH
+
+	<Directory />
+		Options FollowSymLinks -Indexes
+		AllowOverride None
+	</Directory>
+	<Directory /app/registry/registry/current/public>
+		Options -MultiViews -Indexes
+		AllowOverride all
+	</Directory>
+</VirtualHost>
+```
+
+For Apache, epp goes to port 700, /etc/apache2/sites-enabled/epp.conf short example:
 ```apache
 <IfModule mod_epp.c>
-  Listen 701
-  <VirtualHost *:701>
+  Listen 700
+  <VirtualHost *:700>
     SSLEngine on
     SSLCipherSuite ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP:+eNULL
     SSLCertificateFile /etc/apache2/ssl/apache.crt
@@ -81,7 +125,7 @@ For development configuration, add:
     EPPSessionRoot          /proxy/session
     EPPErrorRoot            /proxy/error
     
-    ProxyPass /proxy/ http://localhost:8989/epp/
+    ProxyPass /proxy/ http://localhost:443/epp/
 
     EPPAuthURI              implicit
     EPPReturncodeHeader     X-EPP-Returncode
@@ -89,61 +133,18 @@ For development configuration, add:
 </IfModule>
 ```
 
-Configuration on plain TCP EPP is as follows:
-```apache
-<IfModule mod_epp.c>
-  <Directory "/usr/lib/cgi-bin/epp">
-    Options ExecCGI
-    SetHandler cgi-script
-  </Directory>
-
-  Listen  1701
-  <VirtualHost *:1701>
-    EPPEngine On
-    EPPCommandRoot          /proxy/command
-    EPPSessionRoot          /proxy/session
-    ProxyPass /proxy/ http://localhost:8080/epp/
-
-    EPPErrorRoot         /cgi-bin/epp/error
-
-    EPPAuthURI implicit
-    EPPReturncodeHeader     X-EPP-Returncode
-  </VirtualHost>
-</IfModule>
-```
-
-Note: Its best to go with two virtual hosts, one for autotest and one for dev, 
-then you don't have to worry about quitting 
-the dev appserver for running autotests (because of colliding ports).
+Enable epp_ssl and restart apache
 
     sudo a2ensite epp_ssl
     sudo service apache2 restart
 
-Try it out:
+Now you should see registry admin at https://your-domain
 
-Fire up your appserver on port 8989
-
-    cd $mod_epp
-    ./epptelnet.pl localhost 701 -s
-
-You should receive the greeting from the registry server.  
-Wait for the greeting message on the STD, then send EPP/TCP frame:
-
-```xml
-<epp><command>
-  <login>
-    <clID>registrar1</clID>
-    <pw>test1</pw>
-  </login>
-  <clTRID>sample1trid</clTRID>
-</command></epp>
-```
-
-All demo data locates at: 
+All registry demo data can be found at: 
 
     db/seeds.rb
 
-There are two type of users: admin users and EPP users.
+Initially you can use two type of users: admin users and EPP users.
 
 
 ### EPP web client
