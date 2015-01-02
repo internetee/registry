@@ -23,29 +23,29 @@ class Epp::EppDomain < Domain
       ],
       '2004' => [ # Parameter value range error
         [:nameservers, :out_of_range,
-          {
-            min: Setting.ns_min_count,
-            max: Setting.ns_max_count
-          }
+         {
+           min: Setting.ns_min_count,
+           max: Setting.ns_max_count
+         }
         ],
         [:period, :out_of_range, { value: { obj: 'period', val: period } }],
         [:dnskeys, :out_of_range,
-          {
-            min: Setting.dnskeys_min_count,
-            max: Setting.dnskeys_max_count
-          }
+         {
+           min: Setting.dnskeys_min_count,
+           max: Setting.dnskeys_max_count
+         }
         ],
         [:admin_contacts, :out_of_range,
-          {
-            min: Setting.admin_contacts_min_count,
-            max: Setting.admin_contacts_max_count
-          }
+         {
+           min: Setting.admin_contacts_min_count,
+           max: Setting.admin_contacts_max_count
+         }
         ],
         [:tech_contacts, :out_of_range,
-          {
-            min: Setting.tech_contacts_min_count,
-            max: Setting.tech_contacts_max_count
-          }
+         {
+           min: Setting.tech_contacts_min_count,
+           max: Setting.tech_contacts_max_count
+         }
         ]
       ],
       '2005' => [
