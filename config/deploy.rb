@@ -20,7 +20,7 @@ set :branch, 'master'
 task :st do
   set :domain, 'registry-st'
   set :deploy_to, '/home/registry/registry'
-  set :branch, 'pr'
+  set :branch, 'st'
 end
 
 # production
