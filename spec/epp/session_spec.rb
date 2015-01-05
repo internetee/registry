@@ -52,8 +52,7 @@ describe 'EPP Session', epp: true do
         epp_plain_request(login_xml_cache, :xml)
 
         expect(EppSession.first[:epp_user_id]).to eq(1)
-
-        response = epp_plain_request('logout.xml')
+        response = epp_plain_request(epp_xml.session.logout, :xml)
         expect(response[:result_code]).to eq('1500')
         expect(response[:msg]).to eq('Command completed successfully; ending session')
 

@@ -99,7 +99,7 @@ group :development, :test do
   gem 'epp', '~> 1.4.0'
 
   # EPP XMLs
-  gem 'epp-xml', '~> 0.10.2'
+  gem 'epp-xml', '~> 0.10.3'
 
   # Replacement for fixtures
   gem 'fabrication', '~> 2.11.3'
