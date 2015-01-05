@@ -96,6 +96,8 @@ For Apache, registry admin goes to port 443 in production, /etc/apache2/sites-en
   ServerName your-domain
   ServerAdmin your@example.com
 
+  PassengerRoot /usr/lib/ruby/vendor_ruby/phusion_passenger/locations.ini
+  PassengerRuby /home/registry/.rbenv/shims/ruby
   PassengerEnabled on
   PassengerMinInstances 10
   PassengerMaxPoolSize 10
@@ -153,7 +155,7 @@ For Apache, epp goes to port 700, /etc/apache2/sites-enabled/epp.conf short exam
     EPPSessionRoot          /proxy/session
     EPPErrorRoot            /proxy/error
     
-    ProxyPass /proxy/ http://localhost:443/epp/
+    ProxyPass /proxy/ http://localhost:8080/epp/
 
     EPPAuthURI              implicit
     EPPReturncodeHeader     X-EPP-Returncode
