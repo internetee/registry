@@ -69,16 +69,13 @@ module Epp::DomainsHelper
     handle_errors(@domain) and return unless @domain.authenticate(domain_transfer_params[:pw])
 
     if domain_transfer_params[:action] == 'query'
-
       if @domain.pending_transfer
         @domain_transfer = @domain.pending_transfer
       else
         @domain_transfer = @domain.query_transfer(domain_transfer_params, parsed_frame)
         handle_errors(@domain) and return unless @domain_transfer
       end
-
     elsif domain_transfer_params[:action] == 'approve'
-
       if @domain.pending_transfer
         @domain_transfer = @domain.approve_transfer(domain_transfer_params, parsed_frame)
         handle_errors(@domain) and return unless @domain_transfer
@@ -86,7 +83,6 @@ module Epp::DomainsHelper
         epp_errors << { code: '2303', msg: I18n.t('pending_transfer_was_not_found') }
         handle_errors(@domain) and return
       end
-
     elsif domain_transfer_params[:action] == 'reject'
       if @domain.pending_transfer
         @domain_transfer = @domain.reject_transfer(domain_transfer_params, parsed_frame)

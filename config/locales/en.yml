@@ -478,6 +478,6 @@ en:
   admin_contacts_max_count: 'Admin contacts maximum count'
   tech_contacts_min_count: 'Tech contacts minimum count'
   tech_contacts_max_count: 'Tech contacts maximum count'
-  action_failed_due_to_internal_error: 'Action failed due to internal error'
+  action_failed_due_to_server_error: 'Action failed due to server error'
   pending_transfer_was_not_found: 'Pending transfer was not found'
   transfer_can_be_rejected_only_by_current_registrar: 'Transfer can be rejected only by current registrar'

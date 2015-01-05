@@ -329,7 +329,7 @@ class Epp::EppDomain < Domain
 
         return dt
       rescue => _e
-        add_epp_error('2306', nil, nil, I18n.t('action_failed_due_to_internal_error'))
+        add_epp_error('2306', nil, nil, I18n.t('action_failed_due_to_server_error'))
         raise ActiveRecord::Rollback
       end
     end
@@ -357,7 +357,7 @@ class Epp::EppDomain < Domain
         attach_legal_document(self.class.parse_legal_document_from_frame(parsed_frame))
         save!(validate: false)
       rescue => _e
-        add_epp_error('2306', nil, nil, I18n.t('action_failed_due_to_internal_error'))
+        add_epp_error('2306', nil, nil, I18n.t('action_failed_due_to_server_error'))
         raise ActiveRecord::Rollback
       end
     end
@@ -381,7 +381,7 @@ class Epp::EppDomain < Domain
         attach_legal_document(self.class.parse_legal_document_from_frame(parsed_frame))
         save!(validate: false)
       rescue => _e
-        add_epp_error('2306', nil, nil, I18n.t('action_failed_due_to_internal_error'))
+        add_epp_error('2306', nil, nil, I18n.t('action_failed_due_to_server_error'))
         raise ActiveRecord::Rollback
       end
     end
