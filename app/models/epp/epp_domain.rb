@@ -290,66 +290,104 @@ class Epp::EppDomain < Domain
 
   ### TRANSFER ###
 
-  # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/MethodLength
-  # rubocop: disable Metrics/CyclomaticComplexity
-  def transfer(params)
-    return false unless authenticate(params[:pw])
+  def query_transfer(params, parsed_frame)
+    return false unless can_be_transferred_to?(params[:current_user].registrar)
 
-    pt = pending_transfer
-    if pt && params[:action] == 'approve'
-      if approve_pending_transfer(params[:current_user])
-        return pt.reload
-      else
-        return false
+    transaction do
+      begin
+        if Setting.transfer_wait_time > 0
+          dt = domain_transfers.create!(
+            status: DomainTransfer::PENDING,
+            transfer_requested_at: Time.zone.now,
+            transfer_to: params[:current_user].registrar,
+            transfer_from: registrar
+          )
+
+          registrar.messages.create!(
+            body: I18n.t('transfer_requested'),
+            attached_obj_id: dt.id,
+            attached_obj_type: dt.class.to_s
+          )
+
+        else
+          dt = domain_transfers.create!(
+            status: DomainTransfer::SERVER_APPROVED,
+            transfer_requested_at: Time.zone.now,
+            transferred_at: Time.zone.now,
+            transfer_to: params[:current_user].registrar,
+            transfer_from: registrar
+          )
+
+          generate_auth_info
+
+          self.registrar = params[:current_user].registrar
+        end
+
+        attach_legal_document(self.class.parse_legal_document_from_frame(parsed_frame))
+        save!(validate: false)
+
+        return dt
+      rescue => _e
+        add_epp_error('2306', nil, nil, I18n.t('action_failed_due_to_internal_error'))
+        raise ActiveRecord::Rollback
       end
-
     end
+  end
+  # rubocop: enable Metrics/MethodLength
 
-    if !pt && params[:action] != 'query'
-      add_epp_error('2306', nil, nil, I18n.t('errors.messages.attribute_op_is_invalid'))
+  def approve_transfer(params, parsed_frame)
+    pt = pending_transfer
+    if params[:current_user].registrar != pt.transfer_from
+      add_epp_error('2304', nil, nil, I18n.t('transfer_can_be_approved_only_by_current_registrar'))
       return false
     end
 
-    if !pt && params[:action] == 'query'
-      return false unless can_be_transferred_to?(params[:current_user].registrar)
+    transaction do
+      begin
+        pt.update!(
+          status: DomainTransfer::CLIENT_APPROVED,
+          transferred_at: Time.zone.now
+        )
+
+        generate_auth_info
+
+        self.registrar = pt.transfer_to
+
+        attach_legal_document(self.class.parse_legal_document_from_frame(parsed_frame))
+        save!(validate: false)
+      rescue => _e
+        add_epp_error('2306', nil, nil, I18n.t('action_failed_due_to_internal_error'))
+        raise ActiveRecord::Rollback
+      end
     end
 
-    return pt if pt
-    if Setting.transfer_wait_time > 0
-      dt = domain_transfers.create(
-        status: DomainTransfer::PENDING,
-        transfer_requested_at: Time.zone.now,
-        transfer_to: params[:current_user].registrar,
-        transfer_from: registrar
-      )
-
-      registrar.messages.create(
-        body: I18n.t('transfer_requested'),
-        attached_obj_id: dt.id,
-        attached_obj_type: dt.class.to_s
-      )
-
-    else
-      dt = domain_transfers.create(
-        status: DomainTransfer::SERVER_APPROVED,
-        transfer_requested_at: Time.zone.now,
-        transferred_at: Time.zone.now,
-        transfer_to: params[:current_user].registrar,
-        transfer_from: registrar
-      )
-
-      generate_auth_info
-
-      self.registrar = params[:current_user].registrar
-      save(validate: false)
-    end
-
-    dt
+    pt
   end
-  # rubocop: enable Metrics/PerceivedComplexity
-  # rubocop: enable Metrics/MethodLength
-  # rubocop: enable Metrics/CyclomaticComplexity
+
+  def reject_transfer(params, parsed_frame)
+    pt = pending_transfer
+    if params[:current_user].registrar != pt.transfer_from
+      add_epp_error('2304', nil, nil, I18n.t('transfer_can_be_rejected_only_by_current_registrar'))
+      return false
+    end
+
+    transaction do
+      begin
+        pt.update!(
+          status: DomainTransfer::CLIENT_REJECTED
+        )
+
+        attach_legal_document(self.class.parse_legal_document_from_frame(parsed_frame))
+        save!(validate: false)
+      rescue => _e
+        add_epp_error('2306', nil, nil, I18n.t('action_failed_due_to_internal_error'))
+        raise ActiveRecord::Rollback
+      end
+    end
+
+    pt
+  end
 
   def approve_pending_transfer(current_user)
     pt = pending_transfer

@@ -218,6 +218,74 @@ describe 'EPP Domain', epp: true do
         expect(response[:result_code]).to eq('2201')
         expect(response[:msg]).to eq('Authorization error')
       end
+
+      it 'creates a domain transfer with legal document' do
+        expect(domain.legal_documents.count).to eq(0)
+        pw = domain.auth_info
+        xml = domain_transfer_xml({ authInfo: { pw: { value: pw } } }, 'query', {
+          _anonymus: [
+            legalDocument: {
+              value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+              attrs: { type: 'pdf' }
+            }
+          ]
+        })
+
+        response = epp_request(xml, :xml, :elkdata)
+        expect(response[:result_code]).to eq('1000')
+        expect(domain.legal_documents.count).to eq(1)
+      end
+
+      it 'creates a domain transfer with legal document' do
+        Setting.transfer_wait_time = 1
+        expect(domain.legal_documents.count).to eq(0)
+        pw = domain.auth_info
+        xml = domain_transfer_xml({ authInfo: { pw: { value: pw } } }, 'query', {
+          _anonymus: [
+            legalDocument: {
+              value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+              attrs: { type: 'pdf' }
+            }
+          ]
+        })
+
+        response = epp_request(xml, :xml, :elkdata)
+        expect(response[:result_code]).to eq('1000')
+        expect(domain.legal_documents.count).to eq(1)
+
+        response = epp_request(xml, :xml, :elkdata)
+        expect(response[:result_code]).to eq('1000')
+        expect(domain.legal_documents.count).to eq(1) # does not add another legal document
+      end
+
+      it 'rejects a domain transfer' do
+        domain.domain_transfers.create({
+          status: DomainTransfer::PENDING,
+          transfer_requested_at: Time.zone.now,
+          transfer_to: elkdata,
+          transfer_from: zone
+        })
+
+        pw = domain.auth_info
+        xml = domain_transfer_xml({ authInfo: { pw: { value: pw } } }, 'reject', {
+          _anonymus: [
+            legalDocument: {
+              value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+              attrs: { type: 'pdf' }
+            }
+          ]
+        })
+
+        response = epp_request(xml, :xml, :elkdata)
+        expect(response[:result_code]).to eq('2304')
+        expect(response[:msg]).to eq('Transfer can be rejected only by current registrar')
+        expect(domain.legal_documents.count).to eq(0)
+
+        response = epp_request(xml, :xml, :zone)
+        expect(response[:result_code]).to eq('1000')
+        expect(domain.pending_transfer).to be_nil
+        expect(domain.legal_documents.count).to eq(1)
+      end
     end
 
     context 'with citizen as an owner' do

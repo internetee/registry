@@ -64,14 +64,36 @@ module Epp::DomainsHelper
   def transfer_domain
     @domain = find_domain(secure: false)
     handle_errors(@domain) and return unless @domain
+    handle_errors(@domain) and return unless @domain.authenticate(domain_transfer_params[:pw])
 
-    @domain_transfer = @domain.transfer(domain_transfer_params)
-    if @domain_transfer
-      @domain.attach_legal_document(Epp::EppDomain.parse_legal_document_from_frame(parsed_frame))
-      @domain.save
+    if domain_transfer_params[:action] == 'query'
+
+      if @domain.pending_transfer
+        @domain_transfer = @domain.pending_transfer
+      else
+        @domain_transfer = @domain.query_transfer(domain_transfer_params, parsed_frame)
+        handle_errors(@domain) and return unless @domain_transfer
+      end
+
+    elsif domain_transfer_params[:action] == 'approve'
+
+      if @domain.pending_transfer
+        @domain_transfer = @domain.approve_transfer(domain_transfer_params, parsed_frame)
+        handle_errors(@domain) and return unless @domain_transfer
+      else
+        epp_errors << { code: '2303', msg: I18n.t('pending_transfer_was_not_found') }
+        handle_errors(@domain) and return
+      end
+
+    elsif domain_transfer_params[:action] == 'reject'
+      if @domain.pending_transfer
+        @domain_transfer = @domain.reject_transfer(domain_transfer_params, parsed_frame)
+        handle_errors(@domain) and return unless @domain_transfer
+      else
+        epp_errors << { code: '2303', msg: I18n.t('pending_transfer_was_not_found') }
+        handle_errors(@domain) and return
+      end
     end
-
-    handle_errors(@domain) and return unless @domain_transfer
 
     render '/epp/domains/transfer'
   end
@@ -167,7 +189,7 @@ module Epp::DomainsHelper
     return false unless attrs_present
 
     op = parsed_frame.css('transfer').first[:op]
-    return true if %w(approve query).include?(op)
+    return true if %w(approve query reject).include?(op)
     epp_errors << { code: '2306', msg: I18n.t('errors.messages.attribute_op_is_invalid') }
     false
   end

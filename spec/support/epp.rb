@@ -279,7 +279,7 @@ module Epp
     epp_xml.check(xml_params)
   end
 
-  def domain_transfer_xml(xml_params = {}, op = 'query')
+  def domain_transfer_xml(xml_params = {}, op = 'query', custom_params = {})
     defaults = {
       name: { value: 'example.ee' },
       authInfo: {
@@ -289,7 +289,7 @@ module Epp
 
     xml_params = defaults.deep_merge(xml_params)
     epp_xml = EppXml::Domain.new(cl_trid: 'ABC-12345')
-    epp_xml.transfer(xml_params, op)
+    epp_xml.transfer(xml_params, op, custom_params)
   end
 
   def log(req, res)
