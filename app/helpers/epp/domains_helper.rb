@@ -59,7 +59,9 @@ module Epp::DomainsHelper
       render '/epp/domains/success'
     end
   end
-  # rubocop:enable Metrics/CyclomaticComplexity
+
+  # rubocop: disable Metrics/PerceivedComplexity
+  # rubocop: disable Metrics/MethodLength
 
   def transfer_domain
     @domain = find_domain(secure: false)
@@ -98,7 +100,10 @@ module Epp::DomainsHelper
     render '/epp/domains/transfer'
   end
 
+  # rubocop: enable Metrics/MethodLength
+  # rubocop: enable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/CyclomaticComplexity
+
   def delete_domain
     @domain = find_domain
 
