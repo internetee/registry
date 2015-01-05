@@ -127,13 +127,9 @@ For Apache, registry admin goes to port 443 in production, /etc/apache2/sites-en
   SSLHonorCipherOrder On
   SSLCipherSuite RC4-SHA:HIGH:!ADH
 
-	<Directory />
-		Options FollowSymLinks -Indexes
-		AllowOverride None
-	</Directory>
 	<Directory /app/registry/registry/current/public>
-		Options -MultiViews -Indexes
-		AllowOverride all
+    Require all granted
+    Options -MultiViews
 	</Directory>
 </VirtualHost>
 ```
