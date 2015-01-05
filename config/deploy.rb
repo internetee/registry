@@ -2,7 +2,7 @@ require 'mina/bundler'
 require 'mina/rails'
 require 'mina/git'
 require 'mina/whenever'
-# require 'mina/rbenv'  # for rbenv support. (http://rbenv.org)
+require 'mina/rbenv'  # for rbenv support. (http://rbenv.org)
 # require 'mina/rvm'    # for rvm support. (http://rvm.io)
 
 # Basic settings:
@@ -33,7 +33,7 @@ end
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
 # They will be linked in the 'deploy:link_shared_paths' step.
 set :shared_paths, [
-  'config/initializers/env.rb',
+  'config/initializers/devise_secret.rb',
   'config/database.yml',
   'config/secrets.yml',
   'log',
@@ -50,7 +50,7 @@ set :shared_paths, [
 task :environment do
   # If you're using rbenv, use this to load the rbenv environment.
   # Be sure to commit your .rbenv-version to your repository.
-  # invoke :'rbenv:load'
+  invoke :'rbenv:load'
 
   # For those using RVM, use this to load an RVM version@gemset.
   # invoke :'rvm:use[ruby-1.9.3-p125@default]'
