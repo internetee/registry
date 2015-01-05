@@ -32,9 +32,10 @@ Manual demo install and database setup:
     cd demo-registry
     rbenv local 2.1.2
     bundle
-    mv config/database-example.yml config/database.yml # and update it
-    mv config/secrets-example.yml config/secrets.yml # and generate your own key with 'rake secret'
-    rake assets:precompile
+    cp config/database-example.yml config/database.yml # and edit it
+    cp config/secrets-example.yml config/secrets.yml # and edit it, generate key with 'rake secret'
+    cp config/initializers/devise_secret_example.rb.txt config/initializers/devise_secret.rb # and edit
+    bundle exec rake assets:precompile
 
 Create database manually, example: 
     
@@ -45,15 +46,20 @@ Create database manually, example:
 Production install (database schema should be loaded and seeds should be present)
 
     # at your local machine
-    git clone https://github.com/internetee/EPP-web-client.git eppweb
-    cd eppweb
-    rbenv local 2.1.2
+    git clone git@github.com:internetee/registry.git
+    cd registry
+    rbenv local 2.1.2 # more info about rbenv at debian doc
     gem install mina
     mina pr setup # one time, only creates missing directories
     ssh registry
+
     # at your server
-    vi registry/shared/config/database.yml # add production database conf
-    vi registry/shared/config/secrets.yml  # add secret file (example: secrets-example.yml) 
+    cd registry
+    cp current/config/database-example.yml shared/config/database.yml # and edit it
+    # You can generate secret keys with 'bundle exec rake secret'
+    cp current/config/secrets-example.yml shared/config/secrets.yml # and edit it
+    cp current/config/initializers/devise_secret_example.rb.txt shared/config/initializers/devise_secret.rb # and edit it
+
     vi /etc/apache2/sites-enabled/registry.conf # add conf and all needed serts
     vi /etc/apache2/sites-enabled/epp.conf # add epp conf, restart apache
     exit
