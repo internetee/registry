@@ -20,14 +20,14 @@ set :branch, 'master'
 task :st do
   set :domain, 'registry-st'
   set :deploy_to, '/home/registry/registry'
-  set :branch, 'master' # temp
+  set :branch, 'pr'
 end
 
 # production
 task :pr do
   set :domain, 'registry'
   set :deploy_to, '/home/registry/registry'
-  set :branch, 'master' # temp
+  set :branch, 'pr'
 end
 
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
