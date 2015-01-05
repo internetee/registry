@@ -1,16 +1,17 @@
 xml.epp_head do
   xml.greeting do
-    xml.svID 'EPP server (DSDng)'
-    xml.svDate '2014-06-18T17:46:59+03:00'
+    xml.svID 'EPP server (EIS)'
+    xml.svDate Time.now.utc.iso8601
     xml.svcMenu do
       xml.version '1.0'
       xml.lang 'en'
-      xml.objURI 'http://www.nic.cz/xml/epp/contact-1.6'
-      xml.objURI 'http://www.nic.cz/xml/epp/domain-1.4'
-      xml.objURI 'http://www.nic.cz/xml/epp/nsset-1.2'
-      xml.objURI 'http://www.nic.cz/xml/epp/keyset-1.3'
+      xml.objURI 'urn:ietf:params:xml:ns:domain-1.0'
+      xml.objURI 'urn:ietf:params:xml:ns:contact-1.0'
+      xml.objURI 'urn:ietf:params:xml:ns:host-1.0'
+      xml.objURI 'urn:ietf:params:xml:ns:keyrelay-1.0'
       xml.svcExtension do
-        xml.extURI 'http://www.nic.cz/xml/epp/enumval-1.2'
+        xml.extURI 'urn:ietf:params:xml:ns:secDNS-1.1'
+        xml.extURI 'urn:ee:eis:xml:epp:eis-1.0'
       end
     end
 

@@ -11,7 +11,7 @@
       <svcs>
         <objURI>urn:ietf:params:xml:ns:contact-1.0</objURI>
         <!-- <objURI>http://www.nic.cz/xml/epp/nsset-1.2</objURI> -->
-        <!-- <objURI>http://www.nic.cz/xml/epp/domain-1.4</objURI> -->
+        <!-- <objURI>http://F/xml/epp/domain-1.4</objURI> -->
         <!-- <objURI>http://www.nic.cz/xml/epp/keyset-1.3</objURI> -->
         <!-- <svcExtension>
           <extURI>http://www.nic.cz/xml/epp/enumval-1.2</extURI>

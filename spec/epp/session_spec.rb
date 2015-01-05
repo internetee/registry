@@ -8,8 +8,10 @@ describe 'EPP Session', epp: true do
   context 'when not connected' do
     it 'greets client upon connection' do
       response = Nokogiri::XML(server_gitlab.open_connection)
-      expect(response.css('epp svID').text).to eq('EPP server (DSDng)')
+      expect(response.css('epp svID').text).to eq('EPP server (EIS)')
       server_gitlab.close_connection
+
+      puts "RESPONSE:\n\n```xml\n#{response}```\n\n" if ENV['EPP_DOC']
     end
   end
 

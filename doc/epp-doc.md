@@ -1,6 +1,6 @@
 # EPP REQUEST - RESPONSE EXAMPLES
-GENERATED AT: 2014-12-31 11:57:53 +0200  
-EXAMPLE COUNT: 97  
+GENERATED AT: 2015-01-05 16:59:37 +0200  
+EXAMPLE COUNT: 102  
 
 ---
 
@@ -128,13 +128,13 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <id>f4a70bfe</id>
-        <crDate>2014-12-31 09:57:54 UTC</crDate>
+        <id>abf07b16</id>
+        <crDate>2015-01-05 14:59:38 UTC</crDate>
       </creData>
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7364329837</svTRID>
+  <svTRID>ccReg-6916226034</svTRID>
 </trID>
   </response>
 </epp>
@@ -179,13 +179,13 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <id>8e7b3f2b</id>
-        <crDate>2014-12-31 09:57:54 UTC</crDate>
+        <id>40b0e906</id>
+        <crDate>2015-01-05 14:59:38 UTC</crDate>
       </creData>
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7666919827</svTRID>
+  <svTRID>ccReg-4625373002</svTRID>
 </trID>
   </response>
 </epp>
@@ -230,13 +230,13 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <id>21abc120</id>
-        <crDate>2014-12-31 09:57:54 UTC</crDate>
+        <id>a1c0fada</id>
+        <crDate>2015-01-05 14:59:39 UTC</crDate>
       </creData>
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0466977897</svTRID>
+  <svTRID>ccReg-6276207841</svTRID>
 </trID>
   </response>
 </epp>
@@ -289,13 +289,13 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <id>93168ba2</id>
-        <crDate>2014-12-31 09:57:55 UTC</crDate>
+        <id>087e0fbb</id>
+        <crDate>2015-01-05 14:59:39 UTC</crDate>
       </creData>
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3694773809</svTRID>
+  <svTRID>ccReg-8967008183</svTRID>
 </trID>
   </response>
 </epp>
@@ -344,13 +344,13 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <id>c9a9f345</id>
-        <crDate>2014-12-31 09:57:55 UTC</crDate>
+        <id>cee5f172</id>
+        <crDate>2015-01-05 14:59:39 UTC</crDate>
       </creData>
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7675540175</svTRID>
+  <svTRID>ccReg-0649189448</svTRID>
 </trID>
   </response>
 </epp>
@@ -436,7 +436,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4300465421</svTRID>
+  <svTRID>ccReg-7996128514</svTRID>
 </trID>
 </epp>
 ```
@@ -485,12 +485,12 @@ RESPONSE:
     <resData>
       <creData>
         <id>sh8013</id>
-        <crDate>2014-12-31 09:57:56 UTC</crDate>
+        <crDate>2015-01-05 14:59:40 UTC</crDate>
       </creData>
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1684868060</svTRID>
+  <svTRID>ccReg-3480096687</svTRID>
 </trID>
   </response>
 </epp>
@@ -543,7 +543,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5358749305</svTRID>
+  <svTRID>ccReg-2447191354</svTRID>
 </trID>
 </epp>
 ```
@@ -592,12 +592,12 @@ RESPONSE:
     <resData>
       <creData>
         <id>sh8013</id>
-        <crDate>2014-12-31 09:57:56 UTC</crDate>
+        <crDate>2015-01-05 14:59:40 UTC</crDate>
       </creData>
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3392201513</svTRID>
+  <svTRID>ccReg-4195061369</svTRID>
 </trID>
   </response>
 </epp>
@@ -667,7 +667,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4450344540</svTRID>
+  <svTRID>ccReg-4882027364</svTRID>
 </trID>
   </response>
 </epp>
@@ -709,7 +709,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7230887885</svTRID>
+  <svTRID>ccReg-3246681685</svTRID>
 </trID>
 </epp>
 ```
@@ -744,7 +744,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0321618463</svTRID>
+  <svTRID>ccReg-3415320313</svTRID>
 </trID>
 </epp>
 ```
@@ -825,7 +825,7 @@ RESPONSE:
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9215509368</svTRID>
+  <svTRID>ccReg-1682787508</svTRID>
 </trID>
   </response>
 </epp>
@@ -865,14 +865,14 @@ RESPONSE:
   <name>Johnny Awesome</name>
   <org/>
   <addr>
-    <street>Burnice Dale</street>
-    <city>Stefanview</city>
+    <street>Lenore Row</street>
+    <city>Icieberg</city>
   </addr>
 </postalInfo>
         <voice>+372.12345678</voice>
         <fax/>
-        <email>christian.rosenbaum@kemmer.name</email>
-        <crDate>2014-12-31 09:57:58 UTC</crDate>
+        <email>stella@hellerwiza.biz</email>
+        <crDate>2015-01-05 14:59:42 UTC</crDate>
         <ident type="op">37605030299</ident>
         <authInfo>
           <pw>asde</pw>
@@ -891,7 +891,7 @@ RESPONSE:
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3549674631</svTRID>
+  <svTRID>ccReg-6608041866</svTRID>
 </trID>
   </response>
 </epp>
@@ -930,7 +930,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7838954077</svTRID>
+  <svTRID>ccReg-4964926397</svTRID>
 </trID>
 </epp>
 ```
@@ -971,7 +971,7 @@ RESPONSE:
 <postalInfo type="int">
   <org/>
 </postalInfo>
-        <crDate>2014-12-31 09:57:58 UTC</crDate>
+        <crDate>2015-01-05 14:59:43 UTC</crDate>
         <ident type="op">37605030299</ident>
 <disclose flag="0">
   <name/>
@@ -987,7 +987,7 @@ RESPONSE:
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6838648129</svTRID>
+  <svTRID>ccReg-4440087586</svTRID>
 </trID>
   </response>
 </epp>
@@ -1027,14 +1027,14 @@ RESPONSE:
   <name>Johnny Awesome</name>
   <org/>
   <addr>
-    <street>Burnice Dale</street>
-    <city>Stefanview</city>
+    <street>Lenore Row</street>
+    <city>Icieberg</city>
   </addr>
 </postalInfo>
         <voice>+372.12345678</voice>
         <fax/>
-        <email>christian.rosenbaum@kemmer.name</email>
-        <crDate>2014-12-31 09:57:59 UTC</crDate>
+        <email>stella@hellerwiza.biz</email>
+        <crDate>2015-01-05 14:59:43 UTC</crDate>
         <ident type="op">37605030299</ident>
         <authInfo>
           <pw>password</pw>
@@ -1053,7 +1053,7 @@ RESPONSE:
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3524909478</svTRID>
+  <svTRID>ccReg-9097653752</svTRID>
 </trID>
   </response>
 </epp>
@@ -1169,14 +1169,14 @@ RESPONSE:
   <name>Johnny Awesome</name>
   <org/>
   <addr>
-    <street>Burnice Dale</street>
-    <city>Stefanview</city>
+    <street>Lenore Row</street>
+    <city>Icieberg</city>
   </addr>
 </postalInfo>
         <voice>+372.12345678</voice>
         <fax/>
-        <email>christian.rosenbaum@kemmer.name</email>
-        <crDate>2014-12-31 09:57:59 UTC</crDate>
+        <email>stella@hellerwiza.biz</email>
+        <crDate>2015-01-05 14:59:44 UTC</crDate>
         <ident type="op">37605030299</ident>
         <authInfo>
           <pw>ccds4324pok</pw>
@@ -1195,7 +1195,7 @@ RESPONSE:
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0755816808</svTRID>
+  <svTRID>ccReg-2117379058</svTRID>
 </trID>
   </response>
 </epp>
@@ -1235,10 +1235,10 @@ RESPONSE:
       <chkData>
         <id>info-4444</id>
 <postalInfo type="int">
-  <name>Sydnie Gutmann</name>
+  <name>Perry Blanda</name>
   <org/>
 </postalInfo>
-        <crDate>2014-12-31 09:58:00 UTC</crDate>
+        <crDate>2015-01-05 14:59:44 UTC</crDate>
         <ident type="op">37605030299</ident>
 <disclose flag="0">
   <email/>
@@ -1254,7 +1254,7 @@ RESPONSE:
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0900038526</svTRID>
+  <svTRID>ccReg-2792142623</svTRID>
 </trID>
   </response>
 </epp>
@@ -1328,7 +1328,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5308874588</svTRID>
+  <svTRID>ccReg-1341746578</svTRID>
 </trID>
 </epp>
 ```
@@ -1366,7 +1366,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1188257564</svTRID>
+  <svTRID>ccReg-9208688418</svTRID>
 </trID>
 </epp>
 ```
@@ -1408,6 +1408,9 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
     </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -1435,7 +1438,48 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0863040695</svTRID>
+  <svTRID>ccReg-6004331572</svTRID>
+</trID>
+</epp>
+```
+
+### EPP Domain with valid user validates required parameters  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <create>
+      <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
+        <domain:name>test.ee</domain:name>
+      </domain:create>
+    </create>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="2003">
+      <msg lang="en">Required parameter missing: ns</msg>
+    </result>
+    <result code="2003">
+      <msg lang="en">Required parameter missing: registrant</msg>
+    </result>
+    <result code="2003">
+      <msg lang="en">Required parameter missing: legalDocument</msg>
+    </result>
+  </response>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID/>
 </trID>
 </epp>
 ```
@@ -1476,7 +1520,7 @@ RESPONSE:
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0654506193</svTRID>
+  <svTRID>ccReg-1592502492</svTRID>
 </trID>
   </response>
 </epp>
@@ -1517,7 +1561,7 @@ RESPONSE:
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4297598118</svTRID>
+  <svTRID>ccReg-3859832161</svTRID>
 </trID>
   </response>
 </epp>
@@ -1567,7 +1611,7 @@ RESPONSE:
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6048863849</svTRID>
+  <svTRID>ccReg-2022102865</svTRID>
 </trID>
   </response>
 </epp>
@@ -1614,7 +1658,7 @@ RESPONSE:
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2720372024</svTRID>
+  <svTRID>ccReg-9037191902</svTRID>
 </trID>
   </response>
 </epp>
@@ -1656,7 +1700,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1019936771</svTRID>
+  <svTRID>ccReg-2825720558</svTRID>
 </trID>
 </epp>
 ```
@@ -1673,7 +1717,7 @@ REQUEST:
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
         <domain:name>example.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="JD1234-REP">988d6a312672fa29e3448af093874b85</domain:pw>
+          <domain:pw roid="JD1234-REP">e111bfbf7315294c3d7376eb9c45e225</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -1696,16 +1740,16 @@ RESPONSE:
         <name>example.ee</name>
         <trStatus>serverApproved</trStatus>
         <reID>123</reID>
-        <reDate>2014-12-31 09:58:02 UTC</reDate>
+        <reDate>2015-01-05 14:59:47 UTC</reDate>
         <acID>12345678</acID>
-        <acDate>2014-12-31 09:58:02 UTC</acDate>
-        <exDate>2015-12-31 00:00:00 UTC</exDate>
+        <acDate>2015-01-05 14:59:47 UTC</acDate>
+        <exDate>2016-01-05 00:00:00 UTC</exDate>
       </trnData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5266323333</svTRID>
+  <svTRID>ccReg-4773344769</svTRID>
 </trID>
 </epp>
 ```
@@ -1720,7 +1764,7 @@ REQUEST:
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
         <domain:name>example.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="JD1234-REP">3d444448cc64fd99480d343925404b17</domain:pw>
+          <domain:pw roid="JD1234-REP">902acf45d18c4cb1b4b685ec88cab5fe</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -1743,16 +1787,16 @@ RESPONSE:
         <name>example.ee</name>
         <trStatus>pending</trStatus>
         <reID>12345678</reID>
-        <reDate>2014-12-31 09:58:02 UTC</reDate>
+        <reDate>2015-01-05 14:59:47 UTC</reDate>
         <acID>123</acID>
-        <acDate>2014-12-31 10:58:02 UTC</acDate>
-        <exDate>2015-12-31 00:00:00 UTC</exDate>
+        <acDate>2015-01-05 15:59:47 UTC</acDate>
+        <exDate>2016-01-05 00:00:00 UTC</exDate>
       </trnData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6140987832</svTRID>
+  <svTRID>ccReg-0931106068</svTRID>
 </trID>
 </epp>
 ```
@@ -1767,7 +1811,7 @@ REQUEST:
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
         <domain:name>example.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="JD1234-REP">3d444448cc64fd99480d343925404b17</domain:pw>
+          <domain:pw roid="JD1234-REP">902acf45d18c4cb1b4b685ec88cab5fe</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -1790,16 +1834,16 @@ RESPONSE:
         <name>example.ee</name>
         <trStatus>pending</trStatus>
         <reID>12345678</reID>
-        <reDate>2014-12-31 09:58:02 UTC</reDate>
+        <reDate>2015-01-05 14:59:47 UTC</reDate>
         <acID>123</acID>
-        <acDate>2014-12-31 10:58:02 UTC</acDate>
-        <exDate>2015-12-31 00:00:00 UTC</exDate>
+        <acDate>2015-01-05 15:59:47 UTC</acDate>
+        <exDate>2016-01-05 00:00:00 UTC</exDate>
       </trnData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4003234085</svTRID>
+  <svTRID>ccReg-8855922203</svTRID>
 </trID>
 </epp>
 ```
@@ -1826,7 +1870,7 @@ RESPONSE:
       <msg>Command completed successfully; ack to dequeue</msg>
     </result>
     <msgQ count="1" id="1">
-      <qDate>2014-12-31 09:58:02 UTC</qDate>
+      <qDate>2015-01-05 14:59:47 UTC</qDate>
       <msg>Transfer requested.</msg>
     </msgQ>
     <resData>
@@ -1834,15 +1878,15 @@ RESPONSE:
         <name>example.ee</name>
         <trStatus>pending</trStatus>
         <reID>12345678</reID>
-        <reDate>2014-12-31 09:58:02 UTC</reDate>
+        <reDate>2015-01-05 14:59:47 UTC</reDate>
         <acID>123</acID>
-        <acDate>2014-12-31 10:58:02 UTC</acDate>
-        <exDate>2015-12-31 00:00:00 UTC</exDate>
+        <acDate>2015-01-05 15:59:47 UTC</acDate>
+        <exDate>2016-01-05 00:00:00 UTC</exDate>
       </trnData>
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6358533152</svTRID>
+  <svTRID>ccReg-8462147045</svTRID>
 </trID>
   </response>
 </epp>
@@ -1872,7 +1916,7 @@ RESPONSE:
     <msgQ count="0" id="1"/>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0923299693</svTRID>
+  <svTRID>ccReg-2378053603</svTRID>
 </trID>
   </response>
 </epp>
@@ -1890,7 +1934,7 @@ REQUEST:
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
         <domain:name>example.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="JD1234-REP">5cb9417ce367bb66ab9812e33062766d</domain:pw>
+          <domain:pw roid="JD1234-REP">ad7ff204743c4573efaef4e07d12c2db</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -1911,7 +1955,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9625160623</svTRID>
+  <svTRID>ccReg-3027156411</svTRID>
 </trID>
 </epp>
 ```
@@ -1928,7 +1972,7 @@ REQUEST:
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
         <domain:name>example.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="JD1234-REP">caedf3e984b0351a429d17ffea7c7718</domain:pw>
+          <domain:pw roid="JD1234-REP">1086b5e2113d1c26d0ebee0484cfb659</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -1951,16 +1995,16 @@ RESPONSE:
         <name>example.ee</name>
         <trStatus>clientApproved</trStatus>
         <reID>123</reID>
-        <reDate>2014-12-31 09:58:03 UTC</reDate>
+        <reDate>2015-01-05 14:59:48 UTC</reDate>
         <acID>12345678</acID>
-        <acDate>2014-12-31 09:58:03 UTC</acDate>
-        <exDate>2015-12-31 00:00:00 UTC</exDate>
+        <acDate>2015-01-05 14:59:48 UTC</acDate>
+        <exDate>2016-01-05 00:00:00 UTC</exDate>
       </trnData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4326588344</svTRID>
+  <svTRID>ccReg-1991306802</svTRID>
 </trID>
 </epp>
 ```
@@ -1998,7 +2042,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6912896536</svTRID>
+  <svTRID>ccReg-5446834428</svTRID>
 </trID>
 </epp>
 ```
@@ -2015,7 +2059,7 @@ REQUEST:
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
         <domain:name>example.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="JD1234-REP">18ad8eec9ae0b1e19231d8d0ac501129</domain:pw>
+          <domain:pw roid="JD1234-REP">ae6c8a6aa1a5a56f31dae09f5c203b47</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -2036,7 +2080,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4364621621</svTRID>
+  <svTRID>ccReg-8794961543</svTRID>
 </trID>
 </epp>
 ```
@@ -2112,7 +2156,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7646134788</svTRID>
+  <svTRID>ccReg-3343506409</svTRID>
 </trID>
 </epp>
 ```
@@ -2148,7 +2192,262 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0195877097</svTRID>
+  <svTRID>ccReg-2011160912</svTRID>
+</trID>
+</epp>
+```
+
+### EPP Domain with valid user with two epp users creates a domain transfer with legal document  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <transfer op="query">
+      <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
+        <domain:name>example.ee</domain:name>
+        <domain:authInfo>
+          <domain:pw roid="JD1234-REP">51ccddd642c0d7370ce156c71c646493</domain:pw>
+        </domain:authInfo>
+      </domain:transfer>
+    </transfer>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+    <resData>
+      <trnData>
+        <name>example.ee</name>
+        <trStatus>serverApproved</trStatus>
+        <reID>123</reID>
+        <reDate>2015-01-05 14:59:50 UTC</reDate>
+        <acID>12345678</acID>
+        <acDate>2015-01-05 14:59:50 UTC</acDate>
+        <exDate>2016-01-05 00:00:00 UTC</exDate>
+      </trnData>
+    </resData>
+  </response>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-2690512388</svTRID>
+</trID>
+</epp>
+```
+
+### EPP Domain with valid user with two epp users creates a domain transfer with legal document  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <transfer op="query">
+      <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
+        <domain:name>example.ee</domain:name>
+        <domain:authInfo>
+          <domain:pw roid="JD1234-REP">90e981e528961534a88e20fca47f8dde</domain:pw>
+        </domain:authInfo>
+      </domain:transfer>
+    </transfer>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+    <resData>
+      <trnData>
+        <name>example.ee</name>
+        <trStatus>pending</trStatus>
+        <reID>123</reID>
+        <reDate>2015-01-05 14:59:50 UTC</reDate>
+        <acID>12345678</acID>
+        <acDate>2015-01-05 15:59:50 UTC</acDate>
+        <exDate>2016-01-05 00:00:00 UTC</exDate>
+      </trnData>
+    </resData>
+  </response>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-5666862129</svTRID>
+</trID>
+</epp>
+```
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <transfer op="query">
+      <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
+        <domain:name>example.ee</domain:name>
+        <domain:authInfo>
+          <domain:pw roid="JD1234-REP">90e981e528961534a88e20fca47f8dde</domain:pw>
+        </domain:authInfo>
+      </domain:transfer>
+    </transfer>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+    <resData>
+      <trnData>
+        <name>example.ee</name>
+        <trStatus>pending</trStatus>
+        <reID>123</reID>
+        <reDate>2015-01-05 14:59:50 UTC</reDate>
+        <acID>12345678</acID>
+        <acDate>2015-01-05 15:59:50 UTC</acDate>
+        <exDate>2016-01-05 00:00:00 UTC</exDate>
+      </trnData>
+    </resData>
+  </response>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-4764470981</svTRID>
+</trID>
+</epp>
+```
+
+### EPP Domain with valid user with two epp users rejects a domain transfer  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <transfer op="reject">
+      <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
+        <domain:name>example.ee</domain:name>
+        <domain:authInfo>
+          <domain:pw roid="JD1234-REP">899427843b2b6e705d78160f37ccfaaf</domain:pw>
+        </domain:authInfo>
+      </domain:transfer>
+    </transfer>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="2304">
+      <msg lang="en">Transfer can be rejected only by current registrar</msg>
+    </result>
+  </response>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-2426322730</svTRID>
+</trID>
+</epp>
+```
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <transfer op="reject">
+      <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
+        <domain:name>example.ee</domain:name>
+        <domain:authInfo>
+          <domain:pw roid="JD1234-REP">899427843b2b6e705d78160f37ccfaaf</domain:pw>
+        </domain:authInfo>
+      </domain:transfer>
+    </transfer>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+    <resData>
+      <trnData>
+        <name>example.ee</name>
+        <trStatus>clientRejected</trStatus>
+        <reID>123</reID>
+        <reDate>2015-01-05 14:59:50 UTC</reDate>
+        <acID>12345678</acID>
+        <acDate/>
+        <exDate>2016-01-05 00:00:00 UTC</exDate>
+      </trnData>
+    </resData>
+  </response>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-6484213202</svTRID>
 </trID>
 </epp>
 ```
@@ -2190,6 +2489,9 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
     </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -2208,14 +2510,14 @@ RESPONSE:
     <resData>
       <creData>
         <name>example.ee</name>
-        <crDate>2014-12-31 09:58:04 UTC</crDate>
-        <exDate>2015-12-31 00:00:00 UTC</exDate>
+        <crDate>2015-01-05 14:59:51 UTC</crDate>
+        <exDate>2016-01-05 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1055939964</svTRID>
+  <svTRID>ccReg-7940264394</svTRID>
 </trID>
 </epp>
 ```
@@ -2270,14 +2572,14 @@ RESPONSE:
     <resData>
       <creData>
         <name>example.ee</name>
-        <crDate>2014-12-31 09:58:05 UTC</crDate>
-        <exDate>2015-12-31 00:00:00 UTC</exDate>
+        <crDate>2015-01-05 14:59:51 UTC</crDate>
+        <exDate>2016-01-05 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2476022863</svTRID>
+  <svTRID>ccReg-6928821976</svTRID>
 </trID>
 </epp>
 ```
@@ -2319,6 +2621,9 @@ REQUEST:
           <secDNS:pubKey>AwEAAaOf5+lz3ftsL+0CCvfJbhUF/NVsNh8BKo61oYs5fXVbuWDiH872 LC8uKDO92TJy7Q4TF9XMAKMMlf1GMAxlRspD749SOCTN00sqfWx1OMTu a28L1PerwHq7665oDJDKqR71btcGqyLKhe2QDvCdA0mENimF1NudX1BJ DDFi6oOZ0xE/0CuveB64I3ree7nCrwLwNs56kXC4LYoX3XdkOMKiJLL/ MAhcxXa60CdZLoRtTEW3z8/oBq4hEAYMCNclpbd6y/exScwBxFTdUfFk KsdNcmvai1lyk9vna0WQrtpYpHKMXvY9LFHaJxCOLR4umfeQ42RuTd82 lqfU6ClMeXs=</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
     </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -2337,14 +2642,14 @@ RESPONSE:
     <resData>
       <creData>
         <name>ria.ee</name>
-        <crDate>2014-12-31 09:58:05 UTC</crDate>
-        <exDate>2015-12-31 00:00:00 UTC</exDate>
+        <crDate>2015-01-05 14:59:52 UTC</crDate>
+        <exDate>2016-01-05 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3912924297</svTRID>
+  <svTRID>ccReg-9795989387</svTRID>
 </trID>
 </epp>
 ```
@@ -2384,6 +2689,9 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
     </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -2402,7 +2710,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2627876505</svTRID>
+  <svTRID>ccReg-3651805583</svTRID>
 </trID>
 </epp>
 ```
@@ -2444,6 +2752,9 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
     </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -2462,14 +2773,14 @@ RESPONSE:
     <resData>
       <creData>
         <name>example.ee</name>
-        <crDate>2014-12-31 09:58:06 UTC</crDate>
-        <exDate>2015-12-31 00:00:00 UTC</exDate>
+        <crDate>2015-01-05 14:59:52 UTC</crDate>
+        <exDate>2016-01-05 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1307495376</svTRID>
+  <svTRID>ccReg-3389401512</svTRID>
 </trID>
 </epp>
 ```
@@ -2509,6 +2820,9 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
     </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -2530,7 +2844,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-8528828639</svTRID>
+  <svTRID>ccReg-5852310053</svTRID>
 </trID>
 </epp>
 ```
@@ -2572,6 +2886,9 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
     </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -2593,7 +2910,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2128270208</svTRID>
+  <svTRID>ccReg-2942799324</svTRID>
 </trID>
 </epp>
 ```
@@ -2635,6 +2952,9 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
     </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -2686,6 +3006,9 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
     </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -2780,6 +3103,9 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
     </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -2798,7 +3124,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7580565499</svTRID>
+  <svTRID>ccReg-1338228961</svTRID>
 </trID>
 </epp>
 ```
@@ -2838,6 +3164,9 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
     </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -2865,7 +3194,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6552819116</svTRID>
+  <svTRID>ccReg-4852687010</svTRID>
 </trID>
 </epp>
 ```
@@ -2901,6 +3230,9 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
     </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -2953,6 +3285,11 @@ REQUEST:
         </domain:authInfo>
       </domain:create>
     </create>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
 </epp>
@@ -2970,14 +3307,14 @@ RESPONSE:
     <resData>
       <creData>
         <name>example.ee</name>
-        <crDate>2014-12-31 09:58:08 UTC</crDate>
-        <exDate>2015-12-31 00:00:00 UTC</exDate>
+        <crDate>2015-01-05 14:59:55 UTC</crDate>
+        <exDate>2016-01-05 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3356938157</svTRID>
+  <svTRID>ccReg-0178225781</svTRID>
 </trID>
 </epp>
 ```
@@ -3011,6 +3348,11 @@ REQUEST:
         </domain:authInfo>
       </domain:create>
     </create>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
 </epp>
@@ -3037,7 +3379,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5299838481</svTRID>
+  <svTRID>ccReg-5188650808</svTRID>
 </trID>
 </epp>
 ```
@@ -3079,6 +3421,9 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
     </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -3097,14 +3442,14 @@ RESPONSE:
     <resData>
       <creData>
         <name>example.ee</name>
-        <crDate>2014-12-31 09:58:09 UTC</crDate>
-        <exDate>2015-12-31 00:00:00 UTC</exDate>
+        <crDate>2015-01-05 14:59:55 UTC</crDate>
+        <exDate>2016-01-05 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4944750643</svTRID>
+  <svTRID>ccReg-4165846628</svTRID>
 </trID>
 </epp>
 ```
@@ -3146,6 +3491,9 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
     </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -3167,7 +3515,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1260484797</svTRID>
+  <svTRID>ccReg-8804364196</svTRID>
 </trID>
 </epp>
 ```
@@ -3221,6 +3569,9 @@ REQUEST:
           <secDNS:pubKey>841936717ae427ace63c28d04918569a841936717ae427ace63c28d0</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
     </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -3239,14 +3590,14 @@ RESPONSE:
     <resData>
       <creData>
         <name>example.ee</name>
-        <crDate>2014-12-31 09:58:09 UTC</crDate>
-        <exDate>2015-12-31 00:00:00 UTC</exDate>
+        <crDate>2015-01-05 14:59:56 UTC</crDate>
+        <exDate>2016-01-05 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-8417226663</svTRID>
+  <svTRID>ccReg-8246250687</svTRID>
 </trID>
 </epp>
 ```
@@ -3300,6 +3651,9 @@ REQUEST:
           <secDNS:pubKey/>
         </secDNS:keyData>
       </secDNS:create>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
     </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -3354,7 +3708,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6283543306</svTRID>
+  <svTRID>ccReg-5044370449</svTRID>
 </trID>
 </epp>
 ```
@@ -3402,6 +3756,9 @@ REQUEST:
           <secDNS:pubKey>700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
     </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -3423,7 +3780,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2507883005</svTRID>
+  <svTRID>ccReg-3406007726</svTRID>
 </trID>
 </epp>
 ```
@@ -3471,6 +3828,9 @@ REQUEST:
           <secDNS:pubKey>700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
     </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -3489,7 +3849,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6391365191</svTRID>
+  <svTRID>ccReg-2303291149</svTRID>
 </trID>
 </epp>
 ```
@@ -3531,6 +3891,9 @@ REQUEST:
           <secDNS:digest>49FD46E6C4B45C55D4AC</secDNS:digest>
         </secDNS:dsData>
       </secDNS:create>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
     </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -3549,14 +3912,14 @@ RESPONSE:
     <resData>
       <creData>
         <name>example.ee</name>
-        <crDate>2014-12-31 09:58:10 UTC</crDate>
-        <exDate>2015-12-31 00:00:00 UTC</exDate>
+        <crDate>2015-01-05 14:59:57 UTC</crDate>
+        <exDate>2016-01-05 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-8258587773</svTRID>
+  <svTRID>ccReg-5151269531</svTRID>
 </trID>
 </epp>
 ```
@@ -3604,6 +3967,9 @@ REQUEST:
           </secDNS:keyData>
         </secDNS:dsData>
       </secDNS:create>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
     </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -3622,14 +3988,14 @@ RESPONSE:
     <resData>
       <creData>
         <name>example.ee</name>
-        <crDate>2014-12-31 09:58:11 UTC</crDate>
-        <exDate>2015-12-31 00:00:00 UTC</exDate>
+        <crDate>2015-01-05 14:59:58 UTC</crDate>
+        <exDate>2016-01-05 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-8630720552</svTRID>
+  <svTRID>ccReg-9054041197</svTRID>
 </trID>
 </epp>
 ```
@@ -3677,6 +4043,9 @@ REQUEST:
           </secDNS:keyData>
         </secDNS:dsData>
       </secDNS:create>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
     </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -3695,7 +4064,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2118644552</svTRID>
+  <svTRID>ccReg-1527318904</svTRID>
 </trID>
 </epp>
 ```
@@ -3743,6 +4112,9 @@ REQUEST:
           </secDNS:keyData>
         </secDNS:dsData>
       </secDNS:create>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
     </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -3761,7 +4133,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1924314034</svTRID>
+  <svTRID>ccReg-8345416778</svTRID>
 </trID>
 </epp>
 ```
@@ -3803,6 +4175,9 @@ REQUEST:
           <secDNS:pubKey>700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
     </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -3821,7 +4196,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0159373467</svTRID>
+  <svTRID>ccReg-2253232997</svTRID>
 </trID>
 </epp>
 ```
@@ -3861,6 +4236,9 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
     </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -3879,14 +4257,14 @@ RESPONSE:
     <resData>
       <creData>
         <name>example.ee</name>
-        <crDate>2014-12-31 09:58:12 UTC</crDate>
-        <exDate>2015-12-31 00:00:00 UTC</exDate>
+        <crDate>2015-01-05 14:59:59 UTC</crDate>
+        <exDate>2016-01-05 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-8592556870</svTRID>
+  <svTRID>ccReg-5578801534</svTRID>
 </trID>
 </epp>
 ```
@@ -3926,6 +4304,9 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
     </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -3938,13 +4319,13 @@ RESPONSE:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
-    <result code="2306">
-      <msg lang="en">Admin contacts count must be between 1 - infinity</msg>
+    <result code="2004">
+      <msg lang="en">Admin contacts count must be between 1-10</msg>
     </result>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0558909398</svTRID>
+  <svTRID>ccReg-6177194156</svTRID>
 </trID>
 </epp>
 ```
@@ -3960,7 +4341,7 @@ REQUEST:
     <renew>
       <domain:renew xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
         <domain:name>example.ee</domain:name>
-        <domain:curExpDate>2015-12-31</domain:curExpDate>
+        <domain:curExpDate>2016-01-05</domain:curExpDate>
         <domain:period unit="y">1</domain:period>
       </domain:renew>
     </renew>
@@ -3981,12 +4362,12 @@ RESPONSE:
     <resData>
       <renData>
         <name>example.ee</name>
-        <exDate>2016-12-31 00:00:00 UTC</exDate>
+        <exDate>2017-01-05 00:00:00 UTC</exDate>
       </renData>
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7256713102</svTRID>
+  <svTRID>ccReg-1852934882</svTRID>
 </trID>
   </response>
 </epp>
@@ -4027,7 +4408,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9116437285</svTRID>
+  <svTRID>ccReg-8988231719</svTRID>
 </trID>
 </epp>
 ```
@@ -4043,7 +4424,7 @@ REQUEST:
     <renew>
       <domain:renew xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
         <domain:name>example.ee</domain:name>
-        <domain:curExpDate>2015-12-31</domain:curExpDate>
+        <domain:curExpDate>2016-01-05</domain:curExpDate>
         <domain:period unit="y">4</domain:period>
       </domain:renew>
     </renew>
@@ -4067,7 +4448,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0629909883</svTRID>
+  <svTRID>ccReg-5123316652</svTRID>
 </trID>
 </epp>
 ```
@@ -4106,36 +4487,36 @@ RESPONSE:
       <infData>
         <name>example.ee</name>
         <status s="ok"/>
-        <registrant>sh2013</registrant>
-        <contact type="tech">sh2013</contact>
-        <contact type="admin">sh0456</contact>
+        <registrant>sh5505</registrant>
+        <contact type="tech">sh5505</contact>
+        <contact type="admin">sh7991</contact>
         <ns>
           <hostAttr>
-            <hostName>ns.torphy39.ee</hostName>
+            <hostName>ns.eichmannstiedemann48.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.sawaynpredovic40.ee</hostName>
+            <hostName>ns.runtebradtke49.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.konopelskilehner41.ee</hostName>
+            <hostName>ns.cassinbrekke50.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
         </ns>
         <clID>Registrar OÜ</clID>
         <crID>Registrar OÜ</crID>
-        <crDate>2014-12-31 09:58:14 UTC</crDate>
-        <exDate>2015-12-31 00:00:00 UTC</exDate>
+        <crDate>2015-01-05 15:00:01 UTC</crDate>
+        <exDate>2016-01-05 00:00:00 UTC</exDate>
         <authInfo>
-          <pw>a025520e0ab0430c3c39e7c57c8360cf</pw>
+          <pw>61d9a7f6f590e9a9b6d869127c9098c7</pw>
         </authInfo>
       </infData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0727279739</svTRID>
+  <svTRID>ccReg-9078320750</svTRID>
 </trID>
 </epp>
 ```
@@ -4174,20 +4555,20 @@ RESPONSE:
       <infData>
         <name>example.ee</name>
         <status s="clientHold">Payment overdue.</status>
-        <registrant>sh4240</registrant>
-        <contact type="tech">sh4240</contact>
-        <contact type="admin">sh0927</contact>
+        <registrant>sh1324</registrant>
+        <contact type="tech">sh1324</contact>
+        <contact type="admin">sh4288</contact>
         <ns>
           <hostAttr>
-            <hostName>ns.bergegutmann42.ee</hostName>
+            <hostName>ns.halvorsonmckenzie51.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.zieme43.ee</hostName>
+            <hostName>ns.gaylordturcotte52.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.jaskolski44.ee</hostName>
+            <hostName>ns.mante53.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
@@ -4198,10 +4579,10 @@ RESPONSE:
         </ns>
         <clID>Registrar OÜ</clID>
         <crID>Registrar OÜ</crID>
-        <crDate>2014-12-31 09:58:14 UTC</crDate>
-        <exDate>2015-12-31 00:00:00 UTC</exDate>
+        <crDate>2015-01-05 15:00:01 UTC</crDate>
+        <exDate>2016-01-05 00:00:00 UTC</exDate>
         <authInfo>
-          <pw>c6e9fad12114f8edbc5842a04586fa46</pw>
+          <pw>3f7e42d45707f5db995ca7bd20d2725a</pw>
         </authInfo>
       </infData>
     </resData>
@@ -4236,7 +4617,7 @@ RESPONSE:
   </extension>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5508680060</svTRID>
+  <svTRID>ccReg-4777896072</svTRID>
 </trID>
 </epp>
 ```
@@ -4273,20 +4654,20 @@ RESPONSE:
       <infData>
         <name>example.ee</name>
         <status s="clientHold">Payment overdue.</status>
-        <registrant>sh4240</registrant>
-        <contact type="tech">sh4240</contact>
-        <contact type="admin">sh0927</contact>
+        <registrant>sh1324</registrant>
+        <contact type="tech">sh1324</contact>
+        <contact type="admin">sh4288</contact>
         <ns>
           <hostAttr>
-            <hostName>ns.bergegutmann42.ee</hostName>
+            <hostName>ns.halvorsonmckenzie51.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.zieme43.ee</hostName>
+            <hostName>ns.gaylordturcotte52.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.jaskolski44.ee</hostName>
+            <hostName>ns.mante53.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
@@ -4297,11 +4678,11 @@ RESPONSE:
         </ns>
         <clID>Registrar OÜ</clID>
         <crID>Registrar OÜ</crID>
-        <crDate>2014-12-31 09:58:14 UTC</crDate>
-        <exDate>2015-12-31 00:00:00 UTC</exDate>
-        <upDate>2014-12-31 09:58:14 UTC</upDate>
+        <crDate>2015-01-05 15:00:01 UTC</crDate>
+        <exDate>2016-01-05 00:00:00 UTC</exDate>
+        <upDate>2015-01-05 15:00:01 UTC</upDate>
         <authInfo>
-          <pw>c6e9fad12114f8edbc5842a04586fa46</pw>
+          <pw>3f7e42d45707f5db995ca7bd20d2725a</pw>
         </authInfo>
       </infData>
     </resData>
@@ -4336,7 +4717,7 @@ RESPONSE:
   </extension>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6900875303</svTRID>
+  <svTRID>ccReg-1809322143</svTRID>
 </trID>
 </epp>
 ```
@@ -4377,7 +4758,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5293855948</svTRID>
+  <svTRID>ccReg-4067721468</svTRID>
 </trID>
 </epp>
 ```
@@ -4442,7 +4823,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6675106042</svTRID>
+  <svTRID>ccReg-2408269514</svTRID>
 </trID>
 </epp>
 ```
@@ -4502,7 +4883,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1158978325</svTRID>
+  <svTRID>ccReg-0489988605</svTRID>
 </trID>
 </epp>
 ```
@@ -4601,7 +4982,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1935814817</svTRID>
+  <svTRID>ccReg-4679200491</svTRID>
 </trID>
 </epp>
 ```
@@ -4663,7 +5044,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1473733141</svTRID>
+  <svTRID>ccReg-2406368656</svTRID>
 </trID>
 </epp>
 ```
@@ -4712,7 +5093,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0001719075</svTRID>
+  <svTRID>ccReg-1621359470</svTRID>
 </trID>
 </epp>
 ```
@@ -4776,7 +5157,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5450080812</svTRID>
+  <svTRID>ccReg-6891062039</svTRID>
 </trID>
 </epp>
 ```
@@ -4817,7 +5198,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3119242407</svTRID>
+  <svTRID>ccReg-1262413734</svTRID>
 </trID>
 </epp>
 ```
@@ -4857,7 +5238,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7611152464</svTRID>
+  <svTRID>ccReg-7839170345</svTRID>
 </trID>
 </epp>
 ```
@@ -4898,7 +5279,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4849407330</svTRID>
+  <svTRID>ccReg-0200938279</svTRID>
 </trID>
 </epp>
 ```
@@ -4980,7 +5361,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-8549408219</svTRID>
+  <svTRID>ccReg-8238351524</svTRID>
 </trID>
 </epp>
 ```
@@ -5021,7 +5402,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7528084892</svTRID>
+  <svTRID>ccReg-5852582567</svTRID>
 </trID>
 </epp>
 ```
@@ -5039,6 +5420,11 @@ REQUEST:
         <domain:name>example.ee</domain:name>
       </domain:delete>
     </delete>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
 </epp>
@@ -5056,12 +5442,52 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-8682136521</svTRID>
+  <svTRID>ccReg-8591839746</svTRID>
 </trID>
 </epp>
 ```
 
 ### EPP Domain with valid user with valid domain does not delete domain with specific status  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <delete>
+      <domain:delete xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
+        <domain:name>example.ee</domain:name>
+      </domain:delete>
+    </delete>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="2304">
+      <msg lang="en">Domain status prohibits operation</msg>
+    </result>
+  </response>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-7211526913</svTRID>
+</trID>
+</epp>
+```
+
+### EPP Domain with valid user with valid domain does not delete domain without legal document  
 
 REQUEST:
 
@@ -5085,13 +5511,13 @@ RESPONSE:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
-    <result code="2304">
-      <msg lang="en">Domain status prohibits operation</msg>
+    <result code="2003">
+      <msg lang="en">Required parameter missing: legalDocument</msg>
     </result>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9488889893</svTRID>
+  <svTRID/>
 </trID>
 </epp>
 ```
@@ -5115,13 +5541,13 @@ REQUEST:
         <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
       </ext:keyData>
       <ext:authInfo>
-        <domain:pw>add89ac3e480f075fbe154e1b14d810e</domain:pw>
+        <domain:pw>b5e08c6f6294ea29a814c52903bcb486</domain:pw>
       </ext:authInfo>
       <ext:expiry>
         <ext:relative>P1M13D</ext:relative>
       </ext:expiry>
     </ext:keyrelay>
-    <ext:clTRID>1420019899</ext:clTRID>
+    <ext:clTRID>1420470006</ext:clTRID>
   </command>
 </epp>
 ```
@@ -5137,8 +5563,8 @@ RESPONSE:
     </result>
   </response>
 <trID>
-  <clTRID>1420019899</clTRID>
-  <svTRID>ccReg-6575445462</svTRID>
+  <clTRID>1420470006</clTRID>
+  <svTRID>ccReg-9402578017</svTRID>
 </trID>
 </epp>
 ```
@@ -5160,13 +5586,13 @@ REQUEST:
         <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
       </ext:keyData>
       <ext:authInfo>
-        <domain:pw>115a9478b9cfd578a2cd1fd02cd83ddd</domain:pw>
+        <domain:pw>a4925acb161c928abb618af83cd99365</domain:pw>
       </ext:authInfo>
       <ext:expiry>
         <ext:relative>Invalid Expiry</ext:relative>
       </ext:expiry>
     </ext:keyrelay>
-    <ext:clTRID>1420019899</ext:clTRID>
+    <ext:clTRID>1420470006</ext:clTRID>
   </command>
 </epp>
 ```
@@ -5182,8 +5608,8 @@ RESPONSE:
     </result>
   </response>
 <trID>
-  <clTRID>1420019899</clTRID>
-  <svTRID>ccReg-6768245074</svTRID>
+  <clTRID>1420470006</clTRID>
+  <svTRID>ccReg-7862267427</svTRID>
 </trID>
 </epp>
 ```
@@ -5205,13 +5631,13 @@ REQUEST:
         <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
       </ext:keyData>
       <ext:authInfo>
-        <domain:pw>d7eb76a52d043b8341b9ff7782facb5c</domain:pw>
+        <domain:pw>5c8e0b4e26adc8bab4055b4d00aa5dbd</domain:pw>
       </ext:authInfo>
       <ext:expiry>
         <ext:relative>Invalid Expiry</ext:relative>
       </ext:expiry>
     </ext:keyrelay>
-    <ext:clTRID>1420019899</ext:clTRID>
+    <ext:clTRID>1420470006</ext:clTRID>
   </command>
 </epp>
 ```
@@ -5230,8 +5656,8 @@ RESPONSE:
     </result>
   </response>
 <trID>
-  <clTRID>1420019899</clTRID>
-  <svTRID>ccReg-8023321042</svTRID>
+  <clTRID>1420470006</clTRID>
+  <svTRID>ccReg-2445833286</svTRID>
 </trID>
 </epp>
 ```
@@ -5253,14 +5679,14 @@ REQUEST:
         <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
       </ext:keyData>
       <ext:authInfo>
-        <domain:pw>f912801c0d691190b3c33a3925f0dfa4</domain:pw>
+        <domain:pw>64d57e5c221fe97bd36a99e9e57b7bbd</domain:pw>
       </ext:authInfo>
       <ext:expiry>
         <ext:relative>P1D</ext:relative>
         <ext:absolute>2014-12-23</ext:absolute>
       </ext:expiry>
     </ext:keyrelay>
-    <ext:clTRID>1420019900</ext:clTRID>
+    <ext:clTRID>1420470007</ext:clTRID>
   </command>
 </epp>
 ```
@@ -5276,8 +5702,8 @@ RESPONSE:
     </result>
   </response>
 <trID>
-  <clTRID>1420019900</clTRID>
-  <svTRID>ccReg-9849520324</svTRID>
+  <clTRID>1420470007</clTRID>
+  <svTRID>ccReg-6332508501</svTRID>
 </trID>
 </epp>
 ```
@@ -5291,7 +5717,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="req"/>
-    <clTRID>1420019900</clTRID>
+    <clTRID>1420470007</clTRID>
   </command>
 </epp>
 ```
@@ -5306,8 +5732,8 @@ RESPONSE:
       <msg>Command completed successfully; no messages</msg>
     </result>
 <trID>
-  <clTRID>1420019900</clTRID>
-  <svTRID>ccReg-0411014131</svTRID>
+  <clTRID>1420470007</clTRID>
+  <svTRID>ccReg-9512610563</svTRID>
 </trID>
   </response>
 </epp>
@@ -5322,7 +5748,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="req"/>
-    <clTRID>1420019900</clTRID>
+    <clTRID>1420470007</clTRID>
   </command>
 </epp>
 ```
@@ -5337,8 +5763,8 @@ RESPONSE:
       <msg>Command completed successfully; no messages</msg>
     </result>
 <trID>
-  <clTRID>1420019900</clTRID>
-  <svTRID>ccReg-6323375385</svTRID>
+  <clTRID>1420470007</clTRID>
+  <svTRID>ccReg-1706706465</svTRID>
 </trID>
   </response>
 </epp>
@@ -5351,7 +5777,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="req"/>
-    <clTRID>1420019900</clTRID>
+    <clTRID>1420470007</clTRID>
   </command>
 </epp>
 ```
@@ -5366,12 +5792,12 @@ RESPONSE:
       <msg>Command completed successfully; ack to dequeue</msg>
     </result>
     <msgQ count="1" id="1">
-      <qDate>2014-12-31 09:58:20 UTC</qDate>
+      <qDate>2015-01-05 15:00:07 UTC</qDate>
       <msg>Balance low.</msg>
     </msgQ>
 <trID>
-  <clTRID>1420019900</clTRID>
-  <svTRID>ccReg-2164426296</svTRID>
+  <clTRID>1420470007</clTRID>
+  <svTRID>ccReg-0242118148</svTRID>
 </trID>
   </response>
 </epp>
@@ -5384,7 +5810,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="ack" msgID="1"/>
-    <clTRID>1420019900</clTRID>
+    <clTRID>1420470007</clTRID>
   </command>
 </epp>
 ```
@@ -5403,8 +5829,8 @@ RESPONSE:
     </result>
   </response>
 <trID>
-  <clTRID>1420019900</clTRID>
-  <svTRID>ccReg-7227487206</svTRID>
+  <clTRID>1420470007</clTRID>
+  <svTRID>ccReg-5629541821</svTRID>
 </trID>
 </epp>
 ```
@@ -5416,7 +5842,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="ack" msgID="1"/>
-    <clTRID>1420019900</clTRID>
+    <clTRID>1420470007</clTRID>
   </command>
 </epp>
 ```
@@ -5432,8 +5858,8 @@ RESPONSE:
     </result>
     <msgQ count="0" id="1"/>
 <trID>
-  <clTRID>1420019900</clTRID>
-  <svTRID>ccReg-9751098275</svTRID>
+  <clTRID>1420470007</clTRID>
+  <svTRID>ccReg-4153449007</svTRID>
 </trID>
   </response>
 </epp>
@@ -5446,7 +5872,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="ack" msgID="1"/>
-    <clTRID>1420019900</clTRID>
+    <clTRID>1420470007</clTRID>
   </command>
 </epp>
 ```
@@ -5465,8 +5891,8 @@ RESPONSE:
     </result>
   </response>
 <trID>
-  <clTRID>1420019900</clTRID>
-  <svTRID>ccReg-3468430439</svTRID>
+  <clTRID>1420470007</clTRID>
+  <svTRID>ccReg-3557555028</svTRID>
 </trID>
 </epp>
 ```
@@ -5480,7 +5906,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="bla"/>
-    <clTRID>1420019900</clTRID>
+    <clTRID>1420470007</clTRID>
   </command>
 </epp>
 ```
@@ -5496,7 +5922,7 @@ RESPONSE:
     </result>
   </response>
 <trID>
-  <clTRID>1420019900</clTRID>
+  <clTRID>1420470007</clTRID>
   <svTRID/>
 </trID>
 </epp>
@@ -5511,7 +5937,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="req"/>
-    <clTRID>1420019901</clTRID>
+    <clTRID>1420470008</clTRID>
   </command>
 </epp>
 ```
@@ -5526,12 +5952,12 @@ RESPONSE:
       <msg>Command completed successfully; ack to dequeue</msg>
     </result>
     <msgQ count="3" id="3">
-      <qDate>2014-12-31 09:58:21 UTC</qDate>
+      <qDate>2015-01-05 15:00:08 UTC</qDate>
       <msg>Smth else.</msg>
     </msgQ>
 <trID>
-  <clTRID>1420019901</clTRID>
-  <svTRID>ccReg-6279740873</svTRID>
+  <clTRID>1420470008</clTRID>
+  <svTRID>ccReg-5695351548</svTRID>
 </trID>
   </response>
 </epp>
@@ -5544,7 +5970,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="ack" msgID="3"/>
-    <clTRID>1420019901</clTRID>
+    <clTRID>1420470008</clTRID>
   </command>
 </epp>
 ```
@@ -5560,8 +5986,8 @@ RESPONSE:
     </result>
     <msgQ count="2" id="3"/>
 <trID>
-  <clTRID>1420019901</clTRID>
-  <svTRID>ccReg-2211766284</svTRID>
+  <clTRID>1420470008</clTRID>
+  <svTRID>ccReg-1055396564</svTRID>
 </trID>
   </response>
 </epp>
@@ -5574,7 +6000,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="req"/>
-    <clTRID>1420019901</clTRID>
+    <clTRID>1420470008</clTRID>
   </command>
 </epp>
 ```
@@ -5589,12 +6015,12 @@ RESPONSE:
       <msg>Command completed successfully; ack to dequeue</msg>
     </result>
     <msgQ count="2" id="2">
-      <qDate>2014-12-31 09:58:21 UTC</qDate>
+      <qDate>2015-01-05 15:00:08 UTC</qDate>
       <msg>Something.</msg>
     </msgQ>
 <trID>
-  <clTRID>1420019901</clTRID>
-  <svTRID>ccReg-3086394249</svTRID>
+  <clTRID>1420470008</clTRID>
+  <svTRID>ccReg-2418076519</svTRID>
 </trID>
   </response>
 </epp>
@@ -5607,7 +6033,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="ack" msgID="2"/>
-    <clTRID>1420019901</clTRID>
+    <clTRID>1420470008</clTRID>
   </command>
 </epp>
 ```
@@ -5623,8 +6049,8 @@ RESPONSE:
     </result>
     <msgQ count="1" id="2"/>
 <trID>
-  <clTRID>1420019901</clTRID>
-  <svTRID>ccReg-1161073468</svTRID>
+  <clTRID>1420470008</clTRID>
+  <svTRID>ccReg-6460519021</svTRID>
 </trID>
   </response>
 </epp>
@@ -5637,7 +6063,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="req"/>
-    <clTRID>1420019901</clTRID>
+    <clTRID>1420470008</clTRID>
   </command>
 </epp>
 ```
@@ -5652,12 +6078,12 @@ RESPONSE:
       <msg>Command completed successfully; ack to dequeue</msg>
     </result>
     <msgQ count="1" id="1">
-      <qDate>2014-12-31 09:58:21 UTC</qDate>
+      <qDate>2015-01-05 15:00:08 UTC</qDate>
       <msg>Balance low.</msg>
     </msgQ>
 <trID>
-  <clTRID>1420019901</clTRID>
-  <svTRID>ccReg-9021663970</svTRID>
+  <clTRID>1420470008</clTRID>
+  <svTRID>ccReg-7799009822</svTRID>
 </trID>
   </response>
 </epp>
@@ -5670,7 +6096,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="ack" msgID="1"/>
-    <clTRID>1420019901</clTRID>
+    <clTRID>1420470008</clTRID>
   </command>
 </epp>
 ```
@@ -5686,8 +6112,8 @@ RESPONSE:
     </result>
     <msgQ count="0" id="1"/>
 <trID>
-  <clTRID>1420019901</clTRID>
-  <svTRID>ccReg-2607198436</svTRID>
+  <clTRID>1420470008</clTRID>
+  <svTRID>ccReg-8847137998</svTRID>
 </trID>
   </response>
 </epp>
@@ -5700,7 +6126,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="req"/>
-    <clTRID>1420019901</clTRID>
+    <clTRID>1420470008</clTRID>
   </command>
 </epp>
 ```
@@ -5715,14 +6141,55 @@ RESPONSE:
       <msg>Command completed successfully; no messages</msg>
     </result>
 <trID>
-  <clTRID>1420019901</clTRID>
-  <svTRID>ccReg-8497397604</svTRID>
+  <clTRID>1420470008</clTRID>
+  <svTRID>ccReg-6753251824</svTRID>
 </trID>
   </response>
 </epp>
 ```
 
 ### EPP Session when not connected greets client upon connection  
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <greeting>
+    <svID>EPP server (EIS)</svID>
+    <svDate>2015-01-05T15:00:08Z</svDate>
+    <svcMenu>
+      <version>1.0</version>
+      <lang>en</lang>
+      <objURI>urn:ietf:params:xml:ns:domain-1.0</objURI>
+      <objURI>urn:ietf:params:xml:ns:contact-1.0</objURI>
+      <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
+      <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
+      <svcExtension>
+        <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
+        <extURI>urn:ee:eis:xml:epp:eis-1.0</extURI>
+      </svcExtension>
+    </svcMenu>
+    <dcp>
+      <access>
+        <all/>
+      </access>
+      <statement>
+        <purpose>
+          <admin/>
+          <prov/>
+        </purpose>
+        <recipient>
+          <public/>
+        </recipient>
+        <retention>
+          <stated/>
+        </retention>
+      </statement>
+    </dcp>
+  </greeting>
+</epp>
+```
 
 ### EPP Session when connected does not log in with invalid user  
 
@@ -5760,7 +6227,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6230628380</svTRID>
+  <svTRID>ccReg-1535898379</svTRID>
 </trID>
 </epp>
 ```
@@ -5799,7 +6266,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4570857458</svTRID>
+  <svTRID>ccReg-6889069385</svTRID>
 </trID>
 </epp>
 ```
@@ -5872,7 +6339,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1801284089</svTRID>
+  <svTRID>ccReg-8037045091</svTRID>
 </trID>
   </response>
 </epp>
@@ -5913,7 +6380,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0873883976</svTRID>
+  <svTRID>ccReg-3353053757</svTRID>
 </trID>
   </response>
 </epp>
@@ -5943,7 +6410,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1289935186</svTRID>
+  <svTRID>ccReg-4800353441</svTRID>
 </trID>
 </epp>
 ```
@@ -5983,7 +6450,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6573364280</svTRID>
+  <svTRID>ccReg-6710777969</svTRID>
 </trID>
   </response>
 </epp>
