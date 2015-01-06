@@ -12,21 +12,21 @@ require 'mina/rbenv'  # for rbenv support. (http://rbenv.org)
 #   branch       - Branch name to deploy. (needed by mina/git)
 
 set :domain, 'registry-st'
-set :deploy_to, '/home/app/registry'
+set :deploy_to, '$HOME/registry'
 set :repository, 'https://github.com/internetee/registry'
 set :branch, 'master'
 
 # staging
 task :st do
   set :domain, 'registry-st'
-  set :deploy_to, '/home/registry/registry'
+  set :deploy_to, '$HOME/registry'
   set :branch, 'st'
 end
 
 # production
 task :pr do
   set :domain, 'registry'
-  set :deploy_to, '/home/registry/registry'
+  set :deploy_to, '$HOME/registry'
   set :branch, 'pr'
 end
 
