@@ -64,9 +64,6 @@ gem 'paper_trail', '~> 3.0.5'
 # for select
 gem 'selectize-rails', '~> 0.11.0'
 
-# See https://github.com/sstephenson/execjs#readme for more supported runtimes
-gem 'therubyracer',  platforms: :ruby
-
 # for settings
 gem 'rails-settings-cached', '0.4.1'
 
@@ -169,4 +166,7 @@ group :development do
 
   # to generate database diagrams
   gem 'railroady'
+
+  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
+  gem 'therubyracer',  platforms: :ruby
 end
