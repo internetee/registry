@@ -21,11 +21,10 @@ gem 'sass-rails', '~> 4.0.3'       # '5.0.0'   # sass style
 gem 'bootstrap-sass', '~> 3.2.0.1' # '3.3.1.0' # bootstrap style
 
 # js
-gem 'uglifier', '>= 1.3.0'         # '2.6.1' # minifies js
-gem 'coffee-rails', '~> 4.0.0'     # '4.1.0' # coffeescript support
-gem 'turbolinks'                   # '2.5.3' # faster page load
-gem 'jquery-rails'                 # '4.0.3' # jquery
-gem 'jbuilder', '~> 2.0'           # '2.2.6' # json api
+gem 'uglifier',        '>= 1.3.0'  # '2.6.1' # minifies js
+gem 'coffee-rails',    '~> 4.0.0'  # '4.1.0' # coffeescript support
+gem 'turbolinks',      '~> 2.5.3'  # faster page load
+gem 'jquery-rails',    '~> 3.1.1'  # '4.0.3' jquery
 gem 'selectize-rails', '~> 0.11.0' # '0.11.2' # include selectize.js for select
 
 # view helpers
@@ -37,7 +36,8 @@ gem 'devise',    '~> 3.3.0' # '3.4.0' # authenitcation
 gem 'cancancan', '~> 1.9.2' # autharization
 
 # rest api
-gem 'grape', '~> 0.10.1'
+gem 'grape',    '~> 0.10.1'
+gem 'jbuilder', '~> 2.2.6'  # json api
 
 # registry specfic
 gem 'simpleidn', '~> 0.0.5' # For punycode
@@ -45,7 +45,7 @@ gem 'isikukood' # for EE-id validation
 
 # deploy
 gem 'whenever', '~> 0.9.4', require: false
-gem 'daemons'  '~> 1.1.9' # process delayed jobs
+gem 'daemons',  '~> 1.1.9' # process delayed jobs
 
 group :development do
   # dev tools
@@ -97,7 +97,7 @@ group :development, :test do
   gem 'bundler-audit', '~> 0.3.1'  # for finding future vulnerable gems
   gem 'brakeman',      '~> 2.6.2', require: false # for security audit'
   gem 'sdoc',          '~> 0.4.0'  # bundle exec rake doc:rails generates the API under doc/api.
-  gem 'railroady'      '~> 1.3.0'  # to generate database diagrams
+  gem 'railroady',     '~> 1.3.0'  # to generate database diagrams
 
   # dev tools
   gem 'unicorn'
