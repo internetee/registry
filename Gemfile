@@ -78,6 +78,11 @@ gem 'whenever', '~> 0.9.4', require: false
 # for dates and times
 gem 'iso8601', '~> 0.8.2'
 
+# for REST API
+gem 'grape', '~> 0.10.1'
+
+gem 'hashie_rails', '~> 0.0.1'
+
 group :development, :test do
   # for inserting dummy data
   gem 'activerecord-import', '~> 0.6.0'
