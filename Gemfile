@@ -1,177 +1,104 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.1.4'
-
-# Use postgresql as the database for Active Record
-gem 'pg'
-
-# Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.3'
-
-# Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
-
-# Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.0.0'
-
-# Use jquery as the JavaScript library
-gem 'jquery-rails'
-
-# Turbolinks makes following links in your web application faster.
-# Read more: https://github.com/rails/turbolinks
-gem 'turbolinks'
-
-# Build JSON APIs with ease.
-# Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.0'
-
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
-
-# Replacement for erb
-gem 'haml-rails', '~> 0.5.3'
-
-# For XML parsing
-gem 'nokogiri', '~> 1.6.2.1'
-
-# For punycode
-gem 'simpleidn', '~> 0.0.5'
-
-# for EE-id validation
-gem 'isikukood'
-
-# for using bootstrap
-gem 'bootstrap-sass', '~> 3.2.0.1'
-
-# for visual loader
-gem 'nprogress-rails', '~> 0.1.3.1'
-
-# for pagination
-gem 'kaminari', '~> 0.16.1'
-
-# for searching
-gem 'ransack', '~> 1.3.0'
-
-# for rights
-gem 'cancancan', '~> 1.9.2'
-
-# for login
-gem 'devise', '~> 3.3.0'
-
-# for archiving
-gem 'paper_trail', '~> 3.0.5'
-
-# for select
-gem 'selectize-rails', '~> 0.11.0'
-
-# for settings
-gem 'rails-settings-cached', '0.4.1'
-
-# delayed job
-gem 'delayed_job_active_record', '~> 4.0.2'
-# to process delayed jobs
-gem 'daemons'
-
-# cron
-gem 'whenever', '~> 0.9.4', require: false
-
-# for dates and times
-gem 'iso8601', '~> 0.8.2'
-
-# for REST API
-gem 'grape', '~> 0.10.1'
-
+# core
+gem 'rails',        '4.1.4'    # '4.2.0'
+gem 'iso8601',      '~> 0.8.2' # for dates and times
 gem 'hashie_rails', '~> 0.0.1'
 
-group :development, :test do
-  # for inserting dummy data
-  gem 'activerecord-import', '~> 0.6.0'
+# model related
+gem 'pg',                        '~> 0.18.0'
+gem 'ransack',                   '~> 1.3.0' # '1.5.1' # for searching
+gem 'paper_trail',               '~> 3.0.5' # '3.0.6' # archiving
+gem 'rails-settings-cached',     '~> 0.4.1' # for settings
+gem 'delayed_job_active_record', '~> 4.0.2' # '4.0.3' # delayed job
 
-  gem 'capybara', '~> 2.4.1'
-  # For feature testing
-  # gem 'capybara-webkit', '1.2.0' # Webkit driver didn't work with turbolinks
-  gem 'phantomjs-binaries', '~> 1.9.2.4'
-  gem 'poltergeist', '~> 1.5.1' # We are using PhantomJS instead
-  gem 'phantomjs', '~> 1.9.7.1'
+# html-xml
+gem 'haml-rails', '~> 0.5.3' # '0.6.0' haml for views
+gem 'nokogiri', '~> 1.6.2.1' # For XML parsing
 
-  # For cleaning db in feature and epp tests
-  gem 'database_cleaner', '~> 1.3.0'
+# style
+gem 'sass-rails', '~> 4.0.3'       # '5.0.0'   # sass style
+gem 'bootstrap-sass', '~> 3.2.0.1' # '3.3.1.0' # bootstrap style
 
-  # EPP client
-  gem 'epp', '~> 1.4.0'
+# js
+gem 'uglifier', '>= 1.3.0'         # '2.6.1' # minifies js
+gem 'coffee-rails', '~> 4.0.0'     # '4.1.0' # coffeescript support
+gem 'turbolinks'                   # '2.5.3' # faster page load
+gem 'jquery-rails'                 # '4.0.3' # jquery
+gem 'jbuilder', '~> 2.0'           # '2.2.6' # json api
+gem 'selectize-rails', '~> 0.11.0' # '0.11.2' # include selectize.js for select
 
-  # EPP XMLs
-  gem 'epp-xml', '~> 0.10.3'
+# view helpers
+gem 'kaminari', '~> 0.16.1'         # pagination
+gem 'nprogress-rails', '~> 0.1.3.1' # '0.1.6.5' # visual loader
 
-  # Replacement for fixtures
-  gem 'fabrication', '~> 2.11.3'
+# rights
+gem 'devise',    '~> 3.3.0' # '3.4.0' # authenitcation
+gem 'cancancan', '~> 1.9.2' # autharization
 
-  # Library to generate fake data
-  gem 'faker', '~> 1.3.0'
+# rest api
+gem 'grape', '~> 0.10.1'
 
-  # For debugging
-  gem 'pry', '~> 0.10.1'
-  # gem 'pry-byebug', '~> 1.3.3'
+# registry specfic
+gem 'simpleidn', '~> 0.0.5' # For punycode
+gem 'isikukood' # for EE-id validation
 
-  # Testing framework
-  gem 'rspec-rails', '~> 3.0.2'
-
-  # Additional matchers for RSpec
-  gem 'shoulda-matchers', '~> 2.6.1', require: false
-
-  # For unique IDs (used by the epp gem)
-  gem 'uuidtools', '~> 2.1.4'
-
-  # For code review
-  gem 'simplecov', '~> 0.9.1', require: false
-  gem 'rubycritic', '~> 1.1.1'
-
-  # for finding database optimizations
-  gem 'bullet', '~> 4.14.0'
-
-  # for finding future vulnerable gems
-  gem 'bundler-audit'
-
-  # for security audit'
-  gem 'brakeman', '~> 2.6.2', require: false
-
-  # bundle exec rake doc:rails generates the API under doc/api.
-  gem 'sdoc', '~> 0.4.0'
-
-  # faster dev load time
-  gem 'unicorn'
-
-  # for opening browser automatically
-  gem 'launchy', '~> 2.4.3'
-end
+# deploy
+gem 'whenever', '~> 0.9.4', require: false
+gem 'daemons'  '~> 1.1.9' # process delayed jobs
 
 group :development do
-  # Spring speeds up development by keeping your application running in the background.
-  # Read more: https://github.com/rails/spring
-  gem 'spring', '~> 1.2.0'
+  # dev tools
+  gem 'spring',                '~> 1.2.0'
   gem 'spring-commands-rspec', '~> 1.0.2'
-
-  # for fast deployment
-  gem 'mina', '~> 0.3.1'
-
-  # for finding dead routes and unused actions
-  gem 'traceroute', '~> 0.4.0'
-
-  # for improved errors
-  gem 'better_errors', '~> 2.0.0'
-  gem 'binding_of_caller', '~> 0.7.2'
-
-  # run tests automatically
-  gem 'guard', '~> 2.6.1'
-
-  # rspec support for guard
+  gem 'guard',                 '~> 2.6.1' # run tests automatically
   gem 'guard-rspec', '~> 4.3.1'
   gem 'rubocop', '~> 0.26.1'
   gem 'guard-rubocop', '~> 1.1.0'
 
-  # to generate database diagrams
-  gem 'railroady'
+  # improved errors
+  gem 'better_errors',     '~> 2.0.0'
+  gem 'binding_of_caller', '~> 0.7.2'
+  gem 'traceroute',        '~> 0.4.0' # for finding dead routes and unused actions
 
-  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
+  # deploy
+  gem 'mina', '~> 0.3.1' # for fast deployment
   gem 'therubyracer',  platforms: :ruby
+end
+
+group :development, :test do
+  # test stack
+  gem 'rspec-rails', '~> 3.0.2'
+  gem 'capybara',           '~> 2.4.1'
+  gem 'phantomjs-binaries', '~> 1.9.2.4'
+  gem 'poltergeist',        '~> 1.5.1'  # We are using PhantomJS instead
+  gem 'phantomjs',          '~> 1.9.7.1'
+  gem 'fabrication',        '~> 2.11.3' # Replacement for fixtures
+  gem 'shoulda-matchers',   '~> 2.6.1', require: false # Additional matchers for RSpec
+  gem 'launchy',            '~> 2.4.3' # for opening browser automatically
+
+  # helper gems
+  gem 'activerecord-import', '~> 0.6.0' # for inserting dummy data
+  gem 'database_cleaner',    '~> 1.3.0' # For cleaning db in feature and epp tests
+  gem 'faker',               '~> 1.3.0' # Library to generate fake data
+
+  # EPP 
+  gem 'epp',     '~> 1.4.0'   # EPP client
+  gem 'epp-xml', '~> 0.10.3'  # EPP XMLs
+  gem 'uuidtools', '~> 2.1.4' # For unique IDs (used by the epp gem)
+
+  # debug
+  gem 'pry', '~> 0.10.1'
+
+  # code review
+  gem 'simplecov',     '~> 0.9.1', require: false
+  gem 'rubycritic',    '~> 1.1.1'
+  gem 'bullet',        '~> 4.14.0' # for finding database optimizations
+  gem 'bundler-audit', '~> 0.3.1'  # for finding future vulnerable gems
+  gem 'brakeman',      '~> 2.6.2', require: false # for security audit'
+  gem 'sdoc',          '~> 0.4.0'  # bundle exec rake doc:rails generates the API under doc/api.
+  gem 'railroady'      '~> 1.3.0'  # to generate database diagrams
+
+  # dev tools
+  gem 'unicorn'
 end
