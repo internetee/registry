@@ -1,87 +1,51 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.1.4'
+# core
+gem 'rails',        '4.1.4'    # '4.2.0'
+gem 'iso8601',      '~> 0.8.2' # for dates and times
+gem 'hashie_rails', '~> 0.0.1'
 
-# Use postgresql as the database for Active Record
-gem 'pg'
+# model related
+gem 'pg',                        '~> 0.18.0'
+gem 'ransack',                   '~> 1.3.0' # '1.5.1' # for searching
+gem 'paper_trail',               '~> 3.0.5' # '3.0.6' # archiving
+gem 'rails-settings-cached',     '~> 0.4.1' # for settings
+gem 'delayed_job_active_record', '~> 4.0.2' # '4.0.3' # delayed job
 
-# Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.3'
+# html-xml
+gem 'haml-rails', '~> 0.5.3' # '0.6.0' haml for views
+gem 'nokogiri', '~> 1.6.2.1' # For XML parsing
 
-# Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
+# style
+gem 'sass-rails', '~> 4.0.3'       # '5.0.0'   # sass style
+gem 'bootstrap-sass', '~> 3.2.0.1' # '3.3.1.0' # bootstrap style
 
-# Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.0.0'
+# js
+gem 'uglifier', '>= 1.3.0'         # '2.6.1' # minifies js
+gem 'coffee-rails', '~> 4.0.0'     # '4.1.0' # coffeescript support
+gem 'turbolinks'                   # '2.5.3' # faster page load
+gem 'jquery-rails'                 # '4.0.3' # jquery
+gem 'jbuilder', '~> 2.0'           # '2.2.6' # json api
+gem 'selectize-rails', '~> 0.11.0' # '0.11.2' # include selectize.js for select
 
-# Use jquery as the JavaScript library
-gem 'jquery-rails'
+# view helpers
+gem 'kaminari', '~> 0.16.1'         # pagination
+gem 'nprogress-rails', '~> 0.1.3.1' # '0.1.6.5' # visual loader
 
-# Turbolinks makes following links in your web application faster.
-# Read more: https://github.com/rails/turbolinks
-gem 'turbolinks'
-
-# Build JSON APIs with ease.
-# Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.0'
-
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
-
-# Replacement for erb
-gem 'haml-rails', '~> 0.5.3'
-
-# For XML parsing
-gem 'nokogiri', '~> 1.6.2.1'
-
-# For punycode
-gem 'simpleidn', '~> 0.0.5'
-
-# for EE-id validation
-gem 'isikukood'
-
-# for using bootstrap
-gem 'bootstrap-sass', '~> 3.2.0.1'
-
-# for visual loader
-gem 'nprogress-rails', '~> 0.1.3.1'
-
-# for pagination
-gem 'kaminari', '~> 0.16.1'
-
-# for searching
-gem 'ransack', '~> 1.3.0'
-
-# for rights
-gem 'cancancan', '~> 1.9.2'
-
-# for login
-gem 'devise', '~> 3.3.0'
-
-# for archiving
-gem 'paper_trail', '~> 3.0.5'
-
-# for select
-gem 'selectize-rails', '~> 0.11.0'
-
-# for settings
-gem 'rails-settings-cached', '0.4.1'
-
-# delayed job
-gem 'delayed_job_active_record', '~> 4.0.2'
-# to process delayed jobs
-gem 'daemons'
-
-# cron
-gem 'whenever', '~> 0.9.4', require: false
-
-# for dates and times
-gem 'iso8601', '~> 0.8.2'
-
-# for REST API
+# rest api
 gem 'grape', '~> 0.10.1'
 
-gem 'hashie_rails', '~> 0.0.1'
+# rights
+gem 'devise',    '~> 3.3.0' # '3.4.0' # authenitcation
+gem 'cancancan', '~> 1.9.2' # autharization
+
+# registry specfic
+gem 'simpleidn', '~> 0.0.5' # For punycode
+gem 'isikukood' # for EE-id validation
+
+# deploy
+gem 'whenever', '~> 0.9.4', require: false
+gem 'daemons'  '~> 1.1.9' # process delayed jobs
 
 group :development, :test do
   # for inserting dummy data
