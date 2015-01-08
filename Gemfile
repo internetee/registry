@@ -1,39 +1,39 @@
 source 'https://rubygems.org'
 
 # core
-gem 'rails',        '4.1.4'    # '4.2.0'
+gem 'rails',        '4.2.0'
 gem 'iso8601',      '~> 0.8.2' # for dates and times
 gem 'hashie_rails', '~> 0.0.1'
 
 # model related
 gem 'pg',                        '~> 0.18.0'
-gem 'ransack',                   '~> 1.3.0' # '1.5.1' # for searching
-gem 'paper_trail',               '~> 3.0.5' # '3.0.6' # archiving
+gem 'ransack',                   '~> 1.5.1' # for searching
+gem 'paper_trail',               '~> 3.0.6' # archiving
 gem 'rails-settings-cached',     '~> 0.4.1' # for settings
-gem 'delayed_job_active_record', '~> 4.0.2' # '4.0.3' # delayed job
+gem 'delayed_job_active_record', '~> 4.0.3' # delayed job
 
-# html-xml
-gem 'haml-rails', '~> 0.5.3' # '0.6.0' haml for views
-gem 'nokogiri', '~> 1.6.2.1' # For XML parsing
+# html-xml 
+gem 'haml-rails', '~> 0.6.0' # haml for views
+gem 'nokogiri',   '~> 1.6.2.1' # For XML parsing
 
 # style
-gem 'sass-rails', '~> 4.0.3'       # '5.0.0'   # sass style
-gem 'bootstrap-sass', '~> 3.2.0.1' # '3.3.1.0' # bootstrap style
+gem 'sass-rails',     '~> 5.0.1'   # sass style
+gem 'bootstrap-sass', '~> 3.3.1.0' # bootstrap style
 
 # js
-gem 'uglifier',        '>= 1.3.0'  # '2.6.1' # minifies js
-gem 'coffee-rails',    '~> 4.0.0'  # '4.1.0' # coffeescript support
+gem 'uglifier',        '~> 2.6.1'  # minifies js
+gem 'coffee-rails',    '~> 4.1.0'  # coffeescript support
 gem 'turbolinks',      '~> 2.5.3'  # faster page load
-gem 'jquery-rails',    '~> 3.1.1'  # '4.0.3' jquery
-gem 'selectize-rails', '~> 0.11.0' # '0.11.2' # include selectize.js for select
+gem 'jquery-rails',    '~> 4.0.3'  # jquery
+gem 'selectize-rails', '~> 0.11.2' # include selectize.js for select
 gem 'therubyracer',  platforms: :ruby
 
 # view helpers
-gem 'kaminari', '~> 0.16.1'         # pagination
-gem 'nprogress-rails', '~> 0.1.3.1' # '0.1.6.5' # visual loader
+gem 'kaminari',        '~> 0.16.1'  # pagination
+gem 'nprogress-rails', '~> 0.1.6.5' # visual loader
 
 # rights
-gem 'devise',    '~> 3.3.0' # '3.4.0' # authenitcation
+gem 'devise',    '~> 3.4.1' # authenitcation
 gem 'cancancan', '~> 1.9.2' # autharization
 
 # rest api
@@ -53,9 +53,9 @@ group :development do
   gem 'spring',                '~> 1.2.0'
   gem 'spring-commands-rspec', '~> 1.0.2'
   gem 'guard',                 '~> 2.6.1' # run tests automatically
-  gem 'guard-rspec', '~> 4.3.1'
-  gem 'rubocop', '~> 0.26.1'
-  gem 'guard-rubocop', '~> 1.1.0'
+  gem 'guard-rspec',           '~> 4.3.1'
+  gem 'rubocop',               '~> 0.26.1'
+  gem 'guard-rubocop',         '~> 1.1.0'
 
   # improved errors
   gem 'better_errors',     '~> 2.0.0'
@@ -68,7 +68,7 @@ end
 
 group :development, :test do
   # test stack
-  gem 'rspec-rails', '~> 3.0.2'
+  gem 'rspec-rails',        '~> 3.0.2'
   gem 'capybara',           '~> 2.4.1'
   gem 'phantomjs-binaries', '~> 1.9.2.4'
   gem 'poltergeist',        '~> 1.5.1'  # We are using PhantomJS instead
@@ -83,8 +83,8 @@ group :development, :test do
   gem 'faker',               '~> 1.3.0' # Library to generate fake data
 
   # EPP 
-  gem 'epp',     '~> 1.4.0'   # EPP client
-  gem 'epp-xml', '~> 0.10.3'  # EPP XMLs
+  gem 'epp',       '~> 1.4.0'   # EPP client
+  gem 'epp-xml',   '~> 0.10.3'  # EPP XMLs
   gem 'uuidtools', '~> 2.1.4' # For unique IDs (used by the epp gem)
 
   # debug
@@ -96,6 +96,8 @@ group :development, :test do
   gem 'bullet',        '~> 4.14.0' # for finding database optimizations
   gem 'bundler-audit', '~> 0.3.1'  # for finding future vulnerable gems
   gem 'brakeman',      '~> 2.6.2', require: false # for security audit'
+  # tmp, otherwise conflics with breakman
+  gem 'html2haml', github: 'haml/html2haml', ref: '6984f50bdbbd6291535027726a5697f28778ee8d'
   gem 'sdoc',          '~> 0.4.0'  # bundle exec rake doc:rails generates the API under doc/api.
   gem 'railroady',     '~> 1.3.0'  # to generate database diagrams
 
