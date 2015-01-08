@@ -92,8 +92,8 @@ task deploy: :environment do
     invoke :'bundle:install'
     invoke :'rails:db_migrate'
     invoke :'rails:assets_precompile'
-    invoke :'whenever:update'
     to :launch do
+      invoke :'whenever:update'
       invoke :restart
     end
   end
@@ -107,8 +107,8 @@ task rollback: :environment do
     ls -Art "#{deploy_to}/releases" | sort | tail -n 2 | head -n 1 |
     xargs -I active ln -nfs "#{deploy_to}/releases/active" "#{deploy_to}/current"
   )
-  invoke :'whenever:update'
   to :launch do
+    invoke :'whenever:update'
     invoke :restart
   end
 end
