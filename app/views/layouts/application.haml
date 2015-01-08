@@ -20,7 +20,15 @@
             %span.icon-bar
             %span.icon-bar
             %span.icon-bar
-          = link_to APP_CONFIG['app_name'], root_path, class: 'navbar-brand'
+          = link_to root_path, class: 'navbar-brand' do
+            = APP_CONFIG['app_name']
+            - if Rails.env.development?
+              .text-center
+                %small{style: 'color: #D10000;'}= Rails.env.upcase
+            - elsif Rails.env.staging?
+              .text-center
+                %small{style: 'color: #0074B3;'}= Rails.env.upcase
+
         .navbar-collapse.collapse
           %ul.nav.navbar-nav
             %li= link_to t('domains'), admin_domains_path
