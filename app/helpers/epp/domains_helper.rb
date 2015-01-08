@@ -13,8 +13,8 @@ module Epp::DomainsHelper
   end
 
   def check_domain
-    ph = params_hash['epp']['command']['check']['check']
-    @domains = Epp::EppDomain.check_availability(ph[:name])
+    names = parsed_frame.css('name').map(&:text)
+    @domains = Epp::EppDomain.check_availability(names)
     render '/epp/domains/check'
   end
 
@@ -118,6 +118,12 @@ module Epp::DomainsHelper
   ### HELPER METHODS ###
 
   private
+
+  ## CHECK
+
+  def validate_domain_check_request
+    epp_request_valid?('name')
+  end
 
   ## CREATE
   def validate_domain_create_request
