@@ -26,6 +26,7 @@ gem 'coffee-rails',    '~> 4.0.0'  # '4.1.0' # coffeescript support
 gem 'turbolinks',      '~> 2.5.3'  # faster page load
 gem 'jquery-rails',    '~> 3.1.1'  # '4.0.3' jquery
 gem 'selectize-rails', '~> 0.11.0' # '0.11.2' # include selectize.js for select
+gem 'therubyracer',  platforms: :ruby
 
 # view helpers
 gem 'kaminari', '~> 0.16.1'         # pagination
@@ -63,7 +64,6 @@ group :development do
 
   # deploy
   gem 'mina', '~> 0.3.1' # for fast deployment
-  gem 'therubyracer',  platforms: :ruby
 end
 
 group :development, :test do
