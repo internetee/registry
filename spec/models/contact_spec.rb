@@ -17,6 +17,21 @@ describe Contact do
       expect(@contact.valid?).to be false
     end
 
+    it 'validates birthday' do
+      invalid = [ '123' '12/12/2012', 'aaaa', '12/12/12', '02-11-1999' ]
+      invalid.each do |date|
+        expect(Fabricate.build(:contact, ident_type: 'birthday', ident: date).valid?).to be false
+      end
+      valid = [ '2012-12-11', '1990-02-16' ]
+      valid.each do |date|
+        expect(Fabricate.build(:contact, ident_type: 'birthday', ident: date).valid?).to be true
+      end
+    end
+
+    it 'doesn\'t validate ico' do
+      expect(Fabricate.build(:contact, ident_type: 'ico', ident: '12312adsadwe').valid?).to be true
+    end
+
     it 'should return missing parameter error messages' do
       @contact = Contact.new
       expect(@contact.valid?).to eq false
