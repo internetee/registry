@@ -164,6 +164,7 @@ class Contact < ActiveRecord::Base
       contact_hash = {
         phone: ph[:voice],
         ident: ph[:ident],
+        ident_type: ph[:ident_type],
         email: ph[:email],
         fax: ph[:fax],
         name: ph[:postalInfo].try(:[], :name),
