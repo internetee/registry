@@ -27,7 +27,8 @@ describe Contact do
          email: ['Required parameter missing - email', 'Email is invalid'],
          ident: ['Required parameter missing - ident'],
          address: ['is missing'],
-         registrar: ['is missing']
+         registrar: ['is missing'],
+         ident_type: ['is missing']
       })
     end
   end

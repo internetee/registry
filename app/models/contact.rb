@@ -18,12 +18,13 @@ class Contact < ActiveRecord::Base
 
   accepts_nested_attributes_for :address, :disclosure
 
-  validates :name, :phone, :email, :ident, :address, :registrar, presence: true
-
-  validate :ident_must_be_valid
+  validates :name, :phone, :email, :ident, :address, :registrar, :ident_type, presence: true
 
   validates :phone, format: /\+[0-9]{1,3}\.[0-9]{1,14}?/ # /\+\d{3}\.\d+/
   validates :email, format: /@/
+  validates :ident, format: /\d{4}-\d{2}-\d{2}/, if: proc { |c| c.ident_type == 'birthday' }
+
+  validate :ident_must_be_valid
 
   validates :code, uniqueness: { message: :epp_id_taken }
 
@@ -135,7 +136,8 @@ class Contact < ActiveRecord::Base
       ],
       '2005' => [ # Value syntax error
         [:phone, :invalid],
-        [:email, :invalid]
+        [:email, :invalid],
+        [:ident, :invalid]
       ]
     }
   end
