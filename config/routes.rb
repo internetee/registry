@@ -5,6 +5,8 @@ Rails.application.routes.draw do
     get 'error/:command', to: 'errors#error', defaults: { format: :xml }
   end
 
+  mount Repp::API => '/'
+
   ## ADMIN ROUTES
   namespace(:admin) do
     resources :keyrelays
