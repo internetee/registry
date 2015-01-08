@@ -5,7 +5,7 @@
 
 # rbenv support
 rbenv = 'export PATH="$HOME/.rbenv/bin:$PATH";eval "$(rbenv init -)";'
-path  = Whenever.path.to_s.sub('^\\','')
+path  = Whenever.path.join('../../current')
 set :job_template, "/bin/bash -l -c '#{rbenv} :job'"
 job_type :runner, "#{path}/bin/rails r -e :environment ':task' :output"
 
