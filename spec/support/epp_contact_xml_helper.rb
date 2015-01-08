@@ -11,7 +11,7 @@ module EppContactXmlHelper
       },
       voice: { value: '+372.1234567' },
       email: { value: 'test@example.example' },
-      ident: { value: '37605030299' }
+      ident: { value: '37605030299' , attrs: { flag: 'op' } }
     }
 
     xml_params = defaults.deep_merge(xml_params)
