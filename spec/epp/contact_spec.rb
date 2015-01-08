@@ -58,7 +58,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'successfully saves ident type' do
-        xml = { ident: { value: '37605030299', attrs: { type: 'birthday' } } }
+        xml = { ident: { value: '1990-22-12', attrs: { type: 'birthday' } } }
         epp_request(create_contact_xml(xml), :xml)
         expect(Contact.last.ident_type).to eq('birthday')
       end
