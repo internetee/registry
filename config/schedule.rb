@@ -6,7 +6,7 @@
 # rbenv support
 set :job_template, 
   "/bin/bash -l -c 'export PATH=\"$HOME/.rbenv/bin:$PATH\";eval\"$(rbenv init -)\"; :job'"
-set :path, Rails.root.join('../../current').to_s
+set :path, Whenever.path.sub('^\\','')
 job_type :runner, ":path/bin/rails r -e :environment ':task' :output"
 
 # cron output
