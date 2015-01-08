@@ -12,5 +12,6 @@ module Repp
     end
 
     mount Repp::DomainV1
+    mount Repp::ContactV1
   end
 end
