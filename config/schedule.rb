@@ -3,11 +3,13 @@
 # It's helpful, but not entirely necessary to understand cron before proceeding.
 # http://en.wikipedia.org/wiki/Cron
 
-# rbenv
+# rbenv support
 set :job_template, 
-  "/bin/bash -l -c 'export PATH=\"$HOME/.rbenv/bin:$PATH\"; eval \"$(rbenv init -)\"; :job'"
-job_type :runner, ":path/bin/rails runner -e :environment ':task' :output"
+  "/bin/bash -l -c 'export PATH=\"$HOME/.rbenv/bin:$PATH\";eval\"$(rbenv init -)\"; :job'"
+set :path, Rails.root.join('../../current'
+job_type :runner, ":path/bin/rails r -e :environment ':task' :output"
 
+# cron output
 set :output, 'log/cron.log'
 
 every 10.minutes do
