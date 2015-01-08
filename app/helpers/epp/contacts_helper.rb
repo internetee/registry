@@ -168,7 +168,7 @@ module Epp::ContactsHelper
   end
 
   def ident_type
-    result = parsed_frame.css('ident').first.try(:attributes).try(:[], 'flag').try(:value)
+    result = parsed_frame.css('ident').first.try(:attributes).try(:[], 'type').try(:value)
     return nil unless result
 
     Contact::IDENT_TYPES.any? { |type| return type if result.include?(type) }
