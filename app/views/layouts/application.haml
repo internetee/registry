@@ -22,7 +22,10 @@
             %span.icon-bar
           = link_to root_path, class: 'navbar-brand' do
             = APP_CONFIG['app_name']
-            - if Rails.env.development?
+            - if request.host == 'registry.gitlab.eu'
+              .text-center
+                %small{style: 'color: #0074B3;'} GITLAB STAGING
+            - elsif Rails.env.development?
               .text-center
                 %small{style: 'color: #D10000;'}= Rails.env.upcase
             - elsif Rails.env.staging?
