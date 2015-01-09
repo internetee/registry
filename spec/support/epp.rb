@@ -193,9 +193,11 @@ module Epp
         }
       ],
       registrant: { value: 'jd1234' },
-      contact: { value: 'sh8013', attrs: { type: 'admin' } },
-      contact: { value: 'sh8013', attrs: { type: 'tech' } },
-      contact: { value: 'sh801333', attrs: { type: 'tech' } },
+      _anonymus: [
+        { contact: { value: 'sh8013', attrs: { type: 'admin' } } },
+        { contact: { value: 'sh8013', attrs: { type: 'tech' } } },
+        { contact: { value: 'sh801333', attrs: { type: 'tech' } } }
+      ],
       authInfo: {
         pw: {
           value: '2fooBAR'
@@ -235,9 +237,11 @@ module Epp
         }
       ],
       registrant: { value: 'jd1234' },
-      contact: { value: 'sh8013', attrs: { type: 'admin' } },
-      contact: { value: 'sh8013', attrs: { type: 'tech' } },
-      contact: { value: 'sh801333', attrs: { type: 'tech' } },
+      _anonymus: [
+        { contact: { value: 'sh8013', attrs: { type: 'admin' } } },
+        { contact: { value: 'sh8013', attrs: { type: 'tech' } } },
+        { contact: { value: 'sh801333', attrs: { type: 'tech' } } }
+      ],
       authInfo: {
         pw: {
           value: '2fooBAR'
