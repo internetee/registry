@@ -39,7 +39,7 @@ module Epp::ContactsHelper
   def info_contact
     handle_errors(@contact) and return unless @contact
     handle_errors(@contact) and return unless rights?
-   @disclosure = ContactDisclosure.default_values.merge(@contact.disclosure.try(:as_hash) || {})
+    @disclosure = ContactDisclosure.default_values.merge(@contact.disclosure.try(:as_hash) || {})
     @disclosure_policy = @contact.disclosure.try(:attributes_with_flag)
     @owner = owner?(false)
     # need to reload contact eagerly
@@ -111,7 +111,7 @@ module Epp::ContactsHelper
 
   ## SHARED
 
-  def find_contact(eager_load=nil)
+  def find_contact(eager_load = nil)
     if eager_load
       contact = Contact.includes(address: :country).find_by(code: @ph[:id])
     else
