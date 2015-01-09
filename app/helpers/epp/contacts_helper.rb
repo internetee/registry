@@ -37,8 +37,8 @@ module Epp::ContactsHelper
   end
 
   def info_contact
-    handle_errors(@contact) and return unless @contact
-    handle_errors(@contact) and return unless rights?
+    handle_errors(@contact) and return unless @contact && rights?
+    # handle_errors(@contact) and return unless rights?
     @disclosure = ContactDisclosure.default_values.merge(@contact.disclosure.try(:as_hash) || {})
     @disclosure_policy = @contact.disclosure.try(:attributes_with_flag)
     @owner = owner?(false)
