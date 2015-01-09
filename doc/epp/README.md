@@ -6,7 +6,7 @@ Introduction
 
 Domains
 ---
-| Field name        | Required | Field description |
-| ----------------- |----------| ------------------|
-| domain:name       | true     | Domain name. Can contain unicode characters. |
-| domain:period     | false    | Registration period for domain.     |
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| ------------------|------------|
+| domain:name       | true     | - | Domain name. Can contain unicode characters. |
+| domain:period     | false    | unit |Registration period for domain. Must add up to 1 / 2 / 3 years.|
