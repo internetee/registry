@@ -13,7 +13,8 @@ module Epp::PollHelper
     end
 
     if @message.attached_obj_type == 'Keyrelay'
-      render 'epp/poll/poll_keyrelay'
+      @response = render_to_string('epp/poll/poll_keyrelay')
+      render xml: @response
     else
       render 'epp/poll/poll_req'
     end

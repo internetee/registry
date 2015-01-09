@@ -9,6 +9,7 @@ module Epp::Common
   included do
     protect_from_forgery with: :null_session
     before_action :validate_request, only: [:proxy]
+    after_action :log_to_epp_log
 
     helper_method :current_epp_user
   end
@@ -111,5 +112,17 @@ module Epp::Common
     validation_method = "validate_#{OBJECT_TYPES[params_hash['epp']['xmlns:ns2']]}_#{params[:command]}_request"
     return unless respond_to?(validation_method, true)
     handle_errors and return unless send(validation_method)
+  end
+
+  def log_to_epp_log
+    ApiLog::EppLog.create!({
+      request: params[:frame],
+      request_command: params[:command],
+      request_successful: epp_errors.empty?,
+      request_object: OBJECT_TYPES[params_hash['epp']['xmlns:ns2']],
+      response: @response,
+      api_user_name: current_epp_user.try(:to_s),
+      api_user_registrar: current_epp_user.try(:registrar).try(:to_s)
+    })
   end
 end
