@@ -41,7 +41,6 @@ User.where(
   username: 'user1',
   password: 'test1',
   email: 'user1@example.ee',
-  admin: true,
   identity_code: '37810013855',
   country: Country.where(name: 'Estonia').first
 ).first_or_create
@@ -50,9 +49,7 @@ User.where(
   username: 'user2',
   password: 'test2',
   email: 'user2@example.ee',
-  admin: false,
   identity_code: '37810010085',
-  registrar_id: registrar1.id,
   country: Country.where(name: 'Estonia').first
 ).first_or_create
 
@@ -60,9 +57,7 @@ User.where(
   username: 'user3',
   password: 'test3',
   email: 'user3@example.ee',
-  admin: false,
   identity_code: '37810010727',
-  registrar_id: registrar2.id,
   country: Country.where(name: 'Estonia').first
 ).first_or_create
 
