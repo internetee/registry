@@ -277,6 +277,30 @@ describe 'EPP Domain', epp: true do
         expect(response[:result_code]).to eq('1000')
         expect(domain.legal_documents.count).to eq(1)
 
+        log = ApiLog::EppLog.all
+
+        expect(log.length).to eq(4)
+        expect(log[0].request_command).to eq('hello')
+        expect(log[0].request_successful).to eq(true)
+
+        expect(log[1].request_command).to eq('login')
+        expect(log[1].request_successful).to eq(true)
+        expect(log[1].api_user_name).to eq('elkdata')
+        expect(log[1].api_user_registrar).to eq('Elkdata')
+
+        expect(log[2].request_command).to eq('transfer')
+        expect(log[2].request_object).to eq('domain')
+        expect(log[2].request_successful).to eq(true)
+        expect(log[2].api_user_name).to eq('elkdata')
+        expect(log[2].api_user_registrar).to eq('Elkdata')
+        expect(log[2].request).not_to be_blank
+        expect(log[2].response).not_to be_blank
+
+        expect(log[3].request_command).to eq('logout')
+        expect(log[3].request_successful).to eq(true)
+        expect(log[3].api_user_name).to eq('elkdata')
+        expect(log[3].api_user_registrar).to eq('Elkdata')
+
         response = epp_request(xml, :xml, :elkdata)
         expect(response[:result_code]).to eq('1000')
         expect(domain.legal_documents.count).to eq(1) # does not add another legal document

@@ -57,7 +57,7 @@ module Epp::Common
 
     @errors.uniq!
 
-    render '/epp/error'
+    render_epp_response '/epp/error'
   end
 
   def append_errors(obj)

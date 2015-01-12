@@ -8,14 +8,14 @@ module Epp::DomainsHelper
     if @domain.errors.any? || !@domain.save
       handle_errors(@domain)
     else
-      render '/epp/domains/create'
+      render_epp_response '/epp/domains/create'
     end
   end
 
   def check_domain
     names = parsed_frame.css('name').map(&:text)
     @domains = Epp::EppDomain.check_availability(names)
-    render '/epp/domains/check'
+    render_epp_response '/epp/domains/check'
   end
 
   def renew_domain
@@ -29,7 +29,7 @@ module Epp::DomainsHelper
       parsed_frame.css('period').first['unit']
     )
 
-    render '/epp/domains/renew'
+    render_epp_response '/epp/domains/renew'
   end
 
   def info_domain
@@ -37,7 +37,7 @@ module Epp::DomainsHelper
 
     handle_errors(@domain) and return unless @domain
 
-    render '/epp/domains/info'
+    render_epp_response '/epp/domains/info'
   end
 
   # rubocop:disable Metrics/CyclomaticComplexity
@@ -56,7 +56,7 @@ module Epp::DomainsHelper
     if @domain.errors.any? || !@domain.save
       handle_errors(@domain)
     else
-      render '/epp/domains/success'
+      render_epp_response '/epp/domains/success'
     end
   end
 
@@ -93,7 +93,7 @@ module Epp::DomainsHelper
       end
     end
 
-    render '/epp/domains/transfer'
+    render_epp_response '/epp/domains/transfer'
   end
 
   # rubocop: enable Metrics/MethodLength
@@ -111,7 +111,7 @@ module Epp::DomainsHelper
 
     handle_errors(@domain) and return unless @domain.destroy
 
-    render '/epp/domains/success'
+    render_epp_response '/epp/domains/success'
   end
   # rubocop:enbale Metrics/CyclomaticComplexity
 
