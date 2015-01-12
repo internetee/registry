@@ -32,7 +32,10 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = false
 
   config.before(:suite) do
-    DatabaseCleaner.clean_with(:truncation)
+    ActiveRecord::Base.establish_connection :api_log_test
+    DatabaseCleaner.strategy = :deletion
+    ActiveRecord::Base.establish_connection :test
+    DatabaseCleaner.strategy = :truncation
   end
 
   config.before(:each) do
@@ -48,10 +51,18 @@ RSpec.configure do |config|
   end
 
   config.before(:each) do
+    ActiveRecord::Base.establish_connection :api_log_test
+    DatabaseCleaner.start
+
+    ActiveRecord::Base.establish_connection :test
     DatabaseCleaner.start
   end
 
   config.after(:each) do
+    ActiveRecord::Base.establish_connection :api_log_test
+    DatabaseCleaner.clean
+
+    ActiveRecord::Base.establish_connection :test
     DatabaseCleaner.clean
   end
 
