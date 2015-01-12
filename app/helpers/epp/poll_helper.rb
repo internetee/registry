@@ -6,18 +6,16 @@ module Epp::PollHelper
 
   def req_poll
     @message = current_epp_user.queued_messages.last
-    render 'epp/poll/poll_no_messages' and return unless @message
+    render_epp_response 'epp/poll/poll_no_messages' and return unless @message
 
     if @message.attached_obj_type && @message.attached_obj_id
       @object = Object.const_get(@message.attached_obj_type).find(@message.attached_obj_id)
     end
 
     if @message.attached_obj_type == 'Keyrelay'
-      @response = render_to_string('epp/poll/poll_keyrelay')
-      render xml: @response
-      # render 'epp/poll/poll_keyrelay'
+      render_epp_response 'epp/poll/poll_keyrelay'
     else
-      render 'epp/poll/poll_req'
+      render_epp_response 'epp/poll/poll_req'
     end
   end
 
@@ -34,7 +32,7 @@ module Epp::PollHelper
     end
 
     handle_errors(@message) and return unless @message.dequeue
-    render 'epp/poll/poll_ack'
+    render_epp_response 'epp/poll/poll_ack'
   end
 
   private

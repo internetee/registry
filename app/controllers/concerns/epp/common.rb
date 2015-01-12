@@ -121,7 +121,6 @@ module Epp::Common
 
   def write_to_epp_log
     request_object = OBJECT_TYPES[params_hash['epp']['xmlns:ns2']] if params[:frame]
-
     ApiLog::EppLog.create!({
       request: params[:frame],
       request_command: params[:command],

@@ -65,6 +65,22 @@ describe 'EPP Session', epp: true do
         response = epp_plain_request(login_xml_cache, :xml)
         expect(response[:result_code]).to eq('2002')
         expect(response[:msg]).to match(/Already logged in. Use/)
+
+        log = ApiLog::EppLog.all
+
+        expect(log.length).to eq(3)
+        expect(log[0].request_command).to eq('hello')
+        expect(log[0].request_successful).to eq(true)
+
+        expect(log[1].request_command).to eq('login')
+        expect(log[1].request_successful).to eq(true)
+        expect(log[1].api_user_name).to eq('gitlab')
+        expect(log[1].api_user_registrar).to eq('Registrar OÜ')
+
+        expect(log[2].request_command).to eq('login')
+        expect(log[2].request_successful).to eq(false)
+        expect(log[2].api_user_name).to eq('gitlab')
+        expect(log[2].api_user_registrar).to eq('Registrar OÜ')
       end
     end
   end

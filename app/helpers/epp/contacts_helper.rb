@@ -2,7 +2,7 @@ module Epp::ContactsHelper
   def create_contact
     @contact = Contact.new(contact_and_address_attributes)
     @contact.registrar = current_epp_user.registrar
-    render '/epp/contacts/create' and return if stamp(@contact) && @contact.save
+    render_epp_response '/epp/contacts/create' and return if stamp(@contact) && @contact.save
     handle_errors(@contact)
   end
 
@@ -12,7 +12,7 @@ module Epp::ContactsHelper
     @contact = Contact.where(code: code).first
     # if update_rights? && stamp(@contact) && @contact.update_attributes(contact_and_address_attributes(:update))
     if owner? && stamp(@contact) && @contact.update_attributes(contact_and_address_attributes(:update))
-      render 'epp/contacts/update'
+      render_epp_response 'epp/contacts/update'
     else
       contact_exists?(code)
       handle_errors(@contact) and return
@@ -26,14 +26,14 @@ module Epp::ContactsHelper
     handle_errors(@contact) and return unless @contact
     handle_errors(@contact) and return unless @contact.destroy_and_clean
 
-    render '/epp/contacts/delete'
+    render_epp_response '/epp/contacts/delete'
   end
   # rubocop:enable Metrics/CyclomaticComplexity
 
   def check_contact
     ph = params_hash['epp']['command']['check']['check']
     @contacts = Contact.check_availability(ph[:id])
-    render '/epp/contacts/check'
+    render_epp_response '/epp/contacts/check'
   end
 
   def info_contact
@@ -42,7 +42,7 @@ module Epp::ContactsHelper
     @disclosure = ContactDisclosure.default_values.merge(@contact.disclosure.try(:as_hash) || {})
     @disclosure_policy = @contact.disclosure.try(:attributes_with_flag)
     @owner = owner?(false)
-    render 'epp/contacts/info'
+    render_epp_response 'epp/contacts/info'
   end
 
   def renew_contact

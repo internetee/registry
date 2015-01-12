@@ -39,6 +39,30 @@ describe 'EPP Keyrelay', epp: true do
       expect(response[:result_code]).to eq('1000')
 
       expect(zone.messages.queued.count).to eq(1)
+
+      log = ApiLog::EppLog.all
+
+      expect(log.length).to eq(4)
+      expect(log[0].request_command).to eq('hello')
+      expect(log[0].request_successful).to eq(true)
+
+      expect(log[1].request_command).to eq('login')
+      expect(log[1].request_successful).to eq(true)
+      expect(log[1].api_user_name).to eq('elkdata')
+      expect(log[1].api_user_registrar).to eq('Elkdata')
+
+      expect(log[2].request_command).to eq('keyrelay')
+      expect(log[2].request_object).to eq('domain')
+      expect(log[2].request_successful).to eq(true)
+      expect(log[2].api_user_name).to eq('elkdata')
+      expect(log[2].api_user_registrar).to eq('Elkdata')
+      expect(log[2].request).not_to be_blank
+      expect(log[2].response).not_to be_blank
+
+      expect(log[3].request_command).to eq('logout')
+      expect(log[3].request_successful).to eq(true)
+      expect(log[3].api_user_name).to eq('elkdata')
+      expect(log[3].api_user_registrar).to eq('Elkdata')
     end
 
     it 'returns an error when parameters are missing' do

@@ -10,7 +10,7 @@ module Epp::KeyrelayHelper
     handle_errors(@domain) and return unless @domain.authenticate(parsed_frame.css('pw').text)
     handle_errors(@domain) and return unless @domain.keyrelay(parsed_frame, current_epp_user.registrar)
 
-    render '/epp/shared/success'
+    render_epp_response '/epp/shared/success'
   end
 
   private
