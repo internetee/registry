@@ -9,7 +9,7 @@ class CreateApiLogTables < ActiveRecord::Migration
       t.text :response
       t.string :request_command
       t.string :request_object
-      t.string :request_successful
+      t.boolean :request_successful
       t.string :api_user_name
       t.string :api_user_registrar
 
@@ -21,7 +21,7 @@ class CreateApiLogTables < ActiveRecord::Migration
       t.text :response
       t.string :request_command
       t.string :request_object
-      t.string :request_successful
+      t.boolean :request_successful
       t.string :api_user_name
       t.string :api_user_registrar
 

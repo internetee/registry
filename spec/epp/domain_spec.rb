@@ -39,6 +39,30 @@ describe 'EPP Domain', epp: true do
       expect(response[:results][1][:value]).to eq('sh801333')
 
       expect(response[:clTRID]).to eq('ABC-12345')
+
+      log = ApiLog::EppLog.all
+
+      expect(log.length).to eq(4)
+      expect(log[0].request_command).to eq('hello')
+      expect(log[0].request_successful).to eq(true)
+
+      expect(log[1].request_command).to eq('login')
+      expect(log[1].request_successful).to eq(true)
+      expect(log[1].api_user_name).to eq('zone')
+      expect(log[1].api_user_registrar).to eq('Registrar OÜ')
+
+      expect(log[2].request_command).to eq('create')
+      expect(log[2].request_object).to eq('domain')
+      expect(log[2].request_successful).to eq(false)
+      expect(log[2].api_user_name).to eq('zone')
+      expect(log[2].api_user_registrar).to eq('Registrar OÜ')
+      expect(log[2].request).not_to be_blank
+      expect(log[2].response).not_to be_blank
+
+      expect(log[3].request_command).to eq('logout')
+      expect(log[3].request_successful).to eq(true)
+      expect(log[3].api_user_name).to eq('zone')
+      expect(log[3].api_user_registrar).to eq('Registrar OÜ')
     end
 
     it 'validates required parameters' do
