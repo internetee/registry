@@ -120,11 +120,13 @@ module Epp::Common
   end
 
   def write_to_epp_log
+    request_object = OBJECT_TYPES[params_hash['epp']['xmlns:ns2']] if params[:frame]
+
     ApiLog::EppLog.create!({
       request: params[:frame],
       request_command: params[:command],
       request_successful: epp_errors.empty?,
-      request_object: OBJECT_TYPES[params_hash['epp']['xmlns:ns2']],
+      request_object: request_object,
       response: @response,
       api_user_name: @epp_user.try(:to_s) || current_epp_user.try(:to_s),
       api_user_registrar: @epp_user.try(:registrar).try(:to_s) || current_epp_user.try(:registrar).try(:to_s)
