@@ -5,7 +5,7 @@ namespace :api_log do
       task :dump => [:environment] do
         filename = "#{Rails.root}/db/api_log_schema.rb"
         File.open(filename, 'w:utf-8') do |file|
-          ActiveRecord::Base.establish_connection(:api_log_development)
+          ActiveRecord::Base.establish_connection("api_log_#{Rails.env}".to_sym)
           ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, file)
         end
       end

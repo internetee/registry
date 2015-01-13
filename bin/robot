@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Build and run for automatic tests 
+# Build and run for automatic tests
 #
 
 # fail later
@@ -23,6 +23,7 @@ bundle install
 RAILS_ENV=test bundle exec rake db:drop
 RAILS_ENV=test bundle exec rake db:create
 RAILS_ENV=test bundle exec rake db:schema:load &> /dev/null
+RAILS_ENV=test bundle exec rake api_log:test:schema:reload &> /dev/null
 RAILS_ENV=test bundle exec rake db:seed
 RAILS_ENV=test bundle exec rake assets:precompile
 
