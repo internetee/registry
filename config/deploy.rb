@@ -11,23 +11,26 @@ require 'mina/rbenv'  # for rbenv support. (http://rbenv.org)
 #   repository   - Git repo to clone from. (needed by mina/git)
 #   branch       - Branch name to deploy. (needed by mina/git)
 
+# developers branch
 set :domain, 'registry-st'
 set :deploy_to, '$HOME/registry'
-set :repository, 'https://github.com/internetee/registry'
+set :repository, 'https://github.com/domify/registry' # dev repo
 set :branch, 'master'
 
 # staging
 task :st do
   set :domain, 'registry-st'
   set :deploy_to, '$HOME/registry'
-  set :branch, 'st'
+  set :repository, 'https://github.com/internetee/registry' # production repo
+  set :branch, 'master' # same as production
 end
 
 # production
 task :pr do
   set :domain, 'registry'
   set :deploy_to, '$HOME/registry'
-  set :branch, 'pr'
+  set :repository, 'https://github.com/internetee/registry' # production repo
+  set :branch, 'master' # same as staging
 end
 
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
@@ -107,8 +110,8 @@ task rollback: :environment do
     ls -Art "#{deploy_to}/releases" | sort | tail -n 2 | head -n 1 |
     xargs -I active ln -nfs "#{deploy_to}/releases/active" "#{deploy_to}/current"
   )
+  invoke :'whenever:update'
   to :launch do
-    invoke :'whenever:update'
     invoke :restart
   end
 end
