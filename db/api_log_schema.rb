@@ -24,18 +24,20 @@ ActiveRecord::Schema.define(version: 0) do
     t.boolean  "request_successful"
     t.string   "api_user_name"
     t.string   "api_user_registrar"
+    t.string   "ip"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "repp_logs", force: true do |t|
-    t.text     "request"
+    t.string   "request_path"
+    t.string   "request_method"
+    t.text     "request_params"
     t.text     "response"
-    t.string   "request_command"
-    t.string   "request_object"
-    t.boolean  "request_successful"
+    t.string   "response_code"
     t.string   "api_user_name"
     t.string   "api_user_registrar"
+    t.string   "ip"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

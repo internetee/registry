@@ -5,8 +5,8 @@ module Repp
     resource :domains do
       desc 'Return list of domains'
       get '/' do
-        domains = current_user.registrar.domains.page(params[:page])
-        {
+        domains = current_api_user.registrar.domains.page(params[:page])
+        @response = {
           domains: domains,
           total_pages: domains.total_pages
         }
