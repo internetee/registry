@@ -7,8 +7,6 @@
       = link_to(t('edit_statuses'), edit_admin_domain_path(@domain), class: 'btn btn-primary')
       = link_to(t(:'history'), admin_domain_version_path(@domain.id), method: :get, class: 'btn btn-primary')
 
-      /= link_to(t('generate_zonefile'), zonefile_admin_domain_path(@domain), class: 'btn btn-primary')
-
 %hr
 .row
   .col-md-6= render 'admin/domains/partials/general'

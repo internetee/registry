@@ -67,7 +67,6 @@ describe 'EPP Session', epp: true do
         expect(response[:msg]).to match(/Already logged in. Use/)
 
         log = ApiLog::EppLog.all
-
         expect(log.length).to eq(3)
         expect(log[0].request_command).to eq('hello')
         expect(log[0].request_successful).to eq(true)

@@ -4,6 +4,6 @@ class Epp::ErrorsController < ApplicationController
 
   def error
     epp_errors << { code: params[:code], msg: params[:msg] }
-    render '/epp/error'
+    render_epp_response '/epp/error'
   end
 end

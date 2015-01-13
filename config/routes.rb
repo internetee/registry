@@ -40,6 +40,8 @@ Rails.application.routes.draw do
 
     resource :dashboard
 
+    resources :epp_logs
+
     root 'domains#index'
   end
 

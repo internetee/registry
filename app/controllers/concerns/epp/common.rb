@@ -9,7 +9,6 @@ module Epp::Common
   included do
     protect_from_forgery with: :null_session
     before_action :validate_request, only: [:proxy]
-    after_action :write_to_epp_log
 
     helper_method :current_epp_user
   end
@@ -117,6 +116,7 @@ module Epp::Common
   def render_epp_response(*args)
     @response = render_to_string(*args)
     render xml: @response
+    write_to_epp_log
   end
 
   def write_to_epp_log

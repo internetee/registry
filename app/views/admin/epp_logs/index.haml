@@ -1,0 +1,28 @@
+.row
+  .col-sm-12
+    %h2.text-center-xs= t('epp_logs')
+%hr
+.row
+  .col-md-12
+    .table-responsive
+      %table.table.table-hover.table-bordered.table-condensed
+        %thead
+          %tr
+            %th{class: 'col-xs-2'}= t('request_command')
+            %th{class: 'col-xs-2'}= t('request_object')
+            %th{class: 'col-xs-2'}= t('request_successful')
+            %th{class: 'col-xs-2'}= t('api_user')
+            %th{class: 'col-xs-2'}= t('registrar')
+            %th{class: 'col-xs-2'}= t('created_at')
+        %tbody
+          - @epp_logs.each do |x|
+            %tr
+              %td= link_to(x.request_command, admin_epp_log_path(x))
+              %td= x.request_object
+              %td= x.request_successful
+              %td= x.api_user_name
+              %td= x.api_user_registrar
+              %td= l(x.created_at)
+.row
+  .col-md-12
+    = paginate @epp_logs

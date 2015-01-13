@@ -61,16 +61,9 @@ User.where(
   country: Country.where(name: 'Estonia').first
 ).first_or_create
 
-Setting.ds_algorithm = 2
-Setting.ds_data_allowed = true
-Setting.ds_data_with_key_allowed = true
-Setting.key_data_allowed = true
+Role.create(code: 'admin')
+Role.create(code: 'user')
+Role.create(code: 'customer_service')
 
-Setting.dnskeys_min_count = 0
-Setting.dnskeys_max_count = 9
-Setting.ns_min_count = 2
-Setting.ns_max_count = 11
-
-Setting.transfer_wait_time = 0
-
+User.update_all(role_id: Role.first.id)
 # Setting.whois_enabled = true only uncomment this if you wish whois

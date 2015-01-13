@@ -1,0 +1,55 @@
+.row
+  .col-sm-6
+    %h2.text-center-xs
+      = t('epp_log')
+  .col-sm-6
+    %h2.text-right.text-center-xs
+      = link_to(t('back'), :back, class: 'btn btn-primary')
+%hr
+.row
+  .col-md-12
+    .panel.panel-default
+      .panel-heading
+        %h3.panel-title= t('details')
+      .panel-body
+        %dl.dl-horizontal
+          %dt= t('request_command')
+          %dd= @epp_log.request_command
+
+          %dt= t('request_object')
+          %dd= @epp_log.request_object
+
+          %dt= t('request_successful')
+          %dd= @epp_log.request_successful
+
+          %dt= t('api_user')
+          %dd= @epp_log.api_user_name
+
+          %dt= t('registrar')
+          %dd= @epp_log.api_user_registrar
+
+          %dt= t('created_at')
+          %dd= @epp_log.created_at
+
+.row
+  .col-md-6
+    .panel.panel-default
+      .panel-heading
+        %h3.panel-title= t('request')
+      .panel-body
+        = preserve do
+          %pre
+            - formatted_req = Nokogiri::XML(@epp_log.request)
+            - if formatted_req.errors.none?
+              = formatted_req.root
+            - else
+              = @epp_log.request
+  .col-md-6
+    .panel.panel-default
+      .panel-heading
+        %h3.panel-title= t('response')
+      .panel-body
+        = preserve do
+          %pre
+            = @epp_log.response
+
