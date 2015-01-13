@@ -14,7 +14,7 @@ describe Dnskey do
 
     dk.generate_digest
     expect(dk.ds_digest).to eq('0B62D1BC64EFD1EE652FB102BDF1011BF514CCD9A1A0CFB7472AEA3B01F38C92')
-    expect(dk.ds_key_tag).to eq(30607)
+    expect(dk.ds_key_tag).to eq('30607')
   end
 
   it 'generates correct DS digest and DS key tag for emta.ee' do
@@ -37,6 +37,6 @@ describe Dnskey do
 
     dk.save
     expect(dk.ds_digest).to eq('D7045D3C2EF7332409A132D935C8E2834A2AAB769B35BC370FA68C9445398288')
-    expect(dk.ds_key_tag).to eq(31051)
+    expect(dk.ds_key_tag).to eq('31051')
   end
 end
