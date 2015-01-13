@@ -16,28 +16,28 @@ ActiveRecord::Schema.define(version: 0) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "epp_logs", force: true do |t|
+  create_table "epp_logs", force: :cascade do |t|
     t.text     "request"
     t.text     "response"
-    t.string   "request_command"
-    t.string   "request_object"
+    t.string   "request_command",    limit: 255
+    t.string   "request_object",     limit: 255
     t.boolean  "request_successful"
-    t.string   "api_user_name"
-    t.string   "api_user_registrar"
-    t.string   "ip"
+    t.string   "api_user_name",      limit: 255
+    t.string   "api_user_registrar", limit: 255
+    t.string   "ip",                 limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "repp_logs", force: true do |t|
-    t.string   "request_path"
-    t.string   "request_method"
+  create_table "repp_logs", force: :cascade do |t|
+    t.string   "request_path",       limit: 255
+    t.string   "request_method",     limit: 255
     t.text     "request_params"
     t.text     "response"
-    t.string   "response_code"
-    t.string   "api_user_name"
-    t.string   "api_user_registrar"
-    t.string   "ip"
+    t.string   "response_code",      limit: 255
+    t.string   "api_user_name",      limit: 255
+    t.string   "api_user_registrar", limit: 255
+    t.string   "ip",                 limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
