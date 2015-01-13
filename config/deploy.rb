@@ -95,8 +95,8 @@ task deploy: :environment do
     invoke :'bundle:install'
     invoke :'rails:db_migrate'
     invoke :'rails:assets_precompile'
-    invoke :'whenever:update'
     to :launch do
+      invoke :'whenever:update'
       invoke :restart
     end
   end
