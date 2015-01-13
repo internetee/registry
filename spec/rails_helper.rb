@@ -50,6 +50,10 @@ RSpec.configure do |config|
     DatabaseCleaner.strategy = :truncation
   end
 
+  config.before(:each, type: :request) do
+    DatabaseCleaner.strategy = :truncation
+  end
+
   config.before(:each) do
     ActiveRecord::Base.establish_connection :api_log_test
     DatabaseCleaner.start
