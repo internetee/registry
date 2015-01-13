@@ -1,0 +1,28 @@
+.row
+  .col-sm-12
+    %h2.text-center-xs= t('repp_logs')
+%hr
+.row
+  .col-md-12
+    .table-responsive
+      %table.table.table-hover.table-bordered.table-condensed
+        %thead
+          %tr
+            %th{class: 'col-xs-2'}= t('request_path')
+            %th{class: 'col-xs-2'}= t('request_method')
+            %th{class: 'col-xs-2'}= t('response_code')
+            %th{class: 'col-xs-2'}= t('api_user')
+            %th{class: 'col-xs-2'}= t('registrar')
+            %th{class: 'col-xs-2'}= t('created_at')
+        %tbody
+          - @repp_logs.each do |x|
+            %tr
+              %td= link_to(x.request_path, admin_repp_log_path(x))
+              %td= x.request_method
+              %td= x.response_code
+              %td= x.api_user_name
+              %td= x.api_user_registrar
+              %td= l(x.created_at)
+.row
+  .col-md-12
+    = paginate @repp_logs
