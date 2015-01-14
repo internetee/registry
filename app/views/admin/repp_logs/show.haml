@@ -43,7 +43,6 @@
         = preserve do
           %pre
             = JSON.pretty_generate(JSON.parse(@repp_log.request_params))
-            / = @repp_log.request_params
   .col-md-6
     .panel.panel-default
       .panel-heading
