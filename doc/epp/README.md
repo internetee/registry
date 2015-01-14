@@ -13,6 +13,7 @@ Introduction text here
 | ----------------- |----------| -----|----------------- |
 | [create](#top-domain-create)            | true     |      |                  |
 | [extension](#top-domain-create-extension)         | true     |      |                  |
+| clTRID         | false     |      | Client transaction id |
 
 ##### <a name="top-domain-create"></a>create
 | Field name        | Required | Attributes | Field description |
@@ -76,7 +77,7 @@ Introduction text here
 | ----------------- |----------| -----|----------------- |
 | [update](#top-domain-update)            | true     |      |                  |
 | [extension](#top-domain-update-extension)         | true if registrant is changing |      |                  |
-
+| clTRID         | false     |      | Client transaction id |
 
 ##### <a name="top-domain-update"></a>update
 | Field name        | Required | Attributes | Field description |
