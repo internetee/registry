@@ -158,3 +158,35 @@ Introduction text here
 | [eis:extdata](#eisextdata)     | true     | xmlns:eis (urn:ee:eis:xml:epp:eis-1.0) | Legal document |
 
 [EXAMPLE REQUEST AND RESPONSE](https://github.com/domify/registry/blob/master/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-deletes-domain)
+
+
+### Domain info
+
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| [info](#info)            | true     |      |                  |
+| [extension](#ext-legal-not-required)         | true |      |                  |
+| clTRID         | false     |      | Client transaction id |
+
+
+##### info
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| [domain:info](#domaininfo) | true | xmlns:domain (urn:ietf:params:xml:ns:domain-1.0) |  |
+
+
+##### domain:info
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| domain:name       | true     | hosts (all, TODO) | Domain name. Can contain unicode characters. |
+| [domain:authInfo](#domainauthinfo)       | false     |  | Domain password |
+
+##### domain:authinfo
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| domain:pw       | true     |  | Domain name. Can contain unicode characters. |
+
+##### <a name="ext-legal-not-required"></a>extension
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| [eis:extdata](#eisextdata)     | false     | xmlns:eis (urn:ee:eis:xml:epp:eis-1.0) | Legal document |
