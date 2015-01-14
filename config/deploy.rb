@@ -51,12 +51,8 @@ set :shared_paths, [
 # This task is the environment that is loaded for most commands, such as
 # `mina deploy` or `mina rake`.
 task :environment do
-  # If you're using rbenv, use this to load the rbenv environment.
-  # Be sure to commit your .rbenv-version to your repository.
+  # Be sure to commit your .ruby-version to your repository.
   invoke :'rbenv:load'
-
-  # For those using RVM, use this to load an RVM version@gemset.
-  # invoke :'rvm:use[ruby-1.9.3-p125@default]'
 end
 
 # Put any custom mkdir's in here for when `mina setup` is ran.
@@ -82,7 +78,14 @@ task setup: :environment do
   queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/export/zonefiles")
 
   queue! %(touch "#{deploy_to}/shared/config/database.yml")
-  queue %(echo '-----> Be sure to edit 'shared/config/database.yml'.')
+  deploy do
+    invoke :'git:clone'
+    invoke :'deploy:link_shared_paths'
+    to :launch do
+      invoke :'bundle:install'
+      queue %(echo '\n  NB! Please edit 'shared/config/database.yml'\n')
+    end
+  end
 end
 
 desc 'Deploys the current version to the server.'
