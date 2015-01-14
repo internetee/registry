@@ -40,7 +40,7 @@ Introduction text here
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
 | domain:hostName   | true     |  | Hostname of the nameserver |
-| domain:hostAddr   | true if nameserver is under domain zone     | ip (v4, v6) | ( 0 - n) |
+| domain:hostAddr   | true if nameserver is under domain zone     | ip (v4, v6) | (0 - n) |
 
 ##### <a name="top-domain-create-extension"></a>extension
 | Field name        | Required | Attributes | Field description |
@@ -106,7 +106,7 @@ Introduction text here
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
 | [domain:ns](#domainns) | false     | | Nameservers TODO: Get rid of hostObj |
-| domain:contact    | false     | type (tech, admin) | Contact reference ( 0 - n) |
+| domain:contact    | false     | type (tech, admin) | Contact reference (0 - n) |
 | domain:status    | false     | s (clientDeleteProhibited, clientHold, clientRenewProhibited, clientTransferProhibited, clientUpdateProhibited) | Status description (may be left empty) (0 - n)|
 
 ##### <a name="top-domain-update-extension"></a>extension
