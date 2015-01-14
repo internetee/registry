@@ -2,5 +2,5 @@
 
 ## Introduction
 Introduction text here  
-[Session related functions](session.md)
-[Domain related functions](domain.md)
+[[Session related functions](session.md)]  
+[[Domain related functions](domain.md)]
