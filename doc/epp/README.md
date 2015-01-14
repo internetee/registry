@@ -165,7 +165,7 @@ Introduction text here
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
 | [info](#info)            | true     |      |                  |
-| [extension](#ext-legal-not-required)         | true |      |                  |
+| [extension](#ext-legal-not-required)         | false |      |                  |
 | clTRID         | false     |      | Client transaction id |
 
 
@@ -184,7 +184,7 @@ Introduction text here
 ##### domain:authinfo
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
-| domain:pw       | true     |  | Domain password |
+| domain:pw       | true     | roid (String) TODO: find out why we need roid | Domain password |
 
 ##### <a name="ext-legal-not-required"></a>extension
 | Field name        | Required | Attributes | Field description |
@@ -199,11 +199,11 @@ Introduction text here
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
 | [renew](#renew)            | true     |      |                  |
-| [extension](#ext-legal-not-required)         | true |      |                  |
+| [extension](#ext-legal-not-required)         | false |      |                  |
 | clTRID         | false     |      | Client transaction id |
 
 
-##### info
+##### renew
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
 | [domain:renew](#domainrenew) | true | xmlns:domain (urn:ietf:params:xml:ns:domain-1.0) |  |
@@ -216,3 +216,22 @@ Introduction text here
 | domain:period | true     | unit (y, m, d) | Renew period, must add up to 1, 2 or 3 years. |
 
 [EXAMPLE REQUEST AND RESPONSE](https://github.com/domify/registry/blob/master/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-renews-a-domain)
+
+
+### Domain transfer
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| [transfer](#transfer) | true     | op (approve, query, reject)     |     |
+| [extension](#ext-legal-not-required)         | false |      |                  |
+| clTRID         | false     |      | Client transaction id |
+
+##### transfer
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| [domain:transfer](#domaintransfer) | true | xmlns:domain (urn:ietf:params:xml:ns:domain-1.0) |  |
+
+##### domain:transfer
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| domain:name       | true     |  | Domain name. Can contain unicode characters. |
+| [domain:authInfo](#domainauthinfo)       | true     |  | Domain password |
