@@ -45,7 +45,7 @@ Introduction text here
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
 | [update](#top-domain-update)            | true     |      |                  |
-| [extension](#top-domain-update-extension)         | false     |      |                  |
+| [extension](#top-domain-update-extension)         | true if registrant is changing |      |                  |
 
 
 ##### <a name="top-domain-update"></a>update
@@ -59,7 +59,7 @@ Introduction text here
 | domain:name       | true     |  | Domain name. Can contain unicode characters. |
 | [domain:chg](#domainchg) | false |  | Attributes to change |
 | [domain:add](#domainadd) | false |  | Objects to add |
-| domain:rem | false |  | Objects to remove |
+| [domain:rem](#domainrem) | false |  | Objects to remove |
 
 ##### domain:chg
 | Field name        | Required | Attributes | Field description |
@@ -69,7 +69,13 @@ Introduction text here
 ##### domain:add
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
-| domain:registrant | false     | | Contact reference to the registrant |
+| [domain:ns](#domainns) | false     | | Nameservers TODO: Get rid of hostObj |
+| domain:contact    | false     | type (tech, admin) | Contact reference |
+| domain:status    | false     | s (clientDeleteProhibited, clientHold, clientRenewProhibited, clientTransferProhibited, clientUpdateProhibited) | Status description (may be left empty) |
+
+##### domain:rem
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
 | [domain:ns](#domainns) | false     | | Nameservers TODO: Get rid of hostObj |
 | domain:contact    | false     | type (tech, admin) | Contact reference |
 | domain:status    | false     | s (clientDeleteProhibited, clientHold, clientRenewProhibited, clientTransferProhibited, clientUpdateProhibited) | Status description (may be left empty) |
@@ -77,9 +83,14 @@ Introduction text here
 ##### <a name="top-domain-update-extension"></a>extension
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
-| [secDNS:create](#secdnscreate)     | false     |  | DNSSEC details TODO: MAYBE THIS SHOULD BE secDNS:update ? |
-| [eis:extdata](#eisextdata)     | false     | xmlns:eis (urn:ee:eis:xml:epp:eis-1.0) | Legal document |
+| [secDNS:create](#secdnsupdate)     | false     |  | DNSSEC details TODO: MAYBE THIS SHOULD BE secDNS:update ? |
+| [eis:extdata](#eisextdata)     | true if registrant is changing     | xmlns:eis (urn:ee:eis:xml:epp:eis-1.0) | Legal document |
 
+##### <a name="secdnsupdate"></a>secDNS:create TODO: secDNS:update??
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| [secDNS:add](#secdnsadd)     | false     |  | Objects to add |
+| [secDNS:rem](#secdnsrem)     | false     |  | Objects to remove |
 
 
 ----
@@ -101,7 +112,6 @@ Introduction text here
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
 | [secDNS:keyData](#secdnskeydata)       | true     | xmlns:secDNS (urn:ietf:params:xml:ns:secDNS-1.1) | DNSSEC key data |
-
 
 ##### secDNS:keyData
 | Field name        | Required | Attributes | Field description |
