@@ -3,19 +3,52 @@
 ## Introduction
 Introduction text here
 
+## Basics
+
+### Login
+
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| [login](#login)            | true     |      |                  |
+| clTRID         | false     |      | Client transaction id |
+
+##### login
+| Field name        | Required | Field description |
+| ----------------- |----------|----------------- |
+| clID     | true     | Username |
+| pw     | true     | Password |
+| [options](#options)     | false     |  |
+| [svcs](#svcs)     | false     |  |
+
+
+##### options
+| Field name        | Required | Field description |
+| ----------------- |----------|----------------- |
+| version     | false     | 1.0 |
+| lang     | false     | en |
+
+##### svcs
+| Field name        | Required | Field description |
+| ----------------- |----------|----------------- |
+| objURI     | false     | Object URI that is going to be used in current connection. (0-n) |
+| [svcExtension](#svcExtension)     | false     |  |
+
+##### svcExtension
+| Field name        | Required | Field description |
+| ----------------- |----------|----------------- |
+| extURI     | false     | Extension URI that is going to be used in current connection. (0-n) |
 
 ## Domain related functions
-
 
 ### Domain create
 
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
-| [create](#top-domain-create)            | true     |      |                  |
+| [create](#create)            | true     |      |                  |
 | [extension](#top-domain-create-extension)         | true     |      |                  |
 | clTRID         | false     |      | Client transaction id |
 
-##### <a name="top-domain-create"></a>create
+##### create
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
 | [domain:create](#domaincreate)     | true     | xmlns:domain (urn:ietf:params:xml:ns:domain-1.0) |  |
