@@ -132,3 +132,29 @@ Introduction text here
 | [secDNS:keyData](#secdnskeydata)       | true     | xmlns:secDNS (urn:ietf:params:xml:ns:secDNS-1.1) | DNSSEC key data (0-n)|
 
 [EXAMPLE REQUEST AND RESPONSE](https://github.com/domify/registry/blob/master/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-updates-domain-and-adds-objects)
+
+
+### Domain delete
+
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| [delete](#delete)            | true     |      |                  |
+| [extension](#top-domain-delete-extension)         | true |      |                  |
+| clTRID         | false     |      | Client transaction id |
+
+##### delete
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| [domain:delete](#domaindelete) | true | xmlns:domain (urn:ietf:params:xml:ns:domain-1.0) |  |
+
+##### domain:delete
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| domain:name       | true     |  | Domain name. Can contain unicode characters. |
+
+##### <a name="top-domain-delete-extension"></a>extension
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| [eis:extdata](#eisextdata)     | true     | xmlns:eis (urn:ee:eis:xml:epp:eis-1.0) | Legal document |
+
+[EXAMPLE REQUEST AND RESPONSE](https://github.com/domify/registry/blob/master/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-deletes-domain)
