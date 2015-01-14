@@ -11,10 +11,10 @@ Introduction text here
 
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
-| [create](#create)            | true     |      |                  |
-| [extension](#extension)         | true     |      |                  |
+| [create](#topdomaincreate)            | true     |      |                  |
+| [extension](#topdomainextension)         | true     |      |                  |
 
-##### create
+##### <a name="topdomaincreate"></a>create
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
 | [domain:create](#domaincreate)     | true     | xmlns:domain (urn:ietf:params:xml:ns:domain-1.0) |                  |
@@ -30,7 +30,7 @@ Introduction text here
 | domain:contact    | false     | type (tech, admin) | Contact reference |
 | domain:contact    | false     | type (tech, admin) | Contact reference |
 
-##### extension
+##### <a name="topdomainextension"></a>extension
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
 | [secDNS:create](#secdnscreate)     | false     |  | DNSSEC details |
