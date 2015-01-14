@@ -184,7 +184,7 @@ Introduction text here
 ##### domain:authinfo
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
-| domain:pw       | true     |  | Domain name. Can contain unicode characters. |
+| domain:pw       | true     |  | Domain password |
 
 ##### <a name="ext-legal-not-required"></a>extension
 | Field name        | Required | Attributes | Field description |
