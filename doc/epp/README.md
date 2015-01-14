@@ -15,7 +15,7 @@ Introduction text here
 | ----------------- |----------| -----|----------------- |
 | domain:name       | true     |  | Domain name. Can contain unicode characters. |
 | domain:period     | false    | unit (y, m, d) | Registration period for domain. Must add up to 1 / 2 / 3 years. |
-| domain:ns         | true     | | Nameserver listing |
+| [domain:ns](#domainns) | true     | | Nameserver listing |
 | domain:registrant | true     | | Contact reference to the registrant |
 | domain:contact    | false     | type (tech, admin) | Contact reference |
 | domain:contact    | false     | type (tech, admin) | Contact reference |
