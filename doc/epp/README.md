@@ -19,12 +19,14 @@ Introduction text here
 | domain:registrant | true     | | Contact reference to the registrant |
 | domain:contact    | false     | type (tech, admin) | Contact reference |
 | domain:contact    | false     | type (tech, admin) | Contact reference |
+|||||
+
 
 
 ##### domain:ns
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
-| domain:hostAttr   | true     |  |  | |
+| domain:hostAttr   | true     |  |  |
 
 
 ##### domain:hostAttr
