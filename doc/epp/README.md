@@ -11,13 +11,13 @@ Introduction text here
 
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
-| [create](create)            | true     |      |                  |
-| [extension](extension)         | true     |      |                  |
+| [create](#create)            | true     |      |                  |
+| [extension](#extension)         | true     |      |                  |
 
 ##### create
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
-| [domain:create](domaincreate)     | true     | xmlns:domain (urn:ietf:params:xml:ns:domain-1.0) |                  |
+| [domain:create](#domaincreate)     | true     | xmlns:domain (urn:ietf:params:xml:ns:domain-1.0) |                  |
 
 
 ##### domain:create
