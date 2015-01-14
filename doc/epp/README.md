@@ -236,6 +236,7 @@ Introduction text here
 | domain:name       | true     |  | Domain name. Can contain unicode characters. |
 | [domain:authInfo](#domainauthinfo)       | true     |  | Domain password |
 
+[EXAMPLE REQUEST AND RESPONSE](https://github.com/domify/registry/blob/master/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-returns-domain-info)
 
 ### Domain check
 
@@ -254,3 +255,5 @@ Introduction text here
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
 | domain:name       | true     |  | Domain name. Can contain unicode characters. |
+
+[EXAMPLE REQUEST AND RESPONSE](https://github.com/domify/registry/blob/master/doc/epp-doc.md#epp-domain-with-valid-user-checks-a-domain)
