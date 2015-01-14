@@ -51,8 +51,28 @@ Introduction text here
 ##### <a name="top-domain-update"></a>update
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
-| domain:update | true | xmlns:domain (urn:ietf:params:xml:ns:domain-1.0) |  |
+| [domain:update](#domainupdate) | true | xmlns:domain (urn:ietf:params:xml:ns:domain-1.0) |  |
 
+##### domain:update
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| domain:name       | true     |  | Domain name. Can contain unicode characters. |
+| [domain:chg](#domainchg) | false |  | Attributes to change |
+| [domain:add](#domainadd) | false |  | Objects to add |
+| domain:rem | false |  | Objects to remove |
+
+##### domain:chg
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| domain:registrant | false     | | Contact reference to the registrant |
+
+##### domain:add
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| domain:registrant | false     | | Contact reference to the registrant |
+| [domain:ns](#domainns) | false     | | Nameservers TODO: Get rid of hostObj |
+| domain:contact    | false     | type (tech, admin) | Contact reference |
+| domain:status    | false     | s (clientDeleteProhibited, clientHold, clientRenewProhibited, clientTransferProhibited, clientUpdateProhibited) | Status description (may be left empty) |
 
 ##### <a name="top-domain-update-extension"></a>extension
 | Field name        | Required | Attributes | Field description |
@@ -67,7 +87,7 @@ Introduction text here
 ##### domain:ns
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
-| domain:hostAttr   | true     |  |  |
+| [domain:hostAttr](#domainhostattr)   | true     |  |  |
 
 
 ##### domain:hostAttr
