@@ -48,13 +48,13 @@ Introduction text here
 | [extension](#top-domain-update-extension)         | false     |      |                  |
 
 
-##### <a href="top-domain-update"></a>update
+##### <a name="top-domain-update"></a>update
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
 | domain:update | true | xmlns:domain (urn:ietf:params:xml:ns:domain-1.0) |  |
 
 
-##### <a href="top-domain-update-extension"></a>extension
+##### <a name="top-domain-update-extension"></a>extension
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
 | [secDNS:create](#secdnscreate)     | false     |  | DNSSEC details TODO: MAYBE THIS SHOULD BE secDNS:update ? |
