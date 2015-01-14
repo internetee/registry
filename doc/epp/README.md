@@ -9,6 +9,16 @@ Introduction text here
 
 ### Domain create
 
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| [create](create)            | true     |      |                  |
+| [extension](extension)         | true     |      |                  |
+
+##### create
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| [domain:create](domaincreate)     | true     | xmlns:domain (urn:ietf:params:xml:ns:domain-1.0) |                  |
+
 
 ##### domain:create
 | Field name        | Required | Attributes | Field description |
@@ -19,9 +29,15 @@ Introduction text here
 | domain:registrant | true     | | Contact reference to the registrant |
 | domain:contact    | false     | type (tech, admin) | Contact reference |
 | domain:contact    | false     | type (tech, admin) | Contact reference |
-|||||
+
+##### extension
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| [secDNS:create](#secdnscreate)     | false     |  | DNSSEC details |
+| [eis:extdata](#eisextdata)     | true     |  | Legal document |
 
 
+----
 
 ##### domain:ns
 | Field name        | Required | Attributes | Field description |
@@ -34,8 +50,6 @@ Introduction text here
 | ----------------- |----------| -----|----------------- |
 | domain:hostName   | true     |  | Hostname of the nameserver |
 | domain:hostAddr   | true if nameserver is under domain zone     | ip (v4, v6) |  |
-
-#### Extension
 
 ##### secDNS:create (not required)
 | Field name        | Required | Attributes | Field description |
@@ -51,8 +65,7 @@ Introduction text here
 | secDNS:alg | true     | | Allowed values: 3, 5, 6, 7, 8, 252, 253, 254, 255 |
 | secDNS:pubKey    | true     |  | Public key |
 
-
-##### eis:extdata (required)
+##### eis:extdata
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
 | eis:legalDocument     | true    | type (pdf) | Base64 encoded document |
