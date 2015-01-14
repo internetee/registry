@@ -235,3 +235,22 @@ Introduction text here
 | ----------------- |----------| -----|----------------- |
 | domain:name       | true     |  | Domain name. Can contain unicode characters. |
 | [domain:authInfo](#domainauthinfo)       | true     |  | Domain password |
+
+
+### Domain check
+
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| [check](#check) | true     |      |     |
+| [extension](#ext-legal-not-required)         | false |      |                  |
+| clTRID         | false     |      | Client transaction id |
+
+##### check
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| [domain:check](#domaincheck) | true | xmlns:domain (urn:ietf:params:xml:ns:domain-1.0) |  |
+
+##### domain:transfer
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| domain:name       | true     |  | Domain name. Can contain unicode characters. |
