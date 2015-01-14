@@ -56,7 +56,7 @@ Introduction text here
 ##### secDNS:create
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
-| [secDNS:keyData](secdnskeydata)       | true     |  | DNSSEC key data |
+| [secDNS:keyData](#secdnskeydata)       | true     |  | DNSSEC key data |
 
 
 ##### secDNS:keyData
