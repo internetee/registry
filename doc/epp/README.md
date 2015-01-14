@@ -5,7 +5,7 @@ Introduction text here
 
 ## Basics
 
-### Login and logout
+### Login request
 
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
@@ -37,6 +37,17 @@ Introduction text here
 | Field name        | Required | Field description |
 | ----------------- |----------|----------------- |
 | extURI     | false     | Extension URI that is going to be used in current connection. (0-n) |
+
+[EXAMPLE REQUEST AND RESPONSE](https://github.com/domify/registry/blob/master/doc/epp-doc.md#epp-session-when-connected-with-valid-user-logs-in-epp-user)
+
+### Logout request
+
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| logout            | true     |      |                  |
+| clTRID         | false     |      | Client transaction id |
+
+[EXAMPLE REQUEST AND RESPONSE](https://github.com/domify/registry/blob/master/doc/epp-doc.md#epp-session-when-connected-with-valid-user-logs-out-epp-user)
 
 ## Domain related functions
 
