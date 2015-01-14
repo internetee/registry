@@ -29,7 +29,7 @@ Introduction text here
 | [domain:ns](#domainns) | true     | | Nameserver listing (2-11) |
 | domain:registrant | true     | | Contact reference to the registrant |
 | domain:contact    | true if registrant is a juridical person     | type (admin) | Contact reference |
-| domain:contact    | false     | type (tech, admin) | Contact reference (0 - n) |
+| domain:contact    | false     | type (tech, admin) | Contact reference (0-n) |
 
 ##### domain:ns
 | Field name        | Required | Attributes | Field description |
@@ -40,7 +40,7 @@ Introduction text here
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
 | domain:hostName   | true     |  | Hostname of the nameserver |
-| domain:hostAddr   | true if nameserver is under domain zone     | ip (v4, v6) | (0 - n) |
+| domain:hostAddr   | true if nameserver is under domain zone     | ip (v4, v6) | (0-n) |
 
 ##### <a name="top-domain-create-extension"></a>extension
 | Field name        | Required | Attributes | Field description |
@@ -99,15 +99,15 @@ Introduction text here
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
 | [domain:ns](#domainns) | false     | | Nameservers TODO: Get rid of hostObj |
-| domain:contact    | false     | type (tech, admin) | Contact reference (0 - n) |
-| domain:status    | false     | s (clientDeleteProhibited, clientHold, clientRenewProhibited, clientTransferProhibited, clientUpdateProhibited) | Status description (may be left empty) (0 - n)|
+| domain:contact    | false     | type (tech, admin) | Contact reference (0-n) |
+| domain:status    | false     | s (clientDeleteProhibited, clientHold, clientRenewProhibited, clientTransferProhibited, clientUpdateProhibited) | Status description (may be left empty) (0-n)|
 
 ##### domain:rem
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
 | [domain:ns](#domainns) | false     | | Nameservers TODO: Get rid of hostObj |
-| domain:contact    | false     | type (tech, admin) | Contact reference (0 - n) |
-| domain:status    | false     | s (clientDeleteProhibited, clientHold, clientRenewProhibited, clientTransferProhibited, clientUpdateProhibited) | Status description (may be left empty) (0 - n)|
+| domain:contact    | false     | type (tech, admin) | Contact reference (0-n) |
+| domain:status    | false     | s (clientDeleteProhibited, clientHold, clientRenewProhibited, clientTransferProhibited, clientUpdateProhibited) | Status description (may be left empty) (0-n)|
 
 ##### <a name="top-domain-update-extension"></a>extension
 | Field name        | Required | Attributes | Field description |
@@ -124,11 +124,11 @@ Introduction text here
 ##### secDNS:add
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
-| [secDNS:keyData](#secdnskeydata)       | true     | xmlns:secDNS (urn:ietf:params:xml:ns:secDNS-1.1) | DNSSEC key data (0 - n)|
+| [secDNS:keyData](#secdnskeydata)       | true     | xmlns:secDNS (urn:ietf:params:xml:ns:secDNS-1.1) | DNSSEC key data (0-n)|
 
 ##### secDNS:rem
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
-| [secDNS:keyData](#secdnskeydata)       | true     | xmlns:secDNS (urn:ietf:params:xml:ns:secDNS-1.1) | DNSSEC key data (0 - n)|
+| [secDNS:keyData](#secdnskeydata)       | true     | xmlns:secDNS (urn:ietf:params:xml:ns:secDNS-1.1) | DNSSEC key data (0-n)|
 
 [EXAMPLE REQUEST AND RESPONSE](https://github.com/domify/registry/blob/master/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-updates-domain-and-adds-objects)
