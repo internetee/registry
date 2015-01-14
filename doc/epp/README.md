@@ -27,6 +27,7 @@ Introduction text here
 | domain:period     | false    | unit (y, m, d) | Registration period for domain. Must add up to 1 / 2 / 3 years. |
 | [domain:ns](#domainns) | true     | | Nameserver listing |
 | domain:registrant | true     | | Contact reference to the registrant |
+| domain:contact    | true if registrant is juridical person     | type (admin) | Contact reference |
 | domain:contact    | false     | type (tech, admin) | Contact reference |
 | domain:contact    | false     | type (tech, admin) | Contact reference |
 
