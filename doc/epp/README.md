@@ -34,7 +34,7 @@ Introduction text here
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
 | [secDNS:create](#secdnscreate)     | false     |  | DNSSEC details |
-| [eis:extdata](#eisextdata)     | true     |  | Legal document |
+| [eis:extdata](#eisextdata)     | true     | xmlns:eis (urn:ee:eis:xml:epp:eis-1.0) | Legal document |
 
 [EXAMPLE REQUEST AND RESPONSE](https://github.com/domify/registry/blob/master/doc/epp-doc.md#epp-domain-with-valid-user-with-citizen-as-an-owner-creates-a-domain)
 
@@ -56,7 +56,7 @@ Introduction text here
 ##### secDNS:create
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
-| [secDNS:keyData](#secdnskeydata)       | true     |  | DNSSEC key data |
+| [secDNS:keyData](#secdnskeydata)       | true     | xmlns:secDNS (urn:ietf:params:xml:ns:secDNS-1.1) | DNSSEC key data |
 
 
 ##### secDNS:keyData
