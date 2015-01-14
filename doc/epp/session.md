@@ -43,5 +43,5 @@ Here are functions like login, logout, hello, poll
 | logout            | true     |      |                  |
 | clTRID         | false     |      | Client transaction id |
 
-[EXAMPLE REQUEST AND RESPONSE](https://github.com/domify/registry/blob/master/doc/epp-doc.md#epp-session-when-connected-with-valid-user-logs-out-epp-user)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-session-when-connected-with-valid-user-logs-out-epp-user)
 

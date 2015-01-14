@@ -59,7 +59,7 @@
 | ----------------- |----------| -----|----------------- |
 | eis:legalDocument     | true    | type (pdf) | Base64 encoded document |
 
-[EXAMPLE REQUEST AND RESPONSE](https://github.com/domify/registry/blob/master/doc/epp-doc.md#epp-domain-with-valid-user-with-citizen-as-an-owner-creates-a-domain)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-with-citizen-as-an-owner-creates-a-domain)
 
 
 ### Domain update
@@ -124,7 +124,7 @@
 | ----------------- |----------| -----|----------------- |
 | [secDNS:keyData](#secdnskeydata)       | true     | xmlns:secDNS (urn:ietf:params:xml:ns:secDNS-1.1) | DNSSEC key data (0-n)|
 
-[EXAMPLE REQUEST AND RESPONSE](https://github.com/domify/registry/blob/master/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-updates-domain-and-adds-objects)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-updates-domain-and-adds-objects)
 
 
 ### Domain delete
@@ -150,7 +150,7 @@
 | ----------------- |----------| -----|----------------- |
 | [eis:extdata](#eisextdata)     | true     | xmlns:eis (urn:ee:eis:xml:epp:eis-1.0) | Legal document |
 
-[EXAMPLE REQUEST AND RESPONSE](https://github.com/domify/registry/blob/master/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-deletes-domain)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-deletes-domain)
 
 
 ### Domain info
@@ -184,7 +184,7 @@
 | ----------------- |----------| -----|----------------- |
 | [eis:extdata](#eisextdata)     | false     | xmlns:eis (urn:ee:eis:xml:epp:eis-1.0) | Legal document |
 
-[EXAMPLE REQUEST AND RESPONSE](https://github.com/domify/registry/blob/master/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-returns-domain-info)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-returns-domain-info)
 
 
 ### Domain renew
@@ -208,7 +208,7 @@
 | domain:curExpDate | true     |  | Current expiry date (ISO8601 format) |
 | domain:period | true     | unit (y, m, d) | Renew period, must add up to 1, 2 or 3 years. |
 
-[EXAMPLE REQUEST AND RESPONSE](https://github.com/domify/registry/blob/master/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-renews-a-domain)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-renews-a-domain)
 
 
 ### Domain transfer
@@ -229,7 +229,7 @@
 | domain:name       | true     |  | Domain name. Can contain unicode characters. |
 | [domain:authInfo](#domainauthinfo)       | true     |  | Domain password |
 
-[EXAMPLE REQUEST AND RESPONSE](https://github.com/domify/registry/blob/master/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-returns-domain-info)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-returns-domain-info)
 
 ### Domain check
 
@@ -249,4 +249,4 @@
 | ----------------- |----------| -----|----------------- |
 | domain:name       | true     |  | Domain name. Can contain unicode characters. |
 
-[EXAMPLE REQUEST AND RESPONSE](https://github.com/domify/registry/blob/master/doc/epp-doc.md#epp-domain-with-valid-user-checks-a-domain)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-checks-a-domain)
