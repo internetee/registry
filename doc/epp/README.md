@@ -92,6 +92,17 @@ Introduction text here
 | [secDNS:add](#secdnsadd)     | false     |  | Objects to add |
 | [secDNS:rem](#secdnsrem)     | false     |  | Objects to remove |
 
+##### secDNS:add
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| [secDNS:keyData](#secdnskeydata)       | true     | xmlns:secDNS (urn:ietf:params:xml:ns:secDNS-1.1) | DNSSEC key data |
+| [secDNS:keyData](#secdnskeydata)       | true     | xmlns:secDNS (urn:ietf:params:xml:ns:secDNS-1.1) | DNSSEC key data |
+
+##### secDNS:rem
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| [secDNS:keyData](#secdnskeydata)       | true     | xmlns:secDNS (urn:ietf:params:xml:ns:secDNS-1.1) | DNSSEC key data |
+| [secDNS:keyData](#secdnskeydata)       | true     | xmlns:secDNS (urn:ietf:params:xml:ns:secDNS-1.1) | DNSSEC key data |
 
 ----
 
