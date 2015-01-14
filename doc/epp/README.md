@@ -36,7 +36,7 @@ Introduction text here
 | [secDNS:create](#secdnscreate)     | false     |  | DNSSEC details |
 | [eis:extdata](#eisextdata)     | true     |  | Legal document |
 
-[EXAMPLE REQUEST](https://github.com/domify/registry/blob/master/doc/epp-doc.md#epp-domain-with-valid-user-with-citizen-as-an-owner-creates-a-domain)
+[EXAMPLE REQUEST AND RESPONSE](https://github.com/domify/registry/blob/master/doc/epp-doc.md#epp-domain-with-valid-user-with-citizen-as-an-owner-creates-a-domain)
 
 ----
 
@@ -51,11 +51,12 @@ Introduction text here
 | ----------------- |----------| -----|----------------- |
 | domain:hostName   | true     |  | Hostname of the nameserver |
 | domain:hostAddr   | true if nameserver is under domain zone     | ip (v4, v6) |  |
+| domain:hostAddr   | true if nameserver is under domain zone     | ip (v4, v6) |  |
 
 ##### secDNS:create
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
-| secDNS:keyData       | true     |  | DNSSEC key data |
+| [secDNS:keyData](secdnskeydata)       | true     |  | DNSSEC key data |
 
 
 ##### secDNS:keyData
