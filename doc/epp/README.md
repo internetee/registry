@@ -190,3 +190,5 @@ Introduction text here
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
 | [eis:extdata](#eisextdata)     | false     | xmlns:eis (urn:ee:eis:xml:epp:eis-1.0) | Legal document |
+
+[EXAMPLE REQUEST AND RESPONSE](https://github.com/domify/registry/blob/master/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-returns-domain-info)
