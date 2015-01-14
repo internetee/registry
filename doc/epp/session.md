@@ -34,7 +34,7 @@ Here are functions like login, logout, hello, poll
 | ----------------- |----------|----------------- |
 | extURI     | false     | Extension URI that is going to be used in current connection. (0-n) |
 
-[EXAMPLE REQUEST AND RESPONSE](/blob/master/doc/epp-doc.md#epp-session-when-connected-with-valid-user-logs-in-epp-user)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-session-when-connected-with-valid-user-logs-in-epp-user)
 
 ### Logout request
 
