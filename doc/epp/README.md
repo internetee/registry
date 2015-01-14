@@ -5,7 +5,7 @@ Introduction text here
 
 ## Basics
 
-### Login
+### Login and logout
 
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
@@ -31,7 +31,7 @@ Introduction text here
 | Field name        | Required | Field description |
 | ----------------- |----------|----------------- |
 | objURI     | false     | Object URI that is going to be used in current connection. (0-n) |
-| [svcExtension](#svcExtension)     | false     |  |
+| [svcExtension](#svcextension)     | false     |  |
 
 ##### svcExtension
 | Field name        | Required | Field description |
