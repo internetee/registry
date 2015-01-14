@@ -192,3 +192,27 @@ Introduction text here
 | [eis:extdata](#eisextdata)     | false     | xmlns:eis (urn:ee:eis:xml:epp:eis-1.0) | Legal document |
 
 [EXAMPLE REQUEST AND RESPONSE](https://github.com/domify/registry/blob/master/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-returns-domain-info)
+
+
+### Domain renew
+
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| [renew](#renew)            | true     |      |                  |
+| [extension](#ext-legal-not-required)         | true |      |                  |
+| clTRID         | false     |      | Client transaction id |
+
+
+##### info
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| [domain:renew](#domainrenew) | true | xmlns:domain (urn:ietf:params:xml:ns:domain-1.0) |  |
+
+##### domain:renew
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| domain:name       | true     |  | Domain name. Can contain unicode characters. |
+| domain:curExpDate | true     |  | Current expiry date (ISO8601 format) |
+| domain:period | true     | unit (y, m, d) | Renew period, must add up to 1, 2 or 3 years. |
+
+[EXAMPLE REQUEST AND RESPONSE](https://github.com/domify/registry/blob/master/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-renews-a-domain)
