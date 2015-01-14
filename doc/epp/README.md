@@ -31,11 +31,41 @@ Introduction text here
 | domain:contact    | false     | type (tech, admin) | Contact reference |
 | domain:contact    | false     | type (tech, admin) | Contact reference |
 
+##### domain:ns
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| [domain:hostAttr](#domainhostattr)   | true     |  |  |
+
+##### domain:hostAttr
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| domain:hostName   | true     |  | Hostname of the nameserver |
+| domain:hostAddr   | true if nameserver is under domain zone     | ip (v4, v6) |  |
+| domain:hostAddr   | true if nameserver is under domain zone     | ip (v4, v6) |  |
+
 ##### <a name="top-domain-create-extension"></a>extension
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
 | [secDNS:create](#secdnscreate)     | false     |  | DNSSEC details |
 | [eis:extdata](#eisextdata)     | true     | xmlns:eis (urn:ee:eis:xml:epp:eis-1.0) | Legal document |
+
+##### secDNS:create
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| [secDNS:keyData](#secdnskeydata)       | true     | xmlns:secDNS (urn:ietf:params:xml:ns:secDNS-1.1) | DNSSEC key data |
+
+##### secDNS:keyData
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| secDNS:flags     | true    |  | Allowed values: 0, 256, 257 |
+| secDNS:protocol  | true     | | Allowed values: 3 |
+| secDNS:alg | true     | | Allowed values: 3, 5, 6, 7, 8, 252, 253, 254, 255 |
+| secDNS:pubKey    | true     |  | Public key |
+
+##### eis:extdata
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| eis:legalDocument     | true    | type (pdf) | Base64 encoded document |
 
 [EXAMPLE REQUEST AND RESPONSE](https://github.com/domify/registry/blob/master/doc/epp-doc.md#epp-domain-with-valid-user-with-citizen-as-an-owner-creates-a-domain)
 
@@ -104,35 +134,4 @@ Introduction text here
 | [secDNS:keyData](#secdnskeydata)       | true     | xmlns:secDNS (urn:ietf:params:xml:ns:secDNS-1.1) | DNSSEC key data |
 | [secDNS:keyData](#secdnskeydata)       | true     | xmlns:secDNS (urn:ietf:params:xml:ns:secDNS-1.1) | DNSSEC key data |
 
-----
-
-##### domain:ns
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [domain:hostAttr](#domainhostattr)   | true     |  |  |
-
-
-##### domain:hostAttr
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| domain:hostName   | true     |  | Hostname of the nameserver |
-| domain:hostAddr   | true if nameserver is under domain zone     | ip (v4, v6) |  |
-| domain:hostAddr   | true if nameserver is under domain zone     | ip (v4, v6) |  |
-
-##### secDNS:create
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [secDNS:keyData](#secdnskeydata)       | true     | xmlns:secDNS (urn:ietf:params:xml:ns:secDNS-1.1) | DNSSEC key data |
-
-##### secDNS:keyData
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| secDNS:flags     | true    |  | Allowed values: 0, 256, 257 |
-| secDNS:protocol  | true     | | Allowed values: 3 |
-| secDNS:alg | true     | | Allowed values: 3, 5, 6, 7, 8, 252, 253, 254, 255 |
-| secDNS:pubKey    | true     |  | Public key |
-
-##### eis:extdata
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| eis:legalDocument     | true    | type (pdf) | Base64 encoded document |
+[EXAMPLE REQUEST AND RESPONSE](https://github.com/domify/registry/blob/master/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-updates-domain-and-adds-objects)
