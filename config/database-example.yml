@@ -6,30 +6,26 @@ default: &default
   username: registry
   password: registry_pwd
 
+
 development:
   <<: *default
   database: registry_development
+
+development:
+  <<: *default
+  database: registry_whois_development
+
 
 test:
   <<: *default
   database: registry_test
 
+
 production:
   <<: *default
   database: registry_production
 
-development_private_whois:
+production:
   <<: *default
-  database: whois_private
+  database: registry_whois_production
 
-development_private_whois:
-  <<: *default
-  database: whois_public
-
-production_public_whois:
-  <<: *default
-  database: production_whois_public
-
-production_private_whois:
-  <<: *default
-  database: production_whois_private

@@ -30,7 +30,7 @@ Manual demo install and database setup:
     cd /home/registry
     git clone git@github.com:internetee/registry.git demo-registry
     cd demo-registry
-    rbenv local 2.1.2
+    rbenv local 2.2.0
     bundle
     cp config/database-example.yml config/database.yml # and edit it
     cp config/secrets-example.yml config/secrets.yml # and edit it, generate key with 'rake secret'
@@ -48,7 +48,7 @@ Production install (database schema should be loaded and seeds should be present
     # at your local machine
     git clone git@github.com:internetee/registry.git
     cd registry
-    rbenv local 2.1.2 # more info about rbenv at debian doc
+    rbenv local 2.2.0 # more info about rbenv at debian doc
     gem install mina
     mina pr setup # one time, only creates missing directories
     ssh registry
@@ -108,7 +108,7 @@ For Apache, registry admin goes to port 443 in production, /etc/apache2/sites-en
   DocumentRoot /home/registry/registry/current/public
   
 	# Possible values include: debug, info, notice, warn, error, crit,
-  LogLevel info ssl:warn
+  LogLevel info
   ErrorLog /var/log/apache2/registry.error.log
   CustomLog /var/log/apache2/registry.access.log combined
   
