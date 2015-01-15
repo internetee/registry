@@ -11,21 +11,36 @@ development:
   <<: *default
   database: registry_development
 
-development:
+whois_development:
   <<: *default
   database: registry_whois_development
+
+api_log_development:
+  <<: *default
+  database: api_log_development
 
 
 test:
   <<: *default
   database: registry_test
 
+whois_test:
+  <<: *default
+  database: registry_whois_test
+
+api_log_test:
+  <<: *default
+  database: api_log_test
+
 
 production:
   <<: *default
   database: registry_production
 
-production:
+whois_production:
   <<: *default
   database: registry_whois_production
 
+api_log_production:
+  <<: *default
+  database: api_log_production
