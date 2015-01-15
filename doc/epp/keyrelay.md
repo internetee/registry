@@ -3,7 +3,7 @@
 ### Keyrelay
 
 | Field name        | Required  | Field description |
-| ----------------- |--------------------------- |
+| ----------------- |--------------------------- | -- |
 | [ext:keyrelay](#extkeyrelay)            | true     |                  |
 | ext:clTRID         | false   | Client transaction id |
 
