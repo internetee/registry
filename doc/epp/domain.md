@@ -66,11 +66,11 @@
 
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
-| [update](#top-domain-update)            | true     |      |                  |
+| [update](#update)            | true     |      |                  |
 | [extension](#top-domain-update-extension)         | true if registrant is changing |      |                  |
 | clTRID         | false     |      | Client transaction id |
 
-##### <a name="top-domain-update"></a>update
+##### update
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
 | [domain:update](#domainupdate) | true | xmlns:domain (urn:ietf:params:xml:ns:domain-1.0) |  |
