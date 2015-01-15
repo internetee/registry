@@ -150,6 +150,7 @@ For Apache, epp goes to port 700, /etc/apache2/sites-enabled/epp.conf short exam
     EPPCommandRoot          /proxy/command
     EPPSessionRoot          /proxy/session
     EPPErrorRoot            /proxy/error
+    EPPRawFrame             raw_frame
     
     ProxyPass /proxy/ http://localhost:8080/epp/
 
