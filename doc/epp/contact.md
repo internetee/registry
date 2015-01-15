@@ -38,7 +38,7 @@
 | contact:city      | true     |      | City name |
 | contact:cc      | true     |      | Country code |
 
-##### <a name="ext-0"></a>extension
+##### <a name="ext-0"></a>extension !!! NOT IMPLEMENTED YET
 
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
