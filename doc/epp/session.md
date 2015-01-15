@@ -45,3 +45,17 @@ Here are functions like login, logout, hello, poll
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-session-when-connected-with-valid-user-logs-out-epp-user)
 
+### Poll request
+
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| [poll](#poll)            | true     |      |                  |
+| clTRID         | false     |      | Client transaction id |
+
+##### poll
+
+| Field name        | Required | Attributes | Field description |
+| ----------------- |----------| -----|----------------- |
+| poll            | true     | op (req, ack)     | Rec for receiving messages, ack for dequeuing |
+
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-poll-with-valid-user-queues-and-dequeues-messages)

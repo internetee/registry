@@ -39,3 +39,5 @@
 | ----------------- |----------|----------------- |
 | ext:relative         | true if ext:absolute is not specified     | Relative expiry duration (ISO8601) |
 | ext:absolute         | true if ext:relative is not specified     | Absolute expiry date (ISO8601) |
+
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-keyrelay-with-valid-user-makes-a-keyrelay-request)
