@@ -44,7 +44,7 @@
           %pre
             - formatted_req = Nokogiri::XML(@epp_log.request)
             - if formatted_req.errors.none?
-              = formatted_req.root
+              = formatted_req
             - else
               = @epp_log.request
   .col-md-6
