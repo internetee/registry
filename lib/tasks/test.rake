@@ -1,4 +1,4 @@
-if Rails.env.test? || Rails.env.development?
+begin  
   require 'rspec/core/rake_task'
   require 'open3'
 
@@ -40,4 +40,6 @@ if Rails.env.test? || Rails.env.development?
       `kill #{pid}`
     end
   end
+rescue LoadError
+  # rspec gem not loaded, probably we are in production machine
 end
