@@ -3,4 +3,5 @@
 ## Introduction
 Introduction text here  
 [[Session related functions](session.md)]  
-[[Domain related functions](domain.md)]
+[[Domain related functions](domain.md)]  
+[[Keyrelay related functions](keyrelay.md)]
