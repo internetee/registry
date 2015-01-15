@@ -3,6 +3,6 @@
 ## Introduction
 Introduction text here  
 [[Session related functions](session.md)]  
-[[Contact related functions](domain.md)]  
+[[Contact related functions](contact.md)]  
 [[Domain related functions](domain.md)]  
 [[Keyrelay related functions](keyrelay.md)]
