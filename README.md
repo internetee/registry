@@ -112,11 +112,6 @@ For Apache, registry admin goes to port 443 in production, /etc/apache2/sites-en
   ErrorLog /var/log/apache2/registry.error.log
   CustomLog /var/log/apache2/registry.access.log combined
   
-  <Directory /home/registry/registry/current/public>
-    Require all granted
-    Options -MultiViews
-  </Directory>
-
   SSLEngine On
   SSLCertificateFile    /etc/ssl/certs/your.crt
   SSLCertificateKeyFile /etc/ssl/private/your.key
