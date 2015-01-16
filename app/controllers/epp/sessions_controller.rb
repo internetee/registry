@@ -2,8 +2,6 @@ class Epp::SessionsController < ApplicationController
   include Epp::Common
   layout false
 
-  private
-
   def hello
     render_epp_response('greeting')
   end

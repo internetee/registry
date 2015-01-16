@@ -52,7 +52,7 @@ describe 'EPP Keyrelay', epp: true do
       expect(log[1].api_user_registrar).to eq('Elkdata')
 
       expect(log[2].request_command).to eq('keyrelay')
-      expect(log[2].request_object).to eq('domain')
+      expect(log[2].request_object).to eq('keyrelay')
       expect(log[2].request_successful).to eq(true)
       expect(log[2].api_user_name).to eq('elkdata')
       expect(log[2].api_user_registrar).to eq('Elkdata')

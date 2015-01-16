@@ -9,9 +9,12 @@ class EppConstraint
   end
 
   def matches?(request)
-    element = "//#{@type}:#{request.params[:action]}"
     parsed_frame = Nokogiri::XML(request.params[:raw_frame])
-    return false if parsed_frame.xpath("#{element}", OBJECT_TYPES[@type]).none?
+
+    unless [:keyrelay].include?(@type)
+      element = "//#{@type}:#{request.params[:action]}"
+      return false if parsed_frame.xpath("#{element}", OBJECT_TYPES[@type]).none?
+    end
 
     request.params[:parsed_frame] = parsed_frame.remove_namespaces!
     request.params[:epp_object_type] = @type
@@ -24,11 +27,11 @@ Rails.application.routes.draw do
     post 'command/:action', controller: 'domains', constraints: EppConstraint.new(:domain)
     post 'command/:action', controller: 'contacts', constraints: EppConstraint.new(:contact)
     post 'command/poll', to: 'polls#poll'
-    post 'command/keyrelay', to: 'keyrelays#keyrelay'
+    post 'command/keyrelay', to: 'keyrelays#keyrelay', constraints: EppConstraint.new(:keyrelay)
 
-    match 'session/:command', to: 'sessions#proxy', defaults: { format: :xml }, via: [:get, :post]
+    match 'session/:action', controller: 'sessions', via: :all
     # match 'command/:command', to: 'commands#proxy', defaults: { format: :xml }, via: [:post, :get]
-    get 'error/:command', to: 'errors#error', defaults: { format: :xml }
+    get 'error/:command', to: 'errors#error'
   end
 
   mount Repp::API => '/'

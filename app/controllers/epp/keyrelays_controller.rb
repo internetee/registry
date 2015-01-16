@@ -6,8 +6,8 @@ class Epp::KeyrelaysController < ApplicationController
     @domain = find_domain
 
     handle_errors(@domain) and return unless @domain
-    handle_errors(@domain) and return unless @domain.authenticate(parsed_frame.css('pw').text)
-    handle_errors(@domain) and return unless @domain.keyrelay(parsed_frame, current_epp_user.registrar)
+    handle_errors(@domain) and return unless @domain.authenticate(params[:parsed_frame].css('pw').text)
+    handle_errors(@domain) and return unless @domain.keyrelay(params[:parsed_frame], current_epp_user.registrar)
 
     render_epp_response '/epp/shared/success'
   end
@@ -18,7 +18,7 @@ class Epp::KeyrelaysController < ApplicationController
     epp_request_valid?('pubKey', 'flags', 'protocol', 'alg', 'name', 'pw')
 
     begin
-      abs_datetime = parsed_frame.css('absolute').text
+      abs_datetime = params[:parsed_frame].css('absolute').text
       abs_datetime = DateTime.parse(abs_datetime) if abs_datetime.present?
     rescue => _e
       epp_errors << {
@@ -34,7 +34,7 @@ class Epp::KeyrelaysController < ApplicationController
   # rubocop: enable Metrics/CyclomaticComplexity
 
   def find_domain
-    domain_name = parsed_frame.css('name').text.strip.downcase
+    domain_name = params[:parsed_frame].css('name').text.strip.downcase
     domain = Epp::EppDomain.find_by(name: domain_name)
 
     unless domain
