@@ -2,7 +2,7 @@
 
 * Added new rake tasks: rake db:all:setup to setup all databases
   Find out more tasks for all databases with rake -T db:all
-  
+
 * Staging env added, please change apache conf in staging servers to "RailsEnv staging"
   Then you need to add or update staging section in
   --> config/database.yml
@@ -13,3 +13,8 @@
 
 * Registry api log and whois database added, please update your database.yml,
   you can view updated config at config/database-example.yml
+
+14.01.2015
+
+* Update your Apache EPP conf file, add "EPPRawFrame raw_frame", inspect example file at Readme
+  Otherwise new master EPP will not work.
