@@ -496,3 +496,4 @@ en:
   request_params: 'Request params'
   repp_log: 'REPP log'
   repp_logs: 'REPP logs'
+  could_not_determine_object_type_check_xml_format_and_namespaces: 'Could not determine object type. Check XML format and namespaces.'

@@ -32,6 +32,8 @@ Rails.application.routes.draw do
     post 'command/poll', to: 'polls#poll', constraints: EppConstraint.new(:poll)
     post 'command/keyrelay', to: 'keyrelays#keyrelay', constraints: EppConstraint.new(:keyrelay)
 
+    post 'command/:command', to: 'errors#not_found' # fallback route
+
     get 'error/:command', to: 'errors#error'
   end
 
