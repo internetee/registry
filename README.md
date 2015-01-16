@@ -104,7 +104,7 @@ For Apache, registry admin goes to port 443 in production, /etc/apache2/sites-en
   PassengerPoolIdleTime 0
   PassengerMaxRequests 1000
 
-  RailsEnv production
+  RailsEnv production # or staging
   DocumentRoot /home/registry/registry/current/public
   
 	# Possible values include: debug, info, notice, warn, error, crit,

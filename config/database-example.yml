@@ -17,7 +17,7 @@ whois_development:
 
 api_log_development:
   <<: *default
-  database: api_log_development
+  database: registry_api_log_development
 
 
 test:
@@ -30,7 +30,33 @@ whois_test:
 
 api_log_test:
   <<: *default
-  database: api_log_test
+  database: registry_api_log_test
+
+
+alpha:
+  <<: *default
+  database: registry_alpha
+
+whois_alpha:
+  <<: *default
+  database: registry_whois_alpha
+
+api_log_alpha:
+  <<: *default
+  database: registry_api_log_alpha
+
+
+staging:
+  <<: *default
+  database: registry_staging
+
+whois_staging
+  <<: *default
+  database: registry_whois_staging
+
+api_log_staging
+  <<: *default
+  database: registry_api_log_staging
 
 
 production:
