@@ -84,7 +84,6 @@ class EppController < ApplicationController
   end
   # rubocop: enable Style/PredicateName
 
-
   def write_to_epp_log
     request_command = params[:command] || params[:action] # error receives :command, other methods receive :action
     ApiLog::EppLog.create({

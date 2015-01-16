@@ -104,6 +104,7 @@ en:
             period:
               out_of_range: 'Period must add up to 1, 2 or 3 years'
               not_a_number: 'Period is not a number'
+              not_an_integer: 'Period must be an integer'
             auth_info:
               wrong_pw: 'Authorization error'
             domain_statuses:

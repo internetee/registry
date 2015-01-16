@@ -19,7 +19,8 @@ class Epp::EppDomain < Domain
         [:base, :ds_data_with_key_not_allowed],
         [:base, :ds_data_not_allowed],
         [:base, :key_data_not_allowed],
-        [:period, :not_a_number]
+        [:period, :not_a_number],
+        [:period, :not_an_integer]
       ],
       '2004' => [ # Parameter value range error
         [:nameservers, :out_of_range,
