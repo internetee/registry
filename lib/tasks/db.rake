@@ -1,6 +1,6 @@
 namespace :db do
   def databases
-    @db ||= ["#{Rails.env}", "api_log_#{Rails.env}", "whois_#{Rails.env}"]
+    @db ||= ["api_log_#{Rails.env}", "whois_#{Rails.env}", "#{Rails.env}"]
   end
 
   def schema_file(db)
