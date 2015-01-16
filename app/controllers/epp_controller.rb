@@ -97,7 +97,7 @@ class EppController < ApplicationController
       request: params[:raw_frame] || params[:frame],
       request_command: request_command,
       request_successful: epp_errors.empty?,
-      request_object: params[:epp_object_type], # TODO: fix this for login and logout
+      request_object: params[:epp_object_type],
       response: @response,
       api_user_name: @epp_user.try(:to_s) || current_epp_user.try(:to_s),
       api_user_registrar: @epp_user.try(:registrar).try(:to_s) || current_epp_user.try(:registrar).try(:to_s),
