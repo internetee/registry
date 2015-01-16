@@ -1,4 +1,4 @@
-%html{lang: "en"}
+%html{lang: I18n.locale.to_s}
   %head
     %meta{charset: "utf-8"}/
     %meta{content: "IE=edge", "http-equiv" => "X-UA-Compatible"}/
@@ -10,7 +10,7 @@
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
     %link{href: "../../favicon.ico", rel: "icon"}/
     %title Eesti Interneti SA
-  %body
+  %body{:style => env_style}
     / Static navbar
     .navbar.navbar-inverse.navbar-static-top{role: "navigation"}
       .container
@@ -22,15 +22,9 @@
             %span.icon-bar
           = link_to root_path, class: 'navbar-brand' do
             = APP_CONFIG['app_name']
-            - if request.host == 'registry.gitlab.eu'
+            - if unstable_env.present?
               .text-center
-                %small{style: 'color: #0074B3;'} GITLAB STAGING
-            - elsif Rails.env.development?
-              .text-center
-                %small{style: 'color: #D10000;'}= Rails.env.upcase
-            - elsif Rails.env.staging?
-              .text-center
-                %small{style: 'color: #0074B3;'}= Rails.env.upcase
+                %small{style: 'color: #0074B3;'}= unstable_env
 
         .navbar-collapse.collapse
           %ul.nav.navbar-nav

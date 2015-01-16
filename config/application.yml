@@ -8,6 +8,9 @@ development:
 test:
   <<: *defaults
 
+alpha:
+  <<: *defaults
+
 staging:
   <<: *defaults
 

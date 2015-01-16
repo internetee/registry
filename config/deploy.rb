@@ -11,7 +11,7 @@ require 'mina/rbenv'  # for rbenv support. (http://rbenv.org)
 #   repository   - Git repo to clone from. (needed by mina/git)
 #   branch       - Branch name to deploy. (needed by mina/git)
 
-# developers branch
+# alpha branch
 set :domain, 'registry-st'
 set :deploy_to, '$HOME/registry'
 set :repository, 'https://github.com/domify/registry' # dev repo

@@ -48,6 +48,9 @@ gem 'isikukood' # for EE-id validation
 gem 'whenever', '~> 0.9.4', require: false
 gem 'daemons',  '~> 1.1.9' # process delayed jobs
 
+# monitors
+gem 'newrelic_rpm', '~> 3.9.9.275'
+
 group :development do
   # dev tools
   gem 'spring',                '~> 1.2.0'

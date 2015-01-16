@@ -11,7 +11,7 @@
     = stylesheet_link_tag 'login', media: 'all', 'data-turbolinks-track' => true
     %link{:href => "../../favicon.ico", :rel => "icon"}/
     %title Eesti Interneti SA - Log In
-  %body
+  %body{:style => env_style}
     .container
       .form-signin
         - display = (flash.empty?) ? 'none' : 'block'
