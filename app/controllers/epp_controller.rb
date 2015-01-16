@@ -1,8 +1,15 @@
 class EppController < ApplicationController
   protect_from_forgery with: :null_session
+  before_action :generate_svtrid
   before_action :validate_request
   layout false
   helper_method :current_epp_user
+
+  def generate_svtrid
+    # rubocop: disable Style/VariableName
+    @svTRID = "ccReg-#{format('%010d', rand(10**10))}"
+    # rubocop: enable Style/VariableName
+  end
 
   def params_hash # TODO: THIS IS DEPRECATED AND WILL BE REMOVED IN FUTURE
     @params_hash ||= Hash.from_xml(params[:frame]).with_indifferent_access
