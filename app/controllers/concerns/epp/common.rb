@@ -8,8 +8,8 @@ module Epp::Common
 
   included do
     protect_from_forgery with: :null_session
-    before_action :validate_request, only: [:proxy]
-
+    before_action :validate_request
+    layout false
     helper_method :current_epp_user
   end
 
@@ -108,7 +108,7 @@ module Epp::Common
   # rubocop: enable Style/PredicateName
 
   def validate_request
-    validation_method = "validate_#{OBJECT_TYPES[params_hash['epp']['xmlns:ns2']]}_#{params[:command]}_request"
+    validation_method = "validate_#{params[:action]}"
     return unless respond_to?(validation_method, true)
     handle_errors and return unless send(validation_method)
   end
@@ -123,7 +123,7 @@ module Epp::Common
     request_object = OBJECT_TYPES[params_hash['epp']['xmlns:ns2']] if params[:frame]
     ApiLog::EppLog.create({
       request: params[:raw_frame],
-      request_command: params[:command],
+      request_command: params[:action],
       request_successful: epp_errors.empty?,
       request_object: request_object,
       response: @response,

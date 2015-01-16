@@ -1,7 +1,32 @@
+class EppConstraint
+  OBJECT_TYPES = {
+    domain: { domain: 'urn:ietf:params:xml:ns:domain-1.0' },
+    contact: { contact: 'urn:ietf:params:xml:ns:contact-1.0' }
+  }
+
+  def initialize(type)
+    @type = type
+  end
+
+  def matches?(request)
+    element = "//#{@type}:#{request.params[:action]}"
+    parsed_frame = Nokogiri::XML(request.params[:raw_frame])
+    ret = parsed_frame.xpath("#{element}", OBJECT_TYPES[@type]).any?
+    request.params[:parsed_frame] = parsed_frame.remove_namespaces! if ret
+    ret
+  end
+end
+
 Rails.application.routes.draw do
   namespace(:epp) do
+    post 'command/info', to: 'domains#info', defaults: { format: :xml }, constraints: EppConstraint.new(:domain)
+    post 'command/info', to: 'contacts#info', defaults: { format: :xml }, constraints: EppConstraint.new(:contact)
+
+    post 'command/check', to: 'domains#check', defaults: { format: :xml }, constraints: EppConstraint.new(:domain)
+    post 'command/check', to: 'contacts#check', defaults: { format: :xml }, constraints: EppConstraint.new(:contact)
+
     match 'session/:command', to: 'sessions#proxy', defaults: { format: :xml }, via: [:get, :post]
-    match 'command/:command', to: 'commands#proxy', defaults: { format: :xml }, via: [:post, :get]
+    # match 'command/:command', to: 'commands#proxy', defaults: { format: :xml }, via: [:post, :get]
     get 'error/:command', to: 'errors#error', defaults: { format: :xml }
   end
 
