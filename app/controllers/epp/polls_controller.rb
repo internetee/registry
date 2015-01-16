@@ -2,8 +2,8 @@ class Epp::PollsController < ApplicationController
   include Epp::Common
 
   def poll
-    req_poll if parsed_frame.css('poll').first['op'] == 'req'
-    ack_poll if parsed_frame.css('poll').first['op'] == 'ack'
+    req_poll if params[:parsed_frame].css('poll').first['op'] == 'req'
+    ack_poll if params[:parsed_frame].css('poll').first['op'] == 'ack'
   end
 
   def req_poll
@@ -22,13 +22,13 @@ class Epp::PollsController < ApplicationController
   end
 
   def ack_poll
-    @message = current_epp_user.queued_messages.find_by(id: parsed_frame.css('poll').first['msgID'])
+    @message = current_epp_user.queued_messages.find_by(id: params[:parsed_frame].css('poll').first['msgID'])
 
     unless @message
       epp_errors << {
         code: '2303',
         msg: I18n.t('message_was_not_found'),
-        value: { obj: 'msgID', val: parsed_frame.css('poll').first['msgID'] }
+        value: { obj: 'msgID', val: params[:parsed_frame].css('poll').first['msgID'] }
       }
       handle_errors and return
     end
@@ -40,7 +40,7 @@ class Epp::PollsController < ApplicationController
   private
 
   def validate_poll
-    op = parsed_frame.css('poll').first[:op]
+    op = params[:parsed_frame].css('poll').first[:op]
     return true if %w(ack req).include?(op)
     epp_errors << { code: '2306', msg: I18n.t('errors.messages.attribute_op_is_invalid') }
     false

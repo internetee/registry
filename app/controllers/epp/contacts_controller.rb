@@ -89,9 +89,9 @@ class Epp::ContactsController < ApplicationController
   end
 
   def update_attrs_present?
-    return true if parsed_frame.css('add').present?
-    return true if parsed_frame.css('rem').present?
-    return true if parsed_frame.css('chg').present?
+    return true if params[:parsed_frame].css('add').present?
+    return true if params[:parsed_frame].css('rem').present?
+    return true if params[:parsed_frame].css('chg').present?
     epp_errors << { code: '2003', msg: I18n.t('errors.messages.required_parameter_missing', key: 'add, rem or chg') }
   end
 
@@ -176,13 +176,13 @@ class Epp::ContactsController < ApplicationController
       Address.extract_attributes((prms.try(:[], :postalInfo) || []))
     )
     contact_hash[:disclosure_attributes] =
-      ContactDisclosure.extract_attributes(parsed_frame)
+      ContactDisclosure.extract_attributes(params[:parsed_frame])
 
     contact_hash
   end
 
   def ident_type
-    result = parsed_frame.css('ident').first.try(:attributes).try(:[], 'type').try(:value)
+    result = params[:parsed_frame].css('ident').first.try(:attributes).try(:[], 'type').try(:value)
     return nil unless result
 
     Contact::IDENT_TYPES.any? { |type| return type if result.include?(type) }

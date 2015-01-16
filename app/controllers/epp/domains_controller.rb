@@ -192,8 +192,8 @@ class Epp::DomainsController < ApplicationController
 
   def domain_transfer_params
     res = {}
-    res[:pw] = parsed_frame.css('pw').first.try(:text)
-    res[:action] = parsed_frame.css('transfer').first[:op]
+    res[:pw] = params[:parsed_frame].css('pw').first.try(:text)
+    res[:action] = params[:parsed_frame].css('transfer').first[:op]
     res[:current_user] = current_epp_user
     res
   end
