@@ -1,6 +1,10 @@
 16.01.2015
 
 * Staging env added, please change apache conf in staging servers to "RailsEnv staging"
+  Then you need to add or update staging section in
+  --> config/database.yml
+  --> config/secrets.yml
+  --> config/application.yml
 
 15.01.2015
 
