@@ -123,7 +123,12 @@ For Apache, registry admin goes to port 443 in production, /etc/apache2/sites-en
   SSLCipherSuite RC4-SHA:HIGH:!ADH
 
 	<Directory /app/registry/registry/current/public>
-    Require all granted
+    # comment out if Apache 2.4 or newer
+    Allow from all
+
+    # uncomment if Apache 2.4 or newer
+    # Require all granted
+    
     Options -MultiViews
 	</Directory>
 </VirtualHost>
