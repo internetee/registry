@@ -50,11 +50,11 @@ staging:
   <<: *default
   database: registry_staging
 
-whois_staging
+whois_staging:
   <<: *default
   database: registry_whois_staging
 
-api_log_staging
+api_log_staging:
   <<: *default
   database: registry_api_log_staging
 
