@@ -20,12 +20,11 @@ class EppConstraint
 end
 
 Rails.application.routes.draw do
-  namespace(:epp) do
-    post 'command/info', to: 'domains#info', defaults: { format: :xml }, constraints: EppConstraint.new(:domain)
-    post 'command/info', to: 'contacts#info', defaults: { format: :xml }, constraints: EppConstraint.new(:contact)
-
-    post 'command/check', to: 'domains#check', defaults: { format: :xml }, constraints: EppConstraint.new(:domain)
-    post 'command/check', to: 'contacts#check', defaults: { format: :xml }, constraints: EppConstraint.new(:contact)
+  namespace(:epp, defaults: { format: :xml }) do
+    post 'command/:action', controller: 'domains', constraints: EppConstraint.new(:domain)
+    post 'command/:action', controller: 'contacts', constraints: EppConstraint.new(:contact)
+    post 'command/poll', to: 'polls#poll'
+    post 'command/keyrelay', to: 'keyrelays#keyrelay'
 
     match 'session/:command', to: 'sessions#proxy', defaults: { format: :xml }, via: [:get, :post]
     # match 'command/:command', to: 'commands#proxy', defaults: { format: :xml }, via: [:post, :get]
