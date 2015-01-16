@@ -1,5 +1,8 @@
 16.01.2015
 
+* Added new rake tasks: rake db:all:setup to setup all databases
+  Find out more tasks for all databases with rake -T db:all
+  
 * Staging env added, please change apache conf in staging servers to "RailsEnv staging"
   Then you need to add or update staging section in
   --> config/database.yml

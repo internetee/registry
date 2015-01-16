@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 20150109081914) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "address_versions", force: true do |t|
+  create_table "address_versions", force: :cascade do |t|
     t.string   "item_type",  null: false
     t.integer  "item_id",    null: false
     t.string   "event",      null: false
@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(version: 20150109081914) do
 
   add_index "address_versions", ["item_type", "item_id"], name: "index_address_versions_on_item_type_and_item_id", using: :btree
 
-  create_table "addresses", force: true do |t|
+  create_table "addresses", force: :cascade do |t|
     t.integer  "contact_id"
     t.integer  "country_id"
     t.string   "city"
@@ -39,7 +39,15 @@ ActiveRecord::Schema.define(version: 20150109081914) do
     t.string   "street3"
   end
 
-  create_table "contact_disclosures", force: true do |t|
+  create_table "cached_nameservers", id: false, force: :cascade do |t|
+    t.string "hostname", limit: 255
+    t.string "ipv4",     limit: 255
+    t.string "ipv6",     limit: 255
+  end
+
+  add_index "cached_nameservers", ["hostname", "ipv4", "ipv6"], name: "index_cached_nameservers_on_hostname_and_ipv4_and_ipv6", unique: true, using: :btree
+
+  create_table "contact_disclosures", force: :cascade do |t|
     t.integer  "contact_id"
     t.boolean  "phone"
     t.boolean  "fax"
@@ -51,7 +59,7 @@ ActiveRecord::Schema.define(version: 20150109081914) do
     t.boolean  "address"
   end
 
-  create_table "contact_statuses", force: true do |t|
+  create_table "contact_statuses", force: :cascade do |t|
     t.string   "value"
     t.string   "description"
     t.integer  "contact_id"
@@ -59,7 +67,7 @@ ActiveRecord::Schema.define(version: 20150109081914) do
     t.datetime "updated_at"
   end
 
-  create_table "contact_versions", force: true do |t|
+  create_table "contact_versions", force: :cascade do |t|
     t.string   "item_type",  null: false
     t.integer  "item_id",    null: false
     t.string   "event",      null: false
@@ -70,7 +78,7 @@ ActiveRecord::Schema.define(version: 20150109081914) do
 
   add_index "contact_versions", ["item_type", "item_id"], name: "index_contact_versions_on_item_type_and_item_id", using: :btree
 
-  create_table "contacts", force: true do |t|
+  create_table "contacts", force: :cascade do |t|
     t.string   "code"
     t.string   "type"
     t.string   "reg_no"
@@ -89,14 +97,14 @@ ActiveRecord::Schema.define(version: 20150109081914) do
     t.integer  "registrar_id"
   end
 
-  create_table "countries", force: true do |t|
+  create_table "countries", force: :cascade do |t|
     t.string   "iso"
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "delayed_jobs", force: true do |t|
+  create_table "delayed_jobs", force: :cascade do |t|
     t.integer  "priority",   default: 0, null: false
     t.integer  "attempts",   default: 0, null: false
     t.text     "handler",                null: false
@@ -112,7 +120,7 @@ ActiveRecord::Schema.define(version: 20150109081914) do
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
-  create_table "delegation_signers", force: true do |t|
+  create_table "delegation_signers", force: :cascade do |t|
     t.integer "domain_id"
     t.string  "key_tag"
     t.integer "alg"
@@ -120,7 +128,7 @@ ActiveRecord::Schema.define(version: 20150109081914) do
     t.string  "digest"
   end
 
-  create_table "dnskeys", force: true do |t|
+  create_table "dnskeys", force: :cascade do |t|
     t.integer "domain_id"
     t.integer "flags"
     t.integer "protocol"
@@ -133,7 +141,7 @@ ActiveRecord::Schema.define(version: 20150109081914) do
     t.string  "ds_digest"
   end
 
-  create_table "domain_contacts", force: true do |t|
+  create_table "domain_contacts", force: :cascade do |t|
     t.integer  "contact_id"
     t.integer  "domain_id"
     t.string   "contact_type"
@@ -142,7 +150,7 @@ ActiveRecord::Schema.define(version: 20150109081914) do
     t.string   "contact_code_cache"
   end
 
-  create_table "domain_status_versions", force: true do |t|
+  create_table "domain_status_versions", force: :cascade do |t|
     t.string   "item_type",  null: false
     t.integer  "item_id",    null: false
     t.string   "event",      null: false
@@ -153,13 +161,13 @@ ActiveRecord::Schema.define(version: 20150109081914) do
 
   add_index "domain_status_versions", ["item_type", "item_id"], name: "index_domain_status_versions_on_item_type_and_item_id", using: :btree
 
-  create_table "domain_statuses", force: true do |t|
+  create_table "domain_statuses", force: :cascade do |t|
     t.integer "domain_id"
     t.string  "description"
     t.string  "value"
   end
 
-  create_table "domain_transfers", force: true do |t|
+  create_table "domain_transfers", force: :cascade do |t|
     t.integer  "domain_id"
     t.string   "status"
     t.datetime "transfer_requested_at"
@@ -171,7 +179,7 @@ ActiveRecord::Schema.define(version: 20150109081914) do
     t.datetime "wait_until"
   end
 
-  create_table "domain_versions", force: true do |t|
+  create_table "domain_versions", force: :cascade do |t|
     t.string   "item_type",  null: false
     t.integer  "item_id",    null: false
     t.string   "event",      null: false
@@ -183,7 +191,7 @@ ActiveRecord::Schema.define(version: 20150109081914) do
 
   add_index "domain_versions", ["item_type", "item_id"], name: "index_domain_versions_on_item_type_and_item_id", using: :btree
 
-  create_table "domains", force: true do |t|
+  create_table "domains", force: :cascade do |t|
     t.string   "name"
     t.integer  "registrar_id"
     t.datetime "registered_at"
@@ -200,7 +208,7 @@ ActiveRecord::Schema.define(version: 20150109081914) do
     t.string   "period_unit",      limit: 1
   end
 
-  create_table "epp_sessions", force: true do |t|
+  create_table "epp_sessions", force: :cascade do |t|
     t.string   "session_id"
     t.text     "data"
     t.datetime "created_at"
@@ -210,7 +218,7 @@ ActiveRecord::Schema.define(version: 20150109081914) do
   add_index "epp_sessions", ["session_id"], name: "index_epp_sessions_on_session_id", unique: true, using: :btree
   add_index "epp_sessions", ["updated_at"], name: "index_epp_sessions_on_updated_at", using: :btree
 
-  create_table "epp_users", force: true do |t|
+  create_table "epp_users", force: :cascade do |t|
     t.integer  "registrar_id"
     t.string   "username"
     t.string   "password"
@@ -221,7 +229,7 @@ ActiveRecord::Schema.define(version: 20150109081914) do
     t.datetime "updated_at"
   end
 
-  create_table "keyrelays", force: true do |t|
+  create_table "keyrelays", force: :cascade do |t|
     t.integer  "domain_id"
     t.datetime "pa_date"
     t.string   "key_data_flags"
@@ -237,7 +245,7 @@ ActiveRecord::Schema.define(version: 20150109081914) do
     t.datetime "updated_at"
   end
 
-  create_table "legal_documents", force: true do |t|
+  create_table "legal_documents", force: :cascade do |t|
     t.string   "document_type"
     t.text     "body"
     t.integer  "documentable_id"
@@ -246,7 +254,7 @@ ActiveRecord::Schema.define(version: 20150109081914) do
     t.datetime "updated_at"
   end
 
-  create_table "messages", force: true do |t|
+  create_table "messages", force: :cascade do |t|
     t.integer  "registrar_id"
     t.string   "body"
     t.string   "attached_obj_type"
@@ -256,7 +264,7 @@ ActiveRecord::Schema.define(version: 20150109081914) do
     t.datetime "updated_at"
   end
 
-  create_table "nameserver_versions", force: true do |t|
+  create_table "nameserver_versions", force: :cascade do |t|
     t.string   "item_type",  null: false
     t.integer  "item_id",    null: false
     t.string   "event",      null: false
@@ -267,7 +275,7 @@ ActiveRecord::Schema.define(version: 20150109081914) do
 
   add_index "nameserver_versions", ["item_type", "item_id"], name: "index_nameserver_versions_on_item_type_and_item_id", using: :btree
 
-  create_table "nameservers", force: true do |t|
+  create_table "nameservers", force: :cascade do |t|
     t.string   "hostname"
     t.string   "ipv4"
     t.datetime "created_at"
@@ -276,7 +284,7 @@ ActiveRecord::Schema.define(version: 20150109081914) do
     t.integer  "domain_id"
   end
 
-  create_table "registrars", force: true do |t|
+  create_table "registrars", force: :cascade do |t|
     t.string   "name"
     t.string   "reg_no"
     t.string   "vat_no"
@@ -287,30 +295,30 @@ ActiveRecord::Schema.define(version: 20150109081914) do
     t.datetime "updated_at"
   end
 
-  create_table "reserved_domains", force: true do |t|
+  create_table "reserved_domains", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "rights", force: true do |t|
+  create_table "rights", force: :cascade do |t|
     t.string   "code"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "rights_roles", force: true do |t|
+  create_table "rights_roles", force: :cascade do |t|
     t.integer "right_id"
     t.integer "role_id"
   end
 
-  create_table "roles", force: true do |t|
+  create_table "roles", force: :cascade do |t|
     t.string   "code"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "settings", force: true do |t|
+  create_table "settings", force: :cascade do |t|
     t.string   "var",                   null: false
     t.text     "value"
     t.integer  "thing_id"
@@ -321,7 +329,7 @@ ActiveRecord::Schema.define(version: 20150109081914) do
 
   add_index "settings", ["thing_type", "thing_id", "var"], name: "index_settings_on_thing_type_and_thing_id_and_var", unique: true, using: :btree
 
-  create_table "users", force: true do |t|
+  create_table "users", force: :cascade do |t|
     t.string   "username"
     t.string   "password"
     t.integer  "role_id"
@@ -337,7 +345,7 @@ ActiveRecord::Schema.define(version: 20150109081914) do
     t.integer  "country_id"
   end
 
-  create_table "versions", force: true do |t|
+  create_table "versions", force: :cascade do |t|
     t.string   "item_type",  null: false
     t.integer  "item_id",    null: false
     t.string   "event",      null: false
@@ -348,7 +356,7 @@ ActiveRecord::Schema.define(version: 20150109081914) do
 
   add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
 
-  create_table "zonefile_settings", force: true do |t|
+  create_table "zonefile_settings", force: :cascade do |t|
     t.string   "origin"
     t.integer  "ttl"
     t.integer  "refresh"
