@@ -22,9 +22,9 @@
             %span.icon-bar
           = link_to root_path, class: 'navbar-brand' do
             = APP_CONFIG['app_name']
-            - if current_env.present?
+            - if unstable_env.present?
               .text-center
-                %small{style: 'color: #0074B3;'}= current_env
+                %small{style: 'color: #0074B3;'}= unstable_env
 
         .navbar-collapse.collapse
           %ul.nav.navbar-nav
