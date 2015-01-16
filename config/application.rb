@@ -30,8 +30,6 @@ module Registry
     config.paths.add File.join('app', 'api'), glob: File.join('**', '*.rb')
     config.autoload_paths += Dir[Rails.root.join('app', 'api', '*')]
 
-    config.autoload_paths << Rails.root.join('lib')
-
     # Active Record used to suppresses errors raised within
     # `after_rollback`/`after_commit` callbacks and only printed them to the logs.
     # In the next version, these errors will no longer be suppressed.

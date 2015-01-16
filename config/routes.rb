@@ -11,9 +11,11 @@ class EppConstraint
   def matches?(request)
     element = "//#{@type}:#{request.params[:action]}"
     parsed_frame = Nokogiri::XML(request.params[:raw_frame])
-    ret = parsed_frame.xpath("#{element}", OBJECT_TYPES[@type]).any?
-    request.params[:parsed_frame] = parsed_frame.remove_namespaces! if ret
-    ret
+    return false if parsed_frame.xpath("#{element}", OBJECT_TYPES[@type]).none?
+
+    request.params[:parsed_frame] = parsed_frame.remove_namespaces!
+    request.params[:epp_object_type] = @type
+    true
   end
 end
 
