@@ -1,6 +1,4 @@
-class Epp::DomainsController < ApplicationController
-  include Epp::Common
-
+class Epp::DomainsController < EppController
   def create
     @domain = Epp::EppDomain.new(domain_create_params)
 

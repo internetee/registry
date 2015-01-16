@@ -1,6 +1,4 @@
-class Epp::PollsController < ApplicationController
-  include Epp::Common
-
+class Epp::PollsController < EppController
   def poll
     req_poll if params[:parsed_frame].css('poll').first['op'] == 'req'
     ack_poll if params[:parsed_frame].css('poll').first['op'] == 'ack'

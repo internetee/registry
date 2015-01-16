@@ -1,5 +1,4 @@
-class Epp::ContactsController < ApplicationController
-  include Epp::Common
+class Epp::ContactsController < EppController
   include Shared::UserStamper ## Refactor this?
   helper WhodunnitHelper ## Refactor this?
 

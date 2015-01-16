@@ -1,40 +1,26 @@
-module Epp::Common
-  extend ActiveSupport::Concern
+class EppController < ApplicationController
+  protect_from_forgery with: :null_session
+  before_action :validate_request
+  layout false
+  helper_method :current_epp_user
 
-  OBJECT_TYPES = {
-    'urn:ietf:params:xml:ns:contact-1.0' => 'contact',
-    'urn:ietf:params:xml:ns:domain-1.0' => 'domain'
-  }
-
-  included do
-    protect_from_forgery with: :null_session
-    before_action :validate_request
-    layout false
-    helper_method :current_epp_user
-  end
-
-  def proxy
-    # rubocop: disable Style/VariableName
-    @svTRID = "ccReg-#{format('%010d', rand(10**10))}"
-    # rubocop: enable Style/VariableName
-    send(params[:command])
-  end
-
-  def params_hash
+  def params_hash # TODO: THIS IS DEPRECATED AND WILL BE REMOVED IN FUTURE
     @params_hash ||= Hash.from_xml(params[:frame]).with_indifferent_access
   end
 
+  # SESSION MANAGEMENT
   def epp_session
     cookie = env['rack.request.cookie_hash'] || {}
     EppSession.find_or_initialize_by(session_id: cookie['session'])
   end
 
-  def epp_errors
-    @errors ||= []
-  end
-
   def current_epp_user
     @current_epp_user ||= EppUser.find(epp_session[:epp_user_id]) if epp_session[:epp_user_id]
+  end
+
+  # ERROR + RESPONSE HANDLING
+  def epp_errors
+    @errors ||= []
   end
 
   def handle_errors(obj = nil)
@@ -55,9 +41,17 @@ module Epp::Common
     render_epp_response '/epp/error'
   end
 
-  def append_errors(obj)
-    obj.construct_epp_errors
-    @errors += obj.errors[:epp_errors]
+  def render_epp_response(*args)
+    @response = render_to_string(*args)
+    render xml: @response
+    write_to_epp_log
+  end
+
+  # VALIDATION
+  def validate_request
+    validation_method = "validate_#{params[:action]}"
+    return unless respond_to?(validation_method, true)
+    handle_errors and return unless send(validation_method)
   end
 
   def epp_request_valid?(*selectors)
@@ -72,7 +66,7 @@ module Epp::Common
     epp_errors.empty?
   end
 
-  def xml_attrs_present?(ph, attributes)
+  def xml_attrs_present?(ph, attributes) # TODO: THIS IS DEPRECATED AND WILL BE REMOVED IN FUTURE
     attributes.each do |x|
       epp_errors << {
         code: '2003',
@@ -82,38 +76,14 @@ module Epp::Common
     epp_errors.empty?
   end
 
-  def xml_attrs_array_present?(array_ph, attributes)
-    [array_ph].flatten.each do |ph|
-      attributes.each do |x|
-        next if has_attribute(ph, x)
-        epp_errors << {
-          code: '2003',
-          msg: I18n.t('errors.messages.required_parameter_missing', key: x.last)
-        }
-      end
-    end
-    epp_errors.empty?
-  end
-
   # rubocop: disable Style/PredicateName
-  def has_attribute(ph, path)
+  def has_attribute(ph, path) # TODO: THIS IS DEPRECATED AND WILL BE REMOVED IN FUTURE
     path.reduce(ph) do |location, key|
       location.respond_to?(:keys) ? location[key] : nil
     end
   end
   # rubocop: enable Style/PredicateName
 
-  def validate_request
-    validation_method = "validate_#{params[:action]}"
-    return unless respond_to?(validation_method, true)
-    handle_errors and return unless send(validation_method)
-  end
-
-  def render_epp_response(*args)
-    @response = render_to_string(*args)
-    render xml: @response
-    write_to_epp_log
-  end
 
   def write_to_epp_log
     request_command = params[:command] || params[:action] # error receives :command, other methods receive :action
