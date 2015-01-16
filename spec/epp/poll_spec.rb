@@ -33,7 +33,7 @@ describe 'EPP Poll', epp: true do
       expect(log[1].api_user_registrar).to eq('Registrar OÜ')
 
       expect(log[2].request_command).to eq('poll')
-      expect(log[2].request_object).to eq(nil)
+      expect(log[2].request_object).to eq('poll')
       expect(log[2].request_successful).to eq(true)
       expect(log[2].api_user_name).to eq('zone')
       expect(log[2].api_user_registrar).to eq('Registrar OÜ')

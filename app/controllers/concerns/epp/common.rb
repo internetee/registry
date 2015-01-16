@@ -120,9 +120,10 @@ module Epp::Common
   end
 
   def write_to_epp_log
+    request_command = params[:command] || params[:action] # error receives :command, other methods receive :action
     ApiLog::EppLog.create({
-      request: params[:raw_frame],
-      request_command: params[:action],
+      request: params[:raw_frame] || params[:frame],
+      request_command: request_command,
       request_successful: epp_errors.empty?,
       request_object: params[:epp_object_type], # TODO: fix this for login and logout
       response: @response,

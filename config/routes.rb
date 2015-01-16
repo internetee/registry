@@ -8,10 +8,11 @@ class EppConstraint
     @type = type
   end
 
+  # creates parsed_frame, detects epp request object
   def matches?(request)
     parsed_frame = Nokogiri::XML(request.params[:raw_frame])
 
-    unless [:keyrelay].include?(@type)
+    unless [:keyrelay, :poll].include?(@type)
       element = "//#{@type}:#{request.params[:action]}"
       return false if parsed_frame.xpath("#{element}", OBJECT_TYPES[@type]).none?
     end
@@ -24,13 +25,13 @@ end
 
 Rails.application.routes.draw do
   namespace(:epp, defaults: { format: :xml }) do
+    match 'session/:action', controller: 'sessions', via: :all
+
     post 'command/:action', controller: 'domains', constraints: EppConstraint.new(:domain)
     post 'command/:action', controller: 'contacts', constraints: EppConstraint.new(:contact)
-    post 'command/poll', to: 'polls#poll'
+    post 'command/poll', to: 'polls#poll', constraints: EppConstraint.new(:poll)
     post 'command/keyrelay', to: 'keyrelays#keyrelay', constraints: EppConstraint.new(:keyrelay)
 
-    match 'session/:action', controller: 'sessions', via: :all
-    # match 'command/:command', to: 'commands#proxy', defaults: { format: :xml }, via: [:post, :get]
     get 'error/:command', to: 'errors#error'
   end
 
