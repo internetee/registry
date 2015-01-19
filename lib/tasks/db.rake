@@ -16,14 +16,14 @@ namespace :db do
 
   namespace :all do
     desc 'Create all databases: registry, api_log and whois'
-    task :setup => [:environment] do
+    task setup: [:environment] do
       Rake::Task['db:all:create'].invoke
       Rake::Task['db:all:schema:load'].invoke
       Rake::Task['db:seed'].invoke
     end
 
     desc 'Create all databases: registry, api_log and whois'
-    task :create => [:environment] do
+    task create: [:environment] do
       databases.each do |name|
         begin
           conf = ActiveRecord::Base.configurations
@@ -37,7 +37,7 @@ namespace :db do
 
     namespace :schema do
       desc 'Schema load for all databases: registry, api_log and whois'
-      task :load => [:environment] do
+      task load: [:environment] do
         databases.each do |name|
           begin
             puts "\n---------------------------- #{name} ----------------------------------------\n"
@@ -54,7 +54,7 @@ namespace :db do
       end
 
       desc 'Schema load for all databases: registry, api_log and whois'
-      task :dump => [:environment] do
+      task dump: [:environment] do
         databases.each do |name|
           begin
             puts "\n---------------------------- #{name} ----------------------------------------\n"

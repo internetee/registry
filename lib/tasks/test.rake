@@ -40,6 +40,6 @@ begin
       `kill #{pid}`
     end
   end
-rescue LoadError
-  # rspec gem not loaded, probably we are in production machine
+rescue LoadError => e
+  puts e # rspec gem not loaded, probably we are in production machine
 end
