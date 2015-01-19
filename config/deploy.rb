@@ -17,6 +17,14 @@ set :deploy_to, '$HOME/registry'
 set :repository, 'https://github.com/domify/registry' # dev repo
 set :branch, 'master'
 
+# alpha branch
+task :epp do
+  set :domain, 'registry-st'
+  set :deploy_to, '$HOME/epp'
+  set :repository, 'https://github.com/domify/registry' # dev repo
+  set :branch, 'master'
+end
+
 # staging
 task :st do
   set :domain, 'registry-st'
