@@ -62,3 +62,6 @@
         .alert{class: type}= flash[:notice] || flash[:alert]
       = yield
 
+      .footer.text-right
+        Version
+        = CURRENT_COMMIT_HASH

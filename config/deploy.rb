@@ -38,6 +38,7 @@ end
 set :shared_paths, [
   'config/application.yml',
   'config/database.yml',
+  'config/initializers/current_commit_hash.rb',
   'log',
   'public/system',
   'export/zonefiles'
@@ -93,6 +94,7 @@ task deploy: :environment do
     # Put things that will set up an empty directory into a fully set-up
     # instance of your project.
     invoke :'git:clone'
+    invoke :load_commit_hash
     invoke :'deploy:link_shared_paths'
     invoke :'bundle:install'
     invoke :'rails:db_migrate'
@@ -116,6 +118,14 @@ task rollback: :environment do
   to :launch do
     invoke :restart
   end
+end
+
+desc 'Loads current commit hash'
+task load_commit_hash: :environment do
+  queue! %(
+    echo "CURRENT_COMMIT_HASH = '$(git --git-dir #{deploy_to}/scm rev-parse --short HEAD)'" > \
+    #{deploy_to}/shared/config/initializers/current_commit_hash.rb
+  )
 end
 
 desc 'Restart Passenger application'
