@@ -4,10 +4,10 @@
 
 | Field name        | Min-max | Field description |
 | ----------------- |----------|----------------- |
-| <create>          | 1     |      |
-| - <domain:create> | 1     | Must have attribute xmlns:domain="urn:ietf:params:xml:ns:domain-1.0"      |
-| - - <domain:name> | 1     | Domain name. Can contain unicode characters. |
-| - - <domain:period unit="(y/m/d)"> | 0-1     | Registration period for domain. Must add up to 1 / 2 / 3 years. |
+| `<create>`          | 1     |      |
+| - `<domain:create>` | 1     | Must have attribute xmlns:domain="urn:ietf:params:xml:ns:domain-1.0"      |
+| - - `<domain:name>` | 1     | Domain name. Can contain unicode characters. |
+| - - `<domain:period unit="(y/m/d)">` | 0-1     | Registration period for domain. Must add up to 1 / 2 / 3 years. |
 
 
 ##### create
