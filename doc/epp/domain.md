@@ -4,16 +4,25 @@
 
 | Field name        | Min-max | Field description |
 | ----------------- |----------|----------------- |
-| `<create>`          | 1     |      |
-| `-<domain:create>` | 1     | Must have attribute xmlns:domain="urn:ietf:params:xml:ns:domain-1.0"      |
-| `--<domain:name>` | 1     | Domain name. Can contain unicode characters. |
-| `--<domain:period>` | 0-1     | Registration period for domain. Must add up to 1 / 2 / 3 years. Attribute: unit="y/m/d"|
+| `<create>`              | 1     |      |
+| `-<domain:create>`      | 1     | Attribute: xmlns:domain="urn:ietf:params:xml:ns:domain-1.0"      |
+| `--<domain:name>`       | 1     | Domain name. Can contain unicode characters. |
+| `--<domain:period>`     | 0-1   | Registration period for domain. Must add up to 1 / 2 / 3 years. Attribute: unit="y/m/d"|
 | `--<domain:registrant>` | 1     | Contact reference to the registrant |
-| `--<domain:contact>` | 0-n     | Contact reference. Admin contact is required if registrant is a juridical person. |
-| `--<domain:ns>` | 1     |  |
-| `---<domain:hostAttr>` | 2-11     |  |
+| `--<domain:contact>`    | 0-n   | Contact reference. Admin contact is required if registrant is a juridical person. |
+| `--<domain:ns>`         | 1     |  |
+| `---<domain:hostAttr>`  | 2-11  |  |
 | `----<domain:hostName>` | 1     | Hostname of the nameserver |
-| `----<domain:hostAddr>` | 0-2     | Required if nameserver is under domain zone. Attribute ip="v4/v6" |
+| `----<domain:hostAddr>` | 0-2   | Required if nameserver is under domain zone. Attribute ip="v4/v6" |
+| `<extension>`           | 1     |      |
+| `-<secDNS:create>`      | 0-1   |      |
+| `--<secDNS:keyData>`    | 1     | Attribute:    xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" |
+| `---<secDNS:flags>`     | 1     | Allowed values: 0, 256, 257 |
+| `---<secDNS:protocol>`  | 1     | Allowed values: 3 |
+| `---<secDNS:alg>`       | 1     | Allowed values: 3, 5, 6, 7, 8, 252, 253, 254, 255 |
+| `---<secDNS:pubKey>`    | 1     | Public key |
+| `-<eis:extdata>`        | 1     |      |
+| `--<eis:legalDocument>` | 1     | Base64 encoded document |
 
 
 ##### create
