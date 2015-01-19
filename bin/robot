@@ -15,7 +15,7 @@ export RAILS_ENV=test
 # cd to Rails root directory
 cd "$(dirname "$0")"; cd ..
 
-# cp config/secrets-example.yml config/secrets.yml
+cp config/application-example.yml config/application.yml
 # create manually config/database.yml
 
 bundle install
