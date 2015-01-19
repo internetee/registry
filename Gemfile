@@ -12,7 +12,7 @@ gem 'paper_trail',               '~> 3.0.6' # archiving
 gem 'rails-settings-cached',     '~> 0.4.1' # for settings
 gem 'delayed_job_active_record', '~> 4.0.3' # delayed job
 
-# html-xml 
+# html-xml
 gem 'haml-rails', '~> 0.6.0' # haml for views
 gem 'nokogiri',   '~> 1.6.2.1' # For XML parsing
 
@@ -85,9 +85,9 @@ group :development, :test do
   gem 'database_cleaner',    '~> 1.3.0' # For cleaning db in feature and epp tests
   gem 'faker',               '~> 1.3.0' # Library to generate fake data
 
-  # EPP 
+  # EPP
   gem 'epp',       '~> 1.4.0'   # EPP client
-  gem 'epp-xml',   '~> 0.10.3'  # EPP XMLs
+  gem 'epp-xml',   '~> 0.10.4'  # EPP XMLs
   gem 'uuidtools', '~> 2.1.4' # For unique IDs (used by the epp gem)
 
   # debug
