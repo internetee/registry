@@ -5,9 +5,13 @@
 | Field name        | Min-max | Field description |
 | ----------------- |----------|----------------- |
 | `<create>`          | 1     |      |
-| &nbsp;&nbsp;`<domain:create>` | 1     | Must have attribute xmlns:domain="urn:ietf:params:xml:ns:domain-1.0"      |
-| &nbsp;&nbsp;&nbsp;&nbsp;`<domain:name>` | 1     | Domain name. Can contain unicode characters. |
-| &nbsp;&nbsp;&nbsp;&nbsp;`<domain:period>` | 0-1     | Registration period for domain. Must add up to 1 / 2 / 3 years. Attribute: unit="y/m/d"|
+| `  <domain:create>` | 1     | Must have attribute xmlns:domain="urn:ietf:params:xml:ns:domain-1.0"      |
+| `    <domain:name>` | 1     | Domain name. Can contain unicode characters. |
+| `    <domain:period>` | 0-1     | Registration period for domain. Must add up to 1 / 2 / 3 years. Attribute: unit="y/m/d"|
+| `    <domain:registrant>` | 1     | Contact reference to the registrant |
+| `    <domain:contact>` | 0-n     | Contact reference. Admin contact is required if registrant is a juridical person. |
+| `    <domain:ns>` | 1     |  |
+| `      <domain:hostAttr>` | 2-11     |  |
 
 
 ##### create
