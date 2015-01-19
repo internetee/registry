@@ -66,29 +66,17 @@
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-updates-domain-and-adds-objects)
 
-
 ### Domain delete
 
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [delete](#delete)            | true     |      |                  |
-| [extension](#top-domain-delete-extension)         | true |      |                  |
-| clTRID         | false     |      | Client transaction id |
-
-##### delete
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [domain:delete](#domaindelete) | true | xmlns:domain (urn:ietf:params:xml:ns:domain-1.0) |  |
-
-##### domain:delete
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| domain:name       | true     |  | Domain name. Can contain unicode characters. |
-
-##### <a name="top-domain-delete-extension"></a>extension
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [eis:extdata](#eisextdata)     | true     | xmlns:eis (urn:ee:eis:xml:epp:eis-1.0) | Legal document |
+| Field name              | Min-max | Field description |
+| ----------------------- |---------|------------------ |
+| `<delete>`              | 1     |   |
+| `-<domain:delete>`      | 1     | Attribute: xmlns:domain="urn:ietf:params:xml:ns:domain-1.0"      |
+| `--<domain:name>`       | 1     | Domain name. Can contain unicode characters. |
+| `<extension>`           | 1     |   |
+| `-<eis:extdata>`        | 1     | Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0" |
+| `--<eis:legalDocument>` | 1     | Base64 encoded document |
+| `<clTRID>`               | 0-1   | Client transaction id |
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-deletes-domain)
 
