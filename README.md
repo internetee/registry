@@ -37,11 +37,18 @@ Manual demo install and database setup:
     cp config/initializers/devise_secret_example.rb.txt config/initializers/devise_secret.rb # and edit
     bundle exec rake assets:precompile
 
-Create database manually, example: 
+Create registry database manually, example: 
     
-    create database registry owner registry encoding 'UTF-8' LC_COLLATE 'et_EE.utf8' LC_CTYPE 'et_EE.utf8' template template0;
+    create database registry_production owner registry encoding 'UTF-8' LC_COLLATE 'et_EE.utf8' LC_CTYPE 'et_EE.utf8' template template0;
     rake db:schema:load
     rake db:seeds
+
+Or create all databases:
+
+    rake db:all:setup  # will create all databases and loads all schemas
+    rake db:all:create # creates all databases
+    rake db:all:schema:load # loads all schemas
+    rake db:all:schema:dump # dumps all schemas
 
 Production install (database schema should be loaded and seeds should be present)
 
@@ -55,6 +62,7 @@ Production install (database schema should be loaded and seeds should be present
 
     # at your server
     cd registry
+    cp current/config/application-example.yml shared/config/application.yml # and edit it
     cp current/config/database-example.yml shared/config/database.yml # and edit it
     # You can generate secret keys with 'bundle exec rake secret'
     cp current/config/secrets-example.yml shared/config/secrets.yml # and edit it

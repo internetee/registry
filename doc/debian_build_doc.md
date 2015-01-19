@@ -45,6 +45,13 @@ We also recommend to investigate
 [Passenger Optimization Guide](https://www.phusionpassenger.com/documentation/ServerOptimizationGuide.html) for proper configuration.
 
 
+### For building gem libs
+
+Please install following lib, otherwise your bundler install might not be successful.
+
+    sudo apt-get install libxml2-dev
+
+
 ### RBENV install
 
     cd /home/registry
