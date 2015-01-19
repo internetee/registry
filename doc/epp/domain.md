@@ -126,7 +126,7 @@
 | `--<eis:legalDocument>` | 1     | Base64 encoded document |
 | `<clTRID>`              | 0-1   | Client transaction id |
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-returns-domain-info)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-with-two-epp-users-transfers-a-domain)
 
 ### Domain check
 
