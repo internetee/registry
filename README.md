@@ -62,6 +62,7 @@ Production install (database schema should be loaded and seeds should be present
 
     # at your server
     cd registry
+    cp current/config/application-example.yml shared/config/application.yml # and edit it
     cp current/config/database-example.yml shared/config/database.yml # and edit it
     # You can generate secret keys with 'bundle exec rake secret'
     cp current/config/secrets-example.yml shared/config/secrets.yml # and edit it

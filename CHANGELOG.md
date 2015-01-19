@@ -1,3 +1,9 @@
+19.01.2015
+
+* Added application-exapmle.yml and removed application.yml from repo, please 
+  add config/application.yml back when deploying:
+  cp current/config/application-example.yml shared/config/application.yml # and edit it
+
 16.01.2015
 
 * Added new rake tasks: rake db:all:setup to setup all databases
