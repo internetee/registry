@@ -76,65 +76,39 @@
 | `<extension>`           | 1     |   |
 | `-<eis:extdata>`        | 1     | Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0" |
 | `--<eis:legalDocument>` | 1     | Base64 encoded document |
-| `<clTRID>`               | 0-1   | Client transaction id |
+| `<clTRID>`              | 0-1   | Client transaction id |
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-deletes-domain)
 
-
 ### Domain info
 
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [info](#info)            | true     |      |                  |
-| [extension](#ext-legal-not-required)         | false |      |                  |
-| clTRID         | false     |      | Client transaction id |
-
-
-##### info
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [domain:info](#domaininfo) | true | xmlns:domain (urn:ietf:params:xml:ns:domain-1.0) |  |
-
-
-##### domain:info
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| domain:name       | true     | hosts (all, TODO) | Domain name. Can contain unicode characters. |
-| [domain:authInfo](#domainauthinfo)       | false     |  | Domain password |
-
-##### domain:authinfo
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| domain:pw       | true     | roid (String) TODO: find out why we need roid | Domain password |
-
-##### <a name="ext-legal-not-required"></a>extension
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [eis:extdata](#eisextdata)     | false     | xmlns:eis (urn:ee:eis:xml:epp:eis-1.0) | Legal document |
+| Field name              | Min-max | Field description |
+| ----------------------- |---------|------------------ |
+| `<info>`                | 1     |   |
+| `-<domain:info>`        | 1     | Attribute: xmlns:domain="urn:ietf:params:xml:ns:domain-1.0"      |
+| `--<domain:name>`       | 1     | Domain name. Can contain unicode characters. Attribute: hosts="all / TODO" |
+| `--<domain:authInfo>`   | 0-1   | Required if registrar is not the owner of the domain. |
+| `---<domain:pw>`        | 1     | Domain password. Attribute: roid="String" |
+| `<extension>`           | 0-1     |   |
+| `-<eis:extdata>`        | 0-1     | Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0" |
+| `--<eis:legalDocument>` | 1     | Base64 encoded document |
+| `<clTRID>`              | 0-1   | Client transaction id |
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-returns-domain-info)
 
-
 ### Domain renew
 
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [renew](#renew)            | true     |      |                  |
-| [extension](#ext-legal-not-required)         | false |      |                  |
-| clTRID         | false     |      | Client transaction id |
-
-
-##### renew
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [domain:renew](#domainrenew) | true | xmlns:domain (urn:ietf:params:xml:ns:domain-1.0) |  |
-
-##### domain:renew
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| domain:name       | true     |  | Domain name. Can contain unicode characters. |
-| domain:curExpDate | true     |  | Current expiry date (ISO8601 format) |
-| domain:period | true     | unit (y, m, d) | Renew period, must add up to 1, 2 or 3 years. |
+| Field name              | Min-max | Field description |
+| ----------------------- |---------|------------------ |
+| `<renew>`               | 1     |   |
+| `-<domain:renew>`       | 1     | Attribute: xmlns:domain="urn:ietf:params:xml:ns:domain-1.0"      |
+| `--<domain:name>`       | 1     | Domain name. Can contain unicode characters. Attribute: hosts="all / TODO" |
+| `--<domain:curExpDate>` | 1     | Current expiry date (ISO8601 format) |
+| `--<domain:period>`     | 1     | Registration period for domain. Must add up to 1 / 2 / 3 years. Attribute: unit="y/m/d" |
+| `<extension>`           | 0-1     |   |
+| `-<eis:extdata>`        | 0-1     | Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0" |
+| `--<eis:legalDocument>` | 1     | Base64 encoded document |
+| `<clTRID>`              | 0-1   | Client transaction id |
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-renews-a-domain)
 
