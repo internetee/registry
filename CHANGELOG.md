@@ -3,6 +3,7 @@
 * Added application-exapmle.yml and removed application.yml from repo, please 
   add config/application.yml back when deploying:
   cp current/config/application-example.yml shared/config/application.yml # and edit it
+* Removed config/initilizers/devise_secret.rb, use application.yml
 
 16.01.2015
 

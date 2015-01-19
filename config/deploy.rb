@@ -36,9 +36,8 @@ end
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
 # They will be linked in the 'deploy:link_shared_paths' step.
 set :shared_paths, [
-  'config/initializers/devise_secret.rb',
+  'config/application.yml',
   'config/database.yml',
-  'config/secrets.yml',
   'log',
   'public/system',
   'export/zonefiles'

@@ -2,6 +2,12 @@ defaults: &defaults
   app_name: .EE Registry
   zonefile_export_dir: 'export/zonefiles'
 
+  # You can use `rake secret` to generate a secure secret key.
+  # Your secret key is used for verifying the integrity of signed cookies.
+  # If you change this key, all old signed cookies will become invalid!
+  secret_key_base: please-change-it-you-can-generate-it-with-rake-secret
+  devise_secret: please-change-it-you-can-generate-it-with-rake-secret
+
 development:
   <<: *defaults
 
