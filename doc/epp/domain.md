@@ -112,43 +112,38 @@
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-renews-a-domain)
 
-
 ### Domain transfer
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [transfer](#transfer) | true     | op (approve, query, reject)     |     |
-| [extension](#ext-legal-not-required)         | false |      |                  |
-| clTRID         | false     |      | Client transaction id |
 
-##### transfer
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [domain:transfer](#domaintransfer) | true | xmlns:domain (urn:ietf:params:xml:ns:domain-1.0) |  |
-
-##### domain:transfer
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| domain:name       | true     |  | Domain name. Can contain unicode characters. |
-| [domain:authInfo](#domainauthinfo)       | true     |  | Domain password |
+| Field name              | Min-max | Field description |
+| ----------------------- |---------|------------------ |
+| `<transfer>`            | 1     |   |
+| `-<domain:transfer>`    | 1     | Attribute: xmlns:domain="urn:ietf:params:xml:ns:domain-1.0"      |
+| `--<domain:name>`       | 1     | Domain name. Can contain unicode characters. Attribute: hosts="all / TODO" |
+| `--<domain:authInfo>`   | 1     |  |
+| `---<domain:pw>`        | 1     | Domain password. Attribute: roid="String" |
+| `<extension>`           | 0-1   |   |
+| `-<eis:extdata>`        | 0-1   | Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0" |
+| `--<eis:legalDocument>` | 1     | Base64 encoded document |
+| `<clTRID>`              | 0-1   | Client transaction id |
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-returns-domain-info)
 
 ### Domain check
+
+| Field name              | Min-max | Field description |
+| ----------------------- |---------|------------------ |
+| `<check>`               | 1     |   |
+| `-<domain:check>`       | 1     | Attribute: xmlns:domain="urn:ietf:params:xml:ns:domain-1.0"      |
+| `--<domain:name>`       | 1     | Domain name. Can contain unicode characters. Attribute: hosts="all / TODO" |
+| `<extension>`           | 0-1     |   |
+| `-<eis:extdata>`        | 0-1     | Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0" |
+| `--<eis:legalDocument>` | 1     | Base64 encoded document |
+| `<clTRID>`              | 0-1   | Client transaction id |
 
 | Field name        | Required | Attributes | Field description |
 | ----------------- |----------| -----|----------------- |
 | [check](#check) | true     |      |     |
 | [extension](#ext-legal-not-required)         | false |      |                  |
 | clTRID         | false     |      | Client transaction id |
-
-##### check
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [domain:check](#domaincheck) | true | xmlns:domain (urn:ietf:params:xml:ns:domain-1.0) |  |
-
-##### domain:transfer
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| domain:name       | true     |  | Domain name. Can contain unicode characters. |
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-checks-a-domain)
