@@ -140,10 +140,4 @@
 | `--<eis:legalDocument>` | 1     | Base64 encoded document |
 | `<clTRID>`              | 0-1   | Client transaction id |
 
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [check](#check) | true     |      |     |
-| [extension](#ext-legal-not-required)         | false |      |                  |
-| clTRID         | false     |      | Client transaction id |
-
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-checks-a-domain)
