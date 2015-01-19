@@ -2,53 +2,24 @@
 
 ### Contact create
 
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [create](#create)            | true     |      |                  |
-| [extension](#ext-0)         | true     |      |                  |
-| clTRID         | false     |      | Client transaction id |
+| Field name              | Min-max | Field description |
+| ----------------------- |---------|------------------ |
+| `<create>`              | 1     |   |
+| `-<contact:create>`     | 1     | Attribute: xmlns:domain="urn:ietf:params:xml:ns:contact-1.0"      |
+| `-<contact:voice>`      | 1     | Phone |
+| `-<contact:email>`      | 1     | E-mail |
+| `-<contact:Ident>`      | 1     | Contact identificator. Attribute: type="ico / op / passport / birthday" |
+| `-<contact:postalInfo>` | 1     | Contact information |
+| `--<contact:name>`      | 1     | Full name |
+| `--<contact:addr>`      | 1     | Address |
+| `---<contact:street>`   | 0-1     | Street name |
+| `---<contact:city>`     | 1     | City name |
+| `---<contact:cc>`       | 1     | Country code |
+| `<extension>`           | 0-1   |   |
+| `-<eis:extdata>`        | 0-1   | Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0" |
+| `--<eis:legalDocument>` | 1     | Base64 encoded document. Attribute: type="pdf" |
+| `<clTRID>`              | 0-1   | Client transaction id |
 
-##### create
-
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [contact:create](#contactcreate)    | true     | xmlns:contact (urn:ietf:params:xml:ns:contact-1.0)   |  |
-
-##### contact:create
-
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [contact:postalInfo](#contactpostalinfo) | true     |      | Address information |
-| contact:voice | true |      | Phone |
-| contact:email | true |      | E-mail |
-| contact:ident | true | type (ico, op, passport, birthday)     | Ident |
-
-##### contact:postalInfo
-
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| contact:name      | true     |      | Full name |
-| [contact:addr](#contactaddr)      | true     |      | Address |
-
-##### contact:addr
-
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| contact:street    | false     |      | Street name |
-| contact:city      | true     |      | City name |
-| contact:cc      | true     |      | Country code |
-
-##### <a name="ext-0"></a>extension !!! NOT IMPLEMENTED YET
-
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [eis:extdata](#eisextdata)     | false     | xmlns:eis (urn:ee:eis:xml:epp:eis-1.0) | Legal document |
-
-##### eis:extdata
-
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| eis:legalDocument     | true    | type (pdf) | Base64 encoded document |
-
+NB! Extension is not implemented yet!
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-contact-with-valid-user-create-command-successfully-creates-a-contact)
