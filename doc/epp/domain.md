@@ -9,137 +9,60 @@
 | `--<domain:name>`       | 1     | Domain name. Can contain unicode characters. |
 | `--<domain:period>`     | 0-1   | Registration period for domain. Must add up to 1 / 2 / 3 years. Attribute: unit="y/m/d"|
 | `--<domain:registrant>` | 1     | Contact reference to the registrant |
-| `--<domain:contact>`    | 0-n   | Contact reference. Admin contact is required if registrant is a juridical person. Attribute: type="admin/tech" |
+| `--<domain:contact>`    | 0-n   | Contact reference. Admin contact is required if registrant is a juridical person. Attribute: type="admin / tech" |
 | `--<domain:ns>`         | 1     |  |
 | `---<domain:hostAttr>`  | 2-11  |  |
 | `----<domain:hostName>` | 1     | Hostname of the nameserver |
-| `----<domain:hostAddr>` | 0-2   | Required if nameserver is under domain zone. Attribute ip="v4/v6" |
+| `----<domain:hostAddr>` | 0-2   | Required if nameserver is under domain zone. Attribute ip="v4 / v6" |
 | `<extension>`           | 1     |   |
 | `-<secDNS:create>`      | 0-1   | Attribute: xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" |
-| `--<secDNS:keyData>`    | 1     |  |
+| `--<secDNS:keyData>`    | 1-n   |  |
 | `---<secDNS:flags>`     | 1     | Allowed values: 0, 256, 257 |
 | `---<secDNS:protocol>`  | 1     | Allowed values: 3 |
 | `---<secDNS:alg>`       | 1     | Allowed values: 3, 5, 6, 7, 8, 252, 253, 254, 255 |
 | `---<secDNS:pubKey>`    | 1     | Public key |
-| `-<eis:extdata>`        | 1     |  |
+| `-<eis:extdata>`        | 1     | Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0" |
 | `--<eis:legalDocument>` | 1     | Base64 encoded document |
-
-
-##### create
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [domain:create](#domaincreate)     | true     | xmlns:domain (urn:ietf:params:xml:ns:domain-1.0) |  |
-
-
-##### domain:create
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| domain:name       | true     |  | Domain name. Can contain unicode characters. |
-| domain:period     | false    | unit (y, m, d) | Registration period for domain. Must add up to 1 / 2 / 3 years. |
-| [domain:ns](#domainns) | true     | | Nameserver listing (2-11) |
-| domain:registrant | true     | | Contact reference to the registrant |
-| domain:contact    | true if registrant is a juridical person     | type (admin) | Contact reference |
-| domain:contact    | false     | type (tech, admin) | Contact reference (0-n) |
-
-##### domain:ns
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [domain:hostAttr](#domainhostattr)   | true     |  |  |
-
-##### domain:hostAttr
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| domain:hostName   | true     |  | Hostname of the nameserver |
-| domain:hostAddr   | true if nameserver is under domain zone     | ip (v4, v6) | (0-n) |
-
-##### <a name="top-domain-create-extension"></a>extension
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [secDNS:create](#secdnscreate)     | false     |  | DNSSEC details |
-| [eis:extdata](#eisextdata)     | true     | xmlns:eis (urn:ee:eis:xml:epp:eis-1.0) | Legal document |
-
-##### secDNS:create
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [secDNS:keyData](#secdnskeydata)       | true     | xmlns:secDNS (urn:ietf:params:xml:ns:secDNS-1.1) | DNSSEC key data |
-
-##### secDNS:keyData
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| secDNS:flags     | true    |  | Allowed values: 0, 256, 257 |
-| secDNS:protocol  | true     | | Allowed values: 3 |
-| secDNS:alg | true     | | Allowed values: 3, 5, 6, 7, 8, 252, 253, 254, 255 |
-| secDNS:pubKey    | true     |  | Public key |
-
-##### eis:extdata
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| eis:legalDocument     | true    | type (pdf) | Base64 encoded document |
+| `<clTRID>`               | 0-1   | Client transaction id |
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-with-citizen-as-an-owner-creates-a-domain)
 
-
 ### Domain update
 
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [update](#update)            | true     |      |                  |
-| [extension](#top-domain-update-extension)         | true if registrant is changing |      |                  |
-| clTRID         | false     |      | Client transaction id |
-
-##### update
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [domain:update](#domainupdate) | true | xmlns:domain (urn:ietf:params:xml:ns:domain-1.0) |  |
-
-##### domain:update
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| domain:name       | true     |  | Domain name. Can contain unicode characters. |
-| [domain:chg](#domainchg) | false |  | Attributes to change |
-| [domain:add](#domainadd) | false |  | Objects to add |
-| [domain:rem](#domainrem) | false |  | Objects to remove |
-
-##### domain:chg
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| domain:registrant | false     | | Contact reference to the registrant |
-
-##### domain:add
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [domain:ns](#domainns) | false     | | Nameservers TODO: Get rid of hostObj |
-| domain:contact    | false     | type (tech, admin) | Contact reference (0-n) |
-| domain:status    | false     | s (clientDeleteProhibited, clientHold, clientRenewProhibited, clientTransferProhibited, clientUpdateProhibited) | Status description (may be left empty) (0-n)|
-
-##### domain:rem
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [domain:ns](#domainns) | false     | | Nameservers TODO: Get rid of hostObj |
-| domain:contact    | false     | type (tech, admin) | Contact reference (0-n) |
-| domain:status    | false     | s (clientDeleteProhibited, clientHold, clientRenewProhibited, clientTransferProhibited, clientUpdateProhibited) | Status description (may be left empty) (0-n)|
-
-##### <a name="top-domain-update-extension"></a>extension
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [secDNS:create](#secdnsupdate)     | false     |  | DNSSEC details TODO: MAYBE THIS SHOULD BE secDNS:update ? |
-| [eis:extdata](#eisextdata)     | true if registrant is changing     | xmlns:eis (urn:ee:eis:xml:epp:eis-1.0) | Legal document |
-
-##### <a name="secdnsupdate"></a>secDNS:create TODO: secDNS:update??
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [secDNS:add](#secdnsadd)     | false     |  | Objects to add |
-| [secDNS:rem](#secdnsrem)     | false     |  | Objects to remove |
-
-##### secDNS:add
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [secDNS:keyData](#secdnskeydata)       | true     | xmlns:secDNS (urn:ietf:params:xml:ns:secDNS-1.1) | DNSSEC key data (0-n)|
-
-##### secDNS:rem
-| Field name        | Required | Attributes | Field description |
-| ----------------- |----------| -----|----------------- |
-| [secDNS:keyData](#secdnskeydata)       | true     | xmlns:secDNS (urn:ietf:params:xml:ns:secDNS-1.1) | DNSSEC key data (0-n)|
+| Field name               | Min-max | Field description |
+| ------------------------ |---------|------------------ |
+| `<update>`               | 1     |   |
+| `-<domain:update>`       | 1     | Attribute: xmlns:domain="urn:ietf:params:xml:ns:domain-1.0"      |
+| `--<domain:name>`        | 1     | Domain name. Can contain unicode characters. |
+| `--<domain:chg>`         | 0-1   | Attributes to change |
+| `---<domain:registrant>` | 0-1   | Contact reference to the registrant |
+| `--<domain:add>`         | 0-1   | Objects to add |
+| `---<domain:contact>`    | 0-n   | Contact reference. Attribute: type="admin / tech" |
+| `---<domain:status>`     | 0-n   | Status description. Attribute: s="clientDeleteProhibited / clientHold / clientRenewProhibited / clientTransferProhibited / clientUpdateProhibited" |
+| `---<domain:ns>`         | 0-1   |  |
+| `----<domain:hostAttr>`  | 1     |  |
+| `-----<domain:hostName>` | 1     | Hostname of the nameserver |
+| `-----<domain:hostAddr>` | 0-2   | Required if nameserver is under domain zone. Attribute ip="v4 / v6" |
+| `--<domain:rem>`         | 0-1   | Objects to remove |
+| `---<domain:contact>`    | 0-n   | Contact reference. Attribute: type="admin / tech" |
+| `---<domain:status>`     | 0-n   | Attribute: s="clientDeleteProhibited / clientHold / clientRenewProhibited / clientTransferProhibited / clientUpdateProhibited" |
+| `---<domain:ns>`         | 0-1   |  |
+| `----<domain:hostAttr>`  | 1     |  |
+| `-----<domain:hostName>` | 1     | Hostname of the nameserver |
+| `<extension>`            | 0-1   | Required if registrant is changing |
+| `-<secDNS:update>`       | 0-1   | Attribute: xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" |
+| `--<secDNS:add>`         | 0-1   |  |
+| `---<secDNS:keyData>`    | 1-n   |  |
+| `----<secDNS:flags>`     | 1     | Allowed values: 0, 256, 257 |
+| `----<secDNS:protocol>`  | 1     | Allowed values: 3 |
+| `----<secDNS:alg>`       | 1     | Allowed values: 3, 5, 6, 7, 8, 252, 253, 254, 255 |
+| `----<secDNS:pubKey>`    | 1     | Public key |
+| `--<secDNS:rem>`         | 0-1   |  |
+| `---<secDNS:keyData>`    | 1-n   |  |
+| `----<secDNS:pubKey>`    | 1     | Public key |
+| `-<eis:extdata>`         | 0-1   | Required if registrant is changing. Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0" |
+| `--<eis:legalDocument>`  | 1     | Base64 encoded document |
+| `<clTRID>`               | 0-1   | Client transaction id |
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-updates-domain-and-adds-objects)
 
