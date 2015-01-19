@@ -17,12 +17,6 @@ Here are functions like login, logout, hello, poll
 | `---<extURI>`           | 0-n   | Extension URI that is going to be used in current connection. |
 | `<clTRID>`              | 0-1   | Client transaction id |
 
-| `--<domain:name>`       | 1     | Domain name. Can contain unicode characters. |
-| `<extension>`           | 1     |   |
-| `-<eis:extdata>`        | 1     | Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0" |
-| `--<eis:legalDocument>` | 1     | Base64 encoded document |
-| `<clTRID>`              | 0-1   | Client transaction id |
-
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-session-when-connected-with-valid-user-logs-in-epp-user)
 
 ### Logout request
