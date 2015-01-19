@@ -20,6 +20,7 @@
 
 * Registry api log and whois database added, please update your database.yml,
   you can view updated config at config/database-example.yml
+* Upgraded to Rails 4.2 and ruby 2.2.0, be sure you have ruby 2.2.0 in your rbenv 
 
 14.01.2015
 
