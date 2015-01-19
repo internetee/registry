@@ -5,15 +5,15 @@
 | Field name        | Min-max | Field description |
 | ----------------- |----------|----------------- |
 | `<create>`          | 1     |      |
-| `- <domain:create>` | 1     | Must have attribute xmlns:domain="urn:ietf:params:xml:ns:domain-1.0"      |
-| `-- <domain:name>` | 1     | Domain name. Can contain unicode characters. |
-| `-- <domain:period>` | 0-1     | Registration period for domain. Must add up to 1 / 2 / 3 years. Attribute: unit="y/m/d"|
-| `-- <domain:registrant>` | 1     | Contact reference to the registrant |
-| `-- <domain:contact>` | 0-n     | Contact reference. Admin contact is required if registrant is a juridical person. |
-| `-- <domain:ns>` | 1     |  |
-| `--- <domain:hostAttr>` | 2-11     |  |
-| `---- <domain:hostName>` | 1     | Hostname of the nameserver |
-| `---- <domain:hostAddr>` | 0-2     | Required if nameserver is under domain zone. Attribute ip="v4/v6" |
+| `-<domain:create>` | 1     | Must have attribute xmlns:domain="urn:ietf:params:xml:ns:domain-1.0"      |
+| `--<domain:name>` | 1     | Domain name. Can contain unicode characters. |
+| `--<domain:period>` | 0-1     | Registration period for domain. Must add up to 1 / 2 / 3 years. Attribute: unit="y/m/d"|
+| `--<domain:registrant>` | 1     | Contact reference to the registrant |
+| `--<domain:contact>` | 0-n     | Contact reference. Admin contact is required if registrant is a juridical person. |
+| `--<domain:ns>` | 1     |  |
+| `---<domain:hostAttr>` | 2-11     |  |
+| `----<domain:hostName>` | 1     | Hostname of the nameserver |
+| `----<domain:hostAddr>` | 0-2     | Required if nameserver is under domain zone. Attribute ip="v4/v6" |
 
 
 ##### create
