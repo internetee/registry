@@ -8,9 +8,9 @@ namespace :db do
     when databases.first
       'schema.rb'
     when databases.second
-      'api_log_schema.rb'
-    when databases.third
       'whois_schema.rb'
+    when databases.third
+      'api_log_schema.rb'
     end
   end
 
