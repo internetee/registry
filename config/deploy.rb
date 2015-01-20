@@ -33,6 +33,14 @@ task :st do
   set :branch, 'master' # same as production
 end
 
+# staging
+task :eppst do
+  set :domain, 'epp-st'
+  set :deploy_to, '$HOME/epp'
+  set :repository, 'https://github.com/internetee/registry' # production repo
+  set :branch, 'master' # same as production
+end
+
 # production
 task :pr do
   set :domain, 'registry'
@@ -40,6 +48,15 @@ task :pr do
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'master' # same as staging
 end
+
+# production
+task :epppr do
+  set :domain, 'epp'
+  set :deploy_to, '$HOME/epp'
+  set :repository, 'https://github.com/internetee/registry' # production repo
+  set :branch, 'master' # same as staging
+end
+
 
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
 # They will be linked in the 'deploy:link_shared_paths' step.
@@ -108,7 +125,6 @@ task deploy: :environment do
     invoke :'rails:db_migrate'
     invoke :'rails:assets_precompile'
     to :launch do
-      invoke :'whenever:update'
       invoke :restart
     end
   end
@@ -122,7 +138,6 @@ task rollback: :environment do
     ls -Art "#{deploy_to}/releases" | sort | tail -n 2 | head -n 1 |
     xargs -I active ln -nfs "#{deploy_to}/releases/active" "#{deploy_to}/current"
   )
-  invoke :'whenever:update'
   to :launch do
     invoke :restart
   end
@@ -139,6 +154,20 @@ end
 desc 'Restart Passenger application'
 task restart: :environment do
   queue "mkdir -p #{deploy_to}/current/tmp; touch #{deploy_to}/current/tmp/restart.txt"
+end
+
+namespace :cron do
+  desc 'Setup cron tasks.'
+  task setup: :environment do
+    invoke :'rbenv:load'
+    invoke :'whenever:update'
+  end
+
+  desc 'Clear cron tasks.'
+  task clear: :environment do
+    invoke :'rbenv:load'
+    invoke :'whenever:clear'
+  end
 end
 
 # For help in making your deploy script, see the Mina documentation:

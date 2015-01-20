@@ -1,3 +1,6 @@
+20.01.2015
+
+* Added dedicated mina cron:setup Now cron is not updated automatically and should update manually.
 19.01.2015
 
 * Added application-exapmle.yml and removed application.yml from repo, please 
