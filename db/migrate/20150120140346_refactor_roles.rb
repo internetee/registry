@@ -3,9 +3,7 @@ class RefactorRoles < ActiveRecord::Migration
     add_column :users, :roles, :string, array: true
 
     User.all.each do |x|
-      r = x.role
-      next unless r
-      x.roles = [r.code]
+      x.roles = ['admin']
       x.save
     end
 
