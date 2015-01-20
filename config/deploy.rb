@@ -35,7 +35,7 @@ end
 
 # staging
 task :stepp do
-  set :domain, 'registry-st'
+  set :domain, 'registry-st-epp'
   set :deploy_to, '$HOME/epp'
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'master' # same as production
@@ -51,7 +51,7 @@ end
 
 # production
 task :prepp do
-  set :domain, 'registry'
+  set :domain, 'registry-epp'
   set :deploy_to, '$HOME/epp'
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'master' # same as staging
