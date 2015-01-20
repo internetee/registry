@@ -201,9 +201,10 @@ Deployment
 CRON
 ----
 
-Crontab is automatically updated after each deploy. Jobs can be viewed [here](https://github.com/internetee/registry/blob/master/config/schedule.rb).  
+Crontab can be setup after deploy. Jobs can be viewed [here](https://github.com/internetee/registry/blob/master/config/schedule.rb).  
 
-Alternatively you can run `mina pr whenever:update` to update the crontab.
+    mina pr cron:setup # to update the crontab.
+    mina pr cron:clear # to clear crontab.
 
 Autotesting
 -----------
