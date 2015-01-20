@@ -6,11 +6,11 @@ namespace :db do
   def schema_file(db)
     case db
     when databases.first
-      'schema.rb'
+      'api_log_schema.rb'
     when databases.second
       'whois_schema.rb'
     when databases.third
-      'api_log_schema.rb'
+      'schema.rb'
     end
   end
 
