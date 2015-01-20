@@ -1,6 +1,9 @@
 20.01.2015
 
-* Added dedicated mina cron:setup Now cron is not updated automatically and should update manually.
+* Added dedicated mina cron:setup and mina cron:clear for manual cron management.
+  Automatic management during deploy removed.
+* Added mina config for epp: "mina eppst deploy" and "mina epppr deploy" 
+
 19.01.2015
 
 * Added application-exapmle.yml and removed application.yml from repo, please 
