@@ -3,8 +3,11 @@ class RefactorRoles < ActiveRecord::Migration
     add_column :users, :roles, :string, array: true
 
     User.all.each do |x|
-      x.roles = [x.role.code]
-      x.save
+      c = x.role.try(:code)
+      if c
+        x.roles = [c]
+        x.save
+      end
     end
 
     remove_column :users, :role_id
