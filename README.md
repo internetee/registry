@@ -63,7 +63,6 @@ Production install (database schema should be loaded and seeds should be present
     cd registry
     cp current/config/application-example.yml shared/config/application.yml # and edit it
     cp current/config/database-example.yml shared/config/database.yml # and edit it
-    cp current/config/initializers/devise_secret_example.rb.txt shared/config/initializers/devise_secret.rb # and edit it
 
     vi /etc/apache2/sites-enabled/registry.conf # add conf and all needed serts
     vi /etc/apache2/sites-enabled/epp.conf # add epp conf, restart apache
