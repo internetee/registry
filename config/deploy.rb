@@ -33,6 +33,14 @@ task :st do
   set :branch, 'master' # same as production
 end
 
+# staging
+task :stepp do
+  set :domain, 'registry-st'
+  set :deploy_to, '$HOME/epp'
+  set :repository, 'https://github.com/internetee/registry' # production repo
+  set :branch, 'master' # same as production
+end
+
 # production
 task :pr do
   set :domain, 'registry'
@@ -40,6 +48,15 @@ task :pr do
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'master' # same as staging
 end
+
+# production
+task :prepp do
+  set :domain, 'registry'
+  set :deploy_to, '$HOME/epp'
+  set :repository, 'https://github.com/internetee/registry' # production repo
+  set :branch, 'master' # same as staging
+end
+
 
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
 # They will be linked in the 'deploy:link_shared_paths' step.
