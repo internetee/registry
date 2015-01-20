@@ -2,8 +2,6 @@ require 'rails_helper'
 require 'cancan/matchers'
 
 describe User do
-  it { should belong_to(:role) }
-
   describe 'abilities' do
     subject(:ability) { Ability.new(user) }
     let(:user) { nil }
@@ -29,7 +27,7 @@ describe User do
     end
 
     context 'when user is customer service' do
-      let(:user) { Fabricate(:user, role: Role.new(code: 'customer_service')) }
+      let(:user) { Fabricate(:user, roles: ['customer_service']) }
 
       it { should be_able_to(:manage, Domain.new) }
       it { should be_able_to(:manage, Contact.new) }

@@ -61,9 +61,5 @@ User.where(
   country: Country.where(name: 'Estonia').first
 ).first_or_create
 
-Role.create(code: 'admin')
-Role.create(code: 'user')
-Role.create(code: 'customer_service')
-
-User.update_all(role_id: Role.first.id)
+User.update_all(roles: ['admin'])
 # Setting.whois_enabled = true only uncomment this if you wish whois

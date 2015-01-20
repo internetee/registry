@@ -40,7 +40,7 @@
           %dd= @user.email
 
           %dt= t('role')
-          - if @user.role
-            %dd= t(@user.role)
+          - if @user.roles
+            %dd= t(@user.roles.first)
           - else
             %dd

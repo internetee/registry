@@ -25,8 +25,8 @@
               %td= link_to(x, [:admin, x])
               %td= x.email
               %td= x.identity_code
-              - if x.role
-                %td= t(x.role)
+              - if x.roles
+                %td= t(x.roles.first)
               - else
                 %td
 .row
