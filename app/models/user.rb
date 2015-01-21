@@ -15,7 +15,7 @@ class User < ActiveRecord::Base
 
   validate :validate_identity_code
 
-  ROLES = ['user', 'customer_service', 'admin']
+  ROLES = %w(user customer_service admin)
 
   def to_s
     username

@@ -19,7 +19,7 @@ feature 'Sessions', type: :feature do
     expect(page).to have_text('Welcome!')
 
     uri = URI.parse(current_url)
-    expect(uri.path).to eq(admin_root_path)
+    expect(uri.path).to eq(admin_domains_path)
 
     expect(page).to have_link('Elkdata', count: 2)
     expect(page).to have_link('Registrar OÜ', count: 2)

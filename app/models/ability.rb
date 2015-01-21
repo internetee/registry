@@ -7,9 +7,9 @@ class Ability
     @user = user || User.new
     @user.roles.each { |role| send(role) } if @user.roles
 
-    if @user.roles.nil? || @user.roles.empty?
-      can :show, :dashboard
-    end
+    return if @user.roles || @user.roles.any?
+
+    can :show, :dashboard
   end
 
   def user

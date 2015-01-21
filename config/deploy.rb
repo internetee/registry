@@ -57,7 +57,6 @@ task :epppr do
   set :branch, 'master' # same as staging
 end
 
-
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
 # They will be linked in the 'deploy:link_shared_paths' step.
 set :shared_paths, [
