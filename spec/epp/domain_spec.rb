@@ -80,7 +80,7 @@ describe 'EPP Domain', epp: true do
       expect(response[:results][1][:msg]).to eq('Required parameter missing: registrant')
 
       expect(response[:results][2][:result_code]).to eq('2003')
-      expect(response[:results][2][:msg]).to eq('Required parameter missing: legalDocument')
+      expect(response[:results][2][:msg]).to eq('Required parameter missing: extension > extdata > legalDocument')
     end
 
     context 'with two epp users' do
@@ -520,7 +520,7 @@ describe 'EPP Domain', epp: true do
 
         response = epp_request(xml, :xml)
         expect(response[:result_code]).to eq('2003')
-        expect(response[:msg]).to eq('Required parameter missing: hostAttr')
+        expect(response[:msg]).to eq('Required parameter missing: ns > hostAttr')
       end
 
       it 'creates domain with nameservers with ips' do
