@@ -22,4 +22,4 @@
 
 NB! Extension is not implemented yet!
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-contact-with-valid-user-create-command-successfully-creates-a-contact)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-create-command-successfully-creates-a-contact)

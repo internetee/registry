@@ -17,7 +17,7 @@ Here are functions like login, logout, hello, poll
 | `---<extURI>`           | 0-n   | Extension URI that is going to be used in current connection. |
 | `<clTRID>`              | 0-1   | Client transaction id |
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-session-when-connected-with-valid-user-logs-in-epp-user)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-session-when-connected-with-valid-user-logs-in-epp-user)
 
 ### Logout request
 
@@ -26,7 +26,7 @@ Here are functions like login, logout, hello, poll
 | `<logout>`               | 1     |   |
 | `<clTRID>`              | 0-1   | Client transaction id |
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-session-when-connected-with-valid-user-logs-out-epp-user)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-session-when-connected-with-valid-user-logs-out-epp-user)
 
 ### Poll request
 
@@ -35,4 +35,4 @@ Here are functions like login, logout, hello, poll
 | `<poll>`               | 1     | Rec for receiving messages, ack for dequeuing Attribute: op="req / ack"  |
 | `<clTRID>`              | 0-1   | Client transaction id |
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-poll-with-valid-user-queues-and-dequeues-messages)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-poll-with-valid-user-queues-and-dequeues-messages)

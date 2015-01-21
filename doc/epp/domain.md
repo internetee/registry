@@ -25,7 +25,7 @@ Field name              | Min-max | Field description
 `--<eis:legalDocument>` | 1       | Base64 encoded document. Attribute: type="pdf"
 `<clTRID>`              | 0-1     | Client transaction id
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-with-citizen-as-an-owner-creates-a-domain)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-user-with-citizen-as-an-owner-creates-a-domain)
 
 ### Domain update
 
@@ -64,7 +64,7 @@ Field name               | Min-max  | Field description
 `--<eis:legalDocument>`  | 1        | Base64 encoded document. Attribute: type="pdf"
 `<clTRID>`               | 0-1      | Client transaction id
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-updates-domain-and-adds-objects)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-user-with-valid-domain-updates-domain-and-adds-objects)
 
 ### Domain delete
 
@@ -78,7 +78,7 @@ Field name              | Min-max | Field description
 `--<eis:legalDocument>` | 1       | Base64 encoded document. Attribute: type="pdf"
 `<clTRID>`              | 0-1     | Client transaction id
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-deletes-domain)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-user-with-valid-domain-deletes-domain)
 
 ### Domain info
 
@@ -94,7 +94,7 @@ Field name              | Min-max | Field description
 `--<eis:legalDocument>` | 1       | Base64 encoded document. Attribute: type="pdf"
 `<clTRID>`              | 0-1     | Client transaction id
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-returns-domain-info)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-user-with-valid-domain-returns-domain-info)
 
 ### Domain renew
 
@@ -110,7 +110,7 @@ Field name              | Min-max | Field description
 `--<eis:legalDocument>` | 1       | Base64 encoded document. Attribute: type="pdf"
 `<clTRID>`              | 0-1     | Client transaction id
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-with-valid-domain-renews-a-domain)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-user-with-valid-domain-renews-a-domain)
 
 ### Domain transfer
 
@@ -126,7 +126,7 @@ Field name              | Min-max | Field description
 `--<eis:legalDocument>` | 1       | Base64 encoded document. Attribute: type="pdf"
 `<clTRID>`              | 0-1     | Client transaction id
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-with-two-epp-users-transfers-a-domain)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-user-with-two-epp-users-transfers-a-domain)
 
 ### Domain check
 
@@ -140,4 +140,4 @@ Field name              | Min-max | Field description
 `--<eis:legalDocument>` | 1       | Base64 encoded document. Attribute: type="pdf"
 `<clTRID>`              | 0-1     | Client transaction id
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-doc.md#epp-domain-with-valid-user-checks-a-domain)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-user-checks-a-domain)
