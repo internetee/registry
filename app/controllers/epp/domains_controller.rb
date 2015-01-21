@@ -125,11 +125,8 @@ class Epp::DomainsController < EppController
   end
 
   def validate_create
-    ret = true
-
     # TODO: Verify contact presence if registrant is juridical
-    attrs_present = epp_request_valid?('name', 'ns', 'registrant', 'legalDocument', 'hostAttr')
-    ret = false unless attrs_present
+    ret = epp_request_valid?('name', 'ns', 'registrant', 'legalDocument', 'hostAttr')
 
     if params[:parsed_frame].css('dsData').count > 0 && params[:parsed_frame].css('create > keyData').count > 0
       epp_errors << { code: '2306', msg: I18n.t('ds_data_and_key_data_must_not_exists_together') }
