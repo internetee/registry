@@ -142,9 +142,9 @@ en:
           attributes:
             contact:
               blank: 'Contact was not found'
-              taken: 'Contact already exists on this domain!'
+              taken: 'Contact already exists on this domain'
             contact_code_cache:
-              taken: 'Contact already exists on this domain!'
+              taken: 'Contact already exists on this domain'
 
         domain_status:
           attributes:
@@ -315,7 +315,7 @@ en:
   back_to_domain: 'Back to domain'
   edit_domain: 'Edit domain'
   contact_was_not_found: 'Contact was not found!'
-  contact_already_exists: 'Contact already exists on this domain!'
+  contact_already_exists: 'Contact already exists on this domain'
   failed_to_add_contact: 'Failed to add contact!'
   contact_added: 'Contact added!'
   contact_detached: 'Contact detached!'

@@ -1126,7 +1126,7 @@ describe 'EPP Domain', epp: true do
         expect(response[:results][1][:value]).to eq('ns2.example.com')
 
         expect(response[:results][2][:result_code]).to eq('2302')
-        expect(response[:results][2][:msg]).to eq('Contact already exists on this domain!')
+        expect(response[:results][2][:msg]).to eq('Contact already exists on this domain')
         expect(response[:results][2][:value]).to eq('mak21')
 
         expect(response[:results][3][:msg]).to eq('Status already exists on this domain')
@@ -1265,18 +1265,23 @@ describe 'EPP Domain', epp: true do
       end
 
       it 'does not add duplicate objects to domain' do
-        Fabricate(:contact, code: 'mak21')
+        d = Domain.first
+        c = d.admin_contacts.first
+        n = d.nameservers.first
 
         xml = domain_update_xml({
-          add: [
+          add: {
             ns: [
               {
                 hostAttr: [
-                  { hostName: { value: 'ns1.example.com' } }
+                  { hostName: { value: n.hostname } }
                 ]
               }
+            ],
+            _anonymus: [
+              { contact: { value: c.code, attrs: { type: 'admin' } } }
             ]
-          ]
+          }
         })
 
         epp_request(xml, :xml)
@@ -1284,7 +1289,11 @@ describe 'EPP Domain', epp: true do
 
         expect(response[:results][0][:result_code]).to eq('2302')
         expect(response[:results][0][:msg]).to eq('Nameserver already exists on this domain')
-        expect(response[:results][0][:value]).to eq('ns1.example.com')
+        expect(response[:results][0][:value]).to eq(n.hostname)
+
+        expect(response[:results][1][:result_code]).to eq('2302')
+        expect(response[:results][1][:msg]).to eq('Contact already exists on this domain')
+        expect(response[:results][1][:value]).to eq(c.code)
       end
 
       it 'cannot change registrant without legal document' do
