@@ -16,6 +16,7 @@ set :domain, 'registry-st'
 set :deploy_to, '$HOME/registry'
 set :repository, 'https://github.com/domify/registry' # dev repo
 set :branch, 'master'
+set :rails_env, 'alpha'
 
 # alpha branch
 task :epp do
@@ -23,6 +24,7 @@ task :epp do
   set :deploy_to, '$HOME/epp'
   set :repository, 'https://github.com/domify/registry' # dev repo
   set :branch, 'master'
+  set :rails_env, 'alpha'
 end
 
 # staging
@@ -31,6 +33,7 @@ task :st do
   set :deploy_to, '$HOME/registry'
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'master' # same as production
+  set :rails_env, 'staging'
 end
 
 # staging
@@ -39,6 +42,7 @@ task :eppst do
   set :deploy_to, '$HOME/epp'
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'master' # same as production
+  set :rails_env, 'staging'
 end
 
 # production
@@ -47,6 +51,7 @@ task :pr do
   set :deploy_to, '$HOME/registry'
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'master' # same as staging
+  set :rails_env, 'production'
 end
 
 # production
@@ -55,6 +60,7 @@ task :epppr do
   set :deploy_to, '$HOME/epp'
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'master' # same as staging
+  set :rails_env, 'production'
 end
 
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
