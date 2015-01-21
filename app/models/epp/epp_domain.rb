@@ -124,12 +124,17 @@ class Epp::EppDomain < Domain
     contacts.each do |k, v|
       v.each do |x|
         contact = Contact.find_by(code: x[:contact])
-        if contact
-          attach_contact(k, contact)
-        else
-          # Detailed error message with value to display in EPP response
+        unless contact
           add_epp_error('2303', 'contact', x[:contact], [:domain_contacts, :not_found])
+          next
         end
+
+        if k == :admin && contact.juridical?
+          add_epp_error('2306', 'contact', x[:contact], [:domain_contacts, :admin_contact_can_be_only_citizen])
+          next
+        end
+
+        attach_contact(k, contact)
       end
     end
 

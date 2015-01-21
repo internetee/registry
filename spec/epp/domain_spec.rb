@@ -888,6 +888,18 @@ describe 'EPP Domain', epp: true do
         expect(Domain.count).to eq 0
         expect(DomainContact.count).to eq 0
       end
+
+      it 'cannot assign juridical person as admin contact' do
+        xml = domain_create_xml({
+          _anonymus: [
+            { contact: { value: 'jd1234', attrs: { type: 'admin' } } }
+          ]
+        })
+
+        response = epp_request(xml, :xml)
+        expect(response[:result_code]).to eq('2306')
+        expect(response[:msg]).to eq('Admin contact can be only citizen')
+      end
     end
 
     context 'with valid domain' do
