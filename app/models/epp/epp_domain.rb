@@ -177,7 +177,7 @@ class Epp::EppDomain < Domain
     ns_list.each do |ns_attrs|
       nameserver = nameservers.where(ns_attrs)
       if nameserver.blank?
-        add_epp_error('2303', 'hostObj', ns_attrs[:hostname], [:nameservers, :not_found])
+        add_epp_error('2303', 'hostAttr', ns_attrs[:hostname], [:nameservers, :not_found])
       else
         to_delete << nameserver
       end
@@ -507,12 +507,6 @@ class Epp::EppDomain < Domain
         }
 
         res << host_attr.delete_if { |_k, v| v.blank? }
-      end
-
-      parsed_frame.css('hostObj').each do |x|
-        res << {
-          hostname: x.text
-        }
       end
 
       res

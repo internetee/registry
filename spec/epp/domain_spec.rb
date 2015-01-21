@@ -506,7 +506,7 @@ describe 'EPP Domain', epp: true do
         expect(response[:msg]).to eq('Hostname is invalid')
       end
 
-      it 'does not allow hostObj' do
+      it 'checks hostAttr presence' do
         xml = domain_create_xml({
           ns: [
             {
@@ -519,8 +519,8 @@ describe 'EPP Domain', epp: true do
         })
 
         response = epp_request(xml, :xml)
-        expect(response[:result_code]).to eq('2306')
-        expect(response[:msg]).to eq('hostObj object is not allowed')
+        expect(response[:result_code]).to eq('2003')
+        expect(response[:msg]).to eq('Required parameter missing: hostAttr')
       end
 
       it 'creates domain with nameservers with ips' do
@@ -1041,8 +1041,16 @@ describe 'EPP Domain', epp: true do
           add: [
             {
               ns: [
-                { hostObj: { value: 'ns1.example.com' } },
-                { hostObj: { value: 'ns2.example.com' } }
+                {
+                  hostAttr: [
+                    { hostName: { value: 'ns1.example.com' } }
+                  ]
+                },
+                {
+                  hostAttr: [
+                    { hostName: { value: 'ns2.example.com' } }
+                  ]
+                }
               ]
             },
             _anonymus: [
@@ -1131,8 +1139,16 @@ describe 'EPP Domain', epp: true do
           add: [
             {
               ns: [
-                { hostObj: { value: 'ns1.example.com' } },
-                { hostObj: { value: 'ns2.example.com' } }
+                {
+                  hostAttr: [
+                    { hostName: { value: 'ns1.example.com' } }
+                  ]
+                },
+                {
+                  hostAttr: [
+                    { hostName: { value: 'ns2.example.com' } }
+                  ]
+                }
               ]
             },
             _anonymus: [
@@ -1169,7 +1185,11 @@ describe 'EPP Domain', epp: true do
           rem: [
             {
               ns: [
-                { hostObj: { value: 'ns1.example.com' } }
+                {
+                  hostAttr: [
+                    { hostName: { value: 'ns1.example.com' } }
+                  ]
+                }
               ]
             },
             _anonymus: [
@@ -1238,7 +1258,11 @@ describe 'EPP Domain', epp: true do
         xml = domain_update_xml({
           add: [
             ns: [
-              { hostObj: { value: 'ns1.example.com' } }
+              {
+                hostAttr: [
+                  { hostName: { value: 'ns1.example.com' } }
+                ]
+              }
             ]
           ]
         })

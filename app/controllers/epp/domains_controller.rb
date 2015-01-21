@@ -128,13 +128,8 @@ class Epp::DomainsController < EppController
     ret = true
 
     # TODO: Verify contact presence if registrant is juridical
-    attrs_present = epp_request_valid?('name', 'ns', 'registrant', 'legalDocument')
+    attrs_present = epp_request_valid?('name', 'ns', 'registrant', 'legalDocument', 'hostAttr')
     ret = false unless attrs_present
-
-    if params[:parsed_frame].css('hostObj').any?
-      epp_errors << { code: '2306', msg: I18n.t('host_obj_is_not_allowed') }
-      ret = false
-    end
 
     if params[:parsed_frame].css('dsData').count > 0 && params[:parsed_frame].css('create > keyData').count > 0
       epp_errors << { code: '2306', msg: I18n.t('ds_data_and_key_data_must_not_exists_together') }

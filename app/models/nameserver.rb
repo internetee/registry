@@ -21,10 +21,10 @@ class Nameserver < ActiveRecord::Base
   def epp_code_map
     {
       '2302' => [
-        [:hostname, :taken, { value: { obj: 'hostObj', val: hostname } }]
+        [:hostname, :taken, { value: { obj: 'hostAttr', val: hostname } }]
       ],
       '2005' => [
-        [:hostname, :invalid, { value: { obj: 'hostObj', val: hostname } }],
+        [:hostname, :invalid, { value: { obj: 'hostAttr', val: hostname } }],
         [:ipv4, :invalid, { value: { obj: 'hostAddr', val: ipv4 } }],
         [:ipv6, :invalid, { value: { obj: 'hostAddr', val: ipv6 } }]
       ],
