@@ -5,7 +5,7 @@
     Field name               Min-max  Field description
     -----------------------  -------  -----------------
     <create>                 1     
-      <contact:create>       1        Attribute: xmlns:domain="urn:ietf:params:xml:ns:contact-1.0"
+      <contact:create>       1        Attribute: xmlns:contact="urn:ietf:params:xml:ns:contact-1.0"
       <contact:voice>        1        Phone
       <contact:email>        1        E-mail
       <contact:Ident>        1        Contact identificator. 
