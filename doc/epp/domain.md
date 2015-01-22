@@ -49,7 +49,8 @@
           <domain:ns>            0-1      
             <domain:hostAttr>    1        
               <domain:hostName>  1         Hostname of the nameserver
-              <domain:hostAddr>  0-2       Required if nameserver is under domain zone. Attribute ip="v4 / v6"
+              <domain:hostAddr>  0-2       Required if nameserver is under domain zone. 
+                                           Attribute ip="v4 / v6"
         <domain:rem>             0-1       Objects to remove
           <domain:contact>       0-n       Contact reference. Attribute: type="admin / tech"
           <domain:status>        0-n       Attribute: s="clientDeleteProhibited / clientHold / 
@@ -96,7 +97,8 @@
     -----------------------  -------  -----------------
     <info>                   1       
       <domain:info>          1        Attribute: xmlns:domain="urn:ietf:params:xml:ns:domain-1.0"
-        <domain:name>        1        Domain name. Can contain unicode characters. <br> Attribute: hosts="all / TODO"
+        <domain:name>        1        Domain name. Can contain unicode characters. 
+                                      Attribute: hosts="all / TODO"
         <domain:authInfo>    0-1      Required if registrar is not the owner of the domain.
           <domain:pw>        1        Domain password. Attribute: roid="String"
     <extension>              0-1     
