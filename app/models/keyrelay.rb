@@ -19,6 +19,7 @@ class Keyrelay < ActiveRecord::Base
         [:expiry_relative, :unknown_pattern, { value: { obj: 'relative', val: expiry_relative } }]
       ],
       '2003' => [
+        # TODO: Remove only_one_parameter_allowed and other params that are validated in controller?
         [:base, :only_one_parameter_allowed, { param_1: 'relative', param_2: 'absolute' }],
         [:key_data_public_key, :blank],
         [:key_data_flags, :blank],

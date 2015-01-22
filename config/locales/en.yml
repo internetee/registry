@@ -444,6 +444,7 @@ en:
   generate_zonefile: 'Generate zonefile'
   zonefile: 'Zonefile'
   only_one_parameter_allowed: 'Only one parameter allowed: %{param_1} or %{param_2}'
+  exactly_one_parameter_required: 'Exactly one parameter required: %{params}'
   required_parameter_missing_choice: 'Required parameter missing: %{param_1} or %{param_2}'
   transfer_wait_time: 'Transfer wait time'
   ns_min_count: 'Nameserver minimum count'

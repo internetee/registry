@@ -131,7 +131,7 @@ describe 'EPP Keyrelay', epp: true do
       })
 
       response = epp_request(xml, :xml, :elkdata)
-      expect(response[:msg]).to eq('Only one parameter allowed: relative or absolute')
+      expect(response[:msg]).to eq('Exactly one parameter required: expiry > relative or expiry > absolute')
 
       expect(zone.messages.queued.count).to eq(0)
     end

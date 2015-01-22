@@ -14,7 +14,14 @@ class Epp::KeyrelaysController < EppController
   private
 
   def validate_keyrelay
-    epp_request_valid?('pubKey', 'flags', 'protocol', 'alg', 'name', 'pw')
+    @prefix = 'keyrelay >'
+    epp_request_valid?(
+      'name',
+      'keyData', 'keyData > pubKey', 'keyData > flags', 'keyData > protocol', 'keyData > alg',
+      'authInfo', 'authInfo > pw'
+    )
+
+    exactly_one_of 'expiry > relative', 'expiry > absolute'
 
     begin
       abs_datetime = params[:parsed_frame].css('absolute').text
@@ -26,8 +33,6 @@ class Epp::KeyrelaysController < EppController
         value: { obj: 'expiry_absolute', val: abs_datetime }
       }
     end
-
-    epp_errors.empty?
   end
   # rubocop: enable Metrics/PerceivedComplexity
   # rubocop: enable Metrics/CyclomaticComplexity
