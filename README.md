@@ -3,18 +3,18 @@ Domain Registry
 
 Full stack top-level domain (TLD) management.
 
-* [Documentation](/registry#documentation)
-* [Installation](/registry#installation)
-* [Deployment](/registry#deployment)
-* [Staging deployment](/registry#staging-deployment)
-* [Autotesting](/registry#autotesting)
+* [Documentation](#documentation)
+* [Installation](#installation)
+* [Deployment](#deployment)
+* [Staging deployment](#staging-deployment)
+* [Autotesting](#autotesting)
 
 
 Documentation
 -------------
 
 * [EPP documentation](/doc/epp)
-* [EPP request-response examples](/doc/epp-doc.md)
+* [EPP request-response examples](/doc/epp-examples.md)
 * [Database diagram](/doc/models_complete.svg)
 * [Controllers diagram](/doc/controllers_complete.svg)
 
