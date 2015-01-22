@@ -115,7 +115,8 @@
         <domain:name>        1        Domain name. Can contain unicode characters. 
                                       Attribute: hosts="all / TODO"
         <domain:curExpDate>  1        Current expiry date (ISO8601 format)
-        <domain:period>      1        Registration period for domain. Must add up to 1 / 2 / 3 years. <br> Attribute: unit="y/m/d"
+        <domain:period>      1        Registration period for domain. 
+                                      Must add up to 1 / 2 / 3 years. Attribute: unit="y/m/d"
     <extension>              0-1     
       <eis:extdata>          0-1      Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
         <eis:legalDocument>  1        Base64 encoded document. Attribute: type="pdf"
@@ -146,7 +147,8 @@
     -----------------------  -------  -----------------
     <check>                  1       
       <domain:check>         1        Attribute: xmlns:domain="urn:ietf:params:xml:ns:domain-1.0"
-        <domain:name>        1        Domain name. Can contain unicode characters. <br> Attribute: hosts="all / TODO"
+        <domain:name>        1        Domain name. Can contain unicode characters. 
+                                      Attribute: hosts="all / TODO"
     <extension>              0-1     
       <eis:extdata>          0-1      Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
         <eis:legalDocument>  1        Base64 encoded document. Attribute: type="pdf"
