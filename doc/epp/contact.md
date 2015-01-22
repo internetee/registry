@@ -60,3 +60,44 @@ NB! Extension is not implemented yet!
 
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-update-command-is-succesful)
+
+### Contact delete
+
+    Field name               Min-max  Field description
+    -----------------------  -------  -----------------
+    <delete>                 1       
+      <contact:delete>       1        Attribute: xmlns:contact="urn:ietf:params:xml:ns:contact-1.0"
+        <contact:id>         1        Contact id
+    <clTRID>                 0-1      Client transaction id
+
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-delete-command-deletes-contact)
+
+
+### Contact check
+
+    Field name               Min-max  Field description
+    -----------------------  -------  -----------------
+    <check>                  1       
+      <contact:check>        1        Attribute: xmlns:contact="urn:ietf:params:xml:ns:contact-1.0"
+        <contact:id>         1-n      Contact id 
+    <clTRID>                 0-1      Client transaction id
+
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-check-command-returns-info-about-contact-availability)
+
+
+### Contact info
+
+    Field name               Min-max  Field description
+    -----------------------  -------  -----------------
+    <info>                   1       
+      <contact:info>         1        Attribute: xmlns:contact="urn:ietf:params:xml:ns:contact-1.0"
+        <contact:id>         1-n      Contact id 
+    <clTRID>                 0-1      Client transaction id
+
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-info-command-discloses-items-to-owner)
+
+
+### Domain renew
+
+Renewal semantics do not apply to contact objects, so there is no
+mapping defined for the EPP <renew> command.
