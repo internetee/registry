@@ -83,245 +83,6 @@ describe 'EPP Domain', epp: true do
       expect(response[:results][2][:msg]).to eq('Required parameter missing: extension > extdata > legalDocument')
     end
 
-    # TODO: Refactor this
-    context 'with two epp users' do
-      let(:domain) { Domain.first }
-
-      before(:each) do
-        Fabricate(:domain, name: 'example.ee', registrar: zone)
-      end
-
-      ### TRANSFER ###
-      it 'transfers a domain' do
-        pw = domain.auth_info
-        xml = domain_transfer_xml({ authInfo: { pw: { value: pw } } })
-        response = epp_request(xml, :xml, :elkdata)
-
-        domain.reload
-        dtl = domain.domain_transfers.last
-
-        trn_data = response[:parsed].css('trnData')
-        expect(trn_data.css('name').text).to eq('example.ee')
-        expect(trn_data.css('trStatus').text).to eq('serverApproved')
-        expect(trn_data.css('reID').text).to eq('123')
-        expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
-        expect(trn_data.css('acID').text).to eq('12345678')
-        expect(trn_data.css('acDate').text).to eq(dtl.transferred_at.to_time.utc.to_s)
-        expect(trn_data.css('exDate').text).to eq(domain.valid_to.to_time.utc.to_s)
-
-        expect(domain.registrar).to eq(elkdata)
-
-        Setting.transfer_wait_time = 1
-
-        domain.reload
-        pw = domain.auth_info
-        xml = domain_transfer_xml({ authInfo: { pw: { value: pw } } }) # request with new password
-
-        response = epp_request(xml, :xml, :zone)
-        trn_data = response[:parsed].css('trnData')
-
-        domain.reload
-        dtl = domain.domain_transfers.last
-
-        expect(domain.domain_transfers.count).to eq(2)
-
-        expect(trn_data.css('name').text).to eq('example.ee')
-        expect(trn_data.css('trStatus').text).to eq('pending')
-        expect(trn_data.css('reID').text).to eq('12345678')
-        expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
-        expect(trn_data.css('acDate').text).to eq(dtl.wait_until.to_time.utc.to_s)
-        expect(trn_data.css('acID').text).to eq('123')
-        expect(trn_data.css('exDate').text).to eq(domain.valid_to.to_time.utc.to_s)
-
-        expect(domain.registrar).to eq(elkdata)
-
-        # should return same data if pending already
-        response = epp_request(xml, :xml, :zone)
-        trn_data = response[:parsed].css('trnData')
-
-        expect(domain.domain_transfers.count).to eq(2)
-        expect(trn_data.css('name').text).to eq('example.ee')
-        expect(trn_data.css('trStatus').text).to eq('pending')
-        expect(trn_data.css('reID').text).to eq('12345678')
-        expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
-        expect(trn_data.css('acDate').text).to eq(dtl.wait_until.to_time.utc.to_s)
-        expect(trn_data.css('acID').text).to eq('123')
-        expect(trn_data.css('exDate').text).to eq(domain.valid_to.to_time.utc.to_s)
-
-        expect(domain.registrar).to eq(elkdata)
-
-        # should show up in other registrar's poll
-
-        response = epp_request(epp_xml.session.poll, :xml, :elkdata)
-        expect(response[:msg]).to eq('Command completed successfully; ack to dequeue')
-        msg_q = response[:parsed].css('msgQ')
-        expect(msg_q.css('qDate').text).to_not be_blank
-        expect(msg_q.css('msg').text).to eq('Transfer requested.')
-        expect(msg_q.first['id']).to_not be_blank
-        expect(msg_q.first['count']).to eq('1')
-
-        xml = epp_xml.session.poll(poll: {
-          value: '', attrs: { op: 'ack', msgID: msg_q.first['id'] }
-        })
-
-        response = epp_request(xml, :xml, :elkdata)
-        expect(response[:msg]).to eq('Command completed successfully')
-        msg_q = response[:parsed].css('msgQ')
-        expect(msg_q.first['id']).to_not be_blank
-        expect(msg_q.first['count']).to eq('0')
-      end
-
-      it 'creates a domain transfer with legal document' do
-        Setting.transfer_wait_time = 1
-        expect(domain.legal_documents.count).to eq(0)
-        pw = domain.auth_info
-        xml = domain_transfer_xml({ authInfo: { pw: { value: pw } } }, 'query', {
-          _anonymus: [
-            legalDocument: {
-              value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
-              attrs: { type: 'pdf' }
-            }
-          ]
-        })
-
-        response = epp_request(xml, :xml, :elkdata)
-        expect(response[:result_code]).to eq('1000')
-        expect(domain.legal_documents.count).to eq(1)
-
-        log = ApiLog::EppLog.all
-
-        expect(log.length).to eq(4)
-        expect(log[0].request_command).to eq('hello')
-        expect(log[0].request_successful).to eq(true)
-
-        expect(log[1].request_command).to eq('login')
-        expect(log[1].request_successful).to eq(true)
-        expect(log[1].api_user_name).to eq('elkdata')
-        expect(log[1].api_user_registrar).to eq('Elkdata')
-
-        expect(log[2].request_command).to eq('transfer')
-        expect(log[2].request_object).to eq('domain')
-        expect(log[2].request_successful).to eq(true)
-        expect(log[2].api_user_name).to eq('elkdata')
-        expect(log[2].api_user_registrar).to eq('Elkdata')
-        expect(log[2].request).not_to be_blank
-        expect(log[2].response).not_to be_blank
-
-        expect(log[3].request_command).to eq('logout')
-        expect(log[3].request_successful).to eq(true)
-        expect(log[3].api_user_name).to eq('elkdata')
-        expect(log[3].api_user_registrar).to eq('Elkdata')
-
-        response = epp_request(xml, :xml, :elkdata)
-        expect(response[:result_code]).to eq('1000')
-        expect(domain.legal_documents.count).to eq(1) # does not add another legal document
-      end
-
-      it 'approves the transfer request' do
-        domain.domain_transfers.create({
-          status: DomainTransfer::PENDING,
-          transfer_requested_at: Time.zone.now,
-          transfer_to: elkdata,
-          transfer_from: zone
-        })
-
-        xml = domain_transfer_xml({ authInfo: { pw: { value: domain.auth_info } } }, 'approve')
-        response = epp_request(xml, :xml, :zone)
-        domain.reload
-        dtl = domain.domain_transfers.last
-
-        trn_data = response[:parsed].css('trnData')
-
-        expect(trn_data.css('name').text).to eq('example.ee')
-        expect(trn_data.css('trStatus').text).to eq('clientApproved')
-        expect(trn_data.css('reID').text).to eq('123')
-        expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
-        expect(trn_data.css('acID').text).to eq('12345678')
-        expect(trn_data.css('exDate').text).to eq(domain.valid_to.to_time.utc.to_s)
-      end
-
-      it 'rejects a domain transfer' do
-        domain.domain_transfers.create({
-          status: DomainTransfer::PENDING,
-          transfer_requested_at: Time.zone.now,
-          transfer_to: elkdata,
-          transfer_from: zone
-        })
-
-        pw = domain.auth_info
-        xml = domain_transfer_xml({ authInfo: { pw: { value: pw } } }, 'reject', {
-          _anonymus: [
-            legalDocument: {
-              value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
-              attrs: { type: 'pdf' }
-            }
-          ]
-        })
-
-        response = epp_request(xml, :xml, :elkdata)
-        expect(response[:result_code]).to eq('2304')
-        expect(response[:msg]).to eq('Transfer can be rejected only by current registrar')
-        expect(domain.legal_documents.count).to eq(0)
-
-        response = epp_request(xml, :xml, :zone)
-        expect(response[:result_code]).to eq('1000')
-        expect(domain.pending_transfer).to be_nil
-        expect(domain.legal_documents.count).to eq(1)
-      end
-
-      it 'prohibits wrong registrar from approving transfer' do
-        domain.domain_transfers.create({
-          status: DomainTransfer::PENDING,
-          transfer_requested_at: Time.zone.now,
-          transfer_to: elkdata,
-          transfer_from: zone
-        })
-
-        xml = domain_transfer_xml({ authInfo: { pw: { value: domain.auth_info } } }, 'approve')
-        response = epp_request(xml, :xml, :elkdata)
-        expect(response[:result_code]).to eq('2304')
-        expect(response[:msg]).to eq('Transfer can be approved only by current domain registrar')
-      end
-
-      it 'does not transfer with invalid pw' do
-        xml = domain_transfer_xml({ authInfo: { pw: { value: 'test' } } })
-        response = epp_request(xml, :xml)
-        expect(response[:result_code]).to eq('2201')
-        expect(response[:msg]).to eq('Authorization error')
-      end
-
-      it 'ignores transfer when owner registrar requests transfer' do
-        pw = domain.auth_info
-        xml = domain_transfer_xml({ authInfo: { pw: { value: pw } } })
-        response = epp_request(xml, :xml, :zone)
-
-        expect(response[:result_code]).to eq('2002')
-        expect(response[:msg]).to eq('Domain already belongs to the querying registrar')
-      end
-
-      it 'returns an error for incorrect op attribute' do
-        response = epp_request(domain_transfer_xml({}, 'bla'), :xml, :zone)
-        expect(response[:result_code]).to eq('2306')
-        expect(response[:msg]).to eq('Attribute op is invalid')
-      end
-
-      it 'creates new pw after successful transfer' do
-        pw = domain.auth_info
-        xml = domain_transfer_xml(pw: pw)
-        epp_request(xml, :xml, :elkdata) # transfer domain
-        response = epp_request(xml, :xml, :elkdata) # attempt second transfer
-        expect(response[:result_code]).to eq('2201')
-        expect(response[:msg]).to eq('Authorization error')
-      end
-
-      ### MISC ###
-      it 'can not see other registrar domains' do
-        response = epp_request(domain_info_xml, :xml, :elkdata)
-        expect(response[:result_code]).to eq('2302')
-        expect(response[:msg]).to eq('Domain exists but belongs to other registrar')
-      end
-    end
-
     context 'with citizen as an owner' do
       before(:each) do
         Fabricate(:contact, code: 'jd1234')
@@ -889,7 +650,231 @@ describe 'EPP Domain', epp: true do
     end
 
     context 'with valid domain' do
-      before(:each) { Fabricate(:domain, name: 'example.ee', registrar: EppUser.first.registrar, dnskeys: []) }
+      before(:each) { Fabricate(:domain, name: 'example.ee', registrar: zone, dnskeys: []) }
+      let(:domain) { Domain.first }
+
+      ### TRANSFER ###
+      it 'transfers a domain' do
+        pw = domain.auth_info
+        xml = domain_transfer_xml({ authInfo: { pw: { value: pw } } })
+        response = epp_request(xml, :xml, :elkdata)
+
+        domain.reload
+        dtl = domain.domain_transfers.last
+
+        trn_data = response[:parsed].css('trnData')
+        expect(trn_data.css('name').text).to eq('example.ee')
+        expect(trn_data.css('trStatus').text).to eq('serverApproved')
+        expect(trn_data.css('reID').text).to eq('123')
+        expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
+        expect(trn_data.css('acID').text).to eq('12345678')
+        expect(trn_data.css('acDate').text).to eq(dtl.transferred_at.to_time.utc.to_s)
+        expect(trn_data.css('exDate').text).to eq(domain.valid_to.to_time.utc.to_s)
+
+        expect(domain.registrar).to eq(elkdata)
+
+        Setting.transfer_wait_time = 1
+
+        domain.reload
+        pw = domain.auth_info
+        xml = domain_transfer_xml({ authInfo: { pw: { value: pw } } }) # request with new password
+
+        response = epp_request(xml, :xml, :zone)
+        trn_data = response[:parsed].css('trnData')
+
+        domain.reload
+        dtl = domain.domain_transfers.last
+
+        expect(domain.domain_transfers.count).to eq(2)
+
+        expect(trn_data.css('name').text).to eq('example.ee')
+        expect(trn_data.css('trStatus').text).to eq('pending')
+        expect(trn_data.css('reID').text).to eq('12345678')
+        expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
+        expect(trn_data.css('acDate').text).to eq(dtl.wait_until.to_time.utc.to_s)
+        expect(trn_data.css('acID').text).to eq('123')
+        expect(trn_data.css('exDate').text).to eq(domain.valid_to.to_time.utc.to_s)
+
+        expect(domain.registrar).to eq(elkdata)
+
+        # should return same data if pending already
+        response = epp_request(xml, :xml, :zone)
+        trn_data = response[:parsed].css('trnData')
+
+        expect(domain.domain_transfers.count).to eq(2)
+        expect(trn_data.css('name').text).to eq('example.ee')
+        expect(trn_data.css('trStatus').text).to eq('pending')
+        expect(trn_data.css('reID').text).to eq('12345678')
+        expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
+        expect(trn_data.css('acDate').text).to eq(dtl.wait_until.to_time.utc.to_s)
+        expect(trn_data.css('acID').text).to eq('123')
+        expect(trn_data.css('exDate').text).to eq(domain.valid_to.to_time.utc.to_s)
+
+        expect(domain.registrar).to eq(elkdata)
+
+        # should show up in other registrar's poll
+
+        response = epp_request(epp_xml.session.poll, :xml, :elkdata)
+        expect(response[:msg]).to eq('Command completed successfully; ack to dequeue')
+        msg_q = response[:parsed].css('msgQ')
+        expect(msg_q.css('qDate').text).to_not be_blank
+        expect(msg_q.css('msg').text).to eq('Transfer requested.')
+        expect(msg_q.first['id']).to_not be_blank
+        expect(msg_q.first['count']).to eq('1')
+
+        xml = epp_xml.session.poll(poll: {
+          value: '', attrs: { op: 'ack', msgID: msg_q.first['id'] }
+        })
+
+        response = epp_request(xml, :xml, :elkdata)
+        expect(response[:msg]).to eq('Command completed successfully')
+        msg_q = response[:parsed].css('msgQ')
+        expect(msg_q.first['id']).to_not be_blank
+        expect(msg_q.first['count']).to eq('0')
+      end
+
+      it 'creates a domain transfer with legal document' do
+        Setting.transfer_wait_time = 1
+        expect(domain.legal_documents.count).to eq(0)
+        pw = domain.auth_info
+        xml = domain_transfer_xml({ authInfo: { pw: { value: pw } } }, 'query', {
+          _anonymus: [
+            legalDocument: {
+              value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+              attrs: { type: 'pdf' }
+            }
+          ]
+        })
+
+        response = epp_request(xml, :xml, :elkdata)
+        expect(response[:result_code]).to eq('1000')
+        expect(domain.legal_documents.count).to eq(1)
+
+        log = ApiLog::EppLog.all
+
+        expect(log.length).to eq(4)
+        expect(log[0].request_command).to eq('hello')
+        expect(log[0].request_successful).to eq(true)
+
+        expect(log[1].request_command).to eq('login')
+        expect(log[1].request_successful).to eq(true)
+        expect(log[1].api_user_name).to eq('elkdata')
+        expect(log[1].api_user_registrar).to eq('Elkdata')
+
+        expect(log[2].request_command).to eq('transfer')
+        expect(log[2].request_object).to eq('domain')
+        expect(log[2].request_successful).to eq(true)
+        expect(log[2].api_user_name).to eq('elkdata')
+        expect(log[2].api_user_registrar).to eq('Elkdata')
+        expect(log[2].request).not_to be_blank
+        expect(log[2].response).not_to be_blank
+
+        expect(log[3].request_command).to eq('logout')
+        expect(log[3].request_successful).to eq(true)
+        expect(log[3].api_user_name).to eq('elkdata')
+        expect(log[3].api_user_registrar).to eq('Elkdata')
+
+        response = epp_request(xml, :xml, :elkdata)
+        expect(response[:result_code]).to eq('1000')
+        expect(domain.legal_documents.count).to eq(1) # does not add another legal document
+      end
+
+      it 'approves the transfer request' do
+        domain.domain_transfers.create({
+          status: DomainTransfer::PENDING,
+          transfer_requested_at: Time.zone.now,
+          transfer_to: elkdata,
+          transfer_from: zone
+        })
+
+        xml = domain_transfer_xml({ authInfo: { pw: { value: domain.auth_info } } }, 'approve')
+        response = epp_request(xml, :xml, :zone)
+        domain.reload
+        dtl = domain.domain_transfers.last
+
+        trn_data = response[:parsed].css('trnData')
+
+        expect(trn_data.css('name').text).to eq('example.ee')
+        expect(trn_data.css('trStatus').text).to eq('clientApproved')
+        expect(trn_data.css('reID').text).to eq('123')
+        expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
+        expect(trn_data.css('acID').text).to eq('12345678')
+        expect(trn_data.css('exDate').text).to eq(domain.valid_to.to_time.utc.to_s)
+      end
+
+      it 'rejects a domain transfer' do
+        domain.domain_transfers.create({
+          status: DomainTransfer::PENDING,
+          transfer_requested_at: Time.zone.now,
+          transfer_to: elkdata,
+          transfer_from: zone
+        })
+
+        pw = domain.auth_info
+        xml = domain_transfer_xml({ authInfo: { pw: { value: pw } } }, 'reject', {
+          _anonymus: [
+            legalDocument: {
+              value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+              attrs: { type: 'pdf' }
+            }
+          ]
+        })
+
+        response = epp_request(xml, :xml, :elkdata)
+        expect(response[:result_code]).to eq('2304')
+        expect(response[:msg]).to eq('Transfer can be rejected only by current registrar')
+        expect(domain.legal_documents.count).to eq(0)
+
+        response = epp_request(xml, :xml, :zone)
+        expect(response[:result_code]).to eq('1000')
+        expect(domain.pending_transfer).to be_nil
+        expect(domain.legal_documents.count).to eq(1)
+      end
+
+      it 'prohibits wrong registrar from approving transfer' do
+        domain.domain_transfers.create({
+          status: DomainTransfer::PENDING,
+          transfer_requested_at: Time.zone.now,
+          transfer_to: elkdata,
+          transfer_from: zone
+        })
+
+        xml = domain_transfer_xml({ authInfo: { pw: { value: domain.auth_info } } }, 'approve')
+        response = epp_request(xml, :xml, :elkdata)
+        expect(response[:result_code]).to eq('2304')
+        expect(response[:msg]).to eq('Transfer can be approved only by current domain registrar')
+      end
+
+      it 'does not transfer with invalid pw' do
+        xml = domain_transfer_xml({ authInfo: { pw: { value: 'test' } } })
+        response = epp_request(xml, :xml)
+        expect(response[:result_code]).to eq('2201')
+        expect(response[:msg]).to eq('Authorization error')
+      end
+
+      it 'ignores transfer when owner registrar requests transfer' do
+        pw = domain.auth_info
+        xml = domain_transfer_xml({ authInfo: { pw: { value: pw } } })
+        response = epp_request(xml, :xml, :zone)
+
+        expect(response[:result_code]).to eq('2002')
+        expect(response[:msg]).to eq('Domain already belongs to the querying registrar')
+      end
+
+      it 'returns an error for incorrect op attribute' do
+        response = epp_request(domain_transfer_xml({}, 'bla'), :xml, :zone)
+        expect(response[:result_code]).to eq('2306')
+        expect(response[:msg]).to eq('Attribute op is invalid')
+      end
+
+      it 'creates new pw after successful transfer' do
+        pw = domain.auth_info
+        xml = domain_transfer_xml(pw: pw)
+        epp_request(xml, :xml, :elkdata) # transfer domain
+        response = epp_request(xml, :xml, :elkdata) # attempt second transfer
+        expect(response[:result_code]).to eq('2201')
+        expect(response[:msg]).to eq('Authorization error')
+      end
 
       ### UPDATE ###
       it 'updates a domain' do
@@ -1337,6 +1322,12 @@ describe 'EPP Domain', epp: true do
         response = epp_request(domain_info_xml, :xml)
         inf_data = response[:parsed].css('resData infData')
         expect(inf_data.css('status').first[:s]).to eq('ok')
+      end
+
+      it 'can not see other registrar domains' do
+        response = epp_request(domain_info_xml, :xml, :elkdata)
+        expect(response[:result_code]).to eq('2302')
+        expect(response[:msg]).to eq('Domain exists but belongs to other registrar')
       end
 
       ### DELETE ###
