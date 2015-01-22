@@ -19,25 +19,6 @@ describe 'EPP Session', epp: true do
     before(:each) { server_gitlab.open_connection }
     after(:each) { server_gitlab.close_connection }
 
-    it 'does not log in with invalid user' do
-      response = epp_plain_request(login_xml_cache, :xml)
-      expect(response[:result_code]).to eq('2501')
-      expect(response[:msg]).to eq('Authentication error; server closing connection')
-      expect(response[:clTRID]).to eq('ABC-12345')
-
-      Fabricate(:epp_user, active: false)
-
-      response = epp_plain_request(login_xml_cache, :xml)
-      expect(response[:result_code]).to eq('2501')
-    end
-
-    it 'prohibits further actions unless logged in' do
-      response = epp_plain_request(epp_xml.domain.create, :xml)
-      expect(response[:result_code]).to eq('2002')
-      expect(response[:msg]).to eq('You need to login first.')
-      expect(response[:clTRID]).to eq('ABC-12345')
-    end
-
     context 'with valid user' do
       before(:each) { Fabricate(:epp_user) }
 
@@ -81,6 +62,25 @@ describe 'EPP Session', epp: true do
         expect(log[2].api_user_name).to eq('gitlab')
         expect(log[2].api_user_registrar).to eq('Registrar OÜ')
       end
+    end
+
+    it 'does not log in with invalid user' do
+      response = epp_plain_request(login_xml_cache, :xml)
+      expect(response[:result_code]).to eq('2501')
+      expect(response[:msg]).to eq('Authentication error; server closing connection')
+      expect(response[:clTRID]).to eq('ABC-12345')
+
+      Fabricate(:epp_user, active: false)
+
+      response = epp_plain_request(login_xml_cache, :xml)
+      expect(response[:result_code]).to eq('2501')
+    end
+
+    it 'prohibits further actions unless logged in' do
+      response = epp_plain_request(epp_xml.domain.create, :xml)
+      expect(response[:result_code]).to eq('2002')
+      expect(response[:msg]).to eq('You need to login first.')
+      expect(response[:clTRID]).to eq('ABC-12345')
     end
   end
 end
