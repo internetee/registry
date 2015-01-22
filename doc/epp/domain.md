@@ -149,7 +149,7 @@ Domain name mapping protocol short version:
         <eis:legalDocument>  1        Base64 encoded document. Attribute: type="pdf"
     <clTRID>                 0-1      Client transaction id
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-user-with-two-epp-users-transfers-a-domain)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-user-with-valid-domain-transfers-a-domain)
 
 ### Domain check
 
