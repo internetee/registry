@@ -8,7 +8,7 @@ gem 'hashie_rails', '~> 0.0.1'
 # model related
 gem 'pg',                        '~> 0.18.0'
 gem 'ransack',                   '~> 1.5.1' # for searching
-gem 'paper_trail',               '~> 3.0.6' # archiving
+gem 'paper_trail',               '~> 4.0.0.beta2' # archiving
 gem 'rails-settings-cached',     '~> 0.4.1' # for settings
 gem 'delayed_job_active_record', '~> 4.0.3' # delayed job
 
@@ -76,7 +76,7 @@ group :development, :test do
   gem 'phantomjs-binaries', '~> 1.9.2.4'
   gem 'poltergeist',        '~> 1.5.1'  # We are using PhantomJS instead
   gem 'phantomjs',          '~> 1.9.7.1'
-  gem 'fabrication',        '~> 2.11.3' # Replacement for fixtures
+  gem 'fabrication',        '~> 2.12.2' # Replacement for fixtures
   gem 'shoulda-matchers',   '~> 2.6.1', require: false # Additional matchers for RSpec
   gem 'launchy',            '~> 2.4.3' # for opening browser automatically
 
