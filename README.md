@@ -3,19 +3,20 @@ Domain Registry
 
 Full stack top-level domain (TLD) management.
 
-* [Documentation](https://github.com/internetee/registry#documentation)
-* [Installation](https://github.com/internetee/registry#installation)
-* [Deployment](https://github.com/internetee/registry#deployment)
-* [Staging deployment](https://github.com/internetee/registry#staging-deployment)
-* [Autotesting](https://github.com/internetee/registry#autotesting)
+* [Documentation](/registry#documentation)
+* [Installation](/registry#installation)
+* [Deployment](/registry#deployment)
+* [Staging deployment](/registry#staging-deployment)
+* [Autotesting](/registry#autotesting)
 
 
 Documentation
 -------------
 
-* [EPP request-response examples](https://github.com/internetee/registry/blob/master/doc/epp-doc.md)
-* [Database diagram](https://github.com/internetee/registry/blob/master/doc/models_complete.svg)
-* [Controllers diagram](https://github.com/internetee/registry/blob/master/doc/controllers_complete.svg)
+* [EPP documentation](/doc/epp)
+* [EPP request-response examples](/doc/epp-doc.md)
+* [Database diagram](/doc/models_complete.svg)
+* [Controllers diagram](/doc/controllers_complete.svg)
 
 
 Installation
@@ -195,13 +196,13 @@ Please follow WHOIS server readme:
 Deployment
 ----------
 
-* [Debian build](https://github.com/internetee/registry/blob/master/doc/debian_build_doc.md)
-* [Application build and update](https://github.com/internetee/registry/blob/master/doc/application_build_doc.md)
+* [Debian build](/doc/debian_build_doc.md)
+* [Application build and update](/doc/application_build_doc.md)
 
 CRON
 ----
 
-Crontab can be setup after deploy. Jobs can be viewed [here](https://github.com/internetee/registry/blob/master/config/schedule.rb).  
+Crontab can be setup after deploy. Jobs can be viewed [here](/config/schedule.rb).
 
     mina pr cron:setup # to update the crontab.
     mina pr cron:clear # to clear crontab.
