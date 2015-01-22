@@ -1,3 +1,11 @@
 # EPP integration specification for Estonian Internet Foundation
 
-Document moved to [new_location](/doc/epp/)
+## Introduction
+Introduction text here  
+[Session related functions](session.md)  
+[Contact related functions](contact.md)  
+[Domain related functions](domain.md)  
+[Keyrelay related functions](keyrelay.md)
+
+Please study official The Extensible Provisioning Protocol (EPP):<br>
+http://en.wikipedia.org/wiki/Extensible_Provisioning_Protocol
