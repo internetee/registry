@@ -57,6 +57,7 @@ group :development do
   gem 'spring-commands-rspec', '~> 1.0.2'
   gem 'guard',                 '~> 2.6.1' # run tests automatically
   gem 'guard-rspec',           '~> 4.3.1'
+  gem 'guard-rails',           '~> 0.7.0' # run EPP server automatically
   gem 'rubocop',               '~> 0.26.1'
   gem 'guard-rubocop',         '~> 1.1.0'
 
