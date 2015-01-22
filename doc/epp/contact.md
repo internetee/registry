@@ -1,5 +1,8 @@
 ## Contact related functions
 
+Please study Cantact Mapping protocol:
+http://tools.ietf.org/html/rfc5733
+
 ### Contact create
 
     Field name                 Min-max  Field description
