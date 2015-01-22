@@ -6,7 +6,6 @@ Full stack top-level domain (TLD) management.
 * [Documentation](#documentation)
 * [Installation](#installation)
 * [Deployment](#deployment)
-* [Staging deployment](#staging-deployment)
 * [Autotesting](#autotesting)
 
 
