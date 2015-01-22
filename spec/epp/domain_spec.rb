@@ -83,6 +83,7 @@ describe 'EPP Domain', epp: true do
       expect(response[:results][2][:msg]).to eq('Required parameter missing: extension > extdata > legalDocument')
     end
 
+    # TODO: Refactor this
     context 'with two epp users' do
       let(:domain) { Domain.first }
 
@@ -90,12 +91,7 @@ describe 'EPP Domain', epp: true do
         Fabricate(:domain, name: 'example.ee', registrar: zone)
       end
 
-      it 'can not see other registrar domains' do
-        response = epp_request(domain_info_xml, :xml, :elkdata)
-        expect(response[:result_code]).to eq('2302')
-        expect(response[:msg]).to eq('Domain exists but belongs to other registrar')
-      end
-
+      ### TRANSFER ###
       it 'transfers a domain' do
         pw = domain.auth_info
         xml = domain_transfer_xml({ authInfo: { pw: { value: pw } } })
@@ -175,91 +171,6 @@ describe 'EPP Domain', epp: true do
         expect(msg_q.first['count']).to eq('0')
       end
 
-      it 'prohibits wrong registrar from approving transfer' do
-        domain.domain_transfers.create({
-          status: DomainTransfer::PENDING,
-          transfer_requested_at: Time.zone.now,
-          transfer_to: elkdata,
-          transfer_from: zone
-        })
-
-        xml = domain_transfer_xml({ authInfo: { pw: { value: domain.auth_info } } }, 'approve')
-        response = epp_request(xml, :xml, :elkdata)
-        expect(response[:result_code]).to eq('2304')
-        expect(response[:msg]).to eq('Transfer can be approved only by current domain registrar')
-      end
-
-      it 'approves the transfer request' do
-        domain.domain_transfers.create({
-          status: DomainTransfer::PENDING,
-          transfer_requested_at: Time.zone.now,
-          transfer_to: elkdata,
-          transfer_from: zone
-        })
-
-        xml = domain_transfer_xml({ authInfo: { pw: { value: domain.auth_info } } }, 'approve')
-        response = epp_request(xml, :xml, :zone)
-        domain.reload
-        dtl = domain.domain_transfers.last
-
-        trn_data = response[:parsed].css('trnData')
-
-        expect(trn_data.css('name').text).to eq('example.ee')
-        expect(trn_data.css('trStatus').text).to eq('clientApproved')
-        expect(trn_data.css('reID').text).to eq('123')
-        expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
-        expect(trn_data.css('acID').text).to eq('12345678')
-        expect(trn_data.css('exDate').text).to eq(domain.valid_to.to_time.utc.to_s)
-      end
-
-      it 'does not transfer with invalid pw' do
-        xml = domain_transfer_xml({ authInfo: { pw: { value: 'test' } } })
-        response = epp_request(xml, :xml)
-        expect(response[:result_code]).to eq('2201')
-        expect(response[:msg]).to eq('Authorization error')
-      end
-
-      it 'ignores transfer when owner registrar requests transfer' do
-        pw = domain.auth_info
-        xml = domain_transfer_xml({ authInfo: { pw: { value: pw } } })
-        response = epp_request(xml, :xml, :zone)
-
-        expect(response[:result_code]).to eq('2002')
-        expect(response[:msg]).to eq('Domain already belongs to the querying registrar')
-      end
-
-      it 'returns an error for incorrect op attribute' do
-        response = epp_request(domain_transfer_xml({}, 'bla'), :xml, :zone)
-        expect(response[:result_code]).to eq('2306')
-        expect(response[:msg]).to eq('Attribute op is invalid')
-      end
-
-      it 'creates new pw after successful transfer' do
-        pw = domain.auth_info
-        xml = domain_transfer_xml(pw: pw)
-        epp_request(xml, :xml, :elkdata) # transfer domain
-        response = epp_request(xml, :xml, :elkdata) # attempt second transfer
-        expect(response[:result_code]).to eq('2201')
-        expect(response[:msg]).to eq('Authorization error')
-      end
-
-      it 'creates a domain transfer with legal document' do
-        expect(domain.legal_documents.count).to eq(0)
-        pw = domain.auth_info
-        xml = domain_transfer_xml({ authInfo: { pw: { value: pw } } }, 'query', {
-          _anonymus: [
-            legalDocument: {
-              value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
-              attrs: { type: 'pdf' }
-            }
-          ]
-        })
-
-        response = epp_request(xml, :xml, :elkdata)
-        expect(response[:result_code]).to eq('1000')
-        expect(domain.legal_documents.count).to eq(1)
-      end
-
       it 'creates a domain transfer with legal document' do
         Setting.transfer_wait_time = 1
         expect(domain.legal_documents.count).to eq(0)
@@ -306,6 +217,29 @@ describe 'EPP Domain', epp: true do
         expect(domain.legal_documents.count).to eq(1) # does not add another legal document
       end
 
+      it 'approves the transfer request' do
+        domain.domain_transfers.create({
+          status: DomainTransfer::PENDING,
+          transfer_requested_at: Time.zone.now,
+          transfer_to: elkdata,
+          transfer_from: zone
+        })
+
+        xml = domain_transfer_xml({ authInfo: { pw: { value: domain.auth_info } } }, 'approve')
+        response = epp_request(xml, :xml, :zone)
+        domain.reload
+        dtl = domain.domain_transfers.last
+
+        trn_data = response[:parsed].css('trnData')
+
+        expect(trn_data.css('name').text).to eq('example.ee')
+        expect(trn_data.css('trStatus').text).to eq('clientApproved')
+        expect(trn_data.css('reID').text).to eq('123')
+        expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
+        expect(trn_data.css('acID').text).to eq('12345678')
+        expect(trn_data.css('exDate').text).to eq(domain.valid_to.to_time.utc.to_s)
+      end
+
       it 'rejects a domain transfer' do
         domain.domain_transfers.create({
           status: DomainTransfer::PENDING,
@@ -333,6 +267,58 @@ describe 'EPP Domain', epp: true do
         expect(response[:result_code]).to eq('1000')
         expect(domain.pending_transfer).to be_nil
         expect(domain.legal_documents.count).to eq(1)
+      end
+
+      it 'prohibits wrong registrar from approving transfer' do
+        domain.domain_transfers.create({
+          status: DomainTransfer::PENDING,
+          transfer_requested_at: Time.zone.now,
+          transfer_to: elkdata,
+          transfer_from: zone
+        })
+
+        xml = domain_transfer_xml({ authInfo: { pw: { value: domain.auth_info } } }, 'approve')
+        response = epp_request(xml, :xml, :elkdata)
+        expect(response[:result_code]).to eq('2304')
+        expect(response[:msg]).to eq('Transfer can be approved only by current domain registrar')
+      end
+
+      it 'does not transfer with invalid pw' do
+        xml = domain_transfer_xml({ authInfo: { pw: { value: 'test' } } })
+        response = epp_request(xml, :xml)
+        expect(response[:result_code]).to eq('2201')
+        expect(response[:msg]).to eq('Authorization error')
+      end
+
+      it 'ignores transfer when owner registrar requests transfer' do
+        pw = domain.auth_info
+        xml = domain_transfer_xml({ authInfo: { pw: { value: pw } } })
+        response = epp_request(xml, :xml, :zone)
+
+        expect(response[:result_code]).to eq('2002')
+        expect(response[:msg]).to eq('Domain already belongs to the querying registrar')
+      end
+
+      it 'returns an error for incorrect op attribute' do
+        response = epp_request(domain_transfer_xml({}, 'bla'), :xml, :zone)
+        expect(response[:result_code]).to eq('2306')
+        expect(response[:msg]).to eq('Attribute op is invalid')
+      end
+
+      it 'creates new pw after successful transfer' do
+        pw = domain.auth_info
+        xml = domain_transfer_xml(pw: pw)
+        epp_request(xml, :xml, :elkdata) # transfer domain
+        response = epp_request(xml, :xml, :elkdata) # attempt second transfer
+        expect(response[:result_code]).to eq('2201')
+        expect(response[:msg]).to eq('Authorization error')
+      end
+
+      ### MISC ###
+      it 'can not see other registrar domains' do
+        response = epp_request(domain_info_xml, :xml, :elkdata)
+        expect(response[:result_code]).to eq('2302')
+        expect(response[:msg]).to eq('Domain exists but belongs to other registrar')
       end
     end
 
@@ -905,147 +891,32 @@ describe 'EPP Domain', epp: true do
     context 'with valid domain' do
       before(:each) { Fabricate(:domain, name: 'example.ee', registrar: EppUser.first.registrar, dnskeys: []) }
 
-      it 'renews a domain' do
-        exp_date = (Date.today + 1.year)
-        xml = epp_xml.domain.renew(
-          name: { value: 'example.ee' },
-          curExpDate: { value: exp_date.to_s },
-          period: { value: '1', attrs: { unit: 'y' } }
-        )
+      ### UPDATE ###
+      it 'updates a domain' do
+        Fabricate(:contact, code: 'mak21')
+        existing_pw = Domain.first.auth_info
 
-        response = epp_request(xml, :xml)
-        ex_date = response[:parsed].css('renData exDate').text
-        name = response[:parsed].css('renData name').text
-        expect(ex_date).to eq("#{(exp_date + 1.year)} 00:00:00 UTC")
-        expect(name).to eq('example.ee')
-      end
+        xml_params = {
+          chg: [
+            registrant: { value: 'mak21' }
+          ]
+        }
 
-      it 'returns an error when given and current exp dates do not match' do
-        xml = epp_xml.domain.renew(
-          name: { value: 'example.ee' },
-          curExpDate: { value: '2016-08-07' },
-          period: { value: '1', attrs: { unit: 'y' } }
-        )
+        response = epp_request(domain_update_xml(xml_params, {}, {
+          _anonymus: [
+            legalDocument: {
+              value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+              attrs: { type: 'pdf' }
+            }
+          ]
+        }), :xml)
 
-        response = epp_request(xml, :xml)
-        expect(response[:results][0][:result_code]).to eq('2306')
-        expect(response[:results][0][:msg]).to eq('Given and current expire dates do not match')
-      end
-
-      it 'returns an error when period is invalid' do
-        exp_date = (Date.today + 1.year)
-
-        xml = epp_xml.domain.renew(
-          name: { value: 'example.ee' },
-          curExpDate: { value: exp_date.to_s },
-          period: { value: '4', attrs: { unit: 'y' } }
-        )
-
-        response = epp_request(xml, :xml)
-        expect(response[:results][0][:result_code]).to eq('2004')
-        expect(response[:results][0][:msg]).to eq('Period must add up to 1, 2 or 3 years')
-        expect(response[:results][0][:value]).to eq('4')
-      end
-
-      it 'sets ok status by default' do
-        response = epp_request(domain_info_xml, :xml)
-        inf_data = response[:parsed].css('resData infData')
-        expect(inf_data.css('status').first[:s]).to eq('ok')
-      end
-
-      it 'returns domain info' do
-        d = Domain.first
-        d.domain_statuses.build(value: DomainStatus::CLIENT_HOLD, description: 'Payment overdue.')
-        d.nameservers.build(hostname: 'ns1.example.com', ipv4: '192.168.1.1', ipv6: '1080:0:0:0:8:800:200C:417A')
-
-        d.dnskeys.build(
-          ds_key_tag: '123',
-          ds_alg: 3,
-          ds_digest_type: 1,
-          ds_digest: 'abc',
-          flags: 257,
-          protocol: 3,
-          alg: 3,
-          public_key: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8'
-        )
-
-        d.dnskeys.build(
-          ds_key_tag: '123',
-          ds_alg: 3,
-          ds_digest_type: 1,
-          ds_digest: 'abc',
-          flags: 0,
-          protocol: 3,
-          alg: 5,
-          public_key: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
-        )
-
-        d.save
-
-        xml = domain_info_xml(name: { value: 'Example.ee' })
-
-        response = epp_request(xml, :xml)
         expect(response[:results][0][:result_code]).to eq('1000')
-        expect(response[:results][0][:msg]).to eq('Command completed successfully')
 
-        inf_data = response[:parsed].css('resData infData')
-        expect(inf_data.css('name').text).to eq('example.ee')
-        expect(inf_data.css('status').text).to eq('Payment overdue.')
-        expect(inf_data.css('status').first[:s]).to eq('clientHold')
-        expect(inf_data.css('registrant').text).to eq(d.owner_contact_code)
+        d = Domain.last
 
-        admin_contacts_from_request = inf_data.css('contact[type="admin"]').map(&:text)
-        admin_contacts_existing = d.admin_contacts.pluck(:code)
-
-        expect(admin_contacts_from_request).to eq(admin_contacts_existing)
-
-        hosts_from_request = inf_data.css('hostName').map(&:text)
-        hosts_existing = d.nameservers.pluck(:hostname)
-
-        expect(hosts_from_request).to eq(hosts_existing)
-
-        ns1 = inf_data.css('hostAttr').last
-
-        expect(ns1.css('hostName').last.text).to eq('ns1.example.com')
-        expect(ns1.css('hostAddr').first.text).to eq('192.168.1.1')
-        expect(ns1.css('hostAddr').last.text).to eq('1080:0:0:0:8:800:200C:417A')
-        expect(inf_data.css('crDate').text).to eq(d.created_at.to_time.utc.to_s)
-        expect(inf_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
-        expect(inf_data.css('pw').text).to eq(d.auth_info)
-
-        ds_data_1 = response[:parsed].css('dsData')[0]
-
-        expect(ds_data_1.css('keyTag').first.text).to eq('123')
-        expect(ds_data_1.css('alg').first.text).to eq('3')
-        expect(ds_data_1.css('digestType').first.text).to eq('1')
-        expect(ds_data_1.css('digest').first.text).to eq('abc')
-
-        dnskey_1 = ds_data_1.css('keyData')[0]
-        expect(dnskey_1.css('flags').first.text).to eq('257')
-        expect(dnskey_1.css('protocol').first.text).to eq('3')
-        expect(dnskey_1.css('alg').first.text).to eq('3')
-        expect(dnskey_1.css('pubKey').first.text).to eq('AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8')
-
-        ds_data_2 = response[:parsed].css('dsData')[1]
-
-        dnskey_2 = ds_data_2.css('keyData')[0]
-        expect(dnskey_2.css('flags').first.text).to eq('0')
-        expect(dnskey_2.css('protocol').first.text).to eq('3')
-        expect(dnskey_2.css('alg').first.text).to eq('5')
-        expect(dnskey_2.css('pubKey').first.text).to eq('700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f')
-
-        d.touch
-
-        response = epp_request(domain_info_xml, :xml)
-        inf_data = response[:parsed].css('resData infData')
-
-        expect(inf_data.css('upDate').text).to eq(d.updated_at.to_time.utc.to_s)
-      end
-
-      it 'returns error when domain can not be found' do
-        response = epp_request(domain_info_xml(name:  { value: 'test.ee' }), :xml)
-        expect(response[:results][0][:result_code]).to eq('2303')
-        expect(response[:results][0][:msg]).to eq('Domain not found')
+        expect(d.owner_contact_code).to eq('mak21')
+        expect(d.auth_info).to eq(existing_pw)
       end
 
       it 'updates domain and adds objects' do
@@ -1310,33 +1181,6 @@ describe 'EPP Domain', epp: true do
         expect(response[:results][0][:result_code]).to eq('2003')
       end
 
-      it 'updates a domain' do
-        Fabricate(:contact, code: 'mak21')
-        existing_pw = Domain.first.auth_info
-
-        xml_params = {
-          chg: [
-            registrant: { value: 'mak21' }
-          ]
-        }
-
-        response = epp_request(domain_update_xml(xml_params, {}, {
-          _anonymus: [
-            legalDocument: {
-              value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
-              attrs: { type: 'pdf' }
-            }
-          ]
-        }), :xml)
-
-        expect(response[:results][0][:result_code]).to eq('1000')
-
-        d = Domain.last
-
-        expect(d.owner_contact_code).to eq('mak21')
-        expect(d.auth_info).to eq(existing_pw)
-      end
-
       it 'does not assign invalid status to domain' do
         xml = domain_update_xml({
           add: [
@@ -1350,6 +1194,152 @@ describe 'EPP Domain', epp: true do
         expect(response[:results][0][:value]).to eq('invalidStatus')
       end
 
+      ### RENEW ###
+      it 'renews a domain' do
+        exp_date = (Date.today + 1.year)
+        xml = epp_xml.domain.renew(
+          name: { value: 'example.ee' },
+          curExpDate: { value: exp_date.to_s },
+          period: { value: '1', attrs: { unit: 'y' } }
+        )
+
+        response = epp_request(xml, :xml)
+        ex_date = response[:parsed].css('renData exDate').text
+        name = response[:parsed].css('renData name').text
+        expect(ex_date).to eq("#{(exp_date + 1.year)} 00:00:00 UTC")
+        expect(name).to eq('example.ee')
+      end
+
+      it 'returns an error when given and current exp dates do not match' do
+        xml = epp_xml.domain.renew(
+          name: { value: 'example.ee' },
+          curExpDate: { value: '2016-08-07' },
+          period: { value: '1', attrs: { unit: 'y' } }
+        )
+
+        response = epp_request(xml, :xml)
+        expect(response[:results][0][:result_code]).to eq('2306')
+        expect(response[:results][0][:msg]).to eq('Given and current expire dates do not match')
+      end
+
+      it 'returns an error when period is invalid' do
+        exp_date = (Date.today + 1.year)
+
+        xml = epp_xml.domain.renew(
+          name: { value: 'example.ee' },
+          curExpDate: { value: exp_date.to_s },
+          period: { value: '4', attrs: { unit: 'y' } }
+        )
+
+        response = epp_request(xml, :xml)
+        expect(response[:results][0][:result_code]).to eq('2004')
+        expect(response[:results][0][:msg]).to eq('Period must add up to 1, 2 or 3 years')
+        expect(response[:results][0][:value]).to eq('4')
+      end
+
+      ### INFO ###
+      it 'returns domain info' do
+        d = Domain.first
+        d.domain_statuses.build(value: DomainStatus::CLIENT_HOLD, description: 'Payment overdue.')
+        d.nameservers.build(hostname: 'ns1.example.com', ipv4: '192.168.1.1', ipv6: '1080:0:0:0:8:800:200C:417A')
+
+        d.dnskeys.build(
+          ds_key_tag: '123',
+          ds_alg: 3,
+          ds_digest_type: 1,
+          ds_digest: 'abc',
+          flags: 257,
+          protocol: 3,
+          alg: 3,
+          public_key: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8'
+        )
+
+        d.dnskeys.build(
+          ds_key_tag: '123',
+          ds_alg: 3,
+          ds_digest_type: 1,
+          ds_digest: 'abc',
+          flags: 0,
+          protocol: 3,
+          alg: 5,
+          public_key: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
+        )
+
+        d.save
+
+        xml = domain_info_xml(name: { value: 'Example.ee' })
+
+        response = epp_request(xml, :xml)
+        expect(response[:results][0][:result_code]).to eq('1000')
+        expect(response[:results][0][:msg]).to eq('Command completed successfully')
+
+        inf_data = response[:parsed].css('resData infData')
+        expect(inf_data.css('name').text).to eq('example.ee')
+        expect(inf_data.css('status').text).to eq('Payment overdue.')
+        expect(inf_data.css('status').first[:s]).to eq('clientHold')
+        expect(inf_data.css('registrant').text).to eq(d.owner_contact_code)
+
+        admin_contacts_from_request = inf_data.css('contact[type="admin"]').map(&:text)
+        admin_contacts_existing = d.admin_contacts.pluck(:code)
+
+        expect(admin_contacts_from_request).to eq(admin_contacts_existing)
+
+        hosts_from_request = inf_data.css('hostName').map(&:text)
+        hosts_existing = d.nameservers.pluck(:hostname)
+
+        expect(hosts_from_request).to eq(hosts_existing)
+
+        ns1 = inf_data.css('hostAttr').last
+
+        expect(ns1.css('hostName').last.text).to eq('ns1.example.com')
+        expect(ns1.css('hostAddr').first.text).to eq('192.168.1.1')
+        expect(ns1.css('hostAddr').last.text).to eq('1080:0:0:0:8:800:200C:417A')
+        expect(inf_data.css('crDate').text).to eq(d.created_at.to_time.utc.to_s)
+        expect(inf_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
+        expect(inf_data.css('pw').text).to eq(d.auth_info)
+
+        ds_data_1 = response[:parsed].css('dsData')[0]
+
+        expect(ds_data_1.css('keyTag').first.text).to eq('123')
+        expect(ds_data_1.css('alg').first.text).to eq('3')
+        expect(ds_data_1.css('digestType').first.text).to eq('1')
+        expect(ds_data_1.css('digest').first.text).to eq('abc')
+
+        dnskey_1 = ds_data_1.css('keyData')[0]
+        expect(dnskey_1.css('flags').first.text).to eq('257')
+        expect(dnskey_1.css('protocol').first.text).to eq('3')
+        expect(dnskey_1.css('alg').first.text).to eq('3')
+        expect(dnskey_1.css('pubKey').first.text).to eq('AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8')
+
+        ds_data_2 = response[:parsed].css('dsData')[1]
+
+        dnskey_2 = ds_data_2.css('keyData')[0]
+        expect(dnskey_2.css('flags').first.text).to eq('0')
+        expect(dnskey_2.css('protocol').first.text).to eq('3')
+        expect(dnskey_2.css('alg').first.text).to eq('5')
+        expect(dnskey_2.css('pubKey').first.text).to eq('700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f')
+
+        d.touch
+
+        response = epp_request(domain_info_xml, :xml)
+        inf_data = response[:parsed].css('resData infData')
+
+        expect(inf_data.css('upDate').text).to eq(d.updated_at.to_time.utc.to_s)
+      end
+
+      it 'returns error when domain can not be found' do
+        response = epp_request(domain_info_xml(name:  { value: 'test.ee' }), :xml)
+        expect(response[:results][0][:result_code]).to eq('2303')
+        expect(response[:results][0][:msg]).to eq('Domain not found')
+      end
+
+      it 'sets ok status by default' do
+        response = epp_request(domain_info_xml, :xml)
+        inf_data = response[:parsed].css('resData infData')
+        expect(inf_data.css('status').first[:s]).to eq('ok')
+      end
+
+      ### DELETE ###
       it 'deletes domain' do
         expect(DomainContact.count).to eq(2)
 
@@ -1396,6 +1386,7 @@ describe 'EPP Domain', epp: true do
       end
     end
 
+    ### CHECK ###
     it 'checks a domain' do
       response = epp_request(domain_check_xml, :xml)
       expect(response[:result_code]).to eq('1000')
