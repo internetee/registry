@@ -112,6 +112,7 @@ task setup: :environment do
     invoke :'git:clone'
     invoke :'deploy:link_shared_paths'
     to :launch do
+      queue! 'gem install bundler'
       invoke :'bundle:install'
       queue %(echo '\n  NB! Please edit 'shared/config/database.yml'\n')
     end

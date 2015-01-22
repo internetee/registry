@@ -1,4 +1,13 @@
 group :red_green_refactor, halt_on_fail: true do
+  # start test EPP server automatically on port 8989, 
+  # be sure you have apache2 configured to
+  # accept EPP request on port 701, what proxy to 8989.
+  # port and environment is just for correct notification, all is overwritten by CLI
+  guard :rails, port: 8989, environment: 'test', CLI: 'RAILS_ENV=test unicorn -p 8989' do
+    watch('Gemfile.lock')
+    watch(%r{^(config|lib)/.*})
+  end
+
   guard :rspec, cmd: 'bundle exec rspec', notification: false do
     watch(%r{^spec/.+_spec\.rb$})
     watch(%r{^lib/(.+)\.rb$})     { |m| "spec/lib/#{m[1]}_spec.rb" }
