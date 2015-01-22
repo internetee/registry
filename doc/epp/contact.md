@@ -1,7 +1,11 @@
 ## Contact related functions
 
-Please study Cantact Mapping protocol:
+Please study official Cantact Mapping protocol:
 http://tools.ietf.org/html/rfc5733
+
+More info at http://en.wikipedia.org/wiki/Extensible_Provisioning_Protocol
+
+Contact Mapping protocol short version:
 
 ### Contact create
 

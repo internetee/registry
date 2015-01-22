@@ -1,5 +1,13 @@
 ## Domain related functions
 
+Please study official Domain Name Mapping protocol:
+http://tools.ietf.org/html/rfc5731
+
+More info at http://en.wikipedia.org/wiki/Extensible_Provisioning_Protocol
+
+Domain name mapping protocol short version:
+
+
 ### Domain create
 
     Field name                 Min-max  Field description
