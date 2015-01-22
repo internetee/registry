@@ -18,7 +18,7 @@ describe 'EPP Contact', epp: true do
   let(:epp_xml) { EppXml::Contact.new(cl_trid: 'ABC-12345') }
 
   context 'with valid user' do
-    before(:each) do
+    before do
       Fabricate(:epp_user)
       Fabricate(:epp_user, username: 'zone', registrar: zone)
       Fabricate(:epp_user, username: 'elkdata', registrar: elkdata)

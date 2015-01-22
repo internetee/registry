@@ -1,8 +1,3 @@
 # EPP integration specification for Estonian Internet Foundation
 
-## Introduction
-Introduction text here  
-[[Session related functions](epp/session.md)]  
-[[Contact related functions](epp/contact.md)]  
-[[Domain related functions](epp/domain.md)]  
-[[Keyrelay related functions](epp/keyrelay.md)]
+Document moved to [new_location](/doc/epp/)

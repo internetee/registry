@@ -1,6 +1,5 @@
 class Contact < ActiveRecord::Base
   # TODO: Foreign contact will get email with activation link/username/temp password
-  # TODO: Phone number validation, in first phase very minimam in order to support current registries
 
   include EppErrors
 
@@ -20,7 +19,8 @@ class Contact < ActiveRecord::Base
 
   validates :name, :phone, :email, :ident, :address, :registrar, :ident_type, presence: true
 
-  validates :phone, format: /\+[0-9]{1,3}\.[0-9]{1,14}?/ # /\+\d{3}\.\d+/
+  # Phone nr validation is very minimam in order to support legacy requirements
+  validates :phone, format: /\+[0-9]{1,3}\.[0-9]{1,14}?/
   validates :email, format: /@/
   validates :ident, format: /\d{4}-\d{2}-\d{2}/, if: proc { |c| c.ident_type == 'birthday' }
 
