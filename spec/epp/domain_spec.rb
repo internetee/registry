@@ -80,7 +80,10 @@ describe 'EPP Domain', epp: true do
       expect(response[:results][1][:msg]).to eq('Required parameter missing: registrant')
 
       expect(response[:results][2][:result_code]).to eq('2003')
-      expect(response[:results][2][:msg]).to eq('Required parameter missing: extension > extdata > legalDocument')
+      expect(response[:results][2][:msg]).to eq('Required parameter missing: ns > hostAttr')
+
+      expect(response[:results][3][:result_code]).to eq('2003')
+      expect(response[:results][3][:msg]).to eq('Required parameter missing: extension > extdata > legalDocument')
     end
 
     context 'with citizen as an owner' do

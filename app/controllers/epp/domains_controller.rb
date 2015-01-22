@@ -116,23 +116,25 @@ class Epp::DomainsController < EppController
   private
 
   def validate_info
-    @ph = params_hash['epp']['command']['info']['info']
-    xml_attrs_present?(@ph, [['name']])
+    @prefix = 'info > info >'
+    epp_request_valid?('name')
   end
 
   def validate_check
+    @prefix = 'check > check >'
     epp_request_valid?('name')
   end
 
   def validate_create
-    # TODO: Verify contact presence if registrant is juridical
-    ret = epp_request_valid?('name', 'ns', 'registrant', 'extension > extdata > legalDocument', 'ns > hostAttr')
-
     if params[:parsed_frame].css('dsData').count > 0 && params[:parsed_frame].css('create > keyData').count > 0
       epp_errors << { code: '2306', msg: I18n.t('ds_data_and_key_data_must_not_exists_together') }
-      ret = false
     end
-    ret
+
+    @prefix = 'create > create >'
+    epp_request_valid?('name', 'ns', 'registrant', 'ns > hostAttr')
+
+    @prefix = nil
+    epp_request_valid?('extension > extdata > legalDocument')
   end
 
   def validate_renew

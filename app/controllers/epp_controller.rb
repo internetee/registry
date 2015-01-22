@@ -58,12 +58,14 @@ class EppController < ApplicationController
   def validate_request
     validation_method = "validate_#{params[:action]}"
     return unless respond_to?(validation_method, true)
-    handle_errors and return unless send(validation_method)
+    send(validation_method)
+    handle_errors and return if epp_errors.any?
   end
 
   def epp_request_valid?(*selectors)
     selectors.each do |selector|
-      el = params[:parsed_frame].css(selector).first
+      full_selector = [@prefix, selector].join(' ')
+      el = params[:parsed_frame].css(full_selector).first
       epp_errors << {
         code: '2003',
         msg: I18n.t('errors.messages.required_parameter_missing', key: el.try(:name) || selector)
