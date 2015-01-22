@@ -138,35 +138,35 @@ class Epp::DomainsController < EppController
   end
 
   def validate_renew
-    @ph = params_hash['epp']['command']['renew']['renew']
-    xml_attrs_present?(@ph, [['name'], ['curExpDate'], ['period']])
+    @prefix = 'renew > renew >'
+    epp_request_valid?('name', 'curExpDate', 'period')
   end
 
   def validate_update
-    @ph = params_hash['epp']['command']['update']['update']
-
     if params[:parsed_frame].css('chg registrant').present? && params[:parsed_frame].css('legalDocument').blank?
-      xml_attrs_present?(@ph, [['name'], ['legalDocument']])
-    else
-      xml_attrs_present?(@ph, [['name']])
+      epp_request_valid?('extension > extdata > legalDocument')
     end
+
+    @prefix = 'update > update >'
+    epp_request_valid?('name')
   end
 
   ## TRANSFER
   def validate_transfer
-    @ph = params_hash['epp']['command']['transfer']['transfer']
-    attrs_present = xml_attrs_present?(@ph, [['name']])
-    return false unless attrs_present
+    @prefix = 'transfer > transfer >'
+    epp_request_valid?('name')
 
     op = params[:parsed_frame].css('transfer').first[:op]
-    return true if %w(approve query reject).include?(op)
+    return if %w(approve query reject).include?(op)
     epp_errors << { code: '2306', msg: I18n.t('errors.messages.attribute_op_is_invalid') }
-    false
   end
 
   ## DELETE
   def validate_delete
-    epp_request_valid?('name', 'legalDocument')
+    epp_request_valid?('extension > extdata > legalDocument')
+
+    @prefix = 'delete > delete >'
+    epp_request_valid?('name')
   end
 
   def domain_create_params

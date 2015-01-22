@@ -1165,7 +1165,7 @@ describe 'EPP Domain', epp: true do
         }
 
         response = epp_request(domain_update_xml(xml_params), :xml)
-        expect(response[:results][0][:msg]).to eq('Required parameter missing: legalDocument')
+        expect(response[:results][0][:msg]).to eq('Required parameter missing: extension > extdata > legalDocument')
         expect(response[:results][0][:result_code]).to eq('2003')
       end
 
@@ -1376,7 +1376,7 @@ describe 'EPP Domain', epp: true do
       it 'does not delete domain without legal document' do
         response = epp_request(epp_xml.domain.delete(name: { value: 'example.ee' }), :xml)
         expect(response[:result_code]).to eq('2003')
-        expect(response[:msg]).to eq('Required parameter missing: legalDocument')
+        expect(response[:msg]).to eq('Required parameter missing: extension > extdata > legalDocument')
       end
     end
 
