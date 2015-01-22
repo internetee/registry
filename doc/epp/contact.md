@@ -26,13 +26,6 @@ Contact Mapping protocol short version:
         <contact:email>        1        E-mail
         <contact:Ident>        1        Contact identificator. 
 
-    <extension>                0-1
-      <eis:extdata>            0-1      Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
-        <eis:legalDocument>    1        Base64 encoded document. Attribute: type="pdf"
-    <clTRID>                   0-1      Client transaction id
-
-NB! Extension is not implemented yet!
-
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-create-command-successfully-creates-a-contact)
 
 ### Contact update
@@ -68,6 +61,8 @@ NB! Extension is not implemented yet!
     <delete>                 1       
       <contact:delete>       1        Attribute: xmlns:contact="urn:ietf:params:xml:ns:contact-1.0"
         <contact:id>         1        Contact id
+        <contact:authInfo>   0-1      Required if registrar is not the owner of the contact.
+          <contact:pw>       1        Contact password. Attribute: roid="String"
     <clTRID>                 0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-delete-command-deletes-contact)
