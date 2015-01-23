@@ -49,8 +49,10 @@ class Contact < ActiveRecord::Base
   IDENT_TYPE_ICO = 'ico'
   IDENT_TYPES = [
     IDENT_TYPE_ICO, # Company registry code (or similar)
-    'op',           # Estonian ID
-    'passport',     # Passport number
+    'bic',          # Business registry code
+    'priv',         # National idendtification number
+    'op',           # Estonian ID, depricated
+    'passport',     # Passport number, depricated
     'birthday'      # Birthday date
   ]
 
