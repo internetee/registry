@@ -117,12 +117,12 @@ class Epp::DomainsController < EppController
 
   def validate_info
     @prefix = 'info > info >'
-    epp_request_valid?('name')
+    requires('name')
   end
 
   def validate_check
     @prefix = 'check > check >'
-    epp_request_valid?('name')
+    requires('name')
   end
 
   def validate_create
@@ -131,30 +131,30 @@ class Epp::DomainsController < EppController
     end
 
     @prefix = 'create > create >'
-    epp_request_valid?('name', 'ns', 'registrant', 'ns > hostAttr')
+    requires('name', 'ns', 'registrant', 'ns > hostAttr')
 
     @prefix = nil
-    epp_request_valid?('extension > extdata > legalDocument')
+    requires('extension > extdata > legalDocument')
   end
 
   def validate_renew
     @prefix = 'renew > renew >'
-    epp_request_valid?('name', 'curExpDate', 'period')
+    requires('name', 'curExpDate', 'period')
   end
 
   def validate_update
     if params[:parsed_frame].css('chg registrant').present? && params[:parsed_frame].css('legalDocument').blank?
-      epp_request_valid?('extension > extdata > legalDocument')
+      requires('extension > extdata > legalDocument')
     end
 
     @prefix = 'update > update >'
-    epp_request_valid?('name')
+    requires('name')
   end
 
   ## TRANSFER
   def validate_transfer
     @prefix = 'transfer > transfer >'
-    epp_request_valid?('name')
+    requires('name')
 
     op = params[:parsed_frame].css('transfer').first[:op]
     return if %w(approve query reject).include?(op)
@@ -163,10 +163,10 @@ class Epp::DomainsController < EppController
 
   ## DELETE
   def validate_delete
-    epp_request_valid?('extension > extdata > legalDocument')
+    requires('extension > extdata > legalDocument')
 
     @prefix = 'delete > delete >'
-    epp_request_valid?('name')
+    requires('name')
   end
 
   def domain_create_params

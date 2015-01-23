@@ -15,7 +15,8 @@ class Epp::KeyrelaysController < EppController
 
   def validate_keyrelay
     @prefix = 'keyrelay >'
-    epp_request_valid?(
+
+    requires(
       'name',
       'keyData', 'keyData > pubKey', 'keyData > flags', 'keyData > protocol', 'keyData > alg',
       'authInfo', 'authInfo > pw'
@@ -23,6 +24,7 @@ class Epp::KeyrelaysController < EppController
 
     optional 'expiry > relative', duration_iso8601: true
     optional 'expiry > absolute', date_time_iso8601: true
+
     exactly_one_of 'expiry > relative', 'expiry > absolute'
   end
   # rubocop: enable Metrics/PerceivedComplexity

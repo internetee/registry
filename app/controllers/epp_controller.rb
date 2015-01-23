@@ -62,7 +62,7 @@ class EppController < ApplicationController
     handle_errors and return if epp_errors.any?
   end
 
-  def epp_request_valid?(*selectors)
+  def requires(*selectors)
     selectors.each do |selector|
       full_selector = [@prefix, selector].join(' ')
       el = params[:parsed_frame].css(full_selector).first
