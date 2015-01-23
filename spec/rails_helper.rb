@@ -34,8 +34,10 @@ RSpec.configure do |config|
   config.before(:suite) do
     ActiveRecord::Base.establish_connection :api_log_test
     DatabaseCleaner.strategy = :deletion
+    DatabaseCleaner.clean
     ActiveRecord::Base.establish_connection :test
     DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.clean
   end
 
   config.before(:each) do
@@ -54,21 +56,21 @@ RSpec.configure do |config|
     DatabaseCleaner.strategy = :truncation
   end
 
-  config.before(:each) do
-    ActiveRecord::Base.establish_connection :api_log_test
-    DatabaseCleaner.start
+  # config.before(:each) do
+  #   ActiveRecord::Base.establish_connection :api_log_test
+  #   DatabaseCleaner.start
 
-    ActiveRecord::Base.establish_connection :test
-    DatabaseCleaner.start
-  end
+  #   ActiveRecord::Base.establish_connection :test
+  #   DatabaseCleaner.start
+  # end
 
-  config.after(:each) do
-    ActiveRecord::Base.establish_connection :api_log_test
-    DatabaseCleaner.clean
+  # config.after(:each) do
+  #   ActiveRecord::Base.establish_connection :api_log_test
+  #   DatabaseCleaner.clean
 
-    ActiveRecord::Base.establish_connection :test
-    DatabaseCleaner.clean
-  end
+  #   ActiveRecord::Base.establish_connection :test
+  #   DatabaseCleaner.clean
+  # end
 
   Capybara.javascript_driver = :poltergeist
 

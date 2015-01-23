@@ -67,11 +67,15 @@ module Epp
     puts r[:parsed].to_s
   end
 
+  def next_domain_name
+    "example#{@uniq_no.call}.ee"
+  end
+
   ### REQUEST TEMPLATES ###
 
   def domain_info_xml(xml_params = {})
     defaults = {
-      name: { value: 'example.ee', attrs: { hosts: 'all' } },
+      name: { value: next_domain_name, attrs: { hosts: 'all' } },
       authInfo: {
         pw: { value: '2fooBAR' }
       }
@@ -86,7 +90,7 @@ module Epp
   # rubocop: disable Metrics/MethodLength
   def domain_create_xml(xml_params = {}, dnssec_params = {})
     defaults = {
-      name: { value: 'example.ee' },
+      name: { value: next_domain_name },
       period: { value: '1', attrs: { unit: 'y' } },
       ns: [
         {
@@ -102,7 +106,7 @@ module Epp
           }
         }
       ],
-      registrant: { value: 'jd1234' },
+      registrant: { value: 'citizen_1234' },
       _anonymus: [
         { contact: { value: 'sh8013', attrs: { type: 'admin' } } },
         { contact: { value: 'sh8013', attrs: { type: 'tech' } } },
@@ -138,11 +142,9 @@ module Epp
     epp_xml.create(xml_params, dnssec_params, custom_params)
   end
 
-  def domain_create_xml_with_legal_doc
-    epp_xml = EppXml::Domain.new(cl_trid: 'ABC-12345')
-
-    epp_xml.create({
-      name: { value: 'example.ee' },
+  def domain_create_xml_with_legal_doc(xml_params = {})
+    defaults = {
+      name: { value: next_domain_name },
       period: { value: '1', attrs: { unit: 'y' } },
       ns: [
         {
@@ -158,13 +160,19 @@ module Epp
           }
         }
       ],
-      registrant: { value: 'jd1234' },
+      registrant: { value: 'citizen_1234' },
       _anonymus: [
         { contact: { value: 'sh8013', attrs: { type: 'admin' } } },
         { contact: { value: 'sh8013', attrs: { type: 'tech' } } },
         { contact: { value: 'sh801333', attrs: { type: 'tech' } } }
       ]
-    }, {}, {
+    }
+
+    xml_params = defaults.deep_merge(xml_params)
+
+    epp_xml = EppXml::Domain.new(cl_trid: 'ABC-12345')
+
+    epp_xml.create(xml_params, {}, {
       _anonymus: [
         legalDocument: {
           value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
@@ -176,7 +184,7 @@ module Epp
 
   def domain_create_with_invalid_ns_ip_xml
     xml_params = {
-      name: { value: 'example.ee' },
+      name: { value: next_domain_name },
       period: { value: '1', attrs: { unit: 'y' } },
       ns: [
         {
@@ -192,7 +200,7 @@ module Epp
           }
         }
       ],
-      registrant: { value: 'jd1234' },
+      registrant: { value: 'citizen_1234' },
       _anonymus: [
         { contact: { value: 'sh8013', attrs: { type: 'admin' } } },
         { contact: { value: 'sh8013', attrs: { type: 'tech' } } },
@@ -220,7 +228,7 @@ module Epp
 
   def domain_create_with_host_attrs
     xml_params = {
-      name: { value: 'example.ee' },
+      name: { value: next_domain_name },
       period: { value: '1', attrs: { unit: 'y' } },
       ns: [
         {
@@ -236,7 +244,7 @@ module Epp
           }
         }
       ],
-      registrant: { value: 'jd1234' },
+      registrant: { value: 'citizen_1234' },
       _anonymus: [
         { contact: { value: 'sh8013', attrs: { type: 'admin' } } },
         { contact: { value: 'sh8013', attrs: { type: 'tech' } } },
@@ -264,7 +272,7 @@ module Epp
 
   def domain_update_xml(xml_params = {}, dnssec_params = {}, custom_params = {})
     defaults = {
-      name: { value: 'example.ee' }
+      name: { value: next_domain_name }
     }
 
     xml_params = defaults.deep_merge(xml_params)
@@ -275,7 +283,7 @@ module Epp
   def domain_check_xml(xml_params = {})
     defaults = {
       _anonymus: [
-        { name: { value: 'example.ee' } }
+        { name: { value: next_domain_name } }
       ]
     }
     xml_params = defaults.deep_merge(xml_params)
@@ -285,9 +293,9 @@ module Epp
 
   def domain_transfer_xml(xml_params = {}, op = 'query', custom_params = {})
     defaults = {
-      name: { value: 'example.ee' },
+      name: { value: next_domain_name },
       authInfo: {
-        pw: { value: '98oiewslkfkd', attrs: { roid: 'JD1234-REP' } }
+        pw: { value: '98oiewslkfkd', attrs: { roid: 'citizen_1234-REP' } }
       }
     }
 
