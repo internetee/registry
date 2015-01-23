@@ -92,6 +92,19 @@ class EppController < ApplicationController
     }
   end
 
+  def optional(selector, *validations)
+    full_selector = [@prefix, selector].join(' ')
+    el = params[:parsed_frame].css(full_selector).first
+    return unless el && el.text.present?
+    value = el.text
+
+    validations.each do |x|
+      validator = "#{x.first[0]}_validator".camelize.constantize
+      err = validator.validate_epp(selector.split(' ').last, value)
+      epp_errors << err if err
+    end
+  end
+
   def xml_attrs_present?(ph, attributes) # TODO: THIS IS DEPRECATED AND WILL BE REMOVED IN FUTURE
     attributes.each do |x|
       epp_errors << {

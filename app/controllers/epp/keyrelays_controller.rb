@@ -21,18 +21,9 @@ class Epp::KeyrelaysController < EppController
       'authInfo', 'authInfo > pw'
     )
 
+    optional 'expiry > relative', duration_iso8601: true
+    optional 'expiry > absolute', date_time_iso8601: true
     exactly_one_of 'expiry > relative', 'expiry > absolute'
-
-    begin
-      abs_datetime = params[:parsed_frame].css('absolute').text
-      abs_datetime = DateTime.parse(abs_datetime) if abs_datetime.present?
-    rescue => _e
-      epp_errors << {
-        code: '2005',
-        msg: I18n.t('unknown_expiry_absolute_pattern'),
-        value: { obj: 'expiry_absolute', val: abs_datetime }
-      }
-    end
   end
   # rubocop: enable Metrics/PerceivedComplexity
   # rubocop: enable Metrics/CyclomaticComplexity
