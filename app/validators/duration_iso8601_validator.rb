@@ -21,7 +21,7 @@ class DurationIso8601Validator < ActiveModel::EachValidator
       return if validate(value)
 
       {
-        code: '2003',
+        code: '2005',
         msg: I18n.t(:unknown_expiry_relative_pattern),
         value: { obj: obj, val: value }
       }
