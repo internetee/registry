@@ -1,6 +1,4 @@
-# EPP integration specification for Estonian Internet Foundation
-
-## Introduction
+# EPP integration specification
 
 Main communication specification through EPP:
 
