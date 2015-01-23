@@ -24,10 +24,10 @@ Contact Mapping protocol short version:
             <contact:cc>       1        Country code, 2 letters uppercase 
         <contact:voice>        1        Phone number in format \+ddd.d+
         <contact:email>        1        E-mail
-        <contact:Ident>        1        Contact identificator. Attribute: type="op"
+        <contact:Ident>        1        Contact identificator. Attribute: type="bic"
                                         Type values:
-                                          'op',           # Estonian ID
-                                          'passport',     # Passport number
+                                          'bic',          # Business registry code
+                                          'priv',         # National idendtification number
                                           'birthday'      # Birthday date
 
 
