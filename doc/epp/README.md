@@ -1,7 +1,9 @@
 # EPP integration specification for Estonian Internet Foundation
 
 ## Introduction
-Introduction text here  
+
+Main communication specification through EPP:
+
 [Session related functions](session.md)  
 [Contact related functions](contact.md)  
 [Domain related functions](domain.md)  
