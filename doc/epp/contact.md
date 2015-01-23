@@ -21,10 +21,15 @@ Contact Mapping protocol short version:
             <contact:city>     1        City name
             <contact:sp>       0-1      State or province
             <contact:pc>       0-1      Postal code
-            <contact:cc>`      1        Country code, 2 letters uppercase 
+            <contact:cc>       1        Country code, 2 letters uppercase 
         <contact:voice>        1        Phone number in format \+ddd.d+
         <contact:email>        1        E-mail
-        <contact:Ident>        1        Contact identificator. 
+        <contact:Ident>        1        Contact identificator. Attribute: type="op"
+                                        Type values:
+                                          'op',           # Estonian ID
+                                          'passport',     # Passport number
+                                          'birthday'      # Birthday date
+
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-create-command-successfully-creates-a-contact)
 
@@ -90,9 +95,3 @@ Contact Mapping protocol short version:
     <clTRID>                 0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-info-command-discloses-items-to-owner)
-
-
-### Domain renew
-
-Renewal semantics do not apply to contact objects, so there is no
-mapping defined for the EPP <renew> command.
