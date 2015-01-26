@@ -31,13 +31,11 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = false
 
-  config.before(:suite) do
+  config.before(:all) do
     ActiveRecord::Base.establish_connection :api_log_test
     DatabaseCleaner.strategy = :deletion
-    DatabaseCleaner.clean
     ActiveRecord::Base.establish_connection :test
     DatabaseCleaner.strategy = :truncation
-    DatabaseCleaner.clean
   end
 
   config.before(:each) do
@@ -46,6 +44,22 @@ RSpec.configure do |config|
 
   config.before(:each, epp: true) do
     DatabaseCleaner.strategy = :truncation
+  end
+
+  config.before(:all, epp: true) do
+    ActiveRecord::Base.establish_connection :api_log_test
+    DatabaseCleaner.clean
+
+    ActiveRecord::Base.establish_connection :test
+    DatabaseCleaner.clean
+  end
+
+  config.after(:all, epp: true) do
+    ActiveRecord::Base.establish_connection :api_log_test
+    DatabaseCleaner.clean
+
+    ActiveRecord::Base.establish_connection :test
+    DatabaseCleaner.clean
   end
 
   config.before(:each, js: true) do

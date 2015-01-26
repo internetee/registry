@@ -90,12 +90,6 @@ describe 'EPP Domain', epp: true do
   end
 
   context 'with citizen as an owner' do
-    # before(:each) do
-    #   Fabricate(:contact, code: 'citizen_1234')
-    #   Fabricate(:contact, code: 'sh8013')
-    #   Fabricate(:contact, code: 'sh801333')
-    # end
-
     it 'creates a domain' do
       dn = next_domain_name
       response = epp_request(domain_create_xml({

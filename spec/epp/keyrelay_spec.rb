@@ -3,161 +3,167 @@ require 'rails_helper'
 describe 'EPP Keyrelay', epp: true do
   let(:server_zone) { Epp::Server.new({ server: 'localhost', tag: 'zone', password: 'ghyt9e4fu', port: 701 }) }
   let(:server_elkdata) { Epp::Server.new({ server: 'localhost', tag: 'elkdata', password: 'ghyt9e4fu', port: 701 }) }
-  let(:elkdata) { Fabricate(:registrar, { name: 'Elkdata', reg_no: '123' }) }
-  let(:zone) { Fabricate(:registrar) }
-  let(:domain) { Fabricate(:domain, name: 'example.ee', registrar: zone, dnskeys: [Fabricate.build(:dnskey)]) }
   let(:epp_xml) { EppXml::Keyrelay.new }
 
   before(:each) { create_settings }
 
-  context 'with valid user' do
-    before(:each) do
-      Fabricate(:epp_user, username: 'zone', registrar: zone)
-      Fabricate(:epp_user, username: 'elkdata', registrar: elkdata)
-    end
+  before(:all) do
+    @elkdata = Fabricate(:registrar, { name: 'Elkdata', reg_no: '123' })
+    @zone = Fabricate(:registrar)
+    Fabricate(:epp_user, username: 'zone', registrar: @zone)
+    Fabricate(:epp_user, username: 'elkdata', registrar: @elkdata)
 
-    it 'makes a keyrelay request' do
-      xml = epp_xml.keyrelay({
-        name: { value: 'example.ee' },
-        keyData: {
-          flags: { value: '256' },
-          protocol: { value: '3' },
-          alg: { value: '8' },
-          pubKey: { value: 'cmlraXN0aGViZXN0' }
-        },
-        authInfo: {
-          pw: { value: domain.auth_info }
-        },
-        expiry: {
-          relative: { value: 'P1M13D' }
-        }
-      })
+    @uniq_no = proc { @i ||= 0; @i += 1 }
+  end
 
-      response = epp_request(xml, :xml, :elkdata)
+  before(:each) { Fabricate(:domain, name: next_domain_name, registrar: @zone, dnskeys: [Fabricate.build(:dnskey)]) }
+  let(:domain) { Domain.last }
 
-      expect(response[:msg]).to eq('Command completed successfully')
-      expect(response[:result_code]).to eq('1000')
+  it 'makes a keyrelay request' do
+    xml = epp_xml.keyrelay({
+      name: { value: domain.name },
+      keyData: {
+        flags: { value: '256' },
+        protocol: { value: '3' },
+        alg: { value: '8' },
+        pubKey: { value: 'cmlraXN0aGViZXN0' }
+      },
+      authInfo: {
+        pw: { value: domain.auth_info }
+      },
+      expiry: {
+        relative: { value: 'P1M13D' }
+      }
+    })
 
-      expect(zone.messages.queued.count).to eq(1)
+    response = epp_request(xml, :xml, :elkdata)
 
-      log = ApiLog::EppLog.all
+    expect(response[:msg]).to eq('Command completed successfully')
+    expect(response[:result_code]).to eq('1000')
 
-      expect(log.length).to eq(4)
-      expect(log[0].request_command).to eq('hello')
-      expect(log[0].request_successful).to eq(true)
+    expect(@zone.messages.queued.count).to eq(1)
 
-      expect(log[1].request_command).to eq('login')
-      expect(log[1].request_successful).to eq(true)
-      expect(log[1].api_user_name).to eq('elkdata')
-      expect(log[1].api_user_registrar).to eq('Elkdata')
+    log = ApiLog::EppLog.all
 
-      expect(log[2].request_command).to eq('keyrelay')
-      expect(log[2].request_object).to eq('keyrelay')
-      expect(log[2].request_successful).to eq(true)
-      expect(log[2].api_user_name).to eq('elkdata')
-      expect(log[2].api_user_registrar).to eq('Elkdata')
-      expect(log[2].request).not_to be_blank
-      expect(log[2].response).not_to be_blank
+    expect(log.length).to eq(4)
+    expect(log[0].request_command).to eq('hello')
+    expect(log[0].request_successful).to eq(true)
 
-      expect(log[3].request_command).to eq('logout')
-      expect(log[3].request_successful).to eq(true)
-      expect(log[3].api_user_name).to eq('elkdata')
-      expect(log[3].api_user_registrar).to eq('Elkdata')
-    end
+    expect(log[1].request_command).to eq('login')
+    expect(log[1].request_successful).to eq(true)
+    expect(log[1].api_user_name).to eq('elkdata')
+    expect(log[1].api_user_registrar).to eq('Elkdata')
 
-    it 'returns an error when parameters are missing' do
-      xml = epp_xml.keyrelay({
-        name: { value: 'example.ee' },
-        keyData: {
-          flags: { value: '' },
-          protocol: { value: '3' },
-          alg: { value: '8' },
-          pubKey: { value: 'cmlraXN0aGViZXN0' }
-        },
-        authInfo: {
-          pw: { value: domain.auth_info }
-        },
-        expiry: {
-          relative: { value: 'Invalid Expiry' }
-        }
-      })
+    expect(log[2].request_command).to eq('keyrelay')
+    expect(log[2].request_object).to eq('keyrelay')
+    expect(log[2].request_successful).to eq(true)
+    expect(log[2].api_user_name).to eq('elkdata')
+    expect(log[2].api_user_registrar).to eq('Elkdata')
+    expect(log[2].request).not_to be_blank
+    expect(log[2].response).not_to be_blank
 
-      response = epp_request(xml, :xml, :elkdata)
-      expect(response[:msg]).to eq('Required parameter missing: flags')
+    expect(log[3].request_command).to eq('logout')
+    expect(log[3].request_successful).to eq(true)
+    expect(log[3].api_user_name).to eq('elkdata')
+    expect(log[3].api_user_registrar).to eq('Elkdata')
+  end
 
-      expect(zone.messages.queued.count).to eq(0)
-    end
+  it 'returns an error when parameters are missing' do
+    msg_count = @zone.messages.queued.count
+    xml = epp_xml.keyrelay({
+      name: { value: domain.name },
+      keyData: {
+        flags: { value: '' },
+        protocol: { value: '3' },
+        alg: { value: '8' },
+        pubKey: { value: 'cmlraXN0aGViZXN0' }
+      },
+      authInfo: {
+        pw: { value: domain.auth_info }
+      },
+      expiry: {
+        relative: { value: 'Invalid Expiry' }
+      }
+    })
 
-    it 'returns an error on invalid relative expiry' do
-      xml = epp_xml.keyrelay({
-        name: { value: 'example.ee' },
-        keyData: {
-          flags: { value: '256' },
-          protocol: { value: '3' },
-          alg: { value: '8' },
-          pubKey: { value: 'cmlraXN0aGViZXN0' }
-        },
-        authInfo: {
-          pw: { value: domain.auth_info }
-        },
-        expiry: {
-          relative: { value: 'Invalid Expiry' }
-        }
-      })
+    response = epp_request(xml, :xml, :elkdata)
+    expect(response[:msg]).to eq('Required parameter missing: flags')
 
-      response = epp_request(xml, :xml, :elkdata)
-      expect(response[:msg]).to eq('Expiry relative must be compatible to ISO 8601')
-      expect(response[:results][0][:value]).to eq('Invalid Expiry')
+    expect(@zone.messages.queued.count).to eq(msg_count)
+  end
 
-      expect(zone.messages.queued.count).to eq(0)
-    end
+  it 'returns an error on invalid relative expiry' do
+    msg_count = @zone.messages.queued.count
+    xml = epp_xml.keyrelay({
+      name: { value: domain.name },
+      keyData: {
+        flags: { value: '256' },
+        protocol: { value: '3' },
+        alg: { value: '8' },
+        pubKey: { value: 'cmlraXN0aGViZXN0' }
+      },
+      authInfo: {
+        pw: { value: domain.auth_info }
+      },
+      expiry: {
+        relative: { value: 'Invalid Expiry' }
+      }
+    })
 
-    it 'returns an error on invalid absolute expiry' do
-      xml = epp_xml.keyrelay({
-        name: { value: 'example.ee' },
-        keyData: {
-          flags: { value: '256' },
-          protocol: { value: '3' },
-          alg: { value: '8' },
-          pubKey: { value: 'cmlraXN0aGViZXN0' }
-        },
-        authInfo: {
-          pw: { value: domain.auth_info }
-        },
-        expiry: {
-          absolute: { value: 'Invalid Absolute' }
-        }
-      })
+    response = epp_request(xml, :xml, :elkdata)
+    expect(response[:msg]).to eq('Expiry relative must be compatible to ISO 8601')
+    expect(response[:results][0][:value]).to eq('Invalid Expiry')
 
-      response = epp_request(xml, :xml, :elkdata)
-      expect(response[:msg]).to eq('Expiry absolute must be compatible to ISO 8601')
-      expect(response[:results][0][:value]).to eq('Invalid Absolute')
+    expect(@zone.messages.queued.count).to eq(msg_count)
+  end
 
-      expect(zone.messages.queued.count).to eq(0)
-    end
+  it 'returns an error on invalid absolute expiry' do
+    msg_count = @zone.messages.queued.count
+    xml = epp_xml.keyrelay({
+      name: { value: domain.name },
+      keyData: {
+        flags: { value: '256' },
+        protocol: { value: '3' },
+        alg: { value: '8' },
+        pubKey: { value: 'cmlraXN0aGViZXN0' }
+      },
+      authInfo: {
+        pw: { value: domain.auth_info }
+      },
+      expiry: {
+        absolute: { value: 'Invalid Absolute' }
+      }
+    })
 
-    it 'does not allow both relative and absolute' do
-      xml = epp_xml.keyrelay({
-        name: { value: 'example.ee' },
-        keyData: {
-          flags: { value: '256' },
-          protocol: { value: '3' },
-          alg: { value: '8' },
-          pubKey: { value: 'cmlraXN0aGViZXN0' }
-        },
-        authInfo: {
-          pw: { value: domain.auth_info }
-        },
-        expiry: {
-          relative: { value: 'P1D' },
-          absolute: { value: '2014-12-23' }
-        }
-      })
+    response = epp_request(xml, :xml, :elkdata)
+    expect(response[:msg]).to eq('Expiry absolute must be compatible to ISO 8601')
+    expect(response[:results][0][:value]).to eq('Invalid Absolute')
 
-      response = epp_request(xml, :xml, :elkdata)
-      expect(response[:msg]).to eq('Exactly one parameter required: expiry > relative or expiry > absolute')
+    expect(@zone.messages.queued.count).to eq(msg_count)
+  end
 
-      expect(zone.messages.queued.count).to eq(0)
-    end
+  it 'does not allow both relative and absolute' do
+    msg_count = @zone.messages.queued.count
+    xml = epp_xml.keyrelay({
+      name: { value: domain.name },
+      keyData: {
+        flags: { value: '256' },
+        protocol: { value: '3' },
+        alg: { value: '8' },
+        pubKey: { value: 'cmlraXN0aGViZXN0' }
+      },
+      authInfo: {
+        pw: { value: domain.auth_info }
+      },
+      expiry: {
+        relative: { value: 'P1D' },
+        absolute: { value: '2014-12-23' }
+      }
+    })
+
+    response = epp_request(xml, :xml, :elkdata)
+    expect(response[:msg]).to eq('Exactly one parameter required: expiry > relative or expiry > absolute')
+
+    expect(@zone.messages.queued.count).to eq(msg_count)
   end
 end
