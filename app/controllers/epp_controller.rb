@@ -124,6 +124,7 @@ class EppController < ApplicationController
   # rubocop: enable Style/PredicateName
 
   def write_to_epp_log
+    return nil if EPP_LOG_ENABLED
     request_command = params[:command] || params[:action] # error receives :command, other methods receive :action
     ApiLog::EppLog.create({
       request: params[:raw_frame] || params[:frame],

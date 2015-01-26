@@ -11,7 +11,8 @@ xml.epp_head do
         xml.tag!('contact:voice', @contact.phone) if @disclosure.try(:phone) || @owner
         xml.tag!('contact:fax', @contact.fax) if @disclosure.try(:fax) || @owner
         xml.tag!('contact:email', @contact.email) if @disclosure.try(:email) || @owner
-        #xml.tag!('contact:clID', @current_epp_user.username) if @current_epp_user
+        xml.tag!('contact:clID', @contact.registrar.try(:name))
+
         #xml.tag!('contact:crID', @contact.cr_id ) if @contact.cr_id
         xml.tag!('contact:crDate', @contact.created_at)
         xml.tag!('contact:upID', @contact.up_id) if @contact.up_id

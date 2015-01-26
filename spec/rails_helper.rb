@@ -31,7 +31,7 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = false
 
-  config.before(:all) do
+  config.before(:suite) do
     ActiveRecord::Base.establish_connection :api_log_test
     DatabaseCleaner.strategy = :deletion
     ActiveRecord::Base.establish_connection :test
@@ -42,19 +42,7 @@ RSpec.configure do |config|
     DatabaseCleaner.strategy = :transaction
   end
 
-  config.before(:each, epp: true) do
-    DatabaseCleaner.strategy = :truncation
-  end
-
   config.before(:all, epp: true) do
-    ActiveRecord::Base.establish_connection :api_log_test
-    DatabaseCleaner.clean
-
-    ActiveRecord::Base.establish_connection :test
-    DatabaseCleaner.clean
-  end
-
-  config.after(:all, epp: true) do
     ActiveRecord::Base.establish_connection :api_log_test
     DatabaseCleaner.clean
 
@@ -69,22 +57,6 @@ RSpec.configure do |config|
   config.before(:each, type: :request) do
     DatabaseCleaner.strategy = :truncation
   end
-
-  # config.before(:each) do
-  #   ActiveRecord::Base.establish_connection :api_log_test
-  #   DatabaseCleaner.start
-
-  #   ActiveRecord::Base.establish_connection :test
-  #   DatabaseCleaner.start
-  # end
-
-  # config.after(:each) do
-  #   ActiveRecord::Base.establish_connection :api_log_test
-  #   DatabaseCleaner.clean
-
-  #   ActiveRecord::Base.establish_connection :test
-  #   DatabaseCleaner.clean
-  # end
 
   Capybara.javascript_driver = :poltergeist
 
@@ -104,6 +76,6 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 
   config.expect_with :rspec do |c|
-    c.syntax = :expect
+    c.syntax = [:should, :expect]
   end
 end

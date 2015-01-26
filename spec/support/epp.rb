@@ -23,10 +23,6 @@ module Epp
   end
 
   def epp_plain_request(data, *args)
-    server = server_gitlab
-    server = server_elkdata if args.include?(:elkdata)
-    server = server_zone if args.include?(:zone)
-
     res = parse_response(server.send_request(data)) if args.include?(:xml)
     if res
       log(data, res[:parsed])
@@ -38,6 +34,10 @@ module Epp
     return res
   rescue => e
     e
+  end
+  
+  def server
+    @server ||= Epp::Server.new({ server: 'localhost', tag: '', password: '', port: 701 })
   end
 
   def parse_response(raw)
