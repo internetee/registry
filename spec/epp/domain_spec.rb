@@ -3,11 +3,17 @@ require 'rails_helper'
 describe 'EPP Domain', epp: true do
   let(:epp_xml) { EppXml.new(cl_trid: 'ABC-12345') }
 
+  def registrar1
+    @registrar1 ||= Registrar.where(reg_no: '12345678').first || Fabricate(:registrar)
+  end
+
+  def registrar2
+    @registrar2 ||= Fabricate(:registrar, { name: 'registrar2', reg_no: '123' })
+  end
+
   before(:all) do
-    @elkdata = Fabricate(:registrar, { name: 'Elkdata', reg_no: '123' })
-    @zone = Fabricate(:registrar)
-    Fabricate(:epp_user, username: 'registrar1', registrar: @zone)
-    Fabricate(:epp_user, username: 'registrar2', registrar: @elkdata)
+    Fabricate(:epp_user, username: 'registrar1', registrar: registrar1)
+    Fabricate(:epp_user, username: 'registrar2', registrar: registrar2)
 
     login_as :registrar1
 
@@ -657,12 +663,12 @@ describe 'EPP Domain', epp: true do
   end
 
   context 'with valid domain' do
-    before(:each) { Fabricate(:domain, name: next_domain_name, registrar: @zone, dnskeys: []) }
+    before(:each) { Fabricate(:domain, name: next_domain_name, registrar: registrar1, dnskeys: []) }
     let(:domain) { Domain.last }
 
     ### TRANSFER ###
     it 'transfers a domain' do
-      domain.registrar = @zone
+      domain.registrar = registrar1
       domain.save
 
       pw = domain.auth_info
@@ -687,7 +693,7 @@ describe 'EPP Domain', epp: true do
       trn_data.css('acDate').text.should == dtl.transferred_at.to_time.utc.to_s
       trn_data.css('exDate').text.should == domain.valid_to.to_time.utc.to_s
 
-      domain.registrar.should == @elkdata
+      domain.registrar.should == registrar2
 
       Setting.transfer_wait_time = 1
 
@@ -714,7 +720,7 @@ describe 'EPP Domain', epp: true do
       trn_data.css('acID').text.should == '123'
       trn_data.css('exDate').text.should == domain.valid_to.to_time.utc.to_s
 
-      domain.registrar.should == @elkdata
+      domain.registrar.should == registrar2
 
       # should return same data if pending already
       response = epp_plain_request(xml, :xml)
@@ -729,7 +735,7 @@ describe 'EPP Domain', epp: true do
       trn_data.css('acID').text.should == '123'
       trn_data.css('exDate').text.should == domain.valid_to.to_time.utc.to_s
 
-      domain.registrar.should == @elkdata
+      domain.registrar.should == registrar2
 
       # should show up in other registrar's poll
 
@@ -787,7 +793,7 @@ describe 'EPP Domain', epp: true do
         log.request_object.should == 'domain'
         log.request_successful.should == true
         log.api_user_name.should == 'registrar2'
-        log.api_user_registrar.should == 'Elkdata'
+        log.api_user_registrar.should == 'registrar2'
         log.request.should_not be_blank
         log.response.should_not be_blank
       end
@@ -806,8 +812,8 @@ describe 'EPP Domain', epp: true do
       domain.domain_transfers.create({
         status: DomainTransfer::PENDING,
         transfer_requested_at: Time.zone.now,
-        transfer_to: @elkdata,
-        transfer_from: @zone
+        transfer_to: registrar2,
+        transfer_from: registrar1
       })
 
       xml = domain_transfer_xml({
@@ -834,8 +840,8 @@ describe 'EPP Domain', epp: true do
       domain.domain_transfers.create({
         status: DomainTransfer::PENDING,
         transfer_requested_at: Time.zone.now,
-        transfer_to: @elkdata,
-        transfer_from: @zone
+        transfer_to: registrar2,
+        transfer_from: registrar1
       })
 
       pw = domain.auth_info
@@ -869,8 +875,8 @@ describe 'EPP Domain', epp: true do
       domain.domain_transfers.create({
         status: DomainTransfer::PENDING,
         transfer_requested_at: Time.zone.now,
-        transfer_to: @elkdata,
-        transfer_from: @zone
+        transfer_to: registrar2,
+        transfer_from: registrar1
       })
 
       xml = domain_transfer_xml({
