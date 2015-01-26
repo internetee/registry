@@ -26,4 +26,4 @@ if ActiveRecord::Base.connection.table_exists? 'settings' # otherwise rake not w
 end
 
 # dev only setting
-EPP_LOG_ENABLED = !Rails.env.test?
+EPP_LOG_ENABLED = true # !Rails.env.test?
