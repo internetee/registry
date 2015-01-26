@@ -230,28 +230,27 @@ describe 'EPP Contact', epp: true do
         response[:results][1][:result_code].should == '2005'
       end
 
-      # it 'updates disclosure items' do
-        # Fabricate(
-          # :contact, 
-          # code: 'sh8013disclosure',
-          # auth_info: '2fooBAR',
-          # registrar: registrar1,
-          # created_by_id: EppUser.first.id,
-            # disclosure: Fabricate(:contact_disclosure, phone: true, email: true))
+      it 'updates disclosure items' do
+        Fabricate(
+          :contact, 
+          code: 'sh8013disclosure',
+          auth_info: '2fooBAR',
+          registrar: registrar1,
+          created_by_id: EppUser.first.id,
+          disclosure: Fabricate(:contact_disclosure, phone: true, email: true))
 
-        # xml = {
-          # id: { value: 'sh8013disclosure' },
-          # authInfo: { pw: { value: '2fooBAR' } }
-        # }
-        # @response = epp_plain_request(update_contact_xml(xml), :xml)
+        xml = {
+          id: { value: 'sh8013disclosure' },
+          authInfo: { pw: { value: '2fooBAR' } }
+        }
+        @response = epp_plain_request(update_contact_xml(xml), :xml)
 
-        # # @response[:results][0][:msg].should == '1000'
-        # # @response[:results][0][:result_code].should == '1000'
+        @response[:results][0][:msg].should == 'Command completed successfully'
+        @response[:results][0][:result_code].should == '1000'
 
-        # Contact.last.disclosure.phone.should == false
-        # Contact.last.disclosure.email.should == false
-        # Contact.count.should == 1
-      # end
+        Contact.last.disclosure.phone.should == false
+        Contact.last.disclosure.email.should == false
+      end
     end
 
     context 'delete command' do
@@ -341,12 +340,14 @@ describe 'EPP Contact', epp: true do
                   # address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
 
         # xml = epp_xml.info({ id: { value: @contact.code } })
-        # response = epp_plain_request(xml, :xml, :registrar1)
-        # contact = response[:parsed].css('resData chkData')
+        # login_as :registrar1 do
+          # response = epp_plain_request(xml, :xml)
+          # contact = response[:parsed].css('resData chkData')
 
-        # expect(response[:result_code]).to eq('1000')
-        # expect(response[:msg]).to eq('Command completed successfully')
-        # expect(contact.css('name').first.text).to eq('Johnny Awesome')
+          # expect(response[:result_code]).to eq('1000')
+          # expect(response[:msg]).to eq('Command completed successfully')
+          # expect(contact.css('name').first.text).to eq('Johnny Awesome')
+        # end
       # end
 
       # it 'returns auth error for non-owner with wrong password' do
@@ -461,43 +462,6 @@ describe 'EPP Contact', epp: true do
         response[:msg].should == 'Unimplemented command'
         response[:result_code].should == '2101'
       end
-    end
-  end
-
-  def server
-    @server ||= Epp::Server.new({ server: 'localhost', port: 701, tag: '', password: '' })
-  end
-
-  def login_as(user)
-    @server ||= Epp::Server.new({ server: 'localhost', port: 701, tag: '', password: '' })
-    @server.open_connection
-
-    if block_given?
-      begin
-        epp_plain_request(login_xml_for(user), :xml)
-        yield
-      ensure
-        @server.open_connection
-        epp_plain_request(login_xml_for(@last_user), :xml)
-      end
-    else
-      @last_user = user # save for block
-      epp_plain_request(login_xml_for(user), :xml)
-    end
-  end
-
-  def login_xml_for(user)
-    @xml ||= EppXml.new(cl_trid: 'ABC-12345')
-    case user
-    when :gitlab
-      @gitlab_login_xml ||= 
-        @xml.session.login(clID: { value: 'gitlab' }, pw: { value: 'ghyt9e4fu' }) 
-    when :registrar1
-      @registrar1_login_xml ||= 
-        @xml.session.login(clID: { value: 'registrar1' }, pw: { value: 'ghyt9e4fu' }) 
-    when :registrar2
-      @registrar2_login_xml ||= 
-        @xml.session.login(clID: { value: 'registrar2' }, pw: { value: 'ghyt9e4fu' }) 
     end
   end
 

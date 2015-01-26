@@ -1,4 +1,47 @@
 module Epp
+  # Example usage:
+  #
+  #    login_as :gitlab
+  #
+  # Use block for temp login:
+  #
+  #    login_as :registrar1 do
+  #      your test code
+  #      # will make request as registrar1 and logins back to previous session
+  #    end
+  #
+  def login_as(user)
+    server.open_connection
+
+    if block_given?
+      begin
+        epp_plain_request(login_xml_for(user), :xml)
+        yield
+      ensure
+        server.open_connection # return back to last login
+        epp_plain_request(login_xml_for(@last_user), :xml)
+      end
+    else
+      @last_user = user # save for block
+      epp_plain_request(login_xml_for(user), :xml)
+    end
+  end
+
+  def login_xml_for(user)
+    @xml ||= EppXml.new(cl_trid: 'ABC-12345')
+    case user
+    when :gitlab
+      @gitlab_login_xml ||= 
+        @xml.session.login(clID: { value: 'gitlab' }, pw: { value: 'ghyt9e4fu' }) 
+    when :registrar1
+      @registrar1_login_xml ||= 
+        @xml.session.login(clID: { value: 'registrar1' }, pw: { value: 'ghyt9e4fu' }) 
+    when :registrar2
+      @registrar2_login_xml ||= 
+        @xml.session.login(clID: { value: 'registrar2' }, pw: { value: 'ghyt9e4fu' }) 
+    end
+  end
+
   def read_body(filename)
     File.read("spec/epp/requests/#{filename}")
   end
@@ -37,7 +80,8 @@ module Epp
   end
   
   def server
-    @server ||= Epp::Server.new({ server: 'localhost', tag: '', password: '', port: 701 })
+    # tag and password not in use, add those at login xml
+    @server ||= Epp::Server.new({ server: 'localhost', port: 701, tag: '', password: '' })
   end
 
   def parse_response(raw)
