@@ -3,8 +3,6 @@ require 'rails_helper'
 describe 'EPP Domain', epp: true do
   let(:epp_xml) { EppXml.new(cl_trid: 'ABC-12345') }
 
-  before(:each) { create_settings }
-
   before(:all) do
     @elkdata = Fabricate(:registrar, { name: 'Elkdata', reg_no: '123' })
     @zone = Fabricate(:registrar)
@@ -22,6 +20,8 @@ describe 'EPP Domain', epp: true do
     Fabricate(:reserved_domain)
 
     @uniq_no = proc { @i ||= 0; @i += 1 }
+
+    create_settings
   end
 
   it 'returns error if contact does not exists' do
@@ -465,6 +465,8 @@ describe 'EPP Domain', epp: true do
 
       response[:result_code].should == '2004'
       response[:msg].should == 'DNS keys count must be between 0-1'
+
+      create_settings
     end
 
     it 'creates domain with ds data' do
@@ -548,6 +550,8 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(xml, :xml)
       response[:result_code].should == '2306'
       response[:msg].should == 'dsData object with key data is not allowed'
+
+      create_settings
     end
 
     it 'prohibits dsData' do
@@ -573,6 +577,8 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(xml, :xml)
       response[:result_code].should == '2306'
       response[:msg].should == 'dsData object is not allowed'
+
+      create_settings
     end
 
     it 'prohibits keyData' do
@@ -591,6 +597,8 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(xml, :xml)
       response[:result_code].should == '2306'
       response[:msg].should == 'keyData object is not allowed'
+
+      create_settings
     end
   end
 
@@ -748,6 +756,8 @@ describe 'EPP Domain', epp: true do
       msg_q = response[:parsed].css('msgQ')
       msg_q.first['id'].should_not be_blank
       msg_q.first['count'].should == '0'
+
+      create_settings
     end
 
     it 'creates a domain transfer with legal document' do
@@ -788,6 +798,8 @@ describe 'EPP Domain', epp: true do
 
       response[:result_code].should == '1000'
       domain.legal_documents.count.should == 1 # does not add another legal documen
+
+      create_settings
     end
 
     it 'approves the transfer request' do
