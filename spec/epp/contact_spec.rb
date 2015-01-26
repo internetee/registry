@@ -63,6 +63,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'successfully creates a contact' do
+        ApiLog::EppLog.delete_all
         response = epp_plain_request(create_contact_xml, :xml)
 
         response[:msg].should == 'Command completed successfully'
@@ -76,29 +77,16 @@ describe 'EPP Contact', epp: true do
         @contact.ident.should == '37605030299'
         @contact.address.street.should == '123 Example'
 
-        # log = ApiLog::EppLog.all
+        log = ApiLog::EppLog.all
 
-        # log.length.should == 4
-        # log[0].request_command.should == 'hello'
-        # log[0].request_successful.should == true
-
-        # log[1].request_command).to eq('login')
-        # log[1].request_successful).to eq(true)
-        # log[1].api_user_name).to eq('registrar1')
-        # log[1].api_user_registrar).to eq('Registrar OÜ')
-
-        # log[2].request_command).to eq('create')
-        # log[2].request_object).to eq('contact')
-        # log[2].request_successful).to eq(true)
-        # log[2].api_user_name).to eq('registrar1')
-        # log[2].api_user_registrar).to eq('Registrar OÜ')
-        # log[2].request).not_to be_blank
-        # log[2].response).not_to be_blank
-
-        # log[3].request_command).to eq('logout')
-        # log[3].request_successful).to eq(true)
-        # log[3].api_user_name).to eq('registrar1')
-        # log[3].api_user_registrar).to eq('Registrar OÜ')
+        log.length.should == 1
+        log[0].request_command.should == 'create'
+        log[0].request_object.should == 'contact'
+        log[0].request_successful.should == 'true'
+        log[0].api_user_name.should == 'registrar1'
+        log[0].api_user_registrar.should == 'Registrar OÜ'
+        log[0].request.should be_blank
+        log[0].response.should be_blank
       end
 
       it 'successfully adds registrar' do
