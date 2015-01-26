@@ -1,27 +1,13 @@
 require 'rails_helper'
 
 describe 'EPP Domain', epp: true do
-
-  before do
-    # we don't really care about the code validations here, it's done in models
-    # dynamic Contact.code just makes it harder to test EPP
-    Contact.skip_callback(:create, :before, :generate_code)
-  end
-
-  after do
-    Contact.set_callback(:create, :before, :generate_code)
-  end
-
   let(:server_zone) { Epp::Server.new({ server: 'localhost', tag: 'zone', password: 'ghyt9e4fu', port: 701 }) }
   let(:server_elkdata) { Epp::Server.new({ server: 'localhost', tag: 'elkdata', password: 'ghyt9e4fu', port: 701 }) }
-  let(:elkdata) { Fabricate(:registrar, { name: 'Elkdata', reg_no: '123' }) }
-  let(:zone) { Fabricate(:registrar) }
   let(:epp_xml) { EppXml.new(cl_trid: 'ABC-12345') }
 
   before(:each) { create_settings }
 
   before(:all) do
-
     @elkdata = Fabricate(:registrar, { name: 'Elkdata', reg_no: '123' })
     @zone = Fabricate(:registrar)
     Fabricate(:epp_user, username: 'zone', registrar: @zone)
@@ -29,15 +15,13 @@ describe 'EPP Domain', epp: true do
 
     Contact.skip_callback(:create, :before, :generate_code)
 
-    @example_ee = Fabricate(:domain, name: 'example.ee', registrar: @zone, dnskeys: [])
-
     Fabricate(:contact, code: 'citizen_1234')
     Fabricate(:contact, code: 'sh8013')
     Fabricate(:contact, code: 'sh801333')
-    @juridical_contact = Fabricate(:contact, code: 'juridical_1234', ident_type: 'ico')
+    Fabricate(:contact, code: 'juridical_1234', ident_type: 'ico')
     Fabricate(:reserved_domain)
 
-    @uniq_no = Proc.new { @i ||= 0; @i += 1 }
+    @uniq_no = proc { @i ||= 0; @i += 1 }
   end
 
   it 'returns error if contact does not exists' do
