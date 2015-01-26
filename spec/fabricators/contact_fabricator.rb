@@ -1,5 +1,5 @@
 Fabricator(:contact) do
-  name { sequence(:hostname) { |i| "#{Faker::Name.name}#{i}" } }
+  name { sequence(:name) { |i| "#{Faker::Name.name}#{i}" } }
   phone '+372.12345678'
   email Faker::Internet.email
   ident '37605030299'
