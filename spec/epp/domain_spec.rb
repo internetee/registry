@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 describe 'EPP Domain', epp: true do
-  let(:server_zone) { Epp::Server.new({ server: 'localhost', tag: 'zone', password: 'ghyt9e4fu', port: 701 }) }
-  let(:server_elkdata) { Epp::Server.new({ server: 'localhost', tag: 'elkdata', password: 'ghyt9e4fu', port: 701 }) }
   let(:epp_xml) { EppXml.new(cl_trid: 'ABC-12345') }
 
   before(:each) { create_settings }
@@ -10,8 +8,10 @@ describe 'EPP Domain', epp: true do
   before(:all) do
     @elkdata = Fabricate(:registrar, { name: 'Elkdata', reg_no: '123' })
     @zone = Fabricate(:registrar)
-    Fabricate(:epp_user, username: 'zone', registrar: @zone)
-    Fabricate(:epp_user, username: 'elkdata', registrar: @elkdata)
+    Fabricate(:epp_user, username: 'registrar1', registrar: @zone)
+    Fabricate(:epp_user, username: 'registrar2', registrar: @elkdata)
+
+    login_as :registrar1
 
     Contact.skip_callback(:create, :before, :generate_code)
 
@@ -25,7 +25,7 @@ describe 'EPP Domain', epp: true do
   end
 
   it 'returns error if contact does not exists' do
-    response = epp_request(domain_create_xml({
+    response = epp_plain_request(domain_create_xml({
       registrant: { value: 'citizen_1234' },
       _anonymus: [
         { contact: { value: 'citizen_1234', attrs: { type: 'admin' } } },
@@ -44,29 +44,15 @@ describe 'EPP Domain', epp: true do
 
     response[:clTRID].should == 'ABC-12345'
 
-    log = ApiLog::EppLog.last(4)
+    log = ApiLog::EppLog.last
 
-    log.length.should == 4
-    log[0].request_command.should == 'hello'
-    log[0].request_successful.should == true
-
-    log[1].request_command.should == 'login'
-    log[1].request_successful.should == true
-    log[1].api_user_name.should == 'zone'
-    log[1].api_user_registrar.should == 'Registrar OÜ'
-
-    log[2].request_command.should == 'create'
-    log[2].request_object.should == 'domain'
-    log[2].request_successful.should == false
-    log[2].api_user_name.should == 'zone'
-    log[2].api_user_registrar.should == 'Registrar OÜ'
-    log[2].request.should_not be_blank
-    log[2].response.should_not be_blank
-
-    log[3].request_command.should == 'logout'
-    log[3].request_successful.should == true
-    log[3].api_user_name.should == 'zone'
-    log[3].api_user_registrar.should == 'Registrar OÜ'
+    log.request_command.should == 'create'
+    log.request_object.should == 'domain'
+    log.request_successful.should == false
+    log.api_user_name.should == 'registrar1'
+    log.api_user_registrar.should == 'Registrar OÜ'
+    log.request.should_not be_blank
+    log.response.should_not be_blank
   end
 
   it 'validates required parameters' do
@@ -75,7 +61,7 @@ describe 'EPP Domain', epp: true do
       name: { value: 'test.ee' }
     })
 
-    response = epp_request(xml, :xml)
+    response = epp_plain_request(xml, :xml)
     response[:results][0][:result_code].should == '2003'
     response[:results][0][:msg].should == 'Required parameter missing: ns'
 
@@ -92,7 +78,7 @@ describe 'EPP Domain', epp: true do
   context 'with citizen as an owner' do
     it 'creates a domain' do
       dn = next_domain_name
-      response = epp_request(domain_create_xml({
+      response = epp_plain_request(domain_create_xml({
         name: { value: dn }
       }), :xml)
       d = Domain.last
@@ -129,7 +115,7 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'creates a domain with legal document' do
-      response = epp_request(domain_create_xml_with_legal_doc, :xml)
+      response = epp_plain_request(domain_create_xml_with_legal_doc, :xml)
 
       response[:msg].should == 'Command completed successfully'
       response[:result_code].should == '1000'
@@ -157,7 +143,7 @@ describe 'EPP Domain', epp: true do
         ]
       })
 
-      epp_request(xml, :xml)
+      epp_plain_request(xml, :xml)
       d = Domain.last
       ds = d.dnskeys.last
       ds.ds_digest.should == '0B62D1BC64EFD1EE652FB102BDF1011BF514CCD9A1A0CFB7472AEA3B01F38C92'
@@ -181,17 +167,17 @@ describe 'EPP Domain', epp: true do
         ]
       })
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       response[:result_code].should == '2306'
       response[:msg].should == 'IPv4 is missing'
     end
 
     it 'does not create duplicate domain' do
       dn = next_domain_name
-      epp_request(domain_create_xml({
+      epp_plain_request(domain_create_xml({
         name: { value: dn }
       }), :xml)
-      response = epp_request(domain_create_xml({
+      response = epp_plain_request(domain_create_xml({
         name: { value: dn }
       }), :xml)
 
@@ -203,7 +189,7 @@ describe 'EPP Domain', epp: true do
     it 'does not create reserved domain' do
       xml = domain_create_xml(name: { value: '1162.ee' })
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       response[:result_code].should == '2302'
       response[:msg].should == 'Domain name is reserved or restricted'
       response[:clTRID].should == 'ABC-12345'
@@ -212,14 +198,14 @@ describe 'EPP Domain', epp: true do
     it 'does not create domain without contacts and registrant' do
       xml = domain_create_xml(contacts: [], registrant: false)
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       response[:results][0][:result_code].should == '2003'
       response[:results][0][:msg].should == 'Required parameter missing: registrant'
     end
 
     it 'does not create domain without nameservers' do
       xml = domain_create_xml(ns: [])
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       response[:result_code].should == '2003'
       response[:msg].should == 'Required parameter missing: ns'
     end
@@ -238,7 +224,7 @@ describe 'EPP Domain', epp: true do
         ns: nameservers
       })
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       response[:result_code].should == '2004'
       response[:msg].should == 'Nameservers count must be between 2-11'
     end
@@ -259,7 +245,7 @@ describe 'EPP Domain', epp: true do
         ]
       })
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       response[:result_code].should == '2005'
       response[:msg].should == 'Hostname is invalid'
     end
@@ -276,13 +262,13 @@ describe 'EPP Domain', epp: true do
         ]
       })
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       response[:result_code].should == '2003'
       response[:msg].should == 'Required parameter missing: ns > hostAttr'
     end
 
     it 'creates domain with nameservers with ips' do
-      epp_request(domain_create_with_host_attrs, :xml)
+      epp_plain_request(domain_create_with_host_attrs, :xml)
       Domain.last.nameservers.count.should == 2
       ns = Domain.last.nameservers.first
       ns.ipv4.should == '192.0.2.2'
@@ -292,7 +278,7 @@ describe 'EPP Domain', epp: true do
     it 'returns error when nameserver has invalid ips' do
       domain_count = Domain.count
       nameserver_count = Nameserver.count
-      response = epp_request(domain_create_with_invalid_ns_ip_xml, :xml)
+      response = epp_plain_request(domain_create_with_invalid_ns_ip_xml, :xml)
       response[:results][0][:result_code].should == '2005'
       response[:results][0][:msg].should == 'IPv4 is invalid'
       response[:results][0][:value].should == '192.0.2.2.invalid'
@@ -307,7 +293,7 @@ describe 'EPP Domain', epp: true do
     it 'creates a domain with period in days' do
       xml = domain_create_xml(period_value: 365, period_unit: 'd')
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       response[:result_code].should == '1000'
       response[:msg].should == 'Command completed successfully'
       Domain.first.valid_to.should == Date.today + 1.year
@@ -318,7 +304,7 @@ describe 'EPP Domain', epp: true do
         period: { value: '367', attrs: { unit: 'd' } }
       })
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       response[:results][0][:result_code].should == '2004'
       response[:results][0][:msg].should == 'Period must add up to 1, 2 or 3 years'
       response[:results][0][:value].should == '367'
@@ -353,7 +339,7 @@ describe 'EPP Domain', epp: true do
         ]
       })
 
-      epp_request(xml, :xml)
+      epp_plain_request(xml, :xml)
       d = Domain.last
 
       d.dnskeys.count.should == 3
@@ -403,7 +389,7 @@ describe 'EPP Domain', epp: true do
        ]
      })
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
 
       response[:results][0][:msg].should == 'Valid algorithms are: 3, 5, 6, 7, 8, 252, 253, 254, 255'
       response[:results][0][:value].should == '9'
@@ -446,7 +432,7 @@ describe 'EPP Domain', epp: true do
          }]
        })
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
 
       response[:result_code].should == '2302'
       response[:msg].should == 'Public key already exists'
@@ -475,7 +461,7 @@ describe 'EPP Domain', epp: true do
         }]
       })
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
 
       response[:result_code].should == '2004'
       response[:msg].should == 'DNS keys count must be between 0-1'
@@ -493,7 +479,7 @@ describe 'EPP Domain', epp: true do
           }]
         })
 
-      epp_request(xml, :xml)
+      epp_plain_request(xml, :xml)
 
       d = Domain.last
       ds = d.dnskeys.first
@@ -525,7 +511,7 @@ describe 'EPP Domain', epp: true do
           }]
         })
 
-      epp_request(xml, :xml)
+      epp_plain_request(xml, :xml)
 
       d = Domain.last
       ds = d.dnskeys.first
@@ -559,7 +545,7 @@ describe 'EPP Domain', epp: true do
           }]
         })
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       response[:result_code].should == '2306'
       response[:msg].should == 'dsData object with key data is not allowed'
     end
@@ -584,7 +570,7 @@ describe 'EPP Domain', epp: true do
           }]
         })
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       response[:result_code].should == '2306'
       response[:msg].should == 'dsData object is not allowed'
     end
@@ -602,7 +588,7 @@ describe 'EPP Domain', epp: true do
           }]
         })
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       response[:result_code].should == '2306'
       response[:msg].should == 'keyData object is not allowed'
     end
@@ -617,7 +603,7 @@ describe 'EPP Domain', epp: true do
         ]
       })
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       response[:result_code].should == '1000'
       response[:msg].should == 'Command completed successfully'
       response[:clTRID].should == 'ABC-12345'
@@ -639,7 +625,7 @@ describe 'EPP Domain', epp: true do
         ]
       })
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       response[:result_code].should == '2004'
       response[:msg].should == 'Admin contacts count must be between 1-10'
       response[:clTRID].should == 'ABC-12345'
@@ -656,7 +642,7 @@ describe 'EPP Domain', epp: true do
         ]
       })
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       response[:result_code].should == '2306'
       response[:msg].should == 'Admin contact can be only citizen'
     end
@@ -676,7 +662,10 @@ describe 'EPP Domain', epp: true do
         name: { value: domain.name },
         authInfo: { pw: { value: pw } }
       })
-      response = epp_request(xml, :xml, :elkdata)
+
+      response = login_as :registrar2 do
+        epp_plain_request(xml, :xml)
+      end
 
       domain.reload
       dtl = domain.domain_transfers.last
@@ -701,7 +690,7 @@ describe 'EPP Domain', epp: true do
         authInfo: { pw: { value: pw } }
       }) # request with new password
 
-      response = epp_request(xml, :xml, :zone)
+      response = epp_plain_request(xml, :xml)
       trn_data = response[:parsed].css('trnData')
 
       domain.reload
@@ -720,7 +709,7 @@ describe 'EPP Domain', epp: true do
       domain.registrar.should == @elkdata
 
       # should return same data if pending already
-      response = epp_request(xml, :xml, :zone)
+      response = epp_plain_request(xml, :xml)
       trn_data = response[:parsed].css('trnData')
 
       domain.domain_transfers.count.should == 2
@@ -736,7 +725,10 @@ describe 'EPP Domain', epp: true do
 
       # should show up in other registrar's poll
 
-      response = epp_request(epp_xml.session.poll, :xml, :elkdata)
+      response = login_as :registrar2 do
+        epp_plain_request(epp_xml.session.poll, :xml)
+      end
+
       response[:msg].should == 'Command completed successfully; ack to dequeue'
       msg_q = response[:parsed].css('msgQ')
       msg_q.css('qDate').text.should_not be_blank
@@ -748,7 +740,10 @@ describe 'EPP Domain', epp: true do
         value: '', attrs: { op: 'ack', msgID: msg_q.first['id'] }
       })
 
-      response = epp_request(xml, :xml, :elkdata)
+      response = login_as :registrar2 do
+        epp_plain_request(xml, :xml)
+      end
+
       response[:msg].should == 'Command completed successfully'
       msg_q = response[:parsed].css('msgQ')
       msg_q.first['id'].should_not be_blank
@@ -771,35 +766,26 @@ describe 'EPP Domain', epp: true do
         ]
       })
 
-      response = epp_request(xml, :xml, :elkdata)
+      login_as :registrar2 do
+        response = epp_plain_request(xml, :xml)
+        response[:result_code].should == '1000'
+        domain.legal_documents.count.should == 1
 
-      response[:result_code].should == '1000'
-      domain.legal_documents.count.should == 1
+        log = ApiLog::EppLog.last
 
-      log = ApiLog::EppLog.last(4)
+        log.request_command.should == 'transfer'
+        log.request_object.should == 'domain'
+        log.request_successful.should == true
+        log.api_user_name.should == 'registrar2'
+        log.api_user_registrar.should == 'Elkdata'
+        log.request.should_not be_blank
+        log.response.should_not be_blank
+      end
 
-      log[0].request_command.should == 'hello'
-      log[0].request_successful.should == true
+      response = login_as :registrar2 do
+        epp_plain_request(xml, :xml)
+      end
 
-      log[1].request_command.should == 'login'
-      log[1].request_successful.should == true
-      log[1].api_user_name.should == 'elkdata'
-      log[1].api_user_registrar.should == 'Elkdata'
-
-      log[2].request_command.should == 'transfer'
-      log[2].request_object.should == 'domain'
-      log[2].request_successful.should == true
-      log[2].api_user_name.should == 'elkdata'
-      log[2].api_user_registrar.should == 'Elkdata'
-      log[2].request.should_not be_blank
-      log[2].response.should_not be_blank
-
-      log[3].request_command.should == 'logout'
-      log[3].request_successful.should == true
-      log[3].api_user_name.should == 'elkdata'
-      log[3].api_user_registrar.should == 'Elkdata'
-
-      response = epp_request(xml, :xml, :elkdata)
       response[:result_code].should == '1000'
       domain.legal_documents.count.should == 1 # does not add another legal documen
     end
@@ -816,7 +802,9 @@ describe 'EPP Domain', epp: true do
         name: { value: domain.name },
         authInfo: { pw: { value: domain.auth_info } }
       }, 'approve')
-      response = epp_request(xml, :xml, :zone)
+
+      response = epp_plain_request(xml, :xml)
+
       domain.reload
       dtl = domain.domain_transfers.last
 
@@ -851,12 +839,15 @@ describe 'EPP Domain', epp: true do
         ]
       })
 
-      response = epp_request(xml, :xml, :elkdata)
+      response = login_as :registrar2 do
+        epp_plain_request(xml, :xml)
+      end
+
       response[:msg].should == 'Transfer can be rejected only by current registrar'
       response[:result_code].should == '2304'
       domain.legal_documents.count.should == 0
 
-      response = epp_request(xml, :xml, :zone)
+      response = epp_plain_request(xml, :xml)
       response[:result_code].should == '1000'
       domain.pending_transfer.should be_nil
       domain.legal_documents.count.should == 1
@@ -875,7 +866,10 @@ describe 'EPP Domain', epp: true do
         authInfo: { pw: { value: domain.auth_info } }
       }, 'approve')
 
-      response = epp_request(xml, :xml, :elkdata)
+      response = login_as :registrar2 do
+        epp_plain_request(xml, :xml)
+      end
+
       response[:result_code].should == '2304'
       response[:msg].should == 'Transfer can be approved only by current domain registrar'
     end
@@ -885,7 +879,7 @@ describe 'EPP Domain', epp: true do
         name: { value: domain.name },
         authInfo: { pw: { value: 'test' } }
       })
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       response[:result_code].should == '2201'
       response[:msg].should == 'Authorization error'
     end
@@ -896,14 +890,15 @@ describe 'EPP Domain', epp: true do
         name: { value: domain.name },
         authInfo: { pw: { value: pw } }
       })
-      response = epp_request(xml, :xml, :zone)
+
+      response = epp_plain_request(xml, :xml)
 
       response[:result_code].should == '2002'
       response[:msg].should == 'Domain already belongs to the querying registrar'
     end
 
     it 'returns an error for incorrect op attribute' do
-      response = epp_request(domain_transfer_xml({}, 'bla'), :xml, :zone)
+      response = epp_plain_request(domain_transfer_xml({}, 'bla'), :xml)
       response[:result_code].should == '2306'
       response[:msg].should == 'Attribute op is invalid'
     end
@@ -915,10 +910,12 @@ describe 'EPP Domain', epp: true do
         authInfo: { pw: { value: pw } }
       })
 
-      epp_request(xml, :xml, :elkdata) # transfer domain
-      response = epp_request(xml, :xml, :elkdata) # attempt second transfer
-      response[:result_code].should == '2201'
-      response[:msg].should == 'Authorization error'
+      login_as :registrar2 do
+        epp_plain_request(xml, :xml) # transfer domain
+        response =  epp_plain_request(xml, :xml) # attempt second transfer
+        response[:result_code].should == '2201'
+        response[:msg].should == 'Authorization error'
+      end
     end
 
     ### UPDATE ###
@@ -932,7 +929,7 @@ describe 'EPP Domain', epp: true do
         ]
       }
 
-      response = epp_request(domain_update_xml(xml_params, {}, {
+      response = epp_plain_request(domain_update_xml(xml_params, {}, {
         _anonymus: [
           legalDocument: {
             value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
@@ -993,13 +990,13 @@ describe 'EPP Domain', epp: true do
         ]
       })
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       response[:results][0][:result_code].should == '2303'
       response[:results][0][:msg].should == 'Contact was not found'
 
       Fabricate(:contact, code: 'mak21')
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       response[:results][0][:result_code].should == '1000'
 
       d = Domain.last
@@ -1017,7 +1014,7 @@ describe 'EPP Domain', epp: true do
       d.domain_statuses.last.value.should == 'clientUpdateProhibited'
       d.dnskeys.count.should == 2
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
 
       response[:results][0][:result_code].should == '2302'
       response[:results][0][:msg].should == 'Nameserver already exists on this domain'
@@ -1090,7 +1087,7 @@ describe 'EPP Domain', epp: true do
         ]
       })
 
-      epp_request(xml, :xml)
+      epp_plain_request(xml, :xml)
       d = Domain.last
       d.dnskeys.count.should == 2
 
@@ -1120,7 +1117,7 @@ describe 'EPP Domain', epp: true do
         ]
       })
 
-      epp_request(xml, :xml)
+      epp_plain_request(xml, :xml)
 
       d.dnskeys.count.should == 1
 
@@ -1133,7 +1130,7 @@ describe 'EPP Domain', epp: true do
       rem_cnt = d.tech_contacts.find_by(code: 'citizen_1234')
       rem_cnt.should be_falsey
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       response[:results][0][:result_code].should == '2303'
       response[:results][0][:msg].should == 'Contact was not found'
       response[:results][0][:value].should == 'citizen_1234'
@@ -1160,7 +1157,7 @@ describe 'EPP Domain', epp: true do
         ]
       })
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
 
       response[:results][0][:result_code].should == '2303'
       response[:results][0][:msg].should == 'Status was not found'
@@ -1188,8 +1185,8 @@ describe 'EPP Domain', epp: true do
         }
       })
 
-      epp_request(xml, :xml)
-      response = epp_request(xml, :xml)
+      epp_plain_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
 
       response[:results][0][:result_code].should == '2302'
       response[:results][0][:msg].should == 'Nameserver already exists on this domain'
@@ -1208,7 +1205,7 @@ describe 'EPP Domain', epp: true do
         ]
       }
 
-      response = epp_request(domain_update_xml(xml_params), :xml)
+      response = epp_plain_request(domain_update_xml(xml_params), :xml)
       response[:results][0][:msg].should == 'Required parameter missing: extension > extdata > legalDocument'
       response[:results][0][:result_code].should == '2003'
     end
@@ -1221,7 +1218,7 @@ describe 'EPP Domain', epp: true do
         ]
       })
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       response[:results][0][:result_code].should == '2303'
       response[:results][0][:msg].should == 'Status was not found'
       response[:results][0][:value].should == 'invalidStatus'
@@ -1236,7 +1233,7 @@ describe 'EPP Domain', epp: true do
         period: { value: '1', attrs: { unit: 'y' } }
       )
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       ex_date = response[:parsed].css('renData exDate').text
       name = response[:parsed].css('renData name').text
       ex_date.should == "#{(exp_date + 1.year)} 00:00:00 UTC"
@@ -1250,7 +1247,7 @@ describe 'EPP Domain', epp: true do
         period: { value: '1', attrs: { unit: 'y' } }
       )
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       response[:results][0][:result_code].should == '2306'
       response[:results][0][:msg].should == 'Given and current expire dates do not match'
     end
@@ -1264,7 +1261,7 @@ describe 'EPP Domain', epp: true do
         period: { value: '4', attrs: { unit: 'y' } }
       )
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       response[:results][0][:result_code].should == '2004'
       response[:results][0][:msg].should == 'Period must add up to 1, 2 or 3 years'
       response[:results][0][:value].should == '4'
@@ -1301,7 +1298,7 @@ describe 'EPP Domain', epp: true do
 
       xml = domain_info_xml(name: { value: domain.name })
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       response[:results][0][:result_code].should == '1000'
       response[:results][0][:msg].should == 'Command completed successfully'
 
@@ -1353,33 +1350,35 @@ describe 'EPP Domain', epp: true do
 
       domain.touch
 
-      response = epp_request(domain_info_xml(name: { value: domain.name }), :xml)
+      response = epp_plain_request(domain_info_xml(name: { value: domain.name }), :xml)
       inf_data = response[:parsed].css('resData infData')
 
       inf_data.css('upDate').text.should == domain.updated_at.to_time.utc.to_s
     end
 
     it 'returns error when domain can not be found' do
-      response = epp_request(domain_info_xml(name:  { value: 'test.ee' }), :xml)
+      response = epp_plain_request(domain_info_xml(name:  { value: 'test.ee' }), :xml)
       response[:results][0][:result_code].should == '2303'
       response[:results][0][:msg].should == 'Domain not found'
     end
 
     it 'sets ok status by default' do
-      response = epp_request(domain_info_xml(name: { value: domain.name }), :xml)
+      response = epp_plain_request(domain_info_xml(name: { value: domain.name }), :xml)
       inf_data = response[:parsed].css('resData infData')
       inf_data.css('status').first[:s].should == 'ok'
     end
 
     it 'can not see other registrar domains' do
-      response = epp_request(domain_info_xml(name: { value: domain.name }), :xml, :elkdata)
-      response[:result_code].should == '2302'
-      response[:msg].should == 'Domain exists but belongs to other registrar'
+      login_as :registrar2 do
+        response = epp_plain_request(domain_info_xml(name: { value: domain.name }), :xml)
+        response[:result_code].should == '2302'
+        response[:msg].should == 'Domain exists but belongs to other registrar'
+      end
     end
 
     ### DELETE ###
     it 'deletes domain' do
-      response = epp_request(epp_xml.domain.delete({
+      response = epp_plain_request(epp_xml.domain.delete({
         name: { value: domain.name }
       }, {
         _anonymus: [
@@ -1398,7 +1397,7 @@ describe 'EPP Domain', epp: true do
     it 'does not delete domain with specific status' do
       domain.domain_statuses.create(value: DomainStatus::CLIENT_DELETE_PROHIBITED)
 
-      response = epp_request(epp_xml.domain.delete({
+      response = epp_plain_request(epp_xml.domain.delete({
         name: { value: domain.name }
       }, {
         _anonymus: [
@@ -1414,14 +1413,14 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'does not delete domain without legal document' do
-      response = epp_request(epp_xml.domain.delete(name: { value: 'example.ee' }), :xml)
+      response = epp_plain_request(epp_xml.domain.delete(name: { value: 'example.ee' }), :xml)
       response[:result_code].should == '2003'
       response[:msg].should == 'Required parameter missing: extension > extdata > legalDocument'
     end
 
     ### CHECK ###
     it 'checks a domain' do
-      response = epp_request(domain_check_xml({
+      response = epp_plain_request(domain_check_xml({
         _anonymus: [
           { name: { value: 'one.ee' } }
         ]
@@ -1434,7 +1433,7 @@ describe 'EPP Domain', epp: true do
       res_data.text.should == 'one.ee'
       res_data[:avail].should == '1'
 
-      response = epp_request(domain_check_xml({
+      response = epp_plain_request(domain_check_xml({
         _anonymus: [
           { name: { value: domain.name } }
         ]
@@ -1457,7 +1456,7 @@ describe 'EPP Domain', epp: true do
         ]
       })
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       response[:result_code].should == '1000'
       response[:msg].should == 'Command completed successfully'
 
@@ -1478,7 +1477,7 @@ describe 'EPP Domain', epp: true do
         ]
       })
 
-      response = epp_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
       response[:result_code].should == '1000'
       response[:msg].should == 'Command completed successfully'
 
