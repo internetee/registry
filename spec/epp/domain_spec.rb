@@ -113,8 +113,9 @@ describe 'EPP Domain', epp: true do
     # end
 
     it 'creates a domain' do
+      dn = next_domain_name
       response = epp_request(domain_create_xml({
-        name: { value: 'uniq.ee' }
+        name: { value: dn }
       }), :xml)
       d = Domain.last
       expect(response[:result_code]).to eq('1000')
@@ -122,7 +123,7 @@ describe 'EPP Domain', epp: true do
 
       cre_data = response[:parsed].css('creData')
 
-      expect(cre_data.css('name').text).to eq('uniq.ee')
+      expect(cre_data.css('name').text).to eq(dn)
       expect(cre_data.css('crDate').text).to eq(d.created_at.to_time.utc.to_s)
       expect(cre_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
 
@@ -185,17 +186,18 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'validates nameserver ipv4 when in same zone as domain' do
+      dn = next_domain_name
       xml = domain_create_xml({
-        name: { value: 'uniq3.ee' },
+        name: { value: dn },
         ns: [
           {
             hostAttr: [
-              { hostName: { value: 'ns1.uniq3.ee' } }
+              { hostName: { value: "ns1.#{dn}" } }
             ]
           },
           {
             hostAttr: {
-              hostName: { value: 'ns2.uniq3.ee' }
+              hostName: { value: "ns2.#{dn}" }
             }
           }
         ]
@@ -207,11 +209,12 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'does not create duplicate domain' do
+      dn = next_domain_name
       epp_request(domain_create_xml({
-        name: { value: 'uniq2.ee' }
+        name: { value: dn }
       }), :xml)
       response = epp_request(domain_create_xml({
-        name: { value: 'uniq2.ee' }
+        name: { value: dn }
       }), :xml)
 
       expect(response[:result_code]).to eq('2302')
@@ -778,7 +781,10 @@ describe 'EPP Domain', epp: true do
       Setting.transfer_wait_time = 1
       expect(domain.legal_documents.count).to eq(0)
       pw = domain.auth_info
-      xml = domain_transfer_xml({ authInfo: { pw: { value: pw } } }, 'query', {
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        authInfo: { pw: { value: pw } }
+      }, 'query', {
         _anonymus: [
           legalDocument: {
             value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
@@ -788,12 +794,12 @@ describe 'EPP Domain', epp: true do
       })
 
       response = epp_request(xml, :xml, :elkdata)
+
       expect(response[:result_code]).to eq('1000')
       expect(domain.legal_documents.count).to eq(1)
 
-      log = ApiLog::EppLog.all
+      log = ApiLog::EppLog.last(4)
 
-      expect(log.length).to eq(4)
       expect(log[0].request_command).to eq('hello')
       expect(log[0].request_successful).to eq(true)
 
@@ -828,14 +834,17 @@ describe 'EPP Domain', epp: true do
         transfer_from: @zone
       })
 
-      xml = domain_transfer_xml({ authInfo: { pw: { value: domain.auth_info } } }, 'approve')
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        authInfo: { pw: { value: domain.auth_info } }
+      }, 'approve')
       response = epp_request(xml, :xml, :zone)
       domain.reload
       dtl = domain.domain_transfers.last
 
       trn_data = response[:parsed].css('trnData')
 
-      expect(trn_data.css('name').text).to eq('example.ee')
+      expect(trn_data.css('name').text).to eq(domain.name)
       expect(trn_data.css('trStatus').text).to eq('clientApproved')
       expect(trn_data.css('reID').text).to eq('123')
       expect(trn_data.css('reDate').text).to eq(dtl.transfer_requested_at.to_time.utc.to_s)
@@ -852,7 +861,10 @@ describe 'EPP Domain', epp: true do
       })
 
       pw = domain.auth_info
-      xml = domain_transfer_xml({ authInfo: { pw: { value: pw } } }, 'reject', {
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        authInfo: { pw: { value: pw } }
+      }, 'reject', {
         _anonymus: [
           legalDocument: {
             value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
@@ -862,8 +874,8 @@ describe 'EPP Domain', epp: true do
       })
 
       response = epp_request(xml, :xml, :elkdata)
-      expect(response[:result_code]).to eq('2304')
       expect(response[:msg]).to eq('Transfer can be rejected only by current registrar')
+      expect(response[:result_code]).to eq('2304')
       expect(domain.legal_documents.count).to eq(0)
 
       response = epp_request(xml, :xml, :zone)
@@ -880,14 +892,21 @@ describe 'EPP Domain', epp: true do
         transfer_from: @zone
       })
 
-      xml = domain_transfer_xml({ authInfo: { pw: { value: domain.auth_info } } }, 'approve')
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        authInfo: { pw: { value: domain.auth_info } }
+      }, 'approve')
+
       response = epp_request(xml, :xml, :elkdata)
       expect(response[:result_code]).to eq('2304')
       expect(response[:msg]).to eq('Transfer can be approved only by current domain registrar')
     end
 
     it 'does not transfer with invalid pw' do
-      xml = domain_transfer_xml({ authInfo: { pw: { value: 'test' } } })
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        authInfo: { pw: { value: 'test' } }
+      })
       response = epp_request(xml, :xml)
       expect(response[:result_code]).to eq('2201')
       expect(response[:msg]).to eq('Authorization error')
@@ -895,7 +914,10 @@ describe 'EPP Domain', epp: true do
 
     it 'ignores transfer when owner registrar requests transfer' do
       pw = domain.auth_info
-      xml = domain_transfer_xml({ authInfo: { pw: { value: pw } } })
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        authInfo: { pw: { value: pw } }
+      })
       response = epp_request(xml, :xml, :zone)
 
       expect(response[:result_code]).to eq('2002')
@@ -910,7 +932,11 @@ describe 'EPP Domain', epp: true do
 
     it 'creates new pw after successful transfer' do
       pw = domain.auth_info
-      xml = domain_transfer_xml(pw: pw)
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        authInfo: { pw: { value: pw } }
+      })
+
       epp_request(xml, :xml, :elkdata) # transfer domain
       response = epp_request(xml, :xml, :elkdata) # attempt second transfer
       expect(response[:result_code]).to eq('2201')
@@ -919,12 +945,12 @@ describe 'EPP Domain', epp: true do
 
     ### UPDATE ###
     it 'updates a domain' do
-      Fabricate(:contact, code: 'mak21')
-      existing_pw = Domain.first.auth_info
+      existing_pw = Domain.last.auth_info
 
       xml_params = {
+        name: { value: domain.name },
         chg: [
-          registrant: { value: 'mak21' }
+          registrant: { value: 'citizen_1234' }
         ]
       }
 
@@ -941,12 +967,13 @@ describe 'EPP Domain', epp: true do
 
       d = Domain.last
 
-      expect(d.owner_contact_code).to eq('mak21')
+      expect(d.owner_contact_code).to eq('citizen_1234')
       expect(d.auth_info).to eq(existing_pw)
     end
 
     it 'updates domain and adds objects' do
       xml = domain_update_xml({
+        name: { value: domain.name },
         add: [
           {
             ns: [
@@ -997,7 +1024,7 @@ describe 'EPP Domain', epp: true do
       response = epp_request(xml, :xml)
       expect(response[:results][0][:result_code]).to eq('1000')
 
-      d = Domain.first
+      d = Domain.last
 
       new_ns_count = d.nameservers.where(hostname: ['ns1.example.com', 'ns2.example.com']).count
       expect(new_ns_count).to eq(2)
@@ -1042,9 +1069,8 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'updates a domain and removes objects' do
-      Fabricate(:contact, code: 'mak21')
-
       xml = domain_update_xml({
+        name: { value: domain.name },
         add: [
           {
             ns: [
@@ -1061,7 +1087,7 @@ describe 'EPP Domain', epp: true do
             ]
           },
           _anonymus: [
-            { contact: { value: 'mak21', attrs: { type: 'tech' } } },
+            { contact: { value: 'citizen_1234', attrs: { type: 'tech' } } },
             { status: { value: 'Payment overdue.', attrs: { s: 'clientHold', lang: 'en' } } },
             { status: { value: '', attrs: { s: 'clientUpdateProhibited' } } }
           ]
@@ -1091,6 +1117,7 @@ describe 'EPP Domain', epp: true do
       expect(d.dnskeys.count).to eq(2)
 
       xml = domain_update_xml({
+        name: { value: domain.name },
         rem: [
           {
             ns: [
@@ -1102,7 +1129,7 @@ describe 'EPP Domain', epp: true do
             ]
           },
           _anonymus: [
-            { contact: { value: 'mak21', attrs: { type: 'tech' } } },
+            { contact: { value: 'citizen_1234', attrs: { type: 'tech' } } },
             { status: { value: '', attrs: { s: 'clientHold' } } }
           ]
         ]
@@ -1125,13 +1152,13 @@ describe 'EPP Domain', epp: true do
       rem_ns = d.nameservers.find_by(hostname: 'ns1.example.com')
       expect(rem_ns).to be_falsey
 
-      rem_cnt = d.tech_contacts.find_by(code: 'mak21')
+      rem_cnt = d.tech_contacts.find_by(code: 'citizen_1234')
       expect(rem_cnt).to be_falsey
 
       response = epp_request(xml, :xml)
       expect(response[:results][0][:result_code]).to eq('2303')
       expect(response[:results][0][:msg]).to eq('Contact was not found')
-      expect(response[:results][0][:value]).to eq('mak21')
+      expect(response[:results][0][:value]).to eq('citizen_1234')
 
       expect(response[:results][1][:result_code]).to eq('2303')
       expect(response[:results][1][:msg]).to eq('Nameserver was not found')
@@ -1147,6 +1174,7 @@ describe 'EPP Domain', epp: true do
       d.domain_statuses.create(value: DomainStatus::SERVER_HOLD)
 
       xml = domain_update_xml({
+        name: { value: domain.name },
         rem: [
           _anonymus: [
             { status: { value: '', attrs: { s: 'serverHold' } } }
@@ -1162,11 +1190,12 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'does not add duplicate objects to domain' do
-      d = Domain.first
+      d = Domain.last
       c = d.admin_contacts.first
       n = d.nameservers.first
 
       xml = domain_update_xml({
+        name: { value: domain.name },
         add: {
           ns: [
             {
@@ -1194,11 +1223,10 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'cannot change registrant without legal document' do
-      Fabricate(:contact, code: 'mak21')
-
       xml_params = {
+        name: { value: domain.name },
         chg: [
-          registrant: { value: 'mak21' }
+          registrant: { value: 'citizen_1234' }
         ]
       }
 
@@ -1209,6 +1237,7 @@ describe 'EPP Domain', epp: true do
 
     it 'does not assign invalid status to domain' do
       xml = domain_update_xml({
+        name: { value: domain.name },
         add: [
           status: { value: '', attrs: { s: 'invalidStatus' } }
         ]
@@ -1224,7 +1253,7 @@ describe 'EPP Domain', epp: true do
     it 'renews a domain' do
       exp_date = (Date.today + 1.year)
       xml = epp_xml.domain.renew(
-        name: { value: 'example.ee' },
+        name: { value: domain.name },
         curExpDate: { value: exp_date.to_s },
         period: { value: '1', attrs: { unit: 'y' } }
       )
@@ -1233,13 +1262,13 @@ describe 'EPP Domain', epp: true do
       ex_date = response[:parsed].css('renData exDate').text
       name = response[:parsed].css('renData name').text
       expect(ex_date).to eq("#{(exp_date + 1.year)} 00:00:00 UTC")
-      expect(name).to eq('example.ee')
+      expect(name).to eq(domain.name)
     end
 
     it 'returns an error when given and current exp dates do not match' do
       xml = epp_xml.domain.renew(
-        name: { value: 'example.ee' },
-        curExpDate: { value: '2016-08-07' },
+        name: { value: domain.name },
+        curExpDate: { value: '2200-08-07' },
         period: { value: '1', attrs: { unit: 'y' } }
       )
 
@@ -1252,7 +1281,7 @@ describe 'EPP Domain', epp: true do
       exp_date = (Date.today + 1.year)
 
       xml = epp_xml.domain.renew(
-        name: { value: 'example.ee' },
+        name: { value: domain.name },
         curExpDate: { value: exp_date.to_s },
         period: { value: '4', attrs: { unit: 'y' } }
       )
@@ -1265,11 +1294,10 @@ describe 'EPP Domain', epp: true do
 
     ### INFO ###
     it 'returns domain info' do
-      d = Domain.first
-      d.domain_statuses.build(value: DomainStatus::CLIENT_HOLD, description: 'Payment overdue.')
-      d.nameservers.build(hostname: 'ns1.example.com', ipv4: '192.168.1.1', ipv6: '1080:0:0:0:8:800:200C:417A')
+      domain.domain_statuses.build(value: DomainStatus::CLIENT_HOLD, description: 'Payment overdue.')
+      domain.nameservers.build(hostname: 'ns1.example.com', ipv4: '192.168.1.1', ipv6: '1080:0:0:0:8:800:200C:417A')
 
-      d.dnskeys.build(
+      domain.dnskeys.build(
         ds_key_tag: '123',
         ds_alg: 3,
         ds_digest_type: 1,
@@ -1280,7 +1308,7 @@ describe 'EPP Domain', epp: true do
         public_key: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8'
       )
 
-      d.dnskeys.build(
+      domain.dnskeys.build(
         ds_key_tag: '123',
         ds_alg: 3,
         ds_digest_type: 1,
@@ -1291,27 +1319,27 @@ describe 'EPP Domain', epp: true do
         public_key: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
       )
 
-      d.save
+      domain.save
 
-      xml = domain_info_xml(name: { value: 'Example.ee' })
+      xml = domain_info_xml(name: { value: domain.name })
 
       response = epp_request(xml, :xml)
       expect(response[:results][0][:result_code]).to eq('1000')
       expect(response[:results][0][:msg]).to eq('Command completed successfully')
 
       inf_data = response[:parsed].css('resData infData')
-      expect(inf_data.css('name').text).to eq('example.ee')
+      expect(inf_data.css('name').text).to eq(domain.name)
       expect(inf_data.css('status').text).to eq('Payment overdue.')
       expect(inf_data.css('status').first[:s]).to eq('clientHold')
-      expect(inf_data.css('registrant').text).to eq(d.owner_contact_code)
+      expect(inf_data.css('registrant').text).to eq(domain.owner_contact_code)
 
       admin_contacts_from_request = inf_data.css('contact[type="admin"]').map(&:text)
-      admin_contacts_existing = d.admin_contacts.pluck(:code)
+      admin_contacts_existing = domain.admin_contacts.pluck(:code)
 
       expect(admin_contacts_from_request).to eq(admin_contacts_existing)
 
       hosts_from_request = inf_data.css('hostName').map(&:text)
-      hosts_existing = d.nameservers.pluck(:hostname)
+      hosts_existing = domain.nameservers.pluck(:hostname)
 
       expect(hosts_from_request).to eq(hosts_existing)
 
@@ -1320,9 +1348,9 @@ describe 'EPP Domain', epp: true do
       expect(ns1.css('hostName').last.text).to eq('ns1.example.com')
       expect(ns1.css('hostAddr').first.text).to eq('192.168.1.1')
       expect(ns1.css('hostAddr').last.text).to eq('1080:0:0:0:8:800:200C:417A')
-      expect(inf_data.css('crDate').text).to eq(d.created_at.to_time.utc.to_s)
-      expect(inf_data.css('exDate').text).to eq(d.valid_to.to_time.utc.to_s)
-      expect(inf_data.css('pw').text).to eq(d.auth_info)
+      expect(inf_data.css('crDate').text).to eq(domain.created_at.to_time.utc.to_s)
+      expect(inf_data.css('exDate').text).to eq(domain.valid_to.to_time.utc.to_s)
+      expect(inf_data.css('pw').text).to eq(domain.auth_info)
 
       ds_data_1 = response[:parsed].css('dsData')[0]
 
@@ -1345,12 +1373,12 @@ describe 'EPP Domain', epp: true do
       expect(dnskey_2.css('alg').first.text).to eq('5')
       expect(dnskey_2.css('pubKey').first.text).to eq('700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f')
 
-      d.touch
+      domain.touch
 
-      response = epp_request(domain_info_xml, :xml)
+      response = epp_request(domain_info_xml(name: { value: domain.name }), :xml)
       inf_data = response[:parsed].css('resData infData')
 
-      expect(inf_data.css('upDate').text).to eq(d.updated_at.to_time.utc.to_s)
+      expect(inf_data.css('upDate').text).to eq(domain.updated_at.to_time.utc.to_s)
     end
 
     it 'returns error when domain can not be found' do
@@ -1360,23 +1388,21 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'sets ok status by default' do
-      response = epp_request(domain_info_xml, :xml)
+      response = epp_request(domain_info_xml(name: { value: domain.name }), :xml)
       inf_data = response[:parsed].css('resData infData')
       expect(inf_data.css('status').first[:s]).to eq('ok')
     end
 
     it 'can not see other registrar domains' do
-      response = epp_request(domain_info_xml, :xml, :elkdata)
+      response = epp_request(domain_info_xml(name: { value: domain.name }), :xml, :elkdata)
       expect(response[:result_code]).to eq('2302')
       expect(response[:msg]).to eq('Domain exists but belongs to other registrar')
     end
 
     ### DELETE ###
     it 'deletes domain' do
-      expect(DomainContact.count).to eq(2)
-
       response = epp_request(epp_xml.domain.delete({
-        name: { value: 'example.ee' }
+        name: { value: domain.name }
       }, {
         _anonymus: [
           legalDocument: {
@@ -1388,16 +1414,14 @@ describe 'EPP Domain', epp: true do
 
       expect(response[:result_code]).to eq('1000')
 
-      expect(Domain.first).to eq(nil)
-      expect(DomainContact.count).to eq(0)
+      expect(Domain.find_by(name: domain.name)).to eq(nil)
     end
 
     it 'does not delete domain with specific status' do
-      d = Domain.first
-      d.domain_statuses.create(value: DomainStatus::CLIENT_DELETE_PROHIBITED)
+      domain.domain_statuses.create(value: DomainStatus::CLIENT_DELETE_PROHIBITED)
 
       response = epp_request(epp_xml.domain.delete({
-        name: { value: 'example.ee' }
+        name: { value: domain.name }
       }, {
         _anonymus: [
           legalDocument: {
@@ -1416,82 +1440,83 @@ describe 'EPP Domain', epp: true do
       expect(response[:result_code]).to eq('2003')
       expect(response[:msg]).to eq('Required parameter missing: extension > extdata > legalDocument')
     end
-  end
 
-  ### CHECK ###
-  it 'checks a domain' do
-    response = epp_request(domain_check_xml({
-      _anonymus: [
-        { name: { value: 'one.ee' } }
-      ]
-    }), :xml)
+    ### CHECK ###
+    it 'checks a domain' do
+      response = epp_request(domain_check_xml({
+        _anonymus: [
+          { name: { value: 'one.ee' } }
+        ]
+      }), :xml)
 
-    expect(response[:result_code]).to eq('1000')
-    expect(response[:msg]).to eq('Command completed successfully')
+      expect(response[:result_code]).to eq('1000')
+      expect(response[:msg]).to eq('Command completed successfully')
 
-    domain = response[:parsed].css('resData chkData cd name').first
-    expect(domain.text).to eq('one.ee')
-    expect(domain[:avail]).to eq('1')
+      res_data = response[:parsed].css('resData chkData cd name').first
+      expect(res_data.text).to eq('one.ee')
+      expect(res_data[:avail]).to eq('1')
 
-    response = epp_request(domain_check_xml({
-      _anonymus: [
-        { name: { value: 'example.ee' } }
-      ]
-    }), :xml)
-    domain = response[:parsed].css('resData chkData cd').first
-    name = domain.css('name').first
-    reason = domain.css('reason').first
+      response = epp_request(domain_check_xml({
+        _anonymus: [
+          { name: { value: domain.name } }
+        ]
+      }), :xml)
+      res_data = response[:parsed].css('resData chkData cd').first
+      name = res_data.css('name').first
+      reason = res_data.css('reason').first
 
-    expect(name.text).to eq('example.ee')
-    expect(name[:avail]).to eq('0')
-    expect(reason.text).to eq('in use')
-  end
+      expect(name.text).to eq(domain.name)
+      expect(name[:avail]).to eq('0')
+      expect(reason.text).to eq('in use')
+    end
 
-  it 'checks multiple domains' do
-    xml = domain_check_xml({
-      _anonymus: [
-        { name: { value: 'one.ee' } },
-        { name: { value: 'two.ee' } },
-        { name: { value: 'three.ee' } }
-      ]
-    })
+    it 'checks multiple domains' do
+      xml = domain_check_xml({
+        _anonymus: [
+          { name: { value: 'one.ee' } },
+          { name: { value: 'two.ee' } },
+          { name: { value: 'three.ee' } }
+        ]
+      })
 
-    response = epp_request(xml, :xml)
-    expect(response[:result_code]).to eq('1000')
-    expect(response[:msg]).to eq('Command completed successfully')
+      response = epp_request(xml, :xml)
+      expect(response[:result_code]).to eq('1000')
+      expect(response[:msg]).to eq('Command completed successfully')
 
-    domain = response[:parsed].css('resData chkData cd name').first
-    expect(domain.text).to eq('one.ee')
-    expect(domain[:avail]).to eq('1')
+      res_data = response[:parsed].css('resData chkData cd name').first
+      expect(res_data.text).to eq('one.ee')
+      expect(res_data[:avail]).to eq('1')
 
-    domain = response[:parsed].css('resData chkData cd name').last
-    expect(domain.text).to eq('three.ee')
-    expect(domain[:avail]).to eq('1')
-  end
+      res_data = response[:parsed].css('resData chkData cd name').last
+      expect(res_data.text).to eq('three.ee')
+      expect(res_data[:avail]).to eq('1')
+    end
 
-  it 'checks invalid format domain' do
-    xml = domain_check_xml({
-      _anonymus: [
-        { name: { value: 'one.ee' } },
-        { name: { value: 'notcorrectdomain' } }
-      ]
-    })
+    it 'checks invalid format domain' do
+      xml = domain_check_xml({
+        _anonymus: [
+          { name: { value: 'one.ee' } },
+          { name: { value: 'notcorrectdomain' } }
+        ]
+      })
 
-    response = epp_request(xml, :xml)
-    expect(response[:result_code]).to eq('1000')
-    expect(response[:msg]).to eq('Command completed successfully')
+      response = epp_request(xml, :xml)
+      expect(response[:result_code]).to eq('1000')
+      expect(response[:msg]).to eq('Command completed successfully')
 
-    domain = response[:parsed].css('resData chkData cd name').first
-    expect(domain.text).to eq('one.ee')
-    expect(domain[:avail]).to eq('1')
+      res_data = response[:parsed].css('resData chkData cd name').first
+      expect(res_data.text).to eq('one.ee')
+      expect(res_data[:avail]).to eq('1')
 
-    domain = response[:parsed].css('resData chkData cd').last
-    name = domain.css('name').first
-    reason = domain.css('reason').first
+      res_data = response[:parsed].css('resData chkData cd').last
+      name = res_data.css('name').first
+      reason = res_data.css('reason').first
 
-    expect(name.text).to eq('notcorrectdomain')
-    expect(name[:avail]).to eq('0')
-    expect(reason.text).to eq('invalid format')
+      expect(name.text).to eq('notcorrectdomain')
+      expect(name[:avail]).to eq('0')
+      expect(reason.text).to eq('invalid format')
+    end
+
   end
 
 end
