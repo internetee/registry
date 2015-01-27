@@ -189,7 +189,6 @@ end
   # end
 # end
 
-
 describe Contact, '.extract_params' do
   it 'returns params hash'do
     ph = { id: '123123', email: 'jdoe@example.com', authInfo: { pw: 'asde' },
