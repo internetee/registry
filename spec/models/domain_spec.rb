@@ -15,52 +15,52 @@ describe Domain do
       create_settings
     end
 
-    it 'validates domain name', skip: true do
-      d = Fabricate(:domain)
-      expect(d.name).to_not be_nil
+    # it 'validates domain name', skip: true do
+      # d = Fabricate(:domain)
+      # expect(d.name).to_not be_nil
 
-      invalid = ['a.ee', "#{'a' * 64}.ee", 'ab.eu', 'test.ab.ee', '-test.ee', '-test-.ee', 'test-.ee', 'te--st.ee',
-                 'õ.pri.ee', 'test.com', 'www.ab.ee', 'test.eu', '  .ee', 'a b.ee', 'Ž .ee', 'test.edu.ee']
+      # invalid = ['a.ee', "#{'a' * 64}.ee", 'ab.eu', 'test.ab.ee', '-test.ee', '-test-.ee', 'test-.ee', 'te--st.ee',
+                 # 'õ.pri.ee', 'test.com', 'www.ab.ee', 'test.eu', '  .ee', 'a b.ee', 'Ž .ee', 'test.edu.ee']
 
-      invalid.each do |x|
-        expect(Fabricate.build(:domain, name: x).valid?).to be false
-      end
+      # invalid.each do |x|
+        # expect(Fabricate.build(:domain, name: x).valid?).to be false
+      # end
 
-      valid = ['ab.ee', "#{'a' * 63}.ee", 'te-s-t.ee', 'jäääär.ee', 'päike.pri.ee',
-               'õigus.com.ee', 'õäöü.fie.ee', 'test.med.ee', 'žä.ee', '  ŽŠ.ee  ']
+      # valid = ['ab.ee', "#{'a' * 63}.ee", 'te-s-t.ee', 'jäääär.ee', 'päike.pri.ee',
+               # 'õigus.com.ee', 'õäöü.fie.ee', 'test.med.ee', 'žä.ee', '  ŽŠ.ee  ']
 
-      valid.each do |x|
-        expect(Fabricate.build(:domain, name: x).valid?).to be true
-      end
+      # valid.each do |x|
+        # expect(Fabricate.build(:domain, name: x).valid?).to be true
+      # end
 
-      invalid_punycode = ['xn--geaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-4we.pri.ee']
+      # invalid_punycode = ['xn--geaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-4we.pri.ee']
 
-      invalid_punycode.each do |x|
-        expect(Fabricate.build(:domain, name: x).valid?).to be false
-      end
+      # invalid_punycode.each do |x|
+        # expect(Fabricate.build(:domain, name: x).valid?).to be false
+      # end
 
-      valid_punycode = ['xn--ge-uia.pri.ee', 'xn--geaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-9te.pri.ee']
+      # valid_punycode = ['xn--ge-uia.pri.ee', 'xn--geaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-9te.pri.ee']
 
-      valid_punycode.each do |x|
-        expect(Fabricate.build(:domain, name: x).valid?).to be true
-      end
+      # valid_punycode.each do |x|
+        # expect(Fabricate.build(:domain, name: x).valid?).to be true
+      # end
 
-      d = Domain.new
-      expect(d.valid?).to be false
-      expect(d.errors.messages).to match_array({
-        owner_contact: ['Registrant is missing'],
-        admin_contacts: ['Admin contacts count must be between 1 - infinity'],
-        nameservers: ['Nameservers count must be between 2-11'],
-        registrar: ['Registrar is missing'],
-        period: ['Period is not a number']
-      })
+      # d = Domain.new
+      # expect(d.valid?).to be false
+      # expect(d.errors.messages).to match_array({
+        # owner_contact: ['Registrant is missing'],
+        # admin_contacts: ['Admin contacts count must be between 1 - infinity'],
+        # nameservers: ['Nameservers count must be between 2-11'],
+        # registrar: ['Registrar is missing'],
+        # period: ['Period is not a number']
+      # })
 
-      Setting.ns_min_count = 2
-      Setting.ns_max_count = 7
+      # Setting.ns_min_count = 2
+      # Setting.ns_max_count = 7
 
-      expect(d.valid?).to be false
-      expect(d.errors.messages[:nameservers]).to eq(['Nameservers count must be between 2-7'])
-    end
+      # expect(d.valid?).to be false
+      # expect(d.errors.messages[:nameservers]).to eq(['Nameservers count must be between 2-7'])
+    # end
 
     it 'downcases domain' do
       d = Domain.new(name: 'TesT.Ee')
