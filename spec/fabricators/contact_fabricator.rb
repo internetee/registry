@@ -1,9 +1,9 @@
 Fabricator(:contact) do
-  name Faker::Name.name
+  name { sequence(:name) { |i| "#{Faker::Name.name}#{i}" } }
   phone '+372.12345678'
   email Faker::Internet.email
   ident '37605030299'
-  code { "sh#{Faker::Number.number(4)}" }
+  code { "sh#{Faker::Number.number(8)}" }
   ident_type 'op'
   auth_info 'ccds4324pok'
   address

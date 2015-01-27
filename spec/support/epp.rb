@@ -1,4 +1,47 @@
 module Epp
+  # Example usage:
+  #
+  #    login_as :gitlab
+  #
+  # Use block for temp login:
+  #
+  #    login_as :registrar1 do
+  #      your test code
+  #      # will make request as registrar1 and logins back to previous session
+  #    end
+  #
+  def login_as(user)
+    server.open_connection
+
+    if block_given?
+      begin
+        epp_plain_request(login_xml_for(user), :xml)
+        yield
+      ensure
+        server.open_connection # return back to last login
+        epp_plain_request(login_xml_for(@last_user), :xml)
+      end
+    else
+      @last_user = user # save for block
+      epp_plain_request(login_xml_for(user), :xml)
+    end
+  end
+
+  def login_xml_for(user)
+    @xml ||= EppXml.new(cl_trid: 'ABC-12345')
+    case user
+    when :gitlab
+      @gitlab_login_xml ||= 
+        @xml.session.login(clID: { value: 'gitlab' }, pw: { value: 'ghyt9e4fu' }) 
+    when :registrar1
+      @registrar1_login_xml ||= 
+        @xml.session.login(clID: { value: 'registrar1' }, pw: { value: 'ghyt9e4fu' }) 
+    when :registrar2
+      @registrar2_login_xml ||= 
+        @xml.session.login(clID: { value: 'registrar2' }, pw: { value: 'ghyt9e4fu' }) 
+    end
+  end
+
   def read_body(filename)
     File.read("spec/epp/requests/#{filename}")
   end
@@ -23,10 +66,6 @@ module Epp
   end
 
   def epp_plain_request(data, *args)
-    server = server_gitlab
-    server = server_elkdata if args.include?(:elkdata)
-    server = server_zone if args.include?(:zone)
-
     res = parse_response(server.send_request(data)) if args.include?(:xml)
     if res
       log(data, res[:parsed])
@@ -38,6 +77,11 @@ module Epp
     return res
   rescue => e
     e
+  end
+  
+  def server
+    # tag and password not in use, add those at login xml
+    @server ||= Epp::Server.new({ server: 'localhost', port: 701, tag: '', password: '' })
   end
 
   def parse_response(raw)
@@ -67,11 +111,15 @@ module Epp
     puts r[:parsed].to_s
   end
 
+  def next_domain_name
+    "example#{@uniq_no.call}.ee"
+  end
+
   ### REQUEST TEMPLATES ###
 
   def domain_info_xml(xml_params = {})
     defaults = {
-      name: { value: 'example.ee', attrs: { hosts: 'all' } },
+      name: { value: next_domain_name, attrs: { hosts: 'all' } },
       authInfo: {
         pw: { value: '2fooBAR' }
       }
@@ -86,7 +134,7 @@ module Epp
   # rubocop: disable Metrics/MethodLength
   def domain_create_xml(xml_params = {}, dnssec_params = {})
     defaults = {
-      name: { value: 'example.ee' },
+      name: { value: next_domain_name },
       period: { value: '1', attrs: { unit: 'y' } },
       ns: [
         {
@@ -102,7 +150,7 @@ module Epp
           }
         }
       ],
-      registrant: { value: 'jd1234' },
+      registrant: { value: 'citizen_1234' },
       _anonymus: [
         { contact: { value: 'sh8013', attrs: { type: 'admin' } } },
         { contact: { value: 'sh8013', attrs: { type: 'tech' } } },
@@ -138,11 +186,9 @@ module Epp
     epp_xml.create(xml_params, dnssec_params, custom_params)
   end
 
-  def domain_create_xml_with_legal_doc
-    epp_xml = EppXml::Domain.new(cl_trid: 'ABC-12345')
-
-    epp_xml.create({
-      name: { value: 'example.ee' },
+  def domain_create_xml_with_legal_doc(xml_params = {})
+    defaults = {
+      name: { value: next_domain_name },
       period: { value: '1', attrs: { unit: 'y' } },
       ns: [
         {
@@ -158,13 +204,19 @@ module Epp
           }
         }
       ],
-      registrant: { value: 'jd1234' },
+      registrant: { value: 'citizen_1234' },
       _anonymus: [
         { contact: { value: 'sh8013', attrs: { type: 'admin' } } },
         { contact: { value: 'sh8013', attrs: { type: 'tech' } } },
         { contact: { value: 'sh801333', attrs: { type: 'tech' } } }
       ]
-    }, {}, {
+    }
+
+    xml_params = defaults.deep_merge(xml_params)
+
+    epp_xml = EppXml::Domain.new(cl_trid: 'ABC-12345')
+
+    epp_xml.create(xml_params, {}, {
       _anonymus: [
         legalDocument: {
           value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
@@ -176,7 +228,7 @@ module Epp
 
   def domain_create_with_invalid_ns_ip_xml
     xml_params = {
-      name: { value: 'example.ee' },
+      name: { value: next_domain_name },
       period: { value: '1', attrs: { unit: 'y' } },
       ns: [
         {
@@ -192,7 +244,7 @@ module Epp
           }
         }
       ],
-      registrant: { value: 'jd1234' },
+      registrant: { value: 'citizen_1234' },
       _anonymus: [
         { contact: { value: 'sh8013', attrs: { type: 'admin' } } },
         { contact: { value: 'sh8013', attrs: { type: 'tech' } } },
@@ -220,7 +272,7 @@ module Epp
 
   def domain_create_with_host_attrs
     xml_params = {
-      name: { value: 'example.ee' },
+      name: { value: next_domain_name },
       period: { value: '1', attrs: { unit: 'y' } },
       ns: [
         {
@@ -236,7 +288,7 @@ module Epp
           }
         }
       ],
-      registrant: { value: 'jd1234' },
+      registrant: { value: 'citizen_1234' },
       _anonymus: [
         { contact: { value: 'sh8013', attrs: { type: 'admin' } } },
         { contact: { value: 'sh8013', attrs: { type: 'tech' } } },
@@ -264,7 +316,7 @@ module Epp
 
   def domain_update_xml(xml_params = {}, dnssec_params = {}, custom_params = {})
     defaults = {
-      name: { value: 'example.ee' }
+      name: { value: next_domain_name }
     }
 
     xml_params = defaults.deep_merge(xml_params)
@@ -275,7 +327,7 @@ module Epp
   def domain_check_xml(xml_params = {})
     defaults = {
       _anonymus: [
-        { name: { value: 'example.ee' } }
+        { name: { value: next_domain_name } }
       ]
     }
     xml_params = defaults.deep_merge(xml_params)
@@ -285,9 +337,9 @@ module Epp
 
   def domain_transfer_xml(xml_params = {}, op = 'query', custom_params = {})
     defaults = {
-      name: { value: 'example.ee' },
+      name: { value: next_domain_name },
       authInfo: {
-        pw: { value: '98oiewslkfkd', attrs: { roid: 'JD1234-REP' } }
+        pw: { value: '98oiewslkfkd', attrs: { roid: 'citizen_1234-REP' } }
       }
     }
 

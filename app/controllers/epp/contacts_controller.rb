@@ -16,6 +16,7 @@ class Epp::ContactsController < EppController
   def update
     # FIXME: Update returns 2303 update multiple times
     code = params_hash['epp']['command']['update']['update'][:id]
+
     @contact = Contact.where(code: code).first
     # if update_rights? && stamp(@contact) && @contact.update_attributes(contact_and_address_attributes(:update))
     if owner? && stamp(@contact) && @contact.update_attributes(contact_and_address_attributes(:update))

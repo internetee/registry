@@ -77,18 +77,19 @@ class EppController < ApplicationController
 
   # let's follow grape's validations: https://github.com/intridea/grape/#parameter-validation-and-coercion
   def exactly_one_of(*selectors)
-    present_count = 0
-    selectors.each do |selector|
-      full_selector = [@prefix, selector].join(' ')
-      el = params[:parsed_frame].css(full_selector).first
-      present_count += 1 if el && el.text.present?
-    end
-
-    return if present_count == 1
+    return if element_count(*selectors) == 1
 
     epp_errors << {
-      code: '2003',
+      code: '2306',
       msg: I18n.t(:exactly_one_parameter_required, params: selectors.join(' or '))
+    }
+  end
+
+  def mutually_exclusive(*selectors)
+    return if element_count(*selectors) <= 1
+    epp_errors << {
+      code: '2306',
+      msg: I18n.t(:mutally_exclusive_params, params: selectors.join(', '))
     }
   end
 
@@ -103,6 +104,16 @@ class EppController < ApplicationController
       err = validator.validate_epp(selector.split(' ').last, value)
       epp_errors << err if err
     end
+  end
+
+  def element_count(*selectors)
+    present_count = 0
+    selectors.each do |selector|
+      full_selector = [@prefix, selector].join(' ')
+      el = params[:parsed_frame].css(full_selector).first
+      present_count += 1 if el && el.text.present?
+    end
+    present_count
   end
 
   def xml_attrs_present?(ph, attributes) # TODO: THIS IS DEPRECATED AND WILL BE REMOVED IN FUTURE
@@ -124,6 +135,7 @@ class EppController < ApplicationController
   # rubocop: enable Style/PredicateName
 
   def write_to_epp_log
+    # return nil if EPP_LOG_ENABLED
     request_command = params[:command] || params[:action] # error receives :command, other methods receive :action
     ApiLog::EppLog.create({
       request: params[:raw_frame] || params[:frame],

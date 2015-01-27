@@ -1,6 +1,11 @@
 require 'rails_helper'
 
 describe Contact do
+  before :all do 
+    # DatabaseCleaner.clean_with(:truncation)
+    # DatabaseCleaner.strategy = :transaction
+  end
+
   before { create_disclosure_settings }
   it { should have_one(:address) }
 
@@ -76,6 +81,11 @@ describe Contact do
   end
 
   context 'with callbacks' do
+    before :all do
+      Contact.set_callback(:create, :before, :generate_code)
+      Contact.set_callback(:create, :before, :generate_auth_info)
+    end
+
     before(:each) { @contact = Fabricate.build(:contact, code: '123asd', auth_info: 'qwe321') }
 
     context 'after create' do

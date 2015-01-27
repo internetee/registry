@@ -24,3 +24,6 @@ if ActiveRecord::Base.connection.table_exists? 'settings' # otherwise rake not w
 
   Setting.save_default(:transfer_wait_time, 0)
 end
+
+# dev only setting
+EPP_LOG_ENABLED = true # !Rails.env.test?

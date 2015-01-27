@@ -33,17 +33,18 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     ActiveRecord::Base.establish_connection :api_log_test
-    DatabaseCleaner.strategy = :deletion
+    DatabaseCleaner.clean_with(:truncation)
+    DatabaseCleaner.strategy = nil
+
     ActiveRecord::Base.establish_connection :test
-    DatabaseCleaner.strategy = :truncation
   end
 
-  config.before(:each) do
-    DatabaseCleaner.strategy = :transaction
+  config.before(:all) do
+    DatabaseCleaner.clean_with(:truncation)
   end
 
-  config.before(:each, epp: true) do
-    DatabaseCleaner.strategy = :truncation
+  config.before(:all, epp: true) do
+    DatabaseCleaner.strategy = nil
   end
 
   config.before(:each, js: true) do
@@ -54,19 +55,12 @@ RSpec.configure do |config|
     DatabaseCleaner.strategy = :truncation
   end
 
-  config.before(:each) do
-    ActiveRecord::Base.establish_connection :api_log_test
-    DatabaseCleaner.start
-
-    ActiveRecord::Base.establish_connection :test
+  config.before(:each, type: :model) do
+    DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.start
   end
 
-  config.after(:each) do
-    ActiveRecord::Base.establish_connection :api_log_test
-    DatabaseCleaner.clean
-
-    ActiveRecord::Base.establish_connection :test
+  config.after(:each, type: :model) do
     DatabaseCleaner.clean
   end
 
@@ -88,6 +82,6 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 
   config.expect_with :rspec do |c|
-    c.syntax = :expect
+    c.syntax = [:should, :expect]
   end
 end
