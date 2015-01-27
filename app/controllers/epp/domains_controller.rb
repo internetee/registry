@@ -127,45 +127,46 @@ class Epp::DomainsController < EppController
 
   def validate_create
     @prefix = 'create > create >'
-    requires('name', 'ns', 'registrant', 'ns > hostAttr')
+    requires 'name', 'ns', 'registrant', 'ns > hostAttr'
 
     @prefix = 'extension > create >'
     mutually_exclusive 'keyData', 'dsData'
 
     @prefix = nil
-    requires('extension > extdata > legalDocument')
+    requires 'extension > extdata > legalDocument'
   end
 
   def validate_renew
     @prefix = 'renew > renew >'
-    requires('name', 'curExpDate', 'period')
+    requires 'name', 'curExpDate', 'period'
   end
 
   def validate_update
     if element_count('update > chg > registrant') > 0
-      requires('extension > extdata > legalDocument')
+      requires 'extension > extdata > legalDocument'
     end
 
     @prefix = 'update > update >'
-    requires('name')
+    requires 'name'
   end
 
   ## TRANSFER
   def validate_transfer
-    @prefix = 'transfer > transfer >'
-    requires('name')
+    requires 'transfer > transfer'
 
-    op = params[:parsed_frame].css('transfer').first[:op]
-    return if %w(approve query reject).include?(op)
-    epp_errors << { code: '2306', msg: I18n.t('errors.messages.attribute_op_is_invalid') }
+    @prefix = 'transfer > transfer >'
+    requires 'name'
+
+    @prefix = nil
+    requires_attribute 'transfer', 'op', values: %(approve, query, reject)
   end
 
   ## DELETE
   def validate_delete
-    requires('extension > extdata > legalDocument')
+    requires 'extension > extdata > legalDocument'
 
     @prefix = 'delete > delete >'
-    requires('name')
+    requires 'name'
   end
 
   def domain_create_params

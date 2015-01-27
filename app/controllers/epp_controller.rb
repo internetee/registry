@@ -62,20 +62,56 @@ class EppController < ApplicationController
     handle_errors and return if epp_errors.any?
   end
 
+  # let's follow grape's validations: https://github.com/intridea/grape/#parameter-validation-and-coercion
+
+  # Example usage:
+  #
+  #    requires 'transfer'
+  #
+  # Adds error to epp_errors if element is missing or blank
+  # Returns last element of selectors if it exists
+  #
+  # TODO: Add possibility to pass validations / options in the method
+
   def requires(*selectors)
+    el, missing = nil, nil
     selectors.each do |selector|
       full_selector = [@prefix, selector].join(' ')
       el = params[:parsed_frame].css(full_selector).first
+
+      missing = el.nil? || (el.text.blank? && el.children.none?)
+
       epp_errors << {
         code: '2003',
         msg: I18n.t('errors.messages.required_parameter_missing', key: el.try(:name) || selector)
-      } if el.nil? || el.text.blank?
+      } if missing
     end
 
-    epp_errors.empty?
+    missing ? false : el # return last selector if it was present
   end
 
-  # let's follow grape's validations: https://github.com/intridea/grape/#parameter-validation-and-coercion
+  # Example usage:
+  #
+  #    requires_attribute 'transfer', 'op', values: %(approve, query, reject)
+  #
+  # Adds error to epp_errors if element or attribute is missing or attribute attribute is not one
+  # of the values
+
+  def requires_attribute(element_selector, attribute_selector, options)
+    element = requires(element_selector)
+    return unless element
+
+    attribute = element[attribute_selector]
+
+    values = options.delete(:values)
+    return if attribute && values.include?(attribute)
+
+    epp_errors << {
+      code: '2306',
+      msg: I18n.t('attribute_is_invalid', attribute: attribute_selector)
+    }
+  end
+
   def exactly_one_of(*selectors)
     return if element_count(*selectors) == 1
 

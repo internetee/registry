@@ -269,7 +269,6 @@ en:
       invalid_type: 'PostalInfo type is invalid'
       unimplemented_command: 'Unimplemented command'
       domain_exists_but_belongs_to_other_registrar: 'Domain exists but belongs to other registrar'
-      attribute_op_is_invalid: 'Attribute op is invalid'
 
 
   code: 'Code'
@@ -501,3 +500,4 @@ en:
   unknown_expiry_relative_pattern: 'Expiry relative must be compatible to ISO 8601'
   unknown_expiry_absolute_pattern: 'Expiry absolute must be compatible to ISO 8601'
   mutally_exclusive_params: 'Mutually exclusive parameters: %{params}'
+  attribute_is_invalid: 'Attribute is invalid: %{attribute}'
