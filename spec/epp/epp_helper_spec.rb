@@ -24,7 +24,7 @@ describe 'EPP Helper', epp: true do
       ').to_s.squish
 
       generated = Nokogiri::XML(domain_transfer_xml(name: { value: dn })).to_s.squish
-      expect(generated).to eq(expected)
+      generated.should == expected
 
       expected = Nokogiri::XML('<?xml version="1.0" encoding="UTF-8" standalone="no"?>
         <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
@@ -51,7 +51,7 @@ describe 'EPP Helper', epp: true do
       }, 'approve')
 
       generated = Nokogiri::XML(xml).to_s.squish
-      expect(generated).to eq(expected)
+      generated.should == expected
     end
   end
 end
