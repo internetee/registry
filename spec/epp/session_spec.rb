@@ -77,12 +77,12 @@ describe 'EPP Session', epp: true do
       it 'logs out epp user' do
         epp_plain_request(@login_xml_cache, :xml)
 
-        EppSession.first[:epp_user_id].should == 1
+        EppSession.last[:epp_user_id].should == 1
         response = epp_plain_request(@epp_xml.session.logout, :xml)
         response[:msg].should == 'Command completed successfully; ending session'
         response[:result_code].should == '1500'
 
-        EppSession.first[:epp_user_id].should == nil
+        EppSession.last[:epp_user_id].should == nil
       end
     end
   end
