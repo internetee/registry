@@ -1,86 +1,89 @@
 require 'rails_helper'
 
 describe 'EPP Session', epp: true do
-  let(:server_gitlab) { Epp::Server.new({ server: 'localhost', tag: 'gitlab', password: 'ghyt9e4fu', port: 701 }) }
-  let(:epp_xml) { EppXml.new(cl_trid: 'ABC-12345') }
-  let(:login_xml_cache) { epp_xml.session.login(clID: { value: 'gitlab' }, pw: { value: 'ghyt9e4fu' }) }
+  before :all do 
+    @epp_user = Fabricate(:epp_user)
+    @epp_xml = EppXml.new(cl_trid: 'ABC-12345')
+    @login_xml_cache = @epp_xml.session.login(clID: { value: 'gitlab' }, pw: { value: 'ghyt9e4fu' })
+
+  end
 
   context 'when not connected' do
     it 'greets client upon connection' do
-      response = Nokogiri::XML(server_gitlab.open_connection)
-      expect(response.css('epp svID').text).to eq('EPP server (EIS)')
-      server_gitlab.close_connection
-
+      response = Nokogiri::XML(server.open_connection)
+      response.css('epp svID').text.should == 'EPP server (EIS)'
       puts "RESPONSE:\n\n```xml\n#{response}```\n\n" if ENV['EPP_DOC']
     end
   end
 
   context 'when connected' do
-    before(:each) { server_gitlab.open_connection }
-    after(:each) { server_gitlab.close_connection }
-
-    context 'with valid user' do
-      before(:each) { Fabricate(:epp_user) }
-
-      it 'logs in epp user' do
-        response = epp_plain_request(login_xml_cache, :xml)
-        expect(response[:result_code]).to eq('1000')
-        expect(response[:msg]).to eq('Command completed successfully')
-        expect(response[:clTRID]).to eq('ABC-12345')
-      end
-
-      it 'logs out epp user' do
-        epp_plain_request(login_xml_cache, :xml)
-
-        expect(EppSession.first[:epp_user_id]).to eq(1)
-        response = epp_plain_request(epp_xml.session.logout, :xml)
-        expect(response[:result_code]).to eq('1500')
-        expect(response[:msg]).to eq('Command completed successfully; ending session')
-
-        expect(EppSession.first[:epp_user_id]).to eq(nil)
-      end
-
-      it 'does not log in twice' do
-        epp_plain_request(login_xml_cache, :xml)
-
-        response = epp_plain_request(login_xml_cache, :xml)
-        expect(response[:result_code]).to eq('2002')
-        expect(response[:msg]).to match(/Already logged in. Use/)
-
-        log = ApiLog::EppLog.all
-        expect(log.length).to eq(3)
-        expect(log[0].request_command).to eq('hello')
-        expect(log[0].request_successful).to eq(true)
-
-        expect(log[1].request_command).to eq('login')
-        expect(log[1].request_successful).to eq(true)
-        expect(log[1].api_user_name).to eq('gitlab')
-        expect(log[1].api_user_registrar).to eq('Registrar OÜ')
-
-        expect(log[2].request_command).to eq('login')
-        expect(log[2].request_successful).to eq(false)
-        expect(log[2].api_user_name).to eq('gitlab')
-        expect(log[2].api_user_registrar).to eq('Registrar OÜ')
-      end
+    before do
+      server.open_connection
     end
 
     it 'does not log in with invalid user' do
-      response = epp_plain_request(login_xml_cache, :xml)
-      expect(response[:result_code]).to eq('2501')
-      expect(response[:msg]).to eq('Authentication error; server closing connection')
-      expect(response[:clTRID]).to eq('ABC-12345')
+      wrong_user = @epp_xml.session.login(clID: { value: 'wrong-user' }, pw: { value: 'ghyt9e4fu' })
+      response = epp_plain_request(wrong_user, :xml)
+      response[:msg].should == 'Authentication error; server closing connection'
+      response[:result_code].should == '2501'
+      response[:clTRID].should == 'ABC-12345'
+    end
 
-      Fabricate(:epp_user, active: false)
+    it 'does not log in with inactive user' do
+      @registrar = Fabricate(:registrar, { name: 'registrar1', reg_no: '123' })
+      Fabricate(:epp_user, username: 'inactive-user', active: false, registrar: @registrar)
 
-      response = epp_plain_request(login_xml_cache, :xml)
-      expect(response[:result_code]).to eq('2501')
+      inactive = @epp_xml.session.login(clID: { value: 'inactive-user' }, pw: { value: 'ghyt9e4fu' })
+      response = epp_plain_request(inactive, :xml)
+      response[:result_code].should == '2501'
     end
 
     it 'prohibits further actions unless logged in' do
-      response = epp_plain_request(epp_xml.domain.create, :xml)
-      expect(response[:result_code]).to eq('2002')
-      expect(response[:msg]).to eq('You need to login first.')
-      expect(response[:clTRID]).to eq('ABC-12345')
+      response = epp_plain_request(@epp_xml.domain.create, :xml)
+      response[:msg].should == 'You need to login first.'
+      response[:result_code].should == '2002'
+      response[:clTRID].should == 'ABC-12345'
+    end
+
+    context 'with valid user' do
+      it 'logs in epp user' do
+        response = epp_plain_request(@login_xml_cache, :xml)
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+        response[:clTRID].should == 'ABC-12345'
+      end
+
+      it 'does not log in twice' do
+        ApiLog::EppLog.delete_all
+        epp_plain_request(@login_xml_cache, :xml)
+        response = epp_plain_request(@login_xml_cache, :xml)
+        response[:msg].should match(/Already logged in. Use/)
+        response[:result_code].should == '2002'
+
+        log = ApiLog::EppLog.all
+        log.length.should == 2
+
+        log[0].request_command.should == 'login'
+        log[0].request_successful.should == true
+        log[0].api_user_name.should == 'gitlab'
+        log[0].api_user_registrar.should == 'Registrar OÜ'
+
+        log[1].request_command.should == 'login'
+        log[1].request_successful.should == false
+        log[1].api_user_name.should == 'gitlab'
+        log[1].api_user_registrar.should == 'Registrar OÜ'
+      end
+
+      it 'logs out epp user' do
+        epp_plain_request(@login_xml_cache, :xml)
+
+        EppSession.first[:epp_user_id].should == 1
+        response = epp_plain_request(@epp_xml.session.logout, :xml)
+        response[:msg].should == 'Command completed successfully; ending session'
+        response[:result_code].should == '1500'
+
+        EppSession.first[:epp_user_id].should == nil
+      end
     end
   end
 end
