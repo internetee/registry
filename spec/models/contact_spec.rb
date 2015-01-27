@@ -1,6 +1,11 @@
 require 'rails_helper'
 
 describe Contact do
+  before :all do 
+    # DatabaseCleaner.clean_with(:truncation)
+    # DatabaseCleaner.strategy = :transaction
+  end
+
   before { create_disclosure_settings }
   it { should have_one(:address) }
 

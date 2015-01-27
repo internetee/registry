@@ -1,6 +1,5 @@
 require 'rails_helper'
 
-
 describe 'EPP Keyrelay', epp: true do
   let(:server_zone) { Epp::Server.new({ server: 'localhost', tag: 'zone', password: 'ghyt9e4fu', port: 701 }) }
   let(:server_elkdata) { Epp::Server.new({ server: 'localhost', tag: 'elkdata', password: 'ghyt9e4fu', port: 701 }) }
@@ -9,8 +8,6 @@ describe 'EPP Keyrelay', epp: true do
   before(:each) { create_settings }
 
   before(:all) do
-    DatabaseCleaner.clean_with(:truncation)
-    DatabaseCleaner.strategy = nil
     @elkdata = Fabricate(:registrar, { name: 'Elkdata', reg_no: '123' })
     @zone = Fabricate(:registrar)
     Fabricate(:epp_user, username: 'zone', registrar: @zone)

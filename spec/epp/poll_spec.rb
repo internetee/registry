@@ -17,6 +17,7 @@ describe 'EPP Poll', epp: true do
   end
 
   it 'returns no messages in poll' do
+    ApiLog::EppLog.delete_all
     response = epp_request(epp_xml.poll, :xml)
 
     expect(response[:msg]).to eq('Command completed successfully; no messages')

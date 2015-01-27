@@ -2,9 +2,6 @@ require 'rails_helper'
 
 describe 'EPP Contact', epp: true do
   before :all do
-    DatabaseCleaner.clean_with(:truncation)
-    DatabaseCleaner.strategy = nil
-
     Fabricate(:epp_user)
     Fabricate(:epp_user, username: 'registrar1', registrar: registrar1)
     Fabricate(:epp_user, username: 'registrar2', registrar: registrar2)
@@ -82,11 +79,9 @@ describe 'EPP Contact', epp: true do
         log.length.should == 1
         log[0].request_command.should == 'create'
         log[0].request_object.should == 'contact'
-        log[0].request_successful.should == 'true'
-        log[0].api_user_name.should == 'registrar1'
+        log[0].request_successful.should == true
+        log[0].api_user_name.should == 'gitlab'
         log[0].api_user_registrar.should == 'Registrar OÜ'
-        log[0].request.should be_blank
-        log[0].response.should be_blank
       end
 
       it 'successfully adds registrar' do
