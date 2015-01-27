@@ -40,34 +40,34 @@ describe 'EPP Keyrelay', epp: true do
 
     response = epp_request(xml, :xml, :elkdata)
 
-    expect(response[:msg]).to eq('Command completed successfully')
-    expect(response[:result_code]).to eq('1000')
+    response[:msg].should == 'Command completed successfully'
+    response[:result_code].should == '1000'
 
-    expect(@zone.messages.queued.count).to eq(1)
+    @zone.messages.queued.count.should == 1
 
     log = ApiLog::EppLog.all
 
-    expect(log.length).to eq(4)
-    expect(log[0].request_command).to eq('hello')
-    expect(log[0].request_successful).to eq(true)
+    log.length.should == 4
+    log[0].request_command.should == 'hello'
+    log[0].request_successful.should == true
 
-    expect(log[1].request_command).to eq('login')
-    expect(log[1].request_successful).to eq(true)
-    expect(log[1].api_user_name).to eq('elkdata')
-    expect(log[1].api_user_registrar).to eq('Elkdata')
+    log[1].request_command.should == 'login'
+    log[1].request_successful.should == true
+    log[1].api_user_name.should == 'elkdata'
+    log[1].api_user_registrar.should == 'Elkdata'
 
-    expect(log[2].request_command).to eq('keyrelay')
-    expect(log[2].request_object).to eq('keyrelay')
-    expect(log[2].request_successful).to eq(true)
-    expect(log[2].api_user_name).to eq('elkdata')
-    expect(log[2].api_user_registrar).to eq('Elkdata')
-    expect(log[2].request).not_to be_blank
-    expect(log[2].response).not_to be_blank
+    log[2].request_command.should == 'keyrelay'
+    log[2].request_object.should == 'keyrelay'
+    log[2].request_successful.should == true
+    log[2].api_user_name.should == 'elkdata'
+    log[2].api_user_registrar.should == 'Elkdata'
+    log[2].request.should_not be_blank
+    log[2].response.should_not be_blank
 
-    expect(log[3].request_command).to eq('logout')
-    expect(log[3].request_successful).to eq(true)
-    expect(log[3].api_user_name).to eq('elkdata')
-    expect(log[3].api_user_registrar).to eq('Elkdata')
+    log[3].request_command.should == 'logout'
+    log[3].request_successful.should == true
+    log[3].api_user_name.should == 'elkdata'
+    log[3].api_user_registrar.should == 'Elkdata'
   end
 
   it 'returns an error when parameters are missing' do
@@ -89,9 +89,9 @@ describe 'EPP Keyrelay', epp: true do
     })
 
     response = epp_request(xml, :xml, :elkdata)
-    expect(response[:msg]).to eq('Required parameter missing: flags')
+    response[:msg].should == 'Required parameter missing: flags'
 
-    expect(@zone.messages.queued.count).to eq(msg_count)
+    @zone.messages.queued.count.should == msg_count
   end
 
   it 'returns an error on invalid relative expiry' do
@@ -113,10 +113,10 @@ describe 'EPP Keyrelay', epp: true do
     })
 
     response = epp_request(xml, :xml, :elkdata)
-    expect(response[:msg]).to eq('Expiry relative must be compatible to ISO 8601')
-    expect(response[:results][0][:value]).to eq('Invalid Expiry')
+    response[:msg].should == 'Expiry relative must be compatible to ISO 8601'
+    response[:results][0][:value].should == 'Invalid Expiry'
 
-    expect(@zone.messages.queued.count).to eq(msg_count)
+    @zone.messages.queued.count.should == msg_count
   end
 
   it 'returns an error on invalid absolute expiry' do
@@ -138,10 +138,10 @@ describe 'EPP Keyrelay', epp: true do
     })
 
     response = epp_request(xml, :xml, :elkdata)
-    expect(response[:msg]).to eq('Expiry absolute must be compatible to ISO 8601')
-    expect(response[:results][0][:value]).to eq('Invalid Absolute')
+    response[:msg].should == 'Expiry absolute must be compatible to ISO 8601'
+    response[:results][0][:value].should == 'Invalid Absolute'
 
-    expect(@zone.messages.queued.count).to eq(msg_count)
+    @zone.messages.queued.count.should == msg_count
   end
 
   it 'does not allow both relative and absolute' do
@@ -164,8 +164,8 @@ describe 'EPP Keyrelay', epp: true do
     })
 
     response = epp_request(xml, :xml, :elkdata)
-    expect(response[:msg]).to eq('Exactly one parameter required: expiry > relative or expiry > absolute')
+    response[:msg].should == 'Exactly one parameter required: expiry > relative or expiry > absolute'
 
-    expect(@zone.messages.queued.count).to eq(msg_count)
+    @zone.messages.queued.count.should == msg_count
   end
 end
