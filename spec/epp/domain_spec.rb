@@ -606,6 +606,32 @@ describe 'EPP Domain', epp: true do
 
       create_settings
     end
+
+    it 'prohibits dsData and keyData when they exists together' do
+      xml = domain_create_xml({}, {
+        _anonymus: [
+          {
+            dsData: {
+              keyTag: { value: '12345' },
+              alg: { value: '3' },
+              digestType: { value: '1' },
+              digest: { value: '49FD46E6C4B45C55D4AC' }
+            }
+          },
+          {
+            keyData: {
+              flags: { value: '0' },
+              protocol: { value: '3' },
+              alg: { value: '5' },
+              pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+            }
+          }]
+        })
+
+      response = epp_plain_request(xml, :xml)
+      response[:msg].should == 'keyData, dsData are mutually exclusive'
+      response[:result_code].should == '2306'
+    end
   end
 
   context 'with juridical persion as an owner' do

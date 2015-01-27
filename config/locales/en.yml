@@ -433,7 +433,6 @@ en:
   failed_to_delete_record: 'Failed to delete record'
 
   authentication_error: 'Authentication error'
-  ds_data_and_key_data_must_not_exists_together: 'dsData and keyData objects must not exists together'
 
   setting: 'Setting'
 
@@ -501,3 +500,4 @@ en:
   could_not_determine_object_type_check_xml_format_and_namespaces: 'Could not determine object type. Check XML format and namespaces.'
   unknown_expiry_relative_pattern: 'Expiry relative must be compatible to ISO 8601'
   unknown_expiry_absolute_pattern: 'Expiry absolute must be compatible to ISO 8601'
+  are_mutally_exclusive: '%{params} are mutually exclusive'

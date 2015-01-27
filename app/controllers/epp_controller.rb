@@ -75,6 +75,22 @@ class EppController < ApplicationController
     epp_errors.empty?
   end
 
+  def mutually_exclusive(*selectors)
+    present_count = 0
+    selectors.each do |selector|
+      full_selector = [@prefix, selector].join(' ')
+      el = params[:parsed_frame].css(full_selector).first
+      present_count += 1 if el && el.text.present?
+    end
+
+    return if present_count <= 1
+
+    epp_errors << {
+      code: '2306',
+      msg: I18n.t(:are_mutally_exclusive, params: selectors.join(', '))
+    }
+  end
+
   # let's follow grape's validations: https://github.com/intridea/grape/#parameter-validation-and-coercion
   def exactly_one_of(*selectors)
     present_count = 0
@@ -87,7 +103,7 @@ class EppController < ApplicationController
     return if present_count == 1
 
     epp_errors << {
-      code: '2003',
+      code: '2306',
       msg: I18n.t(:exactly_one_parameter_required, params: selectors.join(' or '))
     }
   end

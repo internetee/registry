@@ -126,12 +126,11 @@ class Epp::DomainsController < EppController
   end
 
   def validate_create
-    if params[:parsed_frame].css('dsData').count > 0 && params[:parsed_frame].css('create > keyData').count > 0
-      epp_errors << { code: '2306', msg: I18n.t('ds_data_and_key_data_must_not_exists_together') }
-    end
-
     @prefix = 'create > create >'
     requires('name', 'ns', 'registrant', 'ns > hostAttr')
+
+    @prefix = 'extension > create >'
+    mutually_exclusive 'keyData', 'dsData'
 
     @prefix = nil
     requires('extension > extdata > legalDocument')
