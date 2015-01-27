@@ -2,199 +2,215 @@ require 'rails_helper'
 
 describe Contact do
   before :all do 
-    # DatabaseCleaner.clean_with(:truncation)
-    # DatabaseCleaner.strategy = :transaction
+    create_disclosure_settings
+    @epp_user = Fabricate(:epp_user)
   end
 
-  before { create_disclosure_settings }
   it { should have_one(:address) }
 
   context 'with invalid attribute' do
-    before(:each) { @contact = Fabricate(:contact) }
+    before :all do
+      @contact = Contact.new
+    end
+
+    it 'should not be valid' do
+      @contact.valid?
+      @contact.errors.full_messages.should match_array([
+        "Name Required parameter missing - name",
+        "Phone Required parameter missing - phone",
+        "Phone Phone nr is invalid",
+        "Email Required parameter missing - email",
+        "Email Email is invalid",
+        "Ident Required parameter missing - ident",
+        "Address is missing",
+        "Registrar is missing",
+        "Ident type is missing"
+      ])
+    end
+
+    it 'should not have creator' do
+      @contact.cr_id.should == nil
+    end
+
+    it 'should not have updater' do
+      @contact.up_id.should == nil
+    end
 
     it 'phone should return false' do
       @contact.phone = '32341'
-      expect(@contact.valid?).to be false
-    end
-
-    it 'ident should return false' do
-      @contact.ident = '123abc'
-      expect(@contact.valid?).to be false
-    end
-
-    it 'validates birthday' do
-      invalid = ['123' '12/12/2012', 'aaaa', '12/12/12', '02-11-1999']
-      invalid.each do |date|
-        expect(Fabricate.build(:contact, ident_type: 'birthday', ident: date).valid?).to be false
-      end
-      valid = ['2012-12-11', '1990-02-16']
-      valid.each do |date|
-        expect(Fabricate.build(:contact, ident_type: 'birthday', ident: date).valid?).to be true
-      end
-    end
-
-    it 'doesn\'t validate ico' do
-      expect(Fabricate.build(:contact, ident_type: 'ico', ident: '12312adsadwe').valid?).to be true
-    end
-
-    it 'should return missing parameter error messages' do
-      @contact = Contact.new
-      expect(@contact.valid?).to eq false
-
-      expect(@contact.errors.messages).to match_array({
-         name: ['Required parameter missing - name'],
-         phone: ['Required parameter missing - phone', 'Phone nr is invalid'],
-         email: ['Required parameter missing - email', 'Email is invalid'],
-         ident: ['Required parameter missing - ident'],
-         address: ['is missing'],
-         registrar: ['is missing'],
-         ident_type: ['is missing']
-      })
+      @contact.valid?
+      @contact.errors[:phone].should == ["Phone nr is invalid"]
     end
   end
 
   context 'with valid attributes' do
-    before(:each) { @contact = Fabricate(:contact, disclosure: nil) }
+    before :all do
+      @contact = Fabricate(:contact, disclosure: nil)
+    end
 
-    it 'should return true' do
-      expect(@contact.valid?).to be true
+    it 'should be valid' do
+      @contact.valid?
+      @contact.errors.full_messages.should match_array([])
+    end
+
+    it 'should not have relation' do
+      @contact.relations_with_domain?.should == false
+    end
+
+    # it 'ico should be valid' do
+      # @contact.ident_type = 'ico'
+      # @contact.ident = '1234'
+      # @contact.errors.full_messages.should match_array([])
+    # end
+
+    # it 'ident should return false' do
+      # puts @contact.ident_type
+      # @contact.ident = '123abc'
+      # @contact.valid?
+      # @contact.errors.full_messages.should_not == []
+    # end
+
+    context 'as birthday' do
+      before :all do
+        @contact.ident_type = 'birthday'
+      end
+
+      it 'birthday should be valid' do
+        valid = ['2012-12-11', '1990-02-16']
+        valid.each do |date|
+          @contact.ident = date
+          @contact.valid?
+          @contact.errors.full_messages.should match_array([])
+        end
+      end
+
+      it 'birthday should be invalid' do
+        invalid = ['123' '12/12/2012', 'aaaa', '12/12/12', '02-11-1999']
+        invalid.each do |date|
+          @contact.ident = date
+          @contact.valid?
+          @contact.errors.full_messages.should == ["Ident is invalid"]
+        end
+      end
     end
 
     it 'should have empty disclosure'  do
-      expect(@contact.disclosure.name).to be nil
-      expect(@contact.disclosure.org_name).to be nil
-      expect(@contact.disclosure.email).to be nil
-      expect(@contact.disclosure.phone).to be nil
-      expect(@contact.disclosure.fax).to be nil
-      expect(@contact.disclosure.address).to be nil
+      @contact.disclosure.name.should     == nil
+      @contact.disclosure.org_name.should == nil
+      @contact.disclosure.email.should    == nil
+      @contact.disclosure.phone.should    == nil
+      @contact.disclosure.fax.should      == nil
+      @contact.disclosure.address.should  == nil
     end
 
     it 'should have custom disclosure' do
       @contact = Fabricate(:contact, disclosure: Fabricate(:contact_disclosure))
-      expect(@contact.disclosure.name).to be true
-      expect(@contact.disclosure.org_name).to be true
-      expect(@contact.disclosure.email).to be true
-      expect(@contact.disclosure.phone).to be true
-      expect(@contact.disclosure.fax).to be true
-      expect(@contact.disclosure.address).to be true
-    end
-  end
-
-  context 'with callbacks' do
-    before :all do
-      Contact.set_callback(:create, :before, :generate_code)
-      Contact.set_callback(:create, :before, :generate_auth_info)
+      @contact.disclosure.name.should     == true
+      @contact.disclosure.org_name.should == true
+      @contact.disclosure.email.should    == true
+      @contact.disclosure.phone.should    == true
+      @contact.disclosure.fax.should      == true
+      @contact.disclosure.address.should  == true
     end
 
-    before(:each) { @contact = Fabricate.build(:contact, code: '123asd', auth_info: 'qwe321') }
-
-    context 'after create' do
-      it 'should generate code' do
-        expect(@contact.code).to eq('123asd')
-        @contact.save!
-        expect(@contact.code).to_not eq('123asd')
+    context 'with callbacks' do
+      before :all do
+        # Ensure callbacks are not taken out from other specs
+        Contact.set_callback(:create, :before, :generate_code)
+        Contact.set_callback(:create, :before, :generate_auth_info)
       end
 
-      it 'should generate password' do
-        expect(@contact.auth_info).to eq('qwe321')
-        @contact.save!
-        expect(@contact.auth_info).to_not eq('qwe321')
-      end
-    end
-
-    context 'after update' do
-      before(:each) do
-        @contact.save!
-        @code = @contact.code
-        @auth_info = @contact.auth_info
+      context 'after create' do
+        it 'should generate a new code and password' do
+          @contact = Fabricate.build(:contact, code: '123asd', auth_info: 'qwe321')
+          @contact.code.should      == '123asd'
+          @contact.auth_info.should == 'qwe321'
+          @contact.save!
+          @contact.code.should_not      == '123asd'
+          @contact.auth_info.should_not == 'qwe321'
+        end
       end
 
-      it 'should not generate new code' do
-        @contact.update_attributes(name: 'qevciherot23')
-        expect(@contact.code).to eq(@code)
+      context 'after update' do
+        before :all do
+          @contact.code = '123asd'
+          @contact.auth_info = 'qwe321'
+        end
+
+        it 'should not generate new code' do
+          @contact.update_attributes(name: 'qevciherot23')
+          @contact.code.should == '123asd'
+        end
+
+        it 'should not generate new auth_info' do
+          @contact.update_attributes(name: 'fvrsgbqevciherot23')
+          @contact.auth_info.should == 'qwe321'
+        end
       end
 
-      it 'should not generate new auth_info' do
-        @contact.update_attributes(name: 'fvrsgbqevciherot23')
-        expect(@contact.auth_info).to eq(@auth_info)
+      context 'with creator' do
+        before :all do
+          @contact.created_by = @epp_user
+        end
+
+        # TODO: change cr_id to something else
+        it 'should return username of creator' do
+          @contact.cr_id.should == 'gitlab'
+        end
       end
-    end
 
-  end
-end
+      context 'with updater' do
+        before :all do
+          @contact.updated_by = @epp_user
+        end
+        
+        # TODO: change up_id to something else
+        it 'should return username of updater' do
+          @contact.up_id.should == 'gitlab'
+        end
 
-describe Contact, '#relations_with_domain?' do
-  context 'with no relation' do
-    before(:each) { Fabricate(:contact) }
-    it 'should return false' do
-      expect(Contact.first.relations_with_domain?).to be false
-    end
-  end
-
-  context 'with relation' do
-    before(:each) do
-      create_settings
-      Fabricate(:domain)
-    end
-
-    it 'should return true' do
-      expect(Contact.first.relations_with_domain?).to be true
+      end
     end
   end
 end
 
-describe Contact, '#cr_id' do
-  before(:each) { Fabricate(:contact, code: 'asd12', created_by: Fabricate(:epp_user)) }
+# TODO: investigate it a bit more
+# describe Contact, '#relations_with_domain?' do
+  # context 'with relation' do
+    # before :all do
+      # create_settings
+      # Fabricate(:domain)
+      # @contact = Fabricate(:contact)
+    # end
 
-  it 'should return username of creator' do
-    expect(Contact.first.cr_id).to eq('gitlab')
-  end
+    # it 'should have relation with domain' do
+      # @contact.relations_with_domain?.should == true
+    # end
+  # end
+# end
 
-  it 'should return nil when no creator' do
-    expect(Contact.new.cr_id).to be nil
-  end
-end
-
-describe Contact, '#up_id' do
-  before(:each) do
-    # Fabricate(:contact, code: 'asd12',
-    # created_by: Fabricate(:epp_user),
-    # updated_by: Fabricate(:epp_user), registrar: zone)
-    @epp_user = Fabricate(:epp_user)
-    @contact = Fabricate.build(:contact, code: 'asd12', created_by: @epp_user, updated_by: @epp_user)
-  end
-
-  it 'should return username of updater' do
-    expect(@contact.up_id).to eq('gitlab')
-  end
-
-  it 'should return nil when no updater' do
-    expect(Contact.new.up_id).to be nil
-  end
-end
 
 describe Contact, '.extract_params' do
   it 'returns params hash'do
     ph = { id: '123123', email: 'jdoe@example.com', authInfo: { pw: 'asde' },
            postalInfo: { name: 'fred', addr: { cc: 'EE' } }  }
-    expect(Contact.extract_attributes(ph)).to eq({
+    Contact.extract_attributes(ph).should == {
       name: 'fred',
       email: 'jdoe@example.com'
-    })
+    }
   end
 end
 
 describe Contact, '.check_availability' do
-
-  before(:each) do
+  before do
     Fabricate(:contact, code: 'asd12')
     Fabricate(:contact, code: 'asd13')
   end
 
   it 'should return array if argument is string' do
     response = Contact.check_availability('asd12')
-    expect(response.class).to be Array
-    expect(response.length).to eq(1)
+    response.class.should == Array
+    response.length.should == 1
   end
 
   it 'should return in_use and available codes' do
@@ -202,16 +218,16 @@ describe Contact, '.check_availability' do
     code_ = Contact.last.code
 
     response = Contact.check_availability([code, code_, 'asd14'])
-    expect(response.class).to be Array
-    expect(response.length).to eq(3)
+    response.class.should == Array
+    response.length.should == 3
 
-    expect(response[0][:avail]).to eq(0)
-    expect(response[0][:code]).to eq(code)
+    response[0][:avail].should == 0
+    response[0][:code].should == code
 
-    expect(response[1][:avail]).to eq(0)
-    expect(response[1][:code]).to eq(code_)
+    response[1][:avail].should == 0
+    response[1][:code].should == code_
 
-    expect(response[2][:avail]).to eq(1)
-    expect(response[2][:code]).to eq('asd14')
+    response[2][:avail].should == 1
+    response[2][:code].should == 'asd14'
   end
 end
