@@ -629,7 +629,7 @@ describe 'EPP Domain', epp: true do
         })
 
       response = epp_plain_request(xml, :xml)
-      response[:msg].should == 'keyData, dsData are mutually exclusive'
+      response[:msg].should == 'Mutually exclusive parameters: keyData, dsData'
       response[:result_code].should == '2306'
     end
   end

@@ -142,7 +142,7 @@ class Epp::DomainsController < EppController
   end
 
   def validate_update
-    if params[:parsed_frame].css('chg registrant').present? && params[:parsed_frame].css('legalDocument').blank?
+    if element_count('update > chg > registrant') > 0
       requires('extension > extdata > legalDocument')
     end
 
