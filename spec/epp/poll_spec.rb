@@ -26,18 +26,18 @@ describe 'EPP Poll', epp: true do
     ApiLog::EppLog.delete_all
     response = epp_plain_request(epp_xml.poll, :xml)
 
-    expect(response[:msg]).to eq('Command completed successfully; no messages')
-    expect(response[:result_code]).to eq('1300')
+    response[:msg].should == 'Command completed successfully; no messages'
+    response[:result_code].should == '1300'
 
     log = ApiLog::EppLog.last
 
-    expect(log.request_command).to eq('poll')
-    expect(log.request_object).to eq('poll')
-    expect(log.request_successful).to eq(true)
-    expect(log.api_user_name).to eq('registrar1')
-    expect(log.api_user_registrar).to eq('Registrar OÜ')
-    expect(log.request).not_to be_blank
-    expect(log.response).not_to be_blank
+    log.request_command.should == 'poll'
+    log.request_object.should == 'poll'
+    log.request_successful.should == true
+    log.api_user_name.should == 'registrar1'
+    log.api_user_registrar.should == 'Registrar OÜ'
+    log.request.should_not be_blank
+    log.response.should_not be_blank
   end
 
   it 'queues and dequeues messages' do
@@ -47,17 +47,17 @@ describe 'EPP Poll', epp: true do
       epp_plain_request(epp_xml.poll, :xml)
     end
 
-    expect(response[:msg]).to eq('Command completed successfully; no messages')
-    expect(response[:result_code]).to eq('1300')
+    response[:msg].should == 'Command completed successfully; no messages'
+    response[:result_code].should == '1300'
 
     response = epp_plain_request(epp_xml.poll, :xml)
-    expect(response[:msg]).to eq('Command completed successfully; ack to dequeue')
-    expect(response[:result_code]).to eq('1301')
+    response[:msg].should == 'Command completed successfully; ack to dequeue'
+    response[:result_code].should == '1301'
     msg_q = response[:parsed].css('msgQ')
 
-    expect(msg_q.css('msg').text).to eq('Balance low.')
-    expect(msg_q.first['count']).to eq('1')
-    expect(msg_q.first['id']).to eq(msg.id.to_s)
+    msg_q.css('msg').text.should == 'Balance low.'
+    msg_q.first['count'].should == '1'
+    msg_q.first['id'].should == msg.id.to_s
 
     xml = epp_xml.poll(poll: {
       value: '', attrs: { op: 'ack', msgID: msg_q.first['id'] }
@@ -67,20 +67,20 @@ describe 'EPP Poll', epp: true do
       epp_plain_request(xml, :xml)
     end
 
-    expect(response[:results][0][:msg]).to eq('Message was not found')
-    expect(response[:results][0][:result_code]).to eq('2303')
-    expect(response[:results][0][:value]).to eq(msg_q.first['id'])
+    response[:results][0][:msg].should == 'Message was not found'
+    response[:results][0][:result_code].should == '2303'
+    response[:results][0][:value].should == msg_q.first['id']
 
     response = epp_plain_request(xml, :xml)
-    expect(response[:msg]).to eq('Command completed successfully')
+    response[:msg].should == 'Command completed successfully'
     msg_q = response[:parsed].css('msgQ')
-    expect(msg_q.first['id']).to_not be_blank
-    expect(msg_q.first['count']).to eq('0')
+    msg_q.first['id'].should_not be_blank
+    msg_q.first['count'].should == '0'
 
     response = epp_plain_request(xml, :xml)
-    expect(response[:results][0][:msg]).to eq('Message was not found')
-    expect(response[:results][0][:result_code]).to eq('2303')
-    expect(response[:results][0][:value]).to eq(msg_q.first['id'])
+    response[:results][0][:msg].should == 'Message was not found'
+    response[:results][0][:result_code].should == '2303'
+    response[:results][0][:value].should == msg_q.first['id']
   end
 
   it 'returns an error on incorrect op' do
@@ -89,7 +89,7 @@ describe 'EPP Poll', epp: true do
     })
 
     response = epp_plain_request(xml, :xml)
-    expect(response[:msg]).to eq('Attribute op is invalid')
+    response[:msg].should == 'Attribute op is invalid'
   end
 
   it 'dequeues multiple messages' do
@@ -98,61 +98,61 @@ describe 'EPP Poll', epp: true do
     registrar1.messages.create({ body: 'Smth else.' })
 
     response = epp_plain_request(epp_xml.poll, :xml)
-    expect(response[:msg]).to eq('Command completed successfully; ack to dequeue')
-    expect(response[:result_code]).to eq('1301')
+    response[:msg].should == 'Command completed successfully; ack to dequeue'
+    response[:result_code].should == '1301'
     msg_q = response[:parsed].css('msgQ')
 
-    expect(msg_q.css('msg').text).to eq('Smth else.')
-    expect(msg_q.first['count']).to eq('3')
+    msg_q.css('msg').text.should == 'Smth else.'
+    msg_q.first['count'].should == '3'
 
     xml = epp_xml.poll(poll: {
       value: '', attrs: { op: 'ack', msgID: msg_q.first['id'] }
     })
 
     response = epp_plain_request(xml, :xml)
-    expect(response[:msg]).to eq('Command completed successfully')
+    response[:msg].should == 'Command completed successfully'
     msg_q = response[:parsed].css('msgQ')
-    expect(msg_q.first['id']).to_not be_blank
-    expect(msg_q.first['count']).to eq('2')
+    msg_q.first['id'].should_not be_blank
+    msg_q.first['count'].should == '2'
 
     response = epp_plain_request(epp_xml.poll, :xml)
-    expect(response[:msg]).to eq('Command completed successfully; ack to dequeue')
-    expect(response[:result_code]).to eq('1301')
+    response[:msg].should == 'Command completed successfully; ack to dequeue'
+    response[:result_code].should == '1301'
     msg_q = response[:parsed].css('msgQ')
 
-    expect(msg_q.css('msg').text).to eq('Something.')
-    expect(msg_q.first['count']).to eq('2')
+    msg_q.css('msg').text.should == 'Something.'
+    msg_q.first['count'].should == '2'
 
     xml = epp_xml.poll(poll: {
       value: '', attrs: { op: 'ack', msgID: msg_q.first['id'] }
     })
 
     response = epp_plain_request(xml, :xml)
-    expect(response[:msg]).to eq('Command completed successfully')
+    response[:msg].should == 'Command completed successfully'
     msg_q = response[:parsed].css('msgQ')
-    expect(msg_q.first['id']).to_not be_blank
-    expect(msg_q.first['count']).to eq('1')
+    msg_q.first['id'].should_not be_blank
+    msg_q.first['count'].should == '1'
 
     response = epp_plain_request(epp_xml.poll, :xml)
-    expect(response[:msg]).to eq('Command completed successfully; ack to dequeue')
-    expect(response[:result_code]).to eq('1301')
+    response[:msg].should == 'Command completed successfully; ack to dequeue'
+    response[:result_code].should == '1301'
     msg_q = response[:parsed].css('msgQ')
 
-    expect(msg_q.css('msg').text).to eq('Balance low.')
-    expect(msg_q.first['count']).to eq('1')
+    msg_q.css('msg').text.should == 'Balance low.'
+    msg_q.first['count'].should == '1'
 
     xml = epp_xml.poll(poll: {
       value: '', attrs: { op: 'ack', msgID: msg_q.first['id'] }
     })
 
     response = epp_plain_request(xml, :xml)
-    expect(response[:msg]).to eq('Command completed successfully')
+    response[:msg].should == 'Command completed successfully'
     msg_q = response[:parsed].css('msgQ')
-    expect(msg_q.first['id']).to_not be_blank
-    expect(msg_q.first['count']).to eq('0')
+    msg_q.first['id'].should_not be_blank
+    msg_q.first['count'].should == '0'
 
     response = epp_plain_request(epp_xml.poll, :xml)
-    expect(response[:msg]).to eq('Command completed successfully; no messages')
-    expect(response[:result_code]).to eq('1300')
+    response[:msg].should == 'Command completed successfully; no messages'
+    response[:result_code].should == '1300'
   end
 end
