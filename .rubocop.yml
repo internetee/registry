@@ -37,6 +37,10 @@ Style/BracesAroundHashParameters:
 Style/IndentHash:
   Enabled: false
 
+# no need to worry about it
+Style/StringLiterals:
+  Enabled: false
+
 # a bit too annoying requirement, no big drawback yet dedected
 Style/TrailingWhitespace:
   Enabled: false
