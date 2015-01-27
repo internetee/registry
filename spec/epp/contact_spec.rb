@@ -60,7 +60,6 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'successfully creates a contact' do
-        ApiLog::EppLog.delete_all
         response = epp_plain_request(create_contact_xml, :xml)
 
         response[:msg].should == 'Command completed successfully'
@@ -74,14 +73,12 @@ describe 'EPP Contact', epp: true do
         @contact.ident.should == '37605030299'
         @contact.address.street.should == '123 Example'
 
-        log = ApiLog::EppLog.all
-
-        log.length.should == 1
-        log[0].request_command.should == 'create'
-        log[0].request_object.should == 'contact'
-        log[0].request_successful.should == true
-        log[0].api_user_name.should == 'gitlab'
-        log[0].api_user_registrar.should == 'Registrar OÜ'
+        log = ApiLog::EppLog.last
+        log.request_command.should == 'create'
+        log.request_object.should == 'contact'
+        log.request_successful.should == true
+        log.api_user_name.should == 'gitlab'
+        log.api_user_registrar.should == 'Registrar OÜ'
       end
 
       it 'successfully adds registrar' do
