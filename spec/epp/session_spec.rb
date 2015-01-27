@@ -54,24 +54,20 @@ describe 'EPP Session', epp: true do
       end
 
       it 'does not log in twice' do
-        ApiLog::EppLog.delete_all
-        epp_plain_request(@login_xml_cache, :xml)
+        response = epp_plain_request(@login_xml_cache, :xml)
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+        response[:clTRID].should == 'ABC-12345'
+
         response = epp_plain_request(@login_xml_cache, :xml)
         response[:msg].should match(/Already logged in. Use/)
         response[:result_code].should == '2002'
 
-        log = ApiLog::EppLog.all
-        log.length.should == 2
-
-        log[0].request_command.should == 'login'
-        log[0].request_successful.should == true
-        log[0].api_user_name.should == 'gitlab'
-        log[0].api_user_registrar.should == 'Registrar OÜ'
-
-        log[1].request_command.should == 'login'
-        log[1].request_successful.should == false
-        log[1].api_user_name.should == 'gitlab'
-        log[1].api_user_registrar.should == 'Registrar OÜ'
+        log = ApiLog::EppLog.last
+        log.request_command.should == 'login'
+        log.request_successful.should == false
+        log.api_user_name.should == 'gitlab'
+        log.api_user_registrar.should == 'Registrar OÜ'
       end
 
       it 'logs out epp user' do
