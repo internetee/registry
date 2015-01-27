@@ -75,7 +75,6 @@ describe 'EPP Keyrelay', epp: true do
     xml = epp_xml.keyrelay({
       name: { value: domain.name },
       keyData: {
-        flags: { value: '' },
         protocol: { value: '3' },
         alg: { value: '8' },
         pubKey: { value: 'cmlraXN0aGViZXN0' }
@@ -89,7 +88,7 @@ describe 'EPP Keyrelay', epp: true do
     })
 
     response = epp_request(xml, :xml, :elkdata)
-    response[:msg].should == 'Required parameter missing: flags'
+    response[:msg].should == 'Required parameter missing: keyData > flags'
 
     @zone.messages.queued.count.should == msg_count
   end

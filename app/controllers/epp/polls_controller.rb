@@ -38,9 +38,6 @@ class Epp::PollsController < EppController
   private
 
   def validate_poll
-    op = params[:parsed_frame].css('poll').first[:op]
-    return true if %w(ack req).include?(op)
-    epp_errors << { code: '2306', msg: I18n.t('errors.messages.attribute_op_is_invalid') }
-    false
+    requires_attribute 'poll', 'op', values: %(ack req)
   end
 end

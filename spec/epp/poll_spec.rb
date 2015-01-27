@@ -25,7 +25,6 @@ describe 'EPP Poll', epp: true do
   it 'returns no messages in poll' do
     ApiLog::EppLog.delete_all
     response = epp_plain_request(epp_xml.poll, :xml)
-
     response[:msg].should == 'Command completed successfully; no messages'
     response[:result_code].should == '1300'
 
@@ -89,7 +88,7 @@ describe 'EPP Poll', epp: true do
     })
 
     response = epp_plain_request(xml, :xml)
-    response[:msg].should == 'Attribute op is invalid'
+    response[:msg].should == 'Attribute is invalid: op'
   end
 
   it 'dequeues multiple messages' do

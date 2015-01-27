@@ -79,7 +79,7 @@ class EppController < ApplicationController
       full_selector = [@prefix, selector].join(' ')
       el = params[:parsed_frame].css(full_selector).first
 
-      missing = el.nil? || (el.text.blank? && el.children.none?)
+      missing = el.nil?
 
       epp_errors << {
         code: '2003',

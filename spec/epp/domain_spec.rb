@@ -213,7 +213,7 @@ describe 'EPP Domain', epp: true do
       xml = domain_create_xml(ns: [])
       response = epp_plain_request(xml, :xml)
       response[:result_code].should == '2003'
-      response[:msg].should == 'Required parameter missing: ns'
+      response[:msg].should == 'Required parameter missing: ns > hostAttr'
     end
 
     it 'does not create domain with too many nameservers' do
