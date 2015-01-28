@@ -59,6 +59,13 @@ class EppController < ApplicationController
     validation_method = "validate_#{params[:action]}"
     return unless respond_to?(validation_method, true)
     send(validation_method)
+
+    # validate legal document's type here because it may be in most of the requests
+    @prefix = nil
+    if element_count('extension > extdata > legalDocument') > 0
+      requires_attribute('extension > extdata > legalDocument', 'type', values: LegalDocument::TYPES)
+    end
+
     handle_errors and return if epp_errors.any?
   end
 
