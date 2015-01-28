@@ -119,24 +119,27 @@ class EppController < ApplicationController
   end
 
   def exactly_one_of(*selectors)
+    full_selectors = create_full_selectors(*selectors)
     return if element_count(*selectors) == 1
 
     epp_errors << {
       code: '2306',
-      msg: I18n.t(:exactly_one_parameter_required, params: selectors.join(' or '))
+      msg: I18n.t(:exactly_one_parameter_required, params: full_selectors.join(' OR '))
     }
   end
 
   def mutually_exclusive(*selectors)
+    full_selectors = create_full_selectors(*selectors)
     return if element_count(*selectors) <= 1
+
     epp_errors << {
       code: '2306',
-      msg: I18n.t(:mutally_exclusive_params, params: selectors.join(', '))
+      msg: I18n.t(:mutally_exclusive_params, params: full_selectors.join(', '))
     }
   end
 
   def optional(selector, *validations)
-    full_selector = [@prefix, selector].join(' ')
+    full_selector = [@prefix, selector].compact.join(' ')
     el = params[:parsed_frame].css(full_selector).first
     return unless el && el.text.present?
     value = el.text
@@ -151,11 +154,15 @@ class EppController < ApplicationController
   def element_count(*selectors)
     present_count = 0
     selectors.each do |selector|
-      full_selector = [@prefix, selector].join(' ')
+      full_selector = [@prefix, selector].compact.join(' ')
       el = params[:parsed_frame].css(full_selector).first
       present_count += 1 if el && el.text.present?
     end
     present_count
+  end
+
+  def create_full_selectors(*selectors)
+    selectors.map { |x| [@prefix, x].compact.join(' ') }
   end
 
   def xml_attrs_present?(ph, attributes) # TODO: THIS IS DEPRECATED AND WILL BE REMOVED IN FUTURE
