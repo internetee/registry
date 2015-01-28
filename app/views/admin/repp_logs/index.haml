@@ -13,7 +13,8 @@
             %th{class: 'col-xs-2'}= t('response_code')
             %th{class: 'col-xs-2'}= t('api_user')
             %th{class: 'col-xs-2'}= t('registrar')
-            %th{class: 'col-xs-2'}= t('created_at')
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'created_at')
         %tbody
           - @repp_logs.each do |x|
             %tr
