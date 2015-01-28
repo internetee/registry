@@ -83,14 +83,13 @@ class EppController < ApplicationController
   def requires(*selectors)
     el, missing = nil, nil
     selectors.each do |selector|
-      full_selector = [@prefix, selector].join(' ')
+      full_selector = [@prefix, selector].compact.join(' ')
       el = params[:parsed_frame].css(full_selector).first
 
       missing = el.nil?
-
       epp_errors << {
         code: '2003',
-        msg: I18n.t('errors.messages.required_parameter_missing', key: el.try(:name) || selector)
+        msg: I18n.t('errors.messages.required_parameter_missing', key: full_selector)
       } if missing
     end
 

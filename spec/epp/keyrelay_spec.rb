@@ -88,7 +88,7 @@ describe 'EPP Keyrelay', epp: true do
     })
 
     response = epp_request(xml, :xml, :elkdata)
-    response[:msg].should == 'Required parameter missing: keyData > flags'
+    response[:msg].should == 'Required parameter missing: keyrelay > keyData > flags'
 
     @zone.messages.queued.count.should == msg_count
   end

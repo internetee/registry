@@ -69,13 +69,13 @@ describe 'EPP Domain', epp: true do
 
     response = epp_plain_request(xml, :xml)
     response[:results][0][:result_code].should == '2003'
-    response[:results][0][:msg].should == 'Required parameter missing: ns'
+    response[:results][0][:msg].should == 'Required parameter missing: create > create > ns'
 
     response[:results][1][:result_code].should == '2003'
-    response[:results][1][:msg].should == 'Required parameter missing: registrant'
+    response[:results][1][:msg].should == 'Required parameter missing: create > create > registrant'
 
     response[:results][2][:result_code].should == '2003'
-    response[:results][2][:msg].should == 'Required parameter missing: ns > hostAttr'
+    response[:results][2][:msg].should == 'Required parameter missing: create > create > ns > hostAttr'
 
     response[:results][3][:result_code].should == '2003'
     response[:results][3][:msg].should == 'Required parameter missing: extension > extdata > legalDocument'
@@ -206,14 +206,14 @@ describe 'EPP Domain', epp: true do
 
       response = epp_plain_request(xml, :xml)
       response[:results][0][:result_code].should == '2003'
-      response[:results][0][:msg].should == 'Required parameter missing: registrant'
+      response[:results][0][:msg].should == 'Required parameter missing: create > create > registrant'
     end
 
     it 'does not create domain without nameservers' do
       xml = domain_create_xml(ns: [])
       response = epp_plain_request(xml, :xml)
       response[:result_code].should == '2003'
-      response[:msg].should == 'Required parameter missing: ns > hostAttr'
+      response[:msg].should == 'Required parameter missing: create > create > ns > hostAttr'
     end
 
     it 'does not create domain with too many nameservers' do
@@ -270,7 +270,7 @@ describe 'EPP Domain', epp: true do
 
       response = epp_plain_request(xml, :xml)
       response[:result_code].should == '2003'
-      response[:msg].should == 'Required parameter missing: ns > hostAttr'
+      response[:msg].should == 'Required parameter missing: create > create > ns > hostAttr'
     end
 
     it 'creates domain with nameservers with ips' do
