@@ -16,8 +16,8 @@
             = f.select :request_method_eq, [[t('choose'),''], 'GET', 'POST', 'PUT', 'DELETE'], {}, class: 'form-control selectize', placeholder: t('choose')
         .col-md-3
           .form-group
-            = f.label :response_code_eq
-            = f.search_field :response_code_eq, class: 'form-control', placeholder: t('api_user')
+            = f.label :response_code
+            = f.search_field :response_code_eq, class: 'form-control', placeholder: t('response_code')
         .col-md-3
           .form-group
             = f.label :api_user
