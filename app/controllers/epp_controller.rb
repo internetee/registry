@@ -172,7 +172,6 @@ class EppController < ApplicationController
 
   def write_to_epp_log
     # return nil if EPP_LOG_ENABLED
-    puts params[:epp_object_type]
     request_command = params[:command] || params[:action] # error receives :command, other methods receive :action
     ApiLog::EppLog.create({
       request: params[:raw_frame] || params[:frame],
