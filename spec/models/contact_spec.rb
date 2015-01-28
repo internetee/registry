@@ -8,6 +8,16 @@ describe Contact do
 
   it { should have_one(:address) }
 
+  context 'about class' do
+    it 'should have versioning enabled?' do
+      Contact.paper_trail_enabled_for_model?.should == true
+    end
+
+    it 'should have custom log prexied table name for versions table' do
+      ContactVersion.table_name.should == 'log_contacts'
+    end
+  end
+
   context 'with invalid attribute' do
     before :all do
       @contact = Contact.new
@@ -41,6 +51,10 @@ describe Contact do
       @contact.valid?
       @contact.errors[:phone].should == ["Phone nr is invalid"]
     end
+
+    it 'should not have any versions' do
+      @contact.versions.should == []
+    end
   end
 
   context 'with valid attributes' do
@@ -55,6 +69,15 @@ describe Contact do
 
     it 'should not have relation' do
       @contact.relations_with_domain?.should == false
+    end
+
+    it 'should not have one version' do
+      with_versioning do
+        @contact.versions.should == []
+        @contact.name = 'New name'
+        @contact.save
+        @contact.versions.size.should == 1
+      end
     end
 
     # it 'ico should be valid' do

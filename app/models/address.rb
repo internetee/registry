@@ -1,4 +1,6 @@
 class Address < ActiveRecord::Base
+  include Versions # version/address_version.rb
+
   LOCAL_TYPE_SHORT = 'loc'
   INTERNATIONAL_TYPE_SHORT = 'int'
   LOCAL_TYPE = 'LocalAddress'
@@ -9,8 +11,6 @@ class Address < ActiveRecord::Base
 
   belongs_to :contact
   belongs_to :country
-
-  has_paper_trail class_name: 'AddressVersion'
 
   class << self
     #    def validate_postal_info_types(parsed_frame)

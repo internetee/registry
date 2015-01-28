@@ -1,6 +1,5 @@
 class Contact < ActiveRecord::Base
-  # TODO: Foreign contact will get email with activation link/username/temp password
-
+  include Versions # version/contact_version.rb
   include EppErrors
 
   has_one :address, dependent: :destroy
@@ -34,17 +33,16 @@ class Contact < ActiveRecord::Base
   delegate :zip, to: :address # , prefix: true
 
   # callbacks
+  # TODO: remove old
   # after_commit :domains_snapshot
-  after_update :domains_snapshot
-  after_destroy :domains_snapshot
+  # after_update :domains_snapshot
+  # after_destroy :domains_snapshot
   before_create :generate_code
   before_create :generate_auth_info
   after_create :ensure_disclosure
 
   # scopes
   scope :current_registrars, ->(id) { where(registrar_id: id) }
-  # archiving
-  has_paper_trail class_name: 'ContactVersion'
 
   IDENT_TYPE_ICO = 'ico'
   IDENT_TYPES = [
@@ -72,13 +70,14 @@ class Contact < ActiveRecord::Base
     create_disclosure! unless disclosure
   end
 
-  def domains_snapshot
-    (domains + domains_owned).uniq.each do |domain|
-      next unless domain.is_a?(Domain)
-      # next if domain.versions.last == domain.create_snapshot
-      domain.create_version # Method from paper_trail
-    end
-  end
+  # TODO: remove old
+  # def domains_snapshot
+    # (domains + domains_owned).uniq.each do |domain|
+      # next unless domain.is_a?(Domain)
+      # # next if domain.versions.last == domain.create_snapshot
+      # domain.create_version # Method from paper_trail
+    # end
+  # end
 
   def juridical?
     ident_type == IDENT_TYPE_ICO
@@ -148,16 +147,17 @@ class Contact < ActiveRecord::Base
     name
   end
 
+  # TODO: remove old
   # for archiving
-  def snapshot
-    {
-      name: name,
-      phone: phone,
-      code: code,
-      ident: ident,
-      email: email
-    }
-  end
+  # def snapshot
+    # {
+      # name: name,
+      # phone: phone,
+      # code: code,
+      # ident: ident,
+      # email: email
+    # }
+  # end
 
   class << self
     # non-EPP

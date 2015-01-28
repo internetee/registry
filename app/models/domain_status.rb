@@ -1,4 +1,5 @@
 class DomainStatus < ActiveRecord::Base
+  include Versions # version/domain_status_version.rb
   include EppErrors
 
   belongs_to :domain
@@ -49,9 +50,6 @@ class DomainStatus < ActiveRecord::Base
     SERVER_UPDATE_PROHIBITED, SERVER_MANUAL_INZONE, SERVER_REGISTRANT_CHANGE_PROHIBITED, 
     SERVER_ADMIN_CHANGE_PROHIBITED, SERVER_TECH_CHANGE_PROHIBITED
   ]
-
-  # archiving
-  has_paper_trail class_name: 'DomainStatusVersion'
 
   def epp_code_map
     {
