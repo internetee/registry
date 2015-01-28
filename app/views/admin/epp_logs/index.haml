@@ -28,13 +28,14 @@
             = f.label :registrar
             = f.search_field :api_user_registrar_cont, class: 'form-control', placeholder: t('registrar')
         .col-md-3
+          .col-md-3
           .form-group
-            = f.label :created_at
-            = f.search_field :created_at_gteq, class: 'form-control', placeholder: t('created_at')
+            = f.label t(:created_after)
+            = f.search_field :created_at_gteq, class: 'form-control', placeholder: t('created_after')
         .col-md-3
           .form-group
-            = f.label :created_at
-            = f.search_field :created_at_lteq, class: 'form-control', placeholder: t('created_at')
+            = f.label t(:created_before)
+            = f.search_field :created_at_lteq, class: 'form-control', placeholder: t('created_before')
         .col-md-3{style: 'padding-top: 25px;'}
           %button.btn.btn-primary
             &nbsp;
