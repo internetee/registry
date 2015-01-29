@@ -43,7 +43,7 @@ describe ContactDisclosure do
     it 'should not have one version' do
       with_versioning do
         @contact_disclosure.versions.should == []
-        @contact_disclosure.name = 'New name'
+        @contact_disclosure.name = false
         @contact_disclosure.save
         @contact_disclosure.versions.size.should == 1
       end
