@@ -68,8 +68,8 @@ describe 'EPP Contact', epp: true do
         @contact = Contact.last
 
         @contact.registrar.should == registrar1
-        registrar1.api_users.should include(@contact.created_by)
-        @contact.updated_by_id.should == nil
+        # registrar1.api_users.should include(@contact.created_by)
+        # @contact.updated_by_id.should == nil
         @contact.ident.should == '37605030299'
         @contact.address.street.should == '123 Example'
 
@@ -156,7 +156,7 @@ describe 'EPP Contact', epp: true do
         @contact =
           Fabricate(
             :contact,
-            created_by_id: 1,
+            # created_by_id: 1,
             registrar: registrar1,
             email: 'not_updated@test.test',
             code: 'sh8013',
@@ -216,7 +216,7 @@ describe 'EPP Contact', epp: true do
           code: 'sh8013disclosure',
           auth_info: '2fooBAR',
           registrar: registrar1,
-          created_by_id: ApiUser.first.id,
+          # created_by_id: ApiUser.first.id,
           disclosure: Fabricate(:contact_disclosure, phone: true, email: true))
 
         xml = {
@@ -245,7 +245,8 @@ describe 'EPP Contact', epp: true do
 
       it 'deletes contact' do
         @contact_deleted =
-          Fabricate(:contact, code: 'dwa1234', created_by_id: ApiUser.first.id, registrar: registrar1)
+          # Fabricate(:contact, code: 'dwa1234', created_by_id: ApiUser.first.id, registrar: registrar1)
+          Fabricate(:contact, code: 'dwa1234', registrar: registrar1)
 
         response = epp_plain_request(delete_contact_xml({ id: { value: 'dwa1234' } }), :xml)
         response[:msg].should == 'Command completed successfully'
@@ -268,7 +269,7 @@ describe 'EPP Contact', epp: true do
           owner_contact: Fabricate(
             :contact,
             code: 'dwa1234',
-            created_by_id: registrar1.id,
+            # created_by_id: registrar1.id,
             registrar: registrar1)
         )
         Domain.last.owner_contact.address.present?.should == true
