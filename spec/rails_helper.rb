@@ -6,6 +6,7 @@ require 'rspec/rails'
 require 'shoulda/matchers'
 require 'capybara/poltergeist'
 require 'paper_trail/frameworks/rspec'
+PaperTrail.whodunnit = 'autotest'
 
 if ENV['ROBOT']
   require 'simplecov'

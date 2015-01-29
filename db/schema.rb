@@ -11,7 +11,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150129134601) do
+ActiveRecord::Schema.define(version: 20150129144652) do
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -25,8 +26,8 @@ ActiveRecord::Schema.define(version: 20150129134601) do
     t.datetime "updated_at"
     t.string   "street2"
     t.string   "street3"
-    t.integer  "creator_id"
-    t.integer  "updater_id"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   create_table "api_users", force: :cascade do |t|
@@ -38,8 +39,8 @@ ActiveRecord::Schema.define(version: 20150129134601) do
     t.text     "crt"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "creator_id"
-    t.integer  "updater_id"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   create_table "cached_nameservers", id: false, force: :cascade do |t|
@@ -60,8 +61,8 @@ ActiveRecord::Schema.define(version: 20150129134601) do
     t.boolean  "name"
     t.boolean  "org_name"
     t.boolean  "address"
-    t.integer  "creator_id"
-    t.integer  "updater_id"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   create_table "contact_statuses", force: :cascade do |t|
@@ -70,8 +71,8 @@ ActiveRecord::Schema.define(version: 20150129134601) do
     t.integer  "contact_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "creator_id"
-    t.integer  "updater_id"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   create_table "contacts", force: :cascade do |t|
@@ -91,8 +92,8 @@ ActiveRecord::Schema.define(version: 20150129134601) do
     t.string   "name"
     t.string   "org_name"
     t.integer  "registrar_id"
-    t.integer  "creator_id"
-    t.integer  "updater_id"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   create_table "countries", force: :cascade do |t|
@@ -100,8 +101,8 @@ ActiveRecord::Schema.define(version: 20150129134601) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "creator_id"
-    t.integer  "updater_id"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
@@ -143,8 +144,8 @@ ActiveRecord::Schema.define(version: 20150129134601) do
     t.integer "ds_alg"
     t.integer "ds_digest_type"
     t.string  "ds_digest"
-    t.integer "creator_id"
-    t.integer "updater_id"
+    t.string  "creator_str"
+    t.string  "updator_str"
   end
 
   create_table "domain_contacts", force: :cascade do |t|
@@ -154,16 +155,16 @@ ActiveRecord::Schema.define(version: 20150129134601) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "contact_code_cache"
-    t.integer  "creator_id"
-    t.integer  "updater_id"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   create_table "domain_statuses", force: :cascade do |t|
     t.integer "domain_id"
     t.string  "description"
     t.string  "value"
-    t.integer "creator_id"
-    t.integer "updater_id"
+    t.string  "creator_str"
+    t.string  "updator_str"
   end
 
   create_table "domain_transfers", force: :cascade do |t|
@@ -176,8 +177,8 @@ ActiveRecord::Schema.define(version: 20150129134601) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "wait_until"
-    t.integer  "creator_id"
-    t.integer  "updater_id"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   create_table "domains", force: :cascade do |t|
@@ -195,8 +196,8 @@ ActiveRecord::Schema.define(version: 20150129134601) do
     t.string   "name_puny"
     t.integer  "period"
     t.string   "period_unit",      limit: 1
-    t.integer  "creator_id"
-    t.integer  "updater_id"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   create_table "epp_sessions", force: :cascade do |t|
@@ -236,8 +237,8 @@ ActiveRecord::Schema.define(version: 20150129134601) do
     t.integer  "accepter_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "creator_id"
-    t.integer  "updater_id"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   create_table "legal_documents", force: :cascade do |t|
@@ -247,8 +248,8 @@ ActiveRecord::Schema.define(version: 20150129134601) do
     t.string   "documentable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "creator_id"
-    t.integer  "updater_id"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   create_table "log_addresses", force: :cascade do |t|
@@ -519,8 +520,8 @@ ActiveRecord::Schema.define(version: 20150129134601) do
     t.boolean  "queued"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "creator_id"
-    t.integer  "updater_id"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   create_table "nameservers", force: :cascade do |t|
@@ -530,8 +531,8 @@ ActiveRecord::Schema.define(version: 20150129134601) do
     t.datetime "updated_at"
     t.string   "ipv6"
     t.integer  "domain_id"
-    t.integer  "creator_id"
-    t.integer  "updater_id"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   create_table "registrars", force: :cascade do |t|
@@ -548,25 +549,27 @@ ActiveRecord::Schema.define(version: 20150129134601) do
     t.string   "billing_email"
     t.integer  "creator_id"
     t.integer  "updater_id"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   create_table "reserved_domains", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "creator_id"
-    t.integer  "updater_id"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   create_table "settings", force: :cascade do |t|
-    t.string   "var",                   null: false
+    t.string   "var",                    null: false
     t.text     "value"
     t.integer  "thing_id"
-    t.string   "thing_type", limit: 30
+    t.string   "thing_type",  limit: 30
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "creator_id"
-    t.integer  "updater_id"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   add_index "settings", ["thing_type", "thing_id", "var"], name: "index_settings_on_thing_type_and_thing_id_and_var", unique: true, using: :btree
@@ -585,8 +588,8 @@ ActiveRecord::Schema.define(version: 20150129134601) do
     t.string   "identity_code"
     t.integer  "country_id"
     t.string   "roles",                                       array: true
-    t.integer  "creator_id"
-    t.integer  "updater_id"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   create_table "versions", force: :cascade do |t|
@@ -604,8 +607,8 @@ ActiveRecord::Schema.define(version: 20150129134601) do
     t.string   "master_nameserver"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "creator_id"
-    t.integer  "updater_id"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
 end
