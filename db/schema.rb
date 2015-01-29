@@ -11,12 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema.define(version: 20150130085458) do
-
-=======
-ActiveRecord::Schema.define(version: 20150129114042) do
->>>>>>> Logging added for most models
+ActiveRecord::Schema.define(version: 20150129134601) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -36,13 +31,15 @@ ActiveRecord::Schema.define(version: 20150129114042) do
 
   create_table "api_users", force: :cascade do |t|
     t.integer  "registrar_id"
-    t.string   "username",     limit: 255
-    t.string   "password",     limit: 255
-    t.boolean  "active",                   default: false
+    t.string   "username"
+    t.string   "password"
+    t.boolean  "active",       default: false
     t.text     "csr"
     t.text     "crt"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "creator_id"
+    t.integer  "updater_id"
   end
 
   create_table "cached_nameservers", id: false, force: :cascade do |t|
@@ -267,6 +264,19 @@ ActiveRecord::Schema.define(version: 20150129114042) do
   add_index "log_addresses", ["item_type", "item_id"], name: "index_log_addresses_on_item_type_and_item_id", using: :btree
   add_index "log_addresses", ["whodunnit"], name: "index_log_addresses_on_whodunnit", using: :btree
 
+  create_table "log_api_users", force: :cascade do |t|
+    t.string   "item_type",      null: false
+    t.integer  "item_id",        null: false
+    t.string   "event",          null: false
+    t.string   "whodunnit"
+    t.json     "object"
+    t.json     "object_changes"
+    t.datetime "created_at"
+  end
+
+  add_index "log_api_users", ["item_type", "item_id"], name: "index_log_api_users_on_item_type_and_item_id", using: :btree
+  add_index "log_api_users", ["whodunnit"], name: "index_log_api_users_on_whodunnit", using: :btree
+
   create_table "log_contact_disclosures", force: :cascade do |t|
     t.string   "item_type",      null: false
     t.integer  "item_id",        null: false
@@ -383,19 +393,6 @@ ActiveRecord::Schema.define(version: 20150129114042) do
 
   add_index "log_domains", ["item_type", "item_id"], name: "index_log_domains_on_item_type_and_item_id", using: :btree
   add_index "log_domains", ["whodunnit"], name: "index_log_domains_on_whodunnit", using: :btree
-
-  create_table "log_epp_users", force: :cascade do |t|
-    t.string   "item_type",      null: false
-    t.integer  "item_id",        null: false
-    t.string   "event",          null: false
-    t.string   "whodunnit"
-    t.json     "object"
-    t.json     "object_changes"
-    t.datetime "created_at"
-  end
-
-  add_index "log_epp_users", ["item_type", "item_id"], name: "index_log_epp_users_on_item_type_and_item_id", using: :btree
-  add_index "log_epp_users", ["whodunnit"], name: "index_log_epp_users_on_whodunnit", using: :btree
 
   create_table "log_keyrelays", force: :cascade do |t|
     t.string   "item_type",      null: false
