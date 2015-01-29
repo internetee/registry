@@ -1421,7 +1421,7 @@ describe 'EPP Domain', epp: true do
       end
     end
 
-    it 'validates legal document type' do
+    it 'validates legal document type in info request' do
       xml = epp_xml.domain.info({
         name: { value: domain.name }
       }, {
@@ -1448,6 +1448,27 @@ describe 'EPP Domain', epp: true do
 
       response = epp_plain_request(xml, :xml)
       response[:msg].should == 'Attribute is invalid: type'
+    end
+
+    it 'saves legal document on info request' do
+      xml = epp_xml.domain.info({
+        name: { value: domain.name }
+      }, {
+        _anonymus: [
+          legalDocument: {
+            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+            attrs: { type: 'pdf' }
+          }
+        ]
+      })
+
+      response = epp_plain_request(xml, :xml)
+      response[:msg].should == 'Command completed successfully'
+
+      docs = domain.legal_documents
+      docs.count.should == 1
+      docs.first.body.should == 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp=='
+      docs.first.document_type.should == 'pdf'
     end
 
     ### DELETE ###
