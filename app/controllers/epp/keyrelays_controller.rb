@@ -1,4 +1,4 @@
-class Epp::KeyrelaysController < EppController
+ class Epp::KeyrelaysController < EppController
   # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/CyclomaticComplexity
   def keyrelay

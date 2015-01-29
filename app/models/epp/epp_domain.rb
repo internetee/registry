@@ -423,7 +423,7 @@ class Epp::EppDomain < Domain
     abs_datetime = DateTime.parse(abs_datetime) if abs_datetime.present?
 
     transaction do
-      kr = keyrelays.create(
+      kr = keyrelays.build(
         pa_date: Time.now,
         key_data_flags: parsed_frame.css('flags').text,
         key_data_protocol: parsed_frame.css('protocol').text,
@@ -435,6 +435,16 @@ class Epp::EppDomain < Domain
         requester: requester,
         accepter: registrar
       )
+
+      legal_document_data = self.class.parse_legal_document_from_frame(parsed_frame)
+      if legal_document_data
+        kr.legal_documents.build(
+          document_type: legal_document_data[:type],
+          body: legal_document_data[:body]
+        )
+      end
+
+      kr.save
 
       return false unless valid?
 

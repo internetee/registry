@@ -6,6 +6,8 @@ class Keyrelay < ActiveRecord::Base
   belongs_to :requester, class_name: 'Registrar'
   belongs_to :accepter, class_name: 'Registrar'
 
+  has_many :legal_documents, as: :documentable
+
   delegate :name, to: :domain, prefix: true
 
   validates :expiry_relative, duration_iso8601: true

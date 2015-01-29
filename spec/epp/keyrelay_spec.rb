@@ -168,4 +168,38 @@ describe 'EPP Keyrelay', epp: true do
 
     @zone.messages.queued.count.should == msg_count
   end
+
+  it 'saves legal document with keyrelay' do
+    xml = epp_xml.keyrelay({
+      name: { value: domain.name },
+      keyData: {
+        flags: { value: '256' },
+        protocol: { value: '3' },
+        alg: { value: '8' },
+        pubKey: { value: 'cmlraXN0aGViZXN0' }
+      },
+      authInfo: {
+        pw: { value: domain.auth_info }
+      },
+      expiry: {
+        relative: { value: 'P1D' },
+      }
+    }, {
+      _anonymus: [
+        legalDocument: {
+          value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+          attrs: { type: 'pdf' }
+        }
+      ]
+    })
+
+    response = epp_request(xml, :xml, :elkdata)
+    response[:msg].should == 'Command completed successfully'
+
+    docs = Keyrelay.last.legal_documents
+    docs.count.should == 1
+    docs.first.body.should == 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp=='
+    docs.first.document_type.should == 'pdf'
+
+  end
 end
