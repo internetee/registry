@@ -25,11 +25,6 @@ class EppController < ApplicationController
     @current_api_user ||= ApiUser.find(epp_session[:api_user_id]) if epp_session[:api_user_id]
   end
 
-  # temp until Martin is ready
-  def current_api_user
-    @current_epp_user ||= EppUser.find(epp_session[:epp_user_id]) if epp_session[:epp_user_id]
-  end
-
   # ERROR + RESPONSE HANDLING
   def epp_errors
     @errors ||= []
