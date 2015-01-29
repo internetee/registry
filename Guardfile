@@ -1,5 +1,5 @@
 group :red_green_refactor, halt_on_fail: true do
-  # start test EPP server automatically on port 8989, 
+  # start test EPP server automatically on port 8989,
   # be sure you have apache2 configured to
   # accept EPP request on port 701, what proxy to 8989.
   # port and environment is just for correct notification, all is overwritten by CLI
@@ -9,7 +9,7 @@ group :red_green_refactor, halt_on_fail: true do
     watch(%r{^(config|lib)/.*})
   end
 
-  guard :rspec, cmd: 'bundle exec rspec', notification: false do
+  guard :rspec, cmd: 'spring rspec', notification: false do
     watch(%r{^spec/.+_spec\.rb$})
     watch(%r{^lib/(.+)\.rb$})     { |m| "spec/lib/#{m[1]}_spec.rb" }
     watch('spec/spec_helper.rb')  { "spec" }
@@ -36,7 +36,7 @@ group :red_green_refactor, halt_on_fail: true do
 
   # Martin does not want rubocop
   unless Socket.gethostname == 'martin'
-    guard :rubocop, 
+    guard :rubocop,
       all_on_start: false,
       cli: '--display-cop-names -c .rubocop-guard.yml -f fuubar',
       notification: false do
