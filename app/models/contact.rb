@@ -9,9 +9,6 @@ class Contact < ActiveRecord::Base
   has_many :domains, through: :domain_contacts
   has_many :statuses, class_name: 'ContactStatus'
 
-  # TODO: remove the x_by
-  belongs_to :created_by, class_name: 'ApiUser', foreign_key: :created_by_id
-  belongs_to :updated_by, class_name: 'ApiUser', foreign_key: :updated_by_id
   belongs_to :registrar
 
   accepts_nested_attributes_for :address, :disclosure
@@ -88,11 +85,11 @@ class Contact < ActiveRecord::Base
   end
 
   def cr_id
-    created_by ? created_by.username : nil
+    # created_by ? created_by.username : nil
   end
 
   def up_id
-    updated_by ? updated_by.username : nil
+    # updated_by ? updated_by.username : nil
   end
 
   def auth_info_matches(pw)
