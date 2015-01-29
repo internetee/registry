@@ -198,7 +198,7 @@ class EppController < ApplicationController
       request_successful: epp_errors.empty?,
       request_object: params[:epp_object_type],
       response: @response,
-      api_user_name: @api_user.try(:to_s) || current_api_user.try(:to_s),
+      api_user_name: PaperTrail.whodunnit,
       api_user_registrar: @api_user.try(:registrar).try(:to_s) || current_api_user.try(:registrar).try(:to_s),
       ip: request.ip
     })
