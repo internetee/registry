@@ -34,7 +34,8 @@ Domain name mapping protocol short version:
           <secDNS:alg>         1        Allowed values: 3, 5, 6, 7, 8, 252, 253, 254, 255
           <secDNS:pubKey>      1        Public key
       <eis:extdata>            1        Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
-        <eis:legalDocument>    1        Base64 encoded document. Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
+        <eis:legalDocument>    1        Base64 encoded document. Attribute: type="pdf / bdoc / ddoc / 
+                                        zip / rar / gz / tar / 7z"
     <clTRID>                   0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-user-with-citizen-as-an-owner-creates-a-domain)
