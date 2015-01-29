@@ -45,3 +45,20 @@
 
           %dt= t('accepter')
           %dd= link_to(@keyrelay.accepter, [:admin, @keyrelay.accepter])
+
+.row
+  .col-md-12
+    .panel.panel-default
+      .panel-heading.clearfix
+        = t('legal_documents')
+      .table-responsive
+        %table.table.table-hover.table-bordered.table-condensed
+          %thead
+            %tr
+              %th{class: 'col-xs-8'}= t('created_at')
+              %th{class: 'col-xs-4'}= t('type')
+          %tbody
+            - @keyrelay.legal_documents.each do |x|
+              %tr
+                %td= link_to(x.created_at, [:admin, x])
+                %td= x.document_type

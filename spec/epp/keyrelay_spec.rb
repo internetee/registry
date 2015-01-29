@@ -182,7 +182,7 @@ describe 'EPP Keyrelay', epp: true do
         pw: { value: domain.auth_info }
       },
       expiry: {
-        relative: { value: 'P1D' },
+        relative: { value: 'P1D' }
       }
     }, {
       _anonymus: [
@@ -200,6 +200,33 @@ describe 'EPP Keyrelay', epp: true do
     docs.count.should == 1
     docs.first.body.should == 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp=='
     docs.first.document_type.should == 'pdf'
+  end
 
+  it 'validates legal document types' do
+    xml = epp_xml.keyrelay({
+      name: { value: domain.name },
+      keyData: {
+        flags: { value: '256' },
+        protocol: { value: '3' },
+        alg: { value: '8' },
+        pubKey: { value: 'cmlraXN0aGViZXN0' }
+      },
+      authInfo: {
+        pw: { value: domain.auth_info }
+      },
+      expiry: {
+        relative: { value: 'P1D' }
+      }
+    }, {
+      _anonymus: [
+        legalDocument: {
+          value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+          attrs: { type: 'jpg' }
+        }
+      ]
+    })
+
+    response = epp_request(xml, :xml, :elkdata)
+    response[:msg].should == 'Attribute is invalid: type'
   end
 end

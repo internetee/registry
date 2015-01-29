@@ -62,8 +62,8 @@ class EppController < ApplicationController
 
     # validate legal document's type here because it may be in most of the requests
     @prefix = nil
-    if element_count('extension > extdata > legalDocument') > 0
-      requires_attribute('extension > extdata > legalDocument', 'type', values: LegalDocument::TYPES)
+    if element_count('extdata > legalDocument') > 0
+      requires_attribute('extdata > legalDocument', 'type', values: LegalDocument::TYPES)
     end
 
     handle_errors and return if epp_errors.any?
