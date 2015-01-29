@@ -6,9 +6,9 @@ PaperTrail::Version.module_eval do
 end
 
 # Store console and rake changes in versions
-if defined?(::Rails::Console)
-  PaperTrail.whodunnit = "#{`whoami`.strip}: console"
+if defined?(::Rails::Console) || File.basename($PROGRAM_NAME).split(' ').first == 'spring'
+  PaperTrail.whodunnit = "console-#{`whoami`.strip}"
 elsif File.basename($PROGRAM_NAME) == "rake"
-  PaperTrail.whodunnit = "#{`whoami`.strip}: rake #{ARGV.join ' '}"
+  # rake username does not work when spring enabled
+  PaperTrail.whodunnit = "rake-#{`whoami`.strip} #{ARGV.join ' '}"
 end
-
