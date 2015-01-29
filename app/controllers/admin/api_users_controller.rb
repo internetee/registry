@@ -3,7 +3,7 @@ class Admin::ApiUsersController < AdminController
   before_action :set_api_user, only: [:show, :edit, :update, :destroy]
 
   def index
-    @q = ApiUser.search(params[:q])
+    @q = ApiUser.includes(:registrar).search(params[:q])
     @api_users = @q.result.page(params[:page])
   end
 
