@@ -71,12 +71,10 @@ class EppController < ApplicationController
 
   # let's follow grape's validations: https://github.com/intridea/grape/#parameter-validation-and-coercion
 
-  # Example usage:
-  #
-  #    requires 'transfer'
-  #
   # Adds error to epp_errors if element is missing or blank
   # Returns last element of selectors if it exists
+  #
+  #    requires 'transfer'
   #
   # TODO: Add possibility to pass validations / options in the method
 
@@ -96,12 +94,10 @@ class EppController < ApplicationController
     missing ? false : el # return last selector if it was present
   end
 
-  # Example usage:
-  #
-  #    requires_attribute 'transfer', 'op', values: %(approve, query, reject)
-  #
   # Adds error to epp_errors if element or attribute is missing or attribute attribute is not one
   # of the values
+  #
+  # requires_attribute 'transfer', 'op', values: %(approve, query, reject)
 
   def requires_attribute(element_selector, attribute_selector, options)
     element = requires(element_selector)
@@ -109,8 +105,7 @@ class EppController < ApplicationController
 
     attribute = element[attribute_selector]
 
-    values = options.delete(:values)
-    return if attribute && values.include?(attribute)
+    return if attribute && options[:values].include?(attribute)
 
     epp_errors << {
       code: '2306',
@@ -120,7 +115,7 @@ class EppController < ApplicationController
 
   def exactly_one_of(*selectors)
     full_selectors = create_full_selectors(*selectors)
-    return if element_count(*selectors) == 1
+    return if element_count(*full_selectors, use_prefix: false) == 1
 
     epp_errors << {
       code: '2306',
@@ -130,7 +125,7 @@ class EppController < ApplicationController
 
   def mutually_exclusive(*selectors)
     full_selectors = create_full_selectors(*selectors)
-    return if element_count(*selectors) <= 1
+    return if element_count(*full_selectors, use_prefix: false) <= 1
 
     epp_errors << {
       code: '2306',
@@ -151,10 +146,21 @@ class EppController < ApplicationController
     end
   end
 
+  # Returns how many elements were present in the request
+  # if use_prefix is true, @prefix will be prepended to selectors e.g create > create > name
+  # default is true
+  #
+  # @prefix = 'create > create >'
+  # element_count 'name', 'registrar', use_prefix: false
+  # => 2
+
   def element_count(*selectors)
+    options = selectors.extract_options!
+    use_prefix = options[:use_prefix] != false # use_prefix is true by default
+
     present_count = 0
     selectors.each do |selector|
-      full_selector = [@prefix, selector].compact.join(' ')
+      full_selector = use_prefix ? [@prefix, selector].compact.join(' ') : selector
       el = params[:parsed_frame].css(full_selector).first
       present_count += 1 if el && el.text.present?
     end
