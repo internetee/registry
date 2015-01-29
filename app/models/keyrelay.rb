@@ -1,4 +1,5 @@
 class Keyrelay < ActiveRecord::Base
+  include Versions # version/keyrelay_version.rb
   include EppErrors
 
   belongs_to :domain

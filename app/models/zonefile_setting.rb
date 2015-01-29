@@ -1,4 +1,5 @@
 class ZonefileSetting < ActiveRecord::Base
+  include Versions # version/zonefile_setting_version.rb
   validates :origin, :ttl, :refresh, :retry, :expire, :minimum_ttl, :email, presence: true
   validates :ttl, :refresh, :retry, :expire, :minimum_ttl, numericality: { only_integer: true }
 

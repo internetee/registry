@@ -1,4 +1,5 @@
 class Message < ActiveRecord::Base
+  include Versions # version/message_version.rb
   belongs_to :registrar
 
   before_create -> { self.queued = true }

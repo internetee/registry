@@ -1,8 +1,8 @@
 class ContactVersion < PaperTrail::Version
-  include LogTable
-  include UserEvents
-  # self.table_name = :post_versions
-  # self.sequence_name = :post_version_id_seq
+  self.table_name    = :log_contacts
+  self.sequence_name = :log_contacts_id_seq
 
-  scope :deleted, -> { where(event: 'destroy') }
+  # include UserEvents
+
+  # scope :deleted, -> { where(event: 'destroy') }
 end

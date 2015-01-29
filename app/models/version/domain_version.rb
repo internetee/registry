@@ -1,5 +1,7 @@
 class DomainVersion < PaperTrail::Version
-  include LogTable
+  self.table_name    = :log_domains
+  self.sequence_name = :log_domains_id_seq
+
   include UserEvents
   # TODO: remove old
   # include DomainVersionObserver if Setting.whois_enabled  # unless Setting.whois_enabled

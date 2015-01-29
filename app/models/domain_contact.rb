@@ -1,4 +1,5 @@
 class DomainContact < ActiveRecord::Base
+  include Versions # version/domain_contact_version.rb
   include EppErrors
   belongs_to :contact
   belongs_to :domain

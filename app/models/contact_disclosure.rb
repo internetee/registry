@@ -1,4 +1,5 @@
 class ContactDisclosure < ActiveRecord::Base
+  include Versions # version/contact_disclosure_version.rb
   belongs_to :contact
 
   def attributes_with_flag

@@ -1,5 +1,6 @@
 # rubocop: disable Metrics/ClassLength
 class ApiUser < ActiveRecord::Base
+  include Versions # version/api_user_version.rb
   # TODO: should have max request limit per day
   belongs_to :registrar
   has_many :contacts

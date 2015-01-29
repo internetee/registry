@@ -11,8 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20150130085458) do
 
+=======
+ActiveRecord::Schema.define(version: 20150129114042) do
+>>>>>>> Logging added for most models
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -125,6 +129,10 @@ ActiveRecord::Schema.define(version: 20150130085458) do
     t.integer "alg"
     t.integer "digest_type"
     t.string  "digest"
+  end
+
+  create_table "depricated_versions", force: :cascade do |t|
+    t.datetime "created_at"
   end
 
   create_table "dnskeys", force: :cascade do |t|
@@ -538,14 +546,11 @@ ActiveRecord::Schema.define(version: 20150130085458) do
     t.string   "billing_address"
     t.datetime "created_at"
     t.datetime "updated_at"
-<<<<<<< HEAD
     t.string   "phone"
     t.string   "email"
     t.string   "billing_email"
-=======
     t.integer  "creator_id"
     t.integer  "updater_id"
->>>>>>> Added pure PaperTrail stack
   end
 
   create_table "reserved_domains", force: :cascade do |t|
@@ -585,6 +590,10 @@ ActiveRecord::Schema.define(version: 20150130085458) do
     t.string   "roles",                                       array: true
     t.integer  "creator_id"
     t.integer  "updater_id"
+  end
+
+  create_table "versions", force: :cascade do |t|
+    t.text "depricated_table_but_somehow_paper_trail_tests_fails_without_it"
   end
 
   create_table "zonefile_settings", force: :cascade do |t|
