@@ -163,7 +163,8 @@ describe 'EPP Keyrelay', epp: true do
     })
 
     response = epp_request(xml, :xml, :elkdata)
-    response[:msg].should == 'Exactly one parameter required: keyrelay > expiry > relative OR keyrelay > expiry > absolute'
+    response[:msg].should == 'Exactly one parameter required: keyrelay > expiry > relative OR '\
+    'keyrelay > expiry > absolute'
 
     @zone.messages.queued.count.should == msg_count
   end

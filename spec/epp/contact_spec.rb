@@ -341,79 +341,79 @@ describe 'EPP Contact', epp: true do
       end
 
       # it 'returns auth error for non-owner with wrong password' do
-        # @contact = Fabricate(:contact, 
-    # registrar: registrar2, code: 'info-4444', name: 'Johnny Awesome', auth_info: 'asde',
-                  # address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
+      # @contact = Fabricate(:contact, 
+      # registrar: registrar2, code: 'info-4444', name: 'Johnny Awesome', auth_info: 'asde',
+      # address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
 
-        # xml = epp_xml.info({ id: { value: @contact.code }, authInfo: { pw: { value: 'asdesde' } } })
-        # response = epp_plain_request(xml, :xml, :registrar1)
+      # xml = epp_xml.info({ id: { value: @contact.code }, authInfo: { pw: { value: 'asdesde' } } })
+      # response = epp_plain_request(xml, :xml, :registrar1)
 
-        # expect(response[:result_code]).to eq('2200')
-        # expect(response[:msg]).to eq('Authentication error')
+      # expect(response[:result_code]).to eq('2200')
+      # expect(response[:msg]).to eq('Authentication error')
       # end
 
       context 'about disclose' do
         # it 'discloses items with wrong password when queried by owner' do
-          # @contact = Fabricate(:contact, 
-                               # registrar: registrar1, code: 'info-4444', 
-                               # name: 'Johnny Awesome', auth_info: 'asde',
-                    # address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
+        # @contact = Fabricate(:contact, 
+        # registrar: registrar1, code: 'info-4444', 
+        # name: 'Johnny Awesome', auth_info: 'asde',
+        # address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
 
-          # xml = epp_xml.info({ id: { value: @contact.code } })
-          # login_as :registrar1 do
-            # response = epp_plain_request(xml, :xml)
-            # contact = response[:parsed].css('resData chkData')
+        # xml = epp_xml.info({ id: { value: @contact.code } })
+        # login_as :registrar1 do
+        # response = epp_plain_request(xml, :xml)
+        # contact = response[:parsed].css('resData chkData')
 
-            # expect(response[:result_code]).to eq('1000')
-            # expect(response[:msg]).to eq('Command completed successfully')
-            # expect(contact.css('name').first.text).to eq('Johnny Awesome')
-          # end
+        # expect(response[:result_code]).to eq('1000')
+        # expect(response[:msg]).to eq('Command completed successfully')
+        # expect(contact.css('name').first.text).to eq('Johnny Awesome')
+        # end
         # end
 
         # it 'doesn\'t disclose items to non-owner with right password' do
-          # @contact = Fabricate(:contact, registrar: registrar2, code: 'info-4444',
-                    # name: 'Johnny Awesome', auth_info: 'password',
-                    # address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
+        # @contact = Fabricate(:contact, registrar: registrar2, code: 'info-4444',
+        # name: 'Johnny Awesome', auth_info: 'password',
+        # address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
 
-          # xml = epp_xml.info({ id: { value: @contact.code }, authInfo: { pw: { value: 'password' } } })
-          # response = epp_plain_request(xml, :xml, :registrar1)
-          # contact = response[:parsed].css('resData chkData')
+        # xml = epp_xml.info({ id: { value: @contact.code }, authInfo: { pw: { value: 'password' } } })
+        # response = epp_plain_request(xml, :xml, :registrar1)
+        # contact = response[:parsed].css('resData chkData')
 
-          # expect(response[:result_code]).to eq('1000')
-          # expect(response[:msg]).to eq('Command completed successfully')
-          # expect(contact.css('chkData postalInfo name').first).to eq(nil)
+        # expect(response[:result_code]).to eq('1000')
+        # expect(response[:msg]).to eq('Command completed successfully')
+        # expect(contact.css('chkData postalInfo name').first).to eq(nil)
         # end
 
         # it 'discloses items to owner' do
-          # @contact = Fabricate(:contact, registrar: registrar1, code: 'info-4444', name: 'Johnny Awesome',
-                    # auth_info: 'password',
-                    # address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
+        # @contact = Fabricate(:contact, registrar: registrar1, code: 'info-4444', name: 'Johnny Awesome',
+        # auth_info: 'password',
+        # address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
 
-          # xml = epp_xml.info({ id: { value: @contact.code } })
-          # response = epp_plain_request(xml, :xml, :registrar1)
-          # contact = response[:parsed].css('resData chkData')
+        # xml = epp_xml.info({ id: { value: @contact.code } })
+        # response = epp_plain_request(xml, :xml, :registrar1)
+        # contact = response[:parsed].css('resData chkData')
 
-          # expect(response[:result_code]).to eq('1000')
-          # expect(response[:msg]).to eq('Command completed successfully')
-          # expect(contact.css('name').first.text).to eq('Johnny Awesome')
+        # expect(response[:result_code]).to eq('1000')
+        # expect(response[:msg]).to eq('Command completed successfully')
+        # expect(contact.css('name').first.text).to eq('Johnny Awesome')
         # end
 
         # it 'doesn\'t disclose private elements' do
-          # Fabricate(:contact, code: 'info-4444', auth_info: '2fooBAR', registrar: registrar2,
-                    # disclosure: Fabricate(:contact_disclosure, name: true, email: false, phone: false))
+        # Fabricate(:contact, code: 'info-4444', auth_info: '2fooBAR', registrar: registrar2,
+        # disclosure: Fabricate(:contact_disclosure, name: true, email: false, phone: false))
 
-          # xml = epp_xml.info({ id: { value: 'info-4444' }, authInfo: { pw: { value: '2fooBAR' } } })
+        # xml = epp_xml.info({ id: { value: 'info-4444' }, authInfo: { pw: { value: '2fooBAR' } } })
 
-          # response = epp_plain_request(xml, :xml, :registrar1)
-          # contact = response[:parsed].css('resData chkData')
+        # response = epp_plain_request(xml, :xml, :registrar1)
+        # contact = response[:parsed].css('resData chkData')
 
-          # expect(response[:result_code]).to eq('1000')
+        # expect(response[:result_code]).to eq('1000')
 
-          # expect(contact.css('chkData phone')).to eq(contact.css('chkData disclose phone'))
-          # expect(contact.css('chkData phone').count).to eq(1)
-          # expect(contact.css('chkData email')).to eq(contact.css('chkData disclose email'))
-          # expect(contact.css('chkData email').count).to eq(1)
-          # expect(contact.css('postalInfo name').present?).to be(true)
+        # expect(contact.css('chkData phone')).to eq(contact.css('chkData disclose phone'))
+        # expect(contact.css('chkData phone').count).to eq(1)
+        # expect(contact.css('chkData email')).to eq(contact.css('chkData disclose email'))
+        # expect(contact.css('chkData email').count).to eq(1)
+        # expect(contact.css('postalInfo name').present?).to be(true)
         # end
       end
 

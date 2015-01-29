@@ -74,7 +74,7 @@ class EppController < ApplicationController
   # Adds error to epp_errors if element is missing or blank
   # Returns last element of selectors if it exists
   #
-  #    requires 'transfer'
+  # requires 'transfer'
   #
   # TODO: Add possibility to pass validations / options in the method
 

@@ -58,16 +58,16 @@ describe Contact do
     end
 
     # it 'ico should be valid' do
-      # @contact.ident_type = 'ico'
-      # @contact.ident = '1234'
-      # @contact.errors.full_messages.should match_array([])
+    # @contact.ident_type = 'ico'
+    # @contact.ident = '1234'
+    # @contact.errors.full_messages.should match_array([])
     # end
 
     # it 'ident should return false' do
-      # puts @contact.ident_type
-      # @contact.ident = '123abc'
-      # @contact.valid?
-      # @contact.errors.full_messages.should_not == []
+    # puts @contact.ident_type
+    # @contact.ident = '123abc'
+    # @contact.valid?
+    # @contact.errors.full_messages.should_not == []
     # end
 
     context 'as birthday' do
@@ -176,17 +176,17 @@ end
 
 # TODO: investigate it a bit more
 # describe Contact, '#relations_with_domain?' do
-  # context 'with relation' do
-    # before :all do
-      # create_settings
-      # Fabricate(:domain)
-      # @contact = Fabricate(:contact)
-    # end
+# context 'with relation' do
+# before :all do
+# create_settings
+# Fabricate(:domain)
+# @contact = Fabricate(:contact)
+# end
 
-    # it 'should have relation with domain' do
-      # @contact.relations_with_domain?.should == true
-    # end
-  # end
+# it 'should have relation with domain' do
+# @contact.relations_with_domain?.should == true
+# end
+# end
 # end
 
 describe Contact, '.extract_params' do
