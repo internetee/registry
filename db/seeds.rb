@@ -16,7 +16,7 @@ registrar1 = Registrar.where(
   country: Country.first
 ).first_or_create
 
-EppUser.where(
+ApiUser.where(
   username: 'registrar1',
   password: 'test1',
   active: true,
@@ -30,7 +30,7 @@ registrar2 = Registrar.where(
   country: Country.first
 ).first_or_create
 
-EppUser.where(
+ApiUser.where(
   username: 'registrar2',
   password: 'test2',
   active: true,

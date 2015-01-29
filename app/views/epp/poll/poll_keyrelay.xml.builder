@@ -10,7 +10,7 @@ xml.epp(
       xml.msg 'Command completed successfully; ack to dequeue'
     end
 
-    xml.tag!('msgQ', 'count' => current_epp_user.queued_messages.count, 'id' => @message.id) do
+    xml.tag!('msgQ', 'count' => current_api_user.queued_messages.count, 'id' => @message.id) do
       xml.qDate @message.created_at
       xml.msg @message.body
     end

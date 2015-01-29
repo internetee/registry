@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 describe 'EPP Session', epp: true do
-  before :all do 
-    @epp_user = Fabricate(:epp_user)
+  before :all do
+    @api_user = Fabricate(:api_user)
     @epp_xml = EppXml.new(cl_trid: 'ABC-12345')
     @login_xml_cache = @epp_xml.session.login(clID: { value: 'gitlab' }, pw: { value: 'ghyt9e4fu' })
 
@@ -31,7 +31,7 @@ describe 'EPP Session', epp: true do
 
     it 'does not log in with inactive user' do
       @registrar = Fabricate(:registrar, { name: 'registrar1', reg_no: '123' })
-      Fabricate(:epp_user, username: 'inactive-user', active: false, registrar: @registrar)
+      Fabricate(:api_user, username: 'inactive-user', active: false, registrar: @registrar)
 
       inactive = @epp_xml.session.login(clID: { value: 'inactive-user' }, pw: { value: 'ghyt9e4fu' })
       response = epp_plain_request(inactive, :xml)
@@ -73,12 +73,12 @@ describe 'EPP Session', epp: true do
       it 'logs out epp user' do
         epp_plain_request(@login_xml_cache, :xml)
 
-        EppSession.last[:epp_user_id].should == 1
+        EppSession.last[:api_user_id].should == 1
         response = epp_plain_request(@epp_xml.session.logout, :xml)
         response[:msg].should == 'Command completed successfully; ending session'
         response[:result_code].should == '1500'
 
-        EppSession.last[:epp_user_id].should == nil
+        EppSession.last[:api_user_id].should == nil
       end
     end
   end

@@ -175,7 +175,7 @@ class Epp::DomainsController < EppController
 
     {
       name: name,
-      registrar_id: current_epp_user.registrar.try(:id),
+      registrar_id: current_api_user.registrar.try(:id),
       registered_at: Time.now,
       period: (period.to_i == 0) ? 1 : period.to_i,
       period_unit: Epp::EppDomain.parse_period_unit_from_frame(params[:parsed_frame]) || 'y'
@@ -186,7 +186,7 @@ class Epp::DomainsController < EppController
     res = {}
     res[:pw] = params[:parsed_frame].css('pw').first.try(:text)
     res[:action] = params[:parsed_frame].css('transfer').first[:op]
-    res[:current_user] = current_epp_user
+    res[:current_user] = current_api_user
     res
   end
 
@@ -205,7 +205,7 @@ class Epp::DomainsController < EppController
 
     return domain if domain.auth_info == params[:parsed_frame].css('authInfo pw').text
 
-    if (domain.registrar != current_epp_user.registrar && secure[:secure] == true) &&
+    if (domain.registrar != current_api_user.registrar && secure[:secure] == true) &&
       epp_errors << {
         code: '2302',
         msg: I18n.t('errors.messages.domain_exists_but_belongs_to_other_registrar'),

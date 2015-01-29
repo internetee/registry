@@ -12,8 +12,8 @@ describe 'EPP Poll', epp: true do
   end
 
   before(:all) do
-    Fabricate(:epp_user, username: 'registrar1', registrar: registrar1)
-    Fabricate(:epp_user, username: 'registrar2', registrar: registrar2)
+    Fabricate(:api_user, username: 'registrar1', registrar: registrar1)
+    Fabricate(:api_user, username: 'registrar2', registrar: registrar2)
 
     login_as :registrar1
 

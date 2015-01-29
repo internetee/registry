@@ -65,7 +65,7 @@ Rails.application.routes.draw do
     end
 
     resources :users
-    resources :epp_users
+    resources :api_users
     resources :domain_versions
 
     resources :delayed_jobs

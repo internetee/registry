@@ -1,4 +1,4 @@
-Fabricator(:epp_user) do
+Fabricator(:api_user) do
   username 'gitlab'
   password 'ghyt9e4fu'
   registrar

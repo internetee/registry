@@ -4,7 +4,7 @@ module Repp
     prefix :repp
 
     http_basic do |username, password|
-      @current_api_user ||= EppUser.find_by(username: username, password: password)
+      @current_api_user ||= ApiUser.find_by(username: username, password: password)
     end
 
     helpers do

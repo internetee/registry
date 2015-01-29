@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 describe Contact do
-  before :all do 
+  before :all do
     create_disclosure_settings
-    @epp_user = Fabricate(:epp_user)
+    @api_user = Fabricate(:api_user)
   end
 
   it { should have_one(:address) }
@@ -150,7 +150,7 @@ describe Contact do
 
       context 'with creator' do
         before :all do
-          @contact.created_by = @epp_user
+          @contact.created_by = @api_user
         end
 
         # TODO: change cr_id to something else
@@ -161,9 +161,9 @@ describe Contact do
 
       context 'with updater' do
         before :all do
-          @contact.updated_by = @epp_user
+          @contact.updated_by = @api_user
         end
-        
+
         # TODO: change up_id to something else
         it 'should return username of updater' do
           @contact.up_id.should == 'gitlab'

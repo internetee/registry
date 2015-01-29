@@ -1,18 +1,18 @@
 .row
   .col-sm-6
     %h2.text-center-xs
-      = "#{t('epp_user_details')}"
+      = "#{t('api_user_details')}"
   .col-sm-6
     %h2.text-right.text-center-xs
-      = link_to(t('edit'), edit_admin_epp_user_path(@epp_user), class: 'btn btn-primary')
-      = link_to(t('delete'), admin_epp_user_path(@epp_user), method: :delete, data: { confirm: t('are_you_sure') }, class: 'btn btn-danger')
+      = link_to(t('edit'), edit_admin_api_user_path(@api_user), class: 'btn btn-primary')
+      = link_to(t('delete'), admin_api_user_path(@api_user), method: :delete, data: { confirm: t('are_you_sure') }, class: 'btn btn-danger')
 
 %hr
-- if @epp_user.errors.any?
-  - @epp_user.errors.each do |attr, err|
+- if @api_user.errors.any?
+  - @api_user.errors.each do |attr, err|
     = err
     %br
-- if @epp_user.errors.any?
+- if @api_user.errors.any?
   %hr
 .row
   .col-md-6
@@ -22,13 +22,13 @@
       .panel-body
         %dl.dl-horizontal
           %dt= t('username')
-          %dd= @epp_user.username
+          %dd= @api_user.username
 
           %dt= t('password')
-          %dd= @epp_user.password
+          %dd= @api_user.password
 
           %dt= t('active')
-          %dd= @epp_user.active
+          %dd= @api_user.active
 
   .col-md-6
     .panel.panel-default
@@ -37,7 +37,7 @@
       .panel-body
         %dl.dl-horizontal
           %dt= t('csr')
-          %dd= @epp_user.csr
+          %dd= @api_user.csr
 
           %dt= t('crt')
-          %dd= @epp_user.crt
+          %dd= @api_user.crt

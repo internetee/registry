@@ -2,7 +2,7 @@ class Registrar < ActiveRecord::Base
   belongs_to :country
   has_many :domains, dependent: :restrict_with_error
   has_many :contacts, dependent: :restrict_with_error
-  has_many :epp_users, dependent: :restrict_with_error
+  has_many :api_users, dependent: :restrict_with_error
   has_many :messages
 
   validates :name, :reg_no, :address, :country, presence: true

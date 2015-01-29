@@ -2,9 +2,9 @@ require 'rails_helper'
 
 describe 'EPP Contact', epp: true do
   before :all do
-    Fabricate(:epp_user)
-    Fabricate(:epp_user, username: 'registrar1', registrar: registrar1)
-    Fabricate(:epp_user, username: 'registrar2', registrar: registrar2)
+    Fabricate(:api_user)
+    Fabricate(:api_user, username: 'registrar1', registrar: registrar1)
+    Fabricate(:api_user, username: 'registrar2', registrar: registrar2)
 
     login_as :gitlab
 
@@ -68,7 +68,7 @@ describe 'EPP Contact', epp: true do
         @contact = Contact.last
 
         @contact.registrar.should == registrar1
-        registrar1.epp_users.should include(@contact.created_by)
+        registrar1.api_users.should include(@contact.created_by)
         @contact.updated_by_id.should == nil
         @contact.ident.should == '37605030299'
         @contact.address.street.should == '123 Example'
@@ -153,7 +153,7 @@ describe 'EPP Contact', epp: true do
 
     context 'update command' do
       before :all do
-        @contact = 
+        @contact =
           Fabricate(
             :contact,
             created_by_id: 1,
@@ -212,11 +212,11 @@ describe 'EPP Contact', epp: true do
 
       it 'updates disclosure items' do
         Fabricate(
-          :contact, 
+          :contact,
           code: 'sh8013disclosure',
           auth_info: '2fooBAR',
           registrar: registrar1,
-          created_by_id: EppUser.first.id,
+          created_by_id: ApiUser.first.id,
           disclosure: Fabricate(:contact_disclosure, phone: true, email: true))
 
         xml = {
@@ -245,7 +245,7 @@ describe 'EPP Contact', epp: true do
 
       it 'deletes contact' do
         @contact_deleted =
-          Fabricate(:contact, code: 'dwa1234', created_by_id: EppUser.first.id, registrar: registrar1)
+          Fabricate(:contact, code: 'dwa1234', created_by_id: ApiUser.first.id, registrar: registrar1)
 
         response = epp_plain_request(delete_contact_xml({ id: { value: 'dwa1234' } }), :xml)
         response[:msg].should == 'Command completed successfully'
@@ -341,7 +341,7 @@ describe 'EPP Contact', epp: true do
       end
 
       # it 'returns auth error for non-owner with wrong password' do
-      # @contact = Fabricate(:contact, 
+      # @contact = Fabricate(:contact,
       # registrar: registrar2, code: 'info-4444', name: 'Johnny Awesome', auth_info: 'asde',
       # address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
 
@@ -354,8 +354,8 @@ describe 'EPP Contact', epp: true do
 
       context 'about disclose' do
         # it 'discloses items with wrong password when queried by owner' do
-        # @contact = Fabricate(:contact, 
-        # registrar: registrar1, code: 'info-4444', 
+        # @contact = Fabricate(:contact,
+        # registrar: registrar1, code: 'info-4444',
         # name: 'Johnny Awesome', auth_info: 'asde',
         # address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
 
@@ -424,9 +424,9 @@ describe 'EPP Contact', epp: true do
         # expect(response[:msg]).to eq('Required parameter missing: pw')
       end
 
-      it 'does not display unassociated object with wrong password' do        
+      it 'does not display unassociated object with wrong password' do
         login_as :registrar2
-        xml = epp_xml.info(id: { value: @registrar1_contact.code }, 
+        xml = epp_xml.info(id: { value: @registrar1_contact.code },
                            authInfo: { pw: { value: 'wrong-pw' } })
         response = epp_plain_request(xml, :xml)
 

@@ -5,7 +5,7 @@ class Epp::PollsController < EppController
   end
 
   def req_poll
-    @message = current_epp_user.queued_messages.last
+    @message = current_api_user.queued_messages.last
     render_epp_response 'epp/poll/poll_no_messages' and return unless @message
 
     if @message.attached_obj_type && @message.attached_obj_id
@@ -20,7 +20,7 @@ class Epp::PollsController < EppController
   end
 
   def ack_poll
-    @message = current_epp_user.queued_messages.find_by(id: params[:parsed_frame].css('poll').first['msgID'])
+    @message = current_api_user.queued_messages.find_by(id: params[:parsed_frame].css('poll').first['msgID'])
 
     unless @message
       epp_errors << {

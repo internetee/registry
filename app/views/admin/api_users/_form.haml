@@ -1,9 +1,9 @@
-= form_for([:admin, @epp_user]) do |f|
-  - if @epp_user.errors.any?
-    - @epp_user.errors.each do |attr, err|
+= form_for([:admin, @api_user]) do |f|
+  - if @api_user.errors.any?
+    - @api_user.errors.each do |attr, err|
       = err
       %br
-  - if @epp_user.errors.any?
+  - if @api_user.errors.any?
     %hr
 
   .row
@@ -23,7 +23,7 @@
           = f.hidden_field(:registrar_id, class: 'js-registrar-id')
       .form-group
         .checkbox
-          %label{for: 'epp_user_active'}
+          %label{for: 'api_user_active'}
             = f.check_box(:active)
             = t('active')
 

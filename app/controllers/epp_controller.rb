@@ -3,7 +3,7 @@ class EppController < ApplicationController
   before_action :generate_svtrid
   before_action :validate_request
   layout false
-  helper_method :current_epp_user
+  helper_method :current_api_user
 
   def generate_svtrid
     # rubocop: disable Style/VariableName
@@ -21,8 +21,8 @@ class EppController < ApplicationController
     EppSession.find_or_initialize_by(session_id: cookie['session'])
   end
 
-  def current_epp_user
-    @current_epp_user ||= EppUser.find(epp_session[:epp_user_id]) if epp_session[:epp_user_id]
+  def current_api_user
+    @current_api_user ||= ApiUser.find(epp_session[:api_user_id]) if epp_session[:api_user_id]
   end
 
   # ERROR + RESPONSE HANDLING
@@ -198,8 +198,8 @@ class EppController < ApplicationController
       request_successful: epp_errors.empty?,
       request_object: params[:epp_object_type],
       response: @response,
-      api_user_name: @epp_user.try(:to_s) || current_epp_user.try(:to_s),
-      api_user_registrar: @epp_user.try(:registrar).try(:to_s) || current_epp_user.try(:registrar).try(:to_s),
+      api_user_name: @api_user.try(:to_s) || current_api_user.try(:to_s),
+      api_user_registrar: @api_user.try(:registrar).try(:to_s) || current_api_user.try(:registrar).try(:to_s),
       ip: request.ip
     })
   end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150122091557) do
+ActiveRecord::Schema.define(version: 20150129114042) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,17 @@ ActiveRecord::Schema.define(version: 20150122091557) do
     t.datetime "updated_at"
     t.string   "street2",    limit: 255
     t.string   "street3",    limit: 255
+  end
+
+  create_table "api_users", force: :cascade do |t|
+    t.integer  "registrar_id"
+    t.string   "username",     limit: 255
+    t.string   "password",     limit: 255
+    t.boolean  "active",                   default: false
+    t.text     "csr"
+    t.text     "crt"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "cached_nameservers", id: false, force: :cascade do |t|
@@ -217,17 +228,6 @@ ActiveRecord::Schema.define(version: 20150122091557) do
 
   add_index "epp_sessions", ["session_id"], name: "index_epp_sessions_on_session_id", unique: true, using: :btree
   add_index "epp_sessions", ["updated_at"], name: "index_epp_sessions_on_updated_at", using: :btree
-
-  create_table "epp_users", force: :cascade do |t|
-    t.integer  "registrar_id"
-    t.string   "username",     limit: 255
-    t.string   "password",     limit: 255
-    t.boolean  "active",                   default: false
-    t.text     "csr"
-    t.text     "crt"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "keyrelays", force: :cascade do |t|
     t.integer  "domain_id"

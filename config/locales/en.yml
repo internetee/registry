@@ -183,7 +183,7 @@ en:
             registrar:
               blank: 'Registrar is missing'
 
-        epp_user:
+        api_user:
           attributes:
             username:
               blank: 'Username is missing'
@@ -280,7 +280,7 @@ en:
   system: 'System'
   settings: 'Settings'
   domains: 'Domains'
-  epp_users: 'EPP Users'
+  api_users: 'API users'
   registrars: 'Registrars'
   valid_to: 'Valid to'
   name: 'Name'
@@ -408,13 +408,13 @@ en:
   edit_user: 'Edit user'
   back_to_user: 'Back to user'
 
-  create_new_epp_user: 'Create new EPP user'
+  create_new_api_user: 'Create new API user'
   certificate_signing_req: 'Certificate signing request'
   csr: 'CSR'
   crt: 'CRT'
-  epp_user_details: 'EPP user details'
-  edit_epp_user: 'Edit EPP user'
-  back_to_epp_user: 'Back to EPP user'
+  api_user_details: 'API user details'
+  edit_api_user: 'Edit API user'
+  back_to_api_user: 'Back to API user'
 
   dnskey: 'DNS key'
   dnskeys: 'DNS Keys'
@@ -458,7 +458,6 @@ en:
   domain_history: Domain history
   domains_history: Domains history
   admin_users: Admin users
-  epp_users: EPP users
   role: 'Role'
   admin: 'Administrator'
   user: 'User'

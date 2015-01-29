@@ -10,12 +10,12 @@ describe EppSession do
   end
 
   it 'stores data' do
-    expect(epp_session[:epp_user_id]).to eq(1)
+    expect(epp_session[:api_user_id]).to eq(1)
 
-    epp_session[:epp_user_id] = 3
-    expect(epp_session[:epp_user_id]).to eq(3)
+    epp_session[:api_user_id] = 3
+    expect(epp_session[:api_user_id]).to eq(3)
 
     epp_session =  EppSession.find_by(session_id: 'test')
-    expect(epp_session[:epp_user_id]).to eq(3)
+    expect(epp_session[:api_user_id]).to eq(3)
   end
 end

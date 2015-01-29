@@ -49,7 +49,7 @@
   .col-md-12
     #epp-users.panel.panel-default
       .panel-heading.clearfix
-        = t('epp_users')
+        = t('api_users')
       .table-responsive
         %table.table.table-hover.table-bordered.table-condensed
           %thead
@@ -57,7 +57,7 @@
               %th{class: 'col-xs-6'}= t('username')
               %th{class: 'col-xs-6'}= t('active')
           %tbody
-            - @registrar.epp_users.each do |x|
+            - @registrar.api_users.each do |x|
               %tr
                 %td= link_to(x, [:admin, x])
                 %td= x.active

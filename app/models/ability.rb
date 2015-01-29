@@ -29,7 +29,7 @@ class Ability
     can :manage, ZonefileSetting
     can :manage, DomainVersion
     can :manage, User
-    can :manage, EppUser
+    can :manage, ApiUser
     can :manage, Keyrelay
     can :manage, LegalDocument
     can :read, ApiLog::EppLog

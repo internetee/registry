@@ -1,0 +1,9 @@
+.row
+  .col-sm-6
+    %h2.text-center-xs
+      = "#{t('edit_api_user')}"
+  .col-sm-6
+    %h2.text-right.text-center-xs
+      = link_to(t('back_to_api_user'), [:admin, @api_user], class: 'btn btn-default')
+%hr
+= render 'form'

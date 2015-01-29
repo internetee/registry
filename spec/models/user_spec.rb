@@ -16,7 +16,7 @@ describe User do
       it { should be_able_to(:manage, ZonefileSetting.new) }
       it { should be_able_to(:manage, DomainVersion.new) }
       it { should be_able_to(:manage, User.new) }
-      it { should be_able_to(:manage, EppUser.new) }
+      it { should be_able_to(:manage, ApiUser.new) }
       it { should be_able_to(:manage, Keyrelay.new) }
       it { should be_able_to(:manage, LegalDocument.new) }
       it { should be_able_to(:read, ApiLog::EppLog.new) }
@@ -36,7 +36,7 @@ describe User do
       it { should_not be_able_to(:manage, ZonefileSetting.new) }
       it { should_not be_able_to(:manage, DomainVersion.new) }
       it { should_not be_able_to(:manage, User.new) }
-      it { should_not be_able_to(:manage, EppUser.new) }
+      it { should_not be_able_to(:manage, ApiUser.new) }
       it { should_not be_able_to(:manage, LegalDocument.new) }
       it { should_not be_able_to(:read, ApiLog::EppLog.new) }
       it { should_not be_able_to(:read, ApiLog::ReppLog.new) }

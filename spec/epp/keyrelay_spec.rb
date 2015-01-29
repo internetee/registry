@@ -10,8 +10,8 @@ describe 'EPP Keyrelay', epp: true do
   before(:all) do
     @elkdata = Fabricate(:registrar, { name: 'Elkdata', reg_no: '123' })
     @zone = Fabricate(:registrar)
-    Fabricate(:epp_user, username: 'zone', registrar: @zone)
-    Fabricate(:epp_user, username: 'elkdata', registrar: @elkdata)
+    Fabricate(:api_user, username: 'zone', registrar: @zone)
+    Fabricate(:api_user, username: 'elkdata', registrar: @elkdata)
 
     @uniq_no = proc { @i ||= 0; @i += 1 }
   end
