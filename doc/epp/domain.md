@@ -81,7 +81,8 @@ Domain name mapping protocol short version:
             <secDNS:pubKey>      1         Public key
       <eis:extdata>              0-1       Required if registrant is changing. 
                                            Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
-        <eis:legalDocument>      1         Base64 encoded document. Attribute: type="pdf"
+        <eis:legalDocument>      1         Base64 encoded document. Attribute: type="pdf / bdoc / ddoc / 
+                                           zip / rar / gz / tar / 7z"
     <clTRID>                     0-1       Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-user-with-valid-domain-updates-domain-and-adds-objects)
@@ -95,7 +96,8 @@ Domain name mapping protocol short version:
         <domain:name>        1        Domain name. Can contain unicode characters.
     <extension>              1       
       <eis:extdata>          1        Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
-        <eis:legalDocument>  1        Base64 encoded document. Attribute: type="pdf"
+        <eis:legalDocument>  1        Base64 encoded document. Attribute: type="pdf / bdoc / ddoc / 
+                                      zip / rar / gz / tar / 7z"
     <clTRID>                 0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-user-with-valid-domain-deletes-domain)
@@ -112,7 +114,8 @@ Domain name mapping protocol short version:
           <domain:pw>        1        Domain password. Attribute: roid="String"
     <extension>              0-1     
       <eis:extdata>          0-1      Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
-        <eis:legalDocument>  1        Base64 encoded document. Attribute: type="pdf"
+        <eis:legalDocument>  1        Base64 encoded document. Attribute: type="pdf / bdoc / ddoc / 
+                                      zip / rar / gz / tar / 7z"
     <clTRID>                 0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-user-with-valid-domain-returns-domain-info)
@@ -130,7 +133,8 @@ Domain name mapping protocol short version:
                                       Must add up to 1 / 2 / 3 years. Attribute: unit="y/m/d"
     <extension>              0-1     
       <eis:extdata>          0-1      Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
-        <eis:legalDocument>  1        Base64 encoded document. Attribute: type="pdf"
+        <eis:legalDocument>  1        Base64 encoded document. Attribute: type="pdf / bdoc / ddoc / 
+                                      zip / rar / gz / tar / 7z"
     <clTRID>                 0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-user-with-valid-domain-renews-a-domain)
@@ -147,7 +151,8 @@ Domain name mapping protocol short version:
           <domain:pw>        1        Domain password. Attribute: roid="String"
     <extension>              0-1     
       <eis:extdata>          0-1      Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
-        <eis:legalDocument>  1        Base64 encoded document. Attribute: type="pdf"
+        <eis:legalDocument>  1        Base64 encoded document. Attribute: type="pdf / bdoc / ddoc / 
+                                      zip / rar / gz / tar / 7z"
     <clTRID>                 0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-user-with-valid-domain-transfers-a-domain)
@@ -162,7 +167,8 @@ Domain name mapping protocol short version:
                                       Attribute: hosts="all / TODO"
     <extension>              0-1     
       <eis:extdata>          0-1      Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
-        <eis:legalDocument>  1        Base64 encoded document. Attribute: type="pdf"
+        <eis:legalDocument>  1        Base64 encoded document. Attribute: type="pdf / bdoc / ddoc / 
+                                      zip / rar / gz / tar / 7z"
     <clTRID>                 0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-user-checks-a-domain)
