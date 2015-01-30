@@ -5,8 +5,10 @@ class Registrar < ActiveRecord::Base
   has_many :api_users, dependent: :restrict_with_error
   has_many :messages
 
-  validates :name, :reg_no, :address, :country, presence: true
+  validates :name, :reg_no, :address, :country, :email, presence: true
   validates :name, :reg_no, uniqueness: true
+
+  validates :email, :billing_email, format: /@/, allow_blank: true
 
   def domain_transfers
     at = DomainTransfer.arel_table

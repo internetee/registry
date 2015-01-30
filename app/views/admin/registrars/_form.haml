@@ -1,6 +1,6 @@
 = form_for([:admin, @registrar]) do |f|
   - if @registrar.errors.any?
-    - @registrar.errors.each do |attr, err|
+    - @registrar.errors.full_messages.each do |err|
       = err
       %br
   - if @registrar.errors.any?
@@ -14,9 +14,16 @@
       .form-group
         = f.label :reg_no
         = f.text_field(:reg_no, class: 'form-control')
+      / EIS does not want VAT
+      / .form-group
+      /   = f.label :vat_no
+      /   = f.text_field(:vat_no, class: 'form-control')
       .form-group
-        = f.label :vat_no
-        = f.text_field(:vat_no, class: 'form-control')
+        = f.label :email
+        = f.text_field(:email, class: 'form-control')
+      .form-group
+        = f.label :phone
+        = f.text_field(:phone, class: 'form-control')
 
     .col-md-6.text-left
       .form-group
@@ -25,9 +32,14 @@
       .form-group
         = f.label :address
         = f.text_field(:address, class: 'form-control')
+        %p.help-block= t('address_help')
       .form-group
         = f.label :billing_address
         = f.text_field(:billing_address, class: 'form-control')
+        %p.help-block= t('address_help')
+      .form-group
+        = f.label :billing_email
+        = f.text_field(:billing_email, class: 'form-control')
   %hr
   .row
     .col-md-12.text-right

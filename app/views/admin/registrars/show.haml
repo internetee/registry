@@ -33,7 +33,7 @@
   .col-md-6
     .panel.panel-default
       .panel-heading
-        %h3.panel-title= t('address')
+        %h3.panel-title= t('contact')
       .panel-body
         %dl.dl-horizontal
           %dt= t('country')
@@ -42,8 +42,17 @@
           %dt= t('address')
           %dd= @registrar.address
 
+          %dt= t('contact_phone')
+          %dd= @registrar.phone
+
+          %dt= t('contact_email')
+          %dd= @registrar.email
+
           %dt= t('billing_address')
           %dd= @registrar.billing_address
+
+          %dt= t('billing_email')
+          %dd= @registrar.billing_email
 
 .row
   .col-md-12

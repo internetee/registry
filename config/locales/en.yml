@@ -151,22 +151,6 @@ en:
             setting_id:
               taken: 'Status already exists on this domain'
 
-
-        registrar:
-          attributes:
-            name:
-              blank: 'Name is missing'
-              taken: 'Name already exists'
-            reg_no:
-              blank: 'Reg. number is missing'
-              taken: 'Reg no. already exists'
-            vat_no:
-              blank: 'Vat number is missing'
-            country:
-              blank: 'Country is missing'
-            address:
-              blank: 'Address is missing'
-
         user:
           attributes:
             username:
@@ -248,6 +232,10 @@ en:
         expire: 'Expire'
         minimum_ttl: 'Minimum TTL'
         email: 'E-Mail'
+      registrar:
+        billing_email: 'Billing e-mail'
+        phone: 'Contact phone'
+        email: 'Contact e-mail'
 
   errors:
     messages:
@@ -505,3 +493,8 @@ en:
   clear_fields: 'Clear fields'
   created_before: 'Created before'
   created_after: 'Created after'
+  billing_address: 'Billing address'
+  billing_email: 'Billing e-mail'
+  contact_phone: 'Contact phone'
+  contact_email: 'Contact e-mail'
+  address_help: 'Street name, house no - apartment no, city, county, country, zip'

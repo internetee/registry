@@ -55,6 +55,9 @@ class Admin::RegistrarsController < AdminController
   end
 
   def registrar_params
-    params.require(:registrar).permit(:name, :reg_no, :vat_no, :address, :billing_address, :country_id)
+    params.require(:registrar).permit(
+      :name, :reg_no, :vat_no, :address, :billing_address,
+      :country_id, :email, :phone, :billing_email
+    )
   end
 end

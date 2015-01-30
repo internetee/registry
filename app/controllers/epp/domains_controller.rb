@@ -29,7 +29,6 @@ class Epp::DomainsController < EppController
   end
 
   def renew
-    # TODO: support period unit
     @domain = find_domain
 
     handle_errors(@domain) and return unless @domain

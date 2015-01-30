@@ -4,6 +4,7 @@ describe Keyrelay do
   it { should belong_to(:domain) }
   it { should belong_to(:requester) }
   it { should belong_to(:accepter) }
+  it { should have_many(:legal_documents) }
 
   it 'is in pending status' do
     kr = Fabricate(:keyrelay)
