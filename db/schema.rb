@@ -576,6 +576,9 @@ ActiveRecord::Schema.define(version: 20150130191056) do
     t.datetime "updated_at"
     t.string   "creator_str"
     t.string   "updator_str"
+    t.string   "phone"
+    t.string   "email"
+    t.string   "billing_email"
   end
 
   create_table "reserved_domains", force: :cascade do |t|
