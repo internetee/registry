@@ -19,10 +19,8 @@
           = status_fields.label :description, class: 'col-md-2 control-label'
           .col-md-10
             = status_fields.text_field :description, class: 'form-control', autocomplete: 'off'
-:javascript
-  $("#domain-statuses").nestedAttributes({
-    bindAddTo: $(".add-domain-status"),
-    afterAdd: function(item) {
-      item.find('.errors').html('');
-    }
-  });
+:coffee
+  $("#domain-statuses").nestedAttributes
+    bindAddTo: $(".add-domain-status")
+    afterAdd: (item) ->
+      item.find(".errors").html ""

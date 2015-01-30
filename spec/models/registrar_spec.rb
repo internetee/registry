@@ -30,7 +30,5 @@ describe Registrar do
       @registrar.errors[:email].should == ['is invalid']
       @registrar.errors[:billing_email].should == ['is invalid']
     end
-
-
   end
 end
