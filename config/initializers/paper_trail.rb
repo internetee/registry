@@ -12,3 +12,15 @@ elsif File.basename($PROGRAM_NAME) == "rake"
   # rake username does not work when spring enabled
   PaperTrail.whodunnit = "rake-#{`whoami`.strip} #{ARGV.join ' '}"
 end
+
+class PaperSession
+  class << self
+    def session
+      @session ||= Time.now.to_s(:db)
+    end
+
+    def session=(code)
+      @session = code
+    end
+  end
+end

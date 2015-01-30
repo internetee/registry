@@ -27,7 +27,11 @@ Rails.application.routes.draw do
     resources :legal_documents
 
     resources :keyrelays
-    resources :domains
+
+    resources :domains do
+      resources :domain_versions
+    end
+
     resources :settings
     resources :registrars do
       collection do
@@ -43,7 +47,6 @@ Rails.application.routes.draw do
 
     resources :users
     resources :api_users
-    resources :domain_versions
 
     resources :delayed_jobs
 

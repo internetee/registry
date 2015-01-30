@@ -8,6 +8,7 @@ class Registrar < ActiveRecord::Base
 
   validates :name, :reg_no, :address, :country, :email, presence: true
   validates :name, :reg_no, uniqueness: true
+  after_save :touch_domains_version
 
   validates :email, :billing_email, format: /@/, allow_blank: true
 

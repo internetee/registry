@@ -16,6 +16,8 @@ class Keyrelay < ActiveRecord::Base
 
   validate :validate_expiry_relative_xor_expiry_absolute
 
+  after_save :touch_domain_version
+
   def epp_code_map
     {
       '2005' => [

@@ -33,7 +33,7 @@ describe 'EPP Poll', epp: true do
     log.request_command.should == 'poll'
     log.request_object.should == 'poll'
     log.request_successful.should == true
-    log.api_user_name.should == 'registrar1'
+    log.api_user_name.should == '1-api-registrar1'
     log.api_user_registrar.should == 'Registrar OÜ'
     log.request.should_not be_blank
     log.response.should_not be_blank

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150129144652) do
+ActiveRecord::Schema.define(version: 20150130191056) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -260,6 +260,8 @@ ActiveRecord::Schema.define(version: 20150129144652) do
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
   end
 
   add_index "log_addresses", ["item_type", "item_id"], name: "index_log_addresses_on_item_type_and_item_id", using: :btree
@@ -273,6 +275,8 @@ ActiveRecord::Schema.define(version: 20150129144652) do
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
   end
 
   add_index "log_api_users", ["item_type", "item_id"], name: "index_log_api_users_on_item_type_and_item_id", using: :btree
@@ -286,6 +290,8 @@ ActiveRecord::Schema.define(version: 20150129144652) do
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
   end
 
   add_index "log_contact_disclosures", ["item_type", "item_id"], name: "index_log_contact_disclosures_on_item_type_and_item_id", using: :btree
@@ -299,6 +305,8 @@ ActiveRecord::Schema.define(version: 20150129144652) do
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
   end
 
   add_index "log_contact_statuses", ["item_type", "item_id"], name: "index_log_contact_statuses_on_item_type_and_item_id", using: :btree
@@ -312,6 +320,8 @@ ActiveRecord::Schema.define(version: 20150129144652) do
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
   end
 
   add_index "log_contacts", ["item_type", "item_id"], name: "index_log_contacts_on_item_type_and_item_id", using: :btree
@@ -325,6 +335,8 @@ ActiveRecord::Schema.define(version: 20150129144652) do
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
   end
 
   add_index "log_countries", ["item_type", "item_id"], name: "index_log_countries_on_item_type_and_item_id", using: :btree
@@ -338,6 +350,8 @@ ActiveRecord::Schema.define(version: 20150129144652) do
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
   end
 
   add_index "log_dnskeys", ["item_type", "item_id"], name: "index_log_dnskeys_on_item_type_and_item_id", using: :btree
@@ -351,6 +365,8 @@ ActiveRecord::Schema.define(version: 20150129144652) do
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
   end
 
   add_index "log_domain_contacts", ["item_type", "item_id"], name: "index_log_domain_contacts_on_item_type_and_item_id", using: :btree
@@ -364,6 +380,8 @@ ActiveRecord::Schema.define(version: 20150129144652) do
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
   end
 
   add_index "log_domain_statuses", ["item_type", "item_id"], name: "index_log_domain_statuses_on_item_type_and_item_id", using: :btree
@@ -377,19 +395,26 @@ ActiveRecord::Schema.define(version: 20150129144652) do
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
   end
 
   add_index "log_domain_transfers", ["item_type", "item_id"], name: "index_log_domain_transfers_on_item_type_and_item_id", using: :btree
   add_index "log_domain_transfers", ["whodunnit"], name: "index_log_domain_transfers_on_whodunnit", using: :btree
 
   create_table "log_domains", force: :cascade do |t|
-    t.string   "item_type",      null: false
-    t.integer  "item_id",        null: false
-    t.string   "event",          null: false
+    t.string   "item_type",                      null: false
+    t.integer  "item_id",                        null: false
+    t.string   "event",                          null: false
     t.string   "whodunnit"
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
+    t.text     "nameserver_ids",    default: [],              array: true
+    t.text     "tech_contact_ids",  default: [],              array: true
+    t.text     "admin_contact_ids", default: [],              array: true
+    t.string   "session"
+    t.json     "children"
   end
 
   add_index "log_domains", ["item_type", "item_id"], name: "index_log_domains_on_item_type_and_item_id", using: :btree
@@ -403,6 +428,8 @@ ActiveRecord::Schema.define(version: 20150129144652) do
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
   end
 
   add_index "log_keyrelays", ["item_type", "item_id"], name: "index_log_keyrelays_on_item_type_and_item_id", using: :btree
@@ -416,6 +443,8 @@ ActiveRecord::Schema.define(version: 20150129144652) do
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
   end
 
   add_index "log_legal_documents", ["item_type", "item_id"], name: "index_log_legal_documents_on_item_type_and_item_id", using: :btree
@@ -429,6 +458,8 @@ ActiveRecord::Schema.define(version: 20150129144652) do
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
   end
 
   add_index "log_messages", ["item_type", "item_id"], name: "index_log_messages_on_item_type_and_item_id", using: :btree
@@ -442,6 +473,8 @@ ActiveRecord::Schema.define(version: 20150129144652) do
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
   end
 
   add_index "log_nameservers", ["item_type", "item_id"], name: "index_log_nameservers_on_item_type_and_item_id", using: :btree
@@ -455,6 +488,8 @@ ActiveRecord::Schema.define(version: 20150129144652) do
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
   end
 
   add_index "log_registrars", ["item_type", "item_id"], name: "index_log_registrars_on_item_type_and_item_id", using: :btree
@@ -468,6 +503,8 @@ ActiveRecord::Schema.define(version: 20150129144652) do
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
   end
 
   add_index "log_reserved_domains", ["item_type", "item_id"], name: "index_log_reserved_domains_on_item_type_and_item_id", using: :btree
@@ -481,6 +518,8 @@ ActiveRecord::Schema.define(version: 20150129144652) do
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
   end
 
   add_index "log_settings", ["item_type", "item_id"], name: "index_log_settings_on_item_type_and_item_id", using: :btree
@@ -494,6 +533,8 @@ ActiveRecord::Schema.define(version: 20150129144652) do
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
   end
 
   add_index "log_users", ["item_type", "item_id"], name: "index_log_users_on_item_type_and_item_id", using: :btree
@@ -507,6 +548,8 @@ ActiveRecord::Schema.define(version: 20150129144652) do
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
   end
 
   add_index "log_zonefile_settings", ["item_type", "item_id"], name: "index_log_zonefile_settings_on_item_type_and_item_id", using: :btree

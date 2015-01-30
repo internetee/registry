@@ -1,5 +1,7 @@
 class Domain < ActiveRecord::Base
   include Versions # version/domain_version.rb
+  has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
+
   # TODO: whois requests ip whitelist for full info for own domains and partial info for other domains
   # TODO: most inputs should be trimmed before validatation, probably some global logic?
   paginates_per 10 # just for showoff
@@ -50,6 +52,10 @@ class Domain < ActiveRecord::Base
   before_create :set_validity_dates
   before_create :attach_default_contacts
   after_save :manage_automatic_statuses
+  before_save :touch_always_version
+  def touch_always_version
+    self.updated_at = Time.now
+  end
 
   validates :name_dirty, domain_name: true, uniqueness: true
   validates :period, numericality: { only_integer: true }
@@ -280,11 +286,20 @@ class Domain < ActiveRecord::Base
     end
   end
 
+  def children_log
+    log = HashWithIndifferentAccess.new
+    log[:admin_contacts] = admin_contacts.map {|ac| ac.attributes}
+    log[:tech_contacts]  = tech_contacts.map  {|tc| tc.attributes}
+    log[:nameservers]    = nameservers.map    {|ns| ns.attributes}
+    log[:owner_contact]  = [owner_contact.try(:attributes)]
+    log
+  end
+
   class << self
     def convert_period_to_time(period, unit)
-      return period.to_i.days if unit == 'd'
+      return period.to_i.days   if unit == 'd'
       return period.to_i.months if unit == 'm'
-      return period.to_i.years if unit == 'y'
+      return period.to_i.years  if unit == 'y'
     end
   end
 end

@@ -5,6 +5,7 @@ module Versions
   included do
     has_paper_trail class_name: "#{model_name}Version"
 
+    # add creator and updator
     before_create :add_creator
     before_create :add_updator
     before_update :add_updator
@@ -17,6 +18,15 @@ module Versions
     def add_updator
       self.updator_str = ::PaperTrail.whodunnit
       true
+    end
+
+    # callbacks
+    def touch_domain_version
+      domain.try(:touch_with_version)
+    end
+
+    def touch_domains_version
+      domains.each(&:touch_with_version)
     end
   end
 end

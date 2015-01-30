@@ -77,7 +77,7 @@ describe 'EPP Contact', epp: true do
         log.request_command.should == 'create'
         log.request_object.should == 'contact'
         log.request_successful.should == true
-        log.api_user_name.should == 'gitlab'
+        log.api_user_name.should == '1-api-gitlab'
         log.api_user_registrar.should == 'Registrar OÜ'
       end
 
