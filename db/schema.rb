@@ -210,19 +210,6 @@ ActiveRecord::Schema.define(version: 20150130191056) do
   add_index "epp_sessions", ["session_id"], name: "index_epp_sessions_on_session_id", unique: true, using: :btree
   add_index "epp_sessions", ["updated_at"], name: "index_epp_sessions_on_updated_at", using: :btree
 
-  create_table "epp_users", force: :cascade do |t|
-    t.integer  "registrar_id"
-    t.string   "username"
-    t.string   "password"
-    t.boolean  "active",       default: false
-    t.text     "csr"
-    t.text     "crt"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "creator_id"
-    t.integer  "updater_id"
-  end
-
   create_table "keyrelays", force: :cascade do |t|
     t.integer  "domain_id"
     t.datetime "pa_date"
@@ -587,11 +574,6 @@ ActiveRecord::Schema.define(version: 20150130191056) do
     t.string   "billing_address"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "phone"
-    t.string   "email"
-    t.string   "billing_email"
-    t.integer  "creator_id"
-    t.integer  "updater_id"
     t.string   "creator_str"
     t.string   "updator_str"
   end
