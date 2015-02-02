@@ -78,7 +78,3 @@ xml.epp_head do
 
   xml << render('/epp/shared/trID')
 end
-
-
-9032
-72056
