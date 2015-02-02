@@ -74,43 +74,44 @@ describe 'EPP Domain', epp: true do
   end
 
   context 'with citizen as an owner' do
-    # it 'creates a domain' do
-      # dn = next_domain_name
-      # response = epp_plain_request(domain_create_xml({
-        # name: { value: dn }
-      # }), :xml)
-      # d = Domain.last
-      # response[:msg].should == 'Command completed successfully'
-      # response[:result_code].should == '1000'
+    it 'creates a domain' do
+      dn = next_domain_name
+      response = epp_plain_request(domain_create_xml({
+        name: { value: dn }
+      }), :xml)
 
-      # cre_data = response[:parsed].css('creData')
+      d = Domain.last
+      response[:msg].should == 'Command completed successfully'
+      response[:result_code].should == '1000'
 
-      # cre_data.css('name').text.should == dn
-      # cre_data.css('crDate').text.should == d.created_at.to_time.utc.to_s
-      # cre_data.css('exDate').text.should == d.valid_to.to_time.utc.to_s
+      cre_data = response[:parsed].css('creData')
 
-      # response[:clTRID].should == 'ABC-12345'
+      cre_data.css('name').text.should == dn
+      cre_data.css('crDate').text.should == d.created_at.to_time.utc.to_s
+      cre_data.css('exDate').text.should == d.valid_to.to_time.utc.to_s
 
-      # d.registrar.name.should == 'Registrar 0'
-      # d.tech_contacts.count.should == 2
-      # d.admin_contacts.count.should == 1
+      response[:clTRID].should == 'ABC-12345'
 
-      # d.nameservers.count.should == 2
-      # d.auth_info.should_not be_empty
+      d.registrar.name.should == 'registrar1'
+      d.tech_contacts.count.should == 2
+      d.admin_contacts.count.should == 1
 
-      # d.dnskeys.count.should == 1
+      d.nameservers.count.should == 2
+      d.auth_info.should_not be_empty
 
-      # key = d.dnskeys.last
+      d.dnskeys.count.should == 1
 
-      # key.ds_alg.should == 3
-      # key.ds_key_tag.should_not be_blank
+      key = d.dnskeys.last
 
-      # key.ds_digest_type.should == Setting.ds_algorithm
-      # key.flags.should == 257
-      # key.protocol.should == 3
-      # key.alg.should == 5
-      # key.public_key.should == 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8'
-    # end
+      key.ds_alg.should == 3
+      key.ds_key_tag.should_not be_blank
+
+      key.ds_digest_type.should == Setting.ds_algorithm
+      key.flags.should == 257
+      key.protocol.should == 3
+      key.alg.should == 5
+      key.public_key.should == 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8'
+    end
 
     it 'creates a domain with legal document' do
       response = epp_plain_request(domain_create_xml_with_legal_doc, :xml)

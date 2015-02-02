@@ -23,9 +23,9 @@ class EppController < ApplicationController
 
   def current_api_user
     @current_api_user ||= ApiUser.find_by_id(epp_session[:api_user_id])
-    # by default PaperTrail uses before filter and at that 
+    # by default PaperTrail uses before filter and at that
     # time current_api_user is not yet present
-    ::PaperTrail.whodunnit = api_user_log_str(@current_api_user) 
+    ::PaperTrail.whodunnit = api_user_log_str(@current_api_user)
     ::PaperSession.session = epp_session.session_id if epp_session.session_id.present?
     @current_api_user
   end
