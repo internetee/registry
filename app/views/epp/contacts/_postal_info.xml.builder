@@ -5,7 +5,7 @@ xml.tag!('contact:postalInfo', type: 'int') do
   if @disclosure.try(:addr) || @owner
     xml.tag!('contact:addr') do
       xml.tag!('contact:street', address.street) if address
-      xml.tag!('contact:cc', address.try(:country).try(:iso)) unless address.try(:country).nil?
+      xml.tag!('contact:cc', address.country_code) unless address.country_code.nil?
       xml.tag!('contact:city', address.city) if address
     end
   end

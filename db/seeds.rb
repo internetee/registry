@@ -8,7 +8,7 @@ registrar1 = Registrar.where(
   reg_no: '10300220',
   address: 'Pärnu mnt 2, Tallinna linn, Harju maakond, 11415',
   email: 'registrar1@example.com',
-  country: Country.first
+  country_code: 'EE'
 ).first_or_create!
 
 ApiUser.where(
@@ -23,7 +23,7 @@ registrar2 = Registrar.where(
   reg_no: '10529229',
   address: 'Vabaduse pst 32, 11316 Tallinn',
   email: 'registrar2@example.com',
-  country: Country.first
+  country_code: 'EE'
 ).first_or_create!
 
 ApiUser.where(
@@ -38,7 +38,7 @@ User.where(
   password: 'test1',
   email: 'user1@example.ee',
   identity_code: '37810013855',
-  country: Country.where(name: 'Estonia').first
+  country_code: 'EE'
 ).first_or_create!
 
 User.where(
@@ -46,7 +46,7 @@ User.where(
   password: 'test2',
   email: 'user2@example.ee',
   identity_code: '37810010085',
-  country: Country.where(name: 'Estonia').first
+  country_code: 'EE'
 ).first_or_create!
 
 User.where(
@@ -54,7 +54,7 @@ User.where(
   password: 'test3',
   email: 'user3@example.ee',
   identity_code: '37810010727',
-  country: Country.where(name: 'Estonia').first
+  country_code: 'EE'
 ).first_or_create!
 
 User.update_all(roles: ['admin'])

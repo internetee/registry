@@ -9,8 +9,8 @@ class User < ActiveRecord::Base
 
   validates :username, :password, presence: true
   validates :identity_code, uniqueness: true, allow_blank: true
-  validates :identity_code, presence: true, if: -> { country.iso == 'EE' }
-  validates :email, presence: true, if: -> { country.iso != 'EE' }
+  validates :identity_code, presence: true, if: -> { country.alpha2 == 'EE' }
+  validates :email, presence: true, if: -> { country.alpha2 != 'EE' }
 
   validate :validate_identity_code
 
