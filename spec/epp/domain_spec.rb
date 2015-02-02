@@ -708,9 +708,9 @@ describe 'EPP Domain', epp: true do
       trn_data = response[:parsed].css('trnData')
       trn_data.css('name').text.should == domain.name
       trn_data.css('trStatus').text.should == 'serverApproved'
-      trn_data.css('reID').text.should == '123'
+      trn_data.css('reID').text.should == '222'
       trn_data.css('reDate').text.should == dtl.transfer_requested_at.to_time.utc.to_s
-      trn_data.css('acID').text.should == '12345678'
+      trn_data.css('acID').text.should == '111'
       trn_data.css('acDate').text.should == dtl.transferred_at.to_time.utc.to_s
       trn_data.css('exDate').text.should == domain.valid_to.to_time.utc.to_s
 
@@ -735,10 +735,10 @@ describe 'EPP Domain', epp: true do
 
       trn_data.css('name').text.should == domain.name
       trn_data.css('trStatus').text.should == 'pending'
-      trn_data.css('reID').text.should == '12345678'
+      trn_data.css('reID').text.should == '111'
       trn_data.css('reDate').text.should == dtl.transfer_requested_at.to_time.utc.to_s
       trn_data.css('acDate').text.should == dtl.wait_until.to_time.utc.to_s
-      trn_data.css('acID').text.should == '123'
+      trn_data.css('acID').text.should == '222'
       trn_data.css('exDate').text.should == domain.valid_to.to_time.utc.to_s
 
       domain.registrar.should == @registrar2
@@ -750,10 +750,10 @@ describe 'EPP Domain', epp: true do
       domain.domain_transfers.count.should == 2
       trn_data.css('name').text.should == domain.name
       trn_data.css('trStatus').text.should == 'pending'
-      trn_data.css('reID').text.should == '12345678'
+      trn_data.css('reID').text.should == '111'
       trn_data.css('reDate').text.should == dtl.transfer_requested_at.to_time.utc.to_s
       trn_data.css('acDate').text.should == dtl.wait_until.to_time.utc.to_s
-      trn_data.css('acID').text.should == '123'
+      trn_data.css('acID').text.should == '222'
       trn_data.css('exDate').text.should == domain.valid_to.to_time.utc.to_s
 
       domain.registrar.should == @registrar2
@@ -851,9 +851,9 @@ describe 'EPP Domain', epp: true do
 
       trn_data.css('name').text.should == domain.name
       trn_data.css('trStatus').text.should == 'clientApproved'
-      trn_data.css('reID').text.should == '123'
+      trn_data.css('reID').text.should == '222'
       trn_data.css('reDate').text.should == dtl.transfer_requested_at.to_time.utc.to_s
-      trn_data.css('acID').text.should == '12345678'
+      trn_data.css('acID').text.should == '111'
       trn_data.css('exDate').text.should == domain.valid_to.to_time.utc.to_s
     end
 
