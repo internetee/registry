@@ -9,7 +9,6 @@ class Dnskey < ActiveRecord::Base
   validate :validate_protocol
   validate :validate_flags
 
-
   before_save -> { generate_digest if public_key_changed? && !ds_digest_changed? }
 
   before_save lambda {
