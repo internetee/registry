@@ -51,14 +51,62 @@ describe Domain do
       @domain.errors.full_messages.should match_array([])
     end
 
-    it 'should not have one version' do
-      with_versioning do
-        @domain.versions.should == []
-        @domain.name = 'new-test-name.ee'
-        @domain.save
-        @domain.errors.full_messages.should match_array([])
-        @domain.versions.size.should == 1
+    context 'with versioning' do
+      it 'should not have one version' do
+        with_versioning do
+          @domain.versions.size.should == 0
+          @domain.name = 'new-test-name.ee'
+          @domain.save
+          @domain.errors.full_messages.should match_array([])
+          @domain.versions.size.should == 1
+        end
       end
+
+      it 'should return api_creator when created by api user' do
+        with_versioning do
+          @user = Fabricate(:user)
+          @api_user = Fabricate(:api_user)
+          @user.id.should == 1
+          @api_user.id.should == 1
+          ::PaperTrail.whodunnit = '1-api-testuser'
+
+          @domain = Fabricate(:domain)
+          @domain.creator_str.should == '1-api-testuser'
+
+          @domain.creator.should == @api_user
+          @domain.creator.should_not == @user
+        end
+      end
+
+      it 'should return api_creator when created by api user' do
+        with_versioning do
+          @user = Fabricate(:user)
+          @api_user = Fabricate(:api_user)
+          @user.id.should == 2
+          @api_user.id.should == 2
+          ::PaperTrail.whodunnit = '2-testuser'
+
+          @domain = Fabricate(:domain)
+          @domain.creator_str.should == '2-testuser'
+
+          @domain.creator.should == @user
+          @domain.creator.should_not == @api_user
+        end
+      end
+
+      it 'should not find api creator when created by user' do
+        with_versioning do
+          # @api_user = Fabricate(:api_user)
+          # @api_user.id.should == 1
+          # ::PaperTrail.whodunnit = '1-testuser'
+
+          # @domain = Fabricate(:domain)
+          # @domain.creator_str.should == '1-testuser'
+
+          # @domain.api_creator.should == nil
+        end
+      end
+
     end
   end
 

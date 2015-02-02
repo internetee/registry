@@ -36,7 +36,7 @@ xml.epp_head do
 
         xml.tag!('domain:clID', @domain.registrar_name)
 
-        xml.tag!('domain:crID', @domain.versions.first.try(:reify).try(:registrar) || @domain.registrar) #TODO Registrar has to be specified
+        xml.tag!('domain:crID', @domain.creator.try(:registrar))
 
         xml.tag!('domain:crDate', @domain.created_at)
 

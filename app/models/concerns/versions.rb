@@ -20,6 +20,20 @@ module Versions
       true
     end
 
+    # needs refactoring
+    # TODO: optimization work
+    # belongs_to :api_creator, class_name: 'ApiUser', foreign_key: :creator_str
+    # belongs_to :creator, class_name: 'User', foreign_key: :creator_str
+    def creator
+      return nil if creator_str.blank?
+
+      if creator_str =~ /^\d-api-/
+        ApiUser.find(creator_str)
+      else
+        User.find(creator_str)
+      end
+    end
+
     # callbacks
     def touch_domain_version
       domain.try(:touch_with_version)
