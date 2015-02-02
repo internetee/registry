@@ -12,11 +12,12 @@ xml.epp_head do
         xml.tag!('contact:fax', @contact.fax) if @disclosure.try(:fax) || @owner
         xml.tag!('contact:email', @contact.email) if @disclosure.try(:email) || @owner
         xml.tag!('contact:clID', @contact.registrar.try(:name))
-
-        #xml.tag!('contact:crID', @contact.cr_id ) if @contact.cr_id
+        xml.tag!('contact:crID', @contact.creator.try(:registrar)) 
         xml.tag!('contact:crDate', @contact.created_at)
-        xml.tag!('contact:upID', @contact.up_id) if @contact.up_id
-        xml.tag!('contact:upDate', @contact.updated_at) unless @contact.updated_at == @contact.created_at
+        if @contact.updated_at != @contact.created_at
+          xml.tag!('contact:upID', @contact.updator.try(:registrar))
+          xml.tag!('contact:upDate', @contact.updated_at) 
+        end
         xml.tag!('contact:ident', @contact.ident, type: @contact.ident_type)
         xml.tag!('contact:trDate', '123') if false
         if @owner

@@ -34,6 +34,16 @@ module Versions
       end
     end
 
+    def updator
+      return nil if updator_str.blank?
+
+      if updator_str =~ /^\d-api-/
+        ApiUser.find(updator_str)
+      else
+        User.find(updator_str)
+      end
+    end
+
     # callbacks
     def touch_domain_version
       domain.try(:touch_with_version)
