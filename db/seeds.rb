@@ -1,11 +1,5 @@
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
-
 Country.where(name: 'Estonia', iso: 'EE').first_or_create!
 Country.where(name: 'Latvia', iso: 'LV').first_or_create!
 
@@ -13,6 +7,7 @@ registrar1 = Registrar.where(
   name: 'Registrar First AS',
   reg_no: '10300220',
   address: 'Pärnu mnt 2, Tallinna linn, Harju maakond, 11415',
+  email: 'registrar1@example.com',
   country: Country.first
 ).first_or_create!
 
@@ -27,6 +22,7 @@ registrar2 = Registrar.where(
   name: 'Registrar Second AS',
   reg_no: '10529229',
   address: 'Vabaduse pst 32, 11316 Tallinn',
+  email: 'registrar2@example.com',
   country: Country.first
 ).first_or_create!
 
@@ -62,4 +58,3 @@ User.where(
 ).first_or_create!
 
 User.update_all(roles: ['admin'])
-# Setting.whois_enabled = true only uncomment this if you wish whois
