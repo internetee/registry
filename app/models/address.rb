@@ -55,7 +55,7 @@ class Address < ActiveRecord::Base
     def addr_hash_from_params(addr)
       return {} if addr.nil?
       return {} unless addr[:addr].is_a?(Hash)
-      { country_id: Country.find_by(iso: addr[:addr][:cc]).try(:id),
+      { country_code: Country.find_by(iso: addr[:addr][:cc]).try(:id),
         city: addr[:addr][:city],
         street: pretty_street(addr[:addr][:street]), # [0],
         # street2: addr[:addr][:street][1],
