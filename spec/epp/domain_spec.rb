@@ -3,7 +3,7 @@ require 'rails_helper'
 describe 'EPP Domain', epp: true do
   before(:all) do
     create_settings
-    @epp_xml = EppXml::Domain.new(cl_trid: 'ABC-12345')
+    @epp_xml = EppXml.new(cl_trid: 'ABC-12345')
     @registrar1 = Fabricate(:registrar1)
     @registrar2 = Fabricate(:registrar2)
     Fabricate(:api_user, username: 'registrar1', registrar: @registrar1)
