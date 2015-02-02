@@ -2,16 +2,19 @@ require 'rails_helper'
 
 describe 'EPP Contact', epp: true do
   before :all do
-    Fabricate(:api_user)
-    Fabricate(:api_user, username: 'registrar1', registrar: registrar1)
-    Fabricate(:api_user, username: 'registrar2', registrar: registrar2)
+    create_settings
+    create_disclosure_settings
+    @registrar1 = Fabricate(:registrar1)
+    @registrar2 = Fabricate(:registrar2)
+    @epp_xml    = EppXml::Contact.new(cl_trid: 'ABC-12345')
+    
+    Fabricate(:api_user, username: 'registrar1', registrar: @registrar1)
+    Fabricate(:api_user, username: 'registrar2', registrar: @registrar2)
 
-    login_as :gitlab
+    login_as :registrar1
 
     Contact.skip_callback(:create, :before, :generate_code)
     Contact.skip_callback(:create, :before, :generate_auth_info)
-    create_settings
-    create_disclosure_settings
   end
 
   after :all do
@@ -22,7 +25,7 @@ describe 'EPP Contact', epp: true do
   context 'with valid user' do
     context 'create command' do
       it 'fails if request xml is missing' do
-        xml = epp_xml.create
+        xml = @epp_xml.create
         response = epp_plain_request(xml, :xml)
         response[:results][0][:msg].should == 'Command syntax error'
         response[:results][0][:result_code].should == '2001'
@@ -31,7 +34,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if request xml is missing' do
-        xml = epp_xml.create(
+        xml = @epp_xml.create(
           postalInfo: { addr: { value: nil } }
         )
         response = epp_plain_request(xml, :xml)
@@ -67,7 +70,7 @@ describe 'EPP Contact', epp: true do
 
         @contact = Contact.last
 
-        @contact.registrar.should == registrar1
+        @contact.registrar.should == @registrar1
         # registrar1.api_users.should include(@contact.created_by)
         # @contact.updated_by_id.should == nil
         @contact.ident.should == '37605030299'
@@ -77,8 +80,8 @@ describe 'EPP Contact', epp: true do
         log.request_command.should == 'create'
         log.request_object.should == 'contact'
         log.request_successful.should == true
-        log.api_user_name.should == '1-api-gitlab'
-        log.api_user_registrar.should == 'Registrar OÜ'
+        log.api_user_name.should == '1-api-registrar1'
+        log.api_user_registrar.should == 'registrar1'
       end
 
       it 'successfully adds registrar' do
@@ -87,7 +90,7 @@ describe 'EPP Contact', epp: true do
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
 
-        Contact.last.registrar.should == registrar1
+        Contact.last.registrar.should == @registrar1
       end
 
       it 'returns result data upon success' do
@@ -157,7 +160,7 @@ describe 'EPP Contact', epp: true do
           Fabricate(
             :contact,
             # created_by_id: 1,
-            registrar: registrar1,
+            registrar: @registrar1,
             email: 'not_updated@test.test',
             code: 'sh8013',
             auth_info: 'password'
@@ -165,7 +168,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if request is invalid' do
-        xml = epp_xml.update
+        xml = @epp_xml.update
         response = epp_plain_request(xml, :xml) # epp_request('contacts/update_missing_attr.xml')
 
         response[:results][0][:result_code].should == '2003'
@@ -215,7 +218,7 @@ describe 'EPP Contact', epp: true do
           :contact,
           code: 'sh8013disclosure',
           auth_info: '2fooBAR',
-          registrar: registrar1,
+          registrar: @registrar1,
           # created_by_id: ApiUser.first.id,
           disclosure: Fabricate(:contact_disclosure, phone: true, email: true))
 
@@ -235,7 +238,7 @@ describe 'EPP Contact', epp: true do
 
     context 'delete command' do
       it 'fails if request is invalid' do
-        xml = epp_xml.delete({ uid: { value: '23123' } })
+        xml = @epp_xml.delete({ uid: { value: '23123' } })
         response = epp_plain_request(xml, :xml)
 
         response[:results][0][:msg].should == 'Required parameter missing: id'
@@ -246,7 +249,7 @@ describe 'EPP Contact', epp: true do
       it 'deletes contact' do
         @contact_deleted =
           # Fabricate(:contact, code: 'dwa1234', created_by_id: ApiUser.first.id, registrar: registrar1)
-          Fabricate(:contact, code: 'dwa1234', registrar: registrar1)
+          Fabricate(:contact, code: 'dwa1234', registrar: @registrar1)
 
         response = epp_plain_request(delete_contact_xml({ id: { value: 'dwa1234' } }), :xml)
         response[:msg].should == 'Command completed successfully'
@@ -265,12 +268,12 @@ describe 'EPP Contact', epp: true do
       it 'fails if contact has associated domain' do
         Fabricate(
           :domain,
-          registrar: registrar1,
+          registrar: @registrar1,
           owner_contact: Fabricate(
             :contact,
             code: 'dwa1234',
             # created_by_id: registrar1.id,
-            registrar: registrar1)
+            registrar: @registrar1)
         )
         Domain.last.owner_contact.address.present?.should == true
         response = epp_plain_request(delete_contact_xml({ id: { value: 'dwa1234' } }), :xml)
@@ -284,7 +287,7 @@ describe 'EPP Contact', epp: true do
 
     context 'check command' do
       it 'fails if request is invalid' do
-        xml = epp_xml.check({ uid: { value: '123asde' } })
+        xml = @epp_xml.check({ uid: { value: '123asde' } })
         response = epp_plain_request(xml, :xml)
 
         response[:results][0][:msg].should == 'Required parameter missing: id'
@@ -309,58 +312,58 @@ describe 'EPP Contact', epp: true do
       end
     end
 
-    context 'info command' do
-      before :all do
-        @registrar1_contact = Fabricate(:contact, code: 'info-4444', registrar: registrar1,
-                                        name: 'Johnny Awesome', address: Fabricate(:address))
-      end
-
-      it 'return info about contact' do
-        login_as :registrar1 do
-          xml = epp_xml.info(id: { value: @registrar1_contact.code })
-          response = epp_plain_request(xml, :xml)
-          response[:msg].should == 'Command completed successfully'
-          response[:result_code].should == '1000'
-
-          contact = response[:parsed].css('resData chkData')
-          contact.css('name').first.text.should == 'Johnny Awesome'
-        end
-      end
-
-      it 'fails if request invalid' do
-        response = epp_plain_request(epp_xml.info({ wrongid: { value: '123123' } }), :xml)
-        response[:results][0][:msg].should == 'Required parameter missing: id'
-        response[:results][0][:result_code].should == '2003'
-        response[:results].count.should == 1
-      end
-
-      it 'returns error when object does not exist' do
-        response = epp_plain_request(info_contact_xml({ id: { value: 'no-contact' } }), :xml)
-        response[:msg].should == 'Object does not exist'
-        response[:result_code].should == '2303'
-        response[:results][0][:value].should == 'no-contact'
-      end
-
-      # it 'returns auth error for non-owner with wrong password' do
-      # @contact = Fabricate(:contact,
-      # registrar: registrar2, code: 'info-4444', name: 'Johnny Awesome', auth_info: 'asde',
-      # address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
-
-      # xml = epp_xml.info({ id: { value: @contact.code }, authInfo: { pw: { value: 'asdesde' } } })
-      # response = epp_plain_request(xml, :xml, :registrar1)
-
-      # expect(response[:result_code]).to eq('2200')
-      # expect(response[:msg]).to eq('Authentication error')
+    # context 'info command' do
+      # before :all do
+        # @registrar1_contact = Fabricate(:contact, code: 'info-4444', registrar: @registrar1,
+                                        # name: 'Johnny Awesome', address: Fabricate(:address))
       # end
 
-      context 'about disclose' do
+      # fit 'return info about contact' do
+        # login_as :registrar2 do
+          # xml = @epp_xml.info(id: { value: @registrar1_contact.code })
+          # response = epp_plain_request(xml, :xml)
+          # response[:msg].should == 'Command completed successfully'
+          # response[:result_code].should == '1000'
+
+          # contact = response[:parsed].css('resData chkData')
+          # contact.css('name').first.text.should == 'Johnny Awesome'
+        # end
+      # end
+
+      # it 'fails if request invalid' do
+        # response = epp_plain_request(@epp_xml.info({ wrongid: { value: '123123' } }), :xml)
+        # response[:results][0][:msg].should == 'Required parameter missing: id'
+        # response[:results][0][:result_code].should == '2003'
+        # response[:results].count.should == 1
+      # end
+
+      # it 'returns error when object does not exist' do
+        # response = epp_plain_request(info_contact_xml({ id: { value: 'no-contact' } }), :xml)
+        # response[:msg].should == 'Object does not exist'
+        # response[:result_code].should == '2303'
+        # response[:results][0][:value].should == 'no-contact'
+      # end
+
+      # # it 'returns auth error for non-owner with wrong password' do
+      # # @contact = Fabricate(:contact,
+      # # registrar: registrar2, code: 'info-4444', name: 'Johnny Awesome', auth_info: 'asde',
+      # # address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
+
+      # # xml = @epp_xml.info({ id: { value: @contact.code }, authInfo: { pw: { value: 'asdesde' } } })
+      # # response = epp_plain_request(xml, :xml, :registrar1)
+
+      # # expect(response[:result_code]).to eq('2200')
+      # # expect(response[:msg]).to eq('Authentication error')
+      # # end
+
+      # context 'about disclose' do
         # it 'discloses items with wrong password when queried by owner' do
         # @contact = Fabricate(:contact,
         # registrar: registrar1, code: 'info-4444',
         # name: 'Johnny Awesome', auth_info: 'asde',
         # address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
 
-        # xml = epp_xml.info({ id: { value: @contact.code } })
+        # xml = @epp_xml.info({ id: { value: @contact.code } })
         # login_as :registrar1 do
         # response = epp_plain_request(xml, :xml)
         # contact = response[:parsed].css('resData chkData')
@@ -376,7 +379,7 @@ describe 'EPP Contact', epp: true do
         # name: 'Johnny Awesome', auth_info: 'password',
         # address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
 
-        # xml = epp_xml.info({ id: { value: @contact.code }, authInfo: { pw: { value: 'password' } } })
+        # xml = @epp_xml.info({ id: { value: @contact.code }, authInfo: { pw: { value: 'password' } } })
         # response = epp_plain_request(xml, :xml, :registrar1)
         # contact = response[:parsed].css('resData chkData')
 
@@ -390,7 +393,7 @@ describe 'EPP Contact', epp: true do
         # auth_info: 'password',
         # address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
 
-        # xml = epp_xml.info({ id: { value: @contact.code } })
+        # xml = @epp_xml.info({ id: { value: @contact.code } })
         # response = epp_plain_request(xml, :xml, :registrar1)
         # contact = response[:parsed].css('resData chkData')
 
@@ -403,7 +406,7 @@ describe 'EPP Contact', epp: true do
         # Fabricate(:contact, code: 'info-4444', auth_info: '2fooBAR', registrar: registrar2,
         # disclosure: Fabricate(:contact_disclosure, name: true, email: false, phone: false))
 
-        # xml = epp_xml.info({ id: { value: 'info-4444' }, authInfo: { pw: { value: '2fooBAR' } } })
+        # xml = @epp_xml.info({ id: { value: 'info-4444' }, authInfo: { pw: { value: '2fooBAR' } } })
 
         # response = epp_plain_request(xml, :xml, :registrar1)
         # contact = response[:parsed].css('resData chkData')
@@ -416,25 +419,25 @@ describe 'EPP Contact', epp: true do
         # expect(contact.css('chkData email').count).to eq(1)
         # expect(contact.css('postalInfo name').present?).to be(true)
         # end
-      end
+      # end
 
-      it 'does not display unassociated object without password' do
-        # xml = epp_xml.info(id: { value: @registrar1_contact.code })
+      # it 'does not display unassociated object without password' do
+        # xml = @epp_xml.info(id: { value: @registrar1_contact.code })
         # response = epp_plain_request(xml, :xml, :registrar2)
         # expect(response[:result_code]).to eq('2003')
         # expect(response[:msg]).to eq('Required parameter missing: pw')
-      end
+      # end
 
-      it 'does not display unassociated object with wrong password' do
-        login_as :registrar2
-        xml = epp_xml.info(id: { value: @registrar1_contact.code },
-                           authInfo: { pw: { value: 'wrong-pw' } })
-        response = epp_plain_request(xml, :xml)
+      # it 'does not display unassociated object with wrong password' do
+        # login_as :registrar2
+        # xml = @epp_xml.info(id: { value: @registrar1_contact.code },
+                           # authInfo: { pw: { value: 'wrong-pw' } })
+        # response = epp_plain_request(xml, :xml)
 
-        response[:msg].should == 'Authentication error'
-        response[:result_code].should == '2200'
-      end
-    end
+        # response[:msg].should == 'Authentication error'
+        # response[:result_code].should == '2200'
+      # end
+    # end
 
     context 'renew command' do
       it 'returns 2101-unimplemented command' do
@@ -444,17 +447,5 @@ describe 'EPP Contact', epp: true do
         response[:result_code].should == '2101'
       end
     end
-  end
-
-  def registrar1
-    @registrar1 ||= Registrar.where(reg_no: '12345678').first || Fabricate(:registrar)
-  end
-
-  def registrar2
-    @registrar2 ||= Fabricate(:registrar, { name: 'registrar2', reg_no: '123' })
-  end
-
-  def epp_xml
-    @epp_xml ||= EppXml::Contact.new(cl_trid: 'ABC-12345')
   end
 end

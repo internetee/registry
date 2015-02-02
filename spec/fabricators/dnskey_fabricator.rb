@@ -9,4 +9,5 @@ Fabricator(:dnskey) do
     'MAhcxXa60CdZLoRtTEW3z8/oBq4hEAYMCNclpbd6y/exScwBxFTdUfFk '\
     'KsdNcmvai1lyk9vna0WQrtpYpHKMXvY9LFHaJxCOLR4umfeQ42RuTd82 lqfU6ClMeXs='
   ds_digest_type 2
+  domain
 end

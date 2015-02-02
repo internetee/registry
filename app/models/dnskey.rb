@@ -4,10 +4,11 @@ class Dnskey < ActiveRecord::Base
 
   belongs_to :domain
 
-  validates :alg, :protocol, :flags, :public_key, presence: true, if: :validate_key_data
+  validates :domain, :alg, :protocol, :flags, :public_key, presence: true, if: :validate_key_data
   validate :validate_algorithm
   validate :validate_protocol
   validate :validate_flags
+  
 
   before_save -> { generate_digest if public_key_changed? && !ds_digest_changed? }
 

@@ -6,4 +6,5 @@ Fabricator(:keyrelay) do
   key_data_protocol 3
   key_data_alg 3
   auth_info_pw 'abc'
+  domain
 end

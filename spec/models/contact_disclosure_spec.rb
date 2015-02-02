@@ -5,23 +5,22 @@ describe ContactDisclosure do
 
   context 'about class' do
     it 'should have versioning enabled?' do
-      Country.paper_trail_enabled_for_model?.should == true
+      ContactDisclosure.paper_trail_enabled_for_model?.should == true
     end
 
     it 'should have custom log prexied table name for versions table' do
-      CountryVersion.table_name.should == 'log_countries'
+      ContactDisclosureVersion.table_name.should == 'log_contact_disclosures'
     end
   end
 
   context 'with invalid attribute' do
     before :all do
-      @contact_disclosure = Country.new
+      @contact_disclosure = ContactDisclosure.new
     end
 
     it 'should not be valid' do
       @contact_disclosure.valid?
       @contact_disclosure.errors.full_messages.should match_array([
-        "Name is missing"
       ])
     end
 
@@ -40,11 +39,18 @@ describe ContactDisclosure do
       @contact_disclosure.errors.full_messages.should match_array([])
     end
 
-    it 'should not have one version' do
+    it 'should be valid twice' do
+      @contact_disclosure = Fabricate(:contact_disclosure)
+      @contact_disclosure.valid?
+      @contact_disclosure.errors.full_messages.should match_array([])
+    end
+
+    it 'should have one version' do
       with_versioning do
         @contact_disclosure.versions.should == []
         @contact_disclosure.name = false
         @contact_disclosure.save
+        @contact_disclosure.errors.full_messages.should match_array([])
         @contact_disclosure.versions.size.should == 1
       end
     end

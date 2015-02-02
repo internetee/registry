@@ -239,7 +239,6 @@ en:
 
   errors:
     messages:
-      taken: 'Status already exists on this domain'
       blank: 'is missing'
       epp_domain_reserved: 'Domain name is reserved or restricted'
       epp_obj_does_not_exist: 'Object does not exist'

@@ -6,9 +6,59 @@ describe Keyrelay do
   it { should belong_to(:accepter) }
   it { should have_many(:legal_documents) }
 
-  it 'is in pending status' do
-    kr = Fabricate(:keyrelay)
-    expect(kr.status).to eq('pending')
+  context 'with invalid attribute' do
+    before :all do
+      @keyrelay = Keyrelay.new
+    end
+
+    it 'should not be valid' do
+      @keyrelay.valid?
+      @keyrelay.errors.full_messages.should match_array([
+        "Auth info pw Password is missing",
+        "Domain is missing",
+        "Expiry relative Expiry relative must be compatible to ISO 8601",
+        "Key data alg Algorithm is missing",
+        "Key data flags Flag is missing",
+        "Key data protocol Protocol is missing",
+        "Key data public key Public key is missing",
+        "Only one parameter allowed: relative or absolute"
+      ])
+    end
+
+    it 'should not have any versions' do
+      @keyrelay.versions.should == []
+    end
+  end
+
+  context 'with valid attributes' do
+    before :all do
+      @keyrelay = Fabricate(:keyrelay)
+    end
+
+    it 'should be valid' do
+      @keyrelay.valid?
+      @keyrelay.errors.full_messages.should match_array([])
+    end
+
+    it 'should be valid twice' do
+      @keyrelay = Fabricate(:keyrelay)
+      @keyrelay.valid?
+      @keyrelay.errors.full_messages.should match_array([])
+    end
+
+    it 'should have one version' do
+      with_versioning do
+        @keyrelay.versions.should == []
+        @keyrelay.auth_info_pw = 'newpw'
+        @keyrelay.save
+        @keyrelay.errors.full_messages.should match_array([])
+        @keyrelay.versions.size.should == 1
+      end
+    end
+
+    it 'is in pending status' do
+      @keyrelay.status.should == 'pending'
+    end
   end
 
   it 'is in expired status' do

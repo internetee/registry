@@ -2,14 +2,14 @@ require 'rails_helper'
 
 describe 'EPP Session', epp: true do
   before :all do
-    @api_user = Fabricate(:api_user)
+    @api_user = Fabricate(:gitlab_api_user)
     @epp_xml = EppXml.new(cl_trid: 'ABC-12345')
     @login_xml_cache = @epp_xml.session.login(clID: { value: 'gitlab' }, pw: { value: 'ghyt9e4fu' })
-
   end
 
   context 'when not connected' do
     it 'greets client upon connection' do
+      server.close_connection
       response = Nokogiri::XML(server.open_connection)
       response.css('epp svID').text.should == 'EPP server (EIS)'
       puts "RESPONSE:\n\n```xml\n#{response}```\n\n" if ENV['EPP_DOC']
@@ -51,6 +51,11 @@ describe 'EPP Session', epp: true do
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
         response[:clTRID].should == 'ABC-12345'
+
+        log = ApiLog::EppLog.last
+        log.request_command.should == 'login'
+        log.request_successful.should == true
+        log.api_user_name.should == '1-api-gitlab'
       end
 
       it 'does not log in twice' do
@@ -67,7 +72,6 @@ describe 'EPP Session', epp: true do
         log.request_command.should == 'login'
         log.request_successful.should == false
         log.api_user_name.should == '1-api-gitlab'
-        log.api_user_registrar.should == 'Registrar OÜ'
       end
 
       it 'logs out epp user' do

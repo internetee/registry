@@ -7,12 +7,13 @@ class User < ActiveRecord::Base
   # After activisation, system should require to change temp password.
   # TODO: Estonian id validation
 
-  validates :username, :password, presence: true
+  validates :username, :password, :country_code, presence: true
   validates :identity_code, uniqueness: true, allow_blank: true
-  validates :identity_code, presence: true, if: -> { country.alpha2 == 'EE' }
-  validates :email, presence: true, if: -> { country.alpha2 != 'EE' }
+  validates :identity_code, presence: true, if: -> { country_code == 'EE' }
+  validates :email, presence: true, if: -> { country_code != 'EE' }
 
   validate :validate_identity_code
+  belongs_to :country_deprecated, foreign_key: :country_id
 
   ROLES = %w(user customer_service admin)
 

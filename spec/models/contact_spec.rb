@@ -67,17 +67,24 @@ describe Contact do
       @contact.errors.full_messages.should match_array([])
     end
 
-    it 'should not have relation' do
-      @contact.relations_with_domain?.should == false
+    it 'should be valid twice' do
+      @contact = Fabricate(:contact)
+      @contact.valid?
+      @contact.errors.full_messages.should match_array([])
     end
 
-    it 'should not have one version' do
+    it 'should have one version' do
       with_versioning do
-        @contact.versions.should == []
+        @contact.versions.reload.should == []
         @contact.name = 'New name'
         @contact.save
+        @contact.errors.full_messages.should match_array([])
         @contact.versions.size.should == 1
       end
+    end
+
+    it 'should not have relation' do
+      @contact.relations_with_domain?.should == false
     end
 
     # it 'ico should be valid' do

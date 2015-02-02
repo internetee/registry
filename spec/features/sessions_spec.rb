@@ -1,27 +1,26 @@
 require 'rails_helper'
 
 feature 'Sessions', type: :feature do
-  let(:elkdata) { Fabricate(:registrar, { name: 'Elkdata', reg_no: '123' }) }
-  let(:zone) { Fabricate(:registrar) }
-
-  background do
+  before :all do
     create_settings
-    Fabricate(:user, username: 'zone', identity_code: '37810013087')
-    Fabricate.times(2, :domain, registrar: zone)
-    Fabricate.times(2, :domain, registrar: elkdata)
+    Fabricate(:ee_user)
+    @registrar1 = Fabricate(:registrar1)
+    @registrar2 = Fabricate(:registrar2)
+    Fabricate.times(2, :domain, registrar: @registrar1)
+    Fabricate.times(2, :domain, registrar: @registrar2)
   end
 
   scenario 'Admin logs in' do
     visit root_path
-    expect(page).to have_button('ID card (user1)')
+    page.should have_button('ID card (user1)')
 
     click_on 'ID card (user1)'
-    expect(page).to have_text('Welcome!')
+    page.should have_text('Welcome!')
 
     uri = URI.parse(current_url)
-    expect(uri.path).to eq(admin_domains_path)
+    uri.path.should == admin_domains_path
 
-    expect(page).to have_link('Elkdata', count: 2)
-    expect(page).to have_link('Registrar OÜ', count: 2)
+    page.should have_link('registrar1', count: 2)
+    page.should have_link('registrar2', count: 2)
   end
 end

@@ -5,6 +5,7 @@ class Registrar < ActiveRecord::Base
   has_many :contacts, dependent: :restrict_with_error
   has_many :api_users, dependent: :restrict_with_error
   has_many :messages
+  belongs_to :country_deprecated, foreign_key: :country_id
 
   validates :name, :reg_no, :address, :country, :email, presence: true
   validates :name, :reg_no, uniqueness: true

@@ -1,5 +1,6 @@
 class Address < ActiveRecord::Base
   include Versions # version/address_version.rb
+  belongs_to :country_deprecated, foreign_key: :country_id
 
   LOCAL_TYPE_SHORT = 'loc'
   INTERNATIONAL_TYPE_SHORT = 'int'
@@ -55,7 +56,7 @@ class Address < ActiveRecord::Base
     def addr_hash_from_params(addr)
       return {} if addr.nil?
       return {} unless addr[:addr].is_a?(Hash)
-      { country_code: Country.find_by(iso: addr[:addr][:cc]).try(:id),
+      { country_code: Country.new(addr[:addr][:cc]).try(:alpha2),
         city: addr[:addr][:city],
         street: pretty_street(addr[:addr][:street]), # [0],
         # street2: addr[:addr][:street][1],

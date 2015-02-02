@@ -5,14 +5,15 @@ class Keyrelay < ActiveRecord::Base
   belongs_to :domain
 
   belongs_to :requester, class_name: 'Registrar'
-  belongs_to :accepter, class_name: 'Registrar'
+  belongs_to :accepter,  class_name: 'Registrar'
 
   has_many :legal_documents, as: :documentable
 
   delegate :name, to: :domain, prefix: true
 
+  validates :domain, :key_data_public_key, :key_data_flags, :key_data_protocol, 
+            :key_data_alg, :auth_info_pw, presence: true
   validates :expiry_relative, duration_iso8601: true
-  validates :key_data_public_key, :key_data_flags, :key_data_protocol, :key_data_alg, :auth_info_pw, presence: true
 
   validate :validate_expiry_relative_xor_expiry_absolute
 
