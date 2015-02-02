@@ -15,12 +15,9 @@ end
 
 class PaperSession
   class << self
+    attr_writer :session
     def session
       @session ||= Time.now.to_s(:db)
-    end
-
-    def session=(code)
-      @session = code
     end
   end
 end

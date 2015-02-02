@@ -288,9 +288,9 @@ class Domain < ActiveRecord::Base
 
   def children_log
     log = HashWithIndifferentAccess.new
-    log[:admin_contacts] = admin_contacts.map {|ac| ac.attributes}
-    log[:tech_contacts]  = tech_contacts.map  {|tc| tc.attributes}
-    log[:nameservers]    = nameservers.map    {|ns| ns.attributes}
+    log[:admin_contacts] = admin_contacts.map(&:attributes)
+    log[:tech_contacts]  = tech_contacts.map(&:attributes)
+    log[:nameservers]    = nameservers.map(&:attributes)
     log[:owner_contact]  = [owner_contact.try(:attributes)]
     log
   end
