@@ -1,7 +1,5 @@
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-Country.where(name: 'Estonia', iso: 'EE').first_or_create!
-Country.where(name: 'Latvia', iso: 'LV').first_or_create!
 
 registrar1 = Registrar.where(
   name: 'Registrar First AS',
