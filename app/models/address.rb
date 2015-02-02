@@ -8,7 +8,7 @@ class Address < ActiveRecord::Base
   ]
 
   belongs_to :contact
-  belongs_to :country
+  belongs_to :country_deprecated, foreign_key: "country_id"
 
   has_paper_trail class_name: 'AddressVersion'
 

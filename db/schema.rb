@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150130085458) do
+ActiveRecord::Schema.define(version: 20150202084444) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,13 +30,14 @@ ActiveRecord::Schema.define(version: 20150130085458) do
   create_table "addresses", force: :cascade do |t|
     t.integer  "contact_id"
     t.integer  "country_id"
-    t.string   "city",       limit: 255
-    t.string   "street",     limit: 255
-    t.string   "zip",        limit: 255
+    t.string   "city",         limit: 255
+    t.string   "street",       limit: 255
+    t.string   "zip",          limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "street2",    limit: 255
-    t.string   "street3",    limit: 255
+    t.string   "street2",      limit: 255
+    t.string   "street3",      limit: 255
+    t.string   "country_code"
   end
 
   create_table "api_users", force: :cascade do |t|
@@ -206,7 +207,6 @@ ActiveRecord::Schema.define(version: 20150130085458) do
     t.string   "name",             limit: 255
     t.integer  "registrar_id"
     t.datetime "registered_at"
-    t.string   "status",           limit: 255
     t.datetime "valid_from"
     t.datetime "valid_to"
     t.integer  "owner_contact_id"
@@ -217,6 +217,7 @@ ActiveRecord::Schema.define(version: 20150130085458) do
     t.string   "name_puny",        limit: 255
     t.integer  "period"
     t.string   "period_unit",      limit: 1
+    t.string   "status"
   end
 
   create_table "epp_sessions", force: :cascade do |t|
@@ -296,6 +297,7 @@ ActiveRecord::Schema.define(version: 20150130085458) do
     t.string   "phone"
     t.string   "email"
     t.string   "billing_email"
+    t.string   "country_code"
   end
 
   create_table "reserved_domains", force: :cascade do |t|
@@ -329,6 +331,7 @@ ActiveRecord::Schema.define(version: 20150130085458) do
     t.string   "identity_code",      limit: 255
     t.integer  "country_id"
     t.string   "roles",                                                   array: true
+    t.string   "country_code"
   end
 
   create_table "version_associations", force: :cascade do |t|

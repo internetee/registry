@@ -1,4 +1,6 @@
-class Country < ActiveRecord::Base
+class CountryDeprecated < ActiveRecord::Base
+  self.table_name = "countries"
+
   def to_s
     name
   end
