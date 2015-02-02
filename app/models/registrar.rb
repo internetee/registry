@@ -1,4 +1,6 @@
 class Registrar < ActiveRecord::Base
+  include Versions # version/registrar_version.rb
+
   has_many :domains, dependent: :restrict_with_error
   has_many :contacts, dependent: :restrict_with_error
   has_many :api_users, dependent: :restrict_with_error
@@ -6,6 +8,7 @@ class Registrar < ActiveRecord::Base
 
   validates :name, :reg_no, :address, :country, :email, presence: true
   validates :name, :reg_no, uniqueness: true
+  after_save :touch_domains_version
 
   validates :email, :billing_email, format: /@/, allow_blank: true
 

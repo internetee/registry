@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  include Versions # version/user_version.rb
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :trackable, :timeoutable

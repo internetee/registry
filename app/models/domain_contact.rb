@@ -1,10 +1,12 @@
 class DomainContact < ActiveRecord::Base
+  include Versions # version/domain_contact_version.rb
   include EppErrors
   belongs_to :contact
   belongs_to :domain
 
-  after_create :domain_snapshot
-  after_destroy :domain_snapshot
+  # TODO: remove old
+  # after_create :domain_snapshot
+  # after_destroy :domain_snapshot
   #  after_save :domain_snapshot
 
   attr_accessor :value_typeahead
@@ -38,10 +40,11 @@ class DomainContact < ActiveRecord::Base
     @value_typeahead || contact.try(:name) || nil
   end
 
-  def domain_snapshot
-    return true if domain.nil?
-    return true if domain.versions.count == 0 # avoid snapshot on creation
-    domain.create_version
-    true
-  end
+  # TODO: remove old
+  # def domain_snapshot
+    # return true if domain.nil?
+    # return true if domain.versions.count == 0 # avoid snapshot on creation
+    # domain.create_version
+    # true
+  # end
 end

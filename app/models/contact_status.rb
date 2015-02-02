@@ -1,4 +1,5 @@
 class ContactStatus < ActiveRecord::Base
+  include Versions # version/contact_status_version.rb
   include EppErrors
 
   belongs_to :contact

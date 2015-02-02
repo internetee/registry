@@ -162,36 +162,36 @@ class Epp::EppDomain < Domain
   end
 
   def detach_contacts(contact_list)
-    to_delete = []
+    to_destroy = []
     contact_list.each do |k, v|
       v.each do |x|
         contact = domain_contacts.joins(:contact).where(contacts: { code: x[:contact] }, contact_type: k.to_s)
         if contact.blank?
           add_epp_error('2303', 'contact', x[:contact], [:domain_contacts, :not_found])
         else
-          to_delete << contact
+          to_destroy << contact
         end
       end
     end
 
-    domain_contacts.delete(to_delete)
+    domain_contacts.destroy(to_destroy)
   end
 
   def detach_nameservers(ns_list)
-    to_delete = []
+    to_destroy = []
     ns_list.each do |ns_attrs|
       nameserver = nameservers.where(ns_attrs)
       if nameserver.blank?
         add_epp_error('2303', 'hostAttr', ns_attrs[:hostname], [:nameservers, :not_found])
       else
-        to_delete << nameserver
+        to_destroy << nameserver
       end
     end
-    nameservers.delete(to_delete)
+    nameservers.destroy(to_destroy)
   end
 
   def detach_statuses(status_list)
-    to_delete = []
+    to_destroy = []
     status_list.each do |x|
       unless DomainStatus::CLIENT_STATUSES.include?(x[:value])
         add_epp_error('2303', 'status', x[:value], [:domain_statuses, :not_found])
@@ -202,11 +202,11 @@ class Epp::EppDomain < Domain
       if status.blank?
         add_epp_error('2303', 'status', x[:value], [:domain_statuses, :not_found])
       else
-        to_delete << status
+        to_destroy << status
       end
     end
 
-    domain_statuses.delete(to_delete)
+    domain_statuses.destroy(to_destroy)
   end
 
   def attach_dnskeys(dnssec_data)
@@ -258,13 +258,13 @@ class Epp::EppDomain < Domain
 
   def detach_dnskeys(dnssec_data)
     return false unless validate_dnssec_data(dnssec_data)
-    to_delete = []
+    to_destroy = []
     dnssec_data[:ds_data].each do |x|
       ds = dnskeys.where(ds_key_tag: x[:ds_key_tag])
       if ds.blank?
         add_epp_error('2303', 'keyTag', x[:key_tag], [:dnskeys, :not_found])
       else
-        to_delete << ds
+        to_destroy << ds
       end
     end
 
@@ -273,11 +273,11 @@ class Epp::EppDomain < Domain
       if ds.blank?
         add_epp_error('2303', 'publicKey', x[:public_key], [:dnskeys, :not_found])
       else
-        to_delete << ds
+        to_destroy << ds
       end
     end
 
-    dnskeys.delete(to_delete)
+    dnskeys.destroy(to_destroy)
   end
 
   ### RENEW ###

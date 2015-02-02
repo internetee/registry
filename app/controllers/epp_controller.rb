@@ -22,7 +22,14 @@ class EppController < ApplicationController
   end
 
   def current_api_user
-    @current_api_user ||= ApiUser.find(epp_session[:api_user_id]) if epp_session[:api_user_id]
+    return @current_api_user if @current_api_user
+
+    @current_api_user ||= ApiUser.find_by_id(epp_session[:api_user_id])
+    # by default PaperTrail uses before filter and at that 
+    # time current_api_user is not yet present
+    ::PaperTrail.whodunnit = api_user_log_str(@current_api_user) 
+    ::PaperSession.session = epp_session.session_id if epp_session.session_id.present?
+    @current_api_user
   end
 
   # ERROR + RESPONSE HANDLING
@@ -198,7 +205,7 @@ class EppController < ApplicationController
       request_successful: epp_errors.empty?,
       request_object: params[:epp_object_type],
       response: @response,
-      api_user_name: @api_user.try(:to_s) || current_api_user.try(:to_s),
+      api_user_name: PaperTrail.whodunnit,
       api_user_registrar: @api_user.try(:registrar).try(:to_s) || current_api_user.try(:registrar).try(:to_s),
       ip: request.ip
     })

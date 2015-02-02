@@ -1,4 +1,5 @@
 class Dnskey < ActiveRecord::Base
+  include Versions # version/dnskey_version.rb
   include EppErrors
 
   belongs_to :domain

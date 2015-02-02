@@ -1,4 +1,5 @@
 class Nameserver < ActiveRecord::Base
+  include Versions # version/nameserver_version.rb
   include EppErrors
 
   belongs_to :registrar
@@ -10,9 +11,8 @@ class Nameserver < ActiveRecord::Base
   validates :ipv6, format: { with: /(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))/, allow_blank: true }
   # rubocop: enable Metrics/LineLength
 
-  # archiving
-  has_paper_trail class_name: 'NameserverVersion'
-  after_destroy :domain_version
+  # TODO: remove old
+  # after_destroy :domain_version
 
   before_validation :normalize_attributes
 
@@ -34,13 +34,14 @@ class Nameserver < ActiveRecord::Base
     }
   end
 
-  def snapshot
-    {
-      hostname: hostname,
-      ipv4: ipv4,
-      ipv6: ipv6
-    }
-  end
+  # TODO: remove old
+  # def snapshot
+    # {
+      # hostname: hostname,
+      # ipv4: ipv4,
+      # ipv6: ipv6
+    # }
+  # end
 
   def normalize_attributes
     self.hostname = hostname.try(:strip).try(:downcase)
@@ -48,9 +49,10 @@ class Nameserver < ActiveRecord::Base
     self.ipv6 = ipv6.try(:strip).try(:upcase)
   end
 
-  def domain_version
-    domain.create_version if domain
-  end
+  # TODO: remove old
+  # def domain_version
+    # domain.create_version if domain
+  # end
 
   def to_s
     hostname

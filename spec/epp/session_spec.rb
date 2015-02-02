@@ -66,7 +66,7 @@ describe 'EPP Session', epp: true do
         log = ApiLog::EppLog.last
         log.request_command.should == 'login'
         log.request_successful.should == false
-        log.api_user_name.should == 'gitlab'
+        log.api_user_name.should == '1-api-gitlab'
         log.api_user_registrar.should == 'Registrar OÜ'
       end
 

@@ -1,4 +1,6 @@
 class Address < ActiveRecord::Base
+  include Versions # version/address_version.rb
+
   LOCAL_TYPE_SHORT = 'loc'
   INTERNATIONAL_TYPE_SHORT = 'int'
   LOCAL_TYPE = 'LocalAddress'
@@ -8,8 +10,6 @@ class Address < ActiveRecord::Base
   ]
 
   belongs_to :contact
-
-  has_paper_trail class_name: 'AddressVersion'
 
   def country
     Country.new(country_code)

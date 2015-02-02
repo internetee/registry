@@ -1,28 +1,31 @@
 .row
-  .col-sm-12
-    %h2.text-center-xs= t('domains')
+  .col-sm-6
+    %h2.text-center-xs
+      = "#{t(:domain_history)}: #{@domain.name}"
+  .col-sm-6
+    %h2.text-right.text-center-xs
+
 %hr
 .row
   .col-md-12
     .table-responsive
-      %table.table.table-hover.table-bordered.table-condensed
+      %table.table-hover.table-bordered.table-condensed
         %thead
           %tr
-            %th{class: 'col-xs-1'}
-              = t('name')
-            %th{class: 'col-xs-1'}
-              = sort_link(@q, 'whodunnit')
-            %th{class: 'col-xs-1'}
-              = sort_link(@q, 'created_at')
+            %th{class: 'col-xs-1'}= t(:timestap)
+            %th{class: 'col-xs-2'}= t(:period)
+            %th{class: 'col-xs-2'}= t(:owner)
+            %th{class: 'col-xs-2'}= t(:admin)
+            %th{class: 'col-xs-2'}= t(:tech)
+            %th{class: 'col-xs-2'}= t(:nameservers)
+            %th{class: 'col-xs-2'}= t(:registrar)
 
         %tbody
-          - @domains.each do |domain|
-            - obj = domain.reify
-            %tr
-              %td= link_to(obj.name, admin_domain_version_path(obj))
-              %td= whodunnit_with_protocol(domain.whodunnit) unless domain.whodunnit.nil?
-              %td= l(obj.created_at, format: :short)
+          %tr.small
+            = render 'admin/domain_versions/version', 
+              domain: @domain, version: @domain.versions.last
 
-.row
-  .col-md-12
-    = paginate @domains
+          - @domain.versions.not_creates.reverse.each do |version|
+            %tr.small
+              = render 'admin/domain_versions/version', 
+                domain: version.reify, version: version.previous

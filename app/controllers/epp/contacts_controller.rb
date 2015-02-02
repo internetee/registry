@@ -1,15 +1,10 @@
 class Epp::ContactsController < EppController
-  include Shared::UserStamper ## Refactor this?
   helper WhodunnitHelper ## Refactor this?
-
-  def user_for_paper_trail ## Refactor this?
-    current_api_user ? "#{current_api_user.id}-ApiUser" : nil
-  end
 
   def create
     @contact = Contact.new(contact_and_address_attributes)
     @contact.registrar = current_api_user.registrar
-    render_epp_response '/epp/contacts/create' and return if stamp(@contact) && @contact.save
+    render_epp_response '/epp/contacts/create' and return if @contact.save
     handle_errors(@contact)
   end
 
@@ -18,8 +13,8 @@ class Epp::ContactsController < EppController
     code = params_hash['epp']['command']['update']['update'][:id]
 
     @contact = Contact.where(code: code).first
-    # if update_rights? && stamp(@contact) && @contact.update_attributes(contact_and_address_attributes(:update))
-    if owner? && stamp(@contact) && @contact.update_attributes(contact_and_address_attributes(:update))
+    # if update_rights? && @contact.update_attributes(contact_and_address_attributes(:update))
+    if owner? && @contact.update_attributes(contact_and_address_attributes(:update))
       render_epp_response 'epp/contacts/update'
     else
       contact_exists?(code)

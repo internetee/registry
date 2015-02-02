@@ -3,10 +3,55 @@ require 'rails_helper'
 describe Address do
   it { should belong_to(:contact) }
   it { should belong_to(:country) }
+
+  context 'about class' do
+    it 'should have versioning enabled?' do
+      Address.paper_trail_enabled_for_model?.should == true
+    end
+
+    it 'should have custom log prexied table name for versions table' do
+      AddressVersion.table_name.should == 'log_addresses'
+    end
+  end
+
+  context 'with invalid attribute' do
+    before :all do
+      @address = Address.new
+    end
+
+    it 'should not be valid' do
+      @address.valid?
+      @address.errors.full_messages.should match_array([
+      ])
+    end
+
+    it 'should not have any versions' do
+      @address.versions.should == []
+    end
+  end
+
+  context 'with valid attributes' do
+    before :all do
+      @address = Fabricate(:address)
+    end
+
+    it 'should be valid' do
+      @address.valid?
+      @address.errors.full_messages.should match_array([])
+    end
+
+    it 'should not have one version' do
+      with_versioning do
+        @address.versions.should == []
+        @address.zip = 'New zip'
+        @address.save
+        @address.versions.size.should == 1
+      end
+    end
+  end
 end
 
 describe Address, '.extract_params' do
-
   it 'returns params hash' do
     Fabricate(:country, iso: 'EE')
     ph = { postalInfo: { name: 'fred', addr: { cc: 'EE', city: 'Village', street: 'street1' } }  }

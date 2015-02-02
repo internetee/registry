@@ -1,4 +1,7 @@
 class Domain < ActiveRecord::Base
+  include Versions # version/domain_version.rb
+  has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
+
   # TODO: whois requests ip whitelist for full info for own domains and partial info for other domains
   # TODO: most inputs should be trimmed before validatation, probably some global logic?
   paginates_per 10 # just for showoff
@@ -17,7 +20,9 @@ class Domain < ActiveRecord::Base
            -> { where(domain_contacts: { contact_type: DomainContact::ADMIN }) },
            through: :domain_contacts, source: :contact
 
-  has_many :nameservers, dependent: :delete_all, after_add: :track_nameserver_add
+  # TODO: remove old
+  # has_many :nameservers, dependent: :delete_all, after_add: :track_nameserver_add
+  has_many :nameservers, dependent: :delete_all
 
   accepts_nested_attributes_for :nameservers, allow_destroy: true,
                                               reject_if: proc { |attrs| attrs[:hostname].blank? }
@@ -47,6 +52,10 @@ class Domain < ActiveRecord::Base
   before_create :set_validity_dates
   before_create :attach_default_contacts
   after_save :manage_automatic_statuses
+  before_save :touch_always_version
+  def touch_always_version
+    self.updated_at = Time.now
+  end
 
   validates :name_dirty, domain_name: true, uniqueness: true
   validates :period, numericality: { only_integer: true }
@@ -102,9 +111,10 @@ class Domain < ActiveRecord::Base
 
   attr_accessor :owner_contact_typeahead, :update_me
 
+  # TODO: remove old
   # archiving
   # if proc works only on changes on domain sadly
-  has_paper_trail class_name: 'DomainVersion', meta: { snapshot: :create_snapshot }, if: proc(&:new_version)
+  # has_paper_trail class_name: 'DomainVersion', meta: { snapshot: :create_snapshot }, if: proc(&:new_version)
 
   def tech_domain_contacts
     domain_contacts.select { |x| x.contact_type == DomainContact::TECH }
@@ -114,46 +124,51 @@ class Domain < ActiveRecord::Base
     domain_contacts.select { |x| x.contact_type == DomainContact::ADMIN }
   end
 
-  def new_version
-    return false if versions.try(:last).try(:snapshot) == create_snapshot
-    true
-  end
+  # TODO: remove old
+  # def new_version
+    # return false if versions.try(:last).try(:snapshot) == create_snapshot
+    # true
+  # end
 
-  def create_version
-    return true unless PaperTrail.enabled?
-    return true unless valid?
-    touch_with_version if new_version
-  end
+  # TODO: remove old
+  # def create_version
+    # return true unless PaperTrail.enabled?
+    # return true unless valid?
+    # touch_with_version if new_version
+  # end
 
-  def track_nameserver_add(_nameserver)
-    return true if versions.count == 0
-    return true unless valid? && new_version
+  # TODO: remove old
+  # def track_nameserver_add(_nameserver)
+    # return true if versions.count == 0
+    # return true unless valid? && new_version
 
-    touch_with_version
-  end
+    # touch_with_version
+  # end
 
-  def create_snapshot
-    oc = owner_contact.snapshot if owner_contact.is_a?(Contact)
-    {
-      owner_contact: oc,
-      tech_contacts: tech_contacts.map(&:snapshot),
-      admin_contacts: admin_contacts.map(&:snapshot),
-      nameservers: nameservers.map(&:snapshot),
-      domain: make_snapshot
-    }.to_yaml
-  end
+  # TODO: remove old
+  # def create_snapshot
+    # oc = owner_contact.snapshot if owner_contact.is_a?(Contact)
+    # {
+      # owner_contact: oc,
+      # tech_contacts: tech_contacts.map(&:snapshot),
+      # admin_contacts: admin_contacts.map(&:snapshot),
+      # nameservers: nameservers.map(&:snapshot),
+      # domain: make_snapshot
+    # }.to_yaml
+  # end
 
-  def make_snapshot
-    {
-      name: name,
-      status: status,
-      period: period,
-      period_unit: period_unit,
-      registrar_id: registrar.try(:id),
-      valid_to: valid_to,
-      valid_from: valid_from
-    }
-  end
+  # TODO: remove old
+  # def make_snapshot
+    # {
+      # name: name,
+      # status: status,
+      # period: period,
+      # period_unit: period_unit,
+      # registrar_id: registrar.try(:id),
+      # valid_to: valid_to,
+      # valid_from: valid_from
+    # }
+  # end
 
   def name=(value)
     value.strip!
@@ -271,11 +286,20 @@ class Domain < ActiveRecord::Base
     end
   end
 
+  def children_log
+    log = HashWithIndifferentAccess.new
+    log[:admin_contacts] = admin_contacts.map {|ac| ac.attributes}
+    log[:tech_contacts]  = tech_contacts.map  {|tc| tc.attributes}
+    log[:nameservers]    = nameservers.map    {|ns| ns.attributes}
+    log[:owner_contact]  = [owner_contact.try(:attributes)]
+    log
+  end
+
   class << self
     def convert_period_to_time(period, unit)
-      return period.to_i.days if unit == 'd'
+      return period.to_i.days   if unit == 'd'
       return period.to_i.months if unit == 'm'
-      return period.to_i.years if unit == 'y'
+      return period.to_i.years  if unit == 'y'
     end
   end
 end

@@ -1,4 +1,5 @@
 class Keyrelay < ActiveRecord::Base
+  include Versions # version/keyrelay_version.rb
   include EppErrors
 
   belongs_to :domain
@@ -14,6 +15,8 @@ class Keyrelay < ActiveRecord::Base
   validates :key_data_public_key, :key_data_flags, :key_data_protocol, :key_data_alg, :auth_info_pw, presence: true
 
   validate :validate_expiry_relative_xor_expiry_absolute
+
+  after_save :touch_domain_version
 
   def epp_code_map
     {
