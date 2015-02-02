@@ -148,8 +148,9 @@ en:
 
         domain_status:
           attributes:
-            setting_id:
+            value:
               taken: 'Status already exists on this domain'
+
 
         user:
           attributes:
