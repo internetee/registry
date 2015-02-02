@@ -52,7 +52,7 @@ gem 'daemons',  '~> 1.1.9' # process delayed jobs
 gem 'newrelic_rpm', '~> 3.9.9.275'
 
 # country listing
-# gem 'countries', '~> 0.10.0'
+gem 'countries', '~> 0.10.0'
 
 group :development do
   # dev tools

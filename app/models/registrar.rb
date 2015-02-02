@@ -1,5 +1,4 @@
 class Registrar < ActiveRecord::Base
-  belongs_to :country_deprecated, foreign_key: "country_id"
   has_many :domains, dependent: :restrict_with_error
   has_many :contacts, dependent: :restrict_with_error
   has_many :api_users, dependent: :restrict_with_error
@@ -21,6 +20,10 @@ class Registrar < ActiveRecord::Base
 
   def to_s
     name
+  end
+
+  def country
+    Country.new(country_code)
   end
 
   class << self

@@ -8,9 +8,12 @@ class Address < ActiveRecord::Base
   ]
 
   belongs_to :contact
-  belongs_to :country_deprecated, foreign_key: "country_id"
 
   has_paper_trail class_name: 'AddressVersion'
+
+  def country
+    Country.new(country_code)
+  end
 
   class << self
     #    def validate_postal_info_types(parsed_frame)
