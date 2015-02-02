@@ -2,7 +2,7 @@ class Nameserver < ActiveRecord::Base
   include Versions # version/nameserver_version.rb
   include EppErrors
 
-  belongs_to :registrar
+  # belongs_to :registrar
   belongs_to :domain
 
   # rubocop: disable Metrics/LineLength

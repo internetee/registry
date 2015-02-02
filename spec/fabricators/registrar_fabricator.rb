@@ -3,5 +3,5 @@ Fabricator(:registrar) do
   reg_no '12345678'
   address 'Street 999, Town, County, Postal'
   email 'info@registrar1.ee'
-  country
+  country_code 'EE'
 end

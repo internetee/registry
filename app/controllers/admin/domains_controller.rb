@@ -52,3 +52,4 @@ class Admin::DomainsController < AdminController
     end
   end
 end
+
