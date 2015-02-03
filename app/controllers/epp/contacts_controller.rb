@@ -46,7 +46,7 @@ class Epp::ContactsController < EppController
     @disclosure_policy = @contact.disclosure.try(:attributes_with_flag)
     @owner = owner?(false)
     # need to reload contact eagerly
-    @contact = find_contact('with eager load') if @owner # for clarity, could just be true
+    @contact = find_contact if @owner # for clarity, could just be true
     render_epp_response 'epp/contacts/info'
   end
 
@@ -114,7 +114,7 @@ class Epp::ContactsController < EppController
 
   ## SHARED
 
-  def find_contact(eager_load = nil)
+  def find_contact
     contact = Contact.find_by(code: @ph[:id])
     unless contact
       epp_errors << { code: '2303',
