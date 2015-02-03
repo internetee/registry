@@ -311,7 +311,7 @@ class Domain < ActiveRecord::Base
       status:
       registered:
       changed:   #{updated_at.to_s(:db)}
-      expire: 
+      expire:
       outzone:
       delete:
 
@@ -330,13 +330,13 @@ class Domain < ActiveRecord::Base
       org:
       url:
       phone:
-      address: 
+      address:
       created:
       changed:
     EOS
   end
 
-  def whois_server_update(name = name, whois_body = whois_body)
+  def whois_server_update(name, whois_body)
     wd = Whois::Domain.find_or_initialize_by(name: name)
     wd.whois_body = whois_body
     wd.save
