@@ -5,7 +5,7 @@ class RefactorRoles < ActiveRecord::Migration
     User.paper_trail_off!
     User.all.each do |x|
       x.roles = ['admin']
-      x.save
+      x.save(validation: false)
     end
     User.paper_trail_on!
 
