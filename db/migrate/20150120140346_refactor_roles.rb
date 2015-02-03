@@ -2,10 +2,12 @@ class RefactorRoles < ActiveRecord::Migration
   def up
     add_column :users, :roles, :string, array: true
 
+    User.paper_trail_off!
     User.all.each do |x|
       x.roles = ['admin']
       x.save
     end
+    User.paper_trail_on!
 
     remove_column :users, :role_id
 
