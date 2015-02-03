@@ -1,5 +1,5 @@
 module Whois
-  class PublicDomain < PublicServer
+  class Domain < Whois::Server
     self.table_name = 'domains'
   end
 end
