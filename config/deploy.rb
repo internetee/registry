@@ -17,6 +17,7 @@ set :deploy_to, '$HOME/registry'
 set :repository, 'https://github.com/domify/registry' # dev repo
 set :branch, 'master'
 set :rails_env, 'alpha'
+set :delayed_job, true
 
 # alpha branch
 task :epp do
@@ -25,6 +26,7 @@ task :epp do
   set :repository, 'https://github.com/domify/registry' # dev repo
   set :branch, 'master'
   set :rails_env, 'alpha'
+  set :delayed_job, false
 end
 
 # staging
@@ -34,6 +36,7 @@ task :st do
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'master' # same as production
   set :rails_env, 'staging'
+  set :delayed_job, true
 end
 
 # staging
@@ -43,6 +46,7 @@ task :eppst do
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'master' # same as production
   set :rails_env, 'staging'
+  set :delayed_job, false
 end
 
 # production
@@ -52,6 +56,7 @@ task :pr do
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'master' # same as staging
   set :rails_env, 'production'
+  set :delayed_job, true
 end
 
 # production
@@ -61,6 +66,7 @@ task :epppr do
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'master' # same as staging
   set :rails_env, 'production'
+  set :delayed_job, false
 end
 
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
@@ -132,8 +138,10 @@ task deploy: :environment do
     invoke :'rails:assets_precompile'
     to :launch do
       invoke :restart
-      invoke :'delayed_job:stop'
-      invoke :'delayed_job:start'
+      if delayed_job
+        invoke :'delayed_job:stop'
+        invoke :'delayed_job:start'
+      end
     end
   end
 end
