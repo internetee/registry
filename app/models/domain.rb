@@ -301,6 +301,7 @@ class Domain < ActiveRecord::Base
     log
   end
 
+  # rubocop:disable Metrics/MethodLength
   def update_whois_body
     self.whois_body = <<-EOS
       This Whois Server contains information on
@@ -335,6 +336,7 @@ class Domain < ActiveRecord::Base
       changed:
     EOS
   end
+  # rubocop:enabled Metrics/MethodLength
 
   def whois_server_update(name, whois_body)
     wd = Whois::Domain.find_or_initialize_by(name: name)
