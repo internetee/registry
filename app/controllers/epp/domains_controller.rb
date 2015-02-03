@@ -15,10 +15,6 @@ class Epp::DomainsController < EppController
   def info
     @domain = find_domain
     handle_errors(@domain) and return unless @domain
-
-    @domain.attach_legal_document(Epp::EppDomain.parse_legal_document_from_frame(params[:parsed_frame]))
-    @domain.save!(validate: false)
-
     render_epp_response '/epp/domains/info'
   end
 
