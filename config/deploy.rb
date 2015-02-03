@@ -160,11 +160,11 @@ task load_commit_hash: :environment do
 end
 
 namespace :delayed_job do
-  task :stop do
+  task stop: :environment do
     queue "cd #{deploy_to}/current; bin/delayed_job stop"
   end
 
-  task :start do
+  task start: :environment do
     queue "cd #{deploy_to}/current; bin/delayed_job start"
   end
 end
