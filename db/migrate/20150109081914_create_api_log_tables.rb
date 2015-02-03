@@ -4,31 +4,31 @@ class CreateApiLogTables < ActiveRecord::Migration
   end
 
   def up
-    create_table :epp_logs do |t|
-      t.text :request
-      t.text :response
-      t.string :request_command
-      t.string :request_object
-      t.boolean :request_successful
-      t.string :api_user_name
-      t.string :api_user_registrar
-      t.string :ip
+    # create_table :epp_logs do |t|
+      # t.text :request
+      # t.text :response
+      # t.string :request_command
+      # t.string :request_object
+      # t.boolean :request_successful
+      # t.string :api_user_name
+      # t.string :api_user_registrar
+      # t.string :ip
 
-      t.timestamps
-    end
+      # t.timestamps
+    # end
 
-    create_table :repp_logs do |t|
-      t.string :request_path
-      t.string :request_method
-      t.text :request_params
-      t.text :response
-      t.string :response_code
-      t.string :api_user_name
-      t.string :api_user_registrar
-      t.string :ip
+    # create_table :repp_logs do |t|
+      # t.string :request_path
+      # t.string :request_method
+      # t.text :request_params
+      # t.text :response
+      # t.string :response_code
+      # t.string :api_user_name
+      # t.string :api_user_registrar
+      # t.string :ip
 
-      t.timestamps
-    end
+      # t.timestamps
+    # end
   end
 
   def down
