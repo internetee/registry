@@ -7,7 +7,7 @@ class Registrar < ActiveRecord::Base
   has_many :messages
   belongs_to :country_deprecated, foreign_key: :country_id
 
-  validates :name, :reg_no, :address, :country, :email, presence: true
+  validates :name, :reg_no, :country_code, :email, presence: true
   validates :name, :reg_no, uniqueness: true
   after_save :touch_domains_version
 
@@ -20,6 +20,10 @@ class Registrar < ActiveRecord::Base
         at[:transfer_from_id].eq(id)
       )
     )
+  end
+
+  def address
+    [street, city, state, city].reject(&:empty?).compact.join(', ')
   end
 
   def to_s

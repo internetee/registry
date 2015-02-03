@@ -237,6 +237,7 @@ en:
         billing_email: 'Billing e-mail'
         phone: 'Contact phone'
         email: 'Contact e-mail'
+        state: 'State / Province'
 
   errors:
     messages:

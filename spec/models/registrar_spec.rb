@@ -13,9 +13,8 @@ describe Registrar do
     it 'is not valid' do
       @registrar.valid?
       @registrar.errors.full_messages.should match_array([
-        'Address is missing',
         'Contact e-mail is missing',
-        'Country is missing',
+        'Country code is missing',
         'Name is missing',
         'Reg no is missing'
       ])
