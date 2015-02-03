@@ -161,11 +161,11 @@ end
 
 namespace :delayed_job do
   task stop: :environment do
-    queue %(echo "-----> Stopping delayed job"; cd #{deploy_to}/current; bin/delayed_job stop)
+    queue %(echo "-----> Stopping delayed job"; cd #{deploy_to}/current; RAILS_ENV=staging bin/delayed_job stop)
   end
 
   task start: :environment do
-    queue %(echo "-----> Starting delayed job"; cd #{deploy_to}/current; bin/delayed_job start)
+    queue %(echo "-----> Starting delayed job"; cd #{deploy_to}/current; RAILS_ENV=staging bin/delayed_job start)
   end
 end
 
