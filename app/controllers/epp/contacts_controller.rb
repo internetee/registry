@@ -115,11 +115,7 @@ class Epp::ContactsController < EppController
   ## SHARED
 
   def find_contact(eager_load = nil)
-    if eager_load
-      contact = Contact.includes(address: :country).find_by(code: @ph[:id])
-    else
-      contact = Contact.find_by(code: @ph[:id])
-    end
+    contact = Contact.find_by(code: @ph[:id])
     unless contact
       epp_errors << { code: '2303',
                       msg: t('errors.messages.epp_obj_does_not_exist'),
