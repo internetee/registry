@@ -33,6 +33,11 @@ describe Domain do
     it 'should not have any versions' do
       @domain.versions.should == []
     end
+
+    it 'should not have whois_body' do
+      @domain.whois_body.should == nil
+    end
+
   end
 
   context 'with valid attributes' do
@@ -49,6 +54,10 @@ describe Domain do
       @domain = Fabricate(:domain)
       @domain.valid?
       @domain.errors.full_messages.should match_array([])
+    end
+
+    it 'should have whois_body' do
+      @domain.whois_body.present?.should == true
     end
 
     context 'with versioning' do

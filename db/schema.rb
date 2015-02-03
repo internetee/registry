@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150202084444) do
+ActiveRecord::Schema.define(version: 20150203074508) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -199,6 +199,7 @@ ActiveRecord::Schema.define(version: 20150202084444) do
     t.string   "period_unit",      limit: 1
     t.string   "creator_str"
     t.string   "updator_str"
+    t.text     "whois_body"
   end
 
   create_table "epp_sessions", force: :cascade do |t|

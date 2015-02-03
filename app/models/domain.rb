@@ -51,10 +51,16 @@ class Domain < ActiveRecord::Base
   before_create :generate_auth_info
   before_create :set_validity_dates
   before_create :attach_default_contacts
-  after_save :manage_automatic_statuses
   before_save :touch_always_version
   def touch_always_version
     self.updated_at = Time.now
+  end
+  before_save :update_whois_body
+  after_save :manage_automatic_statuses
+  after_save :delay_whois_server_update
+  def delay_whois_server_update
+    return if whois_body.blank?
+    delay.whois_server_update(name, whois_body)
   end
 
   validates :name_dirty, domain_name: true, uniqueness: true
@@ -293,6 +299,47 @@ class Domain < ActiveRecord::Base
     log[:nameservers]    = nameservers.map(&:attributes)
     log[:owner_contact]  = [owner_contact.try(:attributes)]
     log
+  end
+
+  def update_whois_body
+    self.whois_body = <<-EOS
+      This Whois Server contains information on
+      Estonian Top Level Domain ee TLD
+
+      domain:    #{name}
+      registrar: #{registrar}
+      status:
+      registered:
+      changed:   #{updated_at.to_s(:db)}
+      expire: 
+      outzone:
+      delete:
+
+      contact
+      name:
+      e-mail:
+      registrar:
+      created:
+
+      contact:
+
+      nsset:
+      nserver:
+
+      registrar:
+      org:
+      url:
+      phone:
+      address: 
+      created:
+      changed:
+    EOS
+  end
+
+  def whois_server_update(name = name, whois_body = whois_body)
+    wd = Whois::Domain.find_or_initialize_by(name: name)
+    wd.whois_body = whois_body
+    wd.save
   end
 
   class << self
