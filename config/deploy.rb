@@ -132,6 +132,8 @@ task deploy: :environment do
     invoke :'rails:assets_precompile'
     to :launch do
       invoke :restart
+      invoke :'delayed_job:stop'
+      invoke :'delayed_job:start'
     end
   end
 end
@@ -155,6 +157,16 @@ task load_commit_hash: :environment do
     echo "CURRENT_COMMIT_HASH = '$(git --git-dir #{deploy_to}/scm rev-parse --short HEAD)'" > \
     #{deploy_to}/shared/config/initializers/current_commit_hash.rb
   )
+end
+
+namespace :delayed_job do
+  task :stop do
+    queue "cd #{deploy_to}/current; bin/delayed_job stop"
+  end
+
+  task :start do
+    queue "cd #{deploy_to}/current; bin/delayed_job start"
+  end
 end
 
 desc 'Restart Passenger application'
