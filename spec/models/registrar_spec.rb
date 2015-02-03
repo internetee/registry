@@ -55,5 +55,9 @@ describe Registrar do
         @registrar.versions.size.should == 1
       end
     end
+
+    fit 'should return full address' do
+      @registrar.address.should == 'Street 999, Town, County, Postal'
+    end
   end
 end
