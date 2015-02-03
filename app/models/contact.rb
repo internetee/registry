@@ -24,7 +24,6 @@ class Contact < ActiveRecord::Base
 
   validates :code, uniqueness: { message: :epp_id_taken }
 
-  delegate :country, to: :address # , prefix: true
   delegate :city, to: :address # , prefix: true
   delegate :street, to: :address # , prefix: true
   delegate :zip, to: :address # , prefix: true
