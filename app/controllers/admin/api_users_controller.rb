@@ -28,7 +28,10 @@ class Admin::ApiUsersController < AdminController
   def edit; end
 
   def update
-    if @api_user.update(api_user_params)
+    app = api_user_params
+    app[:csr] = params[:api_user][:csr].open.read if params[:api_user][:csr]
+
+    if @api_user.update(app)
       flash[:notice] = I18n.t('record_updated')
       redirect_to [:admin, @api_user]
     else
@@ -47,6 +50,14 @@ class Admin::ApiUsersController < AdminController
     end
   end
 
+  def download_csr
+    send_data @api_user.csr, filename: "#{@api_user.username}.csr.pem"
+  end
+
+  def download_crt
+    send_data @api_user.crt, filename: "#{@api_user.username}.crt.pem"
+  end
+
   private
 
   def set_api_user
@@ -54,6 +65,6 @@ class Admin::ApiUsersController < AdminController
   end
 
   def api_user_params
-    params.require(:api_user).permit(:username, :password, :crt, :active, :registrar_id, :registrar_typeahead)
+    params.require(:api_user).permit(:username, :password, :csr, :active, :registrar_id, :registrar_typeahead)
   end
 end

@@ -46,7 +46,12 @@ Rails.application.routes.draw do
     end
 
     resources :users
-    resources :api_users
+    resources :api_users do
+      member do
+        get 'download_csr'
+        get 'download_crt'
+      end
+    end
 
     resources :delayed_jobs
 

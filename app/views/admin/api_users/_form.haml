@@ -1,4 +1,4 @@
-= form_for([:admin, @api_user]) do |f|
+= form_for([:admin, @api_user], multipart: true) do |f|
   - if @api_user.errors.any?
     - @api_user.errors.each do |attr, err|
       = err
@@ -30,7 +30,7 @@
     .col-md-6.text-left
       .form-group
         = f.label :csr, t('certificate_signing_req')
-        = f.text_area :csr, class: 'form-control'
+        = f.file_field :csr
   %hr
   .row
     .col-md-12.text-right
