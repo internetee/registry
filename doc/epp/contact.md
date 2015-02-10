@@ -29,6 +29,7 @@ Contact Mapping protocol short version:
                                           "bic"          # Business registry code
                                           "priv"         # National idendtification number
                                           "birthday"     # Birthday date in format in DD-MM-YYYY
+    <extension>                1       
         <eis:extdata>          1        Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
           <eis:legalDocument>  1        Base64 encoded document 
                                           Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
@@ -63,6 +64,7 @@ Contact Mapping protocol short version:
                                            "birthday"    # Birthday date in format in DD-MM-YYYY
         <contact:authInfo>      0-1      Required if registrar is not the owner of the contact.
           <contact:pw>          1        Contact password. Attribute: roid="String"
+    <extension>                 0-1       
         <eis:extdata>           0-1      Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
           <eis:legalDocument>   0-1      Base64 encoded document. 
                                          Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
@@ -72,14 +74,18 @@ Contact Mapping protocol short version:
 
 ### Contact delete
 
-    Field name               Min-max  Field description
-    -----------------------  -------  -----------------
-    <delete>                 1       
-      <contact:delete>       1        Attribute: xmlns:contact="urn:ietf:params:xml:ns:contact-1.0"
-        <contact:id>         1        Contact id
-        <contact:authInfo>   0-1      Required if registrar is not the owner of the contact.
-          <contact:pw>       1        Contact password. Attribute: roid="String"
-    <clTRID>                 0-1      Client transaction id
+    Field name                Min-max  Field description
+    -----------------------   -------  -----------------
+    <delete>                  1       
+      <contact:delete>        1        Attribute: xmlns:contact="urn:ietf:params:xml:ns:contact-1.0"
+        <contact:id>          1        Contact id
+        <contact:authInfo>    0-1      Required if registrar is not the owner of the contact.
+          <contact:pw>        1        Contact password. Attribute: roid="String"
+    <extension>               1       
+        <eis:extdata>         1        Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
+          <eis:legalDocument> 1        Base64 encoded document. 
+                                         Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
+    <clTRID>                 0-1       Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-delete-command-deletes-contact)
 
