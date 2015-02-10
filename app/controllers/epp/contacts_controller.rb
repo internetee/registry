@@ -1,5 +1,14 @@
 class Epp::ContactsController < EppController
-  helper WhodunnitHelper ## Refactor this?
+  def info
+    handle_errors(@contact) and return unless @contact && rights?
+    # handle_errors(@contact) and return unless rights?
+    @disclosure = ContactDisclosure.default_values.merge(@contact.disclosure.try(:as_hash) || {})
+    @disclosure_policy = @contact.disclosure.try(:attributes_with_flag)
+    @owner = owner?(false)
+    # need to reload contact eagerly
+    @contact = find_contact if @owner # for clarity, could just be true
+    render_epp_response 'epp/contacts/info'
+  end
 
   def create
     @contact = Contact.new(contact_and_address_attributes)
@@ -39,17 +48,6 @@ class Epp::ContactsController < EppController
     render_epp_response '/epp/contacts/check'
   end
 
-  def info
-    handle_errors(@contact) and return unless @contact && rights?
-    # handle_errors(@contact) and return unless rights?
-    @disclosure = ContactDisclosure.default_values.merge(@contact.disclosure.try(:as_hash) || {})
-    @disclosure_policy = @contact.disclosure.try(:attributes_with_flag)
-    @owner = owner?(false)
-    # need to reload contact eagerly
-    @contact = find_contact if @owner # for clarity, could just be true
-    render_epp_response 'epp/contacts/info'
-  end
-
   def renew
     epp_errors << { code: '2101', msg: t(:'errors.messages.unimplemented_command') }
     handle_errors
@@ -61,33 +59,28 @@ class Epp::ContactsController < EppController
 
   ## CREATE
   def validate_create
-    @ph = params_hash['epp']['command']['create']['create']
-    return false unless validate_params
-    xml_attrs_present?(@ph, [%w(postalInfo name), %w(postalInfo addr city), %w(postalInfo addr cc),
-                             %w(ident), %w(voice), %w(email)])
-
-    epp_errors.empty?
+    @prefix = 'create > create >'
+    requires 'postalInfo > name', 'postalInfo > addr > city', 
+      'postalInfo > addr > cc', 'ident', 'voice', 'email'
   end
 
   ## UPDATE
-  def validate_updatezz
-    @ph = params_hash['epp']['command']['update']['update']
-    update_attrs_present?
-    # xml_attrs_present?(@ph, [['id'], %w(authInfo pw)])
-    xml_attrs_present?(@ph, [['id']])
+  def validate_update
+    @prefix = 'update > update >'
+    requires 'id'
+
+    if element_count('chg') == 0 && element_count('rem') == 0 && element_count('add') == 0
+      epp_errors << { 
+        code: '2003', 
+        msg: I18n.t('errors.messages.required_parameter_missing', key: 'add, rem or chg') 
+      }
+    end
   end
 
   def contact_exists?(code)
     return true if @contact.is_a?(Contact)
     epp_errors << { code: '2303', msg: t('errors.messages.epp_obj_does_not_exist'),
                     value: { obj: 'id', val: code } }
-  end
-
-  def update_attrs_present?
-    return true if params[:parsed_frame].css('add').present?
-    return true if params[:parsed_frame].css('rem').present?
-    return true if params[:parsed_frame].css('chg').present?
-    epp_errors << { code: '2003', msg: I18n.t('errors.messages.required_parameter_missing', key: 'add, rem or chg') }
   end
 
   ## DELETE
@@ -115,11 +108,13 @@ class Epp::ContactsController < EppController
   ## SHARED
 
   def find_contact
-    contact = Contact.find_by(code: @ph[:id])
-    unless contact
+    contact_code = params[:parsed_frame].css('id').text.strip.downcase
+    contact = Contact.find_by(code: contact_code)
+
+    if contact.blank?
       epp_errors << { code: '2303',
                       msg: t('errors.messages.epp_obj_does_not_exist'),
-                      value: { obj: 'id', val: @ph[:id] } }
+                      value: { obj: 'id', val: contact_code } }
     end
     contact
   end
