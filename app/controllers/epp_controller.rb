@@ -84,12 +84,19 @@ class EppController < ApplicationController
   # TODO: Add possibility to pass validations / options in the method
 
   def requires(*selectors)
+    options = selectors.extract_options!
+    allow_blank = options[:allow_blank] ||= false # allow_blank is false by default
+
     el, missing = nil, nil
     selectors.each do |selector|
       full_selector = [@prefix, selector].compact.join(' ')
       el = params[:parsed_frame].css(full_selector).first
 
-      missing = el.nil?
+      if allow_blank
+        missing = el.nil?
+      else
+        missing = el.present? ? el.text.blank? : true
+      end
       epp_errors << {
         code: '2003',
         msg: I18n.t('errors.messages.required_parameter_missing', key: full_selector)
