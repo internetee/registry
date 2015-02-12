@@ -138,7 +138,9 @@ For Apache, registry admin goes to port 443 in production, /etc/apache2/sites-en
 </VirtualHost>
 ```
 
-For Apache, epp goes to port 700, /etc/apache2/sites-enabled/epp.conf short example:
+For Apache, epp goes to port 700.  
+Be sure to update paths to match your system configuration.  
+/etc/apache2/sites-enabled/epp.conf short example:
 ```apache
 <IfModule mod_epp.c>
   Listen 700
@@ -148,7 +150,9 @@ For Apache, epp goes to port 700, /etc/apache2/sites-enabled/epp.conf short exam
     SSLCertificateFile /etc/apache2/ssl/apache.crt
     SSLCertificateKeyFile /etc/apache2/ssl/apache.key
 
-    SSLVerifyClient optional_no_ca
+    SSLVerifyClient require
+    SSLVerifyDepth 1
+    SSLCACertificateFile /home/registry/registry/shared/ca/certs/ca.cert.pem
 
     EPPEngine On
     EPPCommandRoot          /proxy/command

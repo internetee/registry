@@ -7,6 +7,9 @@ defaults: &defaults
   # If you change this key, all old signed cookies will become invalid!
   secret_key_base: please-change-it-you-can-generate-it-with-rake-secret
   devise_secret: please-change-it-you-can-generate-it-with-rake-secret
+  ca_cert_path: ca-cert-path-here
+  ca_key_path: ca-key-path-here
+  ca_key_password: ca-key-pass-phrase-here
 
 development:
   <<: *defaults
