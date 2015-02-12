@@ -500,3 +500,4 @@ en:
   contact_email: 'Contact e-mail'
   address_help: 'Street name, house no - apartment no, city, county, country, zip'
   download: 'Download'
+  failed_to_create_certificate: 'Failed to create certificate!'

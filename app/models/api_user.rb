@@ -1,3 +1,5 @@
+require 'open3'
+
 # rubocop: disable Metrics/ClassLength
 class ApiUser < ActiveRecord::Base
   include Versions # version/api_user_version.rb
@@ -30,13 +32,21 @@ class ApiUser < ActiveRecord::Base
     csr_file.rewind
 
     crt_file = Tempfile.new('client_crt')
-
-    `openssl ca -keyfile #{APP_CONFIG['ca_key_path']} -cert #{APP_CONFIG['ca_cert_path']} \
+    _out, err, _st = Open3.capture3("openssl ca -keyfile #{APP_CONFIG['ca_key_path']} \
+    -cert #{APP_CONFIG['ca_cert_path']} \
     -extensions usr_cert -notext -md sha256 \
-    -in #{csr_file.path} -out #{crt_file.path} -key '#{APP_CONFIG['ca_key_password']}' -batch`
+    -in #{csr_file.path} -out #{crt_file.path} -key '#{APP_CONFIG['ca_key_password']}' -batch")
 
-    crt_file.rewind
-    self.crt = crt_file.read
+    if err.present?
+      errors.add(:base, I18n.t('failed_to_create_certificate'))
+      logger.error('FAILED TO CREATE CLIENT CERTIFICATE')
+      logger.error(err)
+      return false
+    else
+      crt_file.rewind
+      self.crt = crt_file.read
+      return true
+    end
   end
 end
 # rubocop: enable Metrics/ClassLength
