@@ -37,7 +37,13 @@
       .panel-body
         %dl.dl-horizontal
           %dt= t('csr')
-          %dd= link_to(t('download'), download_csr_admin_api_user_path)
+          - if @api_user.csr
+            %dd= link_to(t('download'), download_csr_admin_api_user_path)
+          - else
+            %dd -
 
           %dt= t('crt')
-          %dd= link_to(t('download'), download_crt_admin_api_user_path)
+          - if @api_user.csr
+            %dd= link_to(t('download'), download_crt_admin_api_user_path)
+          - else
+            %dd -
