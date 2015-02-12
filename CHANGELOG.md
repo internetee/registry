@@ -68,6 +68,11 @@ With these lines:
   SSLCACertificateFile /home/registry/registry/shared/ca/certs/ca.cert.pem
 ```
 
+Reload apache:
+```
+sudo /etc/init.d/apache2 reload
+```
+
 Configure application.yml to match the CA settings:
 ```
 ca_cert_path: '/home/registry/registry/shared/ca/certs/ca.cert.pem'
