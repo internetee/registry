@@ -12,7 +12,10 @@ class Admin::ApiUsersController < AdminController
   end
 
   def create
-    @api_user = ApiUser.new(api_user_params)
+    app = api_user_params
+    app[:csr] = params[:api_user][:csr].open.read if params[:api_user][:csr]
+
+    @api_user = ApiUser.new(app)
 
     if @api_user.save
       flash[:notice] = I18n.t('record_created')

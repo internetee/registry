@@ -70,7 +70,7 @@ class Epp::ContactsController < EppController
   end
 
   ## UPDATE
-  def validate_update
+  def validate_updatezz
     @ph = params_hash['epp']['command']['update']['update']
     update_attrs_present?
     # xml_attrs_present?(@ph, [['id'], %w(authInfo pw)])

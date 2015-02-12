@@ -25,35 +25,18 @@ class ApiUser < ActiveRecord::Base
   end
 
   def create_crt
-    request = OpenSSL::X509::Request.new(csr)
-    fail 'CSR can not be verified' unless request.verify request.public_key
-    ca_cert = OpenSSL::X509::Certificate.new(File.read(APP_CONFIG['ca_cert_path']))
-    ca_key = OpenSSL::PKey::RSA.new(File.read(APP_CONFIG['ca_key_path']), APP_CONFIG['ca_key_password'])
+    csr_file = Tempfile.new('client_csr')
+    csr_file.write(csr)
+    csr_file.rewind
 
-    csr_cert = OpenSSL::X509::Certificate.new
-    csr_cert.serial = 0
-    csr_cert.version = 2
-    csr_cert.not_before = Time.now
-    csr_cert.not_after = Time.now + 600
+    crt_file = Tempfile.new('client_crt')
 
-    csr_cert.subject = request.subject
-    csr_cert.public_key = request.public_key
-    csr_cert.issuer = ca_cert.subject
+    `openssl ca -keyfile #{APP_CONFIG['ca_key_path']} -cert #{APP_CONFIG['ca_cert_path']} \
+    -extensions usr_cert -notext -md sha256 \
+    -in #{csr_file.path} -out #{crt_file.path} -key '#{APP_CONFIG['ca_key_password']}' -batch`
 
-    extension_factory = OpenSSL::X509::ExtensionFactory.new
-    extension_factory.subject_certificate = csr_cert
-    extension_factory.issuer_certificate = ca_cert
-
-    csr_cert.add_extension extension_factory.create_extension('basicConstraints', 'CA:FALSE')
-
-    csr_cert.add_extension extension_factory.create_extension(
-        'keyUsage', 'keyEncipherment,dataEncipherment,digitalSignature')
-
-    csr_cert.add_extension extension_factory.create_extension('subjectKeyIdentifier', 'hash')
-
-    csr_cert.sign ca_key, OpenSSL::Digest::SHA1.new
-
-    self.crt = csr_cert.to_pem
+    crt_file.rewind
+    self.crt = crt_file.read
   end
 end
 # rubocop: enable Metrics/ClassLength
