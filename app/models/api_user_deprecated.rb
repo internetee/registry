@@ -1,7 +1,8 @@
 require 'open3'
 
 # rubocop: disable Metrics/ClassLength
-class ApiUser < User
+class ApiUserDeprecated < ActiveRecord::Base
+  self.table_name = "api_users"
   # TODO: should have max request limit per day
   belongs_to :registrar
   has_many :contacts
