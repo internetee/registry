@@ -696,6 +696,13 @@ describe 'EPP Domain', epp: true do
       xml = domain_transfer_xml({
         name: { value: domain.name },
         authInfo: { pw: { value: pw } }
+      }, 'query', {
+        _anonymus: [
+          legalDocument: {
+            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+            attrs: { type: 'pdf' }
+          }
+        ]
       })
 
       response = login_as :registrar2 do
@@ -723,6 +730,13 @@ describe 'EPP Domain', epp: true do
       xml = domain_transfer_xml({
         name: { value: domain.name },
         authInfo: { pw: { value: pw } }
+      }, 'query', {
+        _anonymus: [
+          legalDocument: {
+            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+            attrs: { type: 'pdf' }
+          }
+        ]
       }) # request with new password
 
       response = epp_plain_request(xml, :xml)
@@ -829,6 +843,20 @@ describe 'EPP Domain', epp: true do
       create_settings
     end
 
+    it 'does not create a domain transfer without legal document' do
+      pw = domain.auth_info
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        authInfo: { pw: { value: pw } }
+      })
+
+      login_as :registrar2 do
+        response = epp_plain_request(xml, :xml)
+        response[:result_code].should == '2003'
+        response[:msg].should == 'Required parameter missing: extension > extdata > legalDocument'
+      end
+    end
+
     it 'approves the transfer request' do
       domain.domain_transfers.create({
         status: DomainTransfer::PENDING,
@@ -840,7 +868,14 @@ describe 'EPP Domain', epp: true do
       xml = domain_transfer_xml({
         name: { value: domain.name },
         authInfo: { pw: { value: domain.auth_info } }
-      }, 'approve')
+      }, 'approve', {
+        _anonymus: [
+          legalDocument: {
+            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+            attrs: { type: 'pdf' }
+          }
+        ]
+      })
 
       response = epp_plain_request(xml, :xml)
 
@@ -903,7 +938,14 @@ describe 'EPP Domain', epp: true do
       xml = domain_transfer_xml({
         name: { value: domain.name },
         authInfo: { pw: { value: domain.auth_info } }
-      }, 'approve')
+      }, 'approve', {
+        _anonymus: [
+          legalDocument: {
+            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+            attrs: { type: 'pdf' }
+          }
+        ]
+      })
 
       response = login_as :registrar2 do
         epp_plain_request(xml, :xml)
@@ -917,7 +959,15 @@ describe 'EPP Domain', epp: true do
       xml = domain_transfer_xml({
         name: { value: domain.name },
         authInfo: { pw: { value: 'test' } }
+      }, 'query', {
+        _anonymus: [
+          legalDocument: {
+            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+            attrs: { type: 'pdf' }
+          }
+        ]
       })
+
       response = epp_plain_request(xml, :xml)
       response[:result_code].should == '2201'
       response[:msg].should == 'Authorization error'
@@ -928,6 +978,13 @@ describe 'EPP Domain', epp: true do
       xml = domain_transfer_xml({
         name: { value: domain.name },
         authInfo: { pw: { value: pw } }
+      }, 'query', {
+        _anonymus: [
+          legalDocument: {
+            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+            attrs: { type: 'pdf' }
+          }
+        ]
       })
 
       response = epp_plain_request(xml, :xml)
@@ -947,6 +1004,13 @@ describe 'EPP Domain', epp: true do
       xml = domain_transfer_xml({
         name: { value: domain.name },
         authInfo: { pw: { value: pw } }
+      }, 'query', {
+        _anonymus: [
+          legalDocument: {
+            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+            attrs: { type: 'pdf' }
+          }
+        ]
       })
 
       login_as :registrar2 do
