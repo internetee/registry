@@ -37,15 +37,15 @@ class ApiUser < ActiveRecord::Base
     -extensions usr_cert -notext -md sha256 \
     -in #{csr_file.path} -out #{crt_file.path} -key '#{APP_CONFIG['ca_key_password']}' -batch")
 
-    if err.present?
+    if err.match(/Data Base Updated/)
+      crt_file.rewind
+      self.crt = crt_file.read
+      return true
+    else
       errors.add(:base, I18n.t('failed_to_create_certificate'))
       logger.error('FAILED TO CREATE CLIENT CERTIFICATE')
       logger.error(err)
       return false
-    else
-      crt_file.rewind
-      self.crt = crt_file.read
-      return true
     end
   end
 end

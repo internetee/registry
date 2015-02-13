@@ -43,6 +43,14 @@ subjectKeyIdentifier=hash
 authorityKeyIdentifier=keyid:always,issuer
 basicConstraints = CA:true
 keyUsage = cRLSign, keyCertSign
+
+[ policy_match ]
+countryName             = optional
+stateOrProvinceName     = optional
+organizationName        = optional
+organizationalUnitName  = optional
+commonName              = optional
+emailAddress            = optional
 ```
 
 Issue the root certificate (prompts for additional data):
