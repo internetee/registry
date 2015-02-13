@@ -56,7 +56,7 @@ describe Registrar do
       end
     end
 
-    fit 'should return full address' do
+    it 'should return full address' do
       @registrar.address.should == 'Street 999, Town, County, Postal'
     end
   end
