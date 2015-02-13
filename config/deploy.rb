@@ -130,6 +130,10 @@ task deploy: :environment do
   deploy do
     # Put things that will set up an empty directory into a fully set-up
     # instance of your project.
+    to :prepare do
+      invoke :'delayed_job:stop' if delayed_job
+    end
+
     invoke :'git:clone'
     invoke :load_commit_hash
     invoke :'deploy:link_shared_paths'
@@ -138,10 +142,7 @@ task deploy: :environment do
     invoke :'rails:assets_precompile'
     to :launch do
       invoke :restart
-      if delayed_job
-        invoke :'delayed_job:stop'
-        invoke :'delayed_job:start'
-      end
+      invoke :'delayed_job:start' if delayed_job
     end
   end
 end
@@ -166,7 +167,7 @@ task load_commit_hash: :environment do
     #{deploy_to}/shared/config/initializers/current_commit_hash.rb
   )
 end
-       
+
 namespace :delayed_job do
   task stop: :environment do
     queue %(echo "-----> Stopping delayed job"; cd #{deploy_to}/current; RAILS_ENV=#{rails_env} bin/delayed_job stop)
