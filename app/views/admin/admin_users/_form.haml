@@ -1,9 +1,9 @@
-= form_for([:admin, @user]) do |f|
-  - if @user.errors.any?
-    - @user.errors.each do |attr, err|
+= form_for([:admin, @admin_user]) do |f|
+  - if @admin_user.errors.any?
+    - @admin_user.errors.each do |attr, err|
       = err
       %br
-  - if @user.errors.any?
+  - if @admin_user.errors.any?
     %hr
 
   .row
@@ -27,7 +27,7 @@
         = f.text_field(:email, class: 'form-control')
       .form-group
         = f.label :role
-        = select_tag 'user[roles][]', options_for_select(User::ROLES.map {|x| [t(x), x] }, @user.roles.try(:first)), class: 'form-control selectize'
+        = select_tag 'admin_user[roles][]', options_for_select(AdminUser::ROLES.map {|x| [t(x), x] }, @admin_user.roles.try(:first)), class: 'form-control selectize'
 
   %hr
   .row

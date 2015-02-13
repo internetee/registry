@@ -3,7 +3,7 @@ class Epp::ContactsController < EppController
 
   def create
     @contact = Contact.new(contact_and_address_attributes)
-    @contact.registrar = current_api_user.registrar
+    @contact.registrar = current_user.registrar
     render_epp_response '/epp/contacts/create' and return if @contact.save
     handle_errors(@contact)
   end
@@ -108,7 +108,7 @@ class Epp::ContactsController < EppController
     return false unless xml_attrs_present?(@ph, [['id']])
     @contact = find_contact
     return false unless @contact
-    return true if current_api_user.registrar == @contact.registrar || xml_attrs_present?(@ph, [%w(authInfo pw)])
+    return true if current_user.registrar == @contact.registrar || xml_attrs_present?(@ph, [%w(authInfo pw)])
     false
   end
 
@@ -126,7 +126,7 @@ class Epp::ContactsController < EppController
 
   def owner?(with_errors = true)
     return false unless find_contact
-    return true if @contact.registrar == current_api_user.registrar
+    return true if @contact.registrar == current_user.registrar
     return false unless with_errors
     epp_errors << { code: '2201', msg: t('errors.messages.epp_authorization_error') }
     false
@@ -135,7 +135,7 @@ class Epp::ContactsController < EppController
   def rights?
     pw = @ph.try(:[], :authInfo).try(:[], :pw)
 
-    return true if current_api_user.try(:registrar) == @contact.try(:registrar)
+    return true if current_user.try(:registrar) == @contact.try(:registrar)
     return true if pw && @contact.auth_info_matches(pw) # @contact.try(:auth_info_matches, pw)
 
     epp_errors << { code: '2200', msg: t('errors.messages.epp_authentication_error') }

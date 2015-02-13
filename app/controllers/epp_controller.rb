@@ -3,7 +3,7 @@ class EppController < ApplicationController
   before_action :generate_svtrid
   before_action :validate_request
   layout false
-  helper_method :current_api_user
+  helper_method :current_user
 
   def generate_svtrid
     # rubocop: disable Style/VariableName
@@ -21,13 +21,13 @@ class EppController < ApplicationController
     EppSession.find_or_initialize_by(session_id: cookie['session'])
   end
 
-  def current_api_user
-    @current_api_user ||= ApiUser.find_by_id(epp_session[:api_user_id])
+  def current_user
+    @current_user ||= ApiUser.find_by_id(epp_session[:api_user_id])
     # by default PaperTrail uses before filter and at that
-    # time current_api_user is not yet present
-    ::PaperTrail.whodunnit = api_user_log_str(@current_api_user)
+    # time current_user is not yet present
+    ::PaperTrail.whodunnit = api_user_log_str(@current_user)
     ::PaperSession.session = epp_session.session_id if epp_session.session_id.present?
-    @current_api_user
+    @current_user
   end
 
   # ERROR + RESPONSE HANDLING
@@ -203,8 +203,8 @@ class EppController < ApplicationController
       request_successful: epp_errors.empty?,
       request_object: params[:epp_object_type],
       response: @response,
-      api_user_name: api_user_log_str(@api_user || current_api_user),
-      api_user_registrar: @api_user.try(:registrar).try(:to_s) || current_api_user.try(:registrar).try(:to_s),
+      api_user_name: api_user_log_str(@api_user || current_user),
+      api_user_registrar: @api_user.try(:registrar).try(:to_s) || current_user.try(:registrar).try(:to_s),
       ip: request.ip
     })
   end

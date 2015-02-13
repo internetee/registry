@@ -30,7 +30,7 @@ module Versions
       if creator_str =~ /^\d-api-/
         ApiUser.find(creator_str)
       else
-        User.find(creator_str)
+        AdminUser.find(creator_str)
       end
     end
 
@@ -40,7 +40,7 @@ module Versions
       if updator_str =~ /^\d-api-/
         ApiUser.find(updator_str)
       else
-        User.find(updator_str)
+        AdminUser.find(updator_str)
       end
     end
 

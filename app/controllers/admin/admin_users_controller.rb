@@ -1,22 +1,22 @@
-class Admin::UsersController < AdminController
+class Admin::AdminUsersController < AdminController
   load_and_authorize_resource
   before_action :set_user, only: [:show, :edit, :update, :destroy]
 
   def index
-    @q = User.search(params[:q])
-    @users = @q.result.page(params[:page])
+    @q = AdminUser.search(params[:q])
+    @admin_users = @q.result.page(params[:page])
   end
 
   def new
-    @user = User.new
+    @admin_user = AdminUser.new
   end
 
   def create
-    @user = User.new(user_params)
+    @admin_user = AdminUser.new(admin_user_params)
 
-    if @user.save
+    if @admin_user.save
       flash[:notice] = I18n.t('record_created')
-      redirect_to [:admin, @user]
+      redirect_to [:admin, @admin_user]
     else
       flash.now[:alert] = I18n.t('failed_to_create_record')
       render 'new'
@@ -28,9 +28,9 @@ class Admin::UsersController < AdminController
   def edit; end
 
   def update
-    if @user.update(user_params)
+    if @admin_user.update(admin_user_params)
       flash[:notice] = I18n.t('record_updated')
-      redirect_to [:admin, @user]
+      redirect_to [:admin, @admin_user]
     else
       flash.now[:alert] = I18n.t('failed_to_update_record')
       render 'edit'
@@ -38,7 +38,7 @@ class Admin::UsersController < AdminController
   end
 
   def destroy
-    if @user.destroy
+    if @admin_user.destroy
       flash[:notice] = I18n.t('record_deleted')
       redirect_to admin_users_path
     else
@@ -50,10 +50,10 @@ class Admin::UsersController < AdminController
   private
 
   def set_user
-    @user = User.find(params[:id])
+    @admin_user = AdminUser.find(params[:id])
   end
 
-  def user_params
-    params.require(:user).permit(:username, :password, :identity_code, :email, :country_code, { roles: [] })
+  def admin_user_params
+    params.require(:admin_user).permit(:username, :password, :identity_code, :email, :country_code, { roles: [] })
   end
 end

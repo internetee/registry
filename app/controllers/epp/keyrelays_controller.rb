@@ -6,7 +6,7 @@ class Epp::KeyrelaysController < EppController
 
     handle_errors(@domain) and return unless @domain
     handle_errors(@domain) and return unless @domain.authenticate(params[:parsed_frame].css('pw').text)
-    handle_errors(@domain) and return unless @domain.keyrelay(params[:parsed_frame], current_api_user.registrar)
+    handle_errors(@domain) and return unless @domain.keyrelay(params[:parsed_frame], current_user.registrar)
 
     render_epp_response '/epp/shared/success'
   end

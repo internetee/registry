@@ -15,10 +15,10 @@ class ApplicationController < ActionController::Base
   end
 
   def user_for_paper_trail
-    if defined?(current_api_user) && current_api_user.present?
-      # Most of the time it's not loaded in correct time because PaperTrail before filter kicks in 
-      # before current_api_user is defined. PaperTrail is triggered also at current_api_user
-      api_user_log_str(current_api_user) 
+    if defined?(current_user) && current_user.present?
+      # Most of the time it's not loaded in correct time because PaperTrail before filter kicks in
+      # before current_user is defined. PaperTrail is triggered also at current_user
+      api_user_log_str(current_user)
     elsif current_user.present?
       "#{current_user.id}-#{current_user.username}"
     else

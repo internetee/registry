@@ -4,7 +4,7 @@ class Ability
   def initialize(user)
     alias_action :create, :read, :update, :destroy, to: :crud
 
-    @user = user || User.new
+    @user = user || AdminUser.new
     @user.roles.each { |role| send(role) } if @user.roles
 
     return if @user.roles || @user.roles.any?

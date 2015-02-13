@@ -31,7 +31,7 @@ ApiUser.where(
   registrar: registrar2
 ).first_or_create!
 
-User.where(
+AdminUser.where(
   username: 'user1',
   password: 'test1',
   email: 'user1@example.ee',
@@ -39,7 +39,7 @@ User.where(
   country_code: 'EE'
 ).first_or_create!
 
-User.where(
+AdminUser.where(
   username: 'user2',
   password: 'test2',
   email: 'user2@example.ee',
@@ -47,7 +47,7 @@ User.where(
   country_code: 'EE'
 ).first_or_create!
 
-User.where(
+AdminUser.where(
   username: 'user3',
   password: 'test3',
   email: 'user3@example.ee',
@@ -55,4 +55,4 @@ User.where(
   country_code: 'EE'
 ).first_or_create!
 
-User.update_all(roles: ['admin'])
+AdminUser.update_all(roles: ['admin'])

@@ -4,11 +4,11 @@ module Repp
     prefix :repp
 
     http_basic do |username, password|
-      @current_api_user ||= ApiUser.find_by(username: username, password: password)
+      @current_user ||= ApiUser.find_by(username: username, password: password)
     end
 
     helpers do
-      attr_reader :current_api_user
+      attr_reader :current_user
     end
 
     after do
@@ -18,8 +18,8 @@ module Repp
         request_params: request.params.except('route_info').to_json,
         response: @response.to_json,
         response_code: status,
-        api_user_name: current_api_user.try(:username),
-        api_user_registrar: current_api_user.try(:registrar).try(:to_s),
+        api_user_name: current_user.try(:username),
+        api_user_registrar: current_user.try(:registrar).try(:to_s),
         ip: request.ip
       })
     end

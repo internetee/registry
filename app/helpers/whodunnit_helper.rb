@@ -5,7 +5,7 @@ module WhodunnitHelper
       user = ApiUser.find(whodunnit)
       return link_to(user.username, admin_epp_user_path(user))
     end
-    user = User.find(whodunnit)
+    user = AdminUser.find(whodunnit)
     return link_to(user.username, admin_user_path(user))
   rescue ActiveRecord::RecordNotFound
     return nil
@@ -17,7 +17,7 @@ module WhodunnitHelper
       user = ApiUser.find(whodunnit)
       return "#{user.username} (EPP)"
     end
-    user = User.find(whodunnit)
+    user = AdminUser.find(whodunnit)
     return user.username
   rescue ActiveRecord::RecordNotFound
     return nil

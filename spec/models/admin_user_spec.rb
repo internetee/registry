@@ -1,10 +1,10 @@
 require 'rails_helper'
 require 'cancan/matchers'
 
-describe User do
+describe AdminUser do
   context 'with invalid attribute' do
     before :all do
-      @user = User.new
+      @user = AdminUser.new
     end
 
     it 'should not be valid' do
@@ -24,7 +24,7 @@ describe User do
 
   context 'with valid attributes' do
     before :all do
-      @user = Fabricate(:user)
+      @user = Fabricate(:admin_user)
     end
 
     it 'should be valid' do
@@ -33,7 +33,7 @@ describe User do
     end
 
     # it 'should be valid twice' do
-      # @user = Fabricate(:user)
+      # @user = Fabricate(:admin_user)
       # @user.valid?
       # @user.errors.full_messages.should match_array([])
     # end
@@ -54,7 +54,7 @@ describe User do
     # let(:user) { nil }
 
     # context 'when user is admin' do
-      # let(:user) { Fabricate(:user) }
+      # let(:user) { Fabricate(:admin_user) }
 
       # it { should be_able_to(:manage, Domain.new) }
       # it { should be_able_to(:manage, Contact.new) }
