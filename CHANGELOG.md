@@ -21,6 +21,7 @@ sudo su -
 cd /etc/ssl/
 cp openssl.cnf openssl.cnf.bak
 nano openssl.cnf
+exit
 ```
 
 Make sure the following options are in place:
