@@ -1,9 +1,22 @@
 class EppController < ApplicationController
+  layout false
   protect_from_forgery with: :null_session
+  skip_before_action :verify_authenticity_token
+
   before_action :generate_svtrid
   before_action :validate_request
-  layout false
   helper_method :current_user
+
+  rescue_from CanCan::AccessDenied do |_exception|
+    @errors ||= []
+    if @errors.blank?
+      @errors = [{
+        msg: t('errors.messages.epp_authorization_error'),
+        code: '2201'
+      }]
+    end
+    render_epp_response '/epp/error'
+  end
 
   def generate_svtrid
     # rubocop: disable Style/VariableName
@@ -112,7 +125,7 @@ class EppController < ApplicationController
   # requires_attribute 'transfer', 'op', values: %(approve, query, reject)
 
   def requires_attribute(element_selector, attribute_selector, options)
-    element = requires(element_selector)
+    element = requires(element_selector, allow_blank: options[:allow_blank])
     return unless element
 
     attribute = element[attribute_selector]

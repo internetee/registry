@@ -13,6 +13,11 @@ class ApiUser < User
 
   attr_accessor :registrar_typeahead
 
+  def ability
+    @ability ||= Ability.new(self)
+  end
+  delegate :can?, :cannot?, to: :ability
+
   def registrar_typeahead
     @registrar_typeahead || registrar || nil
   end

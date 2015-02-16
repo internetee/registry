@@ -1,4 +1,6 @@
 class SessionsController < Devise::SessionsController
+  skip_authorization_check only: [:login, :create]
+
   def create
     # TODO: Create ID Card login here:
     # this is just testing config

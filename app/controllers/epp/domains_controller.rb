@@ -1,4 +1,6 @@
 class Epp::DomainsController < EppController
+  skip_authorization_check # TODO: remove it
+
   def create
     @domain = Epp::EppDomain.new(domain_create_params)
 

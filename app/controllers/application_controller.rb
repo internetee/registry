@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  check_authorization
+
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
@@ -9,8 +11,22 @@ class ApplicationController < ActionController::Base
     params[resource] &&= send(method) if respond_to?(method, true)
   end
 
+  rescue_from CanCan::AccessDenied do |exception|
+    redirect_to admin_dashboard_path, alert: exception.message
+  end
+
+  def current_ability
+    if defined?(current_api_user) && current_api_user.present?
+      current_api_user.ability
+    else
+      current_user.ability
+    end
+  end
+
   def after_sign_in_path_for(_resource)
-    return session[:user_return_to].to_s if session[:user_return_to] && session[:user_return_to] != login_path
+    if session[:user_return_to] && session[:user_return_to] != login_path
+      return session[:user_return_to].to_s 
+    end
     admin_dashboard_path
   end
 
@@ -32,11 +48,5 @@ class ApplicationController < ActionController::Base
     else
       'api-public'
     end
-  end
-end
-
-class ApplicationController < ActionController::Base
-  rescue_from CanCan::AccessDenied do |exception|
-    redirect_to admin_dashboard_path, alert: exception.message
   end
 end
