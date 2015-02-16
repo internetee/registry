@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 20150213104014) do
     t.string   "creator_str"
     t.string   "updator_str"
     t.string   "country_code"
+    t.string   "state"
   end
 
   create_table "api_users", force: :cascade do |t|
