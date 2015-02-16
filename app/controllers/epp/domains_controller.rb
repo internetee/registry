@@ -42,12 +42,16 @@ class Epp::DomainsController < EppController
 
     handle_errors(@domain) and return unless @domain
 
-    @domain.parse_and_detach_domain_dependencies(params[:parsed_frame].css('rem'))
-    @domain.parse_and_detach_ds_data(params[:parsed_frame].css('extension rem'))
-    @domain.parse_and_attach_domain_dependencies(params[:parsed_frame].css('add'))
-    @domain.parse_and_attach_ds_data(params[:parsed_frame].css('extension add'))
-    @domain.parse_and_update_domain_dependencies(params[:parsed_frame].css('chg'))
-    @domain.attach_legal_document(Epp::EppDomain.parse_legal_document_from_frame(params[:parsed_frame]))
+    # @domain.parse_and_detach_domain_dependencies(params[:parsed_frame].css('rem')
+    # @domain.parse_and_detach_ds_data(params[:parsed_frame].css('extension rem'))
+    # @domain.parse_and_attach_domain_dependencies(params[:parsed_frame].css('add'))
+    # @domain.parse_and_attach_ds_data(params[:parsed_frame].css('extension add'))
+    # @domain.parse_and_update_domain_dependencies(params[:parsed_frame].css('chg'))
+    # @domain.attach_legal_document(Epp::EppDomain.parse_legal_document_from_frame(params[:parsed_frame]))
+
+    @domain.update_attributes(domain_rem_params)
+
+    binding.pry
 
     if @domain.errors.any? || !@domain.save
       handle_errors(@domain)
@@ -167,6 +171,31 @@ class Epp::DomainsController < EppController
 
     @prefix = 'delete > delete >'
     requires 'name'
+  end
+
+  def domain_rem_params
+    ns_list = Epp::EppDomain.parse_nameservers_from_frame(params[:parsed_frame])
+
+    to_destroy = []
+    ns_list.each do |ns_attrs|
+      nameserver = @domain.nameservers.where(ns_attrs).try(:first)
+      if nameserver.blank?
+        epp_errors << {
+          code: '2303',
+          msg: I18n.t('nameserver_not_found'),
+          value: { obj: 'hostAttr', val: ns_attrs[:hostname] }
+        }
+      else
+        to_destroy << {
+          id: nameserver.id,
+          _destroy: 1
+        }
+      end
+    end
+
+    {
+      nameservers_attributes: to_destroy
+    }
   end
 
   def domain_create_params
