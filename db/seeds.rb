@@ -4,7 +4,10 @@
 registrar1 = Registrar.where(
   name: 'Registrar First AS',
   reg_no: '10300220',
-  address: 'Pärnu mnt 2, Tallinna linn, Harju maakond, 11415',
+  street: 'Pärnu mnt 2',
+  city: 'Tallinn',
+  state: 'Harju maakond',
+  zip: '11415',
   email: 'registrar1@example.com',
   country_code: 'EE'
 ).first_or_create!
@@ -19,7 +22,10 @@ ApiUser.where(
 registrar2 = Registrar.where(
   name: 'Registrar Second AS',
   reg_no: '10529229',
-  address: 'Vabaduse pst 32, 11316 Tallinn',
+  street: 'Vabaduse pst 32',
+  city: 'Tallinn',
+  state: 'Harju maakond',
+  zip: '11315',
   email: 'registrar2@example.com',
   country_code: 'EE'
 ).first_or_create!
