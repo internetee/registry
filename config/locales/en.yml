@@ -501,3 +501,4 @@ en:
   address_help: 'Street name, house no - apartment no, city, county, country, zip'
   download: 'Download'
   failed_to_create_certificate: 'Failed to create certificate!'
+  registrant_not_found: 'Registrant not found'

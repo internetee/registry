@@ -2,6 +2,8 @@
 class Epp::EppDomain < Domain
   include EppErrors
 
+  accepts_nested_attributes_for :nameservers
+
   def epp_code_map # rubocop:disable Metrics/MethodLength
     {
       '2002' => [
@@ -57,6 +59,21 @@ class Epp::EppDomain < Domain
       ]
     }
   end
+
+  def self.new_from_epp(domain_params)
+    new(domain_params)
+  end
+
+
+
+
+
+
+
+
+
+
+
 
   def parse_and_attach_domain_dependencies(parsed_frame)
     attach_owner_contact(self.class.parse_owner_contact_from_frame(parsed_frame))

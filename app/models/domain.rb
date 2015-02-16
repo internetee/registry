@@ -41,6 +41,7 @@ class Domain < ActiveRecord::Base
                                           reject_if: proc { |attrs| attrs[:public_key].blank? }
 
   has_many :legal_documents, as: :documentable
+  accepts_nested_attributes_for :legal_documents, reject_if: proc { |attrs| attrs[:body].blank? }
 
   delegate :code, to: :owner_contact, prefix: true
   delegate :email, to: :owner_contact, prefix: true

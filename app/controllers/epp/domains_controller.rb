@@ -1,9 +1,8 @@
 class Epp::DomainsController < EppController
   def create
     @domain = Epp::EppDomain.new(domain_create_params)
-
-    @domain.parse_and_attach_domain_dependencies(params[:parsed_frame])
-    @domain.parse_and_attach_ds_data(params[:parsed_frame].css('extension create'))
+    # @domain.parse_and_attach_domain_dependencies(params[:parsed_frame])
+    # @domain.parse_and_attach_ds_data(params[:parsed_frame].css('extension create'))
 
     if @domain.errors.any? || !@domain.save
       handle_errors(@domain)
@@ -171,16 +170,116 @@ class Epp::DomainsController < EppController
   end
 
   def domain_create_params
-    name = params[:parsed_frame].css('name').text
     period = params[:parsed_frame].css('period').text
 
+    # registrant = parse_registrant(params)
+    # domain_contacts = parse_domain_contacts_from_epp(params)
+
+    registrant_code = params[:parsed_frame].css('registrant').text
+    owner_contact = Contact.find_by(code: registrant_code)
+
+    unless owner_contact
+      epp_errors << {
+        code: '2303',
+        msg: I18n.t('registrant_not_found'),
+        value: { obj: 'registrant', val: registrant_code }
+      }
+    end
+
     {
-      name: name,
+      name: params[:parsed_frame].css('name').text,
       registrar_id: current_user.registrar.try(:id),
       registered_at: Time.now,
       period: (period.to_i == 0) ? 1 : period.to_i,
-      period_unit: Epp::EppDomain.parse_period_unit_from_frame(params[:parsed_frame]) || 'y'
+      period_unit: Epp::EppDomain.parse_period_unit_from_frame(params[:parsed_frame]) || 'y',
+      owner_contact_id: owner_contact.try(:id),
+      nameservers_attributes: Epp::EppDomain.parse_nameservers_from_frame(params[:parsed_frame]),
+      domain_contacts_attributes: parse_domain_contacts_from_epp,
+      dnskeys_attributes: parse_dnskeys_from_frame(params[:parsed_frame].css('extension create')),
+      legal_documents_attributes: parse_legal_document_from_frame(params[:parsed_frame])
     }
+  end
+
+  def parse_domain_contacts_from_epp
+    res = []
+    params[:parsed_frame].css('contact').each do |x|
+      c = Contact.find_by(code: x.text).try(:id)
+
+      unless c
+        epp_errors << {
+          code: '2303',
+          msg: I18n.t('contact_not_found'),
+          value: { obj: 'contact', val: x.text }
+        }
+        next
+      end
+
+      res << {
+        contact_id: Contact.find_by(code: x.text).try(:id),
+        contact_type: x['type'],
+        contact_code_cache: x.text
+      }
+    end
+
+    res
+  end
+
+  def parse_dnskeys_from_frame(parsed_frame)
+    res = []
+    # res = { ds_data: [], key_data: [] }
+
+    # res[:max_sig_life] = parsed_frame.css('maxSigLife').first.try(:text)
+
+    res = parse_ds_data_from_frame(parsed_frame, res)
+    parse_key_data_from_frame(parsed_frame, res)
+  end
+
+  def parse_key_data_from_frame(parsed_frame, res)
+    parsed_frame.xpath('keyData').each do |x|
+      res << {
+        flags: x.css('flags').first.try(:text),
+        protocol: x.css('protocol').first.try(:text),
+        alg: x.css('alg').first.try(:text),
+        public_key: x.css('pubKey').first.try(:text),
+        ds_alg: 3,
+        ds_digest_type: Setting.ds_algorithm
+      }
+    end
+
+    res
+  end
+
+  def parse_ds_data_from_frame(parsed_frame, res)
+    parsed_frame.css('dsData').each do |x|
+      data = {
+        ds_key_tag: x.css('keyTag').first.try(:text),
+        ds_alg: x.css('alg').first.try(:text),
+        ds_digest_type: x.css('digestType').first.try(:text),
+        ds_digest: x.css('digest').first.try(:text)
+      }
+
+      kd = x.css('keyData').first
+      data.merge!({
+        flags: kd.css('flags').first.try(:text),
+        protocol: kd.css('protocol').first.try(:text),
+        alg: kd.css('alg').first.try(:text),
+        public_key: kd.css('pubKey').first.try(:text)
+      }) if kd
+
+      res << data
+    end
+
+    res
+  end
+
+  def parse_legal_document_from_frame(parsed_frame)
+    ld = parsed_frame.css('legalDocument').first
+    return [] unless ld
+
+    [{
+      body: ld.text,
+      document_type: ld['type']
+    }]
   end
 
   def domain_transfer_params
