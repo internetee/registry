@@ -4,25 +4,17 @@
   .panel-body
     - unless @contact.address.nil?
       %dl.dl-horizontal
-        %dt= t('country')
-        %dd= @contact.address.country
+        %dt= t('street')
+        %dd= @contact.street
 
         %dt= t('city')
-        %dd= @contact.address.city
-
-        %dt= t('street')
-        %dd= @contact.address.street
-
-        - if @contact.address.street2
-          %dt= t('street')
-          %dd= @contact.address.street2
-
-        - if @contact.address.street3
-          %dt= t('street')
-          %dd= @contact.address.street3
-
-
+        %dd= @contact.city
 
         %dt= t('zip')
-        %dd= @contact.address.zip
+        %dd= @contact.zip
 
+        %dt= t('state')
+        %dd= @contact.state
+
+        %dt= t('country')
+        %dd= @contact.country

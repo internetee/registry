@@ -39,11 +39,11 @@ describe Contact do
     end
 
     it 'should not have creator' do
-      @contact.cr_id.should == nil
+      @contact.creator.should == nil
     end
 
     it 'should not have updater' do
-      @contact.up_id.should == nil
+      @contact.updator.should == nil
     end
 
     it 'phone should return false' do
@@ -179,54 +179,15 @@ describe Contact do
       end
 
       context 'with creator' do
-        before :all do
-          # @contact.created_by = @api_user
-        end
-
-        # TODO: change cr_id to something else
         it 'should return username of creator' do
-          # @contact.cr_id.should == 'gitlab'
-        end
-      end
-
-      context 'with updater' do
-        before :all do
-          # @contact.updated_by = @api_user
+          # @contact.creator_str.should == 'gitlab'
         end
 
-        # TODO: change up_id to something else
         it 'should return username of updater' do
-          # @contact.up_id.should == 'gitlab'
+          # @contact.updator.should == 'gitlab'
         end
-
       end
     end
-  end
-end
-
-# TODO: investigate it a bit more
-# describe Contact, '#relations_with_domain?' do
-# context 'with relation' do
-# before :all do
-# create_settings
-# Fabricate(:domain)
-# @contact = Fabricate(:contact)
-# end
-
-# it 'should have relation with domain' do
-# @contact.relations_with_domain?.should == true
-# end
-# end
-# end
-
-describe Contact, '.extract_params' do
-  it 'returns params hash'do
-    ph = { id: '123123', email: 'jdoe@example.com', authInfo: { pw: 'asde' },
-           postalInfo: { name: 'fred', addr: { cc: 'EE' } }  }
-    Contact.extract_attributes(ph).should == {
-      name: 'fred',
-      email: 'jdoe@example.com'
-    }
   end
 end
 

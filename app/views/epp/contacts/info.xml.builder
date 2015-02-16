@@ -8,9 +8,9 @@ xml.epp_head do
       xml.tag!('contact:chkData', 'xmlns:contact' => 'urn:ietf:params:xml:ns:contact-1.0') do
         xml.tag!('contact:id', @contact.code)
         xml << render('/epp/contacts/postal_info')
-        xml.tag!('contact:voice', @contact.phone) if @disclosure.try(:phone) || @owner
-        xml.tag!('contact:fax', @contact.fax) if @disclosure.try(:fax) || @owner
-        xml.tag!('contact:email', @contact.email) if @disclosure.try(:email) || @owner
+        xml.tag!('contact:voice', @contact.phone) #if @disclosure.try(:phone) || @owner
+        xml.tag!('contact:fax', @contact.fax) #if @disclosure.try(:fax) || @owner
+        xml.tag!('contact:email', @contact.email) #if @disclosure.try(:email) || @owner
         xml.tag!('contact:clID', @contact.registrar.try(:name))
         xml.tag!('contact:crID', @contact.creator.try(:registrar)) 
         xml.tag!('contact:crDate', @contact.created_at)
@@ -19,17 +19,16 @@ xml.epp_head do
           xml.tag!('contact:upDate', @contact.updated_at) 
         end
         xml.tag!('contact:ident', @contact.ident, type: @contact.ident_type)
-        xml.tag!('contact:trDate', '123') if false
-        if @owner
+        # xml.tag!('contact:trDate', '123') if false
+        if can? :view_password, @contact
           xml.tag!('contact:authInfo') do
-           xml.tag!('contact:pw', @contact.auth_info) # Doc says we have to return this but is it necessary?
+           xml.tag!('contact:pw', @contact.auth_info)
           end
         end
-        # statuses
-        @contact.statuses.each do |cs|
-          xml.tag!('contact:status', s: cs.value)
+        @contact.statuses.each do |status|
+          xml.tag!('contact:status', s: status.value)
         end
-        xml << render('/epp/contacts/disclosure_policy')
+        # xml << render('/epp/contacts/disclosure_policy')
       end
     end
 

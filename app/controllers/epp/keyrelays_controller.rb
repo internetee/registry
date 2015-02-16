@@ -1,4 +1,6 @@
 class Epp::KeyrelaysController < EppController
+  skip_authorization_check # TODO: remove it
+
   # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/CyclomaticComplexity
   def keyrelay
