@@ -8,6 +8,7 @@ class Epp::Contact < Contact
   class << self
     # rubocop: disable Metrics/PerceivedComplexity
     # rubocop: disable Metrics/CyclomaticComplexity
+    # rubocop: disable Metrics/MethodLength
     def attrs_from(frame)
       f = frame
       at = {}.with_indifferent_access
@@ -23,32 +24,34 @@ class Epp::Contact < Contact
         at[:ident_type] = f.css('ident').attr('type').text 
       end
       
-      at[:address_attributes] = {}
+      at[:address_attributes] = {}.with_indifferent_access
       sat = at[:address_attributes]
       sat[:city]   = f.css('postalInfo addr city').text   if f.css('postalInfo addr city').present?
-      sat[:zip]    = f.css('postalInfo addr pc').text    if f.css('postalInfo addr pc').present?
+      sat[:zip]    = f.css('postalInfo addr pc').text     if f.css('postalInfo addr pc').present?
       sat[:street] = f.css('postalInfo addr street').text if f.css('postalInfo addr street').present?
       sat[:state]  = f.css('postalInfo addr sp').text     if f.css('postalInfo addr sp').present?
       sat[:country_code] = f.css('postalInfo addr cc').text if f.css('postalInfo addr cc').present?
       at.delete(:address_attributes) if at[:address_attributes].blank?
+
+      legald = f.css('legalDocument').first
+      if legald.present?
+        at[:legal_documents_attributes] = {}.with_indifferent_access
+        lat = at[:legal_documents_attributes]
+        lat[0] = {}.with_indifferent_access
+        lat[0][:document_type] = legald['type']
+        lat[0][:body]          = legald.text
+        at.delete(:legal_documents_attributes) if at[:legal_documents_attributes].blank?
+      end
+
       at
     end
+    # rubocop: enable Metrics/MethodLength
     # rubocop: enable Metrics/PerceivedComplexity
     # rubocop: enable Metrics/CyclomaticComplexity
 
     def new(frame)
       return super if frame.blank?
       super(attrs_from(frame))
-    end
-
-    def parse_legal_document_from_frame(parsed_frame)
-      ld = parsed_frame.css('legalDocument').first
-      return nil unless ld
-
-      {
-        body: ld.text,
-        type: ld['type']
-      }
     end
   end
 
@@ -73,15 +76,6 @@ class Epp::Contact < Contact
     at = {}.with_indifferent_access
     at.deep_merge!(self.class.attrs_from(frame.css('chg')))
     super(at)
-  end
-
-  def attach_legal_document(legal_document_data)
-    return unless legal_document_data
-
-    legal_documents.build(
-      document_type: legal_document_data[:type],
-      body: legal_document_data[:body]
-    )
   end
 end
 # rubocop: enable Metrics/ClassLength

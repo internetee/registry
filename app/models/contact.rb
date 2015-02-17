@@ -7,10 +7,11 @@ class Contact < ActiveRecord::Base
   has_many :domain_contacts
   has_many :domains, through: :domain_contacts
   has_many :statuses, class_name: 'ContactStatus'
+  has_many :legal_documents, as: :documentable
 
   belongs_to :registrar
 
-  accepts_nested_attributes_for :address, :disclosure
+  accepts_nested_attributes_for :address, :disclosure, :legal_documents
 
   validates :name, :phone, :email, :ident, :address, :registrar, :ident_type, presence: true
 

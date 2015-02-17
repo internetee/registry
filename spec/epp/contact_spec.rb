@@ -17,6 +17,12 @@ describe 'EPP Contact', epp: true do
     Contact.skip_callback(:create, :before, :generate_auth_info)
 
     @contact = Fabricate(:contact, registrar: @registrar1)
+    @legal_document = {
+      legalDocument: {
+        value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+        attrs: { type: 'pdf' }
+      }
+    }
   end
 
   after :all do
@@ -40,7 +46,7 @@ describe 'EPP Contact', epp: true do
           email: { value: 'test@example.example' },
           ident: { value: '37605030299', attrs: { type: 'priv' } }
         }
-        create_xml = @epp_xml.create(defaults.deep_merge(overwrites))
+        create_xml = @epp_xml.create(defaults.deep_merge(overwrites), @legal_document)
         epp_plain_request(create_xml, :xml)
       end
 
@@ -58,6 +64,8 @@ describe 'EPP Contact', epp: true do
           'Required parameter missing: create > create > voice'
         response[:results][5][:msg].should == 
           'Required parameter missing: create > create > email'
+        response[:results][6][:msg].should == 
+          'Required parameter missing: extension > extdata > legalDocument'
 
         response[:results][0][:result_code].should == '2003'
         response[:results][1][:result_code].should == '2003'
@@ -65,8 +73,9 @@ describe 'EPP Contact', epp: true do
         response[:results][3][:result_code].should == '2003'
         response[:results][4][:result_code].should == '2003'
         response[:results][5][:result_code].should == '2003'
+        response[:results][6][:result_code].should == '2003'
 
-        response[:results].count.should == 6
+        response[:results].count.should == 7
       end
 
       it 'successfully creates a contact' do
@@ -81,6 +90,7 @@ describe 'EPP Contact', epp: true do
         @registrar1.api_users.should include(@contact.creator)
         @contact.ident.should == '37605030299'
         @contact.address.street.should == '123 Example'
+        @contact.legal_documents.count.should == 1
 
         log = ApiLog::EppLog.last
         log.request_command.should == 'create'
@@ -156,7 +166,7 @@ describe 'EPP Contact', epp: true do
             }
           }
         }
-        update_xml = @epp_xml.update(defaults.deep_merge(overwrites))
+        update_xml = @epp_xml.update(defaults.deep_merge(overwrites), @legal_document)
         epp_plain_request(update_xml, :xml)
       end
 
@@ -172,7 +182,10 @@ describe 'EPP Contact', epp: true do
         response[:results][2][:msg].should == 
           'Required parameter missing: update > update > authInfo > pw'
         response[:results][2][:result_code].should == '2003'
-        response[:results].count.should == 3
+        response[:results][3][:msg].should == 
+          'Required parameter missing: extension > extdata > legalDocument'
+        response[:results][3][:result_code].should == '2003'
+        response[:results].count.should == 4
       end
 
       it 'returns error if obj doesnt exist' do
@@ -225,7 +238,7 @@ describe 'EPP Contact', epp: true do
           id: { value: @contact.code },
           authInfo: { pw: { value: @contact.auth_info } }
         }
-        delete_xml = @epp_xml.delete(defaults.deep_merge(overwrites))
+        delete_xml = @epp_xml.delete(defaults.deep_merge(overwrites), @legal_document)
         epp_plain_request(delete_xml, :xml)
       end
 
@@ -238,7 +251,10 @@ describe 'EPP Contact', epp: true do
         response[:results][1][:msg].should == 
           'Required parameter missing: delete > delete > authInfo > pw'
         response[:results][1][:result_code].should == '2003'
-        response[:results].count.should == 2
+        response[:results][2][:msg].should == 
+          'Required parameter missing: extension > extdata > legalDocument'
+        response[:results][2][:result_code].should == '2003'
+        response[:results].count.should == 3
       end
 
       it 'returns error if obj doesnt exist' do
