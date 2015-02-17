@@ -5,7 +5,7 @@ module Repp
     resource :contacts do
       desc 'Return list of contact'
       get '/' do
-        contacts = current_api_user.registrar.contacts.page(params[:page])
+        contacts = current_user.registrar.contacts.page(params[:page])
         @response = {
           contacts: contacts,
           total_pages: contacts.total_pages

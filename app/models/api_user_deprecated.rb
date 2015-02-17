@@ -1,7 +1,8 @@
 require 'open3'
 
 # rubocop: disable Metrics/ClassLength
-class ApiUser < User
+class ApiUserDeprecated < ActiveRecord::Base
+  self.table_name = "api_users"
   # TODO: should have max request limit per day
   belongs_to :registrar
   has_many :contacts
@@ -12,11 +13,6 @@ class ApiUser < User
   before_save :create_crt, if: -> (au) { au.csr_changed? }
 
   attr_accessor :registrar_typeahead
-
-  def ability
-    @ability ||= Ability.new(self)
-  end
-  delegate :can?, :cannot?, to: :ability
 
   def registrar_typeahead
     @registrar_typeahead || registrar || nil

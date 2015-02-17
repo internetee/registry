@@ -30,11 +30,9 @@ Contact Mapping protocol short version:
                                           "priv"         # National idendtification number
                                           "birthday"     # Birthday date in format in DD-MM-YYYY
     <extension>                1       
-        <eis:extdata>          1        Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
-          <eis:legalDocument>  1        Base64 encoded document 
+      <eis:extdata>            1        Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
+        <eis:legalDocument>    1        Base64 encoded document 
                                           Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
-
-
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-create-command-successfully-creates-a-contact)
 
@@ -65,9 +63,9 @@ Contact Mapping protocol short version:
         <contact:authInfo>      0-1      Required if registrar is not the owner of the contact.
           <contact:pw>          1        Contact password. Attribute: roid="String"
     <extension>                 0-1       
-        <eis:extdata>           0-1      Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
-          <eis:legalDocument>   0-1      Base64 encoded document. 
-                                         Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
+      <eis:extdata>             0-1      Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
+        <eis:legalDocument>     0-1      Base64 encoded document. 
+                                           Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
 
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-update-command-is-succesful)
@@ -82,10 +80,10 @@ Contact Mapping protocol short version:
         <contact:authInfo>    0-1      Required if registrar is not the owner of the contact.
           <contact:pw>        1        Contact password. Attribute: roid="String"
     <extension>               1       
-        <eis:extdata>         1        Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
-          <eis:legalDocument> 1        Base64 encoded document. 
+      <eis:extdata>           1        Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
+        <eis:legalDocument>   1        Base64 encoded document. 
                                          Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
-    <clTRID>                 0-1       Client transaction id
+    <clTRID>                  0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-delete-command-deletes-contact)
 

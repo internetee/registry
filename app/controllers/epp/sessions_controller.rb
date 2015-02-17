@@ -1,4 +1,6 @@
 class Epp::SessionsController < EppController
+  skip_authorization_check only: [:hello, :login, :logout]
+
   def hello
     render_epp_response('greeting')
   end
@@ -16,7 +18,7 @@ class Epp::SessionsController < EppController
   end
 
   def logout
-    @api_user = current_api_user # cache current_api_user for logging
+    @api_user = current_user # cache current_user for logging
     epp_session[:api_user_id] = nil
     response.headers['X-EPP-Returncode'] = '1500'
     render_epp_response('logout')

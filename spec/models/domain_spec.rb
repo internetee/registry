@@ -73,14 +73,14 @@ describe Domain do
 
       it 'should return api_creator when created by api user' do
         with_versioning do
-          @user = Fabricate(:user)
+          @user = Fabricate(:admin_user)
           @api_user = Fabricate(:api_user)
           @user.id.should == 1
-          @api_user.id.should == 1
-          ::PaperTrail.whodunnit = '1-api-testuser'
+          @api_user.id.should == 2
+          ::PaperTrail.whodunnit = '2-api-testuser'
 
           @domain = Fabricate(:domain)
-          @domain.creator_str.should == '1-api-testuser'
+          @domain.creator_str.should == '2-api-testuser'
 
           @domain.creator.should == @api_user
           @domain.creator.should_not == @user
@@ -89,14 +89,14 @@ describe Domain do
 
       it 'should return api_creator when created by api user' do
         with_versioning do
-          @user = Fabricate(:user)
+          @user = Fabricate(:admin_user)
           @api_user = Fabricate(:api_user)
-          @user.id.should == 2
-          @api_user.id.should == 2
-          ::PaperTrail.whodunnit = '2-testuser'
+          @user.id.should == 3
+          @api_user.id.should == 4
+          ::PaperTrail.whodunnit = '3-testuser'
 
           @domain = Fabricate(:domain)
-          @domain.creator_str.should == '2-testuser'
+          @domain.creator_str.should == '3-testuser'
 
           @domain.creator.should == @user
           @domain.creator.should_not == @api_user

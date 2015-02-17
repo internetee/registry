@@ -1,6 +1,6 @@
-# currently identity code generation not implemented, 
+# currently identity code generation not implemented,
 # thus default user is FI for a while
-Fabricator(:user) do
+Fabricator(:admin_user) do
   username 'gitlab'
   password 'ghyt9e4fu'
   email 'info@gitlab.eu'
@@ -8,7 +8,7 @@ Fabricator(:user) do
   roles ['admin']
 end
 
-Fabricator(:ee_user, from: :user) do
+Fabricator(:ee_user, from: :admin_user) do
   identity_code "45002036517"
   country_code 'EE'
   roles ['admin']

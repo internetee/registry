@@ -206,8 +206,16 @@ describe 'EPP Domain', epp: true do
     it 'does not create domain without nameservers' do
       xml = domain_create_xml(ns: [])
       response = epp_plain_request(xml, :xml)
-      response[:result_code].should == '2003'
-      response[:msg].should == 'Required parameter missing: create > create > ns > hostAttr'
+
+      response[:results][0][:msg].should == 
+        'Required parameter missing: create > create > ns'
+      response[:results][0][:result_code].should == '2003'
+
+      response[:results][1][:msg].should == 
+        'Required parameter missing: create > create > ns > hostAttr'
+      response[:results][1][:result_code].should == '2003'
+
+      response[:results].count.should == 2
     end
 
     it 'does not create domain with too many nameservers' do
@@ -294,8 +302,8 @@ describe 'EPP Domain', epp: true do
       xml = domain_create_xml(period_value: 365, period_unit: 'd')
 
       response = epp_plain_request(xml, :xml)
-      response[:result_code].should == '1000'
       response[:msg].should == 'Command completed successfully'
+      response[:result_code].should == '1000'
       Domain.first.valid_to.should == Date.today + 1.year
     end
 

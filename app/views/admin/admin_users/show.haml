@@ -4,15 +4,15 @@
       = "#{t('user_details')}"
   .col-sm-6
     %h2.text-right.text-center-xs
-      = link_to(t('edit'), edit_admin_user_path(@user), class: 'btn btn-primary')
-      = link_to(t('delete'), admin_user_path(@user), method: :delete, data: { confirm: t('are_you_sure') }, class: 'btn btn-danger')
+      = link_to(t('edit'), edit_admin_admin_user_path(@admin_user), class: 'btn btn-primary')
+      = link_to(t('delete'), admin_admin_user_path(@admin_user), method: :delete, data: { confirm: t('are_you_sure') }, class: 'btn btn-danger')
 
 %hr
-- if @user.errors.any?
-  - @user.errors.each do |attr, err|
+- if @admin_user.errors.any?
+  - @admin_user.errors.each do |attr, err|
     = err
     %br
-- if @user.errors.any?
+- if @admin_user.errors.any?
   %hr
 .row
   .col-md-6
@@ -22,13 +22,13 @@
       .panel-body
         %dl.dl-horizontal
           %dt= t('username')
-          %dd= @user.username
+          %dd= @admin_user.username
 
           %dt= t('password')
-          %dd= @user.password
+          %dd= @admin_user.password
 
           %dt= t('identity_code')
-          %dd= @user.identity_code
+          %dd= @admin_user.identity_code
 
   .col-md-6
     .panel.panel-default
@@ -37,10 +37,10 @@
       .panel-body
         %dl.dl-horizontal
           %dt= t('email')
-          %dd= @user.email
+          %dd= @admin_user.email
 
           %dt= t('role')
-          - if @user.roles
-            %dd= t(@user.roles.first)
+          - if @admin_user.roles
+            %dd= t(@admin_user.roles.first)
           - else
             %dd

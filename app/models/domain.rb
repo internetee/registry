@@ -20,8 +20,6 @@ class Domain < ActiveRecord::Base
            -> { where(domain_contacts: { contact_type: DomainContact::ADMIN }) },
            through: :domain_contacts, source: :contact
 
-  # TODO: remove old
-  # has_many :nameservers, dependent: :delete_all, after_add: :track_nameserver_add
   has_many :nameservers, dependent: :delete_all
 
   accepts_nested_attributes_for :nameservers, allow_destroy: true,
@@ -42,11 +40,11 @@ class Domain < ActiveRecord::Base
 
   has_many :legal_documents, as: :documentable
 
-  delegate :code, to: :owner_contact, prefix: true
+  delegate :code,  to: :owner_contact, prefix: true
   delegate :email, to: :owner_contact, prefix: true
   delegate :ident, to: :owner_contact, prefix: true
   delegate :phone, to: :owner_contact, prefix: true
-  delegate :name, to: :registrar, prefix: true
+  delegate :name,  to: :registrar, prefix: true
 
   before_create :generate_auth_info
   before_create :set_validity_dates
@@ -117,11 +115,6 @@ class Domain < ActiveRecord::Base
 
   attr_accessor :owner_contact_typeahead, :update_me
 
-  # TODO: remove old
-  # archiving
-  # if proc works only on changes on domain sadly
-  # has_paper_trail class_name: 'DomainVersion', meta: { snapshot: :create_snapshot }, if: proc(&:new_version)
-
   def tech_domain_contacts
     domain_contacts.select { |x| x.contact_type == DomainContact::TECH }
   end
@@ -129,52 +122,6 @@ class Domain < ActiveRecord::Base
   def admin_domain_contacts
     domain_contacts.select { |x| x.contact_type == DomainContact::ADMIN }
   end
-
-  # TODO: remove old
-  # def new_version
-    # return false if versions.try(:last).try(:snapshot) == create_snapshot
-    # true
-  # end
-
-  # TODO: remove old
-  # def create_version
-    # return true unless PaperTrail.enabled?
-    # return true unless valid?
-    # touch_with_version if new_version
-  # end
-
-  # TODO: remove old
-  # def track_nameserver_add(_nameserver)
-    # return true if versions.count == 0
-    # return true unless valid? && new_version
-
-    # touch_with_version
-  # end
-
-  # TODO: remove old
-  # def create_snapshot
-    # oc = owner_contact.snapshot if owner_contact.is_a?(Contact)
-    # {
-      # owner_contact: oc,
-      # tech_contacts: tech_contacts.map(&:snapshot),
-      # admin_contacts: admin_contacts.map(&:snapshot),
-      # nameservers: nameservers.map(&:snapshot),
-      # domain: make_snapshot
-    # }.to_yaml
-  # end
-
-  # TODO: remove old
-  # def make_snapshot
-    # {
-      # name: name,
-      # status: status,
-      # period: period,
-      # period_unit: period_unit,
-      # registrar_id: registrar.try(:id),
-      # valid_to: valid_to,
-      # valid_from: valid_from
-    # }
-  # end
 
   def name=(value)
     value.strip!
@@ -304,36 +251,36 @@ class Domain < ActiveRecord::Base
   # rubocop:disable Metrics/MethodLength
   def update_whois_body
     self.whois_body = <<-EOS
-      This Whois Server contains information on
-      Estonian Top Level Domain ee TLD
+    This Whois Server contains information on
+    Estonian Top Level Domain ee TLD
 
-      domain:    #{name}
-      registrar: #{registrar}
-      status:
-      registered:
-      changed:   #{updated_at.to_s(:db)}
-      expire:
-      outzone:
-      delete:
+    domain:    #{name}
+    registrar: #{registrar}
+    status:
+    registered:
+    changed:   #{updated_at.to_s(:db)}
+    expire:
+    outzone:
+    delete:
 
-      contact
-      name:
-      e-mail:
-      registrar:
-      created:
+    contact
+    name:
+    e-mail:
+    registrar:
+    created:
 
-      contact:
+    contact:
 
-      nsset:
-      nserver:
+    nsset:
+    nserver:
 
-      registrar:
-      org:
-      url:
-      phone:
-      address:
-      created:
-      changed:
+    registrar:
+    org:
+    url:
+    phone:
+    address:
+    created:
+    changed:
     EOS
   end
   # rubocop:enabled Metrics/MethodLength

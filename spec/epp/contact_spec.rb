@@ -15,6 +15,14 @@ describe 'EPP Contact', epp: true do
 
     Contact.skip_callback(:create, :before, :generate_code)
     Contact.skip_callback(:create, :before, :generate_auth_info)
+
+    @contact = Fabricate(:contact, registrar: @registrar1)
+    @legal_document = {
+      legalDocument: {
+        value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+        attrs: { type: 'pdf' }
+      }
+    }
   end
 
   after :all do
@@ -24,26 +32,40 @@ describe 'EPP Contact', epp: true do
 
   context 'with valid user' do
     context 'create command' do
-      it 'fails if request xml is missing' do
-        xml = @epp_xml.create
-        response = epp_plain_request(xml, :xml)
-        response[:results][0][:msg].should == 'Command syntax error'
-        response[:results][0][:result_code].should == '2001'
-
-        response[:results].count.should == 1
+      def create_request(overwrites = {})
+        defaults = {
+          postalInfo: {
+            name: { value: 'John Doe' },
+            addr: {
+              street: { value: '123 Example' },
+              city: { value: 'Tallinn' },
+              cc: { value: 'EE' }
+            }
+          },
+          voice: { value: '+372.1234567' },
+          email: { value: 'test@example.example' },
+          ident: { value: '37605030299', attrs: { type: 'priv' } }
+        }
+        create_xml = @epp_xml.create(defaults.deep_merge(overwrites), @legal_document)
+        epp_plain_request(create_xml, :xml)
       end
 
       it 'fails if request xml is missing' do
-        xml = @epp_xml.create(
-          postalInfo: { addr: { value: nil } }
-        )
-        response = epp_plain_request(xml, :xml)
-        response[:results][0][:msg].should == 'Required parameter missing: name'
-        response[:results][1][:msg].should == 'Required parameter missing: city'
-        response[:results][2][:msg].should == 'Required parameter missing: cc'
-        response[:results][3][:msg].should == 'Required parameter missing: ident'
-        response[:results][4][:msg].should == 'Required parameter missing: voice'
-        response[:results][5][:msg].should == 'Required parameter missing: email'
+        response = epp_plain_request(@epp_xml.create, :xml)
+        response[:results][0][:msg].should == 
+          'Required parameter missing: create > create > postalInfo > name'
+        response[:results][1][:msg].should == 
+          'Required parameter missing: create > create > postalInfo > addr > city'
+        response[:results][2][:msg].should == 
+          'Required parameter missing: create > create > postalInfo > addr > cc'
+        response[:results][3][:msg].should == 
+          'Required parameter missing: create > create > ident'
+        response[:results][4][:msg].should == 
+          'Required parameter missing: create > create > voice'
+        response[:results][5][:msg].should == 
+          'Required parameter missing: create > create > email'
+        response[:results][6][:msg].should == 
+          'Required parameter missing: extension > extdata > legalDocument'
 
         response[:results][0][:result_code].should == '2003'
         response[:results][1][:result_code].should == '2003'
@@ -51,19 +73,13 @@ describe 'EPP Contact', epp: true do
         response[:results][3][:result_code].should == '2003'
         response[:results][4][:result_code].should == '2003'
         response[:results][5][:result_code].should == '2003'
+        response[:results][6][:result_code].should == '2003'
 
-        response[:results].count.should == 6
-      end
-
-      it 'successfully saves ident type' do
-        xml = { ident: { value: '1990-22-12', attrs: { type: 'birthday' } } }
-        epp_plain_request(create_contact_xml(xml), :xml)
-
-        Contact.last.ident_type.should == 'birthday'
+        response[:results].count.should == 7
       end
 
       it 'successfully creates a contact' do
-        response = epp_plain_request(create_contact_xml, :xml)
+        response = create_request
 
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
@@ -71,10 +87,10 @@ describe 'EPP Contact', epp: true do
         @contact = Contact.last
 
         @contact.registrar.should == @registrar1
-        # registrar1.api_users.should include(@contact.created_by)
-        # @contact.updated_by_id.should == nil
+        @registrar1.api_users.should include(@contact.creator)
         @contact.ident.should == '37605030299'
         @contact.address.street.should == '123 Example'
+        @contact.legal_documents.count.should == 1
 
         log = ApiLog::EppLog.last
         log.request_command.should == 'create'
@@ -84,8 +100,19 @@ describe 'EPP Contact', epp: true do
         log.api_user_registrar.should == 'registrar1'
       end
 
+      it 'successfully saves ident type' do
+        response = create_request(
+          { ident: { value: '1990-22-12', attrs: { type: 'birthday' } } }
+        )
+
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+
+        Contact.last.ident_type.should == 'birthday'
+      end
+
       it 'successfully adds registrar' do
-        response = epp_plain_request(create_contact_xml, :xml)
+        response = create_request
 
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
@@ -94,7 +121,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'returns result data upon success' do
-        response = epp_plain_request(create_contact_xml, :xml)
+        response = create_request
 
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
@@ -105,52 +132,6 @@ describe 'EPP Contact', epp: true do
         id.text.length.should == 8
         # 5 seconds for what-ever weird lag reasons might happen
         cr_date.text.to_time.should be_within(5).of(Time.now)
-      end
-
-      it 'creates disclosure data' do
-        xml = {
-          disclose: { value: {
-            voice: { value: '' },
-            addr: { value: '' },
-            name: { value: '' },
-            org_name: { value: '' },
-            email: { value: '' },
-            fax: { value: '' }
-          }, attrs: { flag: '1' }
-          }
-        }
-
-        response = epp_plain_request(create_contact_xml(xml), :xml)
-        response[:result_code].should == '1000'
-
-        @contact = Contact.last
-        @contact.disclosure.name.should == true
-        @contact.disclosure.org_name.should == true
-        @contact.disclosure.phone.should == true
-        @contact.disclosure.fax.should == true
-        @contact.disclosure.email.should == true
-        @contact.disclosure.address.should == true
-      end
-
-      it 'creates disclosure data merging with defaults' do
-        xml = {
-          disclose: { value: {
-            voice: { value: '' },
-            addr: { value: '' }
-          }, attrs: { flag: '1' }
-          }
-        }
-
-        response = epp_plain_request(create_contact_xml(xml), :xml)
-        response[:result_code].should == '1000'
-
-        @contact = Contact.last
-        @contact.disclosure.name.should == nil
-        @contact.disclosure.org_name.should == nil
-        @contact.disclosure.phone.should == true
-        @contact.disclosure.fax.should == nil
-        @contact.disclosure.email.should == nil
-        @contact.disclosure.address.should == true
       end
     end
 
@@ -167,130 +148,167 @@ describe 'EPP Contact', epp: true do
           )
       end
 
-      it 'fails if request is invalid' do
-        xml = @epp_xml.update
-        response = epp_plain_request(xml, :xml) # epp_request('contacts/update_missing_attr.xml')
+      def update_request(overwrites = {})
+        defaults = {
+          id: { value: 'asd123123er' },
+          authInfo: { pw: { value: 'password' } },
+          chg: {
+            postalInfo: {
+              name: { value: 'John Doe Edited' }
+            },
+            voice: { value: '+372.7654321' },
+            email: { value: 'edited@example.example' },
+            disclose: {
+              value: {
+                voice: { value: '' },
+                email: { value: '' }
+              }, attrs: { flag: '0' }
+            }
+          }
+        }
+        update_xml = @epp_xml.update(defaults.deep_merge(overwrites), @legal_document)
+        epp_plain_request(update_xml, :xml)
+      end
 
+      it 'fails if request is invalid' do
+        response = epp_plain_request(@epp_xml.update, :xml)
+
+        response[:results][0][:msg].should == 
+          'Required parameter missing: add, rem or chg'
         response[:results][0][:result_code].should == '2003'
-        response[:results][0][:msg].should == 'Required parameter missing: add, rem or chg'
+        response[:results][1][:msg].should == 
+          'Required parameter missing: update > update > id'
         response[:results][1][:result_code].should == '2003'
-        response[:results][1][:msg].should == 'Required parameter missing: id'
-        response[:results].count.should == 2
+        response[:results][2][:msg].should == 
+          'Required parameter missing: update > update > authInfo > pw'
+        response[:results][2][:result_code].should == '2003'
+        response[:results][3][:msg].should == 
+          'Required parameter missing: extension > extdata > legalDocument'
+        response[:results][3][:result_code].should == '2003'
+        response[:results].count.should == 4
+      end
+
+      it 'returns error if obj doesnt exist' do
+        response = update_request({ id: { value: 'not-exists' } })
+        response[:msg].should == 'Object does not exist'
+        response[:result_code].should == '2303'
+        response[:results].count.should == 1
+      end
+
+      it 'is succesful' do
+        response = update_request({ id: { value: 'sh8013' } })
+
+        response[:msg].should == 'Command completed successfully'
+        @contact.reload
+        @contact.name.should  == 'John Doe Edited'
+        @contact.email.should == 'edited@example.example'
       end
 
       it 'fails with wrong authentication info' do
         login_as :registrar2 do
-          response = epp_plain_request(update_contact_xml({ id: { value: 'sh8013' } }), :xml)
-          expect(response[:msg]).to eq('Authorization error')
-          expect(response[:result_code]).to eq('2201')
+          response = update_request({ id: { value: 'sh8013' } })
+          response[:msg].should == 'Authorization error'
+          response[:result_code].should == '2201'
         end
       end
 
-      it 'is succesful' do
-        response = epp_plain_request(update_contact_xml({ id: { value: 'sh8013' } }), :xml)
-
-        response[:msg].should == 'Command completed successfully'
-        @contact.reload
-        @contact.name.should == 'John Doe Edited'
-        @contact.email.should == 'edited@example.example'
-      end
-
       it 'returns phone and email error' do
-        xml = {
+        response = update_request({
           id: { value: 'sh8013' },
           chg: {
             voice: { value: '123213' },
-            email: { value: 'aaa' }
+            email: { value: 'wrong' }
           }
-        }
-
-        response = epp_plain_request(update_contact_xml(xml), :xml)
+        })
 
         response[:results][0][:msg].should == 'Phone nr is invalid'
         response[:results][0][:result_code].should == '2005'
-
         response[:results][1][:msg].should == 'Email is invalid'
         response[:results][1][:result_code].should == '2005'
-      end
-
-      it 'updates disclosure items' do
-        Fabricate(
-          :contact,
-          code: 'sh8013disclosure',
-          auth_info: '2fooBAR',
-          registrar: @registrar1,
-          # created_by_id: ApiUser.first.id,
-          disclosure: Fabricate(:contact_disclosure, phone: true, email: true))
-
-        xml = {
-          id: { value: 'sh8013disclosure' },
-          authInfo: { pw: { value: '2fooBAR' } }
-        }
-        @response = epp_plain_request(update_contact_xml(xml), :xml)
-
-        @response[:results][0][:msg].should == 'Command completed successfully'
-        @response[:results][0][:result_code].should == '1000'
-
-        Contact.last.disclosure.phone.should == false
-        Contact.last.disclosure.email.should == false
       end
     end
 
     context 'delete command' do
-      it 'fails if request is invalid' do
-        xml = @epp_xml.delete({ uid: { value: '23123' } })
-        response = epp_plain_request(xml, :xml)
+      before do
+        @contact = Fabricate(:contact, registrar: @registrar1)
+      end
 
-        response[:results][0][:msg].should == 'Required parameter missing: id'
+      def delete_request(overwrites = {})
+        defaults = {
+          id: { value: @contact.code },
+          authInfo: { pw: { value: @contact.auth_info } }
+        }
+        delete_xml = @epp_xml.delete(defaults.deep_merge(overwrites), @legal_document)
+        epp_plain_request(delete_xml, :xml)
+      end
+
+      it 'fails if request is invalid' do
+        response = epp_plain_request(@epp_xml.delete, :xml)
+
+        response[:results][0][:msg].should == 
+          'Required parameter missing: delete > delete > id'
         response[:results][0][:result_code].should == '2003'
+        response[:results][1][:msg].should == 
+          'Required parameter missing: delete > delete > authInfo > pw'
+        response[:results][1][:result_code].should == '2003'
+        response[:results][2][:msg].should == 
+          'Required parameter missing: extension > extdata > legalDocument'
+        response[:results][2][:result_code].should == '2003'
+        response[:results].count.should == 3
+      end
+
+      it 'returns error if obj doesnt exist' do
+        response = delete_request({ id: { value: 'not-exists' } })
+        response[:msg].should == 'Object does not exist'
+        response[:result_code].should == '2303'
         response[:results].count.should == 1
       end
 
       it 'deletes contact' do
-        @contact_deleted =
-          # Fabricate(:contact, code: 'dwa1234', created_by_id: ApiUser.first.id, registrar: registrar1)
-          Fabricate(:contact, code: 'dwa1234', registrar: @registrar1)
-
-        response = epp_plain_request(delete_contact_xml({ id: { value: 'dwa1234' } }), :xml)
+        response = delete_request
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
         response[:clTRID].should == 'ABC-12345'
 
-        Contact.find_by_id(@contact_deleted.id).should == nil
-      end
-
-      it 'returns error if obj doesnt exist' do
-        response = epp_plain_request(delete_contact_xml, :xml)
-        response[:msg].should == 'Object does not exist'
-        response[:result_code].should == '2303'
+        Contact.find_by_id(@contact.id).should == nil
       end
 
       it 'fails if contact has associated domain' do
-        Fabricate(
-          :domain,
-          registrar: @registrar1,
-          owner_contact: Fabricate(
-            :contact,
-            code: 'dwa1234',
-            # created_by_id: registrar1.id,
-            registrar: @registrar1)
-        )
-        Domain.last.owner_contact.address.present?.should == true
-        response = epp_plain_request(delete_contact_xml({ id: { value: 'dwa1234' } }), :xml)
+        @domain = Fabricate(:domain, registrar: @registrar1, owner_contact: @contact)
+        @domain.owner_contact.address.present?.should == true
 
+        response = delete_request 
         response[:msg].should == 'Object association prohibits operation'
         response[:result_code].should == '2305'
+        response[:results].count.should == 1
 
-        Domain.last.owner_contact.present?.should == true
+        @domain.owner_contact.present?.should == true
+      end
+
+      it 'fails with wrong authentication info' do
+        login_as :registrar2 do
+          response = delete_request
+          response[:msg].should == 'Authorization error'
+          response[:result_code].should == '2201'
+          response[:results].count.should == 1
+        end
       end
     end
 
     context 'check command' do
-      it 'fails if request is invalid' do
-        xml = @epp_xml.check({ uid: { value: '123asde' } })
-        response = epp_plain_request(xml, :xml)
+      def check_request(overwrites = {})
+        defaults = {
+          id: { value: @contact.code },
+          authInfo: { pw: { value: @contact.auth_info } }
+        }
+        xml = @epp_xml.check(defaults.deep_merge(overwrites))
+        epp_plain_request(xml, :xml)
+      end
 
-        response[:results][0][:msg].should == 'Required parameter missing: id'
+      it 'fails if request is invalid' do
+        response = epp_plain_request(@epp_xml.check, :xml)
+
+        response[:results][0][:msg].should == 'Required parameter missing: check > check > id'
         response[:results][0][:result_code].should == '2003'
         response[:results].count.should == 1
       end
@@ -312,132 +330,74 @@ describe 'EPP Contact', epp: true do
       end
     end
 
-    # context 'info command' do
-      # before :all do
-        # @registrar1_contact = Fabricate(:contact, code: 'info-4444', registrar: @registrar1,
-                                        # name: 'Johnny Awesome', address: Fabricate(:address))
-      # end
+    context 'info command' do
+      before :all do
+        @registrar1_contact = Fabricate(
+          :contact, code: 'info-4444', registrar: @registrar1,
+          name: 'Johnny Awesome', address: Fabricate(:address))
+      end
 
-      # fit 'return info about contact' do
-        # login_as :registrar2 do
-          # xml = @epp_xml.info(id: { value: @registrar1_contact.code })
-          # response = epp_plain_request(xml, :xml)
-          # response[:msg].should == 'Command completed successfully'
-          # response[:result_code].should == '1000'
+      def info_request(overwrites = {})
+        defaults = {
+          id: { value: @contact.code },
+          authInfo: { pw: { value: @contact.auth_info } }
+        }
+        xml = @epp_xml.info(defaults.deep_merge(overwrites))
+        epp_plain_request(xml, :xml)
+      end
 
-          # contact = response[:parsed].css('resData chkData')
-          # contact.css('name').first.text.should == 'Johnny Awesome'
-        # end
-      # end
+      it 'fails if request invalid' do
+        response = epp_plain_request(@epp_xml.info, :xml)
+        response[:results][0][:msg].should == 
+          'Required parameter missing: info > info > id'
+        response[:results][0][:result_code].should == '2003'
+        response[:results].count.should == 1
+      end
 
-      # it 'fails if request invalid' do
-        # response = epp_plain_request(@epp_xml.info({ wrongid: { value: '123123' } }), :xml)
-        # response[:results][0][:msg].should == 'Required parameter missing: id'
-        # response[:results][0][:result_code].should == '2003'
-        # response[:results].count.should == 1
-      # end
+      it 'returns error when object does not exist' do
+        response = info_request({ id: { value: 'no-contact' } })
+        response[:msg].should == 'Object does not exist'
+        response[:result_code].should == '2303'
+        response[:results][0][:value].should == 'no-contact'
+        response[:results].count.should == 1
+      end
 
-      # it 'returns error when object does not exist' do
-        # response = epp_plain_request(info_contact_xml({ id: { value: 'no-contact' } }), :xml)
-        # response[:msg].should == 'Object does not exist'
-        # response[:result_code].should == '2303'
-        # response[:results][0][:value].should == 'no-contact'
-      # end
+      it 'return info about contact' do
+        response = info_request({ id: { value: @registrar1_contact.code } })
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
 
-      # # it 'returns auth error for non-owner with wrong password' do
-      # # @contact = Fabricate(:contact,
-      # # registrar: registrar2, code: 'info-4444', name: 'Johnny Awesome', auth_info: 'asde',
-      # # address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
+        contact = response[:parsed].css('resData chkData')
+        contact.css('name').first.text.should == 'Johnny Awesome'
+      end
 
-      # # xml = @epp_xml.info({ id: { value: @contact.code }, authInfo: { pw: { value: 'asdesde' } } })
-      # # response = epp_plain_request(xml, :xml, :registrar1)
+      it 'returns no authorization error for wrong password when owner' do
+        response = info_request({ authInfo: { pw: { value: 'wrong-pw' } } })
 
-      # # expect(response[:result_code]).to eq('2200')
-      # # expect(response[:msg]).to eq('Authentication error')
-      # # end
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+        response[:results].count.should == 1
+      end
 
-      # context 'about disclose' do
-        # it 'discloses items with wrong password when queried by owner' do
-        # @contact = Fabricate(:contact,
-        # registrar: registrar1, code: 'info-4444',
-        # name: 'Johnny Awesome', auth_info: 'asde',
-        # address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
+      it 'returns no authorization error for wrong user but correct pw' do
+        login_as :registrar2 do
+          response = info_request
 
-        # xml = @epp_xml.info({ id: { value: @contact.code } })
-        # login_as :registrar1 do
-        # response = epp_plain_request(xml, :xml)
-        # contact = response[:parsed].css('resData chkData')
+          response[:msg].should == 'Command completed successfully'
+          response[:result_code].should == '1000'
+          response[:results].count.should == 1
+        end
+      end
 
-        # expect(response[:result_code]).to eq('1000')
-        # expect(response[:msg]).to eq('Command completed successfully')
-        # expect(contact.css('name').first.text).to eq('Johnny Awesome')
-        # end
-        # end
-
-        # it 'doesn\'t disclose items to non-owner with right password' do
-        # @contact = Fabricate(:contact, registrar: registrar2, code: 'info-4444',
-        # name: 'Johnny Awesome', auth_info: 'password',
-        # address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
-
-        # xml = @epp_xml.info({ id: { value: @contact.code }, authInfo: { pw: { value: 'password' } } })
-        # response = epp_plain_request(xml, :xml, :registrar1)
-        # contact = response[:parsed].css('resData chkData')
-
-        # expect(response[:result_code]).to eq('1000')
-        # expect(response[:msg]).to eq('Command completed successfully')
-        # expect(contact.css('chkData postalInfo name').first).to eq(nil)
-        # end
-
-        # it 'discloses items to owner' do
-        # @contact = Fabricate(:contact, registrar: registrar1, code: 'info-4444', name: 'Johnny Awesome',
-        # auth_info: 'password',
-        # address: Fabricate(:address), disclosure: Fabricate(:contact_disclosure, name: false))
-
-        # xml = @epp_xml.info({ id: { value: @contact.code } })
-        # response = epp_plain_request(xml, :xml, :registrar1)
-        # contact = response[:parsed].css('resData chkData')
-
-        # expect(response[:result_code]).to eq('1000')
-        # expect(response[:msg]).to eq('Command completed successfully')
-        # expect(contact.css('name').first.text).to eq('Johnny Awesome')
-        # end
-
-        # it 'doesn\'t disclose private elements' do
-        # Fabricate(:contact, code: 'info-4444', auth_info: '2fooBAR', registrar: registrar2,
-        # disclosure: Fabricate(:contact_disclosure, name: true, email: false, phone: false))
-
-        # xml = @epp_xml.info({ id: { value: 'info-4444' }, authInfo: { pw: { value: '2fooBAR' } } })
-
-        # response = epp_plain_request(xml, :xml, :registrar1)
-        # contact = response[:parsed].css('resData chkData')
-
-        # expect(response[:result_code]).to eq('1000')
-
-        # expect(contact.css('chkData phone')).to eq(contact.css('chkData disclose phone'))
-        # expect(contact.css('chkData phone').count).to eq(1)
-        # expect(contact.css('chkData email')).to eq(contact.css('chkData disclose email'))
-        # expect(contact.css('chkData email').count).to eq(1)
-        # expect(contact.css('postalInfo name').present?).to be(true)
-        # end
-      # end
-
-      # it 'does not display unassociated object without password' do
-        # xml = @epp_xml.info(id: { value: @registrar1_contact.code })
-        # response = epp_plain_request(xml, :xml, :registrar2)
-        # expect(response[:result_code]).to eq('2003')
-        # expect(response[:msg]).to eq('Required parameter missing: pw')
-      # end
-
-      # it 'does not display unassociated object with wrong password' do
-        # login_as :registrar2
-        # xml = @epp_xml.info(id: { value: @registrar1_contact.code },
-                           # authInfo: { pw: { value: 'wrong-pw' } })
-        # response = epp_plain_request(xml, :xml)
-
-        # response[:msg].should == 'Authentication error'
-        # response[:result_code].should == '2200'
-      # end
-    # end
+      it 'returns authorization error for wrong user and wrong pw' do
+        login_as :registrar2 do
+          response = info_request({ authInfo: { pw: { value: 'wrong-pw' } } })
+          response[:msg].should == 'Authorization error'
+          response[:result_code].should == '2201'
+          response[:results].count.should == 1
+        end
+      end
+    end
 
     context 'renew command' do
       it 'returns 2101-unimplemented command' do
@@ -447,5 +407,21 @@ describe 'EPP Contact', epp: true do
         response[:result_code].should == '2101'
       end
     end
+  end
+
+  def check_multiple_contacts_xml
+    '<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+      <command>
+        <check>
+          <contact:check
+           xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
+            <contact:id>check-1234</contact:id>
+            <contact:id>check-4321</contact:id>
+          </contact:check>
+        </check>
+        <clTRID>ABC-12345</clTRID>
+      </command>
+    </epp>'
   end
 end

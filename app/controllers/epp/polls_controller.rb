@@ -1,11 +1,13 @@
 class Epp::PollsController < EppController
+  skip_authorization_check # TODO: remove it
+
   def poll
     req_poll if params[:parsed_frame].css('poll').first['op'] == 'req'
     ack_poll if params[:parsed_frame].css('poll').first['op'] == 'ack'
   end
 
   def req_poll
-    @message = current_api_user.queued_messages.last
+    @message = current_user.queued_messages.last
     render_epp_response 'epp/poll/poll_no_messages' and return unless @message
 
     if @message.attached_obj_type && @message.attached_obj_id
@@ -20,7 +22,7 @@ class Epp::PollsController < EppController
   end
 
   def ack_poll
-    @message = current_api_user.queued_messages.find_by(id: params[:parsed_frame].css('poll').first['msgID'])
+    @message = current_user.queued_messages.find_by(id: params[:parsed_frame].css('poll').first['msgID'])
 
     unless @message
       epp_errors << {
@@ -38,6 +40,6 @@ class Epp::PollsController < EppController
   private
 
   def validate_poll
-    requires_attribute 'poll', 'op', values: %(ack req)
+    requires_attribute 'poll', 'op', values: %(ack req), allow_blank: true
   end
 end

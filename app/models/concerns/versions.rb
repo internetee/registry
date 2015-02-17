@@ -28,9 +28,9 @@ module Versions
       return nil if creator_str.blank?
 
       if creator_str =~ /^\d-api-/
-        ApiUser.find(creator_str)
+        ApiUser.find_by(id: creator_str)
       else
-        User.find(creator_str)
+        AdminUser.find_by(id: creator_str)
       end
     end
 
@@ -38,9 +38,9 @@ module Versions
       return nil if updator_str.blank?
 
       if updator_str =~ /^\d-api-/
-        ApiUser.find(updator_str)
+        ApiUser.find_by(id: updator_str)
       else
-        User.find(updator_str)
+        AdminUser.find_by(id: updator_str)
       end
     end
 

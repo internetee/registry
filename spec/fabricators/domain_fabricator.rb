@@ -1,5 +1,5 @@
 Fabricator(:domain) do
-  name { "#{Faker::Internet.domain_word}.ee" }
+  name { "fabricate_name#{rand(1_000_000)}.ee" }
   valid_to Date.new(2014, 8, 7)
   period 1
   period_unit 'y'

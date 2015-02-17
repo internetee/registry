@@ -45,7 +45,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :users
+    resources :admin_users
     resources :api_users do
       member do
         get 'download_csr'
