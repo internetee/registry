@@ -33,14 +33,9 @@ class Epp::Contact < Contact
       sat[:country_code] = f.css('postalInfo addr cc').text if f.css('postalInfo addr cc').present?
       at.delete(:address_attributes) if at[:address_attributes].blank?
 
-      legald = f.css('legalDocument').first
-      if legald.present?
-        at[:legal_documents_attributes] = {}.with_indifferent_access
-        lat = at[:legal_documents_attributes]
-        lat[0] = {}.with_indifferent_access
-        lat[0][:document_type] = legald['type']
-        lat[0][:body]          = legald.text
-        at.delete(:legal_documents_attributes) if at[:legal_documents_attributes].blank?
+      legal_frame = f.css('legalDocument').first
+      if legal_frame.present?
+        at[:legal_documents_attributes] = legal_document_attrs(legal_frame) 
       end
 
       at
@@ -52,6 +47,14 @@ class Epp::Contact < Contact
     def new(frame)
       return super if frame.blank?
       super(attrs_from(frame))
+    end
+
+    def legal_document_attrs(legal_frame)
+      attrs = {}.with_indifferent_access
+      attrs[0] = {}.with_indifferent_access
+      attrs[0][:document_type] = legal_frame['type']
+      attrs[0][:body]          = legal_frame
+      attrs
     end
   end
 
@@ -75,6 +78,9 @@ class Epp::Contact < Contact
     return super if frame.blank?
     at = {}.with_indifferent_access
     at.deep_merge!(self.class.attrs_from(frame.css('chg')))
+    legal_frame = frame.css('legalDocument').first
+    at[:legal_documents_attributes] = self.class.legal_document_attrs(legal_frame) 
+
     super(at)
   end
 end
