@@ -4,7 +4,12 @@ class Epp::SessionsController < EppController
   end
 
   def login
-    @api_user = ApiUser.find_by(login_params)
+    # pki login
+    if request.env['HTTP_SSL_CLIENT_S_DN_CN'] == login_params[:username]
+      @api_user = ApiUser.find_by(username: login_params[:username])
+    else
+      @api_user = ApiUser.find_by(login_params)
+    end
 
     if @api_user.try(:active)
       epp_session[:api_user_id] = @api_user.id
