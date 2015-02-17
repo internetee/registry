@@ -8,7 +8,7 @@
           %th{class: 'col-xs-8'}= t('created_at')
           %th{class: 'col-xs-4'}= t('type')
       %tbody
-        - @domain.legal_documents.each do |x|
+        - legal_documents.each do |x|
           %tr
             %td= link_to(x.created_at, [:admin, x])
             %td= x.document_type
