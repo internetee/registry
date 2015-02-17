@@ -5,7 +5,13 @@ class Ability
     alias_action :show, :create, :update, :destroy, to: :crud
 
     @user = user || AdminUser.new
-    @user.roles.each { |role| send(role) } if @user.roles
+    
+    case @user.class.to_s
+    when 'AdminUser'
+      @user.roles.each { |role| send(role) } if @user.roles
+    when 'ApiUser'
+      epp
+    end
 
     can :show, :dashboard
   end
