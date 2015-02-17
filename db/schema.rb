@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150213104014) do
+ActiveRecord::Schema.define(version: 20150217133937) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -96,7 +96,10 @@ ActiveRecord::Schema.define(version: 20150213104014) do
     t.integer  "registrar_id"
     t.string   "creator_str"
     t.string   "updator_str"
+    t.string   "ident_country_code"
   end
+
+  add_index "contacts", ["code"], name: "index_contacts_on_code", using: :btree
 
   create_table "countries", force: :cascade do |t|
     t.string   "iso"
