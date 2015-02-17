@@ -15,14 +15,6 @@ class ApplicationController < ActionController::Base
     redirect_to admin_dashboard_path, alert: exception.message
   end
 
-  def current_ability
-    if defined?(current_api_user) && current_api_user.present?
-      current_api_user.ability
-    else
-      current_user.ability
-    end
-  end
-
   def after_sign_in_path_for(_resource)
     if session[:user_return_to] && session[:user_return_to] != login_path
       return session[:user_return_to].to_s 
