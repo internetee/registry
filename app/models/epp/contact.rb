@@ -5,6 +5,9 @@ class Epp::Contact < Contact
   # disable STI, there is type column present
   self.inheritance_column = :sti_disabled
 
+  # temp fix
+  has_many :legal_documents, as: :documentable
+
   class << self
     # rubocop: disable Metrics/PerceivedComplexity
     # rubocop: disable Metrics/CyclomaticComplexity
