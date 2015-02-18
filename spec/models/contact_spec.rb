@@ -52,6 +52,42 @@ describe Contact do
       @contact.errors[:phone].should == ["Phone nr is invalid"]
     end
 
+    it 'should require country code when bic' do
+      @contact.ident_type = 'bic'
+      @contact.valid?
+      @contact.errors[:ident_country_code].should == ['is missing']
+    end
+
+    it 'should require country code when priv' do
+      @contact.ident_type = 'priv'
+      @contact.valid?
+      @contact.errors[:ident_country_code].should == ['is missing']
+    end
+
+    it 'should validate correct country code' do
+      @contact.ident_type = 'bic'
+      @contact.ident_country_code = 'EE'
+      @contact.valid?
+
+      @contact.errors[:ident_country_code].should == []
+    end
+
+    it 'should require valid country code' do
+      @contact.ident_type = 'bic'
+      @contact.ident_country_code = 'INVALID'
+      @contact.valid?
+
+      @contact.errors[:ident_country_code].should == ['is not following ISO_3166-1 alpha 2 format']
+    end
+
+    it 'should convert to alpha2 country code' do
+      @contact.ident_type = 'bic'
+      @contact.ident_country_code = 'ee'
+      @contact.valid?
+
+      @contact.ident_country_code.should == 'EE'
+    end
+
     it 'should not have any versions' do
       @contact.versions.should == []
     end
@@ -87,18 +123,12 @@ describe Contact do
       @contact.relations_with_domain?.should == false
     end
 
-    # it 'ico should be valid' do
-    # @contact.ident_type = 'ico'
-    # @contact.ident = '1234'
-    # @contact.errors.full_messages.should match_array([])
-    # end
-
-    # it 'ident should return false' do
-    # puts @contact.ident_type
-    # @contact.ident = '123abc'
-    # @contact.valid?
-    # @contact.errors.full_messages.should_not == []
-    # end
+    it 'bic should be valid' do
+      @contact.ident_type = 'bic'
+      @contact.ident = '1234'
+      @contact.valid?
+      @contact.errors.full_messages.should match_array([])
+    end
 
     context 'as birthday' do
       before :all do
@@ -175,16 +205,6 @@ describe Contact do
         it 'should not generate new auth_info' do
           @contact.update_attributes(name: 'fvrsgbqevciherot23')
           @contact.auth_info.should == 'qwe321'
-        end
-      end
-
-      context 'with creator' do
-        it 'should return username of creator' do
-          # @contact.creator_str.should == 'gitlab'
-        end
-
-        it 'should return username of updater' do
-          # @contact.updator.should == 'gitlab'
         end
       end
     end

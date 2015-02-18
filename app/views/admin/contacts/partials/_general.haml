@@ -4,7 +4,7 @@
   .panel-body
     %dl.dl-horizontal
       %dt= t(:ident)
-      %dd= @contact.ident + ' [' + @contact.ident_type + ']'
+      %dd= "#{@contact.ident} #{ident_indicator(@contact)}"
 
       %br
 
@@ -13,9 +13,6 @@
 
       %dt= t(:phone)
       %dd= @contact.phone
-
-      %dt= t(:org_name)
-      %dd= @contact.org_name
 
       - if @contact.fax
         %dt= t(:fax)

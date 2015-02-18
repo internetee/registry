@@ -19,8 +19,9 @@ class Contact < ActiveRecord::Base
   validates :phone, format: /\+[0-9]{1,3}\.[0-9]{1,14}?/
   validates :email, format: /@/
   validates :ident, format: /\d{4}-\d{2}-\d{2}/, if: proc { |c| c.ident_type == 'birthday' }
-  validate :ident_must_be_valid
+  validates :ident_country_code, presence: true, if: proc { |c| %w(bic priv).include? c.ident_type }
   validates :code, uniqueness: { message: :epp_id_taken }
+  validate :ident_valid_format?
 
   delegate :street,       to: :address
   delegate :city,         to: :address
@@ -29,19 +30,17 @@ class Contact < ActiveRecord::Base
   delegate :country_code, to: :address
   delegate :country,      to: :address
 
+  before_validation :set_ident_country_code
   before_create :generate_code
   before_create :generate_auth_info
   after_create :ensure_disclosure
 
   scope :current_registrars, ->(id) { where(registrar_id: id) }
 
-  IDENT_TYPE_ICO = 'ico'
+  IDENT_TYPE_BIC = 'bic'
   IDENT_TYPES = [
-    IDENT_TYPE_ICO, # Company registry code (or similar)
-    'bic',          # Business registry code
+    IDENT_TYPE_BIC, # Company registry code (or similar)
     'priv',         # National idendtification number
-    'op',           # Estonian ID, depricated
-    'passport',     # Passport number, depricated
     'birthday'      # Birthday date
   ]
 
@@ -75,24 +74,27 @@ class Contact < ActiveRecord::Base
     name
   end
 
-  def ident_must_be_valid
-    # TODO: Ident can also be passport number or company registry code.
-    # so have to make changes to validations (and doc/schema) accordingly
-    return true unless ident.present? && ident_type.present? && ident_type == 'op'
-    code = Isikukood.new(ident)
-    errors.add(:ident, 'bad format') unless code.valid?
+  def ident_valid_format?
+    case ident_type
+    when 'priv'
+      case ident_country_code
+      when 'EE'
+        code = Isikukood.new(ident)
+        errors.add(:ident, :not_valid_EE_identity_format) unless code.valid?
+      end
+    end
   end
 
   def ensure_disclosure
     create_disclosure! unless disclosure
   end
 
-  def juridical?
-    ident_type == IDENT_TYPE_ICO
+  def bic?
+    ident_type == IDENT_TYPE_BIC
   end
 
-  def citizen?
-    ident_type != IDENT_TYPE_ICO
+  def priv?
+    ident_type != IDENT_TYPE_BIC
   end
 
   # generate random id for contact
@@ -123,5 +125,15 @@ class Contact < ActiveRecord::Base
       return false
     end
     destroy
+  end
+
+  def set_ident_country_code
+    return true unless ident_country_code_changed? && ident_country_code.present?
+    code = Country.new(ident_country_code)
+    if code
+      self.ident_country_code = code.alpha2 
+    else
+      errors.add(:ident_country_code, 'is not following ISO_3166-1 alpha 2 format')
+    end
   end
 end

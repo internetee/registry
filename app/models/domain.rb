@@ -211,7 +211,7 @@ class Domain < ActiveRecord::Base
       attach_contact(DomainContact::TECH, owner_contact)
     end
 
-    return unless admin_domain_contacts.count.zero? && owner_contact.citizen?
+    return unless admin_domain_contacts.count.zero? && owner_contact.priv?
     attach_contact(DomainContact::ADMIN, owner_contact)
   end
 

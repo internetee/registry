@@ -1,20 +1,24 @@
 .panel.panel-default
   .panel-heading
-    %h3.panel-title= t('address')
+    %h3.panel-title= t(:address)
   .panel-body
     - unless @contact.address.nil?
       %dl.dl-horizontal
-        %dt= t('street')
+        - if @contact.bic?
+          %dt= t(:org_name)
+          %dd= @contact.org_name
+
+        %dt= t(:street)
         %dd= @contact.street
 
-        %dt= t('city')
+        %dt= t(:city)
         %dd= @contact.city
 
-        %dt= t('zip')
+        %dt= t(:zip)
         %dd= @contact.zip
 
-        %dt= t('state')
+        %dt= t(:state)
         %dd= @contact.state
 
-        %dt= t('country')
+        %dt= t(:country)
         %dd= @contact.country

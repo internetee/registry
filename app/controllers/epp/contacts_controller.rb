@@ -94,6 +94,13 @@ class Epp::ContactsController < EppController
       'postalInfo > name', 'postalInfo > addr > city',
       'postalInfo > addr > cc', 'ident', 'voice', 'email'
     )
+    ident = params[:parsed_frame].css('ident')
+    if ident.present? && ident.text != 'birthday' && ident.attr('cc').blank?
+      epp_errors << { 
+        code: '2003', 
+        msg: I18n.t('errors.messages.required_attribute_missing', key: 'ident country code missing') 
+      }
+    end
     @prefix = nil
     requires 'extension > extdata > legalDocument'
   end

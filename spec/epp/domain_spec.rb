@@ -16,7 +16,7 @@ describe 'EPP Domain', epp: true do
     Fabricate(:contact, code: 'citizen_1234')
     Fabricate(:contact, code: 'sh8013')
     Fabricate(:contact, code: 'sh801333')
-    Fabricate(:contact, code: 'juridical_1234', ident_type: 'ico')
+    Fabricate(:contact, code: 'juridical_1234', ident_type: 'bic')
     Fabricate(:reserved_domain)
 
     @uniq_no = proc { @i ||= 0; @i += 1 }
@@ -669,8 +669,8 @@ describe 'EPP Domain', epp: true do
       })
 
       response = epp_plain_request(xml, :xml)
-      response[:result_code].should == '2004'
       response[:msg].should == 'Admin contacts count must be between 1-10'
+      response[:result_code].should == '2004'
       response[:clTRID].should == 'ABC-12345'
 
       Domain.count.should == domain_count
@@ -686,8 +686,8 @@ describe 'EPP Domain', epp: true do
       })
 
       response = epp_plain_request(xml, :xml)
-      response[:result_code].should == '2306'
       response[:msg].should == 'Admin contact can be only citizen'
+      response[:result_code].should == '2306'
     end
   end
 

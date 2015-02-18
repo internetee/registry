@@ -44,7 +44,7 @@ describe 'EPP Contact', epp: true do
           },
           voice: { value: '+372.1234567' },
           email: { value: 'test@example.example' },
-          ident: { value: '37605030299', attrs: { type: 'priv' } }
+          ident: { value: '37605030299', attrs: { type: 'priv', cc: 'EE' } }
         }
         create_xml = @epp_xml.create(defaults.deep_merge(overwrites), @legal_document)
         epp_plain_request(create_xml, :xml)
@@ -331,12 +331,6 @@ describe 'EPP Contact', epp: true do
     end
 
     context 'info command' do
-      before :all do
-        @registrar1_contact = Fabricate(
-          :contact, code: 'info-4444', registrar: @registrar1,
-          name: 'Johnny Awesome', address: Fabricate(:address))
-      end
-
       def info_request(overwrites = {})
         defaults = {
           id: { value: @contact.code },
@@ -363,6 +357,10 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'return info about contact' do
+        @registrar1_contact = Fabricate(
+          :contact, code: 'info-4444', registrar: @registrar1,
+          name: 'Johnny Awesome', address: Fabricate(:address))
+
         response = info_request({ id: { value: @registrar1_contact.code } })
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'

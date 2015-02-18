@@ -20,8 +20,9 @@ class Epp::Contact < Contact
       at[:auth_info] = f.css('authInfo pw').text if f.css('authInfo pw').present? 
 
       if f.css('ident').present? && f.css('ident').attr('type').present?
-        at[:ident]      = f.css('ident').text      
-        at[:ident_type] = f.css('ident').attr('type').text 
+        at[:ident]              = f.css('ident').text      
+        at[:ident_type]         = f.css('ident').attr('type').try(:text)
+        at[:ident_country_code] = f.css('ident').attr('cc').try(:text)
       end
       
       at[:address_attributes] = {}.with_indifferent_access
@@ -69,7 +70,8 @@ class Epp::Contact < Contact
       '2005' => [ # Value syntax error
         [:phone, :invalid],
         [:email, :invalid],
-        [:ident, :invalid]
+        [:ident, :invalid],
+        [:ident, :not_valid_EE_identity_format]
       ]
     }
   end

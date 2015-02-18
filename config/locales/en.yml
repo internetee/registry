@@ -31,7 +31,6 @@ en:
   activerecord:
     errors:
       models:
-
         contact:
           attributes:
             code:
@@ -46,6 +45,7 @@ en:
               invalid: "Email is invalid"
             ident:
               blank: "Required parameter missing - ident"
+              not_valid_EE_identity_format: "Ident not in valid Estonian identity format."
             domains:
               exist: 'Object association prohibits operation'
 
@@ -237,6 +237,7 @@ en:
       invalid_type: 'PostalInfo type is invalid'
       unimplemented_command: 'Unimplemented command'
       domain_exists_but_belongs_to_other_registrar: 'Domain exists but belongs to other registrar'
+      required_attribute_missing: Required attributes missing
 
   code: 'Code'
   value: 'Value'
