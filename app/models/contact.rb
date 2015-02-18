@@ -18,7 +18,9 @@ class Contact < ActiveRecord::Base
   # Phone nr validation is very minimam in order to support legacy requirements
   validates :phone, format: /\+[0-9]{1,3}\.[0-9]{1,14}?/
   validates :email, format: /@/
-  validates :ident, format: /\d{4}-\d{2}-\d{2}/, if: proc { |c| c.ident_type == 'birthday' }
+  validates :ident, 
+    format: { with: /\d{4}-\d{2}-\d{2}/, message: :invalid_birthday_format },
+    if: proc { |c| c.ident_type == 'birthday' }
   validates :ident_country_code, presence: true, if: proc { |c| %w(bic priv).include? c.ident_type }
   validates :code, uniqueness: { message: :epp_id_taken }
   validate :ident_valid_format?
@@ -80,7 +82,7 @@ class Contact < ActiveRecord::Base
       case ident_country_code
       when 'EE'
         code = Isikukood.new(ident)
-        errors.add(:ident, :not_valid_EE_identity_format) unless code.valid?
+        errors.add(:ident, :invalid_EE_identity_format) unless code.valid?
       end
     end
   end

@@ -45,7 +45,8 @@ en:
               invalid: "Email is invalid"
             ident:
               blank: "Required parameter missing - ident"
-              not_valid_EE_identity_format: "Ident not in valid Estonian identity format."
+              invalid_EE_identity_format: "Ident not in valid Estonian identity format."
+              invalid_birthday_format: "Ident not in valid birthady format, should be YYYY-MM-DD"
             domains:
               exist: 'Object association prohibits operation'
 

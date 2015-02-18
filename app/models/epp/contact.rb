@@ -71,7 +71,8 @@ class Epp::Contact < Contact
         [:phone, :invalid],
         [:email, :invalid],
         [:ident, :invalid],
-        [:ident, :not_valid_EE_identity_format]
+        [:ident, :invalid_EE_identity_format],
+        [:ident, :invalid_birthday_format]
       ]
     }
   end

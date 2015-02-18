@@ -149,7 +149,8 @@ describe Contact do
         invalid.each do |date|
           @contact.ident = date
           @contact.valid?
-          @contact.errors.full_messages.should == ["Ident is invalid"]
+          @contact.errors.full_messages.should == 
+            ["Ident Ident not in valid birthady format, should be YYYY-MM-DD"]
         end
       end
     end
