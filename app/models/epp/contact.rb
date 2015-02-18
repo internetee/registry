@@ -53,8 +53,8 @@ class Epp::Contact < Contact
     def legal_document_attrs(legal_frame)
       attrs = {}.with_indifferent_access
       attrs[0] = {}.with_indifferent_access
+      attrs[0][:body]          = legal_frame.text
       attrs[0][:document_type] = legal_frame['type']
-      attrs[0][:body]          = legal_frame
       attrs
     end
   end
