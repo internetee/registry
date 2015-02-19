@@ -4,7 +4,7 @@ Go to registry shared folder and setup CA directory tree:
 ```
 mkdir ca
 cd ca
-mkdir certs crl newcerts private
+mkdir certs crl newcerts private csrs
 chmod 700 private
 touch index.txt
 echo 1000 > serial
@@ -45,12 +45,13 @@ authorityKeyIdentifier=keyid:always,issuer
 basicConstraints = CA:true
 keyUsage = cRLSign, keyCertSign
 
+# For the CA policy
 [ policy_match ]
 countryName             = optional
 stateOrProvinceName     = optional
 organizationName        = optional
 organizationalUnitName  = optional
-commonName              = optional
+commonName              = supplied
 emailAddress            = optional
 ```
 
@@ -58,6 +59,18 @@ Issue the root certificate (prompts for additional data):
 ```
 openssl req -new -x509 -days 3650 -key private/ca.key.pem -sha256 -extensions v3_ca -out certs/ca.cert.pem
 chmod 444 certs/ca.cert.pem
+```
+
+Create a CSR for the webclient:
+```
+openssl genrsa -out private/webclient.key.pem 4096
+chmod 400 private/webclient.key.pem
+openssl req -sha256 -new -key private/webclient.key.pem -out csrs/webclient.csr.pem
+```
+
+Sign the request and create certificate:
+```
+openssl ca -keyfile private/ca.key.pem -cert certs/ca.cert.pem -extensions usr_cert -notext -md sha256 -in csrs/webclient.csr.pem -out certs/webclient.cert.pem
 ```
 
 Configure EPP virtual host:
@@ -75,10 +88,30 @@ With these lines:
   SSLVerifyClient require
   SSLVerifyDepth 1
   SSLCACertificateFile /home/registry/registry/shared/ca/certs/ca.cert.pem
+  RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
+```
+
+Configure webclient virtual host:
+```
+  SSLVerifyClient none
+  SSLVerifyDepth 1
+  SSLCACertificateFile /home/registry/registry/shared/ca/certs/ca.cert.pem
+
+  RequestHeader set SSL_CLIENT_S_DN_CN ""
+
+  <Location /login/pki>
+    SSLVerifyClient require
+  </Location>
+
+  <Location /sessions>
+    SSLVerifyClient require
+    RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
+  </Location> 
 ```
 
 Reload apache:
 ```
+sudo a2enmod headers
 sudo /etc/init.d/apache2 reload
 ```
 
