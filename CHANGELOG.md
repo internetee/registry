@@ -1,4 +1,4 @@
-12.02.2015
+19.02.2015
  
 Go to registry shared folder and setup CA directory tree:
 ```

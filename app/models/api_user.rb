@@ -9,9 +9,14 @@ class ApiUser < User
   validates :username, :password, :registrar, presence: true
   validates :username, uniqueness: true
 
-  before_save :create_crt, if: -> (au) { au.csr_changed? }
+  # before_save :create_crt, if: -> (au) { au.csr_changed? }
 
   attr_accessor :registrar_typeahead
+
+  def ability
+    @ability ||= Ability.new(self)
+  end
+  delegate :can?, :cannot?, to: :ability
 
   def registrar_typeahead
     @registrar_typeahead || registrar || nil

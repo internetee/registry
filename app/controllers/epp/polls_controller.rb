@@ -1,4 +1,6 @@
 class Epp::PollsController < EppController
+  skip_authorization_check # TODO: remove it
+
   def poll
     req_poll if params[:parsed_frame].css('poll').first['op'] == 'req'
     ack_poll if params[:parsed_frame].css('poll').first['op'] == 'ack'
@@ -38,6 +40,6 @@ class Epp::PollsController < EppController
   private
 
   def validate_poll
-    requires_attribute 'poll', 'op', values: %(ack req)
+    requires_attribute 'poll', 'op', values: %(ack req), allow_blank: true
   end
 end

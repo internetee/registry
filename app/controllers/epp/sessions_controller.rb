@@ -1,4 +1,6 @@
 class Epp::SessionsController < EppController
+  skip_authorization_check only: [:hello, :login, :logout]
+
   def hello
     render_epp_response('greeting')
   end

@@ -1,9 +1,22 @@
 class EppController < ApplicationController
+  layout false
   protect_from_forgery with: :null_session
+  skip_before_action :verify_authenticity_token
+
   before_action :generate_svtrid
   before_action :validate_request
-  layout false
   helper_method :current_user
+
+  rescue_from CanCan::AccessDenied do |_exception|
+    @errors ||= []
+    if @errors.blank?
+      @errors = [{
+        msg: t('errors.messages.epp_authorization_error'),
+        code: '2201'
+      }]
+    end
+    render_epp_response '/epp/error'
+  end
 
   def generate_svtrid
     # rubocop: disable Style/VariableName
@@ -84,12 +97,19 @@ class EppController < ApplicationController
   # TODO: Add possibility to pass validations / options in the method
 
   def requires(*selectors)
+    options = selectors.extract_options!
+    allow_blank = options[:allow_blank] ||= false # allow_blank is false by default
+
     el, missing = nil, nil
     selectors.each do |selector|
       full_selector = [@prefix, selector].compact.join(' ')
       el = params[:parsed_frame].css(full_selector).first
 
-      missing = el.nil?
+      if allow_blank
+        missing = el.nil?
+      else
+        missing = el.present? ? el.text.blank? : true
+      end
       epp_errors << {
         code: '2003',
         msg: I18n.t('errors.messages.required_parameter_missing', key: full_selector)
@@ -105,7 +125,7 @@ class EppController < ApplicationController
   # requires_attribute 'transfer', 'op', values: %(approve, query, reject)
 
   def requires_attribute(element_selector, attribute_selector, options)
-    element = requires(element_selector)
+    element = requires(element_selector, allow_blank: options[:allow_blank])
     return unless element
 
     attribute = element[attribute_selector]
