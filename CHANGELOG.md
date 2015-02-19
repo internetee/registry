@@ -57,8 +57,8 @@ emailAddress            = optional
 
 Issue the root certificate (prompts for additional data):
 ```
-openssl req -new -x509 -days 3650 -key private/ca.key.pem -sha256 -extensions v3_ca -out certs/ca.cert.pem
-chmod 444 certs/ca.cert.pem
+openssl req -new -x509 -days 3650 -key private/ca.key.pem -sha256 -extensions v3_ca -out certs/ca.crt.pem
+chmod 444 certs/ca.crt.pem
 ```
 
 Create a CSR for the webclient:
@@ -70,7 +70,7 @@ openssl req -sha256 -new -key private/webclient.key.pem -out csrs/webclient.csr.
 
 Sign the request and create certificate:
 ```
-openssl ca -keyfile private/ca.key.pem -cert certs/ca.cert.pem -extensions usr_cert -notext -md sha256 -in csrs/webclient.csr.pem -out certs/webclient.cert.pem
+openssl ca -keyfile private/ca.key.pem -cert certs/ca.crt.pem -extensions usr_cert -notext -md sha256 -in csrs/webclient.csr.pem -out certs/webclient.crt.pem
 ```
 
 Configure EPP virtual host:
@@ -87,7 +87,7 @@ With these lines:
 ```
   SSLVerifyClient require
   SSLVerifyDepth 1
-  SSLCACertificateFile /home/registry/registry/shared/ca/certs/ca.cert.pem
+  SSLCACertificateFile /home/registry/registry/shared/ca/certs/ca.crt.pem
   RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
 ```
 
@@ -100,7 +100,7 @@ Add these lines:
 ```
   SSLVerifyClient none
   SSLVerifyDepth 1
-  SSLCACertificateFile /home/registry/registry/shared/ca/certs/ca.cert.pem
+  SSLCACertificateFile /home/registry/registry/shared/ca/certs/ca.crt.pem
 
   RequestHeader set SSL_CLIENT_S_DN_CN ""
 
@@ -109,7 +109,6 @@ Add these lines:
   </Location>
 
   <Location /sessions>
-    SSLVerifyClient require
     RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
   </Location> 
 ```
@@ -122,7 +121,7 @@ sudo /etc/init.d/apache2 restart
 
 Configure registry and epp application.yml to match the CA settings:
 ```
-ca_cert_path: '/home/registry/registry/shared/ca/certs/ca.cert.pem'
+ca_cert_path: '/home/registry/registry/shared/ca/certs/ca.crt.pem'
 ca_key_path: '/home/registry/registry/shared/ca/private/ca.key.pem'
 ca_key_password: 'registryalpha'
 webclient_ip: '54.154.91.240'
@@ -130,7 +129,7 @@ webclient_ip: '54.154.91.240'
 
 Configure webclient application.yml to match the CA settings:
 ```
-cert_path: '/home/registry/registry/shared/ca/certs/webclient.cert.pem'
+cert_path: '/home/registry/registry/shared/ca/certs/webclient.crt.pem'
 key_path: '/home/registry/registry/shared/ca/private/webclient.key.pem'
 ```
 

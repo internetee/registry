@@ -152,7 +152,8 @@ Be sure to update paths to match your system configuration.
 
     SSLVerifyClient require
     SSLVerifyDepth 1
-    SSLCACertificateFile /home/registry/registry/shared/ca/certs/ca.cert.pem
+    SSLCACertificateFile /home/registry/registry/shared/ca/certs/ca.crt.pem
+    RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
 
     EPPEngine On
     EPPCommandRoot          /proxy/command
@@ -181,6 +182,86 @@ All registry demo data can be found at:
 
 Initially you can use two type of users: admin users and EPP users.
 
+### CA
+
+Go to registry shared folder and setup CA directory tree:
+```
+mkdir ca
+cd ca
+mkdir certs crl newcerts private csrs
+chmod 700 private
+touch index.txt
+echo 1000 > serial
+```
+
+Generate the root key (prompts for pass phrase): 
+```
+openssl genrsa -aes256 -out private/ca.key.pem 4096
+```
+
+Configure OpenSSL:
+```
+sudo su -
+cd /etc/ssl/
+cp openssl.cnf openssl.cnf.bak
+nano openssl.cnf
+exit
+```
+
+Make sure the following options are in place:
+```
+[ CA_default ]
+# Where everything is kept
+dir = /home/registry/registry/shared/ca
+
+[ usr_cert ]
+# These extensions are added when 'ca' signs a request.
+basicConstraints=CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+nsComment = "OpenSSL Generated Certificate"
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid,issuer
+
+[ v3_ca ]
+# Extensions for a typical CA
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid:always,issuer
+basicConstraints = CA:true
+keyUsage = cRLSign, keyCertSign
+
+# For the CA policy
+[ policy_match ]
+countryName             = optional
+stateOrProvinceName     = optional
+organizationName        = optional
+organizationalUnitName  = optional
+commonName              = supplied
+emailAddress            = optional
+```
+
+Issue the root certificate (prompts for additional data):
+```
+openssl req -new -x509 -days 3650 -key private/ca.key.pem -sha256 -extensions v3_ca -out certs/ca.crt.pem
+chmod 444 certs/ca.crt.pem
+```
+
+Create a CSR for the webclient:
+```
+openssl genrsa -out private/webclient.key.pem 4096
+chmod 400 private/webclient.key.pem
+openssl req -sha256 -new -key private/webclient.key.pem -out csrs/webclient.csr.pem
+```
+
+Sign the request and create certificate:
+```
+openssl ca -keyfile private/ca.key.pem -cert certs/ca.crt.pem -extensions usr_cert -notext -md sha256 -in csrs/webclient.csr.pem -out certs/webclient.crt.pem
+```
+
+Certificates for API Users are generated via the user interface. CSR must be uploaded for each API User. Certificates are created automatically after saving the user.
+
+Private key and certificate must be packaged to pkcs12 and added to the browser's certificate bank.
+
+Make sure application configuration files contain correct paths to certificates.
 
 ### EPP web client
 
