@@ -43,7 +43,7 @@
             %dd -
 
           %dt= t('crt')
-          / - if @api_user.csr
-          /   %dd= link_to(t('download'), download_crt_admin_api_user_path)
-          / - else
-          /   %dd -
+          - if @api_user.csr
+            %dd= link_to(t('download'), download_crt_admin_api_user_path)
+          - else
+            %dd -
