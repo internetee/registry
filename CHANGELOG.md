@@ -117,14 +117,15 @@ Add these lines:
 Reload apache:
 ```
 sudo a2enmod headers
-sudo /etc/init.d/apache2 reload
+sudo /etc/init.d/apache2 restart
 ```
 
-Configure registry application.yml to match the CA settings:
+Configure registry and epp application.yml to match the CA settings:
 ```
 ca_cert_path: '/home/registry/registry/shared/ca/certs/ca.cert.pem'
 ca_key_path: '/home/registry/registry/shared/ca/private/ca.key.pem'
 ca_key_password: 'registryalpha'
+webclient_ip: '54.154.91.240'
 ```
 
 Configure webclient application.yml to match the CA settings:
