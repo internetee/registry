@@ -3,8 +3,18 @@ module Repp
     format :json
     prefix :repp
 
-    http_basic do |username, password|
-      @current_user ||= ApiUser.find_by(username: username, password: password)
+    before do
+      auth_param = request.headers['Authorization'].split(' ', 2).second
+      username, password = ::Base64.decode64(auth_param || '').split(':', 2)
+
+      # allow user lookup only by username if request came from webclient
+      if request.ip == APP_CONFIG['webclient_ip'] && password.blank?
+        login_params = { username: username }
+      else
+        login_params = { username: username, password: password }
+      end
+
+      @current_user ||= ApiUser.find_by(login_params)
     end
 
     helpers do

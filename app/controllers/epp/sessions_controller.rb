@@ -4,8 +4,8 @@ class Epp::SessionsController < EppController
   end
 
   def login
-    # pki login
-    if request.env['HTTP_SSL_CLIENT_S_DN_CN'] == login_params[:username]
+    # Allow login with only username
+    if request.ip == APP_CONFIG['webclient_ip'] && login_params[:password].nil?
       @api_user = ApiUser.find_by(username: login_params[:username])
     else
       @api_user = ApiUser.find_by(login_params)
