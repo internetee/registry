@@ -30,7 +30,7 @@ begin
     end
 
     Rake::Task[:default].prerequisites.clear
-    task default: :test
+    task default: 'test:other'
 
     def test_against_server
       _stdin, _stdout, _stderr, wait_thr = Open3.popen3('unicorn -E test -p 8989')
