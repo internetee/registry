@@ -2,14 +2,19 @@ language: ruby
 rvm:
   - 2.2
   - ruby-head
-
+env:
+  - DB=postgresql
 sudo: false
-script: 'ci/travis.rb'
 before_install:
   - gem install bundler
   - "rm ${BUNDLE_GEMFILE}.lock"
 before_script:
   - bundle update
+  - cp config/application-example.yml config/application.yml
+  - cp config/database-travis.yml config/database.yml
+  - RAILS_ENV=test bundle exec rake db:all:setup
+script: 
+ - RAILS_ENV=test bundle exec rake
 cache: bundler
 addons:
   postgresql: "9.3"
