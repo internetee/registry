@@ -5,10 +5,23 @@ class Epp::SessionsController < EppController
     render_epp_response('greeting')
   end
 
+  # rubocop: disable Metrics/PerceivedComplexity
+  # rubocop: disable Metrics/CyclomaticComplexity
   def login
-    @api_user = ApiUser.find_by(login_params)
+    cert_valid = true
+    # Allow login with only username
+    if request.ip == APP_CONFIG['webclient_ip'] && login_params[:password].nil?
+      @api_user = ApiUser.find_by(username: login_params[:username])
+    elsif request.ip == APP_CONFIG['webclient_ip']
+      @api_user = ApiUser.find_by(login_params)
+    else
+      if request.env['HTTP_SSL_CLIENT_S_DN_CN'] != login_params[:username]
+        cert_valid = false
+      end
+      @api_user = ApiUser.find_by(login_params)
+    end
 
-    if @api_user.try(:active)
+    if @api_user.try(:active) && cert_valid
       epp_session[:api_user_id] = @api_user.id
       render_epp_response('login_success')
     else
@@ -16,6 +29,8 @@ class Epp::SessionsController < EppController
       render_epp_response('login_fail')
     end
   end
+  # rubocop: enable Metrics/PerceivedComplexity
+  # rubocop: enable Metrics/CyclomaticComplexity
 
   def logout
     @api_user = current_user # cache current_user for logging

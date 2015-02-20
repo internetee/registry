@@ -3,6 +3,7 @@ require 'epp_constraint'
 Rails.application.routes.draw do
   namespace(:epp, defaults: { format: :xml }) do
     match 'session/:action', controller: 'sessions', via: :all
+    match 'session/pki/:action', controller: 'sessions', via: :all
 
     post 'command/:action', controller: 'domains', constraints: EppConstraint.new(:domain)
     post 'command/:action', controller: 'contacts', constraints: EppConstraint.new(:contact)
