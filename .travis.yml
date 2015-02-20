@@ -14,6 +14,7 @@ before_script:
   - psql -c 'create database registry_api_log_test;' -U postgres
   - bundle update
   - cp config/application-example.yml config/application.yml
+  - cp config/secrets-example.yml config/secrets.yml
   - cp config/database-travis.yml config/database.yml
   - RAILS_ENV=test bundle exec rake db:all:schema:load
   - RAILS_ENV=test bundle exec rake db:seed
