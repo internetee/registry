@@ -359,3 +359,8 @@ This needs a static greeting file, so you will have to make /var/www writable.
     mkdir epp
 
 Copy the files from $mod_epp/examples/cgis to /usr/lib/cgi-bin/epp 
+
+## Code Status
+
+Alpha release status, only model tests:
+[![Build Status](https://travis-ci.org/domify/registry.svg?branch=master)](https://travis-ci.org/domify/registry)
