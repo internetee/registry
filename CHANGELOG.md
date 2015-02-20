@@ -108,7 +108,8 @@ Add these lines:
     SSLVerifyClient require
   </Location>
 
-  <Location /sessions>
+  <Location /sessions/pki>
+    SSLVerifyClient require
     RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
   </Location> 
 ```
