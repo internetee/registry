@@ -41,7 +41,7 @@ namespace :db do
         databases.each do |name|
           begin
             puts "\n---------------------------- #{name} ----------------------------------------\n"
-            ActiveRecord::Base.establish_connection(name)
+            ActiveRecord::Base.establish_connection(name.to_sym)
             if ActiveRecord::Base.connection.table_exists?('schema_migrations')
               puts 'Found tables, skip schema load!'
             else

@@ -5,9 +5,6 @@ class Epp::Contact < Contact
   # disable STI, there is type column present
   self.inheritance_column = :sti_disabled
 
-  # temp fix
-  has_many :legal_documents, as: :documentable
-
   class << self
     # rubocop: disable Metrics/PerceivedComplexity
     # rubocop: disable Metrics/CyclomaticComplexity
@@ -54,11 +51,10 @@ class Epp::Contact < Contact
     end
 
     def legal_document_attrs(legal_frame)
-      attrs = {}.with_indifferent_access
-      attrs[0] = {}.with_indifferent_access
-      attrs[0][:body]          = legal_frame.text
-      attrs[0][:document_type] = legal_frame['type']
-      attrs
+      [{
+        body: legal_frame.text,
+        document_type: legal_frame['type']
+      }]
     end
   end
 
