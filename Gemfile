@@ -8,7 +8,10 @@ gem 'hashie_rails', '~> 0.0.1'
 # model related
 gem 'pg',                        '~> 0.18.0'
 gem 'ransack',                   '~> 1.5.1' # for searching
-gem 'paper_trail',               '~> 4.0.0.beta2' # archiving
+# with polymorphic fix
+gem 'paper_trail',
+  github: 'airblade/paper_trail', 
+  ref: 'a453811226ec4ea59753ba6b827e390ced2fc140' # '~> 4.0.0.beta2' # archiving
 gem 'rails-settings-cached',     '~> 0.4.1' # for settings
 gem 'delayed_job_active_record', '~> 4.0.3' # delayed job
 
