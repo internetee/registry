@@ -9,10 +9,7 @@ class Epp::SessionsController < EppController
   # rubocop: disable Metrics/CyclomaticComplexity
   def login
     cert_valid = true
-    # Allow login with only username
-    if request.ip == APP_CONFIG['webclient_ip'] && login_params[:password].nil?
-      @api_user = ApiUser.find_by(username: login_params[:username])
-    elsif request.ip == APP_CONFIG['webclient_ip']
+    if request.ip == APP_CONFIG['webclient_ip']
       @api_user = ApiUser.find_by(login_params)
     else
       if request.env['HTTP_SSL_CLIENT_S_DN_CN'] != login_params[:username]

@@ -8,6 +8,7 @@ mkdir certs crl newcerts private csrs
 chmod 700 private
 touch index.txt
 echo 1000 > serial
+echo 1000 > crlnumber
 ```
 
 Generate the root key (prompts for pass phrase): 
@@ -26,6 +27,8 @@ exit
 
 Make sure the following options are in place:
 ```
+crl_extensions = crl_ext
+
 [ CA_default ]
 # Where everything is kept
 dir = /home/registry/registry/shared/ca
@@ -71,6 +74,12 @@ openssl req -sha256 -new -key private/webclient.key.pem -out csrs/webclient.csr.
 Sign the request and create certificate:
 ```
 openssl ca -keyfile private/ca.key.pem -cert certs/ca.crt.pem -extensions usr_cert -notext -md sha256 -in csrs/webclient.csr.pem -out certs/webclient.crt.pem
+chmod 444 certs/webclient.crt.pem
+```
+
+Create certificate revocation list (prompts for pass phrase):
+```
+openssl ca -keyfile private/ca.key.pem -cert certs/ca.crt.pem -gencrl -out crl/crl.pem
 ```
 
 Configure EPP virtual host:
