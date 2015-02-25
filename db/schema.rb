@@ -57,6 +57,8 @@ ActiveRecord::Schema.define(version: 20150223104842) do
     t.integer  "api_user_id"
     t.text     "csr"
     t.text     "crt"
+    t.string   "creator_str"
+    t.string   "updator_str"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -282,6 +284,18 @@ ActiveRecord::Schema.define(version: 20150223104842) do
 
   add_index "log_api_users", ["item_type", "item_id"], name: "index_log_api_users_on_item_type_and_item_id", using: :btree
   add_index "log_api_users", ["whodunnit"], name: "index_log_api_users_on_whodunnit", using: :btree
+
+  create_table "log_certificates", force: :cascade do |t|
+    t.string   "item_type",      null: false
+    t.integer  "item_id",        null: false
+    t.string   "event",          null: false
+    t.string   "whodunnit"
+    t.json     "object"
+    t.json     "object_changes"
+    t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
+  end
 
   create_table "log_contact_disclosures", force: :cascade do |t|
     t.string   "item_type",      null: false

@@ -10,6 +10,7 @@ defaults: &defaults
   ca_cert_path: ca-cert-path-here
   ca_key_path: ca-key-path-here
   ca_key_password: ca-key-pass-phrase-here
+  crl_path: crl-path-here
 
 development:
   <<: *defaults

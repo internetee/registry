@@ -1,4 +1,8 @@
 class Certificate < ActiveRecord::Base
+  include Versions
+
+  belongs_to :api_user
+
   SIGNED = 'signed'
   UNSIGNED = 'unsigned'
   EXPIRED = 'expired'
@@ -69,6 +73,7 @@ class Certificate < ActiveRecord::Base
 
     if err.match(/Data Base Updated/) || err.match(/ERROR:Already revoked/)
       save!
+      @cached_status = REVOKED
     else
       errors.add(:base, I18n.t('failed_to_revoke_certificate'))
       logger.error('FAILED TO REVOKE CLIENT CERTIFICATE')

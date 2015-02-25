@@ -97,6 +97,8 @@ With these lines:
   SSLVerifyClient require
   SSLVerifyDepth 1
   SSLCACertificateFile /home/registry/registry/shared/ca/certs/ca.crt.pem
+  SSLCARevocationFile /home/registry/registry/shared/ca/crl/crl.pem
+  SSLCARevocationCheck chain
   RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
 ```
 
@@ -110,6 +112,8 @@ Add these lines:
   SSLVerifyClient none
   SSLVerifyDepth 1
   SSLCACertificateFile /home/registry/registry/shared/ca/certs/ca.crt.pem
+  SSLCARevocationFile /home/registry/registry/shared/ca/crl/crl.pem
+  SSLCARevocationCheck chain
 
   RequestHeader set SSL_CLIENT_S_DN_CN ""
 
@@ -134,6 +138,7 @@ Configure registry and epp application.yml to match the CA settings:
 ca_cert_path: '/home/registry/registry/shared/ca/certs/ca.crt.pem'
 ca_key_path: '/home/registry/registry/shared/ca/private/ca.key.pem'
 ca_key_password: 'registryalpha'
+crl_path: '/home/registry/registry/shared/ca/crl/crl.pem'
 webclient_ip: '54.154.91.240'
 ```
 

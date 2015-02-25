@@ -153,6 +153,9 @@ Be sure to update paths to match your system configuration.
     SSLVerifyClient require
     SSLVerifyDepth 1
     SSLCACertificateFile /home/registry/registry/shared/ca/certs/ca.crt.pem
+    SSLCARevocationFile /home/registry/registry/shared/ca/crl/crl.pem
+    SSLCARevocationCheck chain
+
     RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
 
     EPPEngine On
@@ -192,6 +195,7 @@ mkdir certs crl newcerts private csrs
 chmod 700 private
 touch index.txt
 echo 1000 > serial
+echo 1000 > crlnumber
 ```
 
 Generate the root key (prompts for pass phrase): 
@@ -257,11 +261,22 @@ Sign the request and create certificate:
 openssl ca -keyfile private/ca.key.pem -cert certs/ca.crt.pem -extensions usr_cert -notext -md sha256 -in csrs/webclient.csr.pem -out certs/webclient.crt.pem
 ```
 
-Certificates for API Users are generated via the user interface. CSR must be uploaded for each API User. Certificates are created automatically after saving the user.
+Create certificate revocation list (prompts for pass phrase):
+```
+openssl ca -keyfile private/ca.key.pem -cert certs/ca.crt.pem -gencrl -out crl/crl.pem
+```
 
-Private key and certificate must be packaged to pkcs12 and added to the browser's certificate bank.
+Certificates for API Users are generated via the user interface. CSR must be uploaded for each API User.
+
+Private key and certificate must be packaged to pkcs12 and added to the browser.
 
 Make sure application configuration files contain correct paths to certificates.
+
+In test environment it's important to set unique_subject option to false.  
+In CA directory:
+```
+echo "unique_subject = no" > index.txt.attr
+```
 
 ### EPP web client
 
