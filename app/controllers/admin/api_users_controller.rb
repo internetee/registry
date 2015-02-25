@@ -53,14 +53,6 @@ class Admin::ApiUsersController < AdminController
     end
   end
 
-  def download_csr
-    send_data @api_user.csr, filename: "#{@api_user.username}.csr.pem"
-  end
-
-  def download_crt
-    send_data @api_user.crt, filename: "#{@api_user.username}.crt.pem"
-  end
-
   private
 
   def set_api_user

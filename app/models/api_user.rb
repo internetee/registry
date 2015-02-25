@@ -5,6 +5,7 @@ class ApiUser < User
   # TODO: should have max request limit per day
   belongs_to :registrar
   has_many :contacts
+  has_many :certificates
 
   validates :username, :password, :registrar, presence: true
   validates :username, uniqueness: true

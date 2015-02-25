@@ -15,7 +15,7 @@
 - if @api_user.errors.any?
   %hr
 .row
-  .col-md-6
+  .col-md-12
     .panel.panel-default
       .panel-heading
         %h3.panel-title= t('general')
@@ -29,21 +29,24 @@
 
           %dt= t('active')
           %dd= @api_user.active
-
-  .col-md-6
+.row
+  .col-md-12
     .panel.panel-default
-      .panel-heading
-        %h3.panel-title= t('certificates')
-      .panel-body
-        %dl.dl-horizontal
-          %dt= t('csr')
-          - if @api_user.csr
-            %dd= link_to(t('download'), download_csr_admin_api_user_path)
-          - else
-            %dd -
+      .panel-heading.clearfix
+        .pull-left
+          = t('certificates')
+        .pull-right
+          = link_to(t('upload_csr'), new_admin_api_user_certificate_path(@api_user), class: 'btn btn-primary btn-xs')
 
-          %dt= t('crt')
-          - if @api_user.csr
-            %dd= link_to(t('download'), download_crt_admin_api_user_path)
-          - else
-            %dd -
+      .table-responsive
+        %table.table.table-hover.table-bordered.table-condensed
+          %thead
+            %tr
+              %th{class: 'col-xs-10'}= t('subject')
+              %th{class: 'col-xs-2'}= t('status')
+          %tbody
+            - @api_user.certificates.each do |x|
+              - if x.csr
+                %tr
+                  %td= link_to(x.parsed_csr.try(:subject), admin_api_user_certificate_path(@api_user, x))
+                  %td= x.status

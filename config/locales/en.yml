@@ -481,4 +481,11 @@ en:
   address_help: 'Street name, house no - apartment no, city, county, country, zip'
   download: 'Download'
   failed_to_create_certificate: 'Failed to create certificate!'
+  failed_to_revoke_certificate: 'Failed to revoke certificate!'
   contact_code: Contact code
+  upload_csr: 'Upload CSR'
+  signature_algorithm: 'Signature algorithm'
+  version: 'Version'
+  sign_this_request: 'Sign this request'
+  revoke_this_certificate: 'Revoke this certificate'
+  crt_revoked: 'CRT (revoked)'

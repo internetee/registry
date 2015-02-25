@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150217133937) do
+ActiveRecord::Schema.define(version: 20150223104842) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,14 @@ ActiveRecord::Schema.define(version: 20150217133937) do
   end
 
   add_index "cached_nameservers", ["hostname", "ipv4", "ipv6"], name: "index_cached_nameservers_on_hostname_and_ipv4_and_ipv6", unique: true, using: :btree
+
+  create_table "certificates", force: :cascade do |t|
+    t.integer  "api_user_id"
+    t.text     "csr"
+    t.text     "crt"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "contact_disclosures", force: :cascade do |t|
     t.integer  "contact_id"

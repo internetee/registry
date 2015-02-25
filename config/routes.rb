@@ -48,9 +48,13 @@ Rails.application.routes.draw do
 
     resources :admin_users
     resources :api_users do
-      member do
-        get 'download_csr'
-        get 'download_crt'
+      resources :certificates do
+        member do
+          post 'sign'
+          post 'revoke'
+          get 'download_csr'
+          get 'download_crt'
+        end
       end
     end
 

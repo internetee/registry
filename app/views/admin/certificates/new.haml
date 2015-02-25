@@ -1,0 +1,20 @@
+%h2= t('upload_csr')
+%hr
+= form_for([:admin, @api_user, @certificate], multipart: true) do |f|
+  - if @certificate.errors.any?
+    - @certificate.errors.each do |attr, err|
+      = err
+      %br
+  - if @certificate.errors.any?
+    %hr
+
+  .row
+    .col-md-12.text-left
+      .form-group
+        = f.label :csr, t('certificate_signing_req')
+        = f.file_field :csr
+  %hr
+  .row
+    .col-md-12.text-right
+      = button_tag(t('save'), class: 'btn btn-primary')
+
