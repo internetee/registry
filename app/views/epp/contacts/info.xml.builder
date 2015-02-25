@@ -18,7 +18,7 @@ xml.epp_head do
           xml.tag!('contact:upID', @contact.updator.try(:registrar))
           xml.tag!('contact:upDate', @contact.updated_at) 
         end
-        xml.tag!('contact:ident', @contact.ident, type: @contact.ident_type)
+        xml.tag!('contact:ident', @contact.ident, type: @contact.ident_type, cc: @contact.ident_country_code)
         # xml.tag!('contact:trDate', '123') if false
         if can? :view_password, @contact
           xml.tag!('contact:authInfo') do
