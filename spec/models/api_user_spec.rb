@@ -20,6 +20,11 @@ describe ApiUser do
     it 'should not have any versions' do
       @api_user.versions.should == []
     end
+
+    it 'should be active by default' do
+      @api_user.active.should == true
+    end
+
   end
 
   context 'with valid attributes' do

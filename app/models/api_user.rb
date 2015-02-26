@@ -17,6 +17,12 @@ class ApiUser < User
   end
   delegate :can?, :cannot?, to: :ability
 
+  after_initialize :set_defaults
+  def set_defaults
+    return unless new_record?
+    self.active = true
+  end
+
   def registrar_typeahead
     @registrar_typeahead || registrar || nil
   end
