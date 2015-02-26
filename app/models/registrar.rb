@@ -23,7 +23,7 @@ class Registrar < ActiveRecord::Base
   end
 
   def address
-    [street, city, state, zip].reject(&:empty?).compact.join(', ')
+    [street, city, state, zip].reject(&:blank?).compact.join(', ')
   end
 
   def to_s
