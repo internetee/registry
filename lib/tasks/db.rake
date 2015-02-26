@@ -17,7 +17,12 @@ namespace :db do
     task setup: [:environment] do
       Rake::Task['db:all:create'].invoke
       Rake::Task['db:all:schema:load'].invoke
+
+      ActiveRecord::Base.clear_all_connections!
+      ActiveRecord::Base.establish_connection(Rails.env.to_sym)
+      puts "\n---------------------------- Import seed ----------------------------------------\n"
       Rake::Task['db:seed'].invoke
+      puts "\n  All done!\n\n"
     end
 
     desc 'Create all databases: registry, api_log and whois'
@@ -42,12 +47,12 @@ namespace :db do
       # just in case we allow only drop test, comment it out please for temp
       return unless Rails.env.test?
 
-      puts "\n---------------------------- Drop main database ----------------------------------------\n"
       Rake::Task['db:drop'].invoke
+      conf = ActiveRecord::Base.configurations
+      puts "#{conf[Rails.env]['database']} dropped"
 
       other_databases.each do |name|
         begin
-          puts "\n---------------------------- #{name} dropped ----------------------------------------\n"
           ActiveRecord::Base.clear_all_connections!
           ActiveRecord::Base.establish_connection(name.to_sym)
 
