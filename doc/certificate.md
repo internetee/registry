@@ -120,10 +120,6 @@ Add these lines:
 
   RequestHeader set SSL_CLIENT_S_DN_CN ""
 
-  <Location /login/pki>
-    SSLVerifyClient require
-  </Location>
-
   <Location /sessions/pki>
     SSLVerifyClient require
     RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
