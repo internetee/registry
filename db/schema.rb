@@ -18,7 +18,6 @@ ActiveRecord::Schema.define(version: 20150330083700) do
 
   create_table "addresses", force: :cascade do |t|
     t.integer  "contact_id"
-    t.integer  "country_id"
     t.string   "city"
     t.string   "street"
     t.string   "zip"
@@ -579,7 +578,6 @@ ActiveRecord::Schema.define(version: 20150330083700) do
     t.string   "name"
     t.string   "reg_no"
     t.string   "vat_no"
-    t.integer  "country_id"
     t.string   "billing_address"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -594,6 +592,10 @@ ActiveRecord::Schema.define(version: 20150330083700) do
     t.string   "street"
     t.string   "zip"
     t.string   "code"
+    t.string   "url"
+    t.string   "directo_handle"
+    t.boolean  "vat"
+    t.integer  "legacy_id"
   end
 
   add_index "registrars", ["code"], name: "index_registrars_on_code", using: :btree
@@ -631,8 +633,6 @@ ActiveRecord::Schema.define(version: 20150330083700) do
     t.inet     "current_sign_in_ip"
     t.inet     "last_sign_in_ip"
     t.string   "identity_code"
-    t.integer  "country_id"
-    t.string   "roles",                                       array: true
     t.string   "creator_str"
     t.string   "updator_str"
     t.string   "country_code"

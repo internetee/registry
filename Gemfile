@@ -71,6 +71,9 @@ gem 'depp', github: 'domify/depp', ref: '800ab30dcb6dae33095bcb9df47b4e0a390891a
 # gem 'depp', path: '~/projects/depp'
 gem 'epp', '~> 1.4.2', github: 'gitlabeu/epp'
 
+# for importing legacy db
+gem 'activerecord-import', '~> 0.7.0' # for inserting dummy data
+
 group :development do
   # dev tools
   gem 'spring',                '~> 1.3.3'
@@ -102,7 +105,6 @@ group :development, :test do
   gem 'launchy',            '~> 2.4.3' # for opening browser automatically
 
   # helper gems
-  gem 'activerecord-import', '~> 0.6.0' # for inserting dummy data
   gem 'database_cleaner',    '~> 1.3.0' # For cleaning db in feature and epp tests
   gem 'faker',               '~> 1.3.0' # Library to generate fake data
 
