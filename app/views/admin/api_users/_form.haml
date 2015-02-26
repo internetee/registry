@@ -7,7 +7,7 @@
     %hr
 
   .row
-    .col-md-6
+    .col-md-12
       .form-group
         = f.label :username
         = f.text_field(:username, class: 'form-control')
@@ -26,11 +26,6 @@
           %label{for: 'api_user_active'}
             = f.check_box(:active)
             = t('active')
-
-    .col-md-6.text-left
-      .form-group
-        = f.label :csr, t('certificate_signing_req')
-        = f.file_field :csr
   %hr
   .row
     .col-md-12.text-right

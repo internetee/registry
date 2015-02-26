@@ -12,10 +12,7 @@ class Admin::ApiUsersController < AdminController
   end
 
   def create
-    app = api_user_params
-    app[:csr] = params[:api_user][:csr].open.read if params[:api_user][:csr]
-
-    @api_user = ApiUser.new(app)
+    @api_user = ApiUser.new(api_user_params)
 
     if @api_user.save
       flash[:notice] = I18n.t('record_created')
@@ -31,10 +28,7 @@ class Admin::ApiUsersController < AdminController
   def edit; end
 
   def update
-    app = api_user_params
-    app[:csr] = params[:api_user][:csr].open.read if params[:api_user][:csr]
-
-    if @api_user.update(app)
+    if @api_user.update(api_user_params)
       flash[:notice] = I18n.t('record_updated')
       redirect_to [:admin, @api_user]
     else
@@ -60,6 +54,6 @@ class Admin::ApiUsersController < AdminController
   end
 
   def api_user_params
-    params.require(:api_user).permit(:username, :password, :csr, :active, :registrar_id, :registrar_typeahead)
+    params.require(:api_user).permit(:username, :password, :active, :registrar_id, :registrar_typeahead)
   end
 end
