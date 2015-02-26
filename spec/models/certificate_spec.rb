@@ -36,14 +36,14 @@ describe Certificate do
       @certificate.errors.full_messages.should match_array([])
     end
 
-    it 'should sign csr' do
+    it 'should sign csr', epp: true do
       @certificate.status.should == 'unsigned'
       @certificate.sign!
       @certificate.status.should == 'signed'
       @certificate.crt.should_not be_blank
     end
 
-    it 'should revoke crt' do
+    it 'should revoke crt', epp: true do
       @certificate.revoke!
       @certificate.status.should == 'revoked'
     end
