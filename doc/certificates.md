@@ -56,9 +56,8 @@ Make sure the following options are in place:
 Setup CA directory in shared directory:
 
     cd /home/registry/registry/shared
-    mkdir ca
+    mkdir ca ca/certs ca/crl ca/newcerts ca/private ca/csrs
     cd ca
-    mkdir certs crl newcerts private csrs
     chmod 700 private
     touch index.txt
     echo 1000 > serial
@@ -90,10 +89,10 @@ Create certificate revocation list (prompts for pass phrase):
 
 Configure registry registry/shared/config/application.yml to match the CA settings:
 
+    crl_path:     '/home/registry/registry/shared/ca/crl/crl.pem'
     ca_cert_path: '/home/registry/registry/shared/ca/certs/ca.crt.pem'
-    ca_key_path: '/home/registry/registry/shared/ca/private/ca.key.pem'
+    ca_key_path:  '/home/registry/registry/shared/ca/private/ca.key.pem'
     ca_key_password: 'your-root-key-password'
-    crl_path: '/home/registry/registry/shared/ca/crl/crl.pem'
 
 
 ### Registry EPP setup
