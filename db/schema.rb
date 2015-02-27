@@ -74,8 +74,6 @@ ActiveRecord::Schema.define(version: 20150330083700) do
 
   create_table "contacts", force: :cascade do |t|
     t.string   "code"
-    t.string   "type"
-    t.string   "reg_no"
     t.string   "phone"
     t.string   "email"
     t.string   "fax"
@@ -83,8 +81,6 @@ ActiveRecord::Schema.define(version: 20150330083700) do
     t.datetime "updated_at"
     t.string   "ident"
     t.string   "ident_type"
-    t.integer  "created_by_id"
-    t.integer  "updated_by_id"
     t.string   "auth_info"
     t.string   "name"
     t.string   "org_name"
@@ -97,6 +93,7 @@ ActiveRecord::Schema.define(version: 20150330083700) do
     t.string   "zip"
     t.string   "country_code"
     t.string   "state"
+    t.integer  "legacy_id"
   end
 
   add_index "contacts", ["code"], name: "index_contacts_on_code", using: :btree

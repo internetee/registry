@@ -38,45 +38,69 @@ namespace :import do
     puts '-----> Registrars imported'
   end
 
-  # desc 'Import contacts'
-  # task contact: :environment do
-  #   puts '-----> Importing contacts...'
+  desc 'Import contacts'
+  task contacts: :environment do
+    puts '-----> Importing contacts...'
 
-  #   contacts = []
-  #   existing_ids = Contact.pluck(:legacy_id)
+    contacts = []
+    existing_ids = Contact.pluck(:legacy_id)
 
-  #   Legacy::Contact.all.each do |x|
-  #     next if existing_ids.include?(x.id)
+    # 1;"RC";"born number" # not used
+    # 2;"OP";"identity card number" -> priv
+    # 3;"PASS";"passwport" ->
+    # 4;"ICO";"organization identification number"
+    # 5;"MPSV";"social system identification" # not used
+    # 6;"BIRTHDAY";"day of birth"
 
-  #     1;"RC";"born number"
-  #     2;"OP";"identity card number" -> priv
-  #     3;"PASS";"passwport" ->
-  #     4;"ICO";"organization identification number"
-  #     5;"MPSV";"social system identification"
-  #     6;"BIRTHDAY";"day of birth"
+    ident_type_map = {
+      2 => Contact::IDENT_PRIV,
+      3 => Contact::IDENT_PASSPORT,
+      4 => Contact::IDENT_TYPE_BIC,
+      6 => Contact::IDENT_BIRTHDAY
+    }
 
-  #     contacts << Contact.new({
-  #       code: ,
-  #       #type: , # not needed
-  #       #reg_no: x.ssn.try(:strip),
-  #       phone: x.telephone.try(:strip),
-  #       email: x.email.try(:strip),
-  #       fax: x.fax.try(:strip),
-  #       ident: x.ssn.try(:strip),
-  #       ident_type: ,
-  #       #created_by_id: , # not needed
-  #       #updated_by_id: , # not needed
-  #       auth_info: ,
-  #       name: x.name.try(:strip),
-  #       org_name: x.organization.try(:strip),
-  #       registrar_id: ,
-  #       creator_str: "rake-#{`whoami`.strip} #{ARGV.join ' '}",
-  #       updator_str: "rake-#{`whoami`.strip} #{ARGV.join ' '}"
-  #       ident_country_code: x.country.try(:strip),
-  #       legacy_id: x.id
-  #     })
-  #   end
+    Legacy::Contact.all.each do |x|
+      next if existing_ids.include?(x.id)
+      begin
+        registrar = Registrar.find_by(legacy_id: x.object_registry.crid)
 
-  #   puts '-----> Contacts imported'
-  # end
+        contacts << Contact.new({
+          code: x.object_registry.name,
+          #type: , # not needed
+          #reg_no: x.ssn.try(:strip),
+          phone: x.telephone.try(:strip),
+          email: x.email.try(:strip),
+          fax: x.fax.try(:strip),
+          ident: x.ssn.try(:strip),
+          ident_type: ident_type_map[x.ssntype],
+          #created_by_id: , # not needed
+          #updated_by_id: , # not needed
+          auth_info: x.object.authinfopw.try(:strip),
+          name: x.name.try(:strip),
+          org_name: x.organization.try(:strip),
+          registrar_id: registrar.try(:id),
+          creator_str: "rake-#{`whoami`.strip} #{ARGV.join ' '}",
+          updator_str: "rake-#{`whoami`.strip} #{ARGV.join ' '}",
+          ident_country_code: x.country.try(:strip),
+          created_at: x.try(:crdate),
+          legacy_id: x.id,
+          address: Address.new({
+            city: x.city.try(:strip),
+            street: x.street1.try(:strip),
+            zip: x.postalcode.try(:strip),
+            street2: x.street2.try(:strip),
+            street3: x.street3.try(:strip),
+            creator_str: "rake-#{`whoami`.strip} #{ARGV.join ' '}",
+            updator_str: "rake-#{`whoami`.strip} #{ARGV.join ' '}",
+            country_code: x.country.try(:strip),
+            state: x.stateorprovince.try(:strip)
+          })
+        })
+      rescue => e
+        binding.pry
+      end
+    end
+
+    puts '-----> Contacts imported'
+  end
 end
