@@ -5,6 +5,9 @@ gem 'rails',        '4.2.0'
 gem 'iso8601',      '~> 0.8.2' # for dates and times
 gem 'hashie_rails', '~> 0.0.1'
 
+# load env
+gem 'figaro', '~> 1.1.0'
+
 # model related
 gem 'pg',                        '~> 0.18.0'
 gem 'ransack',                   '~> 1.5.1' # for searching

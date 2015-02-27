@@ -33,7 +33,7 @@ class Certificate < ActiveRecord::Base
       @cached_status = EXPIRED
     end
 
-    crl = OpenSSL::X509::CRL.new(File.open(APP_CONFIG['crl_path']).read)
+    crl = OpenSSL::X509::CRL.new(File.open(ENV['crl_path']).read)
     return @cached_status unless crl.revoked.map(&:serial).include?(parsed_crt.serial)
 
     @cached_status = REVOKED
@@ -45,10 +45,10 @@ class Certificate < ActiveRecord::Base
     csr_file.rewind
 
     crt_file = Tempfile.new('client_crt')
-    _out, err, _st = Open3.capture3("openssl ca -keyfile #{APP_CONFIG['ca_key_path']} \
-    -cert #{APP_CONFIG['ca_cert_path']} \
+    _out, err, _st = Open3.capture3("openssl ca -keyfile #{ENV['ca_key_path']} \
+    -cert #{ENV['ca_cert_path']} \
     -extensions usr_cert -notext -md sha256 \
-    -in #{csr_file.path} -out #{crt_file.path} -key '#{APP_CONFIG['ca_key_password']}' -batch")
+    -in #{csr_file.path} -out #{crt_file.path} -key '#{ENV['ca_key_password']}' -batch")
 
     if err.match(/Data Base Updated/)
       crt_file.rewind
@@ -67,9 +67,9 @@ class Certificate < ActiveRecord::Base
     crt_file.write(crt)
     crt_file.rewind
 
-    _out, err, _st = Open3.capture3("openssl ca -keyfile #{APP_CONFIG['ca_key_path']} \
-      -cert #{APP_CONFIG['ca_cert_path']} \
-      -revoke #{crt_file.path} -key '#{APP_CONFIG['ca_key_password']}' -batch")
+    _out, err, _st = Open3.capture3("openssl ca -keyfile #{ENV['ca_key_path']} \
+      -cert #{ENV['ca_cert_path']} \
+      -revoke #{crt_file.path} -key '#{ENV['ca_key_password']}' -batch")
 
     if err.match(/Data Base Updated/) || err.match(/ERROR:Already revoked/)
       save!
@@ -81,8 +81,8 @@ class Certificate < ActiveRecord::Base
       return false
     end
 
-    _out, _err, _st = Open3.capture3("openssl ca -keyfile #{APP_CONFIG['ca_key_path']} \
-      -cert #{APP_CONFIG['ca_cert_path']} \
-      -gencrl -out #{APP_CONFIG['crl_path']} -key '#{APP_CONFIG['ca_key_password']}' -batch")
+    _out, _err, _st = Open3.capture3("openssl ca -keyfile #{ENV['ca_key_path']} \
+      -cert #{ENV['ca_cert_path']} \
+      -gencrl -out #{ENV['crl_path']} -key '#{ENV['ca_key_password']}' -batch")
   end
 end

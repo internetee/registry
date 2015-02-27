@@ -18,7 +18,7 @@ class ZonefileSetting < ActiveRecord::Base
       "select generate_zonefile('#{origin}')"
     )[0]['generate_zonefile']
 
-    File.open("#{APP_CONFIG['zonefile_export_dir']}/#{filename}", 'w') { |f| f.write(zf) }
+    File.open("#{ENV['zonefile_export_dir']}/#{filename}", 'w') { |f| f.write(zf) }
 
     STDOUT << "#{Time.now.utc} - Successfully generated zonefile #{filename}\n"
   end
