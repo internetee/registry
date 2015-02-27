@@ -1,4 +1,4 @@
-# Application configuration values
+# Be sure to restart your server when you modify settings.
 
 app_name: .EE Registry
 zonefile_export_dir: 'export/zonefiles'
