@@ -16,14 +16,12 @@ export RAILS_ENV=test
 cd "$(dirname "$0")"; cd ..
 
 cp config/application-example.yml config/application.yml
-# create manually config/database.yml
+cp config/database-robot.yml config/database.yml
 
 bundle install
 
-RAILS_ENV=test bundle exec rake db:drop
-RAILS_ENV=test bundle exec rake db:all:create
-RAILS_ENV=test bundle exec rake db:all:schema:load
-RAILS_ENV=test bundle exec rake db:seed
+RAILS_ENV=test bundle exec rake db:all:drop
+RAILS_ENV=test bundle exec rake db:all:setup
 RAILS_ENV=test bundle exec rake assets:precompile
 
 echo "GIT_LAST_COMMITS"
@@ -36,7 +34,7 @@ RCODE=$?
 echo "END_OF_RUBOCOP_RESULTS"
 
 echo "TEST_RESULTS"
-ROBOT=true bundle exec rake test
+ROBOT=true bundle exec rake
 TCODE=$?
 echo "END_OF_TEST_RESULTS"
 
