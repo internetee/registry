@@ -20,8 +20,8 @@ namespace :db do
 
       ActiveRecord::Base.clear_all_connections!
       ActiveRecord::Base.establish_connection(Rails.env.to_sym)
-      puts "\n---------------------------- Import seed ----------------------------------------\n"
-      Rake::Task['db:seed'].invoke
+      # puts "\n---------------------------- Import seed ----------------------------------------\n"
+      # Rake::Task['db:seed'].invoke
       puts "\n  All done!\n\n"
     end
 
