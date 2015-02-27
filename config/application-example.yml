@@ -15,12 +15,13 @@ defaults: &defaults
   ca_key_password: 'your-root-key-password'
 
   # Used by EPP server
-  webclient_ip: '54.154.91.240'
+  webclient_ip: '127.0.0.1'
 
 development:
   <<: *defaults
 
 test:
+  webclient_ip: '127.0.0.1' # it should match to localhost ip address
   <<: *defaults
 
 alpha:
