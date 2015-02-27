@@ -6,8 +6,10 @@ namespace :import do
     # Registrar.where('legacy_id IS NOT NULL').delete_all
 
     registrars = []
+    existing_ids = Registrar.pluck(:legacy_id)
+
     Legacy::Registrar.all.each do |x|
-      next if Registrar.exists?(legacy_id: x.id)
+      next if existing_ids.include?(x.id)
 
       registrars << Registrar.new({
         name: x.organization.try(:strip).presence || x.name.try(:strip).presence || x.handle.try(:strip).presence,
