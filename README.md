@@ -44,10 +44,11 @@ Create registry database manually, example:
 
 Or create all databases:
 
-    rake db:all:setup  # will create all databases and loads all schemas
-    rake db:all:create # creates all databases
-    rake db:all:schema:load # loads all schemas
-    rake db:all:schema:dump # dumps all schemas
+    rake db:all:setup  # will create all databases, loads all schemas and seeds
+                       # other similar tasks if needed later:
+                       # rake db:all:create       # creates all databases only
+                       # rake db:all:schema:load  # loads all schemas
+                       # rake db:all:schema:dump  # dumps all schemas
 
 Production install (database schema should be loaded and seeds should be present)
 
