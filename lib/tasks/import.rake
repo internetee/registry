@@ -1,15 +1,17 @@
 namespace :import do
   desc 'Imports registrars'
   task registrars: :environment do
+    start = Time.now.to_f
     puts '-----> Importing registrars...'
-
-    Registrar.where('legacy_id IS NOT NULL').delete_all
 
     registrars = []
     existing_ids = Registrar.pluck(:legacy_id)
+    user = "rake-#{`whoami`.strip} #{ARGV.join ' '}"
+    count = 0
 
     Legacy::Registrar.all.each do |x|
       next if existing_ids.include?(x.id)
+      count += 1
 
       registrars << Registrar.new({
         name: x.organization.try(:strip).presence || x.name.try(:strip).presence || x.handle.try(:strip).presence,
@@ -28,19 +30,19 @@ namespace :import do
         directo_handle: x.directo_handle.try(:strip),
         vat: x.vat,
         legacy_id: x.id,
-        creator_str: "rake-#{`whoami`.strip} #{ARGV.join ' '}",
-        updator_str: "rake-#{`whoami`.strip} #{ARGV.join ' '}"
+        creator_str: user,
+        updator_str: user
       })
     end
 
     Registrar.import registrars, validate: false
 
-    puts '-----> Registrars imported'
+    puts "-----> Imported #{count} new registrars in #{(Time.now.to_f - start).round(2)} seconds"
   end
 
   desc 'Import contacts'
   task contacts: :environment do
-    start = Time.now.to_i
+    start = Time.now.to_f
     puts '-----> Importing contacts...'
 
     # 1;"RC";"born number" # not used
@@ -147,6 +149,6 @@ namespace :import do
 
     puts '-----> Updating relations...'
     ActiveRecord::Base.connection.execute('UPDATE addresses SET contact_id = legacy_contact_id WHERE legacy_contact_id IS NOT NULL AND contact_id IS NULL')
-    puts "-----> Imported #{count} new contacts in #{Time.now.to_i - start} seconds"
+    puts "-----> Imported #{count} new contacts in #{(Time.now.to_f - start).round(2)} seconds"
   end
 end
