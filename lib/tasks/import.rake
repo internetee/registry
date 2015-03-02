@@ -43,9 +43,6 @@ namespace :import do
     start = Time.now.to_i
     puts '-----> Importing contacts...'
 
-    contacts = []
-    existing_ids = Contact.pluck(:legacy_id)
-
     # 1;"RC";"born number" # not used
     # 2;"OP";"identity card number" -> priv
     # 3;"PASS";"passwport" ->
@@ -60,58 +57,96 @@ namespace :import do
       6 => Contact::IDENT_BIRTHDAY
     }
 
-    contacts = []
+    contact_columns = [
+      "code",
+      "phone",
+      "email",
+      "fax",
+      "created_at",
+      "ident",
+      "ident_type",
+      "auth_info",
+      "name",
+      "org_name",
+      "registrar_id",
+      "creator_str",
+      "updator_str",
+      "ident_country_code",
+      "legacy_id"
+    ]
 
-    Legacy::Contact.includes(:object_registry, :object, :registrar).find_each(batch_size: 10000) do |x|
-      next if existing_ids.include?(x.id)
+    address_columns = [
+      "city",
+      "street",
+      "zip",
+      "street2",
+      "street3",
+      "creator_str",
+      "updator_str",
+      "country_code",
+      "state",
+      "legacy_contact_id"
+    ]
+
+    contacts, addresses = [], []
+    existing_contact_ids = Contact.pluck(:legacy_id)
+    existing_address_ids = Address.pluck(:legacy_contact_id)
+    user = "rake-#{`whoami`.strip} #{ARGV.join ' '}"
+    count = 0
+
+    Legacy::Contact.includes(:object_registry, :object, :object_registry => :registrar).find_each(batch_size: 10000).with_index do |x, index|
+      next if existing_contact_ids.include?(x.id)
+      next if existing_address_ids.include?(x.id)
+      count += 1
+
       begin
-        # registrar = Registrar.find_by(legacy_id: x.object_registry.crid)
+        contacts << [
+          x.object_registry.name,
+          x.telephone.try(:strip),
+          x.email.try(:strip),
+          x.fax.try(:strip),
+          x.try(:crdate),
+          x.ssn.try(:strip),
+          ident_type_map[x.ssntype],
+          x.object.authinfopw.try(:strip),
+          x.name.try(:strip),
+          x.organization.try(:strip),
+          x.object_registry.try(:registrar).try(:id),
+          user,
+          user,
+          x.country.try(:strip),
+          x.id
+        ]
 
-        contacts << Contact.new({
-          code: x.object_registry.name,
-          #type: , # not needed
-          #reg_no: x.ssn.try(:strip),
-          phone: x.telephone.try(:strip),
-          email: x.email.try(:strip),
-          fax: x.fax.try(:strip),
-          ident: x.ssn.try(:strip),
-          ident_type: ident_type_map[x.ssntype],
-          #created_by_id: , # not needed
-          #updated_by_id: , # not needed
-          auth_info: x.object.authinfopw.try(:strip),
-          name: x.name.try(:strip),
-          org_name: x.organization.try(:strip),
-          registrar_id: x.registrar.try(:id),
-          creator_str: "rake-#{`whoami`.strip} #{ARGV.join ' '}",
-          updator_str: "rake-#{`whoami`.strip} #{ARGV.join ' '}",
-          ident_country_code: x.country.try(:strip),
-          created_at: x.try(:crdate),
-          legacy_id: x.id,
-          address: Address.new({
-            city: x.city.try(:strip),
-            street: x.street1.try(:strip),
-            zip: x.postalcode.try(:strip),
-            street2: x.street2.try(:strip),
-            street3: x.street3.try(:strip),
-            creator_str: "rake-#{`whoami`.strip} #{ARGV.join ' '}",
-            updator_str: "rake-#{`whoami`.strip} #{ARGV.join ' '}",
-            country_code: x.country.try(:strip),
-            state: x.stateorprovince.try(:strip)
-          })
-        })
+        addresses << [
+          x.city.try(:strip),
+          x.street1.try(:strip),
+          x.postalcode.try(:strip),
+          x.street2.try(:strip),
+          x.street3.try(:strip),
+          user,
+          user,
+          x.country.try(:strip),
+          x.stateorprovince.try(:strip),
+          x.id
+        ]
 
         if contacts.size % 10000 == 0
-          puts "commtting #{contacts.size}"
-          puts Time.now.to_i - start
-          # Contact.import contacts, validate: false
-          contacts = []
+          Contact.import contact_columns, contacts, validate: false
+          Address.import address_columns, addresses, validate: false
+          contacts, addresses = [], []
         end
       rescue => e
+        puts "ERROR on index #{index}"
         puts e
-        puts x.inspect
       end
     end
 
-    puts '-----> Contacts imported'
+    Contact.import contact_columns, contacts, validate: false
+    Address.import address_columns, addresses, validate: false
+
+    puts '-----> Updating relations...'
+    ActiveRecord::Base.connection.execute('UPDATE addresses SET contact_id = legacy_contact_id WHERE legacy_contact_id IS NOT NULL AND contact_id IS NULL')
+    puts "-----> Imported #{count} new contacts in #{Time.now.to_i - start} seconds"
   end
 end

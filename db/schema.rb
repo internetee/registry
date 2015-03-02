@@ -11,7 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20150330083700) do
+=======
+ActiveRecord::Schema.define(version: 20150302130224) do
+>>>>>>> Contact importing
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +33,7 @@ ActiveRecord::Schema.define(version: 20150330083700) do
     t.string   "updator_str"
     t.string   "country_code"
     t.string   "state"
+    t.integer  "legacy_contact_id"
   end
 
   create_table "api_users", force: :cascade do |t|
@@ -630,6 +635,7 @@ ActiveRecord::Schema.define(version: 20150330083700) do
     t.inet     "current_sign_in_ip"
     t.inet     "last_sign_in_ip"
     t.string   "identity_code"
+    t.string   "roles",                                       array: true
     t.string   "creator_str"
     t.string   "updator_str"
     t.string   "country_code"
