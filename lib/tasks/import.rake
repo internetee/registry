@@ -40,6 +40,7 @@ namespace :import do
 
   desc 'Import contacts'
   task contacts: :environment do
+    start = Time.now.to_i
     puts '-----> Importing contacts...'
 
     contacts = []
@@ -59,10 +60,12 @@ namespace :import do
       6 => Contact::IDENT_BIRTHDAY
     }
 
-    Legacy::Contact.all.each do |x|
+    contacts = []
+
+    Legacy::Contact.includes(:object_registry, :object, :registrar).find_each(batch_size: 10000) do |x|
       next if existing_ids.include?(x.id)
       begin
-        registrar = Registrar.find_by(legacy_id: x.object_registry.crid)
+        # registrar = Registrar.find_by(legacy_id: x.object_registry.crid)
 
         contacts << Contact.new({
           code: x.object_registry.name,
@@ -78,7 +81,7 @@ namespace :import do
           auth_info: x.object.authinfopw.try(:strip),
           name: x.name.try(:strip),
           org_name: x.organization.try(:strip),
-          registrar_id: registrar.try(:id),
+          registrar_id: x.registrar.try(:id),
           creator_str: "rake-#{`whoami`.strip} #{ARGV.join ' '}",
           updator_str: "rake-#{`whoami`.strip} #{ARGV.join ' '}",
           ident_country_code: x.country.try(:strip),
@@ -96,8 +99,16 @@ namespace :import do
             state: x.stateorprovince.try(:strip)
           })
         })
+
+        if contacts.size % 10000 == 0
+          puts "commtting #{contacts.size}"
+          puts Time.now.to_i - start
+          # Contact.import contacts, validate: false
+          contacts = []
+        end
       rescue => e
-        binding.pry
+        puts e
+        puts x.inspect
       end
     end
 
