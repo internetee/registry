@@ -16,6 +16,16 @@ Private key and certificate must be packaged to pkcs12 and added to user browser
 
 ### Registry setup
 
+Setup CA directory in shared directory:
+
+    cd /home/registry/registry/shared
+    mkdir ca ca/certs ca/crl ca/newcerts ca/private ca/csrs
+    cd ca
+    chmod 700 private
+    touch index.txt
+    echo 1000 > serial
+    echo 1000 > crlnumber
+
 Configure OpenSSL:
 
     sudo cp /etc/ssl/openssl.cnf /etc/ssl/openssl.cnf.bak
@@ -52,16 +62,6 @@ Make sure the following options are in place:
     authorityKeyIdentifier=keyid:always,issuer                    # around line nr 234
     basicConstraints = CA:true                                    # around line nr 240
     keyUsage = cRLSign, keyCertSign                               # around line nr 245
-
-Setup CA directory in shared directory:
-
-    cd /home/registry/registry/shared
-    mkdir ca ca/certs ca/crl ca/newcerts ca/private ca/csrs
-    cd ca
-    chmod 700 private
-    touch index.txt
-    echo 1000 > serial
-    echo 1000 > crlnumber
 
 Generate the root key and remember your password, you need it later in application.yml: 
 
