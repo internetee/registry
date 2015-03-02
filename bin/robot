@@ -45,7 +45,7 @@ bundle exec bundle-audit update
 bundle exec bundle-audit
 BCODE=$?
 BCODE=0 # tmp
-bundle exec brakeman
+bundle exec brakeman -q
 echo "END_OF_SECURITY_RESULTS"
 
 # update code review
