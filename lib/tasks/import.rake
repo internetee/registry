@@ -148,7 +148,14 @@ namespace :import do
     Address.import address_columns, addresses, validate: false
 
     puts '-----> Updating relations...'
-    ActiveRecord::Base.connection.execute('UPDATE addresses SET contact_id = legacy_contact_id WHERE legacy_contact_id IS NOT NULL AND contact_id IS NULL')
+    ActiveRecord::Base.connection.execute(
+      "UPDATE addresses "\
+      "SET contact_id = contacts.id "\
+      "FROM contacts "\
+      "WHERE contacts.legacy_id = legacy_contact_id "\
+      "AND legacy_contact_id IS NOT NULL "\
+      "AND contact_id IS NULL"
+    )
     puts "-----> Imported #{count} new contacts in #{(Time.now.to_f - start).round(2)} seconds"
   end
 end
