@@ -16,6 +16,7 @@ export RAILS_ENV=test
 cd "$(dirname "$0")"; cd ..
 
 cp config/application-example.yml config/application.yml
+cp config/secrets-example.yml config/secrets.yml
 cp config/database-robot.yml config/database.yml
 
 # under jenkins use rbenv-plugin wrapper
