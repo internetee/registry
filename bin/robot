@@ -40,7 +40,7 @@ echo "TEST_RESULTS"
 # ROBOT=true bundle exec rake
 
 # all tests with EPP
-ROBOT=true bundle exec test
+ROBOT=true bundle exec rake test
 TCODE=$?
 echo "END_OF_TEST_RESULTS"
 
