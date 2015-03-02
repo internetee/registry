@@ -3,7 +3,7 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: 5
-  username: test1
+  username: test
   password: test
 
 test:
