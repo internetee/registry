@@ -184,12 +184,21 @@ namespace :import do
       "legacy_id"
     ]
 
+    nameserver_columns = [
+      "hostname",
+      "ipv4",
+      "ipv6",
+      "creator_str",
+      "updator_str",
+      "legacy_domain_id"
+    ]
+
     domains, nameservers = [], []
     existing_domain_ids = Domain.pluck(:legacy_id)
     user = "rake-#{`whoami`.strip} #{ARGV.join ' '}"
     count = 0
 
-    Legacy::Domain.includes(:object_registry, :object, :registrant, :object_state, :object_registry => :registrar, :object_state => :enum_object_state).find_each(batch_size: 10000).with_index do |x, index|
+    Legacy::Domain.includes(:object_registry, :object, :registrant, :nsset, :object_state, :object_registry => :registrar, :object_state => :enum_object_state).find_each(batch_size: 10000).with_index do |x, index|
       next if existing_domain_ids.include?(x.id)
       count += 1
 
@@ -213,9 +222,35 @@ namespace :import do
           x.id
         ]
 
+        # nameservers
+        x.nsset.hosts.includes(:host_ipaddr_maps).each do |host|
+          ip_maps = host.host_ipaddr_maps
+          ips = {}
+          ip_maps.each do |ip_map|
+            next unless ip_map.ipaddr
+            ips[:ipv4] = ip_map.ipaddr.to_s if ip_map.ipaddr.ipv4?
+            ips[:ipv6] = ip_map.ipaddr.to_s if ip_map.ipaddr.ipv6?
+          end if ip_maps.any?
+
+          nameservers << [
+            host.fqdn.try(:strip),
+            ips[:ipv4].try(:strip),
+            ips[:ipv6].try(:strip),
+            user,
+            user,
+            x.id
+          ]
+        end
+
+        # dnskeys
+        # x.keyset.includes(:dsrecords).each do |ds|
+
+        # end
+
         if domains.size % 10000 == 0
+          puts 'importing'
           Domain.import domain_columns, domains, validate: false
-          # Address.import address_columns, addresses, validate: false
+          Nameserver.import nameserver_columns, nameservers, validate: false
           domains, nameservers = [], []
         end
       rescue => e
@@ -224,6 +259,7 @@ namespace :import do
     end
 
     Domain.import domain_columns, domains, validate: false
+    Nameserver.import nameserver_columns, nameservers, validate: false
 
     puts "-----> Imported #{count} new domains in #{(Time.now.to_f - start).round(2)} seconds"
   end

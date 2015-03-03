@@ -570,7 +570,7 @@ ActiveRecord::Schema.define(version: 20150330083700) do
     t.integer  "domain_id"
     t.string   "creator_str"
     t.string   "updator_str"
-    t.integer  "legacy_id"
+    t.integer  "legacy_domain_id"
   end
 
   create_table "registrars", force: :cascade do |t|
