@@ -13,6 +13,7 @@ Contact Mapping protocol short version:
     -----------------------    -------  -----------------
     <create>                   1     
       <contact:create>         1        Attribute: xmlns:contact="urn:ietf:params:xml:ns:contact-1.0"
+        <contact:id>           0-1      Contact id, optional, generated automatically if missing
         <contact:postalInfo>   1        Postal information container
           <contact:name>       1        Full name of the contact
           <contact:org>        0-1      Name of organization
@@ -42,7 +43,7 @@ Contact Mapping protocol short version:
     -----------------------     -------  -----------------
     <update>                    1     
       <contact:update>          1        Attribute: xmlns:contact="urn:ietf:params:xml:ns:contact-1.0"
-        <contact:id>            1        contact id, required
+        <contact:id>            1        Contact id, required
         <contact:chg>           1        Change container
           <contact:postalInfo>  1        Postal information container
             <contact:name>      0-1      Full name of the contact

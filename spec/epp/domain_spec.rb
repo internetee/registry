@@ -11,8 +11,6 @@ describe 'EPP Domain', epp: true do
 
     login_as :registrar1
 
-    Contact.skip_callback(:create, :before, :generate_code)
-
     Fabricate(:contact, code: 'citizen_1234')
     Fabricate(:contact, code: 'sh8013')
     Fabricate(:contact, code: 'sh801333')
@@ -254,8 +252,8 @@ describe 'EPP Domain', epp: true do
       })
 
       response = epp_plain_request(xml, :xml)
-      response[:result_code].should == '2005'
       response[:msg].should == 'Hostname is invalid'
+      response[:result_code].should == '2005'
     end
 
     it 'checks hostAttr presence' do
@@ -271,8 +269,8 @@ describe 'EPP Domain', epp: true do
       })
 
       response = epp_plain_request(xml, :xml)
-      response[:result_code].should == '2003'
       response[:msg].should == 'Required parameter missing: create > create > ns > hostAttr'
+      response[:result_code].should == '2003'
     end
 
     it 'creates domain with nameservers with ips' do

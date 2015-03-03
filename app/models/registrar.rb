@@ -9,9 +9,17 @@ class Registrar < ActiveRecord::Base
 
   validates :name, :reg_no, :country_code, :email, presence: true
   validates :name, :reg_no, uniqueness: true
+  validate :set_code, if: :new_record?
   after_save :touch_domains_version
 
   validates :email, :billing_email, format: /@/, allow_blank: true
+
+  class << self
+    def search_by_query(query)
+      res = search(name_or_reg_no_cont: query).result
+      res.reduce([]) { |o, v| o << { id: v[:id], display_key: "#{v[:name]} (#{v[:reg_no]})" } }
+    end
+  end
 
   def domain_transfers
     at = DomainTransfer.arel_table
@@ -34,10 +42,23 @@ class Registrar < ActiveRecord::Base
     Country.new(country_code)
   end
 
-  class << self
-    def search_by_query(query)
-      res = search(name_or_reg_no_cont: query).result
-      res.reduce([]) { |o, v| o << { id: v[:id], display_key: "#{v[:name]} (#{v[:reg_no]})" } }
+  def code=(code)
+    self[:code] = code if new_record?
+  end
+
+  private
+
+  def set_code
+    return false if name.blank?
+    new_code = name.parameterize
+
+    # ensure code is always uniq automatically for a new record
+    seq = 1
+    while self.class.find_by_code(new_code)
+      new_code += seq.to_s
+      seq += 1
     end
+
+    self.code = new_code
   end
 end

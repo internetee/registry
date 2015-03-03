@@ -28,6 +28,10 @@ describe Registrar do
       @registrar.errors[:email].should == ['is invalid']
       @registrar.errors[:billing_email].should == ['is invalid']
     end
+
+    it 'should not have valid code' do
+      @registrar.code.should == nil
+    end
   end
 
   context 'with valid attributes' do
@@ -58,6 +62,27 @@ describe Registrar do
 
     it 'should return full address' do
       @registrar.address.should == 'Street 999, Town, County, Postal'
+    end
+
+    it 'should have code' do
+      @registrar.code.should =~ /registrar/
+    end
+
+    it 'should not be able to change code' do
+      @registrar.code = 'not-updated'
+      @registrar.code.should =~ /registrar/
+    end
+
+    it 'should automatically add next code if original is taken' do
+      @registrar = Fabricate(:registrar, name: 'uniq')
+      @registrar.name = 'New name'
+      @registrar.code.should == 'uniq'
+      @registrar.save
+
+      @new_registrar = Fabricate.build(:registrar, name: 'uniq')
+      @new_registrar.valid?
+      @new_registrar.errors.full_messages.should == []
+      @new_registrar.code.should == 'uniq1'
     end
   end
 end

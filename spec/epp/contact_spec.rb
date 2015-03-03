@@ -13,21 +13,14 @@ describe 'EPP Contact', epp: true do
 
     login_as :registrar1
 
-    Contact.skip_callback(:create, :before, :generate_code)
-    Contact.skip_callback(:create, :before, :generate_auth_info)
-
     @contact = Fabricate(:contact, registrar: @registrar1)
+
     @legal_document = {
       legalDocument: {
         value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
         attrs: { type: 'pdf' }
       }
     }
-  end
-
-  after :all do
-    Contact.set_callback(:create, :before, :generate_code)
-    Contact.set_callback(:create, :before, :generate_auth_info)
   end
 
   context 'with valid user' do
@@ -133,6 +126,17 @@ describe 'EPP Contact', epp: true do
         # 5 seconds for what-ever weird lag reasons might happen
         cr_date.text.to_time.should be_within(5).of(Time.now)
       end
+
+      it 'successfully saves custom code' do
+        response = create_request(
+          { id: { value: '12345' } }
+        )
+
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+
+        Contact.last.code.should == 'registrar1:12345'
+      end
     end
 
     context 'update command' do
@@ -140,11 +144,9 @@ describe 'EPP Contact', epp: true do
         @contact =
           Fabricate(
             :contact,
-            # created_by_id: 1,
             registrar: @registrar1,
             email: 'not_updated@test.test',
-            code: 'sh8013',
-            auth_info: 'password'
+            code: 'sh8013'
           )
       end
 
@@ -225,6 +227,20 @@ describe 'EPP Contact', epp: true do
         response[:results][0][:result_code].should == '2005'
         response[:results][1][:msg].should == 'Email is invalid'
         response[:results][1][:result_code].should == '2005'
+      end
+
+      it 'should not update code with custom string' do
+        response = update_request(
+          id: { value: 'sh8013' },
+          chg: {
+            id: { value: 'notpossibletoupdate' }
+          }
+        )
+
+        response[:msg].should == 'Object does not exist'
+        response[:result_code].should == '2303'
+
+        @contact.reload.code.should == 'sh8013'
       end
     end
 

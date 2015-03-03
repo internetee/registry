@@ -22,7 +22,11 @@ class Contact < ActiveRecord::Base
     format: { with: /\d{4}-\d{2}-\d{2}/, message: :invalid_birthday_format },
     if: proc { |c| c.ident_type == 'birthday' }
   validates :ident_country_code, presence: true, if: proc { |c| %w(bic priv).include? c.ident_type }
-  validates :code, uniqueness: { message: :epp_id_taken }
+  validates :code, 
+    uniqueness: { message: :epp_id_taken }, 
+    format: { with: /\A[\w\-\:]*\Z/i },
+    length: { maximum: 100 }
+
   validate :ident_valid_format?
 
   delegate :street,       to: :address
@@ -99,13 +103,25 @@ class Contact < ActiveRecord::Base
     ident_type != IDENT_TYPE_BIC
   end
 
-  # generate random id for contact
   def generate_code
-    self.code = SecureRandom.hex(4)
+    self.code = SecureRandom.hex(4) if code.blank?
   end
 
   def generate_auth_info
+    return if @generate_auth_info_disabled
     self.auth_info = SecureRandom.hex(16)
+  end
+
+  def disable_generate_auth_info! # needed for testing
+    @generate_auth_info_disabled = true
+  end
+
+  def auth_info=(pw)
+    self[:auth_info] = pw if new_record?
+  end
+
+  def code=(code)
+    self[:code] = code if new_record?
   end
 
   # Find a way to use self.domains with contact
