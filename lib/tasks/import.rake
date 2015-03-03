@@ -1,5 +1,5 @@
 namespace :import do
-  desc 'Imports registrars'
+  desc 'Import registrars'
   task registrars: :environment do
     start = Time.now.to_f
     puts '-----> Importing registrars...'
@@ -81,6 +81,7 @@ namespace :import do
       "city",
       "street",
       "zip",
+      "created_at",
       "street2",
       "street3",
       "creator_str",
@@ -92,22 +93,20 @@ namespace :import do
 
     contacts, addresses = [], []
     existing_contact_ids = Contact.pluck(:legacy_id)
-    existing_address_ids = Address.pluck(:legacy_contact_id)
     user = "rake-#{`whoami`.strip} #{ARGV.join ' '}"
     count = 0
 
     Legacy::Contact.includes(:object_registry, :object, :object_registry => :registrar).find_each(batch_size: 10000).with_index do |x, index|
       next if existing_contact_ids.include?(x.id)
-      next if existing_address_ids.include?(x.id)
       count += 1
 
       begin
         contacts << [
-          x.object_registry.name,
+          x.object_registry.name.try(:strip),
           x.telephone.try(:strip),
           x.email.try(:strip),
           x.fax.try(:strip),
-          x.try(:crdate),
+          x.object_registry.try(:crdate),
           x.ssn.try(:strip),
           ident_type_map[x.ssntype],
           x.object.authinfopw.try(:strip),
@@ -124,6 +123,7 @@ namespace :import do
           x.city.try(:strip),
           x.street1.try(:strip),
           x.postalcode.try(:strip),
+          x.object_registry.try(:crdate),
           x.street2.try(:strip),
           x.street3.try(:strip),
           user,
@@ -157,5 +157,74 @@ namespace :import do
       "AND contact_id IS NULL"
     )
     puts "-----> Imported #{count} new contacts in #{(Time.now.to_f - start).round(2)} seconds"
+  end
+
+  desc 'Import domains'
+  task domains: :environment do
+    start = Time.now.to_f
+    puts '-----> Importing domains...'
+
+
+    domain_columns = [
+      "name",
+      "registrar_id",
+      "registered_at",
+      "status",
+      "valid_from",
+      "valid_to",
+      "owner_contact_id",
+      "auth_info",
+      "created_at",
+      "name_dirty",
+      "name_puny",
+      "period",
+      "period_unit",
+      "creator_str",
+      "updator_str",
+      "legacy_id"
+    ]
+
+    domains, nameservers = [], []
+    existing_domain_ids = Domain.pluck(:legacy_id)
+    user = "rake-#{`whoami`.strip} #{ARGV.join ' '}"
+    count = 0
+
+    Legacy::Domain.includes(:object_registry, :object, :registrant, :object_state, :object_registry => :registrar, :object_state => :enum_object_state).find_each(batch_size: 10000).with_index do |x, index|
+      next if existing_domain_ids.include?(x.id)
+      count += 1
+
+      begin
+        domains << [
+          x.object_registry.name.try(:strip),
+          x.object_registry.try(:registrar).try(:id),
+          x.object_registry.try(:crdate),
+          x.object_state.try(:name).try(:strip),
+          x.object_registry.try(:crdate),
+          x.exdate,
+          x.registrant.try(:id),
+          x.object.authinfopw.try(:strip),
+          x.object_registry.try(:crdate),
+          x.object_registry.name.try(:strip),
+          SimpleIDN.to_ascii(x.object_registry.name.try(:strip)),
+          1,
+          'y',
+          user,
+          user,
+          x.id
+        ]
+
+        if domains.size % 10000 == 0
+          Domain.import domain_columns, domains, validate: false
+          # Address.import address_columns, addresses, validate: false
+          domains, nameservers = [], []
+        end
+      rescue => e
+        binding.pry
+      end
+    end
+
+    Domain.import domain_columns, domains, validate: false
+
+    puts "-----> Imported #{count} new domains in #{(Time.now.to_f - start).round(2)} seconds"
   end
 end

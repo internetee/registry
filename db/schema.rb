@@ -11,12 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20150330083700) do
-=======
-ActiveRecord::Schema.define(version: 20150302130224) do
->>>>>>> Contact importing
-
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -207,6 +202,7 @@ ActiveRecord::Schema.define(version: 20150302130224) do
     t.string   "creator_str"
     t.string   "updator_str"
     t.text     "whois_body"
+    t.integer  "legacy_id"
   end
 
   create_table "epp_sessions", force: :cascade do |t|
@@ -574,6 +570,7 @@ ActiveRecord::Schema.define(version: 20150302130224) do
     t.integer  "domain_id"
     t.string   "creator_str"
     t.string   "updator_str"
+    t.integer  "legacy_id"
   end
 
   create_table "registrars", force: :cascade do |t|
