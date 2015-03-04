@@ -166,11 +166,9 @@ namespace :import do
 
     domain_columns = [
       "name",
-      "registrar_id",
       "registered_at",
       "valid_from",
       "valid_to",
-      "owner_contact_id",
       "auth_info",
       "created_at",
       "name_dirty",
@@ -179,22 +177,21 @@ namespace :import do
       "period_unit",
       "creator_str",
       "updator_str",
-      "legacy_id"
+      "legacy_id",
+      "legacy_registrar_id",
+      "legacy_registrant_id"
     ]
 
     domain_contact_columns = [
-      "contact_id",
-      "domain_id",
       "contact_type",
-      "created_at",
-      "updated_at",
-      "contact_code_cache",
       "creator_str",
       "updator_str",
-      "legacy_domain_id"
+      "legacy_domain_id",
+      "legacy_contact_id"
     ]
 
     domain_status_columns = [
+      "description",
       "value",
       "creator_str",
       "updator_str",
@@ -222,25 +219,29 @@ namespace :import do
       "legacy_domain_id"
     ]
 
-
-
     domains, nameservers, dnskeys, domain_statuses, domain_contacts = [], [], [], [], []
     existing_domain_ids = Domain.pluck(:legacy_id)
     user = "rake-#{`whoami`.strip} #{ARGV.join ' '}"
     count = 0
 
-    Legacy::Domain.includes(:object_registry, :object, :registrant, :nsset, :object_states, :dnskeys, :object_registry => :registrar).find_each(batch_size: 10000).with_index do |x, index|
+    Legacy::Domain.includes(
+      :object_registry,
+      :object,
+      :nsset,
+      :object_states,
+      :dnskeys,
+      :domain_contact_maps,
+      :nsset => {:hosts => :host_ipaddr_maps}
+    ).find_each(batch_size: 10000).with_index do |x, index|
       next if existing_domain_ids.include?(x.id)
       count += 1
 
       begin
         domains << [
           x.object_registry.name.try(:strip),
-          x.object_registry.try(:registrar).try(:id),
           x.object_registry.try(:crdate),
           x.object_registry.try(:crdate),
           x.exdate,
-          x.registrant.try(:id),
           x.object.authinfopw.try(:strip),
           x.object_registry.try(:crdate),
           x.object_registry.name.try(:strip),
@@ -249,16 +250,27 @@ namespace :import do
           'y',
           user,
           user,
-          x.id
+          x.id,
+          x.object_registry.try(:crid),
+          x.registrant
         ]
 
         # domain contacts
-
+        x.domain_contact_maps.each do |dc|
+          domain_contacts << [
+            'admin', # TODO: Where to get real contact type?
+            user,
+            user,
+            x.id,
+            dc.contactid
+          ]
+        end
 
         # domain statuses
         x.object_states.each do |state|
           domain_statuses << [
-            state.name.try(:strip),
+            state.desc,
+            state.name,
             user,
             user,
             x.id
@@ -266,7 +278,7 @@ namespace :import do
         end
 
         # nameservers
-        x.nsset.hosts.includes(:host_ipaddr_maps).each do |host|
+        x.nsset.hosts.each do |host|
           ip_maps = host.host_ipaddr_maps
           ips = {}
           ip_maps.each do |ip_map|
@@ -300,11 +312,11 @@ namespace :import do
         end
 
         if index % 10000 == 0 && index != 0
-          puts 'importing'
           Domain.import domain_columns, domains, validate: false
           Nameserver.import nameserver_columns, nameservers, validate: false
           Dnskey.import dnskey_columns, dnskeys, validate: false
           DomainStatus.import domain_status_columns, domain_statuses, validate: false
+          DomainContact.import domain_contact_columns, domain_contacts, validate: false
           domains, nameservers, dnskeys, domain_statuses, domain_contacts = [], [], [], [], []
         end
       rescue => e
@@ -316,6 +328,7 @@ namespace :import do
     Nameserver.import nameserver_columns, nameservers, validate: false
     Dnskey.import dnskey_columns, dnskeys, validate: false
     DomainStatus.import domain_status_columns, domain_statuses, validate: false
+    DomainContact.import domain_contact_columns, domain_contacts, validate: false
 
     # puts '-----> Updating relations...'
 

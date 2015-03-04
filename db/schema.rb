@@ -162,6 +162,7 @@ ActiveRecord::Schema.define(version: 20150330083700) do
     t.string   "updator_str"
     t.string   "type"
     t.integer  "legacy_domain_id"
+    t.integer  "legacy_contact_id"
   end
 
   create_table "domain_statuses", force: :cascade do |t|
@@ -201,11 +202,13 @@ ActiveRecord::Schema.define(version: 20150330083700) do
     t.string   "name_dirty"
     t.string   "name_puny"
     t.integer  "period"
-    t.string   "period_unit",      limit: 1
+    t.string   "period_unit",          limit: 1
     t.string   "creator_str"
     t.string   "updator_str"
     t.text     "whois_body"
     t.integer  "legacy_id"
+    t.integer  "legacy_registrar_id"
+    t.integer  "legacy_registrant_id"
   end
 
   create_table "epp_sessions", force: :cascade do |t|
