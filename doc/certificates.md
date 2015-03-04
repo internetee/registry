@@ -161,6 +161,29 @@ Reload apache:
     sudo /etc/init.d/apache2 restart
 
 
+### ApiUser browser setup
+
+In short:
+
+* Upload CSR file to api user at admin page /admin/api_users
+* Sign it
+* Generate p12 file and install into user browser 
+
+#### Creating CSR file
+
+    openssl genrsa -out private/api-user.key.pem 4096
+    chmod 400 private/api-user.key.pem
+    openssl req -sha256 -new -days 3653 -key private/api-user.key.pem -out csrs/api-user.csr.pem
+
+Upload api-user.csr.pem file to api user at admin interface.
+Sign it
+Download CRT file and create p12 file.
+
+    openssl pkcs12 -export -inkey private/api-user.key.pem -in certs/api-user.crt.pem -out pkcs/api_user.p12
+
+Add api_user.p12 to your browser.
+
+
 Development env
 ---------------
 
