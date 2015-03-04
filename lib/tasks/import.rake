@@ -330,9 +330,84 @@ namespace :import do
     DomainStatus.import domain_status_columns, domain_statuses, validate: false
     DomainContact.import domain_contact_columns, domain_contacts, validate: false
 
-    # puts '-----> Updating relations...'
+    puts '-----> Updating relations...'
 
-    # puts '-----> Generating dnskey digests...'
+    # registrant
+    ActiveRecord::Base.connection.execute(
+      "UPDATE domains "\
+      "SET owner_contact_id = contacts.id "\
+      "FROM contacts "\
+      "WHERE contacts.legacy_id = legacy_registrant_id "\
+      "AND legacy_registrant_id IS NOT NULL "\
+      "AND owner_contact_id IS NULL"
+    )
+
+    # registrar
+    ActiveRecord::Base.connection.execute(
+      "UPDATE domains "\
+      "SET registrar_id = registrars.id "\
+      "FROM registrars "\
+      "WHERE registrars.legacy_id = legacy_registrar_id "\
+      "AND legacy_registrar_id IS NOT NULL "\
+      "AND registrar_id IS NULL"
+    )
+
+    # contacts
+    ActiveRecord::Base.connection.execute(
+      "UPDATE domain_contacts "\
+      "SET contact_id = contacts.id "\
+      "FROM contacts "\
+      "WHERE contacts.legacy_id = legacy_contact_id "\
+      "AND legacy_contact_id IS NOT NULL "\
+      "AND contact_id IS NULL"
+    )
+
+    ActiveRecord::Base.connection.execute(
+      "UPDATE domain_contacts "\
+      "SET domain_id = domains.id "\
+      "FROM domains "\
+      "WHERE domains.legacy_id = legacy_domain_id "\
+      "AND legacy_domain_id IS NOT NULL "\
+      "AND domain_id IS NULL"
+    )
+
+    # nameservers
+    ActiveRecord::Base.connection.execute(
+      "UPDATE nameservers "\
+      "SET domain_id = domains.id "\
+      "FROM domains "\
+      "WHERE domains.legacy_id = legacy_domain_id "\
+      "AND legacy_domain_id IS NOT NULL "\
+      "AND domain_id IS NULL"
+    )
+
+    # dnskeys
+    ActiveRecord::Base.connection.execute(
+      "UPDATE dnskeys "\
+      "SET domain_id = domains.id "\
+      "FROM domains "\
+      "WHERE domains.legacy_id = legacy_domain_id "\
+      "AND legacy_domain_id IS NOT NULL "\
+      "AND domain_id IS NULL"
+    )
+
+    # statuses
+    ActiveRecord::Base.connection.execute(
+      "UPDATE domain_statuses "\
+      "SET domain_id = domains.id "\
+      "FROM domains "\
+      "WHERE domains.legacy_id = legacy_domain_id "\
+      "AND legacy_domain_id IS NOT NULL "\
+      "AND domain_id IS NULL"
+    )
+
+    puts '-----> Generating dnskey digests...'
+
+    Dnskey.all.each do |x|
+      x.generate_digest
+      x.generate_ds_key_tag
+      x.save(validate: false)
+    end
 
     puts "-----> Imported #{count} new domains in #{(Time.now.to_f - start).round(2)} seconds"
   end
