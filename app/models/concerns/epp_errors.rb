@@ -3,42 +3,42 @@ module EppErrors
 
   def construct_epp_errors
     epp_errors = []
-    errors.messages.each do |key, values|
-      key = key.to_s.split('.')[0].to_sym
-      next if key == :epp_errors
+    errors.messages.each do |attr, errors|
+      attr = attr.to_s.split('.')[0].to_sym
+      next if attr == :epp_errors
 
-      if self.class.reflect_on_association(key)
-        epp_errors << collect_child_errors(key)
+      if self.class.reflect_on_association(attr)
+        epp_errors << collect_child_errors(attr)
       end
 
-      epp_errors << collect_parent_errors(values)
+      epp_errors << collect_parent_errors(attr, errors)
     end
 
     errors[:epp_errors] = epp_errors
     errors[:epp_errors].flatten!
   end
 
-  def collect_parent_errors(values)
-    epp_errors = []
-    values = [values] if values.is_a?(String)
+  def collect_parent_errors(attr, errors)
+    errors = [errors] if errors.is_a?(String)
 
-    values.each do |err|
+    epp_errors = []
+    errors.each do |err|
       code, value = find_epp_code_and_value(err)
       next unless code
-      epp_errors << { code: code, msg: err, value: value }
+      epp_errors << { code: code, msg: "#{err} [#{attr}]", value: value }
     end
     epp_errors
   end
 
-  def collect_child_errors(key)
-    macro = self.class.reflect_on_association(key).macro
+  def collect_child_errors(attr)
+    macro = self.class.reflect_on_association(attr).macro
     multi = [:has_and_belongs_to_many, :has_many]
     # single = [:belongs_to, :has_one]
 
     epp_errors = []
-    send(key).each do |x|
-      x.errors.messages.each do |_key, values|
-        epp_errors << x.collect_parent_errors(values)
+    send(attr).each do |x|
+      x.errors.messages.each do |attribute, errors|
+        epp_errors << x.collect_parent_errors(attribute, errors)
       end
     end if multi.include?(macro)
 
