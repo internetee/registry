@@ -320,7 +320,8 @@ namespace :import do
           domains, nameservers, dnskeys, domain_statuses, domain_contacts = [], [], [], [], []
         end
       rescue => e
-        binding.pry
+        puts "ERROR on index #{index}"
+        puts e
       end
     end
 
