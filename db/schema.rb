@@ -148,6 +148,7 @@ ActiveRecord::Schema.define(version: 20150330083700) do
     t.string  "ds_digest"
     t.string  "creator_str"
     t.string  "updator_str"
+    t.integer "legacy_domain_id"
   end
 
   create_table "domain_contacts", force: :cascade do |t|
@@ -160,6 +161,7 @@ ActiveRecord::Schema.define(version: 20150330083700) do
     t.string   "creator_str"
     t.string   "updator_str"
     t.string   "type"
+    t.integer  "legacy_domain_id"
   end
 
   create_table "domain_statuses", force: :cascade do |t|
@@ -168,6 +170,7 @@ ActiveRecord::Schema.define(version: 20150330083700) do
     t.string  "value"
     t.string  "creator_str"
     t.string  "updator_str"
+    t.integer "legacy_domain_id"
   end
 
   create_table "domain_transfers", force: :cascade do |t|

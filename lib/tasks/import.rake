@@ -164,12 +164,10 @@ namespace :import do
     start = Time.now.to_f
     puts '-----> Importing domains...'
 
-
     domain_columns = [
       "name",
       "registrar_id",
       "registered_at",
-      "status",
       "valid_from",
       "valid_to",
       "owner_contact_id",
@@ -184,6 +182,25 @@ namespace :import do
       "legacy_id"
     ]
 
+    domain_contact_columns = [
+      "contact_id",
+      "domain_id",
+      "contact_type",
+      "created_at",
+      "updated_at",
+      "contact_code_cache",
+      "creator_str",
+      "updator_str",
+      "legacy_domain_id"
+    ]
+
+    domain_status_columns = [
+      "value",
+      "creator_str",
+      "updator_str",
+      "legacy_domain_id"
+    ]
+
     nameserver_columns = [
       "hostname",
       "ipv4",
@@ -193,12 +210,26 @@ namespace :import do
       "legacy_domain_id"
     ]
 
-    domains, nameservers = [], []
+    dnskey_columns = [
+      "flags",
+      "protocol",
+      "alg",
+      "public_key",
+      "ds_alg",
+      "ds_digest_type",
+      "creator_str",
+      "updator_str",
+      "legacy_domain_id"
+    ]
+
+
+
+    domains, nameservers, dnskeys, domain_statuses, domain_contacts = [], [], [], [], []
     existing_domain_ids = Domain.pluck(:legacy_id)
     user = "rake-#{`whoami`.strip} #{ARGV.join ' '}"
     count = 0
 
-    Legacy::Domain.includes(:object_registry, :object, :registrant, :nsset, :object_state, :object_registry => :registrar, :object_state => :enum_object_state).find_each(batch_size: 10000).with_index do |x, index|
+    Legacy::Domain.includes(:object_registry, :object, :registrant, :nsset, :object_states, :dnskeys, :object_registry => :registrar).find_each(batch_size: 10000).with_index do |x, index|
       next if existing_domain_ids.include?(x.id)
       count += 1
 
@@ -207,7 +238,6 @@ namespace :import do
           x.object_registry.name.try(:strip),
           x.object_registry.try(:registrar).try(:id),
           x.object_registry.try(:crdate),
-          x.object_state.try(:name).try(:strip),
           x.object_registry.try(:crdate),
           x.exdate,
           x.registrant.try(:id),
@@ -221,6 +251,19 @@ namespace :import do
           user,
           x.id
         ]
+
+        # domain contacts
+
+
+        # domain statuses
+        x.object_states.each do |state|
+          domain_statuses << [
+            state.name.try(:strip),
+            user,
+            user,
+            x.id
+          ]
+        end
 
         # nameservers
         x.nsset.hosts.includes(:host_ipaddr_maps).each do |host|
@@ -242,16 +285,27 @@ namespace :import do
           ]
         end
 
-        # dnskeys
-        # x.keyset.includes(:dsrecords).each do |ds|
+        x.dnskeys.each do |key|
+          dnskeys << [
+            key.flags,
+            key.protocol,
+            key.alg,
+            key.key,
+            3, # ds_alg
+            Setting.ds_algorithm, # ds_digest_type
+            user,
+            user,
+            x.id
+          ]
+        end
 
-        # end
-
-        if domains.size % 10000 == 0
+        if index % 10000 == 0 && index != 0
           puts 'importing'
           Domain.import domain_columns, domains, validate: false
           Nameserver.import nameserver_columns, nameservers, validate: false
-          domains, nameservers = [], []
+          Dnskey.import dnskey_columns, dnskeys, validate: false
+          DomainStatus.import domain_status_columns, domain_statuses, validate: false
+          domains, nameservers, dnskeys, domain_statuses, domain_contacts = [], [], [], [], []
         end
       rescue => e
         binding.pry
@@ -260,6 +314,12 @@ namespace :import do
 
     Domain.import domain_columns, domains, validate: false
     Nameserver.import nameserver_columns, nameservers, validate: false
+    Dnskey.import dnskey_columns, dnskeys, validate: false
+    DomainStatus.import domain_status_columns, domain_statuses, validate: false
+
+    # puts '-----> Updating relations...'
+
+    # puts '-----> Generating dnskey digests...'
 
     puts "-----> Imported #{count} new domains in #{(Time.now.to_f - start).round(2)} seconds"
   end
