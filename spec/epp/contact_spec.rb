@@ -13,21 +13,14 @@ describe 'EPP Contact', epp: true do
 
     login_as :registrar1
 
-    Contact.skip_callback(:create, :before, :generate_code)
-    Contact.skip_callback(:create, :before, :generate_auth_info)
-
     @contact = Fabricate(:contact, registrar: @registrar1)
+
     @legal_document = {
       legalDocument: {
         value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
         attrs: { type: 'pdf' }
       }
     }
-  end
-
-  after :all do
-    Contact.set_callback(:create, :before, :generate_code)
-    Contact.set_callback(:create, :before, :generate_auth_info)
   end
 
   context 'with valid user' do
@@ -53,19 +46,19 @@ describe 'EPP Contact', epp: true do
       it 'fails if request xml is missing' do
         response = epp_plain_request(@epp_xml.create, :xml)
         response[:results][0][:msg].should == 
-          'Required parameter missing: create > create > postalInfo > name'
+          'Required parameter missing: create > create > postalInfo > name [name]'
         response[:results][1][:msg].should == 
-          'Required parameter missing: create > create > postalInfo > addr > city'
+          'Required parameter missing: create > create > postalInfo > addr > city [city]'
         response[:results][2][:msg].should == 
-          'Required parameter missing: create > create > postalInfo > addr > cc'
+          'Required parameter missing: create > create > postalInfo > addr > cc [cc]'
         response[:results][3][:msg].should == 
-          'Required parameter missing: create > create > ident'
+          'Required parameter missing: create > create > ident [ident]'
         response[:results][4][:msg].should == 
-          'Required parameter missing: create > create > voice'
+          'Required parameter missing: create > create > voice [voice]'
         response[:results][5][:msg].should == 
-          'Required parameter missing: create > create > email'
+          'Required parameter missing: create > create > email [email]'
         response[:results][6][:msg].should == 
-          'Required parameter missing: extension > extdata > legalDocument'
+          'Required parameter missing: extension > extdata > legalDocument [legal_document]'
 
         response[:results][0][:result_code].should == '2003'
         response[:results][1][:result_code].should == '2003'
@@ -133,6 +126,17 @@ describe 'EPP Contact', epp: true do
         # 5 seconds for what-ever weird lag reasons might happen
         cr_date.text.to_time.should be_within(5).of(Time.now)
       end
+
+      it 'successfully saves custom code' do
+        response = create_request(
+          { id: { value: '12345' } }
+        )
+
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+
+        Contact.last.code.should == 'registrar1:12345'
+      end
     end
 
     context 'update command' do
@@ -140,11 +144,9 @@ describe 'EPP Contact', epp: true do
         @contact =
           Fabricate(
             :contact,
-            # created_by_id: 1,
             registrar: @registrar1,
             email: 'not_updated@test.test',
-            code: 'sh8013',
-            auth_info: 'password'
+            code: 'sh8013'
           )
       end
 
@@ -177,13 +179,13 @@ describe 'EPP Contact', epp: true do
           'Required parameter missing: add, rem or chg'
         response[:results][0][:result_code].should == '2003'
         response[:results][1][:msg].should == 
-          'Required parameter missing: update > update > id'
+          'Required parameter missing: update > update > id [id]'
         response[:results][1][:result_code].should == '2003'
         response[:results][2][:msg].should == 
-          'Required parameter missing: update > update > authInfo > pw'
+          'Required parameter missing: update > update > authInfo > pw [pw]'
         response[:results][2][:result_code].should == '2003'
         response[:results][3][:msg].should == 
-          'Required parameter missing: extension > extdata > legalDocument'
+          'Required parameter missing: extension > extdata > legalDocument [legal_document]'
         response[:results][3][:result_code].should == '2003'
         response[:results].count.should == 4
       end
@@ -221,10 +223,24 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response[:results][0][:msg].should == 'Phone nr is invalid'
+        response[:results][0][:msg].should == 'Phone nr is invalid [phone]'
         response[:results][0][:result_code].should == '2005'
-        response[:results][1][:msg].should == 'Email is invalid'
+        response[:results][1][:msg].should == 'Email is invalid [email]'
         response[:results][1][:result_code].should == '2005'
+      end
+
+      it 'should not update code with custom string' do
+        response = update_request(
+          id: { value: 'sh8013' },
+          chg: {
+            id: { value: 'notpossibletoupdate' }
+          }
+        )
+
+        response[:msg].should == 'Object does not exist'
+        response[:result_code].should == '2303'
+
+        @contact.reload.code.should == 'sh8013'
       end
     end
 
@@ -246,13 +262,13 @@ describe 'EPP Contact', epp: true do
         response = epp_plain_request(@epp_xml.delete, :xml)
 
         response[:results][0][:msg].should == 
-          'Required parameter missing: delete > delete > id'
+          'Required parameter missing: delete > delete > id [id]'
         response[:results][0][:result_code].should == '2003'
         response[:results][1][:msg].should == 
-          'Required parameter missing: delete > delete > authInfo > pw'
+          'Required parameter missing: delete > delete > authInfo > pw [pw]'
         response[:results][1][:result_code].should == '2003'
         response[:results][2][:msg].should == 
-          'Required parameter missing: extension > extdata > legalDocument'
+          'Required parameter missing: extension > extdata > legalDocument [legal_document]'
         response[:results][2][:result_code].should == '2003'
         response[:results].count.should == 3
       end
@@ -278,7 +294,7 @@ describe 'EPP Contact', epp: true do
         @domain.owner_contact.address.present?.should == true
 
         response = delete_request 
-        response[:msg].should == 'Object association prohibits operation'
+        response[:msg].should == 'Object association prohibits operation [domains]'
         response[:result_code].should == '2305'
         response[:results].count.should == 1
 
@@ -308,7 +324,7 @@ describe 'EPP Contact', epp: true do
       it 'fails if request is invalid' do
         response = epp_plain_request(@epp_xml.check, :xml)
 
-        response[:results][0][:msg].should == 'Required parameter missing: check > check > id'
+        response[:results][0][:msg].should == 'Required parameter missing: check > check > id [id]'
         response[:results][0][:result_code].should == '2003'
         response[:results].count.should == 1
       end
@@ -343,7 +359,7 @@ describe 'EPP Contact', epp: true do
       it 'fails if request invalid' do
         response = epp_plain_request(@epp_xml.info, :xml)
         response[:results][0][:msg].should == 
-          'Required parameter missing: info > info > id'
+          'Required parameter missing: info > info > id [id]'
         response[:results][0][:result_code].should == '2003'
         response[:results].count.should == 1
       end

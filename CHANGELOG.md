@@ -1,3 +1,8 @@
+27.02.2015
+
+* Simplified config/application-example.yml, 
+  now system will check if all required settings are present in application.yml 
+
 19.02.2015
 
 * Cetrificate only enabled, please setup certificates following doc/certificate.md document.

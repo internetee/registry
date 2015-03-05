@@ -16,6 +16,16 @@ Private key and certificate must be packaged to pkcs12 and added to user browser
 
 ### Registry setup
 
+Setup CA directory in shared directory:
+
+    cd /home/registry/registry/shared
+    mkdir ca ca/certs ca/crl ca/newcerts ca/private ca/csrs
+    cd ca
+    chmod 700 private
+    touch index.txt
+    echo 1000 > serial
+    echo 1000 > crlnumber
+
 Configure OpenSSL:
 
     sudo cp /etc/ssl/openssl.cnf /etc/ssl/openssl.cnf.bak
@@ -53,17 +63,6 @@ Make sure the following options are in place:
     basicConstraints = CA:true                                    # around line nr 240
     keyUsage = cRLSign, keyCertSign                               # around line nr 245
 
-Setup CA directory in shared directory:
-
-    cd /home/registry/registry/shared
-    mkdir ca
-    cd ca
-    mkdir certs crl newcerts private csrs
-    chmod 700 private
-    touch index.txt
-    echo 1000 > serial
-    echo 1000 > crlnumber
-
 Generate the root key and remember your password, you need it later in application.yml: 
 
     openssl genrsa -aes256 -out private/ca.key.pem 4096
@@ -90,10 +89,10 @@ Create certificate revocation list (prompts for pass phrase):
 
 Configure registry registry/shared/config/application.yml to match the CA settings:
 
+    crl_path:     '/home/registry/registry/shared/ca/crl/crl.pem'
     ca_cert_path: '/home/registry/registry/shared/ca/certs/ca.crt.pem'
-    ca_key_path: '/home/registry/registry/shared/ca/private/ca.key.pem'
+    ca_key_path:  '/home/registry/registry/shared/ca/private/ca.key.pem'
     ca_key_password: 'your-root-key-password'
-    crl_path: '/home/registry/registry/shared/ca/crl/crl.pem'
 
 
 ### Registry EPP setup
@@ -160,6 +159,29 @@ Reload apache:
 
     sudo a2enmod headers
     sudo /etc/init.d/apache2 restart
+
+
+### ApiUser browser setup
+
+In short:
+
+* Upload CSR file to api user at admin page /admin/api_users
+* Sign it
+* Generate p12 file and install into user browser 
+
+#### Creating CSR file
+
+    openssl genrsa -out private/api-user.key.pem 4096
+    chmod 400 private/api-user.key.pem
+    openssl req -sha256 -new -days 3653 -key private/api-user.key.pem -out csrs/api-user.csr.pem
+
+Upload api-user.csr.pem file to api user at admin interface.
+Sign it
+Download CRT file and create p12 file.
+
+    openssl pkcs12 -export -inkey private/api-user.key.pem -in certs/api-user.crt.pem -out pkcs/api_user.p12
+
+Add api_user.p12 to your browser.
 
 
 Development env

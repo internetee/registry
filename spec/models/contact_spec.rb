@@ -91,6 +91,12 @@ describe Contact do
     it 'should not have any versions' do
       @contact.versions.should == []
     end
+
+    it 'should not accept long code' do
+      @contact.code = 'verylongcode' * 100
+      @contact.valid?
+      @contact.errors[:code].should == ['is too long (maximum is 100 characters)']
+    end
   end
 
   context 'with valid attributes' do
@@ -128,6 +134,17 @@ describe Contact do
       @contact.ident = '1234'
       @contact.valid?
       @contact.errors.full_messages.should match_array([])
+    end
+
+    it 'should not accept new custom code' do
+      old_code = @contact.code
+      @contact.code = 'CID:REG1:12345'
+      @contact.save.should == true
+      @contact.code.should == old_code
+    end
+
+    it 'should have static password' do
+      @contact.auth_info.should == 'password'
     end
 
     context 'as birthday' do
@@ -182,20 +199,56 @@ describe Contact do
       end
 
       context 'after create' do
-        it 'should generate a new code and password' do
+        it 'should not generate a new code when code is present' do
           @contact = Fabricate.build(:contact, code: '123asd', auth_info: 'qwe321')
-          @contact.code.should      == '123asd'
+          @contact.code.should == '123asd'
+          @contact.save.should == true
+          @contact.code.should == '123asd'
+        end
+
+        it 'should generate a new password' do
+          @contact = Fabricate.build(:contact, code: '123asd', auth_info: 'qwe321')
           @contact.auth_info.should == 'qwe321'
-          @contact.save!
-          @contact.code.should_not      == '123asd'
+          @contact.save.should == true
           @contact.auth_info.should_not == 'qwe321'
+        end
+
+        it 'should not allow same code' do
+          @double_contact = Fabricate.build(:contact, code: @contact.code)
+          @double_contact.valid?
+          @double_contact.errors.full_messages.should == ["Code Contact id already exists"]
+        end
+
+        it 'should allow supported code format' do
+          @contact = Fabricate.build(:contact, code: 'CID:REG1:12345')
+          @contact.valid?
+          @contact.errors.full_messages.should == []
+        end
+
+        it 'should not allow unsupported characters in code' do
+          @contact = Fabricate.build(:contact, code: 'unsupported!ÄÖÜ~?')
+          @contact.valid?
+          @contact.errors.full_messages.should == ['Code is invalid']
+        end
+
+        it 'should generate code if empty code is given' do
+          @contact = Fabricate(:contact, code: '')
+          @contact.code.should_not == ''
+        end
+
+        it 'should not allow empty spaces as code' do
+          @contact = Fabricate.build(:contact, code: '    ')
+          @contact.valid?
+          @contact.errors.full_messages.should == ['Code is invalid']
         end
       end
 
       context 'after update' do
         before :all do
-          @contact.code = '123asd'
-          @contact.auth_info = 'qwe321'
+          @contact = Fabricate.build(:contact, code: '123asd', auth_info: 'qwe321')
+          @contact.save
+          @contact.code.should == '123asd'
+          @auth_info = @contact.auth_info
         end
 
         it 'should not generate new code' do
@@ -205,7 +258,7 @@ describe Contact do
 
         it 'should not generate new auth_info' do
           @contact.update_attributes(name: 'fvrsgbqevciherot23')
-          @contact.auth_info.should == 'qwe321'
+          @contact.auth_info.should == @auth_info
         end
       end
     end

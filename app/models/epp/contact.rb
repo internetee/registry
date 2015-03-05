@@ -45,9 +45,22 @@ class Epp::Contact < Contact
     # rubocop: enable Metrics/PerceivedComplexity
     # rubocop: enable Metrics/CyclomaticComplexity
 
-    def new(frame)
+    def new(frame, registrar)
       return super if frame.blank?
-      super(attrs_from(frame))
+
+      custom_code = 
+        if frame.css('id').present? 
+          "#{registrar.code}:#{frame.css('id').text.parameterize}"
+        else
+          nil
+        end
+
+      super(
+        attrs_from(frame).merge(
+          code: custom_code,
+          registrar: registrar
+        )
+      )
     end
 
     def legal_document_attrs(legal_frame)

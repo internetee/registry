@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150223104842) do
+ActiveRecord::Schema.define(version: 20150303151224) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -611,7 +611,10 @@ ActiveRecord::Schema.define(version: 20150223104842) do
     t.string   "city"
     t.string   "street"
     t.string   "zip"
+    t.string   "code"
   end
+
+  add_index "registrars", ["code"], name: "index_registrars_on_code", using: :btree
 
   create_table "reserved_domains", force: :cascade do |t|
     t.string   "name"
@@ -640,19 +643,19 @@ ActiveRecord::Schema.define(version: 20150223104842) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "email"
-    t.integer  "sign_in_count",      default: 0,     null: false
+    t.integer  "sign_in_count",      default: 0, null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.inet     "current_sign_in_ip"
     t.inet     "last_sign_in_ip"
     t.string   "identity_code"
     t.integer  "country_id"
-    t.string   "roles",                                           array: true
+    t.string   "roles",                                       array: true
     t.string   "creator_str"
     t.string   "updator_str"
     t.string   "country_code"
     t.integer  "registrar_id"
-    t.boolean  "active",             default: false
+    t.boolean  "active"
     t.text     "csr"
     t.text     "crt"
     t.string   "type"

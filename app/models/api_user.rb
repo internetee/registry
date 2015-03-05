@@ -20,7 +20,7 @@ class ApiUser < User
   after_initialize :set_defaults
   def set_defaults
     return unless new_record?
-    self.active = true
+    self.active = true unless active_changed?
   end
 
   def registrar_typeahead
