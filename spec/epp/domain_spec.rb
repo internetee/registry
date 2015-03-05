@@ -59,16 +59,20 @@ describe 'EPP Domain', epp: true do
 
     response = epp_plain_request(xml, :xml)
     response[:results][0][:result_code].should == '2003'
-    response[:results][0][:msg].should == 'Required parameter missing: create > create > ns'
+    response[:results][0][:msg].should == 
+      'Required parameter missing: create > create > ns [ns]'
 
     response[:results][1][:result_code].should == '2003'
-    response[:results][1][:msg].should == 'Required parameter missing: create > create > registrant'
+    response[:results][1][:msg].should == 
+      'Required parameter missing: create > create > registrant [registrant]'
 
     response[:results][2][:result_code].should == '2003'
-    response[:results][2][:msg].should == 'Required parameter missing: create > create > ns > hostAttr'
+    response[:results][2][:msg].should == 
+      'Required parameter missing: create > create > ns > hostAttr [host_attr]'
 
     response[:results][3][:result_code].should == '2003'
-    response[:results][3][:msg].should == 'Required parameter missing: extension > extdata > legalDocument'
+    response[:results][3][:msg].should == 
+      'Required parameter missing: extension > extdata > legalDocument [legal_document]'
   end
 
   context 'with citizen as an owner' do
@@ -167,7 +171,7 @@ describe 'EPP Domain', epp: true do
 
       response = epp_plain_request(xml, :xml)
       response[:result_code].should == '2306'
-      response[:msg].should == 'IPv4 is missing'
+      response[:msg].should == 'IPv4 is missing [ipv4]'
     end
 
     # it 'does not create duplicate domain' do
@@ -189,7 +193,7 @@ describe 'EPP Domain', epp: true do
 
       response = epp_plain_request(xml, :xml)
       response[:result_code].should == '2302'
-      response[:msg].should == 'Domain name is reserved or restricted'
+      response[:msg].should == 'Domain name is reserved or restricted [name_dirty]'
       response[:clTRID].should == 'ABC-12345'
     end
 
@@ -198,7 +202,8 @@ describe 'EPP Domain', epp: true do
 
       response = epp_plain_request(xml, :xml)
       response[:results][0][:result_code].should == '2003'
-      response[:results][0][:msg].should == 'Required parameter missing: create > create > registrant'
+      response[:results][0][:msg].should == 
+        'Required parameter missing: create > create > registrant [registrant]'
     end
 
     it 'does not create domain without nameservers' do
@@ -206,11 +211,11 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(xml, :xml)
 
       response[:results][0][:msg].should == 
-        'Required parameter missing: create > create > ns'
+        'Required parameter missing: create > create > ns [ns]'
       response[:results][0][:result_code].should == '2003'
 
       response[:results][1][:msg].should == 
-        'Required parameter missing: create > create > ns > hostAttr'
+        'Required parameter missing: create > create > ns > hostAttr [host_attr]'
       response[:results][1][:result_code].should == '2003'
 
       response[:results].count.should == 2
@@ -232,7 +237,7 @@ describe 'EPP Domain', epp: true do
 
       response = epp_plain_request(xml, :xml)
       response[:result_code].should == '2004'
-      response[:msg].should == 'Nameservers count must be between 2-11'
+      response[:msg].should == 'Nameservers count must be between 2-11 [nameservers]'
     end
 
     it 'returns error when invalid nameservers are present' do
@@ -252,7 +257,7 @@ describe 'EPP Domain', epp: true do
       })
 
       response = epp_plain_request(xml, :xml)
-      response[:msg].should == 'Hostname is invalid'
+      response[:msg].should == 'Hostname is invalid [hostname]'
       response[:result_code].should == '2005'
     end
 
@@ -269,7 +274,7 @@ describe 'EPP Domain', epp: true do
       })
 
       response = epp_plain_request(xml, :xml)
-      response[:msg].should == 'Required parameter missing: create > create > ns > hostAttr'
+      response[:msg].should == 'Required parameter missing: create > create > ns > hostAttr [host_attr]'
       response[:result_code].should == '2003'
     end
 
@@ -286,10 +291,10 @@ describe 'EPP Domain', epp: true do
       nameserver_count = Nameserver.count
       response = epp_plain_request(domain_create_with_invalid_ns_ip_xml, :xml)
       response[:results][0][:result_code].should == '2005'
-      response[:results][0][:msg].should == 'IPv4 is invalid'
+      response[:results][0][:msg].should == 'IPv4 is invalid [ipv4]'
       response[:results][0][:value].should == '192.0.2.2.invalid'
       response[:results][1][:result_code].should == '2005'
-      response[:results][1][:msg].should == 'IPv6 is invalid'
+      response[:results][1][:msg].should == 'IPv6 is invalid [ipv6]'
       response[:results][1][:value].should == 'INVALID_IPV6'
       # ensure nothing gets saved to db:
       Domain.count.should == domain_count
@@ -312,7 +317,7 @@ describe 'EPP Domain', epp: true do
 
       response = epp_plain_request(xml, :xml)
       response[:results][0][:result_code].should == '2004'
-      response[:results][0][:msg].should == 'Period must add up to 1, 2 or 3 years'
+      response[:results][0][:msg].should == 'Period must add up to 1, 2 or 3 years [period]'
       response[:results][0][:value].should == '367'
     end
 
@@ -397,24 +402,25 @@ describe 'EPP Domain', epp: true do
 
       response = epp_plain_request(xml, :xml)
 
-      response[:results][0][:msg].should == 'Valid algorithms are: 3, 5, 6, 7, 8, 252, 253, 254, 255'
+      response[:results][0][:msg].should == 
+        'Valid algorithms are: 3, 5, 6, 7, 8, 252, 253, 254, 255 [alg]'
       response[:results][0][:value].should == '9'
 
-      response[:results][1][:msg].should == 'Valid protocols are: 3'
+      response[:results][1][:msg].should == 'Valid protocols are: 3 [protocol]'
       response[:results][1][:value].should == '4'
 
-      response[:results][2][:msg].should == 'Valid flags are: 0, 256, 257'
+      response[:results][2][:msg].should == 'Valid flags are: 0, 256, 257 [flags]'
       response[:results][2][:value].should == '250'
 
-      response[:results][3][:msg].should == 'Valid algorithms are: 3, 5, 6, 7, 8, 252, 253, 254, 255'
+      response[:results][3][:msg].should == 'Valid algorithms are: 3, 5, 6, 7, 8, 252, 253, 254, 255 [alg]'
       response[:results][3][:value].should == '10'
 
-      response[:results][4][:msg].should == 'Valid flags are: 0, 256, 257'
+      response[:results][4][:msg].should == 'Valid flags are: 0, 256, 257 [flags]'
       response[:results][4][:value].should == '1'
 
-      response[:results][5][:msg].should == 'Public key is missing'
+      response[:results][5][:msg].should == 'Public key is missing [public_key]'
 
-      response[:results][6][:msg].should == 'Valid protocols are: 3'
+      response[:results][6][:msg].should == 'Valid protocols are: 3 [protocol]'
       response[:results][6][:value].should == '5'
     end
 
@@ -441,7 +447,7 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(xml, :xml)
 
       response[:result_code].should == '2302'
-      response[:msg].should == 'Public key already exists'
+      response[:msg].should == 'Public key already exists [public_key]'
       response[:results][0][:value].should == '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
     end
 
@@ -470,7 +476,7 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(xml, :xml)
 
       response[:result_code].should == '2004'
-      response[:msg].should == 'DNS keys count must be between 0-1'
+      response[:msg].should == 'DNS keys count must be between 0-1 [dnskeys]'
 
       create_settings
     end
@@ -667,7 +673,7 @@ describe 'EPP Domain', epp: true do
       })
 
       response = epp_plain_request(xml, :xml)
-      response[:msg].should == 'Admin contacts count must be between 1-10'
+      response[:msg].should == 'Admin contacts count must be between 1-10 [admin_contacts]'
       response[:result_code].should == '2004'
       response[:clTRID].should == 'ABC-12345'
 
@@ -859,7 +865,8 @@ describe 'EPP Domain', epp: true do
       login_as :registrar2 do
         response = epp_plain_request(xml, :xml)
         response[:result_code].should == '2003'
-        response[:msg].should == 'Required parameter missing: extension > extdata > legalDocument'
+        response[:msg].should == 
+          'Required parameter missing: extension > extdata > legalDocument [legal_document]'
       end
     end
 
@@ -976,7 +983,7 @@ describe 'EPP Domain', epp: true do
 
       response = epp_plain_request(xml, :xml)
       response[:result_code].should == '2201'
-      response[:msg].should == 'Authorization error'
+      response[:msg].should == 'Authorization error [auth_info]'
     end
 
     it 'ignores transfer when owner registrar requests transfer' do
@@ -1023,7 +1030,7 @@ describe 'EPP Domain', epp: true do
         epp_plain_request(xml, :xml) # transfer domain
         response =  epp_plain_request(xml, :xml) # attempt second transfer
         response[:result_code].should == '2201'
-        response[:msg].should == 'Authorization error'
+        response[:msg].should == 'Authorization error [auth_info]'
       end
     end
 
@@ -1126,27 +1133,27 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(xml, :xml)
 
       response[:results][0][:result_code].should == '2302'
-      response[:results][0][:msg].should == 'Nameserver already exists on this domain'
+      response[:results][0][:msg].should == 'Nameserver already exists on this domain [hostname]'
       response[:results][0][:value].should == 'ns1.example.com'
 
       response[:results][1][:result_code].should == '2302'
-      response[:results][1][:msg].should == 'Nameserver already exists on this domain'
+      response[:results][1][:msg].should == 'Nameserver already exists on this domain [hostname]'
       response[:results][1][:value].should == 'ns2.example.com'
 
       response[:results][2][:result_code].should == '2302'
-      response[:results][2][:msg].should == 'Contact already exists on this domain'
+      response[:results][2][:msg].should == 'Contact already exists on this domain [contact_code_cache]'
       response[:results][2][:value].should == 'mak21'
 
-      response[:results][3][:msg].should == 'Status already exists on this domain'
+      response[:results][3][:msg].should == 'Status already exists on this domain [value]'
       response[:results][3][:value].should == 'clientHold'
 
-      response[:results][4][:msg].should == 'Status already exists on this domain'
+      response[:results][4][:msg].should == 'Status already exists on this domain [value]'
       response[:results][4][:value].should == 'clientUpdateProhibited'
 
-      response[:results][5][:msg].should == 'Public key already exists'
+      response[:results][5][:msg].should == 'Public key already exists [public_key]'
       response[:results][5][:value].should == '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
 
-      response[:results][6][:msg].should == 'Public key already exists'
+      response[:results][6][:msg].should == 'Public key already exists [public_key]'
       response[:results][6][:value].should == '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0'
 
       d.domain_statuses.count.should == 2
@@ -1298,11 +1305,11 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(xml, :xml)
 
       response[:results][0][:result_code].should == '2302'
-      response[:results][0][:msg].should == 'Nameserver already exists on this domain'
+      response[:results][0][:msg].should == 'Nameserver already exists on this domain [hostname]'
       response[:results][0][:value].should == n.hostname
 
       response[:results][1][:result_code].should == '2302'
-      response[:results][1][:msg].should == 'Contact already exists on this domain'
+      response[:results][1][:msg].should == 'Contact already exists on this domain [contact_code_cache]'
       response[:results][1][:value].should == c.code
     end
 
@@ -1315,7 +1322,8 @@ describe 'EPP Domain', epp: true do
       }
 
       response = epp_plain_request(domain_update_xml(xml_params), :xml)
-      response[:results][0][:msg].should == 'Required parameter missing: extension > extdata > legalDocument'
+      response[:results][0][:msg].should == 
+        'Required parameter missing: extension > extdata > legalDocument [legal_document]'
       response[:results][0][:result_code].should == '2003'
     end
 
@@ -1372,7 +1380,7 @@ describe 'EPP Domain', epp: true do
 
       response = epp_plain_request(xml, :xml)
       response[:results][0][:result_code].should == '2004'
-      response[:results][0][:msg].should == 'Period must add up to 1, 2 or 3 years'
+      response[:results][0][:msg].should == 'Period must add up to 1, 2 or 3 years [period]'
       response[:results][0][:value].should == '4'
     end
 
@@ -1524,7 +1532,8 @@ describe 'EPP Domain', epp: true do
     it 'does not delete domain without legal document' do
       response = epp_plain_request(@epp_xml.domain.delete(name: { value: 'example.ee' }), :xml)
       response[:result_code].should == '2003'
-      response[:msg].should == 'Required parameter missing: extension > extdata > legalDocument'
+      response[:msg].should == 
+        'Required parameter missing: extension > extdata > legalDocument [legal_document]'
     end
 
     ### CHECK ###

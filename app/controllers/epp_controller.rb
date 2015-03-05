@@ -103,6 +103,7 @@ class EppController < ApplicationController
     el, missing = nil, nil
     selectors.each do |selector|
       full_selector = [@prefix, selector].compact.join(' ')
+      attr = selector.split('>').last.strip.underscore
       el = params[:parsed_frame].css(full_selector).first
 
       if allow_blank
@@ -112,7 +113,7 @@ class EppController < ApplicationController
       end
       epp_errors << {
         code: '2003',
-        msg: I18n.t('errors.messages.required_parameter_missing', key: full_selector)
+        msg: I18n.t('errors.messages.required_parameter_missing', key: "#{full_selector} [#{attr}]")
       } if missing
     end
 

@@ -25,7 +25,8 @@ module EppErrors
     errors.each do |err|
       code, value = find_epp_code_and_value(err)
       next unless code
-      epp_errors << { code: code, msg: "#{err} [#{attr}]", value: value }
+      msg = attr.to_sym == :base ? err : "#{err} [#{attr}]"
+      epp_errors << { code: code, msg: msg, value: value }
     end
     epp_errors
   end
