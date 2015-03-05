@@ -5,7 +5,7 @@ class DataUpdateRegisntrarCodes < ActiveRecord::Migration
       next if r.code.present?
       r[:code] = r.name.parameterize
       puts "#{r.id}: #{r.changes.inspect}"
-      r.save!
+      r.save(validate: false)
     end
   end
 end
