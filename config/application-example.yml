@@ -10,6 +10,7 @@ secret_key_base: please-change-it-you-can-generate-it-with-rake-secret
 devise_secret: please-change-it-you-can-generate-it-with-rake-secret
 
 # Used by admin server, you can leave those empty for when running EPP server:
+openssl_config_path: '/etc/ssl/openssl.cnf'
 crl_path:     '/home/registry/registry/shared/ca/crl/crl.pem'
 ca_cert_path: '/home/registry/registry/shared/ca/certs/ca.crt.pem'
 ca_key_path:  '/home/registry/registry/shared/ca/private/ca.key.pem'

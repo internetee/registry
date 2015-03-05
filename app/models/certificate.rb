@@ -45,7 +45,7 @@ class Certificate < ActiveRecord::Base
     csr_file.rewind
 
     crt_file = Tempfile.new('client_crt')
-    _out, err, _st = Open3.capture3("openssl ca -keyfile #{ENV['ca_key_path']} \
+    _out, err, _st = Open3.capture3("openssl ca -config #{ENV['openssl_config_path']} -keyfile #{ENV['ca_key_path']} \
     -cert #{ENV['ca_cert_path']} \
     -extensions usr_cert -notext -md sha256 \
     -in #{csr_file.path} -out #{crt_file.path} -key '#{ENV['ca_key_password']}' -batch")
@@ -67,7 +67,7 @@ class Certificate < ActiveRecord::Base
     crt_file.write(crt)
     crt_file.rewind
 
-    _out, err, _st = Open3.capture3("openssl ca -keyfile #{ENV['ca_key_path']} \
+    _out, err, _st = Open3.capture3("openssl ca -config #{ENV['openssl_config_path']} -keyfile #{ENV['ca_key_path']} \
       -cert #{ENV['ca_cert_path']} \
       -revoke #{crt_file.path} -key '#{ENV['ca_key_password']}' -batch")
 
@@ -81,7 +81,7 @@ class Certificate < ActiveRecord::Base
       return false
     end
 
-    _out, _err, _st = Open3.capture3("openssl ca -keyfile #{ENV['ca_key_path']} \
+    _out, _err, _st = Open3.capture3("openssl ca -config #{ENV['openssl_config_path']} -keyfile #{ENV['ca_key_path']} \
       -cert #{ENV['ca_cert_path']} \
       -gencrl -out #{ENV['crl_path']} -key '#{ENV['ca_key_password']}' -batch")
   end
