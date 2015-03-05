@@ -61,4 +61,26 @@ AdminUser.where(
   country_code: 'EE'
 ).first_or_create!
 
+ZonefileSetting.where({
+  origin: 'ee',
+  ttl: 43200,
+  refresh: 3600,
+  retry: 900,
+  expire: 1209600,
+  minimum_ttl: 3600,
+  email: 'hostmaster.eestiinternet.ee',
+  master_nameserver: 'ns.tld.ee'
+}).first_or_create!
+
+ZonefileSetting.where({
+  origin: 'pri.ee',
+  ttl: 43200,
+  refresh: 3600,
+  retry: 900,
+  expire: 1209600,
+  minimum_ttl: 3600,
+  email: 'hostmaster.eestiinternet.ee',
+  master_nameserver: 'ns.tld.ee'
+}).first_or_create!
+
 AdminUser.update_all(roles: ['admin'])
