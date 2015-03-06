@@ -51,13 +51,11 @@ class Epp::DomainsController < EppController
     # @domain.parse_and_update_domain_dependencies(params[:parsed_frame].css('chg'))
     # @domain.attach_legal_document(Epp::EppDomain.parse_legal_document_from_frame(params[:parsed_frame]))
 
-    # binding.pry
-
-    # if @domain.update(parsed_frame)
-    #   handle_errors(@domain)
-    # else
-    #   render_epp_response '/epp/domains/success'
-    # end
+    if @domain.update(params[:parsed_frame], current_user)
+      handle_errors(@domain)
+    else
+      render_epp_response '/epp/domains/success'
+    end
   end
 
   # rubocop: disable Metrics/PerceivedComplexity

@@ -64,7 +64,7 @@ class Epp::EppDomain < Domain
     domain
   end
 
-  def attrs_from(frame, current_user)
+  def attrs_from(frame, current_user, action = nil)
     at = {}.with_indifferent_access
 
     code = frame.css('registrant').first.try(:text)
@@ -76,7 +76,7 @@ class Epp::EppDomain < Domain
       add_epp_error('2303', 'registrant', code, [:owner_contact, :not_found])
     end
 
-    at[:name] = frame.css('name').text
+    at[:name] = frame.css('name').text if new_record?
     at[:registrar_id] = current_user.registrar.try(:id)
     at[:registered_at] = Time.now if new_record?
 
@@ -84,12 +84,36 @@ class Epp::EppDomain < Domain
     at[:period] = (period.to_i == 0) ? 1 : period.to_i
 
     at[:period_unit] = Epp::EppDomain.parse_period_unit_from_frame(frame) || 'y'
-    at[:nameservers_attributes] = Epp::EppDomain.parse_nameservers_from_frame(frame)
+
+    at[:nameservers_attributes] = nameservers_attrs(frame, action)
     at[:domain_contacts_attributes] = domain_contacts_from(frame)
     at[:dnskeys_attributes] = dnskeys_from(frame.css('extension create'))
     at[:legal_documents_attributes] = legal_document_from(frame)
 
     at
+  end
+
+  def nameservers_attrs(frame, action)
+    if action == 'rem'
+      ns_list = Epp::EppDomain.parse_nameservers_from_frame(frame)
+
+      to_destroy = []
+      ns_list.each do |ns_attrs|
+        nameserver = nameservers.where(ns_attrs).try(:first)
+        if nameserver.blank?
+          add_epp_error('2303', 'hostAttr', ns_attrs[:hostname], I18n.t('nameserver_not_found'))
+        else
+          to_destroy << {
+            id: nameserver.id,
+            _destroy: 1
+          }
+        end
+      end
+
+      return to_destroy
+    else
+      return Epp::EppDomain.parse_nameservers_from_frame(frame)
+    end
   end
 
   def domain_contacts_from(frame)
@@ -170,13 +194,18 @@ class Epp::EppDomain < Domain
     }]
   end
 
-  # def update(frame)
-  #   return super if frame.blank?
-  #   at = {}.with_indifferent_access
-  #   at.deep_merge!(self.class.attrs_from(frame.css('chg')))
-  #   # legal_frame = frame.css('legalDocument').first
-  #   # at[:legal_documents_attributes] = self.class.legal_document_attrs(legal_frame)
-  # end
+  def update(frame, current_user)
+    return super if frame.blank?
+    at = {}.with_indifferent_access
+    at.deep_merge!(attrs_from(frame.css('chg'), current_user))
+    at.deep_merge!(attrs_from(frame.css('rem'), current_user, 'rem'))
+
+    at_add = attrs_from(frame.css('add'), current_user)
+    at[:nameservers_attributes] += at_add[:nameservers_attributes]
+    # at[:domain_contacts_attributes] += at_add[:domain_contacts_attributes]
+
+    super(at)
+  end
 
 
 
