@@ -83,5 +83,5 @@ Style/AlignParameters:
   Enabled: false
 
 # No need fancy style of numbers such as 1_000_000
-Style/NumericLiterals
+Style/NumericLiterals:
   Enabled: false
