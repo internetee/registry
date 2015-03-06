@@ -146,7 +146,7 @@ class Epp::EppDomain < Domain
           next
         end
 
-        if k == :admin && contact.juridical?
+        if k == :admin && contact.bic?
           add_epp_error('2306', 'contact', x[:contact], [:domain_contacts, :admin_contact_can_be_only_citizen])
           next
         end

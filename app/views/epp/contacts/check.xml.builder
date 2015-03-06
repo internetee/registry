@@ -6,11 +6,10 @@ xml.epp_head do
 
     xml.resData do
       xml.tag!('contact:chkData', 'xmlns:contact' => 'urn:ietf:params:xml:ns:contact-1.0') do
-         #xml.tag!('contact:id', @contact.code)
-        @contacts.each do |contact|
+        @results.each do |result|
           xml.tag!('contact:cd') do
-            xml.tag! "contact:id", contact[:code], avail: contact[:avail]
-            xml.tag!('contact:reason', contact[:reason]) unless contact[:avail] == 1
+            xml.tag! "contact:id", result[:code], avail: result[:avail]
+            xml.tag!('contact:reason', result[:reason]) unless result[:avail] == 1
           end
         end
       end

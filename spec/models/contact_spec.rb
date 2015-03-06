@@ -39,11 +39,11 @@ describe Contact do
     end
 
     it 'should not have creator' do
-      @contact.cr_id.should == nil
+      @contact.creator.should == nil
     end
 
     it 'should not have updater' do
-      @contact.up_id.should == nil
+      @contact.updator.should == nil
     end
 
     it 'phone should return false' do
@@ -52,8 +52,50 @@ describe Contact do
       @contact.errors[:phone].should == ["Phone nr is invalid"]
     end
 
+    it 'should require country code when bic' do
+      @contact.ident_type = 'bic'
+      @contact.valid?
+      @contact.errors[:ident_country_code].should == ['is missing']
+    end
+
+    it 'should require country code when priv' do
+      @contact.ident_type = 'priv'
+      @contact.valid?
+      @contact.errors[:ident_country_code].should == ['is missing']
+    end
+
+    it 'should validate correct country code' do
+      @contact.ident_type = 'bic'
+      @contact.ident_country_code = 'EE'
+      @contact.valid?
+
+      @contact.errors[:ident_country_code].should == []
+    end
+
+    it 'should require valid country code' do
+      @contact.ident_type = 'bic'
+      @contact.ident_country_code = 'INVALID'
+      @contact.valid?
+
+      @contact.errors[:ident_country_code].should == ['is not following ISO_3166-1 alpha 2 format']
+    end
+
+    it 'should convert to alpha2 country code' do
+      @contact.ident_type = 'bic'
+      @contact.ident_country_code = 'ee'
+      @contact.valid?
+
+      @contact.ident_country_code.should == 'EE'
+    end
+
     it 'should not have any versions' do
       @contact.versions.should == []
+    end
+
+    it 'should not accept long code' do
+      @contact.code = 'verylongcode' * 100
+      @contact.valid?
+      @contact.errors[:code].should == ['is too long (maximum is 100 characters)']
     end
   end
 
@@ -87,18 +129,23 @@ describe Contact do
       @contact.relations_with_domain?.should == false
     end
 
-    # it 'ico should be valid' do
-    # @contact.ident_type = 'ico'
-    # @contact.ident = '1234'
-    # @contact.errors.full_messages.should match_array([])
-    # end
+    it 'bic should be valid' do
+      @contact.ident_type = 'bic'
+      @contact.ident = '1234'
+      @contact.valid?
+      @contact.errors.full_messages.should match_array([])
+    end
 
-    # it 'ident should return false' do
-    # puts @contact.ident_type
-    # @contact.ident = '123abc'
-    # @contact.valid?
-    # @contact.errors.full_messages.should_not == []
-    # end
+    it 'should not accept new custom code' do
+      old_code = @contact.code
+      @contact.code = 'CID:REG1:12345'
+      @contact.save.should == true
+      @contact.code.should == old_code
+    end
+
+    it 'should have static password' do
+      @contact.auth_info.should == 'password'
+    end
 
     context 'as birthday' do
       before :all do
@@ -119,7 +166,8 @@ describe Contact do
         invalid.each do |date|
           @contact.ident = date
           @contact.valid?
-          @contact.errors.full_messages.should == ["Ident is invalid"]
+          @contact.errors.full_messages.should == 
+            ["Ident Ident not in valid birthady format, should be YYYY-MM-DD"]
         end
       end
     end
@@ -151,20 +199,56 @@ describe Contact do
       end
 
       context 'after create' do
-        it 'should generate a new code and password' do
+        it 'should not generate a new code when code is present' do
           @contact = Fabricate.build(:contact, code: '123asd', auth_info: 'qwe321')
-          @contact.code.should      == '123asd'
+          @contact.code.should == '123asd'
+          @contact.save.should == true
+          @contact.code.should == '123asd'
+        end
+
+        it 'should generate a new password' do
+          @contact = Fabricate.build(:contact, code: '123asd', auth_info: 'qwe321')
           @contact.auth_info.should == 'qwe321'
-          @contact.save!
-          @contact.code.should_not      == '123asd'
+          @contact.save.should == true
           @contact.auth_info.should_not == 'qwe321'
+        end
+
+        it 'should not allow same code' do
+          @double_contact = Fabricate.build(:contact, code: @contact.code)
+          @double_contact.valid?
+          @double_contact.errors.full_messages.should == ["Code Contact id already exists"]
+        end
+
+        it 'should allow supported code format' do
+          @contact = Fabricate.build(:contact, code: 'CID:REG1:12345')
+          @contact.valid?
+          @contact.errors.full_messages.should == []
+        end
+
+        it 'should not allow unsupported characters in code' do
+          @contact = Fabricate.build(:contact, code: 'unsupported!ÄÖÜ~?')
+          @contact.valid?
+          @contact.errors.full_messages.should == ['Code is invalid']
+        end
+
+        it 'should generate code if empty code is given' do
+          @contact = Fabricate(:contact, code: '')
+          @contact.code.should_not == ''
+        end
+
+        it 'should not allow empty spaces as code' do
+          @contact = Fabricate.build(:contact, code: '    ')
+          @contact.valid?
+          @contact.errors.full_messages.should == ['Code is invalid']
         end
       end
 
       context 'after update' do
         before :all do
-          @contact.code = '123asd'
-          @contact.auth_info = 'qwe321'
+          @contact = Fabricate.build(:contact, code: '123asd', auth_info: 'qwe321')
+          @contact.save
+          @contact.code.should == '123asd'
+          @auth_info = @contact.auth_info
         end
 
         it 'should not generate new code' do
@@ -174,59 +258,10 @@ describe Contact do
 
         it 'should not generate new auth_info' do
           @contact.update_attributes(name: 'fvrsgbqevciherot23')
-          @contact.auth_info.should == 'qwe321'
+          @contact.auth_info.should == @auth_info
         end
-      end
-
-      context 'with creator' do
-        before :all do
-          # @contact.created_by = @api_user
-        end
-
-        # TODO: change cr_id to something else
-        it 'should return username of creator' do
-          # @contact.cr_id.should == 'gitlab'
-        end
-      end
-
-      context 'with updater' do
-        before :all do
-          # @contact.updated_by = @api_user
-        end
-
-        # TODO: change up_id to something else
-        it 'should return username of updater' do
-          # @contact.up_id.should == 'gitlab'
-        end
-
       end
     end
-  end
-end
-
-# TODO: investigate it a bit more
-# describe Contact, '#relations_with_domain?' do
-# context 'with relation' do
-# before :all do
-# create_settings
-# Fabricate(:domain)
-# @contact = Fabricate(:contact)
-# end
-
-# it 'should have relation with domain' do
-# @contact.relations_with_domain?.should == true
-# end
-# end
-# end
-
-describe Contact, '.extract_params' do
-  it 'returns params hash'do
-    ph = { id: '123123', email: 'jdoe@example.com', authInfo: { pw: 'asde' },
-           postalInfo: { name: 'fred', addr: { cc: 'EE' } }  }
-    Contact.extract_attributes(ph).should == {
-      name: 'fred',
-      email: 'jdoe@example.com'
-    }
   end
 end
 

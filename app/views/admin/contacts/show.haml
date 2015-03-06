@@ -1,10 +1,13 @@
 .row
   .col-sm-12
     %h2.text-center-xs
-      = "#{t('contact_details')}"
+      = @contact.name
 %hr
 .row
   .col-md-6= render 'admin/contacts/partials/general'
   .col-md-6= render 'admin/contacts/partials/address'
 .row
   .col-md-12= render 'admin/contacts/partials/domains'
+.row
+  .col-md-12
+    = render 'admin/domains/partials/legal_documents', legal_documents: @contact.legal_documents

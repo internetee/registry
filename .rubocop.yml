@@ -77,3 +77,7 @@ Style/AsciiComments:
 # because NerdCommenter honors commented code intentions
 Style/CommentIndentation:
   Enabled: false
+
+# It did not alayws suggested good format
+Style/AlignParameters:
+  Enabled: false

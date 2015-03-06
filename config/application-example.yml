@@ -1,27 +1,29 @@
-defaults: &defaults
-  app_name: .EE Registry
-  zonefile_export_dir: 'export/zonefiles'
+# Be sure to restart your server when you modify settings.
 
-  # You can use `rake secret` to generate a secure secret key.
-  # Your secret key is used for verifying the integrity of signed cookies.
-  # If you change this key, all old signed cookies will become invalid!
-  secret_key_base: please-change-it-you-can-generate-it-with-rake-secret
-  devise_secret: please-change-it-you-can-generate-it-with-rake-secret
-  ca_cert_path: ca-cert-path-here
-  ca_key_path: ca-key-path-here
-  ca_key_password: ca-key-pass-phrase-here
+app_name: .EE Registry
+zonefile_export_dir: 'export/zonefiles'
 
-development:
-  <<: *defaults
+# You can use `rake secret` to generate a secure secret key.
+# Your secret key is used for verifying the integrity of signed cookies.
+# If you change this key, all old signed cookies will become invalid!
+secret_key_base: please-change-it-you-can-generate-it-with-rake-secret
+devise_secret: please-change-it-you-can-generate-it-with-rake-secret
 
+# Used by admin server, you can leave those empty for when running EPP server:
+openssl_config_path: '/etc/ssl/openssl.cnf'
+crl_path:     '/home/registry/registry/shared/ca/crl/crl.pem'
+ca_cert_path: '/home/registry/registry/shared/ca/certs/ca.crt.pem'
+ca_key_path:  '/home/registry/registry/shared/ca/private/ca.key.pem'
+ca_key_password: 'your-root-key-password'
+
+# Used only by EPP server, you can leave it empty when running admin server:
+webclient_ip: '127.0.0.1'
+
+# autotest config overwrites
 test:
-  <<: *defaults
+  webclient_ip: '127.0.0.1' # it should match to localhost ip address
+  crl_path:     '/var/lib/jenkins/workspace/registry/ca/crl/crl.pem'
+  ca_cert_path: '/var/lib/jenkins/workspace/registry/ca/certs/ca.crt.pem'
+  ca_key_path:  '/var/lib/jenkins/workspace/registry/ca/private/ca.key.pem'
+  ca_key_password: 'test'
 
-alpha:
-  <<: *defaults
-
-staging:
-  <<: *defaults
-
-production:
-  <<: *defaults

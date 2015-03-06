@@ -3,6 +3,7 @@ require 'epp_constraint'
 Rails.application.routes.draw do
   namespace(:epp, defaults: { format: :xml }) do
     match 'session/:action', controller: 'sessions', via: :all
+    match 'session/pki/:action', controller: 'sessions', via: :all
 
     post 'command/:action', controller: 'domains', constraints: EppConstraint.new(:domain)
     post 'command/:action', controller: 'contacts', constraints: EppConstraint.new(:contact)
@@ -47,9 +48,13 @@ Rails.application.routes.draw do
 
     resources :admin_users
     resources :api_users do
-      member do
-        get 'download_csr'
-        get 'download_crt'
+      resources :certificates do
+        member do
+          post 'sign'
+          post 'revoke'
+          get 'download_csr'
+          get 'download_crt'
+        end
       end
     end
 

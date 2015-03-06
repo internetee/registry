@@ -1,24 +1,3 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t 'hello'
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t('hello') %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more, please read the Rails Internationalization guide
-# available at http://guides.rubyonrails.org/i18n.html.
-
 en:
   views:
     pagination:
@@ -52,7 +31,6 @@ en:
   activerecord:
     errors:
       models:
-
         contact:
           attributes:
             code:
@@ -67,6 +45,8 @@ en:
               invalid: "Email is invalid"
             ident:
               blank: "Required parameter missing - ident"
+              invalid_EE_identity_format: "Ident not in valid Estonian identity format."
+              invalid_birthday_format: "Ident not in valid birthady format, should be YYYY-MM-DD"
             domains:
               exist: 'Object association prohibits operation'
 
@@ -258,7 +238,7 @@ en:
       invalid_type: 'PostalInfo type is invalid'
       unimplemented_command: 'Unimplemented command'
       domain_exists_but_belongs_to_other_registrar: 'Domain exists but belongs to other registrar'
-
+      required_attribute_missing: Required attributes missing
 
   code: 'Code'
   value: 'Value'
@@ -321,7 +301,7 @@ en:
   domain_status_prohibits_deleting: 'Domain status prohibits deleting'
   domain_deleted: 'Domain deleted!'
   failed_to_delete_domain: 'Failed to delete domain!'
-  email: 'Email'
+  email: 'E-mail'
   fax: 'Fax'
   contact_details: 'Contact details'
   ident: 'Ident'
@@ -330,8 +310,8 @@ en:
   country: 'Country'
   city: 'City'
   street: 'Street'
-  zip: 'Zip'
-  org_name: 'Organisation name'
+  zip: 'Postcode'
+  org_name: 'Org name'
   failed_to_add_domain: 'Failed to add domain!'
   domain_added: 'Domain added!'
   new_contact: 'New contact'
@@ -502,3 +482,11 @@ en:
   download: 'Download'
   failed_to_create_certificate: 'Failed to create certificate!'
   registrant_not_found: 'Registrant not found'
+  failed_to_revoke_certificate: 'Failed to revoke certificate!'
+  contact_code: Contact code
+  upload_csr: 'Upload CSR'
+  signature_algorithm: 'Signature algorithm'
+  version: 'Version'
+  sign_this_request: 'Sign this request'
+  revoke_this_certificate: 'Revoke this certificate'
+  crt_revoked: 'CRT (revoked)'

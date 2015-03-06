@@ -23,7 +23,7 @@ Installation
 
 ### Registry app 
 
-Usual Rails 4 app installation (rbenv install is under Debian build doc)
+Registry based on Rails 4 installation (rbenv install is under Debian build doc)
 
 Manual demo install and database setup:
 
@@ -32,43 +32,10 @@ Manual demo install and database setup:
     cd demo-registry
     rbenv local 2.2.0
     bundle
+    cp config/application-example.yml config/application.yml # and edit it
     cp config/database-example.yml config/database.yml # and edit it
-    cp config/initializers/devise_secret_example.rb.txt config/initializers/devise_secret.rb # and edit
+    bundle exec rake db:all:setup # for production, please follow deployment howto
     bundle exec rake assets:precompile
-
-Create registry database manually, example: 
-    
-    create database registry_production owner registry encoding 'UTF-8' LC_COLLATE 'et_EE.utf8' LC_CTYPE 'et_EE.utf8' template template0;
-    rake db:schema:load
-    rake db:seeds
-
-Or create all databases:
-
-    rake db:all:setup  # will create all databases and loads all schemas
-    rake db:all:create # creates all databases
-    rake db:all:schema:load # loads all schemas
-    rake db:all:schema:dump # dumps all schemas
-
-Production install (database schema should be loaded and seeds should be present)
-
-    # at your local machine
-    git clone git@github.com:internetee/registry.git
-    cd registry
-    rbenv local 2.2.0 # more info about rbenv at debian doc
-    gem install mina
-    mina pr setup # one time, only creates missing directories
-    ssh registry
-
-    # at your server
-    cd registry
-    cp current/config/application-example.yml shared/config/application.yml # and edit it
-    cp current/config/database-example.yml shared/config/database.yml # and edit it
-
-    vi /etc/apache2/sites-enabled/registry.conf # add conf and all needed serts
-    vi /etc/apache2/sites-enabled/epp.conf # add epp conf, restart apache
-    exit
-    # at your local machine
-    mina pr deploy # this is command you use in every application code update
 
 ### Apache with patched mod_epp (Debian 7/Ubuntu 14.04 LTS)
 
@@ -152,7 +119,12 @@ Be sure to update paths to match your system configuration.
 
     SSLVerifyClient require
     SSLVerifyDepth 1
-    SSLCACertificateFile /home/registry/registry/shared/ca/certs/ca.cert.pem
+    SSLCACertificateFile /home/registry/registry/shared/ca/certs/ca.crt.pem
+    SSLCARevocationFile /home/registry/registry/shared/ca/crl/crl.pem
+    # Uncomment this when upgrading to apache 2.4:
+    # SSLCARevocationCheck chain
+
+    RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
 
     EPPEngine On
     EPPCommandRoot          /proxy/command
@@ -182,6 +154,21 @@ All registry demo data can be found at:
 Initially you can use two type of users: admin users and EPP users.
 
 
+### Certificates setup
+
+* [Certificates setup](/doc/certificates.md)
+
+
+### Deployment
+
+* [Application build and update](/doc/application_build_doc.md)
+
+
+### Autotesting
+
+* [Testing](/doc/testing.md)
+
+
 ### EPP web client
 
 Please follow EPP web client readme:
@@ -196,85 +183,7 @@ Please follow WHOIS server readme:
     https://github.com/internetee/whois
 
 
-Deployment
-----------
+## Code Status
 
-* [Debian build](/doc/debian_build_doc.md)
-* [Application build and update](/doc/application_build_doc.md)
-
-CRON
-----
-
-Crontab can be setup after deploy. Jobs can be viewed [here](/config/schedule.rb).
-
-    mina pr cron:setup # to update the crontab.
-    mina pr cron:clear # to clear crontab.
-
-Autotesting
------------
-
-* Before running tests for the first time: `RAILS_ENV=test rake db:seed`
-* Run tests: `rake`
-* Run EPP tests: `rake test:epp`
-* Run all but EPP tests: `rake test:other`
-
-To see internal errors while testing EPP
-    
-    unicorn -E test -p 8989
-    rake spec:epp
-
-### Apache mod_epp autotesting/debugging
-
-Autotesting Apache mod_epp without Registry app.
-
-    sudo apt-get install apache2-dbg 
-
-Includes htpasswd command to generate authentication files
-
-    sudo apt-get install apache2-utils
-
-For manual debugging purposes, standalone CGI scripts can be used:  
-This needs a static greeting file, so you will have to make /var/www writable.
-
-```apache
-<IfModule mod_epp.c>
-    <Directory "/usr/lib/cgi-bin/epp">
-        Options ExecCGI
-        SetHandler cgi-script
-    </Directory>
-
-    Listen 1700
-
-    <VirtualHost *:1700>
-        EPPEngine On
-        EPPCommandRoot          /cgi-bin/epp/command
-        EPPSessionRoot          /cgi-bin/epp/session
-        EPPErrorRoot            /cgi-bin/epp/error
-
-        Alias /cgi-bin/epp/session/hello /var/www/html/epp/session-hello
-
-        Alias /cgi-bin/epp/session/login /usr/lib/cgi-bin/epp/session-login
-        Alias /cgi-bin/epp/session/logout /usr/lib/cgi-bin/epp/session-logout
-        Alias /cgi-bin/epp/error/schema /usr/lib/cgi-bin/epp/error-schema
-        Alias /cgi-bin/epp/command/create /usr/lib/cgi-bin/epp/create
-        Alias /cgi-bin/epp/command/info /usr/lib/cgi-bin/epp/info
-
-        EPPAuthURI              /epp/auth/login
-        <Location /epp/auth>
-                AuthType Basic
-                AuthName "EPP"
-                AuthUserFile /etc/apache2/htpasswd
-                require valid-user
-        </Location>
-    </VirtualHost>
-</IfModule>
-```
-
-    sudo a2enmod cgi
-    sudo a2enmod authn_file # will be used for non implicit authentication URIs
-    sudo htpasswd -c /etc/apache2/htpasswd test
-    Type "test" when prompted
-    cd /usr/lib/cgi-bin
-    mkdir epp
-
-Copy the files from $mod_epp/examples/cgis to /usr/lib/cgi-bin/epp 
+Alpha release status, only model tests:
+[![Build Status](https://travis-ci.org/domify/registry.svg?branch=master)](https://travis-ci.org/domify/registry)

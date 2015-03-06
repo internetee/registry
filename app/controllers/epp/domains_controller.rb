@@ -1,4 +1,6 @@
 class Epp::DomainsController < EppController
+  skip_authorization_check # TODO: remove it
+
   def create
     @domain = Epp::EppDomain.new(domain_create_params)
     # @domain.parse_and_attach_domain_dependencies(params[:parsed_frame])
@@ -334,7 +336,7 @@ class Epp::DomainsController < EppController
 
     return domain if domain.auth_info == params[:parsed_frame].css('authInfo pw').text
 
-    if (domain.registrar != current_user.registrar && secure[:secure] == true) &&
+    if (domain.registrar != current_user.registrar) && secure[:secure] == true
       epp_errors << {
         code: '2302',
         msg: I18n.t('errors.messages.domain_exists_but_belongs_to_other_registrar'),

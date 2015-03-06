@@ -3,11 +3,11 @@ group :red_green_refactor, halt_on_fail: true do
   # be sure you have apache2 configured to
   # accept EPP request on port 701, what proxy to 8989.
   # port and environment is just for correct notification, all is overwritten by CLI
-  guard :rails, port: 8989, environment: 'test' do
-  # guard :rails, port: 8989, environment: 'test', CLI: 'RAILS_ENV=test unicorn -p 8989' do
-    watch('Gemfile.lock')
-    watch(%r{^(config|lib)/.*})
-  end
+  # guard :rails, port: 8989, environment: 'test' do
+  # # guard :rails, port: 8989, environment: 'test', CLI: 'RAILS_ENV=test unicorn -p 8989' do
+    # watch('Gemfile.lock')
+    # watch(%r{^(config|lib)/.*})
+  # end
 
   guard :rspec, cmd: 'spring rspec', notification: false do
     watch(%r{^spec/.+_spec\.rb$})
@@ -18,6 +18,8 @@ group :red_green_refactor, halt_on_fail: true do
     watch(%r{^app/(.+)\.rb$})                           { |m| "spec/#{m[1]}_spec.rb" }
     watch(%r{^app/(.*)(\.erb|\.haml|\.slim)$})          { |m| "spec/#{m[1]}#{m[2]}_spec.rb" }
     watch(%r{^app/controllers/(.+)_(controller)\.rb$})  { |m| ["spec/routing/#{m[1]}_routing_spec.rb", "spec/#{m[2]}s/#{m[1]}_#{m[2]}_spec.rb", "spec/acceptance/#{m[1]}_spec.rb"] }
+    watch(%r{^app/controllers/epp/(.+)_(controller)\.rb$}) { |m| ["spec/epp/#{m[1].sub(/s$/,'')}_spec.rb"] }
+    watch(%r{^app/models/epp/(.+)\.rb$})  { |m| "spec/epp/#{m[1]}_spec.rb" }
     watch(%r{^spec/support/(.+)\.rb$})                  { "spec" }
     watch('config/routes.rb')                           { "spec/routing" }
     watch('app/controllers/application_controller.rb')  { "spec/controllers" }

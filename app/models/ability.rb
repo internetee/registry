@@ -2,14 +2,29 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    alias_action :create, :read, :update, :destroy, to: :crud
+    alias_action :show, :create, :update, :destroy, to: :crud
 
     @user = user || AdminUser.new
-    @user.roles.each { |role| send(role) } if @user.roles
 
-    return if @user.roles || @user.roles.any?
+    case @user.class.to_s
+    when 'AdminUser'
+      @user.roles.each { |role| send(role) } if @user.roles
+    when 'ApiUser'
+      epp
+    end
 
     can :show, :dashboard
+  end
+
+  def epp
+    # Epp::Contact
+    can(:info,   Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
+    can(:check,  Epp::Contact)
+    can(:create, Epp::Contact)
+    can(:update, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id && c.auth_info == pw }
+    can(:delete, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id && c.auth_info == pw }
+    can(:renew,  Epp::Contact)
+    can(:view_password, Epp::Contact) { |c| c.registrar_id == @user.registrar_id }
   end
 
   def user
@@ -30,6 +45,7 @@ class Ability
     can :manage, DomainVersion
     can :manage, User
     can :manage, ApiUser
+    can :manage, Certificate
     can :manage, Keyrelay
     can :manage, LegalDocument
     can :read, ApiLog::EppLog

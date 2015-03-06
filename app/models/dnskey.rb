@@ -85,9 +85,9 @@ class Dnskey < ActiveRecord::Base
   end
 
   def generate_ds_key_tag
-    public_key.gsub!(' ', '')
+    pk = public_key.gsub(' ', '')
     wire_format = [flags, protocol, alg].pack('S!>CC')
-    wire_format += Base64.decode64(public_key)
+    wire_format += Base64.decode64(pk)
 
     c = 0
     wire_format.each_byte.with_index do |b, i|

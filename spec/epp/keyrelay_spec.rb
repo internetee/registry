@@ -64,7 +64,7 @@ describe 'EPP Keyrelay', epp: true do
     })
 
     response = epp_plain_request(xml, :xml)
-    response[:msg].should == 'Required parameter missing: keyrelay > keyData > flags'
+    response[:msg].should == 'Required parameter missing: keyrelay > keyData > flags [flags]'
 
     @registrar2.messages.queued.count.should == msg_count
   end

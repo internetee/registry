@@ -35,6 +35,7 @@ describe 'EPP Session', epp: true do
 
       inactive = @epp_xml.session.login(clID: { value: 'inactive-user' }, pw: { value: 'ghyt9e4fu' })
       response = epp_plain_request(inactive, :xml)
+      response[:msg].should == 'Authentication error; server closing connection'
       response[:result_code].should == '2501'
     end
 

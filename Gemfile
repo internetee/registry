@@ -5,10 +5,16 @@ gem 'rails',        '4.2.0'
 gem 'iso8601',      '~> 0.8.2' # for dates and times
 gem 'hashie_rails', '~> 0.0.1'
 
+# load env
+gem 'figaro', '~> 1.1.0'
+
 # model related
 gem 'pg',                        '~> 0.18.0'
 gem 'ransack',                   '~> 1.5.1' # for searching
-gem 'paper_trail',               '~> 4.0.0.beta2' # archiving
+# with polymorphic fix
+gem 'paper_trail',
+  github: 'airblade/paper_trail', 
+  ref: 'a453811226ec4ea59753ba6b827e390ced2fc140' # '~> 4.0.0.beta2' # archiving
 gem 'rails-settings-cached',     '~> 0.4.1' # for settings
 gem 'delayed_job_active_record', '~> 4.0.3' # delayed job
 
@@ -110,4 +116,7 @@ group :development, :test do
 
   # dev tools
   gem 'unicorn'
+
+  # for travis
+  gem 'rake'
 end

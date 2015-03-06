@@ -1,188 +1,125 @@
 class Epp::ContactsController < EppController
-  helper WhodunnitHelper ## Refactor this?
-
-  def create
-    @contact = Contact.new(contact_and_address_attributes)
-    @contact.registrar = current_user.registrar
-    render_epp_response '/epp/contacts/create' and return if @contact.save
-    handle_errors(@contact)
-  end
-
-  def update
-    # FIXME: Update returns 2303 update multiple times
-    code = params_hash['epp']['command']['update']['update'][:id]
-
-    @contact = Contact.where(code: code).first
-    # if update_rights? && @contact.update_attributes(contact_and_address_attributes(:update))
-    if owner? && @contact.update_attributes(contact_and_address_attributes(:update))
-      render_epp_response 'epp/contacts/update'
-    else
-      contact_exists?(code)
-      handle_errors(@contact) and return
-    end
-  end
-
-  # rubocop:disable Metrics/CyclomaticComplexity
-  def delete
-    @contact = find_contact
-    handle_errors(@contact) and return unless rights? # owner?
-    handle_errors(@contact) and return unless @contact
-    handle_errors(@contact) and return unless @contact.destroy_and_clean
-
-    render_epp_response '/epp/contacts/delete'
-  end
-  # rubocop:enable Metrics/CyclomaticComplexity
-
-  def check
-    ph = params_hash['epp']['command']['check']['check']
-    @contacts = Contact.check_availability(ph[:id])
-    render_epp_response '/epp/contacts/check'
-  end
+  before_action :find_contact,  only: [:info, :update, :delete]
+  before_action :find_password, only: [:info, :update, :delete]
 
   def info
-    handle_errors(@contact) and return unless @contact && rights?
-    # handle_errors(@contact) and return unless rights?
-    @disclosure = ContactDisclosure.default_values.merge(@contact.disclosure.try(:as_hash) || {})
-    @disclosure_policy = @contact.disclosure.try(:attributes_with_flag)
-    @owner = owner?(false)
-    # need to reload contact eagerly
-    @contact = find_contact if @owner # for clarity, could just be true
+    authorize! :info, @contact, @password
     render_epp_response 'epp/contacts/info'
   end
 
+  def check
+    authorize! :check, Epp::Contact
+
+    ids = params[:parsed_frame].css('id').map(&:text)
+    @results = Contact.check_availability(ids)
+    render_epp_response '/epp/contacts/check'
+  end
+
+  def create
+    authorize! :create, Epp::Contact
+    @contact = Epp::Contact.new(params[:parsed_frame], current_user.registrar)
+
+    if @contact.save
+      render_epp_response '/epp/contacts/create' 
+    else
+      handle_errors(@contact)
+    end
+  end
+
+  def update
+    authorize! :update, @contact, @password
+
+    if @contact.update_attributes(params[:parsed_frame])
+      render_epp_response 'epp/contacts/update'
+    else
+      handle_errors(@contact)
+    end
+  end
+
+  def delete
+    authorize! :delete, @contact, @password
+
+    if @contact.destroy_and_clean
+      render_epp_response '/epp/contacts/delete'
+    else
+      handle_errors(@contact)
+    end
+  end
+
   def renew
+    authorize! :renew, Epp::Contact
     epp_errors << { code: '2101', msg: t(:'errors.messages.unimplemented_command') }
     handle_errors
   end
 
-  ## HELPER METHODS
-
   private
 
-  ## CREATE
-  def validate_create
-    @ph = params_hash['epp']['command']['create']['create']
-    return false unless validate_params
-    xml_attrs_present?(@ph, [%w(postalInfo name), %w(postalInfo addr city), %w(postalInfo addr cc),
-                             %w(ident), %w(voice), %w(email)])
-
-    epp_errors.empty?
+  def find_password
+    @password = params[:parsed_frame].css('authInfo pw').text
   end
-
-  ## UPDATE
-  def validate_updatezz
-    @ph = params_hash['epp']['command']['update']['update']
-    update_attrs_present?
-    # xml_attrs_present?(@ph, [['id'], %w(authInfo pw)])
-    xml_attrs_present?(@ph, [['id']])
-  end
-
-  def contact_exists?(code)
-    return true if @contact.is_a?(Contact)
-    epp_errors << { code: '2303', msg: t('errors.messages.epp_obj_does_not_exist'),
-                    value: { obj: 'id', val: code } }
-  end
-
-  def update_attrs_present?
-    return true if params[:parsed_frame].css('add').present?
-    return true if params[:parsed_frame].css('rem').present?
-    return true if params[:parsed_frame].css('chg').present?
-    epp_errors << { code: '2003', msg: I18n.t('errors.messages.required_parameter_missing', key: 'add, rem or chg') }
-  end
-
-  ## DELETE
-  def validate_delete
-    @ph = params_hash['epp']['command']['delete']['delete']
-    xml_attrs_present?(@ph, [['id']])
-  end
-
-  ## check
-  def validate_check
-    @ph = params_hash['epp']['command']['check']['check']
-    xml_attrs_present?(@ph, [['id']])
-  end
-
-  ## info
-  def validate_info # and process
-    @ph = params_hash['epp']['command']['info']['info']
-    return false unless xml_attrs_present?(@ph, [['id']])
-    @contact = find_contact
-    return false unless @contact
-    return true if current_user.registrar == @contact.registrar || xml_attrs_present?(@ph, [%w(authInfo pw)])
-    false
-  end
-
-  ## SHARED
 
   def find_contact
-    contact = Contact.find_by(code: @ph[:id])
-    unless contact
-      epp_errors << { code: '2303',
-                      msg: t('errors.messages.epp_obj_does_not_exist'),
-                      value: { obj: 'id', val: @ph[:id] } }
+    code = params[:parsed_frame].css('id').text.strip.downcase
+    @contact = Epp::Contact.find_by(code: code)
+
+    if @contact.blank?
+      epp_errors << { 
+        code: '2303',
+        msg: t('errors.messages.epp_obj_does_not_exist'),
+        value: { obj: 'id', val: code } 
+      }
+      fail CanCan::AccessDenied
     end
-    contact
+    @contact
   end
 
-  def owner?(with_errors = true)
-    return false unless find_contact
-    return true if @contact.registrar == current_user.registrar
-    return false unless with_errors
-    epp_errors << { code: '2201', msg: t('errors.messages.epp_authorization_error') }
-    false
+  #
+  # Validations
+  #
+  def validate_info
+    @prefix = 'info > info >'
+    requires 'id'
   end
 
-  def rights?
-    pw = @ph.try(:[], :authInfo).try(:[], :pw)
-
-    return true if current_user.try(:registrar) == @contact.try(:registrar)
-    return true if pw && @contact.auth_info_matches(pw) # @contact.try(:auth_info_matches, pw)
-
-    epp_errors << { code: '2200', msg: t('errors.messages.epp_authentication_error') }
-    false
+  def validate_check
+    @prefix = 'check > check >'
+    requires 'id'
   end
 
-  def update_rights?
-    pw = @ph.try(:[], :authInfo).try(:[], :pw)
-    return true if pw && @contact.auth_info_matches(pw)
-    epp_errors << { code: '2200', msg: t('errors.messages.epp_authentication_error') }
-    false
-  end
-
-  def contact_and_address_attributes(type = :create)
-    case type
-    when :update
-      # TODO: support for rem/add
-      contact_hash = merge_attribute_hash(@ph[:chg], type).delete_if { |_k, v| v.empty? }
-    else
-      contact_hash = merge_attribute_hash(@ph, type)
-    end
-    contact_hash[:ident_type] = ident_type unless ident_type.nil?
-    contact_hash
-  end
-
-  def merge_attribute_hash(prms, type)
-    contact_hash = Contact.extract_attributes(prms, type)
-    contact_hash = contact_hash.merge(
-      Address.extract_attributes((prms.try(:[], :postalInfo) || []))
+  def validate_create
+    @prefix = 'create > create >'
+    requires(
+      'postalInfo > name', 'postalInfo > addr > city',
+      'postalInfo > addr > cc', 'ident', 'voice', 'email'
     )
-    contact_hash[:disclosure_attributes] =
-      ContactDisclosure.extract_attributes(params[:parsed_frame])
-
-    contact_hash
+    ident = params[:parsed_frame].css('ident')
+    if ident.present? && ident.text != 'birthday' && ident.attr('cc').blank?
+      epp_errors << { 
+        code: '2003', 
+        msg: I18n.t('errors.messages.required_attribute_missing', key: 'ident country code missing') 
+      }
+    end
+    @prefix = nil
+    requires 'extension > extdata > legalDocument'
   end
 
-  def ident_type
-    result = params[:parsed_frame].css('ident').first.try(:attributes).try(:[], 'type').try(:value)
-    return nil unless result
-
-    Contact::IDENT_TYPES.any? { |type| return type if result.include?(type) }
-    nil
+  def validate_update
+    @prefix = 'update > update >'
+    if element_count('chg') == 0 && element_count('rem') == 0 && element_count('add') == 0
+      epp_errors << { 
+        code: '2003', 
+        msg: I18n.t('errors.messages.required_parameter_missing', key: 'add, rem or chg') 
+      }
+    end
+    requires 'id', 'authInfo > pw'
+    @prefix = nil
+    requires 'extension > extdata > legalDocument'
   end
 
-  def validate_params
-    return true if @ph
-    epp_errors << { code: '2001', msg: t(:'errors.messages.epp_command_syntax_error') }
-    false
+  def validate_delete
+    @prefix = 'delete > delete >'
+    requires 'id', 'authInfo > pw'
+    @prefix = nil
+    requires 'extension > extdata > legalDocument'
   end
 end

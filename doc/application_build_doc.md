@@ -1,7 +1,48 @@
-### Application build and update
+Application build and update
+----------------------------
 
-For application deployment we are using faster [Mina](https://github.com/mina-deploy/mina) 
-instead of Capistrano.
+### Debian setup
+
+* [Debian build](/doc/debian_build_doc.md)
+
+
+### Certificates setup
+
+* [Certificates setup](/doc/certificates.md)
+
+
+### Production env setup
+
+For production you probably would like to create databases to your locale, example: 
+
+    create database registry_production owner registry encoding 'UTF-8' LC_COLLATE 'et_EE.utf8' LC_CTYPE 'et_EE.utf8' template template0;
+
+Deploy overview: (database schema should be loaded and seeds should be present)
+
+    # at your local machine
+    git clone git@github.com:internetee/registry.git
+    cd registry
+    rbenv local 2.2.0 # more info about rbenv at debian doc
+    gem install mina
+    mina pr setup # one time, only creates missing directories
+    ssh registry
+
+    # at your server
+    cd registry
+    cp current/config/application-example.yml shared/config/application.yml # and edit it
+    cp current/config/database-example.yml shared/config/database.yml # and edit it
+
+    vi /etc/apache2/sites-enabled/registry.conf # add conf and all needed serts
+    vi /etc/apache2/sites-enabled/epp.conf # add epp conf, restart apache
+    exit
+    # at your local machine
+    mina pr deploy # this is command you use in every application code update
+
+
+
+### Deploy script setup
+
+We recommend [Mina](https://github.com/mina-deploy/mina) instead of Capistrano for deployment.
 
 All deploy code locates at config/deploy.rb file.
 
@@ -68,3 +109,13 @@ General rake and mina tips:
     rake -T     # list all rake commands
     rake -T db  # list all database related commands
     mina -T     # list all mina deploy commands
+
+
+CRON
+----
+
+Crontab can be setup after deploy. Jobs can be viewed [here](/config/schedule.rb).
+
+    mina pr cron:setup # to update the crontab.
+    mina pr cron:clear # to clear crontab.
+

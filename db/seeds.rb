@@ -4,7 +4,10 @@
 registrar1 = Registrar.where(
   name: 'Registrar First AS',
   reg_no: '10300220',
-  address: 'Pärnu mnt 2, Tallinna linn, Harju maakond, 11415',
+  street: 'Pärnu mnt 2',
+  city: 'Tallinn',
+  state: 'Harju maakond',
+  zip: '11415',
   email: 'registrar1@example.com',
   country_code: 'EE'
 ).first_or_create!
@@ -19,7 +22,10 @@ ApiUser.where(
 registrar2 = Registrar.where(
   name: 'Registrar Second AS',
   reg_no: '10529229',
-  address: 'Vabaduse pst 32, 11316 Tallinn',
+  street: 'Vabaduse pst 32',
+  city: 'Tallinn',
+  state: 'Harju maakond',
+  zip: '11315',
   email: 'registrar2@example.com',
   country_code: 'EE'
 ).first_or_create!
@@ -54,5 +60,27 @@ AdminUser.where(
   identity_code: '37810010727',
   country_code: 'EE'
 ).first_or_create!
+
+ZonefileSetting.where({
+  origin: 'ee',
+  ttl: 43200,
+  refresh: 3600,
+  retry: 900,
+  expire: 1209600,
+  minimum_ttl: 3600,
+  email: 'hostmaster.eestiinternet.ee',
+  master_nameserver: 'ns.tld.ee'
+}).first_or_create!
+
+ZonefileSetting.where({
+  origin: 'pri.ee',
+  ttl: 43200,
+  refresh: 3600,
+  retry: 900,
+  expire: 1209600,
+  minimum_ttl: 3600,
+  email: 'hostmaster.eestiinternet.ee',
+  master_nameserver: 'ns.tld.ee'
+}).first_or_create!
 
 AdminUser.update_all(roles: ['admin'])

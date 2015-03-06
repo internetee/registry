@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150213104014) do
+ActiveRecord::Schema.define(version: 20150303151224) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 20150213104014) do
     t.string   "creator_str"
     t.string   "updator_str"
     t.string   "country_code"
+    t.string   "state"
   end
 
   create_table "api_users", force: :cascade do |t|
@@ -51,6 +52,16 @@ ActiveRecord::Schema.define(version: 20150213104014) do
   end
 
   add_index "cached_nameservers", ["hostname", "ipv4", "ipv6"], name: "index_cached_nameservers_on_hostname_and_ipv4_and_ipv6", unique: true, using: :btree
+
+  create_table "certificates", force: :cascade do |t|
+    t.integer  "api_user_id"
+    t.text     "csr"
+    t.text     "crt"
+    t.string   "creator_str"
+    t.string   "updator_str"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "contact_disclosures", force: :cascade do |t|
     t.integer  "contact_id"
@@ -95,7 +106,10 @@ ActiveRecord::Schema.define(version: 20150213104014) do
     t.integer  "registrar_id"
     t.string   "creator_str"
     t.string   "updator_str"
+    t.string   "ident_country_code"
   end
+
+  add_index "contacts", ["code"], name: "index_contacts_on_code", using: :btree
 
   create_table "countries", force: :cascade do |t|
     t.string   "iso"
@@ -270,6 +284,18 @@ ActiveRecord::Schema.define(version: 20150213104014) do
 
   add_index "log_api_users", ["item_type", "item_id"], name: "index_log_api_users_on_item_type_and_item_id", using: :btree
   add_index "log_api_users", ["whodunnit"], name: "index_log_api_users_on_whodunnit", using: :btree
+
+  create_table "log_certificates", force: :cascade do |t|
+    t.string   "item_type",      null: false
+    t.integer  "item_id",        null: false
+    t.string   "event",          null: false
+    t.string   "whodunnit"
+    t.json     "object"
+    t.json     "object_changes"
+    t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
+  end
 
   create_table "log_contact_disclosures", force: :cascade do |t|
     t.string   "item_type",      null: false
@@ -585,7 +611,10 @@ ActiveRecord::Schema.define(version: 20150213104014) do
     t.string   "city"
     t.string   "street"
     t.string   "zip"
+    t.string   "code"
   end
+
+  add_index "registrars", ["code"], name: "index_registrars_on_code", using: :btree
 
   create_table "reserved_domains", force: :cascade do |t|
     t.string   "name"
@@ -614,19 +643,19 @@ ActiveRecord::Schema.define(version: 20150213104014) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "email"
-    t.integer  "sign_in_count",      default: 0,     null: false
+    t.integer  "sign_in_count",      default: 0, null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.inet     "current_sign_in_ip"
     t.inet     "last_sign_in_ip"
     t.string   "identity_code"
     t.integer  "country_id"
-    t.string   "roles",                                           array: true
+    t.string   "roles",                                       array: true
     t.string   "creator_str"
     t.string   "updator_str"
     t.string   "country_code"
     t.integer  "registrar_id"
-    t.boolean  "active",             default: false
+    t.boolean  "active"
     t.text     "csr"
     t.text     "crt"
     t.string   "type"
