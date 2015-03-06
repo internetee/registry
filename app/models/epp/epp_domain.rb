@@ -58,12 +58,10 @@ class Epp::EppDomain < Domain
     }
   end
 
-  # def self.new_from_epp(domain_params)
-  #   new(domain_params)
-  # end
-
-  def initialize(frame, current_user)
-    super(attrs_from(frame, current_user))
+  def self.new_from_epp(frame, current_user)
+    domain = Epp::EppDomain.new
+    domain.attributes = domain.attrs_from(frame, current_user)
+    domain
   end
 
   def attrs_from(frame, current_user)

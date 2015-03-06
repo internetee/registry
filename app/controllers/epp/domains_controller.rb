@@ -2,7 +2,7 @@ class Epp::DomainsController < EppController
   skip_authorization_check # TODO: remove it
 
   def create
-    @domain = Epp::EppDomain.new(params[:parsed_frame], current_user)
+    @domain = Epp::EppDomain.new_from_epp(params[:parsed_frame], current_user)
     # @domain.parse_and_attach_domain_dependencies(params[:parsed_frame])
     # @domain.parse_and_attach_ds_data(params[:parsed_frame].css('extension create'))
 
