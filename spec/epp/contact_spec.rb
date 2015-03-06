@@ -57,8 +57,6 @@ describe 'EPP Contact', epp: true do
           'Required parameter missing: create > create > voice [voice]'
         response[:results][5][:msg].should == 
           'Required parameter missing: create > create > email [email]'
-        response[:results][6][:msg].should == 
-          'Required parameter missing: extension > extdata > legalDocument [legal_document]'
 
         response[:results][0][:result_code].should == '2003'
         response[:results][1][:result_code].should == '2003'
@@ -66,9 +64,8 @@ describe 'EPP Contact', epp: true do
         response[:results][3][:result_code].should == '2003'
         response[:results][4][:result_code].should == '2003'
         response[:results][5][:result_code].should == '2003'
-        response[:results][6][:result_code].should == '2003'
 
-        response[:results].count.should == 7
+        response[:results].count.should == 6
       end
 
       it 'successfully creates a contact' do
@@ -184,10 +181,7 @@ describe 'EPP Contact', epp: true do
         response[:results][2][:msg].should == 
           'Required parameter missing: update > update > authInfo > pw [pw]'
         response[:results][2][:result_code].should == '2003'
-        response[:results][3][:msg].should == 
-          'Required parameter missing: extension > extdata > legalDocument [legal_document]'
-        response[:results][3][:result_code].should == '2003'
-        response[:results].count.should == 4
+        response[:results].count.should == 3
       end
 
       it 'returns error if obj doesnt exist' do
@@ -267,10 +261,7 @@ describe 'EPP Contact', epp: true do
         response[:results][1][:msg].should == 
           'Required parameter missing: delete > delete > authInfo > pw [pw]'
         response[:results][1][:result_code].should == '2003'
-        response[:results][2][:msg].should == 
-          'Required parameter missing: extension > extdata > legalDocument [legal_document]'
-        response[:results][2][:result_code].should == '2003'
-        response[:results].count.should == 3
+        response[:results].count.should == 2
       end
 
       it 'returns error if obj doesnt exist' do

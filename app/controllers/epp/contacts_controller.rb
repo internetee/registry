@@ -100,7 +100,6 @@ class Epp::ContactsController < EppController
       }
     end
     @prefix = nil
-    requires 'extension > extdata > legalDocument'
   end
 
   def validate_update
@@ -113,13 +112,11 @@ class Epp::ContactsController < EppController
     end
     requires 'id', 'authInfo > pw'
     @prefix = nil
-    requires 'extension > extdata > legalDocument'
   end
 
   def validate_delete
     @prefix = 'delete > delete >'
     requires 'id', 'authInfo > pw'
     @prefix = nil
-    requires 'extension > extdata > legalDocument'
   end
 end
