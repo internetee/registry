@@ -86,7 +86,7 @@ class Epp::EppDomain < Domain
     at[:period_unit] = Epp::EppDomain.parse_period_unit_from_frame(frame) || 'y'
 
     at[:nameservers_attributes] = nameservers_attrs(frame, action)
-    at[:domain_contacts_attributes] = domain_contacts_from(frame)
+    at[:domain_contacts_attributes] = domain_contacts_attrs(frame, action)
     at[:dnskeys_attributes] = dnskeys_from(frame.css('extension create'))
     at[:legal_documents_attributes] = legal_document_from(frame)
 
@@ -116,7 +116,26 @@ class Epp::EppDomain < Domain
     end
   end
 
-  def domain_contacts_from(frame)
+  def domain_contacts_attrs(frame, action)
+    contact_list = parse_contact_list(frame)
+
+    if action == 'rem'
+      to_destroy = []
+      contact_list.each do |dc|
+        domain_contact_id = domain_contacts.find_by(contact_id: dc[:contact_id]).id
+        to_destroy << {
+          id: domain_contact_id,
+          _destroy: 1
+        }
+      end
+
+      return to_destroy
+    else
+      return contact_list
+    end
+  end
+
+  def parse_contact_list(frame)
     res = []
     frame.css('contact').each do |x|
       c = Contact.find_by(code: x.text).try(:id)
@@ -202,7 +221,7 @@ class Epp::EppDomain < Domain
 
     at_add = attrs_from(frame.css('add'), current_user)
     at[:nameservers_attributes] += at_add[:nameservers_attributes]
-    # at[:domain_contacts_attributes] += at_add[:domain_contacts_attributes]
+    at[:domain_contacts_attributes] += at_add[:domain_contacts_attributes]
 
     super(at)
   end
