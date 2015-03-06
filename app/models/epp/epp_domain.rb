@@ -2,8 +2,6 @@
 class Epp::EppDomain < Domain
   include EppErrors
 
-  accepts_nested_attributes_for :nameservers
-
   def epp_code_map # rubocop:disable Metrics/MethodLength
     {
       '2002' => [
@@ -60,11 +58,127 @@ class Epp::EppDomain < Domain
     }
   end
 
-  def self.new_from_epp(domain_params)
-    new(domain_params)
+  # def self.new_from_epp(domain_params)
+  #   new(domain_params)
+  # end
+
+  def initialize(frame, current_user)
+    super(attrs_from(frame, current_user))
   end
 
+  def attrs_from(frame, current_user)
+    at = {}.with_indifferent_access
 
+    code = frame.css('registrant').first.try(:text)
+    oc = Contact.find_by(code: code).try(:id)
+
+    if oc
+      at[:owner_contact_id] = oc
+    else
+      add_epp_error('2303', 'registrant', code, [:owner_contact, :not_found])
+    end
+
+    at[:name] = frame.css('name').text
+    at[:registrar_id] = current_user.registrar.try(:id)
+    at[:registered_at] = Time.now if new_record?
+
+    period = frame.css('period').text
+    at[:period] = (period.to_i == 0) ? 1 : period.to_i
+
+    at[:period_unit] = Epp::EppDomain.parse_period_unit_from_frame(frame) || 'y'
+    at[:nameservers_attributes] = Epp::EppDomain.parse_nameservers_from_frame(frame)
+    at[:domain_contacts_attributes] = domain_contacts_from(frame)
+    at[:dnskeys_attributes] = dnskeys_from(frame.css('extension create'))
+    at[:legal_documents_attributes] = legal_document_from(frame)
+
+    at
+  end
+
+  def domain_contacts_from(frame)
+    res = []
+    frame.css('contact').each do |x|
+      c = Contact.find_by(code: x.text).try(:id)
+
+      unless c
+        add_epp_error('2303', 'contact', x.text, msg: I18n.t('contact_not_found'))
+        next
+      end
+
+      res << {
+        contact_id: Contact.find_by(code: x.text).try(:id),
+        contact_type: x['type'],
+        contact_code_cache: x.text
+      }
+    end
+
+    res
+  end
+
+  def dnskeys_from(frame)
+    res = []
+    # res = { ds_data: [], key_data: [] }
+
+    # res[:max_sig_life] = frame.css('maxSigLife').first.try(:text)
+
+    res = ds_data_from(frame, res)
+    key_data_from(frame, res)
+  end
+
+  def key_data_from(frame, res)
+    frame.xpath('keyData').each do |x|
+      res << {
+        flags: x.css('flags').first.try(:text),
+        protocol: x.css('protocol').first.try(:text),
+        alg: x.css('alg').first.try(:text),
+        public_key: x.css('pubKey').first.try(:text),
+        ds_alg: 3,
+        ds_digest_type: Setting.ds_algorithm
+      }
+    end
+
+    res
+  end
+
+  def ds_data_from(frame, res)
+    frame.css('dsData').each do |x|
+      data = {
+        ds_key_tag: x.css('keyTag').first.try(:text),
+        ds_alg: x.css('alg').first.try(:text),
+        ds_digest_type: x.css('digestType').first.try(:text),
+        ds_digest: x.css('digest').first.try(:text)
+      }
+
+      kd = x.css('keyData').first
+      data.merge!({
+        flags: kd.css('flags').first.try(:text),
+        protocol: kd.css('protocol').first.try(:text),
+        alg: kd.css('alg').first.try(:text),
+        public_key: kd.css('pubKey').first.try(:text)
+      }) if kd
+
+      res << data
+    end
+
+    res
+  end
+
+  def legal_document_from(frame)
+    ld = frame.css('legalDocument').first
+    return [] unless ld
+
+    [{
+      body: ld.text,
+      document_type: ld['type']
+    }]
+  end
+
+  # def update(frame)
+  #   return super if frame.blank?
+  #   at = {}.with_indifferent_access
+  #   at.deep_merge!(self.class.attrs_from(frame.css('chg')))
+  #   # legal_frame = frame.css('legalDocument').first
+  #   # at[:legal_documents_attributes] = self.class.legal_document_attrs(legal_frame)
+  # end
 
 
 

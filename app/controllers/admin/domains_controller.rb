@@ -17,7 +17,7 @@ class Admin::DomainsController < AdminController
 
   def update
     add_prefix_to_statuses
-
+    binding.pry
     if @domain.update(domain_params)
       flash[:notice] = I18n.t('domain_updated')
       redirect_to [:admin, @domain]

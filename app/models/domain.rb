@@ -68,10 +68,10 @@ class Domain < ActiveRecord::Base
 
   validate :validate_period
 
-  validates :nameservers, object_count: {
-    min: -> { Setting.ns_min_count },
-    max: -> { Setting.ns_max_count }
-  }
+  # validates :nameservers, object_count: {
+  #   min: -> { Setting.ns_min_count },
+  #   max: -> { Setting.ns_max_count }
+  # }
 
   validates :dnskeys, object_count: {
     min: -> { Setting.dnskeys_min_count },
@@ -90,9 +90,9 @@ class Domain < ActiveRecord::Base
     max: -> { Setting.tech_contacts_max_count }
   }
 
-  validates :nameservers, uniqueness_multi: {
-    attribute: 'hostname'
-  }
+  # validates :nameservers, uniqueness_multi: {
+  #   attribute: 'hostname'
+  # }
 
   validates :tech_domain_contacts, uniqueness_multi: {
     association: 'domain_contacts',
@@ -112,7 +112,7 @@ class Domain < ActiveRecord::Base
     attribute: 'public_key'
   }
 
-  validate :validate_nameserver_ips
+  # validate :validate_nameserver_ips
 
   attr_accessor :owner_contact_typeahead, :update_me
 

@@ -2,7 +2,7 @@ class Epp::DomainsController < EppController
   skip_authorization_check # TODO: remove it
 
   def create
-    @domain = Epp::EppDomain.new(domain_create_params)
+    @domain = Epp::EppDomain.new(params[:parsed_frame], current_user)
     # @domain.parse_and_attach_domain_dependencies(params[:parsed_frame])
     # @domain.parse_and_attach_ds_data(params[:parsed_frame].css('extension create'))
 
@@ -51,15 +51,13 @@ class Epp::DomainsController < EppController
     # @domain.parse_and_update_domain_dependencies(params[:parsed_frame].css('chg'))
     # @domain.attach_legal_document(Epp::EppDomain.parse_legal_document_from_frame(params[:parsed_frame]))
 
-    @domain.update_attributes(domain_rem_params)
+    # binding.pry
 
-    binding.pry
-
-    if @domain.errors.any? || !@domain.save
-      handle_errors(@domain)
-    else
-      render_epp_response '/epp/domains/success'
-    end
+    # if @domain.update(parsed_frame)
+    #   handle_errors(@domain)
+    # else
+    #   render_epp_response '/epp/domains/success'
+    # end
   end
 
   # rubocop: disable Metrics/PerceivedComplexity
