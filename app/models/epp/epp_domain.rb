@@ -87,7 +87,7 @@ class Epp::EppDomain < Domain
 
     at[:nameservers_attributes] = nameservers_attrs(frame, action)
     at[:domain_contacts_attributes] = domain_contacts_attrs(frame, action)
-    at[:dnskeys_attributes] = dnskeys_from(frame.css('extension create'))
+    at[:dnskeys_attributes] = dnskeys_attrs(frame, action)
     at[:legal_documents_attributes] = legal_document_from(frame)
 
     at
@@ -155,14 +155,44 @@ class Epp::EppDomain < Domain
     res
   end
 
-  def dnskeys_from(frame)
+  def dnskeys_attrs(frame, action)
     res = []
     # res = { ds_data: [], key_data: [] }
 
     # res[:max_sig_life] = frame.css('maxSigLife').first.try(:text)
 
     res = ds_data_from(frame, res)
-    key_data_from(frame, res)
+    dnskeys_list = key_data_from(frame, res)
+
+    if action == 'rem'
+      to_destroy = []
+
+      # TODO: Remove dnskeys based on ds_key_tag
+      # dnskeys_list[:ds_data].each do |x|
+      #   ds = dnskeys.where(ds_key_tag: x[:ds_key_tag])
+      #   if ds.blank?
+      #     add_epp_error('2303', 'keyTag', x[:key_tag], [:dnskeys, :not_found])
+      #   else
+      #     to_destroy << ds
+      #   end
+      # end
+
+      dnskeys_list.each do |x|
+        ds = dnskeys.find_by(public_key: x[:public_key])
+        if ds.blank?
+          add_epp_error('2303', 'publicKey', x[:public_key], [:dnskeys, :not_found])
+        else
+          to_destroy << {
+            id: ds.id,
+            _destroy: 1
+          }
+        end
+      end
+
+      return to_destroy
+    else
+      return dnskeys_list
+    end
   end
 
   def key_data_from(frame, res)
@@ -222,6 +252,7 @@ class Epp::EppDomain < Domain
     at_add = attrs_from(frame.css('add'), current_user)
     at[:nameservers_attributes] += at_add[:nameservers_attributes]
     at[:domain_contacts_attributes] += at_add[:domain_contacts_attributes]
+    at[:dnskeys_attributes] += at_add[:dnskeys_attributes]
 
     super(at)
   end
