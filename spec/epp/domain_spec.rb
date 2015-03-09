@@ -1248,13 +1248,14 @@ describe 'EPP Domain', epp: true do
       rem_cnt.should be_falsey
 
       response = epp_plain_request(xml, :xml)
+
       response[:results][0][:result_code].should == '2303'
-      response[:results][0][:msg].should == 'Contact was not found'
-      response[:results][0][:value].should == 'citizen_1234'
+      response[:results][0][:msg].should == 'Nameserver was not found'
+      response[:results][0][:value].should == 'ns1.example.com'
 
       response[:results][1][:result_code].should == '2303'
-      response[:results][1][:msg].should == 'Nameserver was not found'
-      response[:results][1][:value].should == 'ns1.example.com'
+      response[:results][1][:msg].should == 'Contact was not found'
+      response[:results][1][:value].should == 'citizen_1234'
 
       response[:results][2][:result_code].should == '2303'
       response[:results][2][:msg].should == 'Status was not found'

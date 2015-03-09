@@ -68,12 +68,14 @@ class Epp::EppDomain < Domain
     at = {}.with_indifferent_access
 
     code = frame.css('registrant').first.try(:text)
-    oc = Contact.find_by(code: code).try(:id)
+    if code.present?
+      oc = Contact.find_by(code: code).try(:id)
 
-    if oc
-      at[:owner_contact_id] = oc
-    else
-      add_epp_error('2303', 'registrant', code, [:owner_contact, :not_found])
+      if oc
+        at[:owner_contact_id] = oc
+      else
+        add_epp_error('2303', 'registrant', code, [:owner_contact, :not_found])
+      end
     end
 
     at[:name] = frame.css('name').text if new_record?
@@ -109,7 +111,7 @@ class Epp::EppDomain < Domain
       ns_list.each do |ns_attrs|
         nameserver = nameservers.where(ns_attrs).try(:first)
         if nameserver.blank?
-          add_epp_error('2303', 'hostAttr', ns_attrs[:hostname], I18n.t('nameserver_not_found'))
+          add_epp_error('2303', 'hostAttr', ns_attrs[:hostname], [:nameservers, :not_found])
         else
           to_destroy << {
             id: nameserver.id,
@@ -130,7 +132,13 @@ class Epp::EppDomain < Domain
     if action == 'rem'
       to_destroy = []
       contact_list.each do |dc|
-        domain_contact_id = domain_contacts.find_by(contact_id: dc[:contact_id]).id
+        domain_contact_id = domain_contacts.find_by(contact_id: dc[:contact_id]).try(:id)
+
+        unless domain_contact_id
+          add_epp_error('2303', 'contact', dc[:contact_code_cache], [:domain_contacts, :not_found])
+          next
+        end
+
         to_destroy << {
           id: domain_contact_id,
           _destroy: 1
@@ -147,12 +155,6 @@ class Epp::EppDomain < Domain
     res = []
     frame.css('contact').each do |x|
       c = Contact.find_by(code: x.text)
-
-        #       contact = Contact.find_by(code: x[:contact])
-        # unless contact
-        #   add_epp_error('2303', 'contact', x[:contact], [:domain_contacts, :not_found])
-        #   next
-        # end
 
       unless c
         add_epp_error('2303', 'contact', x.text, [:domain_contacts, :not_found])
@@ -288,7 +290,7 @@ class Epp::EppDomain < Domain
 
     frame.css('status').each do |x|
       unless DomainStatus::CLIENT_STATUSES.include?(x['s'])
-        add_epp_error('2303', 'status', x[:value], [:domain_statuses, :not_found])
+        add_epp_error('2303', 'status', x['s'], [:domain_statuses, :not_found])
         next
       end
 
@@ -323,7 +325,7 @@ class Epp::EppDomain < Domain
     at[:dnskeys_attributes] += at_add[:dnskeys_attributes]
     at[:domain_statuses_attributes] += at_add[:domain_statuses_attributes]
 
-    super(at)
+    errors.empty? && super(at)
   end
 
 
