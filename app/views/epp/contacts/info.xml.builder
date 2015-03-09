@@ -5,7 +5,7 @@ xml.epp_head do
     end
 
     xml.resData do
-      xml.tag!('contact:chkData', 'xmlns:contact' => 'urn:ietf:params:xml:ns:contact-1.0') do
+      xml.tag!('contact:infData', 'xmlns:contact' => 'urn:ietf:params:xml:ns:contact-1.0') do
         xml.tag!('contact:id', @contact.code)
         xml << render('/epp/contacts/postal_info')
         xml.tag!('contact:voice', @contact.phone) #if @disclosure.try(:phone) || @owner
