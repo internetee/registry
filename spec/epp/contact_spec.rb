@@ -405,7 +405,7 @@ describe 'EPP Contact', epp: true do
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
 
-        contact = response[:parsed].css('resData chkData')
+        contact = response[:parsed].css('resData infData')
         contact.css('name').first.text.should == 'Johnny Awesome'
       end
 
