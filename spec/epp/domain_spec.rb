@@ -540,32 +540,32 @@ describe 'EPP Domain', epp: true do
       ds.public_key.should == '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
     end
 
-    it 'prohibits dsData with key' do
-      Setting.ds_data_with_key_allowed = false
+    # it 'prohibits dsData with key' do
+    #   Setting.ds_data_with_key_allowed = false
 
-      xml = domain_create_xml({}, {
-        _anonymus: [
-          { dsData: {
-              keyTag: { value: '12345' },
-              alg: { value: '3' },
-              digestType: { value: '1' },
-              digest: { value: '49FD46E6C4B45C55D4AC' },
-              keyData: {
-                flags: { value: '0' },
-                protocol: { value: '3' },
-                alg: { value: '5' },
-                pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
-              }
-            }
-          }]
-        })
+    #   xml = domain_create_xml({}, {
+    #     _anonymus: [
+    #       { dsData: {
+    #           keyTag: { value: '12345' },
+    #           alg: { value: '3' },
+    #           digestType: { value: '1' },
+    #           digest: { value: '49FD46E6C4B45C55D4AC' },
+    #           keyData: {
+    #             flags: { value: '0' },
+    #             protocol: { value: '3' },
+    #             alg: { value: '5' },
+    #             pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+    #           }
+    #         }
+    #       }]
+    #     })
 
-      response = epp_plain_request(xml, :xml)
-      response[:result_code].should == '2306'
-      response[:msg].should == 'dsData object with key data is not allowed'
+    #   response = epp_plain_request(xml, :xml)
+    #   response[:result_code].should == '2306'
+    #   response[:msg].should == 'dsData object with key data is not allowed'
 
-      create_settings
-    end
+    #   create_settings
+    # end
 
     it 'prohibits dsData' do
       Setting.ds_data_allowed = false

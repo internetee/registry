@@ -146,7 +146,7 @@ class Epp::EppDomain < Domain
   def domain_contact_list_from(frame)
     res = []
     frame.css('contact').each do |x|
-      c = Contact.find_by(code: x.text).try(:id)
+      c = Contact.find_by(code: x.text)
 
         #       contact = Contact.find_by(code: x[:contact])
         # unless contact
@@ -154,13 +154,13 @@ class Epp::EppDomain < Domain
         #   next
         # end
 
-        # if k == :admin && contact.bic?
-        #   add_epp_error('2306', 'contact', x[:contact], [:domain_contacts, :admin_contact_can_be_only_citizen])
-        #   next
-        # end
-
       unless c
         add_epp_error('2303', 'contact', x.text, [:domain_contacts, :not_found])
+        next
+      end
+
+      if x['type'] == 'admin' && c.bic?
+        add_epp_error('2306', 'contact', x.text, [:domain_contacts, :admin_contact_can_be_only_citizen])
         next
       end
 
@@ -175,6 +175,14 @@ class Epp::EppDomain < Domain
   end
 
   def dnskeys_attrs(frame, action)
+    if frame.css('dsData').any? && !Setting.ds_data_allowed
+      errors.add(:base, :ds_data_not_allowed)
+    end
+
+    if frame.xpath('keyData').any? && !Setting.key_data_allowed
+      errors.add(:base, :key_data_not_allowed)
+    end
+
     res = []
     # res = { ds_data: [], key_data: [] }
 
@@ -495,7 +503,7 @@ class Epp::EppDomain < Domain
 
   def validate_dnssec_data(dnssec_data)
     ds_data_allowed?(dnssec_data)
-    ds_data_with_keys_allowed?(dnssec_data)
+    # ds_data_with_keys_allowed?(dnssec_data)
     key_data_allowed?(dnssec_data)
 
     errors.empty?

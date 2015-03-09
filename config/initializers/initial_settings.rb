@@ -1,5 +1,5 @@
 # otherwise rake not working 100%
-if ActiveRecord::Base.connected? && ActiveRecord::Base.connection.table_exists?('settings') 
+if ActiveRecord::Base.connected? && ActiveRecord::Base.connection.table_exists?('settings')
   Setting.disclosure_name = true if Setting.disclosure_name.nil?
   Setting.disclosure_name = true if Setting.disclosure_name.nil?
   Setting.disclosure_org_name = true if Setting.disclosure_org_name.nil?
@@ -15,7 +15,6 @@ if ActiveRecord::Base.connected? && ActiveRecord::Base.connection.table_exists?(
 
   Setting.save_default(:ds_algorithm, 2)
   Setting.save_default(:ds_data_allowed, true)
-  Setting.save_default(:ds_data_with_key_allowed, true)
   Setting.save_default(:key_data_allowed, true)
 
   Setting.save_default(:dnskeys_min_count, 0)
