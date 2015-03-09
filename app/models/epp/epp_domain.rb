@@ -88,7 +88,14 @@ class Epp::EppDomain < Domain
     at[:nameservers_attributes] = nameservers_attrs(frame, action)
     at[:domain_contacts_attributes] = domain_contacts_attrs(frame, action)
     at[:domain_statuses_attributes] = domain_statuses_attrs(frame, action)
-    at[:dnskeys_attributes] = dnskeys_attrs(frame, action)
+
+    if new_record?
+      dnskey_frame = frame.css('extension create')
+    else
+      dnskey_frame = frame
+    end
+
+    at[:dnskeys_attributes] = dnskeys_attrs(dnskey_frame, action)
     at[:legal_documents_attributes] = legal_document_from(frame)
 
     at
@@ -141,8 +148,19 @@ class Epp::EppDomain < Domain
     frame.css('contact').each do |x|
       c = Contact.find_by(code: x.text).try(:id)
 
+        #       contact = Contact.find_by(code: x[:contact])
+        # unless contact
+        #   add_epp_error('2303', 'contact', x[:contact], [:domain_contacts, :not_found])
+        #   next
+        # end
+
+        # if k == :admin && contact.bic?
+        #   add_epp_error('2306', 'contact', x[:contact], [:domain_contacts, :admin_contact_can_be_only_citizen])
+        #   next
+        # end
+
       unless c
-        add_epp_error('2303', 'contact', x.text, msg: I18n.t('contact_not_found'))
+        add_epp_error('2303', 'contact', x.text, [:domain_contacts, :not_found])
         next
       end
 

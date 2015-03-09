@@ -59,19 +59,19 @@ describe 'EPP Domain', epp: true do
 
     response = epp_plain_request(xml, :xml)
     response[:results][0][:result_code].should == '2003'
-    response[:results][0][:msg].should == 
+    response[:results][0][:msg].should ==
       'Required parameter missing: create > create > ns [ns]'
 
     response[:results][1][:result_code].should == '2003'
-    response[:results][1][:msg].should == 
+    response[:results][1][:msg].should ==
       'Required parameter missing: create > create > registrant [registrant]'
 
     response[:results][2][:result_code].should == '2003'
-    response[:results][2][:msg].should == 
+    response[:results][2][:msg].should ==
       'Required parameter missing: create > create > ns > hostAttr [host_attr]'
 
     response[:results][3][:result_code].should == '2003'
-    response[:results][3][:msg].should == 
+    response[:results][3][:msg].should ==
       'Required parameter missing: extension > extdata > legalDocument [legal_document]'
   end
 
@@ -170,6 +170,7 @@ describe 'EPP Domain', epp: true do
       })
 
       response = epp_plain_request(xml, :xml)
+
       response[:result_code].should == '2306'
       response[:msg].should == 'IPv4 is missing [ipv4]'
     end
@@ -202,7 +203,7 @@ describe 'EPP Domain', epp: true do
 
       response = epp_plain_request(xml, :xml)
       response[:results][0][:result_code].should == '2003'
-      response[:results][0][:msg].should == 
+      response[:results][0][:msg].should ==
         'Required parameter missing: create > create > registrant [registrant]'
     end
 
@@ -210,11 +211,11 @@ describe 'EPP Domain', epp: true do
       xml = domain_create_xml(ns: [])
       response = epp_plain_request(xml, :xml)
 
-      response[:results][0][:msg].should == 
+      response[:results][0][:msg].should ==
         'Required parameter missing: create > create > ns [ns]'
       response[:results][0][:result_code].should == '2003'
 
-      response[:results][1][:msg].should == 
+      response[:results][1][:msg].should ==
         'Required parameter missing: create > create > ns > hostAttr [host_attr]'
       response[:results][1][:result_code].should == '2003'
 
@@ -402,7 +403,7 @@ describe 'EPP Domain', epp: true do
 
       response = epp_plain_request(xml, :xml)
 
-      response[:results][0][:msg].should == 
+      response[:results][0][:msg].should ==
         'Valid algorithms are: 3, 5, 6, 7, 8, 252, 253, 254, 255 [alg]'
       response[:results][0][:value].should == '9'
 
@@ -865,7 +866,7 @@ describe 'EPP Domain', epp: true do
       login_as :registrar2 do
         response = epp_plain_request(xml, :xml)
         response[:result_code].should == '2003'
-        response[:msg].should == 
+        response[:msg].should ==
           'Required parameter missing: extension > extdata > legalDocument [legal_document]'
       end
     end
@@ -1322,7 +1323,7 @@ describe 'EPP Domain', epp: true do
       }
 
       response = epp_plain_request(domain_update_xml(xml_params), :xml)
-      response[:results][0][:msg].should == 
+      response[:results][0][:msg].should ==
         'Required parameter missing: extension > extdata > legalDocument [legal_document]'
       response[:results][0][:result_code].should == '2003'
     end
@@ -1532,7 +1533,7 @@ describe 'EPP Domain', epp: true do
     it 'does not delete domain without legal document' do
       response = epp_plain_request(@epp_xml.domain.delete(name: { value: 'example.ee' }), :xml)
       response[:result_code].should == '2003'
-      response[:msg].should == 
+      response[:msg].should ==
         'Required parameter missing: extension > extdata > legalDocument [legal_document]'
     end
 
