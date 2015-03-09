@@ -696,7 +696,7 @@ describe 'EPP Domain', epp: true do
   end
 
   context 'with valid domain' do
-    before(:each) { Fabricate(:domain, name: next_domain_name, registrar: @registrar1, dnskeys: []) }
+    before(:each) { Fabricate(:domain, registrar: @registrar1, dnskeys: []) }
     let(:domain) { Domain.last }
 
     ### TRANSFER ###
