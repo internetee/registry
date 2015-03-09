@@ -25,14 +25,14 @@ Contact Mapping protocol short version:
             <contact:cc>       1        Country code, 2 letters uppercase, in ISO_3166-1 alpha 2
         <contact:voice>        1        Phone number in format \+ddd.d+
         <contact:email>        1        E-mail
-        <contact:ident>        1        Contact identificator 
+    <extension>                1       
+      <eis:extdata>            1        Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
+        <eis:ident>            1        Contact identificator 
                                           Attribute: type="bic/priv/birthday"
                                           "bic"          # Business registry code
                                           "priv"         # National idendtification number
                                           "birthday"     # Birthday date in format in DD-MM-YYYY
-    <extension>                1       
-      <eis:extdata>            1        Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
-        <eis:legalDocument>    1        Base64 encoded document 
+        <eis:legalDocument>    0-1      Base64 encoded document 
                                           Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-create-command-successfully-creates-a-contact)
@@ -56,15 +56,15 @@ Contact Mapping protocol short version:
               <contact:cc>      0-1      Country code, 2 letters uppercase, in ISO_3166-1 alpha 2
           <contact:voice>       0-1      Phone number in format \+ddd.d+
           <contact:email>       0-1      E-mail
-          <contact:ident>       0-1      Contact identificator 
-                                           Attribute: type="bic/priv/birthday"
-                                           "bic"         # Business registry code
-                                           "priv"        # National idendtification number
-                                           "birthday"    # Birthday date in format in DD-MM-YYYY
         <contact:authInfo>      0-1      Required if registrar is not the owner of the contact.
           <contact:pw>          1        Contact password. Attribute: roid="String"
     <extension>                 0-1       
       <eis:extdata>             0-1      Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
+        <eis:ident>             0-1      Contact identificator 
+                                           Attribute: type="bic/priv/birthday"
+                                           "bic"         # Business registry code
+                                           "priv"        # National idendtification number
+                                           "birthday"    # Birthday date in format in DD-MM-YYYY
         <eis:legalDocument>     0-1      Base64 encoded document. 
                                            Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
 
@@ -80,9 +80,9 @@ Contact Mapping protocol short version:
         <contact:id>          1        Contact id
         <contact:authInfo>    0-1      Required if registrar is not the owner of the contact.
           <contact:pw>        1        Contact password. Attribute: roid="String"
-    <extension>               1       
-      <eis:extdata>           1        Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
-        <eis:legalDocument>   1        Base64 encoded document. 
+    <extension>               0-1       
+      <eis:extdata>           0-1      Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
+        <eis:legalDocument>   0-1      Base64 encoded document. 
                                          Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
     <clTRID>                  0-1      Client transaction id
 

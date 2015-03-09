@@ -90,7 +90,7 @@ class Epp::ContactsController < EppController
     @prefix = 'create > create >'
     requires(
       'postalInfo > name', 'postalInfo > addr > city',
-      'postalInfo > addr > cc', 'ident', 'voice', 'email'
+      'postalInfo > addr > cc', 'voice', 'email'
     )
     ident = params[:parsed_frame].css('ident')
     if ident.present? && ident.text != 'birthday' && ident.attr('cc').blank?
@@ -100,6 +100,7 @@ class Epp::ContactsController < EppController
       }
     end
     @prefix = nil
+    requires 'extension > extdata > ident'
   end
 
   def validate_update
