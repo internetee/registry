@@ -61,7 +61,27 @@ class Epp::EppDomain < Domain
   def self.new_from_epp(frame, current_user)
     domain = Epp::EppDomain.new
     domain.attributes = domain.attrs_from(frame, current_user)
+    domain.attach_default_contacts
     domain
+  end
+
+  def attach_default_contacts
+    if tech_domain_contacts.count.zero?
+      attach_contact(DomainContact::TECH, owner_contact)
+    end
+
+    return unless admin_domain_contacts.count.zero? && owner_contact.priv?
+    attach_contact(DomainContact::ADMIN, owner_contact)
+  end
+
+  def attach_contact(type, contact)
+    domain_contacts.build(
+      contact: contact, contact_type: DomainContact::TECH, contact_code_cache: contact.code
+    ) if type.to_sym == :tech
+
+    domain_contacts.build(
+      contact: contact, contact_type: DomainContact::ADMIN, contact_code_cache: contact.code
+    ) if type.to_sym == :admin
   end
 
   def attrs_from(frame, current_user, action = nil)
@@ -185,37 +205,23 @@ class Epp::EppDomain < Domain
       errors.add(:base, :key_data_not_allowed)
     end
 
-    res = []
-    # res = { ds_data: [], key_data: [] }
-
-    # res[:max_sig_life] = frame.css('maxSigLife').first.try(:text)
-
-    res = ds_data_from(frame, res)
+    res = ds_data_from(frame)
     dnskeys_list = key_data_from(frame, res)
 
     if action == 'rem'
       to_destroy = []
-
-      # TODO: Remove dnskeys based on ds_key_tag
-      # dnskeys_list[:ds_data].each do |x|
-      #   ds = dnskeys.where(ds_key_tag: x[:ds_key_tag])
-      #   if ds.blank?
-      #     add_epp_error('2303', 'keyTag', x[:key_tag], [:dnskeys, :not_found])
-      #   else
-      #     to_destroy << ds
-      #   end
-      # end
-
       dnskeys_list.each do |x|
-        ds = dnskeys.find_by(public_key: x[:public_key])
-        if ds.blank?
+        dk = dnskeys.find_by(public_key: x[:public_key])
+
+        unless dk
           add_epp_error('2303', 'publicKey', x[:public_key], [:dnskeys, :not_found])
-        else
-          to_destroy << {
-            id: ds.id,
-            _destroy: 1
-          }
+          next
         end
+
+        to_destroy << {
+          id: dk.id,
+          _destroy: 1
+        }
       end
 
       return to_destroy
@@ -239,7 +245,8 @@ class Epp::EppDomain < Domain
     res
   end
 
-  def ds_data_from(frame, res)
+  def ds_data_from(frame)
+    res = []
     frame.css('dsData').each do |x|
       data = {
         ds_key_tag: x.css('keyTag').first.try(:text),

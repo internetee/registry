@@ -48,7 +48,6 @@ class Domain < ActiveRecord::Base
 
   before_create :generate_auth_info
   before_create :set_validity_dates
-  before_create :attach_default_contacts
   before_save :touch_always_version
   def touch_always_version
     self.updated_at = Time.now
@@ -205,25 +204,6 @@ class Domain < ActiveRecord::Base
     end while self.class.exists?(auth_info: auth_info)
   end
   # rubocop:enable Lint/Loop
-
-  def attach_default_contacts
-    if tech_domain_contacts.count.zero?
-      attach_contact(DomainContact::TECH, owner_contact)
-    end
-
-    return unless admin_domain_contacts.count.zero? && owner_contact.priv?
-    attach_contact(DomainContact::ADMIN, owner_contact)
-  end
-
-  def attach_contact(type, contact)
-    domain_contacts.build(
-      contact: contact, contact_type: DomainContact::TECH, contact_code_cache: contact.code
-    ) if type.to_sym == :tech
-
-    domain_contacts.build(
-      contact: contact, contact_type: DomainContact::ADMIN, contact_code_cache: contact.code
-    ) if type.to_sym == :admin
-  end
 
   def set_validity_dates
     self.registered_at = Time.zone.now
