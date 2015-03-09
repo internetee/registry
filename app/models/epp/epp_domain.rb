@@ -87,6 +87,7 @@ class Epp::EppDomain < Domain
 
     at[:nameservers_attributes] = nameservers_attrs(frame, action)
     at[:domain_contacts_attributes] = domain_contacts_attrs(frame, action)
+    at[:domain_statuses_attributes] = domain_statuses_attrs(frame, action)
     at[:dnskeys_attributes] = dnskeys_attrs(frame, action)
     at[:legal_documents_attributes] = legal_document_from(frame)
 
@@ -117,7 +118,7 @@ class Epp::EppDomain < Domain
   end
 
   def domain_contacts_attrs(frame, action)
-    contact_list = parse_contact_list(frame)
+    contact_list = domain_contact_list_from(frame)
 
     if action == 'rem'
       to_destroy = []
@@ -135,7 +136,7 @@ class Epp::EppDomain < Domain
     end
   end
 
-  def parse_contact_list(frame)
+  def domain_contact_list_from(frame)
     res = []
     frame.css('contact').each do |x|
       c = Contact.find_by(code: x.text).try(:id)
@@ -233,6 +234,47 @@ class Epp::EppDomain < Domain
     res
   end
 
+  def domain_statuses_attrs(frame, action)
+    status_list = domain_status_list_from(frame)
+
+    if action == 'rem'
+      to_destroy = []
+      status_list.each do |x|
+        status = domain_statuses.find_by(value: x[:value])
+        if status.blank?
+          add_epp_error('2303', 'status', x[:value], [:domain_statuses, :not_found])
+        else
+          to_destroy << {
+            id: status.id,
+            _destroy: 1
+          }
+        end
+      end
+
+      return to_destroy
+    else
+      return status_list
+    end
+  end
+
+  def domain_status_list_from(frame)
+    status_list = []
+
+    frame.css('status').each do |x|
+      unless DomainStatus::CLIENT_STATUSES.include?(x['s'])
+        add_epp_error('2303', 'status', x[:value], [:domain_statuses, :not_found])
+        next
+      end
+
+      status_list << {
+        value: x['s'],
+        description: x.text
+      }
+    end
+
+    status_list
+  end
+
   def legal_document_from(frame)
     ld = frame.css('legalDocument').first
     return [] unless ld
@@ -253,6 +295,7 @@ class Epp::EppDomain < Domain
     at[:nameservers_attributes] += at_add[:nameservers_attributes]
     at[:domain_contacts_attributes] += at_add[:domain_contacts_attributes]
     at[:dnskeys_attributes] += at_add[:dnskeys_attributes]
+    at[:domain_statuses_attributes] += at_add[:domain_statuses_attributes]
 
     super(at)
   end
