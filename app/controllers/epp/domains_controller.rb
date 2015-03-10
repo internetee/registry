@@ -5,6 +5,7 @@ class Epp::DomainsController < EppController
   before_action :find_password, only: [:info]
 
   def create
+    authorize! :create, Epp::EppDomain
     @domain = Epp::EppDomain.new_from_epp(params[:parsed_frame], current_user)
 
     if @domain.errors.any? || !@domain.save
@@ -20,6 +21,8 @@ class Epp::DomainsController < EppController
   end
 
   def check
+    authorize! :check, Epp::EppDomain
+
     names = params[:parsed_frame].css('name').map(&:text)
     @domains = Epp::EppDomain.check_availability(names)
     render_epp_response '/epp/domains/check'

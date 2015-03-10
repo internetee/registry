@@ -28,6 +28,8 @@ class Ability
 
     # Epp::Domain
     can(:info, Epp::EppDomain) { |d, pw| d.registrar_id == @user.registrar_id || d.auth_info == pw }
+    can(:check,  Epp::EppDomain)
+    can(:create,  Epp::EppDomain)
   end
 
   def user
