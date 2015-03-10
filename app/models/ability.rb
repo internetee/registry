@@ -27,9 +27,11 @@ class Ability
     can(:view_password, Epp::Contact) { |c| c.registrar_id == @user.registrar_id }
 
     # Epp::Domain
-    can(:info, Epp::EppDomain) { |d, pw| d.registrar_id == @user.registrar_id || d.auth_info == pw }
+    can(:info,   Epp::EppDomain) { |d, pw| d.registrar_id == @user.registrar_id || d.auth_info == pw }
     can(:check,  Epp::EppDomain)
-    can(:create,  Epp::EppDomain)
+    can(:create, Epp::EppDomain)
+    can(:renew,  Epp::EppDomain)
+    can(:update, Epp::EppDomain) { |d, pw| d.registrar_id == @user.registrar_id || d.auth_info == pw }
   end
 
   def user

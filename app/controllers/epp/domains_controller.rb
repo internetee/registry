@@ -1,8 +1,8 @@
 class Epp::DomainsController < EppController
   skip_authorization_check # TODO: remove it
 
-  before_action :find_domain, only: [:info]
-  before_action :find_password, only: [:info]
+  before_action :find_domain, only: [:info, :renew, :update]
+  before_action :find_password, only: [:info, :update]
 
   def create
     authorize! :create, Epp::EppDomain
@@ -29,9 +29,8 @@ class Epp::DomainsController < EppController
   end
 
   def renew
-    @domain = find_domain
+    authorize! :renew, Epp::EppDomain
 
-    handle_errors(@domain) and return unless @domain
     handle_errors(@domain) and return unless @domain.renew(
       params[:parsed_frame].css('curExpDate').text,
       params[:parsed_frame].css('period').text,
@@ -43,9 +42,7 @@ class Epp::DomainsController < EppController
 
   # rubocop:disable Metrics/CyclomaticComplexity
   def update
-    @domain = find_domain
-
-    handle_errors(@domain) and return unless @domain
+    authorize! :update, @domain, @password
 
     if @domain.update(params[:parsed_frame], current_user)
       render_epp_response '/epp/domains/success'
