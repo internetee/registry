@@ -147,8 +147,6 @@ class Epp::DomainsController < EppController
 
     @prefix = nil
     requires_attribute 'transfer', 'op', values: %(approve, query, reject)
-
-    requires 'extension > extdata > legalDocument'
   end
 
   ## DELETE

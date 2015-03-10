@@ -144,9 +144,9 @@ Domain name mapping protocol short version:
                                       Attribute: hosts="all / TODO"
         <domain:authInfo>    1       
           <domain:pw>        1        Domain password. Attribute: roid="String"
-    <extension>              1     
-      <eis:extdata>          1        Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
-        <eis:legalDocument>  1        Base64 encoded document.  
+    <extension>              0-1     
+      <eis:extdata>          0-1      Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
+        <eis:legalDocument>  0-1      Base64 encoded document.  
                                         Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
     <clTRID>                 0-1      Client transaction id
 
