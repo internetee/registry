@@ -984,7 +984,7 @@ describe 'EPP Domain', epp: true do
 
       response = epp_plain_request(xml, :xml)
       response[:result_code].should == '2201'
-      response[:msg].should == 'Authorization error [auth_info]'
+      response[:msg].should == 'Authorization error'
     end
 
     it 'ignores transfer when owner registrar requests transfer' do
@@ -1031,7 +1031,7 @@ describe 'EPP Domain', epp: true do
         epp_plain_request(xml, :xml) # transfer domain
         response =  epp_plain_request(xml, :xml) # attempt second transfer
         response[:result_code].should == '2201'
-        response[:msg].should == 'Authorization error [auth_info]'
+        response[:msg].should == 'Authorization error'
       end
     end
 

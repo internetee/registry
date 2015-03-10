@@ -1,8 +1,8 @@
 class Epp::DomainsController < EppController
   skip_authorization_check # TODO: remove it
 
-  before_action :find_domain, only: [:info, :renew, :update]
-  before_action :find_password, only: [:info, :update]
+  before_action :find_domain, only: [:info, :renew, :update, :transfer, :delete]
+  before_action :find_password, only: [:info, :update, :transfer, :delete]
 
   def create
     authorize! :create, Epp::EppDomain
@@ -55,9 +55,7 @@ class Epp::DomainsController < EppController
   # rubocop: disable Metrics/MethodLength
 
   def transfer
-    @domain = find_domain
-    handle_errors(@domain) and return unless @domain
-    handle_errors(@domain) and return unless @domain.authenticate(domain_transfer_params[:pw])
+    authorize! :transfer, @domain, @password
 
     if domain_transfer_params[:action] == 'query'
       if @domain.pending_transfer
@@ -92,9 +90,6 @@ class Epp::DomainsController < EppController
   # rubocop:disable Metrics/CyclomaticComplexity
 
   def delete
-    @domain = find_domain
-
-    handle_errors(@domain) and return unless @domain
     handle_errors(@domain) and return unless @domain.can_be_deleted?
 
     @domain.attach_legal_document(Epp::EppDomain.parse_legal_document_from_frame(params[:parsed_frame]))
@@ -164,31 +159,6 @@ class Epp::DomainsController < EppController
     requires 'name'
   end
 
-  def domain_rem_params
-    ns_list = Epp::EppDomain.parse_nameservers_from_frame(params[:parsed_frame])
-
-    to_destroy = []
-    ns_list.each do |ns_attrs|
-      nameserver = @domain.nameservers.where(ns_attrs).try(:first)
-      if nameserver.blank?
-        epp_errors << {
-          code: '2303',
-          msg: I18n.t('nameserver_not_found'),
-          value: { obj: 'hostAttr', val: ns_attrs[:hostname] }
-        }
-      else
-        to_destroy << {
-          id: nameserver.id,
-          _destroy: 1
-        }
-      end
-    end
-
-    {
-      nameservers_attributes: to_destroy
-    }
-  end
-
   def domain_transfer_params
     res = {}
     res[:pw] = params[:parsed_frame].css('pw').first.try(:text)
@@ -217,17 +187,3 @@ class Epp::DomainsController < EppController
     @password = params[:parsed_frame].css('authInfo pw').text
   end
 end
-
-
-# return domain if domain.auth_info == params[:parsed_frame].css('authInfo pw').text
-
-#     if (domain.registrar != current_user.registrar) && secure[:secure] == true
-#       epp_errors << {
-#         code: '2302',
-#         msg: I18n.t('errors.messages.domain_exists_but_belongs_to_other_registrar'),
-#         value: { obj: 'name', val: params[:parsed_frame].css('name').text.strip.downcase }
-#       }
-#       return nil
-#     end
-
-#     domain
