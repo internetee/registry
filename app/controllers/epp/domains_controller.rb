@@ -1,10 +1,11 @@
 class Epp::DomainsController < EppController
   skip_authorization_check # TODO: remove it
 
+  before_action :find_domain, only: [:info]
+  before_action :find_password, only: [:info]
+
   def create
     @domain = Epp::EppDomain.new_from_epp(params[:parsed_frame], current_user)
-    # @domain.parse_and_attach_domain_dependencies(params[:parsed_frame])
-    # @domain.parse_and_attach_ds_data(params[:parsed_frame].css('extension create'))
 
     if @domain.errors.any? || !@domain.save
       handle_errors(@domain)
@@ -14,8 +15,7 @@ class Epp::DomainsController < EppController
   end
 
   def info
-    @domain = find_domain
-    handle_errors(@domain) and return unless @domain
+    authorize! :info, @domain, @password
     render_epp_response '/epp/domains/info'
   end
 
@@ -44,14 +44,6 @@ class Epp::DomainsController < EppController
 
     handle_errors(@domain) and return unless @domain
 
-    # @domain.parse_and_detach_domain_dependencies(params[:parsed_frame].css('rem')
-    # @domain.parse_and_detach_ds_data(params[:parsed_frame].css('extension rem'))
-    # @domain.parse_and_attach_domain_dependencies(params[:parsed_frame].css('add'))
-    # @domain.parse_and_attach_ds_data(params[:parsed_frame].css('extension add'))
-    # @domain.parse_and_update_domain_dependencies(params[:parsed_frame].css('chg'))
-    # @domain.attach_legal_document(Epp::EppDomain.parse_legal_document_from_frame(params[:parsed_frame]))
-    # binding.pry
-
     if @domain.update(params[:parsed_frame], current_user)
       render_epp_response '/epp/domains/success'
     else
@@ -63,7 +55,7 @@ class Epp::DomainsController < EppController
   # rubocop: disable Metrics/MethodLength
 
   def transfer
-    @domain = find_domain(secure: false)
+    @domain = find_domain
     handle_errors(@domain) and return unless @domain
     handle_errors(@domain) and return unless @domain.authenticate(domain_transfer_params[:pw])
 
@@ -197,119 +189,6 @@ class Epp::DomainsController < EppController
     }
   end
 
-  def domain_create_params
-    period = params[:parsed_frame].css('period').text
-
-    # registrant = parse_registrant(params)
-    # domain_contacts = parse_domain_contacts_from_epp(params)
-
-    registrant_code = params[:parsed_frame].css('registrant').text
-    owner_contact = Contact.find_by(code: registrant_code)
-
-    unless owner_contact
-      epp_errors << {
-        code: '2303',
-        msg: I18n.t('registrant_not_found'),
-        value: { obj: 'registrant', val: registrant_code }
-      }
-    end
-
-    {
-      name: params[:parsed_frame].css('name').text,
-      registrar_id: current_user.registrar.try(:id),
-      registered_at: Time.now,
-      period: (period.to_i == 0) ? 1 : period.to_i,
-      period_unit: Epp::EppDomain.parse_period_unit_from_frame(params[:parsed_frame]) || 'y',
-      owner_contact_id: owner_contact.try(:id),
-      nameservers_attributes: Epp::EppDomain.parse_nameservers_from_frame(params[:parsed_frame]),
-      domain_contacts_attributes: parse_domain_contacts_from_epp,
-      dnskeys_attributes: parse_dnskeys_from_frame(params[:parsed_frame].css('extension create')),
-      legal_documents_attributes: parse_legal_document_from_frame(params[:parsed_frame])
-    }
-  end
-
-  def parse_domain_contacts_from_epp
-    res = []
-    params[:parsed_frame].css('contact').each do |x|
-      c = Contact.find_by(code: x.text).try(:id)
-
-      unless c
-        epp_errors << {
-          code: '2303',
-          msg: I18n.t('contact_not_found'),
-          value: { obj: 'contact', val: x.text }
-        }
-        next
-      end
-
-      res << {
-        contact_id: Contact.find_by(code: x.text).try(:id),
-        contact_type: x['type'],
-        contact_code_cache: x.text
-      }
-    end
-
-    res
-  end
-
-  def parse_dnskeys_from_frame(parsed_frame)
-    res = []
-    # res = { ds_data: [], key_data: [] }
-
-    # res[:max_sig_life] = parsed_frame.css('maxSigLife').first.try(:text)
-
-    res = parse_ds_data_from_frame(parsed_frame, res)
-    parse_key_data_from_frame(parsed_frame, res)
-  end
-
-  def parse_key_data_from_frame(parsed_frame, res)
-    parsed_frame.xpath('keyData').each do |x|
-      res << {
-        flags: x.css('flags').first.try(:text),
-        protocol: x.css('protocol').first.try(:text),
-        alg: x.css('alg').first.try(:text),
-        public_key: x.css('pubKey').first.try(:text),
-        ds_alg: 3,
-        ds_digest_type: Setting.ds_algorithm
-      }
-    end
-
-    res
-  end
-
-  def parse_ds_data_from_frame(parsed_frame, res)
-    parsed_frame.css('dsData').each do |x|
-      data = {
-        ds_key_tag: x.css('keyTag').first.try(:text),
-        ds_alg: x.css('alg').first.try(:text),
-        ds_digest_type: x.css('digestType').first.try(:text),
-        ds_digest: x.css('digest').first.try(:text)
-      }
-
-      kd = x.css('keyData').first
-      data.merge!({
-        flags: kd.css('flags').first.try(:text),
-        protocol: kd.css('protocol').first.try(:text),
-        alg: kd.css('alg').first.try(:text),
-        public_key: kd.css('pubKey').first.try(:text)
-      }) if kd
-
-      res << data
-    end
-
-    res
-  end
-
-  def parse_legal_document_from_frame(parsed_frame)
-    ld = parsed_frame.css('legalDocument').first
-    return [] unless ld
-
-    [{
-      body: ld.text,
-      document_type: ld['type']
-    }]
-  end
-
   def domain_transfer_params
     res = {}
     res[:pw] = params[:parsed_frame].css('pw').first.try(:text)
@@ -318,30 +197,37 @@ class Epp::DomainsController < EppController
     res
   end
 
-  def find_domain(secure = { secure: true })
+  def find_domain
     domain_name = params[:parsed_frame].css('name').text.strip.downcase
-    domain = Epp::EppDomain.find_by(name: domain_name)
+    @domain = Epp::EppDomain.find_by(name: domain_name)
 
-    unless domain
+    unless @domain
       epp_errors << {
         code: '2303',
         msg: I18n.t('errors.messages.epp_domain_not_found'),
         value: { obj: 'name', val: domain_name }
       }
-      return nil
+      fail CanCan::AccessDenied
     end
 
-    return domain if domain.auth_info == params[:parsed_frame].css('authInfo pw').text
+    @domain
+  end
 
-    if (domain.registrar != current_user.registrar) && secure[:secure] == true
-      epp_errors << {
-        code: '2302',
-        msg: I18n.t('errors.messages.domain_exists_but_belongs_to_other_registrar'),
-        value: { obj: 'name', val: params[:parsed_frame].css('name').text.strip.downcase }
-      }
-      return nil
-    end
-
-    domain
+  def find_password
+    @password = params[:parsed_frame].css('authInfo pw').text
   end
 end
+
+
+# return domain if domain.auth_info == params[:parsed_frame].css('authInfo pw').text
+
+#     if (domain.registrar != current_user.registrar) && secure[:secure] == true
+#       epp_errors << {
+#         code: '2302',
+#         msg: I18n.t('errors.messages.domain_exists_but_belongs_to_other_registrar'),
+#         value: { obj: 'name', val: params[:parsed_frame].css('name').text.strip.downcase }
+#       }
+#       return nil
+#     end
+
+#     domain

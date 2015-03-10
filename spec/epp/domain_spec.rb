@@ -1490,8 +1490,8 @@ describe 'EPP Domain', epp: true do
     it 'can not see other registrar domains' do
       login_as :registrar2 do
         response = epp_plain_request(domain_info_xml(name: { value: domain.name }), :xml)
-        response[:result_code].should == '2302'
-        response[:msg].should == 'Domain exists but belongs to other registrar'
+        response[:result_code].should == '2201'
+        response[:msg].should == 'Authorization error'
       end
     end
 

@@ -25,6 +25,9 @@ class Ability
     can(:delete, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id && c.auth_info == pw }
     can(:renew,  Epp::Contact)
     can(:view_password, Epp::Contact) { |c| c.registrar_id == @user.registrar_id }
+
+    # Epp::Domain
+    can(:info, Epp::EppDomain) { |d, pw| d.registrar_id == @user.registrar_id || d.auth_info == pw }
   end
 
   def user

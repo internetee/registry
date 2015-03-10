@@ -124,9 +124,9 @@ class Epp::EppDomain < Domain
   end
 
   def nameservers_attrs(frame, action)
-    if action == 'rem'
-      ns_list = Epp::EppDomain.parse_nameservers_from_frame(frame)
+    ns_list = nameservers_from(frame)
 
+    if action == 'rem'
       to_destroy = []
       ns_list.each do |ns_attrs|
         nameserver = nameservers.where(ns_attrs).try(:first)
@@ -142,8 +142,23 @@ class Epp::EppDomain < Domain
 
       return to_destroy
     else
-      return Epp::EppDomain.parse_nameservers_from_frame(frame)
+      return ns_list
     end
+  end
+
+  def nameservers_from(frame)
+    res = []
+    frame.css('hostAttr').each do |x|
+      host_attr = {
+        hostname: x.css('hostName').first.try(:text),
+        ipv4: x.css('hostAddr[ip="v4"]').first.try(:text),
+        ipv6: x.css('hostAddr[ip="v6"]').first.try(:text)
+      }
+
+      res << host_attr.delete_if { |_k, v| v.blank? }
+    end
+
+    res
   end
 
   def domain_contacts_attrs(frame, action)
@@ -335,59 +350,6 @@ class Epp::EppDomain < Domain
     errors.empty? && super(at)
   end
 
-
-
-
-
-
-
-
-
-
-  def parse_and_attach_domain_dependencies(parsed_frame)
-    attach_owner_contact(self.class.parse_owner_contact_from_frame(parsed_frame))
-    attach_contacts(self.class.parse_contacts_from_frame(parsed_frame))
-    attach_nameservers(self.class.parse_nameservers_from_frame(parsed_frame))
-    attach_statuses(self.class.parse_statuses_from_frame(parsed_frame))
-    attach_legal_document(self.class.parse_legal_document_from_frame(parsed_frame))
-    errors.empty?
-  end
-
-  def parse_and_detach_domain_dependencies(parsed_frame)
-    detach_contacts(self.class.parse_contacts_from_frame(parsed_frame))
-    detach_nameservers(self.class.parse_nameservers_from_frame(parsed_frame))
-    detach_statuses(self.class.parse_statuses_from_frame(parsed_frame))
-
-    errors.empty?
-  end
-
-  def parse_and_attach_ds_data(parsed_frame)
-    attach_dnskeys(self.class.parse_dnskeys_from_frame(parsed_frame))
-
-    errors.empty?
-  end
-
-  def parse_and_detach_ds_data(parsed_frame)
-    detach_dnskeys(self.class.parse_dnskeys_from_frame(parsed_frame))
-
-    errors.empty?
-  end
-
-  def parse_and_update_domain_dependencies(parsed_frame)
-    owner_contact_code = parsed_frame.css('registrant').try(:text)
-    attach_owner_contact(owner_contact_code) if owner_contact_code.present?
-
-    errors.empty?
-  end
-
-  # TODO: Find out if there are any attributes that can be changed
-  # if not, delete this method
-  def parse_and_update_domain_attributes(_parsed_frame)
-    # assign_attributes(self.class.parse_update_params_from_frame(parsed_frame))
-
-    errors.empty?
-  end
-
   def attach_legal_document(legal_document_data)
     return unless legal_document_data
 
@@ -395,175 +357,6 @@ class Epp::EppDomain < Domain
       document_type: legal_document_data[:type],
       body: legal_document_data[:body]
     )
-  end
-
-  def attach_owner_contact(code)
-    return unless code
-    self.owner_contact = Contact.find_by(code: code)
-
-    return if owner_contact
-
-    add_epp_error('2303', 'registrant', code, [:owner_contact, :not_found])
-  end
-
-  def attach_contacts(contacts)
-    contacts.each do |k, v|
-      v.each do |x|
-        contact = Contact.find_by(code: x[:contact])
-        unless contact
-          add_epp_error('2303', 'contact', x[:contact], [:domain_contacts, :not_found])
-          next
-        end
-
-        if k == :admin && contact.bic?
-          add_epp_error('2306', 'contact', x[:contact], [:domain_contacts, :admin_contact_can_be_only_citizen])
-          next
-        end
-
-        attach_contact(k, contact)
-      end
-    end
-
-    attach_default_contacts if new_record? && owner_contact
-  end
-
-  def attach_nameservers(ns_list)
-    ns_list.each do |ns_attrs|
-      nameservers.build(ns_attrs)
-    end
-  end
-
-  def attach_statuses(status_list)
-    status_list.each do |x|
-      unless DomainStatus::CLIENT_STATUSES.include?(x[:value])
-        add_epp_error('2303', 'status', x[:value], [:domain_statuses, :not_found])
-        next
-      end
-
-      domain_statuses.build(
-        value: x[:value],
-        description: x[:description]
-      )
-    end
-  end
-
-  def detach_contacts(contact_list)
-    to_destroy = []
-    contact_list.each do |k, v|
-      v.each do |x|
-        contact = domain_contacts.joins(:contact).where(contacts: { code: x[:contact] }, contact_type: k.to_s)
-        if contact.blank?
-          add_epp_error('2303', 'contact', x[:contact], [:domain_contacts, :not_found])
-        else
-          to_destroy << contact
-        end
-      end
-    end
-
-    domain_contacts.destroy(to_destroy)
-  end
-
-  def detach_nameservers(ns_list)
-    to_destroy = []
-    ns_list.each do |ns_attrs|
-      nameserver = nameservers.where(ns_attrs)
-      if nameserver.blank?
-        add_epp_error('2303', 'hostAttr', ns_attrs[:hostname], [:nameservers, :not_found])
-      else
-        to_destroy << nameserver
-      end
-    end
-    nameservers.destroy(to_destroy)
-  end
-
-  def detach_statuses(status_list)
-    to_destroy = []
-    status_list.each do |x|
-      unless DomainStatus::CLIENT_STATUSES.include?(x[:value])
-        add_epp_error('2303', 'status', x[:value], [:domain_statuses, :not_found])
-        next
-      end
-
-      status = domain_statuses.find_by(value: x[:value])
-      if status.blank?
-        add_epp_error('2303', 'status', x[:value], [:domain_statuses, :not_found])
-      else
-        to_destroy << status
-      end
-    end
-
-    domain_statuses.destroy(to_destroy)
-  end
-
-  def attach_dnskeys(dnssec_data)
-    return false unless validate_dnssec_data(dnssec_data)
-
-    dnssec_data[:ds_data].each do |ds_data|
-      dnskeys.build(ds_data)
-    end
-
-    dnssec_data[:key_data].each do |x|
-      dnskeys.build({
-        ds_alg: 3,
-        ds_digest_type: Setting.ds_algorithm
-      }.merge(x))
-    end
-  end
-
-  def validate_dnssec_data(dnssec_data)
-    ds_data_allowed?(dnssec_data)
-    # ds_data_with_keys_allowed?(dnssec_data)
-    key_data_allowed?(dnssec_data)
-
-    errors.empty?
-  end
-
-  def ds_data_allowed?(dnssec_data)
-    return if (dnssec_data[:ds_data].any? && Setting.ds_data_allowed) || dnssec_data[:ds_data].empty?
-    errors.add(:base, :ds_data_not_allowed)
-  end
-
-  def ds_data_with_keys_allowed?(dnssec_data)
-    dnssec_data[:ds_data].each do |ds_data|
-      if key_data?(ds_data) && !Setting.ds_data_with_key_allowed
-        errors.add(:base, :ds_data_with_key_not_allowed)
-        return
-      end
-    end
-  end
-
-  def key_data_allowed?(dnssec_data)
-    return if (dnssec_data[:key_data].any? && Setting.key_data_allowed) || dnssec_data[:key_data].empty?
-    errors.add(:base, :key_data_not_allowed)
-  end
-
-  def key_data?(data)
-    key_data_attrs = [:public_key, :alg, :protocol, :flags]
-    (data.keys & key_data_attrs).any?
-  end
-
-  def detach_dnskeys(dnssec_data)
-    return false unless validate_dnssec_data(dnssec_data)
-    to_destroy = []
-    dnssec_data[:ds_data].each do |x|
-      ds = dnskeys.where(ds_key_tag: x[:ds_key_tag])
-      if ds.blank?
-        add_epp_error('2303', 'keyTag', x[:key_tag], [:dnskeys, :not_found])
-      else
-        to_destroy << ds
-      end
-    end
-
-    dnssec_data[:key_data].each do |x|
-      ds = dnskeys.where(public_key: x[:public_key])
-      if ds.blank?
-        add_epp_error('2303', 'publicKey', x[:public_key], [:dnskeys, :not_found])
-      else
-        to_destroy << ds
-      end
-    end
-
-    dnskeys.destroy(to_destroy)
   end
 
   ### RENEW ###
@@ -786,98 +579,10 @@ class Epp::EppDomain < Domain
   end
 
   class << self
-    def parse_contacts_from_frame(parsed_frame)
-      res = {}
-      DomainContact::TYPES.each do |ct|
-        res[ct.to_sym] ||= []
-        parsed_frame.css("contact[type='#{ct}']").each do |x|
-          res[ct.to_sym] << Hash.from_xml(x.to_s).with_indifferent_access
-        end
-      end
-
-      res
-    end
-
-    def parse_nameservers_from_frame(parsed_frame)
-      res = []
-      parsed_frame.css('hostAttr').each do |x|
-        host_attr = {
-          hostname: x.css('hostName').first.try(:text),
-          ipv4: x.css('hostAddr[ip="v4"]').first.try(:text),
-          ipv6: x.css('hostAddr[ip="v6"]').first.try(:text)
-        }
-
-        res << host_attr.delete_if { |_k, v| v.blank? }
-      end
-
-      res
-    end
-
-    def parse_owner_contact_from_frame(parsed_frame)
-      parsed_frame.css('registrant').first.try(:text)
-    end
-
     def parse_period_unit_from_frame(parsed_frame)
       p = parsed_frame.css('period').first
       return nil unless p
       p[:unit]
-    end
-
-    def parse_statuses_from_frame(parsed_frame)
-      res = []
-
-      parsed_frame.css('status').each do |x|
-        res << {
-          value: x['s'],
-          description: x.text
-        }
-      end
-      res
-    end
-
-    def parse_dnskeys_from_frame(parsed_frame)
-      res = { ds_data: [], key_data: [] }
-
-      res[:max_sig_life] = parsed_frame.css('maxSigLife').first.try(:text)
-
-      res = parse_ds_data_from_frame(parsed_frame, res)
-      parse_key_data_from_frame(parsed_frame, res)
-    end
-
-    def parse_key_data_from_frame(parsed_frame, res)
-      parsed_frame.xpath('keyData').each do |x|
-        res[:key_data] << {
-          flags: x.css('flags').first.try(:text),
-          protocol: x.css('protocol').first.try(:text),
-          alg: x.css('alg').first.try(:text),
-          public_key: x.css('pubKey').first.try(:text)
-        }
-      end
-
-      res
-    end
-
-    def parse_ds_data_from_frame(parsed_frame, res)
-      parsed_frame.css('dsData').each do |x|
-        data = {
-          ds_key_tag: x.css('keyTag').first.try(:text),
-          ds_alg: x.css('alg').first.try(:text),
-          ds_digest_type: x.css('digestType').first.try(:text),
-          ds_digest: x.css('digest').first.try(:text)
-        }
-
-        kd = x.css('keyData').first
-        data.merge!({
-          flags: kd.css('flags').first.try(:text),
-          protocol: kd.css('protocol').first.try(:text),
-          alg: kd.css('alg').first.try(:text),
-          public_key: kd.css('pubKey').first.try(:text)
-        }) if kd
-
-        res[:ds_data] << data
-      end
-
-      res
     end
 
     def parse_legal_document_from_frame(parsed_frame)
