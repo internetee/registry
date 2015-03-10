@@ -1046,7 +1046,7 @@ describe 'EPP Domain', epp: true do
       end
     end
 
-    it 'should get an error when there is no pending transfer ' do
+    it 'should get an error when there is no pending transfer' do
       pw = domain.auth_info
       xml = domain_transfer_xml({
         name: { value: domain.name },

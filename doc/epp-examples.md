@@ -1,6 +1,6 @@
 # EPP REQUEST - RESPONSE EXAMPLES
-GENERATED AT: 2015-01-29 16:37:08 +0200  
-EXAMPLE COUNT: 103  
+GENERATED AT: 2015-03-10 17:19:21 +0200  
+EXAMPLE COUNT: 107  
 
 ---
 
@@ -11,7 +11,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <login>
-      <clID>gitlab</clID>
+      <clID>registrar1</clID>
       <pw>ghyt9e4fu</pw>
       <options>
         <version>1.0</version>
@@ -44,7 +44,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9605659156</svTRID>
+  <svTRID>ccReg-3671565571</svTRID>
 </trID>
   </response>
 </epp>
@@ -72,117 +72,29 @@ RESPONSE:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
-    <result code="2001">
-      <msg lang="en">Command syntax error</msg>
+    <result code="2003">
+      <msg lang="en">Required parameter missing: create &gt; create &gt; postalInfo &gt; name [name]</msg>
+    </result>
+    <result code="2003">
+      <msg lang="en">Required parameter missing: create &gt; create &gt; postalInfo &gt; addr &gt; city [city]</msg>
+    </result>
+    <result code="2003">
+      <msg lang="en">Required parameter missing: create &gt; create &gt; postalInfo &gt; addr &gt; cc [cc]</msg>
+    </result>
+    <result code="2003">
+      <msg lang="en">Required parameter missing: create &gt; create &gt; voice [voice]</msg>
+    </result>
+    <result code="2003">
+      <msg lang="en">Required parameter missing: create &gt; create &gt; email [email]</msg>
+    </result>
+    <result code="2003">
+      <msg lang="en">Required parameter missing: extension &gt; extdata &gt; ident [ident]</msg>
     </result>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5082565487</svTRID>
+  <svTRID>ccReg-9754374392</svTRID>
 </trID>
-</epp>
-```
-
-### EPP Contact with valid user create command fails if request xml is missing  
-
-REQUEST:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
-  <command>
-    <create>
-      <contact:create xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
-        <contact:postalInfo>
-          <contact:addr/>
-        </contact:postalInfo>
-      </contact:create>
-    </create>
-    <clTRID>ABC-12345</clTRID>
-  </command>
-</epp>
-```
-
-RESPONSE:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
-  <response>
-    <result code="2003">
-      <msg lang="en">Required parameter missing: name</msg>
-    </result>
-    <result code="2003">
-      <msg lang="en">Required parameter missing: city</msg>
-    </result>
-    <result code="2003">
-      <msg lang="en">Required parameter missing: cc</msg>
-    </result>
-    <result code="2003">
-      <msg lang="en">Required parameter missing: ident</msg>
-    </result>
-    <result code="2003">
-      <msg lang="en">Required parameter missing: voice</msg>
-    </result>
-    <result code="2003">
-      <msg lang="en">Required parameter missing: email</msg>
-    </result>
-  </response>
-<trID>
-  <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4208345006</svTRID>
-</trID>
-</epp>
-```
-
-### EPP Contact with valid user create command successfully saves ident type  
-
-REQUEST:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
-  <command>
-    <create>
-      <contact:create xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
-        <contact:postalInfo>
-          <contact:name>John Doe</contact:name>
-          <contact:addr>
-            <contact:street>123 Example</contact:street>
-            <contact:city>Tallinn</contact:city>
-            <contact:cc>EE</contact:cc>
-          </contact:addr>
-        </contact:postalInfo>
-        <contact:voice>+372.1234567</contact:voice>
-        <contact:email>test@example.example</contact:email>
-        <contact:ident type="birthday">1990-22-12</contact:ident>
-      </contact:create>
-    </create>
-    <clTRID>ABC-12345</clTRID>
-  </command>
-</epp>
-```
-
-RESPONSE:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
-  <response>
-    <result code="1000">
-      <msg>Command completed successfully</msg>
-    </result>
-    <resData>
-      <creData>
-        <id>6ea96411</id>
-        <crDate>2015-01-29 14:37:09 UTC</crDate>
-      </creData>
-    </resData>
-<trID>
-  <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5552787115</svTRID>
-</trID>
-  </response>
 </epp>
 ```
 
@@ -206,9 +118,14 @@ REQUEST:
         </contact:postalInfo>
         <contact:voice>+372.1234567</contact:voice>
         <contact:email>test@example.example</contact:email>
-        <contact:ident type="op">37605030299</contact:ident>
       </contact:create>
     </create>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+        <eis:ident type="priv" cc="EE">37605030299</eis:ident>
+      </eis:extdata>
+    </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
 </epp>
@@ -225,13 +142,69 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <id>65e681ce</id>
-        <crDate>2015-01-29 14:37:09 UTC</crDate>
+        <id>2421ae02</id>
+        <crDate>2015-03-10 15:19:22 UTC</crDate>
       </creData>
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-8119456299</svTRID>
+  <svTRID>ccReg-0813080787</svTRID>
+</trID>
+  </response>
+</epp>
+```
+
+### EPP Contact with valid user create command successfully saves ident type  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <create>
+      <contact:create xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
+        <contact:postalInfo>
+          <contact:name>John Doe</contact:name>
+          <contact:addr>
+            <contact:street>123 Example</contact:street>
+            <contact:city>Tallinn</contact:city>
+            <contact:cc>EE</contact:cc>
+          </contact:addr>
+        </contact:postalInfo>
+        <contact:voice>+372.1234567</contact:voice>
+        <contact:email>test@example.example</contact:email>
+      </contact:create>
+    </create>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+        <eis:ident type="birthday" cc="US">1990-22-12</eis:ident>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+    <resData>
+      <creData>
+        <id>54ade702</id>
+        <crDate>2015-03-10 15:19:22 UTC</crDate>
+      </creData>
+    </resData>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-8661523184</svTRID>
 </trID>
   </response>
 </epp>
@@ -257,9 +230,14 @@ REQUEST:
         </contact:postalInfo>
         <contact:voice>+372.1234567</contact:voice>
         <contact:email>test@example.example</contact:email>
-        <contact:ident type="op">37605030299</contact:ident>
       </contact:create>
     </create>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+        <eis:ident type="priv" cc="EE">37605030299</eis:ident>
+      </eis:extdata>
+    </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
 </epp>
@@ -276,13 +254,13 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <id>5c961f09</id>
-        <crDate>2015-01-29 14:37:09 UTC</crDate>
+        <id>34e5c31b</id>
+        <crDate>2015-03-10 15:19:23 UTC</crDate>
       </creData>
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7819343556</svTRID>
+  <svTRID>ccReg-1951857731</svTRID>
 </trID>
   </response>
 </epp>
@@ -308,9 +286,14 @@ REQUEST:
         </contact:postalInfo>
         <contact:voice>+372.1234567</contact:voice>
         <contact:email>test@example.example</contact:email>
-        <contact:ident type="op">37605030299</contact:ident>
       </contact:create>
     </create>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+        <eis:ident type="priv" cc="EE">37605030299</eis:ident>
+      </eis:extdata>
+    </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
 </epp>
@@ -327,19 +310,19 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <id>193db5f6</id>
-        <crDate>2015-01-29 14:37:09 UTC</crDate>
+        <id>eece3ee1</id>
+        <crDate>2015-03-10 15:19:23 UTC</crDate>
       </creData>
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7922426886</svTRID>
+  <svTRID>ccReg-3402001282</svTRID>
 </trID>
   </response>
 </epp>
 ```
 
-### EPP Contact with valid user create command creates disclosure data  
+### EPP Contact with valid user create command successfully saves custom code  
 
 REQUEST:
 
@@ -359,17 +342,15 @@ REQUEST:
         </contact:postalInfo>
         <contact:voice>+372.1234567</contact:voice>
         <contact:email>test@example.example</contact:email>
-        <contact:ident type="op">37605030299</contact:ident>
-        <contact:disclose flag="1">
-          <contact:voice/>
-          <contact:addr/>
-          <contact:name/>
-          <contact:org_name/>
-          <contact:email/>
-          <contact:fax/>
-        </contact:disclose>
+        <contact:id>12345</contact:id>
       </contact:create>
     </create>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+        <eis:ident type="priv" cc="EE">37605030299</eis:ident>
+      </eis:extdata>
+    </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
 </epp>
@@ -386,19 +367,19 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <id>6bad03a1</id>
-        <crDate>2015-01-29 14:37:09 UTC</crDate>
+        <id>registrar1:12345</id>
+        <crDate>2015-03-10 15:19:23 UTC</crDate>
       </creData>
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4198238682</svTRID>
+  <svTRID>ccReg-9707819433</svTRID>
 </trID>
   </response>
 </epp>
 ```
 
-### EPP Contact with valid user create command creates disclosure data merging with defaults  
+### EPP Contact with valid user create command should return parameter value policy errror  
 
 REQUEST:
 
@@ -415,16 +396,18 @@ REQUEST:
             <contact:city>Tallinn</contact:city>
             <contact:cc>EE</contact:cc>
           </contact:addr>
+          <contact:org>should not save</contact:org>
         </contact:postalInfo>
         <contact:voice>+372.1234567</contact:voice>
         <contact:email>test@example.example</contact:email>
-        <contact:ident type="op">37605030299</contact:ident>
-        <contact:disclose flag="1">
-          <contact:voice/>
-          <contact:addr/>
-        </contact:disclose>
       </contact:create>
     </create>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+        <eis:ident type="priv" cc="EE">37605030299</eis:ident>
+      </eis:extdata>
+    </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
 </epp>
@@ -436,20 +419,14 @@ RESPONSE:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
-    <result code="1000">
-      <msg>Command completed successfully</msg>
+    <result code="2306">
+      <msg lang="en">Parameter value policy error. Org should be blank: postalInfo &gt; org [org]</msg>
     </result>
-    <resData>
-      <creData>
-        <id>f1102c73</id>
-        <crDate>2015-01-29 14:37:09 UTC</crDate>
-      </creData>
-    </resData>
+  </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-8870181699</svTRID>
+  <svTRID>ccReg-6375499408</svTRID>
 </trID>
-  </response>
 </epp>
 ```
 
@@ -479,13 +456,135 @@ RESPONSE:
       <msg lang="en">Required parameter missing: add, rem or chg</msg>
     </result>
     <result code="2003">
-      <msg lang="en">Required parameter missing: id</msg>
+      <msg lang="en">Required parameter missing: update &gt; update &gt; id [id]</msg>
+    </result>
+    <result code="2003">
+      <msg lang="en">Required parameter missing: update &gt; update &gt; authInfo &gt; pw [pw]</msg>
     </result>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4405393350</svTRID>
+  <svTRID>ccReg-5802796953</svTRID>
 </trID>
+</epp>
+```
+
+### EPP Contact with valid user update command returns error if obj doesnt exist  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <update>
+      <contact:update xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
+        <contact:id>not-exists</contact:id>
+        <contact:authInfo>
+          <contact:pw>password</contact:pw>
+        </contact:authInfo>
+        <contact:chg>
+          <contact:postalInfo>
+            <contact:name>John Doe Edited</contact:name>
+          </contact:postalInfo>
+          <contact:voice>+372.7654321</contact:voice>
+          <contact:email>edited@example.example</contact:email>
+          <contact:disclose flag="0">
+            <contact:voice/>
+            <contact:email/>
+          </contact:disclose>
+        </contact:chg>
+      </contact:update>
+    </update>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+        <eis:ident type="priv" cc="EE">37605030299</eis:ident>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="2303">
+      <msg lang="en">Object does not exist</msg>
+      <value>
+        <id>not-exists</id>
+      </value>
+    </result>
+  </response>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-7377667179</svTRID>
+</trID>
+</epp>
+```
+
+### EPP Contact with valid user update command is succesful  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <update>
+      <contact:update xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
+        <contact:id>sh8013</contact:id>
+        <contact:authInfo>
+          <contact:pw>password</contact:pw>
+        </contact:authInfo>
+        <contact:chg>
+          <contact:postalInfo>
+            <contact:name>John Doe Edited</contact:name>
+          </contact:postalInfo>
+          <contact:voice>+372.7654321</contact:voice>
+          <contact:email>edited@example.example</contact:email>
+          <contact:disclose flag="0">
+            <contact:voice/>
+            <contact:email/>
+          </contact:disclose>
+        </contact:chg>
+      </contact:update>
+    </update>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+        <eis:ident type="priv" cc="EE">37605030299</eis:ident>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+    <resData>
+      <creData>
+        <id>sh8013</id>
+        <crDate>2015-03-10 15:19:23 UTC</crDate>
+      </creData>
+    </resData>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-3426251330</svTRID>
+</trID>
+  </response>
 </epp>
 ```
 
@@ -531,7 +630,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2270582286</svTRID>
+  <svTRID>ccReg-8522915078</svTRID>
 </trID>
   </response>
 </epp>
@@ -562,6 +661,12 @@ REQUEST:
         </contact:chg>
       </contact:update>
     </update>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+        <eis:ident type="priv" cc="EE">37605030299</eis:ident>
+      </eis:extdata>
+    </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
 </epp>
@@ -579,7 +684,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5928871487</svTRID>
+  <svTRID>ccReg-7509609824</svTRID>
 </trID>
 </epp>
 ```
@@ -591,7 +696,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <login>
-      <clID>gitlab</clID>
+      <clID>registrar1</clID>
       <pw>ghyt9e4fu</pw>
       <options>
         <version>1.0</version>
@@ -624,62 +729,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4616965597</svTRID>
-</trID>
-  </response>
-</epp>
-```
-
-### EPP Contact with valid user update command is succesful  
-
-REQUEST:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
-  <command>
-    <update>
-      <contact:update xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
-        <contact:id>sh8013</contact:id>
-        <contact:authInfo>
-          <contact:pw>password</contact:pw>
-        </contact:authInfo>
-        <contact:chg>
-          <contact:postalInfo>
-            <contact:name>John Doe Edited</contact:name>
-          </contact:postalInfo>
-          <contact:voice>+372.7654321</contact:voice>
-          <contact:email>edited@example.example</contact:email>
-          <contact:disclose flag="0">
-            <contact:voice/>
-            <contact:email/>
-          </contact:disclose>
-        </contact:chg>
-      </contact:update>
-    </update>
-    <clTRID>ABC-12345</clTRID>
-  </command>
-</epp>
-```
-
-RESPONSE:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
-  <response>
-    <result code="1000">
-      <msg>Command completed successfully</msg>
-    </result>
-    <resData>
-      <creData>
-        <id>sh8013</id>
-        <crDate>2015-01-29 14:37:10 UTC</crDate>
-      </creData>
-    </resData>
-<trID>
-  <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3148009993</svTRID>
+  <svTRID>ccReg-3545721295</svTRID>
 </trID>
   </response>
 </epp>
@@ -704,7 +754,7 @@ REQUEST:
             <contact:name>John Doe Edited</contact:name>
           </contact:postalInfo>
           <contact:voice>123213</contact:voice>
-          <contact:email>aaa</contact:email>
+          <contact:email>wrong</contact:email>
           <contact:disclose flag="0">
             <contact:voice/>
             <contact:email/>
@@ -712,6 +762,12 @@ REQUEST:
         </contact:chg>
       </contact:update>
     </update>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+        <eis:ident type="priv" cc="EE">37605030299</eis:ident>
+      </eis:extdata>
+    </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
 </epp>
@@ -724,20 +780,20 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2005">
-      <msg lang="en">Phone nr is invalid</msg>
+      <msg lang="en">Phone nr is invalid [phone]</msg>
     </result>
     <result code="2005">
-      <msg lang="en">Email is invalid</msg>
+      <msg lang="en">Email is invalid [email]</msg>
     </result>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3411293846</svTRID>
+  <svTRID>ccReg-3920253137</svTRID>
 </trID>
 </epp>
 ```
 
-### EPP Contact with valid user update command updates disclosure items  
+### EPP Contact with valid user update command should not update code with custom string  
 
 REQUEST:
 
@@ -747,9 +803,68 @@ REQUEST:
   <command>
     <update>
       <contact:update xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
-        <contact:id>sh8013disclosure</contact:id>
+        <contact:id>sh8013</contact:id>
         <contact:authInfo>
-          <contact:pw>2fooBAR</contact:pw>
+          <contact:pw>password</contact:pw>
+        </contact:authInfo>
+        <contact:chg>
+          <contact:postalInfo>
+            <contact:name>John Doe Edited</contact:name>
+          </contact:postalInfo>
+          <contact:voice>+372.7654321</contact:voice>
+          <contact:email>edited@example.example</contact:email>
+          <contact:disclose flag="0">
+            <contact:voice/>
+            <contact:email/>
+          </contact:disclose>
+          <contact:id>notpossibletoupdate</contact:id>
+        </contact:chg>
+      </contact:update>
+    </update>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+        <eis:ident type="priv" cc="EE">37605030299</eis:ident>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="2303">
+      <msg lang="en">Object does not exist</msg>
+      <value>
+        <id>sh8013notpossibletoupdate</id>
+      </value>
+    </result>
+  </response>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-5894348058</svTRID>
+</trID>
+</epp>
+```
+
+### EPP Contact with valid user update command should update ident  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <update>
+      <contact:update xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
+        <contact:id>sh8013</contact:id>
+        <contact:authInfo>
+          <contact:pw>password</contact:pw>
         </contact:authInfo>
         <contact:chg>
           <contact:postalInfo>
@@ -764,6 +879,12 @@ REQUEST:
         </contact:chg>
       </contact:update>
     </update>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+        <eis:ident type="birthday" cc="US">1990-22-12</eis:ident>
+      </eis:extdata>
+    </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
 </epp>
@@ -780,15 +901,71 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <id>sh8013disclosure</id>
-        <crDate>2015-01-29 14:37:10 UTC</crDate>
+        <id>sh8013</id>
+        <crDate>2015-03-10 15:19:23 UTC</crDate>
       </creData>
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7680027446</svTRID>
+  <svTRID>ccReg-3402695656</svTRID>
 </trID>
   </response>
+</epp>
+```
+
+### EPP Contact with valid user update command should return parameter value policy errror for org update  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <update>
+      <contact:update xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
+        <contact:id>sh8013</contact:id>
+        <contact:authInfo>
+          <contact:pw>password</contact:pw>
+        </contact:authInfo>
+        <contact:chg>
+          <contact:postalInfo>
+            <contact:name>John Doe Edited</contact:name>
+            <contact:org>should not save</contact:org>
+          </contact:postalInfo>
+          <contact:voice>+372.7654321</contact:voice>
+          <contact:email>edited@example.example</contact:email>
+          <contact:disclose flag="0">
+            <contact:voice/>
+            <contact:email/>
+          </contact:disclose>
+        </contact:chg>
+      </contact:update>
+    </update>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+        <eis:ident type="priv" cc="EE">37605030299</eis:ident>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="2306">
+      <msg lang="en">Parameter value policy error. Org should be blank: postalInfo &gt; org [org]</msg>
+    </result>
+  </response>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-4459479508</svTRID>
+</trID>
 </epp>
 ```
 
@@ -801,9 +978,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <delete>
-      <contact:delete xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
-        <contact:uid>23123</contact:uid>
-      </contact:delete>
+      <contact:delete xmlns:contact="urn:ietf:params:xml:ns:contact-1.0"/>
     </delete>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -817,12 +992,62 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2003">
-      <msg lang="en">Required parameter missing: id</msg>
+      <msg lang="en">Required parameter missing: delete &gt; delete &gt; id [id]</msg>
+    </result>
+    <result code="2003">
+      <msg lang="en">Required parameter missing: delete &gt; delete &gt; authInfo &gt; pw [pw]</msg>
     </result>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6036825649</svTRID>
+  <svTRID>ccReg-4270308301</svTRID>
+</trID>
+</epp>
+```
+
+### EPP Contact with valid user delete command returns error if obj doesnt exist  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <delete>
+      <contact:delete xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
+        <contact:id>not-exists</contact:id>
+        <contact:authInfo>
+          <contact:pw>password</contact:pw>
+        </contact:authInfo>
+      </contact:delete>
+    </delete>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+        <eis:ident type="priv" cc="EE">37605030299</eis:ident>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="2303">
+      <msg lang="en">Object does not exist</msg>
+      <value>
+        <id>not-exists</id>
+      </value>
+    </result>
+  </response>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-0851655200</svTRID>
 </trID>
 </epp>
 ```
@@ -837,9 +1062,18 @@ REQUEST:
   <command>
     <delete>
       <contact:delete xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
-        <contact:id>dwa1234</contact:id>
+        <contact:id>sh34135985</contact:id>
+        <contact:authInfo>
+          <contact:pw>password</contact:pw>
+        </contact:authInfo>
       </contact:delete>
     </delete>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+        <eis:ident type="priv" cc="EE">37605030299</eis:ident>
+      </eis:extdata>
+    </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
 </epp>
@@ -856,50 +1090,9 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-8077119435</svTRID>
+  <svTRID>ccReg-2813303007</svTRID>
 </trID>
   </response>
-</epp>
-```
-
-### EPP Contact with valid user delete command returns error if obj doesnt exist  
-
-REQUEST:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
-  <command>
-    <delete>
-      <contact:delete xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
-        <contact:id>sh8012</contact:id>
-      </contact:delete>
-    </delete>
-    <clTRID>ABC-12345</clTRID>
-  </command>
-</epp>
-```
-
-RESPONSE:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
-  <response>
-    <result code="2303">
-      <msg lang="en">Object does not exist</msg>
-      <value>
-        <id>sh8012</id>
-      </value>
-    </result>
-    <result code="2200">
-      <msg lang="en">Authentication error</msg>
-    </result>
-  </response>
-<trID>
-  <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7045011775</svTRID>
-</trID>
 </epp>
 ```
 
@@ -913,9 +1106,18 @@ REQUEST:
   <command>
     <delete>
       <contact:delete xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
-        <contact:id>dwa1234</contact:id>
+        <contact:id>sh69550939</contact:id>
+        <contact:authInfo>
+          <contact:pw>password</contact:pw>
+        </contact:authInfo>
       </contact:delete>
     </delete>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+        <eis:ident type="priv" cc="EE">37605030299</eis:ident>
+      </eis:extdata>
+    </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
 </epp>
@@ -928,13 +1130,149 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2305">
-      <msg lang="en">Object association prohibits operation</msg>
+      <msg lang="en">Object association prohibits operation [domains]</msg>
     </result>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-8208028220</svTRID>
+  <svTRID>ccReg-4347556039</svTRID>
 </trID>
+</epp>
+```
+
+### EPP Contact with valid user delete command fails with wrong authentication info  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <login>
+      <clID>registrar2</clID>
+      <pw>ghyt9e4fu</pw>
+      <options>
+        <version>1.0</version>
+        <lang>en</lang>
+      </options>
+      <svcs>
+        <objURI>urn:ietf:params:xml:ns:domain-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:contact-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
+        <svcExtension>
+          <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
+          <extURI>urn:ee:eis:xml:epp:eis-1.0</extURI>
+        </svcExtension>
+      </svcs>
+    </login>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-3785497315</svTRID>
+</trID>
+  </response>
+</epp>
+```
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <delete>
+      <contact:delete xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
+        <contact:id>sh76770592</contact:id>
+        <contact:authInfo>
+          <contact:pw>password</contact:pw>
+        </contact:authInfo>
+      </contact:delete>
+    </delete>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+        <eis:ident type="priv" cc="EE">37605030299</eis:ident>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="2201">
+      <msg lang="en">Authorization error</msg>
+    </result>
+  </response>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-6808295757</svTRID>
+</trID>
+</epp>
+```
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <login>
+      <clID>registrar1</clID>
+      <pw>ghyt9e4fu</pw>
+      <options>
+        <version>1.0</version>
+        <lang>en</lang>
+      </options>
+      <svcs>
+        <objURI>urn:ietf:params:xml:ns:domain-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:contact-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
+        <svcExtension>
+          <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
+          <extURI>urn:ee:eis:xml:epp:eis-1.0</extURI>
+        </svcExtension>
+      </svcs>
+    </login>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-5913580108</svTRID>
+</trID>
+  </response>
 </epp>
 ```
 
@@ -947,9 +1285,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <check>
-      <contact:check xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
-        <contact:uid>123asde</contact:uid>
-      </contact:check>
+      <contact:check xmlns:contact="urn:ietf:params:xml:ns:contact-1.0"/>
     </check>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -963,12 +1299,12 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2003">
-      <msg lang="en">Required parameter missing: id</msg>
+      <msg lang="en">Required parameter missing: check &gt; check &gt; id [id]</msg>
     </result>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5679761755</svTRID>
+  <svTRID>ccReg-6098496864</svTRID>
 </trID>
 </epp>
 ```
@@ -1014,166 +1350,7 @@ RESPONSE:
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5723397351</svTRID>
-</trID>
-  </response>
-</epp>
-```
-
-### EPP Contact with valid user info command return info about contact  
-
-REQUEST:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
-  <command>
-    <login>
-      <clID>registrar1</clID>
-      <pw>ghyt9e4fu</pw>
-      <options>
-        <version>1.0</version>
-        <lang>en</lang>
-      </options>
-      <svcs>
-        <objURI>urn:ietf:params:xml:ns:domain-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:contact-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
-        <svcExtension>
-          <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>urn:ee:eis:xml:epp:eis-1.0</extURI>
-        </svcExtension>
-      </svcs>
-    </login>
-    <clTRID>ABC-12345</clTRID>
-  </command>
-</epp>
-```
-
-RESPONSE:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
-  <response>
-    <result code="1000">
-      <msg>Command completed successfully</msg>
-    </result>
-<trID>
-  <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-8948206964</svTRID>
-</trID>
-  </response>
-</epp>
-```
-
-REQUEST:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
-  <command>
-    <info>
-      <contact:info xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
-        <contact:id>info-4444</contact:id>
-      </contact:info>
-    </info>
-    <clTRID>ABC-12345</clTRID>
-  </command>
-</epp>
-```
-
-RESPONSE:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
-  <response>
-    <result code="1000">
-      <msg>Command completed successfully</msg>
-    </result>
-    <resData>
-      <chkData>
-        <id>info-4444</id>
-<postalInfo type="int">
-  <name>Johnny Awesome</name>
-  <org/>
-  <addr>
-    <street>Rath Mill</street>
-    <city>North Petefurt</city>
-  </addr>
-</postalInfo>
-        <voice>+372.12345678</voice>
-        <fax/>
-        <email>cyrus@gerlach.name</email>
-        <clID>Registrar OÜ</clID>
-        <crDate>2015-01-29 14:37:11 UTC</crDate>
-        <ident type="op">37605030299</ident>
-        <authInfo>
-          <pw>ccds4324pok</pw>
-        </authInfo>
-<disclose flag="0">
-</disclose>
-<disclose flag="1">
-  <name/>
-  <email/>
-  <phone/>
-  <address/>
-  <org_name/>
-  <fax/>
-</disclose>
-      </chkData>
-    </resData>
-<trID>
-  <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3277724928</svTRID>
-</trID>
-  </response>
-</epp>
-```
-
-REQUEST:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
-  <command>
-    <login>
-      <clID>gitlab</clID>
-      <pw>ghyt9e4fu</pw>
-      <options>
-        <version>1.0</version>
-        <lang>en</lang>
-      </options>
-      <svcs>
-        <objURI>urn:ietf:params:xml:ns:domain-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:contact-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
-        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
-        <svcExtension>
-          <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>urn:ee:eis:xml:epp:eis-1.0</extURI>
-        </svcExtension>
-      </svcs>
-    </login>
-    <clTRID>ABC-12345</clTRID>
-  </command>
-</epp>
-```
-
-RESPONSE:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
-  <response>
-    <result code="1000">
-      <msg>Command completed successfully</msg>
-    </result>
-<trID>
-  <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4170133330</svTRID>
+  <svTRID>ccReg-4323249463</svTRID>
 </trID>
   </response>
 </epp>
@@ -1188,9 +1365,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <contact:info xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
-        <contact:wrongid>123123</contact:wrongid>
-      </contact:info>
+      <contact:info xmlns:contact="urn:ietf:params:xml:ns:contact-1.0"/>
     </info>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -1204,12 +1379,12 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2003">
-      <msg lang="en">Required parameter missing: id</msg>
+      <msg lang="en">Required parameter missing: info &gt; info &gt; id [id]</msg>
     </result>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5332024642</svTRID>
+  <svTRID>ccReg-8858986480</svTRID>
 </trID>
 </epp>
 ```
@@ -1250,14 +1425,136 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2612971476</svTRID>
+  <svTRID>ccReg-4774505224</svTRID>
 </trID>
 </epp>
 ```
 
-### EPP Contact with valid user info command does not display unassociated object without password  
+### EPP Contact with valid user info command return info about contact  
 
-### EPP Contact with valid user info command does not display unassociated object with wrong password  
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <info>
+      <contact:info xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
+        <contact:id>info-4444</contact:id>
+        <contact:authInfo>
+          <contact:pw>password</contact:pw>
+        </contact:authInfo>
+      </contact:info>
+    </info>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+    <resData>
+      <infData>
+        <id>info-4444</id>
+        <voice>+372.12345678</voice>
+        <email>catherine@lockman.biz</email>
+        <postalInfo type="int">
+          <name>Johnny Awesome</name>
+          <addr>
+            <street>Wehner Trail</street>
+            <city>New Merlchester</city>
+            <pc>44479</pc>
+            <sp/>
+            <cc/>
+          </addr>
+        </postalInfo>
+        <clID>registrar1</clID>
+        <crID/>
+        <crDate>2015-03-10 15:19:24 UTC</crDate>
+        <ident type="priv" cc="EE">37605030299</ident>
+        <authInfo>
+          <pw>password</pw>
+        </authInfo>
+      </infData>
+    </resData>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-3535234191</svTRID>
+</trID>
+  </response>
+</epp>
+```
+
+### EPP Contact with valid user info command returns no authorization error for wrong password when owner  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <info>
+      <contact:info xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
+        <contact:id>sh40186118</contact:id>
+        <contact:authInfo>
+          <contact:pw>wrong-pw</contact:pw>
+        </contact:authInfo>
+      </contact:info>
+    </info>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+    <resData>
+      <infData>
+        <id>sh40186118</id>
+        <voice>+372.12345678</voice>
+        <email>catherine@lockman.biz</email>
+        <postalInfo type="int">
+          <name>Jena Powlowski0</name>
+          <addr>
+            <street>Wehner Trail</street>
+            <city>New Merlchester</city>
+            <pc>44479</pc>
+            <sp/>
+            <cc/>
+          </addr>
+        </postalInfo>
+        <clID>registrar1</clID>
+        <crID/>
+        <crDate>2015-03-10 15:19:22 UTC</crDate>
+        <ident type="priv" cc="EE">37605030299</ident>
+        <authInfo>
+          <pw>password</pw>
+        </authInfo>
+      </infData>
+    </resData>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-3401381543</svTRID>
+</trID>
+  </response>
+</epp>
+```
+
+### EPP Contact with valid user info command returns no authorization error for wrong user but correct pw  
 
 REQUEST:
 
@@ -1299,7 +1596,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-8926329058</svTRID>
+  <svTRID>ccReg-0862768316</svTRID>
 </trID>
   </response>
 </epp>
@@ -1313,7 +1610,158 @@ REQUEST:
   <command>
     <info>
       <contact:info xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
-        <contact:id>info-4444</contact:id>
+        <contact:id>sh40186118</contact:id>
+        <contact:authInfo>
+          <contact:pw>password</contact:pw>
+        </contact:authInfo>
+      </contact:info>
+    </info>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+    <resData>
+      <infData>
+        <id>sh40186118</id>
+        <voice>+372.12345678</voice>
+        <email>catherine@lockman.biz</email>
+        <postalInfo type="int">
+          <name>Jena Powlowski0</name>
+          <addr>
+            <street>Wehner Trail</street>
+            <city>New Merlchester</city>
+            <pc>44479</pc>
+            <sp/>
+            <cc/>
+          </addr>
+        </postalInfo>
+        <clID>registrar1</clID>
+        <crID/>
+        <crDate>2015-03-10 15:19:22 UTC</crDate>
+        <ident type="priv" cc="EE">37605030299</ident>
+      </infData>
+    </resData>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-4413670191</svTRID>
+</trID>
+  </response>
+</epp>
+```
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <login>
+      <clID>registrar1</clID>
+      <pw>ghyt9e4fu</pw>
+      <options>
+        <version>1.0</version>
+        <lang>en</lang>
+      </options>
+      <svcs>
+        <objURI>urn:ietf:params:xml:ns:domain-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:contact-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
+        <svcExtension>
+          <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
+          <extURI>urn:ee:eis:xml:epp:eis-1.0</extURI>
+        </svcExtension>
+      </svcs>
+    </login>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-8638013591</svTRID>
+</trID>
+  </response>
+</epp>
+```
+
+### EPP Contact with valid user info command returns authorization error for wrong user and wrong pw  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <login>
+      <clID>registrar2</clID>
+      <pw>ghyt9e4fu</pw>
+      <options>
+        <version>1.0</version>
+        <lang>en</lang>
+      </options>
+      <svcs>
+        <objURI>urn:ietf:params:xml:ns:domain-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:contact-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
+        <svcExtension>
+          <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
+          <extURI>urn:ee:eis:xml:epp:eis-1.0</extURI>
+        </svcExtension>
+      </svcs>
+    </login>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-1910877294</svTRID>
+</trID>
+  </response>
+</epp>
+```
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <info>
+      <contact:info xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
+        <contact:id>sh40186118</contact:id>
         <contact:authInfo>
           <contact:pw>wrong-pw</contact:pw>
         </contact:authInfo>
@@ -1330,51 +1778,13 @@ RESPONSE:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
-    <result code="2200">
-      <msg lang="en">Authentication error</msg>
+    <result code="2201">
+      <msg lang="en">Authorization error</msg>
     </result>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4631319986</svTRID>
-</trID>
-</epp>
-```
-
-### EPP Contact with valid user renew command returns 2101-unimplemented command  
-
-REQUEST:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
-    <command>
-      <renew>
-        <contact:renew xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
-          <contact:id>info-4444</contact:id>
-          <contact:authInfo>
-            <contact:pw>2fooBAR</contact:pw>
-          </contact:authInfo>
-       </contact:renew>
-      </renew>
-      <clTRID>ABC-12345</clTRID>
-    </command>
-  </epp>
-```
-
-RESPONSE:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
-  <response>
-    <result code="2101">
-      <msg lang="en">Unimplemented command</msg>
-    </result>
-  </response>
-<trID>
-  <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6371946715</svTRID>
+  <svTRID>ccReg-5138393373</svTRID>
 </trID>
 </epp>
 ```
@@ -1419,7 +1829,91 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2036734228</svTRID>
+  <svTRID>ccReg-7606242982</svTRID>
+</trID>
+  </response>
+</epp>
+```
+
+### EPP Contact with valid user renew command returns 2101-unimplemented command  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+    <command>
+      <renew>
+        <contact:renew xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
+          <contact:id>info-4444</contact:id>
+          <contact:authInfo>
+            <contact:pw>2fooBAR</contact:pw>
+          </contact:authInfo>
+       </contact:renew>
+      </renew>
+      <clTRID>ABC-12345</clTRID>
+    </command>
+  </epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="2101">
+      <msg lang="en">Unimplemented command</msg>
+    </result>
+  </response>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-2646973426</svTRID>
+</trID>
+</epp>
+```
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <login>
+      <clID>registrar1</clID>
+      <pw>ghyt9e4fu</pw>
+      <options>
+        <version>1.0</version>
+        <lang>en</lang>
+      </options>
+      <svcs>
+        <objURI>urn:ietf:params:xml:ns:domain-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:contact-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
+        <svcExtension>
+          <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
+          <extURI>urn:ee:eis:xml:epp:eis-1.0</extURI>
+        </svcExtension>
+      </svcs>
+    </login>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-1028115474</svTRID>
 </trID>
   </response>
 </epp>
@@ -1435,7 +1929,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example1.ee</domain:name>
+        <domain:name>example69731840973274203.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -1492,7 +1986,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2209864981</svTRID>
+  <svTRID>ccReg-7797648703</svTRID>
 </trID>
 </epp>
 ```
@@ -1522,21 +2016,21 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2003">
-      <msg lang="en">Required parameter missing: create &gt; create &gt; ns</msg>
+      <msg lang="en">Required parameter missing: create &gt; create &gt; ns [ns]</msg>
     </result>
     <result code="2003">
-      <msg lang="en">Required parameter missing: create &gt; create &gt; registrant</msg>
+      <msg lang="en">Required parameter missing: create &gt; create &gt; registrant [registrant]</msg>
     </result>
     <result code="2003">
-      <msg lang="en">Required parameter missing: create &gt; create &gt; ns &gt; hostAttr</msg>
+      <msg lang="en">Required parameter missing: create &gt; create &gt; ns &gt; hostAttr [host_attr]</msg>
     </result>
     <result code="2003">
-      <msg lang="en">Required parameter missing: extension &gt; extdata &gt; legalDocument</msg>
+      <msg lang="en">Required parameter missing: extension &gt; extdata &gt; legalDocument [legal_document]</msg>
     </result>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5241644719</svTRID>
+  <svTRID>ccReg-0236836699</svTRID>
 </trID>
 </epp>
 ```
@@ -1551,7 +2045,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example2.ee</domain:name>
+        <domain:name>example55415413922780704.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -1598,15 +2092,15 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <name>example2.ee</name>
-        <crDate>2015-01-29 14:37:14 UTC</crDate>
-        <exDate>2016-01-29 00:00:00 UTC</exDate>
+        <name>example55415413922780704.ee</name>
+        <crDate>2015-03-10 15:19:25 UTC</crDate>
+        <exDate>2016-03-10 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0898112664</svTRID>
+  <svTRID>ccReg-3312842406</svTRID>
 </trID>
 </epp>
 ```
@@ -1621,7 +2115,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example4.ee</domain:name>
+        <domain:name>example70091595483024373.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -1660,85 +2154,15 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <name>example4.ee</name>
-        <crDate>2015-01-29 14:37:14 UTC</crDate>
-        <exDate>2016-01-29 00:00:00 UTC</exDate>
+        <name>example70091595483024373.ee</name>
+        <crDate>2015-03-10 15:19:25 UTC</crDate>
+        <exDate>2016-03-10 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1805969383</svTRID>
-</trID>
-</epp>
-```
-
-### EPP Domain with citizen as an owner creates ria.ee with valid ds record  
-
-REQUEST:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
-  <command>
-    <create>
-      <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>ria.ee</domain:name>
-        <domain:period unit="y">1</domain:period>
-        <domain:ns>
-          <domain:hostAttr>
-            <domain:hostName>ns1.example.net</domain:hostName>
-            <domain:hostAddr ip="v4">192.0.2.2</domain:hostAddr>
-            <domain:hostAddr ip="v6">1080:0:0:0:8:800:200C:417A</domain:hostAddr>
-          </domain:hostAttr>
-          <domain:hostAttr>
-            <domain:hostName>ns2.example.net</domain:hostName>
-          </domain:hostAttr>
-        </domain:ns>
-        <domain:registrant>citizen_1234</domain:registrant>
-        <domain:contact type="admin">sh8013</domain:contact>
-        <domain:contact type="tech">sh8013</domain:contact>
-        <domain:contact type="tech">sh801333</domain:contact>
-      </domain:create>
-    </create>
-    <extension>
-      <secDNS:create xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1">
-        <secDNS:keyData>
-          <secDNS:flags>257</secDNS:flags>
-          <secDNS:protocol>3</secDNS:protocol>
-          <secDNS:alg>8</secDNS:alg>
-          <secDNS:pubKey>AwEAAaOf5+lz3ftsL+0CCvfJbhUF/NVsNh8BKo61oYs5fXVbuWDiH872 LC8uKDO92TJy7Q4TF9XMAKMMlf1GMAxlRspD749SOCTN00sqfWx1OMTu a28L1PerwHq7665oDJDKqR71btcGqyLKhe2QDvCdA0mENimF1NudX1BJ DDFi6oOZ0xE/0CuveB64I3ree7nCrwLwNs56kXC4LYoX3XdkOMKiJLL/ MAhcxXa60CdZLoRtTEW3z8/oBq4hEAYMCNclpbd6y/exScwBxFTdUfFk KsdNcmvai1lyk9vna0WQrtpYpHKMXvY9LFHaJxCOLR4umfeQ42RuTd82 lqfU6ClMeXs=</secDNS:pubKey>
-        </secDNS:keyData>
-      </secDNS:create>
-      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
-        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
-      </eis:extdata>
-    </extension>
-    <clTRID>ABC-12345</clTRID>
-  </command>
-</epp>
-```
-
-RESPONSE:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
-  <response>
-    <result code="1000">
-      <msg>Command completed successfully</msg>
-    </result>
-    <resData>
-      <creData>
-        <name>ria.ee</name>
-        <crDate>2015-01-29 14:37:14 UTC</crDate>
-        <exDate>2016-01-29 00:00:00 UTC</exDate>
-      </creData>
-    </resData>
-  </response>
-<trID>
-  <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0011097743</svTRID>
+  <svTRID>ccReg-6943993742</svTRID>
 </trID>
 </epp>
 ```
@@ -1753,14 +2177,14 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example6.ee</domain:name>
+        <domain:name>example83088188887889939.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
-            <domain:hostName>ns1.example6.ee</domain:hostName>
+            <domain:hostName>ns1.example83088188887889939.ee</domain:hostName>
           </domain:hostAttr>
           <domain:hostAttr>
-            <domain:hostName>ns2.example6.ee</domain:hostName>
+            <domain:hostName>ns2.example83088188887889939.ee</domain:hostName>
           </domain:hostAttr>
         </domain:ns>
         <domain:registrant>citizen_1234</domain:registrant>
@@ -1794,146 +2218,12 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2306">
-      <msg lang="en">IPv4 is missing</msg>
+      <msg lang="en">IPv4 is missing [ipv4]</msg>
     </result>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5138544880</svTRID>
-</trID>
-</epp>
-```
-
-### EPP Domain with citizen as an owner does not create duplicate domain  
-
-REQUEST:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
-  <command>
-    <create>
-      <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example8.ee</domain:name>
-        <domain:period unit="y">1</domain:period>
-        <domain:ns>
-          <domain:hostAttr>
-            <domain:hostName>ns1.example.net</domain:hostName>
-            <domain:hostAddr ip="v4">192.0.2.2</domain:hostAddr>
-            <domain:hostAddr ip="v6">1080:0:0:0:8:800:200C:417A</domain:hostAddr>
-          </domain:hostAttr>
-          <domain:hostAttr>
-            <domain:hostName>ns2.example.net</domain:hostName>
-          </domain:hostAttr>
-        </domain:ns>
-        <domain:registrant>citizen_1234</domain:registrant>
-        <domain:contact type="admin">sh8013</domain:contact>
-        <domain:contact type="tech">sh8013</domain:contact>
-        <domain:contact type="tech">sh801333</domain:contact>
-      </domain:create>
-    </create>
-    <extension>
-      <secDNS:create xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1">
-        <secDNS:keyData>
-          <secDNS:flags>257</secDNS:flags>
-          <secDNS:protocol>3</secDNS:protocol>
-          <secDNS:alg>5</secDNS:alg>
-          <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
-        </secDNS:keyData>
-      </secDNS:create>
-      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
-        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
-      </eis:extdata>
-    </extension>
-    <clTRID>ABC-12345</clTRID>
-  </command>
-</epp>
-```
-
-RESPONSE:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
-  <response>
-    <result code="1000">
-      <msg>Command completed successfully</msg>
-    </result>
-    <resData>
-      <creData>
-        <name>example8.ee</name>
-        <crDate>2015-01-29 14:37:14 UTC</crDate>
-        <exDate>2016-01-29 00:00:00 UTC</exDate>
-      </creData>
-    </resData>
-  </response>
-<trID>
-  <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9308011425</svTRID>
-</trID>
-</epp>
-```
-
-REQUEST:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
-  <command>
-    <create>
-      <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example8.ee</domain:name>
-        <domain:period unit="y">1</domain:period>
-        <domain:ns>
-          <domain:hostAttr>
-            <domain:hostName>ns1.example.net</domain:hostName>
-            <domain:hostAddr ip="v4">192.0.2.2</domain:hostAddr>
-            <domain:hostAddr ip="v6">1080:0:0:0:8:800:200C:417A</domain:hostAddr>
-          </domain:hostAttr>
-          <domain:hostAttr>
-            <domain:hostName>ns2.example.net</domain:hostName>
-          </domain:hostAttr>
-        </domain:ns>
-        <domain:registrant>citizen_1234</domain:registrant>
-        <domain:contact type="admin">sh8013</domain:contact>
-        <domain:contact type="tech">sh8013</domain:contact>
-        <domain:contact type="tech">sh801333</domain:contact>
-      </domain:create>
-    </create>
-    <extension>
-      <secDNS:create xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1">
-        <secDNS:keyData>
-          <secDNS:flags>257</secDNS:flags>
-          <secDNS:protocol>3</secDNS:protocol>
-          <secDNS:alg>5</secDNS:alg>
-          <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
-        </secDNS:keyData>
-      </secDNS:create>
-      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
-        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
-      </eis:extdata>
-    </extension>
-    <clTRID>ABC-12345</clTRID>
-  </command>
-</epp>
-```
-
-RESPONSE:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
-  <response>
-    <result code="2302">
-      <msg lang="en">Domain name already exists</msg>
-      <value>
-        <name>example8.ee</name>
-      </value>
-    </result>
-  </response>
-<trID>
-  <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7366518908</svTRID>
+  <svTRID>ccReg-6552200046</svTRID>
 </trID>
 </epp>
 ```
@@ -1991,7 +2281,7 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2302">
-      <msg lang="en">Domain name is reserved or restricted</msg>
+      <msg lang="en">Domain name is reserved or restricted [name_dirty]</msg>
       <value>
         <name>1162.ee</name>
       </value>
@@ -1999,7 +2289,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7680945421</svTRID>
+  <svTRID>ccReg-5986545514</svTRID>
 </trID>
 </epp>
 ```
@@ -2014,7 +2304,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example12.ee</domain:name>
+        <domain:name>example48727412234219681.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -2057,12 +2347,12 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2003">
-      <msg lang="en">Required parameter missing: create &gt; create &gt; registrant</msg>
+      <msg lang="en">Required parameter missing: create &gt; create &gt; registrant [registrant]</msg>
     </result>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3175970158</svTRID>
+  <svTRID>ccReg-7789403429</svTRID>
 </trID>
 </epp>
 ```
@@ -2077,7 +2367,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example13.ee</domain:name>
+        <domain:name>example401229442362069.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns/>
         <domain:registrant>citizen_1234</domain:registrant>
@@ -2111,12 +2401,15 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2003">
-      <msg lang="en">Required parameter missing: create &gt; create &gt; ns &gt; hostAttr</msg>
+      <msg lang="en">Required parameter missing: create &gt; create &gt; ns [ns]</msg>
+    </result>
+    <result code="2003">
+      <msg lang="en">Required parameter missing: create &gt; create &gt; ns &gt; hostAttr [host_attr]</msg>
     </result>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6004073128</svTRID>
+  <svTRID>ccReg-0005778869</svTRID>
 </trID>
 </epp>
 ```
@@ -2131,7 +2424,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example14.ee</domain:name>
+        <domain:name>example96768184835593218.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -2208,12 +2501,12 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2004">
-      <msg lang="en">Nameservers count must be between 2-11</msg>
+      <msg lang="en">Nameservers count must be between 2-11 [nameservers]</msg>
     </result>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9857139853</svTRID>
+  <svTRID>ccReg-7408521299</svTRID>
 </trID>
 </epp>
 ```
@@ -2228,7 +2521,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example15.ee</domain:name>
+        <domain:name>example34050519198727054.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -2269,13 +2562,13 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2005">
-      <msg lang="en">Hostname is invalid</msg>
+      <msg lang="en">Hostname is invalid [hostname]</msg>
       <value>
         <hostAttr>invalid1-</hostAttr>
       </value>
     </result>
     <result code="2005">
-      <msg lang="en">Hostname is invalid</msg>
+      <msg lang="en">Hostname is invalid [hostname]</msg>
       <value>
         <hostAttr>-invalid2</hostAttr>
       </value>
@@ -2283,7 +2576,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5169552858</svTRID>
+  <svTRID>ccReg-2693172502</svTRID>
 </trID>
 </epp>
 ```
@@ -2298,7 +2591,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example16.ee</domain:name>
+        <domain:name>example19042189908255726.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostObj>ns1.example.ee</domain:hostObj>
@@ -2335,12 +2628,12 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2003">
-      <msg lang="en">Required parameter missing: create &gt; create &gt; ns &gt; hostAttr</msg>
+      <msg lang="en">Required parameter missing: create &gt; create &gt; ns &gt; hostAttr [host_attr]</msg>
     </result>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0362209829</svTRID>
+  <svTRID>ccReg-5156578871</svTRID>
 </trID>
 </epp>
 ```
@@ -2355,7 +2648,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example17.ee</domain:name>
+        <domain:name>example91147046017485197.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -2397,15 +2690,15 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <name>example17.ee</name>
-        <crDate>2015-01-29 14:37:14 UTC</crDate>
-        <exDate>2016-01-29 00:00:00 UTC</exDate>
+        <name>example91147046017485197.ee</name>
+        <crDate>2015-03-10 15:19:25 UTC</crDate>
+        <exDate>2016-03-10 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0104152781</svTRID>
+  <svTRID>ccReg-0814871734</svTRID>
 </trID>
 </epp>
 ```
@@ -2420,7 +2713,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example18.ee</domain:name>
+        <domain:name>example13921910832244057.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -2458,13 +2751,13 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2005">
-      <msg lang="en">IPv4 is invalid</msg>
+      <msg lang="en">IPv4 is invalid [ipv4]</msg>
       <value>
         <hostAddr>192.0.2.2.invalid</hostAddr>
       </value>
     </result>
     <result code="2005">
-      <msg lang="en">IPv6 is invalid</msg>
+      <msg lang="en">IPv6 is invalid [ipv6]</msg>
       <value>
         <hostAddr>INVALID_IPV6</hostAddr>
       </value>
@@ -2472,7 +2765,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5275363669</svTRID>
+  <svTRID>ccReg-3083240669</svTRID>
 </trID>
 </epp>
 ```
@@ -2487,7 +2780,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example19.ee</domain:name>
+        <domain:name>example74355573983343477.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -2534,15 +2827,15 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <name>example19.ee</name>
-        <crDate>2015-01-29 14:37:15 UTC</crDate>
-        <exDate>2016-01-29 00:00:00 UTC</exDate>
+        <name>example74355573983343477.ee</name>
+        <crDate>2015-03-10 15:19:26 UTC</crDate>
+        <exDate>2016-03-10 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5252404496</svTRID>
+  <svTRID>ccReg-5571592783</svTRID>
 </trID>
 </epp>
 ```
@@ -2557,7 +2850,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example20.ee</domain:name>
+        <domain:name>example30255152706708311.ee</domain:name>
         <domain:period unit="d">367</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -2600,7 +2893,7 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2004">
-      <msg lang="en">Period must add up to 1, 2 or 3 years</msg>
+      <msg lang="en">Period must add up to 1, 2 or 3 years [period]</msg>
       <value>
         <period>367</period>
       </value>
@@ -2608,7 +2901,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9221478530</svTRID>
+  <svTRID>ccReg-5868030331</svTRID>
 </trID>
 </epp>
 ```
@@ -2623,7 +2916,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example21.ee</domain:name>
+        <domain:name>example9434132897890950.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -2682,15 +2975,15 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <name>example21.ee</name>
-        <crDate>2015-01-29 14:37:15 UTC</crDate>
-        <exDate>2016-01-29 00:00:00 UTC</exDate>
+        <name>example9434132897890950.ee</name>
+        <crDate>2015-03-10 15:19:26 UTC</crDate>
+        <exDate>2016-03-10 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0779134263</svTRID>
+  <svTRID>ccReg-8482595413</svTRID>
 </trID>
 </epp>
 ```
@@ -2705,7 +2998,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example22.ee</domain:name>
+        <domain:name>example44345627365449931.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -2760,40 +3053,40 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2005">
-      <msg lang="en">Valid algorithms are: 3, 5, 6, 7, 8, 252, 253, 254, 255</msg>
+      <msg lang="en">Valid algorithms are: 3, 5, 6, 7, 8, 252, 253, 254, 255 [alg]</msg>
       <value>
         <alg>9</alg>
       </value>
     </result>
     <result code="2005">
-      <msg lang="en">Valid protocols are: 3</msg>
+      <msg lang="en">Valid protocols are: 3 [protocol]</msg>
       <value>
         <protocol>4</protocol>
       </value>
     </result>
     <result code="2005">
-      <msg lang="en">Valid flags are: 0, 256, 257</msg>
+      <msg lang="en">Valid flags are: 0, 256, 257 [flags]</msg>
       <value>
         <flags>250</flags>
       </value>
     </result>
     <result code="2005">
-      <msg lang="en">Valid algorithms are: 3, 5, 6, 7, 8, 252, 253, 254, 255</msg>
+      <msg lang="en">Valid algorithms are: 3, 5, 6, 7, 8, 252, 253, 254, 255 [alg]</msg>
       <value>
         <alg>10</alg>
       </value>
     </result>
     <result code="2005">
-      <msg lang="en">Valid flags are: 0, 256, 257</msg>
+      <msg lang="en">Valid flags are: 0, 256, 257 [flags]</msg>
       <value>
         <flags>1</flags>
       </value>
     </result>
     <result code="2306">
-      <msg lang="en">Public key is missing</msg>
+      <msg lang="en">Public key is missing [public_key]</msg>
     </result>
     <result code="2005">
-      <msg lang="en">Valid protocols are: 3</msg>
+      <msg lang="en">Valid protocols are: 3 [protocol]</msg>
       <value>
         <protocol>5</protocol>
       </value>
@@ -2801,7 +3094,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5129719313</svTRID>
+  <svTRID>ccReg-2738661248</svTRID>
 </trID>
 </epp>
 ```
@@ -2816,7 +3109,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example23.ee</domain:name>
+        <domain:name>example78892520280308641.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -2865,7 +3158,7 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2302">
-      <msg lang="en">Public key already exists</msg>
+      <msg lang="en">Public key already exists [public_key]</msg>
       <value>
         <pubKey>700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f</pubKey>
       </value>
@@ -2873,7 +3166,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7226565627</svTRID>
+  <svTRID>ccReg-3699584195</svTRID>
 </trID>
 </epp>
 ```
@@ -2888,7 +3181,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example24.ee</domain:name>
+        <domain:name>example6152844262625351.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -2937,12 +3230,12 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2004">
-      <msg lang="en">DNS keys count must be between 0-1</msg>
+      <msg lang="en">DNS keys count must be between 0-1 [dnskeys]</msg>
     </result>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0813411699</svTRID>
+  <svTRID>ccReg-6320253470</svTRID>
 </trID>
 </epp>
 ```
@@ -2957,7 +3250,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example25.ee</domain:name>
+        <domain:name>example99913663627111256.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -3004,15 +3297,15 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <name>example25.ee</name>
-        <crDate>2015-01-29 14:37:15 UTC</crDate>
-        <exDate>2016-01-29 00:00:00 UTC</exDate>
+        <name>example99913663627111256.ee</name>
+        <crDate>2015-03-10 15:19:26 UTC</crDate>
+        <exDate>2016-03-10 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6398067973</svTRID>
+  <svTRID>ccReg-0552018173</svTRID>
 </trID>
 </epp>
 ```
@@ -3027,7 +3320,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example26.ee</domain:name>
+        <domain:name>example23884271672663972.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -3080,84 +3373,15 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <name>example26.ee</name>
-        <crDate>2015-01-29 14:37:15 UTC</crDate>
-        <exDate>2016-01-29 00:00:00 UTC</exDate>
+        <name>example23884271672663972.ee</name>
+        <crDate>2015-03-10 15:19:26 UTC</crDate>
+        <exDate>2016-03-10 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5195420892</svTRID>
-</trID>
-</epp>
-```
-
-### EPP Domain with citizen as an owner prohibits dsData with key  
-
-REQUEST:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
-  <command>
-    <create>
-      <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example27.ee</domain:name>
-        <domain:period unit="y">1</domain:period>
-        <domain:ns>
-          <domain:hostAttr>
-            <domain:hostName>ns1.example.net</domain:hostName>
-            <domain:hostAddr ip="v4">192.0.2.2</domain:hostAddr>
-            <domain:hostAddr ip="v6">1080:0:0:0:8:800:200C:417A</domain:hostAddr>
-          </domain:hostAttr>
-          <domain:hostAttr>
-            <domain:hostName>ns2.example.net</domain:hostName>
-          </domain:hostAttr>
-        </domain:ns>
-        <domain:registrant>citizen_1234</domain:registrant>
-        <domain:contact type="admin">sh8013</domain:contact>
-        <domain:contact type="tech">sh8013</domain:contact>
-        <domain:contact type="tech">sh801333</domain:contact>
-      </domain:create>
-    </create>
-    <extension>
-      <secDNS:create xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1">
-        <secDNS:dsData>
-          <secDNS:keyTag>12345</secDNS:keyTag>
-          <secDNS:alg>3</secDNS:alg>
-          <secDNS:digestType>1</secDNS:digestType>
-          <secDNS:digest>49FD46E6C4B45C55D4AC</secDNS:digest>
-          <secDNS:keyData>
-            <secDNS:flags>0</secDNS:flags>
-            <secDNS:protocol>3</secDNS:protocol>
-            <secDNS:alg>5</secDNS:alg>
-            <secDNS:pubKey>700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f</secDNS:pubKey>
-          </secDNS:keyData>
-        </secDNS:dsData>
-      </secDNS:create>
-      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
-        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
-      </eis:extdata>
-    </extension>
-    <clTRID>ABC-12345</clTRID>
-  </command>
-</epp>
-```
-
-RESPONSE:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
-  <response>
-    <result code="2306">
-      <msg lang="en">dsData object with key data is not allowed</msg>
-    </result>
-  </response>
-<trID>
-  <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2822562520</svTRID>
+  <svTRID>ccReg-1011548001</svTRID>
 </trID>
 </epp>
 ```
@@ -3172,7 +3396,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example28.ee</domain:name>
+        <domain:name>example66958471273718608.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -3226,7 +3450,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9033917156</svTRID>
+  <svTRID>ccReg-9169451622</svTRID>
 </trID>
 </epp>
 ```
@@ -3241,7 +3465,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example29.ee</domain:name>
+        <domain:name>example56494345294084411.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -3289,7 +3513,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7411900292</svTRID>
+  <svTRID>ccReg-3112635954</svTRID>
 </trID>
 </epp>
 ```
@@ -3304,7 +3528,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example30.ee</domain:name>
+        <domain:name>example96254489047026999.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -3358,7 +3582,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3926969980</svTRID>
+  <svTRID>ccReg-5192422617</svTRID>
 </trID>
 </epp>
 ```
@@ -3373,7 +3597,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example31.ee</domain:name>
+        <domain:name>example90502607179119410.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -3418,15 +3642,15 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <name>example31.ee</name>
-        <crDate>2015-01-29 14:37:16 UTC</crDate>
-        <exDate>2016-01-29 00:00:00 UTC</exDate>
+        <name>example90502607179119410.ee</name>
+        <crDate>2015-03-10 15:19:27 UTC</crDate>
+        <exDate>2016-03-10 00:00:00 UTC</exDate>
       </creData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1803704181</svTRID>
+  <svTRID>ccReg-3227541160</svTRID>
 </trID>
 </epp>
 ```
@@ -3441,7 +3665,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example32.ee</domain:name>
+        <domain:name>example84375762301029905.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -3482,12 +3706,12 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2004">
-      <msg lang="en">Admin contacts count must be between 1-10</msg>
+      <msg lang="en">Admin contacts count must be between 1-10 [admin_contacts]</msg>
     </result>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6174363771</svTRID>
+  <svTRID>ccReg-0301019365</svTRID>
 </trID>
 </epp>
 ```
@@ -3502,7 +3726,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example33.ee</domain:name>
+        <domain:name>example4072313282158096.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -3551,7 +3775,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4700933742</svTRID>
+  <svTRID>ccReg-8774912503</svTRID>
 </trID>
 </epp>
 ```
@@ -3598,7 +3822,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1087330100</svTRID>
+  <svTRID>ccReg-6417278993</svTRID>
 </trID>
   </response>
 </epp>
@@ -3612,12 +3836,17 @@ REQUEST:
   <command>
     <transfer op="query">
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example34.ee</domain:name>
+        <domain:name>fabricate_name1.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">64c6e246e5db07ca9fadb327211511e4</domain:pw>
+          <domain:pw roid="citizen_1234-REP">16c6697101b6117dd01f0c66443038c0</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
 </epp>
@@ -3634,19 +3863,19 @@ RESPONSE:
     </result>
     <resData>
       <trnData>
-        <name>example34.ee</name>
+        <name>fabricate_name1.ee</name>
         <trStatus>serverApproved</trStatus>
-        <reID>123</reID>
-        <reDate>2015-01-29 14:37:16 UTC</reDate>
-        <acID>12345678</acID>
-        <acDate>2015-01-29 14:37:16 UTC</acDate>
-        <exDate>2016-01-29 00:00:00 UTC</exDate>
+        <reID>222</reID>
+        <reDate>2015-03-10 15:19:27 UTC</reDate>
+        <acID>111</acID>
+        <acDate>2015-03-10 15:19:27 UTC</acDate>
+        <exDate>2016-03-10 00:00:00 UTC</exDate>
       </trnData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3808490159</svTRID>
+  <svTRID>ccReg-1294225945</svTRID>
 </trID>
 </epp>
 ```
@@ -3691,7 +3920,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-8864691000</svTRID>
+  <svTRID>ccReg-5332757850</svTRID>
 </trID>
   </response>
 </epp>
@@ -3705,12 +3934,17 @@ REQUEST:
   <command>
     <transfer op="query">
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example34.ee</domain:name>
+        <domain:name>fabricate_name1.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">ee317e4bd4a982214ec50017b28fca33</domain:pw>
+          <domain:pw roid="citizen_1234-REP">03728ab186c4a492f033350023b46b88</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
 </epp>
@@ -3727,19 +3961,19 @@ RESPONSE:
     </result>
     <resData>
       <trnData>
-        <name>example34.ee</name>
+        <name>fabricate_name1.ee</name>
         <trStatus>pending</trStatus>
-        <reID>12345678</reID>
-        <reDate>2015-01-29 14:37:16 UTC</reDate>
-        <acID>123</acID>
-        <acDate>2015-01-29 15:37:16 UTC</acDate>
-        <exDate>2016-01-29 00:00:00 UTC</exDate>
+        <reID>111</reID>
+        <reDate>2015-03-10 15:19:27 UTC</reDate>
+        <acID>222</acID>
+        <acDate>2015-03-10 16:19:27 UTC</acDate>
+        <exDate>2016-03-10 00:00:00 UTC</exDate>
       </trnData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3380890617</svTRID>
+  <svTRID>ccReg-2981959760</svTRID>
 </trID>
 </epp>
 ```
@@ -3752,12 +3986,17 @@ REQUEST:
   <command>
     <transfer op="query">
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example34.ee</domain:name>
+        <domain:name>fabricate_name1.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">ee317e4bd4a982214ec50017b28fca33</domain:pw>
+          <domain:pw roid="citizen_1234-REP">03728ab186c4a492f033350023b46b88</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
 </epp>
@@ -3774,19 +4013,19 @@ RESPONSE:
     </result>
     <resData>
       <trnData>
-        <name>example34.ee</name>
+        <name>fabricate_name1.ee</name>
         <trStatus>pending</trStatus>
-        <reID>12345678</reID>
-        <reDate>2015-01-29 14:37:16 UTC</reDate>
-        <acID>123</acID>
-        <acDate>2015-01-29 15:37:16 UTC</acDate>
-        <exDate>2016-01-29 00:00:00 UTC</exDate>
+        <reID>111</reID>
+        <reDate>2015-03-10 15:19:27 UTC</reDate>
+        <acID>222</acID>
+        <acDate>2015-03-10 16:19:27 UTC</acDate>
+        <exDate>2016-03-10 00:00:00 UTC</exDate>
       </trnData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-8626741512</svTRID>
+  <svTRID>ccReg-2720880755</svTRID>
 </trID>
 </epp>
 ```
@@ -3831,7 +4070,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7047341745</svTRID>
+  <svTRID>ccReg-1339507270</svTRID>
 </trID>
   </response>
 </epp>
@@ -3859,23 +4098,23 @@ RESPONSE:
       <msg>Command completed successfully; ack to dequeue</msg>
     </result>
     <msgQ count="1" id="1">
-      <qDate>2015-01-29 14:37:16 UTC</qDate>
+      <qDate>2015-03-10 15:19:27 UTC</qDate>
       <msg>Transfer requested.</msg>
     </msgQ>
     <resData>
       <trnData>
-        <name>example34.ee</name>
+        <name>fabricate_name1.ee</name>
         <trStatus>pending</trStatus>
-        <reID>12345678</reID>
-        <reDate>2015-01-29 14:37:16 UTC</reDate>
-        <acID>123</acID>
-        <acDate>2015-01-29 15:37:16 UTC</acDate>
-        <exDate>2016-01-29 00:00:00 UTC</exDate>
+        <reID>111</reID>
+        <reDate>2015-03-10 15:19:27 UTC</reDate>
+        <acID>222</acID>
+        <acDate>2015-03-10 16:19:27 UTC</acDate>
+        <exDate>2016-03-10 00:00:00 UTC</exDate>
       </trnData>
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0036145470</svTRID>
+  <svTRID>ccReg-1114095309</svTRID>
 </trID>
   </response>
 </epp>
@@ -3921,7 +4160,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0295191366</svTRID>
+  <svTRID>ccReg-2488949090</svTRID>
 </trID>
   </response>
 </epp>
@@ -3967,7 +4206,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4143637041</svTRID>
+  <svTRID>ccReg-0760562989</svTRID>
 </trID>
   </response>
 </epp>
@@ -3997,7 +4236,7 @@ RESPONSE:
     <msgQ count="0" id="1"/>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1853825992</svTRID>
+  <svTRID>ccReg-8346264214</svTRID>
 </trID>
   </response>
 </epp>
@@ -4043,7 +4282,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9240064798</svTRID>
+  <svTRID>ccReg-1719949007</svTRID>
 </trID>
   </response>
 </epp>
@@ -4091,7 +4330,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1774087787</svTRID>
+  <svTRID>ccReg-3211934627</svTRID>
 </trID>
   </response>
 </epp>
@@ -4105,9 +4344,9 @@ REQUEST:
   <command>
     <transfer op="query">
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example37.ee</domain:name>
+        <domain:name>fabricate_name2.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">d8cddd150cf7d24b34a0f3038cbcbf72</domain:pw>
+          <domain:pw roid="citizen_1234-REP">8b4b93c0b6bdfe747463fb8ba79924e7</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -4132,19 +4371,19 @@ RESPONSE:
     </result>
     <resData>
       <trnData>
-        <name>example37.ee</name>
+        <name>fabricate_name2.ee</name>
         <trStatus>pending</trStatus>
-        <reID>123</reID>
-        <reDate>2015-01-29 14:37:17 UTC</reDate>
-        <acID>12345678</acID>
-        <acDate>2015-01-29 15:37:17 UTC</acDate>
-        <exDate>2016-01-29 00:00:00 UTC</exDate>
+        <reID>222</reID>
+        <reDate>2015-03-10 15:19:28 UTC</reDate>
+        <acID>111</acID>
+        <acDate>2015-03-10 16:19:28 UTC</acDate>
+        <exDate>2016-03-10 00:00:00 UTC</exDate>
       </trnData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6856272542</svTRID>
+  <svTRID>ccReg-1791819972</svTRID>
 </trID>
 </epp>
 ```
@@ -4189,7 +4428,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-8458283248</svTRID>
+  <svTRID>ccReg-5076079735</svTRID>
 </trID>
   </response>
 </epp>
@@ -4235,7 +4474,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1482519636</svTRID>
+  <svTRID>ccReg-0924745168</svTRID>
 </trID>
   </response>
 </epp>
@@ -4249,9 +4488,9 @@ REQUEST:
   <command>
     <transfer op="query">
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example37.ee</domain:name>
+        <domain:name>fabricate_name2.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">d8cddd150cf7d24b34a0f3038cbcbf72</domain:pw>
+          <domain:pw roid="citizen_1234-REP">8b4b93c0b6bdfe747463fb8ba79924e7</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -4276,19 +4515,19 @@ RESPONSE:
     </result>
     <resData>
       <trnData>
-        <name>example37.ee</name>
+        <name>fabricate_name2.ee</name>
         <trStatus>pending</trStatus>
-        <reID>123</reID>
-        <reDate>2015-01-29 14:37:17 UTC</reDate>
-        <acID>12345678</acID>
-        <acDate>2015-01-29 15:37:17 UTC</acDate>
-        <exDate>2016-01-29 00:00:00 UTC</exDate>
+        <reID>222</reID>
+        <reDate>2015-03-10 15:19:28 UTC</reDate>
+        <acID>111</acID>
+        <acDate>2015-03-10 16:19:28 UTC</acDate>
+        <exDate>2016-03-10 00:00:00 UTC</exDate>
       </trnData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6033276040</svTRID>
+  <svTRID>ccReg-0693582762</svTRID>
 </trID>
 </epp>
 ```
@@ -4333,13 +4572,13 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6854047677</svTRID>
+  <svTRID>ccReg-9530855209</svTRID>
 </trID>
   </response>
 </epp>
 ```
 
-### EPP Domain with valid domain approves the transfer request  
+### EPP Domain with valid domain creates transfer successfully without legal document  
 
 REQUEST:
 
@@ -4347,11 +4586,57 @@ REQUEST:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
-    <transfer op="approve">
+    <login>
+      <clID>registrar2</clID>
+      <pw>ghyt9e4fu</pw>
+      <options>
+        <version>1.0</version>
+        <lang>en</lang>
+      </options>
+      <svcs>
+        <objURI>urn:ietf:params:xml:ns:domain-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:contact-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
+        <svcExtension>
+          <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
+          <extURI>urn:ee:eis:xml:epp:eis-1.0</extURI>
+        </svcExtension>
+      </svcs>
+    </login>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-3231651613</svTRID>
+</trID>
+  </response>
+</epp>
+```
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <transfer op="query">
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example39.ee</domain:name>
+        <domain:name>fabricate_name3.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">f71c7aa92230c1c80a17b5d4c25386be</domain:pw>
+          <domain:pw roid="citizen_1234-REP">b6f1a7c689c3c06b13ff837214be6556</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -4371,19 +4656,249 @@ RESPONSE:
     </result>
     <resData>
       <trnData>
-        <name>example39.ee</name>
-        <trStatus>clientApproved</trStatus>
-        <reID>123</reID>
-        <reDate>2015-01-29 14:37:17 UTC</reDate>
-        <acID>12345678</acID>
-        <acDate>2015-01-29 14:37:17 UTC</acDate>
-        <exDate>2016-01-29 00:00:00 UTC</exDate>
+        <name>fabricate_name3.ee</name>
+        <trStatus>serverApproved</trStatus>
+        <reID>222</reID>
+        <reDate>2015-03-10 15:19:28 UTC</reDate>
+        <acID>111</acID>
+        <acDate>2015-03-10 15:19:28 UTC</acDate>
+        <exDate>2016-03-10 00:00:00 UTC</exDate>
       </trnData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3058350454</svTRID>
+  <svTRID>ccReg-9653002799</svTRID>
+</trID>
+</epp>
+```
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <login>
+      <clID>registrar1</clID>
+      <pw>ghyt9e4fu</pw>
+      <options>
+        <version>1.0</version>
+        <lang>en</lang>
+      </options>
+      <svcs>
+        <objURI>urn:ietf:params:xml:ns:domain-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:contact-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
+        <svcExtension>
+          <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
+          <extURI>urn:ee:eis:xml:epp:eis-1.0</extURI>
+        </svcExtension>
+      </svcs>
+    </login>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-5167128642</svTRID>
+</trID>
+  </response>
+</epp>
+```
+
+### EPP Domain with valid domain should not creates transfer without password  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <login>
+      <clID>registrar2</clID>
+      <pw>ghyt9e4fu</pw>
+      <options>
+        <version>1.0</version>
+        <lang>en</lang>
+      </options>
+      <svcs>
+        <objURI>urn:ietf:params:xml:ns:domain-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:contact-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
+        <svcExtension>
+          <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
+          <extURI>urn:ee:eis:xml:epp:eis-1.0</extURI>
+        </svcExtension>
+      </svcs>
+    </login>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-9067001828</svTRID>
+</trID>
+  </response>
+</epp>
+```
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <transfer op="query">
+      <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
+        <domain:name>fabricate_name4.ee</domain:name>
+        <domain:authInfo>
+          <domain:pw roid="citizen_1234-REP">98oiewslkfkd</domain:pw>
+        </domain:authInfo>
+      </domain:transfer>
+    </transfer>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="2201">
+      <msg lang="en">Authorization error</msg>
+    </result>
+  </response>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-3943818846</svTRID>
+</trID>
+</epp>
+```
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <login>
+      <clID>registrar1</clID>
+      <pw>ghyt9e4fu</pw>
+      <options>
+        <version>1.0</version>
+        <lang>en</lang>
+      </options>
+      <svcs>
+        <objURI>urn:ietf:params:xml:ns:domain-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:contact-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
+        <svcExtension>
+          <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
+          <extURI>urn:ee:eis:xml:epp:eis-1.0</extURI>
+        </svcExtension>
+      </svcs>
+    </login>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-8830591089</svTRID>
+</trID>
+  </response>
+</epp>
+```
+
+### EPP Domain with valid domain approves the transfer request  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <transfer op="approve">
+      <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
+        <domain:name>fabricate_name5.ee</domain:name>
+        <domain:authInfo>
+          <domain:pw roid="citizen_1234-REP">a8368f031ad884359f2f9294e01a0bee</domain:pw>
+        </domain:authInfo>
+      </domain:transfer>
+    </transfer>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+    <resData>
+      <trnData>
+        <name>fabricate_name5.ee</name>
+        <trStatus>clientApproved</trStatus>
+        <reID>222</reID>
+        <reDate>2015-03-10 15:19:29 UTC</reDate>
+        <acID>111</acID>
+        <acDate>2015-03-10 15:19:29 UTC</acDate>
+        <exDate>2016-03-10 00:00:00 UTC</exDate>
+      </trnData>
+    </resData>
+  </response>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-1809533497</svTRID>
 </trID>
 </epp>
 ```
@@ -4430,7 +4945,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7419467469</svTRID>
+  <svTRID>ccReg-4042619523</svTRID>
 </trID>
   </response>
 </epp>
@@ -4444,9 +4959,9 @@ REQUEST:
   <command>
     <transfer op="reject">
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example41.ee</domain:name>
+        <domain:name>fabricate_name6.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">c5b066c1ff235f6df98521f9d12ba430</domain:pw>
+          <domain:pw roid="citizen_1234-REP">d2b6e4fc9f966c163356e7aad1047516</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -4472,7 +4987,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5434026715</svTRID>
+  <svTRID>ccReg-2478717959</svTRID>
 </trID>
 </epp>
 ```
@@ -4517,7 +5032,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7272167764</svTRID>
+  <svTRID>ccReg-9734993774</svTRID>
 </trID>
   </response>
 </epp>
@@ -4531,9 +5046,9 @@ REQUEST:
   <command>
     <transfer op="reject">
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example41.ee</domain:name>
+        <domain:name>fabricate_name6.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">c5b066c1ff235f6df98521f9d12ba430</domain:pw>
+          <domain:pw roid="citizen_1234-REP">d2b6e4fc9f966c163356e7aad1047516</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -4558,19 +5073,19 @@ RESPONSE:
     </result>
     <resData>
       <trnData>
-        <name>example41.ee</name>
+        <name>fabricate_name6.ee</name>
         <trStatus>clientRejected</trStatus>
-        <reID>123</reID>
-        <reDate>2015-01-29 14:37:17 UTC</reDate>
-        <acID>12345678</acID>
+        <reID>222</reID>
+        <reDate>2015-03-10 15:19:29 UTC</reDate>
+        <acID>111</acID>
         <acDate/>
-        <exDate>2016-01-29 00:00:00 UTC</exDate>
+        <exDate>2016-03-10 00:00:00 UTC</exDate>
       </trnData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7881371770</svTRID>
+  <svTRID>ccReg-6634634980</svTRID>
 </trID>
 </epp>
 ```
@@ -4617,7 +5132,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3661382457</svTRID>
+  <svTRID>ccReg-2519392999</svTRID>
 </trID>
   </response>
 </epp>
@@ -4631,12 +5146,17 @@ REQUEST:
   <command>
     <transfer op="approve">
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example43.ee</domain:name>
+        <domain:name>fabricate_name7.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">643ba7ffcda956f1efd73703944edae2</domain:pw>
+          <domain:pw roid="citizen_1234-REP">fd7f8f49a00f9532434f0da580a623fa</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
 </epp>
@@ -4654,7 +5174,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1502255734</svTRID>
+  <svTRID>ccReg-1382656620</svTRID>
 </trID>
 </epp>
 ```
@@ -4699,7 +5219,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4561833267</svTRID>
+  <svTRID>ccReg-4831834771</svTRID>
 </trID>
   </response>
 </epp>
@@ -4715,12 +5235,17 @@ REQUEST:
   <command>
     <transfer op="query">
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example45.ee</domain:name>
+        <domain:name>fabricate_name8.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">test</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
 </epp>
@@ -4738,7 +5263,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1617826528</svTRID>
+  <svTRID>ccReg-7486481521</svTRID>
 </trID>
 </epp>
 ```
@@ -4753,12 +5278,17 @@ REQUEST:
   <command>
     <transfer op="query">
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example47.ee</domain:name>
+        <domain:name>fabricate_name9.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">f54215bdb344f6a90b75105e40dde7a4</domain:pw>
+          <domain:pw roid="citizen_1234-REP">4a42cac5ed2baf10a6dba39a1bd4d436</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
 </epp>
@@ -4776,7 +5306,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4731348585</svTRID>
+  <svTRID>ccReg-1328620960</svTRID>
 </trID>
 </epp>
 ```
@@ -4791,7 +5321,7 @@ REQUEST:
   <command>
     <transfer op="bla">
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example50.ee</domain:name>
+        <domain:name>example56627159572138989.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">98oiewslkfkd</domain:pw>
         </domain:authInfo>
@@ -4814,7 +5344,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6057139057</svTRID>
+  <svTRID>ccReg-2514184293</svTRID>
 </trID>
 </epp>
 ```
@@ -4861,7 +5391,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4697397917</svTRID>
+  <svTRID>ccReg-9987003880</svTRID>
 </trID>
   </response>
 </epp>
@@ -4875,12 +5405,17 @@ REQUEST:
   <command>
     <transfer op="query">
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example51.ee</domain:name>
+        <domain:name>fabricate_name11.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">53d13282073ac841b58777e8d8eec712</domain:pw>
+          <domain:pw roid="citizen_1234-REP">4d8c40f85a06caef66074240dfd78633</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
 </epp>
@@ -4897,19 +5432,19 @@ RESPONSE:
     </result>
     <resData>
       <trnData>
-        <name>example51.ee</name>
+        <name>fabricate_name11.ee</name>
         <trStatus>serverApproved</trStatus>
-        <reID>123</reID>
-        <reDate>2015-01-29 14:37:18 UTC</reDate>
-        <acID>12345678</acID>
-        <acDate>2015-01-29 14:37:18 UTC</acDate>
-        <exDate>2016-01-29 00:00:00 UTC</exDate>
+        <reID>222</reID>
+        <reDate>2015-03-10 15:19:30 UTC</reDate>
+        <acID>111</acID>
+        <acDate>2015-03-10 15:19:30 UTC</acDate>
+        <exDate>2016-03-10 00:00:00 UTC</exDate>
       </trnData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2344709786</svTRID>
+  <svTRID>ccReg-1445611391</svTRID>
 </trID>
 </epp>
 ```
@@ -4922,12 +5457,17 @@ REQUEST:
   <command>
     <transfer op="query">
       <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example51.ee</domain:name>
+        <domain:name>fabricate_name11.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">53d13282073ac841b58777e8d8eec712</domain:pw>
+          <domain:pw roid="citizen_1234-REP">4d8c40f85a06caef66074240dfd78633</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
     <clTRID>ABC-12345</clTRID>
   </command>
 </epp>
@@ -4945,7 +5485,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7912619762</svTRID>
+  <svTRID>ccReg-6995496299</svTRID>
 </trID>
 </epp>
 ```
@@ -4990,9 +5530,52 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9284561579</svTRID>
+  <svTRID>ccReg-5149827925</svTRID>
 </trID>
   </response>
+</epp>
+```
+
+### EPP Domain with valid domain should get an error when there is no pending transfer  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <transfer op="approve">
+      <domain:transfer xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
+        <domain:name>fabricate_name12.ee</domain:name>
+        <domain:authInfo>
+          <domain:pw roid="citizen_1234-REP">4f84ae3b3dbe0f960e4f1780111bf0e2</domain:pw>
+        </domain:authInfo>
+      </domain:transfer>
+    </transfer>
+    <extension>
+      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+        <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="2303">
+      <msg lang="en">Pending transfer was not found</msg>
+    </result>
+  </response>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-5815713161</svTRID>
+</trID>
 </epp>
 ```
 
@@ -5006,7 +5589,7 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example53.ee</domain:name>
+        <domain:name>fabricate_name13.ee</domain:name>
         <domain:chg>
           <domain:registrant>citizen_1234</domain:registrant>
         </domain:chg>
@@ -5035,7 +5618,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2155291918</svTRID>
+  <svTRID>ccReg-1347920772</svTRID>
 </trID>
 </epp>
 ```
@@ -5050,7 +5633,7 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example55.ee</domain:name>
+        <domain:name>fabricate_name14.ee</domain:name>
         <domain:add>
           <domain:ns>
             <domain:hostAttr>
@@ -5104,7 +5687,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3402580641</svTRID>
+  <svTRID>ccReg-2224120145</svTRID>
 </trID>
 </epp>
 ```
@@ -5117,7 +5700,7 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example55.ee</domain:name>
+        <domain:name>fabricate_name14.ee</domain:name>
         <domain:add>
           <domain:ns>
             <domain:hostAttr>
@@ -5168,7 +5751,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7100714699</svTRID>
+  <svTRID>ccReg-1513536423</svTRID>
 </trID>
 </epp>
 ```
@@ -5181,7 +5764,7 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example55.ee</domain:name>
+        <domain:name>fabricate_name14.ee</domain:name>
         <domain:add>
           <domain:ns>
             <domain:hostAttr>
@@ -5227,43 +5810,43 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2302">
-      <msg lang="en">Nameserver already exists on this domain</msg>
+      <msg lang="en">Nameserver already exists on this domain [hostname]</msg>
       <value>
         <hostAttr>ns1.example.com</hostAttr>
       </value>
     </result>
     <result code="2302">
-      <msg lang="en">Nameserver already exists on this domain</msg>
+      <msg lang="en">Nameserver already exists on this domain [hostname]</msg>
       <value>
         <hostAttr>ns2.example.com</hostAttr>
       </value>
     </result>
     <result code="2302">
-      <msg lang="en">Contact already exists on this domain</msg>
+      <msg lang="en">Contact already exists on this domain [contact_code_cache]</msg>
       <value>
         <contact>mak21</contact>
       </value>
     </result>
     <result code="2302">
-      <msg lang="en">Status already exists on this domain</msg>
+      <msg lang="en">Status already exists on this domain [value]</msg>
       <value>
         <status>clientHold</status>
       </value>
     </result>
     <result code="2302">
-      <msg lang="en">Status already exists on this domain</msg>
+      <msg lang="en">Status already exists on this domain [value]</msg>
       <value>
         <status>clientUpdateProhibited</status>
       </value>
     </result>
     <result code="2302">
-      <msg lang="en">Public key already exists</msg>
+      <msg lang="en">Public key already exists [public_key]</msg>
       <value>
         <pubKey>700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f</pubKey>
       </value>
     </result>
     <result code="2302">
-      <msg lang="en">Public key already exists</msg>
+      <msg lang="en">Public key already exists [public_key]</msg>
       <value>
         <pubKey>841936717ae427ace63c28d04918569a841936717ae427ace63c28d0</pubKey>
       </value>
@@ -5271,7 +5854,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3284023666</svTRID>
+  <svTRID>ccReg-7862051726</svTRID>
 </trID>
 </epp>
 ```
@@ -5286,7 +5869,7 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example57.ee</domain:name>
+        <domain:name>fabricate_name15.ee</domain:name>
         <domain:add>
           <domain:ns>
             <domain:hostAttr>
@@ -5337,7 +5920,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9064733355</svTRID>
+  <svTRID>ccReg-0234870654</svTRID>
 </trID>
 </epp>
 ```
@@ -5350,7 +5933,7 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example57.ee</domain:name>
+        <domain:name>fabricate_name15.ee</domain:name>
         <domain:rem>
           <domain:ns>
             <domain:hostAttr>
@@ -5388,7 +5971,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6918905121</svTRID>
+  <svTRID>ccReg-4126922612</svTRID>
 </trID>
 </epp>
 ```
@@ -5401,7 +5984,7 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example57.ee</domain:name>
+        <domain:name>fabricate_name15.ee</domain:name>
         <domain:rem>
           <domain:ns>
             <domain:hostAttr>
@@ -5434,15 +6017,15 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2303">
-      <msg lang="en">Contact was not found</msg>
-      <value>
-        <contact>citizen_1234</contact>
-      </value>
-    </result>
-    <result code="2303">
       <msg lang="en">Nameserver was not found</msg>
       <value>
         <hostAttr>ns1.example.com</hostAttr>
+      </value>
+    </result>
+    <result code="2303">
+      <msg lang="en">Contact was not found</msg>
+      <value>
+        <contact>citizen_1234</contact>
       </value>
     </result>
     <result code="2303">
@@ -5451,10 +6034,16 @@ RESPONSE:
         <status>clientHold</status>
       </value>
     </result>
+    <result code="2303">
+      <msg lang="en">DS was not found</msg>
+      <value>
+        <publicKey>700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f</publicKey>
+      </value>
+    </result>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2893016460</svTRID>
+  <svTRID>ccReg-0876331676</svTRID>
 </trID>
 </epp>
 ```
@@ -5469,7 +6058,7 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example60.ee</domain:name>
+        <domain:name>fabricate_name16.ee</domain:name>
         <domain:rem>
           <domain:status s="serverHold"/>
         </domain:rem>
@@ -5495,7 +6084,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7511102603</svTRID>
+  <svTRID>ccReg-0197026774</svTRID>
 </trID>
 </epp>
 ```
@@ -5510,14 +6099,14 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example62.ee</domain:name>
+        <domain:name>fabricate_name17.ee</domain:name>
         <domain:add>
           <domain:ns>
             <domain:hostAttr>
-              <domain:hostName>ns.bruen42.ee</domain:hostName>
+              <domain:hostName>ns.wilkinson51.ee</domain:hostName>
             </domain:hostAttr>
           </domain:ns>
-          <domain:contact type="admin">sh65147211</domain:contact>
+          <domain:contact type="admin">sh26730572</domain:contact>
         </domain:add>
       </domain:update>
     </update>
@@ -5533,21 +6122,21 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2302">
-      <msg lang="en">Nameserver already exists on this domain</msg>
+      <msg lang="en">Nameserver already exists on this domain [hostname]</msg>
       <value>
-        <hostAttr>ns.bruen42.ee</hostAttr>
+        <hostAttr>ns.wilkinson51.ee</hostAttr>
       </value>
     </result>
     <result code="2302">
-      <msg lang="en">Contact already exists on this domain</msg>
+      <msg lang="en">Contact already exists on this domain [contact_code_cache]</msg>
       <value>
-        <contact>sh65147211</contact>
+        <contact>sh26730572</contact>
       </value>
     </result>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-4200388844</svTRID>
+  <svTRID>ccReg-7238742798</svTRID>
 </trID>
 </epp>
 ```
@@ -5560,14 +6149,14 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example62.ee</domain:name>
+        <domain:name>fabricate_name17.ee</domain:name>
         <domain:add>
           <domain:ns>
             <domain:hostAttr>
-              <domain:hostName>ns.bruen42.ee</domain:hostName>
+              <domain:hostName>ns.wilkinson51.ee</domain:hostName>
             </domain:hostAttr>
           </domain:ns>
-          <domain:contact type="admin">sh65147211</domain:contact>
+          <domain:contact type="admin">sh26730572</domain:contact>
         </domain:add>
       </domain:update>
     </update>
@@ -5583,21 +6172,21 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2302">
-      <msg lang="en">Nameserver already exists on this domain</msg>
+      <msg lang="en">Nameserver already exists on this domain [hostname]</msg>
       <value>
-        <hostAttr>ns.bruen42.ee</hostAttr>
+        <hostAttr>ns.wilkinson51.ee</hostAttr>
       </value>
     </result>
     <result code="2302">
-      <msg lang="en">Contact already exists on this domain</msg>
+      <msg lang="en">Contact already exists on this domain [contact_code_cache]</msg>
       <value>
-        <contact>sh65147211</contact>
+        <contact>sh26730572</contact>
       </value>
     </result>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1874861949</svTRID>
+  <svTRID>ccReg-8444739569</svTRID>
 </trID>
 </epp>
 ```
@@ -5612,7 +6201,7 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example64.ee</domain:name>
+        <domain:name>fabricate_name18.ee</domain:name>
         <domain:chg>
           <domain:registrant>citizen_1234</domain:registrant>
         </domain:chg>
@@ -5630,12 +6219,12 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2003">
-      <msg lang="en">Required parameter missing: extension &gt; extdata &gt; legalDocument</msg>
+      <msg lang="en">Required parameter missing: extension &gt; extdata &gt; legalDocument [legal_document]</msg>
     </result>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-8777483785</svTRID>
+  <svTRID>ccReg-5896788044</svTRID>
 </trID>
 </epp>
 ```
@@ -5650,7 +6239,7 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example66.ee</domain:name>
+        <domain:name>fabricate_name19.ee</domain:name>
         <domain:add>
           <domain:status s="invalidStatus"/>
         </domain:add>
@@ -5676,7 +6265,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0736364937</svTRID>
+  <svTRID>ccReg-0194476203</svTRID>
 </trID>
 </epp>
 ```
@@ -5691,8 +6280,8 @@ REQUEST:
   <command>
     <renew>
       <domain:renew xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example68.ee</domain:name>
-        <domain:curExpDate>2016-01-29</domain:curExpDate>
+        <domain:name>fabricate_name20.ee</domain:name>
+        <domain:curExpDate>2016-03-10</domain:curExpDate>
         <domain:period unit="y">1</domain:period>
       </domain:renew>
     </renew>
@@ -5712,13 +6301,13 @@ RESPONSE:
     </result>
     <resData>
       <renData>
-        <name>example68.ee</name>
-        <exDate>2017-01-29 00:00:00 UTC</exDate>
+        <name>fabricate_name20.ee</name>
+        <exDate>2017-03-10 00:00:00 UTC</exDate>
       </renData>
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6264410081</svTRID>
+  <svTRID>ccReg-0330789403</svTRID>
 </trID>
   </response>
 </epp>
@@ -5734,7 +6323,7 @@ REQUEST:
   <command>
     <renew>
       <domain:renew xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example69.ee</domain:name>
+        <domain:name>fabricate_name21.ee</domain:name>
         <domain:curExpDate>2200-08-07</domain:curExpDate>
         <domain:period unit="y">1</domain:period>
       </domain:renew>
@@ -5759,7 +6348,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-8828722715</svTRID>
+  <svTRID>ccReg-8289799139</svTRID>
 </trID>
 </epp>
 ```
@@ -5774,8 +6363,8 @@ REQUEST:
   <command>
     <renew>
       <domain:renew xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example70.ee</domain:name>
-        <domain:curExpDate>2016-01-29</domain:curExpDate>
+        <domain:name>fabricate_name22.ee</domain:name>
+        <domain:curExpDate>2016-03-10</domain:curExpDate>
         <domain:period unit="y">4</domain:period>
       </domain:renew>
     </renew>
@@ -5791,7 +6380,7 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2004">
-      <msg lang="en">Period must add up to 1, 2 or 3 years</msg>
+      <msg lang="en">Period must add up to 1, 2 or 3 years [period]</msg>
       <value>
         <period>4</period>
       </value>
@@ -5799,7 +6388,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-8405958560</svTRID>
+  <svTRID>ccReg-9889231710</svTRID>
 </trID>
 </epp>
 ```
@@ -5814,7 +6403,7 @@ REQUEST:
   <command>
     <info>
       <domain:info xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name hosts="all">example71.ee</domain:name>
+        <domain:name hosts="all">fabricate_name23.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>
         </domain:authInfo>
@@ -5836,22 +6425,21 @@ RESPONSE:
     </result>
     <resData>
       <infData>
-        <name>example71.ee</name>
+        <name>fabricate_name23.ee</name>
         <status s="clientHold">Payment overdue.</status>
-        <registrant>sh40710177</registrant>
-        <contact type="tech">sh40710177</contact>
-        <contact type="admin">sh70339938</contact>
+        <registrant>sh57883845</registrant>
+        <contact type="admin">sh26624963</contact>
         <ns>
           <hostAttr>
-            <hostName>ns.gutmann60.ee</hostName>
+            <hostName>ns.mosciskizemlak69.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.skiles61.ee</hostName>
+            <hostName>ns.beahanreinger70.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.white62.ee</hostName>
+            <hostName>ns.wyman71.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
@@ -5860,12 +6448,13 @@ RESPONSE:
             <hostAddr ip="v6">1080:0:0:0:8:800:200C:417A</hostAddr>
           </hostAttr>
         </ns>
-        <clID>Registrar OÜ</clID>
-        <crID>Registrar OÜ</crID>
-        <crDate>2015-01-29 14:37:20 UTC</crDate>
-        <exDate>2016-01-29 00:00:00 UTC</exDate>
+        <clID>registrar1</clID>
+        <crID/>
+        <crDate>2015-03-10 15:19:32 UTC</crDate>
+        <exDate>2016-03-10 00:00:00 UTC</exDate>
+        <upDate>2015-03-10 15:19:33 UTC</upDate>
         <authInfo>
-          <pw>95c0d03b3859ae425699088837e418e2</pw>
+          <pw>4830f8a847c25154ad5ad6ae64825622</pw>
         </authInfo>
       </infData>
     </resData>
@@ -5900,7 +6489,7 @@ RESPONSE:
   </extension>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0272694901</svTRID>
+  <svTRID>ccReg-7857605221</svTRID>
 </trID>
 </epp>
 ```
@@ -5913,7 +6502,7 @@ REQUEST:
   <command>
     <info>
       <domain:info xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name hosts="all">example71.ee</domain:name>
+        <domain:name hosts="all">fabricate_name23.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>
         </domain:authInfo>
@@ -5935,22 +6524,21 @@ RESPONSE:
     </result>
     <resData>
       <infData>
-        <name>example71.ee</name>
+        <name>fabricate_name23.ee</name>
         <status s="clientHold">Payment overdue.</status>
-        <registrant>sh40710177</registrant>
-        <contact type="tech">sh40710177</contact>
-        <contact type="admin">sh70339938</contact>
+        <registrant>sh57883845</registrant>
+        <contact type="admin">sh26624963</contact>
         <ns>
           <hostAttr>
-            <hostName>ns.gutmann60.ee</hostName>
+            <hostName>ns.mosciskizemlak69.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.skiles61.ee</hostName>
+            <hostName>ns.beahanreinger70.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.white62.ee</hostName>
+            <hostName>ns.wyman71.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
@@ -5959,13 +6547,13 @@ RESPONSE:
             <hostAddr ip="v6">1080:0:0:0:8:800:200C:417A</hostAddr>
           </hostAttr>
         </ns>
-        <clID>Registrar OÜ</clID>
-        <crID>Registrar OÜ</crID>
-        <crDate>2015-01-29 14:37:20 UTC</crDate>
-        <exDate>2016-01-29 00:00:00 UTC</exDate>
-        <upDate>2015-01-29 14:37:20 UTC</upDate>
+        <clID>registrar1</clID>
+        <crID/>
+        <crDate>2015-03-10 15:19:32 UTC</crDate>
+        <exDate>2016-03-10 00:00:00 UTC</exDate>
+        <upDate>2015-03-10 15:19:33 UTC</upDate>
         <authInfo>
-          <pw>95c0d03b3859ae425699088837e418e2</pw>
+          <pw>4830f8a847c25154ad5ad6ae64825622</pw>
         </authInfo>
       </infData>
     </resData>
@@ -6000,7 +6588,7 @@ RESPONSE:
   </extension>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9813435385</svTRID>
+  <svTRID>ccReg-6385684362</svTRID>
 </trID>
 </epp>
 ```
@@ -6041,7 +6629,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0402302674</svTRID>
+  <svTRID>ccReg-1597421922</svTRID>
 </trID>
 </epp>
 ```
@@ -6056,7 +6644,7 @@ REQUEST:
   <command>
     <info>
       <domain:info xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name hosts="all">example76.ee</domain:name>
+        <domain:name hosts="all">fabricate_name25.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>
         </domain:authInfo>
@@ -6078,38 +6666,38 @@ RESPONSE:
     </result>
     <resData>
       <infData>
-        <name>example76.ee</name>
+        <name>fabricate_name25.ee</name>
         <status s="ok"/>
-        <registrant>sh56219893</registrant>
-        <contact type="tech">sh56219893</contact>
-        <contact type="admin">sh68176022</contact>
+        <registrant>sh81389071</registrant>
+        <contact type="admin">sh45206461</contact>
         <ns>
           <hostAttr>
-            <hostName>ns.kshlerin66.ee</hostName>
+            <hostName>ns.parisian75.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.kunzeharvey67.ee</hostName>
+            <hostName>ns.paucek76.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.mcglynnhackett68.ee</hostName>
+            <hostName>ns.manteschulist77.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
         </ns>
-        <clID>Registrar OÜ</clID>
-        <crID>Registrar OÜ</crID>
-        <crDate>2015-01-29 14:37:21 UTC</crDate>
-        <exDate>2016-01-29 00:00:00 UTC</exDate>
+        <clID>registrar1</clID>
+        <crID/>
+        <crDate>2015-03-10 15:19:33 UTC</crDate>
+        <exDate>2016-03-10 00:00:00 UTC</exDate>
+        <upDate>2015-03-10 15:19:33 UTC</upDate>
         <authInfo>
-          <pw>92fcf8d8a93bcfd8974f35e75fed710e</pw>
+          <pw>43cb67bf4708c22656ef8e969d53eb76</pw>
         </authInfo>
       </infData>
     </resData>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9412163301</svTRID>
+  <svTRID>ccReg-1076195843</svTRID>
 </trID>
 </epp>
 ```
@@ -6156,7 +6744,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2378562207</svTRID>
+  <svTRID>ccReg-1832669555</svTRID>
 </trID>
   </response>
 </epp>
@@ -6170,7 +6758,7 @@ REQUEST:
   <command>
     <info>
       <domain:info xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name hosts="all">example78.ee</domain:name>
+        <domain:name hosts="all">fabricate_name26.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>
         </domain:authInfo>
@@ -6187,16 +6775,13 @@ RESPONSE:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
-    <result code="2302">
-      <msg lang="en">Domain exists but belongs to other registrar</msg>
-      <value>
-        <name>example78.ee</name>
-      </value>
+    <result code="2201">
+      <msg lang="en">Authorization error</msg>
     </result>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3890921963</svTRID>
+  <svTRID>ccReg-6252645399</svTRID>
 </trID>
 </epp>
 ```
@@ -6241,87 +6826,9 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-5735697494</svTRID>
+  <svTRID>ccReg-9220176270</svTRID>
 </trID>
   </response>
-</epp>
-```
-
-### EPP Domain with valid domain validates legal document type  
-
-REQUEST:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
-  <command>
-    <info>
-      <domain:info xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example80.ee</domain:name>
-      </domain:info>
-    </info>
-    <extension>
-      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
-        <eis:legalDocument type="jpg">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
-      </eis:extdata>
-    </extension>
-    <clTRID>ABC-12345</clTRID>
-  </command>
-</epp>
-```
-
-RESPONSE:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
-  <response>
-    <result code="2306">
-      <msg lang="en">Attribute is invalid: type</msg>
-    </result>
-  </response>
-<trID>
-  <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0940699534</svTRID>
-</trID>
-</epp>
-```
-
-REQUEST:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
-  <command>
-    <info>
-      <domain:info xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example80.ee</domain:name>
-      </domain:info>
-    </info>
-    <extension>
-      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
-        <eis:legalDocument>JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
-      </eis:extdata>
-    </extension>
-    <clTRID>ABC-12345</clTRID>
-  </command>
-</epp>
-```
-
-RESPONSE:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
-  <response>
-    <result code="2306">
-      <msg lang="en">Attribute is invalid: type</msg>
-    </result>
-  </response>
-<trID>
-  <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6403879726</svTRID>
-</trID>
 </epp>
 ```
 
@@ -6335,7 +6842,7 @@ REQUEST:
   <command>
     <delete>
       <domain:delete xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example81.ee</domain:name>
+        <domain:name>fabricate_name27.ee</domain:name>
       </domain:delete>
     </delete>
     <extension>
@@ -6360,7 +6867,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-6225952067</svTRID>
+  <svTRID>ccReg-9930620359</svTRID>
 </trID>
 </epp>
 ```
@@ -6375,7 +6882,7 @@ REQUEST:
   <command>
     <delete>
       <domain:delete xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example82.ee</domain:name>
+        <domain:name>fabricate_name28.ee</domain:name>
       </domain:delete>
     </delete>
     <extension>
@@ -6400,7 +6907,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2418769493</svTRID>
+  <svTRID>ccReg-4532736004</svTRID>
 </trID>
 </epp>
 ```
@@ -6430,12 +6937,12 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2003">
-      <msg lang="en">Required parameter missing: extension &gt; extdata &gt; legalDocument</msg>
+      <msg lang="en">Required parameter missing: extension &gt; extdata &gt; legalDocument [legal_document]</msg>
     </result>
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2841392290</svTRID>
+  <svTRID>ccReg-9169585096</svTRID>
 </trID>
 </epp>
 ```
@@ -6476,7 +6983,7 @@ RESPONSE:
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9310381397</svTRID>
+  <svTRID>ccReg-0642087040</svTRID>
 </trID>
   </response>
 </epp>
@@ -6490,7 +6997,7 @@ REQUEST:
   <command>
     <check>
       <domain:check xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
-        <domain:name>example84.ee</domain:name>
+        <domain:name>fabricate_name30.ee</domain:name>
       </domain:check>
     </check>
     <clTRID>ABC-12345</clTRID>
@@ -6510,14 +7017,14 @@ RESPONSE:
     <resData>
       <chkData>
         <cd>
-          <name avail="0">example84.ee</name>
+          <name avail="0">fabricate_name30.ee</name>
           <reason>in use</reason>
         </cd>
       </chkData>
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-2813184496</svTRID>
+  <svTRID>ccReg-0414054221</svTRID>
 </trID>
   </response>
 </epp>
@@ -6567,7 +7074,7 @@ RESPONSE:
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0040157523</svTRID>
+  <svTRID>ccReg-3368366476</svTRID>
 </trID>
   </response>
 </epp>
@@ -6614,13 +7121,59 @@ RESPONSE:
     </resData>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1816265792</svTRID>
+  <svTRID>ccReg-5163771840</svTRID>
 </trID>
   </response>
 </epp>
 ```
 
 ### EPP Helper in context of Domain generates valid transfer xml  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <login>
+      <clID>registrar1</clID>
+      <pw>ghyt9e4fu</pw>
+      <options>
+        <version>1.0</version>
+        <lang>en</lang>
+      </options>
+      <svcs>
+        <objURI>urn:ietf:params:xml:ns:domain-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:contact-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
+        <svcExtension>
+          <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
+          <extURI>urn:ee:eis:xml:epp:eis-1.0</extURI>
+        </svcExtension>
+      </svcs>
+    </login>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-9357156588</svTRID>
+</trID>
+  </response>
+</epp>
+```
 
 ### EPP Keyrelay makes a keyrelay request  
 
@@ -6631,7 +7184,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="urn:ietf:params:xml:ns:domain-1.0" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
   <command>
     <ext:keyrelay>
-      <ext:name>example1.ee</ext:name>
+      <ext:name>fabricate_name33.ee</ext:name>
       <ext:keyData>
         <secDNS:flags>256</secDNS:flags>
         <secDNS:protocol>3</secDNS:protocol>
@@ -6639,13 +7192,13 @@ REQUEST:
         <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
       </ext:keyData>
       <ext:authInfo>
-        <domain:pw>4ef1883d68600dae4c75e5518d0f9f17</domain:pw>
+        <domain:pw>e511587f2d333bdefc005df1c2549724</domain:pw>
       </ext:authInfo>
       <ext:expiry>
         <ext:relative>P1M13D</ext:relative>
       </ext:expiry>
     </ext:keyrelay>
-    <ext:clTRID>1422542243</ext:clTRID>
+    <ext:clTRID>1426000774</ext:clTRID>
   </command>
 </epp>
 ```
@@ -6661,8 +7214,8 @@ RESPONSE:
     </result>
   </response>
 <trID>
-  <clTRID>1422542243</clTRID>
-  <svTRID>ccReg-6688371795</svTRID>
+  <clTRID>1426000774</clTRID>
+  <svTRID>ccReg-6695206209</svTRID>
 </trID>
 </epp>
 ```
@@ -6676,20 +7229,20 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="urn:ietf:params:xml:ns:domain-1.0" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
   <command>
     <ext:keyrelay>
-      <ext:name>example2.ee</ext:name>
+      <ext:name>fabricate_name33.ee</ext:name>
       <ext:keyData>
         <secDNS:protocol>3</secDNS:protocol>
         <secDNS:alg>8</secDNS:alg>
         <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
       </ext:keyData>
       <ext:authInfo>
-        <domain:pw>f3bd45973bae22e8871861e0478d70aa</domain:pw>
+        <domain:pw>e511587f2d333bdefc005df1c2549724</domain:pw>
       </ext:authInfo>
       <ext:expiry>
         <ext:relative>Invalid Expiry</ext:relative>
       </ext:expiry>
     </ext:keyrelay>
-    <ext:clTRID>1422542243</ext:clTRID>
+    <ext:clTRID>1426000774</ext:clTRID>
   </command>
 </epp>
 ```
@@ -6701,7 +7254,7 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2003">
-      <msg lang="en">Required parameter missing: keyrelay &gt; keyData &gt; flags</msg>
+      <msg lang="en">Required parameter missing: keyrelay &gt; keyData &gt; flags [flags]</msg>
     </result>
     <result code="2005">
       <msg lang="en">Expiry relative must be compatible to ISO 8601</msg>
@@ -6711,8 +7264,8 @@ RESPONSE:
     </result>
   </response>
 <trID>
-  <clTRID>1422542243</clTRID>
-  <svTRID>ccReg-9649443313</svTRID>
+  <clTRID>1426000774</clTRID>
+  <svTRID>ccReg-0964015012</svTRID>
 </trID>
 </epp>
 ```
@@ -6726,7 +7279,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="urn:ietf:params:xml:ns:domain-1.0" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
   <command>
     <ext:keyrelay>
-      <ext:name>example3.ee</ext:name>
+      <ext:name>fabricate_name33.ee</ext:name>
       <ext:keyData>
         <secDNS:flags>256</secDNS:flags>
         <secDNS:protocol>3</secDNS:protocol>
@@ -6734,13 +7287,13 @@ REQUEST:
         <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
       </ext:keyData>
       <ext:authInfo>
-        <domain:pw>56a8f8df6f3d9782621d5e7dbda65e83</domain:pw>
+        <domain:pw>e511587f2d333bdefc005df1c2549724</domain:pw>
       </ext:authInfo>
       <ext:expiry>
         <ext:relative>Invalid Expiry</ext:relative>
       </ext:expiry>
     </ext:keyrelay>
-    <ext:clTRID>1422542243</ext:clTRID>
+    <ext:clTRID>1426000774</ext:clTRID>
   </command>
 </epp>
 ```
@@ -6759,8 +7312,8 @@ RESPONSE:
     </result>
   </response>
 <trID>
-  <clTRID>1422542243</clTRID>
-  <svTRID>ccReg-1345674831</svTRID>
+  <clTRID>1426000774</clTRID>
+  <svTRID>ccReg-0366964269</svTRID>
 </trID>
 </epp>
 ```
@@ -6774,7 +7327,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="urn:ietf:params:xml:ns:domain-1.0" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
   <command>
     <ext:keyrelay>
-      <ext:name>example4.ee</ext:name>
+      <ext:name>fabricate_name33.ee</ext:name>
       <ext:keyData>
         <secDNS:flags>256</secDNS:flags>
         <secDNS:protocol>3</secDNS:protocol>
@@ -6782,13 +7335,13 @@ REQUEST:
         <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
       </ext:keyData>
       <ext:authInfo>
-        <domain:pw>36e3b253a7f6f9233381912c5be2fdd1</domain:pw>
+        <domain:pw>e511587f2d333bdefc005df1c2549724</domain:pw>
       </ext:authInfo>
       <ext:expiry>
         <ext:absolute>Invalid Absolute</ext:absolute>
       </ext:expiry>
     </ext:keyrelay>
-    <ext:clTRID>1422542243</ext:clTRID>
+    <ext:clTRID>1426000774</ext:clTRID>
   </command>
 </epp>
 ```
@@ -6807,8 +7360,8 @@ RESPONSE:
     </result>
   </response>
 <trID>
-  <clTRID>1422542243</clTRID>
-  <svTRID>ccReg-6844395143</svTRID>
+  <clTRID>1426000774</clTRID>
+  <svTRID>ccReg-4725971406</svTRID>
 </trID>
 </epp>
 ```
@@ -6822,7 +7375,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="urn:ietf:params:xml:ns:domain-1.0" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
   <command>
     <ext:keyrelay>
-      <ext:name>example5.ee</ext:name>
+      <ext:name>fabricate_name33.ee</ext:name>
       <ext:keyData>
         <secDNS:flags>256</secDNS:flags>
         <secDNS:protocol>3</secDNS:protocol>
@@ -6830,14 +7383,14 @@ REQUEST:
         <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
       </ext:keyData>
       <ext:authInfo>
-        <domain:pw>fe1b13bcc2df6a443a0afd19cce54b53</domain:pw>
+        <domain:pw>e511587f2d333bdefc005df1c2549724</domain:pw>
       </ext:authInfo>
       <ext:expiry>
         <ext:relative>P1D</ext:relative>
         <ext:absolute>2014-12-23</ext:absolute>
       </ext:expiry>
     </ext:keyrelay>
-    <ext:clTRID>1422542244</ext:clTRID>
+    <ext:clTRID>1426000775</ext:clTRID>
   </command>
 </epp>
 ```
@@ -6853,8 +7406,8 @@ RESPONSE:
     </result>
   </response>
 <trID>
-  <clTRID>1422542244</clTRID>
-  <svTRID>ccReg-5160492436</svTRID>
+  <clTRID>1426000775</clTRID>
+  <svTRID>ccReg-8556836847</svTRID>
 </trID>
 </epp>
 ```
@@ -6868,7 +7421,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="urn:ietf:params:xml:ns:domain-1.0" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
   <command>
     <ext:keyrelay>
-      <ext:name>example6.ee</ext:name>
+      <ext:name>fabricate_name33.ee</ext:name>
       <ext:keyData>
         <secDNS:flags>256</secDNS:flags>
         <secDNS:protocol>3</secDNS:protocol>
@@ -6876,7 +7429,7 @@ REQUEST:
         <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
       </ext:keyData>
       <ext:authInfo>
-        <domain:pw>7521f360ae480e67c3096e4c046beb84</domain:pw>
+        <domain:pw>e511587f2d333bdefc005df1c2549724</domain:pw>
       </ext:authInfo>
       <ext:expiry>
         <ext:relative>P1D</ext:relative>
@@ -6885,7 +7438,7 @@ REQUEST:
     <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
       <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
     </eis:extdata>
-    <ext:clTRID>1422542244</ext:clTRID>
+    <ext:clTRID>1426000775</ext:clTRID>
   </command>
 </epp>
 ```
@@ -6901,8 +7454,56 @@ RESPONSE:
     </result>
   </response>
 <trID>
-  <clTRID>1422542244</clTRID>
-  <svTRID>ccReg-7863971480</svTRID>
+  <clTRID>1426000775</clTRID>
+  <svTRID>ccReg-4097781363</svTRID>
+</trID>
+</epp>
+```
+
+### EPP Keyrelay validates legal document types  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="urn:ietf:params:xml:ns:domain-1.0" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
+  <command>
+    <ext:keyrelay>
+      <ext:name>fabricate_name33.ee</ext:name>
+      <ext:keyData>
+        <secDNS:flags>256</secDNS:flags>
+        <secDNS:protocol>3</secDNS:protocol>
+        <secDNS:alg>8</secDNS:alg>
+        <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
+      </ext:keyData>
+      <ext:authInfo>
+        <domain:pw>e511587f2d333bdefc005df1c2549724</domain:pw>
+      </ext:authInfo>
+      <ext:expiry>
+        <ext:relative>P1D</ext:relative>
+      </ext:expiry>
+    </ext:keyrelay>
+    <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+      <eis:legalDocument type="jpg">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+    </eis:extdata>
+    <ext:clTRID>1426000775</ext:clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="2306">
+      <msg lang="en">Attribute is invalid: type</msg>
+    </result>
+  </response>
+<trID>
+  <clTRID>1426000775</clTRID>
+  <svTRID>ccReg-6271258175</svTRID>
 </trID>
 </epp>
 ```
@@ -6947,7 +7548,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-0317248639</svTRID>
+  <svTRID>ccReg-9779533912</svTRID>
 </trID>
   </response>
 </epp>
@@ -6962,7 +7563,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="req"/>
-    <clTRID>1422542244</clTRID>
+    <clTRID>1426000775</clTRID>
   </command>
 </epp>
 ```
@@ -6977,8 +7578,8 @@ RESPONSE:
       <msg>Command completed successfully; no messages</msg>
     </result>
 <trID>
-  <clTRID>1422542244</clTRID>
-  <svTRID>ccReg-2143338620</svTRID>
+  <clTRID>1426000775</clTRID>
+  <svTRID>ccReg-8517889338</svTRID>
 </trID>
   </response>
 </epp>
@@ -7026,7 +7627,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3587768858</svTRID>
+  <svTRID>ccReg-3817851357</svTRID>
 </trID>
   </response>
 </epp>
@@ -7039,7 +7640,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="req"/>
-    <clTRID>1422542244</clTRID>
+    <clTRID>1426000775</clTRID>
   </command>
 </epp>
 ```
@@ -7054,8 +7655,8 @@ RESPONSE:
       <msg>Command completed successfully; no messages</msg>
     </result>
 <trID>
-  <clTRID>1422542244</clTRID>
-  <svTRID>ccReg-7301894781</svTRID>
+  <clTRID>1426000775</clTRID>
+  <svTRID>ccReg-1851455399</svTRID>
 </trID>
   </response>
 </epp>
@@ -7101,7 +7702,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-3527709021</svTRID>
+  <svTRID>ccReg-2501015815</svTRID>
 </trID>
   </response>
 </epp>
@@ -7114,7 +7715,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="req"/>
-    <clTRID>1422542244</clTRID>
+    <clTRID>1426000775</clTRID>
   </command>
 </epp>
 ```
@@ -7129,12 +7730,12 @@ RESPONSE:
       <msg>Command completed successfully; ack to dequeue</msg>
     </result>
     <msgQ count="1" id="1">
-      <qDate>2015-01-29 14:37:24 UTC</qDate>
+      <qDate>2015-03-10 15:19:35 UTC</qDate>
       <msg>Balance low.</msg>
     </msgQ>
 <trID>
-  <clTRID>1422542244</clTRID>
-  <svTRID>ccReg-7522386325</svTRID>
+  <clTRID>1426000775</clTRID>
+  <svTRID>ccReg-8489813477</svTRID>
 </trID>
   </response>
 </epp>
@@ -7180,7 +7781,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-9144036930</svTRID>
+  <svTRID>ccReg-0232917065</svTRID>
 </trID>
   </response>
 </epp>
@@ -7193,7 +7794,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="ack" msgID="1"/>
-    <clTRID>1422542244</clTRID>
+    <clTRID>1426000775</clTRID>
   </command>
 </epp>
 ```
@@ -7212,8 +7813,8 @@ RESPONSE:
     </result>
   </response>
 <trID>
-  <clTRID>1422542244</clTRID>
-  <svTRID>ccReg-3112424227</svTRID>
+  <clTRID>1426000775</clTRID>
+  <svTRID>ccReg-8084312812</svTRID>
 </trID>
 </epp>
 ```
@@ -7258,7 +7859,7 @@ RESPONSE:
     </result>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-1456025212</svTRID>
+  <svTRID>ccReg-2255681297</svTRID>
 </trID>
   </response>
 </epp>
@@ -7271,7 +7872,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="ack" msgID="1"/>
-    <clTRID>1422542244</clTRID>
+    <clTRID>1426000775</clTRID>
   </command>
 </epp>
 ```
@@ -7287,8 +7888,8 @@ RESPONSE:
     </result>
     <msgQ count="0" id="1"/>
 <trID>
-  <clTRID>1422542244</clTRID>
-  <svTRID>ccReg-9922056511</svTRID>
+  <clTRID>1426000775</clTRID>
+  <svTRID>ccReg-3354623191</svTRID>
 </trID>
   </response>
 </epp>
@@ -7301,7 +7902,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="ack" msgID="1"/>
-    <clTRID>1422542244</clTRID>
+    <clTRID>1426000775</clTRID>
   </command>
 </epp>
 ```
@@ -7320,8 +7921,8 @@ RESPONSE:
     </result>
   </response>
 <trID>
-  <clTRID>1422542244</clTRID>
-  <svTRID>ccReg-0718540464</svTRID>
+  <clTRID>1426000775</clTRID>
+  <svTRID>ccReg-7397673913</svTRID>
 </trID>
 </epp>
 ```
@@ -7335,7 +7936,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="bla"/>
-    <clTRID>1422542245</clTRID>
+    <clTRID>1426000775</clTRID>
   </command>
 </epp>
 ```
@@ -7351,8 +7952,8 @@ RESPONSE:
     </result>
   </response>
 <trID>
-  <clTRID>1422542245</clTRID>
-  <svTRID>ccReg-4638808209</svTRID>
+  <clTRID>1426000775</clTRID>
+  <svTRID>ccReg-1944148254</svTRID>
 </trID>
 </epp>
 ```
@@ -7366,7 +7967,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="req"/>
-    <clTRID>1422542245</clTRID>
+    <clTRID>1426000775</clTRID>
   </command>
 </epp>
 ```
@@ -7381,12 +7982,12 @@ RESPONSE:
       <msg>Command completed successfully; ack to dequeue</msg>
     </result>
     <msgQ count="3" id="4">
-      <qDate>2015-01-29 14:37:25 UTC</qDate>
+      <qDate>2015-03-10 15:19:35 UTC</qDate>
       <msg>Smth else.</msg>
     </msgQ>
 <trID>
-  <clTRID>1422542245</clTRID>
-  <svTRID>ccReg-4057556975</svTRID>
+  <clTRID>1426000775</clTRID>
+  <svTRID>ccReg-7291091144</svTRID>
 </trID>
   </response>
 </epp>
@@ -7399,7 +8000,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="ack" msgID="4"/>
-    <clTRID>1422542245</clTRID>
+    <clTRID>1426000775</clTRID>
   </command>
 </epp>
 ```
@@ -7415,8 +8016,8 @@ RESPONSE:
     </result>
     <msgQ count="2" id="4"/>
 <trID>
-  <clTRID>1422542245</clTRID>
-  <svTRID>ccReg-6262633118</svTRID>
+  <clTRID>1426000775</clTRID>
+  <svTRID>ccReg-7798588612</svTRID>
 </trID>
   </response>
 </epp>
@@ -7429,7 +8030,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="req"/>
-    <clTRID>1422542245</clTRID>
+    <clTRID>1426000775</clTRID>
   </command>
 </epp>
 ```
@@ -7444,12 +8045,12 @@ RESPONSE:
       <msg>Command completed successfully; ack to dequeue</msg>
     </result>
     <msgQ count="2" id="3">
-      <qDate>2015-01-29 14:37:25 UTC</qDate>
+      <qDate>2015-03-10 15:19:35 UTC</qDate>
       <msg>Something.</msg>
     </msgQ>
 <trID>
-  <clTRID>1422542245</clTRID>
-  <svTRID>ccReg-4420357163</svTRID>
+  <clTRID>1426000775</clTRID>
+  <svTRID>ccReg-5940017916</svTRID>
 </trID>
   </response>
 </epp>
@@ -7462,7 +8063,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="ack" msgID="3"/>
-    <clTRID>1422542245</clTRID>
+    <clTRID>1426000775</clTRID>
   </command>
 </epp>
 ```
@@ -7478,8 +8079,8 @@ RESPONSE:
     </result>
     <msgQ count="1" id="3"/>
 <trID>
-  <clTRID>1422542245</clTRID>
-  <svTRID>ccReg-6581988156</svTRID>
+  <clTRID>1426000775</clTRID>
+  <svTRID>ccReg-7457864744</svTRID>
 </trID>
   </response>
 </epp>
@@ -7492,7 +8093,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="req"/>
-    <clTRID>1422542245</clTRID>
+    <clTRID>1426000775</clTRID>
   </command>
 </epp>
 ```
@@ -7507,12 +8108,12 @@ RESPONSE:
       <msg>Command completed successfully; ack to dequeue</msg>
     </result>
     <msgQ count="1" id="2">
-      <qDate>2015-01-29 14:37:25 UTC</qDate>
+      <qDate>2015-03-10 15:19:35 UTC</qDate>
       <msg>Balance low.</msg>
     </msgQ>
 <trID>
-  <clTRID>1422542245</clTRID>
-  <svTRID>ccReg-9547799744</svTRID>
+  <clTRID>1426000775</clTRID>
+  <svTRID>ccReg-3851409090</svTRID>
 </trID>
   </response>
 </epp>
@@ -7525,7 +8126,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="ack" msgID="2"/>
-    <clTRID>1422542245</clTRID>
+    <clTRID>1426000775</clTRID>
   </command>
 </epp>
 ```
@@ -7541,8 +8142,8 @@ RESPONSE:
     </result>
     <msgQ count="0" id="2"/>
 <trID>
-  <clTRID>1422542245</clTRID>
-  <svTRID>ccReg-9885467820</svTRID>
+  <clTRID>1426000775</clTRID>
+  <svTRID>ccReg-7618844534</svTRID>
 </trID>
   </response>
 </epp>
@@ -7555,7 +8156,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="req"/>
-    <clTRID>1422542245</clTRID>
+    <clTRID>1426000775</clTRID>
   </command>
 </epp>
 ```
@@ -7570,8 +8171,8 @@ RESPONSE:
       <msg>Command completed successfully; no messages</msg>
     </result>
 <trID>
-  <clTRID>1422542245</clTRID>
-  <svTRID>ccReg-1438270374</svTRID>
+  <clTRID>1426000775</clTRID>
+  <svTRID>ccReg-8787699365</svTRID>
 </trID>
   </response>
 </epp>
@@ -7586,7 +8187,7 @@ RESPONSE:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <greeting>
     <svID>EPP server (EIS)</svID>
-    <svDate>2015-01-29T14:37:25Z</svDate>
+    <svDate>2015-03-10T15:19:36Z</svDate>
     <svcMenu>
       <version>1.0</version>
       <lang>en</lang>
@@ -7663,7 +8264,7 @@ RESPONSE:
   </response>
 <trID>
   <clTRID>ABC-12345</clTRID>
-  <svTRID>ccReg-7329439918</svTRID>
+  <svTRID>ccReg-8297802116</svTRID>
 </trID>
 </epp>
 ```
@@ -7696,6 +8297,275 @@ REQUEST:
     </login>
     <clTRID>ABC-12345</clTRID>
   </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="2501">
+      <msg>Authentication error; server closing connection</msg>
+    </result>
+  </response>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-8118520354</svTRID>
+</trID>
+</epp>
+```
+
+### EPP Session when connected prohibits further actions unless logged in  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <create>
+      <domain:create xmlns:domain="urn:ietf:params:xml:ns:domain-1.0"/>
+    </create>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="2002">
+      <msg lang="en">You need to login first.</msg>
+    </result>
+  </response>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-3938328268</svTRID>
+</trID>
+</epp>
+```
+
+### EPP Session when connected with valid user logs in epp user  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <login>
+      <clID>gitlab</clID>
+      <pw>ghyt9e4fu</pw>
+      <options>
+        <version>1.0</version>
+        <lang>en</lang>
+      </options>
+      <svcs>
+        <objURI>urn:ietf:params:xml:ns:domain-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:contact-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
+        <svcExtension>
+          <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
+          <extURI>urn:ee:eis:xml:epp:eis-1.0</extURI>
+        </svcExtension>
+      </svcs>
+    </login>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-6119124830</svTRID>
+</trID>
+  </response>
+</epp>
+```
+
+### EPP Session when connected with valid user does not log in twice  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <login>
+      <clID>gitlab</clID>
+      <pw>ghyt9e4fu</pw>
+      <options>
+        <version>1.0</version>
+        <lang>en</lang>
+      </options>
+      <svcs>
+        <objURI>urn:ietf:params:xml:ns:domain-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:contact-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
+        <svcExtension>
+          <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
+          <extURI>urn:ee:eis:xml:epp:eis-1.0</extURI>
+        </svcExtension>
+      </svcs>
+    </login>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-5662102004</svTRID>
+</trID>
+  </response>
+</epp>
+```
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <login>
+      <clID>gitlab</clID>
+      <pw>ghyt9e4fu</pw>
+      <options>
+        <version>1.0</version>
+        <lang>en</lang>
+      </options>
+      <svcs>
+        <objURI>urn:ietf:params:xml:ns:domain-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:contact-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
+        <svcExtension>
+          <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
+          <extURI>urn:ee:eis:xml:epp:eis-1.0</extURI>
+        </svcExtension>
+      </svcs>
+    </login>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="2002">
+      <msg lang="en">Already logged in. Use &lt;logout&gt; first.</msg>
+    </result>
+  </response>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-3110491529</svTRID>
+</trID>
+</epp>
+```
+
+### EPP Session when connected with valid user logs out epp user  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <login>
+      <clID>gitlab</clID>
+      <pw>ghyt9e4fu</pw>
+      <options>
+        <version>1.0</version>
+        <lang>en</lang>
+      </options>
+      <svcs>
+        <objURI>urn:ietf:params:xml:ns:domain-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:contact-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
+        <svcExtension>
+          <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
+          <extURI>urn:ee:eis:xml:epp:eis-1.0</extURI>
+        </svcExtension>
+      </svcs>
+    </login>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-8680909451</svTRID>
+</trID>
+  </response>
+</epp>
+```
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <logout/>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1500">
+      <msg>Command completed successfully; ending session</msg>
+    </result>
+  </response>
+<trID>
+  <clTRID>ABC-12345</clTRID>
+  <svTRID>ccReg-9722978417</svTRID>
+</trID>
 </epp>
 ```
 
