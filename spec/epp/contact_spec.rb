@@ -138,14 +138,19 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'successfully saves custom code' do
-        response = create_request(
-          { id: { value: '12345' } }
-        )
-
+        response = create_request({ id: { value: '12345' } })
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
 
         Contact.last.code.should == 'registrar1:12345'
+      end
+
+      it 'should return parameter value policy errror' do
+        response = create_request({ postalInfo: { org: { value: 'should not save' } } })
+        response[:msg].should == 'Parameter value policy error'
+        response[:result_code].should == '2306'
+
+        Contact.last.org_name.should == nil
       end
     end
 
@@ -268,6 +273,19 @@ describe 'EPP Contact', epp: true do
         response[:result_code].should == '1000'
 
         Contact.find_by(code: 'sh8013').ident_type.should == 'birthday'
+      end
+
+      it 'should return parameter value policy errror for org update' do
+        response = update_request({ 
+          id: { value: 'sh8013' }, 
+          chg: {
+            postalInfo: { org: { value: 'should not save' } } 
+          }
+        })
+        response[:msg].should == 'Parameter value policy error'
+        response[:result_code].should == '2306'
+
+        Contact.find_by(code: 'sh8013').org_name.should == nil
       end
     end
 

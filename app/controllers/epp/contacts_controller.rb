@@ -99,6 +99,7 @@ class Epp::ContactsController < EppController
         msg: I18n.t('errors.messages.required_attribute_missing', key: 'ident country code missing') 
       }
     end
+    contact_org_disabled 
     @prefix = nil
     requires 'extension > extdata > ident'
   end
@@ -111,6 +112,7 @@ class Epp::ContactsController < EppController
         msg: I18n.t('errors.messages.required_parameter_missing', key: 'add, rem or chg') 
       }
     end
+    contact_org_disabled
     requires 'id', 'authInfo > pw'
     @prefix = nil
   end
@@ -119,5 +121,14 @@ class Epp::ContactsController < EppController
     @prefix = 'delete > delete >'
     requires 'id', 'authInfo > pw'
     @prefix = nil
+  end
+
+  def contact_org_disabled
+    return true if ENV['contact_org_enabled'] == 'true'
+    return true if params[:parsed_frame].css('postalInfo org').text.blank?
+    epp_errors << {
+      code: '2306',
+      msg: I18n.t(:parameter_value_policy_error)
+    }
   end
 end

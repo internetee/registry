@@ -16,7 +16,7 @@ Contact Mapping protocol short version:
         <contact:id>           0-1      Contact id, optional, generated automatically if missing
         <contact:postalInfo>   1        Postal information container
           <contact:name>       1        Full name of the contact
-          <contact:org>        0-1      Name of organization
+          <contact:org>        0        Org is not supported and should be blank
           <contact:addr>       1        Address container
             <contact:street>   0-n      Street name
             <contact:city>     1        City name
@@ -47,7 +47,7 @@ Contact Mapping protocol short version:
         <contact:chg>           1        Change container
           <contact:postalInfo>  1        Postal information container
             <contact:name>      0-1      Full name of the contact
-            <contact:org>       0-1      Name of organization
+            <contact:org>       0        Org is not supported and should be blank
             <contact:addr>      0-1      Address container
               <contact:street>  0-n      Street name
               <contact:city>    0-1      City name

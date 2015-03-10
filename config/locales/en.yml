@@ -489,3 +489,4 @@ en:
   sign_this_request: 'Sign this request'
   revoke_this_certificate: 'Revoke this certificate'
   crt_revoked: 'CRT (revoked)'
+  parameter_value_policy_error: 'Parameter value policy error'

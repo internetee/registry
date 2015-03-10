@@ -3,6 +3,10 @@
 app_name: .EE Registry
 zonefile_export_dir: 'export/zonefiles'
 
+# Contact epp will not accept org value by default
+# and returns 2306 "Parameter value policy error"
+contact_org_enabled: 'false'
+
 # You can use `rake secret` to generate a secure secret key.
 # Your secret key is used for verifying the integrity of signed cookies.
 # If you change this key, all old signed cookies will become invalid!
