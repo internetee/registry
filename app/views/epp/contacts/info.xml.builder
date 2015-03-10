@@ -7,10 +7,22 @@ xml.epp_head do
     xml.resData do
       xml.tag!('contact:infData', 'xmlns:contact' => 'urn:ietf:params:xml:ns:contact-1.0') do
         xml.tag!('contact:id', @contact.code)
-        xml << render('/epp/contacts/postal_info')
-        xml.tag!('contact:voice', @contact.phone) #if @disclosure.try(:phone) || @owner
-        xml.tag!('contact:fax', @contact.fax) #if @disclosure.try(:fax) || @owner
-        xml.tag!('contact:email', @contact.email) #if @disclosure.try(:email) || @owner
+        xml.tag!('contact:voice', @contact.phone)
+        xml.tag!('contact:email', @contact.email)
+        xml.tag!('contact:fax', @contact.fax) if @contact.fax.present?
+
+        xml.tag!('contact:postalInfo', type: 'int') do
+          xml.tag!('contact:name', @contact.name)
+          xml.tag!('contact:org', @contact.org_name) if @contact.org_name.present?
+          xml.tag!('contact:addr') do
+            xml.tag!('contact:street', @contact.street)
+            xml.tag!('contact:city', @contact.city)
+            xml.tag!('contact:pc', @contact.zip)
+            xml.tag!('contact:sp', @contact.state)
+            xml.tag!('contact:cc', @contact.country_code)
+          end
+        end
+
         xml.tag!('contact:clID', @contact.registrar.try(:name))
         xml.tag!('contact:crID', @contact.creator.try(:registrar)) 
         xml.tag!('contact:crDate', @contact.created_at)
