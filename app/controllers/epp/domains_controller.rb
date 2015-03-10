@@ -56,25 +56,26 @@ class Epp::DomainsController < EppController
 
   def transfer
     authorize! :transfer, @domain, @password
+    action = params[:parsed_frame].css('transfer').first[:op]
 
-    if domain_transfer_params[:action] == 'query'
+    if action == 'query'
       if @domain.pending_transfer
         @domain_transfer = @domain.pending_transfer
       else
-        @domain_transfer = @domain.query_transfer(domain_transfer_params, params[:parsed_frame])
+        @domain_transfer = @domain.query_transfer(params[:parsed_frame], current_user)
         handle_errors(@domain) and return unless @domain_transfer
       end
-    elsif domain_transfer_params[:action] == 'approve'
+    elsif action == 'approve'
       if @domain.pending_transfer
-        @domain_transfer = @domain.approve_transfer(domain_transfer_params, params[:parsed_frame])
+        @domain_transfer = @domain.approve_transfer(params[:parsed_frame], current_user)
         handle_errors(@domain) and return unless @domain_transfer
       else
         epp_errors << { code: '2303', msg: I18n.t('pending_transfer_was_not_found') }
         handle_errors(@domain) and return
       end
-    elsif domain_transfer_params[:action] == 'reject'
+    elsif action == 'reject'
       if @domain.pending_transfer
-        @domain_transfer = @domain.reject_transfer(domain_transfer_params, params[:parsed_frame])
+        @domain_transfer = @domain.reject_transfer(params[:parsed_frame], current_user)
         handle_errors(@domain) and return unless @domain_transfer
       else
         epp_errors << { code: '2303', msg: I18n.t('pending_transfer_was_not_found') }
@@ -157,14 +158,6 @@ class Epp::DomainsController < EppController
 
     @prefix = 'delete > delete >'
     requires 'name'
-  end
-
-  def domain_transfer_params
-    res = {}
-    res[:pw] = params[:parsed_frame].css('pw').first.try(:text)
-    res[:action] = params[:parsed_frame].css('transfer').first[:op]
-    res[:current_user] = current_user
-    res
   end
 
   def find_domain

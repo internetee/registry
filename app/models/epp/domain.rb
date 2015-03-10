@@ -386,8 +386,8 @@ class Epp::Domain < Domain
   ### TRANSFER ###
 
   # rubocop: disable Metrics/MethodLength
-  def query_transfer(params, parsed_frame)
-    return false unless can_be_transferred_to?(params[:current_user].registrar)
+  def query_transfer(frame, current_user)
+    return false unless can_be_transferred_to?(current_user.registrar)
 
     transaction do
       begin
@@ -395,7 +395,7 @@ class Epp::Domain < Domain
           dt = domain_transfers.create!(
             status: DomainTransfer::PENDING,
             transfer_requested_at: Time.zone.now,
-            transfer_to: params[:current_user].registrar,
+            transfer_to: current_user.registrar,
             transfer_from: registrar
           )
 
@@ -410,16 +410,16 @@ class Epp::Domain < Domain
             status: DomainTransfer::SERVER_APPROVED,
             transfer_requested_at: Time.zone.now,
             transferred_at: Time.zone.now,
-            transfer_to: params[:current_user].registrar,
+            transfer_to: current_user.registrar,
             transfer_from: registrar
           )
 
           generate_auth_info
 
-          self.registrar = params[:current_user].registrar
+          self.registrar = current_user.registrar
         end
 
-        attach_legal_document(self.class.parse_legal_document_from_frame(parsed_frame))
+        attach_legal_document(self.class.parse_legal_document_from_frame(frame))
         save!(validate: false)
 
         return dt
@@ -431,9 +431,9 @@ class Epp::Domain < Domain
   end
   # rubocop: enable Metrics/MethodLength
 
-  def approve_transfer(params, parsed_frame)
+  def approve_transfer(frame, current_user)
     pt = pending_transfer
-    if params[:current_user].registrar != pt.transfer_from
+    if current_user.registrar != pt.transfer_from
       add_epp_error('2304', nil, nil, I18n.t('transfer_can_be_approved_only_by_current_registrar'))
       return false
     end
@@ -449,7 +449,7 @@ class Epp::Domain < Domain
 
         self.registrar = pt.transfer_to
 
-        attach_legal_document(self.class.parse_legal_document_from_frame(parsed_frame))
+        attach_legal_document(self.class.parse_legal_document_from_frame(frame))
         save!(validate: false)
       rescue => _e
         add_epp_error('2306', nil, nil, I18n.t('action_failed_due_to_server_error'))
@@ -460,9 +460,9 @@ class Epp::Domain < Domain
     pt
   end
 
-  def reject_transfer(params, parsed_frame)
+  def reject_transfer(frame, current_user)
     pt = pending_transfer
-    if params[:current_user].registrar != pt.transfer_from
+    if current_user.registrar != pt.transfer_from
       add_epp_error('2304', nil, nil, I18n.t('transfer_can_be_rejected_only_by_current_registrar'))
       return false
     end
@@ -473,7 +473,7 @@ class Epp::Domain < Domain
           status: DomainTransfer::CLIENT_REJECTED
         )
 
-        attach_legal_document(self.class.parse_legal_document_from_frame(parsed_frame))
+        attach_legal_document(self.class.parse_legal_document_from_frame(frame))
         save!(validate: false)
       rescue => _e
         add_epp_error('2306', nil, nil, I18n.t('action_failed_due_to_server_error'))
@@ -482,24 +482,6 @@ class Epp::Domain < Domain
     end
 
     pt
-  end
-
-  def approve_pending_transfer(current_user)
-    pt = pending_transfer
-    if current_user.registrar != pt.transfer_from
-      add_epp_error('2304', nil, nil, I18n.t('transfer_can_be_approved_only_by_current_registrar'))
-      return false
-    end
-
-    pt.update(
-      status: DomainTransfer::CLIENT_APPROVED,
-      transferred_at: Time.zone.now
-    )
-
-    generate_auth_info
-
-    self.registrar = pt.transfer_to
-    save(validate: false)
   end
 
   # rubocop:disable Metrics/MethodLength
