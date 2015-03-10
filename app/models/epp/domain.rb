@@ -84,6 +84,9 @@ class Epp::Domain < Domain
     ) if type.to_sym == :admin
   end
 
+  # rubocop: disable Metrics/PerceivedComplexity
+  # rubocop: disable Metrics/CyclomaticComplexity
+  # rubocop: disable Metrics/MethodLength
   def attrs_from(frame, current_user, action = nil)
     at = {}.with_indifferent_access
 
@@ -122,6 +125,9 @@ class Epp::Domain < Domain
 
     at
   end
+  # rubocop: enable Metrics/PerceivedComplexity
+  # rubocop: enable Metrics/CyclomaticComplexity
+  # rubocop: enable Metrics/MethodLength
 
   def nameservers_attrs(frame, action)
     ns_list = nameservers_from(frame)
@@ -211,6 +217,8 @@ class Epp::Domain < Domain
     res
   end
 
+  # rubocop: disable Metrics/PerceivedComplexity
+  # rubocop: disable Metrics/CyclomaticComplexity
   def dnskeys_attrs(frame, action)
     if frame.css('dsData').any? && !Setting.ds_data_allowed
       errors.add(:base, :ds_data_not_allowed)
@@ -244,6 +252,8 @@ class Epp::Domain < Domain
       return dnskeys_list
     end
   end
+  # rubocop: enable Metrics/PerceivedComplexity
+  # rubocop: enable Metrics/CyclomaticComplexity
 
   def key_data_from(frame, res)
     frame.xpath('keyData').each do |x|
