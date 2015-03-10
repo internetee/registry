@@ -1046,6 +1046,25 @@ describe 'EPP Domain', epp: true do
       end
     end
 
+    it 'should get an error when there is no pending transfer ' do
+      pw = domain.auth_info
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        authInfo: { pw: { value: pw } }
+      }, 'approve', {
+        _anonymus: [
+          legalDocument: {
+            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+            attrs: { type: 'pdf' }
+          }
+        ]
+      })
+
+      response = epp_plain_request(xml, :xml)
+      response[:msg].should == 'Pending transfer was not found'
+      response[:result_code].should == '2303'
+    end
+
     ### UPDATE ###
     it 'updates a domain' do
       existing_pw = Domain.last.auth_info

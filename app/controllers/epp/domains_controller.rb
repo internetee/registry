@@ -58,32 +58,13 @@ class Epp::DomainsController < EppController
     authorize! :transfer, @domain, @password
     action = params[:parsed_frame].css('transfer').first[:op]
 
-    if action == 'query'
-      if @domain.pending_transfer
-        @domain_transfer = @domain.pending_transfer
-      else
-        @domain_transfer = @domain.query_transfer(params[:parsed_frame], current_user)
-        handle_errors(@domain) and return unless @domain_transfer
-      end
-    elsif action == 'approve'
-      if @domain.pending_transfer
-        @domain_transfer = @domain.approve_transfer(params[:parsed_frame], current_user)
-        handle_errors(@domain) and return unless @domain_transfer
-      else
-        epp_errors << { code: '2303', msg: I18n.t('pending_transfer_was_not_found') }
-        handle_errors(@domain) and return
-      end
-    elsif action == 'reject'
-      if @domain.pending_transfer
-        @domain_transfer = @domain.reject_transfer(params[:parsed_frame], current_user)
-        handle_errors(@domain) and return unless @domain_transfer
-      else
-        epp_errors << { code: '2303', msg: I18n.t('pending_transfer_was_not_found') }
-        handle_errors(@domain) and return
-      end
-    end
+    @domain_transfer = @domain.transfer(params[:parsed_frame], action, current_user)
 
-    render_epp_response '/epp/domains/transfer'
+    if @domain.errors.empty? && @domain_transfer
+      render_epp_response '/epp/domains/transfer'
+    else
+      handle_errors(@domain)
+    end
   end
 
   # rubocop: enable Metrics/MethodLength

@@ -385,6 +385,23 @@ class Epp::Domain < Domain
 
   ### TRANSFER ###
 
+  # rubocop: disable Metrics/PerceivedComplexity
+  # rubocop: disable Metrics/CyclomaticComplexity
+  def transfer(frame, action, current_user)
+    case action
+    when 'query'
+      return pending_transfer if pending_transfer
+      return query_transfer(frame, current_user)
+    when 'approve'
+      return approve_transfer(frame, current_user) if pending_transfer
+    when 'reject'
+      return reject_transfer(frame, current_user) if pending_transfer
+    end
+    add_epp_error('2303', nil, nil, I18n.t('pending_transfer_was_not_found'))
+  end
+  # rubocop: enable Metrics/PerceivedComplexity
+  # rubocop: enable Metrics/CyclomaticComplexity
+
   # rubocop: disable Metrics/MethodLength
   def query_transfer(frame, current_user)
     return false unless can_be_transferred_to?(current_user.registrar)
