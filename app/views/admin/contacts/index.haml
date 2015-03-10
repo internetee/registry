@@ -29,6 +29,8 @@
               = sort_link(@q, 'email', t(:email))
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'code', t(:code))
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'registrar_name', t(:registrar))
         %tbody
           - @contacts.each do |contact|
             %tr
@@ -36,6 +38,10 @@
               %td= "#{contact.ident} #{ident_indicator(contact)}"
               %td= contact.email
               %td= contact.code
+              %td
+                - if contact.registrar
+                  = link_to(contact.registrar, admin_registrar_path(contact.registrar)) 
+
 .row
   .col-md-12
     = paginate @contacts
