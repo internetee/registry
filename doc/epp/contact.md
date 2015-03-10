@@ -34,6 +34,7 @@ Contact Mapping protocol short version:
                                           "birthday"     # Birthday date in format in DD-MM-YYYY
         <eis:legalDocument>    0-1      Base64 encoded document 
                                           Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
+    <clTRID>                   0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-create-command-successfully-creates-a-contact)
 
@@ -67,6 +68,7 @@ Contact Mapping protocol short version:
                                            "birthday"    # Birthday date in format in DD-MM-YYYY
         <eis:legalDocument>     0-1      Base64 encoded document. 
                                            Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
+    <clTRID>                    0-1      Client transaction id
 
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-update-command-is-succesful)
@@ -108,6 +110,8 @@ Contact Mapping protocol short version:
     <info>                   1       
       <contact:info>         1        Attribute: xmlns:contact="urn:ietf:params:xml:ns:contact-1.0"
         <contact:id>         1-n      Contact id 
+        <contact:authInfo>   0-1      Required if registrar is not the owner of the contact.
+          <contact:pw>       1        Contact password. Attribute: roid="String"
     <clTRID>                 0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-info-command-discloses-items-to-owner)

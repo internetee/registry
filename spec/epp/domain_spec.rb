@@ -856,7 +856,7 @@ describe 'EPP Domain', epp: true do
       create_settings
     end
 
-    it 'does not create a domain transfer without legal document' do
+    it 'creates transfer successfully without legal document' do
       pw = domain.auth_info
       xml = domain_transfer_xml({
         name: { value: domain.name },
@@ -865,9 +865,20 @@ describe 'EPP Domain', epp: true do
 
       login_as :registrar2 do
         response = epp_plain_request(xml, :xml)
-        response[:result_code].should == '2003'
-        response[:msg].should ==
-          'Required parameter missing: extension > extdata > legalDocument [legal_document]'
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+      end
+    end
+
+    it 'should not creates transfer without password' do
+      xml = domain_transfer_xml({
+        name: { value: domain.name }
+      })
+
+      login_as :registrar2 do
+        response = epp_plain_request(xml, :xml)
+        response[:msg].should == 'Authorization error'
+        response[:result_code].should == '2201'
       end
     end
 
