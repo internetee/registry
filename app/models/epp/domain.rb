@@ -1,5 +1,5 @@
 # rubocop: disable Metrics/ClassLength
-class Epp::EppDomain < Domain
+class Epp::Domain < Domain
   include EppErrors
 
   def epp_code_map # rubocop:disable Metrics/MethodLength
@@ -59,7 +59,7 @@ class Epp::EppDomain < Domain
   end
 
   def self.new_from_epp(frame, current_user)
-    domain = Epp::EppDomain.new
+    domain = Epp::Domain.new
     domain.attributes = domain.attrs_from(frame, current_user)
     domain.attach_default_contacts
     domain
@@ -105,7 +105,7 @@ class Epp::EppDomain < Domain
     period = frame.css('period').text
     at[:period] = (period.to_i == 0) ? 1 : period.to_i
 
-    at[:period_unit] = Epp::EppDomain.parse_period_unit_from_frame(frame) || 'y'
+    at[:period_unit] = Epp::Domain.parse_period_unit_from_frame(frame) || 'y'
 
     at[:nameservers_attributes] = nameservers_attrs(frame, action)
     at[:domain_contacts_attributes] = domain_contacts_attrs(frame, action)

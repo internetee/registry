@@ -34,7 +34,7 @@ class Epp::KeyrelaysController < EppController
 
   def find_domain
     domain_name = params[:parsed_frame].css('name').text.strip.downcase
-    domain = Epp::EppDomain.includes(:owner_contact).find_by(name: domain_name)
+    domain = Epp::Domain.includes(:owner_contact).find_by(name: domain_name)
 
     unless domain
       epp_errors << {

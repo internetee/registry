@@ -5,8 +5,8 @@ class Epp::DomainsController < EppController
   before_action :find_password, only: [:info, :update, :transfer, :delete]
 
   def create
-    authorize! :create, Epp::EppDomain
-    @domain = Epp::EppDomain.new_from_epp(params[:parsed_frame], current_user)
+    authorize! :create, Epp::Domain
+    @domain = Epp::Domain.new_from_epp(params[:parsed_frame], current_user)
 
     if @domain.errors.any? || !@domain.save
       handle_errors(@domain)
@@ -21,15 +21,15 @@ class Epp::DomainsController < EppController
   end
 
   def check
-    authorize! :check, Epp::EppDomain
+    authorize! :check, Epp::Domain
 
     names = params[:parsed_frame].css('name').map(&:text)
-    @domains = Epp::EppDomain.check_availability(names)
+    @domains = Epp::Domain.check_availability(names)
     render_epp_response '/epp/domains/check'
   end
 
   def renew
-    authorize! :renew, Epp::EppDomain
+    authorize! :renew, Epp::Domain
 
     handle_errors(@domain) and return unless @domain.renew(
       params[:parsed_frame].css('curExpDate').text,
@@ -92,7 +92,7 @@ class Epp::DomainsController < EppController
   def delete
     handle_errors(@domain) and return unless @domain.can_be_deleted?
 
-    @domain.attach_legal_document(Epp::EppDomain.parse_legal_document_from_frame(params[:parsed_frame]))
+    @domain.attach_legal_document(Epp::Domain.parse_legal_document_from_frame(params[:parsed_frame]))
     @domain.save(validate: false)
 
     handle_errors(@domain) and return unless @domain.destroy
@@ -169,7 +169,7 @@ class Epp::DomainsController < EppController
 
   def find_domain
     domain_name = params[:parsed_frame].css('name').text.strip.downcase
-    @domain = Epp::EppDomain.find_by(name: domain_name)
+    @domain = Epp::Domain.find_by(name: domain_name)
 
     unless @domain
       epp_errors << {

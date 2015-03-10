@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Epp::EppDomain do
+describe Epp::Domain do
   context 'with sufficient settings' do
     let(:domain) { Fabricate(:epp_domain) }
 
