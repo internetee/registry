@@ -20,4 +20,4 @@
                                     Required if ext:relative is not specified 
     <clTRID>               0-1      Client transaction id 
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-keyrelay-with-valid-user-makes-a-keyrelay-request)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-keyrelay-makes-a-keyrelay-request)

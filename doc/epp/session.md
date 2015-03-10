@@ -45,4 +45,4 @@ Here are functions like login, logout, hello, poll
                                       Attribute: op="req / ack"  
     <clTRID>                 0-1      Client transaction id 
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-poll-with-valid-user-queues-and-dequeues-messages)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-poll-queues-and-dequeues-messages)
