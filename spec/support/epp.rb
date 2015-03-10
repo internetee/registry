@@ -112,7 +112,7 @@ module Epp
   end
 
   def next_domain_name
-    "example#{rand(100000000)}.ee"
+    "example#{rand(100_000_000_000_000_000)}.ee"
   end
 
   ### REQUEST TEMPLATES ###

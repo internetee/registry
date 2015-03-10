@@ -81,3 +81,7 @@ Style/CommentIndentation:
 # It did not alayws suggested good format
 Style/AlignParameters:
   Enabled: false
+
+# No need fancy style of numbers such as 1_000_000
+Style/NumericLiterals:
+  Enabled: false

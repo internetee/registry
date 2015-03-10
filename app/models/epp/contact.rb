@@ -18,13 +18,6 @@ class Epp::Contact < Contact
       at[:fax]      = f.css('fax').text             if f.css('fax').present?
       at[:phone]    = f.css('voice').text           if f.css('voice').present?
       at[:auth_info] = f.css('authInfo pw').text if f.css('authInfo pw').present? 
-
-      if f.css('ident').present? && f.css('ident').attr('type').present?
-        at[:ident]              = f.css('ident').text      
-        at[:ident_type]         = f.css('ident').attr('type').try(:text)
-        at[:ident_country_code] = f.css('ident').attr('cc').try(:text)
-      end
-      
       at[:address_attributes] = {}.with_indifferent_access
       sat = at[:address_attributes]
       sat[:city]   = f.css('postalInfo addr city').text   if f.css('postalInfo addr city').present?
@@ -38,7 +31,7 @@ class Epp::Contact < Contact
       if legal_frame.present?
         at[:legal_documents_attributes] = legal_document_attrs(legal_frame) 
       end
-
+      at.merge!(ident_attrs(f.css('ident').first))
       at
     end
     # rubocop: enable Metrics/MethodLength
@@ -63,10 +56,27 @@ class Epp::Contact < Contact
       )
     end
 
+    def ident_attrs(ident_frame)
+      return {} if ident_frame.blank?
+      return {} if ident_frame.try('text').blank?
+      return {} if ident_frame.attr('type').blank?
+      return {} if ident_frame.attr('cc').blank?
+
+      {
+        ident: ident_frame.text,
+        ident_type: ident_frame.attr('type'),
+        ident_country_code: ident_frame.attr('cc')
+      }
+    end
+
     def legal_document_attrs(legal_frame)
+      return [] if legal_frame.blank?
+      return [] if legal_frame.try('text').blank?
+      return [] if legal_frame.attr('type').blank?
+
       [{
         body: legal_frame.text,
-        document_type: legal_frame['type']
+        document_type: legal_frame.attr('type')
       }]
     end
   end
@@ -93,6 +103,7 @@ class Epp::Contact < Contact
     return super if frame.blank?
     at = {}.with_indifferent_access
     at.deep_merge!(self.class.attrs_from(frame.css('chg')))
+    at.merge!(self.class.ident_attrs(frame.css('ident').first))
     legal_frame = frame.css('legalDocument').first
     at[:legal_documents_attributes] = self.class.legal_document_attrs(legal_frame) 
 

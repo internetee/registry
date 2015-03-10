@@ -90,7 +90,7 @@ class Epp::ContactsController < EppController
     @prefix = 'create > create >'
     requires(
       'postalInfo > name', 'postalInfo > addr > city',
-      'postalInfo > addr > cc', 'ident', 'voice', 'email'
+      'postalInfo > addr > cc', 'voice', 'email'
     )
     ident = params[:parsed_frame].css('ident')
     if ident.present? && ident.text != 'birthday' && ident.attr('cc').blank?
@@ -99,8 +99,9 @@ class Epp::ContactsController < EppController
         msg: I18n.t('errors.messages.required_attribute_missing', key: 'ident country code missing') 
       }
     end
+    contact_org_disabled 
     @prefix = nil
-    requires 'extension > extdata > legalDocument'
+    requires 'extension > extdata > ident'
   end
 
   def validate_update
@@ -111,15 +112,23 @@ class Epp::ContactsController < EppController
         msg: I18n.t('errors.messages.required_parameter_missing', key: 'add, rem or chg') 
       }
     end
+    contact_org_disabled
     requires 'id', 'authInfo > pw'
     @prefix = nil
-    requires 'extension > extdata > legalDocument'
   end
 
   def validate_delete
     @prefix = 'delete > delete >'
     requires 'id', 'authInfo > pw'
     @prefix = nil
-    requires 'extension > extdata > legalDocument'
+  end
+
+  def contact_org_disabled
+    return true if ENV['contact_org_enabled'] == 'true'
+    return true if params[:parsed_frame].css('postalInfo org').text.blank?
+    epp_errors << {
+      code: '2306',
+      msg: "#{I18n.t(:contact_org_error)}: postalInfo > org [org]"
+    }
   end
 end

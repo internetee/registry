@@ -4,7 +4,7 @@
   .panel-body
     - unless @contact.address.nil?
       %dl.dl-horizontal
-        - if @contact.bic?
+        - if @contact.org_name.present?
           %dt= t(:org_name)
           %dd= @contact.org_name
 

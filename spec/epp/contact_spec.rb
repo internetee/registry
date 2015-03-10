@@ -15,17 +15,23 @@ describe 'EPP Contact', epp: true do
 
     @contact = Fabricate(:contact, registrar: @registrar1)
 
-    @legal_document = {
+    @extension = {
       legalDocument: {
         value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
         attrs: { type: 'pdf' }
+      },
+      ident: {
+        value: '37605030299',
+        attrs: { type: 'priv', cc: 'EE' }
       }
     }
   end
 
   context 'with valid user' do
     context 'create command' do
-      def create_request(overwrites = {})
+      def create_request(overwrites = {}, extension = {})
+        extension = @extension if extension.blank?
+
         defaults = {
           postalInfo: {
             name: { value: 'John Doe' },
@@ -36,10 +42,9 @@ describe 'EPP Contact', epp: true do
             }
           },
           voice: { value: '+372.1234567' },
-          email: { value: 'test@example.example' },
-          ident: { value: '37605030299', attrs: { type: 'priv', cc: 'EE' } }
+          email: { value: 'test@example.example' }
         }
-        create_xml = @epp_xml.create(defaults.deep_merge(overwrites), @legal_document)
+        create_xml = @epp_xml.create(defaults.deep_merge(overwrites), extension)
         epp_plain_request(create_xml, :xml)
       end
 
@@ -52,13 +57,11 @@ describe 'EPP Contact', epp: true do
         response[:results][2][:msg].should == 
           'Required parameter missing: create > create > postalInfo > addr > cc [cc]'
         response[:results][3][:msg].should == 
-          'Required parameter missing: create > create > ident [ident]'
-        response[:results][4][:msg].should == 
           'Required parameter missing: create > create > voice [voice]'
-        response[:results][5][:msg].should == 
+        response[:results][4][:msg].should == 
           'Required parameter missing: create > create > email [email]'
-        response[:results][6][:msg].should == 
-          'Required parameter missing: extension > extdata > legalDocument [legal_document]'
+        response[:results][5][:msg].should == 
+          'Required parameter missing: extension > extdata > ident [ident]'
 
         response[:results][0][:result_code].should == '2003'
         response[:results][1][:result_code].should == '2003'
@@ -66,9 +69,8 @@ describe 'EPP Contact', epp: true do
         response[:results][3][:result_code].should == '2003'
         response[:results][4][:result_code].should == '2003'
         response[:results][5][:result_code].should == '2003'
-        response[:results][6][:result_code].should == '2003'
 
-        response[:results].count.should == 7
+        response[:results].count.should == 6
       end
 
       it 'successfully creates a contact' do
@@ -94,9 +96,17 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'successfully saves ident type' do
-        response = create_request(
-          { ident: { value: '1990-22-12', attrs: { type: 'birthday' } } }
-        )
+        extension = {
+          legalDocument: {
+            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+            attrs: { type: 'pdf' }
+          },
+          ident: { 
+            value: '1990-22-12',
+            attrs: { type: 'birthday', cc: 'US' } 
+          }
+        }
+        response = create_request({}, extension)
 
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
@@ -128,14 +138,20 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'successfully saves custom code' do
-        response = create_request(
-          { id: { value: '12345' } }
-        )
-
+        response = create_request({ id: { value: '12345' } })
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
 
         Contact.last.code.should == 'registrar1:12345'
+      end
+
+      it 'should return parameter value policy errror' do
+        response = create_request({ postalInfo: { org: { value: 'should not save' } } })
+        response[:msg].should == 
+          'Parameter value policy error. Org should be blank: postalInfo > org [org]'
+        response[:result_code].should == '2306'
+
+        Contact.last.org_name.should == nil
       end
     end
 
@@ -150,7 +166,9 @@ describe 'EPP Contact', epp: true do
           )
       end
 
-      def update_request(overwrites = {})
+      def update_request(overwrites = {}, extension = {})
+        extension = @extension if extension.blank?
+
         defaults = {
           id: { value: 'asd123123er' },
           authInfo: { pw: { value: 'password' } },
@@ -168,7 +186,7 @@ describe 'EPP Contact', epp: true do
             }
           }
         }
-        update_xml = @epp_xml.update(defaults.deep_merge(overwrites), @legal_document)
+        update_xml = @epp_xml.update(defaults.deep_merge(overwrites), extension)
         epp_plain_request(update_xml, :xml)
       end
 
@@ -184,10 +202,7 @@ describe 'EPP Contact', epp: true do
         response[:results][2][:msg].should == 
           'Required parameter missing: update > update > authInfo > pw [pw]'
         response[:results][2][:result_code].should == '2003'
-        response[:results][3][:msg].should == 
-          'Required parameter missing: extension > extdata > legalDocument [legal_document]'
-        response[:results][3][:result_code].should == '2003'
-        response[:results].count.should == 4
+        response[:results].count.should == 3
       end
 
       it 'returns error if obj doesnt exist' do
@@ -242,6 +257,38 @@ describe 'EPP Contact', epp: true do
 
         @contact.reload.code.should == 'sh8013'
       end
+
+      it 'should update ident' do
+        extension = {
+          legalDocument: {
+            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+            attrs: { type: 'pdf' }
+          },
+          ident: { 
+            value: '1990-22-12',
+            attrs: { type: 'birthday', cc: 'US' } 
+          }
+        }
+        response = update_request({ id: { value: 'sh8013' } }, extension)
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+
+        Contact.find_by(code: 'sh8013').ident_type.should == 'birthday'
+      end
+
+      it 'should return parameter value policy errror for org update' do
+        response = update_request({ 
+          id: { value: 'sh8013' }, 
+          chg: {
+            postalInfo: { org: { value: 'should not save' } } 
+          }
+        })
+        response[:msg].should == 
+          'Parameter value policy error. Org should be blank: postalInfo > org [org]'
+        response[:result_code].should == '2306'
+
+        Contact.find_by(code: 'sh8013').org_name.should == nil
+      end
     end
 
     context 'delete command' do
@@ -254,7 +301,7 @@ describe 'EPP Contact', epp: true do
           id: { value: @contact.code },
           authInfo: { pw: { value: @contact.auth_info } }
         }
-        delete_xml = @epp_xml.delete(defaults.deep_merge(overwrites), @legal_document)
+        delete_xml = @epp_xml.delete(defaults.deep_merge(overwrites), @extension)
         epp_plain_request(delete_xml, :xml)
       end
 
@@ -267,10 +314,7 @@ describe 'EPP Contact', epp: true do
         response[:results][1][:msg].should == 
           'Required parameter missing: delete > delete > authInfo > pw [pw]'
         response[:results][1][:result_code].should == '2003'
-        response[:results][2][:msg].should == 
-          'Required parameter missing: extension > extdata > legalDocument [legal_document]'
-        response[:results][2][:result_code].should == '2003'
-        response[:results].count.should == 3
+        response[:results].count.should == 2
       end
 
       it 'returns error if obj doesnt exist' do
@@ -381,7 +425,7 @@ describe 'EPP Contact', epp: true do
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
 
-        contact = response[:parsed].css('resData chkData')
+        contact = response[:parsed].css('resData infData')
         contact.css('name').first.text.should == 'Johnny Awesome'
       end
 

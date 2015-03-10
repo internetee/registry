@@ -1,5 +1,5 @@
 Fabricator(:domain) do
-  name { "fabricate_name#{rand(1_000_000)}.ee" }
+  name { sequence(:name) { |i| "fabricate_name#{i}.ee" } }
   valid_to Date.new(2014, 8, 7)
   period 1
   period_unit 'y'
