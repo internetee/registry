@@ -147,7 +147,8 @@ describe 'EPP Contact', epp: true do
 
       it 'should return parameter value policy errror' do
         response = create_request({ postalInfo: { org: { value: 'should not save' } } })
-        response[:msg].should == 'Parameter value policy error: postalInfo > org [org]'
+        response[:msg].should == 
+          'Parameter value policy error. Org should be blank: postalInfo > org [org]'
         response[:result_code].should == '2306'
 
         Contact.last.org_name.should == nil
@@ -282,7 +283,8 @@ describe 'EPP Contact', epp: true do
             postalInfo: { org: { value: 'should not save' } } 
           }
         })
-        response[:msg].should == 'Parameter value policy error: postalInfo > org [org]'
+        response[:msg].should == 
+          'Parameter value policy error. Org should be blank: postalInfo > org [org]'
         response[:result_code].should == '2306'
 
         Contact.find_by(code: 'sh8013').org_name.should == nil

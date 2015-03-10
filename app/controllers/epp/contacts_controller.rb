@@ -128,7 +128,7 @@ class Epp::ContactsController < EppController
     return true if params[:parsed_frame].css('postalInfo org').text.blank?
     epp_errors << {
       code: '2306',
-      msg: "#{I18n.t(:parameter_value_policy_error)}: postalInfo > org [org]"
+      msg: "#{I18n.t(:contact_org_error)}: postalInfo > org [org]"
     }
   end
 end
