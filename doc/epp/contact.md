@@ -114,4 +114,4 @@ Contact Mapping protocol short version:
           <contact:pw>       1        Contact password. Attribute: roid="String"
     <clTRID>                 0-1      Client transaction id
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-info-command-discloses-items-to-owner)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-info-command-return-info-about-contact)

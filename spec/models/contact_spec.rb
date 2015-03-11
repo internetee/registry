@@ -147,6 +147,11 @@ describe Contact do
       @contact.auth_info.should == 'password'
     end
 
+    it 'should have ok status by default' do
+      @contact.statuses.size.should == 1
+      @contact.statuses.first.value.should == 'ok'
+    end
+
     context 'as birthday' do
       before :all do
         @contact.ident_type = 'birthday'

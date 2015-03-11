@@ -16,15 +16,17 @@ class Ability
     can :show, :dashboard
   end
 
+  # rubocop: disable Metrics/CyclomaticComplexity
   def epp
     # Epp::Contact
-    can(:info,   Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
+    can(:info, Epp::Contact)
+    can(:view_full_info, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
     can(:check,  Epp::Contact)
     can(:create, Epp::Contact)
     can(:update, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id && c.auth_info == pw }
     can(:delete, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id && c.auth_info == pw }
     can(:renew,  Epp::Contact)
-    can(:view_password, Epp::Contact) { |c| c.registrar_id == @user.registrar_id }
+    can(:view_password, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
 
     # Epp::Domain
     can(:info,     Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.auth_info == pw }
@@ -34,6 +36,7 @@ class Ability
     can(:update,   Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.auth_info == pw }
     can(:transfer, Epp::Domain) { |d, pw| d.auth_info == pw }
   end
+  # rubocop: enabled Metrics/CyclomaticComplexity
 
   def user
     can :show, :dashboard
