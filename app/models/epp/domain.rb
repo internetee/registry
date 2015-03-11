@@ -408,31 +408,22 @@ class Epp::Domain < Domain
 
     transaction do
       begin
-        if Setting.transfer_wait_time > 0
-          dt = domain_transfers.create!(
-            status: DomainTransfer::PENDING,
+        dt = domain_transfers.create!(
             transfer_requested_at: Time.zone.now,
             transfer_to: current_user.registrar,
             transfer_from: registrar
           )
 
+        if dt.pending?
           registrar.messages.create!(
             body: I18n.t('transfer_requested'),
             attached_obj_id: dt.id,
             attached_obj_type: dt.class.to_s
           )
+        end
 
-        else
-          dt = domain_transfers.create!(
-            status: DomainTransfer::SERVER_APPROVED,
-            transfer_requested_at: Time.zone.now,
-            transferred_at: Time.zone.now,
-            transfer_to: current_user.registrar,
-            transfer_from: registrar
-          )
-
+        if dt.approved?
           generate_auth_info
-
           self.registrar = current_user.registrar
         end
 

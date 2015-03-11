@@ -13,6 +13,16 @@ class DomainTransfer < ActiveRecord::Base
   SERVER_CANCELLED = 'serverCancelled'
 
   before_create :set_wait_until
+  before_create :set_status
+
+  def set_status
+    if Setting.transfer_wait_time > 0
+      self.status = PENDING unless status
+    else
+      self.status = SERVER_APPROVED unless status
+      self.transferred_at = Time.zone.now unless transferred_at
+    end
+  end
 
   delegate :name, :valid_to, to: :domain, prefix: true
 
@@ -24,6 +34,10 @@ class DomainTransfer < ActiveRecord::Base
 
   def approved?
     status == CLIENT_APPROVED || status == SERVER_APPROVED
+  end
+
+  def pending?
+    status == PENDING
   end
 
   def approve_as_client
