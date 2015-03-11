@@ -401,8 +401,14 @@ class Epp::Domain < Domain
   end
 
   def transfer_contacts(current_user)
-    if owner_contact.domains.count > 1
-      # create new
+    if owner_contact.domains_owned.count > 1
+      c = Contact.find(owner_contact_id)
+      oc = c.deep_clone include: [:statuses, :address]
+      oc.code = nil
+      oc.registrar_id = current_user.registrar_id
+      oc.save!
+
+      self.owner_contact_id = oc.id
     else
       # transfer contact
       # TODO: This is a workaround so Bullet won't complain about n+1 query

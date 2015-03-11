@@ -914,7 +914,7 @@ describe 'EPP Domain', epp: true do
       end
 
       # all domain contacts should be under registrar2 now
-      domain.owner_contact.reload
+      domain.reload
       domain.owner_contact.registrar_id.should == @registrar2.id
       # owner_contact should be a new record
       domain.owner_contact.id.should_not == original_oc_id

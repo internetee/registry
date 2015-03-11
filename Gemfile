@@ -13,7 +13,7 @@ gem 'pg',                        '~> 0.18.0'
 gem 'ransack',                   '~> 1.5.1' # for searching
 # with polymorphic fix
 gem 'paper_trail',
-  github: 'airblade/paper_trail', 
+  github: 'airblade/paper_trail',
   ref: 'a453811226ec4ea59753ba6b827e390ced2fc140' # '~> 4.0.0.beta2' # archiving
 gem 'rails-settings-cached',     '~> 0.4.1' # for settings
 gem 'delayed_job_active_record', '~> 4.0.3' # delayed job
@@ -59,6 +59,9 @@ gem 'newrelic_rpm', '~> 3.9.9.275'
 
 # country listing
 gem 'countries', '~> 0.10.0'
+
+# cloning activerecord objects
+gem 'deep_cloneable', '~> 2.1.1'
 
 group :development do
   # dev tools
