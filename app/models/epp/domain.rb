@@ -399,6 +399,28 @@ class Epp::Domain < Domain
     end
     add_epp_error('2303', nil, nil, I18n.t('pending_transfer_was_not_found'))
   end
+
+  def transfer_contacts(current_user)
+    if owner_contact.domains.count > 1
+      # create new
+    else
+      # transfer contact
+      # TODO: This is a workaround so Bullet won't complain about n+1 query
+      # The problem appears in automatic status callback when doing normal save!
+      owner_contact.update_column(:registrar_id, current_user.registrar_id)
+    end
+
+    domain_contacts.includes(:contact).each do |dc|
+      c = dc.contact
+      if c.domains.count > 1
+        # create new contact
+      else
+        # transfer contact
+        c.registrar_id = current_user.registrar_id
+        c.save!
+      end
+    end
+  end
   # rubocop: enable Metrics/PerceivedComplexity
   # rubocop: enable Metrics/CyclomaticComplexity
 
@@ -423,6 +445,7 @@ class Epp::Domain < Domain
         end
 
         if dt.approved?
+          transfer_contacts(current_user)
           generate_auth_info
           self.registrar = current_user.registrar
         end

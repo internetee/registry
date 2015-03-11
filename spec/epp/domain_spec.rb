@@ -870,6 +870,60 @@ describe 'EPP Domain', epp: true do
       end
     end
 
+    it 'transfers domain with contacts' do
+      original_oc_id = domain.owner_contact.id
+
+      pw = domain.auth_info
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        authInfo: { pw: { value: pw } }
+      })
+
+      login_as :registrar2 do
+        response = epp_plain_request(xml, :xml)
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+      end
+
+      # all domain contacts should be under registrar2 now
+      domain.owner_contact.reload
+      domain.owner_contact.registrar_id.should == @registrar2.id
+      domain.owner_contact.id.should == original_oc_id
+
+      domain.contacts.pluck(:registrar_id).each do |reg_id|
+        reg_id.should == @registrar2.id
+      end
+
+      #
+    end
+
+    it 'transfers domain by creating new contacts' do
+      Fabricate(:domain, owner_contact: domain.owner_contact)
+      original_oc_id = domain.owner_contact.id
+
+      pw = domain.auth_info
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        authInfo: { pw: { value: pw } }
+      })
+
+      login_as :registrar2 do
+        response = epp_plain_request(xml, :xml)
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+      end
+
+      # all domain contacts should be under registrar2 now
+      domain.owner_contact.reload
+      domain.owner_contact.registrar_id.should == @registrar2.id
+      # owner_contact should be a new record
+      domain.owner_contact.id.should_not == original_oc_id
+
+      domain.contacts.pluck(:registrar_id).each do |reg_id|
+        reg_id.should == @registrar2.id
+      end
+    end
+
     it 'should not creates transfer without password' do
       xml = domain_transfer_xml({
         name: { value: domain.name }

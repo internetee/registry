@@ -15,15 +15,15 @@ class Contact < ActiveRecord::Base
 
   validates :name, :phone, :email, :ident, :address, :registrar, :ident_type, presence: true
 
-  # Phone nr validation is very minimam in order to support legacy requirements
+  # # Phone nr validation is very minimam in order to support legacy requirements
   validates :phone, format: /\+[0-9]{1,3}\.[0-9]{1,14}?/
   validates :email, format: /@/
-  validates :ident, 
+  validates :ident,
     format: { with: /\d{4}-\d{2}-\d{2}/, message: :invalid_birthday_format },
     if: proc { |c| c.ident_type == 'birthday' }
   validates :ident_country_code, presence: true, if: proc { |c| %w(bic priv).include? c.ident_type }
-  validates :code, 
-    uniqueness: { message: :epp_id_taken }, 
+  validates :code,
+    uniqueness: { message: :epp_id_taken },
     format: { with: /\A[\w\-\:]*\Z/i },
     length: { maximum: 100 }
 
@@ -142,7 +142,7 @@ class Contact < ActiveRecord::Base
     false
   end
 
-  # TODO: refactor, it should not allow to destroy with normal destroy, 
+  # TODO: refactor, it should not allow to destroy with normal destroy,
   # no need separate method
   # should use only in transaction
   def destroy_and_clean
@@ -157,7 +157,7 @@ class Contact < ActiveRecord::Base
     return true unless ident_country_code_changed? && ident_country_code.present?
     code = Country.new(ident_country_code)
     if code
-      self.ident_country_code = code.alpha2 
+      self.ident_country_code = code.alpha2
     else
       errors.add(:ident_country_code, 'is not following ISO_3166-1 alpha 2 format')
     end

@@ -20,6 +20,8 @@ class Domain < ActiveRecord::Base
            -> { where(domain_contacts: { contact_type: DomainContact::ADMIN }) },
            through: :domain_contacts, source: :contact
 
+  has_many :contacts, through: :domain_contacts, source: :contact
+
   has_many :nameservers, dependent: :delete_all
 
   accepts_nested_attributes_for :nameservers, allow_destroy: true,

@@ -51,16 +51,4 @@ class DomainTransfer < ActiveRecord::Base
       domain.save(validate: false)
     end
   end
-
-  def approve_as_server
-    transaction do
-      self.status = DomainTransfer::SERVER_APPROVED
-      self.transferred_at = Time.zone.now
-      save
-
-      domain.generate_auth_info
-      domain.registrar = transfer_to
-      domain.save(validate: false)
-    end
-  end
 end
