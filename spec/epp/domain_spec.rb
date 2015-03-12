@@ -952,14 +952,16 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'transfers domain when domain contacts are some other domain contacts' do
-      c = Fabricate(:contact, registrar: @registrar1)
-      domain.tech_contacts << c
-      original_c_id = c.id
+      old_contact = Fabricate(:contact, registrar: @registrar1)
+      domain.tech_contacts << old_contact
+      domain.admin_contacts << old_contact
 
       d = Fabricate(:domain)
-      d.tech_contacts << c
-
+      d.tech_contacts << old_contact
+      d.admin_contacts << old_contact
       original_oc_id = domain.owner_contact.id
+      original_contact_count = Contact.count
+      original_domain_contact_count = DomainContact.count
 
       pw = domain.auth_info
       xml = domain_transfer_xml({
@@ -976,11 +978,85 @@ describe 'EPP Domain', epp: true do
       # all domain contacts should be under registrar2 now
       domain.reload
       domain.owner_contact.registrar_id.should == @registrar2.id
-      # owner_contact should be a new record
+      # owner_contact should not be a new record
       domain.owner_contact.id.should == original_oc_id
 
-      old_contact = Contact.find(original_c_id)
+      # old contact must not change
       old_contact.registrar_id.should == @registrar1.id
+
+      domain.contacts.each do |x|
+        x.registrar_id.should == @registrar2.id
+      end
+
+      new_contact = Contact.last
+      new_contact.name.should == old_contact.name
+
+      # there should be 2 references to the new contact
+      domain.domain_contacts.where(contact_id: new_contact.id).count.should == 2
+
+      # there should be only one new contact object
+      (original_contact_count + 1).should == Contact.count
+
+      # and no new references
+      original_domain_contact_count.should == DomainContact.count
+    end
+
+    it 'transfers domain when multiple domain contacts are some other domain contacts' do
+      old_contact = Fabricate(:contact, registrar: @registrar1)
+      old_contact_2 = Fabricate(:contact, registrar: @registrar1)
+
+      domain.tech_contacts << old_contact
+      domain.admin_contacts << old_contact
+      domain.tech_contacts << old_contact_2
+
+      d = Fabricate(:domain)
+      d.tech_contacts << old_contact
+      d.admin_contacts << old_contact_2
+
+      original_oc_id = domain.owner_contact.id
+      original_contact_count = Contact.count
+      original_domain_contact_count = DomainContact.count
+
+      pw = domain.auth_info
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        authInfo: { pw: { value: pw } }
+      })
+
+      login_as :registrar2 do
+        response = epp_plain_request(xml, :xml)
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+      end
+
+      # all domain contacts should be under registrar2 now
+      domain.reload
+      domain.owner_contact.registrar_id.should == @registrar2.id
+      # owner_contact should not be a new record
+      domain.owner_contact.id.should == original_oc_id
+
+      # old contact must not change
+      old_contact.registrar_id.should == @registrar1.id
+
+      domain.contacts.each do |x|
+        x.registrar_id.should == @registrar2.id
+      end
+
+      new_contact, new_contact_2 = Contact.last(2)
+      new_contact.name.should == old_contact.name
+      new_contact_2.name.should == old_contact_2.name
+
+      # there should be 2 references to the new contact (admin + tech)
+      domain.domain_contacts.where(contact_id: new_contact.id).count.should == 2
+
+      # there should be 1 reference to the new contact 2 (tech)
+      domain.domain_contacts.where(contact_id: new_contact_2.id).count.should == 1
+
+      # there should be only two new contact objects
+      (original_contact_count + 2).should == Contact.count
+
+      # and no new references
+      original_domain_contact_count.should == DomainContact.count
     end
 
     it 'should not creates transfer without password' do
