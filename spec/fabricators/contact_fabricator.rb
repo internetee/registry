@@ -11,6 +11,6 @@ Fabricator(:contact) do
   registrar { Fabricate(:registrar, name: Faker::Company.name, reg_no: Faker::Company.duns_number) }
   disclosure { Fabricate(:contact_disclosure) }
   # rubocop: disable Style/SymbolProc
-  after_validation { |c| c.disable_generate_auth_info! } 
+  after_validation { |c| c.disable_generate_auth_info! }
   # rubocop: enamble Style/SymbolProc
 end

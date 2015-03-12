@@ -400,41 +400,54 @@ class Epp::Domain < Domain
     add_epp_error('2303', nil, nil, I18n.t('pending_transfer_was_not_found'))
   end
 
-  def transfer_contacts(current_user)
+  # TODO: Eager load problems here. Investigate how it's possible not to query contact again
+  # Check if versioning works with update_column
+  def transfer_contacts(registrar_id)
+    transfer_owner_contact(registrar_id)
+    transfer_domain_contacts(registrar_id)
+  end
+
+  def transfer_owner_contact(registrar_id)
     is_other_domains_contact = DomainContact.where('contact_id = ? AND domain_id != ?', owner_contact_id, id).count > 0
     if owner_contact.domains_owned.count > 1 || is_other_domains_contact
-      c = Contact.find(owner_contact_id)
+      # copy contact
+      c = Contact.find(owner_contact_id) # n+1 workaround
       oc = c.deep_clone include: [:statuses, :address]
       oc.code = nil
-      oc.registrar_id = current_user.registrar_id
+      oc.registrar_id = registrar_id
       oc.save!
-
       self.owner_contact_id = oc.id
     else
       # transfer contact
-      # TODO: This is a workaround so Bullet won't complain about n+1 query
-      # The problem appears in automatic status callback when doing normal save!
-      owner_contact.update_column(:registrar_id, current_user.registrar_id)
+      owner_contact.update_column(:registrar_id, registrar_id) # n+1 workaround
     end
+  end
 
+  def transfer_domain_contacts(registrar_id)
     copied_ids = []
     contacts.each do |c|
       next if copied_ids.include?(c.id)
 
       is_other_domains_contact = DomainContact.where('contact_id = ? AND domain_id != ?', c.id, id).count > 0
+      # if contact used to be owner contact but was copied, then contact must be transferred
+      # (owner_contact_id_was != c.id)
       if c.domains.count > 1 || is_other_domains_contact
-        # create contact
-        old_contact = Contact.find(c.id)
-        oc = old_contact.deep_clone include: [:statuses, :address]
-        oc.code = nil
-        oc.registrar_id = current_user.registrar_id
-        oc.save!
+        # copy contact
+        if owner_contact_id_was == c.id # owner contact was copied previously, do not copy it again
+          oc = OpenStruct.new(id: owner_contact_id)
+        else
+          old_contact = Contact.find(c.id) # n+1 workaround
+          oc = old_contact.deep_clone include: [:statuses, :address]
+          oc.code = nil
+          oc.registrar_id = registrar_id
+          oc.save!
+        end
 
-        domain_contacts.where(contact_id: c.id).update_all({ contact_id: oc.id })
+        domain_contacts.where(contact_id: c.id).update_all({ contact_id: oc.id }) # n+1 workaround
         copied_ids << c.id
       else
         # transfer contact
-        c.update_column(:registrar_id, current_user.registrar_id)
+        c.update_column(:registrar_id, registrar_id) # n+1 workaround
       end
     end
   end
@@ -462,7 +475,7 @@ class Epp::Domain < Domain
         end
 
         if dt.approved?
-          transfer_contacts(current_user)
+          transfer_contacts(current_user.registrar_id)
           generate_auth_info
           self.registrar = current_user.registrar
         end
@@ -493,8 +506,8 @@ class Epp::Domain < Domain
           transferred_at: Time.zone.now
         )
 
+        transfer_contacts(pt.transfer_to_id)
         generate_auth_info
-
         self.registrar = pt.transfer_to
 
         attach_legal_document(self.class.parse_legal_document_from_frame(frame))

@@ -1059,6 +1059,33 @@ describe 'EPP Domain', epp: true do
       original_domain_contact_count.should == DomainContact.count
     end
 
+    it 'transfers domain and references exsisting owner contact to domain contacts' do
+      d = Fabricate(:domain)
+      d.tech_contacts << domain.owner_contact
+
+      domain.tech_contacts << domain.owner_contact
+      original_owner_contact_id = domain.owner_contact_id
+
+      pw = domain.auth_info
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        authInfo: { pw: { value: pw } }
+      })
+
+      login_as :registrar2 do
+        response = epp_plain_request(xml, :xml)
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+      end
+
+      domain.reload
+      # owner contact must be an new record
+      domain.owner_contact_id.should_not == original_owner_contact_id
+
+      # new owner contact must be a tech contact
+      domain.domain_contacts.where(contact_id: domain.owner_contact_id).count.should == 1
+    end
+
     it 'should not creates transfer without password' do
       xml = domain_transfer_xml({
         name: { value: domain.name }
