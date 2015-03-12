@@ -172,6 +172,9 @@ In short:
 
 #### Creating CSR file
 
+This command prompts for additional data  
+For Common Name (CN), enter the corresponding API user's username 
+
     openssl genrsa -out private/api-user.key.pem 4096
     chmod 400 private/api-user.key.pem
     openssl req -sha256 -new -days 3653 -key private/api-user.key.pem -out csrs/api-user.csr.pem
