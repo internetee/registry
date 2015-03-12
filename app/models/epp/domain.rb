@@ -401,7 +401,8 @@ class Epp::Domain < Domain
   end
 
   def transfer_contacts(current_user)
-    if owner_contact.domains_owned.count > 1
+    is_other_domains_contact = DomainContact.where('contact_id = ? AND domain_id != ?', owner_contact_id, id).count > 0
+    if owner_contact.domains_owned.count > 1 || is_other_domains_contact
       c = Contact.find(owner_contact_id)
       oc = c.deep_clone include: [:statuses, :address]
       oc.code = nil
@@ -416,14 +417,20 @@ class Epp::Domain < Domain
       owner_contact.update_column(:registrar_id, current_user.registrar_id)
     end
 
-    domain_contacts.includes(:contact).each do |dc|
-      c = dc.contact
-      if c.domains.count > 1
-        # create new contact
+    contacts.each do |c|
+      is_other_domains_contact = DomainContact.where('contact_id = ? AND domain_id != ?', c.id, id).count > 0
+      if c.domains.count > 1 || is_other_domains_contact
+        # create contact
+        old_contact = Contact.find(c.id)
+        oc = old_contact.deep_clone include: [:statuses, :address]
+        oc.code = nil
+        oc.registrar_id = current_user.registrar_id
+        oc.save!
+
+        domain_contacts.update_all({ contact_id: oc.id })
       else
         # transfer contact
-        c.registrar_id = current_user.registrar_id
-        c.save!
+        c.update_column(:registrar_id, current_user.registrar_id)
       end
     end
   end
