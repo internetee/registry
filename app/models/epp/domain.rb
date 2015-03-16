@@ -168,7 +168,7 @@ class Epp::Domain < Domain
   end
 
   def domain_contacts_attrs(frame, action)
-    contact_list = domain_contact_list_from(frame)
+    contact_list = domain_contact_list_from(frame, action)
 
     if action == 'rem'
       to_destroy = []
@@ -195,7 +195,7 @@ class Epp::Domain < Domain
     end
   end
 
-  def domain_contact_list_from(frame)
+  def domain_contact_list_from(frame, action)
     res = []
     frame.css('contact').each do |x|
       c = Contact.find_by(code: x.text)
@@ -205,9 +205,11 @@ class Epp::Domain < Domain
         next
       end
 
-      if x['type'] == 'admin' && c.bic?
-        add_epp_error('2306', 'contact', x.text, [:domain_contacts, :admin_contact_can_be_only_citizen])
-        next
+      if action != 'rem'
+        if x['type'] == 'admin' && c.bic?
+          add_epp_error('2306', 'contact', x.text, [:domain_contacts, :admin_contact_can_be_only_citizen])
+          next
+        end
       end
 
       res << {
