@@ -872,6 +872,9 @@ describe 'EPP Domain', epp: true do
 
     it 'transfers domain with contacts' do
       original_oc_id = domain.owner_contact.id
+      original_oc_code = domain.owner_contact.code
+
+      original_contact_codes = domain.contacts.pluck(:code)
 
       pw = domain.auth_info
       xml = domain_transfer_xml({
@@ -890,14 +893,21 @@ describe 'EPP Domain', epp: true do
       domain.owner_contact.registrar_id.should == @registrar2.id
       domain.owner_contact.id.should == original_oc_id
 
-      domain.contacts.pluck(:registrar_id).each do |reg_id|
-        reg_id.should == @registrar2.id
+      # must generate new code
+      domain.owner_contact.code.should_not == original_oc_code
+
+      domain.contacts.each do |c|
+        c.registrar_id.should == @registrar2.id
+        original_contact_codes.include?(c.code).should_not == true
       end
     end
 
     it 'transfers domain when registrant has more domains' do
       Fabricate(:domain, owner_contact: domain.owner_contact)
       original_oc_id = domain.owner_contact.id
+      original_oc_code = domain.owner_contact.code
+
+      original_contact_codes = domain.contacts.pluck(:code)
 
       pw = domain.auth_info
       xml = domain_transfer_xml({
@@ -916,9 +926,12 @@ describe 'EPP Domain', epp: true do
       domain.owner_contact.registrar_id.should == @registrar2.id
       # owner_contact should be a new record
       domain.owner_contact.id.should_not == original_oc_id
+      # must generate new code
+      domain.owner_contact.code.should_not == original_oc_code
 
-      domain.contacts.pluck(:registrar_id).each do |reg_id|
-        reg_id.should == @registrar2.id
+      domain.contacts.each do |c|
+        c.registrar_id.should == @registrar2.id
+        original_contact_codes.include?(c.code).should_not == true
       end
     end
 
@@ -927,6 +940,9 @@ describe 'EPP Domain', epp: true do
       d.tech_contacts << domain.owner_contact
 
       original_oc_id = domain.owner_contact.id
+      original_oc_code = domain.owner_contact.code
+
+      original_contact_codes = domain.contacts.pluck(:code)
 
       pw = domain.auth_info
       xml = domain_transfer_xml({
@@ -945,9 +961,12 @@ describe 'EPP Domain', epp: true do
       domain.owner_contact.registrar_id.should == @registrar2.id
       # owner_contact should be a new record
       domain.owner_contact.id.should_not == original_oc_id
+      # must generate new code
+      domain.owner_contact.code.should_not == original_oc_code
 
-      domain.contacts.pluck(:registrar_id).each do |reg_id|
-        reg_id.should == @registrar2.id
+      domain.contacts.each do |c|
+        c.registrar_id.should == @registrar2.id
+        original_contact_codes.include?(c.code).should_not == true
       end
     end
 

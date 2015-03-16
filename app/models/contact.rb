@@ -13,6 +13,8 @@ class Contact < ActiveRecord::Base
 
   accepts_nested_attributes_for :address, :disclosure, :legal_documents
 
+  attr_accessor :code_overwrite_allowed
+
   validates :name, :phone, :email, :ident, :address, :registrar, :ident_type, presence: true
 
   # # Phone nr validation is very minimam in order to support legacy requirements
@@ -112,7 +114,7 @@ class Contact < ActiveRecord::Base
   end
 
   def generate_code
-    self.code = SecureRandom.hex(4) if code.blank?
+    self.code = SecureRandom.hex(4) if code.blank? || code_overwrite_allowed
   end
 
   def generate_auth_info
@@ -129,7 +131,7 @@ class Contact < ActiveRecord::Base
   end
 
   def code=(code)
-    self[:code] = code if new_record?
+    self[:code] = code if new_record? || code_overwrite_allowed
   end
 
   # Find a way to use self.domains with contact

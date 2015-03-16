@@ -416,7 +416,7 @@ class Epp::Domain < Domain
     is_other_domains_contact = DomainContact.where('contact_id = ? AND domain_id != ?', owner_contact_id, id).count > 0
     if owner_contact.domains_owned.count > 1 || is_other_domains_contact
       # copy contact
-      c = Contact.find(owner_contact_id) # n+1 workaround
+      c = Contact.find(owner_contact_id)
       oc = c.deep_clone include: [:statuses, :address]
       oc.code = nil
       oc.registrar_id = registrar_id
@@ -424,7 +424,13 @@ class Epp::Domain < Domain
       self.owner_contact_id = oc.id
     else
       # transfer contact
-      owner_contact.update_column(:registrar_id, registrar_id) # n+1 workaround
+      oc = Contact.find(owner_contact_id) # n+1 workaround
+      oc.code_overwrite_allowed = true
+      oc.generate_code
+      oc.registrar_id = registrar_id
+      oc.save!
+
+      self.owner_contact = oc
     end
   end
 
@@ -452,7 +458,11 @@ class Epp::Domain < Domain
         copied_ids << c.id
       else
         # transfer contact
-        c.update_column(:registrar_id, registrar_id) # n+1 workaround
+        cnt = Contact.find(c.id) # n+1 workaround
+        cnt.code_overwrite_allowed = true
+        cnt.generate_code
+        cnt.registrar_id = registrar_id
+        cnt.save!
       end
     end
   end
