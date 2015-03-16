@@ -22,8 +22,10 @@ cp config/database-robot.yml config/database.yml
 # Under jenkins admin interface use rbenv-plugin wrapper
 # rbenv does not have bundler by default
 if echo gem list --local bundler | grep -q "bundler"
-  then echo ''
-  else gem install bundler
+  then echo 'bundler ok: already installed'
+  else 
+    echo 'Installing bundler...'
+    gem install bundler
 fi
 bundle install
 
