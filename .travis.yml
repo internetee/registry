@@ -1,7 +1,6 @@
 language: ruby
 rvm:
   - 2.2
-  - ruby-head
 env:
   - DB=postgresql
 sudo: false
