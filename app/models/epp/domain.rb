@@ -413,6 +413,8 @@ class Epp::Domain < Domain
   end
 
   def transfer_owner_contact(registrar_id)
+    return if owner_contact.registrar_id == registrar_id
+
     is_other_domains_contact = DomainContact.where('contact_id = ? AND domain_id != ?', owner_contact_id, id).count > 0
     if owner_contact.domains_owned.count > 1 || is_other_domains_contact
       # copy contact
@@ -429,15 +431,13 @@ class Epp::Domain < Domain
       oc.generate_code
       oc.registrar_id = registrar_id
       oc.save!
-
-      self.owner_contact = oc
     end
   end
 
   def transfer_domain_contacts(registrar_id)
     copied_ids = []
     contacts.each do |c|
-      next if copied_ids.include?(c.id)
+      next if copied_ids.include?(c.id) || c.registrar_id == registrar_id
 
       is_other_domains_contact = DomainContact.where('contact_id = ? AND domain_id != ?', c.id, id).count > 0
       # if contact used to be owner contact but was copied, then contact must be transferred

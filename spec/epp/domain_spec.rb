@@ -1105,6 +1105,41 @@ describe 'EPP Domain', epp: true do
       domain.domain_contacts.where(contact_id: domain.owner_contact_id).count.should == 1
     end
 
+    it 'does not transfer contacts if they are already under new registrar' do
+      domain.contacts.each do |c|
+        c.registrar_id = @registrar2.id
+        c.save
+      end
+
+      domain.owner_contact.registrar_id = @registrar2.id
+      domain.owner_contact.save
+
+      original_oc_id = domain.owner_contact_id
+      original_oc_code = domain.owner_contact.code
+      original_contacts_codes = domain.contacts.pluck(:code)
+
+      pw = domain.auth_info
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        authInfo: { pw: { value: pw } }
+      })
+
+      login_as :registrar2 do
+        response = epp_plain_request(xml, :xml)
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+      end
+
+      domain.reload
+
+      domain.owner_contact.id.should == original_oc_id
+      domain.owner_contact.code.should == original_oc_code
+      domain.owner_contact.registrar_id.should == @registrar2.id
+
+      original_contacts_codes.should == domain.contacts.pluck(:code)
+
+    end
+
     it 'should not creates transfer without password' do
       xml = domain_transfer_xml({
         name: { value: domain.name }
