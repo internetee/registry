@@ -19,7 +19,12 @@ cp config/application-example.yml config/application.yml
 cp config/secrets-example.yml config/secrets.yml
 cp config/database-robot.yml config/database.yml
 
-# under jenkins use rbenv-plugin wrapper
+# Under jenkins admin interface use rbenv-plugin wrapper
+# rbenv does not have bundler by default
+if echo gem list --local bundler | grep -q "bundler"
+  then echo ''
+  else gem install bundler
+fi
 bundle install
 
 RAILS_ENV=test bundle exec rake db:all:drop
