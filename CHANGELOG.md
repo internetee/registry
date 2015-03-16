@@ -1,3 +1,7 @@
+16.03.2015
+
+* ruby upgraded to version 2.2.1
+
 27.02.2015
 
 * Simplified config/application-example.yml, 
