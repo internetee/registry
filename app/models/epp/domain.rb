@@ -173,7 +173,10 @@ class Epp::Domain < Domain
     if action == 'rem'
       to_destroy = []
       contact_list.each do |dc|
-        domain_contact_id = domain_contacts.find_by(contact_id: dc[:contact_id]).try(:id)
+        domain_contact_id = domain_contacts.find_by(
+          contact_id: dc[:contact_id],
+          contact_type: dc[:contact_type]
+        ).try(:id)
 
         unless domain_contact_id
           add_epp_error('2303', 'contact', dc[:contact_code_cache], [:domain_contacts, :not_found])
