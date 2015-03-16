@@ -1,6 +1,6 @@
 16.03.2015
 
-* ruby upgraded to version 2.2.1
+* ruby upgraded to version 2.2.1, added RBENV upgrade howto to debian doc at: doc/debian_build_doc.md
 
 27.02.2015
 

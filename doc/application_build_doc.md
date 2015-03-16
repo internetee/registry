@@ -22,7 +22,7 @@ Deploy overview: (database schema should be loaded and seeds should be present)
     # at your local machine
     git clone git@github.com:internetee/registry.git
     cd registry
-    rbenv local 2.2.0 # more info about rbenv at debian doc
+    rbenv local 2.2.1 # more info about rbenv at debian doc
     gem install mina
     mina pr setup # one time, only creates missing directories
     ssh registry
