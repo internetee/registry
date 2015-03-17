@@ -23,7 +23,7 @@ cp config/database-robot.yml config/database.yml
 # rbenv does not have bundler by default
 if echo gem list --local bundler | grep -q "bundler"
   then echo 'bundler ok: already installed'
-  else 
+  else
     echo 'Installing bundler...'
     gem install bundler
 fi
@@ -31,6 +31,7 @@ bundle install
 
 RAILS_ENV=test bundle exec rake db:all:drop
 RAILS_ENV=test bundle exec rake db:all:setup
+RAILS_ENV=test bundle exec rake zonefile:replace_procedure
 RAILS_ENV=test bundle exec rake assets:precompile
 
 echo "GIT_LAST_COMMITS"

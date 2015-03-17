@@ -1,5 +1,5 @@
 Fabricator(:domain) do
-  name { sequence(:name) { |i| "fabricate_name#{i}.ee" } }
+  name { sequence(:name) { |i| "domain#{i}.ee" } }
   valid_to Date.new(2014, 8, 7)
   period 1
   period_unit 'y'
@@ -11,5 +11,5 @@ Fabricator(:domain) do
 end
 
 Fabricator(:domain_with_dnskeys, from: :domain) do
-  dnskeys(count: 1)
+  after_create { |domain| Fabricate(:dnskey, domain: domain) }
 end
