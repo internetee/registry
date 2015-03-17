@@ -10,5 +10,6 @@ module Legacy
     has_many :object_states, -> { where('valid_to IS NULL') }, foreign_key: :object_id
     has_many :dnskeys, foreign_key: :keysetid, primary_key: :keyset
     has_many :domain_contact_maps, foreign_key: :domainid
+    has_many :nsset_contact_maps, foreign_key: :nssetid, primary_key: :nsset
   end
 end

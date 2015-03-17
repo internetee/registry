@@ -164,6 +164,8 @@ namespace :import do
     start = Time.now.to_f
     puts '-----> Importing domains...'
 
+    # domain_status_map = {}
+
     domain_columns = [
       "name",
       "registered_at",
@@ -255,10 +257,21 @@ namespace :import do
           x.registrant
         ]
 
-        # domain contacts
+        # admin contacts
         x.domain_contact_maps.each do |dc|
           domain_contacts << [
             'admin', # TODO: Where to get real contact type?
+            user,
+            user,
+            x.id,
+            dc.contactid
+          ]
+        end
+
+        # tech contacts
+        x.nsset_contact_maps.each do |dc|
+          domain_contacts << [
+            'tech', # TODO: Where to get real contact type?
             user,
             user,
             x.id,
@@ -304,7 +317,7 @@ namespace :import do
             key.alg,
             key.key,
             3, # ds_alg
-            Setting.ds_algorithm, # ds_digest_type
+            1, # ds_digest_type /SHA1)
             user,
             user,
             x.id

@@ -73,9 +73,9 @@ class Dnskey < ActiveRecord::Base
     hex = [domain.name_in_wire_format, flags_hex, protocol_hex, alg_hex, public_key_hex].join
     bin = self.class.hex_to_bin(hex)
 
-    if Setting.ds_algorithm == 1
+    if ds_digest_type == 1
       self.ds_digest = Digest::SHA1.hexdigest(bin).upcase
-    elsif Setting.ds_algorithm == 2
+    elsif ds_digest_type == 2
       self.ds_digest = Digest::SHA256.hexdigest(bin).upcase
     end
   end

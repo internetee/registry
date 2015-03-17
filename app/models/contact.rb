@@ -84,7 +84,7 @@ class Contact < ActiveRecord::Base
   end
 
   def to_s
-    name
+    name || '[no name]'
   end
 
   def ident_valid_format?
