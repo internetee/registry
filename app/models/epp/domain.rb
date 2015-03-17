@@ -412,25 +412,33 @@ class Epp::Domain < Domain
     transfer_domain_contacts(registrar_id)
   end
 
+  def copy_and_transfer_contact(contact_id, registrar_id)
+    c = Contact.find(contact_id) # n+1 workaround
+    oc = c.deep_clone include: [:statuses, :address]
+    oc.code = nil
+    oc.registrar_id = registrar_id
+    oc.save!
+    oc
+  end
+
+  def transfer_contact(contact_id, registrar_id)
+    oc = Contact.find(contact_id) # n+1 workaround
+    oc.code_overwrite_allowed = true
+    oc.generate_code
+    oc.registrar_id = registrar_id
+    oc.save!
+    oc
+  end
+
   def transfer_owner_contact(registrar_id)
     return if owner_contact.registrar_id == registrar_id
 
     is_other_domains_contact = DomainContact.where('contact_id = ? AND domain_id != ?', owner_contact_id, id).count > 0
     if owner_contact.domains_owned.count > 1 || is_other_domains_contact
-      # copy contact
-      c = Contact.find(owner_contact_id)
-      oc = c.deep_clone include: [:statuses, :address]
-      oc.code = nil
-      oc.registrar_id = registrar_id
-      oc.save!
+      oc = copy_and_transfer_contact(owner_contact_id, registrar_id)
       self.owner_contact_id = oc.id
     else
-      # transfer contact
-      oc = Contact.find(owner_contact_id) # n+1 workaround
-      oc.code_overwrite_allowed = true
-      oc.generate_code
-      oc.registrar_id = registrar_id
-      oc.save!
+      transfer_contact(owner_contact_id, registrar_id)
     end
   end
 
@@ -447,22 +455,13 @@ class Epp::Domain < Domain
         if owner_contact_id_was == c.id # owner contact was copied previously, do not copy it again
           oc = OpenStruct.new(id: owner_contact_id)
         else
-          old_contact = Contact.find(c.id) # n+1 workaround
-          oc = old_contact.deep_clone include: [:statuses, :address]
-          oc.code = nil
-          oc.registrar_id = registrar_id
-          oc.save!
+          oc = copy_and_transfer_contact(c.id, registrar_id)
         end
 
         domain_contacts.where(contact_id: c.id).update_all({ contact_id: oc.id }) # n+1 workaround
         copied_ids << c.id
       else
-        # transfer contact
-        cnt = Contact.find(c.id) # n+1 workaround
-        cnt.code_overwrite_allowed = true
-        cnt.generate_code
-        cnt.registrar_id = registrar_id
-        cnt.save!
+        transfer_contact(c.id, registrar_id)
       end
     end
   end
