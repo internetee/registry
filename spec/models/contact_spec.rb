@@ -152,6 +152,28 @@ describe Contact do
       @contact.statuses.first.value.should == 'ok'
     end
 
+    it 'should have linked status when domain' do
+      @domain_contact = Fabricate(:domain_contact, contact_type: 'admin', contact_id: @contact.id)
+      @domain = Fabricate(:domain, domain_contacts: [@domain_contact])
+      contact = @domain.contacts.first
+      contact.save
+
+      contact.statuses.map(&:value).should == %w(ok linked)
+    end
+
+    it 'should not have linked status when no domain' do
+      @domain_contact = Fabricate(:domain_contact, contact_type: 'admin', contact_id: @contact.id)
+      @domain = Fabricate(:domain, domain_contacts: [@domain_contact])
+      contact = @domain.contacts.first
+      contact.save
+
+      contact.statuses.map(&:value).should == %w(ok linked)
+
+      contact.domains.destroy_all
+      contact.save
+      contact.statuses.map(&:value).should == %w(ok)
+    end
+
     context 'as birthday' do
       before :all do
         @contact.ident_type = 'birthday'

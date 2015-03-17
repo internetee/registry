@@ -9,5 +9,9 @@
 .row
   .col-md-12= render 'admin/contacts/partials/domains'
 .row
-  .col-md-12
-    = render 'admin/domains/partials/legal_documents', legal_documents: @contact.legal_documents
+  .col-md-12= render 'admin/contacts/partials/statuses', contact: @contact
+
+- if @contact.legal_documents.present?
+  .row
+    .col-md-12
+      = render 'admin/domains/partials/legal_documents', legal_documents: @contact.legal_documents

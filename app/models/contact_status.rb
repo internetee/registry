@@ -70,6 +70,32 @@ class ContactStatus < ActiveRecord::Base
     SERVER_UPDATE_PROHIBITED 
   ]
 
+  class << self
+    def manage(statuses, contact)
+      manage_linked(statuses, contact)
+      manage_ok(statuses, contact)
+    end
+
+    def manage_linked(statuses, contact)
+      if contact.domains.present?
+        create(value: LINKED, contact_id: contact.id) if statuses.select { |s| s.value == LINKED }.blank?
+      else
+        statuses.select { |s| s.value == LINKED }.each(&:destroy)
+      end
+    end
+
+    def manage_ok(statuses, contact)
+      if statuses.present?
+        if contact.valid?
+        else
+          statuses.select { |s| s.value == OK }.each(&:destroy)
+        end
+      else
+        create(value: OK, contact_id: contact.id) 
+      end
+    end
+  end
+
   def epp_code_map
     {
       '2302' => [ # Object exists

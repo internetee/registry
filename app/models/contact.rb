@@ -42,13 +42,10 @@ class Contact < ActiveRecord::Base
   before_create :generate_code
   before_create :generate_auth_info
   after_create :ensure_disclosure
-  after_save :manage_automatic_statuses
-  def manage_automatic_statuses
-    if statuses.empty? && valid?
-      statuses.create(value: ContactStatus::OK)
-    elsif statuses.length > 1 || !valid?
-      statuses.find_by(value: ContactStatus::OK).try(:destroy)
-    end
+  after_save :manage_statuses
+  def manage_statuses
+    ContactStatus.manage(statuses, self)
+    statuses.reload
   end
 
   scope :current_registrars, ->(id) { where(registrar_id: id) }
