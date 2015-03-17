@@ -9,12 +9,12 @@ module ApplicationHelper
     "background-image: url(#{image_path(unstable_env.to_s + '.png')});"
   end
 
-  def ident_indicator(contact)
+  def ident_for(contact)
     case contact.ident_type
     when 'birthday'
-      "[#{contact.ident_type}]"
+      "#{contact.ident} [#{contact.ident_type}]"
     else
-      "[#{contact.ident_country_code} #{contact.ident_type}]"
+      "#{contact.ident} [#{contact.ident_country_code} #{contact.ident_type}]"
     end
   end
 end

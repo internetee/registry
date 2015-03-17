@@ -1,6 +1,6 @@
 .row
   .col-sm-12
-    %h2.text-center-xs= t('contacts')
+    %h2.text-center-xs= t(:contacts)
 %hr
 .row
   .col-md-12
@@ -35,7 +35,7 @@
           - @contacts.each do |contact|
             %tr
               %td= link_to(contact, admin_contact_path(contact))
-              %td= "#{contact.ident} #{ident_indicator(contact)}"
+              %td= ident_for(contact)
               %td= contact.email
               %td= contact.code
               %td
