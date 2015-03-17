@@ -100,6 +100,7 @@ class Epp::ContactsController < EppController
       }
     end
     contact_org_disabled 
+    fax_disabled
     @prefix = nil
     requires 'extension > extdata > ident'
   end
@@ -113,6 +114,7 @@ class Epp::ContactsController < EppController
       }
     end
     contact_org_disabled
+    fax_disabled
     requires 'id', 'authInfo > pw'
     @prefix = nil
   end
@@ -129,6 +131,15 @@ class Epp::ContactsController < EppController
     epp_errors << {
       code: '2306',
       msg: "#{I18n.t(:contact_org_error)}: postalInfo > org [org]"
+    }
+  end
+
+  def fax_disabled
+    return true if ENV['fax_enabled'] == 'true'
+    return true if params[:parsed_frame].css('fax').text.blank?
+    epp_errors << {
+      code: '2306',
+      msg: "#{I18n.t(:contact_fax_error)}: fax [fax]"
     }
   end
 end
