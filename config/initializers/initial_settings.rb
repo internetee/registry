@@ -1,5 +1,6 @@
 # otherwise rake not working 100%
-if ActiveRecord::Base.connected? && ActiveRecord::Base.connection.table_exists?('settings')
+con = ActiveRecord::Base.connection
+if con.present? && con.table_exists?('settings')
   Setting.disclosure_name = true if Setting.disclosure_name.nil?
   Setting.disclosure_name = true if Setting.disclosure_name.nil?
   Setting.disclosure_org_name = true if Setting.disclosure_org_name.nil?
