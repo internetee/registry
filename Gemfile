@@ -122,4 +122,6 @@ group :development, :test do
 
   # for travis
   gem 'rake'
+
+  gem "autodoc"
 end

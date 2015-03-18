@@ -88,4 +88,6 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = [:should, :expect]
   end
+
+  Autodoc.configuration.path = "doc/repp/v1"
 end

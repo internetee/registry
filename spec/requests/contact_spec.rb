@@ -6,12 +6,12 @@ describe Repp::ContactV1 do
     @api_user = Fabricate(:gitlab_api_user)
   end
 
-  describe 'GET /repp/v1/contacts' do
+  describe 'GET /repp/v1/contacts', autodoc: true do
     it 'returns contacts of the current registrar' do
       Fabricate.times(2, :contact, registrar: @api_user.registrar)
       Fabricate.times(2, :contact)
 
-      get_with_auth '/repp/v1/contacts', {}, @api_user
+      get_with_auth '/repp/v1/contacts', { page: 1 }, @api_user
       expect(response.status).to eq(200)
 
       body = JSON.parse(response.body)
@@ -23,7 +23,7 @@ describe Repp::ContactV1 do
       log = ApiLog::ReppLog.first
       expect(log[:request_path]).to eq('/repp/v1/contacts')
       expect(log[:request_method]).to eq('GET')
-      expect(log[:request_params]).to eq('{}')
+      expect(log[:request_params]).to eq('{"page":"1"}')
       expect(log[:response].length).to be > 20
       expect(log[:response_code]).to eq('200')
       expect(log[:api_user_name]).to eq('gitlab')

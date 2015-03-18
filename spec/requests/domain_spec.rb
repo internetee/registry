@@ -7,11 +7,11 @@ describe Repp::DomainV1 do
     @api_user   = Fabricate(:gitlab_api_user, registrar: @registrar1)
   end
 
-  describe 'GET /repp/v1/domains' do
+  describe 'GET /repp/v1/domains', autodoc: true do
     it 'returns domains of the current registrar' do
       Fabricate.times(2, :domain, registrar: @api_user.registrar)
 
-      get_with_auth '/repp/v1/domains', {}, @api_user
+      get_with_auth '/repp/v1/domains', { page: 1 }, @api_user
       response.status.should == 200
 
       body = JSON.parse(response.body)
@@ -23,7 +23,7 @@ describe Repp::DomainV1 do
       log = ApiLog::ReppLog.last
       log[:request_path].should == '/repp/v1/domains'
       log[:request_method].should == 'GET'
-      log[:request_params].should == '{}'
+      log[:request_params].should == '{"page":"1"}'
       log[:response_code].should == '200'
       log[:api_user_name].should == 'gitlab'
       log[:api_user_registrar].should == 'registrar1'
