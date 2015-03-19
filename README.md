@@ -105,6 +105,35 @@ For Apache, registry admin goes to port 443 in production, /etc/apache2/sites-en
 </VirtualHost>
 ```
 
+For Apache, REPP goes to port 443 in production, /etc/apache2/sites-enabled/repp.conf short example:
+```
+<VirtualHost *:443>
+  ServerName your-repp-domain
+  SSLEngine on
+  #SSLCipherSuite ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP:+eNULL
+  SSLCertificateFile /etc/apache2/ssl/apache.crt
+  SSLCertificateKeyFile /etc/apache2/ssl/apache.key
+
+  ProxyPass / http://localhost:8080/
+  ProxyPassReverse / http://localhost:8080/
+  ProxyPreserveHost on
+  RequestHeader set X_FORWARDED_PROTO 'https'
+
+  SSLVerifyClient none
+  SSLVerifyDepth 1
+  SSLCACertificateFile /home/registry/registry/shared/ca/certs/ca.crt.pem
+  SSLCARevocationFile /home/registry/registry/shared/ca/crl/crl.pem
+  SSLCARevocationCheck chain
+
+  RequestHeader set SSL_CLIENT_S_DN_CN ""
+
+  <Location /repp/*/*>
+    SSLVerifyClient require
+    RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
+  </Location>
+</VirtualHost>
+```
+
 For Apache, epp goes to port 700.  
 Be sure to update paths to match your system configuration.  
 /etc/apache2/sites-enabled/epp.conf short example:
