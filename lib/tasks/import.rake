@@ -281,6 +281,7 @@ namespace :import do
 
         # domain statuses
         x.object_states.each do |state|
+          next if state.name.blank?
           domain_statuses << [
             state.desc,
             state.name,
