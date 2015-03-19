@@ -1,3 +1,8 @@
+19.03.2015
+
+* New REPP virtualhost added. Please refer to readme for the configuration.
+* Choose new domain for REPP interface and reconfigure repp_url parameter in webclient's application.yml
+
 16.03.2015
 
 * ruby upgraded to version 2.2.1, added RBENV upgrade howto to debian doc at: doc/debian_build_doc.md
