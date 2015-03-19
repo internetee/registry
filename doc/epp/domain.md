@@ -122,7 +122,6 @@ Domain name mapping protocol short version:
     <renew>                  1       
       <domain:renew>         1        Attribute: xmlns:domain="urn:ietf:params:xml:ns:domain-1.0"
         <domain:name>        1        Domain name. Can contain unicode characters. 
-                                      Attribute: hosts="all / TODO"
         <domain:curExpDate>  1        Current expiry date (ISO8601 format)
         <domain:period>      1        Registration period for domain. 
                                       Must add up to 1 / 2 / 3 years. Attribute: unit="y/m/d"
@@ -141,7 +140,6 @@ Domain name mapping protocol short version:
     <transfer>               1       
       <domain:transfer>      1        Attribute: xmlns:domain="urn:ietf:params:xml:ns:domain-1.0"
         <domain:name>        1        Domain name. Can contain unicode characters. 
-                                      Attribute: hosts="all / TODO"
         <domain:authInfo>    1       
           <domain:pw>        1        Domain password. Attribute: roid="String"
     <extension>              0-1     
@@ -159,7 +157,6 @@ Domain name mapping protocol short version:
     <check>                  1       
       <domain:check>         1        Attribute: xmlns:domain="urn:ietf:params:xml:ns:domain-1.0"
         <domain:name>        1        Domain name. Can contain unicode characters. 
-                                      Attribute: hosts="all / TODO"
     <clTRID>                 0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-domain-checks-a-domain)
