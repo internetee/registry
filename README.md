@@ -127,7 +127,12 @@ For Apache, REPP goes to port 443 in production, /etc/apache2/sites-enabled/repp
 
   RequestHeader set SSL_CLIENT_S_DN_CN ""
 
+  <Location />
+    Deny from all
+  </Location>
+
   <Location /repp/*/*>
+    Allow from all
     SSLVerifyClient require
     RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
   </Location>
