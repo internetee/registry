@@ -1,8 +1,8 @@
 # otherwise rake not working 100%
 begin
   con = ActiveRecord::Base.connection
-rescue ActiveRecord::NoDatabaseError
-  # for running rake tasks, no output
+rescue ActiveRecord::NoDatabaseError => e
+  logger.info "Init settings didn't find database: #{e}"
 end
 
 if con.present? && con.table_exists?('settings')
