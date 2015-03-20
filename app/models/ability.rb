@@ -11,6 +11,7 @@ class Ability
       @user.roles.each { |role| send(role) } if @user.roles
     when 'ApiUser'
       epp
+      registrar
     end
 
     can :show, :dashboard
@@ -37,6 +38,10 @@ class Ability
     can(:transfer, Epp::Domain) { |d, pw| d.auth_info == pw }
   end
   # rubocop: enabled Metrics/CyclomaticComplexity
+
+  def registrar
+    can :manage, Invoice
+  end
 
   def user
     can :show, :dashboard

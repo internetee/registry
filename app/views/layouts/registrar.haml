@@ -25,7 +25,11 @@
             - if unstable_env.present?
               .text-center
                 %small{style: 'color: #0074B3;'}= unstable_env
-          - if current_user
+        - if current_user
+          .navbar-collapse.collapse
+            %ul.nav.navbar-nav
+              - if can? :show, Invoice
+                %li= link_to t('invoices'), registrar_invoices_path
             %ul.nav.navbar-nav.navbar-right
               %li= link_to t('log_out', user: current_user), '/logout'
 
