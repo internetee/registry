@@ -116,7 +116,7 @@ class Contact < ActiveRecord::Base
 
   def generate_auth_info
     return if @generate_auth_info_disabled
-    self.auth_info = SecureRandom.hex(16)
+    self.auth_info = SecureRandom.hex(11)
   end
 
   def disable_generate_auth_info! # needed for testing
