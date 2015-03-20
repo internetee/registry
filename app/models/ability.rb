@@ -40,6 +40,7 @@ class Ability
 
   def user
     can :show, :dashboard
+    can :manage, Invoice
   end
 
   def customer_service

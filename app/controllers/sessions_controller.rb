@@ -14,8 +14,4 @@ class SessionsController < Devise::SessionsController
     sign_in_and_redirect @user, event: :authentication
     # end
   end
-
-  def login
-    render 'layouts/login', layout: false
-  end
 end

@@ -65,21 +65,38 @@ Rails.application.routes.draw do
     resources :epp_logs
     resources :repp_logs
 
+    devise_scope :user do
+      get 'login' => 'sessions#login'
+      post 'sessions' => 'sessions#create'
+    end
+
+    root 'domains#index'
+  end
+
+  namespace(:registrar) do
+    resources :invoices
+
+    devise_scope :user do
+      get 'login' => 'sessions#login'
+      post 'sessions' => 'sessions#create'
+    end
+
+    # authenticated :user do
+    #   root to: 'domains#index', as: :authenticated_root
+    # end
+
     root 'domains#index'
   end
 
   devise_for :users
 
   devise_scope :user do
-    resources :sessions
-
     get 'logout' => 'devise/sessions#destroy'
-    get 'login' => 'sessions#login'
   end
 
-  authenticated :user do
-    root to: 'admin/domains#index', as: :authenticated_root
-  end
+  # authenticated :user do
+  #   root to: 'admin/domains#index', as: :authenticated_root
+  # end
 
   root to: redirect('login')
 

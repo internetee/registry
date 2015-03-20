@@ -25,8 +25,9 @@
             - if unstable_env.present?
               .text-center
                 %small{style: 'color: #0074B3;'}= unstable_env
-          %ul.nav.navbar-nav.navbar-right
-            %li= link_to t('log_out', user: current_user), '/logout'
+          - if current_user
+            %ul.nav.navbar-nav.navbar-right
+              %li= link_to t('log_out', user: current_user), '/logout'
 
         / /.nav-collapse
     .container

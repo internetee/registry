@@ -17,9 +17,14 @@ class ApplicationController < ActionController::Base
 
   def after_sign_in_path_for(_resource)
     if session[:user_return_to] && session[:user_return_to] != login_path
-      return session[:user_return_to].to_s 
+      return session[:user_return_to].to_s
     end
-    admin_dashboard_path
+
+    if request.path.match('registrar')
+      registrar_invoices_path
+    elsif request.path.match('admin')
+      admin_dashboard_path
+    end
   end
 
   def user_for_paper_trail
