@@ -2,7 +2,7 @@
 begin
   con = ActiveRecord::Base.connection
 rescue ActiveRecord::NoDatabaseError => e
-  logger.info "Init settings didn't find database: #{e}"
+  Rails.logger.info "Init settings didn't find database: #{e}"
 end
 
 if con.present? && con.table_exists?('settings')
