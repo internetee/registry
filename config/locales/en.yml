@@ -492,3 +492,4 @@ en:
   crt_revoked: 'CRT (revoked)'
   contact_org_error: 'Parameter value policy error. Org should be blank'
   contact_fax_error: 'Parameter value policy error. Fax should be blank'
+  invoices: 'Invoices'
