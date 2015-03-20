@@ -108,7 +108,7 @@ Domain name mapping protocol short version:
     <info>                   1       
       <domain:info>          1        Attribute: xmlns:domain="urn:ietf:params:xml:ns:domain-1.0"
         <domain:name>        1        Domain name. Can contain unicode characters. 
-                                      Attribute: hosts="all / TODO"
+                                      Attribute: hosts="all / del / sub / none"
         <domain:authInfo>    0-1      Required if registrar is not the owner of the domain.
           <domain:pw>        1        Domain password. Attribute: roid="String"
     <clTRID>                 0-1      Client transaction id
