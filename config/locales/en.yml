@@ -68,7 +68,7 @@ en:
             domain_contacts:
               invalid: 'Contacts are invalid'
               not_found: 'Contact was not found'
-              admin_contact_can_be_only_citizen: 'Admin contact can be only citizen'
+              admin_contact_can_be_only_private_person: 'Admin contact can be only private person'
             admin_contacts:
               out_of_range: 'Admin contacts count must be between %{min}-%{max}'
               less_than_or_equal_to: 'Admin contacts count must be less than or equal to %{count}'

@@ -207,7 +207,7 @@ class Epp::Domain < Domain
 
       if action != 'rem'
         if x['type'] == 'admin' && c.bic?
-          add_epp_error('2306', 'contact', x.text, [:domain_contacts, :admin_contact_can_be_only_citizen])
+          add_epp_error('2306', 'contact', x.text, [:domain_contacts, :admin_contact_can_be_only_private_person])
           next
         end
       end
