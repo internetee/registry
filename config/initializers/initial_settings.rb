@@ -1,5 +1,10 @@
 # otherwise rake not working 100%
-con = ActiveRecord::Base.connection
+begin
+  con = ActiveRecord::Base.connection
+rescue ActiveRecord::NoDatabaseError
+  # for running rake tasks, no output
+end
+
 if con.present? && con.table_exists?('settings')
   Setting.disclosure_name = true if Setting.disclosure_name.nil?
   Setting.disclosure_name = true if Setting.disclosure_name.nil?
