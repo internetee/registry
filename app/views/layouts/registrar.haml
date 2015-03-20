@@ -6,13 +6,13 @@
     %meta{content: "Full stack top-level domain (TLD) management.", name: "description"}/
     %meta{content: "Gitlab LTD", name: "author"}/
     = csrf_meta_tags
-    = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true
+    = stylesheet_link_tag 'registrar-manifest', media: 'all', 'data-turbolinks-track' => true
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
     %link{href: "../../favicon.ico", rel: "icon"}/
     %title EIS Registrar Portal
   %body{:style => env_style}
     / Static navbar
-    .navbar.navbar-inverse.navbar-static-top{role: "navigation"}
+    .navbar.navbar-default.navbar-static-top{role: "navigation"}
       .container
         .navbar-header
           %button.navbar-toggle{"data-target" => ".navbar-collapse", "data-toggle" => "collapse", type: "button"}
@@ -20,7 +20,7 @@
             %span.icon-bar
             %span.icon-bar
             %span.icon-bar
-          = link_to admin_dashboard_path, class: 'navbar-brand' do
+          = link_to registrar_invoices_path, class: 'navbar-brand' do
             EIS Registrar
             - if unstable_env.present?
               .text-center
