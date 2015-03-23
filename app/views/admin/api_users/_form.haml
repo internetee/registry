@@ -15,6 +15,9 @@
         = f.label :password
         = f.text_field(:password, class: 'form-control')
       .form-group
+        = f.label :identity_code
+        = f.text_field(:identity_code, class: 'form-control')
+      .form-group
         .form-group.has-feedback.js-typeahead-container
           = f.label :registrar_typeahead, t('registrar')
           = f.text_field(:registrar_typeahead, class: 'form-control js-registrar-typeahead', placeholder: t('registrar'), autocomplete: 'off')

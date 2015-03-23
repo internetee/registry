@@ -54,6 +54,6 @@ class Admin::ApiUsersController < AdminController
   end
 
   def api_user_params
-    params.require(:api_user).permit(:username, :password, :active, :registrar_id, :registrar_typeahead)
+    params.require(:api_user).permit(:username, :password, :active, :registrar_id, :registrar_typeahead, :identity_code)
   end
 end

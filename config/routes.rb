@@ -67,7 +67,11 @@ Rails.application.routes.draw do
 
     devise_scope :user do
       get 'login' => 'sessions#login'
+      # get 'login/mid' => 'sessions#login_mid'
+      # post 'login/mid' => 'sessions#mid'
+
       post 'sessions' => 'sessions#create'
+      post 'mid' => 'sessions#mid'
       get 'logout' => '/devise/sessions#destroy'
     end
 
@@ -79,7 +83,12 @@ Rails.application.routes.draw do
 
     devise_scope :user do
       get 'login' => 'sessions#login'
+      get 'login/mid' => 'sessions#login_mid'
+      post 'login/mid' => 'sessions#mid'
+      post 'login/mid_status' => 'sessions#mid_status'
+
       post 'sessions' => 'sessions#create'
+      post 'mid' => 'sessions#mid'
       get 'logout' => '/devise/sessions#destroy'
     end
 

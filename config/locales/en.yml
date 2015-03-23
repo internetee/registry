@@ -493,3 +493,8 @@ en:
   contact_org_error: 'Parameter value policy error. Org should be blank'
   contact_fax_error: 'Parameter value policy error. Fax should be blank'
   invoices: 'Invoices'
+  no_such_user: 'No such user'
+  log_in: 'Log in'
+  phone_no: 'Phone number'
+  log_in_with_mid: 'Log in with mobile-id'
+  check_your_phone_for_confirmation_code: 'Check your phone for confirmation code'

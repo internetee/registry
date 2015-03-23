@@ -63,6 +63,9 @@ gem 'countries', '~> 0.10.0'
 # cloning activerecord objects
 gem 'deep_cloneable', '~> 2.1.1'
 
+# id + mid login
+gem 'digidoc_client', '~> 0.2.1'
+
 group :development do
   # dev tools
   gem 'spring',                '~> 1.2.0'

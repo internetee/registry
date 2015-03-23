@@ -1,0 +1,30 @@
+.form-signin.text-center
+  %h2.form-signin-heading.text-center= t('log_in_with_mid')
+  %hr
+  = link_to '/registrar/login/mid' do
+    = image_tag 'mid.gif'
+  = link_to '/registrar/login/id' do
+    = image_tag 'id_card.gif'
+  = form_for @user, url: registrar_mid_path, html: {class: 'form-signin'} do |f|
+    = f.text_field :phone, class: 'form-control', placeholder: t('phone_no'), autocomplete: 'off'
+    %button.btn.btn-lg.btn-primary.btn-block.js-login{:type => 'submit'}= t('log_in')
+
+:coffee
+  status_interval = null
+  mid_status = () ->
+
+    status_interval = setInterval((->
+      $.post('/registrar/login/mid_status').fail((data, bla, asd) ->
+        clearInterval(status_interval)
+        flash_alert(data.responseJSON.message)
+      )
+    ), 1000)
+
+  $('.js-login').on 'click', (e) ->
+    e.preventDefault();
+
+    $.post($('form').attr('action'), $('form').serialize()).done((data) ->
+      flash_notice(data.message)
+      mid_status()
+    )
+
