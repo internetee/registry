@@ -1,10 +1,12 @@
 namespace :db do
-  def other_databases
-    @db ||= ["api_log_#{Rails.env}", "whois_#{Rails.env}"]
+  def databases
+    @db ||= [Rails.env, "api_log_#{Rails.env}", "whois_#{Rails.env}"]
   end
 
   def schema_file(db)
     case db
+    when Rails.env
+      'schema.rb'
     when "api_log_#{Rails.env}"
       'api_log_schema.rb'
     when "whois_#{Rails.env}"
@@ -14,28 +16,31 @@ namespace :db do
 
   namespace :all do
     desc 'Create all databases: registry, api_log and whois'
-    task setup: [:environment] do
+    task setup: [:environment, :load_config] do
       Rake::Task['db:all:create'].invoke
       Rake::Task['db:all:schema:load'].invoke
 
       ActiveRecord::Base.clear_all_connections!
       ActiveRecord::Base.establish_connection(Rails.env.to_sym)
-      # puts "\n---------------------------- Import seed ----------------------------------------\n"
-      # Rake::Task['db:seed'].invoke
+
+      puts "\n---------------------------- Import seed ----------------------------------------\n"
+      Rake::Task['db:seed'].invoke
       puts "\n  All done!\n\n"
     end
 
     desc 'Create all databases: registry, api_log and whois'
-    task create: [:environment] do
-      puts "\n---------------------------- Create main database ----------------------------------------\n"
-      Rake::Task['db:create'].invoke
-
-      other_databases.each do |name|
+    task create: [:environment, :load_config] do
+      databases.each do |name|
         begin
           puts "\n---------------------------- Create #{name} ----------------------------------------\n"
           ActiveRecord::Base.clear_all_connections!
           conf = ActiveRecord::Base.configurations
-          ActiveRecord::Base.connection.create_database(conf[name]['database'].to_sym, conf[name])
+          
+          if name == Rails.env
+            ActiveRecord::Tasks::DatabaseTasks.create_current
+          else
+            ActiveRecord::Base.connection.create_database(conf[name]['database'].to_sym, conf[name])
+          end
         rescue => e
           puts "\n#{e}"
         end
@@ -43,15 +48,11 @@ namespace :db do
     end
 
     desc 'Drop all databaseses: registry, api_log and whois'
-    task drop: [:environment] do
-      # just in case we allow only drop test, comment it out please for temp
+    task drop: [:environment, :load_config] do
+      # just in case we allow only drop test, comment it out only for temp
       return unless Rails.env.test?
 
-      Rake::Task['db:drop'].invoke
-      conf = ActiveRecord::Base.configurations
-      puts "#{conf[Rails.env]['database']} dropped"
-
-      other_databases.each do |name|
+      databases.each do |name|
         begin
           ActiveRecord::Base.clear_all_connections!
           ActiveRecord::Base.establish_connection(name.to_sym)
@@ -70,11 +71,8 @@ namespace :db do
 
     namespace :schema do
       desc 'Schema load for all databases: registry, api_log and whois'
-      task load: [:environment] do
-        puts "\n---------------------------- Main schema load ----------------------------------------\n"
-        Rake::Task['db:schema:load'].invoke
-
-        other_databases.each do |name|
+      task load: [:environment, :load_config] do
+        databases.each do |name|
           begin
             puts "\n---------------------------- #{name} schema loaded ----------------------------------------\n"
             ActiveRecord::Base.clear_all_connections!
@@ -91,11 +89,8 @@ namespace :db do
       end
 
       desc 'Schema load for all databases: registry, api_log and whois'
-      task dump: [:environment] do
-        puts "\n---------------------------- Main schema load ----------------------------------------\n"
-        Rake::Task['db:schema:dump'].invoke
-
-        other_databases.each do |name|
+      task dump: [:environment, :load_config] do
+        databases.each do |name|
           begin
             puts "\n---------------------------- #{name} ----------------------------------------\n"
             filename = "#{Rails.root}/db/#{schema_file(name)}"
