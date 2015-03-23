@@ -17,4 +17,20 @@ module ApplicationHelper
       "#{contact.ident} [#{contact.ident_country_code} #{contact.ident_type}]"
     end
   end
+
+  def creator_link(model)
+    return 'not present' if model.blank?
+    return model.creator if model.creator.is_a? String
+
+    # can be api user or some other user
+    link_to(model.creator, ['admin', model.creator])
+  end
+
+  def updator_link(model)
+    return 'not present' if model.blank?
+    return model.updator if model.updator.is_a? String
+
+    # can be api user or some other user
+    link_to(model.updator, ['admin', model.updator])
+  end
 end

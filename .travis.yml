@@ -17,6 +17,7 @@ before_script:
   - cp config/database-travis.yml config/database.yml
   - RAILS_ENV=test bundle exec rake db:all:schema:load
   - RAILS_ENV=test bundle exec rake db:seed
+  - RAILS_ENV=test bundle exec rake zonefile:replace_procedure
 script:
  - RAILS_ENV=test bundle exec rake
 cache: bundler
