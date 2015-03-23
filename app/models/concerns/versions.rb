@@ -27,21 +27,25 @@ module Versions
     def creator
       return nil if creator_str.blank?
 
-      if creator_str =~ /^\d-api-/
+      creator = if creator_str =~ /^\d-api-/
         ApiUser.find_by(id: creator_str)
       else
         AdminUser.find_by(id: creator_str)
       end
+
+      creator.present? ? creator : creator_str
     end
 
     def updator
       return nil if updator_str.blank?
 
-      if updator_str =~ /^\d-api-/
+      updator = if updator_str =~ /^\d-api-/
         ApiUser.find_by(id: updator_str)
       else
         AdminUser.find_by(id: updator_str)
       end
+
+      updator.present? ? updator : updator_str
     end
 
     # callbacks

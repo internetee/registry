@@ -32,18 +32,15 @@
       %dd
         = l(@contact.created_at, format: :short)
         by
-        = link_to(@contact.creator, [:admin, @contact.creator])
+        = creator_link(@contact)
 
       %dt= t(:updated)
       %dd
         = l(@contact.updated_at, format: :short)
         by
-        = link_to(@contact.updator, [:admin, @contact.updator])
-
+        = updator_link(@contact)
 
       %dt= t(:registrar)
       %dd
         - if @contact.registrar.present?
           = link_to(@contact.registrar, admin_registrar_path(@contact.registrar))
-
-
