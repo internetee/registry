@@ -31,7 +31,7 @@
               - if can? :show, Invoice
                 %li= link_to t('invoices'), registrar_invoices_path
             %ul.nav.navbar-nav.navbar-right
-              %li= link_to t('log_out', user: current_user), '/logout'
+              %li= link_to t('log_out', user: current_user), '/registrar/logout'
 
         / /.nav-collapse
     .container

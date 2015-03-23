@@ -68,6 +68,7 @@ Rails.application.routes.draw do
     devise_scope :user do
       get 'login' => 'sessions#login'
       post 'sessions' => 'sessions#create'
+      get 'logout' => '/devise/sessions#destroy'
     end
 
     root 'domains#index'
@@ -79,6 +80,7 @@ Rails.application.routes.draw do
     devise_scope :user do
       get 'login' => 'sessions#login'
       post 'sessions' => 'sessions#create'
+      get 'logout' => '/devise/sessions#destroy'
     end
 
     # authenticated :user do
@@ -89,10 +91,6 @@ Rails.application.routes.draw do
   end
 
   devise_for :users
-
-  devise_scope :user do
-    get 'logout' => 'devise/sessions#destroy'
-  end
 
   # authenticated :user do
   #   root to: 'admin/domains#index', as: :authenticated_root
