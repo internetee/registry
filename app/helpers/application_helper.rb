@@ -20,7 +20,7 @@ module ApplicationHelper
 
   def creator_link(model)
     return 'not present' if model.blank?
-    return model if model.kind_of? String
+    return model if model.is_a? String
 
     # can be api user or some other user
     link_to(model.creator, ['admin', model.creator])
@@ -28,7 +28,7 @@ module ApplicationHelper
 
   def updator_link(model)
     return 'not present' if model.blank?
-    return model if model.kind_of? String
+    return model if model.is_a? String
 
     # can be api user or some other user
     link_to(model.creator, ['admin', model.updator])
