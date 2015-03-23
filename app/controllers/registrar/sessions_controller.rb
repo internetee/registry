@@ -11,7 +11,6 @@ class Registrar::SessionsController < SessionsController
   end
 
   def login
-
   end
 
   def login_mid
