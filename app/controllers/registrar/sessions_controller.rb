@@ -40,6 +40,9 @@ class Registrar::SessionsController < SessionsController
     end
   end
 
+  # rubocop: disable Metrics/PerceivedComplexity
+  # rubocop: disable Metrics/CyclomaticComplexity
+  # rubocop: disable Metrics/MethodLength
   def mid_status
     client = Digidoc::Client.new
     client.session_code = session[:mid_session_code]
@@ -74,6 +77,9 @@ class Registrar::SessionsController < SessionsController
       render json: { message: t('internal_error') }, status: :bad_request
     end
   end
+  # rubocop: enable Metrics/PerceivedComplexity
+  # rubocop: enable Metrics/CyclomaticComplexity
+  # rubocop: enable Metrics/MethodLength
 
   def find_user_by_idc(idc)
     return User.new unless idc
