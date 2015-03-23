@@ -29,6 +29,11 @@ class Registrar::SessionsController < SessionsController
       service_name: 'Testing'
     )
 
+    if response.faultcode
+      render json: { message: response.detail.message }, status: :unauthorized
+      return
+    end
+
     @user = find_user_by_idc(response.user_id_code)
 
     if @user.persisted?
