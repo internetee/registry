@@ -20,6 +20,8 @@ feature 'Admin contact', type: :feature do
     visit admin_contacts_url
 
     click_link('Mr John')
-    page.should have_content('by autotest')
+    # initially it's created by unknown,
+    # indivitually running it's created by autotest
+    page.should have_content(/by [unknown|autotest]/)
   end
 end
