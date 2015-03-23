@@ -22,12 +22,12 @@ class Registrar::SessionsController < SessionsController
     phone = params[:user][:phone]
     client = Digidoc::Client.new
 
-    country_codes = {'+372' => 'EST'}
+    # country_codes = {'+372' => 'EST'}
 
     response = client.authenticate(
-      :phone => "+372#{phone}",
-      :message_to_display => 'Authenticating',
-      :service_name => 'Testing'
+      phone: "+372#{phone}",
+      message_to_display: 'Authenticating',
+      service_name: 'Testing'
     )
 
     @user = find_user_by_idc(response.user_id_code)
@@ -37,12 +37,8 @@ class Registrar::SessionsController < SessionsController
       session[:mid_session_code] = client.session_code
       render json: { message: t('check_your_phone_for_confirmation_code') }, status: :ok
     else
-      flash[:alert] = t('no_such_user')
-      flash.keep(:alert)
-      render js: "window.location = '#{registrar_login_mid_path}'"
+      render json: { message: t('no_such_user') }, status: :unauthorized
     end
-
-    # client.authentication_status
   end
 
   def mid_status
@@ -50,13 +46,34 @@ class Registrar::SessionsController < SessionsController
     client.session_code = session[:mid_session_code]
     auth_status = client.authentication_status
 
-    # binding.pry
-    # flash[:notice] = I18n.t('welcome')
-    # flash.keep(:notice)
-
-    # sign_in @user
-    # render js: "window.location = '#{registrar_invoices_path}'"
-    render json: { message: t('not_ok') }, status: :request_timeout
+    case auth_status.status
+    when 'OUTSTANDING_TRANSACTION'
+      render json: { message: t('check_your_phone_for_confirmation_code') }, status: :ok
+    when 'USER_AUTHENTICATED'
+      @user = find_user_by_idc(session[:user_id_code])
+      sign_in @user
+      flash[:notice] = t('welcome')
+      flash.keep(:notice)
+      render js: "window.location = '#{registrar_invoices_path}'"
+    when 'NOT_VALID'
+      render json: { message: t('user_signature_is_invalid') }, status: :bad_request
+    when 'EXPIRED_TRANSACTION'
+      render json: { message: t('session_timeout') }, status: :bad_request
+    when 'USER_CANCEL'
+      render json: { message: t('user_cancelled') }, status: :bad_request
+    when 'MID_NOT_READY'
+      render json: { message: t('mid_not_ready') }, status: :bad_request
+    when 'PHONE_ABSENT'
+      render json: { message: t('phone_absent') }, status: :bad_request
+    when 'SENDING_ERROR'
+      render json: { message: t('sending_error') }, status: :bad_request
+    when 'SIM_ERROR'
+      render json: { message: t('sim_error') }, status: :bad_request
+    when 'INTERNAL_ERROR'
+      render json: { message: t('internal_error') }, status: :bad_request
+    else
+      render json: { message: t('internal_error') }, status: :bad_request
+    end
   end
 
   def find_user_by_idc(idc)

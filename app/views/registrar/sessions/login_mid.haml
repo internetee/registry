@@ -10,21 +10,28 @@
     %button.btn.btn-lg.btn-primary.btn-block.js-login{:type => 'submit'}= t('log_in')
 
 :coffee
+  $('.js-login').attr('disabled', false)
+
   status_interval = null
   mid_status = () ->
-
     status_interval = setInterval((->
-      $.post('/registrar/login/mid_status').fail((data, bla, asd) ->
+      $.post('/registrar/login/mid_status').fail((data) ->
         clearInterval(status_interval)
         flash_alert(data.responseJSON.message)
+        ('.js-login').attr('disabled', false)
       )
     ), 1000)
 
   $('.js-login').on 'click', (e) ->
     e.preventDefault();
+    $(this).attr('disabled', true)
 
     $.post($('form').attr('action'), $('form').serialize()).done((data) ->
-      flash_notice(data.message)
-      mid_status()
+      if data.message
+        flash_notice(data.message)
+        mid_status()
+    ).fail((data) ->
+      flash_alert(data.responseJSON.message)
+      $('.js-login').attr('disabled', false)
     )
 
