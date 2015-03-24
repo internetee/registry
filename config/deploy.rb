@@ -33,7 +33,7 @@ task :registrar do
   set :domain, 'registry-st'
   set :deploy_to, '$HOME/registrar'
   set :repository, 'https://github.com/domify/registry' # dev repo
-  set :branch, 'registrar-portal'
+  set :branch, 'master'
   set :rails_env, 'alpha'
   set :delayed_job, false
 end

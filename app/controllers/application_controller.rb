@@ -12,7 +12,8 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from CanCan::AccessDenied do |exception|
-    redirect_to admin_dashboard_path, alert: exception.message
+    redirect_to admin_root_path, alert: exception.message if current_user.is_a?(AdminUser)
+    redirect_to registrar_root_path, alert: exception.message if current_user.is_a?(ApiUser)
   end
 
   def after_sign_in_path_for(_resource)
