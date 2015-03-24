@@ -18,7 +18,7 @@
       $.post('/registrar/login/mid_status').fail((data) ->
         clearInterval(status_interval)
         flash_alert(data.responseJSON.message)
-        ('.js-login').attr('disabled', false)
+        $('.js-login').attr('disabled', false)
       )
     ), 1000)
 
