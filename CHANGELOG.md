@@ -1,3 +1,23 @@
+24.03.2015
+
+* New Registrar virtualhost added. Please refer to readme for the configuration.
+* Note the improved configuration for the registry virtualhost:
+
+```
+# Rewrite /login to /admin/login
+RewriteEngine on
+RewriteCond %{REQUEST_URI} ^/login [NC]
+RewriteRule ^/(.*) /admin/$1 [PT,L,QSA]
+
+<Location ~ "/.+/" >
+  Deny from all
+</Location>
+
+<Location ~ "/(admin|assets)\/.+">
+  Allow from all
+</Location>
+```
+
 19.03.2015
 
 * New REPP virtualhost added. Please refer to readme for the configuration.

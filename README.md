@@ -67,6 +67,11 @@ For Apache, registry admin goes to port 443 in production, /etc/apache2/sites-en
   ServerName your-domain
   ServerAdmin your@example.com
 
+  # Rewrite /login to /admin/login
+  RewriteEngine on
+  RewriteCond %{REQUEST_URI} ^/login [NC]
+  RewriteRule ^/(.*) /admin/$1 [PT,L,QSA]
+
   PassengerRoot /usr/lib/ruby/vendor_ruby/phusion_passenger/locations.ini
   PassengerRuby /home/registry/.rbenv/shims/ruby
   PassengerEnabled on
@@ -102,8 +107,71 @@ For Apache, registry admin goes to port 443 in production, /etc/apache2/sites-en
     
     Options -MultiViews
 	</Directory>
+
+  <Location ~ "/.+/" >
+    Deny from all
+  </Location>
+
+  <Location ~ "/(admin|assets)\/.+">
+    Allow from all
+  </Location>
 </VirtualHost>
 ```
+
+Registrar configuration (/etc/apache2/sites-enabled/registrar.conf) is as follows: 
+<VirtualHost *:443>
+  ServerName your-registrar-domain
+  ServerAdmin your@example.com
+
+  # Rewrite /login to /registrar/login
+  RewriteEngine on
+  RewriteCond %{REQUEST_URI} ^/login [NC]
+  RewriteRule ^/(.*) /registrar/$1 [PT,L,QSA]
+
+  PassengerRoot /usr/lib/ruby/vendor_ruby/phusion_passenger/locations.ini
+  PassengerRuby /home/registry/.rbenv/shims/ruby
+  PassengerEnabled on
+  PassengerMinInstances 10
+  PassengerMaxPoolSize 10
+  PassengerPoolIdleTime 0
+  PassengerMaxRequests 1000
+
+  RailsEnv production # or staging
+  DocumentRoot /home/registry/registrar/current/public
+  
+  # Possible values include: debug, info, notice, warn, error, crit,
+  LogLevel info
+  ErrorLog /var/log/apache2/registry.error.log
+  CustomLog /var/log/apache2/registry.access.log combined
+  
+  SSLEngine On
+  SSLCertificateFile    /etc/ssl/certs/your.crt
+  SSLCertificateKeyFile /etc/ssl/private/your.key
+  SSLCertificateChainFile /etc/ssl/certs/your-chain-fail.pem
+  SSLCACertificateFile /etc/ssl/certs/ca.pem
+
+  SSLProtocol TLSv1
+  SSLHonorCipherOrder On
+  SSLCipherSuite RC4-SHA:HIGH:!ADH
+
+  <Directory /app/registry/registrar/current/public>
+    # comment out if Apache 2.4 or newer
+    Allow from all
+
+    # uncomment if Apache 2.4 or newer
+    # Require all granted
+    
+    Options -MultiViews
+  </Directory>
+
+  <Location ~ "/.+/" >
+    Deny from all
+  </Location>
+
+  <Location ~ "/(registrar|assets)\/.+">
+    Allow from all
+  </Location>
+</VirtualHost>
 
 For Apache, REPP goes to port 443 in production, /etc/apache2/sites-enabled/repp.conf short example:
 ```
