@@ -75,7 +75,7 @@ Rails.application.routes.draw do
       get 'logout' => '/devise/sessions#destroy'
     end
 
-    root 'domains#index'
+    root 'dashboards#show'
   end
 
   namespace(:registrar) do
@@ -96,16 +96,16 @@ Rails.application.routes.draw do
     #   root to: 'domains#index', as: :authenticated_root
     # end
 
-    root 'domains#index'
+    root 'invoices#index'
   end
 
   devise_for :users
 
-  # authenticated :user do
-  #   root to: 'admin/domains#index', as: :authenticated_root
-  # end
+  devise_scope :user do
+    get 'login' => 'admin/sessions#login'
+  end
 
-  root to: redirect('admin/login')
+  root to: redirect('login')
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
