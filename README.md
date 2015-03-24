@@ -119,6 +119,7 @@ For Apache, registry admin goes to port 443 in production, /etc/apache2/sites-en
 ```
 
 Registrar configuration (/etc/apache2/sites-enabled/registrar.conf) is as follows: 
+```
 <VirtualHost *:443>
   ServerName your-registrar-domain
   ServerAdmin your@example.com
@@ -172,6 +173,7 @@ Registrar configuration (/etc/apache2/sites-enabled/registrar.conf) is as follow
     Allow from all
   </Location>
 </VirtualHost>
+```
 
 For Apache, REPP goes to port 443 in production, /etc/apache2/sites-enabled/repp.conf short example:
 ```
