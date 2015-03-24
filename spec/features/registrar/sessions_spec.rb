@@ -48,4 +48,35 @@ feature 'Sessions', type: :feature do
     click_button 'Log in'
     page.should have_text('No such user')
   end
+
+  scenario 'Api user should when there is a sim error', js: true do
+    client = instance_double("Digidoc::Client",
+      session_code: '123'
+    )
+
+    allow(client).to receive('session_code=')
+
+    allow(client).to receive(:authenticate).and_return(
+      OpenStruct.new(
+        user_id_code: '14212128025'
+      )
+    )
+
+    allow(client).to receive('authentication_status').and_return(
+      OpenStruct.new(status: 'USER_AUTHENTICATED')
+    )
+
+    allow(Digidoc::Client).to receive(:new) { client }
+
+    visit registrar_login_path
+    page.should have_css('a[href="/registrar/login/mid"]')
+
+    page.find('a[href="/registrar/login/mid"]').click
+
+    fill_in 'user_phone', with: '00007'
+    click_button 'Log in'
+
+    page.should have_text('Check your phone for confirmation code')
+    page.should have_text('Welcome!')
+  end
 end
