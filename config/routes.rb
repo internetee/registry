@@ -105,7 +105,7 @@ Rails.application.routes.draw do
   #   root to: 'admin/domains#index', as: :authenticated_root
   # end
 
-  root to: redirect('login')
+  root to: redirect('admin/login')
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
