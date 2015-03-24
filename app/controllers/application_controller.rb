@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
 
   def after_sign_in_path_for(_resource)
     rt = session[:user_return_to].to_s.presence
-    login_paths = [admin_login_path, registrar_login_path]
+    login_paths = [admin_login_path, registrar_login_path, '/login']
     return rt if rt && !login_paths.include?(rt)
 
     if request.path.match('registrar')
