@@ -2,6 +2,7 @@
 Fabricator(:api_user) do
   username { sequence(:username) { |i| "username#{i}" } }
   password 'ghyt9e4fu'
+  identity_code '14212128025'
   registrar
   active true
 end
