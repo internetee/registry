@@ -10,7 +10,6 @@ Accept: application/json
 Authorization: Basic Z2l0bGFiOmdoeXQ5ZTRmdQ==
 Content-Length: 0
 Content-Type: application/json
-Host: www.example.com
 ```
 
 #### Response
@@ -19,11 +18,6 @@ HTTP/1.1 200
 Cache-Control: max-age=0, private, must-revalidate
 Content-Length: 1859
 Content-Type: application/json
-ETag: W/"a63861e741f479e8099f9fdb913a8e66"
-X-Content-Type-Options: nosniff
-X-Frame-Options: SAMEORIGIN
-X-Request-Id: bdda3b2d-d65a-441f-8c2e-751e56de4d18
-X-Runtime: 0.017877
 X-XSS-Protection: 1; mode=block
 
 {
