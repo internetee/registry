@@ -193,7 +193,7 @@ describe Contact do
         invalid.each do |date|
           @contact.ident = date
           @contact.valid?
-          @contact.errors.full_messages.should == 
+          @contact.errors.full_messages.should ==
             ["Ident Ident not in valid birthady format, should be YYYY-MM-DD"]
         end
       end
@@ -320,5 +320,32 @@ describe Contact, '.check_availability' do
 
     response[2][:avail].should == 1
     response[2][:code].should == 'asd14'
+  end
+end
+
+describe Contact, '.destroy_orphans' do
+  before do
+    @contact_1 = Fabricate(:contact, code: 'asd12')
+    @contact_2 = Fabricate(:contact, code: 'asd13')
+  end
+
+  it 'destroys orphans' do
+    Contact.find_orphans.count.should == 2
+    Contact.destroy_orphans
+    Contact.find_orphans.count.should == 0
+  end
+
+  it 'should find one orphan' do
+    Fabricate(:domain, owner_contact: @contact_1)
+    Contact.find_orphans.count.should == 1
+    Contact.find_orphans.last.should == @contact_2
+  end
+
+  it 'should find no orphans' do
+    Fabricate(:domain, owner_contact: @contact_1, admin_contacts: [@contact_2])
+    cc = Contact.count
+    Contact.find_orphans.count.should == 0
+    Contact.destroy_orphans
+    Contact.count.should == cc
   end
 end

@@ -161,4 +161,20 @@ class Contact < ActiveRecord::Base
       errors.add(:ident_country_code, 'is not following ISO_3166-1 alpha 2 format')
     end
   end
+
+  class << self
+    def find_orphans
+      Contact.where('
+        NOT EXISTS(
+          select 1 from domains d where d.owner_contact_id = contacts.id
+        ) AND NOT EXISTS(
+          select 1 from domain_contacts dc where dc.contact_id = contacts.id
+        )
+      ')
+    end
+
+    def destroy_orphans
+      find_orphans.destroy_all
+    end
+  end
 end
