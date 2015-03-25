@@ -16,6 +16,6 @@ every 10.minutes do
   runner 'ZonefileSetting.generate_zonefiles'
 end
 
-every 6.months, at: '1am' do
+every 2.minutes do
   runner 'Contact.destroy_orphans'
 end
