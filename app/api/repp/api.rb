@@ -7,6 +7,14 @@ module Repp
       @current_user ||= ApiUser.find_by(username: username, password: password)
     end
 
+    before do
+      if request.ip == ENV['webclient_ip']
+        error! 'Certificate mismatch', 401 if env['HTTP_SSL_CLIENT_S_DN_CN'] != 'webclient'
+      else
+        error! 'Certificate mismatch', 401 if env['HTTP_SSL_CLIENT_S_DN_CN'] != @current_user.username
+      end
+    end
+
     helpers do
       attr_reader :current_user
     end
