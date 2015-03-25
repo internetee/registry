@@ -1,3 +1,7 @@
+25.03.2015
+
+* Added new cronjob, please update cron by running `mina cron:setup` for registry
+
 24.03.2015
 
 * New Registrar virtualhost added. Please refer to readme for the configuration.
