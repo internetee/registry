@@ -1,6 +1,6 @@
 25.03.2015
 
-* Added new cronjob for deleting orphaned contacts. Update cron by running `mina cron:setup` in registry project
+* Added new cronjob for destroying orphaned contacts. Update cron by running `mina cron:setup` in registry project
 
 24.03.2015
 
