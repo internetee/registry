@@ -79,6 +79,8 @@ Rails.application.routes.draw do
   end
 
   namespace(:registrar) do
+    mount Depp::Engine, at: '/depp'
+
     resources :invoices
 
     devise_scope :user do

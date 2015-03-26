@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # core
-gem 'rails',        '4.2.0'
+gem 'rails',        '4.2.1'
 gem 'iso8601',      '~> 0.8.2' # for dates and times
 gem 'hashie_rails', '~> 0.0.1'
 
@@ -19,8 +19,8 @@ gem 'rails-settings-cached',     '~> 0.4.1' # for settings
 gem 'delayed_job_active_record', '~> 4.0.3' # delayed job
 
 # html-xml
-gem 'haml-rails', '~> 0.6.0' # haml for views
-gem 'nokogiri',   '~> 1.6.2.1' # For XML parsing
+gem 'haml-rails', '~> 0.9.0' # haml for views
+gem 'nokogiri',   '>= 1.6.2.2' # For XML parsing
 
 # style
 gem 'sass-rails',     '~> 5.0.1'   # sass style
@@ -65,6 +65,9 @@ gem 'deep_cloneable', '~> 2.1.1'
 
 # id + mid login
 gem 'digidoc_client', '~> 0.2.1'
+
+# epp + repp client
+gem 'depp', github: 'domify/depp'
 
 group :development do
   # dev tools
