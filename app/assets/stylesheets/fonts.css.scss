@@ -1,0 +1,65 @@
+@font-face {
+    font-family: 'EtelkaLightProRegular';
+    src: font_url('etelkalight-webfont.eot');
+    src: font_url('etelkalight-webfont.eot?#iefix') format('embedded-opentype'),
+         font_url('etelkalight-webfont.woff') format('woff'),
+         font_url('etelkalight-webfont.ttf') format('truetype'),
+         font_url('etelkalight-webfont.svg#EtelkaLightProRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'EtelkaLightProBold';
+    src: font_url('etelkalightbold-webfont.eot');
+    src: font_url('etelkalightbold-webfont.eot?#iefix') format('embedded-opentype'),
+         font_url('etelkalightbold-webfont.woff') format('woff'),
+         font_url('etelkalightbold-webfont.ttf') format('truetype'),
+         font_url('etelkalightbold-webfont.svg#EtelkaLightProBold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'EtelkaLightProItalic';
+    src: font_url('etelkalightitalic-webfont.eot');
+    src: font_url('etelkalightitalic-webfont.eot?#iefix') format('embedded-opentype'),
+         font_url('etelkalightitalic-webfont.woff') format('woff'),
+         font_url('etelkalightitalic-webfont.ttf') format('truetype'),
+         font_url('etelkalightitalic-webfont.svg#EtelkaLightProItalic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'InfoTextBold';
+    src: font_url('infotexb-webfont.eot');
+    src: font_url('infotexb-webfont.eot?#iefix') format('embedded-opentype'),
+         font_url('infotexb-webfont.woff') format('woff'),
+         font_url('infotexb-webfont.ttf') format('truetype'),
+         font_url('infotexb-webfont.svg#InfoTextBold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'InfoTextMedium';
+    src: font_url('infotexm-webfont.eot');
+    src: font_url('infotexm-webfont.eot?#iefix') format('embedded-opentype'),
+         font_url('infotexm-webfont.woff') format('woff'),
+         font_url('infotexm-webfont.ttf') format('truetype'),
+         font_url('infotexm-webfont.svg#InfoTextMedium') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'InfoTextRegular';
+    src: font_url('infotexn-webfont.eot');
+    src: font_url('infotexn-webfont.eot?#iefix') format('embedded-opentype'),
+         font_url('infotexn-webfont.woff') format('woff'),
+         font_url('infotexn-webfont.ttf') format('truetype'),
+         font_url('infotexn-webfont.svg#InfoTextRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
