@@ -48,6 +48,13 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def depp_current_user
+    @depp_current_user ||= Depp::User.new(
+      tag: current_user.username,
+      password: current_user.password
+    )
+  end
+
   def api_user_log_str(user)
     if user.present?
       "#{user.id}-api-#{user.username}"

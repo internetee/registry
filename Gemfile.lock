@@ -9,20 +9,11 @@ GIT
       request_store (~> 1.1.0)
 
 GIT
-  remote: git://github.com/haml/html2haml.git
-  revision: 6984f50bdbbd6291535027726a5697f28778ee8d
-  ref: 6984f50bdbbd6291535027726a5697f28778ee8d
+  remote: git://github.com/domify/depp.git
+  revision: 730b264929613033d334a636a29b04a39693b107
+  ref: 730b264929613033d334a636a29b04a39693b107
   specs:
-    html2haml (2.0.0.beta.2)
-      erubis (~> 2.7.0)
-      haml (~> 4.0.0)
-      nokogiri (~> 1.6.0)
-      ruby_parser (~> 3.5)
-
-PATH
-  remote: /home/martin/projects/depp
-  specs:
-    depp (0.0.1)
+    depp (0.0.2)
       coderay (>= 1.1.0)
       coffee-rails (>= 4.1.0)
       countries (>= 0.9.3)
@@ -35,6 +26,17 @@ PATH
       sass-rails (>= 5.0.0)
       uglifier (>= 2.6.1)
       uuidtools (>= 2.1.4)
+
+GIT
+  remote: git://github.com/haml/html2haml.git
+  revision: 6984f50bdbbd6291535027726a5697f28778ee8d
+  ref: 6984f50bdbbd6291535027726a5697f28778ee8d
+  specs:
+    html2haml (2.0.0.beta.2)
+      erubis (~> 2.7.0)
+      haml (~> 4.0.0)
+      nokogiri (~> 1.6.0)
+      ruby_parser (~> 3.5)
 
 GEM
   remote: https://rubygems.org/
