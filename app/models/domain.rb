@@ -124,6 +124,14 @@ class Domain < ActiveRecord::Base
     domain_contacts.select { |x| x.contact_type == DomainContact::ADMIN }
   end
 
+  def subordinate_nameservers
+    nameservers.select { |x| x.hostname.end_with?(name) }
+  end
+
+  def delegated_nameservers
+    nameservers.select { |x| !x.hostname.end_with?(name) }
+  end
+
   def name=(value)
     value.strip!
     value.downcase!

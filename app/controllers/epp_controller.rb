@@ -139,6 +139,20 @@ class EppController < ApplicationController
     }
   end
 
+  def optional_attribute(element_selector, attribute_selector, options)
+    element = requires(element_selector, allow_blank: options[:allow_blank])
+    return unless element
+
+    attribute = element[attribute_selector]
+
+    return if (attribute && options[:values].include?(attribute)) || !attribute
+
+    epp_errors << {
+      code: '2306',
+      msg: I18n.t('attribute_is_invalid', attribute: attribute_selector)
+    }
+  end
+
   def exactly_one_of(*selectors)
     full_selectors = create_full_selectors(*selectors)
     return if element_count(*full_selectors, use_prefix: false) == 1

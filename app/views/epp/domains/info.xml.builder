@@ -22,12 +22,14 @@ xml.epp_head do
           xml.tag!('domain:contact', x.code, 'type' => 'admin')
         end
 
-        xml.tag!('domain:ns') do
-          @domain.nameservers.each do |x|
-            xml.tag!('domain:hostAttr') do
-              xml.tag!('domain:hostName', x.hostname)
-              xml.tag!('domain:hostAddr', x.ipv4, 'ip' => 'v4') if x.ipv4.present?
-              xml.tag!('domain:hostAddr', x.ipv6, 'ip' => 'v6') if x.ipv6.present?
+        if @nameservers && @nameservers.any?
+          xml.tag!('domain:ns') do
+            @nameservers.each do |x|
+              xml.tag!('domain:hostAttr') do
+                xml.tag!('domain:hostName', x.hostname)
+                xml.tag!('domain:hostAddr', x.ipv4, 'ip' => 'v4') if x.ipv4.present?
+                xml.tag!('domain:hostAddr', x.ipv6, 'ip' => 'v6') if x.ipv6.present?
+              end
             end
           end
         end

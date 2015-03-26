@@ -1775,6 +1775,49 @@ describe 'EPP Domain', epp: true do
       inf_data.css('upDate').text.should == domain.updated_at.to_time.utc.to_s
     end
 
+    it 'returns domain info with different nameservers' do
+      domain.nameservers = []
+      domain.save
+
+      domain.nameservers.build(hostname: "ns1.#{domain.name}", ipv4: '192.168.1.1', ipv6: '1080:0:0:0:8:800:200C:417A')
+      domain.nameservers.build(hostname: "ns2.#{domain.name}", ipv4: '192.168.1.1', ipv6: '1080:0:0:0:8:800:200C:417A')
+      domain.nameservers.build(hostname: "ns3.test.ee", ipv4: '192.168.1.1', ipv6: '1080:0:0:0:8:800:200C:417A')
+      domain.save
+
+      xml = domain_info_xml(name: { value: domain.name, attrs: { hosts: 'inalid' } })
+      response = epp_plain_request(xml, :xml)
+      response[:msg].should == 'Attribute is invalid: hosts'
+      response[:result_code].should == '2306'
+
+      xml = domain_info_xml(name: { value: domain.name, attrs: { hosts: 'sub' } })
+      response = epp_plain_request(xml, :xml)
+
+      inf_data = response[:parsed].css('resData infData')
+      inf_data.css('hostAttr').count.should == 2
+      inf_data.css('hostName').first.text.should == "ns1.#{domain.name}"
+      inf_data.css('hostName').last.text.should == "ns2.#{domain.name}"
+
+      xml = domain_info_xml(name: { value: domain.name, attrs: { hosts: 'del' } })
+      response = epp_plain_request(xml, :xml)
+
+      inf_data = response[:parsed].css('resData infData')
+      inf_data.css('hostAttr').count.should == 1
+      inf_data.css('hostName').first.text.should == "ns3.test.ee"
+
+      xml = domain_info_xml(name: { value: domain.name, attrs: { hosts: 'none' } })
+      response = epp_plain_request(xml, :xml)
+
+      inf_data = response[:parsed].css('resData infData')
+      inf_data.css('ns').count.should == 0
+      inf_data.css('hostAttr').count.should == 0
+
+      xml = domain_info_xml(name: { value: domain.name, attrs: { hosts: 'all' } })
+      response = epp_plain_request(xml, :xml)
+
+      inf_data = response[:parsed].css('resData infData')
+      inf_data.css('hostAttr').count.should == 3
+    end
+
     it 'returns error when domain can not be found' do
       response = epp_plain_request(domain_info_xml(name:  { value: 'test.ee' }), :xml)
       response[:results][0][:result_code].should == '2303'

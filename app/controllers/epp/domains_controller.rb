@@ -17,6 +17,17 @@ class Epp::DomainsController < EppController
 
   def info
     authorize! :info, @domain, @password
+    @hosts = params[:parsed_frame].css('name').first['hosts'] || 'all'
+
+    case @hosts
+    when 'del'
+      @nameservers = @domain.delegated_nameservers
+    when 'sub'
+      @nameservers = @domain.subordinate_nameservers
+    when 'all'
+      @nameservers = @domain.nameservers
+    end
+
     render_epp_response '/epp/domains/info'
   end
 
@@ -88,6 +99,7 @@ class Epp::DomainsController < EppController
   def validate_info
     @prefix = 'info > info >'
     requires('name')
+    optional_attribute 'name', 'hosts', values: %(all, sub, del, none)
   end
 
   def validate_check
