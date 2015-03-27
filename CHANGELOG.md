@@ -1,6 +1,7 @@
 27.03.2015
  
 * Integrated DEPP engine to Registrar. Please note new DEPP configuration in application-example.yml
+* Patched mod_epp for larger frames, reinstall mod_epp with patches found in README and restart Apache.
 
 25.03.2015
 
