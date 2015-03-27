@@ -23,6 +23,16 @@ ca_key_password: 'your-root-key-password'
 # Used only by EPP server, you can leave it empty when running admin server:
 webclient_ip: '127.0.0.1'
 
+# DEPP configuration
+show_ds_data_fields: 'false'
+default_nameservers_count: '2'
+default_admin_contacts_count: '1'
+epp_port: '700'
+cert_path: '/home/registry/registry/shared/ca/certs/webclient.cert.pem'
+key_path: '/home/registry/registry/shared/ca/private/webclient.key.pem'
+epp_hostname: 'registry.gitlab.eu'
+repp_url: 'https://repp.gitlab.eu/repp/v1/'
+
 # autotest config overwrites
 test:
   webclient_ip: '127.0.0.1' # it should match to localhost ip address

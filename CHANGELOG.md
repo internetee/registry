@@ -1,3 +1,7 @@
+27.03.2015
+ 
+* Integrated DEPP engine to Registrar. Please note new DEPP configuration in application-example.yml
+
 25.03.2015
 
 * Added new cronjob for destroying orphaned contacts. Update cron by running `mina cron:setup` in registry project
