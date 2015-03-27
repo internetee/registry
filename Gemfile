@@ -72,8 +72,8 @@ gem 'depp', github: 'domify/depp', ref: '730b264929613033d334a636a29b04a39693b10
 
 group :development do
   # dev tools
-  gem 'spring',                '~> 1.2.0'
-  gem 'spring-commands-rspec', '~> 1.0.2'
+  gem 'spring',                '~> 1.3.3'
+  gem 'spring-commands-rspec', '~> 1.0.4'
   gem 'guard',                 '~> 2.6.1' # run tests automatically
   gem 'guard-rspec',           '~> 4.3.1'
   gem 'guard-rails',           '~> 0.7.0' # run EPP server automatically
