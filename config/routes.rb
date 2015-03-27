@@ -79,8 +79,6 @@ Rails.application.routes.draw do
   end
 
   namespace(:registrar) do
-    mount Depp::Engine, at: '/depp', as: 'depp'
-
     resources :invoices
 
     devise_scope :user do
@@ -100,6 +98,8 @@ Rails.application.routes.draw do
 
     root 'invoices#index'
   end
+
+  mount Depp::Engine, at: '/registrar/depp', as: 'depp'
 
   devise_for :users
 

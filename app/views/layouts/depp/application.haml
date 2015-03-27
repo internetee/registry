@@ -29,20 +29,26 @@
           .navbar-collapse.collapse
             %ul.nav.navbar-nav
               - if can? :show, Invoice
-                %li= link_to t('invoices'), main_app.registrar_invoices_path
+                - active_class = ['registrar/invoices'].include?(params[:controller]) ? 'active' :nil
+                %li{class: active_class}= link_to t('invoices'), main_app.registrar_invoices_path
 
-              - active_class = %w(domains check renew tranfer keyrelays).include?(params[:controller]) ? 'active' :nil
+              - active_class = %w(depp/domains depp/check depp/renew depp/tranfer depp/keyrelays).include?(params[:controller]) ? 'active' :nil
               %li{class: active_class}= link_to t(:domains), depp.domains_path
 
-              - active_class = ['contacts'].include?(params[:controller]) ? 'active' :nil
-              %li{class: active_class}= link_to t(:contacts), contacts_path
+              - active_class = ['depp/contacts'].include?(params[:controller]) ? 'active' :nil
+              %li{class: active_class}= link_to t(:contacts), depp.contacts_path
 
-              - active_class = ['xml_consoles'].include?(params[:controller]) ? 'active' :nil
-              %li{class: active_class}= link_to t(:xml_console), xml_console_path
+              - active_class = ['depp/xml_consoles'].include?(params[:controller]) ? 'active' :nil
+              %li{class: active_class}= link_to t(:xml_console), depp.xml_console_path
             %ul.nav.navbar-nav.navbar-right
               %li= link_to t('log_out', user: current_user), '/registrar/logout'
 
         / /.nav-collapse
+    / = yield :tabs
+    /   .container
+    /     = render 'depp/shared/flash'
+    /     = render 'depp/shared/epp_results'
+    /     = yield
     .container
       - display = (flash.empty?) ? 'none' : 'block'
       #flash{style: "display: #{display};"}

@@ -1,5 +1,5 @@
 class Registrar::SessionsController < SessionsController
-  layout 'registrar'
+  layout 'depp/application'
 
   def create
     @user = ApiUser.first if params[:user1]
