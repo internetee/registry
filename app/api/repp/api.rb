@@ -8,10 +8,15 @@ module Repp
     end
 
     before do
+      next if Rails.env.test?
+      message = 'Certificate mismatch! Cert common name should be:'
+      request_name = ENV['HTTP_SSL_CLIENT_S_DN_CN']
+      
       if request.ip == ENV['webclient_ip']
-        error! 'Certificate mismatch', 401 if env['HTTP_SSL_CLIENT_S_DN_CN'] != 'webclient'
+        webclient_cert_name = ENV['webclient_cert_common_name'] || 'webclient'
+        error! "#{message} #{webclient_cert_name}", 401 if webclient_cert_name != request_name
       else
-        error! 'Certificate mismatch', 401 if env['HTTP_SSL_CLIENT_S_DN_CN'] != @current_user.username
+        error! "#{message} #{@current_user.username}", 401 if @current_user.username != request_name
       end
     end
 
