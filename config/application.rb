@@ -33,6 +33,12 @@ module Registry
     # Load all model subdirs
     config.autoload_paths += Dir[Rails.root.join('app', 'models', '**/')]
 
+    # Add the fonts path
+    config.assets.paths << Rails.root.join('vendor', 'assets', 'fonts')
+
+    # Precompile additional assets
+    config.assets.precompile += %w(*.svg *.eot *.woff *.ttf)
+
     # Active Record used to suppresses errors raised within
     # `after_rollback`/`after_commit` callbacks and only printed them to the logs.
     # In the next version, these errors will no longer be suppressed.
