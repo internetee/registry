@@ -153,7 +153,7 @@ class Epp::DomainsController < EppController
 
   def find_domain
     domain_name = params[:parsed_frame].css('name').text.strip.downcase
-    @domain = Epp::Domain.find_by(name: domain_name)
+    @domain = Epp::Domain.where(name: domain_name).first
 
     unless @domain
       epp_errors << {

@@ -174,9 +174,9 @@ class Contact < ActiveRecord::Base
     end
 
     def destroy_orphans
-      STDOUT << "#{Time.now.utc} - Destroying orphaned contacts\n"
+      logger.info "#{Time.now.utc} - Destroying orphaned contacts\n"
       count = find_orphans.destroy_all.count
-      STDOUT << "#{Time.now.utc} - Successfully destroyed #{count} orphaned contacts\n"
+      logger.info "#{Time.now.utc} - Successfully destroyed #{count} orphaned contacts\n"
     end
   end
 end

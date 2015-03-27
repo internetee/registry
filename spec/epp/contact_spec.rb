@@ -145,6 +145,24 @@ describe 'EPP Contact', epp: true do
         Contact.last.code.should == 'registrar1:12345'
       end
 
+      it 'should generate server id when id is empty' do
+        response = create_request({ id: { value: '' } })
+
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+
+        Contact.last.code.should_not == 'registrar1:'
+      end
+
+      it 'should generate server id when id is empty' do
+        response = create_request
+
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+
+        Contact.last.code.should_not == 'registrar1:'
+      end
+
       it 'should return parameter value policy error for org' do
         response = create_request({ postalInfo: { org: { value: 'should not save' } } })
         response[:msg].should == 

@@ -22,6 +22,7 @@ ca_key_password: 'your-root-key-password'
 
 # Used only by EPP server, you can leave it empty when running admin server:
 webclient_ip: '127.0.0.1'
+webclient_cert_common_name: 'webclient'
 
 # DEPP configuration
 show_ds_data_fields: 'false'

@@ -241,39 +241,51 @@ class Domain < ActiveRecord::Base
   # rubocop:disable Metrics/MethodLength
   def update_whois_body
     self.whois_body = <<-EOS
-    This Whois Server contains information on
-    Estonian Top Level Domain ee TLD
+  This Whois Server contains information on
+  Estonian Top Level Domain ee TLD
 
-    domain:    #{name}
-    registrar: #{registrar}
-    status:
-    registered:
-    changed:   #{updated_at.to_s(:db)}
-    expire:
-    outzone:
-    delete:
+  domain:    #{name}
+  registrar: #{registrar}
+  status:
+  registered: #{registered_at and registered_at.to_s(:db)}
+  changed:   #{updated_at and updated_at.to_s(:db)}
+  expire:
+  outzone:
+  delete:
 
-    contact
-    name:
-    e-mail:
-    registrar:
-    created:
+  #{contacts_body}
 
-    contact:
+  nsset:
+  nserver:
 
-    nsset:
-    nserver:
-
-    registrar:
-    org:
-    url:
-    phone:
-    address:
-    created:
-    changed:
+  registrar: #{registrar}
+  phone: #{registrar.phone}
+  address: #{registrar.address}
+  created: #{registrar.created_at.to_s(:db)}
+  changed: #{registrar.updated_at.to_s(:db)}
     EOS
   end
-  # rubocop:enabled Metrics/MethodLength
+  # rubocop:enable Metrics/MethodLength
+
+  def contacts_body
+    out = ''
+    admin_contacts.includes(:registrar).each do |c|
+      out << 'Admin contact:'
+      out << "name: #{c.name}"
+      out << "email: #{c.email}"
+      out << "registrar: #{c.registrar}"
+      out << "created: #{c.created_at.to_s(:db)}"
+    end
+
+    tech_contacts.includes(:registrar).each do |c|
+      out << 'Tech contact:'
+      out << "name: #{c.name}"
+      out << "email: #{c.email}"
+      out << "registrar: #{c.registrar}"
+      out << "created: #{c.created_at.to_s(:db)}"
+    end
+    out
+  end
 
   def whois_server_update(name, whois_body)
     wd = Whois::Domain.find_or_initialize_by(name: name)

@@ -42,7 +42,7 @@ class Epp::Contact < Contact
       return super if frame.blank?
 
       custom_code = 
-        if frame.css('id').present? 
+        if frame.css('id').text.present?
           "#{registrar.code}:#{frame.css('id').text.parameterize}"
         else
           nil
