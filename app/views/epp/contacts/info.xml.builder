@@ -34,7 +34,6 @@ xml.epp_head do
           xml.tag!('contact:upID', @contact.updator.try(:registrar))
           xml.tag!('contact:upDate', @contact.updated_at) 
         end
-        xml.tag!('contact:ident', @contact.ident, type: @contact.ident_type, cc: @contact.ident_country_code)
         # xml.tag!('contact:trDate', '123') if false
         if can? :view_password, @contact, @password
           xml.tag!('contact:authInfo') do
@@ -45,6 +44,14 @@ xml.epp_head do
           xml.tag!('contact:status', s: status.value)
         end
         # xml << render('/epp/contacts/disclosure_policy')
+      end
+    end
+    if can? :view_full_info, @contact, @password
+      xml.tag!('extension') do
+        xml.tag!('eis:extdata', 'xmlns:eis' => 'urn:ee:eis:xml:epp:eis-1.0') do
+          xml.tag!('eis:ident', @contact.ident, 
+                   type: @contact.ident_type, cc: @contact.ident_country_code)
+        end
       end
     end
 

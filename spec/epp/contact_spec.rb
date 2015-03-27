@@ -470,6 +470,22 @@ describe 'EPP Contact', epp: true do
         contact.css('name').first.text.should == 'Johnny Awesome'
       end
 
+      it 'should return ident in extension' do
+        @registrar1_contact = Fabricate(
+          :contact, code: 'info-ident', registrar: @registrar1,
+          name: 'Johnny Awesome', address: Fabricate(:address))
+
+        response = info_request({ id: { value: @registrar1_contact.code } })
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+
+        contact = response[:parsed].css('resData infData')
+        contact.css('ident').first.should == nil # ident should be in extension
+
+        contact = response[:parsed].css('extension')
+        contact.css('ident').first.text.should == '37605030299'
+      end
+
       it 'returns no authorization error for wrong password when owner' do
         response = info_request({ authInfo: { pw: { value: 'wrong-pw' } } })
 
