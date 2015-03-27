@@ -44,16 +44,15 @@
               %li= link_to t('log_out', user: current_user), '/registrar/logout'
 
         / /.nav-collapse
-    / = yield :tabs
-    /   .container
-    /     = render 'depp/shared/flash'
-    /     = render 'depp/shared/epp_results'
-    /     = yield
     .container
-      - display = (flash.empty?) ? 'none' : 'block'
-      #flash{style: "display: #{display};"}
-        - type = (flash[:notice]) ? 'bg-success' : 'bg-danger'
-        .alert{class: type}= flash[:notice] || flash[:alert]
+      - if params[:controller].start_with?('depp/')
+        = render 'depp/shared/flash'
+        = render 'depp/shared/epp_results'
+      - else
+        - display = (flash.empty?) ? 'none' : 'block'
+        #flash{style: "display: #{display};"}
+          - type = (flash[:notice]) ? 'bg-success' : 'bg-danger'
+          .alert{class: type}= flash[:notice] || flash[:alert]
       = yield
 
       .footer.text-right
