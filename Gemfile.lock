@@ -9,9 +9,26 @@ GIT
       request_store (~> 1.1.0)
 
 GIT
-  remote: git://github.com/domify/depp.git
-  revision: 730b264929613033d334a636a29b04a39693b107
-  ref: 730b264929613033d334a636a29b04a39693b107
+  remote: git://github.com/gitlabeu/epp.git
+  revision: 505c3f2739eb1da918e54111aecfb138a822739d
+  specs:
+    epp (1.4.2)
+      hpricot
+      libxml-ruby
+
+GIT
+  remote: git://github.com/haml/html2haml.git
+  revision: 6984f50bdbbd6291535027726a5697f28778ee8d
+  ref: 6984f50bdbbd6291535027726a5697f28778ee8d
+  specs:
+    html2haml (2.0.0.beta.2)
+      erubis (~> 2.7.0)
+      haml (~> 4.0.0)
+      nokogiri (~> 1.6.0)
+      ruby_parser (~> 3.5)
+
+PATH
+  remote: /home/martin/projects/depp
   specs:
     depp (0.0.2)
       coderay (>= 1.1.0)
@@ -26,17 +43,6 @@ GIT
       sass-rails (>= 5.0.0)
       uglifier (>= 2.6.1)
       uuidtools (>= 2.1.4)
-
-GIT
-  remote: git://github.com/haml/html2haml.git
-  revision: 6984f50bdbbd6291535027726a5697f28778ee8d
-  ref: 6984f50bdbbd6291535027726a5697f28778ee8d
-  specs:
-    html2haml (2.0.0.beta.2)
-      erubis (~> 2.7.0)
-      haml (~> 4.0.0)
-      nokogiri (~> 1.6.0)
-      ruby_parser (~> 3.5)
 
 GEM
   remote: https://rubygems.org/
@@ -174,9 +180,6 @@ GEM
       nokogiri (>= 1.4.0)
       savon (>= 2.4.0)
     docile (1.1.5)
-    epp (1.4.0)
-      hpricot
-      libxml-ruby
     epp-xml (0.10.4)
       activesupport (~> 4.1)
       builder (~> 3.2)
@@ -521,7 +524,7 @@ DEPENDENCIES
   depp!
   devise (~> 3.4.1)
   digidoc_client (~> 0.2.1)
-  epp (~> 1.4.0)
+  epp (~> 1.4.2)!
   epp-xml (~> 0.10.4)
   fabrication (~> 2.12.2)
   faker (~> 1.3.0)

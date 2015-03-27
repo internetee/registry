@@ -67,8 +67,9 @@ gem 'deep_cloneable', '~> 2.1.1'
 gem 'digidoc_client', '~> 0.2.1'
 
 # epp + repp client
-gem 'depp', github: 'domify/depp', ref: '730b264929613033d334a636a29b04a39693b107'
-# gem 'depp', path: '/home/martin/projects/depp'
+# gem 'depp', github: 'domify/depp', ref: '730b264929613033d334a636a29b04a39693b107'
+gem 'depp', path: '/home/martin/projects/depp'
+gem 'epp', '~> 1.4.2', github: 'gitlabeu/epp'
 
 group :development do
   # dev tools
@@ -106,7 +107,6 @@ group :development, :test do
   gem 'faker',               '~> 1.3.0' # Library to generate fake data
 
   # EPP
-  gem 'epp',       '~> 1.4.0'   # EPP client
   gem 'epp-xml',   '~> 0.10.4'  # EPP XMLs
   gem 'uuidtools', '~> 2.1.4' # For unique IDs (used by the epp gem)
 
