@@ -153,11 +153,7 @@ class Epp::DomainsController < EppController
 
   def find_domain
     domain_name = params[:parsed_frame].css('name').text.strip.downcase
-    if params[:action] == 'transfer'
-      @domain = Epp::Domain.includes(:registrar).where(name: domain_name).first
-    else
-      @domain = Epp::Domain.where(name: domain_name).first
-    end
+    @domain = Epp::Domain.where(name: domain_name).first
 
     unless @domain
       epp_errors << {
