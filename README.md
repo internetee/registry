@@ -49,8 +49,10 @@ Manual demo install and database setup:
 Patch mod_epp for Rack. Beacause Rack multipart parser expects specifically 
 formatted content boundaries, the mod_epp needs to be modified before building:
 
-    wget https://github.com/internetee/registry/raw/master/doc/patches/mod_epp_1.10-rack-friendly.patch    
+    wget https://github.com/internetee/registry/raw/master/doc/patches/mod_epp_1.10-rack-friendly.patch
+    wget https://raw.githubusercontent.com/domify/registry/master/doc/patches/mod_epp_1.10-frame-size.patch
     patch < mod_epp_1.10-rack-friendly.patch
+    patch < mod_epp_1.10-frame-size.patch
     sudo apxs2 -a -c -i mod_epp.c
 
 Enable ssl:
