@@ -58,6 +58,16 @@ task :eppst do
   set :delayed_job, false
 end
 
+# staging
+task :registrarst do
+  set :domain, 'registrar-st'
+  set :deploy_to, '$HOME/registrar'
+  set :repository, 'https://github.com/internetee/registry' # production repo
+  set :branch, 'master'
+  set :rails_env, 'staging'
+  set :delayed_job, false
+end
+
 # production
 task :pr do
   set :domain, 'registry'
@@ -74,6 +84,16 @@ task :epppr do
   set :deploy_to, '$HOME/epp'
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'master' # same as staging
+  set :rails_env, 'production'
+  set :delayed_job, false
+end
+
+# production
+task :registrarst do
+  set :domain, 'registrar'
+  set :deploy_to, '$HOME/registrar'
+  set :repository, 'https://github.com/internetee/registry' # production repo
+  set :branch, 'master'
   set :rails_env, 'production'
   set :delayed_job, false
 end
