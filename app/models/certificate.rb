@@ -58,6 +58,9 @@ class Certificate < ActiveRecord::Base
       errors.add(:base, I18n.t('failed_to_create_certificate'))
       logger.error('FAILED TO CREATE CLIENT CERTIFICATE')
       logger.error(err)
+      # rubocop:disable Rails/Output
+      puts "Certificate sign issue: #{err.inspect}" if Rails.env.test? 
+      # rubocop:enable Rails/Output
       return false
     end
   end

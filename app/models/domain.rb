@@ -265,7 +265,7 @@ class Domain < ActiveRecord::Base
   changed: #{registrar.updated_at.to_s(:db)}
     EOS
   end
-  # rubocop:enabled Metrics/MethodLength
+  # rubocop:enable Metrics/MethodLength
 
   def contacts_body
     out = ''
