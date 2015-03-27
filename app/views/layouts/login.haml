@@ -9,7 +9,7 @@
     = csrf_meta_tags
     = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true
     = stylesheet_link_tag 'login', media: 'all', 'data-turbolinks-track' => true
-    %link{:href => "../../favicon.ico", :rel => "icon"}/
+    = favicon_link_tag 'favicon.ico'
     %title Eesti Interneti SA - Log In
   %body{:style => env_style}
     .container
