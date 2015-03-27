@@ -227,8 +227,8 @@ ActiveRecord::Schema.define(version: 20150320132023) do
   add_index "epp_sessions", ["updated_at"], name: "index_epp_sessions_on_updated_at", using: :btree
 
   create_table "invoices", force: :cascade do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "keyrelays", force: :cascade do |t|
