@@ -115,7 +115,7 @@ group :development, :test do
   # code review
   gem 'simplecov',     '~> 0.9.1', require: false
   gem 'rubycritic',    '~> 1.1.1'
-  gem 'bullet',        '~> 4.14.0' # for finding database optimizations
+  gem 'bullet',        '~> 4.14.4' # for finding database optimizations
   gem 'bundler-audit', '~> 0.3.1'  # for finding future vulnerable gems
   gem 'brakeman',      '~> 2.6.2', require: false # for security audit'
   # tmp, otherwise conflics with breakman
