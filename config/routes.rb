@@ -79,7 +79,7 @@ Rails.application.routes.draw do
   end
 
   namespace(:registrar) do
-    mount Depp::Engine, at: '/depp'
+    mount Depp::Engine, at: '/depp', as: 'depp'
 
     resources :invoices
 
