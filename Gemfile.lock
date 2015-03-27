@@ -9,6 +9,25 @@ GIT
       request_store (~> 1.1.0)
 
 GIT
+  remote: git://github.com/domify/depp.git
+  revision: d3fdd1d9dfec8277ceed32fd66f3cb6911bcceb5
+  ref: d3fdd1d9dfec8277ceed32fd66f3cb6911bcceb5
+  specs:
+    depp (0.0.2)
+      coderay (>= 1.1.0)
+      coffee-rails (>= 4.1.0)
+      countries (>= 0.9.3)
+      epp-xml (>= 0.10.4)
+      figaro (>= 1.1.0)
+      haml-rails (>= 0.9.0)
+      jquery-rails (>= 4.0.3)
+      nokogiri (>= 1.6.6.2)
+      rails (>= 4.2.1)
+      sass-rails (>= 5.0.0)
+      uglifier (>= 2.6.1)
+      uuidtools (>= 2.1.4)
+
+GIT
   remote: git://github.com/gitlabeu/epp.git
   revision: 505c3f2739eb1da918e54111aecfb138a822739d
   specs:
@@ -26,23 +45,6 @@ GIT
       haml (~> 4.0.0)
       nokogiri (~> 1.6.0)
       ruby_parser (~> 3.5)
-
-PATH
-  remote: /home/martin/projects/depp
-  specs:
-    depp (0.0.2)
-      coderay (>= 1.1.0)
-      coffee-rails (>= 4.1.0)
-      countries (>= 0.9.3)
-      epp-xml (>= 0.10.4)
-      figaro (>= 1.1.0)
-      haml-rails (>= 0.9.0)
-      jquery-rails (>= 4.0.3)
-      nokogiri (>= 1.6.6.2)
-      rails (>= 4.2.1)
-      sass-rails (>= 5.0.0)
-      uglifier (>= 2.6.1)
-      uuidtools (>= 2.1.4)
 
 GEM
   remote: https://rubygems.org/
@@ -441,7 +443,7 @@ GEM
       temple (~> 0.6.9)
       tilt (>= 1.3.3, < 2.1)
     slop (3.6.0)
-    spring (1.2.0)
+    spring (1.3.3)
     spring-commands-rspec (1.0.4)
       spring (>= 0.9.1)
     sprockets (2.12.3)
@@ -567,8 +569,8 @@ DEPENDENCIES
   shoulda-matchers (~> 2.6.1)
   simplecov (~> 0.9.1)
   simpleidn (~> 0.0.5)
-  spring (~> 1.2.0)
-  spring-commands-rspec (~> 1.0.2)
+  spring (~> 1.3.3)
+  spring-commands-rspec (~> 1.0.4)
   therubyracer
   traceroute (~> 0.4.0)
   turbolinks (~> 2.5.3)
