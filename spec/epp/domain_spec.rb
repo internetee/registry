@@ -691,7 +691,7 @@ describe 'EPP Domain', epp: true do
       })
 
       response = epp_plain_request(xml, :xml)
-      response[:msg].should == 'Admin contact can be only private person'
+      response[:msg].should == 'Admin contact can be private person only'
       response[:result_code].should == '2306'
     end
   end
