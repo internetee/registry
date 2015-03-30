@@ -67,7 +67,7 @@ gem 'deep_cloneable', '~> 2.1.1'
 gem 'digidoc_client', '~> 0.2.1'
 
 # epp + repp client
-gem 'depp', github: 'domify/depp', ref: '2a14f5025f4909e0225d5c30ad4cc0ab81629034'
+gem 'depp', github: 'domify/depp', ref: '2d0fca4fe610112e855535cde714d5ebed2fe7ae'
 # gem 'depp', path: '~/projects/depp'
 gem 'epp', '~> 1.4.2', github: 'gitlabeu/epp'
 
