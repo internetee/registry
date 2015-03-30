@@ -506,3 +506,4 @@ en:
   sending_error: 'Could not send sms to user'
   sim_error: 'SIM application error'
   internal_error: 'Internal error'
+  client_side_status_editing_error: 'Parameter value policy error. Client-side object status management not supported'

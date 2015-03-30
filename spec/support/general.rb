@@ -16,6 +16,8 @@ module General
     Setting.admin_contacts_max_count = 10
     Setting.tech_contacts_min_count = 0
     Setting.tech_contacts_max_count = 10
+
+    Setting.client_side_status_editing_enabled = true
   end
 
   def create_disclosure_settings

@@ -7,7 +7,7 @@ describe 'EPP Contact', epp: true do
     @registrar1 = Fabricate(:registrar1)
     @registrar2 = Fabricate(:registrar2)
     @epp_xml    = EppXml::Contact.new(cl_trid: 'ABC-12345')
-    
+
     Fabricate(:api_user, username: 'registrar1', registrar: @registrar1)
     Fabricate(:api_user, username: 'registrar2', registrar: @registrar2)
 
@@ -50,17 +50,17 @@ describe 'EPP Contact', epp: true do
 
       it 'fails if request xml is missing' do
         response = epp_plain_request(@epp_xml.create, :xml)
-        response[:results][0][:msg].should == 
+        response[:results][0][:msg].should ==
           'Required parameter missing: create > create > postalInfo > name [name]'
-        response[:results][1][:msg].should == 
+        response[:results][1][:msg].should ==
           'Required parameter missing: create > create > postalInfo > addr > city [city]'
-        response[:results][2][:msg].should == 
+        response[:results][2][:msg].should ==
           'Required parameter missing: create > create > postalInfo > addr > cc [cc]'
-        response[:results][3][:msg].should == 
+        response[:results][3][:msg].should ==
           'Required parameter missing: create > create > voice [voice]'
-        response[:results][4][:msg].should == 
+        response[:results][4][:msg].should ==
           'Required parameter missing: create > create > email [email]'
-        response[:results][5][:msg].should == 
+        response[:results][5][:msg].should ==
           'Required parameter missing: extension > extdata > ident [ident]'
 
         response[:results][0][:result_code].should == '2003'
@@ -101,9 +101,9 @@ describe 'EPP Contact', epp: true do
             value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
             attrs: { type: 'pdf' }
           },
-          ident: { 
+          ident: {
             value: '1990-22-12',
-            attrs: { type: 'birthday', cc: 'US' } 
+            attrs: { type: 'birthday', cc: 'US' }
           }
         }
         response = create_request({}, extension)
@@ -165,7 +165,7 @@ describe 'EPP Contact', epp: true do
 
       it 'should return parameter value policy error for org' do
         response = create_request({ postalInfo: { org: { value: 'should not save' } } })
-        response[:msg].should == 
+        response[:msg].should ==
           'Parameter value policy error. Org should be blank: postalInfo > org [org]'
         response[:result_code].should == '2306'
 
@@ -174,7 +174,7 @@ describe 'EPP Contact', epp: true do
 
       it 'should return parameter value policy error for fax' do
         response = create_request({ fax: { value: 'should not save' } })
-        response[:msg].should == 
+        response[:msg].should ==
           'Parameter value policy error. Fax should be blank: fax [fax]'
         response[:result_code].should == '2306'
 
@@ -220,13 +220,13 @@ describe 'EPP Contact', epp: true do
       it 'fails if request is invalid' do
         response = epp_plain_request(@epp_xml.update, :xml)
 
-        response[:results][0][:msg].should == 
+        response[:results][0][:msg].should ==
           'Required parameter missing: add, rem or chg'
         response[:results][0][:result_code].should == '2003'
-        response[:results][1][:msg].should == 
+        response[:results][1][:msg].should ==
           'Required parameter missing: update > update > id [id]'
         response[:results][1][:result_code].should == '2003'
-        response[:results][2][:msg].should == 
+        response[:results][2][:msg].should ==
           'Required parameter missing: update > update > authInfo > pw [pw]'
         response[:results][2][:result_code].should == '2003'
         response[:results].count.should == 3
@@ -291,9 +291,9 @@ describe 'EPP Contact', epp: true do
             value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
             attrs: { type: 'pdf' }
           },
-          ident: { 
+          ident: {
             value: '1990-22-12',
-            attrs: { type: 'birthday', cc: 'US' } 
+            attrs: { type: 'birthday', cc: 'US' }
           }
         }
         response = update_request({ id: { value: 'sh8013' } }, extension)
@@ -304,13 +304,13 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'should return parameter value policy errror for org update' do
-        response = update_request({ 
-          id: { value: 'sh8013' }, 
+        response = update_request({
+          id: { value: 'sh8013' },
           chg: {
-            postalInfo: { org: { value: 'should not save' } } 
+            postalInfo: { org: { value: 'should not save' } }
           }
         })
-        response[:msg].should == 
+        response[:msg].should ==
           'Parameter value policy error. Org should be blank: postalInfo > org [org]'
         response[:result_code].should == '2306'
 
@@ -318,17 +318,38 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'should return parameter value policy errror for fax update' do
-        response = update_request({ 
-          id: { value: 'sh8013' }, 
+        response = update_request({
+          id: { value: 'sh8013' },
           chg: {
-            fax: { value: 'should not save' } 
+            fax: { value: 'should not save' }
           }
         })
-        response[:msg].should == 
+        response[:msg].should ==
           'Parameter value policy error. Fax should be blank: fax [fax]'
         response[:result_code].should == '2306'
 
         Contact.find_by(code: 'sh8013').fax.should == nil
+      end
+
+      it 'does not allow to edit statuses if policy forbids it' do
+        Setting.client_status_editing_enabled = false
+
+        xml = @epp_xml.update({
+          id: { value: 'sh8013' },
+          add: [{
+            _anonymus: [
+              { status: { value: 'Payment overdue.', attrs: { s: 'clientHold', lang: 'en' } } },
+              { status: { value: '', attrs: { s: 'clientUpdateProhibited' } } }
+            ]
+          }]
+        })
+
+        response = epp_plain_request(xml, :xml)
+        response[:results][0][:result_code].should == '2306'
+        response[:results][0][:msg].should == "Parameter value policy error. Client-side object status "\
+                                              "management not supported: status [status]"
+
+        Setting.client_status_editing_enabled = true
       end
     end
 
@@ -349,10 +370,10 @@ describe 'EPP Contact', epp: true do
       it 'fails if request is invalid' do
         response = epp_plain_request(@epp_xml.delete, :xml)
 
-        response[:results][0][:msg].should == 
+        response[:results][0][:msg].should ==
           'Required parameter missing: delete > delete > id [id]'
         response[:results][0][:result_code].should == '2003'
-        response[:results][1][:msg].should == 
+        response[:results][1][:msg].should ==
           'Required parameter missing: delete > delete > authInfo > pw [pw]'
         response[:results][1][:result_code].should == '2003'
         response[:results].count.should == 2
@@ -378,7 +399,7 @@ describe 'EPP Contact', epp: true do
         @domain = Fabricate(:domain, registrar: @registrar1, owner_contact: @contact)
         @domain.owner_contact.address.present?.should == true
 
-        response = delete_request 
+        response = delete_request
         response[:msg].should == 'Object association prohibits operation [domains]'
         response[:result_code].should == '2305'
         response[:results].count.should == 1
@@ -443,7 +464,7 @@ describe 'EPP Contact', epp: true do
 
       it 'fails if request invalid' do
         response = epp_plain_request(@epp_xml.info, :xml)
-        response[:results][0][:msg].should == 
+        response[:results][0][:msg].should ==
           'Required parameter missing: info > info > id [id]'
         response[:results][0][:result_code].should == '2003'
         response[:results].count.should == 1

@@ -29,6 +29,8 @@ if con.present? && con.table_exists?('settings')
   Setting.save_default(:ns_max_count, 11)
 
   Setting.save_default(:transfer_wait_time, 0)
+
+  Setting.save_default(:client_side_status_editing_enabled, false)
 end
 
 # dev only setting

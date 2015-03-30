@@ -1460,6 +1460,27 @@ describe 'EPP Domain', epp: true do
       d.domain_statuses.count.should == 2
     end
 
+    it 'does not allow to edit statuses if policy forbids it' do
+      Setting.client_status_editing_enabled = false
+
+      xml = domain_update_xml({
+        name: { value: domain.name },
+        add: [{
+          _anonymus: [
+            { status: { value: 'Payment overdue.', attrs: { s: 'clientHold', lang: 'en' } } },
+            { status: { value: '', attrs: { s: 'clientUpdateProhibited' } } }
+          ]
+        }]
+      })
+
+      response = epp_plain_request(xml, :xml)
+      response[:results][0][:result_code].should == '2306'
+      response[:results][0][:msg].should == "Parameter value policy error. Client-side object status "\
+                                            "management not supported: status [status]"
+
+      Setting.client_status_editing_enabled = true
+    end
+
     it 'updates a domain and removes objects' do
       xml = domain_update_xml({
         name: { value: domain.name },

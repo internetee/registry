@@ -116,6 +116,8 @@ class Epp::DomainsController < EppController
 
     @prefix = nil
     requires 'extension > extdata > legalDocument'
+
+    status_editing_disabled
   end
 
   def validate_renew
@@ -130,6 +132,8 @@ class Epp::DomainsController < EppController
 
     @prefix = 'update > update >'
     requires 'name'
+
+    status_editing_disabled
   end
 
   ## TRANSFER
@@ -169,5 +173,14 @@ class Epp::DomainsController < EppController
 
   def find_password
     @password = params[:parsed_frame].css('authInfo pw').text
+  end
+
+  def status_editing_disabled
+    return true if Setting.client_status_editing_enabled
+    return true if params[:parsed_frame].css('status').empty?
+    epp_errors << {
+      code: '2306',
+      msg: "#{I18n.t(:client_side_status_editing_error)}: status [status]"
+    }
   end
 end

@@ -20,7 +20,7 @@ class Epp::ContactsController < EppController
     @contact = Epp::Contact.new(params[:parsed_frame], current_user.registrar)
 
     if @contact.save
-      render_epp_response '/epp/contacts/create' 
+      render_epp_response '/epp/contacts/create'
     else
       handle_errors(@contact)
     end
@@ -63,10 +63,10 @@ class Epp::ContactsController < EppController
     @contact = Epp::Contact.find_by(code: code)
 
     if @contact.blank?
-      epp_errors << { 
+      epp_errors << {
         code: '2303',
         msg: t('errors.messages.epp_obj_does_not_exist'),
-        value: { obj: 'id', val: code } 
+        value: { obj: 'id', val: code }
       }
       fail CanCan::AccessDenied
     end
@@ -94,13 +94,14 @@ class Epp::ContactsController < EppController
     )
     ident = params[:parsed_frame].css('ident')
     if ident.present? && ident.text != 'birthday' && ident.attr('cc').blank?
-      epp_errors << { 
-        code: '2003', 
-        msg: I18n.t('errors.messages.required_attribute_missing', key: 'ident country code missing') 
+      epp_errors << {
+        code: '2003',
+        msg: I18n.t('errors.messages.required_attribute_missing', key: 'ident country code missing')
       }
     end
-    contact_org_disabled 
+    contact_org_disabled
     fax_disabled
+    status_editing_disabled
     @prefix = nil
     requires 'extension > extdata > ident'
   end
@@ -108,13 +109,14 @@ class Epp::ContactsController < EppController
   def validate_update
     @prefix = 'update > update >'
     if element_count('chg') == 0 && element_count('rem') == 0 && element_count('add') == 0
-      epp_errors << { 
-        code: '2003', 
-        msg: I18n.t('errors.messages.required_parameter_missing', key: 'add, rem or chg') 
+      epp_errors << {
+        code: '2003',
+        msg: I18n.t('errors.messages.required_parameter_missing', key: 'add, rem or chg')
       }
     end
     contact_org_disabled
     fax_disabled
+    status_editing_disabled
     requires 'id', 'authInfo > pw'
     @prefix = nil
   end
@@ -140,6 +142,15 @@ class Epp::ContactsController < EppController
     epp_errors << {
       code: '2306',
       msg: "#{I18n.t(:contact_fax_error)}: fax [fax]"
+    }
+  end
+
+  def status_editing_disabled
+    return true if Setting.client_status_editing_enabled
+    return true if params[:parsed_frame].css('status').empty?
+    epp_errors << {
+      code: '2306',
+      msg: "#{I18n.t(:client_side_status_editing_error)}: status [status]"
     }
   end
 end
