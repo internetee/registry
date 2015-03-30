@@ -28,10 +28,12 @@ Contact Mapping protocol short version:
     <extension>                1       
       <eis:extdata>            1        Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
         <eis:ident>            1        Contact identificator 
-                                          Attribute: type="bic/priv/birthday"
-                                          "bic"          # Business registry code
-                                          "priv"         # National idendtification number
-                                          "birthday"     # Birthday date in format in DD-MM-YYYY
+                                          Attribute: "type"
+                                            "bic"          # Business registry code
+                                            "priv"         # National idendtification number
+                                            "birthday"     # Birthday date in format in DD-MM-YYYY
+                                          Attribute: "cc"
+                                            "EE"           # Country code in ISO_3166-1 aplha 2
         <eis:legalDocument>    0-1      Base64 encoded document 
                                           Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
     <clTRID>                   0-1      Client transaction id
@@ -62,10 +64,12 @@ Contact Mapping protocol short version:
     <extension>                 0-1       
       <eis:extdata>             0-1      Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
         <eis:ident>             0-1      Contact identificator 
-                                           Attribute: type="bic/priv/birthday"
-                                           "bic"         # Business registry code
-                                           "priv"        # National idendtification number
-                                           "birthday"    # Birthday date in format in DD-MM-YYYY
+                                          Attribute: "type"
+                                            "bic"          # Business registry code
+                                            "priv"         # National idendtification number
+                                            "birthday"     # Birthday date in format in DD-MM-YYYY
+                                          Attribute: "cc"
+                                            "EE"           # Country code in ISO_3166-1 aplha 2
         <eis:legalDocument>     0-1      Base64 encoded document. 
                                            Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
     <clTRID>                    0-1      Client transaction id
