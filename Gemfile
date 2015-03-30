@@ -35,7 +35,7 @@ gem 'selectize-rails', '~> 0.11.2' # include selectize.js for select
 gem 'therubyracer',  platforms: :ruby
 
 # view helpers
-gem 'kaminari',        '~> 0.16.1'  # pagination
+gem 'kaminari',        '~> 0.16.3'  # pagination
 gem 'nprogress-rails', '~> 0.1.6.5' # visual loader
 
 # rights
@@ -67,7 +67,7 @@ gem 'deep_cloneable', '~> 2.1.1'
 gem 'digidoc_client', '~> 0.2.1'
 
 # epp + repp client
-gem 'depp', github: 'domify/depp', ref: '2d0fca4fe610112e855535cde714d5ebed2fe7ae'
+gem 'depp', github: 'domify/depp', ref: '5648444cd69b8d2a2692f10d196acaca352c9ac5'
 # gem 'depp', path: '~/projects/depp'
 gem 'epp', '~> 1.4.2', github: 'gitlabeu/epp'
 
