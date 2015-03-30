@@ -6,15 +6,17 @@ module Repp
       desc 'Return list of domains'
       params do
         optional :limit, type: Integer, values: (1..20).to_a
+        optional :offset, type: Integer
       end
 
       get '/' do
         limit = params[:limit] || 20
+        offset = params[:offset] || 0
 
         if params[:details] == 'true'
-          domains = current_user.registrar.domains.limit(limit)
+          domains = current_user.registrar.domains.limit(limit).offset(offset)
         else
-          domains = current_user.registrar.domains.limit(limit).pluck(:name)
+          domains = current_user.registrar.domains.limit(limit).offset(offset).pluck(:name)
         end
 
         @response = {
