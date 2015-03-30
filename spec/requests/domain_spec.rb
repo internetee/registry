@@ -31,7 +31,7 @@ describe Repp::DomainV1 do
     end
 
     it 'returns domain names with offset' do
-      get_with_auth '/repp/v1/domains', { offset: 1}, @api_user
+      get_with_auth '/repp/v1/domains', { offset: 1 }, @api_user
       response.status.should == 200
 
       body = JSON.parse(response.body)
