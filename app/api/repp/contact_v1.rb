@@ -4,11 +4,24 @@ module Repp
 
     resource :contacts do
       desc 'Return list of contact'
+      params do
+        optional :limit, type: Integer, values: (1..20).to_a
+        optional :offset, type: Integer
+      end
+
       get '/' do
-        contacts = current_user.registrar.contacts.page(params[:page])
+        limit = params[:limit] || 20
+        offset = params[:offset] || 0
+
+        if params[:details] == 'true'
+          contacts = current_user.registrar.contacts.limit(limit).offset(offset)
+        else
+          contacts = current_user.registrar.contacts.limit(limit).offset(offset).pluck(:code)
+        end
+
         @response = {
           contacts: contacts,
-          total_pages: contacts.total_pages
+          total_number_of_records: current_user.registrar.contacts.count
         }
       end
     end
