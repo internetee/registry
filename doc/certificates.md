@@ -34,8 +34,8 @@ Configure OpenSSL:
 Make sure the following options are in place:
 
     [ CA_default ]
-    # Where everything is kept
-    dir = /home/registry/registry/shared/ca                       # around line nr 42
+    # Where everything is kept. NB! Use your exact location!
+    dir = /home/registry/registry/shared/ca...or your ca path     # around line nr 42
 
     crl_extensions = crl_ext                                      # around line nr 71
 
@@ -63,7 +63,7 @@ Make sure the following options are in place:
     basicConstraints = CA:true                                    # around line nr 240
     keyUsage = cRLSign, keyCertSign                               # around line nr 245
 
-Generate the root key and remember your password, you need it later in application.yml: 
+Generate the root key and REMEBER your password, you need it later in application.yml: 
 
     openssl genrsa -aes256 -out private/ca.key.pem 4096
 
@@ -184,6 +184,8 @@ Sign it
 Download CRT file and create p12 file.
 
     openssl pkcs12 -export -inkey private/api-user.key.pem -in certs/api-user.crt.pem -out pkcs/api_user.p12
+
+    openssl pkcs12 -export -inkey private/priit.key.pem -in certs/registrar1.crt.pem -out pkcs/registrar1.p12
 
 Add api_user.p12 to your browser.
 
