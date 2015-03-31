@@ -3,7 +3,7 @@ class Admin::ContactsController < AdminController
   before_action :set_contact, only: [:show]
 
   def index
-    @q = Contact.search(params[:q])
+    @q = Contact.includes(:registrar).search(params[:q])
     @contacts = @q.result.page(params[:page])
   end
 
