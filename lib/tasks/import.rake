@@ -164,8 +164,6 @@ namespace :import do
     start = Time.now.to_f
     puts '-----> Importing domains...'
 
-    # domain_status_map = {}
-
     domain_columns = [
       "name",
       "registered_at",
@@ -260,7 +258,7 @@ namespace :import do
         # admin contacts
         x.domain_contact_maps.each do |dc|
           domain_contacts << [
-            'admin', # TODO: Where to get real contact type?
+            'admin',
             user,
             user,
             x.id,
@@ -271,7 +269,7 @@ namespace :import do
         # tech contacts
         x.nsset_contact_maps.each do |dc|
           domain_contacts << [
-            'tech', # TODO: Where to get real contact type?
+            'tech',
             user,
             user,
             x.id,
