@@ -24,20 +24,20 @@
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'name', t(:name))
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'ident', t(:identity))
+              = sort_link(@q, 'code', t(:code))
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'ident', t(:ident))
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'email', t(:email))
-            %th{class: 'col-xs-2'}
-              = sort_link(@q, 'code', t(:code))
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'registrar_name', t(:registrar))
         %tbody
           - @contacts.each do |contact|
             %tr
               %td= link_to(contact, admin_contact_path(contact))
+              %td= contact.code
               %td= ident_for(contact)
               %td= contact.email
-              %td= contact.code
               %td
                 - if contact.registrar
                   = link_to(contact.registrar, admin_registrar_path(contact.registrar)) 
