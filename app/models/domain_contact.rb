@@ -1,13 +1,10 @@
 class DomainContact < ActiveRecord::Base
+  # STI: tech_domain_contact
+  # STI: admin_domain_contact
   include Versions # version/domain_contact_version.rb
   include EppErrors
   belongs_to :contact
   belongs_to :domain
-
-  # TODO: remove old
-  # after_create :domain_snapshot
-  # after_destroy :domain_snapshot
-  #  after_save :domain_snapshot
 
   attr_accessor :value_typeahead
 
@@ -19,32 +16,19 @@ class DomainContact < ActiveRecord::Base
     }
   end
 
-  TECH = 'tech'
-  ADMIN = 'admin'
-  TYPES = [TECH, ADMIN]
-
   validates :contact, presence: true
 
-  scope :admin, -> { where(contact_type: ADMIN) }
-  scope :tech, -> { where(contact_type: TECH) }
-
-  def admin?
-    contact_type == ADMIN
+  before_save :update_contact_code_cache
+  def update_contact_code_cache
+    self.contact_code_cache = contact.code
   end
 
-  def tech?
-    contact_type == TECH
+  after_destroy :update_contact
+  def update_contact
+    Contact.find(contact_id).save
   end
 
   def value_typeahead
     @value_typeahead || contact.try(:name) || nil
   end
-
-  # TODO: remove old
-  # def domain_snapshot
-    # return true if domain.nil?
-    # return true if domain.versions.count == 0 # avoid snapshot on creation
-    # domain.create_version
-    # true
-  # end
 end

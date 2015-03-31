@@ -1,0 +1,2 @@
+class AdminDomainContact < DomainContact
+end

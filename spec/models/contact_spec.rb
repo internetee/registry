@@ -2,11 +2,8 @@ require 'rails_helper'
 
 describe Contact do
   before :all do
-    create_disclosure_settings
     @api_user = Fabricate(:api_user)
   end
-
-  it { should have_one(:address) }
 
   context 'about class' do
     it 'should have versioning enabled?' do
@@ -32,9 +29,12 @@ describe Contact do
         "Email Required parameter missing - email",
         "Email Email is invalid",
         "Ident Required parameter missing - ident",
-        "Address is missing",
         "Registrar is missing",
-        "Ident type is missing"
+        "Ident type is missing",
+        "City is missing",
+        "Country code is missing",
+        "Street is missing",
+        "Zip is missing" 
       ])
     end
 
@@ -101,7 +101,7 @@ describe Contact do
 
   context 'with valid attributes' do
     before :all do
-      @contact = Fabricate(:contact, disclosure: nil)
+      @contact = Fabricate(:contact)
     end
 
     it 'should be valid' do
@@ -169,9 +169,18 @@ describe Contact do
 
       contact.statuses.map(&:value).should == %w(ok linked)
 
-      contact.domains.destroy_all
-      contact.save
+      contact.domains.first.destroy
+      contact.reload
       contact.statuses.map(&:value).should == %w(ok)
+    end
+
+    it 'should have linked status when domain is created' do
+      # @admin_domain_contact = Fabricate(:admin_domain_contact)
+      # @domain = Fabricate(:domain, admin_domain_contacts: [@admin_domain_contact])
+      # puts @domain.contacts.size
+      # contact = @domain.contacts.first
+
+      # contact.statuses.map(&:value).should == %w(ok linked)
     end
 
     context 'as birthday' do
@@ -197,25 +206,6 @@ describe Contact do
             ["Ident Ident not in valid birthady format, should be YYYY-MM-DD"]
         end
       end
-    end
-
-    it 'should have empty disclosure'  do
-      @contact.disclosure.name.should     == nil
-      @contact.disclosure.org_name.should == nil
-      @contact.disclosure.email.should    == nil
-      @contact.disclosure.phone.should    == nil
-      @contact.disclosure.fax.should      == nil
-      @contact.disclosure.address.should  == nil
-    end
-
-    it 'should have custom disclosure' do
-      @contact = Fabricate(:contact, disclosure: Fabricate(:contact_disclosure))
-      @contact.disclosure.name.should     == true
-      @contact.disclosure.org_name.should == true
-      @contact.disclosure.email.should    == true
-      @contact.disclosure.phone.should    == true
-      @contact.disclosure.fax.should      == true
-      @contact.disclosure.address.should  == true
     end
 
     context 'with callbacks' do

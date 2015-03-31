@@ -3,7 +3,6 @@ require 'rails_helper'
 describe 'EPP Contact', epp: true do
   before :all do
     create_settings
-    create_disclosure_settings
     @registrar1 = Fabricate(:registrar1)
     @registrar2 = Fabricate(:registrar2)
     @epp_xml    = EppXml::Contact.new(cl_trid: 'ABC-12345')
@@ -38,6 +37,7 @@ describe 'EPP Contact', epp: true do
             addr: {
               street: { value: '123 Example' },
               city: { value: 'Tallinn' },
+              pc: { value: '123456' },
               cc: { value: 'EE' }
             }
           },
@@ -52,15 +52,19 @@ describe 'EPP Contact', epp: true do
         response = epp_plain_request(@epp_xml.create, :xml)
         response[:results][0][:msg].should ==
           'Required parameter missing: create > create > postalInfo > name [name]'
-        response[:results][1][:msg].should ==
+        response[:results][1][:msg].should == 
+          'Required parameter missing: create > create > postalInfo > addr > street [street]'
+        response[:results][2][:msg].should == 
           'Required parameter missing: create > create > postalInfo > addr > city [city]'
-        response[:results][2][:msg].should ==
+        response[:results][3][:msg].should == 
+          'Required parameter missing: create > create > postalInfo > addr > pc [pc]'
+        response[:results][4][:msg].should == 
           'Required parameter missing: create > create > postalInfo > addr > cc [cc]'
-        response[:results][3][:msg].should ==
+        response[:results][5][:msg].should == 
           'Required parameter missing: create > create > voice [voice]'
-        response[:results][4][:msg].should ==
+        response[:results][6][:msg].should == 
           'Required parameter missing: create > create > email [email]'
-        response[:results][5][:msg].should ==
+        response[:results][7][:msg].should == 
           'Required parameter missing: extension > extdata > ident [ident]'
 
         response[:results][0][:result_code].should == '2003'
@@ -69,8 +73,10 @@ describe 'EPP Contact', epp: true do
         response[:results][3][:result_code].should == '2003'
         response[:results][4][:result_code].should == '2003'
         response[:results][5][:result_code].should == '2003'
+        response[:results][6][:result_code].should == '2003'
+        response[:results][7][:result_code].should == '2003'
 
-        response[:results].count.should == 6
+        response[:results].count.should == 8
       end
 
       it 'successfully creates a contact' do
@@ -84,7 +90,7 @@ describe 'EPP Contact', epp: true do
         @contact.registrar.should == @registrar1
         @registrar1.api_users.should include(@contact.creator)
         @contact.ident.should == '37605030299'
-        @contact.address.street.should == '123 Example'
+        @contact.street.should == '123 Example'
         @contact.legal_documents.count.should == 1
 
         log = ApiLog::EppLog.last
@@ -397,7 +403,7 @@ describe 'EPP Contact', epp: true do
 
       it 'fails if contact has associated domain' do
         @domain = Fabricate(:domain, registrar: @registrar1, owner_contact: @contact)
-        @domain.owner_contact.address.present?.should == true
+        @domain.owner_contact.present?.should == true
 
         response = delete_request
         response[:msg].should == 'Object association prohibits operation [domains]'
@@ -480,8 +486,7 @@ describe 'EPP Contact', epp: true do
 
       it 'return info about contact' do
         @registrar1_contact = Fabricate(
-          :contact, code: 'info-4444', registrar: @registrar1,
-          name: 'Johnny Awesome', address: Fabricate(:address))
+          :contact, code: 'info-4444', registrar: @registrar1, name: 'Johnny Awesome')
 
         response = info_request({ id: { value: @registrar1_contact.code } })
         response[:msg].should == 'Command completed successfully'
@@ -492,9 +497,8 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'should return ident in extension' do
-        @registrar1_contact = Fabricate(
-          :contact, code: 'info-ident', registrar: @registrar1,
-          name: 'Johnny Awesome', address: Fabricate(:address))
+        @registrar1_contact = Fabricate(:contact, code: 'info-ident',
+          registrar: @registrar1, name: 'Johnny Awesome')
 
         response = info_request({ id: { value: @registrar1_contact.code } })
         response[:msg].should == 'Command completed successfully'

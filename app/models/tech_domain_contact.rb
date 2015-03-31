@@ -1,0 +1,2 @@
+class TechDomainContact < DomainContact
+end

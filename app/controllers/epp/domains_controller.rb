@@ -4,17 +4,6 @@ class Epp::DomainsController < EppController
   before_action :find_domain, only: [:info, :renew, :update, :transfer, :delete]
   before_action :find_password, only: [:info, :update, :transfer, :delete]
 
-  def create
-    authorize! :create, Epp::Domain
-    @domain = Epp::Domain.new_from_epp(params[:parsed_frame], current_user)
-
-    if @domain.errors.any? || !@domain.save
-      handle_errors(@domain)
-    else
-      render_epp_response '/epp/domains/create'
-    end
-  end
-
   def info
     authorize! :info, @domain, @password
     @hosts = params[:parsed_frame].css('name').first['hosts'] || 'all'
@@ -30,6 +19,44 @@ class Epp::DomainsController < EppController
 
     render_epp_response '/epp/domains/info'
   end
+
+  def create
+    authorize! :create, Epp::Domain
+    @domain = Epp::Domain.new_from_epp(params[:parsed_frame], current_user)
+
+    if @domain.errors.any? || !@domain.save
+      handle_errors(@domain)
+    else
+      render_epp_response '/epp/domains/create'
+    end
+  end
+
+  # rubocop:disable Metrics/CyclomaticComplexity
+  def update
+    authorize! :update, @domain, @password
+
+    if @domain.update(params[:parsed_frame], current_user)
+      render_epp_response '/epp/domains/success'
+    else
+      handle_errors(@domain)
+    end
+  end
+
+  # rubocop:disable Metrics/CyclomaticComplexity
+  def delete
+    # all includes for bullet
+    @domain = Epp::Domain.where(id: @domain.id).includes(nameservers: :versions).first
+
+    handle_errors(@domain) and return unless @domain.can_be_deleted?
+
+    @domain.attach_legal_document(Epp::Domain.parse_legal_document_from_frame(params[:parsed_frame]))
+    @domain.save(validate: false)
+
+    handle_errors(@domain) and return unless @domain.destroy
+
+    render_epp_response '/epp/domains/success'
+  end
+  # rubocop:enbale Metrics/CyclomaticComplexity
 
   def check
     authorize! :check, Epp::Domain
@@ -51,20 +78,8 @@ class Epp::DomainsController < EppController
     render_epp_response '/epp/domains/renew'
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity
-  def update
-    authorize! :update, @domain, @password
-
-    if @domain.update(params[:parsed_frame], current_user)
-      render_epp_response '/epp/domains/success'
-    else
-      handle_errors(@domain)
-    end
-  end
-
   # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/MethodLength
-
   def transfer
     authorize! :transfer, @domain, @password
     action = params[:parsed_frame].css('transfer').first[:op]
@@ -77,22 +92,8 @@ class Epp::DomainsController < EppController
       handle_errors(@domain)
     end
   end
-
   # rubocop: enable Metrics/MethodLength
   # rubocop: enable Metrics/CyclomaticComplexity
-  # rubocop:disable Metrics/CyclomaticComplexity
-
-  def delete
-    handle_errors(@domain) and return unless @domain.can_be_deleted?
-
-    @domain.attach_legal_document(Epp::Domain.parse_legal_document_from_frame(params[:parsed_frame]))
-    @domain.save(validate: false)
-
-    handle_errors(@domain) and return unless @domain.destroy
-
-    render_epp_response '/epp/domains/success'
-  end
-  # rubocop:enbale Metrics/CyclomaticComplexity
 
   private
 
@@ -100,11 +101,6 @@ class Epp::DomainsController < EppController
     @prefix = 'info > info >'
     requires('name')
     optional_attribute 'name', 'hosts', values: %(all, sub, del, none)
-  end
-
-  def validate_check
-    @prefix = 'check > check >'
-    requires('name')
   end
 
   def validate_create
@@ -120,11 +116,6 @@ class Epp::DomainsController < EppController
     status_editing_disabled
   end
 
-  def validate_renew
-    @prefix = 'renew > renew >'
-    requires 'name', 'curExpDate', 'period'
-  end
-
   def validate_update
     if element_count('update > chg > registrant') > 0
       requires 'extension > extdata > legalDocument'
@@ -136,7 +127,23 @@ class Epp::DomainsController < EppController
     status_editing_disabled
   end
 
-  ## TRANSFER
+  def validate_delete
+    requires 'extension > extdata > legalDocument'
+
+    @prefix = 'delete > delete >'
+    requires 'name'
+  end
+
+  def validate_check
+    @prefix = 'check > check >'
+    requires('name')
+  end
+
+  def validate_renew
+    @prefix = 'renew > renew >'
+    requires 'name', 'curExpDate', 'period'
+  end
+
   def validate_transfer
     requires 'transfer > transfer'
 
@@ -145,14 +152,6 @@ class Epp::DomainsController < EppController
 
     @prefix = nil
     requires_attribute 'transfer', 'op', values: %(approve, query, reject)
-  end
-
-  ## DELETE
-  def validate_delete
-    requires 'extension > extdata > legalDocument'
-
-    @prefix = 'delete > delete >'
-    requires 'name'
   end
 
   def find_domain

@@ -22,7 +22,7 @@ describe Domain do
     it 'should not be valid' do
       @domain.valid?
       @domain.errors.full_messages.should match_array([
-        "Admin contacts Admin contacts count must be between 1-10",
+        "Admin domain contacts Admin contacts count must be between 1-10",
         "Nameservers Nameservers count must be between 2-11",
         "Period Period is not a number",
         "Registrant Registrant is missing",
@@ -54,6 +54,24 @@ describe Domain do
       @domain = Fabricate(:domain)
       @domain.valid?
       @domain.errors.full_messages.should match_array([])
+    end
+
+    it 'should validate uniqueness of tech contacts' do
+      same_contact = Fabricate(:contact, code: 'same_contact')
+      domain = Fabricate(:domain)
+      domain.tech_contacts << same_contact
+      domain.tech_contacts << same_contact
+      domain.valid?
+      domain.errors.full_messages.should match_array(["Tech domain contacts is invalid"])
+    end
+
+    it 'should validate uniqueness of tech contacts' do
+      same_contact = Fabricate(:contact, code: 'same_contact')
+      domain = Fabricate(:domain)
+      domain.admin_contacts << same_contact
+      domain.admin_contacts << same_contact
+      domain.valid?
+      domain.errors.full_messages.should match_array(["Admin domain contacts is invalid"])
     end
 
     it 'should have whois_body' do
@@ -102,20 +120,6 @@ describe Domain do
           @domain.creator.should_not == @api_user
         end
       end
-
-      it 'should not find api creator when created by user' do
-        with_versioning do
-          # @api_user = Fabricate(:api_user)
-          # @api_user.id.should == 1
-          # ::PaperTrail.whodunnit = '1-testuser'
-
-          # @domain = Fabricate(:domain)
-          # @domain.creator_str.should == '1-testuser'
-
-          # @domain.api_creator.should == nil
-        end
-      end
-
     end
   end
 

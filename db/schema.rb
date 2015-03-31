@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150320132023) do
+ActiveRecord::Schema.define(version: 20150330083700) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,20 +63,6 @@ ActiveRecord::Schema.define(version: 20150320132023) do
     t.datetime "updated_at"
   end
 
-  create_table "contact_disclosures", force: :cascade do |t|
-    t.integer  "contact_id"
-    t.boolean  "phone"
-    t.boolean  "fax"
-    t.boolean  "email"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "name"
-    t.boolean  "org_name"
-    t.boolean  "address"
-    t.string   "creator_str"
-    t.string   "updator_str"
-  end
-
   create_table "contact_statuses", force: :cascade do |t|
     t.string   "value"
     t.string   "description"
@@ -107,6 +93,11 @@ ActiveRecord::Schema.define(version: 20150320132023) do
     t.string   "creator_str"
     t.string   "updator_str"
     t.string   "ident_country_code"
+    t.string   "city"
+    t.text     "street"
+    t.string   "zip"
+    t.string   "country_code"
+    t.string   "state"
   end
 
   add_index "contacts", ["code"], name: "index_contacts_on_code", using: :btree
@@ -172,6 +163,7 @@ ActiveRecord::Schema.define(version: 20150320132023) do
     t.string   "contact_code_cache"
     t.string   "creator_str"
     t.string   "updator_str"
+    t.string   "type"
   end
 
   create_table "domain_statuses", force: :cascade do |t|
@@ -301,21 +293,6 @@ ActiveRecord::Schema.define(version: 20150320132023) do
     t.string   "session"
     t.json     "children"
   end
-
-  create_table "log_contact_disclosures", force: :cascade do |t|
-    t.string   "item_type",      null: false
-    t.integer  "item_id",        null: false
-    t.string   "event",          null: false
-    t.string   "whodunnit"
-    t.json     "object"
-    t.json     "object_changes"
-    t.datetime "created_at"
-    t.string   "session"
-    t.json     "children"
-  end
-
-  add_index "log_contact_disclosures", ["item_type", "item_id"], name: "index_log_contact_disclosures_on_item_type_and_item_id", using: :btree
-  add_index "log_contact_disclosures", ["whodunnit"], name: "index_log_contact_disclosures_on_whodunnit", using: :btree
 
   create_table "log_contact_statuses", force: :cascade do |t|
     t.string   "item_type",      null: false

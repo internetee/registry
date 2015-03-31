@@ -2,6 +2,15 @@
 class Epp::Domain < Domain
   include EppErrors
 
+  class << self
+    def new_from_epp(frame, current_user)
+      domain = Epp::Domain.new
+      domain.attributes = domain.attrs_from(frame, current_user)
+      domain.attach_default_contacts
+      domain
+    end
+  end
+
   def epp_code_map # rubocop:disable Metrics/MethodLength
     {
       '2002' => [
@@ -58,30 +67,12 @@ class Epp::Domain < Domain
     }
   end
 
-  def self.new_from_epp(frame, current_user)
-    domain = Epp::Domain.new
-    domain.attributes = domain.attrs_from(frame, current_user)
-    domain.attach_default_contacts
-    domain
-  end
-
   def attach_default_contacts
-    if tech_domain_contacts.count.zero?
-      attach_contact(DomainContact::TECH, owner_contact)
-    end
+    # for bullet, owner contact validates registrar and triggers bullet
+    owner_contact_included = Contact.where(id: owner_contact.id).includes(:registrar).first
 
-    return unless admin_domain_contacts.count.zero? && owner_contact.priv?
-    attach_contact(DomainContact::ADMIN, owner_contact)
-  end
-
-  def attach_contact(type, contact)
-    domain_contacts.build(
-      contact: contact, contact_type: DomainContact::TECH, contact_code_cache: contact.code
-    ) if type.to_sym == :tech
-
-    domain_contacts.build(
-      contact: contact, contact_type: DomainContact::ADMIN, contact_code_cache: contact.code
-    ) if type.to_sym == :admin
+    tech_contacts  << owner_contact_included if tech_contacts.blank?
+    admin_contacts << owner_contact_included if admin_contacts.blank? && owner_contact.priv?
   end
 
   # rubocop: disable Metrics/PerceivedComplexity
@@ -111,7 +102,8 @@ class Epp::Domain < Domain
     at[:period_unit] = Epp::Domain.parse_period_unit_from_frame(frame) || 'y'
 
     at[:nameservers_attributes] = nameservers_attrs(frame, action)
-    at[:domain_contacts_attributes] = domain_contacts_attrs(frame, action)
+    at[:admin_domain_contacts_attributes] = admin_domain_contacts_attrs(frame, action)
+    at[:tech_domain_contacts_attributes] = tech_domain_contacts_attrs(frame, action)
     at[:domain_statuses_attributes] = domain_statuses_attrs(frame, action)
 
     if new_record?
@@ -167,39 +159,53 @@ class Epp::Domain < Domain
     res
   end
 
-  def domain_contacts_attrs(frame, action)
-    contact_list = domain_contact_list_from(frame, action)
+  def admin_domain_contacts_attrs(frame, action)
+    admin_attrs = domain_contact_attrs_from(frame, action, 'admin')
 
-    if action == 'rem'
-      to_destroy = []
-      contact_list.each do |dc|
-        domain_contact_id = domain_contacts.find_by(
-          contact_id: dc[:contact_id],
-          contact_type: dc[:contact_type]
-        ).try(:id)
-
-        unless domain_contact_id
-          add_epp_error('2303', 'contact', dc[:contact_code_cache], [:domain_contacts, :not_found])
-          next
-        end
-
-        to_destroy << {
-          id: domain_contact_id,
-          _destroy: 1
-        }
-      end
-
-      return to_destroy
+    case action 
+    when 'rem'
+      return destroy_attrs(admin_attrs, admin_domain_contacts)
     else
-      return contact_list
+      return admin_attrs
     end
   end
 
-  def domain_contact_list_from(frame, action)
-    res = []
-    frame.css('contact').each do |x|
-      c = Contact.find_by(code: x.text)
+  def tech_domain_contacts_attrs(frame, action)
+    tech_attrs = domain_contact_attrs_from(frame, action, 'tech')
 
+    case action 
+    when 'rem'
+      return destroy_attrs(tech_attrs, tech_domain_contacts)
+    else
+      return tech_attrs
+    end
+  end
+
+  def destroy_attrs(attrs, dcontacts)
+    destroy_attrs = []
+    attrs.each do |at|
+      domain_contact_id = dcontacts.find_by(contact_id: at[:contact_id]).try(:id)
+
+      unless domain_contact_id
+        add_epp_error('2303', 'contact', at[:contact_code_cache], [:domain_contacts, :not_found])
+        next
+      end
+
+      destroy_attrs << {
+        id: domain_contact_id,
+        _destroy: 1
+      }
+    end
+
+    destroy_attrs
+  end
+
+  def domain_contact_attrs_from(frame, action, type)
+    attrs = []
+    frame.css('contact').each do |x|
+      next if x['type'] != type
+
+      c = Contact.find_by(code: x.text)
       unless c
         add_epp_error('2303', 'contact', x.text, [:domain_contacts, :not_found])
         next
@@ -212,14 +218,31 @@ class Epp::Domain < Domain
         end
       end
 
-      res << {
-        contact_id: Contact.find_by(code: x.text).try(:id),
-        contact_type: x['type'],
-        contact_code_cache: x.text
+      attrs << {
+        contact_id: c.id,
+        contact_code_cache: c.code
       }
     end
 
-    res
+    attrs
+  end
+
+  def domain_status_list_from(frame)
+    status_list = []
+
+    frame.css('status').each do |x|
+      unless DomainStatus::CLIENT_STATUSES.include?(x['s'])
+        add_epp_error('2303', 'status', x['s'], [:domain_statuses, :not_found])
+        next
+      end
+
+      status_list << {
+        value: x['s'],
+        description: x.text
+      }
+    end
+
+    status_list
   end
 
   # rubocop: disable Metrics/PerceivedComplexity
@@ -358,7 +381,8 @@ class Epp::Domain < Domain
 
     at_add = attrs_from(frame.css('add'), current_user)
     at[:nameservers_attributes] += at_add[:nameservers_attributes]
-    at[:domain_contacts_attributes] += at_add[:domain_contacts_attributes]
+    at[:admin_domain_contacts_attributes] += at_add[:admin_domain_contacts_attributes]
+    at[:tech_domain_contacts_attributes] += at_add[:tech_domain_contacts_attributes]
     at[:dnskeys_attributes] += at_add[:dnskeys_attributes]
     at[:domain_statuses_attributes] += at_add[:domain_statuses_attributes]
 
@@ -414,7 +438,7 @@ class Epp::Domain < Domain
 
   def copy_and_transfer_contact(contact_id, registrar_id)
     c = Contact.find(contact_id) # n+1 workaround
-    oc = c.deep_clone include: [:statuses, :address]
+    oc = c.deep_clone include: [:statuses]
     oc.code = nil
     oc.registrar_id = registrar_id
     oc.save!

@@ -89,8 +89,8 @@ class Epp::ContactsController < EppController
   def validate_create
     @prefix = 'create > create >'
     requires(
-      'postalInfo > name', 'postalInfo > addr > city',
-      'postalInfo > addr > cc', 'voice', 'email'
+      'postalInfo > name', 'postalInfo > addr > street', 'postalInfo > addr > city',
+      'postalInfo > addr > pc', 'postalInfo > addr > cc', 'voice', 'email'
     )
     ident = params[:parsed_frame].css('ident')
     if ident.present? && ident.text != 'birthday' && ident.attr('cc').blank?

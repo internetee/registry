@@ -6,14 +6,6 @@ rescue ActiveRecord::NoDatabaseError => e
 end
 
 if con.present? && con.table_exists?('settings')
-  Setting.disclosure_name = true if Setting.disclosure_name.nil?
-  Setting.disclosure_name = true if Setting.disclosure_name.nil?
-  Setting.disclosure_org_name = true if Setting.disclosure_org_name.nil?
-  Setting.disclosure_email = true if Setting.disclosure_email.nil?
-  Setting.disclosure_phone = false if Setting.disclosure_phone.nil?
-  Setting.disclosure_fax = false if Setting.disclosure_fax.nil?
-  Setting.disclosure_address = false if Setting.disclosure_address.nil?
-
   Setting.save_default(:admin_contacts_min_count, 1)
   Setting.save_default(:admin_contacts_max_count, 10)
   Setting.save_default(:tech_contacts_min_count, 1)

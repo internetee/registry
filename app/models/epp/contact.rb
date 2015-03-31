@@ -17,15 +17,12 @@ class Epp::Contact < Contact
       at[:email]    = f.css('email').text           if f.css('email').present?
       at[:fax]      = f.css('fax').text             if f.css('fax').present?
       at[:phone]    = f.css('voice').text           if f.css('voice').present?
+      at[:city]      = f.css('postalInfo addr city').text   if f.css('postalInfo addr city').present?
+      at[:zip]       = f.css('postalInfo addr pc').text     if f.css('postalInfo addr pc').present?
+      at[:street]    = f.css('postalInfo addr street').text if f.css('postalInfo addr street').present?
+      at[:state]     = f.css('postalInfo addr sp').text     if f.css('postalInfo addr sp').present?
+      at[:country_code] = f.css('postalInfo addr cc').text if f.css('postalInfo addr cc').present?
       at[:auth_info] = f.css('authInfo pw').text if f.css('authInfo pw').present? 
-      at[:address_attributes] = {}.with_indifferent_access
-      sat = at[:address_attributes]
-      sat[:city]   = f.css('postalInfo addr city').text   if f.css('postalInfo addr city').present?
-      sat[:zip]    = f.css('postalInfo addr pc').text     if f.css('postalInfo addr pc').present?
-      sat[:street] = f.css('postalInfo addr street').text if f.css('postalInfo addr street').present?
-      sat[:state]  = f.css('postalInfo addr sp').text     if f.css('postalInfo addr sp').present?
-      sat[:country_code] = f.css('postalInfo addr cc').text if f.css('postalInfo addr cc').present?
-      at.delete(:address_attributes) if at[:address_attributes].blank?
 
       legal_frame = f.css('legalDocument').first
       if legal_frame.present?

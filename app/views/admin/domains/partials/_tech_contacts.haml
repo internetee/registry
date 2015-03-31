@@ -10,11 +10,11 @@
           %th{class: 'col-xs-4'}= t('code')
           %th{class: 'col-xs-4'}= t('email')
       %tbody
-        - @domain.domain_contacts.tech.each do |x|
+        - @domain.tech_contacts.each do |tc|
           %tr
-            %td= link_to(x.contact, admin_contact_path(x.contact))
-            %td= x.contact.code
-            %td= x.contact.email
+            %td= link_to(tc, admin_contact_path(tc))
+            %td= tc.code
+            %td= tc.email
       - if @domain.errors.messages[:tech_contacts]
         %tfoot
           - @domain.errors.messages[:tech_contacts].each do |x|

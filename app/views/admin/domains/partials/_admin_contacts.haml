@@ -1,20 +1,20 @@
 - panel_class = @domain.errors.messages[:admin_contacts] ? 'panel-danger' : 'panel-default'
 .panel{class: panel_class}
   .panel-heading.clearfix
-    = t('admin_contacts')
+    = t(:admin_contacts)
   .table-responsive
     %table.table.table-hover.table-bordered.table-condensed
       %thead
         %tr
-          %th{class: 'col-xs-4'}= t('name')
-          %th{class: 'col-xs-4'}= t('code')
-          %th{class: 'col-xs-4'}= t('email')
+          %th{class: 'col-xs-4'}= t(:name)
+          %th{class: 'col-xs-4'}= t(:code)
+          %th{class: 'col-xs-4'}= t(:email)
       %tbody
-        - @domain.domain_contacts.admin.each do |x|
+        - @domain.admin_contacts.each do |ac|
           %tr
-            %td= link_to(x.contact, admin_contact_path(x.contact))
-            %td= x.contact.code
-            %td= x.contact.email
+            %td= link_to(ac, admin_contact_path(ac))
+            %td= ac.code
+            %td= ac.email
       - if @domain.errors.messages[:admin_contacts]
         %tfoot
           - @domain.errors.messages[:admin_contacts].each do |x|

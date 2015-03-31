@@ -7,19 +7,19 @@ xml.epp_head do
     xml.resData do
       xml.tag!('domain:infData', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
         xml.tag!('domain:name', @domain.name)
-        @domain.domain_statuses.each do |x|
-          xml.tag!('domain:status', x.description, 's' => x.value) unless x.description.blank?
-          xml.tag!('domain:status', 's' => x.value) if x.description.blank?
+        @domain.domain_statuses.each do |ds|
+          xml.tag!('domain:status', ds.description, 's' => ds.value) unless ds.description.blank?
+          xml.tag!('domain:status', 's' => ds.value) if ds.description.blank?
         end
 
         xml.tag!('domain:registrant', @domain.owner_contact_code)
 
-        @domain.tech_contacts.each do |x|
-          xml.tag!('domain:contact', x.code, 'type' => 'tech')
+        @domain.tech_contacts.each do |tc|
+          xml.tag!('domain:contact', tc.code, 'type' => 'tech')
         end
 
-        @domain.admin_contacts.each do |x|
-          xml.tag!('domain:contact', x.code, 'type' => 'admin')
+        @domain.admin_contacts.each do |ac|
+          xml.tag!('domain:contact', ac.code, 'type' => 'admin')
         end
 
         if @nameservers && @nameservers.any?
@@ -61,17 +61,17 @@ xml.epp_head do
 
   xml.extension do
     xml.tag!('secDNS:infData', 'xmlns:secDNS' => 'urn:ietf:params:xml:ns:secDNS-1.1') do
-      @domain.dnskeys.each do |x|
+      @domain.dnskeys.each do |key|
         xml.tag!('secDNS:dsData') do
-          xml.tag!('secDNS:keyTag', x.ds_key_tag)
-          xml.tag!('secDNS:alg', x.ds_alg)
-          xml.tag!('secDNS:digestType', x.ds_digest_type)
-          xml.tag!('secDNS:digest', x.ds_digest)
+          xml.tag!('secDNS:keyTag', key.ds_key_tag)
+          xml.tag!('secDNS:alg', key.ds_alg)
+          xml.tag!('secDNS:digestType', key.ds_digest_type)
+          xml.tag!('secDNS:digest', key.ds_digest)
           xml.tag!('secDNS:keyData') do
-            xml.tag!('secDNS:flags', x.flags)
-            xml.tag!('secDNS:protocol', x.protocol)
-            xml.tag!('secDNS:alg', x.alg)
-            xml.tag!('secDNS:pubKey', x.public_key)
+            xml.tag!('secDNS:flags', key.flags)
+            xml.tag!('secDNS:protocol', key.protocol)
+            xml.tag!('secDNS:alg', key.alg)
+            xml.tag!('secDNS:pubKey', key.public_key)
           end
         end
       end

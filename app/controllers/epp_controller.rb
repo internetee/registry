@@ -56,10 +56,15 @@ class EppController < ApplicationController
     end
 
     # for debugging
-    @errors << {
-      code: '1',
-      msg: 'handle_errors was executed when there were actually no errors'
-    } if @errors.blank?
+    if @errors.blank?
+      @errors << {
+        code: '1',
+        msg: 'handle_errors was executed when there were actually no errors'
+      } 
+      # rubocop:disable Rails/Output
+      puts obj.errors.full_messages if Rails.env.test?
+      # rubocop: enable Rails/Output
+    end
 
     @errors.uniq!
 

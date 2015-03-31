@@ -19,15 +19,6 @@ module General
 
     Setting.client_side_status_editing_enabled = true
   end
-
-  def create_disclosure_settings
-    Setting.disclosure_name = true
-    Setting.disclosure_org_name = true
-    Setting.disclosure_email = true
-    Setting.disclosure_phone = false
-    Setting.disclosure_fax = false
-    Setting.disclosure_address = false
-  end
 end
 
 RSpec.configure do |c|

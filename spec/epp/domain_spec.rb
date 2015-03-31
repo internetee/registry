@@ -30,12 +30,12 @@ describe 'EPP Domain', epp: true do
       ]
     }), :xml)
 
-    response[:results][0][:result_code].should == '2303'
     response[:results][0][:msg].should == 'Contact was not found'
+    response[:results][0][:result_code].should == '2303'
     response[:results][0][:value].should == 'sh1111'
 
-    response[:results][1][:result_code].should == '2303'
     response[:results][1][:msg].should == 'Contact was not found'
+    response[:results][1][:result_code].should == '2303'
     response[:results][1][:value].should == 'sh2222'
 
     response[:clTRID].should == 'ABC-12345'
@@ -95,8 +95,8 @@ describe 'EPP Domain', epp: true do
       response[:clTRID].should == 'ABC-12345'
 
       d.registrar.name.should == 'registrar1'
-      d.tech_contacts.count.should == 2
-      d.admin_contacts.count.should == 1
+      d.tech_contacts.count.should == 3
+      d.admin_contacts.count.should == 2
 
       d.nameservers.count.should == 2
       d.auth_info.should_not be_empty
@@ -674,7 +674,7 @@ describe 'EPP Domain', epp: true do
       })
 
       response = epp_plain_request(xml, :xml)
-      response[:msg].should == 'Admin contacts count must be between 1-10 [admin_contacts]'
+      response[:msg].should == 'Admin contacts count must be between 1-10 [admin_domain_contacts]'
       response[:result_code].should == '2004'
       response[:clTRID].should == 'ABC-12345'
 
@@ -1355,6 +1355,7 @@ describe 'EPP Domain', epp: true do
         ]
       }), :xml)
 
+      response[:results][0][:msg].should == 'Command completed successfully'
       response[:results][0][:result_code].should == '1000'
 
       d = Domain.last
@@ -1525,7 +1526,10 @@ describe 'EPP Domain', epp: true do
         ]
       })
 
-      epp_plain_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
+      response[:results][0][:msg].should == 'Command completed successfully'
+      response[:results][0][:result_code].should == '1000'
+
       d = Domain.last
       d.dnskeys.count.should == 2
 
@@ -1555,7 +1559,9 @@ describe 'EPP Domain', epp: true do
         ]
       })
 
-      epp_plain_request(xml, :xml)
+      response = epp_plain_request(xml, :xml)
+      response[:results][0][:msg].should == 'Command completed successfully'
+      response[:results][0][:result_code].should == '1000'
 
       d.dnskeys.count.should == 1
 
@@ -1872,6 +1878,7 @@ describe 'EPP Domain', epp: true do
         ]
       }), :xml)
 
+      response[:msg].should == 'Command completed successfully'
       response[:result_code].should == '1000'
 
       Domain.find_by(name: domain.name).should == nil

@@ -9,31 +9,28 @@ class Domain < ActiveRecord::Base
   belongs_to :registrar
   belongs_to :owner_contact, class_name: 'Contact'
 
-  has_many :domain_contacts, dependent: :delete_all
-  accepts_nested_attributes_for :domain_contacts, allow_destroy: true
-
-  has_many :tech_contacts,
-           -> { where(domain_contacts: { contact_type: DomainContact::TECH }) },
-           through: :domain_contacts, source: :contact
-
-  has_many :admin_contacts,
-           -> { where(domain_contacts: { contact_type: DomainContact::ADMIN }) },
-           through: :domain_contacts, source: :contact
+  has_many :domain_contacts, dependent: :destroy
+  has_many :admin_domain_contacts
+  accepts_nested_attributes_for :admin_domain_contacts, allow_destroy: true
+  has_many :tech_domain_contacts
+  accepts_nested_attributes_for :tech_domain_contacts, allow_destroy: true
 
   has_many :contacts, through: :domain_contacts, source: :contact
+  has_many :admin_contacts, through: :admin_domain_contacts, source: :contact
+  has_many :tech_contacts, through: :tech_domain_contacts, source: :contact
 
-  has_many :nameservers, dependent: :delete_all
+  has_many :nameservers, dependent: :destroy
 
   accepts_nested_attributes_for :nameservers, allow_destroy: true,
                                               reject_if: proc { |attrs| attrs[:hostname].blank? }
 
-  has_many :domain_statuses, dependent: :delete_all
+  has_many :domain_statuses, dependent: :destroy
   accepts_nested_attributes_for :domain_statuses, allow_destroy: true,
                                                   reject_if: proc { |attrs| attrs[:value].blank? }
 
-  has_many :domain_transfers, dependent: :delete_all
+  has_many :domain_transfers, dependent: :destroy
 
-  has_many :dnskeys, dependent: :delete_all
+  has_many :dnskeys, dependent: :destroy
 
   has_many :keyrelays
 
@@ -55,12 +52,12 @@ class Domain < ActiveRecord::Base
     self.updated_at = Time.now
   end
   before_save :update_whois_body
-  after_save :manage_automatic_statuses
   after_save :delay_whois_server_update
   def delay_whois_server_update
     return if whois_body.blank?
     delay.whois_server_update(name, whois_body)
   end
+  after_save :manage_automatic_statuses
 
   validates :name_dirty, domain_name: true, uniqueness: true
   validates :period, numericality: { only_integer: true }
@@ -79,13 +76,11 @@ class Domain < ActiveRecord::Base
   }
 
   validates :admin_domain_contacts, object_count: {
-    association: 'admin_contacts',
     min: -> { Setting.admin_contacts_min_count },
     max: -> { Setting.admin_contacts_max_count }
   }
 
   validates :tech_domain_contacts, object_count: {
-    association: 'tech_contacts',
     min: -> { Setting.tech_contacts_min_count },
     max: -> { Setting.tech_contacts_max_count }
   }
@@ -95,12 +90,10 @@ class Domain < ActiveRecord::Base
   }
 
   validates :tech_domain_contacts, uniqueness_multi: {
-    association: 'domain_contacts',
     attribute: 'contact_code_cache'
   }
 
   validates :admin_domain_contacts, uniqueness_multi: {
-    association: 'domain_contacts',
     attribute: 'contact_code_cache'
   }
 
@@ -115,14 +108,6 @@ class Domain < ActiveRecord::Base
   validate :validate_nameserver_ips
 
   attr_accessor :owner_contact_typeahead, :update_me
-
-  def tech_domain_contacts
-    domain_contacts.select { |x| x.contact_type == DomainContact::TECH }
-  end
-
-  def admin_domain_contacts
-    domain_contacts.select { |x| x.contact_type == DomainContact::ADMIN }
-  end
 
   def subordinate_nameservers
     nameservers.select { |x| x.hostname.end_with?(name) }
@@ -227,6 +212,8 @@ class Domain < ActiveRecord::Base
     elsif domain_statuses.length > 1 || !valid?
       domain_statuses.find_by(value: DomainStatus::OK).try(:destroy)
     end
+
+    # contacts.includes(:address).each(&:manage_statuses)
   end
 
   def children_log

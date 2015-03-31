@@ -1,23 +1,20 @@
 class Contact < ActiveRecord::Base
   include Versions # version/contact_version.rb
 
-  has_one :address, dependent: :destroy
-  has_one :disclosure, class_name: 'ContactDisclosure', dependent: :destroy
-
+  belongs_to :registrar
   has_many :domain_contacts
   has_many :domains, through: :domain_contacts
-  has_many :statuses, class_name: 'ContactStatus'
+  has_many :statuses, class_name: 'ContactStatus', dependent: :destroy
   has_many :legal_documents, as: :documentable
 
-  belongs_to :registrar
-
-  accepts_nested_attributes_for :address, :disclosure, :legal_documents
+  accepts_nested_attributes_for :legal_documents
 
   attr_accessor :code_overwrite_allowed
 
-  validates :name, :phone, :email, :ident, :address, :registrar, :ident_type, presence: true
+  validates :name, :phone, :email, :ident, :ident_type,
+   :street, :city, :zip, :country_code, :registrar, presence: true
 
-  # # Phone nr validation is very minimam in order to support legacy requirements
+  # Phone nr validation is very minimam in order to support legacy requirements
   validates :phone, format: /\+[0-9]{1,3}\.[0-9]{1,14}?/
   validates :email, format: /@/
   validates :ident,
@@ -28,20 +25,11 @@ class Contact < ActiveRecord::Base
     uniqueness: { message: :epp_id_taken },
     format: { with: /\A[\w\-\:]*\Z/i },
     length: { maximum: 100 }
-
   validate :ident_valid_format?
-
-  delegate :street,       to: :address
-  delegate :city,         to: :address
-  delegate :zip,          to: :address
-  delegate :state,        to: :address
-  delegate :country_code, to: :address
-  delegate :country,      to: :address
 
   before_validation :set_ident_country_code
   before_create :generate_code
   before_create :generate_auth_info
-  after_create :ensure_disclosure
   after_save :manage_statuses
   def manage_statuses
     ContactStatus.manage(statuses, self)
@@ -50,16 +38,12 @@ class Contact < ActiveRecord::Base
 
   scope :current_registrars, ->(id) { where(registrar_id: id) }
 
-  IDENT_TYPE_BIC = 'bic'
+  BIC = 'bic'
   IDENT_TYPES = [
-    IDENT_TYPE_BIC, # Company registry code (or similar)
+    BIC, # Company registry code (or similar)
     'priv',         # National idendtification number
     'birthday'      # Birthday date
   ]
-
-  CONTACT_TYPE_TECH = 'tech'
-  CONTACT_TYPE_ADMIN = 'admin'
-  CONTACT_TYPES = [CONTACT_TYPE_TECH, CONTACT_TYPE_ADMIN]
 
   class << self
     def search_by_query(query)
@@ -81,6 +65,22 @@ class Contact < ActiveRecord::Base
 
       res
     end
+
+    def find_orphans
+      Contact.where('
+        NOT EXISTS(
+          select 1 from domains d where d.owner_contact_id = contacts.id
+        ) AND NOT EXISTS(
+          select 1 from domain_contacts dc where dc.contact_id = contacts.id
+        )
+      ')
+    end
+
+    def destroy_orphans
+      logger.info "#{Time.now.utc} - Destroying orphaned contacts\n"
+      count = find_orphans.destroy_all.count
+      logger.info "#{Time.now.utc} - Successfully destroyed #{count} orphaned contacts\n"
+    end
   end
 
   def to_s
@@ -98,16 +98,12 @@ class Contact < ActiveRecord::Base
     end
   end
 
-  def ensure_disclosure
-    create_disclosure! unless disclosure
-  end
-
   def bic?
-    ident_type == IDENT_TYPE_BIC
+    ident_type == BIC
   end
 
   def priv?
-    ident_type != IDENT_TYPE_BIC
+    ident_type != BIC
   end
 
   def generate_code
@@ -129,6 +125,10 @@ class Contact < ActiveRecord::Base
 
   def code=(code)
     self[:code] = code if new_record? || code_overwrite_allowed
+  end
+
+  def country
+    Country.new(country_code)
   end
 
   # Find a way to use self.domains with contact
@@ -159,24 +159,6 @@ class Contact < ActiveRecord::Base
       self.ident_country_code = code.alpha2
     else
       errors.add(:ident_country_code, 'is not following ISO_3166-1 alpha 2 format')
-    end
-  end
-
-  class << self
-    def find_orphans
-      Contact.where('
-        NOT EXISTS(
-          select 1 from domains d where d.owner_contact_id = contacts.id
-        ) AND NOT EXISTS(
-          select 1 from domain_contacts dc where dc.contact_id = contacts.id
-        )
-      ')
-    end
-
-    def destroy_orphans
-      logger.info "#{Time.now.utc} - Destroying orphaned contacts\n"
-      count = find_orphans.destroy_all.count
-      logger.info "#{Time.now.utc} - Successfully destroyed #{count} orphaned contacts\n"
     end
   end
 end
