@@ -74,8 +74,8 @@ describe Domain do
       domain.errors.full_messages.should match_array(["Admin domain contacts is invalid"])
     end
 
-    it 'should have whois_body' do
-      @domain.whois_body.present?.should == true
+    it 'should not have whois_body present by default' do
+      @domain.whois_body.present?.should == false
     end
 
     context 'with versioning' do

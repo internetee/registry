@@ -51,13 +51,8 @@ class Domain < ActiveRecord::Base
   def touch_always_version
     self.updated_at = Time.now
   end
-  before_save :update_whois_body
-  after_save :delay_whois_server_update
-  def delay_whois_server_update
-    return if whois_body.blank?
-    delay.whois_server_update(name, whois_body)
-  end
   after_save :manage_automatic_statuses
+  after_save :update_whois_body
 
   validates :name_dirty, domain_name: true, uniqueness: true
   validates :period, numericality: { only_integer: true }
@@ -115,6 +110,14 @@ class Domain < ActiveRecord::Base
 
   def delegated_nameservers
     nameservers.select { |x| !x.hostname.end_with?(name) }
+  end
+
+  class << self
+    def convert_period_to_time(period, unit)
+      return period.to_i.days   if unit == 'd'
+      return period.to_i.months if unit == 'm'
+      return period.to_i.years  if unit == 'y'
+    end
   end
 
   def name=(value)
@@ -225,9 +228,15 @@ class Domain < ActiveRecord::Base
     log
   end
 
+  def update_whois_server
+    wd = Whois::Domain.find_or_initialize_by(name: name)
+    wd.whois_body = whois_body
+    wd.save
+  end
+
   # rubocop:disable Metrics/MethodLength
   def update_whois_body
-    self.whois_body = <<-EOS
+    new_whois_body = <<-EOS
   This Whois Server contains information on
   Estonian Top Level Domain ee TLD
 
@@ -251,7 +260,13 @@ class Domain < ActiveRecord::Base
   created: #{registrar.created_at.to_s(:db)}
   changed: #{registrar.updated_at.to_s(:db)}
     EOS
+
+    if whois_body != new_whois_body
+      update_column(whois_body: new_whois_body)
+      update_whois_server
+    end
   end
+  handle_asynchronously :update_whois_body
   # rubocop:enable Metrics/MethodLength
 
   def contacts_body
@@ -272,19 +287,5 @@ class Domain < ActiveRecord::Base
       out << "created: #{c.created_at.to_s(:db)}"
     end
     out
-  end
-
-  def whois_server_update(name, whois_body)
-    wd = Whois::Domain.find_or_initialize_by(name: name)
-    wd.whois_body = whois_body
-    wd.save
-  end
-
-  class << self
-    def convert_period_to_time(period, unit)
-      return period.to_i.days   if unit == 'd'
-      return period.to_i.months if unit == 'm'
-      return period.to_i.years  if unit == 'y'
-    end
   end
 end
