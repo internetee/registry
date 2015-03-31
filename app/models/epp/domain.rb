@@ -68,11 +68,8 @@ class Epp::Domain < Domain
   end
 
   def attach_default_contacts
-    # for bullet, owner contact validates registrar and triggers bullet
-    owner_contact_included = Contact.where(id: owner_contact.id).includes(:registrar).first
-
-    tech_contacts  << owner_contact_included if tech_contacts.blank?
-    admin_contacts << owner_contact_included if admin_contacts.blank? && owner_contact.priv?
+    tech_contacts  << owner_contact if tech_contacts.blank?
+    admin_contacts << owner_contact if admin_contacts.blank? && owner_contact.priv?
   end
 
   # rubocop: disable Metrics/PerceivedComplexity
