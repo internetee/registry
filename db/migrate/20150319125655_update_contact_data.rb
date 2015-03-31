@@ -10,7 +10,7 @@ class UpdateContactData < ActiveRecord::Migration
       c.zip = a.zip
       c.country_code = a.country_code
       c.state = a.state
-      puts "#{c.id} changes: #{c.changes.inspect}; #{c.save(false)}"
+      puts "#{c.id} changes: #{c.changes.inspect}; #{c.save(validate: false)}"
     end
   end
 end
