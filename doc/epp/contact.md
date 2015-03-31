@@ -18,10 +18,10 @@ Contact Mapping protocol short version:
           <contact:name>       1        Full name of the contact
           <contact:org>        0        Org is not supported and should be blank or missing
           <contact:addr>       1        Address container
-            <contact:street>   0-n      Street name
+            <contact:street>   1-n      Street name
             <contact:city>     1        City name
             <contact:sp>       0-1      State or province
-            <contact:pc>       0-1      Postal code
+            <contact:pc>       1        Postal code
             <contact:cc>       1        Country code, 2 letters uppercase, in ISO_3166-1 alpha 2
         <contact:voice>        1        Phone number in format \+ddd.d+
         <contact:email>        1        E-mail
