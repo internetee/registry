@@ -68,6 +68,7 @@ class Epp::Domain < Domain
   end
 
   def attach_default_contacts
+    return if owner_contact.blank?
     tech_contacts  << owner_contact if tech_contacts.blank?
     admin_contacts << owner_contact if admin_contacts.blank? && owner_contact.priv?
   end
