@@ -10,7 +10,7 @@ describe Repp::DomainV1 do
 
   describe 'GET /repp/v1/domains', autodoc: true do
     it 'returns domains of the current registrar' do
-
+      binding.pry
       get_with_auth '/repp/v1/domains', { limit: 1, details: true }, @api_user
       response.status.should == 200
 
