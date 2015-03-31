@@ -14,6 +14,6 @@ class Admin::ContactsController < AdminController
   private
 
   def set_contact
-    @contact = Contact.find(params[:id])
+    @contact = Contact.includes(domains: :registrar).find(params[:id])
   end
 end
