@@ -43,8 +43,18 @@
 
               - active_class = ['depp/xml_consoles'].include?(params[:controller]) ? 'active' :nil
               %li{class: active_class}= link_to t(:xml_console), depp.xml_console_path
+
             %ul.nav.navbar-nav.navbar-right
               %li= link_to t('log_out', user: current_user), '/registrar/logout'
+              %li.dropdown
+                = link_to 'Registrar <span class="caret"></span>'.html_safe, '#', 
+                  class: 'dropdown-toggle', 'data-toggle': 'dropdown', role: 'button'
+                %ul.dropdown-menu{'role': 'menu'}
+                  %li.dropdown-header= t(:switch_to) + ':'
+                  %li= link_to t(:registrant), '#'
+                  %li= link_to t(:registrar), '#'
+                  %li.divider
+                  %li= link_to t(:admin_menu), '#'
 
         / /.nav-collapse
     .container
