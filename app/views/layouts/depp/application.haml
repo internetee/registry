@@ -27,7 +27,7 @@
                 %small{style: 'color: #0074B3;'}= unstable_env
         - if current_user
           .navbar-collapse.collapse
-            %ul.nav.navbar-nav
+            %ul.nav.navbar-nav.public-nav
               - if can? :show, Invoice
                 - active_class = ['registrar/invoices'].include?(params[:controller]) ? 'active' :nil
                 %li{class: active_class}= link_to t('invoices'), main_app.registrar_invoices_path
