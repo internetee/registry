@@ -17,6 +17,10 @@ Documentation
 * [Database diagram](/doc/models_complete.svg)
 * [Controllers diagram](/doc/controllers_complete.svg)
 
+### Updating documentation
+
+  AUTODOC=true rspec spec/requests
+  EPP_DOC=true rspec spec/epp --tag epp --require support/epp_doc.rb --format EppDoc > doc/epp-examples.md
 
 Installation
 ------------
