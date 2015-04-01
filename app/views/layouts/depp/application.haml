@@ -28,15 +28,15 @@
         - if current_user
           .navbar-collapse.collapse
             %ul.nav.navbar-nav.public-nav
-              - if can? :show, Invoice
-                - active_class = ['registrar/invoices'].include?(params[:controller]) ? 'active' :nil
-                %li{class: active_class}= link_to t('invoices'), main_app.registrar_invoices_path
-
               - active_class = %w(depp/domains depp/check depp/renew depp/tranfer depp/keyrelays).include?(params[:controller]) ? 'active' :nil
               %li{class: active_class}= link_to t(:domains), depp.domains_path
 
               - active_class = ['depp/contacts'].include?(params[:controller]) ? 'active' :nil
               %li{class: active_class}= link_to t(:contacts), depp.contacts_path
+
+              - if can? :show, Invoice
+                - active_class = ['registrar/invoices'].include?(params[:controller]) ? 'active' :nil
+                %li{class: active_class}= link_to t('invoices'), main_app.registrar_invoices_path
 
               - active_class = ['depp/xml_consoles'].include?(params[:controller]) ? 'active' :nil
               %li{class: active_class}= link_to t(:xml_console), depp.xml_console_path
