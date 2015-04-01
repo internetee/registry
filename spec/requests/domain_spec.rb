@@ -8,9 +8,8 @@ describe Repp::DomainV1 do
     Fabricate.times(2, :domain, registrar: @api_user.registrar)
   end
 
-  describe 'GET /repp/v1/domains', autodoc: true do
-    it 'returns domains of the current registrar' do
-
+  describe 'GET /repp/v1/domains' do
+    it 'returns domains of the current registrar', autodoc: true, route_info_doc: true do
       get_with_auth '/repp/v1/domains', { limit: 1, details: true }, @api_user
       response.status.should == 200
 
@@ -30,7 +29,7 @@ describe Repp::DomainV1 do
       log[:ip].should == '127.0.0.1'
     end
 
-    it 'returns domain names with offset' do
+    it 'returns domain names with offset', autodoc: true do
       get_with_auth '/repp/v1/domains', { offset: 1 }, @api_user
       response.status.should == 200
 
