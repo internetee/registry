@@ -547,7 +547,7 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2306">
-      <msg lang="en">Parameter value policy error. Org should be blank: postalInfo &gt; org [org]</msg>
+      <msg lang="en">Parameter value policy error. Org must be blank: postalInfo &gt; org [org]</msg>
     </result>
   </response>
 <trID>
@@ -599,7 +599,7 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2306">
-      <msg lang="en">Parameter value policy error. Fax should be blank: fax [fax]</msg>
+      <msg lang="en">Parameter value policy error. Fax must be blank: fax [fax]</msg>
     </result>
   </response>
 <trID>
@@ -1138,7 +1138,7 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2306">
-      <msg lang="en">Parameter value policy error. Org should be blank: postalInfo &gt; org [org]</msg>
+      <msg lang="en">Parameter value policy error. Org must be blank: postalInfo &gt; org [org]</msg>
     </result>
   </response>
 <trID>
@@ -1194,7 +1194,7 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2306">
-      <msg lang="en">Parameter value policy error. Fax should be blank: fax [fax]</msg>
+      <msg lang="en">Parameter value policy error. Fax must be blank: fax [fax]</msg>
     </result>
   </response>
 <trID>

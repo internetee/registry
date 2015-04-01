@@ -172,7 +172,7 @@ describe 'EPP Contact', epp: true do
       it 'should return parameter value policy error for org' do
         response = create_request({ postalInfo: { org: { value: 'should not save' } } })
         response[:msg].should ==
-          'Parameter value policy error. Org should be blank: postalInfo > org [org]'
+          'Parameter value policy error. Org must be blank: postalInfo > org [org]'
         response[:result_code].should == '2306'
 
         Contact.last.org_name.should == nil
@@ -181,7 +181,7 @@ describe 'EPP Contact', epp: true do
       it 'should return parameter value policy error for fax' do
         response = create_request({ fax: { value: 'should not save' } })
         response[:msg].should ==
-          'Parameter value policy error. Fax should be blank: fax [fax]'
+          'Parameter value policy error. Fax must be blank: fax [fax]'
         response[:result_code].should == '2306'
 
         Contact.last.fax.should == nil
@@ -317,7 +317,7 @@ describe 'EPP Contact', epp: true do
           }
         })
         response[:msg].should ==
-          'Parameter value policy error. Org should be blank: postalInfo > org [org]'
+          'Parameter value policy error. Org must be blank: postalInfo > org [org]'
         response[:result_code].should == '2306'
 
         Contact.find_by(code: 'sh8013').org_name.should == nil
@@ -331,7 +331,7 @@ describe 'EPP Contact', epp: true do
           }
         })
         response[:msg].should ==
-          'Parameter value policy error. Fax should be blank: fax [fax]'
+          'Parameter value policy error. Fax must be blank: fax [fax]'
         response[:result_code].should == '2306'
 
         Contact.find_by(code: 'sh8013').fax.should == nil
