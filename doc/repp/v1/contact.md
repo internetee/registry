@@ -1,7 +1,14 @@
 ## GET /repp/v1/contacts
 Returns contacts of the current registrar.
 
-### Example
+
+#### Parameters
+
+| Field name | Required |  Type   |                             Allowed values                              |
+| ---------- | -------- |  ----   |                             --------------                              |
+|   limit    |  false   | Integer | [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20] |
+|   offset   |  false   | Integer |                                                                         |
+|  details   |  false   | String  |                            ["true", "false"]                            |
 
 #### Request
 ```
@@ -16,31 +23,36 @@ Content-Type: application/json
 ```
 HTTP/1.1 200
 Cache-Control: max-age=0, private, must-revalidate
-Content-Length: 483
+Content-Length: 566
 Content-Type: application/json
 
 {
   "contacts": [
     {
       "id": 1,
-      "code": "sh470279120",
+      "code": "sh889404040",
       "reg_no": null,
       "phone": "+372.12345678",
-      "email": "bettye.feil@ratkegoldner.net",
+      "email": "annetta.toy@mitchell.org",
       "fax": null,
-      "created_at": "2015-03-31T07:39:10.854Z",
-      "updated_at": "2015-03-31T07:39:10.854Z",
+      "created_at": "2015-04-01T10:30:47.470Z",
+      "updated_at": "2015-04-01T10:30:47.470Z",
       "ident": "37605030299",
       "ident_type": "priv",
       "created_by_id": null,
       "updated_by_id": null,
       "auth_info": "password",
-      "name": "Leopoldo Waelchi0",
+      "name": "Rogers Bruen0",
       "org_name": null,
       "registrar_id": 1,
       "creator_str": "autotest",
       "updator_str": "autotest",
-      "ident_country_code": "EE"
+      "ident_country_code": "EE",
+      "city": "Tallinn",
+      "street": "Short street 11",
+      "zip": "11111",
+      "country_code": "EE",
+      "state": null
     }
   ],
   "total_number_of_records": 2
@@ -50,7 +62,6 @@ Content-Type: application/json
 ## GET /repp/v1/contacts
 Returns contact names with offset.
 
-### Example
 
 #### Request
 ```
@@ -70,64 +81,8 @@ Content-Type: application/json
 
 {
   "contacts": [
-    "sh226475261"
+    "sh914462381"
   ],
   "total_number_of_records": 2
-}
-```
-
-## GET /repp/v1/contacts
-Returns contact names of the current registrar.
-
-### Example
-
-#### Request
-```
-GET /repp/v1/contacts HTTP/1.1
-Accept: application/json
-Authorization: Basic Z2l0bGFiOmdoeXQ5ZTRmdQ==
-Content-Length: 0
-Content-Type: application/json
-```
-
-#### Response
-```
-HTTP/1.1 200
-Cache-Control: max-age=0, private, must-revalidate
-Content-Length: 70
-Content-Type: application/json
-
-{
-  "contacts": [
-    "sh470279120",
-    "sh226475261"
-  ],
-  "total_number_of_records": 2
-}
-```
-
-## GET /repp/v1/contacts
-Returns an error with invalid parameters in contact index.
-
-### Example
-
-#### Request
-```
-GET /repp/v1/contacts?limit=0 HTTP/1.1
-Accept: application/json
-Authorization: Basic Z2l0bGFiOmdoeXQ5ZTRmdQ==
-Content-Length: 0
-Content-Type: application/json
-```
-
-#### Response
-```
-HTTP/1.1 400
-Cache-Control: no-cache
-Content-Length: 45
-Content-Type: application/json
-
-{
-  "error": "limit does not have a valid value"
 }
 ```

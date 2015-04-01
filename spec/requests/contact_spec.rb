@@ -8,8 +8,8 @@ describe Repp::ContactV1 do
     Fabricate.times(2, :contact)
   end
 
-  describe 'GET /repp/v1/contacts', autodoc: true do
-    it 'returns contacts of the current registrar' do
+  describe 'GET /repp/v1/contacts' do
+    it 'returns contacts of the current registrar', autodoc: true, route_info_doc: true do
       get_with_auth '/repp/v1/contacts', { limit: 1, details: true }, @api_user
       expect(response.status).to eq(200)
 
@@ -29,7 +29,7 @@ describe Repp::ContactV1 do
       expect(log[:ip]).to eq('127.0.0.1')
     end
 
-    it 'returns contact names with offset' do
+    it 'returns contact names with offset', autodoc: true do
       get_with_auth '/repp/v1/contacts', { offset: 1 }, @api_user
       expect(response.status).to eq(200)
 

@@ -29,26 +29,59 @@ module Request
       )
     })
   end
+end
 
-  def get_route_info(path)
-    route = Repp::API.routes.select do |x|
-      x.route_path.gsub('(.:format)', '').gsub(':version', x.route_version) == path
-    end.first
+module Autodoc
+  class Document
+    def route_info_doc
+      return unless example.metadata[:route_info_doc]
+      route = request.env["rack.routing_args"][:route_info]
+      return unless route.route_params.is_a?(Hash)
 
-    route_path = route.route_path.gsub('(.:format)', '').gsub(':version', route.route_version)
+      params_details = [
+        "| Field name | Required | Type | Allowed values |",
+        "| ---------- | -------- | ---- | -------------- |"
+      ]
 
-    puts "#{route.route_method} #{route_path}"
-    puts " #{route.route_description}" if route.route_description
-
-    if route.route_params.is_a?(Hash)
-      params = route.route_params.map do |name, desc|
-        required = desc.is_a?(Hash) ? desc[:required] : false
-        description = desc.is_a?(Hash) ? desc[:description] : desc.to_s
-        [name, required, "   * #{name}: #{description} #{required ? '(required)' : ''}"]
+      route.route_params.each do |name, desc|
+        details = []
+        details << "| #{name} "
+        details << "| #{desc[:required]} "
+        details << "| #{desc[:type]} "
+        details << "| #{desc[:values]} |"
+        params_details << details.join
+        # required = desc.is_a?(Hash) ? desc[:required] : false
+        # description = desc.is_a?(Hash) ? desc[:description] : desc.to_s
+        # [name, required, "   * #{name}: #{description} #{required ? '(required)' : ''}"]
       end
 
-      puts "  parameters:"
-      params.each { |p| puts p[2] }
+      prettify_table(params_details).join("\n")
+    end
+
+    def prettify_table(rows)
+      # longest_in_col = 0
+      matrix_array = []
+      rows.each do |x|
+        matrix_array << x.split('|') + [''] # [''] is because split loses last |
+      end
+
+      new_arr = []
+      matrix_array.transpose.each do |col|
+        new_col = []
+        longest = col.max_by(&:size).size
+
+        col.each do |r|
+          new_col << r.center(longest)
+        end
+        new_arr << new_col
+      end
+
+      matrix_array = []
+      new_arr.transpose.each do |x|
+        matrix_array << x.join('|')
+      end
+
+      matrix_array
     end
   end
 end

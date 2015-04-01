@@ -7,6 +7,7 @@ module Repp
       params do
         optional :limit, type: Integer, values: (1..20).to_a
         optional :offset, type: Integer
+        optional :details, type: String, values: %w(true false)
       end
 
       get '/' do
