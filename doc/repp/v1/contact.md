@@ -6,7 +6,7 @@ Returns contacts of the current registrar.
 
 | Field name | Required |  Type   |  Allowed values   |        Description         |
 | ---------- | -------- |  ----   |  --------------   |        -----------         |
-|   limit    |  false   | Integer |      [1..20]      | How many contacts to show  |
+|   limit    |  false   | Integer |     [1..200]      | How many contacts to show  |
 |   offset   |  false   | Integer |                   | Contact number to start at |
 |  details   |  false   | String  | ["true", "false"] | Whether to include details |
 
@@ -23,26 +23,26 @@ Content-Type: application/json
 ```
 HTTP/1.1 200
 Cache-Control: max-age=0, private, must-revalidate
-Content-Length: 573
+Content-Length: 562
 Content-Type: application/json
 
 {
   "contacts": [
     {
       "id": 1,
-      "code": "sh095058820",
+      "code": "sh995165920",
       "reg_no": null,
       "phone": "+372.12345678",
-      "email": "shakira.reichert@corkery.com",
+      "email": "ronaldo@sauer.biz",
       "fax": null,
-      "created_at": "2015-04-01T10:51:49.854Z",
-      "updated_at": "2015-04-01T10:51:49.854Z",
+      "created_at": "2015-04-01T13:59:45.332Z",
+      "updated_at": "2015-04-01T13:59:45.332Z",
       "ident": "37605030299",
       "ident_type": "priv",
       "created_by_id": null,
       "updated_by_id": null,
       "auth_info": "password",
-      "name": "Henderson Feest0",
+      "name": "Meagan Roob Jr.0",
       "org_name": null,
       "registrar_id": 1,
       "creator_str": "autotest",
@@ -81,7 +81,7 @@ Content-Type: application/json
 
 {
   "contacts": [
-    "sh331036241"
+    "sh818918181"
   ],
   "total_number_of_records": 2
 }

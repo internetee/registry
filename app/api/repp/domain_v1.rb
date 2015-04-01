@@ -5,13 +5,13 @@ module Repp
     resource :domains do
       desc 'Return list of domains'
       params do
-        optional :limit, type: Integer, values: (1..20).to_a, desc: 'How many domains to show'
+        optional :limit, type: Integer, values: (1..200).to_a, desc: 'How many domains to show'
         optional :offset, type: Integer, desc: 'Domain number to start at'
         optional :details, type: String, values: %w(true false), desc: 'Whether to include details'
       end
 
       get '/' do
-        limit = params[:limit] || 20
+        limit = params[:limit] || 200
         offset = params[:offset] || 0
 
         if params[:details] == 'true'

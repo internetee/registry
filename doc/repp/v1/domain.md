@@ -6,7 +6,7 @@ Returns domains of the current registrar.
 
 | Field name | Required |  Type   |  Allowed values   |        Description         |
 | ---------- | -------- |  ----   |  --------------   |        -----------         |
-|   limit    |  false   | Integer |      [1..20]      |  How many domains to show  |
+|   limit    |  false   | Integer |     [1..200]      |  How many domains to show  |
 |   offset   |  false   | Integer |                   | Domain number to start at  |
 |  details   |  false   | String  | ["true", "false"] | Whether to include details |
 
@@ -23,7 +23,7 @@ Content-Type: application/json
 ```
 HTTP/1.1 200
 Cache-Control: max-age=0, private, must-revalidate
-Content-Length: 909
+Content-Length: 506
 Content-Type: application/json
 
 {
@@ -32,21 +32,21 @@ Content-Type: application/json
       "id": 1,
       "name": "domain0.ee",
       "registrar_id": 1,
-      "registered_at": "2015-04-01T10:51:53.445Z",
+      "registered_at": "2015-04-01T13:59:45.874Z",
       "status": null,
       "valid_from": "2015-04-01T00:00:00.000Z",
       "valid_to": "2016-04-01T00:00:00.000Z",
       "owner_contact_id": 1,
-      "auth_info": "15d4b95d0611312ee96e63e48fcab2de",
-      "created_at": "2015-04-01T10:51:53.439Z",
-      "updated_at": "2015-04-01T10:51:53.432Z",
+      "auth_info": "78d0edcd105c8e1936457c1eef659611",
+      "created_at": "2015-04-01T13:59:45.871Z",
+      "updated_at": "2015-04-01T13:59:45.871Z",
       "name_dirty": "domain0.ee",
       "name_puny": "domain0.ee",
       "period": 1,
       "period_unit": "y",
       "creator_str": null,
       "updator_str": null,
-      "whois_body": "  This Whois Server contains information on\n  Estonian Top Level Domain ee TLD\n\n  domain:    domain0.ee\n  registrar: registrar1\n  status:\n  registered: \n  changed:   2015-04-01 10:51:53\n  expire:\n  outzone:\n  delete:\n\n  \n\n  nsset:\n  nserver:\n\n  registrar: registrar1\n  phone: \n  address: Street 111, Town, County, Postal\n  created: 2015-04-01 10:51:53\n  changed: 2015-04-01 10:51:53\n"
+      "whois_body": null
     }
   ],
   "total_number_of_records": 2
