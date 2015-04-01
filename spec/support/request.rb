@@ -38,7 +38,7 @@ module Autodoc
       route = request.env["rack.routing_args"][:route_info]
       return unless route.route_params.is_a?(Hash)
 
-      params_details = [
+      rows = [
         "| Field name | Required | Type | Allowed values |",
         "| ---------- | -------- | ---- | -------------- |"
       ]
@@ -48,17 +48,14 @@ module Autodoc
         details << "| #{name} "
         details << "| #{desc[:required]} "
         details << "| #{desc[:type]} "
-        details << "| #{desc[:values]} |"
-        params_details << details.join
-        # required = desc.is_a?(Hash) ? desc[:required] : false
-        # description = desc.is_a?(Hash) ? desc[:description] : desc.to_s
-        # [name, required, "   * #{name}: #{description} #{required ? '(required)' : ''}"]
+        details << "| #{ranges_from_array(desc[:values])} |"
+        rows << details.join
       end
 
-      prettify_table(params_details).join("\n")
+      pretty_table(rows).join("\n")
     end
 
-    def prettify_table(rows)
+    def pretty_table(rows)
       # longest_in_col = 0
       matrix_array = []
       rows.each do |x|
@@ -82,6 +79,20 @@ module Autodoc
       end
 
       matrix_array
+    end
+
+    def ranges_from_array(a)
+      return unless a
+      ranges = a.sort.uniq.reduce([]) do |spans, n|
+        return a if n.is_a?(String)
+        if spans.empty? || spans.last.last != n - 1
+          spans + [n..n]
+        else
+          spans[0..-2] + [spans.last.first..n]
+        end
+      end
+
+      ranges
     end
   end
 end

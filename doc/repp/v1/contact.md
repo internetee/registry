@@ -4,11 +4,11 @@ Returns contacts of the current registrar.
 
 #### Parameters
 
-| Field name | Required |  Type   |                             Allowed values                              |
-| ---------- | -------- |  ----   |                             --------------                              |
-|   limit    |  false   | Integer | [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20] |
-|   offset   |  false   | Integer |                                                                         |
-|  details   |  false   | String  |                            ["true", "false"]                            |
+| Field name | Required |  Type   |  Allowed values   |
+| ---------- | -------- |  ----   |  --------------   |
+|   limit    |  false   | Integer |      [1..20]      |
+|   offset   |  false   | Integer |                   |
+|  details   |  false   | String  | ["true", "false"] |
 
 #### Request
 ```
@@ -23,26 +23,26 @@ Content-Type: application/json
 ```
 HTTP/1.1 200
 Cache-Control: max-age=0, private, must-revalidate
-Content-Length: 566
+Content-Length: 586
 Content-Type: application/json
 
 {
   "contacts": [
     {
       "id": 1,
-      "code": "sh889404040",
+      "code": "sh651514820",
       "reg_no": null,
       "phone": "+372.12345678",
-      "email": "annetta.toy@mitchell.org",
+      "email": "giles_altenwerth@oberbrunnerbrakus.com",
       "fax": null,
-      "created_at": "2015-04-01T10:30:47.470Z",
-      "updated_at": "2015-04-01T10:30:47.470Z",
+      "created_at": "2015-04-01T10:45:28.045Z",
+      "updated_at": "2015-04-01T10:45:28.045Z",
       "ident": "37605030299",
       "ident_type": "priv",
       "created_by_id": null,
       "updated_by_id": null,
       "auth_info": "password",
-      "name": "Rogers Bruen0",
+      "name": "Ms. Lucienne Olson0",
       "org_name": null,
       "registrar_id": 1,
       "creator_str": "autotest",
@@ -81,7 +81,7 @@ Content-Type: application/json
 
 {
   "contacts": [
-    "sh914462381"
+    "sh371827431"
   ],
   "total_number_of_records": 2
 }
