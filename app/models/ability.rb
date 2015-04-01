@@ -18,6 +18,7 @@ class Ability
   end
 
   # rubocop: disable Metrics/CyclomaticComplexity
+  # rubocop: disable Metrics/PerceivedComplexity
   def epp
     # Epp::Domain
     can(:info,     Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.auth_info == pw }
@@ -28,7 +29,7 @@ class Ability
     can(:transfer, Epp::Domain) { |d, pw| d.auth_info == pw }
 
     # Epp::Contact
-    can(:info, Epp::Contact)
+    can(:info, Epp::Contact)           { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
     can(:view_full_info, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
     can(:check,  Epp::Contact)
     can(:create, Epp::Contact)
@@ -37,7 +38,8 @@ class Ability
     can(:renew,  Epp::Contact)
     can(:view_password, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
   end
-  # rubocop: enabled Metrics/CyclomaticComplexity
+  # rubocop: enable Metrics/CyclomaticComplexity
+  # rubocop: enable Metrics/PerceivedComplexity
 
   def registrar
     can :manage, Invoice
