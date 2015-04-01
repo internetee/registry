@@ -261,10 +261,9 @@ class Domain < ActiveRecord::Base
   changed: #{registrar.updated_at.to_s(:db)}
     EOS
 
-    if whois_body != new_whois_body
-      update_column(whois_body: new_whois_body)
-      update_whois_server
-    end
+    return if whois_body == new_whois_body
+    update_column(whois_body: new_whois_body)
+    update_whois_server
   end
   handle_asynchronously :update_whois_body
   # rubocop:enable Metrics/MethodLength
