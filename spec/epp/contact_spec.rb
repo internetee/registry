@@ -519,7 +519,7 @@ describe 'EPP Contact', epp: true do
         response[:results].count.should == 1
       end
 
-      it 'returns no authorization error for wrong user but correct pw' do
+      it 'returns no authorization error for wrong user but correct password' do
         login_as :registrar2 do
           response = info_request
 
@@ -534,11 +534,25 @@ describe 'EPP Contact', epp: true do
         end
       end
 
-      it 'returns authorization error for wrong user and wrong pw' do
+      it 'returns authorization error for wrong user and wrong password' do
         login_as :registrar2 do
           response = info_request({ authInfo: { pw: { value: 'wrong-pw' } } })
           response[:msg].should == 'Authorization error'
           response[:result_code].should == '2201'
+          response[:results].count.should == 1
+
+          contact = response[:parsed].css('resData infData')
+          contact.css('postalInfo addr city').first.try(:text).should == nil
+          contact.css('email').first.try(:text).should == nil
+          contact.css('voice').first.try(:text).should == nil
+        end
+      end
+
+      it 'returns no authorization error for wrong user and no password' do
+        login_as :registrar2 do
+          response = info_request({ authInfo: { pw: { value: '' } } })
+          response[:msg].should == 'Command completed successfully'
+          response[:result_code].should == '1000'
           response[:results].count.should == 1
 
           contact = response[:parsed].css('resData infData')
