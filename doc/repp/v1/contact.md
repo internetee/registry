@@ -4,11 +4,11 @@ Returns contacts of the current registrar.
 
 #### Parameters
 
-| Field name | Required |  Type   |  Allowed values   |
-| ---------- | -------- |  ----   |  --------------   |
-|   limit    |  false   | Integer |      [1..20]      |
-|   offset   |  false   | Integer |                   |
-|  details   |  false   | String  | ["true", "false"] |
+| Field name | Required |  Type   |  Allowed values   |        Description         |
+| ---------- | -------- |  ----   |  --------------   |        -----------         |
+|   limit    |  false   | Integer |      [1..20]      | How many contacts to show  |
+|   offset   |  false   | Integer |                   | Contact number to start at |
+|  details   |  false   | String  | ["true", "false"] | Whether to include details |
 
 #### Request
 ```
@@ -23,26 +23,26 @@ Content-Type: application/json
 ```
 HTTP/1.1 200
 Cache-Control: max-age=0, private, must-revalidate
-Content-Length: 586
+Content-Length: 573
 Content-Type: application/json
 
 {
   "contacts": [
     {
       "id": 1,
-      "code": "sh651514820",
+      "code": "sh095058820",
       "reg_no": null,
       "phone": "+372.12345678",
-      "email": "giles_altenwerth@oberbrunnerbrakus.com",
+      "email": "shakira.reichert@corkery.com",
       "fax": null,
-      "created_at": "2015-04-01T10:45:28.045Z",
-      "updated_at": "2015-04-01T10:45:28.045Z",
+      "created_at": "2015-04-01T10:51:49.854Z",
+      "updated_at": "2015-04-01T10:51:49.854Z",
       "ident": "37605030299",
       "ident_type": "priv",
       "created_by_id": null,
       "updated_by_id": null,
       "auth_info": "password",
-      "name": "Ms. Lucienne Olson0",
+      "name": "Henderson Feest0",
       "org_name": null,
       "registrar_id": 1,
       "creator_str": "autotest",
@@ -81,7 +81,7 @@ Content-Type: application/json
 
 {
   "contacts": [
-    "sh371827431"
+    "sh331036241"
   ],
   "total_number_of_records": 2
 }

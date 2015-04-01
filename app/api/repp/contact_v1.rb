@@ -5,9 +5,9 @@ module Repp
     resource :contacts do
       desc 'Return list of contact'
       params do
-        optional :limit, type: Integer, values: (1..20).to_a
-        optional :offset, type: Integer
-        optional :details, type: String, values: %w(true false)
+        optional :limit, type: Integer, values: (1..20).to_a, desc: 'How many contacts to show'
+        optional :offset, type: Integer, desc: 'Contact number to start at'
+        optional :details, type: String, values: %w(true false), desc: 'Whether to include details'
       end
 
       get '/' do

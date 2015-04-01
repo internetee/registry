@@ -39,8 +39,8 @@ module Autodoc
       return unless route.route_params.is_a?(Hash)
 
       rows = [
-        "| Field name | Required | Type | Allowed values |",
-        "| ---------- | -------- | ---- | -------------- |"
+        "| Field name | Required | Type | Allowed values | Description |",
+        "| ---------- | -------- | ---- | -------------- | ----------- |"
       ]
 
       route.route_params.each do |name, desc|
@@ -48,7 +48,8 @@ module Autodoc
         details << "| #{name} "
         details << "| #{desc[:required]} "
         details << "| #{desc[:type]} "
-        details << "| #{ranges_from_array(desc[:values])} |"
+        details << "| #{ranges_from_array(desc[:values])} "
+        details << "| #{desc[:desc]} |"
         rows << details.join
       end
 
