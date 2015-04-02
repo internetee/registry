@@ -71,7 +71,7 @@ class Ability
     can :manage, LegalDocument
     can :read, ApiLog::EppLog
     can :read, ApiLog::ReppLog
-    can :index, :delayed_job
+    # can :index, :delayed_job
     can :create, :zonefile
     can :access, :settings_menu
   end

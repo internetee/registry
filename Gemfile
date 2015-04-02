@@ -16,7 +16,6 @@ gem 'paper_trail',
   github: 'airblade/paper_trail',
   ref: 'a453811226ec4ea59753ba6b827e390ced2fc140' # '~> 4.0.0.beta2' # archiving
 gem 'rails-settings-cached',     '~> 0.4.1' # for settings
-gem 'delayed_job_active_record', '~> 4.0.3' # delayed job
 
 # html-xml
 gem 'haml-rails', '~> 0.9.0' # haml for views
@@ -52,7 +51,6 @@ gem 'isikukood' # for EE-id validation
 
 # deploy
 gem 'whenever', '~> 0.9.4', require: false
-gem 'daemons',  '~> 1.1.9' # process delayed jobs
 
 # monitors
 gem 'newrelic_rpm', '~> 3.9.9.275'
