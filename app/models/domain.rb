@@ -236,7 +236,7 @@ class Domain < ActiveRecord::Base
 
   # rubocop:disable Metrics/MethodLength
   def update_whois_body
-    new_whois_body = <<-EOS
+    self.whois_body = <<-EOS
   This Whois Server contains information on
   Estonian Top Level Domain ee TLD
 
@@ -261,8 +261,6 @@ class Domain < ActiveRecord::Base
   changed: #{registrar.updated_at.to_s(:db)}
     EOS
 
-    return if whois_body == new_whois_body
-    update_column(whois_body: new_whois_body)
     update_whois_server
   end
   # handle_asynchronously :update_whois_body
