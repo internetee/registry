@@ -263,7 +263,6 @@ class Domain < ActiveRecord::Base
 
     update_whois_server
   end
-  # handle_asynchronously :update_whois_body
   # rubocop:enable Metrics/MethodLength
 
   def contacts_body
