@@ -59,44 +59,46 @@ namespace :import do
       6 => Contact::IDENT_BIRTHDAY
     }
 
-    contact_columns = [
-      "code",
-      "phone",
-      "email",
-      "fax",
-      "created_at",
-      "ident",
-      "ident_type",
-      "auth_info",
-      "name",
-      "org_name",
-      "registrar_id",
-      "creator_str",
-      "updator_str",
-      "ident_country_code",
-      "legacy_id"
-    ]
+    contact_columns = %w(
+      code
+      phone
+      email
+      fax
+      created_at
+      ident
+      ident_type
+      auth_info
+      name
+      org_name
+      registrar_id
+      creator_str
+      updator_str
+      ident_country_code
+      legacy_id
+    )
 
-    address_columns = [
-      "city",
-      "street",
-      "zip",
-      "created_at",
-      "street2",
-      "street3",
-      "creator_str",
-      "updator_str",
-      "country_code",
-      "state",
-      "legacy_contact_id"
-    ]
+    address_columns = %w(
+      city
+      street
+      zip
+      created_at
+      street2
+      street3
+      creator_str
+      updator_str
+      country_code
+      state
+      legacy_contact_id
+    )
 
     contacts, addresses = [], []
     existing_contact_ids = Contact.pluck(:legacy_id)
     user = "rake-#{`whoami`.strip} #{ARGV.join ' '}"
     count = 0
 
-    Legacy::Contact.includes(:object_registry, :object, :object_registry => :registrar).find_each(batch_size: 10000).with_index do |x, index|
+    Legacy::Contact.includes(:object_registry, :object, object_registry: :registrar)
+      .find_each(batch_size: 10000).with_index do |x, index|
+
       next if existing_contact_ids.include?(x.id)
       count += 1
 
@@ -164,60 +166,60 @@ namespace :import do
     start = Time.now.to_f
     puts '-----> Importing domains...'
 
-    domain_columns = [
-      "name",
-      "registered_at",
-      "valid_from",
-      "valid_to",
-      "auth_info",
-      "created_at",
-      "name_dirty",
-      "name_puny",
-      "period",
-      "period_unit",
-      "creator_str",
-      "updator_str",
-      "legacy_id",
-      "legacy_registrar_id",
-      "legacy_registrant_id"
-    ]
+    domain_columns = %w(
+      name
+      registered_at
+      valid_from
+      valid_to
+      auth_info
+      created_at
+      name_dirty
+      name_puny
+      period
+      period_unit
+      creator_str
+      updator_str
+      legacy_id
+      legacy_registrar_id
+      legacy_registrant_id
+    )
 
-    domain_contact_columns = [
-      "contact_type",
-      "creator_str",
-      "updator_str",
-      "legacy_domain_id",
-      "legacy_contact_id"
-    ]
+    domain_contact_columns = %w(
+      contact_type
+      creator_str
+      updator_str
+      legacy_domain_id
+      legacy_contact_id
+    )
 
-    domain_status_columns = [
-      "description",
-      "value",
-      "creator_str",
-      "updator_str",
-      "legacy_domain_id"
-    ]
+    domain_status_columns = %w(
+      description
+      value
+      creator_str
+      updator_str
+      legacy_domain_id
+    )
 
-    nameserver_columns = [
-      "hostname",
-      "ipv4",
-      "ipv6",
-      "creator_str",
-      "updator_str",
-      "legacy_domain_id"
-    ]
+    nameserver_columns = %w(
+      hostname
+      ipv4
+      ipv6
+      creator_str
+      updator_str
+      legacy_domain_id
+    )
 
-    dnskey_columns = [
-      "flags",
-      "protocol",
-      "alg",
-      "public_key",
-      "ds_alg",
-      "ds_digest_type",
-      "creator_str",
-      "updator_str",
-      "legacy_domain_id"
-    ]
+    dnskey_columns = %w(
+      flags
+      protocol
+      alg
+      public_key
+      ds_alg
+      ds_digest_type
+      creator_str
+      updator_str
+      legacy_domain_id
+    )
 
     domains, nameservers, dnskeys, domain_statuses, domain_contacts = [], [], [], [], []
     existing_domain_ids = Domain.pluck(:legacy_id)
@@ -231,7 +233,7 @@ namespace :import do
       :object_states,
       :dnskeys,
       :domain_contact_maps,
-      :nsset => {:hosts => :host_ipaddr_maps}
+      nsset: { hosts: :host_ipaddr_maps }
     ).find_each(batch_size: 10000).with_index do |x, index|
       next if existing_domain_ids.include?(x.id)
       count += 1
