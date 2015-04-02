@@ -265,7 +265,7 @@ class Domain < ActiveRecord::Base
     update_column(whois_body: new_whois_body)
     update_whois_server
   end
-  handle_asynchronously :update_whois_body
+  # handle_asynchronously :update_whois_body
   # rubocop:enable Metrics/MethodLength
 
   def contacts_body
