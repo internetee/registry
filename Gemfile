@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 # core
 gem 'rails',        '4.2.1'
 gem 'iso8601',      '~> 0.8.2' # for dates and times
-gem 'hashie_rails', '~> 0.0.1'
+gem 'hashie-forbidden_attributes', '~> 0.1.1'
 
 # load env
 gem 'figaro', '~> 1.1.0'
