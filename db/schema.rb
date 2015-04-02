@@ -11,14 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150330083700) do
+ActiveRecord::Schema.define(version: 20150402114712) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "addresses", force: :cascade do |t|
     t.integer  "contact_id"
-    t.integer  "country_id"
     t.string   "city"
     t.string   "street"
     t.string   "zip"
@@ -30,6 +29,7 @@ ActiveRecord::Schema.define(version: 20150330083700) do
     t.string   "updator_str"
     t.string   "country_code"
     t.string   "state"
+    t.integer  "legacy_contact_id"
   end
 
   create_table "api_users", force: :cascade do |t|
@@ -75,8 +75,6 @@ ActiveRecord::Schema.define(version: 20150330083700) do
 
   create_table "contacts", force: :cascade do |t|
     t.string   "code"
-    t.string   "type"
-    t.string   "reg_no"
     t.string   "phone"
     t.string   "email"
     t.string   "fax"
@@ -84,8 +82,6 @@ ActiveRecord::Schema.define(version: 20150330083700) do
     t.datetime "updated_at"
     t.string   "ident"
     t.string   "ident_type"
-    t.integer  "created_by_id"
-    t.integer  "updated_by_id"
     t.string   "auth_info"
     t.string   "name"
     t.string   "org_name"
@@ -98,6 +94,7 @@ ActiveRecord::Schema.define(version: 20150330083700) do
     t.string   "zip"
     t.string   "country_code"
     t.string   "state"
+    t.integer  "legacy_id"
   end
 
   add_index "contacts", ["code"], name: "index_contacts_on_code", using: :btree
@@ -110,22 +107,6 @@ ActiveRecord::Schema.define(version: 20150330083700) do
     t.string   "creator_str"
     t.string   "updator_str"
   end
-
-  create_table "delayed_jobs", force: :cascade do |t|
-    t.integer  "priority",   default: 0, null: false
-    t.integer  "attempts",   default: 0, null: false
-    t.text     "handler",                null: false
-    t.text     "last_error"
-    t.datetime "run_at"
-    t.datetime "locked_at"
-    t.datetime "failed_at"
-    t.string   "locked_by"
-    t.string   "queue"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
   create_table "delegation_signers", force: :cascade do |t|
     t.integer "domain_id"
@@ -152,6 +133,7 @@ ActiveRecord::Schema.define(version: 20150330083700) do
     t.string  "ds_digest"
     t.string  "creator_str"
     t.string  "updator_str"
+    t.integer "legacy_domain_id"
   end
 
   create_table "domain_contacts", force: :cascade do |t|
@@ -164,6 +146,8 @@ ActiveRecord::Schema.define(version: 20150330083700) do
     t.string   "creator_str"
     t.string   "updator_str"
     t.string   "type"
+    t.integer  "legacy_domain_id"
+    t.integer  "legacy_contact_id"
   end
 
   create_table "domain_statuses", force: :cascade do |t|
@@ -172,6 +156,7 @@ ActiveRecord::Schema.define(version: 20150330083700) do
     t.string  "value"
     t.string  "creator_str"
     t.string  "updator_str"
+    t.integer "legacy_domain_id"
   end
 
   create_table "domain_transfers", force: :cascade do |t|
@@ -202,10 +187,13 @@ ActiveRecord::Schema.define(version: 20150330083700) do
     t.string   "name_dirty"
     t.string   "name_puny"
     t.integer  "period"
-    t.string   "period_unit",      limit: 1
+    t.string   "period_unit",          limit: 1
     t.string   "creator_str"
     t.string   "updator_str"
     t.text     "whois_body"
+    t.integer  "legacy_id"
+    t.integer  "legacy_registrar_id"
+    t.integer  "legacy_registrant_id"
   end
 
   create_table "epp_sessions", force: :cascade do |t|
@@ -573,13 +561,13 @@ ActiveRecord::Schema.define(version: 20150330083700) do
     t.integer  "domain_id"
     t.string   "creator_str"
     t.string   "updator_str"
+    t.integer  "legacy_domain_id"
   end
 
   create_table "registrars", force: :cascade do |t|
     t.string   "name"
     t.string   "reg_no"
     t.string   "vat_no"
-    t.integer  "country_id"
     t.string   "billing_address"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -594,6 +582,10 @@ ActiveRecord::Schema.define(version: 20150330083700) do
     t.string   "street"
     t.string   "zip"
     t.string   "code"
+    t.string   "url"
+    t.string   "directo_handle"
+    t.boolean  "vat"
+    t.integer  "legacy_id"
   end
 
   add_index "registrars", ["code"], name: "index_registrars_on_code", using: :btree
@@ -631,7 +623,6 @@ ActiveRecord::Schema.define(version: 20150330083700) do
     t.inet     "current_sign_in_ip"
     t.inet     "last_sign_in_ip"
     t.string   "identity_code"
-    t.integer  "country_id"
     t.string   "roles",                                       array: true
     t.string   "creator_str"
     t.string   "updator_str"

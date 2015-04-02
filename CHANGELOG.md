@@ -1,3 +1,7 @@
+02.04.2015
+
+* Depricated DelayedJob, kill all running delayed jobs if needed
+
 27.03.2015
  
 * Integrated DEPP engine to Registrar. Please note new DEPP configuration in application-example.yml

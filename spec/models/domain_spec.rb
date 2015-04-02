@@ -75,7 +75,7 @@ describe Domain do
     end
 
     it 'should not have whois_body present by default' do
-      @domain.whois_body.present?.should == false
+      @domain.whois_body.present?.should == true
     end
 
     context 'with versioning' do
