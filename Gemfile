@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 # core
 gem 'rails',        '4.2.1'
 gem 'iso8601',      '~> 0.8.2' # for dates and times
-gem 'hashie_rails', '~> 0.0.1'
+gem 'hashie-forbidden_attributes', '~> 0.1.1'
 
 # load env
 gem 'figaro', '~> 1.1.0'
@@ -16,7 +16,6 @@ gem 'paper_trail',
   github: 'airblade/paper_trail',
   ref: 'a453811226ec4ea59753ba6b827e390ced2fc140' # '~> 4.0.0.beta2' # archiving
 gem 'rails-settings-cached',     '~> 0.4.1' # for settings
-gem 'delayed_job_active_record', '~> 4.0.3' # delayed job
 
 # html-xml
 gem 'haml-rails', '~> 0.9.0' # haml for views
@@ -52,7 +51,6 @@ gem 'isikukood' # for EE-id validation
 
 # deploy
 gem 'whenever', '~> 0.9.4', require: false
-gem 'daemons',  '~> 1.1.9' # process delayed jobs
 
 # monitors
 gem 'newrelic_rpm', '~> 3.9.9.275'
@@ -70,6 +68,9 @@ gem 'digidoc_client', '~> 0.2.1'
 gem 'depp', github: 'domify/depp', ref: '800ab30dcb6dae33095bcb9df47b4e0a390891a3'
 # gem 'depp', path: '~/projects/depp'
 gem 'epp', '~> 1.4.2', github: 'gitlabeu/epp'
+
+# for importing legacy db
+gem 'activerecord-import', '~> 0.7.0' # for inserting dummy data
 
 group :development do
   # dev tools
@@ -102,7 +103,6 @@ group :development, :test do
   gem 'launchy',            '~> 2.4.3' # for opening browser automatically
 
   # helper gems
-  gem 'activerecord-import', '~> 0.6.0' # for inserting dummy data
   gem 'database_cleaner',    '~> 1.3.0' # For cleaning db in feature and epp tests
   gem 'faker',               '~> 1.3.0' # Library to generate fake data
 
