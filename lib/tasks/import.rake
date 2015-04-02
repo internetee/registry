@@ -1,4 +1,59 @@
 namespace :import do
+  # README
+  #
+  # 1) ESTABLISH CONNECTION TO FRED DATABASE
+  # ----------------------------------------
+  #
+  # Add 'fred' database connection settings to config/database.yml
+  # Example config:
+  #
+  # fred:
+  #   host: localhost
+  #   adapter: postgresql
+  #   encoding: unicode
+  #   pool: 5
+  #   username: fred
+  #   password: fred
+  #
+  #  Verify you have correctly connected to fred database:
+  #  Open Rails console:
+  #
+  #      cd your_registry_deploy_path/current/
+  #      RAILS_ENV=production bundle exec rails c
+  #      in console: Legacy::Contact.last
+  #      in console: exit
+  #
+  #  In console you should get Last Legacy::Contact object. 
+  #  If you get any errors, scroll up and read first lines
+  #  to figure out what went wrong to connect to fred database.
+  #
+  #
+  #  2) START IMPORT
+  #  ---------------
+  #  
+  #  Import scrip does not write anything to fred database.
+  #  Script is implemented this way, you can run it multiple times
+  #  in case you need it. However already imported object are
+  #  not reimported, thus if some object has been updated meanwhile
+  #  in fred database, those updates will be missed and thous should
+  #  be carried over manually. All new object in fred will be 
+  #  imported in multiple import script runs.
+  #
+  #  Start all import:
+  #  
+  #      cd your_registry_deploy_path/current/
+  #      RAILS_ENV=production bundle exec rails import:all
+  #  
+  #  If you wish to import one by one, please follow individual import order
+  #  from task 'Import all' tasks in this script.
+  
+  desc 'Import all'
+  task registrars: :environment do
+    Rake::Task['import:registrars'].invoke
+    Rake::Task['import:contacts'].invoke
+    Rake::Task['import:domains'].invoke
+  end
+
   desc 'Import registrars'
   task registrars: :environment do
     start = Time.now.to_f
@@ -53,10 +108,10 @@ namespace :import do
     # 6;"BIRTHDAY";"day of birth"
 
     ident_type_map = {
-      2 => Contact::IDENT_PRIV,
-      3 => Contact::IDENT_PASSPORT,
-      4 => Contact::IDENT_TYPE_BIC,
-      6 => Contact::IDENT_BIRTHDAY
+      2 => Contact::PRIV,
+      3 => Contact::PASSPORT,
+      4 => Contact::BIC,
+      6 => Contact::BIRTHDAY
     }
 
     contact_columns = %w(
@@ -75,23 +130,14 @@ namespace :import do
       updator_str
       ident_country_code
       legacy_id
-    )
-
-    address_columns = %w(
-      city
       street
+      city
       zip
-      created_at
-      street2
-      street3
-      creator_str
-      updator_str
-      country_code
       state
-      legacy_contact_id
+      country_code
     )
 
-    contacts, addresses = [], []
+    contacts = []
     existing_contact_ids = Contact.pluck(:legacy_id)
     user = "rake-#{`whoami`.strip} #{ARGV.join ' '}"
     count = 0
@@ -118,27 +164,17 @@ namespace :import do
           user,
           user,
           x.country.try(:strip),
-          x.id
-        ]
-
-        addresses << [
+          x.id,
+          [x.street1.try(:strip), x.street2.try(:strip), x.street3.try(:strip)].join('\n'),
           x.city.try(:strip),
-          x.street1.try(:strip),
           x.postalcode.try(:strip),
-          x.object_registry.try(:crdate),
-          x.street2.try(:strip),
-          x.street3.try(:strip),
-          user,
-          user,
-          x.country.try(:strip),
           x.stateorprovince.try(:strip),
-          x.id
+          x.country.try(:strip)
         ]
 
         if contacts.size % 10000 == 0
           Contact.import contact_columns, contacts, validate: false
-          Address.import address_columns, addresses, validate: false
-          contacts, addresses = [], []
+          contacts = []
         end
       rescue => e
         puts "ERROR on index #{index}"
@@ -147,17 +183,6 @@ namespace :import do
     end
 
     Contact.import contact_columns, contacts, validate: false
-    Address.import address_columns, addresses, validate: false
-
-    puts '-----> Updating relations...'
-    ActiveRecord::Base.connection.execute(
-      "UPDATE addresses "\
-      "SET contact_id = contacts.id "\
-      "FROM contacts "\
-      "WHERE contacts.legacy_id = legacy_contact_id "\
-      "AND legacy_contact_id IS NOT NULL "\
-      "AND contact_id IS NULL"
-    )
     puts "-----> Imported #{count} new contacts in #{(Time.now.to_f - start).round(2)} seconds"
   end
 
