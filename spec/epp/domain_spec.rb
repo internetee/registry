@@ -1857,11 +1857,36 @@ describe 'EPP Domain', epp: true do
       inf_data.css('status').first[:s].should == 'ok'
     end
 
-    it 'can not see other registrar domains' do
+    it 'can not see other registrar domains with invalid password' do
       login_as :registrar2 do
         response = epp_plain_request(domain_info_xml(name: { value: domain.name }), :xml)
         response[:result_code].should == '2201'
         response[:msg].should == 'Authorization error'
+      end
+    end
+
+    it 'can see other registrar domains without password' do
+      login_as :registrar2 do
+        response = epp_plain_request(domain_info_xml(
+          name: { value: domain.name },
+          authInfo: nil
+        ), :xml)
+
+        response[:result_code].should == '1000'
+        response[:parsed].css('authInfo pw').first.should == nil
+      end
+    end
+
+    it 'can see other registrar domains with correct password' do
+      login_as :registrar2 do
+        pw = domain.auth_info
+        response = epp_plain_request(domain_info_xml(
+          name: { value: domain.name },
+          authInfo: { pw: { value: pw } }
+        ), :xml)
+
+        response[:result_code].should == '1000'
+        response[:parsed].css('authInfo pw').text.should == pw
       end
     end
 

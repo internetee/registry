@@ -52,8 +52,10 @@ xml.epp_head do
         # TODO Make domain transferrable
         #xml.tag!('domain:trDate', @domain.transferred_at) if @domain.transferred_at
 
-        xml.tag!('domain:authInfo') do
-          xml.tag!('domain:pw', @domain.auth_info)
+        if can? :view_password, @domain, @password
+          xml.tag!('domain:authInfo') do
+            xml.tag!('domain:pw', @domain.auth_info)
+          end
         end
       end
     end
