@@ -48,7 +48,7 @@ namespace :import do
   #  from task 'Import all' tasks in this script.
   
   desc 'Import all'
-  task registrars: :environment do
+  task all: :environment do
     Rake::Task['import:registrars'].invoke
     Rake::Task['import:contacts'].invoke
     Rake::Task['import:domains'].invoke
