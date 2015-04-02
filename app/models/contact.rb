@@ -39,10 +39,14 @@ class Contact < ActiveRecord::Base
   scope :current_registrars, ->(id) { where(registrar_id: id) }
 
   BIC = 'bic'
+  PRIV = 'priv'
+  BIRTHDAY = 'birthday'
+  PASSPORT = 'passport'
+
   IDENT_TYPES = [
-    BIC, # Company registry code (or similar)
-    'priv',         # National idendtification number
-    'birthday'      # Birthday date
+    BIC,     # Company registry code (or similar)
+    PRIV,    # National idendtification number
+    BIRTHDAY # Birthday date
   ]
 
   class << self
