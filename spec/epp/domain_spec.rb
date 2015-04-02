@@ -736,6 +736,16 @@ describe 'EPP Domain', epp: true do
 
       domain.registrar.should == @registrar2
 
+      response = epp_plain_request(@epp_xml.session.poll, :xml)
+
+      response[:msg].should == 'Command completed successfully; ack to dequeue'
+      msg_q = response[:parsed].css('msgQ')
+      msg_q.css('qDate').text.should_not be_blank
+      contacts = domain.contacts.pluck(:code)
+      msg_q.css('msg').text.should == "Domain transfer was approved, associated contacts are: #{contacts}"
+      msg_q.first['id'].should_not be_blank
+      msg_q.first['count'].should == '1'
+
       Setting.transfer_wait_time = 1
 
       domain.reload

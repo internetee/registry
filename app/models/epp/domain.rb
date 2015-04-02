@@ -160,7 +160,7 @@ class Epp::Domain < Domain
   def admin_domain_contacts_attrs(frame, action)
     admin_attrs = domain_contact_attrs_from(frame, action, 'admin')
 
-    case action 
+    case action
     when 'rem'
       return destroy_attrs(admin_attrs, admin_domain_contacts)
     else
@@ -171,7 +171,7 @@ class Epp::Domain < Domain
   def tech_domain_contacts_attrs(frame, action)
     tech_attrs = domain_contact_attrs_from(frame, action, 'tech')
 
-    case action 
+    case action
     when 'rem'
       return destroy_attrs(tech_attrs, tech_domain_contacts)
     else
@@ -512,6 +512,7 @@ class Epp::Domain < Domain
 
         if dt.approved?
           transfer_contacts(current_user.registrar_id)
+          dt.notify_losing_registrar
           generate_auth_info
           self.registrar = current_user.registrar
         end

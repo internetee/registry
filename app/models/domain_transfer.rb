@@ -13,8 +13,13 @@ class DomainTransfer < ActiveRecord::Base
   SERVER_CANCELLED = 'serverCancelled'
 
   before_create :set_wait_until
-  before_create :set_status
+  def set_wait_until
+    wait_time = Setting.transfer_wait_time
+    return if wait_time == 0
+    self.wait_until = transfer_requested_at + wait_time.hours
+  end
 
+  before_create :set_status
   def set_status
     if Setting.transfer_wait_time > 0
       self.status = PENDING unless status
@@ -25,12 +30,6 @@ class DomainTransfer < ActiveRecord::Base
   end
 
   delegate :name, :valid_to, to: :domain, prefix: true
-
-  def set_wait_until
-    wait_time = Setting.transfer_wait_time
-    return if wait_time == 0
-    self.wait_until = transfer_requested_at + wait_time.hours
-  end
 
   def approved?
     status == CLIENT_APPROVED || status == SERVER_APPROVED
@@ -50,5 +49,13 @@ class DomainTransfer < ActiveRecord::Base
       domain.registrar = transfer_to
       domain.save(validate: false)
     end
+  end
+
+  def notify_losing_registrar
+    transfer_from.messages.create!(
+      body: I18n.t('domain_transfer_was_approved', contacts: domain.contacts.pluck(:code)),
+      attached_obj_id: id,
+      attached_obj_type: self.class.to_s
+    )
   end
 end
