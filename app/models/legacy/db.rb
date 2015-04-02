@@ -1,7 +1,11 @@
 module Legacy
   class Db < ActiveRecord::Base
     self.abstract_class = true
-    establish_connection :fred
+    begin
+      establish_connection :fred
+    rescue ActiveRecord::AdapterNotSpecified => e
+      logger.info "'fred' database not configured, please update your database.yml file: #{e}"
+    end
 
     def readonly?
       true
