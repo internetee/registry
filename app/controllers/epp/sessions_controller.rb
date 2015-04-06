@@ -21,6 +21,7 @@ class Epp::SessionsController < EppController
     if @api_user.try(:active) && cert_valid
       if parsed_frame.css('newPW').first
         unless @api_user.update(password: parsed_frame.css('newPW').first.text)
+          response.headers['X-EPP-Returncode'] = '2200'
           handle_errors(@api_user) and return
         end
       end
