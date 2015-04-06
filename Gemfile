@@ -65,8 +65,8 @@ gem 'deep_cloneable', '~> 2.1.1'
 gem 'digidoc_client', '~> 0.2.1'
 
 # epp + repp client
-gem 'depp', github: 'domify/depp', ref: 'b8b5160bbe887b5736dcec776a4c80467ce3f175'
-# gem 'depp', path: '~/projects/depp'
+gem 'depp', github: 'domify/depp', ref: 'bac84dba62baa1b6465523f52df9eb3140f4d1ee'
+# gem 'depp', path: '../depp'
 gem 'epp', '~> 1.4.2', github: 'gitlabeu/epp'
 
 # for importing legacy db
