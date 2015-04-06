@@ -61,7 +61,7 @@ class Registrar::SessionsController < SessionsController
       sign_in @user
       flash[:notice] = t('welcome')
       flash.keep(:notice)
-      render js: "window.location = '#{registrar_invoices_path}'"
+      render js: "window.location = '#{registrar_root_path}'"
     when 'NOT_VALID'
       render json: { message: t('user_signature_is_invalid') }, status: :bad_request
     when 'EXPIRED_TRANSACTION'

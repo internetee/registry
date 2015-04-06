@@ -47,7 +47,7 @@
             %ul.nav.navbar-nav.navbar-right
               %li= link_to t('log_out', user: current_user), '/registrar/logout'
               %li.dropdown
-                = link_to 'Registrar <span class="caret"></span>'.html_safe, '#', 
+                = link_to 'Registrar <span class="caret"></span>'.html_safe, '#',
                   class: 'dropdown-toggle', 'data-toggle': 'dropdown', role: 'button'
                 %ul.dropdown-menu{'role': 'menu'}
                   %li.dropdown-header= t(:switch_to) + ':'
