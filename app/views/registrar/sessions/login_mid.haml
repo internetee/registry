@@ -9,6 +9,10 @@
     = f.text_field :phone, class: 'form-control', placeholder: t('phone_no'), autocomplete: 'off'
     %button.btn.btn-lg.btn-primary.btn-block.js-login{:type => 'submit'}= t('log_in')
 
+- if ['development', 'alpha'].include?(Rails.env)
+  %div.text-center
+    60000007 / 00000766
+
 :coffee
   $('.js-login').attr('disabled', false)
 

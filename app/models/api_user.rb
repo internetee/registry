@@ -2,6 +2,15 @@ require 'open3'
 
 # rubocop: disable Metrics/ClassLength
 class ApiUser < User
+  include EppErrors
+  def epp_code_map # rubocop:disable Metrics/MethodLength
+    {
+      '2306' => [ # Parameter policy error
+        [:password, :blank]
+      ]
+    }
+  end
+
   # TODO: should have max request limit per day
   belongs_to :registrar
   has_many :contacts

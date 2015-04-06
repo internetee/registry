@@ -19,6 +19,12 @@ class Epp::SessionsController < EppController
     end
 
     if @api_user.try(:active) && cert_valid
+      if parsed_frame.css('newPW').first
+        unless @api_user.update(password: parsed_frame.css('newPW').first.text)
+          handle_errors(@api_user) and return
+        end
+      end
+
       epp_session[:api_user_id] = @api_user.id
       render_epp_response('login_success')
     else
@@ -41,5 +47,9 @@ class Epp::SessionsController < EppController
   def login_params
     ph = params_hash['epp']['command']['login']
     { username: ph[:clID], password: ph[:pw] }
+  end
+
+  def parsed_frame
+    @parsed_frame ||= Nokogiri::XML(request.params[:raw_frame]).remove_namespaces!
   end
 end

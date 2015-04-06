@@ -85,6 +85,36 @@ describe 'EPP Session', epp: true do
 
         EppSession.last[:api_user_id].should == nil
       end
+
+      it 'changes password and logs in' do
+        @api_user.update(password: 'ghyt9e4fu')
+        response = epp_plain_request(@epp_xml.session.login(
+          clID: { value: 'gitlab' },
+          pw: { value: 'ghyt9e4fu' },
+          newPW: { value: 'abcdefg' }
+        ), :xml)
+
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+
+        @api_user.reload
+        @api_user.password.should == 'abcdefg'
+      end
+
+      it 'fails if new password is not valid' do
+        @api_user.update(password: 'ghyt9e4fu')
+        response = epp_plain_request(@epp_xml.session.login(
+          clID: { value: 'gitlab' },
+          pw: { value: 'ghyt9e4fu' },
+          newPW: { value: '' }
+        ), :xml)
+
+        response[:msg].should == 'Password is missing [password]'
+        response[:result_code].should == '2306'
+
+        @api_user.reload
+        @api_user.password.should == 'ghyt9e4fu'
+      end
     end
   end
 end
