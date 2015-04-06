@@ -7,7 +7,7 @@ class EppDoc
 
   def start(example_count)
     @output.puts '# EPP REQUEST - RESPONSE EXAMPLES'
-    @output.puts "GENERATED AT: #{Time.now}  "
+    @output.puts "GENERATED AT: #{Time.zone.now}  "
     @output.puts "EXAMPLE COUNT: #{example_count.count}  "
     @output.puts "\n---\n\n"
   end

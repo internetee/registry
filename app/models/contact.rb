@@ -81,9 +81,9 @@ class Contact < ActiveRecord::Base
     end
 
     def destroy_orphans
-      logger.info "#{Time.now.utc} - Destroying orphaned contacts\n"
+      logger.info "#{Time.zone.now.utc} - Destroying orphaned contacts\n"
       count = find_orphans.destroy_all.count
-      logger.info "#{Time.now.utc} - Successfully destroyed #{count} orphaned contacts\n"
+      logger.info "#{Time.zone.now.utc} - Successfully destroyed #{count} orphaned contacts\n"
     end
   end
 

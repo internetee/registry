@@ -49,7 +49,7 @@ class Domain < ActiveRecord::Base
   before_create :set_validity_dates
   before_save :touch_always_version
   def touch_always_version
-    self.updated_at = Time.now
+    self.updated_at = Time.zone.now
   end
   after_save :manage_automatic_statuses
   after_save :update_whois_body
@@ -205,7 +205,7 @@ class Domain < ActiveRecord::Base
 
   def set_validity_dates
     self.registered_at = Time.zone.now
-    self.valid_from = Date.today
+    self.valid_from = Time.zone.now.to_date
     self.valid_to = valid_from + self.class.convert_period_to_time(period, period_unit)
   end
 

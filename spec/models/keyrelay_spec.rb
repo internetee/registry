@@ -62,7 +62,7 @@ describe Keyrelay do
   end
 
   it 'is in expired status' do
-    kr = Fabricate(:keyrelay, pa_date: DateTime.now - 2.weeks)
+    kr = Fabricate(:keyrelay, pa_date: Time.zone.now - 2.weeks)
     expect(kr.status).to eq('expired')
   end
 

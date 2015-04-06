@@ -29,7 +29,7 @@ class Certificate < ActiveRecord::Base
 
     @cached_status = SIGNED
 
-    if parsed_crt.not_before > Time.now.utc && parsed_crt.not_after < Time.now.utc
+    if parsed_crt.not_before > Time.zone.now.utc && parsed_crt.not_after < Time.zone.now.utc
       @cached_status = EXPIRED
     end
 

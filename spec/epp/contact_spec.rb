@@ -140,7 +140,7 @@ describe 'EPP Contact', epp: true do
 
         id.text.length.should == 8
         # 5 seconds for what-ever weird lag reasons might happen
-        cr_date.text.to_time.should be_within(5).of(Time.now)
+        cr_date.text.to_time.should be_within(5).of(Time.zone.now)
       end
 
       it 'successfully saves custom code' do

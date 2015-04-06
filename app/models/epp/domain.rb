@@ -92,7 +92,7 @@ class Epp::Domain < Domain
 
     at[:name] = frame.css('name').text if new_record?
     at[:registrar_id] = current_user.registrar.try(:id)
-    at[:registered_at] = Time.now if new_record?
+    at[:registered_at] = Time.zone.now if new_record?
 
     period = frame.css('period').text
     at[:period] = (period.to_i == 0) ? 1 : period.to_i
@@ -593,7 +593,7 @@ class Epp::Domain < Domain
 
     transaction do
       kr = keyrelays.build(
-        pa_date: Time.now,
+        pa_date: Time.zone.now,
         key_data_flags: parsed_frame.css('flags').text,
         key_data_protocol: parsed_frame.css('protocol').text,
         key_data_alg: parsed_frame.css('alg').text,
@@ -632,7 +632,7 @@ class Epp::Domain < Domain
 
   def validate_exp_dates(cur_exp_date)
     begin
-      return if cur_exp_date.to_date == valid_to
+      return if cur_exp_date.to_date == valid_to.to_date
     rescue
       add_epp_error('2306', 'curExpDate', cur_exp_date, I18n.t('errors.messages.epp_exp_dates_do_not_match'))
       return
