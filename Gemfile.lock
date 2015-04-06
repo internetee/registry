@@ -10,8 +10,8 @@ GIT
 
 GIT
   remote: git://github.com/domify/depp.git
-  revision: 800ab30dcb6dae33095bcb9df47b4e0a390891a3
-  ref: 800ab30dcb6dae33095bcb9df47b4e0a390891a3
+  revision: b8b5160bbe887b5736dcec776a4c80467ce3f175
+  ref: b8b5160bbe887b5736dcec776a4c80467ce3f175
   specs:
     depp (0.0.2)
       coderay (>= 1.1.0)

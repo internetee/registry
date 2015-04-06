@@ -96,7 +96,7 @@ Rails.application.routes.draw do
     #   root to: 'domains#index', as: :authenticated_root
     # end
 
-    root 'invoices#index'
+    root to: redirect('/registrar/depp')
   end
 
   mount Depp::Engine, at: '/registrar/depp', as: 'depp'
