@@ -17,7 +17,7 @@ class PaperSession
   class << self
     attr_writer :session
     def session
-      @session ||= Time.now.to_s(:db)
+      @session ||= Time.zone.now.to_s(:db)
     end
   end
 end

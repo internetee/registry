@@ -12,7 +12,7 @@ class ZonefileSetting < ActiveRecord::Base
   def self.generate_zonefile(origin)
     filename = "#{origin}.zone"
 
-    STDOUT << "#{Time.now.utc} - Generating zonefile #{filename}\n"
+    STDOUT << "#{Time.zone.now.utc} - Generating zonefile #{filename}\n"
 
     zf = ActiveRecord::Base.connection.execute(
       "select generate_zonefile('#{origin}')"
@@ -20,7 +20,7 @@ class ZonefileSetting < ActiveRecord::Base
 
     File.open("#{ENV['zonefile_export_dir']}/#{filename}", 'w') { |f| f.write(zf) }
 
-    STDOUT << "#{Time.now.utc} - Successfully generated zonefile #{filename}\n"
+    STDOUT << "#{Time.zone.now.utc} - Successfully generated zonefile #{filename}\n"
   end
 
   def to_s

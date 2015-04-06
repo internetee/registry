@@ -56,7 +56,7 @@ namespace :import do
 
   desc 'Import registrars'
   task registrars: :environment do
-    start = Time.now.to_f
+    start = Time.zone.now.to_f
     puts '-----> Importing registrars...'
 
     registrars = []
@@ -92,12 +92,12 @@ namespace :import do
 
     Registrar.import registrars, validate: false
 
-    puts "-----> Imported #{count} new registrars in #{(Time.now.to_f - start).round(2)} seconds"
+    puts "-----> Imported #{count} new registrars in #{(Time.zone.now.to_f - start).round(2)} seconds"
   end
 
   desc 'Import contacts'
   task contacts: :environment do
-    start = Time.now.to_f
+    start = Time.zone.now.to_f
     puts '-----> Importing contacts...'
 
     # 1;"RC";"born number" # not used
@@ -183,12 +183,12 @@ namespace :import do
     end
 
     Contact.import contact_columns, contacts, validate: false
-    puts "-----> Imported #{count} new contacts in #{(Time.now.to_f - start).round(2)} seconds"
+    puts "-----> Imported #{count} new contacts in #{(Time.zone.now.to_f - start).round(2)} seconds"
   end
 
   desc 'Import domains'
   task domains: :environment do
-    start = Time.now.to_f
+    start = Time.zone.now.to_f
     puts '-----> Importing domains...'
 
     domain_columns = %w(
@@ -449,6 +449,6 @@ namespace :import do
       x.save(validate: false)
     end
 
-    puts "-----> Imported #{count} new domains in #{(Time.now.to_f - start).round(2)} seconds"
+    puts "-----> Imported #{count} new domains in #{(Time.zone.now.to_f - start).round(2)} seconds"
   end
 end

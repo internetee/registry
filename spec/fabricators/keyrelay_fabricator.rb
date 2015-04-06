@@ -1,5 +1,5 @@
 Fabricator(:keyrelay) do
-  pa_date { DateTime.now }
+  pa_date { Time.zone.now }
   expiry_relative 'P1W'
   key_data_public_key 'abc'
   key_data_flags 0

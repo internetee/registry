@@ -308,7 +308,7 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(xml, :xml)
       response[:msg].should == 'Command completed successfully'
       response[:result_code].should == '1000'
-      Domain.first.valid_to.should == Date.today + 1.year
+      Domain.first.valid_to.should == 1.year.since.to_date
     end
 
     it 'does not create a domain with invalid period' do
@@ -1682,7 +1682,7 @@ describe 'EPP Domain', epp: true do
 
     ### RENEW ###
     it 'renews a domain' do
-      exp_date = (Date.today + 1.year)
+      exp_date = 1.year.since.to_date
       xml = @epp_xml.domain.renew(
         name: { value: domain.name },
         curExpDate: { value: exp_date.to_s },
@@ -1690,6 +1690,9 @@ describe 'EPP Domain', epp: true do
       )
 
       response = epp_plain_request(xml, :xml)
+      response[:results][0][:msg].should == 'Command completed successfully'
+      response[:results][0][:result_code].should == '1000'
+
       ex_date = response[:parsed].css('renData exDate').text
       name = response[:parsed].css('renData name').text
       ex_date.should == "#{(exp_date + 1.year)} 00:00:00 UTC"
@@ -1709,7 +1712,7 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'returns an error when period is invalid' do
-      exp_date = (Date.today + 1.year)
+      exp_date = (1.year.since.to_date)
 
       xml = @epp_xml.domain.renew(
         name: { value: domain.name },
@@ -1718,8 +1721,8 @@ describe 'EPP Domain', epp: true do
       )
 
       response = epp_plain_request(xml, :xml)
-      response[:results][0][:result_code].should == '2004'
       response[:results][0][:msg].should == 'Period must add up to 1, 2 or 3 years [period]'
+      response[:results][0][:result_code].should == '2004'
       response[:results][0][:value].should == '4'
     end
 

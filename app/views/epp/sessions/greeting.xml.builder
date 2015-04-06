@@ -1,7 +1,7 @@
 xml.epp_head do
   xml.greeting do
     xml.svID 'EPP server (EIS)'
-    xml.svDate Time.now.utc.iso8601
+    xml.svDate Time.zone.now.utc.iso8601
     xml.svcMenu do
       xml.version '1.0'
       xml.lang 'en'

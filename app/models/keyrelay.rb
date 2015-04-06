@@ -45,7 +45,7 @@ class Keyrelay < ActiveRecord::Base
   end
 
   def status
-    if Time.now > expiry
+    if Time.zone.now > expiry
       return 'expired'
     else
       return 'pending'
