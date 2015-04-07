@@ -1,0 +1,33 @@
+= render 'depp/shared/title', name: t(:contact_info)
+
+%hr
+.row
+  .col-md-12
+    = form_tag check_contacts_path, class: 'form-horizontal', method: :get do
+      .col-md-11
+        .form-group
+          = text_field_tag :contacts, params[:contacts], class: 'form-control', autocomplete: 'off'
+
+      .col-md-1.text-right.text-center-xs
+        .form-group
+          .col-md-offset-2.col-md-10
+            %button.btn.btn-primary
+              &nbsp;
+              %span.glyphicon.glyphicon-search
+              &nbsp;
+
+- if @contacts
+  %hr
+  .row
+    .col-md-12
+      .table-responsive
+        %table.table.table-hover.table-bordered.table-condensed
+          %thead
+            %tr
+              %th= t('id')
+              %th= t('value')
+          %tbody
+            - @contacts.each do |contact|
+              %tr
+                %td= contact[:id]
+                %td= contact[:reason]

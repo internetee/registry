@@ -1,0 +1,13 @@
+- content_for :tabs do
+  .container.subnav
+    %ul.nav.nav-tabs.navbar-right
+      %li{role: :presentation, class: active == :domains ? 'active' : ''}
+        = link_to t(:all), domains_path
+      %li{role: :presentation, class: active == :new ? 'active' : ''}
+        = link_to t(:new), new_domain_path
+      %li{role: :presentation, class: active == :check ? 'active' : ''}
+        = link_to t(:check), check_domains_path
+      %li{role: :presentation, class: active == :transfer ? 'active' : ''}
+        = link_to t(:transfer), transfer_domains_path
+      %li{role: :presentation, class: active == :keyrelay ? 'active' : ''}
+        = link_to t(:keyrelay), keyrelay_path

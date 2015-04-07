@@ -1,0 +1,29 @@
+- if @data && @data.css('result')
+  - @results ||= @data.css('result')
+
+- if @results || flash[:epp_results]
+  - success_codes = %(1000, 1300, 1301, 200)
+
+  - if @results
+    - @results.each do |x|
+      - next if success_codes.include?(x['code'])
+      .row
+        .col-md-12
+          %p{class: "alert alert-danger"}
+            = x.css('msg').text.split('[').first
+            - if x.css('value').text.present?
+              = " - #{x.css('value').text}"
+            %span.pull-right
+              = "[code: #{x['code']}]"
+
+  - if flash[:epp_results]
+    - flash[:epp_results].each do |x|
+      - next if success_codes.include?(x['code'])
+      .row
+        .col-md-12
+          %p{class: "alert alert-danger"}
+            = x['msg'].split('[').first
+            - if x['value'].present?
+              = " - #{x['value']}"
+            %span.pull-right
+              = "[code: #{x['code']}]"

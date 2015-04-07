@@ -1,0 +1,66 @@
+.row
+  .col-md-8
+    = form_tag(xml_console_path) do
+      .form-group
+        = text_area_tag(:payload, params[:payload], class: 'form-control', rows: 15, style: 'font-family:monospace; font-size: 11px;')
+
+      = button_tag t('send_epp_request'), class: 'btn btn-default'
+  .col-md-4
+    %h4 Domain
+    %a.js-load-xml{href: 'javascript:void(0)', data: {obj: 'domain', epp_action: 'create'}}
+      Create
+    ,
+    %a.js-load-xml{href: 'javascript:void(0)', data: {obj: 'domain', epp_action: 'update'}}
+      Update
+    ,
+    %a.js-load-xml{href: 'javascript:void(0)', data: {obj: 'domain', epp_action: 'info'}}
+      Info
+    ,
+    %a.js-load-xml{href: 'javascript:void(0)', data: {obj: 'domain', epp_action: 'renew'}}
+      Renew
+    ,
+    %a.js-load-xml{href: 'javascript:void(0)', data: {obj: 'domain', epp_action: 'check'}}
+      Check
+    ,
+    %a.js-load-xml{href: 'javascript:void(0)', data: {obj: 'domain', epp_action: 'transfer'}}
+      Transfer
+    ,
+    %a.js-load-xml{href: 'javascript:void(0)', data: {obj: 'domain', epp_action: 'delete'}}
+      Delete
+
+    %h4 Keyrelay
+    %a.js-load-xml{href: 'javascript:void(0)', data: {obj: 'keyrelay', epp_action: 'keyrelay'}}
+      Keyrelay
+
+    %h4 Contact
+    %a.js-load-xml{href: 'javascript:void(0)', data: {obj: 'contact', epp_action: 'create'}}
+      Create
+    ,
+    %a.js-load-xml{href: 'javascript:void(0)', data: {obj: 'contact', epp_action: 'check'}}
+      Check
+    ,
+    %a.js-load-xml{href: 'javascript:void(0)', data: {obj: 'contact', epp_action: 'check_multiple'}}
+      Check(multiple)
+    ,
+    %a.js-load-xml{href: 'javascript:void(0)', data: {obj: 'contact', epp_action: 'delete'}}
+      Delete
+    ,
+    %a.js-load-xml{href: 'javascript:void(0)', data: {obj: 'contact', epp_action: 'info'}}
+      Info
+    ,
+    %a.js-load-xml{href: 'javascript:void(0)', data: {obj: 'contact', epp_action: 'update_chg'}}
+      Update(chg)
+
+- if @result
+  %hr
+  .row
+    .col-md-12
+      = preserve do
+        = CodeRay.scan(@result.to_s.force_encoding("UTF-8"), :xml).div().html_safe
+
+:javascript
+  $('.js-load-xml').click(function() {
+    $.get('xml_console/load_xml', {obj: $(this).data('obj'), epp_action: $(this).data('epp-action')}, function(data) {
+      $('textarea[name="payload"]').html(data);
+    });
+  });

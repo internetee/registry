@@ -1,0 +1,9 @@
+- content_for :window_title do
+  %title= name
+
+.row.title-row
+  .col-sm-6
+    %h1= name
+  .col-sm-6
+    .top-actions
+      = yield :actions

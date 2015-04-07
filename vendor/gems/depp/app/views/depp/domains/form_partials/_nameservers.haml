@@ -1,0 +1,24 @@
+#nameservers
+  - @domain_params['nameservers_attributes'].each do |k, v|
+    .panel.panel-default
+      .panel-heading.clearfix
+        .pull-left= t('nameserver')
+        .pull-right
+          = link_to(t('add_another'), '#', class: 'btn btn-primary btn-xs add-nameserver')
+          = link_to(t('delete'), '#', class: 'btn btn-danger btn-xs destroy')
+      .panel-body
+        .form-group
+          = label_tag "domain_nameservers_attributes_#{k}_hostname", t('hostname'), class: 'col-md-2 control-label'
+          .col-md-10
+            = text_field_tag "domain[nameservers_attributes][#{k}][hostname]", v['hostname'], class: 'form-control'
+        .form-group
+          = label_tag "domain_nameservers_attributes_#{k}_ipv4", t('ipv4'), class: 'col-md-2 control-label'
+          .col-md-10
+            = text_field_tag "domain[nameservers_attributes][#{k}][ipv4]", v['ipv4'], class: 'form-control'
+        .form-group
+          = label_tag "domain_nameservers_attributes_#{k}_ipv6", t('ipv6'), class: 'col-md-2 control-label'
+          .col-md-10
+            = text_field_tag "domain[nameservers_attributes][#{k}][ipv6]", v['ipv6'], class: 'form-control'
+:coffee
+  $("#nameservers").nestedAttributes
+    bindAddTo: $(".add-nameserver")

@@ -1,0 +1,4 @@
+- if flash[:notice].present? || flash[:alert].present?
+  #flash
+    - type = (flash[:notice]) ? 'bg-success' : 'bg-danger'
+    .alert{class: type}= flash[:notice] || flash[:alert]

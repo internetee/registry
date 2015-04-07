@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="urn:ietf:params:xml:ns:domain-1.0" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
+  <command>
+    <ext:keyrelay>
+      <ext:name>example6.ee</ext:name>
+      <ext:keyData>
+        <secDNS:flags>256</secDNS:flags>
+        <secDNS:protocol>3</secDNS:protocol>
+        <secDNS:alg>8</secDNS:alg>
+        <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
+      </ext:keyData>
+      <ext:authInfo>
+        <domain:pw>7521f360ae480e67c3096e4c046beb84</domain:pw>
+      </ext:authInfo>
+      <ext:expiry>
+        <ext:relative>P1D</ext:relative>
+      </ext:expiry>
+    </ext:keyrelay>
+    <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+      <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+    </eis:extdata>
+    <ext:clTRID>1422542244</ext:clTRID>
+  </command>
+</epp>

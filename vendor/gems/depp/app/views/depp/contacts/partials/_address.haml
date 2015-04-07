@@ -1,0 +1,23 @@
+.panel.panel-default
+  .panel-heading
+    %h3.panel-title= t(:address)
+  .panel-body
+    %dl.dl-horizontal
+      - if @contact.org_name.present?
+        %dt= t(:org_name)
+        %dd= @contact.org_name
+
+      %dt= t(:street)
+      %dd= @contact.street
+
+      %dt= t(:city)
+      %dd= @contact.city
+
+      %dt= t(:zip)
+      %dd= @contact.zip
+
+      %dt= t(:state)
+      %dd= @contact.state
+
+      %dt= t(:country)
+      %dd= @contact.country_name

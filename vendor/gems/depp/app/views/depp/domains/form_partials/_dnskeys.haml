@@ -1,0 +1,57 @@
+#dnskeys
+  - @domain_params['dnskeys_attributes'].each do |k, v|
+    .panel.panel-default
+      .panel-heading.clearfix
+        .pull-left= t('dnskey')
+        .pull-right
+          = link_to(t('add_another'), '#', class: 'btn btn-primary btn-xs add-dnskey')
+          = link_to(t('delete'), '#', class: 'btn btn-danger btn-xs destroy')
+      .panel-body
+        - if ENV['show_ds_data_fields'] == 'true'
+          .form-group
+            = label_tag "domain_dnskeys_attributes_#{k}_ds_key_tag", t('ds_key_tag'), class: 'col-md-2 control-label'
+            .col-md-10
+              = text_field_tag "domain[dnskeys_attributes][#{k}][ds_key_tag]", v['ds_key_tag'], {class: 'form-control'}
+
+          .form-group
+            = label_tag "domain_dnskeys_attributes_#{k}_ds_alg", t('ds_algorithm'), class: 'col-md-2 control-label'
+            .col-md-10
+              = select_tag "domain[dnskeys_attributes][#{k}][ds_alg]", options_for_select(Depp::Dnskey::ALGORITHMS, v['ds_alg']), {class: 'form-control'}
+
+          .form-group
+            = label_tag "domain_dnskeys_attributes_#{k}_ds_digest_type", t('ds_digest_type'), class: 'col-md-2 control-label'
+            .col-md-10
+              = select_tag "domain[dnskeys_attributes][#{k}][ds_digest_type]", options_for_select(Depp::Dnskey::DS_DIGEST_TYPES, v['ds_digest_type']), {class: 'form-control'}
+
+          .form-group
+            = label_tag "domain_dnskeys_attributes_#{k}_ds_digest", t('ds_digest'), class: 'col-md-2 control-label'
+            .col-md-10
+              = text_field_tag "domain[dnskeys_attributes][#{k}][ds_digest]", v['ds_digest'], {class: 'form-control'}
+
+        .form-group
+          = label_tag "domain_dnskeys_attributes_#{k}_flags", t('flags'), class: 'col-md-2 control-label'
+          .col-md-10
+            = select_tag "domain[dnskeys_attributes][#{k}][flags]", options_for_select(Depp::Dnskey::FLAGS, v['flags']), {class: 'form-control'}
+
+        .form-group
+          = label_tag "domain_dnskeys_attributes_#{k}_protocol", t('protocol'), class: 'col-md-2 control-label'
+          .col-md-10
+            = select_tag "domain[dnskeys_attributes][#{k}][protocol]", options_for_select(Depp::Dnskey::PROTOCOLS, v['protocol']), {class: 'form-control'}
+
+        .form-group
+          = label_tag "domain_dnskeys_attributes_#{k}_alg", t('alg'), class: 'col-md-2 control-label'
+          .col-md-10
+            = select_tag "domain[dnskeys_attributes][#{k}][alg]", options_for_select(Depp::Dnskey::ALGORITHMS, v['alg']), {class: 'form-control'}
+
+        .form-group
+          = label_tag "domain_dnskeys_attributes_#{k}_public_key", t('public_key'), class: 'col-md-2 control-label'
+          .col-md-10
+            = text_field_tag "domain[dnskeys_attributes][#{k}][public_key]", v['public_key'], class: 'form-control'
+:coffee
+  $("#dnskeys").nestedAttributes
+    bindAddTo: $(".add-dnskey")
+    afterAdd: (item) ->
+      item.find('select').each (k, v) ->
+        $(v).val($(v).find('option:first-child').val())
+
+

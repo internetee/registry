@@ -1,0 +1,41 @@
+.panel.panel-default
+  .panel-heading.clearfix
+    .pull-left= t('contact_disclosure')
+
+  .panel-body
+    .form-group
+      = label_tag :contact_disclose_flag, t('flag_type'), class: 'col-md-2 control-label'
+      .col-md-10
+        =# check_box_tag('contact[disclose][sv_policy]', @contact_params[:disclose][:sv_policy], class: 'form-control')
+        = select_tag('contact[disclose][flag]', options_for_select(Depp::Contact::DISCLOSURE_TYPES) )
+
+  .panel-body
+    .form-group
+      = label_tag :contact_disclose_name, t('name'), class: 'col-md-2 control-label'
+      .col-md-10
+        = check_box_tag('contact[disclose][name]')
+
+    .form-group
+      = label_tag :contact_disclose_email, t('email'), class: 'col-md-2 control-label'
+      .col-md-10
+        = check_box_tag('contact[disclose][email]')
+
+    .form-group
+      = label_tag :contact_disclose_org_name, t('org_name'), class: 'col-md-2 control-label'
+      .col-md-10
+        = check_box_tag('contact[disclose][org_name]')
+
+    .form-group
+      = label_tag :contact_disclose_address, t('address'), class: 'col-md-2 control-label'
+      .col-md-10
+        = check_box_tag('contact[disclose][address]')
+
+    .form-group
+      = label_tag :contact_disclose_voice, t('voice'), class: 'col-md-2 control-label'
+      .col-md-10
+        = check_box_tag('contact[disclose][voice]')
+
+    .form-group
+      = label_tag :contact_disclose_fax, t('fax'), class: 'col-md-2 control-label'
+      .col-md-10
+        = check_box_tag('contact[disclose][fax]')

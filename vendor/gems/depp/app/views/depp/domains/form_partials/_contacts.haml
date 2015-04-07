@@ -1,0 +1,24 @@
+#domain-contacts
+  - @domain_params['contacts_attributes'].each do |k, v|
+    .panel.panel-default
+      .panel-heading.clearfix
+        .pull-left= t('contact')
+        .pull-right
+          = link_to(t('add_another'), '#', class: 'btn btn-primary btn-xs add-domain-contact')
+          = link_to(t('delete'), '#', class: 'btn btn-danger btn-xs destroy')
+      .panel-body
+        .form-group
+          = label_tag "domain_contacts_attributes_#{k}_type", t('contact_type'), class: 'col-md-2 control-label'
+          .col-md-10
+            = select_tag "domain[contacts_attributes][#{k}][type]", options_for_select(['admin', 'tech'], v['type']), {class: 'form-control'}
+
+        .form-group
+          = label_tag "domain_contacts_attributes_#{k}_code", t('contact_code'), class: 'col-md-2 control-label'
+          .col-md-10.has-feedback
+            = text_field_tag("domain[contacts_attributes][#{k}][code]", v['code'], class: 'form-control', placeholder: t('contact_code'), autocomplete: 'off')
+:coffee
+  $("#domain-contacts").nestedAttributes
+    bindAddTo: $(".add-domain-contact")
+    afterAdd: (item) ->
+      item.find('select').each (k, v) ->
+        $(v).val($(v).find('option:first-child').val())

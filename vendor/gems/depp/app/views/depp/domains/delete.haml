@@ -1,0 +1,17 @@
+= render 'depp/shared/title', name: "#{t(:delete)}: #{params[:domain_name]}"
+
+= form_tag(destroy_domains_path, class: 'form-horizontal', multipart: true, method: :delete) do
+  .panel.panel-default
+    .panel-heading.clearfix
+      = t(:legal_document)
+    .panel-body
+      .form-group
+        .col-md-4.control-label
+          = label_tag 'domain[legal_document]', t('legal_document')
+        .col-md-6
+          = file_field_tag 'domain[legal_document]'
+          = hidden_field_tag 'domain[name]', params[:domain_name]
+  %hr
+  .row
+    .col-md-12.text-right
+      = button_tag t('delete'), class: 'btn btn-danger'
