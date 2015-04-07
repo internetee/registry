@@ -1,0 +1,17 @@
+#nameservers.panel.panel-default
+  .panel-heading.clearfix
+    %h3.panel-title= t(:nameservers)
+  .table-responsive
+    %table.table.table-hover.table-bordered.table-condensed
+      %thead
+        %tr
+          %th{class: 'col-xs-4'}= t('hostname')
+          %th{class: 'col-xs-4'}= t('ipv4')
+          %th{class: 'col-xs-4'}= t('ipv6')
+      %tbody
+        - @data.css('hostAttr').each do |x|
+          %tr
+            %td= x.css('hostName').text
+            %td= x.css('hostAddr[ip="v4"]').text
+            %td= x.css('hostAddr[ip="v6"]').text
+

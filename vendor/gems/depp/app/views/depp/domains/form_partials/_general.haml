@@ -1,0 +1,19 @@
+.general-tab.panel.panel-default
+  .form-group
+    = label_tag :domain_name, t('name'), class: 'col-md-2 control-label'
+    .col-md-10
+      - readonly = params[:domain_name] ? true : false
+      = text_field_tag('domain[name]', @domain_params[:name], class: 'form-control', readonly: readonly)
+
+  - unless params[:domain_name]
+    .form-group
+      = label_tag :domain_period, t('period'), class: 'col-md-2 control-label'
+      .col-md-5
+        = text_field_tag('domain[period]', @domain_params[:period], class: 'form-control')
+      .col-md-5
+        = select_tag 'domain[period_unit]', options_for_select(['y', 'm', 'd'], @domain_params[:period_unit]), { class: 'form-control' }
+
+  .form-group
+    = label_tag :domain_registrant, t('registrant'), class: 'col-md-2 control-label'
+    .col-md-10
+      = text_field_tag('domain[registrant]', @domain_params[:registrant], class: 'form-control', placeholder: t('contact_code'), autocomplete: 'off')

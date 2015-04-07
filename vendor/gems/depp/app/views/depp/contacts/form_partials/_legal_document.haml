@@ -1,0 +1,12 @@
+.form-group
+  .col-md-10
+
+.panel.panel-default
+  .panel-heading.clearfix
+    .pull-left= t(:legal_document)
+  .panel-body
+    .form-group
+      .col-md-3.control-label
+        = f.label :legal_document, t(:legal_document)
+      .col-md-7
+        = f.file_field :legal_document, :value => ''

@@ -1,0 +1,24 @@
+#domain-statuses
+  - @domain_params['statuses_attributes'].each do |k, v|
+    %br
+    .panel.panel-default
+      .panel-heading.clearfix
+        .pull-left= t('status')
+        .pull-right
+          = link_to(t('add_another'), '#', class: 'btn btn-primary btn-xs add-domain-status')
+          = link_to(t('delete'), '#', class: 'btn btn-danger btn-xs destroy')
+      .panel-body
+        .form-group
+          = label_tag "domain_statuses_attributes_#{k}_code", t('code'),class: 'col-md-2 control-label'
+          .col-md-10
+            = select_tag "domain[statuses_attributes][#{k}][code]", options_for_select(Depp::Domain::DOMAIN_STATUSES, v['code']), {class: 'form-control', prompt: ''}
+        .form-group
+          = label_tag "domain_statuses_attributes_#{k}_description", t('description'),class: 'col-md-2 control-label'
+          .col-md-10
+            = text_field_tag "domain[statuses_attributes][#{k}][description]", v['description'], class: 'form-control', autocomplete: 'off'
+:coffee
+  $("#domain-statuses").nestedAttributes
+    bindAddTo: $(".add-domain-status")
+    afterAdd: (item) ->
+      item.find('select').each (k, v) ->
+        $(v).val($(v).find('option:first-child').val())

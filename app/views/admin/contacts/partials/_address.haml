@@ -8,7 +8,7 @@
         %dd= @contact.org_name
 
       %dt= t(:street)
-      %dd= @contact.street.gsub("\n", '<br>').html_safe
+      %dd= @contact.street.to_s.gsub("\n", '<br>').html_safe
 
       %dt= t(:city)
       %dd= @contact.city

@@ -85,3 +85,7 @@ Style/AlignParameters:
 # No need fancy style of numbers such as 1_000_000
 Style/NumericLiterals:
   Enabled: false
+
+# Too often suggest wrong syntax in subarray, this should be fix in rubocop first
+Style/WordArray:
+  Enabled: false

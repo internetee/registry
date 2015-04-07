@@ -1,0 +1,33 @@
+.panel.panel-default
+  .panel-heading
+    %h3.panel-title= t('dnskeys')
+  .panel-body{style: 'word-wrap: break-word;'}
+    - @data.css('dsData').each do |x|
+      %dl.dl-horizontal
+        - if x.css('keyTag').text.present?
+          %dt= t('ds_key_tag')
+          %dd= x.css('keyTag').text
+
+        - if x.css('alg').first.text.present?
+          %dt= t('ds_algorithm')
+          %dd= x.css('alg').first.text
+
+        - if x.css('digestType').text.present?
+          %dt= t('ds_digest_type')
+          %dd= x.css('digestType').text
+
+        - if x.css('digest').text.present?
+          %dt= t('ds_digest')
+          %dd= x.css('digest').text
+
+        %dt= t('flag')
+        %dd= x.css('flags').text
+
+        %dt= t('protocol')
+        %dd= x.css('protocol').text
+
+        %dt= t('algorithm')
+        %dd= x.css('keyData > alg').text
+
+        %dt= t('public_key')
+        %dd= x.css('pubKey').text

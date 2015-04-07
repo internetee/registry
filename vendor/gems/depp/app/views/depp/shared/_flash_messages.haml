@@ -1,0 +1,4 @@
+- display = (flash.empty?) ? 'none' : 'block'
+#flash{style: "display: #{display};"}
+  - type = (flash[:notice]) ? 'bg-success' : 'bg-danger'
+  .alert{class: type}= flash[:notice] || flash[:alert]

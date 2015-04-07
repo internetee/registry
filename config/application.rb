@@ -30,8 +30,11 @@ module Registry
     config.paths.add File.join('app', 'api'), glob: File.join('**', '*.rb')
     config.autoload_paths += Dir[Rails.root.join('app', 'api', '*')]
 
-    # Load all model subdirs
+    # Autoload all model subdirs
     config.autoload_paths += Dir[Rails.root.join('app', 'models', '**/')]
+
+    # Autoload depp gem
+    config.autoload_paths += %W(#{config.root}/vendor/gems/depp/lib)
 
     # Add the fonts path
     config.assets.paths << Rails.root.join('vendor', 'assets', 'fonts')

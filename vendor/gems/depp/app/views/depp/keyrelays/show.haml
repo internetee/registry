@@ -1,0 +1,55 @@
+.row
+  .col-sm-12
+    %h2.text-center-xs= t('keyrelay')
+%hr
+.row
+  .col-md-12
+    = form_tag keyrelay_path, class: 'form-horizontal', method: :post, multipart: true do
+      .form-group
+        = label_tag :domain_name, t('domain_name'), class: 'col-md-2 control-label'
+        .col-md-10
+          = text_field_tag :domain_name, params[:domain_name], class: 'form-control', autocomplete: 'off'
+
+      .form-group
+        = label_tag :password, t('password'), class: 'col-md-2 control-label'
+        .col-md-10
+          = text_field_tag :password, params[:password], class: 'form-control', autocomplete: 'off'
+
+      .form-group
+        = label_tag :expiry_relative, t('expiry_relative'), class: 'col-md-2 control-label'
+        .col-md-10
+          = text_field_tag :expiry_relative, params[:expiry_relative], class: 'form-control', autocomplete: 'off'
+
+      .form-group
+        = label_tag :expiry_absolute, t('expiry_absolute'), class: 'col-md-2 control-label'
+        .col-md-10
+          = text_field_tag :expiry_absolute, params[:expiry_absolute], class: 'form-control', autocomplete: 'off'
+
+      .form-group
+        = label_tag :key_data_flags, t('flag'), class: 'col-md-2 control-label'
+        .col-md-10
+          = select_tag :key_data_flags, options_for_select(Depp::Dnskey::FLAGS, params['key_data_flags']), {class: 'form-control'}
+
+      .form-group
+        = label_tag :key_data_protocol, t('protocol'), class: 'col-md-2 control-label'
+        .col-md-10
+          = select_tag :key_data_protocol, options_for_select(Depp::Dnskey::PROTOCOLS, params['key_data_protocol']), {class: 'form-control'}
+
+      .form-group
+        = label_tag :key_data_alg, t('algorithm'), class: 'col-md-2 control-label'
+        .col-md-10
+          = select_tag :key_data_alg, options_for_select(Depp::Dnskey::ALGORITHMS, params['key_data_alg']), {class: 'form-control'}
+
+      .form-group
+        = label_tag :key_data_public_key, t('public_key'), class: 'col-md-2 control-label'
+        .col-md-10
+          = text_field_tag :key_data_public_key, params['key_data_public_key'], class: 'form-control'
+
+      .form-group
+        = label_tag :legal_document, t('legal_document'),class: 'col-md-2 control-label'
+        .col-md-10
+          = file_field_tag :legal_document
+
+      .form-group
+        .col-md-offset-2.col-md-10
+          %button.btn.btn-primary= t('upload_key')

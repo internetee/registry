@@ -1,0 +1,41 @@
+- path = (params[:domain_name]) ? update_domains_path : domains_path
+= form_tag(path, class: 'form-horizontal', multipart: true) do
+  .row
+    .col-md-12
+      / Nav tabs
+      %ul.nav.nav-tabs{:role => "tablist", id: 'tabs'}
+        %li.active
+          %a{"data-toggle" => "tab", :href => "#general-tab", :role => "tab"}= t('general')
+        - if params['domain_name']
+          %li
+            %a{"data-toggle" => "tab", :href => "#statuses-tab", :role => "tab"}= t('statuses')
+      / Tab panes
+      .tab-content
+        #general-tab.tab-pane.active
+          = render 'depp/domains/form_partials/general'
+          = render 'depp/domains/form_partials/contacts'
+          %hr
+          = render 'depp/domains/form_partials/nameservers'
+          %hr
+          = render 'depp/domains/form_partials/dnskeys'
+        - if params['domain_name']
+          #statuses-tab.tab-pane
+            = render 'depp/domains/form_partials/statuses'
+
+        .panel.panel-default
+          .panel-heading.clearfix
+            .pull-left= t(:legal_document)
+          .panel-body
+            .form-group
+              = label_tag 'domain[legal_document]', t('legal_document'),class: 'col-md-3 control-label'
+              .col-md-9
+                = file_field_tag 'domain[legal_document]'
+
+  .row
+    .col-md-12.text-right
+      = button_tag(t('shared.save'), class: 'btn btn-primary')
+
+:javascript
+  $(function () {
+    $('#tabs a:first').tab('show')
+  })

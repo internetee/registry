@@ -1,0 +1,89 @@
+- if @data.css('msgQ').any?
+  - msg_q = @data.css('msgQ').first
+  .row
+    .col-sm-12
+      %h2= t('messages', count: msg_q['count'])
+  %hr
+    .row
+      .col-md-12
+        .panel.panel-default
+          .panel-heading.clearfix
+            .pull-left= t('message_no', id: msg_q['id'])
+            .pull-right
+              - if @data.css('panData').any? # this is a keyrelay request
+                = link_to(t('confirm'), 'javascript: void(0);', class: 'btn btn-primary btn-xs js-keyrelay-confirm')
+              - if @data.css('trnData trStatus').any? # this is a transfer request
+                - unless ['serverApproved', 'clientApproved'].include?(@data.css('trStatus').first.text)
+                  = link_to(t('confirm'), 'javascript: void(0);', class: 'btn btn-primary btn-xs js-transfer-confirm')
+              = link_to(t('dequeue'), poll_path(id: msg_q['id']), method: :delete, class: 'btn btn-primary btn-xs')
+          .panel-body
+            %dl.dl-horizontal
+              %dt= t('message')
+              %dd= msg_q.css('msg').text
+
+              %dt= t('queue_date')
+              %dd= @data.css('qDate').text
+
+              %dl.dl-horizontal
+              / keyrelay
+              - if @data.css('panData').any?
+                %dt= t('domain_name')
+                %dd= @data.css('name').text
+
+                %dt= t('password')
+                %dd= @data.css('pw').text
+
+                - if @data.css('relative').text.present?
+                  %dt= t('expiry_relative')
+                  %dd= @data.css('relative').text
+
+                - if @data.css('absolute').text.present?
+                  %dt= t('expiry_absolute')
+                  %dd= @data.css('absolute').text
+
+                %dt paDate
+                %dd= @data.css('paDate').text
+
+                %dt= t('flag')
+                %dd= @data.css('flags').text
+
+                %dt= t('protocol')
+                %dd= @data.css('protocol').text
+
+                %dt= t('algorithm')
+                %dd= @data.css('alg').text
+
+                %dt= t('public_key')
+                %dd= @data.css('pubKey').text
+
+                = form_tag confirm_keyrelay_poll_path, class: 'js-keyrelay-form' do
+                  = hidden_field_tag 'domain[name]', @data.css('name').text
+                  = hidden_field_tag 'domain[dnskeys_attributes][0][flags]', @data.css('flags').text
+                  = hidden_field_tag 'domain[dnskeys_attributes][0][protocol]', @data.css('protocol').text
+                  = hidden_field_tag 'domain[dnskeys_attributes][0][alg]', @data.css('alg').text
+                  = hidden_field_tag 'domain[dnskeys_attributes][0][public_key]', @data.css('pubKey').text
+
+              - else
+                - if @data.css('trnData trStatus').any? # this is a transfer request
+                  = form_tag confirm_transfer_poll_path, class: 'js-transfer-form' do
+                    = hidden_field_tag 'domain[name]', @data.css('name').text
+
+                - @data.css('trnData').children.each do |x|
+                  - next if x.blank?
+                  %dt= t(x.name)
+                  %dd= x.text
+- else
+  .row
+    .col-sm-12
+      %h2= t('messages', count: 0)
+  %hr
+    .row
+      .col-md-12
+        %p.bg-info{style: 'padding: 15px;'}= t('you_have_no_new_messages')
+
+:coffee
+  $(".js-keyrelay-confirm").on "click", ->
+    $(".js-keyrelay-form").submit()
+
+  $(".js-transfer-confirm").on "click", ->
+    $(".js-transfer-form").submit()

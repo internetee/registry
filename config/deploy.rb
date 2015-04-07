@@ -11,14 +11,14 @@ require 'mina/rbenv'  # for rbenv support. (http://rbenv.org)
 #   repository   - Git repo to clone from. (needed by mina/git)
 #   branch       - Branch name to deploy. (needed by mina/git)
 
-# alpha branch
+# alpha branch, all interfaces unified
 set :domain, 'registry-st'
 set :deploy_to, '$HOME/registry'
 set :repository, 'https://github.com/domify/registry' # dev repo
 set :branch, 'master'
 set :rails_env, 'alpha'
 
-# alpha branch
+# alpha branch, only use for heavy debugging
 task :epp do
   set :domain, 'registry-st'
   set :deploy_to, '$HOME/epp'
@@ -27,6 +27,7 @@ task :epp do
   set :rails_env, 'alpha'
 end
 
+# alpha branch, only use for heavy debugging
 task :registrar do
   set :domain, 'registry-st'
   set :deploy_to, '$HOME/registrar'

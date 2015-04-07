@@ -1,0 +1,50 @@
+.panel.panel-default
+  .panel-heading.clearfix
+    .pull-left= t(:ident)
+  .panel-body
+    .form-group
+      .col-md-2.control-label
+        = f.label :ident_country_code, t(:country) + '*'
+      .col-md-10
+        = f.select(:ident_country_code, SortedCountry.all_options(f.object.ident_country_code), {}, 
+          class: 'js-ident-country-code')
+
+    .form-group
+      .col-md-2.control-label
+        = f.label :ident_type, t(:type) + '*'
+      .col-md-10
+        = f.select(:ident_type, Depp::Contact::SELECTION_TYPES, { selected: f.object.ident_type },
+          class: 'js-ident-type')
+
+    .form-group
+      .col-md-2.control-label
+        = f.label :ident, t(:ident) + '*'
+      .col-md-10
+        = f.text_field :ident, class: 'form-control'
+        - tip_visibility = f.object.ident_type == 'birthday' ? '' : 'display: none'
+        .js-ident-tip{ style: tip_visibility }
+          = t(:birthday_format)
+
+.panel.panel-default
+  .panel-heading.clearfix
+    .pull-left= t(:general)
+  .panel-body
+    .form-group
+      .col-md-2.control-label
+        = f.label :name, t(:name) + '*'
+      .col-md-10
+        = f.text_field :name, class: 'form-control'
+
+    .form-group
+      .col-md-2.control-label
+        = f.label :email, t(:email) + '*'
+      .col-md-10
+        = f.text_field :email, class: 'form-control'
+
+    .form-group
+      .col-md-2.control-label
+        = f.label :phone, t(:phone) + '*'
+      .col-md-10
+        = f.text_field(:phone, class: 'form-control', placeholder: '+372.12323344')
+
+

@@ -1,0 +1,26 @@
+- content_for :actions do
+  = link_to(t(:edit), edit_domains_path(domain_name: params[:domain_name]), 
+    class: 'btn btn-primary')
+  = link_to(t(:renew), renew_domains_path(domain_name: params[:domain_name]), 
+    class: 'btn btn-default') 
+  = link_to(t(:delete), delete_domains_path(domain_name: params[:domain_name]), 
+    class: 'btn btn-default')
+= render 'depp/shared/title', name: truncate(@data.css('name').text)
+
+.row
+  .col-sm-12
+    - if @data.css('result').first['code'] == '1000'
+      .row
+        .col-md-12= render 'depp/domains/partials/general'
+      .row
+        .col-md-12= render 'depp/domains/partials/contacts'
+      .row
+        .col-md-12= render 'depp/domains/partials/statuses'
+      .row
+        .col-md-12= render 'depp/domains/partials/nameservers'
+      .row
+        .col-md-12= render 'depp/domains/partials/dnskeys'
+    - else
+      .row
+        .col-sm-6
+          %h1= t(:not_found)
