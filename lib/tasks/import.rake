@@ -331,7 +331,7 @@ namespace :import do
         end
 
         # nameservers
-        x.nsset.try(:hosts).each do |host|
+        x.nsset.hosts.each do |host|
           ip_maps = host.host_ipaddr_maps
           ips = {}
           ip_maps.each do |ip_map|
@@ -348,7 +348,7 @@ namespace :import do
             user,
             x.id
           ]
-        end
+        end if x.nsset
 
         x.dnskeys.each do |key|
           dnskeys << [
