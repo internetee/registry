@@ -166,7 +166,7 @@ namespace :import do
           user,
           x.country.try(:strip),
           x.id,
-          [x.street1.try(:strip), x.street2.try(:strip), x.street3.try(:strip)].join('\n'),
+          [x.street1.try(:strip), x.street2.try(:strip), x.street3.try(:strip)].join("\n"),
           x.city.try(:strip),
           x.postalcode.try(:strip),
           x.stateorprovince.try(:strip),
