@@ -11,12 +11,15 @@ module Depp
     DISCLOSURE_TYPES = [DISABLED, '1', '0']
     TYPES = %w( bic priv birthday )
     SELECTION_TYPES = [
-      [ 'Business code', 'bic' ],
-      [ 'Personal identification code', 'priv' ],
-      [ 'Birthday', 'birthday' ]
+      ['Business code', 'bic'],
+      ['Personal identification code', 'priv'],
+      ['Birthday', 'birthday']
     ]
 
     class << self
+      attr_reader :epp_xml, :user
+
+      # rubocop: disable Metrics/MethodLength
       def new_from_params(params)
         new(
           id: params[:code],
@@ -36,9 +39,10 @@ module Depp
           city:         params[:city],
           zip:          params[:zip],
           state:        params[:state],
-          country_code: params[:country_code],
+          country_code: params[:country_code]
         )
       end
+      # rubocop: enable Metrics/MethodLength
 
       def find_by_id(id)
         data = info_xml(id)
@@ -75,14 +79,6 @@ module Depp
       def user=(user)
         @user = user
         @epp_xml = EppXml::Contact.new(cl_trid_prefix: user.tag)
-      end
-
-      def epp_xml
-        @epp_xml
-      end
-
-      def user
-        @user
       end
 
       def info_xml(id, password = nil)
@@ -140,7 +136,7 @@ module Depp
       end
     end
 
-    def initialize(attributes={})
+    def initialize(attributes = {})
       super
       self.country_code = 'EE'       if country_code.blank?
       self.ident_type = 'bic'        if ident_type.blank?
@@ -172,6 +168,7 @@ module Depp
       handle_errors(data)
     end
 
+    # rubocop: disable Metrics/MethodLength
     def update_attributes(params)
       self.ident_country_code = params[:ident_country_code]
       self.ident_type   = params[:ident_type]
@@ -215,6 +212,7 @@ module Depp
       data = Depp::Contact.user.request(update_xml)
       handle_errors(data)
     end
+    # rubocop: enable Metrics/MethodLength
 
     def delete
       delete_xml = Contact.epp_xml.delete(
@@ -275,17 +273,13 @@ module Depp
     def handle_errors(data)
       data.css('result').each do |x|
         success_codes = %(1000, 1300, 1301)
+        next if success_codes.include?(x['code'])
         
-        unless success_codes.include?(x['code'])
-          message = "#{x.css('msg').text} #{x.css('value').text}"
-
-          attr = message.split('[').last.strip.sub(']','') if message.include?('[')
-
-          attr = :base if attr.nil?
-          attr = 'phone' if attr == 'voice'
-
-          errors.add(attr, message) 
-        end
+        message = "#{x.css('msg').text} #{x.css('value').text}"
+        attr = message.split('[').last.strip.sub(']', '') if message.include?('[')
+        attr = :base if attr.nil?
+        attr = 'phone' if attr == 'voice'
+        errors.add(attr, message) 
       end
       errors.blank?
     end
