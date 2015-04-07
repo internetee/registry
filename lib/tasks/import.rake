@@ -23,30 +23,30 @@ namespace :import do
   #      in console: Legacy::Contact.last
   #      in console: exit
   #
-  #  In console you should get Last Legacy::Contact object. 
+  #  In console you should get Last Legacy::Contact object.
   #  If you get any errors, scroll up and read first lines
   #  to figure out what went wrong to connect to fred database.
   #
   #
   #  2) START IMPORT
   #  ---------------
-  #  
+  #
   #  Import scrip does not write anything to fred database.
   #  Script is implemented this way, you can run it multiple times
   #  in case you need it. However already imported object are
   #  not reimported, thus if some object has been updated meanwhile
   #  in fred database, those updates will be missed and thous should
-  #  be carried over manually. All new object in fred will be 
+  #  be carried over manually. All new object in fred will be
   #  imported in multiple import script runs.
   #
   #  Start all import:
-  #  
+  #
   #      cd your_registry_deploy_path/current/
   #      RAILS_ENV=production bundle exec rails import:all
-  #  
+  #
   #  If you wish to import one by one, please follow individual import order
   #  from task 'Import all' tasks in this script.
-  
+
   desc 'Import all'
   task all: :environment do
     Rake::Task['import:registrars'].invoke
@@ -148,6 +148,7 @@ namespace :import do
       next if existing_contact_ids.include?(x.id)
       count += 1
 
+      name = x.name.try(:strip).presence || x.organization.try(:strip).presence
       begin
         contacts << [
           x.object_registry.name.try(:strip),
@@ -158,7 +159,7 @@ namespace :import do
           x.ssn.try(:strip),
           ident_type_map[x.ssntype],
           x.object.authinfopw.try(:strip),
-          x.name.try(:strip),
+          name,
           x.organization.try(:strip),
           x.object_registry.try(:registrar).try(:id),
           user,
