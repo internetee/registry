@@ -41,4 +41,5 @@ test:
   ca_cert_path: '/var/lib/jenkins/workspace/registry/ca/certs/ca.crt.pem'
   ca_key_path:  '/var/lib/jenkins/workspace/registry/ca/private/ca.key.pem'
   ca_key_password: 'test'
+  cert_path:    '/var/lib/jenkins/workspace/registry/ca/certs/webclient.crt.pem'
 
