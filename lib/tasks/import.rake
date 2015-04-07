@@ -211,7 +211,7 @@ namespace :import do
     )
 
     domain_contact_columns = %w(
-      contact_type
+      type
       creator_str
       updator_str
       legacy_domain_id
@@ -286,7 +286,7 @@ namespace :import do
         # admin contacts
         x.domain_contact_maps.each do |dc|
           domain_contacts << [
-            'admin',
+            'AdminDomainContact',
             user,
             user,
             x.id,
@@ -297,7 +297,7 @@ namespace :import do
         # tech contacts
         x.nsset_contact_maps.each do |dc|
           domain_contacts << [
-            'tech',
+            'TechDomainContact',
             user,
             user,
             x.id,
@@ -306,6 +306,7 @@ namespace :import do
         end
 
         # domain statuses
+        ok = true
         x.object_states.each do |state|
           next if state.name.blank?
           domain_statuses << [
@@ -315,10 +316,22 @@ namespace :import do
             user,
             x.id
           ]
+          ok = false
+        end
+
+        # OK status is default
+        if ok
+          domain_statuses << [
+            nil,
+            DomainStatus::OK,
+            user,
+            user,
+            x.id
+          ]
         end
 
         # nameservers
-        x.nsset.hosts.each do |host|
+        x.nsset.try(:hosts).each do |host|
           ip_maps = host.host_ipaddr_maps
           ips = {}
           ip_maps.each do |ip_map|
