@@ -206,9 +206,55 @@ ActiveRecord::Schema.define(version: 20150413140933) do
   add_index "epp_sessions", ["session_id"], name: "index_epp_sessions_on_session_id", unique: true, using: :btree
   add_index "epp_sessions", ["updated_at"], name: "index_epp_sessions_on_updated_at", using: :btree
 
+  create_table "invoice_items", force: :cascade do |t|
+    t.integer  "invoice_id"
+    t.string   "description", null: false
+    t.string   "item_unit"
+    t.integer  "item_amount"
+    t.decimal  "item_price"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "invoices", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+    t.string   "invoice_type",        null: false
+    t.datetime "due_date",            null: false
+    t.string   "payment_term"
+    t.string   "currency",            null: false
+    t.string   "description"
+    t.string   "reference_no"
+    t.decimal  "vat_prc"
+    t.datetime "paid_at"
+    t.integer  "seller_id"
+    t.string   "seller_name",         null: false
+    t.string   "seller_reg_no"
+    t.string   "seller_iban",         null: false
+    t.string   "seller_bank",         null: false
+    t.string   "seller_swift",        null: false
+    t.string   "seller_vat_no"
+    t.string   "seller_country_code"
+    t.string   "seller_state"
+    t.string   "seller_street"
+    t.string   "seller_city"
+    t.string   "seller_zip"
+    t.string   "seller_phone"
+    t.string   "seller_url"
+    t.string   "seller_email"
+    t.string   "seller_contact_name"
+    t.integer  "buyer_id"
+    t.string   "buyer_name",          null: false
+    t.string   "buyer_reg_no",        null: false
+    t.string   "buyer_country_code"
+    t.string   "buyer_state"
+    t.string   "buyer_street"
+    t.string   "buyer_city"
+    t.string   "buyer_zip"
+    t.string   "buyer_phone"
+    t.string   "buyer_url"
+    t.string   "buyer_email"
+    t.string   "buyer_contact_name"
   end
 
   create_table "keyrelays", force: :cascade do |t|

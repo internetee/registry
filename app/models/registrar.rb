@@ -6,6 +6,7 @@ class Registrar < ActiveRecord::Base
   has_many :api_users, dependent: :restrict_with_error
   has_many :messages
   belongs_to :country_deprecated, foreign_key: :country_id
+  has_many :invoices, foreign_key: 'buyer_id'
 
   validates :name, :reg_no, :country_code, :email, presence: true
   validates :name, :reg_no, uniqueness: true
@@ -19,6 +20,59 @@ class Registrar < ActiveRecord::Base
       res = search(name_or_reg_no_cont: query).result
       res.reduce([]) { |o, v| o << { id: v[:id], display_key: "#{v[:name]} (#{v[:reg_no]})" } }
     end
+
+    def eis
+      find_by(reg_no: '90010019')
+    end
+  end
+
+  def issue_prepayment_invoice(amount, description = nil)
+    # Currently only EIS can issue invoices
+    eis = self.class.eis
+
+    invoices.create(
+      invoice_type: 'DEB',
+      due_date: Time.zone.now.to_date + 1.day,
+      payment_term: 'prepayment',
+      description: description,
+      currency: 'EUR',
+      vat_prc: 0.2,
+      seller_id: eis.id,
+      seller_name: eis.name,
+      seller_reg_no: eis.reg_no,
+      seller_iban: Setting.eis_iban,
+      seller_bank: Setting.eis_bank,
+      seller_swift: Setting.eis_swift,
+      seller_vat_no: eis.vat_no,
+      seller_country_code: eis.country_code,
+      seller_state: eis.state,
+      seller_street: eis.street,
+      seller_city: eis.city,
+      seller_zip: eis.zip,
+      seller_phone: eis.phone,
+      seller_url: eis.url,
+      seller_email: eis.email,
+      seller_contact_name: Setting.eis_invoice_contact,
+      buyer_id: id,
+      buyer_name: name,
+      buyer_reg_no: reg_no,
+      buyer_country_code: country_code,
+      buyer_state: state,
+      buyer_street: street,
+      buyer_city: city,
+      buyer_zip: zip,
+      buyer_phone: phone,
+      buyer_url: url,
+      buyer_email: email,
+      invoice_items_attributes: [
+        {
+          description: 'prepayment',
+          item_unit: 'piece',
+          item_amount: 1,
+          item_price: amount
+        }
+      ]
+    )
   end
 
   def domain_transfers

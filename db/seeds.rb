@@ -84,3 +84,17 @@ ZonefileSetting.where({
 }).first_or_create!
 
 AdminUser.update_all(roles: ['admin'])
+
+Registrar.where(
+  name: 'EIS',
+  reg_no: '90010019',
+  phone: '+372 727 1000',
+  country_code: 'EE',
+  vat_no: 'EE101286464',
+  email: 'info@internet.ee',
+  state: 'Harjumaa',
+  city: 'Tallinn',
+  street: 'Paldiski mnt 80',
+  zip: '10617',
+  url: 'www.internet.ee'
+).first_or_create!

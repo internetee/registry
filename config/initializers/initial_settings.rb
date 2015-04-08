@@ -23,6 +23,11 @@ if con.present? && con.table_exists?('settings')
   Setting.save_default(:transfer_wait_time, 0)
 
   Setting.save_default(:client_side_status_editing_enabled, false)
+
+  Setting.save_default(:eis_iban, 'EE557700771000598731')
+  Setting.save_default(:eis_bank, 'LHV Pank')
+  Setting.save_default(:eis_swift, 'LHVBEE22')
+  Setting.save_default(:eis_invoice_contact, 'Martti Õigus')
 end
 
 # dev only setting
