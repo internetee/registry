@@ -512,3 +512,131 @@ en:
   switch_to: Switch to
   admin_menu: Admin
   domain_transfer_was_approved: 'Domain transfer was approved, associated contacts are: %{contacts}'
+
+  # DEPP
+  activemodel:
+    errors:
+      models:
+        'depp/user':
+          attributes:
+            base:
+              failed_to_open_connection_to_epp_server: 'Failed to open connection to EPP server!'
+              authorization_error: 'Authorization error'
+              invalid_cert: 'Invalid certificate'
+            tag:
+              blank: "Username can't be blank"
+            password:
+              blank: "Password can't be blank"
+
+  username: 'Username'
+  password: 'Password'
+  log_in: 'Log in'
+  log_out: 'Log out (%{user})'
+  domain_name: 'Domain name'
+  domains: 'Domains'
+  register: 'Register'
+  check: 'Check'
+  contacts: 'Contacts'
+  domain_info: 'Domain info'
+  domain_details: 'Domain details'
+  xml_console: 'XML Console'
+  info: 'Info'
+  register: 'Register'
+  send_epp_request: 'Send EPP Request'
+  registrant: 'Registrant'
+  created_at: 'Created at'
+  valid_to: 'Valid to'
+  updated_at: 'Updated at'
+  tech_contacts: 'Tech contacts'
+  name: 'Name'
+  type: 'Type'
+  code: 'Code'
+  nameservers: 'Nameservers'
+  hostname: 'Hostname'
+  ipv4: 'IPv4'
+  ipv6: 'IPv6'
+  dnskeys: 'DNS Keys'
+  flag: 'Flag'
+  protocol: 'Protocol'
+  algorithm: 'Algorithm'
+  public_key: 'Public key'
+  ds_key_tag: 'DS key tag'
+  ds_algorithm: 'DS algorithm'
+  ds_digest_type: 'DS digest type'
+  ds_digest: 'DS digest'
+  statuses: 'Statuses'
+  status: 'Status'
+  description: 'Description'
+  check_domain: 'Check domain'
+  result: 'Result'
+  available: 'Available'
+  reason: 'Reason'
+  contact_code: 'Code'
+  add_another: 'Add another'
+  delete: 'Delete'
+  contact_type: 'Contact type'
+  edit_domain: 'Edit domain'
+  new_domain: 'New domain'
+  edit: 'Edit'
+  delete: 'Delete'
+  are_you_sure: 'Are you sure?'
+  renew: 'Renew'
+  renew_domain: 'Renew domain'
+  cur_exp_date: 'curExpDate'
+  transfer: 'Transfer'
+  query: 'Query'
+  transfer_domain: 'Transfer domain'
+  reject: 'Reject'
+  approve: 'Approve'
+  contact_info: 'Contact info'
+  contact_id: 'Contact ID'
+  address: 'Address'
+  street: 'Street'
+  city: 'City'
+  messages: 'Messages (%{count})'
+  message: 'Message'
+  message_no: 'Message #%{id}'
+  queue_date: 'Queue date'
+  messages_in_queue: 'Messages in queue'
+  you_have_no_new_messages: 'You have no new messages'
+  message_id: 'Message ID'
+  trStatus: 'Status'
+  reID: 'Transfer from'
+  reDate: 'Transfer requested at'
+  acID: 'Transfer to'
+  acDate: 'Accept date'
+  exDate: 'Valid to'
+  dequeue: 'Dequeue'
+  are_you_sure_you_want_to_delete_domain: 'Are you sure you want to delete domain %{domain}?'
+  keyrelay: 'Keyrelay'
+  expiry_relative: 'Expiry relative'
+  expiry_absolute: 'Expiry absolute'
+  upload_key: 'Upload key'
+  legal_document: 'Legal document'
+  delete_domain: 'Delete domain'
+  index: 'Index'
+  ident: 'Ident'
+  email: 'E-mail'
+  value: 'Value'
+  phone: 'Phone'
+  org_name: Org name
+  ident_type: Ident code
+  country: Country
+  period: Period
+  birthday_format: 'Insert birthday in format: YYYY-MM-DD'
+  your_session_has_timed_out: 'Your session has timed out. Please log in again.'
+  certificate_loaded: 'Certificate (already loaded)'
+  private_key_loaded: 'Private key (already loaded)'
+  credentials: 'Credentials'
+  pki: 'PKI'
+  zip: Postcode
+  contact_details: Contact Details
+  general: General
+  id_card: 'ID Card'
+  m_id: 'M-ID'
+  destroyed: It was successfully deleted.
+  not_found: Not found
+  no_connection_to_registry: Connection issue to the registry server! Please try again later.
+  domain_not_found: 'Domain was not found'
+  new_contact: 'New contact'
+

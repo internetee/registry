@@ -21,7 +21,7 @@ module Depp
 
     def pagination_details
       params[:page] ||= 1
-      limit = ENV['depp_records_on_page'] || DEPP_RECORDS_ON_PAGE
+      limit = ENV['depp_records_on_page'] || 20
       offset = ((params[:page].to_i - 1) * limit.to_i)
       [limit, offset]
     end
