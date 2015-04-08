@@ -348,7 +348,7 @@ namespace :import do
             user,
             x.id
           ]
-        end if x.nsset
+        end if x.nsset && x.nsset.hosts
 
         x.dnskeys.each do |key|
           dnskeys << [
