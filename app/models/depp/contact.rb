@@ -279,6 +279,7 @@ module Depp
         attr = message.split('[').last.strip.sub(']', '') if message.include?('[')
         attr = :base if attr.nil?
         attr = 'phone' if attr == 'voice'
+        attr = 'zip' if attr == 'pc'
         errors.add(attr, message) 
       end
       errors.blank?
