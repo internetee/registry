@@ -1,0 +1,16 @@
+- if @contact.id.present?
+  - content_for :actions do
+    = link_to(t(:edit), edit_registrar_contact_path(@contact.id), class: 'btn btn-primary')
+    = link_to(t(:delete), delete_registrar_contact_path(@contact.id), class: 'btn btn-default')
+  = render 'registrar/shared/title', name: truncate(@contact.name)
+
+  .row
+    .col-md-6= render 'registrar/contacts/partials/general'
+    .col-md-6= render 'registrar/contacts/partials/address'
+  .row
+    .col-md-12= render 'registrar/contacts/partials/statuses', statuses: @contact.statuses
+
+- else 
+  .row
+    .col-sm-6
+      %h1= t(:not_found)

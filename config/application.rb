@@ -32,9 +32,7 @@ module Registry
 
     # Autoload all model subdirs
     config.autoload_paths += Dir[Rails.root.join('app', 'models', '**/')]
-
-    # Autoload depp gem
-    config.autoload_paths += %W(#{config.root}/vendor/gems/depp/lib)
+    config.autoload_paths << Rails.root.join('lib')
 
     # Add the fonts path
     config.assets.paths << Rails.root.join('vendor', 'assets', 'fonts')

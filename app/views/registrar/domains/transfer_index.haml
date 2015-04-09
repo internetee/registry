@@ -1,0 +1,22 @@
+= render 'registrar/shared/title', name: t(:transfer_domain)
+
+.row
+  .col-md-12
+    = form_tag transfer_registrar_domains_path, class: 'form-horizontal', method: :post, multipart: true do
+      .form-group
+        = label_tag :domain_name, t('name'), class: 'col-md-2 control-label'
+        .col-md-10
+          = text_field_tag :domain_name, params[:domain_name], class: 'form-control', placeholder: t('domain_name'), autocomplete: 'off', autofocus: true
+      .form-group
+        = label_tag :password, t('password'), class: 'col-md-2 control-label'
+        .col-md-10
+          = text_field_tag :password, params[:password], class: 'form-control', autocomplete: 'off'
+      .form-group
+        = label_tag 'legal_document', t('legal_document'),class: 'col-md-2 control-label'
+        .col-md-10
+          = file_field_tag 'legal_document'
+      .form-group
+        .col-md-offset-2.col-md-10
+          %button.btn.btn-primary{ name: 'query' }= t('query')
+          %button.btn.btn-primary{ name: 'approve' }= t('approve')
+          %button.btn.btn-primary{ name: 'reject' }= t('reject')

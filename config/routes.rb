@@ -15,7 +15,11 @@ Rails.application.routes.draw do
     get 'error/:command', to: 'errors#error'
   end
 
+  mount Repp::API => '/'
+
   namespace :registrar do
+    root 'polls#show'
+
     resources :invoices
 
     devise_scope :user do
@@ -28,12 +32,6 @@ Rails.application.routes.draw do
       post 'mid' => 'sessions#mid'
       get 'logout' => '/devise/sessions#destroy'
     end
-
-    # authenticated :user do
-    #   root to: 'domains#index', as: :authenticated_root
-    # end
-
-    root to: redirect('/registrar/depp')
 
     resources :domains do
       collection do
@@ -72,11 +70,9 @@ Rails.application.routes.draw do
         get 'load_xml'
       end
     end
-
-    root 'polls#show'
   end
 
-  ## ADMIN ROUTES
+  # ## ADMIN ROUTES
   namespace :admin do
     resources :keyrelays
 
@@ -143,5 +139,5 @@ Rails.application.routes.draw do
     get 'login' => 'admin/sessions#login'
   end
 
-  root to: redirect('login')
+  root to: redirect('admin/login')
 end

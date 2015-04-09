@@ -1,0 +1,5 @@
+= render 'registrar/shared/title', name: t(:new_contact)
+
+= form_for(@contact, url: registrar_contacts_path, 
+  html: {class: 'form-horizontal js-contact-form'}) do |f|
+  - render 'form', f: f

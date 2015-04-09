@@ -2,6 +2,7 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
+    alias_action :show, to: :view
     alias_action :show, :create, :update, :destroy, to: :crud
 
     @user = user || AdminUser.new
@@ -46,11 +47,20 @@ class Ability
 
   def registrar
     can :manage, Invoice
+    can :view, :registrar_dashboard
+    can :delete, :registrar_poll
+    can :manage, :registrar_xml_console
+    can :manage, Depp::Contact
+    can :manage, Depp::Domain
+    can :renew,  Depp::Domain
+    can :transfer, Depp::Domain
+    can :manage, Depp::Keyrelay
+    can :confirm, :keyrelay
+    can :confirm, :transfer
   end
 
   def user
     can :show, :dashboard
-    can :manage, Invoice
   end
 
   def customer_service
