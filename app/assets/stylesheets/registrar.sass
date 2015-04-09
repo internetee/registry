@@ -2,201 +2,27 @@ $navbar-default-bg: #F69240
 $navbar-default-brand-color: #fff
 $navbar-default-link-color: #fff
 $border-radius-base: 2px
-
+$body-bg: #F8F8F8
+$container-large-desktop: 1040px
 $font-family-sans-serif: 'EtelkaLightProRegular', Arial, Helvetica, sans-serif
 $font-family-serif: 'EtelkaLightProBold', Georgia, "Times New Roman", Times, serif
+$font-size-h1: 26px
 
 html
-  font-size: 100%
-  overflow-y: scroll
-  -webkit-text-size-adjust: 100%
-  -ms-text-size-adjust: 100%
+  position: relative
+  min-height: 100%
 
 body
-  background: url(image_path('bg.jpg'))
+  padding-bottom: 60px
 
-h1
-  font-size: 26px !important
-  margin-bottom: 16px !important
-
-a
-  color: #008fd7
-  text-decoration: none
-
-a:hover,
-a:active
-  color: #008fd7
-  outline: 0
-
-h1, h2, h3, h4, h1 a, h2 a, h3 a, h4 a
-  color: #272f34
-  text-decoration: none
-  font-weight: normal
-  font-family: 'EtelkaLightProBold'
-
-h1
-  font-size: 22px
-  text-transform: uppercase
-
-body,
-button,
-input,
-select,
-textarea
-  font-family: 'EtelkaLightProRegular', Arial, Helvetica, sans-serif
-  color: #5d6064
-  font-size: 13px
-
-abbr[title]
-  border-bottom: 1px dotted
-
-b,
-strong
-  font-weight: normal
-  font-family: 'EtelkaLightProBold'
-
-blockquote
-  margin: 1em 40px
-
-dfn
-  font-style: italic
-
-mark
-  background: #ff0
-  color: #000
-
-pre,
-code,
-kbd,
-samp
-  font-family: monospace, serif
-  _font-family: 'courier new', monospace
-  font-size: 1em
-
-pre
-  white-space: pre
-  white-space: pre-wrap
-  word-wrap: break-word
-
-q
-  quotes: none
-
-q:before,
-q:after
-  content: ''
-  content: none
-
-small
-  font-size: 75%
-
-sub,
-sup
-  font-size: 75%
-  line-height: 0
-  position: relative
-  vertical-align: baseline
-
-sup
-  top: -0.5em
-
-sub
-  bottom: -0.25em
-
-.title-row
-  margin-bottom: 22px
-
-.app-nav
-  padding-top: 7px
-
-.public-nav
-  font-weight: bold
-  li.active a
-    color: black !important
-
-.general-tab
-  padding-top: 30px
-  padding-right: 20px
-  border-top: 0px
-
-.container
-  border-radius: 2px
-  width: 860px
 body > .container
-  background: #F8F8F8
-  padding: 30px 30px 30px 30px
-
-.container.version
-  background: transparent
-  margin-top: -116px
-  min-height: 0px
-  text-align: right
-  font-size: 12px
-  color: gray
-
-.container.subnav
-  background: transparent
-  min-height: 0
-  padding: 0 46px 0 0
-  margin-bottom: 0
-  ul.nav
-    li a
-      background: #E7E7E7
-      height: 33px
-      line-height: 12px
-      color: gray
-      &:hover
-        color: #333
-    li.active a
-      background: #F8F8F8
-      font-weight: bold
-      color: #333
-
-
-.subactions
-  h4
-    margin-bottom: 20px
-    margin-top: 10px
-  min-height: 600px
-
-.sidebar
-  min-height: 400px
-
-.content
-  margin-right: 240px
-  margin-left: 0
-
-h4
-  margin: 0
-
-.top-actions
-  margin-top: 12px
-  margin-bottom: 16px
-  float: right
-
-.navbar-brand
-  line-height: 12px
-  padding-top: 20px
-  padding-bottom: 5px
-
-.navbar-brand small
-  display: block
-  font-size: 10px
+  height: 100%
+  background: #fff
+  padding: 60px 30px 30px 30px
 
 .footer
-  color: #777
-  padding-top: 70px
-  padding-bottom: 10px
-  font-size: 10px
-
-.field_with_errors
-  @extend .has-error
-
-.domify
-  td
-    vertical-align: middle !important
-
-// fix label position for medium screen
-@media (min-width: 768px) and (max-width: 991px)
-  .form-horizontal .control-label
-    text-align: left
-
+  position: absolute
+  bottom: 0
+  width: 100%
+  height: 60px
+  background-color: black

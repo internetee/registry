@@ -1,3 +1,4 @@
+!!!
 %html{lang: I18n.locale.to_s}
   %head
     %meta{charset: "utf-8"}/
@@ -8,14 +9,14 @@
     = csrf_meta_tags
     = stylesheet_link_tag 'registrar-manifest', media: 'all', 'data-turbolinks-track' => true
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
-    = favicon_link_tag 'registrar/favicon.ico'
+    = favicon_link_tag 'favicon.ico'
     %title EIS Registrar Portal
   %body
-    / Static navbar
-    .navbar.navbar-default.navbar-static-top{role: "navigation"}
+    / Fixed navbar
+    %nav.navbar.navbar-default.navbar-fixed-top
       .container
         .navbar-header
-          %button.navbar-toggle{"data-target" => ".navbar-collapse", "data-toggle" => "collapse", type: "button"}
+          %button.navbar-toggle.collapsed{"aria-controls" => "navbar", "aria-expanded" => "false", "data-target" => "#navbar", "data-toggle" => "collapse", :type => "button"}
             %span.sr-only Toggle navigation
             %span.icon-bar
             %span.icon-bar
@@ -25,43 +26,40 @@
             - if unstable_env.present?
               .text-center
                 %small{style: 'color: #0074B3;'}= unstable_env
-        - if current_user
-          .navbar-collapse.collapse
-            %ul.nav.navbar-nav.public-nav
-              - if can? :view, Depp::Domain
-                - active_class = %w(registrar/domains registrar/check registrar/renew registrar/tranfer registrar/keyrelays).include?(params[:controller]) ? 'active' :nil
-                %li{class: active_class}= link_to t(:domains), registrar_domains_path
-              - if can? :view, Depp::Contact
-                - active_class = ['registrar/contacts'].include?(params[:controller]) ? 'active' :nil
-                %li{class: active_class}= link_to t(:contacts), registrar_contacts_path
+        .navbar-collapse.collapse
+          %ul.nav.navbar-nav.public-nav
+            - active_class = %w(depp/domains depp/check depp/renew depp/tranfer depp/keyrelays).include?(params[:controller]) ? 'active' :nil
+            %li{class: active_class}= link_to t(:domains), depp.domains_path
 
-              - if can? :show, Invoice
-                - active_class = ['registrar/invoices'].include?(params[:controller]) ? 'active' :nil
-                %li{class: active_class}= link_to t('invoices'), main_app.registrar_invoices_path
+            - active_class = ['depp/contacts'].include?(params[:controller]) ? 'active' :nil
+            %li{class: active_class}= link_to t(:contacts), depp.contacts_path
 
-              - if can? :view, :registrar_xml_console
-                - active_class = ['registrar/xml_consoles'].include?(params[:controller]) ? 'active' :nil
-                %li{class: active_class}= link_to t(:xml_console), registrar_xml_console_path
+            - if can? :show, Invoice
+              - active_class = ['registrar/invoices'].include?(params[:controller]) ? 'active' :nil
+              %li{class: active_class}= link_to t('accounting'), main_app.registrar_invoices_path
 
-            %ul.nav.navbar-nav.navbar-right
-              - if user_signed_in?
-                %li= link_to t('log_out', user: current_user), '/registrar/logout'
-              -# %li.dropdown
-                -# = link_to 'Registrar <span class="caret"></span>'.html_safe, '#',
-                  -# class: 'dropdown-toggle', 'data-toggle': 'dropdown', role: 'button'
-                -# %ul.dropdown-menu{'role': 'menu'}
-                  -# %li.dropdown-header= t(:switch_to) + ':'
-                  -# %li= link_to t(:registrant), '#'
-                  -# %li= link_to t(:registrar), '#'
+            - active_class = ['depp/xml_consoles'].include?(params[:controller]) ? 'active' :nil
+            %li{class: active_class}= link_to t(:xml_console), depp.xml_console_path
 
+          %ul.nav.navbar-nav.navbar-right
+            %li= link_to t('log_out', user: current_user), '/registrar/logout'
         / /.nav-collapse
+    / Begin page content
     .container
-      = render 'registrar/shared/flash'
-      - if depp_controller?
-        = render 'registrar/shared/epp_results'
-
+      - if params[:controller].start_with?('depp/')
+        = render 'depp/shared/flash'
+        = render 'depp/shared/epp_results'
+      - else
+        - display = (flash.empty?) ? 'none' : 'block'
+        #flash{style: "display: #{display};"}
+          - type = (flash[:notice]) ? 'bg-success' : 'bg-danger'
+          .alert{class: type}= flash[:notice] || flash[:alert]
       = yield
-
-      .footer.text-right
-        Version
-        = CURRENT_COMMIT_HASH
+    %footer.footer
+      .container
+        %row
+          .col-md-6
+            = image_tag 'eis-logo-et.png'
+          .col-md-6.text-right
+            Version
+            = CURRENT_COMMIT_HASH
