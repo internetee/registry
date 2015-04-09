@@ -56,14 +56,10 @@
 
         / /.nav-collapse
     .container
-      -# - if params[:controller].start_with?('depp/')
-        -# = render 'depp/shared/flash'
-        -# = render 'depp/shared/epp_results'
-      -# - else
-      - display = (flash.empty?) ? 'none' : 'block'
-      #flash{style: "display: #{display};"}
-        - type = (flash[:notice]) ? 'bg-success' : 'bg-danger'
-        .alert{class: type}= flash[:notice] || flash[:alert]
+      = render 'registrar/shared/flash'
+      - if depp_controller?
+        = render 'registrar/shared/epp_results'
+
       = yield
 
       .footer.text-right

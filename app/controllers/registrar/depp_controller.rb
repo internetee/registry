@@ -17,6 +17,10 @@ class Registrar::DeppController < RegistrarController # EPP controller
     redirect_to registrar_login_url and return unless depp_current_user
   end
 
+  def depp_controller?
+    true
+  end
+
   def depp_current_user
     return nil unless current_user
     @depp_current_user ||= Depp::User.new(
