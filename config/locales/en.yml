@@ -222,6 +222,8 @@ en:
         phone: 'Contact phone'
         email: 'Contact e-mail'
         state: 'State / Province'
+      deposit:
+        amount: 'Amount'
 
   errors:
     messages:
@@ -641,4 +643,6 @@ en:
   no_connection_to_registry: Connection issue to the registry server! Please try again later.
   domain_not_found: 'Domain was not found'
   new_contact: 'New contact'
-
+  add_deposit: 'Add deposit'
+  amount: 'Amount'
+  please_pay_the_following_invoice: 'Please pay the following invoice'

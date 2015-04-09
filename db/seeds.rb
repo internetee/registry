@@ -15,6 +15,7 @@ registrar1 = Registrar.where(
 ApiUser.where(
   username: 'registrar1',
   password: 'test1',
+  identity_code: '51001091072',
   active: true,
   registrar: registrar1
 ).first_or_create!
@@ -33,6 +34,7 @@ registrar2 = Registrar.where(
 ApiUser.where(
   username: 'registrar2',
   password: 'test2',
+  identity_code: '11412090004',
   active: true,
   registrar: registrar2
 ).first_or_create!

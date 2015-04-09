@@ -21,6 +21,7 @@ Rails.application.routes.draw do
     root 'polls#show'
 
     resources :invoices
+    resources :deposits
 
     devise_scope :user do
       get 'login' => 'sessions#login'

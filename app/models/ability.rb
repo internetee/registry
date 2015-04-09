@@ -57,6 +57,7 @@ class Ability
     can :manage, Depp::Keyrelay
     can :confirm, :keyrelay
     can :confirm, :transfer
+    can :manage, :deposit
   end
 
   def user
