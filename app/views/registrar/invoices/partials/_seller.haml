@@ -1,37 +1,35 @@
-.panel.panel-default
-  .panel-heading
-    %h3.panel-title= t('general')
-  .panel-body
-    %dl.dl-horizontal
-      %dt= t('name')
-      %dd= @invoice.seller_name
+%h4= t('seller')
+%hr
+%dl.dl-horizontal
+  %dt= t('name')
+  %dd= @invoice.seller_name
 
-      %dt= t('reg_no')
-      %dd= @invoice.seller_reg_no
+  %dt= t('reg_no')
+  %dd= @invoice.seller_reg_no
 
-      %dt= t('iban')
-      %dd= @invoice.seller_iban
+  %dt= t('iban')
+  %dd= @invoice.seller_iban
 
-      %dt= t('bank')
-      %dd= @invoice.seller_bank
+  %dt= t('bank')
+  %dd= @invoice.seller_bank
 
-      %dt= t('swift')
-      %dd= @invoice.seller_swift
+  %dt= t('swift')
+  %dd= @invoice.seller_swift
 
-      %dt= t('vat_no')
-      %dd= @invoice.seller_vat_no
+  %dt= t('vat_no')
+  %dd= @invoice.seller_vat_no
 
-      %dt= t('address')
-      %dd= @invoice.seller_address
+  %dt= t('address')
+  %dd= @invoice.seller_address
 
-      %dt= t('phone')
-      %dd= @invoice.seller_phone
+  %dt= t('phone')
+  %dd= @invoice.seller_phone
 
-      %dt= t('url')
-      %dd= @invoice.seller_url
+  %dt= t('url')
+  %dd= @invoice.seller_url
 
-      %dt= t('email')
-      %dd= @invoice.seller_email
+  %dt= t('email')
+  %dd= @invoice.seller_email
 
-      %dt= t('issuer')
-      %dd= @invoice.seller_contact_name
+  %dt= t('issuer')
+  %dd= @invoice.seller_contact_name

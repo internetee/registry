@@ -67,9 +67,9 @@ class Registrar < ActiveRecord::Base
       invoice_items_attributes: [
         {
           description: 'prepayment',
-          item_unit: 'piece',
-          item_amount: 1,
-          item_price: amount
+          unit: 'piece',
+          amount: 1,
+          price: amount
         }
       ]
     )
