@@ -1,0 +1,20 @@
+%h1= t('invoice_no', no: @invoice.id)
+%hr
+.row
+  .col-md-6= render 'registrar/invoices/partials/seller'
+  .col-md-6= render 'registrar/invoices/partials/buyer'
+/ .row
+/   .col-md-12= render 'admin/domains/partials/tech_contacts'
+/ .row
+/   .col-md-12= render 'admin/domains/partials/admin_contacts'
+/ .row
+/   .col-md-12= render 'admin/domains/partials/statuses'
+/ .row
+/   .col-md-12= render 'admin/domains/partials/nameservers'
+/ .row
+/   .col-md-12= render 'admin/domains/partials/dnskeys'
+/ .row
+/   .col-md-12= render 'admin/domains/partials/keyrelays'
+/ .row
+/   .col-md-12
+/     = render 'admin/domains/partials/legal_documents', legal_documents: @domain.legal_documents
