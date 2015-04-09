@@ -13,7 +13,7 @@ class AddInvoiceColumns < ActiveRecord::Migration
     add_column :invoices, :reference_no, :string
     add_column :invoices, :vat_prc, :decimal
     #add_column :invoices, :total_sum, :decimal # calculate on the fly
-    add_column :invoices, :paid_at, :datetime
+    add_column :invoices, :paid_at, :datetime # maybe figure this out from transactions
 
     # seller info
     # add_column :invoices, :sellable_id, :integer # EIS is actually a registrar itself and invoice can belong to EIS

@@ -650,3 +650,4 @@ en:
   seller: 'Seller'
   prepayment: 'Prepayment'
   vat: 'VAT (%{vat_prc}%)'
+  unpaid: 'Unpaid'
