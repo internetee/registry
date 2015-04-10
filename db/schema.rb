@@ -225,14 +225,14 @@ ActiveRecord::Schema.define(version: 20150413140933) do
     t.string   "currency",            null: false
     t.string   "description"
     t.string   "reference_no"
-    t.decimal  "vat_prc"
+    t.decimal  "vat_prc",             null: false
     t.datetime "paid_at"
     t.integer  "seller_id"
     t.string   "seller_name",         null: false
     t.string   "seller_reg_no"
     t.string   "seller_iban",         null: false
-    t.string   "seller_bank",         null: false
-    t.string   "seller_swift",        null: false
+    t.string   "seller_bank"
+    t.string   "seller_swift"
     t.string   "seller_vat_no"
     t.string   "seller_country_code"
     t.string   "seller_state"
@@ -245,7 +245,7 @@ ActiveRecord::Schema.define(version: 20150413140933) do
     t.string   "seller_contact_name"
     t.integer  "buyer_id"
     t.string   "buyer_name",          null: false
-    t.string   "buyer_reg_no",        null: false
+    t.string   "buyer_reg_no"
     t.string   "buyer_country_code"
     t.string   "buyer_state"
     t.string   "buyer_street"
@@ -254,7 +254,6 @@ ActiveRecord::Schema.define(version: 20150413140933) do
     t.string   "buyer_phone"
     t.string   "buyer_url"
     t.string   "buyer_email"
-    t.string   "buyer_contact_name"
   end
 
   create_table "keyrelays", force: :cascade do |t|

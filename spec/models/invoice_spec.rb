@@ -1,0 +1,83 @@
+require 'rails_helper'
+
+describe Invoice do
+  it { should belong_to(:seller) }
+  it { should belong_to(:buyer) }
+  it { should have_many(:invoice_items) }
+
+  context 'with invalid attribute' do
+    before :all do
+      @invoice = Invoice.new
+    end
+
+    it 'should not be valid' do
+      @invoice.valid?
+      @invoice.errors.full_messages.should match_array([
+        "Buyer name is missing",
+        "Currency is missing",
+        "Due date is missing",
+        "Invoice items is missing",
+        "Invoice type is missing",
+        "Seller iban is missing",
+        "Seller name is missing",
+        "Vat prc is missing"
+      ])
+    end
+
+    # it 'should not have any versions' do
+    #   @invoice.versions.should == []
+    # end
+  end
+
+  context 'with valid attributes' do
+    before :all do
+      @invoice = Fabricate(:invoice)
+    end
+
+    it 'should be valid' do
+      @invoice.valid?
+      @invoice.errors.full_messages.should match_array([])
+    end
+
+    it 'should be valid twice' do
+      @invoice = Fabricate(:invoice)
+      @invoice.valid?
+      @invoice.errors.full_messages.should match_array([])
+    end
+
+    it 'should be valid twice' do
+      @invoice = Fabricate(:invoice)
+      @invoice.valid?
+      @invoice.errors.full_messages.should match_array([])
+    end
+
+    it 'should return correct addresses' do
+      @invoice = Fabricate(:invoice)
+      @invoice.seller_address.should == 'Paldiski mnt. 123, Tallinn'
+    end
+
+    it 'should calculate totals correctly' do
+      @invoice = Fabricate(:invoice)
+      @invoice.vat_prc.should == BigDecimal.new('0.2')
+      @invoice.total_without_vat.should == BigDecimal.new('300.0')
+      @invoice.total_vat.should == BigDecimal.new('60.0')
+      @invoice.total.should == BigDecimal.new('360.0')
+
+      ii = @invoice.items.first
+      ii.item_total_without_vat.should == BigDecimal.new('150.0')
+
+      ii = @invoice.items.last
+      ii.item_total_without_vat.should == BigDecimal.new('150.0')
+    end
+
+    # it 'should have one version' do
+    #   with_versioning do
+    #     @invoice.versions.should == []
+    #     @invoice.body = 'New body'
+    #     @invoice.save
+    #     @invoice.errors.full_messages.should match_array([])
+    #     @invoice.versions.size.should == 1
+    #   end
+    # end
+  end
+end
