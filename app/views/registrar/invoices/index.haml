@@ -1,3 +1,14 @@
+.row
+  .col-sm-6
+    %h1.text-center-xs
+      = t('your_account')
+  .col-sm-6
+    %h1.text-right.text-center-xs
+      = link_to(t('add_deposit'), new_registrar_deposit_path, class: 'btn btn-default')
+
+%hr
+= t('your_current_credit_account_balance_is', balance: 1000.0)
+
 %h1= t('invoices')
 %hr
 .table-responsive

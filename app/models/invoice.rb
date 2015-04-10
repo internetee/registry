@@ -12,6 +12,14 @@ class Invoice < ActiveRecord::Base
     [buyer_street, buyer_city, buyer_state, buyer_zip].reject(&:blank?).compact.join(', ')
   end
 
+  def seller_country
+    Country.new(seller_country_code)
+  end
+
+  def buyer_country
+    Country.new(buyer_country_code)
+  end
+
   def items
     invoice_items
   end
