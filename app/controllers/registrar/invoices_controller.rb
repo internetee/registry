@@ -4,7 +4,7 @@ class Registrar::InvoicesController < RegistrarController
   before_action :set_invoice, only: [:show]
 
   def index
-    @invoices = current_user.registrar.invoices.includes(:invoice_items)
+    @invoices = current_user.registrar.invoices.includes(:invoice_items).order(id: :desc)
   end
 
   def show
