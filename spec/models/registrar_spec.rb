@@ -84,5 +84,14 @@ describe Registrar do
       @new_registrar.errors.full_messages.should == []
       @new_registrar.code.should == 'uniq1'
     end
+
+    it 'should be able to issue a prepayment invoice' do
+      Fabricate(:registrar, name: 'EIS', reg_no: '90010019')
+      @registrar.issue_prepayment_invoice(200, 'add some money')
+      @registrar.invoices.count.should == 1
+      i = @registrar.invoices.first
+      i.total.should == BigDecimal.new('240.0')
+      i.description.should == 'add some money'
+    end
   end
 end
