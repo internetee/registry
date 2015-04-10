@@ -14,9 +14,9 @@ class Registrar::XmlConsolesController < Registrar::DeppController # EPP control
   end
 
   def load_xml
-    # binding.pry
-    cl_trid = "#{depp_current_user.tag}-#{Time.now.to_i}"
-    xml_dir_path = Depp::Engine.root + 'app/views/depp/xml_consoles/epp_requests'
+    authorize! :create, :registrar_xml_console
+    cl_trid = "#{depp_current_user.tag}-#{Time.zone.now.to_i}"
+    xml_dir_path = Rails.root + 'app/views/registrar/xml_consoles/epp_requests'
     xml = File.read("#{xml_dir_path}/#{params[:obj]}/#{params[:epp_action]}.xml")
     xml.gsub!('<clTRID>ABC-12345</clTRID>', "<clTRID>#{cl_trid}</clTRID>")
     render text: xml

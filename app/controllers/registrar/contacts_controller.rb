@@ -32,7 +32,7 @@ class Registrar::ContactsController < Registrar::DeppController # EPP controller
 
   def create
     authorize! :create, Depp::Contact
-    @contact = Depp::Contact.new(params[:contact])
+    @contact = Depp::Contact.new(params[:depp_contact])
 
     if @contact.save
       redirect_to registrar_contact_url(@contact.id)
@@ -43,9 +43,9 @@ class Registrar::ContactsController < Registrar::DeppController # EPP controller
 
   def update
     authorize! :edit, Depp::Contact
-    @contact = Depp::Contact.new(params[:contact])
+    @contact = Depp::Contact.new(params[:depp_contact])
 
-    if @contact.update_attributes(params[:contact])
+    if @contact.update_attributes(params[:depp_contact])
       redirect_to registrar_contact_url(@contact.id)
     else
       render 'edit'
@@ -59,7 +59,7 @@ class Registrar::ContactsController < Registrar::DeppController # EPP controller
 
   def destroy
     authorize! :delete, Depp::Contact
-    @contact = Depp::Contact.new(params[:contact])
+    @contact = Depp::Contact.new(params[:depp_contact])
 
     if @contact.delete
       redirect_to registrar_contacts_url, notice: t(:destroyed)

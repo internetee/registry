@@ -16,23 +16,32 @@ class ApplicationController < ActionController::Base
     redirect_to registrar_root_path, alert: exception.message if current_user.is_a?(ApiUser)
   end
 
+  helper_method :registrar_request?, :admin_request?
+  def registrar_request?
+    request.path.match(/^\/registrar/)
+  end
+
+  def admin_request?
+    request.path.match(/^\/admin/)
+  end
+
   def after_sign_in_path_for(_resource)
     rt = session[:user_return_to].to_s.presence
     login_paths = [admin_login_path, registrar_login_path, '/login']
     return rt if rt && !login_paths.include?(rt)
 
-    if request.path.match('registrar')
-      registrar_root_path
-    elsif request.path.match('admin')
-      admin_root_path
+    if registrar_request?
+      registrar_root_url
+    elsif admin_request?
+      admin_root_url
     end
   end
 
   def after_sign_out_path_for(_resource)
-    if request.path.match('registrar')
-      registrar_login_path
-    elsif request.path.match('admin')
-      admin_login_path
+    if registrar_request?
+      registrar_login_url
+    elsif admin_request?
+      admin_login_url
     end
   end
 

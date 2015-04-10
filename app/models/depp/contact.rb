@@ -48,14 +48,15 @@ module Depp
         data = info_xml(id)
 
         res = data.css('epp response resData infData')
+        ext = data.css('epp response extension')
         new(
           id: res.css('id').text,
           code: res.css('id').text,
           email: res.css('email').text,
           phone: res.css('voice').text,
-          ident: res.css('ident').text,
-          ident_type: res.css('ident').first.try(:attributes).try(:[], 'type').try(:value),
-          ident_country_code: res.css('ident').first.try(:attributes).try(:[], 'cc').try(:value),
+          ident: ext.css('ident').text,
+          ident_type: ext.css('ident').first.try(:attributes).try(:[], 'type').try(:value),
+          ident_country_code: ext.css('ident').first.try(:attributes).try(:[], 'cc').try(:value),
 
           # postalInfo
           name: res.css('postalInfo name').text,
