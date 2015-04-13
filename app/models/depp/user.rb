@@ -37,7 +37,8 @@ module Depp
       client_cert = File.read(ENV['cert_path'])
       client_key = File.read(ENV['key_path'])
 
-      uri = URI.parse("#{ENV['repp_url']}#{path}")
+      repp_url = Rails.env.test? ? 'http://localhost:8989/repp/v1/' : ENV['repp_url']
+      uri = URI.parse("#{repp_url}#{path}")
       uri.query = URI.encode_www_form(params)
 
       req = Net::HTTP::Get.new(uri)

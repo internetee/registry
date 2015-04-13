@@ -109,5 +109,10 @@ feature 'Sessions', type: :feature do
       page.should have_text('Check your phone for confirmation code')
       page.should have_text('Welcome!')
     end
+
+    it 'should log in successfully using helper method', js: true do
+      registrar_sign_in
+      page.should have_text('Welcome!')
+    end
   end
 end

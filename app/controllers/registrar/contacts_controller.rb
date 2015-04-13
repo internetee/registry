@@ -6,13 +6,15 @@ class Registrar::ContactsController < Registrar::DeppController # EPP controller
     limit, offset = pagination_details
 
     res = depp_current_user.repp_request('contacts', { details: true, limit: limit, offset: offset })
-    flash.now[:epp_results] = [{ 'code' => res.code, 'msg' => res.message }]
-    @response = res.parsed_body.with_indifferent_access if res.code == '200'
-    @contacts    = @response ? @response[:contacts] : []
+    if res.code == '200'
+      @response = res.parsed_body.with_indifferent_access 
+      @contacts = @response ? @response[:contacts] : []
 
-    @paginatable_array = Kaminari.paginate_array(
-      [], total_count: @response[:total_number_of_records]
-    ).page(params[:page]).per(limit)
+      @paginatable_array = Kaminari.paginate_array(
+        [], total_count: @response[:total_number_of_records]
+      ).page(params[:page]).per(limit)
+    end
+    flash.now[:epp_results] = [{ 'code' => res.code, 'msg' => res.message }]
   end
 
   def new

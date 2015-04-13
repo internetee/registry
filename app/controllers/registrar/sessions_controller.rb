@@ -5,15 +5,6 @@ class Registrar::SessionsController < ::SessionsController
     false
   end
 
-  def create
-    @user = ApiUser.first if params[:user1]
-
-    return redirect_to :back, alert: 'No user' if @user.blank?
-
-    flash[:notice] = I18n.t('welcome')
-    sign_in_and_redirect @user, event: :authentication
-  end
-
   def login
   end
 
@@ -41,6 +32,11 @@ class Registrar::SessionsController < ::SessionsController
     @user = find_user_by_idc(response.user_id_code)
 
     if @user.persisted?
+      if Rails.env.test?
+        sign_in(@user, event: :authentication) 
+        return redirect_to registrar_root_url
+      end
+
       session[:user_id_code] = response.user_id_code
       session[:mid_session_code] = client.session_code
       render json: { message: t('check_your_phone_for_confirmation_code') }, status: :ok
