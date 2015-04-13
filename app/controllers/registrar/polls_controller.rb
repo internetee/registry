@@ -2,8 +2,8 @@ class Registrar::PollsController < Registrar::DeppController # EPP controller
   before_action :init_epp_xml
 
   def show
-   authorize! :view, :registrar_dashboard
-   @data = depp_current_user.request(@ex.poll)
+    authorize! :view, :registrar_dashboard
+    @data = depp_current_user.request(@ex.poll)
   end
 
   def destroy

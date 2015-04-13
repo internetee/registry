@@ -6,17 +6,17 @@ feature 'Root', type: :feature do
     Fabricate(:api_user)
   end
 
-  fit 'should redirect to registrar login page' do
+  it 'should redirect to registrar login page' do
     visit '/registrar/login'
     current_path.should == '/registrar/login'
   end
 
-  fit 'should redirect to registrar login page' do
+  it 'should redirect to registrar login page' do
     visit '/registrar'
     current_path.should == '/registrar/login'
   end
 
-  fit 'should redirect to registrar login page' do
+  it 'should redirect to registrar login page' do
     visit '/registrar/'
     current_path.should == '/registrar/login'
   end

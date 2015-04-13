@@ -1,5 +1,9 @@
 class Registrar::SessionsController < ::SessionsController
   layout 'registrar/application'
+  helper_method :depp_controller?
+  def depp_controller?
+    false
+  end
 
   def create
     @user = ApiUser.first if params[:user1]
