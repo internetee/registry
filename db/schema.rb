@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150402114712) do
+ActiveRecord::Schema.define(version: 20150413140933) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -633,6 +633,8 @@ ActiveRecord::Schema.define(version: 20150402114712) do
     t.text     "crt"
     t.string   "type"
   end
+
+  add_index "users", ["identity_code"], name: "index_users_on_identity_code", using: :btree
 
   create_table "versions", force: :cascade do |t|
     t.text "depricated_table_but_somehow_paper_trail_tests_fails_without_it"
