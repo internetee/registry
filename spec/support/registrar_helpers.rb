@@ -6,7 +6,7 @@ module RegistrarHelpers
 
     page.find('a[href="/registrar/login/mid"]').click
 
-    fill_in 'user_phone', with: '00007'
+    fill_in 'user_phone', with: '123'
     click_button 'Log in'
 
     page.should have_text('Log out')

@@ -16,8 +16,13 @@ class Registrar::SessionsController < ::SessionsController
     phone = params[:user][:phone]
     client = Digidoc::Client.new
 
-    # country_codes = {'+372' => 'EST'}
+    if Rails.env.test? && phone == "123"
+      @user = ApiUser.find_by(identity_code: "14212128025")
+      sign_in(@user, event: :authentication) 
+      return redirect_to registrar_root_url
+    end
 
+    # country_codes = {'+372' => 'EST'}
     response = client.authenticate(
       phone: "+372#{phone}",
       message_to_display: 'Authenticating',
@@ -32,11 +37,6 @@ class Registrar::SessionsController < ::SessionsController
     @user = find_user_by_idc(response.user_id_code)
 
     if @user.persisted?
-      if Rails.env.test?
-        sign_in(@user, event: :authentication) 
-        return redirect_to registrar_root_url
-      end
-
       session[:user_id_code] = response.user_id_code
       session[:mid_session_code] = client.session_code
       render json: { message: t('check_your_phone_for_confirmation_code') }, status: :ok
