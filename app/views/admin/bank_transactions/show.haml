@@ -1,0 +1,44 @@
+.row
+  .col-sm-6
+    %h2.text-center-xs
+      = t('bank_transaction')
+  .col-sm-6
+    %h2.text-right.text-center-xs
+      = link_to(t('back_to_bank_statement'), admin_bank_statement_path(@bank_transaction.bank_statement), class: 'btn btn-primary')
+%hr
+%row
+  .col-md-12
+.panel.panel-default
+  .panel-heading
+    %h3.panel-title= t(:details)
+  .panel-body
+    %dl.dl-horizontal
+      %dt= t('bank_reference')
+      %dd= @bank_transaction.bank_reference
+
+      %dt= t('iban').upcase
+      %dd= @bank_transaction.iban
+
+      %dt= t('currency')
+      %dd= @bank_transaction.currency
+
+      %dt= t('buyer_bank_code')
+      %dd= @bank_transaction.buyer_bank_code
+
+      %dt= t('buyer_iban')
+      %dd= @bank_transaction.buyer_iban
+
+      %dt= t('buyer_name')
+      %dd= @bank_transaction.buyer_name
+
+      %dt= t('document_no')
+      %dd= @bank_transaction.document_no
+
+      %dt= t('description')
+      %dd= @bank_transaction.description
+
+      %dt= t('sum')
+      %dd= @bank_transaction.sum
+
+      %dt= t('reference_no')
+      %dd= @bank_transaction.reference_no

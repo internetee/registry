@@ -2,19 +2,21 @@ class CreateBankTransactions < ActiveRecord::Migration
   def change
     create_table :bank_transactions do |t|
       t.integer :bank_statement_id
-      t.string :subject_code
+      # t.string :subject_code (VV)
       # record_code # kirjetunnus - ei kasuta? # impordime ainult tehingud nagunii
       t.string :bank_reference # panga viide
-      t.string :tr_code # tehingu liik (MK / MV)
+      # t.string :tr_code # tehingu liik (MK / MV)
       t.string :iban # own bank account no.
       t.string :currency
-      t.string :other_party_bank
-      t.string :other_party_name
-      t.string :doc_no
+      t.string :buyer_bank_code
+      t.string :buyer_iban
+      t.string :buyer_name
+      t.string :document_no
       t.string :description
       #tr_type # C/D # impordime ainult cre nagunii
-      t.decimal :amount
+      t.decimal :sum
       t.string :reference_no
+      t.datetime :paid_at
 
       t.timestamps
     end

@@ -81,6 +81,8 @@ class Ability
     can :manage, Certificate
     can :manage, Keyrelay
     can :manage, LegalDocument
+    can :manage, BankStatement
+    can :manage, BankTransaction
     can :read, ApiLog::EppLog
     can :read, ApiLog::ReppLog
     # can :index, :delayed_job

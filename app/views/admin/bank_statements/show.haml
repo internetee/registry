@@ -1,0 +1,28 @@
+.row
+  .col-sm-6
+    %h2.text-center-xs= t('bank_statement')
+  .col-sm-6
+    %h2.text-right.text-center-xs
+      = link_to(t('back_to_bank_statements'), admin_bank_statements_path, class: 'btn btn-primary')
+%hr
+.row
+  .col-md-12
+    .table-responsive
+      %table.table.table-hover.table-bordered.table-condensed
+        %thead
+          %tr
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'buyer_name')
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'paid_at')
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'sum', t('sum'))
+        %tbody
+          - @bank_transactions.each do |x|
+            %tr
+              %td= link_to(x.buyer_name, [:admin, x])
+              %td= l(x.paid_at)
+              %td= x.sum
+.row
+  .col-md-12
+    = paginate @bank_transactions

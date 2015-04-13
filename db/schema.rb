@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 20150413115829) do
   create_table "account_activites", force: :cascade do |t|
     t.integer  "account_id"
     t.integer  "invoice_id"
-    t.decimal  "amount"
+    t.decimal  "sum"
     t.string   "currency"
     t.integer  "bank_transaction_id"
     t.datetime "created_at"
@@ -64,29 +64,27 @@ ActiveRecord::Schema.define(version: 20150413115829) do
   end
 
   create_table "bank_statements", force: :cascade do |t|
-    t.string   "subject_code"
     t.string   "bank_code"
-    t.string   "account_number"
-    t.date     "date"
-    t.time     "time"
+    t.string   "iban"
     t.string   "import_file_path"
+    t.datetime "queried_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "bank_transactions", force: :cascade do |t|
     t.integer  "bank_statement_id"
-    t.string   "subject_code"
     t.string   "bank_reference"
-    t.string   "tr_code"
     t.string   "iban"
     t.string   "currency"
-    t.string   "other_party_bank"
-    t.string   "other_party_name"
-    t.string   "doc_no"
+    t.string   "buyer_bank_code"
+    t.string   "buyer_iban"
+    t.string   "buyer_name"
+    t.string   "document_no"
     t.string   "description"
-    t.decimal  "amount"
+    t.decimal  "sum"
     t.string   "reference_no"
+    t.datetime "paid_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
