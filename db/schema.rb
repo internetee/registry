@@ -11,10 +11,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150413140933) do
+ActiveRecord::Schema.define(version: 20150413115829) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "account_activites", force: :cascade do |t|
+    t.integer  "account_id"
+    t.integer  "invoice_id"
+    t.decimal  "amount"
+    t.string   "currency"
+    t.integer  "bank_transaction_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "accounts", force: :cascade do |t|
+    t.integer  "registrar_id"
+    t.string   "account_type"
+    t.decimal  "balance"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "addresses", force: :cascade do |t|
     t.integer  "contact_id"
@@ -43,6 +61,58 @@ ActiveRecord::Schema.define(version: 20150413140933) do
     t.datetime "updated_at"
     t.string   "creator_str"
     t.string   "updator_str"
+  end
+
+  create_table "bank_statements", force: :cascade do |t|
+    t.string   "subject_code"
+    t.string   "bank_code"
+    t.string   "account_number"
+    t.date     "date"
+    t.time     "time"
+    t.string   "import_file_path"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "bank_transactions", force: :cascade do |t|
+    t.integer  "bank_statement_id"
+    t.string   "subject_code"
+    t.string   "bank_reference"
+    t.string   "tr_code"
+    t.string   "iban"
+    t.string   "currency"
+    t.string   "other_party_bank"
+    t.string   "other_party_name"
+    t.string   "doc_no"
+    t.string   "description"
+    t.decimal  "amount"
+    t.string   "reference_no"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "banklink_transactions", force: :cascade do |t|
+    t.string   "vk_service"
+    t.string   "vk_version"
+    t.string   "vk_snd_id"
+    t.string   "vk_rec_id"
+    t.string   "vk_stamp"
+    t.string   "vk_t_no"
+    t.decimal  "vk_amount"
+    t.string   "vk_curr"
+    t.string   "vk_rec_acc"
+    t.string   "vk_rec_name"
+    t.string   "vk_snd_acc"
+    t.string   "vk_snd_name"
+    t.string   "vk_ref"
+    t.string   "vk_msg"
+    t.datetime "vk_t_datetime"
+    t.string   "vk_mac"
+    t.string   "vk_encoding"
+    t.string   "vk_lang"
+    t.string   "vk_auto"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "cached_nameservers", id: false, force: :cascade do |t|
