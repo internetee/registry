@@ -66,9 +66,12 @@ gem 'digidoc_client', '~> 0.2.1'
 
 # epp
 gem 'epp', '~> 1.4.2', github: 'gitlabeu/epp'
+gem 'epp-xml',   '~> 0.10.4'  # EPP XMLs
+gem 'uuidtools', '~> 2.1.4' # For unique IDs (used by the epp gem)
 
 # for importing legacy db
 gem 'activerecord-import', '~> 0.7.0' # for inserting dummy data
+
 
 group :development do
   # dev tools
@@ -103,10 +106,6 @@ group :development, :test do
   # helper gems
   gem 'database_cleaner',    '~> 1.3.0' # For cleaning db in feature and epp tests
   gem 'faker',               '~> 1.3.0' # Library to generate fake data
-
-  # EPP
-  gem 'epp-xml',   '~> 0.10.4'  # EPP XMLs
-  gem 'uuidtools', '~> 2.1.4' # For unique IDs (used by the epp gem)
 
   # debug
   gem 'pry', '~> 0.10.1'
