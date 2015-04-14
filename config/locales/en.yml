@@ -692,3 +692,5 @@ en:
   bank_reference: 'Bank reference'
   document_no: 'Document no'
   import_file: 'Import file'
+  bind_with_invoices: 'Bind with invoices'
+  url: 'URL'
