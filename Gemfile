@@ -12,9 +12,7 @@ gem 'figaro', '~> 1.1.0'
 gem 'pg',                        '~> 0.18.0'
 gem 'ransack',                   '~> 1.5.1' # for searching
 # with polymorphic fix
-gem 'paper_trail',
-  github: 'airblade/paper_trail',
-  ref: 'a453811226ec4ea59753ba6b827e390ced2fc140' # '~> 4.0.0.beta2' # archiving
+gem 'paper_trail', github: 'airblade/paper_trail', ref: 'a453811226ec4ea59753ba6b827e390ced2fc140'
 gem 'rails-settings-cached',     '~> 0.4.1' # for settings
 
 # html-xml
