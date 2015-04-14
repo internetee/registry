@@ -2,6 +2,7 @@
 
 app_name: '.EE Registry'
 zonefile_export_dir: 'export/zonefiles'
+bank_statement_import_dir: 'import/bank_statements'
 
 # Contact epp will not accept org value by default
 # and returns 2306 "Parameter value policy error"
