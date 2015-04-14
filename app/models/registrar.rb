@@ -11,6 +11,29 @@ class Registrar < ActiveRecord::Base
   validates :name, :reg_no, :country_code, :email, presence: true
   validates :name, :reg_no, uniqueness: true
   validate :set_code, if: :new_record?
+
+  before_create :generate_iso_11649_reference_no
+  def generate_iso_11649_reference_no
+    return if reference_no.present?
+
+    loop do
+      base = nil
+      loop do
+        base = SecureRandom.random_number.to_s.last(8)
+        break if base.length == 8
+      end
+
+      control_base = (base + '2715' + '00').to_i
+      reminder = control_base % 97
+      check_digits = 98 - reminder
+
+      check_digits = check_digits < 10 ? "0#{check_digits}" : check_digits.to_s
+
+      self.reference_no = "RF#{check_digits}#{base}"
+      break unless self.class.exists?(reference_no: reference_no)
+    end
+  end
+
   after_save :touch_domains_version
 
   validates :email, :billing_email, format: /@/, allow_blank: true

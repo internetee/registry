@@ -92,6 +92,13 @@ namespace :import do
 
     Registrar.import registrars, validate: false
 
+    puts "-----> Generating reference numbers"
+
+    Registrar.all.each do |x|
+      x.generate_iso_11649_reference_no
+      x.save(validate: false)
+    end
+
     puts "-----> Imported #{count} new registrars in #{(Time.zone.now.to_f - start).round(2)} seconds"
   end
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150413115829) do
+ActiveRecord::Schema.define(version: 20150414092249) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -699,6 +699,7 @@ ActiveRecord::Schema.define(version: 20150413115829) do
     t.string   "directo_handle"
     t.boolean  "vat"
     t.integer  "legacy_id"
+    t.string   "reference_no"
   end
 
   add_index "registrars", ["code"], name: "index_registrars_on_code", using: :btree
