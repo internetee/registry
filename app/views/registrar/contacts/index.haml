@@ -3,23 +3,22 @@
 = render 'registrar/shared/title', name: t(:contacts)
 
 - if @response
-  .panel.panel-default
-    .table-responsive
-      %table.table.table-hover.table-bordered.table-condensed.domify
-        %thead
+  .table-responsive
+    %table.table.table-hover.table-condensed
+      %thead
+        %tr
+          %th{class: 'col-xs-3'}= t(:name)
+          %th{class: 'col-xs-3'}= t(:code)
+          %th{class: 'col-xs-3'}= t(:ident)
+          %th{class: 'col-xs-3'}= t(:actions)
+      %tbody
+        - @contacts.each do |c|
           %tr
-            %th{class: 'col-xs-3'}= t(:name)
-            %th{class: 'col-xs-3'}= t(:code)
-            %th{class: 'col-xs-3'}= t(:ident)
-            %th{class: 'col-xs-3'}= t(:actions)
-        %tbody
-          - @contacts.each do |c|
-            %tr
-              %td= link_to(c[:name], registrar_contact_path(id: c[:code]))
-              %td= c[:code]
-              %td= c[:ident]
-              %td
-                = link_to(t(:edit), edit_registrar_contact_path(c[:code]), class: 'btn btn-primary btn-xs')
-                = link_to(t(:delete), delete_registrar_contact_path(c[:code]), class: 'btn btn-default btn-xs')
+            %td= link_to(c[:name], registrar_contact_path(id: c[:code]))
+            %td= c[:code]
+            %td= c[:ident]
+            %td
+              = link_to(t(:edit), edit_registrar_contact_path(c[:code]), class: 'btn btn-primary btn-xs')
+              = link_to(t(:delete), delete_registrar_contact_path(c[:code]), class: 'btn btn-default btn-xs')
 
   = paginate @paginatable_array

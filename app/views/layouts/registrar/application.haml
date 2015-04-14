@@ -26,34 +26,35 @@
             - if unstable_env.present?
               .text-center
                 %small{style: 'color: #0074B3;'}= unstable_env
-        .navbar-collapse.collapse
-          %ul.nav.navbar-nav.public-nav
-            - active_class = %w(depp/domains depp/check depp/renew depp/tranfer depp/keyrelays).include?(params[:controller]) ? 'active' :nil
-            %li{class: active_class}= link_to t(:domains), depp.domains_path
+        - if current_user
+          .navbar-collapse.collapse
+            %ul.nav.navbar-nav.public-nav
+              - if can? :view, Depp::Domain
+                - active_class = %w(registrar/domains registrar/check registrar/renew registrar/tranfer registrar/keyrelays).include?(params[:controller]) ? 'active' :nil
+                %li{class: active_class}= link_to t(:domains), registrar_domains_path
 
-            - active_class = ['depp/contacts'].include?(params[:controller]) ? 'active' :nil
-            %li{class: active_class}= link_to t(:contacts), depp.contacts_path
+              - if can? :view, Depp::Contact
+                - active_class = ['registrar/contacts'].include?(params[:controller]) ? 'active' :nil
+                %li{class: active_class}= link_to t(:contacts), registrar_contacts_path
 
-            - if can? :show, Invoice
-              - active_class = ['registrar/invoices'].include?(params[:controller]) ? 'active' :nil
-              %li{class: active_class}= link_to t('accounting'), main_app.registrar_invoices_path
+              - if can? :show, Invoice
+                - active_class = ['registrar/invoices'].include?(params[:controller]) ? 'active' :nil
+                %li{class: active_class}= link_to t('accounting'), registrar_invoices_path
 
-            - active_class = ['depp/xml_consoles'].include?(params[:controller]) ? 'active' :nil
-            %li{class: active_class}= link_to t(:xml_console), depp.xml_console_path
+              - if can? :view, :registrar_xml_console
+                - active_class = ['registrar/xml_consoles'].include?(params[:controller]) ? 'active' :nil
+                %li{class: active_class}= link_to t(:xml_console), registrar_xml_console_path
 
-          %ul.nav.navbar-nav.navbar-right
-            %li= link_to t('log_out', user: current_user), '/registrar/logout'
+            %ul.nav.navbar-nav.navbar-right
+              - if user_signed_in?
+                %li= link_to t('log_out', user: current_user), '/registrar/logout'
         / /.nav-collapse
     / Begin page content
     .container
-      - if params[:controller].start_with?('depp/')
-        = render 'depp/shared/flash'
-        = render 'depp/shared/epp_results'
-      - else
-        - display = (flash.empty?) ? 'none' : 'block'
-        #flash{style: "display: #{display};"}
-          - type = (flash[:notice]) ? 'bg-success' : 'bg-danger'
-          .alert{class: type}= flash[:notice] || flash[:alert]
+      = render 'registrar/shared/flash'
+      - if depp_controller?
+        = render 'registrar/shared/epp_results'
+
       = yield
     %footer.footer
       .container

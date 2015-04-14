@@ -1,4 +1,4 @@
-class Registrar::DomainsController < Registrar::DeppController # EPP controller 
+class Registrar::DomainsController < Registrar::DeppController # EPP controller
   before_action :init_domain, except: :new
 
   def index
@@ -7,7 +7,7 @@ class Registrar::DomainsController < Registrar::DeppController # EPP controller
 
     res = depp_current_user.repp_request('domains', { details: true, limit: limit, offset: offset })
     if res.code == '200'
-      @response = res.parsed_body.with_indifferent_access 
+      @response = res.parsed_body.with_indifferent_access
       @contacts = @response ? @response[:contacts] : []
 
       @paginatable_array = Kaminari.paginate_array(
@@ -24,7 +24,7 @@ class Registrar::DomainsController < Registrar::DeppController # EPP controller
       render 'info'
     else
       flash[:alert] = t('domain_not_found')
-      redirect_to domains_path and return
+      redirect_to registrar_domains_path and return
     end
   end
 
@@ -49,7 +49,7 @@ class Registrar::DomainsController < Registrar::DeppController # EPP controller
     @data = @domain.create(@domain_params)
 
     if response_ok?
-      redirect_to info_domains_path(domain_name: @domain_params[:name])
+      redirect_to info_registrar_domains_path(domain_name: @domain_params[:name])
     else
       render 'new'
     end

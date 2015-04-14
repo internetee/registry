@@ -20,28 +20,27 @@
 %hr
 
 - if @response
-  .panel.panel-default
-    .table-responsive
-      %table.table.table-hover.table-bordered.table-condensed.domify
-        %thead
+  .table-responsive
+    %table.table.table-hover.table-condensed
+      %thead
+        %tr
+          %th{class: 'col-xs-3'}= t(:name)
+          %th{class: 'col-xs-6'}= t(:valid)
+          %th{class: 'col-xs-3'}= t(:actions)
+      %tbody
+        - @response['domains'].each do |x|
           %tr
-            %th{class: 'col-xs-3'}= t(:name)
-            %th{class: 'col-xs-6'}= t(:valid)
-            %th{class: 'col-xs-3'}= t(:actions)
-        %tbody
-          - @response['domains'].each do |x|
-            %tr
-              %td= link_to(x['name'], info_registrar_domains_path(domain_name: x['name']))
-              %td
-                = Time.zone.parse(x['valid_from']).try(:to_date)
-                \-
-                = Time.zone.parse(x['valid_to']).try(:to_date)
-              %td
-                = link_to(t(:edit), edit_registrar_domains_path(domain_name: x['name']),
-                  class: 'btn btn-primary btn-xs')
-                = link_to(t(:renew), renew_registrar_domains_path(domain_name: x['name']),
-                  class: 'btn btn-default btn-xs')
-                = link_to(t(:delete), delete_registrar_domains_path(domain_name: x['name']),
+            %td= link_to(x['name'], info_registrar_domains_path(domain_name: x['name']))
+            %td
+              = Time.zone.parse(x['valid_from']).try(:to_date)
+              \-
+              = Time.zone.parse(x['valid_to']).try(:to_date)
+            %td
+              = link_to(t(:edit), edit_registrar_domains_path(domain_name: x['name']),
+                class: 'btn btn-primary btn-xs')
+              = link_to(t(:renew), renew_registrar_domains_path(domain_name: x['name']),
+                class: 'btn btn-default btn-xs')
+              = link_to(t(:delete), delete_registrar_domains_path(domain_name: x['name']),
                   class: 'btn btn-default btn-xs')
 
   = paginate @paginatable_array
