@@ -121,7 +121,12 @@ class Domain < ActiveRecord::Base
     end
 
     def included
-       includes(:registrar, :nameservers, {tech_contacts: :registrar}, {admin_contacts: :registrar})
+      includes(
+        :registrar, 
+        :nameservers, 
+        { tech_contacts: :registrar },
+        { admin_contacts: :registrar }
+      )
     end
   end
 
