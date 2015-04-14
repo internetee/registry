@@ -45,5 +45,5 @@ test:
 
   # DEPP
   key_path: '/var/lib/jenkins/workspace/registry/ca/private/webclient.key.pem'
-  epp_hostname: 'localhost'
-  repp_url: 'http://localhost:8989/repp/v1/'
+  epp_hostname: '127.0.0.1'
+  repp_url: 'http://127.0.0.1:8989/repp/v1/'
