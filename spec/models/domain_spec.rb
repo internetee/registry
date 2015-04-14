@@ -249,7 +249,7 @@ describe Domain do
 
       it 'creates domain version' do
         expect(DomainVersion.count).to eq(1)
-        expect(ContactVersion.count).to eq(2)
+        expect(ContactVersion.count).to eq(3)
         expect(NameserverVersion.count).to eq(3)
       end
     end

@@ -153,8 +153,8 @@ describe Contact do
     end
 
     it 'should have linked status when domain' do
-      @domain_contact = Fabricate(:domain_contact, contact_type: 'admin', contact_id: @contact.id)
-      @domain = Fabricate(:domain, domain_contacts: [@domain_contact])
+      @tech_domain_contact = Fabricate(:tech_domain_contact, contact_id: @contact.id)
+      @domain = Fabricate(:domain, tech_domain_contacts: [@tech_domain_contact])
       contact = @domain.contacts.first
       contact.save
 
@@ -162,8 +162,8 @@ describe Contact do
     end
 
     it 'should not have linked status when no domain' do
-      @domain_contact = Fabricate(:domain_contact, contact_type: 'admin', contact_id: @contact.id)
-      @domain = Fabricate(:domain, domain_contacts: [@domain_contact])
+      @admin_domain_contact = Fabricate(:admin_domain_contact, contact_id: @contact.id)
+      @domain = Fabricate(:domain, admin_domain_contacts: [@admin_domain_contact])
       contact = @domain.contacts.first
       contact.save
 
