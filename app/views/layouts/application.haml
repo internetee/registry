@@ -42,6 +42,9 @@
                   = t('settings')
                   %span.caret
                 %ul.dropdown-menu{role: "menu"}
+                  %li.dropdown-header= t('accounting')
+                  %li= link_to t('bank_statements'), admin_bank_statements_path
+                  %li.divider
                   %li.dropdown-header= t('system')
                   %li= link_to t('settings'), admin_settings_path
                   %li= link_to t('zonefile'), admin_zonefile_settings_path

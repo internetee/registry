@@ -13,14 +13,14 @@
     %h3.panel-title= t(:details)
   .panel-body
     %dl.dl-horizontal
+      %dt= t('document_no')
+      %dd= @bank_transaction.document_no
+
       %dt= t('bank_reference')
       %dd= @bank_transaction.bank_reference
 
       %dt= t('iban').upcase
       %dd= @bank_transaction.iban
-
-      %dt= t('currency')
-      %dd= @bank_transaction.currency
 
       %dt= t('buyer_bank_code')
       %dd= @bank_transaction.buyer_bank_code
@@ -31,14 +31,17 @@
       %dt= t('buyer_name')
       %dd= @bank_transaction.buyer_name
 
-      %dt= t('document_no')
-      %dd= @bank_transaction.document_no
-
       %dt= t('description')
       %dd= @bank_transaction.description
 
       %dt= t('sum')
       %dd= @bank_transaction.sum
 
+      %dt= t('currency')
+      %dd= @bank_transaction.currency
+
       %dt= t('reference_no')
       %dd= @bank_transaction.reference_no
+
+      %dt= t('paid_at')
+      %dd= l(@bank_transaction.paid_at, format: :date_long)

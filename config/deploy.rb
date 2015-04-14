@@ -97,7 +97,8 @@ set :shared_paths, [
   'config/initializers/current_commit_hash.rb',
   'log',
   'public/system',
-  'export/zonefiles'
+  'export/zonefiles',
+  'import/bank_statements'
 ]
 
 # Optional settings:
@@ -132,6 +133,9 @@ task setup: :environment do
 
   queue! %(mkdir -p "#{deploy_to}/shared/export/zonefiles")
   queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/export/zonefiles")
+
+  queue! %(mkdir -p "#{deploy_to}/shared/import/bank_statements")
+  queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/import/bank_statements")
 
   queue! %(touch "#{deploy_to}/shared/config/database.yml")
   deploy do

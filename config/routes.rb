@@ -85,7 +85,10 @@ Rails.application.routes.draw do
 
     resources :keyrelays
 
-    resources :bank_statements
+    resources :bank_statements do
+      get 'download_import_file', on: :member
+    end
+
     resources :bank_transactions
 
     resources :domains do

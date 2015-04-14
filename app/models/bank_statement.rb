@@ -15,6 +15,9 @@ class BankStatement < ActiveRecord::Base
       next unless bt_params
       bank_transactions.build(bt_params)
     end
+
+    self.import_file_path = "#{ENV['bank_statement_import_dir']}/#{Time.zone.now.to_formatted_s(:number)}.txt"
+    File.open(import_file_path, 'w') { |f| f.write(th6_file.open.read) }
   end
 
   def parse_th6_row(row)

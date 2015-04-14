@@ -23,6 +23,7 @@ en:
       long: "%A, %e. %B %Y, %H:%M"
       short: "%d.%m.%y, %H:%M"
       date: "%d.%m.%y"
+      date_long: "%d. %B %Y"
 
   date:
     formats:
@@ -677,5 +678,17 @@ en:
   back_to_bank_statement: 'Back to bank statement'
   imported_at: 'Imported at'
   bank_statement: 'Bank statement'
+  bank_transactions: 'Bank transactions'
   bank_transaction: 'Bank transaction'
   sum: 'Sum'
+  queried_at: 'Queried at'
+  import_file_path: 'Import file path'
+  bank_code: 'Bank code'
+  reference_no: 'Reference number'
+  currency: 'Currency'
+  buyer_name: 'Buyer name'
+  buyer_iban: 'Buyer IBAN'
+  buyer_bank_code: 'Buyer bank code'
+  bank_reference: 'Bank reference'
+  document_no: 'Document number'
+  import_file: 'Import file'

@@ -5,24 +5,52 @@
     %h2.text-right.text-center-xs
       = link_to(t('back_to_bank_statements'), admin_bank_statements_path, class: 'btn btn-primary')
 %hr
+%row
+  .col-md-12
+.panel.panel-default
+  .panel-heading
+    %h3.panel-title= t(:details)
+  .panel-body
+    %dl.dl-horizontal
+      %dt= t('bank_code')
+      %dd= @bank_statement.bank_code
+
+      %dt= t('iban').upcase
+      %dd= @bank_statement.iban
+
+      %dt= t('queried_at')
+      %dd= l(@bank_statement.queried_at)
+
+      %dt= t('imported_at')
+      %dd= l(@bank_statement.created_at)
+
+      - if @bank_statement.import_file_path
+        %dt= t('import_file')
+        %dd= link_to(t('download'), download_import_file_admin_bank_statement_path(@bank_statement))
+
+%h2.text-center-xs= t('bank_transactions')
+%hr
 .row
   .col-md-12
     .table-responsive
       %table.table.table-hover.table-bordered.table-condensed
         %thead
           %tr
-            %th{class: 'col-xs-2'}
-              = sort_link(@q, 'buyer_name')
-            %th{class: 'col-xs-2'}
+            %th{class: 'col-xs-3'}
               = sort_link(@q, 'paid_at')
-            %th{class: 'col-xs-2'}
-              = sort_link(@q, 'sum', t('sum'))
+            %th{class: 'col-xs-3'}
+              = sort_link(@q, 'buyer_name')
+            %th{class: 'col-xs-3'}
+              = sort_link(@q, 'sum')
+            %th{class: 'col-xs-3'}
+              = sort_link(@q, 'currency')
         %tbody
           - @bank_transactions.each do |x|
             %tr
-              %td= link_to(x.buyer_name, [:admin, x])
-              %td= l(x.paid_at)
+              %td= link_to(l(x.paid_at, format: :date_long), [:admin, x])
+              %td= x.buyer_name
               %td= x.sum
+              %td= x.currency
 .row
   .col-md-12
     = paginate @bank_transactions
