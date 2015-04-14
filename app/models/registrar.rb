@@ -49,7 +49,7 @@ class Registrar < ActiveRecord::Base
     end
   end
 
-  def issue_prepayment_invoice(amount, description = nil)
+  def issue_prepayment_invoice(amount, description = nil) # rubocop:disable Metrics/MethodLength
     # Currently only EIS can issue invoices
     eis = self.class.eis
 
