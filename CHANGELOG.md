@@ -1,3 +1,7 @@
+15.04.2015
+
+* Added whois tasks, more info with rake -T whois
+
 02.04.2015
 
 * Depricated DelayedJob, kill all running delayed jobs if needed

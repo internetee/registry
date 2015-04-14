@@ -53,6 +53,7 @@ class Domain < ActiveRecord::Base
   end
   after_save :manage_automatic_statuses
   after_save :update_whois_body
+  after_save :update_whois_server
 
   validates :name_dirty, domain_name: true, uniqueness: true
   validates :period, numericality: { only_integer: true }
@@ -117,6 +118,15 @@ class Domain < ActiveRecord::Base
       return period.to_i.days   if unit == 'd'
       return period.to_i.months if unit == 'm'
       return period.to_i.years  if unit == 'y'
+    end
+
+    def included
+      includes(
+        :registrar, 
+        :nameservers, 
+        { tech_contacts: :registrar },
+        { admin_contacts: :registrar }
+      )
     end
   end
 
@@ -228,12 +238,6 @@ class Domain < ActiveRecord::Base
     log
   end
 
-  def update_whois_server
-    wd = Whois::Domain.find_or_initialize_by(name: name)
-    wd.whois_body = whois_body
-    wd.save
-  end
-
   # rubocop:disable Metrics/MethodLength
   def update_whois_body
     self.whois_body = <<-EOS
@@ -260,14 +264,12 @@ class Domain < ActiveRecord::Base
   created: #{registrar.created_at.to_s(:db)}
   changed: #{registrar.updated_at.to_s(:db)}
     EOS
-
-    update_whois_server
   end
   # rubocop:enable Metrics/MethodLength
 
   def contacts_body
     out = ''
-    admin_contacts.includes(:registrar).each do |c|
+    admin_contacts.each do |c|
       out << 'Admin contact:'
       out << "name: #{c.name}"
       out << "email: #{c.email}"
@@ -275,7 +277,7 @@ class Domain < ActiveRecord::Base
       out << "created: #{c.created_at.to_s(:db)}"
     end
 
-    tech_contacts.includes(:registrar).each do |c|
+    tech_contacts.each do |c|
       out << 'Tech contact:'
       out << "name: #{c.name}"
       out << "email: #{c.email}"
@@ -283,5 +285,11 @@ class Domain < ActiveRecord::Base
       out << "created: #{c.created_at.to_s(:db)}"
     end
     out
+  end
+
+  def update_whois_server
+    wd = Whois::Domain.find_or_initialize_by(name: name)
+    wd.whois_body = whois_body
+    wd.save
   end
 end
