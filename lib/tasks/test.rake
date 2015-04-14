@@ -16,6 +16,7 @@ begin
     desc 'Run all but EPP specs'
     RSpec::Core::RakeTask.new('test:other') do |t|
       t.rspec_opts = '--tag ~epp --tag ~feature'
+      t.pattern = FileList["spec/models/**/*_spec.rb"]
     end
 
     desc 'Run all but EPP specs'
