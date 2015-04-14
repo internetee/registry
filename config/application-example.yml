@@ -43,3 +43,5 @@ test:
   ca_key_password: 'test'
   cert_path:    '/var/lib/jenkins/workspace/registry/ca/certs/webclient.crt.pem'
 
+  # DEPP
+  key_path: '/var/lib/jenkins/workspace/registry/ca/private/webclient.key.pem'
