@@ -1,9 +1,6 @@
 %h4= t('details')
 %hr
 %dl.dl-horizontal
-  / %dt= t('document_name')
-  / %dd= t(@invoice.document_name)
-
   %dt= t('issue_date')
   %dd= l(@invoice.created_at)
 
@@ -14,4 +11,8 @@
   %dd= t(@invoice.payment_term)
 
   %dt= t('description')
-  %dd= @invoice.description
+  - @invoice.description.prepend(' - ') if @invoice.description.present?
+  %dd= "#{t('invoice_no', no: @invoice.id)}#{@invoice.description}"
+
+  %dt= t('reference_no')
+  %dd= @invoice.reference_no
