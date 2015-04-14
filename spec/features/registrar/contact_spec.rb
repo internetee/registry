@@ -68,7 +68,6 @@ feature 'Contact', type: :feature do
 
         page.should have_text('Business Name Ltd')
         page.should have_text('bic-ident [EE bic]')
-
       end
 
       it 'should create new contact with success' do
