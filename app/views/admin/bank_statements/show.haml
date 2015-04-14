@@ -41,10 +41,12 @@
               = sort_link(@q, 'paid_at')
             %th{class: 'col-xs-3'}
               = sort_link(@q, 'buyer_name')
-            %th{class: 'col-xs-3'}
+            %th{class: 'col-xs-2'}
               = sort_link(@q, 'sum')
-            %th{class: 'col-xs-3'}
+            %th{class: 'col-xs-2'}
               = sort_link(@q, 'currency')
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'account_activity', t('status'))
         %tbody
           - @bank_transactions.each do |x|
             %tr
@@ -52,6 +54,10 @@
               %td= x.buyer_name
               %td= x.sum
               %td= x.currency
+              %td
+                - c = x.binded? ? 'label-success' : 'label-danger'
+                %span.label{class: c}= x.binded? ? t('binded') : t('not_binded')
+                &nbsp;
 .row
   .col-md-12
     = paginate @bank_transactions

@@ -11,12 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150414092249) do
+ActiveRecord::Schema.define(version: 20150414124630) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "account_activites", force: :cascade do |t|
+  create_table "account_activities", force: :cascade do |t|
     t.integer  "account_id"
     t.integer  "invoice_id"
     t.decimal  "sum"

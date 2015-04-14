@@ -5,11 +5,13 @@ class Registrar < ActiveRecord::Base
   has_many :contacts, dependent: :restrict_with_error
   has_many :api_users, dependent: :restrict_with_error
   has_many :messages
-  belongs_to :country_deprecated, foreign_key: :country_id
   has_many :invoices, foreign_key: 'buyer_id'
+  has_many :accounts
+
+  belongs_to :country_deprecated, foreign_key: :country_id
 
   validates :name, :reg_no, :country_code, :email, presence: true
-  validates :name, :reg_no, uniqueness: true
+  validates :name, :reg_no, :reference_no, uniqueness: true
   validate :set_code, if: :new_record?
 
   before_create :generate_iso_11649_reference_no
@@ -97,6 +99,10 @@ class Registrar < ActiveRecord::Base
         }
       ]
     )
+  end
+
+  def cash_account
+    accounts.find_by(account_type: Account::CASH)
   end
 
   def domain_transfers

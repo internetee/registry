@@ -3,6 +3,8 @@ class BankStatement < ActiveRecord::Base
 
   attr_accessor :th6_file
 
+  validates :bank_code, :iban, :queried_at, presence: true
+
   def import
     import_th6_file && save
   end
@@ -46,5 +48,9 @@ class BankStatement < ActiveRecord::Base
     self.iban = row[10, 20].strip
     self.queried_at = DateTime.strptime(row[30, 10].strip, '%y%m%d%H%M')
     nil
+  end
+
+  def bind_with_invoices
+    bank_transactions.unbinded.each(&:bind_with_invoice)
   end
 end

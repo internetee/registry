@@ -694,3 +694,5 @@ en:
   import_file: 'Import file'
   bind_with_invoices: 'Bind with invoices'
   url: 'URL'
+  binded: 'Binded'
+  not_binded: 'Not binded'

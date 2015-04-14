@@ -56,18 +56,18 @@ describe Invoice do
       @invoice.seller_address.should == 'Paldiski mnt. 123, Tallinn'
     end
 
-    it 'should calculate totals correctly' do
+    it 'should calculate sums correctly' do
       @invoice = Fabricate(:invoice)
       @invoice.vat_prc.should == BigDecimal.new('0.2')
-      @invoice.total_without_vat.should == BigDecimal.new('300.0')
-      @invoice.total_vat.should == BigDecimal.new('60.0')
-      @invoice.total.should == BigDecimal.new('360.0')
+      @invoice.sum_without_vat.should == BigDecimal.new('300.0')
+      @invoice.vat.should == BigDecimal.new('60.0')
+      @invoice.sum.should == BigDecimal.new('360.0')
 
       ii = @invoice.items.first
-      ii.item_total_without_vat.should == BigDecimal.new('150.0')
+      ii.item_sum_without_vat.should == BigDecimal.new('150.0')
 
       ii = @invoice.items.last
-      ii.item_total_without_vat.should == BigDecimal.new('150.0')
+      ii.item_sum_without_vat.should == BigDecimal.new('150.0')
     end
 
     # it 'should have one version' do
