@@ -2,10 +2,10 @@
   %title= name
 
 .row
-  .col-sm-6
+  .col-sm-8
     %h1.text-center-xs
-      = truncate(name)
-  .col-sm-6
+      = truncate(name, length: 40)
+  .col-sm-4
     %h1.text-right.text-center-xs
       = yield :actions
 %hr

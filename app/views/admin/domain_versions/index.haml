@@ -1,11 +1,7 @@
-.row
-  .col-sm-6
-    %h2.text-center-xs
-      = "#{t(:domain_history)}: #{@domain.name}"
-  .col-sm-6
-    %h2.text-right.text-center-xs
+- content_for :actions do
+  = link_to(t(:back_to_domain), [:admin, @domain], class: 'btn btn-default')
+= render 'admin/shared/title', name: "#{t(:history)}: #{@domain.name}"
 
-%hr
 .row
   .col-md-12
     .table-responsive
@@ -21,9 +17,10 @@
             %th{class: 'col-xs-2'}= t(:registrar)
 
         %tbody
-          %tr.small
-            = render 'admin/domain_versions/version', 
-              domain: @domain, version: @domain.versions.last
+          - if @domain.versions.present?
+            %tr.small
+              = render 'admin/domain_versions/version', 
+                domain: @domain, version: @domain.versions.last
 
           - @domain.versions.not_creates.reverse.each do |version|
             %tr.small

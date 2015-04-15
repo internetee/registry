@@ -7,10 +7,16 @@
     %hr
 
   .row
-    .col-md-6
-      .form-group
-        = f.label :name
-        = f.text_field(:name, class: 'form-control')
+    .col-md-8
+      .panel.panel-default
+        .panel-heading.clearfix
+          .pull-left= t(:general)
+        .panel-body
+          .form-group
+            .col-md-3.control-label
+              = f.label :name
+            .col-md-7
+              = f.text_field(:name, class: 'form-control')
       .form-group
         = f.label :reg_no
         = f.text_field(:reg_no, class: 'form-control')
@@ -27,8 +33,8 @@
       .form-group
         = f.label :billing_email
         = f.text_field(:billing_email, class: 'form-control')
-
-    .col-md-6.text-left
+  .row
+    .col-md-8
       .form-group
         = f.label :street
         = f.text_field(:street, class: 'form-control')
@@ -51,5 +57,5 @@
       /   %p.help-block= t('address_help')
   %hr
   .row
-    .col-md-12.text-right
+    .col-md-8.text-right
       = button_tag(t('save'), class: 'btn btn-primary')

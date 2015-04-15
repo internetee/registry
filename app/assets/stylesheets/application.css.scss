@@ -1,9 +1,9 @@
-@import "bootstrap-sprockets";
-@import "bootstrap";
+//= require 'custom-boostrap'
 @import "nprogress";
 @import "nprogress-bootstrap";
 @import "bootstrap-ext";
 @import "typeaheadjs";
 @import "selectize";
 @import "selectize.bootstrap3";
+@import "general";
 @import "app";

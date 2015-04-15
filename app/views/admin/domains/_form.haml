@@ -3,17 +3,12 @@
   - unless @domain.parent_valid?
     %hr
   .row
-    .col-md-12
-      %ul.nav.nav-tabs{:role => "tablist", id: 'tabs'}
-        - li_class = @domain.statuses_tab_valid? ? nil : 'error-tab'
-        %li{class: li_class}
-          %a{"data-toggle" => "tab", :href => "#statuses-tab", :role => "tab"}= t('statuses')
-        / Tab panes
+    .col-md-8
       .tab-content{style:'margin-top: 20px;'}
         #general-tab.tab-pane.active
           = render 'admin/domains/form_partials/statuses', f: f
   .row
-    .col-md-12.text-right
+    .col-md-8.text-right
       = button_tag(t('save'), class: 'btn btn-primary')
 
 :coffee
