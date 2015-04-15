@@ -24,7 +24,7 @@ class Registrar::PollsController < Registrar::DeppController # EPP controller
     @data = @domain.confirm_keyrelay(domain_params)
 
     if response_ok?
-      redirect_to info_domains_path(domain_name: domain_params[:name])
+      redirect_to info_registrar_domains_url(domain_name: domain_params[:name])
     else
       @results = @data.css('result')
       @data = depp_current_user.request(@ex.poll)

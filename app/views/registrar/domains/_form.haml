@@ -1,38 +1,28 @@
 - path = (params[:domain_name]) ? update_registrar_domains_path : registrar_domains_path
 = form_tag(path, class: 'form-horizontal', multipart: true) do
   .row
-    .col-md-12
-      / Nav tabs
-      %ul.nav.nav-tabs{:role => "tablist", id: 'tabs'}
-        %li.active
-          %a{"data-toggle" => "tab", :href => "#general-tab", :role => "tab"}= t('general')
-        - if params['domain_name']
-          %li
-            %a{"data-toggle" => "tab", :href => "#statuses-tab", :role => "tab"}= t('statuses')
-      / Tab panes
-      .tab-content
-        #general-tab.tab-pane.active
-          = render 'registrar/domains/form_partials/general'
-          = render 'registrar/domains/form_partials/contacts'
-          %hr
-          = render 'registrar/domains/form_partials/nameservers'
-          %hr
-          = render 'registrar/domains/form_partials/dnskeys'
-        - if params['domain_name']
-          #statuses-tab.tab-pane
-            = render 'registrar/domains/form_partials/statuses'
+    .col-md-8
+      #general-tab.tab-pane.active
+        = render 'registrar/domains/form_partials/general'
+        = render 'registrar/domains/form_partials/contacts'
+        = render 'registrar/domains/form_partials/nameservers'
+        = render 'registrar/domains/form_partials/dnskeys'
 
-        .panel.panel-default
-          .panel-heading.clearfix
-            .pull-left= t(:legal_document)
-          .panel-body
-            .form-group
-              = label_tag 'domain[legal_document]', t('legal_document'),class: 'col-md-3 control-label'
-              .col-md-9
-                = file_field_tag 'domain[legal_document]'
+      .panel.panel-default
+        .panel-heading.clearfix
+          .pull-left= t(:legal_document)
+        .panel-body
+          .form-group
+            = label_tag 'domain[legal_document]', t('legal_document'),class: 'col-md-3 control-label'
+            .col-md-9
+              = file_field_tag 'domain[legal_document]'
+    .col-md-4
+      %p.domain-general-help= t(:domain_general_help).html_safe
+      %p.domain-admin-contact-help= t(:domain_admin_contact_help).html_safe
+      %p.domain-tech-contact-help= t(:domain_tech_contact_help).html_safe
 
   .row
-    .col-md-12.text-right
+    .col-md-8.text-right
       = button_tag(t('shared.save'), class: 'btn btn-primary')
 
 :javascript

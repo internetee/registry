@@ -16,7 +16,7 @@
           %tr
             %td= link_to(c[:name], registrar_contact_path(id: c[:code]))
             %td= c[:code]
-            %td= c[:ident]
+            %td= ident_for(c)
             %td
               = link_to(t(:edit), edit_registrar_contact_path(c[:code]), class: 'btn btn-primary btn-xs')
               = link_to(t(:delete), delete_registrar_contact_path(c[:code]), class: 'btn btn-default btn-xs')

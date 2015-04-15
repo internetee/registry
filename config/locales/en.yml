@@ -702,3 +702,12 @@ en:
   invoices_were_fully_binded: 'Invoices were fully binded'
   invoices_were_partially_binded: 'Invoices were partially binded'
   no_invoices_were_binded: 'No invoices were binded'
+  domain_general_help:
+    <b>The Administrative Contact</b>
+    is an Estonian citizen or a citizen of another country in the European Union, European Economic Area or the Swiss Confederation with a registered place of residence in Estonia and an Estonian personal identification code who has the right to represent the registering entity in accordance with the current legislation of the Republic of Estonia (member of the management board) or on the basis of the written authorisation issued by a member of the management board. The Administrative Contact has the right to sign and submit in the name of the registering entity any applications connected with the domain name and also to receive and forward any information concerning the domain name(s). The Administrative Contact is responsible for the correctness and authenticity of the data and documents submitted about itself and the registering entity.
+  domain_admin_contact_help:
+    <b>The Technical Contact</b>
+    is a person who has the right to modify only such domain name server data that is connected with it. If the domain registering entity is using a website hosting service, it is recommended to register as the Technical Contact a representative of the corresponding provider company. If the domain registering entity manages its own servers, it can register itself as the Technical Contact.
+  domain_tech_contact_help:
+    <b>The domain name server</b>
+    is a computer that saves and forwards via a general-access data communications network such data that is connected with the domain name and corresponding IP addresses. Your IT helpdesk or Internet service provider will have the necessary information about the domain name servers.
