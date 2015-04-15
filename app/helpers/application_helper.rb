@@ -10,11 +10,21 @@ module ApplicationHelper
   end
 
   def ident_for(contact)
-    case contact.ident_type
-    when 'birthday'
-      "#{contact.ident} [#{contact.ident_type}]"
+    if contact.kind_of? Hash
+      ident_country_code = contact[:ident_country_code]
+      ident_type = contact[:ident_type]
+      ident = contact[:ident]
     else
-      "#{contact.ident} [#{contact.ident_country_code} #{contact.ident_type}]"
+      ident_country_code = contact.ident_country_code
+      ident_type = contact.ident_type
+      ident = contact.ident
+    end
+
+    case ident_type
+    when 'birthday'
+      "#{ident} [#{ident_type}]"
+    else
+      "#{ident} [#{ident_country_code} #{ident_type}]"
     end
   end
 
