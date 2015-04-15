@@ -21,7 +21,7 @@ feature 'Invoices', type: :feature do
 
     it 'should navigate to the domains index page' do
       current_path.should == '/registrar'
-      click_link 'Accounting'
+      click_link 'Billing'
 
       current_path.should == '/registrar/invoices'
       page.should have_text('Your current credit account balance is')
