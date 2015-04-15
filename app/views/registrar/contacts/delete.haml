@@ -9,12 +9,12 @@
     = f.hidden_field :password
 
     .row
-      .col-md-12
+      .col-md-8
         = render 'registrar/contacts/form_partials/legal_document', f: f
 
     %hr
     .row
-      .col-md-12.text-right
+      .col-md-8.text-right
         = button_tag t(:delete), class: 'btn btn-danger'
 - else
   %h2= "#{t(:delete)}: #{t(:not_found)}"

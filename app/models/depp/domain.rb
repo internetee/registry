@@ -73,7 +73,7 @@ module Depp
       current_user.request(epp_xml.renew(
         name: { value: params[:domain_name] },
         curExpDate: { value: params[:cur_exp_date] },
-        period: { value: params[:period], attrs: { unit: params[:period_unit] } }
+        period: { value: params[:period].to_s[0], attrs: { unit: params[:period].to_s[1] } }
       ))
     end
 
