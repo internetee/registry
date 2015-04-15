@@ -4,7 +4,7 @@ module Legacy
     begin
       establish_connection :fred
     rescue ActiveRecord::AdapterNotSpecified => e
-      logger.info "'fred' database not configured, please update your database.yml file: #{e}"
+      logger.info "Legacy 'fred' database support is currently disabled because #{e}"
     end
 
     def readonly?
