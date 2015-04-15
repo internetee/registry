@@ -42,6 +42,10 @@
                   = t('settings')
                   %span.caret
                 %ul.dropdown-menu{role: "menu"}
+                  %li.dropdown-header= t('users')
+                  %li= link_to t(:api_users), admin_api_users_path
+                  %li= link_to t(:admin_users), admin_admin_users_path
+                  %li.divider
                   %li.dropdown-header= t('billing')
                   %li= link_to t('bank_statements'), admin_bank_statements_path
                   %li.divider
@@ -52,11 +56,6 @@
                   %li= link_to t(:epp_logs), admin_epp_logs_path
                   %li= link_to t(:repp_logs), admin_repp_logs_path
                   -# %li= link_to t(:background_jobs), admin_delayed_jobs_path
-
-                  %li.divider
-                  %li.dropdown-header= t('users')
-                  %li= link_to t(:admin_users), admin_admin_users_path
-                  %li= link_to t(:api_users), admin_api_users_path
 
           %ul.nav.navbar-nav.navbar-right
             %li= link_to t('log_out', user: current_user), '/admin/logout'
