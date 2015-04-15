@@ -25,6 +25,7 @@ describe BankStatement do
   context 'with valid attributes' do
     before :all do
       @bank_statement = Fabricate(:bank_statement)
+      Fabricate(:eis)
     end
 
     it 'should be valid' do
@@ -39,7 +40,6 @@ describe BankStatement do
     end
 
     it 'should bind transactions with invoices' do
-      Fabricate(:eis)
       r = Fabricate(:registrar, reference_no: 'RF7086666663')
       r.issue_prepayment_invoice(200, 'add some money')
 
@@ -67,6 +67,36 @@ describe BankStatement do
 
       bs.bank_transactions.unbinded.count.should == 1
       bs.partially_binded?.should == true
+    end
+
+    it 'should not bind transactions with invalid match data' do
+      r = Fabricate(:registrar, reference_no: 'RF7086666663')
+      r.issue_prepayment_invoice(200, 'add some money')
+
+      bs = Fabricate(:bank_statement, bank_transactions: [
+        Fabricate(:bank_transaction, {
+          sum: 240.0, # with vat
+          reference_no: 'RF7086666662',
+          description: 'Invoice no. 1'
+        }),
+        Fabricate(:bank_transaction, {
+          sum: 240.0,
+          reference_no: 'RF7086666663',
+          description: 'Invoice no. 4948934'
+        })
+      ])
+
+      bs.bank_transactions.count.should == 2
+
+      AccountActivity.count.should == 0
+      bs.bind_invoices
+
+      AccountActivity.count.should == 0
+
+      r.cash_account.balance.should == 0.0
+
+      bs.bank_transactions.unbinded.count.should == 2
+      bs.not_binded?.should == true
     end
 
     # it 'should have one version' do
