@@ -20,9 +20,9 @@
       %dd= @bank_statement.iban
 
       %dt= t('status')
-      - sc = 'text-success' if @bank_statement.status == BankStatement::FULLY_BINDED
-      - sc = 'text-warning' if @bank_statement.status == BankStatement::PARTIALLY_BINDED
-      - sc = 'text-danger' if @bank_statement.status == BankStatement::NOT_BINDED
+      - sc = 'text-success' if @bank_statement.fully_binded?
+      - sc = 'text-warning' if @bank_statement.partially_binded?
+      - sc = 'text-danger' if @bank_statement.not_binded?
       %dd{class: sc}= t(@bank_statement.status)
 
       %dt= t('queried_at')

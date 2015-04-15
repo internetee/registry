@@ -26,9 +26,9 @@
               %td= link_to(l(x.created_at), admin_bank_statement_path(x))
               %td= x.bank_code
               %td= x.iban
-              - sc = 'text-success' if x.status == BankStatement::FULLY_BINDED
-              - sc = 'text-warning' if x.status == BankStatement::PARTIALLY_BINDED
-              - sc = 'text-danger' if x.status == BankStatement::NOT_BINDED
+              - sc = 'text-success' if x.fully_binded?
+              - sc = 'text-warning' if x.partially_binded?
+              - sc = 'text-danger' if x.not_binded?
               %td{class: sc}= t(x.status)
 .row
   .col-md-12
