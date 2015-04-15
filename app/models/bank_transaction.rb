@@ -8,10 +8,15 @@ class BankTransaction < ActiveRecord::Base
     account_activity.present?
   end
 
+  def binded_invoice
+    return unless binded?
+    account_activity.invoice
+  end
+
   # For successful binding, reference number, invoice id and sum must match with the invoice
   # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/CyclomaticComplexity
-  def bind_with_invoice
+  def bind_invoice
     return if binded?
     registrar = Registrar.find_by(reference_no: reference_no)
     return unless registrar

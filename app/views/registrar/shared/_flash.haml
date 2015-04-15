@@ -1,4 +1,5 @@
-- display = (flash[:notice] || flash[:alert]) ? 'block' : 'none'
+- display = (flash[:notice] || flash[:alert] || flash[:warning]) ? 'block' : 'none'
 #flash{style: "display: #{display};"}
   - type = (flash[:notice]) ? 'bg-success' : 'bg-danger'
-  .alert{class: type}= flash[:notice] || flash[:alert]
+  - type = 'bg-warning' if flash[:warning]
+  .alert{class: type}= flash[:notice] || flash[:alert] || flash[:warning]

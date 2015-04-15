@@ -5,6 +5,10 @@ class BankStatement < ActiveRecord::Base
 
   validates :bank_code, :iban, :queried_at, presence: true
 
+  FULLY_BINDED = 'fully_binded'
+  PARTIALLY_BINDED = 'partially_binded'
+  NOT_BINDED = 'not_binded'
+
   def import
     import_th6_file && save
   end
@@ -50,7 +54,30 @@ class BankStatement < ActiveRecord::Base
     nil
   end
 
-  def bind_with_invoices
-    bank_transactions.unbinded.each(&:bind_with_invoice)
+  # TODO: Cache this to database so it can be used for searching
+  def status
+    if bank_transactions.unbinded.count == bank_transactions.count
+      NOT_BINDED
+    elsif bank_transactions.unbinded.count == 0
+      FULLY_BINDED
+    else
+      PARTIALLY_BINDED
+    end
+  end
+
+  def not_binded?
+    status == NOT_BINDED
+  end
+
+  def partially_binded?
+    status == PARTIALLY_BINDED
+  end
+
+  def fully_binded?
+    status == FULLY_BINDED
+  end
+
+  def bind_invoices
+    bank_transactions.unbinded.each(&:bind_invoice)
   end
 end

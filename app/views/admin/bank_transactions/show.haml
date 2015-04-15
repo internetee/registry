@@ -16,6 +16,14 @@
       %dt= t('document_no')
       %dd= @bank_transaction.document_no
 
+      %dt= t('status')
+      - c = @bank_transaction.binded? ? 'text-success' : 'text-danger'
+      %dd{class: c}= @bank_transaction.binded? ? t('binded') : t('not_binded')
+
+      - if @bank_transaction.binded?
+        %dt= t('binded_invoice')
+        %dd= link_to(@bank_transaction.binded_invoice, '#')
+
       %dt= t('bank_reference')
       %dd= @bank_transaction.bank_reference
 

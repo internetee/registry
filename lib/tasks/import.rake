@@ -99,6 +99,12 @@ namespace :import do
       x.save(validate: false)
     end
 
+    Registrar.all.each do |x|
+      next if x.cash_account
+      x.accounts.create(account_type: Account::CASH)
+      x.save(validate: false)
+    end
+
     puts "-----> Imported #{count} new registrars in #{(Time.zone.now.to_f - start).round(2)} seconds"
   end
 

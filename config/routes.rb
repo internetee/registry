@@ -86,6 +86,7 @@ Rails.application.routes.draw do
     resources :keyrelays
 
     resources :bank_statements do
+      post 'bind_invoices', on: :member
       get 'download_import_file', on: :member
     end
 

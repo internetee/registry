@@ -7,6 +7,10 @@ class Invoice < ActiveRecord::Base
   validates :invoice_type, :due_date, :currency, :seller_name,
             :seller_iban, :buyer_name, :invoice_items, :vat_prc, presence: true
 
+  def to_s
+    I18n.t('invoice_no', no: id)
+  end
+
   def seller_address
     [seller_street, seller_city, seller_state, seller_zip].reject(&:blank?).compact.join(', ')
   end

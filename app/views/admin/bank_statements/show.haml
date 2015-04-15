@@ -3,7 +3,7 @@
     %h2.text-center-xs= t('bank_statement')
   .col-sm-6
     %h2.text-right.text-center-xs
-      = link_to(t('bind_with_invoices'), '#', class: 'btn btn-primary')
+      = link_to(t('bind_invoices'), bind_invoices_admin_bank_statement_path, class: 'btn btn-primary', method: :post)
       = link_to(t('back_to_bank_statements'), admin_bank_statements_path, class: 'btn btn-default')
 %hr
 %row
@@ -16,8 +16,14 @@
       %dt= t('bank_code')
       %dd= @bank_statement.bank_code
 
-      %dt= t('iban').upcase
+      %dt= t('iban')
       %dd= @bank_statement.iban
+
+      %dt= t('status')
+      - sc = 'text-success' if @bank_statement.status == BankStatement::FULLY_BINDED
+      - sc = 'text-warning' if @bank_statement.status == BankStatement::PARTIALLY_BINDED
+      - sc = 'text-danger' if @bank_statement.status == BankStatement::NOT_BINDED
+      %dd{class: sc}= t(@bank_statement.status)
 
       %dt= t('queried_at')
       %dd= l(@bank_statement.queried_at)
@@ -46,7 +52,7 @@
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'currency')
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'account_activity', t('status'))
+              = sort_link(@q, 'account_activity_id', t('status'))
         %tbody
           - @bank_transactions.each do |x|
             %tr
@@ -54,10 +60,8 @@
               %td= x.buyer_name
               %td= x.sum
               %td= x.currency
-              %td
-                - c = x.binded? ? 'label-success' : 'label-danger'
-                %span.label{class: c}= x.binded? ? t('binded') : t('not_binded')
-                &nbsp;
+              - c = x.binded? ? 'text-success' : 'text-danger'
+              %td{class: c}= x.binded? ? t('binded') : t('not_binded')
 .row
   .col-md-12
     = paginate @bank_transactions

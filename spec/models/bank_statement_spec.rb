@@ -59,7 +59,7 @@ describe BankStatement do
       bs.bank_transactions.count.should == 2
 
       AccountActivity.count.should == 0
-      bs.bind_with_invoices
+      bs.bind_invoices
 
       AccountActivity.count.should == 1
 

@@ -11,18 +11,25 @@
       %table.table.table-hover.table-bordered.table-condensed
         %thead
           %tr
-            %th{class: 'col-xs-2'}
+            %th{class: 'col-xs-3'}
               = sort_link(@q, 'created_at', t('imported_at'))
-            %th{class: 'col-xs-2'}
+            %th{class: 'col-xs-3'}
               = sort_link(@q, 'bank_code')
-            %th{class: 'col-xs-2'}
+            %th{class: 'col-xs-3'}
               = sort_link(@q, 'iban', t('iban').upcase)
+            / TODO: Make this searchable by caching the status to the database
+            %th{class: 'col-xs-3'}
+              = t('status')
         %tbody
           - @bank_statements.each do |x|
             %tr
               %td= link_to(l(x.created_at), admin_bank_statement_path(x))
               %td= x.bank_code
               %td= x.iban
+              - sc = 'text-success' if x.status == BankStatement::FULLY_BINDED
+              - sc = 'text-warning' if x.status == BankStatement::PARTIALLY_BINDED
+              - sc = 'text-danger' if x.status == BankStatement::NOT_BINDED
+              %td{class: sc}= t(x.status)
 .row
   .col-md-12
     = paginate @bank_statements
