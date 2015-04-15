@@ -7,7 +7,7 @@
       = link_to(t('add_deposit'), new_registrar_deposit_path, class: 'btn btn-default')
 
 %hr
-= t('your_current_credit_account_balance_is', balance: 1000.0)
+= t('your_current_account_balance_is', balance: current_user.registrar.cash_account.balance)
 
 %h1= t('invoices')
 %hr

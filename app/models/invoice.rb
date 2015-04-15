@@ -13,6 +13,11 @@ class Invoice < ActiveRecord::Base
     account_activity.present?
   end
 
+  def paid_at
+    # TODO: Cache this?
+    account_activity.try(:bank_transaction).try(:paid_at)
+  end
+
   def to_s
     I18n.t('invoice_no', no: id)
   end

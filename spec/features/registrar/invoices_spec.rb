@@ -24,7 +24,7 @@ feature 'Invoices', type: :feature do
       click_link 'Billing'
 
       current_path.should == '/registrar/invoices'
-      page.should have_text('Your current credit account balance is')
+      page.should have_text('Your current account balance is')
     end
 
     it 'should get domains index page' do

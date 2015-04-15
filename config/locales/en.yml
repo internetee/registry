@@ -652,7 +652,7 @@ en:
   prepayment: 'Prepayment'
   vat: 'VAT (%{vat_prc}%)'
   unpaid: 'Unpaid'
-  your_current_credit_account_balance_is: 'Your current credit account balance is %{balance} EUR'
+  your_current_account_balance_is: 'Your current account balance is %{balance} EUR'
   billing: 'Billing'
   your_account: 'Your account'
   pay_by_bank_link: 'Pay by bank link'

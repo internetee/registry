@@ -7,6 +7,12 @@
   %dt= t('due_date')
   %dd= l(@invoice.due_date)
 
+  %dt= t('paid_at')
+  - if @invoice.paid_at
+    %dd= l(@invoice.paid_at)
+  - else
+    %dd{class: 'text-danger'}= t('unpaid')
+
   %dt= t('payment_term')
   %dd= t(@invoice.payment_term)
 
