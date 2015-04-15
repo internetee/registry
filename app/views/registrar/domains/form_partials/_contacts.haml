@@ -8,13 +8,13 @@
           = link_to(t('delete'), '#', class: 'btn btn-danger btn-xs destroy')
       .panel-body
         .form-group
-          = label_tag "domain_contacts_attributes_#{k}_type", t('contact_type'), class: 'col-md-2 control-label'
-          .col-md-10
+          = label_tag "domain_contacts_attributes_#{k}_type", t('contact_type'), class: 'col-md-3 control-label'
+          .col-md-7
             = select_tag "domain[contacts_attributes][#{k}][type]", options_for_select(['admin', 'tech'], v['type']), {class: 'form-control'}
 
         .form-group
-          = label_tag "domain_contacts_attributes_#{k}_code", t('contact_code'), class: 'col-md-2 control-label'
-          .col-md-10.has-feedback
+          = label_tag "domain_contacts_attributes_#{k}_code", t('contact_code'), class: 'col-md-3 control-label'
+          .col-md-7.has-feedback
             = text_field_tag("domain[contacts_attributes][#{k}][code]", v['code'], class: 'form-control', placeholder: t('contact_code'), autocomplete: 'off')
 :coffee
   $("#domain-contacts").nestedAttributes

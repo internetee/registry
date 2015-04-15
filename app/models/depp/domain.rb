@@ -5,13 +5,15 @@ module Depp
 
     attr_accessor :name, :current_user, :epp_xml
 
-    DOMAIN_STATUSES = %w(
+    STATUSES = %w(
       clientDeleteProhibited
       clientHold
       clientRenewProhibited
       clientTransferProhibited
       clientUpdateProhibited
     )
+
+    PERIODS = [['1 year', '1y'], ['2 years', '2y'], ['3 years', '3y']]
 
     def initialize(args = {})
       self.current_user = args[:current_user]
@@ -36,7 +38,7 @@ module Depp
       xml = epp_xml.create({
         name: { value: domain_params[:name] },
         registrant: { value: domain_params[:registrant] },
-        period: { value: domain_params[:period], attrs: { unit: domain_params[:period_unit] } },
+        period: { value: domain_params[:period].to_s[0], attrs: { unit: domain_params[:period].to_s[1] } },
         ns: Domain.create_nameservers_hash(domain_params),
         _anonymus: Domain.create_contacts_hash(domain_params)
       }, {
@@ -164,7 +166,7 @@ module Depp
         end
 
         data.css('status').each_with_index do |x, i|
-          next unless DOMAIN_STATUSES.include?(x['s'])
+          next unless STATUSES.include?(x['s'])
           ret[:statuses_attributes][i] = {
             code: x['s'],
             description: x.text
@@ -190,12 +192,10 @@ module Depp
 
       def construct_edit_hash(domain_params, old_domain_params)
         contacts = create_contacts_hash(domain_params) - create_contacts_hash(old_domain_params)
-        statuses = create_statuses_hash(domain_params) - create_statuses_hash(old_domain_params)
-        add_anon = contacts + statuses
+        add_anon = contacts
 
         contacts = create_contacts_hash(old_domain_params) - create_contacts_hash(domain_params)
-        statuses = create_statuses_hash(old_domain_params) - create_statuses_hash(domain_params)
-        rem_anon = contacts + statuses
+        rem_anon = contacts
 
         if domain_params[:registrant] != old_domain_params[:registrant]
           chg = [{ registrant: { value: domain_params[:registrant] } }]
@@ -282,18 +282,6 @@ module Depp
           alg: { value: key_data_params['alg'] },
           pubKey: { value: key_data_params['public_key'] }
         }
-      end
-
-      def create_statuses_hash(domain_params)
-        ret = []
-        domain_params[:statuses_attributes].each do |_k, v|
-          next if v['code'].blank?
-          ret << {
-            status: { value: v['description'], attrs: { s: v['code'] } }
-          }
-        end
-
-        ret
       end
     end
   end

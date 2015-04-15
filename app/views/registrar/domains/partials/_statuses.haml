@@ -1,0 +1,14 @@
+#domain_statuses.panel.panel-default
+  .panel-heading.clearfix
+    %h3.panel-title= t(:statuses)
+  .table-responsive
+    %table.table.table-hover.table-bordered.table-condensed
+      %thead
+        %tr
+          %th{class: 'col-xs-6'}= t('status')
+          %th{class: 'col-xs-6'}= t('description')
+      %tbody
+        - @data.css('status').each do |x|
+          %tr
+            %td= x['s']
+            %td= x.text
