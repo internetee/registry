@@ -30,6 +30,8 @@ class BankTransaction < ActiveRecord::Base
     invoice = registrar.invoices.find_by(id: invoice_id)
     return unless invoice
 
+    return if invoice.binded?
+
     return if invoice.sum != sum
     create_account_activity(
       account: registrar.cash_account,

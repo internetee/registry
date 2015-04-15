@@ -2,10 +2,16 @@ class Invoice < ActiveRecord::Base
   belongs_to :seller, class_name: 'Registrar'
   belongs_to :buyer, class_name: 'Registrar'
   has_many :invoice_items
+  has_one :account_activity
+
   accepts_nested_attributes_for :invoice_items
 
   validates :invoice_type, :due_date, :currency, :seller_name,
             :seller_iban, :buyer_name, :invoice_items, :vat_prc, presence: true
+
+  def binded?
+    account_activity.present?
+  end
 
   def to_s
     I18n.t('invoice_no', no: id)

@@ -50,7 +50,7 @@ describe BankStatement do
           description: 'Invoice no. 1'
         }),
         Fabricate(:bank_transaction, {
-          sum: 120.0,
+          sum: 240.0,
           reference_no: 'RF7086666663',
           description: 'Invoice no. 1'
         })
@@ -66,6 +66,7 @@ describe BankStatement do
       r.cash_account.balance.should == 240.0
 
       bs.bank_transactions.unbinded.count.should == 1
+      bs.partially_binded?.should == true
     end
 
     # it 'should have one version' do
