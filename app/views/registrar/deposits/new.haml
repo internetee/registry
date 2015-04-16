@@ -1,12 +1,7 @@
-.row
-  .col-sm-6
-    %h1.text-center-xs
-      = t(:add_deposit)
-  .col-sm-6
-    %h1.text-right.text-center-xs
-      = link_to(t('back_to_billing'), registrar_invoices_path, class: 'btn btn-default')
+- content_for :actions do
+  = link_to(t(:back_to_billing), registrar_invoices_path, class: 'btn btn-default')
+= render 'shared/title', name: t(:add_deposit)
 
-%hr
 = form_for([:registrar, @deposit], method: :post) do |f|
   .row
     .col-md-4.col-md-offset-4

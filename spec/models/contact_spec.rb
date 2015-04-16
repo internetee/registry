@@ -158,7 +158,7 @@ describe Contact do
       contact = @domain.contacts.first
       contact.save
 
-      contact.statuses.map(&:value).should == %w(ok linked)
+      contact.statuses.map(&:value).sort.should == %w(linked ok)
     end
 
     it 'should not have linked status when no domain' do
@@ -167,7 +167,7 @@ describe Contact do
       contact = @domain.contacts.first
       contact.save
 
-      contact.statuses.map(&:value).should == %w(ok linked)
+      contact.statuses.map(&:value).sort.should == %w(linked ok)
 
       contact.domains.first.destroy
       contact.reload

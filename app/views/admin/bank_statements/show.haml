@@ -1,11 +1,9 @@
-.row
-  .col-sm-6
-    %h2.text-center-xs= t('bank_statement')
-  .col-sm-6
-    %h2.text-right.text-center-xs
-      = link_to(t('bind_invoices'), bind_invoices_admin_bank_statement_path, class: 'btn btn-primary', method: :post)
-      = link_to(t('back_to_bank_statements'), admin_bank_statements_path, class: 'btn btn-default')
-%hr
+- content_for :actions do
+  = link_to(t(:bind_invoices), bind_invoices_admin_bank_statement_path, 
+    class: 'btn btn-primary', method: :post)
+  = link_to(t(:back_to_bank_statements), admin_bank_statements_path, class: 'btn btn-default')
+= render 'shared/title', name: t(:bank_statement)
+
 %row
   .col-md-12
 .panel.panel-default
@@ -13,29 +11,29 @@
     %h3.panel-title= t(:details)
   .panel-body
     %dl.dl-horizontal
-      %dt= t('bank_code')
+      %dt= t(:bank_code)
       %dd= @bank_statement.bank_code
 
-      %dt= t('iban')
+      %dt= t(:iban)
       %dd= @bank_statement.iban
 
-      %dt= t('status')
+      %dt= t(:status)
       - sc = 'text-success' if @bank_statement.fully_binded?
       - sc = 'text-warning' if @bank_statement.partially_binded?
       - sc = 'text-danger' if @bank_statement.not_binded?
       %dd{class: sc}= t(@bank_statement.status)
 
-      %dt= t('queried_at')
+      %dt= t(:queried_at)
       %dd= l(@bank_statement.queried_at)
 
-      %dt= t('imported_at')
+      %dt= t(:imported_at)
       %dd= l(@bank_statement.created_at)
 
       - if @bank_statement.import_file_path
-        %dt= t('import_file')
-        %dd= link_to(t('download'), download_import_file_admin_bank_statement_path(@bank_statement))
+        %dt= t(:import_file)
+        %dd= link_to(t(:download), download_import_file_admin_bank_statement_path(@bank_statement))
 
-%h2.text-center-xs= t('bank_transactions')
+%h2.text-center-xs= t(:bank_transactions)
 %hr
 .row
   .col-md-12
@@ -52,7 +50,7 @@
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'currency')
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'account_activity_id', t('status'))
+              = sort_link(@q, 'account_activity_id', t(:status))
         %tbody
           - @bank_transactions.each do |x|
             %tr
@@ -61,7 +59,7 @@
               %td= x.sum
               %td= x.currency
               - c = x.binded? ? 'text-success' : 'text-danger'
-              %td{class: c}= x.binded? ? t('binded') : t('not_binded')
+              %td{class: c}= x.binded? ? t(:binded) : t(:not_binded)
 .row
   .col-md-12
     = paginate @bank_transactions

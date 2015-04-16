@@ -1,12 +1,7 @@
-.row
-  .col-sm-6
-    %h2.text-center-xs
-      = t('certificates')
-  .col-sm-6
-    %h2.text-right.text-center-xs
-      = link_to(t('back_to_api_user'), [:admin, @api_user], class: 'btn btn-default')
+- content_for :actions do
+  = link_to(t(:back_to_api_user), [:admin, @api_user], class: 'btn btn-default')
+= render 'shared/title', name: t(:certificates)
 
-%hr
 - if @certificate.errors.any?
   - @certificate.errors.each do |attr, err|
     = err

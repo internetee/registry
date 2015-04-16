@@ -8,4 +8,9 @@ class RegistrarController < ApplicationController
   def depp_controller?
     false
   end
+
+  helper_method :head_title_sufix
+  def head_title_sufix
+    t(:registrar_head_title_sufix)
+  end
 end

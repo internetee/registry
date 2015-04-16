@@ -1,7 +1,5 @@
-.row
-  .col-sm-8
-    %h2.text-center-xs= t(:keyrelay)
-%hr
+= render 'shared/title', name: t(:keyrelay)
+
 .row
   .col-md-8
     = form_tag registrar_keyrelay_path, class: 'form-horizontal', method: :post, multipart: true do
@@ -52,4 +50,4 @@
 
       .form-group
         .col-md-10.text-right
-          %button.btn.btn-primary= t('upload_key')
+          %button.btn.btn-primary= t(:upload_key)

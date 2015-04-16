@@ -1,4 +1,4 @@
-= render 'registrar/shared/title', name: "#{t(:edit)}: #{@contact.name}"
+= render 'shared/title', name: "#{t(:edit)}: #{@contact.name}"
 
 = form_for(@contact, url: registrar_contact_path(@contact), 
   html: {class: 'form-horizontal js-contact-form'}) do |f|

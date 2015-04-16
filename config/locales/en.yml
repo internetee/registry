@@ -718,3 +718,7 @@ en:
   invoice_was_not_found: 'Invoice was not found'
   invoice_is_already_binded: 'Invoice is already binded'
   invoice_and_transaction_sums_do_not_match: 'Invoice and transaction sums do not match'
+  registrar_head_title_sufix: ' - EIS Registrar'
+  admin_head_title_sufix: ' - Estonian Internet Foundation'
+  registrar_head_title: 'EIS Registrar'
+  admin_head_title: 'Estonian Internet Foundation'

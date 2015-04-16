@@ -6,11 +6,14 @@
     %meta{content: "width=device-width, initial-scale=1", name: "viewport"}/
     %meta{content: "Full stack top-level domain (TLD) management.", name: "description"}/
     %meta{content: "Gitlab LTD", name: "author"}/
+    - if content_for? :head_title
+      = yield :head_title
+    - else
+      %title= t(:registrar_head_title)
     = csrf_meta_tags
     = stylesheet_link_tag 'registrar-manifest', media: 'all', 'data-turbolinks-track' => true
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
     = favicon_link_tag 'favicon.ico'
-    %title EIS Registrar Portal
   %body
     / Fixed navbar
     %nav.navbar.navbar-default.navbar-fixed-top
@@ -22,7 +25,7 @@
             %span.icon-bar
             %span.icon-bar
           = link_to main_app.registrar_root_path, class: 'navbar-brand' do
-            EIS Registrar
+            = t(:registrar_head_title)
             - if unstable_env.present?
               .text-center
                 %small{style: 'color: #0074B3;'}= unstable_env
@@ -39,7 +42,7 @@
 
               - if can? :show, Invoice
                 - active_class = ['registrar/invoices'].include?(params[:controller]) ? 'active' :nil
-                %li{class: active_class}= link_to t('billing'), registrar_invoices_path
+                %li{class: active_class}= link_to t(:billing), registrar_invoices_path
 
               - if can? :view, :registrar_xml_console
                 - active_class = ['registrar/xml_consoles'].include?(params[:controller]) ? 'active' :nil
@@ -47,15 +50,14 @@
 
             %ul.nav.navbar-nav.navbar-right
               - if user_signed_in?
-                %li= link_to t('log_out', user: current_user), '/registrar/logout'
-        / /.nav-collapse
-    / Begin page content
+                %li= link_to t(:log_out, user: current_user), '/registrar/logout'
+
     .container
-      = render 'registrar/shared/flash'
+      = render 'shared/flash'
       - if depp_controller?
         = render 'registrar/shared/epp_results'
-
       = yield
+
     %footer.footer
       .container
         %row

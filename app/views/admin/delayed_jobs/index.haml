@@ -1,19 +1,16 @@
-.row
-  .col-sm-12
-    %h2.text-center-xs= t('jobs')
+= render 'shared/title', name: t(:jobs)
 
-%hr
 .row
   .col-md-12
     .table-responsive
       %table.table.table-hover.table-bordered.table-condensed
         %thead
           %tr
-            %th{class: 'col-xs-2'}= t('priority')
-            %th{class: 'col-xs-2'}= t('attempts')
-            %th{class: 'col-xs-2'}= t('last_error')
-            %th{class: 'col-xs-1'}= t('run_at')
-            %th{class: 'col-xs-1'}= t('created_at')
+            %th{class: 'col-xs-2'}= t(:priority)
+            %th{class: 'col-xs-2'}= t(:attempts)
+            %th{class: 'col-xs-2'}= t(:last_error)
+            %th{class: 'col-xs-1'}= t(:run_at)
+            %th{class: 'col-xs-1'}= t(:created_at)
         %tbody
           - @jobs.each do |job|
             %tr

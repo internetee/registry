@@ -1,7 +1,5 @@
-.row
-  .col-sm-12
-    %h2.text-center-xs= t('zonefile_settings')
-%hr
+= render 'shared/title', name: t(:zonefile_settings)
+
 .row
   .col-md-12
     .table-responsive
@@ -9,12 +7,14 @@
         %thead
           %tr
             %th{class: 'col-xs-10'}
-              = t('origin')
+              = t(:origin)
             %th{class: 'col-xs-2'}
-              = t('action')
+              = t(:action)
         %tbody
           - @zonefile_settings.each do |x|
             %tr
               %td= link_to(x, edit_admin_zonefile_setting_path(x))
               %td
-                = link_to(t('generate_zonefile'), admin_zonefiles_path(origin: x.origin), method: 'post', class: 'btn btn-xs btn-primary')
+                = link_to(t(:generate_zonefile), 
+                  admin_zonefiles_path(origin: x.origin), 
+                  method: 'post', class: 'btn btn-xs btn-primary')

@@ -1,4 +1,4 @@
-class Admin::ZonefileSettingsController < ApplicationController
+class Admin::ZonefileSettingsController < AdminController
   load_and_authorize_resource
   before_action :set_zonefile_setting, only: [:update, :edit]
   def index

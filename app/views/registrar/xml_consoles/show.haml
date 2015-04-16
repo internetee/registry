@@ -1,11 +1,12 @@
-= render 'registrar/shared/title', name: t(:xml_console)
+= render 'shared/title', name: t(:xml_console)
+
 .row
   .col-md-8
     = form_tag(registrar_xml_console_path) do
       .form-group
         = text_area_tag(:payload, params[:payload], class: 'form-control', rows: 15, style: 'font-family:monospace; font-size: 11px;')
 
-      = button_tag t('send_epp_request'), class: 'btn btn-default'
+      = button_tag t(:send_epp_request), class: 'btn btn-default'
   .col-md-4
     %h4 Domain
     %a.js-load-xml{href: 'javascript:void(0)', data: {obj: 'domain', epp_action: 'create'}}

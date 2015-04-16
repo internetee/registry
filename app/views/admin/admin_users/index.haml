@@ -1,10 +1,7 @@
-.row
-  .col-sm-6
-    %h2.text-center-xs= t('admin_users')
-  .col-sm-6
-    %h2.text-right.text-center-xs
-      = link_to(t('create_new_user'), new_admin_admin_user_path, class: 'btn btn-primary')
-%hr
+- content_for :actions do
+  = link_to(t(:create_new_user), new_admin_admin_user_path, class: 'btn btn-primary')
+= render 'shared/title', name: t(:admin_users)
+
 .row
   .col-md-12
     .table-responsive
@@ -14,11 +11,11 @@
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'username')
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'email', t('email'))
+              = sort_link(@q, 'email', t(:email))
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'identity_code', t('identity_code'))
+              = sort_link(@q, 'identity_code', t(:identity_code))
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'role', t('role'))
+              = sort_link(@q, 'role', t(:role))
         %tbody
           - @admin_users.each do |x|
             %tr
