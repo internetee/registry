@@ -37,7 +37,8 @@ class BankTransaction < ActiveRecord::Base
       account: registrar.cash_account,
       invoice: invoice,
       sum: sum,
-      currency: currency
+      currency: currency,
+      description: description
     )
   end
   # rubocop: enable Metrics/PerceivedComplexity

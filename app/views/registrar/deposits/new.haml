@@ -1,4 +1,11 @@
-%h1= t(:add_deposit)
+.row
+  .col-sm-6
+    %h1.text-center-xs
+      = t(:add_deposit)
+  .col-sm-6
+    %h1.text-right.text-center-xs
+      = link_to(t('back_to_billing'), registrar_invoices_path, class: 'btn btn-default')
+
 %hr
 = form_for([:registrar, @deposit], method: :post) do |f|
   .row
@@ -18,5 +25,3 @@
       .row
         .col-md-12.text-right
           = button_tag(t(:add), class: 'btn btn-primary')
-
-

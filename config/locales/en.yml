@@ -652,7 +652,7 @@ en:
   prepayment: 'Prepayment'
   vat: 'VAT (%{vat_prc}%)'
   unpaid: 'Unpaid'
-  your_current_account_balance_is: 'Your current account balance is %{balance} %{currency]'
+  your_current_account_balance_is: 'Your current account balance is %{balance} %{currency}'
   billing: 'Billing'
   your_account: 'Your account'
   pay_by_bank_link: 'Pay by bank link'
@@ -711,3 +711,5 @@ en:
   domain_tech_contact_help:
     <b>The domain name server</b>
     is a computer that saves and forwards via a general-access data communications network such data that is connected with the domain name and corresponding IP addresses. Your IT helpdesk or Internet service provider will have the necessary information about the domain name servers.
+  account_activity: 'Account activity'
+  receipt_date: 'Receipt date'

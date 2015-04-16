@@ -13,9 +13,8 @@ class Invoice < ActiveRecord::Base
     account_activity.present?
   end
 
-  def paid_at
-    # TODO: Cache this?
-    account_activity.try(:bank_transaction).try(:paid_at)
+  def receipt_date
+    account_activity.try(:created_at)
   end
 
   def to_s

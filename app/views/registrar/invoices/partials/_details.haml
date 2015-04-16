@@ -7,9 +7,9 @@
   %dt= t('due_date')
   %dd= l(@invoice.due_date)
 
-  %dt= t('paid_at')
-  - if @invoice.paid_at
-    %dd= l(@invoice.paid_at)
+  %dt= t('receipt_date')
+  - if @invoice.binded?
+    %dd= l(@invoice.receipt_date)
   - else
     %dd{class: 'text-danger'}= t('unpaid')
 

@@ -22,6 +22,7 @@ Rails.application.routes.draw do
 
     resources :invoices
     resources :deposits
+    resources :account_activities
 
     devise_scope :user do
       get 'login' => 'sessions#login'

@@ -4,7 +4,10 @@ class Registrar::InvoicesController < RegistrarController
   before_action :set_invoice, only: [:show]
 
   def index
-    @invoices = current_user.registrar.invoices.includes(:invoice_items).order(id: :desc)
+    invoices = current_user.registrar.invoices.includes(:invoice_items, :account_activity)
+    @q = invoices.search(params[:q])
+    @q.sorts  = 'id desc' if @q.sorts.empty?
+    @invoices = @q.result.page(params[:page])
   end
 
   def show
