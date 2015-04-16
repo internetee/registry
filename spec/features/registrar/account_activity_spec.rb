@@ -18,7 +18,7 @@ feature 'Account activity', type: :feature do
       registrar_sign_in
     end
 
-    it 'should navigate to the domains index page' do
+    it 'should navigate to account activities page' do
       current_path.should == '/registrar'
       click_link 'Billing'
       click_link 'Account activity'
