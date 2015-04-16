@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150416092026) do
+ActiveRecord::Schema.define(version: 20150416094704) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,10 @@ ActiveRecord::Schema.define(version: 20150416092026) do
     t.string   "description"
   end
 
+  add_index "account_activities", ["account_id"], name: "index_account_activities_on_account_id", using: :btree
+  add_index "account_activities", ["bank_transaction_id"], name: "index_account_activities_on_bank_transaction_id", using: :btree
+  add_index "account_activities", ["invoice_id"], name: "index_account_activities_on_invoice_id", using: :btree
+
   create_table "accounts", force: :cascade do |t|
     t.integer  "registrar_id"
     t.string   "account_type"
@@ -35,6 +39,8 @@ ActiveRecord::Schema.define(version: 20150416092026) do
     t.datetime "updated_at"
     t.string   "currency"
   end
+
+  add_index "accounts", ["registrar_id"], name: "index_accounts_on_registrar_id", using: :btree
 
   create_table "addresses", force: :cascade do |t|
     t.integer  "contact_id"
@@ -64,6 +70,8 @@ ActiveRecord::Schema.define(version: 20150416092026) do
     t.string   "creator_str"
     t.string   "updator_str"
   end
+
+  add_index "api_users", ["registrar_id"], name: "index_api_users_on_registrar_id", using: :btree
 
   create_table "bank_statements", force: :cascade do |t|
     t.string   "bank_code"
@@ -133,6 +141,8 @@ ActiveRecord::Schema.define(version: 20150416092026) do
     t.datetime "updated_at"
   end
 
+  add_index "certificates", ["api_user_id"], name: "index_certificates_on_api_user_id", using: :btree
+
   create_table "contact_statuses", force: :cascade do |t|
     t.string   "value"
     t.string   "description"
@@ -142,6 +152,8 @@ ActiveRecord::Schema.define(version: 20150416092026) do
     t.string   "creator_str"
     t.string   "updator_str"
   end
+
+  add_index "contact_statuses", ["contact_id"], name: "index_contact_statuses_on_contact_id", using: :btree
 
   create_table "contacts", force: :cascade do |t|
     t.string   "code"
@@ -168,6 +180,7 @@ ActiveRecord::Schema.define(version: 20150416092026) do
   end
 
   add_index "contacts", ["code"], name: "index_contacts_on_code", using: :btree
+  add_index "contacts", ["registrar_id"], name: "index_contacts_on_registrar_id", using: :btree
 
   create_table "countries", force: :cascade do |t|
     t.string   "iso"
@@ -185,6 +198,8 @@ ActiveRecord::Schema.define(version: 20150416092026) do
     t.integer "digest_type"
     t.string  "digest"
   end
+
+  add_index "delegation_signers", ["domain_id"], name: "index_delegation_signers_on_domain_id", using: :btree
 
   create_table "depricated_versions", force: :cascade do |t|
     t.datetime "created_at"
@@ -206,6 +221,10 @@ ActiveRecord::Schema.define(version: 20150416092026) do
     t.integer "legacy_domain_id"
   end
 
+  add_index "dnskeys", ["delegation_signer_id"], name: "index_dnskeys_on_delegation_signer_id", using: :btree
+  add_index "dnskeys", ["domain_id"], name: "index_dnskeys_on_domain_id", using: :btree
+  add_index "dnskeys", ["legacy_domain_id"], name: "index_dnskeys_on_legacy_domain_id", using: :btree
+
   create_table "domain_contacts", force: :cascade do |t|
     t.integer  "contact_id"
     t.integer  "domain_id"
@@ -220,6 +239,9 @@ ActiveRecord::Schema.define(version: 20150416092026) do
     t.integer  "legacy_contact_id"
   end
 
+  add_index "domain_contacts", ["contact_id"], name: "index_domain_contacts_on_contact_id", using: :btree
+  add_index "domain_contacts", ["domain_id"], name: "index_domain_contacts_on_domain_id", using: :btree
+
   create_table "domain_statuses", force: :cascade do |t|
     t.integer "domain_id"
     t.string  "description"
@@ -228,6 +250,8 @@ ActiveRecord::Schema.define(version: 20150416092026) do
     t.string  "updator_str"
     t.integer "legacy_domain_id"
   end
+
+  add_index "domain_statuses", ["domain_id"], name: "index_domain_statuses_on_domain_id", using: :btree
 
   create_table "domain_transfers", force: :cascade do |t|
     t.integer  "domain_id"
@@ -242,6 +266,8 @@ ActiveRecord::Schema.define(version: 20150416092026) do
     t.string   "creator_str"
     t.string   "updator_str"
   end
+
+  add_index "domain_transfers", ["domain_id"], name: "index_domain_transfers_on_domain_id", using: :btree
 
   create_table "domains", force: :cascade do |t|
     t.string   "name"
@@ -266,6 +292,9 @@ ActiveRecord::Schema.define(version: 20150416092026) do
     t.integer  "legacy_registrant_id"
   end
 
+  add_index "domains", ["registrant_id"], name: "index_domains_on_registrant_id", using: :btree
+  add_index "domains", ["registrar_id"], name: "index_domains_on_registrar_id", using: :btree
+
   create_table "epp_sessions", force: :cascade do |t|
     t.string   "session_id"
     t.text     "data"
@@ -285,6 +314,8 @@ ActiveRecord::Schema.define(version: 20150416092026) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "invoice_items", ["invoice_id"], name: "index_invoice_items_on_invoice_id", using: :btree
 
   create_table "invoices", force: :cascade do |t|
     t.datetime "created_at",          null: false
@@ -326,6 +357,9 @@ ActiveRecord::Schema.define(version: 20150416092026) do
     t.string   "buyer_email"
   end
 
+  add_index "invoices", ["buyer_id"], name: "index_invoices_on_buyer_id", using: :btree
+  add_index "invoices", ["seller_id"], name: "index_invoices_on_seller_id", using: :btree
+
   create_table "keyrelays", force: :cascade do |t|
     t.integer  "domain_id"
     t.datetime "pa_date"
@@ -344,6 +378,10 @@ ActiveRecord::Schema.define(version: 20150416092026) do
     t.string   "updator_str"
   end
 
+  add_index "keyrelays", ["accepter_id"], name: "index_keyrelays_on_accepter_id", using: :btree
+  add_index "keyrelays", ["domain_id"], name: "index_keyrelays_on_domain_id", using: :btree
+  add_index "keyrelays", ["requester_id"], name: "index_keyrelays_on_requester_id", using: :btree
+
   create_table "legal_documents", force: :cascade do |t|
     t.string   "document_type"
     t.text     "body"
@@ -354,6 +392,8 @@ ActiveRecord::Schema.define(version: 20150416092026) do
     t.string   "creator_str"
     t.string   "updator_str"
   end
+
+  add_index "legal_documents", ["documentable_type", "documentable_id"], name: "index_legal_documents_on_documentable_type_and_documentable_id", using: :btree
 
   create_table "log_addresses", force: :cascade do |t|
     t.string   "item_type",      null: false
@@ -396,6 +436,9 @@ ActiveRecord::Schema.define(version: 20150416092026) do
     t.string   "session"
     t.json     "children"
   end
+
+  add_index "log_certificates", ["item_type", "item_id"], name: "index_log_certificates_on_item_type_and_item_id", using: :btree
+  add_index "log_certificates", ["whodunnit"], name: "index_log_certificates_on_whodunnit", using: :btree
 
   create_table "log_contact_statuses", force: :cascade do |t|
     t.string   "item_type",      null: false
@@ -667,6 +710,8 @@ ActiveRecord::Schema.define(version: 20150416092026) do
     t.string   "updator_str"
   end
 
+  add_index "messages", ["registrar_id"], name: "index_messages_on_registrar_id", using: :btree
+
   create_table "nameservers", force: :cascade do |t|
     t.string   "hostname"
     t.string   "ipv4"
@@ -678,6 +723,8 @@ ActiveRecord::Schema.define(version: 20150416092026) do
     t.string   "updator_str"
     t.integer  "legacy_domain_id"
   end
+
+  add_index "nameservers", ["domain_id"], name: "index_nameservers_on_domain_id", using: :btree
 
   create_table "registrars", force: :cascade do |t|
     t.string   "name"
@@ -751,6 +798,7 @@ ActiveRecord::Schema.define(version: 20150416092026) do
   end
 
   add_index "users", ["identity_code"], name: "index_users_on_identity_code", using: :btree
+  add_index "users", ["registrar_id"], name: "index_users_on_registrar_id", using: :btree
 
   create_table "versions", force: :cascade do |t|
     t.text "depricated_table_but_somehow_paper_trail_tests_fails_without_it"
