@@ -10,7 +10,7 @@ module ApplicationHelper
   end
 
   def ident_for(contact)
-    if contact.kind_of? Hash
+    if contact.is_a? Hash
       ident_country_code = contact[:ident_country_code]
       ident_type = contact[:ident_type]
       ident = contact[:ident]
