@@ -6,7 +6,7 @@
     %meta{content: "Full stack top-level domain (TLD) management.", name: "description"}/
     %meta{content: "Gitlab LTD", name: "author"}/
     = csrf_meta_tags
-    = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true
+    = stylesheet_link_tag 'admin-manifest', media: 'all', 'data-turbolinks-track' => true
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
     = favicon_link_tag 'favicon.ico'
     %title Eesti Interneti SA
@@ -58,8 +58,9 @@
                   %li= link_to t(:repp_logs), admin_repp_logs_path
                   -# %li= link_to t(:background_jobs), admin_delayed_jobs_path
 
-          %ul.nav.navbar-nav.navbar-right
-            %li= link_to t('log_out', user: current_user), '/admin/logout'
+          - if signed_in?
+            %ul.nav.navbar-nav.navbar-right
+              %li= link_to t('log_out', user: current_user), '/admin/logout'
 
         / /.nav-collapse
     .container

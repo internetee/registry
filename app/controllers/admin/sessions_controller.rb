@@ -1,5 +1,5 @@
 class Admin::SessionsController < SessionsController
-  layout 'login'
+  layout 'admin/application'
 
   def create
     super
