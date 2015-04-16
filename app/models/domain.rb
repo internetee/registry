@@ -7,7 +7,7 @@ class Domain < ActiveRecord::Base
   paginates_per 10 # just for showoff
 
   belongs_to :registrar
-  belongs_to :owner_contact, class_name: 'Contact'
+  belongs_to :registrant, class_name: 'Contact'
 
   has_many :domain_contacts, dependent: :destroy
   has_many :admin_domain_contacts
@@ -39,10 +39,10 @@ class Domain < ActiveRecord::Base
   has_many :legal_documents, as: :documentable
   accepts_nested_attributes_for :legal_documents, reject_if: proc { |attrs| attrs[:body].blank? }
 
-  delegate :code,  to: :owner_contact, prefix: true
-  delegate :email, to: :owner_contact, prefix: true
-  delegate :ident, to: :owner_contact, prefix: true
-  delegate :phone, to: :owner_contact, prefix: true
+  delegate :code,  to: :registrant, prefix: true
+  delegate :email, to: :registrant, prefix: true
+  delegate :ident, to: :registrant, prefix: true
+  delegate :phone, to: :registrant, prefix: true
   delegate :name,  to: :registrar, prefix: true
 
   before_create :generate_auth_info
@@ -57,7 +57,7 @@ class Domain < ActiveRecord::Base
 
   validates :name_dirty, domain_name: true, uniqueness: true
   validates :period, numericality: { only_integer: true }
-  validates :owner_contact, :registrar, presence: true
+  validates :registrant, :registrar, presence: true
 
   validate :validate_period
 
@@ -103,7 +103,7 @@ class Domain < ActiveRecord::Base
 
   validate :validate_nameserver_ips
 
-  attr_accessor :owner_contact_typeahead, :update_me
+  attr_accessor :registrant_typeahead, :update_me
 
   def subordinate_nameservers
     nameservers.select { |x| x.hostname.end_with?(name) }
@@ -138,8 +138,8 @@ class Domain < ActiveRecord::Base
     self[:name_dirty] = value
   end
 
-  def owner_contact_typeahead
-    @owner_contact_typeahead || owner_contact.try(:name) || nil
+  def registrant_typeahead
+    @registrant_typeahead || registrant.try(:name) || nil
   end
 
   def pending_transfer
@@ -234,22 +234,21 @@ class Domain < ActiveRecord::Base
     log[:admin_contacts] = admin_contacts.map(&:attributes)
     log[:tech_contacts]  = tech_contacts.map(&:attributes)
     log[:nameservers]    = nameservers.map(&:attributes)
-    log[:owner_contact]  = [owner_contact.try(:attributes)]
+    log[:registrant]  = [registrant.try(:attributes)]
     log
   end
 
   # rubocop:disable Metrics/MethodLength
   def update_whois_body
     self.whois_body = <<-EOS
-  This Whois Server contains information on
-  Estonian Top Level Domain ee TLD
+Estonia .ee Top Level Domain WHOIS server
 
-  domain:    #{name}
-  registrar: #{registrar}
-  status:
+  domain:     #{name}
+  registrant: #{registrant.name}
+  status:     #{domain_statuses.map(&:value).join(', ')}
   registered: #{registered_at and registered_at.to_s(:db)}
-  changed:   #{updated_at and updated_at.to_s(:db)}
-  expire:
+  changed:    #{updated_at and updated_at.to_s(:db)}
+  expire:     #{valid_to and valid_to.to_s(:db)}
   outzone:
   delete:
 
@@ -263,6 +262,9 @@ class Domain < ActiveRecord::Base
   address: #{registrar.address}
   created: #{registrar.created_at.to_s(:db)}
   changed: #{registrar.updated_at.to_s(:db)}
+
+Estonia .ee Top Level Domain WHOIS server
+More information at http://internet.ee
     EOS
   end
   # rubocop:enable Metrics/MethodLength

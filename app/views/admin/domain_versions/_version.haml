@@ -2,7 +2,7 @@
 - nameservers    = children[:nameservers] || []
 - tech_contacts  = children[:tech_contacts] || []
 - admin_contacts = children[:admin_contacts] || []
-- owner_contact  = children[:owner_contact] || []
+- registrant  = children[:registrant] || []
 
 %td
   %p.nowrap
@@ -19,7 +19,7 @@
     = domain.status
 
 %td
-  - owner_contact.each do |oc|
+  - registrant.each do |oc|
     %p
       = oc[:name]
       = oc[:phone]
@@ -75,16 +75,16 @@
         -# = ',' + children[:domain][:status]
 
 
--# %td{ class: changes.include?(:owner_contact) ? 'edit-highlight' : 'no-highlight' }
-  -# - if children[:owner_contact]
+-# %td{ class: changes.include?(:registrant) ? 'edit-highlight' : 'no-highlight' }
+  -# - if children[:registrant]
     -# %p{:style => "font-size:x-small;"}
-      -# = children[:owner_contact][:name]
+      -# = children[:registrant][:name]
       -# = ","
-      -# = children[:owner_contact][:phone]
+      -# = children[:registrant][:phone]
       -# = ","
-      -# = children[:owner_contact][:email]
+      -# = children[:registrant][:email]
       -# = ","
-      -# = children[:owner_contact][:code]
+      -# = children[:registrant][:code]
 
 -# %td{ class: changes.include?(:admin_contacts) ? 'edit-highlight' : 'no-highlight' }
   -# - if children[:admin_contacts]

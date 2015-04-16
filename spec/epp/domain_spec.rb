@@ -75,7 +75,7 @@ describe 'EPP Domain', epp: true do
       'Required parameter missing: extension > extdata > legalDocument [legal_document]'
   end
 
-  context 'with citizen as an owner' do
+  context 'with citizen as a registrant' do
     it 'creates a domain' do
       dn = next_domain_name
       response = epp_plain_request(domain_create_xml({
@@ -642,7 +642,7 @@ describe 'EPP Domain', epp: true do
     end
   end
 
-  context 'with juridical persion as an owner' do
+  context 'with juridical persion as a registrant' do
     it 'creates a domain with contacts' do
       xml = domain_create_xml({
         registrant: { value: 'juridical_1234' },
@@ -881,8 +881,8 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'transfers domain with contacts' do
-      original_oc_id = domain.owner_contact.id
-      original_oc_code = domain.owner_contact.code
+      original_oc_id = domain.registrant.id
+      original_oc_code = domain.registrant.code
 
       original_contact_codes = domain.contacts.pluck(:code)
 
@@ -899,12 +899,12 @@ describe 'EPP Domain', epp: true do
       end
 
       # all domain contacts should be under registrar2 now
-      domain.owner_contact.reload
-      domain.owner_contact.registrar_id.should == @registrar2.id
-      domain.owner_contact.id.should == original_oc_id
+      domain.registrant.reload
+      domain.registrant.registrar_id.should == @registrar2.id
+      domain.registrant.id.should == original_oc_id
 
       # must generate new code
-      domain.owner_contact.code.should_not == original_oc_code
+      domain.registrant.code.should_not == original_oc_code
 
       domain.contacts.each do |c|
         c.registrar_id.should == @registrar2.id
@@ -913,9 +913,9 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'transfers domain when registrant has more domains' do
-      Fabricate(:domain, owner_contact: domain.owner_contact)
-      original_oc_id = domain.owner_contact.id
-      original_oc_code = domain.owner_contact.code
+      Fabricate(:domain, registrant: domain.registrant)
+      original_oc_id = domain.registrant.id
+      original_oc_code = domain.registrant.code
 
       original_contact_codes = domain.contacts.pluck(:code)
 
@@ -933,11 +933,11 @@ describe 'EPP Domain', epp: true do
 
       # all domain contacts should be under registrar2 now
       domain.reload
-      domain.owner_contact.registrar_id.should == @registrar2.id
-      # owner_contact should be a new record
-      domain.owner_contact.id.should_not == original_oc_id
+      domain.registrant.registrar_id.should == @registrar2.id
+      # registrant should be a new record
+      domain.registrant.id.should_not == original_oc_id
       # must generate new code
-      domain.owner_contact.code.should_not == original_oc_code
+      domain.registrant.code.should_not == original_oc_code
 
       domain.contacts.each do |c|
         c.registrar_id.should == @registrar2.id
@@ -947,10 +947,10 @@ describe 'EPP Domain', epp: true do
 
     it 'transfers domain when registrant is admin or tech contact on some other domain' do
       d = Fabricate(:domain)
-      d.tech_contacts << domain.owner_contact
+      d.tech_contacts << domain.registrant
 
-      original_oc_id = domain.owner_contact.id
-      original_oc_code = domain.owner_contact.code
+      original_oc_id = domain.registrant.id
+      original_oc_code = domain.registrant.code
 
       original_contact_codes = domain.contacts.pluck(:code)
 
@@ -968,11 +968,11 @@ describe 'EPP Domain', epp: true do
 
       # all domain contacts should be under registrar2 now
       domain.reload
-      domain.owner_contact.registrar_id.should == @registrar2.id
-      # owner_contact should be a new record
-      domain.owner_contact.id.should_not == original_oc_id
+      domain.registrant.registrar_id.should == @registrar2.id
+      # registrant should be a new record
+      domain.registrant.id.should_not == original_oc_id
       # must generate new code
-      domain.owner_contact.code.should_not == original_oc_code
+      domain.registrant.code.should_not == original_oc_code
 
       domain.contacts.each do |c|
         c.registrar_id.should == @registrar2.id
@@ -988,7 +988,7 @@ describe 'EPP Domain', epp: true do
       d = Fabricate(:domain)
       d.tech_contacts << old_contact
       d.admin_contacts << old_contact
-      original_oc_id = domain.owner_contact.id
+      original_oc_id = domain.registrant.id
       original_contact_count = Contact.count
       original_domain_contact_count = DomainContact.count
 
@@ -1006,9 +1006,9 @@ describe 'EPP Domain', epp: true do
 
       # all domain contacts should be under registrar2 now
       domain.reload
-      domain.owner_contact.registrar_id.should == @registrar2.id
-      # owner_contact should not be a new record
-      domain.owner_contact.id.should == original_oc_id
+      domain.registrant.registrar_id.should == @registrar2.id
+      # registrant should not be a new record
+      domain.registrant.id.should == original_oc_id
 
       # old contact must not change
       old_contact.registrar_id.should == @registrar1.id
@@ -1042,7 +1042,7 @@ describe 'EPP Domain', epp: true do
       d.tech_contacts << old_contact
       d.admin_contacts << old_contact_2
 
-      original_oc_id = domain.owner_contact.id
+      original_oc_id = domain.registrant.id
       original_contact_count = Contact.count
       original_domain_contact_count = DomainContact.count
 
@@ -1060,9 +1060,9 @@ describe 'EPP Domain', epp: true do
 
       # all domain contacts should be under registrar2 now
       domain.reload
-      domain.owner_contact.registrar_id.should == @registrar2.id
-      # owner_contact should not be a new record
-      domain.owner_contact.id.should == original_oc_id
+      domain.registrant.registrar_id.should == @registrar2.id
+      # registrant should not be a new record
+      domain.registrant.id.should == original_oc_id
 
       # old contact must not change
       old_contact.registrar_id.should == @registrar1.id
@@ -1088,12 +1088,12 @@ describe 'EPP Domain', epp: true do
       original_domain_contact_count.should == DomainContact.count
     end
 
-    it 'transfers domain and references exsisting owner contact to domain contacts' do
+    it 'transfers domain and references exsisting registrant to domain contacts' do
       d = Fabricate(:domain)
-      d.tech_contacts << domain.owner_contact
+      d.tech_contacts << domain.registrant
 
-      domain.tech_contacts << domain.owner_contact
-      original_owner_contact_id = domain.owner_contact_id
+      domain.tech_contacts << domain.registrant
+      original_registrant_id = domain.registrant_id
 
       pw = domain.auth_info
       xml = domain_transfer_xml({
@@ -1108,11 +1108,11 @@ describe 'EPP Domain', epp: true do
       end
 
       domain.reload
-      # owner contact must be an new record
-      domain.owner_contact_id.should_not == original_owner_contact_id
+      # registrant must be an new record
+      domain.registrant_id.should_not == original_registrant_id
 
-      # new owner contact must be a tech contact
-      domain.domain_contacts.where(contact_id: domain.owner_contact_id).count.should == 1
+      # new registrant must be a tech contact
+      domain.domain_contacts.where(contact_id: domain.registrant_id).count.should == 1
     end
 
     it 'does not transfer contacts if they are already under new registrar' do
@@ -1121,11 +1121,11 @@ describe 'EPP Domain', epp: true do
         c.save
       end
 
-      domain.owner_contact.registrar_id = @registrar2.id
-      domain.owner_contact.save
+      domain.registrant.registrar_id = @registrar2.id
+      domain.registrant.save
 
-      original_oc_id = domain.owner_contact_id
-      original_oc_code = domain.owner_contact.code
+      original_oc_id = domain.registrant_id
+      original_oc_code = domain.registrant.code
       original_contacts_codes = domain.contacts.pluck(:code)
 
       pw = domain.auth_info
@@ -1142,9 +1142,9 @@ describe 'EPP Domain', epp: true do
 
       domain.reload
 
-      domain.owner_contact.id.should == original_oc_id
-      domain.owner_contact.code.should == original_oc_code
-      domain.owner_contact.registrar_id.should == @registrar2.id
+      domain.registrant.id.should == original_oc_id
+      domain.registrant.code.should == original_oc_code
+      domain.registrant.registrar_id.should == @registrar2.id
 
       original_contacts_codes.should == domain.contacts.pluck(:code)
 
@@ -1278,7 +1278,7 @@ describe 'EPP Domain', epp: true do
       response[:msg].should == 'Authorization error'
     end
 
-    it 'ignores transfer when owner registrar requests transfer' do
+    it 'ignores transfer wha registrant registrar requests transfer' do
       pw = domain.auth_info
       xml = domain_transfer_xml({
         name: { value: domain.name },
@@ -1370,7 +1370,7 @@ describe 'EPP Domain', epp: true do
 
       d = Domain.last
 
-      d.owner_contact_code.should == 'citizen_1234'
+      d.registrant_code.should == 'citizen_1234'
       d.auth_info.should == existing_pw
     end
 
@@ -1765,7 +1765,7 @@ describe 'EPP Domain', epp: true do
       inf_data.css('name').text.should == domain.name
       inf_data.css('status').text.should == 'Payment overdue.'
       inf_data.css('status').first[:s].should == 'clientHold'
-      inf_data.css('registrant').text.should == domain.owner_contact_code
+      inf_data.css('registrant').text.should == domain.registrant_code
 
       admin_contacts_from_request = inf_data.css('contact[type="admin"]').map(&:text)
       admin_contacts_existing = domain.admin_contacts.pluck(:code)

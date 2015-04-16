@@ -402,11 +402,11 @@ namespace :import do
     # registrant
     ActiveRecord::Base.connection.execute(
       "UPDATE domains "\
-      "SET owner_contact_id = contacts.id "\
+      "SET registrant_id = contacts.id "\
       "FROM contacts "\
       "WHERE contacts.legacy_id = legacy_registrant_id "\
       "AND legacy_registrant_id IS NOT NULL "\
-      "AND owner_contact_id IS NULL"
+      "AND registrant_id IS NULL"
     )
 
     # registrar

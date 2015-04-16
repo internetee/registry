@@ -3,7 +3,7 @@ class Admin::DomainsController < AdminController
   before_action :set_domain, only: [:show, :edit, :update, :zonefile]
 
   def index
-    @q = Domain.includes(:registrar, :owner_contact).search(params[:q])
+    @q = Domain.includes(:registrar, :registrant).search(params[:q])
     @domains = @q.result.page(params[:page])
   end
 

@@ -402,15 +402,15 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if contact has associated domain' do
-        @domain = Fabricate(:domain, registrar: @registrar1, owner_contact: @contact)
-        @domain.owner_contact.present?.should == true
+        @domain = Fabricate(:domain, registrar: @registrar1, registrant: @contact)
+        @domain.registrant.present?.should == true
 
         response = delete_request
         response[:msg].should == 'Object association prohibits operation [domains]'
         response[:result_code].should == '2305'
         response[:results].count.should == 1
 
-        @domain.owner_contact.present?.should == true
+        @domain.registrant.present?.should == true
       end
 
       it 'fails with wrong authentication info' do
@@ -511,7 +511,7 @@ describe 'EPP Contact', epp: true do
         contact.css('ident').first.text.should == '37605030299'
       end
 
-      it 'returns no authorization error for wrong password when owner' do
+      it 'returns no authorization error for wrong password when registrant' do
         response = info_request({ authInfo: { pw: { value: 'wrong-pw' } } })
 
         response[:msg].should == 'Command completed successfully'

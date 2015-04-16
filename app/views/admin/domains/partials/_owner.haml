@@ -1,19 +1,19 @@
 .panel.panel-default
   .panel-heading
-    %h3.panel-title= t('owner')
+    %h3.panel-title= t(:registrant)
   .panel-body
     %dl.dl-horizontal
-      %dt= t('name')
-      %dd= link_to(@domain.owner_contact, [:admin, @domain.owner_contact])
+      %dt= t(:name)
+      %dd= link_to(@domain.registrant, [:admin, @domain.registrant])
 
-      %dt= t('code')
-      %dd= @domain.owner_contact_code
+      %dt= t(:code)
+      %dd= @domain.registrant_code
 
-      %dt= t('identity_code')
-      %dd= @domain.owner_contact_ident
+      %dt= t(:identity_code)
+      %dd= @domain.registrant_ident
 
-      %dt= t('email')
-      %dd= @domain.owner_contact_email
+      %dt= t(:email)
+      %dd= @domain.registrant_email
 
-      %dt= t('phone')
-      %dd= @domain.owner_contact_phone
+      %dt= t(:phone)
+      %dd= @domain.registrant_phone

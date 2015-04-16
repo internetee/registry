@@ -1,6 +1,6 @@
 .row
   .col-sm-12
-    %h2.text-center-xs= t('domains')
+    %h2.text-center-xs= t(:domains)
 %hr
 .row
   .col-md-12
@@ -24,16 +24,16 @@
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'name')
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'owner_contact_name', t('owner'))
+              = sort_link(@q, 'registrant_name', t(:registrant))
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'valid_to', t('valid_to'))
+              = sort_link(@q, 'valid_to', t(:valid_to))
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'registrar_name', t('registrar'))
+              = sort_link(@q, 'registrar_name', t(:registrar))
         %tbody
           - @domains.each do |x|
             %tr
               %td= link_to(x, admin_domain_path(x))
-              %td= link_to(x.owner_contact, [:admin, x.owner_contact])
+              %td= link_to(x.registrant, [:admin, x.registrant])
               %td= l(x.valid_to, format: :short)
               %td= link_to(x.registrar, admin_registrar_path(x.registrar)) if x.registrar
 .row
