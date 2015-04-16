@@ -9,4 +9,5 @@ Production API endpoint: https://repp.todo.ee/repp/v1
 Main communication specification through Restful EPP (REPP):
 
 [Contact related functions](repp/v1/contact.md)  
-[Domain related functions](repp/v1/domain.md)
+[Domain related functions](repp/v1/domain.md)  
+[Account related functions](repp/v1/account.md)

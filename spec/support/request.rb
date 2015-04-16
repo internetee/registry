@@ -37,6 +37,7 @@ module Autodoc
       return unless example.metadata[:route_info_doc]
       route = request.env["rack.routing_args"][:route_info]
       return unless route.route_params.is_a?(Hash)
+      return if route.route_params.empty?
 
       rows = [
         "| Field name | Required | Type | Allowed values | Description |",

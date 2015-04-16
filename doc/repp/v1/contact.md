@@ -23,36 +23,34 @@ Content-Type: application/json
 ```
 HTTP/1.1 200
 Cache-Control: max-age=0, private, must-revalidate
-Content-Length: 562
+Content-Length: 533
 Content-Type: application/json
 
 {
   "contacts": [
     {
       "id": 1,
-      "code": "sh995165920",
-      "reg_no": null,
+      "code": "sh135909910",
       "phone": "+372.12345678",
-      "email": "ronaldo@sauer.biz",
+      "email": "natasha.bechtelar@breitenberg.name",
       "fax": null,
-      "created_at": "2015-04-01T13:59:45.332Z",
-      "updated_at": "2015-04-01T13:59:45.332Z",
+      "created_at": "2015-04-16T08:44:33.041Z",
+      "updated_at": "2015-04-16T08:44:33.041Z",
       "ident": "37605030299",
       "ident_type": "priv",
-      "created_by_id": null,
-      "updated_by_id": null,
       "auth_info": "password",
-      "name": "Meagan Roob Jr.0",
+      "name": "Miss Sherwood Jacobi0",
       "org_name": null,
       "registrar_id": 1,
-      "creator_str": "autotest",
-      "updator_str": "autotest",
+      "creator_str": null,
+      "updator_str": null,
       "ident_country_code": "EE",
       "city": "Tallinn",
       "street": "Short street 11",
       "zip": "11111",
       "country_code": "EE",
-      "state": null
+      "state": null,
+      "legacy_id": null
     }
   ],
   "total_number_of_records": 2
@@ -81,7 +79,7 @@ Content-Type: application/json
 
 {
   "contacts": [
-    "sh818918181"
+    "sh056866451"
   ],
   "total_number_of_records": 2
 }

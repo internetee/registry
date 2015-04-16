@@ -23,7 +23,7 @@ Content-Type: application/json
 ```
 HTTP/1.1 200
 Cache-Control: max-age=0, private, must-revalidate
-Content-Length: 506
+Content-Length: 578
 Content-Type: application/json
 
 {
@@ -32,21 +32,24 @@ Content-Type: application/json
       "id": 1,
       "name": "domain0.ee",
       "registrar_id": 1,
-      "registered_at": "2015-04-01T13:59:45.874Z",
+      "registered_at": "2015-04-16T08:44:33.499Z",
       "status": null,
-      "valid_from": "2015-04-01T00:00:00.000Z",
-      "valid_to": "2016-04-01T00:00:00.000Z",
+      "valid_from": "2015-04-16T00:00:00.000Z",
+      "valid_to": "2016-04-16T00:00:00.000Z",
       "owner_contact_id": 1,
-      "auth_info": "78d0edcd105c8e1936457c1eef659611",
-      "created_at": "2015-04-01T13:59:45.871Z",
-      "updated_at": "2015-04-01T13:59:45.871Z",
+      "auth_info": "d081ba64515bc8ae9a512a98e6b1baa1",
+      "created_at": "2015-04-16T08:44:33.496Z",
+      "updated_at": "2015-04-16T08:44:33.496Z",
       "name_dirty": "domain0.ee",
       "name_puny": "domain0.ee",
       "period": 1,
       "period_unit": "y",
       "creator_str": null,
       "updator_str": null,
-      "whois_body": null
+      "whois_body": null,
+      "legacy_id": null,
+      "legacy_registrar_id": null,
+      "legacy_registrant_id": null
     }
   ],
   "total_number_of_records": 2

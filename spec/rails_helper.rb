@@ -89,7 +89,7 @@ RSpec.configure do |config|
     c.syntax = [:should, :expect]
   end
 
-  Autodoc.configuration.path = 'doc/repp/v1'
+  Autodoc.configuration.path = 'doc/repp'
   Autodoc.configuration.suppressed_request_header = ['Host']
   Autodoc.configuration.suppressed_response_header = ['ETag', 'X-Request-Id', 'X-Runtime']
   Autodoc.configuration.template = File.read('spec/requests/repp_doc_template.md.erb')

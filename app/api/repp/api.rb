@@ -39,5 +39,6 @@ module Repp
 
     mount Repp::DomainV1
     mount Repp::ContactV1
+    mount Repp::AccountV1
   end
 end

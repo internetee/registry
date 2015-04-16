@@ -101,7 +101,7 @@ namespace :import do
 
     Registrar.all.each do |x|
       next if x.cash_account
-      x.accounts.create(account_type: Account::CASH)
+      x.accounts.create(account_type: Account::CASH, currency: 'EUR')
       x.save(validate: false)
     end
 
