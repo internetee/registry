@@ -56,7 +56,7 @@
                 %dt= t('public_key')
                 %dd= @data.css('pubKey').text
 
-                = form_tag registrar_confirm_keyrelay_poll_path, class: 'js-keyrelay-form' do
+                = form_tag confirm_keyrelay_registrar_poll_path, class: 'js-keyrelay-form' do
                   = hidden_field_tag 'domain[name]', @data.css('name').text
                   = hidden_field_tag 'domain[dnskeys_attributes][0][flags]', @data.css('flags').text
                   = hidden_field_tag 'domain[dnskeys_attributes][0][protocol]', @data.css('protocol').text
@@ -65,7 +65,7 @@
 
               - else
                 - if @data.css('trnData trStatus').any? # this is a transfer request
-                  = form_tag registrar_confirm_transfer_poll_path, class: 'js-transfer-form' do
+                  = form_tag confirm_transfer_registrar_poll_path, class: 'js-transfer-form' do
                     = hidden_field_tag 'domain[name]', @data.css('name').text
 
                 - @data.css('trnData').children.each do |x|
