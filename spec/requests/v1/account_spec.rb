@@ -9,7 +9,7 @@ describe Repp::AccountV1 do
   end
 
   describe 'GET /repp/v1/accounts/balance' do
-    it 'returns domains of the current registrar', autodoc: true, route_info_doc: true do
+    it 'returns account balance of the current registrar', autodoc: true, route_info_doc: true do
       get_with_auth '/repp/v1/accounts/balance', {}, @api_user
       response.status.should == 200
 

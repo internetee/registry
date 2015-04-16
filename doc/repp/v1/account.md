@@ -1,5 +1,5 @@
 ## GET /repp/v1/accounts/balance
-Returns domains of the current registrar.
+Returns account balance of the current registrar.
 
 
 #### Request

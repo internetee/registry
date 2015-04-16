@@ -23,23 +23,23 @@ Content-Type: application/json
 ```
 HTTP/1.1 200
 Cache-Control: max-age=0, private, must-revalidate
-Content-Length: 533
+Content-Length: 524
 Content-Type: application/json
 
 {
   "contacts": [
     {
       "id": 1,
-      "code": "sh135909910",
+      "code": "sh523328490",
       "phone": "+372.12345678",
-      "email": "natasha.bechtelar@breitenberg.name",
+      "email": "corene_koch@caspermoen.net",
       "fax": null,
-      "created_at": "2015-04-16T08:44:33.041Z",
-      "updated_at": "2015-04-16T08:44:33.041Z",
+      "created_at": "2015-04-16T08:48:39.551Z",
+      "updated_at": "2015-04-16T08:48:39.551Z",
       "ident": "37605030299",
       "ident_type": "priv",
       "auth_info": "password",
-      "name": "Miss Sherwood Jacobi0",
+      "name": "Alana Williamson II0",
       "org_name": null,
       "registrar_id": 1,
       "creator_str": null,
@@ -79,7 +79,7 @@ Content-Type: application/json
 
 {
   "contacts": [
-    "sh056866451"
+    "sh629765881"
   ],
   "total_number_of_records": 2
 }
