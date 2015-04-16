@@ -1,7 +1,7 @@
 - content_for :actions do
   = link_to(t('edit'), edit_admin_bank_transaction_path(@bank_transaction), class: 'btn btn-primary')
   = link_to(t('back_to_bank_statement'), admin_bank_statement_path(@bank_transaction.bank_statement), class: 'btn btn-default')
-= render 'admin/shared/title', name: "#{t('bank_transaction')}"
+= render 'shared/title', name: t(:bank_transaction)
 = render 'shared/full_errors', object: @bank_transaction
 %row
   .col-md-12
