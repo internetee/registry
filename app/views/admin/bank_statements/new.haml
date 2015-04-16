@@ -1,5 +1,5 @@
 - content_for :actions do
-  = link_to(t(:back_to_bank_statements), admin_bank_statements_path, class: 'btn btn-primary')
+  = link_to(t(:back_to_bank_statements), admin_bank_statements_path, class: 'btn btn-default')
 = render 'shared/title', name: t(:import_th6_bank_statement)
 
 = form_for([:admin, @bank_statement], multipart: true) do |f|
