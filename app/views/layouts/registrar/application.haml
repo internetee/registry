@@ -39,7 +39,7 @@
 
               - if can? :show, Invoice
                 - active_class = ['registrar/invoices'].include?(params[:controller]) ? 'active' :nil
-                %li{class: active_class}= link_to t('billing'), registrar_invoices_path
+                %li{class: active_class}= link_to t(:billing), registrar_invoices_path
 
               - if can? :view, :registrar_xml_console
                 - active_class = ['registrar/xml_consoles'].include?(params[:controller]) ? 'active' :nil
@@ -47,15 +47,14 @@
 
             %ul.nav.navbar-nav.navbar-right
               - if user_signed_in?
-                %li= link_to t('log_out', user: current_user), '/registrar/logout'
-        / /.nav-collapse
-    / Begin page content
+                %li= link_to t(:log_out, user: current_user), '/registrar/logout'
+
     .container
-      = render 'registrar/shared/flash'
+      = render 'shared/flash'
       - if depp_controller?
         = render 'registrar/shared/epp_results'
-
       = yield
+
     %footer.footer
       .container
         %row
