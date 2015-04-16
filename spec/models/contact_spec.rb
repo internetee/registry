@@ -326,13 +326,13 @@ describe Contact, '.destroy_orphans' do
   end
 
   it 'should find one orphan' do
-    Fabricate(:domain, owner_contact: @contact_1)
+    Fabricate(:domain, registrant: @contact_1)
     Contact.find_orphans.count.should == 1
     Contact.find_orphans.last.should == @contact_2
   end
 
   it 'should find no orphans' do
-    Fabricate(:domain, owner_contact: @contact_1, admin_contacts: [@contact_2])
+    Fabricate(:domain, registrant: @contact_1, admin_contacts: [@contact_2])
     cc = Contact.count
     Contact.find_orphans.count.should == 0
     Contact.destroy_orphans

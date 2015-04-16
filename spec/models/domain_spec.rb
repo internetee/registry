@@ -7,7 +7,7 @@ describe Domain do
 
   it { should belong_to(:registrar) }
   it { should have_many(:nameservers) }
-  it { should belong_to(:owner_contact) }
+  it { should belong_to(:registrant) }
   it { should have_many(:tech_contacts) }
   it { should have_many(:admin_contacts) }
   it { should have_many(:domain_transfers) }
@@ -156,7 +156,7 @@ describe Domain do
   # d = Domain.new
   # expect(d.valid?).to be false
   # expect(d.errors.messages).to match_array({
-  # owner_contact: ['Registrant is missing'],
+  # registrant: ['Registrant is missing'],
   # admin_contacts: ['Admin contacts count must be between 1 - infinity'],
   # nameservers: ['Nameservers count must be between 2-11'],
   # registrar: ['Registrar is missing'],

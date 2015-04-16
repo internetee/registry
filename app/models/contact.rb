@@ -74,7 +74,7 @@ class Contact < ActiveRecord::Base
     def find_orphans
       Contact.where('
         NOT EXISTS(
-          select 1 from domains d where d.owner_contact_id = contacts.id
+          select 1 from domains d where d.registrant_id = contacts.id
         ) AND NOT EXISTS(
           select 1 from domain_contacts dc where dc.contact_id = contacts.id
         )
@@ -138,7 +138,7 @@ class Contact < ActiveRecord::Base
 
   # Find a way to use self.domains with contact
   def domains_owned
-    Domain.where(owner_contact_id: id)
+    Domain.where(registrant_id: id)
   end
 
   def relations_with_domain?

@@ -249,7 +249,7 @@ ActiveRecord::Schema.define(version: 20150416080828) do
     t.string   "status"
     t.datetime "valid_from"
     t.datetime "valid_to"
-    t.integer  "owner_contact_id"
+    t.integer  "registrant_id"
     t.string   "auth_info"
     t.datetime "created_at"
     t.datetime "updated_at"

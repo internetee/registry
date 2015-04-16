@@ -36,7 +36,7 @@ Content-Type: application/json
       "status": null,
       "valid_from": "2015-04-16T00:00:00.000Z",
       "valid_to": "2016-04-16T00:00:00.000Z",
-      "owner_contact_id": 1,
+      "registrant_id": 1,
       "auth_info": "3ec9a29d618023920b61758c339b638f",
       "created_at": "2015-04-16T08:48:39.992Z",
       "updated_at": "2015-04-16T08:48:39.991Z",

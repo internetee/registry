@@ -63,7 +63,7 @@ en:
               invalid: 'Domain name is invalid'
               reserved: 'Domain name is reserved or restricted'
               taken: 'Domain name already exists'
-            owner_contact:
+            registrant:
               blank: 'Registrant is missing'
               not_found: 'Registrant not found'
             domain_contacts:
@@ -201,7 +201,7 @@ en:
         name: 'Domain name'
         name_dirty: 'Domain name'
         name_puny: 'Domain name'
-        owner_contact: 'Registrant'
+        registrant: 'Registrant'
         nameservers: 'Nameservers'
       domain:
         <<: *epp_domain_attributes

@@ -24,7 +24,7 @@ class Epp::Domain < Domain
         [:base, :domain_status_prohibits_operation]
       ],
       '2306' => [ # Parameter policy error
-        [:owner_contact, :blank],
+        [:registrant, :blank],
         [:base, :ds_data_with_key_not_allowed],
         [:base, :ds_data_not_allowed],
         [:base, :key_data_not_allowed],
@@ -68,9 +68,9 @@ class Epp::Domain < Domain
   end
 
   def attach_default_contacts
-    return if owner_contact.blank?
-    tech_contacts  << owner_contact if tech_contacts.blank?
-    admin_contacts << owner_contact if admin_contacts.blank? && owner_contact.priv?
+    return if registrant.blank?
+    tech_contacts  << registrant if tech_contacts.blank?
+    admin_contacts << registrant if admin_contacts.blank? && registrant.priv?
   end
 
   # rubocop: disable Metrics/PerceivedComplexity
@@ -84,9 +84,9 @@ class Epp::Domain < Domain
       oc = Contact.find_by(code: code).try(:id)
 
       if oc
-        at[:owner_contact_id] = oc
+        at[:registrant_id] = oc
       else
-        add_epp_error('2303', 'registrant', code, [:owner_contact, :not_found])
+        add_epp_error('2303', 'registrant', code, [:registrant, :not_found])
       end
     end
 
@@ -430,7 +430,7 @@ class Epp::Domain < Domain
   # TODO: Eager load problems here. Investigate how it's possible not to query contact again
   # Check if versioning works with update_column
   def transfer_contacts(registrar_id)
-    transfer_owner_contact(registrar_id)
+    transfer_registrant(registrar_id)
     transfer_domain_contacts(registrar_id)
   end
 
@@ -452,15 +452,15 @@ class Epp::Domain < Domain
     oc
   end
 
-  def transfer_owner_contact(registrar_id)
-    return if owner_contact.registrar_id == registrar_id
+  def transfer_registrant(registrar_id)
+    return if registrant.registrar_id == registrar_id
 
-    is_other_domains_contact = DomainContact.where('contact_id = ? AND domain_id != ?', owner_contact_id, id).count > 0
-    if owner_contact.domains_owned.count > 1 || is_other_domains_contact
-      oc = copy_and_transfer_contact(owner_contact_id, registrar_id)
-      self.owner_contact_id = oc.id
+    is_other_domains_contact = DomainContact.where('contact_id = ? AND domain_id != ?', registrant_id, id).count > 0
+    if registrant.domains_owned.count > 1 || is_other_domains_contact
+      oc = copy_and_transfer_contact(registrant_id, registrar_id)
+      self.registrant_id = oc.id
     else
-      transfer_contact(owner_contact_id, registrar_id)
+      transfer_contact(registrant_id, registrar_id)
     end
   end
 
@@ -471,11 +471,11 @@ class Epp::Domain < Domain
 
       is_other_domains_contact = DomainContact.where('contact_id = ? AND domain_id != ?', c.id, id).count > 0
       # if contact used to be owner contact but was copied, then contact must be transferred
-      # (owner_contact_id_was != c.id)
+      # (registrant_id_was != c.id)
       if c.domains.count > 1 || is_other_domains_contact
         # copy contact
-        if owner_contact_id_was == c.id # owner contact was copied previously, do not copy it again
-          oc = OpenStruct.new(id: owner_contact_id)
+        if registrant_id_was == c.id # owner contact was copied previously, do not copy it again
+          oc = OpenStruct.new(id: registrant_id)
         else
           oc = copy_and_transfer_contact(c.id, registrar_id)
         end
