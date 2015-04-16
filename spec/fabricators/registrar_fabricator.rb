@@ -11,6 +11,10 @@ Fabricator(:registrar) do
   accounts(count: 1)
 end
 
+Fabricator(:registrar_with_no_account_activities, from: :registrar) do
+  accounts(count: 1) { Fabricate(:account, account_activities: []) }
+end
+
 Fabricator(:registrar1, from: :registrar) do
   name 'registrar1'
   reg_no '111'
@@ -43,4 +47,5 @@ Fabricator(:eis, from: :registrar) do
   street 'Paldiski mnt 80'
   zip '10617'
   url 'www.internet.ee'
+  accounts(count: 1) { Fabricate(:account, account_activities: []) }
 end

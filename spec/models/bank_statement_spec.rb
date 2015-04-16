@@ -40,7 +40,7 @@ describe BankStatement do
     end
 
     it 'should bind transactions with invoices' do
-      r = Fabricate(:registrar, reference_no: 'RF7086666663')
+      r = Fabricate(:registrar_with_no_account_activities, reference_no: 'RF7086666663')
       r.issue_prepayment_invoice(200, 'add some money')
 
       bs = Fabricate(:bank_statement, bank_transactions: [
@@ -70,7 +70,7 @@ describe BankStatement do
     end
 
     it 'should not bind transactions with invalid match data' do
-      r = Fabricate(:registrar, reference_no: 'RF7086666663')
+      r = Fabricate(:registrar_with_no_account_activities, reference_no: 'RF7086666663')
       r.issue_prepayment_invoice(200, 'add some money')
 
       bs = Fabricate(:bank_statement, bank_transactions: [

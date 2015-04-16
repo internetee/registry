@@ -3,7 +3,7 @@ require 'rails_helper'
 describe Repp::AccountV1 do
   before :all do
     @registrar1 = Fabricate(:registrar1, accounts:
-      [Fabricate(:account, { balance: '324.45' })]
+      [Fabricate(:account, { balance: '324.45', account_activities: [] })]
     )
     @api_user = Fabricate(:gitlab_api_user, registrar: @registrar1)
   end
