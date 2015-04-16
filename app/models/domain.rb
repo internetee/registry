@@ -241,15 +241,14 @@ class Domain < ActiveRecord::Base
   # rubocop:disable Metrics/MethodLength
   def update_whois_body
     self.whois_body = <<-EOS
-  This Whois Server contains information on
-  Estonian Top Level Domain ee TLD
+Estonia .ee Top Level Domain WHOIS server
 
-  domain:    #{name}
-  registrar: #{registrar}
-  status:
+  domain:     #{name}
+  registrant: #{owner_contact.name}
+  status:     #{domain_statuses.map(&:value).join(', ')}
   registered: #{registered_at and registered_at.to_s(:db)}
-  changed:   #{updated_at and updated_at.to_s(:db)}
-  expire:
+  changed:    #{updated_at and updated_at.to_s(:db)}
+  expire:     #{valid_to and valid_to.to_s(:db)}
   outzone:
   delete:
 
@@ -263,6 +262,9 @@ class Domain < ActiveRecord::Base
   address: #{registrar.address}
   created: #{registrar.created_at.to_s(:db)}
   changed: #{registrar.updated_at.to_s(:db)}
+
+Estonia .ee Top Level Domain WHOIS server
+More information at http://internet.ee
     EOS
   end
   # rubocop:enable Metrics/MethodLength
