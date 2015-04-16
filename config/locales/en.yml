@@ -713,7 +713,7 @@ en:
     is a computer that saves and forwards via a general-access data communications network such data that is connected with the domain name and corresponding IP addresses. Your IT helpdesk or Internet service provider will have the necessary information about the domain name servers.
   account_activity: 'Account activity'
   receipt_date: 'Receipt date'
-  registrar_head_title_sufix: ' - EIS Registrar Portal'
+  registrar_head_title_sufix: ' - EIS Registrar'
   admin_head_title_sufix: ' - Estonian Internet Foundation'
-  registrar_head_title: 'EIS Registrar Portal'
+  registrar_head_title: 'EIS Registrar'
   admin_head_title: 'Estonian Internet Foundation'
