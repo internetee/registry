@@ -2,13 +2,12 @@
   = link_to(t(:edit), edit_admin_admin_user_path(@admin_user), class: 'btn btn-primary')
   = link_to(t(:delete), admin_admin_user_path(@admin_user), 
     method: :delete, data: { confirm: t(:are_you_sure) }, class: 'btn btn-danger')
-= render 'shared/title', name: @admin_user.name
+= render 'shared/title', name: @admin_user.username
 
 - if @admin_user.errors.any?
   - @admin_user.errors.each do |attr, err|
     = err
     %br
-- if @admin_user.errors.any?
 .row
   .col-md-6
     .panel.panel-default
