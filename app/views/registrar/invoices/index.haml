@@ -1,6 +1,6 @@
 - content_for :actions do
-  = link_to(t(:account_activity), registrar_account_activities_path, class: 'btn btn-default')
-  = link_to(t(:add_deposit), new_registrar_deposit_path, class: 'btn btn-default')
+  = link_to(t(:add_deposit), new_registrar_deposit_path, class: 'btn btn-primary')
+  = link_to(t(:account_activity), registrar_account_activities_path, class: 'btn btn-primary')
 = render 'shared/title', name: t(:your_account)
 
 = t(:your_current_account_balance_is, 
