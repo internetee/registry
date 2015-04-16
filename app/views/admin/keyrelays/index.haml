@@ -1,13 +1,11 @@
-.row
-  .col-sm-12
-    %h2.text-center-xs= t('keyrelays')
-%hr
+= render 'shared/title', name: t(:keyrelays)
+
 .row
   .col-md-12
     = search_form_for [:admin, @q], html: { class: 'form-horizontal' } do |f|
       .col-md-11
         .form-group
-          = f.search_field :domain_name_cont, class: 'form-control', placeholder: t('domain_name')
+          = f.search_field :domain_name_cont, class: 'form-control', placeholder: t(:domain_name)
       .col-md-1.text-right.text-center-xs
         .form-group
           %button.btn.btn-primary
@@ -22,15 +20,15 @@
         %thead
           %tr
             %th{class: 'col-xs-4'}
-              = sort_link(@q, 'pa_date', t('uploaded_at'))
+              = sort_link(@q, 'pa_date', t(:uploaded_at))
             %th{class: 'col-xs-3'}
-              = t('expiry')
+              = t(:expiry)
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'requester_name', t('requester'))
+              = sort_link(@q, 'requester_name', t(:requester))
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'accepter_name', t('accepter'))
+              = sort_link(@q, 'accepter_name', t(:accepter))
             %th{class: 'col-xs-1'}
-              = t('status')
+              = t(:status)
         %tbody
           - @keyrelays.each do |x|
             %tr

@@ -1,9 +1,5 @@
-.row
-  .col-sm-6
-    %h2.text-center-xs
-      = "#{t('edit_user')}"
-  .col-sm-6
-    %h2.text-right.text-center-xs
-      = link_to(t('back_to_user'), [:admin, @admin_user], class: 'btn btn-default')
-%hr
+- content_for :actions do
+  = link_to(t(:back_to_user), [:admin, @admin_user], class: 'btn btn-default')
+= render 'shared/title', name: "#{t(:edit)}: #{@admin_user.name}"
+
 = render 'form'

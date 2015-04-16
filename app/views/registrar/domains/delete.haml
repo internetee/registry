@@ -1,4 +1,4 @@
-= render 'registrar/shared/title', name: "#{t(:delete)}: #{params[:domain_name]}"
+= render 'shared/title', name: "#{t(:delete)}: #{params[:domain_name]}"
 
 = form_tag(destroy_registrar_domains_path, class: 'form-horizontal', multipart: true, method: :delete) do
   .col-md-8

@@ -1,7 +1,5 @@
-.row
-  .col-sm-12
-    %h2.text-center-xs= t(:contacts)
-%hr
+= render 'shared/title', name: t(:contacts)
+
 .row
   .col-md-12
     = search_form_for [:admin, @q], html: { class: 'form-horizontal' } do |f|

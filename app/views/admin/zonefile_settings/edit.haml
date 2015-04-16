@@ -1,5 +1,5 @@
-%h2= t('zonefile_settings')
-%hr
+= render 'shared/title', name: t(:zonefile_settings)
+
 = form_for [:admin, @zonefile_setting], html: { class: 'form-horizontal' } do |f|
   .row
     .col-md-12
@@ -47,4 +47,4 @@
 
   .row
     .col-md-12.text-right
-      %button.btn.btn-primary=t('save')
+      %button.btn.btn-primary= t(:save)

@@ -1,6 +1,5 @@
-.row
-  .col-sm-12
-    %h2.text-center-xs= t('epp_logs')
+= render 'shared/title', name: t(:epp_logs)
+
 .row
   .col-md-12
     %hr
@@ -9,39 +8,39 @@
         .col-md-3
           .form-group
             = f.label :request_command
-            = f.select :request_command_eq, [[t('choose'),''], 'hello', 'login', 'logout', 'info', 'create', 'update', 'delete', 'check', 'renew', 'transfer', 'poll', 'keyrelay'], {}, class: 'form-control selectize', placeholder: t('choose')
+            = f.select :request_command_eq, [[t(:choose),''], 'hello', 'login', 'logout', 'info', 'create', 'update', 'delete', 'check', 'renew', 'transfer', 'poll', 'keyrelay'], {}, class: 'form-control selectize', placeholder: t(:choose)
         .col-md-3
           .form-group
             = f.label :request_object
-            = f.select :request_object_eq, [[t('choose'),''], 'contact', 'domain', 'poll', 'keyrelay'], {}, class: 'form-control selectize', placeholder: t('choose')
+            = f.select :request_object_eq, [[t(:choose),''], 'contact', 'domain', 'poll', 'keyrelay'], {}, class: 'form-control selectize', placeholder: t(:choose)
         .col-md-3
           .form-group
             = f.label :request_successful
-            = f.select :request_successful_true, [[t('choose'), ''], 'true', 'false'], {}, class: 'form-control selectize', placeholder: t('choose')
+            = f.select :request_successful_true, [[t(:choose), ''], 'true', 'false'], {}, class: 'form-control selectize', placeholder: t(:choose)
         .col-md-3
           .form-group
             = f.label :api_user
-            = f.search_field :api_user_name_cont, class: 'form-control', placeholder: t('api_user'), autocomplete: 'off'
+            = f.search_field :api_user_name_cont, class: 'form-control', placeholder: t(:api_user), autocomplete: 'off'
       .row
         .col-md-3
           .form-group
             = f.label :registrar
-            = f.search_field :api_user_registrar_cont, class: 'form-control', placeholder: t('registrar'), autocomplete: 'off'
+            = f.search_field :api_user_registrar_cont, class: 'form-control', placeholder: t(:registrar), autocomplete: 'off'
         .col-md-3
           .form-group
             = f.label t(:created_after)
-            = f.search_field :created_at_gteq, class: 'form-control', placeholder: t('created_after'), autocomplete: 'off'
+            = f.search_field :created_at_gteq, class: 'form-control', placeholder: t(:created_after), autocomplete: 'off'
         .col-md-3
           .form-group
             = f.label t(:created_before)
-            = f.search_field :created_at_lteq, class: 'form-control', placeholder: t('created_before'), autocomplete: 'off'
+            = f.search_field :created_at_lteq, class: 'form-control', placeholder: t(:created_before), autocomplete: 'off'
         .col-md-3{style: 'padding-top: 25px;'}
           %button.btn.btn-primary
             &nbsp;
             %span.glyphicon.glyphicon-search
             &nbsp;
           %button.btn.btn-default.js-reset-form
-            = t('clear_fields')
+            = t(:clear_fields)
 .row
   .col-md-12
     %hr
@@ -50,11 +49,11 @@
       %table.table.table-hover.table-bordered.table-condensed
         %thead
           %tr
-            %th{class: 'col-xs-2'}= t('request_command')
-            %th{class: 'col-xs-2'}= t('request_object')
-            %th{class: 'col-xs-2'}= t('request_successful')
-            %th{class: 'col-xs-2'}= t('api_user')
-            %th{class: 'col-xs-2'}= t('registrar')
+            %th{class: 'col-xs-2'}= t(:request_command)
+            %th{class: 'col-xs-2'}= t(:request_object)
+            %th{class: 'col-xs-2'}= t(:request_successful)
+            %th{class: 'col-xs-2'}= t(:api_user)
+            %th{class: 'col-xs-2'}= t(:registrar)
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'created_at')
         %tbody

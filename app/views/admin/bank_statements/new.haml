@@ -1,11 +1,7 @@
-.row
-  .col-sm-6
-    %h2.text-center-xs= t('import_th6_bank_statement')
-  .col-sm-6
-    %h2.text-right.text-center-xs
-      = link_to(t('back_to_bank_statements'), admin_bank_statements_path, class: 'btn btn-primary')
+- content_for :actions do
+  = link_to(t(:back_to_bank_statements), admin_bank_statements_path, class: 'btn btn-primary')
+= render 'shared/title', name: t(:import_th6_bank_statement)
 
-%hr
 = form_for([:admin, @bank_statement], multipart: true) do |f|
   = render 'shared/full_errors', object: @bank_statement
 
@@ -17,5 +13,4 @@
   %hr
   .row
     .col-md-12.text-right
-      = button_tag(t('save'), class: 'btn btn-primary')
-
+      = button_tag(t(:save), class: 'btn btn-primary')

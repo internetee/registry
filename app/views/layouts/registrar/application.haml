@@ -6,11 +6,14 @@
     %meta{content: "width=device-width, initial-scale=1", name: "viewport"}/
     %meta{content: "Full stack top-level domain (TLD) management.", name: "description"}/
     %meta{content: "Gitlab LTD", name: "author"}/
+    - if content_for? :head_title
+      = yield :head_title
+    - else
+      %title= t(:registrar_head_title)
     = csrf_meta_tags
     = stylesheet_link_tag 'registrar-manifest', media: 'all', 'data-turbolinks-track' => true
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
     = favicon_link_tag 'favicon.ico'
-    %title EIS Registrar Portal
   %body
     / Fixed navbar
     %nav.navbar.navbar-default.navbar-fixed-top

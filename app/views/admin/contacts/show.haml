@@ -1,8 +1,5 @@
-.row
-  .col-sm-12
-    %h2.text-center-xs
-      = @contact.name
-%hr
+= render 'shared/title', name: @contact.name
+
 .row
   .col-md-6= render 'admin/contacts/partials/general'
   .col-md-6= render 'admin/contacts/partials/address'

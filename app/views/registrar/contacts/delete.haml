@@ -1,5 +1,5 @@
 - if @contact.persisted?
-  = render 'registrar/shared/title', name: "#{t(:delete)}: #{@contact.name}"
+  = render 'shared/title', name: "#{t(:delete)}: #{@contact.name}"
 
   = form_for(@contact, url: registrar_contact_path(@contact), 
     class: 'form-horizontal', multipart: true, method: :delete) do |f|

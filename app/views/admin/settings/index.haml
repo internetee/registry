@@ -1,5 +1,5 @@
-%h2= t('settings')
-%hr
+= render 'shared/title', name: t(:settings)
+
 = form_tag [:admin, :settings] do
   .row
     .col-md-12
@@ -8,9 +8,9 @@
           %thead
             %tr
               %th{class: 'col-xs-9'}
-                = t('setting')
+                = t(:setting)
               %th{class: 'col-xs-2'}
-                = t('value')
+                = t(:value)
           %tbody
             - @settings.each do |x|
               %tr
@@ -23,4 +23,4 @@
                   %td= text_field_tag("[settings][#{x.var}]", x.value)
   .row
     .col-md-12.text-right
-      %button.btn.btn-primary=t('save')
+      %button.btn.btn-primary=t(:save)

@@ -1,4 +1,4 @@
-class Admin::EppLogsController < ApplicationController
+class Admin::EppLogsController < AdminController
   load_and_authorize_resource class: ApiLog::EppLog
 
   def index

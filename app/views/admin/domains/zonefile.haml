@@ -1,11 +1,7 @@
-.row
-  .col-sm-6
-    %h2.text-center-xs
-      = "#{t('zonefile')}"
-  .col-sm-6
-    %h2.text-right.text-center-xs
-      = link_to(t('back_to_domain'), admin_domain_path(@domain), class: 'btn btn-default')
-%hr
+- content_for :actions do
+  = link_to(t(:back_to_domain), admin_domain_path(@domain), class: 'btn btn-default')
+= render 'shared/title', name: t(:zonefile)
+
 .row
   .col-md-12
     = preserve do
