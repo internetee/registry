@@ -5,7 +5,6 @@ feature 'Repp log', type: :feature do
 
   before :all do
     @user = Fabricate(:admin_user, username: 'user1', identity_code: '37810013087')
-    @contact = Fabricate(:contact, name: 'Mr John')
   end
 
   context 'as unknown user' do

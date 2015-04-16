@@ -2,7 +2,7 @@
   = link_to(t(:edit), edit_admin_api_user_path(@api_user), class: 'btn btn-primary')
   = link_to(t(:delete), admin_api_user_path(@api_user), 
     method: :delete, data: { confirm: t(:are_you_sure) }, class: 'btn btn-danger')
-= render 'shared/title', @api_user.name
+= render 'shared/title', name: @api_user.username
 
 - if @api_user.errors.any?
   - @api_user.errors.each do |attr, err|
