@@ -91,7 +91,9 @@ Rails.application.routes.draw do
       get 'download_import_file', on: :member
     end
 
-    resources :bank_transactions
+    resources :bank_transactions do
+      patch 'bind', on: :member
+    end
 
     resources :invoices
 

@@ -713,3 +713,8 @@ en:
     is a computer that saves and forwards via a general-access data communications network such data that is connected with the domain name and corresponding IP addresses. Your IT helpdesk or Internet service provider will have the necessary information about the domain name servers.
   account_activity: 'Account activity'
   receipt_date: 'Receipt date'
+  manual_binding: 'Manual binding'
+  transaction_is_already_binded: 'Transaction is already binded'
+  invoice_was_not_found: 'Invoice was not found'
+  invoice_is_already_binded: 'Invoice is already binded'
+  invoice_and_transaction_sums_do_not_match: 'Invoice and transaction sums do not match'

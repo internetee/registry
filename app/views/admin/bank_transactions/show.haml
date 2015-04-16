@@ -1,11 +1,8 @@
-.row
-  .col-sm-6
-    %h2.text-center-xs
-      = t('bank_transaction')
-  .col-sm-6
-    %h2.text-right.text-center-xs
-      = link_to(t('back_to_bank_statement'), admin_bank_statement_path(@bank_transaction.bank_statement), class: 'btn btn-primary')
-%hr
+- content_for :actions do
+  = link_to(t('edit'), edit_admin_bank_transaction_path(@bank_transaction), class: 'btn btn-primary')
+  = link_to(t('back_to_bank_statement'), admin_bank_statement_path(@bank_transaction.bank_statement), class: 'btn btn-default')
+= render 'admin/shared/title', name: "#{t('bank_transaction')}"
+= render 'shared/full_errors', object: @bank_transaction
 %row
   .col-md-12
 .panel.panel-default
@@ -19,10 +16,6 @@
       %dt= t('status')
       - c = @bank_transaction.binded? ? 'text-success' : 'text-danger'
       %dd{class: c}= @bank_transaction.binded? ? t('binded') : t('not_binded')
-
-      - if @bank_transaction.binded?
-        %dt= t('binded_invoice')
-        %dd= link_to(@bank_transaction.binded_invoice, admin_invoice_path(@bank_transaction.binded_invoice))
 
       %dt= t('bank_reference')
       %dd= @bank_transaction.bank_reference
@@ -53,3 +46,16 @@
 
       %dt= t('paid_at')
       %dd= l(@bank_transaction.paid_at, format: :date_long)
+
+      - if @bank_transaction.binded?
+        %dt= t('binded_invoice')
+        %dd= link_to(@bank_transaction.binded_invoice, admin_invoice_path(@bank_transaction.binded_invoice))
+
+    - unless @bank_transaction.binded?
+      = form_for([:admin, @bank_transaction], url: {action: :bind}, html: { class: 'form-inline' }) do |f|
+        .form-group
+          %dl.dl-horizontal
+            %dt{style: 'padding-top: 5px'}= t('binded_invoice')
+            %dd
+              = text_field_tag(:invoice_id, params[:invoice_id], class: 'form-control')
+              = button_tag(t('bind_manually'), class: 'btn btn-primary')

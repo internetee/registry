@@ -1,9 +1,7 @@
-.row
-  .col-sm-6
-    %h2.text-center-xs= t('bank_statements')
-  .col-sm-6
-    %h2.text-right.text-center-xs
-      = link_to(t('import'), new_admin_bank_statement_path, class: 'btn btn-primary')
+- content_for :actions do
+  = link_to(t('import'), new_admin_bank_statement_path, class: 'btn btn-default')
+= render 'admin/shared/title', name: "#{t(:bank_statements)}"
+
 %hr
 .row
   .col-md-12

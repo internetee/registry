@@ -16,7 +16,7 @@ class BankTransaction < ActiveRecord::Base
   # For successful binding, reference number, invoice id and sum must match with the invoice
   # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/CyclomaticComplexity
-  def bind_invoice
+  def autobind_invoice
     return if binded?
     registrar = Registrar.find_by(reference_no: reference_no)
     return unless registrar
@@ -33,6 +33,38 @@ class BankTransaction < ActiveRecord::Base
     return if invoice.binded?
 
     return if invoice.sum != sum
+    create_activity(registrar, invoice)
+  end
+  # rubocop: enable Metrics/PerceivedComplexity
+  # rubocop: enable Metrics/CyclomaticComplexity
+
+  def bind_invoice(invoice_id)
+    if binded?
+      errors.add(:base, I18n.t('transaction_is_already_binded'))
+      return
+    end
+
+    invoice = Invoice.find_by(id: invoice_id)
+
+    unless invoice
+      errors.add(:base, I18n.t('invoice_was_not_found'))
+      return
+    end
+
+    if invoice.binded?
+      errors.add(:base, I18n.t('invoice_is_already_binded'))
+      return
+    end
+
+    if invoice.sum != sum
+      errors.add(:base, I18n.t('invoice_and_transaction_sums_do_not_match'))
+      return
+    end
+
+    create_activity(invoice.buyer, invoice)
+  end
+
+  def create_activity(registrar, invoice)
     create_account_activity(
       account: registrar.cash_account,
       invoice: invoice,
@@ -41,6 +73,4 @@ class BankTransaction < ActiveRecord::Base
       description: description
     )
   end
-  # rubocop: enable Metrics/PerceivedComplexity
-  # rubocop: enable Metrics/CyclomaticComplexity
 end
