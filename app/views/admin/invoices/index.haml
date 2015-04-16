@@ -1,0 +1,31 @@
+.row
+  .col-sm-12
+    %h2.text-center-xs= t('invoices')
+%hr
+.row
+  .col-md-12
+    .table-responsive
+      %table.table.table-hover.table-bordered.table-condensed
+        %thead
+          %tr
+            %th{class: 'col-xs-3'}
+              = sort_link(@q, 'invoice')
+            %th{class: 'col-xs-3'}
+              = sort_link(@q, 'buyer')
+            %th{class: 'col-xs-3'}
+              = sort_link(@q, 'due_date')
+            %th{class: 'col-xs-3'}
+              = sort_link(@q, 'receipt_date')
+        %tbody
+          - @invoices.each do |x|
+            %tr
+              %td= link_to(t('invoice_no', no: x.id), [:admin, x])
+              %td= link_to(x.buyer_name, admin_registrar_path(x.buyer_id))
+              %td= l(x.due_date)
+              - if x.binded?
+                %td= l(x.receipt_date)
+              - else
+                %td.text-danger= t('unpaid')
+.row
+  .col-md-12
+    = paginate @invoices

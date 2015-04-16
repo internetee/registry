@@ -93,6 +93,8 @@ Rails.application.routes.draw do
 
     resources :bank_transactions
 
+    resources :invoices
+
     resources :domains do
       resources :domain_versions
     end

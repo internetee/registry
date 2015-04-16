@@ -22,7 +22,7 @@
 
       - if @bank_transaction.binded?
         %dt= t('binded_invoice')
-        %dd= link_to(@bank_transaction.binded_invoice, '#')
+        %dd= link_to(@bank_transaction.binded_invoice, admin_invoice_path(@bank_transaction.binded_invoice))
 
       %dt= t('bank_reference')
       %dd= @bank_transaction.bank_reference

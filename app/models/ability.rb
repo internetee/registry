@@ -84,6 +84,7 @@ class Ability
     can :manage, LegalDocument
     can :manage, BankStatement
     can :manage, BankTransaction
+    can :manage, Invoice
     can :read, ApiLog::EppLog
     can :read, ApiLog::ReppLog
     # can :index, :delayed_job

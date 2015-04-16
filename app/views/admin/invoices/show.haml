@@ -1,0 +1,15 @@
+.row
+  .col-sm-6
+    %h1.text-center-xs
+      = t('invoice_no', no: @invoice.id)
+  .col-sm-6
+    %h1.text-right.text-center-xs
+      = link_to(t('back'), :back, class: 'btn btn-default')
+%hr
+.row
+  .col-md-6= render 'registrar/invoices/partials/details'
+.row
+  .col-md-6= render 'registrar/invoices/partials/seller'
+  .col-md-6= render 'registrar/invoices/partials/buyer'
+.row
+  .col-md-12= render 'registrar/invoices/partials/items'
