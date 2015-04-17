@@ -2,10 +2,10 @@
   %title= "#{truncate(name, length: 60)}#{head_title_sufix}"
 
 .row
-  .col-sm-6
+  .col-sm-7
     %h1.text-center-xs
       = truncate(name, length: 35)
-  .col-sm-6
+  .col-sm-5
     %h1.text-right.text-center-xs
       = yield :actions
 %hr
