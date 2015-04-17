@@ -78,6 +78,6 @@ class BankStatement < ActiveRecord::Base
   end
 
   def bind_invoices
-    bank_transactions.unbinded.each(&:bind_invoice)
+    bank_transactions.unbinded.each(&:autobind_invoice)
   end
 end
