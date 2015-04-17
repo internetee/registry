@@ -99,6 +99,8 @@ namespace :import do
       x.save(validate: false)
     end
 
+    puts "-----> Creating accounts numbers"
+
     Registrar.all.each do |x|
       next if x.cash_account
       x.accounts.create(account_type: Account::CASH, currency: 'EUR')
