@@ -1,4 +1,5 @@
 class AccountActivity < ActiveRecord::Base
+  include Versions
   belongs_to :account
   belongs_to :bank_transaction
   belongs_to :invoice

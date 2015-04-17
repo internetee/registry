@@ -1,4 +1,5 @@
 class BankTransaction < ActiveRecord::Base
+  include Versions
   belongs_to :bank_statement
   has_one :account_activity
 

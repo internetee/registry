@@ -17,9 +17,9 @@ describe BankStatement do
       ])
     end
 
-    # it 'should not have any versions' do
-    #   @bank_statement.versions.should == []
-    # end
+    it 'should not have any versions' do
+      @bank_statement.versions.should == []
+    end
   end
 
   context 'with valid attributes' do
@@ -99,14 +99,14 @@ describe BankStatement do
       bs.not_binded?.should == true
     end
 
-    # it 'should have one version' do
-    #   with_versioning do
-    #     @bank_statement.versions.should == []
-    #     @bank_statement.body = 'New body'
-    #     @bank_statement.save
-    #     @bank_statement.errors.full_messages.should match_array([])
-    #     @bank_statement.versions.size.should == 1
-    #   end
-    # end
+    it 'should have one version' do
+      with_versioning do
+        @bank_statement.versions.should == []
+        @bank_statement.bank_code = 'new_code'
+        @bank_statement.save
+        @bank_statement.errors.full_messages.should match_array([])
+        @bank_statement.versions.size.should == 1
+      end
+    end
   end
 end

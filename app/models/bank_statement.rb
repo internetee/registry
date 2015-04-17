@@ -1,4 +1,5 @@
 class BankStatement < ActiveRecord::Base
+  include Versions
   has_many :bank_transactions
 
   attr_accessor :th6_file
