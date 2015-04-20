@@ -1,6 +1,265 @@
+html
+  font-size: 100%
+  overflow-y: scroll
+  -webkit-text-size-adjust: 100%
+  -ms-text-size-adjust: 100%
+
+h1
+  font-size: 26px
+  margin-bottom: 16px
+
+a
+  color: #23527C
+  text-decoration: none
+
+a:hover,
+a:active
+  color: #23527C
+  outline: 0
+
+h1, h2, h3, h4, h1 a, h2 a, h3 a, h4 a
+  color: #272f34
+  text-decoration: none
+  font-weight: normal
+  font-family: 'EtelkaLightProBold'
+
+body,
+button,
+input,
+select,
+textarea
+  font-family: 'EtelkaLightProRegular', Arial, Helvetica, sans-serif
+  color: #5d6064
+  font-size: 13px
+
+abbr[title]
+  border-bottom: 1px dotted
+
+b,
+strong
+  font-weight: normal
+  font-family: 'EtelkaLightProBold'
+
+blockquote
+  margin: 1em 40px
+
+dfn
+  font-style: italic
+
+mark
+  background: #ff0
+  color: #000
+
+pre,
+code,
+kbd,
+samp
+  font-family: monospace, serif
+  _font-family: 'courier new', monospace
+  font-size: 1em
+
+pre
+  white-space: pre
+  white-space: pre-wrap
+  word-wrap: break-word
+
+q
+  quotes: none
+
+q:before,
+q:after
+  content: ''
+  content: none
+
+small
+  font-size: 75%
+
+sub,
+sup
+  font-size: 75%
+  line-height: 0
+  position: relative
+  vertical-align: baseline
+
+sup
+  top: -0.5em
+
+sub
+  bottom: -0.25em
+
+.title-row
+  margin-bottom: 22px
+
+.app-nav
+  padding-top: 7px
+
+.general-tab
+  padding-top: 30px
+  padding-right: 20px
+  border-top: 0px
+
+.container
+  border-radius: 3px
+
+body > .container
+  background: #F8F8F8
+  margin-bottom: 50px
+  min-height: 600px
+  padding: 30px 30px 56px 30px
+
+.container.version
+  background: transparent
+  margin-top: -116px
+  min-height: 0px
+  text-align: right
+  font-size: 12px
+  color: gray
+
+.container.subnav
+  background: transparent
+  min-height: 0
+  padding: 0 46px 0 0
+  margin-bottom: 0
+  ul.nav
+    li a
+      background: #E7E7E7
+      height: 33px
+      line-height: 12px
+      color: gray
+      &:hover
+        color: #333
+    li.active a
+      background: #F8F8F8
+      font-weight: bold
+      color: #333
+
+
+.subactions
+  h4
+    margin-bottom: 20px
+    margin-top: 10px
+  min-height: 600px
+
+.sidebar
+  min-height: 400px
+
+.content
+  margin-right: 240px
+  margin-left: 0
+
+h4
+  margin: 0
+
+.top-actions
+  margin-top: 12px
+  margin-bottom: 16px
+  float: right
+
+.navbar-brand
+  line-height: 12px
+  padding-top: 20px
+  padding-bottom: 5px
+
+.navbar-brand small
+  display: block
+  font-size: 10px
+
+.footer
+  color: #777
+  padding-top: 70px
+  padding-bottom: 10px
+  font-size: 10px
+
+.domify
+  td
+    vertical-align: middle !important
+
+body.login
+  padding-top: 40px
+  padding-bottom: 40px
+
+  .form-signin
+  .form-signin-heading,
+  .form-signin
+  .checkbox
+    margin-bottom: 10px
+
+  .form-signin
+    max-width: 330px
+    padding: 15px
+    margin: 0 auto
+
+    input[type="text"]
+      margin-bottom: 8px
+
+    input[type="password"]
+      margin-bottom: 10px
+
+    .btn-lg
+      margin-top: 28px
+
+    .checkbox
+      font-weight: normal
+
+    .form-control
+      position: relative
+      height: auto
+      -webkit-box-sizing: border-box
+      -moz-box-sizing: border-box
+      box-sizing: border-box
+      padding: 10px
+      font-size: 16px
+
+    .form-control:focus
+      z-index: 2
+
+.error-tab > a
+  color: #a94442 !important
+
+.edit-highlight
+  background-color: #E7E7E7
+
+.navbar-brand
+  line-height: 12px
+  padding-top: 20px
+  padding-bottom: 5px
+
+.navbar-brand small
+  display: block
+  font-size: 10px
+
+.footer
+  color: #777
+  padding-top: 15px
+  font-size: 10px
+
+.nowrap
+  white-space: nowrap
+
 .form-signin
   max-width: 330px
   padding: 15px
   margin: 0 auto
   input
     margin-bottom: 10px
+
+.form-signin .form-control
+  position: relative
+  height: auto
+  -webkit-box-sizing: border-box
+  -moz-box-sizing: border-box
+  box-sizing: border-box
+  padding: 10px
+  font-size: 16px
+
+.form-signin
+  max-width: 330px
+  padding: 15px
+  margin: 0 auto
+  input
+    margin-bottom: 10px
+
+// fix label position for medium screen
+@media (min-width: 768px) and (max-width: 991px)
+  .form-horizontal .control-label
+    text-align: left
