@@ -9,4 +9,5 @@ Fabricator(:invoice) do
   seller_street { 'Paldiski mnt. 123' }
   invoice_items(count: 2)
   vat_prc 0.2
+  buyer { Fabricate(:registrar) }
 end

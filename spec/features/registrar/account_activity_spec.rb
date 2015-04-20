@@ -3,6 +3,7 @@ require 'rails_helper'
 feature 'Account activity', type: :feature do
   before :all do
     @user = Fabricate(:api_user)
+    Fabricate(:account_activity, account: @user.registrar.cash_account)
   end
 
   context 'as unknown user' do

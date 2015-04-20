@@ -4,6 +4,7 @@ feature 'Invoices', type: :feature do
   before :all do
     create_settings
     @user = Fabricate(:api_user)
+    Fabricate(:invoice)
   end
 
   context 'as unknown user' do
