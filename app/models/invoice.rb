@@ -7,6 +7,9 @@ class Invoice < ActiveRecord::Base
 
   accepts_nested_attributes_for :invoice_items
 
+  attr_accessor :billing_email
+  validates :billing_email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i }
+
   validates :invoice_type, :due_date, :currency, :seller_name,
             :seller_iban, :buyer_name, :invoice_items, :vat_prc, presence: true
 
@@ -36,6 +39,14 @@ class Invoice < ActiveRecord::Base
 
   def buyer_country
     Country.new(buyer_country_code)
+  end
+
+  def forward
+    return false unless valid?
+    return false unless billing_email
+
+    # TODO: forward invoice
+    true
   end
 
   def items

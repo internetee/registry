@@ -20,7 +20,11 @@ Rails.application.routes.draw do
   namespace :registrar do
     root 'polls#show'
 
-    resources :invoices
+    resources :invoices do
+      get 'download_pdf', on: :member
+      match 'forward', on: :member, via: [:post, :get]
+    end
+
     resources :deposits
     resources :account_activities
 

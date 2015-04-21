@@ -1,0 +1,203 @@
+%html{lang: I18n.locale.to_s}
+  %head
+    %meta{charset: "utf-8"}
+    :css
+      .container {
+        margin: auto;
+        font-size: 12px;
+      }
+      .col-md-12 {
+
+      }
+
+      .col-md-6 {
+        width: 49%;
+        display: inline-block;
+      }
+
+      .col-xs-4 {
+        width: 33%;
+      }
+
+      .col-xs-2 {
+        width: 16%;
+      }
+
+      .left {
+        float: left;
+      }
+
+      .left {
+        padding-right: 5px;
+      }
+
+      .right {
+        float: right;
+      }
+
+      dt {
+        float: left;
+        width: 100px;
+        clear: left;
+        text-align: right;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: bold;
+        line-height: 1.42857;
+      }
+
+      dd {
+        margin-left: 120px;
+        line-height: 1.42857;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th {
+        text-align: left;
+        border: 0px;
+        border-top: 1px solid #DDD;
+        padding: 10px;
+      }
+
+      thead th {
+        border-bottom: 2px solid #DDD;
+        border-top: 0px;
+      }
+
+      td {
+        border-top: 1px solid #DDD;
+      }
+
+      td {
+        padding: 10px;
+      }
+
+      .no-border {
+        border: 0px;
+      }
+
+      hr {
+        height: 1px;
+        border: 0;
+        color: #333;
+        background-color: #C4C4C4;
+      }
+
+      .clear {
+        clear: both;
+      }
+
+      .pull-down {
+        margin-top: 50px;
+      }
+    /%style{type:"text/css"}
+    /  = Rails.application.assets.find_asset('shared/pdf').to_s
+    / = stylesheet_link_tag 'shared/pdf', media: 'all'
+    / = stylesheet_link_tag 'shared/pdf', media: 'all'
+  %body
+    .container
+      .row
+        .col-md-12.text-right
+          = image_tag('eis-logo-black-et.png')
+      .row
+        .col-md-12
+          = render 'shared/title', name: t(:invoice_no, no: @invoice.id)
+      .row
+        .col-md-6.left
+          %h4
+            Details
+          %hr
+          %dl.dl-horizontal
+            %dt= t('issue_date')
+            %dd= l(@invoice.created_at)
+
+            %dt= t('due_date')
+            %dd= l(@invoice.due_date)
+
+            %dt= t('receipt_date')
+            - if @invoice.binded?
+              %dd= l(@invoice.receipt_date)
+            - else
+              %dd{class: 'text-danger'}= t('unpaid')
+
+            %dt= t('payment_term')
+            %dd= t(@invoice.payment_term)
+
+            %dt= t('description')
+            - @invoice.description.prepend(' - ') if @invoice.description.present?
+            %dd= "#{t('invoice_no', no: @invoice.id)}#{@invoice.description}"
+
+            %dt= t('reference_no')
+            %dd= @invoice.reference_no
+        .col-md-6.right
+          %h4= t('buyer')
+          %hr
+          %dl.dl-horizontal
+            %dt= t('name')
+            %dd= @invoice.buyer_name
+
+            %dt= t('reg_no')
+            %dd= @invoice.buyer_reg_no
+
+            %dt= t('address')
+            %dd= @invoice.buyer_address
+
+            %dt= t('country')
+            %dd= @invoice.buyer_country
+
+            %dt= t('phone')
+            %dd= @invoice.buyer_phone
+
+            %dt= t('url')
+            %dd= @invoice.buyer_url
+
+            %dt= t('email')
+            %dd= @invoice.buyer_email
+
+
+        / = render 'registrar/invoices/partials/details'
+
+        / .col-md-6= render 'registrar/invoices/partials/buyer'
+      .clear
+      .row.pull-down
+        .col-md-12= render 'registrar/invoices/partials/items'
+
+      #footer
+        %hr
+        .row
+          .col-md-3
+            = @invoice.seller_name
+            %br
+            = @invoice.seller_address
+            %br
+            = @invoice.seller_country
+            %br
+            = "#{t('reg_no')} #{@invoice.seller_reg_no}"
+            %br
+            = "#{t('vat_no')} #{@invoice.seller_vat_no}"
+
+          .col-md-3
+            = @invoice.seller_phone
+            %br
+            = @invoice.seller_email
+            %br
+            = @invoice.seller_url
+
+          .col-md-3.text-right
+            = t('bank')
+            %br
+            = t('iban')
+            %br
+            = t('swift')
+
+          .col-md-3
+            = @invoice.seller_bank
+            %br
+            = @invoice.seller_iban
+            %br
+            = @invoice.seller_swift
