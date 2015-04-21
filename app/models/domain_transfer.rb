@@ -53,7 +53,7 @@ class DomainTransfer < ActiveRecord::Base
 
   def notify_losing_registrar
     transfer_from.messages.create!(
-      body: I18n.t('domain_transfer_was_approved', contacts: domain.contacts.pluck(:code)),
+      body: I18n.t('domain_transfer_was_approved', contacts: domain.contacts.pluck(:code).sort),
       attached_obj_id: id,
       attached_obj_type: self.class.to_s
     )

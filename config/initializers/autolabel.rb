@@ -1,7 +1,9 @@
 class ActionView::Helpers::FormBuilder
-  alias :orig_label :label
+  alias_method :orig_label, :label
 
   # add a 'required' CSS class to the field label if the field is required
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
   def label(method, content_or_options = nil, options = nil, &block)
     if content_or_options && content_or_options.class == Hash
       options = content_or_options
@@ -13,12 +15,14 @@ class ActionView::Helpers::FormBuilder
       object.class.validators_on(method).map(&:class).include?(ActiveRecord::Validations::PresenceValidator)
 
       if options.class != Hash
-        options = {:class => "required"}
+        options = { class: 'required' }
       else
-        options[:class] = ((options[:class] || "") + " required").split(" ").uniq.join(" ")
+        options[:class] = ((options[:class] || "") + ' required').split(' ').uniq.join(' ')
       end
     end
 
-    self.orig_label(method, content, options || {}, &block)
+    orig_label(method, content, options || {}, &block)
   end
+  # rubocop:enable Metrics/PerceivedComplexity
+  # rubocop:enable Metrics/CyclomaticComplexity
 end

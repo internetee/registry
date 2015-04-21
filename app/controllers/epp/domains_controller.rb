@@ -10,11 +10,11 @@ class Epp::DomainsController < EppController
 
     case @hosts
     when 'del'
-      @nameservers = @domain.delegated_nameservers
+      @nameservers = @domain.delegated_nameservers.sort
     when 'sub'
-      @nameservers = @domain.subordinate_nameservers
+      @nameservers = @domain.subordinate_nameservers.sort
     when 'all'
-      @nameservers = @domain.nameservers
+      @nameservers = @domain.nameservers.sort
     end
 
     render_epp_response '/epp/domains/info'

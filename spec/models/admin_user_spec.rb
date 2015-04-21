@@ -13,7 +13,8 @@ describe AdminUser do
         "Country code is missing",
         "Email Email is missing",
         "Password Password is missing",
-        "Username Username is missing"
+        "Username Username is missing",
+        "Roles is missing"
       ])
     end
 
