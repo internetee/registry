@@ -1,10 +1,8 @@
-#= require jquery
-#= require jquery_ujs
-#= require turbolinks
-#= require bootstrap-sprockets
-#= require jquery.nested_attributes
-
 $(document).on 'ready page:load', ->
+  # client side validate all forms
+  $('form').each ->
+    $(this).validate()
+
   $('.js-contact-form').on 'restoreDefault', (e) ->
     form = $(e.target)
     form.find('.js-ident-tip').hide()

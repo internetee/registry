@@ -1,14 +1,10 @@
 class AdminUser < User
-  # TODO: Foreign user will get email with activation link,email,temp-password.
-  # After activisation, system should require to change temp password.
-  # TODO: Estonian id validation
-
-  validates :username, :password, :country_code, presence: true
+  validates :username, :password, :country_code, :roles, presence: true
   validates :identity_code, uniqueness: true, allow_blank: true
   validates :identity_code, presence: true, if: -> { country_code == 'EE' }
-  validates :email, presence: true, if: -> { country_code != 'EE' }
+  validates :email, presence: true 
 
-  validate :validate_identity_code
+  validate :validate_identity_code, if: -> { country_code == 'EE' }
   belongs_to :country_deprecated, foreign_key: :country_id
 
   ROLES = %w(user customer_service admin)

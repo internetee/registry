@@ -4,18 +4,27 @@
   .col-md-8
     = form_tag renew_registrar_domains_path, class: 'form-horizontal', method: :get do
       .form-group
-        = label_tag :domain_name, t(:name), class: 'col-md-3 control-label'
+        .col-md-3.control-label
+          = label_tag :domain_name, t(:name), class: 'required'
         .col-md-7
-          = text_field_tag :domain_name, params[:domain_name], class: 'form-control', placeholder: t('domain_name'), autocomplete: 'off'
+          = text_field_tag :domain_name, params[:domain_name], 
+            class: 'form-control', placeholder: t('domain_name'), autocomplete: 'off', required: true
+
       .form-group
-        = label_tag :cur_exp_date, t(:cur_exp_date), class: 'col-md-3 control-label'
+        .col-md-3.control-label
+          = label_tag :cur_exp_date, t(:cur_exp_date), class: 'required'
         .col-md-7
-          = text_field_tag :cur_exp_date, params[:cur_exp_date], class: 'form-control', placeholder: 'yyyy-mm-dd', autocomplete: 'off'
+          = text_field_tag :cur_exp_date, params[:cur_exp_date], 
+            class: 'form-control', placeholder: 'yyyy-mm-dd', autocomplete: 'off', required: true
+
       .form-group
-        = label_tag :domain_period, t(:period), class: 'col-md-3 control-label'
+        .col-md-3.control-label
+          = label_tag :domain_period, t(:period), class: 'required'
         .col-md-7
           = select_tag :period, 
             options_for_select(Depp::Domain::PERIODS, params[:period]), { class: 'form-control' }
+
+      %hr
       .form-group
         .col-md-10.text-right
           %button.btn.btn-primary= t(:renew)

@@ -5,10 +5,12 @@
 #= require nprogress
 #= require nprogress-turbolinks
 #= require typeahead.bundle.min
-#= require autocomplete
+#= require admin/autocomplete
 #= require jquery.nested_attributes
 #= require selectize
-#= require app
+#= require shared/jquery.validate.bootstrap
+#= require shared/general
+#= require admin/application
 
 NProgress.configure
   showSpinner: false

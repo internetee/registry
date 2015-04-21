@@ -2,6 +2,7 @@ class Deposit
   include ActiveModel::Validations
   include ActiveModel::Conversion
   extend ActiveModel::Naming
+  include DisableHtml5Validation
 
   attr_accessor :amount, :description, :registrar
 

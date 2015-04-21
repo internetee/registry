@@ -14,7 +14,7 @@ class Registrar < ActiveRecord::Base
   validates :name, :reg_no, :reference_no, uniqueness: true
   validate :set_code, if: :new_record?
 
-  before_create :generate_iso_11649_reference_no
+  before_validation :generate_iso_11649_reference_no
   def generate_iso_11649_reference_no
     return if reference_no.present?
 

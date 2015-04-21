@@ -30,10 +30,12 @@ gem 'turbolinks',      '~> 2.5.3'  # faster page load
 gem 'jquery-rails',    '~> 4.0.3'  # jquery
 gem 'selectize-rails', '~> 0.11.2' # include selectize.js for select
 gem 'therubyracer',  platforms: :ruby
+gem 'jquery-validation-rails', '~> 1.13.1' # validate on client side
 
 # view helpers
 gem 'kaminari',        '~> 0.16.3'  # pagination
 gem 'nprogress-rails', '~> 0.1.6.5' # visual loader
+gem 'html5_validators', '~> 1.1.3'  # model requements now automatically on html form 
 
 # rights
 gem 'devise',    '~> 3.4.1' # authenitcation

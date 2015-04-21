@@ -18,6 +18,6 @@
 .row
   .col-md-8.text-right
     - if @contact.persisted?
-      = button_tag(t(:save), class: 'btn btn-primary')
+      = button_tag t(:save), class: 'btn btn-primary'
     - else
-      = button_tag(t(:create), class: 'btn btn-primary')
+      = button_tag t(:create), class: 'btn btn-primary'
