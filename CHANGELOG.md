@@ -1,3 +1,12 @@
+21.04.2015
+
+* Install wkhtmltopdf
+
+```
+sudo apt-get install libxext-dev
+sudo apt-get install libxrender1
+```
+
 15.04.2015
 
 * Added whois tasks, more info with rake -T whois
