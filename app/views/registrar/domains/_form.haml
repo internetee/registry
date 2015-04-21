@@ -13,9 +13,10 @@
           .pull-left= t(:legal_document)
         .panel-body
           .form-group
-            = label_tag 'domain[legal_document]', t('legal_document'),class: 'col-md-3 control-label'
-            .col-md-9
-              = file_field_tag 'domain[legal_document]'
+            .col-md-3.control-label
+              = label_tag 'domain[legal_document]', t('legal_document'), class: 'required'
+            .col-md-7
+              = file_field_tag 'domain[legal_document]', required: true
     .col-md-4
       %p.domain-general-help= t(:domain_general_help).html_safe
       %p.domain-admin-contact-help= t(:domain_admin_contact_help).html_safe

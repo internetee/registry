@@ -63,7 +63,7 @@ xml.epp_head do
 
   xml.extension do
     xml.tag!('secDNS:infData', 'xmlns:secDNS' => 'urn:ietf:params:xml:ns:secDNS-1.1') do
-      @domain.dnskeys.each do |key|
+      @domain.dnskeys.sort.each do |key|
         xml.tag!('secDNS:dsData') do
           xml.tag!('secDNS:keyTag', key.ds_key_tag)
           xml.tag!('secDNS:alg', key.ds_alg)

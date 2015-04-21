@@ -1,6 +1,7 @@
 module Depp
   class Contact
     include ActiveModel::Model
+    include DisableHtml5Validation
 
     attr_accessor :id, :name, :email, :phone, :org_name,
       :ident, :ident_type, :ident_country_code, 

@@ -2,12 +2,12 @@
 
 = form_tag [:admin, :settings] do
   .row
-    .col-md-12
+    .col-md-8
       .table-responsive
         %table.table.table-hover.table-bordered.table-condensed
           %thead
             %tr
-              %th{class: 'col-xs-9'}
+              %th{class: 'col-xs-4'}
                 = t(:setting)
               %th{class: 'col-xs-2'}
                 = t(:value)
@@ -21,6 +21,7 @@
                     = check_box_tag("[settings][#{x.var}]", true, x.value)
                 - else
                   %td= text_field_tag("[settings][#{x.var}]", x.value)
+  %hr
   .row
-    .col-md-12.text-right
+    .col-md-8.text-right
       %button.btn.btn-primary=t(:save)

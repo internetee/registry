@@ -1,10 +1,5 @@
-= form_for([:admin, @registrar]) do |f|
-  - if @registrar.errors.any?
-    - @registrar.errors.full_messages.each do |err|
-      = err
-      %br
-  - if @registrar.errors.any?
-    %hr
+= form_for([:admin, @registrar], html: {class: 'form-horizontal'}) do |f|
+  = render 'shared/full_errors', object: @registrar
 
   .row
     .col-md-8
@@ -13,48 +8,68 @@
           .pull-left= t(:general)
         .panel-body
           .form-group
-            .col-md-3.control-label
+            .col-md-4.control-label
               = f.label :name
             .col-md-7
               = f.text_field(:name, class: 'form-control')
-      .form-group
-        = f.label :reg_no
-        = f.text_field(:reg_no, class: 'form-control')
-      / EIS does not want VAT
-      / .form-group
-      /   = f.label :vat_no
-      /   = f.text_field(:vat_no, class: 'form-control')
-      .form-group
-        = f.label :email
-        = f.text_field(:email, class: 'form-control')
-      .form-group
-        = f.label :phone
-        = f.text_field(:phone, class: 'form-control')
-      .form-group
-        = f.label :billing_email
-        = f.text_field(:billing_email, class: 'form-control')
+          .form-group
+            .col-md-4.control-label
+              = f.label :reg_no
+            .col-md-7
+              = f.text_field(:reg_no, class: 'form-control')
+          .form-group
+            .col-md-4.control-label
+              = f.label :vat_no
+            .col-md-7
+              = f.text_field(:vat_no, class: 'form-control')
+          .form-group
+            .col-md-4.control-label
+              = f.label :phone
+            .col-md-7
+              = f.text_field(:phone, class: 'form-control')
+          .form-group
+            .col-md-4.control-label
+              = f.label :email
+            .col-md-7
+              = f.text_field(:email, class: 'form-control', email: true)
+          .form-group
+            .col-md-4.control-label
+              = f.label :billing_email
+            .col-md-7
+              = f.text_field(:billing_email, class: 'form-control', email: true)
+
   .row
     .col-md-8
-      .form-group
-        = f.label :street
-        = f.text_field(:street, class: 'form-control')
-      .form-group
-        = f.label :city
-        = f.text_field(:city, class: 'form-control')
-      .form-group
-        = f.label :state
-        = f.text_field(:state, class: 'form-control')
-      .form-group
-        = f.label :zip
-        = f.text_field(:zip, class: 'form-control')
-      .form-group
-        = f.label :country_code
-        = f.text_field :country_code, class: 'form-control'
-      / EIS does not want Billing Address
-      / .form-group
-      /   = f.label :billing_address
-      /   = f.text_field(:billing_address, class: 'form-control')
-      /   %p.help-block= t('address_help')
+      .panel.panel-default
+        .panel-heading.clearfix
+          .pull-left= t(:address)
+        .panel-body
+          .form-group
+            .col-md-4.control-label
+              = f.label :street
+            .col-md-7
+              = f.text_field(:street, class: 'form-control')
+          .form-group
+            .col-md-4.control-label
+              = f.label :city
+            .col-md-7
+              = f.text_field(:city, class: 'form-control')
+          .form-group
+            .col-md-4.control-label
+              = f.label :state
+            .col-md-7
+              = f.text_field(:state, class: 'form-control')
+          .form-group
+            .col-md-4.control-label
+              = f.label :zip
+            .col-md-7
+              = f.text_field(:zip, class: 'form-control')
+          .form-group
+            .col-md-4.control-label
+              = f.label :country_code, t(:country)
+            .col-md-7
+              = f.select(:country_code, 
+                SortedCountry.all_options(f.object.country_code), {}, class: 'form-control')
   %hr
   .row
     .col-md-8.text-right

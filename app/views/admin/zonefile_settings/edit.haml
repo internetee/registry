@@ -2,49 +2,52 @@
 
 = form_for [:admin, @zonefile_setting], html: { class: 'form-horizontal' } do |f|
   .row
-    .col-md-12
+    .col-md-8
       #domain-statuses
-        .errors
-          - if f.object.errors.any?
-            - f.object.errors.full_messages.each do |x|
-              = x
-              %br
-          - if f.object.errors.any?
-            %hr
+        = render 'shared/full_errors', object: f.object
+
         .form-group
-          = f.label :origin, class: 'col-md-2 control-label'
-          .col-md-10
+          .col-md-4.control-label
+            = f.label :origin
+          .col-md-8
             = f.text_field :origin, class: 'form-control', disabled: true
 
         .form-group
-          = f.label :ttl, class: 'col-md-2 control-label'
-          .col-md-10
+          .col-md-4.control-label
+            = f.label :ttl
+          .col-md-8
             = f.text_field :ttl, class: 'form-control'
 
         .form-group
-          = f.label :refresh, class: 'col-md-2 control-label'
-          .col-md-10
+          .col-md-4.control-label
+            = f.label :refresh
+          .col-md-8
             = f.text_field :refresh, class: 'form-control'
 
         .form-group
-          = f.label :retry, class: 'col-md-2 control-label'
-          .col-md-10
+          .col-md-4.control-label
+            = f.label :retry
+          .col-md-8
             = f.text_field :retry, class: 'form-control'
         .form-group
-          = f.label :expire, class: 'col-md-2 control-label'
-          .col-md-10
+          .col-md-4.control-label
+            = f.label :expire
+          .col-md-8
             = f.text_field :expire, class: 'form-control'
 
         .form-group
-          = f.label :minimum_ttl, class: 'col-md-2 control-label'
-          .col-md-10
+          .col-md-4.control-label
+            = f.label :minimum_ttl
+          .col-md-8
             = f.text_field :minimum_ttl, class: 'form-control'
 
         .form-group
-          = f.label :email, class: 'col-md-2 control-label'
-          .col-md-10
-            = f.text_field :email, class: 'form-control'
+          .col-md-4.control-label
+            = f.label :email
+          .col-md-8
+            = f.text_field :email, class: 'form-control', email: true
 
+  %hr
   .row
-    .col-md-12.text-right
+    .col-md-8.text-right
       %button.btn.btn-primary= t(:save)

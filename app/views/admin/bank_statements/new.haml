@@ -6,11 +6,13 @@
   = render 'shared/full_errors', object: @bank_statement
 
   .row
-    .col-md-12.text-left
+    .col-md-8
       .form-group
-        = f.label :th6_file
-        = f.file_field :th6_file
+        .col-md-4.control-label
+          = f.label :th6_file
+        .col-md-8
+          = f.file_field :th6_file
   %hr
   .row
-    .col-md-12.text-right
+    .col-md-8.text-right
       = button_tag(t(:save), class: 'btn btn-primary')

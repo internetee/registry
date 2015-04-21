@@ -9,11 +9,3 @@
   $('#flash').find('div').addClass('bg-danger')
   $('#flash').find('div').html(msg)
   $('#flash').show()
-
-ready = ->
-  $('.selectize').selectize({
-    allowEmptyOption: true
-  });
-
-$(document).ready(ready)
-$(document).on('page:load', ready)

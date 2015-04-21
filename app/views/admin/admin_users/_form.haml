@@ -1,35 +1,43 @@
-= form_for([:admin, @admin_user]) do |f|
-  - if @admin_user.errors.any?
-    - @admin_user.errors.each do |attr, err|
-      = err
-      %br
-  - if @admin_user.errors.any?
-    %hr
+= form_for([:admin, @admin_user], html: { class: 'form-horizontal' }) do |f|
+  = render 'shared/full_errors', object: @admin_user
 
   .row
-    .col-md-6
+    .col-md-8
       .form-group
-        = f.label :username
-        = f.text_field(:username, class: 'form-control')
+        .col-md-4.control-label
+          = f.label :username
+        .col-md-8
+          = f.text_field(:username, class: 'form-control')
       .form-group
-        = f.label :password
-        = f.text_field(:password, class: 'form-control')
+        .col-md-4.control-label
+          = f.label :password
+        .col-md-8
+          = f.text_field(:password, class: 'form-control')
+      %hr
       .form-group
-        = f.label :country_code
-        = f.text_field :country_code, class: 'form-control'
+        .col-md-4.control-label
+          = f.label :identity_code
+        .col-md-8
+          = f.text_field(:identity_code, class: 'form-control')
       .form-group
-        = f.label :identity_code
-        = f.text_field(:identity_code, class: 'form-control')
-
-    .col-md-6
+        .col-md-4.control-label
+          = f.label :email
+        .col-md-8
+          = f.text_field(:email, class: 'form-control', email: true)
       .form-group
-        = f.label :email
-        = f.text_field(:email, class: 'form-control')
+        .col-md-4.control-label
+          = f.label :country_code, t(:country)
+        .col-md-8
+          = f.select(:country_code, 
+            SortedCountry.all_options(f.object.country_code), {}, class: 'form-control')
+      %hr
       .form-group
-        = f.label :role
-        = select_tag 'admin_user[roles][]', options_for_select(AdminUser::ROLES.map {|x| [t(x), x] }, @admin_user.roles.try(:first)), class: 'form-control selectize'
+        .col-md-4.control-label
+          = f.label :role
+        .col-md-8
+          = select_tag 'admin_user[roles][]', options_for_select(AdminUser::ROLES.map {|x| [t(x), x] }, @admin_user.roles.try(:first)), class: 'form-control selectize'
 
   %hr
   .row
-    .col-md-12.text-right
-      = button_tag(t('save'), class: 'btn btn-primary')
+    .col-md-8.text-right
+      = button_tag(t(:save), class: 'btn btn-primary')

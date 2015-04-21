@@ -6,19 +6,19 @@
       .col-md-3.control-label
         = f.label :street, t(:street) + '*'
       .col-md-7
-        = f.text_field :street, class: 'form-control'
+        = f.text_field :street, class: 'form-control', required: true
 
     .form-group
       .col-md-3.control-label
         = f.label :city, t(:city) + '*'
       .col-md-7
-        = f.text_field :city, class: 'form-control'
+        = f.text_field :city, class: 'form-control', required: true
 
     .form-group
       .col-md-3.control-label
         = f.label :zip, t(:zip) + '*'
       .col-md-7
-        = f.text_field :zip, class: 'form-control'
+        = f.text_field :zip, class: 'form-control', required: true
 
     .form-group
       .col-md-3.control-label
@@ -30,4 +30,5 @@
       .col-md-3.control-label
         = f.label :country_code, t(:country) + '*'
       .col-md-7
-        = f.select(:country_code, SortedCountry.all_options(f.object.country_code))
+        = f.select :country_code, 
+          SortedCountry.all_options(f.object.country_code)

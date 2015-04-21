@@ -1,19 +1,24 @@
 .general-tab.panel.panel-default
   .panel-body
     .form-group
-      = label_tag :domain_name, t('name'), class: 'col-md-3 control-label'
+      .col-md-3.control-label
+        = label_tag :domain_name, t(:name), class: 'required'
       .col-md-7
         - readonly = params[:domain_name] ? true : false
-        = text_field_tag('domain[name]', @domain_params[:name], class: 'form-control', readonly: readonly)
+        = text_field_tag('domain[name]', @domain_params[:name], 
+          class: 'form-control', readonly: readonly, required: true)
 
     - unless params[:domain_name]
       .form-group
-        = label_tag :domain_period, t('period'), class: 'col-md-3 control-label'
+        .col-md-3.control-label
+          = label_tag :domain_period, t(:period), class: 'required'
         .col-md-7
           = select_tag 'domain[period]', 
             options_for_select(Depp::Domain::PERIODS, @domain_params[:period]), { class: 'form-control' }
 
     .form-group
-      = label_tag :domain_registrant, t('registrant'), class: 'col-md-3 control-label'
+      .col-md-3.control-label
+        = label_tag :domain_registrant, t(:registrant), class: 'required'
       .col-md-7
-        = text_field_tag('domain[registrant]', @domain_params[:registrant], class: 'form-control', placeholder: t('contact_code'), autocomplete: 'off')
+        = text_field_tag('domain[registrant]', @domain_params[:registrant], 
+          class: 'form-control', placeholder: t(:contact_code), autocomplete: 'off', required: true)

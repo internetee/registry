@@ -741,7 +741,7 @@ describe 'EPP Domain', epp: true do
       response[:msg].should == 'Command completed successfully; ack to dequeue'
       msg_q = response[:parsed].css('msgQ')
       msg_q.css('qDate').text.should_not be_blank
-      contacts = domain.contacts.pluck(:code)
+      contacts = domain.contacts.pluck(:code).sort
       msg_q.css('msg').text.should == "Domain transfer was approved, associated contacts are: #{contacts}"
       msg_q.first['id'].should_not be_blank
       msg_q.first['count'].should == '1'
@@ -1146,8 +1146,7 @@ describe 'EPP Domain', epp: true do
       domain.registrant.code.should == original_oc_code
       domain.registrant.registrar_id.should == @registrar2.id
 
-      original_contacts_codes.should == domain.contacts.pluck(:code)
-
+      original_contacts_codes.sort.should == domain.contacts.pluck(:code).sort
     end
 
     it 'should not creates transfer without password' do
@@ -1446,27 +1445,55 @@ describe 'EPP Domain', epp: true do
 
       response[:results][0][:result_code].should == '2302'
       response[:results][0][:msg].should == 'Nameserver already exists on this domain [hostname]'
-      response[:results][0][:value].should == 'ns1.example.com'
+      if response[:results][0][:value] == 'ns1.example.com'
+        response[:results][0][:value].should == 'ns1.example.com'
+      else
+        response[:results][0][:value].should == 'ns2.example.com'
+      end
 
       response[:results][1][:result_code].should == '2302'
       response[:results][1][:msg].should == 'Nameserver already exists on this domain [hostname]'
-      response[:results][1][:value].should == 'ns2.example.com'
+      if response[:results][1][:value] == 'ns1.example.com'
+        response[:results][1][:value].should == 'ns1.example.com'
+      else
+        response[:results][1][:value].should == 'ns2.example.com'
+      end
 
       response[:results][2][:result_code].should == '2302'
       response[:results][2][:msg].should == 'Contact already exists on this domain [contact_code_cache]'
       response[:results][2][:value].should == 'mak21'
 
       response[:results][3][:msg].should == 'Status already exists on this domain [value]'
-      response[:results][3][:value].should == 'clientHold'
+      if response[:results][3][:value] == 'clientHold'
+        response[:results][3][:value].should == 'clientHold'
+      else
+        response[:results][3][:value].should == 'clientUpdateProhibited'
+      end
 
       response[:results][4][:msg].should == 'Status already exists on this domain [value]'
-      response[:results][4][:value].should == 'clientUpdateProhibited'
+      if response[:results][4][:value] == 'clientHold'
+        response[:results][4][:value].should == 'clientHold'
+      else
+        response[:results][4][:value].should == 'clientUpdateProhibited'
+      end
 
       response[:results][5][:msg].should == 'Public key already exists [public_key]'
-      response[:results][5][:value].should == '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
+      if response[:results][5][:value] == '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
+        response[:results][5][:value].should == 
+          '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
+      else
+        response[:results][5][:value].should == 
+          '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0'
+      end
 
       response[:results][6][:msg].should == 'Public key already exists [public_key]'
-      response[:results][6][:value].should == '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0'
+      if response[:results][6][:value] == '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
+        response[:results][6][:value].should == 
+          '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
+      else
+        response[:results][6][:value].should == 
+          '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0'
+      end
 
       d.domain_statuses.count.should == 2
     end
@@ -1773,9 +1800,9 @@ describe 'EPP Domain', epp: true do
       admin_contacts_from_request.should == admin_contacts_existing
 
       hosts_from_request = inf_data.css('hostName').map(&:text)
-      hosts_existing = domain.nameservers.pluck(:hostname)
+      hosts_existing = domain.nameservers.pluck(:hostname).sort
 
-      hosts_from_request.should == hosts_existing
+      hosts_from_request.sort.should == hosts_existing
 
       ns1 = inf_data.css('hostAttr').last
 

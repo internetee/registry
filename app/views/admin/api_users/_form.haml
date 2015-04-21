@@ -1,38 +1,42 @@
-= form_for([:admin, @api_user], multipart: true) do |f|
-  - if @api_user.errors.any?
-    - @api_user.errors.each do |attr, err|
-      = err
-      %br
-  - if @api_user.errors.any?
-    %hr
+= form_for([:admin, @api_user], multipart: true, html: {class: 'form-horizontal'}) do |f|
+  = render 'shared/full_errors', object: @api_user
 
   .row
-    .col-md-12
+    .col-md-8
       .form-group
-        = f.label :username
-        = f.text_field(:username, class: 'form-control')
+        .col-md-4.control-label
+          = f.label :username
+        .col-md-7
+          = f.text_field(:username, class: 'form-control')
       .form-group
-        = f.label :password
-        = f.text_field(:password, class: 'form-control')
+        .col-md-4.control-label
+          = f.label :password
+        .col-md-7
+          = f.text_field(:password, class: 'form-control')
       .form-group
-        = f.label :identity_code
-        = f.text_field(:identity_code, class: 'form-control')
+        .col-md-4.control-label
+          = f.label :identity_code
+        .col-md-7
+          = f.text_field(:identity_code, class: 'form-control')
       .form-group
         .form-group.has-feedback.js-typeahead-container
-          = f.label :registrar_typeahead, t('registrar')
-          = f.text_field(:registrar_typeahead, class: 'form-control js-registrar-typeahead', placeholder: t('registrar'), autocomplete: 'off')
-          %span.glyphicon.glyphicon-ok.form-control-feedback.js-typeahead-ok.hidden
-          %span.glyphicon.glyphicon-remove.form-control-feedback.js-typeahead-remove
-          = f.hidden_field(:registrar_id, class: 'js-registrar-id')
-      .form-group
-        .checkbox
-          %label{for: 'api_user_active'}
-            = f.check_box(:active)
-            = t('active')
+          .col-md-4.control-label
+            = f.label :registrar_typeahead, t(:registrar), class: 'required'
+          .col-md-7
+            = f.text_field(:registrar_typeahead, 
+              class: 'form-control js-registrar-typeahead typeahead required', 
+              placeholder: t(:registrar), autocomplete: 'off')
+            %span.glyphicon.glyphicon-ok.form-control-feedback.js-typeahead-ok.hidden
+            %span.glyphicon.glyphicon-remove.form-control-feedback.js-typeahead-remove
+            = f.hidden_field(:registrar_id, class: 'js-registrar-id')
+            .checkbox
+              %label{for: 'api_user_active'}
+                = f.check_box(:active)
+                = t(:active)
   %hr
   .row
-    .col-md-12.text-right
-      = button_tag(t('save'), class: 'btn btn-primary')
+    .col-md-8.text-right
+      = button_tag(t(:save), class: 'btn btn-primary')
 
 :coffee
   Autocomplete.bindAdminRegistrarSearch();
