@@ -6,6 +6,7 @@
         margin: auto;
         font-size: 12px;
       }
+
       .col-md-12 {
 
       }
@@ -23,6 +24,11 @@
         width: 16%;
       }
 
+      .col-md-3 {
+        width: 24%;
+        display: inline-block;
+      }
+
       .left {
         float: left;
       }
@@ -33,6 +39,10 @@
 
       .right {
         float: right;
+      }
+
+      .text-right {
+        text-align: right;
       }
 
       dt {
@@ -55,13 +65,14 @@
       table {
         width: 100%;
         border-collapse: collapse;
+        font-size: 12px;
       }
 
       th {
         text-align: left;
         border: 0px;
         border-top: 1px solid #DDD;
-        padding: 10px;
+        padding: 6px;
       }
 
       thead th {
@@ -74,7 +85,7 @@
       }
 
       td {
-        padding: 10px;
+        padding: 6px;
       }
 
       .no-border {
@@ -84,8 +95,8 @@
       hr {
         height: 1px;
         border: 0;
-        color: #333;
-        background-color: #C4C4C4;
+        color: #DDD;
+        background-color: #DDD;
       }
 
       .clear {
@@ -95,6 +106,12 @@
       .pull-down {
         margin-top: 50px;
       }
+
+      #footer {
+        position: absolute;
+        bottom: 0px;
+        width: 99%;
+      }
     /%style{type:"text/css"}
     /  = Rails.application.assets.find_asset('shared/pdf').to_s
     / = stylesheet_link_tag 'shared/pdf', media: 'all'
@@ -102,11 +119,14 @@
   %body
     .container
       .row
-        .col-md-12.text-right
-          = image_tag('eis-logo-black-et.png')
-      .row
-        .col-md-12
-          = render 'shared/title', name: t(:invoice_no, no: @invoice.id)
+        .col-sm-6.left
+          %h1
+            = t(:invoice_no, no: @invoice.id)
+        .col-sm-6.right
+          %h1
+            = image_tag('eis-logo-black-et.png')
+      .clear
+      %hr
       .row
         .col-md-6.left
           %h4
@@ -165,12 +185,45 @@
         / .col-md-6= render 'registrar/invoices/partials/buyer'
       .clear
       .row.pull-down
-        .col-md-12= render 'registrar/invoices/partials/items'
+        .col-md-12
+          %h4= t('items')
+          %hr
+          .table-responsive
+            %table.table.table-hover.table-condensed
+              %thead
+                %tr
+                  %th{class: 'col-xs-4'}= t('description')
+                  %th{class: 'col-xs-2'}= t('unit')
+                  %th{class: 'col-xs-1'}= t('amount')
+                  %th{class: 'col-xs-3'}= t('price')
+                  %th{class: 'col-xs-2'}= t('total')
+              %tbody
+                - @invoice.items.each do |x|
+                  %tr
+                    %td= t(x.description)
+                    %td= x.unit
+                    %td= x.amount
+                    %td= x.price
+                    %td= "#{x.item_sum_without_vat} #{@invoice.currency}"
+              %tfoot
+                %tr
+                  %th{colspan: 3}
+                  %th= t('total_without_vat')
+                  %td= "#{@invoice.sum_without_vat} #{@invoice.currency}"
+                %tr
+                  %th.no-border{colspan: 3}
+                  %th= t('vat', vat_prc: (@invoice.vat_prc * 100).round)
+                  %td= "#{@invoice.vat} #{@invoice.currency}"
+                %tr
+                  %th.no-border{colspan: 3}
+                  %th= t('total')
+                  %td= "#{@invoice.sum} #{@invoice.currency}"
+
 
       #footer
         %hr
         .row
-          .col-md-3
+          .col-md-3.left
             = @invoice.seller_name
             %br
             = @invoice.seller_address
@@ -181,21 +234,21 @@
             %br
             = "#{t('vat_no')} #{@invoice.seller_vat_no}"
 
-          .col-md-3
+          .col-md-3.left
             = @invoice.seller_phone
             %br
             = @invoice.seller_email
             %br
             = @invoice.seller_url
 
-          .col-md-3.text-right
+          .col-md-3.text-right.left
             = t('bank')
             %br
             = t('iban')
             %br
             = t('swift')
 
-          .col-md-3
+          .col-md-3.left
             = @invoice.seller_bank
             %br
             = @invoice.seller_iban
