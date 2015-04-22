@@ -729,3 +729,5 @@ en:
   invoice_forwared: 'Invoice forwarded'
   failed_to_forward_invoice: 'Failed to forward invoice'
   client: 'Client'
+  you_have_a_new_invoice: 'You have a new invoice.'
+  sincerely: 'Sincerely'

@@ -5,6 +5,8 @@ class InvoiceMailer < ApplicationMailer
       return unless test_emails.include?(invoice.billing_email)
     end
 
+    @invoice = invoice
+
     attachments[invoice.pdf_name] = pdf
     mail(to: invoice.billing_email, subject: invoice)
   end
