@@ -298,6 +298,7 @@ ActiveRecord::Schema.define(version: 20150423083308) do
     t.integer  "legacy_id"
     t.integer  "legacy_registrar_id"
     t.integer  "legacy_registrant_id"
+    t.json     "whois_json"
   end
 
   add_index "domains", ["registrant_id"], name: "index_domains_on_registrant_id", using: :btree

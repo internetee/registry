@@ -238,55 +238,10 @@ class Domain < ActiveRecord::Base
     log
   end
 
-  # rubocop:disable Metrics/MethodLength
   def update_whois_body
-    self.whois_body = <<-EOS
-Estonia .ee Top Level Domain WHOIS server
-
-  domain:     #{name}
-  registrant: #{registrant.name}
-  status:     #{domain_statuses.map(&:value).join(', ')}
-  registered: #{registered_at and registered_at.to_s(:db)}
-  changed:    #{updated_at and updated_at.to_s(:db)}
-  expire:     #{valid_to and valid_to.to_s(:db)}
-  outzone:
-  delete:
-
-  #{contacts_body}
-
-  nsset:
-  nserver:
-
-  registrar: #{registrar}
-  phone: #{registrar.phone}
-  address: #{registrar.address}
-  created: #{registrar.created_at.to_s(:db)}
-  changed: #{registrar.updated_at.to_s(:db)}
-
-Estonia .ee Top Level Domain WHOIS server
-More information at http://internet.ee
-    EOS
-  end
-  # rubocop:enable Metrics/MethodLength
-
-  def contacts_body
-    out = ''
-    admin_contacts.each do |c|
-      out << 'Admin contact:'
-      out << "name: #{c.name}"
-      out << "email: #{c.email}"
-      out << "registrar: #{c.registrar}"
-      out << "created: #{c.created_at.to_s(:db)}"
-    end
-
-    tech_contacts.each do |c|
-      out << 'Tech contact:'
-      out << "name: #{c.name}"
-      out << "email: #{c.email}"
-      out << "registrar: #{c.registrar}"
-      out << "created: #{c.created_at.to_s(:db)}"
-    end
-    out
+    whois = Whois::Body.new(self)
+    self.whois_json = whois.whois_json
+    self.whois_body = whois.whois_body
   end
 
   def update_whois_server
