@@ -1,10 +1,20 @@
-class Whois::Body
+class WhoisBody < ActiveRecord::Base
+  belongs_to :domain
+
+  def update_whois_server
+    return logger.info "NO WHOIS NAME for whois_body id: #{id}" if name.blank?
+    wd = Whois::Domain.find_or_initialize_by(name: name)
+    wd.whois_body = whois_body
+    wd.whois_json = whois_json
+    wd.save
+  end
+
   # rubocop:disable Metrics/MethodLength
   def h
     @h ||= HashWithIndifferentAccess.new
   end
 
-  def initialize(domain)
+  def update
     h[:name] = domain.name
     h[:registrant] = domain.registrant.name
     h[:status] = domain.domain_statuses.map(&:human_value).join(', ')
@@ -41,13 +51,14 @@ class Whois::Body
         updated_at: ns.updated_at.to_s(:db)
       }
     end
+
+    self.name = h[:name]
+    self.whois_body = body
+    self.whois_json = h
+    save
   end
 
-  def whois_json
-    h
-  end
-
-  def whois_body
+  def body
     <<-EOS
 Estonia .ee Top Level Domain WHOIS server
 

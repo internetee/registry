@@ -14,9 +14,9 @@ namespace :whois do
   task export: :environment do
     start = Time.zone.now.to_f
     print "-----> Delete whois database data and sync with Registry master database..."
-    domains = Domain.pluck(:name, :whois_body, :whois_json)
+    whois_bodies = WhoisBody.pluck(:name, :whois_body, :whois_json)
     Whois::Domain.delete_all
-    Whois::Domain.import([:name, :whois_body, :whois_json], domains)
+    Whois::Domain.import([:name, :whois_body, :whois_json], whois_bodies)
     puts "\n-----> all done in #{(Time.zone.now.to_f - start).round(2)} seconds"
   end
 

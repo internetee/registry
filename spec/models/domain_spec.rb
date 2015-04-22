@@ -34,12 +34,8 @@ describe Domain do
       @domain.versions.should == []
     end
 
-    it 'should not have whois_body' do
+    it 'should not have whois body' do
       @domain.whois_body.should == nil
-    end
-
-    it 'should not have whois json' do
-      @domain.whois_json.should == nil
     end
   end
 
@@ -82,7 +78,7 @@ describe Domain do
     end
 
     it 'should have whois json by default' do
-      @domain.whois_json.present?.should == true
+      @domain.whois_body.whois_json.present?.should == true
     end
 
     it 'should have whois_body present by default' do
@@ -113,7 +109,7 @@ describe Domain do
       @domain.nameservers = [ns1, ns2]
 
       @domain.update_whois_body
-      @domain.whois_body.should == <<-EOS
+      @domain.whois_body.whois_body.should == <<-EOS
 Estonia .ee Top Level Domain WHOIS server
 
 Domain:

@@ -33,6 +33,7 @@ class Domain < ActiveRecord::Base
   has_many :dnskeys, dependent: :destroy
 
   has_many :keyrelays
+  has_one :whois_body, dependent: :destroy
 
   accepts_nested_attributes_for :dnskeys, allow_destroy: true
 
@@ -124,6 +125,7 @@ class Domain < ActiveRecord::Base
       includes(
         :registrar, 
         :nameservers, 
+        :whois_body,
         { tech_contacts: :registrar },
         { admin_contacts: :registrar }
       )
@@ -242,17 +244,15 @@ class Domain < ActiveRecord::Base
   end
 
   def update_whois_body
-    whois = Whois::Body.new(self)
-    # validations, callbacks and updated_at are skipped
-    update_columns(
-      whois_json: whois.whois_json,
-      whois_body: whois.whois_body
-    )
+    self.whois_body = WhoisBody.create if whois_body.blank?
+    whois_body.update
   end
 
   def update_whois_server
-    wd = Whois::Domain.find_or_initialize_by(name: name)
-    wd.whois_body = whois_body
-    wd.save
+    if whois_body.present?
+      whois_body.update_whois_server
+    else
+      logger.info "NO WHOIS BODY for domain: #{name}"
+    end
   end
 end

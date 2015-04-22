@@ -294,13 +294,15 @@ ActiveRecord::Schema.define(version: 20150423083308) do
     t.string   "period_unit",          limit: 1
     t.string   "creator_str"
     t.string   "updator_str"
-    t.text     "whois_body"
     t.integer  "legacy_id"
     t.integer  "legacy_registrar_id"
     t.integer  "legacy_registrant_id"
-    t.json     "whois_json"
+    t.datetime "outzone_at"
+    t.datetime "delete_at"
   end
 
+  add_index "domains", ["delete_at"], name: "index_domains_on_delete_at", using: :btree
+  add_index "domains", ["outzone_at"], name: "index_domains_on_outzone_at", using: :btree
   add_index "domains", ["registrant_id"], name: "index_domains_on_registrant_id", using: :btree
   add_index "domains", ["registrar_id"], name: "index_domains_on_registrar_id", using: :btree
 
@@ -907,6 +909,17 @@ ActiveRecord::Schema.define(version: 20150423083308) do
   create_table "versions", force: :cascade do |t|
     t.text "depricated_table_but_somehow_paper_trail_tests_fails_without_it"
   end
+
+  create_table "whois_bodies", force: :cascade do |t|
+    t.integer  "domain_id"
+    t.string   "name"
+    t.text     "whois_body"
+    t.json     "whois_json"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "whois_bodies", ["domain_id"], name: "index_whois_bodies_on_domain_id", using: :btree
 
   create_table "zonefile_settings", force: :cascade do |t|
     t.string   "origin"
