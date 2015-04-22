@@ -33,7 +33,7 @@ namespace :db do
     task create: [:environment, :load_config] do
       databases.each do |name|
         begin
-          puts "\n---------------------------- Create #{name} ----------------------------------------\n"
+          puts "\n------------------------ Create #{name} ---------------------------------------\n"
           ActiveRecord::Base.clear_all_connections!
           conf = ActiveRecord::Base.configurations
           
@@ -75,7 +75,7 @@ namespace :db do
       task load: [:environment, :load_config] do
         databases.each do |name|
           begin
-            puts "\n---------------------------- #{name} schema loaded ----------------------------------------\n"
+            puts "\n------------------------ #{name} schema loading -----------------------------\n"
             ActiveRecord::Base.clear_all_connections!
             ActiveRecord::Base.establish_connection(name.to_sym)
             if ActiveRecord::Base.connection.table_exists?('schema_migrations')

@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 20150113113236) do
   create_table "domains", force: :cascade do |t|
     t.string   "name"
     t.text     "whois_body"
+    t.json     "whois_json"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

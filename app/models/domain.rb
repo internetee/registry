@@ -226,6 +226,9 @@ class Domain < ActiveRecord::Base
       domain_statuses.find_by(value: DomainStatus::OK).try(:destroy)
     end
 
+    # otherwise domain_statuses are in old state for domain object
+    domain_statuses.reload 
+
     # contacts.includes(:address).each(&:manage_statuses)
   end
 
@@ -234,14 +237,17 @@ class Domain < ActiveRecord::Base
     log[:admin_contacts] = admin_contacts.map(&:attributes)
     log[:tech_contacts]  = tech_contacts.map(&:attributes)
     log[:nameservers]    = nameservers.map(&:attributes)
-    log[:registrant]  = [registrant.try(:attributes)]
+    log[:registrant]     = [registrant.try(:attributes)]
     log
   end
 
   def update_whois_body
     whois = Whois::Body.new(self)
-    self.whois_json = whois.whois_json
-    self.whois_body = whois.whois_body
+    # validations, callbacks and updated_at are skipped
+    update_columns(
+      whois_json: whois.whois_json,
+      whois_body: whois.whois_body
+    )
   end
 
   def update_whois_server
