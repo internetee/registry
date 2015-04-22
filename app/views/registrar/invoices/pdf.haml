@@ -131,10 +131,6 @@
       h1 {
         margin-bottom: 5px;
       }
-    /%style{type:"text/css"}
-    /  = Rails.application.assets.find_asset('shared/pdf').to_s
-    / = stylesheet_link_tag 'shared/pdf', media: 'all'
-    / = stylesheet_link_tag 'shared/pdf', media: 'all'
   %body
     .container
       #header.row
@@ -207,15 +203,9 @@
               %dt= t('email')
               %dd= @invoice.buyer_email
 
-
-        / = render 'registrar/invoices/partials/details'
-
-        / .col-md-6= render 'registrar/invoices/partials/buyer'
       .clear
       .row.pull-down
         .col-md-12
-          %h4= t('items')
-          %hr
           .table-responsive
             %table.table.table-hover.table-condensed
               %thead
@@ -246,7 +236,6 @@
                   %th.no-border{colspan: 3}
                   %th= t('total')
                   %td= "#{@invoice.sum} #{@invoice.currency}"
-
 
       #footer
         %hr
