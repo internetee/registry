@@ -36,11 +36,11 @@ epp_hostname: 'registry.gitlab.eu'
 repp_url: 'https://repp.gitlab.eu/repp/v1/'
 
 # SMTP configuration
-address: 'smtp.mandrillapp.com'
-port: '587'
-user_name: 'domify-test'
-password: 'zVGZvd9D5NHYZ4I99h92nw'
-domain: 'registry.gitlab.eu'
+address: 'server-hostname'
+port: '000'
+user_name: 'login'
+password: 'pw/key'
+domain: 'domain for HELO checking'
 
 # autotest config overwrites
 test:

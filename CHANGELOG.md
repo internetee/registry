@@ -1,3 +1,7 @@
+22.04.2015
+
+* Configure smtp (see application-example.yml)
+
 21.04.2015
 
 * Install packages for wkhtmltopdf (see readme)
