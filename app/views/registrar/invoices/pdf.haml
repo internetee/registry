@@ -107,10 +107,29 @@
         margin-top: 50px;
       }
 
+      #header {
+        position: relative;
+        min-height: 100px;
+      }
+
+      img {
+        width: 106px;
+        height: 102px;
+      }
+
+      #header-content {
+        position: absolute;
+        bottom: 0;
+      }
+
       #footer {
         position: absolute;
         bottom: 0px;
         width: 99%;
+      }
+
+      h1 {
+        margin-bottom: 5px;
       }
     /%style{type:"text/css"}
     /  = Rails.application.assets.find_asset('shared/pdf').to_s
@@ -118,13 +137,13 @@
     / = stylesheet_link_tag 'shared/pdf', media: 'all'
   %body
     .container
-      .row
+      #header.row
         .col-sm-6.left
-          %h1
-            = t(:invoice_no, no: @invoice.id)
+          #header-content
+            %h1
+              = t(:invoice_no, no: @invoice.id)
         .col-sm-6.right
-          %h1
-            = image_tag('eis-logo-black-et.png')
+          %img{src: "#{Rails.root}/public/eis-logo-black-et.png"}
       .clear
       %hr
       .row
@@ -145,6 +164,9 @@
             - else
               %dd{class: 'text-danger'}= t('unpaid')
 
+            %dt= t('issuer')
+            %dd= @invoice.seller_contact_name
+
             %dt= t('payment_term')
             %dd= t(@invoice.payment_term)
 
@@ -154,8 +176,9 @@
 
             %dt= t('reference_no')
             %dd= @invoice.reference_no
+
         .col-md-6.right
-          %h4= t('buyer')
+          %h4= t('client')
           %hr
           %dl.dl-horizontal
             %dt= t('name')
@@ -164,20 +187,25 @@
             %dt= t('reg_no')
             %dd= @invoice.buyer_reg_no
 
-            %dt= t('address')
-            %dd= @invoice.buyer_address
+            - if @invoice.buyer_address.present?
+              %dt= t('address')
+              %dd= @invoice.buyer_address
 
-            %dt= t('country')
-            %dd= @invoice.buyer_country
+            - if @invoice.buyer_country.present?
+              %dt= t('country')
+              %dd= @invoice.buyer_country
 
-            %dt= t('phone')
-            %dd= @invoice.buyer_phone
+            - if @invoice.buyer_phone.present?
+              %dt= t('phone')
+              %dd= @invoice.buyer_phone
 
-            %dt= t('url')
-            %dd= @invoice.buyer_url
+            - if @invoice.buyer_phone.present?
+              %dt= t('url')
+              %dd= @invoice.buyer_url
 
-            %dt= t('email')
-            %dd= @invoice.buyer_email
+            - if @invoice.buyer_email.present?
+              %dt= t('email')
+              %dd= @invoice.buyer_email
 
 
         / = render 'registrar/invoices/partials/details'

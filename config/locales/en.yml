@@ -728,3 +728,4 @@ en:
   back_to_invoice: 'Back to invoice'
   invoice_forwared: 'Invoice forwarded'
   failed_to_forward_invoice: 'Failed to forward invoice'
+  client: 'Client'
