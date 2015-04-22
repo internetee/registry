@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150423083308) do
+ActiveRecord::Schema.define(version: 20150422134243) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -910,16 +910,16 @@ ActiveRecord::Schema.define(version: 20150423083308) do
     t.text "depricated_table_but_somehow_paper_trail_tests_fails_without_it"
   end
 
-  create_table "whois_bodies", force: :cascade do |t|
+  create_table "whois_records", force: :cascade do |t|
     t.integer  "domain_id"
     t.string   "name"
-    t.text     "whois_body"
-    t.json     "whois_json"
+    t.text     "body"
+    t.json     "json"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  add_index "whois_bodies", ["domain_id"], name: "index_whois_bodies_on_domain_id", using: :btree
+  add_index "whois_records", ["domain_id"], name: "index_whois_records_on_domain_id", using: :btree
 
   create_table "zonefile_settings", force: :cascade do |t|
     t.string   "origin"

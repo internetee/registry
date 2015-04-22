@@ -1,11 +1,11 @@
-class WhoisBody < ActiveRecord::Base
+class WhoisRecord < ActiveRecord::Base
   belongs_to :domain
 
   def update_whois_server
-    return logger.info "NO WHOIS NAME for whois_body id: #{id}" if name.blank?
-    wd = Whois::Domain.find_or_initialize_by(name: name)
-    wd.whois_body = whois_body
-    wd.whois_json = whois_json
+    return logger.info "NO WHOIS NAME for whois record id: #{id}" if name.blank?
+    wd = Whois::Record.find_or_initialize_by(name: name)
+    wd.body = body
+    wd.json = json
     wd.save
   end
 
@@ -53,12 +53,12 @@ class WhoisBody < ActiveRecord::Base
     end
 
     self.name = h[:name]
-    self.whois_body = body
-    self.whois_json = h
+    self.body = generated_body
+    self.json = h
     save
   end
 
-  def body
+  def generated_body
     <<-EOS
 Estonia .ee Top Level Domain WHOIS server
 

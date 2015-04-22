@@ -35,7 +35,7 @@ describe Domain do
     end
 
     it 'should not have whois body' do
-      @domain.whois_body.should == nil
+      @domain.whois_record.should == nil
     end
   end
 
@@ -74,14 +74,14 @@ describe Domain do
     end
 
     it 'should have whois body by default' do
-      @domain.whois_body.present?.should == true
+      @domain.whois_record.present?.should == true
     end
 
     it 'should have whois json by default' do
-      @domain.whois_body.whois_json.present?.should == true
+      @domain.whois_record.json.present?.should == true
     end
 
-    it 'should have whois_body present by default' do
+    it 'should have whois record present by default' do
       @domain.name = 'yeah.ee'
       @domain.updated_at    = Time.zone.parse('2020.02.02 02:00')
       @domain.registered_at = Time.zone.parse('2000.01.01 9:00')
@@ -108,8 +108,8 @@ describe Domain do
       ns2.updated_at = Time.zone.parse('1970.01.01')
       @domain.nameservers = [ns1, ns2]
 
-      @domain.update_whois_body
-      @domain.whois_body.whois_body.should == <<-EOS
+      @domain.update_whois_record
+      @domain.whois_record.body.should == <<-EOS
 Estonia .ee Top Level Domain WHOIS server
 
 Domain:

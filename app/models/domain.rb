@@ -33,7 +33,7 @@ class Domain < ActiveRecord::Base
   has_many :dnskeys, dependent: :destroy
 
   has_many :keyrelays
-  has_one :whois_body, dependent: :destroy
+  has_one :whois_record, dependent: :destroy
 
   accepts_nested_attributes_for :dnskeys, allow_destroy: true
 
@@ -53,7 +53,7 @@ class Domain < ActiveRecord::Base
     self.updated_at = Time.zone.now
   end
   after_save :manage_automatic_statuses
-  after_save :update_whois_body
+  after_save :update_whois_record
   after_save :update_whois_server
 
   validates :name_dirty, domain_name: true, uniqueness: true
@@ -125,7 +125,7 @@ class Domain < ActiveRecord::Base
       includes(
         :registrar, 
         :nameservers, 
-        :whois_body,
+        :whois_record,
         { tech_contacts: :registrar },
         { admin_contacts: :registrar }
       )
@@ -243,14 +243,14 @@ class Domain < ActiveRecord::Base
     log
   end
 
-  def update_whois_body
-    self.whois_body = WhoisBody.create if whois_body.blank?
-    whois_body.update
+  def update_whois_record
+    self.whois_record = WhoisRecord.create if whois_record.blank?
+    whois_record.update
   end
 
   def update_whois_server
-    if whois_body.present?
-      whois_body.update_whois_server
+    if whois_record.present?
+      whois_record.update_whois_server
     else
       logger.info "NO WHOIS BODY for domain: #{name}"
     end
