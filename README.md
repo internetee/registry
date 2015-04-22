@@ -264,6 +264,11 @@ All registry demo data can be found at:
 
 Initially you can use two type of users: admin users and EPP users.
 
+### Wkhtmltopdf setup
+
+```
+sudo apt-get install libxext-dev libxrender1
+```
 
 ### Certificates setup
 

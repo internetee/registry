@@ -1,6 +1,7 @@
 21.04.2015
 
-* Install wkhtmltopdf
+* Install packages for wkhtmltopdf (see readme)
+* Add `bank_statement_import_dir: 'import/bank_statements'` to application.yml, run `mina setup`
 
 15.04.2015
 
