@@ -5,7 +5,7 @@ describe 'EPP Keyrelay', epp: true do
     create_settings
     @registrar1 = Fabricate(:registrar1)
     @registrar2 = Fabricate(:registrar2)
-    @domain     = Fabricate(:domain, registrar: @registrar2) 
+    @domain     = Fabricate(:domain, registrar: @registrar2)
     @epp_xml    = EppXml::Keyrelay.new
 
     Fabricate(:api_user, username: 'registrar1', registrar: @registrar1)
@@ -174,7 +174,7 @@ describe 'EPP Keyrelay', epp: true do
 
     docs = Keyrelay.last.legal_documents
     docs.count.should == 1
-    docs.first.body.should == 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp=='
+    docs.first.path.should_not be_blank
     docs.first.document_type.should == 'pdf'
   end
 

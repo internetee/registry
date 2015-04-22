@@ -3,4 +3,19 @@ class LegalDocument < ActiveRecord::Base
   belongs_to :documentable, polymorphic: true
 
   TYPES = %w(pdf bdoc ddoc zip rar gz tar 7z)
+
+  attr_accessor :body
+
+  before_save :save_to_filesystem
+  def save_to_filesystem
+    loop do
+      rand = SecureRandom.random_number.to_s.last(4)
+      self.path = "#{ENV['legal_documents_dir']}/#{Time.zone.now.to_formatted_s(:number)}_#{rand}.#{document_type}"
+      break unless File.file?(path)
+    end
+
+    # TODO: Change path for test env
+    File.open(path, 'wb') { |f| f.write(Base64.decode64(body)) } unless Rails.env.test?
+    self.path = path
+  end
 end

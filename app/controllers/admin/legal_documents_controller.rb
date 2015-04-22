@@ -3,7 +3,7 @@ class Admin::LegalDocumentsController < AdminController
 
   def show
     @ld = LegalDocument.find(params[:id])
-    file = Base64.decode64(@ld.body)
-    send_data file, filename: "#{@ld.created_at}.#{@ld.document_type}"
+    filename = @ld.path.split('/').last
+    send_data File.open(@ld.path).read, filename: filename
   end
 end
