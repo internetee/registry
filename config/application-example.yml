@@ -35,6 +35,13 @@ key_path: '/home/registry/registry/shared/ca/private/webclient.key.pem'
 epp_hostname: 'registry.gitlab.eu'
 repp_url: 'https://repp.gitlab.eu/repp/v1/'
 
+# SMTP configuration
+address: 'smtp.mandrillapp.com'
+port: '587'
+user_name: 'domify-test'
+password: 'zVGZvd9D5NHYZ4I99h92nw'
+domain: 'registry.gitlab.eu'
+
 # autotest config overwrites
 test:
   webclient_ip: '127.0.0.1' # it should match to localhost ip address

@@ -22,7 +22,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def to_s
-    I18n.t('invoice_no', no: id)
+    I18n.t('invoice_no', no: number)
   end
 
   def number
@@ -44,6 +44,15 @@ class Invoice < ActiveRecord::Base
 
   def buyer_country
     Country.new(buyer_country_code)
+  end
+
+  def pdf(html)
+    kit = PDFKit.new(html)
+    kit.to_pdf
+  end
+
+  def pdf_name
+    "invoice-#{number}.pdf"
   end
 
   def forward

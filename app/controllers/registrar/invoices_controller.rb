@@ -21,6 +21,8 @@ class Registrar::InvoicesController < RegistrarController
     @invoice.billing_email = params[:invoice][:billing_email]
 
     if @invoice.forward
+      pdf = @invoice.pdf(render_to_string('pdf', layout: false))
+      InvoiceMailer.invoice_email(@invoice, pdf).deliver_now
       flash[:notice] = t('invoice_forwared')
       redirect_to([:registrar, @invoice])
     else
@@ -31,10 +33,8 @@ class Registrar::InvoicesController < RegistrarController
   def download_pdf
     # render 'pdf', layout: false
 
-    kit = PDFKit.new(render_to_string('pdf', layout: false))
-    pdf = kit.to_pdf
-
-    send_data pdf, filename: "invoice-#{@invoice.number}.pdf"
+    pdf = @invoice.pdf(render_to_string('pdf', layout: false))
+    send_data pdf, filename: @invoice.pdf_name
   end
 
   private

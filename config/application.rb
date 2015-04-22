@@ -53,5 +53,19 @@ module Registry
       g.javascripts false
       g.helper false
     end
+
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.perform_deliveries = true
+    config.action_mailer.raise_delivery_errors = true
+
+    config.action_mailer.smtp_settings = {
+      address: ENV['address'],
+      port: ENV['port'],
+      enable_starttls_auto: true,
+      user_name: ENV['user_name'],
+      password: ENV['password'],
+      authentication: 'login',
+      domain: ENV['domain']
+    }
   end
 end
