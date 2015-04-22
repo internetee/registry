@@ -25,6 +25,11 @@ class Invoice < ActiveRecord::Base
     I18n.t('invoice_no', no: id)
   end
 
+  def number
+    # TODO: Real invoice numbers here
+    id
+  end
+
   def seller_address
     [seller_street, seller_city, seller_state, seller_zip].reject(&:blank?).compact.join(', ')
   end

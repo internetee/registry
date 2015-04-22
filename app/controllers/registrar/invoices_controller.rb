@@ -34,7 +34,7 @@ class Registrar::InvoicesController < RegistrarController
     kit = PDFKit.new(render_to_string('pdf', layout: false))
     pdf = kit.to_pdf
 
-    send_data pdf, filename: "test.pdf"
+    send_data pdf, filename: "invoice-#{@invoice.number}.pdf"
   end
 
   private
