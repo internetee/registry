@@ -10,6 +10,7 @@ class LegalDocument < ActiveRecord::Base
   def save_to_filesystem
     loop do
       rand = SecureRandom.random_number.to_s.last(4)
+      next if rand.to_i == 0 || rand.length < 4
       self.path = "#{ENV['legal_documents_dir']}/#{Time.zone.now.to_formatted_s(:number)}_#{rand}.#{document_type}"
       break unless File.file?(path)
     end

@@ -5,6 +5,7 @@ class SaveLegalDocsToDisk < ActiveRecord::Migration
       path = nil
       loop do
         rand = SecureRandom.random_number.to_s.last(4)
+        next if rand.to_i == 0 || rand.length < 4
         path = "#{ENV['legal_documents_dir']}/#{Time.zone.now.to_formatted_s(:number)}_#{rand}.#{x.document_type}"
         break unless File.file?(path)
       end

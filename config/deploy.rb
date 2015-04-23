@@ -98,7 +98,8 @@ set :shared_paths, [
   'log',
   'public/system',
   'export/zonefiles',
-  'import/bank_statements'
+  'import/bank_statements',
+  'import/legal_documents'
 ]
 
 # Optional settings:
@@ -136,6 +137,9 @@ task setup: :environment do
 
   queue! %(mkdir -p "#{deploy_to}/shared/import/bank_statements")
   queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/import/bank_statements")
+
+  queue! %(mkdir -p "#{deploy_to}/shared/import/legal_documents")
+  queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/import/legal_documents")
 
   queue! %(touch "#{deploy_to}/shared/config/database.yml")
   deploy do

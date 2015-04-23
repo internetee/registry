@@ -32,6 +32,12 @@ describe Registrar do
     it 'should not have valid code' do
       @registrar.code.should == nil
     end
+
+    it 'should generate reference number' do
+      @registrar.generate_iso_11649_reference_no
+      @registrar.reference_no.should_not be_blank
+      @registrar.reference_no.last(10).to_i.should_not == 0
+    end
   end
 
   context 'with valid attributes' do

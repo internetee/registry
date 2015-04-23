@@ -22,7 +22,7 @@ class Registrar < ActiveRecord::Base
       base = nil
       loop do
         base = SecureRandom.random_number.to_s.last(8)
-        break if base.length == 8
+        break if base.to_i != 0 && base.length == 8
       end
 
       control_base = (base + '2715' + '00').to_i
