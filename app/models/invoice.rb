@@ -55,11 +55,11 @@ class Invoice < ActiveRecord::Base
     "invoice-#{number}.pdf"
   end
 
-  def forward
+  def forward(html)
     return false unless valid?
-    return false unless billing_email
+    return false unless billing_email.present?
 
-    # TODO: forward invoice
+    InvoiceMailer.invoice_email(self, pdf(html)).deliver_now
     true
   end
 

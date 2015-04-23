@@ -20,9 +20,7 @@ class Registrar::InvoicesController < RegistrarController
 
     @invoice.billing_email = params[:invoice][:billing_email]
 
-    if @invoice.forward
-      pdf = @invoice.pdf(render_to_string('pdf', layout: false))
-      InvoiceMailer.invoice_email(@invoice, pdf).deliver_now
+    if @invoice.forward(render_to_string('pdf', layout: false))
       flash[:notice] = t('invoice_forwared')
       redirect_to([:registrar, @invoice])
     else
