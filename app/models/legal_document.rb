@@ -14,7 +14,6 @@ class LegalDocument < ActiveRecord::Base
       break unless File.file?(path)
     end
 
-    # TODO: Change path for test env
     File.open(path, 'wb') { |f| f.write(Base64.decode64(body)) } unless Rails.env.test?
     self.path = path
   end
