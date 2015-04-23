@@ -137,7 +137,7 @@
         .col-sm-6.left
           #header-content
             %h1
-              = t(:invoice_no, no: @invoice.id)
+              = @invoice
         .col-sm-6.right
           %img{src: "#{Rails.root}/public/eis-logo-black-et.png"}
       .clear

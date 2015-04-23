@@ -1,7 +1,7 @@
 .row
   .col-sm-6
     %h1.text-center-xs
-      = t('invoice_no', no: @invoice.id)
+      = @invoice
   .col-sm-6
     %h1.text-right.text-center-xs
       = link_to(t('back'), :back, class: 'btn btn-default')

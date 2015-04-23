@@ -28,6 +28,8 @@ if con.present? && con.table_exists?('settings')
   Setting.save_default(:eis_bank, 'LHV Pank')
   Setting.save_default(:eis_swift, 'LHVBEE22')
   Setting.save_default(:eis_invoice_contact, 'Martti Õigus')
+  Setting.save_default(:invoice_number_min, '131050')
+  Setting.save_default(:invoice_number_max, '149999')
 end
 
 # dev only setting

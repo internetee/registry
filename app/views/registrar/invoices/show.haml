@@ -2,7 +2,7 @@
   = link_to(t(:download), download_pdf_registrar_invoice_path(@invoice), class: 'btn btn-default')
   = link_to(t(:forward_invoice), forward_registrar_invoice_path(@invoice), class: 'btn btn-default')
   = link_to(t(:back), :back, class: 'btn btn-default')
-= render 'shared/title', name: t(:invoice_no, no: @invoice.id)
+= render 'shared/title', name: @invoice.to_s
 
 .row
   .col-md-6= render 'registrar/invoices/partials/details'

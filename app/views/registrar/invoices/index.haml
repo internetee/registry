@@ -3,8 +3,8 @@
   = link_to(t(:account_activity), registrar_account_activities_path, class: 'btn btn-default')
 = render 'shared/title', name: t(:your_account)
 
-= t(:your_current_account_balance_is, 
-  balance: current_user.registrar.cash_account.balance, 
+= t(:your_current_account_balance_is,
+  balance: current_user.registrar.cash_account.balance,
   currency: current_user.registrar.cash_account.currency)
 
 %h1= t(:invoices)
@@ -22,7 +22,7 @@
         %tbody
           - @invoices.each do |x|
             %tr
-              %td= link_to(t(:invoice_no, no: x.id), [:registrar, x])
+              %td= link_to(x, [:registrar, x])
               - if x.receipt_date
                 %td= l(x.receipt_date)
               - else

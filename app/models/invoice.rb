@@ -13,6 +13,23 @@ class Invoice < ActiveRecord::Base
   validates :invoice_type, :due_date, :currency, :seller_name,
             :seller_iban, :buyer_name, :invoice_items, :vat_prc, presence: true
 
+  before_save :set_invoice_number
+  def set_invoice_number
+    last_no = Invoice.order(number: :desc).where('number IS NOT NULL').limit(1).pluck(:number).first
+
+    if last_no
+      self.number = last_no + 1
+    else
+      self.number = Setting.invoice_number_min.to_i
+    end
+
+    return if number <= Setting.invoice_number_max.to_i
+
+    errors.add(:base, I18n.t('failed_to_generate_invoice'))
+    logger.error('INVOICE NUMBER LIMIT REACHED, COULD NOT GENERATE INVOICE')
+    false
+  end
+
   def binded?
     account_activity.present?
   end
@@ -23,11 +40,6 @@ class Invoice < ActiveRecord::Base
 
   def to_s
     I18n.t('invoice_no', no: number)
-  end
-
-  def number
-    # TODO: Real invoice numbers here
-    id
   end
 
   def seller_address
