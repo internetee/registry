@@ -1,3 +1,7 @@
+23.04.2015
+  
+  * Add `bank_statement_import_dir: 'import/legal_documents'` to application.yml, run `mina setup`
+
 22.04.2015
 
 * Configure smtp (see application-example.yml)
