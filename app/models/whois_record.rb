@@ -15,6 +15,7 @@ class WhoisRecord < ActiveRecord::Base
   end
 
   def update
+    @disclosed = []
     h[:name] = domain.name
     h[:registrant] = domain.registrant.name
     h[:status] = domain.domain_statuses.map(&:human_value).join(', ')
@@ -28,6 +29,7 @@ class WhoisRecord < ActiveRecord::Base
     h[:registrar_update_at] = domain.registrar.updated_at.to_s(:db)
     h[:admin_contacts] = []
     domain.admin_contacts.each do |ac|
+      @disclosed << [:email, ac.email]
       h[:admin_contacts] << {
         name: ac.name,
         email: ac.email,
@@ -37,6 +39,7 @@ class WhoisRecord < ActiveRecord::Base
     end
     h[:tech_contacts] = []
     domain.tech_contacts.each do |tc|
+      @disclosed << [:email, tc.email]
       h[:tech_contacts] << {
         name: tc.name,
         email: tc.email,
@@ -51,6 +54,8 @@ class WhoisRecord < ActiveRecord::Base
         updated_at: ns.updated_at.to_s(:db)
       }
     end
+
+    h[:disclosed] = @disclosed
 
     self.name = h[:name]
     self.body = generated_body
@@ -89,7 +94,7 @@ More information at http://internet.ee
     out << (admins.size > 1 ? "\nAdministrative contacts" : "\nAdministrative contact")
     admins.each do |c|
       out << "\n  name:       #{c[:name]}"
-      out << "\n  e-mail:     Not Disclosed - Visit www.internet.ee for webbased WHOIS"
+      out << "\n  email:      Not Disclosed - Visit www.internet.ee for webbased WHOIS"
       out << "\n  registrar:  #{c[:registrar]}"
       out << "\n  created:    #{c[:created_at]}"
       out << "\n"
@@ -98,7 +103,7 @@ More information at http://internet.ee
     out << (techs.size > 1 ? "\nTechnical contacts" : "\nTechnical contact:")
     techs.each do |c|
       out << "\n  name:       #{c[:name]}"
-      out << "\n  e-mail:     Not Disclosed - Visit www.internet.ee for webbased WHOIS"
+      out << "\n  email:      Not Disclosed - Visit www.internet.ee for webbased WHOIS"
       out << "\n  registrar:  #{c[:registrar]}"
       out << "\n  created:    #{c[:created_at]}"
       out << "\n"
