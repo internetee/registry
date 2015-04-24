@@ -29,10 +29,11 @@ class Admin::CertificatesController < AdminController
   def sign
     if @certificate.sign!
       flash[:notice] = I18n.t('record_updated')
+      redirect_to [:admin, @api_user, @certificate]
     else
-      flash[:alert] = I18n.t('failed_to_update_record')
+      flash.now[:alert] = I18n.t('failed_to_update_record')
+      render 'show'
     end
-    redirect_to [:admin, @api_user, @certificate]
   end
 
   def revoke
