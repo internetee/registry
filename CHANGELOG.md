@@ -1,6 +1,6 @@
 24.04.2015
 
-  * Update zonefile
+  * Update zonefile procedure
 
 23.04.2015
   
