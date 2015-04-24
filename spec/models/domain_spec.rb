@@ -124,13 +124,13 @@ Domain:
 
 Administrative contact
   name:       First Admin
-  e-mail:     Not Disclosed - Visit www.internet.ee for webbased WHOIS
+  email:      Not Disclosed - Visit www.internet.ee for webbased WHOIS
   registrar:  First Registrar Ltd
   created:    2016-01-01 00:00:00
 
 Technical contact:
   name:       First Tech
-  e-mail:     Not Disclosed - Visit www.internet.ee for webbased WHOIS
+  email:      Not Disclosed - Visit www.internet.ee for webbased WHOIS
   registrar:  First Registrar Ltd
   created:    2016-01-01 00:00:00
 
