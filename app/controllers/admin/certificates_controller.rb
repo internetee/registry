@@ -2,10 +2,7 @@ class Admin::CertificatesController < AdminController
   load_and_authorize_resource
   before_action :set_certificate, :set_api_user, only: [:sign, :show, :download_csr, :download_crt, :revoke]
 
-  def show
-    @csr = OpenSSL::X509::Request.new(@certificate.csr) if @certificate.csr
-    @crt = OpenSSL::X509::Certificate.new(@certificate.crt) if @certificate.crt
-  end
+  def show; end
 
   def new
     set_api_user
@@ -57,6 +54,8 @@ class Admin::CertificatesController < AdminController
 
   def set_certificate
     @certificate = Certificate.find(params[:id])
+    @csr = OpenSSL::X509::Request.new(@certificate.csr) if @certificate.csr
+    @crt = OpenSSL::X509::Certificate.new(@certificate.crt) if @certificate.crt
   end
 
   def set_api_user
