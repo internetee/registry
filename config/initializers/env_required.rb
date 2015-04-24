@@ -9,6 +9,7 @@ required = %w(
   ca_key_password
   webclient_ip
   legal_documents_dir
+  bank_statement_import_dir
 )
 
 Figaro.require_keys(required)
