@@ -356,10 +356,16 @@ describe 'EPP Domain', epp: true do
 
       d.dnskeys.count.should == 3
 
-      key_1 = d.dnskeys[0]
-      key_1.ds_key_tag.should_not be_blank
-      key_1.ds_alg.should == 3
-      key_1.ds_digest_type.should == Setting.ds_algorithm
+      ksk = d.dnskeys.find_by(flags: 257)
+      ksk.ds_key_tag.should_not be_blank
+      ksk.ds_alg.should == 3
+      ksk.ds_digest_type.should == Setting.ds_algorithm
+
+      zsk = d.dnskeys.find_by(flags: 256)
+      zsk.ds_key_tag.should be_blank
+
+      zero = d.dnskeys.find_by(flags: 0)
+      zero.ds_key_tag.should be_blank
 
       d.dnskeys.pluck(:flags).should match_array([257, 0, 256])
       d.dnskeys.pluck(:protocol).should match_array([3, 3, 3])
@@ -1479,19 +1485,19 @@ describe 'EPP Domain', epp: true do
 
       response[:results][5][:msg].should == 'Public key already exists [public_key]'
       if response[:results][5][:value] == '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
-        response[:results][5][:value].should == 
+        response[:results][5][:value].should ==
           '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
       else
-        response[:results][5][:value].should == 
+        response[:results][5][:value].should ==
           '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0'
       end
 
       response[:results][6][:msg].should == 'Public key already exists [public_key]'
       if response[:results][6][:value] == '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
-        response[:results][6][:value].should == 
+        response[:results][6][:value].should ==
           '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
       else
-        response[:results][6][:value].should == 
+        response[:results][6][:value].should ==
           '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0'
       end
 
