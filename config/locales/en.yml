@@ -732,3 +732,4 @@ en:
   you_have_a_new_invoice: 'You have a new invoice.'
   sincerely: 'Sincerely'
   expiry: 'Expiry'
+  failed_to_create_crt_csr_already_signed: 'Failed to create certificate: CSR is already signed'

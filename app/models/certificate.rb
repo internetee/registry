@@ -55,11 +55,16 @@ class Certificate < ActiveRecord::Base
       self.crt = crt_file.read
       save!
     else
-      errors.add(:base, I18n.t('failed_to_create_certificate'))
       logger.error('FAILED TO CREATE CLIENT CERTIFICATE')
+      if err.match(/TXT_DB error number 2/)
+        errors.add(:base, I18n.t('failed_to_create_crt_csr_already_signed'))
+        logger.error('CSR ALREADY SIGNED')
+      else
+        errors.add(:base, I18n.t('failed_to_create_certificate'))
+      end
       logger.error(err)
       # rubocop:disable Rails/Output
-      puts "Certificate sign issue: #{err.inspect}" if Rails.env.test? 
+      puts "Certificate sign issue: #{err.inspect}" if Rails.env.test?
       # rubocop:enable Rails/Output
       return false
     end
