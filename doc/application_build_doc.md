@@ -120,6 +120,6 @@ Crontab can be setup after deploy. Jobs can be viewed [here](/config/schedule.rb
 
 ### Zonefile procedure
 
-Zonefile procedure must be set up after deploy. The same command must be run whenever procedure is updated (see changelog).
+Zonefile procedure must be set up in server after deploy. The same command must be run whenever procedure is updated (see changelog).
 
     bundle exec rake zonefile:replace_procedure

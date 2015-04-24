@@ -1,3 +1,7 @@
+24.04.2015
+
+  * Update zonefile
+
 23.04.2015
   
   * Add `bank_statement_import_dir: 'import/legal_documents'` to application.yml, run `mina setup`
