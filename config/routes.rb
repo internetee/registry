@@ -107,6 +107,7 @@ Rails.application.routes.draw do
 
     resources :settings
     resources :registrars do
+      resources :api_users
       collection do
         get :search
       end

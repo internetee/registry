@@ -1,6 +1,6 @@
 - content_for :actions do
   = link_to(t(:edit), edit_admin_registrar_path(@registrar), class: 'btn btn-primary')
-  = link_to(t(:delete), admin_registrar_path(@registrar), 
+  = link_to(t(:delete), admin_registrar_path(@registrar),
     method: :delete, data: { confirm: t(:are_you_sure) }, class: 'btn btn-danger')
 = render 'shared/title', name: @registrar.name
 
@@ -57,7 +57,11 @@
   .col-md-12
     #epp-users.panel.panel-default
       .panel-heading.clearfix
-        = t(:api_users)
+        .pull-left
+          = t(:api_users)
+        .pull-right
+          = link_to(t('create_new_api_user'), new_admin_registrar_api_user_path(@registrar), class: 'btn btn-primary btn-xs')
+
       .table-responsive
         %table.table.table-hover.table-bordered.table-condensed
           %thead

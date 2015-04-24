@@ -1,6 +1,6 @@
 - content_for :actions do
   = link_to(t(:edit), edit_admin_api_user_path(@api_user), class: 'btn btn-primary')
-  = link_to(t(:delete), admin_api_user_path(@api_user), 
+  = link_to(t(:delete), admin_api_user_path(@api_user),
     method: :delete, data: { confirm: t(:are_you_sure) }, class: 'btn btn-danger')
 = render 'shared/title', name: @api_user.username
 
@@ -23,6 +23,9 @@
           %dt= t(:password)
           %dd= @api_user.password
 
+          %dt= t(:registrar)
+          %dd= link_to(@api_user.registrar, admin_registrar_path(@api_user.registrar))
+
           %dt= t(:active)
           %dd= @api_user.active
 .row
@@ -32,7 +35,7 @@
         .pull-left
           = t(:certificates)
         .pull-right
-          = link_to(t(:upload_csr), 
+          = link_to(t(:upload_csr),
             new_admin_api_user_certificate_path(@api_user), class: 'btn btn-primary btn-xs')
 
       .table-responsive

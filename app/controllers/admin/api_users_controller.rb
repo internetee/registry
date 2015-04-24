@@ -8,7 +8,8 @@ class Admin::ApiUsersController < AdminController
   end
 
   def new
-    @api_user = ApiUser.new
+    @registrar = Registrar.find_by(id: params[:registrar_id])
+    @api_user = ApiUser.new(registrar: @registrar)
   end
 
   def create
