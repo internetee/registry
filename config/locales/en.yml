@@ -733,3 +733,4 @@ en:
   sincerely: 'Sincerely'
   expiry: 'Expiry'
   failed_to_create_crt_csr_already_signed: 'Failed to create certificate: CSR is already signed'
+  certificates: 'Certificates'
