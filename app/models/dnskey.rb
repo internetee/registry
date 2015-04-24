@@ -19,7 +19,7 @@ class Dnskey < ActiveRecord::Base
 
   ALGORITHMS = %w(3 5 6 7 8 252 253 254 255)
   PROTOCOLS = %w(3)
-  FLAGS = %w(0 256 257)
+  FLAGS = %w(0 256 257) # 256 = ZSK, 257 = KSK
 
   def epp_code_map
     {
@@ -66,6 +66,7 @@ class Dnskey < ActiveRecord::Base
   end
 
   def generate_digest
+    return if flags != 257 # generate ds only with KSK
     flags_hex = self.class.int_to_hex(flags)
     protocol_hex = self.class.int_to_hex(protocol)
     alg_hex = self.class.int_to_hex(alg)
@@ -85,6 +86,7 @@ class Dnskey < ActiveRecord::Base
   end
 
   def generate_ds_key_tag
+    return if flags != 257 # generate ds key tag only with KSK
     pk = public_key.gsub(' ', '')
     wire_format = [flags, protocol, alg].pack('S!>CC')
     wire_format += Base64.decode64(pk)

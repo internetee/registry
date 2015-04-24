@@ -146,7 +146,7 @@ namespace :zonefile do
             )
             FROM domains d
             JOIN dnskeys dk ON dk.domain_id = d.id
-            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
+            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter AND dk.flags = 257
             ),
           chr(10)
         ) INTO tmp_var;
