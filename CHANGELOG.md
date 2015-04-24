@@ -1,14 +1,18 @@
 24.04.2015
 
-  * Update zonefile procedure
+* Update zonefile procedure
 
 23.04.2015
-  
-  * Add `bank_statement_import_dir: 'import/legal_documents'` to application.yml, run `mina setup`
+
+* Add `bank_statement_import_dir: 'import/legal_documents'` to application.yml, run `mina setup`
 
 22.04.2015
 
 * Configure smtp (see application-example.yml)
+
+22.04.2015
+
+* Whois database schema updated. Please reset whois database and run `rake whois:schema:load`
 
 21.04.2015
 

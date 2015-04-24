@@ -33,6 +33,7 @@ class Domain < ActiveRecord::Base
   has_many :dnskeys, dependent: :destroy
 
   has_many :keyrelays
+  has_one :whois_record, dependent: :destroy
 
   accepts_nested_attributes_for :dnskeys, allow_destroy: true
 
@@ -52,7 +53,7 @@ class Domain < ActiveRecord::Base
     self.updated_at = Time.zone.now
   end
   after_save :manage_automatic_statuses
-  after_save :update_whois_body
+  after_save :update_whois_record
   after_save :update_whois_server
 
   validates :name_dirty, domain_name: true, uniqueness: true
@@ -124,6 +125,7 @@ class Domain < ActiveRecord::Base
       includes(
         :registrar, 
         :nameservers, 
+        :whois_record,
         { tech_contacts: :registrar },
         { admin_contacts: :registrar }
       )
@@ -226,6 +228,9 @@ class Domain < ActiveRecord::Base
       domain_statuses.find_by(value: DomainStatus::OK).try(:destroy)
     end
 
+    # otherwise domain_statuses are in old state for domain object
+    domain_statuses.reload 
+
     # contacts.includes(:address).each(&:manage_statuses)
   end
 
@@ -234,64 +239,20 @@ class Domain < ActiveRecord::Base
     log[:admin_contacts] = admin_contacts.map(&:attributes)
     log[:tech_contacts]  = tech_contacts.map(&:attributes)
     log[:nameservers]    = nameservers.map(&:attributes)
-    log[:registrant]  = [registrant.try(:attributes)]
+    log[:registrant]     = [registrant.try(:attributes)]
     log
   end
 
-  # rubocop:disable Metrics/MethodLength
-  def update_whois_body
-    self.whois_body = <<-EOS
-Estonia .ee Top Level Domain WHOIS server
-
-  domain:     #{name}
-  registrant: #{registrant.name}
-  status:     #{domain_statuses.map(&:value).join(', ')}
-  registered: #{registered_at and registered_at.to_s(:db)}
-  changed:    #{updated_at and updated_at.to_s(:db)}
-  expire:     #{valid_to and valid_to.to_s(:db)}
-  outzone:
-  delete:
-
-  #{contacts_body}
-
-  nsset:
-  nserver:
-
-  registrar: #{registrar}
-  phone: #{registrar.phone}
-  address: #{registrar.address}
-  created: #{registrar.created_at.to_s(:db)}
-  changed: #{registrar.updated_at.to_s(:db)}
-
-Estonia .ee Top Level Domain WHOIS server
-More information at http://internet.ee
-    EOS
-  end
-  # rubocop:enable Metrics/MethodLength
-
-  def contacts_body
-    out = ''
-    admin_contacts.each do |c|
-      out << 'Admin contact:'
-      out << "name: #{c.name}"
-      out << "email: #{c.email}"
-      out << "registrar: #{c.registrar}"
-      out << "created: #{c.created_at.to_s(:db)}"
-    end
-
-    tech_contacts.each do |c|
-      out << 'Tech contact:'
-      out << "name: #{c.name}"
-      out << "email: #{c.email}"
-      out << "registrar: #{c.registrar}"
-      out << "created: #{c.created_at.to_s(:db)}"
-    end
-    out
+  def update_whois_record
+    self.whois_record = WhoisRecord.create if whois_record.blank?
+    whois_record.update
   end
 
   def update_whois_server
-    wd = Whois::Domain.find_or_initialize_by(name: name)
-    wd.whois_body = whois_body
-    wd.save
+    if whois_record.present?
+      whois_record.update_whois_server
+    else
+      logger.info "NO WHOIS BODY for domain: #{name}"
+    end
   end
 end

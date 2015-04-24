@@ -109,6 +109,15 @@ class DomainStatus < ActiveRecord::Base
     CLIENT_STATUSES.include?(value)
   end
 
+  def human_value
+    case value
+    when 'ok'
+      'ok (paid and in zone)'
+    else 
+      value
+    end
+  end
+
   class << self
     def statuses_for_client
       CLIENT_STATUSES.map { |x| x.sub('client', '') }

@@ -39,29 +39,35 @@ ApiUser.where(
   registrar: registrar2
 ).first_or_create!
 
-AdminUser.where(
+admin1 = {
   username: 'user1',
   password: 'test1',
   email: 'user1@example.ee',
   identity_code: '37810013855',
   country_code: 'EE'
-).first_or_create!
-
-AdminUser.where(
+}
+admin2 = {
   username: 'user2',
   password: 'test2',
   email: 'user2@example.ee',
   identity_code: '37810010085',
   country_code: 'EE'
-).first_or_create!
-
-AdminUser.where(
+}
+admin3 = {
   username: 'user3',
   password: 'test3',
   email: 'user3@example.ee',
   identity_code: '37810010727',
   country_code: 'EE'
-).first_or_create!
+}
+
+[admin1, admin2, admin3].each do |at|
+  admin = AdminUser.where(at)
+  next if admin.present?
+  admin = AdminUser.new(at)
+  admin.roles = ['admin']
+  admin.save
+end
 
 ZonefileSetting.where({
   origin: 'ee',
@@ -84,8 +90,6 @@ ZonefileSetting.where({
   email: 'hostmaster.eestiinternet.ee',
   master_nameserver: 'ns.tld.ee'
 }).first_or_create!
-
-AdminUser.update_all(roles: ['admin'])
 
 Registrar.where(
   name: 'EIS',
