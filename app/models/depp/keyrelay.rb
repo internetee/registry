@@ -30,13 +30,17 @@ module Depp
         authInfo: {
           pw: { value: params['password'] }
         },
-        expiry: {
-          relative: { value: params['expiry_relative'] },
-          absolute: { value: params['expiry_absolute'] }
-        }
+        expiry: expiry(params['expiry'])
       }, custom_params)
 
       current_user.request(xml)
+    end
+
+    def expiry(value)
+      ISO8601::Duration.new(value)
+      { relative: { value: value } }
+      rescue => _e
+        { absolute: { value: value } }
     end
   end
 end

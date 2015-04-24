@@ -18,10 +18,12 @@
 
   - if flash[:epp_results]
     - flash[:epp_results].each do |x|
-      - next if success_codes.include?(x['code'])
+      - next if success_codes.include?(x['code']) && x['show'] != true
+      - c = 'alert-danger'
+      - c = 'alert-success' if success_codes.include?(x['code'])
       .row
         .col-md-12
-          %p{class: "alert alert-danger"}
+          %p{class: "alert #{c}"}
             = x['msg'].split('[').first
             - if x['value'].present?
               = " - #{x['value']}"

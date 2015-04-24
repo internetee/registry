@@ -9,8 +9,8 @@ class Registrar::KeyrelaysController < Registrar::DeppController # EPP controlle
     @data = keyrelay.keyrelay(params)
 
     if response_ok?
-      flash[:epp_results] = [{ 'code' => '1000', 'msg' => 'Command completed successfully' }]
-      redirect_to keyrelay_path
+      flash[:epp_results] = [{ 'code' => '1000', 'msg' => 'Command completed successfully', 'show' => true }]
+      redirect_to registrar_keyrelay_path
     else
       render 'show'
     end

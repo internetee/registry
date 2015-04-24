@@ -7,57 +7,50 @@
         .col-md-3.control-label
           = label_tag :domain_name, t(:domain_name), class: 'required'
         .col-md-7
-          = text_field_tag :domain_name, params[:domain_name], 
+          = text_field_tag :domain_name, params[:domain_name],
             class: 'form-control', autocomplete: 'off', required: true
 
       .form-group
         .col-md-3.control-label
           = label_tag :password, t(:password), class: 'required'
         .col-md-7
-          = text_field_tag :password, params[:password], 
+          = text_field_tag :password, params[:password],
             class: 'form-control', autocomplete: 'off', required: true
 
       .form-group
         .col-md-3.control-label
-          = label_tag :expiry_relative, t(:expiry_relative), class: 'required'
+          = label_tag :expiry, t(:expiry), class: 'required'
         .col-md-7
-          = text_field_tag :expiry_relative, params[:expiry_relative], 
-            class: 'form-control', autocomplete: 'off', required: true
-
-      .form-group
-        .col-md-3.control-label
-          = label_tag :expiry_absolute, t(:expiry_absolute), class: 'required'
-        .col-md-7
-          = text_field_tag :expiry_absolute, params[:expiry_absolute], 
+          = text_field_tag :expiry, params[:expiry],
             class: 'form-control', autocomplete: 'off', required: true
 
       .form-group
         .col-md-3.control-label
           = label_tag :key_data_flags, t(:flag), class: 'required'
         .col-md-7
-          = select_tag :key_data_flags, 
+          = select_tag :key_data_flags,
             options_for_select(Depp::Dnskey::FLAGS, params['key_data_flags']), {class: 'form-control'}
 
       .form-group
         .col-md-3.control-label
           = label_tag :key_data_protocol, t(:protocol), class: 'required'
         .col-md-7
-          = select_tag :key_data_protocol, 
-            options_for_select(Depp::Dnskey::PROTOCOLS, params['key_data_protocol']), 
+          = select_tag :key_data_protocol,
+            options_for_select(Depp::Dnskey::PROTOCOLS, params['key_data_protocol']),
             {class: 'form-control'}
 
       .form-group
         .col-md-3.control-label
           = label_tag :key_data_alg, t(:algorithm), class: 'required'
         .col-md-7
-          = select_tag :key_data_alg, 
+          = select_tag :key_data_alg,
             options_for_select(Depp::Dnskey::ALGORITHMS, params['key_data_alg']), {class: 'form-control'}
 
       .form-group
         .col-md-3.control-label
           = label_tag :key_data_public_key, t(:public_key), class: 'required'
         .col-md-7
-          = text_field_tag :key_data_public_key, params['key_data_public_key'], 
+          = text_field_tag :key_data_public_key, params['key_data_public_key'],
             class: 'form-control', required: true
 
       .form-group

@@ -6,7 +6,7 @@ class DurationIso8601Validator < ActiveModel::EachValidator
 
   class << self
     def validate(value)
-      return false if value.blank?
+      return true if value.blank?
       return true if value.empty?
 
       begin

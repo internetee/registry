@@ -16,7 +16,6 @@ describe Keyrelay do
       @keyrelay.errors.full_messages.should match_array([
         "Auth info pw Password is missing",
         "Domain is missing",
-        "Expiry relative Expiry relative must be compatible to ISO 8601",
         "Key data alg Algorithm is missing",
         "Key data flags Flag is missing",
         "Key data protocol Protocol is missing",
