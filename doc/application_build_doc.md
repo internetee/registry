@@ -111,11 +111,15 @@ General rake and mina tips:
     mina -T     # list all mina deploy commands
 
 
-CRON
-----
+### CRON
 
 Crontab can be setup after deploy. Jobs can be viewed [here](/config/schedule.rb).
 
     mina pr cron:setup # to update the crontab.
     mina pr cron:clear # to clear crontab.
 
+### Zonefile procedure
+
+Zonefile procedure must be set up after deploy. The same command must be run whenever procedure is updated (see changelog).
+
+    bundle exec rake zonefile:replace_procedure
