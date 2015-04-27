@@ -36,7 +36,7 @@ feature 'Invoices', type: :feature do
     it 'should forward invoice' do
       visit '/registrar/invoices'
       click_link @invoice.to_s
-      click_link 'Forward invoice'
+      click_link 'Forward'
       click_button 'Forward'
       page.should have_text('Failed to forward invoice')
       fill_in 'Billing email', with: 'test@test.ee'
