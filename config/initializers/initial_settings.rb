@@ -30,6 +30,7 @@ if con.present? && con.table_exists?('settings')
   Setting.save_default(:eis_invoice_contact, 'Martti Õigus')
   Setting.save_default(:invoice_number_min, '131050')
   Setting.save_default(:invoice_number_max, '149999')
+  Setting.save_default(:days_to_keep_overdue_invoices_active, 30)
 end
 
 # dev only setting

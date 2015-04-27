@@ -7,6 +7,8 @@ class Invoice < ActiveRecord::Base
 
   accepts_nested_attributes_for :invoice_items
 
+  scope :unbinded, -> { where('id NOT IN (SELECT invoice_id FROM account_activities)') }
+
   attr_accessor :billing_email
   validates :billing_email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i }, allow_blank: true
 
@@ -113,7 +115,11 @@ class Invoice < ActiveRecord::Base
   class << self
     def cancel_overdue_invoices
       cr_at = Time.zone.now - Setting.days_to_keep_overdue_invoices_active.days
-      self.class.where('due_date < ? AND created_at < ?', Time.zone.now, cr_at)
+      invoices = Invoice.unbinded.where(
+        'due_date < ? AND created_at < ? AND cancelled_at IS NULL', Time.zone.now, cr_at
+      )
+
+      invoices.update_all(cancelled_at: Time.zone.now)
     end
   end
 end

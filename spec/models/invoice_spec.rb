@@ -70,6 +70,11 @@ describe Invoice do
       ii.item_sum_without_vat.should == BigDecimal.new('150.0')
     end
 
+    it 'should cancel overdue invoices' do
+      Fabricate(:invoice, created_at: Time.zone.now - 35.days, due_date: Time.zone.now - 1.days)
+      Invoice.cancel_overdue_invoices.should == 1
+    end
+
     # it 'should have one version' do
     #   with_versioning do
     #     @invoice.versions.should == []
