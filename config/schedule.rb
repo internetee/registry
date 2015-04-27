@@ -20,6 +20,6 @@ every 6.months, at: '12pm' do
   runner 'Contact.destroy_orphans'
 end
 
-every 1.days, at: '12:10pm' do
+every :day, at: '12:10pm' do
   runner 'Invoice.cancel_overdue_invoices'
 end
