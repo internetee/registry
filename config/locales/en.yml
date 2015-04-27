@@ -738,4 +738,5 @@ en:
   cancelled: 'Cancelled'
   cancel_date: 'Cancel date'
   cannot_cancel_paid_invoice: 'Cannot cancel paid invoice'
+  cannot_cancel_cancelled_invoice: 'Cannot cancel cancelled invoice'
   cannot_bind_cancelled_invoice: 'Cannot bind cancelled invoice'

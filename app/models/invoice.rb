@@ -72,6 +72,12 @@ class Invoice < ActiveRecord::Base
       errors.add(:base, I18n.t('cannot_cancel_paid_invoice'))
       return false
     end
+
+    if cancelled?
+      errors.add(:base, I18n.t('cannot_cancel_cancelled_invoice'))
+      return false
+    end
+
     self.cancelled_at = Time.zone.now
     save
   end
