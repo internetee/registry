@@ -28,6 +28,16 @@ class Registrar::InvoicesController < RegistrarController
     end
   end
 
+  def cancel
+    if @invoice.cancel
+      flash[:notice] = t('record_updated')
+      redirect_to([:registrar, @invoice])
+    else
+      flash.now[:alert] = t('failed_to_update_record')
+      render :show
+    end
+  end
+
   def download_pdf
     # render 'pdf', layout: false
 

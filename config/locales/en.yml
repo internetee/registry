@@ -734,3 +734,8 @@ en:
   expiry: 'Expiry'
   failed_to_create_crt_csr_already_signed: 'Failed to create certificate: CSR is already signed'
   certificates: 'Certificates'
+  cancel: 'Cancel'
+  cancelled: 'Cancelled'
+  cancel_date: 'Cancel date'
+  cannot_cancel_paid_invoice: 'Cannot cancel paid invoice'
+  cannot_bind_cancelled_invoice: 'Cannot bind cancelled invoice'

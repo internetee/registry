@@ -67,6 +67,19 @@ class Invoice < ActiveRecord::Base
     "invoice-#{number}.pdf"
   end
 
+  def cancel
+    if binded?
+      errors.add(:base, I18n.t('cannot_cancel_paid_invoice'))
+      return false
+    end
+    self.cancelled_at = Time.zone.now
+    save
+  end
+
+  def cancelled?
+    cancelled_at.present?
+  end
+
   def forward(html)
     return false unless valid?
     return false unless billing_email.present?

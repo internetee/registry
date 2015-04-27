@@ -57,5 +57,5 @@
           %dl.dl-horizontal
             %dt{style: 'padding-top: 5px'}= t('binded_invoice')
             %dd
-              = text_field_tag(:invoice_id, params[:invoice_id], class: 'form-control')
+              = text_field_tag(:invoice_no, params[:invoice_no], class: 'form-control')
               = button_tag(t('bind_manually'), class: 'btn btn-primary')

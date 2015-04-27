@@ -12,7 +12,7 @@ class Admin::BankTransactionsController < AdminController
   end
 
   def bind
-    if @bank_transaction.bind_invoice(params[:invoice_id])
+    if @bank_transaction.bind_invoice(params[:invoice_no])
       flash[:notice] = I18n.t('record_created')
       redirect_to [:admin, @bank_transaction]
     else

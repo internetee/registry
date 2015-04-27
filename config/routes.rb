@@ -21,8 +21,11 @@ Rails.application.routes.draw do
     root 'polls#show'
 
     resources :invoices do
-      get 'download_pdf', on: :member
-      match 'forward', on: :member, via: [:post, :get]
+      member do
+        get 'download_pdf'
+        match 'forward', via: [:post, :get]
+        patch 'cancel'
+      end
     end
 
     resources :deposits

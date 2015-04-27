@@ -21,9 +21,15 @@
             %tr
               %td= link_to(x, [:admin, x])
               %td= link_to(x.buyer_name, admin_registrar_path(x.buyer_id))
-              %td= l(x.due_date)
+              - if x.cancelled?
+                %td.text-grey= t('cancelled')
+              - else
+                %td= l(x.due_date)
+
               - if x.binded?
                 %td= l(x.receipt_date)
+              - elsif x.cancelled?
+                %td.text-grey= t('cancelled')
               - else
                 %td.text-danger= t('unpaid')
 .row

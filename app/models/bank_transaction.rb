@@ -25,13 +25,14 @@ class BankTransaction < ActiveRecord::Base
     match = description.match(/^[^\d]*(\d+)/)
     return unless match
 
-    invoice_id = match[1].to_i
-    return unless invoice_id
+    invoice_no = match[1].to_i
+    return unless invoice_no
 
-    invoice = registrar.invoices.find_by(id: invoice_id)
+    invoice = registrar.invoices.find_by(number: invoice_no)
     return unless invoice
 
     return if invoice.binded?
+    return if invoice.cancelled?
 
     return if invoice.sum != sum
     create_activity(registrar, invoice)
@@ -39,13 +40,13 @@ class BankTransaction < ActiveRecord::Base
   # rubocop: enable Metrics/PerceivedComplexity
   # rubocop: enable Metrics/CyclomaticComplexity
 
-  def bind_invoice(invoice_id)
+  def bind_invoice(invoice_no)
     if binded?
       errors.add(:base, I18n.t('transaction_is_already_binded'))
       return
     end
 
-    invoice = Invoice.find_by(id: invoice_id)
+    invoice = Invoice.find_by(number: invoice_no)
 
     unless invoice
       errors.add(:base, I18n.t('invoice_was_not_found'))
@@ -54,6 +55,11 @@ class BankTransaction < ActiveRecord::Base
 
     if invoice.binded?
       errors.add(:base, I18n.t('invoice_is_already_binded'))
+      return
+    end
+
+    if invoice.cancelled?
+      errors.add(:base, I18n.t('cannot_bind_cancelled_invoice'))
       return
     end
 

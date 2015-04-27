@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150423083308) do
+ActiveRecord::Schema.define(version: 20150427073517) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -297,12 +297,8 @@ ActiveRecord::Schema.define(version: 20150423083308) do
     t.integer  "legacy_id"
     t.integer  "legacy_registrar_id"
     t.integer  "legacy_registrant_id"
-    t.datetime "outzone_at"
-    t.datetime "delete_at"
   end
 
-  add_index "domains", ["delete_at"], name: "index_domains_on_delete_at", using: :btree
-  add_index "domains", ["outzone_at"], name: "index_domains_on_outzone_at", using: :btree
   add_index "domains", ["registrant_id"], name: "index_domains_on_registrant_id", using: :btree
   add_index "domains", ["registrar_id"], name: "index_domains_on_registrar_id", using: :btree
 
@@ -371,6 +367,7 @@ ActiveRecord::Schema.define(version: 20150423083308) do
     t.string   "creator_str"
     t.string   "updator_str"
     t.integer  "number"
+    t.datetime "cancelled_at"
   end
 
   add_index "invoices", ["buyer_id"], name: "index_invoices_on_buyer_id", using: :btree

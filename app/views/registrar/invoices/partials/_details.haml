@@ -4,12 +4,21 @@
   %dt= t('issue_date')
   %dd= l(@invoice.created_at)
 
+  - if @invoice.cancelled?
+    %dt= t('cancel_date')
+    %dd= l(@invoice.cancelled_at)
+
   %dt= t('due_date')
-  %dd= l(@invoice.due_date)
+  - if @invoice.cancelled?
+    %dd.text-grey= t('cancelled')
+  - else
+    %dd= l(@invoice.due_date)
 
   %dt= t('receipt_date')
   - if @invoice.binded?
     %dd= l(@invoice.receipt_date)
+  - elsif @invoice.cancelled?
+    %dd.text-grey= t('cancelled')
   - else
     %dd{class: 'text-danger'}= t('unpaid')
 
