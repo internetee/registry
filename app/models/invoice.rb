@@ -109,4 +109,11 @@ class Invoice < ActiveRecord::Base
   def sum
     sum_without_vat + vat
   end
+
+  class << self
+    def cancel_overdue_invoices
+      cr_at = Time.zone.now - Setting.days_to_keep_overdue_invoices_active.days
+      self.class.where('due_date < ? AND created_at < ?', Time.zone.now, cr_at)
+    end
+  end
 end

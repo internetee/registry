@@ -41,18 +41,18 @@ describe BankStatement do
 
     it 'should bind transactions with invoices' do
       r = Fabricate(:registrar_with_no_account_activities, reference_no: 'RF7086666663')
-      r.issue_prepayment_invoice(200, 'add some money')
+      invoice = r.issue_prepayment_invoice(200, 'add some money')
 
       bs = Fabricate(:bank_statement, bank_transactions: [
         Fabricate(:bank_transaction, {
           sum: 240.0, # with vat
           reference_no: 'RF7086666663',
-          description: 'Invoice no. 1'
+          description: "Invoice no. #{invoice.number}"
         }),
         Fabricate(:bank_transaction, {
           sum: 240.0,
           reference_no: 'RF7086666663',
-          description: 'Invoice no. 1'
+          description: "Invoice no. #{invoice.number}"
         })
       ])
 
