@@ -16,6 +16,10 @@ every 10.minutes do
   runner 'ZonefileSetting.generate_zonefiles'
 end
 
-every 6.months, at: '1am' do
+every 6.months, at: '12pm' do
   runner 'Contact.destroy_orphans'
+end
+
+every 1.days, at: '12:10pm' do
+  runner 'Invoice.cancel_overdue_invoices'
 end
