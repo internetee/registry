@@ -4,8 +4,12 @@
       = @invoice
   .col-sm-6
     %h1.text-right.text-center-xs
-      = link_to(t('back'), :back, class: 'btn btn-default')
+      - if !@invoice.cancelled? && !@invoice.binded?
+        = link_to(t(:cancel), cancel_admin_invoice_path(@invoice), method: :patch, class: 'btn btn-default')
+      = link_to(t('back'), admin_invoices_path, class: 'btn btn-default')
 %hr
+= render 'shared/full_errors', object: @invoice
+
 .row
   .col-md-6= render 'registrar/invoices/partials/details'
 .row

@@ -102,7 +102,9 @@ Rails.application.routes.draw do
       patch 'bind', on: :member
     end
 
-    resources :invoices
+    resources :invoices do
+      patch 'cancel', on: :member
+    end
 
     resources :domains do
       resources :domain_versions
