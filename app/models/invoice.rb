@@ -32,6 +32,8 @@ class Invoice < ActiveRecord::Base
     false
   end
 
+  before_save -> { self.sum_cache = sum }
+
   def binded?
     account_activity.present?
   end

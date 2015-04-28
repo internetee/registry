@@ -35,7 +35,7 @@ gem 'jquery-validation-rails', '~> 1.13.1' # validate on client side
 # view helpers
 gem 'kaminari',        '~> 0.16.3'  # pagination
 gem 'nprogress-rails', '~> 0.1.6.5' # visual loader
-gem 'html5_validators', '~> 1.1.3'  # model requements now automatically on html form 
+gem 'html5_validators', '~> 1.1.3'  # model requements now automatically on html form
 
 # rights
 gem 'devise',    '~> 3.4.1' # authenitcation
@@ -74,6 +74,9 @@ gem 'activerecord-import', '~> 0.7.0' # for inserting dummy data
 
 # for generating pdf
 gem 'pdfkit', '~> 0.6.2'
+
+# for datepicker
+gem 'jquery-ui-rails', '~> 5.0.3'
 
 group :development do
   # dev tools

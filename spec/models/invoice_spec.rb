@@ -72,7 +72,8 @@ describe Invoice do
 
     it 'should cancel overdue invoices' do
       Fabricate(:invoice, created_at: Time.zone.now - 35.days, due_date: Time.zone.now - 1.days)
-      Invoice.cancel_overdue_invoices.should == 1
+      Invoice.cancel_overdue_invoices
+      Invoice.where(cancelled_at: nil).count.should == 1
     end
 
     # it 'should have one version' do

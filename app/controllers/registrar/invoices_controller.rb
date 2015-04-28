@@ -4,6 +4,7 @@ class Registrar::InvoicesController < RegistrarController
   before_action :set_invoice, only: [:show, :forward, :download_pdf]
 
   def index
+    params[:q] ||= {}
     invoices = current_user.registrar.invoices.includes(:invoice_items, :account_activity)
     @q = invoices.search(params[:q])
     @q.sorts  = 'id desc' if @q.sorts.empty?

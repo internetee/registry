@@ -6,5 +6,6 @@
 #= require bootstrap-sprockets
 #= require jquery.nested_attributes
 #= require shared/jquery.validate.bootstrap
+#= require jquery-ui/datepicker
 #= require shared/general
 #= require registrar/application
