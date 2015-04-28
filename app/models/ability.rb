@@ -48,6 +48,7 @@ class Ability
   def registrar
     can :manage, Invoice
     can :read, AccountActivity
+    can :manage, Nameserver
     can :view, :registrar_dashboard
     can :delete, :registrar_poll
     can :manage, :registrar_xml_console

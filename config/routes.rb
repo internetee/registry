@@ -55,6 +55,12 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :nameservers do
+      collection do
+        get 'replace_hostnames'
+      end
+    end
+
     resources :contacts do
       member do
         get 'delete'

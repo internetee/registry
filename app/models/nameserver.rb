@@ -5,6 +5,8 @@ class Nameserver < ActiveRecord::Base
   # belongs_to :registrar
   belongs_to :domain
 
+  # scope :owned_by_registrar, -> (registrar) { joins(:domain).where('domains.registrar_id = ?', registrar.id) }
+
   # rubocop: disable Metrics/LineLength
   validates :hostname, format: { with: /\A(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\z/ }
   validates :ipv4, format: { with: /\A(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\z/, allow_blank: true }
@@ -39,5 +41,28 @@ class Nameserver < ActiveRecord::Base
 
   def to_s
     hostname
+  end
+
+  class << self
+    def replace_hostname_ends(domains, old_end, new_end)
+      res = true
+      domains.each do |d|
+        nameservers = d.nameservers.where('hostname LIKE ?', "%#{old_end}")
+        next unless nameservers
+
+        ns_attrs = { nameservers_attributes: [] }
+
+        nameservers.each do |ns|
+          hn = ns.hostname.chomp(old_end)
+          ns_attrs[:nameservers_attributes] << {
+            id: ns.id,
+            hostname: "#{hn}#{new_end}"
+          }
+        end
+
+        res = false unless d.update(ns_attrs)
+      end
+      res
+    end
   end
 end

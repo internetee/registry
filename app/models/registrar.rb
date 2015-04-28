@@ -7,6 +7,7 @@ class Registrar < ActiveRecord::Base
   has_many :messages
   has_many :invoices, foreign_key: 'buyer_id'
   has_many :accounts
+  has_many :nameservers, through: :domains
 
   belongs_to :country_deprecated, foreign_key: :country_id
 
