@@ -61,7 +61,7 @@ describe Nameserver do
           Fabricate(:nameserver, hostname: 'ns3.test.ee')
         ], registrar: @api_user.registrar)
 
-        Fabricate(:domain, nameservers: [
+        @domain_3 = Fabricate(:domain, nameservers: [
           Fabricate(:nameserver, hostname: 'ns1.ns.ee'),
           Fabricate(:nameserver, hostname: 'ns2.ns.ee'),
           Fabricate(:nameserver, hostname: 'ns3.test.ee')
@@ -89,6 +89,7 @@ describe Nameserver do
         @api_user.registrar.nameservers.where("hostname LIKE '%test.ee'").count.should == 2
         @domain_1.nameservers.pluck(:hostname).should include('ns1.test.ee', 'ns2.test.ee', 'ns2.testing.ee')
         @domain_2.nameservers.pluck(:hostname).should include('ns1.testing.ee', 'ns2.testing.ee', 'ns3.testing.ee')
+        @domain_3.nameservers.pluck(:hostname).should include('ns1.ns.ee', 'ns2.ns.ee', 'ns3.test.ee')
       end
     end
   end
