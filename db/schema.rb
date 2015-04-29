@@ -297,8 +297,12 @@ ActiveRecord::Schema.define(version: 20150428075052) do
     t.integer  "legacy_id"
     t.integer  "legacy_registrar_id"
     t.integer  "legacy_registrant_id"
+    t.datetime "outzone_at"
+    t.datetime "delete_at"
   end
 
+  add_index "domains", ["delete_at"], name: "index_domains_on_delete_at", using: :btree
+  add_index "domains", ["outzone_at"], name: "index_domains_on_outzone_at", using: :btree
   add_index "domains", ["registrant_id"], name: "index_domains_on_registrant_id", using: :btree
   add_index "domains", ["registrar_id"], name: "index_domains_on_registrar_id", using: :btree
 

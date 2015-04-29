@@ -13,23 +13,12 @@ class Epp::Domain < Domain
 
   def epp_code_map # rubocop:disable Metrics/MethodLength
     {
-      '2002' => [
+      '2002' => [ # Command use error
         [:base, :domain_already_belongs_to_the_querying_registrar]
       ],
-      '2302' => [ # Object exists
-        [:name_dirty, :taken, { value: { obj: 'name', val: name_dirty } }],
-        [:name_dirty, :reserved, { value: { obj: 'name', val: name_dirty } }]
-      ],
-      '2304' => [
-        [:base, :domain_status_prohibits_operation]
-      ],
-      '2306' => [ # Parameter policy error
+      '2003' => [ # Required parameter missing
         [:registrant, :blank],
-        [:base, :ds_data_with_key_not_allowed],
-        [:base, :ds_data_not_allowed],
-        [:base, :key_data_not_allowed],
-        [:period, :not_a_number],
-        [:period, :not_an_integer]
+        [:registrar, :blank]
       ],
       '2004' => [ # Parameter value range error
         [:nameservers, :out_of_range,
@@ -58,11 +47,25 @@ class Epp::Domain < Domain
          }
         ]
       ],
-      '2005' => [
+      '2005' => [ # Parameter value syntax error
         [:name_dirty, :invalid,  { obj: 'name', val: name_dirty }]
       ],
-      '2201' => [
+      '2201' => [ # Authorisation error
         [:auth_info, :wrong_pw]
+      ],
+      '2302' => [ # Object exists
+        [:name_dirty, :taken, { value: { obj: 'name', val: name_dirty } }],
+        [:name_dirty, :reserved, { value: { obj: 'name', val: name_dirty } }]
+      ],
+      '2304' => [ # Object status prohibits operation
+        [:base, :domain_status_prohibits_operation]
+      ],
+      '2306' => [ # Parameter policy error
+        [:base, :ds_data_with_key_not_allowed],
+        [:base, :ds_data_not_allowed],
+        [:base, :key_data_not_allowed],
+        [:period, :not_a_number],
+        [:period, :not_an_integer]
       ]
     }
   end
