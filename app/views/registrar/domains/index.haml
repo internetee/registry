@@ -1,7 +1,8 @@
 - content_for :actions do
-  = link_to(t(:new), new_registrar_domain_path, class: 'btn btn-primary')
+  = link_to(t(:new), new_registrar_domain_path, class: 'btn btn-default')
   = link_to(t(:transfer), transfer_registrar_domains_path, class: 'btn btn-default')
   = link_to(t(:keyrelay), registrar_keyrelay_path, class: 'btn btn-default')
+  = link_to(t(:nameservers), registrar_nameservers_path, class: 'btn btn-default')
 = render 'shared/title', name: t(:domains)
 
 .row
@@ -12,7 +13,7 @@
           = text_field_tag :domain_name, params[:domain_name], class: 'form-control', placeholder: t('domain_name'), autocomplete: 'off', autofocus: true
       .col-md-1.text-right.text-center-xs
         .form-group
-          %button.btn.btn-primary
+          %button.btn.btn-default
             &nbsp;
             %span.glyphicon.glyphicon-search
             &nbsp;
@@ -37,7 +38,7 @@
               = Time.zone.parse(x['valid_to']).try(:to_date)
             %td
               = link_to(t(:edit), edit_registrar_domains_path(domain_name: x['name']),
-                class: 'btn btn-primary btn-xs')
+                class: 'btn btn-default btn-xs')
               = link_to(t(:renew), renew_registrar_domains_path(domain_name: x['name']),
                 class: 'btn btn-default btn-xs')
               = link_to(t(:delete), delete_registrar_domains_path(domain_name: x['name']),

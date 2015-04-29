@@ -753,3 +753,5 @@ en:
   hostnames_replaced: 'Hostnames replaced'
   all_hostnames_replaced: 'All hostnames replaced'
   hostnames_partially_replaced: 'Hostnames partially replaced'
+  hostnames_will_be_replaced_only_if_domain_validates_with_the_new_nameserver: 'Hostnames will be replaced only if domain validates with the new nameserver'
+  back_to_domains: 'Back to domains'
