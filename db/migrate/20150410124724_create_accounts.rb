@@ -7,9 +7,5 @@ class CreateAccounts < ActiveRecord::Migration
 
       t.timestamps
     end
-
-    Registrar.all.each do |x|
-      Account.create(registrar_id: x.id, account_type: Account::CASH)
-    end
   end
 end
