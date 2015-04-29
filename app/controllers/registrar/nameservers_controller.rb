@@ -29,6 +29,10 @@ class Registrar::NameserversController < RegistrarController
     @nameservers = @q.result.page(params[:page])
   end
 
+  def replace_all
+    @domain_params = { nameservers_attributes: { 0 => {} } }
+  end
+
   private
 
   def can_replace_hostnames?

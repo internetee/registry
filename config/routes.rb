@@ -57,7 +57,7 @@ Rails.application.routes.draw do
 
     resources :nameservers do
       collection do
-        get 'replace_hostnames'
+        match 'replace_all', via: [:post, :get]
       end
     end
 
