@@ -357,6 +357,216 @@ describe 'EPP Contact', epp: true do
 
         Setting.client_status_editing_enabled = true
       end
+
+      it 'should add value voice value' do
+        xml = @epp_xml.update({
+          id: { value: 'sh8013' },
+          authInfo: { pw: { value: 'password' } },
+          add: {
+            voice: { value: '+372.11111111' }
+          }
+        })
+
+        response = epp_plain_request(xml, :xml)
+        response[:results][0][:msg].should == 'Command completed successfully'
+        response[:results][0][:result_code].should == '1000'
+
+        contact = Contact.find_by(code: 'sh8013')
+        contact.phone.should == '+372.11111111'
+
+        contact.update_attribute(:phone, '+372.7654321') # restore default value
+      end
+
+      it 'should return error when add attributes phone value is empty' do
+        xml = @epp_xml.update({
+          id: { value: 'sh8013' },
+          authInfo: { pw: { value: 'password' } },
+          add: {
+            voice: { value: '' }
+          },
+          chg: {
+            postalInfo: { email: { value: 'example@example.ee' } }
+          }
+        })
+
+        response = epp_plain_request(xml, :xml)
+        response[:results][0][:msg].should == 'Required parameter missing - phone [phone]'
+        response[:results][0][:result_code].should == '2003'
+        Contact.find_by(code: 'sh8013').phone.should == '+372.7654321' # aka not changed
+      end
+
+      it 'should honor chg value over add value when both changes same attribute' do
+        xml = @epp_xml.update({
+          id: { value: 'sh8013' },
+          authInfo: { pw: { value: 'password' } },
+          chg: {
+            voice: { value: '+372.2222222222222' }
+          },
+          add: {
+            voice: { value: '+372.11111111111' }
+          }
+        })
+
+        response = epp_plain_request(xml, :xml)
+        response[:results][0][:msg].should == 'Command completed successfully'
+        response[:results][0][:result_code].should == '1000'
+
+        contact = Contact.find_by(code: 'sh8013')
+        contact.phone.should == '+372.2222222222222'
+
+        contact.update_attribute(:phone, '+372.7654321') # restore default value
+      end
+
+      it 'should not allow to remove required voice attribute' do
+        xml = @epp_xml.update({
+          id: { value: 'sh8013' },
+          authInfo: { pw: { value: 'password' } },
+          rem: {
+            voice: { value: '+372.7654321' }
+          }
+        })
+
+        response = epp_plain_request(xml, :xml)
+        response[:results][0][:msg].should == 'Required parameter missing - phone [phone]'
+        response[:results][0][:result_code].should == '2003'
+
+        contact = Contact.find_by(code: 'sh8013')
+        contact.phone.should == '+372.7654321'
+      end
+
+      it 'should not allow to remove required attribute' do
+        xml = @epp_xml.update({
+          id: { value: 'sh8013' },
+          authInfo: { pw: { value: 'password' } },
+          rem: {
+            voice: { value: '+372.7654321' }
+          }
+        })
+
+        response = epp_plain_request(xml, :xml)
+        response[:results][0][:msg].should == 'Required parameter missing - phone [phone]'
+        response[:results][0][:result_code].should == '2003'
+
+        contact = Contact.find_by(code: 'sh8013')
+        contact.phone.should == '+372.7654321'
+      end
+
+      it 'should honor add over rem' do
+        xml = @epp_xml.update({
+          id: { value: 'sh8013' },
+          authInfo: { pw: { value: 'password' } },
+          rem: {
+            voice: { value: 'not important' }
+          },
+          add: {
+            voice: { value: '+372.3333333' }
+          }
+        })
+
+        response = epp_plain_request(xml, :xml)
+        response[:results][0][:msg].should == 'Command completed successfully'
+        response[:results][0][:result_code].should == '1000'
+
+        contact = Contact.find_by(code: 'sh8013')
+        contact.phone.should == '+372.3333333'
+
+        contact.update_attribute(:phone, '+372.7654321') # restore default value
+      end
+
+      it 'should honor chg over rem' do
+        xml = @epp_xml.update({
+          id: { value: 'sh8013' },
+          authInfo: { pw: { value: 'password' } },
+          rem: {
+            voice: { value: 'not important' }
+          },
+          chg: {
+            voice: { value: '+372.44444444' }
+          }
+        })
+
+        response = epp_plain_request(xml, :xml)
+        response[:results][0][:msg].should == 'Command completed successfully'
+        response[:results][0][:result_code].should == '1000'
+
+        contact = Contact.find_by(code: 'sh8013')
+        contact.phone.should == '+372.44444444'
+
+        contact.update_attribute(:phone, '+372.7654321') # restore default value
+      end
+
+      it 'should honor chg over rem and add' do
+        xml = @epp_xml.update({
+          id: { value: 'sh8013' },
+          authInfo: { pw: { value: 'password' } },
+          chg: {
+            voice: { value: '+372.666666' }
+          },
+          add: {
+            voice: { value: '+372.555555' }
+          },
+          rem: {
+            voice: { value: 'not important' }
+          }
+        })
+
+        response = epp_plain_request(xml, :xml)
+        response[:results][0][:msg].should == 'Command completed successfully'
+        response[:results][0][:result_code].should == '1000'
+
+        contact = Contact.find_by(code: 'sh8013')
+        contact.phone.should == '+372.666666'
+
+        contact.update_attribute(:phone, '+372.7654321') # restore default value
+      end
+
+      it 'should return authorization error when removing auth info' do
+        xml = @epp_xml.update({
+          id: { value: 'sh8013' },
+          authInfo: { pw: { value: 'password' } },
+          rem: {
+            authInfo: { pw: { value: 'password' } }
+          }
+        })
+
+        response = epp_plain_request(xml, :xml)
+        response[:results][0][:msg].should == 'Authorization error'
+        response[:results][0][:result_code].should == '2201'
+
+        contact = Contact.find_by(code: 'sh8013')
+        contact.auth_info.should == 'password'
+      end
+
+      it 'should return general policy error when removing org' do
+        xml = @epp_xml.update({
+          id: { value: 'sh8013' },
+          authInfo: { pw: { value: 'password' } },
+          rem: {
+            postalInfo: { org: { value: 'not important' } } 
+          }
+        })
+
+        response = epp_plain_request(xml, :xml)
+        response[:results][0][:msg].should == 
+          'Parameter value policy error. Org must be blank: postalInfo > org [org]'
+        response[:results][0][:result_code].should == '2306'
+      end
+
+      it 'should return error when removing street' do
+        xml = @epp_xml.update({
+          id: { value: 'sh8013' },
+          authInfo: { pw: { value: 'password' } },
+          rem: {
+            postalInfo: { 
+              name: { value: 'not important' }
+            }
+          }
+        })
+
+        response = epp_plain_request(xml, :xml)
+        response[:results][0][:msg].should == "Required parameter missing - name [name]"
+        response[:results][0][:result_code].should == '2003'
+      end
     end
 
     context 'delete command' do
