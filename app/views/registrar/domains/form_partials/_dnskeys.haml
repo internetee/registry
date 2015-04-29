@@ -4,67 +4,67 @@
       .panel-heading.clearfix
         .pull-left= t(:dnskey)
         .pull-right
-          = link_to(t(:add_another), '#', class: 'btn btn-primary btn-xs add-dnskey')
-          = link_to(t(:delete), '#', class: 'btn btn-danger btn-xs destroy')
+          = link_to(t(:add_another), '#', class: 'btn btn-default btn-xs add-dnskey')
+          = link_to(t(:delete), '#', class: 'btn btn-default btn-xs destroy')
       .panel-body
         - if ENV['show_ds_data_fields'] == 'true'
           .form-group
             .col-md-3.control-label
               = label_tag "domain_dnskeys_attributes_#{k}_ds_key_tag", t(:ds_key_tag)
             .col-md-7
-              = text_field_tag "domain[dnskeys_attributes][#{k}][ds_key_tag]", v['ds_key_tag'], 
+              = text_field_tag "domain[dnskeys_attributes][#{k}][ds_key_tag]", v['ds_key_tag'],
                 {class: 'form-control'}
 
           .form-group
             .col-md-3.control-label
               = label_tag "domain_dnskeys_attributes_#{k}_ds_alg", t(:ds_algorithm)
             .col-md-7
-              = select_tag "domain[dnskeys_attributes][#{k}][ds_alg]", 
+              = select_tag "domain[dnskeys_attributes][#{k}][ds_alg]",
                 options_for_select(Depp::Dnskey::ALGORITHMS, v['ds_alg']), {class: 'form-control'}
 
           .form-group
             .col-md-3.control-label
               = label_tag "domain_dnskeys_attributes_#{k}_ds_digest_type", t(:ds_digest_type)
             .col-md-7
-              = select_tag "domain[dnskeys_attributes][#{k}][ds_digest_type]", 
-                options_for_select(Depp::Dnskey::DS_DIGEST_TYPES, v['ds_digest_type']), 
+              = select_tag "domain[dnskeys_attributes][#{k}][ds_digest_type]",
+                options_for_select(Depp::Dnskey::DS_DIGEST_TYPES, v['ds_digest_type']),
                 {class: 'form-control'}
 
           .form-group
             .col-md-3.control-label
               = label_tag "domain_dnskeys_attributes_#{k}_ds_digest", t(:ds_digest)
             .col-md-7
-              = text_field_tag "domain[dnskeys_attributes][#{k}][ds_digest]", v['ds_digest'], 
+              = text_field_tag "domain[dnskeys_attributes][#{k}][ds_digest]", v['ds_digest'],
                 {class: 'form-control'}
 
         .form-group
           .col-md-3.control-label
             = label_tag "domain_dnskeys_attributes_#{k}_flags", t(:flags)
           .col-md-7
-            = select_tag "domain[dnskeys_attributes][#{k}][flags]", 
-              options_for_select(Depp::Dnskey::FLAGS, v['flags']), 
+            = select_tag "domain[dnskeys_attributes][#{k}][flags]",
+              options_for_select(Depp::Dnskey::FLAGS, v['flags']),
               { class: 'form-control' }
 
         .form-group
           .col-md-3.control-label
             = label_tag "domain_dnskeys_attributes_#{k}_protocol", t(:protocol)
           .col-md-7
-            = select_tag "domain[dnskeys_attributes][#{k}][protocol]", 
-              options_for_select(Depp::Dnskey::PROTOCOLS, v['protocol']), 
+            = select_tag "domain[dnskeys_attributes][#{k}][protocol]",
+              options_for_select(Depp::Dnskey::PROTOCOLS, v['protocol']),
               { class: 'form-control' }
 
         .form-group
           .col-md-3.control-label
             = label_tag "domain_dnskeys_attributes_#{k}_alg", t(:alg)
           .col-md-7
-            = select_tag "domain[dnskeys_attributes][#{k}][alg]", 
+            = select_tag "domain[dnskeys_attributes][#{k}][alg]",
               options_for_select(Depp::Dnskey::ALGORITHMS, v['alg']), { class: 'form-control' }
 
         .form-group
           .col-md-3.control-label
             = label_tag "domain_dnskeys_attributes_#{k}_public_key", t(:public_key)
           .col-md-7
-            = text_field_tag "domain[dnskeys_attributes][#{k}][public_key]", v['public_key'], 
+            = text_field_tag "domain[dnskeys_attributes][#{k}][public_key]", v['public_key'],
               class: 'form-control'
 
 :coffee

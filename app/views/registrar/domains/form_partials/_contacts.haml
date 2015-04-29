@@ -4,8 +4,8 @@
       .panel-heading.clearfix
         .pull-left= t(:contact)
         .pull-right
-          = link_to(t(:add_another), '#', class: 'btn btn-primary btn-xs add-domain-contact')
-          = link_to(t(:delete), '#', class: 'btn btn-danger btn-xs destroy')
+          = link_to(t(:add_another), '#', class: 'btn btn-default btn-xs add-domain-contact')
+          = link_to(t(:delete), '#', class: 'btn btn-default btn-xs destroy')
       .panel-body
         .form-group
           .col-md-3.control-label
@@ -17,7 +17,7 @@
           .col-md-3.control-label
             = label_tag "domain_contacts_attributes_#{k}_code", t(:contact_code), class: 'required'
           .col-md-7.has-feedback
-            = text_field_tag("domain[contacts_attributes][#{k}][code]", v['code'], 
+            = text_field_tag("domain[contacts_attributes][#{k}][code]", v['code'],
               class: 'form-control', placeholder: t(:contact_code), autocomplete: 'off', required: true)
 :coffee
   $("#domain-contacts").nestedAttributes
