@@ -3,7 +3,7 @@ class Registrar::NameserversController < RegistrarController
 
   def index
     if can_replace_hostnames?
-      res = Nameserver.replace_hostname_ends(
+      prc = Nameserver.replace_hostname_ends(
         current_user.registrar.domains.includes(
           :registrant, :nameservers, :admin_domain_contacts, :tech_domain_contacts, :domain_statuses,
           :versions, :admin_contacts, :tech_contacts, :whois_record, :dnskeys
@@ -12,7 +12,9 @@ class Registrar::NameserversController < RegistrarController
         params[:hostname_end_replacement]
       )
 
-      if res
+      if prc == 'replaced_none'
+        flash.now[:alert] = t('no_hostnames_replaced')
+      elsif prc == 'replaced_all'
         params[:q][:hostname_end] = params[:hostname_end_replacement]
         params[:hostname_end_replacement] = nil
         flash.now[:notice] = t('all_hostnames_replaced')

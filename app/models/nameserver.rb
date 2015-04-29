@@ -50,7 +50,7 @@ class Nameserver < ActiveRecord::Base
         )', "%#{old_end}"
       )
 
-      res = true
+      count, success_count = 0.0, 0.0
       domains.each do |d|
         ns_attrs = { nameservers_attributes: [] }
 
@@ -64,9 +64,16 @@ class Nameserver < ActiveRecord::Base
           }
         end
 
-        res = false unless d.update(ns_attrs)
+        success_count += 1 if d.update(ns_attrs)
+        count += 1
       end
-      res
+
+      return 'replaced_none' if count == 0.0
+
+      prc = success_count / count
+
+      return 'replaced_all' if prc == 1.0
+      'replaced_some'
     end
   end
 end
