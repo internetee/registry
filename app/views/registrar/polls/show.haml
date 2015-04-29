@@ -11,10 +11,10 @@
             .pull-left= t('message_no', id: msg_q['id'])
             .pull-right
               - if @data.css('panData').any? # this is a keyrelay request
-                = link_to(t('confirm'), 'javascript: void(0);', class: 'btn btn-primary btn-xs js-keyrelay-confirm')
+                = link_to(t('confirm'), 'javascript: void(0);', class: 'btn btn-warning btn-xs js-keyrelay-confirm')
               - if @data.css('trnData trStatus').any? # this is a transfer request
                 - unless ['serverApproved', 'clientApproved'].include?(@data.css('trStatus').first.text)
-                  = link_to(t('confirm'), 'javascript: void(0);', class: 'btn btn-primary btn-xs js-transfer-confirm')
+                  = link_to(t('confirm'), 'javascript: void(0);', class: 'btn btn-warning btn-xs js-transfer-confirm')
               = link_to(t('dequeue'), registrar_poll_path(id: msg_q['id']), method: :delete, class: 'btn btn-primary btn-xs')
           .panel-body
             %dl.dl-horizontal
