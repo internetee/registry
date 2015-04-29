@@ -15,8 +15,27 @@ class AddMissingData < ActiveRecord::Migration
     puts 'GENERATING REFERENCE NUMBERS'
 
     Registrar.all.each do |x|
-      x.generate_iso_11649_reference_no
-      x.save
+
+      no = nil
+
+      loop do
+        base = nil
+        loop do
+          base = SecureRandom.random_number.to_s.last(8)
+          break if base.to_i != 0 && base.length == 8
+        end
+
+        control_base = (base + '2715' + '00').to_i
+        reminder = control_base % 97
+        check_digits = 98 - reminder
+
+        check_digits = check_digits < 10 ? "0#{check_digits}" : check_digits.to_s
+
+        no = "RF#{check_digits}#{base}"
+        break unless Registrar.exists?(reference_no: no)
+      end
+
+      x.update_columns(reference_no: no)
     end
 
     puts 'SAVING LEGAL DOCUMENTS'
