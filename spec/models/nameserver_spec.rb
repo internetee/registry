@@ -45,5 +45,51 @@ describe Nameserver do
         @nameserver.versions.size.should == 1
       end
     end
+
+    context 'with many nameservers' do
+      before :all do
+        @api_user = Fabricate(:api_user)
+        @domain_1 = Fabricate(:domain, nameservers: [
+          Fabricate(:nameserver, hostname: 'ns1.ns.ee'),
+          Fabricate(:nameserver, hostname: 'ns2.ns.ee'),
+          Fabricate(:nameserver, hostname: 'ns2.test.ee')
+        ], registrar: @api_user.registrar)
+
+        @domain_2 = Fabricate(:domain, nameservers: [
+          Fabricate(:nameserver, hostname: 'ns1.ns.ee'),
+          Fabricate(:nameserver, hostname: 'ns2.ns.ee'),
+          Fabricate(:nameserver, hostname: 'ns3.test.ee')
+        ], registrar: @api_user.registrar)
+
+        Fabricate(:domain, nameservers: [
+          Fabricate(:nameserver, hostname: 'ns1.ns.ee'),
+          Fabricate(:nameserver, hostname: 'ns2.ns.ee'),
+          Fabricate(:nameserver, hostname: 'ns3.test.ee')
+        ])
+      end
+
+      it 'should replace hostname ends' do
+        res = Nameserver.replace_hostname_ends(@api_user.registrar.domains, 'ns.ee', 'test.ee')
+        res.should == false
+
+        @api_user.registrar.nameservers.where("hostname LIKE '%test.ee'").count.should == 4
+        @domain_1.nameservers.pluck(:hostname).should include('ns1.ns.ee', 'ns2.ns.ee', 'ns2.test.ee')
+        @domain_2.nameservers.pluck(:hostname).should include('ns1.test.ee', 'ns2.test.ee', 'ns3.test.ee')
+
+        res = Nameserver.replace_hostname_ends(@api_user.registrar.domains, 'test.ee', 'testing.ee')
+        res.should == true
+
+        @api_user.registrar.nameservers.where("hostname LIKE '%testing.ee'").count.should == 4
+        @domain_1.nameservers.pluck(:hostname).should include('ns1.ns.ee', 'ns2.ns.ee', 'ns2.testing.ee')
+        @domain_2.nameservers.pluck(:hostname).should include('ns1.testing.ee', 'ns2.testing.ee', 'ns3.testing.ee')
+
+        res = Nameserver.replace_hostname_ends(@api_user.registrar.domains, 'ns.ee', 'test.ee')
+        res.should == true
+
+        @api_user.registrar.nameservers.where("hostname LIKE '%test.ee'").count.should == 2
+        @domain_1.nameservers.pluck(:hostname).should include('ns1.test.ee', 'ns2.test.ee', 'ns2.testing.ee')
+        @domain_2.nameservers.pluck(:hostname).should include('ns1.testing.ee', 'ns2.testing.ee', 'ns3.testing.ee')
+      end
+    end
   end
 end
