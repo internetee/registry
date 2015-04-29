@@ -81,7 +81,7 @@ task :epppr do
 end
 
 # production
-task :registrarst do
+task :registrarpr do
   set :domain, 'registrar'
   set :deploy_to, '$HOME/registrar'
   set :repository, 'https://github.com/internetee/registry' # production repo
