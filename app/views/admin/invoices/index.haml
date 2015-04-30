@@ -1,6 +1,6 @@
 .row
   .col-sm-12
-    %h2.text-center-xs= t('invoices')
+    %h2.text-center-xs= t(:invoices)
 %hr
 .row
   .col-md-12
@@ -22,16 +22,16 @@
               %td= link_to(x, [:admin, x])
               %td= link_to(x.buyer_name, admin_registrar_path(x.buyer_id))
               - if x.cancelled?
-                %td.text-grey= t('cancelled')
+                %td.text-grey= t(:cancelled)
               - else
                 %td= l(x.due_date)
 
               - if x.binded?
                 %td= l(x.receipt_date)
               - elsif x.cancelled?
-                %td.text-grey= t('cancelled')
+                %td.text-grey= t(:cancelled)
               - else
-                %td.text-danger= t('unpaid')
+                %td.text-danger= t(:unpaid)
 .row
   .col-md-12
     = paginate @invoices

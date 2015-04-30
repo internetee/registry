@@ -148,68 +148,68 @@
             Details
           %hr
           %dl.dl-horizontal
-            %dt= t('issue_date')
+            %dt= t(:issue_date)
             %dd= l(@invoice.created_at)
 
             - if @invoice.cancelled?
-              %dt= t('cancel_date')
+              %dt= t(:cancel_date)
               %dd= l(@invoice.cancelled_at)
 
-            %dt= t('due_date')
+            %dt= t(:due_date)
             - if @invoice.cancelled?
-              %dd= t('cancelled')
+              %dd= t(:cancelled)
             - else
               %dd= l(@invoice.due_date)
 
-            %dt= t('receipt_date')
+            %dt= t(:receipt_date)
             - if @invoice.binded?
               %dd= l(@invoice.receipt_date)
             - elsif @invoice.cancelled?
-              %dd= t('cancelled')
+              %dd= t(:cancelled)
             - else
-              %dd{class: 'text-danger'}= t('unpaid')
+              %dd{class: 'text-danger'}= t(:unpaid)
 
-            %dt= t('issuer')
+            %dt= t(:issuer)
             %dd= @invoice.seller_contact_name
 
-            %dt= t('payment_term')
+            %dt= t(:payment_term)
             %dd= t(@invoice.payment_term)
 
-            %dt= t('description')
+            %dt= t(:description)
             - @invoice.description.prepend(' - ') if @invoice.description.present?
             %dd= "#{t('invoice_no', no: @invoice.id)}#{@invoice.description}"
 
-            %dt= t('reference_no')
+            %dt= t(:reference_no)
             %dd= @invoice.reference_no
 
         .col-md-6.right
-          %h4= t('client')
+          %h4= t(:client)
           %hr
           %dl.dl-horizontal
-            %dt= t('name')
+            %dt= t(:name)
             %dd= @invoice.buyer_name
 
-            %dt= t('reg_no')
+            %dt= t(:reg_no)
             %dd= @invoice.buyer_reg_no
 
             - if @invoice.buyer_address.present?
-              %dt= t('address')
+              %dt= t(:address)
               %dd= @invoice.buyer_address
 
             - if @invoice.buyer_country.present?
-              %dt= t('country')
+              %dt= t(:country)
               %dd= @invoice.buyer_country
 
             - if @invoice.buyer_phone.present?
-              %dt= t('phone')
+              %dt= t(:phone)
               %dd= @invoice.buyer_phone
 
             - if @invoice.buyer_phone.present?
-              %dt= t('url')
+              %dt= t(:url)
               %dd= @invoice.buyer_url
 
             - if @invoice.buyer_email.present?
-              %dt= t('email')
+              %dt= t(:email)
               %dd= @invoice.buyer_email
 
       .clear
@@ -219,11 +219,11 @@
             %table.table.table-hover.table-condensed
               %thead
                 %tr
-                  %th{class: 'col-xs-4'}= t('description')
-                  %th{class: 'col-xs-2'}= t('unit')
-                  %th{class: 'col-xs-1'}= t('amount')
-                  %th{class: 'col-xs-3'}= t('price')
-                  %th{class: 'col-xs-2'}= t('total')
+                  %th{class: 'col-xs-4'}= t(:description)
+                  %th{class: 'col-xs-2'}= t(:unit)
+                  %th{class: 'col-xs-1'}= t(:amount)
+                  %th{class: 'col-xs-3'}= t(:price)
+                  %th{class: 'col-xs-2'}= t(:total)
               %tbody
                 - @invoice.items.each do |x|
                   %tr
@@ -235,7 +235,7 @@
               %tfoot
                 %tr
                   %th{colspan: 3}
-                  %th= t('total_without_vat')
+                  %th= t(:total_without_vat)
                   %td= "#{@invoice.sum_without_vat} #{@invoice.currency}"
                 %tr
                   %th.no-border{colspan: 3}
@@ -243,7 +243,7 @@
                   %td= "#{@invoice.vat} #{@invoice.currency}"
                 %tr
                   %th.no-border{colspan: 3}
-                  %th= t('total')
+                  %th= t(:total)
                   %td= "#{@invoice.sum} #{@invoice.currency}"
 
       #footer
@@ -268,11 +268,11 @@
             = @invoice.seller_url
 
           .col-md-3.text-right.left
-            = t('bank')
+            = t(:bank)
             %br
-            = t('iban')
+            = t(:iban)
             %br
-            = t('swift')
+            = t(:swift)
 
           .col-md-3.left
             = @invoice.seller_bank

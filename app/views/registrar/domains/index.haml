@@ -10,7 +10,7 @@
     = form_tag info_registrar_domains_path, class: 'form-horizontal', method: :get do
       .col-md-11
         .form-group
-          = text_field_tag :domain_name, params[:domain_name], class: 'form-control', placeholder: t('domain_name'), autocomplete: 'off', autofocus: true
+          = text_field_tag :domain_name, params[:domain_name], class: 'form-control', placeholder: t(:domain_name), autocomplete: 'off', autofocus: true
       .col-md-1.text-right.text-center-xs
         .form-group
           %button.btn.btn-default

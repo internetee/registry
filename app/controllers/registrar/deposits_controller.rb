@@ -10,10 +10,10 @@ class Registrar::DepositsController < RegistrarController
     @invoice = @deposit.issue_prepayment_invoice
 
     if @invoice.persisted?
-      flash[:notice] = t('please_pay_the_following_invoice')
+      flash[:notice] = t(:please_pay_the_following_invoice)
       redirect_to [:registrar, @invoice]
     else
-      flash[:alert] = t('failed_to_create_record')
+      flash[:alert] = t(:failed_to_create_record)
       render 'new'
     end
   end

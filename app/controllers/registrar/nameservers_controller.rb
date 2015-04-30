@@ -13,13 +13,13 @@ class Registrar::NameserversController < RegistrarController
       )
 
       if prc == 'replaced_none'
-        flash.now[:alert] = t('no_hostnames_replaced')
+        flash.now[:alert] = t(:no_hostnames_replaced)
       elsif prc == 'replaced_all'
         params[:q][:hostname_end] = params[:hostname_end_replacement]
         params[:hostname_end_replacement] = nil
-        flash.now[:notice] = t('all_hostnames_replaced')
+        flash.now[:notice] = t(:all_hostnames_replaced)
       else
-        flash.now[:warning] = t('hostnames_partially_replaced')
+        flash.now[:warning] = t(:hostnames_partially_replaced)
       end
     end
 

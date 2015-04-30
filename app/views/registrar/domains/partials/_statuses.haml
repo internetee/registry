@@ -5,8 +5,8 @@
     %table.table.table-hover.table-bordered.table-condensed
       %thead
         %tr
-          %th{class: 'col-xs-6'}= t('status')
-          %th{class: 'col-xs-6'}= t('description')
+          %th{class: 'col-xs-6'}= t(:status)
+          %th{class: 'col-xs-6'}= t(:description)
       %tbody
         - @data.css('status').each do |x|
           %tr
