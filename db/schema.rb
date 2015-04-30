@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150429135339) do
+ActiveRecord::Schema.define(version: 20150430121807) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -917,11 +917,13 @@ ActiveRecord::Schema.define(version: 20150429135339) do
     t.string   "name"
     t.text     "body"
     t.json     "json"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.integer  "registrar_id"
   end
 
   add_index "whois_records", ["domain_id"], name: "index_whois_records_on_domain_id", using: :btree
+  add_index "whois_records", ["registrar_id"], name: "index_whois_records_on_registrar_id", using: :btree
 
   create_table "zonefile_settings", force: :cascade do |t|
     t.string   "origin"

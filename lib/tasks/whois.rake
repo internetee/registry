@@ -1,19 +1,25 @@
 namespace :whois do
-  desc 'Regenerate whois records at Registry master database (slow)'
+  desc 'Regenerate Registry whois_records table and sync with whois server (slower)'
   task regenerate: :environment do
     start = Time.zone.now.to_f
-    print "-----> Regenerate whois records at Registry master database..."
-    Domain.included.find_each(batch_size: 50000).with_index do |d, index|
-      d.update_whois_record
-      print '.' if index % 100 == 0
+
+    @i = 0
+    print "-----> Regenerate Registry whois_records table and sync with whois server..."
+    ActiveRecord::Base.uncached do
+      puts "\n#{@i}"
+      Domain.included.find_in_batches(batch_size: 10000) do |batch|
+        batch.map { |d| d.update_whois_record }
+        puts(@i += 10000)
+        GC.start
+      end
     end
     puts "\n-----> all done in #{(Time.zone.now.to_f - start).round(2)} seconds"
   end
 
-  desc 'Delete whois database data and sync with Registry master database (fast)'
+  desc 'Delete whois database data and import from Registry master database (faster)'
   task export: :environment do
     start = Time.zone.now.to_f
-    print "-----> Delete whois database data and sync with Registry master database..."
+    print "-----> Delete whois database data and import from Registry whois_records table..."
     whois_records = WhoisRecord.pluck(:name, :body, :json)
     Whois::Record.delete_all
     Whois::Record.import([:name, :body, :json], whois_records)
@@ -33,19 +39,6 @@ namespace :whois do
         else
           load("#{Rails.root}/db/#{schema_file(whois_db)}")
         end
-      rescue => e
-        puts "\n#{e}"
-      end
-    end
-
-    desc 'Force whois schema into exsisting whois database'
-    task force_load: [:environment] do
-      whois_db = "whois_#{Rails.env}"
-      begin
-        puts "\n------------------------ #{whois_db} schema loading ------------------------------\n"
-        ActiveRecord::Base.clear_all_connections!
-        ActiveRecord::Base.establish_connection(whois_db.to_sym)
-        load("#{Rails.root}/db/#{schema_file(whois_db)}")
       rescue => e
         puts "\n#{e}"
       end

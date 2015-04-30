@@ -6,7 +6,7 @@ class Admin::RegistrarsController < AdminController
   end
 
   def index
-    @q = Registrar.search(params[:q])
+    @q = Registrar.ordered.search(params[:q])
     @registrars = @q.result.page(params[:page])
   end
 

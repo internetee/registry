@@ -23,6 +23,10 @@ describe WhoisRecord do
     it 'should not have whois body' do
       @whois_record.body.should == nil
     end
+
+    it 'should not have registrar' do
+      @whois_record.registrar.should == nil
+    end
   end
 
   context 'with valid attributes' do
@@ -39,6 +43,10 @@ describe WhoisRecord do
       @whois_record = Fabricate(:domain).whois_record
       @whois_record.valid?
       @whois_record.errors.full_messages.should match_array([])
+    end
+
+    it 'should have registrar' do
+      @whois_record.registrar.present?.should == true
     end
 
     it 'should have whois body by default' do
