@@ -8,6 +8,7 @@ class Registrar < ActiveRecord::Base
   has_many :invoices, foreign_key: 'buyer_id'
   has_many :accounts
   has_many :nameservers, through: :domains
+  has_many :whois_records
 
   belongs_to :country_deprecated, foreign_key: :country_id
 
@@ -39,6 +40,15 @@ class Registrar < ActiveRecord::Base
 
   validates :email, :billing_email, format: /@/, allow_blank: true
 
+  WHOIS_TRIGGERS = %w(name email phone street city state zip)
+
+  after_save :update_whois_records
+  def update_whois_records
+    if changed? && (changes.keys & WHOIS_TRIGGERS).present? 
+      whois_records.map(&:save) # slow currently
+    end
+  end
+
   class << self
     def search_by_query(query)
       res = search(name_or_reg_no_cont: query).result
@@ -48,6 +58,11 @@ class Registrar < ActiveRecord::Base
     def eis
       find_by(reg_no: '90010019')
     end
+
+    def ordered
+      order(name: :asc)
+    end
+
   end
 
   def issue_prepayment_invoice(amount, description = nil) # rubocop:disable Metrics/MethodLength

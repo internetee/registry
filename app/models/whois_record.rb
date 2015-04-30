@@ -5,10 +5,25 @@ class WhoisRecord < ActiveRecord::Base
 
   before_validation :populate
   def populate
-    return if domain.blank?
+    return if domain_id.blank?
     self.json = generate_json
-    self.name = json['name']
     self.body = generated_body
+    self.name = json['name']
+    self.registrar_id = domain.registrar_id # for faster registrar updates
+  end
+
+  class << self
+    def included
+      includes(
+        domain: [
+          :registrant,
+          :registrar, 
+          :nameservers, 
+          { tech_contacts: :registrar },
+          { admin_contacts: :registrar }
+        ]    
+      )
+    end
   end
 
   # rubocop:disable Metrics/MethodLength
@@ -24,10 +39,12 @@ class WhoisRecord < ActiveRecord::Base
     h[:updated_at] = domain.updated_at.try(:to_s, :iso8601)
     h[:valid_to] = domain.valid_to.try(:to_s, :iso8601)
     
+    # update registar triggers when adding new attributes
     h[:registrar] = domain.registrar.name
     h[:registrar_phone] = domain.registrar.phone
     h[:registrar_address] = domain.registrar.address
     h[:registrar_update_at] = domain.registrar.updated_at.try(:to_s, :iso8601) 
+
     h[:admin_contacts] = []
     domain.admin_contacts.each do |ac|
       @disclosed << [:email, ac.email]
