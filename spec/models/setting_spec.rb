@@ -2,7 +2,6 @@ require 'rails_helper'
 
 describe Setting do
   it 'returns value' do
-    create_settings
     expect(Setting.ns_min_count).to eq(2)
     Setting.ns_min_count = '2'
     expect(Setting.ns_min_count).to eq('2')

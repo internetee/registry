@@ -26,6 +26,28 @@ Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.maintain_test_schema!
 
+# create general settings
+def create_settings
+  Setting.ds_algorithm = 2
+  Setting.ds_data_allowed = true
+  Setting.ds_data_with_key_allowed = true
+  Setting.key_data_allowed = true
+
+  Setting.dnskeys_min_count = 0
+  Setting.dnskeys_max_count = 9
+  Setting.ns_min_count = 2
+  Setting.ns_max_count = 11
+
+  Setting.transfer_wait_time = 0
+
+  Setting.admin_contacts_min_count = 1
+  Setting.admin_contacts_max_count = 10
+  Setting.tech_contacts_min_count = 0
+  Setting.tech_contacts_max_count = 10
+
+  Setting.client_side_status_editing_enabled = true
+end
+
 RSpec.configure do |config|
   config.filter_run focus: true
   config.run_all_when_everything_filtered = true
@@ -45,21 +67,26 @@ RSpec.configure do |config|
 
   config.before(:all) do
     DatabaseCleaner.clean_with(:truncation)
+    create_settings
   end
 
   config.before(:all, epp: true) do
     DatabaseCleaner.strategy = nil
+    create_settings
   end
 
   config.before(:each, js: true) do
     DatabaseCleaner.strategy = :truncation
+    create_settings
   end
 
   config.before(:each, type: :request) do
     DatabaseCleaner.strategy = :truncation
+    create_settings
   end
 
   config.before(:each, type: :model) do
+    create_settings
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.start
   end

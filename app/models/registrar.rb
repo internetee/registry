@@ -37,8 +37,6 @@ class Registrar < ActiveRecord::Base
     end
   end
 
-  after_save :touch_domains_version
-
   validates :email, :billing_email, format: /@/, allow_blank: true
 
   class << self

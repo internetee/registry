@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 feature 'Admin users', type: :feature do
-  background { create_settings }
-
   before :all do
     @admin_user = Fabricate(:admin_user, username: 'user1', identity_code: '37810013087')
   end

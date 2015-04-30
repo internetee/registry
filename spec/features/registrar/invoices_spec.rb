@@ -2,7 +2,6 @@ require 'rails_helper'
 
 feature 'Invoices', type: :feature do
   before :all do
-    create_settings
     @user = Fabricate(:api_user)
     @invoice = Fabricate(:invoice, buyer: @user.registrar)
   end

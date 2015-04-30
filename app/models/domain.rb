@@ -54,7 +54,6 @@ class Domain < ActiveRecord::Base
   end
   after_save :manage_automatic_statuses
   after_save :update_whois_record
-  after_save :update_whois_server
 
   validates :name_dirty, domain_name: true, uniqueness: true
   validates :period, numericality: { only_integer: true }
@@ -123,6 +122,7 @@ class Domain < ActiveRecord::Base
 
     def included
       includes(
+        :registrant,
         :registrar, 
         :nameservers, 
         :whois_record,
@@ -244,15 +244,6 @@ class Domain < ActiveRecord::Base
   end
 
   def update_whois_record
-    self.whois_record = WhoisRecord.create if whois_record.blank?
-    whois_record.update
-  end
-
-  def update_whois_server
-    if whois_record.present?
-      whois_record.update_whois_server
-    else
-      logger.info "NO WHOIS BODY for domain: #{name}"
-    end
+    whois_record.blank? ? create_whois_record : whois_record.save
   end
 end

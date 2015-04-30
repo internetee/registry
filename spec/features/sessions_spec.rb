@@ -2,7 +2,6 @@ require 'rails_helper'
 
 feature 'Sessions', type: :feature do
   before :all do
-    create_settings
     Fabricate(:ee_user)
     @registrar1 = Fabricate(:registrar1)
     @registrar2 = Fabricate(:registrar2)

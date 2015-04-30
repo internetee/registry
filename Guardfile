@@ -9,8 +9,8 @@ group :red_green_refactor, halt_on_fail: true do
     # watch(%r{^(config|lib)/.*})
   # end
 
-  guard :rspec, cmd: 'spring rspec --fail-fast', notification: false do
-  # guard :rspec, cmd: 'spring rspec', notification: false do
+  # guard :rspec, cmd: 'spring rspec --fail-fast', notification: false do
+  guard :rspec, cmd: 'spring rspec', notification: false do
     watch(%r{^spec/.+_spec\.rb$})
     watch(%r{^lib/(.+)\.rb$})     { |m| "spec/lib/#{m[1]}_spec.rb" }
     watch('spec/spec_helper.rb')  { "spec" }
