@@ -22,26 +22,24 @@ class Registrar::InvoicesController < RegistrarController
     @invoice.billing_email = params[:invoice][:billing_email]
 
     if @invoice.forward(render_to_string('pdf', layout: false))
-      flash[:notice] = t('invoice_forwared')
+      flash[:notice] = t(:invoice_forwared)
       redirect_to([:registrar, @invoice])
     else
-      flash.now[:alert] = t('failed_to_forward_invoice')
+      flash.now[:alert] = t(:failed_to_forward_invoice)
     end
   end
 
   def cancel
     if @invoice.cancel
-      flash[:notice] = t('record_updated')
+      flash[:notice] = t(:record_updated)
       redirect_to([:registrar, @invoice])
     else
-      flash.now[:alert] = t('failed_to_update_record')
+      flash.now[:alert] = t(:failed_to_update_record)
       render :show
     end
   end
 
   def download_pdf
-    # render 'pdf', layout: false
-
     pdf = @invoice.pdf(render_to_string('pdf', layout: false))
     send_data pdf, filename: @invoice.pdf_name
   end

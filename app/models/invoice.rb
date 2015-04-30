@@ -34,6 +34,21 @@ class Invoice < ActiveRecord::Base
 
   before_save -> { self.sum_cache = sum }
 
+  class << self
+    def cancel_overdue_invoices
+      logger.info "#{Time.zone.now.utc} - Cancelling overdue invoices\n"
+
+      cr_at = Time.zone.now - Setting.days_to_keep_overdue_invoices_active.days
+      invoices = Invoice.unbinded.where(
+        'due_date < ? AND created_at < ? AND cancelled_at IS NULL', Time.zone.now, cr_at
+      )
+
+      count = invoices.update_all(cancelled_at: Time.zone.now)
+
+      logger.info "#{Time.zone.now.utc} - Successfully cancelled #{count} overdue invoices\n"
+    end
+  end
+
   def binded?
     account_activity.present?
   end
@@ -112,20 +127,5 @@ class Invoice < ActiveRecord::Base
 
   def sum
     sum_without_vat + vat
-  end
-
-  class << self
-    def cancel_overdue_invoices
-      STDOUT << "#{Time.zone.now.utc} - Cancelling overdue invoices\n"
-
-      cr_at = Time.zone.now - Setting.days_to_keep_overdue_invoices_active.days
-      invoices = Invoice.unbinded.where(
-        'due_date < ? AND created_at < ? AND cancelled_at IS NULL', Time.zone.now, cr_at
-      )
-
-      count = invoices.update_all(cancelled_at: Time.zone.now)
-
-      STDOUT << "#{Time.zone.now.utc} - Successfully cancelled #{count} overdue invoices\n"
-    end
   end
 end
