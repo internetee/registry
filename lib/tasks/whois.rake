@@ -8,7 +8,7 @@ namespace :whois do
     ActiveRecord::Base.uncached do
       puts "\n#{@i}"
       Domain.included.find_in_batches(batch_size: 10000) do |batch|
-        batch.map { |d| d.update_whois_record }
+        batch.map(&:update_whois_record)
         puts(@i += 10000)
         GC.start
       end

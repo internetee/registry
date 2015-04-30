@@ -44,9 +44,8 @@ class Registrar < ActiveRecord::Base
 
   after_save :update_whois_records
   def update_whois_records
-    if changed? && (changes.keys & WHOIS_TRIGGERS).present? 
-      whois_records.map(&:save) # slow currently
-    end
+    return true unless (changed? && (changes.keys & WHOIS_TRIGGERS).present?) 
+    whois_records.map(&:save) # slow currently
   end
 
   class << self

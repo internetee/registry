@@ -1,5 +1,6 @@
 class WhoisRecord < ActiveRecord::Base
   belongs_to :domain
+  belongs_to :registrar
 
   validates :domain, :name, :body, :json, presence: true
 
