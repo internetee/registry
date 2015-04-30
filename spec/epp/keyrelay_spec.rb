@@ -2,7 +2,6 @@ require 'rails_helper'
 
 describe 'EPP Keyrelay', epp: true do
   before(:all) do
-    create_settings
     @registrar1 = Fabricate(:registrar1)
     @registrar2 = Fabricate(:registrar2)
     @domain     = Fabricate(:domain, registrar: @registrar2)

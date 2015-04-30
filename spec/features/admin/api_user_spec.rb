@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 feature 'Api users', type: :feature do
-  background { create_settings }
-
   before :all do
     @user = Fabricate(:admin_user, username: 'user1', identity_code: '37810013087')
     @api_user = Fabricate(:api_user)

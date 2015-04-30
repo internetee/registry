@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe ZonefileSetting do
-  before { create_settings }
   it 'generates the zonefile' do
     ZonefileSetting.where({
       origin: 'ee',

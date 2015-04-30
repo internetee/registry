@@ -18,8 +18,6 @@ describe 'EPP Poll', epp: true do
     login_as :registrar1
 
     @uniq_no = proc { @i ||= 0; @i += 1 }
-
-    create_settings
   end
 
   it 'returns no messages in poll' do

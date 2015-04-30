@@ -2,7 +2,6 @@ require 'rails_helper'
 
 describe 'EPP Contact', epp: true do
   before :all do
-    create_settings
     @registrar1 = Fabricate(:registrar1)
     @registrar2 = Fabricate(:registrar2)
     @epp_xml    = EppXml::Contact.new(cl_trid: 'ABC-12345')

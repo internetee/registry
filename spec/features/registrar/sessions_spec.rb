@@ -2,7 +2,6 @@ require 'rails_helper'
 
 feature 'Sessions', type: :feature do
   before :all do
-    create_settings
     Fabricate(:api_user)
   end
 

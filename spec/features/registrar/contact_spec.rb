@@ -2,7 +2,6 @@ require 'rails_helper'
 
 feature 'Contact', type: :feature do
   before :all do
-    create_settings
     @user = Fabricate(:api_user)
   end
 

@@ -2,7 +2,6 @@ require 'rails_helper'
 
 describe Repp::ContactV1 do
   before :all do
-    create_settings
     @api_user = Fabricate(:gitlab_api_user)
     Fabricate.times(2, :contact, registrar: @api_user.registrar)
     Fabricate.times(2, :contact)

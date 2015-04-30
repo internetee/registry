@@ -1,10 +1,6 @@
 require 'rails_helper'
 
 describe Dnskey do
-  before :all do
-    create_settings
-  end
-
   it { should belong_to(:domain) }
 
   context 'with invalid attribute' do
