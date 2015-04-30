@@ -2,6 +2,8 @@ class AddMissingData < ActiveRecord::Migration
   def change
     return if Rails.env == 'development'
     return if Rails.env == 'test'
+    return if Rails.env == 'alpha'
+
     puts 'GENERATING ACCOUNTS'
     Registrar.all.each do |x|
       Account.create(
