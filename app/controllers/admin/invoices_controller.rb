@@ -13,10 +13,10 @@ class Admin::InvoicesController < AdminController
 
   def cancel
     if @invoice.cancel
-      flash[:notice] = t('record_updated')
+      flash[:notice] = t(:record_updated)
       redirect_to([:admin, @invoice])
     else
-      flash.now[:alert] = t('failed_to_update_record')
+      flash.now[:alert] = t(:failed_to_update_record)
       render :show
     end
   end

@@ -1,22 +1,22 @@
 .panel.panel-default
   .panel-heading
-    %h3.panel-title= t('general')
+    %h3.panel-title= t(:general)
   .panel-body
     %dl.dl-horizontal
-      %dt= t('name')
+      %dt= t(:name)
       %dd= @domain.name
 
-      %dt= t('registered_at')
+      %dt= t(:registered_at)
       %dd= l(@domain.registered_at)
 
-      %dt= t('registrar')
+      %dt= t(:registrar)
       %dd= link_to(@domain.registrar, root_path)
 
-      %dt= t('password')
+      %dt= t(:password)
       %dd= @domain.auth_info
 
-      %dt= t('valid_from')
+      %dt= t(:valid_from)
       %dd= l(@domain.valid_from)
 
-      %dt= t('valid_to')
+      %dt= t(:valid_to)
       %dd= l(@domain.valid_to)

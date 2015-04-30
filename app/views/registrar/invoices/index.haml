@@ -63,7 +63,7 @@
               - if x.receipt_date
                 %td= l(x.receipt_date)
               - elsif x.cancelled?
-                %td.text-grey= t('cancelled')
+                %td.text-grey= t(:cancelled)
               - else
                 %td{class: 'text-danger'}= t(:unpaid)
 

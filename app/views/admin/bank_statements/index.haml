@@ -9,14 +9,14 @@
         %thead
           %tr
             %th{class: 'col-xs-3'}
-              = sort_link(@q, 'created_at', t('imported_at'))
+              = sort_link(@q, 'created_at', t(:imported_at))
             %th{class: 'col-xs-3'}
               = sort_link(@q, 'bank_code')
             %th{class: 'col-xs-3'}
               = sort_link(@q, 'iban', t('iban').upcase)
             / TODO: Make this searchable by caching the status to the database
             %th{class: 'col-xs-3'}
-              = t('status')
+              = t(:status)
         %tbody
           - @bank_statements.each do |x|
             %tr

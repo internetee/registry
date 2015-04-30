@@ -1,5 +1,5 @@
 - content_for :actions do
-  = link_to(t('back'), admin_bank_transaction_path(@bank_transaction), class: 'btn btn-default')
+  = link_to(t(:back), admin_bank_transaction_path(@bank_transaction), class: 'btn btn-default')
 = render 'shared/title', name: t(:bank_transaction)
 
 = form_for([:admin, @bank_transaction], html: { class: 'form-horizontal' }) do |f|
@@ -11,7 +11,7 @@
         = f.label :status, class: 'col-md-2 control-label'
         - c = @bank_transaction.binded? ? 'text-success' : 'text-danger'
         .col-md-10.form-control-static{class: c}
-          = @bank_transaction.binded? ? t('binded') : t('not_binded')
+          = @bank_transaction.binded? ? t(:binded) : t(:not_binded)
 
       .form-group
         = f.label :description, class: 'col-md-2 control-label'
@@ -71,4 +71,4 @@
   %hr
   .row
     .col-md-8.text-right
-      = button_tag(t('save'), class: 'btn btn-primary')
+      = button_tag(t(:save), class: 'btn btn-primary')

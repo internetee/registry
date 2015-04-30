@@ -15,7 +15,7 @@
           .form-group
             .col-md-3.control-label
               - c, fr = 'required', true if params[:domain_name].blank?
-              = label_tag 'domain[legal_document]', t('legal_document'), class: c
+              = label_tag 'domain[legal_document]', t(:legal_document), class: c
             .col-md-7
               = file_field_tag 'domain[legal_document]', required: fr
     .col-md-4

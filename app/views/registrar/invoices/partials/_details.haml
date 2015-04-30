@@ -1,33 +1,33 @@
-%h4= t('details')
+%h4= t(:details)
 %hr
 %dl.dl-horizontal
-  %dt= t('issue_date')
+  %dt= t(:issue_date)
   %dd= l(@invoice.created_at)
 
   - if @invoice.cancelled?
-    %dt= t('cancel_date')
+    %dt= t(:cancel_date)
     %dd= l(@invoice.cancelled_at)
 
-  %dt= t('due_date')
+  %dt= t(:due_date)
   - if @invoice.cancelled?
-    %dd.text-grey= t('cancelled')
+    %dd.text-grey= t(:cancelled)
   - else
     %dd= l(@invoice.due_date)
 
-  %dt= t('receipt_date')
+  %dt= t(:receipt_date)
   - if @invoice.binded?
     %dd= l(@invoice.receipt_date)
   - elsif @invoice.cancelled?
-    %dd.text-grey= t('cancelled')
+    %dd.text-grey= t(:cancelled)
   - else
-    %dd{class: 'text-danger'}= t('unpaid')
+    %dd{class: 'text-danger'}= t(:unpaid)
 
-  %dt= t('payment_term')
+  %dt= t(:payment_term)
   %dd= t(@invoice.payment_term)
 
-  %dt= t('description')
+  %dt= t(:description)
   - @invoice.description.prepend(' - ') if @invoice.description.present?
   %dd= "#{t('invoice_no', no: @invoice.id)}#{@invoice.description}"
 
-  %dt= t('reference_no')
+  %dt= t(:reference_no)
   %dd= @invoice.reference_no

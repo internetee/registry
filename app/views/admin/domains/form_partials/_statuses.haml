@@ -2,10 +2,10 @@
   = f.fields_for :domain_statuses, @server_statuses do |status_fields|
     .panel.panel-default
       .panel-heading.clearfix
-        .pull-left= t('status')
+        .pull-left= t(:status)
         .pull-right
-          = link_to(t('add_another'), '#', class: 'btn btn-primary btn-xs add-domain-status')
-          = link_to(t('delete'), '#', class: 'btn btn-danger btn-xs destroy')
+          = link_to(t(:add_another), '#', class: 'btn btn-primary btn-xs add-domain-status')
+          = link_to(t(:delete), '#', class: 'btn btn-danger btn-xs destroy')
       .panel-body
         .errors
           = render 'shared/errors', object: status_fields.object

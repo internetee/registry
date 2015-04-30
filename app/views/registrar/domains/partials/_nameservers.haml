@@ -5,9 +5,9 @@
     %table.table.table-hover.table-bordered.table-condensed
       %thead
         %tr
-          %th{class: 'col-xs-4'}= t('hostname')
-          %th{class: 'col-xs-4'}= t('ipv4')
-          %th{class: 'col-xs-4'}= t('ipv6')
+          %th{class: 'col-xs-4'}= t(:hostname)
+          %th{class: 'col-xs-4'}= t(:ipv4)
+          %th{class: 'col-xs-4'}= t(:ipv6)
       %tbody
         - @data.css('hostAttr').each do |x|
           %tr

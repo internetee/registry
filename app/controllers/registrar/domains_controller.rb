@@ -23,7 +23,7 @@ class Registrar::DomainsController < Registrar::DeppController # EPP controller
     if response_ok?
       render 'info'
     else
-      flash[:alert] = t('domain_not_found')
+      flash[:alert] = t(:domain_not_found)
       redirect_to registrar_domains_url and return
     end
   end

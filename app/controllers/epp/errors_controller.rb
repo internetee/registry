@@ -7,7 +7,7 @@ class Epp::ErrorsController < EppController
   end
 
   def not_found
-    epp_errors << { code: 2400, msg: t('could_not_determine_object_type_check_xml_format_and_namespaces') }
+    epp_errors << { code: 2400, msg: t(:could_not_determine_object_type_check_xml_format_and_namespaces) }
     render_epp_response '/epp/error'
   end
 end
