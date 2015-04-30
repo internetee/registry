@@ -24,9 +24,9 @@ describe Invoice do
       ])
     end
 
-    # it 'should not have any versions' do
-    #   @invoice.versions.should == []
-    # end
+    it 'should not have any versions' do
+      @invoice.versions.should == []
+    end
   end
 
   context 'with valid attributes' do
@@ -76,14 +76,14 @@ describe Invoice do
       Invoice.where(cancelled_at: nil).count.should == 1
     end
 
-    # it 'should have one version' do
-    #   with_versioning do
-    #     @invoice.versions.should == []
-    #     @invoice.body = 'New body'
-    #     @invoice.save
-    #     @invoice.errors.full_messages.should match_array([])
-    #     @invoice.versions.size.should == 1
-    #   end
-    # end
+    it 'should have one version' do
+      with_versioning do
+        @invoice.versions.should == []
+        @invoice.buyer_name = 'New name'
+        @invoice.save
+        @invoice.errors.full_messages.should match_array([])
+        @invoice.versions.size.should == 1
+      end
+    end
   end
 end
