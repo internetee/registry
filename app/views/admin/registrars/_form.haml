@@ -81,7 +81,7 @@
             .col-md-4.control-label
               = f.label :code
             .col-md-7
-              = f.text_field(:code, class: 'form-control')
+              = f.text_field(:code, class: 'form-control', disabled: !f.object.new_record?)
 
   %hr
   .row

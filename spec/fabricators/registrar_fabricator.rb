@@ -7,7 +7,7 @@ Fabricator(:registrar) do
   zip 'Postal'
   email 'info@registrar1.ee'
   country_code 'EE'
-  code 'REG'
+  code { sequence(:code) { |i| "REGISTRAR#{i}" } }
   reference_no { sequence(:reference_no) { |i| "RF#{i}" } }
   accounts(count: 1)
 end
@@ -24,6 +24,7 @@ Fabricator(:registrar1, from: :registrar) do
   state 'County'
   zip 'Postal'
   email 'info@registrar1.ee'
+  code { sequence(:code) { |i| "FIRST#{i}" } }
 end
 
 Fabricator(:registrar2, from: :registrar) do
@@ -34,6 +35,7 @@ Fabricator(:registrar2, from: :registrar) do
   state 'County'
   zip 'Postal'
   email 'info@registrar2.ee'
+  code { sequence(:code) { |i| "SECOND#{i}" } }
 end
 
 Fabricator(:eis, from: :registrar) do
@@ -48,5 +50,6 @@ Fabricator(:eis, from: :registrar) do
   street 'Paldiski mnt 80'
   zip '10617'
   url 'www.internet.ee'
+  code { sequence(:code) { |i| "EIS#{i}" } }
   accounts(count: 1) { Fabricate(:account, account_activities: []) }
 end

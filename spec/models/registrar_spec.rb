@@ -17,7 +17,7 @@ describe Registrar do
         'Country code is missing',
         'Name is missing',
         'Reg no is missing',
-        'Code is missing',
+        'Code is missing'
       ])
     end
 
@@ -57,6 +57,14 @@ describe Registrar do
       @registrar.errors.full_messages.should match_array([])
     end
 
+    it 'should validates uniqueness of code' do
+      registrar = Fabricate.build(:registrar, code: @registrar.code)
+      registrar.valid?
+      registrar.errors.full_messages.should match_array([
+        'Code has already been taken'
+      ])
+    end
+
     it 'should have one version' do
       with_versioning do
         @registrar.versions.should == []
@@ -72,24 +80,12 @@ describe Registrar do
     end
 
     it 'should have code' do
-      @registrar.code.should =~ /registrar/
+      @registrar.code.should =~ /REGISTRAR/
     end
 
     it 'should not be able to change code' do
       @registrar.code = 'not-updated'
-      @registrar.code.should =~ /registrar/
-    end
-
-    it 'should automatically add next code if original is taken' do
-      @registrar = Fabricate(:registrar, name: 'uniq')
-      @registrar.name = 'New name'
-      @registrar.code.should == 'uniq'
-      @registrar.save
-
-      @new_registrar = Fabricate.build(:registrar, name: 'uniq')
-      @new_registrar.valid?
-      @new_registrar.errors.full_messages.should == []
-      @new_registrar.code.should == 'uniq1'
+      @registrar.code.should =~ /REGISTRAR/
     end
 
     it 'should be able to issue a prepayment invoice' do

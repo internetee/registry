@@ -13,8 +13,7 @@ class Registrar < ActiveRecord::Base
   belongs_to :country_deprecated, foreign_key: :country_id
 
   validates :name, :reg_no, :country_code, :email, :code, presence: true
-  validates :name, :reg_no, :reference_no, uniqueness: true
-  validate :set_code, if: :new_record?
+  validates :name, :reg_no, :reference_no, :code, uniqueness: true
 
   before_validation :generate_iso_11649_reference_no
   def generate_iso_11649_reference_no
@@ -140,25 +139,5 @@ class Registrar < ActiveRecord::Base
 
   def code=(code)
     self[:code] = code.upcase if new_record? && code.present?
-  end
-
-  def contact_prefix
-    "CID:#{code}:"
-  end
-
-  private
-
-  def set_code
-    return false if name.blank?
-    new_code = name.parameterize
-
-    # ensure code is always uniq automatically for a new record
-    seq = 1
-    while self.class.find_by_code(new_code)
-      new_code += seq.to_s
-      seq += 1
-    end
-
-    self.code = new_code
   end
 end
