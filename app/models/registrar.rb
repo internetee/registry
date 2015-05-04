@@ -140,4 +140,8 @@ class Registrar < ActiveRecord::Base
   def code=(code)
     self[:code] = code.gsub(/[ :]/, '').upcase if new_record? && code.present?
   end
+
+  def contact_prefix
+    "CID:#{code}"
+  end
 end

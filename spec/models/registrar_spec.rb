@@ -89,6 +89,10 @@ describe Registrar do
       registrar.code.should == 'WITH.DOT'
     end
 
+    it 'should have contact prefix' do
+      @registrar.contact_prefix.should == 'CID:REGISTRAR0'
+    end
+
     it 'should have one version' do
       with_versioning do
         @registrar.versions.should == []
