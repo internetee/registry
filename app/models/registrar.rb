@@ -138,6 +138,6 @@ class Registrar < ActiveRecord::Base
   end
 
   def code=(code)
-    self[:code] = code.upcase if new_record? && code.present?
+    self[:code] = code.gsub(/[ :]/, '').upcase if new_record? && code.present?
   end
 end

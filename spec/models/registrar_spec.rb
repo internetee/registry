@@ -65,6 +65,30 @@ describe Registrar do
       ])
     end
 
+    it 'should remove blank from code' do
+      registrar = Fabricate.build(:registrar, code: 'with blank')
+      registrar.valid?
+      registrar.errors.full_messages.should match_array([
+      ])
+      registrar.code.should == 'WITHBLANK'
+    end
+
+    it 'should remove colon from code' do
+      registrar = Fabricate.build(:registrar, code: 'with colon:and:blank')
+      registrar.valid?
+      registrar.errors.full_messages.should match_array([
+      ])
+      registrar.code.should == 'WITHCOLONANDBLANK'
+    end
+
+    it 'should allow dot in code' do
+      registrar = Fabricate.build(:registrar, code: 'with.dot')
+      registrar.valid?
+      registrar.errors.full_messages.should match_array([
+      ])
+      registrar.code.should == 'WITH.DOT'
+    end
+
     it 'should have one version' do
       with_versioning do
         @registrar.versions.should == []
