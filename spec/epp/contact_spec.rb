@@ -588,10 +588,7 @@ describe 'EPP Contact', epp: true do
         response[:results][0][:msg].should ==
           'Required parameter missing: delete > delete > id [id]'
         response[:results][0][:result_code].should == '2003'
-        response[:results][1][:msg].should ==
-          'Required parameter missing: delete > delete > authInfo > pw [pw]'
-        response[:results][1][:result_code].should == '2003'
-        response[:results].count.should == 2
+        response[:results].count.should == 1
       end
 
       it 'returns error if obj doesnt exist' do
@@ -603,6 +600,25 @@ describe 'EPP Contact', epp: true do
 
       it 'deletes contact' do
         response = delete_request
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+        response[:clTRID].should == 'ABC-12345'
+
+        Contact.find_by_id(@contact.id).should == nil
+      end
+
+      it 'deletes own contact even with wrong password' do
+        response = delete_request({ authInfo: { pw: { value: 'wrong password' } } })
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+        response[:clTRID].should == 'ABC-12345'
+
+        Contact.find_by_id(@contact.id).should == nil
+      end
+
+      it 'deletes own contact even without password' do
+        delete_xml = @epp_xml.delete({ id: { value: @contact.code } })
+        response = epp_plain_request(delete_xml, :xml)
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
         response[:clTRID].should == 'ABC-12345'
@@ -622,9 +638,29 @@ describe 'EPP Contact', epp: true do
         @domain.registrant.present?.should == true
       end
 
-      it 'fails with wrong authentication info' do
+      it 'should delete when not owner but with correct password' do
         login_as :registrar2 do
           response = delete_request
+          response[:msg].should == 'Command completed successfully'
+          response[:result_code].should == '1000'
+          response[:clTRID].should == 'ABC-12345'
+          Contact.find_by_id(@contact.id).should == nil
+        end
+      end
+
+      it 'should not delete when not owner without password' do
+        login_as :registrar2 do
+          delete_xml = @epp_xml.delete({ id: { value: @contact.code } })
+          response = epp_plain_request(delete_xml, :xml)
+          response[:msg].should == 'Authorization error'
+          response[:result_code].should == '2201'
+          response[:results].count.should == 1
+        end
+      end
+
+      it 'should not delete when not owner with wrong password' do
+        login_as :registrar2 do
+          response = delete_request({ authInfo: { value: 'wrong password' } })
           response[:msg].should == 'Authorization error'
           response[:result_code].should == '2201'
           response[:results].count.should == 1

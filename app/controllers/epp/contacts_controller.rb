@@ -123,7 +123,7 @@ class Epp::ContactsController < EppController
 
   def validate_delete
     @prefix = 'delete > delete >'
-    requires 'id', 'authInfo > pw'
+    requires 'id'
     @prefix = nil
   end
 
