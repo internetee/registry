@@ -117,7 +117,7 @@ class Epp::ContactsController < EppController
     contact_org_disabled
     fax_disabled
     status_editing_disabled
-    requires 'id', 'authInfo > pw'
+    requires 'id'
     @prefix = nil
   end
 

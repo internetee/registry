@@ -23,7 +23,6 @@ class Epp::Contact < Contact
         at[:street]       = nil if f.css('postalInfo addr street').present?
         at[:state]        = nil if f.css('postalInfo addr sp').present?
         at[:country_code] = nil if f.css('postalInfo addr cc').present?
-        at[:auth_info]    = nil if f.css('authInfo pw').present? 
       else
         at[:name]       = f.css('postalInfo name').text        if f.css('postalInfo name').present? 
         at[:org_name]   = f.css('postalInfo org').text         if f.css('postalInfo org').present? 

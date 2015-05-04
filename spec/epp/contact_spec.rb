@@ -231,10 +231,7 @@ describe 'EPP Contact', epp: true do
         response[:results][1][:msg].should ==
           'Required parameter missing: update > update > id [id]'
         response[:results][1][:result_code].should == '2003'
-        response[:results][2][:msg].should ==
-          'Required parameter missing: update > update > authInfo > pw [pw]'
-        response[:results][2][:result_code].should == '2003'
-        response[:results].count.should == 3
+        response[:results].count.should == 2
       end
 
       it 'returns error if obj doesnt exist' do
@@ -253,11 +250,47 @@ describe 'EPP Contact', epp: true do
         @contact.email.should == 'edited@example.example'
       end
 
-      it 'fails with wrong authentication info' do
+      it 'is succesful for own contact without password' do
+        without_password = {
+          id: { value: 'sh8013' },
+          chg: {
+            postalInfo: {
+              name: { value: 'John Doe Edited' }
+            }
+          }
+        }
+        update_xml = @epp_xml.update(without_password)
+        response = epp_plain_request(update_xml, :xml)
+
+        response[:msg].should == 'Command completed successfully'
+        @contact.reload
+        @contact.name.should  == 'John Doe Edited'
+      end
+
+      it 'should update other contact with correct password' do
         login_as :registrar2 do
           response = update_request({ id: { value: 'sh8013' } })
+          response[:msg].should == 'Command completed successfully'
+          response[:result_code].should == '1000'
+        end
+      end
+
+      it 'should not update other contact without password' do
+        login_as :registrar2 do
+          without_password = {
+            id: { value: 'sh8013' },
+            chg: {
+              postalInfo: {
+                name: { value: 'John Doe Edited' }
+              }
+            }
+          }
+          update_xml = @epp_xml.update(without_password)
+          response = epp_plain_request(update_xml, :xml)
+
           response[:msg].should == 'Authorization error'
-          response[:result_code].should == '2201'
+          @contact.reload
+          @contact.name.should  == 'John Doe Edited'
         end
       end
 
@@ -519,7 +552,7 @@ describe 'EPP Contact', epp: true do
         contact.update_attribute(:phone, '+372.7654321') # restore default value
       end
 
-      it 'should return authorization error when removing auth info' do
+      it 'should not remove password' do
         xml = @epp_xml.update({
           id: { value: 'sh8013' },
           authInfo: { pw: { value: 'password' } },
@@ -529,8 +562,8 @@ describe 'EPP Contact', epp: true do
         })
 
         response = epp_plain_request(xml, :xml)
-        response[:results][0][:msg].should == 'Authorization error'
-        response[:results][0][:result_code].should == '2201'
+        response[:results][0][:msg].should == 'Command completed successfully'
+        response[:results][0][:result_code].should == '1000'
 
         contact = Contact.find_by(code: 'sh8013')
         contact.auth_info.should == 'password'
