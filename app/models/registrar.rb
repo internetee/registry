@@ -44,7 +44,7 @@ class Registrar < ActiveRecord::Base
 
   after_save :update_whois_records
   def update_whois_records
-    return true unless (changed? && (changes.keys & WHOIS_TRIGGERS).present?) 
+    return true unless changed? && (changes.keys & WHOIS_TRIGGERS).present? 
     whois_records.map(&:save) # slow currently
   end
 
@@ -61,7 +61,6 @@ class Registrar < ActiveRecord::Base
     def ordered
       order(name: :asc)
     end
-
   end
 
   def issue_prepayment_invoice(amount, description = nil) # rubocop:disable Metrics/MethodLength
