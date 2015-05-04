@@ -9,7 +9,8 @@ registrar1 = Registrar.where(
   state: 'Harju maakond',
   zip: '11415',
   email: 'registrar1@example.com',
-  country_code: 'EE'
+  country_code: 'EE',
+  code: 'REG1'
 ).first_or_create!
 
 ApiUser.where(
@@ -28,7 +29,8 @@ registrar2 = Registrar.where(
   state: 'Harju maakond',
   zip: '11315',
   email: 'registrar2@example.com',
-  country_code: 'EE'
+  country_code: 'EE',
+  code: 'REG2'
 ).first_or_create!
 
 ApiUser.where(
@@ -102,5 +104,6 @@ Registrar.where(
   city: 'Tallinn',
   street: 'Paldiski mnt 80',
   zip: '10617',
-  url: 'www.internet.ee'
+  url: 'www.internet.ee',
+  code: 'EIS'
 ).first_or_create!
