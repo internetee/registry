@@ -136,9 +136,9 @@ describe Contact do
       @contact.errors.full_messages.should match_array([])
     end
 
-    it 'should not accept new custom code' do
+    it 'should not overwrite code' do
       old_code = @contact.code
-      @contact.code = 'CID:REG1:12345'
+      @contact.code = 'CID:REG1:should-not-overwrite-old-code-12345'
       @contact.save.should == true
       @contact.code.should == old_code
     end

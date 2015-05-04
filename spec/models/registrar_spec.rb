@@ -90,7 +90,8 @@ describe Registrar do
     end
 
     it 'should have contact prefix' do
-      @registrar.contact_prefix.should == 'CID:REGISTRAR0'
+      @registrar = Fabricate.build(:registrar, code: 'CUSTOMCODE')
+      @registrar.contact_prefix.should == 'CID:CUSTOMCODE'
     end
 
     it 'should have one version' do
