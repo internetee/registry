@@ -163,10 +163,10 @@ Registrar configuration (/etc/apache2/sites-enabled/registrar.conf) is as follow
   SSLCipherSuite RC4-SHA:HIGH:!ADH
 
   <Directory /app/registry/registrar/current/public>
-    # comment out if Apache 2.4 or newer
+    # for Apache verison 2.4 or newer
     Allow from all
 
-    # uncomment if Apache 2.4 or newer
+    # for Apache verison 2.4 or newer
     # Require all granted
     
     Options -MultiViews
