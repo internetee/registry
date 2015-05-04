@@ -12,7 +12,7 @@ class Registrar < ActiveRecord::Base
 
   belongs_to :country_deprecated, foreign_key: :country_id
 
-  validates :name, :reg_no, :country_code, :email, presence: true
+  validates :name, :reg_no, :country_code, :email, :code, presence: true
   validates :name, :reg_no, :reference_no, uniqueness: true
   validate :set_code, if: :new_record?
 
@@ -139,7 +139,11 @@ class Registrar < ActiveRecord::Base
   end
 
   def code=(code)
-    self[:code] = code if new_record?
+    self[:code] = code.upcase if new_record? && code.present?
+  end
+
+  def contact_prefix
+    "CID:#{code}:"
   end
 
   private

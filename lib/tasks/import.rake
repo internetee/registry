@@ -86,7 +86,8 @@ namespace :import do
         vat: x.vat,
         legacy_id: x.id,
         creator_str: user,
-        updator_str: user
+        updator_str: user,
+        code: x.handle.upcase
       })
     end
 

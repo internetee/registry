@@ -70,6 +70,19 @@
             .col-md-7
               = f.select(:country_code, 
                 SortedCountry.all_options(f.object.country_code), {}, class: 'form-control')
+
+  .row
+    .col-md-8
+      .panel.panel-default
+        .panel-heading.clearfix
+          .pull-left= t(:misc)
+        .panel-body
+          .form-group
+            .col-md-4.control-label
+              = f.label :code
+            .col-md-7
+              = f.text_field(:code, class: 'form-control')
+
   %hr
   .row
     .col-md-8.text-right

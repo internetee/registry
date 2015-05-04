@@ -16,7 +16,8 @@ describe Registrar do
         'Contact e-mail is missing',
         'Country code is missing',
         'Name is missing',
-        'Reg no is missing'
+        'Reg no is missing',
+        'Code is missing',
       ])
     end
 

@@ -7,6 +7,7 @@ Fabricator(:registrar) do
   zip 'Postal'
   email 'info@registrar1.ee'
   country_code 'EE'
+  code 'REG'
   reference_no { sequence(:reference_no) { |i| "RF#{i}" } }
   accounts(count: 1)
 end
