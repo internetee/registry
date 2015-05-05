@@ -851,6 +851,21 @@ describe 'EPP Contact', epp: true do
         response[:results].count.should == 1
       end
 
+      it 'should honor new contact code format' do
+        @registrar1_contact = Fabricate(:contact, code: 'REGISTRAR1:test:custom:code')
+        @registrar1_contact.code.should == 'REGISTRAR1:test:custom:code'
+
+        response = info_request({ id: { value: 'REGISTRAR1:test:custom:code' } })
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+
+        contact = response[:parsed].css('resData infData')
+        contact.css('ident').first.should == nil # ident should be in extension
+
+        contact = response[:parsed].css('extension')
+        contact.css('ident').first.text.should == '37605030299'
+      end
+
       it 'returns no authorization error for wrong user but correct password' do
         login_as :registrar2 do
           response = info_request
