@@ -16,15 +16,15 @@ namespace :whois do
     puts "\n-----> all done in #{(Time.zone.now.to_f - start).round(2)} seconds"
   end
 
-  desc 'Delete whois database data and import from Registry master database (faster)'
-  task export: :environment do
-    start = Time.zone.now.to_f
-    print "-----> Delete whois database data and import from Registry whois_records table..."
-    whois_records = WhoisRecord.pluck(:name, :body, :json)
-    Whois::Record.delete_all
-    Whois::Record.import([:name, :body, :json], whois_records)
-    puts "\n-----> all done in #{(Time.zone.now.to_f - start).round(2)} seconds"
-  end
+  # desc 'Delete whois database data and import from Registry master database (faster)'
+  # task export: :environment do
+    # start = Time.zone.now.to_f
+    # print "-----> Delete whois database data and import from Registry whois_records table..."
+    # whois_records = WhoisRecord.pluck(:name, :body, :json)
+    # Whois::Record.delete_all
+    # Whois::Record.import([:name, :body, :json], whois_records)
+    # puts "\n-----> all done in #{(Time.zone.now.to_f - start).round(2)} seconds"
+  # end
 
   namespace :schema do
     desc 'Load whois schema into empty whois database'

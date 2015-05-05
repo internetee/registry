@@ -13,6 +13,8 @@ class WhoisRecord < ActiveRecord::Base
     self.registrar_id = domain.registrar_id # for faster registrar updates
   end
 
+  after_save :update_whois_server
+
   class << self
     def included
       includes(
@@ -141,7 +143,6 @@ More information at http://internet.ee
   end
 
   def update_whois_server
-    return logger.info "NO WHOIS NAME for whois record id: #{id}" if name.blank?
     wd = Whois::Record.find_or_initialize_by(name: name)
     wd.body = body
     wd.json = json
