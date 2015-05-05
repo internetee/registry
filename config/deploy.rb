@@ -166,6 +166,7 @@ task deploy: :environment do
     invoke :'rails:assets_precompile'
     to :launch do
       invoke :restart
+      invoke :'deploy:cleanup'
     end
   end
 end
