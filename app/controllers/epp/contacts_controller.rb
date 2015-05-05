@@ -59,7 +59,7 @@ class Epp::ContactsController < EppController
   end
 
   def find_contact
-    code = params[:parsed_frame].css('id').text.strip
+    code = params[:parsed_frame].css('id').text.strip.upcase
     @contact = Epp::Contact.find_by(code: code)
 
     if @contact.blank?

@@ -59,6 +59,7 @@ class Epp::Contact < Contact
         prefix = custom_code.split(':').first
         custom_code = "#{registrar.code}:#{custom_code}" if prefix != registrar.code
         custom_code = nil if custom_code == registrar.code
+        custom_code.upcase! if custom_code.present?
       end
 
       super(

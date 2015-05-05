@@ -112,7 +112,7 @@ class Contact < ActiveRecord::Base
   end
 
   def generate_code
-    self.code = SecureRandom.hex(4) if code.blank? || code_overwrite_allowed
+    self.code = SecureRandom.hex(4).upcase if code.blank? || code_overwrite_allowed
   end
 
   def generate_auth_info
