@@ -51,20 +51,9 @@ class Epp::Contact < Contact
     def new(frame, registrar)
       return super if frame.blank?
 
-      custom_code = frame.css('id').text
-
-      # add prefix when needed
-      if custom_code.present? 
-        custom_code.sub!(/^CID:/, '')
-        prefix = custom_code.split(':').first
-        custom_code = "#{registrar.code}:#{custom_code}" if prefix != registrar.code
-        custom_code = nil if custom_code == registrar.code
-        custom_code.upcase! if custom_code.present?
-      end
-
       super(
         attrs_from(frame).merge(
-          code: custom_code,
+          code: frame.css('id').text,
           registrar: registrar
         )
       )

@@ -10,10 +10,10 @@ describe 'EPP Domain', epp: true do
 
     login_as :registrar1
 
-    Fabricate(:contact, code: 'citizen_1234')
-    Fabricate(:contact, code: 'sh8013')
-    Fabricate(:contact, code: 'sh801333')
-    Fabricate(:contact, code: 'juridical_1234', ident_type: 'bic')
+    Fabricate(:contact, code: 'FIXED:CITIZEN_1234')
+    Fabricate(:contact, code: 'FIXED:SH8013')
+    Fabricate(:contact, code: 'FIXED:SH801333')
+    Fabricate(:contact, code: 'FIXED:JURIDICAL_1234', ident_type: 'bic')
     Fabricate(:reserved_domain)
 
     @uniq_no = proc { @i ||= 0; @i += 1 }
@@ -21,9 +21,9 @@ describe 'EPP Domain', epp: true do
 
   it 'returns error if contact does not exists' do
     response = epp_plain_request(domain_create_xml({
-      registrant: { value: 'citizen_1234' },
+      registrant: { value: 'FIXED:CITIZEN_1234' },
       _anonymus: [
-        { contact: { value: 'citizen_1234', attrs: { type: 'admin' } } },
+        { contact: { value: 'FIXED:CITIZEN_1234', attrs: { type: 'admin' } } },
         { contact: { value: 'sh1111', attrs: { type: 'tech' } } },
         { contact: { value: 'sh2222', attrs: { type: 'tech' } } }
       ]
@@ -650,9 +650,9 @@ describe 'EPP Domain', epp: true do
   context 'with juridical persion as a registrant' do
     it 'creates a domain with contacts' do
       xml = domain_create_xml({
-        registrant: { value: 'juridical_1234' },
+        registrant: { value: 'FIXED:JURIDICAL_1234' },
         _anonymus: [
-          { contact: { value: 'sh8013', attrs: { type: 'admin' } } }
+          { contact: { value: 'FIXED:SH8013', attrs: { type: 'admin' } } }
         ]
       })
 
@@ -665,16 +665,16 @@ describe 'EPP Domain', epp: true do
       Domain.last.admin_contacts.count.should == 1
 
       tech_contact = Domain.last.tech_contacts.first
-      tech_contact.code.should == 'juridical_1234'
+      tech_contact.code.should == 'FIXED:JURIDICAL_1234'
     end
 
     it 'does not create a domain without admin contact' do
       domain_count = Domain.count
       domain_contact_count = DomainContact.count
       xml = domain_create_xml({
-        registrant: { value: 'juridical_1234' },
+        registrant: { value: 'FIXED:JURIDICAL_1234' },
         _anonymus: [
-          { contact: { value: 'sh8013', attrs: { type: 'tech' } } }
+          { contact: { value: 'FIXED:SH8013', attrs: { type: 'tech' } } }
         ]
       })
 
@@ -689,9 +689,9 @@ describe 'EPP Domain', epp: true do
 
     it 'cannot assign juridical person as admin contact' do
       xml = domain_create_xml({
-        registrant: { value: 'juridical_1234' },
+        registrant: { value: 'FIXED:JURIDICAL_1234' },
         _anonymus: [
-          { contact: { value: 'juridical_1234', attrs: { type: 'admin' } } }
+          { contact: { value: 'FIXED:JURIDICAL_1234', attrs: { type: 'admin' } } }
         ]
       })
 
@@ -1356,7 +1356,7 @@ describe 'EPP Domain', epp: true do
       xml_params = {
         name: { value: domain.name },
         chg: [
-          registrant: { value: 'citizen_1234' }
+          registrant: { value: 'FIXED:CITIZEN_1234' }
         ]
       }
 
@@ -1374,7 +1374,7 @@ describe 'EPP Domain', epp: true do
 
       d = Domain.last
 
-      d.registrant_code.should == 'citizen_1234'
+      d.registrant_code.should == 'FIXED:CITIZEN_1234'
       d.auth_info.should == existing_pw
     end
 
@@ -1397,7 +1397,7 @@ describe 'EPP Domain', epp: true do
             ]
           },
           _anonymus: [
-            { contact: { value: 'mak21', attrs: { type: 'tech' } } },
+            { contact: { value: 'FIXED:MAK21', attrs: { type: 'tech' } } },
             { status: { value: 'Payment overdue.', attrs: { s: 'clientHold', lang: 'en' } } },
             { status: { value: '', attrs: { s: 'clientUpdateProhibited' } } }
           ]
@@ -1426,7 +1426,7 @@ describe 'EPP Domain', epp: true do
       response[:results][0][:result_code].should == '2303'
       response[:results][0][:msg].should == 'Contact was not found'
 
-      Fabricate(:contact, code: 'mak21')
+      Fabricate(:contact, code: 'FIXED:MAK21')
 
       response = epp_plain_request(xml, :xml)
       response[:results][0][:result_code].should == '1000'
@@ -1436,7 +1436,7 @@ describe 'EPP Domain', epp: true do
       new_ns_count = d.nameservers.where(hostname: ['ns1.example.com', 'ns2.example.com']).count
       new_ns_count.should == 2
 
-      new_contact = d.tech_contacts.find_by(code: 'mak21')
+      new_contact = d.tech_contacts.find_by(code: 'FIXED:MAK21')
       new_contact.should be_truthy
 
       d.domain_statuses.count.should == 2
@@ -1466,7 +1466,7 @@ describe 'EPP Domain', epp: true do
 
       response[:results][2][:result_code].should == '2302'
       response[:results][2][:msg].should == 'Contact already exists on this domain [contact_code_cache]'
-      response[:results][2][:value].should == 'mak21'
+      response[:results][2][:value].should == 'FIXED:MAK21'
 
       response[:results][3][:msg].should == 'Status already exists on this domain [value]'
       if response[:results][3][:value] == 'clientHold'
@@ -1543,7 +1543,7 @@ describe 'EPP Domain', epp: true do
             ]
           },
           _anonymus: [
-            { contact: { value: 'citizen_1234', attrs: { type: 'tech' } } },
+            { contact: { value: 'FIXED:CITIZEN_1234', attrs: { type: 'tech' } } },
             { status: { value: 'Payment overdue.', attrs: { s: 'clientHold', lang: 'en' } } },
             { status: { value: '', attrs: { s: 'clientUpdateProhibited' } } }
           ]
@@ -1588,7 +1588,7 @@ describe 'EPP Domain', epp: true do
             ]
           },
           _anonymus: [
-            { contact: { value: 'citizen_1234', attrs: { type: 'tech' } } },
+            { contact: { value: 'FIXED:CITIZEN_1234', attrs: { type: 'tech' } } },
             { status: { value: '', attrs: { s: 'clientHold' } } }
           ]
         ]
@@ -1613,7 +1613,7 @@ describe 'EPP Domain', epp: true do
       rem_ns = d.nameservers.find_by(hostname: 'ns1.example.com')
       rem_ns.should be_falsey
 
-      rem_cnt = d.tech_contacts.find_by(code: 'citizen_1234')
+      rem_cnt = d.tech_contacts.find_by(code: 'FIXED:CITIZEN_1234')
       rem_cnt.should be_falsey
 
       response = epp_plain_request(xml, :xml)
@@ -1624,7 +1624,7 @@ describe 'EPP Domain', epp: true do
 
       response[:results][1][:result_code].should == '2303'
       response[:results][1][:msg].should == 'Contact was not found'
-      response[:results][1][:value].should == 'citizen_1234'
+      response[:results][1][:value].should == 'FIXED:CITIZEN_1234'
 
       response[:results][2][:result_code].should == '2303'
       response[:results][2][:msg].should == 'Status was not found'
@@ -1688,7 +1688,7 @@ describe 'EPP Domain', epp: true do
       xml_params = {
         name: { value: domain.name },
         chg: [
-          registrant: { value: 'citizen_1234' }
+          registrant: { value: 'FIXED:CITIZEN_1234' }
         ]
       }
 

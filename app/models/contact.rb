@@ -10,8 +10,6 @@ class Contact < ActiveRecord::Base
 
   accepts_nested_attributes_for :legal_documents
 
-  attr_accessor :code_overwrite_allowed
-
   validates :name, :phone, :email, :ident, :ident_type,
    :street, :city, :zip, :country_code, :registrar, presence: true
 
@@ -29,7 +27,7 @@ class Contact < ActiveRecord::Base
   validate :ident_valid_format?
 
   before_validation :set_ident_country_code
-  before_create :generate_code
+  before_create :update_code
   before_create :generate_auth_info
   after_save :manage_statuses
   def manage_statuses
@@ -111,10 +109,6 @@ class Contact < ActiveRecord::Base
     ident_type != BIC
   end
 
-  def generate_code
-    self.code = SecureRandom.hex(4).upcase if code.blank? || code_overwrite_allowed
-  end
-
   def generate_auth_info
     return if @generate_auth_info_disabled
     self.auth_info = SecureRandom.hex(11)
@@ -129,7 +123,31 @@ class Contact < ActiveRecord::Base
   end
 
   def code=(code)
-    self[:code] = code if new_record? || code_overwrite_allowed
+    self[:code] = code if new_record? # cannot change code later
+  end
+  
+  def update_code
+    code = self[:code]
+
+    # custom code from client
+    # add prefix when needed
+    if code.present? 
+      code.sub!(/^CID:/, '')
+      prefix, *custom_code = code.split(':')
+      code = custom_code.join(':') if prefix == registrar.code
+      code = nil if code == registrar.code
+    end
+
+    code = SecureRandom.hex(4) if code.blank? || code == registrar.code
+
+    self[:code] = "#{registrar.code}:#{code}".upcase
+  end
+
+  # used only for contact trasfere
+  def generate_new_code!
+    return nil if registrar.blank?
+    registrar.reload # for contact transfere
+    self[:code] = "#{registrar.code}:#{SecureRandom.hex(4)}".upcase
   end
 
   def country

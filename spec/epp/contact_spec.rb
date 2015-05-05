@@ -137,7 +137,7 @@ describe 'EPP Contact', epp: true do
         id =  response[:parsed].css('resData creData id').first
         cr_date =  response[:parsed].css('resData creData crDate').first
 
-        id.text.length.should == 8
+        id.text.length.should == 15
         # 5 seconds for what-ever weird lag reasons might happen
         cr_date.text.to_time.should be_within(5).of(Time.zone.now)
       end
@@ -201,7 +201,7 @@ describe 'EPP Contact', epp: true do
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
 
-        Contact.last.code.match(':').should == nil
+        Contact.last.code.should =~ /FIRST0:..../
       end
 
       it 'should generate server id when id is empty' do
@@ -248,7 +248,7 @@ describe 'EPP Contact', epp: true do
             :contact,
             registrar: @registrar1,
             email: 'not_updated@test.test',
-            code: 'SH8013'
+            code: 'FIRST0:SH8013'
           )
       end
 
@@ -296,9 +296,10 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'is succesful' do
-        response = update_request({ id: { value: 'SH8013' } })
+        response = update_request({ id: { value: 'FIRST0:SH8013' } })
 
         response[:msg].should == 'Command completed successfully'
+       
         @contact.reload
         @contact.name.should  == 'John Doe Edited'
         @contact.email.should == 'edited@example.example'
@@ -306,7 +307,7 @@ describe 'EPP Contact', epp: true do
 
       it 'is succesful for own contact without password' do
         without_password = {
-          id: { value: 'SH8013' },
+          id: { value: 'FIRST0:SH8013' },
           chg: {
             postalInfo: {
               name: { value: 'John Doe Edited' }
@@ -323,7 +324,7 @@ describe 'EPP Contact', epp: true do
 
       it 'should update other contact with correct password' do
         login_as :registrar2 do
-          response = update_request({ id: { value: 'SH8013' } })
+          response = update_request({ id: { value: 'FIRST0:SH8013' } })
           response[:msg].should == 'Command completed successfully'
           response[:result_code].should == '1000'
         end
@@ -332,7 +333,7 @@ describe 'EPP Contact', epp: true do
       it 'should not update other contact without password' do
         login_as :registrar2 do
           without_password = {
-            id: { value: 'SH8013' },
+            id: { value: 'FIRST0:SH8013' },
             chg: {
               postalInfo: {
                 name: { value: 'John Doe Edited' }
@@ -350,7 +351,7 @@ describe 'EPP Contact', epp: true do
 
       it 'returns phone and email error' do
         response = update_request({
-          id: { value: 'SH8013' },
+          id: { value: 'FIRST0:SH8013' },
           chg: {
             voice: { value: '123213' },
             email: { value: 'wrong' }
@@ -365,7 +366,7 @@ describe 'EPP Contact', epp: true do
 
       it 'should not update code with custom string' do
         response = update_request(
-          id: { value: 'SH8013' },
+          id: { value: 'FIRST0:SH8013' },
           chg: {
             id: { value: 'notpossibletoupdate' }
           }
@@ -374,7 +375,7 @@ describe 'EPP Contact', epp: true do
         response[:msg].should == 'Object does not exist'
         response[:result_code].should == '2303'
 
-        @contact.reload.code.should == 'SH8013'
+        @contact.reload.code.should == 'FIRST0:SH8013'
       end
 
       it 'should update ident' do
@@ -388,16 +389,16 @@ describe 'EPP Contact', epp: true do
             attrs: { type: 'birthday', cc: 'US' }
           }
         }
-        response = update_request({ id: { value: 'SH8013' } }, extension)
+        response = update_request({ id: { value: 'FIRST0:SH8013' } }, extension)
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
 
-        Contact.find_by(code: 'SH8013').ident_type.should == 'birthday'
+        Contact.find_by(code: 'FIRST0:SH8013').ident_type.should == 'birthday'
       end
 
       it 'should return parameter value policy errror for org update' do
         response = update_request({
-          id: { value: 'SH8013' },
+          id: { value: 'FIRST0:SH8013' },
           chg: {
             postalInfo: { org: { value: 'should not save' } }
           }
@@ -406,12 +407,12 @@ describe 'EPP Contact', epp: true do
           'Parameter value policy error. Org must be blank: postalInfo > org [org]'
         response[:result_code].should == '2306'
 
-        Contact.find_by(code: 'SH8013').org_name.should == nil
+        Contact.find_by(code: 'FIRST0:SH8013').org_name.should == nil
       end
 
       it 'should return parameter value policy errror for fax update' do
         response = update_request({
-          id: { value: 'SH8013' },
+          id: { value: 'FIRST0:SH8013' },
           chg: {
             fax: { value: 'should not save' }
           }
@@ -420,14 +421,14 @@ describe 'EPP Contact', epp: true do
           'Parameter value policy error. Fax must be blank: fax [fax]'
         response[:result_code].should == '2306'
 
-        Contact.find_by(code: 'SH8013').fax.should == nil
+        Contact.find_by(code: 'FIRST0:SH8013').fax.should == nil
       end
 
       it 'does not allow to edit statuses if policy forbids it' do
         Setting.client_status_editing_enabled = false
 
         xml = @epp_xml.update({
-          id: { value: 'SH8013' },
+          id: { value: 'FIRST0:SH8013' },
           add: [{
             _anonymus: [
               { status: { value: 'Payment overdue.', attrs: { s: 'clientHold', lang: 'en' } } },
@@ -446,7 +447,7 @@ describe 'EPP Contact', epp: true do
 
       it 'should add value voice value' do
         xml = @epp_xml.update({
-          id: { value: 'SH8013' },
+          id: { value: 'FIRST0:SH8013' },
           authInfo: { pw: { value: 'password' } },
           add: {
             voice: { value: '+372.11111111' }
@@ -457,7 +458,7 @@ describe 'EPP Contact', epp: true do
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
-        contact = Contact.find_by(code: 'SH8013')
+        contact = Contact.find_by(code: 'FIRST0:SH8013')
         contact.phone.should == '+372.11111111'
 
         contact.update_attribute(:phone, '+372.7654321') # restore default value
@@ -465,7 +466,7 @@ describe 'EPP Contact', epp: true do
 
       it 'should return error when add attributes phone value is empty' do
         xml = @epp_xml.update({
-          id: { value: 'SH8013' },
+          id: { value: 'FIRST0:SH8013' },
           authInfo: { pw: { value: 'password' } },
           add: {
             voice: { value: '' }
@@ -478,12 +479,12 @@ describe 'EPP Contact', epp: true do
         response = epp_plain_request(xml, :xml)
         response[:results][0][:msg].should == 'Required parameter missing - phone [phone]'
         response[:results][0][:result_code].should == '2003'
-        Contact.find_by(code: 'SH8013').phone.should == '+372.7654321' # aka not changed
+        Contact.find_by(code: 'FIRST0:SH8013').phone.should == '+372.7654321' # aka not changed
       end
 
       it 'should honor chg value over add value when both changes same attribute' do
         xml = @epp_xml.update({
-          id: { value: 'SH8013' },
+          id: { value: 'FIRST0:SH8013' },
           authInfo: { pw: { value: 'password' } },
           chg: {
             voice: { value: '+372.2222222222222' }
@@ -497,7 +498,7 @@ describe 'EPP Contact', epp: true do
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
-        contact = Contact.find_by(code: 'SH8013')
+        contact = Contact.find_by(code: 'FIRST0:SH8013')
         contact.phone.should == '+372.2222222222222'
 
         contact.update_attribute(:phone, '+372.7654321') # restore default value
@@ -505,7 +506,7 @@ describe 'EPP Contact', epp: true do
 
       it 'should not allow to remove required voice attribute' do
         xml = @epp_xml.update({
-          id: { value: 'SH8013' },
+          id: { value: 'FIRST0:SH8013' },
           authInfo: { pw: { value: 'password' } },
           rem: {
             voice: { value: '+372.7654321' }
@@ -516,13 +517,13 @@ describe 'EPP Contact', epp: true do
         response[:results][0][:msg].should == 'Required parameter missing - phone [phone]'
         response[:results][0][:result_code].should == '2003'
 
-        contact = Contact.find_by(code: 'SH8013')
+        contact = Contact.find_by(code: 'FIRST0:SH8013')
         contact.phone.should == '+372.7654321'
       end
 
       it 'should not allow to remove required attribute' do
         xml = @epp_xml.update({
-          id: { value: 'SH8013' },
+          id: { value: 'FIRST0:SH8013' },
           authInfo: { pw: { value: 'password' } },
           rem: {
             voice: { value: '+372.7654321' }
@@ -533,13 +534,13 @@ describe 'EPP Contact', epp: true do
         response[:results][0][:msg].should == 'Required parameter missing - phone [phone]'
         response[:results][0][:result_code].should == '2003'
 
-        contact = Contact.find_by(code: 'SH8013')
+        contact = Contact.find_by(code: 'FIRST0:SH8013')
         contact.phone.should == '+372.7654321'
       end
 
       it 'should honor add over rem' do
         xml = @epp_xml.update({
-          id: { value: 'SH8013' },
+          id: { value: 'FIRST0:SH8013' },
           authInfo: { pw: { value: 'password' } },
           rem: {
             voice: { value: 'not important' }
@@ -553,7 +554,7 @@ describe 'EPP Contact', epp: true do
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
-        contact = Contact.find_by(code: 'SH8013')
+        contact = Contact.find_by(code: 'FIRST0:SH8013')
         contact.phone.should == '+372.3333333'
 
         contact.update_attribute(:phone, '+372.7654321') # restore default value
@@ -561,7 +562,7 @@ describe 'EPP Contact', epp: true do
 
       it 'should honor chg over rem' do
         xml = @epp_xml.update({
-          id: { value: 'SH8013' },
+          id: { value: 'FIRST0:SH8013' },
           authInfo: { pw: { value: 'password' } },
           rem: {
             voice: { value: 'not important' }
@@ -575,7 +576,7 @@ describe 'EPP Contact', epp: true do
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
-        contact = Contact.find_by(code: 'SH8013')
+        contact = Contact.find_by(code: 'FIRST0:SH8013')
         contact.phone.should == '+372.44444444'
 
         contact.update_attribute(:phone, '+372.7654321') # restore default value
@@ -583,7 +584,7 @@ describe 'EPP Contact', epp: true do
 
       it 'should honor chg over rem and add' do
         xml = @epp_xml.update({
-          id: { value: 'SH8013' },
+          id: { value: 'FIRST0:SH8013' },
           authInfo: { pw: { value: 'password' } },
           chg: {
             voice: { value: '+372.666666' }
@@ -600,7 +601,7 @@ describe 'EPP Contact', epp: true do
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
-        contact = Contact.find_by(code: 'SH8013')
+        contact = Contact.find_by(code: 'FIRST0:SH8013')
         contact.phone.should == '+372.666666'
 
         contact.update_attribute(:phone, '+372.7654321') # restore default value
@@ -608,7 +609,7 @@ describe 'EPP Contact', epp: true do
 
       it 'should not remove password' do
         xml = @epp_xml.update({
-          id: { value: 'SH8013' },
+          id: { value: 'FIRST0:SH8013' },
           authInfo: { pw: { value: 'password' } },
           rem: {
             authInfo: { pw: { value: 'password' } }
@@ -619,13 +620,13 @@ describe 'EPP Contact', epp: true do
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
-        contact = Contact.find_by(code: 'SH8013')
+        contact = Contact.find_by(code: 'FIRST0:SH8013')
         contact.auth_info.should == 'password'
       end
 
       it 'should return general policy error when removing org' do
         xml = @epp_xml.update({
-          id: { value: 'SH8013' },
+          id: { value: 'FIRST0:SH8013' },
           authInfo: { pw: { value: 'password' } },
           rem: {
             postalInfo: { org: { value: 'not important' } } 
@@ -640,7 +641,7 @@ describe 'EPP Contact', epp: true do
 
       it 'should return error when removing street' do
         xml = @epp_xml.update({
-          id: { value: 'SH8013' },
+          id: { value: 'FIRST0:SH8013' },
           authInfo: { pw: { value: 'password' } },
           rem: {
             postalInfo: { 
@@ -774,7 +775,8 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'returns info about contact availability' do
-        Fabricate(:contact, code: 'check-1234')
+        contact = Fabricate(:contact, code: 'check-1234')
+        contact.code.should == 'FIXED:CHECK-1234'
 
         response = epp_plain_request(check_multiple_contacts_xml, :xml)
 
@@ -785,7 +787,7 @@ describe 'EPP Contact', epp: true do
         ids[0].attributes['avail'].text.should == '0'
         ids[1].attributes['avail'].text.should == '1'
 
-        ids[0].text.should == 'check-1234'
+        ids[0].text.should == 'FIXED:CHECK-1234'
         ids[1].text.should == 'check-4321'
       end
     end
@@ -852,10 +854,10 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'should honor new contact code format' do
-        @registrar1_contact = Fabricate(:contact, code: 'REGISTRAR1:TEST:CUSTOM:CODE')
-        @registrar1_contact.code.should == 'REGISTRAR1:TEST:CUSTOM:CODE'
+        @registrar1_contact = Fabricate(:contact, code: 'FIXED:test:custom:code')
+        @registrar1_contact.code.should == 'FIXED:TEST:CUSTOM:CODE'
 
-        response = info_request({ id: { value: 'REGISTRAR1:TEST:CUSTOM:CODE' } })
+        response = info_request({ id: { value: 'FIXED:TEST:CUSTOM:CODE' } })
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
 
@@ -927,7 +929,7 @@ describe 'EPP Contact', epp: true do
         <check>
           <contact:check
            xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
-            <contact:id>check-1234</contact:id>
+            <contact:id>FIXED:CHECK-1234</contact:id>
             <contact:id>check-4321</contact:id>
           </contact:check>
         </check>

@@ -150,11 +150,11 @@ module Epp
           }
         }
       ],
-      registrant: { value: 'citizen_1234' },
+      registrant: { value: 'FIXED:CITIZEN_1234' },
       _anonymus: [
-        { contact: { value: 'sh8013', attrs: { type: 'admin' } } },
-        { contact: { value: 'sh8013', attrs: { type: 'tech' } } },
-        { contact: { value: 'sh801333', attrs: { type: 'tech' } } }
+        { contact: { value: 'FIXED:SH8013', attrs: { type: 'admin' } } },
+        { contact: { value: 'FIXED:SH8013', attrs: { type: 'tech' } } },
+        { contact: { value: 'FIXED:SH801333', attrs: { type: 'tech' } } }
       ]
     }
 
@@ -204,11 +204,11 @@ module Epp
           }
         }
       ],
-      registrant: { value: 'citizen_1234' },
+      registrant: { value: 'FIXED:CITIZEN_1234' },
       _anonymus: [
-        { contact: { value: 'sh8013', attrs: { type: 'admin' } } },
-        { contact: { value: 'sh8013', attrs: { type: 'tech' } } },
-        { contact: { value: 'sh801333', attrs: { type: 'tech' } } }
+        { contact: { value: 'FIXED:SH8013', attrs: { type: 'admin' } } },
+        { contact: { value: 'FIXED:SH8013', attrs: { type: 'tech' } } },
+        { contact: { value: 'FIXED:SH801333', attrs: { type: 'tech' } } }
       ]
     }
 
@@ -244,11 +244,11 @@ module Epp
           }
         }
       ],
-      registrant: { value: 'citizen_1234' },
+      registrant: { value: 'FIXED:CITIZEN_1234' },
       _anonymus: [
-        { contact: { value: 'sh8013', attrs: { type: 'admin' } } },
-        { contact: { value: 'sh8013', attrs: { type: 'tech' } } },
-        { contact: { value: 'sh801333', attrs: { type: 'tech' } } }
+        { contact: { value: 'FIXED:SH8013', attrs: { type: 'admin' } } },
+        { contact: { value: 'FIXED:SH8013', attrs: { type: 'tech' } } },
+        { contact: { value: 'FIXED:SH801333', attrs: { type: 'tech' } } }
       ],
       authInfo: {
         pw: {
@@ -288,11 +288,11 @@ module Epp
           }
         }
       ],
-      registrant: { value: 'citizen_1234' },
+      registrant: { value: 'FIXED:CITIZEN_1234' },
       _anonymus: [
-        { contact: { value: 'sh8013', attrs: { type: 'admin' } } },
-        { contact: { value: 'sh8013', attrs: { type: 'tech' } } },
-        { contact: { value: 'sh801333', attrs: { type: 'tech' } } }
+        { contact: { value: 'FIXED:SH8013', attrs: { type: 'admin' } } },
+        { contact: { value: 'FIXED:SH8013', attrs: { type: 'tech' } } },
+        { contact: { value: 'FIXED:SH801333', attrs: { type: 'tech' } } }
       ],
       authInfo: {
         pw: {

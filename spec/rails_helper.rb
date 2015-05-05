@@ -46,6 +46,10 @@ def create_settings
   Setting.tech_contacts_max_count = 10
 
   Setting.client_side_status_editing_enabled = true
+
+  @fixed_registrar = 
+    Registrar.find_by_name('fixed registrar') || 
+    Fabricate(:registrar, name: 'fixed registrar', code: 'FIXED')
 end
 
 RSpec.configure do |config|
@@ -121,3 +125,4 @@ RSpec.configure do |config|
   Autodoc.configuration.suppressed_response_header = ['ETag', 'X-Request-Id', 'X-Runtime']
   Autodoc.configuration.template = File.read('spec/requests/repp_doc_template.md.erb')
 end
+

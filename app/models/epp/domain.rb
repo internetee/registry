@@ -448,9 +448,8 @@ class Epp::Domain < Domain
 
   def transfer_contact(contact_id, registrar_id)
     oc = Contact.find(contact_id) # n+1 workaround
-    oc.code_overwrite_allowed = true
-    oc.generate_code
     oc.registrar_id = registrar_id
+    oc.generate_new_code!
     oc.save!
     oc
   end

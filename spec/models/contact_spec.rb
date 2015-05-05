@@ -174,6 +174,10 @@ describe Contact do
       contact.statuses.map(&:value).should == %w(ok)
     end
 
+    it 'should have code' do
+      @contact.code.should =~ /FIXED:..../
+    end
+
     it 'should have linked status when domain is created' do
       # @admin_domain_contact = Fabricate(:admin_domain_contact)
       # @domain = Fabricate(:domain, admin_domain_contacts: [@admin_domain_contact])
@@ -211,16 +215,17 @@ describe Contact do
     context 'with callbacks' do
       before :all do
         # Ensure callbacks are not taken out from other specs
-        Contact.set_callback(:create, :before, :generate_code)
         Contact.set_callback(:create, :before, :generate_auth_info)
       end
 
       context 'after create' do
         it 'should not generate a new code when code is present' do
-          @contact = Fabricate.build(:contact, code: '123asd', auth_info: 'qwe321')
-          @contact.code.should == '123asd'
+          @contact = Fabricate.build(:contact, 
+                                     code: 'FIXED:new-code', 
+                                     auth_info: 'qwe321')
+          @contact.code.should == 'FIXED:new-code' # still new record
           @contact.save.should == true
-          @contact.code.should == '123asd'
+          @contact.code.should == 'FIXED:NEW-CODE'
         end
 
         it 'should generate a new password' do
@@ -262,15 +267,17 @@ describe Contact do
 
       context 'after update' do
         before :all do
-          @contact = Fabricate.build(:contact, code: '123asd', auth_info: 'qwe321')
+          @contact = Fabricate.build(:contact, 
+                                     code: '123asd',
+                                     auth_info: 'qwe321')
           @contact.save
-          @contact.code.should == '123asd'
+          @contact.code.should == 'FIXED:123ASD'
           @auth_info = @contact.auth_info
         end
 
         it 'should not generate new code' do
           @contact.update_attributes(name: 'qevciherot23')
-          @contact.code.should == '123asd'
+          @contact.code.should == 'FIXED:123ASD'
         end
 
         it 'should not generate new auth_info' do
