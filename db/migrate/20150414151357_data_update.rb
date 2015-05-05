@@ -11,7 +11,8 @@ class DataUpdate < ActiveRecord::Migration
       city: 'Tallinn',
       street: 'Paldiski mnt 80',
       zip: '10617',
-      url: 'www.internet.ee'
+      url: 'www.internet.ee',
+      code: 'EIS'
     ).first_or_create!
   end
 end
