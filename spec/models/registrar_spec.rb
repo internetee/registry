@@ -89,11 +89,6 @@ describe Registrar do
       registrar.code.should == 'WITH.DOT'
     end
 
-    it 'should have contact prefix' do
-      @registrar = Fabricate.build(:registrar, code: 'CUSTOMCODE')
-      @registrar.contact_prefix.should == 'CID:CUSTOMCODE'
-    end
-
     it 'should have one version' do
       with_versioning do
         @registrar.versions.should == []
