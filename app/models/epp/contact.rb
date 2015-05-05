@@ -55,11 +55,10 @@ class Epp::Contact < Contact
 
       # add prefix when needed
       if custom_code.present? 
-        cid, rcode = custom_code.split(':')
-        if "#{cid}:#{rcode}" != registrar.contact_prefix
-          custom_code = "#{registrar.contact_prefix}:#{custom_code}" 
-        end
-        custom_code = nil if custom_code == registrar.contact_prefix
+        custom_code.sub!(/^CID:/, '')
+        prefix = custom_code.split(':').first
+        custom_code = "#{registrar.code}:#{custom_code}" if prefix != registrar.code
+        custom_code = nil if custom_code == registrar.code
       end
 
       super(

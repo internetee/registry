@@ -147,7 +147,7 @@ describe 'EPP Contact', epp: true do
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
 
-        Contact.last.code.should == 'CID:FIRST0:abc12345'
+        Contact.last.code.should == 'FIRST0:abc12345'
       end
 
       it 'should add registrar prefix for code when missing' do
@@ -155,7 +155,7 @@ describe 'EPP Contact', epp: true do
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
 
-        Contact.last.code.should == 'CID:FIRST0:abc:ABC:12345'
+        Contact.last.code.should == 'FIRST0:abc:ABC:12345'
       end
 
       it 'should not allow spaces in custom code' do
@@ -164,28 +164,36 @@ describe 'EPP Contact', epp: true do
         response[:result_code].should == '2005'
       end
 
-      it 'should not add registrar prefix for code when prefix present' do
+      it 'should not add registrar prefix for code when legacy prefix present' do
         response = create_request({ id: { value: 'CID:FIRST0:abc:ABC:NEW:12345' } })
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
 
-        Contact.last.code.should == 'CID:FIRST0:abc:ABC:NEW:12345'
+        Contact.last.code.should == 'FIRST0:abc:ABC:NEW:12345'
+      end
+
+      it 'should not remove suffix CID' do
+        response = create_request({ id: { value: 'CID:FIRST0:abc:CID:ABC:NEW:12345' } })
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+
+        Contact.last.code.should == 'FIRST0:abc:CID:ABC:NEW:12345'
       end
 
       it 'should not add registrar prefix for code when prefix present' do
-        response = create_request({ id: { value: 'CID:FIRST0:abc22' } })
+        response = create_request({ id: { value: 'FIRST0:abc22' } })
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
 
-        Contact.last.code.should == 'CID:FIRST0:abc22'
+        Contact.last.code.should == 'FIRST0:abc22'
       end
 
       it 'should add registrar prefix for code does not match exactly to prefix' do
-        response = create_request({ id: { value: 'cid:first0:abc:ABC:11111' } })
+        response = create_request({ id: { value: 'cid2:first0:abc:ABC:11111' } })
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
 
-        Contact.last.code.should == 'CID:FIRST0:cid:first0:abc:ABC:11111'
+        Contact.last.code.should == 'FIRST0:cid2:first0:abc:ABC:11111'
       end
 
       it 'should ignore custom code when only contact prefix given' do
