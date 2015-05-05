@@ -1,6 +1,6 @@
 Fabricator(:contact) do
   registrar { Fabricate(:registrar) }
-  code { sequence(:code) { |i| "sh#{Faker::Number.number(8)}#{i}" } }
+  code { sequence(:code) { |i| "SH#{Faker::Number.number(8)}#{i}" } }
   auth_info 'password'
   name { sequence(:name) { |i| "#{Faker::Name.name}#{i}" } }
   phone '+372.12345678'
