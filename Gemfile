@@ -33,9 +33,10 @@ gem 'therubyracer',  platforms: :ruby
 gem 'jquery-validation-rails', '~> 1.13.1' # validate on client side
 
 # view helpers
-gem 'kaminari',        '~> 0.16.3'  # pagination
-gem 'nprogress-rails', '~> 0.1.6.5' # visual loader
-gem 'html5_validators', '~> 1.1.3'  # model requements now automatically on html form
+gem 'kaminari',         '~> 0.16.3'  # pagination
+gem 'nprogress-rails',  '~> 0.1.6.5' # visual loader
+gem 'html5_validators', '~> 1.1.3'   # model requements now automatically on html form
+gem 'coderay',          '~> 1.1.0'   # xml console visualize
 
 # rights
 gem 'devise',    '~> 3.4.1' # authenitcation
