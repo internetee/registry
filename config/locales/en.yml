@@ -756,3 +756,4 @@ en:
   hostnames_will_be_replaced_only_if_domain_validates_with_the_new_nameserver: 'Hostnames will be replaced only if domain validates with the new nameserver'
   back_to_domains: 'Back to domains'
   no_hostnames_replaced: 'No hostnames replaced'
+  forbidden_code: 'is forbidden to use'

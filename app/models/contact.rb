@@ -27,7 +27,7 @@ class Contact < ActiveRecord::Base
   validate :ident_valid_format?
 
   before_validation :set_ident_country_code
-  before_create :update_code
+  before_validation :prefix_code
   before_create :generate_auth_info
   after_save :manage_statuses
   def manage_statuses
@@ -126,7 +126,8 @@ class Contact < ActiveRecord::Base
     self[:code] = code if new_record? # cannot change code later
   end
   
-  def update_code
+  def prefix_code
+    return nil if registrar.blank?
     code = self[:code]
 
     # custom code from client
@@ -135,7 +136,6 @@ class Contact < ActiveRecord::Base
       code.sub!(/^CID:/, '')
       prefix, *custom_code = code.split(':')
       code = custom_code.join(':') if prefix == registrar.code
-      code = nil if code == registrar.code
     end
 
     code = SecureRandom.hex(4) if code.blank? || code == registrar.code
@@ -143,7 +143,7 @@ class Contact < ActiveRecord::Base
     self[:code] = "#{registrar.code}:#{code}".upcase
   end
 
-  # used only for contact trasfere
+  # used only for contact trasphere
   def generate_new_code!
     return nil if registrar.blank?
     registrar.reload # for contact transfere

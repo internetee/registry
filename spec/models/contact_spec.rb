@@ -228,6 +228,22 @@ describe Contact do
           @contact.code.should == 'FIXED:NEW-CODE'
         end
 
+        it 'should not allaw to use same code' do
+          @contact = Fabricate.build(:contact, 
+                                     code: 'FIXED:new-code', 
+                                     auth_info: 'qwe321')
+          @contact.code.should == 'FIXED:new-code' # still new record
+          @contact.save.should == true
+          @contact.code.should == 'FIXED:NEW-CODE'
+
+          @contact = Fabricate.build(:contact, 
+                                     code: 'FIXED:new-code', 
+                                     auth_info: 'qwe321')
+          @contact.code.should == 'FIXED:new-code' # still new record
+          @contact.valid?
+          @contact.errors.full_messages.should == ["Code Contact id already exists"]
+        end
+
         it 'should generate a new password' do
           @contact = Fabricate.build(:contact, code: '123asd', auth_info: 'qwe321')
           @contact.auth_info.should == 'qwe321'
@@ -258,10 +274,10 @@ describe Contact do
           @contact.code.should_not == ''
         end
 
-        it 'should not allow empty spaces as code' do
+        it 'should not ignore empty spaces as code and generate new one' do
           @contact = Fabricate.build(:contact, code: '    ')
-          @contact.valid?
-          @contact.errors.full_messages.should == ['Code is invalid']
+          @contact.valid?.should == true
+          @contact.code.should =~ /FIXED:..../
         end
       end
 
