@@ -11,7 +11,7 @@ class Epp::ContactsController < EppController
     authorize! :check, Epp::Contact
 
     ids = params[:parsed_frame].css('id').map(&:text)
-    @results = Contact.check_availability(ids)
+    @results = Epp::Contact.check_availability(ids)
     render_epp_response '/epp/contacts/check'
   end
 
@@ -59,8 +59,9 @@ class Epp::ContactsController < EppController
   end
 
   def find_contact
-    code = params[:parsed_frame].css('id').text.strip.upcase
-    @contact = Epp::Contact.find_by(code: code)
+    code = params[:parsed_frame].css('id').text.strip.upcase.sub(/^CID:/, '')
+    
+    @contact = Epp::Contact.find_by_epp_code(code)
 
     if @contact.blank?
       epp_errors << {

@@ -121,7 +121,7 @@ describe Registrar do
       i.description.should == 'add some money'
     end
 
-    fit 'should not allaw to use CID as code for leagcy reasons' do
+    it 'should not allaw to use CID as code for leagcy reasons' do
       registrar = Fabricate.build(:registrar, code: 'CID')
       registrar.valid?
       registrar.errors.full_messages.should == ['Code is forbidden to use']

@@ -6,6 +6,11 @@ class Epp::Contact < Contact
   self.inheritance_column = :sti_disabled
 
   class << self
+    # support legacy search
+    def find_by_epp_code(code)
+      find_by(code: code.sub(/^CID:/, ''))
+    end
+
     # rubocop: disable Metrics/PerceivedComplexity
     # rubocop: disable Metrics/CyclomaticComplexity
     # rubocop: disable Metrics/MethodLength
@@ -81,6 +86,22 @@ class Epp::Contact < Contact
         body: legal_frame.text,
         document_type: legal_frame.attr('type')
       }]
+    end
+
+    def check_availability(codes)
+      codes = [codes] if codes.is_a?(String)
+
+      res = []
+      codes.each do |x|
+        contact = find_by_epp_code(x)
+        if contact
+          res << { code: contact.code, avail: 0, reason: 'in use' }
+        else
+          res << { code: x, avail: 1 }
+        end
+      end
+
+      res
     end
   end
 

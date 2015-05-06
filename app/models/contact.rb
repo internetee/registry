@@ -54,21 +54,6 @@ class Contact < ActiveRecord::Base
       res.reduce([]) { |o, v| o << { id: v[:id], display_key: "#{v.name} (#{v.code})" } }
     end
 
-    def check_availability(codes)
-      codes = [codes] if codes.is_a?(String)
-
-      res = []
-      codes.each do |x|
-        if Contact.find_by(code: x)
-          res << { code: x, avail: 0, reason: 'in use' }
-        else
-          res << { code: x, avail: 1 }
-        end
-      end
-
-      res
-    end
-
     def find_orphans
       Contact.where('
         NOT EXISTS(
@@ -125,7 +110,7 @@ class Contact < ActiveRecord::Base
   def code=(code)
     self[:code] = code if new_record? # cannot change code later
   end
-  
+
   def prefix_code
     return nil if registrar.blank?
     code = self[:code]

@@ -790,6 +790,24 @@ describe 'EPP Contact', epp: true do
         ids[0].text.should == 'FIXED:CHECK-1234'
         ids[1].text.should == 'check-4321'
       end
+
+      it 'should support legacy CID farmat' do
+        contact = Fabricate(:contact, code: 'check-LEGACY')
+        contact.code.should == 'FIXED:CHECK-LEGACY'
+
+        response = epp_plain_request(check_multiple_legacy_contacts_xml, :xml)
+
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+        ids = response[:parsed].css('resData chkData id')
+
+        ids[0].text.should == 'FIXED:CHECK-LEGACY'
+        ids[1].text.should == 'FIXED:CHECK-LEGACY'
+
+        ids[0].attributes['avail'].text.should == '0'
+        ids[1].attributes['avail'].text.should == '0'
+      end
+
     end
 
     context 'info command' do
@@ -819,10 +837,20 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'return info about contact' do
-        @registrar1_contact = Fabricate(
-          :contact, code: 'INFO-4444', registrar: @registrar1, name: 'Johnny Awesome')
+        Fabricate(:contact, code: 'INFO-4444', name: 'Johnny Awesome')
 
-        response = info_request({ id: { value: @registrar1_contact.code } })
+        response = info_request({ id: { value: 'FIXED:INFO-4444' } })
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+
+        contact = response[:parsed].css('resData infData')
+        contact.css('name').first.text.should == 'Johnny Awesome'
+      end
+
+      it 'should honour legacy CID format' do
+        Fabricate(:contact, code: 'INFO-5555', name: 'Johnny Awesome')
+
+        response = info_request({ id: { value: 'CID:FIXED:INFO-5555' } })
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
 
@@ -937,4 +965,21 @@ describe 'EPP Contact', epp: true do
       </command>
     </epp>'
   end
+
+  def check_multiple_legacy_contacts_xml
+    '<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+      <command>
+        <check>
+          <contact:check
+           xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
+            <contact:id>FIXED:CHECK-LEGACY</contact:id>
+            <contact:id>CID:FIXED:CHECK-LEGACY</contact:id>
+          </contact:check>
+        </check>
+        <clTRID>ABC-12345</clTRID>
+      </command>
+    </epp>'
+  end
+
 end

@@ -84,7 +84,7 @@ class Epp::Domain < Domain
 
     code = frame.css('registrant').first.try(:text)
     if code.present?
-      oc = Contact.find_by(code: code).try(:id)
+      oc = Epp::Contact.find_by_epp_code(code).try(:id)
 
       if oc
         at[:registrant_id] = oc
@@ -206,7 +206,7 @@ class Epp::Domain < Domain
     frame.css('contact').each do |x|
       next if x['type'] != type
 
-      c = Contact.find_by(code: x.text)
+      c = Epp::Contact.find_by_epp_code(x.text)
       unless c
         add_epp_error('2303', 'contact', x.text, [:domain_contacts, :not_found])
         next
