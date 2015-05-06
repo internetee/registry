@@ -164,12 +164,12 @@ describe 'EPP Contact', epp: true do
         response[:result_code].should == '2005'
       end
 
-      it 'should not add registrar prefix for code when legacy prefix present' do
+      it 'should add registrar prefix for code when legacy prefix present' do
         response = create_request({ id: { value: 'CID:FIRST0:abc:ABC:NEW:12345' } })
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
 
-        Contact.last.code.should == 'FIRST0:ABC:ABC:NEW:12345'
+        Contact.last.code.should == 'FIRST0:CID:FIRST0:ABC:ABC:NEW:12345'
       end
 
       it 'should not remove suffix CID' do
