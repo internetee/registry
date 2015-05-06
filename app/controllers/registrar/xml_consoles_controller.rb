@@ -1,4 +1,6 @@
 class Registrar::XmlConsolesController < Registrar::DeppController # EPP controller
+  require 'coderay'
+
   def show
     authorize! :view, :registrar_xml_console
   end
