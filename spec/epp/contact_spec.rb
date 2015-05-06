@@ -164,12 +164,12 @@ describe 'EPP Contact', epp: true do
         response[:result_code].should == '2005'
       end
 
-      it 'should not add registrar prefix for code when legacy prefix present' do
+      it 'should add registrar prefix for code when legacy prefix present' do
         response = create_request({ id: { value: 'CID:FIRST0:abc:ABC:NEW:12345' } })
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
 
-        Contact.last.code.should == 'FIRST0:ABC:ABC:NEW:12345'
+        Contact.last.code.should == 'FIRST0:CID:FIRST0:ABC:ABC:NEW:12345'
       end
 
       it 'should not remove suffix CID' do
@@ -177,7 +177,7 @@ describe 'EPP Contact', epp: true do
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
 
-        Contact.last.code.should == 'FIRST0:ABC:CID:ABC:NEW:12345'
+        Contact.last.code.should == 'FIRST0:CID:FIRST0:ABC:CID:ABC:NEW:12345'
       end
 
       it 'should not add registrar prefix for code when prefix present' do
@@ -802,10 +802,10 @@ describe 'EPP Contact', epp: true do
         ids = response[:parsed].css('resData chkData id')
 
         ids[0].text.should == 'FIXED:CHECK-LEGACY'
-        ids[1].text.should == 'FIXED:CHECK-LEGACY'
+        ids[1].text.should == 'CID:FIXED:CHECK-LEGACY'
 
         ids[0].attributes['avail'].text.should == '0'
-        ids[1].attributes['avail'].text.should == '0'
+        ids[1].attributes['avail'].text.should == '1'
       end
 
     end
@@ -847,10 +847,10 @@ describe 'EPP Contact', epp: true do
         contact.css('name').first.text.should == 'Johnny Awesome'
       end
 
-      it 'should honour legacy CID format' do
-        Fabricate(:contact, code: 'INFO-5555', name: 'Johnny Awesome')
+      it 'should add legacy CID format as append' do
+        Fabricate(:contact, code: 'CID:FIXED:INFO-5555', name: 'Johnny Awesome')
 
-        response = info_request({ id: { value: 'CID:FIXED:INFO-5555' } })
+        response = info_request({ id: { value: 'FIXED:CID:FIXED:INFO-5555' } })
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
 

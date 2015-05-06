@@ -8,7 +8,8 @@ class Epp::Contact < Contact
   class << self
     # support legacy search
     def find_by_epp_code(code)
-      find_by(code: code.sub(/^CID:/, ''))
+      # find_by(code: code.sub(/^CID:/, '')) # legacy support turned off
+      find_by(code: code)
     end
 
     # rubocop: disable Metrics/PerceivedComplexity

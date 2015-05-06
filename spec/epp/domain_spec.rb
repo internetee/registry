@@ -1378,34 +1378,6 @@ describe 'EPP Domain', epp: true do
       d.auth_info.should == existing_pw
     end
 
-    it 'updates a domain with legacy CID format' do
-      existing_pw = domain.auth_info
-
-      xml_params = {
-        name: { value: domain.name },
-        chg: [
-          registrant: { value: 'CID:FIXED:CITIZEN_1234' }
-        ]
-      }
-
-      response = epp_plain_request(domain_update_xml(xml_params, {}, {
-        _anonymus: [
-          legalDocument: {
-            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
-            attrs: { type: 'pdf' }
-          }
-        ]
-      }), :xml)
-
-      response[:results][0][:msg].should == 'Command completed successfully'
-      response[:results][0][:result_code].should == '1000'
-
-      d = Domain.last
-
-      d.registrant_code.should == 'FIXED:CITIZEN_1234'
-      d.auth_info.should == existing_pw
-    end
-
     it 'updates domain and adds objects' do
       xml = domain_update_xml({
         name: { value: domain.name },

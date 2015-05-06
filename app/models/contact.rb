@@ -118,7 +118,6 @@ class Contact < ActiveRecord::Base
     # custom code from client
     # add prefix when needed
     if code.present? 
-      code.sub!(/^CID:/, '')
       prefix, *custom_code = code.split(':')
       code = custom_code.join(':') if prefix == registrar.code
     end
