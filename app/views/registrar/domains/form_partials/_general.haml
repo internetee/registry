@@ -20,5 +20,6 @@
       .col-md-3.control-label
         = label_tag :domain_registrant, t(:registrant), class: 'required'
       .col-md-7
-        = text_field_tag('domain[registrant]', @domain_params[:registrant], 
-          class: 'form-control', placeholder: t(:contact_code), autocomplete: 'off', required: true)
+        = select_tag "domain[registrant]", 
+          options_for_select(@contacts_autocomplete_map, selected: @domain_params[:registrant]),
+          include_blank: true, class: 'js-combobox', required: true

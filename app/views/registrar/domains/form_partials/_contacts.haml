@@ -17,11 +17,15 @@
           .col-md-3.control-label
             = label_tag "domain_contacts_attributes_#{k}_code", t(:contact_code), class: 'required'
           .col-md-7.has-feedback
-            = text_field_tag("domain[contacts_attributes][#{k}][code]", v['code'],
-              class: 'form-control', placeholder: t(:contact_code), autocomplete: 'off', required: true)
+            = select_tag "domain[contacts_attributes][#{k}][code]", 
+              options_for_select(@contacts_autocomplete_map, selected: v['code']),
+              include_blank: true, class: 'js-combobox', required: true
+
 :coffee
   $("#domain-contacts").nestedAttributes
     bindAddTo: $(".add-domain-contact")
     afterAdd: (item) ->
       item.find('select').each (k, v) ->
         $(v).val($(v).find('option:first-child').val())
+
+

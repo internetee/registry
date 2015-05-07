@@ -1,5 +1,6 @@
 class Registrar::DomainsController < Registrar::DeppController # EPP controller
   before_action :init_domain, except: :new
+  before_action :init_contacts_autocomplete_map, only: [:new, :edit, :create, :update]
 
   def index
     authorize! :view, Depp::Domain
@@ -115,5 +116,10 @@ class Registrar::DomainsController < Registrar::DeppController # EPP controller
 
   def init_domain
     @domain = Depp::Domain.new(current_user: depp_current_user)
+  end
+
+  def init_contacts_autocomplete_map
+    @contacts_autocomplete_map ||= 
+      current_user.registrar.contacts.pluck(:name, :code).map {|c| ["#{c.second} #{c.first}", c.second]}
   end
 end

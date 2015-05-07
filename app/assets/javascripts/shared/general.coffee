@@ -19,3 +19,8 @@ $(document).on 'ready page:load', ->
     dateFormat: "yy-mm-dd",
     maxDate: tomorrow
   );
+
+  $('.js-combobox').select2
+    width: "100%"
+    selectOnBlur: true
+    dropdownAutoWidth: if self==top then true else false

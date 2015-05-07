@@ -7,5 +7,8 @@
 #= require jquery.nested_attributes
 #= require shared/jquery.validate.bootstrap
 #= require jquery-ui/datepicker
+#= require select2
+
 #= require shared/general
+
 #= require registrar/application

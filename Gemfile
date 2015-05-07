@@ -37,6 +37,7 @@ gem 'kaminari',         '~> 0.16.3'  # pagination
 gem 'nprogress-rails',  '~> 0.1.6.5' # visual loader
 gem 'html5_validators', '~> 1.1.3'   # model requements now automatically on html form
 gem 'coderay',          '~> 1.1.0'   # xml console visualize
+gem 'select2-rails',    '~> 3.5.9.3' # for autocomplete
 
 # rights
 gem 'devise',    '~> 3.4.1' # authenitcation
