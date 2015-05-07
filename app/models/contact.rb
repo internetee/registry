@@ -111,7 +111,9 @@ class Contact < ActiveRecord::Base
     self[:code] = code if new_record? # cannot change code later
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
   def prefix_code
+    return nil unless new_record?
     return nil if registrar.blank?
     code = self[:code]
 
@@ -126,6 +128,7 @@ class Contact < ActiveRecord::Base
 
     self[:code] = "#{registrar.code}:#{code}".upcase
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   # used only for contact trasphere
   def generate_new_code!
