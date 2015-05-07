@@ -21,9 +21,7 @@
     </create>
     <extension>
       <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
-        <eis:ident type="bic" cc="EE">
-          123
-        </eis:ident>
+        <eis:ident type="bic" cc="EE">123</eis:ident>
         <eis:legalDocument type="pdf">
           JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==
         </eis:legalDocument>
