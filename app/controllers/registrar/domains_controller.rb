@@ -120,6 +120,6 @@ class Registrar::DomainsController < Registrar::DeppController # EPP controller
 
   def init_contacts_autocomplete_map
     @contacts_autocomplete_map ||= 
-      current_user.registrar.contacts.pluck(:name, :code).map {|c| ["#{c.second} #{c.first}", c.second]}
+      current_user.registrar.contacts.pluck(:name, :code).map { |c| ["#{c.second} #{c.first}", c.second] }
   end
 end
