@@ -42,7 +42,8 @@ class Epp::KeyrelaysController < EppController
       msg: I18n.t(:unimplemented_object_service),
       value: { obj: 'name', val: domain_name }
     }
-    return nil
+    nil
+    # end of keyrelay temp turned off
 
     # domain = Epp::Domain.includes(:registrant).find_by(name: domain_name)
 
