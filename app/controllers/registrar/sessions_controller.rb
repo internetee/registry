@@ -6,6 +6,29 @@ class Registrar::SessionsController < ::SessionsController
   end
 
   def login
+    @user = Depp::User.new
+  end
+
+  def create
+    @user = Depp::User.new(params[:depp_user].merge(
+        pki: request.env['HTTP_SSL_CLIENT_S_DN_CN'].present?
+      )
+    )
+
+    if @user.pki && request.env['HTTP_SSL_CLIENT_S_DN_CN'] != params[:depp_user][:tag]
+      @user.errors.add(:base, :invalid_cert)
+    end
+
+    if @user.errors.none? && @user.valid?
+      session[:tag] = params[:depp_user][:tag]
+      session[:password] = params[:depp_user][:password]
+      session[:last_seen] = Time.now.to_i
+      session[:pki] = @user.pki
+
+      redirect_to '/registrar'
+    else
+      render 'login'
+    end
   end
 
   def login_mid
