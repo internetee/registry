@@ -34,15 +34,18 @@ describe 'EPP Keyrelay', epp: true do
 
     response = epp_plain_request(xml, :xml)
 
-    response[:msg].should == 'Command completed successfully'
-    response[:result_code].should == '1000'
+    response[:msg].should == 'Unimplemented object service'
+    response[:result_code].should == '2307'
 
-    @registrar2.messages.queued.count.should == 1
+    # response[:msg].should == 'Command completed successfully'
+    # response[:result_code].should == '1000'
 
-    log = ApiLog::EppLog.last
-    log.request_command.should == 'keyrelay'
-    log.request_successful.should == true
-    log.api_user_name.should == '1-api-registrar1'
+    # @registrar2.messages.queued.count.should == 1
+
+    # log = ApiLog::EppLog.last
+    # log.request_command.should == 'keyrelay'
+    # log.request_successful.should == true
+    # log.api_user_name.should == '1-api-registrar1'
   end
 
   it 'returns an error when parameters are missing' do
@@ -169,12 +172,16 @@ describe 'EPP Keyrelay', epp: true do
     })
 
     response = epp_plain_request(xml, :xml)
-    response[:msg].should == 'Command completed successfully'
 
-    docs = Keyrelay.last.legal_documents
-    docs.count.should == 1
-    docs.first.path.should_not be_blank
-    docs.first.document_type.should == 'pdf'
+    response[:msg].should == 'Unimplemented object service'
+    response[:result_code].should == '2307'
+
+    # response[:msg].should == 'Command completed successfully'
+
+    # docs = Keyrelay.last.legal_documents
+    # docs.count.should == 1
+    # docs.first.path.should_not be_blank
+    # docs.first.document_type.should == 'pdf'
   end
 
   it 'validates legal document types' do

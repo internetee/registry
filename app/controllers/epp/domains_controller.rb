@@ -1,6 +1,4 @@
 class Epp::DomainsController < EppController
-  skip_authorization_check # TODO: remove it
-
   before_action :find_domain, only: [:info, :renew, :update, :transfer, :delete]
   before_action :find_password, only: [:info, :update, :transfer, :delete]
 
@@ -44,6 +42,8 @@ class Epp::DomainsController < EppController
 
   # rubocop:disable Metrics/CyclomaticComplexity
   def delete
+    authorize! :delete, @domain, @password
+
     # all includes for bullet
     @domain = Epp::Domain.where(id: @domain.id).includes(nameservers: :versions).first
 

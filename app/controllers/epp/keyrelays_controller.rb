@@ -1,9 +1,10 @@
 class Epp::KeyrelaysController < EppController
-  skip_authorization_check # TODO: remove it
+  skip_authorization_check # TODO: move authorization under ability
 
   # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/CyclomaticComplexity
   def keyrelay
+    # keyrelay temp turned off
     @domain = find_domain
 
     handle_errors(@domain) and return unless @domain
@@ -34,6 +35,15 @@ class Epp::KeyrelaysController < EppController
 
   def find_domain
     domain_name = params[:parsed_frame].css('name').text.strip.downcase
+
+    # keyrelay temp turned off
+    epp_errors << {
+      code: '2307',
+      msg: I18n.t(:unimplemented_object_service),
+      value: { obj: 'name', val: domain_name }
+    }
+    return nil
+
     domain = Epp::Domain.includes(:registrant).find_by(name: domain_name)
 
     unless domain

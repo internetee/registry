@@ -1,5 +1,5 @@
 class Epp::PollsController < EppController
-  skip_authorization_check # TODO: remove it
+  skip_authorization_check # TODO: move authorization under ability
 
   def poll
     req_poll if params[:parsed_frame].css('poll').first['op'] == 'req'
