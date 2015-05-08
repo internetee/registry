@@ -44,17 +44,17 @@ class Epp::KeyrelaysController < EppController
     }
     return nil
 
-    domain = Epp::Domain.includes(:registrant).find_by(name: domain_name)
+    # domain = Epp::Domain.includes(:registrant).find_by(name: domain_name)
 
-    unless domain
-      epp_errors << {
-        code: '2303',
-        msg: I18n.t('errors.messages.epp_domain_not_found'),
-        value: { obj: 'name', val: domain_name }
-      }
-      return nil
-    end
+    # unless domain
+      # epp_errors << {
+        # code: '2303',
+        # msg: I18n.t('errors.messages.epp_domain_not_found'),
+        # value: { obj: 'name', val: domain_name }
+      # }
+      # return nil
+    # end
 
-    domain
+    # domain
   end
 end
