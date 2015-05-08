@@ -3,8 +3,8 @@ require 'rails_helper'
 describe 'EPP Domain', epp: true do
   before(:all) do
     @epp_xml = EppXml.new(cl_trid: 'ABC-12345')
-    @registrar1 = Fabricate(:registrar1)
-    @registrar2 = Fabricate(:registrar2)
+    @registrar1 = Fabricate(:registrar1, code: 'REGDOMAIN1')
+    @registrar2 = Fabricate(:registrar2, code: 'REGDOMAIN2')
     Fabricate(:api_user, username: 'registrar1', registrar: @registrar1)
     Fabricate(:api_user, username: 'registrar2', registrar: @registrar2)
 
@@ -702,7 +702,6 @@ describe 'EPP Domain', epp: true do
   end
 
   context 'with valid domain' do
-    # before(:each) { Fabricate(:domain, registrar: @registrar1, dnskeys: []) }
     let(:domain) { Fabricate(:domain, registrar: @registrar1, dnskeys: []) }
 
     ### TRANSFER ###
@@ -733,9 +732,9 @@ describe 'EPP Domain', epp: true do
       trn_data = response[:parsed].css('trnData')
       trn_data.css('name').text.should == domain.name
       trn_data.css('trStatus').text.should == 'serverApproved'
-      trn_data.css('reID').text.should == '222'
+      trn_data.css('reID').text.should == 'REGDOMAIN2'
       trn_data.css('reDate').text.should == dtl.transfer_requested_at.to_time.utc.to_s
-      trn_data.css('acID').text.should == '111'
+      trn_data.css('acID').text.should == 'REGDOMAIN1'
       trn_data.css('acDate').text.should == dtl.transferred_at.to_time.utc.to_s
       trn_data.css('exDate').text.should == domain.valid_to.to_time.utc.to_s
 
@@ -777,10 +776,10 @@ describe 'EPP Domain', epp: true do
 
       trn_data.css('name').text.should == domain.name
       trn_data.css('trStatus').text.should == 'pending'
-      trn_data.css('reID').text.should == '111'
+      trn_data.css('reID').text.should == 'REGDOMAIN1'
       trn_data.css('reDate').text.should == dtl.transfer_requested_at.to_time.utc.to_s
       trn_data.css('acDate').text.should == dtl.wait_until.to_time.utc.to_s
-      trn_data.css('acID').text.should == '222'
+      trn_data.css('acID').text.should == 'REGDOMAIN2'
       trn_data.css('exDate').text.should == domain.valid_to.to_time.utc.to_s
 
       domain.registrar.should == @registrar2
@@ -792,10 +791,10 @@ describe 'EPP Domain', epp: true do
       domain.domain_transfers.count.should == 2
       trn_data.css('name').text.should == domain.name
       trn_data.css('trStatus').text.should == 'pending'
-      trn_data.css('reID').text.should == '111'
+      trn_data.css('reID').text.should == 'REGDOMAIN1'
       trn_data.css('reDate').text.should == dtl.transfer_requested_at.to_time.utc.to_s
       trn_data.css('acDate').text.should == dtl.wait_until.to_time.utc.to_s
-      trn_data.css('acID').text.should == '222'
+      trn_data.css('acID').text.should == 'REGDOMAIN2'
       trn_data.css('exDate').text.should == domain.valid_to.to_time.utc.to_s
 
       domain.registrar.should == @registrar2
@@ -1036,8 +1035,8 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'transfers domain when multiple domain contacts are some other domain contacts' do
-      old_contact = Fabricate(:contact, registrar: @registrar1)
-      old_contact_2 = Fabricate(:contact, registrar: @registrar1)
+      old_contact = Fabricate(:contact, registrar: @registrar1, name: 'first')
+      old_contact_2 = Fabricate(:contact, registrar: @registrar1, name: 'second')
 
       domain.tech_contacts << old_contact
       domain.admin_contacts << old_contact
@@ -1077,6 +1076,10 @@ describe 'EPP Domain', epp: true do
       end
 
       new_contact, new_contact_2 = Contact.last(2)
+
+      # database does not follow always same order, thus we swap object when different order
+      new_contact, new_contact_2 = new_contact_2, new_contact if new_contact.name != 'first'
+
       new_contact.name.should == old_contact.name
       new_contact_2.name.should == old_contact_2.name
 
@@ -1195,9 +1198,9 @@ describe 'EPP Domain', epp: true do
 
       trn_data.css('name').text.should == domain.name
       trn_data.css('trStatus').text.should == 'clientApproved'
-      trn_data.css('reID').text.should == '222'
+      trn_data.css('reID').text.should == 'REGDOMAIN2'
       trn_data.css('reDate').text.should == dtl.transfer_requested_at.to_time.utc.to_s
-      trn_data.css('acID').text.should == '111'
+      trn_data.css('acID').text.should == 'REGDOMAIN1'
       trn_data.css('exDate').text.should == domain.valid_to.to_time.utc.to_s
     end
 
