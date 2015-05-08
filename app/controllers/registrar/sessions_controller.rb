@@ -9,6 +9,7 @@ class Registrar::SessionsController < ::SessionsController
     @depp_user = Depp::User.new
   end
 
+  # rubocop:disabled Metrics/PerceivedComplexity
   def create
     @depp_user = Depp::User.new(params[:depp_user].merge(
         pki: request.env['HTTP_SSL_CLIENT_S_DN_CN'].present?
@@ -32,6 +33,7 @@ class Registrar::SessionsController < ::SessionsController
       render 'login'
     end
   end
+  # rubocop:enabled Metrics/PerceivedComplexity
 
   def login_mid
     @user = User.new

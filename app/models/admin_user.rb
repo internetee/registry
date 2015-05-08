@@ -5,7 +5,6 @@ class AdminUser < User
   validates :email, presence: true 
 
   validate :validate_identity_code, if: -> { country_code == 'EE' }
-  belongs_to :country_deprecated, foreign_key: :country_id
 
   ROLES = %w(user customer_service admin)
 

@@ -10,8 +10,6 @@ class Registrar < ActiveRecord::Base
   has_many :nameservers, through: :domains
   has_many :whois_records
 
-  belongs_to :country_deprecated, foreign_key: :country_id
-
   validates :name, :reg_no, :country_code, :email, :code, presence: true
   validates :name, :reg_no, :reference_no, :code, uniqueness: true
   validate :forbidden_codes

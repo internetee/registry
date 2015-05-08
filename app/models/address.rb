@@ -1,6 +1,5 @@
 class Address < ActiveRecord::Base
   include Versions # version/address_version.rb
-  belongs_to :country_deprecated, foreign_key: :country_id
 
   LOCAL_TYPE_SHORT = 'loc'
   INTERNATIONAL_TYPE_SHORT = 'int'
