@@ -528,6 +528,7 @@ en:
               failed_to_open_connection_to_epp_server: 'Failed to open connection to EPP server!'
               authorization_error: 'Authorization error'
               invalid_cert: 'Invalid certificate'
+              not_active: 'User is not active'
             tag:
               blank: "Username can't be blank"
             password:
