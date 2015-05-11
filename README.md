@@ -179,6 +179,12 @@ Registrar configuration (/etc/apache2/sites-enabled/registrar.conf) is as follow
   <Location ~ "/(registrar|assets)\/.+">
     Allow from all
   </Location>
+
+  RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
+  <Location /registrar/sessions>
+    SSLVerifyClient require
+    RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
+  </Location>
 </VirtualHost>
 ```
 

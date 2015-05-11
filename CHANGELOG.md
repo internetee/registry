@@ -2,6 +2,7 @@
 
 * Registrar: only dev can skip pki login certificate, 
   please be sure all application.yml and apache conf is correctly setup for pki
+* Updated Registrar Apache example: added user name directive example config
 
 24.04.2015
 

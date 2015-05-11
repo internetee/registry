@@ -529,6 +529,8 @@ en:
               authorization_error: 'Authorization error'
               invalid_cert: 'Invalid certificate'
               not_active: 'User is not active'
+              webserver_missing_user_name_directive: 'Webserver configuration error: Apache or nginx is missing user name directive.'
+              webserver_user_name_directive_should_be_required: 'Webserver configuration error: Apache or nginx should require name directive.'
             tag:
               blank: "Username can't be blank"
             password:

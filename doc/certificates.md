@@ -151,7 +151,7 @@ Add these lines:
 
     RequestHeader set SSL_CLIENT_S_DN_CN ""
 
-    <Location /sessions/pki>
+    <Location /sessions>
       SSLVerifyClient require
       RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
     </Location> 

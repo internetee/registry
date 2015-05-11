@@ -16,6 +16,14 @@ class Registrar::SessionsController < ::SessionsController
       )
     )
 
+    if @depp_user.pki && request.env['HTTP_SSL_CLIENT_S_DN_CN'].blank?
+      @depp_user.errors.add(:base, :webserver_missing_user_name_directive)
+    end
+
+    if @depp_user.pki && request.env['HTTP_SSL_CLIENT_S_DN_CN'] == '(null)'
+      @depp_user.errors.add(:base, :webserver_user_name_directive_should_be_required)
+    end
+
     if @depp_user.pki && request.env['HTTP_SSL_CLIENT_S_DN_CN'] != params[:depp_user][:tag]
       @depp_user.errors.add(:base, :invalid_cert)
     end
