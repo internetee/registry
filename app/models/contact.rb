@@ -69,6 +69,10 @@ class Contact < ActiveRecord::Base
       count = find_orphans.destroy_all.count
       logger.info "#{Time.zone.now.utc} - Successfully destroyed #{count} orphaned contacts\n"
     end
+
+    def privs
+      where("ident_type = '#{PRIV}'")
+    end
   end
 
   def to_s

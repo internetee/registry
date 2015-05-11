@@ -39,6 +39,10 @@ describe Registrar do
       @registrar.reference_no.should_not be_blank
       @registrar.reference_no.last(10).to_i.should_not == 0
     end
+
+    it 'should not have priv contacts' do
+      @registrar.priv_contacts.size.should == 0
+    end
   end
 
   context 'with valid attributes' do
@@ -125,6 +129,15 @@ describe Registrar do
       registrar = Fabricate.build(:registrar, code: 'CID')
       registrar.valid?
       registrar.errors.full_messages.should == ['Code is forbidden to use']
+    end
+
+    it 'should have priv contacts' do
+      Fabricate(:contact, registrar: @registrar)
+      @registrar.reload.priv_contacts.size.should == 1
+    end
+
+    it 'should not have priv contacts' do
+      @registrar.priv_contacts.size.should == 0
     end
   end
 end

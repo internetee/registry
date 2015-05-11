@@ -24,7 +24,6 @@ describe ApiUser do
     it 'should be active by default' do
       @api_user.active.should == true
     end
-
   end
 
   context 'with valid attributes' do

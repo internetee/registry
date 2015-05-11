@@ -9,6 +9,7 @@ class Registrar < ActiveRecord::Base
   has_many :accounts
   has_many :nameservers, through: :domains
   has_many :whois_records
+  has_many :priv_contacts, -> { privs }, class_name: 'Contact'
 
   validates :name, :reg_no, :country_code, :email, :code, presence: true
   validates :name, :reg_no, :reference_no, :code, uniqueness: true
