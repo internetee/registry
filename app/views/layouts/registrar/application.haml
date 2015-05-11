@@ -44,7 +44,7 @@
                 - active_class = ['registrar/invoices'].include?(params[:controller]) ? 'active' :nil
                 %li{class: active_class}= link_to t(:billing), registrar_invoices_path
 
-              - if !Rails.env.production? && can? :view, :registrar_xml_console
+              - if !Rails.env.production? && can?(:view, :registrar_xml_console)
                 - active_class = ['registrar/xml_consoles'].include?(params[:controller]) ? 'active' :nil
                 %li{class: active_class}= link_to t(:xml_console), registrar_xml_console_path
 
