@@ -180,6 +180,13 @@ Registrar configuration (/etc/apache2/sites-enabled/registrar.conf) is as follow
     Allow from all
   </Location>
 
+  SSLVerifyClient none
+  SSLVerifyDepth 1
+  SSLCACertificateFile /home/registry/registry/shared/ca/certs/ca.cert.pem
+  SSLCARevocationFile /home/registry/registry/shared/ca/crl/crl.pem
+  # Uncomment in Apache 2.4
+  # SSLCARevocationCheck chain
+
   RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
   <Location /registrar/sessions>
     SSLVerifyClient require
