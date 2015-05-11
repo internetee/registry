@@ -72,8 +72,8 @@ class Epp::Domain < Domain
 
   def attach_default_contacts
     return if registrant.blank?
-    tech_contacts  << registrant if tech_contacts.blank?
-    admin_contacts << registrant if admin_contacts.blank? && registrant.priv?
+    tech_contacts  << registrant if tech_domain_contacts.blank?
+    admin_contacts << registrant if admin_domain_contacts.blank? && registrant.priv?
   end
 
   # rubocop: disable Metrics/PerceivedComplexity

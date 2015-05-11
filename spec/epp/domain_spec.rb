@@ -94,8 +94,8 @@ describe 'EPP Domain', epp: true do
       response[:clTRID].should == 'ABC-12345'
 
       d.registrar.name.should == 'registrar1'
-      d.tech_contacts.count.should == 3
-      d.admin_contacts.count.should == 2
+      d.tech_contacts.count.should == 2
+      d.admin_contacts.count.should == 1
 
       d.nameservers.count.should == 2
       d.auth_info.should_not be_empty
