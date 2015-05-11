@@ -2,6 +2,8 @@
 
 ### Keyrelay
 
+NB! Keyrelay not implemented.
+
     Field name             Min-max  Field description 
     ---------------------  -------  ----------------- 
     <ext:keyrelay>         1
