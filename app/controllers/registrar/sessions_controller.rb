@@ -9,7 +9,8 @@ class Registrar::SessionsController < ::SessionsController
     @depp_user = Depp::User.new
   end
 
-  # rubocop:disabled Metrics/PerceivedComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
+  # rubocop:disable Metrics/CyclomaticComplexity
   def create
     @depp_user = Depp::User.new(params[:depp_user].merge(
       pki: !Rails.env.development?
@@ -41,7 +42,8 @@ class Registrar::SessionsController < ::SessionsController
       render 'login'
     end
   end
-  # rubocop:enabled Metrics/PerceivedComplexity
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
 
   def login_mid
     @user = User.new
