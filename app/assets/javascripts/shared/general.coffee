@@ -18,7 +18,7 @@ $(document).on 'ready page:load', ->
   $('.datepicker').datepicker(
     dateFormat: "yy-mm-dd",
     maxDate: tomorrow
-  );
+  )
 
   $('.js-combobox').select2
     width: "100%"

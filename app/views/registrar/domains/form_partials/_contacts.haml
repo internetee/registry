@@ -11,7 +11,7 @@
           .col-md-3.control-label
             = label_tag "domain_contacts_attributes_#{k}_type", t(:contact_type), class: 'required'
           .col-md-7
-            = select_tag "domain[contacts_attributes][#{k}][type]", options_for_select(['admin', 'tech'], v['type']), {class: 'form-control'}
+            = select_tag "domain[contacts_attributes][#{k}][type]", options_for_select(['admin', 'tech'], v['type']), {class: 'form-control js-contact-type'}
 
         .form-group
           .col-md-3.control-label
@@ -19,13 +19,26 @@
           .col-md-7.has-feedback
             = select_tag "domain[contacts_attributes][#{k}][code]", 
               options_for_select(@contacts_autocomplete_map, selected: v['code']),
-              include_blank: true, class: 'js-combobox', required: true
+              include_blank: true, class: 'js-combobox js-contact-code', required: true
 
 :coffee
+  clone = $('#domain-contacts').clone()
   $("#domain-contacts").nestedAttributes
     bindAddTo: $(".add-domain-contact")
     afterAdd: (item) ->
-      item.find('select').each (k, v) ->
-        $(v).val($(v).find('option:first-child').val())
+      # preselect type
+      item.find('select.js-contact-type').each (k, v) ->
+        $(v).val($(v).find('option:last-child').val())
+      # add combobex
+      item.find('select.js-contact-code').each (k, v) ->
+        $(v).select2
+          width: "100%"
+          selectOnBlur: true
+          dropdownAutoWidth: if self==top then true else false
+      # remove link for temp
+      item.find('a.add-domain-contact').each (k, v) ->
+        $(v).hide()
+    $clone: clone
+    
 
 
