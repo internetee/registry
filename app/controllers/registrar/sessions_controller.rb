@@ -12,7 +12,7 @@ class Registrar::SessionsController < ::SessionsController
   # rubocop:disabled Metrics/PerceivedComplexity
   def create
     @depp_user = Depp::User.new(params[:depp_user].merge(
-        pki: request.env['HTTP_SSL_CLIENT_S_DN_CN'].present?
+      pki: !Rails.env.development?
       )
     )
 
