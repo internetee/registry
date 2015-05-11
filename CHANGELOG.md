@@ -1,3 +1,8 @@
+11.05.2015
+
+* Registrar: only dev can skip pki login certificate, 
+  please be sure all application.yml and apache conf is correctly setup for pki
+
 24.04.2015
 
 * Update zonefile procedure
