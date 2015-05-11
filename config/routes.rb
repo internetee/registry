@@ -124,6 +124,8 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :registrants, controller: 'contacts'
+
     resources :contacts do
       collection do
         get 'search'

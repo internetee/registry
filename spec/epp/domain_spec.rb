@@ -657,8 +657,8 @@ describe 'EPP Domain', epp: true do
       })
 
       response = epp_plain_request(xml, :xml)
-      response[:result_code].should == '1000'
       response[:msg].should == 'Command completed successfully'
+      response[:result_code].should == '1000'
       response[:clTRID].should == 'ABC-12345'
 
       Domain.last.tech_contacts.count.should == 1

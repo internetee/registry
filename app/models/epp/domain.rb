@@ -72,8 +72,9 @@ class Epp::Domain < Domain
 
   def attach_default_contacts
     return if registrant.blank?
-    tech_contacts  << registrant if tech_domain_contacts.blank?
-    admin_contacts << registrant if admin_domain_contacts.blank? && registrant.priv?
+    regt = Registrant.find(registrant.id) # temp for bullet
+    tech_contacts  << regt if tech_domain_contacts.blank?
+    admin_contacts << regt if admin_domain_contacts.blank? && regt.priv?
   end
 
   # rubocop: disable Metrics/PerceivedComplexity
@@ -84,10 +85,9 @@ class Epp::Domain < Domain
 
     code = frame.css('registrant').first.try(:text)
     if code.present?
-      oc = Epp::Contact.find_by_epp_code(code).try(:id)
-
-      if oc
-        at[:registrant_id] = oc
+      regt = Registrant.find_by(code: code)
+      if regt
+        at[:registrant_id] = regt.id
       else
         add_epp_error('2303', 'registrant', code, [:registrant, :not_found])
       end

@@ -7,7 +7,7 @@ class Domain < ActiveRecord::Base
   paginates_per 10 # just for showoff
 
   belongs_to :registrar
-  belongs_to :registrant, class_name: 'Contact'
+  belongs_to :registrant
 
   has_many :domain_contacts, dependent: :destroy
   has_many :admin_domain_contacts

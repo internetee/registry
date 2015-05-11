@@ -715,7 +715,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if contact has associated domain' do
-        @domain = Fabricate(:domain, registrar: @registrar1, registrant: @contact)
+        @domain = Fabricate(:domain, registrar: @registrar1, registrant: Registrant.find(@contact.id))
         @domain.registrant.present?.should == true
 
         response = delete_request

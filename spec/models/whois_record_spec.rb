@@ -65,7 +65,7 @@ describe WhoisRecord do
                             name: 'First Registrar Ltd', 
                             created_at: Time.zone.parse('1995.01.01'),
                             updated_at: Time.zone.parse('1996.01.01'))
-      @domain.registrant = Fabricate(:contact, 
+      @domain.registrant = Fabricate(:registrant, 
                                      name: 'Jarren Jakubowski0', 
                                      created_at: Time.zone.parse('2005.01.01'))
       @domain.admin_contacts = [Fabricate(:contact,
