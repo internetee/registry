@@ -112,3 +112,9 @@ This needs a static greeting file, so you will have to make /var/www writable.
 
 Copy the files from $mod_epp/examples/cgis to /usr/lib/cgi-bin/epp 
 
+
+Allowed testing email list
+==========================
+
+All allowed testing emails are located under config/initialized/settings.rb file.
+
