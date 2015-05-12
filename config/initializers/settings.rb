@@ -9,4 +9,6 @@ TEST_EMAILS = %w(
   norman.aeg@internet.ee
   martti.oigus@internet.ee
   jana.jarve@internet.ee
+  test@example.com
+  test@example.org
 )
