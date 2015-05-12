@@ -8,6 +8,7 @@ class ContactMailer < ApplicationMailer
     return if contact.deliver_emails != true
 
     @contact = contact
-    mail(to: [@contact.email, @contact.email_was], subject: I18n.t(:contact_email_update_subject))
+    mail(to: [@contact.email, @contact.email_was], 
+         subject: "#{I18n.t(:contact_email_update_subject)} [@contact.code]")
   end
 end
