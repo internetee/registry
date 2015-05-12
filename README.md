@@ -35,7 +35,7 @@ Manual demo install and database setup:
     cd /home/registry
     git clone git@github.com:internetee/registry.git demo-registry
     cd demo-registry
-    rbenv local 2.2.1
+    rbenv local 2.2.2
     bundle
     cp config/application-example.yml config/application.yml # and edit it
     cp config/database-example.yml config/database.yml # and edit it
