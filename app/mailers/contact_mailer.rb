@@ -9,6 +9,6 @@ class ContactMailer < ApplicationMailer
 
     @contact = contact
     mail(to: [@contact.email, @contact.email_was], 
-         subject: "#{I18n.t(:contact_email_update_subject)} [@contact.code]")
+         subject: "#{I18n.t(:contact_email_update_subject)} [#{@contact.code}]")
   end
 end
