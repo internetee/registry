@@ -185,8 +185,6 @@ Download CRT file and create p12 file.
 
     openssl pkcs12 -export -inkey private/api-user.key.pem -in certs/api-user.crt.pem -out pkcs/api_user.p12
 
-    openssl pkcs12 -export -inkey private/priit.key.pem -in certs/registrar1.crt.pem -out pkcs/registrar1.p12
-
 Add api_user.p12 to your browser.
 
 
