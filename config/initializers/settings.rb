@@ -1,6 +1,6 @@
 TEST_EMAILS = %w(
-  test@example.ee
   test@example.com
+  test@example.org
   martin@gitlab.eu
   priit@gitlab.eu
   timo.vohmar@internet.ee
