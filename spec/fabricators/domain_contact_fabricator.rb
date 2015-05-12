@@ -1,7 +1,12 @@
 Fabricator(:domain_contact) do
   contact { Fabricate(:contact) }
-  contact_type 'admin'
-  after_build do |x|
-    x.contact_code_cache = x.contact.code
-  end
+  type 'TechDomainContact'
+end
+
+Fabricator(:tech_domain_contact, from: :domain_contact) do
+  type 'TechDomainContact'
+end
+
+Fabricator(:admin_domain_contact, from: :domain_contact) do
+  type 'AdminDomainContact'
 end

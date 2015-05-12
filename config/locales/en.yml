@@ -761,3 +761,4 @@ en:
   no_hostnames_replaced: 'No hostnames replaced'
   forbidden_code: 'is forbidden to use'
   unimplemented_object_service: 'Unimplemented object service'
+  contact_email_update_subject: 'Teie domeenide kontakt epostiaadress on muutunud / Contact e-mail addresses of your domains have changed'

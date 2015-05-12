@@ -145,7 +145,7 @@ class Epp::Contact < Contact
     at.merge!(self.class.ident_attrs(frame.css('ident').first))
     legal_frame = frame.css('legalDocument').first
     at[:legal_documents_attributes] = self.class.legal_document_attrs(legal_frame) 
-
+    self.deliver_emails = true # turn on email delivery for epp
     super(at)
   end
 end

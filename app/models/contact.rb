@@ -29,6 +29,13 @@ class Contact < ActiveRecord::Base
   before_validation :set_ident_country_code
   before_validation :prefix_code
   before_create :generate_auth_info
+
+  before_update :manage_emails
+  def manage_emails
+    return nil unless email_changed?
+    ContactMailer.email_updated(self).deliver_now
+  end
+
   after_save :manage_statuses
   def manage_statuses
     ContactStatus.manage(statuses, self)
@@ -47,6 +54,8 @@ class Contact < ActiveRecord::Base
     PRIV,    # National idendtification number
     BIRTHDAY # Birthday date
   ]
+
+  attr_accessor :deliver_emails
 
   class << self
     def search_by_query(query)

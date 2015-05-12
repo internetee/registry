@@ -16,6 +16,12 @@ class DomainContact < ActiveRecord::Base
     }
   end
 
+  def name
+    return 'Tech' if type == 'TechDomainContact'
+    return 'Admin' if type == 'AdminDomainContact'
+    ''
+  end
+
   validates :contact, presence: true
 
   before_save :update_contact_code_cache

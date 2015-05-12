@@ -1,0 +1,51 @@
+Tere <%= @contact.name %>
+<br><br>
+Kontakti <%= @contact.name %> eposti aadress on muudetud<br>
+endine aadress: <%= @contact.email_was %><br>
+uus aadress: <%= @contact.email %>
+<br><br>
+Eposti aadressile saadetakse domeenidega seotud infot seal hulgas kinnitustaotluseid omaniku vahetuse ja domeeni kustutamise korral. Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduga oma registripidaja poole. Teie registripidaja on <%= @contact.registrar.name %>
+<br><br>
+Muudatusega seotud domeenid:<br>
+<% @contact.domain_contacts.each do |dc| %>
+  <%= dc.domain.name %> (<%= dc.name %>)<br>
+<% end %>
+<br>
+Kontaktandmed:<br>
+Nimi: <%= @contact.name %><br>
+Isikukood: <%= @contact.ident %><br>
+Epost: <%= @contact.email %><br>
+Tel: <%= @contact.phone %><br>
+Tänav: <%= @contact.street %><br>
+Linn: <%= @contact.city %><br>
+Riik: <%= @contact.country %>
+<br><br>
+Lugupidamisega
+Eesti Interneti SA
+<br><br>
+<hr>
+<br><br>
+Hi <%= @contact.name %>
+<br><br>
+E-mail address of <% @contact.name %> has been changed<br>
+previous address: <% @contact.email_was %><br>
+new address: <% @contact.email %>
+<br><br>
+E-mail addresses are used to send important information regarding your registered domains including applications for approval of registrant change and domain deletion. Please make sure that the update and contact information are correct. Incase of problems please turn to your registrar. Your registrar is <%= @contact.registrar.name %>
+<br><br>
+Domains affected by this update:<br>
+<% @contact.domain_contacts.each do |dc| %>
+  <%= dc.domain.name %> (<%= dc.name %>)<br>
+<% end %>
+<br>
+Contact information:<br>
+Name: <%= @contact.name %><br>
+Identity Code: <%= @contact.ident %><br>
+E-mail: <%= @contact.email %><br>
+Tel: <%= @contact.phone %><br>
+Street: <%= @contact.street %><br>
+City: <%= @contact.city %><br>
+Country: <%= @contact.country %>
+<br><br>
+Best Regards,
+Eesti Interneti SA
