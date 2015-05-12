@@ -17,25 +17,25 @@ gem 'rails-settings-cached',     '~> 0.4.1' # for settings
 
 # html-xml
 gem 'haml-rails', '~> 0.9.0' # haml for views
-gem 'nokogiri',   '>= 1.6.2.2' # For XML parsing
+gem 'nokogiri',   '~> 1.6.6.2' # For XML parsing
 
 # style
-gem 'sass-rails',     '~> 5.0.1'   # sass style
-gem 'bootstrap-sass', '~> 3.3.1.0' # bootstrap style
+gem 'sass-rails',     '~> 5.0.3'   # sass style
+gem 'bootstrap-sass', '~> 3.3.4.1' # bootstrap style
 
 # js
-gem 'uglifier',        '~> 2.6.1'  # minifies js
+gem 'uglifier',        '~> 2.7.1'  # minifies js
 gem 'coffee-rails',    '~> 4.1.0'  # coffeescript support
 gem 'turbolinks',      '~> 2.5.3'  # faster page load
 gem 'jquery-rails',    '~> 4.0.3'  # jquery
-gem 'selectize-rails', '~> 0.11.2' # include selectize.js for select
+gem 'selectize-rails', '~> 0.12.1' # include selectize.js for select
 gem 'therubyracer',    '~> 0.12.2', platforms: :ruby
 gem 'jquery-validation-rails', '~> 1.13.1' # validate on client side
 
 # view helpers
 gem 'kaminari',         '~> 0.16.3'  # pagination
-gem 'nprogress-rails',  '~> 0.1.6.5' # visual loader
-gem 'html5_validators', '~> 1.1.3'   # model requements now automatically on html form
+gem 'nprogress-rails',  '~> 0.1.6.7' # visual loader
+gem 'html5_validators', '~> 1.2.0'   # model requements now automatically on html form
 gem 'coderay',          '~> 1.1.0'   # xml console visualize
 gem 'select2-rails',    '~> 3.5.9.3' # for autocomplete
 
