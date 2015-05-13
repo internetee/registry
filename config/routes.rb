@@ -17,7 +17,7 @@ Rails.application.routes.draw do
 
   mount Repp::API => '/'
 
-  # ADMIN ROUTES
+  # REGISTRAR ROUTES
   namespace :registrar do
     root 'polls#show'
 
