@@ -1353,13 +1353,13 @@ describe 'EPP Domain', epp: true do
     end
 
     ### UPDATE ###
-    it 'updates a domain' do
+    it 'should update right away without update pending status' do
       existing_pw = domain.auth_info
 
       xml_params = {
         name: { value: domain.name },
         chg: [
-          registrant: { value: 'FIXED:CITIZEN_1234' }
+          registrant: { value: 'FIXED:CITIZEN_1234', attrs: { verified: 'yes' } }
         ]
       }
 
@@ -1379,6 +1379,67 @@ describe 'EPP Domain', epp: true do
 
       d.registrant_code.should == 'FIXED:CITIZEN_1234'
       d.auth_info.should == existing_pw
+      d.update_pending?.should == false
+    end
+
+    it 'updates a domain' do
+      existing_pw = domain.auth_info
+
+      xml_params = {
+        name: { value: domain.name },
+        chg: [
+          registrant: { value: 'FIXED:CITIZEN_1234' }
+        ]
+      }
+
+      response = epp_plain_request(domain_update_xml(xml_params, {}, {
+        _anonymus: [
+          legalDocument: {
+            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+            attrs: { type: 'pdf' }
+          }
+        ]
+      }), :xml)
+
+      response[:results][0][:msg].should == 'Command completed successfully; action pending'
+      response[:results][0][:result_code].should == '1001'
+
+      d = Domain.last
+
+      d.registrant_code.should == 'FIXED:CITIZEN_1234'
+      d.auth_info.should == existing_pw
+      d.update_pending?.should == true
+    end
+
+    it 'should not allow any update when status update_pending' do
+      domain.domain_statuses.create(value: DomainStatus::PENDING_UPDATE)
+
+      existing_pw = domain.auth_info
+
+      xml_params = {
+        name: { value: domain.name },
+        chg: [
+          registrant: { value: 'FIXED:CITIZEN_1234' }
+        ]
+      }
+
+      response = epp_plain_request(domain_update_xml(xml_params, {}, {
+        _anonymus: [
+          legalDocument: {
+            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+            attrs: { type: 'pdf' }
+          }
+        ]
+      }), :xml)
+
+      response[:results][0][:msg].should == 'Object status prohibits operation'
+      response[:results][0][:result_code].should == '2304'
+
+      d = Domain.last
+
+      d.registrant_code.should_not == 'FIXED:CITIZEN_1234'
+      d.auth_info.should == existing_pw
+      d.update_pending?.should == true
     end
 
     it 'updates domain and adds objects' do

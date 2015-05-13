@@ -19,6 +19,8 @@ Domain name mapping protocol short version:
                                         Must add up to 1 / 2 / 3 years.
                                         Attribute: unit="y/m/d"
         <domain:registrant>    1        Contact reference to the registrant
+                                          Attribute:
+                                            "verified"  # optional, allowed values 'yes', 'no'
         <domain:contact>       0-n      Contact reference. Admin contact is required if registrant is
                                         a juridical person. Attribute: type="admin / tech"
         <domain:ns>            1       

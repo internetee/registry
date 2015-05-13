@@ -1,0 +1,47 @@
+Tere,
+
+Registrisse laekus taotlus domeeni <%= @domain.name %> registreerija vahetuseks. Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja poole. Teie registripidaja on <%= @domain.registrar_name %>
+
+Uued registreerija andmed:
+Nimi: <%= @domain.registrant_name %>
+<% if @domain.registrant.priv? %>
+Isikukood: <%= @domain.registrant_ident %>
+<% else %>
+Äriregistrikood: <%= @domain.registrant_ident %>
+<% end %>
+Epost: <%= @domain.registrant_email %>
+Tel: <%= @domain.registrant_phone %>
+Tänav: <%= @domain.registrant_street %>
+Linn: <%= @domain.registrant_city %>
+Riik: <%= @domain.registrant_country %>
+
+Muudatuse kinnitamiseks külastage palun allolevat võrgulehekülge, kontrollige uuesti üle muudatuse andmed ning vajutage nuppu kinnitan:
+https://testrar.internet.ee/app/owpieruaofaksj298317498324rquhetoiqhepoijfqperyfq9384yuqpohewg
+
+Lugupidamisega
+Eesti Interneti SA
+
+---------------------------------------------------------------------------------
+
+Hi,
+
+Application for changing registrant of your domain <%= @domain.name %> has been filed. Please make sure that the update and information are correct. Incase of problems please turn to your registrar. Your registrar is <%= @domain.registrar_name %>
+
+New registrant:
+Name: <%= @domain.registrant_name %>
+<% if @domain.registrant.priv? %>
+Personal code: <%= @domain.registrant_ident %>
+<% else %>
+Business Registry code: <%= @domain.registrant_ident %>
+<% end %>
+E-mail: <%= @domain.registrant_email %>
+Tel: <%= @domain.registrant_phone %>
+Street: <%= @domain.registrant_street %>
+City: <%= @domain.registrant_city %>
+Country: <%= @domain.registrant_country %>
+
+To confirm the update please visit this website, once again review the data and press approve:
+https://testrar.internet.ee/app/owpieruaofaksj298317498324rquhetoiqhepoijfqperyfq9384yuqpohewg
+
+Best Regards,
+Estonian Internet Foundation

@@ -40,14 +40,28 @@ class Domain < ActiveRecord::Base
   has_many :legal_documents, as: :documentable
   accepts_nested_attributes_for :legal_documents, reject_if: proc { |attrs| attrs[:body].blank? }
 
-  delegate :code,  to: :registrant, prefix: true
-  delegate :email, to: :registrant, prefix: true
-  delegate :ident, to: :registrant, prefix: true
-  delegate :phone, to: :registrant, prefix: true
-  delegate :name,  to: :registrar, prefix: true
+  delegate :name,    to: :registrant, prefix: true
+  delegate :code,    to: :registrant, prefix: true
+  delegate :ident,   to: :registrant, prefix: true
+  delegate :email,   to: :registrant, prefix: true
+  delegate :phone,   to: :registrant, prefix: true
+  delegate :street,  to: :registrant, prefix: true
+  delegate :city,    to: :registrant, prefix: true
+  delegate :zip,     to: :registrant, prefix: true
+  delegate :state,   to: :registrant, prefix: true
+  delegate :country, to: :registrant, prefix: true
+
+  delegate :name,   to: :registrar, prefix: true
+  delegate :street, to: :registrar, prefix: true
 
   before_create :generate_auth_info
   before_create :set_validity_dates
+  before_update :manage_statuses
+  def manage_statuses
+    return unless registrant_id_changed?
+    domain_statuses.build(value: DomainStatus::PENDING_UPDATE) if registrant_verification_asked_at.present?
+  end
+
   before_save :touch_always_version
   def touch_always_version
     self.updated_at = Time.zone.now
@@ -103,7 +117,7 @@ class Domain < ActiveRecord::Base
 
   validate :validate_nameserver_ips
 
-  attr_accessor :registrant_typeahead, :update_me
+  attr_accessor :registrant_typeahead, :update_me, :deliver_emails
 
   def subordinate_nameservers
     nameservers.select { |x| x.hostname.end_with?(name) }
@@ -153,6 +167,13 @@ class Domain < ActiveRecord::Base
       #{DomainStatus::SERVER_DELETE_PROHIBITED}
     )).empty?
   end
+
+  def pending_update?
+    (domain_statuses.pluck(:value) & %W(
+      #{DomainStatus::PENDING_UPDATE}
+    )).present?
+  end
+  alias_method :update_pending?, :pending_update?
 
   ### VALIDATIONS ###
 
@@ -230,8 +251,6 @@ class Domain < ActiveRecord::Base
 
     # otherwise domain_statuses are in old state for domain object
     domain_statuses.reload 
-
-    # contacts.includes(:address).each(&:manage_statuses)
   end
 
   def children_log
