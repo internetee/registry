@@ -97,6 +97,7 @@ class Epp::Domain < Domain
         at[:registrant_id] = regt.id
         delivery_date = frame.css('registrant').attr('verified').to_s.downcase == 'yes' ? nil : Time.zone.now
         at[:registrant_verification_asked_at] = delivery_date
+        at[:registrant_verification_token] = SecureRandom.hex(42)
       else
         add_epp_error('2303', 'registrant', code, [:registrant, :not_found])
       end

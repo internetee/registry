@@ -41,6 +41,7 @@ module Registry
     config.assets.precompile += %w(*.svg *.eot *.woff *.ttf)
     config.assets.precompile += %w(admin-manifest.css admin-manifest.js)
     config.assets.precompile += %w(registrar-manifest.css registrar-manifest.js)
+    config.assets.precompile += %w(registrant-manifest.css registrant-manifest.js)
 
     # Active Record used to suppresses errors raised within
     # `after_rollback`/`after_commit` callbacks and only printed them to the logs.

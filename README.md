@@ -149,8 +149,8 @@ Registrar configuration (/etc/apache2/sites-enabled/registrar.conf) is as follow
   
   # Possible values include: debug, info, notice, warn, error, crit,
   LogLevel info
-  ErrorLog /var/log/apache2/registry.error.log
-  CustomLog /var/log/apache2/registry.access.log combined
+  ErrorLog /var/log/apache2/registrar.error.log
+  CustomLog /var/log/apache2/registrar.access.log combined
   
   SSLEngine On
   SSLCertificateFile    /etc/ssl/certs/your.crt
@@ -163,7 +163,7 @@ Registrar configuration (/etc/apache2/sites-enabled/registrar.conf) is as follow
   SSLCipherSuite RC4-SHA:HIGH:!ADH
 
   <Directory /app/registry/registrar/current/public>
-    # for Apache verison 2.4 or newer
+    # for Apache older than version 2.4
     Allow from all
 
     # for Apache verison 2.4 or newer
@@ -189,6 +189,76 @@ Registrar configuration (/etc/apache2/sites-enabled/registrar.conf) is as follow
 
   RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
   <Location /registrar/sessions>
+    SSLVerifyClient require
+    RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
+  </Location>
+</VirtualHost>
+```
+
+Registrant configuration (/etc/apache2/sites-enabled/registrant.conf) is as follows: 
+```
+<VirtualHost *:443>
+  ServerName your-registrant-domain
+  ServerAdmin your@example.com
+
+  # Rewrite /login to /registrant/login
+  RewriteEngine on
+  RewriteCond %{REQUEST_URI} ^/login [NC]
+  RewriteRule ^/(.*) /registrant/$1 [PT,L,QSA]
+
+  PassengerRoot /usr/lib/ruby/vendor_ruby/phusion_passenger/locations.ini
+  PassengerRuby /home/registry/.rbenv/shims/ruby
+  PassengerEnabled on
+  PassengerMinInstances 10
+  PassengerMaxPoolSize 10
+  PassengerPoolIdleTime 0
+  PassengerMaxRequests 1000
+
+  RailsEnv production # or staging
+  DocumentRoot /home/registry/registrant/current/public
+  
+  # Possible values include: debug, info, notice, warn, error, crit,
+  LogLevel info
+  ErrorLog /var/log/apache2/registrant.error.log
+  CustomLog /var/log/apache2/registrant.access.log combined
+  
+  SSLEngine On
+  SSLCertificateFile    /etc/ssl/certs/your.crt
+  SSLCertificateKeyFile /etc/ssl/private/your.key
+  SSLCertificateChainFile /etc/ssl/certs/your-chain-fail.pem
+  SSLCACertificateFile /etc/ssl/certs/ca.pem
+
+  SSLProtocol TLSv1
+  SSLHonorCipherOrder On
+  SSLCipherSuite RC4-SHA:HIGH:!ADH
+
+  <Directory /app/registry/registrant/current/public>
+    # for Apache older than version 2.4
+    Allow from all
+
+    # for Apache verison 2.4 or newer
+    # Require all granted
+    
+    Options -MultiViews
+  </Directory>
+
+  <Location ~ "/.+/" >
+    Deny from all
+  </Location>
+
+  <Location ~ "/(registrant|assets)\/.+">
+    Allow from all
+  </Location>
+
+  SSLVerifyClient none
+  SSLVerifyDepth 1
+  SSLCACertificateFile /home/registry/registry/shared/ca/certs/ca.cert.pem
+  SSLCARevocationFile /home/registry/registry/shared/ca/crl/crl.pem
+  # Uncomment in Apache 2.4
+  # SSLCARevocationCheck chain
+
+  RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
+  <Location /registrant/sessions>
     SSLVerifyClient require
     RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
   </Location>

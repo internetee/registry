@@ -12,11 +12,14 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from CanCan::AccessDenied do |exception|
-    redirect_to admin_root_path, alert: exception.message if current_user.is_a?(AdminUser)
-    redirect_to registrar_root_path, alert: exception.message if current_user.is_a?(ApiUser)
+    redirect_to current_root_url, alert: exception.message
   end
 
-  helper_method :registrar_request?, :admin_request?
+  helper_method :registrant_request?, :registrar_request?, :admin_request?, :current_root_url
+  def registrant_request?
+    request.path.match(/^\/registrant/)
+  end
+
   def registrar_request?
     request.path.match(/^\/registrar/)
   end
@@ -25,21 +28,28 @@ class ApplicationController < ActionController::Base
     request.path.match(/^\/admin/)
   end
 
-  def after_sign_in_path_for(_resource)
-    rt = session[:user_return_to].to_s.presence
-    login_paths = [admin_login_path, registrar_login_path, '/login']
-    return rt if rt && !login_paths.include?(rt)
-
+  def current_root_url
     if registrar_request?
+      registrar_root_url
+    elsif registrant_request?
       registrar_root_url
     elsif admin_request?
       admin_root_url
     end
   end
 
+  def after_sign_in_path_for(_resource)
+    rt = session[:user_return_to].to_s.presence
+    login_paths = [admin_login_path, registrar_login_path, '/login']
+    return rt if rt && !login_paths.include?(rt)
+    current_root_url
+  end
+
   def after_sign_out_path_for(_resource)
     if registrar_request?
       registrar_login_url
+    elsif registrant_request?
+      registrant_login_url
     elsif admin_request?
       admin_login_url
     end

@@ -725,6 +725,8 @@ en:
   admin_head_title_sufix: ' - Estonian Internet Foundation'
   registrar_head_title: 'EIS Registrar'
   admin_head_title: 'Estonian Internet Foundation'
+  registrant_head_title: 'EIS Registrant'
+  registrant_head_title_sufix: ' - EIS Registrant'
   bind_manually: 'Bind manually'
   forward_invoice: 'Forward invoice'
   forward: 'Forward'

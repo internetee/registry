@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150512160938) do
+ActiveRecord::Schema.define(version: 20150513080013) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -301,12 +301,14 @@ ActiveRecord::Schema.define(version: 20150512160938) do
     t.datetime "outzone_at"
     t.datetime "delete_at"
     t.datetime "registrant_verification_asked_at"
+    t.string   "registrant_verification_token"
   end
 
   add_index "domains", ["delete_at"], name: "index_domains_on_delete_at", using: :btree
   add_index "domains", ["outzone_at"], name: "index_domains_on_outzone_at", using: :btree
   add_index "domains", ["registrant_id"], name: "index_domains_on_registrant_id", using: :btree
   add_index "domains", ["registrant_verification_asked_at"], name: "index_domains_on_registrant_verification_asked_at", using: :btree
+  add_index "domains", ["registrant_verification_token"], name: "index_domains_on_registrant_verification_token", using: :btree
   add_index "domains", ["registrar_id"], name: "index_domains_on_registrar_id", using: :btree
 
   create_table "epp_sessions", force: :cascade do |t|
