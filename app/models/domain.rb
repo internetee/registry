@@ -59,7 +59,10 @@ class Domain < ActiveRecord::Base
   before_update :manage_statuses
   def manage_statuses
     return unless registrant_id_changed?
-    domain_statuses.build(value: DomainStatus::PENDING_UPDATE) if registrant_verification_asked_at.present?
+    if registrant_verification_asked_at.present?
+      domain_statuses.build(value: DomainStatus::PENDING_UPDATE) 
+      DomainMailer.registrant_updated(self).deliver_now
+    end
   end
 
   before_save :touch_always_version
