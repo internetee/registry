@@ -35,6 +35,15 @@ task :registrar do
   set :rails_env, 'alpha'
 end
 
+# alpha branch, only use for heavy debugging
+task :registrant do
+  set :domain, 'registry-st'
+  set :deploy_to, '$HOME/registrant'
+  set :repository, 'https://github.com/domify/registry' # dev repo
+  set :branch, 'master'
+  set :rails_env, 'alpha'
+end
+
 # staging
 task :st do
   set :domain, 'registry-st'
@@ -62,6 +71,15 @@ task :registrarst do
   set :rails_env, 'staging'
 end
 
+# staging
+task :registrantst do
+  set :domain, 'registrant-st'
+  set :deploy_to, '$HOME/registrant'
+  set :repository, 'https://github.com/internetee/registry' # production repo
+  set :branch, 'master'
+  set :rails_env, 'staging'
+end
+
 # production
 task :pr do
   set :domain, 'registry'
@@ -84,6 +102,15 @@ end
 task :registrarpr do
   set :domain, 'registrar'
   set :deploy_to, '$HOME/registrar'
+  set :repository, 'https://github.com/internetee/registry' # production repo
+  set :branch, 'master'
+  set :rails_env, 'production'
+end
+
+# production
+task :registrantpr do
+  set :domain, 'registrant'
+  set :deploy_to, '$HOME/registrant'
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'master'
   set :rails_env, 'production'
