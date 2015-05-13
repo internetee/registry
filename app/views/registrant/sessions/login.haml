@@ -1,0 +1,21 @@
+.row
+  .form-signin.col-md-6.center-block.text-center
+    %h2.form-signin-heading.text-center= t(:log_in)
+    %hr
+    = form_for @depp_user, url: registrant_sessions_path, html: {class: 'form-signin'} do |f|
+      = render 'registrar/shared/errors', object: f.object
+
+      - error_class = f.object.errors.any? ? 'has-error' : ''
+      %div{class: error_class}
+        = f.text_field :tag, class: 'form-control', placeholder: t(:username), required: true
+        = f.password_field :password, class: 'form-control', placeholder: t(:password), required: true
+
+      %button.btn.btn-lg.btn-primary.btn-block{:type => 'submit'}= t(:log_in)
+
+    %hr
+    = link_to '/regisrant/login/mid' do
+      = image_tag 'mid.gif'
+    -# = link_to '/registrant/login/id' do
+      -# = image_tag 'id_card.gif'
+
+

@@ -1,3 +1,8 @@
+13.05.2015
+
+* Added new environment for EPP server: 'registrant_url'
+* Added Registrant portal and apache config example
+
 12.05.2015
 
 * Ruby version updated to 2.2.2

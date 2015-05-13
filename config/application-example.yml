@@ -5,28 +5,27 @@ zonefile_export_dir: 'export/zonefiles'
 bank_statement_import_dir: 'import/bank_statements'
 legal_documents_dir: 'import/legal_documents'
 
-# Contact epp will not accept org value by default
-# and returns 2306 "Parameter value policy error"
-contact_org_enabled: 'false'
-
 # You can use `rake secret` to generate a secure secret key.
 # Your secret key is used for verifying the integrity of signed cookies.
 # If you change this key, all old signed cookies will become invalid!
 secret_key_base: 'please-change-it-you-can-generate-it-with-rake-secret'
 devise_secret: 'please-change-it-you-can-generate-it-with-rake-secret'
 
-# Used by admin server, you can leave those empty for when running EPP server:
+# Admin server configuration:
 openssl_config_path: '/etc/ssl/openssl.cnf'
 crl_path:     '/home/registry/registry/shared/ca/crl/crl.pem'
 ca_cert_path: '/home/registry/registry/shared/ca/certs/ca.crt.pem'
 ca_key_path:  '/home/registry/registry/shared/ca/private/ca.key.pem'
 ca_key_password: 'your-root-key-password'
 
-# Used only by EPP server, you can leave it empty when running admin server:
+# EPP server configuration
 webclient_ip: '127.0.0.1'
 webclient_cert_common_name: 'webclient'
+# Contact epp will not accept org value by default
+# and returns 2306 "Parameter value policy error"
+contact_org_enabled: 'false'
 
-# DEPP configuration
+# DEPP server configuration (both for Registrar/Registrant servers)
 show_ds_data_fields: 'false'
 default_nameservers_count: '2'
 default_admin_contacts_count: '1'
@@ -36,14 +35,15 @@ key_path: '/home/registry/registry/shared/ca/private/webclient.key.pem'
 epp_hostname: 'registry.gitlab.eu'
 repp_url: 'https://repp.gitlab.eu/repp/v1/'
 
-# SMTP configuration
+# SMTP configuration (for Admin/EPP/Registrar/Registrant servers)
 address: 'server-hostname'
 port: '000'
 user_name: 'login'
 password: 'pw/key'
 domain: 'domain for HELO checking'
+registrant_url: 'https:/registrant.example.com' # for valid email body registrant links
 
-# autotest config overwrites
+# Autotest config overwrites
 test:
   webclient_ip: '127.0.0.1' # it should match to localhost ip address
   crl_path:     '/var/lib/jenkins/workspace/registry/ca/crl/crl.pem'

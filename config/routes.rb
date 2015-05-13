@@ -17,6 +17,7 @@ Rails.application.routes.draw do
 
   mount Repp::API => '/'
 
+  # ADMIN ROUTES
   namespace :registrar do
     root 'polls#show'
 
@@ -87,7 +88,63 @@ Rails.application.routes.draw do
     end
   end
 
-  # ## ADMIN ROUTES
+  # REGISTRANT ROUTES
+  namespace :registrant do
+    root 'domains#index'
+
+    # resources :invoices do
+      # member do
+        # get 'download_pdf'
+        # match 'forward', via: [:post, :get]
+        # patch 'cancel'
+      # end
+    # end
+
+    # resources :deposits
+    # resources :account_activities
+
+    devise_scope :user do
+      get 'login' => 'sessions#login'
+      get 'login/mid' => 'sessions#login_mid'
+      post 'login/mid' => 'sessions#mid'
+      post 'login/mid_status' => 'sessions#mid_status'
+
+      post 'sessions' => 'sessions#create'
+      post 'mid' => 'sessions#mid'
+      get 'logout' => '/devise/sessions#destroy'
+    end
+
+    resources :domains do
+      resources :registrant_verifications
+      collection do
+        post 'update', as: 'update'
+        post 'destroy', as: 'destroy'
+        get 'renew'
+        get 'edit'
+        get 'info'
+        get 'delete'
+      end
+    end
+
+    # resources :contacts do
+      # member do
+        # get 'delete'
+      # end
+
+      # collection do
+        # get 'check'
+      # end
+    # end
+
+    # resource :poll do
+      # collection do
+        # post 'confirm_keyrelay'
+        # post 'confirm_transfer'
+      # end
+    # end
+  end
+
+  # ADMIN ROUTES
   namespace :admin do
     resources :keyrelays
 

@@ -3,8 +3,13 @@ class DomainMailer < ApplicationMailer
     return if Rails.env.production? ? false : !TEST_EMAILS.include?(domain.registrant_email)
     # turn on delivery on specific request only, thus rake tasks does not deliver anything
     return if domain.deliver_emails != true
+    if domain.registrant_verification_token.blank?
+      logger.warn "EMAIL DID NOT DELIVERED: registrant_verification_token is missing for #{@domain.name}"
+      return 
+    end
 
     @old_registrant = Registrant.find(domain.registrant_id_was)
+    @verification_url = "#{ENV['registrant_url']}/etc/"
 
     @domain = domain
     mail(to: @old_registrant.email, 
