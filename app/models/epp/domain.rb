@@ -2,6 +2,13 @@
 class Epp::Domain < Domain
   include EppErrors
 
+  before_update :manage_permissions
+  def manage_permissions
+    return unless update_pending?
+    add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
+    false
+  end
+
   class << self
     def new_from_epp(frame, current_user)
       domain = Epp::Domain.new
@@ -88,6 +95,8 @@ class Epp::Domain < Domain
       regt = Registrant.find_by(code: code)
       if regt
         at[:registrant_id] = regt.id
+        delivery_date = frame.css('registrant').attr('verified').to_s.downcase == 'yes' ? nil : Time.zone.now
+        at[:registrant_verification_asked_at] = delivery_date
       else
         add_epp_error('2303', 'registrant', code, [:registrant, :not_found])
       end
@@ -115,7 +124,6 @@ class Epp::Domain < Domain
 
     at[:dnskeys_attributes] = dnskeys_attrs(dnskey_frame, action)
     at[:legal_documents_attributes] = legal_document_from(frame)
-
     at
   end
   # rubocop: enable Metrics/PerceivedComplexity
@@ -386,6 +394,7 @@ class Epp::Domain < Domain
     at[:tech_domain_contacts_attributes] += at_add[:tech_domain_contacts_attributes]
     at[:dnskeys_attributes] += at_add[:dnskeys_attributes]
     at[:domain_statuses_attributes] += at_add[:domain_statuses_attributes]
+    self.deliver_emails = true # turn on email delivery for epp
 
     errors.empty? && super(at)
   end

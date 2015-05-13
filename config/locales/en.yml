@@ -762,3 +762,5 @@ en:
   forbidden_code: 'is forbidden to use'
   unimplemented_object_service: 'Unimplemented object service'
   contact_email_update_subject: 'Teie domeenide kontakt epostiaadress on muutunud / Contact e-mail addresses of your domains have changed'
+  object_status_prohibits_operation: 'Object status prohibits operation'
+  domain_registrant_update_subject: "Kinnitustaotlus domeeni %{name} registreerija vahetuseks / Application for approval for registrant chache of %{name}"

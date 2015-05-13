@@ -34,7 +34,11 @@ class Epp::DomainsController < EppController
     authorize! :update, @domain, @password
 
     if @domain.update(params[:parsed_frame], current_user)
-      render_epp_response '/epp/domains/success'
+      if @domain.pending_update?
+        render_epp_response '/epp/domains/success_pending'
+      else
+        render_epp_response '/epp/domains/success'
+      end
     else
       handle_errors(@domain)
     end
