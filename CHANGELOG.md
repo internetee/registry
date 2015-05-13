@@ -4,8 +4,9 @@
 
 13.05.2015
 
-* Added new environment for EPP server: 'registrant_url'
 * Added Registrant portal and apache config example
+* Added mina deploy script for registrant
+* Added new environment for EPP server: 'registrant_url'
 
 12.05.2015
 
