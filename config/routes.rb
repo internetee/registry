@@ -111,6 +111,7 @@ Rails.application.routes.draw do
 
       post 'sessions' => 'sessions#create'
       post 'mid' => 'sessions#mid'
+      post 'id' => 'sessions#id'
       get 'logout' => '/devise/sessions#destroy'
     end
 

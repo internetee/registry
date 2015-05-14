@@ -187,6 +187,40 @@ Download CRT file and create p12 file.
 
 Add api_user.p12 to your browser.
 
+ID card login
+---------------
+
+Download SK certificates:
+
+    wget https://sk.ee/upload/files/Juur-SK.pem.crt
+    wget https://sk.ee/upload/files/EE_Certification_Centre_Root_CA.pem.crt
+    wget https://sk.ee/upload/files/ESTEID-SK_2007.pem.crt
+    wget https://sk.ee/upload/files/ESTEID-SK_2011.pem.crt
+
+Merge them into the existing ca file:
+
+    cat EE_Certification_Centre_Root_CA.pem.crt ESTEID-SK_2007.pem.crt ESTEID-SK_2011.pem.crt Juur-SK.pem.crt > id.crt
+
+Download CLR-s:
+
+    wget https://sk.ee/crls/esteid/esteid2007.crl
+    wget https://sk.ee/crls/juur/crl.crl
+    wget https://sk.ee/crls/eeccrca/eeccrca.crl
+    wget https://sk.ee/repository/crls/esteid2011.crl
+
+Convert to PEM:
+
+    openssl crl -in esteid2007.crl -out esteid2007.crl -inform DER
+    openssl crl -in crl.crl -out crl.crl -inform DER
+    openssl crl -in eeccrca.crl -out eeccrca.crl -inform DER
+    openssl crl -in esteid2011.crl -out esteid2011.crl -inform DER
+
+Make symlinks:
+
+    ln -s crl.crl `openssl crl -hash -noout -in crl.crl`.r0
+    ln -s esteid2007.crl `openssl crl -hash -noout -in esteid2007.crl`.r0
+    ln -s eeccrca.crl `openssl crl -hash -noout -in eeccrca.crl`.r0
+    ln -s esteid2011.crl `openssl crl -hash -noout -in esteid2011.crl`.r0
 
 Development env
 ---------------

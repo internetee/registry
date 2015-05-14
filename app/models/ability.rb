@@ -13,7 +13,9 @@ class Ability
     when 'ApiUser'
       epp
       registrar
-      registrant # refactor 
+      registrant # refactor
+    when 'RegistrantUser'
+      registrant
     end
 
     can :show, :dashboard
@@ -66,6 +68,7 @@ class Ability
 
   def registrant
     can :manage, Registrant::Whois
+    can :manage, Depp::Domain
   end
 
   def user

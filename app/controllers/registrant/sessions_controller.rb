@@ -45,6 +45,13 @@ class Registrant::SessionsController < ::SessionsController
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/PerceivedComplexity
 
+  def id
+    logger.error request.env['SSL_CLIENT_CERT']
+    # @user = RegistrantUser.where(identity_code: 'EE-123').first_or_create
+    # sign_in(@user, event: :authentication)
+    redirect_to registrant_root_url
+  end
+
   def login_mid
     @user = User.new
   end
@@ -55,7 +62,7 @@ class Registrant::SessionsController < ::SessionsController
 
     if Rails.env.test? && phone == "123"
       @user = ApiUser.find_by(identity_code: "14212128025")
-      sign_in(@user, event: :authentication) 
+      sign_in(@user, event: :authentication)
       return redirect_to registrant_root_url
     end
 
