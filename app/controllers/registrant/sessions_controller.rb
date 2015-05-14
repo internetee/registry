@@ -46,10 +46,14 @@ class Registrant::SessionsController < ::SessionsController
   # rubocop:enable Metrics/PerceivedComplexity
 
   def id
-    logger.error request.env.inspect
-    # @user = RegistrantUser.where(identity_code: 'EE-123').first_or_create
-    # sign_in(@user, event: :authentication)
-    redirect_to registrant_root_url
+    @user = RegistrantUser.find_or_create_by_idc_data(request.env['SSL_CLIENT_S_DN'])
+    if @user
+      sign_in(@user, event: :authentication)
+      redirect_to registrant_root_url
+    else
+      flash[:alert] = t('login_failed_check_id_card')
+      redirect_to registrant_login_url
+    end
   end
 
   def login_mid
