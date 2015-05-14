@@ -67,7 +67,7 @@ module Registry
       password:             ENV['smtp_password'],
       authentication:       ENV['smtp_authentication'],
       domain:               ENV['smtp_domain'],
-      openssl_verify_mode:  ENV['smtp_openssl_verify_mode'],
+      openssl_verify_mode:  ENV['smtp_openssl_verify_mode']
     }
   end
 end
