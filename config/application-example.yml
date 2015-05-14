@@ -44,6 +44,8 @@ smtp_password: 'pw/key'
 smtp_domain: 'domain for HELO checking'
 # Use "none" only when for a self-signed and/or wildcard certificate
 smtp_openssl_verify_mode: 'peer' # 'none', 'peer', 'client_once','fail_if_no_peer_cert'
+# Detects if STARTTLS is enabled in your SMTP server and starts to use it. Defaults to true.
+smtp_enable_starttls_auto: 'true' # 'false'
 
 # autotest config overwrites
 test:
