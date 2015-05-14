@@ -1,46 +1,22 @@
-require 'open3'
-
-# rubocop: disable Metrics/ClassLength
-class ApiUser < User
-  include EppErrors
-  def epp_code_map # rubocop:disable Metrics/MethodLength
-    {
-      '2306' => [ # Parameter policy error
-        [:password, :blank]
-      ]
-    }
-  end
-
-  # TODO: should have max request limit per day
-  belongs_to :registrar
-  has_many :certificates
-
-  validates :username, :password, :registrar, presence: true
-  validates :username, uniqueness: true
-
-  attr_accessor :registrar_typeahead
+class RegistrantUser < User
+  attr_accessor :idc_data
 
   def ability
     @ability ||= Ability.new(self)
   end
   delegate :can?, :cannot?, to: :ability
 
-  after_initialize :set_defaults
-  def set_defaults
-    return unless new_record?
-    self.active = true unless active_changed?
-  end
-
-  def registrar_typeahead
-    @registrar_typeahead || registrar || nil
-  end
-
   def to_s
-    username
+    registrant_ident
   end
 
-  def queued_messages
-    registrar.messages.queued
+  class << self
+    def find_or_create_by_idc_data(idc_data)
+      return false if idc_data.blank?
+      identity_code = idc_data.scan(/serialNumber=(\d+)/).flatten.first
+      country = idc_data.scan(/^\/C=(.{2})/).flatten.first
+
+      where(registrant_ident: "#{country}-#{identity_code}").first_or_create
+    end
   end
 end
-# rubocop: enable Metrics/ClassLength

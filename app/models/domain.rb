@@ -60,7 +60,7 @@ class Domain < ActiveRecord::Base
   def manage_statuses
     return unless registrant_id_changed?
     if registrant_verification_asked_at.present?
-      domain_statuses.build(value: DomainStatus::PENDING_UPDATE) 
+      domain_statuses.build(value: DomainStatus::PENDING_UPDATE)
       DomainMailer.registrant_updated(self).deliver_now
     end
     true
@@ -141,8 +141,8 @@ class Domain < ActiveRecord::Base
     def included
       includes(
         :registrant,
-        :registrar, 
-        :nameservers, 
+        :registrar,
+        :nameservers,
         :whois_record,
         { tech_contacts: :registrar },
         { admin_contacts: :registrar }
@@ -254,7 +254,7 @@ class Domain < ActiveRecord::Base
     end
 
     # otherwise domain_statuses are in old state for domain object
-    domain_statuses.reload 
+    domain_statuses.reload
   end
 
   def children_log

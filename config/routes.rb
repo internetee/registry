@@ -111,6 +111,7 @@ Rails.application.routes.draw do
 
       post 'sessions' => 'sessions#create'
       post 'mid' => 'sessions#mid'
+      post 'id' => 'sessions#id'
       get 'logout' => '/devise/sessions#destroy'
     end
 
@@ -127,7 +128,6 @@ Rails.application.routes.draw do
     end
 
     resources :whois
-
     # resources :contacts do
       # member do
         # get 'delete'
