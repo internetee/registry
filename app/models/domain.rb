@@ -63,6 +63,7 @@ class Domain < ActiveRecord::Base
       domain_statuses.build(value: DomainStatus::PENDING_UPDATE) 
       DomainMailer.registrant_updated(self).deliver_now
     end
+    true
   end
 
   before_save :touch_always_version
