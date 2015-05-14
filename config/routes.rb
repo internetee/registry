@@ -126,6 +126,8 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :whois
+
     # resources :contacts do
       # member do
         # get 'delete'

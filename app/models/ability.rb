@@ -13,6 +13,7 @@ class Ability
     when 'ApiUser'
       epp
       registrar
+      registrant # refactor 
     end
 
     can :show, :dashboard
@@ -61,6 +62,10 @@ class Ability
     can :confirm, :keyrelay
     can :confirm, :transfer
     can :manage, :deposit
+  end
+
+  def registrant
+    can :manage, Registrant::Whois
   end
 
   def user

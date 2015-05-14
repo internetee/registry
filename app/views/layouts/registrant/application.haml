@@ -36,6 +36,9 @@
                 - active_class = %w(registrant/domains registrant/check registrant/renew registrant/tranfer registrant/keyrelays).include?(params[:controller]) ? 'active' :nil
                 %li{class: active_class}= link_to t(:domains), registrant_domains_path
 
+              - active_class = %w(registrant/whois).include?(params[:controller]) ? 'active' :nil
+              %li{class: active_class}= link_to t(:whois), registrant_whois_path
+
             %ul.nav.navbar-nav.navbar-right
               - if user_signed_in?
                 %li= link_to t(:log_out, user: current_user), '/registrant/logout'

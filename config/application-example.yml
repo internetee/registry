@@ -35,6 +35,9 @@ key_path: '/home/registry/registry/shared/ca/private/webclient.key.pem'
 epp_hostname: 'registry.gitlab.eu'
 repp_url: 'https://repp.gitlab.eu/repp/v1/'
 
+# Registrant server configuration
+restful_whois_url: 'https://restful-whois.example.com'
+
 # SMTP configuration (for Admin/EPP/Registrar/Registrant servers)
 smtp_address: 'server-hostname'
 smtp_port: '25' # 587, 465
