@@ -46,7 +46,7 @@ class Registrant::SessionsController < ::SessionsController
   # rubocop:enable Metrics/PerceivedComplexity
 
   def id
-    logger.error request.env['SSL_CLIENT_CERT']
+    logger.error request.env.inspect
     # @user = RegistrantUser.where(identity_code: 'EE-123').first_or_create
     # sign_in(@user, event: :authentication)
     redirect_to registrant_root_url
