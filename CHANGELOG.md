@@ -1,3 +1,7 @@
+14.05.2015
+
+* Changed and added some new smtp enviroment variables. More info at application-example.yml
+
 12.05.2015
 
 * Ruby version updated to 2.2.2

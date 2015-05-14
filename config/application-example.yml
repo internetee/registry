@@ -37,11 +37,13 @@ epp_hostname: 'registry.gitlab.eu'
 repp_url: 'https://repp.gitlab.eu/repp/v1/'
 
 # SMTP configuration
-address: 'server-hostname'
-port: '000'
-user_name: 'login'
-password: 'pw/key'
-domain: 'domain for HELO checking'
+smtp_address: 'server-hostname'
+smtp_port: '000'
+smtp_user_name: 'login'
+smtp_password: 'pw/key'
+smtp_domain: 'domain for HELO checking'
+# Use "none" only when for a self-signed and/or wildcard certificate
+smtp_openssl_verify_mode: 'peer' # 'none', 'peer', 'client_once','fail_if_no_peer_cert'
 
 # autotest config overwrites
 test:
