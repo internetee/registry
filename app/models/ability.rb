@@ -65,7 +65,7 @@ class Ability
   end
 
   def registrant
-    can :manage, Registrant::Whois
+    can :manage, :registrant_whois
   end
 
   def user
