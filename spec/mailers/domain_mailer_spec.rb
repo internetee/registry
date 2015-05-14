@@ -31,6 +31,10 @@ describe DomainMailer do
       @new_registrant = Fabricate(:registrant, email: 'test@example.org')
       @domain = Fabricate(:domain, registrant: @registrant)
       @domain.deliver_emails = true
+<<<<<<< HEAD
+=======
+      @domain.registrant_verification_token = '123'
+>>>>>>> 0ddd2b6f32fa7e9abec8b2e7c88173585a78f3dd
       @domain.registrant = @new_registrant
       @mail = DomainMailer.registrant_updated(@domain)
     end

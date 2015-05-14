@@ -1,3 +1,7 @@
+14.05.2015
+
+* Changed and added some new smtp enviroment variables. More info at application-example.yml
+
 13.05.2015
 
 * Added Registrant portal and apache config example

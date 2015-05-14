@@ -35,12 +35,23 @@ key_path: '/home/registry/registry/shared/ca/private/webclient.key.pem'
 epp_hostname: 'registry.gitlab.eu'
 repp_url: 'https://repp.gitlab.eu/repp/v1/'
 
+# Registrant server configuration
+restful_whois_url: 'https://restful-whois.example.com'
+
 # SMTP configuration (for Admin/EPP/Registrar/Registrant servers)
-address: 'server-hostname'
-port: '000'
-user_name: 'login'
-password: 'pw/key'
-domain: 'domain for HELO checking'
+smtp_address: 'server-hostname'
+smtp_port: '25' # 587, 465
+smtp_user_name: 'login'
+smtp_password: 'pw/key'
+# If you need to specify a HELO domain, you can do it here.
+smtp_domain: '' # 'domain for HELO checking'
+# Use "none" only when for a self-signed and/or wildcard certificate
+smtp_openssl_verify_mode: 'peer' # 'none', 'peer', 'client_once','fail_if_no_peer_cert'
+# Detects if STARTTLS is enabled in your SMTP server and starts to use it. Defaults to true.
+# Set this to false if there is a problem with your server certificate that you cannot resolve.
+smtp_enable_starttls_auto: 'true' # 'false'
+# If your mail server requires authentication, please change.
+smtp_authentication: 'plain' # 'plain', 'login', 'cram_md5'
 registrant_url: 'https:/registrant.example.com' # for valid email body registrant links
 
 # Autotest config overwrites
