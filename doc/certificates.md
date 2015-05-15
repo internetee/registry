@@ -190,6 +190,8 @@ Add api_user.p12 to your browser.
 ID card login
 ---------------
 
+Navigate to your ca path: /home/registry/registry/shared/ca/certs/
+
 Download SK certificates:
 
     wget https://sk.ee/upload/files/Juur-SK.pem.crt
@@ -199,28 +201,23 @@ Download SK certificates:
 
 Merge them into the existing ca file:
 
-    cat EE_Certification_Centre_Root_CA.pem.crt ESTEID-SK_2007.pem.crt ESTEID-SK_2011.pem.crt Juur-SK.pem.crt > id.crt
+    sudo bash -c "cat EE_Certification_Centre_Root_CA.pem.crt ESTEID-SK_2007.pem.crt ESTEID-SK_2011.pem.crt Juur-SK.pem.crt >> ca.cert.pem"
 
-Download CLR-s:
+Cleanup:
 
-    wget https://sk.ee/crls/esteid/esteid2007.crl
-    wget https://sk.ee/crls/juur/crl.crl
-    wget https://sk.ee/crls/eeccrca/eeccrca.crl
-    wget https://sk.ee/repository/crls/esteid2011.crl
+    rm Juur-SK.pem.crt EE_Certification_Centre_Root_CA.pem.crt ESTEID-SK_2007.pem.crt ESTEID-SK_2011.pem.crt
 
-Convert to PEM:
+From registry's bin directory, copy update-crl script to somewhere else (so it won't get overwritten during deploys). Configure `CRL_PATH` in the script.
 
-    openssl crl -in esteid2007.crl -out esteid2007.crl -inform DER
-    openssl crl -in crl.crl -out crl.crl -inform DER
-    openssl crl -in eeccrca.crl -out eeccrca.crl -inform DER
-    openssl crl -in esteid2011.crl -out esteid2011.crl -inform DER
+    sudo ./update-crl
 
-Make symlinks:
+Edit root's crontab:
 
-    ln -s crl.crl `openssl crl -hash -noout -in crl.crl`.r0
-    ln -s esteid2007.crl `openssl crl -hash -noout -in esteid2007.crl`.r0
-    ln -s eeccrca.crl `openssl crl -hash -noout -in eeccrca.crl`.r0
-    ln -s esteid2011.crl `openssl crl -hash -noout -in esteid2011.crl`.r0
+    sudo crontab -e
+
+Add:
+
+    00 01,13 * * * path-to-your-script
 
 Development env
 ---------------
