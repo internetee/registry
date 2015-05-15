@@ -219,6 +219,21 @@ Add:
 
     00 01,13 * * * path-to-your-script
 
+
+Apache reload without password
+------------------------------
+
+Registrant and Registrar both should be able to reload Apache without password in order
+to refresh certificate deprication list for PKI and ID card.
+
+Example /etc/sudoers.d/apache2-no-password
+
+    username ALL=(ALL:ALL) ALL, NOPASSWD:/etc/init.d/apache2
+
+If this file is not preset, please create it with 'visudo'. All other edits should be done
+alse with 'visudo'
+
+
 Development env
 ---------------
 
