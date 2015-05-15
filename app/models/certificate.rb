@@ -152,7 +152,7 @@ class Certificate < ActiveRecord::Base
     end
 
     def reload_apache
-      `/etc/init.d/apache2 reload`
+      `sudo /etc/init.d/apache2 reload`
     end
   end
 end

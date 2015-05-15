@@ -207,32 +207,26 @@ Cleanup:
 
     rm Juur-SK.pem.crt EE_Certification_Centre_Root_CA.pem.crt ESTEID-SK_2007.pem.crt ESTEID-SK_2011.pem.crt
 
-From registry's bin directory, copy update-crl script to somewhere else (so it won't get overwritten during deploys). Configure `CRL_PATH` in the script.
+Make sure you have this line in application.yml:
 
-    sudo ./update-crl
+    crl_dir: '/home/registry/registry/shared/ca/crl'
 
-Edit root's crontab:
+In rails console:
 
-    sudo crontab -e
+    Certificate.update_crl
 
-Add:
+Update whenever:
 
-    00 01,13 * * * path-to-your-script
+    
 
+Configure apache:
 
-Apache reload without password
-------------------------------
-
-Registrant and Registrar both should be able to reload Apache without password in order
-to refresh certificate deprication list for PKI and ID card.
-
-Example /etc/sudoers.d/apache2-no-password
-
-    username ALL=(ALL:ALL) ALL, NOPASSWD:/etc/init.d/apache2
-
-If this file is not preset, please create it with 'visudo'. All other edits should be done
-alse with 'visudo'
-
+    <Location /registrant/id>
+        SSLVerifyClient require
+        Options Indexes FollowSymLinks MultiViews
+        SSLVerifyDepth 2
+        SSLOptions +StdEnvVars +ExportCertData
+    </Location>
 
 Development env
 ---------------
