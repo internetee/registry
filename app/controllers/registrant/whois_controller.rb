@@ -1,5 +1,5 @@
 class Registrant::WhoisController < RegistrantController
   def index
-    authorize! :view, Registrant::Whois
+    authorize! :view, :registrant_whois
   end
 end

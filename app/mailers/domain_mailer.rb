@@ -10,7 +10,9 @@ class DomainMailer < ApplicationMailer
     end
 
     @old_registrant = Registrant.find(@domain.registrant_id_was)
-    @verification_url = "#{ENV['registrant_url']}/etc/"
+
+    confirm_path = "#{ENV['registrant_url']}/registrant/domain_update_confirms"
+    @verification_url = "#{confirm_path}/#{@domain.id}?token=#{@domain.registrant_verification_token}"
 
     mail(to: @old_registrant.email,
          subject: "#{I18n.t(:domain_registrant_update_subject, name: @domain.name)} [#{@domain.name}]")

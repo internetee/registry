@@ -18,7 +18,9 @@ class Ability
       registrant
     end
 
+    # Public user
     can :show, :dashboard
+    can :create, :registrant_domain_update_confirm
   end
 
   # rubocop: disable Metrics/CyclomaticComplexity
@@ -67,7 +69,7 @@ class Ability
   end
 
   def registrant
-    can :manage, Registrant::Whois
+    can :manage, :registrant_whois
     can :manage, Depp::Domain
   end
 
