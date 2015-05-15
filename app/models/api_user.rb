@@ -42,5 +42,14 @@ class ApiUser < User
   def queued_messages
     registrar.messages.queued
   end
+
+  class << self
+    def find_by_idc_data(idc_data)
+      return false if idc_data.blank?
+      identity_code = idc_data.scan(/serialNumber=(\d+)/).flatten.first
+
+      find_by(identity_code: identity_code)
+    end
+  end
 end
 # rubocop: enable Metrics/ClassLength

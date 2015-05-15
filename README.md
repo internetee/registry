@@ -183,7 +183,7 @@ Registrar configuration (/etc/apache2/sites-enabled/registrar.conf) is as follow
   SSLVerifyClient none
   SSLVerifyDepth 1
   SSLCACertificateFile /home/registry/registry/shared/ca/certs/ca.cert.pem
-  SSLCARevocationFile /home/registry/registry/shared/ca/crl/crl.pem
+  SSLCARevocationPath /home/registry/registry/shared/ca/crl
   # Uncomment in Apache 2.4
   # SSLCARevocationCheck chain
 
@@ -191,6 +191,13 @@ Registrar configuration (/etc/apache2/sites-enabled/registrar.conf) is as follow
   <Location /registrar/sessions>
     SSLVerifyClient require
     RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
+  </Location>
+
+  <Location /registrar/id>
+      SSLVerifyClient require
+      Options Indexes FollowSymLinks MultiViews
+      SSLVerifyDepth 2
+      SSLOptions +StdEnvVars +ExportCertData
   </Location>
 </VirtualHost>
 ```
@@ -253,7 +260,7 @@ Registrant configuration (/etc/apache2/sites-enabled/registrant.conf) is as foll
   SSLVerifyClient none
   SSLVerifyDepth 1
   SSLCACertificateFile /home/registry/registry/shared/ca/certs/ca.cert.pem
-  SSLCARevocationFile /home/registry/registry/shared/ca/crl/crl.pem
+  SSLCARevocationPath /home/registry/registry/shared/ca/crl
   # Uncomment in Apache 2.4
   # SSLCARevocationCheck chain
 
@@ -261,6 +268,13 @@ Registrant configuration (/etc/apache2/sites-enabled/registrant.conf) is as foll
   <Location /registrant/sessions>
     SSLVerifyClient require
     RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
+  </Location>
+
+  <Location /registrant/id>
+      SSLVerifyClient require
+      Options Indexes FollowSymLinks MultiViews
+      SSLVerifyDepth 2
+      SSLOptions +StdEnvVars +ExportCertData
   </Location>
 </VirtualHost>
 ```
@@ -282,7 +296,7 @@ For Apache, REPP goes to port 443 in production, /etc/apache2/sites-enabled/repp
   SSLVerifyClient none
   SSLVerifyDepth 1
   SSLCACertificateFile /home/registry/registry/shared/ca/certs/ca.crt.pem
-  SSLCARevocationFile /home/registry/registry/shared/ca/crl/crl.pem
+  SSLCARevocationPath /home/registry/registry/shared/ca/crl
   SSLCARevocationCheck chain
 
   RequestHeader set SSL_CLIENT_S_DN_CN ""
@@ -314,7 +328,7 @@ Be sure to update paths to match your system configuration.
     SSLVerifyClient require
     SSLVerifyDepth 1
     SSLCACertificateFile /home/registry/registry/shared/ca/certs/ca.crt.pem
-    SSLCARevocationFile /home/registry/registry/shared/ca/crl/crl.pem
+    SSLCARevocationPath /home/registry/registry/shared/ca/crl
     # Uncomment this when upgrading to apache 2.4:
     # SSLCARevocationCheck chain
 

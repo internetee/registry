@@ -39,6 +39,7 @@ Rails.application.routes.draw do
       post 'login/mid_status' => 'sessions#mid_status'
 
       post 'sessions' => 'sessions#create'
+      post 'id' => 'sessions#id'
       post 'mid' => 'sessions#mid'
       get 'logout' => '/devise/sessions#destroy'
     end

@@ -45,6 +45,18 @@ class Registrar::SessionsController < ::SessionsController
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/PerceivedComplexity
 
+  def id
+    @user = ApiUser.find_by_idc_data(request.env['SSL_CLIENT_S_DN'])
+
+    if @user
+      sign_in(@user, event: :authentication)
+      redirect_to registrant_root_url
+    else
+      flash[:alert] = t('no_such_user')
+      redirect_to registrar_login_url
+    end
+  end
+
   def login_mid
     @user = User.new
   end
@@ -55,7 +67,7 @@ class Registrar::SessionsController < ::SessionsController
 
     if Rails.env.test? && phone == "123"
       @user = ApiUser.find_by(identity_code: "14212128025")
-      sign_in(@user, event: :authentication) 
+      sign_in(@user, event: :authentication)
       return redirect_to registrar_root_url
     end
 
