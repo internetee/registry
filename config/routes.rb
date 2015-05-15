@@ -103,6 +103,8 @@ Rails.application.routes.draw do
     # resources :deposits
     # resources :account_activities
 
+    resources :domain_update_confirms
+
     devise_scope :user do
       get 'login' => 'sessions#login'
       get 'login/mid' => 'sessions#login_mid'
