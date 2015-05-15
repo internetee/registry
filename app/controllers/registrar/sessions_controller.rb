@@ -50,7 +50,7 @@ class Registrar::SessionsController < ::SessionsController
 
     if @user
       sign_in(@user, event: :authentication)
-      redirect_to registrant_root_url
+      redirect_to registrar_root_url
     else
       flash[:alert] = t('no_such_user')
       redirect_to registrar_login_url
