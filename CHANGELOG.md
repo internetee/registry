@@ -1,3 +1,8 @@
+15.05.2015
+
+* Added instractions for apache2 reload without password for Registrant/Registrar, 
+  more info at doc/certificates.md
+
 14.05.2015
 
 * Changed and added some new smtp enviroment variables. More info at application-example.yml
