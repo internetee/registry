@@ -1,0 +1,29 @@
+#!/bin/bash
+
+CRL_PATH='/etc/apache2/ssl/idcard/crl'
+
+cd $CRL_PATH
+mkdir crl-temp
+cd crl-temp
+
+wget https://sk.ee/crls/esteid/esteid2007.crl
+wget https://sk.ee/crls/juur/crl.crl
+wget https://sk.ee/crls/eeccrca/eeccrca.crl
+wget https://sk.ee/repository/crls/esteid2011.crl
+
+openssl crl -in esteid2007.crl -out esteid2007.crl -inform DER
+openssl crl -in crl.crl -out crl.crl -inform DER
+openssl crl -in eeccrca.crl -out eeccrca.crl -inform DER
+openssl crl -in esteid2011.crl -out esteid2011.crl -inform DER
+
+ln -s crl.crl `openssl crl -hash -noout -in crl.crl`.r0
+ln -s esteid2007.crl `openssl crl -hash -noout -in esteid2007.crl`.r0
+ln -s eeccrca.crl `openssl crl -hash -noout -in eeccrca.crl`.r0
+ln -s esteid2011.crl `openssl crl -hash -noout -in esteid2011.crl`.r0
+
+rm -rf ../*.crl ../*.r0
+
+mv * ..
+cd ..
+rm -rf crl-temp
+/etc/init.d/apache2 reload
