@@ -1,5 +1,9 @@
 15.05.2015
 
+* Refer to doc/certificates.md for ID card login, note that CRL files in Apache config are not paths to CRL directory. (SSLCARevocationFile -> SSLCARevocationPath)
+
+15.05.2015
+
 * Added instractions for apache2 reload without password for Registrant/Registrar, 
   more info at doc/certificates.md
 

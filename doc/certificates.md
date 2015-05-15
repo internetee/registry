@@ -211,15 +211,15 @@ Make sure you have this line in application.yml:
 
     crl_dir: '/home/registry/registry/shared/ca/crl'
 
-In rails console:
+After deploy, in rails console:
 
     Certificate.update_crl
 
 Update whenever:
 
-    
+    mina whenever:update
 
-Configure apache:
+Configure Apache (set location according to registrant and registrar):
 
     <Location /registrant/id>
         SSLVerifyClient require
