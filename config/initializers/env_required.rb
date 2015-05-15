@@ -3,7 +3,7 @@ required = %w(
   zonefile_export_dir
   secret_key_base
   devise_secret
-  crl_path
+  crl_dir
   ca_cert_path
   ca_key_path
   ca_key_password
