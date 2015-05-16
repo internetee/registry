@@ -57,6 +57,7 @@ registrant_url: 'https:/registrant.example.com' # for valid email body registran
 # Autotest config overwrites
 test:
   webclient_ip: '127.0.0.1' # it should match to localhost ip address
+  crl_dir:      '/var/lib/jenkins/workspace/registry/ca/crl'
   crl_path:     '/var/lib/jenkins/workspace/registry/ca/crl/crl.pem'
   ca_cert_path: '/var/lib/jenkins/workspace/registry/ca/certs/ca.crt.pem'
   ca_key_path:  '/var/lib/jenkins/workspace/registry/ca/private/ca.key.pem'
