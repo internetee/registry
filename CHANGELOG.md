@@ -1,3 +1,8 @@
+16.05.2015
+
+* Security config update. Please replace all Location and RedirectMatch 
+  in Admin, Registrar and Registrant Apache2 config. New one are in readme.
+
 15.05.2015
 
 * Refer to doc/certificates.md for ID card login, note that CRL files in Apache config are not paths to CRL directory. (SSLCARevocationFile -> SSLCARevocationPath)
