@@ -95,7 +95,6 @@ class Epp::Domain < Domain
       regt = Registrant.find_by(code: code)
       if regt
         at[:registrant_id] = regt.id
-        registrant_verification_asked! if frame.css('registrant').attr('verified').to_s.downcase != 'yes'
       else
         add_epp_error('2303', 'registrant', code, [:registrant, :not_found])
       end
@@ -393,6 +392,10 @@ class Epp::Domain < Domain
     at[:tech_domain_contacts_attributes] += at_add[:tech_domain_contacts_attributes]
     at[:dnskeys_attributes] += at_add[:dnskeys_attributes]
     at[:domain_statuses_attributes] += at_add[:domain_statuses_attributes]
+
+    if frame.css('registrant').present? && frame.css('registrant').attr('verified').to_s.downcase != 'yes'
+      registrant_verification_asked! 
+    end
     self.deliver_emails = true # turn on email delivery for epp
 
     errors.empty? && super(at)
