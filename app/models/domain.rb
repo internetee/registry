@@ -290,11 +290,19 @@ class Domain < ActiveRecord::Base
     log[:tech_contacts]  = tech_contacts.map(&:attributes)
     log[:nameservers]    = nameservers.map(&:attributes)
     log[:registrant]     = [registrant.try(:attributes)]
+    log[:domain_statuses] = domain_statuses.map(&:attributes)
     log
   end
 
   def all_changes
-    changes
+    all_changes = HashWithIndifferentAccess.new
+    all_changes[:domain] = changes
+    all_changes[:admin_contacts]  = admin_contacts.map(&:changes)
+    all_changes[:tech_contacts]   = tech_contacts.map(&:changes)
+    all_changes[:nameservers]     = nameservers.map(&:changes)
+    all_changes[:registrant]      = registrant.try(:changes)
+    all_changes[:domain_statuses] = domain_statuses.map(&:changes)
+    all_changes
   end
 
   def update_whois_record
