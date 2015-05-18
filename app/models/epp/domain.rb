@@ -416,6 +416,7 @@ class Epp::Domain < Domain
     if frame.css('delete').attr('verified').to_s.downcase != 'yes'
       registrant_verification_asked! 
       pending_delete!
+      manage_automatic_statuses
       true # aka 1001 pending_delete
     else
       destroy
