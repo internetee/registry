@@ -51,6 +51,7 @@ Domain name mapping protocol short version:
         <domain:name>            1         Domain name. Can contain unicode characters.
         <domain:chg>             0-1       Attributes to change
           <domain:registrant>    0-1       Contact reference to the registrant
+                                             Optional attribute: verified="yes/no"
         <domain:add>             0-1       Objects to add
           <domain:contact>       0-n       Contact reference. Attribute: type="admin / tech"
           <domain:status>        0-n       Status description. 
@@ -94,6 +95,7 @@ Domain name mapping protocol short version:
     -----------------------  -------  -----------------
     <delete>                 1       
       <domain:delete>        1        Attribute: xmlns:domain="urn:ietf:params:xml:ns:domain-1.0"
+                                        Optional attribute: verified="yes/no"
         <domain:name>        1        Domain name. Can contain unicode characters.
     <extension>              1       
       <eis:extdata>          1        Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"

@@ -35,7 +35,7 @@ class Epp::DomainsController < EppController
 
     if @domain.update(params[:parsed_frame], current_user)
       if @domain.epp_pending_update.present?
-        render_epp_response '/epp/shared/success_pending'
+        render_epp_response '/epp/domains/success_pending'
       else
         render_epp_response '/epp/domains/success'
       end
@@ -56,9 +56,15 @@ class Epp::DomainsController < EppController
     @domain.attach_legal_document(Epp::Domain.parse_legal_document_from_frame(params[:parsed_frame]))
     @domain.save(validate: false)
 
-    handle_errors(@domain) and return unless @domain.destroy
-
-    render_epp_response '/epp/domains/success'
+    if @domain.epp_destroy(params[:parsed_frame])
+      if @domain.epp_pending_delete.present?
+        render_epp_response '/epp/domains/success_pending'
+      else
+        render_epp_response '/epp/domains/success'
+      end
+    else
+      handle_errors(@domain)
+    end
   end
   # rubocop:enbale Metrics/CyclomaticComplexity
 

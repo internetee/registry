@@ -117,7 +117,8 @@ class Domain < ActiveRecord::Base
 
   validate :validate_nameserver_ips
 
-  attr_accessor :registrant_typeahead, :update_me, :deliver_emails, :epp_pending_update
+  attr_accessor :registrant_typeahead, :update_me, :deliver_emails, 
+    :epp_pending_update, :epp_pending_delete
 
   def subordinate_nameservers
     nameservers.select { |x| x.hostname.end_with?(name) }
@@ -176,11 +177,11 @@ class Domain < ActiveRecord::Base
 
   def pending_update!
     return true if pending_update?
-    self.epp_pending_update = true # for handling epp errors correctly
+    self.epp_pending_update = true # for epp
 
     return true unless registrant_verification_asked?
     pending_json_cache = all_changes
-    DomainMailer.registrant_updated(self).deliver_now
+    DomainMailer.registrant_pending_updated(self).deliver_now
 
     reload # revert back to original
 
@@ -204,6 +205,21 @@ class Domain < ActiveRecord::Base
   def registrant_verification_asked!
     self.registrant_verification_asked_at = Time.zone.now
     self.registrant_verification_token = SecureRandom.hex(42)
+  end
+
+  def pending_delete?
+    (domain_statuses.pluck(:value) & %W(
+      #{DomainStatus::PENDING_DELETE}
+    )).present?
+  end
+
+  def pending_delete!
+    return true if pending_delete?
+    self.epp_pending_delete = true # for epp
+
+    return true unless registrant_verification_asked?
+    domain_statuses.create(value: DomainStatus::PENDING_DELETE)
+    DomainMailer.pending_deleted(self).deliver_now
   end
 
   ### VALIDATIONS ###

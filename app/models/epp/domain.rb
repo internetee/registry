@@ -4,7 +4,7 @@ class Epp::Domain < Domain
 
   before_validation :manage_permissions
   def manage_permissions
-    return unless pending_update?
+    return unless pending_update? || pending_delete?
     add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
     false
   end
@@ -408,6 +408,16 @@ class Epp::Domain < Domain
       document_type: legal_document_data[:type],
       body: legal_document_data[:body]
     )
+  end
+
+  def epp_destroy(frame)
+    if frame.css('delete').attr('verified').to_s.downcase != 'yes'
+      registrant_verification_asked! 
+      pending_delete!
+      true # aka 1001 pending_delete
+    else
+      destroy
+    end
   end
 
   ### RENEW ###

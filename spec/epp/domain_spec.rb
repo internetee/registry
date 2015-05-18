@@ -2091,10 +2091,10 @@ describe 'EPP Domain', epp: true do
         ]
       }), :xml)
 
-      response[:msg].should == 'Command completed successfully'
-      response[:result_code].should == '1000'
+      response[:msg].should == 'Command completed successfully; action pending'
+      response[:result_code].should == '1001'
 
-      Domain.find_by(name: domain.name).should == nil
+      Domain.find_by(name: domain.name).should_not == nil
     end
 
     it 'does not delete domain with specific status' do
