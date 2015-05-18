@@ -32,6 +32,7 @@ describe DomainMailer do
       @domain = Fabricate(:domain, registrant: @registrant)
       @domain.deliver_emails = true
       @domain.registrant_verification_token = '123'
+      @domain.registrant_verification_asked_at = Time.zone.now
       @domain.registrant = @new_registrant
       @mail = DomainMailer.registrant_updated(@domain)
     end

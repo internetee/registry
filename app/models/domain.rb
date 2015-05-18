@@ -18,7 +18,6 @@ class Domain < ActiveRecord::Base
   has_many :contacts, through: :domain_contacts, source: :contact
   has_many :admin_contacts, through: :admin_domain_contacts, source: :contact
   has_many :tech_contacts, through: :tech_domain_contacts, source: :contact
-
   has_many :nameservers, dependent: :destroy
 
   accepts_nested_attributes_for :nameservers, allow_destroy: true,
@@ -59,10 +58,7 @@ class Domain < ActiveRecord::Base
   before_update :manage_statuses
   def manage_statuses
     return unless registrant_id_changed?
-    if registrant_verification_asked_at.present?
-      domain_statuses.build(value: DomainStatus::PENDING_UPDATE)
-      DomainMailer.registrant_updated(self).deliver_now
-    end
+    pending_update! if registrant_verification_asked?
     true
   end
 
@@ -121,7 +117,7 @@ class Domain < ActiveRecord::Base
 
   validate :validate_nameserver_ips
 
-  attr_accessor :registrant_typeahead, :update_me, :deliver_emails
+  attr_accessor :registrant_typeahead, :update_me, :deliver_emails, :epp_pending_update
 
   def subordinate_nameservers
     nameservers.select { |x| x.hostname.end_with?(name) }
@@ -177,7 +173,38 @@ class Domain < ActiveRecord::Base
       #{DomainStatus::PENDING_UPDATE}
     )).present?
   end
-  alias_method :update_pending?, :pending_update?
+
+  def pending_update!
+    return true if pending_update?
+    self.epp_pending_update = true # for handling epp errors correctly
+
+    return true unless registrant_verification_asked?
+    pending_json_cache = all_changes
+    DomainMailer.registrant_updated(self).deliver_now
+
+    reload # revert back to original
+
+    self.pending_json = pending_json_cache
+    domain_statuses.create(value: DomainStatus::PENDING_UPDATE)
+  end
+
+  def registrant_update_confirmable?(token)
+    return false unless pending_update?
+    return false if registrant_verification_token.blank?
+    return false if registrant_verification_asked_at.blank?
+    return false if token.blank?
+    return false if registrant_verification_token != token
+    true
+  end
+
+  def registrant_verification_asked?
+    registrant_verification_asked_at.present? && registrant_verification_token.present?
+  end
+
+  def registrant_verification_asked!
+    self.registrant_verification_asked_at = Time.zone.now
+    self.registrant_verification_token = SecureRandom.hex(42)
+  end
 
   ### VALIDATIONS ###
 
@@ -264,6 +291,10 @@ class Domain < ActiveRecord::Base
     log[:nameservers]    = nameservers.map(&:attributes)
     log[:registrant]     = [registrant.try(:attributes)]
     log
+  end
+
+  def all_changes
+    changes
   end
 
   def update_whois_record

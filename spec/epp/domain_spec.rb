@@ -1379,7 +1379,7 @@ describe 'EPP Domain', epp: true do
 
       d.registrant_code.should == 'FIXED:CITIZEN_1234'
       d.auth_info.should == existing_pw
-      d.update_pending?.should == false
+      d.pending_update?.should == false
     end
 
     it 'updates a domain' do
@@ -1406,12 +1406,12 @@ describe 'EPP Domain', epp: true do
 
       d = Domain.last
 
-      d.registrant_code.should == 'FIXED:CITIZEN_1234'
+      d.registrant_code.should_not == 'FIXED:CITIZEN_1234' # should not update, because pending
       d.auth_info.should == existing_pw
-      d.update_pending?.should == true
+      d.pending_update?.should == true
     end
 
-    it 'should not allow any update when status update_pending' do
+    it 'should not allow any update when status pending update' do
       domain.domain_statuses.create(value: DomainStatus::PENDING_UPDATE)
 
       existing_pw = domain.auth_info
@@ -1439,7 +1439,7 @@ describe 'EPP Domain', epp: true do
 
       d.registrant_code.should_not == 'FIXED:CITIZEN_1234'
       d.auth_info.should == existing_pw
-      d.update_pending?.should == true
+      d.pending_update?.should == true
     end
 
     it 'updates domain and adds objects' do
@@ -1565,6 +1565,85 @@ describe 'EPP Domain', epp: true do
       end
 
       d.domain_statuses.count.should == 2
+    end
+
+    it 'updates domain with registrant change what triggers action pending' do
+      xml = domain_update_xml({
+        name: { value: domain.name },
+        chg: [
+          registrant: { value: 'FIXED:CITIZEN_1234' }
+        ],
+        add: [
+          {
+            ns: [
+              {
+                hostAttr: [
+                  { hostName: { value: 'ns1.example.com' } }
+                ]
+              },
+              {
+                hostAttr: [
+                  { hostName: { value: 'ns2.example.com' } }
+                ]
+              }
+            ]
+          },
+          _anonymus: [
+            { contact: { value: 'FIXED:PENDINGMAK21', attrs: { type: 'tech' } } },
+            { status: { value: 'Payment overdue.', attrs: { s: 'clientHold', lang: 'en' } } },
+            { status: { value: '', attrs: { s: 'clientUpdateProhibited' } } }
+          ]
+        ]
+      }, {
+        add: [
+          { keyData: {
+              flags: { value: '0' },
+              protocol: { value: '3' },
+              alg: { value: '5' },
+              pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+            }
+          },
+          {
+            keyData: {
+              flags: { value: '256' },
+              protocol: { value: '3' },
+              alg: { value: '254' },
+              pubKey: { value: '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0' }
+            }
+          }
+        ]
+      },
+      {
+        _anonymus: [
+          legalDocument: {
+            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+            attrs: { type: 'pdf' }
+          }
+        ]
+      })
+
+      response = epp_plain_request(xml, :xml)
+      response[:results][0][:msg].should == 'Contact was not found'
+      response[:results][0][:result_code].should == '2303'
+
+      Fabricate(:contact, code: 'FIXED:PENDINGMAK21')
+
+      response = epp_plain_request(xml, :xml)
+      response[:results][0][:msg].should == 'Command completed successfully; action pending'
+      response[:results][0][:result_code].should == '1001'
+
+      d = Domain.last
+
+      new_ns_count = d.nameservers.where(hostname: ['ns1.example.com', 'ns2.example.com']).count
+      new_ns_count.should == 0 # aka old value
+
+      new_contact = d.tech_contacts.find_by(code: 'FIXED:PENDINGMAK21')
+      new_contact.should_not be_truthy # aka should not add new contact
+
+      d.domain_statuses.count.should == 1
+      d.domain_statuses.first.value.should == 'pendingUpdate'
+
+      d.dnskeys.count.should == 0
     end
 
     it 'does not allow to edit statuses if policy forbids it' do

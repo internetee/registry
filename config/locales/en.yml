@@ -768,4 +768,6 @@ en:
   domain_registrant_update_subject: "Kinnitustaotlus domeeni %{name} registreerija vahetuseks / Application for approval for registrant chache of %{name}"
   whois: WHOIS
   login_failed_check_id_card: 'Log in failed, check ID card'
-  not_valid_domain_verification: Not valid domain update verification
+  not_valid_domain_verification_title: Domain verification not available
+  not_valid_domain_verification_body: This could mean your verification has been expired or done already.<br><br>Please contact us if you think something is wrong.
+

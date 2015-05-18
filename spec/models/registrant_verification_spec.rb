@@ -1,0 +1,34 @@
+require 'rails_helper'
+
+describe RegistrantVerification do
+  context 'with invalid attribute' do
+    before :all do
+      @registrant_verification = RegistrantVerification.new
+    end
+
+    it 'should not be valid' do
+      @registrant_verification.valid?
+      @registrant_verification.errors.full_messages.should match_array([
+        "Domain name is missing",
+        "Verification token is missing"
+      ])
+    end
+  end
+
+  context 'with valid attributes' do
+    before :all do
+      @registrant_verification = Fabricate(:registrant_verification)
+    end
+
+    it 'should be valid' do
+      @registrant_verification.valid?
+      @registrant_verification.errors.full_messages.should match_array([])
+    end
+
+    it 'should be valid twice' do
+      @registrant_verification = Fabricate(:registrant_verification)
+      @registrant_verification.valid?
+      @registrant_verification.errors.full_messages.should match_array([])
+    end
+  end
+end

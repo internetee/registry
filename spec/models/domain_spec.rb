@@ -33,6 +33,10 @@ describe Domain do
     it 'should not have whois body' do
       @domain.whois_record.should == nil
     end
+
+    it 'should not be registrant update confirm ready' do
+      @domain.registrant_update_confirmable?('123').should == false
+    end
   end
 
   context 'with valid attributes' do
@@ -75,6 +79,31 @@ describe Domain do
 
     it 'should have whois json by default' do
       @domain.whois_record.json.present?.should == true
+    end
+
+    it 'should not be registrant update confirm ready' do
+      @domain.registrant_update_confirmable?('123').should == false
+    end
+
+    context 'about registrant update confirm' do
+      before :all do
+        @domain.registrant_verification_token = 123
+        @domain.registrant_verification_asked_at = Time.zone.now
+        @domain.domain_statuses.create(value: DomainStatus::PENDING_UPDATE)
+      end
+
+      it 'should be registrant update confirm ready' do
+        @domain.registrant_update_confirmable?('123').should == true
+      end
+
+      it 'should not be registrant update confirm ready when token does not match' do
+        @domain.registrant_update_confirmable?('wrong-token').should == false
+      end
+
+      it 'should not be registrant update confirm ready when no correct status' do
+        @domain.domain_statuses.delete_all
+        @domain.registrant_update_confirmable?('123').should == false
+      end
     end
 
     context 'with versioning' do

@@ -1,2 +1,4 @@
-- if @domain.blank?
-  %h1= t(:not_valid_domain_verification)
+- if @domain.present?
+- else
+  %h1= t(:not_valid_domain_verification_title).html_safe
+  %p=  t(:not_valid_domain_verification_body).html_safe

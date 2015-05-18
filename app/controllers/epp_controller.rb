@@ -9,6 +9,7 @@ class EppController < ApplicationController
 
   rescue_from CanCan::AccessDenied do |_exception|
     @errors ||= []
+
     if @errors.blank?
       @errors = [{
         msg: t('errors.messages.epp_authorization_error'),
@@ -50,6 +51,7 @@ class EppController < ApplicationController
 
   def handle_errors(obj = nil)
     @errors ||= []
+
     if obj
       obj.construct_epp_errors
       @errors += obj.errors[:epp_errors]

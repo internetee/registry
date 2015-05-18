@@ -2,9 +2,9 @@
 class Epp::Domain < Domain
   include EppErrors
 
-  before_update :manage_permissions
+  before_validation :manage_permissions
   def manage_permissions
-    return unless update_pending?
+    return unless pending_update?
     add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
     false
   end
@@ -95,9 +95,7 @@ class Epp::Domain < Domain
       regt = Registrant.find_by(code: code)
       if regt
         at[:registrant_id] = regt.id
-        delivery_date = frame.css('registrant').attr('verified').to_s.downcase == 'yes' ? nil : Time.zone.now
-        at[:registrant_verification_asked_at] = delivery_date
-        at[:registrant_verification_token] = SecureRandom.hex(42)
+        registrant_verification_asked! if frame.css('registrant').attr('verified').to_s.downcase != 'yes'
       else
         add_epp_error('2303', 'registrant', code, [:registrant, :not_found])
       end

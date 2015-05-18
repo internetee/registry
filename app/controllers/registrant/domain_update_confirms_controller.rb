@@ -4,11 +4,7 @@ class Registrant::DomainUpdateConfirmsController < RegistrantController
 
   def show
     @domain = Domain.find(params[:id])
-    
-    # if @domain.present? && params[:token].present? && @domain.registrant_verification_token == params[:token]
-    # else 
-      # @domain = nil
-    # end
+    @domain = nil unless @domain.registrant_update_confirmable?(params[:token])
   end
 
   def create

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150514132606) do
+ActiveRecord::Schema.define(version: 20150518084324) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -302,6 +302,7 @@ ActiveRecord::Schema.define(version: 20150514132606) do
     t.datetime "delete_at"
     t.datetime "registrant_verification_asked_at"
     t.string   "registrant_verification_token"
+    t.json     "pending_json"
   end
 
   add_index "domains", ["delete_at"], name: "index_domains_on_delete_at", using: :btree
@@ -838,6 +839,15 @@ ActiveRecord::Schema.define(version: 20150514132606) do
   end
 
   add_index "nameservers", ["domain_id"], name: "index_nameservers_on_domain_id", using: :btree
+
+  create_table "registrant_verifications", force: :cascade do |t|
+    t.string   "domain_name"
+    t.string   "verification_token"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "registrant_verifications", ["created_at"], name: "index_registrant_verifications_on_created_at", using: :btree
 
   create_table "registrars", force: :cascade do |t|
     t.string   "name"
