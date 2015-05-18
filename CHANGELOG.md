@@ -1,3 +1,7 @@
+18.05.2015
+
+* Added Registrant database example file: config/database-example-registrant.yml
+
 16.05.2015
 
 * Security config update. Please replace all Location and RedirectMatch 

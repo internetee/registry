@@ -1,0 +1,52 @@
+#
+# Registrant config
+#
+
+# Registrant should:
+#   * only read registry mirror database.
+#   * only write to registry table 'registrant_verification' 
+
+default: &default
+  host: localhost
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  username: registry
+  password: registry_pwd
+
+#    
+# Staging config for Registrant
+#
+
+staging:
+  <<: *default
+  database: registry_staging # registry staging mirror
+  host: localhost
+  username: registrant_read_only
+  password: registrant_read_only_pwd
+
+registrant_write_staging:
+  <<: *default
+  database: registry_development # registry real database
+  host: localhost
+  username: registrant_write     # user should have write access only to registrant_verifications table
+  password: registrant_write_pwd
+
+
+#    
+# Production config for Registrant
+#
+
+production:
+  <<: *default
+  database: registry_production # registry production mirror database name
+  host: localhost               # registry production mirror location
+  username: registrant_read_only
+  password: registrant_read_only_pwd
+
+registrant_write_production:
+  <<: *default
+  database: registry_production  # registry production database name 
+  host: localhost                # registry database location
+  username: registrant_write     # user should have write access only to registrant_verifications table
+  password: registrant_write_pwd

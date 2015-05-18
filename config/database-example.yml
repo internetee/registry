@@ -1,3 +1,8 @@
+#
+# EPP, REPP, Admin and Registrar config
+#
+# Registrant example is at database-example-registrant.yml file
+
 default: &default
   host: localhost
   adapter: postgresql
@@ -6,45 +11,9 @@ default: &default
   username: registry
   password: registry_pwd
 
-
-development:
-  <<: *default
-  database: registry_development
-
-whois_development:
-  <<: *default
-  database: registry_whois_development
-
-api_log_development:
-  <<: *default
-  database: registry_api_log_development
-
-
-test:
-  <<: *default
-  database: registry_test
-
-whois_test:
-  <<: *default
-  database: registry_whois_test
-
-api_log_test:
-  <<: *default
-  database: registry_api_log_test
-
-
-alpha:
-  <<: *default
-  database: registry_alpha
-
-whois_alpha:
-  <<: *default
-  database: registry_whois_alpha
-
-api_log_alpha:
-  <<: *default
-  database: registry_api_log_alpha
-
+#    
+# Staging config For EPP, REPP, Admin, Registrar
+#
 
 staging:
   <<: *default
@@ -58,7 +27,9 @@ api_log_staging:
   <<: *default
   database: registry_api_log_staging
 
-
+#    
+# Production config For EPP, REPP, Admin, Registrar
+#
 production:
   <<: *default
   database: registry_production

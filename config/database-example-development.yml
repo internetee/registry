@@ -1,0 +1,23 @@
+default: &default
+  host: localhost
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  username: registry
+  password: registry_pwd
+
+development:
+  <<: *default
+  database: registry_development
+
+whois_development:
+  <<: *default
+  database: registry_whois_development
+
+api_log_development:
+  <<: *default
+  database: registry_api_log_development
+
+registrant_write_development:
+  <<: *default
+  database: registry_development
