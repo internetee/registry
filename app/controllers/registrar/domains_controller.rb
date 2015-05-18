@@ -84,8 +84,7 @@ class Registrar::DomainsController < Registrar::DeppController # EPP controller
     @data = @domain.delete(params[:domain])
     @results = @data.css('result')
     if response_ok?
-      params[:domain_name] = nil
-      render 'info_index'
+      redirect_to info_registrar_domains_url(domain_name: params[:domain][:name])
     else
       params[:domain_name] = params[:domain][:name]
       render 'delete'

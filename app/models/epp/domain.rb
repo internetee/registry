@@ -411,6 +411,8 @@ class Epp::Domain < Domain
   end
 
   def epp_destroy(frame)
+    return false unless valid?
+
     if frame.css('delete').attr('verified').to_s.downcase != 'yes'
       registrant_verification_asked! 
       pending_delete!

@@ -2115,6 +2115,24 @@ describe 'EPP Domain', epp: true do
       response[:msg].should == 'Domain status prohibits operation'
     end
 
+    it 'does not delete domain with pending delete' do
+      domain.domain_statuses.create(value: DomainStatus::PENDING_DELETE)
+
+      response = epp_plain_request(@epp_xml.domain.delete({
+        name: { value: domain.name }
+      }, {
+        _anonymus: [
+          legalDocument: {
+            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+            attrs: { type: 'pdf' }
+          }
+        ]
+      }), :xml)
+
+      response[:msg].should == 'Object status prohibits operation'
+      response[:result_code].should == '2304'
+    end
+
     it 'does not delete domain without legal document' do
       response = epp_plain_request(@epp_xml.domain.delete(name: { value: 'example.ee' }), :xml)
       response[:result_code].should == '2003'
