@@ -21,6 +21,8 @@ class RegistrantUser < User
       u = where(registrant_ident: "#{country}-#{identity_code}").first_or_create
       u.username = "#{first_name} #{last_name}"
       u.save
+
+      u
     end
   end
 end
