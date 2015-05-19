@@ -198,6 +198,15 @@ class Domain < ActiveRecord::Base
     true
   end
 
+  def registrant_delete_confirmable?(token)
+    return false unless pending_delete?
+    return false if registrant_verification_token.blank?
+    return false if registrant_verification_asked_at.blank?
+    return false if token.blank?
+    return false if registrant_verification_token != token
+    true
+  end
+
   def registrant_verification_asked?
     registrant_verification_asked_at.present? && registrant_verification_token.present?
   end
@@ -274,6 +283,15 @@ class Domain < ActiveRecord::Base
   def to_s
     name
   end
+
+  def pending_registrant_name
+    return '' if pending_json.blank?
+    return '' if pending_json['domain'].blank?
+    return '' if pending_json['domain']['registrant_id'].blank?
+    registrant = Registrant.find_by(id: pending_json['domain']['registrant_id'].last)
+    registrant.try(:name)
+  end
+
 
   # rubocop:disable Lint/Loop
   def generate_auth_info

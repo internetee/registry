@@ -105,6 +105,7 @@ Rails.application.routes.draw do
     # resources :account_activities
 
     resources :domain_update_confirms
+    resources :domain_delete_confirms
 
     devise_scope :user do
       get 'login' => 'sessions#login'
