@@ -297,7 +297,6 @@ class Domain < ActiveRecord::Base
     registrant.try(:name)
   end
 
-
   # rubocop:disable Lint/Loop
   def generate_auth_info
     begin

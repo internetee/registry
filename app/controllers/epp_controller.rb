@@ -236,6 +236,8 @@ class EppController < ApplicationController
   end
   # rubocop: enable Style/PredicateName
 
+  # rubocop: disable Metrics/PerceivedComplexity
+  # rubocop: disable Metrics/CyclomaticComplexity
   def write_to_epp_log
     # return nil if EPP_LOG_ENABLED
     request_command = params[:command] || params[:action] # error receives :command, other methods receive :action
@@ -257,4 +259,6 @@ class EppController < ApplicationController
       ip: request.ip
     })
   end
+  # rubocop: enable Metrics/PerceivedComplexity
+  # rubocop: enable Metrics/CyclomaticComplexity
 end
