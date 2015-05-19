@@ -181,16 +181,30 @@ class Domain < ActiveRecord::Base
 
     return true unless registrant_verification_asked?
     pending_json_cache = all_changes
+    token = registrant_verification_token
+    asked_at = registrant_verification_asked_at
+
     DomainMailer.registrant_pending_updated(self).deliver_now
 
     reload # revert back to original
 
     self.pending_json = pending_json_cache
+    self.registrant_verification_token = token
+    self.registrant_verification_asked_at = asked_at
     domain_statuses.create(value: DomainStatus::PENDING_UPDATE)
   end
 
   def registrant_update_confirmable?(token)
     return false unless pending_update?
+    return false if registrant_verification_token.blank?
+    return false if registrant_verification_asked_at.blank?
+    return false if token.blank?
+    return false if registrant_verification_token != token
+    true
+  end
+
+  def registrant_delete_confirmable?(token)
+    return false unless pending_delete?
     return false if registrant_verification_token.blank?
     return false if registrant_verification_asked_at.blank?
     return false if token.blank?
@@ -274,6 +288,15 @@ class Domain < ActiveRecord::Base
   def to_s
     name
   end
+
+  def pending_registrant_name
+    return '' if pending_json.blank?
+    return '' if pending_json['domain'].blank?
+    return '' if pending_json['domain']['registrant_id'].blank?
+    registrant = Registrant.find_by(id: pending_json['domain']['registrant_id'].last)
+    registrant.try(:name)
+  end
+
 
   # rubocop:disable Lint/Loop
   def generate_auth_info

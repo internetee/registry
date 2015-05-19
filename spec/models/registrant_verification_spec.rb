@@ -10,7 +10,10 @@ describe RegistrantVerification do
       @registrant_verification.valid?
       @registrant_verification.errors.full_messages.should match_array([
         "Domain name is missing",
-        "Verification token is missing"
+        "Verification token is missing",
+        "Action is missing",
+        "Action type is missing",
+        "Domain is missing"
       ])
     end
   end

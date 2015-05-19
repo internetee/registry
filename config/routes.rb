@@ -57,11 +57,12 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :nameservers do
-      collection do
-        match 'replace_all', via: [:post, :get]
-      end
-    end
+    # turned off requested by client
+    # resources :nameservers do
+      # collection do
+        # match 'replace_all', via: [:post, :get]
+      # end
+    # end
 
     resources :contacts do
       member do
@@ -105,6 +106,7 @@ Rails.application.routes.draw do
     # resources :account_activities
 
     resources :domain_update_confirms
+    resources :domain_delete_confirms
 
     devise_scope :user do
       get 'login' => 'sessions#login'
