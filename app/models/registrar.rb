@@ -146,4 +146,20 @@ class Registrar < ActiveRecord::Base
   def code=(code)
     self[:code] = code.gsub(/[ :]/, '').upcase if new_record? && code.present?
   end
+
+  def repp_ip_white?(ip)
+    white_ips.repp.pluck(:ipv4, :ipv6).flatten.include?(ip) || global_ip_white?(ip)
+  end
+
+  def epp_ip_white?(ip)
+    white_ips.epp.pluck(:ipv4, :ipv6).flatten.include?(ip) || global_ip_white?(ip)
+  end
+
+  def registrar_ip_white?(ip)
+    white_ips.registrar.pluck(:ipv4, :ipv6).flatten.include?(ip) || global_ip_white?(ip)
+  end
+
+  def global_ip_white?(ip)
+    white_ips.global.pluck(:ipv4, :ipv6).flatten.include?(ip)
+  end
 end

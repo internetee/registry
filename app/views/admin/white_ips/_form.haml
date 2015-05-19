@@ -23,7 +23,7 @@
         .col-md-4.control-label
           = f.label :interface
         .col-md-7
-          = f.select :interface, [[t(:choose), '']] + WhiteIp::INTERFACES.map {|x| [x.upcase, x]}, {}, class: 'form-control selectize', placeholder: t(:choose)
+          = f.select :interface, WhiteIp::INTERFACES.map {|x| [x.upcase, x]}, {}, class: 'form-control selectize'
   %hr
   .row
     .col-md-8.text-right

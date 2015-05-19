@@ -13,9 +13,15 @@ class WhiteIp < ActiveRecord::Base
     errors.add(:base, I18n.t(:ipv4_or_ipv6_must_be_present))
   end
 
-  INTERFACE_EPP = 'epp'
-  INTERFACE_REPP = 'repp'
-  INTERFACE_REGISTRAR = 'registrar'
+  EPP = 'epp'
+  REPP = 'repp'
+  REGISTRAR = 'registrar'
+  GLOBAL = 'global'
 
-  INTERFACES = [INTERFACE_EPP, INTERFACE_REPP, INTERFACE_REGISTRAR]
+  INTERFACES = [GLOBAL, EPP, REPP, REGISTRAR]
+
+  scope :epp, -> { where(interface: EPP) }
+  scope :repp, -> { where(interface: REPP) }
+  scope :registrar, -> { where(interface: REGISTRAR) }
+  scope :global, -> { where(interface: GLOBAL) }
 end
