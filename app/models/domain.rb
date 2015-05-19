@@ -181,11 +181,16 @@ class Domain < ActiveRecord::Base
 
     return true unless registrant_verification_asked?
     pending_json_cache = all_changes
+    token = registrant_verification_token
+    asked_at = registrant_verification_asked_at
+
     DomainMailer.registrant_pending_updated(self).deliver_now
 
     reload # revert back to original
 
     self.pending_json = pending_json_cache
+    self.registrant_verification_token = token
+    self.registrant_verification_asked_at = asked_at
     domain_statuses.create(value: DomainStatus::PENDING_UPDATE)
   end
 
