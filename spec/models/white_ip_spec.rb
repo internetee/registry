@@ -25,30 +25,30 @@ describe WhiteIp do
     end
   end
 
-  # context 'with valid attributes' do
-  #   before :all do
-  #     @white_ip = Fabricate(:white_ip)
-  #   end
+  context 'with valid attributes' do
+    before :all do
+      @white_ip = Fabricate(:white_ip)
+    end
 
-  #   it 'should be valid' do
-  #     @white_ip.valid?
-  #     @white_ip.errors.full_messages.should match_array([])
-  #   end
+    it 'should be valid' do
+      @white_ip.valid?
+      @white_ip.errors.full_messages.should match_array([])
+    end
 
-  #   it 'should be valid twice' do
-  #     @white_ip = Fabricate(:white_ip)
-  #     @white_ip.valid?
-  #     @white_ip.errors.full_messages.should match_array([])
-  #   end
+    it 'should be valid twice' do
+      @white_ip = Fabricate(:white_ip)
+      @white_ip.valid?
+      @white_ip.errors.full_messages.should match_array([])
+    end
 
-  #   it 'should have one version' do
-  #     with_versioning do
-  #       @white_ip.versions.should == []
-  #       @white_ip.ipv4 = '192.168.1.1'
-  #       @white_ip.save
-  #       @white_ip.errors.full_messages.should match_array([])
-  #       @white_ip.versions.size.should == 1
-  #     end
-  #   end
-  # end
+    it 'should have one version' do
+      with_versioning do
+        @white_ip.versions.should == []
+        @white_ip.ipv4 = '192.168.1.2'
+        @white_ip.save
+        @white_ip.errors.full_messages.should match_array([])
+        @white_ip.versions.size.should == 1
+      end
+    end
+  end
 end

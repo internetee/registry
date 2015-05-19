@@ -1,4 +1,5 @@
 class WhiteIp < ActiveRecord::Base
+  include Versions
   belongs_to :registrar
 
   # rubocop: disable Metrics/LineLength
@@ -12,5 +13,9 @@ class WhiteIp < ActiveRecord::Base
     errors.add(:base, I18n.t(:ipv4_or_ipv6_must_be_present))
   end
 
-  INTERFACES = ['epp', 'repp', 'registrar']
+  INTERFACE_EPP = 'epp'
+  INTERFACE_REPP = 'repp'
+  INTERFACE_REGISTRAR = 'registrar'
+
+  INTERFACES = [INTERFACE_EPP, INTERFACE_REPP, INTERFACE_REGISTRAR]
 end

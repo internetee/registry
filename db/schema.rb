@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150519115050) do
+ActiveRecord::Schema.define(version: 20150519140853) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -797,6 +797,18 @@ ActiveRecord::Schema.define(version: 20150519115050) do
   add_index "log_users", ["item_type", "item_id"], name: "index_log_users_on_item_type_and_item_id", using: :btree
   add_index "log_users", ["whodunnit"], name: "index_log_users_on_whodunnit", using: :btree
 
+  create_table "log_white_ips", force: :cascade do |t|
+    t.string   "item_type",      null: false
+    t.integer  "item_id",        null: false
+    t.string   "event",          null: false
+    t.string   "whodunnit"
+    t.json     "object"
+    t.json     "object_changes"
+    t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
+  end
+
   create_table "log_zonefile_settings", force: :cascade do |t|
     t.string   "item_type",      null: false
     t.integer  "item_id",        null: false
@@ -935,6 +947,8 @@ ActiveRecord::Schema.define(version: 20150519115050) do
     t.string   "interface"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   create_table "whois_records", force: :cascade do |t|
