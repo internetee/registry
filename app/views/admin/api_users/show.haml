@@ -35,6 +35,8 @@
         .pull-left
           = t(:certificates)
         .pull-right
+          = link_to(t(:upload_crt),
+            new_admin_api_user_certificate_path(@api_user, crt: true), class: 'btn btn-primary btn-xs')
           = link_to(t(:upload_csr),
             new_admin_api_user_certificate_path(@api_user), class: 'btn btn-primary btn-xs')
 
@@ -49,4 +51,8 @@
               - if x.csr
                 %tr
                   %td= link_to(x.parsed_csr.try(:subject), admin_api_user_certificate_path(@api_user, x))
+                  %td= x.status
+              - elsif x.crt
+                %tr
+                  %td= link_to(x.parsed_crt.try(:subject), admin_api_user_certificate_path(@api_user, x))
                   %td= x.status

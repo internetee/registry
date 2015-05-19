@@ -771,4 +771,5 @@ en:
   login_failed_check_id_card: 'Log in failed, check ID card'
   not_valid_domain_verification_title: Domain verification not available
   not_valid_domain_verification_body: This could mean your verification has been expired or done already.<br><br>Please contact us if you think something is wrong.
-
+  upload_crt: 'Upload CRT'
+  crt_or_csr_must_be_present: 'CRT or CSR must be present'

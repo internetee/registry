@@ -8,27 +8,29 @@
     %br
 - if @certificate.errors.any?
   %hr
-.row
-  .col-md-12
-    .panel.panel-default
-      .panel-heading.clearfix
-        .pull-left
-          = t(:csr)
-        .pull-right
-          = link_to(t(:download), download_csr_admin_api_user_certificate_path(@api_user, @certificate), class: 'btn btn-default btn-xs')
-          - unless @crt
-            = link_to(t(:sign_this_request), sign_admin_api_user_certificate_path(@api_user, @certificate), method: :post, class: 'btn btn-primary btn-xs')
 
-      .panel-body
-        %dl.dl-horizontal
-          %dt= t(:version)
-          %dd= @csr.version
+- if @csr
+  .row
+    .col-md-12
+      .panel.panel-default
+        .panel-heading.clearfix
+          .pull-left
+            = t(:csr)
+          .pull-right
+            = link_to(t(:download), download_csr_admin_api_user_certificate_path(@api_user, @certificate), class: 'btn btn-default btn-xs')
+            - unless @crt
+              = link_to(t(:sign_this_request), sign_admin_api_user_certificate_path(@api_user, @certificate), method: :post, class: 'btn btn-primary btn-xs')
 
-          %dt= t(:subject)
-          %dd= @csr.subject
+        .panel-body
+          %dl.dl-horizontal
+            %dt= t(:version)
+            %dd= @csr.version
 
-          %dt= t(:signature_algorithm)
-          %dd= @csr.signature_algorithm
+            %dt= t(:subject)
+            %dd= @csr.subject
+
+            %dt= t(:signature_algorithm)
+            %dd= @csr.signature_algorithm
 
 - if @crt
   .row
@@ -40,7 +42,7 @@
             = t('crt_revoked') if @certificate.revoked?
           .pull-right
             = link_to(t(:download), download_crt_admin_api_user_certificate_path(@api_user, @certificate), class: 'btn btn-default btn-xs')
-            - unless @certificate.revoked?
+            - if !@certificate.revoked? && @certificate.csr
               = link_to(t(:revoke_this_certificate), revoke_admin_api_user_certificate_path(@api_user, @certificate), method: :post, class: 'btn btn-primary btn-xs')
         - if @crt
           .panel-body

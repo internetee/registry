@@ -11,7 +11,7 @@ describe Certificate do
     it 'should not be valid' do
       @certificate.valid?
       @certificate.errors.full_messages.should match_array([
-        "Csr is missing"
+        "CRT or CSR must be present"
       ])
     end
 

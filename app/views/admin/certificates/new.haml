@@ -1,4 +1,4 @@
-= render 'shared/title', name: t(:upload_csr)
+= render 'shared/title', name: params[:crt] ? t(:upload_crt) : t(:upload_csr)
 
 = form_for([:admin, @api_user, @certificate], multipart: true) do |f|
   = render 'shared/full_errors', object: f.object
@@ -6,10 +6,16 @@
   .row
     .col-md-8
       .form-group
-        .col-md-4.control-label
-          = f.label :csr, t(:certificate_signing_req)
-        .col-md-8
-          = f.file_field :csr
+        - if params[:crt]
+          .col-md-4.control-label
+            = f.label :crt, t(:certificate)
+          .col-md-8
+            = f.file_field :crt
+        - else
+          .col-md-4.control-label
+            = f.label :csr, t(:certificate_signing_req)
+          .col-md-8
+            = f.file_field :csr
   %hr
   .row
     .col-md-8.text-right
