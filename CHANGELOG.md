@@ -1,3 +1,7 @@
+19.05.2015
+
+* Added possibility to define NewRelic app_name at application.yml file with 'new_relic_app_name' attribute. 
+
 18.05.2015
 
 * Added Registrant database example file: config/database-example-registrant.yml
