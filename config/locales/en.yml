@@ -225,6 +225,9 @@ en:
         state: 'State / Province'
       deposit:
         amount: 'Amount'
+      white_ip:
+        ipv4: 'IPv4'
+        ipv6: 'IPv6'
 
   errors:
     messages:
@@ -560,8 +563,6 @@ en:
   code: 'Code'
   nameservers: 'Nameservers'
   hostname: 'Hostname'
-  ipv4: 'IPv4'
-  ipv6: 'IPv6'
   dnskeys: 'DNS Keys'
   flag: 'Flag'
   protocol: 'Protocol'
