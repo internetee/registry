@@ -20,8 +20,8 @@ Documentation
 
 ### Updating documentation
 
-AUTODOC=true rspec spec/requests
-EPP_DOC=true rspec spec/epp --tag epp --require support/epp_doc.rb --format EppDoc > doc/epp-examples.md
+    AUTODOC=true rspec spec/requests
+    EPP_DOC=true rspec spec/epp --tag epp --require support/epp_doc.rb --format EppDoc > doc/epp-examples.md
 
 Installation
 ------------
@@ -32,41 +32,41 @@ Registry based on Rails 4 installation (rbenv install is under Debian build doc)
 
 Manual demo install and database setup:
 
-cd /home/registry
-git clone git@github.com:internetee/registry.git demo-registry
-cd demo-registry
-rbenv local 2.2.2
-bundle
-cp config/application-example.yml config/application.yml # and edit it
-cp config/database-example.yml config/database.yml # and edit it
-bundle exec rake db:all:setup # for production, please follow deployment howto
-bundle exec rake assets:precompile
+    cd /home/registry
+    git clone git@github.com:internetee/registry.git demo-registry
+    cd demo-registry
+    rbenv local 2.2.2
+    bundle
+    cp config/application-example.yml config/application.yml # and edit it
+    cp config/database-example.yml config/database.yml # and edit it
+    bundle exec rake db:all:setup # for production, please follow deployment howto
+    bundle exec rake assets:precompile
 
 ### Apache with patched mod_epp (Debian 7/Ubuntu 14.04 LTS)
 
-sudo apt-get install apache2
+    sudo apt-get install apache2
 
-sudo apt-get install apache2-threaded-dev     # needed to compile mod_epp
-wget sourceforge.net/projects/aepps/files/mod_epp/1.10/mod_epp-1.10.tar.gz
-tar -xzvf mod_epp-1.10.tar.gz
-cd mod_epp-1.10
+    sudo apt-get install apache2-threaded-dev     # needed to compile mod_epp
+    wget sourceforge.net/projects/aepps/files/mod_epp/1.10/mod_epp-1.10.tar.gz
+    tar -xzvf mod_epp-1.10.tar.gz
+    cd mod_epp-1.10
 
 Patch mod_epp for Rack. Beacause Rack multipart parser expects specifically 
 formatted content boundaries, the mod_epp needs to be modified before building:
 
-wget https://github.com/internetee/registry/raw/master/doc/patches/mod_epp_1.10-rack-friendly.patch
-wget https://raw.githubusercontent.com/domify/registry/master/doc/patches/mod_epp_1.10-frame-size.patch
-patch < mod_epp_1.10-rack-friendly.patch
-patch < mod_epp_1.10-frame-size.patch
-sudo apxs2 -a -c -i mod_epp.c
+    wget https://github.com/internetee/registry/raw/master/doc/patches/mod_epp_1.10-rack-friendly.patch
+    wget https://raw.githubusercontent.com/domify/registry/master/doc/patches/mod_epp_1.10-frame-size.patch
+    patch < mod_epp_1.10-rack-friendly.patch
+    patch < mod_epp_1.10-frame-size.patch
+    sudo apxs2 -a -c -i mod_epp.c
 
 Enable ssl:
 
-sudo a2enmod proxy_http
-sudo mkdir /etc/apache2/ssl
-sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
-sudo a2enmod ssl
-sudo nano /etc/apache2/sites-enabled/epp_ssl.conf
+    sudo a2enmod proxy_http
+    sudo mkdir /etc/apache2/ssl
+    sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
+    sudo a2enmod ssl
+    sudo nano /etc/apache2/sites-enabled/epp_ssl.conf
 
 For Apache, registry admin goes to port 443 in production, /etc/apache2/sites-enabled/registry.conf short example:
 
