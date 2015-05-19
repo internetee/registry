@@ -62,7 +62,7 @@ class EppController < ApplicationController
       @errors << {
         code: '1',
         msg: 'handle_errors was executed when there were actually no errors'
-      } 
+      }
       # rubocop:disable Rails/Output
       puts obj.errors.full_messages if Rails.env.test?
       # rubocop: enable Rails/Output
@@ -239,8 +239,15 @@ class EppController < ApplicationController
   def write_to_epp_log
     # return nil if EPP_LOG_ENABLED
     request_command = params[:command] || params[:action] # error receives :command, other methods receive :action
+    frame = params[:raw_frame] || params[:frame]
+
+    # filter pw
+    if request_command == 'login' && frame.present?
+      frame.gsub!(/<pw>.+<\/pw>/, '<pw>[FILTERED]</pw>')
+    end
+
     ApiLog::EppLog.create({
-      request: params[:raw_frame] || params[:frame],
+      request: frame,
       request_command: request_command,
       request_successful: epp_errors.empty?,
       request_object: params[:epp_object_type],
