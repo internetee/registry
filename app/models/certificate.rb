@@ -103,9 +103,9 @@ class Certificate < ActiveRecord::Base
     end
 
     def update_id_crl
-      STDOUT << "#{Time.zone.now.utc} - Updating ID CRL"
+      STDOUT << "#{Time.zone.now.utc} - Updating ID CRL\n"
 
-      _out = %x(
+      _out, _err, _st = Open3.capture3("
         mkdir -p #{ENV['crl_dir']}/crl-id-temp
         cd #{ENV['crl_dir']}/crl-id-temp
 
@@ -114,8 +114,6 @@ class Certificate < ActiveRecord::Base
         wget https://sk.ee/crls/eeccrca/eeccrca.crl
         wget https://sk.ee/repository/crls/esteid2011.crl
 
-
-        # convert to PEM
         openssl crl -in esteid2007.crl -out esteid2007.crl -inform DER
         openssl crl -in crl.crl -out crl.crl -inform DER
         openssl crl -in eeccrca.crl -out eeccrca.crl -inform DER
@@ -131,15 +129,15 @@ class Certificate < ActiveRecord::Base
         mv #{ENV['crl_dir']}/crl-id-temp/* #{ENV['crl_dir']}
 
         rm -rf #{ENV['crl_dir']}/crl-id-temp
-      )
+      ")
 
-      STDOUT << "#{Time.zone.now.utc} - ID CRL updated"
+      STDOUT << "#{Time.zone.now.utc} - ID CRL updated\n"
     end
 
     def update_registry_crl
-      STDOUT << "#{Time.zone.now.utc} - Updating registry CRL"
+      STDOUT << "#{Time.zone.now.utc} - Updating registry CRL\n"
 
-      %x(
+      _out, _err, _st = Open3.capture3("
         mkdir -p #{ENV['crl_dir']}/crl-temp
         cd #{ENV['crl_dir']}/crl-temp
 
@@ -154,15 +152,15 @@ class Certificate < ActiveRecord::Base
         mv #{ENV['crl_dir']}/crl-temp/* #{ENV['crl_dir']}
 
         rm -rf #{ENV['crl_dir']}/crl-temp
-      )
+      ")
 
-      STDOUT << "#{Time.zone.now.utc} - Registry CRL updated"
+      STDOUT << "#{Time.zone.now.utc} - Registry CRL updated\n"
     end
 
     def reload_apache
-      STDOUT << "#{Time.zone.now.utc} - Reloading apache"
-      `sudo /etc/init.d/apache2 reload`
-      STDOUT << "#{Time.zone.now.utc} - Apache reloaded"
+      STDOUT << "#{Time.zone.now.utc} - Reloading apache\n"
+      _out, _err, _st = Open3.capture3("sudo /etc/init.d/apache2 reload")
+      STDOUT << "#{Time.zone.now.utc} - Apache reloaded\n"
     end
   end
 end
