@@ -7,7 +7,7 @@ class RegistrantUser < User
   delegate :can?, :cannot?, to: :ability
 
   def to_s
-    registrant_ident
+    username
   end
 
   class << self
@@ -15,8 +15,12 @@ class RegistrantUser < User
       return false if idc_data.blank?
       identity_code = idc_data.scan(/serialNumber=(\d+)/).flatten.first
       country = idc_data.scan(/^\/C=(.{2})/).flatten.first
+      first_name = idc_data.scan(%r{/GN=(.+)/serialNumber}).flatten.first
+      last_name = idc_data.scan(%r{/SN=(.+)/GN}).flatten.first
 
-      where(registrant_ident: "#{country}-#{identity_code}").first_or_create
+      u = where(registrant_ident: "#{country}-#{identity_code}").first_or_create
+      u.username = "#{first_name} #{last_name}"
+      u.save
     end
   end
 end
