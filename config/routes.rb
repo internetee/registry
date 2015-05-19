@@ -57,11 +57,12 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :nameservers do
-      collection do
-        match 'replace_all', via: [:post, :get]
-      end
-    end
+    # turned off requested by client
+    # resources :nameservers do
+      # collection do
+        # match 'replace_all', via: [:post, :get]
+      # end
+    # end
 
     resources :contacts do
       member do
