@@ -105,14 +105,14 @@ class Certificate < ActiveRecord::Base
     def update_id_crl
       STDOUT << "#{Time.zone.now.utc} - Updating ID CRL"
 
-      %x(
+      _out = %x(
         mkdir -p #{ENV['crl_dir']}/crl-id-temp
         cd #{ENV['crl_dir']}/crl-id-temp
 
-        wget https://sk.ee/crls/esteid/esteid2007.crl &> /dev/null
-        wget https://sk.ee/crls/juur/crl.crl &> /dev/null
-        wget https://sk.ee/crls/eeccrca/eeccrca.crl &> /dev/null
-        wget https://sk.ee/repository/crls/esteid2011.crl &> /dev/null
+        wget https://sk.ee/crls/esteid/esteid2007.crl
+        wget https://sk.ee/crls/juur/crl.crl
+        wget https://sk.ee/crls/eeccrca/eeccrca.crl
+        wget https://sk.ee/repository/crls/esteid2011.crl
 
 
         # convert to PEM
