@@ -215,9 +215,9 @@ After deploy, in rails console:
 
     Certificate.update_crl
 
-Update whenever:
+Update cron:
 
-    mina whenever:update
+    mina cron:setup
 
 Configure Apache (set location according to registrant and registrar):
 

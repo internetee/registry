@@ -103,14 +103,16 @@ class Certificate < ActiveRecord::Base
     end
 
     def update_id_crl
+      STDOUT << "#{Time.zone.now.utc} - Updating ID CRL"
+
       %x(
         mkdir -p #{ENV['crl_dir']}/crl-id-temp
         cd #{ENV['crl_dir']}/crl-id-temp
 
-        wget https://sk.ee/crls/esteid/esteid2007.crl
-        wget https://sk.ee/crls/juur/crl.crl
-        wget https://sk.ee/crls/eeccrca/eeccrca.crl
-        wget https://sk.ee/repository/crls/esteid2011.crl
+        wget https://sk.ee/crls/esteid/esteid2007.crl &> /dev/null
+        wget https://sk.ee/crls/juur/crl.crl &> /dev/null
+        wget https://sk.ee/crls/eeccrca/eeccrca.crl &> /dev/null
+        wget https://sk.ee/repository/crls/esteid2011.crl &> /dev/null
 
 
         # convert to PEM
@@ -130,9 +132,13 @@ class Certificate < ActiveRecord::Base
 
         rm -rf #{ENV['crl_dir']}/crl-id-temp
       )
+
+      STDOUT << "#{Time.zone.now.utc} - ID CRL updated"
     end
 
     def update_registry_crl
+      STDOUT << "#{Time.zone.now.utc} - Updating registry CRL"
+
       %x(
         mkdir -p #{ENV['crl_dir']}/crl-temp
         cd #{ENV['crl_dir']}/crl-temp
@@ -149,10 +155,14 @@ class Certificate < ActiveRecord::Base
 
         rm -rf #{ENV['crl_dir']}/crl-temp
       )
+
+      STDOUT << "#{Time.zone.now.utc} - Registry CRL updated"
     end
 
     def reload_apache
+      STDOUT << "#{Time.zone.now.utc} - Reloading apache"
       `sudo /etc/init.d/apache2 reload`
+      STDOUT << "#{Time.zone.now.utc} - Apache reloaded"
     end
   end
 end
