@@ -1,0 +1,30 @@
+= form_for([:admin, @registrar, @white_ip], html: {class: 'form-horizontal'}) do |f|
+  = render 'shared/full_errors', object: @white_ip
+
+  .row
+    .col-md-8
+      .form-group
+        .col-md-4.control-label
+          = f.label :registrar
+        .col-md-7
+          = f.text_field(:registrar, class: 'form-control', disabled: :disabled)
+          = f.hidden_field(:registrar_id, class: 'js-registrar-id')
+      .form-group
+        .col-md-4.control-label
+          = f.label :ipv4
+        .col-md-7
+          = f.text_field(:ipv4, class: 'form-control')
+      .form-group
+        .col-md-4.control-label
+          = f.label :ipv6
+        .col-md-7
+          = f.text_field(:ipv6, class: 'form-control')
+      .form-group
+        .col-md-4.control-label
+          = f.label :interface
+        .col-md-7
+          = f.select :interface, [[t(:choose), '']] + WhiteIp::INTERFACES.map {|x| [x.upcase, x]}, {}, class: 'form-control selectize', placeholder: t(:choose)
+  %hr
+  .row
+    .col-md-8.text-right
+      = button_tag(t(:save), class: 'btn btn-primary')

@@ -63,7 +63,7 @@
         .pull-left
           = t(:api_users)
         .pull-right
-          = link_to(t(:create_new_api_user), new_admin_registrar_api_user_path(@registrar), class: 'btn btn-primary btn-xs')
+          = link_to(t(:create_new_api_user), new_admin_registrar_api_user_path(@registrar), class: 'btn btn-default btn-xs')
 
       .table-responsive
         %table.table.table-hover.table-bordered.table-condensed
@@ -76,3 +76,26 @@
               %tr
                 %td= link_to(x, [:admin, x])
                 %td= x.active
+
+.row
+  .col-md-12
+    #epp-users.panel.panel-default
+      .panel-heading.clearfix
+        .pull-left
+          = t(:white_ips)
+        .pull-right
+          = link_to(t(:create_new_white_ip), new_admin_registrar_white_ip_path(@registrar), class: 'btn btn-default btn-xs')
+
+      .table-responsive
+        %table.table.table-hover.table-bordered.table-condensed
+          %thead
+            %tr
+              %th{class: 'col-xs-4'}= t(:ipv4)
+              %th{class: 'col-xs-6'}= t(:ipv6)
+              %th{class: 'col-xs-2'}= t(:interface)
+          %tbody
+            - @registrar.white_ips.order(:interface).each do |x|
+              %tr
+                %td= link_to(x.ipv4, [:admin, @registrar, x])
+                %td= link_to(x.ipv6, [:admin, @registrar, x])
+                %td= x.interface.upcase
