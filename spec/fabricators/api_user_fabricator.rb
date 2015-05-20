@@ -5,6 +5,7 @@ Fabricator(:api_user) do
   identity_code '14212128025'
   registrar
   active true
+  roles ['super']
 end
 
 # use dedicated fabricator for fixed one

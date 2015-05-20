@@ -13,7 +13,8 @@ describe ApiUser do
       @api_user.errors.full_messages.should match_array([
         "Password Password is missing",
         "Registrar Registrar is missing",
-        "Username Username is missing"
+        "Username Username is missing",
+        "Roles is missing"
       ])
     end
 

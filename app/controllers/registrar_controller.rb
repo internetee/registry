@@ -12,6 +12,11 @@ class RegistrarController < ApplicationController
 
   def check_ip
     return unless current_user
+    unless current_user.is_a? ApiUser
+      sign_out(current_user)
+      return
+    end
+
     return if current_user.registrar.registrar_ip_white?(request.ip)
     flash[:alert] = t('ip_is_not_whitelisted')
     sign_out(current_user)

@@ -29,11 +29,20 @@
             %span.glyphicon.glyphicon-ok.form-control-feedback.js-typeahead-ok.hidden
             %span.glyphicon.glyphicon-remove.form-control-feedback.js-typeahead-remove
             = f.hidden_field(:registrar_id, class: 'js-registrar-id')
-            .checkbox
-              %label{for: 'api_user_active'}
-                = f.check_box(:active)
-                = t(:active)
+      .form-group
+        .col-md-4.control-label
+          = f.label :role
+        .col-md-7
+          = select_tag 'api_user[roles][]', 
+            options_for_select(ApiUser::ROLES.map {|x| [t(x), x] }, @api_user.roles.try(:first)),
+            class: 'form-control selectize'
+          .checkbox
+            %label{for: 'api_user_active'}
+              = f.check_box(:active)
+              = t(:active)
+
   %hr
+
   .row
     .col-md-8.text-right
       = button_tag(t(:save), class: 'btn btn-primary')

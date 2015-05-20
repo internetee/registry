@@ -1,6 +1,8 @@
 class Ability
   include CanCan::Ability
-
+  # rubocop: disable Metrics/CyclomaticComplexity
+  # rubocop: disable Metrics/PerceivedComplexity
+  # rubocop: disable Metrics/LineLength
   def initialize(user)
     alias_action :show, to: :view
     alias_action :show, :create, :update, :destroy, to: :crud
@@ -11,11 +13,11 @@ class Ability
     when 'AdminUser'
       @user.roles.each { |role| send(role) } if @user.roles
     when 'ApiUser'
-      epp
-      registrar
-      registrant # refactor
+      @user.roles.each { |role| send(role) } if @user.roles
+      static_epp
+      static_registrar
     when 'RegistrantUser'
-      registrant
+      static_registrant
     end
 
     # Public user
@@ -23,10 +25,7 @@ class Ability
     can :create, :registrant_domain_update_confirm
   end
 
-  # rubocop: disable Metrics/CyclomaticComplexity
-  # rubocop: disable Metrics/PerceivedComplexity
-  # rubocop: disable Metrics/LineLength
-  def epp
+  def static_epp
     # Epp::Domain
     can(:info,     Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || pw.blank? ? true : d.auth_info == pw }
     can(:check,    Epp::Domain)
@@ -47,12 +46,8 @@ class Ability
     can(:renew,  Epp::Contact)
     can(:view_password, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
   end
-  # rubocop: enable Metrics/LineLength
-  # rubocop: enable Metrics/CyclomaticComplexity
-  # rubocop: enable Metrics/PerceivedComplexity
 
-  def registrar
-    can :manage, Invoice
+  def static_registrar
     can :read, AccountActivity
     can :manage, Nameserver
     can :view, :registrar_dashboard
@@ -68,15 +63,38 @@ class Ability
     can :manage, :deposit
   end
 
-  def registrant
+  def static_registrant
     can :manage, :registrant_whois
     can :manage, Depp::Domain
+  end
+
+  def static_billing
+    can :manage, Invoice
   end
 
   def user
     can :show, :dashboard
   end
 
+  # api_user dynamic role
+  def super
+    static_epp
+    static_registrar
+  end
+
+  # api_user dynamic role
+  def epp
+    static_epp
+    static_registrar
+  end
+
+  # api_user dynamic role
+  def billing
+    static_registrar
+    static_billing
+  end
+
+  # admin dynamic role
   def customer_service
     user
     can :manage, Domain
@@ -84,6 +102,7 @@ class Ability
     can :manage, Registrar
   end
 
+  # admin dynamic role
   def admin
     customer_service
     can :manage, Setting
@@ -105,4 +124,7 @@ class Ability
     can :create, :zonefile
     can :access, :settings_menu
   end
+  # rubocop: enable Metrics/LineLength
+  # rubocop: enable Metrics/CyclomaticComplexity
+  # rubocop: enable Metrics/PerceivedComplexity
 end

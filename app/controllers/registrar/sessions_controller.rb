@@ -145,6 +145,7 @@ class Registrar::SessionsController < Devise::SessionsController
   private
 
   def check_ip
+    return if Rails.env.development?
     return if WhiteIp.registrar_ip_white?(request.ip)
     render text: t('ip_is_not_whitelisted') and return
   end

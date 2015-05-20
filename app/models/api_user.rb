@@ -15,10 +15,12 @@ class ApiUser < User
   belongs_to :registrar
   has_many :certificates
 
-  validates :username, :password, :registrar, presence: true
+  validates :username, :password, :registrar, :roles, presence: true
   validates :username, uniqueness: true
 
   attr_accessor :registrar_typeahead
+
+  ROLES = %w(super epp billing) # should not match to admin roles
 
   def ability
     @ability ||= Ability.new(self)
