@@ -8,11 +8,18 @@
           = f.label :username
         .col-md-8
           = f.text_field(:username, class: 'form-control')
-      .form-group
-        .col-md-4.control-label
-          = f.label :password
-        .col-md-8
-          = f.text_field(:password, class: 'form-control')
+      - if @admin_user.new_record? || can?(:update, AdminUser)
+        .form-group
+          .col-md-4.control-label
+            = f.label :password
+          .col-md-8
+            = f.text_field(:password, class: 'form-control')
+        .form-group
+          .col-md-4.control-label
+            = f.label :password_confirmation
+          .col-md-8
+            = f.text_field(:password_confirmation, class: 'form-control')
+
       %hr
       .form-group
         .col-md-4.control-label

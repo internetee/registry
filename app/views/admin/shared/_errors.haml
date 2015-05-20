@@ -1,0 +1,5 @@
+- if object.errors.any?
+  %p.text-danger
+    - object.errors.each do |attr, err|
+      = err
+      %br

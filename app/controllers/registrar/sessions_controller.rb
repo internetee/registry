@@ -1,4 +1,4 @@
-class Registrar::SessionsController < ::SessionsController
+class Registrar::SessionsController < Devise::SessionsController
   layout 'registrar/application'
   helper_method :depp_controller?
   def depp_controller?
