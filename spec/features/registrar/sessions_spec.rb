@@ -1,11 +1,35 @@
 require 'rails_helper'
 
 feature 'Sessions', type: :feature do
-  before :all do
-    Fabricate(:api_user)
+  context 'with invalid ip' do
+    it 'should not see login page' do
+      WhiteIp.destroy_all
+      visit registrar_login_path
+      page.should have_text('IP is not whitelisted')
+    end
+
+    it 'should see log in' do
+      @fixed_registrar.white_ips = [Fabricate(:white_ip_registrar)]
+      visit registrar_login_path
+      page.should have_text('Log in')
+    end
+
+    it 'should not get in with invalid ip' do
+      Fabricate(:registrar, white_ips: [Fabricate(:white_ip), Fabricate(:white_ip_registrar)])
+      @api_user_invalid_ip = Fabricate(:api_user, identity_code: '37810013294', registrar: Fabricate(:registrar, white_ips: []))
+      visit registrar_login_path
+      fill_in 'depp_user_tag', with: @api_user_invalid_ip.username
+      fill_in 'depp_user_password', with: @api_user_invalid_ip.password
+      click_button 'Log in'
+      page.should have_text('IP is not whitelisted')
+    end
   end
 
   context 'as unknown user' do
+    before :all do
+      Fabricate(:api_user)
+    end
+
     it 'should not get in' do
       client = instance_double("Digidoc::Client")
       allow(client).to receive(:authenticate).and_return(
@@ -28,6 +52,10 @@ feature 'Sessions', type: :feature do
   end
 
   context 'as known api user' do
+    before :all do
+      Fabricate(:api_user)
+    end
+
     it 'should not get in when external service fails' do
       client = instance_double("Digidoc::Client")
       allow(client).to receive(:authenticate).and_return(

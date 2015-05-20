@@ -15,7 +15,7 @@ class Registrar::SessionsController < Devise::SessionsController
   # rubocop:disable Metrics/CyclomaticComplexity
   def create
     @depp_user = Depp::User.new(params[:depp_user].merge(
-      pki: !Rails.env.development?
+      pki: !(Rails.env.development? || Rails.env.test?)
       )
     )
 
