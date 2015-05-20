@@ -7,15 +7,13 @@ class Ability
     alias_action :show, to: :view
     alias_action :show, :create, :update, :destroy, to: :crud
 
-    @user = user || AdminUser.new
+    @user = user || User.new
 
     case @user.class.to_s
     when 'AdminUser'
       @user.roles.each { |role| send(role) } if @user.roles
     when 'ApiUser'
       @user.roles.each { |role| send(role) } if @user.roles
-      static_epp
-      static_registrar
     when 'RegistrantUser'
       static_registrant
     end
@@ -45,10 +43,12 @@ class Ability
     can(:delete, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
     can(:renew,  Epp::Contact)
     can(:view_password, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
+
+    # REPP
+    can(:manage, :repp)
   end
 
   def static_registrar
-    can :read, AccountActivity
     can :manage, Nameserver
     can :view, :registrar_dashboard
     can :delete, :registrar_poll
@@ -60,7 +60,6 @@ class Ability
     can :manage, Depp::Keyrelay
     can :confirm, :keyrelay
     can :confirm, :transfer
-    can :manage, :deposit
   end
 
   def static_registrant
@@ -68,33 +67,32 @@ class Ability
     can :manage, Depp::Domain
   end
 
-  def static_billing
-    can :manage, Invoice
-  end
-
   def user
     can :show, :dashboard
   end
 
-  # api_user dynamic role
+  # Registrar/api_user dynamic role
   def super
-    static_epp
     static_registrar
+    billing
+    epp
   end
 
-  # api_user dynamic role
+  # Registrar/api_user dynamic role
   def epp
+    static_registrar
     static_epp
-    static_registrar
   end
 
-  # api_user dynamic role
+  # Registrar/api_user dynamic role
   def billing
-    static_registrar
-    static_billing
+    can :view, :registrar_dashboard
+    can :manage, Invoice
+    can :manage, :deposit
+    can :read, AccountActivity
   end
 
-  # admin dynamic role
+  # Admin/admin_user dynamic role
   def customer_service
     user
     can :manage, Domain
@@ -102,7 +100,7 @@ class Ability
     can :manage, Registrar
   end
 
-  # admin dynamic role
+  # Admin/admin_user dynamic role
   def admin
     customer_service
     can :manage, Setting

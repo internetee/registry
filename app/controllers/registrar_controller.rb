@@ -16,7 +16,7 @@ class RegistrarController < ApplicationController
       sign_out(current_user)
       return
     end
-
+    return if Rails.env.development?
     return if current_user.registrar.registrar_ip_white?(request.ip)
     flash[:alert] = t('ip_is_not_whitelisted')
     sign_out(current_user)
