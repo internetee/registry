@@ -796,5 +796,6 @@ en:
   registrant_domain_verification_rejected: 'Domain owner change has been rejected successfully.'
   registrant_domain_verification_rejected_failed: 'Something went wrong'
   ip_is_not_whitelisted: 'IP is not whitelisted'
+  no_permission: 'No permission'
   access_denied: 'Access denied'
   connection_limit_reached: 'Connection limit reached'

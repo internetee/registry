@@ -6,7 +6,7 @@ class AdminUser < User
 
   validate :validate_identity_code, if: -> { country_code == 'EE' }
 
-  ROLES = %w(user customer_service admin)
+  ROLES = %w(user customer_service admin) # should not match to api_users roles
 
   devise :database_authenticatable, :rememberable, :trackable, :validatable, :lockable
 

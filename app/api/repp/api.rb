@@ -12,6 +12,10 @@ module Repp
         error! I18n.t('ip_is_not_whitelisted'), 401 unless @current_user.registrar.api_ip_white?(request.ip)
       end
 
+      if @current_user.cannot?(:view, :repp)
+        error! I18n.t('no_permission'), 401 unless @current_user.registrar.api_ip_white?(request.ip)
+      end
+
       next if Rails.env.test? || Rails.env.development?
       message = 'Certificate mismatch! Cert common name should be:'
       request_name = env['HTTP_SSL_CLIENT_S_DN_CN']
@@ -22,7 +26,6 @@ module Repp
       else
         error! "#{message} #{@current_user.username}", 401 if @current_user.username != request_name
       end
-
     end
 
     helpers do

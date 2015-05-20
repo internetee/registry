@@ -26,6 +26,9 @@
           %dt= t(:registrar)
           %dd= link_to(@api_user.registrar, admin_registrar_path(@api_user.registrar))
 
+          %dt= t(:role)
+          %dd= @api_user.roles.join(', ')
+
           %dt= t(:active)
           %dd= @api_user.active
 .row
