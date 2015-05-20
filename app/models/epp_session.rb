@@ -1,8 +1,9 @@
 class EppSession < ActiveRecord::Base
   before_save :marshal_data!
 
+  belongs_to :registrar
   # rubocop: disable Rails/ReadWriteAttribute
-  # Turned back to read_attribute, thus in Rails 4 
+  # Turned back to read_attribute, thus in Rails 4
   # there is differences between self[:data] and read_attribute.
   def data
     @data ||= self.class.unmarshal(read_attribute(:data)) || {}

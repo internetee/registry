@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150519144118) do
+ActiveRecord::Schema.define(version: 20150520164507) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -317,6 +317,7 @@ ActiveRecord::Schema.define(version: 20150519144118) do
     t.text     "data"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "registrar_id"
   end
 
   add_index "epp_sessions", ["session_id"], name: "index_epp_sessions_on_session_id", unique: true, using: :btree
