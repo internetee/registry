@@ -40,28 +40,65 @@ Please install following lib, otherwise your bundler install might not be succes
     git pull origin master
 
 
-### Using babushka autoscripts
+### Firewall rate limit config
 
-Alternatively you can build servers up using scripts such as babushka.
+First increase the maximum possible value for the hitcount parameter
+from its default value of 20 by setting the option 
+ip_pkt_list_tot of the xt_recent kernel module. 
+This can be done by creating an ip_pkt_list_tot.conf file in /etc/modeprobe.d/ which contains:
 
-You can use or find ideas how to build up production servers using 
-sysadmin tool [Babushka](https://github.com/benhoskings/babushka).
+````
+options xt_recent ip_pkt_list_tot=100
+````
 
-Unofficial build scripts locate at: https://github.com/priit/babushka-deps
-Those scripts are not dedicated to Registry, but more focuse on general
-Ruby on Rails application deployment in various situatians.
-Please fork and customize dedicated to your system.
+Once the file is created, reload the xt_recent kernel module via modprobe -r xt_recent && modprobe xt_recent or reboot the system.
 
-Quick overview, how to use it. 
-Use 'registry' for username and app name when asked.
 
-    # on server side
-    apt-get install curl
-    sh -c "`curl https://babushka.me/up`"
-    babushka priit:app_user
-    babushka priit:app
+#### Registrar, REPP, Restful-whois
 
-Please inspect those scripts before running anything, 
-they might not be complete or might have serious bugs. You are free to fork it.
+````
+#!/bin/bash
+# Inspired and credits to Vivek Gite: http://www.cyberciti.biz/faq/iptables-connection-limits-howto/
+IPT=/sbin/iptables
+# Max connection in seconds
+SECONDS=60
+# Max connections per IP
+BLOCKCOUNT=100
+# default action can be DROP or REJECT
+DACTION="REJECT"
+$IPT -A INPUT -p tcp --dport 80 -i eth0 -m state --state NEW -m recent --set
+$IPT -A INPUT -p tcp --dport 80 -i eth0 -m state --state NEW -m recent --update --seconds ${SECONDS} --hitcount ${BLOCKCOUNT} -j ${DACTION}
+````
 
+#### EPP
+
+````
+#!/bin/bash
+# Inspired and credits to Vivek Gite: http://www.cyberciti.biz/faq/iptables-connection-limits-howto/
+IPT=/sbin/iptables
+# Max connection in seconds
+SECONDS=60
+# Max connections per IP
+BLOCKCOUNT=100
+# default action can be DROP or REJECT
+DACTION="REJECT"
+$IPT -A INPUT -p tcp --dport 700 -i eth0 -m state --state NEW -m recent --set
+$IPT -A INPUT -p tcp --dport 700 -i eth0 -m state --state NEW -m recent --update --seconds ${SECONDS} --hitcount ${BLOCKCOUNT} -j ${DACTION}
+````
+
+#### Whois
+
+````
+#!/bin/bash
+# Inspired and credits to Vivek Gite: http://www.cyberciti.biz/faq/iptables-connection-limits-howto/
+IPT=/sbin/iptables
+# Max connection in seconds
+SECONDS=60
+# Max connections per IP
+BLOCKCOUNT=100
+# default action can be DROP or REJECT
+DACTION="REJECT"
+$IPT -A INPUT -p tcp --dport 43 -i eth0 -m state --state NEW -m recent --set
+$IPT -A INPUT -p tcp --dport 43 -i eth0 -m state --state NEW -m recent --update --seconds ${SECONDS} --hitcount ${BLOCKCOUNT} -j ${DACTION}
+````
 
