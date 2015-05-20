@@ -5,6 +5,7 @@ class EppController < ApplicationController
 
   before_action :generate_svtrid
   before_action :validate_request
+  before_action :update_epp_session
   helper_method :current_user
 
   rescue_from CanCan::AccessDenied do |_exception|
@@ -33,6 +34,26 @@ class EppController < ApplicationController
   def epp_session
     cookie = env['rack.request.cookie_hash'] || {}
     EppSession.find_or_initialize_by(session_id: cookie['session'])
+  end
+
+  def update_epp_session
+    e_s = epp_session
+    return if e_s.new_record?
+
+    if e_s.updated_at < Time.zone.now - 5.minutes
+      @api_user = current_user # cache current_user for logging
+      e_s.destroy
+      response.headers['X-EPP-Returncode'] = '1500'
+
+      epp_errors << {
+        msg: t('session_timeout'),
+        code: '2201'
+      }
+
+      handle_errors and return
+    else
+      e_s.update_column(:updated_at, Time.zone.now)
+    end
   end
 
   def current_user
