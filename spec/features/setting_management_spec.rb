@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 feature 'Setting management', type: :feature do
-  let(:user) { Fabricate(:admin_user, username: 'user1', identity_code: '37810013087') }
+  let(:user) { Fabricate(:admin_user) }
 
   scenario 'User changes a setting' do
     sign_in user

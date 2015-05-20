@@ -2,7 +2,7 @@ require 'rails_helper'
 
 feature 'Api users', type: :feature do
   before :all do
-    @user = Fabricate(:admin_user, username: 'user1', identity_code: '37810013087')
+    @user = Fabricate(:admin_user)
     @api_user = Fabricate(:api_user)
   end
 

@@ -12,9 +12,11 @@ describe AdminUser do
       @user.errors.full_messages.should match_array([
         "Country code is missing",
         "Email Email is missing",
+        "Email Email is missing",
         "Password Password is missing",
-        "Username Username is missing",
-        "Roles is missing"
+        "Password Password is missing",
+        "Roles is missing",
+        "Username Username is missing"
       ])
     end
 
