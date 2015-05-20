@@ -84,7 +84,7 @@ module Depp
       res = server.send_request(xml)
 
       if Nokogiri::XML(res).css('result').first['code'] != '1000'
-        errors.add(:base, :authorization_error)
+        errors.add(:base, Nokogiri::XML(res).css('result').text)
       end
 
       server.close_connection

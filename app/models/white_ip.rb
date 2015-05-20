@@ -24,4 +24,17 @@ class WhiteIp < ActiveRecord::Base
   scope :repp, -> { where(interface: REPP) }
   scope :registrar, -> { where(interface: REGISTRAR) }
   scope :global, -> { where(interface: GLOBAL) }
+
+  class << self
+    def registrar_ip_white?(ip)
+      at = WhiteIp.arel_table
+      WhiteIp.where(
+        at[:interface].eq(REGISTRAR).or(
+          at[:interface].eq(GLOBAL)
+        ).and(
+          at[:ipv4].eq(ip)
+        )
+      )
+    end
+  end
 end
