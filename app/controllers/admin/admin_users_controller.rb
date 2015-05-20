@@ -4,7 +4,7 @@ class Admin::AdminUsersController < AdminController
 
   def index
     @q = AdminUser.search(params[:q])
-    @admin_users = @q.result.page(params[:page])
+    @admin_users = @q.result.page(params[:page]).order(:username)
   end
 
   def new
