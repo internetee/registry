@@ -39,6 +39,19 @@ describe 'EPP Session', epp: true do
       response[:result_code].should == '2501'
     end
 
+    it 'does not log in with ip that is not whitelisted' do
+      @registrar = Fabricate(:registrar,
+        { name: 'registrar123', reg_no: '1234', white_ips: [Fabricate(:white_ip_repp), Fabricate(:white_ip_registrar)] }
+      )
+      Fabricate(:api_user, username: 'invalid-ip-user', registrar: @registrar)
+
+      inactive = @epp_xml.session.login(clID: { value: 'invalid-ip-user' }, pw: { value: 'ghyt9e4fu' })
+      response = epp_plain_request(inactive, :xml)
+
+      response[:msg].should == 'IP is not whitelisted'
+      response[:result_code].should == '2501'
+    end
+
     it 'prohibits further actions unless logged in' do
       response = epp_plain_request(@epp_xml.domain.create, :xml)
       response[:msg].should == 'You need to login first.'

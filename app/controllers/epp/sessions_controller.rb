@@ -18,7 +18,7 @@ class Epp::SessionsController < EppController
       @api_user = ApiUser.find_by(login_params)
     end
 
-    if @api_user.try(:active) && cert_valid
+    if @api_user.try(:active) && cert_valid && ip_white?
       if parsed_frame.css('newPW').first
         unless @api_user.update(password: parsed_frame.css('newPW').first.text)
           response.headers['X-EPP-Returncode'] = '2200'
@@ -33,6 +33,17 @@ class Epp::SessionsController < EppController
       render_epp_response('login_fail')
     end
   end
+
+  def ip_white?
+    if @api_user
+      unless @api_user.registrar.epp_ip_white?(request.ip)
+        @msg = t('ip_is_not_whitelisted')
+        return false
+      end
+    end
+    true
+  end
+
   # rubocop: enable Metrics/PerceivedComplexity
   # rubocop: enable Metrics/CyclomaticComplexity
 

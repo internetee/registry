@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe Repp::AccountV1 do
   it 'should fail without whitelisted IP' do
-    @registrar1 = Fabricate(:registrar, white_ips: [Fabricate(:white_ip)])
+    @registrar1 = Fabricate(:registrar, white_ips: [Fabricate(:white_ip_epp), Fabricate(:white_ip_registrar)])
     @api_user = Fabricate(:api_user, registrar: @registrar1)
 
     get_with_auth '/repp/v1/accounts/balance', {}, @api_user
