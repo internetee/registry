@@ -35,6 +35,7 @@ class Epp::SessionsController < EppController
   end
 
   def ip_white?
+    return true if request.ip == ENV['webclient_ip']
     if @api_user
       unless @api_user.registrar.epp_ip_white?(request.ip)
         @msg = t('ip_is_not_whitelisted')

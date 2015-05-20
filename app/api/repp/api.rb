@@ -8,7 +8,7 @@ module Repp
     end
 
     before do
-      unless Rails.env.development?
+      if request.ip != ENV['webclient_ip']
         error! I18n.t('ip_is_not_whitelisted'), 401 unless @current_user.registrar.repp_ip_white?(request.ip)
       end
 

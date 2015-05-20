@@ -16,7 +16,9 @@ feature 'Sessions', type: :feature do
 
     it 'should not get in with invalid ip' do
       Fabricate(:registrar, white_ips: [Fabricate(:white_ip), Fabricate(:white_ip_registrar)])
-      @api_user_invalid_ip = Fabricate(:api_user, identity_code: '37810013294', registrar: Fabricate(:registrar, white_ips: []))
+      @api_user_invalid_ip = Fabricate(
+        :api_user, identity_code: '37810013294', registrar: Fabricate(:registrar, white_ips: [])
+      )
       visit registrar_login_path
       fill_in 'depp_user_tag', with: @api_user_invalid_ip.username
       fill_in 'depp_user_password', with: @api_user_invalid_ip.password
