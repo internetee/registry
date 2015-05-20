@@ -13,6 +13,10 @@ class RegistrantUser < User
   class << self
     def find_or_create_by_idc_data(idc_data)
       return false if idc_data.blank?
+
+      idc_data.force_encoding('UTF-8')
+      logger.error(idc_data)
+      logger.error(idc_data.encoding)
       identity_code = idc_data.scan(/serialNumber=(\d+)/).flatten.first
       country = idc_data.scan(/^\/C=(.{2})/).flatten.first
       first_name = idc_data.scan(%r{/GN=(.+)/serialNumber}).flatten.first
