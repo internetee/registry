@@ -146,6 +146,6 @@ class Registrar::SessionsController < Devise::SessionsController
 
   def check_ip
     return if WhiteIp.registrar_ip_white?(request.ip)
-    render text: t('ip_is_not_whitelisted') and return
+    render text: t('access_denied') and return
   end
 end

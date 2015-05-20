@@ -13,7 +13,7 @@ class RegistrarController < ApplicationController
   def check_ip
     return unless current_user
     return if current_user.registrar.registrar_ip_white?(request.ip)
-    flash[:alert] = t('ip_is_not_whitelisted')
+    flash[:alert] = t('access_denied')
     sign_out(current_user)
     redirect_to registrar_login_path and return
   end

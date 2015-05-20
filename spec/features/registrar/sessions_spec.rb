@@ -5,7 +5,7 @@ feature 'Sessions', type: :feature do
     it 'should not see login page' do
       WhiteIp.destroy_all
       visit registrar_login_path
-      page.should have_text('IP is not whitelisted')
+      page.should have_text('Access denied')
     end
 
     it 'should see log in' do
@@ -23,7 +23,7 @@ feature 'Sessions', type: :feature do
       fill_in 'depp_user_tag', with: @api_user_invalid_ip.username
       fill_in 'depp_user_password', with: @api_user_invalid_ip.password
       click_button 'Log in'
-      page.should have_text('IP is not whitelisted')
+      page.should have_text('Access denied')
     end
   end
 
