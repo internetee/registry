@@ -8,6 +8,8 @@ class AdminUser < User
 
   ROLES = %w(user customer_service admin)
 
+  devise :database_authenticatable, :rememberable, :trackable, :validatable, :lockable
+
   def to_s
     username
   end

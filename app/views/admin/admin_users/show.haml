@@ -9,7 +9,7 @@
     = err
     %br
 .row
-  .col-md-6
+  .col-md-8
     .panel.panel-default
       .panel-heading
         %h3.panel-title= t(:general)
@@ -18,20 +18,11 @@
           %dt= t(:username)
           %dd= @admin_user.username
 
-          %dt= t(:password)
-          %dd= @admin_user.password
+          %dt= t(:email)
+          %dd= @admin_user.email
 
           %dt= t(:identity_code)
           %dd= @admin_user.identity_code
-
-  .col-md-6
-    .panel.panel-default
-      .panel-heading
-        %h3.panel-title= t(:address)
-      .panel-body
-        %dl.dl-horizontal
-          %dt= t(:email)
-          %dd= @admin_user.email
 
           %dt= t(:role)
           - if @admin_user.roles
