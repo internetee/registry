@@ -34,7 +34,7 @@ class WhiteIp < ActiveRecord::Base
         ).and(
           at[:ipv4].eq(ip)
         )
-      )
+      ).any?
     end
   end
 end
