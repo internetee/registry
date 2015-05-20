@@ -43,21 +43,24 @@ ApiUser.where(
 
 admin1 = {
   username: 'user1',
-  password: 'test1',
+  password: 'testtest',
+  password_confirmation: 'testtest',
   email: 'user1@example.ee',
   identity_code: '37810013855',
   country_code: 'EE'
 }
 admin2 = {
   username: 'user2',
-  password: 'test2',
+  password: 'testtest',
+  password_confirmation: 'testtest',
   email: 'user2@example.ee',
   identity_code: '37810010085',
   country_code: 'EE'
 }
 admin3 = {
   username: 'user3',
-  password: 'test3',
+  password: 'testtest',
+  password_confirmation: 'testtest',
   email: 'user3@example.ee',
   identity_code: '37810010727',
   country_code: 'EE'
