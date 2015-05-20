@@ -8,6 +8,8 @@ class Registrant::DomainUpdateConfirmsController < RegistrantController
     @domain = nil unless @domain.registrant_update_confirmable?(params[:token])
   end
 
+  # rubocop: disable Metrics/PerceivedComplexity
+  # rubocop: disable Metrics/CyclomaticComplexity
   def update
     @domain = Domain.find(params[:id])
     unless @domain.registrant_update_confirmable?(params[:token])
@@ -37,4 +39,6 @@ class Registrant::DomainUpdateConfirmsController < RegistrantController
       end
     end
   end
+  # rubocop: enable Metrics/PerceivedComplexity
+  # rubocop: enable Metrics/CyclomaticComplexity
 end

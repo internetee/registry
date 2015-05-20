@@ -181,8 +181,10 @@ Rails.application.routes.draw do
     end
 
     resources :settings
+
     resources :registrars do
       resources :api_users
+      resources :white_ips
       collection do
         get :search
       end

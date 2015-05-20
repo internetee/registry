@@ -5,6 +5,8 @@ class Registrar::SessionsController < Devise::SessionsController
     false
   end
 
+  before_action :check_ip
+
   def login
     @depp_user = Depp::User.new
   end
@@ -138,5 +140,12 @@ class Registrar::SessionsController < Devise::SessionsController
   def find_user_by_idc(idc)
     return User.new unless idc
     ApiUser.find_by(identity_code: idc) || User.new
+  end
+
+  private
+
+  def check_ip
+    return if WhiteIp.registrar_ip_white?(request.ip)
+    render text: t('ip_is_not_whitelisted') and return
   end
 end

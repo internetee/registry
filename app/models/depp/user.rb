@@ -32,6 +32,8 @@ module Depp
 
     def request(xml)
       Nokogiri::XML(server.request(xml)).remove_namespaces!
+      rescue EppErrorResponse => e
+        Nokogiri::XML(e.response_xml.to_s).remove_namespaces!
     end
 
     def repp_request(path, params = {})
@@ -82,7 +84,7 @@ module Depp
       res = server.send_request(xml)
 
       if Nokogiri::XML(res).css('result').first['code'] != '1000'
-        errors.add(:base, :authorization_error)
+        errors.add(:base, Nokogiri::XML(res).css('result').text)
       end
 
       server.close_connection

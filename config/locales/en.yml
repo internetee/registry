@@ -225,6 +225,9 @@ en:
         state: 'State / Province'
       deposit:
         amount: 'Amount'
+      white_ip:
+        ipv4: 'IPv4'
+        ipv6: 'IPv6'
 
   errors:
     messages:
@@ -560,8 +563,6 @@ en:
   code: 'Code'
   nameservers: 'Nameservers'
   hostname: 'Hostname'
-  ipv4: 'IPv4'
-  ipv6: 'IPv6'
   dnskeys: 'DNS Keys'
   flag: 'Flag'
   protocol: 'Protocol'
@@ -772,6 +773,11 @@ en:
   not_valid_domain_verification_body: This could mean your verification has been expired or done already.<br><br>Please contact us if you think something is wrong.
   upload_crt: 'Upload CRT'
   crt_or_csr_must_be_present: 'CRT or CSR must be present'
+  white_ips: 'White IP-s'
+  create_new_white_ip: 'Create new white IP'
+  ipv4_or_ipv6_must_be_present: 'IPv4 or IPv6 must be present'
+  white_ip: 'White IP'
+  edit_white_ip: 'Edit white IP'
   confirm_domain_delete: 'Confirm domain delete'
   reject_domain_delete: 'Reject domain delete'
   confirm_domain_registrant_update: 'Confirm domain ownership change'
@@ -780,7 +786,7 @@ en:
   domain_registrant_change_body: 'There is a request to change domain ownership. Before doing it we need your confirmation.'
   new_pending_registrant: 'New owner'
   current_registrant: 'Current owner'
-  registrant_domain_verification_failed: 'Domain verification not available' 
+  registrant_domain_verification_failed: 'Domain verification not available'
   domain_registrant_change_confirmed_title: 'Domain owner change has been confirmed'
   domain_registrant_change_confirmed_body: 'You have successfully confirmed domain owner change.'
   registrant_domain_verification_confirmed: 'Domain owner change has successfully confirmed.'
@@ -789,3 +795,4 @@ en:
   domain_registrant_change_rejected_body: 'You have rejected domain owner change.'
   registrant_domain_verification_rejected: 'Domain owner change has been rejected successfully.'
   registrant_domain_verification_rejected_failed: 'Something went wrong'
+  ip_is_not_whitelisted: 'IP is not whitelisted'

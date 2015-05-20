@@ -15,14 +15,14 @@ feature 'Api users', type: :feature do
 
     it 'should redirect to login path' do
       visit admin_api_user_url(@api_user)
-      
+
       current_path.should == '/admin/login'
     end
 
   end
 
   context 'as logged in user' do
-    it 'should show index of contacts' do
+    it 'should show index of api users' do
       sign_in @user
       visit admin_api_users_url
 

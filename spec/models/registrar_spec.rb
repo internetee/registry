@@ -4,6 +4,7 @@ describe Registrar do
   it { should have_many(:domains) }
   it { should have_many(:api_users) }
   it { should have_many(:messages) }
+  it { should have_many(:white_ips) }
 
   context 'with invalid attribute' do
     before :all do

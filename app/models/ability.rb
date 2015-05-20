@@ -98,6 +98,7 @@ class Ability
     can :manage, BankStatement
     can :manage, BankTransaction
     can :manage, Invoice
+    can :manage, WhiteIp
     can :read, ApiLog::EppLog
     can :read, ApiLog::ReppLog
     # can :index, :delayed_job

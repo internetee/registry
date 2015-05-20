@@ -10,6 +10,7 @@ class Registrar < ActiveRecord::Base
   has_many :nameservers, through: :domains
   has_many :whois_records
   has_many :priv_contacts, -> { privs }, class_name: 'Contact'
+  has_many :white_ips, dependent: :destroy
 
   validates :name, :reg_no, :country_code, :email, :code, presence: true
   validates :name, :reg_no, :reference_no, :code, uniqueness: true
@@ -48,7 +49,7 @@ class Registrar < ActiveRecord::Base
 
   after_save :update_whois_records
   def update_whois_records
-    return true unless changed? && (changes.keys & WHOIS_TRIGGERS).present? 
+    return true unless changed? && (changes.keys & WHOIS_TRIGGERS).present?
     whois_records.map(&:save) # slow currently
   end
 
@@ -144,5 +145,21 @@ class Registrar < ActiveRecord::Base
 
   def code=(code)
     self[:code] = code.gsub(/[ :]/, '').upcase if new_record? && code.present?
+  end
+
+  def repp_ip_white?(ip)
+    white_ips.repp.pluck(:ipv4, :ipv6).flatten.include?(ip) || global_ip_white?(ip)
+  end
+
+  def epp_ip_white?(ip)
+    white_ips.epp.pluck(:ipv4, :ipv6).flatten.include?(ip) || global_ip_white?(ip)
+  end
+
+  def registrar_ip_white?(ip)
+    white_ips.registrar.pluck(:ipv4, :ipv6).flatten.include?(ip) || global_ip_white?(ip)
+  end
+
+  def global_ip_white?(ip)
+    white_ips.global.pluck(:ipv4, :ipv6).flatten.include?(ip)
   end
 end

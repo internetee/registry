@@ -24,7 +24,7 @@ class Registrar::DomainsController < Registrar::DeppController # EPP controller
     if response_ok?
       render 'info'
     else
-      flash[:alert] = t(:domain_not_found)
+      flash[:alert] = @data.css('msg').text
       redirect_to registrar_domains_url and return
     end
   end
@@ -118,9 +118,9 @@ class Registrar::DomainsController < Registrar::DeppController # EPP controller
   end
 
   def init_contacts_autocomplete_map
-    @contacts_autocomplete_map ||= 
+    @contacts_autocomplete_map ||=
       current_user.registrar.contacts.pluck(:name, :code).map { |c| ["#{c.second} #{c.first}", c.second] }
-    # @priv_contacts_autocomplete_map ||= 
+    # @priv_contacts_autocomplete_map ||=
       # current_user.registrar.priv_contacts.pluck(:name, :code).map { |c| ["#{c.second} #{c.first}", c.second] }
   end
 end
