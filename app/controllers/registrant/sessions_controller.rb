@@ -46,6 +46,8 @@ class Registrant::SessionsController < Devise::SessionsController
   # rubocop:enable Metrics/PerceivedComplexity
 
   def id
+    logger.error request.env['SSL_CLIENT_S_DN']
+    logger.error request.env['SSL_CLIENT_S_DN'].encoding
     @user = RegistrantUser.find_or_create_by_idc_data(request.env['SSL_CLIENT_S_DN'])
     if @user
       sign_in(@user, event: :authentication)
