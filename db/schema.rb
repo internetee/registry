@@ -317,6 +317,7 @@ ActiveRecord::Schema.define(version: 20150520163237) do
     t.text     "data"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "registrar_id"
   end
 
   add_index "epp_sessions", ["session_id"], name: "index_epp_sessions_on_session_id", unique: true, using: :btree

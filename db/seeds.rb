@@ -44,7 +44,6 @@ ApiUser.where(
 admin1 = {
   username: 'user1',
   password: 'testtest',
-  password_confirmation: 'testtest',
   email: 'user1@example.ee',
   identity_code: '37810013855',
   country_code: 'EE'
@@ -52,7 +51,6 @@ admin1 = {
 admin2 = {
   username: 'user2',
   password: 'testtest',
-  password_confirmation: 'testtest',
   email: 'user2@example.ee',
   identity_code: '37810010085',
   country_code: 'EE'
@@ -60,7 +58,6 @@ admin2 = {
 admin3 = {
   username: 'user3',
   password: 'testtest',
-  password_confirmation: 'testtest',
   email: 'user3@example.ee',
   identity_code: '37810010727',
   country_code: 'EE'
@@ -69,7 +66,7 @@ admin3 = {
 [admin1, admin2, admin3].each do |at|
   admin = AdminUser.where(at)
   next if admin.present?
-  admin = AdminUser.new(at)
+  admin = AdminUser.new(at.merge({ password_confirmation: 'testtest' }))
   admin.roles = ['admin']
   admin.save
 end

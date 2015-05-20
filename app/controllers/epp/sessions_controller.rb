@@ -18,7 +18,7 @@ class Epp::SessionsController < EppController
       @api_user = ApiUser.find_by(login_params)
     end
 
-    if @api_user.try(:active) && cert_valid && ip_white?
+    if @api_user.try(:active) && cert_valid && ip_white? && connection_limit_ok?
       if parsed_frame.css('newPW').first
         unless @api_user.update(password: parsed_frame.css('newPW').first.text)
           response.headers['X-EPP-Returncode'] = '2200'
@@ -27,6 +27,7 @@ class Epp::SessionsController < EppController
       end
 
       epp_session[:api_user_id] = @api_user.id
+      epp_session.update_column(:registrar_id, @api_user.registrar_id)
       render_epp_response('login_success')
     else
       response.headers['X-EPP-Returncode'] = '2200'
@@ -45,12 +46,24 @@ class Epp::SessionsController < EppController
     true
   end
 
+  def connection_limit_ok?
+    c = EppSession.where(
+      'registrar_id = ? AND updated_at >= ?', @api_user.registrar_id, Time.zone.now - 5.minutes
+    ).count
+
+    if c >= 4
+      @msg = t('connection_limit_reached')
+      return false
+    end
+    true
+  end
+
   # rubocop: enable Metrics/PerceivedComplexity
   # rubocop: enable Metrics/CyclomaticComplexity
 
   def logout
     @api_user = current_user # cache current_user for logging
-    epp_session[:api_user_id] = nil
+    epp_session.destroy
     response.headers['X-EPP-Returncode'] = '1500'
     render_epp_response('logout')
   end
