@@ -91,6 +91,7 @@ class Ability
     can :manage, DomainVersion
     can :manage, User
     can :manage, ApiUser
+    can :manage, AdminUser
     can :manage, Certificate
     can :manage, Keyrelay
     can :manage, LegalDocument

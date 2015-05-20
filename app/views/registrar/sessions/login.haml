@@ -8,7 +8,8 @@
       - error_class = f.object.errors.any? ? 'has-error' : ''
       %div{class: error_class}
         = f.text_field :tag, class: 'form-control', placeholder: t(:username), required: true
-        = f.password_field :password, class: 'form-control', placeholder: t(:password), required: true
+        = f.password_field :password, class: 'form-control', 
+          autocomplete: 'off', placeholder: t(:password), required: true
 
       %button.btn.btn-lg.btn-primary.btn-block{:type => 'submit'}= t(:log_in)
 
