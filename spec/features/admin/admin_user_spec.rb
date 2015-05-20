@@ -2,7 +2,7 @@ require 'rails_helper'
 
 feature 'Admin users', type: :feature do
   before :all do
-    @admin_user = Fabricate(:admin_user, username: 'user1', identity_code: '37810013087')
+    @admin_user = Fabricate(:admin_user)
   end
 
   context 'as unknown user' do

@@ -953,7 +953,7 @@ ActiveRecord::Schema.define(version: 20150519144118) do
     t.text     "crt"
     t.string   "type"
     t.string   "registrant_ident"
-    t.string   "encrypted_password",  default: ""
+    t.string   "encrypted_password",  default: "", null: false
     t.datetime "remember_created_at"
     t.integer  "failed_attempts",     default: 0,  null: false
     t.datetime "locked_at"

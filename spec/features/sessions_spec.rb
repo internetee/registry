@@ -2,7 +2,7 @@ require 'rails_helper'
 
 feature 'Sessions', type: :feature do
   before :all do
-    Fabricate(:ee_user)
+    @user = Fabricate(:ee_user)
     @registrar1 = Fabricate(:registrar1)
     @registrar2 = Fabricate(:registrar2)
     Fabricate.times(2, :domain, registrar: @registrar1)
@@ -11,9 +11,8 @@ feature 'Sessions', type: :feature do
 
   scenario 'Admin logs in' do
     visit root_path
-    page.should have_button('ID card (user1)')
 
-    click_on 'ID card (user1)'
+    sign_in @user
     page.should have_text('Welcome!')
 
     uri = URI.parse(current_url)

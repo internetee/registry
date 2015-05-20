@@ -3,6 +3,7 @@
 Fabricator(:admin_user) do
   username 'gitlab'
   password 'ghyt9e4fu'
+  password_confirmation 'ghyt9e4fu'
   email 'info@gitlab.eu'
   country_code 'FI'
   roles ['admin']
@@ -11,6 +12,9 @@ end
 Fabricator(:ee_user, from: :admin_user) do
   identity_code "45002036517"
   country_code 'EE'
+  username 'user1'
+  password 'testtest'
+  password_confirmation 'testtest'
   roles ['admin']
 end
 
