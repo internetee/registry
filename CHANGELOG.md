@@ -1,3 +1,7 @@
+20.05.2015
+
+* Added documentation how to configure linux firewall about rate limits, scirpts and more info at doc/debian_build_doc.md
+
 19.05.2015
 
 * Added possibility to define NewRelic app_name at application.yml file with 'new_relic_app_name' attribute. 
