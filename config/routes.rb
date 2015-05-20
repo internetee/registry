@@ -217,11 +217,7 @@ Rails.application.routes.draw do
 
     devise_scope :user do
       get 'login' => 'sessions#login'
-      # get 'login/mid' => 'sessions#login_mid'
-      # post 'login/mid' => 'sessions#mid'
-
       post 'sessions' => 'sessions#create'
-      post 'mid' => 'sessions#mid'
       get 'logout' => '/devise/sessions#destroy'
     end
 
@@ -229,10 +225,6 @@ Rails.application.routes.draw do
   end
 
   devise_for :users
-
-  devise_scope :user do
-    get 'login' => 'admin/sessions#login'
-  end
 
   root to: redirect('admin/login')
 end
