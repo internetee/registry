@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe Repp::AccountV1 do
   it 'should fail without whitelisted IP' do
+    ENV['webclient_ip'] = '192.188.1.1'
     @registrar1 = Fabricate(:registrar, white_ips: [Fabricate(:white_ip_epp), Fabricate(:white_ip_registrar)])
     @api_user = Fabricate(:api_user, registrar: @registrar1)
 
@@ -10,6 +11,7 @@ describe Repp::AccountV1 do
     body = JSON.parse(response.body)
 
     body['error'].should == 'IP is not whitelisted'
+    ENV['webclient_ip'] = '127.0.0.1'
   end
 
   context 'with valid registrar' do
