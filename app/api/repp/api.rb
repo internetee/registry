@@ -9,7 +9,7 @@ module Repp
 
     before do
       unless Rails.env.development?
-        error! 'IP is not whitelisted', 401 unless @current_user.registrar.repp_ip_white?(request.ip)
+        error! I18n.t('ip_is_not_whitelisted'), 401 unless @current_user.registrar.repp_ip_white?(request.ip)
       end
 
       next if Rails.env.test? || Rails.env.development?

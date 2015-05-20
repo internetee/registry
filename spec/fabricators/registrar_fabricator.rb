@@ -10,7 +10,7 @@ Fabricator(:registrar) do
   code { sequence(:code) { |i| "REGISTRAR#{i}" } }
   reference_no { sequence(:reference_no) { |i| "RF#{i}" } }
   accounts(count: 1)
-  white_ips { [Fabricate(:white_ip_repp, ipv4: '127.0.0.1')] }
+  white_ips { [Fabricate(:white_ip_repp, ipv4: '127.0.0.1'), Fabricate(:white_ip, ipv4: '127.0.0.1')] }
 end
 
 Fabricator(:registrar_with_no_account_activities, from: :registrar) do

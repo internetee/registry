@@ -795,3 +795,4 @@ en:
   domain_registrant_change_rejected_body: 'You have rejected domain owner change.'
   registrant_domain_verification_rejected: 'Domain owner change has been rejected successfully.'
   registrant_domain_verification_rejected_failed: 'Something went wrong'
+  ip_is_not_whitelisted: 'IP is not whitelisted'

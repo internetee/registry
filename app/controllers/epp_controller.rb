@@ -80,7 +80,11 @@ class EppController < ApplicationController
   end
 
   # VALIDATION
+  # rubocop: disable Metrics/PerceivedComplexity
+  # rubocop: disable Metrics/CyclomaticComplexity
   def validate_request
+    handle_errors and return unless ip_white?
+
     validation_method = "validate_#{params[:action]}"
     return unless respond_to?(validation_method, true)
     send(validation_method)
@@ -92,6 +96,22 @@ class EppController < ApplicationController
     end
 
     handle_errors and return if epp_errors.any?
+  end
+  # rubocop: enable Metrics/PerceivedComplexity
+  # rubocop: enable Metrics/CyclomaticComplexity
+
+  def ip_white?
+    if current_user
+      unless current_user.registrar.epp_ip_white?(request.ip)
+        epp_errors << {
+          msg: t('ip_is_not_whitelisted'),
+          code: '2201'
+        }
+        return false
+      end
+    end
+
+    true
   end
 
   # let's follow grape's validations: https://github.com/intridea/grape/#parameter-validation-and-coercion
