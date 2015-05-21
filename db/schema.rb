@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150520164507) do
+ActiveRecord::Schema.define(version: 20150521120145) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -147,6 +147,9 @@ ActiveRecord::Schema.define(version: 20150520164507) do
     t.string   "updator_str"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "common_name"
+    t.string   "md5"
+    t.string   "interface"
   end
 
   add_index "certificates", ["api_user_id"], name: "index_certificates_on_api_user_id", using: :btree

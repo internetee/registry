@@ -11,12 +11,9 @@ class Certificate < ActiveRecord::Base
   REVOKED = 'revoked'
   VALID = 'valid'
 
-  validate :validate_csr_and_crt
+  INTERFACES = ['api', 'registrar']
 
-  def validate_csr_and_crt
-    return if csr.present? || crt.present?
-    errors.add(:base, I18n.t(:crt_or_csr_must_be_present))
-  end
+  validates :common_name, :md5, :interface, presence: true
 
   def parsed_crt
     @p_crt ||= OpenSSL::X509::Certificate.new(crt) if crt

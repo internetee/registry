@@ -1,6 +1,9 @@
 # default fabricator should be reusable
 Fabricator(:certificate) do
   api_user
+  common_name 'cn'
+  md5 'md5hash'
+  interface 'api'
   csr "-----BEGIN CERTIFICATE REQUEST-----\n" \
       "MIIE+DCCAuACAQAwgZ0xCzAJBgNVBAYTAkVFMREwDwYDVQQIDAhIYXJqdW1hYTEQ\n" \
       "MA4GA1UEBwwHVGFsbGlubjEbMBkGA1UECgwSRWVzdGkgSW50ZXJuZXRpIFNBMRIw\n" \

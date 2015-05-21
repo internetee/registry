@@ -799,3 +799,8 @@ en:
   no_permission: 'No permission'
   access_denied: 'Access denied'
   connection_limit_reached: 'Connection limit reached'
+  common_name: 'Common name'
+  md5: 'Md5'
+  interface: 'Interface'
+  add_certificate: 'Add certificate'
+  edit_certificate: 'Edit certificate'

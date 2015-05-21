@@ -1,0 +1,29 @@
+= form_for([:admin, @api_user, @certificate], html: {class: 'form-horizontal'}) do |f|
+  = render 'shared/full_errors', object: f.object
+
+  .row
+    .col-md-8
+      .form-group
+        .col-md-4.control-label
+          = f.label :api_user
+        .col-md-7
+          = f.text_field(:api_user, class: 'form-control', disabled: :disabled)
+      .form-group
+        .col-md-4.control-label
+          = f.label :common_name
+        .col-md-7
+          = f.text_field(:common_name, class: 'form-control', autocomplete: 'off')
+      .form-group
+        .col-md-4.control-label
+          = f.label :md5
+        .col-md-7
+          = f.text_field(:md5, class: 'form-control', autocomplete: 'off')
+      .form-group
+        .col-md-4.control-label
+          = f.label :interface
+        .col-md-7
+          = f.select :interface, Certificate::INTERFACES.map {|x| [x.upcase, x]}, {}, class: 'form-control selectize'
+  %hr
+  .row
+    .col-md-8.text-right
+      = button_tag(t(:save), class: 'btn btn-primary')
