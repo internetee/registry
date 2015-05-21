@@ -24,6 +24,6 @@ every :day, at: '12:10pm' do
   runner 'Invoice.cancel_overdue_invoices'
 end
 
-every 6.hours do
+every 3.hours do
   runner 'Certificate.update_crl'
 end

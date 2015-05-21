@@ -195,10 +195,12 @@ Registrar configuration (/etc/apache2/sites-enabled/registrar.conf) is as follow
   # Uncomment in Apache 2.4
   # SSLCARevocationCheck chain
 
-  RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
+  RequestHeader set SSL_CLIENT_S_DN_CN ""
+  RequestHeader set SSL_CLIENT_CERT ""
   <Location /registrar/sessions>
       SSLVerifyClient require
       RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
+      RequestHeader set SSL_CLIENT_CERT "%{SSL_CLIENT_CERT}s"
   </Location>
 
   <Location /registrar/id>
@@ -276,10 +278,12 @@ Registrant configuration (/etc/apache2/sites-enabled/registrant.conf) is as foll
     # Uncomment in Apache 2.4
     # SSLCARevocationCheck chain
 
-    RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
+    RequestHeader set SSL_CLIENT_S_DN_CN ""
+    RequestHeader set SSL_CLIENT_CERT ""
     <Location /registrant/sessions>
         SSLVerifyClient require
         RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
+        RequestHeader set SSL_CLIENT_CERT "%{SSL_CLIENT_CERT}s"
     </Location>
 
     <Location /registrant/id>
@@ -312,6 +316,7 @@ For Apache, REPP goes to port 443 in production, /etc/apache2/sites-enabled/repp
     SSLCARevocationCheck chain
 
     RequestHeader set SSL_CLIENT_S_DN_CN ""
+    RequestHeader set SSL_CLIENT_CERT ""
 
     <Location />
         Allow from none
@@ -322,6 +327,7 @@ For Apache, REPP goes to port 443 in production, /etc/apache2/sites-enabled/repp
         Allow from all
         SSLVerifyClient require
         RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
+        RequestHeader set SSL_CLIENT_CERT "%{SSL_CLIENT_CERT}s"
     </Location>
 </VirtualHost>
 ```
@@ -346,6 +352,7 @@ Be sure to update paths to match your system configuration.
       # SSLCARevocationCheck chain
 
       RequestHeader set SSL_CLIENT_S_DN_CN "%{SSL_CLIENT_S_DN_CN}s"
+      RequestHeader set SSL_CLIENT_CERT "%{SSL_CLIENT_CERT}s"
 
       EPPEngine On
       EPPCommandRoot          /proxy/command

@@ -27,6 +27,7 @@ class Registrar::SessionsController < Devise::SessionsController
       @depp_user.errors.add(:base, :webserver_user_name_directive_should_be_required)
     end
 
+    logger.error request.env['SSL_CLIENT_CERT']
     if @depp_user.pki && request.env['HTTP_SSL_CLIENT_S_DN_CN'] != params[:depp_user][:tag]
       @depp_user.errors.add(:base, :invalid_cert)
     end
