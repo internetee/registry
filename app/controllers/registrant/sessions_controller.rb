@@ -1,51 +1,15 @@
 class Registrant::SessionsController < Devise::SessionsController
   layout 'registrant/application'
-  helper_method :depp_controller?
-  def depp_controller?
-    false
-  end
 
   def login
-    @depp_user = Depp::User.new
   end
-
-  # rubocop:disable Metrics/PerceivedComplexity
-  # rubocop:disable Metrics/CyclomaticComplexity
-  def create
-    @depp_user = Depp::User.new(params[:depp_user].merge(
-      pki: !Rails.env.development?
-      )
-    )
-
-    if @depp_user.pki && request.env['HTTP_SSL_CLIENT_S_DN_CN'].blank?
-      @depp_user.errors.add(:base, :webserver_missing_user_name_directive)
-    end
-
-    if @depp_user.pki && request.env['HTTP_SSL_CLIENT_S_DN_CN'] == '(null)'
-      @depp_user.errors.add(:base, :webserver_user_name_directive_should_be_required)
-    end
-
-    if @depp_user.pki && request.env['HTTP_SSL_CLIENT_S_DN_CN'] != params[:depp_user][:tag]
-      @depp_user.errors.add(:base, :invalid_cert)
-    end
-
-    if @depp_user.errors.none? && @depp_user.valid?
-      @api_user = ApiUser.find_by(username: params[:depp_user][:tag])
-      if @api_user.active?
-        sign_in @api_user
-        redirect_to registrant_root_url
-      else
-        @depp_user.errors.add(:base, :not_active)
-        render 'login'
-      end
-    else
-      render 'login'
-    end
-  end
-  # rubocop:enable Metrics/CyclomaticComplexity
-  # rubocop:enable Metrics/PerceivedComplexity
 
   def id
+    if Rails.env.development?
+      sign_in(RegistrantUser.find_or_create_by_idc_data('test'), event: :authentication)
+      return redirect_to registrant_root_url
+    end
+
     logger.error request.env['SSL_CLIENT_S_DN']
     logger.error request.env['SSL_CLIENT_S_DN'].encoding
     @user = RegistrantUser.find_or_create_by_idc_data(request.env['SSL_CLIENT_S_DN'])
