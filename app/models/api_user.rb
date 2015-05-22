@@ -46,9 +46,9 @@ class ApiUser < User
   end
 
   def registrar_pki_ok?(crt, cn)
-    crt.split(' ').join("\n")
-    crt = crt.gsub("-----BEGIN\nCERTIFICATE-----\n", "-----BEGIN CERTIFICATE-----\n")
-    crt = crt.gsub("\n-----END\nCERTIFICATE-----", "\n-----END CERTIFICATE-----")
+    crt = crt.split(' ').join("\n")
+    crt.gsub!("-----BEGIN\nCERTIFICATE-----\n", "-----BEGIN CERTIFICATE-----\n")
+    crt.gsub!("\n-----END\nCERTIFICATE-----", "\n-----END CERTIFICATE-----")
     logger.error(crt)
     cert = OpenSSL::X509::Certificate.new(crt)
     md5 = OpenSSL::Digest::MD5.new(cert.to_der).to_s
