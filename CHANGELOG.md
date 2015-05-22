@@ -1,3 +1,7 @@
+22.05.2015
+
+* Add `RequestHeader set SSL_CLIENT_CERT "%{SSL_CLIENT_CERT}s` to apache config (see README for details)
+
 20.05.2015
 
 * Added documentation how to configure linux firewall about rate limits, scirpts and more info at doc/debian_build_doc.md
