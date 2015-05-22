@@ -45,8 +45,6 @@
 
     .container
       = render 'shared/flash'
-      - if depp_controller?
-        = render 'registrar/shared/epp_results'
       = yield
 
     %footer.footer
