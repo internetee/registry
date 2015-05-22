@@ -45,8 +45,12 @@ class ApiUser < User
     registrar.messages.queued
   end
 
-  def registrar_pki_ok?(crt)
-    certificates.registrar.exists?(crt: crt)
+  def registrar_pki_ok?(crt, cn)
+    cert = OpenSSL::X509::Certificate.new(crt)
+    md5 = OpenSSL::Digest::MD5.new(cert.to_der).to_s
+    logger.error(md5)
+    logger.error(cn)
+    certificates.registrar.exists?(md5: md5, cn: cn)
   end
 
   def api_pki_ok?(crt)

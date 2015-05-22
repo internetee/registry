@@ -38,13 +38,12 @@ class Certificate < ActiveRecord::Base
       pc = parsed_crt.try(:subject).try(:to_s) || ''
       cn = pc.scan(/\/CN=(.+)/).flatten.first
       self.common_name = cn.split('/').first
-      self.md5 = Digest::MD5.hexdigest(crt)
+      self.md5 = OpenSSL::Digest::MD5.new(parsed_crt.to_der).to_s
       self.interface = API
     elsif csr
       pc = parsed_csr.try(:subject).try(:to_s) || ''
       cn = pc.scan(/\/CN=(.+)/).flatten.first
       self.common_name = cn.split('/').first
-      self.md5 = Digest::MD5.hexdigest(csr)
       self.interface = REGISTRAR
     end
   end
@@ -91,6 +90,7 @@ class Certificate < ActiveRecord::Base
     if err.match(/Data Base Updated/)
       crt_file.rewind
       self.crt = crt_file.read
+      self.md5 = OpenSSL::Digest::MD5.new(parsed_crt.to_der).to_s
       save!
     else
       logger.error('FAILED TO CREATE CLIENT CERTIFICATE')

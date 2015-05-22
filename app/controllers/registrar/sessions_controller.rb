@@ -44,9 +44,7 @@ class Registrar::SessionsController < Devise::SessionsController
     end
 
     if @depp_user.pki
-      logger.error Digest::MD5.hexdigest(request.env['HTTP_SSL_CLIENT_CERT'])
-      logger.error @api_user.certificates.registrar.pluck(:md5)
-      unless @api_user.registrar_pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'])
+      unless @api_user.registrar_pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'], request.env['HTTP_SSL_CLIENT_S_DN_CN'])
         @depp_user.errors.add(:base, :invalid_cert)
       end
     end
