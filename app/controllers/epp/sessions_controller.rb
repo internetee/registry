@@ -9,13 +9,12 @@ class Epp::SessionsController < EppController
   # rubocop: disable Metrics/CyclomaticComplexity
   def login
     cert_valid = true
-    if request.ip == ENV['webclient_ip']
-      @api_user = ApiUser.find_by(login_params)
-    else
-      if request.env['HTTP_SSL_CLIENT_S_DN_CN'] != login_params[:username]
+    @api_user = ApiUser.find_by(login_params)
+
+    if request.ip != ENV['webclient_ip'] && @api_user
+      unless @api_user.api_pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'], request.env['HTTP_SSL_CLIENT_S_DN_CN'])
         cert_valid = false
       end
-      @api_user = ApiUser.find_by(login_params)
     end
 
     if @api_user.try(:active) && cert_valid && ip_white? && connection_limit_ok?
