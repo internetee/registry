@@ -13,13 +13,24 @@ registrar1 = Registrar.where(
   code: 'REG1'
 ).first_or_create!
 
-ApiUser.where(
+@api_user1 = ApiUser.where(
   username: 'registrar1',
   password: 'test1',
   identity_code: '51001091072',
   active: true,
   registrar: registrar1
-).first_or_create!
+).first
+
+if @api_user1.blank?
+  ApiUser.create(
+    username: 'registrar1',
+    password: 'test1',
+    identity_code: '51001091072',
+    active: true,
+    registrar: registrar1,
+    roles: ['super']
+  )
+end
 
 registrar2 = Registrar.where(
   name: 'Registrar Second AS',
@@ -33,13 +44,24 @@ registrar2 = Registrar.where(
   code: 'REG2'
 ).first_or_create!
 
-ApiUser.where(
+@api_user2 = ApiUser.where(
   username: 'registrar2',
   password: 'test2',
   identity_code: '11412090004',
   active: true,
   registrar: registrar2
-).first_or_create!
+).first
+
+if @api_user2.blank?
+  ApiUser.create(
+    username: 'registrar2',
+    password: 'test2',
+    identity_code: '11412090004',
+    active: true,
+    registrar: registrar2,
+    roles: ['super']
+  )
+end
 
 admin1 = {
   username: 'user1',
