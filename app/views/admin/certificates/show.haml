@@ -1,5 +1,4 @@
 - content_for :actions do
-  = link_to(t(:edit), edit_admin_api_user_certificate_path(@api_user, @certificate), class: 'btn btn-default')
   = link_to(t(:delete), admin_api_user_certificate_path(@api_user, @certificate),
     method: :delete, data: { confirm: t(:are_you_sure) }, class: 'btn btn-danger')
 = render 'shared/title', name: t(:certificates)
@@ -30,10 +29,72 @@
           %dd= @certificate.md5
 
           %dt= t(:interface)
-          %dd= @certificate.interface
+          %dd= @certificate.interface.try(:upcase)
 
           %dt= t(:updated_at)
           %dd= l(@certificate.updated_at)
 
           %dt= t(:created_at)
           %dd= l(@certificate.created_at)
+
+- if @csr
+  .row
+    .col-md-12
+      .panel.panel-default
+        .panel-heading.clearfix
+          .pull-left
+            = t(:csr)
+          .pull-right
+            = link_to(t(:download), download_csr_admin_api_user_certificate_path(@api_user, @certificate), class: 'btn btn-default btn-xs')
+            - unless @crt
+              = link_to(t(:sign_this_request), sign_admin_api_user_certificate_path(@api_user, @certificate), method: :post, class: 'btn btn-primary btn-xs')
+
+        .panel-body
+          %dl.dl-horizontal
+            %dt= t(:version)
+            %dd= @csr.version
+
+            %dt= t(:subject)
+            %dd= @csr.subject
+
+            %dt= t(:signature_algorithm)
+            %dd= @csr.signature_algorithm
+
+- if @crt
+  .row
+    .col-md-12
+      .panel.panel-default
+        .panel-heading.clearfix
+          .pull-left
+            = t('crt') unless @certificate.revoked?
+            = t('crt_revoked') if @certificate.revoked?
+          .pull-right
+            = link_to(t(:download), download_crt_admin_api_user_certificate_path(@api_user, @certificate), class: 'btn btn-default btn-xs')
+            - if !@certificate.revoked? && @certificate.csr
+              = link_to(t(:revoke_this_certificate), revoke_admin_api_user_certificate_path(@api_user, @certificate), method: :post, class: 'btn btn-primary btn-xs')
+        - if @crt
+          .panel-body
+            %dl.dl-horizontal
+              %dt= t(:version)
+              %dd= @crt.version
+
+              %dt= t(:serial_number)
+              %dd= @crt.serial
+
+              %dt= t(:signature_algorithm)
+              %dd= @crt.signature_algorithm
+
+              %dt= t(:issuer)
+              %dd= @crt.issuer
+
+              %dt= t(:valid_from)
+              %dd= @crt.not_before
+
+              %dt= t(:valid_to)
+              %dd= @crt.not_after
+
+              %dt= t(:subject)
+              %dd= @crt.subject
+
+              %dt= t(:extensions)
+              %dd= @crt.extensions.map(&:to_s).join('<br>').html_safe

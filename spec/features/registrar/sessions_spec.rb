@@ -25,6 +25,14 @@ feature 'Sessions', type: :feature do
       click_button 'Log in'
       page.should have_text('Access denied')
     end
+
+    it 'should not get in with invalid user' do
+      visit registrar_login_path
+      fill_in 'depp_user_tag', with: 'bla'
+      fill_in 'depp_user_password', with: 'bla'
+      click_button 'Log in'
+      page.should have_text('No such user')
+    end
   end
 
   context 'as unknown user' do

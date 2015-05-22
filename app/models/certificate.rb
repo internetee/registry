@@ -11,9 +11,43 @@ class Certificate < ActiveRecord::Base
   REVOKED = 'revoked'
   VALID = 'valid'
 
-  INTERFACES = ['api', 'registrar']
+  API = 'api'
+  REGISTRAR = 'registrar'
+  INTERFACES = [API, REGISTRAR]
 
-  validates :common_name, :md5, :interface, presence: true
+  scope 'api', -> { where(interface: API) }
+  scope 'registrar', -> { where(interface: REGISTRAR) }
+
+  validate :validate_csr_and_crt_presence
+  def validate_csr_and_crt_presence
+    return if csr.try(:scrub).present? || crt.try(:scrub).present?
+    errors.add(:base, I18n.t(:crt_or_csr_must_be_present))
+  end
+
+  validate :validate_csr_and_crt
+  def validate_csr_and_crt
+    parsed_crt
+    parsed_csr
+    rescue OpenSSL::X509::RequestError, OpenSSL::X509::CertificateError
+      errors.add(:base, I18n.t(:invalid_csr_or_crt))
+  end
+
+  before_create :parse_metadata
+  def parse_metadata
+    if crt
+      pc = parsed_crt.try(:subject).try(:to_s) || ''
+      cn = pc.scan(/\/CN=(.+)/).flatten.first
+      self.common_name = cn.split('/').first
+      self.md5 = Digest::MD5.hexdigest(crt)
+      self.interface = API
+    elsif csr
+      pc = parsed_csr.try(:subject).try(:to_s) || ''
+      cn = pc.scan(/\/CN=(.+)/).flatten.first
+      self.common_name = cn.split('/').first
+      self.md5 = Digest::MD5.hexdigest(csr)
+      self.interface = REGISTRAR
+    end
+  end
 
   def parsed_crt
     @p_crt ||= OpenSSL::X509::Certificate.new(crt) if crt

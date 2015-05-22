@@ -13,6 +13,7 @@ class Registrar::SessionsController < Devise::SessionsController
 
   # rubocop:disable Metrics/PerceivedComplexity
   # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/MethodLength
   def create
     @depp_user = Depp::User.new(params[:depp_user].merge(
       pki: !(Rails.env.development? || Rails.env.test?)
@@ -23,17 +24,32 @@ class Registrar::SessionsController < Devise::SessionsController
       @depp_user.errors.add(:base, :webserver_missing_user_name_directive)
     end
 
+    if @depp_user.pki && request.env['HTTP_SSL_CLIENT_CERT'].blank?
+      @depp_user.errors.add(:base, :webserver_missing_client_cert_directive)
+    end
+
     if @depp_user.pki && request.env['HTTP_SSL_CLIENT_S_DN_CN'] == '(null)'
       @depp_user.errors.add(:base, :webserver_user_name_directive_should_be_required)
     end
 
-    logger.error request.env
-    if @depp_user.pki && request.env['HTTP_SSL_CLIENT_S_DN_CN'] != params[:depp_user][:tag]
-      @depp_user.errors.add(:base, :invalid_cert)
+    if @depp_user.pki && request.env['HTTP_SSL_CLIENT_CERT'] == '(null)'
+      @depp_user.errors.add(:base, :webserver_client_cert_directive_should_be_required)
+    end
+
+    @api_user = ApiUser.find_by(username: params[:depp_user][:tag], password: params[:depp_user][:password])
+
+    unless @api_user
+      @depp_user.errors.add(:base, t(:no_such_user))
+      render 'login' and return
+    end
+
+    if @depp_user.pki
+      unless @api_user.registrar_pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'])
+        @depp_user.errors.add(:base, :invalid_cert)
+      end
     end
 
     if @depp_user.errors.none? && @depp_user.valid?
-      @api_user = ApiUser.find_by(username: params[:depp_user][:tag])
       if @api_user.active?
         sign_in @api_user
         redirect_to role_base_root_url(@api_user)
@@ -47,6 +63,7 @@ class Registrar::SessionsController < Devise::SessionsController
   end
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/PerceivedComplexity
+  # rubocop:enable Metrics/MethodLength
 
   def id
     @user = ApiUser.find_by_idc_data(request.env['SSL_CLIENT_S_DN'])
