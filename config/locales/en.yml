@@ -804,3 +804,6 @@ en:
   interface: 'Interface'
   add_certificate: 'Add certificate'
   edit_certificate: 'Edit certificate'
+  invalid_csr_or_crt: 'Invalid CSR or CRT'
+  webserver_missing_client_cert_directive: 'Webserver missing client cert directive'
+  webserver_client_cert_directive_should_be_required: 'Webserver client cert directive should be required'

@@ -11,9 +11,7 @@ describe Certificate do
     it 'should not be valid' do
       @certificate.valid?
       @certificate.errors.full_messages.should match_array([
-        "Common name is missing",
-        "Interface is missing",
-        "Md5 is missing"
+        "CRT or CSR must be present"
       ])
     end
 

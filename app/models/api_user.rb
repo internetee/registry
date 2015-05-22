@@ -45,6 +45,14 @@ class ApiUser < User
     registrar.messages.queued
   end
 
+  def registrar_pki_ok?(crt)
+    certificates.registrar.exists?(crt: crt)
+  end
+
+  def api_pki_ok?(crt)
+    certificates.api.exists?(crt: crt)
+  end
+
   class << self
     def find_by_idc_data(idc_data)
       return false if idc_data.blank?

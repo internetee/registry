@@ -1,5 +1,22 @@
-- content_for :actions do
-  = link_to(t(:back_to_api_user), admin_api_user_path(@api_user), class: 'btn btn-default')
+= render 'shared/title', name: params[:crt] ? t(:upload_crt) : t(:upload_csr)
 
-= render 'shared/title', name: t(:add_certificate)
-= render 'form'
+= form_for([:admin, @api_user, @certificate], multipart: true) do |f|
+  = render 'shared/full_errors', object: f.object
+
+  .row
+    .col-md-8
+      .form-group
+        - if params[:crt]
+          .col-md-4.control-label
+            = f.label :crt, t(:certificate)
+          .col-md-8
+            = f.file_field :crt
+        - else
+          .col-md-4.control-label
+            = f.label :csr, t(:certificate_signing_req)
+          .col-md-8
+            = f.file_field :csr
+  %hr
+  .row
+    .col-md-8.text-right
+      = button_tag(t(:save), class: 'btn btn-primary')
