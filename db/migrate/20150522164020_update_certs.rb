@@ -10,6 +10,7 @@ class UpdateCerts < ActiveRecord::Migration
       elsif x.crt.blank? && x.csr.present?
         x.interface = Certificate::REGISTRAR
       end
+      x.save
     end
   end
 end
