@@ -49,12 +49,9 @@ class ApiUser < User
     crt = crt.split(' ').join("\n")
     crt.gsub!("-----BEGIN\nCERTIFICATE-----\n", "-----BEGIN CERTIFICATE-----\n")
     crt.gsub!("\n-----END\nCERTIFICATE-----", "\n-----END CERTIFICATE-----")
-    logger.error(crt)
     cert = OpenSSL::X509::Certificate.new(crt)
     md5 = OpenSSL::Digest::MD5.new(cert.to_der).to_s
-    logger.error(md5)
-    logger.error(cn)
-    certificates.registrar.exists?(md5: md5, cn: cn)
+    certificates.registrar.exists?(md5: md5, common_name: cn)
   end
 
   def api_pki_ok?(crt)
