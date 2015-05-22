@@ -1,5 +1,5 @@
 class Registrant::DomainsController < RegistrantController
   def index
-    # @domains = [Domain.last]
+    authorize! :view, :registrant_domains
   end
 end

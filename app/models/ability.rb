@@ -63,6 +63,7 @@ class Ability
   end
 
   def static_registrant
+    can :manage, :registrant_domains
     can :manage, :registrant_whois
     can :manage, Depp::Domain
   end
