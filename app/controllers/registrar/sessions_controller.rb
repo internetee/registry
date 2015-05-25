@@ -83,7 +83,7 @@ class Registrar::SessionsController < Devise::SessionsController
 
   def mid
     phone = params[:user][:phone]
-    client = Digidoc::Client.new
+    client = Rails.env.production? ? Digidoc::Client.new('https://digidocservice.sk.ee') : Digidoc::Client.new
 
     if Rails.env.test? && phone == "123"
       @user = ApiUser.find_by(identity_code: "14212128025")
@@ -92,6 +92,7 @@ class Registrar::SessionsController < Devise::SessionsController
     end
 
     # country_codes = {'+372' => 'EST'}
+    phone.gsub!('+372', '')
     response = client.authenticate(
       phone: "+372#{phone}",
       message_to_display: 'Authenticating',
@@ -118,7 +119,7 @@ class Registrar::SessionsController < Devise::SessionsController
   # rubocop: disable Metrics/CyclomaticComplexity
   # rubocop: disable Metrics/MethodLength
   def mid_status
-    client = Digidoc::Client.new
+    client = Rails.env.production? ? Digidoc::Client.new('https://digidocservice.sk.ee') : Digidoc::Client.new
     client.session_code = session[:mid_session_code]
     auth_status = client.authentication_status
 
