@@ -11,8 +11,9 @@ class RegistrantUser < User
   end
 
   class << self
-    def find_or_create_by_idc_data(idc_data)
+    def find_or_create_by_idc_data(idc_data, issuer_organization)
       return false if idc_data.blank?
+      return false if issuer_organization != 'AS Sertifitseerimiskeskus'
 
       idc_data.force_encoding('UTF-8')
       logger.error(idc_data)

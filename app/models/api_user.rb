@@ -46,6 +46,7 @@ class ApiUser < User
   end
 
   def registrar_pki_ok?(crt, cn)
+    return false if crt.blank? || cn.blank?
     crt = crt.split(' ').join("\n")
     crt.gsub!("-----BEGIN\nCERTIFICATE-----\n", "-----BEGIN CERTIFICATE-----\n")
     crt.gsub!("\n-----END\nCERTIFICATE-----", "\n-----END CERTIFICATE-----")
@@ -55,6 +56,7 @@ class ApiUser < User
   end
 
   def api_pki_ok?(crt, cn)
+    return false if crt.blank? || cn.blank?
     crt = crt.split(' ').join("\n")
     crt.gsub!("-----BEGIN\nCERTIFICATE-----\n", "-----BEGIN CERTIFICATE-----\n")
     crt.gsub!("\n-----END\nCERTIFICATE-----", "\n-----END CERTIFICATE-----")

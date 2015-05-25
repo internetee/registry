@@ -12,7 +12,8 @@ class Registrant::SessionsController < Devise::SessionsController
 
     logger.error request.env['SSL_CLIENT_S_DN']
     logger.error request.env['SSL_CLIENT_S_DN'].encoding
-    @user = RegistrantUser.find_or_create_by_idc_data(request.env['SSL_CLIENT_S_DN'])
+    logger.error request.env['SSL_CLIENT_I_DN_O']
+    @user = RegistrantUser.find_or_create_by_idc_data(request.env['SSL_CLIENT_S_DN'], request.env['SSL_CLIENT_I_DN_O'])
     if @user
       sign_in(@user, event: :authentication)
       redirect_to registrant_root_url
