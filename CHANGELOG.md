@@ -1,3 +1,7 @@
+25.05.2015
+
+* Add update application.yml with correct `sk_digi_doc_service_endpoint`
+
 22.05.2015
 
 * Add `RequestHeader set SSL_CLIENT_CERT "%{SSL_CLIENT_CERT}s` to apache config (see README for details)
