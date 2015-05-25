@@ -83,7 +83,8 @@ class Registrar::SessionsController < Devise::SessionsController
 
   def mid
     phone = params[:user][:phone]
-    client = Rails.env.production? ? Digidoc::Client.new('https://digidocservice.sk.ee') : Digidoc::Client.new
+    endpoint = "#{ENV['sk_digi_doc_service_endpoint']}"
+    client = Digidoc::Client.new(endpoint)
 
     if Rails.env.test? && phone == "123"
       @user = ApiUser.find_by(identity_code: "14212128025")
@@ -119,7 +120,8 @@ class Registrar::SessionsController < Devise::SessionsController
   # rubocop: disable Metrics/CyclomaticComplexity
   # rubocop: disable Metrics/MethodLength
   def mid_status
-    client = Rails.env.production? ? Digidoc::Client.new('https://digidocservice.sk.ee') : Digidoc::Client.new
+    endpoint = "#{ENV['sk_digi_doc_service_endpoint']}"
+    client = Digidoc::Client.new(endpoint)
     client.session_code = session[:mid_session_code]
     auth_status = client.authentication_status
 

@@ -7,7 +7,7 @@ legal_documents_dir: 'import/legal_documents'
 
 # New Relic app name, keep only current mode, remove other names.
 # Example: 'Admin, EPP, REPP' will have name 'Admin, EPP, REPP - production' at New Relic.
-new_relic_app_name: 'Admin, EPP, REPP, Registrar, Registrant' 
+new_relic_app_name: 'Admin, EPP, REPP, Registrar, Registrant'
 
 # You can use `rake secret` to generate a secure secret key.
 # Your secret key is used for verifying the integrity of signed cookies.
@@ -57,6 +57,9 @@ smtp_enable_starttls_auto: 'true' # 'false'
 # If your mail server requires authentication, please change.
 smtp_authentication: 'plain' # 'plain', 'login', 'cram_md5'
 registrant_url: 'https:/registrant.example.com' # for valid email body registrant links
+
+# SK DigiDocService
+sk_digi_doc_service_endpoint: 'https://openxades.org:9443/DigiDocService'
 
 # Autotest config overwrites
 test:
