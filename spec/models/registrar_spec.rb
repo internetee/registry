@@ -62,6 +62,10 @@ describe Registrar do
       @registrar.errors.full_messages.should match_array([])
     end
 
+    it 'should have a cash account' do
+      @registrar.cash_account.should_not be_nil
+    end
+
     it 'should validates uniqueness of code' do
       registrar = Fabricate.build(:registrar, code: @registrar.code)
       registrar.valid?

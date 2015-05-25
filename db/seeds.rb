@@ -63,6 +63,10 @@ if @api_user2.blank?
   )
 end
 
+Registrar.all.each do |x|
+  x.accounts.where(account_type: Account::CASH, currency: 'EUR').first_or_create!
+end
+
 admin1 = {
   username: 'user1',
   password: 'testtest',

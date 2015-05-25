@@ -16,9 +16,9 @@ describe Repp::AccountV1 do
 
   context 'with valid registrar' do
     before :all do
-      @registrar1 = Fabricate(:registrar1, accounts:
-        [Fabricate(:account, { balance: '324.45', account_activities: [] })]
-      )
+      @registrar1 = Fabricate(:registrar1)
+      @registrar1.accounts = [Fabricate(:account, { balance: '324.45', account_activities: [] })]
+      @registrar1.save
       @api_user = Fabricate(:gitlab_api_user, registrar: @registrar1)
     end
 

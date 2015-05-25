@@ -9,7 +9,6 @@ Fabricator(:registrar) do
   country_code 'EE'
   code { sequence(:code) { |i| "REGISTRAR#{i}" } }
   reference_no { sequence(:reference_no) { |i| "RF#{i}" } }
-  accounts(count: 1)
   white_ips { [Fabricate(:white_ip)] }
 end
 

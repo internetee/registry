@@ -53,6 +53,11 @@ class Registrar < ActiveRecord::Base
     whois_records.map(&:save) # slow currently
   end
 
+  after_create :create_cash_account
+  def create_cash_account
+    accounts.create(account_type: Account::CASH, currency: 'EUR')
+  end
+
   class << self
     def search_by_query(query)
       res = search(name_or_reg_no_cont: query).result
