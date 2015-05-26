@@ -9,6 +9,7 @@ legal_documents_dir: 'import/legal_documents'
 # Example: 'Admin, EPP, REPP' will have name 'Admin, EPP, REPP - production' at New Relic.
 new_relic_app_name: 'Admin, EPP, REPP, Registrar, Registrant'
 
+
 # You can use `rake secret` to generate a secure secret key.
 # Your secret key is used for verifying the integrity of signed cookies.
 # If you change this key, all old signed cookies will become invalid!
@@ -28,6 +29,9 @@ webclient_cert_common_name: 'webclient'
 # Contact epp will not accept org value by default
 # and returns 2306 "Parameter value policy error"
 contact_org_enabled: 'false'
+
+# Firewall countrer update command
+# iptables_counter_update_command: ''
 
 # DEPP server configuration (both for Registrar/Registrant servers)
 show_ds_data_fields: 'false'

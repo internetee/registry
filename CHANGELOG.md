@@ -1,5 +1,6 @@
 25.05.2015
 
+* Added iptables counter commant to application-example.yml
 * Add update application.yml with correct `sk_digi_doc_service_endpoint`
 
 22.05.2015

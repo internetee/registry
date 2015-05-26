@@ -98,6 +98,7 @@ class EppController < ApplicationController
     @response = render_to_string(*args)
     render xml: @response
     write_to_epp_log
+    iptables_counter_update
   end
 
   # VALIDATION
@@ -282,4 +283,8 @@ class EppController < ApplicationController
   end
   # rubocop: enable Metrics/PerceivedComplexity
   # rubocop: enable Metrics/CyclomaticComplexity
+
+  def iptables_counter_update
+    `ENV['iptables_counter_update_command']` if ENV['iptables_counter_update_command'].present?
+  end
 end
