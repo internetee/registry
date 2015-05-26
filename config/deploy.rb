@@ -49,7 +49,7 @@ task :st do
   set :domain, 'registry-st'
   set :deploy_to, '$HOME/registry'
   set :repository, 'https://github.com/internetee/registry' # production repo
-  set :branch, 'master' # same as production
+  set :branch, 'staging'
   set :rails_env, 'staging'
 end
 
@@ -58,7 +58,7 @@ task :eppst do
   set :domain, 'epp-st'
   set :deploy_to, '$HOME/epp'
   set :repository, 'https://github.com/internetee/registry' # production repo
-  set :branch, 'master' # same as production
+  set :branch, 'staging'
   set :rails_env, 'staging'
 end
 
@@ -67,7 +67,7 @@ task :registrarst do
   set :domain, 'registrar-st'
   set :deploy_to, '$HOME/registrar'
   set :repository, 'https://github.com/internetee/registry' # production repo
-  set :branch, 'master'
+  set :branch, 'staging'
   set :rails_env, 'staging'
 end
 
@@ -76,7 +76,7 @@ task :registrantst do
   set :domain, 'registrant-st'
   set :deploy_to, '$HOME/registrant'
   set :repository, 'https://github.com/internetee/registry' # production repo
-  set :branch, 'master'
+  set :branch, 'staging'
   set :rails_env, 'staging'
 end
 
@@ -85,7 +85,7 @@ task :pr do
   set :domain, 'registry'
   set :deploy_to, '$HOME/registry'
   set :repository, 'https://github.com/internetee/registry' # production repo
-  set :branch, 'master' # same as staging
+  set :branch, 'master'
   set :rails_env, 'production'
 end
 
@@ -94,7 +94,7 @@ task :epppr do
   set :domain, 'epp'
   set :deploy_to, '$HOME/epp'
   set :repository, 'https://github.com/internetee/registry' # production repo
-  set :branch, 'master' # same as staging
+  set :branch, 'master'
   set :rails_env, 'production'
 end
 

@@ -1,3 +1,7 @@
+26.05.2015
+
+* Updated deploy script, now staging comes from staging branch
+
 25.05.2015
 
 * Added iptables counter commant to application-example.yml
