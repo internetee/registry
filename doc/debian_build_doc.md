@@ -64,10 +64,10 @@ IPT=/sbin/iptables
 SECONDS=60
 # Max connections per IP
 BLOCKCOUNT=100
-# default action can be DROP or REJECT
+# default action can be DROP or REJECT or something else.
 DACTION="REJECT"
 $IPT -A INPUT -p tcp --dport 80 -i eth0 -m state --state NEW -m recent --set
-$IPT -A INPUT -p tcp --dport 80 -i eth0 -m state --state NEW -m recent --update --seconds ${SECONDS} --hitcount ${BLOCKCOUNT} -j ${DACTION}
+$IPT -A INPUT -p tcp --dport 80 -i eth0 -m state --state NEW -m recent --rcheck --seconds ${SECONDS} --hitcount ${BLOCKCOUNT} -j ${DACTION}
 ````
 
 #### EPP
@@ -80,10 +80,10 @@ IPT=/sbin/iptables
 SECONDS=60
 # Max connections per IP
 BLOCKCOUNT=100
-# default action can be DROP or REJECT
+# default action can be DROP or REJECT or something else.
 DACTION="REJECT"
 $IPT -A INPUT -p tcp --dport 700 -i eth0 -m state --state NEW -m recent --set
-$IPT -A INPUT -p tcp --dport 700 -i eth0 -m state --state NEW -m recent --update --seconds ${SECONDS} --hitcount ${BLOCKCOUNT} -j ${DACTION}
+$IPT -A INPUT -p tcp --dport 700 -i eth0 -m state --state NEW -m recent --rcheck --seconds ${SECONDS} --hitcount ${BLOCKCOUNT} -j ${DACTION}
 ````
 
 #### Whois
@@ -96,9 +96,9 @@ IPT=/sbin/iptables
 SECONDS=60
 # Max connections per IP
 BLOCKCOUNT=100
-# default action can be DROP or REJECT
+# default action can be DROP or REJECT or something else.
 DACTION="REJECT"
 $IPT -A INPUT -p tcp --dport 43 -i eth0 -m state --state NEW -m recent --set
-$IPT -A INPUT -p tcp --dport 43 -i eth0 -m state --state NEW -m recent --update --seconds ${SECONDS} --hitcount ${BLOCKCOUNT} -j ${DACTION}
+$IPT -A INPUT -p tcp --dport 43 -i eth0 -m state --state NEW -m recent --rcheck --seconds ${SECONDS} --hitcount ${BLOCKCOUNT} -j ${DACTION}
 ````
 
