@@ -29,5 +29,13 @@ class RegistrantUser < User
 
       u
     end
+
+    def find_or_create_by_mid_data(response)
+      u = where(registrant_ident: "#{response.user_country}-#{response.user_id_code}").first_or_create
+      u.username = "#{response.user_givenname} #{response.user_surname}"
+      u.save
+
+      u
+    end
   end
 end

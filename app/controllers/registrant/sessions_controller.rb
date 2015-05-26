@@ -49,9 +49,10 @@ class Registrant::SessionsController < Devise::SessionsController
       return
     end
 
-    @user = find_user_by_idc(response.user_id_code)
+    @user = RegistrantUser.find_or_create_by_mid_data(response)
 
     if @user.persisted?
+      session[:user_country] = response.user_country
       session[:user_id_code] = response.user_id_code
       session[:mid_session_code] = client.session_code
       render json: { message: t(:check_your_phone_for_confirmation_code) }, status: :ok
@@ -72,7 +73,8 @@ class Registrant::SessionsController < Devise::SessionsController
     when 'OUTSTANDING_TRANSACTION'
       render json: { message: t(:check_your_phone_for_confirmation_code) }, status: :ok
     when 'USER_AUTHENTICATED'
-      @user = find_user_by_idc(session[:user_id_code])
+      @user = RegistrantUser.find_by(registrant_ident: "#{session[:user_country]}-#{session[:user_id_code]}")
+
       sign_in @user
       flash[:notice] = t(:welcome)
       flash.keep(:notice)
