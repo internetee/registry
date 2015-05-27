@@ -1931,10 +1931,10 @@ describe 'EPP Domain', epp: true do
       domain.save
 
       xml = domain_info_xml(name: { value: domain.name })
-
       response = epp_plain_request(xml, :xml)
       response[:results][0][:msg].should == 'Command completed successfully'
       response[:results][0][:result_code].should == '1000'
+      response[:clTRID].should be_nil
 
       inf_data = response[:parsed].css('resData infData')
       inf_data.css('name').text.should == domain.name
