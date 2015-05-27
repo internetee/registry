@@ -8,8 +8,8 @@ class Epp::PollsController < EppController
 
   def req_poll
     @message = current_user.queued_messages.last
-    render_epp_response 'epp/poll/poll_no_messages' and return unless @message
 
+    render_epp_response 'epp/poll/poll_no_messages' and return unless @message
     if @message.attached_obj_type && @message.attached_obj_id
       @object = Object.const_get(@message.attached_obj_type).find(@message.attached_obj_id)
     end

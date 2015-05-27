@@ -37,6 +37,7 @@ class EppController < ApplicationController
   end
 
   def update_epp_session
+    iptables_counter_update
     e_s = epp_session
     return if e_s.new_record?
 
@@ -98,7 +99,6 @@ class EppController < ApplicationController
     @response = render_to_string(*args)
     render xml: @response
     write_to_epp_log
-    iptables_counter_update
   end
 
   # VALIDATION
