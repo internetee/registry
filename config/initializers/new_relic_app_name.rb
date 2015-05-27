@@ -1,3 +1,5 @@
+# rubocop:disable Metrics/LineLength
 unless Rails.env.test?
   NewRelic::Agent.config[:app_name] = "#{ENV['new_relic_app_name']} - #{Rails.env}" if ENV['new_relic_app_name'].present?
 end
+# rubocop:enable Metrics/LineLength
