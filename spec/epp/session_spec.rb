@@ -46,6 +46,13 @@ describe 'EPP Session', epp: true do
       response[:clTRID].should == 'ABC-12345'
     end
 
+    it 'should not have clTRID in response if client does not send it' do
+      epp_xml_no_cltrid = EppXml.new(cl_trid: '')
+      wrong_user = epp_xml_no_cltrid.session.login(clID: { value: 'wrong-user' }, pw: { value: 'ghyt9e4fu' })
+      response = epp_plain_request(wrong_user, :xml)
+      response[:clTRID].should be_nil
+    end
+
     context 'with valid user' do
       it 'logs in epp user' do
         response = epp_plain_request(@login_xml_cache, :xml)
