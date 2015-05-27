@@ -51,19 +51,19 @@ describe 'EPP Contact', epp: true do
         response = epp_plain_request(@epp_xml.create, :xml)
         response[:results][0][:msg].should ==
           'Required parameter missing: create > create > postalInfo > name [name]'
-        response[:results][1][:msg].should == 
+        response[:results][1][:msg].should ==
           'Required parameter missing: create > create > postalInfo > addr > street [street]'
-        response[:results][2][:msg].should == 
+        response[:results][2][:msg].should ==
           'Required parameter missing: create > create > postalInfo > addr > city [city]'
-        response[:results][3][:msg].should == 
+        response[:results][3][:msg].should ==
           'Required parameter missing: create > create > postalInfo > addr > pc [pc]'
-        response[:results][4][:msg].should == 
+        response[:results][4][:msg].should ==
           'Required parameter missing: create > create > postalInfo > addr > cc [cc]'
-        response[:results][5][:msg].should == 
+        response[:results][5][:msg].should ==
           'Required parameter missing: create > create > voice [voice]'
-        response[:results][6][:msg].should == 
+        response[:results][6][:msg].should ==
           'Required parameter missing: create > create > email [email]'
-        response[:results][7][:msg].should == 
+        response[:results][7][:msg].should ==
           'Required parameter missing: extension > extdata > ident [ident]'
 
         response[:results][0][:result_code].should == '2003'
@@ -299,7 +299,7 @@ describe 'EPP Contact', epp: true do
         response = update_request({ id: { value: 'FIRST0:SH8013' } })
 
         response[:msg].should == 'Command completed successfully'
-       
+
         @contact.reload
         @contact.name.should  == 'John Doe Edited'
         @contact.email.should == 'edited@example.example'
@@ -629,12 +629,12 @@ describe 'EPP Contact', epp: true do
           id: { value: 'FIRST0:SH8013' },
           authInfo: { pw: { value: 'password' } },
           rem: {
-            postalInfo: { org: { value: 'not important' } } 
+            postalInfo: { org: { value: 'not important' } }
           }
         })
 
         response = epp_plain_request(xml, :xml)
-        response[:results][0][:msg].should == 
+        response[:results][0][:msg].should ==
           'Parameter value policy error. Org must be blank: postalInfo > org [org]'
         response[:results][0][:result_code].should == '2306'
       end
@@ -644,7 +644,7 @@ describe 'EPP Contact', epp: true do
           id: { value: 'FIRST0:SH8013' },
           authInfo: { pw: { value: 'password' } },
           rem: {
-            postalInfo: { 
+            postalInfo: {
               name: { value: 'not important' }
             }
           }

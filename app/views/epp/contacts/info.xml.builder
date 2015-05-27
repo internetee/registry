@@ -29,10 +29,10 @@ xml.epp_head do
 
         xml.tag!('contact:clID', @contact.registrar.try(:name))
         xml.tag!('contact:crID', @contact.creator.try(:registrar))
-        xml.tag!('contact:crDate', @contact.created_at)
+        xml.tag!('contact:crDate', @contact.created_at.try(:iso8601))
         if @contact.updated_at != @contact.created_at
           xml.tag!('contact:upID', @contact.updator.try(:registrar))
-          xml.tag!('contact:upDate', @contact.updated_at)
+          xml.tag!('contact:upDate', @contact.updated_at.try(:iso8601))
         end
         # xml.tag!('contact:trDate', '123') if false
         if can? :view_password, @contact, @password

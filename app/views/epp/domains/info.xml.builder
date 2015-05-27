@@ -40,14 +40,14 @@ xml.epp_head do
 
         xml.tag!('domain:crID', @domain.creator.try(:registrar))
 
-        xml.tag!('domain:crDate', @domain.created_at)
+        xml.tag!('domain:crDate', @domain.created_at.try(:iso8601))
 
-        xml.tag!('domain:exDate', @domain.valid_to)
+        xml.tag!('domain:exDate', @domain.valid_to.try(:iso8601))
 
         # TODO Make domain stampable
         #xml.tag!('domain:upID', @domain.updated_by)
 
-        xml.tag!('domain:upDate', @domain.updated_at) if @domain.updated_at != @domain.created_at
+        xml.tag!('domain:upDate', @domain.updated_at.try(:iso8601)) if @domain.updated_at != @domain.created_at
 
         # TODO Make domain transferrable
         #xml.tag!('domain:trDate', @domain.transferred_at) if @domain.transferred_at

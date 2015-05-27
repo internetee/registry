@@ -7,8 +7,8 @@ xml.epp_head do
     xml.resData do
       xml.tag!('domain:creData', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
         xml.tag!('domain:name', @domain.name)
-        xml.tag!('domain:crDate', @domain.created_at)
-        xml.tag!('domain:exDate', @domain.valid_to)
+        xml.tag!('domain:crDate', @domain.created_at.try(:iso8601))
+        xml.tag!('domain:exDate', @domain.valid_to.try(:iso8601))
       end
     end
 
