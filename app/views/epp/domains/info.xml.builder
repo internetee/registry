@@ -59,26 +59,26 @@ xml.epp_head do
         end
       end
     end
-  end
 
-  xml.extension do
-    xml.tag!('secDNS:infData', 'xmlns:secDNS' => 'urn:ietf:params:xml:ns:secDNS-1.1') do
-      @domain.dnskeys.sort.each do |key|
-        xml.tag!('secDNS:dsData') do
-          xml.tag!('secDNS:keyTag', key.ds_key_tag)
-          xml.tag!('secDNS:alg', key.ds_alg)
-          xml.tag!('secDNS:digestType', key.ds_digest_type)
-          xml.tag!('secDNS:digest', key.ds_digest)
-          xml.tag!('secDNS:keyData') do
-            xml.tag!('secDNS:flags', key.flags)
-            xml.tag!('secDNS:protocol', key.protocol)
-            xml.tag!('secDNS:alg', key.alg)
-            xml.tag!('secDNS:pubKey', key.public_key)
+    xml.extension do
+      xml.tag!('secDNS:infData', 'xmlns:secDNS' => 'urn:ietf:params:xml:ns:secDNS-1.1') do
+        @domain.dnskeys.sort.each do |key|
+          xml.tag!('secDNS:dsData') do
+            xml.tag!('secDNS:keyTag', key.ds_key_tag)
+            xml.tag!('secDNS:alg', key.ds_alg)
+            xml.tag!('secDNS:digestType', key.ds_digest_type)
+            xml.tag!('secDNS:digest', key.ds_digest)
+            xml.tag!('secDNS:keyData') do
+              xml.tag!('secDNS:flags', key.flags)
+              xml.tag!('secDNS:protocol', key.protocol)
+              xml.tag!('secDNS:alg', key.alg)
+              xml.tag!('secDNS:pubKey', key.public_key)
+            end
           end
         end
       end
-    end
-  end if @domain.dnskeys.any?
+    end if @domain.dnskeys.any?
 
-  xml << render('/epp/shared/trID')
+    render('epp/shared/trID', builder: xml)
+  end
 end

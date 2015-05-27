@@ -20,7 +20,6 @@ xml.epp_head do
       end
     end
 
+    render('epp/shared/trID', builder: xml)
   end
-
-  xml << render('/epp/shared/trID')
 end

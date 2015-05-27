@@ -15,6 +15,6 @@ xml.epp_head do
       end
     end if @object
 
-    xml << render('/epp/shared/trID')
+    render('epp/shared/trID', builder: xml)
   end
 end

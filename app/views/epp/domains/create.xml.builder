@@ -11,7 +11,7 @@ xml.epp_head do
         xml.tag!('domain:exDate', @domain.valid_to)
       end
     end
-  end
 
-  xml << render('/epp/shared/trID')
+    render('epp/shared/trID', builder: xml)
+  end
 end
