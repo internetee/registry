@@ -81,6 +81,7 @@ class Registrar::SessionsController < Devise::SessionsController
     @user = User.new
   end
 
+  # rubocop:disable Metrics/MethodLength
   def mid
     phone = params[:user][:phone]
     endpoint = "#{ENV['sk_digi_doc_service_endpoint']}"
@@ -115,6 +116,7 @@ class Registrar::SessionsController < Devise::SessionsController
       render json: { message: t(:no_such_user) }, status: :unauthorized
     end
   end
+  # rubocop: enable Metrics/MethodLength
 
   # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/CyclomaticComplexity
