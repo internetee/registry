@@ -939,15 +939,6 @@ describe 'EPP Contact', epp: true do
         end
       end
     end
-
-    context 'renew command' do
-      it 'returns 2101-unimplemented command' do
-        response = epp_plain_request('contacts/renew.xml')
-
-        response[:msg].should == 'Unimplemented command'
-        response[:result_code].should == '2101'
-      end
-    end
   end
 
   def check_multiple_contacts_xml

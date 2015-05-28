@@ -66,15 +66,27 @@ module Epp
   end
 
   def epp_plain_request(data, *args)
-    res = parse_response(server.send_request(data)) if args.include?(:xml)
-    if res
-      log(data, res[:parsed])
-      return res
+    options = args.extract_options!
+    validate_input = options[:validate_input] != false # true by default
+    validate_output = options[:validate_output] != false # true by default
+
+    if validate_input && @xsd
+      xml = Nokogiri::XML(data)
+      @xsd.validate(xml).each do |error|
+        fail Exception.new, error.to_s
+      end
     end
 
-    res = parse_response(server.send_request(read_body(data)))
-    log(read_body(data), res[:parsed])
-    return res
+    res = parse_response(server.send_request(data))
+    if res
+      log(data, res[:parsed])
+      if validate_output && @xsd
+        @xsd.validate(Nokogiri(res[:raw])).each do |error|
+          fail Exception.new, error.to_s
+        end
+      end
+      return res
+    end
   rescue => e
     e
   end
@@ -127,7 +139,7 @@ module Epp
 
     xml_params = defaults.deep_merge(xml_params)
 
-    epp_xml = EppXml::Domain.new(cl_trid: '')
+    epp_xml = EppXml::Domain.new(cl_trid: false)
     epp_xml.info(xml_params)
   end
 

@@ -5,6 +5,7 @@ describe 'EPP Session', epp: true do
     @api_user = Fabricate(:gitlab_api_user)
     @epp_xml = EppXml.new(cl_trid: 'ABC-12345')
     @login_xml_cache = @epp_xml.session.login(clID: { value: 'gitlab' }, pw: { value: 'ghyt9e4fu' })
+    @xsd = Nokogiri::XML::Schema(File.read('doc/schemas/epp-1.0.xsd'))
   end
 
   context 'when not connected' do
@@ -40,14 +41,15 @@ describe 'EPP Session', epp: true do
     end
 
     it 'prohibits further actions unless logged in' do
-      response = epp_plain_request(@epp_xml.domain.create, :xml)
+      @xsd = Nokogiri::XML::Schema(File.read('doc/schemas/domain-1.0.xsd'))
+      response = epp_plain_request(@epp_xml.domain.info(name: { value: 'test.ee' }), :xml)
       response[:msg].should == 'You need to login first.'
       response[:result_code].should == '2002'
       response[:clTRID].should == 'ABC-12345'
     end
 
     it 'should not have clTRID in response if client does not send it' do
-      epp_xml_no_cltrid = EppXml.new(cl_trid: '')
+      epp_xml_no_cltrid = EppXml.new(cl_trid: false)
       wrong_user = epp_xml_no_cltrid.session.login(clID: { value: 'wrong-user' }, pw: { value: 'ghyt9e4fu' })
       response = epp_plain_request(wrong_user, :xml)
       response[:clTRID].should be_nil
@@ -115,7 +117,22 @@ describe 'EPP Session', epp: true do
           clID: { value: 'gitlab' },
           pw: { value: 'ghyt9e4fu' },
           newPW: { value: '' }
-        ), :xml)
+        ), validate_input: false)
+
+        response[:msg].should == 'Password is missing [password]'
+        response[:result_code].should == '2306'
+
+        @api_user.reload
+        @api_user.password.should == 'ghyt9e4fu'
+      end
+
+      it 'fails if new password is not valid' do
+        @api_user.update(password: 'ghyt9e4fu')
+        response = epp_plain_request(@epp_xml.session.login(
+          clID: { value: 'gitlab' },
+          pw: { value: 'ghyt9e4fu' },
+          newPW: { value: '' }
+        ), validate_input: false)
 
         response[:msg].should == 'Password is missing [password]'
         response[:result_code].should == '2306'
