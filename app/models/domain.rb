@@ -117,7 +117,7 @@ class Domain < ActiveRecord::Base
 
   validate :validate_nameserver_ips
 
-  attr_accessor :registrant_typeahead, :update_me, :deliver_emails, 
+  attr_accessor :registrant_typeahead, :update_me, :deliver_emails,
     :epp_pending_update, :epp_pending_delete
 
   def subordinate_nameservers
@@ -250,7 +250,7 @@ class Domain < ActiveRecord::Base
   def validate_period
     return unless period.present?
     if period_unit == 'd'
-      valid_values = %w(365 366 710 712 1065 1068)
+      valid_values = %w(365 730 1095)
     elsif period_unit == 'm'
       valid_values = %w(12 24 36)
     else

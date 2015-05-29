@@ -64,7 +64,7 @@
    <simpleType name="pLimitType">
     <restriction base="unsignedShort">
       <minInclusive value="1"/>
-      <maxInclusive value="99"/>
+      <maxInclusive value="1095"/>
     </restriction>
    </simpleType>
 
@@ -72,6 +72,7 @@
     <restriction base="token">
       <enumeration value="y"/>
       <enumeration value="m"/>
+      <enumeration value="d"/>
     </restriction>
    </simpleType>
 
