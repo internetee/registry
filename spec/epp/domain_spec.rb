@@ -199,7 +199,7 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'does not create domain without contacts and registrant' do
-      xml = domain_create_xml(contacts: [], registrant: false)
+      xml = domain_create_xml(_anonymus: [], registrant: false)
 
       response = epp_plain_request(xml, :xml)
       response[:results][0][:result_code].should == '2003'
@@ -208,8 +208,8 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'does not create domain without nameservers' do
-      xml = domain_create_xml(ns: [])
-      response = epp_plain_request(xml, :xml)
+      xml = domain_create_xml(ns: nil)
+      response = epp_plain_request(xml)
 
       response[:results][0][:msg].should ==
         'Required parameter missing: create > create > ns [ns]'
