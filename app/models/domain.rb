@@ -155,6 +155,10 @@ class Domain < ActiveRecord::Base
     self[:name_dirty] = value
   end
 
+  def roid
+    "EIS-#{id}"
+  end
+
   def registrant_typeahead
     @registrant_typeahead || registrant.try(:name) || nil
   end
