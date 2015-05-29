@@ -1571,9 +1571,6 @@ describe 'EPP Domain', epp: true do
     it 'updates domain with registrant change what triggers action pending' do
       xml = domain_update_xml({
         name: { value: domain.name },
-        chg: [
-          registrant: { value: 'FIXED:CITIZEN_1234' }
-        ],
         add: [
           {
             ns: [
@@ -1594,6 +1591,9 @@ describe 'EPP Domain', epp: true do
             { status: { value: 'Payment overdue.', attrs: { s: 'clientHold', lang: 'en' } } },
             { status: { value: '', attrs: { s: 'clientUpdateProhibited' } } }
           ]
+        ],
+        chg: [
+          registrant: { value: 'FIXED:CITIZEN_1234' }
         ]
       }, {
         add: [
@@ -1739,6 +1739,9 @@ describe 'EPP Domain', epp: true do
       }, {
         rem: [
           { keyData: {
+              flags: { value: '256' },
+              protocol: { value: '3' },
+              alg: { value: '254' },
               pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
             }
           }
@@ -1850,7 +1853,7 @@ describe 'EPP Domain', epp: true do
         ]
       })
 
-      response = epp_plain_request(xml, :xml)
+      response = epp_plain_request(xml, validate_input: false)
       response[:results][0][:result_code].should == '2303'
       response[:results][0][:msg].should == 'Status was not found'
       response[:results][0][:value].should == 'invalidStatus'
