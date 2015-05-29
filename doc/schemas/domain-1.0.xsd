@@ -241,12 +241,28 @@
    Allow the registrant value to be nullified by changing the
    minLength restriction to "0".
    -->
-   <simpleType name="clIDChgType">
+
+   <complexType name="clIDChgType">
+    <simpleContent>
+      <extension base="domain:clIDChgSimpleType">
+        <attribute name="verified" type="domain:verifiedType"/>
+      </extension>
+    </simpleContent>
+   </complexType>
+
+  <simpleType name="clIDChgSimpleType">
     <restriction base="token">
       <minLength value="0"/>
-      <maxLength value="16"/>
     </restriction>
-   </simpleType>
+  </simpleType>
+
+  <simpleType name="verifiedType">
+    <restriction base="token">
+      <enumeration value="yes"/>
+      <enumeration value="no"/>
+    </restriction>
+  </simpleType>
+
 
    <!--
    Allow the authInfo value to be nullified by including an

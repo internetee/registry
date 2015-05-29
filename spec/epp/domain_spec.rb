@@ -407,7 +407,7 @@ describe 'EPP Domain', epp: true do
        ]
      })
 
-      response = epp_plain_request(xml, :xml)
+      response = epp_plain_request(xml, validate_input: false)
 
       response[:results][0][:msg].should ==
         'Valid algorithms are: 3, 5, 6, 7, 8, 252, 253, 254, 255 [alg]'
@@ -641,7 +641,7 @@ describe 'EPP Domain', epp: true do
           }]
         })
 
-      response = epp_plain_request(xml, :xml)
+      response = epp_plain_request(xml, validate_input: false)
       response[:msg].should == 'Mutually exclusive parameters: extension > create > keyData, '\
       'extension > create > dsData'
       response[:result_code].should == '2306'
@@ -1307,7 +1307,7 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'returns an error for incorrect op attribute' do
-      response = epp_plain_request(domain_transfer_xml({}, 'bla'), :xml)
+      response = epp_plain_request(domain_transfer_xml({}, 'bla'), validate_input: false)
       response[:result_code].should == '2306'
       response[:msg].should == 'Attribute is invalid: op'
     end
