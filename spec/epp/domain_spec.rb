@@ -1406,7 +1406,7 @@ describe 'EPP Domain', epp: true do
 
       d = Domain.last
 
-      d.registrant_code.should_not == 'FIXED:CITIZEN_1234' # should not update, because pending
+      d.registrant_code.should_not == 'FIXED:CITIZEN_1234' # should not update
       d.auth_info.should == existing_pw
       d.pending_update?.should == true
     end
@@ -1447,7 +1447,7 @@ describe 'EPP Domain', epp: true do
 
       d = Domain.last
 
-      d.registrant_code.should_not == 'FIXED:CITIZEN_1234' # should not update, because pending
+      d.registrant_code.should_not == 'FIXED:CITIZEN_1234' # should not update
       d.auth_info.should == existing_pw
       d.nameservers.size == 3
       d.pending_update?.should == false
@@ -1482,7 +1482,7 @@ describe 'EPP Domain', epp: true do
 
       d = Domain.find(domain_id)
 
-      d.registrant_code.should_not == 'FIXED:CITIZEN_1234' # should not update, because pending
+      d.registrant_code.should_not == 'FIXED:CITIZEN_1234' # should not update
       d.auth_info.should == existing_pw
       d.nameservers.size.should == 0
       d.pending_update?.should == false
