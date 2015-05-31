@@ -7,6 +7,7 @@ xml.epp_head do
     xml.resData do
       xml.tag!('domain:infData', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
         xml.tag!('domain:name', @domain.name)
+        xml.tag!('domain:roid', @domain.roid)
         @domain.domain_statuses.each do |ds|
           xml.tag!('domain:status', ds.description, 's' => ds.value) unless ds.description.blank?
           xml.tag!('domain:status', 's' => ds.value) if ds.description.blank?
@@ -38,16 +39,16 @@ xml.epp_head do
 
         xml.tag!('domain:clID', @domain.registrar_name)
 
-        xml.tag!('domain:crID', @domain.creator.try(:registrar))
+        xml.tag!('domain:crID', @domain.creator.try(:registrar)) if @domain.creator
 
         xml.tag!('domain:crDate', @domain.created_at.try(:iso8601))
+
+        xml.tag!('domain:upDate', @domain.updated_at.try(:iso8601)) if @domain.updated_at != @domain.created_at
 
         xml.tag!('domain:exDate', @domain.valid_to.try(:iso8601))
 
         # TODO Make domain stampable
         #xml.tag!('domain:upID', @domain.updated_by)
-
-        xml.tag!('domain:upDate', @domain.updated_at.try(:iso8601)) if @domain.updated_at != @domain.created_at
 
         # TODO Make domain transferrable
         #xml.tag!('domain:trDate', @domain.transferred_at) if @domain.transferred_at

@@ -5,6 +5,7 @@ describe 'EPP Session', epp: true do
     @api_user = Fabricate(:gitlab_api_user)
     @epp_xml = EppXml.new(cl_trid: 'ABC-12345')
     @login_xml_cache = @epp_xml.session.login(clID: { value: 'gitlab' }, pw: { value: 'ghyt9e4fu' })
+    @xsd = Nokogiri::XML::Schema(File.read('doc/schemas/epp-1.0.xsd'))
   end
 
   context 'when not connected' do
@@ -23,7 +24,7 @@ describe 'EPP Session', epp: true do
 
     it 'does not log in with invalid user' do
       wrong_user = @epp_xml.session.login(clID: { value: 'wrong-user' }, pw: { value: 'ghyt9e4fu' })
-      response = epp_plain_request(wrong_user, :xml)
+      response = epp_plain_request(wrong_user)
       response[:msg].should == 'Authentication error; server closing connection'
       response[:result_code].should == '2501'
       response[:clTRID].should == 'ABC-12345'
@@ -34,28 +35,29 @@ describe 'EPP Session', epp: true do
       Fabricate(:api_user, username: 'inactive-user', active: false, registrar: @registrar)
 
       inactive = @epp_xml.session.login(clID: { value: 'inactive-user' }, pw: { value: 'ghyt9e4fu' })
-      response = epp_plain_request(inactive, :xml)
+      response = epp_plain_request(inactive)
       response[:msg].should == 'Authentication error; server closing connection'
       response[:result_code].should == '2501'
     end
 
     it 'prohibits further actions unless logged in' do
-      response = epp_plain_request(@epp_xml.domain.create, :xml)
+      @xsd = Nokogiri::XML::Schema(File.read('doc/schemas/domain-1.0.xsd'))
+      response = epp_plain_request(@epp_xml.domain.info(name: { value: 'test.ee' }))
       response[:msg].should == 'You need to login first.'
       response[:result_code].should == '2002'
       response[:clTRID].should == 'ABC-12345'
     end
 
     it 'should not have clTRID in response if client does not send it' do
-      epp_xml_no_cltrid = EppXml.new(cl_trid: '')
+      epp_xml_no_cltrid = EppXml.new(cl_trid: false)
       wrong_user = epp_xml_no_cltrid.session.login(clID: { value: 'wrong-user' }, pw: { value: 'ghyt9e4fu' })
-      response = epp_plain_request(wrong_user, :xml)
+      response = epp_plain_request(wrong_user)
       response[:clTRID].should be_nil
     end
 
     context 'with valid user' do
       it 'logs in epp user' do
-        response = epp_plain_request(@login_xml_cache, :xml)
+        response = epp_plain_request(@login_xml_cache)
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
         response[:clTRID].should == 'ABC-12345'
@@ -67,12 +69,12 @@ describe 'EPP Session', epp: true do
       end
 
       it 'does not log in twice' do
-        response = epp_plain_request(@login_xml_cache, :xml)
+        response = epp_plain_request(@login_xml_cache)
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
         response[:clTRID].should == 'ABC-12345'
 
-        response = epp_plain_request(@login_xml_cache, :xml)
+        response = epp_plain_request(@login_xml_cache)
         response[:msg].should match(/Already logged in. Use/)
         response[:result_code].should == '2002'
 
@@ -84,10 +86,10 @@ describe 'EPP Session', epp: true do
 
       it 'logs out epp user' do
         c = EppSession.count
-        epp_plain_request(@login_xml_cache, :xml)
+        epp_plain_request(@login_xml_cache)
 
         EppSession.count.should == c + 1
-        response = epp_plain_request(@epp_xml.session.logout, :xml)
+        response = epp_plain_request(@epp_xml.session.logout)
         response[:msg].should == 'Command completed successfully; ending session'
         response[:result_code].should == '1500'
 
@@ -100,7 +102,7 @@ describe 'EPP Session', epp: true do
           clID: { value: 'gitlab' },
           pw: { value: 'ghyt9e4fu' },
           newPW: { value: 'abcdefg' }
-        ), :xml)
+        ))
 
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
@@ -115,7 +117,22 @@ describe 'EPP Session', epp: true do
           clID: { value: 'gitlab' },
           pw: { value: 'ghyt9e4fu' },
           newPW: { value: '' }
-        ), :xml)
+        ), validate_input: false)
+
+        response[:msg].should == 'Password is missing [password]'
+        response[:result_code].should == '2306'
+
+        @api_user.reload
+        @api_user.password.should == 'ghyt9e4fu'
+      end
+
+      it 'fails if new password is not valid' do
+        @api_user.update(password: 'ghyt9e4fu')
+        response = epp_plain_request(@epp_xml.session.login(
+          clID: { value: 'gitlab' },
+          pw: { value: 'ghyt9e4fu' },
+          newPW: { value: '' }
+        ), validate_input: false)
 
         response[:msg].should == 'Password is missing [password]'
         response[:result_code].should == '2306'
