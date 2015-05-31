@@ -30,8 +30,8 @@ webclient_cert_common_name: 'webclient'
 # and returns 2306 "Parameter value policy error"
 contact_org_enabled: 'false'
 
-# Firewall countrer update command
-# iptables_counter_update_command: ''
+# Enable iptables counter updater 
+# iptables_counter_enabled: 'true'
 
 # DEPP server configuration (both for Registrar/Registrant servers)
 show_ds_data_fields: 'false'

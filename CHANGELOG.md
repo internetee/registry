@@ -1,3 +1,7 @@
+29.05.2015
+
+* Removed old 'iptables_counter_update_command' and added 'iptables_counter_enabled'
+
 26.05.2015
 
 * Updated deploy script, now staging comes from staging branch
