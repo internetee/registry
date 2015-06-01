@@ -1,0 +1,1 @@
+(function(){var e;e=function(){return $(".selectize").selectize({allowEmptyOption:!0}),$("form").each(function(){return $(this).validate()})},$(document).ready(e),$(document).on("page:load",e)}).call(this);
