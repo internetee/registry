@@ -123,7 +123,8 @@ class Epp::Contact < Contact
         [:email, :invalid],
         [:ident, :invalid],
         [:ident, :invalid_EE_identity_format],
-        [:ident, :invalid_birthday_format]
+        [:ident, :invalid_birthday_format],
+        [:ident, :invalid_country_code]
       ],
       '2302' => [ # Object exists
         [:code, :epp_id_taken]

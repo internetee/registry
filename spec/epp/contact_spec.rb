@@ -100,7 +100,7 @@ describe 'EPP Contact', epp: true do
         log.api_user_registrar.should == 'registrar1'
       end
 
-      it 'successfully saves ident type' do
+      it 'successfully saves ident type with legal document' do
         extension = {
           legalDocument: {
             value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
@@ -116,7 +116,9 @@ describe 'EPP Contact', epp: true do
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
 
-        Contact.last.ident_type.should == 'birthday'
+        @contact = Contact.last
+        @contact.ident_type.should == 'birthday'
+        @contact.legal_documents.size.should == 1
       end
 
       it 'successfully adds registrar' do
@@ -161,6 +163,19 @@ describe 'EPP Contact', epp: true do
       it 'should not allow spaces in custom code' do
         response = create_request({ id: { value: 'abc 123' } })
         response[:msg].should == 'is invalid [code]'
+        response[:result_code].should == '2005'
+      end
+
+      it 'should not saves ident type with wrong country code' do
+        extension = {
+          ident: {
+            value: '1990-22-12',
+            attrs: { type: 'birthday', cc: 'WRONG' }
+          }
+        }
+        response = create_request({}, extension)
+        response[:msg].should == 
+          'Ident country code is not valid, should be in ISO_3166-1 alpha 2 format [ident]'
         response[:result_code].should == '2005'
       end
 
