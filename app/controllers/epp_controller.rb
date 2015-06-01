@@ -1,4 +1,5 @@
 class EppController < ApplicationController
+  include Iptable
   layout false
   protect_from_forgery with: :null_session
   skip_before_action :verify_authenticity_token
@@ -286,6 +287,7 @@ class EppController < ApplicationController
 
   def iptables_counter_update
     return if ENV['iptables_counter_enabled'].blank? && ENV['iptables_counter_enabled'] != 'true'
-    Iptable.counter_update(current_user.registrar_code, request.remote_ip)
+    return if current_user.blank?
+    counter_update(current_user.registrar_code, request.remote_ip)
   end
 end
