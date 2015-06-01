@@ -9,6 +9,14 @@ GIT
       request_store (~> 1.1.0)
 
 GIT
+  remote: git://github.com/gitlabeu/data_migrate.git
+  revision: 35d22b09ff37a4e9d61ab326ad5d8eb0edf1fc81
+  ref: 35d22b09ff37a4e9d61ab326ad5d8eb0edf1fc81
+  specs:
+    data_migrate (1.3.0)
+      rails (>= 4.1.0)
+
+GIT
   remote: git://github.com/gitlabeu/epp.git
   revision: 505c3f2739eb1da918e54111aecfb138a822739d
   specs:
@@ -507,6 +515,7 @@ DEPENDENCIES
   coderay (~> 1.1.0)
   coffee-rails (~> 4.1.0)
   countries (~> 0.10.0)
+  data_migrate!
   database_cleaner (~> 1.3.0)
   deep_cloneable (~> 2.1.1)
   devise (~> 3.4.1)
