@@ -466,21 +466,20 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'should return error when add attributes phone value is empty' do
+        phone = Contact.find_by(code: 'FIRST0:SH8013').phone
         xml = @epp_xml.update({
           id: { value: 'FIRST0:SH8013' },
-          authInfo: { pw: { value: 'password' } },
-          add: {
-            voice: { value: '' }
-          },
           chg: {
-            postalInfo: { email: { value: 'example@example.ee' } }
+            voice: { value: '' },
+            email: { value: 'example@example.ee' },
+            authInfo: { pw: { value: 'password' } }
           }
         })
 
         response = epp_plain_request(xml, :xml)
         response[:results][0][:msg].should == 'Required parameter missing - phone [phone]'
         response[:results][0][:result_code].should == '2003'
-        Contact.find_by(code: 'FIRST0:SH8013').phone.should == '+372.7654321' # aka not changed
+        Contact.find_by(code: 'FIRST0:SH8013').phone.should == phone # aka not changed
       end
 
       it 'should honor chg value over add value when both changes same attribute' do
