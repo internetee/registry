@@ -86,7 +86,7 @@ $IPT -A INPUT -p tcp --dport 43 -i eth0 -m state --state NEW -m recent --rcheck 
 
 #### EPP
 
-We need to update iptables hitcounter from application.
+Iptables hitcounter is updated by application.
 
 ````
 #!/bin/bash
@@ -102,4 +102,12 @@ BLOCKCOUNT=100
 DACTION="REJECT"
 $IPT -A INPUT -p tcp --dport 700 -i eth0 -m state --state NEW -m recent --set
 $IPT -A INPUT -p tcp --dport 700 -m recent --name $REGISTRAR_CODE --rdest --rcheck --hitcount ${BLOCKCOUNT} --seconds ${SECONDS} -j ${DACTION}
+````
+
+After adding iptable counters, please add correct permissions to proc files at path /proc/net/xt_recent
+
+Example command:
+
+````
+sudo chown registry /proc/net/xt_recent/*
 ````
