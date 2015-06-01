@@ -11,7 +11,7 @@ xml.epp(
     end
 
     xml.tag!('msgQ', 'count' => current_user.queued_messages.count, 'id' => @message.id) do
-      xml.qDate @message.created_at
+      xml.qDate @message.created_at.try(:iso8601)
       xml.msg @message.body
     end
 
@@ -19,7 +19,7 @@ xml.epp(
       xml.tag!('keyrelay:response') do
         xml.tag!('keyrelay:panData') do
           xml.tag!('keyrelay:name', @object.domain_name)
-          xml.tag!('keyrelay:paDate', @object.pa_date)
+          xml.tag!('keyrelay:paDate', @object.pa_date.try(:iso8601))
 
           xml.tag!('keyrelay:keyData') do
             xml.tag!('secDNS:flags',  @object.key_data_flags)
@@ -44,6 +44,6 @@ xml.epp(
       end
     end
 
-    xml << render('/epp/shared/trID')
+    render('epp/shared/trID', builder: xml)
   end
 end

@@ -106,6 +106,27 @@ describe Domain do
       end
     end
 
+    context 'about registrant update confirm when domain is invalid' do
+      before :all do
+        @domain.registrant_verification_token = 123
+        @domain.registrant_verification_asked_at = Time.zone.now
+        @domain.domain_statuses.create(value: DomainStatus::PENDING_UPDATE)
+      end
+
+      it 'should be registrant update confirm ready' do
+        @domain.registrant_update_confirmable?('123').should == true
+      end
+
+      it 'should not be registrant update confirm ready when token does not match' do
+        @domain.registrant_update_confirmable?('wrong-token').should == false
+      end
+
+      it 'should not be registrant update confirm ready when no correct status' do
+        @domain.domain_statuses.delete_all
+        @domain.registrant_update_confirmable?('123').should == false
+      end
+    end
+
     context 'with versioning' do
       it 'should not have one version' do
         with_versioning do

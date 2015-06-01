@@ -169,7 +169,7 @@ GEM
       nokogiri (>= 1.4.0)
       savon (>= 2.4.0)
     docile (1.1.5)
-    epp-xml (0.10.4)
+    epp-xml (1.0.1)
       activesupport (~> 4.1)
       builder (~> 3.2)
     equalizer (0.0.11)
@@ -521,7 +521,7 @@ DEPENDENCIES
   devise (~> 3.4.1)
   digidoc_client (~> 0.2.1)
   epp (~> 1.4.2)!
-  epp-xml (~> 0.10.4)
+  epp-xml (~> 1.0.1)
   fabrication (~> 2.12.2)
   faker (~> 1.3.0)
   figaro (~> 1.1.0)

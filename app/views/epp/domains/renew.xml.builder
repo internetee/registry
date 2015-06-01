@@ -7,10 +7,10 @@ xml.epp_head do
     xml.resData do
       xml.tag!('domain:renData', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
         xml.tag!('domain:name', @domain[:name])
-        xml.tag!('domain:exDate', @domain.valid_to)
+        xml.tag!('domain:exDate', @domain.valid_to.try(:iso8601))
       end
     end
 
-    xml << render('/epp/shared/trID')
+    render('epp/shared/trID', builder: xml)
   end
 end

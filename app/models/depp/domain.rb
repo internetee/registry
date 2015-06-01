@@ -192,10 +192,10 @@ module Depp
       end
 
       def construct_edit_hash(domain_params, old_domain_params)
-        contacts = create_contacts_hash(domain_params) - create_contacts_hash(old_domain_params)
+        contacts = array_difference(create_contacts_hash(domain_params), create_contacts_hash(old_domain_params))
         add_anon = contacts
 
-        contacts = create_contacts_hash(old_domain_params) - create_contacts_hash(domain_params)
+        contacts = array_difference(create_contacts_hash(old_domain_params), create_contacts_hash(domain_params))
         rem_anon = contacts
 
         if domain_params[:registrant] != old_domain_params[:registrant]
@@ -283,6 +283,15 @@ module Depp
           alg: { value: key_data_params['alg'] },
           pubKey: { value: key_data_params['public_key'] }
         }
+      end
+
+      def array_difference(x, y)
+        ret = x.dup
+        y.each do |element|
+          index = ret.index(element)
+          ret.delete_at(index) if index
+        end
+        ret
       end
     end
   end

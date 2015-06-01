@@ -28,11 +28,11 @@ xml.epp_head do
         end
 
         xml.tag!('contact:clID', @contact.registrar.try(:name))
-        xml.tag!('contact:crID', @contact.creator.try(:registrar)) 
-        xml.tag!('contact:crDate', @contact.created_at)
+        xml.tag!('contact:crID', @contact.creator.try(:registrar))
+        xml.tag!('contact:crDate', @contact.created_at.try(:iso8601))
         if @contact.updated_at != @contact.created_at
           xml.tag!('contact:upID', @contact.updator.try(:registrar))
-          xml.tag!('contact:upDate', @contact.updated_at) 
+          xml.tag!('contact:upDate', @contact.updated_at.try(:iso8601))
         end
         # xml.tag!('contact:trDate', '123') if false
         if can? :view_password, @contact, @password
@@ -49,12 +49,12 @@ xml.epp_head do
     if can? :view_full_info, @contact, @password
       xml.tag!('extension') do
         xml.tag!('eis:extdata', 'xmlns:eis' => 'urn:ee:eis:xml:epp:eis-1.0') do
-          xml.tag!('eis:ident', @contact.ident, 
+          xml.tag!('eis:ident', @contact.ident,
                    type: @contact.ident_type, cc: @contact.ident_country_code)
         end
       end
     end
 
-    xml << render('/epp/shared/trID')
+    render('epp/shared/trID', builder: xml)
   end
 end

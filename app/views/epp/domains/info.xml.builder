@@ -7,6 +7,7 @@ xml.epp_head do
     xml.resData do
       xml.tag!('domain:infData', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
         xml.tag!('domain:name', @domain.name)
+        xml.tag!('domain:roid', @domain.roid)
         @domain.domain_statuses.each do |ds|
           xml.tag!('domain:status', ds.description, 's' => ds.value) unless ds.description.blank?
           xml.tag!('domain:status', 's' => ds.value) if ds.description.blank?
@@ -38,16 +39,16 @@ xml.epp_head do
 
         xml.tag!('domain:clID', @domain.registrar_name)
 
-        xml.tag!('domain:crID', @domain.creator.try(:registrar))
+        xml.tag!('domain:crID', @domain.creator.try(:registrar)) if @domain.creator
 
-        xml.tag!('domain:crDate', @domain.created_at)
+        xml.tag!('domain:crDate', @domain.created_at.try(:iso8601))
 
-        xml.tag!('domain:exDate', @domain.valid_to)
+        xml.tag!('domain:upDate', @domain.updated_at.try(:iso8601)) if @domain.updated_at != @domain.created_at
+
+        xml.tag!('domain:exDate', @domain.valid_to.try(:iso8601))
 
         # TODO Make domain stampable
         #xml.tag!('domain:upID', @domain.updated_by)
-
-        xml.tag!('domain:upDate', @domain.updated_at) if @domain.updated_at != @domain.created_at
 
         # TODO Make domain transferrable
         #xml.tag!('domain:trDate', @domain.transferred_at) if @domain.transferred_at
@@ -59,26 +60,26 @@ xml.epp_head do
         end
       end
     end
-  end
 
-  xml.extension do
-    xml.tag!('secDNS:infData', 'xmlns:secDNS' => 'urn:ietf:params:xml:ns:secDNS-1.1') do
-      @domain.dnskeys.sort.each do |key|
-        xml.tag!('secDNS:dsData') do
-          xml.tag!('secDNS:keyTag', key.ds_key_tag)
-          xml.tag!('secDNS:alg', key.ds_alg)
-          xml.tag!('secDNS:digestType', key.ds_digest_type)
-          xml.tag!('secDNS:digest', key.ds_digest)
-          xml.tag!('secDNS:keyData') do
-            xml.tag!('secDNS:flags', key.flags)
-            xml.tag!('secDNS:protocol', key.protocol)
-            xml.tag!('secDNS:alg', key.alg)
-            xml.tag!('secDNS:pubKey', key.public_key)
+    xml.extension do
+      xml.tag!('secDNS:infData', 'xmlns:secDNS' => 'urn:ietf:params:xml:ns:secDNS-1.1') do
+        @domain.dnskeys.sort.each do |key|
+          xml.tag!('secDNS:dsData') do
+            xml.tag!('secDNS:keyTag', key.ds_key_tag)
+            xml.tag!('secDNS:alg', key.ds_alg)
+            xml.tag!('secDNS:digestType', key.ds_digest_type)
+            xml.tag!('secDNS:digest', key.ds_digest)
+            xml.tag!('secDNS:keyData') do
+              xml.tag!('secDNS:flags', key.flags)
+              xml.tag!('secDNS:protocol', key.protocol)
+              xml.tag!('secDNS:alg', key.alg)
+              xml.tag!('secDNS:pubKey', key.public_key)
+            end
           end
         end
       end
-    end
-  end if @domain.dnskeys.any?
+    end if @domain.dnskeys.any?
 
-  xml << render('/epp/shared/trID')
+    render('epp/shared/trID', builder: xml)
+  end
 end
