@@ -236,8 +236,7 @@
         <element name="addr" type="contact:addrType"
          minOccurs="0"/>
       </sequence>
-      <attribute name="type" type="contact:postalInfoEnumType"
-       use="required"/>
+      <attribute name="type" type="contact:postalInfoEnumType"/>
     </complexType>
 
    <!--

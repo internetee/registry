@@ -267,14 +267,8 @@ describe 'EPP Contact', epp: true do
             },
             voice: { value: '+372.7654321' },
             fax: nil,
-            authInfo: { pw: { value: 'password' } },
             email: { value: 'edited@example.example' },
-            disclose: {
-              value: {
-                voice: { value: '' },
-                email: { value: '' }
-              }, attrs: { flag: '0' }
-            }
+            authInfo: { pw: { value: 'password' } }
           }
         }
         update_xml = @epp_xml.update(defaults.deep_merge(overwrites), extension)
