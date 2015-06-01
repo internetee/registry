@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe 'EPP Contact', epp: true do
   before :all do
+    @xsd = Nokogiri::XML::Schema(File.read('doc/schemas/contact-1.0.xsd'))
     @registrar1 = Fabricate(:registrar1)
     @registrar2 = Fabricate(:registrar2)
     @epp_xml    = EppXml::Contact.new(cl_trid: 'ABC-12345')
@@ -15,7 +16,7 @@ describe 'EPP Contact', epp: true do
 
     @extension = {
       legalDocument: {
-        value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+        value: 'dGVzdCBmYWlsCg==',
         attrs: { type: 'pdf' }
       },
       ident: {
@@ -31,8 +32,10 @@ describe 'EPP Contact', epp: true do
         extension = @extension if extension.blank?
 
         defaults = {
+          id: nil,
           postalInfo: {
             name: { value: 'John Doe' },
+            org: nil,
             addr: {
               street: { value: '123 Example' },
               city: { value: 'Tallinn' },
@@ -48,7 +51,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if request xml is missing' do
-        response = epp_plain_request(@epp_xml.create, :xml)
+        response = epp_plain_request(@epp_xml.create, validate_input: false)
         response[:results][0][:msg].should ==
           'Required parameter missing: create > create > postalInfo > name [name]'
         response[:results][1][:msg].should ==
@@ -103,7 +106,7 @@ describe 'EPP Contact', epp: true do
       it 'successfully saves ident type' do
         extension = {
           legalDocument: {
-            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+            value: 'dGVzdCBmYWlsCg==',
             attrs: { type: 'pdf' }
           },
           ident: {
@@ -205,7 +208,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'should generate server id when id is empty' do
-        response = create_request({ id: { value: '' } })
+        response = create_request({ id: nil })
 
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
@@ -381,7 +384,7 @@ describe 'EPP Contact', epp: true do
       it 'should update ident' do
         extension = {
           legalDocument: {
-            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+            value: 'dGVzdCBmYWlsCg==',
             attrs: { type: 'pdf' }
           },
           ident: {
