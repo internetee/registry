@@ -256,7 +256,7 @@ describe 'EPP Contact', epp: true do
           )
       end
 
-      def update_request(overwrites = {}, extension = {})
+      def update_request(overwrites = {}, extension = {}, options = {})
         extension = @extension if extension.blank?
 
         defaults = {
@@ -272,7 +272,7 @@ describe 'EPP Contact', epp: true do
           }
         }
         update_xml = @epp_xml.update(defaults.deep_merge(overwrites), extension)
-        epp_plain_request(update_xml, :xml)
+        epp_plain_request(update_xml, options)
       end
 
       it 'fails if request is invalid' do
@@ -365,10 +365,12 @@ describe 'EPP Contact', epp: true do
 
       it 'should not update code with custom string' do
         response = update_request(
-          id: { value: 'FIRST0:SH8013' },
-          chg: {
-            id: { value: 'notpossibletoupdate' }
-          }
+          {
+            id: { value: 'FIRST0:SH8013' },
+            chg: {
+              id: { value: 'notpossibletoupdate' }
+            }
+          }, {}, { validate_input: false }
         )
 
         response[:msg].should == 'Object does not exist'
@@ -436,7 +438,7 @@ describe 'EPP Contact', epp: true do
           }]
         })
 
-        response = epp_plain_request(xml, :xml)
+        response = epp_plain_request(xml, validate_input: false)
         response[:results][0][:result_code].should == '2306'
         response[:results][0][:msg].should == "Parameter value policy error. Client-side object status "\
                                               "management not supported: status [status]"
@@ -447,9 +449,9 @@ describe 'EPP Contact', epp: true do
       it 'should add value voice value' do
         xml = @epp_xml.update({
           id: { value: 'FIRST0:SH8013' },
-          authInfo: { pw: { value: 'password' } },
-          add: {
-            voice: { value: '+372.11111111' }
+          chg: {
+            voice: { value: '+372.11111111' },
+            authInfo: { pw: { value: 'password' } }
           }
         })
 
