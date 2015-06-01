@@ -44,6 +44,7 @@ describe 'EPP Contact', epp: true do
             }
           },
           voice: { value: '+372.1234567' },
+          fax: nil,
           email: { value: 'test@example.example' }
         }
         create_xml = @epp_xml.create(defaults.deep_merge(overwrites), extension)
@@ -280,7 +281,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if request is invalid' do
-        response = epp_plain_request(@epp_xml.update, :xml)
+        response = epp_plain_request(@epp_xml.update, validate_input: false)
 
         response[:results][0][:msg].should ==
           'Required parameter missing: add, rem or chg'
