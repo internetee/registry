@@ -261,12 +261,13 @@ describe 'EPP Contact', epp: true do
 
         defaults = {
           id: { value: 'asd123123er' },
-          authInfo: { pw: { value: 'password' } },
           chg: {
             postalInfo: {
               name: { value: 'John Doe Edited' }
             },
             voice: { value: '+372.7654321' },
+            fax: nil,
+            authInfo: { pw: { value: 'password' } },
             email: { value: 'edited@example.example' },
             disclose: {
               value: {
@@ -489,21 +490,21 @@ describe 'EPP Contact', epp: true do
       it 'should honor chg value over add value when both changes same attribute' do
         xml = @epp_xml.update({
           id: { value: 'FIRST0:SH8013' },
-          authInfo: { pw: { value: 'password' } },
-          chg: {
-            voice: { value: '+372.2222222222222' }
-          },
           add: {
             voice: { value: '+372.11111111111' }
+          },
+          chg: {
+            voice: { value: '+372.222222222222' },
+            authInfo: { pw: { value: 'password' } }
           }
         })
 
-        response = epp_plain_request(xml, :xml)
+        response = epp_plain_request(xml, validate_input: false)
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
         contact = Contact.find_by(code: 'FIRST0:SH8013')
-        contact.phone.should == '+372.2222222222222'
+        contact.phone.should == '+372.222222222222'
 
         contact.update_attribute(:phone, '+372.7654321') # restore default value
       end
