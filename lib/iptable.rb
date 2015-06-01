@@ -7,11 +7,11 @@ module Iptable
         f.puts "+#{ip}"
       end
     rescue Errno::ENOENT => e
-      logger.error "ERROR: cannot open #{counter_proc}: #{e}"
+      logger.error "IPTABLES COUNTER UPDATE: cannot open #{counter_proc}: #{e}"
     rescue Errno::EACCES => e
-      logger.error "ERROR: no permission #{counter_proc}: #{e}"
+      logger.error "IPTABLES COUNTER UPDATE: no permission #{counter_proc}: #{e}"
     rescue IOError => e
-      logger.error "ERROR: cannot write #{ip} to #{counter_proc}: #{e}"
+      logger.error "IPTABLES COUNTER UPDATE: cannot write #{ip} to #{counter_proc}: #{e}"
     end
   end
 end
