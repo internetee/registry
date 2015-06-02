@@ -181,7 +181,7 @@ class Contact < ActiveRecord::Base
     if code
       self.ident_country_code = code.alpha2
     else
-      errors.add(:ident_country_code, 'is not following ISO_3166-1 alpha 2 format')
+      errors.add(:ident, :invalid_country_code)
     end
   end
 end
