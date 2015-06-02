@@ -70,6 +70,7 @@ class Domain < ActiveRecord::Base
   after_save :update_whois_record
 
   validates :name_dirty, domain_name: true, uniqueness: true
+  validates :name_puny, length: { maximum: 66 }
   validates :period, numericality: { only_integer: true }
   validates :registrant, :registrar, presence: true
 

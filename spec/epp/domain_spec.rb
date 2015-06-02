@@ -189,6 +189,15 @@ describe 'EPP Domain', epp: true do
       # response[:clTRID].should == 'ABC-12345'
     # end
 
+    it 'does not create domain longer than 63 punicode characters' do
+      xml = domain_create_xml(name: { value: "#{'ä' * 63}.ee" })
+
+      response = epp_plain_request(xml)
+      response[:msg].should == 'Domain name is too long (maximum is 63 characters) [name_puny]'
+      response[:result_code].should == '2005'
+      response[:clTRID].should == 'ABC-12345'
+    end
+
     it 'does not create reserved domain' do
       xml = domain_create_xml(name: { value: '1162.ee' })
 
