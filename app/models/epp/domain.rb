@@ -55,7 +55,8 @@ class Epp::Domain < Domain
         ]
       ],
       '2005' => [ # Parameter value syntax error
-        [:name_dirty, :invalid,  { obj: 'name', val: name_dirty }]
+        [:name_dirty, :invalid, { obj: 'name', val: name_dirty }],
+        [:name_puny, :too_long, { obj: 'name', val: name_puny }]
       ],
       '2201' => [ # Authorisation error
         [:auth_info, :wrong_pw]
