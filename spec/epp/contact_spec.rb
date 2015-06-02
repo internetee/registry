@@ -505,11 +505,13 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'should not allow to remove required voice attribute' do
+        contact = Contact.find_by(code: 'FIRST0:SH8013')
+        phone = contact.phone
         xml = @epp_xml.update({
           id: { value: 'FIRST0:SH8013' },
-          authInfo: { pw: { value: 'password' } },
-          rem: {
-            voice: { value: '+372.7654321' }
+          chg: {
+            voice: { value: '' },
+            authInfo: { pw: { value: 'password' } }
           }
         })
 
@@ -518,10 +520,13 @@ describe 'EPP Contact', epp: true do
         response[:results][0][:result_code].should == '2003'
 
         contact = Contact.find_by(code: 'FIRST0:SH8013')
-        contact.phone.should == '+372.7654321'
+        contact.phone.should == phone
       end
 
+      # TODO: Update request rem block must be analyzed
       it 'should not allow to remove required attribute' do
+        contact = Contact.find_by(code: 'FIRST0:SH8013')
+        phone = contact.phone
         xml = @epp_xml.update({
           id: { value: 'FIRST0:SH8013' },
           authInfo: { pw: { value: 'password' } },
@@ -530,12 +535,12 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, :xml)
+        response = epp_plain_request(xml, validate_input: false)
         response[:results][0][:msg].should == 'Required parameter missing - phone [phone]'
         response[:results][0][:result_code].should == '2003'
 
         contact = Contact.find_by(code: 'FIRST0:SH8013')
-        contact.phone.should == '+372.7654321'
+        contact.phone.should == phone
       end
 
       it 'should honor add over rem' do
@@ -550,7 +555,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, :xml)
+        response = epp_plain_request(xml, validate_input: false)
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
@@ -572,7 +577,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, :xml)
+        response = epp_plain_request(xml, validate_input: false)
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
@@ -597,7 +602,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, :xml)
+        response = epp_plain_request(xml, validate_input: false)
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
@@ -616,7 +621,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, :xml)
+        response = epp_plain_request(xml, validate_input: false)
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
@@ -633,7 +638,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, :xml)
+        response = epp_plain_request(xml, validate_input: false)
         response[:results][0][:msg].should ==
           'Parameter value policy error. Org must be blank: postalInfo > org [org]'
         response[:results][0][:result_code].should == '2306'
@@ -650,7 +655,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, :xml)
+        response = epp_plain_request(xml, validate_input: false)
         response[:results][0][:msg].should == "Required parameter missing - name [name]"
         response[:results][0][:result_code].should == '2003'
       end
@@ -671,7 +676,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if request is invalid' do
-        response = epp_plain_request(@epp_xml.delete, :xml)
+        response = epp_plain_request(@epp_xml.delete, validate_input: false)
 
         response[:results][0][:msg].should ==
           'Required parameter missing: delete > delete > id [id]'
