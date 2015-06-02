@@ -229,7 +229,7 @@ module Depp
     end
 
     def extension_xml
-      xml = {_anonymus: []}
+      xml = { _anonymus: [] }
       ident = ident_xml[:_anonymus].try(:first)
       legal = legal_document_xml[:_anonymus].try(:first)
       xml[:_anonymus] << ident if ident.present?
