@@ -753,7 +753,7 @@ describe 'EPP Contact', epp: true do
 
       it 'should not delete when not owner with wrong password' do
         login_as :registrar2 do
-          response = delete_request({ authInfo: { value: 'wrong password' } })
+          response = delete_request({ authInfo: { pw: { value: 'wrong password' } } })
           response[:msg].should == 'Authorization error'
           response[:result_code].should == '2201'
           response[:results].count.should == 1
