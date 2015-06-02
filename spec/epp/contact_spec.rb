@@ -28,7 +28,7 @@ describe 'EPP Contact', epp: true do
 
   context 'with valid user' do
     context 'create command' do
-      def create_request(overwrites = {}, extension = {})
+      def create_request(overwrites = {}, extension = {}, options = {})
         extension = @extension if extension.blank?
 
         defaults = {
@@ -48,7 +48,7 @@ describe 'EPP Contact', epp: true do
           email: { value: 'test@example.example' }
         }
         create_xml = @epp_xml.create(defaults.deep_merge(overwrites), extension)
-        epp_plain_request(create_xml, :xml)
+        epp_plain_request(create_xml, options)
       end
 
       it 'fails if request xml is missing' do
@@ -177,8 +177,8 @@ describe 'EPP Contact', epp: true do
             attrs: { type: 'birthday', cc: 'WRONG' }
           }
         }
-        response = create_request({}, extension)
-        response[:msg].should == 
+        response = create_request({}, extension, validate_input: false)
+        response[:msg].should ==
           'Ident country code is not valid, should be in ISO_3166-1 alpha 2 format [ident]'
         response[:result_code].should == '2005'
       end
