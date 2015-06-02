@@ -1,5 +1,5 @@
-class UpdateCerts < ActiveRecord::Migration
-  def change
+class AddCertMd5 < ActiveRecord::Migration
+  def self.up
     Certificate.all.each do |x|
       if x.crt.present? && x.csr.present?
         x.interface = Certificate::REGISTRAR
@@ -20,5 +20,9 @@ class UpdateCerts < ActiveRecord::Migration
       end
       x.save
     end
+  end
+
+  def self.down
+    raise ActiveRecord::IrreversibleMigration
   end
 end

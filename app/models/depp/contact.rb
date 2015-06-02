@@ -229,7 +229,12 @@ module Depp
     end
 
     def extension_xml
-      ident_xml.merge(legal_document_xml)
+      xml = { _anonymus: [] }
+      ident = ident_xml[:_anonymus].try(:first)
+      legal = legal_document_xml[:_anonymus].try(:first)
+      xml[:_anonymus] << ident if ident.present?
+      xml[:_anonymus] << legal if legal.present?
+      xml
     end
 
     def ident_xml

@@ -42,8 +42,7 @@ Please install following lib, otherwise your bundler install might not be succes
 
 ### Firewall rate limit config
 
-First increase the maximum possible value for the hitcount parameter
-from its default value of 20 by setting the option 
+First increase the maximum possible value form 20 to 100 of the hitcount parameter.
 ip_pkt_list_tot of the xt_recent kernel module. 
 This can be done by creating an ip_pkt_list_tot.conf file in /etc/modeprobe.d/ which contains:
 
@@ -52,7 +51,6 @@ options xt_recent ip_pkt_list_tot=100
 ````
 
 Once the file is created, reload the xt_recent kernel module via modprobe -r xt_recent && modprobe xt_recent or reboot the system.
-
 
 #### Registrar, REPP, Restful-whois
 
@@ -68,22 +66,6 @@ BLOCKCOUNT=100
 DACTION="REJECT"
 $IPT -A INPUT -p tcp --dport 80 -i eth0 -m state --state NEW -m recent --set
 $IPT -A INPUT -p tcp --dport 80 -i eth0 -m state --state NEW -m recent --rcheck --seconds ${SECONDS} --hitcount ${BLOCKCOUNT} -j ${DACTION}
-````
-
-#### EPP
-
-````
-#!/bin/bash
-# Inspired and credits to Vivek Gite: http://www.cyberciti.biz/faq/iptables-connection-limits-howto/
-IPT=/sbin/iptables
-# Max connection in seconds
-SECONDS=60
-# Max connections per IP
-BLOCKCOUNT=100
-# default action can be DROP or REJECT or something else.
-DACTION="REJECT"
-$IPT -A INPUT -p tcp --dport 700 -i eth0 -m state --state NEW -m recent --set
-$IPT -A INPUT -p tcp --dport 700 -i eth0 -m state --state NEW -m recent --rcheck --seconds ${SECONDS} --hitcount ${BLOCKCOUNT} -j ${DACTION}
 ````
 
 #### Whois
@@ -102,3 +84,30 @@ $IPT -A INPUT -p tcp --dport 43 -i eth0 -m state --state NEW -m recent --set
 $IPT -A INPUT -p tcp --dport 43 -i eth0 -m state --state NEW -m recent --rcheck --seconds ${SECONDS} --hitcount ${BLOCKCOUNT} -j ${DACTION}
 ````
 
+#### EPP
+
+Iptables hitcounter is updated by application.
+
+````
+#!/bin/bash
+# Inspired and credits to Vivek Gite: http://www.cyberciti.biz/faq/iptables-connection-limits-howto/
+IPT=/sbin/iptables
+# Registrar handler
+REGISTRAR_CODE="test"
+# Max connection in seconds
+SECONDS=60
+# Max connections per IP
+BLOCKCOUNT=100
+# default action can be DROP or REJECT or something else.
+DACTION="REJECT"
+$IPT -A INPUT -p tcp --dport 700 -i eth0 -m state --state NEW -m recent --set
+$IPT -A INPUT -p tcp --dport 700 -m recent --name $REGISTRAR_CODE --rdest --rcheck --hitcount ${BLOCKCOUNT} --seconds ${SECONDS} -j ${DACTION}
+````
+
+After adding iptable counters, please add correct permissions to proc files at path /proc/net/xt_recent
+
+Example command:
+
+````
+sudo chown registry /proc/net/xt_recent/*
+````

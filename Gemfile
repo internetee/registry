@@ -53,6 +53,9 @@ gem 'isikukood' # for EE-id validation
 
 # deploy
 gem 'whenever', '~> 0.9.4', require: false
+gem 'data_migrate', 
+  github: 'gitlabeu/data_migrate',
+  ref: '35d22b09ff37a4e9d61ab326ad5d8eb0edf1fc81'
 
 # monitors
 gem 'newrelic_rpm', '~> 3.9.9.275'

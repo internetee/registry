@@ -1,3 +1,15 @@
+02.06.2015
+
+* Added possibility to overwrite legal document types at application.yml level.
+
+01.06.2015
+
+* Added separate data update, all data migration locate at db/data, more info 'rake -T data'
+
+29.05.2015
+
+* Removed old 'iptables_counter_update_command' and added 'iptables_counter_enabled'
+
 26.05.2015
 
 * Updated deploy script, now staging comes from staging branch

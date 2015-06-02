@@ -1407,9 +1407,86 @@ describe 'EPP Domain', epp: true do
 
       d = Domain.last
 
-      d.registrant_code.should_not == 'FIXED:CITIZEN_1234' # should not update, because pending
+      d.registrant_code.should_not == 'FIXED:CITIZEN_1234' # should not update
       d.auth_info.should == existing_pw
       d.pending_update?.should == true
+    end
+
+    it 'should not return action pending when changes are invalid' do
+      existing_pw = domain.auth_info
+
+      xml_params = {
+        name: { value: domain.name },
+        chg: [
+          registrant: { value: 'FIXED:CITIZEN_1234' }
+        ],
+        rem: 
+          domain.nameservers.map do |ns|
+            {
+              ns: [
+                {
+                  hostAttr: [
+                    { hostName: { value: ns.hostname } }
+                  ]
+                }
+              ]
+            }
+          end
+      }
+
+      response = epp_plain_request(domain_update_xml(xml_params, {}, {
+        _anonymus: [
+          legalDocument: {
+            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+            attrs: { type: 'pdf' }
+          }
+        ]
+      }), :xml)
+
+      response[:results][0][:msg].should == 'Nameservers count must be between 2-11 [nameservers]'
+      response[:results][0][:result_code].should == '2004'
+
+      d = Domain.last
+
+      d.registrant_code.should_not == 'FIXED:CITIZEN_1234' # should not update
+      d.auth_info.should == existing_pw
+      d.nameservers.size == 3
+      d.pending_update?.should == false
+    end
+
+    it 'should not return action pending when domain itself is already invaid' do
+      domain_id = domain.id
+      domain.nameservers.delete_all
+      domain.save(validate: false)
+      domain.reload.nameservers.size.should == 0
+
+      existing_pw = domain.auth_info
+
+      xml_params = {
+        name: { value: domain.name },
+        chg: [
+          registrant: { value: 'FIXED:CITIZEN_1234' }
+        ]
+      }
+
+      response = epp_plain_request(domain_update_xml(xml_params, {}, {
+        _anonymus: [
+          legalDocument: {
+            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+            attrs: { type: 'pdf' }
+          }
+        ]
+      }), :xml)
+
+      response[:results][0][:msg].should == 'Nameservers count must be between 2-11 [nameservers]'
+      response[:results][0][:result_code].should == '2004'
+
+      d = Domain.find(domain_id)
+
+      d.registrant_code.should_not == 'FIXED:CITIZEN_1234' # should not update
+      d.auth_info.should == existing_pw
+      d.nameservers.size.should == 0
+      d.pending_update?.should == false
     end
 
     it 'should not allow any update when status pending update' do

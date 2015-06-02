@@ -1,5 +1,5 @@
-class UpdateCertsAddCnFromCsr < ActiveRecord::Migration
-  def change
+class AddCertCommonName < ActiveRecord::Migration
+  def self.up
     Certificate.all.each do |x|
       if x.crt.blank? && x.csr.present?
         pc = x.parsed_csr.try(:subject).try(:to_s) || ''
@@ -8,5 +8,9 @@ class UpdateCertsAddCnFromCsr < ActiveRecord::Migration
       end
       x.save
     end
+  end
+
+  def self.down
+    raise ActiveRecord::IrreversibleMigration
   end
 end
