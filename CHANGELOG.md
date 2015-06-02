@@ -1,3 +1,7 @@
+02.06.2015
+
+* Added possibility to overwrite legal document types at application.yml level.
+
 01.06.2015
 
 * Added separate data update, all data migration locate at db/data, more info 'rake -T data'

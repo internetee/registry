@@ -2,7 +2,11 @@ class LegalDocument < ActiveRecord::Base
   include Versions # version/legal_document_version.rb
   belongs_to :documentable, polymorphic: true
 
-  TYPES = %w(pdf bdoc ddoc zip rar gz tar 7z odt doc docx)
+  if ENV['legal_document_types'].present?
+    TYPES = ENV['legal_document_types'].split(',').map(&:strip)
+  else
+    TYPES = %w(pdf bdoc ddoc zip rar gz tar 7z odt doc docx)
+  end
 
   attr_accessor :body
 

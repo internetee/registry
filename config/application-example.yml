@@ -33,6 +33,9 @@ contact_org_enabled: 'false'
 # Enable iptables counter updater 
 # iptables_counter_enabled: 'true'
 
+# Custom legal document types
+# legal_document_types: "pdf,bdoc,ddoc,zip,rar,gz,tar,7z,odt,doc,docx" 
+
 # DEPP server configuration (both for Registrar/Registrant servers)
 show_ds_data_fields: 'false'
 default_nameservers_count: '2'
