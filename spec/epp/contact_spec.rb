@@ -772,7 +772,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if request is invalid' do
-        response = epp_plain_request(@epp_xml.check, :xml)
+        response = epp_plain_request(@epp_xml.check, validate_input: false)
 
         response[:results][0][:msg].should == 'Required parameter missing: check > check > id [id]'
         response[:results][0][:result_code].should == '2003'
@@ -816,17 +816,18 @@ describe 'EPP Contact', epp: true do
     end
 
     context 'info command' do
-      def info_request(overwrites = {})
+      def info_request(overwrites = {}, options = {})
         defaults = {
           id: { value: @contact.code },
           authInfo: { pw: { value: @contact.auth_info } }
         }
+
         xml = @epp_xml.info(defaults.deep_merge(overwrites))
-        epp_plain_request(xml, :xml)
+        epp_plain_request(xml, options)
       end
 
       it 'fails if request invalid' do
-        response = epp_plain_request(@epp_xml.info, :xml)
+        response = epp_plain_request(@epp_xml.info, validate_input: false)
         response[:results][0][:msg].should ==
           'Required parameter missing: info > info > id [id]'
         response[:results][0][:result_code].should == '2003'
@@ -932,7 +933,7 @@ describe 'EPP Contact', epp: true do
 
       it 'returns no authorization error for wrong user and no password' do
         login_as :registrar2 do
-          response = info_request({ authInfo: { pw: { value: '' } } })
+          response = info_request({ authInfo: { pw: { value: '' } } }, validate_output: false)
           response[:msg].should == 'Command completed successfully'
           response[:result_code].should == '1000'
           response[:results].count.should == 1
