@@ -242,7 +242,7 @@ describe Domain do
   end
 
   it 'should not be valid when name length is longer than 63 characters' do
-    d = Fabricate.build(:domain, 
+    d = Fabricate.build(:domain,
       name: "xn--4caaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.ee")
     d.valid?
     d.errors.full_messages.should match_array([
@@ -290,6 +290,18 @@ describe Domain do
 
   it 'should not be valid when name length is one pynicode' do
     d = Fabricate.build(:domain, name: "xn--4ca.ee")
+    d.valid?
+    d.errors.full_messages.should == ["Domain name Domain name is invalid"]
+  end
+
+  it 'should not be valid with at character' do
+    d = Fabricate.build(:domain, name: 'dass@sf.ee')
+    d.valid?
+    d.errors.full_messages.should == ["Domain name Domain name is invalid"]
+  end
+
+  it 'should not be valid with invalid characters' do
+    d = Fabricate.build(:domain, name: '@ba)s(?ä_:-df.ee')
     d.valid?
     d.errors.full_messages.should == ["Domain name Domain name is invalid"]
   end
