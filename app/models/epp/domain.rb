@@ -467,6 +467,7 @@ class Epp::Domain < Domain
     oc = c.deep_clone include: [:statuses]
     oc.code = nil
     oc.registrar_id = registrar_id
+    oc.prefix_code
     oc.save!(validate: false)
     oc
   end
