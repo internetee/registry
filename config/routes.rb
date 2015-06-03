@@ -154,14 +154,11 @@ Rails.application.routes.draw do
   # ADMIN ROUTES
   namespace :admin do
     resources :keyrelays
-
     resources :zonefiles
-
     resources :zonefile_settings
-
     resources :legal_documents
-
     resources :keyrelays
+    resources :pricelists
 
     resources :bank_statements do
       post 'bind_invoices', on: :member
