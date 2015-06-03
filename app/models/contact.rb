@@ -85,6 +85,10 @@ class Contact < ActiveRecord::Base
     end
   end
 
+  def roid
+    "EIS-#{id}"
+  end
+
   def to_s
     name || '[no name]'
   end
@@ -133,7 +137,7 @@ class Contact < ActiveRecord::Base
 
     # custom code from client
     # add prefix when needed
-    if code.present? 
+    if code.present?
       prefix, *custom_code = code.split(':')
       code = custom_code.join(':') if prefix == registrar.code
     end

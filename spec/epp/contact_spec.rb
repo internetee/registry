@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe 'EPP Contact', epp: true do
   before :all do
+    @xsd = Nokogiri::XML::Schema(File.read('doc/schemas/contact-1.0.xsd'))
     @registrar1 = Fabricate(:registrar1)
     @registrar2 = Fabricate(:registrar2)
     @epp_xml    = EppXml::Contact.new(cl_trid: 'ABC-12345')
@@ -15,7 +16,7 @@ describe 'EPP Contact', epp: true do
 
     @extension = {
       legalDocument: {
-        value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+        value: 'dGVzdCBmYWlsCg==',
         attrs: { type: 'pdf' }
       },
       ident: {
@@ -27,12 +28,14 @@ describe 'EPP Contact', epp: true do
 
   context 'with valid user' do
     context 'create command' do
-      def create_request(overwrites = {}, extension = {})
+      def create_request(overwrites = {}, extension = {}, options = {})
         extension = @extension if extension.blank?
 
         defaults = {
+          id: nil,
           postalInfo: {
             name: { value: 'John Doe' },
+            org: nil,
             addr: {
               street: { value: '123 Example' },
               city: { value: 'Tallinn' },
@@ -41,14 +44,15 @@ describe 'EPP Contact', epp: true do
             }
           },
           voice: { value: '+372.1234567' },
+          fax: nil,
           email: { value: 'test@example.example' }
         }
         create_xml = @epp_xml.create(defaults.deep_merge(overwrites), extension)
-        epp_plain_request(create_xml, :xml)
+        epp_plain_request(create_xml, options)
       end
 
       it 'fails if request xml is missing' do
-        response = epp_plain_request(@epp_xml.create, :xml)
+        response = epp_plain_request(@epp_xml.create, validate_input: false)
         response[:results][0][:msg].should ==
           'Required parameter missing: create > create > postalInfo > name [name]'
         response[:results][1][:msg].should ==
@@ -103,7 +107,7 @@ describe 'EPP Contact', epp: true do
       it 'successfully saves ident type with legal document' do
         extension = {
           legalDocument: {
-            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+            value: 'dGVzdCBmYWlsCg==',
             attrs: { type: 'pdf' }
           },
           ident: {
@@ -173,8 +177,8 @@ describe 'EPP Contact', epp: true do
             attrs: { type: 'birthday', cc: 'WRONG' }
           }
         }
-        response = create_request({}, extension)
-        response[:msg].should == 
+        response = create_request({}, extension, validate_input: false)
+        response[:msg].should ==
           'Ident country code is not valid, should be in ISO_3166-1 alpha 2 format [ident]'
         response[:result_code].should == '2005'
       end
@@ -220,7 +224,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'should generate server id when id is empty' do
-        response = create_request({ id: { value: '' } })
+        response = create_request({ id: nil })
 
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
@@ -267,32 +271,27 @@ describe 'EPP Contact', epp: true do
           )
       end
 
-      def update_request(overwrites = {}, extension = {})
+      def update_request(overwrites = {}, extension = {}, options = {})
         extension = @extension if extension.blank?
 
         defaults = {
           id: { value: 'asd123123er' },
-          authInfo: { pw: { value: 'password' } },
           chg: {
             postalInfo: {
               name: { value: 'John Doe Edited' }
             },
             voice: { value: '+372.7654321' },
+            fax: nil,
             email: { value: 'edited@example.example' },
-            disclose: {
-              value: {
-                voice: { value: '' },
-                email: { value: '' }
-              }, attrs: { flag: '0' }
-            }
+            authInfo: { pw: { value: 'password' } }
           }
         }
         update_xml = @epp_xml.update(defaults.deep_merge(overwrites), extension)
-        epp_plain_request(update_xml, :xml)
+        epp_plain_request(update_xml, options)
       end
 
       it 'fails if request is invalid' do
-        response = epp_plain_request(@epp_xml.update, :xml)
+        response = epp_plain_request(@epp_xml.update, validate_input: false)
 
         response[:results][0][:msg].should ==
           'Required parameter missing: add, rem or chg'
@@ -381,10 +380,12 @@ describe 'EPP Contact', epp: true do
 
       it 'should not update code with custom string' do
         response = update_request(
-          id: { value: 'FIRST0:SH8013' },
-          chg: {
-            id: { value: 'notpossibletoupdate' }
-          }
+          {
+            id: { value: 'FIRST0:SH8013' },
+            chg: {
+              id: { value: 'notpossibletoupdate' }
+            }
+          }, {}, { validate_input: false }
         )
 
         response[:msg].should == 'Object does not exist'
@@ -396,7 +397,7 @@ describe 'EPP Contact', epp: true do
       it 'should update ident' do
         extension = {
           legalDocument: {
-            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+            value: 'dGVzdCBmYWlsCg==',
             attrs: { type: 'pdf' }
           },
           ident: {
@@ -452,7 +453,7 @@ describe 'EPP Contact', epp: true do
           }]
         })
 
-        response = epp_plain_request(xml, :xml)
+        response = epp_plain_request(xml, validate_input: false)
         response[:results][0][:result_code].should == '2306'
         response[:results][0][:msg].should == "Parameter value policy error. Client-side object status "\
                                               "management not supported: status [status]"
@@ -463,9 +464,9 @@ describe 'EPP Contact', epp: true do
       it 'should add value voice value' do
         xml = @epp_xml.update({
           id: { value: 'FIRST0:SH8013' },
-          authInfo: { pw: { value: 'password' } },
-          add: {
-            voice: { value: '+372.11111111' }
+          chg: {
+            voice: { value: '+372.11111111' },
+            authInfo: { pw: { value: 'password' } }
           }
         })
 
@@ -480,51 +481,52 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'should return error when add attributes phone value is empty' do
+        phone = Contact.find_by(code: 'FIRST0:SH8013').phone
         xml = @epp_xml.update({
           id: { value: 'FIRST0:SH8013' },
-          authInfo: { pw: { value: 'password' } },
-          add: {
-            voice: { value: '' }
-          },
           chg: {
-            postalInfo: { email: { value: 'example@example.ee' } }
+            voice: { value: '' },
+            email: { value: 'example@example.ee' },
+            authInfo: { pw: { value: 'password' } }
           }
         })
 
         response = epp_plain_request(xml, :xml)
         response[:results][0][:msg].should == 'Required parameter missing - phone [phone]'
         response[:results][0][:result_code].should == '2003'
-        Contact.find_by(code: 'FIRST0:SH8013').phone.should == '+372.7654321' # aka not changed
+        Contact.find_by(code: 'FIRST0:SH8013').phone.should == phone # aka not changed
       end
 
       it 'should honor chg value over add value when both changes same attribute' do
         xml = @epp_xml.update({
           id: { value: 'FIRST0:SH8013' },
-          authInfo: { pw: { value: 'password' } },
-          chg: {
-            voice: { value: '+372.2222222222222' }
-          },
           add: {
             voice: { value: '+372.11111111111' }
+          },
+          chg: {
+            voice: { value: '+372.222222222222' },
+            authInfo: { pw: { value: 'password' } }
           }
         })
 
-        response = epp_plain_request(xml, :xml)
+        response = epp_plain_request(xml, validate_input: false)
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
         contact = Contact.find_by(code: 'FIRST0:SH8013')
-        contact.phone.should == '+372.2222222222222'
+        contact.phone.should == '+372.222222222222'
 
         contact.update_attribute(:phone, '+372.7654321') # restore default value
       end
 
       it 'should not allow to remove required voice attribute' do
+        contact = Contact.find_by(code: 'FIRST0:SH8013')
+        phone = contact.phone
         xml = @epp_xml.update({
           id: { value: 'FIRST0:SH8013' },
-          authInfo: { pw: { value: 'password' } },
-          rem: {
-            voice: { value: '+372.7654321' }
+          chg: {
+            voice: { value: '' },
+            authInfo: { pw: { value: 'password' } }
           }
         })
 
@@ -533,10 +535,13 @@ describe 'EPP Contact', epp: true do
         response[:results][0][:result_code].should == '2003'
 
         contact = Contact.find_by(code: 'FIRST0:SH8013')
-        contact.phone.should == '+372.7654321'
+        contact.phone.should == phone
       end
 
+      # TODO: Update request rem block must be analyzed
       it 'should not allow to remove required attribute' do
+        contact = Contact.find_by(code: 'FIRST0:SH8013')
+        phone = contact.phone
         xml = @epp_xml.update({
           id: { value: 'FIRST0:SH8013' },
           authInfo: { pw: { value: 'password' } },
@@ -545,12 +550,12 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, :xml)
+        response = epp_plain_request(xml, validate_input: false)
         response[:results][0][:msg].should == 'Required parameter missing - phone [phone]'
         response[:results][0][:result_code].should == '2003'
 
         contact = Contact.find_by(code: 'FIRST0:SH8013')
-        contact.phone.should == '+372.7654321'
+        contact.phone.should == phone
       end
 
       it 'should honor add over rem' do
@@ -565,7 +570,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, :xml)
+        response = epp_plain_request(xml, validate_input: false)
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
@@ -587,7 +592,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, :xml)
+        response = epp_plain_request(xml, validate_input: false)
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
@@ -612,7 +617,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, :xml)
+        response = epp_plain_request(xml, validate_input: false)
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
@@ -631,7 +636,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, :xml)
+        response = epp_plain_request(xml, validate_input: false)
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
@@ -648,7 +653,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, :xml)
+        response = epp_plain_request(xml, validate_input: false)
         response[:results][0][:msg].should ==
           'Parameter value policy error. Org must be blank: postalInfo > org [org]'
         response[:results][0][:result_code].should == '2306'
@@ -665,7 +670,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, :xml)
+        response = epp_plain_request(xml, validate_input: false)
         response[:results][0][:msg].should == "Required parameter missing - name [name]"
         response[:results][0][:result_code].should == '2003'
       end
@@ -686,7 +691,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if request is invalid' do
-        response = epp_plain_request(@epp_xml.delete, :xml)
+        response = epp_plain_request(@epp_xml.delete, validate_input: false)
 
         response[:results][0][:msg].should ==
           'Required parameter missing: delete > delete > id [id]'
@@ -763,7 +768,7 @@ describe 'EPP Contact', epp: true do
 
       it 'should not delete when not owner with wrong password' do
         login_as :registrar2 do
-          response = delete_request({ authInfo: { value: 'wrong password' } })
+          response = delete_request({ authInfo: { pw: { value: 'wrong password' } } })
           response[:msg].should == 'Authorization error'
           response[:result_code].should == '2201'
           response[:results].count.should == 1
@@ -782,7 +787,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if request is invalid' do
-        response = epp_plain_request(@epp_xml.check, :xml)
+        response = epp_plain_request(@epp_xml.check, validate_input: false)
 
         response[:results][0][:msg].should == 'Required parameter missing: check > check > id [id]'
         response[:results][0][:result_code].should == '2003'
@@ -826,17 +831,18 @@ describe 'EPP Contact', epp: true do
     end
 
     context 'info command' do
-      def info_request(overwrites = {})
+      def info_request(overwrites = {}, options = {})
         defaults = {
           id: { value: @contact.code },
           authInfo: { pw: { value: @contact.auth_info } }
         }
+
         xml = @epp_xml.info(defaults.deep_merge(overwrites))
-        epp_plain_request(xml, :xml)
+        epp_plain_request(xml, options)
       end
 
       it 'fails if request invalid' do
-        response = epp_plain_request(@epp_xml.info, :xml)
+        response = epp_plain_request(@epp_xml.info, validate_input: false)
         response[:results][0][:msg].should ==
           'Required parameter missing: info > info > id [id]'
         response[:results][0][:result_code].should == '2003'
@@ -942,7 +948,7 @@ describe 'EPP Contact', epp: true do
 
       it 'returns no authorization error for wrong user and no password' do
         login_as :registrar2 do
-          response = info_request({ authInfo: { pw: { value: '' } } })
+          response = info_request({ authInfo: { pw: { value: '' } } }, validate_output: false)
           response[:msg].should == 'Command completed successfully'
           response[:result_code].should == '1000'
           response[:results].count.should == 1

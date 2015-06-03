@@ -1424,29 +1424,31 @@ describe 'EPP Domain', epp: true do
     it 'should not return action pending when changes are invalid' do
       existing_pw = domain.auth_info
 
+      hostnames = domain.nameservers.pluck(:hostname)
+
       xml_params = {
         name: { value: domain.name },
-        chg: [
-          registrant: { value: 'FIXED:CITIZEN_1234' }
-        ],
-        rem: 
-          domain.nameservers.map do |ns|
-            {
-              ns: [
+        rem: [
+          {
+            ns:
+              hostnames.map do |x|
                 {
                   hostAttr: [
-                    { hostName: { value: ns.hostname } }
+                    { hostName: { value: x } }
                   ]
                 }
-              ]
-            }
-          end
+              end
+          }
+        ],
+        chg: [
+          registrant: { value: 'FIXED:CITIZEN_1234' }
+        ]
       }
 
       response = epp_plain_request(domain_update_xml(xml_params, {}, {
         _anonymus: [
           legalDocument: {
-            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+            value: 'dGVzdCBmYWlsCg==',
             attrs: { type: 'pdf' }
           }
         ]
@@ -1481,7 +1483,7 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(domain_update_xml(xml_params, {}, {
         _anonymus: [
           legalDocument: {
-            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+            value: 'dGVzdCBmYWlsCg==',
             attrs: { type: 'pdf' }
           }
         ]
