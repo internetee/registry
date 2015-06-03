@@ -9,7 +9,7 @@ Eposti aadressile saadetakse domeenidega seotud infot seal hulgas kinnitustaotlu
 <% if @contact.related_domain_descriptions.present? %>
 Muudatusega seotud domeenid:
   <% @contact.related_domain_descriptions.each do |domain, desc| %>
-    <%= domain %> (<%= desc.map { |d| t(:d) }.join(', ') %>)
+    <%= domain %> (<%= desc.map { |d| t(d, locale: :et) }.join(', ') %>)
   <% end %>
 <% end %>
 
@@ -38,7 +38,7 @@ E-mail addresses are used to send important information regarding your registere
 <% if @contact.related_domain_descriptions.present? %>
 Domains affected by this update:
   <% @contact.related_domain_descriptions.each do |domain, desc| %>
-    <%= domain %> (<%= desc.map { |d| t(:d) }.join(', ') %>)
+    <%= domain %> (<%= desc.map { |d| t(d, locale: :en) }.join(', ') %>)
   <% end %>
 <% end %>
 
