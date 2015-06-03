@@ -2,6 +2,6 @@ et:
   username: 'Kasutajanimi'
   password: 'Parool'
   log_in: 'Logi sisse'
-  registrant: 'Registreerija'
-  tech: Tehniline kontakt
-  admin: Halduskontakt
+  registrant: registreerija
+  tech: tehniline kontakt
+  admin: halduskontakt
