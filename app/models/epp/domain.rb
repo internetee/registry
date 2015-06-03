@@ -550,7 +550,7 @@ class Epp::Domain < Domain
         return dt
       rescue => _e
         add_epp_error('2306', nil, nil, I18n.t('action_failed_due_to_server_error'))
-        logger.error(e)
+        logger.error(_e)
         raise ActiveRecord::Rollback
       end
     end
