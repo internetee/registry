@@ -4,7 +4,7 @@ Fabricator(:admin_user) do
   username 'gitlab'
   password 'ghyt9e4fu'
   password_confirmation 'ghyt9e4fu'
-  email 'info@gitlab.eu'
+  email { sequence(:email) { |i| "info#{i}@example.com" } }
   country_code 'FI'
   roles ['admin']
 end

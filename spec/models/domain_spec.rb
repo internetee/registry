@@ -226,6 +226,98 @@ describe Domain do
     expect(d.name_dirty).to eq('test.ee')
   end
 
+  it 'should be valid when name length is exatly 63 in characters' do
+    d = Fabricate(:domain, name: "#{'a' * 63}.ee")
+    d.valid?
+    d.errors.full_messages.should == []
+  end
+
+  it 'should not be valid when name length is longer than 63 characters' do
+    d = Fabricate.build(:domain, name: "#{'a' * 64}.ee")
+    d.valid?
+    d.errors.full_messages.should match_array([
+      "Domain name Domain name is invalid",
+      "Domain name Domain name is too long (maximum is 63 characters)"
+    ])
+  end
+
+  it 'should not be valid when name length is longer than 63 characters' do
+    d = Fabricate.build(:domain,
+      name: "xn--4caaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.ee")
+    d.valid?
+    d.errors.full_messages.should match_array([
+      "Domain name Domain name is invalid",
+      "Domain name Domain name is too long (maximum is 63 characters)"
+    ])
+  end
+
+  it 'should not be valid when name length is longer than 63 punycode characters' do
+    d = Fabricate.build(:domain, name: "#{'ä' * 63}.ee")
+    d.valid?
+    d.errors.full_messages.should == [
+      "Domain name Domain name is too long (maximum is 63 characters)"
+    ]
+  end
+
+  it 'should not be valid when name length is longer than 63 punycode characters' do
+    d = Fabricate.build(:domain, name: "#{'ä' * 64}.ee")
+    d.valid?
+    d.errors.full_messages.should match_array([
+      "Domain name Domain name is invalid",
+      "Domain name Domain name is too long (maximum is 63 characters)"
+    ])
+  end
+
+  it 'should not be valid when name length is longer than 63 punycode characters' do
+    d = Fabricate.build(:domain, name: "#{'ä' * 63}.pri.ee")
+    d.valid?
+    d.errors.full_messages.should match_array([
+      "Domain name Domain name is too long (maximum is 63 characters)"
+    ])
+  end
+
+  it 'should be valid when punycode name length is not longer than 63' do
+    d = Fabricate.build(:domain, name: "#{'ä' * 53}.pri.ee")
+    d.valid?
+    d.errors.full_messages.should == []
+  end
+
+  it 'should be valid when punycode name length is not longer than 63' do
+    d = Fabricate.build(:domain, name: "#{'ä' * 57}.ee")
+    d.valid?
+    d.errors.full_messages.should == []
+  end
+
+  it 'should not be valid when name length is one pynicode' do
+    d = Fabricate.build(:domain, name: "xn--4ca.ee")
+    d.valid?
+    d.errors.full_messages.should == ["Domain name Domain name is invalid"]
+  end
+
+  it 'should not be valid with at character' do
+    d = Fabricate.build(:domain, name: 'dass@sf.ee')
+    d.valid?
+    d.errors.full_messages.should == ["Domain name Domain name is invalid"]
+  end
+
+  it 'should not be valid with invalid characters' do
+    d = Fabricate.build(:domain, name: '@ba)s(?ä_:-df.ee')
+    d.valid?
+    d.errors.full_messages.should == ["Domain name Domain name is invalid"]
+  end
+
+  it 'should be valid when name length is two pynicodes' do
+    d = Fabricate.build(:domain, name: "xn--4caa.ee")
+    d.valid?
+    d.errors.full_messages.should == []
+  end
+
+  it 'should be valid when name length is two pynicodes' do
+    d = Fabricate.build(:domain, name: "xn--4ca0b.ee")
+    d.valid?
+    d.errors.full_messages.should == []
+  end
+
   it 'normalizes ns attrs' do
     d = Fabricate(:domain)
     d.nameservers.build(hostname: 'BLA.EXAMPLE.EE', ipv4: '   192.168.1.1', ipv6: '1080:0:0:0:8:800:200c:417a')

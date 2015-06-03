@@ -6,10 +6,10 @@ uus aadress: <%= @contact.email %>
 <br><br>
 Eposti aadressile saadetakse domeenidega seotud infot seal hulgas kinnitustaotluseid omaniku vahetuse ja domeeni kustutamise korral. Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduga oma registripidaja poole. Teie registripidaja on <%= @contact.registrar.name %>
 <br><br>
-<% if @contact.domain_contacts.present? %>
+<% if @contact.related_domain_descriptions.present? %>
 Muudatusega seotud domeenid:<br>
-<% @contact.domain_contacts.each do |dc| %>
-  <%= dc.domain.name %> (<%= dc.name %>)<br>
+<% @contact.related_domain_descriptions.each do |domain, desc| %>
+  <%= domain %> (<%= desc.map { |d| t(d, locale: :et) }.join(', ') %>)<br>
 <% end %>
 <% end %>
 <br>
@@ -35,9 +35,11 @@ new address: <% @contact.email %>
 <br><br>
 E-mail addresses are used to send important information regarding your registered domains including applications for approval of registrant change and domain deletion. Please make sure that the update and contact information are correct. Incase of problems please turn to your registrar. Your registrar is <%= @contact.registrar.name %>
 <br><br>
+<% if @contact.related_domain_descriptions.present? %>
 Domains affected by this update:<br>
-<% @contact.domain_contacts.each do |dc| %>
-  <%= dc.domain.name %> (<%= dc.name %>)<br>
+<% @contact.related_domain_descriptions.each do |domain, desc| %>
+  <%= domain %> (<%= desc.map { |d| t(d, locale: :en) }.join(', ') %>)<br>
+<% end %>
 <% end %>
 <br>
 Contact information:<br>

@@ -12,6 +12,7 @@
    -->
     <import namespace="urn:ietf:params:xml:ns:eppcom-1.0" schemaLocation="doc/schemas/eppcom-1.0.xsd"/>
     <import namespace="urn:ietf:params:xml:ns:epp-1.0" schemaLocation="doc/schemas/epp-1.0.xsd"/>
+    <import namespace="urn:ietf:params:xml:ns:eis-1.0" schemaLocation="doc/schemas/eis-1.0.xsd"/>
 
     <annotation>
       <documentation>
@@ -25,7 +26,7 @@
    -->
     <element name="check" type="contact:mIDType"/>
     <element name="create" type="contact:createType"/>
-    <element name="delete" type="contact:sIDType"/>
+    <element name="delete" type="contact:authIDType"/>
     <element name="info" type="contact:authIDType"/>
     <element name="transfer" type="contact:authIDType"/>
     <element name="update" type="contact:updateType"/>
@@ -94,7 +95,7 @@
    -->
     <complexType name="createType">
       <sequence>
-        <element name="id" type="eppcom:clIDType"/>
+        <element name="id" type="eppcom:clIDType" minOccurs="0"/>
         <element name="postalInfo" type="contact:postalInfoType"
          maxOccurs="2"/>
         <element name="voice" type="contact:e164Type"
@@ -103,10 +104,9 @@
          minOccurs="0"/>
         <element name="email" type="eppcom:minTokenType"/>
         <element name="ident" type="contact:identType"
-          minOccurs="0"/> 
-        <element name="authInfo" type="contact:authInfoType"/>
-        <element name="disclose" type="contact:discloseType"
-         minOccurs="0"/>
+          minOccurs="0"/>
+        <element name="authInfo" type="contact:authInfoType" minOccurs="0"/>
+
       </sequence>
     </complexType>
 
@@ -117,8 +117,7 @@
          minOccurs="0"/>
         <element name="addr" type="contact:addrType"/>
       </sequence>
-      <attribute name="type" type="contact:postalInfoEnumType"
-       use="required"/>
+      <attribute name="type" type="contact:postalInfoEnumType"/>
     </complexType>
 
     <simpleType name="postalInfoEnumType">
@@ -146,21 +145,6 @@
         <element name="pw" type="eppcom:pwAuthInfoType"/>
         <element name="ext" type="eppcom:extAuthInfoType"/>
       </choice>
-    </complexType>
-
-    <complexType name="discloseType">
-      <sequence>
-        <element name="name" type="contact:intLocType"
-         minOccurs="0" maxOccurs="2"/>
-        <element name="org" type="contact:intLocType"
-         minOccurs="0" maxOccurs="2"/>
-        <element name="addr" type="contact:intLocType"
-         minOccurs="0" maxOccurs="2"/>
-        <element name="voice" minOccurs="0"/>
-        <element name="fax" minOccurs="0"/>
-        <element name="email" minOccurs="0"/>
-      </sequence>
-      <attribute name="flag" type="boolean" use="required"/>
     </complexType>
 
     <complexType name="intLocType">
@@ -240,8 +224,6 @@
          minOccurs="0"/>
         <element name="authInfo" type="contact:authInfoType"
          minOccurs="0"/>
-        <element name="disclose" type="contact:discloseType"
-         minOccurs="0"/>
       </sequence>
     </complexType>
 
@@ -254,8 +236,7 @@
         <element name="addr" type="contact:addrType"
          minOccurs="0"/>
       </sequence>
-      <attribute name="type" type="contact:postalInfoEnumType"
-       use="required"/>
+      <attribute name="type" type="contact:postalInfoEnumType"/>
     </complexType>
 
    <!--
@@ -330,8 +311,6 @@
         <element name="trDate" type="dateTime"
          minOccurs="0"/>
         <element name="authInfo" type="contact:authInfoType"
-         minOccurs="0"/>
-        <element name="disclose" type="contact:discloseType"
          minOccurs="0"/>
       </sequence>
     </complexType>

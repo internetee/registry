@@ -38,6 +38,7 @@ gem 'nprogress-rails',  '~> 0.1.6.7' # visual loader
 gem 'html5_validators', '~> 1.2.0'   # model requements now automatically on html form
 gem 'coderay',          '~> 1.1.0'   # xml console visualize
 gem 'select2-rails',    '~> 3.5.9.3' # for autocomplete
+gem 'bootstrap-datepicker-rails', '~> 1.3.1.1' # datepicker
 
 # rights
 gem 'devise',    '~> 3.4.1' # authenitcation
@@ -50,6 +51,7 @@ gem 'jbuilder', '~> 2.2.6'  # json api
 # registry specfic
 gem 'simpleidn', '~> 0.0.5' # For punycode
 gem 'isikukood' # for EE-id validation
+gem 'money-rails', '~> 1.3.0' # Money helpers
 
 # deploy
 gem 'whenever', '~> 0.9.4', require: false

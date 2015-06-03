@@ -11,14 +11,15 @@
       - if @admin_user.new_record? || can?(:update, AdminUser)
         .form-group
           .col-md-4.control-label
-            = f.label :password
+            - not_required = @admin_user.new_record? ? '' : 'not-required'
+            = f.label :password, class: not_required
           .col-md-8
-            = f.text_field(:password, class: 'form-control')
+            = f.password_field(:password, class: 'form-control')
         .form-group
           .col-md-4.control-label
-            = f.label :password_confirmation
+            = f.label :password_confirmation, class: not_required
           .col-md-8
-            = f.text_field(:password_confirmation, class: 'form-control')
+            = f.password_field(:password_confirmation, class: 'form-control')
 
       %hr
       .form-group
@@ -48,3 +49,8 @@
   .row
     .col-md-8.text-right
       = button_tag(t(:save), class: 'btn btn-primary')
+
+:coffee
+  $("#admin_user_password").removeAttr('required')
+  $("#admin_user_password_confirmation").removeAttr('required')
+

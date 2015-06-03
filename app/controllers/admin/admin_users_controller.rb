@@ -11,6 +11,10 @@ class Admin::AdminUsersController < AdminController
     @admin_user = AdminUser.new
   end
 
+  def show; end
+
+  def edit; end
+
   def create
     @admin_user = AdminUser.new(admin_user_params)
 
@@ -23,12 +27,11 @@ class Admin::AdminUsersController < AdminController
     end
   end
 
-  def show; end
-
-  def edit; end
-
   def update
-    if @admin_user.update(admin_user_params)
+    params[:admin_user].delete(:password) if params[:admin_user][:password].blank?
+    params[:admin_user].delete(:password_confirmation) if params[:admin_user][:password_confirmation].blank?
+
+    if @admin_user.update_attributes(admin_user_params)
       flash[:notice] = I18n.t('record_updated')
       redirect_to [:admin, @admin_user]
     else
@@ -54,6 +57,6 @@ class Admin::AdminUsersController < AdminController
   end
 
   def admin_user_params
-    params.require(:admin_user).permit(:username, :password, :identity_code, :email, :country_code, { roles: [] })
+    params.require(:admin_user).permit(:username, :password, :password_confirmation, :identity_code, :email, :country_code, { roles: [] })
   end
 end

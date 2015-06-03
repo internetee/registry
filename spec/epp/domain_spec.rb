@@ -189,6 +189,15 @@ describe 'EPP Domain', epp: true do
       # response[:clTRID].should == 'ABC-12345'
     # end
 
+    it 'does not create domain longer than 63 punicode characters' do
+      xml = domain_create_xml(name: { value: "#{'ä' * 63}.ee" })
+
+      response = epp_plain_request(xml)
+      response[:msg].should == 'Domain name is too long (maximum is 63 characters) [name_puny]'
+      response[:result_code].should == '2005'
+      response[:clTRID].should == 'ABC-12345'
+    end
+
     it 'does not create reserved domain' do
       xml = domain_create_xml(name: { value: '1162.ee' })
 
@@ -1415,29 +1424,31 @@ describe 'EPP Domain', epp: true do
     it 'should not return action pending when changes are invalid' do
       existing_pw = domain.auth_info
 
+      hostnames = domain.nameservers.pluck(:hostname)
+
       xml_params = {
         name: { value: domain.name },
-        chg: [
-          registrant: { value: 'FIXED:CITIZEN_1234' }
-        ],
-        rem: 
-          domain.nameservers.map do |ns|
-            {
-              ns: [
+        rem: [
+          {
+            ns:
+              hostnames.map do |x|
                 {
                   hostAttr: [
-                    { hostName: { value: ns.hostname } }
+                    { hostName: { value: x } }
                   ]
                 }
-              ]
-            }
-          end
+              end
+          }
+        ],
+        chg: [
+          registrant: { value: 'FIXED:CITIZEN_1234' }
+        ]
       }
 
       response = epp_plain_request(domain_update_xml(xml_params, {}, {
         _anonymus: [
           legalDocument: {
-            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+            value: 'dGVzdCBmYWlsCg==',
             attrs: { type: 'pdf' }
           }
         ]
@@ -1472,7 +1483,7 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(domain_update_xml(xml_params, {}, {
         _anonymus: [
           legalDocument: {
-            value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+            value: 'dGVzdCBmYWlsCg==',
             attrs: { type: 'pdf' }
           }
         ]
@@ -1980,6 +1991,21 @@ describe 'EPP Domain', epp: true do
       response[:results][0][:msg].should == 'Period must add up to 1, 2 or 3 years [period]'
       response[:results][0][:result_code].should == '2004'
       response[:results][0][:value].should == '4'
+    end
+
+    it 'does not renew foreign domain' do
+      login_as :registrar2 do
+        exp_date = 1.year.since.to_date
+        xml = @epp_xml.domain.renew(
+          name: { value: domain.name },
+          curExpDate: { value: exp_date.to_s },
+          period: { value: '1', attrs: { unit: 'y' } }
+        )
+
+        response = epp_plain_request(xml)
+        response[:results][0][:msg].should == 'Authorization error'
+        response[:results][0][:result_code].should == '2201'
+      end
     end
 
     ### INFO ###

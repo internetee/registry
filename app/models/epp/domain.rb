@@ -55,7 +55,8 @@ class Epp::Domain < Domain
         ]
       ],
       '2005' => [ # Parameter value syntax error
-        [:name_dirty, :invalid,  { obj: 'name', val: name_dirty }]
+        [:name_dirty, :invalid, { obj: 'name', val: name_dirty }],
+        [:name_puny, :too_long, { obj: 'name', val: name_puny }]
       ],
       '2201' => [ # Authorisation error
         [:auth_info, :wrong_pw]
@@ -394,7 +395,7 @@ class Epp::Domain < Domain
     at[:domain_statuses_attributes] += at_add[:domain_statuses_attributes]
 
     if frame.css('registrant').present? && frame.css('registrant').attr('verified').to_s.downcase != 'yes'
-      registrant_verification_asked! 
+      registrant_verification_asked!
     end
     self.deliver_emails = true # turn on email delivery for epp
 
@@ -414,7 +415,7 @@ class Epp::Domain < Domain
     return false unless valid?
 
     if frame.css('delete').attr('verified').to_s.downcase != 'yes'
-      registrant_verification_asked! 
+      registrant_verification_asked!
       pending_delete!
       manage_automatic_statuses
       true # aka 1001 pending_delete
@@ -466,7 +467,8 @@ class Epp::Domain < Domain
     oc = c.deep_clone include: [:statuses]
     oc.code = nil
     oc.registrar_id = registrar_id
-    oc.save!
+    oc.prefix_code
+    oc.save!(validate: false)
     oc
   end
 
@@ -474,7 +476,7 @@ class Epp::Domain < Domain
     oc = Contact.find(contact_id) # n+1 workaround
     oc.registrar_id = registrar_id
     oc.generate_new_code!
-    oc.save!
+    oc.save!(validate: false)
     oc
   end
 
@@ -547,8 +549,10 @@ class Epp::Domain < Domain
         save!(validate: false)
 
         return dt
-      rescue => _e
+      rescue => e
         add_epp_error('2306', nil, nil, I18n.t('action_failed_due_to_server_error'))
+        logger.error('DOMAIN TRANSFER FAILED')
+        logger.error(e)
         raise ActiveRecord::Rollback
       end
     end

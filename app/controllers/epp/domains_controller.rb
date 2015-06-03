@@ -77,7 +77,7 @@ class Epp::DomainsController < EppController
   end
 
   def renew
-    authorize! :renew, Epp::Domain
+    authorize! :renew, @domain
 
     handle_errors(@domain) and return unless @domain.renew(
       params[:parsed_frame].css('curExpDate').text,

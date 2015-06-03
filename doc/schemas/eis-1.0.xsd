@@ -26,8 +26,8 @@
     <sequence>
       <element name="legalDocument" type="eis:legalDocType"
       minOccurs="0" maxOccurs="1"/>
-<!--       <element name="ident" type="eis:identType"
-      minOccurs="0" maxOccurs="1"/> -->
+      <element name="ident" type="eis:identType"
+      minOccurs="0" maxOccurs="1"/>
     </sequence>
   </complexType>
 
@@ -55,10 +55,11 @@
     </restriction>
   </simpleType>
 
-  <!-- <complexType name="identType">
+  <complexType name="identType">
     <simpleContent>
       <extension base="normalizedString">
         <attribute name="type" type="eis:identEnumType" use="required"/>
+        <attribute name="cc" type="eis:ccType" use="required"/>
       </extension>
     </simpleContent>
   </complexType>
@@ -70,5 +71,12 @@
       <enumeration value="birthday"/>
       <enumeration value="passport"/>
     </restriction>
-  </simpleType> -->
+  </simpleType>
+
+  <simpleType name="ccType">
+    <restriction base="normalizedString">
+      <minLength value="2"/>
+      <maxLength value="2"/>
+    </restriction>
+  </simpleType>
 </schema>

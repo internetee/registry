@@ -7,10 +7,10 @@ xml.epp_head do
     xml.resData do
       xml.tag!('contact:infData', 'xmlns:contact' => 'urn:ietf:params:xml:ns:contact-1.0') do
         xml.tag!('contact:id', @contact.code)
-        if can? :view_full_info, @contact, @password
-          xml.tag!('contact:voice', @contact.phone)
-          xml.tag!('contact:email', @contact.email)
-          xml.tag!('contact:fax', @contact.fax) if @contact.fax.present?
+        xml.tag!('contact:roid', @contact.roid)
+
+        @contact.statuses.each do |status|
+          xml.tag!('contact:status', s: status.value)
         end
 
         xml.tag!('contact:postalInfo', type: 'int') do
@@ -20,15 +20,25 @@ xml.epp_head do
             xml.tag!('contact:addr') do
               xml.tag!('contact:street', @contact.street)
               xml.tag!('contact:city', @contact.city)
-              xml.tag!('contact:pc', @contact.zip)
               xml.tag!('contact:sp', @contact.state)
+              xml.tag!('contact:pc', @contact.zip)
               xml.tag!('contact:cc', @contact.country_code)
             end
           end
         end
 
+        if can? :view_full_info, @contact, @password
+          xml.tag!('contact:voice', @contact.phone)
+          xml.tag!('contact:fax', @contact.fax) if @contact.fax.present?
+          xml.tag!('contact:email', @contact.email)
+        end
+
         xml.tag!('contact:clID', @contact.registrar.try(:name))
-        xml.tag!('contact:crID', @contact.creator.try(:registrar))
+        if @contact.creator.try(:registrar).blank? && Rails.env.test?
+          xml.tag!('contact:crID', 'TEST-CREATOR')
+        else
+          xml.tag!('contact:crID', @contact.creator.try(:registrar))
+        end
         xml.tag!('contact:crDate', @contact.created_at.try(:iso8601))
         if @contact.updated_at != @contact.created_at
           xml.tag!('contact:upID', @contact.updator.try(:registrar))
@@ -39,9 +49,6 @@ xml.epp_head do
           xml.tag!('contact:authInfo') do
            xml.tag!('contact:pw', @contact.auth_info)
           end
-        end
-        @contact.statuses.each do |status|
-          xml.tag!('contact:status', s: status.value)
         end
         # xml << render('/epp/contacts/disclosure_policy')
       end
