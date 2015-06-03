@@ -1993,6 +1993,21 @@ describe 'EPP Domain', epp: true do
       response[:results][0][:value].should == '4'
     end
 
+    it 'does not renew foreign domain' do
+      login_as :registrar2 do
+        exp_date = 1.year.since.to_date
+        xml = @epp_xml.domain.renew(
+          name: { value: domain.name },
+          curExpDate: { value: exp_date.to_s },
+          period: { value: '1', attrs: { unit: 'y' } }
+        )
+
+        response = epp_plain_request(xml)
+        response[:results][0][:msg].should == 'Authorization error'
+        response[:results][0][:result_code].should == '2201'
+      end
+    end
+
     ### INFO ###
     it 'returns domain info' do
       domain.domain_statuses.build(value: DomainStatus::CLIENT_HOLD, description: 'Payment overdue.')

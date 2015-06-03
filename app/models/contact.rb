@@ -148,10 +148,10 @@ class Contact < ActiveRecord::Base
   end
   # rubocop:enable Metrics/CyclomaticComplexity
 
-  # used only for contact trasphere
+  # used only for contact transfer
   def generate_new_code!
     return nil if registrar.blank?
-    registrar.reload # for contact transfere
+    registrar.reload # for contact transfer
     self[:code] = "#{registrar.code}:#{SecureRandom.hex(4)}".upcase
   end
 
