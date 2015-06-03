@@ -7,6 +7,7 @@ class Contact < ActiveRecord::Base
   has_many :domains, through: :domain_contacts
   has_many :statuses, class_name: 'ContactStatus', dependent: :destroy
   has_many :legal_documents, as: :documentable
+  has_many :registrant_domains, class_name: 'Domain', foreign_key: 'registrant_id' # when contant is registrant
 
   accepts_nested_attributes_for :legal_documents
 
@@ -187,5 +188,22 @@ class Contact < ActiveRecord::Base
     else
       errors.add(:ident, :invalid_country_code)
     end
+  end
+
+  def related_domain_descriptions
+    @desc = {}
+
+    registrant_domains.each do |dom|
+      @desc[dom.name] ||= []
+      @desc[dom.name] << :registrant
+    end
+
+    domain_contacts.each do |dc|
+      @desc[dc.domain.name] ||= []
+      @desc[dc.domain.name] << dc.name.downcase.to_sym
+      @desc[dc.domain.name] = @desc[dc.domain.name].compact
+    end
+
+    @desc
   end
 end
