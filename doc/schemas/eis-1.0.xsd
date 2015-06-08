@@ -66,10 +66,9 @@
 
   <simpleType name="identEnumType">
     <restriction base="token">
-      <enumeration value="pic"/>
+      <enumeration value="bic"/>
       <enumeration value="priv"/>
       <enumeration value="birthday"/>
-      <enumeration value="passport"/>
     </restriction>
   </simpleType>
 
