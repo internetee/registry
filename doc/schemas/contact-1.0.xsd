@@ -73,23 +73,6 @@
        </restriction>
     </simpleType>
 
-   <complexType name="identType">
-      <simpleContent>
-        <extension base="eppcom:clIDType">
-          <attribute name="type" type="contact:identAttrType"/>
-        </extension>
-      </simpleContent>
-    </complexType>
-
-    <simpleType name="identAttrType">
-      <restriction base="token">
-        <enumeration value="ico"/>
-        <enumeration value="op"/>
-        <enumeration value="passport"/>
-        <enumeration value="birthday"/>
-      </restriction>
-    </simpleType>
-
    <!--
    Child elements of the <create> command.
    -->
@@ -103,8 +86,6 @@
         <element name="fax" type="contact:e164Type"
          minOccurs="0"/>
         <element name="email" type="eppcom:minTokenType"/>
-        <element name="ident" type="contact:identType"
-          minOccurs="0"/>
         <element name="authInfo" type="contact:authInfoType" minOccurs="0"/>
 
       </sequence>
@@ -219,8 +200,6 @@
         <element name="fax" type="contact:e164Type"
          minOccurs="0"/>
         <element name="email" type="eppcom:minTokenType"
-         minOccurs="0"/>
-        <element name="ident" type="contact:identType"
          minOccurs="0"/>
         <element name="authInfo" type="contact:authInfoType"
          minOccurs="0"/>
