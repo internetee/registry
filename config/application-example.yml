@@ -30,11 +30,11 @@ webclient_cert_common_name: 'webclient'
 # and returns 2306 "Parameter value policy error"
 contact_org_enabled: 'false'
 
-# Enable iptables counter updater 
+# Enable iptables counter updater
 # iptables_counter_enabled: 'true'
 
 # Custom legal document types
-# legal_document_types: "pdf,bdoc,ddoc,zip,rar,gz,tar,7z,odt,doc,docx" 
+# legal_document_types: "pdf,bdoc,ddoc,zip,rar,gz,tar,7z,odt,doc,docx"
 
 # DEPP server configuration (both for Registrar/Registrant servers)
 show_ds_data_fields: 'false'
@@ -67,6 +67,7 @@ registrant_url: 'https:/registrant.example.com' # for valid email body registran
 
 # SK DigiDocService
 sk_digi_doc_service_endpoint: 'https://openxades.org:9443/DigiDocService'
+sk_digi_doc_service_name: 'EIS test'
 
 # Autotest config overwrites
 test:
