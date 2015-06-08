@@ -1,3 +1,8 @@
+08.06.2015
+
+* Add sk service name to application.yml
+* Renew zonefile procedure
+
 02.06.2015
 
 * Added possibility to overwrite legal document types at application.yml level.
