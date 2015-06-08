@@ -98,7 +98,7 @@ class Registrar::SessionsController < Devise::SessionsController
     response = client.authenticate(
       phone: "+372#{phone}",
       message_to_display: 'Authenticating',
-      service_name: 'Testing'
+      service_name: ENV['sk_digi_doc_service_name'] || 'Testing'
     )
 
     if response.faultcode
