@@ -1,0 +1,1 @@
+(function(){$(document).on("page:change",function(){return $(".selectize").selectize({allowEmptyOption:!0}),$(".js-datepicker").datepicker({showAnim:"",autoclose:!0,dateFormat:"dd.mm.yy",changeMonth:!0,changeYear:!0}),$("form").each(function(){return $(this).validate()})})}).call(this);

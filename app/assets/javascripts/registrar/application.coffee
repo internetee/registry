@@ -1,4 +1,4 @@
-$(document).on 'ready page:load', ->
+$(document).on 'page:change', ->
   # client side validate all forms
   $('form').each ->
     $(this).validate()

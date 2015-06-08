@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150525075550) do
+ActiveRecord::Schema.define(version: 20150603212659) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 20150525075550) do
   create_table "account_activities", force: :cascade do |t|
     t.integer  "account_id"
     t.integer  "invoice_id"
-    t.decimal  "sum"
+    t.decimal  "sum",                 precision: 10, scale: 2
     t.string   "currency"
     t.integer  "bank_transaction_id"
     t.datetime "created_at"
@@ -36,7 +36,7 @@ ActiveRecord::Schema.define(version: 20150525075550) do
   create_table "accounts", force: :cascade do |t|
     t.integer  "registrar_id"
     t.string   "account_type"
-    t.decimal  "balance",      default: 0.0, null: false
+    t.decimal  "balance",      precision: 10, scale: 2, default: 0.0, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "currency"
@@ -98,7 +98,7 @@ ActiveRecord::Schema.define(version: 20150525075550) do
     t.string   "buyer_name"
     t.string   "document_no"
     t.string   "description"
-    t.decimal  "sum"
+    t.decimal  "sum",               precision: 10, scale: 2
     t.string   "reference_no"
     t.datetime "paid_at"
     t.datetime "created_at"
@@ -114,7 +114,7 @@ ActiveRecord::Schema.define(version: 20150525075550) do
     t.string   "vk_rec_id"
     t.string   "vk_stamp"
     t.string   "vk_t_no"
-    t.decimal  "vk_amount"
+    t.decimal  "vk_amount",     precision: 10, scale: 2
     t.string   "vk_curr"
     t.string   "vk_rec_acc"
     t.string   "vk_rec_name"
@@ -328,10 +328,10 @@ ActiveRecord::Schema.define(version: 20150525075550) do
 
   create_table "invoice_items", force: :cascade do |t|
     t.integer  "invoice_id"
-    t.string   "description", null: false
+    t.string   "description",                          null: false
     t.string   "unit"
     t.integer  "amount"
-    t.decimal  "price"
+    t.decimal  "price",       precision: 10, scale: 2
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "creator_str"
@@ -341,20 +341,20 @@ ActiveRecord::Schema.define(version: 20150525075550) do
   add_index "invoice_items", ["invoice_id"], name: "index_invoice_items_on_invoice_id", using: :btree
 
   create_table "invoices", force: :cascade do |t|
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
-    t.string   "invoice_type",        null: false
-    t.datetime "due_date",            null: false
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
+    t.string   "invoice_type",                                 null: false
+    t.datetime "due_date",                                     null: false
     t.string   "payment_term"
-    t.string   "currency",            null: false
+    t.string   "currency",                                     null: false
     t.string   "description"
     t.string   "reference_no"
-    t.decimal  "vat_prc",             null: false
+    t.decimal  "vat_prc",             precision: 10, scale: 2, null: false
     t.datetime "paid_at"
     t.integer  "seller_id"
-    t.string   "seller_name",         null: false
+    t.string   "seller_name",                                  null: false
     t.string   "seller_reg_no"
-    t.string   "seller_iban",         null: false
+    t.string   "seller_iban",                                  null: false
     t.string   "seller_bank"
     t.string   "seller_swift"
     t.string   "seller_vat_no"
@@ -368,7 +368,7 @@ ActiveRecord::Schema.define(version: 20150525075550) do
     t.string   "seller_email"
     t.string   "seller_contact_name"
     t.integer  "buyer_id"
-    t.string   "buyer_name",          null: false
+    t.string   "buyer_name",                                   null: false
     t.string   "buyer_reg_no"
     t.string   "buyer_country_code"
     t.string   "buyer_state"
@@ -382,7 +382,7 @@ ActiveRecord::Schema.define(version: 20150525075550) do
     t.string   "updator_str"
     t.integer  "number"
     t.datetime "cancelled_at"
-    t.decimal  "sum_cache"
+    t.decimal  "sum_cache",           precision: 10, scale: 2
   end
 
   add_index "invoices", ["buyer_id"], name: "index_invoices_on_buyer_id", using: :btree
@@ -741,6 +741,17 @@ ActiveRecord::Schema.define(version: 20150525075550) do
   add_index "log_nameservers", ["item_type", "item_id"], name: "index_log_nameservers_on_item_type_and_item_id", using: :btree
   add_index "log_nameservers", ["whodunnit"], name: "index_log_nameservers_on_whodunnit", using: :btree
 
+  create_table "log_pricelists", force: :cascade do |t|
+    t.string   "item_type",      null: false
+    t.integer  "item_id",        null: false
+    t.string   "event",          null: false
+    t.string   "whodunnit"
+    t.json     "object"
+    t.json     "object_changes"
+    t.datetime "created_at"
+    t.string   "session"
+  end
+
   create_table "log_registrars", force: :cascade do |t|
     t.string   "item_type",      null: false
     t.integer  "item_id",        null: false
@@ -874,6 +885,20 @@ ActiveRecord::Schema.define(version: 20150525075550) do
   add_index "people", ["email"], name: "index_people_on_email", unique: true, using: :btree
   add_index "people", ["reset_password_token"], name: "index_people_on_reset_password_token", unique: true, using: :btree
 
+  create_table "pricelists", force: :cascade do |t|
+    t.string   "name"
+    t.string   "category"
+    t.decimal  "price_cents",    precision: 8, scale: 2, default: 0.0,   null: false
+    t.string   "price_currency",                         default: "EUR", null: false
+    t.datetime "valid_from"
+    t.datetime "valid_to"
+    t.string   "creator_str"
+    t.string   "updator_str"
+    t.datetime "created_at",                                             null: false
+    t.datetime "updated_at",                                             null: false
+    t.string   "duration"
+  end
+
   create_table "registrant_verifications", force: :cascade do |t|
     t.string   "domain_name"
     t.string   "verification_token"
@@ -957,7 +982,7 @@ ActiveRecord::Schema.define(version: 20150525075550) do
     t.text     "crt"
     t.string   "type"
     t.string   "registrant_ident"
-    t.string   "encrypted_password",  default: "", null: false
+    t.string   "encrypted_password",  default: ""
     t.datetime "remember_created_at"
     t.integer  "failed_attempts",     default: 0,  null: false
     t.datetime "locked_at"

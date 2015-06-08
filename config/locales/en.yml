@@ -24,7 +24,7 @@ en:
       short: "%d.%m.%y, %H:%M"
       date: "%d.%m.%y"
       date_long: "%d. %B %Y"
-
+      ydate: "%Y.%m.%d"
   date:
     formats:
       year_and_month: "%Y %B"
@@ -812,3 +812,7 @@ en:
   webserver_client_cert_directive_should_be_required: 'Webserver client cert directive should be required'
   tech: Tech contact
   admin: Admin contact
+  pricelists: Pricelists
+  new_pricelist: New Pricelist
+  valid: Valid
+  category: Zone
