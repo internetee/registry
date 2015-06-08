@@ -13,8 +13,10 @@ class ZonefileSetting < ActiveRecord::Base
     filename = "#{origin}.zone"
 
     STDOUT << "#{Time.zone.now.utc} - Generating zonefile #{filename}\n"
-    sanitized_query = sanitize_sql("select generate_zonefile(?)", origin)
-    zf = ActiveRecord::Base.connection.execute(sanitized_query)[0]['generate_zonefile']
+
+    zf = ActiveRecord::Base.connection.execute(
+      "select generate_zonefile('#{origin}')"
+    )[0]['generate_zonefile']
 
     File.open("#{ENV['zonefile_export_dir']}/#{filename}", 'w') { |f| f.write(zf) }
 
