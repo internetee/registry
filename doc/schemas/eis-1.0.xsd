@@ -24,10 +24,8 @@
  -->
   <complexType name="legalDocAndIdentType">
     <sequence>
-      <element name="legalDocument" type="eis:legalDocType"
-      minOccurs="0" maxOccurs="1"/>
-      <element name="ident" type="eis:identType"
-      minOccurs="0" maxOccurs="1"/>
+      <element name="ident" type="eis:identType" minOccurs="0" maxOccurs="1"/>
+      <element name="legalDocument" type="eis:legalDocType" minOccurs="0" maxOccurs="1"/>
     </sequence>
   </complexType>
 

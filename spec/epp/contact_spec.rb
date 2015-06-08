@@ -15,13 +15,13 @@ describe 'EPP Contact', epp: true do
     @contact = Fabricate(:contact, registrar: @registrar1)
 
     @extension = {
-      legalDocument: {
-        value: 'dGVzdCBmYWlsCg==',
-        attrs: { type: 'pdf' }
-      },
       ident: {
         value: '37605030299',
         attrs: { type: 'priv', cc: 'EE' }
+      },
+      legalDocument: {
+        value: 'dGVzdCBmYWlsCg==',
+        attrs: { type: 'pdf' }
       }
     }
   end
@@ -106,13 +106,13 @@ describe 'EPP Contact', epp: true do
 
       it 'successfully saves ident type with legal document' do
         extension = {
-          legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
-            attrs: { type: 'pdf' }
-          },
           ident: {
             value: '1990-22-12',
             attrs: { type: 'birthday', cc: 'US' }
+          },
+          legalDocument: {
+            value: 'dGVzdCBmYWlsCg==',
+            attrs: { type: 'pdf' }
           }
         }
         response = create_request({}, extension)
@@ -396,13 +396,13 @@ describe 'EPP Contact', epp: true do
 
       it 'should update ident' do
         extension = {
-          legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
-            attrs: { type: 'pdf' }
-          },
           ident: {
             value: '1990-22-12',
             attrs: { type: 'birthday', cc: 'US' }
+          },
+          legalDocument: {
+            value: 'dGVzdCBmYWlsCg==',
+            attrs: { type: 'pdf' }
           }
         }
         response = update_request({ id: { value: 'FIRST0:SH8013' } }, extension)
