@@ -1949,7 +1949,10 @@ describe 'EPP Domain', epp: true do
 
     ### RENEW ###
     it 'renews a domain' do
-      exp_date = 1.year.since.to_date
+      domain.valid_to = Time.zone.now.to_date + 10.days
+      domain.save
+
+      exp_date = domain.valid_to.to_date
       xml = @epp_xml.domain.renew(
         name: { value: domain.name },
         curExpDate: { value: exp_date.to_s },
@@ -1979,7 +1982,9 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'returns an error when period is invalid' do
-      exp_date = (1.year.since.to_date)
+      domain.valid_to = Time.zone.now.to_date + 10.days
+      domain.save
+      exp_date = domain.valid_to.to_date
 
       xml = @epp_xml.domain.renew(
         name: { value: domain.name },
@@ -1991,6 +1996,36 @@ describe 'EPP Domain', epp: true do
       response[:results][0][:msg].should == 'Period must add up to 1, 2 or 3 years [period]'
       response[:results][0][:result_code].should == '2004'
       response[:results][0][:value].should == '4'
+    end
+
+    it 'does not renew a domain unless less than 90 days till expiration' do
+      domain.valid_to = Time.zone.now.to_date + 91.days
+      domain.save
+      exp_date = domain.valid_to.to_date
+
+      xml = @epp_xml.domain.renew(
+        name: { value: domain.name },
+        curExpDate: { value: exp_date.to_s },
+        period: { value: '1', attrs: { unit: 'y' } }
+      )
+
+      response = epp_plain_request(xml)
+      response[:results][0][:msg].should == 'Object is not eligible for renewal'
+      response[:results][0][:result_code].should == '2105'
+
+      domain.valid_to = Time.zone.now.to_date + 90.days
+      domain.save
+      exp_date = domain.valid_to.to_date
+
+      xml = @epp_xml.domain.renew(
+        name: { value: domain.name },
+        curExpDate: { value: exp_date.to_s },
+        period: { value: '1', attrs: { unit: 'y' } }
+      )
+
+      response = epp_plain_request(xml)
+      response[:results][0][:msg].should == 'Command completed successfully'
+      response[:results][0][:result_code].should == '1000'
     end
 
     it 'does not renew foreign domain' do
