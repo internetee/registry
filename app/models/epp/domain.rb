@@ -429,6 +429,11 @@ class Epp::Domain < Domain
   def renew(cur_exp_date, period, unit = 'y')
     # TODO: Check how much time before domain exp date can it be renewed
     validate_exp_dates(cur_exp_date)
+
+    if (valid_to - Time.zone.now).to_i / 1.day >= Setting.days_to_renew_domain_before_expire
+      add_epp_error('2105', nil, nil, I18n.t('object_is_not_eligible_for_renewal'))
+    end
+
     return false if errors.any?
 
     p = self.class.convert_period_to_time(period, unit)

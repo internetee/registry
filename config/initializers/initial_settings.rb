@@ -31,6 +31,7 @@ if con.present? && con.table_exists?('settings')
   Setting.save_default(:invoice_number_min, '131050')
   Setting.save_default(:invoice_number_max, '149999')
   Setting.save_default(:days_to_keep_overdue_invoices_active, 30)
+  Setting.save_default(:days_to_renew_domain_before_expire, 90)
 end
 
 # dev only setting
