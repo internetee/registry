@@ -326,7 +326,7 @@ describe 'EPP Domain', epp: true do
       })
 
       response = epp_plain_request(xml)
-      response[:results][0][:result_code].should == '2004'
+      response[:results][0][:result_code].should == '2306'
       response[:results][0][:msg].should == 'Period must add up to 1, 2 or 3 years [period]'
       response[:results][0][:value].should == '367'
     end
@@ -1994,7 +1994,7 @@ describe 'EPP Domain', epp: true do
 
       response = epp_plain_request(xml)
       response[:results][0][:msg].should == 'Period must add up to 1, 2 or 3 years [period]'
-      response[:results][0][:result_code].should == '2004'
+      response[:results][0][:result_code].should == '2306'
       response[:results][0][:value].should == '4'
     end
 
@@ -2026,6 +2026,25 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(xml)
       response[:results][0][:msg].should == 'Command completed successfully'
       response[:results][0][:result_code].should == '1000'
+    end
+
+    it 'does not renew a domain unless less than 90 days till expiration' do
+      Setting.days_to_renew_domain_before_expire = 0
+
+      domain.valid_to = Time.zone.now.to_date + 5.years
+      domain.save
+      exp_date = domain.valid_to.to_date
+
+      xml = @epp_xml.domain.renew(
+        name: { value: domain.name },
+        curExpDate: { value: exp_date.to_s },
+        period: { value: '1', attrs: { unit: 'y' } }
+      )
+
+      response = epp_plain_request(xml)
+      response[:results][0][:msg].should == 'Command completed successfully'
+      response[:results][0][:result_code].should == '1000'
+      Setting.days_to_renew_domain_before_expire = 90
     end
 
     it 'does not renew foreign domain' do

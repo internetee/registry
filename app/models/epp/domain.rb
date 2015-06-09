@@ -34,7 +34,6 @@ class Epp::Domain < Domain
            max: Setting.ns_max_count
          }
         ],
-        [:period, :out_of_range, { value: { obj: 'period', val: period } }],
         [:dnskeys, :out_of_range,
          {
            min: Setting.dnskeys_min_count,
@@ -69,6 +68,7 @@ class Epp::Domain < Domain
         [:base, :domain_status_prohibits_operation]
       ],
       '2306' => [ # Parameter policy error
+        [:period, :out_of_range, { value: { obj: 'period', val: period } }],
         [:base, :ds_data_with_key_not_allowed],
         [:base, :ds_data_not_allowed],
         [:base, :key_data_not_allowed],
@@ -430,8 +430,10 @@ class Epp::Domain < Domain
     # TODO: Check how much time before domain exp date can it be renewed
     validate_exp_dates(cur_exp_date)
 
-    if (valid_to - Time.zone.now).to_i / 1.day >= Setting.days_to_renew_domain_before_expire
-      add_epp_error('2105', nil, nil, I18n.t('object_is_not_eligible_for_renewal'))
+    if Setting.days_to_renew_domain_before_expire != 0
+      if (valid_to - Time.zone.now).to_i / 1.day >= Setting.days_to_renew_domain_before_expire
+        add_epp_error('2105', nil, nil, I18n.t('object_is_not_eligible_for_renewal'))
+      end
     end
 
     return false if errors.any?
