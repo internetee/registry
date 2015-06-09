@@ -15,7 +15,7 @@
    <import namespace="urn:ietf:params:xml:ns:epp-1.0" schemaLocation="doc/schemas/epp-1.0.xsd"/>
    <import namespace="urn:ietf:params:xml:ns:host-1.0" schemaLocation="doc/schemas/host-1.0.xsd"/>
    <import namespace="urn:ietf:params:xml:ns:secDNS-1.1" schemaLocation="doc/schemas/secDNS-1.1.xsd"/>
-   <import namespace="urn:ee:eis:xml:epp:eis-1.0" schemaLocation="doc/schemas/eis-1.0.xsd"/>
+   <import namespace="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd" schemaLocation="doc/schemas/eis-1.0.xsd"/>
 
    <annotation>
     <documentation>

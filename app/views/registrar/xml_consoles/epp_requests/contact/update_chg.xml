@@ -25,7 +25,7 @@
       </contact:update>
     </update>
     <extension>
-      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
         <eis:legalDocument type="pdf">
           JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==
         </eis:legalDocument>
