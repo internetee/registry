@@ -64,7 +64,7 @@ en:
               invalid: 'Domain name is invalid'
               reserved: 'Domain name is reserved or restricted'
               taken: 'Domain name already exists'
-            name_puny:
+            puny_label:
               too_long: 'Domain name is too long (maximum is 63 characters)'
             registrant:
               blank: 'Registrant is missing'
@@ -505,6 +505,7 @@ en:
   crt_revoked: 'CRT (revoked)'
   contact_org_error: 'Parameter value policy error. Org must be blank'
   contact_fax_error: 'Parameter value policy error. Fax must be blank'
+  ident_update_error: 'Parameter value policy error. Update of ident data not allowed'
   invoices: 'Invoices'
   no_such_user: 'No such user'
   log_in: 'Log in'
@@ -816,3 +817,4 @@ en:
   new_pricelist: New Pricelist
   valid: Valid
   category: Zone
+  object_is_not_eligible_for_renewal: 'Object is not eligible for renewal'

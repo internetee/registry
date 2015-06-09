@@ -55,7 +55,7 @@ gem 'money-rails', '~> 1.3.0' # Money helpers
 
 # deploy
 gem 'whenever', '~> 0.9.4', require: false
-gem 'data_migrate', 
+gem 'data_migrate',
   github: 'gitlabeu/data_migrate',
   ref: '35d22b09ff37a4e9d61ab326ad5d8eb0edf1fc81'
 
@@ -73,7 +73,7 @@ gem 'digidoc_client', '~> 0.2.1'
 
 # epp
 gem 'epp', '~> 1.4.2', github: 'gitlabeu/epp'
-gem 'epp-xml',   '~> 1.0.1'  # EPP XMLs
+gem 'epp-xml',   '~> 1.0.2'  # EPP XMLs
 gem 'uuidtools', '~> 2.1.4' # For unique IDs (used by the epp gem)
 
 # for importing legacy db

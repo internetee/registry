@@ -118,6 +118,9 @@ class Epp::ContactsController < EppController
     contact_org_disabled
     fax_disabled
     status_editing_disabled
+    if params[:parsed_frame].css('ident').present?
+      epp_errors << { code: '2306', msg: "#{I18n.t(:ident_update_error)} [ident]" }
+    end
     requires 'id'
     @prefix = nil
   end

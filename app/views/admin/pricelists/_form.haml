@@ -4,11 +4,11 @@
   .row
     .col-md-6
       .form-group
+        = f.label :operation_category
+        = f.select(:operation_category, Pricelist::OPERATION_CATEGORIES, {}, { class: 'form-control' })
+      .form-group
         = f.label :category, t(:category)
         = f.select(:category, Pricelist::CATEGORIES, {}, { class: 'form-control' })
-      .form-group
-        = f.label :name
-        = f.text_field(:name, class: 'form-control')
       .form-group
         = f.label :duration
         = f.select(:duration, Pricelist::DURATIONS, {}, { class: 'form-control' })
