@@ -18,12 +18,12 @@ Our implementation supports following protocols:
 
 Related XML Schema Definitions (may differ from policies applied to registry):
 
-[contact-1.0.xsd](schemas/contact-1.0.xsd)
-[domain-1.0.xsd](schemas/domain-1.0.xsd)
-[eis-1.0.xsd](schemas/eis-1.0.xsd)
-[epp-1.0.xsd](schemas/epp-1.0.xsd)
-[eppcom-1.0.xsd](schemas/eppcom-1.0.xsd)
-[host-1.0.xsd](schemas/host-1.0.xsd)
+[contact-1.0.xsd](schemas/contact-1.0.xsd)  
+[domain-1.0.xsd](schemas/domain-1.0.xsd)  
+[eis-1.0.xsd](schemas/eis-1.0.xsd)  
+[epp-1.0.xsd](schemas/epp-1.0.xsd)  
+[eppcom-1.0.xsd](schemas/eppcom-1.0.xsd)  
+[host-1.0.xsd](schemas/host-1.0.xsd)  
 [secDNS-1.1.xsd](schemas/secDNS-1.1.xsd)
 
 More info about The Extensible Provisioning Protocol (EPP):<br>
