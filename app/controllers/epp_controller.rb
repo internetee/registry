@@ -93,6 +93,10 @@ class EppController < ApplicationController
 
     @errors.uniq!
 
+    # Requested by client, ticket #2688
+    # Known issues: error request is exactly 1 second slower and server can handle less load
+    sleep 1 if !Rails.env.test? || !Rails.env.development?
+
     render_epp_response '/epp/error'
   end
 
