@@ -35,7 +35,7 @@ Domain name mapping protocol short version:
           <secDNS:protocol>    1        Allowed values: 3
           <secDNS:alg>         1        Allowed values: 3, 5, 6, 7, 8, 252, 253, 254, 255
           <secDNS:pubKey>      1        Public key
-      <eis:extdata>            1        Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
+      <eis:extdata>            1        Attribute: xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd"
         <eis:legalDocument>    1        Base64 encoded document. 
                                           Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
     <clTRID>                   0-1      Client transaction id
@@ -82,7 +82,7 @@ Domain name mapping protocol short version:
         <secDNS:rem>             0-1      
           <secDNS:keyData>       1-n      
             <secDNS:pubKey>      1         Public key
-      <eis:extdata>              0-1       Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
+      <eis:extdata>              0-1       Attribute: xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd"
         <eis:legalDocument>      0-1       Base64 encoded document. Required if registrant is changing. 
                                              Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
     <clTRID>                     0-1       Client transaction id
@@ -98,7 +98,7 @@ Domain name mapping protocol short version:
                                         Optional attribute: verified="yes/no"
         <domain:name>        1        Domain name. Can contain unicode characters.
     <extension>              1       
-      <eis:extdata>          1        Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
+      <eis:extdata>          1        Attribute: xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd"
         <eis:legalDocument>  1        Base64 encoded document. 
                                         Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
     <clTRID>                 0-1      Client transaction id
@@ -130,7 +130,7 @@ Domain name mapping protocol short version:
         <domain:period>      1        Registration period for domain. 
                                       Must add up to 1 / 2 / 3 years. Attribute: unit="y/m/d"
     <extension>              0-1     
-      <eis:extdata>          0-1      Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
+      <eis:extdata>          0-1      Attribute: xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd"
         <eis:legalDocument>  0-1      Base64 encoded document. 
                                         Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
     <clTRID>                 0-1      Client transaction id
@@ -147,7 +147,7 @@ Domain name mapping protocol short version:
         <domain:authInfo>    1       
           <domain:pw>        1        Domain password. Attribute: roid="String"
     <extension>              0-1     
-      <eis:extdata>          0-1      Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
+      <eis:extdata>          0-1      Attribute: xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd"
         <eis:legalDocument>  0-1      Base64 encoded document.  
                                         Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
     <clTRID>                 0-1      Client transaction id

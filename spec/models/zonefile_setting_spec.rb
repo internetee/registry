@@ -24,7 +24,7 @@ describe ZonefileSetting do
       master_nameserver: 'ns.tld.ee'
     }).first_or_create!
 
-    d = Fabricate(:domain_with_dnskeys)
+    d = Fabricate(:domain_with_dnskeys, name: 'testpri.ee')
     d.nameservers << Nameserver.new({
       hostname: "ns.#{d.name}",
       ipv4: '123.123.123.123',

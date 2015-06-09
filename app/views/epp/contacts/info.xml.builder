@@ -55,7 +55,7 @@ xml.epp_head do
     end
     if can? :view_full_info, @contact, @password
       xml.tag!('extension') do
-        xml.tag!('eis:extdata', 'xmlns:eis' => 'urn:ee:eis:xml:epp:eis-1.0') do
+        xml.tag!('eis:extdata', 'xmlns:eis' => 'https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd') do
           xml.tag!('eis:ident', @contact.ident,
                    type: @contact.ident_type, cc: @contact.ident_country_code)
         end
