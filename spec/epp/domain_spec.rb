@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'EPP Domain', epp: true do
   before(:all) do
-    @xsd = Nokogiri::XML::Schema(File.read('doc/schemas/domain-1.0.xsd'))
+    @xsd = Nokogiri::XML::Schema(File.read('doc/schemas/domain-eis-1.0.xsd'))
     @epp_xml = EppXml.new(cl_trid: 'ABC-12345')
     @registrar1 = Fabricate(:registrar1, code: 'REGDOMAIN1')
     @registrar2 = Fabricate(:registrar2, code: 'REGDOMAIN2')

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'EPP Contact', epp: true do
   before :all do
-    @xsd = Nokogiri::XML::Schema(File.read('doc/schemas/contact-1.0.xsd'))
+    @xsd = Nokogiri::XML::Schema(File.read('doc/schemas/contact-eis-1.0.xsd'))
     @registrar1 = Fabricate(:registrar1)
     @registrar2 = Fabricate(:registrar2)
     @epp_xml    = EppXml::Contact.new(cl_trid: 'ABC-12345')
