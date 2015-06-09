@@ -39,6 +39,7 @@ class Admin::PricelistsController < AdminController
   end
 
   def pricelist_params
-    params.require(:pricelist).permit(:category, :name, :duration, :price, :valid_from, :valid_to)
+    params.require(:pricelist).permit(:operation_category, :category, :price_category,
+                                      :duration, :price, :valid_from, :valid_to)
   end
 end
