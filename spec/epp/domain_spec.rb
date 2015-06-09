@@ -193,7 +193,7 @@ describe 'EPP Domain', epp: true do
       xml = domain_create_xml(name: { value: "#{'ä' * 63}.ee" })
 
       response = epp_plain_request(xml)
-      response[:msg].should == 'Domain name is too long (maximum is 63 characters) [name_puny]'
+      response[:msg].should == 'Domain name is too long (maximum is 63 characters) [puny_label]'
       response[:result_code].should == '2005'
       response[:clTRID].should == 'ABC-12345'
     end

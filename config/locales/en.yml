@@ -64,7 +64,7 @@ en:
               invalid: 'Domain name is invalid'
               reserved: 'Domain name is reserved or restricted'
               taken: 'Domain name already exists'
-            name_puny:
+            puny_label:
               too_long: 'Domain name is too long (maximum is 63 characters)'
             registrant:
               blank: 'Registrant is missing'
