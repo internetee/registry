@@ -146,6 +146,12 @@ class Domain < ActiveRecord::Base
         { admin_contacts: :registrar }
       )
     end
+
+    def expire_domains
+      Domain.where('valid_to <= ?', Time.zone.now).each do |x|
+        x.domain_statuses.create(value: DomainStatus::EXPIRED) if x.expirable?
+      end
+    end
   end
 
   def name=(value)
@@ -172,6 +178,11 @@ class Domain < ActiveRecord::Base
     (domain_statuses.pluck(:value) & %W(
       #{DomainStatus::SERVER_DELETE_PROHIBITED}
     )).empty?
+  end
+
+  def expirable?
+    return false if valid_to > Time.zone.now
+    domain_statuses.where(value: DomainStatus::EXPIRED).empty?
   end
 
   def pending_update?

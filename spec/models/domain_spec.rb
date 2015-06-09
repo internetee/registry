@@ -85,6 +85,17 @@ describe Domain do
       @domain.registrant_update_confirmable?('123').should == false
     end
 
+    it 'should expire domains' do
+      Domain.expire_domains
+      @domain.domain_statuses.where(value: DomainStatus::EXPIRED).count.should == 0
+
+      @domain.valid_to = Time.zone.now - 10.days
+      @domain.save
+
+      Domain.expire_domains
+      @domain.domain_statuses.where(value: DomainStatus::EXPIRED).count.should == 1
+    end
+
     context 'about registrant update confirm' do
       before :all do
         @domain.registrant_verification_token = 123
