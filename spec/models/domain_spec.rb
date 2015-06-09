@@ -248,7 +248,7 @@ describe Domain do
     d.valid?
     d.errors.full_messages.should match_array([
       "Domain name Domain name is invalid",
-      "Puny label is too long (maximum is 63 characters)"
+      "Puny label Domain name is too long (maximum is 63 characters)"
     ])
   end
 
@@ -258,7 +258,7 @@ describe Domain do
     d.valid?
     d.errors.full_messages.should match_array([
       "Domain name Domain name is invalid",
-      "Puny label is too long (maximum is 63 characters)"
+      "Puny label Domain name is too long (maximum is 63 characters)"
     ])
   end
 
@@ -274,7 +274,7 @@ describe Domain do
     d = Fabricate.build(:domain, name: "#{'ä' * 63}.ee")
     d.valid?
     d.errors.full_messages.should == [
-      "Puny label is too long (maximum is 63 characters)"
+      "Puny label Domain name is too long (maximum is 63 characters)"
     ]
   end
 
@@ -283,7 +283,7 @@ describe Domain do
     d.valid?
     d.errors.full_messages.should match_array([
       "Domain name Domain name is invalid",
-      "Puny label is too long (maximum is 63 characters)"
+      "Puny label Domain name is too long (maximum is 63 characters)"
     ])
   end
 
@@ -291,7 +291,7 @@ describe Domain do
     d = Fabricate.build(:domain, name: "#{'ä' * 63}.pri.ee")
     d.valid?
     d.errors.full_messages.should match_array([
-      "Puny label is too long (maximum is 63 characters)"
+      "Puny label Domain name is too long (maximum is 63 characters)"
     ])
   end
 
