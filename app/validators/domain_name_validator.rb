@@ -1,11 +1,4 @@
 class DomainNameValidator < ActiveModel::EachValidator
-  # TODO
-  # validates lenght of 2-63
-  # validates/honours Estonian additional letters zäõüö
-  # honours punicode and all interfces honors utf8
-  # validates lower level domains (.pri.ee, edu.ee etc)
-  # lower level domains are fixed for .ee and can add statically into settings
-
   def validate_each(record, attribute, value)
     if !self.class.validate_format(value)
       record.errors[attribute] << (options[:message] || record.errors.generate_message(attribute, :invalid))

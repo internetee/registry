@@ -70,7 +70,7 @@ class Domain < ActiveRecord::Base
   after_save :update_whois_record
 
   validates :name_dirty, domain_name: true, uniqueness: true
-  validates :name_puny, length: { maximum: 66 }
+  validates :puny_label, length: { maximum: 63 }
   validates :period, numericality: { only_integer: true }
   validates :registrant, :registrar, presence: true
 
@@ -158,6 +158,10 @@ class Domain < ActiveRecord::Base
 
   def roid
     "EIS-#{id}"
+  end
+
+  def puny_label
+    name_puny.to_s.split('.').first
   end
 
   def registrant_typeahead
