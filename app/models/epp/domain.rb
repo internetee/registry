@@ -34,7 +34,6 @@ class Epp::Domain < Domain
            max: Setting.ns_max_count
          }
         ],
-        [:period, :out_of_range, { value: { obj: 'period', val: period } }],
         [:dnskeys, :out_of_range,
          {
            min: Setting.dnskeys_min_count,
@@ -69,6 +68,7 @@ class Epp::Domain < Domain
         [:base, :domain_status_prohibits_operation]
       ],
       '2306' => [ # Parameter policy error
+        [:period, :out_of_range, { value: { obj: 'period', val: period } }],
         [:base, :ds_data_with_key_not_allowed],
         [:base, :ds_data_not_allowed],
         [:base, :key_data_not_allowed],
