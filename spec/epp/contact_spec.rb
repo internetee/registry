@@ -24,6 +24,12 @@ describe 'EPP Contact', epp: true do
         attrs: { type: 'pdf' }
       }
     }
+    @update_extension = {
+      legalDocument: {
+        value: 'dGVzdCBmYWlsCg==',
+        attrs: { type: 'pdf' }
+      }
+    }
   end
 
   context 'with valid user' do
@@ -272,7 +278,7 @@ describe 'EPP Contact', epp: true do
       end
 
       def update_request(overwrites = {}, extension = {}, options = {})
-        extension = @extension if extension.blank?
+        extension = @update_extension if extension.blank?
 
         defaults = {
           id: { value: 'asd123123er' },
@@ -394,7 +400,7 @@ describe 'EPP Contact', epp: true do
         @contact.reload.code.should == 'FIRST0:SH8013'
       end
 
-      it 'should update ident' do
+      it 'should not be able to update ident' do
         extension = {
           ident: {
             value: '1990-22-12',
@@ -406,10 +412,11 @@ describe 'EPP Contact', epp: true do
           }
         }
         response = update_request({ id: { value: 'FIRST0:SH8013' } }, extension)
-        response[:msg].should == 'Command completed successfully'
-        response[:result_code].should == '1000'
+        response[:msg].should == 
+          'Parameter value policy error. Update of ident data not allowed [ident]'
+        response[:result_code].should == '2306'
 
-        Contact.find_by(code: 'FIRST0:SH8013').ident_type.should == 'birthday'
+        Contact.find_by(code: 'FIRST0:SH8013').ident_type.should == 'priv'
       end
 
       it 'should return parameter value policy errror for org update' do
