@@ -55,6 +55,13 @@ describe Domain do
       @domain.errors.full_messages.should match_array([])
     end
 
+    it 'should have correct validity dates' do
+      valid_to = Time.zone.now.beginning_of_day + 1.year
+      @domain.valid_to.should == valid_to
+      @domain.outzone_at.should == valid_to + Setting.expire_warning_period.days
+      @domain.delete_at.should == valid_to + Setting.expire_warning_period.days + Setting.redemption_grace_period.days
+    end
+
     it 'should validate uniqueness of tech contacts' do
       same_contact = Fabricate(:contact, code: 'same_contact')
       domain = Fabricate(:domain)
@@ -94,6 +101,17 @@ describe Domain do
 
       Domain.expire_domains
       @domain.domain_statuses.where(value: DomainStatus::EXPIRED).count.should == 1
+    end
+
+    it 'should start redemption grace period' do
+      Domain.start_redemption_grace_period
+      @domain.domain_statuses.where(value: DomainStatus::SERVER_HOLD).count.should == 0
+
+      @domain.outzone_at = Time.zone.now
+      @domain.save
+
+      Domain.start_redemption_grace_period
+      @domain.domain_statuses.where(value: DomainStatus::SERVER_HOLD).count.should == 1
     end
 
     context 'about registrant update confirm' do

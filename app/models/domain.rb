@@ -152,6 +152,12 @@ class Domain < ActiveRecord::Base
         x.domain_statuses.create(value: DomainStatus::EXPIRED) if x.expirable?
       end
     end
+
+    def start_redemption_grace_period
+      Domain.where('outzone_at <= ?', Time.zone.now).each do |x|
+        x.domain_statuses.create(value: DomainStatus::SERVER_HOLD) if x.server_holdable?
+      end
+    end
   end
 
   def name=(value)
@@ -187,6 +193,13 @@ class Domain < ActiveRecord::Base
   def expirable?
     return false if valid_to > Time.zone.now
     domain_statuses.where(value: DomainStatus::EXPIRED).empty?
+  end
+
+  def server_holdable?
+    return false if outzone_at > Time.zone.now
+    return false if domain_statuses.where(value: DomainStatus::SERVER_HOLD).any?
+    return false if domain_statuses.where(value: DomainStatus::SERVER_MANUAL_INZONE).any?
+    true
   end
 
   def pending_update?
@@ -329,6 +342,8 @@ class Domain < ActiveRecord::Base
     self.registered_at = Time.zone.now
     self.valid_from = Time.zone.now.to_date
     self.valid_to = valid_from + self.class.convert_period_to_time(period, period_unit)
+    self.outzone_at = self.valid_to + Setting.expire_warning_period.days
+    self.delete_at = self.outzone_at + Setting.redemption_grace_period.days
   end
 
   def manage_automatic_statuses
