@@ -148,40 +148,41 @@ class Domain < ActiveRecord::Base
     end
 
     def start_expire_period
-      logger.info "#{Time.zone.now.utc} - Expiring domains\n"
+      STDOUT << "#{Time.zone.now.utc} - Expiring domains\n" unless Rails.env.test?
 
       d = Domain.where('valid_to <= ?', Time.zone.now)
       d.each do |x|
         x.domain_statuses.create(value: DomainStatus::EXPIRED) if x.expirable?
       end
 
-      logger.info "#{Time.zone.now.utc} - Successfully expired #{d.count} domains\n"
+      STDOUT << "#{Time.zone.now.utc} - Successfully expired #{d.count} domains\n" unless Rails.env.test?
     end
 
     def start_redemption_grace_period
-      logger.info "#{Time.zone.now.utc} - Setting server_hold to domains\n"
+      STDOUT << "#{Time.zone.now.utc} - Setting server_hold to domains\n" unless Rails.env.test?
 
       d = Domain.where('outzone_at <= ?', Time.zone.now)
       d.each do |x|
         x.domain_statuses.create(value: DomainStatus::SERVER_HOLD) if x.server_holdable?
       end
 
-      logger.info "#{Time.zone.now.utc} - Successfully set server_hold to #{d.count} domains\n"
+      STDOUT << "#{Time.zone.now.utc} - Successfully set server_hold to #{d.count} domains\n" unless Rails.env.test?
     end
 
     def start_delete_period
-      logger.info "#{Time.zone.now.utc} - Setting delete_candidate to domains\n"
+      STDOUT << "#{Time.zone.now.utc} - Setting delete_candidate to domains\n" unless Rails.env.test?
 
       d = Domain.where('delete_at <= ?', Time.zone.now)
       d.each do |x|
         x.domain_statuses.create(value: DomainStatus::DELETE_CANDIDATE) if x.delete_candidateable?
       end
 
-      logger.info "#{Time.zone.now.utc} - Successfully set delete_candidate to #{d.count} domains\n"
+      return if Rails.env.test?
+      STDOUT << "#{Time.zone.now.utc} - Successfully set delete_candidate to #{d.count} domains\n"
     end
 
     def destroy_delete_candidates
-      logger.info "#{Time.zone.now.utc} - Destroying domains\n"
+      STDOUT << "#{Time.zone.now.utc} - Destroying domains\n" unless Rails.env.test?
 
       c = 0
       DomainStatus.where(value: DomainStatus::DELETE_CANDIDATE).each do |x|
@@ -189,7 +190,7 @@ class Domain < ActiveRecord::Base
         c += 1
       end
 
-      logger.info "#{Time.zone.now.utc} - Successfully destroyed #{c} domains\n"
+      STDOUT << "#{Time.zone.now.utc} - Successfully destroyed #{c} domains\n" unless Rails.env.test?
     end
   end
 
