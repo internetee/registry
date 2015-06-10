@@ -230,7 +230,7 @@ module Depp
 
     def extension_xml
       xml = { _anonymus: [] }
-      ident = ident_xml[:_anonymus].try(:first)
+      ident = ident_xml[:_anonymus].try(:first) if !persisted?
       legal = legal_document_xml[:_anonymus].try(:first)
       xml[:_anonymus] << ident if ident.present?
       xml[:_anonymus] << legal if legal.present?
