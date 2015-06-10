@@ -410,6 +410,14 @@ class Domain < ActiveRecord::Base
   def manage_automatic_statuses
     # domain_statuses.create(value: DomainStatus::DELETE_CANDIDATE) if delete_candidateable?
 
+    # if domain_statuses.exists?(value: DomainStatus::FORCE_DELETE)
+    #   domain_statuses.where(value: DomainStatus::SERVER_RENEW_PROHIBITED).first_or_create
+    #   domain_statuses.where(value: DomainStatus::SERVER_TRANSFER_PROHIBITED).first_or_create
+    #   domain_statuses.where(value: DomainStatus::SERVER_UPDATE_PROHIBITED).first_or_create
+    #   domain_statuses.where(value: DomainStatus::SERVER_MANUAL_INZONE).first_or_create
+    #   domain_statuses.where(value: DomainStatus::PENDING_DELETE).first_or_create
+    # end
+
     if domain_statuses.empty? && valid?
       domain_statuses.create(value: DomainStatus::OK)
     elsif domain_statuses.length > 1 || !valid?
