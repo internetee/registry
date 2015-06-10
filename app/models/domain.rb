@@ -221,6 +221,18 @@ class Domain < ActiveRecord::Base
     true
   end
 
+  def renewable?
+    if Setting.days_to_renew_domain_before_expire != 0
+      if (valid_to - Time.zone.now).to_i / 1.day >= Setting.days_to_renew_domain_before_expire
+        return false
+      end
+    end
+
+    return false if domain_statuses.where(value: DomainStatus::DELETE_CANDIDATE).any?
+
+    true
+  end
+
   def pending_update?
     (domain_statuses.pluck(:value) & %W(
       #{DomainStatus::PENDING_UPDATE}

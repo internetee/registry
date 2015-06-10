@@ -2047,6 +2047,26 @@ describe 'EPP Domain', epp: true do
       Setting.days_to_renew_domain_before_expire = 90
     end
 
+    it 'does not renew a domain if it is a delete candidate' do
+      domain.valid_to = Time.zone.now + 10.days
+      domain.delete_at = Time.zone.now
+      domain.save
+
+      Domain.start_delete_period
+
+      exp_date = domain.valid_to.to_date
+
+      xml = @epp_xml.domain.renew(
+        name: { value: domain.name },
+        curExpDate: { value: exp_date.to_s },
+        period: { value: '1', attrs: { unit: 'y' } }
+      )
+
+      response = epp_plain_request(xml)
+      response[:results][0][:msg].should == 'Object is not eligible for renewal'
+      response[:results][0][:result_code].should == '2105'
+    end
+
     it 'does not renew foreign domain' do
       login_as :registrar2 do
         exp_date = 1.year.since.to_date
