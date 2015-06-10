@@ -147,7 +147,7 @@ class Domain < ActiveRecord::Base
       )
     end
 
-    def expire_domains
+    def start_expire_period
       Domain.where('valid_to <= ?', Time.zone.now).each do |x|
         x.domain_statuses.create(value: DomainStatus::EXPIRED) if x.expirable?
       end
@@ -156,6 +156,12 @@ class Domain < ActiveRecord::Base
     def start_redemption_grace_period
       Domain.where('outzone_at <= ?', Time.zone.now).each do |x|
         x.domain_statuses.create(value: DomainStatus::SERVER_HOLD) if x.server_holdable?
+      end
+    end
+
+    def start_delete_period
+      Domain.where('delete_at <= ?', Time.zone.now).each do |x|
+        x.domain_statuses.create(value: DomainStatus::DELETE_CANDIDATE) if x.deletable?
       end
     end
   end
@@ -199,6 +205,13 @@ class Domain < ActiveRecord::Base
     return false if outzone_at > Time.zone.now
     return false if domain_statuses.where(value: DomainStatus::SERVER_HOLD).any?
     return false if domain_statuses.where(value: DomainStatus::SERVER_MANUAL_INZONE).any?
+    true
+  end
+
+  def deletable?
+    return false if delete_at > Time.zone.now
+    return false if domain_statuses.where(value: DomainStatus::DELETE_CANDIDATE).any?
+    return false if domain_statuses.where(value: DomainStatus::SERVER_DELETE_PROHIBITED).any?
     true
   end
 
@@ -340,13 +353,15 @@ class Domain < ActiveRecord::Base
 
   def set_validity_dates
     self.registered_at = Time.zone.now
-    self.valid_from = Time.zone.now.to_date
+    self.valid_from = Time.zone.now
     self.valid_to = valid_from + self.class.convert_period_to_time(period, period_unit)
-    self.outzone_at = self.valid_to + Setting.expire_warning_period.days
-    self.delete_at = self.outzone_at + Setting.redemption_grace_period.days
+    self.outzone_at = valid_to + Setting.expire_warning_period.days
+    self.delete_at = outzone_at + Setting.redemption_grace_period.days
   end
 
   def manage_automatic_statuses
+    # domain_statuses.create(value: DomainStatus::DELETE_CANDIDATE) if deletable?
+
     if domain_statuses.empty? && valid?
       domain_statuses.create(value: DomainStatus::OK)
     elsif domain_statuses.length > 1 || !valid?

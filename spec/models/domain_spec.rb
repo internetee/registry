@@ -56,10 +56,10 @@ describe Domain do
     end
 
     it 'should have correct validity dates' do
-      valid_to = Time.zone.now.beginning_of_day + 1.year
-      @domain.valid_to.should == valid_to
-      @domain.outzone_at.should == valid_to + Setting.expire_warning_period.days
-      @domain.delete_at.should == valid_to + Setting.expire_warning_period.days + Setting.redemption_grace_period.days
+      valid_to = Time.zone.now + 1.year
+      @domain.valid_to.should be_within(5).of(valid_to)
+      @domain.outzone_at.should be_within(5).of(valid_to + Setting.expire_warning_period.days)
+      @domain.delete_at.should be_within(5).of(valid_to + Setting.expire_warning_period.days + Setting.redemption_grace_period.days)
     end
 
     it 'should validate uniqueness of tech contacts' do
@@ -93,13 +93,16 @@ describe Domain do
     end
 
     it 'should expire domains' do
-      Domain.expire_domains
+      Domain.start_expire_period
       @domain.domain_statuses.where(value: DomainStatus::EXPIRED).count.should == 0
 
       @domain.valid_to = Time.zone.now - 10.days
       @domain.save
 
-      Domain.expire_domains
+      Domain.start_expire_period
+      @domain.domain_statuses.where(value: DomainStatus::EXPIRED).count.should == 1
+
+      Domain.start_expire_period
       @domain.domain_statuses.where(value: DomainStatus::EXPIRED).count.should == 1
     end
 
@@ -108,10 +111,33 @@ describe Domain do
       @domain.domain_statuses.where(value: DomainStatus::SERVER_HOLD).count.should == 0
 
       @domain.outzone_at = Time.zone.now
+      @domain.domain_statuses.create(value: DomainStatus::SERVER_MANUAL_INZONE) # this prohibits server_hold
       @domain.save
 
       Domain.start_redemption_grace_period
+      @domain.domain_statuses.where(value: DomainStatus::SERVER_HOLD).count.should == 0
+
+      @domain.domain_statuses.destroy_all
+
+      Domain.start_redemption_grace_period
       @domain.domain_statuses.where(value: DomainStatus::SERVER_HOLD).count.should == 1
+    end
+
+    it 'should start delete period' do
+      Domain.start_delete_period
+      @domain.domain_statuses.where(value: DomainStatus::DELETE_CANDIDATE).count.should == 0
+
+      @domain.delete_at = Time.zone.now
+      @domain.domain_statuses.create(value: DomainStatus::SERVER_DELETE_PROHIBITED) # this prohibits delete_candidate
+      @domain.save
+
+      Domain.start_delete_period
+      @domain.domain_statuses.where(value: DomainStatus::DELETE_CANDIDATE).count.should == 0
+
+      @domain.domain_statuses.destroy_all
+      Domain.start_delete_period
+
+      @domain.domain_statuses.where(value: DomainStatus::DELETE_CANDIDATE).count.should == 1
     end
 
     context 'about registrant update confirm' do

@@ -317,7 +317,7 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(xml)
       response[:msg].should == 'Command completed successfully'
       response[:result_code].should == '1000'
-      Domain.first.valid_to.should == 1.year.since.to_date
+      Domain.first.valid_to.should be_within(5).of(1.year.since)
     end
 
     it 'does not create a domain with invalid period' do
