@@ -161,7 +161,13 @@ class Domain < ActiveRecord::Base
 
     def start_delete_period
       Domain.where('delete_at <= ?', Time.zone.now).each do |x|
-        x.domain_statuses.create(value: DomainStatus::DELETE_CANDIDATE) if x.deletable?
+        x.domain_statuses.create(value: DomainStatus::DELETE_CANDIDATE) if x.delete_candidateable?
+      end
+    end
+
+    def destroy_delete_candidates
+      DomainStatus.where(value: DomainStatus::DELETE_CANDIDATE).each do |x|
+        x.domain.destroy
       end
     end
   end
@@ -208,7 +214,7 @@ class Domain < ActiveRecord::Base
     true
   end
 
-  def deletable?
+  def delete_candidateable?
     return false if delete_at > Time.zone.now
     return false if domain_statuses.where(value: DomainStatus::DELETE_CANDIDATE).any?
     return false if domain_statuses.where(value: DomainStatus::SERVER_DELETE_PROHIBITED).any?
@@ -360,7 +366,7 @@ class Domain < ActiveRecord::Base
   end
 
   def manage_automatic_statuses
-    # domain_statuses.create(value: DomainStatus::DELETE_CANDIDATE) if deletable?
+    # domain_statuses.create(value: DomainStatus::DELETE_CANDIDATE) if delete_candidateable?
 
     if domain_statuses.empty? && valid?
       domain_statuses.create(value: DomainStatus::OK)

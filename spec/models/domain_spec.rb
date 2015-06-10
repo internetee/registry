@@ -59,7 +59,9 @@ describe Domain do
       valid_to = Time.zone.now + 1.year
       @domain.valid_to.should be_within(5).of(valid_to)
       @domain.outzone_at.should be_within(5).of(valid_to + Setting.expire_warning_period.days)
-      @domain.delete_at.should be_within(5).of(valid_to + Setting.expire_warning_period.days + Setting.redemption_grace_period.days)
+      @domain.delete_at.should be_within(5).of(
+        valid_to + Setting.expire_warning_period.days + Setting.redemption_grace_period.days
+      )
     end
 
     it 'should validate uniqueness of tech contacts' do
@@ -138,6 +140,19 @@ describe Domain do
       Domain.start_delete_period
 
       @domain.domain_statuses.where(value: DomainStatus::DELETE_CANDIDATE).count.should == 1
+    end
+
+    it 'should destroy delete candidates' do
+      Fabricate(:domain)
+      Domain.count.should == 2
+
+      @domain.delete_at = Time.zone.now
+      @domain.save
+
+      Domain.start_delete_period
+
+      Domain.destroy_delete_candidates
+      Domain.count.should == 1
     end
 
     context 'about registrant update confirm' do
