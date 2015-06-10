@@ -152,7 +152,10 @@ class Domain < ActiveRecord::Base
 
       d = Domain.where('valid_to <= ?', Time.zone.now)
       d.each do |x|
-        x.domain_statuses.create(value: DomainStatus::EXPIRED) if x.expirable?
+        next unless x.expirable?
+        x.domain_statuses.create(value: DomainStatus::EXPIRED)
+        # TODO: This should be managed by automatic_statuses
+        x.domain_statuses.where(value: DomainStatus::OK).destroy_all
       end
 
       STDOUT << "#{Time.zone.now.utc} - Successfully expired #{d.count} domains\n" unless Rails.env.test?
@@ -163,7 +166,10 @@ class Domain < ActiveRecord::Base
 
       d = Domain.where('outzone_at <= ?', Time.zone.now)
       d.each do |x|
-        x.domain_statuses.create(value: DomainStatus::SERVER_HOLD) if x.server_holdable?
+        next unless x.server_holdable?
+        x.domain_statuses.create(value: DomainStatus::SERVER_HOLD)
+        # TODO: This should be managed by automatic_statuses
+        x.domain_statuses.where(value: DomainStatus::OK).destroy_all
       end
 
       STDOUT << "#{Time.zone.now.utc} - Successfully set server_hold to #{d.count} domains\n" unless Rails.env.test?
@@ -175,6 +181,8 @@ class Domain < ActiveRecord::Base
       d = Domain.where('delete_at <= ?', Time.zone.now)
       d.each do |x|
         x.domain_statuses.create(value: DomainStatus::DELETE_CANDIDATE) if x.delete_candidateable?
+        # TODO: This should be managed by automatic_statuses
+        x.domain_statuses.where(value: DomainStatus::OK).destroy_all
       end
 
       return if Rails.env.test?

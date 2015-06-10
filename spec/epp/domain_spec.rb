@@ -2078,6 +2078,7 @@ describe 'EPP Domain', epp: true do
 
       domain.domain_statuses.where(value: DomainStatus::EXPIRED).count.should == 1
       domain.domain_statuses.where(value: DomainStatus::SERVER_HOLD).count.should == 1
+      domain.domain_statuses.where(value: DomainStatus::OK).count.should == 0
 
       exp_date = domain.valid_to.to_date
 
@@ -2093,6 +2094,7 @@ describe 'EPP Domain', epp: true do
 
       domain.domain_statuses.where(value: DomainStatus::EXPIRED).count.should == 0
       domain.domain_statuses.where(value: DomainStatus::SERVER_HOLD).count.should == 0
+      domain.domain_statuses.where(value: DomainStatus::OK).count.should == 1
     end
 
     it 'does not renew foreign domain' do
