@@ -1,30 +1,29 @@
-- if !@contact.persisted?
-  .panel.panel-default
-    .panel-heading.clearfix
-      .pull-left= t(:ident)
-    .panel-body
-      .form-group
-        .col-md-3.control-label
-          = f.label :ident_country_code, t(:country) + '*'
-        .col-md-7
-          = f.select(:ident_country_code, SortedCountry.all_options(f.object.ident_country_code), {}, 
-            class: 'js-ident-country-code', required: true)
+.panel.panel-default
+  .panel-heading.clearfix
+    .pull-left= t(:ident)
+  .panel-body
+    .form-group
+      .col-md-3.control-label
+        = f.label :ident_country_code, t(:country) + '*'
+      .col-md-7
+        = f.select(:ident_country_code, SortedCountry.all_options(f.object.ident_country_code), {}, 
+          class: 'js-ident-country-code', required: true, disabled: @contact.persisted?)
 
-      .form-group
-        .col-md-3.control-label
-          = f.label :ident_type, t(:type) + '*'
-        .col-md-7
-          = f.select(:ident_type, Depp::Contact::SELECTION_TYPES, { selected: f.object.ident_type },
-            class: 'js-ident-type', required: true)
+    .form-group
+      .col-md-3.control-label
+        = f.label :ident_type, t(:type) + '*'
+      .col-md-7
+        = f.select(:ident_type, Depp::Contact::SELECTION_TYPES, { selected: f.object.ident_type },
+          class: 'js-ident-type', required: true, disabled: @contact.persisted?)
 
-      .form-group
-        .col-md-3.control-label
-          = f.label :ident, t(:ident) + '*'
-        .col-md-7
-          = f.text_field :ident, class: 'form-control', required: true
-          - tip_visibility = f.object.ident_type == 'birthday' ? '' : 'display: none'
-          .js-ident-tip{ style: tip_visibility }
-            = t(:birthday_format)
+    .form-group
+      .col-md-3.control-label
+        = f.label :ident, t(:ident) + '*'
+      .col-md-7
+        = f.text_field :ident, class: 'form-control', required: true, disabled: @contact.persisted?
+        - tip_visibility = f.object.ident_type == 'birthday' ? '' : 'display: none'
+        .js-ident-tip{ style: tip_visibility }
+          = t(:birthday_format)
 
 .panel.panel-default
   .panel-heading.clearfix
