@@ -143,16 +143,32 @@ describe Domain do
     end
 
     it 'should destroy delete candidates' do
-      Fabricate(:domain)
-      Domain.count.should == 2
+      d = Fabricate(:domain)
+      d.force_delete_at = Time.zone.now
+      d.save
 
       @domain.delete_at = Time.zone.now
       @domain.save
 
+      Domain.count.should == 2
+
       Domain.start_delete_period
 
       Domain.destroy_delete_candidates
-      Domain.count.should == 1
+      Domain.count.should == 0
+    end
+
+    it 'should set force delete time' do
+      @domain.set_force_delete
+
+      @domain.domain_statuses.count.should == 6
+      fda = Time.zone.now + Setting.redemption_grace_period
+      @domain.force_delete_at.should be_within(20).of(fda)
+
+      @domain.unset_force_delete
+
+      @domain.domain_statuses.count.should == 1
+      @domain.force_delete_at.should be_nil
     end
 
     context 'about registrant update confirm' do

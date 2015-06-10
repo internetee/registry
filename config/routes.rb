@@ -175,6 +175,10 @@ Rails.application.routes.draw do
 
     resources :domains do
       resources :domain_versions
+      member do
+        post 'set_force_delete'
+        post 'unset_force_delete'
+      end
     end
 
     resources :settings

@@ -818,3 +818,5 @@ en:
   valid: Valid
   category: Zone
   object_is_not_eligible_for_renewal: 'Object is not eligible for renewal'
+  set_force_delete: 'Set force delete'
+  unset_force_delete: 'Unset force delete'

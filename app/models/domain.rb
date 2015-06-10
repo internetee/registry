@@ -198,6 +198,11 @@ class Domain < ActiveRecord::Base
         c += 1
       end
 
+      Domain.where('force_delete_at <= ?', Time.zone.now).each do |x|
+        x.destroy
+        c += 1
+      end
+
       STDOUT << "#{Time.zone.now.utc} - Successfully destroyed #{c} domains\n" unless Rails.env.test?
     end
   end
@@ -306,6 +311,10 @@ class Domain < ActiveRecord::Base
     true
   end
 
+  def force_deletable?
+    domain_statuses.where(value: DomainStatus::FORCE_DELETE).empty?
+  end
+
   def registrant_verification_asked?
     registrant_verification_asked_at.present? && registrant_verification_token.present?
   end
@@ -407,17 +416,34 @@ class Domain < ActiveRecord::Base
     self.delete_at = outzone_at + Setting.redemption_grace_period.days
   end
 
+  def set_force_delete
+    domain_statuses.where(value: DomainStatus::FORCE_DELETE).first_or_create
+    domain_statuses.where(value: DomainStatus::SERVER_RENEW_PROHIBITED).first_or_create
+    domain_statuses.where(value: DomainStatus::SERVER_TRANSFER_PROHIBITED).first_or_create
+    domain_statuses.where(value: DomainStatus::SERVER_UPDATE_PROHIBITED).first_or_create
+    domain_statuses.where(value: DomainStatus::SERVER_MANUAL_INZONE).first_or_create
+    domain_statuses.where(value: DomainStatus::PENDING_DELETE).first_or_create
+    domain_statuses.where(value: DomainStatus::CLIENT_DELETE_PROHIBITED).destroy_all
+    domain_statuses.where(value: DomainStatus::SERVER_DELETE_PROHIBITED).destroy_all
+    domain_statuses.reload
+    self.force_delete_at = Time.zone.now + Setting.redemption_grace_period unless self.force_delete_at
+    save(validate: false)
+  end
+
+  def unset_force_delete
+    domain_statuses.where(value: DomainStatus::FORCE_DELETE).destroy_all
+    domain_statuses.where(value: DomainStatus::SERVER_RENEW_PROHIBITED).destroy_all
+    domain_statuses.where(value: DomainStatus::SERVER_TRANSFER_PROHIBITED).destroy_all
+    domain_statuses.where(value: DomainStatus::SERVER_UPDATE_PROHIBITED).destroy_all
+    domain_statuses.where(value: DomainStatus::SERVER_MANUAL_INZONE).destroy_all
+    domain_statuses.where(value: DomainStatus::PENDING_DELETE).destroy_all
+    domain_statuses.reload
+    self.force_delete_at = nil
+    save(validate: false)
+  end
+
   def manage_automatic_statuses
     # domain_statuses.create(value: DomainStatus::DELETE_CANDIDATE) if delete_candidateable?
-
-    # if domain_statuses.exists?(value: DomainStatus::FORCE_DELETE)
-    #   domain_statuses.where(value: DomainStatus::SERVER_RENEW_PROHIBITED).first_or_create
-    #   domain_statuses.where(value: DomainStatus::SERVER_TRANSFER_PROHIBITED).first_or_create
-    #   domain_statuses.where(value: DomainStatus::SERVER_UPDATE_PROHIBITED).first_or_create
-    #   domain_statuses.where(value: DomainStatus::SERVER_MANUAL_INZONE).first_or_create
-    #   domain_statuses.where(value: DomainStatus::PENDING_DELETE).first_or_create
-    # end
-
     if domain_statuses.empty? && valid?
       domain_statuses.create(value: DomainStatus::OK)
     elsif domain_statuses.length > 1 || !valid?

@@ -28,6 +28,24 @@ class Admin::DomainsController < AdminController
     end
   end
 
+  def set_force_delete
+    if @domain.set_force_delete
+      flash[:notice] = I18n.t('domain_updated')
+    else
+      flash.now[:alert] = I18n.t('failed_to_update_domain')
+    end
+    redirect_to [:admin, @domain]
+  end
+
+  def unset_force_delete
+    if @domain.unset_force_delete
+      flash[:notice] = I18n.t('domain_updated')
+    else
+      flash.now[:alert] = I18n.t('failed_to_update_domain')
+    end
+    redirect_to [:admin, @domain]
+  end
+
   private
 
   def set_domain
