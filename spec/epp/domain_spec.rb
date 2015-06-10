@@ -2000,7 +2000,7 @@ describe 'EPP Domain', epp: true do
 
     it 'does not renew a domain unless less than 90 days till expiration' do
       # both days are inclusive
-      domain.valid_to = Time.zone.now.to_date + 89.days
+      domain.valid_to = Time.zone.now.to_date + 90.days
       domain.save
       exp_date = domain.valid_to.to_date
 
@@ -2014,7 +2014,7 @@ describe 'EPP Domain', epp: true do
       response[:results][0][:msg].should == 'Object is not eligible for renewal'
       response[:results][0][:result_code].should == '2105'
 
-      domain.valid_to = Time.zone.now.to_date + 88.days
+      domain.valid_to = Time.zone.now.to_date + 89.days
       domain.save
       exp_date = domain.valid_to.to_date
 
