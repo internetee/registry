@@ -31,3 +31,13 @@ end
 every 3.hours do
   runner 'Certificate.update_crl'
 end
+
+every :hour do
+  runner 'Domain.start_expire_period'
+  runner 'Domain.start_redemption_grace_period'
+  runner 'Domain.start_delete_period'
+end
+
+every 42.minutes do
+  runner 'Domain.destroy_delete_candidates'
+end
