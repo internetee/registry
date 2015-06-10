@@ -437,6 +437,9 @@ class Epp::Domain < Domain
     self.period = period
     self.period_unit = unit
 
+    domain_statuses.where(value: DomainStatus::SERVER_HOLD).destroy_all
+    domain_statuses.where(value: DomainStatus::EXPIRED).destroy_all
+
     save
   end
 
