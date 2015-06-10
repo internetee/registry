@@ -317,7 +317,7 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(xml)
       response[:msg].should == 'Command completed successfully'
       response[:result_code].should == '1000'
-      Domain.first.valid_to.should == 1.year.since.to_date
+      Domain.first.valid_to.should be_within(5).of(1.year.since)
     end
 
     it 'does not create a domain with invalid period' do
@@ -2045,6 +2045,53 @@ describe 'EPP Domain', epp: true do
       response[:results][0][:msg].should == 'Command completed successfully'
       response[:results][0][:result_code].should == '1000'
       Setting.days_to_renew_domain_before_expire = 90
+    end
+
+    it 'does not renew a domain if it is a delete candidate' do
+      domain.valid_to = Time.zone.now + 10.days
+      domain.delete_at = Time.zone.now
+      domain.save
+
+      Domain.start_delete_period
+
+      exp_date = domain.valid_to.to_date
+
+      xml = @epp_xml.domain.renew(
+        name: { value: domain.name },
+        curExpDate: { value: exp_date.to_s },
+        period: { value: '1', attrs: { unit: 'y' } }
+      )
+
+      response = epp_plain_request(xml)
+      response[:results][0][:msg].should == 'Object is not eligible for renewal'
+      response[:results][0][:result_code].should == '2105'
+    end
+
+    it 'should renew a expired domain' do
+      domain.valid_to = Time.zone.now - 50.days
+      domain.outzone_at = Time.zone.now - 50.days
+      domain.save
+
+      Domain.start_expire_period
+      Domain.start_redemption_grace_period
+
+      domain.domain_statuses.where(value: DomainStatus::EXPIRED).count.should == 1
+      domain.domain_statuses.where(value: DomainStatus::SERVER_HOLD).count.should == 1
+
+      exp_date = domain.valid_to.to_date
+
+      xml = @epp_xml.domain.renew(
+        name: { value: domain.name },
+        curExpDate: { value: exp_date.to_s },
+        period: { value: '1', attrs: { unit: 'y' } }
+      )
+
+      response = epp_plain_request(xml)
+      response[:results][0][:msg].should == 'Command completed successfully'
+      response[:results][0][:result_code].should == '1000'
+
+      domain.domain_statuses.where(value: DomainStatus::EXPIRED).count.should == 0
+      domain.domain_statuses.where(value: DomainStatus::SERVER_HOLD).count.should == 0
     end
 
     it 'does not renew foreign domain' do

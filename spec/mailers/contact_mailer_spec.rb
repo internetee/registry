@@ -27,7 +27,8 @@ describe ContactMailer do
 
   describe 'email changed notification' do
     before :all do 
-      @contact = Fabricate(:contact, email: 'test@example.com')
+      @domain = Fabricate(:domain)
+      @contact = @domain.registrant
       @contact.deliver_emails = true
       @contact.email = 'test@example.org' # new email
       @mail = ContactMailer.email_updated(@contact)
@@ -42,7 +43,8 @@ describe ContactMailer do
     end
 
     it 'should have both old and new receiver email' do
-      @mail.to.should == ["test@example.org", "test@example.com"]
+      @mail.to.size.should == 2 
+      @mail.to.include? "test@example.org"
     end
 
     it 'should render body' do
