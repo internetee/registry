@@ -2067,6 +2067,33 @@ describe 'EPP Domain', epp: true do
       response[:results][0][:result_code].should == '2105'
     end
 
+    it 'should renew a expired domain' do
+      domain.valid_to = Time.zone.now - 50.days
+      domain.outzone_at = Time.zone.now - 50.days
+      domain.save
+
+      Domain.start_expire_period
+      Domain.start_redemption_grace_period
+
+      domain.domain_statuses.where(value: DomainStatus::EXPIRED).count.should == 1
+      domain.domain_statuses.where(value: DomainStatus::SERVER_HOLD).count.should == 1
+
+      exp_date = domain.valid_to.to_date
+
+      xml = @epp_xml.domain.renew(
+        name: { value: domain.name },
+        curExpDate: { value: exp_date.to_s },
+        period: { value: '1', attrs: { unit: 'y' } }
+      )
+
+      response = epp_plain_request(xml)
+      response[:results][0][:msg].should == 'Command completed successfully'
+      response[:results][0][:result_code].should == '1000'
+
+      domain.domain_statuses.where(value: DomainStatus::EXPIRED).count.should == 0
+      domain.domain_statuses.where(value: DomainStatus::SERVER_HOLD).count.should == 0
+    end
+
     it 'does not renew foreign domain' do
       login_as :registrar2 do
         exp_date = 1.year.since.to_date

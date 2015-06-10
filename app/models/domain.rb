@@ -148,27 +148,48 @@ class Domain < ActiveRecord::Base
     end
 
     def start_expire_period
-      Domain.where('valid_to <= ?', Time.zone.now).each do |x|
+      logger.info "#{Time.zone.now.utc} - Expiring domains\n"
+
+      d = Domain.where('valid_to <= ?', Time.zone.now)
+      d.each do |x|
         x.domain_statuses.create(value: DomainStatus::EXPIRED) if x.expirable?
       end
+
+      logger.info "#{Time.zone.now.utc} - Successfully expired #{d.count} domains\n"
     end
 
     def start_redemption_grace_period
-      Domain.where('outzone_at <= ?', Time.zone.now).each do |x|
+      logger.info "#{Time.zone.now.utc} - Setting server_hold to domains\n"
+
+      d = Domain.where('outzone_at <= ?', Time.zone.now)
+      d.each do |x|
         x.domain_statuses.create(value: DomainStatus::SERVER_HOLD) if x.server_holdable?
       end
+
+      logger.info "#{Time.zone.now.utc} - Successfully set server_hold to #{d.count} domains\n"
     end
 
     def start_delete_period
-      Domain.where('delete_at <= ?', Time.zone.now).each do |x|
+      logger.info "#{Time.zone.now.utc} - Setting delete_candidate to domains\n"
+
+      d = Domain.where('delete_at <= ?', Time.zone.now)
+      d.each do |x|
         x.domain_statuses.create(value: DomainStatus::DELETE_CANDIDATE) if x.delete_candidateable?
       end
+
+      logger.info "#{Time.zone.now.utc} - Successfully set delete_candidate to #{d.count} domains\n"
     end
 
     def destroy_delete_candidates
+      logger.info "#{Time.zone.now.utc} - Destroying domains\n"
+
+      c = 0
       DomainStatus.where(value: DomainStatus::DELETE_CANDIDATE).each do |x|
         x.domain.destroy
+        c += 1
       end
+
+      logger.info "#{Time.zone.now.utc} - Successfully destroyed #{c} domains\n"
     end
   end
 
