@@ -426,7 +426,7 @@ class Domain < ActiveRecord::Base
     domain_statuses.where(value: DomainStatus::CLIENT_DELETE_PROHIBITED).destroy_all
     domain_statuses.where(value: DomainStatus::SERVER_DELETE_PROHIBITED).destroy_all
     domain_statuses.reload
-    self.force_delete_at = Time.zone.now + Setting.redemption_grace_period unless self.force_delete_at
+    self.force_delete_at = Time.zone.now + Setting.redemption_grace_period.days unless self.force_delete_at
     save(validate: false)
   end
 
