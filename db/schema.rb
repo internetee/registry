@@ -12,7 +12,6 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 20150610112238) do
-
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -306,6 +305,7 @@ ActiveRecord::Schema.define(version: 20150610112238) do
     t.datetime "registrant_verification_asked_at"
     t.string   "registrant_verification_token"
     t.json     "pending_json"
+    t.datetime "force_delete_at"
   end
 
   add_index "domains", ["delete_at"], name: "index_domains_on_delete_at", using: :btree

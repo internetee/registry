@@ -1999,7 +1999,8 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'does not renew a domain unless less than 90 days till expiration' do
-      domain.valid_to = Time.zone.now.to_date + 91.days
+      # both days are inclusive
+      domain.valid_to = Time.zone.now.to_date + 90.days
       domain.save
       exp_date = domain.valid_to.to_date
 
@@ -2013,7 +2014,7 @@ describe 'EPP Domain', epp: true do
       response[:results][0][:msg].should == 'Object is not eligible for renewal'
       response[:results][0][:result_code].should == '2105'
 
-      domain.valid_to = Time.zone.now.to_date + 90.days
+      domain.valid_to = Time.zone.now.to_date + 89.days
       domain.save
       exp_date = domain.valid_to.to_date
 
@@ -2069,7 +2070,10 @@ describe 'EPP Domain', epp: true do
 
     it 'should renew a expired domain' do
       domain.valid_to = Time.zone.now - 50.days
+      new_valid_to = domain.valid_to + 1.year
       domain.outzone_at = Time.zone.now - 50.days
+      new_outzone_at = domain.outzone_at + 1.year
+      new_delete_at = domain.delete_at + 1.year
       domain.save
 
       Domain.start_expire_period
@@ -2077,6 +2081,7 @@ describe 'EPP Domain', epp: true do
 
       domain.domain_statuses.where(value: DomainStatus::EXPIRED).count.should == 1
       domain.domain_statuses.where(value: DomainStatus::SERVER_HOLD).count.should == 1
+      domain.domain_statuses.where(value: DomainStatus::OK).count.should == 0
 
       exp_date = domain.valid_to.to_date
 
@@ -2092,6 +2097,12 @@ describe 'EPP Domain', epp: true do
 
       domain.domain_statuses.where(value: DomainStatus::EXPIRED).count.should == 0
       domain.domain_statuses.where(value: DomainStatus::SERVER_HOLD).count.should == 0
+      domain.domain_statuses.where(value: DomainStatus::OK).count.should == 1
+
+      domain.reload
+      domain.valid_to.should be_within(5).of(new_valid_to)
+      domain.outzone_at.should be_within(5).of(new_outzone_at)
+      domain.delete_at.should be_within(5).of(new_delete_at)
     end
 
     it 'does not renew foreign domain' do
