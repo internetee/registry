@@ -1,3 +1,4 @@
+# rubocop: disable Metrics/ClassLength
 class Domain < ActiveRecord::Base
   include Versions # version/domain_version.rb
   has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
@@ -426,7 +427,7 @@ class Domain < ActiveRecord::Base
     domain_statuses.where(value: DomainStatus::CLIENT_DELETE_PROHIBITED).destroy_all
     domain_statuses.where(value: DomainStatus::SERVER_DELETE_PROHIBITED).destroy_all
     domain_statuses.reload
-    self.force_delete_at = Time.zone.now + Setting.redemption_grace_period.days unless self.force_delete_at
+    self.force_delete_at = Time.zone.now + Setting.redemption_grace_period.days unless force_delete_at
     save(validate: false)
   end
 
@@ -479,3 +480,4 @@ class Domain < ActiveRecord::Base
     whois_record.blank? ? create_whois_record : whois_record.save
   end
 end
+# rubocop: enable Metrics/ClassLength
