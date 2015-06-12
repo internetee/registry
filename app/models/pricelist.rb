@@ -7,7 +7,7 @@ class Pricelist < ActiveRecord::Base
     :valid_from, :category, :operation_category, :duration, presence: true
 
   CATEGORIES = %w(ee pri.ee fie.ee med.ee com.ee)
-  OPERATION_CATEGORIES = %w(new renew)
+  OPERATION_CATEGORIES = %w(create renew)
   DURATIONS = %w(1year 2years 3years)
 
   after_initialize :init_values

@@ -1,3 +1,4 @@
+# rubocop: disable Metrics/ClassLength
 class Domain < ActiveRecord::Base
   include Versions # version/domain_version.rb
   has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
@@ -152,7 +153,10 @@ class Domain < ActiveRecord::Base
 
       d = Domain.where('valid_to <= ?', Time.zone.now)
       d.each do |x|
-        x.domain_statuses.create(value: DomainStatus::EXPIRED) if x.expirable?
+        next unless x.expirable?
+        x.domain_statuses.create(value: DomainStatus::EXPIRED)
+        # TODO: This should be managed by automatic_statuses
+        x.domain_statuses.where(value: DomainStatus::OK).destroy_all
       end
 
       STDOUT << "#{Time.zone.now.utc} - Successfully expired #{d.count} domains\n" unless Rails.env.test?
@@ -163,7 +167,10 @@ class Domain < ActiveRecord::Base
 
       d = Domain.where('outzone_at <= ?', Time.zone.now)
       d.each do |x|
-        x.domain_statuses.create(value: DomainStatus::SERVER_HOLD) if x.server_holdable?
+        next unless x.server_holdable?
+        x.domain_statuses.create(value: DomainStatus::SERVER_HOLD)
+        # TODO: This should be managed by automatic_statuses
+        x.domain_statuses.where(value: DomainStatus::OK).destroy_all
       end
 
       STDOUT << "#{Time.zone.now.utc} - Successfully set server_hold to #{d.count} domains\n" unless Rails.env.test?
@@ -175,6 +182,8 @@ class Domain < ActiveRecord::Base
       d = Domain.where('delete_at <= ?', Time.zone.now)
       d.each do |x|
         x.domain_statuses.create(value: DomainStatus::DELETE_CANDIDATE) if x.delete_candidateable?
+        # TODO: This should be managed by automatic_statuses
+        x.domain_statuses.where(value: DomainStatus::OK).destroy_all
       end
 
       return if Rails.env.test?
@@ -187,6 +196,11 @@ class Domain < ActiveRecord::Base
       c = 0
       DomainStatus.where(value: DomainStatus::DELETE_CANDIDATE).each do |x|
         x.domain.destroy
+        c += 1
+      end
+
+      Domain.where('force_delete_at <= ?', Time.zone.now).each do |x|
+        x.destroy
         c += 1
       end
 
@@ -245,7 +259,7 @@ class Domain < ActiveRecord::Base
 
   def renewable?
     if Setting.days_to_renew_domain_before_expire != 0
-      if (valid_to - Time.zone.now).to_i / 1.day >= Setting.days_to_renew_domain_before_expire
+      if ((valid_to - Time.zone.now.beginning_of_day).to_i / 1.day) + 1 > Setting.days_to_renew_domain_before_expire
         return false
       end
     end
@@ -296,6 +310,10 @@ class Domain < ActiveRecord::Base
     return false if token.blank?
     return false if registrant_verification_token != token
     true
+  end
+
+  def force_deletable?
+    domain_statuses.where(value: DomainStatus::FORCE_DELETE).empty?
   end
 
   def registrant_verification_asked?
@@ -399,9 +417,34 @@ class Domain < ActiveRecord::Base
     self.delete_at = outzone_at + Setting.redemption_grace_period.days
   end
 
+  def set_force_delete
+    domain_statuses.where(value: DomainStatus::FORCE_DELETE).first_or_create
+    domain_statuses.where(value: DomainStatus::SERVER_RENEW_PROHIBITED).first_or_create
+    domain_statuses.where(value: DomainStatus::SERVER_TRANSFER_PROHIBITED).first_or_create
+    domain_statuses.where(value: DomainStatus::SERVER_UPDATE_PROHIBITED).first_or_create
+    domain_statuses.where(value: DomainStatus::SERVER_MANUAL_INZONE).first_or_create
+    domain_statuses.where(value: DomainStatus::PENDING_DELETE).first_or_create
+    domain_statuses.where(value: DomainStatus::CLIENT_DELETE_PROHIBITED).destroy_all
+    domain_statuses.where(value: DomainStatus::SERVER_DELETE_PROHIBITED).destroy_all
+    domain_statuses.reload
+    self.force_delete_at = Time.zone.now + Setting.redemption_grace_period.days unless force_delete_at
+    save(validate: false)
+  end
+
+  def unset_force_delete
+    domain_statuses.where(value: DomainStatus::FORCE_DELETE).destroy_all
+    domain_statuses.where(value: DomainStatus::SERVER_RENEW_PROHIBITED).destroy_all
+    domain_statuses.where(value: DomainStatus::SERVER_TRANSFER_PROHIBITED).destroy_all
+    domain_statuses.where(value: DomainStatus::SERVER_UPDATE_PROHIBITED).destroy_all
+    domain_statuses.where(value: DomainStatus::SERVER_MANUAL_INZONE).destroy_all
+    domain_statuses.where(value: DomainStatus::PENDING_DELETE).destroy_all
+    domain_statuses.reload
+    self.force_delete_at = nil
+    save(validate: false)
+  end
+
   def manage_automatic_statuses
     # domain_statuses.create(value: DomainStatus::DELETE_CANDIDATE) if delete_candidateable?
-
     if domain_statuses.empty? && valid?
       domain_statuses.create(value: DomainStatus::OK)
     elsif domain_statuses.length > 1 || !valid?
@@ -437,3 +480,4 @@ class Domain < ActiveRecord::Base
     whois_record.blank? ? create_whois_record : whois_record.save
   end
 end
+# rubocop: enable Metrics/ClassLength

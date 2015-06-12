@@ -434,6 +434,8 @@ class Epp::Domain < Domain
 
     p = self.class.convert_period_to_time(period, unit)
     self.valid_to = valid_to + p
+    self.outzone_at = outzone_at + p
+    self.delete_at = delete_at + p
     self.period = period
     self.period_unit = unit
 

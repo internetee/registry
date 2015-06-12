@@ -1,4 +1,5 @@
 class ContactMailer < ApplicationMailer
+  # rubocop: disable Metrics/CyclomaticComplexity
   def email_updated(contact)
     unless Rails.env.production?
       return unless TEST_EMAILS.include?(contact.email) || TEST_EMAILS.include?(contact.email_was)
@@ -18,4 +19,5 @@ class ContactMailer < ApplicationMailer
       mail(to: email, subject: "#{I18n.t(:contact_email_update_subject)} [#{@contact.code}]")
     end
   end
+  # rubocop: enable Metrics/CyclomaticComplexity
 end
