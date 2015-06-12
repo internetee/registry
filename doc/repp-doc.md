@@ -1,7 +1,7 @@
 # REPP integration specification
 
 REPP uses currently Basic Authentication (http://tools.ietf.org/html/rfc2617#section-2) with ssl certificate and key.
-Credentials and certificate are issued by EIS (in an exchange for desired API username, CSR (where CN must match username) and IP).
+Credentials and certificate are issued by EIS (in an exchange for desired API username, CSR and IP).
 
 To quickly test the API, use curl:
 
