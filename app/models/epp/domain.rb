@@ -381,7 +381,7 @@ class Epp::Domain < Domain
     }]
   end
 
-  def update(frame, current_user)
+  def update(frame, current_user, verify = true)
     return super if frame.blank?
     at = {}.with_indifferent_access
     at.deep_merge!(attrs_from(frame.css('chg'), current_user))
@@ -394,7 +394,7 @@ class Epp::Domain < Domain
     at[:dnskeys_attributes] += at_add[:dnskeys_attributes]
     at[:domain_statuses_attributes] += at_add[:domain_statuses_attributes]
 
-    if frame.css('registrant').present? && frame.css('registrant').attr('verified').to_s.downcase != 'yes' && !pending_update?
+    if verify && frame.css('registrant').present? && frame.css('registrant').attr('verified').to_s.downcase != 'yes'
       registrant_verification_asked!(frame.to_s, current_user.id)
     end
     self.deliver_emails = true # turn on email delivery for epp
@@ -408,7 +408,7 @@ class Epp::Domain < Domain
     frame = Nokogiri::XML(pending_json['frame'])
     domain_statuses.where(value: DomainStatus::PENDING_UPDATE).destroy_all
     domain_statuses.reload
-    if update(frame, user)
+    if update(frame, user, false)
       clean_pendings!
     end
   end
