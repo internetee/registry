@@ -224,6 +224,10 @@ Rails.application.routes.draw do
       get 'logout' => '/devise/sessions#destroy'
     end
 
+    authenticate :user do
+      mount Que::Web, at: 'que'
+    end
+
     root 'dashboards#show'
   end
 

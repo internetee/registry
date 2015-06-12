@@ -76,6 +76,10 @@ gem 'epp', '~> 1.4.2', github: 'gitlabeu/epp'
 gem 'epp-xml',   '~> 1.0.2'  # EPP XMLs
 gem 'uuidtools', '~> 2.1.4' # For unique IDs (used by the epp gem)
 
+# que
+gem 'que', '~> 0.10.0'
+gem 'que-web', '~> 0.4.0'
+
 # for importing legacy db
 gem 'activerecord-import', '~> 0.7.0' # for inserting dummy data
 

@@ -49,6 +49,8 @@ module Registry
     # Instead, the errors will propagate normally just like in other Active Record callbacks.
     config.active_record.raise_in_transactional_callbacks = true
 
+    config.active_record.schema_format = :sql
+
     config.generators do |g|
       g.stylesheets false
       g.javascripts false

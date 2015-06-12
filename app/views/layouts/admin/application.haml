@@ -65,7 +65,7 @@
                   -# %li= link_to t(:domains_history), admin_domain_versions_path
                   %li= link_to t(:epp_logs), admin_epp_logs_path
                   %li= link_to t(:repp_logs), admin_repp_logs_path
-                  -# %li= link_to t(:background_jobs), admin_delayed_jobs_path
+                  %li= link_to t(:que), '/admin/que'
 
           - if signed_in?
             %ul.nav.navbar-nav.navbar-right
