@@ -17,6 +17,7 @@ Here are functions like login, logout, hello, poll
     <login>                  1        
       <clID>                 1        Username      
       <pw>                   1        Password      
+      <newPW>                0-1      Optional new password for EPP user
       <options>              0-1            
         <version>            0-1      1.0      
         <lang>               0-1      en      
