@@ -20,7 +20,6 @@ class Registrant::DomainUpdateConfirmsController < RegistrantController
     @registrant_verification = RegistrantVerification.new(domain_id: @domain.id,
                                                           domain_name: @domain.name,
                                                           verification_token: params[:token])
-
     if params[:rejected]
       if @registrant_verification.domain_registrant_change_reject!
         flash[:notice] = t(:registrant_domain_verification_rejected)

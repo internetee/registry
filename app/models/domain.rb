@@ -54,6 +54,11 @@ class Domain < ActiveRecord::Base
   delegate :name,   to: :registrar, prefix: true
   delegate :street, to: :registrar, prefix: true
 
+  after_initialize :init_default_values
+  def init_default_values
+    self.pending_json = {} if pending_json.blank?
+  end
+
   before_create :generate_auth_info
   before_create :set_validity_dates
   before_update :manage_statuses
@@ -269,6 +274,19 @@ class Domain < ActiveRecord::Base
     true
   end
 
+  def preclean_pendings
+    self.registrant_verification_token = nil
+    self.registrant_verification_asked_at = nil
+  end
+
+  def clean_pendings!
+    preclean_pendings
+    self.pending_json = {}
+    domain_statuses.where(value: DomainStatus::PENDING_UPDATE).destroy_all
+    domain_statuses.where(value: DomainStatus::PENDING_DELETE).destroy_all
+    save
+  end
+
   def pending_update?
     (domain_statuses.pluck(:value) & %W(
       #{DomainStatus::PENDING_UPDATE}
@@ -280,9 +298,10 @@ class Domain < ActiveRecord::Base
     self.epp_pending_update = true # for epp
 
     return true unless registrant_verification_asked?
-    pending_json_cache = all_changes
+    pending_json_cache = pending_json
     token = registrant_verification_token
     asked_at = registrant_verification_asked_at
+    changes_cache = changes
 
     DomainMailer.registrant_pending_updated(self).deliver_now
 
@@ -291,10 +310,12 @@ class Domain < ActiveRecord::Base
     self.pending_json = pending_json_cache
     self.registrant_verification_token = token
     self.registrant_verification_asked_at = asked_at
+    self.pending_json[:domain] = changes_cache
     domain_statuses.create(value: DomainStatus::PENDING_UPDATE)
   end
 
   def registrant_update_confirmable?(token)
+    return true if Rails.env.development?
     return false unless pending_update?
     return false if registrant_verification_token.blank?
     return false if registrant_verification_asked_at.blank?
@@ -304,6 +325,7 @@ class Domain < ActiveRecord::Base
   end
 
   def registrant_delete_confirmable?(token)
+    return true if Rails.env.development?
     return false unless pending_delete?
     return false if registrant_verification_token.blank?
     return false if registrant_verification_asked_at.blank?
@@ -320,7 +342,9 @@ class Domain < ActiveRecord::Base
     registrant_verification_asked_at.present? && registrant_verification_token.present?
   end
 
-  def registrant_verification_asked!
+  def registrant_verification_asked!(frame_str, current_user_id)
+    self.pending_json['frame'] = frame_str
+    self.pending_json['current_user_id'] = current_user_id
     self.registrant_verification_asked_at = Time.zone.now
     self.registrant_verification_token = SecureRandom.hex(42)
   end
@@ -393,12 +417,10 @@ class Domain < ActiveRecord::Base
     name
   end
 
-  def pending_registrant_name
+  def pending_registrant
     return '' if pending_json.blank?
-    return '' if pending_json['domain'].blank?
     return '' if pending_json['domain']['registrant_id'].blank?
-    registrant = Registrant.find_by(id: pending_json['domain']['registrant_id'].last)
-    registrant.try(:name)
+    Registrant.find_by(id: pending_json['domain']['registrant_id'].last)
   end
 
   # rubocop:disable Lint/Loop
@@ -463,17 +485,6 @@ class Domain < ActiveRecord::Base
     log[:registrant]     = [registrant.try(:attributes)]
     log[:domain_statuses] = domain_statuses.map(&:attributes)
     log
-  end
-
-  def all_changes
-    all_changes = HashWithIndifferentAccess.new
-    all_changes[:domain] = changes
-    all_changes[:admin_contacts]  = admin_contacts.map(&:changes)
-    all_changes[:tech_contacts]   = tech_contacts.map(&:changes)
-    all_changes[:nameservers]     = nameservers.map(&:changes)
-    all_changes[:registrant]      = registrant.try(:changes)
-    all_changes[:domain_statuses] = domain_statuses.map(&:changes)
-    all_changes
   end
 
   def update_whois_record
