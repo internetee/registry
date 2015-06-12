@@ -45,7 +45,7 @@ describe BankTransaction do
       bt.bind_invoice(invoice.number)
 
       invoice.receipt_date.should_not be_blank
-      r.cash_account.balance.should == 240.0
+      r.cash_account.balance.should == 200.0
     end
 
     it 'should not bind transaction with mismatching sums' do

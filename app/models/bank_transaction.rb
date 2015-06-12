@@ -75,7 +75,7 @@ class BankTransaction < ActiveRecord::Base
     create_account_activity(
       account: registrar.cash_account,
       invoice: invoice,
-      sum: sum,
+      sum: invoice.sum_without_vat,
       currency: currency,
       description: description
     )
