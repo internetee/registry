@@ -63,7 +63,7 @@ describe BankStatement do
 
       AccountActivity.count.should == 1
 
-      r.cash_account.balance.should == 240.0
+      r.cash_account.balance.should == 200.0
 
       bs.bank_transactions.unbinded.count.should == 1
       bs.partially_binded?.should == true
