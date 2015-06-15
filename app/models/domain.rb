@@ -122,6 +122,13 @@ class Domain < ActiveRecord::Base
 
   validate :validate_nameserver_ips
 
+  validate :statuses_uniqueness
+  def statuses_uniqueness
+    return if statuses.uniq == statuses
+    errors.add(:statuses, :taken)
+  end
+
+
   attr_accessor :registrant_typeahead, :update_me, :deliver_emails,
     :epp_pending_update, :epp_pending_delete
 
@@ -245,13 +252,13 @@ class Domain < ActiveRecord::Base
 
   def expirable?
     return false if valid_to > Time.zone.now
-    domain_statuses.where(value: DomainStatus::EXPIRED).empty?
+    !statuses.include?(DomainStatus::EXPIRED)
   end
 
   def server_holdable?
     return false if outzone_at > Time.zone.now
-    return false if domain_statuses.where(value: DomainStatus::SERVER_HOLD).any?
-    return false if domain_statuses.where(value: DomainStatus::SERVER_MANUAL_INZONE).any?
+    return false if statuses.include?(DomainStatus::SERVER_HOLD)
+    return false if statuses.include?(DomainStatus::SERVER_MANUAL_INZONE)
     true
   end
 

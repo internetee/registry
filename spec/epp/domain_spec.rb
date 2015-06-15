@@ -1592,11 +1592,10 @@ describe 'EPP Domain', epp: true do
       new_contact = d.tech_contacts.find_by(code: 'FIXED:MAK21')
       new_contact.should be_truthy
 
-      d.domain_statuses.count.should == 2
-      d.domain_statuses.first.description.should == 'Payment overdue.'
-      d.domain_statuses.first.value.should == 'clientHold'
+      d.statuses.count.should == 2
+      d.statuses.include?('clientHold').should == true
+      d.statuses.include?('clientUpdateProhibited').should == true
 
-      d.domain_statuses.last.value.should == 'clientUpdateProhibited'
       d.dnskeys.count.should == 2
 
       response = epp_plain_request(xml)
@@ -1621,39 +1620,39 @@ describe 'EPP Domain', epp: true do
       response[:results][2][:msg].should == 'Contact already exists on this domain [contact_code_cache]'
       response[:results][2][:value].should == 'FIXED:MAK21'
 
-      response[:results][3][:msg].should == 'Status already exists on this domain [value]'
-      if response[:results][3][:value] == 'clientHold'
-        response[:results][3][:value].should == 'clientHold'
-      else
-        response[:results][3][:value].should == 'clientUpdateProhibited'
-      end
+      # response[:results][3][:msg].should == 'Status already exists on this domain [value]'
+      # if response[:results][3][:value] == 'clientHold'
+      #   response[:results][3][:value].should == 'clientHold'
+      # else
+      #   response[:results][3][:value].should == 'clientUpdateProhibited'
+      # end
 
-      response[:results][4][:msg].should == 'Status already exists on this domain [value]'
-      if response[:results][4][:value] == 'clientHold'
-        response[:results][4][:value].should == 'clientHold'
-      else
-        response[:results][4][:value].should == 'clientUpdateProhibited'
-      end
+      # response[:results][4][:msg].should == 'Status already exists on this domain [value]'
+      # if response[:results][4][:value] == 'clientHold'
+      #   response[:results][4][:value].should == 'clientHold'
+      # else
+      #   response[:results][4][:value].should == 'clientUpdateProhibited'
+      # end
 
-      response[:results][5][:msg].should == 'Public key already exists [public_key]'
-      if response[:results][5][:value] == '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
-        response[:results][5][:value].should ==
+      response[:results][3][:msg].should == 'Public key already exists [public_key]'
+      if response[:results][3][:value] == '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
+        response[:results][3][:value].should ==
           '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
       else
-        response[:results][5][:value].should ==
+        response[:results][3][:value].should ==
           '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0'
       end
 
-      response[:results][6][:msg].should == 'Public key already exists [public_key]'
-      if response[:results][6][:value] == '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
-        response[:results][6][:value].should ==
+      response[:results][4][:msg].should == 'Public key already exists [public_key]'
+      if response[:results][4][:value] == '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
+        response[:results][4][:value].should ==
           '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
       else
-        response[:results][6][:value].should ==
+        response[:results][4][:value].should ==
           '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0'
       end
 
-      d.domain_statuses.count.should == 2
+      d.statuses.count.should == 2
     end
 
     it 'updates domain with registrant change what triggers action pending' do
@@ -2124,7 +2123,7 @@ describe 'EPP Domain', epp: true do
 
     ### INFO ###
     it 'returns domain info' do
-      domain.domain_statuses.build(value: DomainStatus::CLIENT_HOLD, description: 'Payment overdue.')
+      domain.statuses << DomainStatus::CLIENT_HOLD
       domain.nameservers.build(hostname: 'ns1.example.com', ipv4: '192.168.1.1', ipv6: '1080:0:0:0:8:800:200C:417A')
 
       domain.dnskeys.build(
@@ -2159,7 +2158,6 @@ describe 'EPP Domain', epp: true do
 
       inf_data = response[:parsed].css('resData infData')
       inf_data.css('name').text.should == domain.name
-      inf_data.css('status').text.should == 'Payment overdue.'
       inf_data.css('status').first[:s].should == 'clientHold'
       inf_data.css('registrant').text.should == domain.registrant_code
       inf_data.css('roid').text.should == domain.roid
