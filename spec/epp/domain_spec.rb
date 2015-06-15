@@ -1839,10 +1839,11 @@ describe 'EPP Domain', epp: true do
       response[:results][0][:msg].should == 'Command completed successfully'
       response[:results][0][:result_code].should == '1000'
 
+      d.reload
       d.dnskeys.count.should == 1
 
-      d.domain_statuses.count.should == 1
-      d.domain_statuses.first.value.should == 'clientUpdateProhibited'
+      d.statuses.count.should == 1
+      d.statuses.first.should == 'clientUpdateProhibited'
 
       rem_ns = d.nameservers.find_by(hostname: 'ns1.example.com')
       rem_ns.should be_falsey
@@ -1861,8 +1862,12 @@ describe 'EPP Domain', epp: true do
       response[:results][1][:value].should == 'FIXED:CITIZEN_1234'
 
       response[:results][2][:result_code].should == '2303'
-      response[:results][2][:msg].should == 'Status was not found'
-      response[:results][2][:value].should == 'clientHold'
+      response[:results][2][:msg].should == 'DS was not found'
+      response[:results][2][:value].should == '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
+
+      response[:results][3][:result_code].should == '2303'
+      response[:results][3][:msg].should == 'Status was not found'
+      response[:results][3][:value].should == 'clientHold'
     end
 
     it 'does not remove server statuses' do
@@ -2318,7 +2323,8 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'does not delete domain with specific status' do
-      domain.domain_statuses.create(value: DomainStatus::CLIENT_DELETE_PROHIBITED)
+      domain.statuses << DomainStatus::CLIENT_DELETE_PROHIBITED
+      domain.save
 
       response = epp_plain_request(@epp_xml.domain.delete({
         name: { value: domain.name }
@@ -2336,7 +2342,8 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'does not delete domain with pending delete' do
-      domain.domain_statuses.create(value: DomainStatus::PENDING_DELETE)
+      domain.statuses << DomainStatus::PENDING_DELETE
+      domain.save
 
       response = epp_plain_request(@epp_xml.domain.delete({
         name: { value: domain.name }

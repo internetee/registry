@@ -244,12 +244,6 @@ class Domain < ActiveRecord::Base
     domain_transfers.find_by(status: DomainTransfer::PENDING)
   end
 
-  def can_be_deleted?
-    (domain_statuses.pluck(:value) & %W(
-      #{DomainStatus::SERVER_DELETE_PROHIBITED}
-    )).empty?
-  end
-
   def expirable?
     return false if valid_to > Time.zone.now
     !statuses.include?(DomainStatus::EXPIRED)
@@ -338,9 +332,7 @@ class Domain < ActiveRecord::Base
   end
 
   def pending_delete?
-    (domain_statuses.pluck(:value) & %W(
-      #{DomainStatus::PENDING_DELETE}
-    )).present?
+    statuses.include?(DomainStatus::PENDING_DELETE)
   end
 
   def pending_delete!
@@ -348,7 +340,9 @@ class Domain < ActiveRecord::Base
     self.epp_pending_delete = true # for epp
 
     return true unless registrant_verification_asked?
-    domain_statuses.create(value: DomainStatus::PENDING_DELETE)
+    statuses << DomainStatus::PENDING_DELETE
+    save(validate: false) # should check if this did succeed
+
     DomainMailer.pending_deleted(self).deliver_now
   end
 

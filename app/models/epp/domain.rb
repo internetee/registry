@@ -659,9 +659,7 @@ class Epp::Domain < Domain
     begin
       errors.add(:base, :domain_status_prohibits_operation)
       return false
-    end if (domain_statuses.pluck(:value) & %W(
-      #{DomainStatus::CLIENT_DELETE_PROHIBITED}
-    )).any?
+    end if statuses.include?(DomainStatus::CLIENT_DELETE_PROHIBITED)
 
     true
   end
