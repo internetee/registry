@@ -2079,9 +2079,10 @@ describe 'EPP Domain', epp: true do
       Domain.start_expire_period
       Domain.start_redemption_grace_period
 
-      domain.domain_statuses.where(value: DomainStatus::EXPIRED).count.should == 1
-      domain.domain_statuses.where(value: DomainStatus::SERVER_HOLD).count.should == 1
-      domain.domain_statuses.where(value: DomainStatus::OK).count.should == 0
+      domain.reload
+      domain.statuses.include?(DomainStatus::EXPIRED).should == true
+      domain.statuses.include?(DomainStatus::SERVER_HOLD).should == true
+      domain.statuses.include?(DomainStatus::OK).should == false
 
       exp_date = domain.valid_to.to_date
 
@@ -2095,9 +2096,10 @@ describe 'EPP Domain', epp: true do
       response[:results][0][:msg].should == 'Command completed successfully'
       response[:results][0][:result_code].should == '1000'
 
-      domain.domain_statuses.where(value: DomainStatus::EXPIRED).count.should == 0
-      domain.domain_statuses.where(value: DomainStatus::SERVER_HOLD).count.should == 0
-      domain.domain_statuses.where(value: DomainStatus::OK).count.should == 1
+      domain.reload
+      domain.statuses.include?(DomainStatus::EXPIRED).should == false
+      domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
+      domain.statuses.include?(DomainStatus::OK).should == true
 
       domain.reload
       domain.valid_to.should be_within(5).of(new_valid_to)

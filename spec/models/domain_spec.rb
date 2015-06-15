@@ -441,24 +441,23 @@ describe Domain do
 
   it 'manages statuses automatically' do
     d = Fabricate(:domain)
-    expect(d.domain_statuses.count).to eq(1)
-    expect(d.domain_statuses.first.value).to eq(DomainStatus::OK)
+    expect(d.statuses.count).to eq(1)
+    expect(d.statuses.first).to eq(DomainStatus::OK)
 
     d.period = 2
     d.save
 
     d.reload
+    expect(d.statuses.count).to eq(1)
+    expect(d.statuses.first).to eq(DomainStatus::OK)
 
-    expect(d.domain_statuses.count).to eq(1)
-    expect(d.domain_statuses.first.reload.value).to eq(DomainStatus::OK)
-
-    d.domain_statuses.build(value: DomainStatus::CLIENT_DELETE_PROHIBITED)
+    d.statuses << DomainStatus::CLIENT_DELETE_PROHIBITED
     d.save
 
     d.reload
 
-    expect(d.domain_statuses.count).to eq(1)
-    expect(d.domain_statuses.first.value).to eq(DomainStatus::CLIENT_DELETE_PROHIBITED)
+    expect(d.statuses.count).to eq(1)
+    expect(d.statuses.first).to eq(DomainStatus::CLIENT_DELETE_PROHIBITED)
   end
 
   with_versioning do

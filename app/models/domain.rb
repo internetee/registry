@@ -63,12 +63,15 @@ class Domain < ActiveRecord::Base
     true
   end
 
+  before_save :manage_automatic_statuses
+
   before_save :touch_always_version
   def touch_always_version
     self.updated_at = Time.zone.now
   end
-  after_save :manage_automatic_statuses
   after_save :update_whois_record
+
+  after_initialize -> { self.statuses = [] if statuses.nil? }
 
   validates :name_dirty, domain_name: true, uniqueness: true
   validates :puny_label, length: { maximum: 63 }
@@ -154,9 +157,10 @@ class Domain < ActiveRecord::Base
       d = Domain.where('valid_to <= ?', Time.zone.now)
       d.each do |x|
         next unless x.expirable?
-        x.domain_statuses.create(value: DomainStatus::EXPIRED)
+        x.statuses << DomainStatus::EXPIRED
         # TODO: This should be managed by automatic_statuses
-        x.domain_statuses.where(value: DomainStatus::OK).destroy_all
+        x.statuses.delete(DomainStatus::OK)
+        x.save(validate: false)
       end
 
       STDOUT << "#{Time.zone.now.utc} - Successfully expired #{d.count} domains\n" unless Rails.env.test?
@@ -168,9 +172,10 @@ class Domain < ActiveRecord::Base
       d = Domain.where('outzone_at <= ?', Time.zone.now)
       d.each do |x|
         next unless x.server_holdable?
-        x.domain_statuses.create(value: DomainStatus::SERVER_HOLD)
+        x.statuses << DomainStatus::SERVER_HOLD
         # TODO: This should be managed by automatic_statuses
-        x.domain_statuses.where(value: DomainStatus::OK).destroy_all
+        x.statuses.delete(DomainStatus::OK)
+        x.save
       end
 
       STDOUT << "#{Time.zone.now.utc} - Successfully set server_hold to #{d.count} domains\n" unless Rails.env.test?
@@ -445,14 +450,13 @@ class Domain < ActiveRecord::Base
 
   def manage_automatic_statuses
     # domain_statuses.create(value: DomainStatus::DELETE_CANDIDATE) if delete_candidateable?
-    if domain_statuses.empty? && valid?
-      domain_statuses.create(value: DomainStatus::OK)
-    elsif domain_statuses.length > 1 || !valid?
-      domain_statuses.find_by(value: DomainStatus::OK).try(:destroy)
+    if statuses.empty? && valid?
+      statuses << DomainStatus::OK
+    elsif statuses.length > 1 || !valid?
+      statuses.delete(DomainStatus::OK)
     end
 
     # otherwise domain_statuses are in old state for domain object
-    domain_statuses.reload
   end
 
   def children_log
