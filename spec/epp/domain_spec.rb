@@ -1872,8 +1872,8 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'does not remove server statuses' do
-      d = Domain.last
-      d.domain_statuses.create(value: DomainStatus::SERVER_HOLD)
+      domain.statuses << DomainStatus::SERVER_HOLD
+      domain.save
 
       xml = domain_update_xml({
         name: { value: domain.name },
