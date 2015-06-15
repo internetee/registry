@@ -22,11 +22,11 @@ feature 'DomainUpdateConfirm', type: :feature do
   context 'as unknown user with domain with update token' do
     before :all do
       @domain = Fabricate(
-        :domain, 
-        registrant_verification_token: '123', 
+        :domain,
+        registrant_verification_token: '123',
         registrant_verification_asked_at: Time.zone.now
       )
-      @domain.domain_statuses.create(value: DomainStatus::PENDING_UPDATE)
+      @domain.statuses << DomainStatus::PENDING_UPDATE
     end
 
     it 'should see warning info if token is missing in request' do
