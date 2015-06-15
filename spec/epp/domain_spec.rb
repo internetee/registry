@@ -1501,7 +1501,8 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'should not allow any update when status pending update' do
-      domain.domain_statuses.create(value: DomainStatus::PENDING_UPDATE)
+      domain.statuses << DomainStatus::PENDING_UPDATE
+      domain.save
 
       existing_pw = domain.auth_info
 
@@ -1728,8 +1729,8 @@ describe 'EPP Domain', epp: true do
       new_contact = d.tech_contacts.find_by(code: 'FIXED:PENDINGMAK21')
       new_contact.should_not be_truthy # aka should not add new contact
 
-      d.domain_statuses.count.should == 1
-      d.domain_statuses.first.value.should == 'pendingUpdate'
+      d.statuses.count.should == 1
+      d.statuses.first.should == 'pendingUpdate'
 
       d.dnskeys.count.should == 0
     end

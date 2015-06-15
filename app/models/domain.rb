@@ -193,9 +193,10 @@ class Domain < ActiveRecord::Base
 
       d = Domain.where('delete_at <= ?', Time.zone.now)
       d.each do |x|
-        x.domain_statuses.create(value: DomainStatus::DELETE_CANDIDATE) if x.delete_candidateable?
+        x.statuses << DomainStatus::DELETE_CANDIDATE if x.delete_candidateable?
         # TODO: This should be managed by automatic_statuses
-        x.domain_statuses.where(value: DomainStatus::OK).destroy_all
+        x.statuses.delete(DomainStatus::OK)
+        x.save
       end
 
       return if Rails.env.test?
@@ -258,8 +259,8 @@ class Domain < ActiveRecord::Base
 
   def delete_candidateable?
     return false if delete_at > Time.zone.now
-    return false if domain_statuses.where(value: DomainStatus::DELETE_CANDIDATE).any?
-    return false if domain_statuses.where(value: DomainStatus::SERVER_DELETE_PROHIBITED).any?
+    return false if statuses.include?(DomainStatus::DELETE_CANDIDATE)
+    return false if statuses.include?(DomainStatus::SERVER_DELETE_PROHIBITED)
     true
   end
 
@@ -270,15 +271,13 @@ class Domain < ActiveRecord::Base
       end
     end
 
-    return false if domain_statuses.where(value: DomainStatus::DELETE_CANDIDATE).any?
+    return false if statuses.include?(DomainStatus::DELETE_CANDIDATE)
 
     true
   end
 
   def pending_update?
-    (domain_statuses.pluck(:value) & %W(
-      #{DomainStatus::PENDING_UPDATE}
-    )).present?
+    statuses.include?(DomainStatus::PENDING_UPDATE)
   end
 
   def pending_update!
@@ -297,7 +296,7 @@ class Domain < ActiveRecord::Base
     self.pending_json = pending_json_cache
     self.registrant_verification_token = token
     self.registrant_verification_asked_at = asked_at
-    domain_statuses.create(value: DomainStatus::PENDING_UPDATE)
+    self.statuses = [DomainStatus::PENDING_UPDATE]
   end
 
   def registrant_update_confirmable?(token)
@@ -340,7 +339,7 @@ class Domain < ActiveRecord::Base
     self.epp_pending_delete = true # for epp
 
     return true unless registrant_verification_asked?
-    statuses << DomainStatus::PENDING_DELETE
+    statuses = [DomainStatus::PENDING_DELETE]
     save(validate: false) # should check if this did succeed
 
     DomainMailer.pending_deleted(self).deliver_now
@@ -424,27 +423,27 @@ class Domain < ActiveRecord::Base
   end
 
   def set_force_delete
-    domain_statuses.where(value: DomainStatus::FORCE_DELETE).first_or_create
-    domain_statuses.where(value: DomainStatus::SERVER_RENEW_PROHIBITED).first_or_create
-    domain_statuses.where(value: DomainStatus::SERVER_TRANSFER_PROHIBITED).first_or_create
-    domain_statuses.where(value: DomainStatus::SERVER_UPDATE_PROHIBITED).first_or_create
-    domain_statuses.where(value: DomainStatus::SERVER_MANUAL_INZONE).first_or_create
-    domain_statuses.where(value: DomainStatus::PENDING_DELETE).first_or_create
-    domain_statuses.where(value: DomainStatus::CLIENT_DELETE_PROHIBITED).destroy_all
-    domain_statuses.where(value: DomainStatus::SERVER_DELETE_PROHIBITED).destroy_all
-    domain_statuses.reload
+    statuses << DomainStatus::FORCE_DELETE
+    statuses << DomainStatus::SERVER_RENEW_PROHIBITED
+    statuses << DomainStatus::SERVER_TRANSFER_PROHIBITED
+    statuses << DomainStatus::SERVER_UPDATE_PROHIBITED
+    statuses << DomainStatus::SERVER_MANUAL_INZONE
+    statuses << DomainStatus::PENDING_DELETE
+    statuses.delete(DomainStatus::CLIENT_DELETE_PROHIBITED)
+    statuses.delete(DomainStatus::SERVER_DELETE_PROHIBITED)
+
     self.force_delete_at = Time.zone.now + Setting.redemption_grace_period.days unless force_delete_at
     save(validate: false)
   end
 
   def unset_force_delete
-    domain_statuses.where(value: DomainStatus::FORCE_DELETE).destroy_all
-    domain_statuses.where(value: DomainStatus::SERVER_RENEW_PROHIBITED).destroy_all
-    domain_statuses.where(value: DomainStatus::SERVER_TRANSFER_PROHIBITED).destroy_all
-    domain_statuses.where(value: DomainStatus::SERVER_UPDATE_PROHIBITED).destroy_all
-    domain_statuses.where(value: DomainStatus::SERVER_MANUAL_INZONE).destroy_all
-    domain_statuses.where(value: DomainStatus::PENDING_DELETE).destroy_all
-    domain_statuses.reload
+    statuses.delete(DomainStatus::FORCE_DELETE)
+    statuses.delete(DomainStatus::SERVER_RENEW_PROHIBITED)
+    statuses.delete(DomainStatus::SERVER_TRANSFER_PROHIBITED)
+    statuses.delete(DomainStatus::SERVER_UPDATE_PROHIBITED)
+    statuses.delete(DomainStatus::SERVER_MANUAL_INZONE)
+    statuses.delete(DomainStatus::PENDING_DELETE)
+
     self.force_delete_at = nil
     save(validate: false)
   end
@@ -456,8 +455,6 @@ class Domain < ActiveRecord::Base
     elsif statuses.length > 1 || !valid?
       statuses.delete(DomainStatus::OK)
     end
-
-    # otherwise domain_statuses are in old state for domain object
   end
 
   def children_log
