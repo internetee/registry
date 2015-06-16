@@ -235,6 +235,7 @@ namespace :import do
       legacy_contact_id
     )
 
+    # rubocop: disable Lint/UselessAssignment
     domain_status_columns = %w(
       description
       value
@@ -242,6 +243,7 @@ namespace :import do
       updator_str
       legacy_domain_id
     )
+    # rubocop: enable Lint/UselessAssignment
 
     nameserver_columns = %w(
       hostname
@@ -292,9 +294,7 @@ namespace :import do
         end
 
         # OK status is default
-        if ok
-          domain_statuses << DomainStatus::OK
-        end
+        domain_statuses << DomainStatus::OK if ok
 
         domains << [
           x.object_registry.name.try(:strip),

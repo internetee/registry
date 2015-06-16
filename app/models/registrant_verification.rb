@@ -17,16 +17,12 @@ class RegistrantVerification < ActiveRecord::Base
   def domain_registrant_change_confirm!
     self.action_type = DOMAIN_REGISTRANT_CHANGE
     self.action = CONFIRMED
-    if save
-      DomainConfirmJob.enqueue domain.id, CONFIRMED
-    end
+    DomainConfirmJob.enqueue domain.id, CONFIRMED if save
   end
 
   def domain_registrant_change_reject!
     self.action_type = DOMAIN_REGISTRANT_CHANGE
     self.action = REJECTED
-    if save
-      DomainConfirmJob.enqueue domain.id, REJECTED
-    end
+    DomainConfirmJob.enqueue domain.id, REJECTED if save
   end
 end

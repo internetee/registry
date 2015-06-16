@@ -318,6 +318,7 @@ class Domain < ActiveRecord::Base
     pending_json[:domain] = changes_cache
   end
 
+  # rubocop: disable Metrics/CyclomaticComplexity
   def registrant_update_confirmable?(token)
     return true if Rails.env.development?
     return false unless pending_update?
@@ -337,6 +338,7 @@ class Domain < ActiveRecord::Base
     return false if registrant_verification_token != token
     true
   end
+  # rubocop: enable Metrics/CyclomaticComplexity
 
   def force_deletable?
     !statuses.include?(DomainStatus::FORCE_DELETE)
@@ -362,7 +364,7 @@ class Domain < ActiveRecord::Base
     self.epp_pending_delete = true # for epp
 
     return true unless registrant_verification_asked?
-    statuses = [DomainStatus::PENDING_DELETE]
+    self.statuses = [DomainStatus::PENDING_DELETE]
     save(validate: false) # should check if this did succeed
 
     DomainMailer.pending_deleted(self).deliver_now

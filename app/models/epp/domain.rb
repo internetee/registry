@@ -369,7 +369,9 @@ class Epp::Domain < Domain
     at[:admin_domain_contacts_attributes] += at_add[:admin_domain_contacts_attributes]
     at[:tech_domain_contacts_attributes] += at_add[:tech_domain_contacts_attributes]
     at[:dnskeys_attributes] += at_add[:dnskeys_attributes]
-    at[:statuses] = statuses - domain_statuses_attrs(frame.css('rem'), 'rem') + domain_statuses_attrs(frame.css('add'), 'add')
+    at[:statuses] = 
+      statuses - domain_statuses_attrs(frame.css('rem'), 'rem') + domain_statuses_attrs(frame.css('add'), 'add')
+
     # at[:statuses] += at_add[:domain_statuses_attributes]
 
     if verify && frame.css('registrant').present? && frame.css('registrant').attr('verified').to_s.downcase != 'yes'
@@ -385,9 +387,7 @@ class Epp::Domain < Domain
     frame = Nokogiri::XML(pending_json['frame'])
     statuses.delete(DomainStatus::PENDING_UPDATE)
 
-    if update(frame, user, false)
-      clean_pendings!
-    end
+    clean_pendings! if update(frame, user, false)
   end
 
   def attach_legal_document(legal_document_data)
