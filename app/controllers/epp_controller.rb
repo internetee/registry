@@ -5,6 +5,7 @@ class EppController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   before_action :generate_svtrid
+  before_action :latin_only
   before_action :validate_request
   before_action :update_epp_session
   helper_method :current_user
@@ -104,6 +105,14 @@ class EppController < ApplicationController
     @response = render_to_string(*args)
     render xml: @response
     write_to_epp_log
+  end
+
+  # VALIDATION
+  def latin_only
+    return true if params['frame'].blank?
+    return true if params['frame'].match(/\A[\p{Latin}\p{Z}\p{P}\p{S}\p{Cc}\p{Cf}\w_\'\+\-\.\(\)\/]*\Z/i)
+    render_epp_response '/epp/latin_error'
+    false
   end
 
   # VALIDATION
