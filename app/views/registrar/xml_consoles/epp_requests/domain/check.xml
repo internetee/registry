@@ -3,7 +3,7 @@
   <command>
     <check>
       <domain:check
-       xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
+       xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
         <domain:name>example.ee</domain:name>
       </domain:check>
     </check>

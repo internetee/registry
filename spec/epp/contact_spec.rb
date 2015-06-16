@@ -412,7 +412,7 @@ describe 'EPP Contact', epp: true do
           }
         }
         response = update_request({ id: { value: 'FIRST0:SH8013' } }, extension)
-        response[:msg].should == 
+        response[:msg].should ==
           'Parameter value policy error. Update of ident data not allowed [ident]'
         response[:result_code].should == '2306'
 
@@ -975,7 +975,7 @@ describe 'EPP Contact', epp: true do
       <command>
         <check>
           <contact:check
-           xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
+           xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
             <contact:id>FIXED:CHECK-1234</contact:id>
             <contact:id>check-4321</contact:id>
           </contact:check>
@@ -991,7 +991,7 @@ describe 'EPP Contact', epp: true do
       <command>
         <check>
           <contact:check
-           xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
+           xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
             <contact:id>FIXED:CHECK-LEGACY</contact:id>
             <contact:id>CID:FIXED:CHECK-LEGACY</contact:id>
           </contact:check>

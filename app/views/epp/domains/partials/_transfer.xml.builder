@@ -1,4 +1,4 @@
-builder.tag!('domain:trnData', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
+builder.tag!('domain:trnData', 'xmlns:domain' => 'https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd') do
   builder.tag!('domain:name', dt.domain_name)
   builder.tag!('domain:trStatus', dt.status)
   builder.tag!('domain:reID', dt.transfer_to.code)

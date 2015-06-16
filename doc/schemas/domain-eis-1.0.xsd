@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-   <schema targetNamespace="urn:ietf:params:xml:ns:domain-1.0"
-        xmlns:domain="urn:ietf:params:xml:ns:domain-1.0"
+   <schema targetNamespace="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd"
+        xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd"
         xmlns:host="urn:ietf:params:xml:ns:host-1.0"
         xmlns:epp="urn:ietf:params:xml:ns:epp-1.0"
         xmlns:eppcom="urn:ietf:params:xml:ns:eppcom-1.0"

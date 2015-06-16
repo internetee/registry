@@ -41,7 +41,7 @@ describe 'EPP Session', epp: true do
     end
 
     it 'prohibits further actions unless logged in' do
-      @xsd = Nokogiri::XML::Schema(File.read('doc/schemas/domain-1.0.xsd'))
+      @xsd = Nokogiri::XML::Schema(File.read('doc/schemas/domain-eis-1.0.xsd'))
       response = epp_plain_request(@epp_xml.domain.info(name: { value: 'test.ee' }))
       response[:msg].should == 'You need to login first.'
       response[:result_code].should == '2002'

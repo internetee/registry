@@ -5,7 +5,7 @@ xml.epp_head do
     end
 
     xml.resData do
-      xml.tag!('domain:infData', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
+      xml.tag!('domain:infData', 'xmlns:domain' => 'https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd') do
         xml.tag!('domain:name', @domain.name)
         xml.tag!('domain:roid', @domain.roid)
         @domain.statuses.each do |s|

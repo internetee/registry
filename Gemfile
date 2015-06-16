@@ -73,7 +73,7 @@ gem 'digidoc_client', '~> 0.2.1'
 
 # epp
 gem 'epp', '~> 1.4.2', github: 'gitlabeu/epp'
-gem 'epp-xml',   '~> 1.0.2'  # EPP XMLs
+gem 'epp-xml',   '~> 1.0.3'  # EIS EPP XMLs
 gem 'uuidtools', '~> 2.1.4' # For unique IDs (used by the epp gem)
 
 # que
