@@ -4719,25 +4719,13 @@ INSERT INTO schema_migrations (version) VALUES ('20150520164507');
 
 INSERT INTO schema_migrations (version) VALUES ('20150521120145');
 
-INSERT INTO schema_migrations (version) VALUES ('20150522164020');
-
-INSERT INTO schema_migrations (version) VALUES ('20150525075550');
-
-INSERT INTO schema_migrations (version) VALUES ('20150601083516');
-
-INSERT INTO schema_migrations (version) VALUES ('20150601083800');
-
 INSERT INTO schema_migrations (version) VALUES ('20150603141549');
 
 INSERT INTO schema_migrations (version) VALUES ('20150603211318');
 
 INSERT INTO schema_migrations (version) VALUES ('20150603212659');
 
-INSERT INTO schema_migrations (version) VALUES ('20150609093515');
-
 INSERT INTO schema_migrations (version) VALUES ('20150609103333');
-
-INSERT INTO schema_migrations (version) VALUES ('20150610111019');
 
 INSERT INTO schema_migrations (version) VALUES ('20150610112238');
 
@@ -4746,6 +4734,4 @@ INSERT INTO schema_migrations (version) VALUES ('20150610144547');
 INSERT INTO schema_migrations (version) VALUES ('20150611124920');
 
 INSERT INTO schema_migrations (version) VALUES ('20150612123111');
-
-INSERT INTO schema_migrations (version) VALUES ('20150612125720');
 
