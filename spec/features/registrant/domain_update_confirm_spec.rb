@@ -27,6 +27,7 @@ feature 'DomainUpdateConfirm', type: :feature do
         registrant_verification_asked_at: Time.zone.now
       )
       @domain.statuses << DomainStatus::PENDING_UPDATE
+      @domain.save
     end
 
     it 'should see warning info if token is missing in request' do
