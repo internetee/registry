@@ -22,7 +22,7 @@ class Admin::DomainsController < AdminController
       flash[:notice] = I18n.t('domain_updated')
       redirect_to [:admin, @domain]
     else
-      @domain.domain_statuses.build if @domain.domain_statuses.empty?
+      build_associations
       flash.now[:alert] = I18n.t('failed_to_update_domain')
       render 'edit'
     end
@@ -64,11 +64,11 @@ class Admin::DomainsController < AdminController
     @domain.domain_statuses.build if @domain.domain_statuses.empty?
     @server_statuses = @domain.statuses.select { |x| DomainStatus::SERVER_STATUSES.include?(x) }
     @server_statuses = [nil] if @server_statuses.empty?
+    @other_statuses = @domain.statuses.select { |x| !DomainStatus::SERVER_STATUSES.include?(x) }
   end
 
   def add_prefix_to_statuses
     dp = domain_params
-    dp[:statuses] = domain_params[:statuses].map { |x| x.prepend('server') if x.present? }
     dp[:statuses].reject! { |x| x.blank? }
     dp
   end

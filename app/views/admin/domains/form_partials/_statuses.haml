@@ -10,12 +10,13 @@
         .form-group
           = f.label 'status', class: 'col-md-2 control-label'
           .col-md-10
-            = select_tag 'domain[statuses][]', options_for_select(DomainStatus.statuses_for_admin, x.try(:sub, 'server', '')), include_blank: true, class: 'form-control'
+            = select_tag 'domain[statuses][]', options_for_select(DomainStatus.statuses_for_admin, x), include_blank: true, class: 'form-control'
         .form-group
           = label_tag t(:description), nil, class: 'col-md-2 control-label'
           .col-md-10
             = text_field_tag :description, nil, class: 'form-control', autocomplete: 'off'
-
+  - @other_statuses.each do |x|
+    = hidden_field_tag 'domain[statuses][]', x, readonly: true
 :coffee
   $("#domain-statuses").nestedAttributes
     bindAddTo: $(".add-domain-status")

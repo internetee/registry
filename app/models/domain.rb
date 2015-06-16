@@ -317,7 +317,7 @@ class Domain < ActiveRecord::Base
   end
 
   def force_deletable?
-    domain_statuses.where(value: DomainStatus::FORCE_DELETE).empty?
+    !statuses.include?(DomainStatus::FORCE_DELETE)
   end
 
   def registrant_verification_asked?
