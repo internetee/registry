@@ -1,3 +1,7 @@
+16.06.2015
+
+* Application time_zone should be defined at application.yml, updated application-exaple.yml 
+
 15.06.2015
 
 * Apache config update: now only TLSv1.2 allowed with whitelisted chipers, please review all SSL config parameters
