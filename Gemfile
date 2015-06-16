@@ -51,7 +51,7 @@ gem 'jbuilder', '~> 2.2.6'  # json api
 # registry specfic
 gem 'simpleidn', '~> 0.0.5' # For punycode
 gem 'isikukood' # for EE-id validation
-gem 'money-rails', '~> 1.3.0', require: false # Money helpers
+gem 'money-rails', '~> 1.4.1'
 
 # deploy
 gem 'whenever', '~> 0.9.4', require: false
