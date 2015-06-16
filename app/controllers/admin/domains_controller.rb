@@ -56,7 +56,7 @@ class Admin::DomainsController < AdminController
     if params[:domain]
       params.require(:domain).permit({ statuses: [] })
     else
-      {statuses: []}
+      { statuses: [] }
     end
   end
 
@@ -68,7 +68,7 @@ class Admin::DomainsController < AdminController
 
   def ignore_empty_statuses
     dp = domain_params
-    dp[:statuses].reject! { |x| x.blank? }
+    dp[:statuses].reject!(&:blank?)
     dp
   end
 end
