@@ -128,7 +128,6 @@ class Domain < ActiveRecord::Base
     errors.add(:statuses, :taken)
   end
 
-
   attr_accessor :registrant_typeahead, :update_me, :deliver_emails,
     :epp_pending_update, :epp_pending_delete
 
@@ -207,8 +206,8 @@ class Domain < ActiveRecord::Base
       STDOUT << "#{Time.zone.now.utc} - Destroying domains\n" unless Rails.env.test?
 
       c = 0
-      DomainStatus.where(value: DomainStatus::DELETE_CANDIDATE).each do |x|
-        x.domain.destroy
+      Domain.where("statuses @> '{deleteCandidate}'::varchar[]").each do |x|
+        x.destroy
         c += 1
       end
 
