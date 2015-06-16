@@ -315,7 +315,7 @@ class Domain < ActiveRecord::Base
     self.registrant_verification_token = token
     self.registrant_verification_asked_at = asked_at
     self.statuses = [DomainStatus::PENDING_UPDATE]
-    self.pending_json[:domain] = changes_cache
+    pending_json[:domain] = changes_cache
   end
 
   def registrant_update_confirmable?(token)
@@ -347,8 +347,8 @@ class Domain < ActiveRecord::Base
   end
 
   def registrant_verification_asked!(frame_str, current_user_id)
-    self.pending_json['frame'] = frame_str
-    self.pending_json['current_user_id'] = current_user_id
+    pending_json['frame'] = frame_str
+    pending_json['current_user_id'] = current_user_id
     self.registrant_verification_asked_at = Time.zone.now
     self.registrant_verification_token = SecureRandom.hex(42)
   end
