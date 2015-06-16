@@ -16,7 +16,7 @@ class Admin::DomainsController < AdminController
   end
 
   def update
-    dp = add_prefix_to_statuses
+    dp = ignore_empty_statuses
 
     if @domain.update(dp)
       flash[:notice] = I18n.t('domain_updated')
@@ -67,7 +67,7 @@ class Admin::DomainsController < AdminController
     @other_statuses = @domain.statuses.select { |x| !DomainStatus::SERVER_STATUSES.include?(x) }
   end
 
-  def add_prefix_to_statuses
+  def ignore_empty_statuses
     dp = domain_params
     dp[:statuses].reject! { |x| x.blank? }
     dp
