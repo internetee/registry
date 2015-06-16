@@ -10,6 +10,7 @@ required = %w(
   webclient_ip
   legal_documents_dir
   bank_statement_import_dir
+  time_zone
 )
 
 Figaro.require_keys(required)

@@ -908,6 +908,17 @@ ActiveRecord::Schema.define(version: 20150612123111) do
     t.string   "operation_category"
   end
 
+  create_table "que_jobs", id: false, force: :cascade do |t|
+    t.integer  "priority",    limit: 2, default: 100,                                        null: false
+    t.datetime "run_at",                default: "now()",                                    null: false
+    t.integer  "job_id",      limit: 8, default: "nextval('que_jobs_job_id_seq'::regclass)", null: false
+    t.text     "job_class",                                                                  null: false
+    t.json     "args",                  default: [],                                         null: false
+    t.integer  "error_count",           default: 0,                                          null: false
+    t.text     "last_error"
+    t.text     "queue",                 default: "",                                         null: false
+  end
+
   create_table "registrant_verifications", force: :cascade do |t|
     t.string   "domain_name"
     t.string   "verification_token"
