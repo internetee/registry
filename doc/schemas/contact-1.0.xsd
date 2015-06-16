@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+   <?xml version="1.0" encoding="UTF-8"?>
 
    <schema targetNamespace="urn:ietf:params:xml:ns:contact-1.0"
           xmlns:contact="urn:ietf:params:xml:ns:contact-1.0"
@@ -10,8 +10,8 @@
    <!--
    Import common element types.
    -->
-    <import namespace="urn:ietf:params:xml:ns:eppcom-1.0" schemaLocation="doc/schemas/eppcom-1.0.xsd"/>
-    <import namespace="urn:ietf:params:xml:ns:epp-1.0" schemaLocation="doc/schemas/epp-1.0.xsd"/>
+    <import namespace="urn:ietf:params:xml:ns:eppcom-1.0"/>
+    <import namespace="urn:ietf:params:xml:ns:epp-1.0"/>
 
     <annotation>
       <documentation>
@@ -25,7 +25,7 @@
    -->
     <element name="check" type="contact:mIDType"/>
     <element name="create" type="contact:createType"/>
-    <element name="delete" type="contact:authIDType"/>
+    <element name="delete" type="contact:sIDType"/>
     <element name="info" type="contact:authIDType"/>
     <element name="transfer" type="contact:authIDType"/>
     <element name="update" type="contact:updateType"/>
@@ -38,6 +38,7 @@
         <length value="2"/>
       </restriction>
     </simpleType>
+
     <complexType name="e164Type">
       <simpleContent>
         <extension base="contact:e164StringType">
@@ -48,7 +49,7 @@
 
     <simpleType name="e164StringType">
       <restriction base="token">
-        <!--<pattern value="(\+[0-9]{1,3}\.[0-9]{1,14})?"/> -->
+        <pattern value="(\+[0-9]{1,3}\.[0-9]{1,14})?"/>
         <maxLength value="17"/>
       </restriction>
     </simpleType>
@@ -77,7 +78,7 @@
    -->
     <complexType name="createType">
       <sequence>
-        <element name="id" type="eppcom:clIDType" minOccurs="0"/>
+        <element name="id" type="eppcom:clIDType"/>
         <element name="postalInfo" type="contact:postalInfoType"
          maxOccurs="2"/>
         <element name="voice" type="contact:e164Type"
@@ -85,8 +86,9 @@
         <element name="fax" type="contact:e164Type"
          minOccurs="0"/>
         <element name="email" type="eppcom:minTokenType"/>
-        <element name="authInfo" type="contact:authInfoType" minOccurs="0"/>
-
+        <element name="authInfo" type="contact:authInfoType"/>
+        <element name="disclose" type="contact:discloseType"
+         minOccurs="0"/>
       </sequence>
     </complexType>
 
@@ -97,7 +99,8 @@
          minOccurs="0"/>
         <element name="addr" type="contact:addrType"/>
       </sequence>
-      <attribute name="type" type="contact:postalInfoEnumType"/>
+      <attribute name="type" type="contact:postalInfoEnumType"
+       use="required"/>
     </complexType>
 
     <simpleType name="postalInfoEnumType">
@@ -125,6 +128,21 @@
         <element name="pw" type="eppcom:pwAuthInfoType"/>
         <element name="ext" type="eppcom:extAuthInfoType"/>
       </choice>
+    </complexType>
+
+    <complexType name="discloseType">
+      <sequence>
+        <element name="name" type="contact:intLocType"
+         minOccurs="0" maxOccurs="2"/>
+        <element name="org" type="contact:intLocType"
+         minOccurs="0" maxOccurs="2"/>
+        <element name="addr" type="contact:intLocType"
+         minOccurs="0" maxOccurs="2"/>
+        <element name="voice" minOccurs="0"/>
+        <element name="fax" minOccurs="0"/>
+        <element name="email" minOccurs="0"/>
+      </sequence>
+      <attribute name="flag" type="boolean" use="required"/>
     </complexType>
 
     <complexType name="intLocType">
@@ -202,6 +220,8 @@
          minOccurs="0"/>
         <element name="authInfo" type="contact:authInfoType"
          minOccurs="0"/>
+        <element name="disclose" type="contact:discloseType"
+         minOccurs="0"/>
       </sequence>
     </complexType>
 
@@ -214,7 +234,8 @@
         <element name="addr" type="contact:addrType"
          minOccurs="0"/>
       </sequence>
-      <attribute name="type" type="contact:postalInfoEnumType"/>
+      <attribute name="type" type="contact:postalInfoEnumType"
+       use="required"/>
     </complexType>
 
    <!--
@@ -289,6 +310,8 @@
         <element name="trDate" type="dateTime"
          minOccurs="0"/>
         <element name="authInfo" type="contact:authInfoType"
+         minOccurs="0"/>
+        <element name="disclose" type="contact:discloseType"
          minOccurs="0"/>
       </sequence>
     </complexType>
