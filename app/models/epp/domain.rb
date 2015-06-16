@@ -383,8 +383,8 @@ class Epp::Domain < Domain
     preclean_pendings
     user  = ApiUser.find(pending_json['current_user_id'])
     frame = Nokogiri::XML(pending_json['frame'])
-    domain_statuses.where(value: DomainStatus::PENDING_UPDATE).destroy_all
-    domain_statuses.reload
+    statuses.delete(DomainStatus::PENDING_UPDATE)
+
     if update(frame, user, false)
       clean_pendings!
     end

@@ -61,7 +61,6 @@ class Admin::DomainsController < AdminController
   end
 
   def build_associations
-    @domain.domain_statuses.build if @domain.domain_statuses.empty?
     @server_statuses = @domain.statuses.select { |x| DomainStatus::SERVER_STATUSES.include?(x) }
     @server_statuses = [nil] if @server_statuses.empty?
     @other_statuses = @domain.statuses.select { |x| !DomainStatus::SERVER_STATUSES.include?(x) }

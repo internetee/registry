@@ -288,8 +288,8 @@ class Domain < ActiveRecord::Base
   def clean_pendings!
     preclean_pendings
     self.pending_json = {}
-    domain_statuses.where(value: DomainStatus::PENDING_UPDATE).destroy_all
-    domain_statuses.where(value: DomainStatus::PENDING_DELETE).destroy_all
+    statuses.delete(DomainStatus::PENDING_UPDATE)
+    statuses.delete(DomainStatus::PENDING_DELETE)
     save
   end
 
