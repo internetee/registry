@@ -399,11 +399,11 @@ class Epp::Domain < Domain
     )
   end
 
-  def epp_destroy(frame)
+  def epp_destroy(frame, user_id)
     return false unless valid?
 
     if frame.css('delete').attr('verified').to_s.downcase != 'yes'
-      registrant_verification_asked!
+      registrant_verification_asked!(frame.to_s, user_id)
       pending_delete!
       manage_automatic_statuses
       true # aka 1001 pending_delete
