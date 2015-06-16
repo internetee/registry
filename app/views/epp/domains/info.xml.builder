@@ -8,9 +8,8 @@ xml.epp_head do
       xml.tag!('domain:infData', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
         xml.tag!('domain:name', @domain.name)
         xml.tag!('domain:roid', @domain.roid)
-        @domain.domain_statuses.each do |ds|
-          xml.tag!('domain:status', ds.description, 's' => ds.value) unless ds.description.blank?
-          xml.tag!('domain:status', 's' => ds.value) if ds.description.blank?
+        @domain.statuses.each do |s|
+          xml.tag!('domain:status', 's' => s)
         end
 
         xml.tag!('domain:registrant', @domain.registrant_code)

@@ -100,6 +100,8 @@ en:
               invalid: 'Statuses are invalid'
               not_found: 'Status was not found'
               taken: 'Status already exists on this domain'
+            statuses:
+              taken: 'Status already exists on this domain'
             registrar:
               blank: 'Registrar is missing'
             dnskeys:

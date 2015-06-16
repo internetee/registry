@@ -96,50 +96,60 @@ describe Domain do
 
     it 'should expire domains' do
       Domain.start_expire_period
-      @domain.domain_statuses.where(value: DomainStatus::EXPIRED).count.should == 0
+      @domain.statuses.include?(DomainStatus::EXPIRED).should == false
 
       @domain.valid_to = Time.zone.now - 10.days
       @domain.save
 
       Domain.start_expire_period
-      @domain.domain_statuses.where(value: DomainStatus::EXPIRED).count.should == 1
+      @domain.reload
+      @domain.statuses.include?(DomainStatus::EXPIRED).should == true
 
       Domain.start_expire_period
-      @domain.domain_statuses.where(value: DomainStatus::EXPIRED).count.should == 1
+      @domain.reload
+      @domain.statuses.include?(DomainStatus::EXPIRED).should == true
     end
 
     it 'should start redemption grace period' do
       Domain.start_redemption_grace_period
-      @domain.domain_statuses.where(value: DomainStatus::SERVER_HOLD).count.should == 0
+      @domain.reload
+      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
 
       @domain.outzone_at = Time.zone.now
-      @domain.domain_statuses.create(value: DomainStatus::SERVER_MANUAL_INZONE) # this prohibits server_hold
+      @domain.statuses << DomainStatus::SERVER_MANUAL_INZONE # this prohibits server_hold
       @domain.save
 
       Domain.start_redemption_grace_period
-      @domain.domain_statuses.where(value: DomainStatus::SERVER_HOLD).count.should == 0
+      @domain.reload
+      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
 
-      @domain.domain_statuses.destroy_all
+      @domain.statuses = []
+      @domain.save
 
       Domain.start_redemption_grace_period
-      @domain.domain_statuses.where(value: DomainStatus::SERVER_HOLD).count.should == 1
+      @domain.reload
+      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == true
     end
 
     it 'should start delete period' do
       Domain.start_delete_period
-      @domain.domain_statuses.where(value: DomainStatus::DELETE_CANDIDATE).count.should == 0
+      @domain.reload
+      @domain.statuses.include?(DomainStatus::DELETE_CANDIDATE).should == false
 
       @domain.delete_at = Time.zone.now
-      @domain.domain_statuses.create(value: DomainStatus::SERVER_DELETE_PROHIBITED) # this prohibits delete_candidate
+      @domain.statuses << DomainStatus::SERVER_DELETE_PROHIBITED # this prohibits delete_candidate
       @domain.save
 
       Domain.start_delete_period
-      @domain.domain_statuses.where(value: DomainStatus::DELETE_CANDIDATE).count.should == 0
+      @domain.reload
+      @domain.statuses.include?(DomainStatus::DELETE_CANDIDATE).should == false
 
-      @domain.domain_statuses.destroy_all
+      @domain.statuses = []
+      @domain.save
       Domain.start_delete_period
+      @domain.reload
 
-      @domain.domain_statuses.where(value: DomainStatus::DELETE_CANDIDATE).count.should == 1
+      @domain.statuses.include?(DomainStatus::DELETE_CANDIDATE).should == true
     end
 
     it 'should destroy delete candidates' do
@@ -159,15 +169,16 @@ describe Domain do
     end
 
     it 'should set force delete time' do
+      @domain.statuses = ['ok']
       @domain.set_force_delete
 
-      @domain.domain_statuses.count.should == 6
-      fda = Time.zone.now + Setting.redemption_grace_period
+      @domain.statuses.count.should == 6
+      fda = Time.zone.now + Setting.redemption_grace_period.days
       @domain.force_delete_at.should be_within(20).of(fda)
 
       @domain.unset_force_delete
 
-      @domain.domain_statuses.count.should == 1
+      @domain.statuses.count.should == 1
       @domain.force_delete_at.should be_nil
     end
 
@@ -175,7 +186,7 @@ describe Domain do
       before :all do
         @domain.registrant_verification_token = 123
         @domain.registrant_verification_asked_at = Time.zone.now
-        @domain.domain_statuses.create(value: DomainStatus::PENDING_UPDATE)
+        @domain.statuses << DomainStatus::PENDING_UPDATE
       end
 
       it 'should be registrant update confirm ready' do
@@ -187,7 +198,7 @@ describe Domain do
       end
 
       it 'should not be registrant update confirm ready when no correct status' do
-        @domain.domain_statuses.delete_all
+        @domain.statuses = []
         @domain.registrant_update_confirmable?('123').should == false
       end
     end
@@ -196,7 +207,7 @@ describe Domain do
       before :all do
         @domain.registrant_verification_token = 123
         @domain.registrant_verification_asked_at = Time.zone.now
-        @domain.domain_statuses.create(value: DomainStatus::PENDING_UPDATE)
+        @domain.statuses << DomainStatus::PENDING_UPDATE
       end
 
       it 'should be registrant update confirm ready' do
@@ -208,7 +219,7 @@ describe Domain do
       end
 
       it 'should not be registrant update confirm ready when no correct status' do
-        @domain.domain_statuses.delete_all
+        @domain.statuses = []
         @domain.registrant_update_confirmable?('123').should == false
       end
     end
@@ -441,24 +452,23 @@ describe Domain do
 
   it 'manages statuses automatically' do
     d = Fabricate(:domain)
-    expect(d.domain_statuses.count).to eq(1)
-    expect(d.domain_statuses.first.value).to eq(DomainStatus::OK)
+    expect(d.statuses.count).to eq(1)
+    expect(d.statuses.first).to eq(DomainStatus::OK)
 
     d.period = 2
     d.save
 
     d.reload
+    expect(d.statuses.count).to eq(1)
+    expect(d.statuses.first).to eq(DomainStatus::OK)
 
-    expect(d.domain_statuses.count).to eq(1)
-    expect(d.domain_statuses.first.reload.value).to eq(DomainStatus::OK)
-
-    d.domain_statuses.build(value: DomainStatus::CLIENT_DELETE_PROHIBITED)
+    d.statuses << DomainStatus::CLIENT_DELETE_PROHIBITED
     d.save
 
     d.reload
 
-    expect(d.domain_statuses.count).to eq(1)
-    expect(d.domain_statuses.first.value).to eq(DomainStatus::CLIENT_DELETE_PROHIBITED)
+    expect(d.statuses.count).to eq(1)
+    expect(d.statuses.first).to eq(DomainStatus::CLIENT_DELETE_PROHIBITED)
   end
 
   with_versioning do

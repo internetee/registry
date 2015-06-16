@@ -1,5 +1,4 @@
-- panel_class = @domain.errors.messages[:domain_statuses] ? 'panel-danger' : 'panel-default'
-#domain_statuses.panel{class: panel_class}
+#domain_statuses.panel.panel-default
   .panel-heading.clearfix
     = t(:statuses)
   .table-responsive
@@ -9,12 +8,7 @@
           %th{class: 'col-xs-6'}= t(:status)
           %th{class: 'col-xs-6'}= t(:description)
       %tbody
-        - @domain.domain_statuses.each do |x|
+        - @domain.statuses.each do |x|
           %tr
-            %td= x.value
-            %td= x.description
-      - if @domain.errors.messages[:domain_statuses]
-        %tfoot
-          - @domain.errors.messages[:domain_statuses].each do |x|
-            %tr
-              %td{colspan: 4}= x
+            %td= x
+            %td
