@@ -1,0 +1,9 @@
+- value = Setting.send(var)
+%tr
+  %td= t(var)
+  - if [TrueClass, FalseClass].include?(value.class)
+    %td
+      = hidden_field_tag("[settings][#{var}]", '')
+      = check_box_tag("[settings][#{var}]", true, value)
+  - else
+    %td= text_field_tag("[settings][#{var}]", value)

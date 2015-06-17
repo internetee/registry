@@ -124,7 +124,7 @@ class DomainStatus < ActiveRecord::Base
     end
 
     def statuses_for_admin
-      SERVER_STATUSES.map { |x| x.sub('server', '') }
+      SERVER_STATUSES.map { |x| [x.sub('server', ''), x] }
     end
   end
 end

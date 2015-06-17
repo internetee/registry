@@ -4,6 +4,7 @@ describe 'EPP Helper', epp: true do
   context 'in context of Domain' do
     before(:all) { @uniq_no = proc { @i ||= 0; @i += 1 } }
 
+    # rubocop: disable Metrics/LineLength
     it 'generates valid transfer xml' do
       dn = next_domain_name
       expected = Nokogiri::XML('<?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -11,7 +12,7 @@ describe 'EPP Helper', epp: true do
           <command>
             <transfer op="query">
               <domain:transfer
-               xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
+               xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
                 <domain:name>' + dn + '</domain:name>
                 <domain:authInfo>
                   <domain:pw roid="citizen_1234-REP">98oiewslkfkd</domain:pw>
@@ -31,7 +32,7 @@ describe 'EPP Helper', epp: true do
           <command>
             <transfer op="approve">
               <domain:transfer
-               xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
+               xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
                 <domain:name>one.ee</domain:name>
                 <domain:authInfo>
                   <domain:pw roid="askdf">test</domain:pw>
@@ -53,5 +54,6 @@ describe 'EPP Helper', epp: true do
       generated = Nokogiri::XML(xml).to_s.squish
       generated.should == expected
     end
+    # rubocop: enable Metrics/LineLength
   end
 end

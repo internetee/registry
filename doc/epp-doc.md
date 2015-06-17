@@ -18,8 +18,8 @@ Our implementation supports following protocols:
 
 Related XML Schema Definitions (may differ from policies applied to registry):
 
-[contact-1.0.xsd](schemas/contact-1.0.xsd)  
-[domain-1.0.xsd](schemas/domain-1.0.xsd)  
+[contact-eis-1.0.xsd](schemas/contact-eis-1.0.xsd)  
+[domain-eis-1.0.xsd](schemas/domain-eis-1.0.xsd)  
 [eis-1.0.xsd](schemas/eis-1.0.xsd)  
 [epp-1.0.xsd](schemas/epp-1.0.xsd)  
 [eppcom-1.0.xsd](schemas/eppcom-1.0.xsd)  

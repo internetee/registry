@@ -100,6 +100,8 @@ en:
               invalid: 'Statuses are invalid'
               not_found: 'Status was not found'
               taken: 'Status already exists on this domain'
+            statuses:
+              taken: 'Status already exists on this domain'
             registrar:
               blank: 'Registrar is missing'
             dnskeys:
@@ -788,8 +790,8 @@ en:
   reject_domain_registrant_update: 'Reject domain ownership change'
   domain_registrant_change_title: 'Please confirm or reject domain ownership change'
   domain_registrant_change_body: 'There is a request to change domain ownership. Before doing it we need your confirmation.'
-  new_pending_registrant: 'New owner'
-  current_registrant: 'Current owner'
+  new_pending_registrant: 'New registrant'
+  current_registrant: 'Current registrant'
   registrant_domain_verification_failed: 'Domain verification not available'
   domain_registrant_change_confirmed_title: 'Domain owner change has been confirmed'
   domain_registrant_change_confirmed_body: 'You have successfully confirmed domain owner change.'
@@ -820,3 +822,5 @@ en:
   object_is_not_eligible_for_renewal: 'Object is not eligible for renewal'
   set_force_delete: 'Set force delete'
   unset_force_delete: 'Unset force delete'
+  domain_expiring: 'Domain expiring'
+  domain_validation_rules: 'Domain validation rules'

@@ -25,13 +25,13 @@
     .row
       .col-md-12.text-center.confirmation
         .column-keys
-          %p= t(:domain_name) + ':' 
+          %p= t(:domain_name) + ':'
           %p= t(:current_registrant) + ':'
           %p= t(:new_pending_registrant) + ':'
         .column-values
           %p= @domain.name
-          %p= @domain.registrant_name
-          %p= @domain.pending_registrant_name
+          %p= "#{@domain.registrant_name} (#{@domain.registrant.ident})"
+          %p= "#{@domain.pending_registrant.try(:name)} (#{@domain.pending_registrant.try(:ident)})" 
         
     .row
       .col-md-12.text-center

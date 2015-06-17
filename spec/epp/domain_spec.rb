@@ -317,7 +317,7 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(xml)
       response[:msg].should == 'Command completed successfully'
       response[:result_code].should == '1000'
-      Domain.first.valid_to.should be_within(5).of(1.year.since)
+      Domain.first.valid_to.should be_within(60).of(1.year.since)
     end
 
     it 'does not create a domain with invalid period' do
@@ -1501,7 +1501,8 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'should not allow any update when status pending update' do
-      domain.domain_statuses.create(value: DomainStatus::PENDING_UPDATE)
+      domain.statuses << DomainStatus::PENDING_UPDATE
+      domain.save
 
       existing_pw = domain.auth_info
 
@@ -1592,11 +1593,10 @@ describe 'EPP Domain', epp: true do
       new_contact = d.tech_contacts.find_by(code: 'FIXED:MAK21')
       new_contact.should be_truthy
 
-      d.domain_statuses.count.should == 2
-      d.domain_statuses.first.description.should == 'Payment overdue.'
-      d.domain_statuses.first.value.should == 'clientHold'
+      d.statuses.count.should == 2
+      d.statuses.include?('clientHold').should == true
+      d.statuses.include?('clientUpdateProhibited').should == true
 
-      d.domain_statuses.last.value.should == 'clientUpdateProhibited'
       d.dnskeys.count.should == 2
 
       response = epp_plain_request(xml)
@@ -1621,39 +1621,39 @@ describe 'EPP Domain', epp: true do
       response[:results][2][:msg].should == 'Contact already exists on this domain [contact_code_cache]'
       response[:results][2][:value].should == 'FIXED:MAK21'
 
-      response[:results][3][:msg].should == 'Status already exists on this domain [value]'
-      if response[:results][3][:value] == 'clientHold'
-        response[:results][3][:value].should == 'clientHold'
-      else
-        response[:results][3][:value].should == 'clientUpdateProhibited'
-      end
+      # response[:results][3][:msg].should == 'Status already exists on this domain [value]'
+      # if response[:results][3][:value] == 'clientHold'
+      #   response[:results][3][:value].should == 'clientHold'
+      # else
+      #   response[:results][3][:value].should == 'clientUpdateProhibited'
+      # end
 
-      response[:results][4][:msg].should == 'Status already exists on this domain [value]'
-      if response[:results][4][:value] == 'clientHold'
-        response[:results][4][:value].should == 'clientHold'
-      else
-        response[:results][4][:value].should == 'clientUpdateProhibited'
-      end
+      # response[:results][4][:msg].should == 'Status already exists on this domain [value]'
+      # if response[:results][4][:value] == 'clientHold'
+      #   response[:results][4][:value].should == 'clientHold'
+      # else
+      #   response[:results][4][:value].should == 'clientUpdateProhibited'
+      # end
 
-      response[:results][5][:msg].should == 'Public key already exists [public_key]'
-      if response[:results][5][:value] == '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
-        response[:results][5][:value].should ==
+      response[:results][3][:msg].should == 'Public key already exists [public_key]'
+      if response[:results][3][:value] == '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
+        response[:results][3][:value].should ==
           '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
       else
-        response[:results][5][:value].should ==
+        response[:results][3][:value].should ==
           '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0'
       end
 
-      response[:results][6][:msg].should == 'Public key already exists [public_key]'
-      if response[:results][6][:value] == '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
-        response[:results][6][:value].should ==
+      response[:results][4][:msg].should == 'Public key already exists [public_key]'
+      if response[:results][4][:value] == '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
+        response[:results][4][:value].should ==
           '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
       else
-        response[:results][6][:value].should ==
+        response[:results][4][:value].should ==
           '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0'
       end
 
-      d.domain_statuses.count.should == 2
+      d.statuses.count.should == 2
     end
 
     it 'updates domain with registrant change what triggers action pending' do
@@ -1729,8 +1729,8 @@ describe 'EPP Domain', epp: true do
       new_contact = d.tech_contacts.find_by(code: 'FIXED:PENDINGMAK21')
       new_contact.should_not be_truthy # aka should not add new contact
 
-      d.domain_statuses.count.should == 1
-      d.domain_statuses.first.value.should == 'pendingUpdate'
+      d.statuses.count.should == 1
+      d.statuses.first.should == 'pendingUpdate'
 
       d.dnskeys.count.should == 0
     end
@@ -1840,10 +1840,11 @@ describe 'EPP Domain', epp: true do
       response[:results][0][:msg].should == 'Command completed successfully'
       response[:results][0][:result_code].should == '1000'
 
+      d.reload
       d.dnskeys.count.should == 1
 
-      d.domain_statuses.count.should == 1
-      d.domain_statuses.first.value.should == 'clientUpdateProhibited'
+      d.statuses.count.should == 1
+      d.statuses.first.should == 'clientUpdateProhibited'
 
       rem_ns = d.nameservers.find_by(hostname: 'ns1.example.com')
       rem_ns.should be_falsey
@@ -1862,13 +1863,17 @@ describe 'EPP Domain', epp: true do
       response[:results][1][:value].should == 'FIXED:CITIZEN_1234'
 
       response[:results][2][:result_code].should == '2303'
-      response[:results][2][:msg].should == 'Status was not found'
-      response[:results][2][:value].should == 'clientHold'
+      response[:results][2][:msg].should == 'DS was not found'
+      response[:results][2][:value].should == '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
+
+      response[:results][3][:result_code].should == '2303'
+      response[:results][3][:msg].should == 'Status was not found'
+      response[:results][3][:value].should == 'clientHold'
     end
 
     it 'does not remove server statuses' do
-      d = Domain.last
-      d.domain_statuses.create(value: DomainStatus::SERVER_HOLD)
+      domain.statuses << DomainStatus::SERVER_HOLD
+      domain.save
 
       xml = domain_update_xml({
         name: { value: domain.name },
@@ -2079,9 +2084,10 @@ describe 'EPP Domain', epp: true do
       Domain.start_expire_period
       Domain.start_redemption_grace_period
 
-      domain.domain_statuses.where(value: DomainStatus::EXPIRED).count.should == 1
-      domain.domain_statuses.where(value: DomainStatus::SERVER_HOLD).count.should == 1
-      domain.domain_statuses.where(value: DomainStatus::OK).count.should == 0
+      domain.reload
+      domain.statuses.include?(DomainStatus::EXPIRED).should == true
+      domain.statuses.include?(DomainStatus::SERVER_HOLD).should == true
+      domain.statuses.include?(DomainStatus::OK).should == false
 
       exp_date = domain.valid_to.to_date
 
@@ -2095,9 +2101,10 @@ describe 'EPP Domain', epp: true do
       response[:results][0][:msg].should == 'Command completed successfully'
       response[:results][0][:result_code].should == '1000'
 
-      domain.domain_statuses.where(value: DomainStatus::EXPIRED).count.should == 0
-      domain.domain_statuses.where(value: DomainStatus::SERVER_HOLD).count.should == 0
-      domain.domain_statuses.where(value: DomainStatus::OK).count.should == 1
+      domain.reload
+      domain.statuses.include?(DomainStatus::EXPIRED).should == false
+      domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
+      domain.statuses.include?(DomainStatus::OK).should == true
 
       domain.reload
       domain.valid_to.should be_within(5).of(new_valid_to)
@@ -2122,7 +2129,7 @@ describe 'EPP Domain', epp: true do
 
     ### INFO ###
     it 'returns domain info' do
-      domain.domain_statuses.build(value: DomainStatus::CLIENT_HOLD, description: 'Payment overdue.')
+      domain.statuses << DomainStatus::CLIENT_HOLD
       domain.nameservers.build(hostname: 'ns1.example.com', ipv4: '192.168.1.1', ipv6: '1080:0:0:0:8:800:200C:417A')
 
       domain.dnskeys.build(
@@ -2157,7 +2164,6 @@ describe 'EPP Domain', epp: true do
 
       inf_data = response[:parsed].css('resData infData')
       inf_data.css('name').text.should == domain.name
-      inf_data.css('status').text.should == 'Payment overdue.'
       inf_data.css('status').first[:s].should == 'clientHold'
       inf_data.css('registrant').text.should == domain.registrant_code
       inf_data.css('roid').text.should == domain.roid
@@ -2318,7 +2324,8 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'does not delete domain with specific status' do
-      domain.domain_statuses.create(value: DomainStatus::CLIENT_DELETE_PROHIBITED)
+      domain.statuses << DomainStatus::CLIENT_DELETE_PROHIBITED
+      domain.save
 
       response = epp_plain_request(@epp_xml.domain.delete({
         name: { value: domain.name }
@@ -2336,7 +2343,8 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'does not delete domain with pending delete' do
-      domain.domain_statuses.create(value: DomainStatus::PENDING_DELETE)
+      domain.statuses << DomainStatus::PENDING_DELETE
+      domain.save
 
       response = epp_plain_request(@epp_xml.domain.delete({
         name: { value: domain.name }

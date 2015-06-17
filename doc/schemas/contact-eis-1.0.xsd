@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-   <schema targetNamespace="urn:ietf:params:xml:ns:contact-1.0"
-          xmlns:contact="urn:ietf:params:xml:ns:contact-1.0"
+   <schema targetNamespace="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd"
+          xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd"
           xmlns:epp="urn:ietf:params:xml:ns:epp-1.0"
           xmlns:eppcom="urn:ietf:params:xml:ns:eppcom-1.0"
           xmlns="http://www.w3.org/2001/XMLSchema"

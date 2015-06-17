@@ -5,7 +5,7 @@ xml.epp_head do
     end
 
     xml.resData do
-      xml.tag!('contact:infData', 'xmlns:contact' => 'urn:ietf:params:xml:ns:contact-1.0') do
+      xml.tag!('contact:infData', 'xmlns:contact' => 'https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd') do
         xml.tag!('contact:id', @contact.code)
         xml.tag!('contact:roid', @contact.roid)
 

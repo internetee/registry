@@ -11,10 +11,9 @@
    <!--
    Import common element types.
    -->
-   <import namespace="urn:ietf:params:xml:ns:eppcom-1.0" schemaLocation="doc/schemas/eppcom-1.0.xsd"/>
-   <import namespace="urn:ietf:params:xml:ns:epp-1.0" schemaLocation="doc/schemas/epp-1.0.xsd"/>
-   <import namespace="urn:ietf:params:xml:ns:host-1.0" schemaLocation="doc/schemas/host-1.0.xsd"/>
-   <import namespace="urn:ietf:params:xml:ns:secDNS-1.1" schemaLocation="doc/schemas/secDNS-1.1.xsd"/>
+   <import namespace="urn:ietf:params:xml:ns:eppcom-1.0"/>
+   <import namespace="urn:ietf:params:xml:ns:epp-1.0"/>
+   <import namespace="urn:ietf:params:xml:ns:host-1.0"/>
 
    <annotation>
     <documentation>
@@ -47,7 +46,7 @@
        minOccurs="0"/>
       <element name="contact" type="domain:contactType"
        minOccurs="0" maxOccurs="unbounded"/>
-      <element name="authInfo" type="domain:authInfoType" minOccurs="0"/>
+      <element name="authInfo" type="domain:authInfoType"/>
     </sequence>
    </complexType>
 
@@ -63,7 +62,7 @@
    <simpleType name="pLimitType">
     <restriction base="unsignedShort">
       <minInclusive value="1"/>
-      <maxInclusive value="1095"/>
+      <maxInclusive value="99"/>
     </restriction>
    </simpleType>
 
@@ -71,7 +70,6 @@
     <restriction base="token">
       <enumeration value="y"/>
       <enumeration value="m"/>
-      <enumeration value="d"/>
     </restriction>
    </simpleType>
 
@@ -91,7 +89,6 @@
     <sequence>
       <element name="hostName" type="eppcom:labelType"/>
       <element name="hostAddr" type="host:addrType"
-
        minOccurs="0" maxOccurs="unbounded"/>
     </sequence>
    </complexType>
@@ -240,28 +237,12 @@
    Allow the registrant value to be nullified by changing the
    minLength restriction to "0".
    -->
-
-   <complexType name="clIDChgType">
-    <simpleContent>
-      <extension base="domain:clIDChgSimpleType">
-        <attribute name="verified" type="domain:verifiedType"/>
-      </extension>
-    </simpleContent>
-   </complexType>
-
-  <simpleType name="clIDChgSimpleType">
+   <simpleType name="clIDChgType">
     <restriction base="token">
       <minLength value="0"/>
+      <maxLength value="16"/>
     </restriction>
-  </simpleType>
-
-  <simpleType name="verifiedType">
-    <restriction base="token">
-      <enumeration value="yes"/>
-      <enumeration value="no"/>
-    </restriction>
-  </simpleType>
-
+   </simpleType>
 
    <!--
    Allow the authInfo value to be nullified by including an
@@ -444,6 +425,7 @@
      minOccurs="0"/>
    </sequence>
    </complexType>
+
    <!--
    End of schema.
    -->

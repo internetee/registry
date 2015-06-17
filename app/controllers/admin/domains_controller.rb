@@ -16,13 +16,13 @@ class Admin::DomainsController < AdminController
   end
 
   def update
-    add_prefix_to_statuses
+    dp = ignore_empty_statuses
 
-    if @domain.update(domain_params)
+    if @domain.update(dp)
       flash[:notice] = I18n.t('domain_updated')
       redirect_to [:admin, @domain]
     else
-      @domain.domain_statuses.build if @domain.domain_statuses.empty?
+      build_associations
       flash.now[:alert] = I18n.t('failed_to_update_domain')
       render 'edit'
     end
@@ -53,21 +53,23 @@ class Admin::DomainsController < AdminController
   end
 
   def domain_params
-    params.require(:domain).permit(
-      domain_statuses_attributes: [:id, :value, :description, :_destroy]
-    )
+    if params[:domain]
+      params.require(:domain).permit({ statuses: [] })
+    else
+      { statuses: [] }
+    end
   end
 
   def build_associations
-    @domain.domain_statuses.build if @domain.domain_statuses.empty?
-    @server_statuses = @domain.domain_statuses.select(&:server_status?)
-    @server_statuses << @domain.domain_statuses.build if @server_statuses.empty?
+    @server_statuses = @domain.statuses.select { |x| DomainStatus::SERVER_STATUSES.include?(x) }
+    @server_statuses = [nil] if @server_statuses.empty?
+    @other_statuses = @domain.statuses.select { |x| !DomainStatus::SERVER_STATUSES.include?(x) }
   end
 
-  def add_prefix_to_statuses
-    domain_params[:domain_statuses_attributes].each do |_k, hash|
-      hash[:value] = hash[:value].prepend('server') if hash[:value].present?
-    end
+  def ignore_empty_statuses
+    dp = domain_params
+    dp[:statuses].reject!(&:blank?)
+    dp
   end
 end
 

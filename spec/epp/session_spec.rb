@@ -41,7 +41,7 @@ describe 'EPP Session', epp: true do
     end
 
     it 'prohibits further actions unless logged in' do
-      @xsd = Nokogiri::XML::Schema(File.read('doc/schemas/domain-1.0.xsd'))
+      @xsd = Nokogiri::XML::Schema(File.read('doc/schemas/domain-eis-1.0.xsd'))
       response = epp_plain_request(@epp_xml.domain.info(name: { value: 'test.ee' }))
       response[:msg].should == 'You need to login first.'
       response[:result_code].should == '2002'
@@ -53,6 +53,14 @@ describe 'EPP Session', epp: true do
       wrong_user = epp_xml_no_cltrid.session.login(clID: { value: 'wrong-user' }, pw: { value: 'ghyt9e4fu' })
       response = epp_plain_request(wrong_user)
       response[:clTRID].should be_nil
+    end
+
+    it 'should return latin only error' do
+      wrong_user = @epp_xml.session.login(clID: { value: '你好你好' }, pw: { value: 'ghyt9e4fu' })
+      response = epp_plain_request(wrong_user)
+      response[:msg].should == 'Parameter value policy error. Allowed only Latin characters.'
+      response[:result_code].should == '2306'
+      response[:clTRID].should == 'ABC-12345'
     end
 
     context 'with valid user' do

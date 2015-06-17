@@ -1,27 +1,72 @@
 = render 'shared/title', name: t(:settings)
 
 = form_tag [:admin, :settings] do
+  .panel.panel-default
+    .panel-heading.clearfix
+      = t(:domain_validation_rules)
+    .table-responsive
+      %table.table.table-hover.table-bordered.table-condensed
+        %thead
+          %tr
+            %th{class: 'col-xs-6'}= t(:setting)
+            %th{class: 'col-xs-6'}= t(:value)
+        %tbody
+          = render 'setting_row', var: :admin_contacts_min_count
+          = render 'setting_row', var: :admin_contacts_max_count
+          = render 'setting_row', var: :tech_contacts_min_count
+          = render 'setting_row', var: :tech_contacts_max_count
+          = render 'setting_row', var: :ds_data_allowed
+          = render 'setting_row', var: :key_data_allowed
+          = render 'setting_row', var: :dnskeys_min_count
+          = render 'setting_row', var: :dnskeys_max_count
+          = render 'setting_row', var: :ns_min_count
+          = render 'setting_row', var: :ns_max_count
+
+  .panel.panel-default
+    .panel-heading.clearfix
+      = t(:domain_expiring)
+    .table-responsive
+      %table.table.table-hover.table-bordered.table-condensed
+        %thead
+          %tr
+            %th{class: 'col-xs-6'}= t(:setting)
+            %th{class: 'col-xs-6'}= t(:value)
+        %tbody
+          = render 'setting_row', var: :days_to_renew_domain_before_expire
+          = render 'setting_row', var: :expire_warning_period
+          = render 'setting_row', var: :redemption_grace_period
+
+  .panel.panel-default
+    .panel-heading.clearfix
+      = t(:billing)
+    .table-responsive
+      %table.table.table-hover.table-bordered.table-condensed
+        %thead
+          %tr
+            %th{class: 'col-xs-6'}= t(:setting)
+            %th{class: 'col-xs-6'}= t(:value)
+        %tbody
+          = render 'setting_row', var: :eis_iban
+          = render 'setting_row', var: :eis_bank
+          = render 'setting_row', var: :eis_swift
+          = render 'setting_row', var: :eis_invoice_contact
+          = render 'setting_row', var: :invoice_number_min
+          = render 'setting_row', var: :invoice_number_max
+          = render 'setting_row', var: :days_to_keep_overdue_invoices_active
+
+  .panel.panel-default
+    .panel-heading.clearfix
+      = t(:other)
+    .table-responsive
+      %table.table.table-hover.table-bordered.table-condensed
+        %thead
+          %tr
+            %th{class: 'col-xs-6'}= t(:setting)
+            %th{class: 'col-xs-6'}= t(:value)
+        %tbody
+          = render 'setting_row', var: :transfer_wait_time
+          = render 'setting_row', var: :ds_algorithm
+          = render 'setting_row', var: :client_side_status_editing_enabled
   .row
-    .col-md-8
-      .table-responsive
-        %table.table.table-hover.table-bordered.table-condensed
-          %thead
-            %tr
-              %th{class: 'col-xs-4'}
-                = t(:setting)
-              %th{class: 'col-xs-2'}
-                = t(:value)
-          %tbody
-            - @settings.each do |x|
-              %tr
-                %td= t("#{x.var}")
-                - if [TrueClass, FalseClass].include?(x.value.class)
-                  %td
-                    = hidden_field_tag("[settings][#{x.var}]", '')
-                    = check_box_tag("[settings][#{x.var}]", true, x.value)
-                - else
-                  %td= text_field_tag("[settings][#{x.var}]", x.value)
-  %hr
-  .row
-    .col-md-8.text-right
+    .col-md-12.text-right
       %button.btn.btn-primary=t(:save)

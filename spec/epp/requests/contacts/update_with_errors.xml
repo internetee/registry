@@ -3,7 +3,7 @@
     <command>
       <update>
         <contact:update
-         xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
+         xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
           <contact:id>sh8013</contact:id>
           <contact:chg>
             <contact:voice x="1234">123456798</contact:voice>

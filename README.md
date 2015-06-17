@@ -97,9 +97,10 @@ For Apache, registry admin goes to port 443 in production, /etc/apache2/sites-en
   SSLCertificateChainFile /etc/ssl/certs/your-chain-fail.pem
   SSLCACertificateFile /etc/ssl/certs/ca.pem
 
-  SSLProtocol TLSv1
+  SSLProtocol -all +TLSv1.2
   SSLHonorCipherOrder On
-  SSLCipherSuite RC4-SHA:HIGH:!ADH
+  SSLCompression off
+  SSLCipherSuite EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH
 
   RewriteEnginriteEngine on
   RedirectMatch ^/$ /admin
@@ -157,9 +158,10 @@ Registrar configuration (/etc/apache2/sites-enabled/registrar.conf) is as follow
   SSLCertificateChainFile /etc/ssl/certs/your-chain-fail.pem
   SSLCACertificateFile /etc/ssl/certs/ca.pem
 
-  SSLProtocol TLSv1
+  SSLProtocol -all +TLSv1.2
   SSLHonorCipherOrder On
-  SSLCipherSuite RC4-SHA:HIGH:!ADH
+  SSLCompression off
+  SSLCipherSuite EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH
 
   RewriteEngine on
   RedirectMatch ^/$ /registrar
@@ -240,9 +242,10 @@ Registrant configuration (/etc/apache2/sites-enabled/registrant.conf) is as foll
     SSLCertificateChainFile /etc/ssl/certs/your-chain-fail.pem
     SSLCACertificateFile /etc/ssl/certs/ca.pem
 
-    SSLProtocol TLSv1
+    SSLProtocol -all +TLSv1.2
     SSLHonorCipherOrder On
-    SSLCipherSuite RC4-SHA:HIGH:!ADH
+    SSLCompression off
+    SSLCipherSuite EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH
 
     RewriteEngine on
     RedirectMatch ^/$ /registrant

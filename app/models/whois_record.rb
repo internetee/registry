@@ -20,11 +20,11 @@ class WhoisRecord < ActiveRecord::Base
       includes(
         domain: [
           :registrant,
-          :registrar, 
-          :nameservers, 
+          :registrar,
+          :nameservers,
           { tech_contacts: :registrar },
           { admin_contacts: :registrar }
-        ]    
+        ]
       )
     end
   end
@@ -34,19 +34,23 @@ class WhoisRecord < ActiveRecord::Base
     h = HashWithIndifferentAccess.new
     return h if domain.blank?
 
+    status_map = {
+      'ok' => 'ok (paid and in zone)'
+    }
+
     @disclosed = []
     h[:name] = domain.name
     h[:registrant] = domain.registrant.name
-    h[:status] = domain.domain_statuses.map(&:human_value).join(', ')
+    h[:status] = domain.statuses.map { |x| status_map[x] || x }.join(', ')
     h[:registered] = domain.registered_at.try(:to_s, :iso8601)
     h[:updated_at] = domain.updated_at.try(:to_s, :iso8601)
     h[:valid_to] = domain.valid_to.try(:to_s, :iso8601)
-    
+
     # update registar triggers when adding new attributes
     h[:registrar] = domain.registrar.name
     h[:registrar_phone] = domain.registrar.phone
     h[:registrar_address] = domain.registrar.address
-    h[:registrar_update_at] = domain.registrar.updated_at.try(:to_s, :iso8601) 
+    h[:registrar_update_at] = domain.registrar.updated_at.try(:to_s, :iso8601)
 
     h[:admin_contacts] = []
     domain.admin_contacts.each do |ac|
