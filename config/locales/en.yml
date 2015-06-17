@@ -830,4 +830,4 @@ en:
   unset_force_delete: 'Unset force delete'
   domain_expiring: 'Domain expiring'
   domain_validation_rules: 'Domain validation rules'
-  bank_statement_desc: 'Import will match only when invoice nr, description, sum and client ref number match.' 
+  bank_statement_desc: 'Import file row will match only when matching following attributes: <b>invoice nr, description, sum and client ref number</b>.' 
