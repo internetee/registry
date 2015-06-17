@@ -390,6 +390,15 @@ class Epp::Domain < Domain
     clean_pendings! if update(frame, user, false)
   end
 
+  def apply_pending_delete!
+    preclean_pendings
+    user  = ApiUser.find(pending_json['current_user_id'])
+    frame = Nokogiri::XML(pending_json['frame'])
+    statuses.delete(DomainStatus::PENDING_DELETE)
+
+    clean_pendings! if epp_destroy(frame, user, false)
+  end
+
   def attach_legal_document(legal_document_data)
     return unless legal_document_data
 
@@ -399,10 +408,10 @@ class Epp::Domain < Domain
     )
   end
 
-  def epp_destroy(frame, user_id)
+  def epp_destroy(frame, user_id, verify=true)
     return false unless valid?
 
-    if frame.css('delete').attr('verified').to_s.downcase != 'yes'
+    if verify && frame.css('delete').attr('verified').to_s.downcase != 'yes'
       registrant_verification_asked!(frame.to_s, user_id)
       self.deliver_emails = true # turn on email delivery for epp
       pending_delete!

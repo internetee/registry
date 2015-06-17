@@ -1,4 +1,44 @@
-- if @domain.present?
+- if params[:confirmed].present?
+  .row
+    .col-md-12
+      %h1= t(:domain_delete_confirmed_title)
+  .row
+    .col-md-12
+      %p=  t(:domain_delete_confirmed_body)
+- elsif params[:rejected].present?
+  .row
+    .col-md-12
+      %h1= t(:domain_delete_rejected_title)
+  .row
+    .col-md-12
+      %p=  t(:domain_delete_rejected_body)
 - else
-  %h1= t(:not_valid_domain_verification_title).html_safe
-  %p=  t(:not_valid_domain_verification_body).html_safe
+  - if @domain.present?
+    .row
+      .col-md-12
+        %h1= t(:domain_delete_title)
+    .row
+      .col-md-12
+        %p=  t(:domain_delete_body)
+
+    %hr
+    .row
+      .col-md-12.text-center.confirmation
+        .column-keys
+          %p= t(:domain_name) + ':'
+          %p= t(:registrant) + ':'
+        .column-values
+          %p= @domain.name
+          %p= "#{@domain.registrant_name} (#{@domain.registrant.ident})"
+        
+    .row
+      .col-md-12.text-center
+        .confirmation
+          = form_for registrant_domain_delete_confirm_path(@domain.id), method: :patch do |f|
+            = hidden_field_tag :token, params[:token]
+            = f.button t(:confirm_domain_delete), name: 'confirmed', class: 'btn btn-primary'
+            = f.button t(:reject_domain_delete), name: 'rejected', class: 'btn btn-warning'
+    %hr
+  - else
+    %h1= t(:not_valid_domain_verification_title).html_safe
+    %p=  t(:not_valid_domain_verification_body).html_safe
