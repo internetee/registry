@@ -1,4 +1,4 @@
-class DomainConfirmJob < Que::Job
+class DomainUpdateConfirmJob < Que::Job
   def run(domain_id, action)
     # it's recommended to keep transaction against job table as short as possible.
     ActiveRecord::Base.transaction do

@@ -82,7 +82,7 @@ describe DomainMailer do
     end
   end
 
-  describe 'email changed notification' do
+  describe 'email pending delete notification' do
     before :all do 
       @registrant = Fabricate(:registrant, email: 'test@example.com')
       @domain = Fabricate(:domain, name: 'delete-pending.ee', registrant: @registrant)

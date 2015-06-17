@@ -106,6 +106,15 @@ namespace :import do
       next if x.cash_account
       x.accounts.create(account_type: Account::CASH, currency: 'EUR')
       x.save(validate: false)
+
+      lr = Legacy::Registrar.find(x.legacy_id)
+      x.cash_account.account_activities << AccountActivity.new({
+        sum: lr.account_balance,
+        currency: 'EUR',
+        description: 'Transfer from legacy system'
+      })
+
+      x.cash_account.save
     end
 
     puts "-----> Imported #{count} new registrars in #{(Time.zone.now.to_f - start).round(2)} seconds"
