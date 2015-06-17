@@ -404,6 +404,7 @@ class Epp::Domain < Domain
 
     if frame.css('delete').attr('verified').to_s.downcase != 'yes'
       registrant_verification_asked!(frame.to_s, user_id)
+      self.deliver_emails = true # turn on email delivery for epp
       pending_delete!
       manage_automatic_statuses
       true # aka 1001 pending_delete
