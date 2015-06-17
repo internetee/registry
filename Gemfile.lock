@@ -17,14 +17,6 @@ GIT
       rails (>= 4.1.0)
 
 GIT
-  remote: git://github.com/gitlabeu/epp.git
-  revision: 505c3f2739eb1da918e54111aecfb138a822739d
-  specs:
-    epp (1.4.2)
-      hpricot
-      libxml-ruby
-
-GIT
   remote: git://github.com/haml/html2haml.git
   revision: 6984f50bdbbd6291535027726a5697f28778ee8d
   ref: 6984f50bdbbd6291535027726a5697f28778ee8d
@@ -34,6 +26,14 @@ GIT
       haml (~> 4.0.0)
       nokogiri (~> 1.6.0)
       ruby_parser (~> 3.5)
+
+GIT
+  remote: git://github.com/internetee/epp.git
+  revision: 505c3f2739eb1da918e54111aecfb138a822739d
+  specs:
+    epp (1.4.2)
+      hpricot
+      libxml-ruby
 
 GEM
   remote: https://rubygems.org/
