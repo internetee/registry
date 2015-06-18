@@ -15,7 +15,7 @@ class Admin::CertificatesController < AdminController
     crt = certificate_params[:crt].open.read if certificate_params[:crt]
     csr = certificate_params[:csr].open.read if certificate_params[:csr]
 
-    @certificate = @api_user.certificates.build(csr: Certificate.sanitize(csr), crt: Certificate.sanitize(crt))
+    @certificate = @api_user.certificates.build(csr: csr, crt: crt)
     if @api_user.save
       flash[:notice] = I18n.t('record_created')
       redirect_to [:admin, @api_user, @certificate]
