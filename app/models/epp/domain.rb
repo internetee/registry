@@ -369,7 +369,7 @@ class Epp::Domain < Domain
     at[:admin_domain_contacts_attributes] += at_add[:admin_domain_contacts_attributes]
     at[:tech_domain_contacts_attributes] += at_add[:tech_domain_contacts_attributes]
     at[:dnskeys_attributes] += at_add[:dnskeys_attributes]
-    at[:statuses] = 
+    at[:statuses] =
       statuses - domain_statuses_attrs(frame.css('rem'), 'rem') + domain_statuses_attrs(frame.css('add'), 'add')
 
     # at[:statuses] += at_add[:domain_statuses_attributes]
@@ -527,6 +527,9 @@ class Epp::Domain < Domain
   def query_transfer(frame, current_user)
     return false unless can_be_transferred_to?(current_user.registrar)
 
+    old_contact_codes = contacts.pluck(:code).sort.uniq
+    old_registrant_code = registrant.code
+
     transaction do
       begin
         dt = domain_transfers.create!(
@@ -545,7 +548,7 @@ class Epp::Domain < Domain
 
         if dt.approved?
           transfer_contacts(current_user.registrar_id)
-          dt.notify_losing_registrar
+          dt.notify_losing_registrar(old_contact_codes, old_registrant_code)
           generate_auth_info
           self.registrar = current_user.registrar
         end
