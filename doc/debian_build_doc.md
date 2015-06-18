@@ -108,7 +108,7 @@ BLOCKCOUNT=100
 # The flag --src is an alias for this option. Multiple addresses can be specified, 
 # but this will expand to multiple rules (when adding with -A), 
 # or will cause multiple rules to be deleted (with -D). 
-REGISTRAR_HANDLE_SOURCE = 'x.x.x.x'
+REGISTRAR_HANDLE_SOURCE="x.x.x.x"
 # default action can be DROP or REJECT or something else.
 DACTION="REJECT"
 $IPT -A INPUT -p tcp --dport 700 -i eth0 -m state --state NEW -m recent --set
