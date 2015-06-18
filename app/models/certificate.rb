@@ -132,11 +132,6 @@ class Certificate < ActiveRecord::Base
   end
 
   class << self
-    def sanitize(c)
-      return nil unless c
-      c.gsub("\r", '')
-    end
-
     def update_crl
       update_id_crl
       update_registry_crl

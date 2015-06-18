@@ -732,6 +732,9 @@ describe 'EPP Domain', epp: true do
         ]
       })
 
+      old_contact_codes = domain.contacts.pluck(:code).sort.uniq
+      old_registrant_code = domain.registrant.code
+
       response = login_as :registrar2 do
         epp_plain_request(xml)
       end
@@ -755,8 +758,9 @@ describe 'EPP Domain', epp: true do
       response[:msg].should == 'Command completed successfully; ack to dequeue'
       msg_q = response[:parsed].css('msgQ')
       msg_q.css('qDate').text.should_not be_blank
-      contacts = domain.contacts.pluck(:code).sort
-      msg_q.css('msg').text.should == "Domain transfer was approved, associated contacts are: #{contacts}"
+
+      msg_q.css('msg').text.should == "Domain transfer was approved, associated contacts were: " \
+        "#{old_contact_codes} and registrant was #{old_registrant_code}"
       msg_q.first['id'].should_not be_blank
       msg_q.first['count'].should == '1'
 
