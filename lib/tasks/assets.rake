@@ -4,16 +4,11 @@ end
 
 namespace :assets do
   task non_digested: :environment do
-    assets = Dir.glob(File.join(Rails.root, 'public/assets/**/*'))
-    regex = /(-{1}[a-z0-9]{32}*\.{1}){1}/
-    assets.each do |file|
-      next if File.directory?(file) || file !~ regex
+    manifest_path = Dir.glob(File.join(Rails.root, 'public/assets/.sprockets-manifest-*.json')).first
+    manifest_data = JSON.load(File.new(manifest_path))
 
-      source = file.split('/')
-      source.push(source.pop.gsub(regex, '.'))
-
-      non_digested = File.join(source)
-      FileUtils.cp(file, non_digested)
+    manifest_data["assets"].each do |logical_path, digested_path|
+      FileUtils.cp("public/assets/#{digested_path}", "public/assets/#{logical_path}")
     end
   end
 end
