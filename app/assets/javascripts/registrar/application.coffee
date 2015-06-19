@@ -27,3 +27,5 @@ $(document).on 'page:change', ->
         form.find('.js-ident-tip').show()
 
   $('.js-contact-form').trigger('restoreDefault')
+
+  console.log('change')
