@@ -3,7 +3,7 @@
   <command>
     <delete>
       <contact:delete
-       xmlns:contact="urn:ietf:params:xml:ns:contact-1.0">
+       xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
         <contact:id>sh8013</contact:id>
         <contact:authInfo>
           <contact:pw>wrong-one</contact:pw>
@@ -11,7 +11,7 @@
       </contact:delete>
     </delete>
     <extension>
-      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
         <eis:legalDocument type="pdf">
           JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==
         </eis:legalDocument>

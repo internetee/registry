@@ -55,6 +55,15 @@ describe Domain do
       @domain.errors.full_messages.should match_array([])
     end
 
+    it 'should have correct validity dates' do
+      valid_to = Time.zone.now + 1.year
+      @domain.valid_to.should be_within(5).of(valid_to)
+      @domain.outzone_at.should be_within(5).of(valid_to + Setting.expire_warning_period.days)
+      @domain.delete_at.should be_within(5).of(
+        valid_to + Setting.expire_warning_period.days + Setting.redemption_grace_period.days
+      )
+    end
+
     it 'should validate uniqueness of tech contacts' do
       same_contact = Fabricate(:contact, code: 'same_contact')
       domain = Fabricate(:domain)
@@ -85,11 +94,99 @@ describe Domain do
       @domain.registrant_update_confirmable?('123').should == false
     end
 
+    it 'should expire domains' do
+      Domain.start_expire_period
+      @domain.statuses.include?(DomainStatus::EXPIRED).should == false
+
+      @domain.valid_to = Time.zone.now - 10.days
+      @domain.save
+
+      Domain.start_expire_period
+      @domain.reload
+      @domain.statuses.include?(DomainStatus::EXPIRED).should == true
+
+      Domain.start_expire_period
+      @domain.reload
+      @domain.statuses.include?(DomainStatus::EXPIRED).should == true
+    end
+
+    it 'should start redemption grace period' do
+      Domain.start_redemption_grace_period
+      @domain.reload
+      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
+
+      @domain.outzone_at = Time.zone.now
+      @domain.statuses << DomainStatus::SERVER_MANUAL_INZONE # this prohibits server_hold
+      @domain.save
+
+      Domain.start_redemption_grace_period
+      @domain.reload
+      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
+
+      @domain.statuses = []
+      @domain.save
+
+      Domain.start_redemption_grace_period
+      @domain.reload
+      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == true
+    end
+
+    it 'should start delete period' do
+      Domain.start_delete_period
+      @domain.reload
+      @domain.statuses.include?(DomainStatus::DELETE_CANDIDATE).should == false
+
+      @domain.delete_at = Time.zone.now
+      @domain.statuses << DomainStatus::SERVER_DELETE_PROHIBITED # this prohibits delete_candidate
+      @domain.save
+
+      Domain.start_delete_period
+      @domain.reload
+      @domain.statuses.include?(DomainStatus::DELETE_CANDIDATE).should == false
+
+      @domain.statuses = []
+      @domain.save
+      Domain.start_delete_period
+      @domain.reload
+
+      @domain.statuses.include?(DomainStatus::DELETE_CANDIDATE).should == true
+    end
+
+    it 'should destroy delete candidates' do
+      d = Fabricate(:domain)
+      d.force_delete_at = Time.zone.now
+      d.save
+
+      @domain.delete_at = Time.zone.now
+      @domain.save
+
+      Domain.count.should == 2
+
+      Domain.start_delete_period
+
+      Domain.destroy_delete_candidates
+      Domain.count.should == 0
+    end
+
+    it 'should set force delete time' do
+      @domain.statuses = ['ok']
+      @domain.set_force_delete
+
+      @domain.statuses.count.should == 6
+      fda = Time.zone.now + Setting.redemption_grace_period.days
+      @domain.force_delete_at.should be_within(20).of(fda)
+
+      @domain.unset_force_delete
+
+      @domain.statuses.count.should == 1
+      @domain.force_delete_at.should be_nil
+    end
+
     context 'about registrant update confirm' do
       before :all do
         @domain.registrant_verification_token = 123
         @domain.registrant_verification_asked_at = Time.zone.now
-        @domain.domain_statuses.create(value: DomainStatus::PENDING_UPDATE)
+        @domain.statuses << DomainStatus::PENDING_UPDATE
       end
 
       it 'should be registrant update confirm ready' do
@@ -101,7 +198,28 @@ describe Domain do
       end
 
       it 'should not be registrant update confirm ready when no correct status' do
-        @domain.domain_statuses.delete_all
+        @domain.statuses = []
+        @domain.registrant_update_confirmable?('123').should == false
+      end
+    end
+
+    context 'about registrant update confirm when domain is invalid' do
+      before :all do
+        @domain.registrant_verification_token = 123
+        @domain.registrant_verification_asked_at = Time.zone.now
+        @domain.statuses << DomainStatus::PENDING_UPDATE
+      end
+
+      it 'should be registrant update confirm ready' do
+        @domain.registrant_update_confirmable?('123').should == true
+      end
+
+      it 'should not be registrant update confirm ready when token does not match' do
+        @domain.registrant_update_confirmable?('wrong-token').should == false
+      end
+
+      it 'should not be registrant update confirm ready when no correct status' do
+        @domain.statuses = []
         @domain.registrant_update_confirmable?('123').should == false
       end
     end
@@ -205,6 +323,106 @@ describe Domain do
     expect(d.name_dirty).to eq('test.ee')
   end
 
+  it 'should be valid when name length is exatly 63 in characters' do
+    d = Fabricate(:domain, name: "#{'a' * 63}.ee")
+    d.valid?
+    d.errors.full_messages.should == []
+  end
+
+  it 'should not be valid when name length is longer than 63 characters' do
+    d = Fabricate.build(:domain, name: "#{'a' * 64}.ee")
+    d.valid?
+    d.errors.full_messages.should match_array([
+      "Domain name Domain name is invalid",
+      "Puny label Domain name is too long (maximum is 63 characters)"
+    ])
+  end
+
+  it 'should not be valid when name length is longer than 63 characters' do
+    d = Fabricate.build(:domain,
+      name: "xn--4caaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.ee")
+    d.valid?
+    d.errors.full_messages.should match_array([
+      "Domain name Domain name is invalid",
+      "Puny label Domain name is too long (maximum is 63 characters)"
+    ])
+  end
+
+  it 'should be valid when name length is 63 characters' do
+    d = Fabricate.build(:domain,
+                        name: "õäöüšžõäöüšžõäöüšžõäöüšžõäöüšžõäöüšžõäöüšžab123.pri.ee")
+    d.valid?
+    d.errors.full_messages.should match_array([
+    ])
+  end
+
+  it 'should not be valid when name length is longer than 63 punycode characters' do
+    d = Fabricate.build(:domain, name: "#{'ä' * 63}.ee")
+    d.valid?
+    d.errors.full_messages.should == [
+      "Puny label Domain name is too long (maximum is 63 characters)"
+    ]
+  end
+
+  it 'should not be valid when name length is longer than 63 punycode characters' do
+    d = Fabricate.build(:domain, name: "#{'ä' * 64}.ee")
+    d.valid?
+    d.errors.full_messages.should match_array([
+      "Domain name Domain name is invalid",
+      "Puny label Domain name is too long (maximum is 63 characters)"
+    ])
+  end
+
+  it 'should not be valid when name length is longer than 63 punycode characters' do
+    d = Fabricate.build(:domain, name: "#{'ä' * 63}.pri.ee")
+    d.valid?
+    d.errors.full_messages.should match_array([
+      "Puny label Domain name is too long (maximum is 63 characters)"
+    ])
+  end
+
+  it 'should be valid when punycode name length is not longer than 63' do
+    d = Fabricate.build(:domain, name: "#{'ä' * 53}.pri.ee")
+    d.valid?
+    d.errors.full_messages.should == []
+  end
+
+  it 'should be valid when punycode name length is not longer than 63' do
+    d = Fabricate.build(:domain, name: "#{'ä' * 57}.ee")
+    d.valid?
+    d.errors.full_messages.should == []
+  end
+
+  it 'should not be valid when name length is one pynicode' do
+    d = Fabricate.build(:domain, name: "xn--4ca.ee")
+    d.valid?
+    d.errors.full_messages.should == ["Domain name Domain name is invalid"]
+  end
+
+  it 'should not be valid with at character' do
+    d = Fabricate.build(:domain, name: 'dass@sf.ee')
+    d.valid?
+    d.errors.full_messages.should == ["Domain name Domain name is invalid"]
+  end
+
+  it 'should not be valid with invalid characters' do
+    d = Fabricate.build(:domain, name: '@ba)s(?ä_:-df.ee')
+    d.valid?
+    d.errors.full_messages.should == ["Domain name Domain name is invalid"]
+  end
+
+  it 'should be valid when name length is two pynicodes' do
+    d = Fabricate.build(:domain, name: "xn--4caa.ee")
+    d.valid?
+    d.errors.full_messages.should == []
+  end
+
+  it 'should be valid when name length is two pynicodes' do
+    d = Fabricate.build(:domain, name: "xn--4ca0b.ee")
+    d.valid?
+    d.errors.full_messages.should == []
+  end
+
   it 'normalizes ns attrs' do
     d = Fabricate(:domain)
     d.nameservers.build(hostname: 'BLA.EXAMPLE.EE', ipv4: '   192.168.1.1', ipv6: '1080:0:0:0:8:800:200c:417a')
@@ -234,24 +452,23 @@ describe Domain do
 
   it 'manages statuses automatically' do
     d = Fabricate(:domain)
-    expect(d.domain_statuses.count).to eq(1)
-    expect(d.domain_statuses.first.value).to eq(DomainStatus::OK)
+    expect(d.statuses.count).to eq(1)
+    expect(d.statuses.first).to eq(DomainStatus::OK)
 
     d.period = 2
     d.save
 
     d.reload
+    expect(d.statuses.count).to eq(1)
+    expect(d.statuses.first).to eq(DomainStatus::OK)
 
-    expect(d.domain_statuses.count).to eq(1)
-    expect(d.domain_statuses.first.reload.value).to eq(DomainStatus::OK)
-
-    d.domain_statuses.build(value: DomainStatus::CLIENT_DELETE_PROHIBITED)
+    d.statuses << DomainStatus::CLIENT_DELETE_PROHIBITED
     d.save
 
     d.reload
 
-    expect(d.domain_statuses.count).to eq(1)
-    expect(d.domain_statuses.first.value).to eq(DomainStatus::CLIENT_DELETE_PROHIBITED)
+    expect(d.statuses.count).to eq(1)
+    expect(d.statuses.first).to eq(DomainStatus::CLIENT_DELETE_PROHIBITED)
   end
 
   with_versioning do

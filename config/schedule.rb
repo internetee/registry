@@ -24,6 +24,20 @@ every :day, at: '12:10pm' do
   runner 'Invoice.cancel_overdue_invoices'
 end
 
+every :day, at: '12:15pm' do
+  runner 'Domain.expire_domains'
+end
+
 every 3.hours do
   runner 'Certificate.update_crl'
+end
+
+every :hour do
+  runner 'Domain.start_expire_period'
+  runner 'Domain.start_redemption_grace_period'
+  runner 'Domain.start_delete_period'
+end
+
+every 42.minutes do
+  runner 'Domain.destroy_delete_candidates'
 end

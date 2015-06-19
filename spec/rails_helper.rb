@@ -7,6 +7,7 @@ require 'shoulda/matchers'
 require 'capybara/poltergeist'
 require 'paper_trail/frameworks/rspec'
 PaperTrail.whodunnit = 'autotest'
+require "money-rails/test_helpers"
 
 if ENV['ROBOT']
   require 'simplecov'

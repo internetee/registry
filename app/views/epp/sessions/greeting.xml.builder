@@ -5,13 +5,13 @@ xml.epp_head do
     xml.svcMenu do
       xml.version '1.0'
       xml.lang 'en'
-      xml.objURI 'urn:ietf:params:xml:ns:domain-1.0'
-      xml.objURI 'urn:ietf:params:xml:ns:contact-1.0'
+      xml.objURI 'https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd'
+      xml.objURI 'https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd'
       xml.objURI 'urn:ietf:params:xml:ns:host-1.0'
       xml.objURI 'urn:ietf:params:xml:ns:keyrelay-1.0'
       xml.svcExtension do
         xml.extURI 'urn:ietf:params:xml:ns:secDNS-1.1'
-        xml.extURI 'urn:ee:eis:xml:epp:eis-1.0'
+        xml.extURI 'https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd'
       end
     end
 

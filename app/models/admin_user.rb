@@ -1,9 +1,10 @@
 class AdminUser < User
-  validates :username, :password, :country_code, :roles, presence: true
+  validates :username, :country_code, :roles, presence: true
   validates :identity_code, uniqueness: true, allow_blank: true
   validates :identity_code, presence: true, if: -> { country_code == 'EE' }
-  validates :email, presence: true 
-
+  validates :email, presence: true
+  validates :password, :password_confirmation, presence: true, if: :new_record?
+  validates :password_confirmation, presence: true, if: :encrypted_password_changed?
   validate :validate_identity_code, if: -> { country_code == 'EE' }
 
   ROLES = %w(user customer_service admin) # should not match to api_users roles

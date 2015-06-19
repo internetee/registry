@@ -1,11 +1,4 @@
 class DomainNameValidator < ActiveModel::EachValidator
-  # TODO
-  # validates lenght of 2-63
-  # validates/honours Estonian additional letters zäõüö
-  # honours punicode and all interfces honors utf8
-  # validates lower level domains (.pri.ee, edu.ee etc)
-  # lower level domains are fixed for .ee and can add statically into settings
-
   def validate_each(record, attribute, value)
     if !self.class.validate_format(value)
       record.errors[attribute] << (options[:message] || record.errors.generate_message(attribute, :invalid))
@@ -31,9 +24,8 @@ class DomainNameValidator < ActiveModel::EachValidator
 
       # rubocop: disable Metrics/LineLength
       unicode_chars = /\u00E4\u00F5\u00F6\u00FC\u0161\u017E/ # äõöüšž
-      regexp = /\A[a-zA-Z0-9#{unicode_chars}][a-zA-Z0-9#{unicode_chars}-]{0,61}[a-zA-Z0-9#{unicode_chars}]#{general_domains}\z/
+      regexp = /\A[a-zA-Z0-9#{unicode_chars.source}][a-zA-Z0-9#{unicode_chars.source}-]{0,61}[a-zA-Z0-9#{unicode_chars.source}]#{general_domains.source}\z/
       # rubocop: enable Metrics/LineLength
-
       # rubocop: disable Style/DoubleNegation
       !!(value =~ regexp)
       # rubocop: enable Style/DoubleNegation

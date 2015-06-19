@@ -24,7 +24,7 @@ en:
       short: "%d.%m.%y, %H:%M"
       date: "%d.%m.%y"
       date_long: "%d. %B %Y"
-
+      ydate: "%Y.%m.%d"
   date:
     formats:
       year_and_month: "%Y %B"
@@ -48,6 +48,7 @@ en:
               blank: "Required parameter missing - ident"
               invalid_EE_identity_format: "Ident not in valid Estonian identity format."
               invalid_birthday_format: "Ident not in valid birthady format, should be YYYY-MM-DD"
+              invalid_country_code: "Ident country code is not valid, should be in ISO_3166-1 alpha 2 format"
             domains:
               exist: 'Object association prohibits operation'
 
@@ -63,6 +64,8 @@ en:
               invalid: 'Domain name is invalid'
               reserved: 'Domain name is reserved or restricted'
               taken: 'Domain name already exists'
+            puny_label:
+              too_long: 'Domain name is too long (maximum is 63 characters)'
             registrant:
               blank: 'Registrant is missing'
               not_found: 'Registrant not found'
@@ -96,6 +99,8 @@ en:
             domain_statuses:
               invalid: 'Statuses are invalid'
               not_found: 'Status was not found'
+              taken: 'Status already exists on this domain'
+            statuses:
               taken: 'Status already exists on this domain'
             registrar:
               blank: 'Registrar is missing'
@@ -502,6 +507,7 @@ en:
   crt_revoked: 'CRT (revoked)'
   contact_org_error: 'Parameter value policy error. Org must be blank'
   contact_fax_error: 'Parameter value policy error. Fax must be blank'
+  ident_update_error: 'Parameter value policy error. Update of ident data not allowed'
   invoices: 'Invoices'
   no_such_user: 'No such user'
   log_in: 'Log in'
@@ -519,7 +525,7 @@ en:
   client_side_status_editing_error: 'Parameter value policy error. Client-side object status management not supported'
   switch_to: Switch to
   admin_menu: Admin
-  domain_transfer_was_approved: 'Domain transfer was approved, associated contacts are: %{contacts}'
+  domain_transfer_was_approved: 'Domain transfer was approved, associated contacts were: %{contacts} and registrant was %{registrant}'
 
   # DEPP
   activemodel:
@@ -784,17 +790,23 @@ en:
   reject_domain_registrant_update: 'Reject domain ownership change'
   domain_registrant_change_title: 'Please confirm or reject domain ownership change'
   domain_registrant_change_body: 'There is a request to change domain ownership. Before doing it we need your confirmation.'
-  new_pending_registrant: 'New owner'
-  current_registrant: 'Current owner'
+  new_pending_registrant: 'New registrant'
+  current_registrant: 'Current registrant'
   registrant_domain_verification_failed: 'Domain verification not available'
-  domain_registrant_change_confirmed_title: 'Domain owner change has been confirmed'
-  domain_registrant_change_confirmed_body: 'You have successfully confirmed domain owner change.'
-  registrant_domain_verification_confirmed: 'Domain owner change has successfully confirmed.'
-  registrant_domain_verification_confirmed_failed: 'Something went wrong'
+  domain_registrant_change_confirmed_title: 'Domain owner change has been received'
+  domain_registrant_change_confirmed_body: 'You have successfully submitted domain owner change confirmation. You will receive email confirmation.'
+  registrant_domain_verification_confirmed: 'Domain owner change has successfully received.'
+  registrant_domain_verification_confirmed_failed: 'Something went wrong.'
   domain_registrant_change_rejected_title: 'Domain owner change has been rejected'
   domain_registrant_change_rejected_body: 'You have rejected domain owner change.'
   registrant_domain_verification_rejected: 'Domain owner change has been rejected successfully.'
-  registrant_domain_verification_rejected_failed: 'Something went wrong'
+  registrant_domain_verification_rejected_failed: 'Something went wrong.'
+  domain_delete_title: 'Please confirm or reject domain deletation'
+  domain_delete_body: 'There is a request to delete a domain. Before doing it we need your confirmation.'
+  domain_delete_confirmed_title: 'Domain deletion has been received successfully'
+  domain_delete_confirmed_body: 'You have successfully submitted delete confirmation. You will receive registry final confirmation to email.'
+  domain_delete_rejected_title: 'Domain deletion has been rejected successfully'
+  domain_delete_rejected_body: 'You have rejected domain deletion.'
   ip_is_not_whitelisted: 'IP is not whitelisted'
   no_permission: 'No permission'
   access_denied: 'Access denied'
@@ -807,3 +819,15 @@ en:
   invalid_csr_or_crt: 'Invalid CSR or CRT'
   webserver_missing_client_cert_directive: 'Webserver missing client cert directive'
   webserver_client_cert_directive_should_be_required: 'Webserver client cert directive should be required'
+  tech: Tech contact
+  admin: Admin contact
+  pricelists: Pricelists
+  new_pricelist: New Pricelist
+  valid: Valid
+  category: Zone
+  object_is_not_eligible_for_renewal: 'Object is not eligible for renewal'
+  set_force_delete: 'Set force delete'
+  unset_force_delete: 'Unset force delete'
+  domain_expiring: 'Domain expiring'
+  domain_validation_rules: 'Domain validation rules'
+  bank_statement_desc: 'Import file row will match only when matching following attributes: <b>invoice nr, description, sum and client ref number</b>.'

@@ -13,7 +13,7 @@ namespace :zonefile do
         ret text;
       BEGIN
         -- define filters
-        include_filter = '%' || i_origin;
+        include_filter = '%.' || i_origin;
 
         -- for %.%.%
         IF i_origin ~ '\\.' THEN

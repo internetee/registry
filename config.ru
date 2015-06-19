@@ -2,3 +2,11 @@
 
 require ::File.expand_path('../config/environment',  __FILE__)
 run Rails.application
+
+if defined?(PhusionPassenger)
+  PhusionPassenger.on_event(:starting_worker_process) do |forked|
+    if forked
+      Que.mode = :async
+    end
+  end
+end

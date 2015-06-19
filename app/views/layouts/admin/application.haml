@@ -51,16 +51,21 @@
                   %li= link_to t(:admin_users), admin_admin_users_path
                   %li.divider
                   %li.dropdown-header= t(:billing)
+                  - if can? :view, Pricelist
+                    %li= link_to t(:pricelists), admin_pricelists_path
                   %li= link_to t(:bank_statements), admin_bank_statements_path
                   %li= link_to t(:invoices), admin_invoices_path
                   %li.divider
                   %li.dropdown-header= t(:system)
                   %li= link_to t(:settings), admin_settings_path
                   %li= link_to t(:zonefile), admin_zonefile_settings_path
+                  %li.dropdown-header= t(:system)
+                  %li= link_to t(:settings), admin_settings_path
+                  %li= link_to t(:zonefile), admin_zonefile_settings_path
                   -# %li= link_to t(:domains_history), admin_domain_versions_path
                   %li= link_to t(:epp_logs), admin_epp_logs_path
                   %li= link_to t(:repp_logs), admin_repp_logs_path
-                  -# %li= link_to t(:background_jobs), admin_delayed_jobs_path
+                  %li= link_to t(:que), '/admin/que'
 
           - if signed_in?
             %ul.nav.navbar-nav.navbar-right

@@ -27,9 +27,10 @@ class Registrant::SessionsController < Devise::SessionsController
     @user = User.new
   end
 
-  def mid
+  def mid # rubocop: disable Metrics/MethodLength
     phone = params[:user][:phone]
-    client = Digidoc::Client.new
+    endpoint = "#{ENV['sk_digi_doc_service_endpoint']}"
+    client = Digidoc::Client.new(endpoint)
 
     if Rails.env.test? && phone == "123"
       @user = ApiUser.find_by(identity_code: "14212128025")

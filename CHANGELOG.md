@@ -1,3 +1,20 @@
+16.06.2015
+
+* Application time_zone should be defined at application.yml, updated application-exaple.yml 
+
+15.06.2015
+
+* Apache config update: now only TLSv1.2 allowed with whitelisted chipers, please review all SSL config parameters
+
+08.06.2015
+
+* Add sk service name to application.yml
+* Renew zonefile procedure
+
+02.06.2015
+
+* Added possibility to overwrite legal document types at application.yml level.
+
 01.06.2015
 
 * Added separate data update, all data migration locate at db/data, more info 'rake -T data'
@@ -8,6 +25,11 @@
 
 26.05.2015
 
+* Added separate data update, all data migration locate at db/data, more info 'rake -T data'
+
+29.05.2015
+
+* Removed old 'iptables_counter_update_command' and added 'iptables_counter_enabled'
 * Updated deploy script, now staging comes from staging branch
 
 25.05.2015

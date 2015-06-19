@@ -31,14 +31,14 @@ module Epp
     @xml ||= EppXml.new(cl_trid: 'ABC-12345')
     case user
     when :gitlab
-      @gitlab_login_xml ||= 
-        @xml.session.login(clID: { value: 'gitlab' }, pw: { value: 'ghyt9e4fu' }) 
+      @gitlab_login_xml ||=
+        @xml.session.login(clID: { value: 'gitlab' }, pw: { value: 'ghyt9e4fu' })
     when :registrar1
-      @registrar1_login_xml ||= 
-        @xml.session.login(clID: { value: 'registrar1' }, pw: { value: 'ghyt9e4fu' }) 
+      @registrar1_login_xml ||=
+        @xml.session.login(clID: { value: 'registrar1' }, pw: { value: 'ghyt9e4fu' })
     when :registrar2
-      @registrar2_login_xml ||= 
-        @xml.session.login(clID: { value: 'registrar2' }, pw: { value: 'ghyt9e4fu' }) 
+      @registrar2_login_xml ||=
+        @xml.session.login(clID: { value: 'registrar2' }, pw: { value: 'ghyt9e4fu' })
     end
   end
 
@@ -66,19 +66,31 @@ module Epp
   end
 
   def epp_plain_request(data, *args)
-    res = parse_response(server.send_request(data)) if args.include?(:xml)
-    if res
-      log(data, res[:parsed])
-      return res
+    options = args.extract_options!
+    validate_input = options[:validate_input] != false # true by default
+    validate_output = options[:validate_output] != false # true by default
+
+    if validate_input && @xsd
+      xml = Nokogiri::XML(data)
+      @xsd.validate(xml).each do |error|
+        fail Exception.new, error.to_s
+      end
     end
 
-    res = parse_response(server.send_request(read_body(data)))
-    log(read_body(data), res[:parsed])
-    return res
+    res = parse_response(server.send_request(data))
+    if res
+      log(data, res[:parsed])
+      if validate_output && @xsd
+        @xsd.validate(Nokogiri(res[:raw])).each do |error|
+          fail Exception.new, error.to_s
+        end
+      end
+      return res
+    end
   rescue => e
     e
   end
-  
+
   def server
     # tag and password not in use, add those at login xml
     @server ||= Epp::Server.new({ server: 'localhost', port: 701, tag: '', password: '' })
@@ -89,7 +101,7 @@ module Epp
 
     obj = {
       results: [],
-      clTRID: res.css('epp trID clTRID').text,
+      clTRID: res.css('epp trID clTRID').first.try(:text),
       parsed: res.remove_namespaces!,
       raw: raw
     }
@@ -127,7 +139,7 @@ module Epp
 
     xml_params = defaults.deep_merge(xml_params)
 
-    epp_xml = EppXml::Domain.new(cl_trid: 'ABC-12345')
+    epp_xml = EppXml::Domain.new(cl_trid: false)
     epp_xml.info(xml_params)
   end
 
@@ -176,7 +188,7 @@ module Epp
     custom_params = {
       _anonymus: [
         legalDocument: {
-          value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+          value: 'dGVzdCBmYWlsCg==',
           attrs: { type: 'pdf' }
         }
       ]
@@ -219,7 +231,7 @@ module Epp
     epp_xml.create(xml_params, {}, {
       _anonymus: [
         legalDocument: {
-          value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+          value: 'dGVzdCBmYWlsCg==',
           attrs: { type: 'pdf' }
         }
       ]
@@ -260,7 +272,7 @@ module Epp
     custom_params = {
       _anonymus: [
         legalDocument: {
-          value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+          value: 'dGVzdCBmYWlsCg==',
           attrs: { type: 'pdf' }
         }
       ]
@@ -304,7 +316,7 @@ module Epp
     custom_params = {
       _anonymus: [
         legalDocument: {
-          value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+          value: 'dGVzdCBmYWlsCg==',
           attrs: { type: 'pdf' }
         }
       ]

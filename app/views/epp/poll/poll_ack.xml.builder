@@ -6,6 +6,6 @@ xml.epp_head do
 
     xml.tag!('msgQ', 'count' => current_user.queued_messages.count, 'id' => @message.id)
 
-    xml << render('/epp/shared/trID')
+    render('epp/shared/trID', builder: xml)
   end
 end

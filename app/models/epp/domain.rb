@@ -34,7 +34,6 @@ class Epp::Domain < Domain
            max: Setting.ns_max_count
          }
         ],
-        [:period, :out_of_range, { value: { obj: 'period', val: period } }],
         [:dnskeys, :out_of_range,
          {
            min: Setting.dnskeys_min_count,
@@ -55,7 +54,8 @@ class Epp::Domain < Domain
         ]
       ],
       '2005' => [ # Parameter value syntax error
-        [:name_dirty, :invalid,  { obj: 'name', val: name_dirty }]
+        [:name_dirty, :invalid, { obj: 'name', val: name_dirty }],
+        [:puny_label, :too_long, { obj: 'name', val: name_puny }]
       ],
       '2201' => [ # Authorisation error
         [:auth_info, :wrong_pw]
@@ -68,6 +68,7 @@ class Epp::Domain < Domain
         [:base, :domain_status_prohibits_operation]
       ],
       '2306' => [ # Parameter policy error
+        [:period, :out_of_range, { value: { obj: 'period', val: period } }],
         [:base, :ds_data_with_key_not_allowed],
         [:base, :ds_data_not_allowed],
         [:base, :key_data_not_allowed],
@@ -109,10 +110,12 @@ class Epp::Domain < Domain
 
     at[:period_unit] = Epp::Domain.parse_period_unit_from_frame(frame) || 'y'
 
+    # at[:statuses] = domain_statuses_attrs(frame, action)
+    # binding.pry
     at[:nameservers_attributes] = nameservers_attrs(frame, action)
     at[:admin_domain_contacts_attributes] = admin_domain_contacts_attrs(frame, action)
     at[:tech_domain_contacts_attributes] = tech_domain_contacts_attrs(frame, action)
-    at[:domain_statuses_attributes] = domain_statuses_attrs(frame, action)
+    # at[:domain_statuses_attributes] = domain_statuses_attrs(frame, action)
 
     if new_record?
       dnskey_frame = frame.css('extension create')
@@ -234,24 +237,6 @@ class Epp::Domain < Domain
     attrs
   end
 
-  def domain_status_list_from(frame)
-    status_list = []
-
-    frame.css('status').each do |x|
-      unless DomainStatus::CLIENT_STATUSES.include?(x['s'])
-        add_epp_error('2303', 'status', x['s'], [:domain_statuses, :not_found])
-        next
-      end
-
-      status_list << {
-        value: x['s'],
-        description: x.text
-      }
-    end
-
-    status_list
-  end
-
   # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/CyclomaticComplexity
   def dnskeys_attrs(frame, action)
@@ -335,14 +320,10 @@ class Epp::Domain < Domain
     if action == 'rem'
       to_destroy = []
       status_list.each do |x|
-        status = domain_statuses.find_by(value: x[:value])
-        if status.blank?
-          add_epp_error('2303', 'status', x[:value], [:domain_statuses, :not_found])
+        if statuses.include?(x)
+          to_destroy << x
         else
-          to_destroy << {
-            id: status.id,
-            _destroy: 1
-          }
+          add_epp_error('2303', 'status', x, [:domain_statuses, :not_found])
         end
       end
 
@@ -361,10 +342,7 @@ class Epp::Domain < Domain
         next
       end
 
-      status_list << {
-        value: x['s'],
-        description: x.text
-      }
+      status_list << x['s']
     end
 
     status_list
@@ -380,7 +358,7 @@ class Epp::Domain < Domain
     }]
   end
 
-  def update(frame, current_user)
+  def update(frame, current_user, verify = true)
     return super if frame.blank?
     at = {}.with_indifferent_access
     at.deep_merge!(attrs_from(frame.css('chg'), current_user))
@@ -391,14 +369,34 @@ class Epp::Domain < Domain
     at[:admin_domain_contacts_attributes] += at_add[:admin_domain_contacts_attributes]
     at[:tech_domain_contacts_attributes] += at_add[:tech_domain_contacts_attributes]
     at[:dnskeys_attributes] += at_add[:dnskeys_attributes]
-    at[:domain_statuses_attributes] += at_add[:domain_statuses_attributes]
+    at[:statuses] =
+      statuses - domain_statuses_attrs(frame.css('rem'), 'rem') + domain_statuses_attrs(frame.css('add'), 'add')
 
-    if frame.css('registrant').present? && frame.css('registrant').attr('verified').to_s.downcase != 'yes'
-      registrant_verification_asked! 
+    # at[:statuses] += at_add[:domain_statuses_attributes]
+
+    if verify && frame.css('registrant').present? && frame.css('registrant').attr('verified').to_s.downcase != 'yes'
+      registrant_verification_asked!(frame.to_s, current_user.id)
     end
     self.deliver_emails = true # turn on email delivery for epp
-
     errors.empty? && super(at)
+  end
+
+  def apply_pending_update!
+    preclean_pendings
+    user  = ApiUser.find(pending_json['current_user_id'])
+    frame = Nokogiri::XML(pending_json['frame'])
+    statuses.delete(DomainStatus::PENDING_UPDATE)
+
+    clean_pendings! if update(frame, user, false)
+  end
+
+  def apply_pending_delete!
+    preclean_pendings
+    user  = ApiUser.find(pending_json['current_user_id'])
+    frame = Nokogiri::XML(pending_json['frame'])
+    statuses.delete(DomainStatus::PENDING_DELETE)
+
+    clean_pendings! if epp_destroy(frame, user, false)
   end
 
   def attach_legal_document(legal_document_data)
@@ -410,11 +408,12 @@ class Epp::Domain < Domain
     )
   end
 
-  def epp_destroy(frame)
+  def epp_destroy(frame, user_id, verify=true)
     return false unless valid?
 
-    if frame.css('delete').attr('verified').to_s.downcase != 'yes'
-      registrant_verification_asked! 
+    if verify && frame.css('delete').attr('verified').to_s.downcase != 'yes'
+      registrant_verification_asked!(frame.to_s, user_id)
+      self.deliver_emails = true # turn on email delivery for epp
       pending_delete!
       manage_automatic_statuses
       true # aka 1001 pending_delete
@@ -426,14 +425,21 @@ class Epp::Domain < Domain
   ### RENEW ###
 
   def renew(cur_exp_date, period, unit = 'y')
-    # TODO: Check how much time before domain exp date can it be renewed
     validate_exp_dates(cur_exp_date)
+
+    add_epp_error('2105', nil, nil, I18n.t('object_is_not_eligible_for_renewal')) unless renewable?
     return false if errors.any?
 
     p = self.class.convert_period_to_time(period, unit)
     self.valid_to = valid_to + p
+    self.outzone_at = outzone_at + p
+    self.delete_at = delete_at + p
     self.period = period
     self.period_unit = unit
+
+    statuses.delete(DomainStatus::SERVER_HOLD)
+    statuses.delete(DomainStatus::EXPIRED)
+
     save
   end
 
@@ -466,7 +472,8 @@ class Epp::Domain < Domain
     oc = c.deep_clone include: [:statuses]
     oc.code = nil
     oc.registrar_id = registrar_id
-    oc.save!
+    oc.prefix_code
+    oc.save!(validate: false)
     oc
   end
 
@@ -474,7 +481,7 @@ class Epp::Domain < Domain
     oc = Contact.find(contact_id) # n+1 workaround
     oc.registrar_id = registrar_id
     oc.generate_new_code!
-    oc.save!
+    oc.save!(validate: false)
     oc
   end
 
@@ -520,6 +527,9 @@ class Epp::Domain < Domain
   def query_transfer(frame, current_user)
     return false unless can_be_transferred_to?(current_user.registrar)
 
+    old_contact_codes = contacts.pluck(:code).sort.uniq
+    old_registrant_code = registrant.code
+
     transaction do
       begin
         dt = domain_transfers.create!(
@@ -538,7 +548,7 @@ class Epp::Domain < Domain
 
         if dt.approved?
           transfer_contacts(current_user.registrar_id)
-          dt.notify_losing_registrar
+          dt.notify_losing_registrar(old_contact_codes, old_registrant_code)
           generate_auth_info
           self.registrar = current_user.registrar
         end
@@ -547,8 +557,10 @@ class Epp::Domain < Domain
         save!(validate: false)
 
         return dt
-      rescue => _e
+      rescue => e
         add_epp_error('2306', nil, nil, I18n.t('action_failed_due_to_server_error'))
+        logger.error('DOMAIN TRANSFER FAILED')
+        logger.error(e)
         raise ActiveRecord::Rollback
       end
     end
@@ -671,9 +683,7 @@ class Epp::Domain < Domain
     begin
       errors.add(:base, :domain_status_prohibits_operation)
       return false
-    end if (domain_statuses.pluck(:value) & %W(
-      #{DomainStatus::CLIENT_DELETE_PROHIBITED}
-    )).any?
+    end if statuses.include?(DomainStatus::CLIENT_DELETE_PROHIBITED)
 
     true
   end

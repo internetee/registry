@@ -123,7 +123,8 @@ class Epp::Contact < Contact
         [:email, :invalid],
         [:ident, :invalid],
         [:ident, :invalid_EE_identity_format],
-        [:ident, :invalid_birthday_format]
+        [:ident, :invalid_birthday_format],
+        [:ident, :invalid_country_code]
       ],
       '2302' => [ # Object exists
         [:code, :epp_id_taken]
@@ -142,7 +143,6 @@ class Epp::Contact < Contact
     at.deep_merge!(self.class.attrs_from(frame.css('rem'), 'rem'))
     at.deep_merge!(self.class.attrs_from(frame.css('add')))
     at.deep_merge!(self.class.attrs_from(frame.css('chg')))
-    at.merge!(self.class.ident_attrs(frame.css('ident').first))
     legal_frame = frame.css('legalDocument').first
     at[:legal_documents_attributes] = self.class.legal_document_attrs(legal_frame) 
     self.deliver_emails = true # turn on email delivery for epp

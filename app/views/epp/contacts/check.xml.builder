@@ -5,7 +5,7 @@ xml.epp_head do
     end
 
     xml.resData do
-      xml.tag!('contact:chkData', 'xmlns:contact' => 'urn:ietf:params:xml:ns:contact-1.0') do
+      xml.tag!('contact:chkData', 'xmlns:contact' => 'https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd') do
         @results.each do |result|
           xml.tag!('contact:cd') do
             xml.tag! "contact:id", result[:code], avail: result[:avail]
@@ -15,6 +15,6 @@ xml.epp_head do
       end
     end
 
-    xml << render('/epp/shared/trID')
+    render('epp/shared/trID', builder: xml)
   end
 end

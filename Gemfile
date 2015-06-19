@@ -38,6 +38,7 @@ gem 'nprogress-rails',  '~> 0.1.6.7' # visual loader
 gem 'html5_validators', '~> 1.2.0'   # model requements now automatically on html form
 gem 'coderay',          '~> 1.1.0'   # xml console visualize
 gem 'select2-rails',    '~> 3.5.9.3' # for autocomplete
+gem 'bootstrap-datepicker-rails', '~> 1.3.1.1' # datepicker
 
 # rights
 gem 'devise',    '~> 3.4.1' # authenitcation
@@ -50,10 +51,11 @@ gem 'jbuilder', '~> 2.2.6'  # json api
 # registry specfic
 gem 'simpleidn', '~> 0.0.5' # For punycode
 gem 'isikukood' # for EE-id validation
+gem 'money-rails', '~> 1.4.1'
 
 # deploy
 gem 'whenever', '~> 0.9.4', require: false
-gem 'data_migrate', 
+gem 'data_migrate',
   github: 'gitlabeu/data_migrate',
   ref: '35d22b09ff37a4e9d61ab326ad5d8eb0edf1fc81'
 
@@ -70,9 +72,13 @@ gem 'deep_cloneable', '~> 2.1.1'
 gem 'digidoc_client', '~> 0.2.1'
 
 # epp
-gem 'epp', '~> 1.4.2', github: 'gitlabeu/epp'
-gem 'epp-xml',   '~> 0.10.4'  # EPP XMLs
+gem 'epp', '~> 1.4.2', github: 'internetee/epp'
+gem 'epp-xml',   '~> 1.0.3'  # EIS EPP XMLs
 gem 'uuidtools', '~> 2.1.4' # For unique IDs (used by the epp gem)
+
+# que
+gem 'que', '~> 0.10.0'
+gem 'que-web', '~> 0.4.0'
 
 # for importing legacy db
 gem 'activerecord-import', '~> 0.7.0' # for inserting dummy data

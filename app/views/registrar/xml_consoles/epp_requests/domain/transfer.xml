@@ -3,7 +3,7 @@
   <command>
     <transfer op="query">
       <domain:transfer
-       xmlns:domain="urn:ietf:params:xml:ns:domain-1.0">
+       xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
         <domain:name>example.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="JD1234-REP">2BARfoo</domain:pw>
@@ -11,7 +11,7 @@
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="urn:ee:eis:xml:epp:eis-1.0">
+      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
         <eis:legalDocument type="pdf">
           JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==
         </eis:legalDocument>

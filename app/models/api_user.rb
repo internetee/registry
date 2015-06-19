@@ -11,12 +11,15 @@ class ApiUser < User
     }
   end
 
-  # TODO: should have max request limit per day
+  # TODO: should have max request limit per day?
   belongs_to :registrar
   has_many :certificates
 
   validates :username, :password, :registrar, :roles, presence: true
   validates :username, uniqueness: true
+
+  # TODO: probably cache, because it's requested on every EPP
+  delegate :code, to: :registrar, prefix: true
 
   attr_accessor :registrar_typeahead
 

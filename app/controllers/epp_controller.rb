@@ -1,9 +1,11 @@
 class EppController < ApplicationController
+  include Iptable
   layout false
   protect_from_forgery with: :null_session
   skip_before_action :verify_authenticity_token
 
   before_action :generate_svtrid
+  before_action :latin_only
   before_action :validate_request
   before_action :update_epp_session
   helper_method :current_user
@@ -92,6 +94,10 @@ class EppController < ApplicationController
 
     @errors.uniq!
 
+    # Requested by client, ticket #2688
+    # Known issues: error request is exactly 1 second slower and server can handle less load
+    sleep 1 if !Rails.env.test? || !Rails.env.development?
+
     render_epp_response '/epp/error'
   end
 
@@ -99,6 +105,14 @@ class EppController < ApplicationController
     @response = render_to_string(*args)
     render xml: @response
     write_to_epp_log
+  end
+
+  # VALIDATION
+  def latin_only
+    return true if params['frame'].blank?
+    return true if params['frame'].match(/\A[\p{Latin}\p{Z}\p{P}\p{S}\p{Cc}\p{Cf}\w_\'\+\-\.\(\)\/]*\Z/i)
+    render_epp_response '/epp/latin_error'
+    false
   end
 
   # VALIDATION
@@ -285,6 +299,8 @@ class EppController < ApplicationController
   # rubocop: enable Metrics/CyclomaticComplexity
 
   def iptables_counter_update
-    `ENV['iptables_counter_update_command']` if ENV['iptables_counter_update_command'].present?
+    return if ENV['iptables_counter_enabled'].blank? && ENV['iptables_counter_enabled'] != 'true'
+    return if current_user.blank?
+    counter_update(current_user.registrar_code, request.remote_ip)
   end
 end

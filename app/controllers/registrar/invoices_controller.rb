@@ -6,6 +6,8 @@ class Registrar::InvoicesController < RegistrarController
   def index
     params[:q] ||= {}
     invoices = current_user.registrar.invoices.includes(:invoice_items, :account_activity)
+    params[:q][:sum_cache_gteq].gsub!(',', '.')
+    params[:q][:sum_cache_lteq].gsub!(',', '.')
     @q = invoices.search(params[:q])
     @q.sorts  = 'id desc' if @q.sorts.empty?
     @invoices = @q.result.page(params[:page])

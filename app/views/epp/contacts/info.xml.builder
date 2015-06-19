@@ -5,12 +5,12 @@ xml.epp_head do
     end
 
     xml.resData do
-      xml.tag!('contact:infData', 'xmlns:contact' => 'urn:ietf:params:xml:ns:contact-1.0') do
+      xml.tag!('contact:infData', 'xmlns:contact' => 'https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd') do
         xml.tag!('contact:id', @contact.code)
-        if can? :view_full_info, @contact, @password
-          xml.tag!('contact:voice', @contact.phone)
-          xml.tag!('contact:email', @contact.email)
-          xml.tag!('contact:fax', @contact.fax) if @contact.fax.present?
+        xml.tag!('contact:roid', @contact.roid)
+
+        @contact.statuses.each do |status|
+          xml.tag!('contact:status', s: status.value)
         end
 
         xml.tag!('contact:postalInfo', type: 'int') do
@@ -20,19 +20,29 @@ xml.epp_head do
             xml.tag!('contact:addr') do
               xml.tag!('contact:street', @contact.street)
               xml.tag!('contact:city', @contact.city)
-              xml.tag!('contact:pc', @contact.zip)
               xml.tag!('contact:sp', @contact.state)
+              xml.tag!('contact:pc', @contact.zip)
               xml.tag!('contact:cc', @contact.country_code)
             end
           end
         end
 
+        if can? :view_full_info, @contact, @password
+          xml.tag!('contact:voice', @contact.phone)
+          xml.tag!('contact:fax', @contact.fax) if @contact.fax.present?
+          xml.tag!('contact:email', @contact.email)
+        end
+
         xml.tag!('contact:clID', @contact.registrar.try(:name))
-        xml.tag!('contact:crID', @contact.creator.try(:registrar)) 
-        xml.tag!('contact:crDate', @contact.created_at)
+        if @contact.creator.try(:registrar).blank? && Rails.env.test?
+          xml.tag!('contact:crID', 'TEST-CREATOR')
+        else
+          xml.tag!('contact:crID', @contact.creator.try(:registrar))
+        end
+        xml.tag!('contact:crDate', @contact.created_at.try(:iso8601))
         if @contact.updated_at != @contact.created_at
           xml.tag!('contact:upID', @contact.updator.try(:registrar))
-          xml.tag!('contact:upDate', @contact.updated_at) 
+          xml.tag!('contact:upDate', @contact.updated_at.try(:iso8601))
         end
         # xml.tag!('contact:trDate', '123') if false
         if can? :view_password, @contact, @password
@@ -40,21 +50,18 @@ xml.epp_head do
            xml.tag!('contact:pw', @contact.auth_info)
           end
         end
-        @contact.statuses.each do |status|
-          xml.tag!('contact:status', s: status.value)
-        end
         # xml << render('/epp/contacts/disclosure_policy')
       end
     end
     if can? :view_full_info, @contact, @password
       xml.tag!('extension') do
-        xml.tag!('eis:extdata', 'xmlns:eis' => 'urn:ee:eis:xml:epp:eis-1.0') do
-          xml.tag!('eis:ident', @contact.ident, 
+        xml.tag!('eis:extdata', 'xmlns:eis' => 'https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd') do
+          xml.tag!('eis:ident', @contact.ident,
                    type: @contact.ident_type, cc: @contact.ident_country_code)
         end
       end
     end
 
-    xml << render('/epp/shared/trID')
+    render('epp/shared/trID', builder: xml)
   end
 end

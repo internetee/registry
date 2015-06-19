@@ -73,11 +73,13 @@ describe Contact do
     end
 
     it 'should require valid country code' do
+      @contact.ident = '123'
       @contact.ident_type = 'bic'
       @contact.ident_country_code = 'INVALID'
       @contact.valid?
 
-      @contact.errors[:ident_country_code].should == ['is not following ISO_3166-1 alpha 2 format']
+      @contact.errors[:ident].should == 
+        ['Ident country code is not valid, should be in ISO_3166-1 alpha 2 format']
     end
 
     it 'should convert to alpha2 country code' do
@@ -96,6 +98,10 @@ describe Contact do
       @contact.code = 'verylongcode' * 100
       @contact.valid?
       @contact.errors[:code].should == ['is too long (maximum is 100 characters)']
+    end
+
+    it 'should have no related domain descriptions' do
+      @contact.related_domain_descriptions.should == {}
     end
   end
 
@@ -185,6 +191,22 @@ describe Contact do
       # contact = @domain.contacts.first
 
       # contact.statuses.map(&:value).should == %w(ok linked)
+    end
+
+    context 'as birthday' do
+      before do
+        @domain = Fabricate(:domain)
+      end
+
+      it 'should have related domain descriptions hash' do
+        contact = @domain.registrant
+        contact.related_domain_descriptions.should == { "#{@domain.name}" => [:registrant] }
+      end
+
+      it 'should have related domain descriptions hash' do
+        contact = @domain.contacts.first
+        contact.related_domain_descriptions.should == { "#{@domain.name}" => [:admin] }
+      end
     end
 
     context 'as birthday' do

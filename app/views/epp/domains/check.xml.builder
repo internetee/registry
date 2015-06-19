@@ -5,7 +5,7 @@ xml.epp_head do
     end
 
     xml.resData do
-      xml.tag!('domain:chkData', 'xmlns:domain' => 'urn:ietf:params:xml:ns:domain-1.0') do
+      xml.tag!('domain:chkData', 'xmlns:domain' => 'https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd') do
         @domains.each do |x|
           xml.tag!('domain:cd') do
             xml.tag!('domain:name', x[:name], 'avail' => x[:avail])
@@ -15,6 +15,6 @@ xml.epp_head do
       end
     end
 
-    xml << render('/epp/shared/trID')
+    render('epp/shared/trID', builder: xml)
   end
 end

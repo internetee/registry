@@ -7,7 +7,7 @@ xml.epp_head do
     xml.resData do
       xml << render('epp/domains/partials/transfer', builder: xml, dt: @domain_transfer)
     end
-  end
 
-  xml << render('/epp/shared/trID')
+    render('epp/shared/trID', builder: xml)
+  end
 end

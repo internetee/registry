@@ -8,6 +8,7 @@ AllCops:
     - 'db/whois_schema.rb'
     - 'db/api_log_schema.rb'
     - 'db/migrate/*'
+    - 'db/data/*'
     # epp support files until 'complexity issues' will be solved
     - 'spec/support/epp.rb'
     - 'spec/support/epp_contact_xml_builder.rb'

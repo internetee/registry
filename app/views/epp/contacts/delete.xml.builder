@@ -4,6 +4,6 @@ xml.epp_head do
       xml.msg 'Command completed successfully'
     end
 
-    xml << render('/epp/shared/trID')
+    render('epp/shared/trID', builder: xml)
   end
 end

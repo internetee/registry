@@ -5,7 +5,7 @@ xml.epp_head do
     end
 
     xml.tag!('msgQ', 'count' => current_user.queued_messages.count, 'id' => @message.id) do
-      xml.qDate @message.created_at
+      xml.qDate @message.created_at.try(:iso8601)
       xml.msg @message.body
     end
 
@@ -15,6 +15,6 @@ xml.epp_head do
       end
     end if @object
 
-    xml << render('/epp/shared/trID')
+    render('epp/shared/trID', builder: xml)
   end
 end

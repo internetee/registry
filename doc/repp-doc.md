@@ -1,7 +1,14 @@
 # REPP integration specification
 
-REPP uses currently Basic Authentication (http://tools.ietf.org/html/rfc2617#section-2) with ssl certificate and key.
-Credentials and certificate are issued by EIS (in an exchange for desired API username, CSR (where CN must match username) and IP).
+REPP uses HTTP/1.1 protocol (http://www.ietf.org/rfc/rfc2616.txt) and 
+Basic Authentication (http://tools.ietf.org/html/rfc2617#section-2) using 
+Secure Transport (https://tools.ietf.org/html/rfc5246) with certificate and key (https://tools.ietf.org/html/rfc5280).
+
+Credentials and certificate are issued by EIS (in an exchange for desired API username, CSR and IP).
+
+To quickly test the API, use curl:
+
+    curl -q -k --cert user.crt.pem --key user.key.pem https://TBA/repp/v1/accounts/balance -u username:password
 
 Test API endpoint: TBA  
 Production API endpoint: TBA

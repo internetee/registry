@@ -154,14 +154,11 @@ Rails.application.routes.draw do
   # ADMIN ROUTES
   namespace :admin do
     resources :keyrelays
-
     resources :zonefiles
-
     resources :zonefile_settings
-
     resources :legal_documents
-
     resources :keyrelays
+    resources :pricelists
 
     resources :bank_statements do
       post 'bind_invoices', on: :member
@@ -178,6 +175,10 @@ Rails.application.routes.draw do
 
     resources :domains do
       resources :domain_versions
+      member do
+        post 'set_force_delete'
+        post 'unset_force_delete'
+      end
     end
 
     resources :settings
@@ -221,6 +222,10 @@ Rails.application.routes.draw do
       get 'login' => 'sessions#login'
       post 'sessions' => 'sessions#create'
       get 'logout' => '/devise/sessions#destroy'
+    end
+
+    authenticate :user do
+      mount Que::Web, at: 'que'
     end
 
     root 'dashboards#show'

@@ -106,6 +106,15 @@ namespace :import do
       next if x.cash_account
       x.accounts.create(account_type: Account::CASH, currency: 'EUR')
       x.save(validate: false)
+
+      lr = Legacy::Registrar.find(x.legacy_id)
+      x.cash_account.account_activities << AccountActivity.new({
+        sum: lr.account_balance,
+        currency: 'EUR',
+        description: 'Transfer from legacy system'
+      })
+
+      x.cash_account.save
     end
 
     puts "-----> Imported #{count} new registrars in #{(Time.zone.now.to_f - start).round(2)} seconds"
@@ -224,6 +233,7 @@ namespace :import do
       legacy_id
       legacy_registrar_id
       legacy_registrant_id
+      statuses
     )
 
     domain_contact_columns = %w(
@@ -234,6 +244,7 @@ namespace :import do
       legacy_contact_id
     )
 
+    # rubocop: disable Lint/UselessAssignment
     domain_status_columns = %w(
       description
       value
@@ -241,6 +252,7 @@ namespace :import do
       updator_str
       legacy_domain_id
     )
+    # rubocop: enable Lint/UselessAssignment
 
     nameserver_columns = %w(
       hostname
@@ -263,7 +275,7 @@ namespace :import do
       legacy_domain_id
     )
 
-    domains, nameservers, dnskeys, domain_statuses, domain_contacts = [], [], [], [], []
+    domains, nameservers, dnskeys, domain_contacts = [], [], [], []
     existing_domain_ids = Domain.pluck(:legacy_id)
     user = "rake-#{`whoami`.strip} #{ARGV.join ' '}"
     count = 0
@@ -281,6 +293,18 @@ namespace :import do
       count += 1
 
       begin
+        # domain statuses
+        domain_statuses = []
+        ok = true
+        x.object_states.each do |state|
+          next if state.name.blank?
+          domain_statuses << state.name
+          ok = false
+        end
+
+        # OK status is default
+        domain_statuses << DomainStatus::OK if ok
+
         domains << [
           x.object_registry.name.try(:strip),
           x.object_registry.try(:crdate),
@@ -296,7 +320,8 @@ namespace :import do
           user,
           x.id,
           x.object_registry.try(:crid),
-          x.registrant
+          x.registrant,
+          domain_statuses
         ]
 
         # admin contacts
@@ -318,31 +343,6 @@ namespace :import do
             user,
             x.id,
             dc.contactid
-          ]
-        end
-
-        # domain statuses
-        ok = true
-        x.object_states.each do |state|
-          next if state.name.blank?
-          domain_statuses << [
-            state.desc,
-            state.name,
-            user,
-            user,
-            x.id
-          ]
-          ok = false
-        end
-
-        # OK status is default
-        if ok
-          domain_statuses << [
-            nil,
-            DomainStatus::OK,
-            user,
-            user,
-            x.id
           ]
         end
 
@@ -384,9 +384,8 @@ namespace :import do
           Domain.import domain_columns, domains, validate: false
           Nameserver.import nameserver_columns, nameservers, validate: false
           Dnskey.import dnskey_columns, dnskeys, validate: false
-          DomainStatus.import domain_status_columns, domain_statuses, validate: false
           DomainContact.import domain_contact_columns, domain_contacts, validate: false
-          domains, nameservers, dnskeys, domain_statuses, domain_contacts = [], [], [], [], []
+          domains, nameservers, dnskeys, domain_contacts = [], [], [], []
         end
       rescue => e
         puts "ERROR on index #{index}"
@@ -397,7 +396,6 @@ namespace :import do
     Domain.import domain_columns, domains, validate: false
     Nameserver.import nameserver_columns, nameservers, validate: false
     Dnskey.import dnskey_columns, dnskeys, validate: false
-    DomainStatus.import domain_status_columns, domain_statuses, validate: false
     DomainContact.import domain_contact_columns, domain_contacts, validate: false
 
     puts '-----> Updating relations...'
@@ -454,16 +452,6 @@ namespace :import do
     # dnskeys
     ActiveRecord::Base.connection.execute(
       "UPDATE dnskeys "\
-      "SET domain_id = domains.id "\
-      "FROM domains "\
-      "WHERE domains.legacy_id = legacy_domain_id "\
-      "AND legacy_domain_id IS NOT NULL "\
-      "AND domain_id IS NULL"
-    )
-
-    # statuses
-    ActiveRecord::Base.connection.execute(
-      "UPDATE domain_statuses "\
       "SET domain_id = domains.id "\
       "FROM domains "\
       "WHERE domains.legacy_id = legacy_domain_id "\

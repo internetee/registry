@@ -28,7 +28,7 @@ class Ability
     can(:info,     Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || pw.blank? ? true : d.auth_info == pw }
     can(:check,    Epp::Domain)
     can(:create,   Epp::Domain)
-    can(:renew,    Epp::Domain)
+    can(:renew,    Epp::Domain) { |d| d.registrar_id == @user.registrar_id }
     can(:update,   Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.auth_info == pw }
     can(:transfer, Epp::Domain) { |d, pw| d.auth_info == pw }
     can(:view_password, Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.auth_info == pw }
@@ -107,6 +107,7 @@ class Ability
     can :manage, Setting
     can :manage, ZonefileSetting
     can :manage, DomainVersion
+    can :manage, Pricelist
     can :manage, User
     can :manage, ApiUser
     can :manage, AdminUser

@@ -12,7 +12,7 @@ Contact Mapping protocol short version:
     Field name                 Min-max  Field description
     -----------------------    -------  -----------------
     <create>                   1     
-      <contact:create>         1        Attribute: xmlns:contact="urn:ietf:params:xml:ns:contact-1.0"
+      <contact:create>         1        Attribute: xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd"
         <contact:id>           0-1      Contact id, optional, generated automatically if missing
         <contact:postalInfo>   1        Postal information container
           <contact:name>       1        Full name of the contact
@@ -26,7 +26,7 @@ Contact Mapping protocol short version:
         <contact:voice>        1        Phone number in format \+ddd.d+
         <contact:email>        1        E-mail
     <extension>                1       
-      <eis:extdata>            1        Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
+      <eis:extdata>            1        Attribute: xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd"
         <eis:ident>            1        Contact identificator 
                                           Attribute: "type"
                                             "bic"          # Business registry code
@@ -45,7 +45,7 @@ Contact Mapping protocol short version:
     Field name                  Min-max  Field description
     -----------------------     -------  -----------------
     <update>                    1     
-      <contact:update>          1        Attribute: xmlns:contact="urn:ietf:params:xml:ns:contact-1.0"
+      <contact:update>          1        Attribute: xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd"
         <contact:id>            1        Contact id, required
         <contact:chg>           1        Change container
           <contact:postalInfo>  1        Postal information container
@@ -62,7 +62,7 @@ Contact Mapping protocol short version:
         <contact:authInfo>      0-1      Required if registrar is not the owner of the contact.
           <contact:pw>          1        Contact password. Attribute: roid="String"
     <extension>                 0-1       
-      <eis:extdata>             0-1      Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
+      <eis:extdata>             0-1      Attribute: xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd"
         <eis:ident>             0-1      Contact identificator 
                                           Attribute: "type"
                                             "bic"          # Business registry code
@@ -82,12 +82,12 @@ Contact Mapping protocol short version:
     Field name                Min-max  Field description
     -----------------------   -------  -----------------
     <delete>                  1       
-      <contact:delete>        1        Attribute: xmlns:contact="urn:ietf:params:xml:ns:contact-1.0"
+      <contact:delete>        1        Attribute: xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd"
         <contact:id>          1        Contact id
         <contact:authInfo>    0-1      Required if registrar is not the owner of the contact.
           <contact:pw>        1        Contact password. Attribute: roid="String"
     <extension>               0-1       
-      <eis:extdata>           0-1      Attribute: xmlns:eis="urn:ee:eis:xml:epp:eis-1.0"
+      <eis:extdata>           0-1      Attribute: xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd"
         <eis:legalDocument>   0-1      Base64 encoded document. 
                                          Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
     <clTRID>                  0-1      Client transaction id
@@ -100,7 +100,7 @@ Contact Mapping protocol short version:
     Field name               Min-max  Field description
     -----------------------  -------  -----------------
     <check>                  1       
-      <contact:check>        1        Attribute: xmlns:contact="urn:ietf:params:xml:ns:contact-1.0"
+      <contact:check>        1        Attribute: xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd"
         <contact:id>         1-n      Contact id 
     <clTRID>                 0-1      Client transaction id
 
@@ -112,7 +112,7 @@ Contact Mapping protocol short version:
     Field name               Min-max  Field description
     -----------------------  -------  -----------------
     <info>                   1       
-      <contact:info>         1        Attribute: xmlns:contact="urn:ietf:params:xml:ns:contact-1.0"
+      <contact:info>         1        Attribute: xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd"
         <contact:id>         1-n      Contact id 
         <contact:authInfo>   0-1      Required if registrar is not the owner of the contact.
           <contact:pw>       1        Contact password. Attribute: roid="String"

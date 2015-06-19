@@ -7,6 +7,7 @@ class Contact < ActiveRecord::Base
   has_many :domains, through: :domain_contacts
   has_many :statuses, class_name: 'ContactStatus', dependent: :destroy
   has_many :legal_documents, as: :documentable
+  has_many :registrant_domains, class_name: 'Domain', foreign_key: 'registrant_id' # when contant is registrant
 
   accepts_nested_attributes_for :legal_documents
 
@@ -84,6 +85,10 @@ class Contact < ActiveRecord::Base
     end
   end
 
+  def roid
+    "EIS-#{id}"
+  end
+
   def to_s
     name || '[no name]'
   end
@@ -132,7 +137,7 @@ class Contact < ActiveRecord::Base
 
     # custom code from client
     # add prefix when needed
-    if code.present? 
+    if code.present?
       prefix, *custom_code = code.split(':')
       code = custom_code.join(':') if prefix == registrar.code
     end
@@ -143,10 +148,10 @@ class Contact < ActiveRecord::Base
   end
   # rubocop:enable Metrics/CyclomaticComplexity
 
-  # used only for contact trasphere
+  # used only for contact transfer
   def generate_new_code!
     return nil if registrar.blank?
-    registrar.reload # for contact transfere
+    registrar.reload # for contact transfer
     self[:code] = "#{registrar.code}:#{SecureRandom.hex(4)}".upcase
   end
 
@@ -181,7 +186,24 @@ class Contact < ActiveRecord::Base
     if code
       self.ident_country_code = code.alpha2
     else
-      errors.add(:ident_country_code, 'is not following ISO_3166-1 alpha 2 format')
+      errors.add(:ident, :invalid_country_code)
     end
+  end
+
+  def related_domain_descriptions
+    @desc = {}
+
+    registrant_domains.each do |dom|
+      @desc[dom.name] ||= []
+      @desc[dom.name] << :registrant
+    end
+
+    domain_contacts.each do |dc|
+      @desc[dc.domain.name] ||= []
+      @desc[dc.domain.name] << dc.name.downcase.to_sym
+      @desc[dc.domain.name] = @desc[dc.domain.name].compact
+    end
+
+    @desc
   end
 end

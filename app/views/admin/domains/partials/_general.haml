@@ -13,7 +13,8 @@
       %dd= link_to(@domain.registrar, root_path)
 
       %dt= t(:password)
-      %dd= @domain.auth_info
+      %dd
+        = text_field_tag :password, @domain.auth_info, readonly: true, class: 'partially-hidden'
 
       %dt= t(:valid_from)
       %dd= l(@domain.valid_from)

@@ -56,7 +56,7 @@ class Epp::DomainsController < EppController
     @domain.attach_legal_document(Epp::Domain.parse_legal_document_from_frame(params[:parsed_frame]))
     @domain.save(validate: false)
 
-    if @domain.epp_destroy(params[:parsed_frame])
+    if @domain.epp_destroy(params[:parsed_frame], current_user.id)
       if @domain.epp_pending_delete.present?
         render_epp_response '/epp/domains/success_pending'
       else
@@ -77,7 +77,7 @@ class Epp::DomainsController < EppController
   end
 
   def renew
-    authorize! :renew, Epp::Domain
+    authorize! :renew, @domain
 
     handle_errors(@domain) and return unless @domain.renew(
       params[:parsed_frame].css('curExpDate').text,

@@ -1,3 +1,4 @@
+# rubocop: disable Metrics/ClassLength
 class Domain < ActiveRecord::Base
   include Versions # version/domain_version.rb
   has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
@@ -53,6 +54,11 @@ class Domain < ActiveRecord::Base
   delegate :name,   to: :registrar, prefix: true
   delegate :street, to: :registrar, prefix: true
 
+  after_initialize :init_default_values
+  def init_default_values
+    self.pending_json = {} if pending_json.blank?
+  end
+
   before_create :generate_auth_info
   before_create :set_validity_dates
   before_update :manage_statuses
@@ -62,14 +68,18 @@ class Domain < ActiveRecord::Base
     true
   end
 
+  before_save :manage_automatic_statuses
+
   before_save :touch_always_version
   def touch_always_version
     self.updated_at = Time.zone.now
   end
-  after_save :manage_automatic_statuses
   after_save :update_whois_record
 
+  after_initialize -> { self.statuses = [] if statuses.nil? }
+
   validates :name_dirty, domain_name: true, uniqueness: true
+  validates :puny_label, length: { maximum: 63 }
   validates :period, numericality: { only_integer: true }
   validates :registrant, :registrar, presence: true
 
@@ -117,7 +127,13 @@ class Domain < ActiveRecord::Base
 
   validate :validate_nameserver_ips
 
-  attr_accessor :registrant_typeahead, :update_me, :deliver_emails, 
+  validate :statuses_uniqueness
+  def statuses_uniqueness
+    return if statuses.uniq == statuses
+    errors.add(:statuses, :taken)
+  end
+
+  attr_accessor :registrant_typeahead, :update_me, :deliver_emails,
     :epp_pending_update, :epp_pending_delete
 
   def subordinate_nameservers
@@ -145,6 +161,68 @@ class Domain < ActiveRecord::Base
         { admin_contacts: :registrar }
       )
     end
+
+    def start_expire_period
+      STDOUT << "#{Time.zone.now.utc} - Expiring domains\n" unless Rails.env.test?
+
+      d = Domain.where('valid_to <= ?', Time.zone.now)
+      d.each do |x|
+        next unless x.expirable?
+        x.statuses << DomainStatus::EXPIRED
+        # TODO: This should be managed by automatic_statuses
+        x.statuses.delete(DomainStatus::OK)
+        x.save(validate: false)
+      end
+
+      STDOUT << "#{Time.zone.now.utc} - Successfully expired #{d.count} domains\n" unless Rails.env.test?
+    end
+
+    def start_redemption_grace_period
+      STDOUT << "#{Time.zone.now.utc} - Setting server_hold to domains\n" unless Rails.env.test?
+
+      d = Domain.where('outzone_at <= ?', Time.zone.now)
+      d.each do |x|
+        next unless x.server_holdable?
+        x.statuses << DomainStatus::SERVER_HOLD
+        # TODO: This should be managed by automatic_statuses
+        x.statuses.delete(DomainStatus::OK)
+        x.save
+      end
+
+      STDOUT << "#{Time.zone.now.utc} - Successfully set server_hold to #{d.count} domains\n" unless Rails.env.test?
+    end
+
+    def start_delete_period
+      STDOUT << "#{Time.zone.now.utc} - Setting delete_candidate to domains\n" unless Rails.env.test?
+
+      d = Domain.where('delete_at <= ?', Time.zone.now)
+      d.each do |x|
+        x.statuses << DomainStatus::DELETE_CANDIDATE if x.delete_candidateable?
+        # TODO: This should be managed by automatic_statuses
+        x.statuses.delete(DomainStatus::OK)
+        x.save
+      end
+
+      return if Rails.env.test?
+      STDOUT << "#{Time.zone.now.utc} - Successfully set delete_candidate to #{d.count} domains\n"
+    end
+
+    def destroy_delete_candidates
+      STDOUT << "#{Time.zone.now.utc} - Destroying domains\n" unless Rails.env.test?
+
+      c = 0
+      Domain.where("statuses @> '{deleteCandidate}'::varchar[]").each do |x|
+        x.destroy
+        c += 1
+      end
+
+      Domain.where('force_delete_at <= ?', Time.zone.now).each do |x|
+        x.destroy
+        c += 1
+      end
+
+      STDOUT << "#{Time.zone.now.utc} - Successfully destroyed #{c} domains\n" unless Rails.env.test?
+    end
   end
 
   def name=(value)
@@ -155,6 +233,14 @@ class Domain < ActiveRecord::Base
     self[:name_dirty] = value
   end
 
+  def roid
+    "EIS-#{id}"
+  end
+
+  def puny_label
+    name_puny.to_s.split('.').first
+  end
+
   def registrant_typeahead
     @registrant_typeahead || registrant.try(:name) || nil
   end
@@ -163,16 +249,52 @@ class Domain < ActiveRecord::Base
     domain_transfers.find_by(status: DomainTransfer::PENDING)
   end
 
-  def can_be_deleted?
-    (domain_statuses.pluck(:value) & %W(
-      #{DomainStatus::SERVER_DELETE_PROHIBITED}
-    )).empty?
+  def expirable?
+    return false if valid_to > Time.zone.now
+    !statuses.include?(DomainStatus::EXPIRED)
+  end
+
+  def server_holdable?
+    return false if outzone_at > Time.zone.now
+    return false if statuses.include?(DomainStatus::SERVER_HOLD)
+    return false if statuses.include?(DomainStatus::SERVER_MANUAL_INZONE)
+    true
+  end
+
+  def delete_candidateable?
+    return false if delete_at > Time.zone.now
+    return false if statuses.include?(DomainStatus::DELETE_CANDIDATE)
+    return false if statuses.include?(DomainStatus::SERVER_DELETE_PROHIBITED)
+    true
+  end
+
+  def renewable?
+    if Setting.days_to_renew_domain_before_expire != 0
+      if ((valid_to - Time.zone.now.beginning_of_day).to_i / 1.day) + 1 > Setting.days_to_renew_domain_before_expire
+        return false
+      end
+    end
+
+    return false if statuses.include?(DomainStatus::DELETE_CANDIDATE)
+
+    true
+  end
+
+  def preclean_pendings
+    self.registrant_verification_token = nil
+    self.registrant_verification_asked_at = nil
+  end
+
+  def clean_pendings!
+    preclean_pendings
+    self.pending_json = {}
+    statuses.delete(DomainStatus::PENDING_UPDATE)
+    statuses.delete(DomainStatus::PENDING_DELETE)
+    save
   end
 
   def pending_update?
-    (domain_statuses.pluck(:value) & %W(
-      #{DomainStatus::PENDING_UPDATE}
-    )).present?
+    statuses.include?(DomainStatus::PENDING_UPDATE)
   end
 
   def pending_update!
@@ -180,9 +302,10 @@ class Domain < ActiveRecord::Base
     self.epp_pending_update = true # for epp
 
     return true unless registrant_verification_asked?
-    pending_json_cache = all_changes
+    pending_json_cache = pending_json
     token = registrant_verification_token
     asked_at = registrant_verification_asked_at
+    changes_cache = changes
 
     DomainMailer.registrant_pending_updated(self).deliver_now
 
@@ -191,10 +314,13 @@ class Domain < ActiveRecord::Base
     self.pending_json = pending_json_cache
     self.registrant_verification_token = token
     self.registrant_verification_asked_at = asked_at
-    domain_statuses.create(value: DomainStatus::PENDING_UPDATE)
+    self.statuses = [DomainStatus::PENDING_UPDATE]
+    pending_json[:domain] = changes_cache
   end
 
+  # rubocop: disable Metrics/CyclomaticComplexity
   def registrant_update_confirmable?(token)
+    return true if Rails.env.development?
     return false unless pending_update?
     return false if registrant_verification_token.blank?
     return false if registrant_verification_asked_at.blank?
@@ -204,6 +330,7 @@ class Domain < ActiveRecord::Base
   end
 
   def registrant_delete_confirmable?(token)
+    return true if Rails.env.development?
     return false unless pending_delete?
     return false if registrant_verification_token.blank?
     return false if registrant_verification_asked_at.blank?
@@ -211,20 +338,25 @@ class Domain < ActiveRecord::Base
     return false if registrant_verification_token != token
     true
   end
+  # rubocop: enable Metrics/CyclomaticComplexity
+
+  def force_deletable?
+    !statuses.include?(DomainStatus::FORCE_DELETE)
+  end
 
   def registrant_verification_asked?
     registrant_verification_asked_at.present? && registrant_verification_token.present?
   end
 
-  def registrant_verification_asked!
+  def registrant_verification_asked!(frame_str, current_user_id)
+    pending_json['frame'] = frame_str
+    pending_json['current_user_id'] = current_user_id
     self.registrant_verification_asked_at = Time.zone.now
     self.registrant_verification_token = SecureRandom.hex(42)
   end
 
   def pending_delete?
-    (domain_statuses.pluck(:value) & %W(
-      #{DomainStatus::PENDING_DELETE}
-    )).present?
+    statuses.include?(DomainStatus::PENDING_DELETE)
   end
 
   def pending_delete!
@@ -232,7 +364,9 @@ class Domain < ActiveRecord::Base
     self.epp_pending_delete = true # for epp
 
     return true unless registrant_verification_asked?
-    domain_statuses.create(value: DomainStatus::PENDING_DELETE)
+    self.statuses = [DomainStatus::PENDING_DELETE]
+    save(validate: false) # should check if this did succeed
+
     DomainMailer.pending_deleted(self).deliver_now
   end
 
@@ -250,7 +384,7 @@ class Domain < ActiveRecord::Base
   def validate_period
     return unless period.present?
     if period_unit == 'd'
-      valid_values = %w(365 366 710 712 1065 1068)
+      valid_values = %w(365 730 1095)
     elsif period_unit == 'm'
       valid_values = %w(12 24 36)
     else
@@ -289,12 +423,10 @@ class Domain < ActiveRecord::Base
     name
   end
 
-  def pending_registrant_name
+  def pending_registrant
     return '' if pending_json.blank?
-    return '' if pending_json['domain'].blank?
     return '' if pending_json['domain']['registrant_id'].blank?
-    registrant = Registrant.find_by(id: pending_json['domain']['registrant_id'].last)
-    registrant.try(:name)
+    Registrant.find_by(id: pending_json['domain']['registrant_id'].last)
   end
 
   # rubocop:disable Lint/Loop
@@ -307,19 +439,45 @@ class Domain < ActiveRecord::Base
 
   def set_validity_dates
     self.registered_at = Time.zone.now
-    self.valid_from = Time.zone.now.to_date
+    self.valid_from = Time.zone.now
     self.valid_to = valid_from + self.class.convert_period_to_time(period, period_unit)
+    self.outzone_at = valid_to + Setting.expire_warning_period.days
+    self.delete_at = outzone_at + Setting.redemption_grace_period.days
+  end
+
+  def set_force_delete
+    statuses << DomainStatus::FORCE_DELETE
+    statuses << DomainStatus::SERVER_RENEW_PROHIBITED
+    statuses << DomainStatus::SERVER_TRANSFER_PROHIBITED
+    statuses << DomainStatus::SERVER_UPDATE_PROHIBITED
+    statuses << DomainStatus::SERVER_MANUAL_INZONE
+    statuses << DomainStatus::PENDING_DELETE
+    statuses.delete(DomainStatus::CLIENT_DELETE_PROHIBITED)
+    statuses.delete(DomainStatus::SERVER_DELETE_PROHIBITED)
+
+    self.force_delete_at = Time.zone.now + Setting.redemption_grace_period.days unless force_delete_at
+    save(validate: false)
+  end
+
+  def unset_force_delete
+    statuses.delete(DomainStatus::FORCE_DELETE)
+    statuses.delete(DomainStatus::SERVER_RENEW_PROHIBITED)
+    statuses.delete(DomainStatus::SERVER_TRANSFER_PROHIBITED)
+    statuses.delete(DomainStatus::SERVER_UPDATE_PROHIBITED)
+    statuses.delete(DomainStatus::SERVER_MANUAL_INZONE)
+    statuses.delete(DomainStatus::PENDING_DELETE)
+
+    self.force_delete_at = nil
+    save(validate: false)
   end
 
   def manage_automatic_statuses
-    if domain_statuses.empty? && valid?
-      domain_statuses.create(value: DomainStatus::OK)
-    elsif domain_statuses.length > 1 || !valid?
-      domain_statuses.find_by(value: DomainStatus::OK).try(:destroy)
+    # domain_statuses.create(value: DomainStatus::DELETE_CANDIDATE) if delete_candidateable?
+    if statuses.empty? && valid?
+      statuses << DomainStatus::OK
+    elsif statuses.length > 1 || !valid?
+      statuses.delete(DomainStatus::OK)
     end
-
-    # otherwise domain_statuses are in old state for domain object
-    domain_statuses.reload
   end
 
   def children_log
@@ -332,18 +490,8 @@ class Domain < ActiveRecord::Base
     log
   end
 
-  def all_changes
-    all_changes = HashWithIndifferentAccess.new
-    all_changes[:domain] = changes
-    all_changes[:admin_contacts]  = admin_contacts.map(&:changes)
-    all_changes[:tech_contacts]   = tech_contacts.map(&:changes)
-    all_changes[:nameservers]     = nameservers.map(&:changes)
-    all_changes[:registrant]      = registrant.try(:changes)
-    all_changes[:domain_statuses] = domain_statuses.map(&:changes)
-    all_changes
-  end
-
   def update_whois_record
     whois_record.blank? ? create_whois_record : whois_record.save
   end
 end
+# rubocop: enable Metrics/ClassLength
