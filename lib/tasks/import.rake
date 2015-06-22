@@ -469,4 +469,245 @@ namespace :import do
 
     puts "-----> Imported #{count} new domains in #{(Time.zone.now.to_f - start).round(2)} seconds"
   end
+
+  desc 'Import EIS domains'
+  task eis_domains: :environment do
+    start = Time.zone.now.to_f
+    puts '-----> Importing EIS domains...'
+
+    eis = Registrar.where(
+      name: 'EIS',
+      reg_no: '90010019',
+      phone: '+3727271000',
+      country_code: 'EE',
+      vat_no: 'EE101286464',
+      email: 'info@internet.ee',
+      state: 'Harjumaa',
+      city: 'Tallinn',
+      street: 'Paldiski mnt 80',
+      zip: '10617',
+      url: 'www.internet.ee',
+      code: 'EIS'
+    ).first_or_create!
+
+    unless eis.cash_account
+      eis.accounts.create(account_type: Account::CASH, currency: 'EUR')
+      eis.save
+    end
+
+    c = Registrant.where(
+      name: 'Eesti Interneti Sihtasutus',
+      phone: '+372.7271000',
+      email: 'info@internet.ee',
+      ident: '90010019',
+      ident_type: 'passport',
+      city: 'Tallinn',
+      country_code: 'ee',
+      street: 'Paldiski mnt 80',
+      zip: '10617',
+      registrar: eis
+    ).first_or_create!
+
+    # ee
+    ns_list = []
+    Legacy::ZoneNs.where(zone: 1).each do |x|
+      ipv4 = x.addrs.select { |addr| addr.ipv4? }.first
+      ipv6 = x.addrs.select { |addr| addr.ipv6? }.first
+      ns_list << Nameserver.new(hostname: x.fqdn, ipv4: ipv4, ipv6: ipv6)
+    end
+
+    Domain.create!(
+      name: 'ee',
+      valid_to: Date.new(9999, 1, 1),
+      period: 1,
+      period_unit: 'y',
+      registrant: c,
+      nameservers: ns_list,
+      admin_contacts: [c],
+      tech_contacts: [c],
+      registrar: eis
+    )
+
+    # edu.ee
+    ns_list = []
+    Legacy::ZoneNs.where(zone: 6).each do |x|
+      ipv4 = x.addrs.select { |addr| addr.ipv4? }.first
+      ipv6 = x.addrs.select { |addr| addr.ipv6? }.first
+      ns_list << Nameserver.new(hostname: x.fqdn, ipv4: ipv4, ipv6: ipv6)
+    end
+
+    Domain.create!(
+      name: 'edu.ee',
+      valid_to: Date.new(9999, 1, 1),
+      period: 1,
+      period_unit: 'y',
+      registrant: c,
+      nameservers: ns_list,
+      admin_contacts: [c],
+      tech_contacts: [c],
+      registrar: eis
+    )
+
+    # aip.ee
+    ns_list = []
+    Legacy::ZoneNs.where(zone: 9).each do |x|
+      ipv4 = x.addrs.select { |addr| addr.ipv4? }.first
+      ipv6 = x.addrs.select { |addr| addr.ipv6? }.first
+      ns_list << Nameserver.new(hostname: x.fqdn, ipv4: ipv4, ipv6: ipv6)
+    end
+
+    Domain.create!(
+      name: 'aip.ee',
+      valid_to: Date.new(9999, 1, 1),
+      period: 1,
+      period_unit: 'y',
+      registrant: c,
+      nameservers: ns_list,
+      admin_contacts: [c],
+      tech_contacts: [c],
+      registrar: eis
+    )
+
+    # org.ee
+    ns_list = []
+    Legacy::ZoneNs.where(zone: 10).each do |x|
+      ipv4 = x.addrs.select { |addr| addr.ipv4? }.first
+      ipv6 = x.addrs.select { |addr| addr.ipv6? }.first
+      ns_list << Nameserver.new(hostname: x.fqdn, ipv4: ipv4, ipv6: ipv6)
+    end
+
+    Domain.create!(
+      name: 'org.ee',
+      valid_to: Date.new(9999, 1, 1),
+      period: 1,
+      period_unit: 'y',
+      registrant: c,
+      nameservers: ns_list,
+      admin_contacts: [c],
+      tech_contacts: [c],
+      registrar: eis
+    )
+
+    # pri.ee
+    ns_list = []
+    Legacy::ZoneNs.where(zone: 2).each do |x|
+      ipv4 = x.addrs.select { |addr| addr.ipv4? }.first
+      ipv6 = x.addrs.select { |addr| addr.ipv6? }.first
+      ns_list << Nameserver.new(hostname: x.fqdn, ipv4: ipv4, ipv6: ipv6)
+    end
+
+    Domain.create!(
+      name: 'pri.ee',
+      valid_to: Date.new(9999, 1, 1),
+      period: 1,
+      period_unit: 'y',
+      registrant: c,
+      nameservers: ns_list,
+      admin_contacts: [c],
+      tech_contacts: [c],
+      registrar: eis
+    )
+
+    # med.ee
+    ns_list = []
+    Legacy::ZoneNs.where(zone: 3).each do |x|
+      ipv4 = x.addrs.select { |addr| addr.ipv4? }.first
+      ipv6 = x.addrs.select { |addr| addr.ipv6? }.first
+      ns_list << Nameserver.new(hostname: x.fqdn, ipv4: ipv4, ipv6: ipv6)
+    end
+
+    Domain.create!(
+      name: 'med.ee',
+      valid_to: Date.new(9999, 1, 1),
+      period: 1,
+      period_unit: 'y',
+      registrant: c,
+      nameservers: ns_list,
+      admin_contacts: [c],
+      tech_contacts: [c],
+      registrar: eis
+    )
+
+    # fie.ee
+    ns_list = []
+    Legacy::ZoneNs.where(zone: 4).each do |x|
+      ipv4 = x.addrs.select { |addr| addr.ipv4? }.first
+      ipv6 = x.addrs.select { |addr| addr.ipv6? }.first
+      ns_list << Nameserver.new(hostname: x.fqdn, ipv4: ipv4, ipv6: ipv6)
+    end
+
+    Domain.create!(
+      name: 'fie.ee',
+      valid_to: Date.new(9999, 1, 1),
+      period: 1,
+      period_unit: 'y',
+      registrant: c,
+      nameservers: ns_list,
+      admin_contacts: [c],
+      tech_contacts: [c],
+      registrar: eis
+    )
+
+    # com.ee
+    ns_list = []
+    Legacy::ZoneNs.where(zone: 5).each do |x|
+      ipv4 = x.addrs.select { |addr| addr.ipv4? }.first
+      ipv6 = x.addrs.select { |addr| addr.ipv6? }.first
+      ns_list << Nameserver.new(hostname: x.fqdn, ipv4: ipv4, ipv6: ipv6)
+    end
+
+    Domain.create!(
+      name: 'com.ee',
+      valid_to: Date.new(9999, 1, 1),
+      period: 1,
+      period_unit: 'y',
+      registrant: c,
+      nameservers: ns_list,
+      admin_contacts: [c],
+      tech_contacts: [c],
+      registrar: eis
+    )
+
+    # gov.ee
+    ns_list = []
+    Legacy::ZoneNs.where(zone: 7).each do |x|
+      ipv4 = x.addrs.select { |addr| addr.ipv4? }.first
+      ipv6 = x.addrs.select { |addr| addr.ipv6? }.first
+      ns_list << Nameserver.new(hostname: x.fqdn, ipv4: ipv4, ipv6: ipv6)
+    end
+
+    Domain.create!(
+      name: 'gov.ee',
+      valid_to: Date.new(9999, 1, 1),
+      period: 1,
+      period_unit: 'y',
+      registrant: c,
+      nameservers: ns_list,
+      admin_contacts: [c],
+      tech_contacts: [c],
+      registrar: eis
+    )
+
+    # riik.ee
+    ns_list = []
+    Legacy::ZoneNs.where(zone: 8).each do |x|
+      ipv4 = x.addrs.select { |addr| addr.ipv4? }.first
+      ipv6 = x.addrs.select { |addr| addr.ipv6? }.first
+      ns_list << Nameserver.new(hostname: x.fqdn, ipv4: ipv4, ipv6: ipv6)
+    end
+
+    Domain.create!(
+      name: 'riik.ee',
+      valid_to: Date.new(9999, 1, 1),
+      period: 1,
+      period_unit: 'y',
+      registrant: c,
+      nameservers: ns_list,
+      admin_contacts: [c],
+      tech_contacts: [c],
+      registrar: eis
+    )
+
+    puts "-----> Imported EIS domains in #{(Time.zone.now.to_f - start).round(2)} seconds"
+  end
 end
