@@ -52,6 +52,7 @@ namespace :import do
     Rake::Task['import:registrars'].invoke
     Rake::Task['import:contacts'].invoke
     Rake::Task['import:domains'].invoke
+    Rake::Task['import:eis_domains'].invoke
   end
 
   desc 'Import registrars'
