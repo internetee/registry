@@ -122,7 +122,7 @@ ZonefileSetting.where({
 Registrar.where(
   name: 'EIS',
   reg_no: '90010019',
-  phone: '+372 727 1000',
+  phone: '+3727271000',
   country_code: 'EE',
   vat_no: 'EE101286464',
   email: 'info@internet.ee',
