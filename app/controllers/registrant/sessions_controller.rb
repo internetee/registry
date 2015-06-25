@@ -56,7 +56,10 @@ class Registrant::SessionsController < Devise::SessionsController
       session[:user_country] = response.user_country
       session[:user_id_code] = response.user_id_code
       session[:mid_session_code] = client.session_code
-      render json: { message: t(:check_your_phone_for_confirmation_code) }, status: :ok
+
+      render json: {
+        message: t(:confirmation_sms_was_sent_to_your_phone_verification_code_is, { code: response.challenge_id })
+      }, status: :ok
     else
       render json: { message: t(:no_such_user) }, status: :unauthorized
     end
