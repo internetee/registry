@@ -1,11 +1,11 @@
 class RefactorDomainStatuses < ActiveRecord::Migration
   def self.up
-    Domain.all.each do |x|
-      x.statuses = []
+    Domain.find_each do |x|
+      statuses = []
       x.domain_statuses.each do |ds|
-        x.statuses << ds.value
+        statuses << ds.value
       end
-      x.save
+      x.update_column('statuses', statuses)
     end
   end
 
