@@ -24,7 +24,7 @@
 
 29.05.2015
 
-* Removed old 'iptables_counter_update_command' and added 'iptables_counter_enabled', please enable it.
+* Removed old 'iptables_counter_update_command' and added 'iptables_counter_enabled'
 
 26.05.2015
 
