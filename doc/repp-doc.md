@@ -1,6 +1,6 @@
 # REPP integration specification
 
-REPP uses HTTP/1.1 protocol (http://www.ietf.org/rfc/rfc2616.txt) and 
+REPP uses HTTP/1.1 protocol (http://tools.ietf.org/html/rfc2616) and 
 Basic Authentication (http://tools.ietf.org/html/rfc2617#section-2) using 
 Secure Transport (https://tools.ietf.org/html/rfc5246) with certificate and key (https://tools.ietf.org/html/rfc5280).
 
