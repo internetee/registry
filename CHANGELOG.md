@@ -1,3 +1,6 @@
+22.06.2015
+* Update zonefile
+
 16.06.2015
 
 * Application time_zone should be defined at application.yml, updated application-exaple.yml 
