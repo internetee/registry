@@ -1,3 +1,4 @@
+# rubocop: disable Style/SymbolProc
 namespace :import do
   # README
   #
@@ -712,3 +713,4 @@ namespace :import do
     puts "-----> Imported EIS domains in #{(Time.zone.now.to_f - start).round(2)} seconds"
   end
 end
+# rubocop: enable Style/SymbolProc

@@ -408,7 +408,7 @@ class Epp::Domain < Domain
     )
   end
 
-  def epp_destroy(frame, user_id, verify=true)
+  def epp_destroy(frame, user_id, verify = true)
     return false unless valid?
 
     if verify && frame.css('delete').attr('verified').to_s.downcase != 'yes'
