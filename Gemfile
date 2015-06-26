@@ -103,9 +103,9 @@ group :development do
   gem 'spring-watcher-listen',   # otherwise spring polls the filesystem on every 0.2 seconds
     github: 'jonleighton/spring-watcher-listen',
     ref: '7f6003e14f8f9ca178a5194f210c07f54cfb67ec'
-  gem 'guard',                 '~> 2.6.1' # run tests automatically
-  gem 'guard-rspec',           '~> 4.3.1'
-  gem 'guard-rails',           '~> 0.7.0' # run EPP server automatically
+  gem 'guard',                 '~> 2.12.6' # run tests automatically
+  gem 'guard-rspec',           '~> 4.5.2'
+  gem 'guard-rails',           '~> 0.7.1' # run EPP server automatically
   gem 'rubocop',               '~> 0.32.1'
   gem 'guard-rubocop',         '~> 1.2.0'
 
@@ -123,15 +123,15 @@ group :development, :test do
   gem 'rspec-rails',        '~> 3.0.2'
   gem 'capybara',           '~> 2.4.1'
   gem 'phantomjs-binaries', '~> 1.9.2.4'
-  gem 'poltergeist',        '~> 1.5.1'  # We are using PhantomJS instead
-  gem 'phantomjs',          '~> 1.9.7.1'
+  gem 'poltergeist',        '~> 1.6.0'  # We are using PhantomJS instead
+  gem 'phantomjs',          '~> 1.9.8.0'
   gem 'fabrication',        '~> 2.13.2' # Replacement for fixtures
   gem 'shoulda-matchers',   '~> 2.6.1', require: false # Additional matchers for RSpec
   gem 'launchy',            '~> 2.4.3' # for opening browser automatically
 
   # helper gems
-  gem 'database_cleaner',    '~> 1.3.0' # For cleaning db in feature and epp tests
-  gem 'faker',               '~> 1.3.0' # Library to generate fake data
+  gem 'database_cleaner',    '~> 1.4.1' # For cleaning db in feature and epp tests
+  gem 'faker',               '~> 1.4.3' # Library to generate fake data
 
   # debug
   gem 'pry', '~> 0.10.1'
