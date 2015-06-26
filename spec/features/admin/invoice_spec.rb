@@ -35,7 +35,7 @@ feature 'Invoice', type: :feature do
     select r.name, from: 'Registrar'
     fill_in 'Amount', with: '100'
     fill_in 'Description', with: 'test issue'
-    click_button 'Add'
+    click_button 'Save'
     page.should have_content('Record created')
     page.should have_content('Invoice no.')
     page.should have_content('Prepayment')
