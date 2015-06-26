@@ -1,3 +1,10 @@
+# Use https only for accessing github
+# https://github.com/bundler/bundler/pull/3447
+git_source(:github) do |repo_name|
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
+  "https://github.com/#{repo_name}.git"
+end if Bundler::VERSION < '2'
+
 source 'https://rubygems.org'
 
 # core
@@ -130,7 +137,9 @@ group :development, :test do
   gem 'simplecov',     '~> 0.9.1', require: false
   gem 'rubycritic',    '~> 1.1.1'
   gem 'bullet',        '~> 4.14.4' # for finding database optimizations
-  gem 'bundler-audit', '~> 0.3.1'  # for finding future vulnerable gems
+  gem 'bundler-audit', 
+    github: 'rubysec/bundler-audit',
+    ref: 'f89ef7fae1090bbad825ea76812d56d72b417055' # for finding future vulnerable gems
   gem 'brakeman',      '~> 2.6.2', require: false # for security audit'
   # tmp, otherwise conflics with breakman
   gem 'html2haml', github: 'haml/html2haml', ref: '6984f50bdbbd6291535027726a5697f28778ee8d'

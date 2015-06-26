@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/airblade/paper_trail.git
+  remote: https://github.com/airblade/paper_trail.git
   revision: a453811226ec4ea59753ba6b827e390ced2fc140
   ref: a453811226ec4ea59753ba6b827e390ced2fc140
   specs:
@@ -9,7 +9,7 @@ GIT
       request_store (~> 1.1.0)
 
 GIT
-  remote: git://github.com/gitlabeu/data_migrate.git
+  remote: https://github.com/gitlabeu/data_migrate.git
   revision: 35d22b09ff37a4e9d61ab326ad5d8eb0edf1fc81
   ref: 35d22b09ff37a4e9d61ab326ad5d8eb0edf1fc81
   specs:
@@ -17,7 +17,7 @@ GIT
       rails (>= 4.1.0)
 
 GIT
-  remote: git://github.com/haml/html2haml.git
+  remote: https://github.com/haml/html2haml.git
   revision: 6984f50bdbbd6291535027726a5697f28778ee8d
   ref: 6984f50bdbbd6291535027726a5697f28778ee8d
   specs:
@@ -28,12 +28,21 @@ GIT
       ruby_parser (~> 3.5)
 
 GIT
-  remote: git://github.com/internetee/epp.git
+  remote: https://github.com/internetee/epp.git
   revision: 505c3f2739eb1da918e54111aecfb138a822739d
   specs:
     epp (1.4.2)
       hpricot
       libxml-ruby
+
+GIT
+  remote: https://github.com/rubysec/bundler-audit.git
+  revision: f89ef7fae1090bbad825ea76812d56d72b417055
+  ref: f89ef7fae1090bbad825ea76812d56d72b417055
+  specs:
+    bundler-audit (0.4.0)
+      bundler (~> 1.2)
+      thor (~> 0.18)
 
 GEM
   remote: https://rubygems.org/
@@ -121,9 +130,6 @@ GEM
     bullet (4.14.7)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.9.0)
-    bundler-audit (0.3.1)
-      bundler (~> 1.2)
-      thor (~> 0.18)
     cancancan (1.9.2)
     capybara (2.4.4)
       mime-types (>= 1.16)
@@ -522,7 +528,7 @@ DEPENDENCIES
   bootstrap-sass (~> 3.3.4.1)
   brakeman (~> 2.6.2)
   bullet (~> 4.14.4)
-  bundler-audit (~> 0.3.1)
+  bundler-audit!
   cancancan (~> 1.9.2)
   capybara (~> 2.4.1)
   coderay (~> 1.1.0)
