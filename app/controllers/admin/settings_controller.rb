@@ -43,6 +43,7 @@ class Admin::SettingsController < AdminController
       settings[k] = v.to_i if Setting[k].class == Fixnum
       settings[k] = v.to_f if Setting[k].class == Float
       settings[k] = (v == 'true' ? true : false) if [TrueClass, FalseClass].include?(Setting[k].class)
+      settings[k] = v if Setting[k].class == String
     end
     settings
   end
