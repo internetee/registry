@@ -34,7 +34,13 @@
         %dt= t(:import_file)
         %dd= link_to(t(:download), download_import_file_admin_bank_statement_path(@bank_statement))
 
-%h2.text-center-xs= t(:bank_transactions)
+.row
+  .col-sm-6
+    %h3.text-center-xs
+      = t(:bank_transactions)
+  .col-sm-6.text-right
+    %h3.text-right.text-center-xs
+      = link_to(t(:add), new_admin_bank_statement_bank_transaction_path(@bank_statement), class: 'btn btn-primary')
 %hr
 .row
   .col-md-12

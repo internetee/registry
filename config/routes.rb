@@ -161,6 +161,7 @@ Rails.application.routes.draw do
     resources :pricelists
 
     resources :bank_statements do
+      resources :bank_transactions
       collection do
         get 'import'
         post 'create_from_import'

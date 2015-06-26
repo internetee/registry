@@ -1,0 +1,71 @@
+= form_for([:admin, @bank_statement, @bank_transaction], html: { class: 'form-horizontal' }) do |f|
+  = render 'shared/full_errors', object: @bank_transaction
+
+  .row
+    .col-md-8
+      - if @bank_transaction.persisted?
+        .form-group
+          = f.label :status, class: 'col-md-4 control-label'
+          - c = @bank_transaction.binded? ? 'text-success' : 'text-danger'
+          .col-md-8.form-control-static{class: c}
+            = @bank_transaction.binded? ? t(:binded) : t(:not_binded)
+
+      .form-group
+        = f.label :description, class: 'col-md-4 control-label'
+        .col-md-8
+          = f.text_field(:description, class: 'form-control')
+
+      .form-group
+        = f.label :sum, class: 'col-md-4 control-label'
+        .col-md-8
+          = f.text_field(:sum, class: 'form-control')
+
+      .form-group
+        = f.label :reference_no, class: 'col-md-4 control-label'
+        .col-md-8
+          = f.text_field(:reference_no, class: 'form-control')
+
+      .form-group
+        = f.label :document_no, class: 'col-md-4 control-label'
+        .col-md-8
+          = f.text_field(:document_no, class: 'form-control')
+
+      .form-group
+        = f.label :bank_reference, class: 'col-md-4 control-label'
+        .col-md-8
+          = f.text_field(:bank_reference, class: 'form-control')
+
+      .form-group
+        = f.label :iban, class: 'col-md-4 control-label'
+        .col-md-8
+          = f.text_field(:iban, class: 'form-control')
+
+      .form-group
+        = f.label :buyer_bank_code, class: 'col-md-4 control-label'
+        .col-md-8
+          = f.text_field(:buyer_bank_code, class: 'form-control')
+
+      .form-group
+        = f.label :buyer_iban, class: 'col-md-4 control-label'
+        .col-md-8
+          = f.text_field(:buyer_iban, class: 'form-control')
+
+      .form-group
+        = f.label :buyer_name, class: 'col-md-4 control-label'
+        .col-md-8
+          = f.text_field(:buyer_name, class: 'form-control')
+
+      .form-group
+        = f.label :currency, class: 'col-md-4 control-label'
+        .col-md-8
+          = f.text_field(:currency, class: 'form-control', readonly: true)
+
+      .form-group
+        = f.label :paid_at, class: 'col-md-4 control-label'
+        .col-md-8
+          = f.text_field(:paid_at, class: 'form-control datepicker')
+
+  %hr
+  .row
+    .col-md-8.text-right
+      = button_tag(t(:save), class: 'btn btn-warning')
