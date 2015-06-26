@@ -28,7 +28,7 @@ gem 'nokogiri',   '~> 1.6.6.2' # For XML parsing
 
 # style
 gem 'sass-rails',     '~> 5.0.3'   # sass style
-gem 'bootstrap-sass', '~> 3.3.4.1' # bootstrap style
+gem 'bootstrap-sass', '~> 3.3.5.1' # bootstrap style
 
 # js
 gem 'uglifier',        '~> 2.7.1'  # minifies js
@@ -107,7 +107,7 @@ group :development do
   gem 'guard-rubocop',         '~> 1.1.0'
 
   # improved errors
-  gem 'better_errors',     '~> 2.0.0'
+  gem 'better_errors',     '~> 2.1.1' # webconsole replacement
   gem 'binding_of_caller', '~> 0.7.2'
   gem 'traceroute',        '~> 0.4.0' # for finding dead routes and unused actions
 
@@ -140,9 +140,10 @@ group :development, :test do
   gem 'bundler-audit', 
     github: 'rubysec/bundler-audit',
     ref: 'f89ef7fae1090bbad825ea76812d56d72b417055' # for finding future vulnerable gems
-  gem 'brakeman',      '~> 2.6.2', require: false # for security audit'
+  gem 'brakeman',      '~> 3.0.5', require: false # for security audit'
   # tmp, otherwise conflics with breakman
-  gem 'html2haml', github: 'haml/html2haml', ref: '6984f50bdbbd6291535027726a5697f28778ee8d'
+  # gem 'html2haml', github: 'haml/html2haml', ref: '6984f50bdbbd6291535027726a5697f28778ee8d'
+  gem 'html2haml',     '~> 2.0.0' 
   gem 'sdoc',          '~> 0.4.0'  # bundle exec rake doc:rails generates the API under doc/api.
   gem 'railroady',     '~> 1.3.0'  # to generate database diagrams
 
