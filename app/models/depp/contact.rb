@@ -20,7 +20,6 @@ module Depp
     class << self
       attr_reader :epp_xml, :user
 
-      # rubocop: disable Metrics/MethodLength
       def new_from_params(params)
         new(
           id: params[:code],
@@ -43,8 +42,8 @@ module Depp
           country_code: params[:country_code]
         )
       end
-      # rubocop: enable Metrics/MethodLength
 
+      # rubocop:disable Metrics/AbcSize
       def find_by_id(id)
         data = info_xml(id)
 
@@ -77,6 +76,7 @@ module Depp
           statuses: data.css('status').map { |s| [s['s'], s.text] }
         )
       end
+      # rubocop:enable Metrics/AbcSize
 
       def user=(user)
         @user = user
@@ -170,7 +170,8 @@ module Depp
       handle_errors(data)
     end
 
-    # rubocop: disable Metrics/MethodLength
+    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
     def update_attributes(params)
       self.ident_country_code = params[:ident_country_code]
       self.ident_type   = params[:ident_type]
@@ -214,7 +215,8 @@ module Depp
       data = Depp::Contact.user.request(update_xml)
       handle_errors(data)
     end
-    # rubocop: enable Metrics/MethodLength
+    # rubocop:enbale Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
 
     def delete
       delete_xml = Contact.epp_xml.delete(

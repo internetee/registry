@@ -33,7 +33,6 @@ end
 
 module Autodoc
   class Document
-    # rubocop:disable Metrics/AbcSize
     def route_info_doc
       return unless example.metadata[:route_info_doc]
       route = request.env["rack.routing_args"][:route_info]
@@ -57,7 +56,6 @@ module Autodoc
 
       pretty_table(rows).join("\n")
     end
-    # rubocop:enable Metrics/AbcSize
 
     def pretty_table(rows)
       # longest_in_col = 0

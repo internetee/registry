@@ -7,6 +7,7 @@ class Epp::SessionsController < EppController
 
   # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/CyclomaticComplexity
+  # rubocop: disable Metrics/AbcSize
   def login
     cert_valid = true
     @api_user = ApiUser.find_by(login_params)
@@ -33,6 +34,9 @@ class Epp::SessionsController < EppController
       render_epp_response('login_fail')
     end
   end
+  # rubocop: enable Metrics/AbcSize
+  # rubocop: enable Metrics/PerceivedComplexity
+  # rubocop: enable Metrics/CyclomaticComplexity
 
   def ip_white?
     return true if request.ip == ENV['webclient_ip']
@@ -57,9 +61,6 @@ class Epp::SessionsController < EppController
     end
     true
   end
-
-  # rubocop: enable Metrics/PerceivedComplexity
-  # rubocop: enable Metrics/CyclomaticComplexity
 
   def logout
     @api_user = current_user # cache current_user for logging

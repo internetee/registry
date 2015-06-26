@@ -151,7 +151,7 @@ describe 'EPP Contact', epp: true do
 
         id.text.length.should == 15
         # 5 seconds for what-ever weird lag reasons might happen
-        cr_date.text.to_time.should be_within(5).of(Time.zone.now)
+        cr_date.text.in_time_zone.utc.should be_within(5).of(Time.zone.now)
       end
 
       it 'should add registrar prefix for code when missing' do

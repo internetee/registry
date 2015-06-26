@@ -9,7 +9,7 @@ class DateTimeIso8601Validator < ActiveModel::EachValidator
       return true if value.empty?
 
       begin
-        DateTime.parse(value)
+        DateTime.zone.parse(value)
       rescue => _e
         return false
       end

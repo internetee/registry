@@ -106,8 +106,8 @@ group :development do
   gem 'guard',                 '~> 2.6.1' # run tests automatically
   gem 'guard-rspec',           '~> 4.3.1'
   gem 'guard-rails',           '~> 0.7.0' # run EPP server automatically
-  gem 'rubocop',               '~> 0.26.1'
-  gem 'guard-rubocop',         '~> 1.1.0'
+  gem 'rubocop',               '~> 0.32.1'
+  gem 'guard-rubocop',         '~> 1.2.0'
 
   # improved errors
   gem 'better_errors',     '~> 2.1.1' # webconsole replacement

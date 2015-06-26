@@ -1,7 +1,6 @@
 class Admin::ZonefilesController < ApplicationController
   authorize_resource class: false
   # TODO: Refactor this
-  # rubocop:disable Metrics/MethodLength
 
   def create
     if ZonefileSetting.pluck(:origin).include?(params[:origin])

@@ -106,4 +106,12 @@ Style/EmptyLinesAroundBlockBody:
 
 # The ABC size is a calculated magnitude, so this number can be a Fixnum or a Float.
 Metrics/AbcSize:
-  Max: 25
+  Max: 35
+
+# Very strange intention requirement, disabled for now
+Style/FirstParameterIndentation:
+  Enabled: false
+
+# old school regex // works fine
+Style/RegexpLiteral:
+  Enabled: false
