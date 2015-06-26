@@ -12,7 +12,7 @@ class ContactMailer < ApplicationMailer
 
     emails = []
     emails << [@contact.email, @contact.email_was] if @contact.registrant_domains.present?
-    emails << @contact.domains.map(&:email) if @contact.domains.present?
+    emails << @contact.domains.map(&:registrant_email) if @contact.domains.present?
     emails = emails.uniq
     
     emails.each do |email|

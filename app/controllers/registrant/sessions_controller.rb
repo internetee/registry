@@ -69,7 +69,8 @@ class Registrant::SessionsController < Devise::SessionsController
   # rubocop: disable Metrics/CyclomaticComplexity
   # rubocop: disable Metrics/MethodLength
   def mid_status
-    client = Digidoc::Client.new
+    endpoint = "#{ENV['sk_digi_doc_service_endpoint']}"
+    client = Digidoc::Client.new(endpoint)
     client.session_code = session[:mid_session_code]
     auth_status = client.authentication_status
 
