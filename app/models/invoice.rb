@@ -15,7 +15,7 @@ class Invoice < ActiveRecord::Base
   validates :invoice_type, :due_date, :currency, :seller_name,
             :seller_iban, :buyer_name, :invoice_items, :vat_prc, presence: true
 
-  before_save :set_invoice_number
+  before_create :set_invoice_number
   def set_invoice_number
     last_no = Invoice.order(number: :desc).where('number IS NOT NULL').limit(1).pluck(:number).first
 

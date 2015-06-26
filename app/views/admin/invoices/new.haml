@@ -1,0 +1,33 @@
+- content_for :actions do
+  = link_to(t(:back), admin_invoices_path, class: 'btn btn-default')
+= render 'shared/title', name: t(:create_new_invoice)
+
+= form_for([:admin, @deposit], url: admin_invoices_path, method: :post, html: { class: 'form-horizontal' }) do |f|
+  = render 'shared/full_errors', object: @deposit
+
+  .row
+    .col-md-8
+      .form-group
+        .col-md-4.control-label
+          = f.label :registrar_id, class: 'required'
+        .col-md-8
+          = f.select :registrar_id, Registrar.all.map { |r| [r.name, r.id] }, { include_blank: true }, class: 'form-control selectize', required: true
+
+      .form-group
+        .col-md-4.control-label
+          = f.label :amount, class: 'required'
+        .col-md-8
+          .input-group
+            = f.text_field :amount, class: 'form-control', required: true
+            .input-group-addon
+              EUR
+
+      .form-group
+        .col-md-4.control-label
+          = f.label :description
+        .col-md-8
+          = f.text_area :description, class: 'form-control'
+  %hr
+  .row
+    .col-md-8.text-right
+      = button_tag(t(:add), class: 'btn btn-warning')
