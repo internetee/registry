@@ -112,7 +112,7 @@ group :development do
   # improved errors
   gem 'better_errors',     '~> 2.1.1' # webconsole replacement
   gem 'binding_of_caller', '~> 0.7.2'
-  gem 'traceroute',        '~> 0.4.0' # for finding dead routes and unused actions
+  gem 'traceroute',        '~> 0.5.0' # for finding dead routes and unused actions
 
   # deploy
   gem 'mina', '~> 0.3.1' # for fast deployment
@@ -125,7 +125,7 @@ group :development, :test do
   gem 'phantomjs-binaries', '~> 1.9.2.4'
   gem 'poltergeist',        '~> 1.5.1'  # We are using PhantomJS instead
   gem 'phantomjs',          '~> 1.9.7.1'
-  gem 'fabrication',        '~> 2.12.2' # Replacement for fixtures
+  gem 'fabrication',        '~> 2.13.2' # Replacement for fixtures
   gem 'shoulda-matchers',   '~> 2.6.1', require: false # Additional matchers for RSpec
   gem 'launchy',            '~> 2.4.3' # for opening browser automatically
 
@@ -137,8 +137,8 @@ group :development, :test do
   gem 'pry', '~> 0.10.1'
 
   # code review
-  gem 'simplecov',     '~> 0.9.1', require: false
-  gem 'rubycritic',    '~> 1.1.1'
+  gem 'simplecov',     '~> 0.10.0', require: false
+  gem 'rubycritic',    '~> 1.4.0'
   gem 'bullet',        '~> 4.14.4' # for finding database optimizations
   gem 'bundler-audit', 
     github: 'rubysec/bundler-audit',
