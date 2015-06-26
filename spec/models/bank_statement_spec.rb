@@ -12,8 +12,7 @@ describe BankStatement do
       @bank_statement.valid?
       @bank_statement.errors.full_messages.should match_array([
         "Bank code is missing",
-        "Iban is missing",
-        "Queried at is missing"
+        "Iban is missing"
       ])
     end
 

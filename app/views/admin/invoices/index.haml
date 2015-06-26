@@ -1,7 +1,7 @@
-.row
-  .col-sm-12
-    %h2.text-center-xs= t(:invoices)
-%hr
+- content_for :actions do
+  = link_to(t(:add), new_admin_invoice_path, class: 'btn btn-primary')
+= render 'shared/title', name: t(:invoices)
+
 .row
   .col-md-12
     .table-responsive

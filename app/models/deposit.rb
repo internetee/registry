@@ -4,7 +4,7 @@ class Deposit
   extend ActiveModel::Naming
   include DisableHtml5Validation
 
-  attr_accessor :amount, :description, :registrar
+  attr_accessor :amount, :description, :registrar, :registrar_id
 
   validates :amount, :registrar, presence: true
 
