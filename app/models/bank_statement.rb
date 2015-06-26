@@ -4,7 +4,7 @@ class BankStatement < ActiveRecord::Base
 
   attr_accessor :th6_file
 
-  validates :bank_code, :iban, :queried_at, presence: true
+  validates :bank_code, :iban, presence: true
 
   FULLY_BINDED = 'fully_binded'
   PARTIALLY_BINDED = 'partially_binded'

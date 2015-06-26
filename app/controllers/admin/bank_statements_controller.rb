@@ -22,6 +22,22 @@ class Admin::BankStatementsController < AdminController
   def create
     @bank_statement = BankStatement.new(bank_statement_params)
 
+    if @bank_statement.save
+      flash[:notice] = I18n.t('record_created')
+      redirect_to [:admin, @bank_statement]
+    else
+      flash.now[:alert] = I18n.t('failed_to_create_record')
+      render 'new'
+    end
+  end
+
+  def import
+    @bank_statement = BankStatement.new
+  end
+
+  def create_from_import
+    @bank_statement = BankStatement.new(bank_statement_params)
+
     if @bank_statement.import
       flash[:notice] = I18n.t('record_created')
       redirect_to [:admin, @bank_statement]
@@ -53,6 +69,6 @@ class Admin::BankStatementsController < AdminController
   end
 
   def bank_statement_params
-    params.require(:bank_statement).permit(:th6_file)
+    params.require(:bank_statement).permit(:th6_file, :bank_code, :iban)
   end
 end

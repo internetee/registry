@@ -161,6 +161,11 @@ Rails.application.routes.draw do
     resources :pricelists
 
     resources :bank_statements do
+      collection do
+        get 'import'
+        post 'create_from_import'
+      end
+
       post 'bind_invoices', on: :member
       get 'download_import_file', on: :member
     end

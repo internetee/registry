@@ -1,5 +1,5 @@
 - content_for :actions do
-  = link_to(t(:bind_invoices), bind_invoices_admin_bank_statement_path, 
+  = link_to(t(:bind_invoices), bind_invoices_admin_bank_statement_path,
     class: 'btn btn-primary', method: :post)
   = link_to(t(:back_to_bank_statements), admin_bank_statements_path, class: 'btn btn-default')
 = render 'shared/title', name: t(:bank_statement)
@@ -23,10 +23,11 @@
       - sc = 'text-danger' if @bank_statement.not_binded?
       %dd{class: sc}= t(@bank_statement.status)
 
-      %dt= t(:queried_at)
-      %dd= l(@bank_statement.queried_at)
+      - if @bank_statement.queried_at
+        %dt= t(:queried_at)
+        %dd= l(@bank_statement.queried_at)
 
-      %dt= t(:imported_at)
+      %dt= t(:created_at)
       %dd= l(@bank_statement.created_at)
 
       - if @bank_statement.import_file_path
