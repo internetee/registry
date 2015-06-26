@@ -19,7 +19,7 @@ class Invoice < ActiveRecord::Base
   def set_invoice_number
     last_no = Invoice.order(number: :desc).where('number IS NOT NULL').limit(1).pluck(:number).first
 
-    if last_no
+    if last_no && last_no >= Setting.invoice_number_min.to_i
       self.number = last_no + 1
     else
       self.number = Setting.invoice_number_min.to_i
