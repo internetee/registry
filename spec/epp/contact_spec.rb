@@ -321,7 +321,7 @@ describe 'EPP Contact', epp: true do
         response[:msg].should == 'Command completed successfully'
 
         @contact.reload
-        @contact.name.should  == 'John Doe Edited'
+        @contact.name.should == 'John Doe Edited'
         @contact.email.should == 'edited@example.example'
       end
 
@@ -339,7 +339,7 @@ describe 'EPP Contact', epp: true do
 
         response[:msg].should == 'Command completed successfully'
         @contact.reload
-        @contact.name.should  == 'John Doe Edited'
+        @contact.name.should == 'John Doe Edited'
       end
 
       it 'should update other contact with correct password' do
@@ -365,7 +365,7 @@ describe 'EPP Contact', epp: true do
 
           response[:msg].should == 'Authorization error'
           @contact.reload
-          @contact.name.should  == 'John Doe Edited'
+          @contact.name.should == 'John Doe Edited'
         end
       end
 

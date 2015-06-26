@@ -60,6 +60,11 @@ Style/NilComparison:
   Exclude:
     - 'spec/**/*'
 
+# let's save  space in spec
+Style/AlignHash:
+  Exclude:
+    - 'spec/**/*'
+
 # No need to force reduce to use |a, e| as parameters.
 # Configuration parameters: Methods.
 Style/SingleLineBlockParams:
@@ -90,3 +95,15 @@ Style/NumericLiterals:
 # Too often suggest wrong syntax in subarray, this should be fix in rubocop first
 Style/WordArray:
   Enabled: false
+
+# Ok to use parallel assigment such as: var1, var2 = [], []
+Style/ParallelAssignment:
+  Enabled: false
+
+# not working perfectly or not important enough to care
+Style/EmptyLinesAroundBlockBody:
+  Enabled: false
+
+# The ABC size is a calculated magnitude, so this number can be a Fixnum or a Float.
+Metrics/AbcSize:
+  Max: 25
