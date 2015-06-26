@@ -19,7 +19,9 @@ gem 'figaro', '~> 1.1.0'
 gem 'pg',                        '~> 0.18.0'
 gem 'ransack',                   '~> 1.5.1' # for searching
 # with polymorphic fix
-gem 'paper_trail', github: 'airblade/paper_trail', ref: 'a453811226ec4ea59753ba6b827e390ced2fc140'
+gem 'paper_trail', 
+  github: 'airblade/paper_trail', 
+  ref: 'a453811226ec4ea59753ba6b827e390ced2fc140'
 gem 'rails-settings-cached',     '~> 0.4.1' # for settings
 
 # html-xml
@@ -48,11 +50,11 @@ gem 'select2-rails',    '~> 3.5.9.3' # for autocomplete
 gem 'bootstrap-datepicker-rails', '~> 1.3.1.1' # datepicker
 
 # rights
-gem 'devise',    '~> 3.4.1' # authenitcation
-gem 'cancancan', '~> 1.9.2' # autharization
+gem 'devise',    '~> 3.5.1'  # authenitcation
+gem 'cancancan', '~> 1.11.0' # autharization
 
 # rest api
-gem 'grape',    '~> 0.10.1'
+gem 'grape',    '~> 0.12.0'
 gem 'jbuilder', '~> 2.2.6'  # json api
 
 # registry specfic
@@ -70,7 +72,7 @@ gem 'data_migrate',
 gem 'newrelic_rpm', '~> 3.12.0.288'
 
 # country listing
-gem 'countries', '~> 0.10.0'
+gem 'countries', '~> 0.11.4'
 
 # cloning activerecord objects
 gem 'deep_cloneable', '~> 2.1.1'
@@ -120,13 +122,13 @@ end
 
 group :development, :test do
   # test stack
-  gem 'rspec-rails',        '~> 3.0.2'
+  gem 'rspec-rails',        '~> 3.3.2'
   gem 'capybara',           '~> 2.4.1'
   gem 'phantomjs-binaries', '~> 1.9.2.4'
   gem 'poltergeist',        '~> 1.6.0'  # We are using PhantomJS instead
   gem 'phantomjs',          '~> 1.9.8.0'
   gem 'fabrication',        '~> 2.13.2' # Replacement for fixtures
-  gem 'shoulda-matchers',   '~> 2.6.1', require: false # Additional matchers for RSpec
+  gem 'shoulda-matchers',   '~> 2.8.0', require: false # Additional matchers for RSpec
   gem 'launchy',            '~> 2.4.3' # for opening browser automatically
 
   # helper gems
@@ -156,5 +158,5 @@ group :development, :test do
   # for travis
   gem 'rake'
 
-  gem "autodoc"
+  gem 'autodoc'
 end
