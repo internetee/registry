@@ -67,7 +67,7 @@ gem 'data_migrate',
   ref: '35d22b09ff37a4e9d61ab326ad5d8eb0edf1fc81'
 
 # monitors
-gem 'newrelic_rpm', '~> 3.9.9.275'
+gem 'newrelic_rpm', '~> 3.12.0.288'
 
 # country listing
 gem 'countries', '~> 0.10.0'
