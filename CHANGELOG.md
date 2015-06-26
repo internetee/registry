@@ -1,3 +1,7 @@
+26.06.2015
+
+* Added new relic license key ta application-example.yml, please update application.yml
+
 22.06.2015
 * Update zonefile
 
