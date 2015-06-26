@@ -11,19 +11,19 @@
             = @bank_transaction.binded? ? t(:binded) : t(:not_binded)
 
       .form-group
-        = f.label :description, class: 'col-md-4 control-label'
+        = f.label :description, class: 'col-md-4 control-label required'
         .col-md-8
-          = f.text_field(:description, class: 'form-control')
+          = f.text_field(:description, class: 'form-control', required: true)
 
       .form-group
-        = f.label :sum, class: 'col-md-4 control-label'
+        = f.label :sum, class: 'col-md-4 control-label required'
         .col-md-8
-          = f.text_field(:sum, class: 'form-control')
+          = f.text_field(:sum, class: 'form-control', required: true)
 
       .form-group
-        = f.label :reference_no, class: 'col-md-4 control-label'
+        = f.label :reference_no, class: 'col-md-4 control-label required'
         .col-md-8
-          = f.text_field(:reference_no, class: 'form-control')
+          = f.text_field(:reference_no, class: 'form-control', required: true)
 
       .form-group
         = f.label :document_no, class: 'col-md-4 control-label'
@@ -61,9 +61,9 @@
           = f.text_field(:currency, class: 'form-control', readonly: true)
 
       .form-group
-        = f.label :paid_at, class: 'col-md-4 control-label'
+        = f.label :paid_at, class: 'col-md-4 control-label required'
         .col-md-8
-          = f.text_field(:paid_at, class: 'form-control datepicker')
+          = f.text_field(:paid_at, class: 'form-control datepicker', required: true)
 
   %hr
   .row
