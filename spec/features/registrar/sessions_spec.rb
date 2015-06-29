@@ -114,7 +114,7 @@ feature 'Sessions', type: :feature do
       fill_in 'user_phone', with: '00007'
       click_button 'Log in'
 
-      page.should have_text('Check your phone for confirmation code')
+      page.should have_text('Confirmation sms was sent to your phone. Verification code is')
       page.should have_text('SIM application error')
     end
 
@@ -143,7 +143,7 @@ feature 'Sessions', type: :feature do
       fill_in 'user_phone', with: '00007'
       click_button 'Log in'
 
-      page.should have_text('Check your phone for confirmation code')
+      page.should have_text('Confirmation sms was sent to your phone. Verification code is')
       page.should have_text('Welcome!')
     end
 

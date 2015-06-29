@@ -25,7 +25,7 @@ describe 'EPP Session', epp: true do
     it 'does not log in with invalid user' do
       wrong_user = @epp_xml.session.login(clID: { value: 'wrong-user' }, pw: { value: 'ghyt9e4fu' })
       response = epp_plain_request(wrong_user)
-      response[:msg].should == 'Authentication error; server closing connection'
+      response[:msg].should == 'Authentication error; server closing connection (API user not found)'
       response[:result_code].should == '2501'
       response[:clTRID].should == 'ABC-12345'
     end
@@ -36,7 +36,7 @@ describe 'EPP Session', epp: true do
 
       inactive = @epp_xml.session.login(clID: { value: 'inactive-user' }, pw: { value: 'ghyt9e4fu' })
       response = epp_plain_request(inactive)
-      response[:msg].should == 'Authentication error; server closing connection'
+      response[:msg].should == 'Authentication error; server closing connection (API user is not active)'
       response[:result_code].should == '2501'
     end
 
