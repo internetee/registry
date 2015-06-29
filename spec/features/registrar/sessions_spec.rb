@@ -8,6 +8,14 @@ feature 'Sessions', type: :feature do
       page.should have_text('Access denied')
     end
 
+    it 'should see login page when whitelist disabled' do
+      Setting.registrar_ip_whitelist_enabled = false
+      WhiteIp.destroy_all
+      visit registrar_login_path
+      page.should_not have_text('Access denied')
+      Setting.registrar_ip_whitelist_enabled = true
+    end
+
     it 'should see log in' do
       @fixed_registrar.white_ips = [Fabricate(:white_ip_registrar)]
       visit registrar_login_path
@@ -24,6 +32,20 @@ feature 'Sessions', type: :feature do
       fill_in 'depp_user_password', with: @api_user_invalid_ip.password
       click_button 'Log in'
       page.should have_text('Access denied')
+    end
+
+    it 'should get in with invalid when whitelist disabled' do
+      Setting.registrar_ip_whitelist_enabled = false
+      Fabricate(:registrar, white_ips: [Fabricate(:white_ip), Fabricate(:white_ip_registrar)])
+      @api_user_invalid_ip = Fabricate(
+        :api_user, identity_code: '37810013294', registrar: Fabricate(:registrar, white_ips: [])
+      )
+      visit registrar_login_path
+      fill_in 'depp_user_tag', with: @api_user_invalid_ip.username
+      fill_in 'depp_user_password', with: @api_user_invalid_ip.password
+      click_button 'Log in'
+      page.should have_text('Log out')
+      Setting.registrar_ip_whitelist_enabled = true
     end
 
     it 'should not get in with invalid user' do
@@ -114,7 +136,7 @@ feature 'Sessions', type: :feature do
       fill_in 'user_phone', with: '00007'
       click_button 'Log in'
 
-      page.should have_text('Check your phone for confirmation code')
+      page.should have_text('Confirmation sms was sent to your phone. Verification code is')
       page.should have_text('SIM application error')
     end
 
@@ -143,7 +165,7 @@ feature 'Sessions', type: :feature do
       fill_in 'user_phone', with: '00007'
       click_button 'Log in'
 
-      page.should have_text('Check your phone for confirmation code')
+      page.should have_text('Confirmation sms was sent to your phone. Verification code is')
       page.should have_text('Welcome!')
     end
 

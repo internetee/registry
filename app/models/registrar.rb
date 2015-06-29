@@ -75,7 +75,7 @@ class Registrar < ActiveRecord::Base
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
-  def issue_prepayment_invoice(amount, description = nil) 
+  def issue_prepayment_invoice(amount, description = nil)
     # Currently only EIS can issue invoices
     eis = self.class.eis
 
@@ -157,10 +157,12 @@ class Registrar < ActiveRecord::Base
   end
 
   def api_ip_white?(ip)
+    return true unless Setting.api_ip_whitelist_enabled
     white_ips.api.pluck(:ipv4, :ipv6).flatten.include?(ip) || global_ip_white?(ip)
   end
 
   def registrar_ip_white?(ip)
+    return true unless Setting.registrar_ip_whitelist_enabled
     white_ips.registrar.pluck(:ipv4, :ipv6).flatten.include?(ip) || global_ip_white?(ip)
   end
 

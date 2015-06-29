@@ -24,6 +24,8 @@ class WhiteIp < ActiveRecord::Base
 
   class << self
     def registrar_ip_white?(ip)
+      return true unless Setting.registrar_ip_whitelist_enabled
+
       at = WhiteIp.arel_table
       WhiteIp.where(
         at[:interface].eq(REGISTRAR).or(
