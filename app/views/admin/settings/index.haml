@@ -67,6 +67,8 @@
           = render 'setting_row', var: :transfer_wait_time
           = render 'setting_row', var: :ds_algorithm
           = render 'setting_row', var: :client_side_status_editing_enabled
+          = render 'setting_row', var: :api_ip_whitelist_enabled
+          = render 'setting_row', var: :registrar_ip_whitelist_enabled
   .row
     .col-md-12.text-right
       %button.btn.btn-primary=t(:save)
