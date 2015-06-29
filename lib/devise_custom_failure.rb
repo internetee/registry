@@ -1,9 +1,9 @@
 class DeviseCustomFailure < Devise::FailureApp
   def redirect_url
-    return registrant_login_url if request.original_fullpath.to_s.match(/^\/registrant/)
-    return registrar_login_url  if request.original_fullpath.to_s.match(/^\/registrar/)
+    return registrant_login_url if request.original_fullpath.to_s.match(%r{^\/registrant})
+    return registrar_login_url  if request.original_fullpath.to_s.match(%r{^\/registrar})
     return '/admin'             if request.original_fullpath.to_s.match(%r{^\/admin\/que})
-    return admin_login_url      if request.original_fullpath.to_s.match(/^\/admin/)
+    return admin_login_url      if request.original_fullpath.to_s.match(%r{^\/admin})
     root_url
   end
 

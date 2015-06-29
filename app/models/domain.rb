@@ -207,6 +207,7 @@ class Domain < ActiveRecord::Base
       STDOUT << "#{Time.zone.now.utc} - Successfully set delete_candidate to #{d.count} domains\n"
     end
 
+    # rubocop:disable Rails/FindEach
     def destroy_delete_candidates
       STDOUT << "#{Time.zone.now.utc} - Destroying domains\n" unless Rails.env.test?
 
@@ -223,6 +224,7 @@ class Domain < ActiveRecord::Base
 
       STDOUT << "#{Time.zone.now.utc} - Successfully destroyed #{c} domains\n" unless Rails.env.test?
     end
+    # rubocop:enable Rails/FindEach
   end
 
   def name=(value)
@@ -410,8 +412,8 @@ class Domain < ActiveRecord::Base
     res = ''
     parts = name.split('.')
     parts.each do |x|
-      res += sprintf('%02X', x.length) # length of label in hex
-      res += x.each_byte.map { |b| sprintf('%02X', b) }.join # label
+      res += format('%02X', x.length) # length of label in hex
+      res += x.each_byte.map { |b| format('%02X', b) }.join # label
     end
 
     res += '00'

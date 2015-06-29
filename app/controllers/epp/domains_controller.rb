@@ -29,7 +29,6 @@ class Epp::DomainsController < EppController
     end
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity
   def update
     authorize! :update, @domain, @password
 
@@ -44,7 +43,6 @@ class Epp::DomainsController < EppController
     end
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity
   def delete
     authorize! :delete, @domain, @password
 
@@ -66,7 +64,6 @@ class Epp::DomainsController < EppController
       handle_errors(@domain)
     end
   end
-  # rubocop:enbale Metrics/CyclomaticComplexity
 
   def check
     authorize! :check, Epp::Domain
@@ -88,8 +85,6 @@ class Epp::DomainsController < EppController
     render_epp_response '/epp/domains/renew'
   end
 
-  # rubocop: disable Metrics/PerceivedComplexity
-  # rubocop: disable Metrics/MethodLength
   def transfer
     authorize! :transfer, @domain, @password
     action = params[:parsed_frame].css('transfer').first[:op]
@@ -102,8 +97,6 @@ class Epp::DomainsController < EppController
       handle_errors(@domain)
     end
   end
-  # rubocop: enable Metrics/MethodLength
-  # rubocop: enable Metrics/CyclomaticComplexity
 
   private
 

@@ -73,7 +73,9 @@ class Registrar < ActiveRecord::Base
     end
   end
 
-  def issue_prepayment_invoice(amount, description = nil) # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
+  def issue_prepayment_invoice(amount, description = nil) 
     # Currently only EIS can issue invoices
     eis = self.class.eis
 
@@ -122,6 +124,8 @@ class Registrar < ActiveRecord::Base
       ]
     )
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   def cash_account
     accounts.find_by(account_type: Account::CASH)

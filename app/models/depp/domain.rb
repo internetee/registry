@@ -130,7 +130,9 @@ module Depp
         ret.with_indifferent_access
       end
 
-      def construct_params_from_server_data(data) # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/AbcSize
+      def construct_params_from_server_data(data) 
         ret = default_params
         ret[:name] = data.css('name').text
         ret[:registrant] = data.css('registrant').text
@@ -176,6 +178,8 @@ module Depp
 
         ret
       end
+      # rubocop:enable Metrics/MethodLength
+      # rubocop:enable Metrics/AbcSize
 
       def construct_custom_params_hash(domain_params)
         custom_params = {}
@@ -233,7 +237,7 @@ module Depp
           host_attr << { hostAddr: { value: v['ipv4'], attrs: { ip: 'v4' } } } if v['ipv4'].present?
           host_attr << { hostAddr: { value: v['ipv6'], attrs: { ip: 'v6' } } } if v['ipv6'].present?
 
-          ret <<  { hostAttr: host_attr }
+          ret << { hostAttr: host_attr }
         end
 
         ret
@@ -256,11 +260,11 @@ module Depp
         domain_params[:dnskeys_attributes].each do |_k, v|
           if v['ds_key_tag'].blank?
             kd = create_key_data_hash(v)
-            ret <<  {
+            ret << {
               keyData: kd
             } if kd
           else
-            ret <<  {
+            ret << {
               dsData: [
                 keyTag: { value: v['ds_key_tag'] },
                 alg: { value: v['ds_alg'] },

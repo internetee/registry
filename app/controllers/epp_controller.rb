@@ -272,7 +272,6 @@ class EppController < ApplicationController
   end
   # rubocop: enable Style/PredicateName
 
-  # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/CyclomaticComplexity
   def write_to_epp_log
     # return nil if EPP_LOG_ENABLED
@@ -295,7 +294,6 @@ class EppController < ApplicationController
       ip: request.ip
     })
   end
-  # rubocop: enable Metrics/PerceivedComplexity
   # rubocop: enable Metrics/CyclomaticComplexity
 
   def iptables_counter_update

@@ -11,6 +11,7 @@ class ActionView::Helpers::FormBuilder
       content = content_or_options
     end
 
+    # rubocop:disable Style/MultilineOperationIndentation
     if object.class.respond_to?(:validators_on) &&
       object.class.validators_on(method).map(&:class).include?(ActiveRecord::Validations::PresenceValidator)
 
@@ -20,6 +21,7 @@ class ActionView::Helpers::FormBuilder
         options[:class] = ((options[:class] || "") + ' required').split(' ').uniq.join(' ')
       end
     end
+    # rubocop:enable Style/MultilineOperationIndentation
 
     orig_label(method, content, options || {}, &block)
   end

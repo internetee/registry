@@ -36,6 +36,7 @@ module Depp
         Nokogiri::XML(e.response_xml.to_s).remove_namespaces!
     end
 
+    # rubocop:disable Metrics/AbcSize
     def repp_request(path, params = {})
       client_cert = File.read(ENV['cert_path'])
       client_key = File.read(ENV['key_path'])
@@ -51,8 +52,7 @@ module Depp
                             use_ssl: (uri.scheme == 'https'),
                             verify_mode: OpenSSL::SSL::VERIFY_NONE,
                             cert: OpenSSL::X509::Certificate.new(client_cert),
-                            key: OpenSSL::PKey::RSA.new(client_key)
-      ) do |http|
+                            key: OpenSSL::PKey::RSA.new(client_key)) do |http|
         http.request(req)
       end
 
@@ -67,6 +67,7 @@ module Depp
 
       ret
     end
+    # rubocop:enable Metrics/AbcSize
 
     private
 

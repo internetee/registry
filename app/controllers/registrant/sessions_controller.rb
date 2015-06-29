@@ -4,6 +4,7 @@ class Registrant::SessionsController < Devise::SessionsController
   def login
   end
 
+  # rubocop: disable Metrics/AbcSize
   def id
     if Rails.env.development?
       sign_in(RegistrantUser.find_or_create_by_idc_data('test'), event: :authentication)
@@ -22,12 +23,14 @@ class Registrant::SessionsController < Devise::SessionsController
       redirect_to registrant_login_url
     end
   end
+  # rubocop: enable Metrics/AbcSize
 
   def login_mid
     @user = User.new
   end
 
-  def mid # rubocop: disable Metrics/MethodLength
+  # rubocop: disable Metrics/MethodLength
+  def mid 
     phone = params[:user][:phone]
     endpoint = "#{ENV['sk_digi_doc_service_endpoint']}"
     client = Digidoc::Client.new(endpoint)
@@ -64,8 +67,9 @@ class Registrant::SessionsController < Devise::SessionsController
       render json: { message: t(:no_such_user) }, status: :unauthorized
     end
   end
+  # rubocop: enable Metrics/MethodLength
 
-  # rubocop: disable Metrics/PerceivedComplexity
+  # rubocop: disable Metrics/AbcSize
   # rubocop: disable Metrics/CyclomaticComplexity
   # rubocop: disable Metrics/MethodLength
   def mid_status
@@ -104,7 +108,7 @@ class Registrant::SessionsController < Devise::SessionsController
       render json: { message: t(:internal_error) }, status: :bad_request
     end
   end
-  # rubocop: enable Metrics/PerceivedComplexity
+  # rubocop: enable Metrics/AbcSize
   # rubocop: enable Metrics/CyclomaticComplexity
   # rubocop: enable Metrics/MethodLength
 

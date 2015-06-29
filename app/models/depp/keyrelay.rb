@@ -8,7 +8,7 @@ module Depp
       self.epp_xml = EppXml::Keyrelay.new(cl_trid_prefix: current_user.tag)
     end
 
-    def keyrelay(params) # rubocop:disable Metrics/MethodLength
+    def keyrelay(params) 
       custom_params = {}
       if params[:legal_document].present?
         type = params[:legal_document].original_filename.split('.').last.downcase
