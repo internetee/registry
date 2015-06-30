@@ -37,6 +37,24 @@ if con.present? && con.table_exists?('settings')
 
   Setting.save_default(:registrar_ip_whitelist_enabled, true)
   Setting.save_default(:api_ip_whitelist_enabled, true)
+
+  Setting.save_default(:registry_juridical_name, 'Eesti Interneti SA')
+  Setting.save_default(:registry_reg_no, '90010019')
+  Setting.save_default(:registry_email, 'info@internet.ee')
+  Setting.save_default(:registry_billing_email, 'info@internet.ee')
+  Setting.save_default(:registry_phone, '+372 727 1000')
+  Setting.save_default(:registry_country_code, 'EE')
+  Setting.save_default(:registry_state, 'Harjumaa')
+  Setting.save_default(:registry_street, 'Paldiski mnt 80')
+  Setting.save_default(:registry_city, 'Tallinn')
+  Setting.save_default(:registry_zip, '10617')
+  Setting.save_default(:registry_vat_no, 'EE101286464')
+  Setting.save_default(:registry_url, 'www.internet.ee')
+  Setting.save_default(:registry_vat_prc, 0.2)
+  Setting.save_default(:registry_iban, 'EE557700771000598731')
+  Setting.save_default(:registry_bank, 'LHV Pank')
+  Setting.save_default(:registry_swift, 'LHVBEE22')
+  Setting.save_default(:registry_invoice_contact, 'Martti Õigus')
 end
 
 # dev only setting
