@@ -64,10 +64,6 @@ class Registrar < ActiveRecord::Base
       res.reduce([]) { |o, v| o << { id: v[:id], display_key: "#{v[:name]} (#{v[:reg_no]})" } }
     end
 
-    def eis
-      find_by(reg_no: '90010019')
-    end
-
     def ordered
       order(name: :asc)
     end
