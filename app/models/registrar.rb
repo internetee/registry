@@ -64,44 +64,35 @@ class Registrar < ActiveRecord::Base
       res.reduce([]) { |o, v| o << { id: v[:id], display_key: "#{v[:name]} (#{v[:reg_no]})" } }
     end
 
-    def eis
-      find_by(reg_no: '90010019')
-    end
-
     def ordered
       order(name: :asc)
     end
   end
 
-  # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def issue_prepayment_invoice(amount, description = nil)
-    # Currently only EIS can issue invoices
-    eis = self.class.eis
-
     invoices.create(
       invoice_type: 'DEB',
       due_date: Time.zone.now.to_date + 1.day,
       payment_term: 'prepayment',
       description: description,
       currency: 'EUR',
-      vat_prc: 0.2,
-      seller_id: eis.id,
-      seller_name: eis.name,
-      seller_reg_no: eis.reg_no,
-      seller_iban: Setting.eis_iban,
-      seller_bank: Setting.eis_bank,
-      seller_swift: Setting.eis_swift,
-      seller_vat_no: eis.vat_no,
-      seller_country_code: eis.country_code,
-      seller_state: eis.state,
-      seller_street: eis.street,
-      seller_city: eis.city,
-      seller_zip: eis.zip,
-      seller_phone: eis.phone,
-      seller_url: eis.url,
-      seller_email: eis.email,
-      seller_contact_name: Setting.eis_invoice_contact,
+      vat_prc: Setting.registry_vat_prc,
+      seller_name: Setting.registry_juridical_name,
+      seller_reg_no: Setting.registry_reg_no,
+      seller_iban: Setting.registry_iban,
+      seller_bank: Setting.registry_bank,
+      seller_swift: Setting.registry_swift,
+      seller_vat_no: Setting.registry_vat_no,
+      seller_country_code: Setting.registry_country_code,
+      seller_state: Setting.registry_state,
+      seller_street: Setting.registry_street,
+      seller_city: Setting.registry_city,
+      seller_zip: Setting.registry_zip,
+      seller_phone: Setting.registry_phone,
+      seller_url: Setting.registry_url,
+      seller_email: Setting.registry_email,
+      seller_contact_name: Setting.registry_invoice_contact,
       buyer_id: id,
       buyer_name: name,
       buyer_reg_no: reg_no,
@@ -124,7 +115,6 @@ class Registrar < ActiveRecord::Base
       ]
     )
   end
-  # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 
   def cash_account

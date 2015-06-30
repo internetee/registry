@@ -37,14 +37,45 @@ class Admin::SettingsController < AdminController
     params.require(:setting_group).permit(settings_attributes: [:value, :id])
   end
 
-  def casted_settings
+  def casted_settings # rubocop:disable Metrics/MethodLength
     settings = {}
+
+    ints = [
+      :admin_contacts_min_count,
+      :admin_contacts_max_count,
+      :tech_contacts_min_count,
+      :tech_contacts_max_count,
+      :ds_algorithm,
+      :dnskeys_min_count,
+      :dnskeys_max_count,
+      :ns_min_count,
+      :ns_max_count,
+      :transfer_wait_time,
+      :invoice_number_min,
+      :invoice_number_max,
+      :days_to_keep_overdue_invoices_active,
+      :days_to_renew_domain_before_expire,
+      :expire_warning_period,
+      :redemption_grace_period
+    ]
+
+    floats = [:registry_vat_prc]
+
+    booleans = [
+      :ds_data_allowed,
+      :key_data_allowed,
+      :client_side_status_editing_enabled,
+      :registrar_ip_whitelist_enabled,
+      :api_ip_whitelist_enabled
+    ]
+
     params[:settings].each do |k, v|
-      settings[k] = v.to_i if Setting[k].class == Fixnum
-      settings[k] = v.to_f if Setting[k].class == Float
-      settings[k] = (v == 'true' ? true : false) if [TrueClass, FalseClass].include?(Setting[k].class)
-      settings[k] = v if Setting[k].class == String
+      settings[k] = v
+      settings[k] = v.to_i if ints.include?(k.to_sym)
+      settings[k] = v.to_f if floats.include?(k.to_sym)
+      settings[k] = (v == 'true' ? true : false) if booleans.include?(k.to_sym)
     end
+
     settings
   end
 end
