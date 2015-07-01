@@ -62,7 +62,8 @@ class Epp::Domain < Domain
       ],
       '2302' => [ # Object exists
         [:name_dirty, :taken, { value: { obj: 'name', val: name_dirty } }],
-        [:name_dirty, :reserved, { value: { obj: 'name', val: name_dirty } }]
+        [:name_dirty, :reserved, { value: { obj: 'name', val: name_dirty } }],
+        [:name_dirty, :blocked, { value: { obj: 'name', val: name_dirty } }]
       ],
       '2304' => [ # Object status prohibits operation
         [:base, :domain_status_prohibits_operation]
@@ -81,13 +82,14 @@ class Epp::Domain < Domain
   def attach_default_contacts
     return if registrant.blank?
     regt = Registrant.find(registrant.id) # temp for bullet
-    tech_contacts  << regt if tech_domain_contacts.blank?
+    tech_contacts << regt if tech_domain_contacts.blank?
     admin_contacts << regt if admin_domain_contacts.blank? && regt.priv?
   end
 
   # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/CyclomaticComplexity
   # rubocop: disable Metrics/MethodLength
+  # rubocop: disable Metrics/AbcSize
   def attrs_from(frame, current_user, action = nil)
     at = {}.with_indifferent_access
 
@@ -130,6 +132,7 @@ class Epp::Domain < Domain
   # rubocop: enable Metrics/PerceivedComplexity
   # rubocop: enable Metrics/CyclomaticComplexity
   # rubocop: enable Metrics/MethodLength
+  # rubocop: enable Metrics/AbcSize
 
   def nameservers_attrs(frame, action)
     ns_list = nameservers_from(frame)
@@ -358,6 +361,7 @@ class Epp::Domain < Domain
     }]
   end
 
+  # rubocop: disable Metrics/AbcSize
   def update(frame, current_user, verify = true)
     return super if frame.blank?
     at = {}.with_indifferent_access
@@ -380,6 +384,7 @@ class Epp::Domain < Domain
     self.deliver_emails = true # turn on email delivery for epp
     errors.empty? && super(at)
   end
+  # rubocop: enable Metrics/AbcSize
 
   def apply_pending_update!
     preclean_pendings
@@ -524,6 +529,7 @@ class Epp::Domain < Domain
   # rubocop: enable Metrics/CyclomaticComplexity
 
   # rubocop: disable Metrics/MethodLength
+  # rubocop: disable Metrics/AbcSize
   def query_transfer(frame, current_user)
     return false unless can_be_transferred_to?(current_user.registrar)
 
@@ -533,10 +539,10 @@ class Epp::Domain < Domain
     transaction do
       begin
         dt = domain_transfers.create!(
-            transfer_requested_at: Time.zone.now,
-            transfer_to: current_user.registrar,
-            transfer_from: registrar
-          )
+          transfer_requested_at: Time.zone.now,
+          transfer_to: current_user.registrar,
+          transfer_from: registrar
+        )
 
         if dt.pending?
           registrar.messages.create!(
@@ -565,6 +571,7 @@ class Epp::Domain < Domain
       end
     end
   end
+  # rubocop: enable Metrics/AbcSize
   # rubocop: enable Metrics/MethodLength
 
   def approve_transfer(frame, current_user)
@@ -621,13 +628,14 @@ class Epp::Domain < Domain
   end
 
   # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
   def keyrelay(parsed_frame, requester)
     if registrar == requester
       errors.add(:base, :domain_already_belongs_to_the_querying_registrar) and return false
     end
 
     abs_datetime = parsed_frame.css('absolute').text
-    abs_datetime = DateTime.parse(abs_datetime) if abs_datetime.present?
+    abs_datetime = DateTime.zone.parse(abs_datetime) if abs_datetime.present?
 
     transaction do
       kr = keyrelays.build(
@@ -664,6 +672,7 @@ class Epp::Domain < Domain
 
     true
   end
+  # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 
   ### VALIDATIONS ###

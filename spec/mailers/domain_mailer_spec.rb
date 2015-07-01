@@ -54,7 +54,7 @@ describe DomainMailer do
     end
 
     it 'should render verification url' do
-      @mail.body.encoded.should =~ /registrant\/domain_update_confirms/
+      @mail.body.encoded.should =~ %r{registrant\/domain_update_confirms}
     end
   end
 
@@ -109,7 +109,7 @@ describe DomainMailer do
     end
 
     it 'should render verification url' do
-      @mail.body.encoded.should =~ /registrant\/domain_delete_con/ # somehowe delete_confirms not matching
+      @mail.body.encoded.should =~ %r{registrant\/domain_delete_con} # somehowe delete_confirms not matching
     end
   end
 end

@@ -114,7 +114,7 @@ class Dnskey < ActiveRecord::Base
     end
 
     def bin_to_hex(s)
-      s.each_byte.map { |b| sprintf('%02X', b) }.join
+      s.each_byte.map { |b| format('%02X', b) }.join
     end
   end
 end

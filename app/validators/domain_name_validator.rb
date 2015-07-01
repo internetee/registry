@@ -1,11 +1,17 @@
 class DomainNameValidator < ActiveModel::EachValidator
+  # rubocop: disable Metrics/PerceivedComplexity
+  # rubocop: disable Metrics/CyclomaticComplexity
   def validate_each(record, attribute, value)
     if !self.class.validate_format(value)
       record.errors[attribute] << (options[:message] || record.errors.generate_message(attribute, :invalid))
+    elsif !self.class.validate_blocked(value)
+      record.errors.add(attribute, (options[:message] || record.errors.generate_message(attribute, :blocked)))
     elsif !self.class.validate_reservation(value)
       record.errors.add(attribute, (options[:message] || record.errors.generate_message(attribute, :reserved)))
     end
   end
+  # rubocop: enable Metrics/PerceivedComplexity
+  # rubocop: enable Metrics/CyclomaticComplexity
 
   class << self
     def validate_format(value)
@@ -29,6 +35,11 @@ class DomainNameValidator < ActiveModel::EachValidator
       # rubocop: disable Style/DoubleNegation
       !!(value =~ regexp)
       # rubocop: enable Style/DoubleNegation
+    end
+
+    def validate_blocked(value)
+      return true unless value
+      BlockedDomain.where("names @> ?::varchar[]", "{#{value}}").count == 0
     end
 
     def validate_reservation(value)

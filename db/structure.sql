@@ -25,167 +25,6 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 SET search_path = public, pg_catalog;
 
---
--- Name: generate_zonefile(character varying); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
-    LANGUAGE plpgsql
-    AS $_$
-      DECLARE
-        zone_header text := concat('$ORIGIN ', i_origin, '.');
-        serial_num varchar;
-        include_filter varchar := '';
-        exclude_filter varchar := '';
-        tmp_var text;
-        ret text;
-      BEGIN
-        -- define filters
-        include_filter = '%' || i_origin;
-
-        -- for %.%.%
-        IF i_origin ~ '\.' THEN
-          exclude_filter := '';
-        -- for %.%
-        ELSE
-          exclude_filter := '%.%.' || i_origin;
-        END IF;
-
-        SELECT ROUND(extract(epoch from now() at time zone 'utc')) INTO serial_num;
-
-        -- zonefile header
-        SELECT concat(
-          format('%-10s', '$ORIGIN .'), chr(10),
-          format('%-10s', '$TTL'), zf.ttl, chr(10), chr(10),
-          format('%-10s', i_origin || '.'), 'IN SOA ', zf.master_nameserver, '. ', zf.email, '. (', chr(10),
-          format('%-17s', ''), format('%-12s', serial_num), '; serial number', chr(10),
-          format('%-17s', ''), format('%-12s', zf.refresh), '; refresh, seconds', chr(10),
-          format('%-17s', ''), format('%-12s', zf.retry), '; retry, seconds', chr(10),
-          format('%-17s', ''), format('%-12s', zf.expire), '; expire, seconds', chr(10),
-          format('%-17s', ''), format('%-12s', zf.minimum_ttl), '; minimum TTL, seconds', chr(10),
-          format('%-17s', ''), ')'
-        ) FROM zonefile_settings zf WHERE i_origin = zf.origin INTO tmp_var;
-
-        ret = concat(tmp_var, chr(10), chr(10));
-
-        -- ns records
-        SELECT array_to_string(
-          array(
-            SELECT concat(d.name_puny, '. IN NS ', ns.hostname, '.')
-            FROM domains d
-            JOIN nameservers ns ON ns.domain_id = d.id
-            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
-            ORDER BY d.name
-          ),
-          chr(10)
-        ) INTO tmp_var;
-
-        ret := concat(ret, '; Zone NS Records', chr(10), tmp_var, chr(10), chr(10));
-
-        -- a glue records for origin nameservers
-        SELECT array_to_string(
-          array(
-            SELECT concat(ns.hostname, '. IN A ', ns.ipv4)
-            FROM nameservers ns
-            JOIN domains d ON d.id = ns.domain_id
-            WHERE d.name = i_origin
-            AND ns.hostname LIKE '%.' || d.name
-            AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> ''
-          ), chr(10)
-        ) INTO tmp_var;
-
-        ret := concat(ret, '; Zone A Records', chr(10), tmp_var);
-
-        -- a glue records for other nameservers
-        SELECT array_to_string(
-          array(
-            SELECT concat(ns.hostname, '. IN A ', ns.ipv4)
-            FROM nameservers ns
-            JOIN domains d ON d.id = ns.domain_id
-            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
-            AND ns.hostname LIKE '%.' || d.name
-            AND d.name <> i_origin
-            AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> ''
-            AND NOT EXISTS ( -- filter out glue records that already appeared in origin glue recrods
-              SELECT 1 FROM nameservers nsi
-              JOIN domains di ON nsi.domain_id = di.id
-              WHERE di.name = i_origin
-              AND nsi.hostname = ns.hostname
-            )
-          ), chr(10)
-        ) INTO tmp_var;
-
-        -- TODO This is a possible subtitition to the previous query, stress testing is needed to see which is faster
-
-        -- SELECT ns.*
-        -- FROM nameservers ns
-        -- JOIN domains d ON d.id = ns.domain_id
-        -- WHERE d.name LIKE '%ee' AND d.name NOT LIKE '%pri.ee'
-        -- AND ns.hostname LIKE '%.' || d.name
-        -- AND d.name <> 'ee'
-        -- AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> ''
-        -- AND ns.hostname NOT IN (
-        --   SELECT ns.hostname FROM domains d JOIN nameservers ns ON d.id = ns.domain_id WHERE d.name = 'ee'
-        -- )
-
-        ret := concat(ret, chr(10), tmp_var, chr(10), chr(10));
-
-        -- aaaa glue records for origin nameservers
-        SELECT array_to_string(
-          array(
-            SELECT concat(ns.hostname, '. IN AAAA ', ns.ipv6)
-            FROM nameservers ns
-            JOIN domains d ON d.id = ns.domain_id
-            WHERE d.name = i_origin
-            AND ns.hostname LIKE '%.' || d.name
-            AND ns.ipv6 IS NOT NULL AND ns.ipv6 <> ''
-          ), chr(10)
-        ) INTO tmp_var;
-
-        ret := concat(ret, '; Zone AAAA Records', chr(10), tmp_var);
-
-        -- aaaa glue records for other nameservers
-        SELECT array_to_string(
-          array(
-            SELECT concat(ns.hostname, '. IN AAAA ', ns.ipv6)
-            FROM nameservers ns
-            JOIN domains d ON d.id = ns.domain_id
-            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
-            AND ns.hostname LIKE '%.' || d.name
-            AND d.name <> i_origin
-            AND ns.ipv6 IS NOT NULL AND ns.ipv6 <> ''
-            AND NOT EXISTS ( -- filter out glue records that already appeared in origin glue recrods
-              SELECT 1 FROM nameservers nsi
-              JOIN domains di ON nsi.domain_id = di.id
-              WHERE di.name = i_origin
-              AND nsi.hostname = ns.hostname
-            )
-          ), chr(10)
-        ) INTO tmp_var;
-
-        ret := concat(ret, chr(10), tmp_var, chr(10), chr(10));
-
-        -- ds records
-        SELECT array_to_string(
-          array(
-            SELECT concat(
-              d.name_puny, '. IN DS ', dk.ds_key_tag, ' ',
-              dk.ds_alg, ' ', dk.ds_digest_type, ' ( ', dk.ds_digest, ' )'
-            )
-            FROM domains d
-            JOIN dnskeys dk ON dk.domain_id = d.id
-            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter AND dk.flags = 257
-            ),
-          chr(10)
-        ) INTO tmp_var;
-
-        ret := concat(ret, '; Zone DS Records', chr(10), tmp_var, chr(10));
-
-        RETURN ret;
-      END;
-      $_$;
-
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -198,7 +37,7 @@ CREATE TABLE account_activities (
     id integer NOT NULL,
     account_id integer,
     invoice_id integer,
-    sum numeric(10,2),
+    sum numeric(8,2),
     currency character varying,
     bank_transaction_id integer,
     created_at timestamp without time zone,
@@ -236,7 +75,7 @@ CREATE TABLE accounts (
     id integer NOT NULL,
     registrar_id integer,
     account_type character varying,
-    balance numeric(10,2) DEFAULT 0 NOT NULL,
+    balance numeric(8,2) DEFAULT 0.0 NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     currency character varying,
@@ -394,7 +233,7 @@ CREATE TABLE bank_transactions (
     buyer_name character varying,
     document_no character varying,
     description character varying,
-    sum numeric(10,2),
+    sum numeric(8,2),
     reference_no character varying,
     paid_at timestamp without time zone,
     created_at timestamp without time zone,
@@ -435,7 +274,7 @@ CREATE TABLE banklink_transactions (
     vk_rec_id character varying,
     vk_stamp character varying,
     vk_t_no character varying,
-    vk_amount numeric(10,2),
+    vk_amount numeric(8,2),
     vk_curr character varying,
     vk_rec_acc character varying,
     vk_rec_name character varying,
@@ -637,6 +476,15 @@ CREATE SEQUENCE countries_id_seq
 --
 
 ALTER SEQUENCE countries_id_seq OWNED BY countries.id;
+
+
+--
+-- Name: data_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE data_migrations (
+    version character varying NOT NULL
+);
 
 
 --
@@ -951,7 +799,7 @@ CREATE TABLE invoice_items (
     description character varying NOT NULL,
     unit character varying,
     amount integer,
-    price numeric(10,2),
+    price numeric(8,2),
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     creator_str character varying,
@@ -992,7 +840,7 @@ CREATE TABLE invoices (
     currency character varying NOT NULL,
     description character varying,
     reference_no character varying,
-    vat_prc numeric(10,2) NOT NULL,
+    vat_prc numeric(8,2) NOT NULL,
     paid_at timestamp without time zone,
     seller_id integer,
     seller_name character varying NOT NULL,
@@ -1025,7 +873,7 @@ CREATE TABLE invoices (
     updator_str character varying,
     number integer,
     cancelled_at timestamp without time zone,
-    sum_cache numeric(10,2)
+    sum_cache numeric(8,2)
 );
 
 
@@ -2287,7 +2135,7 @@ CREATE TABLE pricelists (
     id integer NOT NULL,
     "desc" character varying,
     category character varying,
-    price_cents numeric(8,2) DEFAULT 0 NOT NULL,
+    price_cents numeric(8,2) DEFAULT 0.0 NOT NULL,
     price_currency character varying DEFAULT 'EUR'::character varying NOT NULL,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
@@ -2325,40 +2173,14 @@ ALTER SEQUENCE pricelists_id_seq OWNED BY pricelists.id;
 
 CREATE TABLE que_jobs (
     priority smallint DEFAULT 100 NOT NULL,
-    run_at timestamp with time zone DEFAULT now() NOT NULL,
-    job_id bigint NOT NULL,
+    run_at timestamp without time zone DEFAULT '2015-06-29 12:38:58.258132'::timestamp without time zone NOT NULL,
+    job_id bigint DEFAULT 0 NOT NULL,
     job_class text NOT NULL,
     args json DEFAULT '[]'::json NOT NULL,
     error_count integer DEFAULT 0 NOT NULL,
     last_error text,
     queue text DEFAULT ''::text NOT NULL
 );
-
-
---
--- Name: TABLE que_jobs; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON TABLE que_jobs IS '3';
-
-
---
--- Name: que_jobs_job_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE que_jobs_job_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: que_jobs_job_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE que_jobs_job_id_seq OWNED BY que_jobs.job_id;
 
 
 --
@@ -2551,7 +2373,7 @@ CREATE TABLE users (
     crt text,
     type character varying,
     registrant_ident character varying,
-    encrypted_password character varying DEFAULT ''::character varying,
+    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
     remember_created_at timestamp without time zone,
     failed_attempts integer DEFAULT 0 NOT NULL,
     locked_at timestamp without time zone
@@ -3103,13 +2925,6 @@ ALTER TABLE ONLY pricelists ALTER COLUMN id SET DEFAULT nextval('pricelists_id_s
 
 
 --
--- Name: job_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY que_jobs ALTER COLUMN job_id SET DEFAULT nextval('que_jobs_job_id_seq'::regclass);
-
-
---
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3610,14 +3425,6 @@ ALTER TABLE ONLY people
 
 ALTER TABLE ONLY pricelists
     ADD CONSTRAINT pricelists_pkey PRIMARY KEY (id);
-
-
---
--- Name: que_jobs_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY que_jobs
-    ADD CONSTRAINT que_jobs_pkey PRIMARY KEY (queue, priority, run_at, job_id);
 
 
 --
@@ -4379,6 +4186,13 @@ CREATE INDEX index_whois_records_on_registrar_id ON whois_records USING btree (r
 
 
 --
+-- Name: unique_data_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX unique_data_migrations ON data_migrations USING btree (version);
+
+
+--
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4593,8 +4407,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150227092508');
 
 INSERT INTO schema_migrations (version) VALUES ('20150227113121');
 
-INSERT INTO schema_migrations (version) VALUES ('20150302130224');
-
 INSERT INTO schema_migrations (version) VALUES ('20150302161712');
 
 INSERT INTO schema_migrations (version) VALUES ('20150303130729');
@@ -4653,8 +4465,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150417082723');
 
 INSERT INTO schema_migrations (version) VALUES ('20150421134820');
 
-INSERT INTO schema_migrations (version) VALUES ('20150422090645');
-
 INSERT INTO schema_migrations (version) VALUES ('20150422092514');
 
 INSERT INTO schema_migrations (version) VALUES ('20150422132631');
@@ -4699,8 +4509,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150519115050');
 
 INSERT INTO schema_migrations (version) VALUES ('20150519140853');
 
-INSERT INTO schema_migrations (version) VALUES ('20150519142542');
-
 INSERT INTO schema_migrations (version) VALUES ('20150519144118');
 
 INSERT INTO schema_migrations (version) VALUES ('20150520163237');
@@ -4708,12 +4516,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150520163237');
 INSERT INTO schema_migrations (version) VALUES ('20150520164507');
 
 INSERT INTO schema_migrations (version) VALUES ('20150521120145');
-
-INSERT INTO schema_migrations (version) VALUES ('20150522164020');
-
-INSERT INTO schema_migrations (version) VALUES ('20150525075550');
-
-INSERT INTO schema_migrations (version) VALUES ('20150603141054');
 
 INSERT INTO schema_migrations (version) VALUES ('20150603141549');
 

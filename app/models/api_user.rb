@@ -1,9 +1,9 @@
 require 'open3'
 
-# rubocop: disable Metrics/ClassLength
 class ApiUser < User
   include EppErrors
-  def epp_code_map # rubocop:disable Metrics/MethodLength
+
+  def epp_code_map 
     {
       '2306' => [ # Parameter policy error
         [:password, :blank]
@@ -77,4 +77,3 @@ class ApiUser < User
     end
   end
 end
-# rubocop: enable Metrics/ClassLength

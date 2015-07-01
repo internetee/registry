@@ -15,11 +15,11 @@ class Invoice < ActiveRecord::Base
   validates :invoice_type, :due_date, :currency, :seller_name,
             :seller_iban, :buyer_name, :invoice_items, :vat_prc, presence: true
 
-  before_save :set_invoice_number
+  before_create :set_invoice_number
   def set_invoice_number
     last_no = Invoice.order(number: :desc).where('number IS NOT NULL').limit(1).pluck(:number).first
 
-    if last_no
+    if last_no && last_no >= Setting.invoice_number_min.to_i
       self.number = last_no + 1
     else
       self.number = Setting.invoice_number_min.to_i
@@ -40,7 +40,7 @@ class Invoice < ActiveRecord::Base
 
       cr_at = Time.zone.now - Setting.days_to_keep_overdue_invoices_active.days
       invoices = Invoice.unbinded.where(
-        'due_date < ? AND created_at < ? AND cancelled_at IS NULL', Time.zone.now, cr_at
+        'due_date < ? AND cancelled_at IS NULL', cr_at
       )
 
       count = invoices.update_all(cancelled_at: Time.zone.now)

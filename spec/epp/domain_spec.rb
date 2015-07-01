@@ -16,6 +16,7 @@ describe 'EPP Domain', epp: true do
     Fabricate(:contact, code: 'FIXED:SH801333')
     Fabricate(:contact, code: 'FIXED:JURIDICAL_1234', ident_type: 'bic')
     Fabricate(:reserved_domain)
+    Fabricate(:blocked_domain)
 
     @uniq_no = proc { @i ||= 0; @i += 1 }
   end
@@ -89,8 +90,8 @@ describe 'EPP Domain', epp: true do
       cre_data = response[:parsed].css('creData')
 
       cre_data.css('name').text.should == dn
-      cre_data.css('crDate').text.should == d.created_at.to_time.utc.iso8601
-      cre_data.css('exDate').text.should == d.valid_to.to_time.utc.iso8601
+      cre_data.css('crDate').text.should == d.created_at.in_time_zone.utc.utc.iso8601
+      cre_data.css('exDate').text.should == d.valid_to.in_time_zone.utc.utc.iso8601
 
       response[:clTRID].should == 'ABC-12345'
 
@@ -203,7 +204,16 @@ describe 'EPP Domain', epp: true do
 
       response = epp_plain_request(xml)
       response[:result_code].should == '2302'
-      response[:msg].should == 'Domain name is reserved or restricted [name_dirty]'
+      response[:msg].should == 'Domain name is reserved [name_dirty]'
+      response[:clTRID].should == 'ABC-12345'
+    end
+
+    it 'does not create blocked domain' do
+      xml = domain_create_xml(name: { value: 'ftp.ee' })
+
+      response = epp_plain_request(xml)
+      response[:result_code].should == '2302'
+      response[:msg].should == 'Domain name is blocked [name_dirty]'
       response[:clTRID].should == 'ABC-12345'
     end
 
@@ -746,10 +756,10 @@ describe 'EPP Domain', epp: true do
       trn_data.css('name').text.should == domain.name
       trn_data.css('trStatus').text.should == 'serverApproved'
       trn_data.css('reID').text.should == 'REGDOMAIN2'
-      trn_data.css('reDate').text.should == dtl.transfer_requested_at.to_time.utc.iso8601
+      trn_data.css('reDate').text.should == dtl.transfer_requested_at.in_time_zone.utc.utc.iso8601
       trn_data.css('acID').text.should == 'REGDOMAIN1'
-      trn_data.css('acDate').text.should == dtl.transferred_at.to_time.utc.iso8601
-      trn_data.css('exDate').text.should == domain.valid_to.to_time.utc.iso8601
+      trn_data.css('acDate').text.should == dtl.transferred_at.in_time_zone.utc.utc.iso8601
+      trn_data.css('exDate').text.should == domain.valid_to.in_time_zone.utc.utc.iso8601
 
       domain.registrar.should == @registrar2
 
@@ -791,10 +801,10 @@ describe 'EPP Domain', epp: true do
       trn_data.css('name').text.should == domain.name
       trn_data.css('trStatus').text.should == 'pending'
       trn_data.css('reID').text.should == 'REGDOMAIN1'
-      trn_data.css('reDate').text.should == dtl.transfer_requested_at.to_time.utc.iso8601
-      trn_data.css('acDate').text.should == dtl.wait_until.to_time.utc.iso8601
+      trn_data.css('reDate').text.should == dtl.transfer_requested_at.in_time_zone.utc.utc.iso8601
+      trn_data.css('acDate').text.should == dtl.wait_until.in_time_zone.utc.utc.iso8601
       trn_data.css('acID').text.should == 'REGDOMAIN2'
-      trn_data.css('exDate').text.should == domain.valid_to.to_time.utc.iso8601
+      trn_data.css('exDate').text.should == domain.valid_to.in_time_zone.utc.utc.iso8601
 
       domain.registrar.should == @registrar2
 
@@ -806,10 +816,10 @@ describe 'EPP Domain', epp: true do
       trn_data.css('name').text.should == domain.name
       trn_data.css('trStatus').text.should == 'pending'
       trn_data.css('reID').text.should == 'REGDOMAIN1'
-      trn_data.css('reDate').text.should == dtl.transfer_requested_at.to_time.utc.iso8601
-      trn_data.css('acDate').text.should == dtl.wait_until.to_time.utc.iso8601
+      trn_data.css('reDate').text.should == dtl.transfer_requested_at.in_time_zone.utc.utc.iso8601
+      trn_data.css('acDate').text.should == dtl.wait_until.in_time_zone.utc.utc.iso8601
       trn_data.css('acID').text.should == 'REGDOMAIN2'
-      trn_data.css('exDate').text.should == domain.valid_to.to_time.utc.iso8601
+      trn_data.css('exDate').text.should == domain.valid_to.in_time_zone.utc.utc.iso8601
 
       domain.registrar.should == @registrar2
 
@@ -1213,9 +1223,9 @@ describe 'EPP Domain', epp: true do
       trn_data.css('name').text.should == domain.name
       trn_data.css('trStatus').text.should == 'clientApproved'
       trn_data.css('reID').text.should == 'REGDOMAIN2'
-      trn_data.css('reDate').text.should == dtl.transfer_requested_at.to_time.utc.iso8601
+      trn_data.css('reDate').text.should == dtl.transfer_requested_at.in_time_zone.utc.utc.iso8601
       trn_data.css('acID').text.should == 'REGDOMAIN1'
-      trn_data.css('exDate').text.should == domain.valid_to.to_time.utc.iso8601
+      trn_data.css('exDate').text.should == domain.valid_to.in_time_zone.utc.utc.iso8601
     end
 
     it 'rejects a domain transfer' do
@@ -2187,8 +2197,8 @@ describe 'EPP Domain', epp: true do
       ns1.css('hostName').last.text.should == 'ns1.example.com'
       ns1.css('hostAddr').first.text.should == '192.168.1.1'
       ns1.css('hostAddr').last.text.should == '1080:0:0:0:8:800:200C:417A'
-      inf_data.css('crDate').text.should == domain.created_at.to_time.utc.iso8601
-      inf_data.css('exDate').text.should == domain.valid_to.to_time.utc.iso8601
+      inf_data.css('crDate').text.should == domain.created_at.in_time_zone.utc.utc.iso8601
+      inf_data.css('exDate').text.should == domain.valid_to.in_time_zone.utc.utc.iso8601
       inf_data.css('pw').text.should == domain.auth_info
 
       ds_data_1 = response[:parsed].css('dsData')[0]
@@ -2217,7 +2227,7 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(domain_info_xml(name: { value: domain.name }))
       inf_data = response[:parsed].css('resData infData')
 
-      inf_data.css('upDate').text.should == domain.updated_at.to_time.utc.iso8601
+      inf_data.css('upDate').text.should == domain.updated_at.in_time_zone.utc.utc.iso8601
     end
 
     it 'returns domain info with different nameservers' do

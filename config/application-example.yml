@@ -9,6 +9,7 @@ time_zone: 'Tallinn' # more zones by rake time:zones:all
 # New Relic app name, keep only current mode, remove other names.
 # Example: 'Admin, EPP, REPP' will have name 'Admin, EPP, REPP - production' at New Relic.
 new_relic_app_name: 'Admin, EPP, REPP, Registrar, Registrant'
+new_relic_license_key: '42d1c2ba4ed17a9cf6297c59d80e563a3dd3c4fa'
 
 # You can use `rake secret` to generate a secure secret key.
 # Your secret key is used for verifying the integrity of signed cookies.

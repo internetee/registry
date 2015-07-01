@@ -1,4 +1,3 @@
-# rubocop: disable Metrics/ClassLength
 class Epp::Contact < Contact
   include EppErrors
 
@@ -15,6 +14,7 @@ class Epp::Contact < Contact
     # rubocop: disable Metrics/PerceivedComplexity
     # rubocop: disable Metrics/CyclomaticComplexity
     # rubocop: disable Metrics/MethodLength
+    # rubocop: disable Metrics/AbcSize
     def attrs_from(frame, rem = nil)
       f = frame
       at = {}.with_indifferent_access
@@ -53,6 +53,7 @@ class Epp::Contact < Contact
     # rubocop: enable Metrics/MethodLength
     # rubocop: enable Metrics/PerceivedComplexity
     # rubocop: enable Metrics/CyclomaticComplexity
+    # rubocop: enable Metrics/AbcSize
 
     def new(frame, registrar)
       return super if frame.blank?
@@ -149,4 +150,3 @@ class Epp::Contact < Contact
     super(at)
   end
 end
-# rubocop: enable Metrics/ClassLength

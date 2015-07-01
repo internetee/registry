@@ -57,3 +57,8 @@ Rails.application.configure do
     Bullet.add_whitelist type: :n_plus_one_query, class_name: 'Contact', association: :registrar
   end
 end
+
+# In this mode, any jobs you queue will be run in the same thread, synchronously
+# (that is, MyJob.enqueue runs the job and won't return until it's completed).
+# This makes your application's behavior easier to test
+Que.mode = :sync 

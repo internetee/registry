@@ -30,6 +30,7 @@ class WhoisRecord < ActiveRecord::Base
   end
 
   # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
   def generate_json
     h = HashWithIndifferentAccess.new
     return h if domain.blank?
@@ -108,10 +109,11 @@ More information at http://internet.ee
     EOS
   end
   # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
 
   def contacts_body(admins, techs)
     admins ||= []
-    techs  ||= []
+    techs ||= []
 
     out = ''
     out << (admins.size > 1 ? "\nAdministrative contacts" : "\nAdministrative contact")

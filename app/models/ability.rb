@@ -3,6 +3,7 @@ class Ability
   # rubocop: disable Metrics/CyclomaticComplexity
   # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/LineLength
+  # rubocop: disable Metrics/AbcSize
   def initialize(user)
     alias_action :show, to: :view
     alias_action :show, :create, :update, :destroy, to: :crud
@@ -105,6 +106,7 @@ class Ability
   def admin
     customer_service
     can :manage, Setting
+    can :manage, BlockedDomain
     can :manage, ZonefileSetting
     can :manage, DomainVersion
     can :manage, Pricelist
