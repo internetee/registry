@@ -287,7 +287,7 @@ GEM
     kgio (2.9.3)
     launchy (2.4.3)
       addressable (~> 2.3)
-    libv8 (3.16.14.9)
+    libv8 (3.16.14.8)
     libxml-ruby (2.8.0)
     listen (2.10.1)
       celluloid (~> 0.16.0)
