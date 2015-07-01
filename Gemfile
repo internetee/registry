@@ -86,8 +86,9 @@ gem 'epp-xml',   '~> 1.0.3'  # EIS EPP XMLs
 gem 'uuidtools', '~> 2.1.4' # For unique IDs (used by the epp gem)
 
 # que
-gem 'que', '~> 0.10.0'
-gem 'que-web', '~> 0.4.0'
+gem 'que',           '~> 0.10.0'
+gem 'que-web',       '~> 0.4.0'
+gem 'daemons-rails', '~> 1.2.1'
 
 # for importing legacy db
 gem 'activerecord-import', '~> 0.7.0' # for inserting dummy data

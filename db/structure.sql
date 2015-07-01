@@ -25,167 +25,6 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 SET search_path = public, pg_catalog;
 
---
--- Name: generate_zonefile(character varying); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
-    LANGUAGE plpgsql
-    AS $_$
-      DECLARE
-        zone_header text := concat('$ORIGIN ', i_origin, '.');
-        serial_num varchar;
-        include_filter varchar := '';
-        exclude_filter varchar := '';
-        tmp_var text;
-        ret text;
-      BEGIN
-        -- define filters
-        include_filter = '%.' || i_origin;
-
-        -- for %.%.%
-        IF i_origin ~ '\.' THEN
-          exclude_filter := '';
-        -- for %.%
-        ELSE
-          exclude_filter := '%.%.' || i_origin;
-        END IF;
-
-        SELECT ROUND(extract(epoch from now() at time zone 'utc')) INTO serial_num;
-
-        -- zonefile header
-        SELECT concat(
-          format('%-10s', '$ORIGIN .'), chr(10),
-          format('%-10s', '$TTL'), zf.ttl, chr(10), chr(10),
-          format('%-10s', i_origin || '.'), 'IN SOA ', zf.master_nameserver, '. ', zf.email, '. (', chr(10),
-          format('%-17s', ''), format('%-12s', serial_num), '; serial number', chr(10),
-          format('%-17s', ''), format('%-12s', zf.refresh), '; refresh, seconds', chr(10),
-          format('%-17s', ''), format('%-12s', zf.retry), '; retry, seconds', chr(10),
-          format('%-17s', ''), format('%-12s', zf.expire), '; expire, seconds', chr(10),
-          format('%-17s', ''), format('%-12s', zf.minimum_ttl), '; minimum TTL, seconds', chr(10),
-          format('%-17s', ''), ')'
-        ) FROM zonefile_settings zf WHERE i_origin = zf.origin INTO tmp_var;
-
-        ret = concat(tmp_var, chr(10), chr(10));
-
-        -- ns records
-        SELECT array_to_string(
-          array(
-            SELECT concat(d.name_puny, '. IN NS ', ns.hostname, '.')
-            FROM domains d
-            JOIN nameservers ns ON ns.domain_id = d.id
-            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
-            ORDER BY d.name
-          ),
-          chr(10)
-        ) INTO tmp_var;
-
-        ret := concat(ret, '; Zone NS Records', chr(10), tmp_var, chr(10), chr(10));
-
-        -- a glue records for origin nameservers
-        SELECT array_to_string(
-          array(
-            SELECT concat(ns.hostname, '. IN A ', ns.ipv4)
-            FROM nameservers ns
-            JOIN domains d ON d.id = ns.domain_id
-            WHERE d.name = i_origin
-            AND ns.hostname LIKE '%.' || d.name
-            AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> ''
-          ), chr(10)
-        ) INTO tmp_var;
-
-        ret := concat(ret, '; Zone A Records', chr(10), tmp_var);
-
-        -- a glue records for other nameservers
-        SELECT array_to_string(
-          array(
-            SELECT concat(ns.hostname, '. IN A ', ns.ipv4)
-            FROM nameservers ns
-            JOIN domains d ON d.id = ns.domain_id
-            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
-            AND ns.hostname LIKE '%.' || d.name
-            AND d.name <> i_origin
-            AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> ''
-            AND NOT EXISTS ( -- filter out glue records that already appeared in origin glue recrods
-              SELECT 1 FROM nameservers nsi
-              JOIN domains di ON nsi.domain_id = di.id
-              WHERE di.name = i_origin
-              AND nsi.hostname = ns.hostname
-            )
-          ), chr(10)
-        ) INTO tmp_var;
-
-        -- TODO This is a possible subtitition to the previous query, stress testing is needed to see which is faster
-
-        -- SELECT ns.*
-        -- FROM nameservers ns
-        -- JOIN domains d ON d.id = ns.domain_id
-        -- WHERE d.name LIKE '%ee' AND d.name NOT LIKE '%pri.ee'
-        -- AND ns.hostname LIKE '%.' || d.name
-        -- AND d.name <> 'ee'
-        -- AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> ''
-        -- AND ns.hostname NOT IN (
-        --   SELECT ns.hostname FROM domains d JOIN nameservers ns ON d.id = ns.domain_id WHERE d.name = 'ee'
-        -- )
-
-        ret := concat(ret, chr(10), tmp_var, chr(10), chr(10));
-
-        -- aaaa glue records for origin nameservers
-        SELECT array_to_string(
-          array(
-            SELECT concat(ns.hostname, '. IN AAAA ', ns.ipv6)
-            FROM nameservers ns
-            JOIN domains d ON d.id = ns.domain_id
-            WHERE d.name = i_origin
-            AND ns.hostname LIKE '%.' || d.name
-            AND ns.ipv6 IS NOT NULL AND ns.ipv6 <> ''
-          ), chr(10)
-        ) INTO tmp_var;
-
-        ret := concat(ret, '; Zone AAAA Records', chr(10), tmp_var);
-
-        -- aaaa glue records for other nameservers
-        SELECT array_to_string(
-          array(
-            SELECT concat(ns.hostname, '. IN AAAA ', ns.ipv6)
-            FROM nameservers ns
-            JOIN domains d ON d.id = ns.domain_id
-            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
-            AND ns.hostname LIKE '%.' || d.name
-            AND d.name <> i_origin
-            AND ns.ipv6 IS NOT NULL AND ns.ipv6 <> ''
-            AND NOT EXISTS ( -- filter out glue records that already appeared in origin glue recrods
-              SELECT 1 FROM nameservers nsi
-              JOIN domains di ON nsi.domain_id = di.id
-              WHERE di.name = i_origin
-              AND nsi.hostname = ns.hostname
-            )
-          ), chr(10)
-        ) INTO tmp_var;
-
-        ret := concat(ret, chr(10), tmp_var, chr(10), chr(10));
-
-        -- ds records
-        SELECT array_to_string(
-          array(
-            SELECT concat(
-              d.name_puny, '. IN DS ', dk.ds_key_tag, ' ',
-              dk.ds_alg, ' ', dk.ds_digest_type, ' ( ', dk.ds_digest, ' )'
-            )
-            FROM domains d
-            JOIN dnskeys dk ON dk.domain_id = d.id
-            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter AND dk.flags = 257
-            ),
-          chr(10)
-        ) INTO tmp_var;
-
-        ret := concat(ret, '; Zone DS Records', chr(10), tmp_var, chr(10));
-
-        RETURN ret;
-      END;
-      $_$;
-
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -470,39 +309,6 @@ CREATE SEQUENCE banklink_transactions_id_seq
 --
 
 ALTER SEQUENCE banklink_transactions_id_seq OWNED BY banklink_transactions.id;
-
-
---
--- Name: blocked_domains; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE blocked_domains (
-    id integer NOT NULL,
-    names character varying[],
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    creator_str character varying,
-    updator_str character varying
-);
-
-
---
--- Name: blocked_domains_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE blocked_domains_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: blocked_domains_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE blocked_domains_id_seq OWNED BY blocked_domains.id;
 
 
 --
@@ -1389,43 +1195,6 @@ CREATE SEQUENCE log_bank_transactions_id_seq
 --
 
 ALTER SEQUENCE log_bank_transactions_id_seq OWNED BY log_bank_transactions.id;
-
-
---
--- Name: log_blocked_domains; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE log_blocked_domains (
-    id integer NOT NULL,
-    item_type character varying NOT NULL,
-    item_id integer NOT NULL,
-    event character varying NOT NULL,
-    whodunnit character varying,
-    object json,
-    object_changes json,
-    created_at timestamp without time zone,
-    session character varying,
-    children json
-);
-
-
---
--- Name: log_blocked_domains_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE log_blocked_domains_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: log_blocked_domains_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE log_blocked_domains_id_seq OWNED BY log_blocked_domains.id;
 
 
 --
@@ -2404,7 +2173,7 @@ ALTER SEQUENCE pricelists_id_seq OWNED BY pricelists.id;
 
 CREATE TABLE que_jobs (
     priority smallint DEFAULT 100 NOT NULL,
-    run_at timestamp without time zone DEFAULT '2015-06-30 14:16:50.905537'::timestamp without time zone NOT NULL,
+    run_at timestamp without time zone DEFAULT '2015-06-29 12:38:58.258132'::timestamp without time zone NOT NULL,
     job_id bigint DEFAULT 0 NOT NULL,
     job_class text NOT NULL,
     args json DEFAULT '[]'::json NOT NULL,
@@ -2823,13 +2592,6 @@ ALTER TABLE ONLY banklink_transactions ALTER COLUMN id SET DEFAULT nextval('bank
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY blocked_domains ALTER COLUMN id SET DEFAULT nextval('blocked_domains_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY certificates ALTER COLUMN id SET DEFAULT nextval('certificates_id_seq'::regclass);
 
 
@@ -2978,13 +2740,6 @@ ALTER TABLE ONLY log_bank_statements ALTER COLUMN id SET DEFAULT nextval('log_ba
 --
 
 ALTER TABLE ONLY log_bank_transactions ALTER COLUMN id SET DEFAULT nextval('log_bank_transactions_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY log_blocked_domains ALTER COLUMN id SET DEFAULT nextval('log_blocked_domains_id_seq'::regclass);
 
 
 --
@@ -3289,14 +3044,6 @@ ALTER TABLE ONLY banklink_transactions
 
 
 --
--- Name: blocked_domains_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY blocked_domains
-    ADD CONSTRAINT blocked_domains_pkey PRIMARY KEY (id);
-
-
---
 -- Name: certificates_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3470,14 +3217,6 @@ ALTER TABLE ONLY log_bank_statements
 
 ALTER TABLE ONLY log_bank_transactions
     ADD CONSTRAINT log_bank_transactions_pkey PRIMARY KEY (id);
-
-
---
--- Name: log_blocked_domains_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY log_blocked_domains
-    ADD CONSTRAINT log_blocked_domains_pkey PRIMARY KEY (id);
 
 
 --
@@ -4080,20 +3819,6 @@ CREATE INDEX index_log_bank_transactions_on_item_type_and_item_id ON log_bank_tr
 --
 
 CREATE INDEX index_log_bank_transactions_on_whodunnit ON log_bank_transactions USING btree (whodunnit);
-
-
---
--- Name: index_log_blocked_domains_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_blocked_domains_on_item_type_and_item_id ON log_blocked_domains USING btree (item_type, item_id);
-
-
---
--- Name: index_log_blocked_domains_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_blocked_domains_on_whodunnit ON log_blocked_domains USING btree (whodunnit);
 
 
 --
@@ -4807,6 +4532,4 @@ INSERT INTO schema_migrations (version) VALUES ('20150610144547');
 INSERT INTO schema_migrations (version) VALUES ('20150611124920');
 
 INSERT INTO schema_migrations (version) VALUES ('20150612123111');
-
-INSERT INTO schema_migrations (version) VALUES ('20150701074344');
 

@@ -47,3 +47,8 @@ Rails.application.configure do
     Bullet.unused_eager_loading_enable = false
   end
 end
+
+# In this mode, any jobs you queue will be run in the same thread, synchronously
+# (that is, MyJob.enqueue runs the job and won't return until it's completed).
+# This makes your application's behavior easier to test
+Que.mode = :sync 
