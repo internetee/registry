@@ -106,6 +106,7 @@ class Ability
   def admin
     customer_service
     can :manage, Setting
+    can :manage, BlockedDomain
     can :manage, ZonefileSetting
     can :manage, DomainVersion
     can :manage, Pricelist

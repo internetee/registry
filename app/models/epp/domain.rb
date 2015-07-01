@@ -62,7 +62,8 @@ class Epp::Domain < Domain
       ],
       '2302' => [ # Object exists
         [:name_dirty, :taken, { value: { obj: 'name', val: name_dirty } }],
-        [:name_dirty, :reserved, { value: { obj: 'name', val: name_dirty } }]
+        [:name_dirty, :reserved, { value: { obj: 'name', val: name_dirty } }],
+        [:name_dirty, :blocked, { value: { obj: 'name', val: name_dirty } }]
       ],
       '2304' => [ # Object status prohibits operation
         [:base, :domain_status_prohibits_operation]

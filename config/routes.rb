@@ -189,6 +189,8 @@ Rails.application.routes.draw do
 
     resources :settings
 
+    resources :blocked_domains
+
     resources :registrars do
       resources :api_users
       resources :white_ips

@@ -62,7 +62,8 @@ en:
               key_data_not_allowed: 'keyData object is not allowed'
             name_dirty:
               invalid: 'Domain name is invalid'
-              reserved: 'Domain name is reserved or restricted'
+              reserved: 'Domain name is reserved'
+              blocked: 'Domain name is blocked'
               taken: 'Domain name already exists'
             puny_label:
               too_long: 'Domain name is too long (maximum is 63 characters)'
@@ -852,3 +853,4 @@ en:
   registry_state: 'State / Province'
   registry_zip: 'Postcode'
   registry_country_code: 'Country'
+  blocked_domains: 'Blocked domains'
