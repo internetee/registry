@@ -398,7 +398,7 @@ sudo apt-get install libxext-dev libxrender1 fontconfig
 ### Deployment
 
 * [Application build and update](/doc/application_build_doc.md)
-
+* [Registry que server](/doc/que/README.md)
 
 ### Autotesting
 
