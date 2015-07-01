@@ -16,6 +16,7 @@ describe 'EPP Domain', epp: true do
     Fabricate(:contact, code: 'FIXED:SH801333')
     Fabricate(:contact, code: 'FIXED:JURIDICAL_1234', ident_type: 'bic')
     Fabricate(:reserved_domain)
+    Fabricate(:blocked_domain)
 
     @uniq_no = proc { @i ||= 0; @i += 1 }
   end
@@ -204,6 +205,15 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(xml)
       response[:result_code].should == '2302'
       response[:msg].should == 'Domain name is reserved [name_dirty]'
+      response[:clTRID].should == 'ABC-12345'
+    end
+
+    it 'does not create blocked domain' do
+      xml = domain_create_xml(name: { value: 'ftp.ee' })
+
+      response = epp_plain_request(xml)
+      response[:result_code].should == '2302'
+      response[:msg].should == 'Domain name is blocked [name_dirty]'
       response[:clTRID].should == 'ABC-12345'
     end
 
