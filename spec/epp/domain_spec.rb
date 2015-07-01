@@ -203,7 +203,7 @@ describe 'EPP Domain', epp: true do
 
       response = epp_plain_request(xml)
       response[:result_code].should == '2302'
-      response[:msg].should == 'Domain name is reserved or restricted [name_dirty]'
+      response[:msg].should == 'Domain name is reserved [name_dirty]'
       response[:clTRID].should == 'ABC-12345'
     end
 

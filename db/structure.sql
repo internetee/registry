@@ -74,7 +74,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
             SELECT concat(d.name_puny, '. IN NS ', ns.hostname, '.')
             FROM domains d
             JOIN nameservers ns ON ns.domain_id = d.id
-            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter OR d.name = i_origin
+            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
             ORDER BY d.name
           ),
           chr(10)
@@ -2404,7 +2404,7 @@ ALTER SEQUENCE pricelists_id_seq OWNED BY pricelists.id;
 
 CREATE TABLE que_jobs (
     priority smallint DEFAULT 100 NOT NULL,
-    run_at timestamp without time zone DEFAULT '2015-06-30 14:16:49.190473'::timestamp without time zone NOT NULL,
+    run_at timestamp without time zone DEFAULT '2015-06-30 14:16:50.905537'::timestamp without time zone NOT NULL,
     job_id bigint DEFAULT 0 NOT NULL,
     job_class text NOT NULL,
     args json DEFAULT '[]'::json NOT NULL,
@@ -4792,25 +4792,13 @@ INSERT INTO schema_migrations (version) VALUES ('20150520164507');
 
 INSERT INTO schema_migrations (version) VALUES ('20150521120145');
 
-INSERT INTO schema_migrations (version) VALUES ('20150522164020');
-
-INSERT INTO schema_migrations (version) VALUES ('20150525075550');
-
-INSERT INTO schema_migrations (version) VALUES ('20150601083516');
-
-INSERT INTO schema_migrations (version) VALUES ('20150601083800');
-
 INSERT INTO schema_migrations (version) VALUES ('20150603141549');
 
 INSERT INTO schema_migrations (version) VALUES ('20150603211318');
 
 INSERT INTO schema_migrations (version) VALUES ('20150603212659');
 
-INSERT INTO schema_migrations (version) VALUES ('20150609093515');
-
 INSERT INTO schema_migrations (version) VALUES ('20150609103333');
-
-INSERT INTO schema_migrations (version) VALUES ('20150610111019');
 
 INSERT INTO schema_migrations (version) VALUES ('20150610112238');
 
@@ -4819,8 +4807,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150610144547');
 INSERT INTO schema_migrations (version) VALUES ('20150611124920');
 
 INSERT INTO schema_migrations (version) VALUES ('20150612123111');
-
-INSERT INTO schema_migrations (version) VALUES ('20150612125720');
 
 INSERT INTO schema_migrations (version) VALUES ('20150701074344');
 
