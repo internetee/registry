@@ -10,15 +10,29 @@ class EppController < ApplicationController
   before_action :update_epp_session
   helper_method :current_user
 
-  rescue_from CanCan::AccessDenied do |_exception|
+  rescue_from StandardError do |e|
     @errors ||= []
 
-    if @errors.blank?
-      @errors = [{
-        msg: t('errors.messages.epp_authorization_error'),
-        code: '2201'
-      }]
+    if e.class == CanCan::AccessDenied
+      if @errors.blank?
+        @errors = [{
+          msg: t('errors.messages.epp_authorization_error'),
+          code: '2201'
+        }]
+      end
+    else
+      if @errors.blank?
+        @errors = [{
+          msg: 'Internal error.',
+          code: '2400'
+        }]
+      end
+
+      logger.error e.message
+      logger.error e.backtrace.join("\n")
+      # TODO: NOITFY AIRBRAKE / ERRBIT HERE
     end
+
     render_epp_response '/epp/error'
   end
 
