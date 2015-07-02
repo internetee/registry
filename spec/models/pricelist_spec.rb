@@ -70,6 +70,8 @@ describe Pricelist do
   end
 
   it 'should return correct price' do
+    expect { Pricelist.price_for('ee', 'create', '1year') }.to raise_error(NoMethodError)
+
     Fabricate(:pricelist, {
       category: 'ee',
       operation_category: 'create',
