@@ -23,8 +23,8 @@ class Pricelist < ActiveRecord::Base
   end
 
   class << self
-    def price_for(category, operation, duration)
-      lists = valid.where(category: category, operation_category: operation, duration: duration)
+    def price_for(zone, operation, period)
+      lists = valid.where(category: zone, operation_category: operation, duration: period)
       return lists.first.price if lists.count == 1
       lists.where('valid_to IS NOT NULL').order(valid_from: :desc).first.price
     end

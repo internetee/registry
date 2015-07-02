@@ -854,3 +854,5 @@ en:
   registry_zip: 'Postcode'
   registry_country_code: 'Country'
   blocked_domains: 'Blocked domains'
+  billing_failure_credit_balance_low: 'Billing failure - credit balance low'
+  create: 'Create'

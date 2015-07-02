@@ -20,7 +20,7 @@
               - if x.invoice
                 %td= link_to(x.invoice, [:registrar, x.invoice])
               - else
-                %td \-
+                %td -
               - c = x.sum > 0.0 ? 'text-success' : 'text-danger'
               - s = x.sum > 0.0 ? "+#{x.sum} #{x.currency}" : "#{x.sum} #{x.currency}"
               %td{class: c}= s
