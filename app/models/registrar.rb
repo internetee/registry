@@ -131,6 +131,14 @@ class Registrar < ActiveRecord::Base
     )
   end
 
+  def credit!(sum, description)
+    cash_account.account_activities.create!(
+      sum: sum,
+      currency: 'EUR',
+      description: description
+    )
+  end
+
   def domain_transfers
     at = DomainTransfer.arel_table
     DomainTransfer.where(
