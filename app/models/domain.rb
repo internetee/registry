@@ -374,7 +374,12 @@ class Domain < ActiveRecord::Base
 
   def price(operation)
     zone = name.split('.').drop(1).join('.')
-    p = "#{self.period}year"
+
+    p = period / 365 if period_unit == 'd'
+    p = period / 12 if period_unit == 'm'
+    p = period if period_unit == 'y'
+
+    p = "#{p}year"
     Pricelist.price_for(zone, operation, p)
   end
 

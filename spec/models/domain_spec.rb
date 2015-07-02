@@ -182,6 +182,26 @@ describe Domain do
       @domain.force_delete_at.should be_nil
     end
 
+    it 'should know its price' do
+      Fabricate(:pricelist, {
+        category: 'ee',
+        operation_category: 'create',
+        duration: '1year',
+        price: 1.50,
+        valid_from: Time.zone.parse('2015-01-01'),
+        valid_to: nil
+      })
+
+      domain = Fabricate(:domain)
+      domain.price('create').should == 1.50
+
+      domain = Fabricate(:domain, period: 12, period_unit: 'm')
+      domain.price('create').should == 1.50
+
+      domain = Fabricate(:domain, period: 365, period_unit: 'd')
+      domain.price('create').should == 1.50
+    end
+
     context 'about registrant update confirm' do
       before :all do
         @domain.registrant_verification_token = 123
