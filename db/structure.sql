@@ -312,6 +312,39 @@ ALTER SEQUENCE banklink_transactions_id_seq OWNED BY banklink_transactions.id;
 
 
 --
+-- Name: blocked_domains; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE blocked_domains (
+    id integer NOT NULL,
+    names character varying[],
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    creator_str character varying,
+    updator_str character varying
+);
+
+
+--
+-- Name: blocked_domains_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE blocked_domains_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: blocked_domains_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE blocked_domains_id_seq OWNED BY blocked_domains.id;
+
+
+--
 -- Name: cached_nameservers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1195,6 +1228,43 @@ CREATE SEQUENCE log_bank_transactions_id_seq
 --
 
 ALTER SEQUENCE log_bank_transactions_id_seq OWNED BY log_bank_transactions.id;
+
+
+--
+-- Name: log_blocked_domains; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE log_blocked_domains (
+    id integer NOT NULL,
+    item_type character varying NOT NULL,
+    item_id integer NOT NULL,
+    event character varying NOT NULL,
+    whodunnit character varying,
+    object json,
+    object_changes json,
+    created_at timestamp without time zone,
+    session character varying,
+    children json
+);
+
+
+--
+-- Name: log_blocked_domains_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE log_blocked_domains_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: log_blocked_domains_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE log_blocked_domains_id_seq OWNED BY log_blocked_domains.id;
 
 
 --
@@ -2592,6 +2662,13 @@ ALTER TABLE ONLY banklink_transactions ALTER COLUMN id SET DEFAULT nextval('bank
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY blocked_domains ALTER COLUMN id SET DEFAULT nextval('blocked_domains_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY certificates ALTER COLUMN id SET DEFAULT nextval('certificates_id_seq'::regclass);
 
 
@@ -2740,6 +2817,13 @@ ALTER TABLE ONLY log_bank_statements ALTER COLUMN id SET DEFAULT nextval('log_ba
 --
 
 ALTER TABLE ONLY log_bank_transactions ALTER COLUMN id SET DEFAULT nextval('log_bank_transactions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY log_blocked_domains ALTER COLUMN id SET DEFAULT nextval('log_blocked_domains_id_seq'::regclass);
 
 
 --
@@ -3044,6 +3128,14 @@ ALTER TABLE ONLY banklink_transactions
 
 
 --
+-- Name: blocked_domains_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY blocked_domains
+    ADD CONSTRAINT blocked_domains_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: certificates_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3217,6 +3309,14 @@ ALTER TABLE ONLY log_bank_statements
 
 ALTER TABLE ONLY log_bank_transactions
     ADD CONSTRAINT log_bank_transactions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: log_blocked_domains_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY log_blocked_domains
+    ADD CONSTRAINT log_blocked_domains_pkey PRIMARY KEY (id);
 
 
 --
@@ -3819,6 +3919,20 @@ CREATE INDEX index_log_bank_transactions_on_item_type_and_item_id ON log_bank_tr
 --
 
 CREATE INDEX index_log_bank_transactions_on_whodunnit ON log_bank_transactions USING btree (whodunnit);
+
+
+--
+-- Name: index_log_blocked_domains_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_log_blocked_domains_on_item_type_and_item_id ON log_blocked_domains USING btree (item_type, item_id);
+
+
+--
+-- Name: index_log_blocked_domains_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_log_blocked_domains_on_whodunnit ON log_blocked_domains USING btree (whodunnit);
 
 
 --
@@ -4532,4 +4646,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150610144547');
 INSERT INTO schema_migrations (version) VALUES ('20150611124920');
 
 INSERT INTO schema_migrations (version) VALUES ('20150612123111');
+
+INSERT INTO schema_migrations (version) VALUES ('20150701074344');
 
