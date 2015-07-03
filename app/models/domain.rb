@@ -372,14 +372,22 @@ class Domain < ActiveRecord::Base
     DomainMailer.pending_deleted(self).deliver_now
   end
 
-  def price(operation)
+  def price(operation, period_i = nil, unit = nil)
+    period_i ||= period
+    unit ||= period_unit
+
     zone = name.split('.').drop(1).join('.')
 
-    p = period / 365 if period_unit == 'd'
-    p = period / 12 if period_unit == 'm'
-    p = period if period_unit == 'y'
+    p = period_i / 365 if unit == 'd'
+    p = period_i / 12 if unit == 'm'
+    p = period_i if unit == 'y'
 
-    p = "#{p}year"
+    if p > 1
+      p = "#{p}years"
+    else
+      p = "#{p}year"
+    end
+
     Pricelist.price_for(zone, operation, p)
   end
 

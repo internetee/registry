@@ -20,6 +20,7 @@ describe 'EPP Domain', epp: true do
     Fabricate(:reserved_domain)
     Fabricate(:blocked_domain)
     Fabricate(:pricelist, valid_to: nil)
+    Fabricate(:pricelist, operation_category: 'renew', price: 15, valid_to: nil)
 
     @uniq_no = proc { @i ||= 0; @i += 1 }
   end
