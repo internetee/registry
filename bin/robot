@@ -31,8 +31,6 @@ bundle install
 
 RAILS_ENV=test bundle exec rake db:all:drop
 RAILS_ENV=test bundle exec rake db:all:setup
-RAILS_ENV=test bundle exec rake zonefile:replace_procedure
-RAILS_ENV=test bundle exec rake assets:precompile
 
 echo "GIT_LAST_COMMITS"
 git log --pretty='%s  (%cn, %cr)' --abbrev-commit --graph --decorate -n 20 --no-color
@@ -44,7 +42,7 @@ RCODE=$?
 echo "END_OF_RUBOCOP_RESULTS"
 
 echo "TEST_RESULTS"
-# basic test
+# basic tests without EPP
 # ROBOT=true bundle exec rake
 
 # all tests with EPP
