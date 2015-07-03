@@ -23,6 +23,8 @@ describe 'EPP Domain', epp: true do
     Fabricate(:pricelist, duration: '2years', price: 20, valid_to: nil)
     Fabricate(:pricelist, duration: '3years', price: 30, valid_to: nil)
     Fabricate(:pricelist, operation_category: 'renew', price: 15, valid_to: nil)
+    Fabricate(:pricelist, operation_category: 'renew', duration: '2years', price: 35, valid_to: nil)
+    Fabricate(:pricelist, operation_category: 'renew', duration: '3years', price: 62, valid_to: nil)
 
     @uniq_no = proc { @i ||= 0; @i += 1 }
   end
@@ -2030,6 +2032,9 @@ describe 'EPP Domain', epp: true do
 
     ### RENEW ###
     it 'renews a domain' do
+      old_balance = @registrar1.balance
+      old_activities = @registrar1.cash_account.account_activities.count
+
       domain.valid_to = Time.zone.now.to_date + 10.days
       domain.save
 
@@ -2048,6 +2053,99 @@ describe 'EPP Domain', epp: true do
       name = response[:parsed].css('renData name').text
       ex_date.should == "#{(exp_date + 1.year)}T00:00:00Z"
       name.should == domain.name
+
+      @registrar1.balance.should == old_balance - 15.0
+      @registrar1.cash_account.account_activities.count.should == old_activities + 1
+      a = @registrar1.cash_account.account_activities.last
+      a.description.should == "Renew #{Domain.last.name}"
+      a.sum.should == -BigDecimal.new('15.0')
+    end
+
+    it 'renews a domain with 2 year period' do
+      old_balance = @registrar1.balance
+      old_activities = @registrar1.cash_account.account_activities.count
+
+      domain.valid_to = Time.zone.now.to_date + 10.days
+      domain.save
+
+      exp_date = domain.valid_to.to_date
+      xml = @epp_xml.domain.renew(
+        name: { value: domain.name },
+        curExpDate: { value: exp_date.to_s },
+        period: { value: '730', attrs: { unit: 'd' } }
+      )
+
+      response = epp_plain_request(xml)
+      response[:results][0][:msg].should == 'Command completed successfully'
+      response[:results][0][:result_code].should == '1000'
+
+      ex_date = response[:parsed].css('renData exDate').text
+      name = response[:parsed].css('renData name').text
+      ex_date.should == "#{(exp_date + 2.year)}T00:00:00Z"
+      name.should == domain.name
+
+      @registrar1.balance.should == old_balance - 35.0
+      @registrar1.cash_account.account_activities.count.should == old_activities + 1
+      a = @registrar1.cash_account.account_activities.last
+      a.description.should == "Renew #{Domain.last.name}"
+      a.sum.should == -BigDecimal.new('35.0')
+    end
+
+    it 'renews a domain with 3 year period' do
+      old_balance = @registrar1.balance
+      old_activities = @registrar1.cash_account.account_activities.count
+
+      domain.valid_to = Time.zone.now.to_date + 10.days
+      domain.save
+
+      exp_date = domain.valid_to.to_date
+      xml = @epp_xml.domain.renew(
+        name: { value: domain.name },
+        curExpDate: { value: exp_date.to_s },
+        period: { value: '36', attrs: { unit: 'm' } }
+      )
+
+      response = epp_plain_request(xml)
+      response[:results][0][:msg].should == 'Command completed successfully'
+      response[:results][0][:result_code].should == '1000'
+
+      ex_date = response[:parsed].css('renData exDate').text
+      name = response[:parsed].css('renData name').text
+      ex_date.should == "#{(exp_date + 3.year)}T00:00:00Z"
+      name.should == domain.name
+
+      @registrar1.balance.should == old_balance - 62.0
+      @registrar1.cash_account.account_activities.count.should == old_activities + 1
+      a = @registrar1.cash_account.account_activities.last
+      a.description.should == "Renew #{Domain.last.name}"
+      a.sum.should == -BigDecimal.new('62.0')
+    end
+
+    it 'does not renew a domain if credit balance low' do
+      f = Fabricate(:pricelist, valid_to: Time.zone.now + 1.day, operation_category: 'renew', duration: '1year', price: 100000)
+      old_balance = @registrar1.balance
+      old_activities = @registrar1.cash_account.account_activities.count
+
+      domain.valid_to = Time.zone.now.to_date + 10.days
+      domain.save
+
+      exp_date = domain.valid_to.to_date
+      xml = @epp_xml.domain.renew(
+        name: { value: domain.name },
+        curExpDate: { value: exp_date.to_s },
+        period: { value: '1', attrs: { unit: 'y' } }
+      )
+
+      response = epp_plain_request(xml)
+      response[:results][0][:msg].should == 'Billing failure - credit balance low'
+      response[:results][0][:result_code].should == '2104'
+
+      domain.reload
+      domain.valid_to.should == exp_date # ensure domain was not renewed
+
+      @registrar1.balance.should == old_balance
+      @registrar1.cash_account.account_activities.count.should == old_activities
+      f.delete
     end
 
     it 'returns an error when given and current exp dates do not match' do
