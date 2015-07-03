@@ -372,6 +372,17 @@ class Domain < ActiveRecord::Base
     DomainMailer.pending_deleted(self).deliver_now
   end
 
+  def price(operation)
+    zone = name.split('.').drop(1).join('.')
+
+    p = period / 365 if period_unit == 'd'
+    p = period / 12 if period_unit == 'm'
+    p = period if period_unit == 'y'
+
+    p = "#{p}year"
+    Pricelist.price_for(zone, operation, p)
+  end
+
   ### VALIDATIONS ###
 
   def validate_nameserver_ips

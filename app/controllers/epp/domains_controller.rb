@@ -21,11 +21,18 @@ class Epp::DomainsController < EppController
   def create
     authorize! :create, Epp::Domain
     @domain = Epp::Domain.new_from_epp(params[:parsed_frame], current_user)
+    @domain.valid?
 
-    if @domain.errors.any? || !@domain.save
-      handle_errors(@domain)
-    else
-      render_epp_response '/epp/domains/create'
+    handle_errors(@domain) and return if @domain.errors.any?
+    handle_errors and return unless balance_ok?('create')
+
+    ActiveRecord::Base.transaction do
+      if @domain.save
+        current_user.registrar.debit!(@domain_price, "#{I18n.t('create')} #{@domain.name}")
+        render_epp_response '/epp/domains/create'
+      else
+        handle_errors(@domain)
+      end
     end
   end
 
@@ -184,5 +191,17 @@ class Epp::DomainsController < EppController
       code: '2306',
       msg: "#{I18n.t(:client_side_status_editing_error)}: status [status]"
     }
+  end
+
+  def balance_ok?(operation)
+    @domain_price = @domain.price(operation).amount
+    if current_user.registrar.balance < @domain_price
+      epp_errors << {
+        code: '2104',
+        msg: I18n.t('billing_failure_credit_balance_low')
+      }
+      return false
+    end
+    true
   end
 end
