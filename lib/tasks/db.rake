@@ -6,6 +6,12 @@ Rake::Task["db:migrate"].enhance do
   end
 end
 
+Rake::Task["db:rollback"].enhance do
+  if ActiveRecord::Base.schema_format == :sql
+    Rake::Task["db:schema:dump"].invoke
+  end
+end
+
 Rake::Task["db:schema:dump"].enhance do
   if ActiveRecord::Base.schema_format == :sql
     File.rename('db/schema.rb', 'db/schema-read-only.rb')
