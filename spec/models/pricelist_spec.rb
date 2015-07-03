@@ -55,7 +55,7 @@ describe Pricelist do
     end
 
     it 'should have name' do
-      @pricelist.name.should == 'new .ee'
+      @pricelist.name.should == 'create ee'
     end
 
     it 'should have one version' do

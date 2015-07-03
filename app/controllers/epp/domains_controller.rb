@@ -18,16 +18,18 @@ class Epp::DomainsController < EppController
     render_epp_response '/epp/domains/info'
   end
 
+  # rubocop: disable Metrics/PerceivedComplexity
+  # rubocop: disable Metrics/CyclomaticComplexity
   def create
     authorize! :create, Epp::Domain
     @domain = Epp::Domain.new_from_epp(params[:parsed_frame], current_user)
-    @domain.valid?
-
     handle_errors(@domain) and return if @domain.errors.any?
+    handle_errors(@domain) and return if @domain.valid? && @domain.errors.any?
+
     handle_errors and return unless balance_ok?('create')
 
     ActiveRecord::Base.transaction do
-      if @domain.save
+      if @domain.save # TODO: Maybe use validate: false here because we have already validated the domain?
         current_user.registrar.debit!(@domain_price, "#{I18n.t('create')} #{@domain.name}")
         render_epp_response '/epp/domains/create'
       else
@@ -35,6 +37,8 @@ class Epp::DomainsController < EppController
       end
     end
   end
+  # rubocop: enable Metrics/PerceivedComplexity
+  # rubocop: enable Metrics/CyclomaticComplexity
 
   def update
     authorize! :update, @domain, @password
