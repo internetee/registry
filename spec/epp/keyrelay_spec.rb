@@ -121,31 +121,32 @@ describe 'EPP Keyrelay', epp: true do
     @registrar2.messages.queued.count.should == msg_count
   end
 
-  it 'does not allow both relative and absolute' do
-    msg_count = @registrar2.messages.queued.count
-    xml = @epp_xml.keyrelay({
-      name: { value: @domain.name },
-      keyData: {
-        flags: { value: '256' },
-        protocol: { value: '3' },
-        alg: { value: '8' },
-        pubKey: { value: 'cmlraXN0aGViZXN0' }
-      },
-      authInfo: {
-        pw: { value: @domain.auth_info }
-      },
-      expiry: {
-        relative: { value: 'P1D' },
-        absolute: { value: '2014-12-23' }
-      }
-    })
+  # keyrelay not enabled at the moment
+  # it 'does not allow both relative and absolute' do
+    # msg_count = @registrar2.messages.queued.count
+    # xml = @epp_xml.keyrelay({
+      # name: { value: @domain.name },
+      # keyData: {
+        # flags: { value: '256' },
+        # protocol: { value: '3' },
+        # alg: { value: '8' },
+        # pubKey: { value: 'cmlraXN0aGViZXN0' }
+      # },
+      # authInfo: {
+        # pw: { value: @domain.auth_info }
+      # },
+      # expiry: {
+        # relative: { value: 'P1D' },
+        # absolute: { value: '2014-12-23' }
+      # }
+    # })
 
-    response = epp_plain_request(xml, :xml)
-    response[:msg].should == 'Exactly one parameter required: keyrelay > expiry > relative OR '\
-    'keyrelay > expiry > absolute'
+    # response = epp_plain_request(xml, :xml)
+    # response[:msg].should == 'Exactly one parameter required: keyrelay > expiry > relative OR '\
+    # 'keyrelay > expiry > absolute'
 
-    @registrar2.messages.queued.count.should == msg_count
-  end
+    # @registrar2.messages.queued.count.should == msg_count
+  # end
 
   it 'saves legal document with keyrelay' do
     xml = @epp_xml.keyrelay({
