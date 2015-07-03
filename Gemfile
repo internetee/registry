@@ -103,9 +103,10 @@ group :development do
   # dev tools
   gem 'spring',                '~> 1.3.6'
   gem 'spring-commands-rspec', '~> 1.0.4'
-  gem 'spring-watcher-listen',   # otherwise spring polls the filesystem on every 0.2 seconds
-    github: 'jonleighton/spring-watcher-listen',
-    ref: '7f6003e14f8f9ca178a5194f210c07f54cfb67ec'
+  # emits errors, needs more investigation
+  # gem 'spring-watcher-listen',   # otherwise spring polls the filesystem on every 0.2 seconds
+    # github: 'jonleighton/spring-watcher-listen',
+    # ref: '7f6003e14f8f9ca178a5194f210c07f54cfb67ec'
   gem 'guard',                 '~> 2.12.6' # run tests automatically
   gem 'guard-rspec',           '~> 4.5.2'
   gem 'guard-rails',           '~> 0.7.1' # run EPP server automatically
