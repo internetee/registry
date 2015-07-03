@@ -1,12 +1,38 @@
+Rake::Task["db:schema:load"].clear
+
+Rake::Task["db:migrate"].enhance do
+  if ActiveRecord::Base.schema_format == :sql
+    Rake::Task["db:schema:dump"].invoke
+  end
+end
+
+Rake::Task["db:schema:dump"].enhance do
+  if ActiveRecord::Base.schema_format == :sql
+    File.rename('db/schema.rb', 'db/schema-read-only.rb')
+    Rake::Task["db:structure:dump"].invoke # for users who do manually db:schema:dump
+  end
+end
+
 namespace :db do
+  namespace :schema do
+    task load: [:environment, :load_config] do
+      puts 'Only rake db:structure:load is supported and invoked now. Otherwise zonefile generation does not work nor que.'
+      Rake::Task["db:structure:load"].invoke
+    end
+  end
+
   def databases
     @db ||= [Rails.env, "api_log_#{Rails.env}", "whois_#{Rails.env}"]
+  end
+
+  def other_databases
+    @other_dbs ||= ["api_log_#{Rails.env}", "whois_#{Rails.env}"]
   end
 
   def schema_file(db)
     case db
     when Rails.env
-      'schema.rb'
+      'structure.sql' # just in case
     when "api_log_#{Rails.env}"
       'api_log_schema.rb'
     when "whois_#{Rails.env}"
@@ -25,7 +51,7 @@ namespace :db do
 
       puts "\n---------------------------- Import seed ----------------------------------------\n"
       Rake::Task['db:seed'].invoke
-      Rake::Task['zonefile:replace_procedure'].invoke
+      # Rake::Task['zonefile:replace_procedure'].invoke # not needed any more
       puts "\n  All done!\n\n"
     end
 
@@ -73,7 +99,10 @@ namespace :db do
     namespace :schema do
       desc 'Schema load for all databases: registry, api_log and whois'
       task load: [:environment, :load_config] do
-        databases.each do |name|
+        puts "\n------------------------ #{Rails.env} structure loading -----------------------------\n"
+        Rake::Task['db:structure:load'].invoke
+
+        other_databases.each do |name|
           begin
             puts "\n------------------------ #{name} schema loading -----------------------------\n"
             ActiveRecord::Base.clear_all_connections!
@@ -89,9 +118,12 @@ namespace :db do
         end
       end
 
-      desc 'Schema load for all databases: registry, api_log and whois'
+      desc 'Schema dump for all databases: registry, api_log and whois'
       task dump: [:environment, :load_config] do
-        databases.each do |name|
+        puts "\n---------------------------- #{Rails.env} structure and schema dump--------------\n"
+        Rake::Task['db:schema:dump'].invoke # dumps both schema and structure
+
+        other_databases.each do |name|
           begin
             puts "\n---------------------------- #{name} ----------------------------------------\n"
             filename = "#{Rails.root}/db/#{schema_file(name)}"
@@ -102,6 +134,17 @@ namespace :db do
           rescue => e
             puts "\n#{e}"
           end
+        end
+      end
+      # alias names
+      namespace :structure do
+        desc '(alias) Schema dump for all databases: registry, api_log and whois'
+        task :dump do
+          Rake::Task['db:all:schema:dump'].invoke
+        end
+        desc '(alias) Schema load for all databases: registry, api_log and whois'
+        task :load do
+          Rake::Task['db:all:schema:load'].invoke
         end
       end
     end

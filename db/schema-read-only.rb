@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150701074344) do
+ActiveRecord::Schema.define(version: 20150703090039) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -932,14 +932,14 @@ ActiveRecord::Schema.define(version: 20150701074344) do
   end
 
   create_table "que_jobs", id: false, force: :cascade do |t|
-    t.integer  "priority",    limit: 2, default: 100,                   null: false
-    t.datetime "run_at",                default: '2015-06-29 12:38:58', null: false
-    t.integer  "job_id",      limit: 8, default: 0,                     null: false
-    t.text     "job_class",                                             null: false
-    t.json     "args",                  default: [],                    null: false
-    t.integer  "error_count",           default: 0,                     null: false
+    t.integer  "priority",    limit: 2, default: 100,                                        null: false
+    t.datetime "run_at",                default: "now()",                                    null: false
+    t.integer  "job_id",      limit: 8, default: "nextval('que_jobs_job_id_seq'::regclass)", null: false
+    t.text     "job_class",                                                                  null: false
+    t.json     "args",                  default: [],                                         null: false
+    t.integer  "error_count",           default: 0,                                          null: false
     t.text     "last_error"
-    t.text     "queue",                 default: "",                    null: false
+    t.text     "queue",                 default: "",                                         null: false
   end
 
   create_table "registrant_verifications", force: :cascade do |t|
