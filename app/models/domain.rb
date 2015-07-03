@@ -146,9 +146,9 @@ class Domain < ActiveRecord::Base
 
   class << self
     def convert_period_to_time(period, unit)
-      return period.to_i.days   if unit == 'd'
-      return period.to_i.months if unit == 'm'
-      return period.to_i.years  if unit == 'y'
+      return (period.to_i / 365).years if unit == 'd'
+      return (period.to_i / 12).years  if unit == 'm'
+      return period.to_i.years         if unit == 'y'
     end
 
     def included

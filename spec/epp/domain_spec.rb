@@ -20,6 +20,8 @@ describe 'EPP Domain', epp: true do
     Fabricate(:reserved_domain)
     Fabricate(:blocked_domain)
     Fabricate(:pricelist, valid_to: nil)
+    Fabricate(:pricelist, duration: '2years', price: 20, valid_to: nil)
+    Fabricate(:pricelist, duration: '3years', price: 30, valid_to: nil)
     Fabricate(:pricelist, operation_category: 'renew', price: 15, valid_to: nil)
 
     @uniq_no = proc { @i ||= 0; @i += 1 }
@@ -341,7 +343,7 @@ describe 'EPP Domain', epp: true do
     it 'creates a domain with period in days' do
       old_balance = @registrar1.balance
       old_activities = @registrar1.cash_account.account_activities.count
-      xml = domain_create_xml(period_value: 365, period_unit: 'd')
+      xml = domain_create_xml(period: { value: '365', attrs: { unit: 'd' }})
 
       response = epp_plain_request(xml)
       response[:msg].should == 'Command completed successfully'
@@ -352,6 +354,38 @@ describe 'EPP Domain', epp: true do
       a = @registrar1.cash_account.account_activities.last
       a.description.should == "Create #{Domain.last.name}"
       a.sum.should == -BigDecimal.new('10.0')
+    end
+
+    it 'creates a domain with longer periods' do
+      old_balance = @registrar1.balance
+      old_activities = @registrar1.cash_account.account_activities.count
+      xml = domain_create_xml(period: { value: '2', attrs: { unit: 'y' }})
+
+      response = epp_plain_request(xml)
+      response[:msg].should == 'Command completed successfully'
+      response[:result_code].should == '1000'
+      Domain.last.valid_to.should be_within(60).of(2.years.since)
+      @registrar1.balance.should be < old_balance
+      @registrar1.cash_account.account_activities.count.should == old_activities + 1
+      a = @registrar1.cash_account.account_activities.last
+      a.description.should == "Create #{Domain.last.name}"
+      a.sum.should == -BigDecimal.new('20.0')
+    end
+
+    it 'creates a domain with longer periods' do
+      old_balance = @registrar1.balance
+      old_activities = @registrar1.cash_account.account_activities.count
+      xml = domain_create_xml(period: { value: '36', attrs: { unit: 'm' }})
+
+      response = epp_plain_request(xml)
+      response[:msg].should == 'Command completed successfully'
+      response[:result_code].should == '1000'
+      Domain.last.valid_to.should be_within(60).of(3.years.since)
+      @registrar1.balance.should be < old_balance
+      @registrar1.cash_account.account_activities.count.should == old_activities + 1
+      a = @registrar1.cash_account.account_activities.last
+      a.description.should == "Create #{Domain.last.name}"
+      a.sum.should == -BigDecimal.new('30.0')
     end
 
     it 'does not create a domain with invalid period' do
