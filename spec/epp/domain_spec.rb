@@ -19,9 +19,22 @@ describe 'EPP Domain', epp: true do
     Fabricate(:contact, code: 'FIXED:JURIDICAL_1234', ident_type: 'bic')
     Fabricate(:reserved_domain)
     Fabricate(:blocked_domain)
-    Fabricate(:pricelist)
+    Fabricate(:pricelist, valid_to: nil)
 
     @uniq_no = proc { @i ||= 0; @i += 1 }
+  end
+
+  it 'should return error if balance low' do
+    f = Fabricate(:pricelist, valid_to: Time.zone.now + 1.day, price: 100000)
+
+    dn = next_domain_name
+    response = epp_plain_request(domain_create_xml({
+      name: { value: dn }
+    }))
+
+    response[:msg].should == "Billing failure - credit balance low"
+    response[:result_code].should == '2104'
+    f.delete
   end
 
   it 'returns error if contact does not exists' do
@@ -325,15 +338,24 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'creates a domain with period in days' do
+      old_balance = @registrar1.balance
+      old_activities = @registrar1.cash_account.account_activities.count
       xml = domain_create_xml(period_value: 365, period_unit: 'd')
 
       response = epp_plain_request(xml)
       response[:msg].should == 'Command completed successfully'
       response[:result_code].should == '1000'
-      Domain.first.valid_to.should be_within(60).of(1.year.since)
+      Domain.last.valid_to.should be_within(60).of(1.year.since)
+      @registrar1.balance.should be < old_balance
+      @registrar1.cash_account.account_activities.count.should == old_activities + 1
+      a = @registrar1.cash_account.account_activities.last
+      a.description.should == "Create #{Domain.last.name}"
+      a.sum.should == -BigDecimal.new('10.0')
     end
 
     it 'does not create a domain with invalid period' do
+      old_balance = @registrar1.balance
+      old_activities = @registrar1.cash_account.account_activities.count
       xml = domain_create_xml({
         period: { value: '367', attrs: { unit: 'd' } }
       })
@@ -342,6 +364,8 @@ describe 'EPP Domain', epp: true do
       response[:results][0][:result_code].should == '2306'
       response[:results][0][:msg].should == 'Period must add up to 1, 2 or 3 years [period]'
       response[:results][0][:value].should == '367'
+      @registrar1.balance.should == old_balance
+      @registrar1.cash_account.account_activities.count.should == old_activities
     end
 
     it 'creates a domain with multiple dnskeys' do

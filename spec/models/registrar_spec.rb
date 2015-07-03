@@ -144,5 +144,21 @@ describe Registrar do
     it 'should not have priv contacts' do
       @registrar.priv_contacts.size.should == 0
     end
+
+    it 'should credit and debit registrar cash account' do
+      @registrar.credit!(13.32, 'Add money')
+      @registrar.balance.should == BigDecimal.new('13.32')
+      @registrar.cash_account.account_activities.count.should == 1
+      a = @registrar.cash_account.account_activities.last
+      a.description.should == 'Add money'
+      a.sum.should == BigDecimal.new('13.32')
+
+      @registrar.debit!(10.31, 'Remove money')
+      @registrar.balance.should == BigDecimal.new('3.01')
+      @registrar.cash_account.account_activities.count.should == 2
+      a = @registrar.cash_account.account_activities.last
+      a.description.should == 'Remove money'
+      a.sum.should == -BigDecimal.new('10.31')
+    end
   end
 end
