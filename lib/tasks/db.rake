@@ -22,7 +22,8 @@ end
 namespace :db do
   namespace :schema do
     task load: [:environment, :load_config] do
-      puts 'Only rake db:structure:load is supported and invoked now. Otherwise zonefile generation does not work nor que.'
+      puts 'Only rake db:structure:load is supported and invoked. ' \
+           'Otherwise zonefile generation does not work nor que.'
       Rake::Task["db:structure:load"].invoke
     end
   end

@@ -3,7 +3,7 @@ class BankTransaction < ActiveRecord::Base
   belongs_to :bank_statement
   has_one :account_activity
 
-  scope :unbinded, -> {
+  scope :unbinded, lambda {
     where('id NOT IN (SELECT bank_transaction_id FROM account_activities where bank_transaction_id IS NOT NULL)')
   }
 

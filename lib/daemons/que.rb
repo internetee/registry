@@ -3,15 +3,16 @@
 ENV["RAILS_ENV"] ||= "production"
 
 root = File.expand_path(File.dirname(__FILE__))
-root = File.dirname(root) until File.exists?(File.join(root, 'config'))
+root = File.dirname(root) until File.exist?(File.join(root, 'config'))
 Dir.chdir(root)
 
 require File.join(root, "config", "environment")
 
-$running = true
+@running = true
 Signal.trap("TERM") do 
-  $running = false
+  @running = false
 end
 
-while($running) do
+# rubocop: disable Style/WhileUntilDo
+while @running do
 end
