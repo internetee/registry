@@ -325,15 +325,21 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'creates a domain with period in days' do
+      old_balance = @registrar1.balance
+      old_activities = @registrar1.cash_account.account_activities.count
       xml = domain_create_xml(period_value: 365, period_unit: 'd')
 
       response = epp_plain_request(xml)
       response[:msg].should == 'Command completed successfully'
       response[:result_code].should == '1000'
       Domain.first.valid_to.should be_within(60).of(1.year.since)
+      @registrar1.balance.should be < old_balance
+      @registrar1.cash_account.account_activities.count.should == old_activities + 1
     end
 
     it 'does not create a domain with invalid period' do
+      old_balance = @registrar1.balance
+      old_activities = @registrar1.cash_account.account_activities.count
       xml = domain_create_xml({
         period: { value: '367', attrs: { unit: 'd' } }
       })
@@ -342,6 +348,8 @@ describe 'EPP Domain', epp: true do
       response[:results][0][:result_code].should == '2306'
       response[:results][0][:msg].should == 'Period must add up to 1, 2 or 3 years [period]'
       response[:results][0][:value].should == '367'
+      @registrar1.balance.should == old_balance
+      @registrar1.cash_account.account_activities.count.should == old_activities
     end
 
     it 'creates a domain with multiple dnskeys' do
