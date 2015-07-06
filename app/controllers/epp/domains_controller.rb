@@ -87,13 +87,27 @@ class Epp::DomainsController < EppController
   def renew
     authorize! :renew, @domain
 
-    handle_errors(@domain) and return unless @domain.renew(
-      params[:parsed_frame].css('curExpDate').text,
-      params[:parsed_frame].css('period').text,
-      params[:parsed_frame].css('period').first['unit']
-    )
+    period = params[:parsed_frame].css('period').text
+    period_unit = params[:parsed_frame].css('period').first['unit']
 
-    render_epp_response '/epp/domains/renew'
+    ActiveRecord::Base.transaction do
+      success = @domain.renew(
+        params[:parsed_frame].css('curExpDate').text,
+        period, period_unit
+      )
+
+      if success
+        unless balance_ok?('renew', period, period_unit)
+          handle_errors
+          fail ActiveRecord::Rollback
+        end
+
+        current_user.registrar.debit!(@domain_price, "#{I18n.t('renew')} #{@domain.name}")
+        render_epp_response '/epp/domains/renew'
+      else
+        handle_errors(@domain)
+      end
+    end
   end
 
   def transfer
@@ -197,13 +211,14 @@ class Epp::DomainsController < EppController
     }
   end
 
-  def balance_ok?(operation)
-    @domain_price = @domain.price(operation).amount
+  def balance_ok?(operation, period = nil, unit = nil)
+    @domain_price = @domain.price(operation, period.try(:to_i), unit).amount
     if current_user.registrar.balance < @domain_price
       epp_errors << {
         code: '2104',
         msg: I18n.t('billing_failure_credit_balance_low')
       }
+
       return false
     end
     true
