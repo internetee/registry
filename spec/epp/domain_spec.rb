@@ -345,7 +345,7 @@ describe 'EPP Domain', epp: true do
     it 'creates a domain with period in days' do
       old_balance = @registrar1.balance
       old_activities = @registrar1.cash_account.account_activities.count
-      xml = domain_create_xml(period: { value: '365', attrs: { unit: 'd' }})
+      xml = domain_create_xml(period: { value: '365', attrs: { unit: 'd' } })
 
       response = epp_plain_request(xml)
       response[:msg].should == 'Command completed successfully'
@@ -2122,7 +2122,8 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'does not renew a domain if credit balance low' do
-      f = Fabricate(:pricelist, valid_to: Time.zone.now + 1.day, operation_category: 'renew', duration: '1year', price: 100000)
+      f = Fabricate(:pricelist, valid_to: Time.zone.now + 1.day, 
+                    operation_category: 'renew', duration: '1year', price: 100000)
       old_balance = @registrar1.balance
       old_activities = @registrar1.cash_account.account_activities.count
 
