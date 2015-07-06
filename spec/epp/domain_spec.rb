@@ -356,6 +356,7 @@ describe 'EPP Domain', epp: true do
       a = @registrar1.cash_account.account_activities.last
       a.description.should == "Create #{Domain.last.name}"
       a.sum.should == -BigDecimal.new('10.0')
+      a.activity_type = AccountActivity::CREATE
     end
 
     it 'creates a domain with longer periods' do
@@ -372,6 +373,7 @@ describe 'EPP Domain', epp: true do
       a = @registrar1.cash_account.account_activities.last
       a.description.should == "Create #{Domain.last.name}"
       a.sum.should == -BigDecimal.new('20.0')
+      a.activity_type = AccountActivity::CREATE
     end
 
     it 'creates a domain with longer periods' do
@@ -388,6 +390,7 @@ describe 'EPP Domain', epp: true do
       a = @registrar1.cash_account.account_activities.last
       a.description.should == "Create #{Domain.last.name}"
       a.sum.should == -BigDecimal.new('30.0')
+      a.activity_type = AccountActivity::CREATE
     end
 
     it 'does not create a domain with invalid period' do
@@ -2059,6 +2062,7 @@ describe 'EPP Domain', epp: true do
       a = @registrar1.cash_account.account_activities.last
       a.description.should == "Renew #{Domain.last.name}"
       a.sum.should == -BigDecimal.new('15.0')
+      a.activity_type = AccountActivity::RENEW
     end
 
     it 'renews a domain with 2 year period' do
@@ -2089,6 +2093,7 @@ describe 'EPP Domain', epp: true do
       a = @registrar1.cash_account.account_activities.last
       a.description.should == "Renew #{Domain.last.name}"
       a.sum.should == -BigDecimal.new('35.0')
+      a.activity_type = AccountActivity::CREATE
     end
 
     it 'renews a domain with 3 year period' do
@@ -2119,6 +2124,7 @@ describe 'EPP Domain', epp: true do
       a = @registrar1.cash_account.account_activities.last
       a.description.should == "Renew #{Domain.last.name}"
       a.sum.should == -BigDecimal.new('62.0')
+      a.activity_type = AccountActivity::CREATE
     end
 
     it 'does not renew a domain if credit balance low' do

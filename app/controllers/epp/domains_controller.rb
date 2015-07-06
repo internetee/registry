@@ -30,7 +30,7 @@ class Epp::DomainsController < EppController
 
     ActiveRecord::Base.transaction do
       if @domain.save # TODO: Maybe use validate: false here because we have already validated the domain?
-        current_user.registrar.debit!(@domain_price, "#{I18n.t('create')} #{@domain.name}")
+        current_user.registrar.debit!(@domain_price, "#{I18n.t('create')} #{@domain.name}", AccountActivity::CREATE)
         render_epp_response '/epp/domains/create'
       else
         handle_errors(@domain)
@@ -102,7 +102,7 @@ class Epp::DomainsController < EppController
           fail ActiveRecord::Rollback
         end
 
-        current_user.registrar.debit!(@domain_price, "#{I18n.t('renew')} #{@domain.name}")
+        current_user.registrar.debit!(@domain_price, "#{I18n.t('renew')} #{@domain.name}", AccountActivity::RENEW)
         render_epp_response '/epp/domains/renew'
       else
         handle_errors(@domain)
