@@ -40,21 +40,18 @@
           %tr
             %th{class: 'col-xs-5'}
               = sort_link(@q, 'description')
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'activity_type')
             %th{class: 'col-xs-3'}
               = sort_link(@q, 'created_at', t(:receipt_date))
-            %th{class: 'col-xs-2'}
-              = sort_link(@q, 'invoice_id', t(:invoice))
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'sum')
         %tbody
           - @account_activities.each do |x|
             %tr
               %td= x.description.present? ? x.description : '-'
+              %td= x.activity_type ? t(x.activity_type) : ''
               %td= l(x.created_at)
-              - if x.invoice
-                %td= link_to(x.invoice, [:registrar, x.invoice])
-              - else
-                %td -
               - c = x.sum > 0.0 ? 'text-success' : 'text-danger'
               - s = x.sum > 0.0 ? "+#{x.sum} #{x.currency}" : "#{x.sum} #{x.currency}"
               %td{class: c}= s
