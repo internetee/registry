@@ -18,6 +18,18 @@ class AccountActivity < ActiveRecord::Base
     def types_for_select
       [CREATE, RENEW, ADD_CREDIT].map { |x| [I18n.t(x), x] }
     end
+
+    def to_csv
+      attributes = %w(description activity_type created_at sum)
+
+      CSV.generate(headers: true) do |csv|
+        csv << %w(description activity_type receipt_date sum)
+
+        all.each do |x|
+          csv << attributes.map{ |attr| x.send(attr) }
+        end
+      end
+    end
   end
 end
 

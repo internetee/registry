@@ -6,12 +6,18 @@ class Registrar::AccountActivitiesController < RegistrarController
     account = current_user.registrar.cash_account
 
     ca_cache = params[:q][:created_at_lteq]
-    end_time = params[:q][:created_at_lteq].try(:to_date)
-    params[:q][:created_at_lteq] = end_time.try(:end_of_day)
+    begin
+      end_time = params[:q][:created_at_lteq].try(:to_date)
+      params[:q][:created_at_lteq] = end_time.try(:end_of_day)
+    rescue; end
 
     @q = account.activities.includes(:invoice).search(params[:q])
     @q.sorts = 'id desc' if @q.sorts.empty?
-    @account_activities = @q.result.page(params[:page])
+
+    respond_to do |format|
+      format.html { @account_activities = @q.result.page(params[:page]) }
+      format.csv { send_data @q.result.to_csv, filename: "account_activities_#{Time.zone.now.to_formatted_s(:number)}.csv" }
+    end
 
     params[:q][:created_at_lteq] = ca_cache
   end

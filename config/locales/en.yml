@@ -860,3 +860,4 @@ en:
   receipt_date_from: 'Receipt date from'
   receipt_date_until: 'Receipt date until'
   add_credit: 'Add credit'
+  export_csv: 'Export CSV'

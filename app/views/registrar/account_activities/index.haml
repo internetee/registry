@@ -1,5 +1,7 @@
 - content_for :actions do
   = link_to(t(:back_to_billing), registrar_invoices_path, class: 'btn btn-default')
+  = link_to(t(:export_csv), url_for(params.merge(format: 'csv')), class: 'btn btn-default')
+
 = render 'shared/title', name: t(:account_activity)
 
 .row
@@ -23,7 +25,7 @@
           .form-group
             = f.label t(:receipt_date_until)
             = f.search_field :created_at_lteq, value: params[:q][:created_at_lteq], class: 'form-control datepicker', placeholder: t(:receipt_date_until), autocomplete: 'off'
-        .col-md-3{style: 'padding-top: 25px;'}
+        .col-md-6{style: 'padding-top: 25px;'}
           %button.btn.btn-default
             &nbsp;
             %span.glyphicon.glyphicon-search
