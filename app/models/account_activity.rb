@@ -27,7 +27,7 @@ class AccountActivity < ActiveRecord::Base
       CSV.generate(headers: true) do |csv|
         csv << %w(description activity_type receipt_date sum)
 
-        all.find_each do |x|
+        all.each do |x| # rubocop:disable Rails/FindEach
           csv << attributes.map { |attr| x.send(attr) }
         end
       end
