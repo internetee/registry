@@ -27,5 +27,12 @@ feature 'Account activity', type: :feature do
       current_path.should == '/registrar/account_activities'
       page.should have_text('+110.0 EUR')
     end
+
+    it 'should download csv' do
+      visit '/registrar/account_activities'
+      click_link 'Export CSV'
+      response_headers['Content-Type'].should == 'text/csv'
+      response_headers['Content-Disposition'].should match(/attachment; filename="account_activities_\d+\.csv"/)
+    end
   end
 end

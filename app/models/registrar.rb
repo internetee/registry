@@ -123,19 +123,21 @@ class Registrar < ActiveRecord::Base
     accounts.find_by(account_type: Account::CASH)
   end
 
-  def debit!(sum, description)
+  def debit!(sum, description, type = nil)
     cash_account.account_activities.create!(
       sum: -sum,
       currency: 'EUR',
-      description: description
+      description: description,
+      activity_type: type
     )
   end
 
-  def credit!(sum, description)
+  def credit!(sum, description, type = nil)
     cash_account.account_activities.create!(
       sum: sum,
       currency: 'EUR',
-      description: description
+      description: description,
+      activity_type: type
     )
   end
 

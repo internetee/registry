@@ -356,12 +356,13 @@ describe 'EPP Domain', epp: true do
       a = @registrar1.cash_account.account_activities.last
       a.description.should == "Create #{Domain.last.name}"
       a.sum.should == -BigDecimal.new('10.0')
+      a.activity_type = AccountActivity::CREATE
     end
 
     it 'creates a domain with longer periods' do
       old_balance = @registrar1.balance
       old_activities = @registrar1.cash_account.account_activities.count
-      xml = domain_create_xml(period: { value: '2', attrs: { unit: 'y' }})
+      xml = domain_create_xml(period: { value: '2', attrs: { unit: 'y' } })
 
       response = epp_plain_request(xml)
       response[:msg].should == 'Command completed successfully'
@@ -372,12 +373,13 @@ describe 'EPP Domain', epp: true do
       a = @registrar1.cash_account.account_activities.last
       a.description.should == "Create #{Domain.last.name}"
       a.sum.should == -BigDecimal.new('20.0')
+      a.activity_type = AccountActivity::CREATE
     end
 
     it 'creates a domain with longer periods' do
       old_balance = @registrar1.balance
       old_activities = @registrar1.cash_account.account_activities.count
-      xml = domain_create_xml(period: { value: '36', attrs: { unit: 'm' }})
+      xml = domain_create_xml(period: { value: '36', attrs: { unit: 'm' } })
 
       response = epp_plain_request(xml)
       response[:msg].should == 'Command completed successfully'
@@ -388,6 +390,7 @@ describe 'EPP Domain', epp: true do
       a = @registrar1.cash_account.account_activities.last
       a.description.should == "Create #{Domain.last.name}"
       a.sum.should == -BigDecimal.new('30.0')
+      a.activity_type = AccountActivity::CREATE
     end
 
     it 'does not create a domain with invalid period' do
@@ -2059,6 +2062,7 @@ describe 'EPP Domain', epp: true do
       a = @registrar1.cash_account.account_activities.last
       a.description.should == "Renew #{Domain.last.name}"
       a.sum.should == -BigDecimal.new('15.0')
+      a.activity_type = AccountActivity::RENEW
     end
 
     it 'renews a domain with 2 year period' do
@@ -2089,6 +2093,7 @@ describe 'EPP Domain', epp: true do
       a = @registrar1.cash_account.account_activities.last
       a.description.should == "Renew #{Domain.last.name}"
       a.sum.should == -BigDecimal.new('35.0')
+      a.activity_type = AccountActivity::CREATE
     end
 
     it 'renews a domain with 3 year period' do
@@ -2119,11 +2124,17 @@ describe 'EPP Domain', epp: true do
       a = @registrar1.cash_account.account_activities.last
       a.description.should == "Renew #{Domain.last.name}"
       a.sum.should == -BigDecimal.new('62.0')
+      a.activity_type = AccountActivity::CREATE
     end
 
     it 'does not renew a domain if credit balance low' do
-      f = Fabricate(:pricelist, valid_to: Time.zone.now + 1.day, 
-                    operation_category: 'renew', duration: '1year', price: 100000)
+      f = Fabricate(:pricelist, {
+        valid_to: Time.zone.now + 1.day,
+        operation_category: 'renew',
+        duration: '1year',
+        price: 100000
+      })
+
       old_balance = @registrar1.balance
       old_activities = @registrar1.cash_account.account_activities.count
 
