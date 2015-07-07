@@ -41,7 +41,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         ret text;
       BEGIN
         -- define filters
-        include_filter = '%.' || i_origin;
+        include_filter = '%' || i_origin;
 
         -- for %.%.%
         IF i_origin ~ '\.' THEN
@@ -198,7 +198,7 @@ CREATE TABLE account_activities (
     id integer NOT NULL,
     account_id integer,
     invoice_id integer,
-    sum numeric(8,2),
+    sum numeric(10,2),
     currency character varying,
     bank_transaction_id integer,
     created_at timestamp without time zone,
@@ -237,7 +237,7 @@ CREATE TABLE accounts (
     id integer NOT NULL,
     registrar_id integer,
     account_type character varying,
-    balance numeric(8,2) DEFAULT 0.0 NOT NULL,
+    balance numeric(10,2) DEFAULT 0 NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     currency character varying,
@@ -395,7 +395,7 @@ CREATE TABLE bank_transactions (
     buyer_name character varying,
     document_no character varying,
     description character varying,
-    sum numeric(8,2),
+    sum numeric(10,2),
     reference_no character varying,
     paid_at timestamp without time zone,
     created_at timestamp without time zone,
@@ -436,7 +436,7 @@ CREATE TABLE banklink_transactions (
     vk_rec_id character varying,
     vk_stamp character varying,
     vk_t_no character varying,
-    vk_amount numeric(8,2),
+    vk_amount numeric(10,2),
     vk_curr character varying,
     vk_rec_acc character varying,
     vk_rec_name character varying,
@@ -671,15 +671,6 @@ CREATE SEQUENCE countries_id_seq
 --
 
 ALTER SEQUENCE countries_id_seq OWNED BY countries.id;
-
-
---
--- Name: data_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE data_migrations (
-    version character varying NOT NULL
-);
 
 
 --
@@ -994,7 +985,7 @@ CREATE TABLE invoice_items (
     description character varying NOT NULL,
     unit character varying,
     amount integer,
-    price numeric(8,2),
+    price numeric(10,2),
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     creator_str character varying,
@@ -1035,7 +1026,7 @@ CREATE TABLE invoices (
     currency character varying NOT NULL,
     description character varying,
     reference_no character varying,
-    vat_prc numeric(8,2) NOT NULL,
+    vat_prc numeric(10,2) NOT NULL,
     paid_at timestamp without time zone,
     seller_id integer,
     seller_name character varying NOT NULL,
@@ -1068,7 +1059,7 @@ CREATE TABLE invoices (
     updator_str character varying,
     number integer,
     cancelled_at timestamp without time zone,
-    sum_cache numeric(8,2)
+    sum_cache numeric(10,2)
 );
 
 
@@ -2367,7 +2358,7 @@ CREATE TABLE pricelists (
     id integer NOT NULL,
     "desc" character varying,
     category character varying,
-    price_cents numeric(10,2) DEFAULT 0.0 NOT NULL,
+    price_cents numeric(10,2) DEFAULT 0 NOT NULL,
     price_currency character varying DEFAULT 'EUR'::character varying NOT NULL,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
@@ -2605,7 +2596,7 @@ CREATE TABLE users (
     crt text,
     type character varying,
     registrant_ident character varying,
-    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
+    encrypted_password character varying DEFAULT ''::character varying,
     remember_created_at timestamp without time zone,
     failed_attempts integer DEFAULT 0 NOT NULL,
     locked_at timestamp without time zone
@@ -4462,13 +4453,6 @@ CREATE INDEX index_whois_records_on_registrar_id ON whois_records USING btree (r
 
 
 --
--- Name: unique_data_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX unique_data_migrations ON data_migrations USING btree (version);
-
-
---
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4683,6 +4667,8 @@ INSERT INTO schema_migrations (version) VALUES ('20150227092508');
 
 INSERT INTO schema_migrations (version) VALUES ('20150227113121');
 
+INSERT INTO schema_migrations (version) VALUES ('20150302130224');
+
 INSERT INTO schema_migrations (version) VALUES ('20150302161712');
 
 INSERT INTO schema_migrations (version) VALUES ('20150303130729');
@@ -4741,6 +4727,8 @@ INSERT INTO schema_migrations (version) VALUES ('20150417082723');
 
 INSERT INTO schema_migrations (version) VALUES ('20150421134820');
 
+INSERT INTO schema_migrations (version) VALUES ('20150422090645');
+
 INSERT INTO schema_migrations (version) VALUES ('20150422092514');
 
 INSERT INTO schema_migrations (version) VALUES ('20150422132631');
@@ -4785,6 +4773,8 @@ INSERT INTO schema_migrations (version) VALUES ('20150519115050');
 
 INSERT INTO schema_migrations (version) VALUES ('20150519140853');
 
+INSERT INTO schema_migrations (version) VALUES ('20150519142542');
+
 INSERT INTO schema_migrations (version) VALUES ('20150519144118');
 
 INSERT INTO schema_migrations (version) VALUES ('20150520163237');
@@ -4792,6 +4782,12 @@ INSERT INTO schema_migrations (version) VALUES ('20150520163237');
 INSERT INTO schema_migrations (version) VALUES ('20150520164507');
 
 INSERT INTO schema_migrations (version) VALUES ('20150521120145');
+
+INSERT INTO schema_migrations (version) VALUES ('20150522164020');
+
+INSERT INTO schema_migrations (version) VALUES ('20150525075550');
+
+INSERT INTO schema_migrations (version) VALUES ('20150603141054');
 
 INSERT INTO schema_migrations (version) VALUES ('20150603141549');
 
@@ -4814,4 +4810,3 @@ INSERT INTO schema_migrations (version) VALUES ('20150701074344');
 INSERT INTO schema_migrations (version) VALUES ('20150703084632');
 
 INSERT INTO schema_migrations (version) VALUES ('20150706091724');
-

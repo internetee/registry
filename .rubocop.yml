@@ -116,3 +116,7 @@ Style/FirstParameterIndentation:
 # old school regex // works fine
 Style/RegexpLiteral:
   Enabled: false
+
+# annoying to maintain, small thing, no real problem
+Style/SpaceInsideHashLiteralBraces:
+  Enabled: false
