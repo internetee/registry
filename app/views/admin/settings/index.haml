@@ -38,6 +38,22 @@
 
   .panel.panel-default
     .panel-heading.clearfix
+      = t(:other)
+    .table-responsive
+      %table.table.table-hover.table-bordered.table-condensed
+        %thead
+          %tr
+            %th{class: 'col-xs-6'}= t(:setting)
+            %th{class: 'col-xs-6'}= t(:value)
+        %tbody
+          = render 'setting_row', var: :transfer_wait_time
+          = render 'setting_row', var: :ds_algorithm
+          = render 'setting_row', var: :client_side_status_editing_enabled
+          = render 'setting_row', var: :api_ip_whitelist_enabled
+          = render 'setting_row', var: :registrar_ip_whitelist_enabled
+
+  .panel.panel-default
+    .panel-heading.clearfix
       = t(:billing_settings)
     .table-responsive
       %table.table.table-hover.table-bordered.table-condensed
@@ -78,21 +94,6 @@
           = render 'setting_row', var: :registry_zip
           = render 'setting_row', var: :registry_country_code
 
-  .panel.panel-default
-    .panel-heading.clearfix
-      = t(:other)
-    .table-responsive
-      %table.table.table-hover.table-bordered.table-condensed
-        %thead
-          %tr
-            %th{class: 'col-xs-6'}= t(:setting)
-            %th{class: 'col-xs-6'}= t(:value)
-        %tbody
-          = render 'setting_row', var: :transfer_wait_time
-          = render 'setting_row', var: :ds_algorithm
-          = render 'setting_row', var: :client_side_status_editing_enabled
-          = render 'setting_row', var: :api_ip_whitelist_enabled
-          = render 'setting_row', var: :registrar_ip_whitelist_enabled
   .row
     .col-md-12.text-right
       %button.btn.btn-primary=t(:save)
