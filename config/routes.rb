@@ -190,6 +190,7 @@ Rails.application.routes.draw do
     resources :settings
 
     resources :blocked_domains
+    resources :reserved_domains
 
     resources :registrars do
       resources :api_users

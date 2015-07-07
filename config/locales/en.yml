@@ -861,3 +861,5 @@ en:
   receipt_date_until: 'Receipt date until'
   add_credit: 'Add credit'
   export_csv: 'Export CSV'
+  reserved_domains: 'Reserved domains'
+  invalid_yaml: 'Invalid YAML'

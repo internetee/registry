@@ -23,6 +23,20 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
+--
+-- Name: hstore; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION hstore; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
+
+
 SET search_path = public, pg_catalog;
 
 --
@@ -41,7 +55,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         ret text;
       BEGIN
         -- define filters
-        include_filter = '%' || i_origin;
+        include_filter = '%.' || i_origin;
 
         -- for %.%.%
         IF i_origin ~ '\.' THEN
@@ -74,7 +88,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
             SELECT concat(d.name_puny, '. IN NS ', ns.hostname, '.')
             FROM domains d
             JOIN nameservers ns ON ns.domain_id = d.id
-            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
+            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter OR d.name = i_origin
             ORDER BY d.name
           ),
           chr(10)
@@ -237,7 +251,7 @@ CREATE TABLE accounts (
     id integer NOT NULL,
     registrar_id integer,
     account_type character varying,
-    balance numeric(10,2) DEFAULT 0 NOT NULL,
+    balance numeric(10,2) DEFAULT 0.0 NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     currency character varying,
@@ -671,6 +685,15 @@ CREATE SEQUENCE countries_id_seq
 --
 
 ALTER SEQUENCE countries_id_seq OWNED BY countries.id;
+
+
+--
+-- Name: data_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE data_migrations (
+    version character varying NOT NULL
+);
 
 
 --
@@ -2358,7 +2381,7 @@ CREATE TABLE pricelists (
     id integer NOT NULL,
     "desc" character varying,
     category character varying,
-    price_cents numeric(10,2) DEFAULT 0 NOT NULL,
+    price_cents numeric(10,2) DEFAULT 0.0 NOT NULL,
     price_currency character varying DEFAULT 'EUR'::character varying NOT NULL,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
@@ -2396,7 +2419,7 @@ ALTER SEQUENCE pricelists_id_seq OWNED BY pricelists.id;
 
 CREATE TABLE que_jobs (
     priority smallint DEFAULT 100 NOT NULL,
-    run_at timestamp without time zone DEFAULT '2015-06-30 14:16:50.905537'::timestamp without time zone NOT NULL,
+    run_at timestamp without time zone DEFAULT '2015-06-30 14:16:49.190473'::timestamp without time zone NOT NULL,
     job_id bigint DEFAULT 0 NOT NULL,
     job_class text NOT NULL,
     args json DEFAULT '[]'::json NOT NULL,
@@ -2497,11 +2520,11 @@ ALTER SEQUENCE registrars_id_seq OWNED BY registrars.id;
 
 CREATE TABLE reserved_domains (
     id integer NOT NULL,
-    name character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     creator_str character varying,
-    updator_str character varying
+    updator_str character varying,
+    names hstore
 );
 
 
@@ -2596,7 +2619,7 @@ CREATE TABLE users (
     crt text,
     type character varying,
     registrant_ident character varying,
-    encrypted_password character varying DEFAULT ''::character varying,
+    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
     remember_created_at timestamp without time zone,
     failed_attempts integer DEFAULT 0 NOT NULL,
     locked_at timestamp without time zone
@@ -4453,6 +4476,13 @@ CREATE INDEX index_whois_records_on_registrar_id ON whois_records USING btree (r
 
 
 --
+-- Name: unique_data_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX unique_data_migrations ON data_migrations USING btree (version);
+
+
+--
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4667,8 +4697,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150227092508');
 
 INSERT INTO schema_migrations (version) VALUES ('20150227113121');
 
-INSERT INTO schema_migrations (version) VALUES ('20150302130224');
-
 INSERT INTO schema_migrations (version) VALUES ('20150302161712');
 
 INSERT INTO schema_migrations (version) VALUES ('20150303130729');
@@ -4727,8 +4755,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150417082723');
 
 INSERT INTO schema_migrations (version) VALUES ('20150421134820');
 
-INSERT INTO schema_migrations (version) VALUES ('20150422090645');
-
 INSERT INTO schema_migrations (version) VALUES ('20150422092514');
 
 INSERT INTO schema_migrations (version) VALUES ('20150422132631');
@@ -4773,8 +4799,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150519115050');
 
 INSERT INTO schema_migrations (version) VALUES ('20150519140853');
 
-INSERT INTO schema_migrations (version) VALUES ('20150519142542');
-
 INSERT INTO schema_migrations (version) VALUES ('20150519144118');
 
 INSERT INTO schema_migrations (version) VALUES ('20150520163237');
@@ -4787,7 +4811,9 @@ INSERT INTO schema_migrations (version) VALUES ('20150522164020');
 
 INSERT INTO schema_migrations (version) VALUES ('20150525075550');
 
-INSERT INTO schema_migrations (version) VALUES ('20150603141054');
+INSERT INTO schema_migrations (version) VALUES ('20150601083516');
+
+INSERT INTO schema_migrations (version) VALUES ('20150601083800');
 
 INSERT INTO schema_migrations (version) VALUES ('20150603141549');
 
@@ -4795,7 +4821,11 @@ INSERT INTO schema_migrations (version) VALUES ('20150603211318');
 
 INSERT INTO schema_migrations (version) VALUES ('20150603212659');
 
+INSERT INTO schema_migrations (version) VALUES ('20150609093515');
+
 INSERT INTO schema_migrations (version) VALUES ('20150609103333');
+
+INSERT INTO schema_migrations (version) VALUES ('20150610111019');
 
 INSERT INTO schema_migrations (version) VALUES ('20150610112238');
 
@@ -4805,8 +4835,17 @@ INSERT INTO schema_migrations (version) VALUES ('20150611124920');
 
 INSERT INTO schema_migrations (version) VALUES ('20150612123111');
 
+INSERT INTO schema_migrations (version) VALUES ('20150612125720');
+
 INSERT INTO schema_migrations (version) VALUES ('20150701074344');
+
+INSERT INTO schema_migrations (version) VALUES ('20150703084206');
 
 INSERT INTO schema_migrations (version) VALUES ('20150703084632');
 
 INSERT INTO schema_migrations (version) VALUES ('20150706091724');
+
+INSERT INTO schema_migrations (version) VALUES ('20150707104937');
+
+INSERT INTO schema_migrations (version) VALUES ('20150707154543');
+
