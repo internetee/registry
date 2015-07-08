@@ -6,8 +6,8 @@ class DomainNameValidator < ActiveModel::EachValidator
       record.errors[attribute] << (options[:message] || record.errors.generate_message(attribute, :invalid))
     elsif !self.class.validate_blocked(value)
       record.errors.add(attribute, (options[:message] || record.errors.generate_message(attribute, :blocked)))
-    elsif !self.class.validate_reservation(value)
-      record.errors.add(attribute, (options[:message] || record.errors.generate_message(attribute, :reserved)))
+    # elsif !self.class.validate_reservation(value)
+    #   record.errors.add(attribute, (options[:message] || record.errors.generate_message(attribute, :reserved)))
     end
   end
   # rubocop: enable Metrics/PerceivedComplexity
@@ -42,8 +42,9 @@ class DomainNameValidator < ActiveModel::EachValidator
       BlockedDomain.where("names @> ?::varchar[]", "{#{value}}").count == 0
     end
 
-    def validate_reservation(value)
+    def validate_reservation(record, value)
       return true unless value
+      return true if record.reserved_pw == record.auth_info
       !ReservedDomain.exists?(name: value.mb_chars.downcase.strip)
     end
   end

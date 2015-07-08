@@ -78,12 +78,26 @@ class Domain < ActiveRecord::Base
 
   after_initialize -> { self.statuses = [] if statuses.nil? }
 
+  after_create :update_reserved_domains
+  def update_reserved_domains
+    return unless reserved?
+    rd = ReservedDomain.first
+    rd.names[name] = SecureRandom.hex
+    rd.save
+  end
+
   validates :name_dirty, domain_name: true, uniqueness: true
   validates :puny_label, length: { maximum: 63 }
   validates :period, numericality: { only_integer: true }
   validates :registrant, :registrar, presence: true
 
   validate :validate_period
+  validate :validate_reservation
+  def validate_reservation
+    return if persisted?
+    return if !reserved? || reserved_pw == auth_info
+    errors.add(:base, :domain_is_reserved_and_requires_correct_auth_info)
+  end
 
   validates :nameservers, object_count: {
     min: -> { Setting.ns_min_count },
@@ -245,6 +259,14 @@ class Domain < ActiveRecord::Base
 
   def registrant_typeahead
     @registrant_typeahead || registrant.try(:name) || nil
+  end
+
+  def reserved?
+    reserved_pw.present?
+  end
+
+  def reserved_pw
+    ReservedDomain.select("names -> '#{name}' AS pw").first.pw
   end
 
   def pending_transfer
@@ -452,6 +474,7 @@ class Domain < ActiveRecord::Base
 
   # rubocop:disable Lint/Loop
   def generate_auth_info
+    return if auth_info.present?
     begin
       self.auth_info = SecureRandom.hex
     end while self.class.exists?(auth_info: auth_info)
@@ -493,6 +516,8 @@ class Domain < ActiveRecord::Base
   end
 
   def manage_automatic_statuses
+    statuses << DomainStatus::RESERVED if new_record? && reserved?
+
     # domain_statuses.create(value: DomainStatus::DELETE_CANDIDATE) if delete_candidateable?
     if statuses.empty? && valid?
       statuses << DomainStatus::OK

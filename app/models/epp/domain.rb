@@ -66,7 +66,8 @@ class Epp::Domain < Domain
         [:name_dirty, :blocked, { value: { obj: 'name', val: name_dirty } }]
       ],
       '2304' => [ # Object status prohibits operation
-        [:base, :domain_status_prohibits_operation]
+        [:base, :domain_status_prohibits_operation],
+        [:base, :domain_is_reserved_and_requires_correct_auth_info]
       ],
       '2306' => [ # Parameter policy error
         [:period, :out_of_range, { value: { obj: 'period', val: period } }],
@@ -111,6 +112,8 @@ class Epp::Domain < Domain
     at[:period] = (period.to_i == 0) ? 1 : period.to_i
 
     at[:period_unit] = Epp::Domain.parse_period_unit_from_frame(frame) || 'y'
+
+    at[:auth_info] = frame.css('pw').text if new_record?
 
     # at[:statuses] = domain_statuses_attrs(frame, action)
     # binding.pry
