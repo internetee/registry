@@ -227,6 +227,23 @@ describe 'EPP Domain', epp: true do
       response[:result_code].should == '2304'
       response[:msg].should == 'Domain is reserved and requires correct auth info'
       response[:clTRID].should == 'ABC-12345'
+
+      xml = domain_create_xml(name: { value: '1162.ee' }, authInfo: { pw: { value: 'wrong_pw' } })
+      response = epp_plain_request(xml)
+      response[:result_code].should == '2304'
+      response[:msg].should == 'Domain is reserved and requires correct auth info'
+    end
+
+    it 'creates a reserved domain with correct auth info' do
+      xml = domain_create_xml(name: { value: '1162.ee' }, authInfo: { pw: { value: 'abc' } })
+
+      response = epp_plain_request(xml)
+      response[:msg].should == 'Command completed successfully'
+      response[:result_code].should == '1000'
+
+      d = Domain.last
+      d.statuses.should match_array(['reserved'])
+      d.auth_info.should_not == 'abc' # should generate entirely new auth info after domain create
     end
 
     it 'does not create blocked domain' do
