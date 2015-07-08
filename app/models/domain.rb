@@ -266,7 +266,7 @@ class Domain < ActiveRecord::Base
   end
 
   def reserved_pw
-    ReservedDomain.select("names -> '#{name}' AS pw").first.pw
+    ReservedDomain.pw_for(name)
   end
 
   def pending_transfer
@@ -474,7 +474,6 @@ class Domain < ActiveRecord::Base
 
   # rubocop:disable Lint/Loop
   def generate_auth_info
-    return if auth_info.present?
     begin
       self.auth_info = SecureRandom.hex
     end while self.class.exists?(auth_info: auth_info)

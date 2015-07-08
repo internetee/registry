@@ -224,8 +224,8 @@ describe 'EPP Domain', epp: true do
       xml = domain_create_xml(name: { value: '1162.ee' })
 
       response = epp_plain_request(xml)
-      response[:result_code].should == '2302'
-      response[:msg].should == 'Domain name is reserved [name_dirty]'
+      response[:result_code].should == '2304'
+      response[:msg].should == 'Domain is reserved and requires correct auth info'
       response[:clTRID].should == 'ABC-12345'
     end
 
@@ -1419,8 +1419,8 @@ describe 'EPP Domain', epp: true do
       login_as :registrar2 do
         epp_plain_request(xml) # transfer domain
         response =  epp_plain_request(xml) # attempt second transfer
-        response[:result_code].should == '2201'
         response[:msg].should == 'Authorization error'
+        response[:result_code].should == '2201'
       end
     end
 

@@ -745,7 +745,7 @@ class Epp::Domain < Domain
           next
         end
 
-        unless DomainNameValidator.validate_reservation(x)
+        if ReservedDomain.pw_for(x).present?
           res << { name: x, avail: 0, reason: I18n.t('errors.messages.epp_domain_reserved') }
           next
         end

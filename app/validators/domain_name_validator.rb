@@ -42,10 +42,10 @@ class DomainNameValidator < ActiveModel::EachValidator
       BlockedDomain.where("names @> ?::varchar[]", "{#{value}}").count == 0
     end
 
-    def validate_reservation(record, value)
-      return true unless value
-      return true if record.reserved_pw == record.auth_info
-      !ReservedDomain.exists?(name: value.mb_chars.downcase.strip)
-    end
+    # def validate_reservation(record, value)
+    #   return true unless value
+    #   return true if record.reserved_pw == record.auth_info
+    #   !ReservedDomain.exists?(name: value.mb_chars.downcase.strip)
+    # end
   end
 end
