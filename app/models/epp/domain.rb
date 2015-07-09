@@ -25,7 +25,8 @@ class Epp::Domain < Domain
       ],
       '2003' => [ # Required parameter missing
         [:registrant, :blank],
-        [:registrar, :blank]
+        [:registrar, :blank],
+        [:base, :required_parameter_missing_reserved]
       ],
       '2004' => [ # Parameter value range error
         [:nameservers, :out_of_range,
@@ -60,14 +61,16 @@ class Epp::Domain < Domain
       '2201' => [ # Authorisation error
         [:auth_info, :wrong_pw]
       ],
+      '2202' => [
+        [:base, :invalid_auth_information_reserved]
+      ],
       '2302' => [ # Object exists
         [:name_dirty, :taken, { value: { obj: 'name', val: name_dirty } }],
         [:name_dirty, :reserved, { value: { obj: 'name', val: name_dirty } }],
         [:name_dirty, :blocked, { value: { obj: 'name', val: name_dirty } }]
       ],
       '2304' => [ # Object status prohibits operation
-        [:base, :domain_status_prohibits_operation],
-        [:base, :domain_is_reserved_and_requires_correct_auth_info]
+        [:base, :domain_status_prohibits_operation]
       ],
       '2306' => [ # Parameter policy error
         [:period, :out_of_range, { value: { obj: 'period', val: period } }],
@@ -113,7 +116,7 @@ class Epp::Domain < Domain
 
     at[:period_unit] = Epp::Domain.parse_period_unit_from_frame(frame) || 'y'
 
-    at[:auth_info] = frame.css('pw').text if new_record?
+    at[:reserved_pw] = frame.css('reserved > pw').text
 
     # at[:statuses] = domain_statuses_attrs(frame, action)
     # binding.pry

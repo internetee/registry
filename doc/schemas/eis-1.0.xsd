@@ -24,12 +24,30 @@
     <sequence>
       <element name="ident" type="eis:identType" minOccurs="0" maxOccurs="1"/>
       <element name="legalDocument" type="eis:legalDocType" minOccurs="0" maxOccurs="1"/>
+      <element name="reserved" type="eis:reservedType" minOccurs="0" maxOccurs="1"/>
     </sequence>
   </complexType>
 
   <!--
-  Child elements of extdata
+    Child elements of extdata
   -->
+
+  <!--
+    Reserved for providing passwords for reserved domains
+  -->
+
+  <complexType name="reservedType">
+    <sequence>
+      <element name="pw" type="eis:pwType" minOccurs="1" maxOccurs="1"/>
+    </sequence>
+  </complexType>
+
+  <simpleType name="pwType">
+     <restriction base="normalizedString">
+       <minLength value="1"/>
+       <maxLength value="255"/>
+     </restriction>
+  </simpleType>
 
   <!--
   Legal document, encoded in base64

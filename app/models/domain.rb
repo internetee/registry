@@ -96,8 +96,17 @@ class Domain < ActiveRecord::Base
   validate :validate_reservation
   def validate_reservation
     return if persisted?
-    return if !in_reserved_list? || reserved_pw == auth_info
-    errors.add(:base, :domain_is_reserved_and_requires_correct_auth_info)
+    return if !in_reserved_list?
+
+    if reserved_pw.blank?
+      errors.add(:base, :required_parameter_missing_reserved)
+      return false
+    end
+
+    if ReservedDomain.pw_for(name) != reserved_pw
+      errors.add(:base, :invalid_auth_information_reserved)
+      return false
+    end
   end
 
   validates :nameservers, object_count: {
@@ -149,7 +158,7 @@ class Domain < ActiveRecord::Base
   end
 
   attr_accessor :registrant_typeahead, :update_me, :deliver_emails,
-    :epp_pending_update, :epp_pending_delete
+    :epp_pending_update, :epp_pending_delete, :reserved_pw
 
   def subordinate_nameservers
     nameservers.select { |x| x.hostname.end_with?(name) }
@@ -263,11 +272,7 @@ class Domain < ActiveRecord::Base
   end
 
   def in_reserved_list?
-    reserved_pw.present?
-  end
-
-  def reserved_pw
-    ReservedDomain.pw_for(name)
+    ReservedDomain.pw_for(name).present?
   end
 
   def pending_transfer

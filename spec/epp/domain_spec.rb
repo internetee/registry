@@ -225,18 +225,39 @@ describe 'EPP Domain', epp: true do
       xml = domain_create_xml(name: { value: '1162.ee' })
 
       response = epp_plain_request(xml)
-      response[:result_code].should == '2304'
-      response[:msg].should == 'Domain is reserved and requires correct auth info'
+      response[:msg].should == 'Required parameter missing; reserved>pw element required for reserved domains'
+      response[:result_code].should == '2003'
       response[:clTRID].should == 'ABC-12345'
 
-      xml = domain_create_xml(name: { value: '1162.ee' }, authInfo: { pw: { value: 'wrong_pw' } })
+      xml = domain_create_xml({name: { value: '1162.ee' }}, {}, {
+        _anonymus: [
+          legalDocument: {
+            value: 'dGVzdCBmYWlsCg==',
+            attrs: { type: 'pdf' }
+          },
+          reserved: {
+            pw: { value: 'wrong_pw' }
+          }
+        ]
+      })
+
       response = epp_plain_request(xml)
-      response[:result_code].should == '2304'
-      response[:msg].should == 'Domain is reserved and requires correct auth info'
+      response[:msg].should == 'Invalid authorization information; invalid reserved>pw value'
+      response[:result_code].should == '2202'
     end
 
     it 'creates a reserved domain with correct auth info' do
-      xml = domain_create_xml(name: { value: '1162.ee' }, authInfo: { pw: { value: 'abc' } })
+      xml = domain_create_xml({name: { value: '1162.ee' }}, {}, {
+        _anonymus: [
+          legalDocument: {
+            value: 'dGVzdCBmYWlsCg==',
+            attrs: { type: 'pdf' }
+          },
+          reserved: {
+            pw: { value: 'abc' }
+          }
+        ]
+      })
 
       response = epp_plain_request(xml)
       response[:msg].should == 'Command completed successfully'
