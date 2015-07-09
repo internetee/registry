@@ -61,6 +61,7 @@ class Domain < ActiveRecord::Base
 
   before_create :generate_auth_info
   before_create :set_validity_dates
+  before_create -> { self.reserved = in_reserved_list?; nil }
   before_update :manage_statuses
   def manage_statuses
     return unless registrant_id_changed?

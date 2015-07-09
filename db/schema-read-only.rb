@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150707154543) do
+ActiveRecord::Schema.define(version: 20150709092549) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -323,7 +323,8 @@ ActiveRecord::Schema.define(version: 20150707154543) do
     t.string   "registrant_verification_token"
     t.json     "pending_json"
     t.datetime "force_delete_at"
-    t.string   "statuses",                                   array: true
+    t.string   "statuses",                                                   array: true
+    t.boolean  "reserved",                                   default: false
   end
 
   add_index "domains", ["delete_at"], name: "index_domains_on_delete_at", using: :btree
@@ -935,7 +936,7 @@ ActiveRecord::Schema.define(version: 20150707154543) do
 
   create_table "que_jobs", id: false, force: :cascade do |t|
     t.integer  "priority",    limit: 2, default: 100,                   null: false
-    t.datetime "run_at",                default: '2015-06-30 14:16:49', null: false
+    t.datetime "run_at",                default: '2015-06-30 14:16:50', null: false
     t.integer  "job_id",      limit: 8, default: 0,                     null: false
     t.text     "job_class",                                             null: false
     t.json     "args",                  default: [],                    null: false

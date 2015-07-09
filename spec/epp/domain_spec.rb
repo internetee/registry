@@ -144,6 +144,7 @@ describe 'EPP Domain', epp: true do
       response[:result_code].should == '1000'
       d = Domain.last
       d.legal_documents.count.should == 1
+      d.reserved.should == false
     end
 
     # it 'creates ria.ee with valid ds record' do
@@ -244,6 +245,7 @@ describe 'EPP Domain', epp: true do
       d = Domain.last
       d.statuses.should match_array(['ok'])
       d.auth_info.should_not == 'abc' # should generate entirely new auth info after domain create
+      d.reserved.should == true
     end
 
     it 'does not create blocked domain' do
