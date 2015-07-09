@@ -95,18 +95,15 @@ class Domain < ActiveRecord::Base
   validate :validate_period
   validate :validate_reservation
   def validate_reservation
-    return if persisted?
-    return if !in_reserved_list?
+    return if persisted? || !in_reserved_list?
 
     if reserved_pw.blank?
       errors.add(:base, :required_parameter_missing_reserved)
       return false
     end
 
-    if ReservedDomain.pw_for(name) != reserved_pw
-      errors.add(:base, :invalid_auth_information_reserved)
-      return false
-    end
+    return if ReservedDomain.pw_for(name) == reserved_pw
+    errors.add(:base, :invalid_auth_information_reserved)
   end
 
   validates :nameservers, object_count: {
