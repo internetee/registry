@@ -19,6 +19,5 @@ class Admin::BlockedDomainsController < AdminController
       flash.now[:alert] = I18n.t('failed_to_update_record')
       render :index
     end
-
   end
 end
