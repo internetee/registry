@@ -34,5 +34,10 @@ feature 'ReservedDomain', type: :feature do
     d.reserved_pw = 'testpw'
     d.valid?.should == true
     d.errors.full_messages.should match_array([])
+
+    d.save
+    visit admin_reserved_domains_url
+    page.should have_content('110.ee')
+    page.should_not have_content('110.ee: testpw')
   end
 end
