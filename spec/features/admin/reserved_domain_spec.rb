@@ -26,6 +26,9 @@ feature 'ReservedDomain', type: :feature do
     d.valid?.should == false
     d.errors.full_messages.should match_array(["Domain is reserved and requires correct auth info"])
 
+    d.auth_info = 'wrongpw'
+    d.valid?.should == false
+
     d.auth_info = 'testpw'
     d.valid?.should == true
     d.errors.full_messages.should match_array([])
