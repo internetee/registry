@@ -521,9 +521,6 @@ class Domain < ActiveRecord::Base
   end
 
   def manage_automatic_statuses
-    # TODO: Remove this line if EIS decides not to create reserved status #2565
-    # statuses << DomainStatus::RESERVED if new_record? && in_reserved_list?
-
     # domain_statuses.create(value: DomainStatus::DELETE_CANDIDATE) if delete_candidateable?
     if statuses.empty? && valid?
       statuses << DomainStatus::OK

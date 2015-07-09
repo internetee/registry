@@ -265,7 +265,6 @@ describe 'EPP Domain', epp: true do
 
       d = Domain.last
       d.statuses.should match_array(['ok'])
-      d.auth_info.should_not == 'abc' # should generate entirely new auth info after domain create
       d.reserved.should == true
     end
 
@@ -1512,34 +1511,6 @@ describe 'EPP Domain', epp: true do
       d.auth_info.should == existing_pw
       d.pending_update?.should == false
     end
-
-    # TODO: Remove this test if EIS decides not to create reserved status #2565
-    # it 'should keep reserved status after reserved domain update' do
-    #   domain.statuses = ['reserved']
-    #   domain.save
-
-    #   xml_params = {
-    #     name: { value: domain.name },
-    #     chg: [
-    #       registrant: { value: 'FIXED:CITIZEN_1234', attrs: { verified: 'yes' } }
-    #     ]
-    #   }
-
-    #   response = epp_plain_request(domain_update_xml(xml_params, {}, {
-    #     _anonymus: [
-    #       legalDocument: {
-    #         value: 'dGVzdCBmYWlsCg==',
-    #         attrs: { type: 'pdf' }
-    #       }
-    #     ]
-    #   }))
-
-    #   response[:results][0][:msg].should == 'Command completed successfully'
-    #   response[:results][0][:result_code].should == '1000'
-
-    #   d = Domain.last
-    #   d.statuses.should match_array(['reserved'])
-    # end
 
     it 'updates a domain' do
       existing_pw = domain.auth_info
