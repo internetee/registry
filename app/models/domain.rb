@@ -80,7 +80,7 @@ class Domain < ActiveRecord::Base
 
   after_create :update_reserved_domains
   def update_reserved_domains
-    return unless reserved?
+    return unless in_reserved_list?
     rd = ReservedDomain.first
     rd.names[name] = SecureRandom.hex
     rd.save
@@ -95,7 +95,7 @@ class Domain < ActiveRecord::Base
   validate :validate_reservation
   def validate_reservation
     return if persisted?
-    return if !reserved? || reserved_pw == auth_info
+    return if !in_reserved_list? || reserved_pw == auth_info
     errors.add(:base, :domain_is_reserved_and_requires_correct_auth_info)
   end
 
@@ -261,7 +261,7 @@ class Domain < ActiveRecord::Base
     @registrant_typeahead || registrant.try(:name) || nil
   end
 
-  def reserved?
+  def in_reserved_list?
     reserved_pw.present?
   end
 
@@ -515,7 +515,7 @@ class Domain < ActiveRecord::Base
   end
 
   def manage_automatic_statuses
-    statuses << DomainStatus::RESERVED if new_record? && reserved?
+    statuses << DomainStatus::RESERVED if new_record? && in_reserved_list?
 
     # domain_statuses.create(value: DomainStatus::DELETE_CANDIDATE) if delete_candidateable?
     if statuses.empty? && valid?
