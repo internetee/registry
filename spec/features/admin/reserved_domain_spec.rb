@@ -23,7 +23,11 @@ feature 'ReservedDomain', type: :feature do
     page.should have_content('Record updated')
     page.should have_content('110.ee: testpw')
 
-    d.valid?
+    d.valid?.should == false
     d.errors.full_messages.should match_array(["Domain is reserved and requires correct auth info"])
+
+    d.auth_info = 'testpw'
+    d.valid?.should == true
+    d.errors.full_messages.should match_array([])
   end
 end
