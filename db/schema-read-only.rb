@@ -11,10 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150706091724) do
+ActiveRecord::Schema.define(version: 20150709092549) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
 
   create_table "account_activities", force: :cascade do |t|
     t.integer  "account_id"
@@ -212,6 +213,12 @@ ActiveRecord::Schema.define(version: 20150706091724) do
     t.string   "updator_str"
   end
 
+  create_table "data_migrations", id: false, force: :cascade do |t|
+    t.string "version", null: false
+  end
+
+  add_index "data_migrations", ["version"], name: "unique_data_migrations", unique: true, using: :btree
+
   create_table "delegation_signers", force: :cascade do |t|
     t.integer "domain_id"
     t.string  "key_tag"
@@ -316,7 +323,8 @@ ActiveRecord::Schema.define(version: 20150706091724) do
     t.string   "registrant_verification_token"
     t.json     "pending_json"
     t.datetime "force_delete_at"
-    t.string   "statuses",                                   array: true
+    t.string   "statuses",                                                   array: true
+    t.boolean  "reserved",                                   default: false
   end
 
   add_index "domains", ["delete_at"], name: "index_domains_on_delete_at", using: :btree
@@ -978,11 +986,11 @@ ActiveRecord::Schema.define(version: 20150706091724) do
   add_index "registrars", ["code"], name: "index_registrars_on_code", using: :btree
 
   create_table "reserved_domains", force: :cascade do |t|
-    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "creator_str"
     t.string   "updator_str"
+    t.hstore   "names"
   end
 
   create_table "settings", force: :cascade do |t|
@@ -1020,7 +1028,7 @@ ActiveRecord::Schema.define(version: 20150706091724) do
     t.text     "crt"
     t.string   "type"
     t.string   "registrant_ident"
-    t.string   "encrypted_password",  default: ""
+    t.string   "encrypted_password",  default: "", null: false
     t.datetime "remember_created_at"
     t.integer  "failed_attempts",     default: 0,  null: false
     t.datetime "locked_at"

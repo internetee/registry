@@ -61,6 +61,7 @@ class Domain < ActiveRecord::Base
 
   before_create :generate_auth_info
   before_create :set_validity_dates
+  before_create -> { self.reserved = in_reserved_list?; nil }
   before_update :manage_statuses
   def manage_statuses
     return unless registrant_id_changed?
@@ -78,12 +79,32 @@ class Domain < ActiveRecord::Base
 
   after_initialize -> { self.statuses = [] if statuses.nil? }
 
+  after_create :update_reserved_domains
+  def update_reserved_domains
+    return unless in_reserved_list?
+    rd = ReservedDomain.first
+    rd.names[name] = SecureRandom.hex
+    rd.save
+  end
+
   validates :name_dirty, domain_name: true, uniqueness: true
   validates :puny_label, length: { maximum: 63 }
   validates :period, numericality: { only_integer: true }
   validates :registrant, :registrar, presence: true
 
   validate :validate_period
+  validate :validate_reservation
+  def validate_reservation
+    return if persisted? || !in_reserved_list?
+
+    if reserved_pw.blank?
+      errors.add(:base, :required_parameter_missing_reserved)
+      return false
+    end
+
+    return if ReservedDomain.pw_for(name) == reserved_pw
+    errors.add(:base, :invalid_auth_information_reserved)
+  end
 
   validates :nameservers, object_count: {
     min: -> { Setting.ns_min_count },
@@ -134,7 +155,7 @@ class Domain < ActiveRecord::Base
   end
 
   attr_accessor :registrant_typeahead, :update_me, :deliver_emails,
-    :epp_pending_update, :epp_pending_delete
+    :epp_pending_update, :epp_pending_delete, :reserved_pw
 
   def subordinate_nameservers
     nameservers.select { |x| x.hostname.end_with?(name) }
@@ -245,6 +266,10 @@ class Domain < ActiveRecord::Base
 
   def registrant_typeahead
     @registrant_typeahead || registrant.try(:name) || nil
+  end
+
+  def in_reserved_list?
+    ReservedDomain.pw_for(name).present?
   end
 
   def pending_transfer

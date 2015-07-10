@@ -144,6 +144,7 @@ describe 'EPP Domain', epp: true do
       response[:result_code].should == '1000'
       d = Domain.last
       d.legal_documents.count.should == 1
+      d.reserved.should == false
     end
 
     # it 'creates ria.ee with valid ds record' do
@@ -224,9 +225,47 @@ describe 'EPP Domain', epp: true do
       xml = domain_create_xml(name: { value: '1162.ee' })
 
       response = epp_plain_request(xml)
-      response[:result_code].should == '2302'
-      response[:msg].should == 'Domain name is reserved [name_dirty]'
+      response[:msg].should == 'Required parameter missing; reserved>pw element required for reserved domains'
+      response[:result_code].should == '2003'
       response[:clTRID].should == 'ABC-12345'
+
+      xml = domain_create_xml({name: { value: '1162.ee' }}, {}, {
+        _anonymus: [
+          legalDocument: {
+            value: 'dGVzdCBmYWlsCg==',
+            attrs: { type: 'pdf' }
+          },
+          reserved: {
+            pw: { value: 'wrong_pw' }
+          }
+        ]
+      })
+
+      response = epp_plain_request(xml)
+      response[:msg].should == 'Invalid authorization information; invalid reserved>pw value'
+      response[:result_code].should == '2202'
+    end
+
+    it 'creates a reserved domain with correct auth info' do
+      xml = domain_create_xml({name: { value: '1162.ee' }}, {}, {
+        _anonymus: [
+          legalDocument: {
+            value: 'dGVzdCBmYWlsCg==',
+            attrs: { type: 'pdf' }
+          },
+          reserved: {
+            pw: { value: 'abc' }
+          }
+        ]
+      })
+
+      response = epp_plain_request(xml)
+      response[:msg].should == 'Command completed successfully'
+      response[:result_code].should == '1000'
+
+      d = Domain.last
+      d.statuses.should match_array(['ok'])
+      d.reserved.should == true
     end
 
     it 'does not create blocked domain' do
@@ -800,7 +839,7 @@ describe 'EPP Domain', epp: true do
       xml = domain_transfer_xml({
         name: { value: domain.name },
         authInfo: { pw: { value: pw } }
-      }, 'query', {
+      }, 'request', {
         _anonymus: [
           legalDocument: {
             value: 'dGVzdCBmYWlsCg==',
@@ -848,7 +887,7 @@ describe 'EPP Domain', epp: true do
       xml = domain_transfer_xml({
         name: { value: domain.name },
         authInfo: { pw: { value: pw } }
-      }, 'query', {
+      }, 'request', {
         _anonymus: [
           legalDocument: {
             value: 'dGVzdCBmYWlsCg==',
@@ -926,7 +965,7 @@ describe 'EPP Domain', epp: true do
       xml = domain_transfer_xml({
         name: { value: domain.name },
         authInfo: { pw: { value: pw } }
-      }, 'query', {
+      }, 'request', {
         _anonymus: [
           legalDocument: {
             value: 'dGVzdCBmYWlsCg==',
@@ -1362,7 +1401,7 @@ describe 'EPP Domain', epp: true do
       xml = domain_transfer_xml({
         name: { value: domain.name },
         authInfo: { pw: { value: 'test' } }
-      }, 'query', {
+      }, 'request', {
         _anonymus: [
           legalDocument: {
             value: 'dGVzdCBmYWlsCg==',
@@ -1376,12 +1415,12 @@ describe 'EPP Domain', epp: true do
       response[:msg].should == 'Authorization error'
     end
 
-    it 'ignores transfer wha registrant registrar requests transfer' do
+    it 'ignores transfer when domain already belongs to registrar' do
       pw = domain.auth_info
       xml = domain_transfer_xml({
         name: { value: domain.name },
         authInfo: { pw: { value: pw } }
-      }, 'query', {
+      }, 'request', {
         _anonymus: [
           legalDocument: {
             value: 'dGVzdCBmYWlsCg==',
@@ -1407,7 +1446,7 @@ describe 'EPP Domain', epp: true do
       xml = domain_transfer_xml({
         name: { value: domain.name },
         authInfo: { pw: { value: pw } }
-      }, 'query', {
+      }, 'request', {
         _anonymus: [
           legalDocument: {
             value: 'dGVzdCBmYWlsCg==',
@@ -1419,8 +1458,8 @@ describe 'EPP Domain', epp: true do
       login_as :registrar2 do
         epp_plain_request(xml) # transfer domain
         response =  epp_plain_request(xml) # attempt second transfer
-        response[:result_code].should == '2201'
         response[:msg].should == 'Authorization error'
+        response[:result_code].should == '2201'
       end
     end
 
@@ -1439,8 +1478,116 @@ describe 'EPP Domain', epp: true do
       })
 
       response = epp_plain_request(xml)
-      response[:msg].should == 'Pending transfer was not found'
+      response[:msg].should == 'No transfers found'
       response[:result_code].should == '2303'
+    end
+
+    it 'should not return transfers when there are none' do
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        authInfo: { pw: { value: domain.auth_info } }
+      }, 'query')
+
+      response = epp_plain_request(xml)
+      response[:results][0][:msg].should == 'No transfers found'
+      response[:results][0][:result_code].should == '2303'
+    end
+
+    it 'should allow querying domain transfer' do
+      Setting.transfer_wait_time = 1
+      pw = domain.auth_info
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        authInfo: { pw: { value: pw } }
+      }, 'request', {
+        _anonymus: [
+          legalDocument: {
+            value: 'dGVzdCBmYWlsCg==',
+            attrs: { type: 'pdf' }
+          }
+        ]
+      })
+
+      login_as :registrar2 do
+        response = epp_plain_request(xml)
+        response[:results][0][:msg].should == 'Command completed successfully'
+        response[:results][0][:result_code].should == '1000'
+
+        trn_data = response[:parsed].css('trnData')
+
+        dtl = domain.domain_transfers.last
+
+        trn_data.css('name').text.should == domain.name
+        trn_data.css('trStatus').text.should == 'pending'
+        trn_data.css('reID').text.should == 'REGDOMAIN2'
+        trn_data.css('reDate').text.should == dtl.transfer_requested_at.in_time_zone.utc.utc.iso8601
+        trn_data.css('acDate').text.should == dtl.wait_until.in_time_zone.utc.utc.iso8601
+        trn_data.css('acID').text.should == 'REGDOMAIN1'
+        trn_data.css('exDate').text.should == domain.valid_to.in_time_zone.utc.utc.iso8601
+
+        xml = domain_transfer_xml({
+          name: { value: domain.name },
+          authInfo: { pw: { value: pw } }
+        }, 'query')
+
+        response = epp_plain_request(xml)
+        response[:results][0][:msg].should == 'Command completed successfully'
+        response[:results][0][:result_code].should == '1000'
+
+        trn_data = response[:parsed].css('trnData')
+
+        dtl = domain.domain_transfers.last
+        trn_data.css('name').text.should == domain.name
+        trn_data.css('trStatus').text.should == 'pending'
+        trn_data.css('reID').text.should == 'REGDOMAIN2'
+        trn_data.css('reDate').text.should == dtl.transfer_requested_at.in_time_zone.utc.utc.iso8601
+        trn_data.css('acDate').text.should == dtl.wait_until.in_time_zone.utc.utc.iso8601
+        trn_data.css('acID').text.should == 'REGDOMAIN1'
+        trn_data.css('exDate').text.should == domain.valid_to.in_time_zone.utc.utc.iso8601
+      end
+
+      # approves pending transfer
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        authInfo: { pw: { value: pw } }
+      }, 'approve', {
+        _anonymus: [
+          legalDocument: {
+            value: 'dGVzdCBmYWlsCg==',
+            attrs: { type: 'pdf' }
+          }
+        ]
+      })
+
+      response = epp_plain_request(xml)
+      response[:results][0][:msg].should == 'Command completed successfully'
+      response[:results][0][:result_code].should == '1000'
+
+      # query should return last completed transfer
+      domain.reload
+      pw = domain.auth_info
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        authInfo: { pw: { value: pw } }
+      }, 'query')
+
+      response = epp_plain_request(xml)
+      response[:results][0][:msg].should == 'Command completed successfully'
+      response[:results][0][:result_code].should == '1000'
+
+      trn_data = response[:parsed].css('trnData')
+
+      dtl = domain.domain_transfers.last
+
+      trn_data.css('name').text.should == domain.name
+      trn_data.css('trStatus').text.should == 'clientApproved'
+      trn_data.css('reID').text.should == 'REGDOMAIN2'
+      trn_data.css('reDate').text.should == dtl.transfer_requested_at.in_time_zone.utc.utc.iso8601
+      trn_data.css('acDate').text.should == dtl.transferred_at.in_time_zone.utc.utc.iso8601
+      trn_data.css('acID').text.should == 'REGDOMAIN1'
+      trn_data.css('exDate').text.should == domain.valid_to.in_time_zone.utc.utc.iso8601
+
+      Setting.transfer_wait_time = 0
     end
 
     ### UPDATE ###

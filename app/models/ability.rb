@@ -107,6 +107,7 @@ class Ability
     customer_service
     can :manage, Setting
     can :manage, BlockedDomain
+    can :manage, ReservedDomain
     can :manage, ZonefileSetting
     can :manage, DomainVersion
     can :manage, Pricelist
