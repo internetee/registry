@@ -867,3 +867,4 @@ en:
   invalid_yaml: 'Invalid YAML'
   reserved_pw: 'Reserved pw'
   no_transfers_found: 'No transfers found'
+  parameter_value_range_error: 'Parameter value range error: %{key}'

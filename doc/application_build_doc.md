@@ -16,6 +16,7 @@ Application build and update
 For production you probably would like to create databases to your locale, example: 
 
     create database registry_production owner registry encoding 'UTF-8' LC_COLLATE 'et_EE.utf8' LC_CTYPE 'et_EE.utf8' template template0;
+    create extension hstore;
 
 Deploy overview: (database schema should be loaded and seeds should be present)
 
