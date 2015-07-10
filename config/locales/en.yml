@@ -865,3 +865,4 @@ en:
   export_csv: 'Export CSV'
   reserved_domains: 'Reserved domains'
   invalid_yaml: 'Invalid YAML'
+  reserved_pw: 'Reserved pw'

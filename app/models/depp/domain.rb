@@ -132,7 +132,7 @@ module Depp
 
       # rubocop:disable Metrics/MethodLength
       # rubocop:disable Metrics/AbcSize
-      def construct_params_from_server_data(data) 
+      def construct_params_from_server_data(data)
         ret = default_params
         ret[:name] = data.css('name').text
         ret[:registrant] = data.css('registrant').text
@@ -182,14 +182,16 @@ module Depp
       # rubocop:enable Metrics/AbcSize
 
       def construct_custom_params_hash(domain_params)
-        custom_params = {}
+        custom_params = { _anonymus: [] }
         if domain_params[:legal_document].present?
           type = domain_params[:legal_document].original_filename.split('.').last.downcase
-          custom_params = {
-            _anonymus: [
-              legalDocument: { value: Base64.encode64(domain_params[:legal_document].read), attrs: { type:  type } }
-            ]
+          custom_params[:_anonymus] << {
+            legalDocument: { value: Base64.encode64(domain_params[:legal_document].read), attrs: { type:  type } }
           }
+        end
+
+        if domain_params[:reserved_pw].present?
+          custom_params[:_anonymus] << { reserved: { pw: { value: domain_params[:reserved_pw] } } }
         end
 
         custom_params
