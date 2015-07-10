@@ -349,7 +349,7 @@ module Epp
     epp_xml.check(xml_params)
   end
 
-  def domain_transfer_xml(xml_params = {}, op = 'query', custom_params = {})
+  def domain_transfer_xml(xml_params = {}, op = 'request', custom_params = {})
     defaults = {
       name: { value: next_domain_name },
       authInfo: {

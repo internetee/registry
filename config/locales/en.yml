@@ -866,3 +866,4 @@ en:
   reserved_domains: 'Reserved domains'
   invalid_yaml: 'Invalid YAML'
   reserved_pw: 'Reserved pw'
+  no_transfers_found: 'No transfers found'

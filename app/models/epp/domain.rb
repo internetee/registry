@@ -461,6 +461,8 @@ class Epp::Domain < Domain
   def transfer(frame, action, current_user)
     case action
     when 'query'
+      return domain_transfers.last if domain_transfers.any?
+    when 'request'
       return pending_transfer if pending_transfer
       return query_transfer(frame, current_user)
     when 'approve'
@@ -468,7 +470,7 @@ class Epp::Domain < Domain
     when 'reject'
       return reject_transfer(frame, current_user) if pending_transfer
     end
-    add_epp_error('2303', nil, nil, I18n.t('pending_transfer_was_not_found'))
+    add_epp_error('2303', nil, nil, I18n.t('no_transfers_found'))
   end
 
   # TODO: Eager load problems here. Investigate how it's possible not to query contact again
