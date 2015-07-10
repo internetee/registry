@@ -79,7 +79,8 @@ module Depp
     end
 
     def transfer(params)
-      op = params[:query] ? 'query' : nil
+      op = params[:request] ? 'request' : nil
+      op = params[:query] ? 'query' : op
       op = params[:approve] ? 'approve' : op
       op = params[:reject] ? 'reject' : op
 

@@ -1478,7 +1478,7 @@ describe 'EPP Domain', epp: true do
       })
 
       response = epp_plain_request(xml)
-      response[:msg].should == 'Pending transfer was not found'
+      response[:msg].should == 'No transfers found'
       response[:result_code].should == '2303'
     end
 
