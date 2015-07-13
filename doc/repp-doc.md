@@ -10,7 +10,7 @@ To quickly test the API, use curl:
 
     curl -q -k --cert user.crt.pem --key user.key.pem https://TBA/repp/v1/accounts/balance -u username:password
 
-Test API endpoint: TBA  
+Test API endpoint: https://testepp.internet.ee/repp/v1  
 Production API endpoint: TBA
 
 Main communication specification through Restful EPP (REPP):

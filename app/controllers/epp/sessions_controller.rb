@@ -13,7 +13,7 @@ class Epp::SessionsController < EppController
     success = true
     @api_user = ApiUser.find_by(login_params)
 
-    if request.ip == ENV['webclient_ip'] && !Rails.env.test?
+    if request.ip == ENV['webclient_ip'] && (!Rails.env.test? || !Rails.env.development?)
       client_md5 = Certificate.parse_md_from_string(request.env['HTTP_SSL_CLIENT_CERT'])
       server_md5 = Certificate.parse_md_from_string(File.read(ENV['cert_path']))
       if client_md5 != server_md5
