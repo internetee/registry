@@ -1,4 +1,3 @@
-Run options: include {:focus=>true, :epp=>true}
 # EPP REQUEST - RESPONSE EXAMPLES
 GENERATED AT: 2015-07-13 08:09:38 UTC  
 EXAMPLE COUNT: 177  
