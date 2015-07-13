@@ -123,22 +123,15 @@ class Registrar < ActiveRecord::Base
     accounts.find_by(account_type: Account::CASH)
   end
 
-  def debit!(sum, description, type = nil)
-    cash_account.account_activities.create!(
-      sum: -sum,
-      currency: 'EUR',
-      description: description,
-      activity_type: type
-    )
+  def debit!(args)
+    args[:sum] *= -1
+    args[:currency] = 'EUR'
+    cash_account.account_activities.create!(args)
   end
 
-  def credit!(sum, description, type = nil)
-    cash_account.account_activities.create!(
-      sum: sum,
-      currency: 'EUR',
-      description: description,
-      activity_type: type
-    )
+  def credit!(args)
+    args[:currency] = 'EUR'
+    cash_account.account_activities.create!(args)
   end
 
   def domain_transfers

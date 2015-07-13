@@ -30,7 +30,13 @@ class Epp::DomainsController < EppController
 
     ActiveRecord::Base.transaction do
       if @domain.save # TODO: Maybe use validate: false here because we have already validated the domain?
-        current_user.registrar.debit!(@domain_price, "#{I18n.t('create')} #{@domain.name}", AccountActivity::CREATE)
+        current_user.registrar.debit!({
+          sum: @domain_pricelist.price.amount,
+          description: "#{I18n.t('create')} #{@domain.name}",
+          activity_type: AccountActivity::CREATE,
+          log_pricelist_id: @domain_pricelist.id
+        })
+
         render_epp_response '/epp/domains/create'
       else
         handle_errors(@domain)
@@ -102,7 +108,13 @@ class Epp::DomainsController < EppController
           fail ActiveRecord::Rollback
         end
 
-        current_user.registrar.debit!(@domain_price, "#{I18n.t('renew')} #{@domain.name}", AccountActivity::RENEW)
+        current_user.registrar.debit!({
+          sum: @domain_pricelist.price.amount,
+          description: "#{I18n.t('renew')} #{@domain.name}",
+          activity_type: AccountActivity::RENEW,
+          log_pricelist_id: @domain_pricelist.id
+        })
+
         render_epp_response '/epp/domains/renew'
       else
         handle_errors(@domain)
@@ -212,8 +224,8 @@ class Epp::DomainsController < EppController
   end
 
   def balance_ok?(operation, period = nil, unit = nil)
-    @domain_price = @domain.price(operation, period.try(:to_i), unit).amount
-    if current_user.registrar.balance < @domain_price
+    @domain_pricelist = @domain.pricelist(operation, period.try(:to_i), unit)
+    if current_user.registrar.balance < @domain_pricelist.price.amount
       epp_errors << {
         code: '2104',
         msg: I18n.t('billing_failure_credit_balance_low')

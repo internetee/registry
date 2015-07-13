@@ -146,14 +146,14 @@ describe Registrar do
     end
 
     it 'should credit and debit registrar cash account' do
-      @registrar.credit!(13.32, 'Add money')
+      @registrar.credit!({ sum: 13.32, description: 'Add money' })
       @registrar.balance.should == BigDecimal.new('13.32')
       @registrar.cash_account.account_activities.count.should == 1
       a = @registrar.cash_account.account_activities.last
       a.description.should == 'Add money'
       a.sum.should == BigDecimal.new('13.32')
 
-      @registrar.debit!(10.31, 'Remove money')
+      @registrar.debit!({ sum: 10.31, description: 'Remove money' })
       @registrar.balance.should == BigDecimal.new('3.01')
       @registrar.cash_account.account_activities.count.should == 2
       a = @registrar.cash_account.account_activities.last

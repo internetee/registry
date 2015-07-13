@@ -5,9 +5,9 @@ describe 'EPP Domain', epp: true do
     @xsd = Nokogiri::XML::Schema(File.read('doc/schemas/domain-eis-1.0.xsd'))
     @epp_xml = EppXml.new(cl_trid: 'ABC-12345')
     @registrar1 = Fabricate(:registrar1, code: 'REGDOMAIN1')
-    @registrar1.credit!(10000, '')
+    @registrar1.credit!({ sum: 10000 })
     @registrar2 = Fabricate(:registrar2, code: 'REGDOMAIN2')
-    @registrar2.credit!(10000, '')
+    @registrar2.credit!({ sum: 10000 })
     Fabricate(:api_user, username: 'registrar1', registrar: @registrar1)
     Fabricate(:api_user, username: 'registrar2', registrar: @registrar2)
 
