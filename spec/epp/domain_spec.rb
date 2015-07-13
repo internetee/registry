@@ -19,10 +19,10 @@ describe 'EPP Domain', epp: true do
     Fabricate(:contact, code: 'FIXED:JURIDICAL_1234', ident_type: 'bic')
     Fabricate(:reserved_domain)
     Fabricate(:blocked_domain)
-    Fabricate(:pricelist, valid_to: nil)
-    Fabricate(:pricelist, duration: '2years', price: 20, valid_to: nil)
+    @pricelist_reg_1_year = Fabricate(:pricelist, valid_to: nil)
+    @pricelist_reg_2_year = Fabricate(:pricelist, duration: '2years', price: 20, valid_to: nil)
     Fabricate(:pricelist, duration: '3years', price: 30, valid_to: nil)
-    Fabricate(:pricelist, operation_category: 'renew', price: 15, valid_to: nil)
+    @pricelist_renew_1_year = Fabricate(:pricelist, operation_category: 'renew', price: 15, valid_to: nil)
     Fabricate(:pricelist, operation_category: 'renew', duration: '2years', price: 35, valid_to: nil)
     Fabricate(:pricelist, operation_category: 'renew', duration: '3years', price: 62, valid_to: nil)
 
@@ -396,6 +396,7 @@ describe 'EPP Domain', epp: true do
       a.description.should == "Create #{Domain.last.name}"
       a.sum.should == -BigDecimal.new('10.0')
       a.activity_type = AccountActivity::CREATE
+      a.log_pricelist_id.should == @pricelist_reg_1_year.id
     end
 
     it 'creates a domain with longer periods' do
@@ -413,6 +414,7 @@ describe 'EPP Domain', epp: true do
       a.description.should == "Create #{Domain.last.name}"
       a.sum.should == -BigDecimal.new('20.0')
       a.activity_type = AccountActivity::CREATE
+      a.log_pricelist_id.should == @pricelist_reg_2_year.id
     end
 
     it 'creates a domain with longer periods' do
@@ -2210,6 +2212,7 @@ describe 'EPP Domain', epp: true do
       a.description.should == "Renew #{Domain.last.name}"
       a.sum.should == -BigDecimal.new('15.0')
       a.activity_type = AccountActivity::RENEW
+      a.log_pricelist_id.should == @pricelist_renew_1_year.id
     end
 
     it 'renews a domain with 2 year period' do
