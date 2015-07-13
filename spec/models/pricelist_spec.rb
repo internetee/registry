@@ -70,7 +70,7 @@ describe Pricelist do
   end
 
   it 'should return correct price' do
-    expect { Pricelist.price_for('ee', 'create', '1year') }.to raise_error(NoMethodError)
+    Pricelist.pricelist_for('ee', 'create', '1year').should == nil
 
     Fabricate(:pricelist, {
       category: 'ee',
@@ -81,7 +81,7 @@ describe Pricelist do
       valid_to: Time.zone.parse('2199-01-01')
     })
 
-    expect { Pricelist.price_for('ee', 'create', '1year') }.to raise_error(NoMethodError)
+    Pricelist.pricelist_for('ee', 'create', '1year').should == nil
 
     Fabricate(:pricelist, {
       category: 'ee',
@@ -92,7 +92,7 @@ describe Pricelist do
       valid_to: nil
     })
 
-    Pricelist.price_for('ee', 'create', '1year').should == 1.50
+    Pricelist.pricelist_for('ee', 'create', '1year').price.amount.should == 1.50
 
     Fabricate(:pricelist, {
       category: 'ee',
@@ -103,7 +103,7 @@ describe Pricelist do
       valid_to: Time.zone.parse('2999-01-01')
     })
 
-    Pricelist.price_for('ee', 'create', '1year').should == 1.30
+    Pricelist.pricelist_for('ee', 'create', '1year').price.amount.should == 1.30
 
     Fabricate.create(:pricelist, {
       category: 'ee',
@@ -114,7 +114,7 @@ describe Pricelist do
       valid_to: Time.zone.parse('2999-01-01')
     })
 
-    Pricelist.price_for('ee', 'create', '1year').should == 1.20
+    Pricelist.pricelist_for('ee', 'create', '1year').price.amount.should == 1.20
 
     Fabricate.create(:pricelist, {
       category: 'ee',
@@ -125,7 +125,7 @@ describe Pricelist do
       valid_to: Time.zone.parse('2999-01-01')
     })
 
-    Pricelist.price_for('ee', 'create', '1year').should == 1.20
+    Pricelist.pricelist_for('ee', 'create', '1year').price.amount.should == 1.20
 
     Fabricate.create(:pricelist, {
       category: 'ee',
@@ -136,7 +136,7 @@ describe Pricelist do
       valid_to: Time.zone.parse('2999-01-01')
     })
 
-    Pricelist.price_for('ee', 'create', '1year').should == 1.20
+    Pricelist.pricelist_for('ee', 'create', '1year').price.amount.should == 1.20
 
     Fabricate.create(:pricelist, {
       category: 'ee',
@@ -147,7 +147,7 @@ describe Pricelist do
       valid_to: nil
     })
 
-    Pricelist.price_for('ee', 'create', '1year').should == 1.20
+    Pricelist.pricelist_for('ee', 'create', '1year').price.amount.should == 1.20
 
     Fabricate.create(:pricelist, {
       category: 'ee',
@@ -158,7 +158,7 @@ describe Pricelist do
       valid_to: Time.zone.parse('2999-01-01')
     })
 
-    Pricelist.price_for('ee', 'create', '1year').should == 1.10
+    Pricelist.pricelist_for('ee', 'create', '1year').price.amount.should == 1.10
 
     Fabricate.create(:pricelist, {
       category: 'ee',
@@ -169,6 +169,6 @@ describe Pricelist do
       valid_to: Time.zone.parse('2999-01-01')
     })
 
-    Pricelist.price_for('ee', 'create', '2years').should == 1.20
+    Pricelist.pricelist_for('ee', 'create', '2years').price.amount.should == 1.20
   end
 end

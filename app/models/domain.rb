@@ -397,7 +397,7 @@ class Domain < ActiveRecord::Base
     DomainMailer.pending_deleted(self).deliver_now
   end
 
-  def price(operation, period_i = nil, unit = nil)
+  def pricelist(operation, period_i = nil, unit = nil)
     period_i ||= period
     unit ||= period_unit
 
@@ -413,7 +413,7 @@ class Domain < ActiveRecord::Base
       p = "#{p}year"
     end
 
-    Pricelist.price_for(zone, operation, p)
+    Pricelist.pricelist_for(zone, operation, p)
   end
 
   ### VALIDATIONS ###

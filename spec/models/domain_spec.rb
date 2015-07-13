@@ -193,13 +193,13 @@ describe Domain do
       })
 
       domain = Fabricate(:domain)
-      domain.price('create').should == 1.50
+      domain.pricelist('create').price.amount.should == 1.50
 
       domain = Fabricate(:domain, period: 12, period_unit: 'm')
-      domain.price('create').should == 1.50
+      domain.pricelist('create').price.amount.should == 1.50
 
       domain = Fabricate(:domain, period: 365, period_unit: 'd')
-      domain.price('create').should == 1.50
+      domain.pricelist('create').price.amount.should == 1.50
 
       Fabricate(:pricelist, {
         category: 'ee',
@@ -211,13 +211,13 @@ describe Domain do
       })
 
       domain = Fabricate(:domain, period: 2)
-      domain.price('create').should == 3.0
+      domain.pricelist('create').price.amount.should == 3.0
 
       domain = Fabricate(:domain, period: 24, period_unit: 'm')
-      domain.price('create').should == 3.0
+      domain.pricelist('create').price.amount.should == 3.0
 
       domain = Fabricate(:domain, period: 730, period_unit: 'd')
-      domain.price('create').should == 3.0
+      domain.pricelist('create').price.amount.should == 3.0
 
       Fabricate(:pricelist, {
         category: 'ee',
@@ -229,13 +229,13 @@ describe Domain do
       })
 
       domain = Fabricate(:domain, period: 3)
-      domain.price('create').should == 6.0
+      domain.pricelist('create').price.amount.should == 6.0
 
       domain = Fabricate(:domain, period: 36, period_unit: 'm')
-      domain.price('create').should == 6.0
+      domain.pricelist('create').price.amount.should == 6.0
 
       domain = Fabricate(:domain, period: 1095, period_unit: 'd')
-      domain.price('create').should == 6.0
+      domain.pricelist('create').price.amount.should == 6.0
     end
 
     it 'should know its renew price' do
@@ -249,13 +249,13 @@ describe Domain do
       })
 
       domain = Fabricate(:domain)
-      domain.price('renew').should == 1.30
+      domain.pricelist('renew').price.amount.should == 1.30
 
       domain = Fabricate(:domain, period: 12, period_unit: 'm')
-      domain.price('renew').should == 1.30
+      domain.pricelist('renew').price.amount.should == 1.30
 
       domain = Fabricate(:domain, period: 365, period_unit: 'd')
-      domain.price('renew').should == 1.30
+      domain.pricelist('renew').price.amount.should == 1.30
 
       Fabricate(:pricelist, {
         category: 'ee',
@@ -267,13 +267,13 @@ describe Domain do
       })
 
       domain = Fabricate(:domain, period: 2)
-      domain.price('renew').should == 3.1
+      domain.pricelist('renew').price.amount.should == 3.1
 
       domain = Fabricate(:domain, period: 24, period_unit: 'm')
-      domain.price('renew').should == 3.1
+      domain.pricelist('renew').price.amount.should == 3.1
 
       domain = Fabricate(:domain, period: 730, period_unit: 'd')
-      domain.price('renew').should == 3.1
+      domain.pricelist('renew').price.amount.should == 3.1
 
       Fabricate(:pricelist, {
         category: 'ee',
@@ -285,13 +285,13 @@ describe Domain do
       })
 
       domain = Fabricate(:domain, period: 3)
-      domain.price('renew').should == 6.1
+      domain.pricelist('renew').price.amount.should == 6.1
 
       domain = Fabricate(:domain, period: 36, period_unit: 'm')
-      domain.price('renew').should == 6.1
+      domain.pricelist('renew').price.amount.should == 6.1
 
       domain = Fabricate(:domain, period: 1095, period_unit: 'd')
-      domain.price('renew').should == 6.1
+      domain.pricelist('renew').price.amount.should == 6.1
     end
 
     context 'about registrant update confirm' do
