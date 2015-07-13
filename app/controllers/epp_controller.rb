@@ -280,7 +280,7 @@ class EppController < ApplicationController
 
     # filter pw
     if request_command == 'login' && frame.present?
-      frame.gsub!(/<pw>.+<\/pw>/, '<pw>[FILTERED]</pw>')
+      frame.gsub!(/pw>.+<\//, 'pw>[FILTERED]</')
     end
 
     ApiLog::EppLog.create({
