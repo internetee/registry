@@ -141,7 +141,7 @@ Domain name mapping protocol short version:
 
     Field name               Min-max  Field description
     -----------------------  -------  -----------------
-    <transfer>               1       
+    <transfer>               1        Attribute: op="request/query/approve/reject/cancel"
       <domain:transfer>      1        Attribute: xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd"
         <domain:name>        1        Domain name. Can contain unicode characters. 
         <domain:authInfo>    1       
