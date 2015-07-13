@@ -32,6 +32,11 @@ class Admin::PricelistsController < AdminController
     end
   end
 
+  def destroy
+    @pricelist.destroy
+    redirect_to admin_pricelists_url
+  end
+
   private
 
   def set_pricelist
