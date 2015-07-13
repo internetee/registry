@@ -152,6 +152,7 @@ describe Registrar do
       a = @registrar.cash_account.account_activities.last
       a.description.should == 'Add money'
       a.sum.should == BigDecimal.new('13.32')
+      a.log_pricelist_id.should == nil
 
       @registrar.debit!({ sum: 10.31, description: 'Remove money' })
       @registrar.balance.should == BigDecimal.new('3.01')
