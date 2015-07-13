@@ -2,3 +2,7 @@
 
 # Configure sensitive parameters which will be filtered from the log file.
 Rails.application.config.filter_parameters += [:password]
+
+Rails.application.config.filter_parameters << lambda do |key, value|
+  frame.gsub!(/pw>.+<\//, 'pw>[FILTERED]</') if key =~ /frame|raw_frame/i
+end
