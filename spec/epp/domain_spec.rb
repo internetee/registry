@@ -1437,8 +1437,8 @@ describe 'EPP Domain', epp: true do
 
     it 'returns an error for incorrect op attribute' do
       response = epp_plain_request(domain_transfer_xml({}, 'bla'), validate_input: false)
-      response[:result_code].should == '2306'
-      response[:msg].should == 'Attribute is invalid: op'
+      response[:msg].should == 'Parameter value range error: op'
+      response[:result_code].should == '2004'
     end
 
     it 'creates new pw after successful transfer' do

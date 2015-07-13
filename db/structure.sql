@@ -2420,14 +2420,40 @@ ALTER SEQUENCE pricelists_id_seq OWNED BY pricelists.id;
 
 CREATE TABLE que_jobs (
     priority smallint DEFAULT 100 NOT NULL,
-    run_at timestamp without time zone DEFAULT '2015-06-30 14:16:50.905537'::timestamp without time zone NOT NULL,
-    job_id bigint DEFAULT 0 NOT NULL,
+    run_at timestamp with time zone DEFAULT now() NOT NULL,
+    job_id bigint NOT NULL,
     job_class text NOT NULL,
     args json DEFAULT '[]'::json NOT NULL,
     error_count integer DEFAULT 0 NOT NULL,
     last_error text,
     queue text DEFAULT ''::text NOT NULL
 );
+
+
+--
+-- Name: TABLE que_jobs; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE que_jobs IS '3';
+
+
+--
+-- Name: que_jobs_job_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE que_jobs_job_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: que_jobs_job_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE que_jobs_job_id_seq OWNED BY que_jobs.job_id;
 
 
 --
@@ -3186,6 +3212,13 @@ ALTER TABLE ONLY pricelists ALTER COLUMN id SET DEFAULT nextval('pricelists_id_s
 
 
 --
+-- Name: job_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY que_jobs ALTER COLUMN job_id SET DEFAULT nextval('que_jobs_job_id_seq'::regclass);
+
+
+--
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -3702,6 +3735,14 @@ ALTER TABLE ONLY people
 
 ALTER TABLE ONLY pricelists
     ADD CONSTRAINT pricelists_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: que_jobs_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY que_jobs
+    ADD CONSTRAINT que_jobs_pkey PRIMARY KEY (queue, priority, run_at, job_id);
 
 
 --
@@ -4808,13 +4849,25 @@ INSERT INTO schema_migrations (version) VALUES ('20150520164507');
 
 INSERT INTO schema_migrations (version) VALUES ('20150521120145');
 
+INSERT INTO schema_migrations (version) VALUES ('20150522164020');
+
+INSERT INTO schema_migrations (version) VALUES ('20150525075550');
+
+INSERT INTO schema_migrations (version) VALUES ('20150601083516');
+
+INSERT INTO schema_migrations (version) VALUES ('20150601083800');
+
 INSERT INTO schema_migrations (version) VALUES ('20150603141549');
 
 INSERT INTO schema_migrations (version) VALUES ('20150603211318');
 
 INSERT INTO schema_migrations (version) VALUES ('20150603212659');
 
+INSERT INTO schema_migrations (version) VALUES ('20150609093515');
+
 INSERT INTO schema_migrations (version) VALUES ('20150609103333');
+
+INSERT INTO schema_migrations (version) VALUES ('20150610111019');
 
 INSERT INTO schema_migrations (version) VALUES ('20150610112238');
 
@@ -4824,7 +4877,11 @@ INSERT INTO schema_migrations (version) VALUES ('20150611124920');
 
 INSERT INTO schema_migrations (version) VALUES ('20150612123111');
 
+INSERT INTO schema_migrations (version) VALUES ('20150612125720');
+
 INSERT INTO schema_migrations (version) VALUES ('20150701074344');
+
+INSERT INTO schema_migrations (version) VALUES ('20150703084206');
 
 INSERT INTO schema_migrations (version) VALUES ('20150703084632');
 

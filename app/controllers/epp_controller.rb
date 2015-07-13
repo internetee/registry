@@ -138,7 +138,7 @@ class EppController < ApplicationController
     # validate legal document's type here because it may be in most of the requests
     @prefix = nil
     if element_count('extdata > legalDocument') > 0
-      requires_attribute('extdata > legalDocument', 'type', values: LegalDocument::TYPES)
+      requires_attribute('extdata > legalDocument', 'type', values: LegalDocument::TYPES, policy: true)
     end
 
     handle_errors and return if epp_errors.any?
@@ -188,12 +188,27 @@ class EppController < ApplicationController
 
     attribute = element[attribute_selector]
 
-    return if attribute && options[:values].include?(attribute)
+    unless attribute
+      epp_errors << {
+        code: '2003',
+        msg: I18n.t('errors.messages.required_parameter_missing', key: attribute_selector)
+      }
+      return
+    end
 
-    epp_errors << {
-      code: '2306',
-      msg: I18n.t('attribute_is_invalid', attribute: attribute_selector)
-    }
+    return if options[:values].include?(attribute)
+
+    if options[:policy]
+      epp_errors << {
+        code: '2306',
+        msg: I18n.t('attribute_is_invalid', attribute: attribute_selector)
+      }
+    else
+      epp_errors << {
+        code: '2004',
+        msg: I18n.t('parameter_value_range_error', key: attribute_selector)
+      }
+    end
   end
 
   def optional_attribute(element_selector, attribute_selector, options)
