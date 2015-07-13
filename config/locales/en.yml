@@ -291,6 +291,7 @@ en:
   description: 'Description'
   delete: 'Delete'
   are_you_sure: 'Are you sure?'
+  are_you_sure_destroy: 'You are going to delete, are you sure?'
   back: 'Back'
   new_domain: 'New domain'
   registrar_name: 'Registrar name'
