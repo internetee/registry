@@ -38,6 +38,8 @@ Domain name mapping protocol short version:
       <eis:extdata>            1        Attribute: xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd"
         <eis:legalDocument>    1        Base64 encoded document. 
                                           Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
+        <eis:reserved>         0-1
+          <eis:pw>             0-1      Required if registering a reserved domain
     <clTRID>                   0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-citizen-as-a-registrant-creates-a-domain)
