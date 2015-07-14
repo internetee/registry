@@ -1,6 +1,8 @@
 class Admin::InvoicesController < AdminController
   load_and_authorize_resource
 
+  before_action :set_invoice, only: [:forward, :download_pdf]
+
   def new
     @deposit = Deposit.new
   end
@@ -39,9 +41,18 @@ class Admin::InvoicesController < AdminController
     end
   end
 
+  def download_pdf
+    pdf = @invoice.pdf(render_to_string('registrar/invoices/pdf', layout: false))
+    send_data pdf, filename: @invoice.pdf_name
+  end
+
   private
 
   def deposit_params
     params.require(:deposit).permit(:amount, :description, :registrar_id)
+  end
+
+  def set_invoice
+    @invoice = Invoice.find(params[:invoice_id])
   end
 end

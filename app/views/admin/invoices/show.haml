@@ -7,6 +7,7 @@
       - if !@invoice.cancelled? && !@invoice.binded?
         = link_to(t(:cancel), cancel_admin_invoice_path(@invoice), method: :patch, class: 'btn btn-warning')
       = link_to(t(:back), admin_invoices_path, class: 'btn btn-default')
+      = link_to(t(:download), admin_invoice_download_pdf_path(@invoice), class: 'btn btn-default')
 %hr
 = render 'shared/full_errors', object: @invoice
 
