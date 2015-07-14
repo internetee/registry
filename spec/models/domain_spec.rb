@@ -182,6 +182,16 @@ describe Domain do
       @domain.force_delete_at.should be_nil
     end
 
+    it 'should set expired status and update outzone_at and delete_at' do
+      domain = Fabricate(:domain)
+      domain.statuses.should == ['ok']
+      domain.set_expired
+      domain.changes.keys.should == ['statuses', 'outzone_at', 'delete_at']
+      domain.save
+
+      domain.statuses.should == ['expired']
+    end
+
     it 'should know its create price' do
       Fabricate(:pricelist, {
         category: 'ee',

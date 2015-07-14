@@ -186,13 +186,10 @@ class Domain < ActiveRecord::Base
     def start_expire_period
       STDOUT << "#{Time.zone.now.utc} - Expiring domains\n" unless Rails.env.test?
 
-      d = Domain.where('valid_to <= ?', Time.zone.now)
-      d.each do |x|
-        next unless x.expirable?
-        x.statuses << DomainStatus::EXPIRED
-        # TODO: This should be managed by automatic_statuses
-        x.statuses.delete(DomainStatus::OK)
-        x.save(validate: false)
+      domains = Domain.where('valid_to <= ?', Time.zone.now)
+      domains.each do |domain|
+        next unless domain.expirable?
+        domain.set_expired!
       end
 
       STDOUT << "#{Time.zone.now.utc} - Successfully expired #{d.count} domains\n" unless Rails.env.test?
@@ -514,6 +511,19 @@ class Domain < ActiveRecord::Base
     statuses.delete(DomainStatus::PENDING_DELETE)
 
     self.force_delete_at = nil
+    save(validate: false)
+  end
+
+  def set_expired
+    # TODO: currently valid_to attribute update logic is open
+    # self.valid_to = valid_from + self.class.convert_period_to_time(period, period_unit)
+    self.outzone_at = Time.zone.now + Setting.expire_warning_period.days
+    self.delete_at  = Time.zone.now + Setting.redemption_grace_period.days
+    statuses << DomainStatus::EXPIRED
+  end
+
+  def set_expired!
+    set_expired
     save(validate: false)
   end
 
