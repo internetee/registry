@@ -24,7 +24,8 @@ class Epp::DomainsController < EppController
     authorize! :create, Epp::Domain
     @domain = Epp::Domain.new_from_epp(params[:parsed_frame], current_user)
     handle_errors(@domain) and return if @domain.errors.any?
-    handle_errors(@domain) and return if @domain.valid? && @domain.errors.any?
+    @domain.valid?
+    handle_errors(@domain) and return if @domain.errors.any?
 
     handle_errors and return unless balance_ok?('create')
 
