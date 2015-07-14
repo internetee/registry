@@ -41,6 +41,21 @@ class Admin::InvoicesController < AdminController
     end
   end
 
+  def forward
+    @invoice.billing_email = @invoice.buyer.billing_email
+
+    return unless request.post?
+
+    @invoice.billing_email = params[:invoice][:billing_email]
+
+    if @invoice.forward(render_to_string('registrar/invoices/pdf', layout: false))
+      flash[:notice] = t(:invoice_forwared)
+      redirect_to([:admin, @invoice])
+    else
+      flash.now[:alert] = t(:failed_to_forward_invoice)
+    end
+  end
+
   def download_pdf
     pdf = @invoice.pdf(render_to_string('registrar/invoices/pdf', layout: false))
     send_data pdf, filename: @invoice.pdf_name
