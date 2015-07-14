@@ -56,7 +56,8 @@ class Admin::SettingsController < AdminController
       :days_to_keep_overdue_invoices_active,
       :days_to_renew_domain_before_expire,
       :expire_warning_period,
-      :redemption_grace_period
+      :redemption_grace_period,
+      :expire_pending_confirmation
     ]
 
     floats = [:registry_vat_prc]
