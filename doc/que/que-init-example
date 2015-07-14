@@ -27,7 +27,7 @@ cd $APP_ROOT || exit 1
 
 case ${1-help} in
 status)
-        cd $APP_ROOT && RAILS_ENV=$RAILS_ENV $RUBY_BUNDLE_PATH exec rake daemon:que:status         
+        cd $APP_ROOT && RAILS_ENV=$RAILS_ENV lib/daemons/que_ctl status
         ;;
 start)
         echo "$1 que monitor and server"
@@ -38,7 +38,7 @@ start)
         ;;
 stop)
         echo "$1 que monitor and server"
-        cd $APP_ROOT && RAILS_ENV=$RAILS_ENV $RUBY_BUNDLE_PATH exec rake daemon:que:stop         
+        cd $APP_ROOT && RAILS_ENV=$RAILS_ENV lib/daemons/que_ctl stop
         ;;
 restart)
         echo "$1 que monitor and server"
