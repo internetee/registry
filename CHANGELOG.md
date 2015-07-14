@@ -1,4 +1,9 @@
+14.07.2015
+
+* Updated que init script doc example, now status and stop works faster
+
 07.07.2015
+
 * Before applyling 20150707104937_refactor_reserved_domains.rb migration, enable hstore extension in db
 
 01.07.2015

@@ -567,7 +567,7 @@ DEPENDENCIES
   epp-xml (~> 1.0.3)
   fabrication (~> 2.13.2)
   faker (~> 1.4.3)
-  figaro (~> 1.1.0)
+  figaro (~> 1.1.1)
   grape (~> 0.12.0)
   guard (~> 2.12.6)
   guard-rails (~> 0.7.1)

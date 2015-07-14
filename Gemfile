@@ -13,7 +13,7 @@ gem 'iso8601',      '~> 0.8.2' # for dates and times
 gem 'hashie-forbidden_attributes', '~> 0.1.1'
 
 # load env
-gem 'figaro', '~> 1.1.0'
+gem 'figaro', '~> 1.1.1'
 
 # model related
 gem 'pg',                        '~> 0.18.0'
