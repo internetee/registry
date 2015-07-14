@@ -7,7 +7,9 @@ class Invoice < ActiveRecord::Base
 
   accepts_nested_attributes_for :invoice_items
 
-  scope :unbinded, -> { where('id NOT IN (SELECT invoice_id FROM account_activities)') }
+  scope :unbinded, lambda {
+    where('id NOT IN (SELECT invoice_id FROM account_activities where invoice_id IS NOT NULL)')
+  }
 
   attr_accessor :billing_email
   validates :billing_email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i }, allow_blank: true
