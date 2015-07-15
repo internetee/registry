@@ -23,12 +23,12 @@
             = f.search_field :number_lteq, class: 'form-control', placeholder: t(:maximum_invoice_no), autocomplete: 'off'
         .col-md-3
           .form-group
-            = f.label t(:due_date_after)
-            = f.search_field :due_date_gt, value: params[:q][:due_date_gt], class: 'form-control datepicker', placeholder: t(:due_date_after), autocomplete: 'off'
+            = f.label t(:due_date_from)
+            = f.search_field :due_date_gteq, value: params[:q][:due_date_gteq], class: 'form-control datepicker', placeholder: t(:due_date_from), autocomplete: 'off'
         .col-md-3
           .form-group
-            = f.label t(:due_date_before)
-            = f.search_field :due_date_lt, value: params[:q][:due_date_lt], class: 'form-control datepicker', placeholder: t(:due_date_before), autocomplete: 'off'
+            = f.label t(:due_date_until)
+            = f.search_field :due_date_lteq, value: params[:q][:due_date_lteq], class: 'form-control datepicker', placeholder: t(:due_date_until), autocomplete: 'off'
       .row
         .col-md-3
           .form-group

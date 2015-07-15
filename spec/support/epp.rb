@@ -144,7 +144,7 @@ module Epp
   end
 
   # rubocop: disable Metrics/MethodLength
-  def domain_create_xml(xml_params = {}, dnssec_params = {})
+  def domain_create_xml(xml_params = {}, dnssec_params = {}, custom_params = {})
     defaults = {
       name: { value: next_domain_name },
       period: { value: '1', attrs: { unit: 'y' } },
@@ -185,7 +185,7 @@ module Epp
 
     dnssec_params = dnssec_defaults.deep_merge(dnssec_params) if dnssec_params != false
 
-    custom_params = {
+    custom_defaults = {
       _anonymus: [
         legalDocument: {
           value: 'dGVzdCBmYWlsCg==',
@@ -193,6 +193,8 @@ module Epp
         }
       ]
     }
+
+    custom_params = custom_defaults.deep_merge(custom_params) if custom_params != false
 
     epp_xml = EppXml::Domain.new(cl_trid: 'ABC-12345')
     epp_xml.create(xml_params, dnssec_params, custom_params)
@@ -347,7 +349,7 @@ module Epp
     epp_xml.check(xml_params)
   end
 
-  def domain_transfer_xml(xml_params = {}, op = 'query', custom_params = {})
+  def domain_transfer_xml(xml_params = {}, op = 'request', custom_params = {})
     defaults = {
       name: { value: next_domain_name },
       authInfo: {

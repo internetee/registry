@@ -2,8 +2,8 @@ class DomainNameValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     if !self.class.validate_format(value)
       record.errors[attribute] << (options[:message] || record.errors.generate_message(attribute, :invalid))
-    elsif !self.class.validate_reservation(value)
-      record.errors.add(attribute, (options[:message] || record.errors.generate_message(attribute, :reserved)))
+    elsif !self.class.validate_blocked(value)
+      record.errors.add(attribute, (options[:message] || record.errors.generate_message(attribute, :blocked)))
     end
   end
 
@@ -31,9 +31,9 @@ class DomainNameValidator < ActiveModel::EachValidator
       # rubocop: enable Style/DoubleNegation
     end
 
-    def validate_reservation(value)
+    def validate_blocked(value)
       return true unless value
-      !ReservedDomain.exists?(name: value.mb_chars.downcase.strip)
+      BlockedDomain.where("names @> ?::varchar[]", "{#{value}}").count == 0
     end
   end
 end

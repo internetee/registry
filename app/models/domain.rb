@@ -61,6 +61,7 @@ class Domain < ActiveRecord::Base
 
   before_create :generate_auth_info
   before_create :set_validity_dates
+  before_create -> { self.reserved = in_reserved_list?; nil }
   before_update :manage_statuses
   def manage_statuses
     return unless registrant_id_changed?
@@ -78,12 +79,32 @@ class Domain < ActiveRecord::Base
 
   after_initialize -> { self.statuses = [] if statuses.nil? }
 
+  after_create :update_reserved_domains
+  def update_reserved_domains
+    return unless in_reserved_list?
+    rd = ReservedDomain.first
+    rd.names[name] = SecureRandom.hex
+    rd.save
+  end
+
   validates :name_dirty, domain_name: true, uniqueness: true
   validates :puny_label, length: { maximum: 63 }
   validates :period, numericality: { only_integer: true }
   validates :registrant, :registrar, presence: true
 
   validate :validate_period
+  validate :validate_reservation
+  def validate_reservation
+    return if persisted? || !in_reserved_list?
+
+    if reserved_pw.blank?
+      errors.add(:base, :required_parameter_missing_reserved)
+      return false
+    end
+
+    return if ReservedDomain.pw_for(name) == reserved_pw
+    errors.add(:base, :invalid_auth_information_reserved)
+  end
 
   validates :nameservers, object_count: {
     min: -> { Setting.ns_min_count },
@@ -134,7 +155,7 @@ class Domain < ActiveRecord::Base
   end
 
   attr_accessor :registrant_typeahead, :update_me, :deliver_emails,
-    :epp_pending_update, :epp_pending_delete
+    :epp_pending_update, :epp_pending_delete, :reserved_pw
 
   def subordinate_nameservers
     nameservers.select { |x| x.hostname.end_with?(name) }
@@ -146,9 +167,9 @@ class Domain < ActiveRecord::Base
 
   class << self
     def convert_period_to_time(period, unit)
-      return period.to_i.days   if unit == 'd'
-      return period.to_i.months if unit == 'm'
-      return period.to_i.years  if unit == 'y'
+      return (period.to_i / 365).years if unit == 'd'
+      return (period.to_i / 12).years  if unit == 'm'
+      return period.to_i.years         if unit == 'y'
     end
 
     def included
@@ -162,16 +183,34 @@ class Domain < ActiveRecord::Base
       )
     end
 
+    def clean_expired_pendings
+      STDOUT << "#{Time.zone.now.utc} - Clean expired domain pendings\n" unless Rails.env.test?
+
+      expire_at = Setting.expire_pending_confirmation.hours.ago
+      count = 0
+      expired_pending_domains = Domain.where('registrant_verification_asked_at <= ?', expire_at)
+      expired_pending_domains.each do |domain|
+        unless domain.pending_update? || domain.pending_delete?
+          msg = "#{Time.zone.now.utc} - ISSUE: DOMAIN #{domain.id}: #{domain.name} IS IN EXPIRED PENDING LIST, " \
+                "but no pendingDelete/pendingUpdate state present!\n"
+          STDOUT << msg unless Rails.env.test?
+          next
+        end
+        count += 1
+        domain.clean_pendings!
+      end
+
+      STDOUT << "#{Time.zone.now.utc} - Successfully cancelled #{count} domain pendings\n" unless Rails.env.test?
+      count
+    end
+
     def start_expire_period
       STDOUT << "#{Time.zone.now.utc} - Expiring domains\n" unless Rails.env.test?
 
-      d = Domain.where('valid_to <= ?', Time.zone.now)
-      d.each do |x|
-        next unless x.expirable?
-        x.statuses << DomainStatus::EXPIRED
-        # TODO: This should be managed by automatic_statuses
-        x.statuses.delete(DomainStatus::OK)
-        x.save(validate: false)
+      domains = Domain.where('valid_to <= ?', Time.zone.now)
+      domains.each do |domain|
+        next unless domain.expirable?
+        domain.set_expired!
       end
 
       STDOUT << "#{Time.zone.now.utc} - Successfully expired #{d.count} domains\n" unless Rails.env.test?
@@ -207,6 +246,7 @@ class Domain < ActiveRecord::Base
       STDOUT << "#{Time.zone.now.utc} - Successfully set delete_candidate to #{d.count} domains\n"
     end
 
+    # rubocop:disable Rails/FindEach
     def destroy_delete_candidates
       STDOUT << "#{Time.zone.now.utc} - Destroying domains\n" unless Rails.env.test?
 
@@ -223,6 +263,7 @@ class Domain < ActiveRecord::Base
 
       STDOUT << "#{Time.zone.now.utc} - Successfully destroyed #{c} domains\n" unless Rails.env.test?
     end
+    # rubocop:enable Rails/FindEach
   end
 
   def name=(value)
@@ -243,6 +284,10 @@ class Domain < ActiveRecord::Base
 
   def registrant_typeahead
     @registrant_typeahead || registrant.try(:name) || nil
+  end
+
+  def in_reserved_list?
+    ReservedDomain.pw_for(name).present?
   end
 
   def pending_transfer
@@ -370,6 +415,25 @@ class Domain < ActiveRecord::Base
     DomainMailer.pending_deleted(self).deliver_now
   end
 
+  def pricelist(operation, period_i = nil, unit = nil)
+    period_i ||= period
+    unit ||= period_unit
+
+    zone = name.split('.').drop(1).join('.')
+
+    p = period_i / 365 if unit == 'd'
+    p = period_i / 12 if unit == 'm'
+    p = period_i if unit == 'y'
+
+    if p > 1
+      p = "#{p}years"
+    else
+      p = "#{p}year"
+    end
+
+    Pricelist.pricelist_for(zone, operation, p)
+  end
+
   ### VALIDATIONS ###
 
   def validate_nameserver_ips
@@ -410,8 +474,8 @@ class Domain < ActiveRecord::Base
     res = ''
     parts = name.split('.')
     parts.each do |x|
-      res += sprintf('%02X', x.length) # length of label in hex
-      res += x.each_byte.map { |b| sprintf('%02X', b) }.join # label
+      res += format('%02X', x.length) # length of label in hex
+      res += x.each_byte.map { |b| format('%02X', b) }.join # label
     end
 
     res += '00'
@@ -468,6 +532,19 @@ class Domain < ActiveRecord::Base
     statuses.delete(DomainStatus::PENDING_DELETE)
 
     self.force_delete_at = nil
+    save(validate: false)
+  end
+
+  def set_expired
+    # TODO: currently valid_to attribute update logic is open
+    # self.valid_to = valid_from + self.class.convert_period_to_time(period, period_unit)
+    self.outzone_at = Time.zone.now + Setting.expire_warning_period.days
+    self.delete_at  = Time.zone.now + Setting.redemption_grace_period.days
+    statuses << DomainStatus::EXPIRED
+  end
+
+  def set_expired!
+    set_expired
     save(validate: false)
   end
 

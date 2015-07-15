@@ -1,0 +1,51 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          Registry que server
+# Required-Start:    $all
+# Required-Stop:     $network $local_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Enable Registry que server
+### END INIT INFO
+
+set -u
+set -e
+
+#
+# Change these to match your server:
+#
+# Make sure that all paths are correct.
+#
+APP_HOME="/home/registry/registry"
+APP_ROOT="$APP_HOME/current"
+QUE_USER=registry # or use some other unprivileged system user
+RAILS_ENV=production
+RUBY_BUNDLE_PATH=/home/$QUE_USER/.rbenv/shims/bundle         
+QUE_INSTANCES=1 # or as many really needed based real load
+
+cd $APP_ROOT || exit 1
+
+case ${1-help} in
+status)
+        cd $APP_ROOT && RAILS_ENV=$RAILS_ENV $RUBY_BUNDLE_PATH exec lib/daemons/que_ctl status
+        ;;
+start)
+        echo "$1 que monitor and server"
+        for i in `seq 1 $QUE_INSTANCES`; do
+          cd $APP_ROOT && QUE_WORKER_COUNT=1 RAILS_ENV=$RAILS_ENV $RUBY_BUNDLE_PATH exec rake daemon:que:start         
+          echo '.'
+        done
+        ;;
+stop)
+        echo "$1 que monitor and server"
+        cd $APP_ROOT && RAILS_ENV=$RAILS_ENV $RUBY_BUNDLE_PATH lib/daemons/que_ctl stop
+        ;;
+restart)
+        echo "$1 que monitor and server"
+        cd $APP_ROOT && RAILS_ENV=$RAILS_ENV $RUBY_BUNDLE_PATH exec rake daemon:que:restart         
+        ;;
+*)
+        echo >&2 "Usage: $0 <status|start|stop|restart>"
+        exit 1
+        ;;
+esac

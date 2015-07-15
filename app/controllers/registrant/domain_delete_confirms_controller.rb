@@ -8,8 +8,8 @@ class Registrant::DomainDeleteConfirmsController < RegistrantController
     @domain = nil unless @domain.registrant_delete_confirmable?(params[:token])
   end
 
-  # # rubocop: disable Metrics/PerceivedComplexity
-  # # rubocop: disable Metrics/CyclomaticComplexity
+  # rubocop: disable Metrics/PerceivedComplexity
+  # rubocop: disable Metrics/AbcSize
   def update
     @domain = Domain.find(params[:id])
     unless @domain.registrant_delete_confirmable?(params[:token])
@@ -39,5 +39,5 @@ class Registrant::DomainDeleteConfirmsController < RegistrantController
     end
   end
   # rubocop: enable Metrics/PerceivedComplexity
-  # rubocop: enable Metrics/CyclomaticComplexity
+  # rubocop: enable Metrics/AbcSize
 end

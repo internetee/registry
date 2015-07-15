@@ -1,0 +1,19 @@
+= form_for([:admin, @bank_statement], html: { class: 'form-horizontal' }) do |f|
+  = render 'shared/full_errors', object: @bank_statement
+
+  .row
+    .col-md-8
+      .form-group
+        .col-md-4.control-label
+          = f.label :bank_code
+        .col-md-8
+          = f.text_field(:bank_code, class: 'form-control')
+      .form-group
+        .col-md-4.control-label
+          = f.label :iban
+        .col-md-8
+          = f.text_field(:iban, class: 'form-control')
+  %hr
+  .row
+    .col-md-8.text-right
+      = button_tag(t(:save), class: 'btn btn-warning')

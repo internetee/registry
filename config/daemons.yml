@@ -1,0 +1,7 @@
+dir_mode: script
+dir: ../../log
+multiple: true
+backtrace: true
+monitor: true
+ontop: false
+app_name: 'que'

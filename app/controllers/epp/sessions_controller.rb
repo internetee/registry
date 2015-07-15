@@ -7,17 +7,49 @@ class Epp::SessionsController < EppController
 
   # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/CyclomaticComplexity
+  # rubocop: disable Metrics/MethodLength
+  # rubocop: disable Metrics/AbcSize
   def login
-    cert_valid = true
+    success = true
     @api_user = ApiUser.find_by(login_params)
 
-    if request.ip != ENV['webclient_ip'] && @api_user
-      unless @api_user.api_pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'], request.env['HTTP_SSL_CLIENT_S_DN_CN'])
-        cert_valid = false
+    if request.ip == ENV['webclient_ip'] && !Rails.env.test? && !Rails.env.development?
+      client_md5 = Certificate.parse_md_from_string(request.env['HTTP_SSL_CLIENT_CERT'])
+      server_md5 = Certificate.parse_md_from_string(File.read(ENV['cert_path']))
+      if client_md5 != server_md5
+        @msg = 'Authentication error; server closing connection (certificate is not valid)'
+        success = false
       end
     end
 
-    if @api_user.try(:active) && cert_valid && ip_white? && connection_limit_ok?
+    if request.ip != ENV['webclient_ip'] && @api_user
+      unless @api_user.api_pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'], request.env['HTTP_SSL_CLIENT_S_DN_CN'])
+        @msg = 'Authentication error; server closing connection (certificate is not valid)'
+        success = false
+      end
+    end
+
+    if success && !@api_user
+      @msg = 'Authentication error; server closing connection (API user not found)'
+      success = false
+    end
+
+    if success && !@api_user.try(:active)
+      @msg = 'Authentication error; server closing connection (API user is not active)'
+      success = false
+    end
+
+    if success && !ip_white?
+      @msg = 'Authentication error; server closing connection (IP is not whitelisted)'
+      success = false
+    end
+
+    if success && !connection_limit_ok?
+      @msg = 'Authentication error; server closing connection (connection limit reached)'
+      success = false
+    end
+
+    if success
       if parsed_frame.css('newPW').first
         unless @api_user.update(password: parsed_frame.css('newPW').first.text)
           response.headers['X-EPP-Returncode'] = '2200'
@@ -33,14 +65,15 @@ class Epp::SessionsController < EppController
       render_epp_response('login_fail')
     end
   end
+  # rubocop: enable Metrics/MethodLength
+  # rubocop: enable Metrics/AbcSize
+  # rubocop: enable Metrics/PerceivedComplexity
+  # rubocop: enable Metrics/CyclomaticComplexity
 
   def ip_white?
     return true if request.ip == ENV['webclient_ip']
     if @api_user
-      unless @api_user.registrar.api_ip_white?(request.ip)
-        @msg = t('ip_is_not_whitelisted')
-        return false
-      end
+      return false unless @api_user.registrar.api_ip_white?(request.ip)
     end
     true
   end
@@ -51,15 +84,9 @@ class Epp::SessionsController < EppController
       'registrar_id = ? AND updated_at >= ?', @api_user.registrar_id, Time.zone.now - 5.minutes
     ).count
 
-    if c >= 4
-      @msg = t('connection_limit_reached')
-      return false
-    end
+    return false if c >= 4
     true
   end
-
-  # rubocop: enable Metrics/PerceivedComplexity
-  # rubocop: enable Metrics/CyclomaticComplexity
 
   def logout
     @api_user = current_user # cache current_user for logging

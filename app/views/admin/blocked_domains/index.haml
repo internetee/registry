@@ -1,0 +1,10 @@
+= render 'shared/title', name: t(:blocked_domains)
+
+= form_tag([:admin, :blocked_domains]) do |f|
+  .row
+    .col-md-12
+      = text_area_tag :blocked_domains, @blocked_domains, class: 'form-control', rows: 30
+      %hr
+  .row
+    .col-md-12.text-right
+      %button.btn.btn-warning=t(:save)

@@ -16,6 +16,7 @@ set :deploy_to, '$HOME/registry'
 set :repository, 'https://github.com/domify/registry' # dev repo
 set :branch, 'master'
 set :rails_env, 'alpha'
+set :que_restart, true
 
 # alpha branch, only use for heavy debugging
 task :epp do
@@ -24,6 +25,7 @@ task :epp do
   set :repository, 'https://github.com/domify/registry' # dev repo
   set :branch, 'master'
   set :rails_env, 'alpha'
+  set :que_restart, false
 end
 
 # alpha branch, only use for heavy debugging
@@ -33,6 +35,7 @@ task :registrar do
   set :repository, 'https://github.com/domify/registry' # dev repo
   set :branch, 'master'
   set :rails_env, 'alpha'
+  set :que_restart, false
 end
 
 # alpha branch, only use for heavy debugging
@@ -42,6 +45,7 @@ task :registrant do
   set :repository, 'https://github.com/domify/registry' # dev repo
   set :branch, 'master'
   set :rails_env, 'alpha'
+  set :que_restart, false
 end
 
 # staging
@@ -51,6 +55,7 @@ task :st do
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'staging'
   set :rails_env, 'staging'
+  set :que_restart, true
 end
 
 # staging
@@ -60,6 +65,7 @@ task :eppst do
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'staging'
   set :rails_env, 'staging'
+  set :que_restart, false
 end
 
 # staging
@@ -69,6 +75,7 @@ task :registrarst do
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'staging'
   set :rails_env, 'staging'
+  set :que_restart, false
 end
 
 # staging
@@ -78,6 +85,7 @@ task :registrantst do
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'staging'
   set :rails_env, 'staging'
+  set :que_restart, false
 end
 
 # production
@@ -87,6 +95,7 @@ task :pr do
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'master'
   set :rails_env, 'production'
+  set :que_restart, true
 end
 
 # production
@@ -96,6 +105,7 @@ task :epppr do
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'master'
   set :rails_env, 'production'
+  set :que_restart, false
 end
 
 # production
@@ -105,6 +115,7 @@ task :registrarpr do
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'master'
   set :rails_env, 'production'
+  set :que_restart, false
 end
 
 # production
@@ -114,6 +125,7 @@ task :registrantpr do
   set :repository, 'https://github.com/internetee/registry' # production repo
   set :branch, 'master'
   set :rails_env, 'production'
+  set :que_restart, false
 end
 
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
@@ -193,6 +205,7 @@ task deploy: :environment do
     to :launch do
       invoke :restart
       invoke :'deploy:cleanup'
+      queue! "QUE_WORKER_COUNT=1 #{rake} daemon:que:restart" if que_restart
     end
   end
 end

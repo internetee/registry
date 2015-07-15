@@ -54,7 +54,7 @@ describe DomainMailer do
     end
 
     it 'should render verification url' do
-      @mail.body.encoded.should =~ /registrant\/domain_update_confirms/
+      @mail.body.encoded.should =~ %r{registrant\/domain_update_confirms}
     end
   end
 
@@ -109,7 +109,32 @@ describe DomainMailer do
     end
 
     it 'should render verification url' do
-      @mail.body.encoded.should =~ /registrant\/domain_delete_con/ # somehowe delete_confirms not matching
+      @mail.body.encoded.should =~ %r{registrant\/domain_delete_con} # somehowe delete_confirms not matching
+    end
+  end
+
+  describe 'registrant successfully changed confirmation' do
+    before :all do 
+      @registrant = Fabricate(:registrant, email: 'test@example.com')
+      @domain = Fabricate(:domain, registrant: @registrant)
+      @domain.deliver_emails = true
+      @mail = DomainMailer.registrant_updated(@domain)
+    end
+
+    it 'should render email subject' do
+      @mail.subject.should =~ /registreerija vahetus teostatud/
+    end
+
+    it 'should have sender email' do
+      @mail.from.should == ["noreply@internet.ee"]
+    end
+
+    it 'should send to registrant email' do
+      @mail.to.should == ["test@example.com"]
+    end
+
+    it 'should render body' do
+      @mail.body.encoded.should =~ /registreerija vahetuse taotlus on kinnitatud/
     end
   end
 end

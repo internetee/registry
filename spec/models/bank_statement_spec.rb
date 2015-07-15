@@ -12,8 +12,7 @@ describe BankStatement do
       @bank_statement.valid?
       @bank_statement.errors.full_messages.should match_array([
         "Bank code is missing",
-        "Iban is missing",
-        "Queried at is missing"
+        "Iban is missing"
       ])
     end
 
@@ -62,6 +61,11 @@ describe BankStatement do
       bs.bind_invoices
 
       AccountActivity.count.should == 1
+
+      a = AccountActivity.last
+      a.description.should == "Invoice no. #{invoice.number}"
+      a.sum.should == BigDecimal.new('200.0')
+      a.activity_type = AccountActivity::ADD_CREDIT
 
       r.cash_account.balance.should == 200.0
 

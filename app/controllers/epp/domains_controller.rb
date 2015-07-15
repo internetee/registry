@@ -18,18 +18,35 @@ class Epp::DomainsController < EppController
     render_epp_response '/epp/domains/info'
   end
 
+  # rubocop: disable Metrics/PerceivedComplexity
+  # rubocop: disable Metrics/CyclomaticComplexity
   def create
     authorize! :create, Epp::Domain
     @domain = Epp::Domain.new_from_epp(params[:parsed_frame], current_user)
+    handle_errors(@domain) and return if @domain.errors.any?
+    @domain.valid?
+    handle_errors(@domain) and return if @domain.errors.any?
 
-    if @domain.errors.any? || !@domain.save
-      handle_errors(@domain)
-    else
-      render_epp_response '/epp/domains/create'
+    handle_errors and return unless balance_ok?('create')
+
+    ActiveRecord::Base.transaction do
+      if @domain.save # TODO: Maybe use validate: false here because we have already validated the domain?
+        current_user.registrar.debit!({
+          sum: @domain_pricelist.price.amount,
+          description: "#{I18n.t('create')} #{@domain.name}",
+          activity_type: AccountActivity::CREATE,
+          log_pricelist_id: @domain_pricelist.id
+        })
+
+        render_epp_response '/epp/domains/create'
+      else
+        handle_errors(@domain)
+      end
     end
   end
+  # rubocop: enable Metrics/PerceivedComplexity
+  # rubocop: enable Metrics/CyclomaticComplexity
 
-  # rubocop:disable Metrics/CyclomaticComplexity
   def update
     authorize! :update, @domain, @password
 
@@ -44,7 +61,6 @@ class Epp::DomainsController < EppController
     end
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity
   def delete
     authorize! :delete, @domain, @password
 
@@ -66,7 +82,6 @@ class Epp::DomainsController < EppController
       handle_errors(@domain)
     end
   end
-  # rubocop:enbale Metrics/CyclomaticComplexity
 
   def check
     authorize! :check, Epp::Domain
@@ -79,17 +94,35 @@ class Epp::DomainsController < EppController
   def renew
     authorize! :renew, @domain
 
-    handle_errors(@domain) and return unless @domain.renew(
-      params[:parsed_frame].css('curExpDate').text,
-      params[:parsed_frame].css('period').text,
-      params[:parsed_frame].css('period').first['unit']
-    )
+    period = params[:parsed_frame].css('period').text
+    period_unit = params[:parsed_frame].css('period').first['unit']
 
-    render_epp_response '/epp/domains/renew'
+    ActiveRecord::Base.transaction do
+      success = @domain.renew(
+        params[:parsed_frame].css('curExpDate').text,
+        period, period_unit
+      )
+
+      if success
+        unless balance_ok?('renew', period, period_unit)
+          handle_errors
+          fail ActiveRecord::Rollback
+        end
+
+        current_user.registrar.debit!({
+          sum: @domain_pricelist.price.amount,
+          description: "#{I18n.t('renew')} #{@domain.name}",
+          activity_type: AccountActivity::RENEW,
+          log_pricelist_id: @domain_pricelist.id
+        })
+
+        render_epp_response '/epp/domains/renew'
+      else
+        handle_errors(@domain)
+      end
+    end
   end
 
-  # rubocop: disable Metrics/PerceivedComplexity
-  # rubocop: disable Metrics/MethodLength
   def transfer
     authorize! :transfer, @domain, @password
     action = params[:parsed_frame].css('transfer').first[:op]
@@ -102,8 +135,6 @@ class Epp::DomainsController < EppController
       handle_errors(@domain)
     end
   end
-  # rubocop: enable Metrics/MethodLength
-  # rubocop: enable Metrics/CyclomaticComplexity
 
   private
 
@@ -161,7 +192,7 @@ class Epp::DomainsController < EppController
     requires 'name'
 
     @prefix = nil
-    requires_attribute 'transfer', 'op', values: %(approve, query, reject)
+    requires_attribute 'transfer', 'op', values: %(approve, query, reject, request)
   end
 
   def find_domain
@@ -191,5 +222,18 @@ class Epp::DomainsController < EppController
       code: '2306',
       msg: "#{I18n.t(:client_side_status_editing_error)}: status [status]"
     }
+  end
+
+  def balance_ok?(operation, period = nil, unit = nil)
+    @domain_pricelist = @domain.pricelist(operation, period.try(:to_i), unit)
+    if current_user.registrar.balance < @domain_pricelist.price.amount
+      epp_errors << {
+        code: '2104',
+        msg: I18n.t('billing_failure_credit_balance_low')
+      }
+
+      return false
+    end
+    true
   end
 end

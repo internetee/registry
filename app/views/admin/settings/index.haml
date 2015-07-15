@@ -21,6 +21,7 @@
           = render 'setting_row', var: :dnskeys_max_count
           = render 'setting_row', var: :ns_min_count
           = render 'setting_row', var: :ns_max_count
+          = render 'setting_row', var: :expire_pending_confirmation
 
   .panel.panel-default
     .panel-heading.clearfix
@@ -38,24 +39,6 @@
 
   .panel.panel-default
     .panel-heading.clearfix
-      = t(:billing)
-    .table-responsive
-      %table.table.table-hover.table-bordered.table-condensed
-        %thead
-          %tr
-            %th{class: 'col-xs-6'}= t(:setting)
-            %th{class: 'col-xs-6'}= t(:value)
-        %tbody
-          = render 'setting_row', var: :eis_iban
-          = render 'setting_row', var: :eis_bank
-          = render 'setting_row', var: :eis_swift
-          = render 'setting_row', var: :eis_invoice_contact
-          = render 'setting_row', var: :invoice_number_min
-          = render 'setting_row', var: :invoice_number_max
-          = render 'setting_row', var: :days_to_keep_overdue_invoices_active
-
-  .panel.panel-default
-    .panel-heading.clearfix
       = t(:other)
     .table-responsive
       %table.table.table-hover.table-bordered.table-condensed
@@ -67,6 +50,51 @@
           = render 'setting_row', var: :transfer_wait_time
           = render 'setting_row', var: :ds_algorithm
           = render 'setting_row', var: :client_side_status_editing_enabled
+          = render 'setting_row', var: :api_ip_whitelist_enabled
+          = render 'setting_row', var: :registrar_ip_whitelist_enabled
+
+  .panel.panel-default
+    .panel-heading.clearfix
+      = t(:billing_settings)
+    .table-responsive
+      %table.table.table-hover.table-bordered.table-condensed
+        %thead
+          %tr
+            %th{class: 'col-xs-6'}= t(:setting)
+            %th{class: 'col-xs-6'}= t(:value)
+        %tbody
+          = render 'setting_row', var: :invoice_number_min
+          = render 'setting_row', var: :invoice_number_max
+          = render 'setting_row', var: :days_to_keep_overdue_invoices_active
+          = render 'setting_row', var: :registry_billing_email
+          = render 'setting_row', var: :registry_invoice_contact
+          = render 'setting_row', var: :registry_vat_no
+          = render 'setting_row', var: :registry_vat_prc
+          = render 'setting_row', var: :registry_bank
+          = render 'setting_row', var: :registry_iban
+          = render 'setting_row', var: :registry_swift
+
+  .panel.panel-default
+    .panel-heading.clearfix
+      = t(:registry_settings)
+    .table-responsive
+      %table.table.table-hover.table-bordered.table-condensed
+        %thead
+          %tr
+            %th{class: 'col-xs-6'}= t(:setting)
+            %th{class: 'col-xs-6'}= t(:value)
+        %tbody
+          = render 'setting_row', var: :registry_juridical_name
+          = render 'setting_row', var: :registry_reg_no
+          = render 'setting_row', var: :registry_email
+          = render 'setting_row', var: :registry_phone
+          = render 'setting_row', var: :registry_url
+          = render 'setting_row', var: :registry_street
+          = render 'setting_row', var: :registry_city
+          = render 'setting_row', var: :registry_state
+          = render 'setting_row', var: :registry_zip
+          = render 'setting_row', var: :registry_country_code
+
   .row
     .col-md-12.text-right
       %button.btn.btn-primary=t(:save)

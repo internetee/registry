@@ -71,6 +71,7 @@ class DomainStatus < ActiveRecord::Base
   FORCE_DELETE = 'forceDelete'
   DELETE_CANDIDATE = 'deleteCandidate'
   EXPIRED = 'expired'
+  RESERVED = 'reserved'
 
   STATUSES = [
     CLIENT_DELETE_PROHIBITED, SERVER_DELETE_PROHIBITED, CLIENT_HOLD, SERVER_HOLD,

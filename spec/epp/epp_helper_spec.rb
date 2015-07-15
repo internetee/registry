@@ -10,7 +10,7 @@ describe 'EPP Helper', epp: true do
       expected = Nokogiri::XML('<?xml version="1.0" encoding="UTF-8" standalone="no"?>
         <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
           <command>
-            <transfer op="query">
+            <transfer op="request">
               <domain:transfer
                xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
                 <domain:name>' + dn + '</domain:name>

@@ -161,6 +161,12 @@ Rails.application.routes.draw do
     resources :pricelists
 
     resources :bank_statements do
+      resources :bank_transactions
+      collection do
+        get 'import'
+        post 'create_from_import'
+      end
+
       post 'bind_invoices', on: :member
       get 'download_import_file', on: :member
     end
@@ -170,7 +176,9 @@ Rails.application.routes.draw do
     end
 
     resources :invoices do
+      get 'download_pdf'
       patch 'cancel', on: :member
+      match 'forward', via: [:post, :get]
     end
 
     resources :domains do
@@ -182,6 +190,9 @@ Rails.application.routes.draw do
     end
 
     resources :settings
+
+    resources :blocked_domains
+    resources :reserved_domains
 
     resources :registrars do
       resources :api_users

@@ -49,7 +49,7 @@ describe Dnskey do
       dk = d.dnskeys.last
 
       dk.generate_digest
-      dk.ds_digest.should  == '0B62D1BC64EFD1EE652FB102BDF1011BF514CCD9A1A0CFB7472AEA3B01F38C92'
+      dk.ds_digest.should == '0B62D1BC64EFD1EE652FB102BDF1011BF514CCD9A1A0CFB7472AEA3B01F38C92'
       dk.ds_key_tag.should == '30607'
     end
 

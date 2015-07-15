@@ -38,9 +38,11 @@ Domain name mapping protocol short version:
       <eis:extdata>            1        Attribute: xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd"
         <eis:legalDocument>    1        Base64 encoded document. 
                                           Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
+        <eis:reserved>         0-1
+          <eis:pw>             0-1      Required if registering a reserved domain
     <clTRID>                   0-1      Client transaction id
 
-[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-citizen-as-an-owner-creates-a-domain)
+[EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-citizen-as-a-registrant-creates-a-domain)
 
 ### Domain update
 
@@ -141,7 +143,7 @@ Domain name mapping protocol short version:
 
     Field name               Min-max  Field description
     -----------------------  -------  -----------------
-    <transfer>               1       
+    <transfer>               1        Attribute: op="request/query/approve/reject/cancel"
       <domain:transfer>      1        Attribute: xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd"
         <domain:name>        1        Domain name. Can contain unicode characters. 
         <domain:authInfo>    1       

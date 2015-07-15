@@ -23,6 +23,20 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
+--
+-- Name: hstore; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION hstore; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
+
+
 SET search_path = public, pg_catalog;
 
 --
@@ -41,7 +55,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         ret text;
       BEGIN
         -- define filters
-        include_filter = '%' || i_origin;
+        include_filter = '%.' || i_origin;
 
         -- for %.%.%
         IF i_origin ~ '\.' THEN
@@ -74,7 +88,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
             SELECT concat(d.name_puny, '. IN NS ', ns.hostname, '.')
             FROM domains d
             JOIN nameservers ns ON ns.domain_id = d.id
-            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
+            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter OR d.name = i_origin
             ORDER BY d.name
           ),
           chr(10)
@@ -205,7 +219,9 @@ CREATE TABLE account_activities (
     updated_at timestamp without time zone,
     description character varying,
     creator_str character varying,
-    updator_str character varying
+    updator_str character varying,
+    activity_type character varying,
+    log_pricelist_id integer
 );
 
 
@@ -236,7 +252,7 @@ CREATE TABLE accounts (
     id integer NOT NULL,
     registrar_id integer,
     account_type character varying,
-    balance numeric(10,2) DEFAULT 0 NOT NULL,
+    balance numeric(10,2) DEFAULT 0.0 NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     currency character varying,
@@ -473,6 +489,39 @@ ALTER SEQUENCE banklink_transactions_id_seq OWNED BY banklink_transactions.id;
 
 
 --
+-- Name: blocked_domains; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE blocked_domains (
+    id integer NOT NULL,
+    names character varying[],
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    creator_str character varying,
+    updator_str character varying
+);
+
+
+--
+-- Name: blocked_domains_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE blocked_domains_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: blocked_domains_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE blocked_domains_id_seq OWNED BY blocked_domains.id;
+
+
+--
 -- Name: cached_nameservers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -582,7 +631,8 @@ CREATE TABLE contacts (
     zip character varying,
     country_code character varying,
     state character varying,
-    legacy_id integer
+    legacy_id integer,
+    statuses character varying[]
 );
 
 
@@ -637,6 +687,15 @@ CREATE SEQUENCE countries_id_seq
 --
 
 ALTER SEQUENCE countries_id_seq OWNED BY countries.id;
+
+
+--
+-- Name: data_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE data_migrations (
+    version character varying NOT NULL
+);
 
 
 --
@@ -885,7 +944,8 @@ CREATE TABLE domains (
     registrant_verification_token character varying,
     pending_json json,
     force_delete_at timestamp without time zone,
-    statuses character varying[]
+    statuses character varying[],
+    reserved boolean DEFAULT false
 );
 
 
@@ -1347,6 +1407,43 @@ CREATE SEQUENCE log_bank_transactions_id_seq
 --
 
 ALTER SEQUENCE log_bank_transactions_id_seq OWNED BY log_bank_transactions.id;
+
+
+--
+-- Name: log_blocked_domains; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE log_blocked_domains (
+    id integer NOT NULL,
+    item_type character varying NOT NULL,
+    item_id integer NOT NULL,
+    event character varying NOT NULL,
+    whodunnit character varying,
+    object json,
+    object_changes json,
+    created_at timestamp without time zone,
+    session character varying,
+    children json
+);
+
+
+--
+-- Name: log_blocked_domains_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE log_blocked_domains_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: log_blocked_domains_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE log_blocked_domains_id_seq OWNED BY log_blocked_domains.id;
 
 
 --
@@ -2287,7 +2384,7 @@ CREATE TABLE pricelists (
     id integer NOT NULL,
     "desc" character varying,
     category character varying,
-    price_cents numeric(8,2) DEFAULT 0 NOT NULL,
+    price_cents numeric(10,2) DEFAULT 0 NOT NULL,
     price_currency character varying DEFAULT 'EUR'::character varying NOT NULL,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
@@ -2452,11 +2549,11 @@ ALTER SEQUENCE registrars_id_seq OWNED BY registrars.id;
 
 CREATE TABLE reserved_domains (
     id integer NOT NULL,
-    name character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     creator_str character varying,
-    updator_str character varying
+    updator_str character varying,
+    names hstore
 );
 
 
@@ -2770,6 +2867,13 @@ ALTER TABLE ONLY banklink_transactions ALTER COLUMN id SET DEFAULT nextval('bank
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY blocked_domains ALTER COLUMN id SET DEFAULT nextval('blocked_domains_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY certificates ALTER COLUMN id SET DEFAULT nextval('certificates_id_seq'::regclass);
 
 
@@ -2918,6 +3022,13 @@ ALTER TABLE ONLY log_bank_statements ALTER COLUMN id SET DEFAULT nextval('log_ba
 --
 
 ALTER TABLE ONLY log_bank_transactions ALTER COLUMN id SET DEFAULT nextval('log_bank_transactions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY log_blocked_domains ALTER COLUMN id SET DEFAULT nextval('log_blocked_domains_id_seq'::regclass);
 
 
 --
@@ -3229,6 +3340,14 @@ ALTER TABLE ONLY banklink_transactions
 
 
 --
+-- Name: blocked_domains_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY blocked_domains
+    ADD CONSTRAINT blocked_domains_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: certificates_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3402,6 +3521,14 @@ ALTER TABLE ONLY log_bank_statements
 
 ALTER TABLE ONLY log_bank_transactions
     ADD CONSTRAINT log_bank_transactions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: log_blocked_domains_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY log_blocked_domains
+    ADD CONSTRAINT log_blocked_domains_pkey PRIMARY KEY (id);
 
 
 --
@@ -4015,6 +4142,20 @@ CREATE INDEX index_log_bank_transactions_on_whodunnit ON log_bank_transactions U
 
 
 --
+-- Name: index_log_blocked_domains_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_log_blocked_domains_on_item_type_and_item_id ON log_blocked_domains USING btree (item_type, item_id);
+
+
+--
+-- Name: index_log_blocked_domains_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_log_blocked_domains_on_whodunnit ON log_blocked_domains USING btree (whodunnit);
+
+
+--
 -- Name: index_log_certificates_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4379,6 +4520,13 @@ CREATE INDEX index_whois_records_on_registrar_id ON whois_records USING btree (r
 
 
 --
+-- Name: unique_data_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX unique_data_migrations ON data_migrations USING btree (version);
+
+
+--
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4713,6 +4861,10 @@ INSERT INTO schema_migrations (version) VALUES ('20150522164020');
 
 INSERT INTO schema_migrations (version) VALUES ('20150525075550');
 
+INSERT INTO schema_migrations (version) VALUES ('20150601083516');
+
+INSERT INTO schema_migrations (version) VALUES ('20150601083800');
+
 INSERT INTO schema_migrations (version) VALUES ('20150603141054');
 
 INSERT INTO schema_migrations (version) VALUES ('20150603141549');
@@ -4721,7 +4873,11 @@ INSERT INTO schema_migrations (version) VALUES ('20150603211318');
 
 INSERT INTO schema_migrations (version) VALUES ('20150603212659');
 
+INSERT INTO schema_migrations (version) VALUES ('20150609093515');
+
 INSERT INTO schema_migrations (version) VALUES ('20150609103333');
+
+INSERT INTO schema_migrations (version) VALUES ('20150610111019');
 
 INSERT INTO schema_migrations (version) VALUES ('20150610112238');
 
@@ -4730,4 +4886,24 @@ INSERT INTO schema_migrations (version) VALUES ('20150610144547');
 INSERT INTO schema_migrations (version) VALUES ('20150611124920');
 
 INSERT INTO schema_migrations (version) VALUES ('20150612123111');
+
+INSERT INTO schema_migrations (version) VALUES ('20150612125720');
+
+INSERT INTO schema_migrations (version) VALUES ('20150701074344');
+
+INSERT INTO schema_migrations (version) VALUES ('20150703084632');
+
+INSERT INTO schema_migrations (version) VALUES ('20150706091724');
+
+INSERT INTO schema_migrations (version) VALUES ('20150707103241');
+
+INSERT INTO schema_migrations (version) VALUES ('20150707103801');
+
+INSERT INTO schema_migrations (version) VALUES ('20150707104937');
+
+INSERT INTO schema_migrations (version) VALUES ('20150707154543');
+
+INSERT INTO schema_migrations (version) VALUES ('20150709092549');
+
+INSERT INTO schema_migrations (version) VALUES ('20150713113436');
 

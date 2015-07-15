@@ -10,15 +10,29 @@ class EppController < ApplicationController
   before_action :update_epp_session
   helper_method :current_user
 
-  rescue_from CanCan::AccessDenied do |_exception|
+  rescue_from StandardError do |e|
     @errors ||= []
 
-    if @errors.blank?
-      @errors = [{
-        msg: t('errors.messages.epp_authorization_error'),
-        code: '2201'
-      }]
+    if e.class == CanCan::AccessDenied
+      if @errors.blank?
+        @errors = [{
+          msg: t('errors.messages.epp_authorization_error'),
+          code: '2201'
+        }]
+      end
+    else
+      if @errors.blank?
+        @errors = [{
+          msg: 'Internal error.',
+          code: '2400'
+        }]
+      end
+
+      logger.error e.message
+      logger.error e.backtrace.join("\n")
+      # TODO: NOITFY AIRBRAKE / ERRBIT HERE
     end
+
     render_epp_response '/epp/error'
   end
 
@@ -124,7 +138,7 @@ class EppController < ApplicationController
     # validate legal document's type here because it may be in most of the requests
     @prefix = nil
     if element_count('extdata > legalDocument') > 0
-      requires_attribute('extdata > legalDocument', 'type', values: LegalDocument::TYPES)
+      requires_attribute('extdata > legalDocument', 'type', values: LegalDocument::TYPES, policy: true)
     end
 
     handle_errors and return if epp_errors.any?
@@ -174,12 +188,27 @@ class EppController < ApplicationController
 
     attribute = element[attribute_selector]
 
-    return if attribute && options[:values].include?(attribute)
+    unless attribute
+      epp_errors << {
+        code: '2003',
+        msg: I18n.t('errors.messages.required_parameter_missing', key: attribute_selector)
+      }
+      return
+    end
 
-    epp_errors << {
-      code: '2306',
-      msg: I18n.t('attribute_is_invalid', attribute: attribute_selector)
-    }
+    return if options[:values].include?(attribute)
+
+    if options[:policy]
+      epp_errors << {
+        code: '2306',
+        msg: I18n.t('attribute_is_invalid', attribute: attribute_selector)
+      }
+    else
+      epp_errors << {
+        code: '2004',
+        msg: I18n.t('parameter_value_range_error', key: attribute_selector)
+      }
+    end
   end
 
   def optional_attribute(element_selector, attribute_selector, options)
@@ -272,7 +301,6 @@ class EppController < ApplicationController
   end
   # rubocop: enable Style/PredicateName
 
-  # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/CyclomaticComplexity
   def write_to_epp_log
     # return nil if EPP_LOG_ENABLED
@@ -295,7 +323,6 @@ class EppController < ApplicationController
       ip: request.ip
     })
   end
-  # rubocop: enable Metrics/PerceivedComplexity
   # rubocop: enable Metrics/CyclomaticComplexity
 
   def iptables_counter_update
