@@ -60,7 +60,7 @@ feature 'Invoice', type: :feature do
     response_headers['Content-Disposition'].should == "attachment; filename=\"#{@invoice.pdf_name}\""
   end
 
-  it 'should create bankt statement and transaction for invoice' do
+  it 'should create bank statement and transaction for invoice' do
     r = Fabricate(:registrar, reference_no: 'RF7086666663')
     invoice = r.issue_prepayment_invoice(200, 'add some money')
 
