@@ -212,7 +212,7 @@ class Domain < ActiveRecord::Base
         domain.set_expired!
       end
 
-      STDOUT << "#{Time.zone.now.utc} - Successfully expired #{domain.count} domains\n" unless Rails.env.test?
+      STDOUT << "#{Time.zone.now.utc} - Successfully expired #{domains.count} domains\n" unless Rails.env.test?
     end
 
     def start_redemption_grace_period
