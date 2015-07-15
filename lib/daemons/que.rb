@@ -27,7 +27,7 @@ Que.mode          = :async
 
 stop = false
 %w( INT TERM ).each do |signal|
-  trap(signal) {stop = true}
+  trap(signal) { stop = true }
 end
 
 at_exit do

@@ -398,7 +398,10 @@ class Epp::Domain < Domain
     frame = Nokogiri::XML(pending_json['frame'])
     statuses.delete(DomainStatus::PENDING_UPDATE)
 
-    clean_pendings! if update(frame, user, false)
+    return unless update(frame, user, false)
+    clean_pendings! 
+    self.deliver_emails = true # turn on email delivery for epp
+    DomainMailer.registrant_updated(self).deliver_now
   end
 
   def apply_pending_delete!
@@ -429,7 +432,7 @@ class Epp::Domain < Domain
       manage_automatic_statuses
       true # aka 1001 pending_delete
     else
-      destroy
+      set_expired!
     end
   end
 

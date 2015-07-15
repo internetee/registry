@@ -870,3 +870,4 @@ en:
   no_transfers_found: 'No transfers found'
   parameter_value_range_error: 'Parameter value range error: %{key}'
   payment_received: 'Payment received'
+  domain_registrant_updated: 'Domeeni %{name} registreerija vahetus teostatud / Registrant change of %{name} has been finished.'

@@ -1,6 +1,7 @@
 14.07.2015
 
 * Updated que init script doc example, now status and stop works faster
+* Updated registry server cronjob with mina cron:setup
 
 07.07.2015
 

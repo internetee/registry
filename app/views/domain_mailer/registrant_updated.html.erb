@@ -1,0 +1,39 @@
+Tere,
+<br><br>
+Domeeni <%= @domain.name %> registreerija vahetuse taotlus on kinnitatud ning andmed registris uuendatud.
+<br><br>
+Uued registreerija andmed:<br>
+Nimi: <%= @domain.registrant_name %><br>
+<% if @domain.registrant.priv? %>
+Isikukood: <%= @domain.registrant_ident %><br>
+<% else %>
+Äriregistrikood: <%= @domain.registrant_ident %><br>
+<% end %>
+Epost: <%= @domain.registrant_email %><br>
+Tänav: <%= @domain.registrant_street %><br>
+Linn: <%= @domain.registrant_city %><br>
+Riik: <%= @domain.registrant_country %>
+<br><br>
+Lugupidamisega<br>
+Eesti Interneti SA
+<br><br>
+<hr>
+<br><br>
+Hi,
+<br><br>
+Process for changing registrant of the domain <%= @domain.name %> has been approved and the data in the registry is updated.
+<br><br>
+New registrant:<br>
+Name: <%= @domain.registrant_name %><br>
+<% if @domain.registrant.priv? %>
+Personal code: <%= @domain.registrant_ident %><br>
+<% else %>
+Business Registry code: <%= @domain.registrant_ident %><br>
+<% end %>
+E-mail: <%= @domain.registrant_email %><br>
+Street: <%= @domain.registrant_street %><br>
+City: <%= @domain.registrant_city %><br>
+Country: <%= @domain.registrant_country %>
+<br><br>
+Best Regards,<br>
+Estonian Internet Foundation

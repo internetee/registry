@@ -199,6 +199,7 @@ ActiveRecord::Schema.define(version: 20150713113436) do
     t.string   "country_code"
     t.string   "state"
     t.integer  "legacy_id"
+    t.string   "statuses",           array: true
   end
 
   add_index "contacts", ["code"], name: "index_contacts_on_code", using: :btree
@@ -1029,7 +1030,7 @@ ActiveRecord::Schema.define(version: 20150713113436) do
     t.text     "crt"
     t.string   "type"
     t.string   "registrant_ident"
-    t.string   "encrypted_password",  default: "", null: false
+    t.string   "encrypted_password",  default: ""
     t.datetime "remember_created_at"
     t.integer  "failed_attempts",     default: 0,  null: false
     t.datetime "locked_at"
