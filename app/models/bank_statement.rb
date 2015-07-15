@@ -2,6 +2,8 @@ class BankStatement < ActiveRecord::Base
   include Versions
   has_many :bank_transactions
 
+  accepts_nested_attributes_for :bank_transactions
+
   attr_accessor :th6_file
 
   validates :bank_code, :iban, presence: true

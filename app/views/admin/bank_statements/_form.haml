@@ -13,6 +13,31 @@
           = f.label :iban
         .col-md-8
           = f.text_field(:iban, class: 'form-control')
+
+  - if @invoice
+    %hr
+    %h4= t('bank_transaction')
+    %hr
+    = f.fields_for :bank_transactions, [@bank_transaction] do |x|
+      .row
+        .col-md-8
+          .form-group
+            = x.label :description, class: 'col-md-4 control-label required'
+            .col-md-8
+              = x.text_field(:description, class: 'form-control', required: true)
+          .form-group
+            = x.label :sum, class: 'col-md-4 control-label required'
+            .col-md-8
+              = x.text_field(:sum, class: 'form-control', required: true)
+          .form-group
+            = x.label :reference_no, class: 'col-md-4 control-label required'
+            .col-md-8
+              = x.text_field(:reference_no, class: 'form-control', required: true)
+          .form-group
+            = x.label :paid_at, class: 'col-md-4 control-label required'
+            .col-md-8
+              = x.text_field(:paid_at, class: 'form-control datepicker', required: true)
+
   %hr
   .row
     .col-md-8.text-right

@@ -17,6 +17,14 @@ class Admin::BankStatementsController < AdminController
 
   def new
     @bank_statement = BankStatement.new
+    @invoice = Invoice.find_by(id: params[:invoice_id])
+    @bank_transaction = @bank_statement.bank_transactions.build(
+      description: @invoice.to_s,
+      sum: @invoice.sum,
+      reference_no: @invoice.reference_no,
+      paid_at: Time.zone.now.to_date,
+      currency: 'EUR'
+    ) if @invoice
   end
 
   def create
@@ -69,6 +77,8 @@ class Admin::BankStatementsController < AdminController
   end
 
   def bank_statement_params
-    params.require(:bank_statement).permit(:th6_file, :bank_code, :iban)
+    params.require(:bank_statement).permit(:th6_file, :bank_code, :iban, bank_transactions_attributes: [
+      :description, :sum, :reference_no, :paid_at
+    ])
   end
 end
