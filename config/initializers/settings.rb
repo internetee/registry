@@ -1,5 +1,6 @@
 TEST_EMAILS = %w(
   timo.vohmar@internet.ee
+  timo.vohmar@eestiinternet.ee
   rene.vahtel@internet.ee
   martin.mettig@internet.ee
   hannes.klausen@internet.ee
