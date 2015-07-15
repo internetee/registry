@@ -199,7 +199,6 @@ class Domain < ActiveRecord::Base
         count += 1
         domain.clean_pendings!
       end
-
       STDOUT << "#{Time.zone.now.utc} - Successfully cancelled #{count} domain pendings\n" unless Rails.env.test?
       count
     end
@@ -213,7 +212,7 @@ class Domain < ActiveRecord::Base
         domain.set_expired!
       end
 
-      STDOUT << "#{Time.zone.now.utc} - Successfully expired #{d.count} domains\n" unless Rails.env.test?
+      STDOUT << "#{Time.zone.now.utc} - Successfully expired #{domain.count} domains\n" unless Rails.env.test?
     end
 
     def start_redemption_grace_period
