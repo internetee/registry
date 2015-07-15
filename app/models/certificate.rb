@@ -200,5 +200,14 @@ class Certificate < ActiveRecord::Base
       _out, _err, _st = Open3.capture3("sudo /etc/init.d/apache2 reload")
       STDOUT << "#{Time.zone.now.utc} - Apache reloaded\n"
     end
+
+    def parse_md_from_string(crt)
+      return nil if crt.blank?
+      crt = crt.split(' ').join("\n")
+      crt.gsub!("-----BEGIN\nCERTIFICATE-----\n", "-----BEGIN CERTIFICATE-----\n")
+      crt.gsub!("\n-----END\nCERTIFICATE-----", "\n-----END CERTIFICATE-----")
+      cert = OpenSSL::X509::Certificate.new(crt)
+      OpenSSL::Digest::MD5.new(cert.to_der).to_s
+    end
   end
 end

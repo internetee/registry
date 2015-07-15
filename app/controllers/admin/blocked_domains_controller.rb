@@ -13,10 +13,11 @@ class Admin::BlockedDomainsController < AdminController
 
     if bd.update(names: names)
       flash[:notice] = I18n.t('record_updated')
+      redirect_to :back
     else
+      @blocked_domains = params[:blocked_domains]
       flash.now[:alert] = I18n.t('failed_to_update_record')
+      render :index
     end
-
-    redirect_to :back
   end
 end

@@ -4,6 +4,8 @@
       = @invoice
   .col-sm-6
     %h1.text-right.text-center-xs
+      = link_to(t(:download), admin_invoice_download_pdf_path(@invoice), class: 'btn btn-default')
+      = link_to(t(:forward), admin_invoice_forward_path(@invoice), class: 'btn btn-default')
       - if !@invoice.cancelled? && !@invoice.binded?
         = link_to(t(:cancel), cancel_admin_invoice_path(@invoice), method: :patch, class: 'btn btn-warning')
       = link_to(t(:back), admin_invoices_path, class: 'btn btn-default')

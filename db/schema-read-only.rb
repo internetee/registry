@@ -11,15 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150612123111) do
+ActiveRecord::Schema.define(version: 20150713113436) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
 
   create_table "account_activities", force: :cascade do |t|
     t.integer  "account_id"
     t.integer  "invoice_id"
-    t.decimal  "sum",                 precision: 8, scale: 2
+    t.decimal  "sum",                 precision: 10, scale: 2
     t.string   "currency"
     t.integer  "bank_transaction_id"
     t.datetime "created_at"
@@ -27,6 +28,8 @@ ActiveRecord::Schema.define(version: 20150612123111) do
     t.string   "description"
     t.string   "creator_str"
     t.string   "updator_str"
+    t.string   "activity_type"
+    t.integer  "log_pricelist_id"
   end
 
   add_index "account_activities", ["account_id"], name: "index_account_activities_on_account_id", using: :btree
@@ -36,7 +39,7 @@ ActiveRecord::Schema.define(version: 20150612123111) do
   create_table "accounts", force: :cascade do |t|
     t.integer  "registrar_id"
     t.string   "account_type"
-    t.decimal  "balance",      precision: 8, scale: 2, default: 0.0, null: false
+    t.decimal  "balance",      precision: 10, scale: 2, default: 0.0, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "currency"
@@ -98,7 +101,7 @@ ActiveRecord::Schema.define(version: 20150612123111) do
     t.string   "buyer_name"
     t.string   "document_no"
     t.string   "description"
-    t.decimal  "sum",               precision: 8, scale: 2
+    t.decimal  "sum",               precision: 10, scale: 2
     t.string   "reference_no"
     t.datetime "paid_at"
     t.datetime "created_at"
@@ -114,7 +117,7 @@ ActiveRecord::Schema.define(version: 20150612123111) do
     t.string   "vk_rec_id"
     t.string   "vk_stamp"
     t.string   "vk_t_no"
-    t.decimal  "vk_amount",     precision: 8, scale: 2
+    t.decimal  "vk_amount",     precision: 10, scale: 2
     t.string   "vk_curr"
     t.string   "vk_rec_acc"
     t.string   "vk_rec_name"
@@ -129,6 +132,14 @@ ActiveRecord::Schema.define(version: 20150612123111) do
     t.string   "vk_auto"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "blocked_domains", force: :cascade do |t|
+    t.string   "names",       array: true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   create_table "cached_nameservers", id: false, force: :cascade do |t|
@@ -188,6 +199,7 @@ ActiveRecord::Schema.define(version: 20150612123111) do
     t.string   "country_code"
     t.string   "state"
     t.integer  "legacy_id"
+    t.string   "statuses",           array: true
   end
 
   add_index "contacts", ["code"], name: "index_contacts_on_code", using: :btree
@@ -313,7 +325,8 @@ ActiveRecord::Schema.define(version: 20150612123111) do
     t.string   "registrant_verification_token"
     t.json     "pending_json"
     t.datetime "force_delete_at"
-    t.string   "statuses",                                   array: true
+    t.string   "statuses",                                                   array: true
+    t.boolean  "reserved",                                   default: false
   end
 
   add_index "domains", ["delete_at"], name: "index_domains_on_delete_at", using: :btree
@@ -336,10 +349,10 @@ ActiveRecord::Schema.define(version: 20150612123111) do
 
   create_table "invoice_items", force: :cascade do |t|
     t.integer  "invoice_id"
-    t.string   "description",                         null: false
+    t.string   "description",                          null: false
     t.string   "unit"
     t.integer  "amount"
-    t.decimal  "price",       precision: 8, scale: 2
+    t.decimal  "price",       precision: 10, scale: 2
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "creator_str"
@@ -349,20 +362,20 @@ ActiveRecord::Schema.define(version: 20150612123111) do
   add_index "invoice_items", ["invoice_id"], name: "index_invoice_items_on_invoice_id", using: :btree
 
   create_table "invoices", force: :cascade do |t|
-    t.datetime "created_at",                                  null: false
-    t.datetime "updated_at",                                  null: false
-    t.string   "invoice_type",                                null: false
-    t.datetime "due_date",                                    null: false
+    t.datetime "created_at",                                   null: false
+    t.datetime "updated_at",                                   null: false
+    t.string   "invoice_type",                                 null: false
+    t.datetime "due_date",                                     null: false
     t.string   "payment_term"
-    t.string   "currency",                                    null: false
+    t.string   "currency",                                     null: false
     t.string   "description"
     t.string   "reference_no"
-    t.decimal  "vat_prc",             precision: 8, scale: 2, null: false
+    t.decimal  "vat_prc",             precision: 10, scale: 2, null: false
     t.datetime "paid_at"
     t.integer  "seller_id"
-    t.string   "seller_name",                                 null: false
+    t.string   "seller_name",                                  null: false
     t.string   "seller_reg_no"
-    t.string   "seller_iban",                                 null: false
+    t.string   "seller_iban",                                  null: false
     t.string   "seller_bank"
     t.string   "seller_swift"
     t.string   "seller_vat_no"
@@ -376,7 +389,7 @@ ActiveRecord::Schema.define(version: 20150612123111) do
     t.string   "seller_email"
     t.string   "seller_contact_name"
     t.integer  "buyer_id"
-    t.string   "buyer_name",                                  null: false
+    t.string   "buyer_name",                                   null: false
     t.string   "buyer_reg_no"
     t.string   "buyer_country_code"
     t.string   "buyer_state"
@@ -390,7 +403,7 @@ ActiveRecord::Schema.define(version: 20150612123111) do
     t.string   "updator_str"
     t.integer  "number"
     t.datetime "cancelled_at"
-    t.decimal  "sum_cache",           precision: 8, scale: 2
+    t.decimal  "sum_cache",           precision: 10, scale: 2
   end
 
   add_index "invoices", ["buyer_id"], name: "index_invoices_on_buyer_id", using: :btree
@@ -520,6 +533,21 @@ ActiveRecord::Schema.define(version: 20150612123111) do
 
   add_index "log_bank_transactions", ["item_type", "item_id"], name: "index_log_bank_transactions_on_item_type_and_item_id", using: :btree
   add_index "log_bank_transactions", ["whodunnit"], name: "index_log_bank_transactions_on_whodunnit", using: :btree
+
+  create_table "log_blocked_domains", force: :cascade do |t|
+    t.string   "item_type",      null: false
+    t.integer  "item_id",        null: false
+    t.string   "event",          null: false
+    t.string   "whodunnit"
+    t.json     "object"
+    t.json     "object_changes"
+    t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
+  end
+
+  add_index "log_blocked_domains", ["item_type", "item_id"], name: "index_log_blocked_domains_on_item_type_and_item_id", using: :btree
+  add_index "log_blocked_domains", ["whodunnit"], name: "index_log_blocked_domains_on_whodunnit", using: :btree
 
   create_table "log_certificates", force: :cascade do |t|
     t.string   "item_type",      null: false
@@ -896,14 +924,14 @@ ActiveRecord::Schema.define(version: 20150612123111) do
   create_table "pricelists", force: :cascade do |t|
     t.string   "desc"
     t.string   "category"
-    t.decimal  "price_cents",        precision: 8, scale: 2, default: 0.0,   null: false
-    t.string   "price_currency",                             default: "EUR", null: false
+    t.decimal  "price_cents",        precision: 10, scale: 2, default: 0.0,   null: false
+    t.string   "price_currency",                              default: "EUR", null: false
     t.datetime "valid_from"
     t.datetime "valid_to"
     t.string   "creator_str"
     t.string   "updator_str"
-    t.datetime "created_at",                                                 null: false
-    t.datetime "updated_at",                                                 null: false
+    t.datetime "created_at",                                                  null: false
+    t.datetime "updated_at",                                                  null: false
     t.string   "duration"
     t.string   "operation_category"
   end
@@ -960,11 +988,11 @@ ActiveRecord::Schema.define(version: 20150612123111) do
   add_index "registrars", ["code"], name: "index_registrars_on_code", using: :btree
 
   create_table "reserved_domains", force: :cascade do |t|
-    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "creator_str"
     t.string   "updator_str"
+    t.hstore   "names"
   end
 
   create_table "settings", force: :cascade do |t|
@@ -1002,7 +1030,7 @@ ActiveRecord::Schema.define(version: 20150612123111) do
     t.text     "crt"
     t.string   "type"
     t.string   "registrant_ident"
-    t.string   "encrypted_password",  default: "", null: false
+    t.string   "encrypted_password",  default: ""
     t.datetime "remember_created_at"
     t.integer  "failed_attempts",     default: 0,  null: false
     t.datetime "locked_at"

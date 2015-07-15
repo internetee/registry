@@ -13,6 +13,15 @@ class Epp::SessionsController < EppController
     success = true
     @api_user = ApiUser.find_by(login_params)
 
+    if request.ip == ENV['webclient_ip'] && !Rails.env.test? && !Rails.env.development?
+      client_md5 = Certificate.parse_md_from_string(request.env['HTTP_SSL_CLIENT_CERT'])
+      server_md5 = Certificate.parse_md_from_string(File.read(ENV['cert_path']))
+      if client_md5 != server_md5
+        @msg = 'Authentication error; server closing connection (certificate is not valid)'
+        success = false
+      end
+    end
+
     if request.ip != ENV['webclient_ip'] && @api_user
       unless @api_user.api_pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'], request.env['HTTP_SSL_CLIENT_S_DN_CN'])
         @msg = 'Authentication error; server closing connection (certificate is not valid)'

@@ -2,7 +2,7 @@ class AddReservedDomains < ActiveRecord::Migration
   def up
     create_table :reserved_domains do |t|
       t.string :name
-      t.timestamps
+      t.timestamps null: false
     end
 
     domains = %w(

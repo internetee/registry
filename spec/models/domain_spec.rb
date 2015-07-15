@@ -94,6 +94,30 @@ describe Domain do
       @domain.registrant_update_confirmable?('123').should == false
     end
 
+    it 'should not find any domain pendings to clean' do
+      Domain.clean_expired_pendings.should == 0
+    end
+
+    it 'should not find any domains with wrong pendings' do
+      domain = Fabricate(:domain)
+      domain.registrant_verification_asked!('frame-str', '1')
+      domain.registrant_verification_asked_at = 30.days.ago
+      domain.save
+
+      Domain.clean_expired_pendings.should == 0
+    end
+
+    it 'should clean domain pendings' do
+      domain = Fabricate(:domain)
+      domain.registrant_verification_asked!('frame-str', '1')
+      domain.registrant_verification_asked_at = 30.days.ago
+      domain.pending_delete!
+
+      Domain.clean_expired_pendings.should == 1
+      domain.reload.pending_delete?.should == false
+      domain.pending_json.should == {}
+    end
+
     it 'should expire domains' do
       Domain.start_expire_period
       @domain.statuses.include?(DomainStatus::EXPIRED).should == false
@@ -180,6 +204,128 @@ describe Domain do
 
       @domain.statuses.count.should == 1
       @domain.force_delete_at.should be_nil
+    end
+
+    it 'should set expired status and update outzone_at and delete_at' do
+      domain = Fabricate(:domain)
+      domain.statuses.should == ['ok']
+      domain.set_expired
+      domain.changes.keys.should == ['statuses', 'outzone_at', 'delete_at']
+      domain.save
+
+      domain.statuses.should == ['expired']
+    end
+
+    it 'should know its create price' do
+      Fabricate(:pricelist, {
+        category: 'ee',
+        operation_category: 'create',
+        duration: '1year',
+        price: 1.50,
+        valid_from: Time.zone.parse('2015-01-01'),
+        valid_to: nil
+      })
+
+      domain = Fabricate(:domain)
+      domain.pricelist('create').price.amount.should == 1.50
+
+      domain = Fabricate(:domain, period: 12, period_unit: 'm')
+      domain.pricelist('create').price.amount.should == 1.50
+
+      domain = Fabricate(:domain, period: 365, period_unit: 'd')
+      domain.pricelist('create').price.amount.should == 1.50
+
+      Fabricate(:pricelist, {
+        category: 'ee',
+        operation_category: 'create',
+        duration: '2years',
+        price: 3,
+        valid_from: Time.zone.parse('2015-01-01'),
+        valid_to: nil
+      })
+
+      domain = Fabricate(:domain, period: 2)
+      domain.pricelist('create').price.amount.should == 3.0
+
+      domain = Fabricate(:domain, period: 24, period_unit: 'm')
+      domain.pricelist('create').price.amount.should == 3.0
+
+      domain = Fabricate(:domain, period: 730, period_unit: 'd')
+      domain.pricelist('create').price.amount.should == 3.0
+
+      Fabricate(:pricelist, {
+        category: 'ee',
+        operation_category: 'create',
+        duration: '3years',
+        price: 6,
+        valid_from: Time.zone.parse('2015-01-01'),
+        valid_to: nil
+      })
+
+      domain = Fabricate(:domain, period: 3)
+      domain.pricelist('create').price.amount.should == 6.0
+
+      domain = Fabricate(:domain, period: 36, period_unit: 'm')
+      domain.pricelist('create').price.amount.should == 6.0
+
+      domain = Fabricate(:domain, period: 1095, period_unit: 'd')
+      domain.pricelist('create').price.amount.should == 6.0
+    end
+
+    it 'should know its renew price' do
+      Fabricate(:pricelist, {
+        category: 'ee',
+        operation_category: 'renew',
+        duration: '1year',
+        price: 1.30,
+        valid_from: Time.zone.parse('2015-01-01'),
+        valid_to: nil
+      })
+
+      domain = Fabricate(:domain)
+      domain.pricelist('renew').price.amount.should == 1.30
+
+      domain = Fabricate(:domain, period: 12, period_unit: 'm')
+      domain.pricelist('renew').price.amount.should == 1.30
+
+      domain = Fabricate(:domain, period: 365, period_unit: 'd')
+      domain.pricelist('renew').price.amount.should == 1.30
+
+      Fabricate(:pricelist, {
+        category: 'ee',
+        operation_category: 'renew',
+        duration: '2years',
+        price: 3.1,
+        valid_from: Time.zone.parse('2015-01-01'),
+        valid_to: nil
+      })
+
+      domain = Fabricate(:domain, period: 2)
+      domain.pricelist('renew').price.amount.should == 3.1
+
+      domain = Fabricate(:domain, period: 24, period_unit: 'm')
+      domain.pricelist('renew').price.amount.should == 3.1
+
+      domain = Fabricate(:domain, period: 730, period_unit: 'd')
+      domain.pricelist('renew').price.amount.should == 3.1
+
+      Fabricate(:pricelist, {
+        category: 'ee',
+        operation_category: 'renew',
+        duration: '3years',
+        price: 6.1,
+        valid_from: Time.zone.parse('2015-01-01'),
+        valid_to: nil
+      })
+
+      domain = Fabricate(:domain, period: 3)
+      domain.pricelist('renew').price.amount.should == 6.1
+
+      domain = Fabricate(:domain, period: 36, period_unit: 'm')
+      domain.pricelist('renew').price.amount.should == 6.1
+
+      domain = Fabricate(:domain, period: 1095, period_unit: 'd')
+      domain.pricelist('renew').price.amount.should == 6.1
     end
 
     context 'about registrant update confirm' do

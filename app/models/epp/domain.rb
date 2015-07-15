@@ -25,7 +25,8 @@ class Epp::Domain < Domain
       ],
       '2003' => [ # Required parameter missing
         [:registrant, :blank],
-        [:registrar, :blank]
+        [:registrar, :blank],
+        [:base, :required_parameter_missing_reserved]
       ],
       '2004' => [ # Parameter value range error
         [:nameservers, :out_of_range,
@@ -59,6 +60,9 @@ class Epp::Domain < Domain
       ],
       '2201' => [ # Authorisation error
         [:auth_info, :wrong_pw]
+      ],
+      '2202' => [
+        [:base, :invalid_auth_information_reserved]
       ],
       '2302' => [ # Object exists
         [:name_dirty, :taken, { value: { obj: 'name', val: name_dirty } }],
@@ -111,6 +115,8 @@ class Epp::Domain < Domain
     at[:period] = (period.to_i == 0) ? 1 : period.to_i
 
     at[:period_unit] = Epp::Domain.parse_period_unit_from_frame(frame) || 'y'
+
+    at[:reserved_pw] = frame.css('reserved > pw').text
 
     # at[:statuses] = domain_statuses_attrs(frame, action)
     # binding.pry
@@ -392,7 +398,10 @@ class Epp::Domain < Domain
     frame = Nokogiri::XML(pending_json['frame'])
     statuses.delete(DomainStatus::PENDING_UPDATE)
 
-    clean_pendings! if update(frame, user, false)
+    return unless update(frame, user, false)
+    clean_pendings! 
+    self.deliver_emails = true # turn on email delivery for epp
+    DomainMailer.registrant_updated(self).deliver_now
   end
 
   def apply_pending_delete!
@@ -423,7 +432,7 @@ class Epp::Domain < Domain
       manage_automatic_statuses
       true # aka 1001 pending_delete
     else
-      destroy
+      set_expired!
     end
   end
 
@@ -455,6 +464,8 @@ class Epp::Domain < Domain
   def transfer(frame, action, current_user)
     case action
     when 'query'
+      return domain_transfers.last if domain_transfers.any?
+    when 'request'
       return pending_transfer if pending_transfer
       return query_transfer(frame, current_user)
     when 'approve'
@@ -462,7 +473,7 @@ class Epp::Domain < Domain
     when 'reject'
       return reject_transfer(frame, current_user) if pending_transfer
     end
-    add_epp_error('2303', nil, nil, I18n.t('pending_transfer_was_not_found'))
+    add_epp_error('2303', nil, nil, I18n.t('no_transfers_found'))
   end
 
   # TODO: Eager load problems here. Investigate how it's possible not to query contact again
@@ -742,7 +753,7 @@ class Epp::Domain < Domain
           next
         end
 
-        unless DomainNameValidator.validate_reservation(x)
+        if ReservedDomain.pw_for(x).present?
           res << { name: x, avail: 0, reason: I18n.t('errors.messages.epp_domain_reserved') }
           next
         end

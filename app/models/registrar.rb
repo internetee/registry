@@ -12,6 +12,8 @@ class Registrar < ActiveRecord::Base
   has_many :priv_contacts, -> { privs }, class_name: 'Contact'
   has_many :white_ips, dependent: :destroy
 
+  delegate :balance, to: :cash_account
+
   validates :name, :reg_no, :country_code, :email, :code, presence: true
   validates :name, :reg_no, :reference_no, :code, uniqueness: true
   validate :forbidden_codes
@@ -119,6 +121,17 @@ class Registrar < ActiveRecord::Base
 
   def cash_account
     accounts.find_by(account_type: Account::CASH)
+  end
+
+  def debit!(args)
+    args[:sum] *= -1
+    args[:currency] = 'EUR'
+    cash_account.account_activities.create!(args)
+  end
+
+  def credit!(args)
+    args[:currency] = 'EUR'
+    cash_account.account_activities.create!(args)
   end
 
   def domain_transfers

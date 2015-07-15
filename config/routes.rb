@@ -176,7 +176,9 @@ Rails.application.routes.draw do
     end
 
     resources :invoices do
+      get 'download_pdf'
       patch 'cancel', on: :member
+      match 'forward', via: [:post, :get]
     end
 
     resources :domains do
@@ -190,6 +192,7 @@ Rails.application.routes.draw do
     resources :settings
 
     resources :blocked_domains
+    resources :reserved_domains
 
     resources :registrars do
       resources :api_users

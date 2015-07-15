@@ -3,7 +3,9 @@ class BankTransaction < ActiveRecord::Base
   belongs_to :bank_statement
   has_one :account_activity
 
-  scope :unbinded, -> { where('id NOT IN (SELECT bank_transaction_id FROM account_activities)') }
+  scope :unbinded, lambda {
+    where('id NOT IN (SELECT bank_transaction_id FROM account_activities where bank_transaction_id IS NOT NULL)')
+  }
 
   def binded?
     account_activity.present?
@@ -77,7 +79,8 @@ class BankTransaction < ActiveRecord::Base
       invoice: invoice,
       sum: invoice.sum_without_vat,
       currency: currency,
-      description: description
+      description: description,
+      activity_type: AccountActivity::ADD_CREDIT
     )
   end
 end

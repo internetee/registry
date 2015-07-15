@@ -1,6 +1,8 @@
 class Pricelist < ActiveRecord::Base
   include Versions # version/pricelist_version.rb
 
+  scope :valid, -> { where("valid_from <= ? AND valid_to >= ? OR valid_to IS NULL", Time.zone.now, Time.zone.now) }
+
   monetize :price_cents
 
   validates :price_cents, :price_currency, :price,
@@ -13,10 +15,18 @@ class Pricelist < ActiveRecord::Base
   after_initialize :init_values
   def init_values
     return unless new_record?
-    self.valid_from = Time.zone.now.beginning_of_year
+    self.valid_from = Time.zone.now.beginning_of_year unless valid_from
   end
 
   def name
     "#{operation_category} #{category}"
+  end
+
+  class << self
+    def pricelist_for(zone, operation, period)
+      lists = valid.where(category: zone, operation_category: operation, duration: period)
+      return lists.first if lists.count == 1
+      lists.where('valid_to IS NOT NULL').order(valid_from: :desc).first
+    end
   end
 end

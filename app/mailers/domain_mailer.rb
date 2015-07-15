@@ -3,7 +3,7 @@ class DomainMailer < ApplicationMailer
     @domain = domain
     return if Rails.env.production? ? false : !TEST_EMAILS.include?(@domain.registrant_email)
 
-    # turn on delivery on specific request only, thus rake tasks does not deliver anything
+    # turn on delivery on specific EPP request only, thus rake tasks does not deliver anything
     return if @domain.deliver_emails != true
 
     if @domain.registrant_verification_token.blank?
@@ -25,11 +25,22 @@ class DomainMailer < ApplicationMailer
          subject: "#{I18n.t(:domain_registrant_pending_updated_subject, name: @domain.name)} [#{@domain.name}]")
   end
 
+  def registrant_updated(domain)
+    @domain = domain
+    return if Rails.env.production? ? false : !TEST_EMAILS.include?(@domain.registrant_email)
+
+    # turn on delivery on specific EPP request only, thus rake tasks does not deliver anything
+    return if @domain.deliver_emails != true
+
+    mail(to: @domain.registrant_email,
+         subject: "#{I18n.t(:domain_registrant_updated, name: @domain.name)} [#{@domain.name}]")
+  end
+
   def pending_deleted(domain)
     @domain = domain
     return if Rails.env.production? ? false : !TEST_EMAILS.include?(@domain.registrant_email)
 
-    # turn on delivery on specific request only, thus rake tasks does not deliver anything
+    # turn on delivery on specific EPP request only, thus rake tasks does not deliver anything
     return if @domain.deliver_emails != true
 
     if @domain.registrant_verification_token.blank?

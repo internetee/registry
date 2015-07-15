@@ -1,6 +1,6 @@
 # EPP REQUEST - RESPONSE EXAMPLES
-GENERATED AT: 2015-06-16 14:45:11 UTC  
-EXAMPLE COUNT: 168  
+GENERATED AT: 2015-07-13 08:09:38 UTC  
+EXAMPLE COUNT: 177  
 
 ---
 
@@ -44,7 +44,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0628016030</svTRID>
+      <svTRID>ccReg-0618295689</svTRID>
     </trID>
   </response>
 </epp>
@@ -98,7 +98,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-4850323861</svTRID>
+      <svTRID>ccReg-2870310688</svTRID>
     </trID>
   </response>
 </epp>
@@ -149,13 +149,13 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <id>FIRST0:E6D21A5B</id>
-        <crDate>2015-06-16T14:45:14Z</crDate>
+        <id>FIRST0:39FDCF9F</id>
+        <crDate>2015-07-13T08:09:40Z</crDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-8174523782</svTRID>
+      <svTRID>ccReg-5460080031</svTRID>
     </trID>
   </response>
 </epp>
@@ -206,13 +206,13 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <id>FIRST0:2991302F</id>
-        <crDate>2015-06-16T14:45:14Z</crDate>
+        <id>FIRST0:D94B3B80</id>
+        <crDate>2015-07-13T08:09:40Z</crDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5902458408</svTRID>
+      <svTRID>ccReg-1701802241</svTRID>
     </trID>
   </response>
 </epp>
@@ -263,13 +263,13 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <id>FIRST0:939795FC</id>
-        <crDate>2015-06-16T14:45:14Z</crDate>
+        <id>FIRST0:8EB9FF1C</id>
+        <crDate>2015-07-13T08:09:40Z</crDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-7781355479</svTRID>
+      <svTRID>ccReg-4899452053</svTRID>
     </trID>
   </response>
 </epp>
@@ -320,13 +320,13 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <id>FIRST0:8F2D96DF</id>
-        <crDate>2015-06-16T14:45:14Z</crDate>
+        <id>FIRST0:CC224814</id>
+        <crDate>2015-07-13T08:09:40Z</crDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9037049309</svTRID>
+      <svTRID>ccReg-4861590993</svTRID>
     </trID>
   </response>
 </epp>
@@ -379,12 +379,12 @@ RESPONSE:
     <resData>
       <creData>
         <id>FIRST0:ABC12345</id>
-        <crDate>2015-06-16T14:45:14Z</crDate>
+        <crDate>2015-07-13T08:09:40Z</crDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5231101974</svTRID>
+      <svTRID>ccReg-5935450848</svTRID>
     </trID>
   </response>
 </epp>
@@ -437,12 +437,12 @@ RESPONSE:
     <resData>
       <creData>
         <id>FIRST0:ABC:ABC:12345</id>
-        <crDate>2015-06-16T14:45:14Z</crDate>
+        <crDate>2015-07-13T08:09:40Z</crDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-6422793401</svTRID>
+      <svTRID>ccReg-2686282727</svTRID>
     </trID>
   </response>
 </epp>
@@ -494,7 +494,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-2948594360</svTRID>
+      <svTRID>ccReg-8146651939</svTRID>
     </trID>
   </response>
 </epp>
@@ -544,7 +544,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5099683978</svTRID>
+      <svTRID>ccReg-5581241527</svTRID>
     </trID>
   </response>
 </epp>
@@ -597,12 +597,12 @@ RESPONSE:
     <resData>
       <creData>
         <id>FIRST0:CID:FIRST0:ABC:ABC:NEW:12345</id>
-        <crDate>2015-06-16T14:45:16Z</crDate>
+        <crDate>2015-07-13T08:09:43Z</crDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-1644285201</svTRID>
+      <svTRID>ccReg-7844818405</svTRID>
     </trID>
   </response>
 </epp>
@@ -655,12 +655,12 @@ RESPONSE:
     <resData>
       <creData>
         <id>FIRST0:CID:FIRST0:ABC:CID:ABC:NEW:12345</id>
-        <crDate>2015-06-16T14:45:16Z</crDate>
+        <crDate>2015-07-13T08:09:43Z</crDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9700239330</svTRID>
+      <svTRID>ccReg-9977379702</svTRID>
     </trID>
   </response>
 </epp>
@@ -713,12 +713,12 @@ RESPONSE:
     <resData>
       <creData>
         <id>FIRST0:ABC22</id>
-        <crDate>2015-06-16T14:45:17Z</crDate>
+        <crDate>2015-07-13T08:09:43Z</crDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-2521051245</svTRID>
+      <svTRID>ccReg-5280988354</svTRID>
     </trID>
   </response>
 </epp>
@@ -771,12 +771,12 @@ RESPONSE:
     <resData>
       <creData>
         <id>FIRST0:CID2:FIRST0:ABC:ABC:11111</id>
-        <crDate>2015-06-16T14:45:17Z</crDate>
+        <crDate>2015-07-13T08:09:43Z</crDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0724862982</svTRID>
+      <svTRID>ccReg-2496065899</svTRID>
     </trID>
   </response>
 </epp>
@@ -829,12 +829,12 @@ RESPONSE:
     <resData>
       <creData>
         <id>FIRST0:CID:FIRST0</id>
-        <crDate>2015-06-16T14:45:17Z</crDate>
+        <crDate>2015-07-13T08:09:43Z</crDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-6737500376</svTRID>
+      <svTRID>ccReg-6105084302</svTRID>
     </trID>
   </response>
 </epp>
@@ -885,13 +885,13 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <id>FIRST0:83F0C8EE</id>
-        <crDate>2015-06-16T14:45:17Z</crDate>
+        <id>FIRST0:BD65CE88</id>
+        <crDate>2015-07-13T08:09:43Z</crDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-1953331836</svTRID>
+      <svTRID>ccReg-7730845183</svTRID>
     </trID>
   </response>
 </epp>
@@ -942,13 +942,13 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <id>FIRST0:89839115</id>
-        <crDate>2015-06-16T14:45:17Z</crDate>
+        <id>FIRST0:32CC6124</id>
+        <crDate>2015-07-13T08:09:43Z</crDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-1961057833</svTRID>
+      <svTRID>ccReg-5965537420</svTRID>
     </trID>
   </response>
 </epp>
@@ -1000,7 +1000,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-7530778283</svTRID>
+      <svTRID>ccReg-6428920407</svTRID>
     </trID>
   </response>
 </epp>
@@ -1052,7 +1052,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9380671496</svTRID>
+      <svTRID>ccReg-7656849449</svTRID>
     </trID>
   </response>
 </epp>
@@ -1088,7 +1088,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-3302729368</svTRID>
+      <svTRID>ccReg-2056150890</svTRID>
     </trID>
   </response>
 </epp>
@@ -1141,7 +1141,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9700707144</svTRID>
+      <svTRID>ccReg-1334382115</svTRID>
     </trID>
   </response>
 </epp>
@@ -1192,12 +1192,12 @@ RESPONSE:
     <resData>
       <creData>
         <id>FIRST0:SH8013</id>
-        <crDate>2015-06-16T14:45:19Z</crDate>
+        <crDate>2015-07-13T08:09:45Z</crDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-3460954479</svTRID>
+      <svTRID>ccReg-2833711488</svTRID>
     </trID>
   </response>
 </epp>
@@ -1238,12 +1238,12 @@ RESPONSE:
     <resData>
       <creData>
         <id>FIRST0:SH8013</id>
-        <crDate>2015-06-16T14:45:19Z</crDate>
+        <crDate>2015-07-13T08:09:45Z</crDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-3321686496</svTRID>
+      <svTRID>ccReg-2702640931</svTRID>
     </trID>
   </response>
 </epp>
@@ -1291,7 +1291,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-1310720284</svTRID>
+      <svTRID>ccReg-9141239618</svTRID>
     </trID>
   </response>
 </epp>
@@ -1340,12 +1340,12 @@ RESPONSE:
     <resData>
       <creData>
         <id>FIRST0:SH8013</id>
-        <crDate>2015-06-16T14:45:19Z</crDate>
+        <crDate>2015-07-13T08:09:45Z</crDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5319423932</svTRID>
+      <svTRID>ccReg-9170655194</svTRID>
     </trID>
   </response>
 </epp>
@@ -1391,7 +1391,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-8595538880</svTRID>
+      <svTRID>ccReg-9045686845</svTRID>
     </trID>
   </response>
 </epp>
@@ -1439,7 +1439,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-1546881965</svTRID>
+      <svTRID>ccReg-3102023477</svTRID>
     </trID>
   </response>
 </epp>
@@ -1477,7 +1477,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-2967153959</svTRID>
+      <svTRID>ccReg-5108760843</svTRID>
     </trID>
   </response>
 </epp>
@@ -1523,7 +1523,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-2076214878</svTRID>
+      <svTRID>ccReg-8619274236</svTRID>
     </trID>
   </response>
 </epp>
@@ -1576,7 +1576,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0468202475</svTRID>
+      <svTRID>ccReg-4679507984</svTRID>
     </trID>
   </response>
 </epp>
@@ -1630,7 +1630,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-7942047636</svTRID>
+      <svTRID>ccReg-1149916612</svTRID>
     </trID>
   </response>
 </epp>
@@ -1681,7 +1681,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9797329583</svTRID>
+      <svTRID>ccReg-3709656481</svTRID>
     </trID>
   </response>
 </epp>
@@ -1732,7 +1732,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-7526123941</svTRID>
+      <svTRID>ccReg-7193966819</svTRID>
     </trID>
   </response>
 </epp>
@@ -1783,7 +1783,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-4123279413</svTRID>
+      <svTRID>ccReg-8289884012</svTRID>
     </trID>
   </response>
 </epp>
@@ -1822,7 +1822,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-6929449846</svTRID>
+      <svTRID>ccReg-5602755069</svTRID>
     </trID>
   </response>
 </epp>
@@ -1864,12 +1864,12 @@ RESPONSE:
     <resData>
       <creData>
         <id>FIRST0:SH8013</id>
-        <crDate>2015-06-16T14:45:19Z</crDate>
+        <crDate>2015-07-13T08:09:45Z</crDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-1481668570</svTRID>
+      <svTRID>ccReg-9494548866</svTRID>
     </trID>
   </response>
 </epp>
@@ -1914,7 +1914,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0260056975</svTRID>
+      <svTRID>ccReg-3793177760</svTRID>
     </trID>
   </response>
 </epp>
@@ -1959,12 +1959,12 @@ RESPONSE:
     <resData>
       <creData>
         <id>FIRST0:SH8013</id>
-        <crDate>2015-06-16T14:45:19Z</crDate>
+        <crDate>2015-07-13T08:09:45Z</crDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9676737932</svTRID>
+      <svTRID>ccReg-9626068041</svTRID>
     </trID>
   </response>
 </epp>
@@ -2008,7 +2008,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9359806010</svTRID>
+      <svTRID>ccReg-9232532819</svTRID>
     </trID>
   </response>
 </epp>
@@ -2052,7 +2052,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5415478708</svTRID>
+      <svTRID>ccReg-9780958644</svTRID>
     </trID>
   </response>
 </epp>
@@ -2097,12 +2097,12 @@ RESPONSE:
     <resData>
       <creData>
         <id>FIRST0:SH8013</id>
-        <crDate>2015-06-16T14:45:19Z</crDate>
+        <crDate>2015-07-13T08:09:45Z</crDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-7303720395</svTRID>
+      <svTRID>ccReg-9339539428</svTRID>
     </trID>
   </response>
 </epp>
@@ -2147,12 +2147,12 @@ RESPONSE:
     <resData>
       <creData>
         <id>FIRST0:SH8013</id>
-        <crDate>2015-06-16T14:45:19Z</crDate>
+        <crDate>2015-07-13T08:09:45Z</crDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-8343028402</svTRID>
+      <svTRID>ccReg-1811284213</svTRID>
     </trID>
   </response>
 </epp>
@@ -2200,12 +2200,12 @@ RESPONSE:
     <resData>
       <creData>
         <id>FIRST0:SH8013</id>
-        <crDate>2015-06-16T14:45:19Z</crDate>
+        <crDate>2015-07-13T08:09:45Z</crDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-3396633434</svTRID>
+      <svTRID>ccReg-7287677937</svTRID>
     </trID>
   </response>
 </epp>
@@ -2249,12 +2249,12 @@ RESPONSE:
     <resData>
       <creData>
         <id>FIRST0:SH8013</id>
-        <crDate>2015-06-16T14:45:19Z</crDate>
+        <crDate>2015-07-13T08:09:45Z</crDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-2557605520</svTRID>
+      <svTRID>ccReg-3365372793</svTRID>
     </trID>
   </response>
 </epp>
@@ -2297,7 +2297,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5903969239</svTRID>
+      <svTRID>ccReg-1219827368</svTRID>
     </trID>
   </response>
 </epp>
@@ -2340,7 +2340,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-4958556368</svTRID>
+      <svTRID>ccReg-3971655755</svTRID>
     </trID>
   </response>
 </epp>
@@ -2373,7 +2373,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-3948826508</svTRID>
+      <svTRID>ccReg-8754962923</svTRID>
     </trID>
   </response>
 </epp>
@@ -2420,7 +2420,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-6894400452</svTRID>
+      <svTRID>ccReg-9819373260</svTRID>
     </trID>
   </response>
 </epp>
@@ -2436,7 +2436,7 @@ REQUEST:
   <command>
     <delete>
       <contact:delete xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
-        <contact:id>FIRST0:SH660293943</contact:id>
+        <contact:id>FIRST0:SH510454133</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
         </contact:authInfo>
@@ -2464,7 +2464,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-3167684614</svTRID>
+      <svTRID>ccReg-7214487869</svTRID>
     </trID>
   </response>
 </epp>
@@ -2480,7 +2480,7 @@ REQUEST:
   <command>
     <delete>
       <contact:delete xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
-        <contact:id>FIRST0:SH918459854</contact:id>
+        <contact:id>FIRST0:SH503034294</contact:id>
         <contact:authInfo>
           <contact:pw>wrong password</contact:pw>
         </contact:authInfo>
@@ -2508,7 +2508,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-4976622556</svTRID>
+      <svTRID>ccReg-3122380030</svTRID>
     </trID>
   </response>
 </epp>
@@ -2524,7 +2524,7 @@ REQUEST:
   <command>
     <delete>
       <contact:delete xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
-        <contact:id>FIRST0:SH479142985</contact:id>
+        <contact:id>FIRST0:SH673355085</contact:id>
       </contact:delete>
     </delete>
     <clTRID>ABC-12345</clTRID>
@@ -2543,7 +2543,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5497436667</svTRID>
+      <svTRID>ccReg-1862227156</svTRID>
     </trID>
   </response>
 </epp>
@@ -2559,7 +2559,7 @@ REQUEST:
   <command>
     <delete>
       <contact:delete xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
-        <contact:id>FIRST0:SH948515446</contact:id>
+        <contact:id>FIRST0:SH268059126</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
         </contact:authInfo>
@@ -2587,7 +2587,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5113374232</svTRID>
+      <svTRID>ccReg-2654739015</svTRID>
     </trID>
   </response>
 </epp>
@@ -2635,7 +2635,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-2787819683</svTRID>
+      <svTRID>ccReg-7333416442</svTRID>
     </trID>
   </response>
 </epp>
@@ -2649,7 +2649,7 @@ REQUEST:
   <command>
     <delete>
       <contact:delete xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
-        <contact:id>FIRST0:SH756528579</contact:id>
+        <contact:id>FIRST0:SH909522549</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
         </contact:authInfo>
@@ -2677,7 +2677,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-1059535053</svTRID>
+      <svTRID>ccReg-0590479812</svTRID>
     </trID>
   </response>
 </epp>
@@ -2723,7 +2723,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9721519129</svTRID>
+      <svTRID>ccReg-5714766005</svTRID>
     </trID>
   </response>
 </epp>
@@ -2771,7 +2771,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5463189772</svTRID>
+      <svTRID>ccReg-8540093009</svTRID>
     </trID>
   </response>
 </epp>
@@ -2785,7 +2785,7 @@ REQUEST:
   <command>
     <delete>
       <contact:delete xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
-        <contact:id>FIRST0:SH6727132410</contact:id>
+        <contact:id>FIRST0:SH9262555410</contact:id>
       </contact:delete>
     </delete>
     <clTRID>ABC-12345</clTRID>
@@ -2804,7 +2804,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0140635504</svTRID>
+      <svTRID>ccReg-9788975407</svTRID>
     </trID>
   </response>
 </epp>
@@ -2850,7 +2850,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-3361341345</svTRID>
+      <svTRID>ccReg-0232934407</svTRID>
     </trID>
   </response>
 </epp>
@@ -2898,7 +2898,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-2140366200</svTRID>
+      <svTRID>ccReg-1649878002</svTRID>
     </trID>
   </response>
 </epp>
@@ -2912,7 +2912,7 @@ REQUEST:
   <command>
     <delete>
       <contact:delete xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
-        <contact:id>FIRST0:SH6052359511</contact:id>
+        <contact:id>FIRST0:SH6216347011</contact:id>
         <contact:authInfo>
           <contact:pw>wrong password</contact:pw>
         </contact:authInfo>
@@ -2940,7 +2940,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-4307228004</svTRID>
+      <svTRID>ccReg-8638671941</svTRID>
     </trID>
   </response>
 </epp>
@@ -2986,7 +2986,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9967906837</svTRID>
+      <svTRID>ccReg-0461625368</svTRID>
     </trID>
   </response>
 </epp>
@@ -3019,7 +3019,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-1546452843</svTRID>
+      <svTRID>ccReg-7185406208</svTRID>
     </trID>
   </response>
 </epp>
@@ -3066,7 +3066,7 @@ RESPONSE:
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5794718821</svTRID>
+      <svTRID>ccReg-1361275825</svTRID>
     </trID>
   </response>
 </epp>
@@ -3113,7 +3113,7 @@ RESPONSE:
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9107912155</svTRID>
+      <svTRID>ccReg-5807230391</svTRID>
     </trID>
   </response>
 </epp>
@@ -3146,7 +3146,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0867319397</svTRID>
+      <svTRID>ccReg-9534409035</svTRID>
     </trID>
   </response>
 </epp>
@@ -3187,7 +3187,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-1035787772</svTRID>
+      <svTRID>ccReg-0503118697</svTRID>
     </trID>
   </response>
 </epp>
@@ -3239,10 +3239,10 @@ RESPONSE:
           </addr>
         </postalInfo>
         <voice>+372.12345678</voice>
-        <email>litzy_kuvalis@pfannerstillhowe.org</email>
+        <email>mikel_schmidt@daugherty.biz</email>
         <clID>fixed registrar</clID>
         <crID>TEST-CREATOR</crID>
-        <crDate>2015-06-16T14:45:37Z</crDate>
+        <crDate>2015-07-13T08:10:04Z</crDate>
         <authInfo>
           <pw>password</pw>
         </authInfo>
@@ -3255,7 +3255,7 @@ RESPONSE:
     </extension>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-8740910444</svTRID>
+      <svTRID>ccReg-8819586690</svTRID>
     </trID>
   </response>
 </epp>
@@ -3307,10 +3307,10 @@ RESPONSE:
           </addr>
         </postalInfo>
         <voice>+372.12345678</voice>
-        <email>litzy_kuvalis@pfannerstillhowe.org</email>
+        <email>mikel_schmidt@daugherty.biz</email>
         <clID>fixed registrar</clID>
         <crID>TEST-CREATOR</crID>
-        <crDate>2015-06-16T14:45:37Z</crDate>
+        <crDate>2015-07-13T08:10:04Z</crDate>
         <authInfo>
           <pw>password</pw>
         </authInfo>
@@ -3323,7 +3323,7 @@ RESPONSE:
     </extension>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0768016805</svTRID>
+      <svTRID>ccReg-0635458096</svTRID>
     </trID>
   </response>
 </epp>
@@ -3375,10 +3375,10 @@ RESPONSE:
           </addr>
         </postalInfo>
         <voice>+372.12345678</voice>
-        <email>litzy_kuvalis@pfannerstillhowe.org</email>
+        <email>mikel_schmidt@daugherty.biz</email>
         <clID>registrar1</clID>
         <crID>TEST-CREATOR</crID>
-        <crDate>2015-06-16T14:45:37Z</crDate>
+        <crDate>2015-07-13T08:10:04Z</crDate>
         <authInfo>
           <pw>password</pw>
         </authInfo>
@@ -3391,7 +3391,7 @@ RESPONSE:
     </extension>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-1418789936</svTRID>
+      <svTRID>ccReg-6424655076</svTRID>
     </trID>
   </response>
 </epp>
@@ -3407,7 +3407,7 @@ REQUEST:
   <command>
     <info>
       <contact:info xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
-        <contact:id>FIRST0:SH168939920</contact:id>
+        <contact:id>FIRST0:SH282362170</contact:id>
         <contact:authInfo>
           <contact:pw>wrong-pw</contact:pw>
         </contact:authInfo>
@@ -3429,11 +3429,11 @@ RESPONSE:
     </result>
     <resData>
       <infData>
-        <id>FIRST0:SH168939920</id>
+        <id>FIRST0:SH282362170</id>
         <roid>EIS-1</roid>
         <status s="ok"/>
         <postalInfo type="int">
-          <name>Tiana Cummerata0</name>
+          <name>Brandon Gutkowski0</name>
           <addr>
             <street>Short street 11</street>
             <city>Tallinn</city>
@@ -3443,10 +3443,10 @@ RESPONSE:
           </addr>
         </postalInfo>
         <voice>+372.12345678</voice>
-        <email>litzy_kuvalis@pfannerstillhowe.org</email>
+        <email>mikel_schmidt@daugherty.biz</email>
         <clID>registrar1</clID>
         <crID>TEST-CREATOR</crID>
-        <crDate>2015-06-16T14:45:13Z</crDate>
+        <crDate>2015-07-13T08:09:39Z</crDate>
         <authInfo>
           <pw>password</pw>
         </authInfo>
@@ -3459,7 +3459,7 @@ RESPONSE:
     </extension>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-8270641025</svTRID>
+      <svTRID>ccReg-6150961261</svTRID>
     </trID>
   </response>
 </epp>
@@ -3501,7 +3501,7 @@ RESPONSE:
         <roid>EIS-32</roid>
         <status s="ok"/>
         <postalInfo type="int">
-          <name>Jarred Reichel15</name>
+          <name>Hans Dooley15</name>
           <addr>
             <street>Short street 11</street>
             <city>Tallinn</city>
@@ -3511,10 +3511,10 @@ RESPONSE:
           </addr>
         </postalInfo>
         <voice>+372.12345678</voice>
-        <email>litzy_kuvalis@pfannerstillhowe.org</email>
+        <email>mikel_schmidt@daugherty.biz</email>
         <clID>fixed registrar</clID>
         <crID>TEST-CREATOR</crID>
-        <crDate>2015-06-16T14:45:37Z</crDate>
+        <crDate>2015-07-13T08:10:04Z</crDate>
         <authInfo>
           <pw>password</pw>
         </authInfo>
@@ -3527,7 +3527,7 @@ RESPONSE:
     </extension>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0424201637</svTRID>
+      <svTRID>ccReg-5948603765</svTRID>
     </trID>
   </response>
 </epp>
@@ -3575,7 +3575,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-6919284154</svTRID>
+      <svTRID>ccReg-9055288154</svTRID>
     </trID>
   </response>
 </epp>
@@ -3589,7 +3589,7 @@ REQUEST:
   <command>
     <info>
       <contact:info xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
-        <contact:id>FIRST0:SH168939920</contact:id>
+        <contact:id>FIRST0:SH282362170</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
         </contact:authInfo>
@@ -3611,11 +3611,11 @@ RESPONSE:
     </result>
     <resData>
       <infData>
-        <id>FIRST0:SH168939920</id>
+        <id>FIRST0:SH282362170</id>
         <roid>EIS-1</roid>
         <status s="ok"/>
         <postalInfo type="int">
-          <name>Tiana Cummerata0</name>
+          <name>Brandon Gutkowski0</name>
           <addr>
             <street>Short street 11</street>
             <city>Tallinn</city>
@@ -3625,10 +3625,10 @@ RESPONSE:
           </addr>
         </postalInfo>
         <voice>+372.12345678</voice>
-        <email>litzy_kuvalis@pfannerstillhowe.org</email>
+        <email>mikel_schmidt@daugherty.biz</email>
         <clID>registrar1</clID>
         <crID>TEST-CREATOR</crID>
-        <crDate>2015-06-16T14:45:13Z</crDate>
+        <crDate>2015-07-13T08:09:39Z</crDate>
         <authInfo>
           <pw>password</pw>
         </authInfo>
@@ -3641,7 +3641,7 @@ RESPONSE:
     </extension>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-4155363959</svTRID>
+      <svTRID>ccReg-3649803181</svTRID>
     </trID>
   </response>
 </epp>
@@ -3687,7 +3687,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9980678480</svTRID>
+      <svTRID>ccReg-1933675184</svTRID>
     </trID>
   </response>
 </epp>
@@ -3735,7 +3735,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-6386920424</svTRID>
+      <svTRID>ccReg-5420323891</svTRID>
     </trID>
   </response>
 </epp>
@@ -3749,7 +3749,7 @@ REQUEST:
   <command>
     <info>
       <contact:info xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
-        <contact:id>FIRST0:SH168939920</contact:id>
+        <contact:id>FIRST0:SH282362170</contact:id>
         <contact:authInfo>
           <contact:pw>wrong-pw</contact:pw>
         </contact:authInfo>
@@ -3771,7 +3771,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-8614373807</svTRID>
+      <svTRID>ccReg-4827213455</svTRID>
     </trID>
   </response>
 </epp>
@@ -3817,7 +3817,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9444940598</svTRID>
+      <svTRID>ccReg-7118835839</svTRID>
     </trID>
   </response>
 </epp>
@@ -3865,7 +3865,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-1099785761</svTRID>
+      <svTRID>ccReg-9117613031</svTRID>
     </trID>
   </response>
 </epp>
@@ -3879,7 +3879,7 @@ REQUEST:
   <command>
     <info>
       <contact:info xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
-        <contact:id>FIRST0:SH168939920</contact:id>
+        <contact:id>FIRST0:SH282362170</contact:id>
         <contact:authInfo>
           <contact:pw/>
         </contact:authInfo>
@@ -3901,20 +3901,20 @@ RESPONSE:
     </result>
     <resData>
       <infData>
-        <id>FIRST0:SH168939920</id>
+        <id>FIRST0:SH282362170</id>
         <roid>EIS-1</roid>
         <status s="ok"/>
         <postalInfo type="int">
-          <name>Tiana Cummerata0</name>
+          <name>Brandon Gutkowski0</name>
         </postalInfo>
         <clID>registrar1</clID>
         <crID>TEST-CREATOR</crID>
-        <crDate>2015-06-16T14:45:13Z</crDate>
+        <crDate>2015-07-13T08:09:39Z</crDate>
       </infData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-7660283209</svTRID>
+      <svTRID>ccReg-1234334129</svTRID>
     </trID>
   </response>
 </epp>
@@ -3960,7 +3960,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-8143425519</svTRID>
+      <svTRID>ccReg-2736288018</svTRID>
     </trID>
   </response>
 </epp>
@@ -4006,7 +4006,70 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-2175230306</svTRID>
+      <svTRID>ccReg-9795814246</svTRID>
+    </trID>
+  </response>
+</epp>
+```
+
+### EPP Domain should return error if balance low  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <create>
+      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+        <domain:name>example8141781761361142.ee</domain:name>
+        <domain:period unit="y">1</domain:period>
+        <domain:ns>
+          <domain:hostAttr>
+            <domain:hostName>ns1.example.net</domain:hostName>
+            <domain:hostAddr ip="v4">192.0.2.2</domain:hostAddr>
+            <domain:hostAddr ip="v6">1080:0:0:0:8:800:200C:417A</domain:hostAddr>
+          </domain:hostAttr>
+          <domain:hostAttr>
+            <domain:hostName>ns2.example.net</domain:hostName>
+          </domain:hostAttr>
+        </domain:ns>
+        <domain:registrant>FIXED:CITIZEN_1234</domain:registrant>
+        <domain:contact type="admin">FIXED:SH8013</domain:contact>
+        <domain:contact type="tech">FIXED:SH8013</domain:contact>
+        <domain:contact type="tech">FIXED:SH801333</domain:contact>
+      </domain:create>
+    </create>
+    <extension>
+      <secDNS:create xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1">
+        <secDNS:keyData>
+          <secDNS:flags>257</secDNS:flags>
+          <secDNS:protocol>3</secDNS:protocol>
+          <secDNS:alg>5</secDNS:alg>
+          <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
+        </secDNS:keyData>
+      </secDNS:create>
+      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+        <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="2104">
+      <msg lang="en">Billing failure - credit balance low</msg>
+    </result>
+    <trID>
+      <clTRID>ABC-12345</clTRID>
+      <svTRID>ccReg-5775792464</svTRID>
     </trID>
   </response>
 </epp>
@@ -4022,7 +4085,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example51359824296846476.ee</domain:name>
+        <domain:name>example25336679785374406.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -4078,7 +4141,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-6335804328</svTRID>
+      <svTRID>ccReg-1869400002</svTRID>
     </trID>
   </response>
 </epp>
@@ -4122,7 +4185,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-4990944724</svTRID>
+      <svTRID>ccReg-3527497563</svTRID>
     </trID>
   </response>
 </epp>
@@ -4138,7 +4201,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example18858770590752611.ee</domain:name>
+        <domain:name>example49861011752583930.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -4185,14 +4248,14 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <name>example18858770590752611.ee</name>
-        <crDate>2015-06-16T14:45:40Z</crDate>
-        <exDate>2016-06-16T14:45:40Z</exDate>
+        <name>example49861011752583930.ee</name>
+        <crDate>2015-07-13T08:10:08Z</crDate>
+        <exDate>2016-07-13T08:10:08Z</exDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0460679321</svTRID>
+      <svTRID>ccReg-2908644272</svTRID>
     </trID>
   </response>
 </epp>
@@ -4208,7 +4271,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example53637086732201506.ee</domain:name>
+        <domain:name>example52367797551189787.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -4247,14 +4310,14 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <name>example53637086732201506.ee</name>
-        <crDate>2015-06-16T14:45:40Z</crDate>
-        <exDate>2016-06-16T14:45:40Z</exDate>
+        <name>example52367797551189787.ee</name>
+        <crDate>2015-07-13T08:10:09Z</crDate>
+        <exDate>2016-07-13T08:10:09Z</exDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-2657489548</svTRID>
+      <svTRID>ccReg-7361617669</svTRID>
     </trID>
   </response>
 </epp>
@@ -4270,14 +4333,14 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example55255947651220293.ee</domain:name>
+        <domain:name>example95532387633828733.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
-            <domain:hostName>ns1.example55255947651220293.ee</domain:hostName>
+            <domain:hostName>ns1.example95532387633828733.ee</domain:hostName>
           </domain:hostAttr>
           <domain:hostAttr>
-            <domain:hostName>ns2.example55255947651220293.ee</domain:hostName>
+            <domain:hostName>ns2.example95532387633828733.ee</domain:hostName>
           </domain:hostAttr>
         </domain:ns>
         <domain:registrant>FIXED:CITIZEN_1234</domain:registrant>
@@ -4315,7 +4378,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5446638954</svTRID>
+      <svTRID>ccReg-9261817668</svTRID>
     </trID>
   </response>
 </epp>
@@ -4378,7 +4441,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-2558205520</svTRID>
+      <svTRID>ccReg-6772570562</svTRID>
     </trID>
   </response>
 </epp>
@@ -4436,15 +4499,215 @@ RESPONSE:
 <?xml version="1.0" encoding="UTF-8"?>
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
-    <result code="2302">
-      <msg lang="en">Domain name is reserved or restricted [name_dirty]</msg>
-      <value>
+    <result code="2003">
+      <msg lang="en">Required parameter missing; reserved&gt;pw element required for reserved domains</msg>
+    </result>
+    <trID>
+      <clTRID>ABC-12345</clTRID>
+      <svTRID>ccReg-3733065800</svTRID>
+    </trID>
+  </response>
+</epp>
+```
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <create>
+      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+        <domain:name>1162.ee</domain:name>
+        <domain:period unit="y">1</domain:period>
+        <domain:ns>
+          <domain:hostAttr>
+            <domain:hostName>ns1.example.net</domain:hostName>
+            <domain:hostAddr ip="v4">192.0.2.2</domain:hostAddr>
+            <domain:hostAddr ip="v6">1080:0:0:0:8:800:200C:417A</domain:hostAddr>
+          </domain:hostAttr>
+          <domain:hostAttr>
+            <domain:hostName>ns2.example.net</domain:hostName>
+          </domain:hostAttr>
+        </domain:ns>
+        <domain:registrant>FIXED:CITIZEN_1234</domain:registrant>
+        <domain:contact type="admin">FIXED:SH8013</domain:contact>
+        <domain:contact type="tech">FIXED:SH8013</domain:contact>
+        <domain:contact type="tech">FIXED:SH801333</domain:contact>
+      </domain:create>
+    </create>
+    <extension>
+      <secDNS:create xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1">
+        <secDNS:keyData>
+          <secDNS:flags>257</secDNS:flags>
+          <secDNS:protocol>3</secDNS:protocol>
+          <secDNS:alg>5</secDNS:alg>
+          <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
+        </secDNS:keyData>
+      </secDNS:create>
+      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+        <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
+        <eis:reserved>
+          <eis:pw>wrong_pw</eis:pw>
+        </eis:reserved>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="2202">
+      <msg lang="en">Invalid authorization information; invalid reserved&gt;pw value</msg>
+    </result>
+    <trID>
+      <clTRID>ABC-12345</clTRID>
+      <svTRID>ccReg-7112576450</svTRID>
+    </trID>
+  </response>
+</epp>
+```
+
+### EPP Domain with citizen as a registrant creates a reserved domain with correct auth info  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <create>
+      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+        <domain:name>1162.ee</domain:name>
+        <domain:period unit="y">1</domain:period>
+        <domain:ns>
+          <domain:hostAttr>
+            <domain:hostName>ns1.example.net</domain:hostName>
+            <domain:hostAddr ip="v4">192.0.2.2</domain:hostAddr>
+            <domain:hostAddr ip="v6">1080:0:0:0:8:800:200C:417A</domain:hostAddr>
+          </domain:hostAttr>
+          <domain:hostAttr>
+            <domain:hostName>ns2.example.net</domain:hostName>
+          </domain:hostAttr>
+        </domain:ns>
+        <domain:registrant>FIXED:CITIZEN_1234</domain:registrant>
+        <domain:contact type="admin">FIXED:SH8013</domain:contact>
+        <domain:contact type="tech">FIXED:SH8013</domain:contact>
+        <domain:contact type="tech">FIXED:SH801333</domain:contact>
+      </domain:create>
+    </create>
+    <extension>
+      <secDNS:create xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1">
+        <secDNS:keyData>
+          <secDNS:flags>257</secDNS:flags>
+          <secDNS:protocol>3</secDNS:protocol>
+          <secDNS:alg>5</secDNS:alg>
+          <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
+        </secDNS:keyData>
+      </secDNS:create>
+      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+        <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
+        <eis:reserved>
+          <eis:pw>abc</eis:pw>
+        </eis:reserved>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+    <resData>
+      <creData>
         <name>1162.ee</name>
+        <crDate>2015-07-13T08:10:13Z</crDate>
+        <exDate>2016-07-13T08:10:13Z</exDate>
+      </creData>
+    </resData>
+    <trID>
+      <clTRID>ABC-12345</clTRID>
+      <svTRID>ccReg-5049259745</svTRID>
+    </trID>
+  </response>
+</epp>
+```
+
+### EPP Domain with citizen as a registrant does not create blocked domain  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <create>
+      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+        <domain:name>ftp.ee</domain:name>
+        <domain:period unit="y">1</domain:period>
+        <domain:ns>
+          <domain:hostAttr>
+            <domain:hostName>ns1.example.net</domain:hostName>
+            <domain:hostAddr ip="v4">192.0.2.2</domain:hostAddr>
+            <domain:hostAddr ip="v6">1080:0:0:0:8:800:200C:417A</domain:hostAddr>
+          </domain:hostAttr>
+          <domain:hostAttr>
+            <domain:hostName>ns2.example.net</domain:hostName>
+          </domain:hostAttr>
+        </domain:ns>
+        <domain:registrant>FIXED:CITIZEN_1234</domain:registrant>
+        <domain:contact type="admin">FIXED:SH8013</domain:contact>
+        <domain:contact type="tech">FIXED:SH8013</domain:contact>
+        <domain:contact type="tech">FIXED:SH801333</domain:contact>
+      </domain:create>
+    </create>
+    <extension>
+      <secDNS:create xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1">
+        <secDNS:keyData>
+          <secDNS:flags>257</secDNS:flags>
+          <secDNS:protocol>3</secDNS:protocol>
+          <secDNS:alg>5</secDNS:alg>
+          <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
+        </secDNS:keyData>
+      </secDNS:create>
+      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+        <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="2302">
+      <msg lang="en">Domain name is blocked [name_dirty]</msg>
+      <value>
+        <name>ftp.ee</name>
       </value>
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-3241448329</svTRID>
+      <svTRID>ccReg-0819724563</svTRID>
     </trID>
   </response>
 </epp>
@@ -4460,7 +4723,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example79107476359960104.ee</domain:name>
+        <domain:name>example66869374929851351.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -4503,7 +4766,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-2841149464</svTRID>
+      <svTRID>ccReg-1539701883</svTRID>
     </trID>
   </response>
 </epp>
@@ -4519,7 +4782,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example89212032300871964.ee</domain:name>
+        <domain:name>example46569369919922504.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:registrant>FIXED:CITIZEN_1234</domain:registrant>
         <domain:contact type="admin">FIXED:SH8013</domain:contact>
@@ -4559,7 +4822,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-6780943188</svTRID>
+      <svTRID>ccReg-6017666451</svTRID>
     </trID>
   </response>
 </epp>
@@ -4575,7 +4838,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example83430684429956047.ee</domain:name>
+        <domain:name>example9775945649237234.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -4656,7 +4919,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-2034075719</svTRID>
+      <svTRID>ccReg-2484227692</svTRID>
     </trID>
   </response>
 </epp>
@@ -4672,7 +4935,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example48749833529852102.ee</domain:name>
+        <domain:name>example25543970040464568.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -4726,7 +4989,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-8625622303</svTRID>
+      <svTRID>ccReg-0271766119</svTRID>
     </trID>
   </response>
 </epp>
@@ -4742,7 +5005,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example62530771922904064.ee</domain:name>
+        <domain:name>example83419576189614996.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostObj>ns1.example.ee</domain:hostObj>
@@ -4783,7 +5046,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9223003685</svTRID>
+      <svTRID>ccReg-7801167272</svTRID>
     </trID>
   </response>
 </epp>
@@ -4799,7 +5062,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example57855176106155885.ee</domain:name>
+        <domain:name>example78746795673349410.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -4841,14 +5104,14 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <name>example57855176106155885.ee</name>
-        <crDate>2015-06-16T14:45:49Z</crDate>
-        <exDate>2016-06-16T14:45:49Z</exDate>
+        <name>example78746795673349410.ee</name>
+        <crDate>2015-07-13T08:10:20Z</crDate>
+        <exDate>2016-07-13T08:10:20Z</exDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-3987518347</svTRID>
+      <svTRID>ccReg-7812759820</svTRID>
     </trID>
   </response>
 </epp>
@@ -4864,7 +5127,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example36117415864684846.ee</domain:name>
+        <domain:name>example86459993736024103.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -4915,7 +5178,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-8191386800</svTRID>
+      <svTRID>ccReg-0770361263</svTRID>
     </trID>
   </response>
 </epp>
@@ -4931,8 +5194,8 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example47616294102238590.ee</domain:name>
-        <domain:period unit="y">1</domain:period>
+        <domain:name>example77378499664954502.ee</domain:name>
+        <domain:period unit="d">365</domain:period>
         <domain:ns>
           <domain:hostAttr>
             <domain:hostName>ns1.example.net</domain:hostName>
@@ -4978,14 +5241,154 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <name>example47616294102238590.ee</name>
-        <crDate>2015-06-16T14:45:50Z</crDate>
-        <exDate>2016-06-16T14:45:50Z</exDate>
+        <name>example77378499664954502.ee</name>
+        <crDate>2015-07-13T08:10:22Z</crDate>
+        <exDate>2016-07-13T08:10:22Z</exDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9254659589</svTRID>
+      <svTRID>ccReg-2279305615</svTRID>
+    </trID>
+  </response>
+</epp>
+```
+
+### EPP Domain with citizen as a registrant creates a domain with longer periods  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <create>
+      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+        <domain:name>example91344146443917444.ee</domain:name>
+        <domain:period unit="y">2</domain:period>
+        <domain:ns>
+          <domain:hostAttr>
+            <domain:hostName>ns1.example.net</domain:hostName>
+            <domain:hostAddr ip="v4">192.0.2.2</domain:hostAddr>
+            <domain:hostAddr ip="v6">1080:0:0:0:8:800:200C:417A</domain:hostAddr>
+          </domain:hostAttr>
+          <domain:hostAttr>
+            <domain:hostName>ns2.example.net</domain:hostName>
+          </domain:hostAttr>
+        </domain:ns>
+        <domain:registrant>FIXED:CITIZEN_1234</domain:registrant>
+        <domain:contact type="admin">FIXED:SH8013</domain:contact>
+        <domain:contact type="tech">FIXED:SH8013</domain:contact>
+        <domain:contact type="tech">FIXED:SH801333</domain:contact>
+      </domain:create>
+    </create>
+    <extension>
+      <secDNS:create xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1">
+        <secDNS:keyData>
+          <secDNS:flags>257</secDNS:flags>
+          <secDNS:protocol>3</secDNS:protocol>
+          <secDNS:alg>5</secDNS:alg>
+          <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
+        </secDNS:keyData>
+      </secDNS:create>
+      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+        <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+    <resData>
+      <creData>
+        <name>example91344146443917444.ee</name>
+        <crDate>2015-07-13T08:10:22Z</crDate>
+        <exDate>2017-07-13T08:10:22Z</exDate>
+      </creData>
+    </resData>
+    <trID>
+      <clTRID>ABC-12345</clTRID>
+      <svTRID>ccReg-7948856904</svTRID>
+    </trID>
+  </response>
+</epp>
+```
+
+### EPP Domain with citizen as a registrant creates a domain with longer periods  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <create>
+      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+        <domain:name>example37678434336097153.ee</domain:name>
+        <domain:period unit="m">36</domain:period>
+        <domain:ns>
+          <domain:hostAttr>
+            <domain:hostName>ns1.example.net</domain:hostName>
+            <domain:hostAddr ip="v4">192.0.2.2</domain:hostAddr>
+            <domain:hostAddr ip="v6">1080:0:0:0:8:800:200C:417A</domain:hostAddr>
+          </domain:hostAttr>
+          <domain:hostAttr>
+            <domain:hostName>ns2.example.net</domain:hostName>
+          </domain:hostAttr>
+        </domain:ns>
+        <domain:registrant>FIXED:CITIZEN_1234</domain:registrant>
+        <domain:contact type="admin">FIXED:SH8013</domain:contact>
+        <domain:contact type="tech">FIXED:SH8013</domain:contact>
+        <domain:contact type="tech">FIXED:SH801333</domain:contact>
+      </domain:create>
+    </create>
+    <extension>
+      <secDNS:create xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1">
+        <secDNS:keyData>
+          <secDNS:flags>257</secDNS:flags>
+          <secDNS:protocol>3</secDNS:protocol>
+          <secDNS:alg>5</secDNS:alg>
+          <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
+        </secDNS:keyData>
+      </secDNS:create>
+      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+        <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+    <resData>
+      <creData>
+        <name>example37678434336097153.ee</name>
+        <crDate>2015-07-13T08:10:22Z</crDate>
+        <exDate>2018-07-13T08:10:22Z</exDate>
+      </creData>
+    </resData>
+    <trID>
+      <clTRID>ABC-12345</clTRID>
+      <svTRID>ccReg-0923978415</svTRID>
     </trID>
   </response>
 </epp>
@@ -5001,7 +5404,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example59902259057282424.ee</domain:name>
+        <domain:name>example16191991725339317.ee</domain:name>
         <domain:period unit="d">367</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -5051,7 +5454,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5831577897</svTRID>
+      <svTRID>ccReg-3982837408</svTRID>
     </trID>
   </response>
 </epp>
@@ -5067,7 +5470,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example35799150293426379.ee</domain:name>
+        <domain:name>example40866032952252613.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -5126,14 +5529,14 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <name>example35799150293426379.ee</name>
-        <crDate>2015-06-16T14:45:52Z</crDate>
-        <exDate>2016-06-16T14:45:52Z</exDate>
+        <name>example40866032952252613.ee</name>
+        <crDate>2015-07-13T08:10:23Z</crDate>
+        <exDate>2016-07-13T08:10:23Z</exDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-6805098026</svTRID>
+      <svTRID>ccReg-9573434963</svTRID>
     </trID>
   </response>
 </epp>
@@ -5149,7 +5552,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example77419485730565318.ee</domain:name>
+        <domain:name>example9781392118411734.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -5244,7 +5647,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5499891820</svTRID>
+      <svTRID>ccReg-6068485630</svTRID>
     </trID>
   </response>
 </epp>
@@ -5260,7 +5663,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example62893290773940803.ee</domain:name>
+        <domain:name>example82547809365634736.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -5316,7 +5719,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-1606849858</svTRID>
+      <svTRID>ccReg-6743869283</svTRID>
     </trID>
   </response>
 </epp>
@@ -5332,7 +5735,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example89542634347493363.ee</domain:name>
+        <domain:name>example24299031431104455.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -5385,7 +5788,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0277146354</svTRID>
+      <svTRID>ccReg-4538001040</svTRID>
     </trID>
   </response>
 </epp>
@@ -5401,7 +5804,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example5611622315382730.ee</domain:name>
+        <domain:name>example86624189051768810.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -5448,14 +5851,14 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <name>example5611622315382730.ee</name>
-        <crDate>2015-06-16T14:45:55Z</crDate>
-        <exDate>2016-06-16T14:45:55Z</exDate>
+        <name>example86624189051768810.ee</name>
+        <crDate>2015-07-13T08:10:27Z</crDate>
+        <exDate>2016-07-13T08:10:27Z</exDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-2786067157</svTRID>
+      <svTRID>ccReg-4356869009</svTRID>
     </trID>
   </response>
 </epp>
@@ -5471,7 +5874,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example28205147543381731.ee</domain:name>
+        <domain:name>example70522154515526376.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -5524,14 +5927,14 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <name>example28205147543381731.ee</name>
-        <crDate>2015-06-16T14:45:55Z</crDate>
-        <exDate>2016-06-16T14:45:55Z</exDate>
+        <name>example70522154515526376.ee</name>
+        <crDate>2015-07-13T08:10:27Z</crDate>
+        <exDate>2016-07-13T08:10:27Z</exDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-3180633288</svTRID>
+      <svTRID>ccReg-0834839872</svTRID>
     </trID>
   </response>
 </epp>
@@ -5547,7 +5950,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example81689211125437444.ee</domain:name>
+        <domain:name>example11125999187215251.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -5600,7 +6003,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0596552578</svTRID>
+      <svTRID>ccReg-4189398038</svTRID>
     </trID>
   </response>
 </epp>
@@ -5616,7 +6019,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example16808329279089073.ee</domain:name>
+        <domain:name>example58593539019684182.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -5663,7 +6066,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-3845103907</svTRID>
+      <svTRID>ccReg-1718210348</svTRID>
     </trID>
   </response>
 </epp>
@@ -5679,7 +6082,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example57773978303296424.ee</domain:name>
+        <domain:name>example83982312915963874.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -5732,7 +6135,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0236248171</svTRID>
+      <svTRID>ccReg-2950027969</svTRID>
     </trID>
   </response>
 </epp>
@@ -5748,7 +6151,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example82556663094409029.ee</domain:name>
+        <domain:name>example46238990207964440.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -5793,14 +6196,14 @@ RESPONSE:
     </result>
     <resData>
       <creData>
-        <name>example82556663094409029.ee</name>
-        <crDate>2015-06-16T14:45:59Z</crDate>
-        <exDate>2016-06-16T14:45:59Z</exDate>
+        <name>example46238990207964440.ee</name>
+        <crDate>2015-07-13T08:10:31Z</crDate>
+        <exDate>2016-07-13T08:10:31Z</exDate>
       </creData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-7792326836</svTRID>
+      <svTRID>ccReg-0620001088</svTRID>
     </trID>
   </response>
 </epp>
@@ -5816,7 +6219,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example61224688298392772.ee</domain:name>
+        <domain:name>example88328132023816416.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -5861,7 +6264,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-4835312018</svTRID>
+      <svTRID>ccReg-4854981199</svTRID>
     </trID>
   </response>
 </epp>
@@ -5877,7 +6280,7 @@ REQUEST:
   <command>
     <create>
       <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example2482715006886939.ee</domain:name>
+        <domain:name>example63410537948779137.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
           <domain:hostAttr>
@@ -5925,7 +6328,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0994405489</svTRID>
+      <svTRID>ccReg-1289788540</svTRID>
     </trID>
   </response>
 </epp>
@@ -5973,7 +6376,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9434443874</svTRID>
+      <svTRID>ccReg-9947034870</svTRID>
     </trID>
   </response>
 </epp>
@@ -5985,11 +6388,11 @@ REQUEST:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
-    <transfer op="query">
+    <transfer op="request">
       <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
         <domain:name>domain1.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">cade780e81c248d9e6363fd303b523c3</domain:pw>
+          <domain:pw roid="citizen_1234-REP">a6c1a37f9466f510bc45a6f9b9d0095e</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -6017,15 +6420,15 @@ RESPONSE:
         <name>domain1.ee</name>
         <trStatus>serverApproved</trStatus>
         <reID>REGDOMAIN2</reID>
-        <reDate>2015-06-16T14:46:02Z</reDate>
+        <reDate>2015-07-13T08:10:33Z</reDate>
         <acID>REGDOMAIN1</acID>
-        <acDate>2015-06-16T14:46:02Z</acDate>
-        <exDate>2016-06-16T14:46:02Z</exDate>
+        <acDate>2015-07-13T08:10:33Z</acDate>
+        <exDate>2016-07-13T08:10:33Z</exDate>
       </trnData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-6107518806</svTRID>
+      <svTRID>ccReg-7553127734</svTRID>
     </trID>
   </response>
 </epp>
@@ -6071,7 +6474,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9351177423</svTRID>
+      <svTRID>ccReg-0227567769</svTRID>
     </trID>
   </response>
 </epp>
@@ -6099,23 +6502,23 @@ RESPONSE:
       <msg>Command completed successfully; ack to dequeue</msg>
     </result>
     <msgQ count="1" id="1">
-      <qDate>2015-06-16T14:46:02Z</qDate>
-      <msg>Domain transfer was approved, associated contacts are: ["REGDOMAIN2:2E38C324", "REGDOMAIN2:30A5A03D"]</msg>
+      <qDate>2015-07-13T08:10:33Z</qDate>
+      <msg>Domain transfer was approved, associated contacts were: ["FIXED:SH2458466313", "FIXED:SH6857426112"] and registrant was FIXED:REGISTRANT240360470</msg>
     </msgQ>
     <resData>
       <trnData>
         <name>domain1.ee</name>
         <trStatus>serverApproved</trStatus>
         <reID>REGDOMAIN2</reID>
-        <reDate>2015-06-16T14:46:02Z</reDate>
+        <reDate>2015-07-13T08:10:33Z</reDate>
         <acID>REGDOMAIN1</acID>
-        <acDate>2015-06-16T14:46:02Z</acDate>
-        <exDate>2016-06-16T14:46:02Z</exDate>
+        <acDate>2015-07-13T08:10:33Z</acDate>
+        <exDate>2016-07-13T08:10:33Z</exDate>
       </trnData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5221788468</svTRID>
+      <svTRID>ccReg-5437902047</svTRID>
     </trID>
   </response>
 </epp>
@@ -6127,11 +6530,11 @@ REQUEST:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
-    <transfer op="query">
+    <transfer op="request">
       <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
         <domain:name>domain1.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">e3b00963e2849df1654840a4805b8390</domain:pw>
+          <domain:pw roid="citizen_1234-REP">a79127ff7dc2919c88c697cdfbdf0b08</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -6159,15 +6562,15 @@ RESPONSE:
         <name>domain1.ee</name>
         <trStatus>pending</trStatus>
         <reID>REGDOMAIN1</reID>
-        <reDate>2015-06-16T14:46:02Z</reDate>
+        <reDate>2015-07-13T08:10:34Z</reDate>
         <acID>REGDOMAIN2</acID>
-        <acDate>2015-06-16T15:46:02Z</acDate>
-        <exDate>2016-06-16T14:46:02Z</exDate>
+        <acDate>2015-07-13T09:10:34Z</acDate>
+        <exDate>2016-07-13T08:10:33Z</exDate>
       </trnData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5943956125</svTRID>
+      <svTRID>ccReg-7214241560</svTRID>
     </trID>
   </response>
 </epp>
@@ -6179,11 +6582,11 @@ REQUEST:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
-    <transfer op="query">
+    <transfer op="request">
       <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
         <domain:name>domain1.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">e3b00963e2849df1654840a4805b8390</domain:pw>
+          <domain:pw roid="citizen_1234-REP">a79127ff7dc2919c88c697cdfbdf0b08</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -6211,15 +6614,15 @@ RESPONSE:
         <name>domain1.ee</name>
         <trStatus>pending</trStatus>
         <reID>REGDOMAIN1</reID>
-        <reDate>2015-06-16T14:46:02Z</reDate>
+        <reDate>2015-07-13T08:10:34Z</reDate>
         <acID>REGDOMAIN2</acID>
-        <acDate>2015-06-16T15:46:02Z</acDate>
-        <exDate>2016-06-16T14:46:02Z</exDate>
+        <acDate>2015-07-13T09:10:34Z</acDate>
+        <exDate>2016-07-13T08:10:33Z</exDate>
       </trnData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0973430912</svTRID>
+      <svTRID>ccReg-6123955551</svTRID>
     </trID>
   </response>
 </epp>
@@ -6265,7 +6668,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-7808499308</svTRID>
+      <svTRID>ccReg-6308918955</svTRID>
     </trID>
   </response>
 </epp>
@@ -6293,7 +6696,7 @@ RESPONSE:
       <msg>Command completed successfully; ack to dequeue</msg>
     </result>
     <msgQ count="1" id="2">
-      <qDate>2015-06-16T14:46:02Z</qDate>
+      <qDate>2015-07-13T08:10:34Z</qDate>
       <msg>Transfer requested.</msg>
     </msgQ>
     <resData>
@@ -6301,15 +6704,15 @@ RESPONSE:
         <name>domain1.ee</name>
         <trStatus>pending</trStatus>
         <reID>REGDOMAIN1</reID>
-        <reDate>2015-06-16T14:46:02Z</reDate>
+        <reDate>2015-07-13T08:10:34Z</reDate>
         <acID>REGDOMAIN2</acID>
-        <acDate>2015-06-16T15:46:02Z</acDate>
-        <exDate>2016-06-16T14:46:02Z</exDate>
+        <acDate>2015-07-13T09:10:34Z</acDate>
+        <exDate>2016-07-13T08:10:33Z</exDate>
       </trnData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-7198000795</svTRID>
+      <svTRID>ccReg-9560017151</svTRID>
     </trID>
   </response>
 </epp>
@@ -6355,7 +6758,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-8981002307</svTRID>
+      <svTRID>ccReg-9032834985</svTRID>
     </trID>
   </response>
 </epp>
@@ -6401,7 +6804,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0623446914</svTRID>
+      <svTRID>ccReg-9332036940</svTRID>
     </trID>
   </response>
 </epp>
@@ -6431,7 +6834,7 @@ RESPONSE:
     <msgQ count="0" id="2"/>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-3648943159</svTRID>
+      <svTRID>ccReg-8727580885</svTRID>
     </trID>
   </response>
 </epp>
@@ -6477,7 +6880,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5814325246</svTRID>
+      <svTRID>ccReg-4349221001</svTRID>
     </trID>
   </response>
 </epp>
@@ -6525,7 +6928,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-6044514213</svTRID>
+      <svTRID>ccReg-5525442277</svTRID>
     </trID>
   </response>
 </epp>
@@ -6537,11 +6940,11 @@ REQUEST:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
-    <transfer op="query">
+    <transfer op="request">
       <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
         <domain:name>domain2.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">024bb6c14f1f351ff88bd3bdb24ec907</domain:pw>
+          <domain:pw roid="citizen_1234-REP">55293c4e006ab91a8bb56ad2c3b542e8</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -6569,15 +6972,15 @@ RESPONSE:
         <name>domain2.ee</name>
         <trStatus>pending</trStatus>
         <reID>REGDOMAIN2</reID>
-        <reDate>2015-06-16T14:46:03Z</reDate>
+        <reDate>2015-07-13T08:10:34Z</reDate>
         <acID>REGDOMAIN1</acID>
-        <acDate>2015-06-16T15:46:03Z</acDate>
-        <exDate>2016-06-16T14:46:03Z</exDate>
+        <acDate>2015-07-13T09:10:34Z</acDate>
+        <exDate>2016-07-13T08:10:34Z</exDate>
       </trnData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-6223906445</svTRID>
+      <svTRID>ccReg-3032166853</svTRID>
     </trID>
   </response>
 </epp>
@@ -6623,7 +7026,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-8746149187</svTRID>
+      <svTRID>ccReg-0266707351</svTRID>
     </trID>
   </response>
 </epp>
@@ -6669,7 +7072,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-7756736893</svTRID>
+      <svTRID>ccReg-9904220818</svTRID>
     </trID>
   </response>
 </epp>
@@ -6681,11 +7084,11 @@ REQUEST:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
-    <transfer op="query">
+    <transfer op="request">
       <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
         <domain:name>domain2.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">024bb6c14f1f351ff88bd3bdb24ec907</domain:pw>
+          <domain:pw roid="citizen_1234-REP">55293c4e006ab91a8bb56ad2c3b542e8</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -6713,15 +7116,15 @@ RESPONSE:
         <name>domain2.ee</name>
         <trStatus>pending</trStatus>
         <reID>REGDOMAIN2</reID>
-        <reDate>2015-06-16T14:46:03Z</reDate>
+        <reDate>2015-07-13T08:10:34Z</reDate>
         <acID>REGDOMAIN1</acID>
-        <acDate>2015-06-16T15:46:03Z</acDate>
-        <exDate>2016-06-16T14:46:03Z</exDate>
+        <acDate>2015-07-13T09:10:34Z</acDate>
+        <exDate>2016-07-13T08:10:34Z</exDate>
       </trnData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-8545188045</svTRID>
+      <svTRID>ccReg-4891125991</svTRID>
     </trID>
   </response>
 </epp>
@@ -6767,7 +7170,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-2241555669</svTRID>
+      <svTRID>ccReg-6334747073</svTRID>
     </trID>
   </response>
 </epp>
@@ -6815,7 +7218,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-8460295410</svTRID>
+      <svTRID>ccReg-8881009763</svTRID>
     </trID>
   </response>
 </epp>
@@ -6827,11 +7230,11 @@ REQUEST:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
-    <transfer op="query">
+    <transfer op="request">
       <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
         <domain:name>domain3.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">836af4fd51fcd5712120b17fe2fa2bb3</domain:pw>
+          <domain:pw roid="citizen_1234-REP">0eb7555f7484fec80ed502a2b3ba5be9</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -6854,15 +7257,15 @@ RESPONSE:
         <name>domain3.ee</name>
         <trStatus>serverApproved</trStatus>
         <reID>REGDOMAIN2</reID>
-        <reDate>2015-06-16T14:46:03Z</reDate>
+        <reDate>2015-07-13T08:10:35Z</reDate>
         <acID>REGDOMAIN1</acID>
-        <acDate>2015-06-16T14:46:03Z</acDate>
-        <exDate>2016-06-16T14:46:03Z</exDate>
+        <acDate>2015-07-13T08:10:35Z</acDate>
+        <exDate>2016-07-13T08:10:35Z</exDate>
       </trnData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-8076619398</svTRID>
+      <svTRID>ccReg-0400376668</svTRID>
     </trID>
   </response>
 </epp>
@@ -6908,7 +7311,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-8851768239</svTRID>
+      <svTRID>ccReg-0112443198</svTRID>
     </trID>
   </response>
 </epp>
@@ -6956,7 +7359,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9101345679</svTRID>
+      <svTRID>ccReg-9031704497</svTRID>
     </trID>
   </response>
 </epp>
@@ -6968,11 +7371,11 @@ REQUEST:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
-    <transfer op="query">
+    <transfer op="request">
       <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
         <domain:name>domain4.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">c4191d5991d76be69de4c89c7d6332c6</domain:pw>
+          <domain:pw roid="citizen_1234-REP">04edcd706724ed5d0de9642788995eee</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -6995,15 +7398,15 @@ RESPONSE:
         <name>domain4.ee</name>
         <trStatus>serverApproved</trStatus>
         <reID>REGDOMAIN2</reID>
-        <reDate>2015-06-16T14:46:04Z</reDate>
+        <reDate>2015-07-13T08:10:35Z</reDate>
         <acID>REGDOMAIN1</acID>
-        <acDate>2015-06-16T14:46:04Z</acDate>
-        <exDate>2016-06-16T14:46:04Z</exDate>
+        <acDate>2015-07-13T08:10:35Z</acDate>
+        <exDate>2016-07-13T08:10:35Z</exDate>
       </trnData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-1271904293</svTRID>
+      <svTRID>ccReg-8391034505</svTRID>
     </trID>
   </response>
 </epp>
@@ -7049,7 +7452,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-3137087761</svTRID>
+      <svTRID>ccReg-7638487821</svTRID>
     </trID>
   </response>
 </epp>
@@ -7097,7 +7500,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-7273165678</svTRID>
+      <svTRID>ccReg-4526950665</svTRID>
     </trID>
   </response>
 </epp>
@@ -7109,11 +7512,11 @@ REQUEST:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
-    <transfer op="query">
+    <transfer op="request">
       <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
         <domain:name>domain5.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">cb2a7321b5cbbbb3dde7a6810c9ed13f</domain:pw>
+          <domain:pw roid="citizen_1234-REP">9d0219c5b0c128c86608c85c44f11e55</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -7136,15 +7539,15 @@ RESPONSE:
         <name>domain5.ee</name>
         <trStatus>serverApproved</trStatus>
         <reID>REGDOMAIN2</reID>
-        <reDate>2015-06-16T14:46:04Z</reDate>
+        <reDate>2015-07-13T08:10:36Z</reDate>
         <acID>REGDOMAIN1</acID>
-        <acDate>2015-06-16T14:46:04Z</acDate>
-        <exDate>2016-06-16T14:46:04Z</exDate>
+        <acDate>2015-07-13T08:10:36Z</acDate>
+        <exDate>2016-07-13T08:10:36Z</exDate>
       </trnData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-6138246266</svTRID>
+      <svTRID>ccReg-5537786370</svTRID>
     </trID>
   </response>
 </epp>
@@ -7190,7 +7593,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0594521940</svTRID>
+      <svTRID>ccReg-8635372653</svTRID>
     </trID>
   </response>
 </epp>
@@ -7238,7 +7641,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-3903547157</svTRID>
+      <svTRID>ccReg-2387752429</svTRID>
     </trID>
   </response>
 </epp>
@@ -7250,11 +7653,11 @@ REQUEST:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
-    <transfer op="query">
+    <transfer op="request">
       <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
         <domain:name>domain8.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">8ad5a1e3f0f5cfd3ac927eacd377d748</domain:pw>
+          <domain:pw roid="citizen_1234-REP">97a9ceb244b35347929aa1561ead4c8b</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -7277,15 +7680,15 @@ RESPONSE:
         <name>domain8.ee</name>
         <trStatus>serverApproved</trStatus>
         <reID>REGDOMAIN2</reID>
-        <reDate>2015-06-16T14:46:05Z</reDate>
+        <reDate>2015-07-13T08:10:36Z</reDate>
         <acID>REGDOMAIN1</acID>
-        <acDate>2015-06-16T14:46:05Z</acDate>
-        <exDate>2016-06-16T14:46:05Z</exDate>
+        <acDate>2015-07-13T08:10:36Z</acDate>
+        <exDate>2016-07-13T08:10:36Z</exDate>
       </trnData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-6422274553</svTRID>
+      <svTRID>ccReg-0632987427</svTRID>
     </trID>
   </response>
 </epp>
@@ -7331,7 +7734,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-8513849853</svTRID>
+      <svTRID>ccReg-9801073653</svTRID>
     </trID>
   </response>
 </epp>
@@ -7379,7 +7782,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0495664550</svTRID>
+      <svTRID>ccReg-5308734025</svTRID>
     </trID>
   </response>
 </epp>
@@ -7391,11 +7794,11 @@ REQUEST:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
-    <transfer op="query">
+    <transfer op="request">
       <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
         <domain:name>domain9.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">ae0e9f8ad42aa43f5421e7825576d49b</domain:pw>
+          <domain:pw roid="citizen_1234-REP">5a41b6437a25e0d9411403c06c18f33c</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -7418,15 +7821,15 @@ RESPONSE:
         <name>domain9.ee</name>
         <trStatus>serverApproved</trStatus>
         <reID>REGDOMAIN2</reID>
-        <reDate>2015-06-16T14:46:05Z</reDate>
+        <reDate>2015-07-13T08:10:37Z</reDate>
         <acID>REGDOMAIN1</acID>
-        <acDate>2015-06-16T14:46:05Z</acDate>
-        <exDate>2016-06-16T14:46:05Z</exDate>
+        <acDate>2015-07-13T08:10:37Z</acDate>
+        <exDate>2016-07-13T08:10:37Z</exDate>
       </trnData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-8327056615</svTRID>
+      <svTRID>ccReg-1676191553</svTRID>
     </trID>
   </response>
 </epp>
@@ -7472,7 +7875,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-4617980059</svTRID>
+      <svTRID>ccReg-3121793274</svTRID>
     </trID>
   </response>
 </epp>
@@ -7520,7 +7923,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-2829504560</svTRID>
+      <svTRID>ccReg-7602205334</svTRID>
     </trID>
   </response>
 </epp>
@@ -7532,11 +7935,11 @@ REQUEST:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
-    <transfer op="query">
+    <transfer op="request">
       <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
         <domain:name>domain11.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">15fd8747240b3b76d7d629fdfb9933c2</domain:pw>
+          <domain:pw roid="citizen_1234-REP">6a9bfed8e96b212f1de718bd4979b39a</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -7559,15 +7962,15 @@ RESPONSE:
         <name>domain11.ee</name>
         <trStatus>serverApproved</trStatus>
         <reID>REGDOMAIN2</reID>
-        <reDate>2015-06-16T14:46:06Z</reDate>
+        <reDate>2015-07-13T08:10:37Z</reDate>
         <acID>REGDOMAIN1</acID>
-        <acDate>2015-06-16T14:46:06Z</acDate>
-        <exDate>2016-06-16T14:46:06Z</exDate>
+        <acDate>2015-07-13T08:10:37Z</acDate>
+        <exDate>2016-07-13T08:10:37Z</exDate>
       </trnData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-4652082139</svTRID>
+      <svTRID>ccReg-7258212831</svTRID>
     </trID>
   </response>
 </epp>
@@ -7613,7 +8016,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-7682673588</svTRID>
+      <svTRID>ccReg-1615959934</svTRID>
     </trID>
   </response>
 </epp>
@@ -7661,7 +8064,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-2956836704</svTRID>
+      <svTRID>ccReg-4400024318</svTRID>
     </trID>
   </response>
 </epp>
@@ -7673,11 +8076,11 @@ REQUEST:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
-    <transfer op="query">
+    <transfer op="request">
       <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
         <domain:name>domain14.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">99528c913bd395947f46b320c600851e</domain:pw>
+          <domain:pw roid="citizen_1234-REP">5d5ba19df5b5411f99236a493ef22a5c</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -7700,15 +8103,15 @@ RESPONSE:
         <name>domain14.ee</name>
         <trStatus>serverApproved</trStatus>
         <reID>REGDOMAIN2</reID>
-        <reDate>2015-06-16T14:46:07Z</reDate>
+        <reDate>2015-07-13T08:10:38Z</reDate>
         <acID>REGDOMAIN1</acID>
-        <acDate>2015-06-16T14:46:07Z</acDate>
-        <exDate>2016-06-16T14:46:06Z</exDate>
+        <acDate>2015-07-13T08:10:38Z</acDate>
+        <exDate>2016-07-13T08:10:38Z</exDate>
       </trnData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-2561775032</svTRID>
+      <svTRID>ccReg-9169504885</svTRID>
     </trID>
   </response>
 </epp>
@@ -7754,7 +8157,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-8704236801</svTRID>
+      <svTRID>ccReg-8687650026</svTRID>
     </trID>
   </response>
 </epp>
@@ -7802,7 +8205,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5989893103</svTRID>
+      <svTRID>ccReg-8275992139</svTRID>
     </trID>
   </response>
 </epp>
@@ -7814,11 +8217,11 @@ REQUEST:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
-    <transfer op="query">
+    <transfer op="request">
       <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
         <domain:name>domain15.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">ced325e25352a6d3ae454729c5a5f133</domain:pw>
+          <domain:pw roid="citizen_1234-REP">0a63b7c0a6d070aba600c1233b74780e</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -7841,15 +8244,15 @@ RESPONSE:
         <name>domain15.ee</name>
         <trStatus>serverApproved</trStatus>
         <reID>REGDOMAIN2</reID>
-        <reDate>2015-06-16T14:46:07Z</reDate>
+        <reDate>2015-07-13T08:10:39Z</reDate>
         <acID>REGDOMAIN1</acID>
-        <acDate>2015-06-16T14:46:07Z</acDate>
-        <exDate>2016-06-16T14:46:07Z</exDate>
+        <acDate>2015-07-13T08:10:39Z</acDate>
+        <exDate>2016-07-13T08:10:38Z</exDate>
       </trnData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-3303397389</svTRID>
+      <svTRID>ccReg-7177786070</svTRID>
     </trID>
   </response>
 </epp>
@@ -7895,7 +8298,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-3498869771</svTRID>
+      <svTRID>ccReg-9291043231</svTRID>
     </trID>
   </response>
 </epp>
@@ -7943,7 +8346,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-3004185742</svTRID>
+      <svTRID>ccReg-1485507026</svTRID>
     </trID>
   </response>
 </epp>
@@ -7955,7 +8358,7 @@ REQUEST:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
-    <transfer op="query">
+    <transfer op="request">
       <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
         <domain:name>domain16.ee</domain:name>
         <domain:authInfo>
@@ -7979,7 +8382,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0738799544</svTRID>
+      <svTRID>ccReg-0431836855</svTRID>
     </trID>
   </response>
 </epp>
@@ -8025,7 +8428,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9100482752</svTRID>
+      <svTRID>ccReg-4670728995</svTRID>
     </trID>
   </response>
 </epp>
@@ -8043,7 +8446,7 @@ REQUEST:
       <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
         <domain:name>domain17.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">d5649c7d29cea682a55405451a7b3e9f</domain:pw>
+          <domain:pw roid="citizen_1234-REP">78a5ec49ace3acba7d9f00f07b42843b</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -8071,15 +8474,15 @@ RESPONSE:
         <name>domain17.ee</name>
         <trStatus>clientApproved</trStatus>
         <reID>REGDOMAIN2</reID>
-        <reDate>2015-06-16T14:46:08Z</reDate>
+        <reDate>2015-07-13T08:10:39Z</reDate>
         <acID>REGDOMAIN1</acID>
-        <acDate>2015-06-16T14:46:08Z</acDate>
-        <exDate>2016-06-16T14:46:08Z</exDate>
+        <acDate>2015-07-13T08:10:39Z</acDate>
+        <exDate>2016-07-13T08:10:39Z</exDate>
       </trnData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5630988802</svTRID>
+      <svTRID>ccReg-7636473741</svTRID>
     </trID>
   </response>
 </epp>
@@ -8127,7 +8530,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-1163667761</svTRID>
+      <svTRID>ccReg-6002706539</svTRID>
     </trID>
   </response>
 </epp>
@@ -8143,7 +8546,7 @@ REQUEST:
       <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
         <domain:name>domain18.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">fe3d5081d9fa1723fec7ca2d3d197651</domain:pw>
+          <domain:pw roid="citizen_1234-REP">36db07e5d50c74825a890736522b8ff5</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -8168,7 +8571,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-6697616444</svTRID>
+      <svTRID>ccReg-8962204090</svTRID>
     </trID>
   </response>
 </epp>
@@ -8214,7 +8617,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-2557365838</svTRID>
+      <svTRID>ccReg-4895590684</svTRID>
     </trID>
   </response>
 </epp>
@@ -8230,7 +8633,7 @@ REQUEST:
       <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
         <domain:name>domain18.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">fe3d5081d9fa1723fec7ca2d3d197651</domain:pw>
+          <domain:pw roid="citizen_1234-REP">36db07e5d50c74825a890736522b8ff5</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -8258,15 +8661,15 @@ RESPONSE:
         <name>domain18.ee</name>
         <trStatus>clientRejected</trStatus>
         <reID>REGDOMAIN2</reID>
-        <reDate>2015-06-16T14:46:08Z</reDate>
+        <reDate>2015-07-13T08:10:39Z</reDate>
         <acID>REGDOMAIN1</acID>
-        <acDate>2015-06-16T14:46:08Z</acDate>
-        <exDate>2016-06-16T14:46:08Z</exDate>
+        <acDate>2015-07-13T08:10:39Z</acDate>
+        <exDate>2016-07-13T08:10:39Z</exDate>
       </trnData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9330091112</svTRID>
+      <svTRID>ccReg-2744955362</svTRID>
     </trID>
   </response>
 </epp>
@@ -8314,7 +8717,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-4172750491</svTRID>
+      <svTRID>ccReg-6291768376</svTRID>
     </trID>
   </response>
 </epp>
@@ -8330,7 +8733,7 @@ REQUEST:
       <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
         <domain:name>domain19.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">0220447ad7d651fac0dace38a5bcb106</domain:pw>
+          <domain:pw roid="citizen_1234-REP">ab440e4d641fdb8309ee06212014f08c</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -8355,7 +8758,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-8617259540</svTRID>
+      <svTRID>ccReg-1456367772</svTRID>
     </trID>
   </response>
 </epp>
@@ -8401,7 +8804,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-7168292306</svTRID>
+      <svTRID>ccReg-3133112737</svTRID>
     </trID>
   </response>
 </epp>
@@ -8415,7 +8818,7 @@ REQUEST:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
-    <transfer op="query">
+    <transfer op="request">
       <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
         <domain:name>domain20.ee</domain:name>
         <domain:authInfo>
@@ -8444,13 +8847,13 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5705380145</svTRID>
+      <svTRID>ccReg-9979904031</svTRID>
     </trID>
   </response>
 </epp>
 ```
 
-### EPP Domain with valid domain ignores transfer wha registrant registrar requests transfer  
+### EPP Domain with valid domain ignores transfer when domain already belongs to registrar  
 
 REQUEST:
 
@@ -8458,11 +8861,11 @@ REQUEST:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
-    <transfer op="query">
+    <transfer op="request">
       <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
         <domain:name>domain21.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">e736e5af0a5e47d84be0a8211eb1e97a</domain:pw>
+          <domain:pw roid="citizen_1234-REP">fec6806502193b6797015e58f6720cd6</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -8487,7 +8890,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0353546410</svTRID>
+      <svTRID>ccReg-8875125353</svTRID>
     </trID>
   </response>
 </epp>
@@ -8503,7 +8906,7 @@ REQUEST:
   <command>
     <transfer op="bla">
       <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>example98439991603054778.ee</domain:name>
+        <domain:name>example59798550307607834.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">98oiewslkfkd</domain:pw>
         </domain:authInfo>
@@ -8520,12 +8923,12 @@ RESPONSE:
 <?xml version="1.0" encoding="UTF-8"?>
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
-    <result code="2306">
-      <msg lang="en">Attribute is invalid: op</msg>
+    <result code="2004">
+      <msg lang="en">Parameter value range error: op</msg>
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-6980066531</svTRID>
+      <svTRID>ccReg-7685901733</svTRID>
     </trID>
   </response>
 </epp>
@@ -8573,7 +8976,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-6843014672</svTRID>
+      <svTRID>ccReg-5540138016</svTRID>
     </trID>
   </response>
 </epp>
@@ -8585,11 +8988,11 @@ REQUEST:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
-    <transfer op="query">
+    <transfer op="request">
       <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
         <domain:name>domain22.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">008c062889e1dc19127c0636278263f4</domain:pw>
+          <domain:pw roid="citizen_1234-REP">5c974420af9eaed0828c12290a1982ad</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -8617,15 +9020,15 @@ RESPONSE:
         <name>domain22.ee</name>
         <trStatus>serverApproved</trStatus>
         <reID>REGDOMAIN2</reID>
-        <reDate>2015-06-16T14:46:13Z</reDate>
+        <reDate>2015-07-13T08:10:44Z</reDate>
         <acID>REGDOMAIN1</acID>
-        <acDate>2015-06-16T14:46:13Z</acDate>
-        <exDate>2016-06-16T14:46:13Z</exDate>
+        <acDate>2015-07-13T08:10:44Z</acDate>
+        <exDate>2016-07-13T08:10:44Z</exDate>
       </trnData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-8542599190</svTRID>
+      <svTRID>ccReg-4135314212</svTRID>
     </trID>
   </response>
 </epp>
@@ -8637,11 +9040,11 @@ REQUEST:
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
-    <transfer op="query">
+    <transfer op="request">
       <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
         <domain:name>domain22.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">008c062889e1dc19127c0636278263f4</domain:pw>
+          <domain:pw roid="citizen_1234-REP">5c974420af9eaed0828c12290a1982ad</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -8666,7 +9069,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0772545533</svTRID>
+      <svTRID>ccReg-9874991967</svTRID>
     </trID>
   </response>
 </epp>
@@ -8712,7 +9115,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0922916710</svTRID>
+      <svTRID>ccReg-5290054570</svTRID>
     </trID>
   </response>
 </epp>
@@ -8730,7 +9133,7 @@ REQUEST:
       <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
         <domain:name>domain23.ee</domain:name>
         <domain:authInfo>
-          <domain:pw roid="citizen_1234-REP">8b267970556e6d4f52ac0e8cd5ec0533</domain:pw>
+          <domain:pw roid="citizen_1234-REP">f147990f98219469538d22370f6678db</domain:pw>
         </domain:authInfo>
       </domain:transfer>
     </transfer>
@@ -8751,11 +9154,341 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2303">
-      <msg lang="en">Pending transfer was not found</msg>
+      <msg lang="en">No transfers found</msg>
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0757072773</svTRID>
+      <svTRID>ccReg-5805802380</svTRID>
+    </trID>
+  </response>
+</epp>
+```
+
+### EPP Domain with valid domain should not return transfers when there are none  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <transfer op="query">
+      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+        <domain:name>domain24.ee</domain:name>
+        <domain:authInfo>
+          <domain:pw roid="citizen_1234-REP">b37a01669b03f47168dc04d231f58e10</domain:pw>
+        </domain:authInfo>
+      </domain:transfer>
+    </transfer>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="2303">
+      <msg lang="en">No transfers found</msg>
+    </result>
+    <trID>
+      <clTRID>ABC-12345</clTRID>
+      <svTRID>ccReg-3524664626</svTRID>
+    </trID>
+  </response>
+</epp>
+```
+
+### EPP Domain with valid domain should allow querying domain transfer  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <login>
+      <clID>registrar2</clID>
+      <pw>ghyt9e4fu</pw>
+      <options>
+        <version>1.0</version>
+        <lang>en</lang>
+      </options>
+      <svcs>
+        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
+        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
+        <svcExtension>
+          <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
+          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+        </svcExtension>
+      </svcs>
+    </login>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+    <trID>
+      <clTRID>ABC-12345</clTRID>
+      <svTRID>ccReg-5541426382</svTRID>
+    </trID>
+  </response>
+</epp>
+```
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <transfer op="request">
+      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+        <domain:name>domain25.ee</domain:name>
+        <domain:authInfo>
+          <domain:pw roid="citizen_1234-REP">51ae1a97a223f79283c466efa66d9f29</domain:pw>
+        </domain:authInfo>
+      </domain:transfer>
+    </transfer>
+    <extension>
+      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+        <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+    <resData>
+      <trnData>
+        <name>domain25.ee</name>
+        <trStatus>pending</trStatus>
+        <reID>REGDOMAIN2</reID>
+        <reDate>2015-07-13T08:10:47Z</reDate>
+        <acID>REGDOMAIN1</acID>
+        <acDate>2015-07-13T09:10:47Z</acDate>
+        <exDate>2016-07-13T08:10:47Z</exDate>
+      </trnData>
+    </resData>
+    <trID>
+      <clTRID>ABC-12345</clTRID>
+      <svTRID>ccReg-7762900615</svTRID>
+    </trID>
+  </response>
+</epp>
+```
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <transfer op="query">
+      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+        <domain:name>domain25.ee</domain:name>
+        <domain:authInfo>
+          <domain:pw roid="citizen_1234-REP">51ae1a97a223f79283c466efa66d9f29</domain:pw>
+        </domain:authInfo>
+      </domain:transfer>
+    </transfer>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+    <resData>
+      <trnData>
+        <name>domain25.ee</name>
+        <trStatus>pending</trStatus>
+        <reID>REGDOMAIN2</reID>
+        <reDate>2015-07-13T08:10:47Z</reDate>
+        <acID>REGDOMAIN1</acID>
+        <acDate>2015-07-13T09:10:47Z</acDate>
+        <exDate>2016-07-13T08:10:47Z</exDate>
+      </trnData>
+    </resData>
+    <trID>
+      <clTRID>ABC-12345</clTRID>
+      <svTRID>ccReg-6766932145</svTRID>
+    </trID>
+  </response>
+</epp>
+```
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <login>
+      <clID>registrar1</clID>
+      <pw>ghyt9e4fu</pw>
+      <options>
+        <version>1.0</version>
+        <lang>en</lang>
+      </options>
+      <svcs>
+        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
+        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
+        <svcExtension>
+          <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
+          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+        </svcExtension>
+      </svcs>
+    </login>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+    <trID>
+      <clTRID>ABC-12345</clTRID>
+      <svTRID>ccReg-6659036116</svTRID>
+    </trID>
+  </response>
+</epp>
+```
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <transfer op="approve">
+      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+        <domain:name>domain25.ee</domain:name>
+        <domain:authInfo>
+          <domain:pw roid="citizen_1234-REP">51ae1a97a223f79283c466efa66d9f29</domain:pw>
+        </domain:authInfo>
+      </domain:transfer>
+    </transfer>
+    <extension>
+      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+        <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+    <resData>
+      <trnData>
+        <name>domain25.ee</name>
+        <trStatus>clientApproved</trStatus>
+        <reID>REGDOMAIN2</reID>
+        <reDate>2015-07-13T08:10:47Z</reDate>
+        <acID>REGDOMAIN1</acID>
+        <acDate>2015-07-13T08:10:48Z</acDate>
+        <exDate>2016-07-13T08:10:47Z</exDate>
+      </trnData>
+    </resData>
+    <trID>
+      <clTRID>ABC-12345</clTRID>
+      <svTRID>ccReg-0997071800</svTRID>
+    </trID>
+  </response>
+</epp>
+```
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <transfer op="query">
+      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+        <domain:name>domain25.ee</domain:name>
+        <domain:authInfo>
+          <domain:pw roid="citizen_1234-REP">2b13bca2ffba6d50141100fd2a6d2cfb</domain:pw>
+        </domain:authInfo>
+      </domain:transfer>
+    </transfer>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+    <resData>
+      <trnData>
+        <name>domain25.ee</name>
+        <trStatus>clientApproved</trStatus>
+        <reID>REGDOMAIN2</reID>
+        <reDate>2015-07-13T08:10:47Z</reDate>
+        <acID>REGDOMAIN1</acID>
+        <acDate>2015-07-13T08:10:48Z</acDate>
+        <exDate>2016-07-13T08:10:47Z</exDate>
+      </trnData>
+    </resData>
+    <trID>
+      <clTRID>ABC-12345</clTRID>
+      <svTRID>ccReg-0170230306</svTRID>
     </trID>
   </response>
 </epp>
@@ -8771,7 +9504,7 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain24.ee</domain:name>
+        <domain:name>domain26.ee</domain:name>
         <domain:chg>
           <domain:registrant verified="yes">FIXED:CITIZEN_1234</domain:registrant>
         </domain:chg>
@@ -8799,114 +9532,13 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-1524969701</svTRID>
+      <svTRID>ccReg-4927090089</svTRID>
     </trID>
   </response>
 </epp>
 ```
 
 ### EPP Domain with valid domain updates a domain  
-
-REQUEST:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
-  <command>
-    <update>
-      <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain25.ee</domain:name>
-        <domain:chg>
-          <domain:registrant>FIXED:CITIZEN_1234</domain:registrant>
-        </domain:chg>
-      </domain:update>
-    </update>
-    <extension>
-      <secDNS:update xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1"/>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
-        <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
-      </eis:extdata>
-    </extension>
-    <clTRID>ABC-12345</clTRID>
-  </command>
-</epp>
-```
-
-RESPONSE:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
-  <response>
-    <result code="1001">
-      <msg>Command completed successfully; action pending</msg>
-    </result>
-    <trID>
-      <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-7160661951</svTRID>
-    </trID>
-  </response>
-</epp>
-```
-
-### EPP Domain with valid domain should not return action pending when changes are invalid  
-
-REQUEST:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
-  <command>
-    <update>
-      <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain26.ee</domain:name>
-        <domain:rem>
-          <domain:ns>
-            <domain:hostAttr>
-              <domain:hostName>ns.morissette80.ee</domain:hostName>
-            </domain:hostAttr>
-            <domain:hostAttr>
-              <domain:hostName>ns.turnerwuckert79.ee</domain:hostName>
-            </domain:hostAttr>
-            <domain:hostAttr>
-              <domain:hostName>ns.shanahan78.ee</domain:hostName>
-            </domain:hostAttr>
-          </domain:ns>
-        </domain:rem>
-        <domain:chg>
-          <domain:registrant>FIXED:CITIZEN_1234</domain:registrant>
-        </domain:chg>
-      </domain:update>
-    </update>
-    <extension>
-      <secDNS:update xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1"/>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
-        <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
-      </eis:extdata>
-    </extension>
-    <clTRID>ABC-12345</clTRID>
-  </command>
-</epp>
-```
-
-RESPONSE:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
-  <response>
-    <result code="2004">
-      <msg lang="en">Nameservers count must be between 2-11 [nameservers]</msg>
-    </result>
-    <trID>
-      <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5838624706</svTRID>
-    </trID>
-  </response>
-</epp>
-```
-
-### EPP Domain with valid domain should not return action pending when domain itself is already invaid  
 
 REQUEST:
 
@@ -8939,12 +9571,113 @@ RESPONSE:
 <?xml version="1.0" encoding="UTF-8"?>
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
+    <result code="1001">
+      <msg>Command completed successfully; action pending</msg>
+    </result>
+    <trID>
+      <clTRID>ABC-12345</clTRID>
+      <svTRID>ccReg-5939193255</svTRID>
+    </trID>
+  </response>
+</epp>
+```
+
+### EPP Domain with valid domain should not return action pending when changes are invalid  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <update>
+      <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+        <domain:name>domain28.ee</domain:name>
+        <domain:rem>
+          <domain:ns>
+            <domain:hostAttr>
+              <domain:hostName>ns.lowe86.ee</domain:hostName>
+            </domain:hostAttr>
+            <domain:hostAttr>
+              <domain:hostName>ns.von85.ee</domain:hostName>
+            </domain:hostAttr>
+            <domain:hostAttr>
+              <domain:hostName>ns.mayert84.ee</domain:hostName>
+            </domain:hostAttr>
+          </domain:ns>
+        </domain:rem>
+        <domain:chg>
+          <domain:registrant>FIXED:CITIZEN_1234</domain:registrant>
+        </domain:chg>
+      </domain:update>
+    </update>
+    <extension>
+      <secDNS:update xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1"/>
+      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+        <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
     <result code="2004">
       <msg lang="en">Nameservers count must be between 2-11 [nameservers]</msg>
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5253637768</svTRID>
+      <svTRID>ccReg-1902697655</svTRID>
+    </trID>
+  </response>
+</epp>
+```
+
+### EPP Domain with valid domain should not return action pending when domain itself is already invaid  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <update>
+      <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+        <domain:name>domain29.ee</domain:name>
+        <domain:chg>
+          <domain:registrant>FIXED:CITIZEN_1234</domain:registrant>
+        </domain:chg>
+      </domain:update>
+    </update>
+    <extension>
+      <secDNS:update xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1"/>
+      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+        <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="2004">
+      <msg lang="en">Nameservers count must be between 2-11 [nameservers]</msg>
+    </result>
+    <trID>
+      <clTRID>ABC-12345</clTRID>
+      <svTRID>ccReg-3416538565</svTRID>
     </trID>
   </response>
 </epp>
@@ -8960,7 +9693,7 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain28.ee</domain:name>
+        <domain:name>domain30.ee</domain:name>
         <domain:chg>
           <domain:registrant>FIXED:CITIZEN_1234</domain:registrant>
         </domain:chg>
@@ -8988,7 +9721,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-6353980879</svTRID>
+      <svTRID>ccReg-8628956364</svTRID>
     </trID>
   </response>
 </epp>
@@ -9004,7 +9737,7 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain29.ee</domain:name>
+        <domain:name>domain31.ee</domain:name>
         <domain:add>
           <domain:ns>
             <domain:hostAttr>
@@ -9057,7 +9790,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9385991613</svTRID>
+      <svTRID>ccReg-1167119793</svTRID>
     </trID>
   </response>
 </epp>
@@ -9071,7 +9804,7 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain29.ee</domain:name>
+        <domain:name>domain31.ee</domain:name>
         <domain:add>
           <domain:ns>
             <domain:hostAttr>
@@ -9121,7 +9854,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5743092443</svTRID>
+      <svTRID>ccReg-2401442001</svTRID>
     </trID>
   </response>
 </epp>
@@ -9135,7 +9868,7 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain29.ee</domain:name>
+        <domain:name>domain31.ee</domain:name>
         <domain:add>
           <domain:ns>
             <domain:hostAttr>
@@ -9212,7 +9945,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-8404006394</svTRID>
+      <svTRID>ccReg-3219643667</svTRID>
     </trID>
   </response>
 </epp>
@@ -9228,7 +9961,7 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain30.ee</domain:name>
+        <domain:name>domain32.ee</domain:name>
         <domain:add>
           <domain:ns>
             <domain:hostAttr>
@@ -9287,7 +10020,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-4710508132</svTRID>
+      <svTRID>ccReg-9234642721</svTRID>
     </trID>
   </response>
 </epp>
@@ -9301,7 +10034,7 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain30.ee</domain:name>
+        <domain:name>domain32.ee</domain:name>
         <domain:add>
           <domain:ns>
             <domain:hostAttr>
@@ -9357,7 +10090,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0418760365</svTRID>
+      <svTRID>ccReg-1807566212</svTRID>
     </trID>
   </response>
 </epp>
@@ -9373,7 +10106,7 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain31.ee</domain:name>
+        <domain:name>domain33.ee</domain:name>
         <domain:add>
           <domain:status s="clientHold" lang="en">Payment overdue.</domain:status>
           <domain:status s="clientUpdateProhibited"/>
@@ -9396,7 +10129,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-6393659962</svTRID>
+      <svTRID>ccReg-7613379343</svTRID>
     </trID>
   </response>
 </epp>
@@ -9412,7 +10145,7 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain32.ee</domain:name>
+        <domain:name>domain34.ee</domain:name>
         <domain:add>
           <domain:ns>
             <domain:hostAttr>
@@ -9462,7 +10195,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5765767170</svTRID>
+      <svTRID>ccReg-3729650879</svTRID>
     </trID>
   </response>
 </epp>
@@ -9476,7 +10209,7 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain32.ee</domain:name>
+        <domain:name>domain34.ee</domain:name>
         <domain:rem>
           <domain:ns>
             <domain:hostAttr>
@@ -9516,7 +10249,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-7916696039</svTRID>
+      <svTRID>ccReg-6699726145</svTRID>
     </trID>
   </response>
 </epp>
@@ -9530,7 +10263,7 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain32.ee</domain:name>
+        <domain:name>domain34.ee</domain:name>
         <domain:rem>
           <domain:ns>
             <domain:hostAttr>
@@ -9591,7 +10324,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-6312761543</svTRID>
+      <svTRID>ccReg-8491953228</svTRID>
     </trID>
   </response>
 </epp>
@@ -9607,7 +10340,7 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain33.ee</domain:name>
+        <domain:name>domain35.ee</domain:name>
         <domain:rem>
           <domain:status s="serverHold"/>
         </domain:rem>
@@ -9632,7 +10365,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-4059845175</svTRID>
+      <svTRID>ccReg-8239034275</svTRID>
     </trID>
   </response>
 </epp>
@@ -9648,14 +10381,14 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain34.ee</domain:name>
+        <domain:name>domain36.ee</domain:name>
         <domain:add>
           <domain:ns>
             <domain:hostAttr>
-              <domain:hostName>ns.paucekcremin99.ee</domain:hostName>
+              <domain:hostName>ns.lockman105.ee</domain:hostName>
             </domain:hostAttr>
           </domain:ns>
-          <domain:contact type="admin">FIXED:SH2421352279</domain:contact>
+          <domain:contact type="admin">FIXED:SH1552152183</domain:contact>
         </domain:add>
       </domain:update>
     </update>
@@ -9675,7 +10408,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-6215676067</svTRID>
+      <svTRID>ccReg-5647276544</svTRID>
     </trID>
   </response>
 </epp>
@@ -9689,14 +10422,14 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain34.ee</domain:name>
+        <domain:name>domain36.ee</domain:name>
         <domain:add>
           <domain:ns>
             <domain:hostAttr>
-              <domain:hostName>ns.paucekcremin99.ee</domain:hostName>
+              <domain:hostName>ns.lockman105.ee</domain:hostName>
             </domain:hostAttr>
           </domain:ns>
-          <domain:contact type="admin">FIXED:SH2421352279</domain:contact>
+          <domain:contact type="admin">FIXED:SH1552152183</domain:contact>
         </domain:add>
       </domain:update>
     </update>
@@ -9714,18 +10447,18 @@ RESPONSE:
     <result code="2302">
       <msg lang="en">Nameserver already exists on this domain [hostname]</msg>
       <value>
-        <hostAttr>ns.paucekcremin99.ee</hostAttr>
+        <hostAttr>ns.lockman105.ee</hostAttr>
       </value>
     </result>
     <result code="2302">
       <msg lang="en">Contact already exists on this domain [contact_code_cache]</msg>
       <value>
-        <contact>FIXED:SH2421352279</contact>
+        <contact>FIXED:SH1552152183</contact>
       </value>
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9116884956</svTRID>
+      <svTRID>ccReg-7429213220</svTRID>
     </trID>
   </response>
 </epp>
@@ -9741,7 +10474,7 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain35.ee</domain:name>
+        <domain:name>domain37.ee</domain:name>
         <domain:chg>
           <domain:registrant>FIXED:CITIZEN_1234</domain:registrant>
         </domain:chg>
@@ -9763,7 +10496,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-7918261747</svTRID>
+      <svTRID>ccReg-6346019419</svTRID>
     </trID>
   </response>
 </epp>
@@ -9779,7 +10512,7 @@ REQUEST:
   <command>
     <update>
       <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain36.ee</domain:name>
+        <domain:name>domain38.ee</domain:name>
         <domain:add>
           <domain:status s="invalidStatus"/>
         </domain:add>
@@ -9804,7 +10537,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-4823438244</svTRID>
+      <svTRID>ccReg-9819005325</svTRID>
     </trID>
   </response>
 </epp>
@@ -9820,8 +10553,8 @@ REQUEST:
   <command>
     <renew>
       <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain37.ee</domain:name>
-        <domain:curExpDate>2015-06-26</domain:curExpDate>
+        <domain:name>domain39.ee</domain:name>
+        <domain:curExpDate>2015-07-23</domain:curExpDate>
         <domain:period unit="y">1</domain:period>
       </domain:renew>
     </renew>
@@ -9841,13 +10574,136 @@ RESPONSE:
     </result>
     <resData>
       <renData>
-        <name>domain37.ee</name>
-        <exDate>2016-06-26T00:00:00Z</exDate>
+        <name>domain39.ee</name>
+        <exDate>2016-07-23T00:00:00Z</exDate>
       </renData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-6519525965</svTRID>
+      <svTRID>ccReg-7220541028</svTRID>
+    </trID>
+  </response>
+</epp>
+```
+
+### EPP Domain with valid domain renews a domain with 2 year period  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <renew>
+      <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+        <domain:name>domain40.ee</domain:name>
+        <domain:curExpDate>2015-07-23</domain:curExpDate>
+        <domain:period unit="d">730</domain:period>
+      </domain:renew>
+    </renew>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+    <resData>
+      <renData>
+        <name>domain40.ee</name>
+        <exDate>2017-07-23T00:00:00Z</exDate>
+      </renData>
+    </resData>
+    <trID>
+      <clTRID>ABC-12345</clTRID>
+      <svTRID>ccReg-6857657669</svTRID>
+    </trID>
+  </response>
+</epp>
+```
+
+### EPP Domain with valid domain renews a domain with 3 year period  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <renew>
+      <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+        <domain:name>domain41.ee</domain:name>
+        <domain:curExpDate>2015-07-23</domain:curExpDate>
+        <domain:period unit="m">36</domain:period>
+      </domain:renew>
+    </renew>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="1000">
+      <msg>Command completed successfully</msg>
+    </result>
+    <resData>
+      <renData>
+        <name>domain41.ee</name>
+        <exDate>2018-07-23T00:00:00Z</exDate>
+      </renData>
+    </resData>
+    <trID>
+      <clTRID>ABC-12345</clTRID>
+      <svTRID>ccReg-1769374464</svTRID>
+    </trID>
+  </response>
+</epp>
+```
+
+### EPP Domain with valid domain does not renew a domain if credit balance low  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <renew>
+      <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+        <domain:name>domain42.ee</domain:name>
+        <domain:curExpDate>2015-07-23</domain:curExpDate>
+        <domain:period unit="y">1</domain:period>
+      </domain:renew>
+    </renew>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="2104">
+      <msg lang="en">Billing failure - credit balance low</msg>
+    </result>
+    <trID>
+      <clTRID>ABC-12345</clTRID>
+      <svTRID>ccReg-4109711014</svTRID>
     </trID>
   </response>
 </epp>
@@ -9863,7 +10719,7 @@ REQUEST:
   <command>
     <renew>
       <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain38.ee</domain:name>
+        <domain:name>domain43.ee</domain:name>
         <domain:curExpDate>2200-08-07</domain:curExpDate>
         <domain:period unit="y">1</domain:period>
       </domain:renew>
@@ -9890,7 +10746,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9192582359</svTRID>
+      <svTRID>ccReg-2628108471</svTRID>
     </trID>
   </response>
 </epp>
@@ -9906,8 +10762,8 @@ REQUEST:
   <command>
     <renew>
       <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain39.ee</domain:name>
-        <domain:curExpDate>2015-06-26</domain:curExpDate>
+        <domain:name>domain44.ee</domain:name>
+        <domain:curExpDate>2015-07-23</domain:curExpDate>
         <domain:period unit="y">4</domain:period>
       </domain:renew>
     </renew>
@@ -9930,7 +10786,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9034050627</svTRID>
+      <svTRID>ccReg-2767217341</svTRID>
     </trID>
   </response>
 </epp>
@@ -9946,8 +10802,8 @@ REQUEST:
   <command>
     <renew>
       <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain40.ee</domain:name>
-        <domain:curExpDate>2015-09-14</domain:curExpDate>
+        <domain:name>domain45.ee</domain:name>
+        <domain:curExpDate>2015-10-11</domain:curExpDate>
         <domain:period unit="y">1</domain:period>
       </domain:renew>
     </renew>
@@ -9967,7 +10823,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0329970059</svTRID>
+      <svTRID>ccReg-1810374134</svTRID>
     </trID>
   </response>
 </epp>
@@ -9981,8 +10837,8 @@ REQUEST:
   <command>
     <renew>
       <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain40.ee</domain:name>
-        <domain:curExpDate>2015-09-13</domain:curExpDate>
+        <domain:name>domain45.ee</domain:name>
+        <domain:curExpDate>2015-10-10</domain:curExpDate>
         <domain:period unit="y">1</domain:period>
       </domain:renew>
     </renew>
@@ -10002,13 +10858,13 @@ RESPONSE:
     </result>
     <resData>
       <renData>
-        <name>domain40.ee</name>
-        <exDate>2016-09-13T00:00:00Z</exDate>
+        <name>domain45.ee</name>
+        <exDate>2016-10-10T00:00:00Z</exDate>
       </renData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-6696413266</svTRID>
+      <svTRID>ccReg-0911571437</svTRID>
     </trID>
   </response>
 </epp>
@@ -10024,8 +10880,8 @@ REQUEST:
   <command>
     <renew>
       <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain41.ee</domain:name>
-        <domain:curExpDate>2020-06-16</domain:curExpDate>
+        <domain:name>domain46.ee</domain:name>
+        <domain:curExpDate>2020-07-13</domain:curExpDate>
         <domain:period unit="y">1</domain:period>
       </domain:renew>
     </renew>
@@ -10045,13 +10901,13 @@ RESPONSE:
     </result>
     <resData>
       <renData>
-        <name>domain41.ee</name>
-        <exDate>2021-06-16T00:00:00Z</exDate>
+        <name>domain46.ee</name>
+        <exDate>2021-07-13T00:00:00Z</exDate>
       </renData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-1505326476</svTRID>
+      <svTRID>ccReg-2422169680</svTRID>
     </trID>
   </response>
 </epp>
@@ -10067,8 +10923,8 @@ REQUEST:
   <command>
     <renew>
       <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain42.ee</domain:name>
-        <domain:curExpDate>2015-06-26</domain:curExpDate>
+        <domain:name>domain47.ee</domain:name>
+        <domain:curExpDate>2015-07-23</domain:curExpDate>
         <domain:period unit="y">1</domain:period>
       </domain:renew>
     </renew>
@@ -10088,7 +10944,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-4127044027</svTRID>
+      <svTRID>ccReg-0194027285</svTRID>
     </trID>
   </response>
 </epp>
@@ -10104,8 +10960,8 @@ REQUEST:
   <command>
     <renew>
       <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain43.ee</domain:name>
-        <domain:curExpDate>2015-04-27</domain:curExpDate>
+        <domain:name>domain48.ee</domain:name>
+        <domain:curExpDate>2015-05-24</domain:curExpDate>
         <domain:period unit="y">1</domain:period>
       </domain:renew>
     </renew>
@@ -10125,13 +10981,13 @@ RESPONSE:
     </result>
     <resData>
       <renData>
-        <name>domain43.ee</name>
-        <exDate>2016-04-27T14:46:35Z</exDate>
+        <name>domain48.ee</name>
+        <exDate>2016-05-24T08:11:10Z</exDate>
       </renData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9291103741</svTRID>
+      <svTRID>ccReg-2793752469</svTRID>
     </trID>
   </response>
 </epp>
@@ -10179,7 +11035,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-3538502070</svTRID>
+      <svTRID>ccReg-9025280022</svTRID>
     </trID>
   </response>
 </epp>
@@ -10193,8 +11049,8 @@ REQUEST:
   <command>
     <renew>
       <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain44.ee</domain:name>
-        <domain:curExpDate>2016-06-16</domain:curExpDate>
+        <domain:name>domain49.ee</domain:name>
+        <domain:curExpDate>2016-07-13</domain:curExpDate>
         <domain:period unit="y">1</domain:period>
       </domain:renew>
     </renew>
@@ -10214,7 +11070,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5006977619</svTRID>
+      <svTRID>ccReg-6272603612</svTRID>
     </trID>
   </response>
 </epp>
@@ -10260,7 +11116,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-3666394551</svTRID>
+      <svTRID>ccReg-7742341031</svTRID>
     </trID>
   </response>
 </epp>
@@ -10276,7 +11132,7 @@ REQUEST:
   <command>
     <info>
       <domain:info xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name hosts="all">domain45.ee</domain:name>
+        <domain:name hosts="all">domain50.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>
         </domain:authInfo>
@@ -10297,23 +11153,23 @@ RESPONSE:
     </result>
     <resData>
       <infData>
-        <name>domain45.ee</name>
-        <roid>EIS-53</roid>
+        <name>domain50.ee</name>
+        <roid>EIS-61</roid>
         <status s="clientHold"/>
-        <registrant>FIXED:REGISTRANT5034182443</registrant>
-        <contact type="tech">FIXED:SH87553047104</contact>
-        <contact type="admin">FIXED:SH60451564103</contact>
+        <registrant>FIXED:REGISTRANT6482132848</registrant>
+        <contact type="tech">FIXED:SH09572943114</contact>
+        <contact type="admin">FIXED:SH87989459113</contact>
         <ns>
           <hostAttr>
-            <hostName>ns.sipeskeeling135.ee</hostName>
+            <hostName>ns.mann150.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.denesikjaskolski136.ee</hostName>
+            <hostName>ns.gibson151.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.johns137.ee</hostName>
+            <hostName>ns.bergnaum152.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
@@ -10323,11 +11179,11 @@ RESPONSE:
           </hostAttr>
         </ns>
         <clID>registrar1</clID>
-        <crDate>2015-06-16T14:46:36Z</crDate>
-        <upDate>2015-06-16T14:46:36Z</upDate>
-        <exDate>2016-06-16T14:46:36Z</exDate>
+        <crDate>2015-07-13T08:11:11Z</crDate>
+        <upDate>2015-07-13T08:11:11Z</upDate>
+        <exDate>2016-07-13T08:11:11Z</exDate>
         <authInfo>
-          <pw>7fc87d2ceabb4a21969a9a067aa03411</pw>
+          <pw>5957310332b7a7eecb8ba4514ec2b500</pw>
         </authInfo>
       </infData>
     </resData>
@@ -10360,7 +11216,7 @@ RESPONSE:
       </infData>
     </extension>
     <trID>
-      <svTRID>ccReg-1180902357</svTRID>
+      <svTRID>ccReg-8376341695</svTRID>
     </trID>
   </response>
 </epp>
@@ -10374,7 +11230,7 @@ REQUEST:
   <command>
     <info>
       <domain:info xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name hosts="all">domain45.ee</domain:name>
+        <domain:name hosts="all">domain50.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>
         </domain:authInfo>
@@ -10395,23 +11251,23 @@ RESPONSE:
     </result>
     <resData>
       <infData>
-        <name>domain45.ee</name>
-        <roid>EIS-53</roid>
+        <name>domain50.ee</name>
+        <roid>EIS-61</roid>
         <status s="clientHold"/>
-        <registrant>FIXED:REGISTRANT5034182443</registrant>
-        <contact type="tech">FIXED:SH87553047104</contact>
-        <contact type="admin">FIXED:SH60451564103</contact>
+        <registrant>FIXED:REGISTRANT6482132848</registrant>
+        <contact type="tech">FIXED:SH09572943114</contact>
+        <contact type="admin">FIXED:SH87989459113</contact>
         <ns>
           <hostAttr>
-            <hostName>ns.sipeskeeling135.ee</hostName>
+            <hostName>ns.mann150.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.denesikjaskolski136.ee</hostName>
+            <hostName>ns.gibson151.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.johns137.ee</hostName>
+            <hostName>ns.bergnaum152.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
@@ -10421,11 +11277,11 @@ RESPONSE:
           </hostAttr>
         </ns>
         <clID>registrar1</clID>
-        <crDate>2015-06-16T14:46:36Z</crDate>
-        <upDate>2015-06-16T14:46:36Z</upDate>
-        <exDate>2016-06-16T14:46:36Z</exDate>
+        <crDate>2015-07-13T08:11:11Z</crDate>
+        <upDate>2015-07-13T08:11:11Z</upDate>
+        <exDate>2016-07-13T08:11:11Z</exDate>
         <authInfo>
-          <pw>7fc87d2ceabb4a21969a9a067aa03411</pw>
+          <pw>5957310332b7a7eecb8ba4514ec2b500</pw>
         </authInfo>
       </infData>
     </resData>
@@ -10458,7 +11314,7 @@ RESPONSE:
       </infData>
     </extension>
     <trID>
-      <svTRID>ccReg-9928668202</svTRID>
+      <svTRID>ccReg-3233264315</svTRID>
     </trID>
   </response>
 </epp>
@@ -10474,7 +11330,7 @@ REQUEST:
   <command>
     <info>
       <domain:info xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name hosts="invalid">domain46.ee</domain:name>
+        <domain:name hosts="invalid">domain51.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>
         </domain:authInfo>
@@ -10494,7 +11350,7 @@ RESPONSE:
       <msg lang="en">Attribute is invalid: hosts</msg>
     </result>
     <trID>
-      <svTRID>ccReg-5780540561</svTRID>
+      <svTRID>ccReg-8690139061</svTRID>
     </trID>
   </response>
 </epp>
@@ -10508,7 +11364,7 @@ REQUEST:
   <command>
     <info>
       <domain:info xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name hosts="sub">domain46.ee</domain:name>
+        <domain:name hosts="sub">domain51.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>
         </domain:authInfo>
@@ -10529,35 +11385,35 @@ RESPONSE:
     </result>
     <resData>
       <infData>
-        <name>domain46.ee</name>
-        <roid>EIS-54</roid>
+        <name>domain51.ee</name>
+        <roid>EIS-62</roid>
         <status s="ok"/>
-        <registrant>FIXED:REGISTRANT7386073344</registrant>
-        <contact type="tech">FIXED:SH70911474106</contact>
-        <contact type="admin">FIXED:SH83717810105</contact>
+        <registrant>FIXED:REGISTRANT2667536449</registrant>
+        <contact type="tech">FIXED:SH94654914116</contact>
+        <contact type="admin">FIXED:SH61833805115</contact>
         <ns>
           <hostAttr>
-            <hostName>ns1.domain46.ee</hostName>
+            <hostName>ns1.domain51.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
             <hostAddr ip="v6">1080:0:0:0:8:800:200C:417A</hostAddr>
           </hostAttr>
           <hostAttr>
-            <hostName>ns2.domain46.ee</hostName>
+            <hostName>ns2.domain51.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
             <hostAddr ip="v6">1080:0:0:0:8:800:200C:417A</hostAddr>
           </hostAttr>
         </ns>
         <clID>registrar1</clID>
-        <crDate>2015-06-16T14:46:36Z</crDate>
-        <upDate>2015-06-16T14:46:36Z</upDate>
-        <exDate>2016-06-16T14:46:36Z</exDate>
+        <crDate>2015-07-13T08:11:11Z</crDate>
+        <upDate>2015-07-13T08:11:11Z</upDate>
+        <exDate>2016-07-13T08:11:11Z</exDate>
         <authInfo>
-          <pw>04319f6bf003ebd8357d77a866f21a1d</pw>
+          <pw>9d30e698ec98687e28804e22d659af30</pw>
         </authInfo>
       </infData>
     </resData>
     <trID>
-      <svTRID>ccReg-9817465177</svTRID>
+      <svTRID>ccReg-6365400804</svTRID>
     </trID>
   </response>
 </epp>
@@ -10571,7 +11427,7 @@ REQUEST:
   <command>
     <info>
       <domain:info xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name hosts="del">domain46.ee</domain:name>
+        <domain:name hosts="del">domain51.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>
         </domain:authInfo>
@@ -10592,12 +11448,12 @@ RESPONSE:
     </result>
     <resData>
       <infData>
-        <name>domain46.ee</name>
-        <roid>EIS-54</roid>
+        <name>domain51.ee</name>
+        <roid>EIS-62</roid>
         <status s="ok"/>
-        <registrant>FIXED:REGISTRANT7386073344</registrant>
-        <contact type="tech">FIXED:SH70911474106</contact>
-        <contact type="admin">FIXED:SH83717810105</contact>
+        <registrant>FIXED:REGISTRANT2667536449</registrant>
+        <contact type="tech">FIXED:SH94654914116</contact>
+        <contact type="admin">FIXED:SH61833805115</contact>
         <ns>
           <hostAttr>
             <hostName>ns3.test.ee</hostName>
@@ -10606,16 +11462,16 @@ RESPONSE:
           </hostAttr>
         </ns>
         <clID>registrar1</clID>
-        <crDate>2015-06-16T14:46:36Z</crDate>
-        <upDate>2015-06-16T14:46:36Z</upDate>
-        <exDate>2016-06-16T14:46:36Z</exDate>
+        <crDate>2015-07-13T08:11:11Z</crDate>
+        <upDate>2015-07-13T08:11:11Z</upDate>
+        <exDate>2016-07-13T08:11:11Z</exDate>
         <authInfo>
-          <pw>04319f6bf003ebd8357d77a866f21a1d</pw>
+          <pw>9d30e698ec98687e28804e22d659af30</pw>
         </authInfo>
       </infData>
     </resData>
     <trID>
-      <svTRID>ccReg-1956126808</svTRID>
+      <svTRID>ccReg-9998409461</svTRID>
     </trID>
   </response>
 </epp>
@@ -10629,7 +11485,7 @@ REQUEST:
   <command>
     <info>
       <domain:info xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name hosts="none">domain46.ee</domain:name>
+        <domain:name hosts="none">domain51.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>
         </domain:authInfo>
@@ -10650,23 +11506,23 @@ RESPONSE:
     </result>
     <resData>
       <infData>
-        <name>domain46.ee</name>
-        <roid>EIS-54</roid>
+        <name>domain51.ee</name>
+        <roid>EIS-62</roid>
         <status s="ok"/>
-        <registrant>FIXED:REGISTRANT7386073344</registrant>
-        <contact type="tech">FIXED:SH70911474106</contact>
-        <contact type="admin">FIXED:SH83717810105</contact>
+        <registrant>FIXED:REGISTRANT2667536449</registrant>
+        <contact type="tech">FIXED:SH94654914116</contact>
+        <contact type="admin">FIXED:SH61833805115</contact>
         <clID>registrar1</clID>
-        <crDate>2015-06-16T14:46:36Z</crDate>
-        <upDate>2015-06-16T14:46:36Z</upDate>
-        <exDate>2016-06-16T14:46:36Z</exDate>
+        <crDate>2015-07-13T08:11:11Z</crDate>
+        <upDate>2015-07-13T08:11:11Z</upDate>
+        <exDate>2016-07-13T08:11:11Z</exDate>
         <authInfo>
-          <pw>04319f6bf003ebd8357d77a866f21a1d</pw>
+          <pw>9d30e698ec98687e28804e22d659af30</pw>
         </authInfo>
       </infData>
     </resData>
     <trID>
-      <svTRID>ccReg-4662877023</svTRID>
+      <svTRID>ccReg-1755029994</svTRID>
     </trID>
   </response>
 </epp>
@@ -10680,7 +11536,7 @@ REQUEST:
   <command>
     <info>
       <domain:info xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name hosts="all">domain46.ee</domain:name>
+        <domain:name hosts="all">domain51.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>
         </domain:authInfo>
@@ -10701,20 +11557,20 @@ RESPONSE:
     </result>
     <resData>
       <infData>
-        <name>domain46.ee</name>
-        <roid>EIS-54</roid>
+        <name>domain51.ee</name>
+        <roid>EIS-62</roid>
         <status s="ok"/>
-        <registrant>FIXED:REGISTRANT7386073344</registrant>
-        <contact type="tech">FIXED:SH70911474106</contact>
-        <contact type="admin">FIXED:SH83717810105</contact>
+        <registrant>FIXED:REGISTRANT2667536449</registrant>
+        <contact type="tech">FIXED:SH94654914116</contact>
+        <contact type="admin">FIXED:SH61833805115</contact>
         <ns>
           <hostAttr>
-            <hostName>ns1.domain46.ee</hostName>
+            <hostName>ns1.domain51.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
             <hostAddr ip="v6">1080:0:0:0:8:800:200C:417A</hostAddr>
           </hostAttr>
           <hostAttr>
-            <hostName>ns2.domain46.ee</hostName>
+            <hostName>ns2.domain51.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
             <hostAddr ip="v6">1080:0:0:0:8:800:200C:417A</hostAddr>
           </hostAttr>
@@ -10725,16 +11581,16 @@ RESPONSE:
           </hostAttr>
         </ns>
         <clID>registrar1</clID>
-        <crDate>2015-06-16T14:46:36Z</crDate>
-        <upDate>2015-06-16T14:46:36Z</upDate>
-        <exDate>2016-06-16T14:46:36Z</exDate>
+        <crDate>2015-07-13T08:11:11Z</crDate>
+        <upDate>2015-07-13T08:11:11Z</upDate>
+        <exDate>2016-07-13T08:11:11Z</exDate>
         <authInfo>
-          <pw>04319f6bf003ebd8357d77a866f21a1d</pw>
+          <pw>9d30e698ec98687e28804e22d659af30</pw>
         </authInfo>
       </infData>
     </resData>
     <trID>
-      <svTRID>ccReg-2430670023</svTRID>
+      <svTRID>ccReg-3118580746</svTRID>
     </trID>
   </response>
 </epp>
@@ -10773,7 +11629,7 @@ RESPONSE:
       </value>
     </result>
     <trID>
-      <svTRID>ccReg-5247973919</svTRID>
+      <svTRID>ccReg-1733768523</svTRID>
     </trID>
   </response>
 </epp>
@@ -10789,7 +11645,7 @@ REQUEST:
   <command>
     <info>
       <domain:info xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name hosts="all">domain47.ee</domain:name>
+        <domain:name hosts="all">domain52.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>
         </domain:authInfo>
@@ -10810,37 +11666,37 @@ RESPONSE:
     </result>
     <resData>
       <infData>
-        <name>domain47.ee</name>
-        <roid>EIS-55</roid>
+        <name>domain52.ee</name>
+        <roid>EIS-63</roid>
         <status s="ok"/>
-        <registrant>FIXED:REGISTRANT3737412845</registrant>
-        <contact type="tech">FIXED:SH49038744108</contact>
-        <contact type="admin">FIXED:SH06725299107</contact>
+        <registrant>FIXED:REGISTRANT2342249650</registrant>
+        <contact type="tech">FIXED:SH20249682118</contact>
+        <contact type="admin">FIXED:SH18642279117</contact>
         <ns>
           <hostAttr>
-            <hostName>ns.sanford141.ee</hostName>
+            <hostName>ns.lakin156.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.sauer142.ee</hostName>
+            <hostName>ns.hartmann157.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.veum143.ee</hostName>
+            <hostName>ns.kuhicemmerich158.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
         </ns>
         <clID>registrar1</clID>
-        <crDate>2015-06-16T14:46:37Z</crDate>
-        <upDate>2015-06-16T14:46:37Z</upDate>
-        <exDate>2016-06-16T14:46:37Z</exDate>
+        <crDate>2015-07-13T08:11:13Z</crDate>
+        <upDate>2015-07-13T08:11:13Z</upDate>
+        <exDate>2016-07-13T08:11:13Z</exDate>
         <authInfo>
-          <pw>81c5f0a214cb0756ad4a5c553e80df90</pw>
+          <pw>1461c4b264196cd03804c940733dc38a</pw>
         </authInfo>
       </infData>
     </resData>
     <trID>
-      <svTRID>ccReg-6047154535</svTRID>
+      <svTRID>ccReg-3963429650</svTRID>
     </trID>
   </response>
 </epp>
@@ -10888,7 +11744,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-1083606006</svTRID>
+      <svTRID>ccReg-3669004177</svTRID>
     </trID>
   </response>
 </epp>
@@ -10902,7 +11758,7 @@ REQUEST:
   <command>
     <info>
       <domain:info xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name hosts="all">domain48.ee</domain:name>
+        <domain:name hosts="all">domain53.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>
         </domain:authInfo>
@@ -10922,7 +11778,7 @@ RESPONSE:
       <msg lang="en">Authorization error</msg>
     </result>
     <trID>
-      <svTRID>ccReg-9393465490</svTRID>
+      <svTRID>ccReg-7057482646</svTRID>
     </trID>
   </response>
 </epp>
@@ -10968,7 +11824,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0344532333</svTRID>
+      <svTRID>ccReg-3127374780</svTRID>
     </trID>
   </response>
 </epp>
@@ -11016,7 +11872,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9663838605</svTRID>
+      <svTRID>ccReg-0437688297</svTRID>
     </trID>
   </response>
 </epp>
@@ -11030,7 +11886,7 @@ REQUEST:
   <command>
     <info>
       <domain:info xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name hosts="all">domain49.ee</domain:name>
+        <domain:name hosts="all">domain54.ee</domain:name>
       </domain:info>
     </info>
   </command>
@@ -11048,34 +11904,34 @@ RESPONSE:
     </result>
     <resData>
       <infData>
-        <name>domain49.ee</name>
-        <roid>EIS-57</roid>
+        <name>domain54.ee</name>
+        <roid>EIS-65</roid>
         <status s="ok"/>
-        <registrant>FIXED:REGISTRANT1566943147</registrant>
-        <contact type="tech">FIXED:SH39124150112</contact>
-        <contact type="admin">FIXED:SH43742622111</contact>
+        <registrant>FIXED:REGISTRANT3313756852</registrant>
+        <contact type="tech">FIXED:SH50852734122</contact>
+        <contact type="admin">FIXED:SH63024484121</contact>
         <ns>
           <hostAttr>
-            <hostName>ns.kreiger147.ee</hostName>
+            <hostName>ns.harber162.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.hudson148.ee</hostName>
+            <hostName>ns.gutmanngrady163.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.dare149.ee</hostName>
+            <hostName>ns.block164.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
         </ns>
         <clID>registrar1</clID>
-        <crDate>2015-06-16T14:46:38Z</crDate>
-        <upDate>2015-06-16T14:46:38Z</upDate>
-        <exDate>2016-06-16T14:46:38Z</exDate>
+        <crDate>2015-07-13T08:11:13Z</crDate>
+        <upDate>2015-07-13T08:11:13Z</upDate>
+        <exDate>2016-07-13T08:11:13Z</exDate>
       </infData>
     </resData>
     <trID>
-      <svTRID>ccReg-0003863495</svTRID>
+      <svTRID>ccReg-5268249056</svTRID>
     </trID>
   </response>
 </epp>
@@ -11121,7 +11977,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9016819552</svTRID>
+      <svTRID>ccReg-2996369133</svTRID>
     </trID>
   </response>
 </epp>
@@ -11169,7 +12025,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-4480505409</svTRID>
+      <svTRID>ccReg-2348926042</svTRID>
     </trID>
   </response>
 </epp>
@@ -11183,9 +12039,9 @@ REQUEST:
   <command>
     <info>
       <domain:info xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name hosts="all">domain50.ee</domain:name>
+        <domain:name hosts="all">domain55.ee</domain:name>
         <domain:authInfo>
-          <domain:pw>f44d898ad1b9caa41023a0894a3d0801</domain:pw>
+          <domain:pw>70fdd52cf30cb84607b091c211508b3e</domain:pw>
         </domain:authInfo>
       </domain:info>
     </info>
@@ -11204,37 +12060,37 @@ RESPONSE:
     </result>
     <resData>
       <infData>
-        <name>domain50.ee</name>
-        <roid>EIS-58</roid>
+        <name>domain55.ee</name>
+        <roid>EIS-66</roid>
         <status s="ok"/>
-        <registrant>FIXED:REGISTRANT5610043948</registrant>
-        <contact type="tech">FIXED:SH85839976114</contact>
-        <contact type="admin">FIXED:SH72694104113</contact>
+        <registrant>FIXED:REGISTRANT4048132253</registrant>
+        <contact type="tech">FIXED:SH48069556124</contact>
+        <contact type="admin">FIXED:SH18507922123</contact>
         <ns>
           <hostAttr>
-            <hostName>ns.mann150.ee</hostName>
+            <hostName>ns.kuhlman165.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.gutkowskibernier151.ee</hostName>
+            <hostName>ns.howe166.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
           <hostAttr>
-            <hostName>ns.schinner152.ee</hostName>
+            <hostName>ns.bradtkehyatt167.ee</hostName>
             <hostAddr ip="v4">192.168.1.1</hostAddr>
           </hostAttr>
         </ns>
         <clID>registrar1</clID>
-        <crDate>2015-06-16T14:46:38Z</crDate>
-        <upDate>2015-06-16T14:46:38Z</upDate>
-        <exDate>2016-06-16T14:46:38Z</exDate>
+        <crDate>2015-07-13T08:11:13Z</crDate>
+        <upDate>2015-07-13T08:11:13Z</upDate>
+        <exDate>2016-07-13T08:11:13Z</exDate>
         <authInfo>
-          <pw>f44d898ad1b9caa41023a0894a3d0801</pw>
+          <pw>70fdd52cf30cb84607b091c211508b3e</pw>
         </authInfo>
       </infData>
     </resData>
     <trID>
-      <svTRID>ccReg-7074882802</svTRID>
+      <svTRID>ccReg-1792551087</svTRID>
     </trID>
   </response>
 </epp>
@@ -11280,7 +12136,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-2139213556</svTRID>
+      <svTRID>ccReg-6746329954</svTRID>
     </trID>
   </response>
 </epp>
@@ -11296,7 +12152,7 @@ REQUEST:
   <command>
     <delete>
       <domain:delete xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain51.ee</domain:name>
+        <domain:name>domain56.ee</domain:name>
       </domain:delete>
     </delete>
     <extension>
@@ -11315,11 +12171,12 @@ RESPONSE:
 <?xml version="1.0" encoding="UTF-8"?>
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
-    <result code="2400">
-      <msg lang="en">Internal error.</msg>
+    <result code="1001">
+      <msg>Command completed successfully; action pending</msg>
     </result>
     <trID>
-      <svTRID>ccReg-0801639712</svTRID>
+      <clTRID>ABC-12345</clTRID>
+      <svTRID>ccReg-4342498296</svTRID>
     </trID>
   </response>
 </epp>
@@ -11335,7 +12192,7 @@ REQUEST:
   <command>
     <delete>
       <domain:delete xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain52.ee</domain:name>
+        <domain:name>domain57.ee</domain:name>
       </domain:delete>
     </delete>
     <extension>
@@ -11359,7 +12216,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0908156344</svTRID>
+      <svTRID>ccReg-7883262615</svTRID>
     </trID>
   </response>
 </epp>
@@ -11375,7 +12232,7 @@ REQUEST:
   <command>
     <delete>
       <domain:delete xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain53.ee</domain:name>
+        <domain:name>domain58.ee</domain:name>
       </domain:delete>
     </delete>
     <extension>
@@ -11399,7 +12256,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5302487355</svTRID>
+      <svTRID>ccReg-0920548662</svTRID>
     </trID>
   </response>
 </epp>
@@ -11434,7 +12291,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-4445302239</svTRID>
+      <svTRID>ccReg-0781777028</svTRID>
     </trID>
   </response>
 </epp>
@@ -11476,7 +12333,7 @@ RESPONSE:
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-6989281837</svTRID>
+      <svTRID>ccReg-3611796311</svTRID>
     </trID>
   </response>
 </epp>
@@ -11490,7 +12347,7 @@ REQUEST:
   <command>
     <check>
       <domain:check xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
-        <domain:name>domain54.ee</domain:name>
+        <domain:name>domain59.ee</domain:name>
       </domain:check>
     </check>
     <clTRID>ABC-12345</clTRID>
@@ -11510,14 +12367,14 @@ RESPONSE:
     <resData>
       <chkData>
         <cd>
-          <name avail="0">domain54.ee</name>
+          <name avail="0">domain59.ee</name>
           <reason>in use</reason>
         </cd>
       </chkData>
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-7241677214</svTRID>
+      <svTRID>ccReg-3334019851</svTRID>
     </trID>
   </response>
 </epp>
@@ -11567,7 +12424,7 @@ RESPONSE:
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-2988756260</svTRID>
+      <svTRID>ccReg-0064719758</svTRID>
     </trID>
   </response>
 </epp>
@@ -11614,7 +12471,7 @@ RESPONSE:
     </resData>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-3861410540</svTRID>
+      <svTRID>ccReg-0603882179</svTRID>
     </trID>
   </response>
 </epp>
@@ -11662,7 +12519,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9350463779</svTRID>
+      <svTRID>ccReg-0885284769</svTRID>
     </trID>
   </response>
 </epp>
@@ -11677,7 +12534,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
   <command>
     <ext:keyrelay>
-      <ext:name>domain55.ee</ext:name>
+      <ext:name>domain60.ee</ext:name>
       <ext:keyData>
         <secDNS:flags>256</secDNS:flags>
         <secDNS:protocol>3</secDNS:protocol>
@@ -11685,13 +12542,13 @@ REQUEST:
         <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
       </ext:keyData>
       <ext:authInfo>
-        <domain:pw>606917876743fb9d65eb59fbf175c5bd</domain:pw>
+        <domain:pw>fabc7a8ebef505abcb469833f145e84c</domain:pw>
       </ext:authInfo>
       <ext:expiry>
         <ext:relative>P1M13D</ext:relative>
       </ext:expiry>
     </ext:keyrelay>
-    <ext:clTRID>1434466003</ext:clTRID>
+    <ext:clTRID>1436775078</ext:clTRID>
   </command>
 </epp>
 ```
@@ -11705,12 +12562,12 @@ RESPONSE:
     <result code="2307">
       <msg lang="en">Unimplemented object service</msg>
       <value>
-        <name>domain55.ee</name>
+        <name>domain60.ee</name>
       </value>
     </result>
     <trID>
-      <clTRID>1434466003</clTRID>
-      <svTRID>ccReg-7770421771</svTRID>
+      <clTRID>1436775078</clTRID>
+      <svTRID>ccReg-9036054194</svTRID>
     </trID>
   </response>
 </epp>
@@ -11725,20 +12582,20 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
   <command>
     <ext:keyrelay>
-      <ext:name>domain55.ee</ext:name>
+      <ext:name>domain60.ee</ext:name>
       <ext:keyData>
         <secDNS:protocol>3</secDNS:protocol>
         <secDNS:alg>8</secDNS:alg>
         <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
       </ext:keyData>
       <ext:authInfo>
-        <domain:pw>606917876743fb9d65eb59fbf175c5bd</domain:pw>
+        <domain:pw>fabc7a8ebef505abcb469833f145e84c</domain:pw>
       </ext:authInfo>
       <ext:expiry>
         <ext:relative>Invalid Expiry</ext:relative>
       </ext:expiry>
     </ext:keyrelay>
-    <ext:clTRID>1434466004</ext:clTRID>
+    <ext:clTRID>1436775079</ext:clTRID>
   </command>
 </epp>
 ```
@@ -11759,8 +12616,8 @@ RESPONSE:
       </value>
     </result>
     <trID>
-      <clTRID>1434466004</clTRID>
-      <svTRID>ccReg-0081075985</svTRID>
+      <clTRID>1436775079</clTRID>
+      <svTRID>ccReg-0012228718</svTRID>
     </trID>
   </response>
 </epp>
@@ -11775,7 +12632,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
   <command>
     <ext:keyrelay>
-      <ext:name>domain55.ee</ext:name>
+      <ext:name>domain60.ee</ext:name>
       <ext:keyData>
         <secDNS:flags>256</secDNS:flags>
         <secDNS:protocol>3</secDNS:protocol>
@@ -11783,13 +12640,13 @@ REQUEST:
         <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
       </ext:keyData>
       <ext:authInfo>
-        <domain:pw>606917876743fb9d65eb59fbf175c5bd</domain:pw>
+        <domain:pw>fabc7a8ebef505abcb469833f145e84c</domain:pw>
       </ext:authInfo>
       <ext:expiry>
         <ext:relative>Invalid Expiry</ext:relative>
       </ext:expiry>
     </ext:keyrelay>
-    <ext:clTRID>1434466005</ext:clTRID>
+    <ext:clTRID>1436775081</ext:clTRID>
   </command>
 </epp>
 ```
@@ -11807,8 +12664,8 @@ RESPONSE:
       </value>
     </result>
     <trID>
-      <clTRID>1434466005</clTRID>
-      <svTRID>ccReg-6676809630</svTRID>
+      <clTRID>1436775081</clTRID>
+      <svTRID>ccReg-3299050163</svTRID>
     </trID>
   </response>
 </epp>
@@ -11823,7 +12680,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
   <command>
     <ext:keyrelay>
-      <ext:name>domain55.ee</ext:name>
+      <ext:name>domain60.ee</ext:name>
       <ext:keyData>
         <secDNS:flags>256</secDNS:flags>
         <secDNS:protocol>3</secDNS:protocol>
@@ -11831,13 +12688,13 @@ REQUEST:
         <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
       </ext:keyData>
       <ext:authInfo>
-        <domain:pw>606917876743fb9d65eb59fbf175c5bd</domain:pw>
+        <domain:pw>fabc7a8ebef505abcb469833f145e84c</domain:pw>
       </ext:authInfo>
       <ext:expiry>
         <ext:absolute>Invalid Absolute</ext:absolute>
       </ext:expiry>
     </ext:keyrelay>
-    <ext:clTRID>1434466006</ext:clTRID>
+    <ext:clTRID>1436775082</ext:clTRID>
   </command>
 </epp>
 ```
@@ -11855,54 +12712,8 @@ RESPONSE:
       </value>
     </result>
     <trID>
-      <clTRID>1434466006</clTRID>
-      <svTRID>ccReg-8006484799</svTRID>
-    </trID>
-  </response>
-</epp>
-```
-
-### EPP Keyrelay does not allow both relative and absolute  
-
-REQUEST:
-
-```xml
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
-  <command>
-    <ext:keyrelay>
-      <ext:name>domain55.ee</ext:name>
-      <ext:keyData>
-        <secDNS:flags>256</secDNS:flags>
-        <secDNS:protocol>3</secDNS:protocol>
-        <secDNS:alg>8</secDNS:alg>
-        <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
-      </ext:keyData>
-      <ext:authInfo>
-        <domain:pw>606917876743fb9d65eb59fbf175c5bd</domain:pw>
-      </ext:authInfo>
-      <ext:expiry>
-        <ext:relative>P1D</ext:relative>
-        <ext:absolute>2014-12-23</ext:absolute>
-      </ext:expiry>
-    </ext:keyrelay>
-    <ext:clTRID>1434466007</ext:clTRID>
-  </command>
-</epp>
-```
-
-RESPONSE:
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
-  <response>
-    <result code="2306">
-      <msg lang="en">Exactly one parameter required: keyrelay &gt; expiry &gt; relative OR keyrelay &gt; expiry &gt; absolute</msg>
-    </result>
-    <trID>
-      <clTRID>1434466007</clTRID>
-      <svTRID>ccReg-6196744977</svTRID>
+      <clTRID>1436775082</clTRID>
+      <svTRID>ccReg-5674703725</svTRID>
     </trID>
   </response>
 </epp>
@@ -11917,7 +12728,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
   <command>
     <ext:keyrelay>
-      <ext:name>domain55.ee</ext:name>
+      <ext:name>domain60.ee</ext:name>
       <ext:keyData>
         <secDNS:flags>256</secDNS:flags>
         <secDNS:protocol>3</secDNS:protocol>
@@ -11925,7 +12736,7 @@ REQUEST:
         <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
       </ext:keyData>
       <ext:authInfo>
-        <domain:pw>606917876743fb9d65eb59fbf175c5bd</domain:pw>
+        <domain:pw>fabc7a8ebef505abcb469833f145e84c</domain:pw>
       </ext:authInfo>
       <ext:expiry>
         <ext:relative>P1D</ext:relative>
@@ -11934,7 +12745,7 @@ REQUEST:
     <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
       <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
     </eis:extdata>
-    <ext:clTRID>1434466008</ext:clTRID>
+    <ext:clTRID>1436775083</ext:clTRID>
   </command>
 </epp>
 ```
@@ -11948,12 +12759,12 @@ RESPONSE:
     <result code="2307">
       <msg lang="en">Unimplemented object service</msg>
       <value>
-        <name>domain55.ee</name>
+        <name>domain60.ee</name>
       </value>
     </result>
     <trID>
-      <clTRID>1434466008</clTRID>
-      <svTRID>ccReg-8880766111</svTRID>
+      <clTRID>1436775083</clTRID>
+      <svTRID>ccReg-4889072298</svTRID>
     </trID>
   </response>
 </epp>
@@ -11968,7 +12779,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
   <command>
     <ext:keyrelay>
-      <ext:name>domain55.ee</ext:name>
+      <ext:name>domain60.ee</ext:name>
       <ext:keyData>
         <secDNS:flags>256</secDNS:flags>
         <secDNS:protocol>3</secDNS:protocol>
@@ -11976,7 +12787,7 @@ REQUEST:
         <secDNS:pubKey>cmlraXN0aGViZXN0</secDNS:pubKey>
       </ext:keyData>
       <ext:authInfo>
-        <domain:pw>606917876743fb9d65eb59fbf175c5bd</domain:pw>
+        <domain:pw>fabc7a8ebef505abcb469833f145e84c</domain:pw>
       </ext:authInfo>
       <ext:expiry>
         <ext:relative>P1D</ext:relative>
@@ -11985,7 +12796,7 @@ REQUEST:
     <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
       <eis:legalDocument type="jpg">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
     </eis:extdata>
-    <ext:clTRID>1434466009</ext:clTRID>
+    <ext:clTRID>1436775084</ext:clTRID>
   </command>
 </epp>
 ```
@@ -12000,8 +12811,8 @@ RESPONSE:
       <msg lang="en">Attribute is invalid: type</msg>
     </result>
     <trID>
-      <clTRID>1434466009</clTRID>
-      <svTRID>ccReg-5896300316</svTRID>
+      <clTRID>1436775084</clTRID>
+      <svTRID>ccReg-3763435235</svTRID>
     </trID>
   </response>
 </epp>
@@ -12047,7 +12858,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-6744406564</svTRID>
+      <svTRID>ccReg-8391468842</svTRID>
     </trID>
   </response>
 </epp>
@@ -12062,7 +12873,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="req"/>
-    <clTRID>1434466011</clTRID>
+    <clTRID>1436775085</clTRID>
   </command>
 </epp>
 ```
@@ -12077,8 +12888,8 @@ RESPONSE:
       <msg>Command completed successfully; no messages</msg>
     </result>
     <trID>
-      <clTRID>1434466011</clTRID>
-      <svTRID>ccReg-7079179755</svTRID>
+      <clTRID>1436775085</clTRID>
+      <svTRID>ccReg-5223012602</svTRID>
     </trID>
   </response>
 </epp>
@@ -12126,7 +12937,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5443416105</svTRID>
+      <svTRID>ccReg-1644113251</svTRID>
     </trID>
   </response>
 </epp>
@@ -12139,7 +12950,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="req"/>
-    <clTRID>1434466011</clTRID>
+    <clTRID>1436775085</clTRID>
   </command>
 </epp>
 ```
@@ -12154,8 +12965,8 @@ RESPONSE:
       <msg>Command completed successfully; no messages</msg>
     </result>
     <trID>
-      <clTRID>1434466011</clTRID>
-      <svTRID>ccReg-6783686315</svTRID>
+      <clTRID>1436775085</clTRID>
+      <svTRID>ccReg-7422031286</svTRID>
     </trID>
   </response>
 </epp>
@@ -12201,7 +13012,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5004171706</svTRID>
+      <svTRID>ccReg-9135374868</svTRID>
     </trID>
   </response>
 </epp>
@@ -12214,7 +13025,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="req"/>
-    <clTRID>1434466011</clTRID>
+    <clTRID>1436775085</clTRID>
   </command>
 </epp>
 ```
@@ -12229,12 +13040,12 @@ RESPONSE:
       <msg>Command completed successfully; ack to dequeue</msg>
     </result>
     <msgQ count="1" id="1">
-      <qDate>2015-06-16T14:46:51Z</qDate>
+      <qDate>2015-07-13T08:11:25Z</qDate>
       <msg>Balance low.</msg>
     </msgQ>
     <trID>
-      <clTRID>1434466011</clTRID>
-      <svTRID>ccReg-4253494053</svTRID>
+      <clTRID>1436775085</clTRID>
+      <svTRID>ccReg-0576977561</svTRID>
     </trID>
   </response>
 </epp>
@@ -12280,7 +13091,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-4918171501</svTRID>
+      <svTRID>ccReg-9969074675</svTRID>
     </trID>
   </response>
 </epp>
@@ -12293,7 +13104,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="ack" msgID="1"/>
-    <clTRID>1434466011</clTRID>
+    <clTRID>1436775085</clTRID>
   </command>
 </epp>
 ```
@@ -12311,8 +13122,8 @@ RESPONSE:
       </value>
     </result>
     <trID>
-      <clTRID>1434466011</clTRID>
-      <svTRID>ccReg-5948146323</svTRID>
+      <clTRID>1436775085</clTRID>
+      <svTRID>ccReg-4944273043</svTRID>
     </trID>
   </response>
 </epp>
@@ -12358,7 +13169,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0602722237</svTRID>
+      <svTRID>ccReg-1529649635</svTRID>
     </trID>
   </response>
 </epp>
@@ -12371,7 +13182,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="ack" msgID="1"/>
-    <clTRID>1434466011</clTRID>
+    <clTRID>1436775085</clTRID>
   </command>
 </epp>
 ```
@@ -12387,8 +13198,8 @@ RESPONSE:
     </result>
     <msgQ count="0" id="1"/>
     <trID>
-      <clTRID>1434466011</clTRID>
-      <svTRID>ccReg-6653908143</svTRID>
+      <clTRID>1436775085</clTRID>
+      <svTRID>ccReg-9499020661</svTRID>
     </trID>
   </response>
 </epp>
@@ -12401,7 +13212,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="ack" msgID="1"/>
-    <clTRID>1434466011</clTRID>
+    <clTRID>1436775085</clTRID>
   </command>
 </epp>
 ```
@@ -12419,8 +13230,8 @@ RESPONSE:
       </value>
     </result>
     <trID>
-      <clTRID>1434466011</clTRID>
-      <svTRID>ccReg-4030904109</svTRID>
+      <clTRID>1436775085</clTRID>
+      <svTRID>ccReg-3165481294</svTRID>
     </trID>
   </response>
 </epp>
@@ -12435,7 +13246,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="bla"/>
-    <clTRID>1434466013</clTRID>
+    <clTRID>1436775088</clTRID>
   </command>
 </epp>
 ```
@@ -12446,12 +13257,12 @@ RESPONSE:
 <?xml version="1.0" encoding="UTF-8"?>
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
-    <result code="2306">
-      <msg lang="en">Attribute is invalid: op</msg>
+    <result code="2004">
+      <msg lang="en">Parameter value range error: op</msg>
     </result>
     <trID>
-      <clTRID>1434466013</clTRID>
-      <svTRID>ccReg-1337274768</svTRID>
+      <clTRID>1436775088</clTRID>
+      <svTRID>ccReg-3390618149</svTRID>
     </trID>
   </response>
 </epp>
@@ -12466,7 +13277,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="req"/>
-    <clTRID>1434466014</clTRID>
+    <clTRID>1436775089</clTRID>
   </command>
 </epp>
 ```
@@ -12481,12 +13292,12 @@ RESPONSE:
       <msg>Command completed successfully; ack to dequeue</msg>
     </result>
     <msgQ count="3" id="4">
-      <qDate>2015-06-16T14:46:54Z</qDate>
+      <qDate>2015-07-13T08:11:29Z</qDate>
       <msg>Smth else.</msg>
     </msgQ>
     <trID>
-      <clTRID>1434466014</clTRID>
-      <svTRID>ccReg-0133258887</svTRID>
+      <clTRID>1436775089</clTRID>
+      <svTRID>ccReg-1784449840</svTRID>
     </trID>
   </response>
 </epp>
@@ -12499,7 +13310,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="ack" msgID="4"/>
-    <clTRID>1434466014</clTRID>
+    <clTRID>1436775089</clTRID>
   </command>
 </epp>
 ```
@@ -12515,8 +13326,8 @@ RESPONSE:
     </result>
     <msgQ count="2" id="4"/>
     <trID>
-      <clTRID>1434466014</clTRID>
-      <svTRID>ccReg-7865881696</svTRID>
+      <clTRID>1436775089</clTRID>
+      <svTRID>ccReg-9604708191</svTRID>
     </trID>
   </response>
 </epp>
@@ -12529,7 +13340,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="req"/>
-    <clTRID>1434466014</clTRID>
+    <clTRID>1436775089</clTRID>
   </command>
 </epp>
 ```
@@ -12544,12 +13355,12 @@ RESPONSE:
       <msg>Command completed successfully; ack to dequeue</msg>
     </result>
     <msgQ count="2" id="3">
-      <qDate>2015-06-16T14:46:54Z</qDate>
+      <qDate>2015-07-13T08:11:29Z</qDate>
       <msg>Something.</msg>
     </msgQ>
     <trID>
-      <clTRID>1434466014</clTRID>
-      <svTRID>ccReg-2990701289</svTRID>
+      <clTRID>1436775089</clTRID>
+      <svTRID>ccReg-1957177353</svTRID>
     </trID>
   </response>
 </epp>
@@ -12562,7 +13373,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="ack" msgID="3"/>
-    <clTRID>1434466014</clTRID>
+    <clTRID>1436775089</clTRID>
   </command>
 </epp>
 ```
@@ -12578,8 +13389,8 @@ RESPONSE:
     </result>
     <msgQ count="1" id="3"/>
     <trID>
-      <clTRID>1434466014</clTRID>
-      <svTRID>ccReg-5225046181</svTRID>
+      <clTRID>1436775089</clTRID>
+      <svTRID>ccReg-6685502756</svTRID>
     </trID>
   </response>
 </epp>
@@ -12592,7 +13403,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="req"/>
-    <clTRID>1434466014</clTRID>
+    <clTRID>1436775089</clTRID>
   </command>
 </epp>
 ```
@@ -12607,12 +13418,12 @@ RESPONSE:
       <msg>Command completed successfully; ack to dequeue</msg>
     </result>
     <msgQ count="1" id="2">
-      <qDate>2015-06-16T14:46:54Z</qDate>
+      <qDate>2015-07-13T08:11:29Z</qDate>
       <msg>Balance low.</msg>
     </msgQ>
     <trID>
-      <clTRID>1434466014</clTRID>
-      <svTRID>ccReg-6707896691</svTRID>
+      <clTRID>1436775089</clTRID>
+      <svTRID>ccReg-8768039298</svTRID>
     </trID>
   </response>
 </epp>
@@ -12625,7 +13436,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="ack" msgID="2"/>
-    <clTRID>1434466014</clTRID>
+    <clTRID>1436775089</clTRID>
   </command>
 </epp>
 ```
@@ -12641,8 +13452,8 @@ RESPONSE:
     </result>
     <msgQ count="0" id="2"/>
     <trID>
-      <clTRID>1434466014</clTRID>
-      <svTRID>ccReg-8174947053</svTRID>
+      <clTRID>1436775089</clTRID>
+      <svTRID>ccReg-1482529320</svTRID>
     </trID>
   </response>
 </epp>
@@ -12655,7 +13466,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <poll op="req"/>
-    <clTRID>1434466015</clTRID>
+    <clTRID>1436775089</clTRID>
   </command>
 </epp>
 ```
@@ -12670,8 +13481,8 @@ RESPONSE:
       <msg>Command completed successfully; no messages</msg>
     </result>
     <trID>
-      <clTRID>1434466015</clTRID>
-      <svTRID>ccReg-0858483195</svTRID>
+      <clTRID>1436775089</clTRID>
+      <svTRID>ccReg-1495533817</svTRID>
     </trID>
   </response>
 </epp>
@@ -12686,7 +13497,7 @@ RESPONSE:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <greeting>
     <svID>EPP server (EIS)</svID>
-    <svDate>2015-06-16T14:46:55Z</svDate>
+    <svDate>2015-07-13T08:11:30Z</svDate>
     <svcMenu>
       <version>1.0</version>
       <lang>en</lang>
@@ -12758,11 +13569,11 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2501">
-      <msg>Authentication error; server closing connection</msg>
+      <msg>Authentication error; server closing connection (API user not found)</msg>
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-4597363742</svTRID>
+      <svTRID>ccReg-4962773185</svTRID>
     </trID>
   </response>
 </epp>
@@ -12806,11 +13617,11 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2501">
-      <msg>Authentication error; server closing connection</msg>
+      <msg>Authentication error; server closing connection (API user is not active)</msg>
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-1428657257</svTRID>
+      <svTRID>ccReg-5095764492</svTRID>
     </trID>
   </response>
 </epp>
@@ -12845,7 +13656,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-3082305327</svTRID>
+      <svTRID>ccReg-5738565184</svTRID>
     </trID>
   </response>
 </epp>
@@ -12888,10 +13699,58 @@ RESPONSE:
 <epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2501">
-      <msg>Authentication error; server closing connection</msg>
+      <msg>Authentication error; server closing connection (API user not found)</msg>
     </result>
     <trID>
-      <svTRID>ccReg-3565992149</svTRID>
+      <svTRID>ccReg-5622270256</svTRID>
+    </trID>
+  </response>
+</epp>
+```
+
+### EPP Session when connected should return latin only error  
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+  <command>
+    <login>
+      <clID>你好你好</clID>
+      <pw>ghyt9e4fu</pw>
+      <options>
+        <version>1.0</version>
+        <lang>en</lang>
+      </options>
+      <svcs>
+        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
+        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
+        <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
+        <svcExtension>
+          <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
+          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+        </svcExtension>
+      </svcs>
+    </login>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<epp schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+  <response>
+    <result code="2306">
+      <msg lang="en">Parameter value policy error. Allowed only Latin characters.</msg>
+    </result>
+    <trID>
+      <clTRID>ABC-12345</clTRID>
+      <svTRID>ccReg-0289669237</svTRID>
     </trID>
   </response>
 </epp>
@@ -12939,7 +13798,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0832089091</svTRID>
+      <svTRID>ccReg-0488458615</svTRID>
     </trID>
   </response>
 </epp>
@@ -12987,7 +13846,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-1535717609</svTRID>
+      <svTRID>ccReg-3342389163</svTRID>
     </trID>
   </response>
 </epp>
@@ -13033,7 +13892,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-5055971923</svTRID>
+      <svTRID>ccReg-0540678286</svTRID>
     </trID>
   </response>
 </epp>
@@ -13081,7 +13940,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-0729496396</svTRID>
+      <svTRID>ccReg-6032986990</svTRID>
     </trID>
   </response>
 </epp>
@@ -13110,7 +13969,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-7311985652</svTRID>
+      <svTRID>ccReg-1481291484</svTRID>
     </trID>
   </response>
 </epp>
@@ -13159,7 +14018,7 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-7387239733</svTRID>
+      <svTRID>ccReg-3765095362</svTRID>
     </trID>
   </response>
 </epp>
@@ -13208,8 +14067,9 @@ RESPONSE:
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
-      <svTRID>ccReg-9506918430</svTRID>
+      <svTRID>ccReg-0096989953</svTRID>
     </trID>
   </response>
 </epp>
 ```
+

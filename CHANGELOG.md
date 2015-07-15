@@ -1,3 +1,12 @@
+14.07.2015
+
+* Updated que init script doc example, now status and stop works faster
+* Updated registry server cronjob with mina cron:setup
+
+07.07.2015
+
+* Before applyling 20150707104937_refactor_reserved_domains.rb migration, enable hstore extension in db
+
 01.07.2015
 
 * Added que init script example at doc/que directory, please setup que accornding to doc/que/README.md

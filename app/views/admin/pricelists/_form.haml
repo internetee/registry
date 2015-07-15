@@ -29,5 +29,7 @@
   %hr
   .row
     .col-md-12.text-right
-      = button_tag(t(:save), class: 'btn btn-primary')
-
+      = button_tag(t(:save), class: 'btn btn-warning')
+      - if !f.object.new_record? && can?(:delete, f.object)
+        = link_to t(:delete), admin_pricelist_path(f.object), 
+          method: :delete, data: { confirm: t(:are_you_sure_destroy) }, class: 'btn btn-danger'

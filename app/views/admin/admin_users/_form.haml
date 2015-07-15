@@ -1,4 +1,4 @@
-= form_for([:admin, @admin_user], html: { class: 'form-horizontal' }) do |f|
+= form_for([:admin, @admin_user], html: { class: 'form-horizontal', autocomplete: 'off' }) do |f|
   = render 'shared/full_errors', object: @admin_user
 
   .row
@@ -14,12 +14,12 @@
             - not_required = @admin_user.new_record? ? '' : 'not-required'
             = f.label :password, class: not_required
           .col-md-8
-            = f.password_field(:password, class: 'form-control')
+            = f.text_field(:password, class: 'form-control')
         .form-group
           .col-md-4.control-label
             = f.label :password_confirmation, class: not_required
           .col-md-8
-            = f.password_field(:password_confirmation, class: 'form-control')
+            = f.text_field(:password_confirmation, class: 'form-control')
 
       %hr
       .form-group
@@ -36,7 +36,7 @@
         .col-md-4.control-label
           = f.label :country_code, t(:country)
         .col-md-8
-          = f.select(:country_code, 
+          = f.select(:country_code,
             SortedCountry.all_options(f.object.country_code), {}, class: 'form-control')
       %hr
       .form-group
@@ -48,7 +48,7 @@
   %hr
   .row
     .col-md-8.text-right
-      = button_tag(t(:save), class: 'btn btn-primary')
+      = button_tag(t(:save), class: 'btn btn-warning')
 
 :coffee
   $("#admin_user_password").removeAttr('required')
