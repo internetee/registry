@@ -30,6 +30,10 @@
             .col-md-8
               = x.text_field(:sum, class: 'form-control', required: true)
           .form-group
+            = x.label :currency, class: 'col-md-4 control-label required'
+            .col-md-8
+              = x.text_field(:currency, class: 'form-control', required: true, readonly: true)
+          .form-group
             = x.label :reference_no, class: 'col-md-4 control-label required'
             .col-md-8
               = x.text_field(:reference_no, class: 'form-control', required: true)

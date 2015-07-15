@@ -59,4 +59,52 @@ feature 'Invoice', type: :feature do
     response_headers['Content-Type'].should == 'application/pdf'
     response_headers['Content-Disposition'].should == "attachment; filename=\"#{@invoice.pdf_name}\""
   end
+
+  it 'should create bankt statement and transaction for invoice' do
+    r = Fabricate(:registrar, reference_no: 'RF7086666663')
+    invoice = r.issue_prepayment_invoice(200, 'add some money')
+
+    visit '/admin/invoices'
+    click_link invoice.to_s
+
+    page.should have_content('Unpaid')
+
+    click_link 'Payment received'
+
+    paid_at = Time.zone.now
+    find_field('Bank code').value.should == '689'
+    find_field('Iban').value.should == 'EE557700771000598731'
+    find_field('Description').value.should == invoice.to_s
+    find_field('Sum').value.should == invoice.sum.to_s
+    find_field('Currency').value.should == 'EUR'
+    find_field('Reference no').value.should == invoice.reference_no
+    find_field('Paid at').value.should == paid_at.to_date.to_s
+
+    click_button 'Save'
+
+    page.should have_content('Record created')
+    page.should have_content('689')
+    page.should have_content('EE557700771000598731')
+    page.should have_content('Not binded', count: 2)
+    page.should have_content(invoice.sum.to_s)
+    page.should have_content('EUR')
+
+    click_link 'Bind invoices'
+
+    page.should have_content('Invoices were fully binded')
+    page.should have_content('Fully binded')
+    page.should have_content('Binded')
+
+    click_link I18n.l(paid_at, format: :date_long)
+
+    page.should have_content('Binded')
+    page.should have_content(invoice.to_s)
+    page.should have_content(invoice.sum.to_s)
+    page.should have_content(invoice.reference_no)
+    page.should have_content(I18n.l(paid_at, format: :date_long))
+
+    click_link(invoice.to_s)
+    page.should_not have_content('Unpaid')
+    page.should_not have_content('Payment received')
+  end
 end

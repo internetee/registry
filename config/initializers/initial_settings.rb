@@ -50,6 +50,7 @@ if con.present? && con.table_exists?('settings')
   Setting.save_default(:registry_vat_prc, 0.2)
   Setting.save_default(:registry_iban, 'EE557700771000598731')
   Setting.save_default(:registry_bank, 'LHV Pank')
+  Setting.save_default(:registry_bank_code, '689')
   Setting.save_default(:registry_swift, 'LHVBEE22')
   Setting.save_default(:registry_invoice_contact, 'Martti Õigus')
 end
