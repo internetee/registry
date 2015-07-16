@@ -91,11 +91,17 @@ class Epp::DomainsController < EppController
     render_epp_response '/epp/domains/check'
   end
 
+  # rubocop: disable Metrics/MethodLength
   def renew
     authorize! :renew, @domain
 
-    period = params[:parsed_frame].css('period').text
-    period_unit = params[:parsed_frame].css('period').first['unit']
+    period = params[:parsed_frame].css('period').text.presence || 1
+    period_unit = 'y'
+    period_element = params[:parsed_frame].css('period').first
+
+    if period_element.present? && period_element['unit'].present?
+      period_unit = period_element['unit']
+    end
 
     ActiveRecord::Base.transaction do
       success = @domain.renew(
@@ -122,6 +128,7 @@ class Epp::DomainsController < EppController
       end
     end
   end
+  # rubocop: enable Metrics/MethodLength
 
   def transfer
     authorize! :transfer, @domain, @password
@@ -182,7 +189,9 @@ class Epp::DomainsController < EppController
 
   def validate_renew
     @prefix = 'renew > renew >'
-    requires 'name', 'curExpDate', 'period'
+    requires 'name', 'curExpDate'
+
+    optional_attribute 'period', 'unit', values: %w(d m y)
   end
 
   def validate_transfer

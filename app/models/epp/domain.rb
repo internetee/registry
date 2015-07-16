@@ -399,7 +399,7 @@ class Epp::Domain < Domain
     statuses.delete(DomainStatus::PENDING_UPDATE)
 
     return unless update(frame, user, false)
-    clean_pendings! 
+    clean_pendings!
     self.deliver_emails = true # turn on email delivery for epp
     DomainMailer.registrant_updated(self).deliver_now
   end
@@ -446,8 +446,8 @@ class Epp::Domain < Domain
 
     p = self.class.convert_period_to_time(period, unit)
     self.valid_to = valid_to + p
-    self.outzone_at = outzone_at + p
-    self.delete_at = delete_at + p
+    self.outzone_at = valid_to + Setting.expire_warning_period.days
+    self.delete_at = outzone_at + Setting.redemption_grace_period.days
     self.period = period
     self.period_unit = unit
 

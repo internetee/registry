@@ -217,11 +217,11 @@ class EppController < ApplicationController
   end
 
   def optional_attribute(element_selector, attribute_selector, options)
-    element = requires(element_selector, allow_blank: options[:allow_blank])
+    full_selector = [@prefix, element_selector].compact.join(' ')
+    element = params[:parsed_frame].css(full_selector).first
     return unless element
 
     attribute = element[attribute_selector]
-
     return if (attribute && options[:values].include?(attribute)) || !attribute
 
     epp_errors << {
