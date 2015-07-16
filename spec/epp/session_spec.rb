@@ -28,6 +28,11 @@ describe 'EPP Session', epp: true do
       response[:msg].should == 'Authentication error; server closing connection (API user not found)'
       response[:result_code].should == '2501'
       response[:clTRID].should == 'ABC-12345'
+
+      log = ApiLog::EppLog.last
+      log.request_command.should == 'login'
+      log.request_successful.should == false
+      log.api_user_name.should == 'api-public'
     end
 
     it 'does not log in with inactive user' do
@@ -38,6 +43,11 @@ describe 'EPP Session', epp: true do
       response = epp_plain_request(inactive)
       response[:msg].should == 'Authentication error; server closing connection (API user is not active)'
       response[:result_code].should == '2501'
+
+      log = ApiLog::EppLog.last
+      log.request_command.should == 'login'
+      log.request_successful.should == false
+      log.api_user_name.should == '2-api-inactive-user'
     end
 
     it 'prohibits further actions unless logged in' do
@@ -61,6 +71,11 @@ describe 'EPP Session', epp: true do
       response[:msg].should == 'Parameter value policy error. Allowed only Latin characters.'
       response[:result_code].should == '2306'
       response[:clTRID].should == 'ABC-12345'
+
+      log = ApiLog::EppLog.last
+      log.request_command.should == 'login'
+      log.request_successful.should == false
+      log.api_user_name.should == 'api-public'
     end
 
     context 'with valid user' do
