@@ -58,7 +58,7 @@ Once the file is created, reload the xt_recent kernel module via modprobe -r xt_
 #!/bin/bash
 iptables -A INPUT -p tcp --dport 443 -m recent --name repp  --rcheck --seconds 60 --hitcount 25 -j DROP
 iptables -A INPUT -p tcp --dport 443 -m state --state NEW -m recent --set --rsource --name repp -j ACCEPT
-iptables -A INPUT -p tcp --dport 443 -m recent --name rwhois  --rcheck --seconds 60 --hitcount 25 -j DROP
+iptables -A INPUT -p tcp --dport 80 -m recent --name rwhois  --rcheck --seconds 60 --hitcount 25 -j DROP
 iptables -A INPUT -p tcp --dport 80 -m state --state NEW -m recent --set --rsource --name rwhois -j ACCEPT
 
 ````
