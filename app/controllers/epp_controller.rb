@@ -125,8 +125,13 @@ class EppController < ApplicationController
   def latin_only
     return true if params['frame'].blank?
     return true if params['frame'].match(/\A[\p{Latin}\p{Z}\p{P}\p{S}\p{Cc}\p{Cf}\w_\'\+\-\.\(\)\/]*\Z/i)
-    render_epp_response '/epp/latin_error'
-    false
+
+    epp_errors << {
+      msg: 'Parameter value policy error. Allowed only Latin characters.',
+      code: '2306'
+    }
+
+    handle_errors and return false
   end
 
   # VALIDATION

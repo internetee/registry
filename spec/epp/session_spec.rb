@@ -71,6 +71,11 @@ describe 'EPP Session', epp: true do
       response[:msg].should == 'Parameter value policy error. Allowed only Latin characters.'
       response[:result_code].should == '2306'
       response[:clTRID].should == 'ABC-12345'
+
+      log = ApiLog::EppLog.last
+      log.request_command.should == 'login'
+      log.request_successful.should == false
+      log.api_user_name.should == 'api-public'
     end
 
     context 'with valid user' do
