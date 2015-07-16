@@ -9,7 +9,7 @@ however officially Debian 7 is supported and tested.
 * Consider using [RBENV](https://github.com/sstephenson/rbenv)
 * Compile requried [ruby version](https://github.com/internetee/registry/blob/master/.ruby-version)
 * [Phusion passenger](https://www.phusionpassenger.com/documentation/Users%20guide%20Apache.html)
-* [Postgresql](http://www.postgresql.org/docs/)
+* [Postgresql](http://www.postgresql.org/docs/) (requires postgresql-contrib package)
 
 Registry application is not tested with multi-threaded system (such as Puma) and 
 it's not officially supported. Please use multi-process system instead (Passenger, Unicorn, Mongrel)
@@ -43,11 +43,11 @@ Please install following lib, otherwise your bundler install might not be succes
 ### Firewall rate limit config
 
 First increase the maximum possible value form 20 to 100 of the hitcount parameter.
-ip_pkt_list_tot of the xt_recent kernel module. 
+ip_pkt_list_tot of the xt_recent kernel module. Secondly change /proc/xt_recent/ permissions so, epp user can modify the tables.
 This can be done by creating an ip_pkt_list_tot.conf file in /etc/modeprobe.d/ which contains:
 
 ````
-options xt_recent ip_pkt_list_tot=100
+options xt_recent ip_pkt_list_tot=100 ip_list_uid=eppuseruid ip_list_gid=eppusergid
 ````
 
 Once the file is created, reload the xt_recent kernel module via modprobe -r xt_recent && modprobe xt_recent or reboot the system.
@@ -56,69 +56,35 @@ Once the file is created, reload the xt_recent kernel module via modprobe -r xt_
 
 ````
 #!/bin/bash
-# Inspired and credits to Vivek Gite: http://www.cyberciti.biz/faq/iptables-connection-limits-howto/
-IPT=/sbin/iptables
-# Max connection in seconds
-SECONDS=60
-# Max connections per IP
-BLOCKCOUNT=100
-# default action can be DROP or REJECT or something else.
-DACTION="REJECT"
-$IPT -A INPUT -p tcp --dport 80 -i eth0 -m state --state NEW -m recent --set
-$IPT -A INPUT -p tcp --dport 80 -i eth0 -m state --state NEW -m recent --rcheck --seconds ${SECONDS} --hitcount ${BLOCKCOUNT} -j ${DACTION}
+iptables -A INPUT -p tcp --dport 443 -m recent --name repp  --rcheck --seconds 60 --hitcount 25 -j DROP
+iptables -A INPUT -p tcp --dport 443 -m state --state NEW -m recent --set --rsource --name repp -j ACCEPT
+iptables -A INPUT -p tcp --dport 80 -m recent --name rwhois  --rcheck --seconds 60 --hitcount 25 -j DROP
+iptables -A INPUT -p tcp --dport 80 -m state --state NEW -m recent --set --rsource --name rwhois -j ACCEPT
+
 ````
 
 #### Whois
 
 ````
 #!/bin/bash
-# Inspired and credits to Vivek Gite: http://www.cyberciti.biz/faq/iptables-connection-limits-howto/
-IPT=/sbin/iptables
-# Max connection in seconds
-SECONDS=60
-# Max connections per IP
-BLOCKCOUNT=100
-# default action can be DROP or REJECT or something else.
-DACTION="REJECT"
-$IPT -A INPUT -p tcp --dport 43 -i eth0 -m state --state NEW -m recent --set
-$IPT -A INPUT -p tcp --dport 43 -i eth0 -m state --state NEW -m recent --rcheck --seconds ${SECONDS} --hitcount ${BLOCKCOUNT} -j ${DACTION}
+iptables -A INPUT -p tcp --dport 43 -m recent --name whois --rsource --rcheck --seconds 60 --hitcount 25 -j LOG --log-prefix "whois limit: " --log-level warning
+iptables -A INPUT -p tcp --dport 43 -m recent --name whois --rsource --rcheck --seconds 60 --hitcount 25 -j REJECT
+iptables -A INPUT -p tcp --dport 43 -m recent --set --rsource --name whois -j ACCEPT
+
 ````
 
 #### EPP
 
-Iptables hitcounter is updated by application.
+Iptables hitcounter is updated by application. For every registrar there is one recent table, where the request counters are stored, registrar handles and sources ips are "connected" with iptables rules.
 
 ````
 #!/bin/bash
-# Inspired and credits to Vivek Gite: http://www.cyberciti.biz/faq/iptables-connection-limits-howto/
-IPT=/sbin/iptables
-# Registrar handler
-REGISTRAR_CODE="test"
-# Max connection in seconds
-SECONDS=60
-# Max connections per IP
-BLOCKCOUNT=100
-# Source specification. Address can be either a network name, a hostname, a network IP address 
-# (with /mask), or a plain IP address. Hostnames will be resolved once only, before the rule
-# is submitted to the kernel. Please note that specifying any name to be resolved with 
-# a remote query such as DNS is a really bad idea.  The mask can be either a network mask or 
-# a plain number, specifying the number of 1's at the left side of the network mask. 
-# Thus, a mask of 24 is equivalent to 255.255.255.0. A "!" argument before 
-# the address specification inverts the sense of the address. 
-# The flag --src is an alias for this option. Multiple addresses can be specified, 
-# but this will expand to multiple rules (when adding with -A), 
-# or will cause multiple rules to be deleted (with -D). 
-REGISTRAR_HANDLE_SOURCE="x.x.x.x"
-# default action can be DROP or REJECT or something else.
-DACTION="REJECT"
-$IPT -A INPUT -p tcp --dport 700 -i eth0 -m state --state NEW -m recent --set
-$IPT -A INPUT -p tcp --dport 700 -s $REGISTRAR_HANDLE_SOURCE -m recent --name $REGISTRAR_CODE --rdest --rcheck --hitcount ${BLOCKCOUNT} --seconds ${SECONDS} -j ${DACTION}
-````
 
-After adding iptable counters, please add correct permissions to proc files at path /proc/net/xt_recent
+iptables -A INPUT -p tcp --dport 700 -s $REGISTRAR_SOURCE -m recent --name $REGISTRAR_CODE --rdest --rcheck --hitcount 100 --seconds 60 -j DROP
+iptables -A INPUT -p tcp --dport 700 -s $REGISTRAR_SOURCE2 -m recent --name $REGISTRAR_CODE --rdest --rcheck --hitcount 100 --seconds 60 -j DROP
+iptables -A INPUT -p tcp --dport 700 -s $REGISTRAR2_SOURCE -m recent --name $REGISTRAR2_CODE --rdest --rcheck --hitcount 100 --seconds 60 -j DROP
+iptables -A INPUT -p tcp --dport 700 -s $REGISTRAR2_SOURCE2 -m recent --name $REGISTRAR2_CODE --rdest --rcheck --hitcount 100 --seconds 60 -j DROP
 
-Example command:
 
 ````
-sudo chown registry /proc/net/xt_recent/*
-````
+
