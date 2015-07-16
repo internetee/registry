@@ -25,7 +25,7 @@ Installation at deployed server:
 PID files
 ---------
 
-All pid files are at tmp/pids directory.
+All pid files are at log/que directory.
 
 Debugging
 ---------

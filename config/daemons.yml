@@ -1,6 +1,5 @@
 dir_mode: script
-dir: ../../tmp/pids
-log_dir: <%= File.expand_path("../../log", __FILE__) %>
+dir: ../../log/que
 multiple: true
 backtrace: true
 monitor: true

@@ -181,8 +181,8 @@ task setup: :environment do
   queue! %(mkdir -p "#{deploy_to}/shared/import/legal_documents")
   queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/import/legal_documents")
 
-  queue! %(mkdir -p "#{deploy_to}/shared/tmp/pids")
-  queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/tmp/pids")
+  queue! %(mkdir -p "#{deploy_to}/shared/log/que")
+  queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/log/que")
 
   queue! %(touch "#{deploy_to}/shared/config/database.yml")
   deploy do
@@ -205,8 +205,8 @@ task deploy: :environment do
     invoke :load_commit_hash
 
     # TEMP until all servers are updated
-    queue! %(mkdir -p "#{deploy_to}/shared/tmp/pids")
-    queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/tmp/pids")
+    queue! %(mkdir -p "#{deploy_to}/shared/log/que")
+    queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/log/que")
 
     invoke :'deploy:link_shared_paths'
     invoke :'bundle:install'
