@@ -138,7 +138,8 @@ set :shared_paths, [
   'public/system',
   'export/zonefiles',
   'import/bank_statements',
-  'import/legal_documents'
+  'import/legal_documents',
+  'tmp/pids'
 ]
 
 # Optional settings:
@@ -180,6 +181,9 @@ task setup: :environment do
   queue! %(mkdir -p "#{deploy_to}/shared/import/legal_documents")
   queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/import/legal_documents")
 
+  queue! %(mkdir -p "#{deploy_to}/shared/tmp/pids")
+  queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/tmp/pids")
+
   queue! %(touch "#{deploy_to}/shared/config/database.yml")
   deploy do
     invoke :'git:clone'
@@ -199,6 +203,11 @@ task deploy: :environment do
     # instance of your project.
     invoke :'git:clone'
     invoke :load_commit_hash
+
+    # TEMP until all servers are updated
+    queue! %(mkdir -p "#{deploy_to}/shared/tmp/pids")
+    queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/tmp/pids")
+
     invoke :'deploy:link_shared_paths'
     invoke :'bundle:install'
     invoke :'rails:db_migrate'
