@@ -1,5 +1,6 @@
 dir_mode: script
 dir: ../../tmp/pids
+log_dir: ../../log
 multiple: true
 backtrace: true
 monitor: true
