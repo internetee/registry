@@ -22,9 +22,15 @@ Installation at deployed server:
     sudo /etc/init.d/que start    # for manual start 
     sudo update-rc.d que defaults # for start in server boot
 
-# Debugging
+PID files
+---------
 
-You can run que manually as well:
+All pid files are at tmp/pids directory.
+
+Debugging
+---------
+
+You can run que manually as well for debugging:
 
     cd /home/registry/registry/current
 
