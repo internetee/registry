@@ -214,7 +214,7 @@ task deploy: :environment do
     to :launch do
       invoke :restart
       invoke :'deploy:cleanup'
-      queue! "QUE_WORKER_COUNT=1 #{rake} daemon:que:restart" if que_restart
+      invoke :que_restart if que_restart
     end
   end
 end
@@ -243,6 +243,11 @@ end
 desc 'Restart Passenger application'
 task restart: :environment do
   queue "mkdir -p #{deploy_to}/current/tmp; touch #{deploy_to}/current/tmp/restart.txt"
+end
+
+desc 'Restart que server'
+task que_restart: :environment do
+  queue "/etc/init.d/que restart" 
 end
 
 namespace :cron do
