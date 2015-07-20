@@ -435,6 +435,24 @@ describe 'EPP Domain', epp: true do
       a.activity_type = AccountActivity::CREATE
     end
 
+    it 'creates a domain without period' do
+      old_balance = @registrar1.balance
+      old_activities = @registrar1.cash_account.account_activities.count
+      xml = domain_create_xml(period: nil)
+
+      response = epp_plain_request(xml)
+      response[:msg].should == 'Command completed successfully'
+      response[:result_code].should == '1000'
+      Domain.last.valid_to.should be_within(60).of(1.years.since)
+      @registrar1.balance.should be < old_balance
+      @registrar1.cash_account.account_activities.count.should == old_activities + 1
+      a = @registrar1.cash_account.account_activities.last
+      a.description.should == "Create #{Domain.last.name}"
+      a.sum.should == -BigDecimal.new('10.0')
+      a.activity_type = AccountActivity::CREATE
+      a.log_pricelist_id.should == @pricelist_reg_1_year.id
+    end
+
     it 'does not create a domain with invalid period' do
       old_balance = @registrar1.balance
       old_activities = @registrar1.cash_account.account_activities.count
@@ -448,6 +466,24 @@ describe 'EPP Domain', epp: true do
       response[:results][0][:value].should == '367'
       @registrar1.balance.should == old_balance
       @registrar1.cash_account.account_activities.count.should == old_activities
+    end
+
+    it 'does not create a domain with invalid period unit' do
+      xml = domain_create_xml({
+        period: { value: '1', attrs: { unit: '' } }
+      })
+
+      response = epp_plain_request(xml, validate_input: false)
+      response[:results][0][:msg].should == 'Attribute is invalid: unit'
+      response[:results][0][:result_code].should == '2306'
+
+      xml = domain_create_xml({
+        period: { value: '1', attrs: { unit: 'bla' } }
+      })
+
+      response = epp_plain_request(xml, validate_input: false)
+      response[:results][0][:msg].should == 'Attribute is invalid: unit'
+      response[:results][0][:result_code].should == '2306'
     end
 
     it 'creates a domain with multiple dnskeys' do

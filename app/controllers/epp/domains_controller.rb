@@ -161,6 +161,8 @@ class Epp::DomainsController < EppController
     @prefix = nil
     requires 'extension > extdata > legalDocument'
 
+    optional_attribute 'period', 'unit', values: %w(d m y)
+
     status_editing_disabled
   end
 
