@@ -11,38 +11,35 @@
 set -u
 set -e
 
-#
-# Change these to match your server:
-#
-# Make sure that all paths are correct.
-#
+### CHANGES
 APP_HOME="/home/registry/registry"
 APP_ROOT="$APP_HOME/current"
-QUE_USER=registry # or use some other unprivileged system user
+QUE_USER=registry # or use some other unprivileged OS user what your registry servers uses
 RAILS_ENV=production
-RUBY_BUNDLE_PATH=/home/$QUE_USER/.rbenv/shims/bundle         
-QUE_INSTANCES=1 # or as many really needed based real load
+RUBY_BUNDLE=/home/$QUE_USER/.rbenv/shims/bundle         
+QUE_INSTANCES=1 # or as many really needed based on real load info
+### END OF CHANGES
 
 cd $APP_ROOT || exit 1
 
 case ${1-help} in
 status)
-        cd $APP_ROOT && RAILS_ENV=$RAILS_ENV $RUBY_BUNDLE_PATH exec lib/daemons/que_ctl status
+        cd $APP_ROOT && RAILS_ENV=$RAILS_ENV $RUBY_BUNDLE exec lib/daemons/que_ctl status
         ;;
 start)
         echo "$1 que monitor and server"
         for i in `seq 1 $QUE_INSTANCES`; do
-          cd $APP_ROOT && QUE_WORKER_COUNT=1 RAILS_ENV=$RAILS_ENV $RUBY_BUNDLE_PATH exec rake daemon:que:start         
-          echo '.'
+          cd $APP_ROOT && QUE_WORKER_COUNT=1 RAILS_ENV=$RAILS_ENV QUE_USER=$QUE_USER $RUBY_BUNDLE exec rake daemon:que:start         
+          echo 'que instance started'
         done
         ;;
 stop)
         echo "$1 que monitor and server"
-        cd $APP_ROOT && RAILS_ENV=$RAILS_ENV $RUBY_BUNDLE_PATH lib/daemons/que_ctl stop
+        cd $APP_ROOT && RAILS_ENV=$RAILS_ENV $RUBY_BUNDLE exec lib/daemons/que_ctl stop
         ;;
 restart)
         echo "$1 que monitor and server"
-        cd $APP_ROOT && RAILS_ENV=$RAILS_ENV $RUBY_BUNDLE_PATH exec rake daemon:que:restart         
+        cd $APP_ROOT && RAILS_ENV=$RAILS_ENV QUE_USER=$QUE_USER $RUBY_BUNDLE exec rake daemon:que:restart         
         ;;
 *)
         echo >&2 "Usage: $0 <status|start|stop|restart>"

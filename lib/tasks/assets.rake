@@ -12,3 +12,7 @@ namespace :assets do
     end
   end
 end
+
+task as: :environment do
+  system('RAILS_ENV=production rake assets:precompile')
+end

@@ -11,7 +11,7 @@ require 'mina/rbenv'  # for rbenv support. (http://rbenv.org)
 #   branch       - Branch name to deploy. (needed by mina/git)
 
 # alpha branch, all interfaces unified
-set :domain, 'registry-st'
+set :domain, 'registry'
 set :deploy_to, '$HOME/registry'
 set :repository, 'https://github.com/domify/registry' # dev repo
 set :branch, 'master'
@@ -20,7 +20,7 @@ set :que_restart, true
 
 # alpha branch, only use for heavy debugging
 task :epp do
-  set :domain, 'registry-st'
+  set :domain, 'registry'
   set :deploy_to, '$HOME/epp'
   set :repository, 'https://github.com/domify/registry' # dev repo
   set :branch, 'master'
@@ -30,7 +30,7 @@ end
 
 # alpha branch, only use for heavy debugging
 task :registrar do
-  set :domain, 'registry-st'
+  set :domain, 'registry'
   set :deploy_to, '$HOME/registrar'
   set :repository, 'https://github.com/domify/registry' # dev repo
   set :branch, 'master'
@@ -40,7 +40,7 @@ end
 
 # alpha branch, only use for heavy debugging
 task :registrant do
-  set :domain, 'registry-st'
+  set :domain, 'registryt'
   set :deploy_to, '$HOME/registrant'
   set :repository, 'https://github.com/domify/registry' # dev repo
   set :branch, 'master'
@@ -138,7 +138,8 @@ set :shared_paths, [
   'public/system',
   'export/zonefiles',
   'import/bank_statements',
-  'import/legal_documents'
+  'import/legal_documents',
+  'tmp/pids'
 ]
 
 # Optional settings:
@@ -180,6 +181,9 @@ task setup: :environment do
   queue! %(mkdir -p "#{deploy_to}/shared/import/legal_documents")
   queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/import/legal_documents")
 
+  queue! %(mkdir -p "#{deploy_to}/shared/log/que")
+  queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/log/que")
+
   queue! %(touch "#{deploy_to}/shared/config/database.yml")
   deploy do
     invoke :'git:clone'
@@ -199,13 +203,18 @@ task deploy: :environment do
     # instance of your project.
     invoke :'git:clone'
     invoke :load_commit_hash
+
+    # TEMP until all servers are updated
+    queue! %(mkdir -p "#{deploy_to}/shared/log/que")
+    queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/log/que")
+
     invoke :'deploy:link_shared_paths'
     invoke :'bundle:install'
     invoke :'rails:db_migrate'
     to :launch do
       invoke :restart
       invoke :'deploy:cleanup'
-      queue! "QUE_WORKER_COUNT=1 #{rake} daemon:que:restart" if que_restart
+      invoke :que_restart if que_restart
     end
   end
 end
@@ -234,6 +243,11 @@ end
 desc 'Restart Passenger application'
 task restart: :environment do
   queue "mkdir -p #{deploy_to}/current/tmp; touch #{deploy_to}/current/tmp/restart.txt"
+end
+
+desc 'Restart que server'
+task que_restart: :environment do
+  queue "/etc/init.d/que restart" 
 end
 
 namespace :cron do

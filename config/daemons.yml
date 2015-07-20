@@ -1,7 +1,9 @@
 dir_mode: script
-dir: ../../log
+dir: ../../log/que
 multiple: true
 backtrace: true
 monitor: true
 ontop: false
 app_name: 'que'
+user: <%= ENV['QUE_USER'] || 'registry' %>
+group: <%= ENV['QUE_GROUP'] || ENV['QUE_USER'] || 'registry' %>
