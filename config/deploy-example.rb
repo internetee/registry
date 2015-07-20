@@ -219,19 +219,6 @@ task deploy: :environment do
   end
 end
 
-desc 'Rolls back the latest release'
-task rollback: :environment do
-  queue! %(echo "-----> Rolling back to previous release for instance: #{domain}")
-  queue %(ls "#{deploy_to}/releases" -Art | sort | tail -n 2 | head -n 1)
-  queue! %(
-    ls -Art "#{deploy_to}/releases" | sort | tail -n 2 | head -n 1 |
-    xargs -I active ln -nfs "#{deploy_to}/releases/active" "#{deploy_to}/current"
-  )
-  to :launch do
-    invoke :restart
-  end
-end
-
 desc 'Loads current commit hash'
 task load_commit_hash: :environment do
   queue! %(

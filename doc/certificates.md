@@ -215,7 +215,7 @@ After deploy, in rails console:
 
     Certificate.update_crl
 
-Update cron:
+Update cron (mina tool example, when installed correctly):
 
     mina cron:setup
 
