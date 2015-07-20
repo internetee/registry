@@ -256,7 +256,7 @@ en:
       invalid_type: 'PostalInfo type is invalid'
       unimplemented_command: 'Unimplemented command'
       domain_exists_but_belongs_to_other_registrar: 'Domain exists but belongs to other registrar'
-      required_attribute_missing: Required attributes missing
+      required_ident_attribute_missing: "Required ident attribute missing: %{key}"
 
   code: 'Code'
   value: 'Value'

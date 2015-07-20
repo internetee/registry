@@ -94,12 +94,26 @@ class Epp::ContactsController < EppController
       'postalInfo > addr > pc', 'postalInfo > addr > cc', 'voice', 'email'
     )
     ident = params[:parsed_frame].css('ident')
+
+    if ident.present? && ident.attr('type').blank?
+      epp_errors << {
+        code: '2003',
+        msg: I18n.t('errors.messages.required_ident_attribute_missing', key: 'type')
+      }
+    end
+
     if ident.present? && ident.text != 'birthday' && ident.attr('cc').blank?
       epp_errors << {
         code: '2003',
-        msg: I18n.t('errors.messages.required_attribute_missing', key: 'ident country code missing')
+        msg: I18n.t('errors.messages.required_ident_attribute_missing', key: 'cc')
       }
     end
+    # if ident.present? && ident.attr('cc').blank?
+      # epp_errors << {
+        # code: '2003',
+        # msg: I18n.t('errors.messages.required_ident_attribute_missing', key: 'cc')
+      # }
+    # end
     contact_org_disabled
     fax_disabled
     status_editing_disabled
