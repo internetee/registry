@@ -76,7 +76,7 @@ class Epp::SessionsController < EppController
     if success
       if parsed_frame.css('newPW').first
         unless @api_user.update(password: parsed_frame.css('newPW').first.text)
-          response.headers['X-EPP-Returncode'] = '2200'
+          response.headers['X-EPP-Returncode'] = '2500'
           handle_errors(@api_user) and return
         end
       end
@@ -85,7 +85,7 @@ class Epp::SessionsController < EppController
       epp_session.update_column(:registrar_id, @api_user.registrar_id)
       render_epp_response('login_success')
     else
-      response.headers['X-EPP-Returncode'] = '2200'
+      response.headers['X-EPP-Returncode'] = '2500'
       handle_errors
     end
   end
