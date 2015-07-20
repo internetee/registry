@@ -5,6 +5,11 @@ module Repp
 
     http_basic do |username, password|
       @current_user ||= ApiUser.find_by(username: username, password: password)
+      if @current_user
+        true
+      else
+        error! I18n.t('api_user_not_found'), 401
+      end
     end
 
     before do
