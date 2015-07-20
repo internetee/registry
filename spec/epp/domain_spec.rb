@@ -2283,8 +2283,6 @@ describe 'EPP Domain', epp: true do
 
     it 'does not renew domain with invalid period' do
       Setting.days_to_renew_domain_before_expire = 0
-      old_balance = @registrar1.balance
-      old_activities = @registrar1.cash_account.account_activities.count
 
       exp_date = domain.valid_to
       xml = @epp_xml.domain.renew(
