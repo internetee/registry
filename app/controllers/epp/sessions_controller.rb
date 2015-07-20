@@ -13,7 +13,8 @@ class Epp::SessionsController < EppController
     success = true
     @api_user = ApiUser.find_by(login_params)
 
-    if request.ip == ENV['webclient_ip'] && !Rails.env.test? && !Rails.env.development?
+    webclient_request = ENV['webclient_ips'].split(',').map(&:strip).include?(request.ip)
+    if webclient_request && !Rails.env.test? && !Rails.env.development?
       client_md5 = Certificate.parse_md_from_string(request.env['HTTP_SSL_CLIENT_CERT'])
       server_md5 = Certificate.parse_md_from_string(File.read(ENV['cert_path']))
       if client_md5 != server_md5
@@ -22,7 +23,7 @@ class Epp::SessionsController < EppController
       end
     end
 
-    if request.ip != ENV['webclient_ip'] && @api_user
+    if !webclient_request && @api_user
       unless @api_user.api_pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'], request.env['HTTP_SSL_CLIENT_S_DN_CN'])
         @msg = 'Authentication error; server closing connection (certificate is not valid)'
         success = false
@@ -71,7 +72,8 @@ class Epp::SessionsController < EppController
   # rubocop: enable Metrics/CyclomaticComplexity
 
   def ip_white?
-    return true if request.ip == ENV['webclient_ip']
+    webclient_request = ENV['webclient_ips'].split(',').map(&:strip).include?(request.ip)
+    return true if webclient_request
     if @api_user
       return false unless @api_user.registrar.api_ip_white?(request.ip)
     end
