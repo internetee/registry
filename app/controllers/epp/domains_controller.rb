@@ -91,7 +91,6 @@ class Epp::DomainsController < EppController
     render_epp_response '/epp/domains/check'
   end
 
-  # rubocop: disable Metrics/MethodLength
   def renew
     authorize! :renew, @domain
 
@@ -124,7 +123,6 @@ class Epp::DomainsController < EppController
       end
     end
   end
-  # rubocop: enable Metrics/MethodLength
 
   def transfer
     authorize! :transfer, @domain, @password
