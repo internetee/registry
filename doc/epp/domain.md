@@ -18,6 +18,7 @@ Domain name mapping protocol short version:
         <domain:period>        0-1      Registration period for domain. 
                                         Must add up to 1 / 2 / 3 years.
                                         Attribute: unit="y/m/d"
+                                        Default is 1 year.
         <domain:registrant>    1        Contact reference to the registrant
                                           Attribute:
                                             "verified"  # optional, allowed values 'yes', 'no'

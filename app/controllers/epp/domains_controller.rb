@@ -95,13 +95,9 @@ class Epp::DomainsController < EppController
   def renew
     authorize! :renew, @domain
 
-    period = params[:parsed_frame].css('period').text.presence || 1
-    period_unit = 'y'
-    period_element = params[:parsed_frame].css('period').first
-
-    if period_element.present? && period_element['unit'].present?
-      period_unit = period_element['unit']
-    end
+    period_element = params[:parsed_frame].css('period').text
+    period = (period_element.to_i == 0) ? 1 : period_element.to_i
+    period_unit = Epp::Domain.parse_period_unit_from_frame(params[:parsed_frame]) || 'y'
 
     ActiveRecord::Base.transaction do
       success = @domain.renew(
