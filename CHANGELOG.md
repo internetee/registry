@@ -1,3 +1,6 @@
+20.07.2015
+* New syntax for setting webclient IP-s (see config/application-example.yml)
+
 14.07.2015
 
 * Updated que init script doc example, now status and stop works faster
