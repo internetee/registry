@@ -77,5 +77,14 @@ describe Repp::DomainV1 do
 
       # TODO: Log failed API requests too
     end
+
+    it 'returns an error with invalid credentials' do
+      invalid_user = OpenStruct.new(username: 'bla', password: 'blabala')
+      get_with_auth '/repp/v1/domains', {}, invalid_user
+      response.status.should == 401
+
+      body = JSON.parse(response.body)
+      body['error'].should == 'API user not found'
+    end
   end
 end
