@@ -19,7 +19,7 @@ end
 
 Que.logger.level  = Logger.const_get((ENV['QUE_LOG_LEVEL'] || 'INFO').upcase)
 Que.worker_count  = 1
-Que.wake_interval = (ENV['QUE_WAKE_INTERVAL'] || 0.1).to_f
+Que.wake_interval = (ENV['QUE_WAKE_INTERVAL'] || 1).to_f
 Que.mode          = :async
 
 # When changing how signals are caught, be sure to test the behavior with
@@ -38,6 +38,6 @@ at_exit do
 end
 
 loop do
-  sleep 0.01
+  sleep 1
   break if stop
 end
