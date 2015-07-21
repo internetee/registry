@@ -144,13 +144,6 @@ module Depp
       end
     end
 
-    def initialize(attributes = {})
-      super
-      self.country_code = 'EE'       if country_code.blank?
-      self.ident_type = 'bic'        if ident_type.blank?
-      self.ident_country_code = 'EE' if ident_country_code.blank?
-    end
-
     def save
       create_xml = Depp::Contact.epp_xml.create(
         {
