@@ -140,7 +140,7 @@ module Depp
       def type_string(type_code)
         return '' if type_code.blank?
         t = SELECTION_TYPES.select { |tp| tp.second == type_code }
-        t.try(:first)
+        t.try(:first).try(:first)
       end
     end
 
