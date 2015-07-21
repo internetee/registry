@@ -1,4 +1,9 @@
+21.07.2015
+
+* Possible to define custom trusted proxies at application.yml
+
 20.07.2015
+
 * New syntax for setting webclient IP-s (see config/application-example.yml)
 
 14.07.2015
