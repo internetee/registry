@@ -473,7 +473,6 @@ class Epp::Domain < Domain
     when 'reject'
       return reject_transfer(frame, current_user) if pending_transfer
     end
-    add_epp_error('2303', nil, nil, I18n.t('no_transfers_found'))
   end
 
   # TODO: Eager load problems here. Investigate how it's possible not to query contact again
@@ -536,50 +535,48 @@ class Epp::Domain < Domain
       end
     end
   end
+
   # rubocop: enable Metrics/PerceivedComplexity
   # rubocop: enable Metrics/CyclomaticComplexity
-
   # rubocop: disable Metrics/MethodLength
   # rubocop: disable Metrics/AbcSize
   def query_transfer(frame, current_user)
-    return false unless can_be_transferred_to?(current_user.registrar)
+    unless can_be_transferred_to?(current_user.registrar)
+      throw :epp_error, {
+        code: '2002',
+        msg: I18n.t(:domain_already_belongs_to_the_querying_registrar)
+      }
+    end
 
     old_contact_codes = contacts.pluck(:code).sort.uniq
     old_registrant_code = registrant.code
 
     transaction do
-      begin
-        dt = domain_transfers.create!(
-          transfer_requested_at: Time.zone.now,
-          transfer_to: current_user.registrar,
-          transfer_from: registrar
+      dt = domain_transfers.create!(
+        transfer_requested_at: Time.zone.now,
+        transfer_to: current_user.registrar,
+        transfer_from: registrar
+      )
+
+      if dt.pending?
+        registrar.messages.create!(
+          body: I18n.t('transfer_requested'),
+          attached_obj_id: dt.id,
+          attached_obj_type: dt.class.to_s
         )
-
-        if dt.pending?
-          registrar.messages.create!(
-            body: I18n.t('transfer_requested'),
-            attached_obj_id: dt.id,
-            attached_obj_type: dt.class.to_s
-          )
-        end
-
-        if dt.approved?
-          transfer_contacts(current_user.registrar_id)
-          dt.notify_losing_registrar(old_contact_codes, old_registrant_code)
-          generate_auth_info
-          self.registrar = current_user.registrar
-        end
-
-        attach_legal_document(self.class.parse_legal_document_from_frame(frame))
-        save!(validate: false)
-
-        return dt
-      rescue => e
-        add_epp_error('2306', nil, nil, I18n.t('action_failed_due_to_server_error'))
-        logger.error('DOMAIN TRANSFER FAILED')
-        logger.error(e)
-        raise ActiveRecord::Rollback
       end
+
+      if dt.approved?
+        transfer_contacts(current_user.registrar_id)
+        dt.notify_losing_registrar(old_contact_codes, old_registrant_code)
+        generate_auth_info
+        self.registrar = current_user.registrar
+      end
+
+      attach_legal_document(self.class.parse_legal_document_from_frame(frame))
+      save!(validate: false)
+
+      return dt
     end
   end
   # rubocop: enable Metrics/AbcSize
@@ -588,27 +585,24 @@ class Epp::Domain < Domain
   def approve_transfer(frame, current_user)
     pt = pending_transfer
     if current_user.registrar != pt.transfer_from
-      add_epp_error('2304', nil, nil, I18n.t('transfer_can_be_approved_only_by_current_registrar'))
-      return false
+      throw :epp_error, {
+        msg: I18n.t('transfer_can_be_approved_only_by_current_registrar'),
+        code: '2304'
+      }
     end
 
     transaction do
-      begin
-        pt.update!(
-          status: DomainTransfer::CLIENT_APPROVED,
-          transferred_at: Time.zone.now
-        )
+      pt.update!(
+        status: DomainTransfer::CLIENT_APPROVED,
+        transferred_at: Time.zone.now
+      )
 
-        transfer_contacts(pt.transfer_to_id)
-        generate_auth_info
-        self.registrar = pt.transfer_to
+      transfer_contacts(pt.transfer_to_id)
+      generate_auth_info
+      self.registrar = pt.transfer_to
 
-        attach_legal_document(self.class.parse_legal_document_from_frame(frame))
-        save!(validate: false)
-      rescue => _e
-        add_epp_error('2306', nil, nil, I18n.t('action_failed_due_to_server_error'))
-        raise ActiveRecord::Rollback
-      end
+      attach_legal_document(self.class.parse_legal_document_from_frame(frame))
+      save!(validate: false)
     end
 
     pt
@@ -617,22 +611,19 @@ class Epp::Domain < Domain
   def reject_transfer(frame, current_user)
     pt = pending_transfer
     if current_user.registrar != pt.transfer_from
-      add_epp_error('2304', nil, nil, I18n.t('transfer_can_be_rejected_only_by_current_registrar'))
-      return false
+      throw :epp_error, {
+        msg: I18n.t('transfer_can_be_rejected_only_by_current_registrar'),
+        code: '2304'
+      }
     end
 
     transaction do
-      begin
-        pt.update!(
-          status: DomainTransfer::CLIENT_REJECTED
-        )
+      pt.update!(
+        status: DomainTransfer::CLIENT_REJECTED
+      )
 
-        attach_legal_document(self.class.parse_legal_document_from_frame(frame))
-        save!(validate: false)
-      rescue => _e
-        add_epp_error('2306', nil, nil, I18n.t('action_failed_due_to_server_error'))
-        raise ActiveRecord::Rollback
-      end
+      attach_legal_document(self.class.parse_legal_document_from_frame(frame))
+      save!(validate: false)
     end
 
     pt
@@ -709,11 +700,7 @@ class Epp::Domain < Domain
   end
 
   def can_be_transferred_to?(new_registrar)
-    if new_registrar == registrar
-      errors.add(:base, :domain_already_belongs_to_the_querying_registrar)
-      return false
-    end
-    true
+    new_registrar != registrar
   end
 
   ## SHARED

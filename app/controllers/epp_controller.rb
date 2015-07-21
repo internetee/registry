@@ -8,6 +8,18 @@ class EppController < ApplicationController
   before_action :latin_only
   before_action :validate_request
   before_action :update_epp_session
+
+  around_action :catch_epp_errors
+  def catch_epp_errors
+    err = catch(:epp_error) do
+      yield
+      nil
+    end
+    return unless err
+    @errors = [err]
+    handle_errors
+  end
+
   helper_method :current_user
 
   rescue_from StandardError do |e|

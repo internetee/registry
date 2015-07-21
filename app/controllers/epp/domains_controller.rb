@@ -130,10 +130,14 @@ class Epp::DomainsController < EppController
 
     @domain_transfer = @domain.transfer(params[:parsed_frame], action, current_user)
 
-    if @domain.errors.empty? && @domain_transfer
+    if @domain_transfer
       render_epp_response '/epp/domains/transfer'
     else
-      handle_errors(@domain)
+      epp_errors << {
+        code: '2303',
+        msg: I18n.t('no_transfers_found')
+      }
+      handle_errors
     end
   end
 
