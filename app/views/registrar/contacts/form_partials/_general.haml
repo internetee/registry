@@ -32,7 +32,8 @@
         = f.label :ident, t(:ident) + '*'
       .col-md-7
         - if f.object.ident.present?
-          = f.object.ident
+          .disabled-value
+            = f.object.ident
         - else
           = f.text_field :ident, class: 'form-control', required: true, disabled: @contact.persisted?
           - tip_visibility = f.object.ident_type == 'birthday' ? '' : 'display: none'
