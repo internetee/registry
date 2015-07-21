@@ -23,8 +23,8 @@ class Contact < ActiveRecord::Base
   validates :ident_country_code, presence: true, if: proc { |c| %w(bic priv).include? c.ident_type }
   validates :code,
     uniqueness: { message: :epp_id_taken },
-    format: { with: /\A[\w\-\:]*\Z/i },
-    length: { maximum: 100 }
+    format: { with: /\A[\w\-\:]*\Z/i, message: :invalid },
+    length: { maximum: 100, message: :too_long_contact_code }
   validate :ident_valid_format?
 
   before_validation :set_ident_country_code

@@ -36,6 +36,7 @@ en:
           attributes:
             code:
               blank: "Required parameter missing - code"
+              too_long_contact_code: "Contact code is too long, max 100 characters"
             name:
               blank: "Required parameter missing - name"
             phone:

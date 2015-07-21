@@ -97,7 +97,7 @@ describe Contact do
     it 'should not accept long code' do
       @contact.code = 'verylongcode' * 100
       @contact.valid?
-      @contact.errors[:code].should == ['is too long (maximum is 100 characters)']
+      @contact.errors[:code].should == ['Contact code is too long, max 100 characters']
     end
 
     it 'should have no related domain descriptions' do

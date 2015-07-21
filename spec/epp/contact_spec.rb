@@ -170,23 +170,22 @@ describe 'EPP Contact', epp: true do
         Contact.last.code.should == 'FIRST0:ABC:ABC:12345'
       end
 
-      it 'should add registrar prefix for code when missing' do
-        response = create_request({ id: { value: 'abc:ABC:12345' } })
-        response[:msg].should == 'Command completed successfully'
-        response[:result_code].should == '1000'
-
-        Contact.last.code.should == 'FIRST0:ABC:ABC:12345'
-      end
-
       it 'should not allow spaces in custom code' do
         response = create_request({ id: { value: 'abc 123' } })
         response[:msg].should == 'is invalid [code]'
         response[:result_code].should == '2005'
       end
 
-      fit 'should not allow spaces in custom code' do
-        response = create_request({ id: { value: '1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111' } })
+      it 'should not strange characters in custom code' do
+        response = create_request({ id: { value: '33&$@@' } })
         response[:msg].should == 'is invalid [code]'
+        response[:result_code].should == '2005'
+      end
+
+      it 'should not strange characters in custom code' do
+        long_str = 'a' * 1000
+        response = create_request({ id: { value: long_str } })
+        response[:msg].should == 'Contact code is too long, max 100 characters [code]'
         response[:result_code].should == '2005'
       end
 
