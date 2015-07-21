@@ -31,5 +31,6 @@
         = f.label :country_code, t(:country) + '*'
       .col-md-7
         - country_selected = f.object.persisted? ? f.object.country_code : 'EE'
-        = f.select :country_code, SortedCountry.all_options(country_selected),
-          { include_blank: true }
+        = f.select(:country_code, SortedCountry.all_options(country_selected),
+          { include_blank: true }, required: true)
+
