@@ -136,6 +136,12 @@ module Depp
         end
         hash
       end
+
+      def type_string(type_code)
+        return '' if type_code.blank?
+        t = SELECTION_TYPES.select { |tp| tp.second == type_code }
+        t.try(:first)
+      end
     end
 
     def initialize(attributes = {})
