@@ -588,8 +588,10 @@ class Epp::Domain < Domain
   def approve_transfer(frame, current_user)
     pt = pending_transfer
     if current_user.registrar != pt.transfer_from
-      add_epp_error('2304', nil, nil, I18n.t('transfer_can_be_approved_only_by_current_registrar'))
-      return false
+      throw :epp_error, {
+        msg: I18n.t('transfer_can_be_approved_only_by_current_registrar'),
+        code: '2304'
+      }
     end
 
     transaction do
