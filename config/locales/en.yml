@@ -833,7 +833,7 @@ en:
   unset_force_delete: 'Unset force delete'
   domain_expiring: 'Domain expiring'
   domain_validation_rules: 'Domain validation rules'
-  bank_statement_desc: 'Import file row will match only when matching following attributes: <b><br>ref number<br>payment amount<br>invoice number (the very first number in comment field)</b>.'
+  bank_statement_desc: 'Import file row will match only when matching following attributes: <b><br>ref number<br>payment amount<br>invoice number (the first numerical value in comment field)</b>.'
   create_bank_statement: 'Create bank statement'
   create_bank_transaction: 'Create bank transaction'
   create_new_invoice: 'Create new invoice'
