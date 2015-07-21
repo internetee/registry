@@ -9,6 +9,7 @@ capybara-*.html
 /spec/tmp
 **.orig
 config/initializers/secret_token.rb
+config/deploy.rb
 config/secrets.yml
 config/database.yml
 /export

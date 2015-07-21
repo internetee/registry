@@ -345,6 +345,6 @@ class EppController < ApplicationController
   def iptables_counter_update
     return if ENV['iptables_counter_enabled'].blank? && ENV['iptables_counter_enabled'] != 'true'
     return if current_user.blank?
-    counter_update(current_user.registrar_code, request.remote_ip)
+    counter_update(current_user.registrar_code, request.ip)
   end
 end

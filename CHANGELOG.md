@@ -1,5 +1,6 @@
 20.07.2015
 * New syntax for setting webclient IP-s (see config/application-example.yml)
+* Example mina/deploy.rb renamed to mina/deploy-example.rb in order to not overwrite local deploy scripts
 
 14.07.2015
 
