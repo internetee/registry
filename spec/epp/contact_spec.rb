@@ -184,7 +184,7 @@ describe 'EPP Contact', epp: true do
         response[:result_code].should == '2005'
       end
 
-      fit 'should not allow spaces in custom code' do
+      it 'should not allow spaces in custom code' do
         response = create_request({ id: { value: '1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111' } })
         response[:msg].should == 'is invalid [code]'
         response[:result_code].should == '2005'
