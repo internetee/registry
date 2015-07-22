@@ -9,6 +9,21 @@ class Epp::Domain < Domain
     false
   end
 
+  before_validation :validate_contacts
+  def validate_contacts
+    return if contacts.map {|c| c.valid? }.all?
+    add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
+    false
+  end
+
+  before_save :update_contact_status
+  def update_contact_status
+    contacts.each do |c|
+      next if c.linked?
+      c.save(validate: false)
+    end
+  end
+
   class << self
     def new_from_epp(frame, current_user)
       domain = Epp::Domain.new

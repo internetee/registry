@@ -179,17 +179,17 @@ describe Contact do
 
     it 'should have linked status when domain' do
       contact = Fabricate(:contact)
-      tech_domain_contact = Fabricate(:tech_domain_contact, contact_id: @contact.id)
+      tech_domain_contact = Fabricate(:tech_domain_contact, contact_id: contact.id)
       contact.statuses.should == %w(ok)
-      # domain = Fabricate(:domain, tech_domain_contacts: [@tech_domain_contact])
+      domain = Fabricate(:domain, tech_domain_contacts: [tech_domain_contact])
 
+      contact = domain.contacts.first
       contact.save
-      contact.reload.statuses.should == %w(linked ok)
-      
-      # contact = @domain.contacts.first
-      # contact.save
+      contact.statuses.sort.should == %w(linked ok)
 
-      # contact.statuses.sort.should == %w(linked ok)
+      contact = domain.contacts.second
+      contact.save
+      contact.statuses.sort.should == %w(linked ok)
     end
 
     it 'should not have linked status when no domain' do

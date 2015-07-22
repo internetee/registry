@@ -351,4 +351,34 @@ class Contact < ActiveRecord::Base
   def set_ok
     statuses << OK if statuses.detect { |s| s == OK }.blank?
   end
+
+  def linked?
+    statuses.include?(LINKED)
+  end
+
+  def update_prohibited?
+    (statuses & [
+      CLIENT_UPDATE_PROHIBITED,
+      SERVER_UPDATE_PROHIBITED,
+      CLIENT_TRANSFER_PROHIBITED,
+      SERVER_TRANSFER_PROHIBITED,
+      PENDING_CREATE,
+      PENDING_TRANSFER,
+      PENDING_UPDATE,
+      PENDING_DELETE
+    ]).present?
+  end
+
+  def delete_prohibited?
+    (statuses & [
+      CLIENT_DELETE_PROHIBITED,
+      SERVER_DELETE_PROHIBITED,
+      CLIENT_TRANSFER_PROHIBITED,
+      SERVER_TRANSFER_PROHIBITED,
+      PENDING_CREATE,
+      PENDING_TRANSFER,
+      PENDING_UPDATE,
+      PENDING_DELETE
+    ]).present?
+  end
 end
