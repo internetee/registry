@@ -25,6 +25,7 @@ class Epp::DomainsController < EppController
     @domain = Epp::Domain.new_from_epp(params[:parsed_frame], current_user)
     handle_errors(@domain) and return if @domain.errors.any?
     @domain.valid?
+    @domain.errors.delete(:name_dirty) if @domain.errors[:puny_label].any?
     handle_errors(@domain) and return if @domain.errors.any?
 
     handle_errors and return unless balance_ok?('create')
