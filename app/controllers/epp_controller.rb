@@ -40,9 +40,18 @@ class EppController < ApplicationController
         }]
       end
 
-      logger.error e.message
-      logger.error e.backtrace.join("\n")
-      # TODO: NOITFY AIRBRAKE / ERRBIT HERE
+      if Rails.env.test? || Rails.env.development?
+        # rubocop:disable Rails/Output
+        puts e.backtrace.reverse.join("\n")
+        puts "\nFROM-EPP-RESCUE: #{e.message}\n"
+        # rubocop:enable Rails/Output
+      else
+        logger.error "FROM-EPP-RESCUE: #{e.message}"
+        logger.error e.backtrace.join("\n")
+
+        # TODO: NOITFY AIRBRAKE / ERRBIT HERE
+        NewRelic::Agent.notice_error(e)
+      end
     end
 
     render_epp_response '/epp/error'
