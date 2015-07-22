@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150713113436) do
+ActiveRecord::Schema.define(version: 20150722071128) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -200,6 +200,7 @@ ActiveRecord::Schema.define(version: 20150713113436) do
     t.string   "state"
     t.integer  "legacy_id"
     t.string   "statuses",           array: true
+    t.hstore   "status_notes"
   end
 
   add_index "contacts", ["code"], name: "index_contacts_on_code", using: :btree
@@ -214,12 +215,6 @@ ActiveRecord::Schema.define(version: 20150713113436) do
     t.string   "creator_str"
     t.string   "updator_str"
   end
-
-  create_table "data_migrations", id: false, force: :cascade do |t|
-    t.string "version", null: false
-  end
-
-  add_index "data_migrations", ["version"], name: "unique_data_migrations", unique: true, using: :btree
 
   create_table "delegation_signers", force: :cascade do |t|
     t.integer "domain_id"
@@ -327,6 +322,7 @@ ActiveRecord::Schema.define(version: 20150713113436) do
     t.datetime "force_delete_at"
     t.string   "statuses",                                                   array: true
     t.boolean  "reserved",                                   default: false
+    t.hstore   "status_notes"
   end
 
   add_index "domains", ["delete_at"], name: "index_domains_on_delete_at", using: :btree

@@ -484,7 +484,7 @@ class Epp::Domain < Domain
 
   def copy_and_transfer_contact(contact_id, registrar_id)
     c = Contact.find(contact_id) # n+1 workaround
-    oc = c.deep_clone include: [:statuses]
+    oc = c.deep_clone
     oc.code = nil
     oc.registrar_id = registrar_id
     oc.prefix_code

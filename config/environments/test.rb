@@ -44,7 +44,7 @@ Rails.application.configure do
 
   # The available log levels are: :debug, :info, :warn, :error, :fatal, and :unknown, 
   # corresponding to the log level numbers from 0 up to 5 respectively
-  config.log_level = :fatal
+  config.log_level = :info
 
   # for finding database optimization
   config.after_initialize do

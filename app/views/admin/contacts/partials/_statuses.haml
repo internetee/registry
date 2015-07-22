@@ -7,12 +7,12 @@
       %thead
         %tr
           %th{class: 'col-xs-6'}= t(:status)
-          %th{class: 'col-xs-6'}= t(:description)
+          %th{class: 'col-xs-6'}= t(:notes)
       %tbody
-        - contact.statuses.each do |s|
+        - contact.statuses.each do |status|
           %tr
-            %td= s.value
-            %td= s.description
+            %td= status
+            %td= contact.status_notes[status]
 
       - if contact.errors.messages[:statuses]
         %tfoot

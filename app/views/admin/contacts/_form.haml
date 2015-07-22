@@ -1,0 +1,11 @@
+= form_for([:admin, contact], html: { class: 'form-horizontal' }) do |f|
+  .errors
+    = render 'shared/errors', object: contact
+  .row
+    .col-md-8
+      .tab-content{style:'margin-top: 20px;'}
+        #general-tab.tab-pane.active
+          = render 'admin/contacts/form_partials/statuses', f: f
+  .row
+    .col-md-8.text-right
+      = button_tag(t(:save), class: 'btn btn-primary')

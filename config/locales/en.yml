@@ -52,6 +52,8 @@ en:
               invalid_country_code: "Ident country code is not valid, should be in ISO_3166-1 alpha 2 format"
             domains:
               exist: 'Object association prohibits operation'
+            statuses:
+              not_uniq: 'not uniq'
 
         epp_domain: &epp_domain_ar_attributes
           attributes:
@@ -874,3 +876,4 @@ en:
   domain_registrant_updated: 'Domeeni %{name} registreerija vahetus teostatud / Registrant change of %{name} has been finished.'
   api_user_not_found: 'API user not found'
   domain_already_belongs_to_the_querying_registrar: 'Domain already belongs to the querying registrar'
+  notes: Notes

@@ -10,7 +10,7 @@ xml.epp_head do
         xml.tag!('contact:roid', @contact.roid)
 
         @contact.statuses.each do |status|
-          xml.tag!('contact:status', s: status.value)
+          xml.tag!('contact:status', s: status)
         end
 
         xml.tag!('contact:postalInfo', type: 'int') do
