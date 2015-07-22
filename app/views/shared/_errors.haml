@@ -2,5 +2,5 @@
   - object.errors.each do |attr, err|
     - next if attr.match(/\./)
     - next if attr == :epp_errors
-    = err
+    = "#{attr.to_s.humanize} #{err}"
     %br

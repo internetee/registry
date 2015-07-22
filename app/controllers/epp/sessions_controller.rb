@@ -13,46 +13,71 @@ class Epp::SessionsController < EppController
     success = true
     @api_user = ApiUser.find_by(login_params)
 
-    if request.ip == ENV['webclient_ip'] && !Rails.env.test? && !Rails.env.development?
+    webclient_request = ENV['webclient_ips'].split(',').map(&:strip).include?(request.ip)
+    if webclient_request && !Rails.env.test? && !Rails.env.development?
       client_md5 = Certificate.parse_md_from_string(request.env['HTTP_SSL_CLIENT_CERT'])
       server_md5 = Certificate.parse_md_from_string(File.read(ENV['cert_path']))
       if client_md5 != server_md5
-        @msg = 'Authentication error; server closing connection (certificate is not valid)'
+        epp_errors << {
+          msg: 'Authentication error; server closing connection (certificate is not valid)',
+          code: '2501'
+        }
+
         success = false
       end
     end
 
-    if request.ip != ENV['webclient_ip'] && @api_user
+    if !webclient_request && @api_user
       unless @api_user.api_pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'], request.env['HTTP_SSL_CLIENT_S_DN_CN'])
-        @msg = 'Authentication error; server closing connection (certificate is not valid)'
+        epp_errors << {
+          msg: 'Authentication error; server closing connection (certificate is not valid)',
+          code: '2501'
+        }
+
         success = false
       end
     end
 
     if success && !@api_user
-      @msg = 'Authentication error; server closing connection (API user not found)'
+      epp_errors << {
+        msg: 'Authentication error; server closing connection (API user not found)',
+        code: '2501'
+      }
+
       success = false
     end
 
     if success && !@api_user.try(:active)
-      @msg = 'Authentication error; server closing connection (API user is not active)'
+      epp_errors << {
+        msg: 'Authentication error; server closing connection (API user is not active)',
+        code: '2501'
+      }
+
       success = false
     end
 
     if success && !ip_white?
-      @msg = 'Authentication error; server closing connection (IP is not whitelisted)'
+      epp_errors << {
+        msg: 'Authentication error; server closing connection (IP is not whitelisted)',
+        code: '2501'
+      }
+
       success = false
     end
 
     if success && !connection_limit_ok?
-      @msg = 'Authentication error; server closing connection (connection limit reached)'
+      epp_errors << {
+        msg: 'Authentication error; server closing connection (connection limit reached)',
+        code: '2501'
+      }
+
       success = false
     end
 
     if success
       if parsed_frame.css('newPW').first
         unless @api_user.update(password: parsed_frame.css('newPW').first.text)
-          response.headers['X-EPP-Returncode'] = '2200'
+          response.headers['X-EPP-Returncode'] = '2500'
           handle_errors(@api_user) and return
         end
       end
@@ -61,8 +86,8 @@ class Epp::SessionsController < EppController
       epp_session.update_column(:registrar_id, @api_user.registrar_id)
       render_epp_response('login_success')
     else
-      response.headers['X-EPP-Returncode'] = '2200'
-      render_epp_response('login_fail')
+      response.headers['X-EPP-Returncode'] = '2500'
+      handle_errors
     end
   end
   # rubocop: enable Metrics/MethodLength
@@ -71,7 +96,8 @@ class Epp::SessionsController < EppController
   # rubocop: enable Metrics/CyclomaticComplexity
 
   def ip_white?
-    return true if request.ip == ENV['webclient_ip']
+    webclient_request = ENV['webclient_ips'].split(',').map(&:strip).include?(request.ip)
+    return true if webclient_request
     if @api_user
       return false unless @api_user.registrar.api_ip_white?(request.ip)
     end

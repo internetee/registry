@@ -1,125 +1,126 @@
-- children = HashWithIndifferentAccess.new(version.children)
-- nameservers    = children[:nameservers] || []
-- tech_contacts  = children[:tech_contacts] || []
-- admin_contacts = children[:admin_contacts] || []
-- registrant  = children[:registrant] || []
+- if version.present? && domain.present?
+  - children = HashWithIndifferentAccess.new(version.children)
+  - nameservers    = children[:nameservers] || []
+  - tech_contacts  = children[:tech_contacts] || []
+  - admin_contacts = children[:admin_contacts] || []
+  - registrant  = children[:registrant] || []
 
-%td
-  %p.nowrap
-    = l(domain.updated_at, format: :short)
-    = version.event
-  %p.text-right
-    = version.terminator
+  %td
+    %p.nowrap
+      = l(domain.updated_at, format: :short)
+      = version.event
+    %p.text-right
+      = version.terminator
 
-%td
-  %p
-    = "#{domain.period}#{domain.period_unit}"
-    = "#{l(domain.valid_from, format: :date)} - #{l(domain.valid_to, format: :date)}"
-  %p
-    = domain.status
-
-%td
-  - registrant.each do |oc|
+  %td
     %p
-      = oc[:name]
-      = oc[:phone]
-      = oc[:email]
+      = "#{domain.period}#{domain.period_unit}"
+      = "#{l(domain.valid_from, format: :date)} - #{l(domain.valid_to, format: :date)}"
     %p
-      = oc[:code]
+      = domain.status
 
-%td
-  - admin_contacts.each do |ac|
+  %td
+    - registrant.each do |oc|
+      %p
+        = oc[:name]
+        = oc[:phone]
+        = oc[:email]
+      %p
+        = oc[:code]
+
+  %td
+    - admin_contacts.each do |ac|
+      %p
+        = ac[:name]
+        = ac[:phone]
+        = ac[:email]
+      %p
+        = ac[:code]
+
+  %td
+    - tech_contacts.each do |tc|
+      %p
+        = tc[:name]
+        = tc[:phone]
+        = tc[:email]
+      %p
+        = tc[:code]
+
+  %td
+    - nameservers.each do |ns|
+      %p
+        = ns[:hostname]
+        %br
+        = ns[:ipv4]
+        = ns[:ipv6]
+
+  %td
     %p
-      = ac[:name]
-      = ac[:phone]
-      = ac[:email]
-    %p
-      = ac[:code]
+      = domain.registrar.name
 
-%td
-  - tech_contacts.each do |tc|
-    %p
-      = tc[:name]
-      = tc[:phone]
-      = tc[:email]
-    %p
-      = tc[:code]
+  -# %td
+    -# = version.children.inspect
 
-%td
-  - nameservers.each do |ns|
-    %p
-      = ns[:hostname]
-      %br
-      = ns[:ipv4]
-      = ns[:ipv6]
-
-%td
-  %p
-    = domain.registrar.name
-
--# %td
-  -# = version.children.inspect
-
--# %td{ class: changes.include?(:domain) ? 'edit-highlight' : 'no-highlight' }
-  -# - if children[:domain]
-    -# %p{:style => "font-size:x-small;"}
-      -# = children[:domain][:period]
-      -# = children[:domain][:period_unit] if children[:domain][:period]
-      -# - if children[:domain][:valid_to] && children[:domain][:valid_from]
-        -# = ","
-        -# = l(children[:domain][:valid_from], format: :date) + '-' + l(children[:domain][:valid_to], format: :date)
-      -# - if children[:domain].try(:[], :registrar_id)
-        -# = ","
-        -# = Registrar.find(children[:domain][:registrar_id]).try(:name)
-      -# - if children[:domain][:status]
-        -# = ',' + children[:domain][:status]
-
-
--# %td{ class: changes.include?(:registrant) ? 'edit-highlight' : 'no-highlight' }
-  -# - if children[:registrant]
-    -# %p{:style => "font-size:x-small;"}
-      -# = children[:registrant][:name]
-      -# = ","
-      -# = children[:registrant][:phone]
-      -# = ","
-      -# = children[:registrant][:email]
-      -# = ","
-      -# = children[:registrant][:code]
-
--# %td{ class: changes.include?(:admin_contacts) ? 'edit-highlight' : 'no-highlight' }
-  -# - if children[:admin_contacts]
-    -# - children[:admin_contacts].each do |ac|
+  -# %td{ class: changes.include?(:domain) ? 'edit-highlight' : 'no-highlight' }
+    -# - if children[:domain]
       -# %p{:style => "font-size:x-small;"}
-        -# = ac[:name]
-        -# = ","
-        -# = ac[:phone]
-        -# = ","
-        -# = ac[:email]
-        -# = ","
-        -# = ac[:code]
+        -# = children[:domain][:period]
+        -# = children[:domain][:period_unit] if children[:domain][:period]
+        -# - if children[:domain][:valid_to] && children[:domain][:valid_from]
+          -# = ","
+          -# = l(children[:domain][:valid_from], format: :date) + '-' + l(children[:domain][:valid_to], format: :date)
+        -# - if children[:domain].try(:[], :registrar_id)
+          -# = ","
+          -# = Registrar.find(children[:domain][:registrar_id]).try(:name)
+        -# - if children[:domain][:status]
+          -# = ',' + children[:domain][:status]
 
--# %td{ class: changes.include?(:tech_contacts) ? 'edit-highlight' : 'no-highlight' }
-  -# - if children[:tech_contacts]
-    -# - children[:tech_contacts].each do |tc|
+
+  -# %td{ class: changes.include?(:registrant) ? 'edit-highlight' : 'no-highlight' }
+    -# - if children[:registrant]
       -# %p{:style => "font-size:x-small;"}
-        -# = tc[:name]
+        -# = children[:registrant][:name]
         -# = ","
-        -# = tc[:phone]
+        -# = children[:registrant][:phone]
         -# = ","
-        -# = tc[:email]
+        -# = children[:registrant][:email]
         -# = ","
-        -# = tc[:code]
+        -# = children[:registrant][:code]
 
--# %td{ class: changes.include?(:nameservers) ? 'edit-highlight' : 'no-highlight' }
-  -# - if children[:nameservers]
-    -# - children[:nameservers].each do |ns|
-      -# %p{:style => "font-size:x-small;"}
-        -# = ns[:hostname]
-        -# = ","
-        -# = ns[:ipv4] || ns[:ipv6]
+  -# %td{ class: changes.include?(:admin_contacts) ? 'edit-highlight' : 'no-highlight' }
+    -# - if children[:admin_contacts]
+      -# - children[:admin_contacts].each do |ac|
+        -# %p{:style => "font-size:x-small;"}
+          -# = ac[:name]
+          -# = ","
+          -# = ac[:phone]
+          -# = ","
+          -# = ac[:email]
+          -# = ","
+          -# = ac[:code]
 
--# %td
-  -# %p{ :style => 'font-size:x-small;' }
-    -# = l(version.created_at, format: :short)
-    -# = whodunnit_with_protocol(version.whodunnit)
-    -# = version.event
+  -# %td{ class: changes.include?(:tech_contacts) ? 'edit-highlight' : 'no-highlight' }
+    -# - if children[:tech_contacts]
+      -# - children[:tech_contacts].each do |tc|
+        -# %p{:style => "font-size:x-small;"}
+          -# = tc[:name]
+          -# = ","
+          -# = tc[:phone]
+          -# = ","
+          -# = tc[:email]
+          -# = ","
+          -# = tc[:code]
+
+  -# %td{ class: changes.include?(:nameservers) ? 'edit-highlight' : 'no-highlight' }
+    -# - if children[:nameservers]
+      -# - children[:nameservers].each do |ns|
+        -# %p{:style => "font-size:x-small;"}
+          -# = ns[:hostname]
+          -# = ","
+          -# = ns[:ipv4] || ns[:ipv6]
+
+  -# %td
+    -# %p{ :style => 'font-size:x-small;' }
+      -# = l(version.created_at, format: :short)
+      -# = whodunnit_with_protocol(version.whodunnit)
+      -# = version.event

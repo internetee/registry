@@ -7,7 +7,7 @@ required = %w(
   ca_cert_path
   ca_key_path
   ca_key_password
-  webclient_ip
+  webclient_ips
   legal_documents_dir
   bank_statement_import_dir
   time_zone

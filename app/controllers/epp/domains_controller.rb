@@ -25,6 +25,7 @@ class Epp::DomainsController < EppController
     @domain = Epp::Domain.new_from_epp(params[:parsed_frame], current_user)
     handle_errors(@domain) and return if @domain.errors.any?
     @domain.valid?
+    @domain.errors.delete(:name_dirty) if @domain.errors[:puny_label].any?
     handle_errors(@domain) and return if @domain.errors.any?
 
     handle_errors and return unless balance_ok?('create')
@@ -94,8 +95,9 @@ class Epp::DomainsController < EppController
   def renew
     authorize! :renew, @domain
 
-    period = params[:parsed_frame].css('period').text
-    period_unit = params[:parsed_frame].css('period').first['unit']
+    period_element = params[:parsed_frame].css('period').text
+    period = (period_element.to_i == 0) ? 1 : period_element.to_i
+    period_unit = Epp::Domain.parse_period_unit_from_frame(params[:parsed_frame]) || 'y'
 
     ActiveRecord::Base.transaction do
       success = @domain.renew(
@@ -129,10 +131,14 @@ class Epp::DomainsController < EppController
 
     @domain_transfer = @domain.transfer(params[:parsed_frame], action, current_user)
 
-    if @domain.errors.empty? && @domain_transfer
+    if @domain_transfer
       render_epp_response '/epp/domains/transfer'
     else
-      handle_errors(@domain)
+      epp_errors << {
+        code: '2303',
+        msg: I18n.t('no_transfers_found')
+      }
+      handle_errors
     end
   end
 
@@ -153,6 +159,8 @@ class Epp::DomainsController < EppController
 
     @prefix = nil
     requires 'extension > extdata > legalDocument'
+
+    optional_attribute 'period', 'unit', values: %w(d m y)
 
     status_editing_disabled
   end
@@ -182,7 +190,9 @@ class Epp::DomainsController < EppController
 
   def validate_renew
     @prefix = 'renew > renew >'
-    requires 'name', 'curExpDate', 'period'
+    requires 'name', 'curExpDate'
+
+    optional_attribute 'period', 'unit', values: %w(d m y)
   end
 
   def validate_transfer

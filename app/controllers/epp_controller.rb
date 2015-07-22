@@ -8,6 +8,18 @@ class EppController < ApplicationController
   before_action :latin_only
   before_action :validate_request
   before_action :update_epp_session
+
+  around_action :catch_epp_errors
+  def catch_epp_errors
+    err = catch(:epp_error) do
+      yield
+      nil
+    end
+    return unless err
+    @errors = [err]
+    handle_errors
+  end
+
   helper_method :current_user
 
   rescue_from StandardError do |e|
@@ -28,9 +40,18 @@ class EppController < ApplicationController
         }]
       end
 
-      logger.error e.message
-      logger.error e.backtrace.join("\n")
-      # TODO: NOITFY AIRBRAKE / ERRBIT HERE
+      if Rails.env.test? || Rails.env.development?
+        # rubocop:disable Rails/Output
+        puts e.backtrace.reverse.join("\n")
+        puts "\nFROM-EPP-RESCUE: #{e.message}\n"
+        # rubocop:enable Rails/Output
+      else
+        logger.error "FROM-EPP-RESCUE: #{e.message}"
+        logger.error e.backtrace.join("\n")
+
+        # TODO: NOITFY AIRBRAKE / ERRBIT HERE
+        NewRelic::Agent.notice_error(e)
+      end
     end
 
     render_epp_response '/epp/error'
@@ -102,7 +123,7 @@ class EppController < ApplicationController
         msg: 'handle_errors was executed when there were actually no errors'
       }
       # rubocop:disable Rails/Output
-      puts obj.errors.full_messages if Rails.env.test?
+      puts "FULL MESSAGE: #{obj.errors.full_messages} #{obj.errors.inspect}" if Rails.env.test?
       # rubocop: enable Rails/Output
     end
 
@@ -125,8 +146,13 @@ class EppController < ApplicationController
   def latin_only
     return true if params['frame'].blank?
     return true if params['frame'].match(/\A[\p{Latin}\p{Z}\p{P}\p{S}\p{Cc}\p{Cf}\w_\'\+\-\.\(\)\/]*\Z/i)
-    render_epp_response '/epp/latin_error'
-    false
+
+    epp_errors << {
+      msg: 'Parameter value policy error. Allowed only Latin characters.',
+      code: '2306'
+    }
+
+    handle_errors and return false
   end
 
   # VALIDATION
@@ -212,11 +238,11 @@ class EppController < ApplicationController
   end
 
   def optional_attribute(element_selector, attribute_selector, options)
-    element = requires(element_selector, allow_blank: options[:allow_blank])
+    full_selector = [@prefix, element_selector].compact.join(' ')
+    element = params[:parsed_frame].css(full_selector).first
     return unless element
 
     attribute = element[attribute_selector]
-
     return if (attribute && options[:values].include?(attribute)) || !attribute
 
     epp_errors << {

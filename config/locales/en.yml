@@ -36,6 +36,7 @@ en:
           attributes:
             code:
               blank: "Required parameter missing - code"
+              too_long_contact_code: "Contact code is too long, max 100 characters"
             name:
               blank: "Required parameter missing - name"
             phone:
@@ -51,6 +52,8 @@ en:
               invalid_country_code: "Ident country code is not valid, should be in ISO_3166-1 alpha 2 format"
             domains:
               exist: 'Object association prohibits operation'
+            statuses:
+              not_uniq: 'not uniq'
 
         epp_domain: &epp_domain_ar_attributes
           attributes:
@@ -256,7 +259,7 @@ en:
       invalid_type: 'PostalInfo type is invalid'
       unimplemented_command: 'Unimplemented command'
       domain_exists_but_belongs_to_other_registrar: 'Domain exists but belongs to other registrar'
-      required_attribute_missing: Required attributes missing
+      required_ident_attribute_missing: "Required ident attribute missing: %{key}"
 
   code: 'Code'
   value: 'Value'
@@ -832,7 +835,7 @@ en:
   unset_force_delete: 'Unset force delete'
   domain_expiring: 'Domain expiring'
   domain_validation_rules: 'Domain validation rules'
-  bank_statement_desc: 'Import file row will match only when matching following attributes: <b><br>ref number<br>payment amount<br>invoice number (the very first number in comment field)</b>.'
+  bank_statement_desc: 'Import file row will match only when matching following attributes: <b><br>ref number<br>payment amount<br>invoice number (the first numerical value in comment field)</b>.'
   create_bank_statement: 'Create bank statement'
   create_bank_transaction: 'Create bank transaction'
   create_new_invoice: 'Create new invoice'
@@ -869,4 +872,8 @@ en:
   reserved_pw: 'Reserved pw'
   no_transfers_found: 'No transfers found'
   parameter_value_range_error: 'Parameter value range error: %{key}'
+  payment_received: 'Payment received'
   domain_registrant_updated: 'Domeeni %{name} registreerija vahetus teostatud / Registrant change of %{name} has been finished.'
+  api_user_not_found: 'API user not found'
+  domain_already_belongs_to_the_querying_registrar: 'Domain already belongs to the querying registrar'
+  notes: Notes

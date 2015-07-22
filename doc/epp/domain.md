@@ -18,6 +18,7 @@ Domain name mapping protocol short version:
         <domain:period>        0-1      Registration period for domain. 
                                         Must add up to 1 / 2 / 3 years.
                                         Attribute: unit="y/m/d"
+                                        Default is 1 year.
         <domain:registrant>    1        Contact reference to the registrant
                                           Attribute:
                                             "verified"  # optional, allowed values 'yes', 'no'
@@ -129,8 +130,9 @@ Domain name mapping protocol short version:
       <domain:renew>         1        Attribute: xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd"
         <domain:name>        1        Domain name. Can contain unicode characters. 
         <domain:curExpDate>  1        Current expiry date (ISO8601 format)
-        <domain:period>      1        Registration period for domain. 
+        <domain:period>      0-1      Registration period for domain. 
                                       Must add up to 1 / 2 / 3 years. Attribute: unit="y/m/d"
+                                      Default value is 1 year.
     <extension>              0-1     
       <eis:extdata>          0-1      Attribute: xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd"
         <eis:legalDocument>  0-1      Base64 encoded document. 

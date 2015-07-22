@@ -26,7 +26,7 @@ Que.mode          = :async
 # the rake task in tasks/safe_shutdown.rb.
 
 stop = false
-%w( INT TERM ).each do |signal|
+%w( INT ).each do |signal|
   trap(signal) { stop = true }
 end
 

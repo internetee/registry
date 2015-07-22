@@ -1,3 +1,12 @@
+21.07.2015
+
+* Possible to define custom trusted proxies at application.yml
+
+20.07.2015
+
+* New syntax for setting webclient IP-s (see config/application-example.yml)
+* Example mina/deploy.rb renamed to mina/deploy-example.rb in order to not overwrite local deploy scripts
+
 14.07.2015
 
 * Updated que init script doc example, now status and stop works faster
