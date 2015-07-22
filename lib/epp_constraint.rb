@@ -15,6 +15,7 @@ class EppConstraint
     unless [:keyrelay, :poll].include?(@type)
       element = "//#{@type}:#{request.params[:action]}"
       return false if parsed_frame.xpath("#{element}", OBJECT_TYPES[@type]).none?
+      request.params[:schema] = OBJECT_TYPES[@type][@type].split('/').last
     end
 
     request.params[:parsed_frame] = parsed_frame.remove_namespaces!

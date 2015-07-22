@@ -6,22 +6,26 @@ class EppController < ApplicationController
 
   before_action :generate_svtrid
   before_action :latin_only
-  # before_action :validate_against_schema
+  before_action :validate_against_schema
 
-  # def validate_against_schema
-  #   if params[:epp_object_type] == :domain
+  def validate_against_schema
+    # filename =
+    # if params[:epp_object_type] == :domain
 
-  #     xsd = Nokogiri::XML::Schema(File.read('doc/schemas/domain-eis-1.0.xsd'))
-  #     xsd.validate(Nokogiri::XML(params[:raw_frame])).each do |error|
-  #       epp_errors << {
-  #         code: 2002,
-  #         msg: error
-  #       }
-  #     end
-  #   end
+    return if params[:action] == 'hello'
+    params[:schema] = 'epp-1.0.xsd' unless params[:schema]
 
-  #   handle_errors and return if epp_errors.any?
-  # end
+    xsd = Nokogiri::XML::Schema(File.read("doc/schemas/#{params[:schema]}"))
+    xsd.validate(Nokogiri::XML(params[:raw_frame])).each do |error|
+      epp_errors << {
+        code: 2001,
+        msg: error
+      }
+    end
+
+      # end
+    handle_errors and return if epp_errors.any?
+  end
 
   before_action :validate_request
   before_action :update_epp_session
