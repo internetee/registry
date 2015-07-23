@@ -260,21 +260,11 @@ class Contact < ActiveRecord::Base
     Country.new(country_code)
   end
 
-  # Find a way to use self.domains with contact
-  def domains_owned
-    Domain.where(registrant_id: id)
-  end
-
-  def relations_with_domain?
-    return true if domain_contacts.present? || domains_owned.present?
-    false
-  end
-
   # TODO: refactor, it should not allow to destroy with normal destroy,
   # no need separate method
   # should use only in transaction
   def destroy_and_clean
-    if relations_with_domain?
+    if domains_present?
       errors.add(:domains, :exist)
       return false
     end
@@ -316,12 +306,32 @@ class Contact < ActiveRecord::Base
     end
   end
 
+  # optimization under children loop, 
+  # otherwise bullet will not be happy
+  def domains_present?
+    return @domains_present if @domains_present
+    domain_contacts.present? || registrant_domains.present?
+  end
+
+  # for overwrite when doing children loop
+  def domains_present=(boolean)
+    @domains_present = boolean
+  end
+
   def manage_linked
-    if domains.present?
-      statuses << LINKED if statuses.detect { |s| s == LINKED }.blank?
+    if domains_present?
+      set_linked
     else
-      statuses.delete_if { |s| s == LINKED }
+      unset_linked
     end
+  end
+
+  def set_linked
+    statuses << LINKED if statuses.detect { |s| s == LINKED }.blank?
+  end
+
+  def unset_linked
+    statuses.delete_if { |s| s == LINKED }
   end
 
   # rubocop:disable Metrics/CyclomaticComplexity
