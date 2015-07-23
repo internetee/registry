@@ -9,10 +9,10 @@ class EppController < ApplicationController
   before_action :validate_against_schema
 
   def validate_against_schema
-    return if params[:action] == 'hello'
+    return if ['hello', 'error'].include?(params[:action])
     params[:schema] = 'epp-1.0.xsd' unless params[:schema]
     xsd = Nokogiri::XML::Schema(File.read("lib/schemas/#{params[:schema]}"))
-    xsd.validate(Nokogiri::XML(params[:raw_frame])).each do |error|
+    xsd.validate(params[:nokogiri_frame]).each do |error|
       epp_errors << {
         code: 2001,
         msg: error
