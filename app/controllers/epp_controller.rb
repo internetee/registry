@@ -6,8 +6,8 @@ class EppController < ApplicationController
 
   before_action :generate_svtrid
   before_action :latin_only
-  before_action :validate_against_schema
 
+  before_action :validate_against_schema
   def validate_against_schema
     return if ['hello', 'error'].include?(params[:action])
     params[:schema] = 'epp-1.0.xsd' unless params[:schema]
