@@ -1,3 +1,4 @@
+# Log all flash messages
 module ActionDispatch
   class Flash
     def call(env)

@@ -134,7 +134,6 @@ class Epp::Domain < Domain
     at[:reserved_pw] = frame.css('reserved > pw').text
 
     # at[:statuses] = domain_statuses_attrs(frame, action)
-    # binding.pry
     at[:nameservers_attributes] = nameservers_attrs(frame, action)
     at[:admin_domain_contacts_attributes] = admin_domain_contacts_attrs(frame, action)
     at[:tech_domain_contacts_attributes] = tech_domain_contacts_attrs(frame, action)
