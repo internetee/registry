@@ -11,7 +11,7 @@ module ActionDispatch
         session["flash"] = flash_hash.to_session_value
 
         # EIS custom logging
-        Rails.logger.info "USER MSG: #{Time.now.to_s(:db)} FLASH: #{session['flash']['flashes'].inspect}" if session['flash']
+        Rails.logger.info "USER MSG: FLASH: #{session['flash']['flashes'].inspect}" if session['flash']
         # END OF EIS custom logging
 
         env[KEY] = flash_hash.dup

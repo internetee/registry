@@ -9,7 +9,7 @@ module ActiveModel
       end
 
       # CUSTOM logging
-      Rails.logger.info "USER MSG: #{Time.now.to_s(:db)} ACTIVEMODEL: #{@base.try(:class)} [#{attribute}] #{message}" if message.present?
+      Rails.logger.info "USER MSG: ACTIVEMODEL: #{@base.try(:class)} [#{attribute}] #{message}" if message.present?
       # END of CUSTOM logging
 
       self[attribute] << message
