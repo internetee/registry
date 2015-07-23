@@ -16,10 +16,20 @@ class Epp::Domain < Domain
     false
   end
 
-  before_save :update_contact_status
-  def update_contact_status
-    contacts.each do |c|
-      next if c.linked?
+  before_save :link_contacts
+  def link_contacts
+    # Based on bullet report
+    unlinked_contacts = contacts.select { |c| !c.linked? } # speed up a bit
+    unlinked_contacts.each do |uc|
+      uc.domains_present = true # no need to fetch domains again
+      uc.save(validate: false)
+    end
+  end
+
+  after_destroy :unlink_contacts
+  def unlink_contacts
+    contacts.each do |c| 
+      c.domains_present = false
       c.save(validate: false)
     end
   end
