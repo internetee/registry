@@ -11,7 +11,7 @@ class Epp::Domain < Domain
 
   before_validation :validate_contacts
   def validate_contacts
-    return if contacts.map {|c| c.valid? }.all?
+    return if contacts.map(&:valid?).all?
     add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
     false
   end

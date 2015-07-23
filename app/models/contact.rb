@@ -311,8 +311,8 @@ class Contact < ActiveRecord::Base
   def status_notes_array=(notes)
     self.status_notes = {}
     notes ||= []
-    statuses.each_with_index do |status,i|
-      self.status_notes[status] = notes[i]
+    statuses.each_with_index do |status, i|
+      status_notes[status] = notes[i]
     end
   end
 
