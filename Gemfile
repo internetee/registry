@@ -8,7 +8,7 @@ end if Bundler::VERSION < '2'
 source 'https://rubygems.org'
 
 # core
-gem 'rails',        '4.2.3'
+gem 'rails',        '4.2.3' # when update, all initializers eis_custom files needs check/update
 gem 'iso8601',      '~> 0.8.2' # for dates and times
 gem 'hashie-forbidden_attributes', '~> 0.1.1'
 
