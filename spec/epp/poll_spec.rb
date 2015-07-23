@@ -12,7 +12,7 @@ describe 'EPP Poll', epp: true do
   end
 
   before(:all) do
-    @xsd = Nokogiri::XML::Schema(File.read('doc/schemas/epp-1.0.xsd'))
+    @xsd = Nokogiri::XML::Schema(File.read('lib/schemas/epp-1.0.xsd'))
     Fabricate(:api_user, username: 'registrar1', registrar: registrar1)
     Fabricate(:api_user, username: 'registrar2', registrar: registrar2)
 

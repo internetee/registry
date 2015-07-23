@@ -11,11 +11,11 @@
    <!--
    Import common element types.
    -->
-   <import namespace="urn:ietf:params:xml:ns:eppcom-1.0" schemaLocation="http://www.iana.org/assignments/xml-registry/schema/eppcom-1.0.xsd"/>
-   <import namespace="urn:ietf:params:xml:ns:epp-1.0" schemaLocation="http://www.iana.org/assignments/xml-registry/schema/epp-1.0.xsd"/>
-   <import namespace="urn:ietf:params:xml:ns:host-1.0" schemaLocation="http://www.iana.org/assignments/xml-registry/schema/host-1.0.xsd"/>
-   <import namespace="urn:ietf:params:xml:ns:secDNS-1.1" schemaLocation="http://www.iana.org/assignments/xml-registry/schema/secDNS-1.1.xsd"/>
-   <import namespace="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd" schemaLocation="doc/schemas/eis-1.0.xsd"/>
+   <import namespace="urn:ietf:params:xml:ns:eppcom-1.0" schemaLocation="lib/schemas/eppcom-1.0.xsd"/>
+   <import namespace="urn:ietf:params:xml:ns:epp-1.0" schemaLocation="lib/schemas/epp-1.0.xsd"/>
+   <import namespace="urn:ietf:params:xml:ns:host-1.0" schemaLocation="lib/schemas/host-1.0.xsd"/>
+   <import namespace="urn:ietf:params:xml:ns:secDNS-1.1" schemaLocation="lib/schemas/secDNS-1.1.xsd"/>
+   <import namespace="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd" schemaLocation="lib/schemas/eis-1.0.xsd"/>
 
    <annotation>
     <documentation>
