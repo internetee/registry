@@ -124,7 +124,8 @@ class Epp::SessionsController < EppController
   ### HELPER METHODS ###
 
   def login_params
-    ph = params_hash['epp']['command']['login']
-    { username: ph[:clID], password: ph[:pw] }
+    user = params[:parsed_frame].css('clID').first.text
+    pw = params[:parsed_frame].css('pw').first.text
+    { username: user, password: pw }
   end
 end
