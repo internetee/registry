@@ -78,7 +78,6 @@ class Domain < ActiveRecord::Base
   end
   after_save :update_whois_record
 
-
   after_create :update_reserved_domains
   def update_reserved_domains
     return unless in_reserved_list?
