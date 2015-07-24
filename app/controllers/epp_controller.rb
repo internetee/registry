@@ -10,9 +10,7 @@ class EppController < ApplicationController
   before_action :validate_against_schema
   def validate_against_schema
     return if ['hello', 'error', 'keyrelay'].include?(params[:action])
-    params[:schema] = 'epp-1.0.xsd' unless params[:schema]
-    xsd = Nokogiri::XML::Schema(File.read("lib/schemas/#{params[:schema]}"))
-    xsd.validate(params[:nokogiri_frame]).each do |error|
+    schema.validate(params[:nokogiri_frame]).each do |error|
       epp_errors << {
         code: 2001,
         msg: error
@@ -71,6 +69,13 @@ class EppController < ApplicationController
     end
 
     render_epp_response '/epp/error'
+  end
+
+  def schema
+    # TODO: Support multiple schemas
+    return DOMAIN_SCHEMA if params[:epp_object_type] == :domain
+    return CONTACT_SCHEMA if params[:epp_object_type] == :contact
+    EPP_SCHEMA
   end
 
   def generate_svtrid
