@@ -36,15 +36,17 @@ module Depp
     end
 
     def create(domain_params)
+      dns_hash = {}
+      keys = Domain.create_dnskeys_hash(domain_params)
+      dns_hash[:_anonymus] = keys if keys.any?
+
       xml = epp_xml.create({
         name: { value: domain_params[:name] },
-        registrant: { value: domain_params[:registrant] },
         period: { value: domain_params[:period].to_s[0], attrs: { unit: domain_params[:period].to_s[1] } },
         ns: Domain.create_nameservers_hash(domain_params),
+        registrant: { value: domain_params[:registrant] },
         _anonymus: Domain.create_contacts_hash(domain_params)
-      }, {
-        _anonymus: Domain.create_dnskeys_hash(domain_params)
-      }, Domain.construct_custom_params_hash(domain_params))
+      }, dns_hash, Domain.construct_custom_params_hash(domain_params))
 
       current_user.request(xml)
     end
@@ -205,6 +207,16 @@ module Depp
         contacts = array_difference(create_contacts_hash(old_domain_params), create_contacts_hash(domain_params))
         rem_anon = contacts
 
+        add_arr = []
+        add_ns = create_nameservers_hash(domain_params) - create_nameservers_hash(old_domain_params)
+        add_arr << { ns: add_ns } if add_ns.any?
+        add_arr << { _anonymus: add_anon } if add_anon.any?
+
+        rem_arr = []
+        rem_ns = create_nameservers_hash(old_domain_params) - create_nameservers_hash(domain_params)
+        rem_arr << { ns: rem_ns } if rem_ns.any?
+        rem_arr << { _anonymus: rem_anon } if rem_anon.any?
+
         if domain_params[:registrant] != old_domain_params[:registrant]
           chg = [{ registrant: { value: domain_params[:registrant] } }]
         end
@@ -212,22 +224,18 @@ module Depp
         {
           name: { value: domain_params[:name] },
           chg: chg,
-          add: [
-            { ns: create_nameservers_hash(domain_params) - create_nameservers_hash(old_domain_params) },
-            { _anonymus: add_anon }
-          ],
-          rem: [
-            { ns: create_nameservers_hash(old_domain_params) - create_nameservers_hash(domain_params) },
-            { _anonymus: rem_anon }
-          ]
+          add: add_arr,
+          rem: rem_arr
         }
       end
 
       def construct_ext_edit_hash(domain_params, old_domain_params)
-        {
-          add: create_dnskeys_hash(domain_params) - create_dnskeys_hash(old_domain_params),
-          rem: create_dnskeys_hash(old_domain_params) - create_dnskeys_hash(domain_params)
-        }
+        rem_keys = create_dnskeys_hash(old_domain_params) - create_dnskeys_hash(domain_params)
+        add_keys = create_dnskeys_hash(domain_params) - create_dnskeys_hash(old_domain_params)
+        hash = {}
+        hash[:rem] = rem_keys if rem_keys.any?
+        hash[:add] = add_keys if add_keys.any?
+        hash
       end
 
       def create_nameservers_hash(domain_params)

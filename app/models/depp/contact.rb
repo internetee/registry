@@ -192,23 +192,23 @@ module Depp
         {
           id: { value: id },
           chg: {
-            voice: { value: phone },
-            email: { value: email },
             postalInfo: {
               name: { value: name },
               org:  { value: org_name },
               addr: {
                 street: { value: street },
                 city:   { value: city },
-                pc:     { value: zip },
                 sp:     { value: state },
+                pc:     { value: zip },
                 cc:     { value: country_code }
               }
+            },
+            voice: { value: phone },
+            email: { value: email },
+            authInfo: {
+              pw: { value: password }
             }
           },
-          authInfo: {
-            pw: { value: password }
-          }
         },
         extension_xml
       )
