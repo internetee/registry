@@ -10,8 +10,8 @@
    <!--
    Import common element types.
    -->
-    <import namespace="urn:ietf:params:xml:ns:eppcom-1.0" schemaLocation="doc/schemas/eppcom-1.0.xsd"/>
-    <import namespace="urn:ietf:params:xml:ns:epp-1.0" schemaLocation="doc/schemas/epp-1.0.xsd"/>
+    <import namespace="urn:ietf:params:xml:ns:eppcom-1.0" schemaLocation="http://www.iana.org/assignments/xml-registry/schema/eppcom-1.0.xsd"/>
+    <import namespace="urn:ietf:params:xml:ns:epp-1.0" schemaLocation="http://www.iana.org/assignments/xml-registry/schema/epp-1.0.xsd"/>
     <import namespace="https://epp.tld.ee/schema/eis-1.0.xsd" schemaLocation="doc/schemas/eis-1.0.xsd"/>
 
     <annotation>
