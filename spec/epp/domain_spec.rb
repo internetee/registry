@@ -474,7 +474,7 @@ describe 'EPP Domain', epp: true do
       })
 
       response = epp_plain_request(xml, validate_input: false)
-      response[:results][0][:msg].should == "Element '{https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd}period', attribute 'unit': [facet 'enumeration'] The value '' is not an element of the set {'y', 'm', 'd'}."
+      response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}period', attribute 'unit': [facet 'enumeration'] The value '' is not an element of the set {'y', 'm', 'd'}."
       response[:results][0][:result_code].should == '2001'
 
       xml = domain_create_xml({
@@ -482,7 +482,7 @@ describe 'EPP Domain', epp: true do
       })
 
       response = epp_plain_request(xml, validate_input: false)
-      response[:results][0][:msg].should == "Element '{https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd}period', attribute 'unit': [facet 'enumeration'] The value 'bla' is not an element of the set {'y', 'm', 'd'}."
+      response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}period', attribute 'unit': [facet 'enumeration'] The value 'bla' is not an element of the set {'y', 'm', 'd'}."
       response[:results][0][:result_code].should == '2001'
     end
 
@@ -2243,7 +2243,7 @@ describe 'EPP Domain', epp: true do
       })
 
       response = epp_plain_request(xml, validate_input: false)
-      response[:results][0][:msg].should == "Element '{https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd}status', attribute 's': [facet 'enumeration'] The value 'invalidStatus' is not an element of the set {'clientDeleteProhibited', 'clientHold', 'clientRenewProhibited', 'clientTransferProhibited', 'clientUpdateProhibited', 'inactive', 'ok', 'pendingCreate', 'pendingDelete', 'pendingRenew', 'pendingTransfer', 'pendingUpdate', 'serverDeleteProhibited', 'serverHold', 'serverRenewProhibited', 'serverTransferProhibited', 'serverUpdateProhibited'}."
+      response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}status', attribute 's': [facet 'enumeration'] The value 'invalidStatus' is not an element of the set {'clientDeleteProhibited', 'clientHold', 'clientRenewProhibited', 'clientTransferProhibited', 'clientUpdateProhibited', 'inactive', 'ok', 'pendingCreate', 'pendingDelete', 'pendingRenew', 'pendingTransfer', 'pendingUpdate', 'serverDeleteProhibited', 'serverHold', 'serverRenewProhibited', 'serverTransferProhibited', 'serverUpdateProhibited'}."
       response[:results][0][:result_code].should == '2001'
     end
 
@@ -2356,7 +2356,7 @@ describe 'EPP Domain', epp: true do
       )
 
       response = epp_plain_request(xml, validate_input: false)
-      response[:results][0][:msg].should == "Element '{https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd}period', attribute 'unit': [facet 'enumeration'] The value '' is not an element of the set {'y', 'm', 'd'}."
+      response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}period', attribute 'unit': [facet 'enumeration'] The value '' is not an element of the set {'y', 'm', 'd'}."
       response[:results][0][:result_code].should == '2001'
 
       xml = @epp_xml.domain.renew(
@@ -2366,7 +2366,7 @@ describe 'EPP Domain', epp: true do
       )
 
       response = epp_plain_request(xml, validate_input: false)
-      response[:results][0][:msg].should == "Element '{https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd}period', attribute 'unit': [facet 'enumeration'] The value 'bla' is not an element of the set {'y', 'm', 'd'}."
+      response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}period', attribute 'unit': [facet 'enumeration'] The value 'bla' is not an element of the set {'y', 'm', 'd'}."
       response[:results][0][:result_code].should == '2001'
 
       Setting.days_to_renew_domain_before_expire = 90
@@ -2721,7 +2721,7 @@ describe 'EPP Domain', epp: true do
 
       xml = domain_info_xml(name: { value: domain.name, attrs: { hosts: 'invalid' } })
       response = epp_plain_request(xml, validate_input: false)
-      response[:msg].should == "Element '{https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd}name', attribute 'hosts': [facet 'enumeration'] The value 'invalid' is not an element of the set {'all', 'del', 'none', 'sub'}."
+      response[:msg].should == "Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}name', attribute 'hosts': [facet 'enumeration'] The value 'invalid' is not an element of the set {'all', 'del', 'none', 'sub'}."
       response[:result_code].should == '2001'
 
       xml = domain_info_xml(name: { value: domain.name, attrs: { hosts: 'sub' } })

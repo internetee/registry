@@ -60,7 +60,7 @@ describe 'EPP Contact', epp: true do
       it 'fails if request xml is missing' do
         response = epp_plain_request(@epp_xml.create, validate_input: false)
 
-        response[:results][0][:msg].should == "Element '{https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd}create': Missing child element(s). Expected is one of ( {https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd}id, {https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd}postalInfo )."
+        response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}create': Missing child element(s). Expected is one of ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id, {https://epp.tld.ee/schema/contact-eis-1.0.xsd}postalInfo )."
         response[:results][0][:result_code].should == '2001'
       end
 
@@ -173,7 +173,7 @@ describe 'EPP Contact', epp: true do
           }
         }
         response = create_request({}, extension, validate_input: false)
-        response[:msg].should == "Element '{https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd}ident', attribute 'cc': [facet 'maxLength'] The value 'WRONG' has a length of '5'; this exceeds the allowed maximum length of '2'."
+        response[:msg].should == "Element '{https://epp.tld.ee/schema/eis-1.0.xsd}ident', attribute 'cc': [facet 'maxLength'] The value 'WRONG' has a length of '5'; this exceeds the allowed maximum length of '2'."
         response[:result_code].should == '2001'
       end
 
@@ -185,7 +185,7 @@ describe 'EPP Contact', epp: true do
           }
         }
         response = create_request({}, extension, validate_input: false)
-        response[:msg].should == "Element '{https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd}ident': The attribute 'cc' is required but missing."
+        response[:msg].should == "Element '{https://epp.tld.ee/schema/eis-1.0.xsd}ident': The attribute 'cc' is required but missing."
         response[:result_code].should == '2001'
       end
 
@@ -196,7 +196,7 @@ describe 'EPP Contact', epp: true do
           }
         }
         response = create_request({}, extension, validate_input: false)
-        response[:msg].should == "Element '{https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd}ident': The attribute 'type' is required but missing."
+        response[:msg].should == "Element '{https://epp.tld.ee/schema/eis-1.0.xsd}ident': The attribute 'type' is required but missing."
         response[:result_code].should == '2001'
       end
 
@@ -309,7 +309,7 @@ describe 'EPP Contact', epp: true do
 
       it 'fails if request is invalid' do
         response = epp_plain_request(@epp_xml.update, validate_input: false)
-        response[:results][0][:msg].should == "Element '{https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd}update': Missing child element(s). Expected is ( {https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd}id )."
+        response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}update': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id )."
       end
 
       it 'returns error if obj doesnt exist' do
@@ -398,7 +398,7 @@ describe 'EPP Contact', epp: true do
           }, {}, { validate_input: false }
         )
 
-        response[:msg].should == "Element '{https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd}id': This element is not expected."
+        response[:msg].should == "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}id': This element is not expected."
         response[:result_code].should == '2001'
 
         @contact.reload.code.should == 'FIRST0:SH8013'
@@ -719,7 +719,7 @@ describe 'EPP Contact', epp: true do
       it 'fails if request is invalid' do
         response = epp_plain_request(@epp_xml.delete, validate_input: false)
 
-        response[:results][0][:msg].should == "Element '{https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd}delete': Missing child element(s). Expected is ( {https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd}id )."
+        response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}delete': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id )."
         response[:results][0][:result_code].should == '2001'
         response[:results].count.should == 1
       end
@@ -814,7 +814,7 @@ describe 'EPP Contact', epp: true do
       it 'fails if request is invalid' do
         response = epp_plain_request(@epp_xml.check, validate_input: false)
 
-        response[:results][0][:msg].should == "Element '{https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd}check': Missing child element(s). Expected is ( {https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd}id )."
+        response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}check': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id )."
         response[:results][0][:result_code].should == '2001'
         response[:results].count.should == 1
       end
@@ -868,7 +868,7 @@ describe 'EPP Contact', epp: true do
 
       it 'fails if request invalid' do
         response = epp_plain_request(@epp_xml.info, validate_input: false)
-        response[:results][0][:msg].should == "Element '{https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd}info': Missing child element(s). Expected is ( {https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd}id )."
+        response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}info': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id )."
         response[:results][0][:result_code].should == '2001'
         response[:results].count.should == 1
       end
@@ -992,7 +992,7 @@ describe 'EPP Contact', epp: true do
       <command>
         <check>
           <contact:check
-           xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+           xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
             <contact:id>FIXED:CHECK-1234</contact:id>
             <contact:id>check-4321</contact:id>
           </contact:check>
@@ -1008,7 +1008,7 @@ describe 'EPP Contact', epp: true do
       <command>
         <check>
           <contact:check
-           xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+           xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
             <contact:id>FIXED:CHECK-LEGACY</contact:id>
             <contact:id>CID:FIXED:CHECK-LEGACY</contact:id>
           </contact:check>

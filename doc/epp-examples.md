@@ -19,13 +19,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -60,7 +60,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <contact:create xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd"/>
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd"/>
     </create>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -114,7 +114,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <contact:create xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
           <contact:addr>
@@ -129,7 +129,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -171,7 +171,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <contact:create xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
           <contact:addr>
@@ -186,7 +186,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="birthday" cc="US">1990-22-12</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -228,7 +228,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <contact:create xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
           <contact:addr>
@@ -243,7 +243,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -285,7 +285,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <contact:create xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
           <contact:addr>
@@ -300,7 +300,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -342,7 +342,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <contact:create xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>abc12345</contact:id>
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
@@ -358,7 +358,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -400,7 +400,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <contact:create xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>abc:ABC:12345</contact:id>
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
@@ -416,7 +416,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -458,7 +458,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <contact:create xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>abc 123</contact:id>
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
@@ -474,7 +474,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -510,7 +510,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <contact:create xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
           <contact:addr>
@@ -525,7 +525,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="birthday" cc="WRONG">1990-22-12</eis:ident>
       </eis:extdata>
     </extension>
@@ -560,7 +560,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <contact:create xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>CID:FIRST0:abc:ABC:NEW:12345</contact:id>
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
@@ -576,7 +576,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -618,7 +618,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <contact:create xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>CID:FIRST0:abc:CID:ABC:NEW:12345</contact:id>
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
@@ -634,7 +634,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -676,7 +676,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <contact:create xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:abc22</contact:id>
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
@@ -692,7 +692,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -734,7 +734,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <contact:create xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>cid2:first0:abc:ABC:11111</contact:id>
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
@@ -750,7 +750,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -792,7 +792,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <contact:create xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>CID:FIRST0</contact:id>
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
@@ -808,7 +808,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -850,7 +850,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <contact:create xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
           <contact:addr>
@@ -865,7 +865,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -907,7 +907,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <contact:create xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
           <contact:addr>
@@ -922,7 +922,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -964,7 +964,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <contact:create xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
           <contact:org>should not save</contact:org>
@@ -980,7 +980,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -1016,7 +1016,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <contact:create xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
           <contact:addr>
@@ -1032,7 +1032,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -1068,7 +1068,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd"/>
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd"/>
     </update>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -1104,7 +1104,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>not-exists</contact:id>
         <contact:chg>
           <contact:postalInfo>
@@ -1119,7 +1119,7 @@ REQUEST:
       </contact:update>
     </update>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -1157,7 +1157,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:postalInfo>
@@ -1172,7 +1172,7 @@ REQUEST:
       </contact:update>
     </update>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -1213,7 +1213,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:postalInfo>
@@ -1266,13 +1266,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -1305,7 +1305,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:postalInfo>
@@ -1320,7 +1320,7 @@ REQUEST:
       </contact:update>
     </update>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -1366,13 +1366,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -1414,13 +1414,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -1453,7 +1453,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:postalInfo>
@@ -1498,13 +1498,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -1539,7 +1539,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:postalInfo>
@@ -1554,7 +1554,7 @@ REQUEST:
       </contact:update>
     </update>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -1592,7 +1592,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:postalInfo>
@@ -1608,7 +1608,7 @@ REQUEST:
       </contact:update>
     </update>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -1646,7 +1646,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:postalInfo>
@@ -1661,7 +1661,7 @@ REQUEST:
       </contact:update>
     </update>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="birthday" cc="US">1990-22-12</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -1697,7 +1697,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:postalInfo>
@@ -1713,7 +1713,7 @@ REQUEST:
       </contact:update>
     </update>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -1748,7 +1748,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:postalInfo>
@@ -1764,7 +1764,7 @@ REQUEST:
       </contact:update>
     </update>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -1799,7 +1799,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:add>
           <contact:status s="clientHold" lang="en">Payment overdue.</contact:status>
@@ -1838,7 +1838,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:voice>+372.11111111</contact:voice>
@@ -1885,7 +1885,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:voice/>
@@ -1930,7 +1930,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:add>
           <contact:voice>+372.11111111111</contact:voice>
@@ -1980,7 +1980,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:voice/>
@@ -2024,7 +2024,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -2068,7 +2068,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -2118,7 +2118,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -2168,7 +2168,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -2221,7 +2221,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -2270,7 +2270,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -2313,7 +2313,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -2356,7 +2356,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd"/>
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd"/>
     </delete>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -2389,7 +2389,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>not-exists</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -2397,7 +2397,7 @@ REQUEST:
       </contact:delete>
     </delete>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -2436,7 +2436,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH737607533</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -2444,7 +2444,7 @@ REQUEST:
       </contact:delete>
     </delete>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -2480,7 +2480,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH348236744</contact:id>
         <contact:authInfo>
           <contact:pw>wrong password</contact:pw>
@@ -2488,7 +2488,7 @@ REQUEST:
       </contact:delete>
     </delete>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -2524,7 +2524,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH982687135</contact:id>
       </contact:delete>
     </delete>
@@ -2559,7 +2559,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH648273286</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -2567,7 +2567,7 @@ REQUEST:
       </contact:delete>
     </delete>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -2610,13 +2610,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -2649,7 +2649,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH129859989</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -2657,7 +2657,7 @@ REQUEST:
       </contact:delete>
     </delete>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -2698,13 +2698,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -2746,13 +2746,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -2785,7 +2785,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH5773127110</contact:id>
       </contact:delete>
     </delete>
@@ -2825,13 +2825,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -2873,13 +2873,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -2912,7 +2912,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH8279968911</contact:id>
         <contact:authInfo>
           <contact:pw>wrong password</contact:pw>
@@ -2920,7 +2920,7 @@ REQUEST:
       </contact:delete>
     </delete>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -2961,13 +2961,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -3002,7 +3002,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <check>
-      <contact:check xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd"/>
+      <contact:check xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd"/>
     </check>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -3035,7 +3035,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
       <command>
         <check>
-          <contact:check xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+          <contact:check xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
             <contact:id>FIXED:CHECK-1234</contact:id>
             <contact:id>check-4321</contact:id>
           </contact:check>
@@ -3082,7 +3082,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
       <command>
         <check>
-          <contact:check xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+          <contact:check xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
             <contact:id>FIXED:CHECK-LEGACY</contact:id>
             <contact:id>CID:FIXED:CHECK-LEGACY</contact:id>
           </contact:check>
@@ -3129,7 +3129,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <contact:info xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd"/>
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd"/>
     </info>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -3162,7 +3162,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <contact:info xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>no-contact</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -3203,7 +3203,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <contact:info xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIXED:INFO-4444</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -3271,7 +3271,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <contact:info xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIXED:CID:FIXED:INFO-5555</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -3339,7 +3339,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <contact:info xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:INFO-IDENT</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -3407,7 +3407,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <contact:info xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH025726680</contact:id>
         <contact:authInfo>
           <contact:pw>wrong-pw</contact:pw>
@@ -3475,7 +3475,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <contact:info xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIXED:TEST:CUSTOM:CODE</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -3550,13 +3550,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -3589,7 +3589,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <contact:info xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH025726680</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -3662,13 +3662,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -3710,13 +3710,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -3749,7 +3749,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <contact:info xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH025726680</contact:id>
         <contact:authInfo>
           <contact:pw>wrong-pw</contact:pw>
@@ -3792,13 +3792,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -3840,13 +3840,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -3879,7 +3879,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <contact:info xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>FIRST0:SH025726680</contact:id>
         <contact:authInfo>
           <contact:pw/>
@@ -3935,13 +3935,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -3981,13 +3981,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -4022,7 +4022,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example570502870390653.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -4050,7 +4050,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -4085,7 +4085,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example75362879070324119.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -4113,7 +4113,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -4157,7 +4157,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>test.ee</domain:name>
       </domain:create>
     </create>
@@ -4201,7 +4201,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example33195882581021572.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -4229,7 +4229,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -4271,7 +4271,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example29083099037202800.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -4291,7 +4291,7 @@ REQUEST:
       </domain:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -4333,7 +4333,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example50220100704932421.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -4359,7 +4359,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -4394,7 +4394,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>äääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääää.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -4422,7 +4422,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -4457,7 +4457,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>1162.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -4485,7 +4485,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -4518,7 +4518,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>1162.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -4546,7 +4546,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
         <eis:reserved>
           <eis:pw>wrong_pw</eis:pw>
@@ -4584,7 +4584,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>1162.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -4612,7 +4612,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
         <eis:reserved>
           <eis:pw>abc</eis:pw>
@@ -4657,7 +4657,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>ftp.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -4685,7 +4685,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -4723,7 +4723,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example60325525827762784.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -4747,7 +4747,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -4782,7 +4782,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example42884591161561847.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:registrant>FIXED:CITIZEN_1234</domain:registrant>
@@ -4800,7 +4800,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -4838,7 +4838,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example51822641645885173.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -4900,7 +4900,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -4935,7 +4935,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example95701265975718561.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -4961,7 +4961,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5005,7 +5005,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example79689508380822639.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -5027,7 +5027,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5062,7 +5062,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example65830382884082211.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -5085,7 +5085,7 @@ REQUEST:
       </domain:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5127,7 +5127,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example37104311749905114.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -5150,7 +5150,7 @@ REQUEST:
       </domain:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5194,7 +5194,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example17283406877102608.ee</domain:name>
         <domain:period unit="d">365</domain:period>
         <domain:ns>
@@ -5222,7 +5222,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5264,7 +5264,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example42530658953623496.ee</domain:name>
         <domain:period unit="y">2</domain:period>
         <domain:ns>
@@ -5292,7 +5292,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5334,7 +5334,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example20254148699039299.ee</domain:name>
         <domain:period unit="m">36</domain:period>
         <domain:ns>
@@ -5362,7 +5362,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5404,7 +5404,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example41984719173309545.ee</domain:name>
         <domain:ns>
           <domain:hostAttr>
@@ -5431,7 +5431,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5473,7 +5473,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example85680911639912537.ee</domain:name>
         <domain:period unit="d">367</domain:period>
         <domain:ns>
@@ -5501,7 +5501,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5539,7 +5539,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example80718300051718809.ee</domain:name>
         <domain:period unit="">1</domain:period>
         <domain:ns>
@@ -5567,7 +5567,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5600,7 +5600,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example53736479297046054.ee</domain:name>
         <domain:period unit="bla">1</domain:period>
         <domain:ns>
@@ -5628,7 +5628,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5663,7 +5663,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example18929120996156482.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -5703,7 +5703,7 @@ REQUEST:
           <secDNS:pubKey>841936717ae427ace63c28d04918569a841936717ae427ace63c28d0</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5745,7 +5745,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example92492494814312141.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -5785,7 +5785,7 @@ REQUEST:
           <secDNS:pubKey/>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5856,7 +5856,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example62629375729901991.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -5890,7 +5890,7 @@ REQUEST:
           <secDNS:pubKey>700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5928,7 +5928,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example96324057439285023.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -5962,7 +5962,7 @@ REQUEST:
           <secDNS:pubKey>700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5997,7 +5997,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example7613404788385072.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -6025,7 +6025,7 @@ REQUEST:
           <secDNS:digest>49FD46E6C4B45C55D4AC</secDNS:digest>
         </secDNS:dsData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -6067,7 +6067,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example49277921871401732.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -6101,7 +6101,7 @@ REQUEST:
           </secDNS:keyData>
         </secDNS:dsData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -6143,7 +6143,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example56030289069030352.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -6177,7 +6177,7 @@ REQUEST:
           </secDNS:keyData>
         </secDNS:dsData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -6212,7 +6212,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example75160608584221394.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -6240,7 +6240,7 @@ REQUEST:
           <secDNS:pubKey>700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -6275,7 +6275,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example3956990749578865.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -6309,7 +6309,7 @@ REQUEST:
           <secDNS:pubKey>700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -6344,7 +6344,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example75024791554839013.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -6370,7 +6370,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -6412,7 +6412,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example53305717298495096.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -6438,7 +6438,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -6473,7 +6473,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <domain:create xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example32384352982726855.ee</domain:name>
         <domain:period unit="y">1</domain:period>
         <domain:ns>
@@ -6499,7 +6499,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -6544,13 +6544,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -6583,7 +6583,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="request">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain1.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">42ae0ae9efbfe30e392c68f43868c156</domain:pw>
@@ -6591,7 +6591,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -6642,13 +6642,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -6725,7 +6725,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="request">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain1.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">0e24645ded1d5674883359a3a6efc6d8</domain:pw>
@@ -6733,7 +6733,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -6777,7 +6777,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="request">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain1.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">0e24645ded1d5674883359a3a6efc6d8</domain:pw>
@@ -6785,7 +6785,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -6836,13 +6836,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -6926,13 +6926,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -6972,13 +6972,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7048,13 +7048,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7096,13 +7096,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7135,7 +7135,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="request">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain2.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">cc8d4d0ec06659816e33ffa712bfcb96</domain:pw>
@@ -7143,7 +7143,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -7194,13 +7194,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7240,13 +7240,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7279,7 +7279,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="request">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain2.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">cc8d4d0ec06659816e33ffa712bfcb96</domain:pw>
@@ -7287,7 +7287,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -7338,13 +7338,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7386,13 +7386,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7425,7 +7425,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="request">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain3.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">11a06f18e5e558f6b64753eaaa49173c</domain:pw>
@@ -7479,13 +7479,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7527,13 +7527,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7566,7 +7566,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="request">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain4.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">fc66d69a22fd1bcdbf3be76be431b09d</domain:pw>
@@ -7620,13 +7620,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7668,13 +7668,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7707,7 +7707,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="request">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain5.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">4d5a71cc6c7d0ddcf59d2816b42e98d3</domain:pw>
@@ -7761,13 +7761,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7809,13 +7809,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7848,7 +7848,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="request">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain8.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">2ec2e6c76768ad88df0dbeba38f710e6</domain:pw>
@@ -7902,13 +7902,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7950,13 +7950,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7989,7 +7989,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="request">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain9.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">d36b447200a1aaac2bd7b5a878652bf5</domain:pw>
@@ -8043,13 +8043,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -8091,13 +8091,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -8130,7 +8130,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="request">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain11.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">cbb169bf8cd2f5ba0a3fcebaf7fa97fb</domain:pw>
@@ -8184,13 +8184,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -8232,13 +8232,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -8271,7 +8271,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="request">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain14.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">7590473cda31d3a0b3c2d8ffbf410b7c</domain:pw>
@@ -8325,13 +8325,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -8373,13 +8373,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -8412,7 +8412,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="request">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain15.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">91a1593675c6b62f498280dcff1613ae</domain:pw>
@@ -8466,13 +8466,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -8514,13 +8514,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -8553,7 +8553,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="request">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain16.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">98oiewslkfkd</domain:pw>
@@ -8596,13 +8596,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -8637,7 +8637,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="approve">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain17.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">66a79e8236d629c800bc4cddbb5b4b5f</domain:pw>
@@ -8645,7 +8645,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -8698,13 +8698,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -8737,7 +8737,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="reject">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain18.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">6d38dcddecdb6cd04201e5bffd7ac13d</domain:pw>
@@ -8745,7 +8745,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -8785,13 +8785,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -8824,7 +8824,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="reject">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain18.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">6d38dcddecdb6cd04201e5bffd7ac13d</domain:pw>
@@ -8832,7 +8832,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -8885,13 +8885,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -8924,7 +8924,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="approve">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain19.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">c39986ad356b45908b93934b9b531b3e</domain:pw>
@@ -8932,7 +8932,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -8972,13 +8972,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -9013,7 +9013,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="request">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain20.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">test</domain:pw>
@@ -9021,7 +9021,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -9056,7 +9056,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="request">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain21.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">97ffdf9ce35006bb804a90b0be86158f</domain:pw>
@@ -9064,7 +9064,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -9099,7 +9099,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="bla">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example23607638467376100.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">98oiewslkfkd</domain:pw>
@@ -9144,13 +9144,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -9183,7 +9183,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="request">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain22.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">ed362ab554eed93eef9ba15f47b3a86b</domain:pw>
@@ -9191,7 +9191,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -9235,7 +9235,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="request">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain22.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">ed362ab554eed93eef9ba15f47b3a86b</domain:pw>
@@ -9243,7 +9243,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -9283,13 +9283,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -9324,7 +9324,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="approve">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain23.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">aefa0df0d6e304b99ae3c5ff5220feec</domain:pw>
@@ -9332,7 +9332,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -9367,7 +9367,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="query">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain24.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">40bce48fe3a738128d78e17d37bf296b</domain:pw>
@@ -9412,13 +9412,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -9451,7 +9451,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="request">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain25.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">064c71aaa009061b95fba395d67df5c5</domain:pw>
@@ -9459,7 +9459,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -9503,7 +9503,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="query">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain25.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">064c71aaa009061b95fba395d67df5c5</domain:pw>
@@ -9557,13 +9557,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -9596,7 +9596,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="approve">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain25.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">064c71aaa009061b95fba395d67df5c5</domain:pw>
@@ -9604,7 +9604,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -9648,7 +9648,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <transfer op="query">
-      <domain:transfer xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain25.ee</domain:name>
         <domain:authInfo>
           <domain:pw roid="citizen_1234-REP">5bfe0b53635867fb9e51d987d686b95e</domain:pw>
@@ -9697,7 +9697,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain26.ee</domain:name>
         <domain:chg>
           <domain:registrant verified="yes">FIXED:CITIZEN_1234</domain:registrant>
@@ -9706,7 +9706,7 @@ REQUEST:
     </update>
     <extension>
       <secDNS:update xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1"/>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -9741,7 +9741,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain27.ee</domain:name>
         <domain:chg>
           <domain:registrant>FIXED:CITIZEN_1234</domain:registrant>
@@ -9750,7 +9750,7 @@ REQUEST:
     </update>
     <extension>
       <secDNS:update xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1"/>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -9785,7 +9785,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain28.ee</domain:name>
         <domain:rem>
           <domain:ns>
@@ -9807,7 +9807,7 @@ REQUEST:
     </update>
     <extension>
       <secDNS:update xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1"/>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -9842,7 +9842,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain29.ee</domain:name>
         <domain:chg>
           <domain:registrant>FIXED:CITIZEN_1234</domain:registrant>
@@ -9851,7 +9851,7 @@ REQUEST:
     </update>
     <extension>
       <secDNS:update xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1"/>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -9886,7 +9886,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain30.ee</domain:name>
         <domain:chg>
           <domain:registrant>FIXED:CITIZEN_1234</domain:registrant>
@@ -9895,7 +9895,7 @@ REQUEST:
     </update>
     <extension>
       <secDNS:update xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1"/>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -9930,7 +9930,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain31.ee</domain:name>
         <domain:add>
           <domain:ns>
@@ -9997,7 +9997,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain31.ee</domain:name>
         <domain:add>
           <domain:ns>
@@ -10061,7 +10061,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain31.ee</domain:name>
         <domain:add>
           <domain:ns>
@@ -10154,7 +10154,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain32.ee</domain:name>
         <domain:add>
           <domain:ns>
@@ -10191,7 +10191,7 @@ REQUEST:
           </secDNS:keyData>
         </secDNS:add>
       </secDNS:update>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -10227,7 +10227,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain32.ee</domain:name>
         <domain:add>
           <domain:ns>
@@ -10264,7 +10264,7 @@ REQUEST:
           </secDNS:keyData>
         </secDNS:add>
       </secDNS:update>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -10299,7 +10299,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain33.ee</domain:name>
         <domain:add>
           <domain:status s="clientHold" lang="en">Payment overdue.</domain:status>
@@ -10338,7 +10338,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain34.ee</domain:name>
         <domain:add>
           <domain:ns>
@@ -10402,7 +10402,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain34.ee</domain:name>
         <domain:rem>
           <domain:ns>
@@ -10456,7 +10456,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain34.ee</domain:name>
         <domain:rem>
           <domain:ns>
@@ -10533,7 +10533,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain35.ee</domain:name>
         <domain:rem>
           <domain:status s="serverHold"/>
@@ -10574,7 +10574,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain36.ee</domain:name>
         <domain:add>
           <domain:ns>
@@ -10615,7 +10615,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain36.ee</domain:name>
         <domain:add>
           <domain:ns>
@@ -10667,7 +10667,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain37.ee</domain:name>
         <domain:chg>
           <domain:registrant>FIXED:CITIZEN_1234</domain:registrant>
@@ -10705,7 +10705,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <domain:update xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain38.ee</domain:name>
         <domain:add>
           <domain:status s="invalidStatus"/>
@@ -10746,7 +10746,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <renew>
-      <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain39.ee</domain:name>
         <domain:curExpDate>2016-07-20</domain:curExpDate>
         <domain:period unit="y">1</domain:period>
@@ -10789,7 +10789,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <renew>
-      <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain40.ee</domain:name>
         <domain:curExpDate>2016-07-20</domain:curExpDate>
         <domain:period unit="y">1</domain:period>
@@ -10832,7 +10832,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <renew>
-      <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain41.ee</domain:name>
         <domain:curExpDate>2016-07-20</domain:curExpDate>
       </domain:renew>
@@ -10874,7 +10874,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <renew>
-      <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain42.ee</domain:name>
         <domain:curExpDate>2016-07-20</domain:curExpDate>
         <domain:period unit="">1</domain:period>
@@ -10909,7 +10909,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <renew>
-      <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain42.ee</domain:name>
         <domain:curExpDate>2016-07-20</domain:curExpDate>
         <domain:period unit="bla">1</domain:period>
@@ -10946,7 +10946,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <renew>
-      <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain43.ee</domain:name>
         <domain:curExpDate>2015-07-30</domain:curExpDate>
         <domain:period unit="d">730</domain:period>
@@ -10989,7 +10989,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <renew>
-      <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain44.ee</domain:name>
         <domain:curExpDate>2015-07-30</domain:curExpDate>
         <domain:period unit="m">36</domain:period>
@@ -11032,7 +11032,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <renew>
-      <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain45.ee</domain:name>
         <domain:curExpDate>2015-07-30</domain:curExpDate>
         <domain:period unit="y">1</domain:period>
@@ -11069,7 +11069,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <renew>
-      <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain46.ee</domain:name>
         <domain:curExpDate>2200-08-07</domain:curExpDate>
         <domain:period unit="y">1</domain:period>
@@ -11112,7 +11112,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <renew>
-      <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain47.ee</domain:name>
         <domain:curExpDate>2015-07-30</domain:curExpDate>
         <domain:period unit="y">4</domain:period>
@@ -11152,7 +11152,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <renew>
-      <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain48.ee</domain:name>
         <domain:curExpDate>2015-10-18</domain:curExpDate>
         <domain:period unit="y">1</domain:period>
@@ -11187,7 +11187,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <renew>
-      <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain48.ee</domain:name>
         <domain:curExpDate>2015-10-17</domain:curExpDate>
         <domain:period unit="y">1</domain:period>
@@ -11230,7 +11230,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <renew>
-      <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain49.ee</domain:name>
         <domain:curExpDate>2020-07-20</domain:curExpDate>
         <domain:period unit="y">1</domain:period>
@@ -11273,7 +11273,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <renew>
-      <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain50.ee</domain:name>
         <domain:curExpDate>2015-07-30</domain:curExpDate>
         <domain:period unit="y">1</domain:period>
@@ -11319,13 +11319,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -11358,7 +11358,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <renew>
-      <domain:renew xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain52.ee</domain:name>
         <domain:curExpDate>2016-07-20</domain:curExpDate>
         <domain:period unit="y">1</domain:period>
@@ -11400,13 +11400,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -11441,7 +11441,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <domain:info xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name hosts="all">domain53.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>
@@ -11539,7 +11539,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <domain:info xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name hosts="all">domain53.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>
@@ -11639,7 +11639,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <domain:info xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name hosts="invalid">domain54.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>
@@ -11673,7 +11673,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <domain:info xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name hosts="sub">domain54.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>
@@ -11736,7 +11736,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <domain:info xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name hosts="del">domain54.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>
@@ -11794,7 +11794,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <domain:info xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name hosts="none">domain54.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>
@@ -11845,7 +11845,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <domain:info xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name hosts="all">domain54.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>
@@ -11915,7 +11915,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <domain:info xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name hosts="all">test.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>
@@ -11954,7 +11954,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <domain:info xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name hosts="all">domain55.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>
@@ -12028,13 +12028,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -12067,7 +12067,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <domain:info xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name hosts="all">domain56.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>
@@ -12108,13 +12108,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -12156,13 +12156,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -12195,7 +12195,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <domain:info xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name hosts="all">domain57.ee</domain:name>
       </domain:info>
     </info>
@@ -12261,13 +12261,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -12309,13 +12309,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -12348,7 +12348,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <domain:info xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name hosts="all">domain58.ee</domain:name>
         <domain:authInfo>
           <domain:pw>6247f0cbf6ef99c7803d68f9604ef0b0</domain:pw>
@@ -12420,13 +12420,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -12461,12 +12461,12 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <delete>
-      <domain:delete xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:delete xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain59.ee</domain:name>
       </domain:delete>
     </delete>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -12501,12 +12501,12 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <delete>
-      <domain:delete xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:delete xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain60.ee</domain:name>
       </domain:delete>
     </delete>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -12541,12 +12541,12 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <delete>
-      <domain:delete xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:delete xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain61.ee</domain:name>
       </domain:delete>
     </delete>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -12581,7 +12581,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <delete>
-      <domain:delete xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:delete xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example.ee</domain:name>
       </domain:delete>
     </delete>
@@ -12616,7 +12616,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <check>
-      <domain:check xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:check xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>one.ee</domain:name>
       </domain:check>
     </check>
@@ -12656,7 +12656,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <check>
-      <domain:check xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:check xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>domain62.ee</domain:name>
       </domain:check>
     </check>
@@ -12699,7 +12699,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <check>
-      <domain:check xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:check xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>one.ee</domain:name>
         <domain:name>two.ee</domain:name>
         <domain:name>three.ee</domain:name>
@@ -12749,7 +12749,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <check>
-      <domain:check xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:check xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>one.ee</domain:name>
         <domain:name>notcorrectdomain</domain:name>
       </domain:check>
@@ -12803,13 +12803,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -12841,7 +12841,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
   <command>
     <ext:keyrelay>
       <ext:name>domain63.ee</ext:name>
@@ -12889,7 +12889,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
   <command>
     <ext:keyrelay>
       <ext:name>domain63.ee</ext:name>
@@ -12939,7 +12939,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
   <command>
     <ext:keyrelay>
       <ext:name>domain63.ee</ext:name>
@@ -12987,7 +12987,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
   <command>
     <ext:keyrelay>
       <ext:name>domain63.ee</ext:name>
@@ -13035,7 +13035,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
   <command>
     <ext:keyrelay>
       <ext:name>domain63.ee</ext:name>
@@ -13052,7 +13052,7 @@ REQUEST:
         <ext:relative>P1D</ext:relative>
       </ext:expiry>
     </ext:keyrelay>
-    <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+    <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
       <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
     </eis:extdata>
     <ext:clTRID>1437394918</ext:clTRID>
@@ -13086,7 +13086,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
   <command>
     <ext:keyrelay>
       <ext:name>domain63.ee</ext:name>
@@ -13103,7 +13103,7 @@ REQUEST:
         <ext:relative>P1D</ext:relative>
       </ext:expiry>
     </ext:keyrelay>
-    <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+    <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
       <eis:legalDocument type="jpg">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
     </eis:extdata>
     <ext:clTRID>1437394919</ext:clTRID>
@@ -13142,13 +13142,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -13221,13 +13221,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -13296,13 +13296,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -13375,13 +13375,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -13453,13 +13453,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -13811,13 +13811,13 @@ RESPONSE:
     <svcMenu>
       <version>1.0</version>
       <lang>en</lang>
-      <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-      <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+      <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+      <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
       <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
       <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
       <svcExtension>
         <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-        <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+        <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
       </svcExtension>
     </svcMenu>
     <dcp>
@@ -13857,13 +13857,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -13905,13 +13905,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -13946,7 +13946,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <domain:info xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+      <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>test.ee</domain:name>
       </domain:info>
     </info>
@@ -13988,13 +13988,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -14034,13 +14034,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -14082,13 +14082,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -14130,13 +14130,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -14176,13 +14176,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -14224,13 +14224,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -14302,13 +14302,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -14351,13 +14351,13 @@ REQUEST:
         <lang>en</lang>
       </options>
       <svcs>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd</objURI>
-        <objURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>

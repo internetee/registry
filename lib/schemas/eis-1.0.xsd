@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema
- targetNamespace="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd"
- xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd"
+ targetNamespace="https://epp.tld.ee/schema/eis-1.0.xsd"
+ xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
  xmlns="http://www.w3.org/2001/XMLSchema"
  elementFormDefault="qualified">
 

@@ -5,7 +5,7 @@ xml.epp_head do
     end
 
     xml.resData do
-      xml.tag!('contact:infData', 'xmlns:contact' => 'https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd') do
+      xml.tag!('contact:infData', 'xmlns:contact' => 'https://epp.tld.ee/schema/contact-eis-1.0.xsd') do
         xml.tag!('contact:id', @contact.code)
         xml.tag!('contact:roid', @contact.roid)
 
@@ -55,7 +55,7 @@ xml.epp_head do
     end
     if can? :view_full_info, @contact, @password
       xml.tag!('extension') do
-        xml.tag!('eis:extdata', 'xmlns:eis' => 'https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd') do
+        xml.tag!('eis:extdata', 'xmlns:eis' => 'https://epp.tld.ee/schema/eis-1.0.xsd') do
           xml.tag!('eis:ident', @contact.ident,
                    type: @contact.ident_type, cc: @contact.ident_country_code)
         end

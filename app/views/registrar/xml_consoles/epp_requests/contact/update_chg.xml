@@ -2,7 +2,7 @@
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
         <contact:id>sh8013</contact:id>
         <contact:chg>
           <contact:postalInfo>
@@ -25,7 +25,7 @@
       </contact:update>
     </update>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">
           JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==
         </eis:legalDocument>

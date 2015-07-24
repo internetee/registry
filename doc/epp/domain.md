@@ -13,7 +13,7 @@ Domain name mapping protocol short version:
     Field name                 Min-max  Field description
     -------------------------  -------  -----------------
     <create>                   1       
-      <domain:create>          1        Attribute: xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd"
+      <domain:create>          1        Attribute: xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd"
         <domain:name>          1        Domain name. Can contain unicode characters.
         <domain:period>        0-1      Registration period for domain. 
                                         Must add up to 1 / 2 / 3 years.
@@ -36,7 +36,7 @@ Domain name mapping protocol short version:
           <secDNS:protocol>    1        Allowed values: 3
           <secDNS:alg>         1        Allowed values: 3, 5, 6, 7, 8, 252, 253, 254, 255
           <secDNS:pubKey>      1        Public key
-      <eis:extdata>            1        Attribute: xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd"
+      <eis:extdata>            1        Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
         <eis:legalDocument>    1        Base64 encoded document. 
                                           Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
         <eis:reserved>         0-1
@@ -50,7 +50,7 @@ Domain name mapping protocol short version:
     Field name                   Min-max   Field description
     ------------------------     --------  -----------------
     <update>                     1        
-      <domain:update>            1         Attribute: xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd"
+      <domain:update>            1         Attribute: xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd"
         <domain:name>            1         Domain name. Can contain unicode characters.
         <domain:chg>             0-1       Attributes to change
           <domain:registrant>    0-1       Contact reference to the registrant
@@ -85,7 +85,7 @@ Domain name mapping protocol short version:
         <secDNS:rem>             0-1      
           <secDNS:keyData>       1-n      
             <secDNS:pubKey>      1         Public key
-      <eis:extdata>              0-1       Attribute: xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd"
+      <eis:extdata>              0-1       Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
         <eis:legalDocument>      0-1       Base64 encoded document. Required if registrant is changing. 
                                              Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
     <clTRID>                     0-1       Client transaction id
@@ -97,11 +97,11 @@ Domain name mapping protocol short version:
     Field name               Min-max  Field description
     -----------------------  -------  -----------------
     <delete>                 1       
-      <domain:delete>        1        Attribute: xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd"
+      <domain:delete>        1        Attribute: xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd"
                                         Optional attribute: verified="yes/no"
         <domain:name>        1        Domain name. Can contain unicode characters.
     <extension>              1       
-      <eis:extdata>          1        Attribute: xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd"
+      <eis:extdata>          1        Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
         <eis:legalDocument>  1        Base64 encoded document. 
                                         Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
     <clTRID>                 0-1      Client transaction id
@@ -113,7 +113,7 @@ Domain name mapping protocol short version:
     Field name               Min-max  Field description
     -----------------------  -------  -----------------
     <info>                   1       
-      <domain:info>          1        Attribute: xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd"
+      <domain:info>          1        Attribute: xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd"
         <domain:name>        1        Domain name. Can contain unicode characters. 
                                       Attribute: hosts="all / del / sub / none"
         <domain:authInfo>    0-1      Required if registrar is not the owner of the domain.
@@ -127,14 +127,14 @@ Domain name mapping protocol short version:
     Field name               Min-max  Field description
     -----------------------  -------  -----------------
     <renew>                  1       
-      <domain:renew>         1        Attribute: xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd"
+      <domain:renew>         1        Attribute: xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd"
         <domain:name>        1        Domain name. Can contain unicode characters. 
         <domain:curExpDate>  1        Current expiry date (ISO8601 format)
         <domain:period>      0-1      Registration period for domain. 
                                       Must add up to 1 / 2 / 3 years. Attribute: unit="y/m/d"
                                       Default value is 1 year.
     <extension>              0-1     
-      <eis:extdata>          0-1      Attribute: xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd"
+      <eis:extdata>          0-1      Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
         <eis:legalDocument>  0-1      Base64 encoded document. 
                                         Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
     <clTRID>                 0-1      Client transaction id
@@ -146,12 +146,12 @@ Domain name mapping protocol short version:
     Field name               Min-max  Field description
     -----------------------  -------  -----------------
     <transfer>               1        Attribute: op="request/query/approve/reject/cancel"
-      <domain:transfer>      1        Attribute: xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd"
+      <domain:transfer>      1        Attribute: xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd"
         <domain:name>        1        Domain name. Can contain unicode characters. 
         <domain:authInfo>    1       
           <domain:pw>        1        Domain password. Attribute: roid="String"
     <extension>              0-1     
-      <eis:extdata>          0-1      Attribute: xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd"
+      <eis:extdata>          0-1      Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
         <eis:legalDocument>  0-1      Base64 encoded document.  
                                         Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
     <clTRID>                 0-1      Client transaction id
@@ -163,7 +163,7 @@ Domain name mapping protocol short version:
     Field name               Min-max  Field description
     -----------------------  -------  -----------------
     <check>                  1       
-      <domain:check>         1        Attribute: xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd"
+      <domain:check>         1        Attribute: xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd"
         <domain:name>        1        Domain name. Can contain unicode characters. 
     <clTRID>                 0-1      Client transaction id
 

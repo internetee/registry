@@ -19,8 +19,8 @@ gem 'figaro', '~> 1.1.1'
 gem 'pg',                        '~> 0.18.0'
 gem 'ransack',                   '~> 1.5.1' # for searching
 # with polymorphic fix
-gem 'paper_trail', 
-  github: 'airblade/paper_trail', 
+gem 'paper_trail',
+  github: 'airblade/paper_trail',
   ref: 'a453811226ec4ea59753ba6b827e390ced2fc140'
 gem 'rails-settings-cached',     '~> 0.4.1' # for settings
 
@@ -82,7 +82,7 @@ gem 'digidoc_client', '~> 0.2.1'
 
 # epp
 gem 'epp', '~> 1.4.2', github: 'internetee/epp'
-gem 'epp-xml',   '~> 1.0.3'  # EIS EPP XMLs
+gem 'epp-xml',   '~> 1.0.4' # EIS EPP XMLs
 gem 'uuidtools', '~> 2.1.4' # For unique IDs (used by the epp gem)
 
 # que
@@ -144,13 +144,13 @@ group :development, :test do
   gem 'simplecov',     '~> 0.10.0', require: false
   gem 'rubycritic',    '~> 1.4.0'
   gem 'bullet',        '~> 4.14.4' # for finding database optimizations
-  gem 'bundler-audit', 
+  gem 'bundler-audit',
     github: 'rubysec/bundler-audit',
     ref: 'f89ef7fae1090bbad825ea76812d56d72b417055' # for finding future vulnerable gems
   gem 'brakeman',      '~> 3.0.5', require: false # for security audit'
   # tmp, otherwise conflics with breakman
   # gem 'html2haml', github: 'haml/html2haml', ref: '6984f50bdbbd6291535027726a5697f28778ee8d'
-  gem 'html2haml',     '~> 2.0.0' 
+  gem 'html2haml',     '~> 2.0.0'
   gem 'sdoc',          '~> 0.4.0'  # bundle exec rake doc:rails generates the API under doc/api.
   gem 'railroady',     '~> 1.3.0'  # to generate database diagrams
 

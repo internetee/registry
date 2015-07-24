@@ -1,7 +1,7 @@
 class EppConstraint
   OBJECT_TYPES = {
-    domain: { domain: 'https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd' },
-    contact: { contact: 'https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd' }
+    domain: { domain: 'https://epp.tld.ee/schema/domain-eis-1.0.xsd' },
+    contact: { contact: 'https://epp.tld.ee/schema/contact-eis-1.0.xsd' }
   }
 
   def initialize(type)
