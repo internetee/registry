@@ -45,7 +45,13 @@ feature 'Contact', type: :feature do
         visit '/registrar/contacts/new'
         current_path.should == '/registrar/contacts/new'
 
-        fill_in 'depp_contact_ident', with: 'bic-ident'
+        fill_in 'depp_contact_ident',  with: ''
+        fill_in 'depp_contact_name',   with: 'Business Name Ltd'
+        fill_in 'depp_contact_email',  with: 'example@example.com'
+        fill_in 'depp_contact_street', with: 'Example street 12'
+        fill_in 'depp_contact_city',   with: 'Example City'
+        fill_in 'depp_contact_zip',    with: '123456'
+        fill_in 'depp_contact_phone',  with: '+372.12345678'
         click_button 'Create'
 
         current_path.should == '/registrar/contacts'
