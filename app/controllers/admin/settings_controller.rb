@@ -53,6 +53,7 @@ class Admin::SettingsController < AdminController
       :transfer_wait_time,
       :invoice_number_min,
       :invoice_number_max,
+      :days_to_keep_invoices_active,
       :days_to_keep_overdue_invoices_active,
       :days_to_renew_domain_before_expire,
       :expire_warning_period,

@@ -72,10 +72,11 @@ class Registrar < ActiveRecord::Base
   end
 
   # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
   def issue_prepayment_invoice(amount, description = nil)
     invoices.create(
       invoice_type: 'DEB',
-      due_date: Time.zone.now.to_date + 1.day,
+      due_date: (Time.zone.now.to_date + Setting.days_to_keep_invoices_active.days).end_of_day,
       payment_term: 'prepayment',
       description: description,
       currency: 'EUR',
@@ -117,6 +118,7 @@ class Registrar < ActiveRecord::Base
       ]
     )
   end
+  # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 
   def cash_account

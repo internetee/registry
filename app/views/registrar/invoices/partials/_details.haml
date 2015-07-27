@@ -2,21 +2,21 @@
 %hr
 %dl.dl-horizontal
   %dt= t(:issue_date)
-  %dd= l(@invoice.created_at)
+  %dd= l(@invoice.created_at, format: :date_long)
 
   - if @invoice.cancelled?
     %dt= t(:cancel_date)
-    %dd= l(@invoice.cancelled_at)
+    %dd= l(@invoice.cancelled_at, format: :date_long)
 
   %dt= t(:due_date)
   - if @invoice.cancelled?
     %dd.text-grey= t(:cancelled)
   - else
-    %dd= l(@invoice.due_date)
+    %dd= l(@invoice.due_date, format: :date_long)
 
   %dt= t(:receipt_date)
   - if @invoice.binded?
-    %dd= l(@invoice.receipt_date)
+    %dd= l(@invoice.receipt_date, format: :date_long)
   - elsif @invoice.cancelled?
     %dd.text-grey= t(:cancelled)
   - else

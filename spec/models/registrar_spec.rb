@@ -122,11 +122,13 @@ describe Registrar do
     end
 
     it 'should be able to issue a prepayment invoice' do
+      Setting.days_to_keep_invoices_active = 30
       Fabricate(:registrar, name: 'EIS', reg_no: '90010019')
       @registrar.issue_prepayment_invoice(200, 'add some money')
       @registrar.invoices.count.should == 1
       i = @registrar.invoices.first
       i.sum.should == BigDecimal.new('240.0')
+      i.due_date.should be_within(0.1).of((Time.zone.now + 30.days).end_of_day)
       i.description.should == 'add some money'
     end
 
