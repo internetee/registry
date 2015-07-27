@@ -9,7 +9,7 @@ class Contact < ActiveRecord::Base
   has_many :registrant_domains, class_name: 'Domain', foreign_key: 'registrant_id' # when contant is registrant
 
   # TODO: remove later
-  has_many :depricated_statuses, class_name: 'DepricatedContactStatus', dependent: :destroy 
+  has_many :depricated_statuses, class_name: 'DepricatedContactStatus', dependent: :destroy
 
   accepts_nested_attributes_for :legal_documents
 
@@ -30,7 +30,7 @@ class Contact < ActiveRecord::Base
   validate :ident_valid_format?
   validate :uniq_statuses?
 
-  after_initialize do 
+  after_initialize do
     self.statuses = [] if statuses.nil?
     self.status_notes = {} if status_notes.nil?
   end
@@ -50,6 +50,9 @@ class Contact < ActiveRecord::Base
     manage_linked
     manage_ok
   end
+
+  # for overwrite when doing children loop
+  attr_writer :domains_present
 
   scope :current_registrars, ->(id) { where(registrar_id: id) }
 
@@ -113,12 +116,12 @@ class Contact < ActiveRecord::Base
   # "pendingUpdate" status MUST NOT be combined with either
   # "clientUpdateProhibited" or "serverUpdateProhibited" status.
   PENDING_UPDATE = 'pendingUpdate'
-  # "pendingDelete" MUST NOT be combined with either 
+  # "pendingDelete" MUST NOT be combined with either
   # "clientDeleteProhibited" or "serverDeleteProhibited" status.
-  PENDING_DELETE = 'pendingDelete' 
+  PENDING_DELETE = 'pendingDelete'
 
   STATUSES = [
-    CLIENT_DELETE_PROHIBITED, SERVER_DELETE_PROHIBITED, 
+    CLIENT_DELETE_PROHIBITED, SERVER_DELETE_PROHIBITED,
     CLIENT_TRANSFER_PROHIBITED,
     SERVER_TRANSFER_PROHIBITED, CLIENT_UPDATE_PROHIBITED, SERVER_UPDATE_PROHIBITED,
     OK, PENDING_CREATE, PENDING_DELETE, PENDING_TRANSFER,
@@ -132,7 +135,7 @@ class Contact < ActiveRecord::Base
 
   SERVER_STATUSES = [
     SERVER_UPDATE_PROHIBITED,
-    SERVER_DELETE_PROHIBITED, 
+    SERVER_DELETE_PROHIBITED,
     SERVER_TRANSFER_PROHIBITED
   ]
   #
@@ -306,16 +309,11 @@ class Contact < ActiveRecord::Base
     end
   end
 
-  # optimization under children loop, 
+  # optimization under children loop,
   # otherwise bullet will not be happy
   def domains_present?
     return @domains_present if @domains_present
     domain_contacts.present? || registrant_domains.present?
-  end
-
-  # for overwrite when doing children loop
-  def domains_present=(boolean)
-    @domains_present = boolean
   end
 
   def manage_linked

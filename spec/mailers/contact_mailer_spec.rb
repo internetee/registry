@@ -29,6 +29,7 @@ describe ContactMailer do
     before :all do 
       @domain = Fabricate(:domain)
       @contact = @domain.registrant
+      @contact.reload # until figured out why registrant_domains not loaded
       @contact.deliver_emails = true
       @contact.email = 'test@example.org' # new email
       @mail = ContactMailer.email_updated(@contact)

@@ -528,7 +528,7 @@ class Epp::Domain < Domain
     return if registrant.registrar_id == registrar_id
 
     is_other_domains_contact = DomainContact.where('contact_id = ? AND domain_id != ?', registrant_id, id).count > 0
-    if registrant.domains_owned.count > 1 || is_other_domains_contact
+    if registrant.registrant_domains.count > 1 || is_other_domains_contact
       oc = copy_and_transfer_contact(registrant_id, registrar_id)
       self.registrant_id = oc.id
     else
