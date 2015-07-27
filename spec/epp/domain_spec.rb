@@ -473,7 +473,7 @@ describe 'EPP Domain', epp: true do
         period: { value: '1', attrs: { unit: '' } }
       })
 
-      response = epp_plain_request(xml, validate_input: false)
+      response = epp_plain_request(xml)
       response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}period', attribute 'unit': [facet 'enumeration'] The value '' is not an element of the set {'y', 'm', 'd'}."
       response[:results][0][:result_code].should == '2001'
 
@@ -481,7 +481,7 @@ describe 'EPP Domain', epp: true do
         period: { value: '1', attrs: { unit: 'bla' } }
       })
 
-      response = epp_plain_request(xml, validate_input: false)
+      response = epp_plain_request(xml)
       response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}period', attribute 'unit': [facet 'enumeration'] The value 'bla' is not an element of the set {'y', 'm', 'd'}."
       response[:results][0][:result_code].should == '2001'
     end
@@ -570,7 +570,7 @@ describe 'EPP Domain', epp: true do
        ]
      })
 
-      response = epp_plain_request(xml, validate_input: false)
+      response = epp_plain_request(xml)
 
       response[:results][0][:msg].should == "Element '{urn:ietf:params:xml:ns:secDNS-1.1}pubKey': [facet 'minLength'] The value has a length of '0'; this underruns the allowed minimum length of '1'."
       response[:results][1][:msg].should == "Element '{urn:ietf:params:xml:ns:secDNS-1.1}pubKey': '' is not a valid value of the atomic type '{urn:ietf:params:xml:ns:secDNS-1.1}keyType'."
@@ -603,7 +603,7 @@ describe 'EPP Domain', epp: true do
         ]
       })
 
-      response = epp_plain_request(xml, validate_input: false)
+      response = epp_plain_request(xml)
 
       response[:results][0][:msg].should ==
         'Valid algorithms are: 3, 5, 6, 7, 8, 252, 253, 254, 255 [alg]'
@@ -835,7 +835,7 @@ describe 'EPP Domain', epp: true do
           }]
         })
 
-      response = epp_plain_request(xml, validate_input: false)
+      response = epp_plain_request(xml)
       response[:msg].should == "Element '{urn:ietf:params:xml:ns:secDNS-1.1}keyData': This element is not expected. Expected is ( {urn:ietf:params:xml:ns:secDNS-1.1}dsData )."
       response[:result_code].should == '2001'
     end
@@ -1504,7 +1504,7 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'returns an error for incorrect op attribute' do
-      response = epp_plain_request(domain_transfer_xml({}, 'bla'), validate_input: false)
+      response = epp_plain_request(domain_transfer_xml({}, 'bla'))
       response[:msg].should == "Element '{urn:ietf:params:xml:ns:epp-1.0}transfer', attribute 'op': [facet 'enumeration'] The value 'bla' is not an element of the set {'approve', 'cancel', 'query', 'reject', 'request'}."
       response[:result_code].should == '2001'
     end
@@ -2242,7 +2242,7 @@ describe 'EPP Domain', epp: true do
         ]
       })
 
-      response = epp_plain_request(xml, validate_input: false)
+      response = epp_plain_request(xml)
       response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}status', attribute 's': [facet 'enumeration'] The value 'invalidStatus' is not an element of the set {'clientDeleteProhibited', 'clientHold', 'clientRenewProhibited', 'clientTransferProhibited', 'clientUpdateProhibited', 'inactive', 'ok', 'pendingCreate', 'pendingDelete', 'pendingRenew', 'pendingTransfer', 'pendingUpdate', 'serverDeleteProhibited', 'serverHold', 'serverRenewProhibited', 'serverTransferProhibited', 'serverUpdateProhibited'}."
       response[:results][0][:result_code].should == '2001'
     end
@@ -2355,7 +2355,7 @@ describe 'EPP Domain', epp: true do
         period: { value: '1', attrs: { unit: '' } }
       )
 
-      response = epp_plain_request(xml, validate_input: false)
+      response = epp_plain_request(xml)
       response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}period', attribute 'unit': [facet 'enumeration'] The value '' is not an element of the set {'y', 'm', 'd'}."
       response[:results][0][:result_code].should == '2001'
 
@@ -2365,7 +2365,7 @@ describe 'EPP Domain', epp: true do
         period: { value: '1', attrs: { unit: 'bla' } }
       )
 
-      response = epp_plain_request(xml, validate_input: false)
+      response = epp_plain_request(xml)
       response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}period', attribute 'unit': [facet 'enumeration'] The value 'bla' is not an element of the set {'y', 'm', 'd'}."
       response[:results][0][:result_code].should == '2001'
 
@@ -2720,7 +2720,7 @@ describe 'EPP Domain', epp: true do
       domain.save
 
       xml = domain_info_xml(name: { value: domain.name, attrs: { hosts: 'invalid' } })
-      response = epp_plain_request(xml, validate_input: false)
+      response = epp_plain_request(xml)
       response[:msg].should == "Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}name', attribute 'hosts': [facet 'enumeration'] The value 'invalid' is not an element of the set {'all', 'del', 'none', 'sub'}."
       response[:result_code].should == '2001'
 
