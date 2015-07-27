@@ -48,6 +48,7 @@ def create_settings
 
   Setting.client_side_status_editing_enabled = true
 
+  # speedup and easier to create fabrications
   @fixed_registrar = 
     Registrar.find_by_name('fixed registrar') || 
     Fabricate(:registrar, name: 'fixed registrar', code: 'FIXED')

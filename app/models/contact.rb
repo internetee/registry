@@ -51,6 +51,9 @@ class Contact < ActiveRecord::Base
     manage_ok
   end
 
+  # for overwrite when doing children loop
+  attr_writer :domains_present
+
   scope :current_registrars, ->(id) { where(registrar_id: id) }
 
   BIC = 'bic'
@@ -311,11 +314,6 @@ class Contact < ActiveRecord::Base
   def domains_present?
     return @domains_present if @domains_present
     domain_contacts.present? || registrant_domains.present?
-  end
-
-  # for overwrite when doing children loop
-  def domains_present=(boolean)
-    @domains_present = boolean
   end
 
   def manage_linked
