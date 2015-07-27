@@ -166,9 +166,19 @@ class Contact < ActiveRecord::Base
     end
 
     def destroy_orphans
-      logger.info "#{Time.zone.now.utc} - Destroying orphaned contacts\n"
-      count = find_orphans.destroy_all.count
-      logger.info "#{Time.zone.now.utc} - Successfully destroyed #{count} orphaned contacts\n"
+      STDOUT << "#{Time.zone.now.utc} - Destroying orphaned contacts\n" unless Rails.env.test?
+
+      orphans = find_orphans
+
+      unless Rails.env.test?
+        orphans.each do |m|
+          STDOUT << "#{Time.zone.now.utc} Contact.destroy_orphans: ##{m.id}\n"
+        end
+      end
+
+      count = orphans.destroy_all.count
+
+      STDOUT << "#{Time.zone.now.utc} - Successfully destroyed #{count} orphaned contacts\n" unless Rails.env.test?
     end
 
     def privs

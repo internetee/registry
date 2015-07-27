@@ -182,6 +182,8 @@ class Domain < ActiveRecord::Base
       )
     end
 
+    # rubocop: disable Metrics/AbcSize
+    # rubocop: disable Metrics/CyclomaticComplexity
     def clean_expired_pendings
       STDOUT << "#{Time.zone.now.utc} - Clean expired domain pendings\n" unless Rails.env.test?
 
@@ -197,18 +199,24 @@ class Domain < ActiveRecord::Base
         end
         count += 1
         domain.clean_pendings!
+        STDOUT << "#{Time.zone.now.utc} Domain.clean_expired_pendings: ##{domain.id}\n" unless Rails.env.test?
       end
       STDOUT << "#{Time.zone.now.utc} - Successfully cancelled #{count} domain pendings\n" unless Rails.env.test?
       count
     end
+    # rubocop: enable Metrics/AbcSize
+    # rubocop: enable Metrics/CyclomaticComplexity
 
+    # rubocop: disable Metrics/LineLength
     def start_expire_period
       STDOUT << "#{Time.zone.now.utc} - Expiring domains\n" unless Rails.env.test?
 
       domains = Domain.where('valid_to <= ?', Time.zone.now)
       domains.each do |domain|
         next unless domain.expirable?
-        domain.set_expired!
+        domain.set_expired
+        STDOUT << "#{Time.zone.now.utc} Domain.start_expire_period: ##{domain.id} #{domain.changes}\n" unless Rails.env.test?
+        domain.save(validate: false)
       end
 
       STDOUT << "#{Time.zone.now.utc} - Successfully expired #{domains.count} domains\n" unless Rails.env.test?
@@ -218,12 +226,11 @@ class Domain < ActiveRecord::Base
       STDOUT << "#{Time.zone.now.utc} - Setting server_hold to domains\n" unless Rails.env.test?
 
       d = Domain.where('outzone_at <= ?', Time.zone.now)
-      d.each do |x|
-        next unless x.server_holdable?
-        x.statuses << DomainStatus::SERVER_HOLD
-        # TODO: This should be managed by automatic_statuses
-        x.statuses.delete(DomainStatus::OK)
-        x.save
+      d.each do |domain|
+        next unless domain.server_holdable?
+        domain.statuses << DomainStatus::SERVER_HOLD
+        STDOUT << "#{Time.zone.now.utc} Domain.start_redemption_grace_period: ##{domain.id} #{domain.changes}\n" unless Rails.env.test?
+        domain.save
       end
 
       STDOUT << "#{Time.zone.now.utc} - Successfully set server_hold to #{d.count} domains\n" unless Rails.env.test?
@@ -233,11 +240,11 @@ class Domain < ActiveRecord::Base
       STDOUT << "#{Time.zone.now.utc} - Setting delete_candidate to domains\n" unless Rails.env.test?
 
       d = Domain.where('delete_at <= ?', Time.zone.now)
-      d.each do |x|
-        x.statuses << DomainStatus::DELETE_CANDIDATE if x.delete_candidateable?
-        # TODO: This should be managed by automatic_statuses
-        x.statuses.delete(DomainStatus::OK)
-        x.save
+      d.each do |domain|
+        next unless domain.delete_candidateable?
+        domain.statuses << DomainStatus::DELETE_CANDIDATE
+        STDOUT << "#{Time.zone.now.utc} Domain.start_delete_period: ##{domain.id} #{domain.changes}\n" unless Rails.env.test?
+        domain.save
       end
 
       return if Rails.env.test?
@@ -251,17 +258,20 @@ class Domain < ActiveRecord::Base
       c = 0
       Domain.where("statuses @> '{deleteCandidate}'::varchar[]").each do |x|
         x.destroy
+        STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by deleteCandidate ##{x.id}\n" unless Rails.env.test?
         c += 1
       end
 
       Domain.where('force_delete_at <= ?', Time.zone.now).each do |x|
         x.destroy
+        STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by force delete time ##{x.id}\n" unless Rails.env.test?
         c += 1
       end
 
       STDOUT << "#{Time.zone.now.utc} - Successfully destroyed #{c} domains\n" unless Rails.env.test?
     end
     # rubocop:enable Rails/FindEach
+    # rubocop: enable Metrics/LineLength
   end
 
   def name=(value)
