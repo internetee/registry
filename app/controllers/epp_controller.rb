@@ -43,7 +43,8 @@ class EppController < ApplicationController
       if Rails.env.test? || Rails.env.development?
         # rubocop:disable Rails/Output
         puts e.backtrace.reverse.join("\n")
-        puts "\nFROM-EPP-RESCUE: #{e.message}\n"
+        puts "\n  BACKTRACE REVERSED!\n"
+        puts "\n  FROM-EPP-RESCUE: #{e.message}\n\n\n"
         # rubocop:enable Rails/Output
       else
         logger.error "FROM-EPP-RESCUE: #{e.message}"
