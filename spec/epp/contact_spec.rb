@@ -58,7 +58,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if request xml is missing' do
-        response = epp_plain_request(@epp_xml.create, validate_input: false)
+        response = epp_plain_request(@epp_xml.create)
 
         response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}create': Missing child element(s). Expected is one of ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id, {https://epp.tld.ee/schema/contact-eis-1.0.xsd}postalInfo )."
         response[:results][0][:result_code].should == '2001'
@@ -172,7 +172,7 @@ describe 'EPP Contact', epp: true do
             attrs: { type: 'birthday', cc: 'WRONG' }
           }
         }
-        response = create_request({}, extension, validate_input: false)
+        response = create_request({}, extension)
         response[:msg].should == "Element '{https://epp.tld.ee/schema/eis-1.0.xsd}ident', attribute 'cc': [facet 'maxLength'] The value 'WRONG' has a length of '5'; this exceeds the allowed maximum length of '2'."
         response[:result_code].should == '2001'
       end
@@ -184,7 +184,7 @@ describe 'EPP Contact', epp: true do
             attrs: { type: 'birthday' }
           }
         }
-        response = create_request({}, extension, validate_input: false)
+        response = create_request({}, extension)
         response[:msg].should == "Element '{https://epp.tld.ee/schema/eis-1.0.xsd}ident': The attribute 'cc' is required but missing."
         response[:result_code].should == '2001'
       end
@@ -195,7 +195,7 @@ describe 'EPP Contact', epp: true do
             value: '1990-22-12'
           }
         }
-        response = create_request({}, extension, validate_input: false)
+        response = create_request({}, extension)
         response[:msg].should == "Element '{https://epp.tld.ee/schema/eis-1.0.xsd}ident': The attribute 'type' is required but missing."
         response[:result_code].should == '2001'
       end
@@ -308,7 +308,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if request is invalid' do
-        response = epp_plain_request(@epp_xml.update, validate_input: false)
+        response = epp_plain_request(@epp_xml.update)
         response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}update': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id )."
       end
 
@@ -395,7 +395,7 @@ describe 'EPP Contact', epp: true do
             chg: {
               id: { value: 'notpossibletoupdate' }
             }
-          }, {}, { validate_input: false }
+          }, {}
         )
 
         response[:msg].should == "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}id': This element is not expected."
@@ -464,7 +464,7 @@ describe 'EPP Contact', epp: true do
           }]
         })
 
-        response = epp_plain_request(xml, validate_input: false)
+        response = epp_plain_request(xml)
         response[:results][0][:msg].should == "Parameter value policy error. Client-side object status "\
                                               "management not supported: status [status]"
         response[:results][0][:result_code].should == '2306'
@@ -521,7 +521,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, validate_input: false)
+        response = epp_plain_request(xml)
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
@@ -564,7 +564,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, validate_input: false)
+        response = epp_plain_request(xml)
         response[:results][0][:msg].should == 'Required parameter missing - phone [phone]'
         response[:results][0][:result_code].should == '2003'
 
@@ -586,7 +586,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, validate_input: false)
+        response = epp_plain_request(xml)
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
@@ -610,7 +610,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, validate_input: false)
+        response = epp_plain_request(xml)
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
@@ -637,7 +637,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, validate_input: false)
+        response = epp_plain_request(xml)
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
@@ -657,7 +657,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, validate_input: false)
+        response = epp_plain_request(xml)
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
@@ -677,7 +677,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, validate_input: false)
+        response = epp_plain_request(xml)
         response[:results][0][:msg].should ==
           'Parameter value policy error. Org must be blank: postalInfo > org [org]'
         response[:results][0][:result_code].should == '2306'
@@ -696,7 +696,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, validate_input: false)
+        response = epp_plain_request(xml)
         response[:results][0][:msg].should == "Required parameter missing - name [name]"
         response[:results][0][:result_code].should == '2003'
       end
@@ -717,7 +717,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if request is invalid' do
-        response = epp_plain_request(@epp_xml.delete, validate_input: false)
+        response = epp_plain_request(@epp_xml.delete)
 
         response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}delete': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id )."
         response[:results][0][:result_code].should == '2001'
@@ -812,7 +812,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if request is invalid' do
-        response = epp_plain_request(@epp_xml.check, validate_input: false)
+        response = epp_plain_request(@epp_xml.check)
 
         response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}check': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id )."
         response[:results][0][:result_code].should == '2001'
@@ -867,7 +867,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if request invalid' do
-        response = epp_plain_request(@epp_xml.info, validate_input: false)
+        response = epp_plain_request(@epp_xml.info)
         response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}info': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id )."
         response[:results][0][:result_code].should == '2001'
         response[:results].count.should == 1
