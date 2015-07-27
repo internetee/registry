@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'EPP Contact', epp: true do
   before :all do
-    @xsd = Nokogiri::XML::Schema(File.read('doc/schemas/contact-eis-1.0.xsd'))
+    @xsd = Nokogiri::XML::Schema(File.read('lib/schemas/contact-eis-1.0.xsd'))
     @registrar1 = Fabricate(:registrar1)
     @registrar2 = Fabricate(:registrar2)
     @epp_xml    = EppXml::Contact.new(cl_trid: 'ABC-12345')
@@ -58,34 +58,10 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if request xml is missing' do
-        response = epp_plain_request(@epp_xml.create, validate_input: false)
-        response[:results][0][:msg].should ==
-          'Required parameter missing: create > create > postalInfo > name [name]'
-        response[:results][1][:msg].should ==
-          'Required parameter missing: create > create > postalInfo > addr > street [street]'
-        response[:results][2][:msg].should ==
-          'Required parameter missing: create > create > postalInfo > addr > city [city]'
-        response[:results][3][:msg].should ==
-          'Required parameter missing: create > create > postalInfo > addr > pc [pc]'
-        response[:results][4][:msg].should ==
-          'Required parameter missing: create > create > postalInfo > addr > cc [cc]'
-        response[:results][5][:msg].should ==
-          'Required parameter missing: create > create > voice [voice]'
-        response[:results][6][:msg].should ==
-          'Required parameter missing: create > create > email [email]'
-        response[:results][7][:msg].should ==
-          'Required parameter missing: extension > extdata > ident [ident]'
+        response = epp_plain_request(@epp_xml.create)
 
-        response[:results][0][:result_code].should == '2003'
-        response[:results][1][:result_code].should == '2003'
-        response[:results][2][:result_code].should == '2003'
-        response[:results][3][:result_code].should == '2003'
-        response[:results][4][:result_code].should == '2003'
-        response[:results][5][:result_code].should == '2003'
-        response[:results][6][:result_code].should == '2003'
-        response[:results][7][:result_code].should == '2003'
-
-        response[:results].count.should == 8
+        response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}create': Missing child element(s). Expected is one of ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id, {https://epp.tld.ee/schema/contact-eis-1.0.xsd}postalInfo )."
+        response[:results][0][:result_code].should == '2001'
       end
 
       it 'successfully creates a contact' do
@@ -196,10 +172,9 @@ describe 'EPP Contact', epp: true do
             attrs: { type: 'birthday', cc: 'WRONG' }
           }
         }
-        response = create_request({}, extension, validate_input: false)
-        response[:msg].should ==
-          'Ident country code is not valid, should be in ISO_3166-1 alpha 2 format [ident]'
-        response[:result_code].should == '2005'
+        response = create_request({}, extension)
+        response[:msg].should == "Element '{https://epp.tld.ee/schema/eis-1.0.xsd}ident', attribute 'cc': [facet 'maxLength'] The value 'WRONG' has a length of '5'; this exceeds the allowed maximum length of '2'."
+        response[:result_code].should == '2001'
       end
 
       it 'should return country missing' do
@@ -209,10 +184,9 @@ describe 'EPP Contact', epp: true do
             attrs: { type: 'birthday' }
           }
         }
-        response = create_request({}, extension, validate_input: false)
-        response[:msg].should ==
-          'Required ident attribute missing: cc'
-        response[:result_code].should == '2003'
+        response = create_request({}, extension)
+        response[:msg].should == "Element '{https://epp.tld.ee/schema/eis-1.0.xsd}ident': The attribute 'cc' is required but missing."
+        response[:result_code].should == '2001'
       end
 
       it 'should return country missing' do
@@ -221,10 +195,9 @@ describe 'EPP Contact', epp: true do
             value: '1990-22-12'
           }
         }
-        response = create_request({}, extension, validate_input: false)
-        response[:msg].should ==
-          'Required ident attribute missing: type'
-        response[:result_code].should == '2003'
+        response = create_request({}, extension)
+        response[:msg].should == "Element '{https://epp.tld.ee/schema/eis-1.0.xsd}ident': The attribute 'type' is required but missing."
+        response[:result_code].should == '2001'
       end
 
       it 'should add registrar prefix for code when legacy prefix present' do
@@ -335,15 +308,8 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if request is invalid' do
-        response = epp_plain_request(@epp_xml.update, validate_input: false)
-
-        response[:results][0][:msg].should ==
-          'Required parameter missing: add, rem or chg'
-        response[:results][0][:result_code].should == '2003'
-        response[:results][1][:msg].should ==
-          'Required parameter missing: update > update > id [id]'
-        response[:results][1][:result_code].should == '2003'
-        response[:results].count.should == 2
+        response = epp_plain_request(@epp_xml.update)
+        response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}update': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id )."
       end
 
       it 'returns error if obj doesnt exist' do
@@ -429,11 +395,11 @@ describe 'EPP Contact', epp: true do
             chg: {
               id: { value: 'notpossibletoupdate' }
             }
-          }, {}, { validate_input: false }
+          }, {}
         )
 
-        response[:msg].should == 'Object does not exist'
-        response[:result_code].should == '2303'
+        response[:msg].should == "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}id': This element is not expected."
+        response[:result_code].should == '2001'
 
         @contact.reload.code.should == 'FIRST0:SH8013'
       end
@@ -492,16 +458,16 @@ describe 'EPP Contact', epp: true do
           id: { value: 'FIRST0:SH8013' },
           add: [{
             _anonymus: [
-              { status: { value: 'Payment overdue.', attrs: { s: 'clientHold', lang: 'en' } } },
+              { status: { value: 'Payment overdue.', attrs: { s: 'clientDeleteProhibited', lang: 'en' } } },
               { status: { value: '', attrs: { s: 'clientUpdateProhibited' } } }
             ]
           }]
         })
 
-        response = epp_plain_request(xml, validate_input: false)
-        response[:results][0][:result_code].should == '2306'
+        response = epp_plain_request(xml)
         response[:results][0][:msg].should == "Parameter value policy error. Client-side object status "\
                                               "management not supported: status [status]"
+        response[:results][0][:result_code].should == '2306'
 
         Setting.client_status_editing_enabled = true
       end
@@ -543,6 +509,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'should honor chg value over add value when both changes same attribute' do
+        pending 'It should not be possible to add voice (in add)'
         xml = @epp_xml.update({
           id: { value: 'FIRST0:SH8013' },
           add: {
@@ -554,7 +521,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, validate_input: false)
+        response = epp_plain_request(xml)
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
@@ -585,8 +552,10 @@ describe 'EPP Contact', epp: true do
 
       # TODO: Update request rem block must be analyzed
       it 'should not allow to remove required attribute' do
+        pending 'It should not be possible to remove or add voice (in add and rem)'
         contact = Contact.find_by(code: 'FIRST0:SH8013')
         phone = contact.phone
+        # TODO: Refactor authInfo under chg block
         xml = @epp_xml.update({
           id: { value: 'FIRST0:SH8013' },
           authInfo: { pw: { value: 'password' } },
@@ -595,7 +564,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, validate_input: false)
+        response = epp_plain_request(xml)
         response[:results][0][:msg].should == 'Required parameter missing - phone [phone]'
         response[:results][0][:result_code].should == '2003'
 
@@ -604,6 +573,8 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'should honor add over rem' do
+        pending 'It should not be possible to remove or add voice (in add and rem)'
+        # TODO: Refactor authInfo under chg block
         xml = @epp_xml.update({
           id: { value: 'FIRST0:SH8013' },
           authInfo: { pw: { value: 'password' } },
@@ -615,7 +586,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, validate_input: false)
+        response = epp_plain_request(xml)
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
@@ -626,6 +597,8 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'should honor chg over rem' do
+        pending 'It should not be possible to remove or add voice (in add and rem)'
+        # TODO: Refactor authInfo under chg block
         xml = @epp_xml.update({
           id: { value: 'FIRST0:SH8013' },
           authInfo: { pw: { value: 'password' } },
@@ -637,7 +610,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, validate_input: false)
+        response = epp_plain_request(xml)
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
@@ -648,6 +621,8 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'should honor chg over rem and add' do
+        pending 'It should not be possible to remove or add voice (in add and rem)'
+        # TODO: Refactor authInfo under chg block
         xml = @epp_xml.update({
           id: { value: 'FIRST0:SH8013' },
           authInfo: { pw: { value: 'password' } },
@@ -662,7 +637,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, validate_input: false)
+        response = epp_plain_request(xml)
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
@@ -673,6 +648,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'should not remove password' do
+        pending 'There should be no possibility to remove pw'
         xml = @epp_xml.update({
           id: { value: 'FIRST0:SH8013' },
           authInfo: { pw: { value: 'password' } },
@@ -681,7 +657,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, validate_input: false)
+        response = epp_plain_request(xml)
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
 
@@ -690,21 +666,26 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'should return general policy error when removing org' do
+        pending 'Test says it should throw error when removing org, it does not do it when removing it with chg block'
         xml = @epp_xml.update({
           id: { value: 'FIRST0:SH8013' },
-          authInfo: { pw: { value: 'password' } },
-          rem: {
-            postalInfo: { org: { value: 'not important' } }
+          chg: {
+            postalInfo: {
+              org: { value: '' }
+            },
+            authInfo: { pw: { value: 'password' } }
           }
         })
 
-        response = epp_plain_request(xml, validate_input: false)
+        response = epp_plain_request(xml)
         response[:results][0][:msg].should ==
           'Parameter value policy error. Org must be blank: postalInfo > org [org]'
         response[:results][0][:result_code].should == '2306'
       end
 
       it 'should return error when removing street' do
+        pending 'Test says it tests removing street, but actually street is not removed'
+        # TODO: Refactor authInfo under chg block
         xml = @epp_xml.update({
           id: { value: 'FIRST0:SH8013' },
           authInfo: { pw: { value: 'password' } },
@@ -715,7 +696,7 @@ describe 'EPP Contact', epp: true do
           }
         })
 
-        response = epp_plain_request(xml, validate_input: false)
+        response = epp_plain_request(xml)
         response[:results][0][:msg].should == "Required parameter missing - name [name]"
         response[:results][0][:result_code].should == '2003'
       end
@@ -736,11 +717,10 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if request is invalid' do
-        response = epp_plain_request(@epp_xml.delete, validate_input: false)
+        response = epp_plain_request(@epp_xml.delete)
 
-        response[:results][0][:msg].should ==
-          'Required parameter missing: delete > delete > id [id]'
-        response[:results][0][:result_code].should == '2003'
+        response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}delete': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id )."
+        response[:results][0][:result_code].should == '2001'
         response[:results].count.should == 1
       end
 
@@ -832,10 +812,10 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if request is invalid' do
-        response = epp_plain_request(@epp_xml.check, validate_input: false)
+        response = epp_plain_request(@epp_xml.check)
 
-        response[:results][0][:msg].should == 'Required parameter missing: check > check > id [id]'
-        response[:results][0][:result_code].should == '2003'
+        response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}check': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id )."
+        response[:results][0][:result_code].should == '2001'
         response[:results].count.should == 1
       end
 
@@ -887,10 +867,9 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'fails if request invalid' do
-        response = epp_plain_request(@epp_xml.info, validate_input: false)
-        response[:results][0][:msg].should ==
-          'Required parameter missing: info > info > id [id]'
-        response[:results][0][:result_code].should == '2003'
+        response = epp_plain_request(@epp_xml.info)
+        response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}info': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id )."
+        response[:results][0][:result_code].should == '2001'
         response[:results].count.should == 1
       end
 
@@ -1013,7 +992,7 @@ describe 'EPP Contact', epp: true do
       <command>
         <check>
           <contact:check
-           xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+           xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
             <contact:id>FIXED:CHECK-1234</contact:id>
             <contact:id>check-4321</contact:id>
           </contact:check>
@@ -1029,7 +1008,7 @@ describe 'EPP Contact', epp: true do
       <command>
         <check>
           <contact:check
-           xmlns:contact="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/contact-eis-1.0.xsd">
+           xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
             <contact:id>FIXED:CHECK-LEGACY</contact:id>
             <contact:id>CID:FIXED:CHECK-LEGACY</contact:id>
           </contact:check>

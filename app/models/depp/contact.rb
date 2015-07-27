@@ -4,7 +4,7 @@ module Depp
     include DisableHtml5Validation
 
     attr_accessor :id, :name, :email, :phone, :org_name,
-      :ident, :ident_type, :ident_country_code, 
+      :ident, :ident_type, :ident_country_code,
       :street, :city, :zip, :state, :country_code,
       :password, :legal_document, :statuses, :code
 
@@ -68,7 +68,7 @@ module Depp
           zip:          res.css('postalInfo addr pc').text,
           state:        res.css('postalInfo addr sp').text,
           country_code: res.css('postalInfo addr cc').text,
-          
+
           # authInfo
           password: res.css('authInfo pw').text,
 
@@ -145,25 +145,26 @@ module Depp
     end
 
     def save
-      create_xml = Depp::Contact.epp_xml.create(
-        {
-          id: { value: code },
-          email: { value: email },
-          voice: { value: phone },
-          postalInfo: {
-            name: { value: name },
-            org:  { value: org_name },
-            addr: {
-              street: { value: street },
-              city:   { value: city },
-              pc:     { value: zip },
-              sp:     { value: state },
-              cc:     { value: country_code }
-            }
+      hash = {
+        id: { value: code },
+        postalInfo: {
+          name: { value: name },
+          org:  { value: org_name },
+          addr: {
+            street: { value: street },
+            city:   { value: city },
+            sp:     { value: state },
+            pc:     { value: zip },
+            cc:     { value: country_code }
           }
-        }, 
-        extension_xml
-      )
+        },
+        voice: { value: phone },
+        email: { value: email }
+      }
+
+      hash[:id] = nil if code.blank?
+      create_xml = Depp::Contact.epp_xml.create(hash, extension_xml)
+
       data = Depp::Contact.user.request(create_xml)
       self.id = data.css('id').text
       handle_errors(data)
@@ -191,23 +192,23 @@ module Depp
         {
           id: { value: id },
           chg: {
-            voice: { value: phone },
-            email: { value: email },
             postalInfo: {
               name: { value: name },
               org:  { value: org_name },
               addr: {
                 street: { value: street },
                 city:   { value: city },
-                pc:     { value: zip },
                 sp:     { value: state },
+                pc:     { value: zip },
                 cc:     { value: country_code }
               }
+            },
+            voice: { value: phone },
+            email: { value: email },
+            authInfo: {
+              pw: { value: password }
             }
           },
-          authInfo: {
-            pw: { value: password }
-          }
         },
         extension_xml
       )
@@ -250,7 +251,7 @@ module Depp
       return {} if legal_document.blank?
 
       type = legal_document.original_filename.split('.').last.downcase
-      { 
+      {
         _anonymus: [
           legalDocument: { value: Base64.encode64(legal_document.read), attrs: { type: type } }
         ]
@@ -274,7 +275,7 @@ module Depp
       ident_type == 'priv'
     end
 
-    def persisted? 
+    def persisted?
       id.present?
     end
 
@@ -282,13 +283,13 @@ module Depp
       data.css('result').each do |x|
         success_codes = %(1000, 1300, 1301)
         next if success_codes.include?(x['code'])
-        
+
         message = "#{x.css('msg').text} #{x.css('value').text}"
         attr = message.split('[').last.strip.sub(']', '') if message.include?('[')
         attr = :base if attr.nil?
         attr = 'phone' if attr == 'voice'
         attr = 'zip' if attr == 'pc'
-        errors.add(attr, message) 
+        errors.add(attr, message)
       end
       errors.blank?
     end

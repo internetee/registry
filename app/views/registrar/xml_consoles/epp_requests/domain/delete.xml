@@ -3,12 +3,12 @@
   <command>
     <delete>
       <domain:delete
-       xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+       xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example.ee</domain:name>
       </domain:delete>
     </delete>
     <extension>
-      <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">
           JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==
         </eis:legalDocument>

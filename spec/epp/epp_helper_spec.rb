@@ -12,7 +12,7 @@ describe 'EPP Helper', epp: true do
           <command>
             <transfer op="request">
               <domain:transfer
-               xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+               xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
                 <domain:name>' + dn + '</domain:name>
                 <domain:authInfo>
                   <domain:pw roid="citizen_1234-REP">98oiewslkfkd</domain:pw>
@@ -32,7 +32,7 @@ describe 'EPP Helper', epp: true do
           <command>
             <transfer op="approve">
               <domain:transfer
-               xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+               xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
                 <domain:name>one.ee</domain:name>
                 <domain:authInfo>
                   <domain:pw roid="askdf">test</domain:pw>

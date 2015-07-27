@@ -6,6 +6,20 @@ class EppController < ApplicationController
 
   before_action :generate_svtrid
   before_action :latin_only
+
+  before_action :validate_against_schema
+  def validate_against_schema
+    return if ['hello', 'error', 'keyrelay'].include?(params[:action])
+    schema.validate(params[:nokogiri_frame]).each do |error|
+      epp_errors << {
+        code: 2001,
+        msg: error
+      }
+    end
+
+    handle_errors and return if epp_errors.any?
+  end
+
   before_action :validate_request
   before_action :update_epp_session
 
@@ -56,6 +70,13 @@ class EppController < ApplicationController
     end
 
     render_epp_response '/epp/error'
+  end
+
+  def schema
+    # TODO: Support multiple schemas
+    return DOMAIN_SCHEMA if params[:epp_object_type] == :domain
+    return CONTACT_SCHEMA if params[:epp_object_type] == :contact
+    EPP_SCHEMA
   end
 
   def generate_svtrid

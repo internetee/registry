@@ -3,7 +3,7 @@
   <command>
     <info>
       <domain:info
-       xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd">
+       xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name hosts="all">example.ee</domain:name>
         <domain:authInfo>
           <domain:pw>2fooBAR</domain:pw>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-   <schema targetNamespace="urn:ietf:params:xml:ns:domain-1.0"
-        xmlns:domain="urn:ietf:params:xml:ns:domain-1.0"
+   <schema targetNamespace="https://epp.tld.ee/schema/domain-eis-1.0.xsd"
+        xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd"
         xmlns:host="urn:ietf:params:xml:ns:host-1.0"
         xmlns:epp="urn:ietf:params:xml:ns:epp-1.0"
         xmlns:eppcom="urn:ietf:params:xml:ns:eppcom-1.0"
@@ -11,9 +11,11 @@
    <!--
    Import common element types.
    -->
-   <import namespace="urn:ietf:params:xml:ns:eppcom-1.0"/>
-   <import namespace="urn:ietf:params:xml:ns:epp-1.0"/>
-   <import namespace="urn:ietf:params:xml:ns:host-1.0"/>
+   <import namespace="urn:ietf:params:xml:ns:eppcom-1.0" schemaLocation="lib/schemas/eppcom-1.0.xsd"/>
+   <import namespace="urn:ietf:params:xml:ns:epp-1.0" schemaLocation="lib/schemas/epp-1.0.xsd"/>
+   <import namespace="urn:ietf:params:xml:ns:host-1.0" schemaLocation="lib/schemas/host-1.0.xsd"/>
+   <import namespace="urn:ietf:params:xml:ns:secDNS-1.1" schemaLocation="lib/schemas/secDNS-1.1.xsd"/>
+   <import namespace="https://epp.tld.ee/schema/eis-1.0.xsd" schemaLocation="lib/schemas/eis-1.0.xsd"/>
 
    <annotation>
     <documentation>
@@ -46,7 +48,7 @@
        minOccurs="0"/>
       <element name="contact" type="domain:contactType"
        minOccurs="0" maxOccurs="unbounded"/>
-      <element name="authInfo" type="domain:authInfoType"/>
+      <element name="authInfo" type="domain:authInfoType" minOccurs="0"/>
     </sequence>
    </complexType>
 
@@ -62,7 +64,7 @@
    <simpleType name="pLimitType">
     <restriction base="unsignedShort">
       <minInclusive value="1"/>
-      <maxInclusive value="99"/>
+      <maxInclusive value="1095"/>
     </restriction>
    </simpleType>
 
@@ -70,6 +72,7 @@
     <restriction base="token">
       <enumeration value="y"/>
       <enumeration value="m"/>
+      <enumeration value="d"/>
     </restriction>
    </simpleType>
 
@@ -89,6 +92,7 @@
     <sequence>
       <element name="hostName" type="eppcom:labelType"/>
       <element name="hostAddr" type="host:addrType"
+
        minOccurs="0" maxOccurs="unbounded"/>
     </sequence>
    </complexType>
@@ -237,12 +241,28 @@
    Allow the registrant value to be nullified by changing the
    minLength restriction to "0".
    -->
-   <simpleType name="clIDChgType">
+
+   <complexType name="clIDChgType">
+    <simpleContent>
+      <extension base="domain:clIDChgSimpleType">
+        <attribute name="verified" type="domain:verifiedType"/>
+      </extension>
+    </simpleContent>
+   </complexType>
+
+  <simpleType name="clIDChgSimpleType">
     <restriction base="token">
       <minLength value="0"/>
-      <maxLength value="16"/>
     </restriction>
-   </simpleType>
+  </simpleType>
+
+  <simpleType name="verifiedType">
+    <restriction base="token">
+      <enumeration value="yes"/>
+      <enumeration value="no"/>
+    </restriction>
+  </simpleType>
+
 
    <!--
    Allow the authInfo value to be nullified by including an
@@ -425,7 +445,6 @@
      minOccurs="0"/>
    </sequence>
    </complexType>
-
    <!--
    End of schema.
    -->
