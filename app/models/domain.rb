@@ -359,6 +359,9 @@ class Domain < ActiveRecord::Base
     token = registrant_verification_token
     asked_at = registrant_verification_asked_at
     changes_cache = changes
+    new_registrant_id    = registrant.id
+    new_registrant_email = registrant.email
+    new_registrant_name  = registrant.name
 
     DomainMailer.pending_update_old_registrant_request(self).deliver_now
     DomainMailer.pending_update_new_registrant_notification(self).deliver_now
@@ -370,6 +373,9 @@ class Domain < ActiveRecord::Base
     self.registrant_verification_asked_at = asked_at
     self.statuses = [DomainStatus::PENDING_UPDATE]
     pending_json[:domain] = changes_cache
+    pending_json[:new_registrant_id]    = new_registrant_id
+    pending_json[:new_registrant_email] = new_registrant_email
+    pending_json[:new_registrant_name]  = new_registrant_name
   end
 
   # rubocop: disable Metrics/CyclomaticComplexity

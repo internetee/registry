@@ -57,6 +57,19 @@ class DomainMailer < ApplicationMailer
          name: @domain.name)} [#{@domain.name}]")
   end
 
+  def pending_update_rejected_new_registrant_notification(domain)
+    @domain = domain
+    # no delivery off control, driggered by que, no epp request
+
+    @new_registrant_email = @domain.pending_json[:new_registrant_email] 
+    @new_registrant_name  = @domain.pending_json[:new_registrant_name] 
+
+    return if whitelist_blocked?(@new_registrant_email)
+    mail(to: @new_registrant_email,
+         subject: "#{I18n.t(:pending_update_rejected_new_registrant_notification_subject, 
+         name: @domain.name)} [#{@domain.name}]")
+  end
+
   def pending_deleted(domain)
     @domain = domain
     return if delivery_off?(@domain)

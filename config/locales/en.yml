@@ -779,6 +779,7 @@ en:
   object_status_prohibits_operation: 'Object status prohibits operation'
   pending_update_old_registrant_request_subject: "Kinnitustaotlus domeeni %{name} registreerija vahetuseks / Application for approval for registrant chache of %{name}"
   pending_update_new_registrant_notification_subject: "Domeeni %{name} registreerija vahetus protseduur on algatatud / %{name} registrant change"
+  pending_update_rejected_new_registrant_notification_subject: "Domeeni %{name} registreerija vahetuse taotlus tagasi lükatud / %{name} registrant change declined"
   domain_pending_deleted_subject: "Kinnitustaotlus domeeni %{name} kustutamiseks .ee registrist / Application for approval for deletion of %{name}"
   whois: WHOIS
   login_failed_check_id_card: 'Log in failed, check ID card'
