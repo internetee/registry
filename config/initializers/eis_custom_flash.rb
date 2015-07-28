@@ -1,6 +1,10 @@
 # Log all flash messages
+# rubocop: disable Metrics/CyclomaticComplexity
+# rubocop: disable Metrics/LineLength
 module ActionDispatch
   class Flash
+    # rubocop: disable Metrics/PerceivedComplexity
+    # rubocop: disable Style/MultilineOperationIndentation
     def call(env)
       @app.call(env)
     ensure

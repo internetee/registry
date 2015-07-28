@@ -1,4 +1,6 @@
 # Log all active model user errors
+# rubocop: disable Lint/AssignmentInCondition
+# rubocop: disable Style/SignalException
 module ActiveModel
   class Errors
     def add(attribute, message = :invalid, options = {})
