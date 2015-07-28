@@ -1,0 +1,49 @@
+Tere,
+<br><br>
+Registripidaja <%= @domain.registrar_name %> vahendusel on algatatud <%= @domain.name %> domeeni omanikuvahetuse protseduur.  
+<br><br>
+Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja poole. Teie registripidaja on <%= @domain.registrar_name %>
+<br><br>
+Uued registreerija andmed:<br>
+Nimi: <%= @domain.registrant_name %><br>
+<% if @domain.registrant.priv? %>
+  Isikukood: <%= @domain.registrant_ident %><br>
+<% else %>
+  Äriregistrikood: <%= @domain.registrant_ident %><br>
+<% end %>
+Tänav: <%= @domain.registrant_street %><br>
+Linn: <%= @domain.registrant_city %><br>
+Riik: <%= @domain.registrant_country %>
+<br><br>
+Juhime Teie tähelepanu asjaolule, et omanikuvahetuse protseduur viiaks lõpule vaid juhul, kui domeeni hetkel kehtiv registreerija <%= @old_registrant.name %> omanikuvahetuse tähtaegselt kinnitab.
+<br><br>
+Juhul kui <%= @old_registrant.name %> lükkab omanikuvahtuse taotluse tagasi või ei anna kinnitust enne <%= Setting.expire_pending_confirmation %> tundi, omanikuvahetuse protseduur tühistatakse.<br>
+<br><br>
+Taotlus on aktiivne <%= Setting.expire_pending_confirmation %> tundi ja lükatakse automaatselt tagasi kui te seda enne ise ei kinnita või tagasi lükka.
+<br><br>
+Küsimuste korral palun võtke ühendust registripidajaga <%= @domain.registrar_name %>, kelle kontaktid leiate http://internet.ee/registripidajad/akrediteeritud-registripidajad
+<br><br>
+Lugupidamisega<br>
+Eesti Interneti SA
+<br><br>
+<hr>
+<br><br>
+Hi,
+<br><br>
+Registrant change process for the domain <%= @domain.name %> has been started.
+<br><br>
+New registrant:<br>
+Name: <%= @domain.registrant_name %><br>
+<% if @domain.registrant.priv? %>
+Personal code: <%= @domain.registrant_ident %><br>
+<% else %>
+Business Registry code: <%= @domain.registrant_ident %><br>
+<% end %>
+Street: <%= @domain.registrant_street %><br>
+City: <%= @domain.registrant_city %><br>
+Country: <%= @domain.registrant_country %><br>
+<br><br>
+Please contact to your registrar <%= @domain.registrar_name %> if you have any questions.
+<br><br>
+Best Regards,<br>
+Estonian Internet Foundation

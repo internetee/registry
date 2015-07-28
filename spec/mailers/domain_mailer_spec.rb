@@ -25,7 +25,7 @@ describe DomainMailer do
     end
   end
 
-  describe 'email changed notification' do
+  describe 'registrant change request for old registrant' do
     before :all do 
       @registrant = Fabricate(:registrant, email: 'test@example.com')
       @new_registrant = Fabricate(:registrant, email: 'test@example.org')
@@ -55,6 +55,35 @@ describe DomainMailer do
 
     it 'should render verification url' do
       @mail.body.encoded.should =~ %r{registrant\/domain_update_confirms}
+    end
+  end
+
+  describe 'registrant change notification for new registrant' do
+    before :all do 
+      @registrant = Fabricate(:registrant, email: 'old@example.com')
+      @new_registrant = Fabricate(:registrant, email: 'new@example.org')
+      @domain = Fabricate(:domain, registrant: @registrant)
+      @domain.deliver_emails = true
+      @domain.registrant_verification_token = '123'
+      @domain.registrant_verification_asked_at = Time.zone.now
+      @domain.registrant = @new_registrant
+      @mail = DomainMailer.pending_update_new_registrant_notification(@domain)
+    end
+
+    it 'should render email subject' do
+      @mail.subject.should =~ /protseduur on algatatud/
+    end
+
+    it 'should have sender email' do
+      @mail.from.should == ["noreply@internet.ee"]
+    end
+
+    it 'should send confirm email to new registrant email' do
+      @mail.to.should == ["new@example.org"]
+    end
+
+    it 'should render body' do
+      @mail.body.encoded.should =~ /vahendusel on algatatud/
     end
   end
 
