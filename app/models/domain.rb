@@ -198,6 +198,7 @@ class Domain < ActiveRecord::Base
           next
         end
         count += 1
+        DomainMailer.pending_update_expired_notification_for_new_registrant(domain).deliver_now
         domain.clean_pendings!
         STDOUT << "#{Time.zone.now.utc} Domain.clean_expired_pendings: ##{domain.id}\n" unless Rails.env.test?
       end
@@ -363,8 +364,8 @@ class Domain < ActiveRecord::Base
     new_registrant_email = registrant.email
     new_registrant_name  = registrant.name
 
-    DomainMailer.pending_update_old_registrant_request(self).deliver_now
-    DomainMailer.pending_update_new_registrant_notification(self).deliver_now
+    DomainMailer.pending_update_request_for_old_registrant(self).deliver_now
+    DomainMailer.pending_update_notification_for_new_registrant(self).deliver_now
 
     reload # revert back to original
 

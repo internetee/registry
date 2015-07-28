@@ -8,7 +8,7 @@ class DomainUpdateConfirmJob < Que::Job
         domain.apply_pending_update!
         domain.clean_pendings!
       when RegistrantVerification::REJECTED
-        DomainMailer.pending_update_rejected_new_registrant_notification(domain).deliver_now
+        DomainMailer.pending_update_rejected_notification_for_new_registrant(domain).deliver_now
         domain.clean_pendings!
       end
       destroy # it's best to destroy the job in the same transaction
