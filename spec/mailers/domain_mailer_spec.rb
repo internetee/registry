@@ -276,10 +276,10 @@ describe DomainMailer do
     end
   end
 
-  describe 'pending delete rejected notification' do
+  describe 'pending delete expired notification' do
     before :all do 
       @registrant = Fabricate(:registrant, email: 'test@example.com')
-      @domain = Fabricate(:domain, name: 'delete-pending-expired.ee', registrant: @registrant)
+      @domain = Fabricate(:domain, name: 'pending-delete-expired.ee', registrant: @registrant)
       @domain.deliver_emails = true
       @domain.registrant_verification_token = '123'
       @domain.registrant_verification_asked_at = Time.zone.now
@@ -300,6 +300,33 @@ describe DomainMailer do
 
     it 'should render body' do
       @mail.body.encoded.should =~ /deletion cancelled/
+    end
+  end
+
+  describe 'pending delete rejected notification' do
+    before :all do 
+      @registrant = Fabricate(:registrant, email: 'test@example.com')
+      @domain = Fabricate(:domain, name: 'delete-confirmed.ee', registrant: @registrant)
+      @domain.deliver_emails = true
+      @domain.registrant_verification_token = '123'
+      @domain.registrant_verification_asked_at = Time.zone.now
+      @mail = DomainMailer.delete_confirmation(@domain)
+    end
+
+    it 'should render email subject' do
+      @mail.subject.should =~ /deleted/
+    end
+
+    it 'should have sender email' do
+      @mail.from.should == ["noreply@internet.ee"]
+    end
+
+    it 'should send confirm email to old registrant email' do
+      @mail.to.should == ["test@example.com"]
+    end
+
+    it 'should render body' do
+      @mail.body.encoded.should =~ /confirmed and will be deleted/
     end
   end
 end

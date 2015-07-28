@@ -438,6 +438,7 @@ class Epp::Domain < Domain
     user  = ApiUser.find(pending_json['current_user_id'])
     frame = Nokogiri::XML(pending_json['frame'])
     statuses.delete(DomainStatus::PENDING_DELETE)
+    DomainMailer.delete_confirmation(self).deliver_now
 
     clean_pendings! if epp_destroy(frame, user, false)
   end

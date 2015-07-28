@@ -153,4 +153,13 @@ class DomainMailer < ApplicationMailer
          subject: "#{I18n.t(:pending_delete_expired_notification_subject, 
          name: @domain.name)} [#{@domain.name}]")
   end
+
+  def delete_confirmation(domain)
+    @domain = domain
+
+    return if whitelist_blocked?(@domain.registrant.email)
+    mail(to: @domain.registrant.email,
+         subject: "#{I18n.t(:delete_confirmation_subject, 
+         name: @domain.name)} [#{@domain.name}]")
+  end
 end
