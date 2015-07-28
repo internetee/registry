@@ -555,7 +555,6 @@ en:
   username: 'Username'
   password: 'Password'
   log_in: 'Log in'
-  log_out: 'Log out (%{user})'
   domains: 'Domains'
   register: 'Register'
   check: 'Check'
@@ -879,3 +878,4 @@ en:
   notes: Notes
   active_price_for_this_operation_is: 'Active price for this operation is %{price}'
   active_price_missing_for_this_operation: 'Active price missing for this operation!'
+  log_out_: 'Log out'
