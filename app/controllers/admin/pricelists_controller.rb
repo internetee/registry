@@ -4,7 +4,7 @@ class Admin::PricelistsController < AdminController
 
   def index
     @q = Pricelist.search(params[:q])
-    @q.sorts = ['category asc', 'duration asc', 'operation_category asc', 'valid_from desc'] if @q.sorts.empty?
+    @q.sorts = ['category asc', 'duration asc', 'operation_category asc', 'valid_from desc', 'valid_to desc'] if @q.sorts.empty?
     @pricelists = @q.result.page(params[:page])
   end
 
