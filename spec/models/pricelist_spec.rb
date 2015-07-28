@@ -163,6 +163,17 @@ describe Pricelist do
     Fabricate.create(:pricelist, {
       category: 'ee',
       operation_category: 'create',
+      duration: '1year',
+      price: 2.10,
+      valid_from: Time.zone.now.to_date,
+      valid_to: Time.zone.now.to_date
+    })
+
+    Pricelist.pricelist_for('ee', 'create', '1year').price.amount.should == 2.10
+
+    Fabricate.create(:pricelist, {
+      category: 'ee',
+      operation_category: 'create',
       duration: '2years',
       price: 1.20,
       valid_from: Time.zone.parse('2015-07-01'),
