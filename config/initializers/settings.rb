@@ -13,4 +13,8 @@ TEST_EMAILS = %w(
   info@gitlab.eu
   test@example.com
   test@example.org
+  old@example.org
+  new@example.org
+  old@example.com
+  new@example.com
 )

@@ -42,7 +42,14 @@ class Contact < ActiveRecord::Base
   before_update :manage_emails
   def manage_emails
     return nil unless email_changed?
-    ContactMailer.email_updated(self).deliver_now
+    return nil unless deliver_emails == true
+    emails = []
+    emails << [email, email_was]
+    emails << domains.map(&:registrant_email) if domains.present?
+    emails = emails.flatten.uniq
+    emails.each do |e|
+      ContactMailer.email_updated(e, contact).deliver_now
+    end
   end
 
   before_save :manage_statuses
