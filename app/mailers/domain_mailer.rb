@@ -1,5 +1,5 @@
 class DomainMailer < ApplicationMailer
-  def registrant_pending_updated(domain)
+  def pending_update_old_registrant_request(domain)
     @domain = domain
     return if delivery_off?(@domain)
 
@@ -20,7 +20,8 @@ class DomainMailer < ApplicationMailer
 
     return if whitelist_blocked?(@old_registrant.email)
     mail(to: @old_registrant.email,
-         subject: "#{I18n.t(:domain_registrant_pending_updated_subject, name: @domain.name)} [#{@domain.name}]")
+         subject: "#{I18n.t(:pending_update_old_registrant_request_subject, 
+         name: @domain.name)} [#{@domain.name}]")
   end
 
   def pending_update_new_registrant_notification(domain)
@@ -42,7 +43,7 @@ class DomainMailer < ApplicationMailer
 
     return if whitelist_blocked?(@new_registrant.email)
     mail(to: @new_registrant.email,
-         subject: "#{I18n.t(:domain_pending_update_new_registrant_notification_subject, 
+         subject: "#{I18n.t(:pending_update_new_registrant_notification_subject, 
          name: @domain.name)} [#{@domain.name}]")
   end
 
@@ -52,7 +53,8 @@ class DomainMailer < ApplicationMailer
 
     return if whitelist_blocked?(@domain.registrant_email)
     mail(to: @domain.registrant_email,
-         subject: "#{I18n.t(:domain_registrant_updated, name: @domain.name)} [#{@domain.name}]")
+         subject: "#{I18n.t(:domain_registrant_updated, 
+         name: @domain.name)} [#{@domain.name}]")
   end
 
   def pending_deleted(domain)
@@ -76,6 +78,7 @@ class DomainMailer < ApplicationMailer
 
     return if whitelist_blocked?(@old_registrant.email)
     mail(to: @old_registrant.email,
-         subject: "#{I18n.t(:domain_pending_deleted_subject, name: @domain.name)} [#{@domain.name}]")
+         subject: "#{I18n.t(:domain_pending_deleted_subject, 
+         name: @domain.name)} [#{@domain.name}]")
   end
 end

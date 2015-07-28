@@ -1,11 +1,11 @@
 require 'rails_helper'
 
 describe DomainMailer do
-  describe 'registrant changed notification when delivery turned off' do
+  describe 'registrant change request for old registrant when delivery turned off' do
     before :all do 
       @registrant = Fabricate(:registrant, email: 'test@example.com')
       @domain = Fabricate(:domain, registrant: @registrant)
-      @mail = DomainMailer.registrant_pending_updated(@domain)
+      @mail = DomainMailer.pending_update_old_registrant_request(@domain)
     end
 
     it 'should not render email subject' do
@@ -34,7 +34,7 @@ describe DomainMailer do
       @domain.registrant_verification_token = '123'
       @domain.registrant_verification_asked_at = Time.zone.now
       @domain.registrant = @new_registrant
-      @mail = DomainMailer.registrant_pending_updated(@domain)
+      @mail = DomainMailer.pending_update_old_registrant_request(@domain)
     end
 
     it 'should render email subject' do

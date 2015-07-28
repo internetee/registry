@@ -360,7 +360,7 @@ class Domain < ActiveRecord::Base
     asked_at = registrant_verification_asked_at
     changes_cache = changes
 
-    DomainMailer.registrant_pending_updated(self).deliver_now
+    DomainMailer.pending_update_old_registrant_request(self).deliver_now
     DomainMailer.pending_update_new_registrant_notification(self).deliver_now
 
     reload # revert back to original
