@@ -411,7 +411,7 @@ class Epp::Domain < Domain
 
     # at[:statuses] += at_add[:domain_statuses_attributes]
 
-    if verify && 
+    if verify && Setting.request_confrimation_on_registrant_change_enabled && 
       frame.css('registrant').present? && 
       frame.css('registrant').attr('verified').to_s.downcase != 'yes'
       registrant_verification_asked!(frame.to_s, current_user.id)
@@ -457,7 +457,10 @@ class Epp::Domain < Domain
   def epp_destroy(frame, user_id, verify = true)
     return false unless valid?
 
-    if verify && frame.css('delete').attr('verified').to_s.downcase != 'yes'
+    if verify && 
+      Setting.request_confirmation_on_domain_deletion_enabled &&
+      frame.css('delete').attr('verified').to_s.downcase != 'yes'
+
       registrant_verification_asked!(frame.to_s, user_id)
       self.deliver_emails = true # turn on email delivery for epp
       pending_delete!
