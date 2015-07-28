@@ -211,7 +211,7 @@ class Epp::DomainsController < EppController
     requires 'name'
 
     @prefix = nil
-    requires_attribute 'transfer', 'op', values: %(approve, query, reject, request)
+    requires_attribute 'transfer', 'op', values: %(approve, query, reject, request, cancel)
   end
 
   def find_domain
