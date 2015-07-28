@@ -123,4 +123,24 @@ class DomainMailer < ApplicationMailer
          subject: "#{I18n.t(:domain_pending_deleted_subject, 
          name: @domain.name)} [#{@domain.name}]")
   end
+
+  def pending_delete_rejected_notification(domain)
+    @domain = domain
+    # no delivery off control, driggered by que, no epp request
+
+    if @domain.registrant_verification_token.blank?
+      logger.warn "EMAIL NOT DELIVERED: registrant_verification_token is missing for #{@domain.name}"
+      return
+    end
+
+    if @domain.registrant_verification_asked_at.blank?
+      logger.warn "EMAIL NOT DELIVERED: registrant_verification_asked_at is missing for #{@domain.name}"
+      return
+    end
+
+    return if whitelist_blocked?(@domain.registrant.email)
+    mail(to: @domain.registrant.email,
+         subject: "#{I18n.t(:pending_delete_rejected_notification_subject, 
+         name: @domain.name)} [#{@domain.name}]")
+  end
 end

@@ -8,6 +8,7 @@ class DomainDeleteConfirmJob < Que::Job
         domain.apply_pending_delete!
         domain.clean_pendings!
       when RegistrantVerification::REJECTED
+        DomainMailer.pending_delete_rejected_notification(domain).deliver_now
         domain.clean_pendings!
       end
       destroy # it's best to destroy the job in the same transaction

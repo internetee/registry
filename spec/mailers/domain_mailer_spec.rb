@@ -248,4 +248,31 @@ describe DomainMailer do
       @mail.body.encoded.should =~ %r{registrant\/domain_delete_con} # somehowe delete_confirms not matching
     end
   end
+
+  describe 'email pending delete notification' do
+    before :all do 
+      @registrant = Fabricate(:registrant, email: 'test@example.com')
+      @domain = Fabricate(:domain, name: 'delete-pending-rejected.ee', registrant: @registrant)
+      @domain.deliver_emails = true
+      @domain.registrant_verification_token = '123'
+      @domain.registrant_verification_asked_at = Time.zone.now
+      @mail = DomainMailer.pending_delete_rejected_notification(@domain)
+    end
+
+    it 'should render email subject' do
+      @mail.subject.should =~ /kustutamise taotlus tagasi lükatud/
+    end
+
+    it 'should have sender email' do
+      @mail.from.should == ["noreply@internet.ee"]
+    end
+
+    it 'should send confirm email to old registrant email' do
+      @mail.to.should == ["test@example.com"]
+    end
+
+    it 'should render body' do
+      @mail.body.encoded.should =~ /deletion rejected/
+    end
+  end
 end
