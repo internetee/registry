@@ -60,7 +60,10 @@ describe 'EPP Contact', epp: true do
       it 'fails if request xml is missing' do
         response = epp_plain_request(@epp_xml.create)
 
-        response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}create': Missing child element(s). Expected is one of ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id, {https://epp.tld.ee/schema/contact-eis-1.0.xsd}postalInfo )."
+        response[:results][0][:msg].should ==
+          "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}create': Missing child element(s). "\
+          "Expected is one of ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id, "\
+          "{https://epp.tld.ee/schema/contact-eis-1.0.xsd}postalInfo )."
         response[:results][0][:result_code].should == '2001'
       end
 
@@ -173,7 +176,9 @@ describe 'EPP Contact', epp: true do
           }
         }
         response = create_request({}, extension)
-        response[:msg].should == "Element '{https://epp.tld.ee/schema/eis-1.0.xsd}ident', attribute 'cc': [facet 'maxLength'] The value 'WRONG' has a length of '5'; this exceeds the allowed maximum length of '2'."
+        response[:msg].should == "Element '{https://epp.tld.ee/schema/eis-1.0.xsd}ident', "\
+          "attribute 'cc': [facet 'maxLength'] The value 'WRONG' has a length of '5'; this exceeds "\
+          "the allowed maximum length of '2'."
         response[:result_code].should == '2001'
       end
 
@@ -185,7 +190,8 @@ describe 'EPP Contact', epp: true do
           }
         }
         response = create_request({}, extension)
-        response[:msg].should == "Element '{https://epp.tld.ee/schema/eis-1.0.xsd}ident': The attribute 'cc' is required but missing."
+        response[:msg].should == "Element '{https://epp.tld.ee/schema/eis-1.0.xsd}ident': The attribute "\
+          "'cc' is required but missing."
         response[:result_code].should == '2001'
       end
 
@@ -196,7 +202,8 @@ describe 'EPP Contact', epp: true do
           }
         }
         response = create_request({}, extension)
-        response[:msg].should == "Element '{https://epp.tld.ee/schema/eis-1.0.xsd}ident': The attribute 'type' is required but missing."
+        response[:msg].should == "Element '{https://epp.tld.ee/schema/eis-1.0.xsd}ident': The attribute "\
+        "'type' is required but missing."
         response[:result_code].should == '2001'
       end
 
@@ -309,7 +316,9 @@ describe 'EPP Contact', epp: true do
 
       it 'fails if request is invalid' do
         response = epp_plain_request(@epp_xml.update)
-        response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}update': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id )."
+        response[:results][0][:msg].should ==
+          "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}update': Missing child element(s). "\
+          "Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id )."
       end
 
       it 'returns error if obj doesnt exist' do
@@ -398,7 +407,8 @@ describe 'EPP Contact', epp: true do
           }, {}
         )
 
-        response[:msg].should == "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}id': This element is not expected."
+        response[:msg].should == "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}id': "\
+          "This element is not expected."
         response[:result_code].should == '2001'
 
         @contact.reload.code.should == 'FIRST0:SH8013'
@@ -719,7 +729,9 @@ describe 'EPP Contact', epp: true do
       it 'fails if request is invalid' do
         response = epp_plain_request(@epp_xml.delete)
 
-        response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}delete': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id )."
+        response[:results][0][:msg].should ==
+          "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}delete': Missing child element(s). "\
+          "Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id )."
         response[:results][0][:result_code].should == '2001'
         response[:results].count.should == 1
       end
@@ -814,7 +826,9 @@ describe 'EPP Contact', epp: true do
       it 'fails if request is invalid' do
         response = epp_plain_request(@epp_xml.check)
 
-        response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}check': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id )."
+        response[:results][0][:msg].should ==
+          "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}check': Missing child element(s). "\
+          "Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id )."
         response[:results][0][:result_code].should == '2001'
         response[:results].count.should == 1
       end
@@ -868,7 +882,9 @@ describe 'EPP Contact', epp: true do
 
       it 'fails if request invalid' do
         response = epp_plain_request(@epp_xml.info)
-        response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}info': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id )."
+        response[:results][0][:msg].should ==
+          "Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}info': Missing child element(s). "\
+          "Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id )."
         response[:results][0][:result_code].should == '2001'
         response[:results].count.should == 1
       end

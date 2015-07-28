@@ -2757,7 +2757,9 @@ describe 'EPP Domain', epp: true do
 
       xml = domain_info_xml(name: { value: domain.name, attrs: { hosts: 'invalid' } })
       response = epp_plain_request(xml)
-      response[:msg].should == "Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}name', attribute 'hosts': [facet 'enumeration'] The value 'invalid' is not an element of the set {'all', 'del', 'none', 'sub'}."
+      response[:msg].should == "Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}name', "\
+        "attribute 'hosts': [facet 'enumeration'] The value 'invalid' is not an element of the "\
+        "set {'all', 'del', 'none', 'sub'}."
       response[:result_code].should == '2001'
 
       xml = domain_info_xml(name: { value: domain.name, attrs: { hosts: 'sub' } })

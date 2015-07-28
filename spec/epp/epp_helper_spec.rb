@@ -4,7 +4,6 @@ describe 'EPP Helper', epp: true do
   context 'in context of Domain' do
     before(:all) { @uniq_no = proc { @i ||= 0; @i += 1 } }
 
-    # rubocop: disable Metrics/LineLength
     it 'generates valid transfer xml' do
       dn = next_domain_name
       expected = Nokogiri::XML('<?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -54,6 +53,5 @@ describe 'EPP Helper', epp: true do
       generated = Nokogiri::XML(xml).to_s.squish
       generated.should == expected
     end
-    # rubocop: enable Metrics/LineLength
   end
 end

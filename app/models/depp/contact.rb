@@ -208,7 +208,7 @@ module Depp
             authInfo: {
               pw: { value: password }
             }
-          },
+          }
         },
         extension_xml
       )
