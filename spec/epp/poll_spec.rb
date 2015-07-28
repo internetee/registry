@@ -87,7 +87,8 @@ describe 'EPP Poll', epp: true do
     })
 
     response = epp_plain_request(xml, validate_input: false)
-    response[:msg].should == "Element '{urn:ietf:params:xml:ns:epp-1.0}poll', attribute 'op': [facet 'enumeration'] The value 'bla' is not an element of the set {'ack', 'req'}."
+    response[:msg].should == "Element '{urn:ietf:params:xml:ns:epp-1.0}poll', attribute 'op': "\
+        "[facet 'enumeration'] The value 'bla' is not an element of the set {'ack', 'req'}."
     response[:result_code].should == '2001'
   end
 

@@ -352,6 +352,7 @@ module Epp
   def domain_transfer_xml(xml_params = {}, op = 'request', custom_params = {})
     defaults = {
       name: { value: next_domain_name },
+      period: nil,
       authInfo: {
         pw: { value: '98oiewslkfkd', attrs: { roid: 'citizen_1234-REP' } }
       }

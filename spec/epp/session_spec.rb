@@ -142,7 +142,9 @@ describe 'EPP Session', epp: true do
           newPW: { value: '' }
         ), validate_input: false)
 
-        response[:msg].should == "Element '{urn:ietf:params:xml:ns:epp-1.0}newPW': [facet 'minLength'] The value has a length of '0'; this underruns the allowed minimum length of '6'."
+        response[:msg].should ==
+          "Element '{urn:ietf:params:xml:ns:epp-1.0}newPW': [facet 'minLength'] The value has a "\
+          "length of '0'; this underruns the allowed minimum length of '6'."
         response[:result_code].should == '2001'
 
         @api_user.reload
