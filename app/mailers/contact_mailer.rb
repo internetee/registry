@@ -1,5 +1,4 @@
 class ContactMailer < ApplicationMailer
-  # rubocop:disable Metrics/MethodLength
   def email_updated(email, contact)
     return if delivery_off?(contact)
 
@@ -24,5 +23,4 @@ class ContactMailer < ApplicationMailer
       logger.info "EMAIL SENDING FAILED: #{email}: #{e}"
     end
   end
-  # rubocop:enable Metrics/MethodLength
 end
