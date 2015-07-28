@@ -25,6 +25,6 @@ feature 'BlockedDomain', type: :feature do
     page.should have_content('cache.ee')
 
     d.valid?
-    d.errors.full_messages.should match_array(["Domain name Domain name is blocked"])
+    d.errors.full_messages.should match_array(["Data management policy violation: Domain name is blocked [name]"])
   end
 end
