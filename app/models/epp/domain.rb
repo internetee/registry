@@ -28,7 +28,7 @@ class Epp::Domain < Domain
 
   after_destroy :unlink_contacts
   def unlink_contacts
-    contacts.each do |c| 
+    contacts.each do |c|
       c.domains_present = false
       c.save(validate: false)
     end
@@ -104,6 +104,9 @@ class Epp::Domain < Domain
         [:base, :key_data_not_allowed],
         [:period, :not_a_number],
         [:period, :not_an_integer]
+      ],
+      '2308' => [
+        [:base, :domain_name_blocked, { value: { obj: 'name', val: name_dirty } }]
       ]
     }
   end

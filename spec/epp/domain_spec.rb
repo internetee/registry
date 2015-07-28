@@ -272,8 +272,8 @@ describe 'EPP Domain', epp: true do
       xml = domain_create_xml(name: { value: 'ftp.ee' })
 
       response = epp_plain_request(xml)
-      response[:msg].should == 'Domain name is blocked [name_dirty]'
-      response[:result_code].should == '2302'
+      response[:msg].should == 'Data management policy violation: Domain name is blocked [name]'
+      response[:result_code].should == '2308'
       response[:results][0][:value].should == 'ftp.ee'
       response[:clTRID].should == 'ABC-12345'
     end

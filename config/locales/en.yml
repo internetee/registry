@@ -65,10 +65,10 @@ en:
               key_data_not_allowed: 'keyData object is not allowed'
               required_parameter_missing_reserved: 'Required parameter missing; reserved>pw element required for reserved domains'
               invalid_auth_information_reserved: 'Invalid authorization information; invalid reserved>pw value'
+              domain_name_blocked: 'Data management policy violation: Domain name is blocked [name]'
             name_dirty:
               invalid: 'Domain name is invalid'
               reserved: 'Domain name is reserved'
-              blocked: 'Domain name is blocked'
               taken: 'Domain name already exists'
             puny_label:
               too_long: 'Domain name is too long (maximum is 63 characters)'
