@@ -184,6 +184,7 @@ class Domain < ActiveRecord::Base
 
     # rubocop: disable Metrics/AbcSize
     # rubocop: disable Metrics/CyclomaticComplexity
+    # rubocop: disable Metrics/PerceivedComplexity
     def clean_expired_pendings
       STDOUT << "#{Time.zone.now.utc} - Clean expired domain pendings\n" unless Rails.env.test?
 
@@ -198,13 +199,19 @@ class Domain < ActiveRecord::Base
           next
         end
         count += 1
-        DomainMailer.pending_update_expired_notification_for_new_registrant(domain).deliver_now
+        if domain.pending_update?
+          DomainMailer.pending_update_expired_notification_for_new_registrant(domain).deliver_now
+        end
+        if domain.pending_delete?
+          DomainMailer.pending_delete_expired_notification(domain).deliver_now
+        end
         domain.clean_pendings!
         STDOUT << "#{Time.zone.now.utc} Domain.clean_expired_pendings: ##{domain.id}\n" unless Rails.env.test?
       end
       STDOUT << "#{Time.zone.now.utc} - Successfully cancelled #{count} domain pendings\n" unless Rails.env.test?
       count
     end
+    # rubocop: enable Metrics/PerceivedComplexity
     # rubocop: enable Metrics/AbcSize
     # rubocop: enable Metrics/CyclomaticComplexity
 

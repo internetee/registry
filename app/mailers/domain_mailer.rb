@@ -143,4 +143,14 @@ class DomainMailer < ApplicationMailer
          subject: "#{I18n.t(:pending_delete_rejected_notification_subject, 
          name: @domain.name)} [#{@domain.name}]")
   end
+
+  def pending_delete_expired_notification(domain)
+    @domain = domain
+    # no delivery off control, driggered by cron, no epp request
+
+    return if whitelist_blocked?(@domain.registrant.email)
+    mail(to: @domain.registrant.email,
+         subject: "#{I18n.t(:pending_delete_expired_notification_subject, 
+         name: @domain.name)} [#{@domain.name}]")
+  end
 end
