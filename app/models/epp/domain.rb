@@ -411,7 +411,9 @@ class Epp::Domain < Domain
 
     # at[:statuses] += at_add[:domain_statuses_attributes]
 
-    if verify && frame.css('registrant').present? && frame.css('registrant').attr('verified').to_s.downcase != 'yes'
+    if verify && 
+      frame.css('registrant').present? && 
+      frame.css('registrant').attr('verified').to_s.downcase != 'yes'
       registrant_verification_asked!(frame.to_s, current_user.id)
     end
     self.deliver_emails = true # turn on email delivery for epp
