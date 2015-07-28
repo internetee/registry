@@ -374,7 +374,7 @@ class Domain < ActiveRecord::Base
     self.pending_json = pending_json_cache
     self.registrant_verification_token = token
     self.registrant_verification_asked_at = asked_at
-    self.statuses = DomainStatus::PENDING_UPDATE
+    set_pending_update
     pending_json[:domain] = changes_cache
     pending_json[:new_registrant_id]    = new_registrant_id
     pending_json[:new_registrant_email] = new_registrant_email
@@ -423,7 +423,7 @@ class Domain < ActiveRecord::Base
     self.epp_pending_delete = true # for epp
 
     return true unless registrant_verification_asked?
-    self.statuses = DomainStatus::PENDING_DELETE
+    set_pending_delete
     save(validate: false) # should check if this did succeed
 
     DomainMailer.pending_deleted(self).deliver_now
