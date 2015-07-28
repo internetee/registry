@@ -15,9 +15,9 @@
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'category', t(:category))
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'operation_category', t(:operation))
-            %th{class: 'col-xs-2'}
               = sort_link(@q, 'duration', t(:duration))
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'operation_category', t(:operation))
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'price', t(:price))
             %th{class: 'col-xs-2'}
@@ -31,8 +31,8 @@
           - @pricelists.each do |pricelist|
             %tr
               %td= pricelist.category
-              %td= pricelist.operation_category
               %td= pricelist.duration
+              %td= pricelist.operation_category
               %td= pricelist.price
               %td= l(pricelist.valid_from, format: :ydate)
               %td= l(pricelist.valid_to, format: :ydate)
