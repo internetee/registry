@@ -4,7 +4,7 @@ class Epp::Domain < Domain
 
   before_validation :manage_permissions
   def manage_permissions
-    return unless pending_update? || pending_delete?
+    return unless update_prohibited?
     add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
     false
   end
