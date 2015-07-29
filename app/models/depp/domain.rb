@@ -221,6 +221,9 @@ module Depp
           chg = [{ registrant: { value: domain_params[:registrant] } }]
         end
 
+        add_arr = nil if add_arr.none?
+        rem_arr = nil if rem_arr.none?
+
         {
           name: { value: domain_params[:name] },
           chg: chg,
