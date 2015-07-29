@@ -47,7 +47,7 @@ describe 'EPP Session', epp: true do
       log = ApiLog::EppLog.last
       log.request_command.should == 'login'
       log.request_successful.should == false
-      log.api_user_name.should == '2-api-inactive-user'
+      log.api_user_name.should == 'inactive-user'
     end
 
     it 'prohibits further actions unless logged in' do
@@ -88,7 +88,7 @@ describe 'EPP Session', epp: true do
         log = ApiLog::EppLog.last
         log.request_command.should == 'login'
         log.request_successful.should == true
-        log.api_user_name.should == '1-api-gitlab'
+        log.api_user_name.should == 'gitlab'
       end
 
       it 'does not log in twice' do
@@ -104,7 +104,7 @@ describe 'EPP Session', epp: true do
         log = ApiLog::EppLog.last
         log.request_command.should == 'login'
         log.request_successful.should == false
-        log.api_user_name.should == '1-api-gitlab'
+        log.api_user_name.should == 'gitlab'
       end
 
       it 'logs out epp user' do

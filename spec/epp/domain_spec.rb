@@ -67,7 +67,7 @@ describe 'EPP Domain', epp: true do
     log.request_command.should == 'create'
     log.request_object.should == 'domain'
     log.request_successful.should == false
-    log.api_user_name.should == '1-api-registrar1'
+    log.api_user_name.should == 'registrar1'
     log.api_user_registrar.should == 'registrar1'
     log.request.should_not be_blank
     log.response.should_not be_blank
@@ -1061,7 +1061,7 @@ describe 'EPP Domain', epp: true do
         log.request_command.should == 'transfer'
         log.request_object.should == 'domain'
         log.request_successful.should == true
-        log.api_user_name.should == '2-api-registrar2'
+        log.api_user_name.should == 'registrar2'
         log.api_user_registrar.should == 'registrar2'
         log.request.should_not be_blank
         log.response.should_not be_blank

@@ -420,6 +420,7 @@ class Epp::Domain < Domain
   # rubocop: enable Metrics/AbcSize
 
   def apply_pending_update!
+    old_registrant_email = DomainMailer.registrant_updated_notification_for_old_registrant(self)
     preclean_pendings
     user  = ApiUser.find(pending_json['current_user_id'])
     frame = Nokogiri::XML(pending_json['frame'])
@@ -428,7 +429,8 @@ class Epp::Domain < Domain
     return unless update(frame, user, false)
     clean_pendings!
     self.deliver_emails = true # turn on email delivery for epp
-    DomainMailer.registrant_updated(self).deliver_now
+    DomainMailer.registrant_updated_notification_for_new_registrant(self).deliver_now
+    old_registrant_email.deliver_now
   end
 
   def apply_pending_delete!
@@ -436,6 +438,7 @@ class Epp::Domain < Domain
     user  = ApiUser.find(pending_json['current_user_id'])
     frame = Nokogiri::XML(pending_json['frame'])
     statuses.delete(DomainStatus::PENDING_DELETE)
+    DomainMailer.delete_confirmation(self).deliver_now
 
     clean_pendings! if epp_destroy(frame, user, false)
   end

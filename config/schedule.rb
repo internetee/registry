@@ -24,9 +24,10 @@ every :day, at: '12:10am' do
   runner 'Invoice.cancel_overdue_invoices'
 end
 
-every :day, at: '12:15am' do
-  runner 'Domain.expire_domains'
-end
+# TODO
+# every :day, at: '12:15am' do
+  # runner 'Domain.expire_domains'
+# end
 
 every :day, at: '12:20am' do
   runner 'Domain.clean_expired_pendings'

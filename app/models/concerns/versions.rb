@@ -20,17 +20,15 @@ module Versions
       true
     end
 
-    # needs refactoring
-    # TODO: optimization work
-    # belongs_to :api_creator, class_name: 'ApiUser', foreign_key: :creator_str
-    # belongs_to :creator, class_name: 'User', foreign_key: :creator_str
     def creator
       return nil if creator_str.blank?
 
-      if creator_str =~ /^\d-api-/
-        creator = ApiUser.find_by(id: creator_str)
-      else
+      if creator_str =~ /^\d+-AdminUser:/
         creator = AdminUser.find_by(id: creator_str)
+      elsif creator_str =~ /^\d+-ApiUser:/
+        creator = ApiUser.find_by(id: creator_str)
+      elsif creator_str =~ /^\d+-api-/ # depricated
+        creator = ApiUser.find_by(id: creator_str)
       end
 
       creator.present? ? creator : creator_str
@@ -39,10 +37,12 @@ module Versions
     def updator
       return nil if updator_str.blank?
 
-      if updator_str =~ /^\d-api-/
-        updator = ApiUser.find_by(id: updator_str)
-      else
+      if updator_str =~ /^\d+-AdminUser:/
         updator = AdminUser.find_by(id: updator_str)
+      elsif updator_str =~ /^\d+-ApiUser:/
+        updator = ApiUser.find_by(id: updator_str)
+      elsif updator_str =~ /^\d+-api-/ # depricated
+        updator = ApiUser.find_by(id: updator_str)
       end
 
       updator.present? ? updator : updator_str
