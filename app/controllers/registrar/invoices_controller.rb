@@ -6,15 +6,15 @@ class Registrar::InvoicesController < RegistrarController
   def index
     params[:q] ||= {}
     invoices = current_user.registrar.invoices.includes(:invoice_items, :account_activity)
-    params[:q][:sum_cache_gteq].gsub!(',', '.') if params[:q][:sum_cache_gteq]
-    params[:q][:sum_cache_lteq].gsub!(',', '.') if params[:q][:sum_cache_lteq]
-    @q = invoices.search(params[:q])
-    @q.sorts  = 'id desc' if @q.sorts.empty?
-    @invoices = @q.result.page(params[:page])
+
+    normalize_search_parameters do
+      @q = invoices.search(params[:q])
+      @q.sorts  = 'id desc' if @q.sorts.empty?
+      @invoices = @q.result.page(params[:page])
+    end
   end
 
-  def show
-  end
+  def show; end
 
   def forward
     @invoice.billing_email = @invoice.buyer.billing_email
@@ -50,5 +50,22 @@ class Registrar::InvoicesController < RegistrarController
 
   def set_invoice
     @invoice = Invoice.find(params[:id])
+  end
+
+  def normalize_search_parameters
+    params[:q][:sum_cache_gteq].gsub!(',', '.') if params[:q][:sum_cache_gteq]
+    params[:q][:sum_cache_lteq].gsub!(',', '.') if params[:q][:sum_cache_lteq]
+
+    ca_cache = params[:q][:due_date_lteq]
+    begin
+      end_time = params[:q][:due_date_lteq].try(:to_date)
+      params[:q][:due_date_lteq] = end_time.try(:end_of_day)
+    rescue
+      logger.warn('Invalid date')
+    end
+
+    yield
+
+    params[:q][:due_date_lteq] = ca_cache
   end
 end
