@@ -15,6 +15,16 @@ class Admin::DomainsController < AdminController
     normalize_search_parameters do
       @q = domains.search(params[:q])
       @domains = @q.result.page(params[:page])
+      if @domains.count == 1
+        redirect_to [:admin, @domains.first] and return
+      elsif @domains.count == 0 && params[:q][:name_matches] !~ /^%.+%$/
+        # if we do not get any results, add wildcards to the name field and search again
+        n_cache = params[:q][:name_matches]
+        params[:q][:name_matches] = "%#{params[:q][:name_matches]}%"
+        @q = domains.search(params[:q])
+        @domains = @q.result.page(params[:page])
+        params[:q][:name_matches] = n_cache # we don't want to show wildcards in search form
+      end
     end
   end
 

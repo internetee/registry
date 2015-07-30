@@ -2,12 +2,12 @@
 
 .row
   .col-md-12
-    = search_form_for [:admin, @q], html: { style: 'margin-bottom: 0;', class: 'js-form' } do |f|
+    = search_form_for [:admin, @q], html: { style: 'margin-bottom: 0;', class: 'js-form', autocomplete: 'off' } do |f|
       .row
         .col-md-3
           .form-group
             = f.label :name
-            = f.search_field :name_cont, class: 'form-control', placeholder: t(:name)
+            = f.search_field :name_matches, value: params[:q][:name_matches], class: 'form-control', placeholder: t(:name)
         .col-md-3
           .form-group
             = f.label t(:registrant_ident)

@@ -5,7 +5,6 @@ class Domain < ActiveRecord::Base
 
   # TODO: whois requests ip whitelist for full info for own domains and partial info for other domains
   # TODO: most inputs should be trimmed before validatation, probably some global logic?
-  paginates_per 10 # just for showoff
 
   belongs_to :registrar
   belongs_to :registrant
