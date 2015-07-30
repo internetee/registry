@@ -2,6 +2,9 @@ class Admin::DomainsController < AdminController
   load_and_authorize_resource
   before_action :set_domain, only: [:show, :edit, :update, :zonefile]
 
+  # rubocop: disable Metrics/PerceivedComplexity
+  # rubocop: disable Metrics/CyclomaticComplexity
+  # rubocop: disable Metrics/AbcSize
   def index
     params[:q] ||= {}
     if params[:statuses_contains]
@@ -29,6 +32,9 @@ class Admin::DomainsController < AdminController
 
     @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i > 0
   end
+  # rubocop: enable Metrics/PerceivedComplexity
+  # rubocop: enable Metrics/CyclomaticComplexity
+  # rubocop: enable Metrics/AbcSize
 
   def show
     @domain.valid?
