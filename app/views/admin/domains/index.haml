@@ -37,7 +37,7 @@
         .col-md-6
           .form-group
             = label_tag t(:status)
-            = select_tag 'q[statuses_contains]', options_for_select(DomainStatus::STATUSES, params[:q][:statuses_contains]), { multiple: true, placeholder: t(:choose), class: 'form-control js-combobox' }
+            = select_tag :statuses_contains, options_for_select(DomainStatus::STATUSES, params[:statuses_contains]), { multiple: true, placeholder: t(:choose), class: 'form-control js-combobox' }
         .col-md-3
           .form-group
             = label_tag t(:results_per_page)

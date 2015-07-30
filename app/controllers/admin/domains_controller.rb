@@ -4,9 +4,9 @@ class Admin::DomainsController < AdminController
 
   def index
     params[:q] ||= {}
-    if params[:q][:statuses_contains]
+    if params[:statuses_contains]
       domains = Domain.includes(:registrar, :registrant).where(
-        "statuses @> ?::varchar[]", "{#{params[:q][:statuses_contains].join(',')}}"
+        "statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
       )
     else
       domains = Domain.includes(:registrar, :registrant)
