@@ -3,7 +3,15 @@ class Admin::DomainsController < AdminController
   before_action :set_domain, only: [:show, :edit, :update, :zonefile]
 
   def index
-    @q = Domain.includes(:registrar, :registrant).search(params[:q])
+    params[:q] ||= {}
+    if params[:q][:statuses_contains]
+      domains = Domain.includes(:registrar, :registrant).where(
+        "statuses @> ?::varchar[]", "{#{params[:q][:statuses_contains].join(',')}}"
+      )
+    else
+      domains = Domain.includes(:registrar, :registrant)
+    end
+    @q = domains.search(params[:q])
     @domains = @q.result.page(params[:page])
   end
 

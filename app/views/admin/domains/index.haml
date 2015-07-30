@@ -8,15 +8,19 @@
           .form-group
             = f.label :name
             = f.search_field :name_cont, class: 'form-control', placeholder: t(:name)
+        .col-md-8
+          .form-group
+            = label_tag t(:status)
+            = select_tag 'q[statuses_contains]', options_for_select(DomainStatus::STATUSES, params[:q][:statuses_contains]), { multiple: true, placeholder: t(:choose), class: 'form-control js-combobox' }
+      .row
         .col-md-4
           .form-group
             = f.label t(:registrar)
-            = f.select :registrar_id_eq, Registrar.all.map { |x| [x, x.id] }, {}, class: 'form-control selectize', placeholder: t(:choose)
+            = f.select :registrar_id_eq, Registrar.all.map { |x| [x, x.id] }, { include_blank: true }, class: 'form-control selectize', placeholder: t(:choose)
         .col-md-4
           .form-group
             = f.label t(:registrant_ident)
             = f.search_field :registrant_ident_eq, class: 'form-control', placeholder: t(:registrant_ident)
-      .row
         .col-md-3
           .form-group
             = f.label t(:valid_to_from)
