@@ -75,8 +75,11 @@
               %td= l(x.valid_to, format: :short)
               %td= link_to(x.registrar, admin_registrar_path(x.registrar)) if x.registrar
 .row
-  .col-md-12
+  .col-md-6
     = paginate @domains
+  .col-md-6.text-right
+    .pagination
+      = t(:result_count, count: @domains.total_count)
 
 :coffee
   $(".js-reset-form").on "click", (e) ->

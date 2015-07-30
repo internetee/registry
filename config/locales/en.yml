@@ -892,3 +892,4 @@ en:
   contact_ident: 'Contact ident'
   results_per_page: 'Results per page'
   nameserver_hostname: 'Nameserver hostname'
+  result_count: '%{count} results'
