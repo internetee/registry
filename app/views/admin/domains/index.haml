@@ -4,23 +4,27 @@
   .col-md-12
     = search_form_for [:admin, @q], html: { style: 'margin-bottom: 0;', class: 'js-form' } do |f|
       .row
-        .col-md-4
+        .col-md-3
           .form-group
             = f.label :name
             = f.search_field :name_cont, class: 'form-control', placeholder: t(:name)
-        .col-md-8
-          .form-group
-            = label_tag t(:status)
-            = select_tag 'q[statuses_contains]', options_for_select(DomainStatus::STATUSES, params[:q][:statuses_contains]), { multiple: true, placeholder: t(:choose), class: 'form-control js-combobox' }
-      .row
-        .col-md-4
-          .form-group
-            = f.label t(:registrar)
-            = f.select :registrar_id_eq, Registrar.all.map { |x| [x, x.id] }, { include_blank: true }, class: 'form-control selectize', placeholder: t(:choose)
-        .col-md-4
+        .col-md-3
           .form-group
             = f.label t(:registrant_ident)
             = f.search_field :registrant_ident_eq, class: 'form-control', placeholder: t(:registrant_ident)
+        .col-md-3
+          .form-group
+            = f.label t(:contact_ident)
+            = f.search_field :contacts_ident_eq, class: 'form-control', placeholder: t(:contact_ident)
+        .col-md-3
+          .form-group
+            = f.label t(:nameserver)
+            = f.search_field :nameservers_hostname_eq, class: 'form-control', placeholder: t(:nameserver)
+      .row
+        .col-md-6
+          .form-group
+            = f.label t(:registrar)
+            = f.select :registrar_id_eq, Registrar.all.map { |x| [x, x.id] }, { include_blank: true }, class: 'form-control selectize', placeholder: t(:choose)
         .col-md-3
           .form-group
             = f.label t(:valid_to_from)
@@ -29,6 +33,11 @@
           .form-group
             = f.label t(:valid_to_until)
             = f.search_field :valid_to_lteq, class: 'form-control datepicker', placeholder: t(:valid_to_until), autocomplete: 'off'
+      .row
+        .col-md-9
+          .form-group
+            = label_tag t(:status)
+            = select_tag 'q[statuses_contains]', options_for_select(DomainStatus::STATUSES, params[:q][:statuses_contains]), { multiple: true, placeholder: t(:choose), class: 'form-control js-combobox' }
         .col-md-3{style: 'padding-top: 25px;'}
           %button.btn.btn-primary
             &nbsp;
@@ -64,3 +73,8 @@
 .row
   .col-md-12
     = paginate @domains
+
+:coffee
+  $(".js-reset-form").on "click", (e) ->
+    e.preventDefault();
+    window.location = "#{admin_domains_path}"
