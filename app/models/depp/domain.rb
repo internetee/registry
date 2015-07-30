@@ -200,6 +200,8 @@ module Depp
         custom_params
       end
 
+      # rubocop: disable Metrics/PerceivedComplexity
+      # rubocop: disable Metrics/CyclomaticComplexity
       def construct_edit_hash(domain_params, old_domain_params)
         contacts = array_difference(create_contacts_hash(domain_params), create_contacts_hash(old_domain_params))
         add_anon = contacts
@@ -231,6 +233,8 @@ module Depp
           rem: rem_arr
         }
       end
+      # rubocop: enable Metrics/PerceivedComplexity
+      # rubocop: enable Metrics/CyclomaticComplexity
 
       def construct_ext_edit_hash(domain_params, old_domain_params)
         rem_keys = create_dnskeys_hash(old_domain_params) - create_dnskeys_hash(domain_params)
