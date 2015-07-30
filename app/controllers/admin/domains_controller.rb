@@ -26,6 +26,8 @@ class Admin::DomainsController < AdminController
         params[:q][:name_matches] = n_cache # we don't want to show wildcards in search form
       end
     end
+
+    @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i > 0
   end
 
   def show

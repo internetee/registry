@@ -890,3 +890,4 @@ en:
   valid_to_until: 'Valid to until'
   registrant_ident: 'Registrant ident'
   contact_ident: 'Contact ident'
+  results_per_page: 'Results per page'
