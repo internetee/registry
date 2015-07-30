@@ -11,8 +11,11 @@ class Admin::DomainsController < AdminController
     else
       domains = Domain.includes(:registrar, :registrant)
     end
-    @q = domains.search(params[:q])
-    @domains = @q.result.page(params[:page])
+
+    normalize_search_parameters do
+      @q = domains.search(params[:q])
+      @domains = @q.result.page(params[:page])
+    end
   end
 
   def show
@@ -78,6 +81,20 @@ class Admin::DomainsController < AdminController
     dp = domain_params
     dp[:statuses].reject!(&:blank?)
     dp
+  end
+
+  def normalize_search_parameters
+    ca_cache = params[:q][:valid_to_lteq]
+    begin
+      end_time = params[:q][:valid_to_lteq].try(:to_date)
+      params[:q][:valid_to_lteq] = end_time.try(:end_of_day)
+    rescue
+      logger.warn('Invalid date')
+    end
+
+    yield
+
+    params[:q][:valid_to_lteq] = ca_cache
   end
 end
 
