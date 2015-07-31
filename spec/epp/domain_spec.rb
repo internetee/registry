@@ -2644,7 +2644,9 @@ describe 'EPP Domain', epp: true do
       domain.reload
       domain.valid_to.should be_within(5).of(old_valid_to + 1.year)
       domain.outzone_at.should be_within(5).of(old_valid_to + 1.year + Setting.expire_warning_period.days)
-      domain.delete_at.should be_within(5).of(old_valid_to + 1.year + Setting.expire_warning_period.days + Setting.redemption_grace_period.days)
+      domain.delete_at.should be_within(5).of(
+        old_valid_to + 1.year + Setting.expire_warning_period.days + Setting.redemption_grace_period.days
+      )
     end
 
     it 'does not renew foreign domain' do
