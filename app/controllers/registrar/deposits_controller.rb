@@ -13,7 +13,7 @@ class Registrar::DepositsController < RegistrarController
       flash[:notice] = t(:please_pay_the_following_invoice)
       redirect_to [:registrar, @invoice]
     else
-      flash[:alert] = t(:failed_to_create_record)
+      flash.now[:alert] = t(:failed_to_create_record)
       render 'new'
     end
   end
