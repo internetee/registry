@@ -395,6 +395,7 @@ class Epp::Domain < Domain
   end
 
   # rubocop: disable Metrics/AbcSize
+  # rubocop: disable Metrics/CyclomaticComplexity
   def update(frame, current_user, verify = true)
     return super if frame.blank?
     at = {}.with_indifferent_access
@@ -411,15 +412,17 @@ class Epp::Domain < Domain
 
     # at[:statuses] += at_add[:domain_statuses_attributes]
 
-    if verify && Setting.request_confrimation_on_registrant_change_enabled && 
-      frame.css('registrant').present? && 
-      frame.css('registrant').attr('verified').to_s.downcase != 'yes'
+    if verify &&
+       Setting.request_confrimation_on_registrant_change_enabled &&
+       frame.css('registrant').present? &&
+       frame.css('registrant').attr('verified').to_s.downcase != 'yes'
       registrant_verification_asked!(frame.to_s, current_user.id)
     end
     self.deliver_emails = true # turn on email delivery for epp
     errors.empty? && super(at)
   end
   # rubocop: enable Metrics/AbcSize
+  # rubocop: enable Metrics/CyclomaticComplexity
 
   def apply_pending_update!
     old_registrant_email = DomainMailer.registrant_updated_notification_for_old_registrant(self)
@@ -458,8 +461,8 @@ class Epp::Domain < Domain
     return false unless valid?
 
     if verify && 
-      Setting.request_confirmation_on_domain_deletion_enabled &&
-      frame.css('delete').attr('verified').to_s.downcase != 'yes'
+       Setting.request_confirmation_on_domain_deletion_enabled &&
+       frame.css('delete').attr('verified').to_s.downcase != 'yes'
 
       registrant_verification_asked!(frame.to_s, user_id)
       self.deliver_emails = true # turn on email delivery for epp

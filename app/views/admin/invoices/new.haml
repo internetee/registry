@@ -4,7 +4,8 @@
 
 = form_for([:admin, @deposit], url: admin_invoices_path, method: :post, html: { class: 'form-horizontal' }) do |f|
   = render 'shared/full_errors', object: @deposit
-
+  - if @invoice
+    = render 'shared/full_errors', object: @invoice
   .row
     .col-md-8
       .form-group

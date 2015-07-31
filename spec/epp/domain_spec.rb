@@ -2603,15 +2603,20 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'should renew a expired domain' do
-      pending("Please inspect, somehow SERVER_HOLD is false and test fails")
-      domain.valid_to = Time.zone.now - 50.days
-      new_valid_to = domain.valid_to + 1.year
-      domain.outzone_at = Time.zone.now - 50.days
-      new_outzone_at = domain.outzone_at + 1.year
-      new_delete_at = domain.delete_at + 1.year
+      old_valid_to = Time.zone.now - 90.days
+      old_outzone_at = Time.zone.now - 60.days
+      old_delete_at = Time.zone.now - 30.days
+      domain.valid_to = old_valid_to
+      domain.outzone_at = old_outzone_at
+      domain.delete_at = old_delete_at
       domain.save
 
       Domain.start_expire_period
+      domain.reload
+      domain.valid_to = old_valid_to
+      domain.outzone_at = old_outzone_at
+      domain.delete_at = old_delete_at
+      domain.save
       Domain.start_redemption_grace_period
 
       domain.reload
@@ -2637,9 +2642,11 @@ describe 'EPP Domain', epp: true do
       domain.statuses.include?(DomainStatus::OK).should == true
 
       domain.reload
-      domain.valid_to.should be_within(5).of(new_valid_to)
-      domain.outzone_at.should be_within(5).of(new_outzone_at)
-      domain.delete_at.should be_within(5).of(new_delete_at)
+      domain.valid_to.should be_within(5).of(old_valid_to + 1.year)
+      domain.outzone_at.should be_within(5).of(old_valid_to + 1.year + Setting.expire_warning_period.days)
+      domain.delete_at.should be_within(5).of(
+        old_valid_to + 1.year + Setting.expire_warning_period.days + Setting.redemption_grace_period.days
+      )
     end
 
     it 'does not renew foreign domain' do
