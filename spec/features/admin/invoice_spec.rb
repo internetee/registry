@@ -41,6 +41,27 @@ feature 'Invoice', type: :feature do
     page.should have_content(r.name)
   end
 
+  it 'should not issue and invoice with deposit amount too small' do
+    Setting.minimum_deposit = 0.0
+    r = Fabricate(:registrar)
+    visit admin_invoices_url
+    click_link('Add')
+    select r.name, from: 'Registrar'
+    fill_in 'Amount', with: '-2.11'
+    fill_in 'Description', with: 'test issue'
+    click_button 'Save'
+    page.should have_content('Amount is too small. Minimum deposit is 0.0 EUR')
+    Setting.minimum_deposit = 12.43
+    fill_in 'Amount', with: '12.42'
+    click_button 'Save'
+
+    page.should have_content('Amount is too small. Minimum deposit is 12.43 EUR')
+    fill_in 'Amount', with: '12.44'
+    click_button 'Save'
+    page.should have_content('Record created')
+    Setting.minimum_deposit = 0.0
+  end
+
   it 'should forward invoice' do
     visit '/admin/invoices'
     click_link @invoice.to_s
