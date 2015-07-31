@@ -11,7 +11,7 @@ require 'mina/rbenv'  # for rbenv support. (http://rbenv.org)
 #   branch       - Branch name to deploy. (needed by mina/git)
 
 # alpha branch, all interfaces unified
-set :domain, 'registry-st'
+set :domain, 'registry'
 set :deploy_to, '$HOME/registry'
 set :repository, 'https://github.com/domify/registry' # dev repo
 set :branch, 'master'
@@ -20,7 +20,7 @@ set :que_restart, true
 
 # alpha branch, only use for heavy debugging
 task :epp do
-  set :domain, 'registry-st'
+  set :domain, 'registry'
   set :deploy_to, '$HOME/epp'
   set :repository, 'https://github.com/domify/registry' # dev repo
   set :branch, 'master'
@@ -30,7 +30,7 @@ end
 
 # alpha branch, only use for heavy debugging
 task :registrar do
-  set :domain, 'registry-st'
+  set :domain, 'registry'
   set :deploy_to, '$HOME/registrar'
   set :repository, 'https://github.com/domify/registry' # dev repo
   set :branch, 'master'
@@ -40,7 +40,7 @@ end
 
 # alpha branch, only use for heavy debugging
 task :registrant do
-  set :domain, 'registry-st'
+  set :domain, 'registryt'
   set :deploy_to, '$HOME/registrant'
   set :repository, 'https://github.com/domify/registry' # dev repo
   set :branch, 'master'
@@ -216,19 +216,6 @@ task deploy: :environment do
       invoke :'deploy:cleanup'
       invoke :que_restart if que_restart
     end
-  end
-end
-
-desc 'Rolls back the latest release'
-task rollback: :environment do
-  queue! %(echo "-----> Rolling back to previous release for instance: #{domain}")
-  queue %(ls "#{deploy_to}/releases" -Art | sort | tail -n 2 | head -n 1)
-  queue! %(
-    ls -Art "#{deploy_to}/releases" | sort | tail -n 2 | head -n 1 |
-    xargs -I active ln -nfs "#{deploy_to}/releases/active" "#{deploy_to}/current"
-  )
-  to :launch do
-    invoke :restart
   end
 end
 

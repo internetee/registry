@@ -54,9 +54,10 @@ class Domain < ActiveRecord::Base
   delegate :name,   to: :registrar, prefix: true
   delegate :street, to: :registrar, prefix: true
 
-  after_initialize :init_default_values
-  def init_default_values
+  after_initialize do
     self.pending_json = {} if pending_json.blank?
+    self.statuses = [] if statuses.nil?
+    self.status_notes = {} if status_notes.nil?
   end
 
   before_create :generate_auth_info
@@ -77,7 +78,6 @@ class Domain < ActiveRecord::Base
   end
   after_save :update_whois_record
 
-  after_initialize -> { self.statuses = [] if statuses.nil? }
 
   after_create :update_reserved_domains
   def update_reserved_domains

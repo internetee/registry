@@ -5,9 +5,11 @@ class Contact < ActiveRecord::Base
   belongs_to :registrar
   has_many :domain_contacts
   has_many :domains, through: :domain_contacts
-  has_many :statuses, class_name: 'ContactStatus', dependent: :destroy
   has_many :legal_documents, as: :documentable
   has_many :registrant_domains, class_name: 'Domain', foreign_key: 'registrant_id' # when contant is registrant
+
+  # TODO: remove later
+  has_many :depricated_statuses, class_name: 'DepricatedContactStatus', dependent: :destroy 
 
   accepts_nested_attributes_for :legal_documents
 
@@ -23,9 +25,15 @@ class Contact < ActiveRecord::Base
   validates :ident_country_code, presence: true, if: proc { |c| %w(bic priv).include? c.ident_type }
   validates :code,
     uniqueness: { message: :epp_id_taken },
-    format: { with: /\A[\w\-\:]*\Z/i },
-    length: { maximum: 100 }
+    format: { with: /\A[\w\-\:]*\Z/i, message: :invalid },
+    length: { maximum: 100, message: :too_long_contact_code }
   validate :ident_valid_format?
+  validate :uniq_statuses?
+
+  after_initialize do 
+    self.statuses = [] if statuses.nil?
+    self.status_notes = {} if status_notes.nil?
+  end
 
   before_validation :set_ident_country_code
   before_validation :prefix_code
@@ -37,10 +45,10 @@ class Contact < ActiveRecord::Base
     ContactMailer.email_updated(self).deliver_now
   end
 
-  after_save :manage_statuses
+  before_save :manage_statuses
   def manage_statuses
-    ContactStatus.manage(statuses, self)
-    statuses.reload
+    manage_linked
+    manage_ok
   end
 
   scope :current_registrars, ->(id) { where(registrar_id: id) }
@@ -57,6 +65,79 @@ class Contact < ActiveRecord::Base
   ]
 
   attr_accessor :deliver_emails
+
+  #
+  # STATUSES
+  #
+  # Requests to delete the object MUST be rejected.
+  CLIENT_DELETE_PROHIBITED = 'clientDeleteProhibited'
+  SERVER_DELETE_PROHIBITED = 'serverDeleteProhibited'
+
+  # Requests to transfer the object MUST be rejected.
+  CLIENT_TRANSFER_PROHIBITED = 'clientTransferProhibited'
+  SERVER_TRANSFER_PROHIBITED = 'serverTransferProhibited'
+
+  # The contact object has at least one active association with
+  # another object, such as a domain object. Servers SHOULD provide
+  # services to determine existing object associations.
+  # "linked" status MAY be combined with any status.
+  LINKED = 'linked'
+
+  # This is the normal status value for an object that has no pending
+  # operations or prohibitions. This value is set and removed by the
+  # server as other status values are added or removed.
+  # "ok" status MAY only be combined with "linked" status.
+  OK = 'ok'
+
+  # Requests to update the object (other than to remove this status) MUST be rejected.
+  CLIENT_UPDATE_PROHIBITED = 'clientUpdateProhibited'
+  SERVER_UPDATE_PROHIBITED = 'serverUpdateProhibited'
+
+  # A transform command has been processed for the object, but the
+  # action has not been completed by the server. Server operators can
+  # delay action completion for a variety of reasons, such as to allow
+  # for human review or third-party action. A transform command that
+  # is processed, but whose requested action is pending, is noted with
+  # response code 1001.
+  # When the requested action has been completed, the pendingCreate,
+  # pendingDelete, pendingTransfer, or pendingUpdate status value MUST be
+  # removed.  All clients involved in the transaction MUST be notified
+  # using a service message that the action has been completed and that
+  # the status of the object has changed.
+  # The pendingCreate, pendingDelete, pendingTransfer, and pendingUpdate
+  # status values MUST NOT be combined with each other.
+  PENDING_CREATE = 'pendingCreate'
+  # "pendingTransfer" status MUST NOT be combined with either
+  # "clientTransferProhibited" or "serverTransferProhibited" status.
+  PENDING_TRANSFER = 'pendingTransfer'
+  # "pendingUpdate" status MUST NOT be combined with either
+  # "clientUpdateProhibited" or "serverUpdateProhibited" status.
+  PENDING_UPDATE = 'pendingUpdate'
+  # "pendingDelete" MUST NOT be combined with either 
+  # "clientDeleteProhibited" or "serverDeleteProhibited" status.
+  PENDING_DELETE = 'pendingDelete' 
+
+  STATUSES = [
+    CLIENT_DELETE_PROHIBITED, SERVER_DELETE_PROHIBITED, 
+    CLIENT_TRANSFER_PROHIBITED,
+    SERVER_TRANSFER_PROHIBITED, CLIENT_UPDATE_PROHIBITED, SERVER_UPDATE_PROHIBITED,
+    OK, PENDING_CREATE, PENDING_DELETE, PENDING_TRANSFER,
+    PENDING_UPDATE, LINKED
+  ]
+
+  CLIENT_STATUSES = [
+    CLIENT_DELETE_PROHIBITED, CLIENT_TRANSFER_PROHIBITED,
+    CLIENT_UPDATE_PROHIBITED
+  ]
+
+  SERVER_STATUSES = [
+    SERVER_UPDATE_PROHIBITED,
+    SERVER_DELETE_PROHIBITED, 
+    SERVER_TRANSFER_PROHIBITED
+  ]
+  #
+  # END OF STATUSES
+  #
 
   class << self
     def search_by_query(query)
@@ -83,6 +164,20 @@ class Contact < ActiveRecord::Base
     def privs
       where("ident_type = '#{PRIV}'")
     end
+
+    def admin_statuses
+      [
+        SERVER_UPDATE_PROHIBITED,
+        SERVER_DELETE_PROHIBITED
+      ]
+    end
+
+    def admin_statuses_map
+      [
+        ['UpdateProhibited', SERVER_UPDATE_PROHIBITED],
+        ['DeleteProhibited', SERVER_DELETE_PROHIBITED]
+      ]
+    end
   end
 
   def roid
@@ -102,6 +197,12 @@ class Contact < ActiveRecord::Base
         errors.add(:ident, :invalid_EE_identity_format) unless code.valid?
       end
     end
+  end
+
+  def uniq_statuses?
+    return true unless statuses.detect { |s| statuses.count(s) > 1 }
+    errors.add(:statuses, :not_uniq)
+    false
   end
 
   def bic?
@@ -205,5 +306,79 @@ class Contact < ActiveRecord::Base
     end
 
     @desc
+  end
+
+  def status_notes_array=(notes)
+    self.status_notes = {}
+    notes ||= []
+    statuses.each_with_index do |status,i|
+      self.status_notes[status] = notes[i]
+    end
+  end
+
+  private
+
+  def manage_linked
+    if domains.present?
+      statuses << LINKED if statuses.detect { |s| s == LINKED }.blank?
+    else
+      statuses.delete_if { |s| s == LINKED }
+    end
+  end
+
+  # rubocop:disable Metrics/CyclomaticComplexity
+  def manage_ok
+    return unset_ok unless valid?
+
+    case statuses.size
+    when 0
+      set_ok
+    when 1
+      set_ok if statuses == [LINKED]
+    when 2
+      return if statuses.sort == [LINKED, OK]
+      unset_ok
+    else
+      unset_ok
+    end
+  end
+  # rubocop:enable Metrics/CyclomaticComplexity
+
+  def unset_ok
+    statuses.delete_if { |s| s == OK }
+  end
+
+  def set_ok
+    statuses << OK if statuses.detect { |s| s == OK }.blank?
+  end
+
+  def linked?
+    statuses.include?(LINKED)
+  end
+
+  def update_prohibited?
+    (statuses & [
+      CLIENT_UPDATE_PROHIBITED,
+      SERVER_UPDATE_PROHIBITED,
+      CLIENT_TRANSFER_PROHIBITED,
+      SERVER_TRANSFER_PROHIBITED,
+      PENDING_CREATE,
+      PENDING_TRANSFER,
+      PENDING_UPDATE,
+      PENDING_DELETE
+    ]).present?
+  end
+
+  def delete_prohibited?
+    (statuses & [
+      CLIENT_DELETE_PROHIBITED,
+      SERVER_DELETE_PROHIBITED,
+      CLIENT_TRANSFER_PROHIBITED,
+      SERVER_TRANSFER_PROHIBITED,
+      PENDING_CREATE,
+      PENDING_TRANSFER,
+      PENDING_UPDATE,
+      PENDING_DELETE
+    ]).present?
   end
 end

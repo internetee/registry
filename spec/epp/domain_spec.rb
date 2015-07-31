@@ -435,6 +435,24 @@ describe 'EPP Domain', epp: true do
       a.activity_type = AccountActivity::CREATE
     end
 
+    it 'creates a domain without period' do
+      old_balance = @registrar1.balance
+      old_activities = @registrar1.cash_account.account_activities.count
+      xml = domain_create_xml(period: nil)
+
+      response = epp_plain_request(xml)
+      response[:msg].should == 'Command completed successfully'
+      response[:result_code].should == '1000'
+      Domain.last.valid_to.should be_within(60).of(1.years.since)
+      @registrar1.balance.should be < old_balance
+      @registrar1.cash_account.account_activities.count.should == old_activities + 1
+      a = @registrar1.cash_account.account_activities.last
+      a.description.should == "Create #{Domain.last.name}"
+      a.sum.should == -BigDecimal.new('10.0')
+      a.activity_type = AccountActivity::CREATE
+      a.log_pricelist_id.should == @pricelist_reg_1_year.id
+    end
+
     it 'does not create a domain with invalid period' do
       old_balance = @registrar1.balance
       old_activities = @registrar1.cash_account.account_activities.count
@@ -448,6 +466,24 @@ describe 'EPP Domain', epp: true do
       response[:results][0][:value].should == '367'
       @registrar1.balance.should == old_balance
       @registrar1.cash_account.account_activities.count.should == old_activities
+    end
+
+    it 'does not create a domain with invalid period unit' do
+      xml = domain_create_xml({
+        period: { value: '1', attrs: { unit: '' } }
+      })
+
+      response = epp_plain_request(xml, validate_input: false)
+      response[:results][0][:msg].should == 'Attribute is invalid: unit'
+      response[:results][0][:result_code].should == '2306'
+
+      xml = domain_create_xml({
+        period: { value: '1', attrs: { unit: 'bla' } }
+      })
+
+      response = epp_plain_request(xml, validate_input: false)
+      response[:results][0][:msg].should == 'Attribute is invalid: unit'
+      response[:results][0][:result_code].should == '2306'
     end
 
     it 'creates a domain with multiple dnskeys' do
@@ -2185,16 +2221,14 @@ describe 'EPP Domain', epp: true do
 
     ### RENEW ###
     it 'renews a domain' do
+      Setting.days_to_renew_domain_before_expire = 0
       old_balance = @registrar1.balance
       old_activities = @registrar1.cash_account.account_activities.count
 
-      domain.valid_to = Time.zone.now.to_date + 10.days
-      domain.save
-
-      exp_date = domain.valid_to.to_date
+      exp_date = domain.valid_to
       xml = @epp_xml.domain.renew(
         name: { value: domain.name },
-        curExpDate: { value: exp_date.to_s },
+        curExpDate: { value: exp_date.to_date.to_s },
         period: { value: '1', attrs: { unit: 'y' } }
       )
 
@@ -2204,8 +2238,15 @@ describe 'EPP Domain', epp: true do
 
       ex_date = response[:parsed].css('renData exDate').text
       name = response[:parsed].css('renData name').text
-      ex_date.should == "#{(exp_date + 1.year)}T00:00:00Z"
+      ex_date.should == "#{(exp_date + 1.year).to_s(:iso8601)}"
       name.should == domain.name
+
+      domain.reload
+      domain.valid_to.should be_within(1).of(exp_date + 1.year)
+      domain.outzone_at.should be_within(1).of(exp_date + 1.year + Setting.expire_warning_period.days)
+      domain.delete_at.should be_within(1).of(
+        exp_date + 1.year + Setting.expire_warning_period.days + Setting.redemption_grace_period.days
+      )
 
       @registrar1.balance.should == old_balance - 15.0
       @registrar1.cash_account.account_activities.count.should == old_activities + 1
@@ -2214,6 +2255,93 @@ describe 'EPP Domain', epp: true do
       a.sum.should == -BigDecimal.new('15.0')
       a.activity_type = AccountActivity::RENEW
       a.log_pricelist_id.should == @pricelist_renew_1_year.id
+      Setting.days_to_renew_domain_before_expire = 90
+    end
+
+    it 'renews a domain when outzone_at or delete_at is nil for some reason' do
+      Setting.days_to_renew_domain_before_expire = 0
+
+      domain.outzone_at = nil
+      domain.delete_at = nil
+      domain.save
+
+      exp_date = domain.valid_to
+      xml = @epp_xml.domain.renew(
+        name: { value: domain.name },
+        curExpDate: { value: exp_date.to_date.to_s },
+        period: { value: '1', attrs: { unit: 'y' } }
+      )
+
+      response = epp_plain_request(xml)
+      response[:results][0][:msg].should == 'Command completed successfully'
+      response[:results][0][:result_code].should == '1000'
+
+      Setting.days_to_renew_domain_before_expire = 90
+    end
+
+    it 'renews a domain with no period specified' do
+      Setting.days_to_renew_domain_before_expire = 0
+      old_balance = @registrar1.balance
+      old_activities = @registrar1.cash_account.account_activities.count
+
+      exp_date = domain.valid_to
+      xml = @epp_xml.domain.renew(
+        name: { value: domain.name },
+        curExpDate: { value: exp_date.to_date.to_s },
+        period: nil
+      )
+
+      response = epp_plain_request(xml)
+      response[:results][0][:msg].should == 'Command completed successfully'
+      response[:results][0][:result_code].should == '1000'
+
+      ex_date = response[:parsed].css('renData exDate').text
+      name = response[:parsed].css('renData name').text
+      ex_date.should == "#{(exp_date + 1.year).to_s(:iso8601)}"
+      name.should == domain.name
+
+      domain.reload
+      domain.valid_to.should be_within(1).of(exp_date + 1.year)
+      domain.outzone_at.should be_within(1).of(exp_date + 1.year + Setting.expire_warning_period.days)
+      domain.delete_at.should be_within(1).of(
+        exp_date + 1.year + Setting.expire_warning_period.days + Setting.redemption_grace_period.days
+      )
+
+      @registrar1.balance.should == old_balance - 15.0
+      @registrar1.cash_account.account_activities.count.should == old_activities + 1
+      a = @registrar1.cash_account.account_activities.last
+      a.description.should == "Renew #{Domain.last.name}"
+      a.sum.should == -BigDecimal.new('15.0')
+      a.activity_type = AccountActivity::RENEW
+      a.log_pricelist_id.should == @pricelist_renew_1_year.id
+      Setting.days_to_renew_domain_before_expire = 90
+    end
+
+    it 'does not renew domain with invalid period' do
+      Setting.days_to_renew_domain_before_expire = 0
+
+      exp_date = domain.valid_to
+      xml = @epp_xml.domain.renew(
+        name: { value: domain.name },
+        curExpDate: { value: exp_date.to_date.to_s },
+        period: { value: '1', attrs: { unit: '' } }
+      )
+
+      response = epp_plain_request(xml, validate_input: false)
+      response[:results][0][:msg].should == 'Attribute is invalid: unit'
+      response[:results][0][:result_code].should == '2306'
+
+      xml = @epp_xml.domain.renew(
+        name: { value: domain.name },
+        curExpDate: { value: exp_date.to_date.to_s },
+        period: { value: '1', attrs: { unit: 'bla' } }
+      )
+
+      response = epp_plain_request(xml, validate_input: false)
+      response[:results][0][:msg].should == 'Attribute is invalid: unit'
+      response[:results][0][:result_code].should == '2306'
+
+      Setting.days_to_renew_domain_before_expire = 90
     end
 
     it 'renews a domain with 2 year period' do

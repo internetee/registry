@@ -24,7 +24,8 @@ Deploy overview: (database schema should be loaded and seeds should be present)
     git clone git@github.com:internetee/registry.git
     cd registry
     rbenv local 2.2.2 # more info about rbenv at debian doc
-    gem install mina
+    gem install mina # or any other deployment tool
+    cp config/deploy-example.rb config/deploy.rb # and edit it
     mina pr setup # one time, only creates missing directories
     ssh registry
 
@@ -37,15 +38,17 @@ Deploy overview: (database schema should be loaded and seeds should be present)
     vi /etc/apache2/sites-enabled/epp.conf # add epp conf, restart apache
     exit
     # at your local machine
-    mina pr deploy # this is command you use in every application code update
+    mina pr deploy # for new update using mina tool as example
 
 
 
 ### Deploy script setup
 
-We recommend [Mina](https://github.com/mina-deploy/mina) instead of Capistrano for deployment.
+We recommend [Mina](https://github.com/mina-deploy/mina) instead of Capistrano or other tools for deployment.
 
-All deploy code locates at config/deploy.rb file.
+All deploy code locates at config/deploy.rb, please copy content from example file and edit it.
+
+    cp config/deploy-example.rb config/deploy.rb # and edit it
 
 First add shortcuts to your local machine ssh config file, 
 

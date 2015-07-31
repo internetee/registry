@@ -141,7 +141,7 @@ class Certificate < ActiveRecord::Base
     end
 
     def update_id_crl
-      STDOUT << "#{Time.zone.now.utc} - Updating ID CRL\n"
+      STDOUT << "#{Time.zone.now.utc} - Updating ID CRL\n" unless Rails.env.test?
 
       _out, _err, _st = Open3.capture3("
         mkdir -p #{ENV['crl_dir']}/crl-id-temp
@@ -169,11 +169,11 @@ class Certificate < ActiveRecord::Base
         rm -rf #{ENV['crl_dir']}/crl-id-temp
       ")
 
-      STDOUT << "#{Time.zone.now.utc} - ID CRL updated\n"
+      STDOUT << "#{Time.zone.now.utc} - ID CRL updated\n" unless Rails.env.test?
     end
 
     def update_registry_crl
-      STDOUT << "#{Time.zone.now.utc} - Updating registry CRL\n"
+      STDOUT << "#{Time.zone.now.utc} - Updating registry CRL\n" unless Rails.env.test?
 
       _out, _err, _st = Open3.capture3("
         mkdir -p #{ENV['crl_dir']}/crl-temp
@@ -192,13 +192,13 @@ class Certificate < ActiveRecord::Base
         rm -rf #{ENV['crl_dir']}/crl-temp
       ")
 
-      STDOUT << "#{Time.zone.now.utc} - Registry CRL updated\n"
+      STDOUT << "#{Time.zone.now.utc} - Registry CRL updated\n" unless Rails.env.test?
     end
 
     def reload_apache
-      STDOUT << "#{Time.zone.now.utc} - Reloading apache\n"
+      STDOUT << "#{Time.zone.now.utc} - Reloading apache\n" unless Rails.env.test?
       _out, _err, _st = Open3.capture3("sudo /etc/init.d/apache2 reload")
-      STDOUT << "#{Time.zone.now.utc} - Apache reloaded\n"
+      STDOUT << "#{Time.zone.now.utc} - Apache reloaded\n" unless Rails.env.test?
     end
 
     def parse_md_from_string(crt)

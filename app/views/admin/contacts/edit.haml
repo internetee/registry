@@ -1,0 +1,6 @@
+- content_for :actions do
+  = link_to(t(:add_new_status), '#', class: 'btn btn-primary js-add-contact-status')
+  = link_to(t(:back_to_contact), [:admin, @contact], class: 'btn btn-default')
+= render 'shared/title', name: "#{t(:edit)}: #{@contact.name}"
+
+= render 'form', contact: @contact

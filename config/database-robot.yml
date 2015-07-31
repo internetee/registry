@@ -21,3 +21,20 @@ api_log_test:
 registrant_write_test:
   <<: *default
   database: registry_test
+
+# only for testing assets
+production:
+  <<: *default
+  database: registry_test
+
+whois_test:
+  <<: *default
+  database: registry_whois_test
+
+api_log_test:
+  <<: *default
+  database: registry_api_log_test
+
+registrant_write_test:
+  <<: *default
+  database: registry_test

@@ -4,6 +4,13 @@ class Epp::Contact < Contact
   # disable STI, there is type column present
   self.inheritance_column = :sti_disabled
 
+  before_validation :manage_permissions
+  def manage_permissions
+    return unless update_prohibited? || delete_prohibited?
+    add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
+    false
+  end
+
   class << self
     # support legacy search
     def find_by_epp_code(code)
@@ -125,7 +132,9 @@ class Epp::Contact < Contact
         [:ident, :invalid],
         [:ident, :invalid_EE_identity_format],
         [:ident, :invalid_birthday_format],
-        [:ident, :invalid_country_code]
+        [:ident, :invalid_country_code],
+        [:code, :invalid],
+        [:code, :too_long_contact_code]
       ],
       '2302' => [ # Object exists
         [:code, :epp_id_taken]

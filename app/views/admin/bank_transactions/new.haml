@@ -1,5 +1,6 @@
 - content_for :actions do
-  = link_to(t(:back), admin_bank_statement_path(@bank_statement), class: 'btn btn-default')
+  - if @bank_statement.persisted?
+    = link_to(t(:back), admin_bank_statement_path(@bank_statement), class: 'btn btn-default')
 
 = render 'shared/title', name: t(:create_bank_transaction)
 

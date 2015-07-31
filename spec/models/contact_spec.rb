@@ -97,7 +97,13 @@ describe Contact do
     it 'should not accept long code' do
       @contact.code = 'verylongcode' * 100
       @contact.valid?
-      @contact.errors[:code].should == ['is too long (maximum is 100 characters)']
+      @contact.errors[:code].should == ['Contact code is too long, max 100 characters']
+    end
+
+    it 'should not allow double status' do
+      @contact.statuses = ['ok', 'ok']
+      @contact.valid?
+      @contact.errors[:statuses].should == ['not uniq']
     end
 
     it 'should have no related domain descriptions' do
@@ -154,17 +160,36 @@ describe Contact do
     end
 
     it 'should have ok status by default' do
-      @contact.statuses.size.should == 1
-      @contact.statuses.first.value.should == 'ok'
+      @contact.statuses.should == %w(ok)
+    end
+
+    it 'should not remove ok status after save' do
+      @contact.statuses.should == %w(ok)
+      @contact.save 
+      @contact.statuses.should == %w(ok)
+    end
+
+    it 'should remove ok status when other non linked status present' do
+      contact = Fabricate(:contact)
+      contact.statuses = [Contact::SERVER_UPDATE_PROHIBITED]
+      contact.statuses.should == [Contact::SERVER_UPDATE_PROHIBITED] # temp test
+      contact.save
+      contact.statuses.should == [Contact::SERVER_UPDATE_PROHIBITED]
     end
 
     it 'should have linked status when domain' do
-      @tech_domain_contact = Fabricate(:tech_domain_contact, contact_id: @contact.id)
-      @domain = Fabricate(:domain, tech_domain_contacts: [@tech_domain_contact])
-      contact = @domain.contacts.first
-      contact.save
+      contact = Fabricate(:contact)
+      tech_domain_contact = Fabricate(:tech_domain_contact, contact_id: contact.id)
+      contact.statuses.should == %w(ok)
+      domain = Fabricate(:domain, tech_domain_contacts: [tech_domain_contact])
 
-      contact.statuses.map(&:value).sort.should == %w(linked ok)
+      contact = domain.contacts.first
+      contact.save
+      contact.statuses.sort.should == %w(linked ok)
+
+      contact = domain.contacts.second
+      contact.save
+      contact.statuses.sort.should == %w(linked ok)
     end
 
     it 'should not have linked status when no domain' do
@@ -173,11 +198,11 @@ describe Contact do
       contact = @domain.contacts.first
       contact.save
 
-      contact.statuses.map(&:value).sort.should == %w(linked ok)
+      contact.statuses.sort.should == %w(linked ok)
 
       contact.domains.first.destroy
       contact.reload
-      contact.statuses.map(&:value).should == %w(ok)
+      contact.statuses.should == %w(ok)
     end
 
     it 'should have code' do
@@ -191,6 +216,15 @@ describe Contact do
       # contact = @domain.contacts.first
 
       # contact.statuses.map(&:value).should == %w(ok linked)
+    end
+
+    it 'should save status notes' do
+      contact = Fabricate(:contact)
+      contact.statuses = ['serverDeleteProhibited', 'serverUpdateProhibited']
+      contact.status_notes_array = [nil, 'update manually turned off']
+      contact.status_notes['serverDeleteProhibited'].should == nil
+      contact.status_notes['serverUpdateProhibited'].should == 'update manually turned off'
+      contact.status_notes['someotherstatus'].should == nil
     end
 
     context 'as birthday' do

@@ -136,13 +136,12 @@ module Depp
         end
         hash
       end
-    end
 
-    def initialize(attributes = {})
-      super
-      self.country_code = 'EE'       if country_code.blank?
-      self.ident_type = 'bic'        if ident_type.blank?
-      self.ident_country_code = 'EE' if ident_country_code.blank?
+      def type_string(type_code)
+        return '' if type_code.blank?
+        t = SELECTION_TYPES.select { |tp| tp.second == type_code }
+        t.try(:first).try(:first)
+      end
     end
 
     def save
