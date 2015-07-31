@@ -62,19 +62,20 @@ class Domain < ActiveRecord::Base
   before_create :generate_auth_info
   before_create :set_validity_dates
   before_create -> { self.reserved = in_reserved_list?; nil }
-  before_update :manage_statuses
-  def manage_statuses
-    return unless registrant_id_changed?
-    pending_update! if registrant_verification_asked?
-    true
-  end
 
   before_save :manage_automatic_statuses
-
   before_save :touch_always_version
   def touch_always_version
     self.updated_at = Time.zone.now
   end
+
+  before_update :manage_statuses
+  def manage_statuses
+    return unless registrant_id_changed? # rollback has not yet happened
+    pending_update! if registrant_verification_asked?
+    true
+  end
+
   after_save :update_whois_record
 
   after_create :update_reserved_domains
@@ -353,10 +354,6 @@ class Domain < ActiveRecord::Base
     save
   end
 
-  def pending_update?
-    statuses.include?(DomainStatus::PENDING_UPDATE)
-  end
-
   def pending_update!
     return true if pending_update?
     self.epp_pending_update = true # for epp
@@ -378,11 +375,17 @@ class Domain < ActiveRecord::Base
     self.pending_json = pending_json_cache
     self.registrant_verification_token = token
     self.registrant_verification_asked_at = asked_at
-    self.statuses = [DomainStatus::PENDING_UPDATE]
+    set_pending_update
     pending_json[:domain] = changes_cache
     pending_json[:new_registrant_id]    = new_registrant_id
     pending_json[:new_registrant_email] = new_registrant_email
     pending_json[:new_registrant_name]  = new_registrant_name
+
+    # This pending_update! method is triggered by before_update
+    # Note, all before_save callbacks are excecuted before before_update,
+    # thus automatic statuses has already excectued by this point
+    # and we need to trigger automatic statuses manually (second time).
+    manage_automatic_statuses
   end
 
   # rubocop: disable Metrics/CyclomaticComplexity
@@ -422,16 +425,12 @@ class Domain < ActiveRecord::Base
     self.registrant_verification_token = SecureRandom.hex(42)
   end
 
-  def pending_delete?
-    statuses.include?(DomainStatus::PENDING_DELETE)
-  end
-
   def pending_delete!
     return true if pending_delete?
     self.epp_pending_delete = true # for epp
 
     return true unless registrant_verification_asked?
-    self.statuses = [DomainStatus::PENDING_DELETE]
+    set_pending_delete
     save(validate: false) # should check if this did succeed
 
     DomainMailer.pending_deleted(self).deliver_now
@@ -568,6 +567,60 @@ class Domain < ActiveRecord::Base
   def set_expired!
     set_expired
     save(validate: false)
+  end
+
+  def pending_update?
+    statuses.include?(DomainStatus::PENDING_UPDATE)
+  end
+
+  def update_prohibited?
+    pending_update_prohibited? && pending_delete_prohibited?
+  end
+
+  # TODO: Review the list and disallow epp calls
+  def pending_update_prohibited?
+    (statuses & [
+      DomainStatus::CLIENT_UPDATE_PROHIBITED,
+      DomainStatus::SERVER_UPDATE_PROHIBITED,
+      DomainStatus::PENDING_CREATE,
+      DomainStatus::PENDING_UPDATE,
+      DomainStatus::PENDING_DELETE,
+      DomainStatus::PENDING_RENEW,
+      DomainStatus::PENDING_TRANSFER
+    ]).present?
+  end
+
+  def set_pending_update
+    if pending_update_prohibited?
+      logger.info "DOMAIN STATUS UPDATE ISSUE ##{id}: PENDING_UPDATE not allowed to set. [#{statuses}]"
+      return nil
+    end
+    statuses << DomainStatus::PENDING_UPDATE
+  end
+
+  def pending_delete?
+    statuses.include?(DomainStatus::PENDING_DELETE)
+  end
+
+  # TODO: Review the list and disallow epp calls
+  def pending_delete_prohibited?
+    (statuses & [
+      DomainStatus::CLIENT_DELETE_PROHIBITED,
+      DomainStatus::SERVER_DELETE_PROHIBITED,
+      DomainStatus::PENDING_CREATE,
+      DomainStatus::PENDING_UPDATE,
+      DomainStatus::PENDING_DELETE,
+      DomainStatus::PENDING_RENEW,
+      DomainStatus::PENDING_TRANSFER
+    ]).present?
+  end
+
+  def set_pending_delete
+    if pending_delete_prohibited?
+      logger.info "DOMAIN STATUS UPDATE ISSUE ##{id}: PENDING_DELETE not allowed to set. [#{statuses}]"
+      return nil
+    end
+    statuses << DomainStatus::PENDING_DELETE
   end
 
   def manage_automatic_statuses

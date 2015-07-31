@@ -17,9 +17,7 @@ Riik: <%= @domain.registrant_country %>
 <br><br>
 Juhime Teie tähelepanu asjaolule, et omanikuvahetuse protseduur viiaks lõpule vaid juhul, kui domeeni hetkel kehtiv registreerija <%= @old_registrant.name %> omanikuvahetuse tähtaegselt kinnitab.
 <br><br>
-Juhul kui <%= @old_registrant.name %> lükkab omanikuvahtuse taotluse tagasi või ei anna kinnitust enne <%= Setting.expire_pending_confirmation %> tundi, omanikuvahetuse protseduur tühistatakse.<br>
-<br><br>
-Taotlus on aktiivne <%= Setting.expire_pending_confirmation %> tundi ja lükatakse automaatselt tagasi kui te seda enne ise ei kinnita või tagasi lükka.
+Juhul kui <%= @old_registrant.name %> lükkab omanikuvahtuse taotluse tagasi või ei anna kinnitust enne <%= Setting.expire_pending_confirmation %> tundi, omanikuvahetuse protseduur tühistatakse.
 <br><br>
 Küsimuste korral palun võtke ühendust registripidajaga <%= @domain.registrar_name %>, kelle kontaktid leiate http://internet.ee/registripidajad/akrediteeritud-registripidajad
 <br><br>
@@ -41,7 +39,7 @@ Business Registry code: <%= @domain.registrant_ident %><br>
 <% end %>
 Street: <%= @domain.registrant_street %><br>
 City: <%= @domain.registrant_city %><br>
-Country: <%= @domain.registrant_country %><br>
+Country: <%= @domain.registrant_country %>
 <br><br>
 Please contact to your registrar <%= @domain.registrar_name %> if you have any questions.
 <br><br>

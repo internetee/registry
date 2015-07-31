@@ -68,7 +68,9 @@ class Admin::SettingsController < AdminController
       :key_data_allowed,
       :client_side_status_editing_enabled,
       :registrar_ip_whitelist_enabled,
-      :api_ip_whitelist_enabled
+      :api_ip_whitelist_enabled,
+      :request_confrimation_on_registrant_change_enabled,
+      :request_confirmation_on_domain_deletion_enabled
     ]
 
     params[:settings].each do |k, v|

@@ -37,6 +37,22 @@ describe Domain do
     it 'should not be registrant update confirm ready' do
       @domain.registrant_update_confirmable?('123').should == false
     end
+
+    it 'should not have pending update' do
+      @domain.pending_update?.should == false
+    end
+
+    it 'should allow pending update' do
+      @domain.pending_update_prohibited?.should == false
+    end
+
+    it 'should not have pending delete' do
+      @domain.pending_delete?.should == false
+    end
+
+    it 'should allow pending delete' do
+      @domain.pending_delete_prohibited?.should == false
+    end
   end
 
   context 'with valid attributes' do
@@ -326,6 +342,44 @@ describe Domain do
 
       domain = Fabricate(:domain, period: 1095, period_unit: 'd')
       domain.pricelist('renew').price.amount.should == 6.1
+    end
+
+    it 'should set pending update' do
+      @domain.statuses = DomainStatus::OK # restore
+      @domain.pending_update?.should == false
+
+      @domain.set_pending_update
+      @domain.pending_update?.should == true
+      @domain.statuses = DomainStatus::OK # restore
+    end
+
+    it 'should not set pending update' do
+      @domain.statuses = DomainStatus::OK # restore
+      @domain.statuses << DomainStatus::CLIENT_UPDATE_PROHIBITED
+
+      @domain.set_pending_update.should == nil # not updated
+      @domain.pending_update?.should == false
+      @domain.statuses = DomainStatus::OK # restore
+    end
+
+    it 'should set pending delete' do
+      @domain.statuses = DomainStatus::OK # restore
+      @domain.pending_delete?.should == false
+
+      @domain.set_pending_delete.should == ['pendingDelete']
+      @domain.pending_delete?.should == true
+      @domain.statuses = DomainStatus::OK # restore
+    end
+
+    it 'should not set pending delele' do
+      @domain.statuses = DomainStatus::OK # restore
+      @domain.pending_delete?.should == false
+      @domain.statuses << DomainStatus::CLIENT_DELETE_PROHIBITED
+
+      @domain.set_pending_delete.should == nil
+
+      @domain.pending_delete?.should == false
+      @domain.statuses = DomainStatus::OK # restore
     end
 
     context 'about registrant update confirm' do
