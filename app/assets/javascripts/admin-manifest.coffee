@@ -8,5 +8,6 @@
 #= require selectize
 #= require shared/jquery.validate.bootstrap
 #= require jquery-ui/datepicker
+#= require select2
 #= require shared/general
 #= require admin/application

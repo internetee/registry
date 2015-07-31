@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-   <schema targetNamespace="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd"
-        xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd"
+   <schema targetNamespace="https://epp.tld.ee/schema/domain-eis-1.0.xsd"
+        xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd"
         xmlns:host="urn:ietf:params:xml:ns:host-1.0"
         xmlns:epp="urn:ietf:params:xml:ns:epp-1.0"
         xmlns:eppcom="urn:ietf:params:xml:ns:eppcom-1.0"
@@ -11,11 +11,11 @@
    <!--
    Import common element types.
    -->
-   <import namespace="urn:ietf:params:xml:ns:eppcom-1.0" schemaLocation="doc/schemas/eppcom-1.0.xsd"/>
-   <import namespace="urn:ietf:params:xml:ns:epp-1.0" schemaLocation="doc/schemas/epp-1.0.xsd"/>
-   <import namespace="urn:ietf:params:xml:ns:host-1.0" schemaLocation="doc/schemas/host-1.0.xsd"/>
-   <import namespace="urn:ietf:params:xml:ns:secDNS-1.1" schemaLocation="doc/schemas/secDNS-1.1.xsd"/>
-   <import namespace="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd" schemaLocation="doc/schemas/eis-1.0.xsd"/>
+   <import namespace="urn:ietf:params:xml:ns:eppcom-1.0" schemaLocation="http://www.iana.org/assignments/xml-registry/schema/eppcom-1.0.xsd"/>
+   <import namespace="urn:ietf:params:xml:ns:epp-1.0" schemaLocation="http://www.iana.org/assignments/xml-registry/schema/epp-1.0.xsd"/>
+   <import namespace="urn:ietf:params:xml:ns:host-1.0" schemaLocation="http://www.iana.org/assignments/xml-registry/schema/host-1.0.xsd"/>
+   <import namespace="urn:ietf:params:xml:ns:secDNS-1.1" schemaLocation="http://www.iana.org/assignments/xml-registry/schema/secDNS-1.1.xsd"/>
+   <import namespace="https://epp.tld.ee/schema/eis-1.0.xsd" schemaLocation="doc/schemas/eis-1.0.xsd"/>
 
    <annotation>
     <documentation>

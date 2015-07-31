@@ -64,6 +64,12 @@ class Registrar::SessionsController < Devise::SessionsController
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
 
+  def switch_user
+    @api_user = ApiUser.find(params[:id])
+    sign_in @api_user if @api_user.identity_code == current_user.identity_code
+    redirect_to :back
+  end
+
   def id
     @user = ApiUser.find_by_idc_data(request.env['SSL_CLIENT_S_DN'])
 

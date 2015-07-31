@@ -37,6 +37,22 @@ describe Domain do
     it 'should not be registrant update confirm ready' do
       @domain.registrant_update_confirmable?('123').should == false
     end
+
+    it 'should not have pending update' do
+      @domain.pending_update?.should == false
+    end
+
+    it 'should allow pending update' do
+      @domain.pending_update_prohibited?.should == false
+    end
+
+    it 'should not have pending delete' do
+      @domain.pending_delete?.should == false
+    end
+
+    it 'should allow pending delete' do
+      @domain.pending_delete_prohibited?.should == false
+    end
   end
 
   context 'with valid attributes' do
@@ -328,6 +344,44 @@ describe Domain do
       domain.pricelist('renew').price.amount.should == 6.1
     end
 
+    it 'should set pending update' do
+      @domain.statuses = DomainStatus::OK # restore
+      @domain.pending_update?.should == false
+
+      @domain.set_pending_update
+      @domain.pending_update?.should == true
+      @domain.statuses = DomainStatus::OK # restore
+    end
+
+    it 'should not set pending update' do
+      @domain.statuses = DomainStatus::OK # restore
+      @domain.statuses << DomainStatus::CLIENT_UPDATE_PROHIBITED
+
+      @domain.set_pending_update.should == nil # not updated
+      @domain.pending_update?.should == false
+      @domain.statuses = DomainStatus::OK # restore
+    end
+
+    it 'should set pending delete' do
+      @domain.statuses = DomainStatus::OK # restore
+      @domain.pending_delete?.should == false
+
+      @domain.set_pending_delete.should == ['pendingDelete']
+      @domain.pending_delete?.should == true
+      @domain.statuses = DomainStatus::OK # restore
+    end
+
+    it 'should not set pending delele' do
+      @domain.statuses = DomainStatus::OK # restore
+      @domain.pending_delete?.should == false
+      @domain.statuses << DomainStatus::CLIENT_DELETE_PROHIBITED
+
+      @domain.set_pending_delete.should == nil
+
+      @domain.pending_delete?.should == false
+      @domain.statuses = DomainStatus::OK # restore
+    end
+
     context 'about registrant update confirm' do
       before :all do
         @domain.registrant_verification_token = 123
@@ -387,10 +441,10 @@ describe Domain do
           @api_user = Fabricate(:api_user)
           @user.id.should == 1
           @api_user.id.should == 2
-          ::PaperTrail.whodunnit = '2-api-testuser'
+          ::PaperTrail.whodunnit = '2-ApiUser: testuser'
 
           @domain = Fabricate(:domain)
-          @domain.creator_str.should == '2-api-testuser'
+          @domain.creator_str.should == '2-ApiUser: testuser'
 
           @domain.creator.should == @api_user
           @domain.creator.should_not == @user
@@ -399,14 +453,14 @@ describe Domain do
 
       it 'should return api_creator when created by api user' do
         with_versioning do
-          @user = Fabricate(:admin_user)
-          @api_user = Fabricate(:api_user)
-          @user.id.should == 3
-          @api_user.id.should == 4
-          ::PaperTrail.whodunnit = '3-testuser'
+          @user = Fabricate(:admin_user, id: 1000)
+          @api_user = Fabricate(:api_user, id: 2000)
+          @user.id.should == 1000
+          @api_user.id.should == 2000
+          ::PaperTrail.whodunnit = '1000-AdminUser: testuser'
 
           @domain = Fabricate(:domain)
-          @domain.creator_str.should == '3-testuser'
+          @domain.creator_str.should == '1000-AdminUser: testuser'
 
           @domain.creator.should == @user
           @domain.creator.should_not == @api_user

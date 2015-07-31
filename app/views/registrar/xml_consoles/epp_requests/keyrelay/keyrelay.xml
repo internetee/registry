@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
+<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
   <command>
     <ext:keyrelay>
       <ext:name>example6.ee</ext:name>
@@ -16,7 +16,7 @@
         <ext:relative>P1D</ext:relative>
       </ext:expiry>
     </ext:keyrelay>
-    <eis:extdata xmlns:eis="https://raw.githubusercontent.com/internetee/registry/alpha/doc/schemas/eis-1.0.xsd">
+    <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
       <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
     </eis:extdata>
     <ext:clTRID>1422542244</ext:clTRID>

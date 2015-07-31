@@ -3,7 +3,7 @@ require 'open3'
 class ApiUser < User
   include EppErrors
 
-  def epp_code_map 
+  def epp_code_map
     {
       '2306' => [ # Parameter policy error
         [:password, :blank]
@@ -16,6 +16,7 @@ class ApiUser < User
   has_many :certificates
 
   validates :username, :password, :registrar, :roles, presence: true
+  validates :password, length: { minimum: 6 }
   validates :username, uniqueness: true
 
   # TODO: probably cache, because it's requested on every EPP

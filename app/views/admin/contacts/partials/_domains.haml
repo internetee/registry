@@ -8,7 +8,7 @@
           %th{class: 'col-xs-4'}= t(:registrar)
           %th{class: 'col-xs-4'}= t(:valid_to)
       %tbody
-        - @contact.domains_owned.each do |x|
+        - @contact.registrant_domains.each do |x|
           %tr
             %td= link_to(x.name, [:admin, x])
             %td= link_to(x.registrar, [:admin, x.registrar])

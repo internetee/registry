@@ -196,13 +196,22 @@ class Epp::DomainsController < EppController
   end
 
   def validate_transfer
+    # period element is disabled for now
+    if params[:parsed_frame].css('period').any?
+      epp_errors << {
+        code: '2307',
+        msg: I18n.t(:unimplemented_object_service),
+        value: { obj: 'period' }
+      }
+    end
+
     requires 'transfer > transfer'
 
     @prefix = 'transfer > transfer >'
     requires 'name'
 
     @prefix = nil
-    requires_attribute 'transfer', 'op', values: %(approve, query, reject, request)
+    requires_attribute 'transfer', 'op', values: %(approve, query, reject, request, cancel)
   end
 
   def find_domain

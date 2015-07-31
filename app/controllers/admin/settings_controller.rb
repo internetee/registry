@@ -53,6 +53,7 @@ class Admin::SettingsController < AdminController
       :transfer_wait_time,
       :invoice_number_min,
       :invoice_number_max,
+      :days_to_keep_invoices_active,
       :days_to_keep_overdue_invoices_active,
       :days_to_renew_domain_before_expire,
       :expire_warning_period,
@@ -67,7 +68,9 @@ class Admin::SettingsController < AdminController
       :key_data_allowed,
       :client_side_status_editing_enabled,
       :registrar_ip_whitelist_enabled,
-      :api_ip_whitelist_enabled
+      :api_ip_whitelist_enabled,
+      :request_confrimation_on_registrant_change_enabled,
+      :request_confirmation_on_domain_deletion_enabled
     ]
 
     params[:settings].each do |k, v|

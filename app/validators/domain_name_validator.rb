@@ -3,7 +3,7 @@ class DomainNameValidator < ActiveModel::EachValidator
     if !self.class.validate_format(value)
       record.errors[attribute] << (options[:message] || record.errors.generate_message(attribute, :invalid))
     elsif !self.class.validate_blocked(value)
-      record.errors.add(attribute, (options[:message] || record.errors.generate_message(attribute, :blocked)))
+      record.errors.add(:base, :domain_name_blocked)
     end
   end
 

@@ -90,7 +90,8 @@ module Depp
 
       server.close_connection
 
-      rescue OpenSSL::SSL::SSLError
+      rescue OpenSSL::SSL::SSLError => e
+        Rails.logger.error "INVALID CERT: #{e}"
         errors.add(:base, :invalid_cert)
     end
   end

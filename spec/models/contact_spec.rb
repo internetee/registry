@@ -137,8 +137,8 @@ describe Contact do
       end
     end
 
-    it 'should not have relation' do
-      @contact.relations_with_domain?.should == false
+    it 'should not have relation with domains' do
+      @contact.domains_present?.should == false
     end
 
     it 'bic should be valid' do
@@ -234,7 +234,13 @@ describe Contact do
 
       it 'should have related domain descriptions hash' do
         contact = @domain.registrant
+        contact.reload # somehow it registrant_domains are empty?
         contact.related_domain_descriptions.should == { "#{@domain.name}" => [:registrant] }
+      end
+
+      it 'should have related domain descriptions hash when find directly' do
+        contact = @domain.registrant
+        Contact.find(contact.id).related_domain_descriptions.should == { "#{@domain.name}" => [:registrant] }
       end
 
       it 'should have related domain descriptions hash' do

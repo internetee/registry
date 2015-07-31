@@ -49,8 +49,15 @@
                 %li{class: active_class}= link_to t(:xml_console), registrar_xml_console_path
 
             %ul.nav.navbar-nav.navbar-right
+              %li.dropdown
+                %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
+                  = "#{current_user} (#{current_user.roles.first}) - #{current_user.registrar}"
+                  %span.caret
+                %ul.dropdown-menu{role: "menu"}
+                  - ApiUser.where(identity_code: current_user.identity_code).includes(:registrar).each do |x|
+                    %li= link_to "#{x} (#{x.roles.first}) - #{x.registrar}", "/registrar/switch_user/#{x.id}"
               - if user_signed_in?
-                %li= link_to t(:log_out, user: current_user), '/registrar/logout'
+                %li= link_to t(:log_out_), '/registrar/logout'
 
     .container
       = render 'shared/flash'

@@ -31,7 +31,7 @@
           %dd= @epp_log.created_at
 
 .row
-  .col-md-6
+  .col-md-12
     .panel.panel-default
       .panel-heading
         %h3.panel-title= t(:request)
@@ -43,7 +43,8 @@
               = formatted_req
             - else
               = @epp_log.request
-  .col-md-6
+.row
+  .col-md-12
     .panel.panel-default
       .panel-heading
         %h3.panel-title= t(:response)
