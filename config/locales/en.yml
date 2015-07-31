@@ -893,3 +893,4 @@ en:
   results_per_page: 'Results per page'
   nameserver_hostname: 'Nameserver hostname'
   result_count: '%{count} results'
+  failed_to_generate_invoice_invoice_number_limit_reached: 'Failed to generate invoice - invoice number limit reached'

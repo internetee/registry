@@ -29,7 +29,7 @@ class Invoice < ActiveRecord::Base
 
     return if number <= Setting.invoice_number_max.to_i
 
-    errors.add(:base, I18n.t('failed_to_generate_invoice'))
+    errors.add(:base, I18n.t('failed_to_generate_invoice_invoice_number_limit_reached'))
     logger.error('INVOICE NUMBER LIMIT REACHED, COULD NOT GENERATE INVOICE')
     false
   end
