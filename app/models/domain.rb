@@ -62,19 +62,20 @@ class Domain < ActiveRecord::Base
   before_create :generate_auth_info
   before_create :set_validity_dates
   before_create -> { self.reserved = in_reserved_list?; nil }
-  before_update :manage_statuses
-  def manage_statuses
-    return unless registrant_id_changed?
-    pending_update! if registrant_verification_asked?
-    true
-  end
 
   before_save :manage_automatic_statuses
-
   before_save :touch_always_version
   def touch_always_version
     self.updated_at = Time.zone.now
   end
+
+  before_update :manage_statuses
+  def manage_statuses
+    return unless registrant_id_changed? # rollback has not yet happened
+    pending_update! if registrant_verification_asked?
+    true
+  end
+
   after_save :update_whois_record
 
   after_create :update_reserved_domains
@@ -379,6 +380,12 @@ class Domain < ActiveRecord::Base
     pending_json[:new_registrant_id]    = new_registrant_id
     pending_json[:new_registrant_email] = new_registrant_email
     pending_json[:new_registrant_name]  = new_registrant_name
+
+    # This pending_update! method is triggered by before_update
+    # Note, all before_save callbacks are excecuted before before_update,
+    # thus automatic statuses has already excectued by this point
+    # and we need to trigger automatic statuses manually (second time).
+    manage_automatic_statuses
   end
 
   # rubocop: disable Metrics/CyclomaticComplexity
