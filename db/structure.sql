@@ -691,6 +691,15 @@ ALTER SEQUENCE countries_id_seq OWNED BY countries.id;
 
 
 --
+-- Name: data_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE data_migrations (
+    version character varying NOT NULL
+);
+
+
+--
 -- Name: delegation_signers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2377,7 +2386,7 @@ CREATE TABLE pricelists (
     id integer NOT NULL,
     "desc" character varying,
     category character varying,
-    price_cents numeric(10,2) DEFAULT 0 NOT NULL,
+    price_cents numeric(10,2) DEFAULT 0.0 NOT NULL,
     price_currency character varying DEFAULT 'EUR'::character varying NOT NULL,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
@@ -2641,7 +2650,7 @@ CREATE TABLE users (
     crt text,
     type character varying,
     registrant_ident character varying,
-    encrypted_password character varying DEFAULT ''::character varying,
+    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
     remember_created_at timestamp without time zone,
     failed_attempts integer DEFAULT 0 NOT NULL,
     locked_at timestamp without time zone
@@ -2784,7 +2793,10 @@ CREATE TABLE zonefile_settings (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     creator_str character varying,
-    updator_str character varying
+    updator_str character varying,
+    ns_records text,
+    a_records text,
+    a4_records text
 );
 
 
@@ -4513,6 +4525,13 @@ CREATE INDEX index_whois_records_on_registrar_id ON whois_records USING btree (r
 
 
 --
+-- Name: unique_data_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX unique_data_migrations ON data_migrations USING btree (version);
+
+
+--
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4727,8 +4746,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150227092508');
 
 INSERT INTO schema_migrations (version) VALUES ('20150227113121');
 
-INSERT INTO schema_migrations (version) VALUES ('20150302130224');
-
 INSERT INTO schema_migrations (version) VALUES ('20150302161712');
 
 INSERT INTO schema_migrations (version) VALUES ('20150303130729');
@@ -4787,8 +4804,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150417082723');
 
 INSERT INTO schema_migrations (version) VALUES ('20150421134820');
 
-INSERT INTO schema_migrations (version) VALUES ('20150422090645');
-
 INSERT INTO schema_migrations (version) VALUES ('20150422092514');
 
 INSERT INTO schema_migrations (version) VALUES ('20150422132631');
@@ -4833,8 +4848,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150519115050');
 
 INSERT INTO schema_migrations (version) VALUES ('20150519140853');
 
-INSERT INTO schema_migrations (version) VALUES ('20150519142542');
-
 INSERT INTO schema_migrations (version) VALUES ('20150519144118');
 
 INSERT INTO schema_migrations (version) VALUES ('20150520163237');
@@ -4847,7 +4860,9 @@ INSERT INTO schema_migrations (version) VALUES ('20150522164020');
 
 INSERT INTO schema_migrations (version) VALUES ('20150525075550');
 
-INSERT INTO schema_migrations (version) VALUES ('20150603141054');
+INSERT INTO schema_migrations (version) VALUES ('20150601083516');
+
+INSERT INTO schema_migrations (version) VALUES ('20150601083800');
 
 INSERT INTO schema_migrations (version) VALUES ('20150603141549');
 
@@ -4855,7 +4870,11 @@ INSERT INTO schema_migrations (version) VALUES ('20150603211318');
 
 INSERT INTO schema_migrations (version) VALUES ('20150603212659');
 
+INSERT INTO schema_migrations (version) VALUES ('20150609093515');
+
 INSERT INTO schema_migrations (version) VALUES ('20150609103333');
+
+INSERT INTO schema_migrations (version) VALUES ('20150610111019');
 
 INSERT INTO schema_migrations (version) VALUES ('20150610112238');
 
@@ -4865,7 +4884,11 @@ INSERT INTO schema_migrations (version) VALUES ('20150611124920');
 
 INSERT INTO schema_migrations (version) VALUES ('20150612123111');
 
+INSERT INTO schema_migrations (version) VALUES ('20150612125720');
+
 INSERT INTO schema_migrations (version) VALUES ('20150701074344');
+
+INSERT INTO schema_migrations (version) VALUES ('20150703084206');
 
 INSERT INTO schema_migrations (version) VALUES ('20150703084632');
 
@@ -4882,4 +4905,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150709092549');
 INSERT INTO schema_migrations (version) VALUES ('20150713113436');
 
 INSERT INTO schema_migrations (version) VALUES ('20150722071128');
+
+INSERT INTO schema_migrations (version) VALUES ('20150803080914');
 

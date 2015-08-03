@@ -5,6 +5,22 @@ class Admin::ZonefileSettingsController < AdminController
     @zonefile_settings = ZonefileSetting.all
   end
 
+  def new
+    @zonefile_setting = ZonefileSetting.new
+  end
+
+  def create
+    @zonefile_setting = ZonefileSetting.new(zonefile_setting_params)
+
+    if @zonefile_setting.save
+      flash[:notice] = I18n.t('record_created')
+      redirect_to admin_zonefile_settings_path
+    else
+      flash.now[:alert] = I18n.t('failed_to_create_record')
+      render 'new'
+    end
+  end
+
   def edit
     @zonefile_setting = ZonefileSetting.find(params[:id])
   end
@@ -26,6 +42,8 @@ class Admin::ZonefileSettingsController < AdminController
   end
 
   def zonefile_setting_params
-    params.require(:zonefile_setting).permit(:ttl, :refresh, :retry, :expire, :minimum_ttl, :email)
+    params.require(:zonefile_setting).permit(
+      :origin, :ttl, :refresh, :retry, :expire, :minimum_ttl, :email, :ns_records, :a_records, :a4_records
+    )
   end
 end

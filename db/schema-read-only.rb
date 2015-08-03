@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150722071128) do
+ActiveRecord::Schema.define(version: 20150803080914) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -215,6 +215,12 @@ ActiveRecord::Schema.define(version: 20150722071128) do
     t.string   "creator_str"
     t.string   "updator_str"
   end
+
+  create_table "data_migrations", id: false, force: :cascade do |t|
+    t.string "version", null: false
+  end
+
+  add_index "data_migrations", ["version"], name: "unique_data_migrations", unique: true, using: :btree
 
   create_table "delegation_signers", force: :cascade do |t|
     t.integer "domain_id"
@@ -1026,7 +1032,7 @@ ActiveRecord::Schema.define(version: 20150722071128) do
     t.text     "crt"
     t.string   "type"
     t.string   "registrant_ident"
-    t.string   "encrypted_password",  default: ""
+    t.string   "encrypted_password",  default: "", null: false
     t.datetime "remember_created_at"
     t.integer  "failed_attempts",     default: 0,  null: false
     t.datetime "locked_at"
@@ -1076,6 +1082,9 @@ ActiveRecord::Schema.define(version: 20150722071128) do
     t.datetime "updated_at"
     t.string   "creator_str"
     t.string   "updator_str"
+    t.text     "ns_records"
+    t.text     "a_records"
+    t.text     "a4_records"
   end
 
 end
