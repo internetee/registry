@@ -898,3 +898,4 @@ en:
   a4_records: 'AAAA records'
   new_zone: 'New zone'
   edit_zone: 'Edit zone'
+  there_are_count_domains_in_this_zone: 'There are %{count} domains in this zone'

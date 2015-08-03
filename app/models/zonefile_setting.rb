@@ -4,6 +4,14 @@ class ZonefileSetting < ActiveRecord::Base
   validates :ttl, :refresh, :retry, :expire, :minimum_ttl, numericality: { only_integer: true }
   validates :origin, uniqueness: true
 
+  before_destroy :check_for_dependencies
+  def check_for_dependencies
+    dc = Domain.where("name ILIKE ?", "%.#{origin}").count
+    return if dc == 0
+    errors.add(:base, I18n.t('there_are_count_domains_in_this_zone', count: dc))
+    false
+  end
+
   def self.generate_zonefiles
     pluck(:origin).each do |origin|
       generate_zonefile(origin)

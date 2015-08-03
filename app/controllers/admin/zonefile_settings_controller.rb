@@ -35,6 +35,16 @@ class Admin::ZonefileSettingsController < AdminController
     end
   end
 
+  def destroy
+    if @zonefile_setting.destroy
+      flash[:notice] = I18n.t('record_deleted')
+      redirect_to admin_zonefile_settings_path
+    else
+      flash.now[:alert] = I18n.t('failed_to_delete_record')
+      render 'edit'
+    end
+  end
+
   private
 
   def set_zonefile_setting
