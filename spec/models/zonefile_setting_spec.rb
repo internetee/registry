@@ -2,27 +2,8 @@ require 'rails_helper'
 
 describe ZonefileSetting do
   it 'generates the zonefile' do
-    ZonefileSetting.where({
-      origin: 'ee',
-      ttl: 43200,
-      refresh: 3600,
-      retry: 900,
-      expire: 1209600,
-      minimum_ttl: 3600,
-      email: 'hostmaster.eestiinternet.ee',
-      master_nameserver: 'ns.tld.ee'
-    }).first_or_create!
-
-    ZonefileSetting.where({
-      origin: 'pri.ee',
-      ttl: 43200,
-      refresh: 3600,
-      retry: 900,
-      expire: 1209600,
-      minimum_ttl: 3600,
-      email: 'hostmaster.eestiinternet.ee',
-      master_nameserver: 'ns.tld.ee'
-    }).first_or_create!
+    Fabricate(:zonefile_setting)
+    Fabricate(:zonefile_setting, origin: 'pri.ee')
 
     d = Fabricate(:domain_with_dnskeys, name: 'testpri.ee')
     d.nameservers << Nameserver.new({
@@ -56,16 +37,7 @@ describe ZonefileSetting do
   end
 
   it 'does not allow deleting zone when it has existing domains' do
-    zs = ZonefileSetting.where({
-      origin: 'ee',
-      ttl: 43200,
-      refresh: 3600,
-      retry: 900,
-      expire: 1209600,
-      minimum_ttl: 3600,
-      email: 'hostmaster.eestiinternet.ee',
-      master_nameserver: 'ns.tld.ee'
-    }).first_or_create!
+    zs = Fabricate(:zonefile_setting)
 
     d = Fabricate(:domain)
 
