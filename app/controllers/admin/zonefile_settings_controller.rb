@@ -53,7 +53,8 @@ class Admin::ZonefileSettingsController < AdminController
 
   def zonefile_setting_params
     params.require(:zonefile_setting).permit(
-      :origin, :ttl, :refresh, :retry, :expire, :minimum_ttl, :email, :ns_records, :a_records, :a4_records
+      :origin, :ttl, :refresh, :retry, :expire, :minimum_ttl, :email,
+      :master_nameserver, :ns_records, :a_records, :a4_records
     )
   end
 end

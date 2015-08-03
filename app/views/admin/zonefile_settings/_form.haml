@@ -52,6 +52,12 @@
 
         .form-group
           .col-md-4.control-label
+            = f.label :master_nameserver
+          .col-md-8
+            = f.text_field :master_nameserver, class: 'form-control'
+
+        .form-group
+          .col-md-4.control-label
             = f.label :ns_records
           .col-md-8
             = f.text_area :ns_records, class: 'form-control', rows: 8
