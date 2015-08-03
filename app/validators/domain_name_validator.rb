@@ -33,7 +33,8 @@ class DomainNameValidator < ActiveModel::EachValidator
 
     def validate_blocked(value)
       return true unless value
-      BlockedDomain.where("names @> ?::varchar[]", "{#{value}}").count == 0
+      return false if BlockedDomain.where("names @> ?::varchar[]", "{#{value}}").count > 0
+      ZonefileSetting.where(origin: value).count == 0
     end
   end
 end

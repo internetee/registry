@@ -33,7 +33,9 @@ describe ZonefileSetting do
 
   it 'does not create duplicate zones' do
     Fabricate(:zonefile_setting)
-    expect { Fabricate(:zonefile_setting) }.to raise_error(ActiveRecord::RecordInvalid)
+    zs = Fabricate.build(:zonefile_setting)
+    zs.save.should == false
+    zs.errors.full_messages.should match_array(["Origin has already been taken"])
   end
 
   it 'does not allow deleting zone when it has existing domains' do

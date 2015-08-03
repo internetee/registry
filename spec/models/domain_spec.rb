@@ -469,35 +469,49 @@ describe Domain do
     end
   end
 
-  # it 'validates domain name', skip: true do
-  # d = Fabricate(:domain)
-  # expect(d.name).to_not be_nil
+  it 'validates domain name' do
+    d = Fabricate(:domain)
+    expect(d.name).to_not be_nil
 
-  # invalid = ['a.ee', "#{'a' * 64}.ee", 'ab.eu', 'test.ab.ee', '-test.ee', '-test-.ee', 'test-.ee', 'te--st.ee',
-  # 'õ.pri.ee', 'test.com', 'www.ab.ee', 'test.eu', '  .ee', 'a b.ee', 'Ž .ee', 'test.edu.ee']
+    invalid = ['a.ee', "#{'a' * 64}.ee", 'ab.eu', 'test.ab.ee', '-test.ee', '-test-.ee', 'test-.ee', 'te--st.ee',
+      'õ.pri.ee', 'test.com', 'www.ab.ee', 'test.eu', '  .ee', 'a b.ee', 'Ž .ee', 'test.edu.ee']
 
-  # invalid.each do |x|
-  # expect(Fabricate.build(:domain, name: x).valid?).to be false
-  # end
+    invalid.each do |x|
+      expect(Fabricate.build(:domain, name: x).valid?).to be false
+    end
 
-  # valid = ['ab.ee', "#{'a' * 63}.ee", 'te-s-t.ee', 'jäääär.ee', 'päike.pri.ee',
-  # 'õigus.com.ee', 'õäöü.fie.ee', 'test.med.ee', 'žä.ee', '  ŽŠ.ee  ']
+    valid = ['ab.ee', "#{'a' * 63}.ee", 'te-s-t.ee', 'jäääär.ee', 'päike.pri.ee',
+      'õigus.com.ee', 'õäöü.fie.ee', 'test.med.ee', 'žä.ee', '  ŽŠ.ee  ']
 
-  # valid.each do |x|
-  # expect(Fabricate.build(:domain, name: x).valid?).to be true
-  # end
+    valid.each do |x|
+      expect(Fabricate.build(:domain, name: x).valid?).to be true
+    end
 
-  # invalid_punycode = ['xn--geaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-4we.pri.ee']
+    invalid_punycode = ['xn--geaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-4we.pri.ee']
 
-  # invalid_punycode.each do |x|
-  # expect(Fabricate.build(:domain, name: x).valid?).to be false
-  # end
+    invalid_punycode.each do |x|
+      expect(Fabricate.build(:domain, name: x).valid?).to be false
+    end
 
-  # valid_punycode = ['xn--ge-uia.pri.ee', 'xn--geaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-9te.pri.ee']
+    valid_punycode = ['xn--ge-uia.pri.ee', 'xn--geaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-9te.pri.ee']
 
-  # valid_punycode.each do |x|
-  # expect(Fabricate.build(:domain, name: x).valid?).to be true
-  # end
+    valid_punycode.each do |x|
+      expect(Fabricate.build(:domain, name: x).valid?).to be true
+    end
+  end
+
+  it 'should not create zone origin domain' do
+    zs = Fabricate(:zonefile_setting)
+    d = Fabricate.build(:domain, name: 'ee')
+    d.save.should == false
+    d.errors.full_messages.should match_array([
+      "Data management policy violation: Domain name is blocked [name]"
+    ])
+
+    zs.destroy
+
+    d.save.should == true
+  end
 
   # d = Domain.new
   # expect(d.valid?).to be false
