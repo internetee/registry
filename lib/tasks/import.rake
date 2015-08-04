@@ -478,7 +478,7 @@ namespace :import do
     start = Time.zone.now.to_f
     puts '-----> Importing zones...'
 
-    ns_records, a_records, a4_records = parse_zone_ns_data(1)
+    ns_records, a_records, a4_records = parse_zone_ns_data('ee', 1)
 
     ZonefileSetting.create!({
       origin: 'ee',
@@ -495,7 +495,7 @@ namespace :import do
     })
 
     # edu.ee
-    ns_records, a_records, a4_records = parse_zone_ns_data(6)
+    ns_records, a_records, a4_records = parse_zone_ns_data('edu.ee', 6)
 
     ZonefileSetting.create!({
       origin: 'edu.ee',
@@ -512,7 +512,7 @@ namespace :import do
     })
 
     # aip.ee
-    ns_records, a_records, a4_records = parse_zone_ns_data(9)
+    ns_records, a_records, a4_records = parse_zone_ns_data('aip.ee', 9)
 
     ZonefileSetting.create!({
       origin: 'aip.ee',
@@ -529,7 +529,7 @@ namespace :import do
     })
 
     # org.ee
-    ns_records, a_records, a4_records = parse_zone_ns_data(10)
+    ns_records, a_records, a4_records = parse_zone_ns_data('org.ee', 10)
 
     ZonefileSetting.create!({
       origin: 'org.ee',
@@ -546,7 +546,7 @@ namespace :import do
     })
 
     # pri.ee
-    ns_records, a_records, a4_records = parse_zone_ns_data(2)
+    ns_records, a_records, a4_records = parse_zone_ns_data('pri.ee', 2)
 
     ZonefileSetting.create!({
       origin: 'pri.ee',
@@ -563,7 +563,7 @@ namespace :import do
     })
 
     # med.ee
-    ns_records, a_records, a4_records = parse_zone_ns_data(3)
+    ns_records, a_records, a4_records = parse_zone_ns_data('med.ee', 3)
 
     ZonefileSetting.create!({
       origin: 'med.ee',
@@ -580,7 +580,7 @@ namespace :import do
     })
 
     # fie.ee
-    ns_records, a_records, a4_records = parse_zone_ns_data(4)
+    ns_records, a_records, a4_records = parse_zone_ns_data('fie.ee', 4)
 
     ZonefileSetting.create!({
       origin: 'fie.ee',
@@ -597,7 +597,7 @@ namespace :import do
     })
 
     # com.ee
-    ns_records, a_records, a4_records = parse_zone_ns_data(5)
+    ns_records, a_records, a4_records = parse_zone_ns_data('com.ee', 5)
 
     ZonefileSetting.create!({
       origin: 'com.ee',
@@ -614,7 +614,7 @@ namespace :import do
     })
 
     # gov.ee
-    ns_records, a_records, a4_records = parse_zone_ns_data(7)
+    ns_records, a_records, a4_records = parse_zone_ns_data('gov.ee', 7)
 
     ZonefileSetting.create!({
       origin: 'gov.ee',
@@ -631,7 +631,7 @@ namespace :import do
     })
 
     # riik.ee
-    ns_records, a_records, a4_records = parse_zone_ns_data(8)
+    ns_records, a_records, a4_records = parse_zone_ns_data('riik.ee', 8)
 
     ZonefileSetting.create!({
       origin: 'riik.ee',
@@ -651,7 +651,7 @@ namespace :import do
   end
 end
 
-def parse_zone_ns_data(zone)
+def parse_zone_ns_data(domain, zone)
   ns_records = ''
   a_records = ''
   a4_records = ''
@@ -659,7 +659,7 @@ def parse_zone_ns_data(zone)
     ipv4 = x.addrs.select { |addr| addr.ipv4? }.first
     ipv6 = x.addrs.select { |addr| addr.ipv6? }.first
 
-    ns_records += "ee. IN NS #{x.fqdn}.\n"
+    ns_records += "#{domain}. IN NS #{x.fqdn}.\n"
     a_records += "#{x.fqdn}. IN A #{ipv4}\n" if ipv4.present?
     a4_records += "#{x.fqdn}. IN AAAA #{ipv6}\n" if ipv6.present?
   end
