@@ -54,7 +54,7 @@ namespace :import do
     Rake::Task['import:registrars'].invoke
     Rake::Task['import:contacts'].invoke
     Rake::Task['import:domains'].invoke
-    Rake::Task['import:eis_domains'].invoke
+    Rake::Task['import:zones'].invoke
   end
 
   desc 'Import registrars'
@@ -473,246 +473,197 @@ namespace :import do
     puts "-----> Imported #{count} new domains in #{(Time.zone.now.to_f - start).round(2)} seconds"
   end
 
-  desc 'Import EIS domains'
-  task eis_domains: :environment do
+  desc 'Import zones'
+  task zones: :environment do
     start = Time.zone.now.to_f
-    puts '-----> Importing EIS domains...'
+    puts '-----> Importing zones...'
 
-    eis = Registrar.where(
-      name: 'EIS',
-      reg_no: '90010019',
-      phone: '+3727271000',
-      country_code: 'EE',
-      vat_no: 'EE101286464',
-      email: 'info@internet.ee',
-      state: 'Harjumaa',
-      city: 'Tallinn',
-      street: 'Paldiski mnt 80',
-      zip: '10617',
-      url: 'www.internet.ee',
-      code: 'EIS'
-    ).first_or_create!
+    ns_records, a_records, a4_records = parse_zone_ns_data(1)
 
-    unless eis.cash_account
-      eis.accounts.create(account_type: Account::CASH, currency: 'EUR')
-      eis.save
-    end
-
-    c = Registrant.where(
-      name: 'Eesti Interneti Sihtasutus',
-      phone: '+372.7271000',
-      email: 'info@internet.ee',
-      ident: '90010019',
-      ident_type: 'passport',
-      city: 'Tallinn',
-      country_code: 'ee',
-      street: 'Paldiski mnt 80',
-      zip: '10617',
-      registrar: eis
-    ).first_or_create!
-
-    # ee
-    ns_list = []
-    Legacy::ZoneNs.where(zone: 1).each do |x|
-      ipv4 = x.addrs.select { |addr| addr.ipv4? }.first
-      ipv6 = x.addrs.select { |addr| addr.ipv6? }.first
-      ns_list << Nameserver.new(hostname: x.fqdn, ipv4: ipv4, ipv6: ipv6)
-    end
-
-    Domain.create!(
-      name: 'ee',
-      valid_to: Date.new(9999, 1, 1),
-      period: 1,
-      period_unit: 'y',
-      registrant: c,
-      nameservers: ns_list,
-      admin_contacts: [c],
-      tech_contacts: [c],
-      registrar: eis
-    )
+    ZonefileSetting.create!({
+      origin: 'ee',
+      ttl: 43200,
+      refresh: 3600,
+      retry: 900,
+      expire: 1209600,
+      minimum_ttl: 3600,
+      email: 'hostmaster.eestiinternet.ee',
+      master_nameserver: 'ns.tld.ee',
+      ns_records: ns_records,
+      a_records: a_records,
+      a4_records: a4_records
+    })
 
     # edu.ee
-    ns_list = []
-    Legacy::ZoneNs.where(zone: 6).each do |x|
-      ipv4 = x.addrs.select { |addr| addr.ipv4? }.first
-      ipv6 = x.addrs.select { |addr| addr.ipv6? }.first
-      ns_list << Nameserver.new(hostname: x.fqdn, ipv4: ipv4, ipv6: ipv6)
-    end
+    ns_records, a_records, a4_records = parse_zone_ns_data(6)
 
-    Domain.create!(
-      name: 'edu.ee',
-      valid_to: Date.new(9999, 1, 1),
-      period: 1,
-      period_unit: 'y',
-      registrant: c,
-      nameservers: ns_list,
-      admin_contacts: [c],
-      tech_contacts: [c],
-      registrar: eis
-    )
+    ZonefileSetting.create!({
+      origin: 'edu.ee',
+      ttl: 43200,
+      refresh: 3600,
+      retry: 900,
+      expire: 1209600,
+      minimum_ttl: 3600,
+      email: 'hostmaster.eestiinternet.ee',
+      master_nameserver: 'ns.tld.ee',
+      ns_records: ns_records,
+      a_records: a_records,
+      a4_records: a4_records
+    })
 
     # aip.ee
-    ns_list = []
-    Legacy::ZoneNs.where(zone: 9).each do |x|
-      ipv4 = x.addrs.select { |addr| addr.ipv4? }.first
-      ipv6 = x.addrs.select { |addr| addr.ipv6? }.first
-      ns_list << Nameserver.new(hostname: x.fqdn, ipv4: ipv4, ipv6: ipv6)
-    end
+    ns_records, a_records, a4_records = parse_zone_ns_data(9)
 
-    Domain.create!(
-      name: 'aip.ee',
-      valid_to: Date.new(9999, 1, 1),
-      period: 1,
-      period_unit: 'y',
-      registrant: c,
-      nameservers: ns_list,
-      admin_contacts: [c],
-      tech_contacts: [c],
-      registrar: eis
-    )
+    ZonefileSetting.create!({
+      origin: 'aip.ee',
+      ttl: 43200,
+      refresh: 3600,
+      retry: 900,
+      expire: 1209600,
+      minimum_ttl: 3600,
+      email: 'hostmaster.eestiinternet.ee',
+      master_nameserver: 'ns.tld.ee',
+      ns_records: ns_records,
+      a_records: a_records,
+      a4_records: a4_records
+    })
 
     # org.ee
-    ns_list = []
-    Legacy::ZoneNs.where(zone: 10).each do |x|
-      ipv4 = x.addrs.select { |addr| addr.ipv4? }.first
-      ipv6 = x.addrs.select { |addr| addr.ipv6? }.first
-      ns_list << Nameserver.new(hostname: x.fqdn, ipv4: ipv4, ipv6: ipv6)
-    end
+    ns_records, a_records, a4_records = parse_zone_ns_data(10)
 
-    Domain.create!(
-      name: 'org.ee',
-      valid_to: Date.new(9999, 1, 1),
-      period: 1,
-      period_unit: 'y',
-      registrant: c,
-      nameservers: ns_list,
-      admin_contacts: [c],
-      tech_contacts: [c],
-      registrar: eis
-    )
+    ZonefileSetting.create!({
+      origin: 'org.ee',
+      ttl: 43200,
+      refresh: 3600,
+      retry: 900,
+      expire: 1209600,
+      minimum_ttl: 3600,
+      email: 'hostmaster.eestiinternet.ee',
+      master_nameserver: 'ns.tld.ee',
+      ns_records: ns_records,
+      a_records: a_records,
+      a4_records: a4_records
+    })
 
     # pri.ee
-    ns_list = []
-    Legacy::ZoneNs.where(zone: 2).each do |x|
-      ipv4 = x.addrs.select { |addr| addr.ipv4? }.first
-      ipv6 = x.addrs.select { |addr| addr.ipv6? }.first
-      ns_list << Nameserver.new(hostname: x.fqdn, ipv4: ipv4, ipv6: ipv6)
-    end
+    ns_records, a_records, a4_records = parse_zone_ns_data(2)
 
-    Domain.create!(
-      name: 'pri.ee',
-      valid_to: Date.new(9999, 1, 1),
-      period: 1,
-      period_unit: 'y',
-      registrant: c,
-      nameservers: ns_list,
-      admin_contacts: [c],
-      tech_contacts: [c],
-      registrar: eis
-    )
+    ZonefileSetting.create!({
+      origin: 'pri.ee',
+      ttl: 43200,
+      refresh: 3600,
+      retry: 900,
+      expire: 1209600,
+      minimum_ttl: 3600,
+      email: 'hostmaster.eestiinternet.ee',
+      master_nameserver: 'ns.tld.ee',
+      ns_records: ns_records,
+      a_records: a_records,
+      a4_records: a4_records
+    })
 
     # med.ee
-    ns_list = []
-    Legacy::ZoneNs.where(zone: 3).each do |x|
-      ipv4 = x.addrs.select { |addr| addr.ipv4? }.first
-      ipv6 = x.addrs.select { |addr| addr.ipv6? }.first
-      ns_list << Nameserver.new(hostname: x.fqdn, ipv4: ipv4, ipv6: ipv6)
-    end
+    ns_records, a_records, a4_records = parse_zone_ns_data(3)
 
-    Domain.create!(
-      name: 'med.ee',
-      valid_to: Date.new(9999, 1, 1),
-      period: 1,
-      period_unit: 'y',
-      registrant: c,
-      nameservers: ns_list,
-      admin_contacts: [c],
-      tech_contacts: [c],
-      registrar: eis
-    )
+    ZonefileSetting.create!({
+      origin: 'med.ee',
+      ttl: 43200,
+      refresh: 3600,
+      retry: 900,
+      expire: 1209600,
+      minimum_ttl: 3600,
+      email: 'hostmaster.eestiinternet.ee',
+      master_nameserver: 'ns.tld.ee',
+      ns_records: ns_records,
+      a_records: a_records,
+      a4_records: a4_records
+    })
 
     # fie.ee
-    ns_list = []
-    Legacy::ZoneNs.where(zone: 4).each do |x|
-      ipv4 = x.addrs.select { |addr| addr.ipv4? }.first
-      ipv6 = x.addrs.select { |addr| addr.ipv6? }.first
-      ns_list << Nameserver.new(hostname: x.fqdn, ipv4: ipv4, ipv6: ipv6)
-    end
+    ns_records, a_records, a4_records = parse_zone_ns_data(4)
 
-    Domain.create!(
-      name: 'fie.ee',
-      valid_to: Date.new(9999, 1, 1),
-      period: 1,
-      period_unit: 'y',
-      registrant: c,
-      nameservers: ns_list,
-      admin_contacts: [c],
-      tech_contacts: [c],
-      registrar: eis
-    )
+    ZonefileSetting.create!({
+      origin: 'fie.ee',
+      ttl: 43200,
+      refresh: 3600,
+      retry: 900,
+      expire: 1209600,
+      minimum_ttl: 3600,
+      email: 'hostmaster.eestiinternet.ee',
+      master_nameserver: 'ns.tld.ee',
+      ns_records: ns_records,
+      a_records: a_records,
+      a4_records: a4_records
+    })
 
     # com.ee
-    ns_list = []
-    Legacy::ZoneNs.where(zone: 5).each do |x|
-      ipv4 = x.addrs.select { |addr| addr.ipv4? }.first
-      ipv6 = x.addrs.select { |addr| addr.ipv6? }.first
-      ns_list << Nameserver.new(hostname: x.fqdn, ipv4: ipv4, ipv6: ipv6)
-    end
+    ns_records, a_records, a4_records = parse_zone_ns_data(5)
 
-    Domain.create!(
-      name: 'com.ee',
-      valid_to: Date.new(9999, 1, 1),
-      period: 1,
-      period_unit: 'y',
-      registrant: c,
-      nameservers: ns_list,
-      admin_contacts: [c],
-      tech_contacts: [c],
-      registrar: eis
-    )
+    ZonefileSetting.create!({
+      origin: 'com.ee',
+      ttl: 43200,
+      refresh: 3600,
+      retry: 900,
+      expire: 1209600,
+      minimum_ttl: 3600,
+      email: 'hostmaster.eestiinternet.ee',
+      master_nameserver: 'ns.tld.ee',
+      ns_records: ns_records,
+      a_records: a_records,
+      a4_records: a4_records
+    })
 
     # gov.ee
-    ns_list = []
-    Legacy::ZoneNs.where(zone: 7).each do |x|
-      ipv4 = x.addrs.select { |addr| addr.ipv4? }.first
-      ipv6 = x.addrs.select { |addr| addr.ipv6? }.first
-      ns_list << Nameserver.new(hostname: x.fqdn, ipv4: ipv4, ipv6: ipv6)
-    end
+    ns_records, a_records, a4_records = parse_zone_ns_data(7)
 
-    Domain.create!(
-      name: 'gov.ee',
-      valid_to: Date.new(9999, 1, 1),
-      period: 1,
-      period_unit: 'y',
-      registrant: c,
-      nameservers: ns_list,
-      admin_contacts: [c],
-      tech_contacts: [c],
-      registrar: eis
-    )
+    ZonefileSetting.create!({
+      origin: 'gov.ee',
+      ttl: 43200,
+      refresh: 3600,
+      retry: 900,
+      expire: 1209600,
+      minimum_ttl: 3600,
+      email: 'hostmaster.eestiinternet.ee',
+      master_nameserver: 'ns.tld.ee',
+      ns_records: ns_records,
+      a_records: a_records,
+      a4_records: a4_records
+    })
 
     # riik.ee
-    ns_list = []
-    Legacy::ZoneNs.where(zone: 8).each do |x|
-      ipv4 = x.addrs.select { |addr| addr.ipv4? }.first
-      ipv6 = x.addrs.select { |addr| addr.ipv6? }.first
-      ns_list << Nameserver.new(hostname: x.fqdn, ipv4: ipv4, ipv6: ipv6)
-    end
+    ns_records, a_records, a4_records = parse_zone_ns_data(8)
 
-    Domain.create!(
-      name: 'riik.ee',
-      valid_to: Date.new(9999, 1, 1),
-      period: 1,
-      period_unit: 'y',
-      registrant: c,
-      nameservers: ns_list,
-      admin_contacts: [c],
-      tech_contacts: [c],
-      registrar: eis
-    )
+    ZonefileSetting.create!({
+      origin: 'riik.ee',
+      ttl: 43200,
+      refresh: 3600,
+      retry: 900,
+      expire: 1209600,
+      minimum_ttl: 3600,
+      email: 'hostmaster.eestiinternet.ee',
+      master_nameserver: 'ns.tld.ee',
+      ns_records: ns_records,
+      a_records: a_records,
+      a4_records: a4_records
+    })
 
-    puts "-----> Imported EIS domains in #{(Time.zone.now.to_f - start).round(2)} seconds"
+    puts "-----> Imported zones in #{(Time.zone.now.to_f - start).round(2)} seconds"
   end
+end
+
+def parse_zone_ns_data(zone)
+  ns_records = ''
+  a_records = ''
+  a4_records = ''
+  Legacy::ZoneNs.where(zone: zone).each do |x|
+    ipv4 = x.addrs.select { |addr| addr.ipv4? }.first
+    ipv6 = x.addrs.select { |addr| addr.ipv6? }.first
+
+    ns_records += "ee. IN NS #{x.fqdn}.\n"
+    a_records += "#{x.fqdn}. IN A #{ipv4}\n" if ipv4.present?
+    a4_records += "#{x.fqdn}. IN AAAA #{ipv6}\n" if ipv6.present?
+  end
+  [ns_records.strip, a_records.strip, a4_records.strip]
 end
 # rubocop: enable Performance/Detect
 # rubocop: enable Style/SymbolProc
