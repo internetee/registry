@@ -40,19 +40,23 @@ namespace :zonefile do
 
         ret = concat(tmp_var, chr(10), chr(10));
 
+        -- origin ns records
+        SELECT ns_records FROM zonefile_settings zf WHERE i_origin = zf.origin INTO tmp_var;
+        ret := concat(ret, '; Zone NS Records', chr(10), tmp_var, chr(10));
+
         -- ns records
         SELECT array_to_string(
           array(
             SELECT concat(d.name_puny, '. IN NS ', ns.hostname, '.')
             FROM domains d
             JOIN nameservers ns ON ns.domain_id = d.id
-            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter OR d.name = i_origin
+            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
             ORDER BY d.name
           ),
           chr(10)
         ) INTO tmp_var;
 
-        ret := concat(ret, '; Zone NS Records', chr(10), tmp_var, chr(10), chr(10));
+        ret := concat(ret, tmp_var, chr(10), chr(10));
 
         -- a glue records for origin nameservers
         SELECT array_to_string(
