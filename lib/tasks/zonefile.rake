@@ -51,7 +51,7 @@ namespace :zonefile do
             FROM domains d
             JOIN nameservers ns ON ns.domain_id = d.id
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
-            AND NOT ('{serverHold}' && d.statuses)
+            AND NOT ('{serverHold,clientHold}' && d.statuses)
             ORDER BY d.name
           ),
           chr(10)
@@ -73,7 +73,7 @@ namespace :zonefile do
             AND ns.hostname LIKE '%.' || d.name
             AND d.name <> i_origin
             AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> ''
-            AND NOT ('{serverHold}' && d.statuses)
+            AND NOT ('{serverHold,clientHold}' && d.statuses)
           ), chr(10)
         ) INTO tmp_var;
 
@@ -93,7 +93,7 @@ namespace :zonefile do
             AND ns.hostname LIKE '%.' || d.name
             AND d.name <> i_origin
             AND ns.ipv6 IS NOT NULL AND ns.ipv6 <> ''
-            AND NOT ('{serverHold}' && d.statuses)
+            AND NOT ('{serverHold,clientHold}' && d.statuses)
           ), chr(10)
         ) INTO tmp_var;
 
@@ -109,7 +109,7 @@ namespace :zonefile do
             FROM domains d
             JOIN dnskeys dk ON dk.domain_id = d.id
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter AND dk.flags = 257
-            AND NOT ('{serverHold}' && d.statuses)
+            AND NOT ('{serverHold,clientHold}' && d.statuses)
             ),
           chr(10)
         ) INTO tmp_var;

@@ -39,9 +39,9 @@ describe ZonefileSetting do
     @zonefile.scan(/^#{d.name}/).count.should == 0
   end
 
-  it 'should not place serverHold domains into zonefile' do
+  it 'should not place serverHold nor clientHold domains into zonefile' do
     Fabricate(:zonefile_setting)
-    d = Fabricate(:domain_with_dnskeys, name: 'testzone.ee', statuses: ['serverHold', 'serverDeleteProhibited'])
+    d = Fabricate(:domain_with_dnskeys, name: 'testzone.ee', statuses: ['serverHold', 'serverDeleteProhibited', 'clientHold'])
     d.nameservers << Nameserver.new({
       hostname: "ns.#{d.name}",
       ipv4: '123.123.123.123',
@@ -58,7 +58,20 @@ describe ZonefileSetting do
     @zonefile.scan('123.123.123.123').count.should == 0
     @zonefile.scan('FE80:0000:0000:0000:0202:B3FF:FE1E:8329').count.should == 0
 
-    d.statuses = ['ok']
+    d.statuses = ['clientHold', 'serverDeleteProhibited']
+    d.save
+
+    @zonefile = ActiveRecord::Base.connection.execute(
+      "select generate_zonefile('ee')"
+    )[0]['generate_zonefile']
+
+    @zonefile.should_not be_blank
+    @zonefile.scan(/^#{d.name}/).count.should == 0
+    @zonefile.scan(/ns.#{d.name}/).count.should == 0
+    @zonefile.scan('123.123.123.123').count.should == 0
+    @zonefile.scan('FE80:0000:0000:0000:0202:B3FF:FE1E:8329').count.should == 0
+
+    d.statuses = ['serverDeleteProhibited']
     d.save
 
     @zonefile = ActiveRecord::Base.connection.execute(
