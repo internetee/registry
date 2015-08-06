@@ -133,6 +133,13 @@ describe 'EPP Contact', epp: true do
         cr_date.text.in_time_zone.utc.should be_within(5).of(Time.zone.now)
       end
 
+      it 'should return email issue' do
+        response = create_request(email: { value: 'not@valid' })
+
+        response[:msg].should == 'Email is invalid [email]'
+        response[:result_code].should == '2005'
+      end
+
       it 'should add registrar prefix for code when missing' do
         response = create_request({ id: { value: 'abc12345' } })
         response[:msg].should == 'Command completed successfully'
@@ -395,6 +402,18 @@ describe 'EPP Contact', epp: true do
         response[:results][0][:result_code].should == '2005'
         response[:results][1][:msg].should == 'Email is invalid [email]'
         response[:results][1][:result_code].should == '2005'
+      end
+
+      it 'should return email issue' do
+        response = update_request({
+          id: { value: 'FIRST0:SH8013' },
+          chg: {
+            email: { value: 'legacy@wrong' }
+          }
+        })
+
+        response[:msg].should == 'Email is invalid [email]'
+        response[:result_code].should == '2005'
       end
 
       it 'should not update code with custom string' do
