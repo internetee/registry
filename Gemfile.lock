@@ -521,6 +521,8 @@ GEM
       parser (~> 2.2.2)
       procto (~> 0.0.2)
     uuidtools (2.1.5)
+    validates_email_format_of (1.6.3)
+      i18n
     virtus (1.0.5)
       axiom-types (~> 0.1)
       coercible (~> 1.0)
@@ -622,4 +624,5 @@ DEPENDENCIES
   uglifier (~> 2.7.1)
   unicorn
   uuidtools (~> 2.1.4)
+  validates_email_format_of (~> 1.6.3)
   whenever (~> 0.9.4)
