@@ -13,8 +13,10 @@ Contact Mapping protocol short version:
     -----------------------    -------  -----------------
     <create>                   1     
       <contact:create>         1        Attribute: xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd"
-        <contact:id>           0-1      Contact id, optional, string, no spaces, max 100 characters,
-                                        generated automatically if missing
+        <contact:id>           0-1      Contact id, optional, 
+                                          string: ASCII letters, numbers, ':', '-' characters, no spaces,
+                                          max 100 characters,
+                                          generated automatically if missing.
         <contact:postalInfo>   1        Postal information container
           <contact:name>       1        Full name of the contact
           <contact:org>        0        Org is not supported and must be blank or missing
