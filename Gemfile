@@ -66,8 +66,8 @@ gem 'money-rails', '~> 1.4.1'
 
 # deploy
 gem 'whenever', '~> 0.9.4', require: false
-gem 'data_migrate',
-  github: 'gitlabeu/data_migrate',
+gem 'data_migrate', 
+  github: 'internetee/data-migrate', 
   ref: '35d22b09ff37a4e9d61ab326ad5d8eb0edf1fc81'
 
 # monitors
