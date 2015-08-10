@@ -236,7 +236,10 @@ describe Domain do
         DomainStatus::PENDING_TRANSFER,
         DomainStatus::PENDING_RENEW,
         DomainStatus::PENDING_CREATE,
-        DomainStatus::CLIENT_HOLD
+        DomainStatus::CLIENT_HOLD,
+        DomainStatus::EXPIRED,
+        DomainStatus::SERVER_HOLD,
+        DomainStatus::DELETE_CANDIDATE,
       ]
 
       @domain.save
@@ -244,18 +247,32 @@ describe Domain do
       @domain.set_force_delete
 
       @domain.statuses.should match_array([
+        "clientHold",
+        "deleteCandidate",
+        "expired",
         "forceDelete",
         "pendingDelete",
+        "serverHold",
         "serverManualInzone",
         "serverRenewProhibited",
         "serverTransferProhibited",
-        "serverUpdateProhibited",
-        "clientHold"
+        "serverUpdateProhibited"
       ])
 
       @domain.unset_force_delete
 
-      @domain.statuses.should == ['clientHold']
+      @domain.statuses.should match_array([
+        "clientDeleteProhibited",
+        "clientHold",
+        "deleteCandidate",
+        "expired",
+        "pendingCreate",
+        "pendingRenew",
+        "pendingTransfer",
+        "pendingUpdate",
+        "serverDeleteProhibited",
+        "serverHold"
+      ])
     end
 
     it 'should set expired status and update outzone_at and delete_at' do
