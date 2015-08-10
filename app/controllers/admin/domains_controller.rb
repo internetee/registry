@@ -83,7 +83,7 @@ class Admin::DomainsController < AdminController
 
   def domain_params
     if params[:domain]
-      params.require(:domain).permit({ statuses: [] })
+      params.require(:domain).permit({ statuses: [], status_notes_array: [] })
     else
       { statuses: [] }
     end

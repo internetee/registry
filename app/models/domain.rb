@@ -681,5 +681,13 @@ class Domain < ActiveRecord::Base
   def update_whois_record
     whois_record.blank? ? create_whois_record : whois_record.save
   end
+
+  def status_notes_array=(notes)
+    self.status_notes = {}
+    notes ||= []
+    statuses.each_with_index do |status, i|
+      status_notes[status] = notes[i]
+    end
+  end
 end
 # rubocop: enable Metrics/ClassLength
