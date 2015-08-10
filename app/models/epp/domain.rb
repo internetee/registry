@@ -579,6 +579,13 @@ class Epp::Domain < Domain
   # rubocop: disable Metrics/MethodLength
   # rubocop: disable Metrics/AbcSize
   def query_transfer(frame, current_user)
+    unless transferrable?
+      throw :epp_error, {
+        code: '2304',
+        msg: I18n.t(:object_status_prohibits_operation)
+      }
+    end
+
     unless can_be_transferred_to?(current_user.registrar)
       throw :epp_error, {
         code: '2002',
@@ -739,6 +746,17 @@ class Epp::Domain < Domain
 
   def can_be_transferred_to?(new_registrar)
     new_registrar != registrar
+  end
+
+  def transferrable?
+    (statuses & [
+      DomainStatus::PENDING_CREATE,
+      DomainStatus::PENDING_UPDATE,
+      DomainStatus::PENDING_DELETE,
+      DomainStatus::PENDING_RENEW,
+      DomainStatus::PENDING_TRANSFER,
+      DomainStatus::FORCE_DELETE
+    ]).empty?
   end
 
   ## SHARED
