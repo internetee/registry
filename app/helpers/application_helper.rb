@@ -50,4 +50,9 @@ module ApplicationHelper
     amount ||= 0
     ("%01.2f" % amount.round(2)).sub(/\./, ',')
   end
+
+  def plain_username(username)
+    username ||= ''
+    username.split(':').last.to_s.strip
+  end
 end

@@ -1,16 +1,37 @@
-- if version.present? && domain.present?
-  - children = HashWithIndifferentAccess.new(version.children)
-  - nameservers    = children[:nameservers] || []
-  - tech_contacts  = children[:tech_contacts] || []
-  - admin_contacts = children[:admin_contacts] || []
-  - registrant  = children[:registrant] || []
+- version ||= false
+- domain ||= false
+- pending_user ||= false
+
+- if domain.present?
+  - if version # normal history
+    - children = HashWithIndifferentAccess.new(version.children)
+    - nameservers    = children[:nameservers] || []
+    - tech_contacts  = children[:tech_contacts] || []
+    - admin_contacts = children[:admin_contacts] || []
+    - registrant  = children[:registrant] || []
+    - event       = version.event
+    - creator     = plain_username(version.terminator)
+  - elsif pending_user # pending history
+    - nameservers    = domain.nameservers
+    - tech_contacts  = domain.tech_contacts
+    - admin_contacts = domain.admin_contacts
+    - registrant  = [domain.registrant]
+    - event       = 'PENDING'
+    - creator     = pending_user.try(:username)
+  - else # if legacy data not presentable
+    - nameservers    = []
+    - tech_contacts  = []
+    - admin_contacts = []
+    - registrant  = []
+    - event       = 'Log data is not viewable'
+    - creator     = ''
 
   %td
     %p.nowrap
       = l(domain.updated_at, format: :short)
-      = version.event
+      = event
     %p.text-right
-      = version.terminator
+      = creator
 
   %td
     %p
