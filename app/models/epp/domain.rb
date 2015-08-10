@@ -4,8 +4,7 @@ class Epp::Domain < Domain
 
   before_validation :manage_permissions
   def manage_permissions
-    return unless update_prohibited?
-    return unless delete_prohibited?
+    return unless update_prohibited? || delete_prohibited?
     add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
     false
   end
@@ -461,7 +460,7 @@ class Epp::Domain < Domain
   def epp_destroy(frame, user_id, verify = true)
     return false unless valid?
 
-    if verify && 
+    if verify &&
        Setting.request_confirmation_on_domain_deletion_enabled &&
        frame.css('delete').attr('verified').to_s.downcase != 'yes'
 

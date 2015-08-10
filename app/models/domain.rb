@@ -574,7 +574,7 @@ class Domain < ActiveRecord::Base
   end
 
   def pending_update?
-    statuses.include?(DomainStatus::PENDING_UPDATE) && !statuses.include?(DomainStatus::FORCE_UPDATE)
+    statuses.include?(DomainStatus::PENDING_UPDATE) && !statuses.include?(DomainStatus::FORCE_DELETE)
   end
 
   # public api
