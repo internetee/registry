@@ -33,7 +33,7 @@
       .col-md-3.control-label
         = f.label :ident, t(:ident) + '*'
       .col-md-7
-        - if f.object.ident.present?
+        - if @contact.persisted? && f.object.ident.present?
           .disabled-value
             = f.object.ident
         - else
