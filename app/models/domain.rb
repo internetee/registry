@@ -1,6 +1,7 @@
 # rubocop: disable Metrics/ClassLength
 class Domain < ActiveRecord::Base
   include Versions # version/domain_version.rb
+  include Statuses
   has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
 
   # TODO: whois requests ip whitelist for full info for own domains and partial info for other domains
@@ -107,7 +108,7 @@ class Domain < ActiveRecord::Base
 
   validate :check_permissions
   def check_permissions
-    return unless update_prohibited? || delete_prohibited?
+    return unless force_delete?
     errors.add(:base, I18n.t(:object_status_prohibits_operation))
     false
   end
