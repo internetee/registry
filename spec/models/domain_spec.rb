@@ -418,6 +418,12 @@ describe Domain do
       @domain.statuses = DomainStatus::OK # restore
     end
 
+    it 'should add poll message to registrar' do
+      domain = Fabricate(:domain)
+      domain.poll_message!(:poll_pending_update_confirmed_by_registrant)
+      domain.registrar.messages.first.body.should == 'Registrant confirmed domain update'
+    end
+
     context 'about registrant update confirm' do
       before :all do
         @domain.registrant_verification_token = 123

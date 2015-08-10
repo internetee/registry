@@ -5,10 +5,12 @@ class DomainDeleteConfirmJob < Que::Job
       domain = Epp::Domain.find(domain_id)
       case action
       when RegistrantVerification::CONFIRMED
+        domain.poll_message!(:poll_pending_delete_confirmed_by_registrant)
         domain.apply_pending_delete!
         domain.clean_pendings!
       when RegistrantVerification::REJECTED
         DomainMailer.pending_delete_rejected_notification(domain).deliver_now
+        domain.poll_message!(:poll_pending_delete_rejected_by_registrant)
         domain.clean_pendings!
       end
       destroy # it's best to destroy the job in the same transaction

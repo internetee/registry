@@ -348,6 +348,14 @@ class Domain < ActiveRecord::Base
     true
   end
 
+  def poll_message!(message_key)
+    registrar.messages.create!(
+      body: I18n.t(message_key),
+      attached_obj_id: id,
+      attached_obj_type: self.class.to_s
+    )
+  end
+
   def preclean_pendings
     self.registrant_verification_token = nil
     self.registrant_verification_asked_at = nil
