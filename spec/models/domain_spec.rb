@@ -419,9 +419,9 @@ describe Domain do
     end
 
     it 'should add poll message to registrar' do
-      domain = Fabricate(:domain)
+      domain = Fabricate(:domain, name: 'testpollmessage123.ee')
       domain.poll_message!(:poll_pending_update_confirmed_by_registrant)
-      domain.registrar.messages.first.body.should == 'Registrant confirmed domain update'
+      domain.registrar.messages.first.body.should == 'Registrant confirmed domain update: testpollmessage123.ee'
     end
 
     context 'about registrant update confirm' do

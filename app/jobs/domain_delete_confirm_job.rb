@@ -2,7 +2,7 @@ class DomainDeleteConfirmJob < Que::Job
   def run(domain_id, action)
     # it's recommended to keep transaction against job table as short as possible.
     ActiveRecord::Base.transaction do
-      domain = Epp::Domain.find(domain_id)
+      domain = Epp::Domain.find(domain_id).include(:registrar)
       case action
       when RegistrantVerification::CONFIRMED
         domain.poll_message!(:poll_pending_delete_confirmed_by_registrant)
