@@ -2,7 +2,7 @@ class DomainUpdateConfirmJob < Que::Job
   def run(domain_id, action)
     # it's recommended to keep transaction against job table as short as possible.
     ActiveRecord::Base.transaction do
-      domain = Epp::Domain.find(domain_id).include(:registrar)
+      domain = Epp::Domain.find(domain_id)
       case action
       when RegistrantVerification::CONFIRMED
         domain.poll_message!(:poll_pending_update_confirmed_by_registrant)
