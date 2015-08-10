@@ -17,6 +17,7 @@ class Admin::PricelistsController < AdminController
   end
 
   def create
+    comma_support_for(:pricelist, :price)
     @pricelist = Pricelist.new(pricelist_params)
 
     if @pricelist.save
@@ -27,6 +28,7 @@ class Admin::PricelistsController < AdminController
   end
 
   def update
+    comma_support_for(:pricelist, :price)
     if @pricelist.update_attributes(pricelist_params)
       redirect_to admin_pricelists_url
     else
@@ -49,4 +51,5 @@ class Admin::PricelistsController < AdminController
     params.require(:pricelist).permit(:operation_category, :category, :price_category,
                                       :duration, :price, :valid_from, :valid_to)
   end
+
 end

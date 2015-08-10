@@ -63,7 +63,7 @@
             %tr
               %td= link_to(l(x.paid_at, format: :date_long), [:admin, x])
               %td= x.buyer_name
-              %td= x.sum
+              %td= currency(x.sum)
               %td= x.currency
               - c = x.binded? ? 'text-success' : 'text-danger'
               %td{class: c}= x.binded? ? t(:binded) : t(:not_binded)

@@ -36,7 +36,7 @@
       %dd= @bank_transaction.description
 
       %dt= t(:sum)
-      %dd= @bank_transaction.sum
+      %dd= currency(@bank_transaction.sum)
 
       %dt= t(:currency)
       %dd= @bank_transaction.currency

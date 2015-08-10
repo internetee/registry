@@ -45,4 +45,9 @@ module ApplicationHelper
     # can be api user or some other user
     link_to(model.updator, ['admin', model.updator])
   end
+
+  def currency(amount)
+    amount ||= 0
+    ("%01.2f" % amount.round(2)).sub(/\./, ',')
+  end
 end
