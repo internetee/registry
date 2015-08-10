@@ -11,7 +11,7 @@
             = Country.new(f.object.ident_country_code).try(:to_s)
             = " [#{f.object.ident_country_code}]"
         - else
-          - country_selected = @contact.persisted? ? '' : 'EE'
+          - country_selected = @contact.persisted? ? '' : (params[:depp_contact].try(:[], :ident_country_code) || 'EE')
           = f.select(:ident_country_code, SortedCountry.all_options(country_selected), {}, 
             class: 'js-ident-country-code', required: true)
 
@@ -24,7 +24,7 @@
             = Depp::Contact.type_string(f.object.ident_type)
             = " [#{f.object.ident_type}]"
         - else
-          - type_selected = @contact.persisted? ? '' : 'bic'
+          - type_selected = @contact.persisted? ? '' : (params[:depp_contact].try(:[], :ident_type) || 'bic')
           = f.select(:ident_type, Depp::Contact::SELECTION_TYPES, 
             { selected: type_selected },
             class: 'js-ident-type', required: true)
