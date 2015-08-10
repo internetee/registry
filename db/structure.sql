@@ -910,7 +910,8 @@ CREATE TABLE domains (
     force_delete_at timestamp without time zone,
     statuses character varying[],
     reserved boolean DEFAULT false,
-    status_notes hstore
+    status_notes hstore,
+    statuses_backup character varying[] DEFAULT '{}'::character varying[]
 );
 
 
@@ -4870,4 +4871,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150713113436');
 INSERT INTO schema_migrations (version) VALUES ('20150722071128');
 
 INSERT INTO schema_migrations (version) VALUES ('20150803080914');
+
+INSERT INTO schema_migrations (version) VALUES ('20150810114746');
 

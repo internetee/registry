@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150803080914) do
+ActiveRecord::Schema.define(version: 20150810114746) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -329,6 +329,7 @@ ActiveRecord::Schema.define(version: 20150803080914) do
     t.string   "statuses",                                                   array: true
     t.boolean  "reserved",                                   default: false
     t.hstore   "status_notes"
+    t.string   "statuses_backup",                            default: [],    array: true
   end
 
   add_index "domains", ["delete_at"], name: "index_domains_on_delete_at", using: :btree
