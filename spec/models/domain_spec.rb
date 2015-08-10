@@ -212,14 +212,50 @@ describe Domain do
       @domain.statuses = ['ok']
       @domain.set_force_delete
 
-      @domain.statuses.count.should == 6
+      @domain.statuses.should match_array([
+        "forceDelete",
+        "pendingDelete",
+        "serverManualInzone",
+        "serverRenewProhibited",
+        "serverTransferProhibited",
+        "serverUpdateProhibited"
+      ])
+
       fda = Time.zone.now + Setting.redemption_grace_period.days
       @domain.force_delete_at.should be_within(20).of(fda)
 
       @domain.unset_force_delete
 
-      @domain.statuses.count.should == 1
+      @domain.statuses.should == ['ok']
       @domain.force_delete_at.should be_nil
+
+      @domain.statuses = [
+        DomainStatus::CLIENT_DELETE_PROHIBITED,
+        DomainStatus::SERVER_DELETE_PROHIBITED,
+        DomainStatus::PENDING_UPDATE,
+        DomainStatus::PENDING_TRANSFER,
+        DomainStatus::PENDING_RENEW,
+        DomainStatus::PENDING_CREATE,
+        DomainStatus::CLIENT_HOLD
+      ]
+
+      @domain.save
+
+      @domain.set_force_delete
+
+      @domain.statuses.should match_array([
+        "forceDelete",
+        "pendingDelete",
+        "serverManualInzone",
+        "serverRenewProhibited",
+        "serverTransferProhibited",
+        "serverUpdateProhibited",
+        "clientHold"
+      ])
+
+      @domain.unset_force_delete
+
+      @domain.statuses.should == ['clientHold']
     end
 
     it 'should set expired status and update outzone_at and delete_at' do

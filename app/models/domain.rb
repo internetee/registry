@@ -539,6 +539,10 @@ class Domain < ActiveRecord::Base
     statuses << DomainStatus::PENDING_DELETE
     statuses.delete(DomainStatus::CLIENT_DELETE_PROHIBITED)
     statuses.delete(DomainStatus::SERVER_DELETE_PROHIBITED)
+    statuses.delete(DomainStatus::PENDING_UPDATE)
+    statuses.delete(DomainStatus::PENDING_TRANSFER)
+    statuses.delete(DomainStatus::PENDING_RENEW)
+    statuses.delete(DomainStatus::PENDING_CREATE)
 
     self.force_delete_at = Time.zone.now + Setting.redemption_grace_period.days unless force_delete_at
     save(validate: false)
