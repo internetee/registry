@@ -105,6 +105,13 @@ class Domain < ActiveRecord::Base
     errors.add(:base, :invalid_auth_information_reserved)
   end
 
+  validate :check_permissions
+  def check_permissions
+    return unless update_prohibited? || delete_prohibited?
+    errors.add(:base, I18n.t(:object_status_prohibits_operation))
+    false
+  end
+
   validates :nameservers, object_count: {
     min: -> { Setting.ns_min_count },
     max: -> { Setting.ns_max_count }
