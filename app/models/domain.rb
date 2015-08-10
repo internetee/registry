@@ -574,7 +574,7 @@ class Domain < ActiveRecord::Base
   end
 
   def pending_update?
-    statuses.include?(DomainStatus::PENDING_UPDATE)
+    statuses.include?(DomainStatus::PENDING_UPDATE) && !statuses.include?(DomainStatus::FORCE_UPDATE)
   end
 
   # public api
@@ -609,7 +609,7 @@ class Domain < ActiveRecord::Base
   end
 
   def pending_delete?
-    statuses.include?(DomainStatus::PENDING_DELETE)
+    statuses.include?(DomainStatus::PENDING_DELETE) && !statuses.include?(DomainStatus::FORCE_DELETE)
   end
 
   # TODO: Review the list and disallow epp calls
