@@ -1,30 +1,47 @@
+#
+# Registry servers configuration
+#
+#
 # Be sure to restart your server when you modify settings.
+#
 
+#
+# SMTP configuration (for Admin/EPP/Registrar/Registrant servers)
+#
+smtp_address: 'server-hostname'
+smtp_port: '25' # 587, 465
+smtp_user_name: 'login'
+smtp_password: 'pw/key'
+# If you need to specify a HELO domain, you can do it here.
+smtp_domain: '' # 'domain for HELO checking'
+# Use "none" only when for a self-signed and/or wildcard certificate
+smtp_openssl_verify_mode: 'peer' # 'none', 'peer', 'client_once','fail_if_no_peer_cert'
+# Detects if STARTTLS is enabled in your SMTP server and starts to use it. Defaults to true.
+# Set this to false if there is a problem with your server certificate that you cannot resolve.
+smtp_enable_starttls_auto: 'true' # 'false'
+# If your mail server requires authentication, please change.
+smtp_authentication: 'plain' # 'plain', 'login', 'cram_md5'
+registrant_url: 'https:/registrant.example.com' # for valid email body registrant links
+
+#
+# ADMIN server
+#
 app_name: '.EE Registry'
 zonefile_export_dir: 'export/zonefiles'
 bank_statement_import_dir: 'import/bank_statements'
 legal_documents_dir: 'import/legal_documents'
 time_zone: 'Tallinn' # more zones by rake time:zones:all
 
-# New Relic app name, keep only current mode, remove other names.
-# Example: 'Admin, EPP, REPP' will have name 'Admin, EPP, REPP - production' at New Relic.
-new_relic_app_name: 'Admin, EPP, REPP, Registrar, Registrant'
-new_relic_license_key: '42d1c2ba4ed17a9cf6297c59d80e563a3dd3c4fa'
-
-# You can use `rake secret` to generate a secure secret key.
-# Your secret key is used for verifying the integrity of signed cookies.
-# If you change this key, all old signed cookies will become invalid!
-secret_key_base: 'please-change-it-you-can-generate-it-with-rake-secret'
-devise_secret: 'please-change-it-you-can-generate-it-with-rake-secret'
-
-# Admin server configuration:
 openssl_config_path: '/etc/ssl/openssl.cnf'
 crl_dir:     '/home/registry/registry/shared/ca/crl'
 ca_cert_path: '/home/registry/registry/shared/ca/certs/ca.crt.pem'
 ca_key_path:  '/home/registry/registry/shared/ca/private/ca.key.pem'
 ca_key_password: 'your-root-key-password'
 
-# EPP server configuration
+
+#
+# EPP
+#
 webclient_ips: '127.0.0.1,0.0.0.0' #ips, separated with commas
 webclient_cert_common_name: 'webclient'
 # Contact epp will not accept org value by default
@@ -41,7 +58,10 @@ contact_org_enabled: 'false'
 # Custom legal document types
 # legal_document_types: "pdf,bdoc,ddoc,zip,rar,gz,tar,7z,odt,doc,docx"
 
-# DEPP server configuration (both for Registrar/Registrant servers)
+
+#
+# REGISTRAR configuration (DEPP)
+#
 show_ds_data_fields: 'false'
 default_nameservers_count: '2'
 default_admin_contacts_count: '1'
@@ -51,30 +71,40 @@ key_path: '/home/registry/registry/shared/ca/private/webclient.key.pem'
 epp_hostname: 'registry.gitlab.eu'
 repp_url: 'https://repp.gitlab.eu/repp/v1/'
 
-# Registrant server configuration
+
+#
+# REGISTRANT configuration
+#
 restful_whois_url: 'https://restful-whois.example.com'
 
-# SMTP configuration (for Admin/EPP/Registrar/Registrant servers)
-smtp_address: 'server-hostname'
-smtp_port: '25' # 587, 465
-smtp_user_name: 'login'
-smtp_password: 'pw/key'
-# If you need to specify a HELO domain, you can do it here.
-smtp_domain: '' # 'domain for HELO checking'
-# Use "none" only when for a self-signed and/or wildcard certificate
-smtp_openssl_verify_mode: 'peer' # 'none', 'peer', 'client_once','fail_if_no_peer_cert'
-# Detects if STARTTLS is enabled in your SMTP server and starts to use it. Defaults to true.
-# Set this to false if there is a problem with your server certificate that you cannot resolve.
-smtp_enable_starttls_auto: 'true' # 'false'
-# If your mail server requires authentication, please change.
-smtp_authentication: 'plain' # 'plain', 'login', 'cram_md5'
-registrant_url: 'https:/registrant.example.com' # for valid email body registrant links
+
+#
+# REGISTRAR AND REGISTRANT
+#
 
 # SK DigiDocService
 sk_digi_doc_service_endpoint: 'https://openxades.org:9443/DigiDocService'
 sk_digi_doc_service_name: 'EIS test'
 
-# Autotest config overwrites
+
+#
+# MISC
+#
+# New Relic app name, keep only current mode, remove other names.
+# Example: 'Admin, EPP, REPP' will have name 'Admin, EPP, REPP - production' at New Relic.
+new_relic_app_name: 'Admin, EPP, REPP, Registrar, Registrant'
+new_relic_license_key: '42d1c2ba4ed17a9cf6297c59d80e563a3dd3c4fa'
+
+# You can use `rake secret` to generate a secure secret key.
+# Your secret key is used for verifying the integrity of signed cookies.
+# If you change this key, all old signed cookies will become invalid!
+secret_key_base: 'please-change-it-you-can-generate-it-with-rake-secret'
+devise_secret: 'please-change-it-you-can-generate-it-with-rake-secret'
+
+
+#
+# AUTOTEST overwrites
+#
 test:
   webclient_ips: '127.0.0.1' # it should match to localhost ip address
   crl_dir:      '/var/lib/jenkins/workspace/registry/ca/crl'
@@ -84,7 +114,21 @@ test:
   ca_key_password: 'test'
   cert_path:    '/var/lib/jenkins/workspace/registry/ca/certs/webclient.crt.pem'
 
-  # DEPP
+  # Registrar/DEPP
   key_path: '/var/lib/jenkins/workspace/registry/ca/private/webclient.key.pem'
   epp_hostname: '127.0.0.1'
   repp_url: 'http://127.0.0.1:8989/repp/v1/'
+
+
+#
+# DEVELOPMENT overwrites
+#
+development:
+  epp_hostname: '127.0.0.1'
+  repp_url: 'http://127.0.0.1:8080/repp/v1/'
+  cert_path: 'ca/certs/webclient.cert.pem'
+  key_path: 'ca/private/webclient.key.pem'
+  crl_dir:     'ca/crl'
+  ca_cert_path: 'ca/certs/ca.crt.pem'
+  ca_key_path:  'ca/private/ca.key.pem'
+  ca_key_password: 'your-root-key-password'
