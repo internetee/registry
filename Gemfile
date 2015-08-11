@@ -9,7 +9,7 @@ source 'https://rubygems.org'
 
 # core
 gem 'rails',        '4.2.3' # when update, all initializers eis_custom files needs check/update
-gem 'iso8601',      '~> 0.8.2' # for dates and times
+gem 'iso8601',      '~> 0.8.6' # for dates and times
 gem 'hashie-forbidden_attributes', '~> 0.1.1'
 
 # load env
@@ -66,8 +66,8 @@ gem 'money-rails', '~> 1.4.1'
 
 # deploy
 gem 'whenever', '~> 0.9.4', require: false
-gem 'data_migrate', 
-  github: 'internetee/data-migrate', 
+gem 'data_migrate',
+  github: 'internetee/data-migrate',
   ref: '35d22b09ff37a4e9d61ab326ad5d8eb0edf1fc81'
 
 # monitors

@@ -574,7 +574,7 @@ DEPENDENCIES
   html2haml (~> 2.0.0)
   html5_validators (~> 1.2.0)
   isikukood
-  iso8601 (~> 0.8.2)
+  iso8601 (~> 0.8.6)
   jbuilder (~> 2.2.6)
   jquery-rails (~> 4.0.3)
   jquery-ui-rails (~> 5.0.3)
