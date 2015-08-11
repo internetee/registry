@@ -586,7 +586,7 @@ class Epp::Domain < Domain
       }
     end
 
-    unless can_be_transferred_to?(current_user.registrar)
+    if current_user.registrar == registrar
       throw :epp_error, {
         code: '2002',
         msg: I18n.t(:domain_already_belongs_to_the_querying_registrar)
@@ -742,10 +742,6 @@ class Epp::Domain < Domain
     end if statuses.include?(DomainStatus::CLIENT_DELETE_PROHIBITED)
 
     true
-  end
-
-  def can_be_transferred_to?(new_registrar)
-    new_registrar != registrar
   end
 
   def transferrable?
