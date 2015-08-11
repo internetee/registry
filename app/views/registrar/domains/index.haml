@@ -70,7 +70,7 @@
         %tbody
           - @domains.each do |x|
             %tr
-              %td= link_to(x, info_registrar_domains_path(domain_name: x.name))
+              %td= link_to(truncate(x.name), info_registrar_domains_path(domain_name: x.name))
               %td
                 - if x.registrant
                   = link_to(x.registrant, registrar_contact_path(id: x.registrant.code))
