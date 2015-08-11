@@ -1622,6 +1622,17 @@ describe 'EPP Domain', epp: true do
       response[:results][0][:result_code].should == '2303'
     end
 
+    it 'should not cancel transfer when there are none' do
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        authInfo: { pw: { value: domain.auth_info } }
+      }, 'cancel')
+
+      response = epp_plain_request(xml)
+      response[:results][0][:msg].should == 'No transfers found'
+      response[:results][0][:result_code].should == '2303'
+    end
+
     it 'should allow querying domain transfer', epp: false do
       Setting.transfer_wait_time = 1
       pw = domain.auth_info
