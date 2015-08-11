@@ -1008,29 +1008,25 @@ describe 'EPP Domain', epp: true do
 
       # should show up in other registrar's poll
 
-      response = login_as :registrar2 do
-        epp_plain_request(@epp_xml.session.poll)
+      login_as :registrar2 do
+        response = epp_plain_request(@epp_xml.session.poll)
+        response[:msg].should == 'Command completed successfully; ack to dequeue'
+        msg_q = response[:parsed].css('msgQ')
+        msg_q.css('qDate').text.should_not be_blank
+        msg_q.css('msg').text.should == 'Transfer requested.'
+        msg_q.first['id'].should_not be_blank
+        msg_q.first['count'].should == '1'
+
+        xml = @epp_xml.session.poll(poll: {
+          value: '', attrs: { op: 'ack', msgID: msg_q.first['id'] }
+        })
+
+        response = epp_plain_request(xml)
+        response[:msg].should == 'Command completed successfully'
+        msg_q = response[:parsed].css('msgQ')
+        msg_q.first['id'].should_not be_blank
+        msg_q.first['count'].should == '0'
       end
-
-      response[:msg].should == 'Command completed successfully; ack to dequeue'
-      msg_q = response[:parsed].css('msgQ')
-      msg_q.css('qDate').text.should_not be_blank
-      msg_q.css('msg').text.should == 'Transfer requested.'
-      msg_q.first['id'].should_not be_blank
-      msg_q.first['count'].should == '1'
-
-      xml = @epp_xml.session.poll(poll: {
-        value: '', attrs: { op: 'ack', msgID: msg_q.first['id'] }
-      })
-
-      response = login_as :registrar2 do
-        epp_plain_request(xml)
-      end
-
-      response[:msg].should == 'Command completed successfully'
-      msg_q = response[:parsed].css('msgQ')
-      msg_q.first['id'].should_not be_blank
-      msg_q.first['count'].should == '0'
 
       create_settings
     end
