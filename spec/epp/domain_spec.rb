@@ -1855,6 +1855,31 @@ describe 'EPP Domain', epp: true do
       d.pending_update?.should == true
     end
 
+    it 'should not allow any update when status force delete' do
+      domain.set_force_delete
+
+      existing_pw = domain.auth_info
+
+      xml_params = {
+        name: { value: domain.name },
+        chg: [
+          registrant: { value: 'FIXED:CITIZEN_1234' }
+        ]
+      }
+
+      response = epp_plain_request(domain_update_xml(xml_params, {}, {
+        _anonymus: [
+          legalDocument: {
+            value: 'dGVzdCBmYWlsCg==',
+            attrs: { type: 'pdf' }
+          }
+        ]
+      }))
+
+      response[:results][0][:msg].should == 'Object status prohibits operation'
+      response[:results][0][:result_code].should == '2304'
+    end
+
     it 'updates domain and adds objects' do
       xml = domain_update_xml({
         name: { value: domain.name },
