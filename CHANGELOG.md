@@ -1,3 +1,7 @@
+11.08.2015
+
+* Possible to add whitelist_emails_for_staging list at application.yml
+
 21.07.2015
 
 * Possible to define custom trusted proxies at application.yml
