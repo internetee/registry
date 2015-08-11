@@ -1122,7 +1122,7 @@ describe 'EPP Domain', epp: true do
         log.response.should_not be_blank
       end
 
-      response = login_as :registrar2 do
+      login_as :registrar2 do
         epp_plain_request(xml)
       end
     end
