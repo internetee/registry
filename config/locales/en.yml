@@ -903,4 +903,5 @@ en:
   poll_pending_update_rejected_by_registranti: 'Registrant rejected domain update'
   poll_pending_delete_rejected_by_registrant: 'Registrant rejected domain deletion'
   poll_pending_delete_confirmed_by_registrant: 'Registrant confirmed domain deletion'
+  manage: Manage
 

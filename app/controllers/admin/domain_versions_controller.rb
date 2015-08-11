@@ -3,7 +3,7 @@ class Admin::DomainVersionsController < AdminController
 
   # rubocop:disable Style/GuardClause
   def index
-    @domain = Domain.find(params[:domain_id])
+    @domain = Domain.where(id: params[:domain_id]).includes({versions: :item}).first
     @versions = @domain.versions
 
     if @domain.pending_json.present?
@@ -13,13 +13,4 @@ class Admin::DomainVersionsController < AdminController
     end
   end
   # rubocop:enable Style/GuardClause
-
-  # def index
-    # # @q = DomainVersion.deleted.search(params[:q])
-    # # @domains = @q.result.page(params[:page])
-  # end
-
-  # def show
-    # @versions = DomainVersion.where(item_id: params[:id])
-  # end
 end

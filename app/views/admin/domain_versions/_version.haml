@@ -16,7 +16,7 @@
     - tech_contacts  = domain.tech_contacts
     - admin_contacts = domain.admin_contacts
     - registrant  = [domain.registrant]
-    - event       = 'PENDING'
+    - event       = ('PENDING<br>' + link_to(t(:manage), edit_admin_domain_path(params[:domain_id]))).html_safe
     - creator     = pending_user.try(:username)
   - else # if legacy data not presentable
     - nameservers    = []
