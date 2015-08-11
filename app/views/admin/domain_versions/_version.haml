@@ -16,8 +16,8 @@
     - tech_contacts  = domain.tech_contacts
     - admin_contacts = domain.admin_contacts
     - registrant  = [domain.registrant]
-    - event       = ('PENDING<br>' + link_to(t(:manage), edit_admin_domain_path(params[:domain_id]))).html_safe
     - creator     = pending_user.try(:username)
+    - event       = 'PENDING'
   - else # if legacy data not presentable
     - nameservers    = []
     - tech_contacts  = []
@@ -29,16 +29,25 @@
   %td
     %p.nowrap
       = l(domain.updated_at, format: :short)
-      = event
     %p.text-right
+      = event
+      %br
       = creator
+      - if event == 'PENDING'
+        %br= link_to t(:manage), edit_admin_domain_path(params[:domain_id])
 
   %td
     %p
       = "#{domain.period}#{domain.period_unit}"
-      = "#{l(domain.valid_from, format: :date)} - #{l(domain.valid_to, format: :date)}"
+      %br
+      = "#{l(domain.valid_from, format: :date)}"
+      %br
+      = "#{l(domain.valid_to, format: :date)}"
+
+  %td
     %p
-      = domain.status
+      - domain.statuses.each do |s|
+        = s
 
   %td
     - registrant.each do |oc|
@@ -68,8 +77,8 @@
         = tc[:code]
 
   %td
-    - nameservers.each do |ns|
-      %p
+    %p
+      - nameservers.each do |ns|
         = ns[:hostname]
         %br
         = ns[:ipv4]
