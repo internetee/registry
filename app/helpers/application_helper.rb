@@ -48,7 +48,7 @@ module ApplicationHelper
 
   def currency(amount)
     amount ||= 0
-    ("%01.2f" % amount.round(2)).sub(/\./, ',')
+    format("%01.2f", amount.round(2)).sub(/\./, ',')
   end
 
   def plain_username(username)

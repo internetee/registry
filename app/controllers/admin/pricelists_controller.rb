@@ -51,5 +51,4 @@ class Admin::PricelistsController < AdminController
     params.require(:pricelist).permit(:operation_category, :category, :price_category,
                                       :duration, :price, :valid_from, :valid_to)
   end
-
 end

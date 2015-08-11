@@ -41,7 +41,9 @@ describe ZonefileSetting do
 
   it 'should not place serverHold nor clientHold domains into zonefile' do
     Fabricate(:zonefile_setting)
-    d = Fabricate(:domain_with_dnskeys, name: 'testzone.ee', statuses: ['serverHold', 'serverDeleteProhibited', 'clientHold'])
+    d = Fabricate(:domain_with_dnskeys, 
+                  name: 'testzone.ee', 
+                  statuses: ['serverHold', 'serverDeleteProhibited', 'clientHold'])
     d.nameservers << Nameserver.new({
       hostname: "ns.#{d.name}",
       ipv4: '123.123.123.123',

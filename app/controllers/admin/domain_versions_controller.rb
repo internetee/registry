@@ -1,6 +1,7 @@
 class Admin::DomainVersionsController < AdminController
   load_and_authorize_resource
 
+  # rubocop:disable Style/GuardClause
   def index
     @domain = Domain.find(params[:domain_id])
     @versions = @domain.versions
@@ -11,6 +12,7 @@ class Admin::DomainVersionsController < AdminController
       @pending_domain = Epp::Domain.new_from_epp(frame, @pending_user)
     end
   end
+  # rubocop:enable Style/GuardClause
 
   # def index
     # # @q = DomainVersion.deleted.search(params[:q])
