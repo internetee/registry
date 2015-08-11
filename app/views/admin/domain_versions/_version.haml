@@ -50,13 +50,13 @@
         = s
 
   %td
-    - registrant.each do |oc|
+    - registrant.each do |r|
       %p
-        = oc[:name]
-        = oc[:phone]
-        = oc[:email]
+        = r[:name]
+        = r[:phone]
+        = r[:email]
       %p
-        = oc[:code]
+        = r[:code]
 
   %td
     - admin_contacts.each do |ac|
