@@ -316,8 +316,6 @@ class Contact < ActiveRecord::Base
     end
   end
 
-  private
-
   def manage_linked
     if domains.present?
       statuses << LINKED if statuses.detect { |s| s == LINKED }.blank?
