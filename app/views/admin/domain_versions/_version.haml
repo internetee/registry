@@ -33,14 +33,6 @@
 
   %td
     %p
-      = "#{domain.period}#{domain.period_unit}"
-      %br
-      = "#{l(domain.valid_from, format: :date)}"
-      %br
-      = "#{l(domain.valid_to, format: :date)}"
-
-  %td
-    %p
       - domain.statuses.each do |s|
         = s
         - notes = domain.status_notes[s]
@@ -51,6 +43,14 @@
     - if domain.pending_json.present?
       %p
         = link_to t(:pending_epp), '#', class: 'js-pending-toggle'
+
+  %td
+    %p
+      = "#{domain.period}#{domain.period_unit}"
+      %br
+      = "#{l(domain.valid_from, format: :date)}"
+      %br
+      = "#{l(domain.valid_to, format: :date)}"
 
   %td
     - registrant.each do |r|

@@ -1,4 +1,4 @@
-class Admin::PendingsController < AdminController
+class Admin::PendingUpdatesController < AdminController
   before_action :find_domain
   before_action :check_status
 
@@ -7,7 +7,7 @@ class Admin::PendingsController < AdminController
 
     @epp_domain = Epp::Domain.find(params[:domain_id]) # only epp domain has apply pending
     if @epp_domain.apply_pending_update!
-      redirect_to admin_domain_path(@domain.id), notice: t(:successfully_updated)
+      redirect_to admin_domain_path(@domain.id), notice: t(:pending_applied)
     else
       redirect_to admin_edit_domain_path(@domain.id), alert: t(:failure)
     end
@@ -17,7 +17,7 @@ class Admin::PendingsController < AdminController
     authorize! :destroy, :pending
 
     if @domain.clean_pendings!
-      redirect_to admin_domain_path(@domain.id), notice: t(:successfully_destroyed)
+      redirect_to admin_domain_path(@domain.id), notice: t(:pending_removed)
     else
       redirect_to admin_domain_path(@domain.id), alert: t(:failure)
     end

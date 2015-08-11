@@ -655,8 +655,8 @@ en:
   general: General
   id_card: 'ID Card'
   m_id: 'M-ID'
-  successfully_destroyed: It was successfully deleted.
-  successfully_updated: It was successfully updated.
+  pending_removed: Pending was successfully removed.
+  pending_applied: Pending was successfully applied.
   something_wrong: Not success, something went wrong!
   failure: Not success
   not_found: Not found
