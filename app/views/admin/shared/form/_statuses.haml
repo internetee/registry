@@ -8,6 +8,8 @@
       .panel-heading.clearfix
         .pull-left= t(:status)
         .pull-right
+          - if model == 'domain'
+            = render 'admin/domains/form/pending_update', f: f, status: s
           = link_to(t(:delete), '#', class: 'btn btn-danger btn-xs js-destroy-status', style: delete_style)
       .panel-body
         .form-group

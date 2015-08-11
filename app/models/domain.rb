@@ -367,6 +367,8 @@ class Domain < ActiveRecord::Base
     self.pending_json = {}
     statuses.delete(DomainStatus::PENDING_UPDATE)
     statuses.delete(DomainStatus::PENDING_DELETE)
+    status_notes[DomainStatus::PENDING_UPDATE] = ''
+    status_notes[DomainStatus::PENDING_DELETE] = ''
     save
   end
 
