@@ -907,8 +907,68 @@ describe 'EPP Domain', epp: true do
   context 'with valid domain' do
     let(:domain) { Fabricate(:domain, registrar: @registrar1, dnskeys: []) }
 
-    ### TRANSFER ###
     it 'transfers a domain' do
+      domain.registrar = @registrar1
+      domain.save
+
+      pw = domain.auth_info
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        authInfo: { pw: { value: pw } }
+      }, 'request', {
+        _anonymus: [
+          legalDocument: {
+            value: 'dGVzdCBmYWlsCg==',
+            attrs: { type: 'pdf' }
+          }
+        ]
+      })
+
+      old_contact_codes = domain.contacts.pluck(:code).sort.uniq
+      old_registrant_code = domain.registrant.code
+
+      login_as :registrar2 do
+        response = epp_plain_request(xml)
+        domain.reload
+        dtl = domain.domain_transfers.last
+
+        trn_data = response[:parsed].css('trnData')
+        trn_data.css('name').text.should == domain.name
+        trn_data.css('trStatus').text.should == 'serverApproved'
+        trn_data.css('reID').text.should == 'REGDOMAIN2'
+        trn_data.css('reDate').text.should == dtl.transfer_requested_at.in_time_zone.utc.utc.iso8601
+        trn_data.css('acID').text.should == 'REGDOMAIN1'
+        trn_data.css('acDate').text.should == dtl.transferred_at.in_time_zone.utc.utc.iso8601
+        trn_data.css('exDate').text.should == domain.valid_to.in_time_zone.utc.utc.iso8601
+
+        domain.registrar.should == @registrar2
+      end
+
+      response = epp_plain_request(@epp_xml.session.poll)
+
+      response[:msg].should == 'Command completed successfully; ack to dequeue'
+      msg_q = response[:parsed].css('msgQ')
+      msg_q.css('qDate').text.should_not be_blank
+
+      msg_q.css('msg').text.should == "Domain transfer was approved, associated contacts were: " \
+        "#{old_contact_codes} and registrant was #{old_registrant_code}"
+      msg_q.first['id'].should_not be_blank
+      msg_q.first['count'].should == '1'
+
+      xml = @epp_xml.session.poll(poll: {
+        value: '', attrs: { op: 'ack', msgID: msg_q.first['id'] }
+      })
+
+      response = epp_plain_request(xml)
+      response[:msg].should == 'Command completed successfully'
+      msg_q = response[:parsed].css('msgQ')
+      msg_q.first['id'].should_not be_blank
+      msg_q.first['count'].should == '0'
+    end
+
+    ### TRANSFER ###
+    # Do not place this test to epp-examples (epp: false)
+    it 'transfers a domain with wait time > 0', epp: false do
       domain.registrar = @registrar1
       domain.save
 
@@ -1008,35 +1068,30 @@ describe 'EPP Domain', epp: true do
 
       # should show up in other registrar's poll
 
-      response = login_as :registrar2 do
-        epp_plain_request(@epp_xml.session.poll)
+      login_as :registrar2 do
+        response = epp_plain_request(@epp_xml.session.poll)
+        response[:msg].should == 'Command completed successfully; ack to dequeue'
+        msg_q = response[:parsed].css('msgQ')
+        msg_q.css('qDate').text.should_not be_blank
+        msg_q.css('msg').text.should == 'Transfer requested.'
+        msg_q.first['id'].should_not be_blank
+        msg_q.first['count'].should == '1'
+
+        xml = @epp_xml.session.poll(poll: {
+          value: '', attrs: { op: 'ack', msgID: msg_q.first['id'] }
+        })
+
+        response = epp_plain_request(xml)
+        response[:msg].should == 'Command completed successfully'
+        msg_q = response[:parsed].css('msgQ')
+        msg_q.first['id'].should_not be_blank
+        msg_q.first['count'].should == '0'
       end
-
-      response[:msg].should == 'Command completed successfully; ack to dequeue'
-      msg_q = response[:parsed].css('msgQ')
-      msg_q.css('qDate').text.should_not be_blank
-      msg_q.css('msg').text.should == 'Transfer requested.'
-      msg_q.first['id'].should_not be_blank
-      msg_q.first['count'].should == '1'
-
-      xml = @epp_xml.session.poll(poll: {
-        value: '', attrs: { op: 'ack', msgID: msg_q.first['id'] }
-      })
-
-      response = login_as :registrar2 do
-        epp_plain_request(xml)
-      end
-
-      response[:msg].should == 'Command completed successfully'
-      msg_q = response[:parsed].css('msgQ')
-      msg_q.first['id'].should_not be_blank
-      msg_q.first['count'].should == '0'
 
       create_settings
     end
 
     it 'creates a domain transfer with legal document' do
-      Setting.transfer_wait_time = 1
       domain.legal_documents.count.should == 0
       pw = domain.auth_info
       xml = domain_transfer_xml({
@@ -1070,11 +1125,6 @@ describe 'EPP Domain', epp: true do
       response = login_as :registrar2 do
         epp_plain_request(xml)
       end
-
-      response[:result_code].should == '1000'
-      domain.legal_documents.count.should == 1 # does not add another legal documen
-
-      create_settings
     end
 
     it 'creates transfer successfully without legal document' do
@@ -1572,7 +1622,18 @@ describe 'EPP Domain', epp: true do
       response[:results][0][:result_code].should == '2303'
     end
 
-    it 'should allow querying domain transfer' do
+    it 'should not cancel transfer when there are none' do
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        authInfo: { pw: { value: domain.auth_info } }
+      }, 'cancel')
+
+      response = epp_plain_request(xml)
+      response[:results][0][:msg].should == 'No transfers found'
+      response[:results][0][:result_code].should == '2303'
+    end
+
+    it 'should allow querying domain transfer', epp: false do
       Setting.transfer_wait_time = 1
       pw = domain.auth_info
       xml = domain_transfer_xml({

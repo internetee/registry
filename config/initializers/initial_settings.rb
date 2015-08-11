@@ -22,6 +22,7 @@ if con.present? && con.table_exists?('settings')
   Setting.save_default(:ns_max_count, 11)
 
   Setting.save_default(:transfer_wait_time, 0)
+  Setting.transfer_wait_time = 0
   Setting.save_default(:request_confrimation_on_registrant_change_enabled, true)
   Setting.save_default(:request_confirmation_on_domain_deletion_enabled, true)
 
