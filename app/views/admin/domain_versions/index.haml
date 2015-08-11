@@ -17,6 +17,11 @@
             %th{class: 'col-xs-2'}= t(:registrar)
 
         %tbody
+          - if @pending_domain.present?
+            %tr.small
+              = render 'admin/domain_versions/version', 
+                domain: @pending_domain, pending_user: @pending_user
+
           - if @domain.versions.present?
             %tr.small
               = render 'admin/domain_versions/version', 

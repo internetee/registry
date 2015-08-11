@@ -37,7 +37,7 @@ feature 'Invoice', type: :feature do
     page.should have_content('Record created')
     page.should have_content('Invoice no.')
     page.should have_content('Prepayment')
-    page.should have_content('120.0')
+    page.should have_content('120,00')
     page.should have_content(r.name)
   end
 
@@ -107,7 +107,7 @@ feature 'Invoice', type: :feature do
     page.should have_content('689')
     page.should have_content('EE557700771000598731')
     page.should have_content('Not binded', count: 2)
-    page.should have_content(invoice.sum.to_s)
+    page.should have_content('240,00')
     page.should have_content('EUR')
 
     click_link 'Bind invoices'
@@ -120,7 +120,7 @@ feature 'Invoice', type: :feature do
 
     page.should have_content('Binded')
     page.should have_content(invoice.to_s)
-    page.should have_content(invoice.sum.to_s)
+    page.should have_content('240,00')
     page.should have_content(invoice.reference_no)
     page.should have_content(I18n.l(paid_at, format: :date_long))
 

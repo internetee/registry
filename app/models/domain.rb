@@ -546,6 +546,7 @@ class Domain < ActiveRecord::Base
     self.delete_at = outzone_at + Setting.redemption_grace_period.days
   end
 
+  # rubocop:disable Metrics/AbcSize
   def set_force_delete
     self.statuses_backup = statuses
     statuses.delete(DomainStatus::CLIENT_DELETE_PROHIBITED)
@@ -572,6 +573,7 @@ class Domain < ActiveRecord::Base
     self.force_delete_at = Time.zone.now + Setting.redemption_grace_period.days unless force_delete_at
     save(validate: false)
   end
+  # rubocop:enable Metrics/AbcSize
 
   def unset_force_delete
     s = []
@@ -680,6 +682,14 @@ class Domain < ActiveRecord::Base
 
   def update_whois_record
     whois_record.blank? ? create_whois_record : whois_record.save
+  end
+
+  def status_notes_array=(notes)
+    self.status_notes = {}
+    notes ||= []
+    statuses.each_with_index do |status, i|
+      status_notes[status] = notes[i]
+    end
   end
 end
 # rubocop: enable Metrics/ClassLength

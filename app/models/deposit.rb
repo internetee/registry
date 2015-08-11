@@ -23,6 +23,10 @@ class Deposit
     false
   end
 
+  def amount
+    BigDecimal.new(@amount.to_s.sub(/,/, '.'))
+  end
+
   def issue_prepayment_invoice
     valid? && registrar.issue_prepayment_invoice(amount, description)
   end

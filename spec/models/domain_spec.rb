@@ -239,7 +239,7 @@ describe Domain do
         DomainStatus::CLIENT_HOLD,
         DomainStatus::EXPIRED,
         DomainStatus::SERVER_HOLD,
-        DomainStatus::DELETE_CANDIDATE,
+        DomainStatus::DELETE_CANDIDATE
       ]
 
       @domain.save
