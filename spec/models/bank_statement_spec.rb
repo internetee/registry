@@ -67,6 +67,8 @@ describe BankStatement do
       a.sum.should == BigDecimal.new('200.0')
       a.activity_type = AccountActivity::ADD_CREDIT
 
+      r.reload
+      r.cash_account.reload
       r.cash_account.balance.should == 200.0
 
       bs.bank_transactions.unbinded.count.should == 1

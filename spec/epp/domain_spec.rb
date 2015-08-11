@@ -1858,8 +1858,6 @@ describe 'EPP Domain', epp: true do
     it 'should not allow any update when status force delete' do
       domain.set_force_delete
 
-      existing_pw = domain.auth_info
-
       xml_params = {
         name: { value: domain.name },
         chg: [
