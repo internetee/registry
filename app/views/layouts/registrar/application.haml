@@ -56,8 +56,8 @@
                 %ul.dropdown-menu{role: "menu"}
                   - ApiUser.where(identity_code: current_user.identity_code).includes(:registrar).each do |x|
                     %li= link_to "#{x} (#{x.roles.first}) - #{x.registrar}", "/registrar/switch_user/#{x.id}"
-              - if user_signed_in?
-                %li= link_to t(:log_out_), '/registrar/logout'
+                  - if user_signed_in?
+                    %li= link_to t(:log_out_), '/registrar/logout'
 
     .container
       = render 'shared/flash'

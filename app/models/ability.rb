@@ -123,7 +123,8 @@ class Ability
     can :manage, WhiteIp
     can :read, ApiLog::EppLog
     can :read, ApiLog::ReppLog
-    # can :index, :delayed_job
+    can :update, :pending
+    can :destroy, :pending
     can :create, :zonefile
     can :access, :settings_menu
   end

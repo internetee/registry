@@ -1,3 +1,4 @@
+- statuses_link ||= false
 - version ||= false
 - domain ||= false
 - pending_user ||= false
@@ -11,43 +12,54 @@
     - registrant  = children[:registrant] || []
     - event       = version.event
     - creator     = plain_username(version.terminator)
-  - elsif pending_user # pending history
+  - else # pending history
     - nameservers    = domain.nameservers
     - tech_contacts  = domain.tech_contacts
     - admin_contacts = domain.admin_contacts
     - registrant  = [domain.registrant]
-    - event       = 'PENDING'
     - creator     = pending_user.try(:username)
-  - else # if legacy data not presentable
-    - nameservers    = []
-    - tech_contacts  = []
-    - admin_contacts = []
-    - registrant  = []
-    - event       = 'Log data is not viewable'
-    - creator     = ''
+    - event       = 'pending'
 
   %td
     %p.nowrap
-      = l(domain.updated_at, format: :short)
-      = event
+      = l(domain.updated_at, format: :shorts)
+      - if statuses_link
+        %br= link_to t(:edit_statuses), edit_admin_domain_path(params[:domain_id])
+
     %p.text-right
+      = event
+      %br
       = creator
 
   %td
     %p
-      = "#{domain.period}#{domain.period_unit}"
-      = "#{l(domain.valid_from, format: :date)} - #{l(domain.valid_to, format: :date)}"
-    %p
-      = domain.status
+      - domain.statuses.each do |s|
+        = s
+        - notes = domain.status_notes[s]
+        - if notes
+          %br
+          %i= notes
+        %br
+    - if domain.pending_json.present?
+      %p
+        = link_to t(:pending_epp), '#', class: 'js-pending-toggle'
 
   %td
-    - registrant.each do |oc|
+    %p
+      = "#{domain.period}#{domain.period_unit}"
+      %br
+      = "#{l(domain.valid_from, format: :date)}"
+      %br
+      = "#{l(domain.valid_to, format: :date)}"
+
+  %td
+    - registrant.each do |r|
       %p
-        = oc[:name]
-        = oc[:phone]
-        = oc[:email]
+        = r[:name]
+        = r[:phone]
+        = r[:email]
       %p
-        = oc[:code]
+        = r[:code]
 
   %td
     - admin_contacts.each do |ac|
@@ -68,8 +80,8 @@
         = tc[:code]
 
   %td
-    - nameservers.each do |ns|
-      %p
+    %p
+      - nameservers.each do |ns|
         = ns[:hostname]
         %br
         = ns[:ipv4]
@@ -79,69 +91,13 @@
     %p
       = domain.registrar.name
 
-  -# %td
-    -# = version.children.inspect
-
-  -# %td{ class: changes.include?(:domain) ? 'edit-highlight' : 'no-highlight' }
-    -# - if children[:domain]
-      -# %p{:style => "font-size:x-small;"}
-        -# = children[:domain][:period]
-        -# = children[:domain][:period_unit] if children[:domain][:period]
-        -# - if children[:domain][:valid_to] && children[:domain][:valid_from]
-          -# = ","
-          -# = l(children[:domain][:valid_from], format: :date) + '-' + l(children[:domain][:valid_to], format: :date)
-        -# - if children[:domain].try(:[], :registrar_id)
-          -# = ","
-          -# = Registrar.find(children[:domain][:registrar_id]).try(:name)
-        -# - if children[:domain][:status]
-          -# = ',' + children[:domain][:status]
-
-
-  -# %td{ class: changes.include?(:registrant) ? 'edit-highlight' : 'no-highlight' }
-    -# - if children[:registrant]
-      -# %p{:style => "font-size:x-small;"}
-        -# = children[:registrant][:name]
-        -# = ","
-        -# = children[:registrant][:phone]
-        -# = ","
-        -# = children[:registrant][:email]
-        -# = ","
-        -# = children[:registrant][:code]
-
-  -# %td{ class: changes.include?(:admin_contacts) ? 'edit-highlight' : 'no-highlight' }
-    -# - if children[:admin_contacts]
-      -# - children[:admin_contacts].each do |ac|
-        -# %p{:style => "font-size:x-small;"}
-          -# = ac[:name]
-          -# = ","
-          -# = ac[:phone]
-          -# = ","
-          -# = ac[:email]
-          -# = ","
-          -# = ac[:code]
-
-  -# %td{ class: changes.include?(:tech_contacts) ? 'edit-highlight' : 'no-highlight' }
-    -# - if children[:tech_contacts]
-      -# - children[:tech_contacts].each do |tc|
-        -# %p{:style => "font-size:x-small;"}
-          -# = tc[:name]
-          -# = ","
-          -# = tc[:phone]
-          -# = ","
-          -# = tc[:email]
-          -# = ","
-          -# = tc[:code]
-
-  -# %td{ class: changes.include?(:nameservers) ? 'edit-highlight' : 'no-highlight' }
-    -# - if children[:nameservers]
-      -# - children[:nameservers].each do |ns|
-        -# %p{:style => "font-size:x-small;"}
-          -# = ns[:hostname]
-          -# = ","
-          -# = ns[:ipv4] || ns[:ipv6]
-
-  -# %td
-    -# %p{ :style => 'font-size:x-small;' }
-      -# = l(version.created_at, format: :short)
-      -# = whodunnit_with_protocol(version.whodunnit)
-      -# = version.event
+  - if domain.pending_json.present?
+    %tr.js-pending{ style: 'display: none;' }
+      %td{colspan: 8}
+        = preserve do
+          %pre
+            - formatted_req = Nokogiri::XML(domain.pending_json['frame'])
+            - if formatted_req.errors.none?
+              = formatted_req
+            - else
+              = domain.pending_json['frame']

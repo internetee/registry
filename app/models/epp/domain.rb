@@ -433,9 +433,10 @@ class Epp::Domain < Domain
 
     return unless update(frame, user, false)
     clean_pendings!
-    self.deliver_emails = true # turn on email delivery for epp
+    self.deliver_emails = true # turn on email delivery
     DomainMailer.registrant_updated_notification_for_new_registrant(self).deliver_now
     old_registrant_email.deliver_now
+    true
   end
 
   def apply_pending_delete!
@@ -446,6 +447,7 @@ class Epp::Domain < Domain
     DomainMailer.delete_confirmation(self).deliver_now
 
     clean_pendings! if epp_destroy(frame, user, false)
+    true
   end
 
   def attach_legal_document(legal_document_data)
