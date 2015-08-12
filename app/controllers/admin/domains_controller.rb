@@ -18,7 +18,7 @@ class Admin::DomainsController < AdminController
     normalize_search_parameters do
       @q = domains.search(params[:q])
       @domains = @q.result.page(params[:page])
-      if @domains.count == 1
+      if @domains.count == 1 && params[:q][:name_matches].present?
         redirect_to [:admin, @domains.first] and return
       elsif @domains.count == 0 && params[:q][:name_matches] !~ /^%.+%$/
         # if we do not get any results, add wildcards to the name field and search again
@@ -83,7 +83,7 @@ class Admin::DomainsController < AdminController
 
   def domain_params
     if params[:domain]
-      params.require(:domain).permit({ statuses: [] })
+      params.require(:domain).permit({ statuses: [], status_notes_array: [] })
     else
       { statuses: [] }
     end

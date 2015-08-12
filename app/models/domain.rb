@@ -1,6 +1,7 @@
 # rubocop: disable Metrics/ClassLength
 class Domain < ActiveRecord::Base
   include Versions # version/domain_version.rb
+  include Statuses
   has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
 
   # TODO: whois requests ip whitelist for full info for own domains and partial info for other domains
@@ -103,6 +104,13 @@ class Domain < ActiveRecord::Base
 
     return if ReservedDomain.pw_for(name) == reserved_pw
     errors.add(:base, :invalid_auth_information_reserved)
+  end
+
+  validate :check_permissions
+  def check_permissions
+    return unless force_delete?
+    errors.add(:base, I18n.t(:object_status_prohibits_operation))
+    false
   end
 
   validates :nameservers, object_count: {
@@ -341,6 +349,14 @@ class Domain < ActiveRecord::Base
     true
   end
 
+  def poll_message!(message_key)
+    registrar.messages.create!(
+      body: "#{I18n.t(message_key)}: #{name}",
+      attached_obj_id: id,
+      attached_obj_type: self.class.to_s
+    )
+  end
+
   def preclean_pendings
     self.registrant_verification_token = nil
     self.registrant_verification_asked_at = nil
@@ -351,6 +367,8 @@ class Domain < ActiveRecord::Base
     self.pending_json = {}
     statuses.delete(DomainStatus::PENDING_UPDATE)
     statuses.delete(DomainStatus::PENDING_DELETE)
+    status_notes[DomainStatus::PENDING_UPDATE] = ''
+    status_notes[DomainStatus::PENDING_DELETE] = ''
     save
   end
 
@@ -530,21 +548,16 @@ class Domain < ActiveRecord::Base
     self.delete_at = outzone_at + Setting.redemption_grace_period.days
   end
 
+  # rubocop:disable Metrics/AbcSize
   def set_force_delete
-    statuses << DomainStatus::FORCE_DELETE
-    statuses << DomainStatus::SERVER_RENEW_PROHIBITED
-    statuses << DomainStatus::SERVER_TRANSFER_PROHIBITED
-    statuses << DomainStatus::SERVER_UPDATE_PROHIBITED
-    statuses << DomainStatus::SERVER_MANUAL_INZONE
-    statuses << DomainStatus::PENDING_DELETE
+    self.statuses_backup = statuses
     statuses.delete(DomainStatus::CLIENT_DELETE_PROHIBITED)
     statuses.delete(DomainStatus::SERVER_DELETE_PROHIBITED)
+    statuses.delete(DomainStatus::PENDING_UPDATE)
+    statuses.delete(DomainStatus::PENDING_TRANSFER)
+    statuses.delete(DomainStatus::PENDING_RENEW)
+    statuses.delete(DomainStatus::PENDING_CREATE)
 
-    self.force_delete_at = Time.zone.now + Setting.redemption_grace_period.days unless force_delete_at
-    save(validate: false)
-  end
-
-  def unset_force_delete
     statuses.delete(DomainStatus::FORCE_DELETE)
     statuses.delete(DomainStatus::SERVER_RENEW_PROHIBITED)
     statuses.delete(DomainStatus::SERVER_TRANSFER_PROHIBITED)
@@ -552,7 +565,28 @@ class Domain < ActiveRecord::Base
     statuses.delete(DomainStatus::SERVER_MANUAL_INZONE)
     statuses.delete(DomainStatus::PENDING_DELETE)
 
+    statuses << DomainStatus::FORCE_DELETE
+    statuses << DomainStatus::SERVER_RENEW_PROHIBITED
+    statuses << DomainStatus::SERVER_TRANSFER_PROHIBITED
+    statuses << DomainStatus::SERVER_UPDATE_PROHIBITED
+    statuses << DomainStatus::SERVER_MANUAL_INZONE
+    statuses << DomainStatus::PENDING_DELETE
+
+    self.force_delete_at = Time.zone.now + Setting.redemption_grace_period.days unless force_delete_at
+    save(validate: false)
+  end
+  # rubocop:enable Metrics/AbcSize
+
+  def unset_force_delete
+    s = []
+    s << DomainStatus::EXPIRED if statuses.include?(DomainStatus::EXPIRED)
+    s << DomainStatus::SERVER_HOLD if statuses.include?(DomainStatus::SERVER_HOLD)
+    s << DomainStatus::DELETE_CANDIDATE if statuses.include?(DomainStatus::DELETE_CANDIDATE)
+
+    self.statuses = (statuses_backup + s).uniq
+
     self.force_delete_at = nil
+    self.statuses_backup = []
     save(validate: false)
   end
 
@@ -570,11 +604,17 @@ class Domain < ActiveRecord::Base
   end
 
   def pending_update?
-    statuses.include?(DomainStatus::PENDING_UPDATE)
+    statuses.include?(DomainStatus::PENDING_UPDATE) && !statuses.include?(DomainStatus::FORCE_DELETE)
   end
 
+  # public api
   def update_prohibited?
     pending_update_prohibited? && pending_delete_prohibited?
+  end
+
+  # public api
+  def delete_prohibited?
+    statuses.include?(DomainStatus::FORCE_DELETE)
   end
 
   # TODO: Review the list and disallow epp calls
@@ -599,7 +639,7 @@ class Domain < ActiveRecord::Base
   end
 
   def pending_delete?
-    statuses.include?(DomainStatus::PENDING_DELETE)
+    statuses.include?(DomainStatus::PENDING_DELETE) && !statuses.include?(DomainStatus::FORCE_DELETE)
   end
 
   # TODO: Review the list and disallow epp calls
@@ -644,6 +684,14 @@ class Domain < ActiveRecord::Base
 
   def update_whois_record
     whois_record.blank? ? create_whois_record : whois_record.save
+  end
+
+  def status_notes_array=(notes)
+    self.status_notes = {}
+    notes ||= []
+    statuses.each_with_index do |status, i|
+      status_notes[status] = notes[i]
+    end
   end
 end
 # rubocop: enable Metrics/ClassLength

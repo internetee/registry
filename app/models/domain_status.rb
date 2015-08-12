@@ -120,12 +120,49 @@ class DomainStatus < ActiveRecord::Base
   end
 
   class << self
-    def statuses_for_client
-      CLIENT_STATUSES.map { |x| x.sub('client', '') }
+    def admin_statuses
+      [
+        SERVER_HOLD, 
+        # sync with admin_statuses_map
+        # SERVER_MANUAL_INZONE, 
+        # SERVER_RENEW_PROHIBITED, 
+        # SERVER_TRANSFER_PROHIBITED,
+        # SERVER_REGISTRANT_CHANGE_PROHIBITED,
+        # SERVER_ADMIN_CHANGE_PROHIBITED, 
+        # SERVER_TECH_CHANGE_PROHIBITED,
+        SERVER_DELETE_PROHIBITED, 
+        SERVER_UPDATE_PROHIBITED
+      ]
     end
 
-    def statuses_for_admin
-      SERVER_STATUSES.map { |x| [x.sub('server', ''), x] }
+    def admin_statuses_map
+      [
+        ['Hold', SERVER_HOLD], 
+        # sync with admin_statuses
+        # ['ManualInzone', SERVER_MANUAL_INZONE], 
+        # [''],
+        # ['RenewProhibited', SERVER_RENEW_PROHIBITED], 
+        # ['TransferProhibited', SERVER_TRANSFER_PROHIBITED],
+        # ['RegistrantChangeProhibited', SERVER_REGISTRANT_CHANGE_PROHIBITED],
+        # ['AdminChangeProhibited', SERVER_ADMIN_CHANGE_PROHIBITED], 
+        # ['TechChangeProhibited', SERVER_TECH_CHANGE_PROHIBITED],
+        # [''],
+        ['UpdateProhibited', SERVER_UPDATE_PROHIBITED], 
+        ['DeleteProhibited', SERVER_DELETE_PROHIBITED]
+      ]
+    end
+
+    def admin_not_deletable_statuses
+      [
+        OK, 
+        INACTIVE, 
+        FORCE_DELETE,
+        PENDING_CREATE,
+        PENDING_DELETE,
+        PENDING_RENEW,
+        PENDING_TRANSFER,
+        PENDING_UPDATE
+      ]
     end
   end
 end

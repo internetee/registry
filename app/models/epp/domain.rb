@@ -4,7 +4,7 @@ class Epp::Domain < Domain
 
   before_validation :manage_permissions
   def manage_permissions
-    return unless update_prohibited?
+    return unless update_prohibited? || delete_prohibited?
     add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
     false
   end
@@ -433,9 +433,10 @@ class Epp::Domain < Domain
 
     return unless update(frame, user, false)
     clean_pendings!
-    self.deliver_emails = true # turn on email delivery for epp
+    self.deliver_emails = true # turn on email delivery
     DomainMailer.registrant_updated_notification_for_new_registrant(self).deliver_now
     old_registrant_email.deliver_now
+    true
   end
 
   def apply_pending_delete!
@@ -446,6 +447,7 @@ class Epp::Domain < Domain
     DomainMailer.delete_confirmation(self).deliver_now
 
     clean_pendings! if epp_destroy(frame, user, false)
+    true
   end
 
   def attach_legal_document(legal_document_data)
@@ -460,7 +462,7 @@ class Epp::Domain < Domain
   def epp_destroy(frame, user_id, verify = true)
     return false unless valid?
 
-    if verify && 
+    if verify &&
        Setting.request_confirmation_on_domain_deletion_enabled &&
        frame.css('delete').attr('verified').to_s.downcase != 'yes'
 
@@ -579,7 +581,14 @@ class Epp::Domain < Domain
   # rubocop: disable Metrics/MethodLength
   # rubocop: disable Metrics/AbcSize
   def query_transfer(frame, current_user)
-    unless can_be_transferred_to?(current_user.registrar)
+    unless transferrable?
+      throw :epp_error, {
+        code: '2304',
+        msg: I18n.t(:object_status_prohibits_operation)
+      }
+    end
+
+    if current_user.registrar == registrar
       throw :epp_error, {
         code: '2002',
         msg: I18n.t(:domain_already_belongs_to_the_querying_registrar)
@@ -737,8 +746,15 @@ class Epp::Domain < Domain
     true
   end
 
-  def can_be_transferred_to?(new_registrar)
-    new_registrar != registrar
+  def transferrable?
+    (statuses & [
+      DomainStatus::PENDING_CREATE,
+      DomainStatus::PENDING_UPDATE,
+      DomainStatus::PENDING_DELETE,
+      DomainStatus::PENDING_RENEW,
+      DomainStatus::PENDING_TRANSFER,
+      DomainStatus::FORCE_DELETE
+    ]).empty?
   end
 
   ## SHARED

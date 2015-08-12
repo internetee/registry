@@ -82,33 +82,28 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
 
         ret = concat(tmp_var, chr(10), chr(10));
 
+        -- origin ns records
+        SELECT ns_records FROM zonefile_settings zf WHERE i_origin = zf.origin INTO tmp_var;
+        ret := concat(ret, '; Zone NS Records', chr(10), tmp_var, chr(10));
+
         -- ns records
         SELECT array_to_string(
           array(
             SELECT concat(d.name_puny, '. IN NS ', ns.hostname, '.')
             FROM domains d
             JOIN nameservers ns ON ns.domain_id = d.id
-            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter OR d.name = i_origin
+            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
+            AND NOT ('{serverHold,clientHold}' && d.statuses)
             ORDER BY d.name
           ),
           chr(10)
         ) INTO tmp_var;
 
-        ret := concat(ret, '; Zone NS Records', chr(10), tmp_var, chr(10), chr(10));
+        ret := concat(ret, tmp_var, chr(10), chr(10));
 
-        -- a glue records for origin nameservers
-        SELECT array_to_string(
-          array(
-            SELECT concat(ns.hostname, '. IN A ', ns.ipv4)
-            FROM nameservers ns
-            JOIN domains d ON d.id = ns.domain_id
-            WHERE d.name = i_origin
-            AND ns.hostname LIKE '%.' || d.name
-            AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> ''
-          ), chr(10)
-        ) INTO tmp_var;
-
-        ret := concat(ret, '; Zone A Records', chr(10), tmp_var);
+        -- origin a glue records
+        SELECT a_records FROM zonefile_settings zf WHERE i_origin = zf.origin INTO tmp_var;
+        ret := concat(ret, '; Zone A Records', chr(10), tmp_var, chr(10));
 
         -- a glue records for other nameservers
         SELECT array_to_string(
@@ -120,43 +115,15 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
             AND ns.hostname LIKE '%.' || d.name
             AND d.name <> i_origin
             AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> ''
-            AND NOT EXISTS ( -- filter out glue records that already appeared in origin glue recrods
-              SELECT 1 FROM nameservers nsi
-              JOIN domains di ON nsi.domain_id = di.id
-              WHERE di.name = i_origin
-              AND nsi.hostname = ns.hostname
-            )
+            AND NOT ('{serverHold,clientHold}' && d.statuses)
           ), chr(10)
         ) INTO tmp_var;
 
-        -- TODO This is a possible subtitition to the previous query, stress testing is needed to see which is faster
+        ret := concat(ret, tmp_var, chr(10), chr(10));
 
-        -- SELECT ns.*
-        -- FROM nameservers ns
-        -- JOIN domains d ON d.id = ns.domain_id
-        -- WHERE d.name LIKE '%ee' AND d.name NOT LIKE '%pri.ee'
-        -- AND ns.hostname LIKE '%.' || d.name
-        -- AND d.name <> 'ee'
-        -- AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> ''
-        -- AND ns.hostname NOT IN (
-        --   SELECT ns.hostname FROM domains d JOIN nameservers ns ON d.id = ns.domain_id WHERE d.name = 'ee'
-        -- )
-
-        ret := concat(ret, chr(10), tmp_var, chr(10), chr(10));
-
-        -- aaaa glue records for origin nameservers
-        SELECT array_to_string(
-          array(
-            SELECT concat(ns.hostname, '. IN AAAA ', ns.ipv6)
-            FROM nameservers ns
-            JOIN domains d ON d.id = ns.domain_id
-            WHERE d.name = i_origin
-            AND ns.hostname LIKE '%.' || d.name
-            AND ns.ipv6 IS NOT NULL AND ns.ipv6 <> ''
-          ), chr(10)
-        ) INTO tmp_var;
-
-        ret := concat(ret, '; Zone AAAA Records', chr(10), tmp_var);
+        -- origin aaaa glue records
+        SELECT a4_records FROM zonefile_settings zf WHERE i_origin = zf.origin INTO tmp_var;
+        ret := concat(ret, '; Zone AAAA Records', chr(10), tmp_var, chr(10));
 
         -- aaaa glue records for other nameservers
         SELECT array_to_string(
@@ -168,16 +135,11 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
             AND ns.hostname LIKE '%.' || d.name
             AND d.name <> i_origin
             AND ns.ipv6 IS NOT NULL AND ns.ipv6 <> ''
-            AND NOT EXISTS ( -- filter out glue records that already appeared in origin glue recrods
-              SELECT 1 FROM nameservers nsi
-              JOIN domains di ON nsi.domain_id = di.id
-              WHERE di.name = i_origin
-              AND nsi.hostname = ns.hostname
-            )
+            AND NOT ('{serverHold,clientHold}' && d.statuses)
           ), chr(10)
         ) INTO tmp_var;
 
-        ret := concat(ret, chr(10), tmp_var, chr(10), chr(10));
+        ret := concat(ret, tmp_var, chr(10), chr(10));
 
         -- ds records
         SELECT array_to_string(
@@ -189,6 +151,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
             FROM domains d
             JOIN dnskeys dk ON dk.domain_id = d.id
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter AND dk.flags = 257
+            AND NOT ('{serverHold,clientHold}' && d.statuses)
             ),
           chr(10)
         ) INTO tmp_var;
@@ -691,6 +654,15 @@ ALTER SEQUENCE countries_id_seq OWNED BY countries.id;
 
 
 --
+-- Name: data_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE data_migrations (
+    version character varying NOT NULL
+);
+
+
+--
 -- Name: delegation_signers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -938,7 +910,8 @@ CREATE TABLE domains (
     force_delete_at timestamp without time zone,
     statuses character varying[],
     reserved boolean DEFAULT false,
-    status_notes hstore
+    status_notes hstore,
+    statuses_backup character varying[] DEFAULT '{}'::character varying[]
 );
 
 
@@ -2377,7 +2350,7 @@ CREATE TABLE pricelists (
     id integer NOT NULL,
     "desc" character varying,
     category character varying,
-    price_cents numeric(10,2) DEFAULT 0 NOT NULL,
+    price_cents numeric(10,2) DEFAULT 0.0 NOT NULL,
     price_currency character varying DEFAULT 'EUR'::character varying NOT NULL,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
@@ -2641,7 +2614,7 @@ CREATE TABLE users (
     crt text,
     type character varying,
     registrant_ident character varying,
-    encrypted_password character varying DEFAULT ''::character varying,
+    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
     remember_created_at timestamp without time zone,
     failed_attempts integer DEFAULT 0 NOT NULL,
     locked_at timestamp without time zone
@@ -2784,7 +2757,10 @@ CREATE TABLE zonefile_settings (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     creator_str character varying,
-    updator_str character varying
+    updator_str character varying,
+    ns_records text,
+    a_records text,
+    a4_records text
 );
 
 
@@ -4513,6 +4489,13 @@ CREATE INDEX index_whois_records_on_registrar_id ON whois_records USING btree (r
 
 
 --
+-- Name: unique_data_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX unique_data_migrations ON data_migrations USING btree (version);
+
+
+--
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4727,8 +4710,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150227092508');
 
 INSERT INTO schema_migrations (version) VALUES ('20150227113121');
 
-INSERT INTO schema_migrations (version) VALUES ('20150302130224');
-
 INSERT INTO schema_migrations (version) VALUES ('20150302161712');
 
 INSERT INTO schema_migrations (version) VALUES ('20150303130729');
@@ -4787,8 +4768,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150417082723');
 
 INSERT INTO schema_migrations (version) VALUES ('20150421134820');
 
-INSERT INTO schema_migrations (version) VALUES ('20150422090645');
-
 INSERT INTO schema_migrations (version) VALUES ('20150422092514');
 
 INSERT INTO schema_migrations (version) VALUES ('20150422132631');
@@ -4833,8 +4812,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150519115050');
 
 INSERT INTO schema_migrations (version) VALUES ('20150519140853');
 
-INSERT INTO schema_migrations (version) VALUES ('20150519142542');
-
 INSERT INTO schema_migrations (version) VALUES ('20150519144118');
 
 INSERT INTO schema_migrations (version) VALUES ('20150520163237');
@@ -4847,7 +4824,9 @@ INSERT INTO schema_migrations (version) VALUES ('20150522164020');
 
 INSERT INTO schema_migrations (version) VALUES ('20150525075550');
 
-INSERT INTO schema_migrations (version) VALUES ('20150603141054');
+INSERT INTO schema_migrations (version) VALUES ('20150601083516');
+
+INSERT INTO schema_migrations (version) VALUES ('20150601083800');
 
 INSERT INTO schema_migrations (version) VALUES ('20150603141549');
 
@@ -4855,7 +4834,11 @@ INSERT INTO schema_migrations (version) VALUES ('20150603211318');
 
 INSERT INTO schema_migrations (version) VALUES ('20150603212659');
 
+INSERT INTO schema_migrations (version) VALUES ('20150609093515');
+
 INSERT INTO schema_migrations (version) VALUES ('20150609103333');
+
+INSERT INTO schema_migrations (version) VALUES ('20150610111019');
 
 INSERT INTO schema_migrations (version) VALUES ('20150610112238');
 
@@ -4865,7 +4848,11 @@ INSERT INTO schema_migrations (version) VALUES ('20150611124920');
 
 INSERT INTO schema_migrations (version) VALUES ('20150612123111');
 
+INSERT INTO schema_migrations (version) VALUES ('20150612125720');
+
 INSERT INTO schema_migrations (version) VALUES ('20150701074344');
+
+INSERT INTO schema_migrations (version) VALUES ('20150703084206');
 
 INSERT INTO schema_migrations (version) VALUES ('20150703084632');
 
@@ -4882,4 +4869,8 @@ INSERT INTO schema_migrations (version) VALUES ('20150709092549');
 INSERT INTO schema_migrations (version) VALUES ('20150713113436');
 
 INSERT INTO schema_migrations (version) VALUES ('20150722071128');
+
+INSERT INTO schema_migrations (version) VALUES ('20150803080914');
+
+INSERT INTO schema_migrations (version) VALUES ('20150810114746');
 

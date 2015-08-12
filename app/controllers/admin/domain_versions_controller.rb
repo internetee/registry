@@ -1,17 +1,17 @@
 class Admin::DomainVersionsController < AdminController
   load_and_authorize_resource
 
+  # rubocop:disable Style/GuardClause
   def index
-    @domain = Domain.find(params[:domain_id])
+    @domain = Domain.where(id: params[:domain_id]).includes({versions: :item}).first
     @versions = @domain.versions
+
+    if @domain.pending_json.present?
+      frame = Nokogiri::XML(@domain.pending_json['frame'])
+      @pending_user  = User.find(@domain.pending_json['current_user_id'])
+      @pending_domain = Epp::Domain.find(@domain.id)
+      @pending_domain.update(frame, @pending_user, false)
+    end
   end
-
-  # def index
-    # # @q = DomainVersion.deleted.search(params[:q])
-    # # @domains = @q.result.page(params[:page])
-  # end
-
-  # def show
-    # @versions = DomainVersion.where(item_id: params[:id])
-  # end
+  # rubocop:enable Style/GuardClause
 end

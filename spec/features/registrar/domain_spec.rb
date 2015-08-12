@@ -54,6 +54,47 @@ feature 'Domains', type: :feature do
 
       page.should_not have_text(d1.name)
       page.should have_text(d2.name)
+
+    end
+
+    it 'should search domains' do
+      # having shared state across tests is really annoying sometimes...
+      click_link "#{@user} (#{@user.roles.first}) - #{@user.registrar}"
+
+      Fabricate(:domain, name: 'abcde.ee', registrar: @user.registrar)
+      Fabricate(:domain, name: 'abcdee.ee', registrar: @user.registrar)
+      Fabricate(:domain, name: 'defgh.pri.ee', registrar: @user.registrar)
+
+      visit '/registrar/domains'
+      click_link 'Domains'
+
+      page.should have_content('abcde.ee')
+      page.should have_content('abcdee.ee')
+      page.should have_content('defgh.pri.ee')
+
+      fill_in 'q_name_matches', with: 'abcde.ee'
+      find('.btn.btn-primary.search').click
+
+      current_path.should == "/registrar/domains/info"
+
+      visit '/registrar/domains'
+      fill_in 'q_name_matches', with: '.ee'
+      find('.btn.btn-primary.search').click
+
+      current_path.should == "/registrar/domains"
+      page.should have_content('abcde.ee')
+      page.should have_content('abcdee.ee')
+      page.should have_content('defgh.pri.ee')
+
+      fill_in 'q_name_matches', with: 'abcd%.ee'
+      find('.btn.btn-primary.search').click
+      page.should have_content('abcde.ee')
+      page.should have_content('abcdee.ee')
+      page.should_not have_content('defgh.pri.ee')
+
+      fill_in 'q_name_matches', with: 'abcd_.ee'
+      find('.btn.btn-primary.search').click
+      current_path.should == "/registrar/domains/info"
     end
   end
 end

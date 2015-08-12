@@ -9,7 +9,7 @@ source 'https://rubygems.org'
 
 # core
 gem 'rails',        '4.2.3' # when update, all initializers eis_custom files needs check/update
-gem 'iso8601',      '~> 0.8.2' # for dates and times
+gem 'iso8601',      '~> 0.8.6' # for dates and times
 gem 'hashie-forbidden_attributes', '~> 0.1.1'
 
 # load env
@@ -18,6 +18,8 @@ gem 'figaro', '~> 1.1.1'
 # model related
 gem 'pg',                        '~> 0.18.0'
 gem 'ransack',                   '~> 1.5.1' # for searching
+gem 'validates_email_format_of', '~> 1.6.3' # validates email against RFC 2822 and RFC 3696
+
 # with polymorphic fix
 gem 'paper_trail',
   github: 'airblade/paper_trail',
@@ -65,7 +67,7 @@ gem 'money-rails', '~> 1.4.1'
 # deploy
 gem 'whenever', '~> 0.9.4', require: false
 gem 'data_migrate',
-  github: 'gitlabeu/data_migrate',
+  github: 'internetee/data-migrate',
   ref: '35d22b09ff37a4e9d61ab326ad5d8eb0edf1fc81'
 
 # monitors

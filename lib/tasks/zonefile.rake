@@ -40,33 +40,28 @@ namespace :zonefile do
 
         ret = concat(tmp_var, chr(10), chr(10));
 
+        -- origin ns records
+        SELECT ns_records FROM zonefile_settings zf WHERE i_origin = zf.origin INTO tmp_var;
+        ret := concat(ret, '; Zone NS Records', chr(10), tmp_var, chr(10));
+
         -- ns records
         SELECT array_to_string(
           array(
             SELECT concat(d.name_puny, '. IN NS ', ns.hostname, '.')
             FROM domains d
             JOIN nameservers ns ON ns.domain_id = d.id
-            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter OR d.name = i_origin
+            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
+            AND NOT ('{serverHold,clientHold}' && d.statuses)
             ORDER BY d.name
           ),
           chr(10)
         ) INTO tmp_var;
 
-        ret := concat(ret, '; Zone NS Records', chr(10), tmp_var, chr(10), chr(10));
+        ret := concat(ret, tmp_var, chr(10), chr(10));
 
-        -- a glue records for origin nameservers
-        SELECT array_to_string(
-          array(
-            SELECT concat(ns.hostname, '. IN A ', ns.ipv4)
-            FROM nameservers ns
-            JOIN domains d ON d.id = ns.domain_id
-            WHERE d.name = i_origin
-            AND ns.hostname LIKE '%.' || d.name
-            AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> ''
-          ), chr(10)
-        ) INTO tmp_var;
-
-        ret := concat(ret, '; Zone A Records', chr(10), tmp_var);
+        -- origin a glue records
+        SELECT a_records FROM zonefile_settings zf WHERE i_origin = zf.origin INTO tmp_var;
+        ret := concat(ret, '; Zone A Records', chr(10), tmp_var, chr(10));
 
         -- a glue records for other nameservers
         SELECT array_to_string(
@@ -78,43 +73,15 @@ namespace :zonefile do
             AND ns.hostname LIKE '%.' || d.name
             AND d.name <> i_origin
             AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> ''
-            AND NOT EXISTS ( -- filter out glue records that already appeared in origin glue recrods
-              SELECT 1 FROM nameservers nsi
-              JOIN domains di ON nsi.domain_id = di.id
-              WHERE di.name = i_origin
-              AND nsi.hostname = ns.hostname
-            )
+            AND NOT ('{serverHold,clientHold}' && d.statuses)
           ), chr(10)
         ) INTO tmp_var;
 
-        -- TODO This is a possible subtitition to the previous query, stress testing is needed to see which is faster
+        ret := concat(ret, tmp_var, chr(10), chr(10));
 
-        -- SELECT ns.*
-        -- FROM nameservers ns
-        -- JOIN domains d ON d.id = ns.domain_id
-        -- WHERE d.name LIKE '%ee' AND d.name NOT LIKE '%pri.ee'
-        -- AND ns.hostname LIKE '%.' || d.name
-        -- AND d.name <> 'ee'
-        -- AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> ''
-        -- AND ns.hostname NOT IN (
-        --   SELECT ns.hostname FROM domains d JOIN nameservers ns ON d.id = ns.domain_id WHERE d.name = 'ee'
-        -- )
-
-        ret := concat(ret, chr(10), tmp_var, chr(10), chr(10));
-
-        -- aaaa glue records for origin nameservers
-        SELECT array_to_string(
-          array(
-            SELECT concat(ns.hostname, '. IN AAAA ', ns.ipv6)
-            FROM nameservers ns
-            JOIN domains d ON d.id = ns.domain_id
-            WHERE d.name = i_origin
-            AND ns.hostname LIKE '%.' || d.name
-            AND ns.ipv6 IS NOT NULL AND ns.ipv6 <> ''
-          ), chr(10)
-        ) INTO tmp_var;
-
-        ret := concat(ret, '; Zone AAAA Records', chr(10), tmp_var);
+        -- origin aaaa glue records
+        SELECT a4_records FROM zonefile_settings zf WHERE i_origin = zf.origin INTO tmp_var;
+        ret := concat(ret, '; Zone AAAA Records', chr(10), tmp_var, chr(10));
 
         -- aaaa glue records for other nameservers
         SELECT array_to_string(
@@ -126,16 +93,11 @@ namespace :zonefile do
             AND ns.hostname LIKE '%.' || d.name
             AND d.name <> i_origin
             AND ns.ipv6 IS NOT NULL AND ns.ipv6 <> ''
-            AND NOT EXISTS ( -- filter out glue records that already appeared in origin glue recrods
-              SELECT 1 FROM nameservers nsi
-              JOIN domains di ON nsi.domain_id = di.id
-              WHERE di.name = i_origin
-              AND nsi.hostname = ns.hostname
-            )
+            AND NOT ('{serverHold,clientHold}' && d.statuses)
           ), chr(10)
         ) INTO tmp_var;
 
-        ret := concat(ret, chr(10), tmp_var, chr(10), chr(10));
+        ret := concat(ret, tmp_var, chr(10), chr(10));
 
         -- ds records
         SELECT array_to_string(
@@ -147,6 +109,7 @@ namespace :zonefile do
             FROM domains d
             JOIN dnskeys dk ON dk.domain_id = d.id
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter AND dk.flags = 257
+            AND NOT ('{serverHold,clientHold}' && d.statuses)
             ),
           chr(10)
         ) INTO tmp_var;

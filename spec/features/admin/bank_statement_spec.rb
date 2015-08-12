@@ -46,7 +46,7 @@ feature 'BankStatement', type: :feature do
 
     click_link 'Back to bank statement'
 
-    page.should have_content('120.0')
+    page.should have_content('120,00')
     page.should have_content('Test buyer')
   end
 end

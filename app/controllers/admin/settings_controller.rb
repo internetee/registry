@@ -61,7 +61,7 @@ class Admin::SettingsController < AdminController
       :expire_pending_confirmation
     ]
 
-    floats = [:registry_vat_prc]
+    floats = [:registry_vat_prc, :minimum_deposit]
 
     booleans = [
       :ds_data_allowed,

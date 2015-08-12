@@ -22,6 +22,7 @@ en:
       longer: "%a, %e. %b %Y, %H:%M"
       long: "%A, %e. %B %Y, %H:%M"
       short: "%d.%m.%y, %H:%M"
+      shorts: "%d.%m.%y, %H:%M:%S"
       date: "%d.%m.%y"
       date_long: "%d. %B %Y"
       ydate: "%Y.%m.%d"
@@ -654,7 +655,10 @@ en:
   general: General
   id_card: 'ID Card'
   m_id: 'M-ID'
-  destroyed: It was successfully deleted.
+  pending_removed: Pending was successfully removed.
+  pending_applied: Pending was successfully applied.
+  something_wrong: Not success, something went wrong!
+  failure: Not success
   not_found: Not found
   no_connection_to_registry: Connection issue to the registry EPP or REPP server! Please try again later.
   domain_not_found: 'Domain was not found'
@@ -894,3 +898,15 @@ en:
   nameserver_hostname: 'Nameserver hostname'
   result_count: '%{count} results'
   failed_to_generate_invoice_invoice_number_limit_reached: 'Failed to generate invoice - invoice number limit reached'
+  is_too_small_minimum_deposit_is: 'is too small. Minimum deposit is %{amount} %{currency}'
+  a4_records: 'AAAA records'
+  new_zone: 'New zone'
+  edit_zone: 'Edit zone'
+  there_are_count_domains_in_this_zone: 'There are %{count} domains in this zone'
+  poll_pending_update_confirmed_by_registrant: 'Registrant confirmed domain update'
+  poll_pending_update_rejected_by_registranti: 'Registrant rejected domain update'
+  poll_pending_delete_rejected_by_registrant: 'Registrant rejected domain deletion'
+  poll_pending_delete_confirmed_by_registrant: 'Registrant confirmed domain deletion'
+  manage: Manage
+  pending_epp: Pending epp
+

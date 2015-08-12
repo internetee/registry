@@ -1,53 +1,7 @@
-= render 'shared/title', name: t(:zonefile_settings)
+- content_for :actions do
+  = link_to(t(:back), admin_zonefile_settings_path, class: 'btn btn-default')
+  = link_to(t(:delete), admin_zonefile_setting_path(@zonefile_setting),
+    method: :delete, data: { confirm: t(:are_you_sure) }, class: 'btn btn-danger')
+= render 'shared/title', name: t(:edit_zone)
 
-= form_for [:admin, @zonefile_setting], html: { class: 'form-horizontal' } do |f|
-  .row
-    .col-md-8
-      #domain-statuses
-        = render 'shared/full_errors', object: f.object
-
-        .form-group
-          .col-md-4.control-label
-            = f.label :origin
-          .col-md-8
-            = f.text_field :origin, class: 'form-control', disabled: true
-
-        .form-group
-          .col-md-4.control-label
-            = f.label :ttl
-          .col-md-8
-            = f.text_field :ttl, class: 'form-control'
-
-        .form-group
-          .col-md-4.control-label
-            = f.label :refresh
-          .col-md-8
-            = f.text_field :refresh, class: 'form-control'
-
-        .form-group
-          .col-md-4.control-label
-            = f.label :retry
-          .col-md-8
-            = f.text_field :retry, class: 'form-control'
-        .form-group
-          .col-md-4.control-label
-            = f.label :expire
-          .col-md-8
-            = f.text_field :expire, class: 'form-control'
-
-        .form-group
-          .col-md-4.control-label
-            = f.label :minimum_ttl
-          .col-md-8
-            = f.text_field :minimum_ttl, class: 'form-control'
-
-        .form-group
-          .col-md-4.control-label
-            = f.label :email
-          .col-md-8
-            = f.text_field :email, class: 'form-control', email: true
-
-  %hr
-  .row
-    .col-md-8.text-right
-      %button.btn.btn-primary= t(:save)
+= render 'form'

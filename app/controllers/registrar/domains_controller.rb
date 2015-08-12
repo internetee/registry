@@ -2,21 +2,41 @@ class Registrar::DomainsController < Registrar::DeppController # EPP controller
   before_action :init_domain, except: :new
   before_action :init_contacts_autocomplete_map, only: [:new, :edit, :create, :update]
 
+  # rubocop: disable Metrics/PerceivedComplexity
+  # rubocop: disable Metrics/CyclomaticComplexity
+  # rubocop: disable Metrics/AbcSize
   def index
     authorize! :view, Depp::Domain
-    limit, offset = pagination_details
 
-    res = depp_current_user.repp_request('domains', { details: true, limit: limit, offset: offset })
-    if res.code == '200'
-      @response = res.parsed_body.with_indifferent_access
-      @contacts = @response ? @response[:contacts] : []
-
-      @paginatable_array = Kaminari.paginate_array(
-        [], total_count: @response[:total_number_of_records]
-      ).page(params[:page]).per(limit)
+    params[:q] ||= {}
+    if params[:statuses_contains]
+      domains = current_user.registrar.domains.includes(:registrar, :registrant).where(
+        "statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
+      )
+    else
+      domains = current_user.registrar.domains.includes(:registrar, :registrant)
     end
-    flash.now[:epp_results] = [{ 'code' => res.code, 'msg' => res.message }]
+
+    normalize_search_parameters do
+      @q = domains.search(params[:q])
+      @domains = @q.result.page(params[:page])
+      if @domains.count == 1 && params[:q][:name_matches].present?
+        redirect_to info_registrar_domains_path(domain_name: @domains.first.name) and return
+      elsif @domains.count == 0 && params[:q][:name_matches] !~ /^%.+%$/
+        # if we do not get any results, add wildcards to the name field and search again
+        n_cache = params[:q][:name_matches]
+        params[:q][:name_matches] = "%#{params[:q][:name_matches]}%"
+        @q = domains.search(params[:q])
+        @domains = @q.result.page(params[:page])
+        params[:q][:name_matches] = n_cache # we don't want to show wildcards in search form
+      end
+    end
+
+    @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i > 0
   end
+  # rubocop: enable Metrics/PerceivedComplexity
+  # rubocop: enable Metrics/CyclomaticComplexity
+  # rubocop: enable Metrics/AbcSize
 
   def info
     authorize! :view, Depp::Domain
@@ -122,5 +142,19 @@ class Registrar::DomainsController < Registrar::DeppController # EPP controller
       current_user.registrar.contacts.pluck(:name, :code).map { |c| ["#{c.second} #{c.first}", c.second] }
     # @priv_contacts_autocomplete_map ||=
       # current_user.registrar.priv_contacts.pluck(:name, :code).map { |c| ["#{c.second} #{c.first}", c.second] }
+  end
+
+  def normalize_search_parameters
+    ca_cache = params[:q][:valid_to_lteq]
+    begin
+      end_time = params[:q][:valid_to_lteq].try(:to_date)
+      params[:q][:valid_to_lteq] = end_time.try(:end_of_day)
+    rescue
+      logger.warn('Invalid date')
+    end
+
+    yield
+
+    params[:q][:valid_to_lteq] = ca_cache
   end
 end

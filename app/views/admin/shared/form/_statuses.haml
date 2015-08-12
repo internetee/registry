@@ -1,35 +1,38 @@
-#js-contact-statuses
+#js-statuses
   - f.object.statuses.each do |s|
-    - disabled = !Contact.admin_statuses.include?(s)
+    - disabled = disabled_statuses.include?(s)
     - disabled_style = disabled ? 'display: none' : ''
-    - delete_style = [Contact::OK, Contact::LINKED].include?(s) ? 'display: none' : ''
+    - delete_style = not_deletable_statuses.include?(s) ? 'display: none' : ''
 
     .panel.panel-default
       .panel-heading.clearfix
         .pull-left= t(:status)
         .pull-right
+          - if model == 'domain'
+            = render 'admin/domains/form/pending_update', f: f, status: s
+            = render 'admin/domains/form/pending_delete', f: f, status: s
           = link_to(t(:delete), '#', class: 'btn btn-danger btn-xs js-destroy-status', style: delete_style)
       .panel-body
         .form-group
           = f.label 'status', class: 'col-md-2 control-label'
           .col-md-10
             .js-select{style: disabled_style}
-              = select_tag 'contact[statuses][]', 
-                options_for_select(Contact::admin_statuses_map, s), 
+              = select_tag "#{model}[statuses][]", 
+                options_for_select(admin_statuses_map, s), 
                 include_blank: true, class: "form-control"
             - if disabled
               .disabled-value.js-disabled-value
                 = s
-                = hidden_field_tag 'contact[statuses][]', s, readonly: true
+                = hidden_field_tag "#{model}[statuses][]", s, readonly: true
         .form-group
           = label_tag t(:notes), nil, class: 'col-md-2 control-label'
           .col-md-10
             - value = f.object.new_record? ? '' : f.object.status_notes[s]
-            = text_field_tag 'contact[status_notes_array][]', value, class: 'form-control'
+            = text_field_tag "#{model}[status_notes_array][]", value, class: 'form-control'
 
 :coffee
-  $("#js-contact-statuses").nestedAttributes
-    bindAddTo: $(".js-add-contact-status")
+  $("#js-statuses").nestedAttributes
+    bindAddTo: $(".js-add-status")
     afterAdd: (el) ->
       if el.find('.js-disabled-value')
         el.find('.js-disabled-value').remove()
