@@ -54,6 +54,7 @@ feature 'Domain', type: :feature do
     sign_in @user
     visit admin_domains_url
     click_link d.name
+    click_link 'Edit statuses'
     page.should have_content('ok')
     click_link 'Set force delete'
     page.should have_content('forceDelete')
@@ -69,6 +70,7 @@ feature 'Domain', type: :feature do
     page.should have_content('Object status prohibits operation')
 
     click_link 'Back to domain'
+    click_link 'Edit statuses'
     click_link 'Unset force delete'
     page.should_not have_content('forceDelete')
     page.should_not have_content('serverRenewProhibited')
