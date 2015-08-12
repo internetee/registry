@@ -39,5 +39,21 @@ feature 'Domains', type: :feature do
       visit '/registrar/domains/new'
       current_path.should == '/registrar/domains/new'
     end
+
+    it 'should switch user' do
+      d1 = Fabricate(:domain, registrar: @user.registrar)
+      user2 = Fabricate(:api_user, identity_code: @user.identity_code)
+      d2 = Fabricate(:domain, registrar: user2.registrar)
+
+      visit '/registrar/domains'
+
+      page.should have_text(d1.name)
+      page.should_not have_text(d2.name)
+
+      click_link "#{user2} (#{user2.roles.first}) - #{user2.registrar}"
+
+      page.should_not have_text(d1.name)
+      page.should have_text(d2.name)
+    end
   end
 end

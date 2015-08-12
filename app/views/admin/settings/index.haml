@@ -52,6 +52,8 @@
           = render 'setting_row', var: :client_side_status_editing_enabled
           = render 'setting_row', var: :api_ip_whitelist_enabled
           = render 'setting_row', var: :registrar_ip_whitelist_enabled
+          = render 'setting_row', var: :request_confrimation_on_registrant_change_enabled
+          = render 'setting_row', var: :request_confirmation_on_domain_deletion_enabled
 
   .panel.panel-default
     .panel-heading.clearfix
@@ -65,6 +67,7 @@
         %tbody
           = render 'setting_row', var: :invoice_number_min
           = render 'setting_row', var: :invoice_number_max
+          = render 'setting_row', var: :days_to_keep_invoices_active
           = render 'setting_row', var: :days_to_keep_overdue_invoices_active
           = render 'setting_row', var: :registry_billing_email
           = render 'setting_row', var: :registry_invoice_contact

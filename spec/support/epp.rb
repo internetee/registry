@@ -67,15 +67,15 @@ module Epp
 
   def epp_plain_request(data, *args)
     options = args.extract_options!
-    validate_input = options[:validate_input] != false # true by default
+    # validate_input = options[:validate_input] != false # true by default
     validate_output = options[:validate_output] != false # true by default
 
-    if validate_input && @xsd
-      xml = Nokogiri::XML(data)
-      @xsd.validate(xml).each do |error|
-        fail Exception.new, error.to_s
-      end
-    end
+    # if validate_input && @xsd
+    #   xml = Nokogiri::XML(data)
+    #   @xsd.validate(xml).each do |error|
+    #     fail Exception.new, error.to_s
+    #   end
+    # end
 
     res = parse_response(server.send_request(data))
     if res
@@ -352,6 +352,7 @@ module Epp
   def domain_transfer_xml(xml_params = {}, op = 'request', custom_params = {})
     defaults = {
       name: { value: next_domain_name },
+      period: nil,
       authInfo: {
         pw: { value: '98oiewslkfkd', attrs: { roid: 'citizen_1234-REP' } }
       }

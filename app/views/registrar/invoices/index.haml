@@ -61,13 +61,13 @@
             %tr
               %td= link_to(x, [:registrar, x])
               - if x.receipt_date
-                %td= l(x.receipt_date)
+                %td= l(x.receipt_date, format: :date_long)
               - elsif x.cancelled?
                 %td.text-grey= t(:cancelled)
               - else
                 %td{class: 'text-danger'}= t(:unpaid)
 
-              %td= l(x.due_date)
+              %td= l(x.due_date, format: :date_long)
               %td= x.sum
 .row
   .col-md-12

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'EPP Domain', epp: true do
   before(:all) do
-    @xsd = Nokogiri::XML::Schema(File.read('doc/schemas/domain-eis-1.0.xsd'))
+    @xsd = Nokogiri::XML::Schema(File.read('lib/schemas/domain-eis-1.0.xsd'))
     @epp_xml = EppXml.new(cl_trid: 'ABC-12345')
     @registrar1 = Fabricate(:registrar1, code: 'REGDOMAIN1')
     @registrar1.credit!({ sum: 10000 })
@@ -67,7 +67,7 @@ describe 'EPP Domain', epp: true do
     log.request_command.should == 'create'
     log.request_object.should == 'domain'
     log.request_successful.should == false
-    log.api_user_name.should == '1-api-registrar1'
+    log.api_user_name.should == 'registrar1'
     log.api_user_registrar.should == 'registrar1'
     log.request.should_not be_blank
     log.response.should_not be_blank
@@ -272,8 +272,8 @@ describe 'EPP Domain', epp: true do
       xml = domain_create_xml(name: { value: 'ftp.ee' })
 
       response = epp_plain_request(xml)
-      response[:msg].should == 'Domain name is blocked [name_dirty]'
-      response[:result_code].should == '2302'
+      response[:msg].should == 'Data management policy violation: Domain name is blocked [name]'
+      response[:result_code].should == '2308'
       response[:results][0][:value].should == 'ftp.ee'
       response[:clTRID].should == 'ABC-12345'
     end
@@ -473,17 +473,21 @@ describe 'EPP Domain', epp: true do
         period: { value: '1', attrs: { unit: '' } }
       })
 
-      response = epp_plain_request(xml, validate_input: false)
-      response[:results][0][:msg].should == 'Attribute is invalid: unit'
-      response[:results][0][:result_code].should == '2306'
+      response = epp_plain_request(xml)
+      response[:results][0][:msg].should ==
+        "Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}period', attribute 'unit': "\
+        "[facet 'enumeration'] The value '' is not an element of the set {'y', 'm', 'd'}."
+      response[:results][0][:result_code].should == '2001'
 
       xml = domain_create_xml({
         period: { value: '1', attrs: { unit: 'bla' } }
       })
 
-      response = epp_plain_request(xml, validate_input: false)
-      response[:results][0][:msg].should == 'Attribute is invalid: unit'
-      response[:results][0][:result_code].should == '2306'
+      response = epp_plain_request(xml)
+      response[:results][0][:msg].should ==
+        "Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}period', attribute 'unit': "\
+        "[facet 'enumeration'] The value 'bla' is not an element of the set {'y', 'm', 'd'}."
+      response[:results][0][:result_code].should == '2001'
     end
 
     it 'creates a domain with multiple dnskeys' do
@@ -542,7 +546,6 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'does not create a domain when dnskeys are invalid' do
-
       xml = domain_create_xml({}, {
        _anonymus: [
          { keyData: {
@@ -571,7 +574,44 @@ describe 'EPP Domain', epp: true do
        ]
      })
 
-      response = epp_plain_request(xml, validate_input: false)
+      response = epp_plain_request(xml)
+
+      response[:results][0][:msg].should ==
+        "Element '{urn:ietf:params:xml:ns:secDNS-1.1}pubKey': [facet 'minLength'] The value has a "\
+        "length of '0'; this underruns the allowed minimum length of '1'."
+      response[:results][1][:msg].should ==
+        "Element '{urn:ietf:params:xml:ns:secDNS-1.1}pubKey': '' is not a valid value of the atomic "\
+        "type '{urn:ietf:params:xml:ns:secDNS-1.1}keyType'."
+
+      xml = domain_create_xml({}, {
+        _anonymus: [
+          { keyData: {
+              flags: { value: '250' },
+              protocol: { value: '4' },
+              alg: { value: '9' },
+              pubKey: { value: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8' }
+            }
+          },
+          {
+            keyData: {
+              flags: { value: '1' },
+              protocol: { value: '3' },
+              alg: { value: '10' },
+              pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
+            }
+          },
+          {
+            keyData: {
+              flags: { value: '256' },
+              protocol: { value: '5' },
+              alg: { value: '254' },
+              pubKey: { value: 'AwEAAbuFiHS4jZL7ZQKvEPBmsbceNHTVYpEVMdxz2A6YCjlZTEoAH3qK' }
+            }
+          }
+        ]
+      })
+
+      response = epp_plain_request(xml)
 
       response[:results][0][:msg].should ==
         'Valid algorithms are: 3, 5, 6, 7, 8, 252, 253, 254, 255 [alg]'
@@ -589,10 +629,8 @@ describe 'EPP Domain', epp: true do
       response[:results][4][:msg].should == 'Valid flags are: 0, 256, 257 [flags]'
       response[:results][4][:value].should == '1'
 
-      response[:results][5][:msg].should == 'Public key is missing [public_key]'
-
-      response[:results][6][:msg].should == 'Valid protocols are: 3 [protocol]'
-      response[:results][6][:value].should == '5'
+      response[:results][5][:msg].should == 'Valid protocols are: 3 [protocol]'
+      response[:results][5][:value].should == '5'
     end
 
     it 'does not create a domain with two identical dnskeys' do
@@ -805,10 +843,10 @@ describe 'EPP Domain', epp: true do
           }]
         })
 
-      response = epp_plain_request(xml, validate_input: false)
-      response[:msg].should == 'Mutually exclusive parameters: extension > create > keyData, '\
-      'extension > create > dsData'
-      response[:result_code].should == '2306'
+      response = epp_plain_request(xml)
+      response[:msg].should == "Element '{urn:ietf:params:xml:ns:secDNS-1.1}keyData': This element "\
+        "is not expected. Expected is ( {urn:ietf:params:xml:ns:secDNS-1.1}dsData )."
+      response[:result_code].should == '2001'
     end
   end
 
@@ -1023,7 +1061,7 @@ describe 'EPP Domain', epp: true do
         log.request_command.should == 'transfer'
         log.request_object.should == 'domain'
         log.request_successful.should == true
-        log.api_user_name.should == '2-api-registrar2'
+        log.api_user_name.should == 'registrar2'
         log.api_user_registrar.should == 'registrar2'
         log.request.should_not be_blank
         log.response.should_not be_blank
@@ -1475,9 +1513,11 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'returns an error for incorrect op attribute' do
-      response = epp_plain_request(domain_transfer_xml({}, 'bla'), validate_input: false)
-      response[:msg].should == 'Parameter value range error: op'
-      response[:result_code].should == '2004'
+      response = epp_plain_request(domain_transfer_xml({}, 'bla'))
+      response[:msg].should ==
+        "Element '{urn:ietf:params:xml:ns:epp-1.0}transfer', attribute 'op': [facet 'enumeration'] "\
+        "The value 'bla' is not an element of the set {'approve', 'cancel', 'query', 'reject', 'request'}."
+      response[:result_code].should == '2001'
     end
 
     it 'creates new pw after successful transfer' do
@@ -1627,6 +1667,22 @@ describe 'EPP Domain', epp: true do
       trn_data.css('exDate').text.should == domain.valid_to.in_time_zone.utc.utc.iso8601
 
       Setting.transfer_wait_time = 0
+    end
+
+    it 'should not transfer when period element is present' do
+      pw = domain.auth_info
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        period: { value: '1', attrs: { unit: 'y' } },
+        authInfo: { pw: { value: pw } }
+      })
+
+      login_as :registrar2 do
+        response = epp_plain_request(xml)
+        response[:msg].should == 'Unimplemented object service'
+        response[:result_code].should == '2307'
+        response[:parsed].css('value > period').any?.should == true
+      end
     end
 
     ### UPDATE ###
@@ -2213,10 +2269,16 @@ describe 'EPP Domain', epp: true do
         ]
       })
 
-      response = epp_plain_request(xml, validate_input: false)
-      response[:results][0][:result_code].should == '2303'
-      response[:results][0][:msg].should == 'Status was not found'
-      response[:results][0][:value].should == 'invalidStatus'
+      response = epp_plain_request(xml)
+      response[:results][0][:msg].should ==
+        "Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}status', attribute 's': "\
+        "[facet 'enumeration'] The value 'invalidStatus' is not an element of the set "\
+        "{'clientDeleteProhibited', 'clientHold', 'clientRenewProhibited', "\
+        "'clientTransferProhibited', 'clientUpdateProhibited', 'inactive', "\
+        "'ok', 'pendingCreate', 'pendingDelete', 'pendingRenew', 'pendingTransfer', "\
+        "'pendingUpdate', 'serverDeleteProhibited', 'serverHold', 'serverRenewProhibited', "\
+        "'serverTransferProhibited', 'serverUpdateProhibited'}."
+      response[:results][0][:result_code].should == '2001'
     end
 
     ### RENEW ###
@@ -2327,9 +2389,10 @@ describe 'EPP Domain', epp: true do
         period: { value: '1', attrs: { unit: '' } }
       )
 
-      response = epp_plain_request(xml, validate_input: false)
-      response[:results][0][:msg].should == 'Attribute is invalid: unit'
-      response[:results][0][:result_code].should == '2306'
+      response = epp_plain_request(xml)
+      response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}period', "\
+        "attribute 'unit': [facet 'enumeration'] The value '' is not an element of the set {'y', 'm', 'd'}."
+      response[:results][0][:result_code].should == '2001'
 
       xml = @epp_xml.domain.renew(
         name: { value: domain.name },
@@ -2337,9 +2400,10 @@ describe 'EPP Domain', epp: true do
         period: { value: '1', attrs: { unit: 'bla' } }
       )
 
-      response = epp_plain_request(xml, validate_input: false)
-      response[:results][0][:msg].should == 'Attribute is invalid: unit'
-      response[:results][0][:result_code].should == '2306'
+      response = epp_plain_request(xml)
+      response[:results][0][:msg].should == "Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}period', "\
+        "attribute 'unit': [facet 'enumeration'] The value 'bla' is not an element of the set {'y', 'm', 'd'}."
+      response[:results][0][:result_code].should == '2001'
 
       Setting.days_to_renew_domain_before_expire = 90
     end
@@ -2539,15 +2603,20 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'should renew a expired domain' do
-      pending("Please inspect, somehow SERVER_HOLD is false and test fails")
-      domain.valid_to = Time.zone.now - 50.days
-      new_valid_to = domain.valid_to + 1.year
-      domain.outzone_at = Time.zone.now - 50.days
-      new_outzone_at = domain.outzone_at + 1.year
-      new_delete_at = domain.delete_at + 1.year
+      old_valid_to = Time.zone.now - 90.days
+      old_outzone_at = Time.zone.now - 60.days
+      old_delete_at = Time.zone.now - 30.days
+      domain.valid_to = old_valid_to
+      domain.outzone_at = old_outzone_at
+      domain.delete_at = old_delete_at
       domain.save
 
       Domain.start_expire_period
+      domain.reload
+      domain.valid_to = old_valid_to
+      domain.outzone_at = old_outzone_at
+      domain.delete_at = old_delete_at
+      domain.save
       Domain.start_redemption_grace_period
 
       domain.reload
@@ -2573,9 +2642,11 @@ describe 'EPP Domain', epp: true do
       domain.statuses.include?(DomainStatus::OK).should == true
 
       domain.reload
-      domain.valid_to.should be_within(5).of(new_valid_to)
-      domain.outzone_at.should be_within(5).of(new_outzone_at)
-      domain.delete_at.should be_within(5).of(new_delete_at)
+      domain.valid_to.should be_within(5).of(old_valid_to + 1.year)
+      domain.outzone_at.should be_within(5).of(old_valid_to + 1.year + Setting.expire_warning_period.days)
+      domain.delete_at.should be_within(5).of(
+        old_valid_to + 1.year + Setting.expire_warning_period.days + Setting.redemption_grace_period.days
+      )
     end
 
     it 'does not renew foreign domain' do
@@ -2692,9 +2763,11 @@ describe 'EPP Domain', epp: true do
       domain.save
 
       xml = domain_info_xml(name: { value: domain.name, attrs: { hosts: 'invalid' } })
-      response = epp_plain_request(xml, validate_input: false)
-      response[:msg].should == 'Attribute is invalid: hosts'
-      response[:result_code].should == '2306'
+      response = epp_plain_request(xml)
+      response[:msg].should == "Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}name', "\
+        "attribute 'hosts': [facet 'enumeration'] The value 'invalid' is not an element of the "\
+        "set {'all', 'del', 'none', 'sub'}."
+      response[:result_code].should == '2001'
 
       xml = domain_info_xml(name: { value: domain.name, attrs: { hosts: 'sub' } })
       response = epp_plain_request(xml)

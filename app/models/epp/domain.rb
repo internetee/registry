@@ -4,22 +4,32 @@ class Epp::Domain < Domain
 
   before_validation :manage_permissions
   def manage_permissions
-    return unless pending_update? || pending_delete?
+    return unless update_prohibited?
     add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
     false
   end
 
   before_validation :validate_contacts
   def validate_contacts
-    return if contacts.map {|c| c.valid? }.all?
+    return if contacts.map(&:valid?).all?
     add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
     false
   end
 
-  before_save :update_contact_status
-  def update_contact_status
+  before_save :link_contacts
+  def link_contacts
+    # Based on bullet report
+    unlinked_contacts = contacts.select { |c| !c.linked? } # speed up a bit
+    unlinked_contacts.each do |uc|
+      uc.domains_present = true # no need to fetch domains again
+      uc.save(validate: false)
+    end
+  end
+
+  after_destroy :unlink_contacts
+  def unlink_contacts
     contacts.each do |c|
-      next if c.linked?
+      c.domains_present = false
       c.save(validate: false)
     end
   end
@@ -94,6 +104,9 @@ class Epp::Domain < Domain
         [:base, :key_data_not_allowed],
         [:period, :not_a_number],
         [:period, :not_an_integer]
+      ],
+      '2308' => [
+        [:base, :domain_name_blocked, { value: { obj: 'name', val: name_dirty } }]
       ]
     }
   end
@@ -134,7 +147,6 @@ class Epp::Domain < Domain
     at[:reserved_pw] = frame.css('reserved > pw').text
 
     # at[:statuses] = domain_statuses_attrs(frame, action)
-    # binding.pry
     at[:nameservers_attributes] = nameservers_attrs(frame, action)
     at[:admin_domain_contacts_attributes] = admin_domain_contacts_attrs(frame, action)
     at[:tech_domain_contacts_attributes] = tech_domain_contacts_attrs(frame, action)
@@ -383,6 +395,7 @@ class Epp::Domain < Domain
   end
 
   # rubocop: disable Metrics/AbcSize
+  # rubocop: disable Metrics/CyclomaticComplexity
   def update(frame, current_user, verify = true)
     return super if frame.blank?
     at = {}.with_indifferent_access
@@ -399,15 +412,20 @@ class Epp::Domain < Domain
 
     # at[:statuses] += at_add[:domain_statuses_attributes]
 
-    if verify && frame.css('registrant').present? && frame.css('registrant').attr('verified').to_s.downcase != 'yes'
+    if verify &&
+       Setting.request_confrimation_on_registrant_change_enabled &&
+       frame.css('registrant').present? &&
+       frame.css('registrant').attr('verified').to_s.downcase != 'yes'
       registrant_verification_asked!(frame.to_s, current_user.id)
     end
     self.deliver_emails = true # turn on email delivery for epp
     errors.empty? && super(at)
   end
   # rubocop: enable Metrics/AbcSize
+  # rubocop: enable Metrics/CyclomaticComplexity
 
   def apply_pending_update!
+    old_registrant_email = DomainMailer.registrant_updated_notification_for_old_registrant(self)
     preclean_pendings
     user  = ApiUser.find(pending_json['current_user_id'])
     frame = Nokogiri::XML(pending_json['frame'])
@@ -416,7 +434,8 @@ class Epp::Domain < Domain
     return unless update(frame, user, false)
     clean_pendings!
     self.deliver_emails = true # turn on email delivery for epp
-    DomainMailer.registrant_updated(self).deliver_now
+    DomainMailer.registrant_updated_notification_for_new_registrant(self).deliver_now
+    old_registrant_email.deliver_now
   end
 
   def apply_pending_delete!
@@ -424,6 +443,7 @@ class Epp::Domain < Domain
     user  = ApiUser.find(pending_json['current_user_id'])
     frame = Nokogiri::XML(pending_json['frame'])
     statuses.delete(DomainStatus::PENDING_DELETE)
+    DomainMailer.delete_confirmation(self).deliver_now
 
     clean_pendings! if epp_destroy(frame, user, false)
   end
@@ -440,7 +460,10 @@ class Epp::Domain < Domain
   def epp_destroy(frame, user_id, verify = true)
     return false unless valid?
 
-    if verify && frame.css('delete').attr('verified').to_s.downcase != 'yes'
+    if verify && 
+       Setting.request_confirmation_on_domain_deletion_enabled &&
+       frame.css('delete').attr('verified').to_s.downcase != 'yes'
+
       registrant_verification_asked!(frame.to_s, user_id)
       self.deliver_emails = true # turn on email delivery for epp
       pending_delete!
@@ -519,7 +542,7 @@ class Epp::Domain < Domain
     return if registrant.registrar_id == registrar_id
 
     is_other_domains_contact = DomainContact.where('contact_id = ? AND domain_id != ?', registrant_id, id).count > 0
-    if registrant.domains_owned.count > 1 || is_other_domains_contact
+    if registrant.registrant_domains.count > 1 || is_other_domains_contact
       oc = copy_and_transfer_contact(registrant_id, registrar_id)
       self.registrant_id = oc.id
     else

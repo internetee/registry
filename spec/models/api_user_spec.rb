@@ -12,6 +12,7 @@ describe ApiUser do
       @api_user.valid?
       @api_user.errors.full_messages.should match_array([
         "Password Password is missing",
+        "Password is too short (minimum is 6 characters)",
         "Registrar Registrar is missing",
         "Username Username is missing",
         "Roles is missing"

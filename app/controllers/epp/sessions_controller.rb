@@ -75,8 +75,8 @@ class Epp::SessionsController < EppController
     end
 
     if success
-      if parsed_frame.css('newPW').first
-        unless @api_user.update(password: parsed_frame.css('newPW').first.text)
+      if params[:parsed_frame].css('newPW').first
+        unless @api_user.update(password: params[:parsed_frame].css('newPW').first.text)
           response.headers['X-EPP-Returncode'] = '2500'
           handle_errors(@api_user) and return
         end
@@ -124,11 +124,8 @@ class Epp::SessionsController < EppController
   ### HELPER METHODS ###
 
   def login_params
-    ph = params_hash['epp']['command']['login']
-    { username: ph[:clID], password: ph[:pw] }
-  end
-
-  def parsed_frame
-    @parsed_frame ||= Nokogiri::XML(request.params[:raw_frame]).remove_namespaces!
+    user = params[:parsed_frame].css('clID').first.text
+    pw = params[:parsed_frame].css('pw').first.text
+    { username: user, password: pw }
   end
 end

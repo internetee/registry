@@ -29,7 +29,7 @@ class Invoice < ActiveRecord::Base
 
     return if number <= Setting.invoice_number_max.to_i
 
-    errors.add(:base, I18n.t('failed_to_generate_invoice'))
+    errors.add(:base, I18n.t('failed_to_generate_invoice_invoice_number_limit_reached'))
     logger.error('INVOICE NUMBER LIMIT REACHED, COULD NOT GENERATE INVOICE')
     false
   end
@@ -44,6 +44,12 @@ class Invoice < ActiveRecord::Base
       invoices = Invoice.unbinded.where(
         'due_date < ? AND cancelled_at IS NULL', cr_at
       )
+
+      unless Rails.env.test?
+        invoices.each do |m|
+          STDOUT << "#{Time.zone.now.utc} Invoice.cancel_overdue_invoices: ##{m.id}\n"
+        end
+      end
 
       count = invoices.update_all(cancelled_at: Time.zone.now)
 

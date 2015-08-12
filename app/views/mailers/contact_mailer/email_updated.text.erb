@@ -29,9 +29,9 @@ Eesti Interneti SA
 
 Hi <%= @contact.name %>
 
-E-mail address of <% @contact.name %> has been changed
-previous address: <% @contact.email_was %>
-new address: <% @contact.email %>
+E-mail address of <%= @contact.name %> has been changed
+previous address: <%= @contact.email_was %>
+new address: <%= @contact.email %>
 
 E-mail addresses are used to send important information regarding your registered domains including applications for approval of registrant change and domain deletion. Please make sure that the update and contact information are correct. Incase of problems please turn to your registrar. Your registrar is <%= @contact.registrar.name %>
 

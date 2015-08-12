@@ -5,7 +5,7 @@ describe 'EPP Session', epp: true do
     @api_user = Fabricate(:gitlab_api_user)
     @epp_xml = EppXml.new(cl_trid: 'ABC-12345')
     @login_xml_cache = @epp_xml.session.login(clID: { value: 'gitlab' }, pw: { value: 'ghyt9e4fu' })
-    @xsd = Nokogiri::XML::Schema(File.read('doc/schemas/epp-1.0.xsd'))
+    @xsd = Nokogiri::XML::Schema(File.read('lib/schemas/epp-1.0.xsd'))
   end
 
   context 'when not connected' do
@@ -47,11 +47,11 @@ describe 'EPP Session', epp: true do
       log = ApiLog::EppLog.last
       log.request_command.should == 'login'
       log.request_successful.should == false
-      log.api_user_name.should == '2-api-inactive-user'
+      log.api_user_name.should == 'inactive-user'
     end
 
     it 'prohibits further actions unless logged in' do
-      @xsd = Nokogiri::XML::Schema(File.read('doc/schemas/domain-eis-1.0.xsd'))
+      @xsd = Nokogiri::XML::Schema(File.read('lib/schemas/domain-eis-1.0.xsd'))
       response = epp_plain_request(@epp_xml.domain.info(name: { value: 'test.ee' }))
       response[:msg].should == 'You need to login first.'
       response[:result_code].should == '2002'
@@ -88,7 +88,7 @@ describe 'EPP Session', epp: true do
         log = ApiLog::EppLog.last
         log.request_command.should == 'login'
         log.request_successful.should == true
-        log.api_user_name.should == '1-api-gitlab'
+        log.api_user_name.should == 'gitlab'
       end
 
       it 'does not log in twice' do
@@ -104,7 +104,7 @@ describe 'EPP Session', epp: true do
         log = ApiLog::EppLog.last
         log.request_command.should == 'login'
         log.request_successful.should == false
-        log.api_user_name.should == '1-api-gitlab'
+        log.api_user_name.should == 'gitlab'
       end
 
       it 'logs out epp user' do
@@ -142,8 +142,10 @@ describe 'EPP Session', epp: true do
           newPW: { value: '' }
         ), validate_input: false)
 
-        response[:msg].should == 'Password is missing [password]'
-        response[:result_code].should == '2306'
+        response[:msg].should ==
+          "Element '{urn:ietf:params:xml:ns:epp-1.0}newPW': [facet 'minLength'] The value has a "\
+          "length of '0'; this underruns the allowed minimum length of '6'."
+        response[:result_code].should == '2001'
 
         @api_user.reload
         @api_user.password.should == 'ghyt9e4fu'

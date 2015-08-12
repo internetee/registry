@@ -6,6 +6,20 @@ class EppController < ApplicationController
 
   before_action :generate_svtrid
   before_action :latin_only
+
+  before_action :validate_against_schema
+  def validate_against_schema
+    return if ['hello', 'error', 'keyrelay'].include?(params[:action])
+    schema.validate(params[:nokogiri_frame]).each do |error|
+      epp_errors << {
+        code: 2001,
+        msg: error
+      }
+    end
+
+    handle_errors and return if epp_errors.any?
+  end
+
   before_action :validate_request
   before_action :update_epp_session
 
@@ -43,7 +57,8 @@ class EppController < ApplicationController
       if Rails.env.test? || Rails.env.development?
         # rubocop:disable Rails/Output
         puts e.backtrace.reverse.join("\n")
-        puts "\nFROM-EPP-RESCUE: #{e.message}\n"
+        puts "\n  BACKTRACE REVERSED!\n"
+        puts "\n  FROM-EPP-RESCUE: #{e.message}\n\n\n"
         # rubocop:enable Rails/Output
       else
         logger.error "FROM-EPP-RESCUE: #{e.message}"
@@ -55,6 +70,13 @@ class EppController < ApplicationController
     end
 
     render_epp_response '/epp/error'
+  end
+
+  def schema
+    # TODO: Support multiple schemas
+    return DOMAIN_SCHEMA if params[:epp_object_type] == :domain
+    return CONTACT_SCHEMA if params[:epp_object_type] == :contact
+    EPP_SCHEMA
   end
 
   def generate_svtrid
@@ -98,7 +120,7 @@ class EppController < ApplicationController
     @current_user ||= ApiUser.find_by_id(epp_session[:api_user_id])
     # by default PaperTrail uses before filter and at that
     # time current_user is not yet present
-    ::PaperTrail.whodunnit = api_user_log_str(@current_user)
+    ::PaperTrail.whodunnit = user_log_str(@current_user)
     ::PaperSession.session = epp_session.session_id if epp_session.session_id.present?
     @current_user
   end
@@ -328,6 +350,7 @@ class EppController < ApplicationController
   # rubocop: enable Style/PredicateName
 
   # rubocop: disable Metrics/CyclomaticComplexity
+  # rubocop: disable Metrics/PerceivedComplexity
   def write_to_epp_log
     # return nil if EPP_LOG_ENABLED
     request_command = params[:command] || params[:action] # error receives :command, other methods receive :action
@@ -344,12 +367,13 @@ class EppController < ApplicationController
       request_successful: epp_errors.empty?,
       request_object: params[:epp_object_type],
       response: @response,
-      api_user_name: api_user_log_str(@api_user || current_user),
+      api_user_name: @api_user.try(:username) || current_user.try(:username) || 'api-public',
       api_user_registrar: @api_user.try(:registrar).try(:to_s) || current_user.try(:registrar).try(:to_s),
       ip: request.ip
     })
   end
   # rubocop: enable Metrics/CyclomaticComplexity
+  # rubocop: enable Metrics/PerceivedComplexity
 
   def iptables_counter_update
     return if ENV['iptables_counter_enabled'].blank? && ENV['iptables_counter_enabled'] != 'true'

@@ -1,7 +1,6 @@
 - content_for :actions do
   = link_to(t(:add), new_admin_invoice_path, class: 'btn btn-primary')
 = render 'shared/title', name: t(:invoices)
-
 .row
   .col-md-12
     .table-responsive
@@ -24,10 +23,10 @@
               - if x.cancelled?
                 %td.text-grey= t(:cancelled)
               - else
-                %td= l(x.due_date)
+                %td= l(x.due_date, format: :date_long)
 
               - if x.binded?
-                %td= l(x.receipt_date)
+                %td= l(x.receipt_date, format: :date_long)
               - elsif x.cancelled?
                 %td.text-grey= t(:cancelled)
               - else

@@ -9,7 +9,7 @@ class Contact < ActiveRecord::Base
   has_many :registrant_domains, class_name: 'Domain', foreign_key: 'registrant_id' # when contant is registrant
 
   # TODO: remove later
-  has_many :depricated_statuses, class_name: 'DepricatedContactStatus', dependent: :destroy 
+  has_many :depricated_statuses, class_name: 'DepricatedContactStatus', dependent: :destroy
 
   accepts_nested_attributes_for :legal_documents
 
@@ -30,7 +30,7 @@ class Contact < ActiveRecord::Base
   validate :ident_valid_format?
   validate :uniq_statuses?
 
-  after_initialize do 
+  after_initialize do
     self.statuses = [] if statuses.nil?
     self.status_notes = {} if status_notes.nil?
   end
@@ -42,7 +42,14 @@ class Contact < ActiveRecord::Base
   before_update :manage_emails
   def manage_emails
     return nil unless email_changed?
-    ContactMailer.email_updated(self).deliver_now
+    return nil unless deliver_emails == true
+    emails = []
+    emails << [email, email_was]
+    emails << domains.map(&:registrant_email) if domains.present?
+    emails = emails.flatten.uniq
+    emails.each do |e|
+      ContactMailer.email_updated(e, self).deliver_now
+    end
   end
 
   before_save :manage_statuses
@@ -50,6 +57,9 @@ class Contact < ActiveRecord::Base
     manage_linked
     manage_ok
   end
+
+  # for overwrite when doing children loop
+  attr_writer :domains_present
 
   scope :current_registrars, ->(id) { where(registrar_id: id) }
 
@@ -113,12 +123,12 @@ class Contact < ActiveRecord::Base
   # "pendingUpdate" status MUST NOT be combined with either
   # "clientUpdateProhibited" or "serverUpdateProhibited" status.
   PENDING_UPDATE = 'pendingUpdate'
-  # "pendingDelete" MUST NOT be combined with either 
+  # "pendingDelete" MUST NOT be combined with either
   # "clientDeleteProhibited" or "serverDeleteProhibited" status.
-  PENDING_DELETE = 'pendingDelete' 
+  PENDING_DELETE = 'pendingDelete'
 
   STATUSES = [
-    CLIENT_DELETE_PROHIBITED, SERVER_DELETE_PROHIBITED, 
+    CLIENT_DELETE_PROHIBITED, SERVER_DELETE_PROHIBITED,
     CLIENT_TRANSFER_PROHIBITED,
     SERVER_TRANSFER_PROHIBITED, CLIENT_UPDATE_PROHIBITED, SERVER_UPDATE_PROHIBITED,
     OK, PENDING_CREATE, PENDING_DELETE, PENDING_TRANSFER,
@@ -132,7 +142,7 @@ class Contact < ActiveRecord::Base
 
   SERVER_STATUSES = [
     SERVER_UPDATE_PROHIBITED,
-    SERVER_DELETE_PROHIBITED, 
+    SERVER_DELETE_PROHIBITED,
     SERVER_TRANSFER_PROHIBITED
   ]
   #
@@ -156,9 +166,19 @@ class Contact < ActiveRecord::Base
     end
 
     def destroy_orphans
-      logger.info "#{Time.zone.now.utc} - Destroying orphaned contacts\n"
-      count = find_orphans.destroy_all.count
-      logger.info "#{Time.zone.now.utc} - Successfully destroyed #{count} orphaned contacts\n"
+      STDOUT << "#{Time.zone.now.utc} - Destroying orphaned contacts\n" unless Rails.env.test?
+
+      orphans = find_orphans
+
+      unless Rails.env.test?
+        orphans.each do |m|
+          STDOUT << "#{Time.zone.now.utc} Contact.destroy_orphans: ##{m.id}\n"
+        end
+      end
+
+      count = orphans.destroy_all.count
+
+      STDOUT << "#{Time.zone.now.utc} - Successfully destroyed #{count} orphaned contacts\n" unless Rails.env.test?
     end
 
     def privs
@@ -260,21 +280,11 @@ class Contact < ActiveRecord::Base
     Country.new(country_code)
   end
 
-  # Find a way to use self.domains with contact
-  def domains_owned
-    Domain.where(registrant_id: id)
-  end
-
-  def relations_with_domain?
-    return true if domain_contacts.present? || domains_owned.present?
-    false
-  end
-
   # TODO: refactor, it should not allow to destroy with normal destroy,
   # no need separate method
   # should use only in transaction
   def destroy_and_clean
-    if relations_with_domain?
+    if domains_present?
       errors.add(:domains, :exist)
       return false
     end
@@ -311,17 +321,32 @@ class Contact < ActiveRecord::Base
   def status_notes_array=(notes)
     self.status_notes = {}
     notes ||= []
-    statuses.each_with_index do |status,i|
-      self.status_notes[status] = notes[i]
+    statuses.each_with_index do |status, i|
+      status_notes[status] = notes[i]
     end
   end
 
+  # optimization under children loop,
+  # otherwise bullet will not be happy
+  def domains_present?
+    return @domains_present if @domains_present
+    domain_contacts.present? || registrant_domains.present?
+  end
+
   def manage_linked
-    if domains.present?
-      statuses << LINKED if statuses.detect { |s| s == LINKED }.blank?
+    if domains_present?
+      set_linked
     else
-      statuses.delete_if { |s| s == LINKED }
+      unset_linked
     end
+  end
+
+  def set_linked
+    statuses << LINKED if statuses.detect { |s| s == LINKED }.blank?
+  end
+
+  def unset_linked
+    statuses.delete_if { |s| s == LINKED }
   end
 
   # rubocop:disable Metrics/CyclomaticComplexity

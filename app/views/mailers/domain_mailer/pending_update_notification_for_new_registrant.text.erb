@@ -1,0 +1,47 @@
+Tere,
+
+Registripidaja <%= @domain.registrar_name %> vahendusel on algatatud <%= @domain.name %> domeeni omanikuvahetuse protseduur.  
+
+Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja poole. Teie registripidaja on <%= @domain.registrar_name %>
+
+Uued registreerija andmed:
+Nimi: <%= @domain.registrant_name %>
+<% if @domain.registrant.priv? %>
+Isikukood: <%= @domain.registrant_ident %>
+<% else %>
+Äriregistrikood: <%= @domain.registrant_ident %>
+<% end %>
+Tänav: <%= @domain.registrant_street %>
+Linn: <%= @domain.registrant_city %>
+Riik: <%= @domain.registrant_country %>
+
+Juhime Teie tähelepanu asjaolule, et omanikuvahetuse protseduur viiaks lõpule vaid juhul, kui domeeni hetkel kehtiv registreerija <%= @old_registrant.name %> omanikuvahetuse tähtaegselt kinnitab.
+
+Juhul kui <%= @old_registrant.name %> lükkab omanikuvahtuse taotluse tagasi või ei anna kinnitust enne <%= Setting.expire_pending_confirmation %> tundi, omanikuvahetuse protseduur tühistatakse.
+
+Küsimuste korral palun võtke ühendust registripidajaga <%= @domain.registrar_name %>, kelle kontaktid leiate http://internet.ee/registripidajad/akrediteeritud-registripidajad
+
+Lugupidamisega
+Eesti Interneti SA
+
+--------------------------------------
+
+Hi,
+
+Registrant change process for the domain <%= @domain.name %> has been started.
+
+New registrant:
+Name: <%= @domain.registrant_name %>
+<% if @domain.registrant.priv? %>
+Personal code: <%= @domain.registrant_ident %>
+<% else %>
+Business Registry code: <%= @domain.registrant_ident %>
+<% end %>
+Street: <%= @domain.registrant_street %>
+City: <%= @domain.registrant_city %>
+Country: <%= @domain.registrant_country %>
+
+Please contact to your registrar <%= @domain.registrar_name %> if you have any questions.
+
+Best Regards,
+Estonian Internet Foundation
