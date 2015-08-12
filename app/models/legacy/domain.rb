@@ -11,5 +11,6 @@ module Legacy
     has_many :dnskeys, foreign_key: :keysetid, primary_key: :keyset
     has_many :domain_contact_maps, foreign_key: :domainid
     has_many :nsset_contact_maps, foreign_key: :nssetid, primary_key: :nsset
+    has_many :domain_histories, foreign_key: :id
   end
 end

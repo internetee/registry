@@ -501,10 +501,6 @@ class Domain < ActiveRecord::Base
     (errors.keys - assoc_errors).empty?
   end
 
-  def statuses_tab_valid?
-    !errors.keys.any? { |x| x.match(/domain_statuses/) }
-  end
-
   ## SHARED
 
   def name_in_wire_format

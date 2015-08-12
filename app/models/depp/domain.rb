@@ -228,9 +228,9 @@ module Depp
 
         {
           name: { value: domain_params[:name] },
-          chg: chg,
           add: add_arr,
-          rem: rem_arr
+          rem: rem_arr,
+          chg: chg
         }
       end
       # rubocop: enable Metrics/PerceivedComplexity
