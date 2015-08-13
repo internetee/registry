@@ -528,8 +528,13 @@ class Domain < ActiveRecord::Base
     Registrant.find_by(id: pending_json['domain']['registrant_id'].last)
   end
 
-  # rubocop:disable Lint/Loop
   def generate_auth_info
+    return if auth_info.present?
+    generate_auth_info!
+  end
+
+  # rubocop:disable Lint/Loop
+  def generate_auth_info!
     begin
       self.auth_info = SecureRandom.hex
     end while self.class.exists?(auth_info: auth_info)
