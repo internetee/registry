@@ -1819,6 +1819,22 @@ describe 'EPP Domain', epp: true do
       d.pending_update?.should == true
     end
 
+    it 'updates a domain and changes auth info' do
+      response = epp_plain_request(domain_update_xml({
+        name: { value: domain.name },
+        chg: [
+          authInfo: { pw: { value: 'newpw' } }
+        ]
+      }))
+
+      response[:results][0][:msg].should == 'Command completed successfully'
+      response[:results][0][:result_code].should == '1000'
+
+      d = Domain.last
+
+      d.auth_info.should == 'newpw'
+    end
+
     it 'should not return action pending when changes are invalid' do
       existing_pw = domain.auth_info
 
