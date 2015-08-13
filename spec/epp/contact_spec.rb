@@ -51,7 +51,8 @@ describe 'EPP Contact', epp: true do
           },
           voice: { value: '+372.1234567' },
           fax: nil,
-          email: { value: 'test@example.example' }
+          email: { value: 'test@example.example' },
+          authInfo: nil
         }
         create_xml = @epp_xml.create(defaults.deep_merge(overwrites), extension)
         epp_plain_request(create_xml, options)
@@ -80,6 +81,7 @@ describe 'EPP Contact', epp: true do
         @contact.ident.should == '37605030299'
         @contact.street.should == '123 Example'
         @contact.legal_documents.count.should == 1
+        @contact.auth_info.length.should > 0
 
         log = ApiLog::EppLog.last
         log.request_command.should == 'create'
@@ -87,6 +89,18 @@ describe 'EPP Contact', epp: true do
         log.request_successful.should == true
         log.api_user_name.should == 'registrar1'
         log.api_user_registrar.should == 'registrar1'
+      end
+
+      it 'creates a contact with custom auth info' do
+        response = create_request({
+          authInfo: { pw: { value: 'custompw' } }
+        })
+
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+
+        @contact = Contact.last
+        @contact.auth_info.should == 'custompw'
       end
 
       it 'successfully saves ident type with legal document' do
