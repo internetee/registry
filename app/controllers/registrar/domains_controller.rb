@@ -5,10 +5,19 @@ class Registrar::DomainsController < Registrar::DeppController # EPP controller
   # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/CyclomaticComplexity
   # rubocop: disable Metrics/AbcSize
+  # rubocop: disable Metrics/MethodLength
   def index
     authorize! :view, Depp::Domain
 
     params[:q] ||= {}
+    params[:q].delete_if { |_k, v| v.blank? }
+    if params[:q].length == 1 && params[:q][:name_matches].present?
+      @domain = Domain.find_by(name: params[:q][:name_matches])
+      if @domain
+        redirect_to info_registrar_domains_path(domain_name: @domain.name) and return
+      end
+    end
+
     if params[:statuses_contains]
       domains = current_user.registrar.domains.includes(:registrar, :registrant).where(
         "statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
@@ -20,9 +29,7 @@ class Registrar::DomainsController < Registrar::DeppController # EPP controller
     normalize_search_parameters do
       @q = domains.search(params[:q])
       @domains = @q.result.page(params[:page])
-      if @domains.count == 1 && params[:q][:name_matches].present?
-        redirect_to info_registrar_domains_path(domain_name: @domains.first.name) and return
-      elsif @domains.count == 0 && params[:q][:name_matches] !~ /^%.+%$/
+      if @domains.count == 0 && params[:q][:name_matches] !~ /^%.+%$/
         # if we do not get any results, add wildcards to the name field and search again
         n_cache = params[:q][:name_matches]
         params[:q][:name_matches] = "%#{params[:q][:name_matches]}%"

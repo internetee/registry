@@ -94,7 +94,8 @@ feature 'Domains', type: :feature do
 
       fill_in 'q_name_matches', with: 'abcd_.ee'
       find('.btn.btn-primary.search').click
-      current_path.should == "/registrar/domains/info"
+      current_path.should == "/registrar/domains"
+      page.should have_content('abcde.ee')
     end
   end
 end
