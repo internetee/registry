@@ -11,6 +11,7 @@ source 'https://rubygems.org'
 gem 'rails',        '4.2.3' # when update, all initializers eis_custom files needs check/update
 gem 'iso8601',      '~> 0.8.6' # for dates and times
 gem 'hashie-forbidden_attributes', '~> 0.1.1'
+gem 'SyslogLogger', '~> 2.0.0'
 
 # load env
 gem 'figaro', '~> 1.1.1'
