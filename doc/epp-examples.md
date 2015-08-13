@@ -13129,7 +13129,7 @@ REQUEST:
       </ext:expiry>
     </ext:keyrelay>
     <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
-      <eis:legalDocument type="pdf">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
     </eis:extdata>
     <ext:clTRID>1439458573</ext:clTRID>
   </command>
@@ -13180,7 +13180,7 @@ REQUEST:
       </ext:expiry>
     </ext:keyrelay>
     <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
-      <eis:legalDocument type="jpg">JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==</eis:legalDocument>
+      <eis:legalDocument type="jpg">dGVzdCBmYWlsCg==</eis:legalDocument>
     </eis:extdata>
     <ext:clTRID>1439458574</ext:clTRID>
   </command>
