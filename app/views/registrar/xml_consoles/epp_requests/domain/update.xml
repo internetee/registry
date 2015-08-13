@@ -30,6 +30,9 @@
       <secDNS:update xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1">
         <secDNS:rem>
           <secDNS:keyData>
+            <secDNS:flags>257</secDNS:flags>
+            <secDNS:protocol>3</secDNS:protocol>
+            <secDNS:alg>8</secDNS:alg>
             <secDNS:pubKey>700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f</secDNS:pubKey>
           </secDNS:keyData>
         </secDNS:rem>
