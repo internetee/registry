@@ -147,6 +147,20 @@ describe 'EPP Domain', epp: true do
       d.reserved.should == false
     end
 
+    it 'creates a domain with custom auth info' do
+      dn = next_domain_name
+      response = epp_plain_request(domain_create_xml({
+        name: { value: dn },
+        authInfo: { pw: { value: 'asdasd' } }
+      }))
+
+      d = Domain.last
+      response[:msg].should == 'Command completed successfully'
+      response[:result_code].should == '1000'
+
+      d.auth_info.should == 'asdasd'
+    end
+
     # it 'creates ria.ee with valid ds record' do
       # xml = domain_create_xml({
         # name: { value: 'ria.ee' }
