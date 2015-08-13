@@ -515,6 +515,22 @@ describe 'EPP Contact', epp: true do
         Setting.client_status_editing_enabled = true
       end
 
+      it 'should update auth info' do
+        xml = @epp_xml.update({
+          id: { value: 'FIRST0:SH8013' },
+          chg: {
+            authInfo: { pw: { value: 'newpassword' } }
+          }
+        })
+        puts Nokogiri xml
+        response = epp_plain_request(xml, :xml)
+        response[:results][0][:msg].should == 'Command completed successfully'
+        response[:results][0][:result_code].should == '1000'
+
+        contact = Contact.find_by(code: 'FIRST0:SH8013')
+        contact.auth_info.should == 'newpassword'
+      end
+
       it 'should add value voice value' do
         xml = @epp_xml.update({
           id: { value: 'FIRST0:SH8013' },

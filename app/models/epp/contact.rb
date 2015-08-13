@@ -26,8 +26,8 @@ class Epp::Contact < Contact
       f = frame
       at = {}.with_indifferent_access
       if rem
-        at[:name]         = nil if f.css('postalInfo name').present? 
-        at[:org_name]     = nil if f.css('postalInfo org').present? 
+        at[:name]         = nil if f.css('postalInfo name').present?
+        at[:org_name]     = nil if f.css('postalInfo org').present?
         at[:email]        = nil if f.css('email').present?
         at[:fax]          = nil if f.css('fax').present?
         at[:phone]        = nil if f.css('voice').present?
@@ -37,8 +37,8 @@ class Epp::Contact < Contact
         at[:state]        = nil if f.css('postalInfo addr sp').present?
         at[:country_code] = nil if f.css('postalInfo addr cc').present?
       else
-        at[:name]       = f.css('postalInfo name').text        if f.css('postalInfo name').present? 
-        at[:org_name]   = f.css('postalInfo org').text         if f.css('postalInfo org').present? 
+        at[:name]       = f.css('postalInfo name').text        if f.css('postalInfo name').present?
+        at[:org_name]   = f.css('postalInfo org').text         if f.css('postalInfo org').present?
         at[:email]      = f.css('email').text                  if f.css('email').present?
         at[:fax]        = f.css('fax').text                    if f.css('fax').present?
         at[:phone]      = f.css('voice').text                  if f.css('voice').present?
@@ -47,12 +47,12 @@ class Epp::Contact < Contact
         at[:street]     = f.css('postalInfo addr street').text if f.css('postalInfo addr street').present?
         at[:state]      = f.css('postalInfo addr sp').text     if f.css('postalInfo addr sp').present?
         at[:country_code] = f.css('postalInfo addr cc').text     if f.css('postalInfo addr cc').present?
-        at[:auth_info]    = f.css('authInfo pw').text            if f.css('authInfo pw').present? 
+        at[:auth_info]    = f.css('authInfo pw').text            if f.css('authInfo pw').present?
       end
 
       legal_frame = f.css('legalDocument').first
       if legal_frame.present?
-        at[:legal_documents_attributes] = legal_document_attrs(legal_frame) 
+        at[:legal_documents_attributes] = legal_document_attrs(legal_frame)
       end
       at.merge!(ident_attrs(f.css('ident').first))
       at
@@ -154,7 +154,7 @@ class Epp::Contact < Contact
     at.deep_merge!(self.class.attrs_from(frame.css('add')))
     at.deep_merge!(self.class.attrs_from(frame.css('chg')))
     legal_frame = frame.css('legalDocument').first
-    at[:legal_documents_attributes] = self.class.legal_document_attrs(legal_frame) 
+    at[:legal_documents_attributes] = self.class.legal_document_attrs(legal_frame)
     self.deliver_emails = true # turn on email delivery for epp
     super(at)
   end

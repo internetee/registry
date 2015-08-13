@@ -244,9 +244,9 @@ class Contact < ActiveRecord::Base
     @generate_auth_info_disabled = true
   end
 
-  def auth_info=(pw)
-    self[:auth_info] = pw if new_record?
-  end
+  # def auth_info=(pw)
+  #   self[:auth_info] = pw if new_record?
+  # end
 
   def code=(code)
     self[:code] = code if new_record? # cannot change code later
