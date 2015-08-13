@@ -37,8 +37,6 @@
           </secDNS:keyData>
         </secDNS:rem>
       </secDNS:update>
-    </extension>
-    <extension>
       <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">
           dGVzdCBmYWlsCg==
