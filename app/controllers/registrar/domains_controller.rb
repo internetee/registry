@@ -130,7 +130,7 @@ class Registrar::DomainsController < Registrar::DeppController # EPP controller
 
   def transfer
     authorize! :transfer, Depp::Domain
-    if params[:domain_name]
+    if request.post? && params[:domain_name]
       @data = @domain.transfer(params)
       render 'transfer_index' and return unless response_ok?
     else
