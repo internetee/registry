@@ -522,7 +522,7 @@ describe 'EPP Contact', epp: true do
             authInfo: { pw: { value: 'newpassword' } }
           }
         })
-        puts Nokogiri xml
+
         response = epp_plain_request(xml, :xml)
         response[:results][0][:msg].should == 'Command completed successfully'
         response[:results][0][:result_code].should == '1000'
