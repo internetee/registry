@@ -50,5 +50,18 @@ feature 'Invoices', type: :feature do
       response_headers['Content-Type'].should == 'application/pdf'
       response_headers['Content-Disposition'].should == "attachment; filename=\"#{@invoice.pdf_name}\""
     end
+
+    it 'should not see foreign invoices' do
+      user2 = Fabricate(:api_user, identity_code: @user.identity_code)
+      visit '/registrar/invoices'
+      click_link @invoice.to_s
+      page.should have_text(@invoice.to_s)
+      page.should have_text('Buyer')
+      click_link "#{user2} (#{user2.roles.first}) - #{user2.registrar}"
+      page.should have_text('You are not authorized to access this page.')
+
+      visit "/registrar/invoices/#{@invoice.id}/forward"
+      page.should have_text('You are not authorized to access this page.')
+    end
   end
 end
