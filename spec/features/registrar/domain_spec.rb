@@ -97,5 +97,23 @@ feature 'Domains', type: :feature do
       current_path.should == "/registrar/domains"
       page.should have_content('abcde.ee')
     end
+
+    it 'should search foreign domain and transfer it' do
+      user2 = Fabricate(:api_user, identity_code: @user.identity_code)
+      d2 = Fabricate(:domain, registrar: user2.registrar)
+
+      visit '/registrar/domains'
+      page.should_not have_content(d2.name)
+      fill_in 'q_name_matches', with: d2.name
+      find('.btn.btn-primary.search').click
+
+      current_path.should == "/registrar/domains/info"
+      click_link 'Transfer'
+      fill_in 'Password', with: d2.auth_info
+      click_button 'Transfer'
+      page.should have_content 'serverApproved'
+      visit '/registrar/domains'
+      page.should have_content d2.name
+    end
   end
 end
