@@ -6,6 +6,10 @@
       %dt= t(:password)
       %dd= @data.css('pw').text.present? ? @data.css('pw').text : t('hidden')
 
+      - if @data.css('pw').text.blank?
+        %dt= t(:registrar)
+        %dd= @data.css('clID').text
+
       %dt= t(:registrant)
       %dd= @data.css('registrant').text
 
