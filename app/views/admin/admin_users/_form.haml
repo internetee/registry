@@ -31,7 +31,7 @@
         .col-md-4.control-label
           = f.label :email
         .col-md-8
-          = f.text_field(:email, class: 'form-control', email: true)
+          = f.text_field(:email, class: 'form-control', lax_email: true)
       .form-group
         .col-md-4.control-label
           = f.label :country_code, t(:country)
