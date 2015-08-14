@@ -13,7 +13,7 @@
         .col-md-3.control-label
           = label_tag :password, t(:password), class: 'required'
         .col-md-7
-          = password_field_tag :password, params[:password],
+          = text_field_tag :password, params[:password],
             class: 'form-control', autocomplete: 'off', required: true
       .form-group
         .col-md-3.control-label
