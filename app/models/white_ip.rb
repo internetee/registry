@@ -15,12 +15,10 @@ class WhiteIp < ActiveRecord::Base
 
   API = 'api'
   REGISTRAR = 'registrar'
-  GLOBAL = 'global'
-  INTERFACES = [GLOBAL, API, REGISTRAR]
+  INTERFACES = [API, REGISTRAR]
 
   scope :api, -> { where(interface: API) }
   scope :registrar, -> { where(interface: REGISTRAR) }
-  scope :global, -> { where(interface: GLOBAL) }
 
   class << self
     def registrar_ip_white?(ip)
@@ -28,9 +26,7 @@ class WhiteIp < ActiveRecord::Base
 
       at = WhiteIp.arel_table
       WhiteIp.where(
-        at[:interface].eq(REGISTRAR).or(
-          at[:interface].eq(GLOBAL)
-        ).and(
+        at[:interface].eq(REGISTRAR).and(
           at[:ipv4].eq(ip)
         )
       ).any?

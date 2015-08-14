@@ -24,6 +24,9 @@ class ApiUser < User
 
   attr_accessor :registrar_typeahead
 
+  SUPER = 'super'
+  EPP = 'epp'
+
   ROLES = %w(super epp billing) # should not match to admin roles
 
   def ability
@@ -39,6 +42,10 @@ class ApiUser < User
 
   def registrar_typeahead
     @registrar_typeahead || registrar || nil
+  end
+
+  def can_make_api_calls?
+    ([SUPER, EPP] & roles).any?
   end
 
   def to_s
