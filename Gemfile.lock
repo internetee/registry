@@ -540,7 +540,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  SyslogLogger (~> 2.0.0)
+  SyslogLogger (~> 2.0)
   activerecord-import (~> 0.7.0)
   autodoc
   better_errors (~> 2.1.1)
