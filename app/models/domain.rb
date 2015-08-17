@@ -618,7 +618,6 @@ class Domain < ActiveRecord::Base
     statuses.include?(DomainStatus::FORCE_DELETE)
   end
 
-  # TODO: Review the list and disallow epp calls
   def pending_update_prohibited?
     (statuses & [
       DomainStatus::CLIENT_UPDATE_PROHIBITED,
@@ -643,7 +642,6 @@ class Domain < ActiveRecord::Base
     statuses.include?(DomainStatus::PENDING_DELETE) && !statuses.include?(DomainStatus::FORCE_DELETE)
   end
 
-  # TODO: Review the list and disallow epp calls
   def pending_delete_prohibited?
     (statuses & [
       DomainStatus::CLIENT_DELETE_PROHIBITED,
