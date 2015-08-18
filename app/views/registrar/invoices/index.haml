@@ -4,7 +4,7 @@
 = render 'shared/title', name: t(:your_account)
 
 = t(:your_current_account_balance_is,
-  balance: current_user.registrar.cash_account.balance,
+  balance: currency(current_user.registrar.cash_account.balance),
   currency: current_user.registrar.cash_account.currency)
 
 %h1= t(:invoices)
@@ -68,7 +68,7 @@
                 %td{class: 'text-danger'}= t(:unpaid)
 
               %td= l(x.due_date, format: :date_long)
-              %td= x.sum
+              %td= currency(x.sum)
 .row
   .col-md-12
     = paginate @invoices
