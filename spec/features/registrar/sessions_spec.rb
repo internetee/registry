@@ -32,7 +32,7 @@ feature 'Sessions', type: :feature do
       fill_in 'depp_user_tag', with: @api_user_invalid_ip.username
       fill_in 'depp_user_password', with: @api_user_invalid_ip.password
       click_button 'Log in'
-      page.should have_text('Access denied')
+      page.should have_text('IP is not whitelisted')
     end
 
     it 'should get in with invalid when whitelist disabled' do

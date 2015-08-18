@@ -26,7 +26,7 @@ class RegistrarController < ApplicationController
     end
 
     return if riw && aiw
-    flash[:alert] = t('access_denied')
+    flash[:alert] = t('ip_is_not_whitelisted')
     sign_out(current_user)
     redirect_to registrar_login_path and return
   end
