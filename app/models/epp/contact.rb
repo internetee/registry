@@ -20,35 +20,21 @@ class Epp::Contact < Contact
 
     # rubocop: disable Metrics/PerceivedComplexity
     # rubocop: disable Metrics/CyclomaticComplexity
-    # rubocop: disable Metrics/MethodLength
     # rubocop: disable Metrics/AbcSize
-    def attrs_from(frame, rem = nil)
+    def attrs_from(frame)
       f = frame
       at = {}.with_indifferent_access
-      if rem
-        at[:name]         = nil if f.css('postalInfo name').present?
-        at[:org_name]     = nil if f.css('postalInfo org').present?
-        at[:email]        = nil if f.css('email').present?
-        at[:fax]          = nil if f.css('fax').present?
-        at[:phone]        = nil if f.css('voice').present?
-        at[:city]         = nil if f.css('postalInfo addr city').present?
-        at[:zip]          = nil if f.css('postalInfo addr pc').present?
-        at[:street]       = nil if f.css('postalInfo addr street').present?
-        at[:state]        = nil if f.css('postalInfo addr sp').present?
-        at[:country_code] = nil if f.css('postalInfo addr cc').present?
-      else
-        at[:name]       = f.css('postalInfo name').text        if f.css('postalInfo name').present?
-        at[:org_name]   = f.css('postalInfo org').text         if f.css('postalInfo org').present?
-        at[:email]      = f.css('email').text                  if f.css('email').present?
-        at[:fax]        = f.css('fax').text                    if f.css('fax').present?
-        at[:phone]      = f.css('voice').text                  if f.css('voice').present?
-        at[:city]       = f.css('postalInfo addr city').text   if f.css('postalInfo addr city').present?
-        at[:zip]        = f.css('postalInfo addr pc').text     if f.css('postalInfo addr pc').present?
-        at[:street]     = f.css('postalInfo addr street').text if f.css('postalInfo addr street').present?
-        at[:state]      = f.css('postalInfo addr sp').text     if f.css('postalInfo addr sp').present?
-        at[:country_code] = f.css('postalInfo addr cc').text     if f.css('postalInfo addr cc').present?
-        at[:auth_info]    = f.css('authInfo pw').text            if f.css('authInfo pw').present?
-      end
+      at[:name]       = f.css('postalInfo name').text        if f.css('postalInfo name').present?
+      at[:org_name]   = f.css('postalInfo org').text         if f.css('postalInfo org').present?
+      at[:email]      = f.css('email').text                  if f.css('email').present?
+      at[:fax]        = f.css('fax').text                    if f.css('fax').present?
+      at[:phone]      = f.css('voice').text                  if f.css('voice').present?
+      at[:city]       = f.css('postalInfo addr city').text   if f.css('postalInfo addr city').present?
+      at[:zip]        = f.css('postalInfo addr pc').text     if f.css('postalInfo addr pc').present?
+      at[:street]     = f.css('postalInfo addr street').text if f.css('postalInfo addr street').present?
+      at[:state]      = f.css('postalInfo addr sp').text     if f.css('postalInfo addr sp').present?
+      at[:country_code] = f.css('postalInfo addr cc').text     if f.css('postalInfo addr cc').present?
+      at[:auth_info]    = f.css('authInfo pw').text            if f.css('authInfo pw').present?
 
       legal_frame = f.css('legalDocument').first
       if legal_frame.present?
@@ -57,7 +43,6 @@ class Epp::Contact < Contact
       at.merge!(ident_attrs(f.css('ident').first))
       at
     end
-    # rubocop: enable Metrics/MethodLength
     # rubocop: enable Metrics/PerceivedComplexity
     # rubocop: enable Metrics/CyclomaticComplexity
     # rubocop: enable Metrics/AbcSize
@@ -150,12 +135,49 @@ class Epp::Contact < Contact
   def update_attributes(frame)
     return super if frame.blank?
     at = {}.with_indifferent_access
-    at.deep_merge!(self.class.attrs_from(frame.css('rem'), 'rem'))
-    at.deep_merge!(self.class.attrs_from(frame.css('add')))
     at.deep_merge!(self.class.attrs_from(frame.css('chg')))
+
+    if Setting.client_status_editing_enabled
+      at[:statuses] = statuses - statuses_attrs(frame.css('rem'), 'rem') + statuses_attrs(frame.css('add'), 'add')
+    end
+
     legal_frame = frame.css('legalDocument').first
     at[:legal_documents_attributes] = self.class.legal_document_attrs(legal_frame)
     self.deliver_emails = true # turn on email delivery for epp
     super(at)
+  end
+
+  def statuses_attrs(frame, action)
+    status_list = status_list_from(frame)
+
+    if action == 'rem'
+      to_destroy = []
+      status_list.each do |status|
+        if statuses.include?(status)
+          to_destroy << status
+        else
+          add_epp_error('2303', 'status', status, [:contact_statuses, :not_found])
+        end
+      end
+
+      return to_destroy
+    else
+      return status_list
+    end
+  end
+
+  def status_list_from(frame)
+    status_list = []
+
+    frame.css('status').each do |status|
+      unless Contact::CLIENT_STATUSES.include?(status['s'])
+        add_epp_error('2303', 'status', status['s'], [:domain_statuses, :not_found])
+        next
+      end
+
+      status_list << status['s']
+    end
+
+    status_list
   end
 end

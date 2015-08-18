@@ -123,12 +123,6 @@ class Epp::ContactsController < EppController
 
   def validate_update
     @prefix = 'update > update >'
-    if element_count('chg') == 0 && element_count('rem') == 0 && element_count('add') == 0
-      epp_errors << {
-        code: '2003',
-        msg: I18n.t('errors.messages.required_parameter_missing', key: 'add, rem or chg')
-      }
-    end
     contact_org_disabled
     fax_disabled
     status_editing_disabled
@@ -148,6 +142,7 @@ class Epp::ContactsController < EppController
   def contact_org_disabled
     return true if ENV['contact_org_enabled'] == 'true'
     return true if params[:parsed_frame].css('postalInfo org').text.blank?
+    
     epp_errors << {
       code: '2306',
       msg: "#{I18n.t(:contact_org_error)}: postalInfo > org [org]"
