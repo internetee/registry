@@ -47,16 +47,6 @@ class Registrar::SessionsController < Devise::SessionsController
       end
     end
 
-    unless @api_user.registrar.registrar_ip_white?(request.ip)
-      @depp_user.errors.add(:base, I18n.t(:ip_is_not_whitelisted))
-    end
-
-    if @api_user.can_make_api_calls?
-      unless @api_user.registrar.api_ip_white?(request.ip)
-        @depp_user.errors.add(:base, I18n.t(:ip_is_not_whitelisted))
-      end
-    end
-
     if @depp_user.errors.none? && @depp_user.valid?
       if @api_user.active?
         sign_in @api_user
