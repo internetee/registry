@@ -58,10 +58,6 @@ class ApiUser < User
     @registrar_typeahead || registrar || nil
   end
 
-  def can_make_api_calls?
-    ([SUPER, EPP] & roles).any?
-  end
-
   def to_s
     username
   end

@@ -21,7 +21,7 @@ class RegistrarController < ApplicationController
     riw = current_user.registrar.registrar_ip_white?(request.ip)
 
     aiw = true
-    if current_user.can_make_api_calls?
+    if current_user.can?(:create, :epp_request)
       aiw = current_user.registrar.api_ip_white?(request.ip)
     end
 
