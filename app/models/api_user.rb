@@ -40,6 +40,20 @@ class ApiUser < User
     self.active = true unless active_changed?
   end
 
+  class << self
+    def find_by_idc_data(idc_data)
+      return false if idc_data.blank?
+      identity_code = idc_data.scan(/serialNumber=(\d+)/).flatten.first
+
+      find_by(identity_code: identity_code)
+    end
+
+    def all_by_identity_code(identity_code)
+      ApiUser.where(identity_code: identity_code)
+        .where("identity_code is NOT NULL and identity_code != ''").includes(:registrar)
+    end
+  end
+
   def registrar_typeahead
     @registrar_typeahead || registrar || nil
   end
@@ -74,14 +88,5 @@ class ApiUser < User
     cert = OpenSSL::X509::Certificate.new(crt)
     md5 = OpenSSL::Digest::MD5.new(cert.to_der).to_s
     certificates.api.exists?(md5: md5, common_name: cn)
-  end
-
-  class << self
-    def find_by_idc_data(idc_data)
-      return false if idc_data.blank?
-      identity_code = idc_data.scan(/serialNumber=(\d+)/).flatten.first
-
-      find_by(identity_code: identity_code)
-    end
   end
 end
