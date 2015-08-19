@@ -24,7 +24,7 @@ feature 'Admin contact', type: :feature do
   end
 
   it 'should search contacts by name' do
-    d1 = Fabricate(:contact, name: 'first name')
+    Fabricate(:contact, name: 'first name')
     Fabricate(:contact, name: 'second name')
     Fabricate(:contact, name: 'third name')
     sign_in @user
