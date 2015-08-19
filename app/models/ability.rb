@@ -30,13 +30,39 @@ class Ability
 
   def super # Registrar/api_user dynamic role
     static_registrar
-    static_epp
+    epp
     billing
   end
 
   def epp # Registrar/api_user dynamic role
     static_registrar
-    static_epp
+
+    # REPP
+    can(:manage, :repp)
+
+    # EPP
+    can(:create, :epp_login) # billing can establis epp connection in order to login
+    can(:create, :epp_requests)
+
+    # Epp::Domain
+    can(:info,     Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || pw.blank? ? true : d.auth_info == pw }
+    can(:check,    Epp::Domain)
+    can(:create,   Epp::Domain)
+    can(:renew,    Epp::Domain) { |d| d.registrar_id == @user.registrar_id }
+    can(:update,   Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.auth_info == pw }
+    can(:transfer, Epp::Domain) { |d, pw| d.auth_info == pw }
+    can(:view_password, Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.auth_info == pw }
+    can(:delete,   Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.auth_info == pw }
+
+    # Epp::Contact
+    can(:info, Epp::Contact)           { |c, pw| c.registrar_id == @user.registrar_id || pw.blank? ? true : c.auth_info == pw }
+    can(:view_full_info, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
+    can(:check,  Epp::Contact)
+    can(:create, Epp::Contact)
+    can(:update, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
+    can(:delete, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
+    can(:renew,  Epp::Contact)
+    can(:view_password, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
   end
 
   def billing # Registrar/api_user dynamic role
@@ -44,7 +70,7 @@ class Ability
     can(:manage, Invoice) { |i| i.buyer_id == @user.registrar_id }
     can :manage, :deposit
     can :read, AccountActivity
-    static_epp_login # billing can establis epp connection in order to login
+    can(:create, :epp_login) # billing can establis epp connection in order to login
   end
 
   def customer_service # Admin/admin_user dynamic role
@@ -83,39 +109,6 @@ class Ability
   #
   # Static roles, linked from dynamic roles
   #
-  def static_epp_login
-    can(:create, :epp_login)
-  end
-
-  def static_epp
-    # REPP
-    can(:manage, :repp)
-
-    # EPP
-    static_epp_login
-    can(:create, :epp_requests)
-
-    # Epp::Domain
-    can(:info,     Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || pw.blank? ? true : d.auth_info == pw }
-    can(:check,    Epp::Domain)
-    can(:create,   Epp::Domain)
-    can(:renew,    Epp::Domain) { |d| d.registrar_id == @user.registrar_id }
-    can(:update,   Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.auth_info == pw }
-    can(:transfer, Epp::Domain) { |d, pw| d.auth_info == pw }
-    can(:view_password, Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.auth_info == pw }
-    can(:delete,   Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.auth_info == pw }
-
-    # Epp::Contact
-    can(:info, Epp::Contact)           { |c, pw| c.registrar_id == @user.registrar_id || pw.blank? ? true : c.auth_info == pw }
-    can(:view_full_info, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
-    can(:check,  Epp::Contact)
-    can(:create, Epp::Contact)
-    can(:update, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
-    can(:delete, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
-    can(:renew,  Epp::Contact)
-    can(:view_password, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
-  end
-
   def static_registrar
     can :manage, Nameserver
     can :view, :registrar_dashboard
