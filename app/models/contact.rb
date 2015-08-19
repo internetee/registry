@@ -19,6 +19,7 @@ class Contact < ActiveRecord::Base
   # Phone nr validation is very minimam in order to support legacy requirements
   validates :phone, format: /\+[0-9]{1,3}\.[0-9]{1,14}?/
   validates :email, format: /@/
+  validates :email, email_format: { message: :invalid }, if: proc { |c| c.email_changed? }
   validates :ident,
     format: { with: /\d{4}-\d{2}-\d{2}/, message: :invalid_birthday_format },
     if: proc { |c| c.ident_type == 'birthday' }

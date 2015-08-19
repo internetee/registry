@@ -48,4 +48,40 @@ feature 'Domain', type: :feature do
     find('.btn.btn-primary').click
     current_path.should == "/admin/domains/#{d1.id}"
   end
+
+  it 'should set domain to force delete' do
+    d = Fabricate(:domain)
+    sign_in @user
+    visit admin_domains_url
+    click_link d.name
+    click_link 'Edit statuses'
+    page.should have_content('ok')
+    click_link 'Set force delete'
+    page.should have_content('forceDelete')
+    page.should have_content('serverRenewProhibited')
+    page.should have_content('serverTransferProhibited')
+    page.should have_content('serverUpdateProhibited')
+    page.should have_content('serverManualInzone')
+    page.should have_content('pendingDelete')
+
+    click_link 'Edit statuses'
+    click_button 'Save'
+    page.should have_content('Failed to update domain')
+    page.should have_content('Object status prohibits operation')
+
+    click_link 'Back to domain'
+    click_link 'Edit statuses'
+    click_link 'Unset force delete'
+    page.should_not have_content('forceDelete')
+    page.should_not have_content('serverRenewProhibited')
+    page.should_not have_content('serverTransferProhibited')
+    page.should_not have_content('serverUpdateProhibited')
+    page.should_not have_content('serverManualInzone')
+    page.should_not have_content('pendingDelete')
+    page.should have_content('ok')
+
+    click_link 'Edit statuses'
+    click_button 'Save'
+    page.should have_content('Domain updated!')
+  end
 end

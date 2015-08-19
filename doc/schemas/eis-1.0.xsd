@@ -70,6 +70,9 @@
       <enumeration value="gz"/>
       <enumeration value="tar"/>
       <enumeration value="7z"/>
+      <enumeration value="odt"/>
+      <enumeration value="doc"/>
+      <enumeration value="docx"/>
     </restriction>
   </simpleType>
 

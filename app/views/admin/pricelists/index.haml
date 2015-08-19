@@ -33,7 +33,7 @@
               %td= pricelist.category
               %td= pricelist.duration
               %td= pricelist.operation_category
-              %td= pricelist.price
+              %td= currency(pricelist.price)
               %td= l(pricelist.valid_from, format: :ydate)
               %td= l(pricelist.valid_to, format: :ydate)
               %td= link_to(t(:edit), edit_admin_pricelist_path(pricelist), class: 'btn btn-xs btn-primary')

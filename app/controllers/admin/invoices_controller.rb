@@ -16,7 +16,7 @@ class Admin::InvoicesController < AdminController
       flash[:notice] = t(:record_created)
       redirect_to [:admin, @invoice]
     else
-      flash[:alert] = t(:failed_to_create_record)
+      flash.now[:alert] = t(:failed_to_create_record)
       render 'new'
     end
   end

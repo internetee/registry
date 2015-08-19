@@ -109,6 +109,12 @@ describe Contact do
     it 'should have no related domain descriptions' do
       @contact.related_domain_descriptions.should == {}
     end
+
+    it 'should fully validate email syntax for new records' do
+      @contact.email = 'not@correct'
+      @contact.valid?
+      @contact.errors[:email].should == ['Email is invalid']
+    end
   end
 
   context 'with valid attributes' do
@@ -246,6 +252,14 @@ describe Contact do
       it 'should have related domain descriptions hash' do
         contact = @domain.contacts.first
         contact.related_domain_descriptions.should == { "#{@domain.name}" => [:admin] }
+      end
+
+      it 'should fully validate email syntax for old records' do
+        old = @contact.email
+        @contact.email = 'legacy@support-not-correct'
+        @contact.valid?
+        @contact.errors[:email].should == ['Email is invalid']
+        @contact.email = old
       end
     end
 

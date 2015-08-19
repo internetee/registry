@@ -22,6 +22,7 @@ if con.present? && con.table_exists?('settings')
   Setting.save_default(:ns_max_count, 11)
 
   Setting.save_default(:transfer_wait_time, 0)
+  Setting.transfer_wait_time = 0
   Setting.save_default(:request_confrimation_on_registrant_change_enabled, true)
   Setting.save_default(:request_confirmation_on_domain_deletion_enabled, true)
 
@@ -31,6 +32,8 @@ if con.present? && con.table_exists?('settings')
   Setting.save_default(:invoice_number_max, 149999)
   Setting.save_default(:days_to_keep_invoices_active, 30)
   Setting.save_default(:days_to_keep_overdue_invoices_active, 30)
+  Setting.save_default(:minimum_deposit, 0.0)
+
   Setting.save_default(:days_to_renew_domain_before_expire, 90)
   Setting.save_default(:expire_warning_period, 15)
   Setting.save_default(:redemption_grace_period, 30)

@@ -7,6 +7,7 @@ class Admin::BankTransactionsController < AdminController
   end
 
   def create
+    comma_support_for(:bank_transaction, :sum)
     @bank_transaction = BankTransaction.new(
       bank_transaction_params.merge(bank_statement_id: params[:bank_statement_id])
     )
@@ -21,6 +22,7 @@ class Admin::BankTransactionsController < AdminController
   end
 
   def update
+    comma_support_for(:bank_transaction, :sum)
     if @bank_transaction.update(bank_transaction_params)
       flash[:notice] = I18n.t('record_updated')
       redirect_to [:admin, @bank_transaction]

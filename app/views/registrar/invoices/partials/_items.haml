@@ -14,19 +14,19 @@
         %tr
           %td= t(x.description)
           %td= x.unit
-          %td= x.amount
-          %td= x.price
-          %td= x.item_sum_without_vat
+          %td= currency(x.amount)
+          %td= currency(x.price)
+          %td= currency(x.item_sum_without_vat)
     %tfoot
       %tr
         %th{colspan: 3}
         %th= t(:total_without_vat)
-        %td= @invoice.sum_without_vat
+        %td= currency(@invoice.sum_without_vat)
       %tr
         %th.no-border{colspan: 3}
         %th= t('vat', vat_prc: (@invoice.vat_prc * 100).round)
-        %td= @invoice.vat
+        %td= currency(@invoice.vat)
       %tr
         %th.no-border{colspan: 3}
         %th= t(:total)
-        %td= @invoice.sum
+        %td= currency(@invoice.sum)

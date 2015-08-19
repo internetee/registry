@@ -212,14 +212,67 @@ describe Domain do
       @domain.statuses = ['ok']
       @domain.set_force_delete
 
-      @domain.statuses.count.should == 6
+      @domain.statuses.should match_array([
+        "forceDelete",
+        "pendingDelete",
+        "serverManualInzone",
+        "serverRenewProhibited",
+        "serverTransferProhibited",
+        "serverUpdateProhibited"
+      ])
+
       fda = Time.zone.now + Setting.redemption_grace_period.days
       @domain.force_delete_at.should be_within(20).of(fda)
 
       @domain.unset_force_delete
 
-      @domain.statuses.count.should == 1
+      @domain.statuses.should == ['ok']
       @domain.force_delete_at.should be_nil
+
+      @domain.statuses = [
+        DomainStatus::CLIENT_DELETE_PROHIBITED,
+        DomainStatus::SERVER_DELETE_PROHIBITED,
+        DomainStatus::PENDING_UPDATE,
+        DomainStatus::PENDING_TRANSFER,
+        DomainStatus::PENDING_RENEW,
+        DomainStatus::PENDING_CREATE,
+        DomainStatus::CLIENT_HOLD,
+        DomainStatus::EXPIRED,
+        DomainStatus::SERVER_HOLD,
+        DomainStatus::DELETE_CANDIDATE
+      ]
+
+      @domain.save
+
+      @domain.set_force_delete
+
+      @domain.statuses.should match_array([
+        "clientHold",
+        "deleteCandidate",
+        "expired",
+        "forceDelete",
+        "pendingDelete",
+        "serverHold",
+        "serverManualInzone",
+        "serverRenewProhibited",
+        "serverTransferProhibited",
+        "serverUpdateProhibited"
+      ])
+
+      @domain.unset_force_delete
+
+      @domain.statuses.should match_array([
+        "clientDeleteProhibited",
+        "clientHold",
+        "deleteCandidate",
+        "expired",
+        "pendingCreate",
+        "pendingRenew",
+        "pendingTransfer",
+        "pendingUpdate",
+        "serverDeleteProhibited",
+        "serverHold"
+      ])
     end
 
     it 'should set expired status and update outzone_at and delete_at' do
@@ -382,6 +435,12 @@ describe Domain do
       @domain.statuses = DomainStatus::OK # restore
     end
 
+    it 'should add poll message to registrar' do
+      domain = Fabricate(:domain, name: 'testpollmessage123.ee')
+      domain.poll_message!(:poll_pending_update_confirmed_by_registrant)
+      domain.registrar.messages.first.body.should == 'Registrant confirmed domain update: testpollmessage123.ee'
+    end
+
     context 'about registrant update confirm' do
       before :all do
         @domain.registrant_verification_token = 123
@@ -469,35 +528,54 @@ describe Domain do
     end
   end
 
-  # it 'validates domain name', skip: true do
-  # d = Fabricate(:domain)
-  # expect(d.name).to_not be_nil
+  it 'validates domain name' do
+    d = Fabricate(:domain)
+    expect(d.name).to_not be_nil
 
-  # invalid = ['a.ee', "#{'a' * 64}.ee", 'ab.eu', 'test.ab.ee', '-test.ee', '-test-.ee', 'test-.ee', 'te--st.ee',
-  # 'õ.pri.ee', 'test.com', 'www.ab.ee', 'test.eu', '  .ee', 'a b.ee', 'Ž .ee', 'test.edu.ee']
+    invalid = [
+      'a.ee', "#{'a' * 64}.ee", 'ab.eu', 'test.ab.ee', '-test.ee', '-test-.ee',
+      'test-.ee', 'te--st.ee', 'õ.pri.ee', 'test.com', 'www.ab.ee', 'test.eu', '  .ee', 'a b.ee',
+      'Ž .ee', 'test.edu.ee'
+    ]
 
-  # invalid.each do |x|
-  # expect(Fabricate.build(:domain, name: x).valid?).to be false
-  # end
+    invalid.each do |x|
+      expect(Fabricate.build(:domain, name: x).valid?).to be false
+    end
 
-  # valid = ['ab.ee', "#{'a' * 63}.ee", 'te-s-t.ee', 'jäääär.ee', 'päike.pri.ee',
-  # 'õigus.com.ee', 'õäöü.fie.ee', 'test.med.ee', 'žä.ee', '  ŽŠ.ee  ']
+    valid = [
+      'ab.ee', "#{'a' * 63}.ee", 'te-s-t.ee', 'jäääär.ee', 'päike.pri.ee',
+      'õigus.com.ee', 'õäöü.fie.ee', 'test.med.ee', 'žä.ee', '  ŽŠ.ee  '
+    ]
 
-  # valid.each do |x|
-  # expect(Fabricate.build(:domain, name: x).valid?).to be true
-  # end
+    valid.each do |x|
+      expect(Fabricate.build(:domain, name: x).valid?).to be true
+    end
 
-  # invalid_punycode = ['xn--geaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-4we.pri.ee']
+    invalid_punycode = ['xn--geaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-4we.pri.ee']
 
-  # invalid_punycode.each do |x|
-  # expect(Fabricate.build(:domain, name: x).valid?).to be false
-  # end
+    invalid_punycode.each do |x|
+      expect(Fabricate.build(:domain, name: x).valid?).to be false
+    end
 
-  # valid_punycode = ['xn--ge-uia.pri.ee', 'xn--geaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-9te.pri.ee']
+    valid_punycode = ['xn--ge-uia.pri.ee', 'xn--geaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-9te.pri.ee']
 
-  # valid_punycode.each do |x|
-  # expect(Fabricate.build(:domain, name: x).valid?).to be true
-  # end
+    valid_punycode.each do |x|
+      expect(Fabricate.build(:domain, name: x).valid?).to be true
+    end
+  end
+
+  it 'should not create zone origin domain' do
+    zs = Fabricate(:zonefile_setting)
+    d = Fabricate.build(:domain, name: 'ee')
+    d.save.should == false
+    d.errors.full_messages.should match_array([
+      "Data management policy violation: Domain name is blocked [name]"
+    ])
+
+    zs.destroy
+
+    d.save.should == true
+  end
 
   # d = Domain.new
   # expect(d.valid?).to be false
