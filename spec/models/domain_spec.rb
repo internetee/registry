@@ -399,6 +399,7 @@ describe Domain do
 
     it 'should set pending update' do
       @domain.statuses = DomainStatus::OK # restore
+      @domain.save
       @domain.pending_update?.should == false
 
       @domain.set_pending_update
@@ -409,6 +410,7 @@ describe Domain do
     it 'should not set pending update' do
       @domain.statuses = DomainStatus::OK # restore
       @domain.statuses << DomainStatus::CLIENT_UPDATE_PROHIBITED
+      @domain.save
 
       @domain.set_pending_update.should == nil # not updated
       @domain.pending_update?.should == false
@@ -417,9 +419,12 @@ describe Domain do
 
     it 'should set pending delete' do
       @domain.statuses = DomainStatus::OK # restore
+      @domain.save
       @domain.pending_delete?.should == false
 
-      @domain.set_pending_delete.should == ['pendingDelete']
+      @domain.set_pending_delete
+      @domain.save
+      @domain.statuses.should == ['pendingDelete']
       @domain.pending_delete?.should == true
       @domain.statuses = DomainStatus::OK # restore
     end

@@ -1,3 +1,11 @@
+- if @api_user.new_record?
+  - overwrite_required = ''
+  - field_required = 'required'
+- else
+  - overwrite_required = 'not-required' # otherwise automatic one adds required
+  - field_required = ''
+
+
 = form_for([:admin, @api_user], multipart: true, 
   html: {class: 'form-horizontal', autocomplete: 'off'}) do |f|
   = render 'shared/full_errors', object: @api_user
@@ -11,16 +19,16 @@
           = f.text_field(:username, class: 'form-control')
       .form-group
         .col-md-4.control-label
-          - not_required = @api_user.new_record? ? '' : 'not-required'
-          = f.label :password, class: not_required
+          = f.label :password, class: overwrite_required
         .col-md-7
-          = f.text_field :password, class: 'form-control', autocomplete: 'off'
+          = f.text_field :password, class: "form-control #{field_required}", autocomplete: 'off'
 
       .form-group
         .col-md-4.control-label
           = f.label :identity_code
         .col-md-7
           = f.text_field(:identity_code, class: 'form-control')
+
       .form-group
         .form-group.has-feedback.js-typeahead-container
           .col-md-4.control-label
@@ -32,9 +40,10 @@
             %span.glyphicon.glyphicon-ok.form-control-feedback.js-typeahead-ok.hidden
             %span.glyphicon.glyphicon-remove.form-control-feedback.js-typeahead-remove
             = f.hidden_field(:registrar_id, class: 'js-registrar-id')
+
       .form-group
         .col-md-4.control-label
-          = f.label :role
+          = f.label :role, class: 'required'
         .col-md-7
           = select_tag 'api_user[roles][]', 
             options_for_select(ApiUser::ROLES.map {|x| [t(x), x] }, @api_user.roles.try(:first)),

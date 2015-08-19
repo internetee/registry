@@ -394,10 +394,10 @@ class Domain < ActiveRecord::Base
     self.registrant_verification_token = token
     self.registrant_verification_asked_at = asked_at
     set_pending_update
-    pending_json[:domain] = changes_cache
-    pending_json[:new_registrant_id]    = new_registrant_id
-    pending_json[:new_registrant_email] = new_registrant_email
-    pending_json[:new_registrant_name]  = new_registrant_name
+    pending_json['domain'] = changes_cache
+    pending_json['new_registrant_id']    = new_registrant_id
+    pending_json['new_registrant_email'] = new_registrant_email
+    pending_json['new_registrant_name']  = new_registrant_name
 
     # This pending_update! method is triggered by before_update
     # Note, all before_save callbacks are excecuted before before_update,
@@ -503,10 +503,6 @@ class Domain < ActiveRecord::Base
     (errors.keys - assoc_errors).empty?
   end
 
-  def statuses_tab_valid?
-    !errors.keys.any? { |x| x.match(/domain_statuses/) }
-  end
-
   ## SHARED
 
   def name_in_wire_format
@@ -532,8 +528,13 @@ class Domain < ActiveRecord::Base
     Registrant.find_by(id: pending_json['domain']['registrant_id'].last)
   end
 
-  # rubocop:disable Lint/Loop
   def generate_auth_info
+    return if auth_info.present?
+    generate_auth_info!
+  end
+
+  # rubocop:disable Lint/Loop
+  def generate_auth_info!
     begin
       self.auth_info = SecureRandom.hex
     end while self.class.exists?(auth_info: auth_info)
@@ -617,7 +618,6 @@ class Domain < ActiveRecord::Base
     statuses.include?(DomainStatus::FORCE_DELETE)
   end
 
-  # TODO: Review the list and disallow epp calls
   def pending_update_prohibited?
     (statuses & [
       DomainStatus::CLIENT_UPDATE_PROHIBITED,
@@ -642,7 +642,6 @@ class Domain < ActiveRecord::Base
     statuses.include?(DomainStatus::PENDING_DELETE) && !statuses.include?(DomainStatus::FORCE_DELETE)
   end
 
-  # TODO: Review the list and disallow epp calls
   def pending_delete_prohibited?
     (statuses & [
       DomainStatus::CLIENT_DELETE_PROHIBITED,

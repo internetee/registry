@@ -122,8 +122,8 @@ describe DomainMailer do
       @new_registrant = Fabricate(:registrant, email: 'new@example.org')
       @domain = Fabricate(:domain, registrant: @registrant)
       @domain.deliver_emails = true
-      @domain.pending_json[:new_registrant_email] = 'new@example.org'
-      @domain.pending_json[:new_registrant_name]  = 'test name'
+      @domain.pending_json['new_registrant_email'] = 'new@example.org'
+      @domain.pending_json['new_registrant_name']  = 'test name'
       @mail = DomainMailer.pending_update_rejected_notification_for_new_registrant(@domain)
     end
 

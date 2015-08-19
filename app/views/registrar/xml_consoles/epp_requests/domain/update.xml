@@ -5,41 +5,41 @@
       <domain:update
        xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
         <domain:name>example.ee</domain:name>
-        <domain:chg>
-          <domain:registrant>mak21</domain:registrant>
-        </domain:chg>
         <domain:add>
           <domain:ns>
             <domain:hostObj>ns1.example.com</domain:hostObj>
             <domain:hostObj>ns2.example.com</domain:hostObj>
           </domain:ns>
           <domain:contact type="tech">mak21</domain:contact>
-          <domain:status s="clientHold"
-           lang="en">Payment overdue.</domain:status>
-          <domain:status s="clientUpdateProhibited"/>
         </domain:add>
         <domain:rem>
           <domain:ns>
             <domain:hostObj>ns1.example.com</domain:hostObj>
           </domain:ns>
           <domain:contact type="tech">mak21</domain:contact>
-          <domain:status s="clientHold"/>
         </domain:rem>
+        <domain:chg>
+          <domain:registrant>mak21</domain:registrant>
+          <domain:authInfo>
+            <domain:pw>newpw</domain:pw>
+          </domain:authInfo>
+        </domain:chg>
       </domain:update>
     </update>
     <extension>
       <secDNS:update xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1">
         <secDNS:rem>
           <secDNS:keyData>
+            <secDNS:flags>257</secDNS:flags>
+            <secDNS:protocol>3</secDNS:protocol>
+            <secDNS:alg>8</secDNS:alg>
             <secDNS:pubKey>700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f</secDNS:pubKey>
           </secDNS:keyData>
         </secDNS:rem>
       </secDNS:update>
-    </extension>
-    <extension>
       <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">
-          JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==
+          dGVzdCBmYWlsCg==
         </eis:legalDocument>
       </eis:extdata>
     </extension>

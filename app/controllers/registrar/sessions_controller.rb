@@ -59,16 +59,32 @@ class Registrar::SessionsController < Devise::SessionsController
       render 'login'
     end
   end
-  # rubocop:enable Metrics/CyclomaticComplexity
-  # rubocop:enable Metrics/PerceivedComplexity
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
 
   def switch_user
     @api_user = ApiUser.find(params[:id])
+
+    unless Rails.env.development?
+      unless @api_user.registrar.registrar_ip_white?(request.ip)
+        flash[:alert] = I18n.t(:ip_is_not_whitelisted)
+        redirect_to :back and return
+      end
+
+      if @api_user.can?(:create, :epp_login)
+        unless @api_user.registrar.api_ip_white?(request.ip)
+          flash[:alert] = I18n.t(:ip_is_not_whitelisted)
+          redirect_to :back and return
+        end
+      end
+    end
+
     sign_in @api_user if @api_user.identity_code == current_user.identity_code
+
     redirect_to :back
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
 
   def id
     @user = ApiUser.find_by_idc_data(request.env['SSL_CLIENT_S_DN'])

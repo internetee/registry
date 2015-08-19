@@ -3,6 +3,7 @@ require 'rails_helper'
 feature 'Sessions', type: :feature do
   context 'with invalid ip' do
     it 'should not see login page' do
+      Setting.registrar_ip_whitelist_enabled = true
       WhiteIp.destroy_all
       visit registrar_login_path
       page.should have_text('Access denied')
@@ -31,11 +32,12 @@ feature 'Sessions', type: :feature do
       fill_in 'depp_user_tag', with: @api_user_invalid_ip.username
       fill_in 'depp_user_password', with: @api_user_invalid_ip.password
       click_button 'Log in'
-      page.should have_text('Access denied')
+      page.should have_text('IP is not whitelisted')
     end
 
     it 'should get in with invalid when whitelist disabled' do
       Setting.registrar_ip_whitelist_enabled = false
+      Setting.api_ip_whitelist_enabled = false
       Fabricate(:registrar, white_ips: [Fabricate(:white_ip), Fabricate(:white_ip_registrar)])
       @api_user_invalid_ip = Fabricate(
         :api_user, identity_code: '37810013294', registrar: Fabricate(:registrar, white_ips: [])
@@ -46,6 +48,7 @@ feature 'Sessions', type: :feature do
       click_button 'Log in'
       page.should have_text('Log out')
       Setting.registrar_ip_whitelist_enabled = true
+      Setting.api_ip_whitelist_enabled = true
     end
 
     it 'should not get in with invalid user' do

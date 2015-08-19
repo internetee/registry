@@ -16,7 +16,7 @@
 
           .form-group
             .col-md-3.control-label
-              = label_tag "domain_contacts_attributes_#{k}_code", t(:contact_code), class: 'required'
+              = label_tag "domain_contacts_attributes_#{k}_code", t(:id), class: 'required'
             .col-md-7.has-feedback
               = select_tag "domain[contacts_attributes][#{k}][code]", 
                 options_for_select(@contacts_autocomplete_map, selected: v['code']),

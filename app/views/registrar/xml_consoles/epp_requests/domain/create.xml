@@ -31,11 +31,9 @@
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-    </extension>
-    <extension>
       <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:legalDocument type="pdf">
-          JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==
+          dGVzdCBmYWlsCg==
         </eis:legalDocument>
       </eis:extdata>
     </extension>

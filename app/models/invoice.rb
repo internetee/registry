@@ -126,14 +126,14 @@ class Invoice < ActiveRecord::Base
   end
 
   def sum_without_vat
-    items.map(&:item_sum_without_vat).sum
+    (items.map(&:item_sum_without_vat).sum).round(2)
   end
 
   def vat
-    sum_without_vat * vat_prc
+    (sum_without_vat * vat_prc).round(2)
   end
 
   def sum
-    sum_without_vat + vat
+    (sum_without_vat + vat).round(2)
   end
 end

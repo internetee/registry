@@ -3,6 +3,22 @@ require 'rails_helper'
 describe ApiUser do
   it { should belong_to(:registrar) }
 
+  context 'class methods' do
+    before do
+      Fabricate(:api_user, identity_code: '')
+      Fabricate(:api_user, identity_code: 14212128025)
+    end
+
+    it 'should return all api users with given identity code' do
+      ApiUser.all_by_identity_code('14212128025').size.should == 1
+      ApiUser.all_by_identity_code(14212128025).size.should == 1
+    end
+
+    it 'should not return any api user with blank identity code' do
+      ApiUser.all_by_identity_code('').size.should == 0
+    end
+  end
+
   context 'with invalid attribute' do
     before :all do
       @api_user = ApiUser.new

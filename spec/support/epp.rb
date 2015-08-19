@@ -353,9 +353,7 @@ module Epp
     defaults = {
       name: { value: next_domain_name },
       period: nil,
-      authInfo: {
-        pw: { value: '98oiewslkfkd', attrs: { roid: 'citizen_1234-REP' } }
-      }
+      authInfo: nil
     }
 
     xml_params = defaults.deep_merge(xml_params)

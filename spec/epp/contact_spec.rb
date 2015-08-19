@@ -51,7 +51,8 @@ describe 'EPP Contact', epp: true do
           },
           voice: { value: '+372.1234567' },
           fax: nil,
-          email: { value: 'test@example.example' }
+          email: { value: 'test@example.example' },
+          authInfo: nil
         }
         create_xml = @epp_xml.create(defaults.deep_merge(overwrites), extension)
         epp_plain_request(create_xml, options)
@@ -80,6 +81,7 @@ describe 'EPP Contact', epp: true do
         @contact.ident.should == '37605030299'
         @contact.street.should == '123 Example'
         @contact.legal_documents.count.should == 1
+        @contact.auth_info.length.should > 0
 
         log = ApiLog::EppLog.last
         log.request_command.should == 'create'
@@ -87,6 +89,18 @@ describe 'EPP Contact', epp: true do
         log.request_successful.should == true
         log.api_user_name.should == 'registrar1'
         log.api_user_registrar.should == 'registrar1'
+      end
+
+      it 'creates a contact with custom auth info' do
+        response = create_request({
+          authInfo: { pw: { value: 'custompw' } }
+        })
+
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+
+        @contact = Contact.last
+        @contact.auth_info.should == 'custompw'
       end
 
       it 'successfully saves ident type with legal document' do
@@ -501,6 +515,22 @@ describe 'EPP Contact', epp: true do
         Setting.client_status_editing_enabled = true
       end
 
+      it 'should update auth info' do
+        xml = @epp_xml.update({
+          id: { value: 'FIRST0:SH8013' },
+          chg: {
+            authInfo: { pw: { value: 'newpassword' } }
+          }
+        })
+
+        response = epp_plain_request(xml, :xml)
+        response[:results][0][:msg].should == 'Command completed successfully'
+        response[:results][0][:result_code].should == '1000'
+
+        contact = Contact.find_by(code: 'FIRST0:SH8013')
+        contact.auth_info.should == 'newpassword'
+      end
+
       it 'should add value voice value' do
         xml = @epp_xml.update({
           id: { value: 'FIRST0:SH8013' },
@@ -537,29 +567,6 @@ describe 'EPP Contact', epp: true do
         Contact.find_by(code: 'FIRST0:SH8013').phone.should == phone # aka not changed
       end
 
-      it 'should honor chg value over add value when both changes same attribute' do
-        pending 'It should not be possible to add voice (in add)'
-        xml = @epp_xml.update({
-          id: { value: 'FIRST0:SH8013' },
-          add: {
-            voice: { value: '+372.11111111111' }
-          },
-          chg: {
-            voice: { value: '+372.222222222222' },
-            authInfo: { pw: { value: 'password' } }
-          }
-        })
-
-        response = epp_plain_request(xml)
-        response[:results][0][:msg].should == 'Command completed successfully'
-        response[:results][0][:result_code].should == '1000'
-
-        contact = Contact.find_by(code: 'FIRST0:SH8013')
-        contact.phone.should == '+372.222222222222'
-
-        contact.update_attribute(:phone, '+372.7654321') # restore default value
-      end
-
       it 'should not allow to remove required voice attribute' do
         contact = Contact.find_by(code: 'FIRST0:SH8013')
         phone = contact.phone
@@ -579,128 +586,12 @@ describe 'EPP Contact', epp: true do
         contact.phone.should == phone
       end
 
-      # TODO: Update request rem block must be analyzed
-      it 'should not allow to remove required attribute' do
-        pending 'It should not be possible to remove or add voice (in add and rem)'
-        contact = Contact.find_by(code: 'FIRST0:SH8013')
-        phone = contact.phone
-        # TODO: Refactor authInfo under chg block
-        xml = @epp_xml.update({
-          id: { value: 'FIRST0:SH8013' },
-          authInfo: { pw: { value: 'password' } },
-          rem: {
-            voice: { value: '+372.7654321' }
-          }
-        })
-
-        response = epp_plain_request(xml)
-        response[:results][0][:msg].should == 'Required parameter missing - phone [phone]'
-        response[:results][0][:result_code].should == '2003'
-
-        contact = Contact.find_by(code: 'FIRST0:SH8013')
-        contact.phone.should == phone
-      end
-
-      it 'should honor add over rem' do
-        pending 'It should not be possible to remove or add voice (in add and rem)'
-        # TODO: Refactor authInfo under chg block
-        xml = @epp_xml.update({
-          id: { value: 'FIRST0:SH8013' },
-          authInfo: { pw: { value: 'password' } },
-          rem: {
-            voice: { value: 'not important' }
-          },
-          add: {
-            voice: { value: '+372.3333333' }
-          }
-        })
-
-        response = epp_plain_request(xml)
-        response[:results][0][:msg].should == 'Command completed successfully'
-        response[:results][0][:result_code].should == '1000'
-
-        contact = Contact.find_by(code: 'FIRST0:SH8013')
-        contact.phone.should == '+372.3333333'
-
-        contact.update_attribute(:phone, '+372.7654321') # restore default value
-      end
-
-      it 'should honor chg over rem' do
-        pending 'It should not be possible to remove or add voice (in add and rem)'
-        # TODO: Refactor authInfo under chg block
-        xml = @epp_xml.update({
-          id: { value: 'FIRST0:SH8013' },
-          authInfo: { pw: { value: 'password' } },
-          rem: {
-            voice: { value: 'not important' }
-          },
-          chg: {
-            voice: { value: '+372.44444444' }
-          }
-        })
-
-        response = epp_plain_request(xml)
-        response[:results][0][:msg].should == 'Command completed successfully'
-        response[:results][0][:result_code].should == '1000'
-
-        contact = Contact.find_by(code: 'FIRST0:SH8013')
-        contact.phone.should == '+372.44444444'
-
-        contact.update_attribute(:phone, '+372.7654321') # restore default value
-      end
-
-      it 'should honor chg over rem and add' do
-        pending 'It should not be possible to remove or add voice (in add and rem)'
-        # TODO: Refactor authInfo under chg block
-        xml = @epp_xml.update({
-          id: { value: 'FIRST0:SH8013' },
-          authInfo: { pw: { value: 'password' } },
-          chg: {
-            voice: { value: '+372.666666' }
-          },
-          add: {
-            voice: { value: '+372.555555' }
-          },
-          rem: {
-            voice: { value: 'not important' }
-          }
-        })
-
-        response = epp_plain_request(xml)
-        response[:results][0][:msg].should == 'Command completed successfully'
-        response[:results][0][:result_code].should == '1000'
-
-        contact = Contact.find_by(code: 'FIRST0:SH8013')
-        contact.phone.should == '+372.666666'
-
-        contact.update_attribute(:phone, '+372.7654321') # restore default value
-      end
-
-      it 'should not remove password' do
-        pending 'There should be no possibility to remove pw'
-        xml = @epp_xml.update({
-          id: { value: 'FIRST0:SH8013' },
-          authInfo: { pw: { value: 'password' } },
-          rem: {
-            authInfo: { pw: { value: 'password' } }
-          }
-        })
-
-        response = epp_plain_request(xml)
-        response[:results][0][:msg].should == 'Command completed successfully'
-        response[:results][0][:result_code].should == '1000'
-
-        contact = Contact.find_by(code: 'FIRST0:SH8013')
-        contact.auth_info.should == 'password'
-      end
-
-      it 'should return general policy error when removing org' do
-        pending 'Test says it should throw error when removing org, it does not do it when removing it with chg block'
+      it 'should return general policy error when updating org' do
         xml = @epp_xml.update({
           id: { value: 'FIRST0:SH8013' },
           chg: {
             postalInfo: {
-              org: { value: '' }
+              org: { value: 'shouldnot' }
             },
             authInfo: { pw: { value: 'password' } }
           }
@@ -712,22 +603,24 @@ describe 'EPP Contact', epp: true do
         response[:results][0][:result_code].should == '2306'
       end
 
-      it 'should return error when removing street' do
-        pending 'Test says it tests removing street, but actually street is not removed'
-        # TODO: Refactor authInfo under chg block
+      it 'does not allow to edit statuses if policy forbids it' do
+        Setting.client_status_editing_enabled = false
+
         xml = @epp_xml.update({
           id: { value: 'FIRST0:SH8013' },
-          authInfo: { pw: { value: 'password' } },
-          rem: {
-            postalInfo: {
-              name: { value: 'not important' }
-            }
-          }
+          add: [{
+            _anonymus: [
+              { status: { value: '', attrs: { s: 'clientUpdateProhibited' } } }
+            ]
+          }]
         })
 
         response = epp_plain_request(xml)
-        response[:results][0][:msg].should == "Required parameter missing - name [name]"
-        response[:results][0][:result_code].should == '2003'
+        response[:results][0][:msg].should == "Parameter value policy error. Client-side object status "\
+                                              "management not supported: status [status]"
+        response[:results][0][:result_code].should == '2306'
+
+        Setting.client_status_editing_enabled = true
       end
     end
 

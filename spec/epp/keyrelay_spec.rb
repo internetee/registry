@@ -166,7 +166,7 @@ describe 'EPP Keyrelay', epp: true do
     }, {
       _anonymus: [
         legalDocument: {
-          value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+          value: 'dGVzdCBmYWlsCg==',
           attrs: { type: 'pdf' }
         }
       ]
@@ -203,7 +203,7 @@ describe 'EPP Keyrelay', epp: true do
     }, {
       _anonymus: [
         legalDocument: {
-          value: 'JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==',
+          value: 'dGVzdCBmYWlsCg==',
           attrs: { type: 'jpg' }
         }
       ]

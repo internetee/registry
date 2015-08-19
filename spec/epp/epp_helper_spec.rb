@@ -13,9 +13,6 @@ describe 'EPP Helper', epp: true do
               <domain:transfer
                xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
                 <domain:name>' + dn + '</domain:name>
-                <domain:authInfo>
-                  <domain:pw roid="citizen_1234-REP">98oiewslkfkd</domain:pw>
-                </domain:authInfo>
               </domain:transfer>
             </transfer>
             <clTRID>ABC-12345</clTRID>

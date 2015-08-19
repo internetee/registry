@@ -31,12 +31,12 @@
             .col-md-4.control-label
               = f.label :email
             .col-md-7
-              = f.text_field(:email, class: 'form-control', email: true)
+              = f.text_field(:email, class: 'form-control', lax_email: true)
           .form-group
             .col-md-4.control-label
               = f.label :billing_email
             .col-md-7
-              = f.text_field(:billing_email, class: 'form-control', email: true)
+              = f.text_field(:billing_email, class: 'form-control', lax_email: true)
 
   .row
     .col-md-8
@@ -68,7 +68,7 @@
             .col-md-4.control-label
               = f.label :country_code, t(:country)
             .col-md-7
-              = f.select(:country_code, 
+              = f.select(:country_code,
                 SortedCountry.all_options(f.object.country_code), {}, class: 'form-control')
 
   .row
