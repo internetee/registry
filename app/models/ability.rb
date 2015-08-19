@@ -42,7 +42,7 @@ class Ability
 
     # EPP
     can(:create, :epp_login) # billing can establis epp connection in order to login
-    can(:create, :epp_requests)
+    can(:create, :epp_request)
 
     # Epp::Domain
     can(:info,     Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || pw.blank? ? true : d.auth_info == pw }
