@@ -18,14 +18,14 @@ class RegistrarController < ApplicationController
       return
     end
     return if Rails.env.development?
-    riw = current_user.registrar.registrar_ip_white?(request.ip)
+    registrar_ip_whitelisted = current_user.registrar.registrar_ip_white?(request.ip)
 
-    aiw = true
-    if current_user.can_make_api_calls?
-      aiw = current_user.registrar.api_ip_white?(request.ip)
+    api_ip_whitelisted = true
+    if current_user.can?(:create, :epp_request)
+      api_ip_whitelisted = current_user.registrar.api_ip_white?(request.ip)
     end
 
-    return if riw && aiw
+    return if registrar_ip_whitelisted && api_ip_whitelisted
     flash[:alert] = t('ip_is_not_whitelisted')
     sign_out(current_user)
     redirect_to registrar_login_path and return

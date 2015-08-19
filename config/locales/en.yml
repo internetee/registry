@@ -780,14 +780,14 @@ en:
   unimplemented_object_service: 'Unimplemented object service'
   contact_email_update_subject: 'Teie domeenide kontakt epostiaadress on muutunud / Contact e-mail addresses of your domains have changed'
   object_status_prohibits_operation: 'Object status prohibits operation'
-  pending_update_request_for_old_registrant_subject: "Kinnitustaotlus domeeni %{name} registreerija vahetuseks / Application for approval for registrant chache of %{name}"
+  pending_update_request_for_old_registrant_subject: "Kinnitustaotlus domeeni %{name} registreerija vahetuseks / Application for approval for registrant change of %{name}"
   pending_update_notification_for_new_registrant_subject: "Domeeni %{name} registreerija vahetus protseduur on algatatud / %{name} registrant change"
   pending_update_rejected_notification_for_new_registrant_subject: "Domeeni %{name} registreerija vahetuse taotlus tagasi lükatud / %{name} registrant change declined"
   pending_update_expired_notification_for_new_registrant_subject: "Domeeni %{name} registreerija vahetuse taotlus on tühistatud / %{name} registrant change cancelled"
   registrant_updated_notification_for_new_registrant_subject: 'Domeeni %{name} registreerija vahetus teostatud / Registrant change of %{name} has been finished.'
   registrant_updated_notification_for_old_registrant_subject: 'Domeeni %{name} registreerija vahetus teostatud / Registrant change of %{name} has been finished.'
   domain_pending_deleted_subject: "Kinnitustaotlus domeeni %{name} kustutamiseks .ee registrist / Application for approval for deletion of %{name}"
-  pending_delete_rejected_notification_subject: "Domeeni %{name} kustutamise taotlus tagasi lükatud / %{name) deletion declined"
+  pending_delete_rejected_notification_subject: "Domeeni %{name} kustutamise taotlus tagasi lükatud / %{name} deletion declined"
   pending_delete_expired_notification_subject: "Domeeni %{name} kustutamise taotlus on tühistatud / %{name} deletion cancelled"
   delete_confirmation_subject: "Domeeni %{name} kustutatud / %{name} deleted"
   whois: WHOIS

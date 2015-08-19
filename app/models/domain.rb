@@ -394,10 +394,10 @@ class Domain < ActiveRecord::Base
     self.registrant_verification_token = token
     self.registrant_verification_asked_at = asked_at
     set_pending_update
-    pending_json[:domain] = changes_cache
-    pending_json[:new_registrant_id]    = new_registrant_id
-    pending_json[:new_registrant_email] = new_registrant_email
-    pending_json[:new_registrant_name]  = new_registrant_name
+    pending_json['domain'] = changes_cache
+    pending_json['new_registrant_id']    = new_registrant_id
+    pending_json['new_registrant_email'] = new_registrant_email
+    pending_json['new_registrant_name']  = new_registrant_name
 
     # This pending_update! method is triggered by before_update
     # Note, all before_save callbacks are excecuted before before_update,

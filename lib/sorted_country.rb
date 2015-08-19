@@ -6,12 +6,13 @@ class SortedCountry
     include ActionView::Helpers
 
     def all_options(selected = nil)
-      quick_options = options_for_select(quick_list + [['---', '']], selected)  
+      quick_options = options_for_select([['', '']] + quick_list, { selected: selected })  
 
       # no double select
       selected = quick_list.map(&:second).include?(selected) ? '' : selected 
 
-      all_options = options_for_select(all_sorted_truncated, selected)
+      all_options = options_for_select([['---', '---']] + all_sorted_truncated, 
+                                       { selected: selected, disabled: ['---'] })
       quick_options + all_options
     end
 

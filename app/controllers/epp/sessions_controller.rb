@@ -56,6 +56,15 @@ class Epp::SessionsController < EppController
       success = false
     end
 
+    if success && @api_user.cannot?(:create, :epp_login)
+      epp_errors << {
+        msg: 'Authentication error; server closing connection (API user does not have epp role)',
+        code: '2501'
+      }
+
+      success = false
+    end
+
     if success && !ip_white?
       epp_errors << {
         msg: 'Authentication error; server closing connection (IP is not whitelisted)',
@@ -105,7 +114,7 @@ class Epp::SessionsController < EppController
   end
 
   def connection_limit_ok?
-    return true if Rails.env.test?
+    return true if Rails.env.test? || Rails.env.development?
     c = EppSession.where(
       'registrar_id = ? AND updated_at >= ?', @api_user.registrar_id, Time.zone.now - 5.minutes
     ).count
