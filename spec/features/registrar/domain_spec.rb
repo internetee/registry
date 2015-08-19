@@ -54,7 +54,6 @@ feature 'Domains', type: :feature do
 
       page.should_not have_text(d1.name)
       page.should have_text(d2.name)
-
     end
 
     it 'should search domains' do
