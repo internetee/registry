@@ -641,7 +641,6 @@ en:
   value: 'Value'
   phone: 'Phone'
   org_name: Org name
-  ident_type: Ident code
   country: Country
   period: Period
   birthday_format: 'Insert birthday in format: YYYY-MM-DD'
@@ -913,3 +912,4 @@ en:
   hidden: '[hidden]'
   created_at_from: 'Created at from'
   created_at_until: 'Created at until'
+  is_registrant: 'Is registrant'

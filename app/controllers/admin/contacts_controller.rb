@@ -9,7 +9,7 @@ class Admin::ContactsController < AdminController
 
     if params[:statuses_contains]
       contacts = Contact.includes(:registrar).where(
-        "statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
+        "contacts.statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
       )
     else
       contacts = Contact.includes(:registrar)
