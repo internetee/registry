@@ -67,6 +67,9 @@ class Admin::ContactsController < AdminController
     begin
       end_time = params[:q][:created_at_lteq].try(:to_date)
       params[:q][:created_at_lteq] = end_time.try(:end_of_day)
+      # updated at
+      end_time = params[:q][:updated_at_gteq].try(:to_date)
+      params[:q][:updated_at_lteq] = end_time.try(:end_of_day)
     rescue
       logger.warn('Invalid date')
     end
