@@ -114,7 +114,6 @@ class Ability
     can(:delete, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
     can(:renew,  Epp::Contact)
     can(:view_password, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
-
   end
 
   def static_registrar
@@ -141,11 +140,7 @@ class Ability
     can :show, :dashboard
   end
 
-
-
   # rubocop: enable Metrics/LineLength
   # rubocop: enable Metrics/CyclomaticComplexity
   # rubocop: enable Metrics/PerceivedComplexity
-
-
 end
