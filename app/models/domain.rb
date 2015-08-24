@@ -570,8 +570,11 @@ class Domain < ActiveRecord::Base
     statuses << DomainStatus::SERVER_RENEW_PROHIBITED
     statuses << DomainStatus::SERVER_TRANSFER_PROHIBITED
     statuses << DomainStatus::SERVER_UPDATE_PROHIBITED
-    statuses << DomainStatus::SERVER_MANUAL_INZONE
     statuses << DomainStatus::PENDING_DELETE
+
+    if (statuses & [DomainStatus::SERVER_HOLD, DomainStatus::CLIENT_HOLD]).empty?
+      statuses << DomainStatus::SERVER_MANUAL_INZONE
+    end
 
     self.force_delete_at = Time.zone.now + Setting.redemption_grace_period.days unless force_delete_at
     save(validate: false)

@@ -253,7 +253,6 @@ describe Domain do
         "forceDelete",
         "pendingDelete",
         "serverHold",
-        "serverManualInzone",
         "serverRenewProhibited",
         "serverTransferProhibited",
         "serverUpdateProhibited"
