@@ -160,6 +160,7 @@ Rails.application.routes.draw do
     resources :legal_documents
     resources :keyrelays
     resources :pricelists
+    resources :mail_templates
 
     resources :bank_statements do
       resources :bank_transactions

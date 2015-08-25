@@ -2229,6 +2229,43 @@ ALTER SEQUENCE log_zonefile_settings_id_seq OWNED BY log_zonefile_settings.id;
 
 
 --
+-- Name: mail_templates; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE mail_templates (
+    id integer NOT NULL,
+    name character varying NOT NULL,
+    subject character varying,
+    "from" character varying,
+    bcc character varying,
+    cc character varying,
+    body text NOT NULL,
+    text_body text NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: mail_templates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE mail_templates_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: mail_templates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE mail_templates_id_seq OWNED BY mail_templates.id;
+
+
+--
 -- Name: messages; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3158,6 +3195,13 @@ ALTER TABLE ONLY log_zonefile_settings ALTER COLUMN id SET DEFAULT nextval('log_
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY mail_templates ALTER COLUMN id SET DEFAULT nextval('mail_templates_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY messages ALTER COLUMN id SET DEFAULT nextval('messages_id_seq'::regclass);
 
 
@@ -3674,6 +3718,14 @@ ALTER TABLE ONLY log_white_ips
 
 ALTER TABLE ONLY log_zonefile_settings
     ADD CONSTRAINT log_zonefile_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mail_templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY mail_templates
+    ADD CONSTRAINT mail_templates_pkey PRIMARY KEY (id);
 
 
 --
@@ -4873,4 +4925,8 @@ INSERT INTO schema_migrations (version) VALUES ('20150722071128');
 INSERT INTO schema_migrations (version) VALUES ('20150803080914');
 
 INSERT INTO schema_migrations (version) VALUES ('20150810114746');
+
+INSERT INTO schema_migrations (version) VALUES ('20150810114747');
+
+INSERT INTO schema_migrations (version) VALUES ('20150825125118');
 
