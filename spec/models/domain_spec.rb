@@ -224,6 +224,10 @@ describe Domain do
       fda = Time.zone.now + Setting.redemption_grace_period.days
       @domain.force_delete_at.should be_within(20).of(fda)
 
+      @domain.registrar.messages.count.should == 1
+      m = @domain.registrar.messages.first
+      m.body.should == "Force delete set on domain #{@domain.name}"
+
       @domain.unset_force_delete
 
       @domain.statuses.should == ['ok']

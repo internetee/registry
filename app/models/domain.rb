@@ -577,7 +577,14 @@ class Domain < ActiveRecord::Base
     end
 
     self.force_delete_at = Time.zone.now + Setting.redemption_grace_period.days unless force_delete_at
-    save(validate: false)
+    transaction do
+      save!(validate: false)
+      registrar.messages.create!(
+        body: I18n.t('force_delete_set_on_domain', domain: name)
+      )
+      return true
+    end
+    false
   end
   # rubocop:enable Metrics/AbcSize
 

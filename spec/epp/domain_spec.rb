@@ -3096,5 +3096,12 @@ describe 'EPP Domain', epp: true do
       name[:avail].should == '0'
       reason.text.should == 'invalid format'
     end
+
+    ### POLL ###
+    it 'should show force delete in poll' do
+      domain.set_force_delete
+      response = epp_plain_request(@epp_xml.session.poll)
+      binding.pry
+    end
   end
 end
