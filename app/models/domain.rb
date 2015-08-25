@@ -550,6 +550,7 @@ class Domain < ActiveRecord::Base
   end
 
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def set_force_delete
     self.statuses_backup = statuses
     statuses.delete(DomainStatus::CLIENT_DELETE_PROHIBITED)
@@ -586,6 +587,7 @@ class Domain < ActiveRecord::Base
     end
     false
   end
+  # rubocop: enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
 
   def unset_force_delete
