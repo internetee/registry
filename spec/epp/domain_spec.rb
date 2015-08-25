@@ -3101,6 +3101,8 @@ describe 'EPP Domain', epp: true do
     it 'should show force delete in poll' do
       domain.set_force_delete
       response = epp_plain_request(@epp_xml.session.poll)
+      msg_q = response[:parsed].css('msgQ')
+      msg_q.css('msg').text.should == "Force delete set on domain #{domain.name}"
     end
   end
 end
