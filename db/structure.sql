@@ -2241,8 +2241,8 @@ CREATE TABLE mail_templates (
     cc character varying,
     body text NOT NULL,
     text_body text NOT NULL,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -4925,8 +4925,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150722071128');
 INSERT INTO schema_migrations (version) VALUES ('20150803080914');
 
 INSERT INTO schema_migrations (version) VALUES ('20150810114746');
-
-INSERT INTO schema_migrations (version) VALUES ('20150810114747');
 
 INSERT INTO schema_migrations (version) VALUES ('20150825125118');
 

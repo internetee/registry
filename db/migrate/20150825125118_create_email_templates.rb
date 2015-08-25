@@ -8,7 +8,7 @@ class CreateEmailTemplates < ActiveRecord::Migration
       t.string :cc
       t.text :body, null: false
       t.text :text_body, null: false
-      t.timestamps
+      t.timestamps null: false
     end
   end
 
