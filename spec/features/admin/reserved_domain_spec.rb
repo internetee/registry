@@ -2,6 +2,7 @@ require 'rails_helper'
 
 feature 'ReservedDomain', type: :feature do
   before :all do
+    Fabricate(:zonefile_setting, origin: 'ee')
     @user = Fabricate(:admin_user)
   end
 

@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 feature 'DomainUpdateConfirm', type: :feature do
+  before :all do
+    Fabricate(:zonefile_setting, origin: 'ee')
+  end
+
   context 'as unknown user with domain without update token' do
     before :all do
       @domain = Fabricate(:domain)

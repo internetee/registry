@@ -1,6 +1,14 @@
 require 'rails_helper'
 
 describe Domain do
+  before :all do
+    Fabricate(:zonefile_setting, origin: 'ee')
+    Fabricate(:zonefile_setting, origin: 'pri.ee')
+    Fabricate(:zonefile_setting, origin: 'med.ee')
+    Fabricate(:zonefile_setting, origin: 'fie.ee')
+    Fabricate(:zonefile_setting, origin: 'com.ee')
+  end
+
   it { should belong_to(:registrar) }
   it { should have_many(:nameservers) }
   it { should belong_to(:registrant) }
@@ -573,16 +581,17 @@ describe Domain do
   end
 
   it 'should not create zone origin domain' do
-    zs = Fabricate(:zonefile_setting)
     d = Fabricate.build(:domain, name: 'ee')
     d.save.should == false
     d.errors.full_messages.should match_array([
       "Data management policy violation: Domain name is blocked [name]"
     ])
 
-    zs.destroy
-
-    d.save.should == true
+    d = Fabricate.build(:domain, name: 'bla')
+    d.save.should == false
+    d.errors.full_messages.should match_array([
+      "Domain name Domain name is invalid"
+    ])
   end
 
   # d = Domain.new

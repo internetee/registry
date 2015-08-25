@@ -2,6 +2,8 @@ require 'rails_helper'
 
 feature 'Domain', type: :feature do
   before :all do
+    Fabricate(:zonefile_setting, origin: 'ee')
+    Fabricate(:zonefile_setting, origin: 'pri.ee')
     @user = Fabricate(:admin_user)
   end
 

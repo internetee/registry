@@ -2,6 +2,7 @@ require 'rails_helper'
 
 feature 'Sessions', type: :feature do
   before :all do
+    Fabricate(:zonefile_setting, origin: 'ee')
     @user = Fabricate(:ee_user)
     @registrar1 = Fabricate(:registrar1)
     @registrar2 = Fabricate(:registrar2)

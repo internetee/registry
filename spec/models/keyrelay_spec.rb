@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 describe Keyrelay do
+  before :all do
+    Fabricate(:zonefile_setting, origin: 'ee')
+  end
+
   it { should belong_to(:domain) }
   it { should belong_to(:requester) }
   it { should belong_to(:accepter) }

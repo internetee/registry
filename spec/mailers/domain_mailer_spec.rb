@@ -1,8 +1,12 @@
 require 'rails_helper'
 
 describe DomainMailer do
+  before :all do
+    Fabricate(:zonefile_setting, origin: 'ee')
+  end
+
   describe 'pending update request for an old registrant when delivery turned off' do
-    before :all do 
+    before :all do
       @registrant = Fabricate(:registrant, email: 'test@example.com')
       @domain = Fabricate(:domain, registrant: @registrant)
       @mail = DomainMailer.pending_update_request_for_old_registrant(@domain)
@@ -26,7 +30,7 @@ describe DomainMailer do
   end
 
   describe 'pending update request for an old registrant' do
-    before :all do 
+    before :all do
       @registrant = Fabricate(:registrant, email: 'test@example.com')
       @new_registrant = Fabricate(:registrant, email: 'test@example.org')
       @domain = Fabricate(:domain, registrant: @registrant)
@@ -59,7 +63,7 @@ describe DomainMailer do
   end
 
   describe 'pending upadte notification for a new registrant' do
-    before :all do 
+    before :all do
       @registrant = Fabricate(:registrant, email: 'old@example.com')
       @new_registrant = Fabricate(:registrant, email: 'new@example.org')
       @domain = Fabricate(:domain, registrant: @registrant)
@@ -88,7 +92,7 @@ describe DomainMailer do
   end
 
   describe 'pending update notification for a new registrant' do
-    before :all do 
+    before :all do
       @registrant = Fabricate(:registrant, email: 'old@example.com')
       @new_registrant = Fabricate(:registrant, email: 'new@example.org')
       @domain = Fabricate(:domain, registrant: @registrant)
@@ -117,7 +121,7 @@ describe DomainMailer do
   end
 
   describe 'pending update rejected notification for a new registrant' do
-    before :all do 
+    before :all do
       @registrant = Fabricate(:registrant, email: 'old@example.com')
       @new_registrant = Fabricate(:registrant, email: 'new@example.org')
       @domain = Fabricate(:domain, registrant: @registrant)
@@ -145,7 +149,7 @@ describe DomainMailer do
   end
 
   describe 'registrant updated notification for a new registrant' do
-    before :all do 
+    before :all do
       @registrant = Fabricate(:registrant, email: 'test@example.com')
       @domain = Fabricate(:domain, registrant: @registrant)
       @domain.deliver_emails = true
@@ -170,7 +174,7 @@ describe DomainMailer do
   end
 
   describe 'registrant updated notification for a old registrant' do
-    before :all do 
+    before :all do
       @registrant = Fabricate(:registrant, email: 'test@example.com')
       @domain = Fabricate(:domain, registrant: @registrant)
       @domain.deliver_emails = true
@@ -195,7 +199,7 @@ describe DomainMailer do
   end
 
   describe 'domain pending delete notification when delivery turned off' do
-    before :all do 
+    before :all do
       @registrant = Fabricate(:registrant, email: 'test@example.com')
       @domain = Fabricate(:domain, registrant: @registrant)
       @mail = DomainMailer.pending_deleted(@domain)
@@ -219,7 +223,7 @@ describe DomainMailer do
   end
 
   describe 'email pending delete notification' do
-    before :all do 
+    before :all do
       @registrant = Fabricate(:registrant, email: 'test@example.com')
       @domain = Fabricate(:domain, name: 'delete-pending.ee', registrant: @registrant)
       @domain.deliver_emails = true
@@ -250,7 +254,7 @@ describe DomainMailer do
   end
 
   describe 'pending delete rejected notification' do
-    before :all do 
+    before :all do
       @registrant = Fabricate(:registrant, email: 'test@example.com')
       @domain = Fabricate(:domain, name: 'delete-pending-rejected.ee', registrant: @registrant)
       @domain.deliver_emails = true
@@ -277,7 +281,7 @@ describe DomainMailer do
   end
 
   describe 'pending delete expired notification' do
-    before :all do 
+    before :all do
       @registrant = Fabricate(:registrant, email: 'test@example.com')
       @domain = Fabricate(:domain, name: 'pending-delete-expired.ee', registrant: @registrant)
       @domain.deliver_emails = true
@@ -304,7 +308,7 @@ describe DomainMailer do
   end
 
   describe 'pending delete rejected notification' do
-    before :all do 
+    before :all do
       @registrant = Fabricate(:registrant, email: 'test@example.com')
       @domain = Fabricate(:domain, name: 'delete-confirmed.ee', registrant: @registrant)
       @domain.deliver_emails = true

@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 feature 'DomainDeleteConfirm', type: :feature do
+  before :all do
+    Fabricate(:zonefile_setting, origin: 'ee')
+  end
+
   context 'as unknown user with domain without token' do
     before :all do
       @domain = Fabricate(:domain)
