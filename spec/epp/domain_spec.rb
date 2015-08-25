@@ -3101,7 +3101,6 @@ describe 'EPP Domain', epp: true do
     it 'should show force delete in poll' do
       domain.set_force_delete
       response = epp_plain_request(@epp_xml.session.poll)
-      binding.pry
     end
   end
 end
