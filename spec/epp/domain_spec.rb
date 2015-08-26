@@ -147,6 +147,20 @@ describe 'EPP Domain', epp: true do
       d.reserved.should == false
     end
 
+    it 'creates a domain with custom auth info' do
+      dn = next_domain_name
+      response = epp_plain_request(domain_create_xml({
+        name: { value: dn },
+        authInfo: { pw: { value: 'asdasd' } }
+      }))
+
+      d = Domain.last
+      response[:msg].should == 'Command completed successfully'
+      response[:result_code].should == '1000'
+
+      d.auth_info.should == 'asdasd'
+    end
+
     # it 'creates ria.ee with valid ds record' do
       # xml = domain_create_xml({
         # name: { value: 'ria.ee' }
@@ -1803,6 +1817,22 @@ describe 'EPP Domain', epp: true do
       d.registrant_code.should_not == 'FIXED:CITIZEN_1234' # should not update
       d.auth_info.should == existing_pw
       d.pending_update?.should == true
+    end
+
+    it 'updates a domain and changes auth info' do
+      response = epp_plain_request(domain_update_xml({
+        name: { value: domain.name },
+        chg: [
+          authInfo: { pw: { value: 'newpw' } }
+        ]
+      }))
+
+      response[:results][0][:msg].should == 'Command completed successfully'
+      response[:results][0][:result_code].should == '1000'
+
+      d = Domain.last
+
+      d.auth_info.should == 'newpw'
     end
 
     it 'should not return action pending when changes are invalid' do

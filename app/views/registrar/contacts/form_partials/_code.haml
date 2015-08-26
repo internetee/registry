@@ -1,9 +1,9 @@
 .panel.panel-default
   .panel-heading.clearfix
-    .pull-left= t(:code)
+    .pull-left= t(:id)
   .panel-body
     .form-group
       .col-md-2.control-label
-        = f.label :code
+        = f.label :code, t(:id)
       .col-md-10
         = f.text_field :code, class: 'form-control'

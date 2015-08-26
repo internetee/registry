@@ -24,7 +24,26 @@ class Ability
     can :create, :registrant_domain_update_confirm
   end
 
-  def static_epp
+  #
+  # User roles
+  #
+
+  def super # Registrar/api_user dynamic role
+    static_registrar
+    epp
+    billing
+  end
+
+  def epp # Registrar/api_user dynamic role
+    static_registrar
+
+    # REPP
+    can(:manage, :repp)
+
+    # EPP
+    can(:create, :epp_login) # billing can establis epp connection in order to login
+    can(:create, :epp_request)
+
     # Epp::Domain
     can(:info,     Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || pw.blank? ? true : d.auth_info == pw }
     can(:check,    Epp::Domain)
@@ -44,66 +63,24 @@ class Ability
     can(:delete, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
     can(:renew,  Epp::Contact)
     can(:view_password, Epp::Contact) { |c, pw| c.registrar_id == @user.registrar_id || c.auth_info == pw }
-
-    # REPP
-    can(:manage, :repp)
   end
 
-  def static_registrar
-    can :manage, Nameserver
+  def billing # Registrar/api_user dynamic role
     can :view, :registrar_dashboard
-    can :delete, :registrar_poll
-    can :manage, :registrar_xml_console
-    can :manage, Depp::Contact
-    can :manage, Depp::Domain
-    can :renew,  Depp::Domain
-    can :transfer, Depp::Domain
-    can :manage, Depp::Keyrelay
-    can :confirm, :keyrelay
-    can :confirm, :transfer
-  end
-
-  def static_registrant
-    can :manage, :registrant_domains
-    can :manage, :registrant_whois
-    can :manage, Depp::Domain
-  end
-
-  def user
-    can :show, :dashboard
-  end
-
-  # Registrar/api_user dynamic role
-  def super
-    static_registrar
-    billing
-    epp
-  end
-
-  # Registrar/api_user dynamic role
-  def epp
-    static_registrar
-    static_epp
-  end
-
-  # Registrar/api_user dynamic role
-  def billing
-    can :view, :registrar_dashboard
-    can :manage, Invoice
+    can(:manage, Invoice) { |i| i.buyer_id == @user.registrar_id }
     can :manage, :deposit
     can :read, AccountActivity
+    can(:create, :epp_login) # billing can establis epp connection in order to login
   end
 
-  # Admin/admin_user dynamic role
-  def customer_service
+  def customer_service # Admin/admin_user dynamic role
     user
     can :manage, Domain
     can :manage, Contact
     can :manage, Registrar
   end
 
-  # Admin/admin_user dynamic role
-  def admin
+  def admin # Admin/admin_user dynamic role
     customer_service
     can :manage, Setting
     can :manage, BlockedDomain
@@ -128,6 +105,34 @@ class Ability
     can :create, :zonefile
     can :access, :settings_menu
   end
+
+  #
+  # Static roles, linked from dynamic roles
+  #
+  def static_registrar
+    can :manage, Nameserver
+    can :view, :registrar_dashboard
+    can :delete, :registrar_poll
+    can :manage, :registrar_xml_console
+    can :manage, Depp::Contact
+    can :manage, Depp::Domain
+    can :renew,  Depp::Domain
+    can :transfer, Depp::Domain
+    can :manage, Depp::Keyrelay
+    can :confirm, :keyrelay
+    can :confirm, :transfer
+  end
+
+  def static_registrant
+    can :manage, :registrant_domains
+    can :manage, :registrant_whois
+    can :manage, Depp::Domain
+  end
+
+  def user
+    can :show, :dashboard
+  end
+
   # rubocop: enable Metrics/LineLength
   # rubocop: enable Metrics/CyclomaticComplexity
   # rubocop: enable Metrics/PerceivedComplexity

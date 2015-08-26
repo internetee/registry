@@ -23,7 +23,7 @@
       <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="bic" cc="EE">123</eis:ident>
         <eis:legalDocument type="pdf">
-          JVBERi0xLjQKJcOkw7zDtsOfCjIgMCBvYmoKPDwvTGVuZ3RoIDMgMCBSL0Zp==
+          dGVzdCBmYWlsCg==
         </eis:legalDocument>
       </eis:extdata>
     </extension>

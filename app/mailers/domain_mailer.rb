@@ -73,8 +73,8 @@ class DomainMailer < ApplicationMailer
     @domain = domain
     # no delivery off control, driggered by que, no epp request
 
-    @new_registrant_email = @domain.pending_json[:new_registrant_email] 
-    @new_registrant_name  = @domain.pending_json[:new_registrant_name] 
+    @new_registrant_email = @domain.pending_json['new_registrant_email'] 
+    @new_registrant_name  = @domain.pending_json['new_registrant_name'] 
 
     return if whitelist_blocked?(@new_registrant_email)
     mail(to: @new_registrant_email,
@@ -86,8 +86,8 @@ class DomainMailer < ApplicationMailer
     @domain = domain
     # no delivery off control, driggered by cron, no epp request
 
-    @new_registrant_email = @domain.pending_json[:new_registrant_email] 
-    @new_registrant_name  = @domain.pending_json[:new_registrant_name] 
+    @new_registrant_email = @domain.pending_json['new_registrant_email'] 
+    @new_registrant_name  = @domain.pending_json['new_registrant_name'] 
 
     return if whitelist_blocked?(@new_registrant_email)
     if @new_registrant_email.blank?

@@ -152,6 +152,9 @@ class Epp::Domain < Domain
     at[:tech_domain_contacts_attributes] = tech_domain_contacts_attrs(frame, action)
     # at[:domain_statuses_attributes] = domain_statuses_attrs(frame, action)
 
+    pw = frame.css('authInfo > pw').text
+    at[:auth_info] = pw if pw.present?
+
     if new_record?
       dnskey_frame = frame.css('extension create')
     else
@@ -419,6 +422,7 @@ class Epp::Domain < Domain
       registrant_verification_asked!(frame.to_s, current_user.id)
     end
     self.deliver_emails = true # turn on email delivery for epp
+
     errors.empty? && super(at)
   end
   # rubocop: enable Metrics/AbcSize
@@ -616,7 +620,7 @@ class Epp::Domain < Domain
       if dt.approved?
         transfer_contacts(current_user.registrar_id)
         dt.notify_losing_registrar(old_contact_codes, old_registrant_code)
-        generate_auth_info
+        generate_auth_info!
         self.registrar = current_user.registrar
       end
 

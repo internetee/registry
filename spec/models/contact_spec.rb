@@ -34,7 +34,7 @@ describe Contact do
         "City is missing",
         "Country code is missing",
         "Street is missing",
-        "Zip is missing" 
+        "Zip is missing"
       ])
     end
 
@@ -78,7 +78,7 @@ describe Contact do
       @contact.ident_country_code = 'INVALID'
       @contact.valid?
 
-      @contact.errors[:ident].should == 
+      @contact.errors[:ident].should ==
         ['Ident country code is not valid, should be in ISO_3166-1 alpha 2 format']
     end
 
@@ -171,7 +171,7 @@ describe Contact do
 
     it 'should not remove ok status after save' do
       @contact.statuses.should == %w(ok)
-      @contact.save 
+      @contact.save
       @contact.statuses.should == %w(ok)
     end
 
@@ -296,8 +296,8 @@ describe Contact do
 
       context 'after create' do
         it 'should not generate a new code when code is present' do
-          @contact = Fabricate.build(:contact, 
-                                     code: 'FIXED:new-code', 
+          @contact = Fabricate.build(:contact,
+                                     code: 'FIXED:new-code',
                                      auth_info: 'qwe321')
           @contact.code.should == 'FIXED:new-code' # still new record
           @contact.save.should == true
@@ -305,15 +305,15 @@ describe Contact do
         end
 
         it 'should not allaw to use same code' do
-          @contact = Fabricate.build(:contact, 
-                                     code: 'FIXED:new-code', 
+          @contact = Fabricate.build(:contact,
+                                     code: 'FIXED:new-code',
                                      auth_info: 'qwe321')
           @contact.code.should == 'FIXED:new-code' # still new record
           @contact.save.should == true
           @contact.code.should == 'FIXED:NEW-CODE'
 
-          @contact = Fabricate.build(:contact, 
-                                     code: 'FIXED:new-code', 
+          @contact = Fabricate.build(:contact,
+                                     code: 'FIXED:new-code',
                                      auth_info: 'qwe321')
           @contact.code.should == 'FIXED:new-code' # still new record
           @contact.valid?
@@ -321,10 +321,10 @@ describe Contact do
         end
 
         it 'should generate a new password' do
-          @contact = Fabricate.build(:contact, code: '123asd', auth_info: 'qwe321')
-          @contact.auth_info.should == 'qwe321'
+          @contact = Fabricate.build(:contact, code: '123asd', auth_info: nil)
+          @contact.auth_info.should == nil
           @contact.save.should == true
-          @contact.auth_info.should_not == 'qwe321'
+          @contact.auth_info.should_not be_nil
         end
 
         it 'should not allow same code' do
@@ -359,7 +359,7 @@ describe Contact do
 
       context 'after update' do
         before :all do
-          @contact = Fabricate.build(:contact, 
+          @contact = Fabricate.build(:contact,
                                      code: '123asd',
                                      auth_info: 'qwe321')
           @contact.save

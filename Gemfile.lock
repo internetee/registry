@@ -36,6 +36,7 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
+    SyslogLogger (2.0)
     abstract_type (0.0.7)
     actionmailer (4.2.3)
       actionpack (= 4.2.3)
@@ -539,6 +540,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  SyslogLogger (~> 2.0)
   activerecord-import (~> 0.7.0)
   autodoc
   better_errors (~> 2.1.1)

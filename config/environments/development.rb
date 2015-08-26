@@ -35,6 +35,9 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
+  # config.log_tags = [:subdomain, :uuid, :remote_ip]
+  # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new(ENV['app_name'] || 'registry'))
+
   config.action_mailer.default_url_options = { host: 'localhost:8081' }
 
   # for finding database optimization

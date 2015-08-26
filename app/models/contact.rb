@@ -236,6 +236,7 @@ class Contact < ActiveRecord::Base
 
   def generate_auth_info
     return if @generate_auth_info_disabled
+    return if auth_info.present?
     self.auth_info = SecureRandom.hex(11)
   end
 
@@ -243,9 +244,9 @@ class Contact < ActiveRecord::Base
     @generate_auth_info_disabled = true
   end
 
-  def auth_info=(pw)
-    self[:auth_info] = pw if new_record?
-  end
+  # def auth_info=(pw)
+  #   self[:auth_info] = pw if new_record?
+  # end
 
   def code=(code)
     self[:code] = code if new_record? # cannot change code later

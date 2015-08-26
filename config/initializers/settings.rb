@@ -1,4 +1,4 @@
-TEST_EMAILS = 
+TEST_EMAILS =
   if Rails.env.test?
     %w(
       test@example.com
@@ -9,5 +9,6 @@ TEST_EMAILS =
       new@example.com
     )
   else
+    ENV['whitelist_emails_for_staging'] ||= ''
     ENV['whitelist_emails_for_staging'].split(',').map(&:strip)
   end

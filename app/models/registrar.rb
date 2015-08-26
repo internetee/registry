@@ -45,8 +45,8 @@ class Registrar < ActiveRecord::Base
     end
   end
 
-  validates :email, :billing_email, 
-    email_format: { message: :invalid }, 
+  validates :email, :billing_email,
+    email_format: { message: :invalid },
     allow_blank: true, if: proc { |c| c.email_changed? }
 
   WHOIS_TRIGGERS = %w(name email phone street city state zip)
@@ -165,15 +165,11 @@ class Registrar < ActiveRecord::Base
 
   def api_ip_white?(ip)
     return true unless Setting.api_ip_whitelist_enabled
-    white_ips.api.pluck(:ipv4, :ipv6).flatten.include?(ip) || global_ip_white?(ip)
+    white_ips.api.pluck(:ipv4, :ipv6).flatten.include?(ip)
   end
 
   def registrar_ip_white?(ip)
     return true unless Setting.registrar_ip_whitelist_enabled
-    white_ips.registrar.pluck(:ipv4, :ipv6).flatten.include?(ip) || global_ip_white?(ip)
-  end
-
-  def global_ip_white?(ip)
-    white_ips.global.pluck(:ipv4, :ipv6).flatten.include?(ip)
+    white_ips.registrar.pluck(:ipv4, :ipv6).flatten.include?(ip)
   end
 end
