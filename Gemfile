@@ -51,6 +51,7 @@ gem 'html5_validators', '~> 1.2.0'   # model requements now automatically on htm
 gem 'coderay',          '~> 1.1.0'   # xml console visualize
 gem 'select2-rails',    '~> 3.5.9.3' # for autocomplete
 gem 'bootstrap-datepicker-rails', '~> 1.3.1.1' # datepicker
+gem 'liquid',           '~> 3.0.6'   # for email templates
 
 # rights
 gem 'devise',    '~> 3.5.1'  # authenitcation

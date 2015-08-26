@@ -2,6 +2,8 @@ require 'rails_helper'
 
 feature 'Domains', type: :feature do
   before :all do
+    Fabricate(:zonefile_setting, origin: 'ee')
+    Fabricate(:zonefile_setting, origin: 'pri.ee')
     @user = Fabricate(:api_user)
   end
 
@@ -58,7 +60,9 @@ feature 'Domains', type: :feature do
 
     it 'should search domains' do
       # having shared state across tests is really annoying sometimes...
-      click_link "#{@user} (#{@user.roles.first}) - #{@user.registrar}"
+      within('.dropdown-menu') do
+        click_link "#{@user} (#{@user.roles.first}) - #{@user.registrar}"
+      end
 
       Fabricate(:domain, name: 'abcde.ee', registrar: @user.registrar)
       Fabricate(:domain, name: 'abcdee.ee', registrar: @user.registrar)

@@ -550,6 +550,7 @@ class Domain < ActiveRecord::Base
   end
 
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def set_force_delete
     self.statuses_backup = statuses
     statuses.delete(DomainStatus::CLIENT_DELETE_PROHIBITED)
@@ -570,12 +571,23 @@ class Domain < ActiveRecord::Base
     statuses << DomainStatus::SERVER_RENEW_PROHIBITED
     statuses << DomainStatus::SERVER_TRANSFER_PROHIBITED
     statuses << DomainStatus::SERVER_UPDATE_PROHIBITED
-    statuses << DomainStatus::SERVER_MANUAL_INZONE
     statuses << DomainStatus::PENDING_DELETE
 
+    if (statuses & [DomainStatus::SERVER_HOLD, DomainStatus::CLIENT_HOLD]).empty?
+      statuses << DomainStatus::SERVER_MANUAL_INZONE
+    end
+
     self.force_delete_at = Time.zone.now + Setting.redemption_grace_period.days unless force_delete_at
-    save(validate: false)
+    transaction do
+      save!(validate: false)
+      registrar.messages.create!(
+        body: I18n.t('force_delete_set_on_domain', domain: name)
+      )
+      return true
+    end
+    false
   end
+  # rubocop: enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
 
   def unset_force_delete

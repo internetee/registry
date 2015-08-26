@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe Contact do
   before :all do
+    Fabricate(:zonefile_setting, origin: 'ee')
     @api_user = Fabricate(:api_user)
   end
 
@@ -383,6 +384,7 @@ end
 
 describe Contact, '.destroy_orphans' do
   before do
+    Fabricate(:zonefile_setting, origin: 'ee')
     @contact_1 = Fabricate(:contact, code: 'asd12')
     @contact_2 = Fabricate(:contact, code: 'asd13')
   end

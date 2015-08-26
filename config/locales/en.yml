@@ -641,7 +641,6 @@ en:
   value: 'Value'
   phone: 'Phone'
   org_name: Org name
-  ident_type: Ident code
   country: Country
   period: Period
   birthday_format: 'Insert birthday in format: YYYY-MM-DD'
@@ -911,3 +910,10 @@ en:
   pending_epp: Pending epp
   id: ID
   hidden: '[hidden]'
+  created_at_from: 'Created at from'
+  created_at_until: 'Created at until'
+  is_registrant: 'Is registrant'
+  force_delete_set_on_domain: 'Force delete set on domain %{domain}'
+  mail_templates: Mail Templates
+  new_mail_template: New mail template
+  failure: "It was not saved"

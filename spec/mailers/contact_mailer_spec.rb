@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe ContactMailer do
   describe 'email changed notification when delivery turned off' do
-    before :all do 
+    before :all do
       @contact = Fabricate(:contact, email: 'test@example.ee')
       @mail = ContactMailer.email_updated('test@example.com', @contact)
     end
@@ -25,7 +25,8 @@ describe ContactMailer do
   end
 
   describe 'email changed notification' do
-    before :all do 
+    before :all do
+      Fabricate(:zonefile_setting, origin: 'ee')
       @domain = Fabricate(:domain)
       @contact = @domain.registrant
       @contact.reload # until figured out why registrant_domains not loaded

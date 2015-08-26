@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 describe WhoisRecord do
+  before :all do
+    Fabricate(:zonefile_setting, origin: 'ee')
+  end
+
   context 'with invalid attribute' do
     before :all do
       @whois_record = WhoisRecord.new

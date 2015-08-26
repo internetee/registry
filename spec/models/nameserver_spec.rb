@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 describe Nameserver do
+  before :all do
+    Fabricate(:zonefile_setting, origin: 'ee')
+  end
+
   it { should belong_to(:domain) }
 
   context 'with invalid attribute' do

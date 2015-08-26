@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150810114746) do
+ActiveRecord::Schema.define(version: 20150825125118) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -877,6 +877,18 @@ ActiveRecord::Schema.define(version: 20150810114746) do
 
   add_index "log_zonefile_settings", ["item_type", "item_id"], name: "index_log_zonefile_settings_on_item_type_and_item_id", using: :btree
   add_index "log_zonefile_settings", ["whodunnit"], name: "index_log_zonefile_settings_on_whodunnit", using: :btree
+
+  create_table "mail_templates", force: :cascade do |t|
+    t.string   "name",       null: false
+    t.string   "subject"
+    t.string   "from"
+    t.string   "bcc"
+    t.string   "cc"
+    t.text     "body",       null: false
+    t.text     "text_body",  null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "messages", force: :cascade do |t|
     t.integer  "registrar_id"
