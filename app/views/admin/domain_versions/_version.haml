@@ -33,13 +33,14 @@
 
   %td
     %p
-      - domain.statuses.each do |s|
-        = s
-        - notes = domain.status_notes[s]
-        - if notes
+      - if domain.statuses.present?
+        - domain.statuses.each do |s|
+          = s
+          - notes = domain.status_notes[s]
+          - if notes
+            %br
+            %i= notes
           %br
-          %i= notes
-        %br
     - if domain.pending_json.present?
       %p
         = link_to t(:pending_epp), '#', class: 'js-pending-toggle'
