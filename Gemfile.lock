@@ -624,6 +624,3 @@ DEPENDENCIES
   uuidtools (= 2.1.5)
   validates_email_format_of (= 1.6.3)
   whenever (= 0.9.4)
-
-BUNDLED WITH
-   1.10.6
