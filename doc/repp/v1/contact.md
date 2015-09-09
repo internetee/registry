@@ -23,25 +23,25 @@ Content-Type: application/json
 ```
 HTTP/1.1 200
 Cache-Control: max-age=0, private, must-revalidate
-Content-Length: 524
+Content-Length: 564
 Content-Type: application/json
 
 {
   "contacts": [
     {
       "id": 1,
-      "code": "sh523328490",
+      "code": "REGISTRAR2:SH022086480",
       "phone": "+372.12345678",
-      "email": "corene_koch@caspermoen.net",
+      "email": "hoyt@deckowbechtelar.net",
       "fax": null,
-      "created_at": "2015-04-16T08:48:39.551Z",
-      "updated_at": "2015-04-16T08:48:39.551Z",
+      "created_at": "2015-09-09T09:11:14.130Z",
+      "updated_at": "2015-09-09T09:11:14.130Z",
       "ident": "37605030299",
       "ident_type": "priv",
       "auth_info": "password",
-      "name": "Alana Williamson II0",
+      "name": "Karson Kessler0",
       "org_name": null,
-      "registrar_id": 1,
+      "registrar_id": 2,
       "creator_str": null,
       "updator_str": null,
       "ident_country_code": "EE",
@@ -50,7 +50,12 @@ Content-Type: application/json
       "zip": "11111",
       "country_code": "EE",
       "state": null,
-      "legacy_id": null
+      "legacy_id": null,
+      "statuses": [
+        "ok"
+      ],
+      "status_notes": {
+      }
     }
   ],
   "total_number_of_records": 2
@@ -74,12 +79,12 @@ Content-Type: application/json
 ```
 HTTP/1.1 200
 Cache-Control: max-age=0, private, must-revalidate
-Content-Length: 56
+Content-Length: 67
 Content-Type: application/json
 
 {
   "contacts": [
-    "sh629765881"
+    "REGISTRAR2:SH749456461"
   ],
   "total_number_of_records": 2
 }

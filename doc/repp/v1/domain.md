@@ -23,7 +23,7 @@ Content-Type: application/json
 ```
 HTTP/1.1 200
 Cache-Control: max-age=0, private, must-revalidate
-Content-Length: 578
+Content-Length: 808
 Content-Type: application/json
 
 {
@@ -31,25 +31,40 @@ Content-Type: application/json
     {
       "id": 1,
       "name": "domain0.ee",
-      "registrar_id": 1,
-      "registered_at": "2015-04-16T08:48:39.995Z",
+      "registrar_id": 2,
+      "registered_at": "2015-09-09T09:11:14.861Z",
       "status": null,
-      "valid_from": "2015-04-16T00:00:00.000Z",
-      "valid_to": "2016-04-16T00:00:00.000Z",
+      "valid_from": "2015-09-09T09:11:14.861Z",
+      "valid_to": "2016-09-09T09:11:14.861Z",
       "registrant_id": 1,
-      "auth_info": "3ec9a29d618023920b61758c339b638f",
-      "created_at": "2015-04-16T08:48:39.992Z",
-      "updated_at": "2015-04-16T08:48:39.991Z",
+      "auth_info": "98oiewslkfkd",
+      "created_at": "2015-09-09T09:11:14.861Z",
+      "updated_at": "2015-09-09T09:11:14.860Z",
       "name_dirty": "domain0.ee",
       "name_puny": "domain0.ee",
       "period": 1,
       "period_unit": "y",
       "creator_str": null,
       "updator_str": null,
-      "whois_body": null,
       "legacy_id": null,
       "legacy_registrar_id": null,
-      "legacy_registrant_id": null
+      "legacy_registrant_id": null,
+      "outzone_at": "2016-09-24T09:11:14.861Z",
+      "delete_at": "2016-10-24T09:11:14.861Z",
+      "registrant_verification_asked_at": null,
+      "registrant_verification_token": null,
+      "pending_json": {
+      },
+      "force_delete_at": null,
+      "statuses": [
+        "ok"
+      ],
+      "reserved": false,
+      "status_notes": {
+      },
+      "statuses_backup": [
+
+      ]
     }
   ],
   "total_number_of_records": 2
