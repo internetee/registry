@@ -2426,10 +2426,8 @@ describe 'EPP Domain', epp: true do
 
       domain.reload
       domain.valid_to.should be_within(1).of(exp_date + 1.year)
-      domain.outzone_at.should be_within(1).of(exp_date + 1.year + Setting.expire_warning_period.days)
-      domain.delete_at.should be_within(1).of(
-        exp_date + 1.year + Setting.expire_warning_period.days + Setting.redemption_grace_period.days
-      )
+      domain.outzone_at.should be_nil
+      domain.delete_at.should be_nil
 
       @registrar1.balance.should == old_balance - 15.0
       @registrar1.cash_account.account_activities.count.should == old_activities + 1
@@ -2485,10 +2483,8 @@ describe 'EPP Domain', epp: true do
 
       domain.reload
       domain.valid_to.should be_within(1).of(exp_date + 1.year)
-      domain.outzone_at.should be_within(1).of(exp_date + 1.year + Setting.expire_warning_period.days)
-      domain.delete_at.should be_within(1).of(
-        exp_date + 1.year + Setting.expire_warning_period.days + Setting.redemption_grace_period.days
-      )
+      domain.outzone_at.should be_nil
+      domain.delete_at.should be_nil
 
       @registrar1.balance.should == old_balance - 15.0
       @registrar1.cash_account.account_activities.count.should == old_activities + 1
@@ -2764,10 +2760,8 @@ describe 'EPP Domain', epp: true do
 
       domain.reload
       domain.valid_to.should be_within(5).of(old_valid_to + 1.year)
-      domain.outzone_at.should be_within(5).of(old_valid_to + 1.year + Setting.expire_warning_period.days)
-      domain.delete_at.should be_within(5).of(
-        old_valid_to + 1.year + Setting.expire_warning_period.days + Setting.redemption_grace_period.days
-      )
+      domain.outzone_at.should be_nil
+      domain.delete_at.should be_nil
     end
 
     it 'does not renew foreign domain' do
