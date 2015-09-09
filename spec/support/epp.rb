@@ -79,7 +79,7 @@ module Epp
 
     res = parse_response(server.send_request(data))
     if res
-      log(data, res[:parsed])
+      log(data, res[:raw])
       if validate_output && @xsd
         @xsd.validate(Nokogiri(res[:raw])).each do |error|
           fail Exception.new, error.to_s
@@ -364,7 +364,7 @@ module Epp
   def log(req, res)
     return unless ENV['EPP_DOC']
     puts "REQUEST:\n\n```xml\n#{Nokogiri(req)}```\n\n"
-    puts "RESPONSE:\n\n```xml\n#{res}```\n\n"
+    puts "RESPONSE:\n\n```xml\n#{Nokogiri(res)}```\n\n"
   end
 end
 
