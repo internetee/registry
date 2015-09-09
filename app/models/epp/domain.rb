@@ -490,8 +490,8 @@ class Epp::Domain < Domain
 
     p = self.class.convert_period_to_time(period, unit)
     self.valid_to = valid_to + p
-    self.outzone_at = valid_to + Setting.expire_warning_period.days
-    self.delete_at = outzone_at + Setting.redemption_grace_period.days
+    self.outzone_at = nil
+    self.delete_at = nil
     self.period = period
     self.period_unit = unit
 
