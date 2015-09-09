@@ -10,12 +10,13 @@ class Domain < ActiveRecord::Base
   belongs_to :registrar
   belongs_to :registrant
 
-  has_many :domain_contacts, dependent: :destroy
   has_many :admin_domain_contacts
   accepts_nested_attributes_for :admin_domain_contacts, allow_destroy: true
   has_many :tech_domain_contacts
   accepts_nested_attributes_for :tech_domain_contacts, allow_destroy: true
 
+  # NB! contacts, admin_contacts, tech_contacts are empty for a new record
+  has_many :domain_contacts, dependent: :destroy
   has_many :contacts, through: :domain_contacts, source: :contact
   has_many :admin_contacts, through: :admin_domain_contacts, source: :contact
   has_many :tech_contacts, through: :tech_domain_contacts, source: :contact
