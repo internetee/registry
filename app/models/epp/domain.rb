@@ -19,7 +19,16 @@ class Epp::Domain < Domain
   before_save :link_contacts
   def link_contacts
     # Based on bullet report
-    unlinked_contacts = contacts.select { |c| !c.linked? } # speed up a bit
+    if new_record?
+      # new record does not have correct instance contacts entries thanks to epp
+      unlinked_contacts = [registrant]
+      unlinked_contacts << admin_domain_contacts.map(&:contact)
+      unlinked_contacts << tech_domain_contacts.map(&:contact)
+      unlinked_contacts.flatten!
+    else
+      unlinked_contacts = contacts.select { |c| !c.linked? } # speed up a bit
+    end
+
     unlinked_contacts.each do |uc|
       uc.domains_present = true # no need to fetch domains again
       uc.save(validate: false)
