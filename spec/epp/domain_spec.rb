@@ -1805,6 +1805,23 @@ describe 'EPP Domain', epp: true do
       end
     end
 
+    it 'should not transfer when in prohibited status' do
+      domain.statuses = [DomainStatus::SERVER_TRANSFER_PROHIBITED]
+      domain.save
+
+      pw = domain.auth_info
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        authInfo: { pw: { value: pw } }
+      })
+
+      login_as :registrar2 do
+        response = epp_plain_request(xml)
+        response[:msg].should == 'Object status prohibits operation'
+        response[:result_code].should == '2304'
+      end
+    end
+
     ### UPDATE ###
     it 'should update right away without update pending status' do
       existing_pw = domain.auth_info
