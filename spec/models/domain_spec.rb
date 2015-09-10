@@ -82,10 +82,8 @@ describe Domain do
     it 'should have correct validity dates' do
       valid_to = Time.zone.now + 1.year
       @domain.valid_to.should be_within(5).of(valid_to)
-      @domain.outzone_at.should be_within(5).of(valid_to + Setting.expire_warning_period.days)
-      @domain.delete_at.should be_within(5).of(
-        valid_to + Setting.expire_warning_period.days + Setting.redemption_grace_period.days
-      )
+      @domain.outzone_at.should be_nil
+      @domain.delete_at.should be_nil
     end
 
     it 'should validate uniqueness of tech contacts' do
@@ -146,16 +144,37 @@ describe Domain do
       Domain.start_expire_period
       @domain.statuses.include?(DomainStatus::EXPIRED).should == false
 
-      @domain.valid_to = Time.zone.now - 10.days
+      old_valid_to = Time.zone.now - 10.days
+      @domain.valid_to = old_valid_to
       @domain.save
 
       Domain.start_expire_period
       @domain.reload
       @domain.statuses.include?(DomainStatus::EXPIRED).should == true
+      @domain.outzone_at.should be_within(5).of(old_valid_to + Setting.expire_warning_period.days)
+      @domain.delete_at.should be_within(5).of(
+        old_valid_to + Setting.expire_warning_period.days + Setting.redemption_grace_period.days
+      )
 
       Domain.start_expire_period
       @domain.reload
       @domain.statuses.include?(DomainStatus::EXPIRED).should == true
+    end
+
+    it 'should start redemption grace period' do
+      old_valid_to = Time.zone.now - 10.days
+      @domain.valid_to = old_valid_to
+      @domain.statuses = [DomainStatus::EXPIRED]
+      @domain.outzone_at, @domain.delete_at = nil, nil
+      @domain.save
+
+      Domain.start_expire_period
+      @domain.reload
+      @domain.statuses.include?(DomainStatus::EXPIRED).should == true
+      @domain.outzone_at.should be_within(5).of(old_valid_to + Setting.expire_warning_period.days)
+      @domain.delete_at.should be_within(5).of(
+        old_valid_to + Setting.expire_warning_period.days + Setting.redemption_grace_period.days
+      )
     end
 
     it 'should start redemption grace period' do

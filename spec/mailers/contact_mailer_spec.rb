@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 describe ContactMailer do
+  before :all do
+    Fabricate(:zonefile_setting, origin: 'ee')
+  end
+
   describe 'email changed notification when delivery turned off' do
     before :all do
       @contact = Fabricate(:contact, email: 'test@example.ee')
@@ -26,7 +30,6 @@ describe ContactMailer do
 
   describe 'email changed notification' do
     before :all do
-      Fabricate(:zonefile_setting, origin: 'ee')
       @domain = Fabricate(:domain)
       @contact = @domain.registrant
       @contact.reload # until figured out why registrant_domains not loaded
@@ -44,6 +47,32 @@ describe ContactMailer do
 
     it 'should send to info email' do
       @mail.to.should == ['info@example.org']
+    end
+
+    it 'should render body' do
+      @mail.body.encoded.should =~ /Kontaktandmed:/
+    end
+  end
+
+  describe 'email with pynicode' do
+    before :all do
+      @domain = Fabricate(:domain)
+      @contact = @domain.registrant
+      @contact.reload # until figured out why registrant_domains not loaded
+      @contact.deliver_emails = true
+      @mail = ContactMailer.email_updated('info@ääöü.org', @contact)
+    end
+
+    it 'should render email subject' do
+      @mail.subject.should =~ /Teie domeenide kontakt epostiaadress on muutunud/
+    end
+
+    it 'should have sender email' do
+      @mail.from.should == ["noreply@internet.ee"]
+    end
+
+    it 'should send to info email' do
+      @mail.to.should == ['info@xn--4caa8cya.org']
     end
 
     it 'should render body' do

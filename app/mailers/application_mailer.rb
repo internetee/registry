@@ -23,4 +23,10 @@ class ApplicationMailer < ActionMailer::Base
       "BY MODEL OBJECT: id ##{model.try(:id)} deliver_emails returned false"
     true
   end
+
+  def format(email)
+    local, host = email.split('@')
+    host = SimpleIDN.to_ascii(host)
+    "#{local}@#{host}"
+  end
 end

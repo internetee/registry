@@ -10,12 +10,13 @@ class Domain < ActiveRecord::Base
   belongs_to :registrar
   belongs_to :registrant
 
-  has_many :domain_contacts, dependent: :destroy
   has_many :admin_domain_contacts
   accepts_nested_attributes_for :admin_domain_contacts, allow_destroy: true
   has_many :tech_domain_contacts
   accepts_nested_attributes_for :tech_domain_contacts, allow_destroy: true
 
+  # NB! contacts, admin_contacts, tech_contacts are empty for a new record
+  has_many :domain_contacts, dependent: :destroy
   has_many :contacts, through: :domain_contacts, source: :contact
   has_many :admin_contacts, through: :admin_domain_contacts, source: :contact
   has_many :tech_contacts, through: :tech_domain_contacts, source: :contact
@@ -230,7 +231,7 @@ class Domain < ActiveRecord::Base
       domains = Domain.where('valid_to <= ?', Time.zone.now)
       domains.each do |domain|
         next unless domain.expirable?
-        domain.set_expired
+        domain.set_graceful_expired
         STDOUT << "#{Time.zone.now.utc} Domain.start_expire_period: ##{domain.id} #{domain.changes}\n" unless Rails.env.test?
         domain.save(validate: false)
       end
@@ -320,7 +321,12 @@ class Domain < ActiveRecord::Base
 
   def expirable?
     return false if valid_to > Time.zone.now
-    !statuses.include?(DomainStatus::EXPIRED)
+
+    if statuses.include?(DomainStatus::EXPIRED) && outzone_at.present? && delete_at.present?
+      return false
+    end
+
+    true
   end
 
   def server_holdable?
@@ -545,8 +551,6 @@ class Domain < ActiveRecord::Base
     self.registered_at = Time.zone.now
     self.valid_from = Time.zone.now
     self.valid_to = valid_from + self.class.convert_period_to_time(period, period_unit)
-    self.outzone_at = valid_to + Setting.expire_warning_period.days
-    self.delete_at = outzone_at + Setting.redemption_grace_period.days
   end
 
   # rubocop:disable Metrics/AbcSize
@@ -603,6 +607,13 @@ class Domain < ActiveRecord::Base
     save(validate: false)
   end
 
+  def set_graceful_expired
+    self.outzone_at = valid_to + Setting.expire_warning_period.days
+    self.delete_at = outzone_at + Setting.redemption_grace_period.days
+    statuses << DomainStatus::EXPIRED
+  end
+
+  # TODO: This looks odd - outzone_at and delete_at will be the same value?
   def set_expired
     # TODO: currently valid_to attribute update logic is open
     # self.valid_to = valid_from + self.class.convert_period_to_time(period, period_unit)
@@ -675,7 +686,6 @@ class Domain < ActiveRecord::Base
   end
 
   def manage_automatic_statuses
-    # domain_statuses.create(value: DomainStatus::DELETE_CANDIDATE) if delete_candidateable?
     if statuses.empty? && valid?
       statuses << DomainStatus::OK
     elsif statuses.length > 1 || !valid?

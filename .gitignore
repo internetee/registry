@@ -12,6 +12,7 @@ config/initializers/secret_token.rb
 config/deploy.rb
 config/secrets.yml
 config/database.yml
+misc
 /export
 /import
 /ca

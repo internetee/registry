@@ -6,7 +6,7 @@ class ContactMailer < ApplicationMailer
 
     return if whitelist_blocked?(email)
     begin
-      mail(to: email, subject: "#{I18n.t(:contact_email_update_subject)} [#{@contact.code}]")
+      mail(to: format(email), subject: "#{I18n.t(:contact_email_update_subject)} [#{@contact.code}]")
     rescue EOFError,
            IOError,
            TimeoutError,

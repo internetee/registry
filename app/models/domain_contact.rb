@@ -17,7 +17,7 @@ class DomainContact < ActiveRecord::Base
   end
 
   def name
-    return 'Tech' if type == 'TechDomainContact'
+    return 'Tech'  if type == 'TechDomainContact'
     return 'Admin' if type == 'AdminDomainContact'
     ''
   end

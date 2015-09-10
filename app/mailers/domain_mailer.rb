@@ -19,7 +19,7 @@ class DomainMailer < ApplicationMailer
     @verification_url = "#{confirm_path}/#{@domain.id}?token=#{@domain.registrant_verification_token}"
 
     return if whitelist_blocked?(@old_registrant.email)
-    mail(to: @old_registrant.email,
+    mail(to: format(@old_registrant.email),
          subject: "#{I18n.t(:pending_update_request_for_old_registrant_subject, 
          name: @domain.name)} [#{@domain.name}]")
   end
@@ -42,7 +42,7 @@ class DomainMailer < ApplicationMailer
     @old_registrant = Registrant.find(@domain.registrant_id_was)
 
     return if whitelist_blocked?(@new_registrant.email)
-    mail(to: @new_registrant.email,
+    mail(to: format(@new_registrant.email),
          subject: "#{I18n.t(:pending_update_notification_for_new_registrant_subject, 
          name: @domain.name)} [#{@domain.name}]")
   end
@@ -52,7 +52,7 @@ class DomainMailer < ApplicationMailer
     return if delivery_off?(@domain)
 
     return if whitelist_blocked?(@domain.registrant_email)
-    mail(to: @domain.registrant_email,
+    mail(to: format(@domain.registrant_email),
          subject: "#{I18n.t(:registrant_updated_notification_for_new_registrant_subject, 
          name: @domain.name)} [#{@domain.name}]")
   end
@@ -64,7 +64,7 @@ class DomainMailer < ApplicationMailer
     @old_registrant_email = domain.registrant_email # Nb! before applying pending updates
 
     return if whitelist_blocked?(@old_registrant_email)
-    mail(to: @old_registrant_email,
+    mail(to: format(@old_registrant_email),
          subject: "#{I18n.t(:registrant_updated_notification_for_old_registrant_subject, 
          name: @domain.name)} [#{@domain.name}]")
   end
@@ -77,7 +77,7 @@ class DomainMailer < ApplicationMailer
     @new_registrant_name  = @domain.pending_json['new_registrant_name'] 
 
     return if whitelist_blocked?(@new_registrant_email)
-    mail(to: @new_registrant_email,
+    mail(to: format(@new_registrant_email),
          subject: "#{I18n.t(:pending_update_rejected_notification_for_new_registrant_subject, 
          name: @domain.name)} [#{@domain.name}]")
   end
@@ -94,7 +94,7 @@ class DomainMailer < ApplicationMailer
       logger.info "EMAIL NOT DELIVERED: no registrant email [pending_update_expired_notification_for_new_registrant]"
       return
     end
-    mail(to: @new_registrant_email,
+    mail(to: format(@new_registrant_email),
          subject: "#{I18n.t(:pending_update_expired_notification_for_new_registrant_subject, 
          name: @domain.name)} [#{@domain.name}]")
   end
@@ -119,7 +119,7 @@ class DomainMailer < ApplicationMailer
     @verification_url = "#{confirm_path}/#{@domain.id}?token=#{@domain.registrant_verification_token}"
 
     return if whitelist_blocked?(@old_registrant.email)
-    mail(to: @old_registrant.email,
+    mail(to: format(@old_registrant.email),
          subject: "#{I18n.t(:domain_pending_deleted_subject, 
          name: @domain.name)} [#{@domain.name}]")
   end
@@ -139,7 +139,7 @@ class DomainMailer < ApplicationMailer
     end
 
     return if whitelist_blocked?(@domain.registrant.email)
-    mail(to: @domain.registrant.email,
+    mail(to: format(@domain.registrant.email),
          subject: "#{I18n.t(:pending_delete_rejected_notification_subject, 
          name: @domain.name)} [#{@domain.name}]")
   end
@@ -149,7 +149,7 @@ class DomainMailer < ApplicationMailer
     # no delivery off control, driggered by cron, no epp request
 
     return if whitelist_blocked?(@domain.registrant.email)
-    mail(to: @domain.registrant.email,
+    mail(to: format(@domain.registrant.email),
          subject: "#{I18n.t(:pending_delete_expired_notification_subject, 
          name: @domain.name)} [#{@domain.name}]")
   end
@@ -158,7 +158,7 @@ class DomainMailer < ApplicationMailer
     @domain = domain
 
     return if whitelist_blocked?(@domain.registrant.email)
-    mail(to: @domain.registrant.email,
+    mail(to: format(@domain.registrant.email),
          subject: "#{I18n.t(:delete_confirmation_subject, 
          name: @domain.name)} [#{@domain.name}]")
   end

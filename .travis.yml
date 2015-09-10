@@ -24,3 +24,12 @@ services:
   - postgresql
 addons:
   postgresql: "9.3"
+notifications:
+  email:
+    - priit@gitlab.eu
+    - martin@gitlab.eu
+branches:
+  only:
+    - master
+    - alpha
+    - staging
