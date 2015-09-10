@@ -467,6 +467,7 @@ describe Domain do
       @domain.statuses = DomainStatus::OK # restore
       @domain.pending_delete?.should == false
       @domain.statuses << DomainStatus::CLIENT_DELETE_PROHIBITED
+      @domain.save
 
       @domain.set_pending_delete.should == nil
 
