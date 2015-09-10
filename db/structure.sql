@@ -596,7 +596,8 @@ CREATE TABLE contacts (
     state character varying,
     legacy_id integer,
     statuses character varying[],
-    status_notes hstore
+    status_notes hstore,
+    copy_from_id integer
 );
 
 
@@ -4927,4 +4928,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150803080914');
 INSERT INTO schema_migrations (version) VALUES ('20150810114746');
 
 INSERT INTO schema_migrations (version) VALUES ('20150825125118');
+
+INSERT INTO schema_migrations (version) VALUES ('20150910113839');
 

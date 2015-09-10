@@ -1181,9 +1181,10 @@ describe 'EPP Domain', epp: true do
       end
 
       # all domain contacts should be under registrar2 now
+      domain.reload
       domain.registrant.reload
       domain.registrant.registrar_id.should == @registrar2.id
-      domain.registrant.id.should == original_oc_id
+      domain.registrant.id.should_not == original_oc_id
 
       # must generate new code
       domain.registrant.code.should_not == original_oc_code
@@ -1289,8 +1290,7 @@ describe 'EPP Domain', epp: true do
       # all domain contacts should be under registrar2 now
       domain.reload
       domain.registrant.registrar_id.should == @registrar2.id
-      # registrant should not be a new record
-      domain.registrant.id.should == original_oc_id
+      domain.registrant.id.should_not == original_oc_id
 
       # old contact must not change
       old_contact.registrar_id.should == @registrar1.id
@@ -1305,8 +1305,8 @@ describe 'EPP Domain', epp: true do
       # there should be 2 references to the new contact
       domain.domain_contacts.where(contact_id: new_contact.id).count.should == 2
 
-      # there should be only one new contact object
-      (original_contact_count + 1).should == Contact.count
+      # there should be four new contact object
+      (original_contact_count + 4).should == Contact.count
 
       # and no new references
       original_domain_contact_count.should == DomainContact.count
@@ -1344,7 +1344,7 @@ describe 'EPP Domain', epp: true do
       domain.reload
       domain.registrant.registrar_id.should == @registrar2.id
       # registrant should not be a new record
-      domain.registrant.id.should == original_oc_id
+      domain.registrant.id.should_not == original_oc_id
 
       # old contact must not change
       old_contact.registrar_id.should == @registrar1.id
@@ -1367,8 +1367,8 @@ describe 'EPP Domain', epp: true do
       # there should be 1 reference to the new contact 2 (tech)
       domain.domain_contacts.where(contact_id: new_contact_2.id).count.should == 1
 
-      # there should be only two new contact objects
-      (original_contact_count + 2).should == Contact.count
+      # there should be four new contact objects
+      (original_contact_count + 5).should == Contact.count
 
       # and no new references
       original_domain_contact_count.should == DomainContact.count
@@ -1433,6 +1433,43 @@ describe 'EPP Domain', epp: true do
       domain.registrant.registrar_id.should == @registrar2.id
 
       original_contacts_codes.sort.should == domain.contacts.pluck(:code).sort
+    end
+
+    fit 'transfers domain contact should populate copy_from_id' do
+      d = Fabricate(:domain)
+      d.tech_contacts << domain.registrant
+
+      original_oc_id = domain.registrant.id
+      original_oc_code = domain.registrant.code
+      domain.registrant.copy_from_id.should == nil
+
+      original_contact_codes = domain.contacts.pluck(:code)
+
+      pw = domain.auth_info
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        authInfo: { pw: { value: pw } }
+      })
+
+      login_as :registrar2 do
+        response = epp_plain_request(xml)
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+      end
+
+      # all domain contacts should be under registrar2 now
+      domain.reload
+      domain.registrant.registrar_id.should == @registrar2.id
+      # registrant should be a new record
+      domain.registrant.id.should_not == original_oc_id
+      domain.registrant.copy_from_id.should == original_oc_id
+      # must generate new code
+      domain.registrant.code.should_not == original_oc_code
+
+      domain.contacts.each do |c|
+        c.registrar_id.should == @registrar2.id
+        original_contact_codes.include?(c.code).should_not == true
+      end
     end
 
     it 'should not creates transfer without password' do
