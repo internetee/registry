@@ -330,7 +330,6 @@ class Domain < ActiveRecord::Base
   end
 
   def server_holdable?
-    return false if outzone_at > Time.zone.now
     return false if statuses.include?(DomainStatus::SERVER_HOLD)
     return false if statuses.include?(DomainStatus::SERVER_MANUAL_INZONE)
     true
@@ -613,7 +612,6 @@ class Domain < ActiveRecord::Base
     statuses << DomainStatus::EXPIRED
   end
 
-  # TODO: This looks odd - outzone_at and delete_at will be the same value?
   def set_expired
     # TODO: currently valid_to attribute update logic is open
     # self.valid_to = valid_from + self.class.convert_period_to_time(period, period_unit)
@@ -642,7 +640,7 @@ class Domain < ActiveRecord::Base
   end
 
   def pending_update_prohibited?
-    (statuses & [
+    (statuses_was & [
       DomainStatus::CLIENT_UPDATE_PROHIBITED,
       DomainStatus::SERVER_UPDATE_PROHIBITED,
       DomainStatus::PENDING_CREATE,
@@ -666,15 +664,22 @@ class Domain < ActiveRecord::Base
   end
 
   def pending_delete_prohibited?
-    (statuses & [
+    (statuses_was & [
       DomainStatus::CLIENT_DELETE_PROHIBITED,
       DomainStatus::SERVER_DELETE_PROHIBITED,
+      DomainStatus::CLIENT_UPDATE_PROHIBITED,
+      DomainStatus::SERVER_UPDATE_PROHIBITED,
       DomainStatus::PENDING_CREATE,
-      DomainStatus::PENDING_UPDATE,
-      DomainStatus::PENDING_DELETE,
       DomainStatus::PENDING_RENEW,
-      DomainStatus::PENDING_TRANSFER
+      DomainStatus::PENDING_TRANSFER,
+      DomainStatus::PENDING_UPDATE,
+      DomainStatus::PENDING_DELETE
     ]).present?
+  end
+
+  # let's use positive method names
+  def pending_deletable?
+    !pending_delete_prohibited?
   end
 
   def set_pending_delete
@@ -685,13 +690,25 @@ class Domain < ActiveRecord::Base
     statuses << DomainStatus::PENDING_DELETE
   end
 
+  def set_server_hold
+    statuses << DomainStatus::SERVER_HOLD
+  end
+
+  # rubocop: disable Metrics/CyclomaticComplexity
+  # rubocop: disable Metrics/PerceivedComplexity
   def manage_automatic_statuses
     if statuses.empty? && valid?
       statuses << DomainStatus::OK
     elsif statuses.length > 1 || !valid?
       statuses.delete(DomainStatus::OK)
     end
+
+    p_d = statuses.include?(DomainStatus::PENDING_DELETE)
+    s_h = (statuses & [DomainStatus::SERVER_MANUAL_INZONE, DomainStatus::SERVER_HOLD]).empty?
+    statuses << DomainStatus::SERVER_HOLD if p_d && s_h
   end
+  # rubocop: enable Metrics/CyclomaticComplexity
+  # rubocop: enable Metrics/PerceivedComplexity
 
   def children_log
     log = HashWithIndifferentAccess.new

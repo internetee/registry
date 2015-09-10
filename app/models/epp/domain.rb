@@ -472,6 +472,8 @@ class Epp::Domain < Domain
     )
   end
 
+  # rubocop: disable Metrics/PerceivedComplexity
+  # rubocop: disable Metrics/CyclomaticComplexity
   def epp_destroy(frame, user_id, verify = true)
     return false unless valid?
 
@@ -485,9 +487,19 @@ class Epp::Domain < Domain
       manage_automatic_statuses
       true # aka 1001 pending_delete
     else
-      set_expired!
+      throw :epp_error, {
+        code: '2304',
+        msg: I18n.t(:object_status_prohibits_operation)
+      } unless pending_deletable?
+
+      self.delete_at = Time.zone.now + Setting.redemption_grace_period.days
+      set_pending_delete
+      set_server_hold if server_holdable?
+      save(validate: false)
     end
   end
+  # rubocop: enable Metrics/PerceivedComplexity
+  # rubocop: enable Metrics/CyclomaticComplexity
 
   ### RENEW ###
 

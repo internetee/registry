@@ -2014,7 +2014,7 @@ describe 'EPP Domain', epp: true do
           _anonymus: [
             { contact: { value: 'FIXED:MAK21', attrs: { type: 'tech' } } },
             { status: { value: 'Payment overdue.', attrs: { s: 'clientHold', lang: 'en' } } },
-            { status: { value: '', attrs: { s: 'clientUpdateProhibited' } } }
+            { status: { value: '', attrs: { s: 'clientRenewProhibited' } } }
           ]
         ]
       }, {
@@ -2044,6 +2044,7 @@ describe 'EPP Domain', epp: true do
       Fabricate(:contact, code: 'FIXED:MAK21')
 
       response = epp_plain_request(xml)
+
       response[:results][0][:result_code].should == '1000'
 
       d = Domain.last
@@ -2056,7 +2057,7 @@ describe 'EPP Domain', epp: true do
 
       d.statuses.count.should == 2
       d.statuses.include?('clientHold').should == true
-      d.statuses.include?('clientUpdateProhibited').should == true
+      d.statuses.include?('clientRenewProhibited').should == true
 
       d.dnskeys.count.should == 2
 
@@ -2238,7 +2239,7 @@ describe 'EPP Domain', epp: true do
           _anonymus: [
             { contact: { value: 'FIXED:CITIZEN_1234', attrs: { type: 'tech' } } },
             { status: { value: 'Payment overdue.', attrs: { s: 'clientHold', lang: 'en' } } },
-            { status: { value: '', attrs: { s: 'clientUpdateProhibited' } } }
+            { status: { value: '', attrs: { s: 'clientRenewProhibited' } } }
           ]
         ]
       }, {
@@ -2305,7 +2306,7 @@ describe 'EPP Domain', epp: true do
       d.dnskeys.count.should == 1
 
       d.statuses.count.should == 1
-      d.statuses.first.should == 'clientUpdateProhibited'
+      d.statuses.first.should == 'clientRenewProhibited'
 
       rem_ns = d.nameservers.find_by(hostname: 'ns1.example.com')
       rem_ns.should be_falsey
