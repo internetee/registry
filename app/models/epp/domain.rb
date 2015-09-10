@@ -540,29 +540,15 @@ class Epp::Domain < Domain
     oc = c.deep_clone
     oc.code = nil
     oc.registrar_id = registrar_id
+    oc.copy_from_id = c.id
     oc.prefix_code
-    oc.save!(validate: false)
-    oc
-  end
-
-  def transfer_contact(contact_id, registrar_id)
-    oc = Contact.find(contact_id) # n+1 workaround
-    oc.registrar_id = registrar_id
-    oc.generate_new_code!
     oc.save!(validate: false)
     oc
   end
 
   def transfer_registrant(registrar_id)
     return if registrant.registrar_id == registrar_id
-
-    is_other_domains_contact = DomainContact.where('contact_id = ? AND domain_id != ?', registrant_id, id).count > 0
-    if registrant.registrant_domains.count > 1 || is_other_domains_contact
-      oc = copy_and_transfer_contact(registrant_id, registrar_id)
-      self.registrant_id = oc.id
-    else
-      transfer_contact(registrant_id, registrar_id)
-    end
+    self.registrant_id = copy_and_transfer_contact(registrant_id, registrar_id).id
   end
 
   def transfer_domain_contacts(registrar_id)
@@ -570,22 +556,14 @@ class Epp::Domain < Domain
     contacts.each do |c|
       next if copied_ids.include?(c.id) || c.registrar_id == registrar_id
 
-      is_other_domains_contact = DomainContact.where('contact_id = ? AND domain_id != ?', c.id, id).count > 0
-      # if contact used to be owner contact but was copied, then contact must be transferred
-      # (registrant_id_was != c.id)
-      if c.domains.count > 1 || is_other_domains_contact
-        # copy contact
-        if registrant_id_was == c.id # owner contact was copied previously, do not copy it again
-          oc = OpenStruct.new(id: registrant_id)
-        else
-          oc = copy_and_transfer_contact(c.id, registrar_id)
-        end
-
-        domain_contacts.where(contact_id: c.id).update_all({ contact_id: oc.id }) # n+1 workaround
-        copied_ids << c.id
+      if registrant_id_was == c.id # registrant was copied previously, do not copy it again
+        oc = OpenStruct.new(id: registrant_id)
       else
-        transfer_contact(c.id, registrar_id)
+        oc = copy_and_transfer_contact(c.id, registrar_id)
       end
+
+      domain_contacts.where(contact_id: c.id).update_all({ contact_id: oc.id }) # n+1 workaround
+      copied_ids << c.id
     end
   end
 
