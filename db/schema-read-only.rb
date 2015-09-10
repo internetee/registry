@@ -201,6 +201,7 @@ ActiveRecord::Schema.define(version: 20150910113839) do
     t.integer  "legacy_id"
     t.string   "statuses",           array: true
     t.hstore   "status_notes"
+    t.integer  "legacy_history_id"
     t.integer  "copy_from_id"
   end
 
