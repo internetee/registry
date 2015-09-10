@@ -9,22 +9,27 @@ class DomainNameValidator < ActiveModel::EachValidator
 
   class << self
     def validate_format(value)
-      return true if value == 'ee'
       return true unless value
       value = value.mb_chars.downcase.strip
 
-      general_domains = /(.pri.ee|.com.ee|.fie.ee|.med.ee|.ee)/
+      origins = ZonefileSetting.pluck(:origin)
+      # if someone tries to register an origin domain, let this validation pass
+      # the error will be catched in blocked domains validator
+      return true if origins.include?(value)
+
+      general_domains = /(#{origins.join('|')})/
+      # general_domains = /(.pri.ee|.com.ee|.fie.ee|.med.ee|.ee)/
 
       # it's punycode
       if value[2] == '-' && value[3] == '-'
-        regexp = /\Axn--[a-zA-Z0-9-]{0,59}#{general_domains}\z/
+        regexp = /\Axn--[a-zA-Z0-9-]{0,59}\.#{general_domains}\z/
         return false unless value =~ regexp
         value = SimpleIDN.to_unicode(value).mb_chars.downcase.strip
       end
 
       # rubocop: disable Metrics/LineLength
       unicode_chars = /\u00E4\u00F5\u00F6\u00FC\u0161\u017E/ # äõöüšž
-      regexp = /\A[a-zA-Z0-9#{unicode_chars.source}][a-zA-Z0-9#{unicode_chars.source}-]{0,61}[a-zA-Z0-9#{unicode_chars.source}]#{general_domains.source}\z/
+      regexp = /\A[a-zA-Z0-9#{unicode_chars.source}][a-zA-Z0-9#{unicode_chars.source}-]{0,61}[a-zA-Z0-9#{unicode_chars.source}]\.#{general_domains.source}\z/
       # rubocop: enable Metrics/LineLength
       # rubocop: disable Style/DoubleNegation
       !!(value =~ regexp)

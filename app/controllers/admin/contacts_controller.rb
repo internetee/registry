@@ -3,8 +3,24 @@ class Admin::ContactsController < AdminController
   before_action :set_contact, only: [:show]
 
   def index
+    params[:q] ||= {}
     @q = Contact.includes(:registrar).search(params[:q])
     @contacts = @q.result.page(params[:page])
+
+    if params[:statuses_contains]
+      contacts = Contact.includes(:registrar).where(
+        "contacts.statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
+      )
+    else
+      contacts = Contact.includes(:registrar)
+    end
+
+    normalize_search_parameters do
+      @q = contacts.search(params[:q])
+      @contacts = @q.result.page(params[:page])
+    end
+
+    @contacts = @contacts.per(params[:results_per_page]) if params[:results_per_page].to_i > 0
   end
 
   def search
@@ -44,5 +60,22 @@ class Admin::ContactsController < AdminController
     dp = contact_params
     dp[:statuses].reject!(&:blank?)
     dp
+  end
+
+  def normalize_search_parameters
+    ca_cache = params[:q][:created_at_lteq]
+    begin
+      end_time = params[:q][:created_at_lteq].try(:to_date)
+      params[:q][:created_at_lteq] = end_time.try(:end_of_day)
+      # updated at
+      end_time = params[:q][:updated_at_gteq].try(:to_date)
+      params[:q][:updated_at_lteq] = end_time.try(:end_of_day)
+    rescue
+      logger.warn('Invalid date')
+    end
+
+    yield
+
+    params[:q][:created_at_lteq] = ca_cache
   end
 end

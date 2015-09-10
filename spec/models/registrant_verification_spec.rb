@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 describe RegistrantVerification do
+  before :all do
+    Fabricate(:zonefile_setting, origin: 'ee')
+  end
   context 'with invalid attribute' do
     before :all do
       @registrant_verification = RegistrantVerification.new

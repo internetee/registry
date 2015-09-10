@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe Repp::DomainV1 do
   before :all do
+    Fabricate(:zonefile_setting, origin: 'ee')
     @registrar1 = Fabricate(:registrar1)
     @api_user   = Fabricate(:gitlab_api_user, registrar: @registrar1)
     Fabricate.times(2, :domain, registrar: @api_user.registrar)

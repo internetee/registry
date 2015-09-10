@@ -10,5 +10,5 @@ TEST_EMAILS =
     )
   else
     ENV['whitelist_emails_for_staging'] ||= ''
-    ENV['whitelist_emails_for_staging'].split(',').map(&:strip)
+    ENV['whitelist_emails_for_staging'].to_s.split(',').map(&:strip)
   end

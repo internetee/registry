@@ -29,7 +29,6 @@ class Epp::DomainsController < EppController
     handle_errors(@domain) and return if @domain.errors.any?
 
     handle_errors and return unless balance_ok?('create')
-
     ActiveRecord::Base.transaction do
       if @domain.save # TODO: Maybe use validate: false here because we have already validated the domain?
         current_user.registrar.debit!({

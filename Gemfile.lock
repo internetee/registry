@@ -278,6 +278,7 @@ GEM
       addressable (~> 2.3)
     libv8 (3.16.14.11)
     libxml-ruby (2.8.0)
+    liquid (3.0.6)
     listen (3.0.3)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)

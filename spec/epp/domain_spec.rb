@@ -4,6 +4,13 @@ describe 'EPP Domain', epp: true do
   before(:all) do
     @xsd = Nokogiri::XML::Schema(File.read('lib/schemas/domain-eis-1.0.xsd'))
     @epp_xml = EppXml.new(cl_trid: 'ABC-12345')
+
+    Fabricate(:zonefile_setting, origin: 'ee')
+    Fabricate(:zonefile_setting, origin: 'pri.ee')
+    Fabricate(:zonefile_setting, origin: 'med.ee')
+    Fabricate(:zonefile_setting, origin: 'fie.ee')
+    Fabricate(:zonefile_setting, origin: 'com.ee')
+
     @registrar1 = Fabricate(:registrar1, code: 'REGDOMAIN1')
     @registrar1.credit!({ sum: 10000 })
     @registrar2 = Fabricate(:registrar2, code: 'REGDOMAIN2')
@@ -3095,6 +3102,14 @@ describe 'EPP Domain', epp: true do
       name.text.should == 'notcorrectdomain'
       name[:avail].should == '0'
       reason.text.should == 'invalid format'
+    end
+
+    ### POLL ###
+    it 'should show force delete in poll' do
+      domain.set_force_delete
+      response = epp_plain_request(@epp_xml.session.poll)
+      msg_q = response[:parsed].css('msgQ')
+      msg_q.css('msg').text.should == "Force delete set on domain #{domain.name}"
     end
   end
 end
