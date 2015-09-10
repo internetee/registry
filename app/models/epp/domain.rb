@@ -757,7 +757,9 @@ class Epp::Domain < Domain
       DomainStatus::PENDING_DELETE,
       DomainStatus::PENDING_RENEW,
       DomainStatus::PENDING_TRANSFER,
-      DomainStatus::FORCE_DELETE
+      DomainStatus::FORCE_DELETE,
+      DomainStatus::SERVER_TRANSFER_PROHIBITED,
+      DomainStatus::CLIENT_TRANSFER_PROHIBITED
     ]).empty?
   end
 
