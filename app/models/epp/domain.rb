@@ -512,7 +512,6 @@ class Epp::Domain < Domain
 
   ### TRANSFER ###
 
-  # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/CyclomaticComplexity
   def transfer(frame, action, current_user)
     case action

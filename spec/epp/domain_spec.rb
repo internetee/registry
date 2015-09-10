@@ -1466,7 +1466,6 @@ describe 'EPP Domain', epp: true do
       # must generate new code
       domain.registrant.code.should_not == original_oc_code
 
-
       domain.contacts.each do |c|
         c.registrar_id.should == @registrar2.id
         original_contact_codes.include?(c.code).should_not == true
