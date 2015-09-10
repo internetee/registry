@@ -123,7 +123,7 @@ class Epp::Domain < Domain
   def attach_default_contacts
     return if registrant.blank?
     regt = Registrant.find(registrant.id) # temp for bullet
-    tech_contacts  << regt if tech_domain_contacts.blank?
+    tech_contacts << regt if tech_domain_contacts.blank?
     admin_contacts << regt if admin_domain_contacts.blank? && regt.priv?
   end
 
