@@ -3,7 +3,6 @@ class Admin::AccountActivitiesController < AdminController
 
   def index # rubocop: disable Metrics/AbcSize
     params[:q] ||= {}
-    # account = current_user.registrar.cash_account
 
     ca_cache = params[:q][:created_at_lteq]
     begin
