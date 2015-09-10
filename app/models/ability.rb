@@ -99,6 +99,7 @@ class Ability
     can :manage, MailTemplate
     can :manage, Invoice
     can :manage, WhiteIp
+    can :manage, AccountActivity
     can :read, ApiLog::EppLog
     can :read, ApiLog::ReppLog
     can :update, :pending
