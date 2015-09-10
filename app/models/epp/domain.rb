@@ -472,8 +472,6 @@ class Epp::Domain < Domain
     )
   end
 
-  # rubocop: disable Metrics/PerceivedComplexity
-  # rubocop: disable Metrics/CyclomaticComplexity
   def epp_destroy(frame, user_id, verify = true)
     return false unless valid?
 
@@ -502,8 +500,6 @@ class Epp::Domain < Domain
     set_server_hold if server_holdable?
     save(validate: false)
   end
-  # rubocop: enable Metrics/PerceivedComplexity
-  # rubocop: enable Metrics/CyclomaticComplexity
 
   ### RENEW ###
 
