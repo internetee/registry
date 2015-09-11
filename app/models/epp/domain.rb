@@ -12,13 +12,8 @@ class Epp::Domain < Domain
   after_validation :validate_contacts
   def validate_contacts
     ok = true
-    if new_record?
-      ac = admin_domain_contacts.map(&:contact)
-      tc = tech_domain_contacts.map(&:contact)
-    else
-      ac = contacts
-      tc = []
-    end
+    ac = admin_domain_contacts.includes(:contact).select { |x| !x.marked_for_destruction? }.map(&:contact)
+    tc = tech_domain_contacts.includes(:contact).select { |x| !x.marked_for_destruction? }.map(&:contact)
     # validate registrant here as well
     ([registrant] + ac + tc).each do |x|
       unless x.valid?
