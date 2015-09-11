@@ -1299,7 +1299,7 @@ describe 'EPP Domain', epp: true do
         x.registrar_id.should == @registrar2.id
       end
 
-      new_contact = Contact.last
+      new_contact = Contact.last(2).sort.last # ensure fixed order
       new_contact.name.should == old_contact.name
 
       # there should be 2 references to the new contact
@@ -1353,13 +1353,10 @@ describe 'EPP Domain', epp: true do
         x.registrar_id.should == @registrar2.id
       end
 
-      new_contact, new_contact_2 = Contact.last(2)
+      new_contact, new_contact_2 = Contact.last(2).sort
 
-      # database does not follow always same order, thus we swap object when different order
-      new_contact, new_contact_2 = new_contact_2, new_contact if new_contact.name != 'first'
-
-      new_contact.name.should == old_contact.name
-      new_contact_2.name.should == old_contact_2.name
+      new_contact.name.should == 'first'
+      new_contact_2.name.should == 'second'
 
       # there should be 2 references to the new contact (admin + tech)
       domain.domain_contacts.where(contact_id: new_contact.id).count.should == 2
