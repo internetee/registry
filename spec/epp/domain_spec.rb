@@ -1264,24 +1264,24 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'transfers domain when domain contacts are some other domain contacts' do
-      old_contact = Fabricate(:contact, registrar: @registrar1)
+      old_contact = Fabricate(:contact, registrar: @registrar1, name: 'old name')
       domain.tech_contacts << old_contact
       domain.admin_contacts << old_contact
 
       d = Fabricate(:domain)
       d.tech_contacts << old_contact
       d.admin_contacts << old_contact
+
       original_oc_id = domain.registrant.id
       original_contact_count = Contact.count
       original_domain_contact_count = DomainContact.count
 
-      pw = domain.auth_info
-      xml = domain_transfer_xml({
-        name: { value: domain.name },
-        authInfo: { pw: { value: pw } }
-      })
-
       login_as :registrar2 do
+        pw = domain.auth_info
+        xml = domain_transfer_xml({
+          name: { value: domain.name },
+          authInfo: { pw: { value: pw } }
+        })
         response = epp_plain_request(xml)
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
@@ -1299,8 +1299,8 @@ describe 'EPP Domain', epp: true do
         x.registrar_id.should == @registrar2.id
       end
 
-      new_contact = Contact.last(2).sort.last # ensure fixed order
-      new_contact.name.should == old_contact.name
+      new_contact = Contact.last(4).detect { |c| c.name == 'old name' } # database order
+      new_contact.name.should == 'old name'
 
       # there should be 2 references to the new contact
       domain.domain_contacts.where(contact_id: new_contact.id).count.should == 2
@@ -1353,7 +1353,8 @@ describe 'EPP Domain', epp: true do
         x.registrar_id.should == @registrar2.id
       end
 
-      new_contact, new_contact_2 = Contact.last(2).sort
+      new_contact = Contact.last(5).detect { |c| c.name == 'first' }
+      new_contact_2 = Contact.last(5).detect { |c| c.name == 'second' }
 
       new_contact.name.should == 'first'
       new_contact_2.name.should == 'second'
