@@ -215,7 +215,9 @@ class Domain < ActiveRecord::Base
           DomainMailer.pending_delete_expired_notification(domain).deliver_now
         end
         domain.clean_pendings!
-        STDOUT << "#{Time.zone.now.utc} Domain.clean_expired_pendings: ##{domain.id}\n" unless Rails.env.test?
+        unless Rails.env.test?
+          STDOUT << "#{Time.zone.now.utc} Domain.clean_expired_pendings: ##{domain.id} (#{domain.name})\n"
+        end
       end
       STDOUT << "#{Time.zone.now.utc} - Successfully cancelled #{count} domain pendings\n" unless Rails.env.test?
       count
@@ -232,7 +234,7 @@ class Domain < ActiveRecord::Base
       domains.each do |domain|
         next unless domain.expirable?
         domain.set_graceful_expired
-        STDOUT << "#{Time.zone.now.utc} Domain.start_expire_period: ##{domain.id} #{domain.changes}\n" unless Rails.env.test?
+        STDOUT << "#{Time.zone.now.utc} Domain.start_expire_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
         domain.save(validate: false)
       end
 
@@ -246,7 +248,7 @@ class Domain < ActiveRecord::Base
       d.each do |domain|
         next unless domain.server_holdable?
         domain.statuses << DomainStatus::SERVER_HOLD
-        STDOUT << "#{Time.zone.now.utc} Domain.start_redemption_grace_period: ##{domain.id} #{domain.changes}\n" unless Rails.env.test?
+        STDOUT << "#{Time.zone.now.utc} Domain.start_redemption_grace_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
         domain.save
       end
 
@@ -260,7 +262,7 @@ class Domain < ActiveRecord::Base
       d.each do |domain|
         next unless domain.delete_candidateable?
         domain.statuses << DomainStatus::DELETE_CANDIDATE
-        STDOUT << "#{Time.zone.now.utc} Domain.start_delete_period: ##{domain.id} #{domain.changes}\n" unless Rails.env.test?
+        STDOUT << "#{Time.zone.now.utc} Domain.start_delete_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
         domain.save
       end
 
@@ -275,13 +277,13 @@ class Domain < ActiveRecord::Base
       c = 0
       Domain.where("statuses @> '{deleteCandidate}'::varchar[]").each do |x|
         x.destroy
-        STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by deleteCandidate ##{x.id}\n" unless Rails.env.test?
+        STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by deleteCandidate ##{x.id} (#{x.name})\n" unless Rails.env.test?
         c += 1
       end
 
       Domain.where('force_delete_at <= ?', Time.zone.now).each do |x|
         x.destroy
-        STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by force delete time ##{x.id}\n" unless Rails.env.test?
+        STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by force delete time ##{x.id} (#{x.name})\n" unless Rails.env.test?
         c += 1
       end
 
