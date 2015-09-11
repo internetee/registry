@@ -12,8 +12,13 @@ class Epp::Domain < Domain
   after_validation :validate_contacts
   def validate_contacts
     ok = true
-    ac = admin_domain_contacts.includes(:contact).select { |x| !x.marked_for_destruction? }.map(&:contact)
-    tc = tech_domain_contacts.includes(:contact).select { |x| !x.marked_for_destruction? }.map(&:contact)
+    active_admins = admin_domain_contacts.select { |x| !x.marked_for_destruction? }
+    active_techs = tech_domain_contacts.select { |x| !x.marked_for_destruction? }
+
+    # bullet workaround
+    ac = active_admins.map { |x| Contact.find(x.contact_id) }
+    tc = active_techs.map { |x| Contact.find(x.contact_id) }
+
     # validate registrant here as well
     ([registrant] + ac + tc).each do |x|
       unless x.valid?
