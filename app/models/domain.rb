@@ -9,6 +9,7 @@ class Domain < ActiveRecord::Base
 
   belongs_to :registrar
   belongs_to :registrant
+  # TODO: should we user validates_associated :registrant here?
 
   has_many :admin_domain_contacts
   accepts_nested_attributes_for :admin_domain_contacts, allow_destroy: true
@@ -271,6 +272,7 @@ class Domain < ActiveRecord::Base
     end
 
     # rubocop:disable Rails/FindEach
+    # rubocop:disable Metrics/AbcSize
     def destroy_delete_candidates
       STDOUT << "#{Time.zone.now.utc} - Destroying domains\n" unless Rails.env.test?
 
@@ -289,6 +291,7 @@ class Domain < ActiveRecord::Base
 
       STDOUT << "#{Time.zone.now.utc} - Successfully destroyed #{c} domains\n" unless Rails.env.test?
     end
+    # rubocop: enable Metrics/AbcSize
     # rubocop:enable Rails/FindEach
     # rubocop: enable Metrics/LineLength
   end

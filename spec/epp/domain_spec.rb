@@ -1435,7 +1435,7 @@ describe 'EPP Domain', epp: true do
       original_contacts_codes.sort.should == domain.contacts.pluck(:code).sort
     end
 
-    fit 'transfers domain contact should populate copy_from_id' do
+    it 'transfers domain contact should populate copy_from_id' do
       d = Fabricate(:domain)
       d.tech_contacts << domain.registrant
 

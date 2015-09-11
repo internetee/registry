@@ -9,11 +9,24 @@ class Epp::Domain < Domain
     false
   end
 
-  before_validation :validate_contacts
+  after_validation :validate_contacts
   def validate_contacts
-    return if contacts.map(&:valid?).all?
-    add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
-    false
+    ok = true
+    if new_record?
+      ac = admin_domain_contacts.map(&:contact)
+      tc = tech_domain_contacts.map(&:contact)
+    else
+      ac = contacts
+      tc = []
+    end
+    # validate registrant here as well
+    ([registrant] + ac + tc).each do |x|
+      unless x.valid?
+        add_epp_error('2304', nil, nil, I18n.t(:contact_is_not_valid, value: x.code))
+        ok = false
+      end
+    end
+    ok
   end
 
   before_save :link_contacts
