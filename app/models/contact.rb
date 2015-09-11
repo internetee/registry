@@ -173,7 +173,7 @@ class Contact < ActiveRecord::Base
 
       unless Rails.env.test?
         orphans.each do |m|
-          STDOUT << "#{Time.zone.now.utc} Contact.destroy_orphans: ##{m.id}\n"
+          STDOUT << "#{Time.zone.now.utc} Contact.destroy_orphans: ##{m.id} (#{m.name})\n"
         end
       end
 
