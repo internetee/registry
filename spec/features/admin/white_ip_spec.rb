@@ -26,7 +26,7 @@ feature 'Api users', type: :feature do
 
       fill_in 'IPv4', with: '192.168.1.1'
       fill_in 'IPv6', with: 'FE80:0000:0000:0000:0202:B3FF:FE1E:8329'
-      select 'API', from: 'Interface'
+      find('#white_ip_interfaces_api').set(true)
       click_button 'Save'
 
       page.should have_text('Record created')
