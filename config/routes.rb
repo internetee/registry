@@ -21,7 +21,6 @@ Rails.application.routes.draw do
   namespace :registrar do
     resource :dashboard
     root 'dashboard#show'
-    # root 'polls#show'
 
     resources :invoices do
       member do
