@@ -46,7 +46,7 @@ class Registrar::DomainsController < Registrar::DeppController # EPP controller
   # rubocop: enable Metrics/AbcSize
 
   def info
-    authorize! :view, Depp::Domain
+    authorize! :info, Depp::Domain
     @data = @domain.info(params[:domain_name]) if params[:domain_name]
     if response_ok?
       render 'info'
@@ -57,7 +57,7 @@ class Registrar::DomainsController < Registrar::DeppController # EPP controller
   end
 
   def check
-    authorize! :view, Depp::Domain
+    authorize! :check, Depp::Domain
     if params[:domain_name]
       @data = @domain.check(params[:domain_name])
       render 'check_index' and return unless response_ok?

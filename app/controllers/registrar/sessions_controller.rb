@@ -47,10 +47,10 @@ class Registrar::SessionsController < Devise::SessionsController
       end
     end
 
-    if @depp_user.errors.none? && @depp_user.valid?
+    if @depp_user.errors.none?
       if @api_user.active?
         sign_in @api_user
-        redirect_to role_base_root_url(@api_user)
+        redirect_to registrar_root_url
       else
         @depp_user.errors.add(:base, :not_active)
         render 'login'
@@ -71,17 +71,17 @@ class Registrar::SessionsController < Devise::SessionsController
         redirect_to :back and return
       end
 
-      if @api_user.can?(:create, :epp_login)
-        unless @api_user.registrar.api_ip_white?(request.ip)
-          flash[:alert] = I18n.t(:ip_is_not_whitelisted)
-          redirect_to :back and return
-        end
-      end
+      # if @api_user.can?(:create, :epp_login)
+      #   unless @api_user.registrar.api_ip_white?(request.ip)
+      #     flash[:alert] = I18n.t(:ip_is_not_whitelisted)
+      #     redirect_to :back and return
+      #   end
+      # end
     end
 
     sign_in @api_user if @api_user.identity_code == current_user.identity_code
 
-    redirect_to :back
+    redirect_to registrar_root_url
   end
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/PerceivedComplexity
@@ -91,7 +91,7 @@ class Registrar::SessionsController < Devise::SessionsController
 
     if @user
       sign_in(@user, event: :authentication)
-      redirect_to role_base_root_url(@user)
+      redirect_to registrar_root_url
     else
       flash[:alert] = t('no_such_user')
       redirect_to registrar_login_url
@@ -111,7 +111,7 @@ class Registrar::SessionsController < Devise::SessionsController
     if Rails.env.test? && phone == "123"
       @user = ApiUser.find_by(identity_code: "14212128025")
       sign_in(@user, event: :authentication)
-      return redirect_to role_base_root_url(@user)
+      return redirect_to registrar_root_url
     end
 
     # country_codes = {'+372' => 'EST'}
@@ -159,7 +159,7 @@ class Registrar::SessionsController < Devise::SessionsController
       sign_in @user
       flash[:notice] = t(:welcome)
       flash.keep(:notice)
-      render js: "window.location = '#{role_base_root_url(@user)}'"
+      render js: "window.location = '#{registrar_root_url}'"
     when 'NOT_VALID'
       render json: { message: t(:user_signature_is_invalid) }, status: :bad_request
     when 'EXPIRED_TRANSACTION'
@@ -195,13 +195,5 @@ class Registrar::SessionsController < Devise::SessionsController
     return if Rails.env.development?
     return if WhiteIp.registrar_ip_white?(request.ip)
     render text: t('access_denied') and return
-  end
-
-  def role_base_root_url(user)
-    if user.try(:roles) == ['billing']
-      registrar_invoices_url
-    else
-      registrar_root_url
-    end
   end
 end

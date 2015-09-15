@@ -19,7 +19,9 @@ Rails.application.routes.draw do
 
   # REGISTRAR ROUTES
   namespace :registrar do
-    root 'polls#show'
+    resource :dashboard
+    root 'dashboard#show'
+    # root 'polls#show'
 
     resources :invoices do
       member do
