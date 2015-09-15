@@ -2717,7 +2717,7 @@ CREATE TABLE white_ips (
     registrar_id integer,
     ipv4 character varying,
     ipv6 character varying,
-    interface character varying,
+    interfaces character varying[],
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     creator_str character varying,
@@ -4933,4 +4933,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150825125118');
 INSERT INTO schema_migrations (version) VALUES ('20150827151906');
 
 INSERT INTO schema_migrations (version) VALUES ('20150910113839');
+
+INSERT INTO schema_migrations (version) VALUES ('20150915094707');
 

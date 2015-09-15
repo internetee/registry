@@ -921,3 +921,4 @@ en:
   contact_is_not_valid: 'Contact %{value} is not valid, please fix the invalid contact'
   force_delete_subject: 'Kustutusmenetluse teade'
   welcome_to_eis_registrar_portal: 'Welcome to EIS Registrar portal'
+  interfaces: 'Interfaces'

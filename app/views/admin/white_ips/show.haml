@@ -20,5 +20,5 @@
           %dt= t(:ipv6)
           %dd= @white_ip.ipv6
 
-          %dt= t(:interface)
-          %dd= @white_ip.interface.upcase
+          %dt= t(:interfaces)
+          %dd= @white_ip.interfaces.join(', ').upcase
