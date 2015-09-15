@@ -30,21 +30,16 @@ class Ability
   #
 
   def super # Registrar/api_user dynamic role
-    static_registrar
     epp
     billing
   end
 
   def epp # Registrar/api_user dynamic role
-    # static_registrar
     can :view, :registrar_dashboard
 
     if @user.registrar.api_ip_white?(@ip)
       can :manage, :poll
       can :manage, Depp::Contact
-      # can :manage, Depp::Domain
-      # can :renew,  Depp::Domain
-      # can :transfer, Depp::Domain
       # can :manage, Depp::Keyrelay # TODO: Keyrelay is disabled for now
       # can :confirm, :keyrelay # TODO: Keyrelay is disabled for now
       can :manage, :xml_console
@@ -84,7 +79,6 @@ class Ability
     can(:manage, Invoice) { |i| i.buyer_id == @user.registrar_id }
     can :manage, :deposit
     can :read, AccountActivity
-    #can(:create, :epp_login) # billing can establis epp connection in order to login
   end
 
   def customer_service # Admin/admin_user dynamic role
@@ -120,23 +114,6 @@ class Ability
     can :destroy, :pending
     can :create, :zonefile
     can :access, :settings_menu
-  end
-
-  #
-  # Static roles, linked from dynamic roles
-  #
-  def static_registrar
-    #can :manage, Nameserver
-    # can :view, :registrar_dashboard
-    # can :delete, :registrar_poll
-    # can :manage, :registrar_xml_console
-    # can :manage, Depp::Contact
-    # can :manage, Depp::Domain
-    # can :renew,  Depp::Domain
-    # can :transfer, Depp::Domain
-    # can :manage, Depp::Keyrelay
-    # can :confirm, :keyrelay
-    # can :confirm, :transfer
   end
 
   def static_registrant

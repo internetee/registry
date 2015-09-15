@@ -3,12 +3,10 @@ class Registrar::PollsController < Registrar::DeppController # EPP controller
   before_action :init_epp_xml
 
   def show
-    # authorize! :view, :registrar_dashboard
     @data = depp_current_user.request(@ex.poll)
   end
 
   def destroy
-    # authorize! :delete, :registrar_poll
     @data = depp_current_user.request(@ex.poll(poll: {
       value: '', attrs: { op: 'ack', msgID: params[:id] }
     }))
@@ -35,7 +33,6 @@ class Registrar::PollsController < Registrar::DeppController # EPP controller
   # end
 
   def confirm_transfer
-    # authorize! :confirm, :transfer
     domain_params = params[:domain]
     @data = @domain.confirm_transfer(domain_params)
 

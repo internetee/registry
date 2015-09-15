@@ -70,13 +70,6 @@ class Registrar::SessionsController < Devise::SessionsController
         flash[:alert] = I18n.t(:ip_is_not_whitelisted)
         redirect_to :back and return
       end
-
-      # if @api_user.can?(:create, :epp_login)
-      #   unless @api_user.registrar.api_ip_white?(request.ip)
-      #     flash[:alert] = I18n.t(:ip_is_not_whitelisted)
-      #     redirect_to :back and return
-      #   end
-      # end
     end
 
     sign_in @api_user if @api_user.identity_code == current_user.identity_code
