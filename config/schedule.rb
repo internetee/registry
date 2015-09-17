@@ -9,6 +9,8 @@ path  = Whenever.path.sub(%r{\/releases\/.*}, '/current')
 set :job_template, "/bin/bash -l -c '#{rbenv} :job'"
 job_type :runner, "cd #{path} && bin/rails r -e :environment \":task\" :output"
 
+puts @environment
+
 # cron output
 set :output, 'log/cron.log'
 
@@ -51,4 +53,8 @@ end
 
 every 52.minutes do
   runner 'Domain.start_redemption_grace_period'
+end
+
+every 10.minutes do
+  runner 'Setting.reload_settings!'
 end
