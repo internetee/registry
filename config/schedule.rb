@@ -12,11 +12,6 @@ job_type :runner, "cd #{path} && bin/rails r -e :environment \":task\" :output"
 # cron output
 set :output, 'log/cron.log'
 
-puts 'cron_group'
-puts @cron_group
-puts 'env'
-puts @environment
-
 if @cron_group == 'registry'
   every 10.minutes do
     runner 'ZonefileSetting.generate_zonefiles'
