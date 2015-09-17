@@ -1,3 +1,6 @@
+17.09.2015
+* deploy-example.rb has been updated with `@cron_group`.
+
 11.08.2015
 
 * Possible to add whitelist_emails_for_staging list at application.yml
