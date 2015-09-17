@@ -201,6 +201,7 @@ ActiveRecord::Schema.define(version: 20150915094707) do
     t.integer  "legacy_id"
     t.string   "statuses",           array: true
     t.hstore   "status_notes"
+    t.integer  "legacy_history_id"
     t.integer  "copy_from_id"
   end
 
@@ -887,8 +888,8 @@ ActiveRecord::Schema.define(version: 20150915094707) do
     t.string   "cc"
     t.text     "body",       null: false
     t.text     "text_body",  null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "messages", force: :cascade do |t|
