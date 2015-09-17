@@ -1,7 +1,6 @@
 require 'mina/bundler'
 require 'mina/rails'
 require 'mina/git'
-require 'mina/whenever'
 require 'mina/rbenv'  # for rbenv support. (http://rbenv.org)
 
 # Basic settings:
