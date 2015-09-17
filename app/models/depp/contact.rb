@@ -267,8 +267,8 @@ module Depp
       Country.new(country_code)
     end
 
-    def bic?
-      ident_type == 'bic'
+    def org?
+      ident_type == 'org'
     end
 
     def priv?

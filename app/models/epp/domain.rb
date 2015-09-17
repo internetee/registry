@@ -137,7 +137,7 @@ class Epp::Domain < Domain
     return if registrant.blank?
     regt = Registrant.find(registrant.id) # temp for bullet
     tech_contacts << regt if tech_domain_contacts.blank?
-    admin_contacts << regt if admin_domain_contacts.blank? && regt.priv?
+    admin_contacts << regt if admin_domain_contacts.blank? && !regt.org?
   end
 
   # rubocop: disable Metrics/PerceivedComplexity
@@ -283,7 +283,7 @@ class Epp::Domain < Domain
       end
 
       if action != 'rem'
-        if x['type'] == 'admin' && c.bic?
+        if x['type'] == 'admin' && c.org?
           add_epp_error('2306', 'contact', x.text, [:domain_contacts, :admin_contact_can_be_only_private_person])
           next
         end

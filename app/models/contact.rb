@@ -23,7 +23,7 @@ class Contact < ActiveRecord::Base
   validates :ident,
     format: { with: /\d{4}-\d{2}-\d{2}/, message: :invalid_birthday_format },
     if: proc { |c| c.ident_type == 'birthday' }
-  validates :ident_country_code, presence: true, if: proc { |c| %w(bic priv).include? c.ident_type }
+  validates :ident_country_code, presence: true, if: proc { |c| %w(org priv).include? c.ident_type }
   validates :code,
     uniqueness: { message: :epp_id_taken },
     format: { with: /\A[\w\-\:]*\Z/i, message: :invalid },
@@ -64,13 +64,13 @@ class Contact < ActiveRecord::Base
 
   scope :current_registrars, ->(id) { where(registrar_id: id) }
 
-  BIC = 'bic'
+  ORG = 'org'
   PRIV = 'priv'
   BIRTHDAY = 'birthday'
   PASSPORT = 'passport'
 
   IDENT_TYPES = [
-    BIC,     # Company registry code (or similar)
+    ORG,     # Company registry code (or similar)
     PRIV,    # National idendtification number
     BIRTHDAY # Birthday date
   ]
@@ -226,12 +226,13 @@ class Contact < ActiveRecord::Base
     false
   end
 
-  def bic?
-    ident_type == BIC
+  def org?
+    ident_type == ORG
   end
 
+  # it might mean priv or birthday type
   def priv?
-    ident_type != BIC
+    !org?
   end
 
   def generate_auth_info

@@ -597,6 +597,7 @@ CREATE TABLE contacts (
     legacy_id integer,
     statuses character varying[],
     status_notes hstore,
+    legacy_history_id integer,
     copy_from_id integer
 );
 
@@ -2242,8 +2243,8 @@ CREATE TABLE mail_templates (
     cc character varying,
     body text NOT NULL,
     text_body text NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -4927,7 +4928,11 @@ INSERT INTO schema_migrations (version) VALUES ('20150803080914');
 
 INSERT INTO schema_migrations (version) VALUES ('20150810114746');
 
+INSERT INTO schema_migrations (version) VALUES ('20150810114747');
+
 INSERT INTO schema_migrations (version) VALUES ('20150825125118');
+
+INSERT INTO schema_migrations (version) VALUES ('20150827151906');
 
 INSERT INTO schema_migrations (version) VALUES ('20150910113839');
 
