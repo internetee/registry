@@ -230,6 +230,9 @@ module Depp
       handle_errors(data)
     end
 
+    # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Style/NegatedIf
+    # rubocop:disable Style/RedundantSelf
     def extension_xml(action)
       xml = { _anonymus: [] }
 
@@ -237,7 +240,7 @@ module Depp
       when :create
         ident = ident_xml[:_anonymus].try(:first) 
       when :update
-        # detect if any ident has changed
+        # detect if any ident has changed, nb! ident and self.ident is not always same
         if !(ident == self.ident && ident == self.ident_type && ident_country_code == self.ident_country_code)
           ident = ident_xml[:_anonymus].try(:first) 
         end
@@ -248,6 +251,9 @@ module Depp
       xml[:_anonymus] << legal if legal.present?
       xml
     end
+    # rubocop:enable Metrics/CyclomaticComplexity
+    # rubocop:enable Style/NegatedIf
+    # rubocop:enable Style/RedundantSelf
 
     def ident_xml
       {

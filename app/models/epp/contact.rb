@@ -133,6 +133,7 @@ class Epp::Contact < Contact
     }
   end
 
+  # rubocop:disable Metrics/AbcSize
   def update_attributes(frame)
     return super if frame.blank?
     at = {}.with_indifferent_access
@@ -161,6 +162,7 @@ class Epp::Contact < Contact
 
     super(at)
   end
+  # rubocop:enable Metrics/AbcSize
 
   def statuses_attrs(frame, action)
     status_list = status_list_from(frame)
