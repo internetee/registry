@@ -23,7 +23,7 @@ describe 'EPP Domain', epp: true do
     Fabricate(:contact, code: 'FIXED:CITIZEN_1234')
     Fabricate(:contact, code: 'FIXED:SH8013')
     Fabricate(:contact, code: 'FIXED:SH801333')
-    Fabricate(:contact, code: 'FIXED:JURIDICAL_1234', ident_type: 'bic')
+    Fabricate(:contact, code: 'FIXED:JURIDICAL_1234', ident_type: 'org')
     Fabricate(:reserved_domain)
     Fabricate(:blocked_domain)
     @pricelist_reg_1_year = Fabricate(:pricelist, valid_to: nil)
@@ -1181,9 +1181,10 @@ describe 'EPP Domain', epp: true do
       end
 
       # all domain contacts should be under registrar2 now
+      domain.reload
       domain.registrant.reload
       domain.registrant.registrar_id.should == @registrar2.id
-      domain.registrant.id.should == original_oc_id
+      domain.registrant.id.should_not == original_oc_id
 
       # must generate new code
       domain.registrant.code.should_not == original_oc_code
@@ -1263,24 +1264,24 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'transfers domain when domain contacts are some other domain contacts' do
-      old_contact = Fabricate(:contact, registrar: @registrar1)
+      old_contact = Fabricate(:contact, registrar: @registrar1, name: 'old name')
       domain.tech_contacts << old_contact
       domain.admin_contacts << old_contact
 
       d = Fabricate(:domain)
       d.tech_contacts << old_contact
       d.admin_contacts << old_contact
+
       original_oc_id = domain.registrant.id
       original_contact_count = Contact.count
       original_domain_contact_count = DomainContact.count
 
-      pw = domain.auth_info
-      xml = domain_transfer_xml({
-        name: { value: domain.name },
-        authInfo: { pw: { value: pw } }
-      })
-
       login_as :registrar2 do
+        pw = domain.auth_info
+        xml = domain_transfer_xml({
+          name: { value: domain.name },
+          authInfo: { pw: { value: pw } }
+        })
         response = epp_plain_request(xml)
         response[:msg].should == 'Command completed successfully'
         response[:result_code].should == '1000'
@@ -1289,8 +1290,7 @@ describe 'EPP Domain', epp: true do
       # all domain contacts should be under registrar2 now
       domain.reload
       domain.registrant.registrar_id.should == @registrar2.id
-      # registrant should not be a new record
-      domain.registrant.id.should == original_oc_id
+      domain.registrant.id.should_not == original_oc_id
 
       # old contact must not change
       old_contact.registrar_id.should == @registrar1.id
@@ -1299,14 +1299,14 @@ describe 'EPP Domain', epp: true do
         x.registrar_id.should == @registrar2.id
       end
 
-      new_contact = Contact.last
-      new_contact.name.should == old_contact.name
+      new_contact = Contact.last(4).detect { |c| c.name == 'old name' } # database order
+      new_contact.name.should == 'old name'
 
       # there should be 2 references to the new contact
       domain.domain_contacts.where(contact_id: new_contact.id).count.should == 2
 
-      # there should be only one new contact object
-      (original_contact_count + 1).should == Contact.count
+      # there should be four new contact object
+      (original_contact_count + 4).should == Contact.count
 
       # and no new references
       original_domain_contact_count.should == DomainContact.count
@@ -1344,7 +1344,7 @@ describe 'EPP Domain', epp: true do
       domain.reload
       domain.registrant.registrar_id.should == @registrar2.id
       # registrant should not be a new record
-      domain.registrant.id.should == original_oc_id
+      domain.registrant.id.should_not == original_oc_id
 
       # old contact must not change
       old_contact.registrar_id.should == @registrar1.id
@@ -1353,13 +1353,11 @@ describe 'EPP Domain', epp: true do
         x.registrar_id.should == @registrar2.id
       end
 
-      new_contact, new_contact_2 = Contact.last(2)
+      new_contact = Contact.last(5).detect { |c| c.name == 'first' }
+      new_contact_2 = Contact.last(5).detect { |c| c.name == 'second' }
 
-      # database does not follow always same order, thus we swap object when different order
-      new_contact, new_contact_2 = new_contact_2, new_contact if new_contact.name != 'first'
-
-      new_contact.name.should == old_contact.name
-      new_contact_2.name.should == old_contact_2.name
+      new_contact.name.should == 'first'
+      new_contact_2.name.should == 'second'
 
       # there should be 2 references to the new contact (admin + tech)
       domain.domain_contacts.where(contact_id: new_contact.id).count.should == 2
@@ -1367,8 +1365,8 @@ describe 'EPP Domain', epp: true do
       # there should be 1 reference to the new contact 2 (tech)
       domain.domain_contacts.where(contact_id: new_contact_2.id).count.should == 1
 
-      # there should be only two new contact objects
-      (original_contact_count + 2).should == Contact.count
+      # there should be four new contact objects
+      (original_contact_count + 5).should == Contact.count
 
       # and no new references
       original_domain_contact_count.should == DomainContact.count
@@ -1433,6 +1431,43 @@ describe 'EPP Domain', epp: true do
       domain.registrant.registrar_id.should == @registrar2.id
 
       original_contacts_codes.sort.should == domain.contacts.pluck(:code).sort
+    end
+
+    it 'transfers domain contact should populate copy_from_id' do
+      d = Fabricate(:domain)
+      d.tech_contacts << domain.registrant
+
+      original_oc_id = domain.registrant.id
+      original_oc_code = domain.registrant.code
+      domain.registrant.copy_from_id.should == nil
+
+      original_contact_codes = domain.contacts.pluck(:code)
+
+      pw = domain.auth_info
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        authInfo: { pw: { value: pw } }
+      })
+
+      login_as :registrar2 do
+        response = epp_plain_request(xml)
+        response[:msg].should == 'Command completed successfully'
+        response[:result_code].should == '1000'
+      end
+
+      # all domain contacts should be under registrar2 now
+      domain.reload
+      domain.registrant.registrar_id.should == @registrar2.id
+      # registrant should be a new record
+      domain.registrant.id.should_not == original_oc_id
+      domain.registrant.copy_from_id.should == original_oc_id
+      # must generate new code
+      domain.registrant.code.should_not == original_oc_code
+
+      domain.contacts.each do |c|
+        c.registrar_id.should == @registrar2.id
+        original_contact_codes.include?(c.code).should_not == true
+      end
     end
 
     it 'should not creates transfer without password' do
@@ -1767,6 +1802,23 @@ describe 'EPP Domain', epp: true do
       end
     end
 
+    it 'should not transfer when in prohibited status' do
+      domain.statuses = [DomainStatus::SERVER_TRANSFER_PROHIBITED]
+      domain.save
+
+      pw = domain.auth_info
+      xml = domain_transfer_xml({
+        name: { value: domain.name },
+        authInfo: { pw: { value: pw } }
+      })
+
+      login_as :registrar2 do
+        response = epp_plain_request(xml)
+        response[:msg].should == 'Object status prohibits operation'
+        response[:result_code].should == '2304'
+      end
+    end
+
     ### UPDATE ###
     it 'should update right away without update pending status' do
       existing_pw = domain.auth_info
@@ -1997,7 +2049,7 @@ describe 'EPP Domain', epp: true do
           _anonymus: [
             { contact: { value: 'FIXED:MAK21', attrs: { type: 'tech' } } },
             { status: { value: 'Payment overdue.', attrs: { s: 'clientHold', lang: 'en' } } },
-            { status: { value: '', attrs: { s: 'clientUpdateProhibited' } } }
+            { status: { value: '', attrs: { s: 'clientRenewProhibited' } } }
           ]
         ]
       }, {
@@ -2027,6 +2079,7 @@ describe 'EPP Domain', epp: true do
       Fabricate(:contact, code: 'FIXED:MAK21')
 
       response = epp_plain_request(xml)
+
       response[:results][0][:result_code].should == '1000'
 
       d = Domain.last
@@ -2039,7 +2092,7 @@ describe 'EPP Domain', epp: true do
 
       d.statuses.count.should == 2
       d.statuses.include?('clientHold').should == true
-      d.statuses.include?('clientUpdateProhibited').should == true
+      d.statuses.include?('clientRenewProhibited').should == true
 
       d.dnskeys.count.should == 2
 
@@ -2221,7 +2274,7 @@ describe 'EPP Domain', epp: true do
           _anonymus: [
             { contact: { value: 'FIXED:CITIZEN_1234', attrs: { type: 'tech' } } },
             { status: { value: 'Payment overdue.', attrs: { s: 'clientHold', lang: 'en' } } },
-            { status: { value: '', attrs: { s: 'clientUpdateProhibited' } } }
+            { status: { value: '', attrs: { s: 'clientRenewProhibited' } } }
           ]
         ]
       }, {
@@ -2288,7 +2341,7 @@ describe 'EPP Domain', epp: true do
       d.dnskeys.count.should == 1
 
       d.statuses.count.should == 1
-      d.statuses.first.should == 'clientUpdateProhibited'
+      d.statuses.first.should == 'clientRenewProhibited'
 
       rem_ns = d.nameservers.find_by(hostname: 'ns1.example.com')
       rem_ns.should be_falsey

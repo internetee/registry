@@ -53,8 +53,8 @@ describe Contact do
       @contact.errors[:phone].should == ["Phone nr is invalid"]
     end
 
-    it 'should require country code when bic' do
-      @contact.ident_type = 'bic'
+    it 'should require country code when org' do
+      @contact.ident_type = 'org'
       @contact.valid?
       @contact.errors[:ident_country_code].should == ['is missing']
     end
@@ -66,7 +66,7 @@ describe Contact do
     end
 
     it 'should validate correct country code' do
-      @contact.ident_type = 'bic'
+      @contact.ident_type = 'org'
       @contact.ident_country_code = 'EE'
       @contact.valid?
 
@@ -75,7 +75,7 @@ describe Contact do
 
     it 'should require valid country code' do
       @contact.ident = '123'
-      @contact.ident_type = 'bic'
+      @contact.ident_type = 'org'
       @contact.ident_country_code = 'INVALID'
       @contact.valid?
 
@@ -84,7 +84,7 @@ describe Contact do
     end
 
     it 'should convert to alpha2 country code' do
-      @contact.ident_type = 'bic'
+      @contact.ident_type = 'org'
       @contact.ident_country_code = 'ee'
       @contact.valid?
 
@@ -115,6 +115,10 @@ describe Contact do
       @contact.email = 'not@correct'
       @contact.valid?
       @contact.errors[:email].should == ['Email is invalid']
+    end
+
+    it 'should have ident updated because the logic itself is dedicated for legacy contacts ' do
+      @contact.ident_updated_at.should_not == nil
     end
   end
 
@@ -148,8 +152,8 @@ describe Contact do
       @contact.domains_present?.should == false
     end
 
-    it 'bic should be valid' do
-      @contact.ident_type = 'bic'
+    it 'org should be valid' do
+      @contact.ident_type = 'org'
       @contact.ident = '1234'
       @contact.valid?
       @contact.errors.full_messages.should match_array([])
@@ -232,6 +236,18 @@ describe Contact do
       contact.status_notes['serverDeleteProhibited'].should == nil
       contact.status_notes['serverUpdateProhibited'].should == 'update manually turned off'
       contact.status_notes['someotherstatus'].should == nil
+    end
+
+    it 'should have ident already updated because the logic itself is only for legacy contacts' do
+      @contact.ident_updated_at.should_not == nil
+    end
+
+    it 'should have not update ident updated at when initializing old contact' do
+      # creating a legacy contact
+      contact = Fabricate(:contact)
+      contact.update_column(:ident_updated_at, nil)
+
+      Contact.find(contact.id).ident_updated_at.should == nil
     end
 
     context 'as birthday' do

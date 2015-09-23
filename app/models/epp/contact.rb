@@ -118,6 +118,7 @@ class Epp::Contact < Contact
         [:ident, :invalid_EE_identity_format],
         [:ident, :invalid_birthday_format],
         [:ident, :invalid_country_code],
+        [:ident_type, :missing],
         [:code, :invalid],
         [:code, :too_long_contact_code]
       ],
@@ -132,6 +133,7 @@ class Epp::Contact < Contact
     }
   end
 
+  # rubocop:disable Metrics/AbcSize
   def update_attributes(frame)
     return super if frame.blank?
     at = {}.with_indifferent_access
@@ -144,8 +146,23 @@ class Epp::Contact < Contact
     legal_frame = frame.css('legalDocument').first
     at[:legal_documents_attributes] = self.class.legal_document_attrs(legal_frame)
     self.deliver_emails = true # turn on email delivery for epp
+
+    # allow to update ident code for legacy contacts
+    if frame.css('ident').first.present?
+      if ident_updated_at.present?
+        throw :epp_error, {
+          code: '2306',
+          msg: I18n.t(:ident_update_error)
+        }
+      else
+        at.merge!(self.class.ident_attrs(frame.css('ident').first)) 
+        self.ident_updated_at = Time.zone.now
+      end
+    end
+
     super(at)
   end
+  # rubocop:enable Metrics/AbcSize
 
   def statuses_attrs(frame, action)
     status_list = status_list_from(frame)

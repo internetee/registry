@@ -19,11 +19,13 @@
           = f.label :ipv6
         .col-md-7
           = f.text_field(:ipv6, class: 'form-control', ipv6: true, autocomplete: 'off')
-      .form-group
-        .col-md-4.control-label
-          = f.label :interface
-        .col-md-7
-          = f.select :interface, WhiteIp::INTERFACES.map {|x| [x.upcase, x]}, {}, class: 'form-control selectize'
+      - WhiteIp::INTERFACES.each do |x|
+        .form-group
+          .col-md-4.control-label
+            = f.label x
+          .col-md-7
+            = f.check_box :interfaces, { multiple: true }, x, nil
+      = hidden_field_tag "white_ip[interfaces][]", nil
   %hr
   .row
     .col-md-8.text-right

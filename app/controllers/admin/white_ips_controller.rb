@@ -51,6 +51,6 @@ class Admin::WhiteIpsController < AdminController
   end
 
   def white_ip_params
-    params.require(:white_ip).permit(:ipv4, :ipv6, :interface, :registrar_id)
+    params.require(:white_ip).permit(:ipv4, :ipv6, :registrar_id, { interfaces: [] })
   end
 end

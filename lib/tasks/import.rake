@@ -138,7 +138,7 @@ namespace :import do
     ident_type_map = {
       2 => Contact::PRIV,
       3 => Contact::PASSPORT,
-      4 => Contact::BIC,
+      4 => Contact::ORG,
       6 => Contact::BIRTHDAY
     }
 

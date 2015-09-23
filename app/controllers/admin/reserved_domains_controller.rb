@@ -11,6 +11,7 @@ class Admin::ReservedDomainsController < AdminController
 
     begin
       names = YAML.load(params[:reserved_domains])
+      fail if names == false
     rescue
       flash.now[:alert] = I18n.t('invalid_yaml')
       logger.warn 'Invalid YAML'

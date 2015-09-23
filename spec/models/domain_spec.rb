@@ -454,8 +454,12 @@ describe Domain do
 
       @domain.set_pending_delete
       @domain.save
-      @domain.statuses.should == ['pendingDelete']
+      @domain.statuses.should == ['pendingDelete', 'serverHold']
       @domain.pending_delete?.should == true
+      @domain.statuses = ['serverManualInzone']
+      @domain.save
+      @domain.set_pending_delete
+      @domain.statuses.sort.should == ['pendingDelete', 'serverManualInzone'].sort
       @domain.statuses = DomainStatus::OK # restore
     end
 
@@ -463,6 +467,7 @@ describe Domain do
       @domain.statuses = DomainStatus::OK # restore
       @domain.pending_delete?.should == false
       @domain.statuses << DomainStatus::CLIENT_DELETE_PROHIBITED
+      @domain.save
 
       @domain.set_pending_delete.should == nil
 

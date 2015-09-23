@@ -17,19 +17,17 @@ class WhiteIp < ActiveRecord::Base
   REGISTRAR = 'registrar'
   INTERFACES = [API, REGISTRAR]
 
-  scope :api, -> { where(interface: API) }
-  scope :registrar, -> { where(interface: REGISTRAR) }
+  scope :api, -> { where("interfaces @> ?::varchar[]", "{#{API}}") }
+  scope :registrar, -> { where("interfaces @> ?::varchar[]", "{#{REGISTRAR}}") }
+
+  def interfaces=(interfaces)
+    super(interfaces.reject(&:blank?))
+  end
 
   class << self
     def registrar_ip_white?(ip)
       return true unless Setting.registrar_ip_whitelist_enabled
-
-      at = WhiteIp.arel_table
-      WhiteIp.where(
-        at[:interface].eq(REGISTRAR).and(
-          at[:ipv4].eq(ip)
-        )
-      ).any?
+      WhiteIp.where(ipv4: ip).registrar.any?
     end
   end
 end

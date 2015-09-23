@@ -9,6 +9,7 @@ class Domain < ActiveRecord::Base
 
   belongs_to :registrar
   belongs_to :registrant
+  # TODO: should we user validates_associated :registrant here?
 
   has_many :admin_domain_contacts
   accepts_nested_attributes_for :admin_domain_contacts, allow_destroy: true
@@ -215,7 +216,9 @@ class Domain < ActiveRecord::Base
           DomainMailer.pending_delete_expired_notification(domain).deliver_now
         end
         domain.clean_pendings!
-        STDOUT << "#{Time.zone.now.utc} Domain.clean_expired_pendings: ##{domain.id}\n" unless Rails.env.test?
+        unless Rails.env.test?
+          STDOUT << "#{Time.zone.now.utc} Domain.clean_expired_pendings: ##{domain.id} (#{domain.name})\n"
+        end
       end
       STDOUT << "#{Time.zone.now.utc} - Successfully cancelled #{count} domain pendings\n" unless Rails.env.test?
       count
@@ -232,7 +235,7 @@ class Domain < ActiveRecord::Base
       domains.each do |domain|
         next unless domain.expirable?
         domain.set_graceful_expired
-        STDOUT << "#{Time.zone.now.utc} Domain.start_expire_period: ##{domain.id} #{domain.changes}\n" unless Rails.env.test?
+        STDOUT << "#{Time.zone.now.utc} Domain.start_expire_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
         domain.save(validate: false)
       end
 
@@ -246,7 +249,7 @@ class Domain < ActiveRecord::Base
       d.each do |domain|
         next unless domain.server_holdable?
         domain.statuses << DomainStatus::SERVER_HOLD
-        STDOUT << "#{Time.zone.now.utc} Domain.start_redemption_grace_period: ##{domain.id} #{domain.changes}\n" unless Rails.env.test?
+        STDOUT << "#{Time.zone.now.utc} Domain.start_redemption_grace_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
         domain.save
       end
 
@@ -260,7 +263,7 @@ class Domain < ActiveRecord::Base
       d.each do |domain|
         next unless domain.delete_candidateable?
         domain.statuses << DomainStatus::DELETE_CANDIDATE
-        STDOUT << "#{Time.zone.now.utc} Domain.start_delete_period: ##{domain.id} #{domain.changes}\n" unless Rails.env.test?
+        STDOUT << "#{Time.zone.now.utc} Domain.start_delete_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
         domain.save
       end
 
@@ -269,24 +272,26 @@ class Domain < ActiveRecord::Base
     end
 
     # rubocop:disable Rails/FindEach
+    # rubocop:disable Metrics/AbcSize
     def destroy_delete_candidates
       STDOUT << "#{Time.zone.now.utc} - Destroying domains\n" unless Rails.env.test?
 
       c = 0
       Domain.where("statuses @> '{deleteCandidate}'::varchar[]").each do |x|
         x.destroy
-        STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by deleteCandidate ##{x.id}\n" unless Rails.env.test?
+        STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by deleteCandidate ##{x.id} (#{x.name})\n" unless Rails.env.test?
         c += 1
       end
 
       Domain.where('force_delete_at <= ?', Time.zone.now).each do |x|
         x.destroy
-        STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by force delete time ##{x.id}\n" unless Rails.env.test?
+        STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by force delete time ##{x.id} (#{x.name})\n" unless Rails.env.test?
         c += 1
       end
 
       STDOUT << "#{Time.zone.now.utc} - Successfully destroyed #{c} domains\n" unless Rails.env.test?
     end
+    # rubocop: enable Metrics/AbcSize
     # rubocop:enable Rails/FindEach
     # rubocop: enable Metrics/LineLength
   end
@@ -330,7 +335,6 @@ class Domain < ActiveRecord::Base
   end
 
   def server_holdable?
-    return false if outzone_at > Time.zone.now
     return false if statuses.include?(DomainStatus::SERVER_HOLD)
     return false if statuses.include?(DomainStatus::SERVER_MANUAL_INZONE)
     true
@@ -587,6 +591,7 @@ class Domain < ActiveRecord::Base
       registrar.messages.create!(
         body: I18n.t('force_delete_set_on_domain', domain: name)
       )
+      DomainMailer.force_delete(self).deliver_now
       return true
     end
     false
@@ -613,7 +618,6 @@ class Domain < ActiveRecord::Base
     statuses << DomainStatus::EXPIRED
   end
 
-  # TODO: This looks odd - outzone_at and delete_at will be the same value?
   def set_expired
     # TODO: currently valid_to attribute update logic is open
     # self.valid_to = valid_from + self.class.convert_period_to_time(period, period_unit)
@@ -642,7 +646,7 @@ class Domain < ActiveRecord::Base
   end
 
   def pending_update_prohibited?
-    (statuses & [
+    (statuses_was & [
       DomainStatus::CLIENT_UPDATE_PROHIBITED,
       DomainStatus::SERVER_UPDATE_PROHIBITED,
       DomainStatus::PENDING_CREATE,
@@ -666,15 +670,22 @@ class Domain < ActiveRecord::Base
   end
 
   def pending_delete_prohibited?
-    (statuses & [
+    (statuses_was & [
       DomainStatus::CLIENT_DELETE_PROHIBITED,
       DomainStatus::SERVER_DELETE_PROHIBITED,
+      DomainStatus::CLIENT_UPDATE_PROHIBITED,
+      DomainStatus::SERVER_UPDATE_PROHIBITED,
       DomainStatus::PENDING_CREATE,
-      DomainStatus::PENDING_UPDATE,
-      DomainStatus::PENDING_DELETE,
       DomainStatus::PENDING_RENEW,
-      DomainStatus::PENDING_TRANSFER
+      DomainStatus::PENDING_TRANSFER,
+      DomainStatus::PENDING_UPDATE,
+      DomainStatus::PENDING_DELETE
     ]).present?
+  end
+
+  # let's use positive method names
+  def pending_deletable?
+    !pending_delete_prohibited?
   end
 
   def set_pending_delete
@@ -685,13 +696,25 @@ class Domain < ActiveRecord::Base
     statuses << DomainStatus::PENDING_DELETE
   end
 
+  def set_server_hold
+    statuses << DomainStatus::SERVER_HOLD
+  end
+
+  # rubocop: disable Metrics/CyclomaticComplexity
+  # rubocop: disable Metrics/PerceivedComplexity
   def manage_automatic_statuses
     if statuses.empty? && valid?
       statuses << DomainStatus::OK
     elsif statuses.length > 1 || !valid?
       statuses.delete(DomainStatus::OK)
     end
+
+    p_d = statuses.include?(DomainStatus::PENDING_DELETE)
+    s_h = (statuses & [DomainStatus::SERVER_MANUAL_INZONE, DomainStatus::SERVER_HOLD]).empty?
+    statuses << DomainStatus::SERVER_HOLD if p_d && s_h
   end
+  # rubocop: enable Metrics/CyclomaticComplexity
+  # rubocop: enable Metrics/PerceivedComplexity
 
   def children_log
     log = HashWithIndifferentAccess.new

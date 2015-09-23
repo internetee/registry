@@ -10,9 +10,9 @@ module Depp
 
     DISABLED = 'Disabled'
     DISCLOSURE_TYPES = [DISABLED, '1', '0']
-    TYPES = %w( bic priv birthday )
+    TYPES = %w( org priv birthday )
     SELECTION_TYPES = [
-      ['Business code', 'bic'],
+      ['Business code', 'org'],
       ['Personal identification code', 'priv'],
       ['Birthday', 'birthday']
     ]
@@ -163,7 +163,7 @@ module Depp
       }
 
       hash[:id] = nil if code.blank?
-      create_xml = Depp::Contact.epp_xml.create(hash, extension_xml)
+      create_xml = Depp::Contact.epp_xml.create(hash, extension_xml(:create))
 
       data = Depp::Contact.user.request(create_xml)
       self.id = data.css('id').text
@@ -210,7 +210,7 @@ module Depp
             }
           }
         },
-        extension_xml
+        extension_xml(:update)
       )
       data = Depp::Contact.user.request(update_xml)
       handle_errors(data)
@@ -224,20 +224,36 @@ module Depp
           id: { value: id },
           authInfo: { pw: { value: password } }
         },
-        extension_xml
+        extension_xml(:delete)
       )
       data = Depp::Contact.user.request(delete_xml)
       handle_errors(data)
     end
 
-    def extension_xml
+    # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Style/NegatedIf
+    # rubocop:disable Style/RedundantSelf
+    def extension_xml(action)
       xml = { _anonymus: [] }
-      ident = ident_xml[:_anonymus].try(:first) unless persisted?
+
+      case action
+      when :create
+        ident = ident_xml[:_anonymus].try(:first) 
+      when :update
+        # detect if any ident has changed, nb! ident and self.ident is not always same
+        if !(ident == self.ident && ident == self.ident_type && ident_country_code == self.ident_country_code)
+          ident = ident_xml[:_anonymus].try(:first) 
+        end
+      end
+
       legal = legal_document_xml[:_anonymus].try(:first)
       xml[:_anonymus] << ident if ident.present?
       xml[:_anonymus] << legal if legal.present?
       xml
     end
+    # rubocop:enable Metrics/CyclomaticComplexity
+    # rubocop:enable Style/NegatedIf
+    # rubocop:enable Style/RedundantSelf
 
     def ident_xml
       {
@@ -267,8 +283,8 @@ module Depp
       Country.new(country_code)
     end
 
-    def bic?
-      ident_type == 'bic'
+    def org?
+      ident_type == 'org'
     end
 
     def priv?

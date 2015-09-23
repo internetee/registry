@@ -92,10 +92,10 @@
             %tr
               %th{class: 'col-xs-4'}= t(:ipv4)
               %th{class: 'col-xs-6'}= t(:ipv6)
-              %th{class: 'col-xs-2'}= t(:interface)
+              %th{class: 'col-xs-2'}= t(:interfaces)
           %tbody
-            - @registrar.white_ips.order(:interface).each do |x|
+            - @registrar.white_ips.each do |x|
               %tr
                 %td= link_to(x.ipv4, [:admin, @registrar, x])
                 %td= link_to(x.ipv6, [:admin, @registrar, x])
-                %td= x.interface.upcase
+                %td= x.interfaces.join(', ').upcase

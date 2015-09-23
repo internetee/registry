@@ -4,7 +4,8 @@ class Ability
   # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/LineLength
   # rubocop: disable Metrics/AbcSize
-  def initialize(user)
+  def initialize(user, ip = nil)
+    @ip = ip
     alias_action :show, to: :view
     alias_action :show, :create, :update, :destroy, to: :crud
 
@@ -29,20 +30,28 @@ class Ability
   #
 
   def super # Registrar/api_user dynamic role
-    static_registrar
     epp
     billing
   end
 
   def epp # Registrar/api_user dynamic role
-    static_registrar
+    can :view, :registrar_dashboard
+
+    if @user.registrar.api_ip_white?(@ip)
+      can :manage, :poll
+      can :manage, Depp::Contact
+      # can :manage, Depp::Keyrelay # TODO: Keyrelay is disabled for now
+      # can :confirm, :keyrelay # TODO: Keyrelay is disabled for now
+      can :manage, :xml_console
+      can :manage,   Depp::Domain
+    end
 
     # REPP
     can(:manage, :repp)
 
     # EPP
-    can(:create, :epp_login) # billing can establis epp connection in order to login
-    can(:create, :epp_request)
+    can(:create, :epp_login) # billing can establish epp connection in order to login
+    # can(:create, :epp_request)
 
     # Epp::Domain
     can(:info,     Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || pw.blank? ? true : d.auth_info == pw }
@@ -70,7 +79,6 @@ class Ability
     can(:manage, Invoice) { |i| i.buyer_id == @user.registrar_id }
     can :manage, :deposit
     can :read, AccountActivity
-    can(:create, :epp_login) # billing can establis epp connection in order to login
   end
 
   def customer_service # Admin/admin_user dynamic role
@@ -99,29 +107,13 @@ class Ability
     can :manage, MailTemplate
     can :manage, Invoice
     can :manage, WhiteIp
+    can :manage, AccountActivity
     can :read, ApiLog::EppLog
     can :read, ApiLog::ReppLog
     can :update, :pending
     can :destroy, :pending
     can :create, :zonefile
     can :access, :settings_menu
-  end
-
-  #
-  # Static roles, linked from dynamic roles
-  #
-  def static_registrar
-    can :manage, Nameserver
-    can :view, :registrar_dashboard
-    can :delete, :registrar_poll
-    can :manage, :registrar_xml_console
-    can :manage, Depp::Contact
-    can :manage, Depp::Domain
-    can :renew,  Depp::Domain
-    can :transfer, Depp::Domain
-    can :manage, Depp::Keyrelay
-    can :confirm, :keyrelay
-    can :confirm, :transfer
   end
 
   def static_registrant
