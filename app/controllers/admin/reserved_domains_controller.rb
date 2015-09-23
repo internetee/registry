@@ -3,7 +3,7 @@ class Admin::ReservedDomainsController < AdminController
 
   def index
     rd = ReservedDomain.first_or_initialize
-    @reserved_domains = rd.names.to_yaml
+    @reserved_domains = rd.names.to_yaml.gsub("---\n", '')
   end
 
   def create
