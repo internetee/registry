@@ -34,6 +34,7 @@ class Contact < ActiveRecord::Base
   after_initialize do
     self.statuses = [] if statuses.nil?
     self.status_notes = {} if status_notes.nil?
+    self.ident_updated_at = Time.zone.now if new_record? && ident_updated_at.blank?
   end
 
   before_validation :set_ident_country_code

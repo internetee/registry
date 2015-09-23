@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150915094707) do
+ActiveRecord::Schema.define(version: 20150921111842) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -203,6 +203,7 @@ ActiveRecord::Schema.define(version: 20150915094707) do
     t.hstore   "status_notes"
     t.integer  "legacy_history_id"
     t.integer  "copy_from_id"
+    t.datetime "ident_updated_at"
   end
 
   add_index "contacts", ["code"], name: "index_contacts_on_code", using: :btree
@@ -585,15 +586,16 @@ ActiveRecord::Schema.define(version: 20150915094707) do
   add_index "log_contact_statuses", ["whodunnit"], name: "index_log_contact_statuses_on_whodunnit", using: :btree
 
   create_table "log_contacts", force: :cascade do |t|
-    t.string   "item_type",      null: false
-    t.integer  "item_id",        null: false
-    t.string   "event",          null: false
+    t.string   "item_type",        null: false
+    t.integer  "item_id",          null: false
+    t.string   "event",            null: false
     t.string   "whodunnit"
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.datetime "ident_updated_at"
   end
 
   add_index "log_contacts", ["item_type", "item_id"], name: "index_log_contacts_on_item_type_and_item_id", using: :btree

@@ -148,7 +148,6 @@ en:
             value:
               taken: 'Status already exists on this domain'
 
-
         user:
           attributes:
             username:
@@ -515,7 +514,7 @@ en:
   crt_revoked: 'CRT (revoked)'
   contact_org_error: 'Parameter value policy error. Org must be blank'
   contact_fax_error: 'Parameter value policy error. Fax must be blank'
-  ident_update_error: 'Parameter value policy error. Update of ident data not allowed'
+  ident_update_error: 'Parameter value policy error. Update of ident data not allowed [ident]'
   invoices: 'Invoices'
   no_such_user: 'No such user'
   log_in: 'Log in'

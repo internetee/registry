@@ -1,3 +1,11 @@
+- ident_complete = f.object.ident_country_code.present? && f.object.ident_type.present? && f.object.ident.present?
+- if @contact.persisted?
+  - country_selected = f.object.ident_country_code || (params[:depp_contact].try(:[], :ident_country_code))
+  - type_selected = f.object.ident_type || (params[:depp_contact].try(:[], :ident_type))
+- else
+  - country_selected = (params[:depp_contact].try(:[], :ident_country_code) || 'EE')
+  - type_selected = (params[:depp_contact].try(:[], :ident_type) || 'org')
+
 .panel.panel-default
   .panel-heading.clearfix
     .pull-left= t(:ident)
@@ -6,12 +14,11 @@
       .col-md-3.control-label
         = f.label :ident_country_code, t(:country) + '*'
       .col-md-7
-        - if @contact.persisted? && f.object.ident_country_code.present?
+        - if ident_complete && @contact.persisted? && f.object.ident_country_code.present?
           .disabled-value
             = Country.new(f.object.ident_country_code).try(:to_s)
             = " [#{f.object.ident_country_code}]"
         - else
-          - country_selected = @contact.persisted? ? '' : (params[:depp_contact].try(:[], :ident_country_code) || 'EE')
           = f.select(:ident_country_code, SortedCountry.all_options(country_selected), {},
             class: 'js-ident-country-code', required: true)
 
@@ -19,25 +26,23 @@
       .col-md-3.control-label
         = f.label :ident_type, t(:type) + '*'
       .col-md-7
-        - if @contact.persisted? && f.object.ident_type.present?
+        - if ident_complete && @contact.persisted? && f.object.ident_type.present?
           .disabled-value
             = Depp::Contact.type_string(f.object.ident_type)
             = " [#{f.object.ident_type}]"
         - else
-          - type_selected = @contact.persisted? ? '' : (params[:depp_contact].try(:[], :ident_type) || 'bic')
-          = f.select(:ident_type, Depp::Contact::SELECTION_TYPES,
-            { selected: type_selected },
+          = f.select(:ident_type, Depp::Contact::SELECTION_TYPES, { selected: type_selected },
             class: 'js-ident-type', required: true)
 
     .form-group
       .col-md-3.control-label
         = f.label :ident, t(:ident) + '*'
       .col-md-7
-        - if @contact.persisted? && f.object.ident.present?
+        - if ident_complete && @contact.persisted? && f.object.ident.present?
           .disabled-value
             = f.object.ident
         - else
-          = f.text_field :ident, class: 'form-control', required: true, disabled: @contact.persisted?
+          = f.text_field :ident, class: 'form-control', required: true
           - tip_visibility = f.object.ident_type == 'birthday' ? '' : 'display: none'
           .js-ident-tip{ style: tip_visibility }
             = t(:birthday_format)

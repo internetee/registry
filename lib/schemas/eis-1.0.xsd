@@ -90,7 +90,7 @@
 
   <simpleType name="identEnumType">
     <restriction base="token">
-      <enumeration value="bic"/>
+      <enumeration value="org"/>
       <enumeration value="priv"/>
       <enumeration value="birthday"/>
     </restriction>

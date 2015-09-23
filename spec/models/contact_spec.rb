@@ -116,6 +116,10 @@ describe Contact do
       @contact.valid?
       @contact.errors[:email].should == ['Email is invalid']
     end
+
+    it 'should have ident updated because the logic itself is dedicated for legacy contacts ' do
+      @contact.ident_updated_at.should_not == nil
+    end
   end
 
   context 'with valid attributes' do
@@ -232,6 +236,18 @@ describe Contact do
       contact.status_notes['serverDeleteProhibited'].should == nil
       contact.status_notes['serverUpdateProhibited'].should == 'update manually turned off'
       contact.status_notes['someotherstatus'].should == nil
+    end
+
+    it 'should have ident already updated because the logic itself is only for legacy contacts' do
+      @contact.ident_updated_at.should_not == nil
+    end
+
+    it 'should have not update ident updated at when initializing old contact' do
+      # creating a legacy contact
+      contact = Fabricate(:contact)
+      contact.update_column(:ident_updated_at, nil)
+
+      Contact.find(contact.id).ident_updated_at.should == nil
     end
 
     context 'as birthday' do
