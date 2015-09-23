@@ -38,7 +38,7 @@ task statuses: [:environment] do
       'serverTechChangeProhibited',
       'forceDelete',
       'deleteCandidate',
-      'expired',
+      'expired'
     ],
     'serverDeleteProhibited': [
       'clientDeleteProhibited',
@@ -57,7 +57,7 @@ task statuses: [:environment] do
       'serverTechChangeProhibited',
       'forceDelete',
       'deleteCandidate',
-      'expired',
+      'expired'
     ],
     'clientHold': [
       'clientDeleteProhibited',
@@ -75,7 +75,7 @@ task statuses: [:environment] do
       'serverTechChangeProhibited',
       'forceDelete',
       'deleteCandidate',
-      'expired',
+      'expired'
     ],
     'serverHold': [
       'clientDeleteProhibited',
@@ -93,7 +93,7 @@ task statuses: [:environment] do
       'serverTechChangeProhibited',
       'forceDelete',
       'deleteCandidate',
-      'expired',
+      'expired'
     ],
     'clientRenewProhibited': [
       'clientDeleteProhibited',
@@ -117,7 +117,7 @@ task statuses: [:environment] do
       'serverTechChangeProhibited',
       'forceDelete',
       'deleteCandidate',
-      'expired',
+      'expired'
     ],
     'serverRenewProhibited': [
       'clientDeleteProhibited',
@@ -141,7 +141,7 @@ task statuses: [:environment] do
       'serverTechChangeProhibited',
       'forceDelete',
       'deleteCandidate',
-      'expired',
+      'expired'
     ],
     'clientTransferProhibited': [
       'clientDeleteProhibited',
@@ -165,7 +165,7 @@ task statuses: [:environment] do
       'serverTechChangeProhibited',
       'forceDelete',
       'deleteCandidate',
-      'expired',
+      'expired'
     ],
     'serverTransferProhibited': [
       'clientDeleteProhibited',
@@ -189,7 +189,7 @@ task statuses: [:environment] do
       'serverTechChangeProhibited',
       'forceDelete',
       'deleteCandidate',
-      'expired',
+      'expired'
     ],
     'clientUpdateProhibited': [
       'clientDeleteProhibited',
@@ -213,7 +213,7 @@ task statuses: [:environment] do
       'serverTechChangeProhibited',
       'forceDelete',
       'deleteCandidate',
-      'expired',
+      'expired'
     ],
     'serverUpdateProhibited': [
       'clientDeleteProhibited',
@@ -237,7 +237,7 @@ task statuses: [:environment] do
       'serverTechChangeProhibited',
       'forceDelete',
       'deleteCandidate',
-      'expired',
+      'expired'
     ],
     'pendingCreate': [
       'clientDeleteProhibited',
@@ -257,7 +257,7 @@ task statuses: [:environment] do
       'serverTechChangeProhibited',
       'forceDelete',
       'deleteCandidate',
-      'expired',
+      'expired'
     ],
     'pendingDelete': [
       'clientHold',
@@ -276,7 +276,7 @@ task statuses: [:environment] do
       'serverTechChangeProhibited',
       'forceDelete',
       'deleteCandidate',
-      'expired',
+      'expired'
     ],
     'pendingRenew': [
       'clientDeleteProhibited',
@@ -294,7 +294,7 @@ task statuses: [:environment] do
       'serverTechChangeProhibited',
       'forceDelete',
       'deleteCandidate',
-      'expired',
+      'expired'
 
     ],
     'pendingTransfer': [
@@ -313,7 +313,7 @@ task statuses: [:environment] do
       'serverTechChangeProhibited',
       'forceDelete',
       'deleteCandidate',
-      'expired',
+      'expired'
     ],
     'pendingUpdate': [
       'clientDeleteProhibited',
@@ -331,7 +331,7 @@ task statuses: [:environment] do
       'serverTechChangeProhibited',
       'forceDelete',
       'deleteCandidate',
-      'expired',
+      'expired'
     ],
     'serverManualInzone': [
       'clientDeleteProhibited',
@@ -355,7 +355,7 @@ task statuses: [:environment] do
       'serverTechChangeProhibited',
       'forceDelete',
       'deleteCandidate',
-      'expired',
+      'expired'
     ],
     'serverRegistrantChangeProhibited': [
       'clientDeleteProhibited',
@@ -380,7 +380,7 @@ task statuses: [:environment] do
       'serverTechChangeProhibited',
       'forceDelete',
       'deleteCandidate',
-      'expired',
+      'expired'
     ],
     'serverAdminChangeProhibited': [
       'clientDeleteProhibited',
@@ -405,7 +405,7 @@ task statuses: [:environment] do
       'serverTechChangeProhibited',
       'forceDelete',
       'deleteCandidate',
-      'expired',
+      'expired'
     ],
     'serverTechChangeProhibited': [
       'clientDeleteProhibited',
@@ -430,7 +430,7 @@ task statuses: [:environment] do
       'serverAdminChangeProhibited',
       'forceDelete',
       'deleteCandidate',
-      'expired',
+      'expired'
     ],
     'forceDelete': [
       'clientHold',
@@ -441,7 +441,7 @@ task statuses: [:environment] do
       'serverAdminChangeProhibited',
       'serverTechChangeProhibited',
       'deleteCandidate',
-      'expired',
+      'expired'
     ],
     'deleteCandidate': [
       'clientDeleteProhibited',
@@ -467,7 +467,7 @@ task statuses: [:environment] do
       'serverTechChangeProhibited',
       'forceDelete',
       'deleteCandidate',
-      'expired',
+      'expired'
     ],
     'expired': [
       'clientDeleteProhibited',
@@ -492,13 +492,13 @@ task statuses: [:environment] do
       'serverAdminChangeProhibited',
       'serverTechChangeProhibited',
       'forceDelete',
-      'deleteCandidate',
+      'deleteCandidate'
     ]
   }
 
   puts "\nDomain status can be with other statuses map\n"
   puts "---------------------------------------------"
-  statuses.each do |s,v|
+  statuses.each do |s, _v|
     puts "\n#{s} =>"
     statuses[s].map { |u| puts "  #{u}" }
     puts
@@ -520,7 +520,7 @@ task statuses: [:environment] do
       'serverUpdateProhibited',
       'pendingCreate',
       'pendingTransfer',
-      'pendingUpdate',
+      'pendingUpdate'
     ],
     'serverDeleteProhibited': [
       'linked',
@@ -531,7 +531,7 @@ task statuses: [:environment] do
       'serverUpdateProhibited',
       'pendingCreate',
       'pendingTransfer',
-      'pendingUpdate',
+      'pendingUpdate'
     ],
     'clientTransferProhibited': [
       'linked',
@@ -542,7 +542,7 @@ task statuses: [:environment] do
       'serverUpdateProhibited',
       'pendingCreate',
       'pendingDelete',
-      'pendingUpdate',
+      'pendingUpdate'
     ],
     'serverTransferProhibited': [
       'linked',
@@ -553,7 +553,7 @@ task statuses: [:environment] do
       'serverUpdateProhibited',
       'pendingCreate',
       'pendingDelete',
-      'pendingUpdate',
+      'pendingUpdate'
     ],
     'clientUpdateProhibited': [
       'linked',
@@ -564,7 +564,7 @@ task statuses: [:environment] do
       'serverUpdateProhibited',
       'pendingCreate',
       'pendingDelete',
-      'pendingTransfer',
+      'pendingTransfer'
     ],
     'serverUpdateProhibited': [
       'linked',
@@ -575,7 +575,7 @@ task statuses: [:environment] do
       'clientUpdateProhibited',
       'pendingCreate',
       'pendingDelete',
-      'pendingTransfer',
+      'pendingTransfer'
     ],
     'pendingCreate': [
       'linked',
@@ -584,7 +584,7 @@ task statuses: [:environment] do
       'clientTransferProhibited',
       'serverTransferProhibited',
       'clientUpdateProhibited',
-      'serverUpdateProhibited',
+      'serverUpdateProhibited'
     ],
     'pendingDelete': [
       'linked',
@@ -593,7 +593,7 @@ task statuses: [:environment] do
       'clientTransferProhibited',
       'serverTransferProhibited',
       'clientUpdateProhibited',
-      'serverUpdateProhibited',
+      'serverUpdateProhibited'
     ],
     'pendingTransfer': [
       'linked',
@@ -602,7 +602,7 @@ task statuses: [:environment] do
       'clientTransferProhibited',
       'serverTransferProhibited',
       'clientUpdateProhibited',
-      'serverUpdateProhibited',
+      'serverUpdateProhibited'
     ],
     'pendingUpdate': [
       'linked',
@@ -611,13 +611,13 @@ task statuses: [:environment] do
       'clientTransferProhibited',
       'serverTransferProhibited',
       'clientUpdateProhibited',
-      'serverUpdateProhibited',
-    ],
+      'serverUpdateProhibited'
+    ]
   }
 
   puts "\n\nContact status can be with other statuses map\n"
   puts "---------------------------------------------"
-  contact_statuses.each do |s,v|
+  contact_statuses.each do |s, _v|
     puts "\n#{s} =>"
     contact_statuses[s].map { |u| puts "  #{u}" }
     puts

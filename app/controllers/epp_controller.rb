@@ -15,8 +15,8 @@ class EppController < ApplicationController
         code: 2001,
         msg: error
       }
+      response.headers['X-EPP-Returncode'] = '2200'
     end
-
     handle_errors and return if epp_errors.any?
   end
 
