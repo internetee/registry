@@ -3,13 +3,15 @@ class Admin::ReservedDomainsController < AdminController
 
   def index
     rd = ReservedDomain.first_or_initialize
-    @reserved_domains = rd.names.to_yaml.gsub("---\n", '')
+    rd.names = nil if rd.names.blank?
+    @reserved_domains = rd.names.to_yaml.gsub(/---.?\n/, '').gsub(/\.\.\..?\n/, '')
   end
 
   def create
     @reserved_domains = params[:reserved_domains]
 
     begin
+      params[:reserved_domains] = "---\n" if params[:reserved_domains].blank?
       names = YAML.load(params[:reserved_domains])
       fail if names == false
     rescue

@@ -3,6 +3,7 @@ class ReservedDomain < ActiveRecord::Base
   before_save :fill_empty_passwords
 
   def fill_empty_passwords
+    return unless names
     names.each { |k, v| names[k] = SecureRandom.hex if v.blank? }
   end
 
