@@ -1,3 +1,7 @@
+- content_for :actions do
+  = link_to('#', class: 'btn btn-default', "data-container": "body", "data-title": t('list_format_is_in_yaml'), "data-content": "domain.ee: authinfopw<br>seconddomain.ee:<br>thirddomain.ee: authinfo3<br><br>#{t('if_auth_info_is_left_empty_it_will_be_auto_generated')}", "data-placement": "left", "data-toggle": "popover", "data-html" => "true") do
+    %span.glyphicon.glyphicon-info-sign{"aria-hidden" => "true"}
+
 = render 'shared/title', name: t(:reserved_domains)
 
 = form_tag([:admin, :reserved_domains]) do |f|
