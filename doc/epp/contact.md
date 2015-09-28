@@ -32,7 +32,7 @@ Contact Mapping protocol short version:
       <eis:extdata>            1        Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
         <eis:ident>            1        Contact identificator 
                                           Attribute: "type"
-                                            "bic"          # Business registry code
+                                            "org"          # Business registry code
                                             "priv"         # National idendtification number
                                             "birthday"     # Birthday date in format in DD-MM-YYYY
                                           Attribute: "cc"
@@ -68,7 +68,7 @@ Contact Mapping protocol short version:
       <eis:extdata>             0-1      Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
         <eis:ident>             0-1      Contact identificator 
                                           Attribute: "type"
-                                            "bic"          # Business registry code
+                                            "org"          # Business registry code
                                             "priv"         # National idendtification number
                                             "birthday"     # Birthday date in format in DD-MM-YYYY
                                           Attribute: "cc"
