@@ -150,6 +150,10 @@ class EppController < ApplicationController
     end
 
     @errors.uniq!
+    
+    logger.error "\nFOLLOWING ERRORS OCCURRED ON EPP QUERY:"
+    logger.error @errors.inspect
+    logger.error "\n"
 
     # Requested by client, ticket #2688
     # Known issues: error request is exactly 1 second slower and server can handle less load
