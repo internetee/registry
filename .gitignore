@@ -20,6 +20,9 @@ todo
 ## Environment normalisation:
 /.bundle
 /vendor/bundle
+.idea
+# editor tmp files
+*.*~
 
 # these should all be checked in to normalise the environment:
 # Gemfile.lock, .ruby-version, .ruby-gemset
