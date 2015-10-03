@@ -63,7 +63,6 @@ class Epp::DomainsController < EppController
 
   def delete
     authorize! :delete, @domain, @password
-
     # all includes for bullet
     @domain = Epp::Domain.where(id: @domain.id).includes(nameservers: :versions).first
 

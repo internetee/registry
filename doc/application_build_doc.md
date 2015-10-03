@@ -117,7 +117,7 @@ General rake and mina tips:
 
 ### CRON
 
-Crontab can be setup after deploy. Jobs can be viewed [here](/config/schedule.rb).
+Crontab can be setup after deploy. Jobs can be viewed [here](/config/schedule.rb). Some jobs are dependent on `cron_group` variable set in [deploy-example.rb](/config/deploy-example.rb) file.
 
     mina pr cron:setup # to update the crontab.
     mina pr cron:clear # to clear crontab.

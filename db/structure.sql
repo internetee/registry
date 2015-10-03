@@ -596,7 +596,10 @@ CREATE TABLE contacts (
     state character varying,
     legacy_id integer,
     statuses character varying[],
-    status_notes hstore
+    status_notes hstore,
+    legacy_history_id integer,
+    copy_from_id integer,
+    ident_updated_at timestamp without time zone
 );
 
 
@@ -1500,7 +1503,8 @@ CREATE TABLE log_contacts (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    ident_updated_at timestamp without time zone
 );
 
 
@@ -2241,8 +2245,8 @@ CREATE TABLE mail_templates (
     cc character varying,
     body text NOT NULL,
     text_body text NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
 );
 
 
@@ -2715,7 +2719,7 @@ CREATE TABLE white_ips (
     registrar_id integer,
     ipv4 character varying,
     ipv6 character varying,
-    interface character varying,
+    interfaces character varying[],
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     creator_str character varying,
@@ -4926,5 +4930,19 @@ INSERT INTO schema_migrations (version) VALUES ('20150803080914');
 
 INSERT INTO schema_migrations (version) VALUES ('20150810114746');
 
+INSERT INTO schema_migrations (version) VALUES ('20150810114747');
+
 INSERT INTO schema_migrations (version) VALUES ('20150825125118');
+
+INSERT INTO schema_migrations (version) VALUES ('20150827151906');
+
+INSERT INTO schema_migrations (version) VALUES ('20150903105659');
+
+INSERT INTO schema_migrations (version) VALUES ('20150910113839');
+
+INSERT INTO schema_migrations (version) VALUES ('20150915094707');
+
+INSERT INTO schema_migrations (version) VALUES ('20150921110152');
+
+INSERT INTO schema_migrations (version) VALUES ('20150921111842');
 

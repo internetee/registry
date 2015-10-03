@@ -9,11 +9,24 @@ class Epp::Domain < Domain
     false
   end
 
-  before_validation :validate_contacts
+  after_validation :validate_contacts
   def validate_contacts
-    return if contacts.map(&:valid?).all?
-    add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
-    false
+    ok = true
+    active_admins = admin_domain_contacts.select { |x| !x.marked_for_destruction? }
+    active_techs = tech_domain_contacts.select { |x| !x.marked_for_destruction? }
+
+    # bullet workaround
+    ac = active_admins.map { |x| Contact.find(x.contact_id) }
+    tc = active_techs.map { |x| Contact.find(x.contact_id) }
+
+    # validate registrant here as well
+    ([registrant] + ac + tc).each do |x|
+      unless x.valid?
+        add_epp_error('2304', nil, nil, I18n.t(:contact_is_not_valid, value: x.code))
+        ok = false
+      end
+    end
+    ok
   end
 
   before_save :link_contacts
@@ -124,7 +137,7 @@ class Epp::Domain < Domain
     return if registrant.blank?
     regt = Registrant.find(registrant.id) # temp for bullet
     tech_contacts << regt if tech_domain_contacts.blank?
-    admin_contacts << regt if admin_domain_contacts.blank? && regt.priv?
+    admin_contacts << regt if admin_domain_contacts.blank? && !regt.org?
   end
 
   # rubocop: disable Metrics/PerceivedComplexity
@@ -270,7 +283,7 @@ class Epp::Domain < Domain
       end
 
       if action != 'rem'
-        if x['type'] == 'admin' && c.bic?
+        if x['type'] == 'admin' && c.org?
           add_epp_error('2306', 'contact', x.text, [:domain_contacts, :admin_contact_can_be_only_private_person])
           next
         end
@@ -485,8 +498,20 @@ class Epp::Domain < Domain
       manage_automatic_statuses
       true # aka 1001 pending_delete
     else
-      set_expired!
+      set_pending_delete!
     end
+  end
+
+  def set_pending_delete!
+    throw :epp_error, {
+      code: '2304',
+      msg: I18n.t(:object_status_prohibits_operation)
+    } unless pending_deletable?
+
+    self.delete_at = Time.zone.now + Setting.redemption_grace_period.days
+    set_pending_delete
+    set_server_hold if server_holdable?
+    save(validate: false)
   end
 
   ### RENEW ###
@@ -512,7 +537,6 @@ class Epp::Domain < Domain
 
   ### TRANSFER ###
 
-  # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/CyclomaticComplexity
   def transfer(frame, action, current_user)
     case action
@@ -540,29 +564,15 @@ class Epp::Domain < Domain
     oc = c.deep_clone
     oc.code = nil
     oc.registrar_id = registrar_id
+    oc.copy_from_id = c.id
     oc.prefix_code
-    oc.save!(validate: false)
-    oc
-  end
-
-  def transfer_contact(contact_id, registrar_id)
-    oc = Contact.find(contact_id) # n+1 workaround
-    oc.registrar_id = registrar_id
-    oc.generate_new_code!
     oc.save!(validate: false)
     oc
   end
 
   def transfer_registrant(registrar_id)
     return if registrant.registrar_id == registrar_id
-
-    is_other_domains_contact = DomainContact.where('contact_id = ? AND domain_id != ?', registrant_id, id).count > 0
-    if registrant.registrant_domains.count > 1 || is_other_domains_contact
-      oc = copy_and_transfer_contact(registrant_id, registrar_id)
-      self.registrant_id = oc.id
-    else
-      transfer_contact(registrant_id, registrar_id)
-    end
+    self.registrant_id = copy_and_transfer_contact(registrant_id, registrar_id).id
   end
 
   def transfer_domain_contacts(registrar_id)
@@ -570,22 +580,14 @@ class Epp::Domain < Domain
     contacts.each do |c|
       next if copied_ids.include?(c.id) || c.registrar_id == registrar_id
 
-      is_other_domains_contact = DomainContact.where('contact_id = ? AND domain_id != ?', c.id, id).count > 0
-      # if contact used to be owner contact but was copied, then contact must be transferred
-      # (registrant_id_was != c.id)
-      if c.domains.count > 1 || is_other_domains_contact
-        # copy contact
-        if registrant_id_was == c.id # owner contact was copied previously, do not copy it again
-          oc = OpenStruct.new(id: registrant_id)
-        else
-          oc = copy_and_transfer_contact(c.id, registrar_id)
-        end
-
-        domain_contacts.where(contact_id: c.id).update_all({ contact_id: oc.id }) # n+1 workaround
-        copied_ids << c.id
+      if registrant_id_was == c.id # registrant was copied previously, do not copy it again
+        oc = OpenStruct.new(id: registrant_id)
       else
-        transfer_contact(c.id, registrar_id)
+        oc = copy_and_transfer_contact(c.id, registrar_id)
       end
+
+      domain_contacts.where(contact_id: c.id).update_all({ contact_id: oc.id }) # n+1 workaround
+      copied_ids << c.id
     end
   end
 
@@ -766,7 +768,9 @@ class Epp::Domain < Domain
       DomainStatus::PENDING_DELETE,
       DomainStatus::PENDING_RENEW,
       DomainStatus::PENDING_TRANSFER,
-      DomainStatus::FORCE_DELETE
+      DomainStatus::FORCE_DELETE,
+      DomainStatus::SERVER_TRANSFER_PROHIBITED,
+      DomainStatus::CLIENT_TRANSFER_PROHIBITED
     ]).empty?
   end
 

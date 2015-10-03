@@ -54,6 +54,8 @@ feature 'Domains', type: :feature do
 
       click_link "#{user2} (#{user2.roles.first}) - #{user2.registrar}"
 
+      visit '/registrar/domains'
+
       page.should_not have_text(d1.name)
       page.should have_text(d2.name)
     end

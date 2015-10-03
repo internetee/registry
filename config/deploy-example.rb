@@ -1,7 +1,6 @@
 require 'mina/bundler'
 require 'mina/rails'
 require 'mina/git'
-require 'mina/whenever'
 require 'mina/rbenv'  # for rbenv support. (http://rbenv.org)
 
 # Basic settings:
@@ -17,6 +16,7 @@ set :repository, 'https://github.com/domify/registry' # dev repo
 set :branch, 'master'
 set :rails_env, 'alpha'
 set :que_restart, true
+set :cron_group, 'registry'
 
 # alpha branch, only use for heavy debugging
 task :epp do
@@ -36,6 +36,7 @@ task :registrar do
   set :branch, 'master'
   set :rails_env, 'alpha'
   set :que_restart, false
+  set :cron_group, 'registrar'
 end
 
 # alpha branch, only use for heavy debugging
@@ -46,6 +47,7 @@ task :registrant do
   set :branch, 'master'
   set :rails_env, 'alpha'
   set :que_restart, false
+  set :cron_group, 'registrant'
 end
 
 # staging
@@ -66,6 +68,7 @@ task :eppst do
   set :branch, 'staging'
   set :rails_env, 'staging'
   set :que_restart, false
+  set :cron_group, 'epp'
 end
 
 # staging
@@ -76,6 +79,7 @@ task :registrarst do
   set :branch, 'staging'
   set :rails_env, 'staging'
   set :que_restart, false
+  set :cron_group, 'registrar'
 end
 
 # staging
@@ -86,6 +90,7 @@ task :registrantst do
   set :branch, 'staging'
   set :rails_env, 'staging'
   set :que_restart, false
+  set :cron_group, 'registrant'
 end
 
 # production
@@ -106,6 +111,7 @@ task :epppr do
   set :branch, 'master'
   set :rails_env, 'production'
   set :que_restart, false
+  set :cron_group, 'epp'
 end
 
 # production
@@ -116,6 +122,7 @@ task :registrarpr do
   set :branch, 'master'
   set :rails_env, 'production'
   set :que_restart, false
+  set :cron_group, 'registrar'
 end
 
 # production
@@ -126,6 +133,7 @@ task :registrantpr do
   set :branch, 'master'
   set :rails_env, 'production'
   set :que_restart, false
+  set :cron_group, 'registrant'
 end
 
 # Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
@@ -234,7 +242,7 @@ end
 
 desc 'Restart que server'
 task que_restart: :environment do
-  queue "/etc/init.d/que restart" 
+  queue "/etc/init.d/que restart"
 end
 
 namespace :cron do
@@ -248,6 +256,32 @@ namespace :cron do
   task clear: :environment do
     invoke :'rbenv:load'
     invoke :'whenever:clear'
+  end
+end
+
+namespace :whenever do
+  name = -> { "#{domain}_#{rails_env}" }
+
+  desc "Clear crontab"
+  task clear: :environment  do
+    queue %(
+      echo "-----> Clear crontab for #{name.call}"
+      #{echo_cmd %(cd #{deploy_to!}/#{current_path!} ; #{bundle_bin} exec whenever --clear-crontab #{name.call} --set 'environment=#{rails_env}&path=#{deploy_to!}/#{current_path!}&cron_group=#{cron_group}')}
+    )
+  end
+  desc "Update crontab"
+  task update: :environment do
+    queue %(
+      echo "-----> Update crontab for #{name.call}"
+      #{echo_cmd %(cd #{deploy_to!}/#{current_path!} ; #{bundle_bin} exec whenever --update-crontab #{name.call} --set 'environment=#{rails_env}&path=#{deploy_to!}/#{current_path!}&cron_group=#{cron_group}')}
+    )
+  end
+  desc "Write crontab"
+  task write: :environment do
+    queue %(
+      echo "-----> Update crontab for #{name.call}"
+      #{echo_cmd %(cd #{deploy_to!}/#{current_path!} ; #{bundle_bin} exec whenever --write-crontab #{name.call} --set 'environment=#{rails_env}&path=#{deploy_to!}/#{current_path!}&cron_group=#{cron_group}')}
+    )
   end
 end
 

@@ -25,6 +25,7 @@ gem 'validates_email_format_of', '1.6.3' # validates email against RFC 2822 and 
 gem 'paper_trail',
   github: 'airblade/paper_trail',
   ref: 'a453811226ec4ea59753ba6b827e390ced2fc140'
+# NB! if this gets upgraded, ensure Setting.reload_settings! still works correctly
 gem 'rails-settings-cached',     '0.4.1' # for settings
 
 # html-xml

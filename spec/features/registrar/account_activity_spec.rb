@@ -20,7 +20,7 @@ feature 'Account activity', type: :feature do
     end
 
     it 'should navigate to account activities page' do
-      current_path.should == '/registrar'
+      current_path.should == '/registrar/poll'
       click_link 'Billing'
       click_link 'Account activity'
 

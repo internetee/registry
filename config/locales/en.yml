@@ -148,7 +148,6 @@ en:
             value:
               taken: 'Status already exists on this domain'
 
-
         user:
           attributes:
             username:
@@ -277,7 +276,7 @@ en:
   name: 'Name'
   transfer_can_be_approved_only_by_current_registrar: 'Transfer can be approved only by current domain registrar'
   registrar: 'Registrar'
-  owner: 'Owner'
+  owner: 'Registrant'
   domain_details: 'Domain details'
   registered_at: 'Registered at'
   password: 'Password'
@@ -515,7 +514,7 @@ en:
   crt_revoked: 'CRT (revoked)'
   contact_org_error: 'Parameter value policy error. Org must be blank'
   contact_fax_error: 'Parameter value policy error. Fax must be blank'
-  ident_update_error: 'Parameter value policy error. Update of ident data not allowed'
+  ident_update_error: 'Parameter value policy error. Update of ident data not allowed [ident]'
   invoices: 'Invoices'
   no_such_user: 'No such user'
   log_in: 'Log in'
@@ -730,6 +729,7 @@ en:
     <b>The domain name server</b>
     is a computer that saves and forwards via a general-access data communications network such data that is connected with the domain name and corresponding IP addresses. Your IT helpdesk or Internet service provider will have the necessary information about the domain name servers.
   account_activity: 'Account activity'
+  account_activities: 'Account activities'
   receipt_date: 'Receipt date'
   manual_binding: 'Manual binding'
   transaction_is_already_binded: 'Transaction is already binded'
@@ -803,20 +803,20 @@ en:
   edit_white_ip: 'Edit white IP'
   confirm_domain_delete: 'Confirm domain delete'
   reject_domain_delete: 'Reject domain delete'
-  confirm_domain_registrant_update: 'Confirm domain ownership change'
-  reject_domain_registrant_update: 'Reject domain ownership change'
-  domain_registrant_change_title: 'Please confirm or reject domain ownership change'
-  domain_registrant_change_body: 'There is a request to change domain ownership. Before doing it we need your confirmation.'
+  confirm_domain_registrant_update: 'Confirm domain registrant change'
+  reject_domain_registrant_update: 'Reject domain registrant change'
+  domain_registrant_change_title: 'Please confirm or reject domain registrant change'
+  domain_registrant_change_body: 'There is a request to change domain registrant. Before doing it we need your confirmation.'
   new_pending_registrant: 'New registrant'
   current_registrant: 'Current registrant'
   registrant_domain_verification_failed: 'Domain verification not available'
-  domain_registrant_change_confirmed_title: 'Domain owner change has been received'
-  domain_registrant_change_confirmed_body: 'You have successfully submitted domain owner change confirmation. You will receive email confirmation.'
-  registrant_domain_verification_confirmed: 'Domain owner change has successfully received.'
+  domain_registrant_change_confirmed_title: 'Domain registrant change has been received'
+  domain_registrant_change_confirmed_body: 'You have successfully submitted domain registrant change confirmation. You will receive email confirmation.'
+  registrant_domain_verification_confirmed: 'Domain registrant change has successfully received.'
   registrant_domain_verification_confirmed_failed: 'Something went wrong.'
-  domain_registrant_change_rejected_title: 'Domain owner change has been rejected'
-  domain_registrant_change_rejected_body: 'You have rejected domain owner change.'
-  registrant_domain_verification_rejected: 'Domain owner change has been rejected successfully.'
+  domain_registrant_change_rejected_title: 'Domain registrant change has been rejected'
+  domain_registrant_change_rejected_body: 'You have rejected domain registrant change.'
+  registrant_domain_verification_rejected: 'Domain registrant change has been rejected successfully.'
   registrant_domain_verification_rejected_failed: 'Something went wrong.'
   domain_delete_title: 'Please confirm or reject domain deletation'
   domain_delete_body: 'There is a request to delete a domain. Before doing it we need your confirmation.'
@@ -917,3 +917,7 @@ en:
   mail_templates: Mail Templates
   new_mail_template: New mail template
   failure: "It was not saved"
+  contact_is_not_valid: 'Contact %{value} is not valid, please fix the invalid contact'
+  force_delete_subject: 'Kustutusmenetluse teade'
+  welcome_to_eis_registrar_portal: 'Welcome to EIS Registrar portal'
+  interfaces: 'Interfaces'

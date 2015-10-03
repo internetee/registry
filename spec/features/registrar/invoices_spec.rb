@@ -20,7 +20,7 @@ feature 'Invoices', type: :feature do
     end
 
     it 'should navigate to the domains index page' do
-      current_path.should == '/registrar'
+      current_path.should == '/registrar/poll'
       click_link 'Billing'
 
       current_path.should == '/registrar/invoices'
@@ -58,6 +58,7 @@ feature 'Invoices', type: :feature do
       page.should have_text(@invoice.to_s)
       page.should have_text('Buyer')
       click_link "#{user2} (#{user2.roles.first}) - #{user2.registrar}"
+      visit "/registrar/invoices/#{@invoice.id}"
       page.should have_text('You are not authorized to access this page.')
 
       visit "/registrar/invoices/#{@invoice.id}/forward"
