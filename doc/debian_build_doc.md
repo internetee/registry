@@ -26,6 +26,10 @@ Please install following lib, otherwise your bundler install might not be succes
 
     sudo apt-get install libxml2-dev
 
+### For generating pdfs
+
+    sudo apt-get install wkhtmltopdf
+
 ### RBENV install
 
     cd /home/registry
