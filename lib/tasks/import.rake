@@ -190,7 +190,7 @@ namespace :import do
           name,
           x.organization.try(:strip),
           x.object_registry.try(:registrar).try(:id),
-          user,
+          x.object_registry.try(:crid),
           x.object.try(:upid) ? x.object.try(:upid) : x.object_registry.try(:crid),
           x.country.try(:strip),
           x.id,
@@ -319,7 +319,7 @@ namespace :import do
           SimpleIDN.to_ascii(x.object_registry.name.try(:strip)),
           1,
           'y',
-          user,
+          x.object_registry.try(:crid),
           x.object.try(:upid) ? x.object.try(:upid) : x.object_registry.try(:crid),
           x.id,
           x.object_registry.try(:crid),
@@ -331,7 +331,7 @@ namespace :import do
         x.domain_contact_maps.each do |dc|
           domain_contacts << [
             'AdminDomainContact',
-            user,
+            x.object_registry.try(:crid),
             x.object.try(:upid) ? x.object.try(:upid) : x.object_registry.try(:crid),
             x.id,
             dc.contactid
@@ -342,7 +342,7 @@ namespace :import do
         x.nsset_contact_maps.each do |dc|
           domain_contacts << [
             'TechDomainContact',
-            user,
+            x.object_registry.try(:crid),
             x.object.try(:upid) ? x.object.try(:upid) : x.object_registry.try(:crid),
             x.id,
             dc.contactid
@@ -363,7 +363,7 @@ namespace :import do
             host.fqdn.try(:strip),
             ips[:ipv4].try(:strip),
             ips[:ipv6].try(:strip),
-            user,
+            x.object_registry.try(:crid),
             x.object.try(:upid) ? x.object.try(:upid) : x.object_registry.try(:crid),
             x.id
           ]
