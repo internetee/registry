@@ -189,7 +189,7 @@ namespace :import do
           x.object.authinfopw.try(:strip),
           name,
           x.organization.try(:strip),
-          x.object_registry.try(:registrar).try(:id),
+          x.object.try(:clid),
           user,
           user,
           x.country.try(:strip),
@@ -222,6 +222,7 @@ namespace :import do
 
     domain_columns = %w(
       name
+      registrar_id
       registered_at
       valid_from
       valid_to
@@ -310,6 +311,7 @@ namespace :import do
 
         domains << [
           x.object_registry.name.try(:strip),
+          x.object.try(:clid),
           x.object_registry.try(:crdate),
           x.object_registry.try(:crdate),
           x.exdate,
