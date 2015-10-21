@@ -92,8 +92,10 @@ module Epp
   end
 
   def server
+    port = ENV['epp_port'] || 700
+    hostname = ENV['epp_hostname'] || 'localhost'
     # tag and password not in use, add those at login xml
-    @server ||= Epp::Server.new({ server: 'localhost', port: 701, tag: '', password: '' })
+    @server ||= Epp::Server.new({ server: hostname, port: port, tag: '', password: '' })
   end
 
   def parse_response(raw)
