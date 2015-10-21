@@ -20,7 +20,7 @@ registrar1 = Registrar.where(
   identity_code: '51001091072',
   active: true,
   registrar: registrar1
-).first
+)
 
 
 registrar2 = Registrar.where(
