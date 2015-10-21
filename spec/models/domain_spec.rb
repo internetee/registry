@@ -64,8 +64,13 @@ describe Domain do
   end
 
   context 'with valid attributes' do
-    before :all do
+    before :example do
       @domain = Fabricate(:domain)
+    end
+
+    after do
+      @domain.delete
+      @domain = nil
     end
 
     it 'should be valid' do
@@ -458,7 +463,7 @@ describe Domain do
     end
 
     context 'about registrant update confirm' do
-      before :all do
+      before :example do
         @domain.registrant_verification_token = 123
         @domain.registrant_verification_asked_at = Time.zone.now
         @domain.statuses << DomainStatus::PENDING_UPDATE
@@ -479,7 +484,7 @@ describe Domain do
     end
 
     context 'about registrant update confirm when domain is invalid' do
-      before :all do
+      before :example do
         @domain.registrant_verification_token = 123
         @domain.registrant_verification_asked_at = Time.zone.now
         @domain.statuses << DomainStatus::PENDING_UPDATE
