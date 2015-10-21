@@ -344,7 +344,7 @@ class Domain < ActiveRecord::Base
       end
     end
 
-    return false if statuses.include?(DomainStatus::DELETE_CANDIDATE)
+    return false if statuses.include?(DomainStatus::DELETE_CANDIDATE) || statuses.include?(DomainStatus::FORCE_DELETE)
 
     true
   end
