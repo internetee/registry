@@ -191,7 +191,7 @@ namespace :import do
           x.organization.try(:strip),
           Registrar.find_by(legacy_id: x.object.try(:clid)).try(:id),
           x.object_registry.try(:registrar).try(:name),
-          x.object.try(:upid) ? x.object.try(:upid) : x.object_registry.try(:crid),
+          x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
           x.country.try(:strip),
           x.id,
           [x.street1.try(:strip), x.street2.try(:strip), x.street3.try(:strip)].join("\n"),
@@ -322,7 +322,7 @@ namespace :import do
           1,
           'y',
           x.object_registry.try(:registrar).try(:name),
-          x.object.try(:upid) ? x.object.try(:upid) : x.object_registry.try(:crid),
+          x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
           x.id,
           x.object_registry.try(:crid),
           x.registrant,
@@ -334,7 +334,7 @@ namespace :import do
           domain_contacts << [
             'AdminDomainContact',
             x.object_registry.try(:registrar).try(:name),
-            x.object.try(:upid) ? x.object.try(:upid) : x.object_registry.try(:crid),
+            x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
             x.id,
             dc.contactid
           ]
@@ -345,7 +345,7 @@ namespace :import do
           domain_contacts << [
             'TechDomainContact',
             x.object_registry.try(:registrar).try(:name),
-            x.object.try(:upid) ? x.object.try(:upid) : x.object_registry.try(:crid),
+            x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
             x.id,
             dc.contactid
           ]
@@ -366,7 +366,7 @@ namespace :import do
             ips[:ipv4].try(:strip),
             ips[:ipv6].try(:strip),
             x.object_registry.try(:registrar).try(:name),
-            x.object.try(:upid) ? x.object.try(:upid) : x.object_registry.try(:crid),
+            x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
             x.id
           ]
         end if x.nsset && x.nsset.hosts
@@ -380,7 +380,7 @@ namespace :import do
             3, # ds_alg
             1, # ds_digest_type /SHA1)
             x.object_registry.try(:registrar).try(:name),
-            x.object.try(:upid) ? x.object.try(:upid) : x.object_registry.try(:crid),
+            x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
             x.id
           ]
         end
