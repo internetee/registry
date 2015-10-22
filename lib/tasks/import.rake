@@ -189,7 +189,7 @@ namespace :import do
           x.object.authinfopw.try(:strip),
           name,
           x.organization.try(:strip),
-          x.object_registry.try(:registrar).try(:id),
+          Registrar.find_by(legacy_id: x.object.try(:clid)).try(:id),
           x.object_registry.try(:registrar).try(:name),
           x.object.try(:upid) ? x.object.try(:upid) : x.object_registry.try(:crid),
           x.country.try(:strip),
@@ -311,7 +311,7 @@ namespace :import do
 
         domains << [
           x.object_registry.name.try(:strip),
-          x.object.try(:clid),
+          Registrar.find_by(legacy_id: x.object.try(:clid)).try(:id),
           x.object_registry.try(:crdate),
           x.object_registry.try(:crdate),
           x.exdate,
