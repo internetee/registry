@@ -15,22 +15,13 @@ registrar1 = Registrar.where(
 
 @api_user1 = ApiUser.where(
   username: 'registrar1',
-  password: 'test1',
+).first_or_create!(
+  password: 'password',
   identity_code: '51001091072',
   active: true,
   registrar: registrar1
-).first
+)
 
-if @api_user1.blank?
-  ApiUser.create(
-    username: 'registrar1',
-    password: 'test1',
-    identity_code: '51001091072',
-    active: true,
-    registrar: registrar1,
-    roles: ['super']
-  )
-end
 
 registrar2 = Registrar.where(
   name: 'Registrar Second AS',
@@ -46,22 +37,13 @@ registrar2 = Registrar.where(
 
 @api_user2 = ApiUser.where(
   username: 'registrar2',
-  password: 'test2',
+).first_or_create!(
+  password: 'password',
   identity_code: '11412090004',
   active: true,
   registrar: registrar2
-).first
+)
 
-if @api_user2.blank?
-  ApiUser.create(
-    username: 'registrar2',
-    password: 'test2',
-    identity_code: '11412090004',
-    active: true,
-    registrar: registrar2,
-    roles: ['super']
-  )
-end
 
 Registrar.all.each do |x|
   x.accounts.where(account_type: Account::CASH, currency: 'EUR').first_or_create!
@@ -69,21 +51,18 @@ end
 
 admin1 = {
   username: 'user1',
-  password: 'testtest',
   email: 'user1@example.ee',
   identity_code: '37810013855',
   country_code: 'EE'
 }
 admin2 = {
   username: 'user2',
-  password: 'testtest',
   email: 'user2@example.ee',
   identity_code: '37810010085',
   country_code: 'EE'
 }
 admin3 = {
   username: 'user3',
-  password: 'testtest',
   email: 'user3@example.ee',
   identity_code: '37810010727',
   country_code: 'EE'

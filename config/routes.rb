@@ -56,6 +56,7 @@ Rails.application.routes.draw do
         get 'info'
         get 'check'
         get 'delete'
+        get 'search_contacts'
       end
     end
 
