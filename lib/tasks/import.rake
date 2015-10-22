@@ -377,7 +377,7 @@ namespace :import do
             key.key,
             3, # ds_alg
             1, # ds_digest_type /SHA1)
-            user,
+            x.object_registry.try(:registrar).try(:name),
             x.object.try(:upid) ? x.object.try(:upid) : x.object_registry.try(:crid),
             x.id
           ]
