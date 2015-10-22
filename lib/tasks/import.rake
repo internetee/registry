@@ -343,7 +343,7 @@ namespace :import do
           domain_contacts << [
             'TechDomainContact',
             user,
-            x.object.try(:upid) ? x.object.try(:upid) : x.object_registry.try(:crid),
+            x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
             x.id,
             dc.contactid
           ]
