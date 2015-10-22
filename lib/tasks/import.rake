@@ -181,7 +181,7 @@ namespace :import do
         contacts << [
           x.object_registry.name.try(:strip),
           x.telephone.try(:strip),
-          x.email.try(:strip),
+          [x.email.try(:strip), x.notifyemail.try(:strip)].uniq.select(&:present?).join(', '),
           x.fax.try(:strip),
           x.object_registry.try(:crdate),
           x.ssn.try(:strip),
