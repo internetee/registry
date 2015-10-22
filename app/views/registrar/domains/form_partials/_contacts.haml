@@ -18,9 +18,8 @@
             .col-md-3.control-label
               = label_tag "domain_contacts_attributes_#{k}_code", t(:id), class: 'required'
             .col-md-7.has-feedback
-              = select_tag "domain[contacts_attributes][#{k}][code]", 
-                options_for_select(@contacts_autocomplete_map, selected: v['code']),
-                include_blank: true, class: 'js-combobox js-contact-code', required: true
+              = text_field_tag "domain[contacts_attributes][#{k}][code]", v['code'], class: "hidden"
+              = text_field_tag "domain[contacts_attributes][#{k}][code_helper]", contacts.find_by(code: v['code']).try(:search_name), class: 'form-control',  data: {autocomplete: search_contacts_registrar_domains_path}, required: true
 
 :coffee
   clone = $('.js-contact:first').clone()
@@ -39,4 +38,5 @@
       # remove link for temp 
       item.find('a.add-domain-contact').each (k, v) ->
         $(v).hide()
+      new Autocomplete()
     $clone: clone

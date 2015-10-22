@@ -345,6 +345,10 @@ class Contact < ActiveRecord::Base
     end
   end
 
+  def search_name
+    "#{code} #{name}"
+  end
+
   def set_linked
     statuses << LINKED if statuses.detect { |s| s == LINKED }.blank?
   end
