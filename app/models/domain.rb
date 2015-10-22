@@ -236,7 +236,7 @@ class Domain < ActiveRecord::Base
         next unless domain.expirable?
         domain.set_graceful_expired
         STDOUT << "#{Time.zone.now.utc} Domain.start_expire_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-        domain.save(validate: false)
+        domain.save
       end
 
       STDOUT << "#{Time.zone.now.utc} - Successfully expired #{domains.count} domains\n" unless Rails.env.test?
