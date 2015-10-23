@@ -148,6 +148,7 @@ namespace :import do
       email
       fax
       created_at
+      updated_at
       ident
       ident_type
       auth_info
@@ -184,6 +185,7 @@ namespace :import do
           x.email.try(:strip),
           x.fax.try(:strip),
           x.object_registry.try(:crdate),
+          x.object.respond_to?(:update) && x.object.read_attribute(:update),
           x.ssn.try(:strip),
           ident_type_map[x.ssntype],
           x.object.authinfopw.try(:strip),
@@ -227,6 +229,7 @@ namespace :import do
       valid_to
       auth_info
       created_at
+      updated_at
       name_dirty
       name_puny
       period
@@ -315,6 +318,7 @@ namespace :import do
           x.exdate,
           x.object.authinfopw.try(:strip),
           x.object_registry.try(:crdate),
+          x.object.respond_to?(:update) && x.object.read_attribute(:update),
           x.object_registry.name.try(:strip),
           SimpleIDN.to_ascii(x.object_registry.name.try(:strip)),
           1,
