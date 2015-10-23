@@ -12,9 +12,10 @@ class Domain < ActiveRecord::Base
 
   has_many :domain_contacts, dependent: :destroy
   has_many :admin_domain_contacts
-  accepts_nested_attributes_for :admin_domain_contacts, allow_destroy: true
+  accepts_nested_attributes_for :admin_domain_contacts,  allow_destroy: !:admin_change_prohibited?, reject_if: :admin_change_prohibited?
   has_many :tech_domain_contacts
-  accepts_nested_attributes_for :tech_domain_contacts, allow_destroy: true
+  accepts_nested_attributes_for :tech_domain_contacts, allow_destroy: !:tech_change_prohibited?, reject_if: :tech_change_prohibited?
+
 
   has_many :contacts, through: :domain_contacts, source: :contact
   has_many :admin_contacts, through: :admin_domain_contacts, source: :contact
@@ -170,6 +171,14 @@ class Domain < ActiveRecord::Base
 
   def delegated_nameservers
     nameservers.select { |x| !x.hostname.end_with?(name) }
+  end
+
+  def admin_change_prohibited?
+    statuses.include? DomainStatus::SERVER_ADMIN_CHANGE_PROHIBITED
+  end
+
+  def tech_change_prohibited?
+    statuses.include? DomainStatus::SERVER_TECH_CHANGE_PROHIBITED
   end
 
   class << self
