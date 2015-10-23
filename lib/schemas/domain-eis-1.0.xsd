@@ -396,6 +396,10 @@
       <enumeration value="serverRenewProhibited"/>
       <enumeration value="serverTransferProhibited"/>
       <enumeration value="serverUpdateProhibited"/>
+      <!-- Custom EIS domain status values -->
+      <enumeration value="serverTechChangeProhibited"/>
+      <enumeration value="serverAdminChangeProhibited"/>
+
     </restriction>
    </simpleType>
 
