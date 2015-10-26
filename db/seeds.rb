@@ -19,7 +19,8 @@ registrar1 = Registrar.where(
   password: 'password',
   identity_code: '51001091072',
   active: true,
-  registrar: registrar1
+  registrar: registrar1,
+  roles: ['super']
 )
 
 
@@ -41,7 +42,8 @@ registrar2 = Registrar.where(
   password: 'password',
   identity_code: '11412090004',
   active: true,
-  registrar: registrar2
+  registrar: registrar2,
+  roles: ['super']
 )
 
 
