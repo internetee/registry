@@ -126,11 +126,11 @@ class DomainStatus < ActiveRecord::Base
         # sync with admin_statuses_map
         # SERVER_MANUAL_INZONE,
         # SERVER_RENEW_PROHIBITED,
-        # SERVER_TRANSFER_PROHIBITED,
+        SERVER_TRANSFER_PROHIBITED,
         # SERVER_REGISTRANT_CHANGE_PROHIBITED,
-        # SERVER_ADMIN_CHANGE_PROHIBITED,
-        # SERVER_TECH_CHANGE_PROHIBITED,
-        SERVER_DELETE_PROHIBITED,
+        SERVER_ADMIN_CHANGE_PROHIBITED,
+        SERVER_TECH_CHANGE_PROHIBITED,
+        SERVER_DELETE_PROHIBITED, 
         SERVER_UPDATE_PROHIBITED
       ]
     end
@@ -144,8 +144,8 @@ class DomainStatus < ActiveRecord::Base
         # ['RenewProhibited', SERVER_RENEW_PROHIBITED],
         ['TransferProhibited', SERVER_TRANSFER_PROHIBITED],
         # ['RegistrantChangeProhibited', SERVER_REGISTRANT_CHANGE_PROHIBITED],
-        # ['AdminChangeProhibited', SERVER_ADMIN_CHANGE_PROHIBITED],
-        # ['TechChangeProhibited', SERVER_TECH_CHANGE_PROHIBITED],
+        ['AdminChangeProhibited', SERVER_ADMIN_CHANGE_PROHIBITED],
+        ['TechChangeProhibited', SERVER_TECH_CHANGE_PROHIBITED],
         # [''],
         ['UpdateProhibited', SERVER_UPDATE_PROHIBITED],
         ['DeleteProhibited', SERVER_DELETE_PROHIBITED]

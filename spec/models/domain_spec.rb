@@ -64,8 +64,13 @@ describe Domain do
   end
 
   context 'with valid attributes' do
-    before :all do
+    before :example do
       @domain = Fabricate(:domain)
+    end
+
+    after do
+      @domain.delete
+      @domain = nil
     end
 
     it 'should be valid' do
@@ -305,6 +310,108 @@ describe Domain do
       ])
     end
 
+    it 'should should be manual in zone and held after force delete' do
+      @domain.valid?
+      @domain.outzone_at = Time.zone.now + 1.day # before redemption grace period
+      # what should this be?
+      # @domain.server_holdable?.should be true
+      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should be false
+      @domain.statuses.include?(DomainStatus::SERVER_MANUAL_INZONE).should be false
+      @domain.set_force_delete
+      @domain.server_holdable?.should be false
+      @domain.statuses.include?(DomainStatus::SERVER_MANUAL_INZONE).should be true
+      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should be false
+    end
+
+    it 'should not allow update after force delete' do
+      @domain.valid?
+      @domain.pending_update_prohibited?.should be false
+      @domain.update_prohibited?.should be false
+      @domain.set_force_delete
+      @domain.pending_update_prohibited?.should be true
+      @domain.update_prohibited?.should be true
+    end
+
+    context 'with time period settings' do
+      before :all do
+        @save_days_to_renew = Setting.days_to_renew_domain_before_expire
+        @save_warning_period = Setting.expire_warning_period
+        @save_grace_period = Setting.redemption_grace_period
+      end
+
+      after :all do
+        Setting.days_to_renew_domain_before_expire = @save_days_to_renew
+        Setting.expire_warning_period = @save_warning_period
+        Setting.redemption_grace_period = @save_grace_period
+      end
+
+      before :example do
+        @domain.valid?
+      end
+
+      context 'with no renewal limit, renew anytime' do
+        before do
+          Setting.days_to_renew_domain_before_expire = 0
+        end
+
+        it 'should always renew with no policy' do
+          @domain.renewable?.should be true
+        end
+
+        it 'should not allow to renew after force delete' do
+          @domain.set_force_delete
+          @domain.renewable?.should be false
+        end
+      end
+
+      context 'with renew policy' do
+        before :all do
+          @policy = 30
+          Setting.days_to_renew_domain_before_expire = @policy
+        end
+
+        it 'should not allow renew before policy' do
+          @domain.valid_to = Time.zone.now.beginning_of_day + @policy.days * 2
+          @domain.renewable?.should be false
+        end
+
+        context 'ready to renew' do
+          before { @domain.valid_to = Time.zone.now + (@policy - 2).days }
+
+          it 'should allow renew' do
+            @domain.renewable?.should be true
+          end
+
+          it 'should not allow to renew after force delete' do
+            @domain.set_force_delete
+            @domain.renewable?.should be false
+          end
+        end
+      end
+    end
+
+    it 'should start redemption grace period' do
+      Domain.start_redemption_grace_period
+      @domain.reload
+      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
+
+      @domain.outzone_at = Time.zone.now
+      @domain.statuses << DomainStatus::SERVER_MANUAL_INZONE # this prohibits server_hold
+      @domain.save
+
+      Domain.start_redemption_grace_period
+      @domain.reload
+      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
+
+      @domain.statuses = []
+      @domain.save
+
+      Domain.start_redemption_grace_period
+      @domain.reload
+      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == true
+    end
+
+
     it 'should set expired status and update outzone_at and delete_at' do
       domain = Fabricate(:domain)
       domain.statuses.should == ['ok']
@@ -482,7 +589,7 @@ describe Domain do
     end
 
     context 'about registrant update confirm' do
-      before :all do
+      before :example do
         @domain.registrant_verification_token = 123
         @domain.registrant_verification_asked_at = Time.zone.now
         @domain.statuses << DomainStatus::PENDING_UPDATE
@@ -503,7 +610,7 @@ describe Domain do
     end
 
     context 'about registrant update confirm when domain is invalid' do
-      before :all do
+      before :example do
         @domain.registrant_verification_token = 123
         @domain.registrant_verification_asked_at = Time.zone.now
         @domain.statuses << DomainStatus::PENDING_UPDATE
