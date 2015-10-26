@@ -456,6 +456,7 @@ class Epp::Domain < Domain
     user  = ApiUser.find(pending_json['current_user_id'])
     frame = Nokogiri::XML(pending_json['frame'])
     statuses.delete(DomainStatus::PENDING_UPDATE)
+    yield(self) if block_given? # need to skip statuses check here
 
     return unless update(frame, user, false)
     clean_pendings!
