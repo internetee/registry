@@ -185,7 +185,7 @@ namespace :import do
           x.email.try(:strip),
           x.fax.try(:strip),
           x.object_registry.try(:crdate),
-          x.object.respond_to?(:update) && x.object.read_attribute(:update),
+          x.object.read_attribute(:update).nil? ? x.object_registry.try(:crdate) : x.object.read_attribute(:update),
           x.ssn.try(:strip),
           ident_type_map[x.ssntype],
           x.object.authinfopw.try(:strip),
@@ -204,7 +204,7 @@ namespace :import do
         ]
 
         if contacts.size % 10000 == 0
-          Contact.import contact_columns, contacts, validate: false
+          Contact.import contact_columns, contacts, {validate: false, timestamps: false}
           contacts = []
         end
       rescue => e
@@ -213,7 +213,7 @@ namespace :import do
       end
     end
 
-    Contact.import contact_columns, contacts, validate: false
+    Contact.import contact_columns, contacts, validate: false, timestamps: false
     puts "-----> Imported #{count} new contacts in #{(Time.zone.now.to_f - start).round(2)} seconds"
   end
 
@@ -318,7 +318,7 @@ namespace :import do
           x.exdate,
           x.object.authinfopw.try(:strip),
           x.object_registry.try(:crdate),
-          x.object.respond_to?(:update) && x.object.read_attribute(:update),
+          x.object.read_attribute(:update).nil? ? x.object_registry.try(:crdate) : x.object.read_attribute(:update),
           x.object_registry.name.try(:strip),
           SimpleIDN.to_ascii(x.object_registry.name.try(:strip)),
           1,
@@ -388,7 +388,7 @@ namespace :import do
         end
 
         if index % 10000 == 0 && index != 0
-          Domain.import domain_columns, domains, validate: false
+          Domain.import domain_columns, domains, {validate: false, timestamps: false}
           Nameserver.import nameserver_columns, nameservers, validate: false
           Dnskey.import dnskey_columns, dnskeys, validate: false
           DomainContact.import domain_contact_columns, domain_contacts, validate: false
@@ -400,7 +400,7 @@ namespace :import do
       end
     end
 
-    Domain.import domain_columns, domains, validate: false
+    Domain.import domain_columns, domains, {validate: false, timestamps: false}
     Nameserver.import nameserver_columns, nameservers, validate: false
     Dnskey.import dnskey_columns, dnskeys, validate: false
     DomainContact.import domain_contact_columns, domain_contacts, validate: false
