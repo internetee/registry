@@ -615,7 +615,7 @@ class Domain < ActiveRecord::Base
   def set_graceful_expired
     self.outzone_at = valid_to + Setting.expire_warning_period.days
     self.delete_at = outzone_at + Setting.redemption_grace_period.days
-    statuses << DomainStatus::EXPIRED
+    self.statuses |= [DomainStatus::EXPIRED]
   end
 
   def set_expired
