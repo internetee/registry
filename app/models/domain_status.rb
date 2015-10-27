@@ -124,7 +124,7 @@ class DomainStatus < ActiveRecord::Base
       [
         SERVER_HOLD,
         # sync with admin_statuses_map
-        # SERVER_MANUAL_INZONE,
+        SERVER_MANUAL_INZONE,
         SERVER_RENEW_PROHIBITED,
         SERVER_TRANSFER_PROHIBITED,
         # SERVER_REGISTRANT_CHANGE_PROHIBITED,
@@ -139,7 +139,7 @@ class DomainStatus < ActiveRecord::Base
       [
         ['Hold', SERVER_HOLD],
         # sync with admin_statuses
-        # ['ManualInzone', SERVER_MANUAL_INZONE],
+        ['ManualInzone', SERVER_MANUAL_INZONE],
         # [''],
         ['RenewProhibited', SERVER_RENEW_PROHIBITED],
         ['TransferProhibited', SERVER_TRANSFER_PROHIBITED],
