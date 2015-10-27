@@ -109,7 +109,9 @@ class Domain < ActiveRecord::Base
     errors.add(:base, :invalid_auth_information_reserved)
   end
 
-  validate :check_permissions
+  attr_accessor :is_admin
+
+  validate :check_permissions, :unless => :is_admin
   def check_permissions
     return unless force_delete?
     errors.add(:base, I18n.t(:object_status_prohibits_operation))
