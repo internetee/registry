@@ -1,3 +1,4 @@
+require "erb"
 class WhoisRecord < ActiveRecord::Base
   belongs_to :domain
   belongs_to :registrar
@@ -45,8 +46,8 @@ class WhoisRecord < ActiveRecord::Base
     h[:registered] = domain.registered_at.try(:to_s, :iso8601)
     h[:changed]    = domain.updated_at.try(:to_s, :iso8601)
     h[:expire]     = domain.valid_to.try(:to_date).try(:to_s)
-    h[:outzone]    = domain.outzone_at.try(:to_s, :iso8601)
-    h[:delete]     = domain.delete_at.try(:to_s, :iso8601)
+    h[:outzone]    = domain.outzone_at.try(:to_date).try(:to_s)
+    h[:delete]     = domain.delete_at.try(:to_date).try(:to_s)
 
 
     h[:registrant]       = domain.registrant.name
@@ -59,7 +60,7 @@ class WhoisRecord < ActiveRecord::Base
       h[:admin_contacts] << {
           name: ac.name,
           email: ac.email,
-          created_at: ac.created_at.try(:to_s, :iso8601)
+          changed: ac.updated_at.try(:to_s, :iso8601)
       }
     end
     h[:tech_contacts] = []
@@ -68,7 +69,7 @@ class WhoisRecord < ActiveRecord::Base
       h[:tech_contacts] << {
           name: tc.name,
           email: tc.email,
-          created_at: tc.created_at.try(:to_s, :iso8601)
+          changed: tc.updated_at.try(:to_s, :iso8601)
       }
     end
 
@@ -91,68 +92,12 @@ class WhoisRecord < ActiveRecord::Base
   end
 
   def generated_body
-    <<-EOS
-Estonia .ee Top Level Domain WHOIS server
-
-Domain:
-  name:       #{json['name']}
-  registrant: #{json['registrant']}
-  status:     #{json['status']}
-  registered: #{Time.zone.parse(json['registered'])}
-  changed:    #{Time.zone.parse(json['updated_at'])}
-  expire:     #{Time.zone.parse(json['valid_to'])}
-  outzone:
-  delete:
-#{contacts_body(json['admin_contacts'], json['tech_contacts'])}
-Registrar:
-  name:       #{json['registrar']}
-  phone:      #{json['registrar_phone']}
-  address:    #{json['registrar_address']}
-  changed:    #{Time.zone.parse(json['registrar_update_at'])}
-#{nameservers_body(json['nameservers'])}
-Estonia .ee Top Level Domain WHOIS server
-More information at http://internet.ee
-    EOS
+    template = Rails.root.join("app/views/for_models/whois.erb".freeze)
+    ERB.new(template.read, nil, "-").result.binding
   end
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
 
-  def contacts_body(admins, techs)
-    admins ||= []
-    techs ||= []
-
-    out = ''
-    out << (admins.size > 1 ? "\nAdministrative contacts" : "\nAdministrative contact")
-    admins.each do |c|
-      out << "\n  name:       #{c['name']}"
-      out << "\n  email:      Not Disclosed - Visit www.internet.ee for webbased WHOIS"
-      out << "\n  registrar:  #{c['registrar']}"
-      out << "\n  created:    #{Time.zone.parse(c['created_at'])}"
-      out << "\n"
-    end
-
-    out << (techs.size > 1 ? "\nTechnical contacts" : "\nTechnical contact:")
-    techs.each do |c|
-      out << "\n  name:       #{c['name']}"
-      out << "\n  email:      Not Disclosed - Visit www.internet.ee for webbased WHOIS"
-      out << "\n  registrar:  #{c['registrar']}"
-      out << "\n  created:    #{Time.zone.parse(c['created_at'])}"
-      out << "\n"
-    end
-    out
-  end
-
-  def nameservers_body(nservers)
-    nservers ||= []
-
-    out = "\nName servers:"
-    nservers.each do |ns|
-      out << "\n  nserver:   #{ns['hostname']}"
-      out << "\n  changed:   #{Time.zone.parse(ns['updated_at'])}"
-      out << "\n"
-    end
-    out
-  end
 
   def update_whois_server
     wd = Whois::Record.find_or_initialize_by(name: name)
