@@ -153,7 +153,6 @@ namespace :import do
       ident_type
       auth_info
       name
-      org_name
       registrar_id
       creator_str
       updator_str
@@ -190,7 +189,6 @@ namespace :import do
           ident_type_map[x.ssntype],
           x.object.authinfopw.try(:strip),
           x.organization.try(:strip)? x.organization.try(:strip): name,
-          x.organization.try(:strip),
           Registrar.find_by(legacy_id: x.object.try(:clid)).try(:id),
           x.object_registry.try(:registrar).try(:name),
           x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
