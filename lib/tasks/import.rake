@@ -152,7 +152,6 @@ namespace :import do
       ident_type
       auth_info
       name
-      org_name
       registrar_id
       creator_str
       updator_str
@@ -187,8 +186,7 @@ namespace :import do
           x.ssn.try(:strip),
           ident_type_map[x.ssntype],
           x.object.authinfopw.try(:strip),
-          name,
-          x.organization.try(:strip),
+          x.organization.try(:strip)? x.organization.try(:strip): name,
           x.object_registry.try(:registrar).try(:id),
           user,
           user,
