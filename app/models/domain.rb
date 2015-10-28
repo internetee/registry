@@ -16,6 +16,10 @@ class Domain < ActiveRecord::Base
   has_many :tech_domain_contacts
   accepts_nested_attributes_for :tech_domain_contacts, allow_destroy: !:tech_change_prohibited?, reject_if: :tech_change_prohibited?
 
+  def registrant_change_prohibited?
+    statuses.include? DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED
+  end
+
 
   # NB! contacts, admin_contacts, tech_contacts are empty for a new record
   has_many :domain_contacts, dependent: :destroy

@@ -149,6 +149,9 @@ class Epp::Domain < Domain
 
     code = frame.css('registrant').first.try(:text)
     if code.present?
+      if action == 'chg' && registrant_change_prohibited?
+        add_epp_error('2304', nil, DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
+      end
       regt = Registrant.find_by(code: code)
       if regt
         at[:registrant_id] = regt.id
@@ -433,7 +436,7 @@ class Epp::Domain < Domain
   def update(frame, current_user, verify = true)
     return super if frame.blank?
     at = {}.with_indifferent_access
-    at.deep_merge!(attrs_from(frame.css('chg'), current_user))
+    at.deep_merge!(attrs_from(frame.css('chg'), current_user, 'chg'))
     at.deep_merge!(attrs_from(frame.css('rem'), current_user, 'rem'))
 
     at_add = attrs_from(frame.css('add'), current_user)
