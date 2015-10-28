@@ -189,7 +189,7 @@ namespace :import do
           x.ssn.try(:strip),
           ident_type_map[x.ssntype],
           x.object.authinfopw.try(:strip),
-          name,
+          x.organization.try(:strip)? x.organization.try(:strip): name,
           x.organization.try(:strip),
           Registrar.find_by(legacy_id: x.object.try(:clid)).try(:id),
           x.object_registry.try(:registrar).try(:name),
