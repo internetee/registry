@@ -36,50 +36,56 @@ class WhoisRecord < ActiveRecord::Base
     return h if domain.blank?
 
     status_map = {
-      'ok' => 'ok (paid and in zone)'
+        'ok' => 'ok (paid and in zone)'
     }
 
     @disclosed = []
-    h[:name] = domain.name
-    h[:registrant] = domain.registrant.name
-    h[:status] = domain.statuses.map { |x| status_map[x] || x }.join(', ')
+    h[:name]       = domain.name
+    h[:status]     = domain.statuses.map { |x| status_map[x] || x }
     h[:registered] = domain.registered_at.try(:to_s, :iso8601)
-    h[:updated_at] = domain.updated_at.try(:to_s, :iso8601)
-    h[:valid_to] = domain.valid_to.try(:to_s, :iso8601)
+    h[:changed]    = domain.updated_at.try(:to_s, :iso8601)
+    h[:expire]     = domain.valid_to.try(:to_date).try(:to_s)
+    h[:outzone]    = nil
+    h[:delete]     = domain.force_delete_at.try(:to_s, :iso8601)
 
-    # update registar triggers when adding new attributes
-    h[:registrar] = domain.registrar.name
-    h[:registrar_phone] = domain.registrar.phone
-    h[:registrar_address] = domain.registrar.address
-    h[:registrar_update_at] = domain.registrar.updated_at.try(:to_s, :iso8601)
+
+    h[:registrant]       = domain.registrant.name
+    h[:registrant_email] = domain.registrant.email
+    h[:changed]          = domain.registrant.updated_at.try(:to_s, :iso8601)
 
     h[:admin_contacts] = []
     domain.admin_contacts.each do |ac|
       @disclosed << [:email, ac.email]
       h[:admin_contacts] << {
-        name: ac.name,
-        email: ac.email,
-        registrar: ac.registrar.name,
-        created_at: ac.created_at.try(:to_s, :iso8601)
+          name: ac.name,
+          email: ac.email,
+          created_at: ac.created_at.try(:to_s, :iso8601)
       }
     end
     h[:tech_contacts] = []
     domain.tech_contacts.each do |tc|
       @disclosed << [:email, tc.email]
       h[:tech_contacts] << {
-        name: tc.name,
-        email: tc.email,
-        registrar: tc.registrar.name,
-        created_at: tc.created_at.try(:to_s, :iso8601)
+          name: tc.name,
+          email: tc.email,
+          created_at: tc.created_at.try(:to_s, :iso8601)
       }
     end
-    h[:nameservers] = []
-    domain.nameservers.each do |ns|
-      h[:nameservers] << {
-        hostname: ns.hostname,
-        updated_at: ns.updated_at.try(:to_s, :iso8601)
-      }
-    end
+
+    # update registar triggers when adding new attributes
+    h[:registrar]         = domain.registrar.name
+    h[:registrar_url]     = domain.registrar.url
+    h[:registrar_phone]   = domain.registrar.phone
+    h[:registrar_address] = domain.registrar.address
+    h[:registrar_changed] = domain.registrar.updated_at.try(:to_s, :iso8601)
+
+    h[:nameservers]         = domain.nameservers.pluck(:hostname).uniq.select(&:present?)
+    h[:nameservers_changed] = domain.nameservers.pluck(:updated_at).max.try(:to_s, :iso8601)
+
+    h[:dnssec_keys]    = domain.dnskeys.map{|key| "#{key.flags} #{key.protocol} #{key.alg} #{key.public_key}" }
+    h[:dnssec_changed] = domain.dnskeys.pluck(:updated_at).max.try(:to_s, :iso8601) rescue nil
+
+
     h[:disclosed] = @disclosed
     h
   end
