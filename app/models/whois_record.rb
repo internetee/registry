@@ -88,10 +88,8 @@ class WhoisRecord < ActiveRecord::Base
   end
 
   def generated_body
-    self.json = generated_json if self.json.blank?
-
     template = Rails.root.join("app/views/for_models/whois.erb".freeze)
-    ERB.new(template.read, nil, "-").result.binding
+    ERB.new(template.read, nil, "-").result(binding)
   end
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
