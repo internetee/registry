@@ -51,10 +51,10 @@ class Registrar < ActiveRecord::Base
 
   WHOIS_TRIGGERS = %w(name email phone street city state zip)
 
-  after_save :update_whois_records
+  after_commit :update_whois_records
   def update_whois_records
     return true unless changed? && (changes.keys & WHOIS_TRIGGERS).present?
-    whois_records.map(&:save) # slow currently
+    RegenerateRegistrarWhoisesJob.enqueue id
   end
 
   after_create :create_cash_account
