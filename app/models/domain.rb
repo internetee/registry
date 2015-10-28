@@ -109,6 +109,12 @@ class Domain < ActiveRecord::Base
     errors.add(:base, :invalid_auth_information_reserved)
   end
 
+  validate :status_is_consistant
+  def status_is_consistant
+      has_error = (statuses.include?(DomainStatus::SERVER_HOLD) && statuses.include?(DomainStatus::SERVER_MANUAL_INZONE))
+      errors.add(:domains, I18n.t(:object_status_prohibits_operation)) if has_error
+  end
+
   attr_accessor :is_admin
 
   validate :check_permissions, :unless => :is_admin
