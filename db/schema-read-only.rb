@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150921111842) do
+ActiveRecord::Schema.define(version: 20151028183132) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -240,19 +240,20 @@ ActiveRecord::Schema.define(version: 20150921111842) do
   end
 
   create_table "dnskeys", force: :cascade do |t|
-    t.integer "domain_id"
-    t.integer "flags"
-    t.integer "protocol"
-    t.integer "alg"
-    t.text    "public_key"
-    t.integer "delegation_signer_id"
-    t.string  "ds_key_tag"
-    t.integer "ds_alg"
-    t.integer "ds_digest_type"
-    t.string  "ds_digest"
-    t.string  "creator_str"
-    t.string  "updator_str"
-    t.integer "legacy_domain_id"
+    t.integer  "domain_id"
+    t.integer  "flags"
+    t.integer  "protocol"
+    t.integer  "alg"
+    t.text     "public_key"
+    t.integer  "delegation_signer_id"
+    t.string   "ds_key_tag"
+    t.integer  "ds_alg"
+    t.integer  "ds_digest_type"
+    t.string   "ds_digest"
+    t.string   "creator_str"
+    t.string   "updator_str"
+    t.integer  "legacy_domain_id"
+    t.datetime "updated_at"
   end
 
   add_index "dnskeys", ["delegation_signer_id"], name: "index_dnskeys_on_delegation_signer_id", using: :btree

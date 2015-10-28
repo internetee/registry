@@ -6,14 +6,6 @@ class WhoisRecord < ActiveRecord::Base
   validates :domain, :name, :body, :json, presence: true
 
   before_validation :populate
-  def populate
-    return if domain_id.blank?
-    self.json = generate_json
-    self.body = generated_body
-    self.name = json['name']
-    self.registrar_id = domain.registrar_id # for faster registrar updates
-  end
-
   after_save :update_whois_server
 
   class << self
@@ -28,6 +20,10 @@ class WhoisRecord < ActiveRecord::Base
         ]
       )
     end
+  end
+
+  def generated_json
+    @generated_json ||= generate_json
   end
 
   # rubocop:disable Metrics/MethodLength
@@ -92,12 +88,22 @@ class WhoisRecord < ActiveRecord::Base
   end
 
   def generated_body
+    self.json = generated_json if self.json.blank?
+
     template = Rails.root.join("app/views/for_models/whois.erb".freeze)
     ERB.new(template.read, nil, "-").result.binding
   end
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
 
+
+  def populate
+    return if domain_id.blank?
+    self.json = generated_json
+    self.body = generated_body
+    self.name = json['name']
+    self.registrar_id = domain.registrar_id # for faster registrar updates
+  end
 
   def update_whois_server
     wd = Whois::Record.find_or_initialize_by(name: name)
