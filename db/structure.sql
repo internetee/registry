@@ -745,7 +745,8 @@ CREATE TABLE dnskeys (
     ds_digest character varying,
     creator_str character varying,
     updator_str character varying,
-    legacy_domain_id integer
+    legacy_domain_id integer,
+    updated_at timestamp without time zone
 );
 
 
@@ -4945,4 +4946,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150915094707');
 INSERT INTO schema_migrations (version) VALUES ('20150921110152');
 
 INSERT INTO schema_migrations (version) VALUES ('20150921111842');
+
+INSERT INTO schema_migrations (version) VALUES ('20151028183132');
 
