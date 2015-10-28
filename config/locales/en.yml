@@ -633,6 +633,7 @@ en:
   expiry_absolute: 'Expiry absolute'
   upload_key: 'Upload key'
   legal_document: 'Legal document'
+  legal_document_max_size: '(max. 8MB)'
   delete_domain: 'Delete domain'
   index: 'Index'
   ident: 'Ident'
