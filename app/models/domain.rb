@@ -349,12 +349,16 @@ class Domain < ActiveRecord::Base
 
   def renewable?
     if Setting.days_to_renew_domain_before_expire != 0
-      if ((valid_to - Time.zone.now.beginning_of_day).to_i / 1.day) + 1 > Setting.days_to_renew_domain_before_expire
+      # if you can renew domain at days_to_renew before domain expiration
+      if (valid_to.to_date - Date.today) + 1 > Setting.days_to_renew_domain_before_expire
         return false
       end
     end
 
-    return false if statuses.include?(DomainStatus::DELETE_CANDIDATE)
+    return false if statuses.include_any?(DomainStatus::DELETE_CANDIDATE, DomainStatus::SERVER_RENEW_PROHIBITED,
+                                          DomainStatus::CLIENT_RENEW_PROHIBITED, DomainStatus::PENDING_RENEW,
+                                          DomainStatus::PENDING_TRANSFER, DomainStatus::PENDING_DELETE,
+                                          DomainStatus::PENDING_UPDATE, 'pendingDeleteConfirmation')
 
     true
   end
