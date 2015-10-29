@@ -399,7 +399,7 @@
       <!-- Custom EIS domain status values -->
       <enumeration value="serverTechChangeProhibited"/>
       <enumeration value="serverAdminChangeProhibited"/>
-
+      <enumeration value="serverRegistrantChangeProhibited"/>
     </restriction>
    </simpleType>
 
