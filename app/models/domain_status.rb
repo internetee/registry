@@ -68,7 +68,7 @@ class DomainStatus < ActiveRecord::Base
   SERVER_REGISTRANT_CHANGE_PROHIBITED = 'serverRegistrantChangeProhibited'
   SERVER_ADMIN_CHANGE_PROHIBITED = 'serverAdminChangeProhibited'
   SERVER_TECH_CHANGE_PROHIBITED = 'serverTechChangeProhibited'
-  FORCE_DELETE = 'forceDelete'
+  FORCE_DELETE = 'serverForceDelete'
   DELETE_CANDIDATE = 'deleteCandidate'
   EXPIRED = 'expired'
   RESERVED = 'reserved'

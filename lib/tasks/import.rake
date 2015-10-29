@@ -163,11 +163,11 @@ namespace :import do
       zip
       state
       country_code
+      statuses
     )
 
     contacts = []
     existing_contact_ids = Contact.pluck(:legacy_id)
-    user = "rake-#{`whoami`.strip} #{ARGV.join ' '}"
     count = 0
 
     Legacy::Contact.includes(:object_registry, :object, object_registry: :registrar)
@@ -198,7 +198,8 @@ namespace :import do
           x.city.try(:strip),
           x.postalcode.try(:strip),
           x.stateorprovince.try(:strip),
-          x.country.try(:strip)
+          x.country.try(:strip),
+          [x.object_state.try(:name)|| Contact::OK]
         ]
 
         if contacts.size % 10000 == 0
@@ -300,15 +301,13 @@ namespace :import do
       begin
         # domain statuses
         domain_statuses = []
-        ok = true
         x.object_states.each do |state|
           next if state.name.blank?
           domain_statuses << state.name
-          ok = false
         end
 
         # OK status is default
-        domain_statuses << DomainStatus::OK if ok
+        domain_statuses << DomainStatus::OK if domain_statuses.empty?
 
         domains << [
           x.object_registry.name.try(:strip),
