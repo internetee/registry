@@ -460,7 +460,7 @@ class Epp::Domain < Domain
 
     # at[:statuses] += at_add[:domain_statuses_attributes]
 
-    if verify &&
+    if errors.empty? && verify &&
        Setting.request_confrimation_on_registrant_change_enabled &&
        frame.css('registrant').present? &&
        frame.css('registrant').attr('verified').to_s.downcase != 'yes'
