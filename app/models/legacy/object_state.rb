@@ -2,7 +2,7 @@ module Legacy
   class ObjectState < Db
     self.table_name = :object_state
 
-    # legacy values
+    # legacy values. Just for log
     # 2 => "serverRenewProhibited",
     # 5 => "serverOutzoneManual",
     # 6 => "serverInzoneManual",
@@ -30,11 +30,11 @@ module Legacy
         2 => "serverRenewProhibited",
         5 => "serverHold",
         6 => "serverManualInzone",
-        7 => "serverBlocked",
+        # 7 => "serverBlocked",
         9 => "expired",
-        11 => "validationWarning1",
-        13 => "notValidated",
-        14 => "nssetMissing",
+        # 11 => "validationWarning1",
+        # 13 => "notValidated",
+        14 => "inactive",
         15 => "serverHold",
         18 => "serverRegistrantChangeProhibited",
         1 => "serverDeleteProhibited",
@@ -42,7 +42,7 @@ module Legacy
         4 => "serverUpdateProhibited",
         16 => "linked",
         17 => "deleteCandidate", # grupistaatus
-        21 => "forceDelete" # grupistaatus
+        21 => "serverForceDelete" # grupistaatus
     }.freeze
 
 

@@ -303,15 +303,13 @@ namespace :import do
       begin
         # domain statuses
         domain_statuses = []
-        ok = true
         x.object_states.each do |state|
           next if state.name.blank?
           domain_statuses << state.name
-          ok = false
         end
 
         # OK status is default
-        domain_statuses << DomainStatus::OK if ok
+        domain_statuses << DomainStatus::OK if domain_statuses.empty?
 
         domains << [
           x.object_registry.name.try(:strip),

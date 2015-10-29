@@ -59,7 +59,7 @@ feature 'Domain', type: :feature do
     click_link 'Edit statuses'
     page.should have_content('ok')
     click_link 'Set force delete'
-    page.should have_content('forceDelete')
+    page.should have_content('serverForceDelete')
     page.should have_content('serverRenewProhibited')
     page.should have_content('serverTransferProhibited')
     page.should have_content('serverUpdateProhibited')
@@ -74,7 +74,7 @@ feature 'Domain', type: :feature do
     click_link 'Back to domain'
     click_link 'Edit statuses'
     click_link 'Unset force delete'
-    page.should_not have_content('forceDelete')
+    page.should_not have_content('serverForceDelete')
     page.should_not have_content('serverRenewProhibited')
     page.should_not have_content('serverTransferProhibited')
     page.should_not have_content('serverUpdateProhibited')
