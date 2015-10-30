@@ -2658,7 +2658,8 @@ CREATE TABLE users (
     encrypted_password character varying DEFAULT ''::character varying NOT NULL,
     remember_created_at timestamp without time zone,
     failed_attempts integer DEFAULT 0 NOT NULL,
-    locked_at timestamp without time zone
+    locked_at timestamp without time zone,
+    legacy_id integer
 );
 
 
@@ -4945,4 +4946,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150915094707');
 INSERT INTO schema_migrations (version) VALUES ('20150921110152');
 
 INSERT INTO schema_migrations (version) VALUES ('20150921111842');
+
+INSERT INTO schema_migrations (version) VALUES ('20151029152638');
 
