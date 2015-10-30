@@ -281,7 +281,6 @@ namespace :import do
       creator_str
       updator_str
       legacy_domain_id
-      created_at
       updated_at
     )
 
@@ -391,7 +390,6 @@ namespace :import do
             user,
             x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
             x.id,
-            key.object_registry.try(:crdate),
             key.object.read_attribute(:update).nil? ? x.object_registry.try(:crdate) : x.object.read_attribute(:update)
           ]
         end
