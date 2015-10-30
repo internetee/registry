@@ -773,6 +773,8 @@ class Epp::Domain < Domain
   end
 
   ### ABILITIES ###
+
+  # depricated -- this is redundant TODO: try to remove
   def can_be_deleted?
     begin
       errors.add(:base, :domain_status_prohibits_operation)
@@ -784,6 +786,7 @@ class Epp::Domain < Domain
 
   def transferrable?
     (statuses & [
+        DomainStatus::PENDING_DELETE_CONFIRMATION,
       DomainStatus::PENDING_CREATE,
       DomainStatus::PENDING_UPDATE,
       DomainStatus::PENDING_DELETE,
