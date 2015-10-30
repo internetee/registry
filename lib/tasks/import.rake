@@ -267,6 +267,8 @@ namespace :import do
       creator_str
       updator_str
       legacy_domain_id
+      created_at
+      updated_at
     )
 
     dnskey_columns = %w(
@@ -356,7 +358,8 @@ namespace :import do
         end
 
         # nameservers
-        x.nsset.hosts.each do |host|
+        nsset = x.nsset
+        nsset.hosts.each do |host|
           ip_maps = host.host_ipaddr_maps
           ips = {}
           ip_maps.each do |ip_map|
@@ -371,7 +374,9 @@ namespace :import do
             ips[:ipv6].try(:strip),
             user,
             x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
-            x.id
+            x.id,
+            nsset.object_registry.try(:crdate),
+            nsset.object.read_attribute(:update).nil? ? x.object_registry.try(:crdate) : x.object.read_attribute(:update)
           ]
         end if x.nsset && x.nsset.hosts
 
@@ -393,7 +398,7 @@ namespace :import do
 
         if index % 10000 == 0 && index != 0
           Domain.import domain_columns, domains, {validate: false, timestamps: false}
-          Nameserver.import nameserver_columns, nameservers, validate: false
+          Nameserver.import nameserver_columns, nameservers, {validate: false, timestamps: false}
           Dnskey.import dnskey_columns, dnskeys, {validate: false, timestamps: false}
           DomainContact.import domain_contact_columns, domain_contacts, validate: false # created_at is taken from contact at the bottom
           domains, nameservers, dnskeys, domain_contacts = [], [], [], []
@@ -405,7 +410,7 @@ namespace :import do
     end
 
     Domain.import domain_columns, domains, {validate: false, timestamps: false}
-    Nameserver.import nameserver_columns, nameservers, validate: false
+    Nameserver.import nameserver_columns, nameservers, {validate: false, timestamps: false}
     Dnskey.import dnskey_columns, dnskeys, {validate: false, timestamps: false}
     DomainContact.import domain_contact_columns, domain_contacts, {validate: false, timestamps: false}
 
