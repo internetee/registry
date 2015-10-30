@@ -223,7 +223,7 @@ class Domain < ActiveRecord::Base
       count = 0
       expired_pending_domains = Domain.where('registrant_verification_asked_at <= ?', expire_at)
       expired_pending_domains.each do |domain|
-        unless domain.pending_update? || domain.pending_delete?
+        unless domain.pending_update? || domain.pending_delete? || pending_delete_confirmation?
           msg = "#{Time.zone.now.utc} - ISSUE: DOMAIN #{domain.id}: #{domain.name} IS IN EXPIRED PENDING LIST, " \
                 "but no pendingDelete/pendingUpdate state present!\n"
           STDOUT << msg unless Rails.env.test?
@@ -233,7 +233,7 @@ class Domain < ActiveRecord::Base
         if domain.pending_update?
           DomainMailer.pending_update_expired_notification_for_new_registrant(domain).deliver_now
         end
-        if domain.pending_delete?
+        if domain.pending_delete? || pending_delete_confirmation?
           DomainMailer.pending_delete_expired_notification(domain).deliver_now
         end
         domain.clean_pendings!
@@ -399,6 +399,7 @@ class Domain < ActiveRecord::Base
   def clean_pendings!
     preclean_pendings
     self.pending_json = {}
+    statuses.delete[DomainStatus::PENDING_DELETE_CONFIRMATION]
     statuses.delete(DomainStatus::PENDING_UPDATE)
     statuses.delete(DomainStatus::PENDING_DELETE)
     status_notes[DomainStatus::PENDING_UPDATE] = ''
@@ -692,6 +693,10 @@ class Domain < ActiveRecord::Base
 
   def pending_delete?
     statuses.include?(DomainStatus::PENDING_DELETE) && !statuses.include?(DomainStatus::FORCE_DELETE)
+  end
+
+  def pending_delete_confirmation?
+    statuses.include? DomainStatus::PENDING_DELETE_CONFIRMATION
   end
 
   def pending_delete_prohibited?
