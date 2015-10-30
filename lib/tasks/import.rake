@@ -374,7 +374,7 @@ namespace :import do
             x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
             x.id,
             nsset.object_registry.try(:crdate),
-            nsset.object.read_attribute(:update).nil? ? x.object_registry.try(:crdate) : x.object.read_attribute(:update)
+            nsset.object_registry.try(:object_history).read_attribute(:update).nil? ? nsset.object_registry.try(:crdate) : nsset.object_registry.try(:object_history).read_attribute(:update)
           ]
         end if x.nsset && x.nsset.hosts
 
@@ -389,7 +389,7 @@ namespace :import do
             x.object_registry.try(:registrar).try(:name),
             x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
             x.id,
-            key.object.read_attribute(:update).nil? ? x.object_registry.try(:crdate) : x.object.read_attribute(:update)
+            key.object_registry.try(:object_history).read_attribute(:update).nil? ? key.try(:crdate) : key.object_registry.try(:object_history).read_attribute(:update)
           ]
         end
 
