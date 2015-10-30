@@ -213,7 +213,7 @@ namespace :import do
       end
     end
 
-    Contact.import contact_columns, contacts, validate: false, timestamps: false
+    Contact.import contact_columns, contacts, {validate: false, timestamps: false}
     puts "-----> Imported #{count} new contacts in #{(Time.zone.now.to_f - start).round(2)} seconds"
   end
 
@@ -279,6 +279,8 @@ namespace :import do
       creator_str
       updator_str
       legacy_domain_id
+      created_at
+      updated_at
     )
 
     domains, nameservers, dnskeys, domain_contacts = [], [], [], []
@@ -383,15 +385,17 @@ namespace :import do
             1, # ds_digest_type /SHA1)
             user,
             x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
-            x.id
+            x.id,
+            key.object_registry.try(:crdate),
+            key.object.read_attribute(:update).nil? ? x.object_registry.try(:crdate) : x.object.read_attribute(:update)
           ]
         end
 
         if index % 10000 == 0 && index != 0
           Domain.import domain_columns, domains, {validate: false, timestamps: false}
           Nameserver.import nameserver_columns, nameservers, validate: false
-          Dnskey.import dnskey_columns, dnskeys, validate: false
-          DomainContact.import domain_contact_columns, domain_contacts, validate: false
+          Dnskey.import dnskey_columns, dnskeys, {validate: false, timestamps: false}
+          DomainContact.import domain_contact_columns, domain_contacts, validate: false # created_at is taken from contact at the bottom
           domains, nameservers, dnskeys, domain_contacts = [], [], [], []
         end
       rescue => e
@@ -402,8 +406,8 @@ namespace :import do
 
     Domain.import domain_columns, domains, {validate: false, timestamps: false}
     Nameserver.import nameserver_columns, nameservers, validate: false
-    Dnskey.import dnskey_columns, dnskeys, validate: false
-    DomainContact.import domain_contact_columns, domain_contacts, validate: false
+    Dnskey.import dnskey_columns, dnskeys, {validate: false, timestamps: false}
+    DomainContact.import domain_contact_columns, domain_contacts, {validate: false, timestamps: false}
 
     puts '-----> Updating relations...'
 
@@ -430,7 +434,9 @@ namespace :import do
     # contacts
     ActiveRecord::Base.connection.execute(
       "UPDATE domain_contacts "\
-      "SET contact_id = contacts.id "\
+      "SET contact_id = contacts.id, "\
+      "updated_at = contacts.updated_at, "\
+      "created_at = contacts.created_at "\
       "FROM contacts "\
       "WHERE contacts.legacy_id = legacy_contact_id "\
       "AND legacy_contact_id IS NOT NULL "\
