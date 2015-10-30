@@ -149,6 +149,9 @@ class Epp::Domain < Domain
 
     code = frame.css('registrant').first.try(:text)
     if code.present?
+      if action == 'chg' && registrant_change_prohibited?
+        add_epp_error('2304', nil, DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
+      end
       regt = Registrant.find_by(code: code)
       if regt
         at[:registrant_id] = regt.id
@@ -233,6 +236,11 @@ class Epp::Domain < Domain
   def admin_domain_contacts_attrs(frame, action)
     admin_attrs = domain_contact_attrs_from(frame, action, 'admin')
 
+    if action && !admin_attrs.empty? && admin_change_prohibited?
+      add_epp_error('2304', 'admin', DomainStatus::SERVER_ADMIN_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
+      return []
+    end
+
     case action
     when 'rem'
       return destroy_attrs(admin_attrs, admin_domain_contacts)
@@ -243,6 +251,11 @@ class Epp::Domain < Domain
 
   def tech_domain_contacts_attrs(frame, action)
     tech_attrs = domain_contact_attrs_from(frame, action, 'tech')
+
+    if action && !tech_attrs.empty? && tech_change_prohibited?
+      add_epp_error('2304', 'tech', DomainStatus::SERVER_TECH_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
+      return []
+    end
 
     case action
     when 'rem'
@@ -377,7 +390,6 @@ class Epp::Domain < Domain
 
   def domain_statuses_attrs(frame, action)
     status_list = domain_status_list_from(frame)
-
     if action == 'rem'
       to_destroy = []
       status_list.each do |x|
@@ -424,20 +436,31 @@ class Epp::Domain < Domain
   def update(frame, current_user, verify = true)
     return super if frame.blank?
     at = {}.with_indifferent_access
-    at.deep_merge!(attrs_from(frame.css('chg'), current_user))
+    at.deep_merge!(attrs_from(frame.css('chg'), current_user, 'chg'))
     at.deep_merge!(attrs_from(frame.css('rem'), current_user, 'rem'))
 
     at_add = attrs_from(frame.css('add'), current_user)
     at[:nameservers_attributes] += at_add[:nameservers_attributes]
-    at[:admin_domain_contacts_attributes] += at_add[:admin_domain_contacts_attributes]
-    at[:tech_domain_contacts_attributes] += at_add[:tech_domain_contacts_attributes]
+
+    if !at[:admin_domain_contacts_attributes].empty? && admin_change_prohibited?
+      add_epp_error('2304', 'admin', DomainStatus::SERVER_ADMIN_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
+    else
+      at[:admin_domain_contacts_attributes] += at_add[:admin_domain_contacts_attributes]
+    end
+
+    if !at[:tech_domain_contacts_attributes].empty? && tech_change_prohibited?
+      add_epp_error('2304', 'tech', DomainStatus::SERVER_TECH_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
+    else
+      at[:tech_domain_contacts_attributes] += at_add[:tech_domain_contacts_attributes]
+    end
+
     at[:dnskeys_attributes] += at_add[:dnskeys_attributes]
     at[:statuses] =
       statuses - domain_statuses_attrs(frame.css('rem'), 'rem') + domain_statuses_attrs(frame.css('add'), 'add')
 
     # at[:statuses] += at_add[:domain_statuses_attributes]
 
-    if verify &&
+    if errors.empty? && verify &&
        Setting.request_confrimation_on_registrant_change_enabled &&
        frame.css('registrant').present? &&
        frame.css('registrant').attr('verified').to_s.downcase != 'yes'
@@ -468,12 +491,12 @@ class Epp::Domain < Domain
 
   def apply_pending_delete!
     preclean_pendings
-    user  = ApiUser.find(pending_json['current_user_id'])
-    frame = Nokogiri::XML(pending_json['frame'])
+    statuses.delete(DomainStatus::PENDING_DELETE_CONFIRMATION)
     statuses.delete(DomainStatus::PENDING_DELETE)
     DomainMailer.delete_confirmation(self).deliver_now
 
-    clean_pendings! if epp_destroy(frame, user, false)
+    # TODO: confirm that this actually makes sense
+    clean_pendings! if valid? && set_pending_delete!
     true
   end
 
@@ -486,11 +509,10 @@ class Epp::Domain < Domain
     )
   end
 
-  def epp_destroy(frame, user_id, verify = true)
+  def epp_destroy(frame, user_id)
     return false unless valid?
 
-    if verify &&
-       Setting.request_confirmation_on_domain_deletion_enabled &&
+    if Setting.request_confirmation_on_domain_deletion_enabled &&
        frame.css('delete').attr('verified').to_s.downcase != 'yes'
 
       registrant_verification_asked!(frame.to_s, user_id)
@@ -753,6 +775,8 @@ class Epp::Domain < Domain
   end
 
   ### ABILITIES ###
+
+  # depricated -- this is redundant TODO: try to remove
   def can_be_deleted?
     begin
       errors.add(:base, :domain_status_prohibits_operation)
@@ -764,6 +788,7 @@ class Epp::Domain < Domain
 
   def transferrable?
     (statuses & [
+        DomainStatus::PENDING_DELETE_CONFIRMATION,
       DomainStatus::PENDING_CREATE,
       DomainStatus::PENDING_UPDATE,
       DomainStatus::PENDING_DELETE,

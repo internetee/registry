@@ -29,7 +29,7 @@
    -->
    <element name="check" type="domain:mNameType"/>
    <element name="create" type="domain:createType"/>
-   <element name="delete" type="domain:sNameType"/>
+   <element name="delete" type="domain:verifiedDeleteType"/>
    <element name="info" type="domain:infoType"/>
    <element name="renew" type="domain:renewType"/>
    <element name="transfer" type="domain:transferType"/>
@@ -131,6 +131,22 @@
     <sequence>
       <element name="name" type="eppcom:labelType"/>
     </sequence>
+   </complexType>
+   <!--
+   Extended delete with verified attribute and include single name content
+   -->
+   <complexType name="verifiedDeleteType">
+     <sequence>
+     <element name="name" type="eppcom:labelType"/>
+     </sequence>
+       <attribute name="verified" use="optional">
+         <simpleType>
+         <restriction base="string">
+           <enumeration value="yes"/>
+           <enumeration value="no"/>
+         </restriction>
+         </simpleType>
+       </attribute>
    </complexType>
    <!--
    Child element of commands that accept multiple names.
@@ -396,6 +412,10 @@
       <enumeration value="serverRenewProhibited"/>
       <enumeration value="serverTransferProhibited"/>
       <enumeration value="serverUpdateProhibited"/>
+      <!-- Custom EIS domain status values -->
+      <enumeration value="serverTechChangeProhibited"/>
+      <enumeration value="serverAdminChangeProhibited"/>
+      <enumeration value="serverRegistrantChangeProhibited"/>
     </restriction>
    </simpleType>
 

@@ -52,7 +52,7 @@ class Admin::DomainsController < AdminController
       redirect_to [:admin, @domain]
     else
       build_associations
-      flash.now[:alert] = I18n.t('failed_to_update_domain')
+      flash.now[:alert] = I18n.t('failed_to_update_domain') + ' ' + @domain.errors.full_messages.join(", ")
       render 'edit'
     end
   end

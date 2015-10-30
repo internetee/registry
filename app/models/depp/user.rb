@@ -18,7 +18,7 @@ module Depp
     def server
       client_cert = File.read(ENV['cert_path'])
       client_key = File.read(ENV['key_path'])
-      port = Rails.env.test? ? 701 : ENV['epp_port']
+      port = ENV['epp_port'] || '700'
 
       @server_cache ||= Epp::Server.new({
         server: ENV['epp_hostname'],

@@ -12,9 +12,14 @@ class Domain < ActiveRecord::Base
   # TODO: should we user validates_associated :registrant here?
 
   has_many :admin_domain_contacts
-  accepts_nested_attributes_for :admin_domain_contacts, allow_destroy: true
+  accepts_nested_attributes_for :admin_domain_contacts,  allow_destroy: !:admin_change_prohibited?, reject_if: :admin_change_prohibited?
   has_many :tech_domain_contacts
-  accepts_nested_attributes_for :tech_domain_contacts, allow_destroy: true
+  accepts_nested_attributes_for :tech_domain_contacts, allow_destroy: !:tech_change_prohibited?, reject_if: :tech_change_prohibited?
+
+  def registrant_change_prohibited?
+    statuses.include? DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED
+  end
+
 
   # NB! contacts, admin_contacts, tech_contacts are empty for a new record
   has_many :domain_contacts, dependent: :destroy
@@ -108,7 +113,15 @@ class Domain < ActiveRecord::Base
     errors.add(:base, :invalid_auth_information_reserved)
   end
 
-  validate :check_permissions
+  validate :status_is_consistant
+  def status_is_consistant
+      has_error = (statuses.include?(DomainStatus::SERVER_HOLD) && statuses.include?(DomainStatus::SERVER_MANUAL_INZONE))
+      errors.add(:domains, I18n.t(:object_status_prohibits_operation)) if has_error
+  end
+
+  attr_accessor :is_admin
+
+  validate :check_permissions, :unless => :is_admin
   def check_permissions
     return unless force_delete?
     errors.add(:base, I18n.t(:object_status_prohibits_operation))
@@ -174,6 +187,14 @@ class Domain < ActiveRecord::Base
     nameservers.select { |x| !x.hostname.end_with?(name) }
   end
 
+  def admin_change_prohibited?
+    statuses.include? DomainStatus::SERVER_ADMIN_CHANGE_PROHIBITED
+  end
+
+  def tech_change_prohibited?
+    statuses.include? DomainStatus::SERVER_TECH_CHANGE_PROHIBITED
+  end
+
   class << self
     def convert_period_to_time(period, unit)
       return (period.to_i / 365).years if unit == 'd'
@@ -202,7 +223,7 @@ class Domain < ActiveRecord::Base
       count = 0
       expired_pending_domains = Domain.where('registrant_verification_asked_at <= ?', expire_at)
       expired_pending_domains.each do |domain|
-        unless domain.pending_update? || domain.pending_delete?
+        unless domain.pending_update? || domain.pending_delete? || pending_delete_confirmation?
           msg = "#{Time.zone.now.utc} - ISSUE: DOMAIN #{domain.id}: #{domain.name} IS IN EXPIRED PENDING LIST, " \
                 "but no pendingDelete/pendingUpdate state present!\n"
           STDOUT << msg unless Rails.env.test?
@@ -212,7 +233,7 @@ class Domain < ActiveRecord::Base
         if domain.pending_update?
           DomainMailer.pending_update_expired_notification_for_new_registrant(domain).deliver_now
         end
-        if domain.pending_delete?
+        if domain.pending_delete? || pending_delete_confirmation?
           DomainMailer.pending_delete_expired_notification(domain).deliver_now
         end
         domain.clean_pendings!
@@ -358,8 +379,7 @@ class Domain < ActiveRecord::Base
     return false if statuses.include_any?(DomainStatus::DELETE_CANDIDATE, DomainStatus::SERVER_RENEW_PROHIBITED,
                                           DomainStatus::CLIENT_RENEW_PROHIBITED, DomainStatus::PENDING_RENEW,
                                           DomainStatus::PENDING_TRANSFER, DomainStatus::PENDING_DELETE,
-                                          DomainStatus::PENDING_UPDATE, 'pendingDeleteConfirmation')
-
+                                          DomainStatus::PENDING_UPDATE, DomainStatus::PENDING_DELETE_CONFIRMATION)
     true
   end
 
@@ -379,6 +399,7 @@ class Domain < ActiveRecord::Base
   def clean_pendings!
     preclean_pendings
     self.pending_json = {}
+    statuses.delete[DomainStatus::PENDING_DELETE_CONFIRMATION]
     statuses.delete(DomainStatus::PENDING_UPDATE)
     statuses.delete(DomainStatus::PENDING_DELETE)
     status_notes[DomainStatus::PENDING_UPDATE] = ''
@@ -461,8 +482,9 @@ class Domain < ActiveRecord::Base
     return true if pending_delete?
     self.epp_pending_delete = true # for epp
 
+    # TODO: if this were to ever return true, that would be wrong. EPP would report sucess pending
     return true unless registrant_verification_asked?
-    set_pending_delete
+    pending_delete_confirmation!
     save(validate: false) # should check if this did succeed
 
     DomainMailer.pending_deleted(self).deliver_now
@@ -639,7 +661,7 @@ class Domain < ActiveRecord::Base
     statuses.include?(DomainStatus::PENDING_UPDATE) && !statuses.include?(DomainStatus::FORCE_DELETE)
   end
 
-  # public api
+  # depricated not used, not valid
   def update_prohibited?
     pending_update_prohibited? && pending_delete_prohibited?
   end
@@ -651,6 +673,7 @@ class Domain < ActiveRecord::Base
 
   def pending_update_prohibited?
     (statuses_was & [
+        DomainStatus::PENDING_DELETE_CONFIRMATION,
       DomainStatus::CLIENT_UPDATE_PROHIBITED,
       DomainStatus::SERVER_UPDATE_PROHIBITED,
       DomainStatus::PENDING_CREATE,
@@ -671,6 +694,14 @@ class Domain < ActiveRecord::Base
 
   def pending_delete?
     statuses.include?(DomainStatus::PENDING_DELETE) && !statuses.include?(DomainStatus::FORCE_DELETE)
+  end
+
+  def pending_delete_confirmation?
+    statuses.include? DomainStatus::PENDING_DELETE_CONFIRMATION
+  end
+
+  def pending_delete_confirmation!
+    statuses << DomainStatus::PENDING_DELETE_CONFIRMATION unless pending_delete_prohibited?
   end
 
   def pending_delete_prohibited?
