@@ -223,7 +223,7 @@ class Domain < ActiveRecord::Base
       count = 0
       expired_pending_domains = Domain.where('registrant_verification_asked_at <= ?', expire_at)
       expired_pending_domains.each do |domain|
-        unless domain.pending_update? || domain.pending_delete? || pending_delete_confirmation?
+        unless domain.pending_update? || domain.pending_delete? || domain.pending_delete_confirmation?
           msg = "#{Time.zone.now.utc} - ISSUE: DOMAIN #{domain.id}: #{domain.name} IS IN EXPIRED PENDING LIST, " \
                 "but no pendingDelete/pendingUpdate state present!\n"
           STDOUT << msg unless Rails.env.test?
@@ -233,7 +233,7 @@ class Domain < ActiveRecord::Base
         if domain.pending_update?
           DomainMailer.pending_update_expired_notification_for_new_registrant(domain).deliver_now
         end
-        if domain.pending_delete? || pending_delete_confirmation?
+        if domain.pending_delete? || domain.pending_delete_confirmation?
           DomainMailer.pending_delete_expired_notification(domain).deliver_now
         end
         domain.clean_pendings!
