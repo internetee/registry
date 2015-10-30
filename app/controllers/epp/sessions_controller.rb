@@ -116,7 +116,7 @@ class Epp::SessionsController < EppController
   def connection_limit_ok?
     return true if Rails.env.test? || Rails.env.development?
     c = EppSession.where(
-      'registrar_id = ? AND updated_at >= ?', @api_user.registrar_id, Time.zone.now - 5.minutes
+      'registrar_id = ? AND updated_at >= ?', @api_user.registrar_id, Time.zone.now - 1.second
     ).count
 
     return false if c >= 4

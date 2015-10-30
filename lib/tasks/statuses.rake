@@ -17,7 +17,7 @@ task statuses: [:environment] do
       'serverRegistrantChangeProhibited',
       'serverAdminChangeProhibited',
       'serverTechChangeProhibited',
-      'forceDelete',
+      'serverForceDelete',
       'deleteCandidate',
       'expired'
     ],
@@ -36,7 +36,7 @@ task statuses: [:environment] do
       'serverRegistrantChangeProhibited',
       'serverAdminChangeProhibited',
       'serverTechChangeProhibited',
-      'forceDelete',
+      'serverForceDelete',
       'deleteCandidate',
       'expired'
     ],
@@ -55,7 +55,7 @@ task statuses: [:environment] do
       'serverRegistrantChangeProhibited',
       'serverAdminChangeProhibited',
       'serverTechChangeProhibited',
-      'forceDelete',
+      'serverForceDelete',
       'deleteCandidate',
       'expired'
     ],
@@ -73,7 +73,7 @@ task statuses: [:environment] do
       'serverRegistrantChangeProhibited',
       'serverAdminChangeProhibited',
       'serverTechChangeProhibited',
-      'forceDelete',
+      'serverForceDelete',
       'deleteCandidate',
       'expired'
     ],
@@ -91,7 +91,7 @@ task statuses: [:environment] do
       'serverRegistrantChangeProhibited',
       'serverAdminChangeProhibited',
       'serverTechChangeProhibited',
-      'forceDelete',
+      'serverForceDelete',
       'deleteCandidate',
       'expired'
     ],
@@ -115,7 +115,7 @@ task statuses: [:environment] do
       'serverRegistrantChangeProhibited',
       'serverAdminChangeProhibited',
       'serverTechChangeProhibited',
-      'forceDelete',
+      'serverForceDelete',
       'deleteCandidate',
       'expired'
     ],
@@ -139,7 +139,7 @@ task statuses: [:environment] do
       'serverRegistrantChangeProhibited',
       'serverAdminChangeProhibited',
       'serverTechChangeProhibited',
-      'forceDelete',
+      'serverForceDelete',
       'deleteCandidate',
       'expired'
     ],
@@ -163,7 +163,7 @@ task statuses: [:environment] do
       'serverRegistrantChangeProhibited',
       'serverAdminChangeProhibited',
       'serverTechChangeProhibited',
-      'forceDelete',
+      'serverForceDelete',
       'deleteCandidate',
       'expired'
     ],
@@ -187,7 +187,7 @@ task statuses: [:environment] do
       'serverRegistrantChangeProhibited',
       'serverAdminChangeProhibited',
       'serverTechChangeProhibited',
-      'forceDelete',
+      'serverForceDelete',
       'deleteCandidate',
       'expired'
     ],
@@ -211,7 +211,7 @@ task statuses: [:environment] do
       'serverRegistrantChangeProhibited',
       'serverAdminChangeProhibited',
       'serverTechChangeProhibited',
-      'forceDelete',
+      'serverForceDelete',
       'deleteCandidate',
       'expired'
     ],
@@ -235,7 +235,7 @@ task statuses: [:environment] do
       'serverRegistrantChangeProhibited',
       'serverAdminChangeProhibited',
       'serverTechChangeProhibited',
-      'forceDelete',
+      'serverForceDelete',
       'deleteCandidate',
       'expired'
     ],
@@ -255,7 +255,7 @@ task statuses: [:environment] do
       'serverRegistrantChangeProhibited',
       'serverAdminChangeProhibited',
       'serverTechChangeProhibited',
-      'forceDelete',
+      'serverForceDelete',
       'deleteCandidate',
       'expired'
     ],
@@ -274,7 +274,7 @@ task statuses: [:environment] do
       'serverRegistrantChangeProhibited',
       'serverAdminChangeProhibited',
       'serverTechChangeProhibited',
-      'forceDelete',
+      'serverForceDelete',
       'deleteCandidate',
       'expired'
     ],
@@ -292,7 +292,7 @@ task statuses: [:environment] do
       'serverRegistrantChangeProhibited',
       'serverAdminChangeProhibited',
       'serverTechChangeProhibited',
-      'forceDelete',
+      'serverForceDelete',
       'deleteCandidate',
       'expired'
 
@@ -311,7 +311,7 @@ task statuses: [:environment] do
       'serverRegistrantChangeProhibited',
       'serverAdminChangeProhibited',
       'serverTechChangeProhibited',
-      'forceDelete',
+      'serverForceDelete',
       'deleteCandidate',
       'expired'
     ],
@@ -329,7 +329,7 @@ task statuses: [:environment] do
       'serverRegistrantChangeProhibited',
       'serverAdminChangeProhibited',
       'serverTechChangeProhibited',
-      'forceDelete',
+      'serverForceDelete',
       'deleteCandidate',
       'expired'
     ],
@@ -353,7 +353,7 @@ task statuses: [:environment] do
       'serverRegistrantChangeProhibited',
       'serverAdminChangeProhibited',
       'serverTechChangeProhibited',
-      'forceDelete',
+      'serverForceDelete',
       'deleteCandidate',
       'expired'
     ],
@@ -378,7 +378,7 @@ task statuses: [:environment] do
       'serverManualInzone',
       'serverAdminChangeProhibited',
       'serverTechChangeProhibited',
-      'forceDelete',
+      'serverForceDelete',
       'deleteCandidate',
       'expired'
     ],
@@ -403,7 +403,7 @@ task statuses: [:environment] do
       'serverManualInzone',
       'serverRegistrantChangeProhibited',
       'serverTechChangeProhibited',
-      'forceDelete',
+      'serverForceDelete',
       'deleteCandidate',
       'expired'
     ],
@@ -428,11 +428,11 @@ task statuses: [:environment] do
       'serverManualInzone',
       'serverRegistrantChangeProhibited',
       'serverAdminChangeProhibited',
-      'forceDelete',
+      'serverForceDelete',
       'deleteCandidate',
       'expired'
     ],
-    'forceDelete': [
+    'serverForceDelete': [
       'clientHold',
       'serverHold',
       'inactive',
@@ -465,7 +465,7 @@ task statuses: [:environment] do
       'serverRegistrantChangeProhibited',
       'serverAdminChangeProhibited',
       'serverTechChangeProhibited',
-      'forceDelete',
+      'serverForceDelete',
       'deleteCandidate',
       'expired'
     ],
@@ -491,7 +491,7 @@ task statuses: [:environment] do
       'serverRegistrantChangeProhibited',
       'serverAdminChangeProhibited',
       'serverTechChangeProhibited',
-      'forceDelete',
+      'serverForceDelete',
       'deleteCandidate'
     ]
   }

@@ -8,5 +8,6 @@
     .form-group
       .col-md-3.control-label
         = f.label :legal_document, t(:legal_document)
+        %p.help-block= t(:legal_document_max_size)
       .col-md-7
         = f.file_field :legal_document, :value => ''

@@ -21,7 +21,7 @@
     </create>
     <extension>
       <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
-        <eis:ident type="bic" cc="EE">123</eis:ident>
+        <eis:ident type="org" cc="EE">123</eis:ident>
         <eis:legalDocument type="pdf">
           dGVzdCBmYWlsCg==
         </eis:legalDocument>

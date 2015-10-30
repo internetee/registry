@@ -245,7 +245,7 @@ describe Domain do
       @domain.set_force_delete
 
       @domain.statuses.should match_array([
-        "forceDelete",
+        "serverForceDelete",
         "pendingDelete",
         "serverManualInzone",
         "serverRenewProhibited",
@@ -286,7 +286,7 @@ describe Domain do
         "clientHold",
         "deleteCandidate",
         "expired",
-        "forceDelete",
+        "serverForceDelete",
         "pendingDelete",
         "serverHold",
         "serverRenewProhibited",

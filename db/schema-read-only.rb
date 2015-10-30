@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150921111842) do
+ActiveRecord::Schema.define(version: 20151028183132) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -240,19 +240,20 @@ ActiveRecord::Schema.define(version: 20150921111842) do
   end
 
   create_table "dnskeys", force: :cascade do |t|
-    t.integer "domain_id"
-    t.integer "flags"
-    t.integer "protocol"
-    t.integer "alg"
-    t.text    "public_key"
-    t.integer "delegation_signer_id"
-    t.string  "ds_key_tag"
-    t.integer "ds_alg"
-    t.integer "ds_digest_type"
-    t.string  "ds_digest"
-    t.string  "creator_str"
-    t.string  "updator_str"
-    t.integer "legacy_domain_id"
+    t.integer  "domain_id"
+    t.integer  "flags"
+    t.integer  "protocol"
+    t.integer  "alg"
+    t.text     "public_key"
+    t.integer  "delegation_signer_id"
+    t.string   "ds_key_tag"
+    t.integer  "ds_alg"
+    t.integer  "ds_digest_type"
+    t.string   "ds_digest"
+    t.string   "creator_str"
+    t.string   "updator_str"
+    t.integer  "legacy_domain_id"
+    t.datetime "updated_at"
   end
 
   add_index "dnskeys", ["delegation_signer_id"], name: "index_dnskeys_on_delegation_signer_id", using: :btree
@@ -451,15 +452,28 @@ ActiveRecord::Schema.define(version: 20150921111842) do
   add_index "legal_documents", ["documentable_type", "documentable_id"], name: "index_legal_documents_on_documentable_type_and_documentable_id", using: :btree
 
   create_table "log_account_activities", force: :cascade do |t|
-    t.string   "item_type",      null: false
-    t.integer  "item_id",        null: false
-    t.string   "event",          null: false
+    t.string   "item_type",           null: false
+    t.integer  "item_id",             null: false
+    t.string   "event",               null: false
     t.string   "whodunnit"
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.integer  "log_id"
+    t.integer  "account_id"
+    t.integer  "invoice_id"
+    t.decimal  "sum"
+    t.string   "currency"
+    t.integer  "bank_transaction_id"
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+    t.string   "description"
+    t.string   "creator_str"
+    t.string   "updator_str"
+    t.string   "activity_type"
+    t.integer  "log_pricelist_id"
   end
 
   add_index "log_account_activities", ["item_type", "item_id"], name: "index_log_account_activities_on_item_type_and_item_id", using: :btree
@@ -475,21 +489,44 @@ ActiveRecord::Schema.define(version: 20150921111842) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.integer  "log_id"
+    t.integer  "registrar_id"
+    t.string   "account_type"
+    t.decimal  "balance"
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+    t.string   "currency"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   add_index "log_accounts", ["item_type", "item_id"], name: "index_log_accounts_on_item_type_and_item_id", using: :btree
   add_index "log_accounts", ["whodunnit"], name: "index_log_accounts_on_whodunnit", using: :btree
 
   create_table "log_addresses", force: :cascade do |t|
-    t.string   "item_type",      null: false
-    t.integer  "item_id",        null: false
-    t.string   "event",          null: false
+    t.string   "item_type",         null: false
+    t.integer  "item_id",           null: false
+    t.string   "event",             null: false
     t.string   "whodunnit"
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.integer  "log_id"
+    t.integer  "contact_id"
+    t.string   "city"
+    t.string   "street"
+    t.string   "zip"
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+    t.string   "street2"
+    t.string   "street3"
+    t.string   "creator_str"
+    t.string   "updator_str"
+    t.string   "country_code"
+    t.string   "state"
+    t.integer  "legacy_contact_id"
   end
 
   add_index "log_addresses", ["item_type", "item_id"], name: "index_log_addresses_on_item_type_and_item_id", using: :btree
@@ -511,30 +548,56 @@ ActiveRecord::Schema.define(version: 20150921111842) do
   add_index "log_api_users", ["whodunnit"], name: "index_log_api_users_on_whodunnit", using: :btree
 
   create_table "log_bank_statements", force: :cascade do |t|
-    t.string   "item_type",      null: false
-    t.integer  "item_id",        null: false
-    t.string   "event",          null: false
+    t.string   "item_type",        null: false
+    t.integer  "item_id",          null: false
+    t.string   "event",            null: false
     t.string   "whodunnit"
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.integer  "log_id"
+    t.string   "bank_code"
+    t.string   "iban"
+    t.string   "import_file_path"
+    t.datetime "queried_at"
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   add_index "log_bank_statements", ["item_type", "item_id"], name: "index_log_bank_statements_on_item_type_and_item_id", using: :btree
   add_index "log_bank_statements", ["whodunnit"], name: "index_log_bank_statements_on_whodunnit", using: :btree
 
   create_table "log_bank_transactions", force: :cascade do |t|
-    t.string   "item_type",      null: false
-    t.integer  "item_id",        null: false
-    t.string   "event",          null: false
+    t.string   "item_type",         null: false
+    t.integer  "item_id",           null: false
+    t.string   "event",             null: false
     t.string   "whodunnit"
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.integer  "log_id"
+    t.integer  "bank_statement_id"
+    t.string   "bank_reference"
+    t.string   "iban"
+    t.string   "currency"
+    t.string   "buyer_bank_code"
+    t.string   "buyer_iban"
+    t.string   "buyer_name"
+    t.string   "document_no"
+    t.string   "description"
+    t.decimal  "sum"
+    t.string   "reference_no"
+    t.datetime "paid_at"
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   add_index "log_bank_transactions", ["item_type", "item_id"], name: "index_log_bank_transactions_on_item_type_and_item_id", using: :btree
@@ -550,6 +613,12 @@ ActiveRecord::Schema.define(version: 20150921111842) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.integer  "log_id"
+    t.string   "names",                       array: true
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   add_index "log_blocked_domains", ["item_type", "item_id"], name: "index_log_blocked_domains_on_item_type_and_item_id", using: :btree
@@ -565,6 +634,17 @@ ActiveRecord::Schema.define(version: 20150921111842) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.integer  "log_id"
+    t.integer  "api_user_id"
+    t.text     "csr"
+    t.text     "crt"
+    t.string   "creator_str"
+    t.string   "updator_str"
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+    t.string   "common_name"
+    t.string   "md5"
+    t.string   "interface"
   end
 
   add_index "log_certificates", ["item_type", "item_id"], name: "index_log_certificates_on_item_type_and_item_id", using: :btree
@@ -586,15 +666,41 @@ ActiveRecord::Schema.define(version: 20150921111842) do
   add_index "log_contact_statuses", ["whodunnit"], name: "index_log_contact_statuses_on_whodunnit", using: :btree
 
   create_table "log_contacts", force: :cascade do |t|
-    t.string   "item_type",        null: false
-    t.integer  "item_id",          null: false
-    t.string   "event",            null: false
+    t.string   "item_type",          null: false
+    t.integer  "item_id",            null: false
+    t.string   "event",              null: false
     t.string   "whodunnit"
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.integer  "log_id"
+    t.string   "code"
+    t.string   "phone"
+    t.string   "email"
+    t.string   "fax"
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+    t.string   "ident"
+    t.string   "ident_type"
+    t.string   "auth_info"
+    t.string   "name"
+    t.string   "org_name"
+    t.integer  "registrar_id"
+    t.string   "creator_str"
+    t.string   "updator_str"
+    t.string   "ident_country_code"
+    t.string   "city"
+    t.text     "street"
+    t.string   "zip"
+    t.string   "country_code"
+    t.string   "state"
+    t.integer  "legacy_id"
+    t.string   "statuses",                        array: true
+    t.hstore   "status_notes"
+    t.integer  "legacy_history_id"
+    t.integer  "copy_from_id"
     t.datetime "ident_updated_at"
   end
 
@@ -617,78 +723,153 @@ ActiveRecord::Schema.define(version: 20150921111842) do
   add_index "log_countries", ["whodunnit"], name: "index_log_countries_on_whodunnit", using: :btree
 
   create_table "log_dnskeys", force: :cascade do |t|
-    t.string   "item_type",      null: false
-    t.integer  "item_id",        null: false
-    t.string   "event",          null: false
+    t.string   "item_type",            null: false
+    t.integer  "item_id",              null: false
+    t.string   "event",                null: false
     t.string   "whodunnit"
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.integer  "log_id"
+    t.integer  "domain_id"
+    t.integer  "flags"
+    t.integer  "protocol"
+    t.integer  "alg"
+    t.text     "public_key"
+    t.integer  "delegation_signer_id"
+    t.string   "ds_key_tag"
+    t.integer  "ds_alg"
+    t.integer  "ds_digest_type"
+    t.string   "ds_digest"
+    t.string   "creator_str"
+    t.string   "updator_str"
+    t.integer  "legacy_domain_id"
   end
 
   add_index "log_dnskeys", ["item_type", "item_id"], name: "index_log_dnskeys_on_item_type_and_item_id", using: :btree
   add_index "log_dnskeys", ["whodunnit"], name: "index_log_dnskeys_on_whodunnit", using: :btree
 
   create_table "log_domain_contacts", force: :cascade do |t|
-    t.string   "item_type",      null: false
-    t.integer  "item_id",        null: false
-    t.string   "event",          null: false
+    t.string   "item_type",          null: false
+    t.integer  "item_id",            null: false
+    t.string   "event",              null: false
     t.string   "whodunnit"
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.integer  "log_id"
+    t.integer  "contact_id"
+    t.integer  "domain_id"
+    t.string   "contact_type"
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+    t.string   "contact_code_cache"
+    t.string   "creator_str"
+    t.string   "updator_str"
+    t.string   "type"
+    t.integer  "legacy_domain_id"
+    t.integer  "legacy_contact_id"
   end
 
   add_index "log_domain_contacts", ["item_type", "item_id"], name: "index_log_domain_contacts_on_item_type_and_item_id", using: :btree
   add_index "log_domain_contacts", ["whodunnit"], name: "index_log_domain_contacts_on_whodunnit", using: :btree
 
   create_table "log_domain_statuses", force: :cascade do |t|
-    t.string   "item_type",      null: false
-    t.integer  "item_id",        null: false
-    t.string   "event",          null: false
+    t.string   "item_type",        null: false
+    t.integer  "item_id",          null: false
+    t.string   "event",            null: false
     t.string   "whodunnit"
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.integer  "log_id"
+    t.integer  "domain_id"
+    t.string   "description"
+    t.string   "value"
+    t.string   "creator_str"
+    t.string   "updator_str"
+    t.integer  "legacy_domain_id"
   end
 
   add_index "log_domain_statuses", ["item_type", "item_id"], name: "index_log_domain_statuses_on_item_type_and_item_id", using: :btree
   add_index "log_domain_statuses", ["whodunnit"], name: "index_log_domain_statuses_on_whodunnit", using: :btree
 
   create_table "log_domain_transfers", force: :cascade do |t|
-    t.string   "item_type",      null: false
-    t.integer  "item_id",        null: false
-    t.string   "event",          null: false
+    t.string   "item_type",             null: false
+    t.integer  "item_id",               null: false
+    t.string   "event",                 null: false
     t.string   "whodunnit"
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.integer  "log_id"
+    t.integer  "domain_id"
+    t.string   "status"
+    t.datetime "transfer_requested_at"
+    t.datetime "transferred_at"
+    t.integer  "transfer_from_id"
+    t.integer  "transfer_to_id"
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+    t.datetime "wait_until"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   add_index "log_domain_transfers", ["item_type", "item_id"], name: "index_log_domain_transfers_on_item_type_and_item_id", using: :btree
   add_index "log_domain_transfers", ["whodunnit"], name: "index_log_domain_transfers_on_whodunnit", using: :btree
 
   create_table "log_domains", force: :cascade do |t|
-    t.string   "item_type",                      null: false
-    t.integer  "item_id",                        null: false
-    t.string   "event",                          null: false
+    t.string   "item_type",                                     null: false
+    t.integer  "item_id",                                       null: false
+    t.string   "event",                                         null: false
     t.string   "whodunnit"
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
-    t.text     "nameserver_ids",    default: [],              array: true
-    t.text     "tech_contact_ids",  default: [],              array: true
-    t.text     "admin_contact_ids", default: [],              array: true
+    t.text     "nameserver_ids",                   default: [],              array: true
+    t.text     "tech_contact_ids",                 default: [],              array: true
+    t.text     "admin_contact_ids",                default: [],              array: true
     t.string   "session"
     t.json     "children"
+    t.integer  "log_id"
+    t.string   "name"
+    t.integer  "registrar_id"
+    t.datetime "registered_at"
+    t.string   "status"
+    t.datetime "valid_from"
+    t.datetime "valid_to"
+    t.integer  "registrant_id"
+    t.string   "auth_info"
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+    t.string   "name_dirty"
+    t.string   "name_puny"
+    t.integer  "period"
+    t.string   "period_unit"
+    t.string   "creator_str"
+    t.string   "updator_str"
+    t.integer  "legacy_id"
+    t.integer  "legacy_registrar_id"
+    t.integer  "legacy_registrant_id"
+    t.datetime "outzone_at"
+    t.datetime "delete_at"
+    t.datetime "registrant_verification_asked_at"
+    t.string   "registrant_verification_token"
+    t.json     "pending_json"
+    t.datetime "force_delete_at"
+    t.string   "statuses",                                                   array: true
+    t.boolean  "reserved"
+    t.hstore   "status_notes"
+    t.string   "statuses_backup",                                            array: true
   end
 
   add_index "log_domains", ["item_type", "item_id"], name: "index_log_domains_on_item_type_and_item_id", using: :btree
@@ -704,57 +885,135 @@ ActiveRecord::Schema.define(version: 20150921111842) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.integer  "log_id"
+    t.integer  "invoice_id"
+    t.string   "description"
+    t.string   "unit"
+    t.integer  "amount"
+    t.decimal  "price"
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   add_index "log_invoice_items", ["item_type", "item_id"], name: "index_log_invoice_items_on_item_type_and_item_id", using: :btree
   add_index "log_invoice_items", ["whodunnit"], name: "index_log_invoice_items_on_whodunnit", using: :btree
 
   create_table "log_invoices", force: :cascade do |t|
-    t.string   "item_type",      null: false
-    t.integer  "item_id",        null: false
-    t.string   "event",          null: false
+    t.string   "item_type",           null: false
+    t.integer  "item_id",             null: false
+    t.string   "event",               null: false
     t.string   "whodunnit"
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.integer  "log_id"
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+    t.string   "invoice_type"
+    t.datetime "due_date"
+    t.string   "payment_term"
+    t.string   "currency"
+    t.string   "description"
+    t.string   "reference_no"
+    t.decimal  "vat_prc"
+    t.datetime "paid_at"
+    t.integer  "seller_id"
+    t.string   "seller_name"
+    t.string   "seller_reg_no"
+    t.string   "seller_iban"
+    t.string   "seller_bank"
+    t.string   "seller_swift"
+    t.string   "seller_vat_no"
+    t.string   "seller_country_code"
+    t.string   "seller_state"
+    t.string   "seller_street"
+    t.string   "seller_city"
+    t.string   "seller_zip"
+    t.string   "seller_phone"
+    t.string   "seller_url"
+    t.string   "seller_email"
+    t.string   "seller_contact_name"
+    t.integer  "buyer_id"
+    t.string   "buyer_name"
+    t.string   "buyer_reg_no"
+    t.string   "buyer_country_code"
+    t.string   "buyer_state"
+    t.string   "buyer_street"
+    t.string   "buyer_city"
+    t.string   "buyer_zip"
+    t.string   "buyer_phone"
+    t.string   "buyer_url"
+    t.string   "buyer_email"
+    t.string   "creator_str"
+    t.string   "updator_str"
+    t.integer  "number"
+    t.datetime "cancelled_at"
+    t.decimal  "sum_cache"
   end
 
   add_index "log_invoices", ["item_type", "item_id"], name: "index_log_invoices_on_item_type_and_item_id", using: :btree
   add_index "log_invoices", ["whodunnit"], name: "index_log_invoices_on_whodunnit", using: :btree
 
   create_table "log_keyrelays", force: :cascade do |t|
-    t.string   "item_type",      null: false
-    t.integer  "item_id",        null: false
-    t.string   "event",          null: false
+    t.string   "item_type",           null: false
+    t.integer  "item_id",             null: false
+    t.string   "event",               null: false
     t.string   "whodunnit"
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.integer  "log_id"
+    t.integer  "domain_id"
+    t.datetime "pa_date"
+    t.string   "key_data_flags"
+    t.string   "key_data_protocol"
+    t.string   "key_data_alg"
+    t.text     "key_data_public_key"
+    t.string   "auth_info_pw"
+    t.string   "expiry_relative"
+    t.datetime "expiry_absolute"
+    t.integer  "requester_id"
+    t.integer  "accepter_id"
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   add_index "log_keyrelays", ["item_type", "item_id"], name: "index_log_keyrelays_on_item_type_and_item_id", using: :btree
   add_index "log_keyrelays", ["whodunnit"], name: "index_log_keyrelays_on_whodunnit", using: :btree
 
   create_table "log_legal_documents", force: :cascade do |t|
-    t.string   "item_type",      null: false
-    t.integer  "item_id",        null: false
-    t.string   "event",          null: false
+    t.string   "item_type",         null: false
+    t.integer  "item_id",           null: false
+    t.string   "event",             null: false
     t.string   "whodunnit"
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.integer  "log_id"
+    t.string   "document_type"
+    t.integer  "documentable_id"
+    t.string   "documentable_type"
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+    t.string   "creator_str"
+    t.string   "updator_str"
+    t.string   "path"
   end
 
   add_index "log_legal_documents", ["item_type", "item_id"], name: "index_log_legal_documents_on_item_type_and_item_id", using: :btree
   add_index "log_legal_documents", ["whodunnit"], name: "index_log_legal_documents_on_whodunnit", using: :btree
 
-  create_table "log_messages", force: :cascade do |t|
+  create_table "log_mail_templates", force: :cascade do |t|
     t.string   "item_type",      null: false
     t.integer  "item_id",        null: false
     t.string   "event",          null: false
@@ -764,47 +1023,151 @@ ActiveRecord::Schema.define(version: 20150921111842) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.integer  "log_id"
+    t.string   "name"
+    t.string   "subject"
+    t.string   "from"
+    t.string   "bcc"
+    t.string   "cc"
+    t.text     "body"
+    t.text     "text_body"
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+  end
+
+  add_index "log_mail_templates", ["item_type", "item_id"], name: "index_log_mail_templates_on_item_type_and_item_id", using: :btree
+  add_index "log_mail_templates", ["whodunnit"], name: "index_log_mail_templates_on_whodunnit", using: :btree
+
+  create_table "log_messages", force: :cascade do |t|
+    t.string   "item_type",         null: false
+    t.integer  "item_id",           null: false
+    t.string   "event",             null: false
+    t.string   "whodunnit"
+    t.json     "object"
+    t.json     "object_changes"
+    t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
+    t.integer  "log_id"
+    t.integer  "registrar_id"
+    t.string   "body"
+    t.string   "attached_obj_type"
+    t.string   "attached_obj_id"
+    t.boolean  "queued"
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   add_index "log_messages", ["item_type", "item_id"], name: "index_log_messages_on_item_type_and_item_id", using: :btree
   add_index "log_messages", ["whodunnit"], name: "index_log_messages_on_whodunnit", using: :btree
 
   create_table "log_nameservers", force: :cascade do |t|
-    t.string   "item_type",      null: false
-    t.integer  "item_id",        null: false
-    t.string   "event",          null: false
+    t.string   "item_type",        null: false
+    t.integer  "item_id",          null: false
+    t.string   "event",            null: false
     t.string   "whodunnit"
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.integer  "log_id"
+    t.string   "hostname"
+    t.string   "ipv4"
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+    t.string   "ipv6"
+    t.integer  "domain_id"
+    t.string   "creator_str"
+    t.string   "updator_str"
+    t.integer  "legacy_domain_id"
   end
 
   add_index "log_nameservers", ["item_type", "item_id"], name: "index_log_nameservers_on_item_type_and_item_id", using: :btree
   add_index "log_nameservers", ["whodunnit"], name: "index_log_nameservers_on_whodunnit", using: :btree
 
   create_table "log_pricelists", force: :cascade do |t|
-    t.string   "item_type",      null: false
-    t.integer  "item_id",        null: false
-    t.string   "event",          null: false
+    t.string   "item_type",          null: false
+    t.integer  "item_id",            null: false
+    t.string   "event",              null: false
     t.string   "whodunnit"
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
     t.string   "session"
+    t.integer  "log_id"
+    t.string   "desc"
+    t.string   "category"
+    t.decimal  "price_cents"
+    t.string   "price_currency"
+    t.datetime "valid_from"
+    t.datetime "valid_to"
+    t.string   "creator_str"
+    t.string   "updator_str"
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+    t.string   "duration"
+    t.string   "operation_category"
   end
 
-  create_table "log_registrars", force: :cascade do |t|
-    t.string   "item_type",      null: false
-    t.integer  "item_id",        null: false
-    t.string   "event",          null: false
+  create_table "log_registrant_verifications", force: :cascade do |t|
+    t.string   "item_type",          null: false
+    t.integer  "item_id",            null: false
+    t.string   "event",              null: false
     t.string   "whodunnit"
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.integer  "log_id"
+    t.string   "domain_name"
+    t.string   "verification_token"
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+    t.string   "action"
+    t.integer  "domain_id"
+    t.string   "action_type"
+  end
+
+  add_index "log_registrant_verifications", ["item_type", "item_id"], name: "index_log_registrant_verifications_on_item_type_and_item_id", using: :btree
+  add_index "log_registrant_verifications", ["whodunnit"], name: "index_log_registrant_verifications_on_whodunnit", using: :btree
+
+  create_table "log_registrars", force: :cascade do |t|
+    t.string   "item_type",       null: false
+    t.integer  "item_id",         null: false
+    t.string   "event",           null: false
+    t.string   "whodunnit"
+    t.json     "object"
+    t.json     "object_changes"
+    t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
+    t.integer  "log_id"
+    t.string   "name"
+    t.string   "reg_no"
+    t.string   "vat_no"
+    t.string   "billing_address"
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+    t.string   "creator_str"
+    t.string   "updator_str"
+    t.string   "phone"
+    t.string   "email"
+    t.string   "billing_email"
+    t.string   "country_code"
+    t.string   "state"
+    t.string   "city"
+    t.string   "street"
+    t.string   "zip"
+    t.string   "code"
+    t.string   "url"
+    t.string   "directo_handle"
+    t.boolean  "vat"
+    t.integer  "legacy_id"
+    t.string   "reference_no"
   end
 
   add_index "log_registrars", ["item_type", "item_id"], name: "index_log_registrars_on_item_type_and_item_id", using: :btree
@@ -820,6 +1183,12 @@ ActiveRecord::Schema.define(version: 20150921111842) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.integer  "log_id"
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+    t.string   "creator_str"
+    t.string   "updator_str"
+    t.hstore   "names"
   end
 
   add_index "log_reserved_domains", ["item_type", "item_id"], name: "index_log_reserved_domains_on_item_type_and_item_id", using: :btree
@@ -835,21 +1204,56 @@ ActiveRecord::Schema.define(version: 20150921111842) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.integer  "log_id"
+    t.string   "var"
+    t.text     "value"
+    t.integer  "thing_id"
+    t.string   "thing_type"
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   add_index "log_settings", ["item_type", "item_id"], name: "index_log_settings_on_item_type_and_item_id", using: :btree
   add_index "log_settings", ["whodunnit"], name: "index_log_settings_on_whodunnit", using: :btree
 
   create_table "log_users", force: :cascade do |t|
-    t.string   "item_type",      null: false
-    t.integer  "item_id",        null: false
-    t.string   "event",          null: false
+    t.string   "item_type",           null: false
+    t.integer  "item_id",             null: false
+    t.string   "event",               null: false
     t.string   "whodunnit"
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.integer  "log_id"
+    t.string   "username"
+    t.string   "password"
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+    t.string   "email"
+    t.integer  "sign_in_count"
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.inet     "current_sign_in_ip"
+    t.inet     "last_sign_in_ip"
+    t.string   "identity_code"
+    t.string   "roles",                            array: true
+    t.string   "creator_str"
+    t.string   "updator_str"
+    t.string   "country_code"
+    t.integer  "registrar_id"
+    t.boolean  "active"
+    t.text     "csr"
+    t.text     "crt"
+    t.string   "type"
+    t.string   "registrant_ident"
+    t.string   "encrypted_password"
+    t.datetime "remember_created_at"
+    t.integer  "failed_attempts"
+    t.datetime "locked_at"
   end
 
   add_index "log_users", ["item_type", "item_id"], name: "index_log_users_on_item_type_and_item_id", using: :btree
@@ -865,18 +1269,43 @@ ActiveRecord::Schema.define(version: 20150921111842) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.integer  "log_id"
+    t.integer  "registrar_id"
+    t.string   "ipv4"
+    t.string   "ipv6"
+    t.string   "interfaces",                  array: true
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+    t.string   "creator_str"
+    t.string   "updator_str"
   end
 
   create_table "log_zonefile_settings", force: :cascade do |t|
-    t.string   "item_type",      null: false
-    t.integer  "item_id",        null: false
-    t.string   "event",          null: false
+    t.string   "item_type",         null: false
+    t.integer  "item_id",           null: false
+    t.string   "event",             null: false
     t.string   "whodunnit"
     t.json     "object"
     t.json     "object_changes"
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.integer  "log_id"
+    t.string   "origin"
+    t.integer  "ttl"
+    t.integer  "refresh"
+    t.integer  "retry"
+    t.integer  "expire"
+    t.integer  "minimum_ttl"
+    t.string   "email"
+    t.string   "master_nameserver"
+    t.datetime "log_created_at"
+    t.datetime "log_updated_at"
+    t.string   "creator_str"
+    t.string   "updator_str"
+    t.text     "ns_records"
+    t.text     "a_records"
+    t.text     "a4_records"
   end
 
   add_index "log_zonefile_settings", ["item_type", "item_id"], name: "index_log_zonefile_settings_on_item_type_and_item_id", using: :btree
@@ -890,8 +1319,8 @@ ActiveRecord::Schema.define(version: 20150921111842) do
     t.string   "cc"
     t.text     "body",       null: false
     t.text     "text_body",  null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "messages", force: :cascade do |t|

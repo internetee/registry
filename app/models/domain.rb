@@ -257,7 +257,7 @@ class Domain < ActiveRecord::Base
         next unless domain.expirable?
         domain.set_graceful_expired
         STDOUT << "#{Time.zone.now.utc} Domain.start_expire_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-        domain.save(validate: false)
+        domain.save
       end
 
       STDOUT << "#{Time.zone.now.utc} - Successfully expired #{domains.count} domains\n" unless Rails.env.test?
@@ -370,13 +370,16 @@ class Domain < ActiveRecord::Base
 
   def renewable?
     if Setting.days_to_renew_domain_before_expire != 0
-      if ((valid_to - Time.zone.now.beginning_of_day).to_i / 1.day) + 1 > Setting.days_to_renew_domain_before_expire
+      # if you can renew domain at days_to_renew before domain expiration
+      if (valid_to.to_date - Date.today) + 1 > Setting.days_to_renew_domain_before_expire
         return false
       end
     end
 
-    return false if statuses.include?(DomainStatus::DELETE_CANDIDATE) || statuses.include?(DomainStatus::FORCE_DELETE)
-
+    return false if statuses.include_any?(DomainStatus::DELETE_CANDIDATE, DomainStatus::SERVER_RENEW_PROHIBITED,
+                                          DomainStatus::CLIENT_RENEW_PROHIBITED, DomainStatus::PENDING_RENEW,
+                                          DomainStatus::PENDING_TRANSFER, DomainStatus::PENDING_DELETE,
+                                          DomainStatus::PENDING_UPDATE, 'pendingDeleteConfirmation')
     true
   end
 
@@ -636,7 +639,7 @@ class Domain < ActiveRecord::Base
   def set_graceful_expired
     self.outzone_at = valid_to + Setting.expire_warning_period.days
     self.delete_at = outzone_at + Setting.redemption_grace_period.days
-    statuses << DomainStatus::EXPIRED
+    self.statuses |= [DomainStatus::EXPIRED]
   end
 
   def set_expired

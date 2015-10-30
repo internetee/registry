@@ -148,11 +148,11 @@ namespace :import do
       email
       fax
       created_at
+      updated_at
       ident
       ident_type
       auth_info
       name
-      org_name
       registrar_id
       creator_str
       updator_str
@@ -163,11 +163,11 @@ namespace :import do
       zip
       state
       country_code
+      statuses
     )
 
     contacts = []
     existing_contact_ids = Contact.pluck(:legacy_id)
-    user = "rake-#{`whoami`.strip} #{ARGV.join ' '}"
     count = 0
 
     Legacy::Contact.includes(:object_registry, :object, object_registry: :registrar)
@@ -181,28 +181,29 @@ namespace :import do
         contacts << [
           x.object_registry.name.try(:strip),
           x.telephone.try(:strip),
-          x.email.try(:strip),
+          [x.email.try(:strip), x.notifyemail.try(:strip)].uniq.select(&:present?).join(', '),
           x.fax.try(:strip),
           x.object_registry.try(:crdate),
+          x.object.read_attribute(:update).nil? ? x.object_registry.try(:crdate) : x.object.read_attribute(:update),
           x.ssn.try(:strip),
           ident_type_map[x.ssntype],
           x.object.authinfopw.try(:strip),
-          name,
-          x.organization.try(:strip),
-          x.object_registry.try(:registrar).try(:id),
-          user,
-          user,
+          x.organization.try(:strip)? x.organization.try(:strip): name,
+          Registrar.find_by(legacy_id: x.object.try(:clid)).try(:id),
+          x.object_registry.try(:registrar).try(:name),
+          x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
           x.country.try(:strip),
           x.id,
           [x.street1.try(:strip), x.street2.try(:strip), x.street3.try(:strip)].join("\n"),
           x.city.try(:strip),
           x.postalcode.try(:strip),
           x.stateorprovince.try(:strip),
-          x.country.try(:strip)
+          x.country.try(:strip),
+          [x.object_state.try(:name)|| Contact::OK]
         ]
 
         if contacts.size % 10000 == 0
-          Contact.import contact_columns, contacts, validate: false
+          Contact.import contact_columns, contacts, {validate: false, timestamps: false}
           contacts = []
         end
       rescue => e
@@ -211,7 +212,7 @@ namespace :import do
       end
     end
 
-    Contact.import contact_columns, contacts, validate: false
+    Contact.import contact_columns, contacts, {validate: false, timestamps: false}
     puts "-----> Imported #{count} new contacts in #{(Time.zone.now.to_f - start).round(2)} seconds"
   end
 
@@ -222,11 +223,13 @@ namespace :import do
 
     domain_columns = %w(
       name
+      registrar_id
       registered_at
       valid_from
       valid_to
       auth_info
       created_at
+      updated_at
       name_dirty
       name_puny
       period
@@ -264,6 +267,8 @@ namespace :import do
       creator_str
       updator_str
       legacy_domain_id
+      created_at
+      updated_at
     )
 
     dnskey_columns = %w(
@@ -276,6 +281,7 @@ namespace :import do
       creator_str
       updator_str
       legacy_domain_id
+      updated_at
     )
 
     domains, nameservers, dnskeys, domain_contacts = [], [], [], []
@@ -298,29 +304,29 @@ namespace :import do
       begin
         # domain statuses
         domain_statuses = []
-        ok = true
         x.object_states.each do |state|
           next if state.name.blank?
           domain_statuses << state.name
-          ok = false
         end
 
         # OK status is default
-        domain_statuses << DomainStatus::OK if ok
+        domain_statuses << DomainStatus::OK if domain_statuses.empty?
 
         domains << [
           x.object_registry.name.try(:strip),
+          Registrar.find_by(legacy_id: x.object.try(:clid)).try(:id),
           x.object_registry.try(:crdate),
           x.object_registry.try(:crdate),
           x.exdate,
           x.object.authinfopw.try(:strip),
           x.object_registry.try(:crdate),
+          x.object.read_attribute(:update).nil? ? x.object_registry.try(:crdate) : x.object.read_attribute(:update),
           x.object_registry.name.try(:strip),
           SimpleIDN.to_ascii(x.object_registry.name.try(:strip)),
           1,
           'y',
-          user,
-          user,
+          x.object_registry.try(:registrar).try(:name),
+          x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
           x.id,
           x.object_registry.try(:crid),
           x.registrant,
@@ -331,8 +337,8 @@ namespace :import do
         x.domain_contact_maps.each do |dc|
           domain_contacts << [
             'AdminDomainContact',
-            user,
-            user,
+            x.object_registry.try(:registrar).try(:name),
+            x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
             x.id,
             dc.contactid
           ]
@@ -342,15 +348,16 @@ namespace :import do
         x.nsset_contact_maps.each do |dc|
           domain_contacts << [
             'TechDomainContact',
-            user,
-            user,
+            x.object_registry.try(:registrar).try(:name),
+            x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
             x.id,
             dc.contactid
           ]
         end
 
         # nameservers
-        x.nsset.hosts.each do |host|
+        nsset = x.nsset
+        nsset.hosts.each do |host|
           ip_maps = host.host_ipaddr_maps
           ips = {}
           ip_maps.each do |ip_map|
@@ -363,9 +370,11 @@ namespace :import do
             host.fqdn.try(:strip),
             ips[:ipv4].try(:strip),
             ips[:ipv6].try(:strip),
-            user,
-            user,
-            x.id
+            x.object_registry.try(:registrar).try(:name),
+            x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
+            x.id,
+            nsset.object_registry.try(:crdate),
+            nsset.object.read_attribute(:update).nil? ? x.object_registry.try(:crdate) : x.object.read_attribute(:update)
           ]
         end if x.nsset && x.nsset.hosts
 
@@ -377,17 +386,18 @@ namespace :import do
             key.key,
             3, # ds_alg
             1, # ds_digest_type /SHA1)
-            user,
-            user,
-            x.id
+            x.object_registry.try(:registrar).try(:name),
+            x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
+            x.id,
+            key.object.read_attribute(:update).nil? ? x.object_registry.try(:crdate) : x.object.read_attribute(:update)
           ]
         end
 
         if index % 10000 == 0 && index != 0
-          Domain.import domain_columns, domains, validate: false
-          Nameserver.import nameserver_columns, nameservers, validate: false
-          Dnskey.import dnskey_columns, dnskeys, validate: false
-          DomainContact.import domain_contact_columns, domain_contacts, validate: false
+          Domain.import domain_columns, domains, {validate: false, timestamps: false}
+          Nameserver.import nameserver_columns, nameservers, {validate: false, timestamps: false}
+          Dnskey.import dnskey_columns, dnskeys, {validate: false, timestamps: false}
+          DomainContact.import domain_contact_columns, domain_contacts, validate: false # created_at is taken from contact at the bottom
           domains, nameservers, dnskeys, domain_contacts = [], [], [], []
         end
       rescue => e
@@ -396,9 +406,9 @@ namespace :import do
       end
     end
 
-    Domain.import domain_columns, domains, validate: false
-    Nameserver.import nameserver_columns, nameservers, validate: false
-    Dnskey.import dnskey_columns, dnskeys, validate: false
+    Domain.import domain_columns, domains, {validate: false, timestamps: false}
+    Nameserver.import nameserver_columns, nameservers, {validate: false, timestamps: false}
+    Dnskey.import dnskey_columns, dnskeys, {validate: false, timestamps: false}
     DomainContact.import domain_contact_columns, domain_contacts, validate: false
 
     puts '-----> Updating relations...'
@@ -426,7 +436,9 @@ namespace :import do
     # contacts
     ActiveRecord::Base.connection.execute(
       "UPDATE domain_contacts "\
-      "SET contact_id = contacts.id "\
+      "SET contact_id = contacts.id, "\
+      "updated_at = contacts.updated_at, "\
+      "created_at = contacts.created_at "\
       "FROM contacts "\
       "WHERE contacts.legacy_id = legacy_contact_id "\
       "AND legacy_contact_id IS NOT NULL "\

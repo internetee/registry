@@ -1,6 +1,6 @@
 class Registrar::DomainsController < Registrar::DeppController # EPP controller
   before_action :init_domain, except: :new
-  before_action :init_contacts_autocomplete_map, only: [:new, :edit, :create, :update]
+  helper_method :contacts
 
   # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/CyclomaticComplexity
@@ -138,17 +138,27 @@ class Registrar::DomainsController < Registrar::DeppController # EPP controller
     end
   end
 
+  def search_contacts
+    authorize! :create, Depp::Domain
+
+    scope = current_user.registrar.contacts.limit(10)
+    if params[:query].present?
+      escaped_str = ActiveRecord::Base.connection.quote_string params[:query]
+      scope = scope.where("name ilike '%#{escaped_str}%' OR code ilike '%#{escaped_str}%' ")
+    end
+
+    render json: scope.pluck(:name, :code).map { |c| {display_key: "#{c.second} #{c.first}", value: c.second} }
+  end
+
   private
 
   def init_domain
     @domain = Depp::Domain.new(current_user: depp_current_user)
   end
 
-  def init_contacts_autocomplete_map
-    @contacts_autocomplete_map ||=
-      current_user.registrar.contacts.pluck(:name, :code).map { |c| ["#{c.second} #{c.first}", c.second] }
-    # @priv_contacts_autocomplete_map ||=
-      # current_user.registrar.priv_contacts.pluck(:name, :code).map { |c| ["#{c.second} #{c.first}", c.second] }
+
+  def contacts
+    current_user.registrar.contacts
   end
 
   def normalize_search_parameters
