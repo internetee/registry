@@ -389,7 +389,7 @@ namespace :import do
             x.object_registry.try(:registrar).try(:name),
             x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
             x.id,
-            key.object_registry.try(:object_history).read_attribute(:update).nil? ? key.try(:crdate) : key.object_registry.try(:object_history).read_attribute(:update)
+            key.object_registry.try(:object_history).read_attribute(:update).nil? ? key.try(:crdate)||Time.zone.now : key.object_registry.try(:object_history).read_attribute(:update)
           ]
         end
 
