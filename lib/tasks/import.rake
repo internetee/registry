@@ -409,7 +409,7 @@ namespace :import do
     Domain.import domain_columns, domains, {validate: false, timestamps: false}
     Nameserver.import nameserver_columns, nameservers, {validate: false, timestamps: false}
     Dnskey.import dnskey_columns, dnskeys, {validate: false, timestamps: false}
-    DomainContact.import domain_contact_columns, domain_contacts, {validate: false, timestamps: false}
+    DomainContact.import domain_contact_columns, domain_contacts, validate: false
 
     puts '-----> Updating relations...'
 
