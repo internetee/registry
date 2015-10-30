@@ -122,44 +122,13 @@ class DomainStatus < ActiveRecord::Base
 
   class << self
     def admin_statuses
-<<<<<<< HEAD
-      [
-        SERVER_HOLD,
-        # sync with admin_statuses_map
-        SERVER_MANUAL_INZONE,
-        SERVER_RENEW_PROHIBITED,
-        SERVER_TRANSFER_PROHIBITED,
-        SERVER_REGISTRANT_CHANGE_PROHIBITED,
-        SERVER_ADMIN_CHANGE_PROHIBITED,
-        SERVER_TECH_CHANGE_PROHIBITED,
-        SERVER_UPDATE_PROHIBITED,
-        SERVER_DELETE_PROHIBITED
-      ]
-=======
-      # [
-      #   SERVER_HOLD,
-      #   # sync with admin_statuses_map
-      #   # SERVER_MANUAL_INZONE,
-      #   # SERVER_RENEW_PROHIBITED,
-      #   # SERVER_TRANSFER_PROHIBITED,
-      #   # SERVER_REGISTRANT_CHANGE_PROHIBITED,
-      #   # SERVER_ADMIN_CHANGE_PROHIBITED,
-      #   # SERVER_TECH_CHANGE_PROHIBITED,
-      #   SERVER_DELETE_PROHIBITED,
-      #   SERVER_UPDATE_PROHIBITED
-      # ]
       admin_statuses_map.map(&:second)
->>>>>>> staging
     end
 
 
     def admin_statuses_map
       [
         ['Hold', SERVER_HOLD],
-<<<<<<< HEAD
-        # sync with admin_statuses
-=======
->>>>>>> staging
         ['ManualInzone', SERVER_MANUAL_INZONE],
         # [''],
         ['RenewProhibited', SERVER_RENEW_PROHIBITED],

@@ -379,7 +379,7 @@ class Domain < ActiveRecord::Base
     return false if statuses.include_any?(DomainStatus::DELETE_CANDIDATE, DomainStatus::SERVER_RENEW_PROHIBITED,
                                           DomainStatus::CLIENT_RENEW_PROHIBITED, DomainStatus::PENDING_RENEW,
                                           DomainStatus::PENDING_TRANSFER, DomainStatus::PENDING_DELETE,
-                                          DomainStatus::PENDING_UPDATE, 'pendingDeleteConfirmation')
+                                          DomainStatus::PENDING_UPDATE, DomainStatus::PENDING_DELETE_CONFIRMATION)
     true
   end
 
