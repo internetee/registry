@@ -482,8 +482,9 @@ class Domain < ActiveRecord::Base
     return true if pending_delete?
     self.epp_pending_delete = true # for epp
 
+    # TODO: if this were to ever return true, that would be wrong. EPP would report sucess pending
     return true unless registrant_verification_asked?
-    set_pending_delete
+    pending_delete_confirmation!
     save(validate: false) # should check if this did succeed
 
     DomainMailer.pending_deleted(self).deliver_now
@@ -697,6 +698,10 @@ class Domain < ActiveRecord::Base
 
   def pending_delete_confirmation?
     statuses.include? DomainStatus::PENDING_DELETE_CONFIRMATION
+  end
+
+  def pending_delete_confirmation!
+    statuses << DomainStatus::PENDING_DELETE_CONFIRMATION unless pending_delete_prohibited?
   end
 
   def pending_delete_prohibited?
