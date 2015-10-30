@@ -52,6 +52,7 @@ namespace :import do
   desc 'Import all'
   task all: :environment do
     Rake::Task['import:registrars'].invoke
+    Rake::Task['import:users'].invoke
     Rake::Task['import:contacts'].invoke
     Rake::Task['import:domains'].invoke
     Rake::Task['import:zones'].invoke
@@ -121,6 +122,45 @@ namespace :import do
     end
 
     puts "-----> Imported #{count} new registrars in #{(Time.zone.now.to_f - start).round(2)} seconds"
+  end
+
+  desc 'Import users'
+  task users: :environment do
+    start = Time.zone.now.to_f
+    puts '-----> Importing users...'
+
+    users = []
+    ips = []
+
+    existing_ids = ApiUser.pluck(:legacy_id)
+
+    count = 0
+
+    Legacy::Registrar.all.each do |x|
+
+      next if existing_ids.include?(x.id)
+      count += 1
+
+      users << ApiUser.new({
+          username: x.handle.try(:strip),
+          password: x.acl.try(:password),
+          registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
+          legacy_id: x.try(:id)
+          })
+
+      if x.acl.try(:ipaddr)
+      ips << WhiteIp.new({
+          registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
+          ipv4: x.acl.try(:ipaddr)
+          })
+      end
+    end
+
+    ApiUser.import users, validate: false
+    if ips
+      WhiteIp.import ips, validate: false
+    end
+    puts "-----> Imported #{count} new users in #{(Time.zone.now.to_f - start).round(2)} seconds"
   end
 
   desc 'Import contacts'
