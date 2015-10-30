@@ -491,12 +491,10 @@ class Epp::Domain < Domain
 
   def apply_pending_delete!
     preclean_pendings
-    user  = ApiUser.find(pending_json['current_user_id'])
-    frame = Nokogiri::XML(pending_json['frame'])
     statuses.delete(DomainStatus::PENDING_DELETE)
     DomainMailer.delete_confirmation(self).deliver_now
 
-    clean_pendings! if epp_destroy(frame, user, false)
+    clean_pendings! if valid? && set_pending_delete!
     true
   end
 
@@ -509,11 +507,10 @@ class Epp::Domain < Domain
     )
   end
 
-  def epp_destroy(frame, user_id, verify = true)
+  def epp_destroy(frame, user_id)
     return false unless valid?
 
-    if verify &&
-       Setting.request_confirmation_on_domain_deletion_enabled &&
+    if Setting.request_confirmation_on_domain_deletion_enabled &&
        frame.css('delete').attr('verified').to_s.downcase != 'yes'
 
       registrant_verification_asked!(frame.to_s, user_id)
