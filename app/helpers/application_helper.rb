@@ -60,7 +60,7 @@ module ApplicationHelper
     sort = params.fetch(:sort, {})[param_name]
     order = {"asc"=>"desc", "desc"=>"asc"}[sort] || "asc"
 
-    # binding.pry
+
     if params.fetch(:sort, {}).include?(param_name)
       title += (sort == "asc" ? " ▲" : " ▼")
     end
