@@ -55,4 +55,16 @@ module ApplicationHelper
     username ||= ''
     username.split(':').last.to_s.strip
   end
+
+  def custom_sort_link(title, param_name)
+    sort = params.fetch(:sort, {})[param_name]
+    order = {"asc"=>"desc", "desc"=>"asc"}[sort] || "asc"
+
+
+    if params.fetch(:sort, {}).include?(param_name)
+      title += (sort == "asc" ? " ▲" : " ▼")
+    end
+
+    link_to(title, url_for(sort: {param_name => order}), class: "sort_link #{order}")
+  end
 end

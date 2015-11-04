@@ -4,6 +4,8 @@ class Domain < ActiveRecord::Base
   include Statuses
   has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
 
+  attr_accessor :roles
+
   # TODO: whois requests ip whitelist for full info for own domains and partial info for other domains
   # TODO: most inputs should be trimmed before validatation, probably some global logic?
 
