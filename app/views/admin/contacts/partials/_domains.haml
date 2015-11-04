@@ -1,13 +1,13 @@
-- domains = @contact.all_domains(page: params[:domain_page], per: 20)
+- domains = @contact.all_domains(page: params[:domain_page], per: 20, params: params)
 #contacts.panel.panel-default
   .panel-heading= t(:domains)
   .table-responsive
     %table.table.table-hover.table-bordered.table-condensed
       %thead
         %tr
-          %th{class: 'col-xs-3'}= t(:domain_name)
-          %th{class: 'col-xs-3'}= t(:registrar)
-          %th{class: 'col-xs-3'}= t(:valid_to)
+          %th{class: 'col-xs-3'}=custom_sort_link t(:domain_name), :name
+          %th{class: 'col-xs-3'}=custom_sort_link t(:registrar), :registrar_name
+          %th{class: 'col-xs-3'}=custom_sort_link t(:valid_to), :valid_to
           %th{class: 'col-xs-3'}= t(:roles)
       %tbody
         - domains.each do |x|

@@ -353,18 +353,29 @@ class Contact < ActiveRecord::Base
   # what we can do load firstly by registrant
   # if total is smaller than needed, the load more
   # we also need to sort by valid_to
-  def all_domains(page: nil, per: nil)
-    sql = %Q{id IN (
+  def all_domains(page: nil, per: nil, params: {})
+    sql = %Q{domains.id IN (
               select domain_id from domain_contacts where contact_id=#{id}
               UNION
               select id from domains where registrant_id=#{id}
             )}
 
+    sorts = params.fetch(:sort, {}).first || []
+    sort  = Domain.column_names.include?(sorts.first) ? sorts.first : "valid_to"
+    order = {"asc"=>"desc", "desc"=>"asc"}[sorts.second] || "desc"
 
-    # sql = Domain.joins(:domain_contacts).where(domain_contacts: {contact_id: id}).select("#{Domain.table_name}.*".freeze, "'domain_contacts' AS style").
-    #     union(registrant_domains.select("#{Domain.table_name}.*".freeze, "'registrant_domains' AS style")).to_sql
-    # merged_sql = "select #{Domain.column_names.join(',')}, array_agg (t.style) over (partition by t.id) style from (#{sql} limit #{per.to_i}) t"
-    domains    = Domain.where(sql).order("valid_to DESC NULLS LAST").includes(:registrar).page(page).per(per)
+
+    domains  = Domain.where(sql).includes(:registrar).page(page).per(per)
+    if sorts.first == "registrar_name".freeze
+      # using small rails hack to generate outer join
+      domains = domains.includes(:registrar).where.not(registrars: {id: nil}).order("registrars.name #{order} NULLS LAST")
+    else
+      domains = domains.order("#{sort} #{order} NULLS LAST")
+    end
+
+
+
+    # adding roles. Need here to make faster sqls
     domain_c = Hash.new([])
     registrant_domains.where(id: domains.map(&:id)).each{|d| domain_c[d.id] |= ["Registrant"].freeze }
     DomainContact.where(contact_id: id, domain_id: domains.map(&:id)).each{|d| domain_c[d.domain_id] |= [d.type] }
