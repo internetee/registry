@@ -1,6 +1,16 @@
 - domains = @contact.all_domains(page: params[:domain_page], per: 20, params: params)
 #contacts.panel.panel-default
-  .panel-heading= t(:domains)
+  .panel-heading
+    .pull-left
+      = t(:domains)
+    .pull-right
+      = form_tag request.path, method: :get do
+        = select_tag :domain_filter, options_for_select(%w(Registrant AdminDomainContact TechDomainContact), selected: params[:domain_filter]),
+            include_blank: true, class: 'form-control2 selectize2'
+        %button.btn.btn-primary
+          %span.glyphicon.glyphicon-search
+    .clearfix
+
   .table-responsive
     %table.table.table-hover.table-bordered.table-condensed
       %thead

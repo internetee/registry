@@ -353,19 +353,26 @@ class Contact < ActiveRecord::Base
   # what we can do load firstly by registrant
   # if total is smaller than needed, the load more
   # we also need to sort by valid_to
+  # todo: extract to drapper. Then we can remove Domain#roles
   def all_domains(page: nil, per: nil, params: {})
-    sql = %Q{domains.id IN (
-              select domain_id from domain_contacts where contact_id=#{id}
-              UNION
-              select id from domains where registrant_id=#{id}
-            )}
+    # compose filter sql
+    filter_sql = case params[:domain_filter]
+      when "Registrant".freeze
+        %Q{select id from domains where registrant_id=#{id}}
+      when AdminDomainContact.to_s, TechDomainContact.to_s
+        %Q{select domain_id from domain_contacts where contact_id=#{id} AND type='#{params[:domain_filter]}'}
+      else
+        %Q{select domain_id from domain_contacts where contact_id=#{id}  UNION select id from domains where registrant_id=#{id}}
+    end
 
+    # get sorting rules
     sorts = params.fetch(:sort, {}).first || []
     sort  = Domain.column_names.include?(sorts.first) ? sorts.first : "valid_to"
     order = {"asc"=>"desc", "desc"=>"asc"}[sorts.second] || "desc"
 
 
-    domains  = Domain.where(sql).includes(:registrar).page(page).per(per)
+    # fetch domains
+    domains  = Domain.where("domains.id IN (#{filter_sql})").includes(:registrar).page(page).per(per)
     if sorts.first == "registrar_name".freeze
       # using small rails hack to generate outer join
       domains = domains.includes(:registrar).where.not(registrars: {id: nil}).order("registrars.name #{order} NULLS LAST")
@@ -377,7 +384,7 @@ class Contact < ActiveRecord::Base
 
     # adding roles. Need here to make faster sqls
     domain_c = Hash.new([])
-    registrant_domains.where(id: domains.map(&:id)).each{|d| domain_c[d.id] |= ["Registrant"].freeze }
+    registrant_domains.where(id: domains.map(&:id)).each{|d| domain_c[d.id] |= ["Registrant".freeze] }
     DomainContact.where(contact_id: id, domain_id: domains.map(&:id)).each{|d| domain_c[d.domain_id] |= [d.type] }
     domains.each{|d| d.roles = domain_c[d.id].uniq}
 
