@@ -141,19 +141,33 @@ namespace :import do
       next if existing_ids.include?(x.id)
       count += 1
 
-      users << ApiUser.new({
-          username: x.handle.try(:strip),
-          password: x.acl.try(:password),
-          registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
-          legacy_id: x.try(:id)
-          })
+        if x.acl.last.try(:cert) != 'pki'
+          if x.acl.last.try(:cert) != 'idkaart'
+            users << ApiUser.new({
+                username: x.handle.try(:strip),
+                password: x.acl.last.try(:password) ? x.acl.last.try(:password) : x.acl.first.try(:password),
+                identity_code: x.handle.try(:strip),
+                registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
+                legacy_id: x.try(:id)
+            })
+          else
+            users << ApiUser.new({
+               username: x.handle.try(:strip),
+               password: x.acl.last.try(:password) ? x.acl.last.try(:password) : x.acl.first.try(:password),
+               registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
+               legacy_id: x.try(:id)
+            })
+          end
+        end
 
-      if x.acl.try(:ipaddr)
-      ips << WhiteIp.new({
-          registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
-          ipv4: x.acl.try(:ipaddr)
-          })
-      end
+        x.acl.all.each do |y|
+          if !y.ipaddr.nil? && y.ipaddr != ''
+            ips << WhiteIp.new({
+              registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
+              ipv4: y.ipaddr
+            })
+          end
+        end
     end
 
     ApiUser.import users, validate: false
