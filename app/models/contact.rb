@@ -349,6 +349,26 @@ class Contact < ActiveRecord::Base
     "#{code} #{name}"
   end
 
+
+  # what we can do load firstly by registrant
+  # if total is smaller than needed, the load more
+  # we also need to sort by valid_to
+  def all_domains(page: nil, per: nil)
+    sql = %Q{id IN (
+              select domain_id from domain_contacts where contact_id=#{id}
+              UNION
+              select id from domains where registrant_id=#{id}
+            )}
+
+
+    # sql = Domain.joins(:domain_contacts).where(domain_contacts: {contact_id: id}).select("#{Domain.table_name}.*".freeze, "'domain_contacts' AS style").
+    #     union(registrant_domains.select("#{Domain.table_name}.*".freeze, "'registrant_domains' AS style")).to_sql
+    # merged_sql = "select #{Domain.column_names.join(',')}, array_agg (t.style) over (partition by t.id) style from (#{sql} limit #{per.to_i}) t"
+    domains    = Domain.where(sql).order("valid_to DESC NULLS LAST").includes(:registrar).page(page).per(per)
+
+    domains
+  end
+
   def set_linked
     statuses << LINKED if statuses.detect { |s| s == LINKED }.blank?
   end

@@ -1,15 +1,20 @@
+- domains = @contact.all_domains(page: params[:domain_page], per: 20)
 #contacts.panel.panel-default
   .panel-heading= t(:domains)
   .table-responsive
     %table.table.table-hover.table-bordered.table-condensed
       %thead
         %tr
-          %th{class: 'col-xs-4'}= t(:domain_name)
-          %th{class: 'col-xs-4'}= t(:registrar)
-          %th{class: 'col-xs-4'}= t(:valid_to)
+          %th{class: 'col-xs-3'}= t(:domain_name)
+          %th{class: 'col-xs-3'}= t(:registrar)
+          %th{class: 'col-xs-3'}= t(:valid_to)
+          %th{class: 'col-xs-3'}= t(:roles)
       %tbody
-        - @contact.registrant_domains.each do |x|
+        - domains.each do |x|
           %tr
             %td= link_to(x.name, [:admin, x])
             %td= link_to(x.registrar, [:admin, x.registrar])
             %td= l(x.valid_to, format: :short)
+            %td= t(:registrar)
+
+= paginate domains, param_name: :domain_page
