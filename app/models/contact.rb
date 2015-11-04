@@ -365,6 +365,10 @@ class Contact < ActiveRecord::Base
     #     union(registrant_domains.select("#{Domain.table_name}.*".freeze, "'registrant_domains' AS style")).to_sql
     # merged_sql = "select #{Domain.column_names.join(',')}, array_agg (t.style) over (partition by t.id) style from (#{sql} limit #{per.to_i}) t"
     domains    = Domain.where(sql).order("valid_to DESC NULLS LAST").includes(:registrar).page(page).per(per)
+    domain_c = Hash.new([])
+    registrant_domains.where(id: domains.map(&:id)).each{|d| domain_c[d.id] |= ["Registrant"].freeze }
+    DomainContact.where(contact_id: id, domain_id: domains.map(&:id)).each{|d| domain_c[d.domain_id] |= [d.type] }
+    domains.each{|d| d.roles = domain_c[d.id].uniq}
 
     domains
   end
