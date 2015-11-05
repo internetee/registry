@@ -513,7 +513,7 @@ class Epp::Domain < Domain
     return false unless valid?
 
     if Setting.request_confirmation_on_domain_deletion_enabled &&
-       frame.css('delete').attr('verified').to_s.downcase != 'yes'
+       frame.css('delete').children.css('delete').attr('verified').to_s.downcase != 'yes'
 
       registrant_verification_asked!(frame.to_s, user_id)
       self.deliver_emails = true # turn on email delivery for epp
