@@ -145,15 +145,15 @@ namespace :import do
           if x.acl.last.try(:cert) != 'idkaart'
             users << ApiUser.new({
                 username: x.handle.try(:strip),
-                password: x.acl.last.try(:password) ? x.acl.last.try(:password) : x.acl.first.try(:password),
+                password: x.acl.last.try(:password) ? x.acl.last.try(:password) : ('a'..'z').to_a.shuffle.first(8).join,
                 identity_code: x.handle.try(:strip),
                 registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
                 legacy_id: x.try(:id)
             })
-          else
+          elsif x.acl.last.try(:cert) == 'idkaart'
             users << ApiUser.new({
-               username: x.handle.try(:strip),
-               password: x.acl.last.try(:password) ? x.acl.last.try(:password) : x.acl.first.try(:password),
+               username: x.acl.last.try(:password) ? x.acl.last.try(:password) : x.acl.first.try(:password),
+               password: ('a'..'z').to_a.shuffle.first(8).join,
                registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
                legacy_id: x.try(:id)
             })
