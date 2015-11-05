@@ -1,4 +1,4 @@
-- if (status == DomainStatus::PENDING_DELETE && f.object.pending_json.present?)
+- if (status == DomainStatus::PENDING_DELETE || status == DomainStatus::PENDING_DELETE_CONFIRMATION)
   = link_to(t(:apply_pending), admin_domain_pending_delete_path(f.object.id, f.object.id),
     method: :patch, data: { confirm: t(:are_you_sure) },
     class: 'btn btn-danger btn-xs')
