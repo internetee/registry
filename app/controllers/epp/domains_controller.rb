@@ -1,4 +1,5 @@
 class Epp::DomainsController < EppController
+  include EppErrors
   before_action :find_domain, only: [:info, :renew, :update, :transfer, :delete]
   before_action :find_password, only: [:info, :update, :transfer, :delete]
 
@@ -27,6 +28,10 @@ class Epp::DomainsController < EppController
     @domain.valid?
     @domain.errors.delete(:name_dirty) if @domain.errors[:puny_label].any?
     handle_errors(@domain) and return if @domain.errors.any?
+
+    if !@domain_pricelist || @domain_pricelist.valid_from > Time.zone.now
+        add_epp_error('2306', nil, nil, 'No price lists for domain')
+    end
 
     handle_errors and return unless balance_ok?('create')
     ActiveRecord::Base.transaction do
