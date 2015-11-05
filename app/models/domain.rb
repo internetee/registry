@@ -401,7 +401,7 @@ class Domain < ActiveRecord::Base
   def clean_pendings!
     preclean_pendings
     self.pending_json = {}
-    statuses.delete[DomainStatus::PENDING_DELETE_CONFIRMATION]
+    statuses.delete(DomainStatus::PENDING_DELETE_CONFIRMATION)
     statuses.delete(DomainStatus::PENDING_UPDATE)
     statuses.delete(DomainStatus::PENDING_DELETE)
     status_notes[DomainStatus::PENDING_UPDATE] = ''
