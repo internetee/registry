@@ -148,6 +148,7 @@ namespace :import do
                 password: x.acl.last.try(:password) ? x.acl.last.try(:password) : ('a'..'z').to_a.shuffle.first(8).join,
                 identity_code: x.handle.try(:strip),
                 registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
+                roles: ['super'],
                 legacy_id: x.try(:id)
             })
           elsif x.acl.last.try(:cert) == 'idkaart'
@@ -160,7 +161,10 @@ namespace :import do
           end
         end
 
+      existing_ips = WhiteIp.pluck(:ipv4)
+
         x.acl.all.each do |y|
+          next if existing_ips.include?(y.ipaddr)
           if !y.ipaddr.nil? && y.ipaddr != ''
             ips << WhiteIp.new({
               registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
