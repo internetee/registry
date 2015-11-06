@@ -9,6 +9,8 @@
     .col-md-6= render 'registrar/contacts/partials/address'
   .row
     .col-md-12= render 'registrar/contacts/partials/statuses', statuses: @contact.statuses
+  .row
+    .col-md-12= render 'admin/contacts/partials/domains', contact: Contact.find_by(code: params[:id])
 
 - else 
   .row
