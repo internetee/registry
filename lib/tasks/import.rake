@@ -148,7 +148,7 @@ namespace :import do
                 password: x.acl.last.try(:password) ? x.acl.last.try(:password) : ('a'..'z').to_a.shuffle.first(8).join,
                 identity_code: x.handle.try(:strip),
                 registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
-                roles: ['super'],
+                roles: ['epp'],
                 legacy_id: x.try(:id)
             })
           elsif x.acl.last.try(:cert) == 'idkaart'
@@ -156,6 +156,7 @@ namespace :import do
                username: x.acl.last.try(:password) ? x.acl.last.try(:password) : x.acl.first.try(:password),
                password: ('a'..'z').to_a.shuffle.first(8).join,
                registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
+               roles: ['billing'],
                legacy_id: x.try(:id)
             })
           end
