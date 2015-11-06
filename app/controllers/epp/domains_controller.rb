@@ -28,6 +28,11 @@ class Epp::DomainsController < EppController
     @domain.errors.delete(:name_dirty) if @domain.errors[:puny_label].any?
     handle_errors(@domain) and return if @domain.errors.any?
 
+    if !@domain_pricelist.try(:price)#checking if pricelist is not found
+        @domain.add_epp_error('2306', nil, nil, 'No price list for domain')
+        handle_errors(@domain) and return if @domain.errors.any?
+    end
+
     handle_errors and return unless balance_ok?('create')
     ActiveRecord::Base.transaction do
       if @domain.save # TODO: Maybe use validate: false here because we have already validated the domain?
@@ -99,6 +104,11 @@ class Epp::DomainsController < EppController
     period_element = params[:parsed_frame].css('period').text
     period = (period_element.to_i == 0) ? 1 : period_element.to_i
     period_unit = Epp::Domain.parse_period_unit_from_frame(params[:parsed_frame]) || 'y'
+
+    if !@domain_pricelist.try(:price)#checking if pricelist is not found
+      @domain.add_epp_error('2306', nil, nil, 'No price list for domain')
+      handle_errors(@domain) and return if @domain.errors.any?
+    end
 
     ActiveRecord::Base.transaction do
       success = @domain.renew(
