@@ -6,9 +6,9 @@
   .col-md-6= render 'admin/contacts/partials/general'
   .col-md-6= render 'admin/contacts/partials/address'
 .row
-  .col-md-12= render 'admin/contacts/partials/domains'
-.row
   .col-md-12= render 'admin/contacts/partials/statuses', contact: @contact
+.row
+  .col-md-12= render 'admin/contacts/partials/domains'
 
 - if @contact.legal_documents.present?
   .row
