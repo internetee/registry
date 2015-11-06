@@ -27,13 +27,13 @@ class Epp::DomainsController < EppController
     @domain.valid?
     @domain.errors.delete(:name_dirty) if @domain.errors[:puny_label].any?
     handle_errors(@domain) and return if @domain.errors.any?
+    handle_errors and return unless balance_ok?('create') # loads pricelist in this method
 
     if !@domain_pricelist.try(:price)#checking if pricelist is not found
         @domain.add_epp_error('2306', nil, nil, 'No price list for domain')
         handle_errors(@domain) and return if @domain.errors.any?
     end
 
-    handle_errors and return unless balance_ok?('create')
     ActiveRecord::Base.transaction do
       if @domain.save # TODO: Maybe use validate: false here because we have already validated the domain?
         current_user.registrar.debit!({
@@ -105,6 +105,7 @@ class Epp::DomainsController < EppController
     period = (period_element.to_i == 0) ? 1 : period_element.to_i
     period_unit = Epp::Domain.parse_period_unit_from_frame(params[:parsed_frame]) || 'y'
 
+    balance_ok?('renew', period, period_unit) # loading pricelist
     if !@domain_pricelist.try(:price)#checking if pricelist is not found
       @domain.add_epp_error('2306', nil, nil, 'No price list for domain')
       handle_errors(@domain) and return if @domain.errors.any?
