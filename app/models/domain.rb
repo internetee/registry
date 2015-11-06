@@ -450,19 +450,15 @@ class Domain < ActiveRecord::Base
   def registrant_update_confirmable?(token)
     return false if (statuses & [DomainStatus::FORCE_DELETE, DomainStatus::DELETE_CANDIDATE]).any?
     return false unless pending_update?
-    return false if registrant_verification_token.blank?
-    return false if registrant_verification_asked_at.blank?
-    return false if token.blank?
-    return false if registrant_verification_token != token
+    return false unless registrant_verification_asked?
+    return false unless registrant_verification_token == token
     true
   end
 
   def registrant_delete_confirmable?(token)
     return false unless pending_delete?
-    return false if registrant_verification_token.blank?
-    return false if registrant_verification_asked_at.blank?
-    return false if token.blank?
-    return false if registrant_verification_token != token
+    return false unless registrant_verification_asked?
+    return false unless registrant_verification_token == token
     true
   end
   # rubocop: enable Metrics/CyclomaticComplexity
