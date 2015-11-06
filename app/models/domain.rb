@@ -449,6 +449,7 @@ class Domain < ActiveRecord::Base
   # rubocop: disable Metrics/CyclomaticComplexity
   def registrant_update_confirmable?(token)
     return true if Rails.env.development?
+    return false if (statuses & [DomainStatus::FORCE_DELETE, DomainStatus::DELETE_CANDIDATE]).any?
     return false unless pending_update?
     return false if registrant_verification_token.blank?
     return false if registrant_verification_asked_at.blank?
@@ -698,7 +699,7 @@ class Domain < ActiveRecord::Base
   end
 
   def pending_delete?
-    statuses.include?(DomainStatus::PENDING_DELETE) && !statuses.include?(DomainStatus::FORCE_DELETE)
+    (statuses & [DomainStatus::PENDING_DELETE_CONFIRMATION, DomainStatus::PENDING_DELETE]).any?
   end
 
   def pending_delete_confirmation?
