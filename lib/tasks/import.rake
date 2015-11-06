@@ -169,7 +169,8 @@ namespace :import do
           if !y.ipaddr.nil? && y.ipaddr != ''
             ips << WhiteIp.new({
               registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
-              ipv4: y.ipaddr
+              ipv4: y.ipaddr,
+              roles: ['api', 'registrar']
             })
           end
         end
