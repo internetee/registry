@@ -3,7 +3,7 @@ class Pricelist < ActiveRecord::Base
 
   scope :valid, lambda {
     where(
-      "valid_from <= ? AND valid_to >= ? OR valid_to IS NULL",
+      "valid_from <= ? AND (valid_to >= ? OR valid_to IS NULL)",
       Time.zone.now.end_of_day, Time.zone.now.beginning_of_day
     )
   }
