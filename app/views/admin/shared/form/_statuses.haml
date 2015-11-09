@@ -9,8 +9,9 @@
         .pull-left= t(:status)
         .pull-right
           - if model == 'domain'
-            = render 'admin/domains/form/pending_update', f: f, status: s
-            = render 'admin/domains/form/pending_delete', f: f, status: s
+            .hide-when-new
+              = render 'admin/domains/form/pending_update', f: f, status: s
+              = render 'admin/domains/form/pending_delete', f: f, status: s
           = link_to(t(:delete), '#', class: 'btn btn-danger btn-xs js-destroy-status', style: delete_style)
       .panel-body
         .form-group
@@ -37,6 +38,7 @@
       if el.find('.js-disabled-value')
         el.find('.js-disabled-value').remove()
         el.find('.js-select').show()
+        el.find('.hide-when-new').hide()
         el.find('.js-destroy-status').show()
 
   $(document).on 'click', '.js-destroy-status', (e) ->

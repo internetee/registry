@@ -118,6 +118,11 @@ class Domain < ActiveRecord::Base
   validate :status_is_consistant
   def status_is_consistant
       has_error = (statuses.include?(DomainStatus::SERVER_HOLD) && statuses.include?(DomainStatus::SERVER_MANUAL_INZONE))
+      unless has_error
+        if (statuses & [DomainStatus::PENDING_DELETE_CONFIRMATION, DomainStatus::PENDING_DELETE, DomainStatus::FORCE_DELETE]).any?
+          has_error = statuses.include? DomainStatus::SERVER_DELETE_PROHIBITED
+        end
+      end
       errors.add(:domains, I18n.t(:object_status_prohibits_operation)) if has_error
   end
 
@@ -445,22 +450,17 @@ class Domain < ActiveRecord::Base
 
   # rubocop: disable Metrics/CyclomaticComplexity
   def registrant_update_confirmable?(token)
-    return true if Rails.env.development?
+    return false if (statuses & [DomainStatus::FORCE_DELETE, DomainStatus::DELETE_CANDIDATE]).any?
     return false unless pending_update?
-    return false if registrant_verification_token.blank?
-    return false if registrant_verification_asked_at.blank?
-    return false if token.blank?
-    return false if registrant_verification_token != token
+    return false unless registrant_verification_asked?
+    return false unless registrant_verification_token == token
     true
   end
 
   def registrant_delete_confirmable?(token)
-    return true if Rails.env.development?
     return false unless pending_delete?
-    return false if registrant_verification_token.blank?
-    return false if registrant_verification_asked_at.blank?
-    return false if token.blank?
-    return false if registrant_verification_token != token
+    return false unless registrant_verification_asked?
+    return false unless registrant_verification_token == token
     true
   end
   # rubocop: enable Metrics/CyclomaticComplexity
@@ -695,7 +695,7 @@ class Domain < ActiveRecord::Base
   end
 
   def pending_delete?
-    statuses.include?(DomainStatus::PENDING_DELETE) && !statuses.include?(DomainStatus::FORCE_DELETE)
+    (statuses & [DomainStatus::PENDING_DELETE_CONFIRMATION, DomainStatus::PENDING_DELETE]).any?
   end
 
   def pending_delete_confirmation?

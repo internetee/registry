@@ -776,12 +776,12 @@ class Epp::Domain < Domain
 
   ### ABILITIES ###
 
-  # depricated -- this is redundant TODO: try to remove
+
   def can_be_deleted?
     begin
       errors.add(:base, :domain_status_prohibits_operation)
       return false
-    end if statuses.include?(DomainStatus::CLIENT_DELETE_PROHIBITED)
+    end if (statuses & [DomainStatus::CLIENT_DELETE_PROHIBITED, DomainStatus::SERVER_DELETE_PROHIBITED].any?
 
     true
   end

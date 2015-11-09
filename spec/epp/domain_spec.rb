@@ -2444,9 +2444,9 @@ describe 'EPP Domain', epp: true do
       })
 
       response = epp_plain_request(xml)
-      response[:results][0][:msg].should start_with
+      response[:results][0][:msg].should start_with(
         "Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}status', attribute 's': "\
-        "[facet 'enumeration'] The value 'invalidStatus' is not an element of the set "
+        "[facet 'enumeration'] The value 'invalidStatus' is not an element of the set ")
       response[:results][0][:result_code].should == '2001'
     end
 
