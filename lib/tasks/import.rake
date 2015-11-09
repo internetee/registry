@@ -170,7 +170,7 @@ namespace :import do
             ips << WhiteIp.new({
               registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
               ipv4: y.ipaddr,
-              roles: ['api', 'registrar']
+              interfaces: ['api', 'registrar']
             })
           end
         end
