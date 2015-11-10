@@ -19,7 +19,22 @@
         - if x.css('digest').text.present?
           %dt= t(:ds_digest)
           %dd= x.css('digest').text
+        - @data.css('keyData').each do |x|
+          %dl.dl-horizontal
+            %dt= t(:flag)
+            %dd= x.css('flags').text
 
+            %dt= t(:protocol)
+            %dd= x.css('protocol').text
+
+            %dt= t(:algorithm)
+            %dd= x.css('alg').text
+
+            %dt= t(:public_key)
+            %dd= x.css('pubKey').text
+
+    - @data.css('keyData').each do |x|
+      %dl.dl-horizontal
         %dt= t(:flag)
         %dd= x.css('flags').text
 
@@ -27,7 +42,7 @@
         %dd= x.css('protocol').text
 
         %dt= t(:algorithm)
-        %dd= x.css('keyData > alg').text
+        %dd= x.css('alg').text
 
         %dt= t(:public_key)
         %dd= x.css('pubKey').text
