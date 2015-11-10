@@ -91,6 +91,10 @@ Rails.application.routes.draw do
         get 'load_xml'
       end
     end
+
+    get 'pay/:bank'        => 'payments#pay',   as: 'payment_with'
+    get 'pay/:bank/cancel' => 'payments#cancel',as: 'cancel_payment_with'
+    get 'pay/:bank/return' => 'payments#back',  as: 'return_payment_with'
   end
 
   # REGISTRANT ROUTES
