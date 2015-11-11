@@ -8,7 +8,7 @@
 .row
   .col-md-12= render 'admin/contacts/partials/statuses', contact: @contact
 .row
-  .col-md-12= render 'admin/contacts/partials/domains'
+  .col-md-12= render 'admin/contacts/partials/domains', contact: @contact
 
 - if @contact.legal_documents.present?
   .row
