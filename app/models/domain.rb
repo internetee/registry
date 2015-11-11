@@ -14,9 +14,9 @@ class Domain < ActiveRecord::Base
   # TODO: should we user validates_associated :registrant here?
 
   has_many :admin_domain_contacts
-  accepts_nested_attributes_for :admin_domain_contacts,  allow_destroy: !:admin_change_prohibited?, reject_if: :admin_change_prohibited?
+  accepts_nested_attributes_for :admin_domain_contacts,  allow_destroy: true, reject_if: :admin_change_prohibited?
   has_many :tech_domain_contacts
-  accepts_nested_attributes_for :tech_domain_contacts, allow_destroy: !:tech_change_prohibited?, reject_if: :tech_change_prohibited?
+  accepts_nested_attributes_for :tech_domain_contacts, allow_destroy: true, reject_if: :tech_change_prohibited?
 
   def registrant_change_prohibited?
     statuses.include? DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED
