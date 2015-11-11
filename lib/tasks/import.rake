@@ -155,6 +155,7 @@ namespace :import do
             users << ApiUser.new({
                username: x.acl.last.try(:password) ? x.acl.last.try(:password) : x.acl.first.try(:password),
                password: ('a'..'z').to_a.shuffle.first(8).join,
+               identity_code: x.acl.last.try(:password) ? x.acl.last.try(:password) : x.acl.first.try(:password),
                registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
                roles: ['billing'],
                legacy_id: x.try(:id)
