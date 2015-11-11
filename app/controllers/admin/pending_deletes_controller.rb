@@ -6,6 +6,7 @@ class Admin::PendingDeletesController < AdminController
     authorize! :update, :pending
 
     @epp_domain = Epp::Domain.find(params[:domain_id]) # only epp domain has apply pending
+    @epp_domain.is_admin= true
     if @epp_domain.apply_pending_delete!
       redirect_to admin_domain_path(@domain.id), notice: t(:pending_applied)
     else
@@ -16,6 +17,7 @@ class Admin::PendingDeletesController < AdminController
   def destroy
     authorize! :destroy, :pending
 
+    @epp_domain.is_admin= true
     if @domain.clean_pendings!
       redirect_to admin_domain_path(@domain.id), notice: t(:pending_removed)
     else
