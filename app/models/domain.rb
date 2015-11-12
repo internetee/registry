@@ -422,7 +422,6 @@ class Domain < ActiveRecord::Base
     pending_json_cache = pending_json
     token = registrant_verification_token
     asked_at = registrant_verification_asked_at
-    changes_cache = changes
     new_registrant_id    = registrant.id
     new_registrant_email = registrant.email
     new_registrant_name  = registrant.name
@@ -436,7 +435,6 @@ class Domain < ActiveRecord::Base
     self.registrant_verification_token = token
     self.registrant_verification_asked_at = asked_at
     set_pending_update
-    pending_json['domain'] = changes_cache
     pending_json['new_registrant_id']    = new_registrant_id
     pending_json['new_registrant_email'] = new_registrant_email
     pending_json['new_registrant_name']  = new_registrant_name
@@ -562,8 +560,8 @@ class Domain < ActiveRecord::Base
 
   def pending_registrant
     return '' if pending_json.blank?
-    return '' if pending_json['domain']['registrant_id'].blank?
-    Registrant.find_by(id: pending_json['domain']['registrant_id'].last)
+    return '' if pending_json['new_registrant_id'].blank?
+    Registrant.find_by(id: pending_json['new_registrant_id'].last)
   end
 
   def generate_auth_info
