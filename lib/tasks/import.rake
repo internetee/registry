@@ -274,6 +274,42 @@ namespace :import do
     puts "-----> Imported #{count} new contacts in #{(Time.zone.now.to_f - start).round(2)} seconds"
   end
 
+  desc 'Import reserved'
+  task reserved: :environment do
+    start = Time.zone.now.to_f
+    puts '-----> Importing reserved domains...'
+
+    reserved_domains = []
+    count = 0
+
+    existing_ids = ReservedDomain.pluck(:legacy_id)
+
+    Legacy::Domain.includes(
+        :object_registry,
+        :object
+    ).find_each(batch_size: 1).with_index do |x, index|
+
+      next if existing_ids.include?(x.id) || Registrar.find_by(legacy_id: x.object.try(:clid)).try(:name) == 'eedirect'
+      count += 1
+
+      reserved_domains << ReservedDomain.new({
+        created_at: x.object_registry.try(:crdate),
+        updated_at: x.object.read_attribute(:update).nil? ? x.object_registry.try(:crdate) : x.object.read_attribute(:update),
+        creator_str: x.object_registry.try(:registrar).try(:name),
+        updator_str: x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
+        names: '"' + x.object_registry.name.try(:strip) + '"=>"' + SecureRandom.hex + '"',
+        legacy_id: x.id
+      })
+
+      if index % 1 == 0 && index != 0
+        ReservedDomain.import reserved_domains, {validate: false, timestamps: false}
+        reserved_domains = []
+      end
+    end
+    ReservedDomain.import reserved_domains, {validate: false, timestamps: false}
+    puts "-----> Imported #{count} new reserved domains in #{(Time.zone.now.to_f - start).round(2)} seconds"
+  end
+
   desc 'Import domains'
   task domains: :environment do
     start = Time.zone.now.to_f
