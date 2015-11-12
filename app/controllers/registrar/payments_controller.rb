@@ -20,6 +20,18 @@ class Registrar::PaymentsController < RegistrarController
   # both back and IPN
   def back
     @bank_link = BankLink::Response.new(params[:bank], params)
+    if @bank_link.valid?
+      @bank_link.complete_payment
+
+      if @bank_link.invoice.binded?
+        flash[:notice] = t(:pending_applieds)
+      else
+        flash[:error]  = t(:something_wrong)
+      end
+    else
+      flash[:error] = t(:something_wrong)
+    end
+    redirect_to registrar_invoice_path(@bank_link.invoice)
   end
 
   private
