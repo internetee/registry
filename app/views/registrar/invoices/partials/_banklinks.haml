@@ -1,16 +1,6 @@
 %h4= t(:pay_by_bank_link)
 %hr
-= link_to '#' do
-  = image_tag('swed.png')
-
-= link_to '#' do
-  = image_tag('seb.png')
-
-= link_to '#' do
-  = image_tag('nordea.png')
-
-= link_to '#' do
-  = image_tag('lhv.png')
-
-= link_to '#' do
-  = image_tag('danske.png')
+- ENV['payments_banks'].split(",").each do |meth|
+  - meth = meth.strip
+  = link_to registrar_payment_with_path(meth, invoice_id: params[:id]) do
+    = image_tag("#{meth}.png")
