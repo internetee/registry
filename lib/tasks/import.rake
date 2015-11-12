@@ -54,6 +54,7 @@ namespace :import do
     Rake::Task['import:registrars'].invoke
     Rake::Task['import:users'].invoke
     Rake::Task['import:contacts'].invoke
+    Rake::Task['import:reserved'].invoke
     Rake::Task['import:domains'].invoke
     Rake::Task['import:zones'].invoke
   end
@@ -287,7 +288,7 @@ namespace :import do
     Legacy::Domain.includes(
         :object_registry,
         :object
-    ).find_each(batch_size: 1).with_index do |x, index|
+    ).find_each(batch_size: 1000).with_index do |x, index|
 
       next if existing_ids.include?(x.id) || Registrar.find_by(legacy_id: x.object.try(:clid)).try(:name) == 'eedirect'
       count += 1
@@ -301,7 +302,7 @@ namespace :import do
         legacy_id: x.id
       })
 
-      if index % 1 == 0 && index != 0
+      if index % 1000 == 0 && index != 0
         ReservedDomain.import reserved_domains, {validate: false, timestamps: false}
         reserved_domains = []
       end
