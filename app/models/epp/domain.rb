@@ -314,20 +314,11 @@ class Epp::Domain < Domain
   # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/CyclomaticComplexity
   def dnskeys_attrs(frame, action)
-    if frame.css('dsData').any? && !Setting.ds_data_allowed
-      errors.add(:base, :ds_data_not_allowed)
-    end
-
-    if frame.xpath('keyData').any? && !Setting.key_data_allowed
-      errors.add(:base, :key_data_not_allowed)
-    end
-
-    res = ds_data_from(frame)
-    dnskeys_list = key_data_from(frame, res)
-
+    return [] if frame.empty?
+    keys = DnsSecKeys.new(self).values frame
     if action == 'rem'
       to_destroy = []
-      dnskeys_list.each do |x|
+      keys.each do |x|
         dk = dnskeys.find_by(public_key: x[:public_key])
 
         unless dk
@@ -343,50 +334,79 @@ class Epp::Domain < Domain
 
       return to_destroy
     else
-      return dnskeys_list
+      return keys
     end
   end
   # rubocop: enable Metrics/PerceivedComplexity
   # rubocop: enable Metrics/CyclomaticComplexity
 
-  def key_data_from(frame, res)
-    frame.xpath('keyData').each do |x|
-      res << {
-        flags: x.css('flags').first.try(:text),
-        protocol: x.css('protocol').first.try(:text),
-        alg: x.css('alg').first.try(:text),
-        public_key: x.css('pubKey').first.try(:text),
-        ds_alg: 3,
-        ds_digest_type: Setting.ds_algorithm
-      }
+  class DnsSecKeys
+    def initialize(domain)
+      @domain = domain
     end
 
-    res
-  end
-
-  def ds_data_from(frame)
-    res = []
-    frame.css('dsData').each do |x|
-      data = {
-        ds_key_tag: x.css('keyTag').first.try(:text),
-        ds_alg: x.css('alg').first.try(:text),
-        ds_digest_type: x.css('digestType').first.try(:text),
-        ds_digest: x.css('digest').first.try(:text)
-      }
-
-      kd = x.css('keyData').first
-      data.merge!({
-        flags: kd.css('flags').first.try(:text),
-        protocol: kd.css('protocol').first.try(:text),
-        alg: kd.css('alg').first.try(:text),
-        public_key: kd.css('pubKey').first.try(:text)
-      }) if kd
-
-      res << data
+    def values(frame)
+      if Setting.key_data_allowed
+        @domain.errors.add(:base, :ds_data_not_allowed) if frame.css('dsData').present?
+        return key_data_from frame
+      end
+      if Setting.ds_data_allowed
+        @domain.errors.add(:base, :key_data_not_allowed) if frame.css('keyData').present?
+        return ds_data_from frame
+      end
+      []
     end
 
-    res
+    private
+
+    KEY_INTERFACE = {flags: 'flags', protocol: 'protocol', alg: 'alg', public_key: 'pubKey' }
+    DS_INTERFACE  =
+        { ds_key_tag:     'keyTag',
+          ds_alg:         'alg',
+          ds_digest_type: 'digestType',
+          ds_digest:      'digest'
+        }
+
+    def xm_copy(frame, map)
+      result = {}
+      map.each do |key, value|
+        result[key] = frame.css(value).first.try(:text)
+      end
+      result
+    end
+
+    # frame requires NodeSet with direct children of keyData
+    def key_data(frame)
+      result = xm_copy frame.css('keyData'), KEY_INTERFACE
+      # TODO: can these defaults go where they belong?
+      result.merge({
+                       ds_alg: 3,
+                       ds_digest_type: Setting.ds_algorithm
+                   })
+    end
+
+    # get all top level dsData from NodeSet
+    def ds_data_from(frame)
+      result = []
+      frame.css('dsData').each do |ds_data|
+        key = ds_data.css('keyData')
+        ds = xm_copy ds_data, DS_INTERFACE
+        ds.merge! (key_data key) if key.present?
+        result << ds
+      end
+      result
+    end
+
+    def key_data_from(frame)
+      result = []
+      frame.css('keyData').each do |key|
+        result << key_data(key)
+      end
+      result
+    end
+
   end
+
 
   def domain_statuses_attrs(frame, action)
     status_list = domain_status_list_from(frame)
