@@ -62,6 +62,10 @@ xml.epp_head do
           xml.tag!('contact:authInfo') do
            xml.tag!('contact:pw', @contact.auth_info)
           end
+        else
+          xml.tag!('contact:authInfo') do
+          xml.tag!('contact:pw', 'No access')
+          end
         end
         # xml << render('/epp/contacts/disclosure_policy')
       end
@@ -71,6 +75,12 @@ xml.epp_head do
         xml.tag!('eis:extdata', 'xmlns:eis' => 'https://epp.tld.ee/schema/eis-1.0.xsd') do
           xml.tag!('eis:ident', @contact.ident,
                    type: @contact.ident_type, cc: @contact.ident_country_code)
+        end
+      end
+    else
+      xml.tag!('extension') do
+        xml.tag!('eis:extdata', 'xmlns:eis' => 'https://epp.tld.ee/schema/eis-1.0.xsd') do
+          xml.tag!('eis:ident', 'No access')
         end
       end
     end
