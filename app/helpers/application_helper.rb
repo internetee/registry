@@ -24,7 +24,7 @@ module ApplicationHelper
     when 'birthday'
       "#{ident} [#{ident_type}]"
       else
-        if ident
+        if ident.present?
           "#{ident} [#{ident_country_code} #{ident_type}]"
         else
           "[No access]"
