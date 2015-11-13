@@ -280,7 +280,7 @@ module Depp
     end
 
     def country_name
-      Country.new(country_code)
+      Country.new(country_code) || 'No access'
     end
 
     def org?
