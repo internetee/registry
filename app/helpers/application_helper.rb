@@ -23,8 +23,13 @@ module ApplicationHelper
     case ident_type
     when 'birthday'
       "#{ident} [#{ident_type}]"
-    else
-      "#{ident} [#{ident_country_code} #{ident_type}]"
+      else
+        if ident
+          "#{ident} [#{ident_country_code} #{ident_type}]"
+        else
+          "[No access]"
+        end
+
     end
   end
 
