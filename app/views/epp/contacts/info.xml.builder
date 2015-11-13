@@ -15,6 +15,7 @@ xml.epp_head do
 
         xml.tag!('contact:postalInfo', type: 'int') do
           xml.tag!('contact:name', @contact.name)
+          if can? :view_full_info, @contact, @password
             xml.tag!('contact:org', @contact.org_name) if @contact.org_name.present?
             xml.tag!('contact:addr') do
               xml.tag!('contact:street', @contact.street)
@@ -23,11 +24,27 @@ xml.epp_head do
               xml.tag!('contact:pc', @contact.zip)
               xml.tag!('contact:cc', @contact.country_code)
             end
+          else
+            xml.tag!('contact:org', 'No access')
+            xml.tag!('contact:addr') do
+              xml.tag!('contact:street', 'No access')
+              xml.tag!('contact:city', 'No access')
+              xml.tag!('contact:sp', 'No access')
+              xml.tag!('contact:pc', 'No access')
+              xml.tag!('contact:cc', 'No access')
+            end
+          end
         end
 
+        if can? :view_full_info, @contact, @password
           xml.tag!('contact:voice', @contact.phone)
           xml.tag!('contact:fax', @contact.fax) if @contact.fax.present?
           xml.tag!('contact:email', @contact.email)
+        else
+          xml.tag!('contact:voice', 'No access')
+          xml.tag!('contact:fax', 'No access')
+          xml.tag!('contact:email', 'No access')
+        end
 
         xml.tag!('contact:clID', @contact.registrar.try(:name))
         if @contact.creator.try(:registrar).blank? && Rails.env.test?
