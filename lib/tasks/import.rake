@@ -293,7 +293,7 @@ namespace :import do
         :object
     ).find_each(batch_size: 1000).with_index do |x, index|
 
-      next if existing_ids.include?(x.id) || Registrar.find_by(legacy_id: x.object.try(:clid)).try(:name) == 'eedirect'
+      next if existing_ids.include?(x.id) || Registrar.find_by(legacy_id: x.object.try(:clid)).try(:name) != 'eedirect'
       count += 1
 
       reserved_domains << ReservedDomain.new({
