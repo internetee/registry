@@ -127,61 +127,69 @@ namespace :import do
   desc 'Import users'
   task users: :environment do
     start = Time.zone.now.to_f
-    puts '-----> Importing users...'
+    puts "-----> Importing users and IP's..."
 
+    id_users = []
     users = []
     ips = []
+    temp = []
 
     existing_ids = ApiUser.pluck(:legacy_id)
-
-    count = 0
+    existing_ips = WhiteIp.pluck(:ipv4)
 
     Legacy::Registrar.all.each do |x|
 
-      next if existing_ids.include?(x.id)
-      count += 1
+      x.acl.all.each do |y|
 
-        if x.acl.last.try(:cert) != 'pki'
-          if x.acl.last.try(:cert) != 'idkaart'
-            users << ApiUser.new({
-                username: x.handle.try(:strip),
-                password: x.acl.last.try(:password) ? x.acl.last.try(:password) : ('a'..'z').to_a.shuffle.first(8).join,
-                identity_code: x.handle.try(:strip),
-                registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
-                roles: ['epp'],
-                legacy_id: x.try(:id)
-            })
-          elsif x.acl.last.try(:cert) == 'idkaart'
-            users << ApiUser.new({
-               username: x.acl.last.try(:password) ? x.acl.last.try(:password) : x.acl.first.try(:password),
-               password: ('a'..'z').to_a.shuffle.first(8).join,
-               identity_code: x.acl.last.try(:password) ? x.acl.last.try(:password) : x.acl.first.try(:password),
-               registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
-               roles: ['billing'],
-               legacy_id: x.try(:id)
-            })
-          end
-        end
+        next if existing_ids.include?(y.id)
 
-      existing_ips = WhiteIp.pluck(:ipv4)
+        if y.try(:cert) != 'pki'
 
-        x.acl.all.each do |y|
-          next if existing_ips.include?(y.ipaddr)
-          if !y.ipaddr.nil? && y.ipaddr != ''
-            ips << WhiteIp.new({
+          if y.try(:cert) == 'idkaart'
+            id_users << ApiUser.new({
+              username: y.try(:password) ? y.try(:password) : y.try(:password),
+              password: ('a'..'z').to_a.shuffle.first(8).join,
+              identity_code: y.try(:password) ? y.try(:password) : y.try(:password),
               registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
-              ipv4: y.ipaddr,
-              interfaces: ['api', 'registrar']
-            })
+              roles: ['billing'],
+              legacy_id: y.try(:id)
+              })
+          else
+            temp << ApiUser.new({
+              username: x.handle.try(:strip),
+              password: y.try(:password) ? y.try(:password) : ('a'..'z').to_a.shuffle.first(8).join,
+              registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
+              roles: ['epp'],
+              legacy_id: y.try(:id)
+              })
           end
         end
+        temp = temp.reverse!.uniq{|u| u.username }
+      end
+      users = temp
+
+      x.acl.all.each do |y|
+        next if existing_ips.include?(y.ipaddr)
+        if !y.ipaddr.nil? && y.ipaddr != ''
+          ips << WhiteIp.new({
+            registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
+            ipv4: y.ipaddr,
+            interfaces: ['api', 'registrar']
+            })
+        end
+      end
     end
 
+    ApiUser.import id_users, validate: false
     ApiUser.import users, validate: false
+
     if ips
       WhiteIp.import ips, validate: false
     end
-    puts "-----> Imported #{count} new users in #{(Time.zone.now.to_f - start).round(2)} seconds"
+
+    puts "-----> Imported #{id_users.count} billing users and #{users.count} epp users"
+    puts "-----> Imported #{ips.count} white IP's in #{(Time.zone.now.to_f - start).round(2)} seconds"
+
   end
 
   desc 'Import contacts'
