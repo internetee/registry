@@ -81,18 +81,17 @@ xml.epp_head do
       end
 
       xml.tag!('secDNS:infData', 'xmlns:secDNS' => 'urn:ietf:params:xml:ns:secDNS-1.1') do
-        # might not have ds in first key? maybe check any? k.ds_digest if requirements change (DS not accepted by EIS)
-        if @domain.dnskeys[0].ds_digest.blank?
-          @domain.dnskeys.sort.each do |key|
-            tag_key_data(xml, key)
+        if Setting.ds_data_allowed
+          (@domain.dnskeys.find_all { |key| key.ds_digest.present? }).sort.each do |key|
+            tag_ds_data(xml, key)
           end
         else
-          @domain.dnskeys.sort.each do |key|
-            tag_ds_data(xml, key)
+          (@domain.dnskeys.find_all { |key| key.ds_digest.blank? }).sort.each do |key|
+            tag_key_data(xml, key)
           end
         end
       end
-    end if @domain.dnskeys.any?
+    end if @domain.dnskeys.any? && (Setting.ds_data_allowed ? @domain.dnskeys.any? { |key| key.ds_digest.present? } :  Setting.key_data_allowed)
 
     render('epp/shared/trID', builder: xml)
   end
