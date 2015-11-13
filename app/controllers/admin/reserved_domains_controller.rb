@@ -2,9 +2,9 @@ class Admin::ReservedDomainsController < AdminController
   load_and_authorize_resource
 
   def index
-    rd = ReservedDomain.first_or_initialize
-    rd.names = nil if rd.names.blank?
-    @reserved_domains = rd.names.to_yaml.gsub(/---.?\n/, '').gsub(/\.\.\..?\n/, '')
+    names = ReservedDomain.pluck(:names).each_with_object({}){|e_h,h| h.merge!(e_h)}
+    names.names = nil if names.blank?
+    @reserved_domains = names.to_yaml.gsub(/---.?\n/, '').gsub(/\.\.\..?\n/, '')
   end
 
   def create
@@ -20,9 +20,27 @@ class Admin::ReservedDomainsController < AdminController
       render :index and return
     end
 
-    rd = ReservedDomain.first_or_create
+    result = true
+    ReservedDomain.transaction do
+      # removing old ones
+      existing = ReservedDomain.any_of_domains(names.keys).pluck(:id)
+      ReservedDomain.where.not(id: existing).delete_all
 
-    if rd.update(names: names)
+      #updating and adding
+      names.each do |name, psw|
+        rec   = ReservedDomain.by_domain(name).first
+        rec ||= ReservedDomain.new
+        rec.names = {name => psw}
+
+        unless rec.save
+          result = false
+          raise ActiveRecord::Rollback
+        end
+      end
+    end
+
+
+    if result
       flash[:notice] = I18n.t('record_updated')
       redirect_to :back
     else
