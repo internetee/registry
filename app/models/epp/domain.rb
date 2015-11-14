@@ -314,8 +314,31 @@ class Epp::Domain < Domain
   # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/CyclomaticComplexity
   def dnskeys_attrs(frame, action)
-    return [] if frame.empty?
-    keys = DnsSecKeys.new(self).values frame
+    keys = []
+    return keys if frame.blank?
+
+    if frame.xpath('dnsSec:all').present?
+      # support delete all or all of
+    else
+      inf_data = DnsSecKeys.new(frame)
+      if Setting.key_data_allowed
+        if inf_data.ds_data.present?
+          errors.add(:base, :ds_data_not_allowed)
+          return
+        else
+          keys = inf_data.key_data
+        end
+      end
+      if Setting.ds_data_allowed
+        if inf_data.key_data.present?
+          errors.add(:base, :key_data_not_allowed)
+          return
+        else
+          keys = inf_data.ds_data
+        end
+      end
+    end
+
     if action == 'rem'
       to_destroy = []
       keys.each do |x|
@@ -341,20 +364,22 @@ class Epp::Domain < Domain
   # rubocop: enable Metrics/CyclomaticComplexity
 
   class DnsSecKeys
-    def initialize(domain)
-      @domain = domain
+    def initialize(frame)
+      @key_data = []
+      @ds_data = []
+      if frame.css('dsData').present?
+        ds_data_from frame
+      end
+      frame.css('keyData').each do |key|
+        @key_data.append key_data_from(key)
+      end
     end
 
-    def values(frame)
-      if Setting.key_data_allowed
-        @domain.errors.add(:base, :ds_data_not_allowed) if frame.css('dsData').present?
-        return key_data_from frame
-      end
-      if Setting.ds_data_allowed
-        @domain.errors.add(:base, :key_data_not_allowed) if frame.css('keyData').present?
-        return ds_data_from frame
-      end
-      []
+    attr_reader :key_data
+    attr_reader :ds_data
+
+    def error
+      ds_data.present? && key_data.present?
     end
 
     private
@@ -369,15 +394,15 @@ class Epp::Domain < Domain
 
     def xm_copy(frame, map)
       result = {}
-      map.each do |key, value|
-        result[key] = frame.css(value).first.try(:text)
+      map.each do |key, elem|
+        # content validation might happen later in Dnskey, if we get that far; or not. TODO: check handling
+        result[key] = frame.css(elem).first.try(:text)
       end
       result
     end
 
-    # frame requires NodeSet with direct children of keyData
-    def key_data(frame)
-      result = xm_copy frame.css('keyData'), KEY_INTERFACE
+    def key_data_from(frame)
+      result = xm_copy frame, KEY_INTERFACE
       # TODO: can these defaults go where they belong?
       result.merge({
                        ds_alg: 3,
@@ -385,26 +410,14 @@ class Epp::Domain < Domain
                    })
     end
 
-    # get all top level dsData from NodeSet
     def ds_data_from(frame)
-      result = []
       frame.css('dsData').each do |ds_data|
         key = ds_data.css('keyData')
         ds = xm_copy ds_data, DS_INTERFACE
-        ds.merge! (key_data key) if key.present?
-        result << ds
+        ds.merge! (key_data_from key) if key.present?
+        @ds_data << ds
       end
-      result
     end
-
-    def key_data_from(frame)
-      result = []
-      frame.css('keyData').each do |key|
-        result << key_data(key)
-      end
-      result
-    end
-
   end
 
 
