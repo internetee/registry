@@ -88,6 +88,10 @@ class BankLink
       !!validate
     end
 
+    def ok?
+      params["VK_SERVICE"] == "1111"
+    end
+
     def complete_payment
       if valid?
         transaction = BankTransaction.find_by(description: params["VK_MSG"])
