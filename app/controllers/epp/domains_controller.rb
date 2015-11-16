@@ -56,10 +56,6 @@ class Epp::DomainsController < EppController
     authorize! :update, @domain, @password
     begin
       if @domain.update(params[:parsed_frame], current_user)
-
-        @domain.attach_legal_document(Epp::Domain.parse_legal_document_from_frame(params[:parsed_frame]))
-        @domain.save(validate: false)
-
         if @domain.epp_pending_update.present?
           render_epp_response '/epp/domains/success_pending'
         else
@@ -79,9 +75,6 @@ class Epp::DomainsController < EppController
     @domain = Epp::Domain.where(id: @domain.id).includes(nameservers: :versions).first
 
     handle_errors(@domain) and return unless @domain.can_be_deleted?
-
-    @domain.attach_legal_document(Epp::Domain.parse_legal_document_from_frame(params[:parsed_frame]))
-    @domain.save(validate: false)
 
     if @domain.epp_destroy(params[:parsed_frame], current_user.id)
       if @domain.epp_pending_delete.present?
