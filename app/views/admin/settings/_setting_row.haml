@@ -1,5 +1,5 @@
 - value = Setting.send(var)
-%tr
+%tr{class: (@errors && @errors.has_key?(var.to_s) && "danger")}
   %td= t(var)
   - if [TrueClass, FalseClass].include?(value.class)
     %td
