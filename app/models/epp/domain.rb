@@ -439,6 +439,10 @@ class Epp::Domain < Domain
     at.deep_merge!(attrs_from(frame.css('chg'), current_user, 'chg'))
     at.deep_merge!(attrs_from(frame.css('rem'), current_user, 'rem'))
 
+    if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
+      frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
+    end
+
     at_add = attrs_from(frame.css('add'), current_user)
     at[:nameservers_attributes] += at_add[:nameservers_attributes]
 
@@ -503,7 +507,7 @@ class Epp::Domain < Domain
   def attach_legal_document(legal_document_data)
     return unless legal_document_data
 
-    legal_documents.build(
+    legal_documents.create(
       document_type: legal_document_data[:type],
       body: legal_document_data[:body]
     )
@@ -511,6 +515,10 @@ class Epp::Domain < Domain
 
   def epp_destroy(frame, user_id)
     return false unless valid?
+
+    if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
+      frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
+    end
 
     if Setting.request_confirmation_on_domain_deletion_enabled &&
        frame.css('delete').children.css('delete').attr('verified').to_s.downcase != 'yes'
