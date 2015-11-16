@@ -656,7 +656,7 @@ en:
   m_id: 'M-ID'
   pending_removed: Pending was successfully removed.
   pending_applied: Pending was successfully applied.
-  something_wrong: Not success, something went wrong
+  something_wrong: Sorry, something went wrong
   failure: Not success
   not_found: Not found
   no_connection_to_registry: Connection issue to the registry EPP or REPP server! Please try again later.
