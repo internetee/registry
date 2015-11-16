@@ -62,7 +62,7 @@ xml.epp_head do
 
     if @domain.dnskeys.any?
       ds_data  = Setting.ds_data_allowed  ? @domain.dnskeys.find_all { |key| key.ds_digest.present? } : []
-      key_data = Setting.key_data_allowed ? @domain.dnskeys.find_all { |key| key.ds_digest.blank? } : []
+      key_data = Setting.key_data_allowed ? @domain.dnskeys.find_all { |key| key.public_key.present? } : []
 
       # is there any reason to include <extension> without <secDNS:infData>
       xml.extension do
