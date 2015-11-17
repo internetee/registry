@@ -1,10 +1,12 @@
 class ContactMailer < ApplicationMailer
-  def email_updated(email, contact)
+  include Que::Mailer
+
+  def email_updated(email, contact_id)
+    @contact = Contact.find_by(id: contact_id)
+    return unless email || @contact
     return if delivery_off?(contact)
-
-    @contact = contact
-
     return if whitelist_blocked?(email)
+
     begin
       mail(to: format(email), subject: "#{I18n.t(:contact_email_update_subject)} [#{@contact.code}]")
     rescue EOFError,
