@@ -306,12 +306,14 @@ class Domain < ActiveRecord::Base
 
       c = 0
       Domain.where("statuses @> '{deleteCandidate}'::varchar[]").each do |x|
+        Whois::Record.where('domain_id = ?', x.id).try(':destroy')
         x.destroy
         STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by deleteCandidate ##{x.id} (#{x.name})\n" unless Rails.env.test?
         c += 1
       end
 
       Domain.where('force_delete_at <= ?', Time.zone.now).each do |x|
+        Whois::Record.where('domain_id = ?', x.id).try(':destroy')
         x.destroy
         STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by force delete time ##{x.id} (#{x.name})\n" unless Rails.env.test?
         c += 1
