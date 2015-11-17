@@ -236,7 +236,7 @@ class Epp::Domain < Domain
   def admin_domain_contacts_attrs(frame, action)
     admin_attrs = domain_contact_attrs_from(frame, action, 'admin')
 
-    if action && !admin_attrs.empty? && admin_change_prohibited?
+    if admin_attrs.present? && admin_change_prohibited?
       add_epp_error('2304', 'admin', DomainStatus::SERVER_ADMIN_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
       return []
     end
@@ -252,7 +252,7 @@ class Epp::Domain < Domain
   def tech_domain_contacts_attrs(frame, action)
     tech_attrs = domain_contact_attrs_from(frame, action, 'tech')
 
-    if action && !tech_attrs.empty? && tech_change_prohibited?
+    if tech_attrs.present? && tech_change_prohibited?
       add_epp_error('2304', 'tech', DomainStatus::SERVER_TECH_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
       return []
     end
@@ -443,7 +443,7 @@ class Epp::Domain < Domain
       frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
     end
 
-    at_add = attrs_from(frame.css('add'), current_user)
+    at_add = attrs_from(frame.css('add'), current_user, 'add')
     at[:nameservers_attributes] += at_add[:nameservers_attributes]
 
     if !at[:admin_domain_contacts_attributes].empty? && admin_change_prohibited?
