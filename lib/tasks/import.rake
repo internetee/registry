@@ -404,7 +404,7 @@ namespace :import do
       :domain_contact_maps,
       nsset: { hosts: :host_ipaddr_maps }
     ).find_each(batch_size: 10000).with_index do |x, index|
-      next if existing_domain_ids.include?(x.id)
+      next if existing_domain_ids.include?(x.id) || Registrar.find_by(legacy_id: x.object.try(:clid)).try(:name) == 'eedirect'
       count += 1
 
       begin
