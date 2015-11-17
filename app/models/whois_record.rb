@@ -7,6 +7,7 @@ class WhoisRecord < ActiveRecord::Base
 
   before_validation :populate
   after_save :update_whois_server
+  after_destroy :destroy_whois_record
 
   class << self
     def included
@@ -108,5 +109,9 @@ class WhoisRecord < ActiveRecord::Base
     wd.body = body
     wd.json = json
     wd.save
+  end
+
+  def destroy_whois_record
+    Whois::Record.where(name: name).delete_all()
   end
 end
