@@ -68,8 +68,12 @@ class Epp::DomainsController < EppController
       else
         handle_errors(@domain)
       end
-    rescue
-      handle_errors(@domain)
+    rescue => e
+      if @domain.errors.any?
+        handle_errors(@domain)
+      else
+        throw e
+      end
     end
   end
 
