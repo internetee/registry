@@ -54,6 +54,7 @@ namespace :import do
     Rake::Task['import:registrars'].invoke
     Rake::Task['import:users'].invoke
     Rake::Task['import:contacts'].invoke
+    Rake::Task['import:reserved'].invoke
     Rake::Task['import:domains'].invoke
     Rake::Task['import:zones'].invoke
   end
@@ -127,40 +128,69 @@ namespace :import do
   desc 'Import users'
   task users: :environment do
     start = Time.zone.now.to_f
-    puts '-----> Importing users...'
+    puts "-----> Importing users and IP's..."
 
+    id_users = []
     users = []
     ips = []
+    temp = []
 
     existing_ids = ApiUser.pluck(:legacy_id)
-
-    count = 0
+    existing_ips = WhiteIp.pluck(:ipv4)
 
     Legacy::Registrar.all.each do |x|
 
-      next if existing_ids.include?(x.id)
-      count += 1
+      x.acl.all.each do |y|
 
-      users << ApiUser.new({
-          username: x.handle.try(:strip),
-          password: x.acl.try(:password),
-          registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
-          legacy_id: x.try(:id)
-          })
+        next if existing_ids.include?(y.id)
 
-      if x.acl.try(:ipaddr)
-      ips << WhiteIp.new({
-          registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
-          ipv4: x.acl.try(:ipaddr)
-          })
+        if y.try(:cert) != 'pki'
+
+          if y.try(:cert) == 'idkaart'
+            id_users << ApiUser.new({
+              username: y.try(:password) ? y.try(:password) : y.try(:password),
+              password: ('a'..'z').to_a.shuffle.first(8).join,
+              identity_code: y.try(:password) ? y.try(:password) : y.try(:password),
+              registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
+              roles: ['billing'],
+              legacy_id: y.try(:id)
+              })
+          else
+            temp << ApiUser.new({
+              username: x.handle.try(:strip),
+              password: y.try(:password) ? y.try(:password) : ('a'..'z').to_a.shuffle.first(8).join,
+              registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
+              roles: ['epp'],
+              legacy_id: y.try(:id)
+              })
+          end
+        end
+        temp = temp.reverse!.uniq{|u| u.username }
+      end
+      users = temp
+
+      x.acl.all.each do |y|
+        next if existing_ips.include?(y.ipaddr)
+        if !y.ipaddr.nil? && y.ipaddr != ''
+          ips << WhiteIp.new({
+            registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
+            ipv4: y.ipaddr,
+            interfaces: ['api', 'registrar']
+            })
+        end
       end
     end
 
+    ApiUser.import id_users, validate: false
     ApiUser.import users, validate: false
+
     if ips
       WhiteIp.import ips, validate: false
     end
-    puts "-----> Imported #{count} new users in #{(Time.zone.now.to_f - start).round(2)} seconds"
+
+    puts "-----> Imported #{id_users.count} billing users and #{users.count} epp users"
+    puts "-----> Imported #{ips.count} white IP's in #{(Time.zone.now.to_f - start).round(2)} seconds"
+
   end
 
   desc 'Import contacts'
@@ -256,6 +286,42 @@ namespace :import do
     puts "-----> Imported #{count} new contacts in #{(Time.zone.now.to_f - start).round(2)} seconds"
   end
 
+  desc 'Import reserved'
+  task reserved: :environment do
+    start = Time.zone.now.to_f
+    puts '-----> Importing reserved domains...'
+
+    reserved_domains = []
+    count = 0
+
+    existing_ids = ReservedDomain.pluck(:legacy_id)
+
+    Legacy::Domain.includes(
+        :object_registry,
+        :object
+    ).find_each(batch_size: 1000).with_index do |x, index|
+
+      next if existing_ids.include?(x.id) || Registrar.find_by(legacy_id: x.object.try(:clid)).try(:name) != 'eedirect'
+      count += 1
+
+      reserved_domains << ReservedDomain.new({
+        created_at: x.object_registry.try(:crdate),
+        updated_at: x.object.read_attribute(:update).nil? ? x.object_registry.try(:crdate) : x.object.read_attribute(:update),
+        creator_str: x.object_registry.try(:registrar).try(:name),
+        updator_str: x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
+        names: '"' + x.object_registry.name.try(:strip) + '"=>"' + SecureRandom.hex + '"',
+        legacy_id: x.id
+      })
+
+      if index % 1000 == 0 && index != 0
+        ReservedDomain.import reserved_domains, {validate: false, timestamps: false}
+        reserved_domains = []
+      end
+    end
+    ReservedDomain.import reserved_domains, {validate: false, timestamps: false}
+    puts "-----> Imported #{count} new reserved domains in #{(Time.zone.now.to_f - start).round(2)} seconds"
+  end
+
   desc 'Import domains'
   task domains: :environment do
     start = Time.zone.now.to_f
@@ -338,7 +404,7 @@ namespace :import do
       :domain_contact_maps,
       nsset: { hosts: :host_ipaddr_maps }
     ).find_each(batch_size: 10000).with_index do |x, index|
-      next if existing_domain_ids.include?(x.id)
+      next if existing_domain_ids.include?(x.id) || Registrar.find_by(legacy_id: x.object.try(:clid)).try(:name) == 'eedirect'
       count += 1
 
       begin

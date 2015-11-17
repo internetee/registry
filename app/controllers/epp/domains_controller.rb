@@ -27,8 +27,13 @@ class Epp::DomainsController < EppController
     @domain.valid?
     @domain.errors.delete(:name_dirty) if @domain.errors[:puny_label].any?
     handle_errors(@domain) and return if @domain.errors.any?
+    handle_errors and return unless balance_ok?('create') # loads pricelist in this method
 
-    handle_errors and return unless balance_ok?('create')
+    if !@domain_pricelist.try(:price)#checking if pricelist is not found
+        @domain.add_epp_error('2306', nil, nil, 'No price list for domain')
+        handle_errors(@domain) and return if @domain.errors.any?
+    end
+
     ActiveRecord::Base.transaction do
       if @domain.save # TODO: Maybe use validate: false here because we have already validated the domain?
         current_user.registrar.debit!({
@@ -51,10 +56,6 @@ class Epp::DomainsController < EppController
     authorize! :update, @domain, @password
     begin
       if @domain.update(params[:parsed_frame], current_user)
-
-        @domain.attach_legal_document(Epp::Domain.parse_legal_document_from_frame(params[:parsed_frame]))
-        @domain.save(validate: false)
-
         if @domain.epp_pending_update.present?
           render_epp_response '/epp/domains/success_pending'
         else
@@ -74,9 +75,6 @@ class Epp::DomainsController < EppController
     @domain = Epp::Domain.where(id: @domain.id).includes(nameservers: :versions).first
 
     handle_errors(@domain) and return unless @domain.can_be_deleted?
-
-    @domain.attach_legal_document(Epp::Domain.parse_legal_document_from_frame(params[:parsed_frame]))
-    @domain.save(validate: false)
 
     if @domain.epp_destroy(params[:parsed_frame], current_user.id)
       if @domain.epp_pending_delete.present?
@@ -103,6 +101,12 @@ class Epp::DomainsController < EppController
     period_element = params[:parsed_frame].css('period').text
     period = (period_element.to_i == 0) ? 1 : period_element.to_i
     period_unit = Epp::Domain.parse_period_unit_from_frame(params[:parsed_frame]) || 'y'
+
+    balance_ok?('renew', period, period_unit) # loading pricelist
+    if !@domain_pricelist.try(:price)#checking if pricelist is not found
+      @domain.add_epp_error('2306', nil, nil, 'No price list for domain')
+      handle_errors(@domain) and return if @domain.errors.any?
+    end
 
     ActiveRecord::Base.transaction do
       success = @domain.renew(

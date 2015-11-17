@@ -28,7 +28,7 @@ Please install following lib, otherwise your bundler install might not be succes
 
 ### For generating pdfs
 
-    sudo apt-get install wkhtmltopdf
+    sudo apt-get install libxrender1 libfontconfig1
 
 ### RBENV install
 

@@ -24,6 +24,15 @@ xml.epp_head do
               xml.tag!('contact:pc', @contact.zip)
               xml.tag!('contact:cc', @contact.country_code)
             end
+          else
+            xml.tag!('contact:org', 'No access')
+            xml.tag!('contact:addr') do
+              xml.tag!('contact:street', 'No access')
+              xml.tag!('contact:city', 'No access')
+              xml.tag!('contact:sp', 'No access')
+              xml.tag!('contact:pc', 'No access')
+              xml.tag!('contact:cc', 'No access')
+            end
           end
         end
 
@@ -31,6 +40,10 @@ xml.epp_head do
           xml.tag!('contact:voice', @contact.phone)
           xml.tag!('contact:fax', @contact.fax) if @contact.fax.present?
           xml.tag!('contact:email', @contact.email)
+        else
+          xml.tag!('contact:voice', 'No access')
+          xml.tag!('contact:fax', 'No access')
+          xml.tag!('contact:email', 'No access')
         end
 
         xml.tag!('contact:clID', @contact.registrar.try(:name))
@@ -48,6 +61,10 @@ xml.epp_head do
         if can? :view_password, @contact, @password
           xml.tag!('contact:authInfo') do
            xml.tag!('contact:pw', @contact.auth_info)
+          end
+        else
+          xml.tag!('contact:authInfo') do
+          xml.tag!('contact:pw', 'No access')
           end
         end
         # xml << render('/epp/contacts/disclosure_policy')

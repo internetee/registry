@@ -4,6 +4,8 @@ class Domain < ActiveRecord::Base
   include Statuses
   has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
 
+  attr_accessor :roles
+
   # TODO: whois requests ip whitelist for full info for own domains and partial info for other domains
   # TODO: most inputs should be trimmed before validatation, probably some global logic?
 
@@ -12,9 +14,9 @@ class Domain < ActiveRecord::Base
   # TODO: should we user validates_associated :registrant here?
 
   has_many :admin_domain_contacts
-  accepts_nested_attributes_for :admin_domain_contacts,  allow_destroy: !:admin_change_prohibited?, reject_if: :admin_change_prohibited?
+  accepts_nested_attributes_for :admin_domain_contacts,  allow_destroy: true, reject_if: :admin_change_prohibited?
   has_many :tech_domain_contacts
-  accepts_nested_attributes_for :tech_domain_contacts, allow_destroy: !:tech_change_prohibited?, reject_if: :tech_change_prohibited?
+  accepts_nested_attributes_for :tech_domain_contacts, allow_destroy: true, reject_if: :tech_change_prohibited?
 
   def registrant_change_prohibited?
     statuses.include? DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED
@@ -116,6 +118,11 @@ class Domain < ActiveRecord::Base
   validate :status_is_consistant
   def status_is_consistant
       has_error = (statuses.include?(DomainStatus::SERVER_HOLD) && statuses.include?(DomainStatus::SERVER_MANUAL_INZONE))
+      unless has_error
+        if (statuses & [DomainStatus::PENDING_DELETE_CONFIRMATION, DomainStatus::PENDING_DELETE, DomainStatus::FORCE_DELETE]).any?
+          has_error = statuses.include? DomainStatus::SERVER_DELETE_PROHIBITED
+        end
+      end
       errors.add(:domains, I18n.t(:object_status_prohibits_operation)) if has_error
   end
 
@@ -299,12 +306,14 @@ class Domain < ActiveRecord::Base
 
       c = 0
       Domain.where("statuses @> '{deleteCandidate}'::varchar[]").each do |x|
+        Whois::Record.where('domain_id = ?', x.id).try(':destroy')
         x.destroy
         STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by deleteCandidate ##{x.id} (#{x.name})\n" unless Rails.env.test?
         c += 1
       end
 
       Domain.where('force_delete_at <= ?', Time.zone.now).each do |x|
+        Whois::Record.where('domain_id = ?', x.id).try(':destroy')
         x.destroy
         STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by force delete time ##{x.id} (#{x.name})\n" unless Rails.env.test?
         c += 1
@@ -399,7 +408,7 @@ class Domain < ActiveRecord::Base
   def clean_pendings!
     preclean_pendings
     self.pending_json = {}
-    statuses.delete[DomainStatus::PENDING_DELETE_CONFIRMATION]
+    statuses.delete(DomainStatus::PENDING_DELETE_CONFIRMATION)
     statuses.delete(DomainStatus::PENDING_UPDATE)
     statuses.delete(DomainStatus::PENDING_DELETE)
     status_notes[DomainStatus::PENDING_UPDATE] = ''
@@ -415,7 +424,6 @@ class Domain < ActiveRecord::Base
     pending_json_cache = pending_json
     token = registrant_verification_token
     asked_at = registrant_verification_asked_at
-    changes_cache = changes
     new_registrant_id    = registrant.id
     new_registrant_email = registrant.email
     new_registrant_name  = registrant.name
@@ -429,7 +437,6 @@ class Domain < ActiveRecord::Base
     self.registrant_verification_token = token
     self.registrant_verification_asked_at = asked_at
     set_pending_update
-    pending_json['domain'] = changes_cache
     pending_json['new_registrant_id']    = new_registrant_id
     pending_json['new_registrant_email'] = new_registrant_email
     pending_json['new_registrant_name']  = new_registrant_name
@@ -443,22 +450,17 @@ class Domain < ActiveRecord::Base
 
   # rubocop: disable Metrics/CyclomaticComplexity
   def registrant_update_confirmable?(token)
-    return true if Rails.env.development?
+    return false if (statuses & [DomainStatus::FORCE_DELETE, DomainStatus::DELETE_CANDIDATE]).any?
     return false unless pending_update?
-    return false if registrant_verification_token.blank?
-    return false if registrant_verification_asked_at.blank?
-    return false if token.blank?
-    return false if registrant_verification_token != token
+    return false unless registrant_verification_asked?
+    return false unless registrant_verification_token == token
     true
   end
 
   def registrant_delete_confirmable?(token)
-    return true if Rails.env.development?
     return false unless pending_delete?
-    return false if registrant_verification_token.blank?
-    return false if registrant_verification_asked_at.blank?
-    return false if token.blank?
-    return false if registrant_verification_token != token
+    return false unless registrant_verification_asked?
+    return false unless registrant_verification_token == token
     true
   end
   # rubocop: enable Metrics/CyclomaticComplexity
@@ -560,8 +562,8 @@ class Domain < ActiveRecord::Base
 
   def pending_registrant
     return '' if pending_json.blank?
-    return '' if pending_json['domain']['registrant_id'].blank?
-    Registrant.find_by(id: pending_json['domain']['registrant_id'].last)
+    return '' if pending_json['new_registrant_id'].blank?
+    Registrant.find_by(id: pending_json['new_registrant_id'].last)
   end
 
   def generate_auth_info
@@ -693,7 +695,7 @@ class Domain < ActiveRecord::Base
   end
 
   def pending_delete?
-    statuses.include?(DomainStatus::PENDING_DELETE) && !statuses.include?(DomainStatus::FORCE_DELETE)
+    (statuses & [DomainStatus::PENDING_DELETE_CONFIRMATION, DomainStatus::PENDING_DELETE]).any?
   end
 
   def pending_delete_confirmation?
@@ -753,11 +755,11 @@ class Domain < ActiveRecord::Base
 
   def children_log
     log = HashWithIndifferentAccess.new
-    log[:admin_contacts] = admin_contacts.map(&:attributes)
-    log[:tech_contacts]  = tech_contacts.map(&:attributes)
-    log[:nameservers]    = nameservers.map(&:attributes)
-    log[:registrant]     = [registrant.try(:attributes)]
-    log[:domain_statuses] = domain_statuses.map(&:attributes)
+    log[:admin_contacts] = admin_contact_ids
+    log[:tech_contacts]  = tech_contact_ids
+    log[:nameservers]    = nameserver_ids
+    log[:registrant]     = [registrant_id]
+    log[:domain_statuses] = domain_status_ids
     log
   end
 

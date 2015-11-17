@@ -1,0 +1,10 @@
+.payment-form
+  = form_tag @bank_link.url, method: :post do
+    - @bank_link.fields.each do |k, v|
+      = hidden_field_tag k, v
+    = submit_tag "Mine maksma"
+
+
+:coffeescript
+  $(document).ready ->
+    $('.payment-form form').submit()

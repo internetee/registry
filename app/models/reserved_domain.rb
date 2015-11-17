@@ -9,7 +9,15 @@ class ReservedDomain < ActiveRecord::Base
 
   class << self
     def pw_for(domain_name)
-      select("names -> '#{domain_name}' AS pw").first.try(:pw)
+      by_domain(domain_name).select("names -> '#{domain_name}' AS pw").first.try(:pw)
+    end
+
+    def by_domain name
+      where("names ? '#{name}'")
+    end
+
+    def any_of_domains names
+      where("names ?| ARRAY['#{names.join("','")}']")
     end
   end
 end

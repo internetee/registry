@@ -23,8 +23,13 @@ module ApplicationHelper
     case ident_type
     when 'birthday'
       "#{ident} [#{ident_type}]"
-    else
-      "#{ident} [#{ident_country_code} #{ident_type}]"
+      else
+        if ident.present?
+          "#{ident} [#{ident_country_code} #{ident_type}]"
+        else
+          "[No access]"
+        end
+
     end
   end
 
@@ -54,5 +59,17 @@ module ApplicationHelper
   def plain_username(username)
     username ||= ''
     username.split(':').last.to_s.strip
+  end
+
+  def custom_sort_link(title, param_name)
+    sort = params.fetch(:sort, {})[param_name]
+    order = {"asc"=>"desc", "desc"=>"asc"}[sort] || "asc"
+
+
+    if params.fetch(:sort, {}).include?(param_name)
+      title += (sort == "asc" ? " ▲" : " ▼")
+    end
+
+    link_to(title, url_for(sort: {param_name => order}), class: "sort_link #{order}")
   end
 end

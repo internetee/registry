@@ -109,6 +109,22 @@ new_relic_license_key: '42d1c2ba4ed17a9cf6297c59d80e563a3dd3c4fa'
 secret_key_base: 'please-change-it-you-can-generate-it-with-rake-secret'
 devise_secret: 'please-change-it-you-can-generate-it-with-rake-secret'
 
+payments_banks: >
+  seb,
+  swed,
+  lhv
+payments_seb_url: 'https://www.seb.ee/cgi-bin/dv.sh/ipank.r'
+payments_seb_bank_certificate: 'eyp_pub.pem'
+payments_seb_seller_private: 'kaupmees_priv.pem'
+payments_seb_seller_account: 'testvpos'
+payments_swed_url: 'https://www.seb.ee/cgi-bin/dv.sh/ipank.r'
+payments_swed_bank_certificate: 'eyp_pub.pem'
+payments_swed_seller_private: 'kaupmees_priv.pem'
+payments_swed_seller_account: 'testvpos'
+payments_lhv_url: 'https://www.seb.ee/cgi-bin/dv.sh/ipank.r'
+payments_lhv_bank_certificate: 'eyp_pub.pem'
+payments_lhv_seller_private: 'kaupmees_priv.pem'
+payments_lhv_seller_account: 'testvpos'
 
 #
 # AUTOTEST overwrites
