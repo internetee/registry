@@ -6,7 +6,6 @@ class DropLogLegalDocuments < ActiveRecord::Migration
   end
 
   def down
-    # removed concern Version, which removed LegalDocumentVersion
-    fail ActiveRecord::IrreversibleMigration
+    # we don't want it back
   end
 end
