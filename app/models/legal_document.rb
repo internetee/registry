@@ -1,16 +1,19 @@
 class LegalDocument < ActiveRecord::Base
-  include Versions # version/legal_document_version.rb
-  belongs_to :documentable, polymorphic: true
-
   if ENV['legal_document_types'].present?
     TYPES = ENV['legal_document_types'].split(',').map(&:strip)
   else
-    TYPES = %w(pdf bdoc ddoc zip rar gz tar 7z odt doc docx)
+    TYPES = %w(pdf bdoc ddoc zip rar gz tar 7z odt doc docx).freeze
   end
 
   attr_accessor :body
 
-  before_save :save_to_filesystem
+  belongs_to :documentable, polymorphic: true
+
+  before_create :add_creator
+  before_save   :save_to_filesystem
+
+
+
   def save_to_filesystem
     loop do
       rand = SecureRandom.random_number.to_s.last(4)
@@ -24,5 +27,10 @@ class LegalDocument < ActiveRecord::Base
 
     File.open(path, 'wb') { |f| f.write(Base64.decode64(body)) } unless Rails.env.test?
     self.path = path
+  end
+
+  def add_creator
+    self.creator_str = ::PaperTrail.whodunnit
+    true
   end
 end

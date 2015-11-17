@@ -424,7 +424,6 @@ class Domain < ActiveRecord::Base
     pending_json_cache = pending_json
     token = registrant_verification_token
     asked_at = registrant_verification_asked_at
-    changes_cache = changes
     new_registrant_id    = registrant.id
     new_registrant_email = registrant.email
     new_registrant_name  = registrant.name
@@ -438,7 +437,6 @@ class Domain < ActiveRecord::Base
     self.registrant_verification_token = token
     self.registrant_verification_asked_at = asked_at
     set_pending_update
-    pending_json['domain'] = changes_cache
     pending_json['new_registrant_id']    = new_registrant_id
     pending_json['new_registrant_email'] = new_registrant_email
     pending_json['new_registrant_name']  = new_registrant_name
@@ -564,8 +562,8 @@ class Domain < ActiveRecord::Base
 
   def pending_registrant
     return '' if pending_json.blank?
-    return '' if pending_json['domain']['registrant_id'].blank?
-    Registrant.find_by(id: pending_json['domain']['registrant_id'].last)
+    return '' if pending_json['new_registrant_id'].blank?
+    Registrant.find_by(id: pending_json['new_registrant_id'].last)
   end
 
   def generate_auth_info
@@ -757,11 +755,11 @@ class Domain < ActiveRecord::Base
 
   def children_log
     log = HashWithIndifferentAccess.new
-    log[:admin_contacts] = admin_contacts.map(&:attributes)
-    log[:tech_contacts]  = tech_contacts.map(&:attributes)
-    log[:nameservers]    = nameservers.map(&:attributes)
-    log[:registrant]     = [registrant.try(:attributes)]
-    log[:domain_statuses] = domain_statuses.map(&:attributes)
+    log[:admin_contacts] = admin_contact_ids
+    log[:tech_contacts]  = tech_contact_ids
+    log[:nameservers]    = nameserver_ids
+    log[:registrant]     = [registrant_id]
+    log[:domain_statuses] = domain_status_ids
     log
   end
 
