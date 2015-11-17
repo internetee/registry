@@ -1,8 +1,7 @@
 class ContactMailer < ApplicationMailer
   include Que::Mailer
 
-  def email_updated(email_id, contact_id)
-    email = Email.find_by(id: email_id)
+  def email_updated(email, contact_id)
     @contact = Contact.find_by(id: contact_id)
     return unless email || @contact
     return if delivery_off?(contact)

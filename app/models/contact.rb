@@ -50,7 +50,7 @@ class Contact < ActiveRecord::Base
     emails << domains.map(&:registrant_email) if domains.present?
     emails = emails.flatten.uniq
     emails.each do |e|
-      ContactMailer.email_updated(e.id, id).deliver
+      ContactMailer.email_updated(e, id).deliver
     end
   end
 
