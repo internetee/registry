@@ -1,5 +1,6 @@
 class LegalDocument < ActiveRecord::Base
-  include Versions # version/legal_document_version.rb
+  extend VersionCreator
+
   belongs_to :documentable, polymorphic: true
 
   if ENV['legal_document_types'].present?
