@@ -441,19 +441,8 @@ class Epp::Domain < Domain
 
     at_add = attrs_from(frame.css('add'), current_user, 'add')
     at[:nameservers_attributes] += at_add[:nameservers_attributes]
-
-    if !at[:admin_domain_contacts_attributes].empty? && admin_change_prohibited?
-      add_epp_error('2304', 'admin', DomainStatus::SERVER_ADMIN_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
-    else
-      at[:admin_domain_contacts_attributes] += at_add[:admin_domain_contacts_attributes]
-    end
-
-    if !at[:tech_domain_contacts_attributes].empty? && tech_change_prohibited?
-      add_epp_error('2304', 'tech', DomainStatus::SERVER_TECH_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
-    else
-      at[:tech_domain_contacts_attributes] += at_add[:tech_domain_contacts_attributes]
-    end
-
+    at[:admin_domain_contacts_attributes] += at_add[:admin_domain_contacts_attributes]
+    at[:tech_domain_contacts_attributes] += at_add[:tech_domain_contacts_attributes]
     at[:dnskeys_attributes] += at_add[:dnskeys_attributes]
     at[:statuses] =
       statuses - domain_statuses_attrs(frame.css('rem'), 'rem') + domain_statuses_attrs(frame.css('add'), 'add')
