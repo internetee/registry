@@ -483,9 +483,8 @@ class Epp::Domain < Domain
     statuses.delete(DomainStatus::PENDING_DELETE_CONFIRMATION)
     statuses.delete(DomainStatus::PENDING_DELETE)
     DomainMailer.delete_confirmation(self).deliver_now
-
-    # TODO: confirm that this actually makes sense
-    clean_pendings! if valid? && set_pending_delete!
+    clean_pendings!
+    set_pending_delete!
     true
   end
 

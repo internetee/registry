@@ -492,6 +492,12 @@ class Domain < ActiveRecord::Base
     DomainMailer.pending_deleted(self).deliver_now
   end
 
+  def cancel_pending_delete
+    statuses.delete DomainStatus::PENDING_DELETE_CONFIRMATION
+    statuses.delete DomainStatus::PENDING_DELETE
+    delete_at = nil
+  end
+
   def pricelist(operation, period_i = nil, unit = nil)
     period_i ||= period
     unit ||= period_unit
