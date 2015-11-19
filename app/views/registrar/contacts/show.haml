@@ -11,7 +11,7 @@
     .col-md-12= render 'registrar/contacts/partials/statuses', statuses: @contact.statuses
   .row
     - if @contact.ident.present?
-      .col-md-12= render 'admin/contacts/partials/domains', contact: Contact.find_by(code: params[:id])
+      .col-md-12= render 'registrar/contacts/partials/domains', contact: Contact.find_by(code: params[:id])
 
 - else 
   .row
