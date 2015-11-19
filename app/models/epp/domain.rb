@@ -838,7 +838,7 @@ class Epp::Domain < Domain
           next
         end
 
-        if Domain.find_by(name: x)
+        if Domain.find_by_idn x
           res << { name: x, avail: 0, reason: 'in use' }
         else
           res << { name: x, avail: 1 }

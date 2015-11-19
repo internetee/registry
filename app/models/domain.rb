@@ -334,6 +334,17 @@ class Domain < ActiveRecord::Base
     self[:name_dirty] = value
   end
 
+  # find by internationalized domain name
+  # internet domain name => ascii or puny, but db::domains.name is unicode
+  def self.find_by_idn(name)
+    domain = self.find_by_name name
+    if domain.blank? && name.include?('-')
+      unicode = SimpleIDN.to_unicode name # we have no index on domains.name_puny
+      domain = self.find_by_name unicode
+    end
+    domain
+  end
+
   def roid
     "EIS-#{id}"
   end
