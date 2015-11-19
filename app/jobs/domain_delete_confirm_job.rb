@@ -7,12 +7,10 @@ class DomainDeleteConfirmJob < Que::Job
       when RegistrantVerification::CONFIRMED
         domain.poll_message!(:poll_pending_delete_confirmed_by_registrant)
         domain.apply_pending_delete!
-        domain.clean_pendings!
       when RegistrantVerification::REJECTED
         DomainMailer.pending_delete_rejected_notification(domain_id).deliver
-        domain.statuses.delete(DomainStatus::PENDING_DELETE_CONFIRMATION)
         domain.poll_message!(:poll_pending_delete_rejected_by_registrant)
-        domain.clean_pendings!
+        domain.cancel_pending_delete
       end
       destroy # it's best to destroy the job in the same transaction
     end

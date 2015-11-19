@@ -236,7 +236,7 @@ class Epp::Domain < Domain
   def admin_domain_contacts_attrs(frame, action)
     admin_attrs = domain_contact_attrs_from(frame, action, 'admin')
 
-    if action && !admin_attrs.empty? && admin_change_prohibited?
+    if admin_attrs.present? && admin_change_prohibited?
       add_epp_error('2304', 'admin', DomainStatus::SERVER_ADMIN_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
       return []
     end
@@ -252,7 +252,7 @@ class Epp::Domain < Domain
   def tech_domain_contacts_attrs(frame, action)
     tech_attrs = domain_contact_attrs_from(frame, action, 'tech')
 
-    if action && !tech_attrs.empty? && tech_change_prohibited?
+    if tech_attrs.present? && tech_change_prohibited?
       add_epp_error('2304', 'tech', DomainStatus::SERVER_TECH_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
       return []
     end
@@ -443,21 +443,10 @@ class Epp::Domain < Domain
       frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
     end
 
-    at_add = attrs_from(frame.css('add'), current_user)
+    at_add = attrs_from(frame.css('add'), current_user, 'add')
     at[:nameservers_attributes] += at_add[:nameservers_attributes]
-
-    if !at[:admin_domain_contacts_attributes].empty? && admin_change_prohibited?
-      add_epp_error('2304', 'admin', DomainStatus::SERVER_ADMIN_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
-    else
-      at[:admin_domain_contacts_attributes] += at_add[:admin_domain_contacts_attributes]
-    end
-
-    if !at[:tech_domain_contacts_attributes].empty? && tech_change_prohibited?
-      add_epp_error('2304', 'tech', DomainStatus::SERVER_TECH_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
-    else
-      at[:tech_domain_contacts_attributes] += at_add[:tech_domain_contacts_attributes]
-    end
-
+    at[:admin_domain_contacts_attributes] += at_add[:admin_domain_contacts_attributes]
+    at[:tech_domain_contacts_attributes] += at_add[:tech_domain_contacts_attributes]
     at[:dnskeys_attributes] += at_add[:dnskeys_attributes]
     at[:statuses] =
       statuses - domain_statuses_attrs(frame.css('rem'), 'rem') + domain_statuses_attrs(frame.css('add'), 'add')
@@ -498,9 +487,8 @@ class Epp::Domain < Domain
     statuses.delete(DomainStatus::PENDING_DELETE_CONFIRMATION)
     statuses.delete(DomainStatus::PENDING_DELETE)
     DomainMailer.delete_confirmation(id).deliver
-
-    # TODO: confirm that this actually makes sense
-    clean_pendings! if valid? && set_pending_delete!
+    clean_pendings!
+    set_pending_delete!
     true
   end
 

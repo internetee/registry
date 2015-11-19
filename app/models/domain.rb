@@ -492,6 +492,12 @@ class Domain < ActiveRecord::Base
     DomainMailer.pending_deleted(id).deliver
   end
 
+  def cancel_pending_delete
+    statuses.delete DomainStatus::PENDING_DELETE_CONFIRMATION
+    statuses.delete DomainStatus::PENDING_DELETE
+    self.delete_at = nil
+  end
+
   def pricelist(operation, period_i = nil, unit = nil)
     period_i ||= period
     unit ||= period_unit
@@ -673,16 +679,31 @@ class Domain < ActiveRecord::Base
     statuses.include?(DomainStatus::FORCE_DELETE)
   end
 
+  # special handling for admin changing status
+  def admin_status_update(update)
+    # check for deleted status
+    statuses.each do |s|
+      unless update.includes? s
+        case s
+          when DomainStatus::PENDING_DELETE
+            self.delete_at = nil
+          # Handle any other special remove cases?
+          # when DomainStatus::FORCE_DELETE unset_force_delete
+        end
+      end
+    end
+  end
+
   def pending_update_prohibited?
     (statuses_was & [
         DomainStatus::PENDING_DELETE_CONFIRMATION,
-      DomainStatus::CLIENT_UPDATE_PROHIBITED,
-      DomainStatus::SERVER_UPDATE_PROHIBITED,
-      DomainStatus::PENDING_CREATE,
-      DomainStatus::PENDING_UPDATE,
-      DomainStatus::PENDING_DELETE,
-      DomainStatus::PENDING_RENEW,
-      DomainStatus::PENDING_TRANSFER
+        DomainStatus::CLIENT_UPDATE_PROHIBITED,
+        DomainStatus::SERVER_UPDATE_PROHIBITED,
+        DomainStatus::PENDING_CREATE,
+        DomainStatus::PENDING_UPDATE,
+        DomainStatus::PENDING_DELETE,
+        DomainStatus::PENDING_RENEW,
+        DomainStatus::PENDING_TRANSFER
     ]).present?
   end
 
