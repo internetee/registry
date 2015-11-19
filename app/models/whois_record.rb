@@ -49,6 +49,7 @@ class WhoisRecord < ActiveRecord::Base
 
     h[:registrant]       = domain.registrant.name
     h[:registrant_email] = domain.registrant.email
+    @disclosed << domain.registrant.email
     h[:changed]          = domain.registrant.updated_at.try(:to_s, :iso8601)
 
     h[:admin_contacts] = []
@@ -84,7 +85,7 @@ class WhoisRecord < ActiveRecord::Base
     h[:dnssec_changed] = domain.dnskeys.pluck(:updated_at).max.try(:to_s, :iso8601) rescue nil
 
 
-    h[:disclosed] = @disclosed
+    h[:disclosed] = @disclosed # later we can replace
     h
   end
 
