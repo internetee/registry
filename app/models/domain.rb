@@ -683,7 +683,7 @@ class Domain < ActiveRecord::Base
   def admin_status_update(update)
     # check for deleted status
     statuses.each do |s|
-      unless update.includes? s
+      unless update.include? s
         case s
           when DomainStatus::PENDING_DELETE
             self.delete_at = nil
