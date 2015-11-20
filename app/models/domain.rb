@@ -241,7 +241,7 @@ class Domain < ActiveRecord::Base
           DomainMailer.pending_update_expired_notification_for_new_registrant(id).deliver
         end
         if domain.pending_delete? || domain.pending_delete_confirmation?
-          DomainMailer.pending_delete_expired_notification(id).deliver
+          DomainMailer.pending_delete_expired_notification(id, deliver_emails).deliver
         end
         domain.clean_pendings!
         unless Rails.env.test?
@@ -428,8 +428,8 @@ class Domain < ActiveRecord::Base
     new_registrant_email = registrant.email
     new_registrant_name  = registrant.name
 
-    DomainMailer.pending_update_request_for_old_registrant(id).deliver
-    DomainMailer.pending_update_notification_for_new_registrant(id).deliver
+    DomainMailer.pending_update_request_for_old_registrant(id, deliver_emails).deliver
+    DomainMailer.pending_update_notification_for_new_registrant(id, deliver_emails).deliver
 
     reload # revert back to original
 
@@ -489,7 +489,7 @@ class Domain < ActiveRecord::Base
     pending_delete_confirmation!
     save(validate: false) # should check if this did succeed
 
-    DomainMailer.pending_deleted(id).deliver
+    DomainMailer.pending_deleted(id, deliver_emails).deliver
   end
 
   def pricelist(operation, period_i = nil, unit = nil)
@@ -619,7 +619,7 @@ class Domain < ActiveRecord::Base
       registrar.messages.create!(
         body: I18n.t('force_delete_set_on_domain', domain: name)
       )
-      DomainMailer.force_delete(id).deliver
+      DomainMailer.force_delete(id, deliver_emails).deliver
       return true
     end
     false

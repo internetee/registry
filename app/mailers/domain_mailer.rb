@@ -1,10 +1,10 @@
 class DomainMailer < ApplicationMailer
   include Que::Mailer
 
-  def pending_update_request_for_old_registrant(domain_id)
+  def pending_update_request_for_old_registrant(domain_id, should_deliver)
     @domain = Domain.find_by(id: domain_id)
     return unless @domain
-    return if delivery_off?(@domain)
+    return if delivery_off?(@domain, should_deliver)
 
     if @domain.registrant_verification_token.blank?
       logger.warn "EMAIL NOT DELIVERED: registrant_verification_token is missing for #{@domain.name}"
@@ -27,10 +27,10 @@ class DomainMailer < ApplicationMailer
          name: @domain.name)} [#{@domain.name}]")
   end
 
-  def pending_update_notification_for_new_registrant(domain_id)
+  def pending_update_notification_for_new_registrant(domain_id, should_deliver)
     @domain = Domain.find_by(id: domain_id)
     return unless @domain
-    return if delivery_off?(@domain)
+    return if delivery_off?(@domain, should_deliver)
 
     if @domain.registrant_verification_token.blank?
       logger.warn "EMAIL NOT DELIVERED: registrant_verification_token is missing for #{@domain.name}"
@@ -51,10 +51,10 @@ class DomainMailer < ApplicationMailer
          name: @domain.name)} [#{@domain.name}]")
   end
 
-  def registrant_updated_notification_for_new_registrant(domain_id)
+  def registrant_updated_notification_for_new_registrant(domain_id, should_deliver)
     @domain = Domain.find_by(id: domain_id)
     return unless @domain
-    return if delivery_off?(@domain)
+    return if delivery_off?(@domain, should_deliver)
 
     return if whitelist_blocked?(@domain.registrant_email)
     mail(to: format(@domain.registrant_email),
@@ -62,10 +62,10 @@ class DomainMailer < ApplicationMailer
          name: @domain.name)} [#{@domain.name}]")
   end
 
-  def registrant_updated_notification_for_old_registrant(domain_id)
+  def registrant_updated_notification_for_old_registrant(domain_id, should_deliver)
     domain = Domain.find_by(id: domain_id)
     return unless domain
-    return if delivery_off?(@domain)
+    return if delivery_off?(@domain, should_deliver)
 
     @old_registrant_email = domain.registrant_email # Nb! before applying pending updates
 
@@ -107,10 +107,10 @@ class DomainMailer < ApplicationMailer
          name: @domain.name)} [#{@domain.name}]")
   end
 
-  def pending_deleted(domain_id)
+  def pending_deleted(domain_id, should_deliver)
     @domain = Domain.find_by(id: domain_id)
     return unless @domain
-    return if delivery_off?(@domain)
+    return if delivery_off?(@domain, should_deliver)
 
     if @domain.registrant_verification_token.blank?
       logger.warn "EMAIL NOT DELIVERED: registrant_verification_token is missing for #{@domain.name}"
@@ -133,10 +133,10 @@ class DomainMailer < ApplicationMailer
          name: @domain.name)} [#{@domain.name}]")
   end
 
-  def pending_delete_rejected_notification(domain_id)
+  def pending_delete_rejected_notification(domain_id, should_deliver)
     @domain = Domain.find_by(id: domain_id)
     return unless @domain
-    return if delivery_off?(@domain)
+    return if delivery_off?(@domain, should_deliver)
     # no delivery off control, driggered by que, no epp request
 
     if @domain.registrant_verification_token.blank?
@@ -155,10 +155,10 @@ class DomainMailer < ApplicationMailer
          name: @domain.name)} [#{@domain.name}]")
   end
 
-  def pending_delete_expired_notification(domain_id)
+  def pending_delete_expired_notification(domain_id, should_deliver)
     @domain = Domain.find_by(id: domain_id)
     return unless @domain
-    return if delivery_off?(@domain)
+    return if delivery_off?(@domain, should_deliver)
     # no delivery off control, driggered by cron, no epp request
 
     return if whitelist_blocked?(@domain.registrant.email)
@@ -167,10 +167,10 @@ class DomainMailer < ApplicationMailer
          name: @domain.name)} [#{@domain.name}]")
   end
 
-  def delete_confirmation(domain_id)
+  def delete_confirmation(domain_id, should_deliver)
     @domain = Domain.find_by(id: domain_id)
     return unless @domain
-    return if delivery_off?(@domain)
+    return if delivery_off?(@domain, should_deliver)
 
     return if whitelist_blocked?(@domain.registrant.email)
     mail(to: format(@domain.registrant.email),
@@ -178,9 +178,9 @@ class DomainMailer < ApplicationMailer
          name: @domain.name)} [#{@domain.name}]")
   end
 
-  def force_delete(domain_id)
+  def force_delete(domain_id, should_deliver)
     @domain = Domain.find_by(id: domain_id)
-    return if delivery_off?(@domain)
+    return if delivery_off?(@domain, should_deliver)
     emails = ([@domain.registrant.email] + @domain.admin_contacts.map { |x| format(x.email) }).uniq
     return if whitelist_blocked?(emails)
 
