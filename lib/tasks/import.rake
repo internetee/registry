@@ -364,16 +364,6 @@ namespace :import do
       legacy_contact_id
     )
 
-    # rubocop: disable Lint/UselessAssignment
-    domain_status_columns = %w(
-      description
-      value
-      creator_str
-      updator_str
-      legacy_domain_id
-    )
-    # rubocop: enable Lint/UselessAssignment
-
     nameserver_columns = %w(
       hostname
       ipv4
@@ -398,7 +388,6 @@ namespace :import do
 
     domains, nameservers, dnskeys, domain_contacts = [], [], [], []
     existing_domain_ids = Domain.pluck(:legacy_id)
-    user = "rake-#{`whoami`.strip} #{ARGV.join ' '}"
     count = 0
 
     Legacy::Domain.includes(
@@ -414,16 +403,6 @@ namespace :import do
       count += 1
 
       begin
-        # domain statuses
-        domain_statuses = []
-        x.object_states.each do |state|
-          next if state.name.blank?
-          domain_statuses << state.name
-        end
-
-        # OK status is default
-        domain_statuses << DomainStatus::OK if domain_statuses.empty?
-
         domains << [
           x.object_registry.name.try(:strip),
           Registrar.find_by(legacy_id: x.object.try(:clid)).try(:id),
@@ -442,7 +421,7 @@ namespace :import do
           x.id,
           x.object_registry.try(:crid),
           x.registrant,
-          domain_statuses
+          x.new_states
         ]
 
         # admin contacts
@@ -777,6 +756,25 @@ namespace :import do
 
   desc 'Import history'
   task history: :environment do
+    # {"id"=>83215, "name"=>"gssb-dsf0pf.ee", "registrar_id"=>17,
+    # "registered_at"=>Thu, 18 Sep 2014 10:17:13 EEST +03:00,
+    # "status"=>nil, "valid_from"=>Thu, 18 Sep 2014 10:17:13 EEST +03:00,
+    # "valid_to"=>Fri, 18 Sep 2015 00:00:00 EEST +03:00, "registrant_id"=>262841,
+    # "auth_info"=>"authinfopw", "created_at"=>Thu, 18 Sep 2014 10:17:13 EEST +03:00,
+    # "updated_at"=>Thu, 18 Sep 2014 10:17:13 EEST +03:00, "name_dirty"=>"gssb-dsf0pf.ee",
+    # "name_puny"=>"gssb-dsf0pf.ee", "period"=>1, "period_unit"=>"y", "creator_str"=>"Elkdata OÜ",
+    # "updator_str"=>"Elkdata OÜ", "legacy_id"=>778106, "legacy_registrar_id"=>13, "legacy_registrant_id"=>778104,
+    # "outzone_at"=>nil, "delete_at"=>nil, "registrant_verification_asked_at"=>nil,
+    # "registrant_verification_token"=>nil,
+    # "pending_json"=>{}, "force_delete_at"=>nil, "statuses"=>["ok"],
+    # "reserved"=>false, "status_notes"=>{}, "statuses_backup"=>[]}
+
+    Legacy::DomainHistory.uniq.pluck(:id).each do |legacy_domain_id|
+      # 1. add domain changes
+      # 2. add states
+
+    end
+
     Domain.where.not(legacy_id: nil).find_each do |domain|
       next if domain.versions.where(action: :create).any?
 

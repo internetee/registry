@@ -2,6 +2,8 @@ module Legacy
   class ObjectState < Db
     self.table_name = :object_state
 
+    scope :valid, -> { where('valid_to IS NULL') }
+
     # legacy values. Just for log
     # 2 => "serverRenewProhibited",
     # 5 => "serverOutzoneManual",
