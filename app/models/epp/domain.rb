@@ -314,80 +314,113 @@ class Epp::Domain < Domain
   # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/CyclomaticComplexity
   def dnskeys_attrs(frame, action)
-    if frame.css('dsData').any? && !Setting.ds_data_allowed
-      errors.add(:base, :ds_data_not_allowed)
-    end
+    keys = []
+    return keys if frame.blank?
+    inf_data = DnsSecKeys.new(frame)
 
-    if frame.xpath('keyData').any? && !Setting.key_data_allowed
-      errors.add(:base, :key_data_not_allowed)
-    end
-
-    res = ds_data_from(frame)
-    dnskeys_list = key_data_from(frame, res)
-
-    if action == 'rem'
-      to_destroy = []
-      dnskeys_list.each do |x|
-        dk = dnskeys.find_by(public_key: x[:public_key])
-
-        unless dk
-          add_epp_error('2303', 'publicKey', x[:public_key], [:dnskeys, :not_found])
-          next
-        end
-
-        to_destroy << {
-          id: dk.id,
-          _destroy: 1
-        }
-      end
-
-      return to_destroy
+    if  action == 'rem' &&
+        frame.css('rem > all').first.try(:text) == 'true'
+      keys = inf_data.mark_destroy_all dnskeys
     else
-      return dnskeys_list
+      if Setting.key_data_allowed
+        errors.add(:base, :ds_data_not_allowed) if inf_data.ds_data.present?
+        keys = inf_data.key_data
+      end
+      if Setting.ds_data_allowed
+        errors.add(:base, :key_data_not_allowed) if inf_data.key_data.present?
+        keys = inf_data.ds_data
+      end
+      if action == 'rem'
+        keys = inf_data.mark_destroy(dnskeys)
+        add_epp_error('2303', nil, nil, [:dnskeys, :not_found]) if keys.include? nil
+      end
     end
+    errors.any? ? [] : keys
   end
   # rubocop: enable Metrics/PerceivedComplexity
   # rubocop: enable Metrics/CyclomaticComplexity
 
-  def key_data_from(frame, res)
-    frame.xpath('keyData').each do |x|
-      res << {
-        flags: x.css('flags').first.try(:text),
-        protocol: x.css('protocol').first.try(:text),
-        alg: x.css('alg').first.try(:text),
-        public_key: x.css('pubKey').first.try(:text),
-        ds_alg: 3,
-        ds_digest_type: Setting.ds_algorithm
-      }
+  class DnsSecKeys
+    def initialize(frame)
+      @key_data = []
+      @ds_data = []
+      # schema validation prevents both in the same parent node
+      if frame.css('dsData').present?
+        ds_data_from frame
+      else
+        frame.css('keyData').each do |key|
+          @key_data.append key_data_from(key)
+        end
+      end
     end
 
-    res
-  end
+    attr_reader :key_data
+    attr_reader :ds_data
 
-  def ds_data_from(frame)
-    res = []
-    frame.css('dsData').each do |x|
-      data = {
-        ds_key_tag: x.css('keyTag').first.try(:text),
-        ds_alg: x.css('alg').first.try(:text),
-        ds_digest_type: x.css('digestType').first.try(:text),
-        ds_digest: x.css('digest').first.try(:text)
-      }
-
-      kd = x.css('keyData').first
-      data.merge!({
-        flags: kd.css('flags').first.try(:text),
-        protocol: kd.css('protocol').first.try(:text),
-        alg: kd.css('alg').first.try(:text),
-        public_key: kd.css('pubKey').first.try(:text)
-      }) if kd
-
-      res << data
+    def mark_destroy_all(dns_keys)
+      # if transition support required mark_destroy dns_keys when has ds/key values otherwise ...
+      dns_keys.map { |inf_data| mark inf_data }
     end
 
-    res
-  end
+    def mark_destroy(dns_keys)
+      (ds_data.present? ? ds_filter(dns_keys) : kd_filter(dns_keys)).map do |inf_data|
+        inf_data.blank? ? nil : mark(inf_data)
+      end
+    end
 
+    private
+
+    KEY_INTERFACE = {flags: 'flags', protocol: 'protocol', alg: 'alg', public_key: 'pubKey' }
+    DS_INTERFACE  =
+        { ds_key_tag:     'keyTag',
+          ds_alg:         'alg',
+          ds_digest_type: 'digestType',
+          ds_digest:      'digest'
+        }
+
+    def xm_copy(frame, map)
+      result = {}
+      map.each do |key, elem|
+        result[key] = frame.css(elem).first.try(:text)
+      end
+      result
+    end
+
+    def key_data_from(frame)
+      result = xm_copy frame, KEY_INTERFACE
+      # TODO: can these defaults go where they belong?
+      result.merge({
+                       ds_alg: 3,      # DSA/SHA-1 [DSA] RFC2536
+                       ds_digest_type: Setting.ds_algorithm     # only 1
+                   })
+    end
+
+    def ds_data_from(frame)
+      frame.css('dsData').each do |ds_data|
+        key = ds_data.css('keyData')
+        ds = xm_copy ds_data, DS_INTERFACE
+        ds.merge(key_data_from key) if key.present?
+        @ds_data << ds
+      end
+    end
+
+    def ds_filter(dns_keys)
+      @ds_data.map do |ds|
+        dns_keys.find_by(ds.slice(*DS_INTERFACE.keys))
+      end
+     end
+
+    def kd_filter(dns_keys)
+      @key_data.map do |key|
+        dns_keys.find_by(key)
+      end
+    end
+
+    def mark(inf_data)
+      { id: inf_data.id, _destroy: 1 }
+    end
+  end
+  
   def domain_statuses_attrs(frame, action)
     status_list = domain_status_list_from(frame)
     if action == 'rem'
@@ -785,14 +818,14 @@ class Epp::Domain < Domain
   def transferrable?
     (statuses & [
         DomainStatus::PENDING_DELETE_CONFIRMATION,
-      DomainStatus::PENDING_CREATE,
-      DomainStatus::PENDING_UPDATE,
-      DomainStatus::PENDING_DELETE,
-      DomainStatus::PENDING_RENEW,
-      DomainStatus::PENDING_TRANSFER,
-      DomainStatus::FORCE_DELETE,
-      DomainStatus::SERVER_TRANSFER_PROHIBITED,
-      DomainStatus::CLIENT_TRANSFER_PROHIBITED
+        DomainStatus::PENDING_CREATE,
+        DomainStatus::PENDING_UPDATE,
+        DomainStatus::PENDING_DELETE,
+        DomainStatus::PENDING_RENEW,
+        DomainStatus::PENDING_TRANSFER,
+        DomainStatus::FORCE_DELETE,
+        DomainStatus::SERVER_TRANSFER_PROHIBITED,
+        DomainStatus::CLIENT_TRANSFER_PROHIBITED
     ]).empty?
   end
 

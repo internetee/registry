@@ -7,12 +7,18 @@ class Admin::SettingsController < AdminController
   end
 
   def create
-    casted_settings.each do |k, v|
-      Setting[k] = v
-    end
+    @errors = Setting.params_errors(casted_settings)
+    if @errors.empty?
+      casted_settings.each do |k, v|
+        Setting[k] = v
+      end
 
-    flash[:notice] = I18n.t('records_updated')
-    redirect_to [:admin, :settings]
+      flash[:notice] = I18n.t('records_updated')
+      redirect_to [:admin, :settings]
+    else
+      flash[:alert] = @errors.values.uniq.join(", ")
+      render "admin/settings/index"
+    end
   end
 
   def show; end

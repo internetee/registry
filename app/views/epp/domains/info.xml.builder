@@ -60,40 +60,44 @@ xml.epp_head do
       end
     end
 
-    xml.extension do
-      def tag_key_data(xml, key)
-        xml.tag!('secDNS:keyData') do
-          xml.tag!('secDNS:flags', key.flags)
-          xml.tag!('secDNS:protocol', key.protocol)
-          xml.tag!('secDNS:alg', key.alg)
-          xml.tag!('secDNS:pubKey', key.public_key)
-        end
-      end
+    if @domain.dnskeys.any?
+      ds_data  = Setting.ds_data_allowed  ? @domain.dnskeys.find_all { |key| key.ds_digest.present? } : []
+      key_data = Setting.key_data_allowed ? @domain.dnskeys.find_all { |key| key.public_key.present? } : []
 
-      def tag_ds_data(xml, key)
-        xml.tag!('secDNS:dsData') do
-          xml.tag!('secDNS:keyTag', key.ds_key_tag)
-          xml.tag!('secDNS:alg', key.ds_alg)
-          xml.tag!('secDNS:digestType', key.ds_digest_type)
-          xml.tag!('secDNS:digest', key.ds_digest)
-          tag_key_data(xml, key) if key.public_key.present?
-        end
-      end
-
-      xml.tag!('secDNS:infData', 'xmlns:secDNS' => 'urn:ietf:params:xml:ns:secDNS-1.1') do
-        # might not have ds in first key? maybe check any? k.ds_digest if requirements change (DS not accepted by EIS)
-        if @domain.dnskeys[0].ds_digest.blank?
-          @domain.dnskeys.sort.each do |key|
-            tag_key_data(xml, key)
-          end
-        else
-          @domain.dnskeys.sort.each do |key|
-            tag_ds_data(xml, key)
+      # is there any reason to include <extension> without <secDNS:infData>
+      xml.extension do
+        def tag_key_data(xml, key)
+          xml.tag!('secDNS:keyData') do
+            xml.tag!('secDNS:flags', key.flags)
+            xml.tag!('secDNS:protocol', key.protocol)
+            xml.tag!('secDNS:alg', key.alg)
+            xml.tag!('secDNS:pubKey', key.public_key)
           end
         end
-      end
-    end if @domain.dnskeys.any?
 
+        def tag_ds_data(xml, key)
+          xml.tag!('secDNS:dsData') do
+            xml.tag!('secDNS:keyTag', key.ds_key_tag)
+            xml.tag!('secDNS:alg', key.ds_alg)
+            xml.tag!('secDNS:digestType', key.ds_digest_type)
+            xml.tag!('secDNS:digest', key.ds_digest)
+            tag_key_data(xml, key) if key.public_key.present?
+          end
+        end
+
+        xml.tag!('secDNS:infData', 'xmlns:secDNS' => 'urn:ietf:params:xml:ns:secDNS-1.1') do
+          if Setting.ds_data_allowed
+            ds_data.sort.each do |key|
+              tag_ds_data(xml, key)
+            end
+          else
+            key_data.sort.each do |key|
+              tag_key_data(xml, key)
+            end
+          end
+        end
+      end if key_data.present? || ds_data.present?
+    end
     render('epp/shared/trID', builder: xml)
   end
 end
