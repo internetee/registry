@@ -23,7 +23,7 @@
         - domains.each do |x|
           %tr
             %td= link_to(x.name, info_registrar_domains_path(domain_name: x.name))
-            %td= link_to(x.registrar, registrar_contact_path(id: x.registrant.code))
+            %td= x.registrar.name
             %td= l(x.valid_to, format: :short)
             %td= x.roles.join(", ")
 
