@@ -79,5 +79,19 @@ module Legacy
 
       map[state_id]
     end
+
+
+  class << self
+       def changes_dates_for domain_id
+         sql = %Q{SELECT t_2.id, state.*
+                  FROM object_history t_2
+                    JOIN object_state state ON (t_2.historyid >= state.ohid_from
+                                                AND (t_2.historyid <= state.ohid_to OR state.ohid_to IS NULL))
+                                               AND t_2.id = state.object_id
+                  WHERE state.object_id=#{domain_id}
+                  ORDER BY t_2.historyid;}
+         find_by_sql(sql).map{|e| e.attributes.values_at("valid_from", "valid_to") }.flatten.each_with_object({}){|e,h|h[e] = [self]}
+       end
+  end
   end
 end

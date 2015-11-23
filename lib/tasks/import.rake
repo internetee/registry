@@ -772,6 +772,8 @@ namespace :import do
     Legacy::DomainHistory.uniq.pluck(:id).each do |legacy_domain_id|
       # 1. add domain changes
       # 2. add states
+      # compose hash of change time -> Object changes
+      history = Legacy::ObjectState.changes_dates_for(legacy_domain_id)
 
     end
 
