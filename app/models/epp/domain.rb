@@ -387,13 +387,8 @@ class Epp::Domain < Domain
     end
 
     def key_data_from(frame)
-      result = xm_copy frame, KEY_INTERFACE
-      # TODO: can these defaults go where they belong?
-      result.merge({
-                       ds_alg: 3,      # DSA/SHA-1 [DSA] RFC2536
-                       ds_digest_type: Setting.ds_algorithm     # only 1
-                   })
-    end
+      xm_copy frame, KEY_INTERFACE
+   end
 
     def ds_data_from(frame)
       frame.css('dsData').each do |ds_data|

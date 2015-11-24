@@ -20,6 +20,7 @@ class Dnskey < ActiveRecord::Base
   ALGORITHMS = Depp::Dnskey::ALGORITHMS.map {|pair| pair[1].to_s}.freeze # IANA numbers, single authority list
   PROTOCOLS = %w(3)
   FLAGS = %w(0 256 257) # 256 = ZSK, 257 = KSK
+  DS_DIGEST_TYPE = [1,2]
 
   def epp_code_map
     {
@@ -67,6 +68,9 @@ class Dnskey < ActiveRecord::Base
 
   def generate_digest
     return if flags != 257 # generate ds only with KSK
+    self.ds_alg = alg
+    self.ds_digest_type = Setting.ds_algorithm if ds_digest_type.blank? || !DS_DIGEST_TYPE.include?(ds_digest_type)
+
     flags_hex = self.class.int_to_hex(flags)
     protocol_hex = self.class.int_to_hex(protocol)
     alg_hex = self.class.int_to_hex(alg)
@@ -74,9 +78,9 @@ class Dnskey < ActiveRecord::Base
     hex = [domain.name_in_wire_format, flags_hex, protocol_hex, alg_hex, public_key_hex].join
     bin = self.class.hex_to_bin(hex)
 
-    if ds_digest_type == 1
+    if self.ds_digest_type == 1
       self.ds_digest = Digest::SHA1.hexdigest(bin).upcase
-    elsif ds_digest_type == 2
+    elsif self.ds_digest_type == 2
       self.ds_digest = Digest::SHA256.hexdigest(bin).upcase
     end
   end
