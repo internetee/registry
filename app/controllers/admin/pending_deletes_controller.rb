@@ -17,7 +17,6 @@ class Admin::PendingDeletesController < AdminController
   def destroy
     authorize! :destroy, :pending
 
-    @epp_domain.is_admin= true
     if @domain.clean_pendings!
       redirect_to admin_domain_path(@domain.id), notice: t(:pending_removed)
     else
