@@ -17,8 +17,8 @@ class ApplicationMailer < ActionMailer::Base
   end
 
   # turn on delivery on specific (epp) request only, thus rake tasks does not deliver anything
-  def delivery_off?(model)
-    return false if model.deliver_emails == true
+  def delivery_off?(model, deliver_email= false)
+    return false if deliver_emails == true
     logger.info "EMAIL SENDING WAS NOT ACTIVATED " \
       "BY MODEL OBJECT: id ##{model.try(:id)} deliver_emails returned false"
     true
