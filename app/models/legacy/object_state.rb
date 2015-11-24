@@ -80,18 +80,40 @@ module Legacy
       map[state_id]
     end
 
+    def get_current_domain_object(param)
+      p "not implemented #{__method__}"
+    end
 
-  class << self
+    def get_current_changes(param)
+      p "not implemented #{__method__}"
+    end
+
+    class << self
        def changes_dates_for domain_id
-         sql = %Q{SELECT t_2.id, state.*
-                  FROM object_history t_2
-                    JOIN object_state state ON (t_2.historyid >= state.ohid_from
-                                                AND (t_2.historyid <= state.ohid_to OR state.ohid_to IS NULL))
-                                               AND t_2.id = state.object_id
-                  WHERE state.object_id=#{domain_id}
-                  ORDER BY t_2.historyid;}
-         find_by_sql(sql).map{|e| e.attributes.values_at("valid_from", "valid_to") }.flatten.each_with_object({}){|e,h|h[e] = [self]}
+         sql = %Q{SELECT distinct t_2.id, state.id state_dot_id, state.*,
+                    extract(epoch from valid_from) valid_from_unix, extract(epoch from valid_to) valid_to_unix
+                    FROM object_history t_2
+                      JOIN object_state state ON (t_2.historyid >= state.ohid_from
+                                                  AND (t_2.historyid <= state.ohid_to OR state.ohid_to IS NULL))
+                                                 AND t_2.id = state.object_id
+                    WHERE state.object_id=#{domain_id};}
+         hash = {}
+         find_by_sql(sql).each do |rec|
+           hash[rec.valid_from.try(:to_time)] = [{id: rec.state_dot_id, klass: self, param: :valid_from}] if rec.valid_from
+           hash[rec.valid_to.try(:to_time)]   = [{id: rec.state_dot_id, klass: self, param: :valid_to}]   if rec.valid_to
+         end
+         hash
        end
-  end
+
+      def get_record_at domain_id, rec_id
+        sql = %Q{SELECT distinct t_2.id, state.*
+                    FROM object_history t_2
+                      JOIN object_state state ON (t_2.historyid >= state.ohid_from
+                                                  AND (t_2.historyid <= state.ohid_to OR state.ohid_to IS NULL))
+                                                 AND t_2.id = state.object_id
+                    WHERE state.object_id=#{domain_id} AND  state.id = #{rec_id};}
+        find_by_sql(sql).first
+      end
+    end
   end
 end

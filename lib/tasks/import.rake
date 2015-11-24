@@ -769,34 +769,60 @@ namespace :import do
     # "pending_json"=>{}, "force_delete_at"=>nil, "statuses"=>["ok"],
     # "reserved"=>false, "status_notes"=>{}, "statuses_backup"=>[]}
 
-    Legacy::DomainHistory.uniq.pluck(:id).each do |legacy_domain_id|
+    Legacy::DomainHistory.uniq.where(id: 294516).pluck(:id).each do |legacy_domain_id|
+      # add here to skip domains whith create history
+
       # 1. add domain changes
       # 2. add states
       # compose hash of change time -> Object changes
-      history = Legacy::ObjectState.changes_dates_for(legacy_domain_id)
+      history  = Legacy::ObjectState.changes_dates_for(legacy_domain_id)
+      p history.keys
+      p Legacy::DomainHistory.changes_dates_for(legacy_domain_id).keys
+      Legacy::DomainHistory.changes_dates_for(legacy_domain_id).each do |time, klasses|
+        if history.has_key?(time)
+          history[time] = history[time] | klasses
+        else
+          history[time] = klasses
+        end
+      end
 
-    end
+      keys = history.keys.compact.sort
+      i = 0
+      keys.each_with_index do |time|
 
-    Domain.where.not(legacy_id: nil).find_each do |domain|
-      next if domain.versions.where(action: :create).any?
+        p time
+        history[time].each do |orig_history_klass|
+          event = :update
+          event = :create  if i == 0
+          responder = orig_history_klass[:klass].get_record_at(legacy_domain_id, orig_history_klass[:id])
+          responder.get_current_domain_object(orig_history_klass[:param])
+          responder.get_current_changes(orig_history_klass[:param])
 
-      history = Legacy::DomainHistory.where(id: domain.legacy_id).order("valid_from ASC").to_a
-      history.each_with_index do |his, i|
-        event = :update
-        event = :create  if i == 0
-        event = :destroy if i + 1 == history.size && his.history.valid_to.present?
-
-        {
-            item_type: domain.class,
-            item_id:   domain.id,
-            event:     event,
-            whodunnit: Registrar.find_by(legacy_id: his.object_history.upid || his.object_history.clid),
-            object:    {},
-            object_changes: {"id" => [nil, 1111] },
-            created_at: his.object_history.try(:update),
-        }
+          i += 1
+        end
       end
     end
+
+    # Domain.where.not(legacy_id: nil).find_each do |domain|
+    #   next if domain.versions.where(action: :create).any?
+    #
+    #   history = Legacy::DomainHistory.where(id: domain.legacy_id).order("valid_from ASC").to_a
+    #   history.each_with_index do |his, i|
+    #     event = :update
+    #     event = :create  if i == 0
+    #     event = :destroy if i + 1 == history.size && his.history.valid_to.present?
+    #
+    #     {
+    #         item_type: domain.class,
+    #         item_id:   domain.id,
+    #         event:     event,
+    #         whodunnit: Registrar.find_by(legacy_id: his.object_history.upid || his.object_history.clid),
+    #         object:    {},
+    #         object_changes: {"id" => [nil, 1111] },
+    #         created_at: his.object_history.try(:update),
+    #     }
+    #   end
+    # end
   end
 end
 
