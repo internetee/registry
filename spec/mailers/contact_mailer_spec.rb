@@ -8,7 +8,7 @@ describe ContactMailer do
   describe 'email changed notification when delivery turned off' do
     before :all do
       @contact = Fabricate(:contact, email: 'test@example.ee')
-      @mail = ContactMailer.email_updated('test@example.com', @contact)
+      @mail = ContactMailer.email_updated('test@example.com', @contact.id, deliver_emails)
     end
 
     it 'should not render email subject' do
@@ -34,7 +34,7 @@ describe ContactMailer do
       @contact = @domain.registrant
       @contact.reload # until figured out why registrant_domains not loaded
       @contact.deliver_emails = true
-      @mail = ContactMailer.email_updated('info@example.org', @contact)
+      @mail = ContactMailer.email_updated('info@example.org', @contact.id, deliver_emails)
     end
 
     it 'should render email subject' do
@@ -60,7 +60,7 @@ describe ContactMailer do
       @contact = @domain.registrant
       @contact.reload # until figured out why registrant_domains not loaded
       @contact.deliver_emails = true
-      @mail = ContactMailer.email_updated('info@ääöü.org', @contact)
+      @mail = ContactMailer.email_updated('info@ääöü.org', @contact.id, deliver_emails)
     end
 
     it 'should render email subject' do

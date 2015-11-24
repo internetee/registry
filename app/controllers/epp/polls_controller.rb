@@ -11,7 +11,19 @@ class Epp::PollsController < EppController
 
     render_epp_response 'epp/poll/poll_no_messages' and return unless @message
     if @message.attached_obj_type && @message.attached_obj_id
-      @object = Object.const_get(@message.attached_obj_type).find(@message.attached_obj_id)
+      begin
+        @object = Object.const_get(@message.attached_obj_type).find(@message.attached_obj_id)
+      rescue => problem
+        # the data model might be inconsistent; or ...
+        # this could happen if the registrar does not dequeue messages, and then the domain was deleted
+
+        # SELECT messages.id, domains.name, messages.body FROM messages LEFT OUTER
+        # JOIN domains ON attached_obj_id::INTEGER = domains.id
+        # WHERE attached_obj_type = 'Epp::Domain' AND name IS NULL;
+
+        Rails.logger.error 'orphan message, error ignored: ' + problem.to_s
+        # now we should dequeue or delete the messages avoid duplicate log alarms
+      end
     end
 
     if @message.attached_obj_type == 'Keyrelay'

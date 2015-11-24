@@ -47,6 +47,7 @@ class Admin::DomainsController < AdminController
   def update
     dp = ignore_empty_statuses
     @domain.is_admin = true
+    @domain.admin_status_update dp[:statuses]
 
     if @domain.update(dp)
       flash[:notice] = I18n.t('domain_updated')

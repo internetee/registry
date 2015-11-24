@@ -9,7 +9,7 @@ describe DomainMailer do
     before :all do
       @registrant = Fabricate(:registrant, email: 'test@example.com')
       @domain = Fabricate(:domain, registrant: @registrant)
-      @mail = DomainMailer.pending_update_request_for_old_registrant(@domain)
+      @mail = DomainMailer.pending_update_request_for_old_registrant(@domain.id, deliver_emails)
     end
 
     it 'should not render email subject' do
@@ -38,7 +38,7 @@ describe DomainMailer do
       @domain.registrant_verification_token = '123'
       @domain.registrant_verification_asked_at = Time.zone.now
       @domain.registrant = @new_registrant
-      @mail = DomainMailer.pending_update_request_for_old_registrant(@domain)
+      @mail = DomainMailer.pending_update_request_for_old_registrant(@domain.id, deliver_emails)
     end
 
     it 'should render email subject' do
@@ -71,7 +71,7 @@ describe DomainMailer do
       @domain.registrant_verification_token = '123'
       @domain.registrant_verification_asked_at = Time.zone.now
       @domain.registrant = @new_registrant
-      @mail = DomainMailer.pending_update_notification_for_new_registrant(@domain)
+      @mail = DomainMailer.pending_update_notification_for_new_registrant(@domain.id, deliver_emails)
     end
 
     it 'should render email subject' do
@@ -100,7 +100,7 @@ describe DomainMailer do
       @domain.registrant_verification_token = '123'
       @domain.registrant_verification_asked_at = Time.zone.now
       @domain.registrant = @new_registrant
-      @mail = DomainMailer.pending_update_notification_for_new_registrant(@domain)
+      @mail = DomainMailer.pending_update_notification_for_new_registrant(@domain.id, deliver_emails)
     end
 
     it 'should render email subject' do
@@ -128,7 +128,7 @@ describe DomainMailer do
       @domain.deliver_emails = true
       @domain.pending_json['new_registrant_email'] = 'new@example.org'
       @domain.pending_json['new_registrant_name']  = 'test name'
-      @mail = DomainMailer.pending_update_rejected_notification_for_new_registrant(@domain)
+      @mail = DomainMailer.pending_update_rejected_notification_for_new_registrant(@domain.id)
     end
 
     it 'should render email subject' do
@@ -153,7 +153,7 @@ describe DomainMailer do
       @registrant = Fabricate(:registrant, email: 'test@example.com')
       @domain = Fabricate(:domain, registrant: @registrant)
       @domain.deliver_emails = true
-      @mail = DomainMailer.registrant_updated_notification_for_new_registrant(@domain)
+      @mail = DomainMailer.registrant_updated_notification_for_new_registrant(@domain.id, deliver_emails)
     end
 
     it 'should render email subject' do
@@ -178,7 +178,7 @@ describe DomainMailer do
       @registrant = Fabricate(:registrant, email: 'test@example.com')
       @domain = Fabricate(:domain, registrant: @registrant)
       @domain.deliver_emails = true
-      @mail = DomainMailer.registrant_updated_notification_for_old_registrant(@domain)
+      @mail = DomainMailer.registrant_updated_notification_for_old_registrant(@domain.id, deliver_emails)
     end
 
     it 'should render email subject' do
@@ -202,7 +202,7 @@ describe DomainMailer do
     before :all do
       @registrant = Fabricate(:registrant, email: 'test@example.com')
       @domain = Fabricate(:domain, registrant: @registrant)
-      @mail = DomainMailer.pending_deleted(@domain)
+      @mail = DomainMailer.pending_deleted(@domain.id, deliver_emails)
     end
 
     it 'should not render email subject' do
@@ -229,7 +229,7 @@ describe DomainMailer do
       @domain.deliver_emails = true
       @domain.registrant_verification_token = '123'
       @domain.registrant_verification_asked_at = Time.zone.now
-      @mail = DomainMailer.pending_deleted(@domain)
+      @mail = DomainMailer.pending_deleted(@domain.id, deliver_emails)
     end
 
     it 'should render email subject' do
@@ -260,7 +260,7 @@ describe DomainMailer do
       @domain.deliver_emails = true
       @domain.registrant_verification_token = '123'
       @domain.registrant_verification_asked_at = Time.zone.now
-      @mail = DomainMailer.pending_delete_rejected_notification(@domain)
+      @mail = DomainMailer.pending_delete_rejected_notification(@domain.id, deliver_emails)
     end
 
     it 'should render email subject' do
@@ -287,7 +287,7 @@ describe DomainMailer do
       @domain.deliver_emails = true
       @domain.registrant_verification_token = '123'
       @domain.registrant_verification_asked_at = Time.zone.now
-      @mail = DomainMailer.pending_delete_expired_notification(@domain)
+      @mail = DomainMailer.pending_delete_expired_notification(@domain.id, deliver_emails)
     end
 
     it 'should render email subject' do
@@ -314,7 +314,7 @@ describe DomainMailer do
       @domain.deliver_emails = true
       @domain.registrant_verification_token = '123'
       @domain.registrant_verification_asked_at = Time.zone.now
-      @mail = DomainMailer.delete_confirmation(@domain)
+      @mail = DomainMailer.delete_confirmation(@domain.id, deliver_emails)
     end
 
     it 'should render email subject' do

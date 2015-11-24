@@ -83,11 +83,14 @@ Iptables hitcounter is updated by application. For every registrar there is one 
 
 ````
 #!/bin/bash
+iptables -A INPUT -p tcp --dport 700 -j CHKLIMITS
 
-iptables -A INPUT -p tcp --dport 700 -s $REGISTRAR_SOURCE -m recent --name $REGISTRAR_CODE --rdest --rcheck --hitcount 100 --seconds 60 -j DROP
-iptables -A INPUT -p tcp --dport 700 -s $REGISTRAR_SOURCE2 -m recent --name $REGISTRAR_CODE --rdest --rcheck --hitcount 100 --seconds 60 -j DROP
-iptables -A INPUT -p tcp --dport 700 -s $REGISTRAR2_SOURCE -m recent --name $REGISTRAR2_CODE --rdest --rcheck --hitcount 100 --seconds 60 -j DROP
-iptables -A INPUT -p tcp --dport 700 -s $REGISTRAR2_SOURCE2 -m recent --name $REGISTRAR2_CODE --rdest --rcheck --hitcount 100 --seconds 60 -j DROP
+iptables -N CHKLIMITS
+
+iptables -A CHKLIMITS -p tcp --dport 700 -s $REGISTRAR_SOURCE -m recent --name $REGISTRAR_CODE --rdest --rcheck --hitcount 100 --seconds 60 -j DROP
+iptables -A CHKLIMITS -p tcp --dport 700 -s $REGISTRAR_SOURCE2 -m recent --name $REGISTRAR_CODE --rdest --rcheck --hitcount 100 --seconds 60 -j DROP
+iptables -A CHKLIMITS -p tcp --dport 700 -s $REGISTRAR2_SOURCE -m recent --name $REGISTRAR2_CODE --rdest --rcheck --hitcount 100 --seconds 60 -j DROP
+iptables -A CHKLIMITS -p tcp --dport 700 -s $REGISTRAR2_SOURCE2 -m recent --name $REGISTRAR2_CODE --rdest --rcheck --hitcount 100 --seconds 60 -j DROP
 
 
 ````

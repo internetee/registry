@@ -148,7 +148,7 @@ class DomainStatus < ActiveRecord::Base
         INACTIVE,
         FORCE_DELETE,
         PENDING_CREATE,
-        PENDING_DELETE,
+        #PENDING_DELETE,
         PENDING_RENEW,
         PENDING_TRANSFER,
         PENDING_UPDATE,

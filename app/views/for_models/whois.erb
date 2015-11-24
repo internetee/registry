@@ -27,7 +27,7 @@ changed:    <%= contact['changed'].to_s.tr('T',' ').sub('+', ' +') %>
 <%- end -%>
 <% if json['tech_contacts'].present? %>
 Technical contact:
-<%- for contact in json['admin_contacts'] -%>
+<%- for contact in json['tech_contacts'] -%>
 name:       <%= contact['name'] %>
 email:      Not Disclosed - Visit www.internet.ee for webbased WHOIS
 changed:    <%= contact['changed'].to_s.tr('T',' ').sub('+', ' +') %>

@@ -238,10 +238,10 @@ class Domain < ActiveRecord::Base
         end
         count += 1
         if domain.pending_update?
-          DomainMailer.pending_update_expired_notification_for_new_registrant(domain).deliver_now
+          DomainMailer.pending_update_expired_notification_for_new_registrant(id).deliver
         end
         if domain.pending_delete? || domain.pending_delete_confirmation?
-          DomainMailer.pending_delete_expired_notification(domain).deliver_now
+          DomainMailer.pending_delete_expired_notification(id, deliver_emails).deliver
         end
         domain.clean_pendings!
         unless Rails.env.test?
@@ -307,14 +307,15 @@ class Domain < ActiveRecord::Base
       c = 0
       Domain.where("statuses @> '{deleteCandidate}'::varchar[]").each do |x|
         Whois::Record.where('domain_id = ?', x.id).try(':destroy')
-        x.destroy
+        destroy_with_message x
         STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by deleteCandidate ##{x.id} (#{x.name})\n" unless Rails.env.test?
+
         c += 1
       end
 
       Domain.where('force_delete_at <= ?', Time.zone.now).each do |x|
         Whois::Record.where('domain_id = ?', x.id).try(':destroy')
-        x.destroy
+        destroy_with_message x
         STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by force delete time ##{x.id} (#{x.name})\n" unless Rails.env.test?
         c += 1
       end
@@ -324,6 +325,15 @@ class Domain < ActiveRecord::Base
     # rubocop: enable Metrics/AbcSize
     # rubocop:enable Rails/FindEach
     # rubocop: enable Metrics/LineLength
+    def destroy_with_message(domain)
+      domain.destroy
+      bye_bye = domain.versions.last
+      domain.registrar.messages.create!(
+          body: I18n.t(:domain_deleted),
+          attached_obj_id: bye_bye.id,
+          attached_obj_type: bye_bye.class.to_s # DomainVersion
+      )
+    end
   end
 
   def name=(value)
@@ -332,6 +342,17 @@ class Domain < ActiveRecord::Base
     self[:name] = SimpleIDN.to_unicode(value)
     self[:name_puny] = SimpleIDN.to_ascii(value)
     self[:name_dirty] = value
+  end
+
+  # find by internationalized domain name
+  # internet domain name => ascii or puny, but db::domains.name is unicode
+  def self.find_by_idn(name)
+    domain = self.find_by_name name
+    if domain.blank? && name.include?('-')
+      unicode = SimpleIDN.to_unicode name # we have no index on domains.name_puny
+      domain = self.find_by_name unicode
+    end
+    domain
   end
 
   def roid
@@ -428,8 +449,8 @@ class Domain < ActiveRecord::Base
     new_registrant_email = registrant.email
     new_registrant_name  = registrant.name
 
-    DomainMailer.pending_update_request_for_old_registrant(self).deliver_now
-    DomainMailer.pending_update_notification_for_new_registrant(self).deliver_now
+    DomainMailer.pending_update_request_for_old_registrant(id, deliver_emails).deliver
+    DomainMailer.pending_update_notification_for_new_registrant(id, deliver_emails).deliver
 
     reload # revert back to original
 
@@ -489,7 +510,13 @@ class Domain < ActiveRecord::Base
     pending_delete_confirmation!
     save(validate: false) # should check if this did succeed
 
-    DomainMailer.pending_deleted(self).deliver_now
+    DomainMailer.pending_deleted(id, deliver_emails).deliver
+  end
+
+  def cancel_pending_delete
+    statuses.delete DomainStatus::PENDING_DELETE_CONFIRMATION
+    statuses.delete DomainStatus::PENDING_DELETE
+    self.delete_at = nil
   end
 
   def pricelist(operation, period_i = nil, unit = nil)
@@ -619,7 +646,7 @@ class Domain < ActiveRecord::Base
       registrar.messages.create!(
         body: I18n.t('force_delete_set_on_domain', domain: name)
       )
-      DomainMailer.force_delete(self).deliver_now
+      DomainMailer.force_delete(id, deliver_emails).deliver
       return true
     end
     false
@@ -673,16 +700,31 @@ class Domain < ActiveRecord::Base
     statuses.include?(DomainStatus::FORCE_DELETE)
   end
 
+  # special handling for admin changing status
+  def admin_status_update(update)
+    # check for deleted status
+    statuses.each do |s|
+      unless update.include? s
+        case s
+          when DomainStatus::PENDING_DELETE
+            self.delete_at = nil
+          # Handle any other special remove cases?
+          # when DomainStatus::FORCE_DELETE unset_force_delete
+        end
+      end
+    end
+  end
+
   def pending_update_prohibited?
     (statuses_was & [
         DomainStatus::PENDING_DELETE_CONFIRMATION,
-      DomainStatus::CLIENT_UPDATE_PROHIBITED,
-      DomainStatus::SERVER_UPDATE_PROHIBITED,
-      DomainStatus::PENDING_CREATE,
-      DomainStatus::PENDING_UPDATE,
-      DomainStatus::PENDING_DELETE,
-      DomainStatus::PENDING_RENEW,
-      DomainStatus::PENDING_TRANSFER
+        DomainStatus::CLIENT_UPDATE_PROHIBITED,
+        DomainStatus::SERVER_UPDATE_PROHIBITED,
+        DomainStatus::PENDING_CREATE,
+        DomainStatus::PENDING_UPDATE,
+        DomainStatus::PENDING_DELETE,
+        DomainStatus::PENDING_RENEW,
+        DomainStatus::PENDING_TRANSFER
     ]).present?
   end
 

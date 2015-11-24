@@ -50,9 +50,6 @@ Domain name mapping protocol short version:
     <update>                     1        
       <domain:update>            1         Attribute: xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd"
         <domain:name>            1         Domain name. Can contain unicode characters.
-        <domain:chg>             0-1       Attributes to change
-          <domain:registrant>    0-1       Contact reference to the registrant
-                                             Optional attribute: verified="yes/no"
         <domain:add>             0-1       Objects to add
           <domain:contact>       0-n       Contact reference. Attribute: type="admin / tech"
           <domain:status>        0-n       Status description. 
@@ -72,6 +69,9 @@ Domain name mapping protocol short version:
           <domain:ns>            0-1      
             <domain:hostAttr>    1        
               <domain:hostName>  1         Hostname of the nameserver
+        <domain:chg>             0-1       Attributes to change
+          <domain:registrant>    0-1       Contact reference to the registrant
+                                             Optional attribute: verified="yes/no"
     <extension>                  0-1       Required if registrant is changing
       <secDNS:update>            0-1       Attribute: xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1"
         <secDNS:add>             0-1      

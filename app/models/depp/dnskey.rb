@@ -12,10 +12,9 @@ module Depp
       ['6 - DSA-NSEC3-SHA1', 6],
       ['7 - RSASHA1-NSEC3-SHA1', 7],
       ['8 - RSA/SHA-256', 8],
-      ['252 - Reserved for Indirect Keys', 252],
-      ['253 - Private algorithm', 253],
-      ['254 - Private algorithm OID', 254],
-      ['255 - Reserved', 255]
+      ['10 - RSA/SHA-512', 10],
+      ['13 - ECDSA Curve P-256 with SHA-256', 13],
+      ['14 - ECDSA Curve P-384 with SHA-384', 14]
     ]
 
     PROTOCOLS = [3]
