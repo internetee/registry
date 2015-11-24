@@ -69,7 +69,7 @@ class Dnskey < ActiveRecord::Base
   def generate_digest
     return unless flags == 257 || flags == 256 # require ZoneFlag, but optional SecureEntryPoint
     self.ds_alg = alg
-    self.ds_digest_type = Setting.ds_algorithm if ds_digest_type.blank? || !DS_DIGEST_TYPE.include?(ds_digest_type)
+    self.ds_digest_type = Setting.ds_digest_type if self.ds_digest_type.blank? || !DS_DIGEST_TYPE.include?(ds_digest_type)
 
     flags_hex = self.class.int_to_hex(flags)
     protocol_hex = self.class.int_to_hex(protocol)

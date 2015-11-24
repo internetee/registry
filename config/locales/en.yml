@@ -443,7 +443,7 @@ en:
   ds_data_allowed: 'DS data allowed'
   ds_data_with_key_allowed: 'Allow DS data with key'
   key_data_allowed: 'Allow key data'
-  ds_algorithm: 'DS algorithm'
+  ds_digest_type: 'DS digest type'
   zonefile_settings: 'Zonefile settings'
   background_jobs: Background jobs
   domain_history: Domain history
