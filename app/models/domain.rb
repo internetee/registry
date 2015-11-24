@@ -307,14 +307,15 @@ class Domain < ActiveRecord::Base
       c = 0
       Domain.where("statuses @> '{deleteCandidate}'::varchar[]").each do |x|
         Whois::Record.where('domain_id = ?', x.id).try(':destroy')
-        x.destroy
+        destroy_with_message x
         STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by deleteCandidate ##{x.id} (#{x.name})\n" unless Rails.env.test?
+
         c += 1
       end
 
       Domain.where('force_delete_at <= ?', Time.zone.now).each do |x|
         Whois::Record.where('domain_id = ?', x.id).try(':destroy')
-        x.destroy
+        destroy_with_message x
         STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by force delete time ##{x.id} (#{x.name})\n" unless Rails.env.test?
         c += 1
       end
@@ -324,6 +325,15 @@ class Domain < ActiveRecord::Base
     # rubocop: enable Metrics/AbcSize
     # rubocop:enable Rails/FindEach
     # rubocop: enable Metrics/LineLength
+    def destroy_with_message(domain)
+      domain.destroy
+      bye_bye = domain.versions.last
+      domain.registrar.messages.create!(
+          body: I18n.t(:domain_deleted),
+          attached_obj_id: bye_bye.id,
+          attached_obj_type: bye_bye.class.to_s # DomainVersion
+      )
+    end
   end
 
   def name=(value)
