@@ -25,6 +25,24 @@ module Repp
           total_number_of_records: current_user.registrar.domains.count
         }
       end
+
+      # example: curl -u registrar1:password localhost:3000/repp/v1/domains/1/transfer_info -H "Auth-Code: authinfopw1"
+      get '/:id/transfer_info' do
+
+        domain = Domain.where("name = ? OR id=?", params[:id], params[:id]).where(auth_info: request.headers['Auth-Code']).first
+        error! I18n.t('errors.messages.epp_domain_not_found'), 401 unless domain
+
+        contact_repp_json = proc{|contact|
+          contact.attributes.slice("code", "ident_type", "ident_country_code", "phone", "email", "street", "city", "zip","country_code", "statuses")
+        }
+
+        @response = {
+          domain: domain.name,
+          registrant: contact_repp_json.call(domain.registrant),
+          admin_contacts: domain.admin_contacts.map{|e| contact_repp_json.call(e)},
+          tech_contacts: domain.tech_contacts.map{|e| contact_repp_json.call(e)}
+        }
+      end
     end
   end
 end
