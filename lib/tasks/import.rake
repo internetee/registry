@@ -226,7 +226,6 @@ namespace :import do
       registrar_id
       creator_str
       updator_str
-      ident_country_code
       legacy_id
       street
       city
@@ -262,7 +261,6 @@ namespace :import do
           Registrar.find_by(legacy_id: x.object.try(:clid)).try(:id),
           x.object_registry.try(:registrar).try(:name),
           x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
-          x.country.try(:strip),
           x.id,
           [x.street1.try(:strip), x.street2.try(:strip), x.street3.try(:strip)].join("\n"),
           x.city.try(:strip),
