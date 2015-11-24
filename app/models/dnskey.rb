@@ -67,7 +67,7 @@ class Dnskey < ActiveRecord::Base
   end
 
   def generate_digest
-    return if flags != 257 # generate ds only with KSK
+    return unless flags == 257 || flags == 256 # require ZoneFlag, but optional SecureEntryPoint
     self.ds_alg = alg
     self.ds_digest_type = Setting.ds_algorithm if ds_digest_type.blank? || !DS_DIGEST_TYPE.include?(ds_digest_type)
 
@@ -90,7 +90,7 @@ class Dnskey < ActiveRecord::Base
   end
 
   def generate_ds_key_tag
-    return if flags != 257 # generate ds key tag only with KSK
+    return unless flags == 257 || flags == 256 # require ZoneFlag, but optional SecureEntryPoint
     pk = public_key.gsub(' ', '')
     wire_format = [flags, protocol, alg].pack('S!>CC')
     wire_format += Base64.decode64(pk)
