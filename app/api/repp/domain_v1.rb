@@ -27,9 +27,10 @@ module Repp
       end
 
       # example: curl -u registrar1:password localhost:3000/repp/v1/domains/1/transfer_info -H "Auth-Code: authinfopw1"
-      get '/:id/transfer_info' do
+      get '/:id/transfer_info', requirements: { id: /.*/ } do
+        attr   = params[:id] =~ /\A[0-9]+\z/ ? :id : :name
+        domain = Domain.where(auth_info: request.headers['Auth-Code']).where(attr => params[:id]).first
 
-        domain = Domain.where("name = ? OR id=?", params[:id], params[:id]).where(auth_info: request.headers['Auth-Code']).first
         error! I18n.t('errors.messages.epp_domain_not_found'), 401 unless domain
 
         contact_repp_json = proc{|contact|
