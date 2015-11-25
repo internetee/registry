@@ -380,8 +380,6 @@ namespace :import do
       protocol
       alg
       public_key
-      ds_alg
-      ds_digest_type
       creator_str
       updator_str
       legacy_domain_id
@@ -488,8 +486,6 @@ namespace :import do
             key.protocol,
             key.alg,
             key.key,
-            3, # ds_alg
-            1, # ds_digest_type /SHA1)
             x.object_registry.try(:registrar).try(:name),
             x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
             x.id,
@@ -580,10 +576,10 @@ namespace :import do
 
     puts '-----> Generating dnskey digests...'
 
-    Dnskey.all.each do |x|
-      x.generate_digest
-      x.generate_ds_key_tag
-      x.save(validate: false)
+    Dnskey.all.each do |ds|
+      ds.generate_digest
+      ds.generate_ds_key_tag
+      ds.save(validate: false)
     end
 
     puts "-----> Imported #{count} new domains in #{(Time.zone.now.to_f - start).round(2)} seconds"
