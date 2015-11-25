@@ -28,10 +28,11 @@ module Repp
 
       # example: curl -u registrar1:password localhost:3000/repp/v1/domains/1/transfer_info -H "Auth-Code: authinfopw1"
       get '/:id/transfer_info', requirements: { id: /.*/ } do
-        attr   = params[:id] =~ /\A[0-9]+\z/ ? :id : :name
-        domain = Domain.where(auth_info: request.headers['Auth-Code']).where(attr => params[:id]).first
+        ident = params[:id]
+        domain = ident =~ /\A[0-9]+\z/ ? Domain.find(ident) : Domain.find_by_idn(ident)
 
-        error! I18n.t('errors.messages.epp_domain_not_found'), 401 unless domain
+        error! I18n.t('errors.messages.epp_domain_not_found'), 404 unless domain
+        error! I18n.t('errors.messages.epp_authorization_error'), 401 unless domain.auth_info.eql? request.headers['Auth-Code']
 
         contact_repp_json = proc{|contact|
           contact.attributes.slice("code", "ident_type", "ident_country_code", "phone", "email", "street", "city", "zip","country_code", "statuses")
