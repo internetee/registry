@@ -1,6 +1,6 @@
 class AddIdentAutofill < ActiveRecord::Migration
   def change
-    execute "
+    execute <<-SQL
     CREATE OR REPLACE FUNCTION fill_ident_country()
       RETURNS BOOLEAN AS $$
       DECLARE
@@ -86,10 +86,13 @@ class AddIdentAutofill < ActiveRecord::Migration
         END LOOP;
       RETURN changed;
       END;
-      $$  LANGUAGE plpgsql;"
+      $$  LANGUAGE plpgsql;
+      SQL
   end
 
   def down
-    execute "DROP FUNCTION IF EXISTS fill_ident_country()"
+    execute <<-SQL
+      DROP FUNCTION IF EXISTS fill_ident_country()
+    SQL
   end
 end
