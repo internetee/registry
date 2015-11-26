@@ -131,6 +131,8 @@ Content-Type: application/json
   "domain":"ee-test.ee",
   "registrant":{
     "code":"EE:R1",
+    "name":"Registrant",
+    "ident":"17612535",
     "ident_type":"org",
     "ident_country_code":"EE",
     "phone":"+372.1234567",
@@ -147,6 +149,8 @@ Content-Type: application/json
   "admin_contacts":[
     {
       "code":"EE:A1",
+      "name":"Admin Contact",
+      "ident":"17612535376",
       "ident_type":"priv",
       "ident_country_code":"EE",
       "phone":"+372.7654321",
@@ -164,6 +168,8 @@ Content-Type: application/json
   "tech_contacts":[
     {
       "code":"EE:T1",
+      "name":"Tech Contact",
+      "ident":"17612536",
       "ident_type":"org",
       "ident_country_code":"EE",
       "phone":"+372.7654321",
