@@ -4,7 +4,7 @@ class ContactMailer < ApplicationMailer
   def email_updated(email, contact_id, should_deliver)
     @contact = Contact.find_by(id: contact_id)
     return unless email || @contact
-    return if delivery_off?(contact, should_deliver)
+    return if delivery_off?(@contact, should_deliver)
     return if whitelist_blocked?(email)
 
     begin
