@@ -11,11 +11,11 @@
    <!--
    Import common element types.
    -->
-   <import namespace="urn:ietf:params:xml:ns:eppcom-1.0" schemaLocation="http://www.iana.org/assignments/xml-registry/schema/eppcom-1.0.xsd"/>
-   <import namespace="urn:ietf:params:xml:ns:epp-1.0" schemaLocation="http://www.iana.org/assignments/xml-registry/schema/epp-1.0.xsd"/>
-   <import namespace="urn:ietf:params:xml:ns:host-1.0" schemaLocation="http://www.iana.org/assignments/xml-registry/schema/host-1.0.xsd"/>
-   <import namespace="urn:ietf:params:xml:ns:secDNS-1.1" schemaLocation="http://www.iana.org/assignments/xml-registry/schema/secDNS-1.1.xsd"/>
-   <import namespace="https://epp.tld.ee/schema/eis-1.0.xsd" schemaLocation="doc/schemas/eis-1.0.xsd"/>
+   <import namespace="urn:ietf:params:xml:ns:eppcom-1.0"/>
+   <import namespace="urn:ietf:params:xml:ns:epp-1.0"/>
+   <import namespace="urn:ietf:params:xml:ns:host-1.0"/>
+   <import namespace="urn:ietf:params:xml:ns:secDNS-1.1"/>
+   <import namespace="https://epp.tld.ee/schema/eis-1.0.xsd"/>
 
    <annotation>
     <documentation>
@@ -92,7 +92,6 @@
     <sequence>
       <element name="hostName" type="eppcom:labelType"/>
       <element name="hostAddr" type="host:addrType"
-
        minOccurs="0" maxOccurs="unbounded"/>
     </sequence>
    </complexType>
@@ -386,16 +385,24 @@
       <enumeration value="clientUpdateProhibited"/>
       <enumeration value="inactive"/>
       <enumeration value="ok"/>
+      <enumeration value="expired"/>
       <enumeration value="pendingCreate"/>
       <enumeration value="pendingDelete"/>
       <enumeration value="pendingRenew"/>
       <enumeration value="pendingTransfer"/>
       <enumeration value="pendingUpdate"/>
+      <enumeration value="pendingDeleteConfirmation"/>
       <enumeration value="serverDeleteProhibited"/>
       <enumeration value="serverHold"/>
       <enumeration value="serverRenewProhibited"/>
       <enumeration value="serverTransferProhibited"/>
       <enumeration value="serverUpdateProhibited"/>
+      <enumeration value="serverForceDelete"/>
+      <enumeration value="serverManualInzone"/>
+      <enumeration value="serverRegistrantChangeProhibited"/>
+      <enumeration value="serverAdminChangeProhibited"/>
+      <enumeration value="serverTechChangeProhibited"/>
+      <enumeration value="deleteCandidate"/>
     </restriction>
    </simpleType>
 

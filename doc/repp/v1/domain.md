@@ -1,3 +1,5 @@
+# Domain listing
+
 ## GET /repp/v1/domains
 Returns domains of the current registrar.
 
@@ -96,5 +98,85 @@ Content-Type: application/json
     "domain1.ee"
   ],
   "total_number_of_records": 2
+}
+```
+
+# Transfer info
+
+## GET /repp/v1/domains/*domainname.ee*/transfer_info
+Returns details of contacts associated with a domain to be transfered. Necessary for pre-transfer checks and better user experience in automated registrar systems.
+
+Please note the domain name in the path
+
+#### Request
+```
+GET /repp/v1/domains/ee-test.ee/transfer_info HTTP/1.1
+Accept: application/json
+Authorization: Basic Z2l0bGFiOmdoeXQ5ZTRmdQ==
+Content-Length: 0
+Content-Type: application/json
+Auth-Code: authinfopw
+```
+
+Please note that domain transfer/authorisation code must be placed in header - *Auth-Code*
+
+#### Response
+```
+HTTP/1.1 200 OK
+Cache-Control: max-age=0, private, must-revalidate
+Content-Length: 784
+Content-Type: application/json
+
+{
+  "domain":"ee-test.ee",
+  "registrant":{
+    "code":"EE:R1",
+    "ident_type":"org",
+    "ident_country_code":"EE",
+    "phone":"+372.1234567",
+    "email":"registrant@cache.ee",
+    "street":"Businesstreet 1",
+    "city":"Tallinn",
+    "zip":"10101",
+    "country_code":"EE",
+    "statuses":[
+      "ok",
+      "linked"
+    ]
+  },
+  "admin_contacts":[
+    {
+      "code":"EE:A1",
+      "ident_type":"priv",
+      "ident_country_code":"EE",
+      "phone":"+372.7654321",
+      "email":"admin@cache.ee",
+      "street":"Adminstreet 2",
+      "city":"Tallinn",
+      "zip":"12345",
+      "country_code":"EE",
+      "statuses":[
+        "ok",
+        "linked"
+      ]
+    }
+  ],
+  "tech_contacts":[
+    {
+      "code":"EE:T1",
+      "ident_type":"org",
+      "ident_country_code":"EE",
+      "phone":"+372.7654321",
+      "email":"tech@cache.ee",
+      "street":"Techstreet 1",
+      "city":"Tallinn",
+      "zip":"12345",
+      "country_code":"EE",
+      "statuses":[
+        "ok",
+        "linked"
+      ]
+    }
+  ]
 }
 ```

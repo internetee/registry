@@ -12,7 +12,7 @@ if con.present? && con.table_exists?('settings')
   Setting.save_default(:tech_contacts_max_count, 10)
   Setting.save_default(:expire_pending_confirmation, 48)
 
-  Setting.save_default(:ds_algorithm, 2)
+  Setting.save_default(:ds_digest_type, 2)
   Setting.save_default(:ds_data_allowed, false)
   Setting.save_default(:key_data_allowed, true)
 
