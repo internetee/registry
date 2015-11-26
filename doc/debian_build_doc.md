@@ -47,7 +47,7 @@ Please install following lib, otherwise your bundler install might not be succes
 ### Firewall rate limit config
 
 First increase the maximum possible value form 20 to 100 of the hitcount parameter.
-ip_pkt_list_tot of the xt_recent kernel module. Secondly change /proc/xt_recent/ permissions so, epp user can modify the tables.
+ip_pkt_list_tot of the xt_recent kernel module. Secondly change /proc/net/xt_recent/ permissions so, epp user can modify the tables.
 This can be done by creating an ip_pkt_list_tot.conf file in /etc/modeprobe.d/ which contains:
 
 ````
@@ -79,11 +79,13 @@ iptables -A INPUT -p tcp --dport 43 -m recent --set --rsource --name whois -j AC
 
 #### EPP
 
+Configure epp server ip in applicatin.yml
+iptables_server_ip: 'x.x.x.x'
 Iptables hitcounter is updated by application. For every registrar there is one recent table, where the request counters are stored, registrar handles and sources ips are "connected" with iptables rules.
 
 ````
 #!/bin/bash
-iptables -A INPUT -p tcp --dport 700 -j CHKLIMITS
+
 
 iptables -N CHKLIMITS
 
@@ -92,6 +94,6 @@ iptables -A CHKLIMITS -p tcp --dport 700 -s $REGISTRAR_SOURCE2 -m recent --name 
 iptables -A CHKLIMITS -p tcp --dport 700 -s $REGISTRAR2_SOURCE -m recent --name $REGISTRAR2_CODE --rdest --rcheck --hitcount 100 --seconds 60 -j DROP
 iptables -A CHKLIMITS -p tcp --dport 700 -s $REGISTRAR2_SOURCE2 -m recent --name $REGISTRAR2_CODE --rdest --rcheck --hitcount 100 --seconds 60 -j DROP
 
-
+iptables -A INPUT -p tcp --dport 700 -j CHKLIMITS
 ````
 
