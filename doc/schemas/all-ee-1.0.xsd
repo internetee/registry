@@ -20,15 +20,19 @@
       schemaLocation="eppcom-1.0.xsd"/>
     <import namespace="urn:ietf:params:xml:ns:epp-1.0"
       schemaLocation="epp-1.0.xsd"/>
+    <!-- EPP protocol extension: DNSSEC -->
+    <import namespace="urn:ietf:params:xml:ns:secDNS-1.1"
+      schemaLocation="secNDS-1.1.xsd"/>
+    <import namespace="urn:ietf:params:xml:ns:host-1.0"
+      schemaLocation="host-1.0.xsd"/>
+    <!-- EPP protocol extension: .ee specific -->
+    <import namespace="https://epp.tld.ee/schema/eis-1.0"
+      schemaLocation="eis-1.0.xsd"/>
     <import namespace="https://epp.tld.ee/schema/contact-eis-1.0"
       schemaLocation="contact-eis-1.0.xsd"/>
     <import namespace="https://epp.tld.ee/schema/domain-eis-1.0"
       schemaLocation="domain-eis-1.0.xsd"/>
-    <!-- EPP protocol extensions -->
-    <import namespace="urn:ietf:params:xml:ns:secDNS-1.1"
-      schemaLocation="secNDS-1.1.xsd"/>
-    <import namespace="https://epp.tld.ee/schema/eis-1.0"
-      schemaLocation="eis-1.0.xsd"/>
+
 
     <annotation>
       <documentation>
