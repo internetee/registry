@@ -101,16 +101,16 @@ Content-Type: application/json
 }
 ```
 
-# Details of contacts
+# Transfer info
 
 ## GET /repp/v1/domains/*domainname.ee*/transfer_info
-Returns details of contacts associated with other registrar. Necessary for pre-transfer checks and better user experience in automated registrar systems.
+Returns details of contacts associated with a domain to be transfered. Necessary for pre-transfer checks and better user experience in automated registrar systems.
 
 Please note the domain name in the path
 
 #### Request
 ```
-GET /repp/v1/domains?limit=1&details=true HTTP/1.1
+GET /repp/v1/domains/ee-test.ee/transfer_info HTTP/1.1
 Accept: application/json
 Authorization: Basic Z2l0bGFiOmdoeXQ5ZTRmdQ==
 Content-Length: 0
