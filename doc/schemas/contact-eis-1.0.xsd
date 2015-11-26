@@ -10,9 +10,9 @@
    <!--
    Import common element types.
    -->
-    <import namespace="urn:ietf:params:xml:ns:eppcom-1.0">
-    <import namespace="urn:ietf:params:xml:ns:epp-1.0">
-    <import namespace="https://epp.tld.ee/schema/eis-1.0.xsd">
+    <import namespace="urn:ietf:params:xml:ns:eppcom-1.0"/>
+    <import namespace="urn:ietf:params:xml:ns:epp-1.0"/>
+    <import namespace="https://epp.tld.ee/schema/eis-1.0.xsd"/>
 
     <annotation>
       <documentation>
