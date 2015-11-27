@@ -590,7 +590,7 @@ class Domain < ActiveRecord::Base
   def pending_registrant
     return '' if pending_json.blank?
     return '' if pending_json['new_registrant_id'].blank?
-    Registrant.find_by(id: pending_json['new_registrant_id'].last)
+    Registrant.find_by(id: pending_json['new_registrant_id'])
   end
 
   def generate_auth_info
