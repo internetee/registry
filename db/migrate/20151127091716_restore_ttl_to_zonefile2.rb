@@ -1,4 +1,4 @@
-class RestoreTtlToZonefile < ActiveRecord::Migration
+class RestoreTtlToZonefile2 < ActiveRecord::Migration
   # rubocop:disable Metrics/MethodLength
   def up
     execute <<-SQL
