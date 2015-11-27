@@ -20,7 +20,7 @@ class LegalDocument < ActiveRecord::Base
       next if rand.to_i == 0 || rand.length < 4
 
       dir = "#{ENV['legal_documents_dir']}/#{Time.zone.now.strftime('%Y/%m/%d')}"
-      FileUtils.mkdir_p(dir)
+      FileUtils.mkdir_p(dir, mode: 0775)
       self.path = "#{dir}/#{Time.zone.now.to_formatted_s(:number)}_#{rand}.#{document_type}"
       break unless File.file?(path)
     end
