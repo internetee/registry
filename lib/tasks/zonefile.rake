@@ -103,8 +103,8 @@ namespace :zonefile do
         SELECT array_to_string(
           array(
             SELECT concat(
-              d.name_puny, '. IN DS ', dk.ds_key_tag, ' ',
-              dk.ds_alg, ' ', dk.ds_digest_type, ' ( ', dk.ds_digest, ' )'
+              d.name_puny, '. 3600 IN DS ', dk.ds_key_tag, ' ',
+              dk.ds_alg, ' ', dk.ds_digest_type, ' ', dk.ds_digest
             )
             FROM domains d
             JOIN dnskeys dk ON dk.domain_id = d.id
