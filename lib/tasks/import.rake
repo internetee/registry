@@ -57,6 +57,7 @@ namespace :import do
     Rake::Task['import:reserved'].invoke
     Rake::Task['import:domains'].invoke
     Rake::Task['import:zones'].invoke
+    Rake::Task['zonefile:replace_procedure'].invoke
   end
 
   desc 'Import registrars'
