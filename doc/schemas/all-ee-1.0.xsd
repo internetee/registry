@@ -23,6 +23,9 @@
     <!-- EPP protocol extension: DNSSEC -->
     <import namespace="urn:ietf:params:xml:ns:secDNS-1.1"
       schemaLocation="secDNS-1.1.xsd"/>
+    <!-- EPP protocol extension: DNSSEC keyrelay -->
+    <import namespace="urn:ietf:params:xml:ns:keyrelay-1.0"
+      schemaLocation="keyrelay-1.0.xsd"/>
     <import namespace="urn:ietf:params:xml:ns:host-1.0"
       schemaLocation="host-1.0.xsd"/>
     <!-- EPP protocol extension: .ee specific -->
