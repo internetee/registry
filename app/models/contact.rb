@@ -227,9 +227,11 @@ class Contact < ActiveRecord::Base
       next unless column.type == :string
 
       c_name = column.name
-      val    = read_atribute(c_name)
-      errors.add(c_name, :invalid) if val.include?('<') || val.include?('>') || val.include?('%3C') || val.include?('%3E')
-      return
+      val    = read_attribute(c_name)
+      if val && (val.include?('<') || val.include?('>') || val.include?('%3C') || val.include?('%3E'))
+        errors.add(c_name, :invalid)
+        return # want to run code faster
+      end
     end
   end
 
