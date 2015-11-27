@@ -843,6 +843,7 @@ class Epp::Domain < Domain
     def parse_legal_document_from_frame(parsed_frame)
       ld = parsed_frame.css('legalDocument').first
       return nil unless ld
+      return nil if ld.text.starts_with?(ENV['legal_documents_dir']) # escape reloading
 
       {
         body: ld.text,
