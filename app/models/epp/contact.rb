@@ -21,7 +21,7 @@ class Epp::Contact < Contact
     # rubocop: disable Metrics/PerceivedComplexity
     # rubocop: disable Metrics/CyclomaticComplexity
     # rubocop: disable Metrics/AbcSize
-    def attrs_from(frame)
+    def attrs_from(frame, new_record: false)
       f = frame
       at = {}.with_indifferent_access
       at[:name]       = f.css('postalInfo name').text        if f.css('postalInfo name').present?
@@ -40,7 +40,7 @@ class Epp::Contact < Contact
       if legal_frame.present?
         at[:legal_documents_attributes] = legal_document_attrs(legal_frame)
       end
-      at.merge!(ident_attrs(f.css('ident').first))
+      at.merge!(ident_attrs(f.css('ident').first)) if new_record
       at
     end
     # rubocop: enable Metrics/PerceivedComplexity
@@ -51,7 +51,7 @@ class Epp::Contact < Contact
       return super if frame.blank?
 
       super(
-        attrs_from(frame).merge(
+        attrs_from(frame, new_record: true).merge(
           code: frame.css('id').text,
           registrar: registrar
         )
@@ -59,16 +59,22 @@ class Epp::Contact < Contact
     end
 
     def ident_attrs(ident_frame)
-      return {} if ident_frame.blank?
-      return {} if ident_frame.try('text').blank?
-      return {} if ident_frame.attr('type').blank?
-      return {} if ident_frame.attr('cc').blank?
+      return {} unless ident_attr_valid?(ident_frame)
 
       {
         ident: ident_frame.text,
         ident_type: ident_frame.attr('type'),
         ident_country_code: ident_frame.attr('cc')
       }
+    end
+
+    def ident_attr_valid?(ident_frame)
+      return false if ident_frame.blank?
+      return false if ident_frame.try('text').blank?
+      return false if ident_frame.attr('type').blank?
+      return false if ident_frame.attr('cc').blank?
+
+      true
     end
 
     def legal_document_attrs(legal_frame)
@@ -137,7 +143,7 @@ class Epp::Contact < Contact
   def update_attributes(frame)
     return super if frame.blank?
     at = {}.with_indifferent_access
-    at.deep_merge!(self.class.attrs_from(frame.css('chg')))
+    at.deep_merge!(self.class.attrs_from(frame.css('chg'), new_record: false))
 
     if Setting.client_status_editing_enabled
       at[:statuses] = statuses - statuses_attrs(frame.css('rem'), 'rem') + statuses_attrs(frame.css('add'), 'add')
@@ -147,17 +153,26 @@ class Epp::Contact < Contact
     at[:legal_documents_attributes] = self.class.legal_document_attrs(legal_frame)
     self.deliver_emails = true # turn on email delivery for epp
 
+
     # allow to update ident code for legacy contacts
-    if frame.css('ident').first.present?
-      if ident_updated_at.present?
-        throw :epp_error, {
-          code: '2306',
-          msg: I18n.t(:ident_update_error)
-        }
-      else
-        at.merge!(self.class.ident_attrs(frame.css('ident').first)) 
-        self.ident_updated_at = Time.zone.now
+    if frame.css('ident').first
+      self.ident_updated_at ||= Time.zone.now # not in use
+      ident_frame = frame.css('ident').first
+
+      if ident_frame && ident_attr_valid?(ident_frame) && ident_country_code.blank? && ident_type.in?(%w(org priv).freeze)
+        at.merge!(ident_country_code: ident_frame.attr('cc'))
       end
+
+      # Deprecated
+      # if ident_updated_at.present?
+      #   throw :epp_error, {
+      #     code: '2306',
+      #     msg: I18n.t(:ident_update_error)
+      #   }
+      # else
+      #   at.merge!(self.class.ident_attrs(frame.css('ident').first))
+      #   self.ident_updated_at = Time.zone.now
+      # end
     end
 
     super(at)
