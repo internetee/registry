@@ -22,7 +22,7 @@
       schemaLocation="epp-1.0.xsd"/>
     <!-- EPP protocol extension: DNSSEC -->
     <import namespace="urn:ietf:params:xml:ns:secDNS-1.1"
-      schemaLocation="secNDS-1.1.xsd"/>
+      schemaLocation="secDNS-1.1.xsd"/>
     <import namespace="urn:ietf:params:xml:ns:host-1.0"
       schemaLocation="host-1.0.xsd"/>
     <!-- EPP protocol extension: .ee specific -->
