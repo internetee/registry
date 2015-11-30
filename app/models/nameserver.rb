@@ -35,8 +35,8 @@ class Nameserver < ActiveRecord::Base
 
   def normalize_attributes
     self.hostname = hostname.try(:strip).try(:downcase)
-    self.ipv4 = ipv4.try(:strip)
-    self.ipv6 = ipv6.try(:strip).try(:upcase)
+    self.ipv4 = Array(ipv4).reject(&:blank?).map(&:strip)
+    self.ipv6 = Array(ipv4).reject(&:blank?).map(&:strip).map(&:upcase)
   end
 
   def to_s
