@@ -201,7 +201,7 @@ class Epp::Domain < Domain
     if action == 'rem'
       to_destroy = []
       ns_list.each do |ns_attrs|
-        nameserver = nameservers.where(ns_attrs).try(:first)
+        nameserver = nameservers.find_by_hash_params(ns_attrs).first
         if nameserver.blank?
           add_epp_error('2303', 'hostAttr', ns_attrs[:hostname], [:nameservers, :not_found])
         else
@@ -223,8 +223,8 @@ class Epp::Domain < Domain
     frame.css('hostAttr').each do |x|
       host_attr = {
         hostname: x.css('hostName').first.try(:text),
-        ipv4: x.css('hostAddr[ip="v4"]').first.try(:text),
-        ipv6: x.css('hostAddr[ip="v6"]').first.try(:text)
+        ipv4: x.css('hostAddr[ip="v4"]').map(&:text).compact,
+        ipv6: x.css('hostAddr[ip="v6"]').map(&:text).compact
       }
 
       res << host_attr.delete_if { |_k, v| v.blank? }
@@ -415,7 +415,7 @@ class Epp::Domain < Domain
       { id: inf_data.id, _destroy: 1 }
     end
   end
-  
+
   def domain_statuses_attrs(frame, action)
     status_list = domain_status_list_from(frame)
     if action == 'rem'

@@ -89,5 +89,14 @@ class Nameserver < ActiveRecord::Base
       return 'replaced_all' if prc == 1.0
       'replaced_some'
     end
+
+    def find_by_hash_params params
+      params = params.with_indifferent_access
+      rel = all
+      rel = rel.where(hostname: params[:hostname])
+      # rel = rel.where(hostname: params[:hostname]) if params[:ipv4]
+      # ignoring ips
+      rel
+    end
   end
 end
