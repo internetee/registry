@@ -27,8 +27,8 @@ xml.epp_head do
             @nameservers.each do |x|
               xml.tag!('domain:hostAttr') do
                 xml.tag!('domain:hostName', x.hostname)
-                xml.tag!('domain:hostAddr', x.ipv4, 'ip' => 'v4') if x.ipv4.present?
-                xml.tag!('domain:hostAddr', x.ipv6, 'ip' => 'v6') if x.ipv6.present?
+                x.ipv4.each{|ip| xml.tag!('domain:hostAddr', ip, 'ip' => 'v4') } if x.ipv4.present?
+                x.ipv6.each{|ip| xml.tag!('domain:hostAddr', ip, 'ip' => 'v6') } if x.ipv6.present?
               end
             end
           end
