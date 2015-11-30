@@ -277,7 +277,7 @@ namespace :import do
           x.postalcode.try(:strip),
           x.stateorprovince.try(:strip),
           x.country.try(:strip),
-          [x.object_state.try(:name)|| Contact::OK]
+          [x.object_state.try(:name), Contact::OK].compact
         ]
 
         if contacts.size % 10000 == 0
