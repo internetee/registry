@@ -53,7 +53,7 @@ Abstract client and object identifier type.
   <simpleType name="clIDType">
     <restriction base="token">
       <minLength value="3"/>
-      <maxLength value="16"/>
+<!--      <maxLength value="16"/> -->
     </restriction>
   </simpleType>
 
