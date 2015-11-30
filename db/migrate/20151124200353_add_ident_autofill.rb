@@ -45,12 +45,15 @@ class AddIdentAutofill < ActiveRecord::Migration
               END LOOP;
               mod := (total % 11);
             END IF;
-
-            IF (mod < 10 AND substring(r.ident, 11, 1) = to_char(mod, 'FM999MI'))
+            IF (mod = 10)
+              THEN
+              mod := 0;
+            END IF;
+            IF (substring(r.ident, 11, 1) = to_char(mod, 'FM999MI'))
               THEN
                 UPDATE contacts SET ident_country_code = 'EE' WHERE id = r.id;
             END IF;
-            total = 0;
+            total := 0;
           END IF;
         END LOOP;
 
@@ -66,7 +69,7 @@ class AddIdentAutofill < ActiveRecord::Migration
               counter := (counter + 1);
             END LOOP;
             mod := total % 11;
-            total = 0;
+            total := 0;
             counter := 1;
             IF (mod >= 10)
             THEN
@@ -78,7 +81,11 @@ class AddIdentAutofill < ActiveRecord::Migration
               END LOOP;
               mod := (total % 11);
             END IF;
-            IF (mod < 10 AND (substring(r.ident, 8, 1) = to_char(mod, 'FM999MI')))
+            IF (mod = 10)
+            THEN
+              mod := 0;
+            END IF;
+            IF (substring(r.ident, 8, 1) = to_char(mod, 'FM999MI'))
             THEN
               UPDATE contacts SET ident_country_code = 'EE' WHERE id = r.id;
             END IF;

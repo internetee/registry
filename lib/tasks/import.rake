@@ -250,7 +250,12 @@ namespace :import do
       next if existing_contact_ids.include?(x.id)
       count += 1
 
-      name = x.name.try(:strip).presence || x.organization.try(:strip).presence
+      if 4 == x.ssntype
+        name = x.organization.try(:strip).presence || x.name.try(:strip).presence
+      else
+        name = x.name.try(:strip).presence || x.organization.try(:strip).presence
+      end
+
       begin
         contacts << [
           x.object_registry.name.try(:strip),
@@ -262,7 +267,7 @@ namespace :import do
           x.ssn.try(:strip),
           ident_type_map[x.ssntype],
           x.object.authinfopw.try(:strip),
-          x.organization.try(:strip)? x.organization.try(:strip): name,
+          name,
           Registrar.find_by(legacy_id: x.object.try(:clid)).try(:id),
           x.object_registry.try(:registrar).try(:name),
           x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
