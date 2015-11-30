@@ -91,7 +91,7 @@ class Domain < ActiveRecord::Base
   after_create :update_reserved_domains
   def update_reserved_domains
     return unless in_reserved_list?
-    rd = ReservedDomain.first
+    rd = ReservedDomain.by_domain(name).first
     rd.names[name] = SecureRandom.hex
     rd.save
   end
