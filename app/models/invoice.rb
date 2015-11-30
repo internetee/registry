@@ -117,7 +117,7 @@ class Invoice < ActiveRecord::Base
     return false unless valid?
     return false unless billing_email.present?
 
-    InvoiceMailer.invoice_email(id, html).deliver
+    InvoiceMailer.invoice_email(id, html, billing_email).deliver
     true
   end
 
