@@ -136,6 +136,8 @@ module Depp
       # rubocop:disable Metrics/MethodLength
       # rubocop:disable Metrics/AbcSize
       def construct_params_from_server_data(data)
+        Rails.logger.fatal("NNNNN: #{data.class}")
+        Rails.logger.fatal("NNNNN: #{data}")
         ret = default_params
         ret[:name] = data.css('name').text
         ret[:registrant] = data.css('registrant').text
@@ -145,10 +147,11 @@ module Depp
         end
 
         data.css('hostAttr').each_with_index do |x, i|
+          Rails.logger.fatal("QQQQQ: #{x.css('hostAddr[ip="v4"]')}")
           ret[:nameservers_attributes][i] = {
             hostname: x.css('hostName').text,
-            ipv4: x.css('hostAddr[ip="v4"]').text,
-            ipv6: x.css('hostAddr[ip="v6"]').text
+            ipv4: Array(x.css('hostAddr[ip="v4"]')).map(&:text).join(','),
+            ipv6: Array(x.css('hostAddr[ip="v6"]')).map(&:text).join(',')
            }
         end
 
