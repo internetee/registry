@@ -23,7 +23,7 @@ class Contact < ActiveRecord::Base
   validates :ident,
     format: { with: /\d{4}-\d{2}-\d{2}/, message: :invalid_birthday_format },
     if: proc { |c| c.ident_type == 'birthday' }
-  validates :ident_country_code, presence: true, if: proc { |c| %w(org priv).include? c.ident_type }
+  validates :ident_country_code, presence: true, if: proc { |c| %w(org priv).include? c.ident_type }, on: :create
   validates :code,
     uniqueness: { message: :epp_id_taken },
     format: { with: /\A[\w\-\:]*\Z/i, message: :invalid },
