@@ -30,6 +30,7 @@ class Contact < ActiveRecord::Base
     length: { maximum: 100, message: :too_long_contact_code }
   validate :ident_valid_format?
   validate :uniq_statuses?
+  validate :validate_html
 
   after_initialize do
     self.statuses = [] if statuses.nil?
@@ -217,6 +218,19 @@ class Contact < ActiveRecord::Base
       when 'EE'
         code = Isikukood.new(ident)
         errors.add(:ident, :invalid_EE_identity_format) unless code.valid?
+      end
+    end
+  end
+
+  def validate_html
+    self.class.columns.each do |column|
+      next unless column.type == :string
+
+      c_name = column.name
+      val    = read_attribute(c_name)
+      if val && (val.include?('<') || val.include?('>') || val.include?('%3C') || val.include?('%3E'))
+        errors.add(c_name, :invalid)
+        return # want to run code faster
       end
     end
   end

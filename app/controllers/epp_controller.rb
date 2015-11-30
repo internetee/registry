@@ -73,10 +73,7 @@ class EppController < ApplicationController
   end
 
   def schema
-    # TODO: Support multiple schemas
-    return DOMAIN_SCHEMA if params[:epp_object_type] == :domain
-    return CONTACT_SCHEMA if params[:epp_object_type] == :contact
-    EPP_SCHEMA
+    EPP_ALL_SCHEMA
   end
 
   def generate_svtrid

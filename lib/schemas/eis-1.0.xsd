@@ -83,7 +83,7 @@
     <simpleContent>
       <extension base="normalizedString">
         <attribute name="type" type="eis:identEnumType" use="required"/>
-        <attribute name="cc" type="eis:ccType" use="required"/>
+        <attribute name="cc" type="eis:ccType"/>
       </extension>
     </simpleContent>
   </complexType>

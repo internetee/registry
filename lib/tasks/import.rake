@@ -57,6 +57,7 @@ namespace :import do
     Rake::Task['import:reserved'].invoke
     Rake::Task['import:domains'].invoke
     Rake::Task['import:zones'].invoke
+    Rake::Task['zonefile:replace_procedure'].invoke
   end
 
   desc 'Import registrars'
@@ -172,11 +173,15 @@ namespace :import do
       x.acl.all.each do |y|
         next if existing_ips.include?(y.ipaddr)
         if !y.ipaddr.nil? && y.ipaddr != ''
-          ips << WhiteIp.new({
-            registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
-            ipv4: y.ipaddr,
-            interfaces: ['api', 'registrar']
-            })
+
+          y.ipaddr.split(',').each do |ip|
+            ips << WhiteIp.new({
+              registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
+              ipv4: ip,
+              interfaces: ['api', 'registrar']
+              })
+
+          end
         end
       end
     end

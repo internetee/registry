@@ -9,7 +9,7 @@ class Admin::PendingUpdatesController < AdminController
     if @epp_domain.apply_pending_update!
       redirect_to admin_domain_path(@domain.id), notice: t(:pending_applied)
     else
-      redirect_to admin_edit_domain_path(@domain.id), alert: t(:failure)
+      redirect_to edit_admin_domain_path(@domain.id), alert: t(:failure)
     end
   end
 

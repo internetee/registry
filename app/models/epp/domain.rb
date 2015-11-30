@@ -515,9 +515,8 @@ class Epp::Domain < Domain
     statuses.delete(DomainStatus::PENDING_DELETE_CONFIRMATION)
     statuses.delete(DomainStatus::PENDING_DELETE)
     DomainMailer.delete_confirmation(id, deliver_emails).deliver
-
-    # TODO: confirm that this actually makes sense
-    clean_pendings! if valid? && set_pending_delete!
+    clean_pendings!
+    set_pending_delete!
     true
   end
 
@@ -843,6 +842,7 @@ class Epp::Domain < Domain
     def parse_legal_document_from_frame(parsed_frame)
       ld = parsed_frame.css('legalDocument').first
       return nil unless ld
+      return nil if ld.text.starts_with?(ENV['legal_documents_dir']) # escape reloading
 
       {
         body: ld.text,
