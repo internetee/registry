@@ -252,8 +252,13 @@ module Depp
 
           host_attr = []
           host_attr << { hostName: { value: v['hostname'] } }
-          host_attr << { hostAddr: { value: v['ipv4'], attrs: { ip: 'v4' } } } if v['ipv4'].present?
-          host_attr << { hostAddr: { value: v['ipv6'], attrs: { ip: 'v6' } } } if v['ipv6'].present?
+          v['ipv4'].to_s.split(",").each do |ip|
+            host_attr << { hostAddr: { value: ip, attrs: { ip: 'v4' } } }
+          end if v['ipv4'].present?
+
+          v['ipv6'].to_s.split(",").each do |ip|
+            host_attr << { hostAddr: { value: ip, attrs: { ip: 'v6' } } }
+          end if v['ipv6'].present?
 
           ret << { hostAttr: host_attr }
         end
