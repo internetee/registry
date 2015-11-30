@@ -71,7 +71,7 @@ describe DomainMailer do
       @domain.registrant_verification_token = '123'
       @domain.registrant_verification_asked_at = Time.zone.now
       @domain.registrant = @new_registrant
-      @mail = DomainMailer.pending_update_notification_for_new_registrant(@domain.id, deliver_emails)
+      @mail = DomainMailer.pending_update_notification_for_new_registrant(@domain.id, @registrant.id, deliver_emails)
     end
 
     it 'should render email subject' do
@@ -100,7 +100,7 @@ describe DomainMailer do
       @domain.registrant_verification_token = '123'
       @domain.registrant_verification_asked_at = Time.zone.now
       @domain.registrant = @new_registrant
-      @mail = DomainMailer.pending_update_notification_for_new_registrant(@domain.id, deliver_emails)
+      @mail = DomainMailer.pending_update_notification_for_new_registrant(@domain.id, @registrant.id, deliver_emails)
     end
 
     it 'should render email subject' do

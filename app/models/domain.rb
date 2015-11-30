@@ -430,7 +430,7 @@ class Domain < ActiveRecord::Base
     new_registrant_name  = registrant.name
 
     DomainMailer.pending_update_request_for_old_registrant(id, old_registrant_id, deliver_emails).deliver
-    DomainMailer.pending_update_notification_for_new_registrant(id, deliver_emails).deliver
+    DomainMailer.pending_update_notification_for_new_registrant(id, old_registrant_id, deliver_emails).deliver
 
     reload # revert back to original
 
