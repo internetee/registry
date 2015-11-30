@@ -471,17 +471,20 @@ namespace :import do
         nsset = x.nsset
         nsset.hosts.each do |host|
           ip_maps = host.host_ipaddr_maps
-          ips = {}
+          ips = {
+              ipv4: [],
+              ipv6: [],
+          }
           ip_maps.each do |ip_map|
             next unless ip_map.ipaddr
-            ips[:ipv4] = ip_map.ipaddr.to_s if ip_map.ipaddr.ipv4?
-            ips[:ipv6] = ip_map.ipaddr.to_s if ip_map.ipaddr.ipv6?
-          end if ip_maps.any?
+            ips[:ipv4] << ip_map.ipaddr.to_s.strip if ip_map.ipaddr.ipv4?
+            ips[:ipv6] << ip_map.ipaddr.to_s.strip if ip_map.ipaddr.ipv6?
+          end
 
           nameservers << [
             host.fqdn.try(:strip),
-            ips[:ipv4].try(:strip),
-            ips[:ipv6].try(:strip),
+            ips[:ipv4],
+            ips[:ipv6],
             x.object_registry.try(:registrar).try(:name),
             x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
             x.id,
