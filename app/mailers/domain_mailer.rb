@@ -106,8 +106,9 @@ class DomainMailer < ApplicationMailer
          name: @domain.name)} [#{@domain.name}]")
   end
 
-  def pending_deleted(domain_id, should_deliver)
+  def pending_deleted(domain_id, old_registrant_id, should_deliver)
     @domain = Domain.find_by(id: domain_id)
+    @old_registrant = Registrant.find(old_registrant_id)
     return unless @domain
     return if delivery_off?(@domain, should_deliver)
 
@@ -120,8 +121,6 @@ class DomainMailer < ApplicationMailer
       logger.warn "EMAIL NOT DELIVERED: registrant_verification_asked_at is missing for #{@domain.name}"
       return
     end
-
-    @old_registrant = Registrant.find(@domain.registrant_id_was)
 
     confirm_path = "#{ENV['registrant_url']}/registrant/domain_delete_confirms"
     @verification_url = "#{confirm_path}/#{@domain.id}?token=#{@domain.registrant_verification_token}"

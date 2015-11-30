@@ -490,7 +490,7 @@ class Domain < ActiveRecord::Base
     pending_delete_confirmation!
     save(validate: false) # should check if this did succeed
 
-    DomainMailer.pending_deleted(id, deliver_emails).deliver
+    DomainMailer.pending_deleted(id, registrant_id_was, deliver_emails).deliver
   end
 
   def pricelist(operation, period_i = nil, unit = nil)
