@@ -272,7 +272,7 @@ namespace :import do
           x.object_registry.try(:registrar).try(:name),
           x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
           x.id,
-          [x.street1.try(:strip), x.street2.try(:strip), x.street3.try(:strip)].join("\n"),
+          [x.street1.try(:strip), x.street2.try(:strip), x.street3.try(:strip)].compact.join(", "),
           x.city.try(:strip),
           x.postalcode.try(:strip),
           x.stateorprovince.try(:strip),
