@@ -104,6 +104,7 @@ class Epp::Contact < Contact
       res
     end
   end
+  delegate :ident_attr_valid?, to: :class
 
   def epp_code_map # rubocop:disable Metrics/MethodLength
     {
