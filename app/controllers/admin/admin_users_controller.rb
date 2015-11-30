@@ -43,7 +43,7 @@ class Admin::AdminUsersController < AdminController
   def destroy
     if @admin_user.destroy
       flash[:notice] = I18n.t('record_deleted')
-      redirect_to admin_users_path
+      redirect_to admin_admin_users_path
     else
       flash.now[:alert] = I18n.t('failed_to_delete_record')
       render 'show'
