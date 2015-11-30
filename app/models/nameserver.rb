@@ -9,8 +9,10 @@ class Nameserver < ActiveRecord::Base
 
   # rubocop: disable Metrics/LineLength
   validates :hostname, format: { with: /\A(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\z/ }
-  validates :ipv4, format: { with: /\A(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\z/, allow_blank: true }
-  validates :ipv6, format: { with: /(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))/, allow_blank: true }
+  # validates :ipv4, format: { with: /\A(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\z/, allow_blank: true }
+  # validates :ipv6, format: { with: /(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))/, allow_blank: true }
+  validate :val_ipv4
+  validate :val_ipv6
   # rubocop: enable Metrics/LineLength
 
   before_validation :normalize_attributes
@@ -19,28 +21,41 @@ class Nameserver < ActiveRecord::Base
 
   def epp_code_map
     {
-      '2302' => [
-        [:hostname, :taken, { value: { obj: 'hostAttr', val: hostname } }]
-      ],
-      '2005' => [
-        [:hostname, :invalid, { value: { obj: 'hostAttr', val: hostname } }],
-        [:ipv4, :invalid, { value: { obj: 'hostAddr', val: ipv4 } }],
-        [:ipv6, :invalid, { value: { obj: 'hostAddr', val: ipv6 } }]
-      ],
-      '2306' => [
-        [:ipv4, :blank]
-      ]
+        '2302' => [
+            [:hostname, :taken, { value: { obj: 'hostAttr', val: hostname } }]
+        ],
+        '2005' => [
+            [:hostname, :invalid, { value: { obj: 'hostAttr', val: hostname } }],
+            [:ipv4, :invalid, { value: { obj: 'hostAddr', val: ipv4 } }],
+            [:ipv6, :invalid, { value: { obj: 'hostAddr', val: ipv6 } }]
+        ],
+        '2306' => [
+            [:ipv4, :blank]
+        ]
     }
   end
 
   def normalize_attributes
     self.hostname = hostname.try(:strip).try(:downcase)
-    self.ipv4 = ipv4.try(:strip)
-    self.ipv6 = ipv6.try(:strip).try(:upcase)
+    self.ipv4 = Array(ipv4).reject(&:blank?).map(&:strip)
+    self.ipv6 = Array(ipv6).reject(&:blank?).map(&:strip).map(&:upcase)
   end
 
   def to_s
     hostname
+  end
+
+  def val_ipv4
+    regexp = /\A(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\z/
+    ipv4.to_a.each do |ip|
+      errors.add(:ipv4, :invalid) unless ip =~ regexp
+    end
+  end
+  def val_ipv6
+    regexp = /(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))/
+    ipv6.to_a.each do |ip|
+      errors.add(:ipv6, :invalid) unless ip =~ regexp
+    end
   end
 
   class << self
@@ -58,8 +73,8 @@ class Nameserver < ActiveRecord::Base
 
           hn = ns.hostname.chomp(old_end)
           ns_attrs[:nameservers_attributes] << {
-            id: ns.id,
-            hostname: "#{hn}#{new_end}"
+              id: ns.id,
+              hostname: "#{hn}#{new_end}"
           }
         end
 
@@ -73,6 +88,15 @@ class Nameserver < ActiveRecord::Base
 
       return 'replaced_all' if prc == 1.0
       'replaced_some'
+    end
+
+    def find_by_hash_params params
+      params = params.with_indifferent_access
+      rel = all
+      rel = rel.where(hostname: params[:hostname])
+      # rel = rel.where(hostname: params[:hostname]) if params[:ipv4]
+      # ignoring ips
+      rel
     end
   end
 end

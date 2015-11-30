@@ -147,8 +147,8 @@ module Depp
         data.css('hostAttr').each_with_index do |x, i|
           ret[:nameservers_attributes][i] = {
             hostname: x.css('hostName').text,
-            ipv4: x.css('hostAddr[ip="v4"]').text,
-            ipv6: x.css('hostAddr[ip="v6"]').text
+            ipv4: Array(x.css('hostAddr[ip="v4"]')).map(&:text).join(','),
+            ipv6: Array(x.css('hostAddr[ip="v6"]')).map(&:text).join(',')
            }
         end
 
@@ -252,8 +252,13 @@ module Depp
 
           host_attr = []
           host_attr << { hostName: { value: v['hostname'] } }
-          host_attr << { hostAddr: { value: v['ipv4'], attrs: { ip: 'v4' } } } if v['ipv4'].present?
-          host_attr << { hostAddr: { value: v['ipv6'], attrs: { ip: 'v6' } } } if v['ipv6'].present?
+          v['ipv4'].to_s.split(",").each do |ip|
+            host_attr << { hostAddr: { value: ip, attrs: { ip: 'v4' } } }
+          end if v['ipv4'].present?
+
+          v['ipv6'].to_s.split(",").each do |ip|
+            host_attr << { hostAddr: { value: ip, attrs: { ip: 'v6' } } }
+          end if v['ipv6'].present?
 
           ret << { hostAttr: host_attr }
         end

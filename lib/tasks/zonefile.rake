@@ -72,7 +72,7 @@ namespace :zonefile do
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
             AND ns.hostname LIKE '%.' || d.name
             AND d.name <> i_origin
-            AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> ''
+            AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> '{}'
             AND NOT ('{serverHold,clientHold}' && d.statuses)
           ), chr(10)
         ) INTO tmp_var;
@@ -92,7 +92,7 @@ namespace :zonefile do
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
             AND ns.hostname LIKE '%.' || d.name
             AND d.name <> i_origin
-            AND ns.ipv6 IS NOT NULL AND ns.ipv6 <> ''
+            AND ns.ipv6 IS NOT NULL AND ns.ipv6 <> '{}'
             AND NOT ('{serverHold,clientHold}' && d.statuses)
           ), chr(10)
         ) INTO tmp_var;
