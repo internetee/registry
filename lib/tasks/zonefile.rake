@@ -66,7 +66,7 @@ namespace :zonefile do
         -- a glue records for other nameservers
         SELECT array_to_string(
           array(
-            SELECT concat(ns.hostname, '. IN A ', ns.ipv4)
+            SELECT concat(ns.hostname, '. IN A ', unnest(ns.ipv4))
             FROM nameservers ns
             JOIN domains d ON d.id = ns.domain_id
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
@@ -86,7 +86,7 @@ namespace :zonefile do
         -- aaaa glue records for other nameservers
         SELECT array_to_string(
           array(
-            SELECT concat(ns.hostname, '. IN AAAA ', ns.ipv6)
+            SELECT concat(ns.hostname, '. IN AAAA ', unnest(ns.ipv6))
             FROM nameservers ns
             JOIN domains d ON d.id = ns.domain_id
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
