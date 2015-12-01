@@ -62,8 +62,8 @@ Contact Mapping protocol short version:
               <contact:cc>      0-1      Country code, 2 letters uppercase, in ISO_3166-1 alpha 2
           <contact:voice>       0-1      Phone number in format \+ddd.d+
           <contact:email>       0-1      E-mail
-        <contact:authInfo>      0-1      Required if registrar is not the owner of the contact.
-          <contact:pw>          1        Contact password. Attribute: roid="String"
+          <contact:authInfo>    0-1      Required if registrar is not the owner of the contact.
+            <contact:pw>        1        Contact password. Attribute: roid="String"
     <extension>                 0-1       
       <eis:extdata>             0-1      Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
         <eis:ident>             0-1      Contact identificator 
