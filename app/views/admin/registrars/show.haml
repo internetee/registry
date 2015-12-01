@@ -100,6 +100,6 @@
                   - if x.ipv4.present?
                     = link_to(x.ipv4, [:admin, @registrar, x])
                 %td
-                  - x.ipv6.present?
+                  - if x.ipv6.present?
                     = link_to(x.ipv6, [:admin, @registrar, x])
                 %td= x.interfaces.join(', ').upcase
