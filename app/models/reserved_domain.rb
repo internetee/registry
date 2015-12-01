@@ -9,7 +9,9 @@ class ReservedDomain < ActiveRecord::Base
 
   class << self
     def pw_for(domain_name)
-      by_domain(domain_name).select("names -> '#{domain_name}' AS pw").first.try(:pw)
+      name_in_unicode = SimpleIDN.to_ascii(domain_name)
+      by_domain(domain_name).select("names -> '#{domain_name}' AS pw").first.try(:pw) ||
+          by_domain(name_in_unicode).select("names -> '#{name_in_unicode}' AS pw").first.try(:pw)
     end
 
     def by_domain name

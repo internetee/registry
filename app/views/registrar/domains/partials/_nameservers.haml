@@ -12,6 +12,6 @@
         - @data.css('hostAttr').each do |x|
           %tr
             %td= x.css('hostName').text
-            %td= x.css('hostAddr[ip="v4"]').text
-            %td= x.css('hostAddr[ip="v6"]').text
+            %td= Array(x.css('hostAddr[ip="v4"]')).map(&:text).join(", ")
+            %td= Array(x.css('hostAddr[ip="v6"]')).map(&:text).join(", ")
 
