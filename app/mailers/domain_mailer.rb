@@ -176,11 +176,9 @@ class DomainMailer < ApplicationMailer
          name: @domain.name)} [#{@domain.name}]")
   end
 
-  def expiration_reminder(domain_id, should_deliver)
+  def expiration_reminder(domain_id)
     @domain = Domain.find_by(id: domain_id)
     return unless @domain
-    return if delivery_off?(@domain, should_deliver)
-
     return if whitelist_blocked?(@domain.registrant.email)
     mail(to: format(@domain.registrant.email),
          subject: "#{I18n.t(:expiration_remind_subject,
