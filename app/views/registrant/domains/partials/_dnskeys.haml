@@ -1,0 +1,25 @@
+- panel_class = @domain.errors.messages[:dnskeys] ? 'panel-danger' : 'panel-default'
+#dnskeys.panel{class: panel_class}
+  .panel-heading.clearfix
+    = t(:dnskeys)
+  .table-responsive
+    %table.table.table-hover.table-bordered.table-condensed
+      %thead
+        %tr
+          %th{class: 'col-xs-1'}= t(:flag)
+          %th{class: 'col-xs-1'}= t(:protocol)
+          %th{class: 'col-xs-1'}= t(:algorithm)
+          %th{class: 'col-xs-9'}= t(:public_key)
+      %tbody
+        - @domain.dnskeys.each do |x|
+          %tr
+            %td= x.flags
+            %td= x.protocol
+            %td= x.alg
+            %td= x.public_key
+      - if @domain.errors.messages[:dnskeys]
+        %tfoot
+          - @domain.errors.messages[:dnskeys].each do |x|
+            %tr
+              %td{colspan: 4}= x
+

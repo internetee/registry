@@ -17,5 +17,5 @@
               %span.glyphicon.glyphicon-search
               &nbsp;
   %hr
-  - if @results
-    = @results
+  - if @domain
+    %pre= @domain.body

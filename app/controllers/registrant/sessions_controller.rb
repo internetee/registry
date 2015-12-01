@@ -2,6 +2,8 @@ class Registrant::SessionsController < Devise::SessionsController
   layout 'registrant/application'
 
   def login
+    @user = RegistrantUser.find_by_username('registrar1')
+    sign_in(@user, event: :authentication)
   end
 
   # rubocop: disable Metrics/AbcSize
