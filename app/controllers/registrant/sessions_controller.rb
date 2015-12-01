@@ -2,21 +2,14 @@ class Registrant::SessionsController < Devise::SessionsController
   layout 'registrant/application'
 
   def login
-    @user = RegistrantUser.find_by_username('registrar1')
-    sign_in(@user, event: :authentication)
   end
 
   # rubocop: disable Metrics/AbcSize
   def id
-    if Rails.env.development?
-      sign_in(RegistrantUser.find_or_create_by_idc_data('test'), event: :authentication)
-      return redirect_to registrant_root_url
-    end
+    id_code, id_issuer = request.env['SSL_CLIENT_S_DN'], request.env['SSL_CLIENT_I_DN_O']
+    id_code, id_issuer = 'test', RegistrantUser::ACCEPTED_ISSUER if Rails.env.development?
 
-    logger.error request.env['SSL_CLIENT_S_DN']
-    logger.error request.env['SSL_CLIENT_S_DN'].encoding
-    logger.error request.env['SSL_CLIENT_I_DN_O']
-    @user = RegistrantUser.find_or_create_by_idc_data(request.env['SSL_CLIENT_S_DN'], request.env['SSL_CLIENT_I_DN_O'])
+    @user = RegistrantUser.find_or_create_by_idc_data(id_code, id_issuer)
     if @user
       sign_in(@user, event: :authentication)
       redirect_to registrant_root_url

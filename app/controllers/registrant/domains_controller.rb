@@ -5,7 +5,7 @@ class Registrant::DomainsController < RegistrantController
   authorize! :view, :registrant_domains
   params[:q] ||= {}
 
-  domains = Domain.includes(:registrar, :registrant).where(registrant_id: 76246)
+  domains = current_user.domains
 
   normalize_search_parameters do
     @q = domains.search(params[:q])
