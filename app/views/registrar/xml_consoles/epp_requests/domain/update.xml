@@ -7,14 +7,20 @@
         <domain:name>example.ee</domain:name>
         <domain:add>
           <domain:ns>
-            <domain:hostObj>ns1.example.com</domain:hostObj>
-            <domain:hostObj>ns2.example.com</domain:hostObj>
+            <domain:hostAttr>
+              <domain:hostName>ns1.example.com</domain:hostName>
+            </domain:hostAttr>
+            <domain:hostAttr>
+              <domain:hostName>ns2.example.com</domain:hostName>
+            </domain:hostAttr>
           </domain:ns>
           <domain:contact type="tech">mak21</domain:contact>
         </domain:add>
         <domain:rem>
           <domain:ns>
-            <domain:hostObj>ns1.example.com</domain:hostObj>
+            <domain:hostAttr>
+              <domain:hostName>ns1.example.net</domain:hostName>
+            </domain:hostAttr>
           </domain:ns>
           <domain:contact type="tech">mak21</domain:contact>
         </domain:rem>
