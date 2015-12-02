@@ -38,7 +38,7 @@ xml.epp_head do
 
         xml.tag!('domain:clID', @domain.registrar_name)
 
-        xml.tag!('domain:crID', @domain.creator.try(:registrar)) if @domain.creator
+        xml.tag!('domain:crID', @domain.creator.try(:registrar) || @domain.creator) if @domain.creator
 
         xml.tag!('domain:crDate', @domain.created_at.try(:iso8601))
 
