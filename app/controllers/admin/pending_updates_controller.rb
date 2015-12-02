@@ -6,6 +6,8 @@ class Admin::PendingUpdatesController < AdminController
     authorize! :update, :pending
 
     @epp_domain = Epp::Domain.find(params[:domain_id]) # only epp domain has apply pending
+    @epp_domain.is_admin = true
+    
     if @epp_domain.apply_pending_update!
       redirect_to admin_domain_path(@domain.id), notice: t(:pending_applied)
     else
