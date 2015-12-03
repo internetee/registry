@@ -2,6 +2,9 @@
 class Epp::Domain < Domain
   include EppErrors
 
+  # TODO: remove this spagetti once data in production is correct.
+  attr_accessor :is_renewal
+
   before_validation :manage_permissions
   def manage_permissions
     return unless update_prohibited? || delete_prohibited?
@@ -11,6 +14,8 @@ class Epp::Domain < Domain
 
   after_validation :validate_contacts
   def validate_contacts
+    return true if is_renewal
+
     ok = true
     active_admins = admin_domain_contacts.select { |x| !x.marked_for_destruction? }
     active_techs = tech_domain_contacts.select { |x| !x.marked_for_destruction? }
@@ -565,6 +570,7 @@ class Epp::Domain < Domain
   ### RENEW ###
 
   def renew(cur_exp_date, period, unit = 'y')
+    @is_renewal = true
     validate_exp_dates(cur_exp_date)
 
     add_epp_error('2105', nil, nil, I18n.t('object_is_not_eligible_for_renewal')) unless renewable?
