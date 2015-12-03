@@ -34,7 +34,7 @@ Contact Mapping protocol short version:
                                           Attribute: "type"
                                             "org"          # Business registry code
                                             "priv"         # National idendtification number
-                                            "birthday"     # Birthday date in format in DD-MM-YYYY
+                                            "birthday"     # Birthday date in format in YYYY-MM-DD
                                           Attribute: "cc"
                                             "EE"           # Country code in ISO_3166-1 aplha 2
         <eis:legalDocument>    0-1      Base64 encoded document 
@@ -70,7 +70,7 @@ Contact Mapping protocol short version:
                                           Attribute: "type"
                                             "org"          # Business registry code
                                             "priv"         # National idendtification number
-                                            "birthday"     # Birthday date in format in DD-MM-YYYY
+                                            "birthday"     # Birthday date in format in YYYY-MM-DD
                                           Attribute: "cc"
                                             "EE"           # Country code in ISO_3166-1 aplha 2
         <eis:legalDocument>     0-1      Base64 encoded document. 
