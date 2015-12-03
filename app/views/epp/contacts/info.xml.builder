@@ -52,7 +52,7 @@ xml.epp_head do
         xml.tag!('contact:crDate', @contact.created_at.try(:iso8601))
 
         if @contact.updated_at != @contact.created_at
-          xml.tag!('contact:upID', @contact.updator.registrar.code)
+          xml.tag!('contact:upID', @contact.updator.registrar.code) if @contact.updator.try(:registrar).present?
           xml.tag!('contact:upDate', @contact.updated_at.try(:iso8601))
         end
         # xml.tag!('contact:trDate', '123') if false
