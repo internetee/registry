@@ -50,7 +50,7 @@ class WhoisRecord < ActiveRecord::Base
     h[:registrant]       = domain.registrant.name
     h[:registrant_email] = domain.registrant.email
     @disclosed << [:email, domain.registrant.email]
-    h[:changed]          = domain.registrant.updated_at.try(:to_s, :iso8601)
+    h[:registrant_changed]          = domain.registrant.updated_at.try(:to_s, :iso8601)
 
     h[:admin_contacts] = []
     domain.admin_contacts.each do |ac|
