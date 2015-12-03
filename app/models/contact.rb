@@ -26,7 +26,7 @@ class Contact < ActiveRecord::Base
   validates :ident_country_code, presence: true, if: proc { |c| %w(org priv).include? c.ident_type }, on: :create
   validates :code,
     uniqueness: { message: :epp_id_taken },
-    format: { with: /\A[\w\-\:]*\Z/i, message: :invalid },
+    format: { with: /\A[\w\-\:\.\_]*\z/i, message: :invalid },
     length: { maximum: 100, message: :too_long_contact_code }
   validate :ident_valid_format?
   validate :uniq_statuses?
