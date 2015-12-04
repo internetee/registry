@@ -789,8 +789,6 @@ namespace :import do
       keys = history.keys.compact.sort
       i = 0
       keys.each_with_index do |time|
-
-        p time
         history[time].each do |orig_history_klass|
           event = :update
           event = :create  if i == 0
