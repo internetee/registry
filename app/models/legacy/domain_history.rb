@@ -9,11 +9,11 @@ module Legacy
     belongs_to :history, foreign_key: :historyid
     has_one :object_history, foreign_key: :historyid, primary_key: :historyid
 
-    def get_current_domain_object(change_param)
+    def get_current_domain_object(time, change_param)
       x = self
       {
           name:          SimpleIDN.to_unicode(x.object_registry.name.try(:strip)),
-          registrar_id:  Registrar.find_by(legacy_id: x.object.try(:clid)).try(:id),
+          registrar_id:  ::Registrar.find_by(legacy_id: x.object.try(:clid)).try(:id),
           registered_at: x.object_registry.try(:crdate),
           valid_from:    x.object_registry.try(:crdate),
           valid_to:      x.exdate,
@@ -29,12 +29,8 @@ module Legacy
           legacy_id:     x.id,
           legacy_registrar_id:  x.object_registry.try(:crid),
           legacy_registrant_id: x.registrant,
-          statuses:             x.states
+          statuses:      Legacy::ObjectState.states_for_domain_at(x.id, time)
       }
-    end
-
-    def get_current_changes(param)
-      p "not implemented #{__method__}"
     end
 
     class << self

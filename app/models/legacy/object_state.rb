@@ -80,12 +80,12 @@ module Legacy
       map[state_id]
     end
 
-    def get_current_domain_object(param)
-      p "not implemented #{__method__}"
-    end
+    def get_current_domain_object(time, param)
+      d_his = Legacy::DomainHistory.get_record_at(object_id, historyid)
+      hash  = d_his.get_current_domain_object(time, param)
+      hash[:statuses] = Legacy::ObjectState.states_for_domain_at(object_id, time + 1)
 
-    def get_current_changes(param)
-      p "not implemented #{__method__}"
+      hash
     end
 
     class << self
@@ -106,13 +106,28 @@ module Legacy
        end
 
       def get_record_at domain_id, rec_id
-        sql = %Q{SELECT distinct t_2.id, state.*
+        sql = %Q{SELECT distinct t_2.historyid, state.*
                     FROM object_history t_2
                       JOIN object_state state ON (t_2.historyid >= state.ohid_from
                                                   AND (t_2.historyid <= state.ohid_to OR state.ohid_to IS NULL))
                                                  AND t_2.id = state.object_id
                     WHERE state.object_id=#{domain_id} AND  state.id = #{rec_id};}
         find_by_sql(sql).first
+      end
+
+      def states_for_domain_at(domain_id, time)
+        sql = %Q{SELECT state.*
+          FROM object_history t_2
+            JOIN object_state state ON (t_2.historyid >= state.ohid_from
+                                        AND (t_2.historyid <= state.ohid_to OR state.ohid_to IS NULL))
+                                       AND t_2.id = state.object_id
+          WHERE state.object_id=#{domain_id}
+            AND (valid_from is null or valid_from <= '#{time.to_s}'::TIMESTAMPTZ)
+            AND (valid_to is null or valid_to >= '#{time}'::TIMESTAMPTZ)
+          }
+        arr = find_by_sql(sql).uniq
+        arr.map!(&:name) if arr.any?
+        arr.present? ? arr : [DomainStatus::OK]
       end
     end
   end

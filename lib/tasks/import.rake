@@ -770,11 +770,13 @@ namespace :import do
     # "reserved"=>false, "status_notes"=>{}, "statuses_backup"=>[]}
 
     Legacy::DomainHistory.uniq.where(id: 294516).pluck(:id).each do |legacy_domain_id|
+      next if Domain.find_by(legacy_id: legacy_domain_id).versions.where(event: :create).any?
       # add here to skip domains whith create history
 
       # 1. add domain changes
       # 2. add states
       # compose hash of change time -> Object changes
+      last_changes = nil
       history  = Legacy::ObjectState.changes_dates_for(legacy_domain_id)
       p history.keys
       p Legacy::DomainHistory.changes_dates_for(legacy_domain_id).keys
@@ -793,8 +795,7 @@ namespace :import do
           event = :update
           event = :create  if i == 0
           responder = orig_history_klass[:klass].get_record_at(legacy_domain_id, orig_history_klass[:id])
-          responder.get_current_domain_object(orig_history_klass[:param])
-          responder.get_current_changes(orig_history_klass[:param])
+          p responder.get_current_domain_object(time, orig_history_klass[:param])
 
           i += 1
         end
