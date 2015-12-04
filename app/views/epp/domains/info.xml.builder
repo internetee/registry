@@ -38,11 +38,17 @@ xml.epp_head do
 
         xml.tag!('domain:clID', @domain.registrar.code)
 
-        xml.tag!('domain:crID', @domain.creator.registrar.code) if @domain.creator
+        # EPP requires a creator ID, which should be registrar code if we have one
+        crID = @domain.creator.try(:registrar)
+        crID = crID.code if crID.present?            # Did creator return a kind of User that has a registrar?
+        crID =  @domain.creator unless crID.present? # Fallback if we failed, maybe this is a string only
+        xml.tag!('domain:crID', crID)
         xml.tag!('domain:crDate', @domain.created_at.try(:iso8601))
 
         if @domain.updated_at != @domain.created_at
-          xml.tag!('domain:upID', @domain.updator.registrar.code) if @domain.updator.try(:registrar).present?
+          upID =  @domain.updator.try(:registrar)
+          upID =  upID.code if upID.present?             # Did updator return a kind of User that has a registrar?
+          xml.tag!('domain:upID', upID) if upID.present? # optional upID
           xml.tag!('domain:upDate', @domain.updated_at.try(:iso8601))
         end
 
