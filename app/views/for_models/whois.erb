@@ -6,7 +6,7 @@ name:       <%= json['name'] %>
 status:     <%= st %>
 <%- end -%>
 registered: <%= json['registered'].to_s.tr('T',' ').sub('+', ' +') %>
-changed:    <%= json['domain_changed'].to_s.tr('T',' ').sub('+', ' +') %>
+changed:    <%= json['changed'].to_s.tr('T',' ').sub('+', ' +') %>
 expire:     <%= json['expire'].to_s.tr('T',' ').sub('+', ' +') %>
 outzone:    <%= json['outzone'].to_s.tr('T',' ').sub('+', ' +') %>
 delete:     <%= json['delete'].to_s.tr('T',' ').sub('+', ' +') %>

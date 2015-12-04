@@ -41,7 +41,7 @@ class WhoisRecord < ActiveRecord::Base
     h[:name]       = domain.name
     h[:status]     = domain.statuses.map { |x| status_map[x] || x }
     h[:registered] = domain.registered_at.try(:to_s, :iso8601)
-    h[:domain_changed]    = domain.updated_at.try(:to_s, :iso8601)
+    h[:changed]    = domain.updated_at.try(:to_s, :iso8601)
     h[:expire]     = domain.valid_to.try(:to_date).try(:to_s)
     h[:outzone]    = domain.outzone_at.try(:to_date).try(:to_s)
     h[:delete]     = domain.delete_at.try(:to_date).try(:to_s)
