@@ -22,30 +22,28 @@ module Versions
 
     def creator
       return nil if creator_str.blank?
-
-      if creator_str =~ /^\d+-AdminUser:/
-        creator = AdminUser.find_by(id: creator_str)
-      elsif creator_str =~ /^\d+-ApiUser:/
-        creator = ApiUser.find_by(id: creator_str)
-      elsif creator_str =~ /^\d+-api-/ # depricated
-        creator = ApiUser.find_by(id: creator_str)
-      end
-
+      creator = user_from_id_class_name creator_str
       creator.present? ? creator : creator_str
     end
 
     def updator
       return nil if updator_str.blank?
-
-      if updator_str =~ /^\d+-AdminUser:/
-        updator = AdminUser.find_by(id: updator_str)
-      elsif updator_str =~ /^\d+-ApiUser:/
-        updator = ApiUser.find_by(id: updator_str)
-      elsif updator_str =~ /^\d+-api-/ # depricated
-        updator = ApiUser.find_by(id: updator_str)
-      end
-
+      updator = user_from_id_class_name updator_str
       updator.present? ? updator : updator_str
+    end
+
+    def user_from_id_class_name(str)
+      user = ApiUser.find_by(id: $1) if str =~ /^(\d+)-(ApiUser:|api-)/
+      unless user.present?
+        user = AdminUser.find_by(id: $1) if str =~ /^(\d+)-AdminUser:/
+        unless user.present?
+          # on import we copied Registrar name, which may eql code
+          registrar = Registrar.find_by(name: str).first
+          # assume each registrar has only one user
+          user = registrar.api_users.first if registrar
+        end
+      end
+      user
     end
 
     # callbacks
