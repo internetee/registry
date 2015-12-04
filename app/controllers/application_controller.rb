@@ -67,7 +67,7 @@ class ApplicationController < ActionController::Base
   end
 
   def user_log_str(user)
-    user.nil? ? 'public' : user.string
+    user.nil? ? 'public' : user.id_role_username
   end
 
   def comma_support_for(parent_key, key)
