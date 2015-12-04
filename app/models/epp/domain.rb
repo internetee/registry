@@ -691,6 +691,9 @@ class Epp::Domain < Domain
       end
 
       attach_legal_document(self.class.parse_legal_document_from_frame(frame))
+
+      # we want to transfer data to new owner at any case.
+      # We also hope that if domain is not valid, new registrar would be better.
       save!(validate: false)
 
       return dt
