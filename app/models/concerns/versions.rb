@@ -38,7 +38,7 @@ module Versions
         user = AdminUser.find_by(id: $1) if str =~ /^(\d+)-AdminUser:/
         unless user.present?
           # on import we copied Registrar name, which may eql code
-          registrar = Registrar.find_by(name: str).first
+          registrar = Registrar.find_by(name: str)
           # assume each registrar has only one user
           user = registrar.api_users.first if registrar
         end
