@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
 
   attr_accessor :phone
 
-  def string
+  def id_role_username
     "#{self.id}-#{self.class}: #{self.username}"
   end
 
