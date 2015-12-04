@@ -13,7 +13,8 @@ module Legacy
       x = self
       {
           name:          SimpleIDN.to_unicode(x.object_registry.name.try(:strip)),
-          registrar_id:  ::Registrar.find_by(legacy_id: x.object.try(:clid)).try(:id),
+          registrar_id:  ::Registrar.find_by(legacy_id: x.object_history.try(:clid)).try(:id),
+          registrant_id: ::Contact.find_by(legacy_id: x.registrant).try(:id),
           registered_at: x.object_registry.try(:crdate),
           valid_from:    x.object_registry.try(:crdate),
           valid_to:      x.exdate,
@@ -27,7 +28,7 @@ module Legacy
           creator_str:   x.object_registry.try(:registrar).try(:name),
           updator_str:   x.object.try(:registrar).try(:name) ? x.object.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
           legacy_id:     x.id,
-          legacy_registrar_id:  x.object_registry.try(:crid),
+          legacy_registrar_id:  x.object_history.try(:clid),
           legacy_registrant_id: x.registrant,
           statuses:      Legacy::ObjectState.states_for_domain_at(x.id, time)
       }
@@ -52,6 +53,14 @@ module Legacy
             where dh.id=#{domain_id} and dh.historyid = #{rec_id} ;}
         find_by_sql(sql).first
       end
+
+
+      # def last_history_action domain_id
+      #   sql = %Q{SELECT  dh.*, h.valid_from, h.valid_to
+      #       from domain_history dh JOIN history h ON dh.historyid=h.id
+      #       where dh.id=#{domain_id} order by dh.historyid desc limit 1;}
+      #   find_by_sql(sql).first
+      # end
     end
   end
 end
