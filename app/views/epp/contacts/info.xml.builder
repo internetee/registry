@@ -48,11 +48,17 @@ xml.epp_head do
 
         xml.tag!('contact:clID', @contact.registrar.try(:code))
 
-        xml.tag!('contact:crID', @contact.creator.registrar.try(:code))
+        # EPP requires a creator ID, which should be registrar code if we have one
+        crID = contact.creator.try(:registrar)
+        crID = crID.code if crID.present?            # Did creator return a kind of User that has a registrar?
+        crID =  contact.creator unless crID.present? # Fallback if we failed, maybe this is a string only
+        xml.tag!('contact:crID', crID)
         xml.tag!('contact:crDate', @contact.created_at.try(:iso8601))
 
         if @contact.updated_at != @contact.created_at
-          xml.tag!('contact:upID', @contact.updator.registrar.code) if @contact.updator.try(:registrar).present?
+          upID =  contact.updator.try(:registrar)
+          upID =  upID.code if upID.present?             # Did updator return a kind of User that has a registrar?
+          xml.tag!('contact:upID', upID) if upID.present? # optional upID
           xml.tag!('contact:upDate', @contact.updated_at.try(:iso8601))
         end
         # xml.tag!('contact:trDate', '123') if false
