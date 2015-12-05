@@ -61,6 +61,8 @@ class Contact < ActiveRecord::Base
     manage_ok
   end
 
+  after_save :update_related_whois_records
+
   # for overwrite when doing children loop
   attr_writer :domains_present
 
@@ -468,4 +470,9 @@ class Contact < ActiveRecord::Base
       PENDING_DELETE
     ]).present?
   end
+
+ def update_related_whois_records
+	related_domain_descriptions.each do |x, y| WhoisRecord.find_by(name: x).save	
+ end	 
+
 end
