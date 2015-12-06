@@ -27,7 +27,7 @@ module ApplicationHelper
         if ident.present?
           "#{ident} [#{ident_country_code} #{ident_type}]"
         else
-          "[No access]"
+          "[Blank]"
         end
 
     end
