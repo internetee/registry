@@ -3,18 +3,38 @@ class Registrar::ContactsController < Registrar::DeppController # EPP controller
 
   def index
     authorize! :view, Depp::Contact
-    limit, offset = pagination_details
 
-    res = depp_current_user.repp_request('contacts', { details: true, limit: limit, offset: offset })
-    if res.code == '200'
-      @response = res.parsed_body.with_indifferent_access 
-      @contacts = @response ? @response[:contacts] : []
-
-      @paginatable_array = Kaminari.paginate_array(
-        [], total_count: @response[:total_number_of_records]
-      ).page(params[:page]).per(limit)
+    params[:q] ||= {}
+    params[:q].delete_if { |_k, v| v.blank? }
+    if params[:q].length == 1 && params[:q][:name_matches].present?
+      @contacts = Contact.find_by(name: params[:q][:name_matches])
+      if @contact
+        redirect_to info_registrar_domains_path(contact_name: @contact.name) and return
+      end
     end
-    flash.now[:epp_results] = [{ 'code' => res.code, 'msg' => res.message }]
+
+    if params[:statuses_contains]
+      contacts = current_user.registrar.contacts.includes(:registrar).where(
+          "statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
+      )
+    else
+      contacts = current_user.registrar.contacts.includes(:registrar)
+    end
+
+    normalize_search_parameters do
+      @q = contacts.search(params[:q])
+      @contacts = @q.result.page(params[:page])
+      if @contacts.count == 0 && params[:q][:name_matches] !~ /^%.+%$/
+        # if we do not get any results, add wildcards to the name field and search again
+        n_cache = params[:q][:name_matches]
+        params[:q][:name_matches] = "%#{params[:q][:name_matches]}%"
+        @q = contacts.search(params[:q])
+        @contacts = @q.result.page(params[:page])
+        params[:q][:name_matches] = n_cache # we don't want to show wildcards in search form
+      end
+    end
+
+    @contacts = @contacts.per(params[:results_per_page]) if params[:results_per_page].to_i > 0
   end
 
   def new
@@ -74,5 +94,19 @@ class Registrar::ContactsController < Registrar::DeppController # EPP controller
 
   def init_epp_contact
     Depp::Contact.user = depp_current_user
+  end
+
+  def normalize_search_parameters
+    ca_cache = params[:q][:valid_to_lteq]
+    begin
+      end_time = params[:q][:valid_to_lteq].try(:to_date)
+      params[:q][:valid_to_lteq] = end_time.try(:end_of_day)
+    rescue
+      logger.warn('Invalid date')
+    end
+
+    yield
+
+    params[:q][:valid_to_lteq] = ca_cache
   end
 end
