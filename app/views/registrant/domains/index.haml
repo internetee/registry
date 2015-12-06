@@ -12,10 +12,6 @@
           .form-group
             = f.label t(:registrant_ident)
             = f.search_field :registrant_ident_eq, class: 'form-control', placeholder: t(:registrant_ident)
-        .col-md-3
-          .form-group
-            = f.label t(:nameserver_hostname)
-            = f.search_field :nameservers_hostname_eq, class: 'form-control', placeholder: t(:nameserver_hostname)
       .row
         .col-md-3
           .form-group
@@ -36,6 +32,20 @@
             &nbsp;
           %button.btn.btn-default.js-reset-form
             = t(:clear_fields)
+      .row
+        .col-md-3
+          .btn-group{:role => "group"}
+            %button.btn.btn-default.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+              Download
+              %span.caret
+            %ul.dropdown-menu
+              %li= link_to 'PDF', download_list_registrant_domain_path(params[:q], format: "pdf")
+              %li= link_to 'CSV', download_list_registrant_domain_path(params[:q], format: "csv")
+        .col-md-3
+        .col-md-3
+        .col-md-3
+
+
 
 %hr
 .row
@@ -58,7 +68,20 @@
               %td= link_to(x, registrant_domain_path(x))
               %td
                 - if x.registrant
-                  = link_to(x.registrant, [:admin, x.registrant])
+                  = link_to(x.registrant, [:registrant, x.registrant]) if x.registrant
 
               %td= l(x.valid_to, format: :short)
-              %td= link_to(x.registrar, admin_registrar_path(x.registrar)) if x.registrar
+              %td= link_to(x.registrar, registrant_registrar_path(x.registrar)) if x.registrar
+
+            .row
+  .col-md-6
+    = paginate @domains
+  .col-md-6.text-right
+    .pagination
+      = t(:result_count, count: @domains.total_count)
+
+:coffee
+  $(".js-reset-form").on "click", (e) ->
+    e.preventDefault();
+    window.location = "#{registrant_domains_path}"
+

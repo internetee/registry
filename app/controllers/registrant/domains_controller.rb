@@ -1,12 +1,9 @@
 class Registrant::DomainsController < RegistrantController
 
   def index
-
   authorize! :view, :registrant_domains
   params[:q] ||= {}
-
   domains = current_user.domains
-
   normalize_search_parameters do
     @q = domains.search(params[:q])
     @domains = @q.result.page(params[:page])
@@ -16,15 +13,32 @@ class Registrant::DomainsController < RegistrantController
 
   def show
     @domain = Domain.find(params[:id])
-    @domain.valid?
+    if !(current_user.domains.include?(@domain) || @domain.valid?)
+      redirect_to registrant_domains_path
+    end
+    authorize! :read, @domain
   end
 
   def set_domain
     @domain = Domain.find(params[:id])
   end
 
-  def normalize_search_parameters
+  def download_list
+    authorize! :view, :registrant_domains
+    params[:q] ||= {}
+    domains = current_user.domains
+    normalize_search_parameters do
+      @q = domains.search(params[:q])
+      @domains = @q
+    end
 
+    respond_to do |format|
+      format.html
+      format.csv { render text: @domains.to_csv }
+    end
+  end
+
+  def normalize_search_parameters
     ca_cache = params[:q][:valid_to_lteq]
     begin
       end_time = params[:q][:valid_to_lteq].try(:to_date)
@@ -32,10 +46,7 @@ class Registrant::DomainsController < RegistrantController
     rescue
       logger.warn('Invalid date')
     end
-
     yield
-
     params[:q][:valid_to_lteq] = ca_cache
   end
-
 end
