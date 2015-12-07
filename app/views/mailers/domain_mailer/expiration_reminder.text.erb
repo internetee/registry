@@ -8,11 +8,11 @@ Domeeni registreeringu pikendamiseks pöörduge palun oma registripidaja <%= @do
 Domeeni <%= @domain.name %> kohta on registris järgmised andmed:
 
 Registreerija: <%= @domain.registrant_name %>
-Halduskontakt: [% haldus_est_html %]
-Tehniline kontakt: <%= @domain.tech_domain_contacts.map { |c| c.contact.phone }.join ', ' %>
+Halduskontakt: <%= @domain.admin_contacts.map { |c| c.contact.name }.join ', ' %>
+Tehniline kontakt: <%= @domain.tech_domain_contacts.map { |c| c.contact.name }.join ', ' %>
 Registripidaja: <%= @domain.registrar.name %>
 Nimeserverid: <%= @domain.nameservers.join(', ') %>
-Ülevaate kõikidest endaga seotud domeenidest saate registreerija portaalist. http://eedirekt.internet.ee/registrant.
+Ülevaate kõikidest endaga seotud domeenidest saate registreerija portaalist. <%= ENV['registrant_url'] %>.
 
 Parimate soovidega
 
@@ -34,11 +34,11 @@ To renew the domain registration, please contact your registrar <%= @domain.regi
 The following data for the <%= @domain.name %> domain have been entered into the registry:
 
 Registrant: <%= @domain.registrant_name %>
-Administrative contact: [% haldus_eng_html %]
-Technical contact: <%= @domain.tech_domain_contacts.map { |c| c.contact.phone }.join ', ' %>
+Administrative contact: <%= @domain.admin_contacts.map { |c| c.contact.name }.join ', ' %>
+Technical contact: <%= @domain.tech_domain_contacts.map { |c| c.contact.name }.join ', ' %>
 Registrar: <%= @domain.registrar.name %>
 Name servers: <%= @domain.nameservers.join(', ') %>
-You can find an overview of all your domains at the registrant's portal. http://eedirekt.internet.ee/registrant.
+You can find an overview of all your domains at the registrant's portal. <%= ENV['registrant_url'] %>.
 
 Sincerely
 
@@ -60,11 +60,11 @@ Phone: +372 727 1000
 Относительно домена <%= @domain.name %> в реестр внесены следующие данные:
 
 Регистрант: <%= @domain.registrant_name %>
-Административный контакт: [% haldus_rus_html %]
-Технический контакт: <%= @domain.tech_domain_contacts.map { |c| c.contact.phone }.join ', ' %>
+Административный контакт: <%= @domain.admin_contacts.map { |c| c.contact.name }.join ', ' %>
+Технический контакт: <%= @domain.tech_domain_contacts.map { |c| c.contact.name }.join ', ' %>
 Регистратор: <%= @domain.registrar.name %>
 Серверы доменных имен: <%= @domain.nameservers.join(', ') %>
-Обзор всех связанных с Вами доменов можете получить на портале регистранта. http://eedirekt.internet.ee/registrant.
+Обзор всех связанных с Вами доменов можете получить на портале регистранта. <%= ENV['registrant_url'] %>.
 
 С наилучшими пожеланиями
 
