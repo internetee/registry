@@ -3,7 +3,7 @@ class Epp::Domain < Domain
   include EppErrors
 
   # TODO: remove this spagetti once data in production is correct.
-  attr_accessor :is_renewal
+  attr_accessor :is_renewal, :is_transfer
 
   before_validation :manage_permissions
   def manage_permissions
@@ -14,7 +14,7 @@ class Epp::Domain < Domain
 
   after_validation :validate_contacts
   def validate_contacts
-    return true if is_renewal
+    return true if is_renewal || is_transfer
 
     ok = true
     active_admins = admin_domain_contacts.select { |x| !x.marked_for_destruction? }
@@ -592,6 +592,8 @@ class Epp::Domain < Domain
 
   # rubocop: disable Metrics/CyclomaticComplexity
   def transfer(frame, action, current_user)
+    @is_transfer = true
+
     case action
     when 'query'
       return domain_transfers.last if domain_transfers.any?
