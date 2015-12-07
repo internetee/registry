@@ -647,7 +647,7 @@ class Domain < ActiveRecord::Base
       registrar.messages.create!(
         body: I18n.t('force_delete_set_on_domain', domain: name)
       )
-      DomainMailer.force_delete(id, deliver_emails).deliver
+      DomainMailer.force_delete(id, true).deliver
       return true
     end
     false
