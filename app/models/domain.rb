@@ -783,5 +783,10 @@ class Domain < ActiveRecord::Base
       end
     end
   end
+
+  def self.pdf(html)
+    kit = PDFKit.new(html)
+    kit.to_pdf
+  end
 end
 # rubocop: enable Metrics/ClassLength

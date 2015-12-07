@@ -103,7 +103,7 @@ Rails.application.routes.draw do
     root 'domains#index'
 
     resources :domains do
-      member do
+      collection do
         get :download_list
       end
     end

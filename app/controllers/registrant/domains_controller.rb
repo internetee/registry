@@ -32,11 +32,14 @@ class Registrant::DomainsController < RegistrantController
       @domains = @q
     end
 
-    respond_to do |format|
-      format.html
-      format.csv { render text: @domains.to_csv }
+      respond_to do |format|
+        format.csv { render text: @domains.result.to_csv }
+        format.pdf do
+          pdf = @domains.result.pdf(render_to_string('registrant/domains/download_list', layout: false))
+          send_data pdf, filename: 'domains'
+        end
+      end
     end
-  end
 
   def normalize_search_parameters
     ca_cache = params[:q][:valid_to_lteq]
