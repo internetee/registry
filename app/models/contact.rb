@@ -61,8 +61,6 @@ class Contact < ActiveRecord::Base
     manage_ok
   end
 
-  after_save :update_related_whois_records
-
   # for overwrite when doing children loop
   attr_writer :domains_present
 
