@@ -8,8 +8,8 @@ Domeeni registreeringu pikendamiseks pöörduge palun oma registripidaja <%= @do
 Domeeni <%= @domain.name %> kohta on registris järgmised andmed:
 <br><br>
 Registreerija: <%= @domain.registrant_name %><br>
-Halduskontakt: <%= @domain.admin_contacts.map { |c| c.contact.name }.join ', ' %><br>
-Tehniline kontakt: <%= @domain.tech_domain_contacts.map { |c| c.contact.name }.join ', ' %><br>
+Halduskontakt: <%= @domain.admin_contacts.map(&:name).join ', ' %><br>
+Tehniline kontakt: <%= @domain.tech_contacts.map(&:name).join ', ' %><br>
 Registripidaja: <%= @domain.registrar.name %><br>
 Nimeserverid: <%= @domain.nameservers.join(', ') %><br>
 Ülevaate kõikidest endaga seotud domeenidest saate registreerija portaalist. <%= ENV['registrant_url'] %>.<br>
@@ -34,8 +34,8 @@ To renew the domain registration, please contact your registrar <%= @domain.regi
 The following data for the <%= @domain.name %> domain have been entered into the registry:
 <br><br>
 Registrant: <%= @domain.registrant_name %><br>
-Administrative contact: <%= @domain.admin_contacts.map { |c| c.contact.name }.join ', ' %><br>
-Technical contact: <%= @domain.tech_domain_contacts.map { |c| c.contact.name }.join ', ' %><br>
+Administrative contact: <%= @domain.admin_contacts.map(&:name).join ', ' %><br>
+Technical contact: <%= @domain.tech_contacts.map(&:name).join ', ' %><br>
 Registrar: <%= @domain.registrar.name %><br>
 Name servers: <%= @domain.nameservers.join(', ') %><br>
 You can find an overview of all your domains at the registrant's portal. <%= ENV['registrant_url'] %>.<br>
@@ -60,8 +60,8 @@ Phone: +372 727 1000<br>
 Относительно домена <%= @domain.name %> в реестр внесены следующие данные:
 <br><br>
 Регистрант: <%= @domain.registrant_name %><br>
-Административный контакт: <%= @domain.admin_contacts.map { |c| c.contact.name }.join ', ' %><br>
-Технический контакт: <%= @domain.tech_domain_contacts.map { |c| c.contact.name }.join ', ' %><br>
+Административный контакт: <%= @domain.admin_contacts.map(&:name).join ', ' %><br>
+Технический контакт: <%= @domain.tech_contacts.map(&:name).join ', ' %><br>
 Регистратор: <%= @domain.registrar.name %><br>
 Серверы доменных имен: <%= @domain.nameservers.join(', ') %><br>
 Обзор всех связанных с Вами доменов можете получить на портале регистранта. <%= ENV['registrant_url'] %>.<br>
