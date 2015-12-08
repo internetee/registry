@@ -289,15 +289,17 @@ class Domain < ActiveRecord::Base
       STDOUT << "#{Time.zone.now.utc} - Setting delete_candidate to domains\n" unless Rails.env.test?
 
       d = Domain.where('delete_at <= ?', Time.zone.now)
+      marked = 0
       d.each do |domain|
         next unless domain.delete_candidateable?
         domain.statuses << DomainStatus::DELETE_CANDIDATE
         STDOUT << "#{Time.zone.now.utc} Domain.start_delete_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
         domain.save
+        marked += 1
       end
 
       return if Rails.env.test?
-      STDOUT << "#{Time.zone.now.utc} - Successfully set delete_candidate to #{d.count} domains\n"
+      STDOUT << "#{Time.zone.now.utc} - Finished setting delete_candidate -  #{marked} out of #{d.count} successfully set\n"
     end
 
     # rubocop:disable Rails/FindEach
