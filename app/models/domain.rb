@@ -300,6 +300,7 @@ class Domain < ActiveRecord::Base
       ensure # the operator should see what was accomplished
         STDOUT << "#{Time.zone.now.utc} - Finished setting delete_candidate -  #{marked} out of #{d.count} successfully set\n" unless Rails.env.test?
       end
+      marked
     end
 
     # rubocop:disable Rails/FindEach
