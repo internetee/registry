@@ -294,8 +294,7 @@ class Domain < ActiveRecord::Base
           next unless domain.delete_candidateable?
           domain.statuses << DomainStatus::DELETE_CANDIDATE
           STDOUT << "#{Time.zone.now.utc} Domain.start_delete_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-          domain.save
-          marked += 1
+          domain.save and marked += 1
         end
       ensure # the operator should see what was accomplished
         STDOUT << "#{Time.zone.now.utc} - Finished setting delete_candidate -  #{marked} out of #{d.count} successfully set\n" unless Rails.env.test?
