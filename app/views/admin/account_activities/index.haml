@@ -55,6 +55,7 @@
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'sum')
         %tbody
+          -total = 0
           - @account_activities.each do |x|
             %tr
               %td= link_to(x.account.registrar.try(:code), admin_registrar_path(x.account.registrar))
@@ -63,7 +64,15 @@
               %td= l(x.created_at)
               - c = x.sum > 0.0 ? 'text-success' : 'text-danger'
               - s = x.sum > 0.0 ? "+#{x.sum} #{x.currency}" : "#{x.sum} #{x.currency}"
+              -total += x.sum
               %td{class: c}= s
+        - if @account_activities.count > 0
+          %tr
+            %td
+            %td
+            %td
+            %td{class: 'text-right'}= t(:total)
+            %td{class: 'text-success'}= total > 0 ? "+#{total} EUR" : "#{total} EUR"
 .row
   .col-md-12
     = paginate @account_activities
