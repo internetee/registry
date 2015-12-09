@@ -36,7 +36,7 @@ class Registrant::DomainsController < RegistrantController
         format.csv { render text: @domains.result.to_csv }
         format.pdf do
           pdf = @domains.result.pdf(render_to_string('registrant/domains/download_list', layout: false))
-          send_data pdf, filename: 'domains'
+          send_data pdf, filename: 'domains.pdf'
         end
       end
     end
