@@ -15,5 +15,22 @@ namespace :convert do
      end
     puts "-----> all done in #{(Time.zone.now.to_f - start).round(2)} seconds. #{count} domains changed."
   end
+
+  desc 'Convert punycodes in history to unicode'
+  task history_punycode: :environment do
+    DomainVersion.find_each do |d|
+       if obj = d.object
+         obj["name"]      = SimpleIDN.to_unicode(obj["name"])
+         obj["name_puny"] = SimpleIDN.to_ascii(obj["name_puny"])
+         d.object = obj
+       end
+       if (obj_c = d.object_changes).present?
+          obj_c["name"].map!{|e| e ? SimpleIDN.to_unicode(e) : e } if obj_c["name"]
+          obj_c["name_puny"].map!{|e| e ? SimpleIDN.to_ascii(e) : e } if obj_c["name_puny"]
+         d.object_changes = obj_c
+       end
+      d.save!
+    end
+  end
 end
 
