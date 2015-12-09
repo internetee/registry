@@ -42,7 +42,7 @@ xml.epp_head do
         crID = @domain.creator.try(:registrar)
         crID = crID.code if crID.present?            # Did creator return a kind of User that has a registrar?
         crID =  @domain.creator unless crID.present? # Fallback if we failed, maybe this is a string only
-        xml.tag!('domain:crID', crID)
+        xml.tag!('domain:crID', crID) if crID
         xml.tag!('domain:crDate', @domain.created_at.try(:iso8601))
 
         if @domain.updated_at != @domain.created_at
