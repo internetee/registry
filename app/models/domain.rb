@@ -820,5 +820,19 @@ class Domain < ActiveRecord::Base
       status_notes[status] = notes[i]
     end
   end
+
+  def self.to_csv
+    CSV.generate do |csv|
+      csv << column_names
+      all.each do |domain|
+        csv << domain.attributes.values_at(*column_names)
+      end
+    end
+  end
+
+  def self.pdf(html)
+    kit = PDFKit.new(html)
+    kit.to_pdf
+  end
 end
 # rubocop: enable Metrics/ClassLength

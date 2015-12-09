@@ -16,7 +16,7 @@ class Ability
       @user.roles.each { |role| send(role) } if @user.roles
     when 'ApiUser'
       @user.roles.each { |role| send(role) } if @user.roles
-    when 'RegistrantUser'
+      when 'RegistrantUser'
       static_registrant
     end
 
@@ -117,9 +117,11 @@ class Ability
   end
 
   def static_registrant
+    customer_service
     can :manage, :registrant_domains
     can :manage, :registrant_whois
     can :manage, Depp::Domain
+    can :manage, Domain
   end
 
   def user
