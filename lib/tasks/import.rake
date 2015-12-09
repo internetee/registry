@@ -817,26 +817,6 @@ namespace :import do
       end
     end
 
-    # Domain.where.not(legacy_id: nil).find_each do |domain|
-    #   next if domain.versions.where(action: :create).any?
-    #
-    #   history = Legacy::DomainHistory.where(id: domain.legacy_id).order("valid_from ASC").to_a
-    #   history.each_with_index do |his, i|
-    #     event = :update
-    #     event = :create  if i == 0
-    #     event = :destroy if i + 1 == history.size && his.history.valid_to.present?
-    #
-    #     {
-    #         item_type: domain.class,
-    #         item_id:   domain.id,
-    #         event:     event,
-    #         whodunnit: Registrar.find_by(legacy_id: his.object_history.upid || his.object_history.clid),
-    #         object:    {},
-    #         object_changes: {"id" => [nil, 1111] },
-    #         created_at: his.object_history.try(:update),
-    #     }
-    #   end
-    # end
   end
 end
 
