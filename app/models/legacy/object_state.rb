@@ -88,6 +88,14 @@ module Legacy
       hash
     end
 
+    def get_current_contact_object(time, param)
+      d_his = Legacy::ContactHistory.get_record_at(object_id, historyid)
+      hash  = d_his.get_current_contact_object(time, param)
+      hash[:statuses] = Legacy::ObjectState.states_for_contact_at(object_id, time + 1)
+
+      hash
+    end
+
     class << self
        def changes_dates_for domain_id
          sql = %Q{SELECT distinct t_2.id, state.id state_dot_id, state.*,
@@ -127,7 +135,22 @@ module Legacy
           }
         arr = find_by_sql(sql).uniq
         arr.map!(&:name) if arr.any?
-        arr.present? ? arr : [DomainStatus::OK]
+        arr.present? ? arr : [::DomainStatus::OK]
+      end
+
+
+      def states_for_contact_at(contact_id, time)
+        sql = %Q{SELECT state.*
+          FROM object_history t_2
+            JOIN object_state state ON (t_2.historyid >= state.ohid_from
+                                        AND (t_2.historyid <= state.ohid_to OR state.ohid_to IS NULL))
+                                       AND t_2.id = state.object_id
+          WHERE state.object_id=#{contact_id}
+            AND (valid_from is null or valid_from <= '#{time.to_s}'::TIMESTAMPTZ)
+            AND (valid_to is null or valid_to >= '#{time}'::TIMESTAMPTZ)
+          }
+
+        (find_by_sql(sql).uniq.to_a.map(&:name) + [::Contact::OK]).compact.uniq
       end
     end
   end
