@@ -25,16 +25,48 @@ class Registrar::ContactsController < Registrar::DeppController # EPP controller
       @q = contacts.search(params[:q])
       @contacts = @q.result.page(params[:page])
       if @contacts.count == 0 && params[:q][:name_matches] !~ /^%.+%$/
-        # if we do not get any results, add wildcards to the name field and search again
         n_cache = params[:q][:name_matches]
         params[:q][:name_matches] = "%#{params[:q][:name_matches]}%"
         @q = contacts.search(params[:q])
         @contacts = @q.result.page(params[:page])
-        params[:q][:name_matches] = n_cache # we don't want to show wildcards in search form
+        params[:q][:name_matches] = n_cache
       end
     end
 
     @contacts = @contacts.per(params[:results_per_page]) if params[:results_per_page].to_i > 0
+  end
+
+  def download_list
+    authorize! :view, Depp::Contact
+
+        params[:q] ||= {}
+        if params[:statuses_contains]
+          contacts = current_user.registrar.contacts.includes(:registrar).where(
+              "statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
+          )
+        else
+          contacts = current_user.registrar.contacts.includes(:registrar)
+        end
+
+        normalize_search_parameters do
+          @q = contacts.search(params[:q])
+          @contacts = @q.result.page(params[:page])
+          if @contacts.count == 0 && params[:q][:name_matches] !~ /^%.+%$/
+            n_cache = params[:q][:name_matches]
+            params[:q][:name_matches] = "%#{params[:q][:name_matches]}%"
+            @q = contacts.search(params[:q])
+            @contacts = @q.result.page(params[:page])
+            params[:q][:name_matches] = n_cache
+          end
+        end
+
+        respond_to do |format|
+          format.csv { render text: @contacts.to_csv }
+          format.pdf do
+          pdf = @contacts.pdf(render_to_string('registrar/contacts/download_list', layout: false))
+          send_data pdf, filename: 'contacts.pdf'
+        end
+    end
   end
 
   def new

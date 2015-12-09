@@ -73,6 +73,18 @@
             &nbsp;
           %button.btn.btn-default.js-reset-form
             = t(:clear_fields)
+      .row
+        .col-md-3
+          .btn-group{:role => "group"}
+            %button.btn.btn-default.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :type => "button"}
+              Download
+              %span.caret
+            %ul.dropdown-menu
+              %li= link_to 'PDF', download_list_registrar_contacts_path(params[:q], format: "pdf")
+              %li= link_to 'CSV', download_list_registrar_contacts_path(params[:q], format: "csv")
+        .col-md-3
+        .col-md-3
+        .col-md-3
 
 %hr
 .row
