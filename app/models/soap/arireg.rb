@@ -104,6 +104,9 @@ module Soap
       rescue HTTPI::SSLError => ssl_error
         Rails.logger.error "#{ssl_error} at #{self.class.host}"
         nil
+      rescue SocketError => sock
+        Rails.logger.error "#{sock}"
+        nil
       end
     end
     
