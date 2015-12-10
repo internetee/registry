@@ -4,8 +4,8 @@ namespace :import do
     Legacy::ContactHistory.uniq.pluck(:id).each do |legacy_contact_id|
       Contact.transaction do
         contact   = Contact.find_by(legacy_id: legacy_contact_id)
-        version_contact = ContactVersion.where("object->>'legacy_id' = '#{legacy_contact_id}'").first
-        contact ||= Contact.new(id: version_contact.object["id"], legacy_id: legacy_contact_id) if version_contact
+        version_contact = ContactVersion.where("object->>'legacy_id' = '#{legacy_contact_id}'").select(:item_id).first
+        contact ||= Contact.new(id: version_contact.item_id, legacy_id: legacy_contact_id) if version_contact
         contact ||= Contact.new(id: ::Contact.next_id, legacy_id: legacy_contact_id)
         next if contact.versions.where(event: :create).any?
         # add here to skip domains whith create history
@@ -34,6 +34,7 @@ namespace :import do
             changes   = {}
             responder = orig_history_klass[:klass].get_record_at(legacy_contact_id, orig_history_klass[:id])
             new_attrs = responder.get_current_contact_object(time, orig_history_klass[:param])
+            new_attrs[:id] = contact.id
 
             event = :update
             event = :create  if i == 0
@@ -49,16 +50,16 @@ namespace :import do
             obj_his = Legacy::ObjectHistory.find_by(historyid: responder.historyid)
             user    = Registrar.find_by(legacy_id: obj_his.upid || obj_his.clid).try(:api_users).try(:first)
 
-            ContactVersion.create!(
-                item_type: contact.class,
+            hash = {
+                item_type: Contact.to_s,
                 item_id:   contact.id,
                 event:     event,
                 whodunnit: user.try(:id),
                 object:    last_changes,
                 object_changes: changes,
-                created_at: time,
-                children: {}
-            )
+                created_at: time
+            }
+            ContactVersion.create!(hash)
 
             last_changes = new_attrs
             i += 1
