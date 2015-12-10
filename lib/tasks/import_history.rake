@@ -105,7 +105,8 @@ namespace :import do
             changes   = {}
             responder = orig_history_klass[:klass].get_record_at(legacy_domain_id, orig_history_klass[:id])
             new_attrs = responder.get_current_domain_object(time, orig_history_klass[:param])
-            new_attrs[:id] = domain.id
+            new_attrs[:id]         = domain.id
+            new_attrs[:updated_at] = time
 
             event = :update
             event = :create  if i == 0
