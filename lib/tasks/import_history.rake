@@ -74,14 +74,17 @@ namespace :import do
   task history_domains: :environment do
     Domain.transaction do
       Legacy::DomainHistory.uniq.where(id: 294516).pluck(:id).each do |legacy_domain_id|
-        next if Domain.find_by(legacy_id: legacy_domain_id).versions.where(event: :create).any?
+        domain   = Domain.find_by(legacy_id: legacy_domain_id)
+        version_domain = DomainVersion.where("object->>'legacy_id' = '#{legacy_domain_id}'").select(:item_id).first
+        domain ||= Domain.new(id: version_domain.item_id, legacy_id: legacy_domain_id) if version_domain
+        domain ||= Domain.new(id: ::Domain.next_id, legacy_id: legacy_domain_id)
+        next if domain.versions.where(event: :create).any?
         # add here to skip domains whith create history
 
         # 1. add domain changes
         # 2. add states
         # compose hash of change time -> Object changes
         last_changes = nil
-        domain   = Domain.find_by(legacy_id: legacy_domain_id)
         history  = Legacy::ObjectState.changes_dates_for(legacy_domain_id)
         dom_his  = Legacy::DomainHistory.changes_dates_for(legacy_domain_id)
         last_domain_action = dom_his.sort.last[1].last # need to identify if we delete
@@ -102,6 +105,7 @@ namespace :import do
             changes   = {}
             responder = orig_history_klass[:klass].get_record_at(legacy_domain_id, orig_history_klass[:id])
             new_attrs = responder.get_current_domain_object(time, orig_history_klass[:param])
+            new_attrs[:id] = domain.id
 
             event = :update
             event = :create  if i == 0
