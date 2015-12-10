@@ -18,6 +18,7 @@ class Epp::SessionsController < EppController
       client_md5 = Certificate.parse_md_from_string(request.env['HTTP_SSL_CLIENT_CERT'])
       server_md5 = Certificate.parse_md_from_string(File.read(ENV['cert_path']))
       if client_md5 != server_md5
+         logger.error("ERROR: SSL client (webclient) cert: #{client_md5} doesnot match server configured cert: #{server_md5}")
         epp_errors << {
           msg: 'Authentication error; server closing connection (certificate is not valid)',
           code: '2501'
@@ -29,6 +30,8 @@ class Epp::SessionsController < EppController
 
     if !webclient_request && @api_user
       unless @api_user.api_pki_ok?(request.env['HTTP_SSL_CLIENT_CERT'], request.env['HTTP_SSL_CLIENT_S_DN_CN'])
+        client_md5 = Certificate.parse_md_from_string(request.env['HTTP_SSL_CLIENT_CERT'])
+        logger.error("ERROR: SSL client invalid cert: #{client_md5} ")
         epp_errors << {
           msg: 'Authentication error; server closing connection (certificate is not valid)',
           code: '2501'
