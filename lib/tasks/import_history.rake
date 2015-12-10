@@ -129,7 +129,12 @@ namespace :import do
                 object:    last_changes,
                 object_changes: changes,
                 created_at: time,
-                children: {}
+                children: {
+                    admin_contacts: [responder.get_admin_contact_new_ids],
+                    tech_contacts: [],
+                    nameservers: [],
+                    registrant: [responder.new_registrant_id]
+                }
             )
 
             last_changes = new_attrs

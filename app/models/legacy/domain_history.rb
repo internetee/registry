@@ -8,13 +8,14 @@ module Legacy
     belongs_to :domain, foreign_key: :id
     belongs_to :history, foreign_key: :historyid
     has_one :object_history, foreign_key: :historyid, primary_key: :historyid
+    has_many :domain_contact_map_histories, foreign_key: :historyid, primary_key: :historyid
 
     def get_current_domain_object(time, change_param)
       x = self
       {
           name:          SimpleIDN.to_unicode(x.object_registry.name.try(:strip)),
           registrar_id:  ::Registrar.find_by(legacy_id: x.object_history.try(:clid)).try(:id),
-          registrant_id: ::Contact.find_by(legacy_id: x.registrant).try(:id),
+          registrant_id: new_registrant_id,
           registered_at: x.object_registry.try(:crdate),
           valid_from:    x.object_registry.try(:crdate),
           valid_to:      x.exdate,
@@ -32,6 +33,15 @@ module Legacy
           legacy_registrant_id: x.registrant,
           statuses:      Legacy::ObjectState.states_for_domain_at(x.id, time)
       }
+    end
+
+    def get_admin_contact_new_ids
+      c_ids = domain_contact_map_histories.pluck(:contactid).join("','")
+      DomainVersion.where("object->>'legacy_id' IN ('#{c_ids}')").uniq.pluck(:item_id)
+    end
+
+    def new_registrant_id
+      @new_registrant_id ||= ::Contact.find_by(legacy_id: registrant).try(:id)
     end
 
     class << self
