@@ -42,7 +42,16 @@ Implements Soap::Arireg # associated_businesses
 # ssl_ca_cert
 
 module Soap
+
   class Arireg
+
+    class NotAvailableError < StandardError
+      def initialize(params)
+        params[:message] = "#{I18n.t(:business_registry_service_not_available)}" unless params.key? :message
+        super(params)
+      end
+    end
+
     class << self
       attr_accessor :wsdl, :host, :username, :password
     end
@@ -100,13 +109,13 @@ module Soap
         end
       rescue Savon::SOAPFault => fault
         Rails.logger.error "#{fault} Äriregister arireg #{self.class.username} at #{self.class.host }"
-        nil
+        raise NotAvailableError.new(exception: fault)
       rescue HTTPI::SSLError => ssl_error
         Rails.logger.error "#{ssl_error} at #{self.class.host}"
-        nil
+        raise NotAvailableError.new(exception: ssl_error)
       rescue SocketError => sock
         Rails.logger.error "#{sock}"
-        nil
+        raise NotAvailableError.new(exception: sock)
       end
     end
     
