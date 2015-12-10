@@ -80,8 +80,8 @@
               Download
               %span.caret
             %ul.dropdown-menu
-              %li= link_to 'PDF', download_list_registrar_contacts_path(params[:q], format: "pdf")
-              %li= link_to 'CSV', download_list_registrar_contacts_path(params[:q], format: "csv")
+              %li= link_to 'PDF', download_list_registrar_contacts_path(q: params[:q], format: "pdf")
+              %li= link_to 'CSV', download_list_registrar_contacts_path(q: params[:q], format: "csv")
         .col-md-3
         .col-md-3
         .col-md-3
@@ -107,7 +107,7 @@
         %tbody
           - @contacts.each do |contact|
             %tr
-              %td= link_to(contact, registrar_contact_path(contact))
+              %td= link_to(contact.name, registrar_contact_path(id: contact.code))
               %td= contact.code
               %td= ident_for(contact)
               %td= l(contact.created_at, format: :short)
@@ -115,8 +115,8 @@
                 - if contact.registrar
                   = contact.registrar
               %td
-                = link_to(t(:edit), edit_registrar_contact_path(contact), class: 'btn btn-primary btn-xs')
-                = link_to(t(:delete), delete_registrar_contact_path(contact), class: 'btn btn-default btn-xs')
+                = link_to(t(:edit), edit_registrar_contact_path(contact.code), class: 'btn btn-primary btn-xs')
+                = link_to(t(:delete), delete_registrar_contact_path(contact.code), class: 'btn btn-default btn-xs')
 
 .row
   .col-md-6
