@@ -89,7 +89,7 @@ module Soap
       begin
         response = @client.call :paringesindus_v4, message: body(
                                   'fyysilise_isiku_kood' => ident,
-                                  'fyysilise_isiku_koodi_riik' => ident_cc
+                                  'fyysilise_isiku_koodi_riik' => country_code_3(ident_cc)
                                 )
         content = extract response, :paringesindus_v4_response
         unless content.blank?
@@ -138,7 +138,13 @@ module Soap
       end
       {keha: args}
     end
-    
+
+    # TLA --- three letter acronym required not two letter acronyms, transform
+    def country_code_3(code)
+      # FIXME: need service class for this data
+      code.length == 3 ? code : {'EE' => 'EST', 'SE' => 'SWE', 'FI' => 'FIN', 'DK' => 'DEN'}[code]
+    end
+
     def extract(response, element)
       # response envelope body has again header/body under element; header is user and password returned
       response.hash[:envelope][:body][element][:keha]
