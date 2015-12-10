@@ -28,6 +28,8 @@ if con.present? && con.table_exists?('settings')
 
   Setting.save_default(:client_side_status_editing_enabled, false)
 
+  Setting.save_default(:days_to_keep_business_registry_cache, 2)
+
   Setting.save_default(:invoice_number_min, 131050)
   Setting.save_default(:invoice_number_max, 149999)
   Setting.save_default(:days_to_keep_invoices_active, 30)
