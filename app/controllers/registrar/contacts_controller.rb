@@ -8,14 +8,11 @@ class Registrar::ContactsController < Registrar::DeppController # EPP controller
     params[:q].delete_if { |_k, v| v.blank? }
     if params[:q].length == 1 && params[:q][:name_matches].present?
       @contacts = Contact.find_by(name: params[:q][:name_matches])
-      if @contact
-        redirect_to info_registrar_domains_path(contact_name: @contact.name) and return
-      end
     end
 
     if params[:statuses_contains]
-      contacts = current_user.registrar.contacts.includes(:registrar).where(
-          "statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
+      contacts =  current_user.registrar.contacts.includes(:registrar).where(
+          "contacts.statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
       )
     else
       contacts = current_user.registrar.contacts.includes(:registrar)
@@ -24,13 +21,6 @@ class Registrar::ContactsController < Registrar::DeppController # EPP controller
     normalize_search_parameters do
       @q = contacts.search(params[:q])
       @contacts = @q.result.page(params[:page])
-      if @contacts.count == 0 && params[:q][:name_matches] !~ /^%.+%$/
-        n_cache = params[:q][:name_matches]
-        params[:q][:name_matches] = "%#{params[:q][:name_matches]}%"
-        @q = contacts.search(params[:q])
-        @contacts = @q.result.page(params[:page])
-        params[:q][:name_matches] = n_cache
-      end
     end
 
     @contacts = @contacts.per(params[:results_per_page]) if params[:results_per_page].to_i > 0
@@ -39,34 +29,35 @@ class Registrar::ContactsController < Registrar::DeppController # EPP controller
   def download_list
     authorize! :view, Depp::Contact
 
-        params[:q] ||= {}
-        if params[:statuses_contains]
-          contacts = current_user.registrar.contacts.includes(:registrar).where(
-              "statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
-          )
-        else
-          contacts = current_user.registrar.contacts.includes(:registrar)
-        end
-
-        normalize_search_parameters do
-          @q = contacts.search(params[:q])
-          @contacts = @q.result.page(params[:page])
-          if @contacts.count == 0 && params[:q][:name_matches] !~ /^%.+%$/
-            n_cache = params[:q][:name_matches]
-            params[:q][:name_matches] = "%#{params[:q][:name_matches]}%"
-            @q = contacts.search(params[:q])
-            @contacts = @q.result.page(params[:page])
-            params[:q][:name_matches] = n_cache
-          end
-        end
-
-        respond_to do |format|
-          format.csv { render text: @contacts.to_csv }
-          format.pdf do
-          pdf = @contacts.pdf(render_to_string('registrar/contacts/download_list', layout: false))
-          send_data pdf, filename: 'contacts.pdf'
-        end
+    params[:q] ||= {}
+    params[:q].delete_if { |_k, v| v.blank? }
+    if params[:q].length == 1 && params[:q][:name_matches].present?
+      @contacts = Contact.find_by(name: params[:q][:name_matches])
     end
+
+    if params[:statuses_contains]
+      contacts =  current_user.registrar.contacts.includes(:registrar).where(
+          "contacts.statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
+      )
+    else
+      contacts = current_user.registrar.contacts.includes(:registrar)
+    end
+
+    normalize_search_parameters do
+      @q = contacts.search(params[:q])
+      @contacts = @q.result.page(params[:page])
+    end
+
+    @contacts = @contacts.per(params[:results_per_page]) if params[:results_per_page].to_i > 0
+
+    respond_to do |format|
+        format.csv { render text: @contacts.to_csv }
+        format.pdf do
+        pdf = @contacts.pdf(render_to_string('registrar/contacts/download_list', layout: false))
+        send_data pdf, filename: 'contacts.pdf'
+      end
+    end
+
   end
 
   def new
