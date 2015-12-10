@@ -9,6 +9,7 @@ module Legacy
     belongs_to :history, foreign_key: :historyid
     has_one :object_history, foreign_key: :historyid, primary_key: :historyid
     has_many :domain_contact_map_histories, foreign_key: :historyid, primary_key: :historyid
+    has_many :nsset_contact_map_histories,  foreign_key: :historyid, primary_key: :historyid
 
     def get_current_domain_object(time, change_param)
       x = self
@@ -37,6 +38,10 @@ module Legacy
 
     def get_admin_contact_new_ids
       c_ids = domain_contact_map_histories.pluck(:contactid).join("','")
+      DomainVersion.where("object->>'legacy_id' IN ('#{c_ids}')").uniq.pluck(:item_id)
+    end
+    def get_tech_contact_new_ids
+      c_ids = nsset_contact_map_histories.pluck(:contactid).join("','")
       DomainVersion.where("object->>'legacy_id' IN ('#{c_ids}')").uniq.pluck(:item_id)
     end
 

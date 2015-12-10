@@ -131,8 +131,9 @@ namespace :import do
                 created_at: time,
                 children: {
                     admin_contacts: [responder.get_admin_contact_new_ids],
-                    tech_contacts: [],
+                    tech_contacts: [responder.get_tech_contact_new_ids],
                     nameservers: [],
+                    dnskeys: [],
                     registrant: [responder.new_registrant_id]
                 }
             )
