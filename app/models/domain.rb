@@ -221,6 +221,10 @@ class Domain < ActiveRecord::Base
       )
     end
 
+    def next_id
+      self.connection.select_value("SELECT nextval('#{self.sequence_name}')")
+    end
+
     # rubocop: disable Metrics/AbcSize
     # rubocop: disable Metrics/CyclomaticComplexity
     # rubocop: disable Metrics/PerceivedComplexity
