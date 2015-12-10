@@ -8,6 +8,7 @@ module Legacy
     belongs_to :domain, foreign_key: :id
     belongs_to :history, foreign_key: :historyid
     has_one :object_history, foreign_key: :historyid, primary_key: :historyid
+    has_many :nsset_histories,  foreign_key: :id, primary_key: :nsset
     has_many :domain_contact_map_histories, foreign_key: :historyid, primary_key: :historyid
     has_many :nsset_contact_map_histories,  foreign_key: :historyid, primary_key: :historyid
 
@@ -47,6 +48,72 @@ module Legacy
 
     def new_registrant_id
       @new_registrant_id ||= ::Contact.find_by(legacy_id: registrant).try(:id)
+    end
+
+    def user
+      @user ||= Registrar.find_by(legacy_id: obj_his.upid || obj_his.clid).try(:api_users).try(:first)
+    end
+
+
+    # returns imported nameserver ids
+    def import_nameservers_history(new_domain, time)
+      #removing previous nameservers
+      NameserverVersion.where("object->>legacy_domain_id").where(event: :create).where("created_at <= ?", time).each do |nv|
+        if NameserverVersion.where(item_type: nv.item_type, item_id: nv.item_id, event: :destroy).none?
+          NameserverVersion.create!(
+              item_type: nv.item_type,
+              item_id:   nv.item_id,
+              event:     :destroy,
+              whodunnit: user.try(:id),
+              object:    nv.object_changes.each_with_object({}){|(k,v),hash| hash[k] = v.last },
+              object_changes: {},
+              created_at: time
+          )
+        end
+      end
+
+
+      if (nssets = nsset_histories.at(time).to_a).any?
+        ids = []
+        nssets.each do |nsset|
+          nsset.host_histories.at(time).each do |host|
+            ips = {ipv4: [],ipv6: []}
+            host.host_ipaddr_map_histories.at(time).each do |ip_map|
+              next unless ip_map.ipaddr
+              ips[:ipv4] << ip_map.ipaddr.to_s.strip if ip_map.ipaddr.ipv4?
+              ips[:ipv6] << ip_map.ipaddr.to_s.strip if ip_map.ipaddr.ipv6?
+            end
+
+            server = {
+                id: Nameserver.next_id,
+                hostname: host.fqdn.try(:strip),
+                ipv4: ips[:ipv4],
+                ipv6: ips[:ipv6],
+                creator_str: object_registry.try(:registrar).try(:name),
+                updator_str: object_history.try(:registrar).try(:name) || object_registry.try(:registrar).try(:name),
+                legacy_domain_id:  id,
+                domain_id: new_domain.id,
+                created_at: nsset.object_registry.try(:crdate),
+                updated_at: nsset.object_registry.try(:object_history).read_attribute(:update) || nsset.object_registry.try(:crdate)
+            }
+
+            NameserverVersion.create!(
+                item_type: Nameserver.to_s,
+                item_id:   server[:id],
+                event:     :create,
+                whodunnit: user.try(:id),
+                object:    nil,
+                object_changes: server.each_with_object({}){|(k,v), h| h[k] = [nil, v]},
+                created_at: time
+            )
+            ids << server[:id]
+          end
+
+        end
+        ids
+      else
+        []
+      end
     end
 
     class << self

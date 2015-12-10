@@ -107,6 +107,8 @@ namespace :import do
             new_attrs = responder.get_current_domain_object(time, orig_history_klass[:param])
             new_attrs[:id]         = domain.id
             new_attrs[:updated_at] = time
+            p time
+            p responder.import_nameservers_history(domain, time) if responder.respond_to?(:import_nameservers_history)
 
             event = :update
             event = :create  if i == 0
@@ -120,13 +122,12 @@ namespace :import do
             end
             next if changes.blank? && event != :destroy
             obj_his = Legacy::ObjectHistory.find_by(historyid: responder.historyid)
-            user    = Registrar.find_by(legacy_id: obj_his.upid || obj_his.clid).try(:api_users).try(:first)
 
-            DomainVersion.create!(
+            p DomainVersion.new(
                 item_type: domain.class,
                 item_id:   domain.id,
                 event:     event,
-                whodunnit: user.try(:id),
+                whodunnit: responder.user.try(:id),
                 object:    last_changes,
                 object_changes: changes,
                 created_at: time,
