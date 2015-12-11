@@ -155,6 +155,8 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :registrants
+
     resources :whois
     # resources :contacts do
       # member do
