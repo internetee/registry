@@ -543,7 +543,7 @@ class Domain < ActiveRecord::Base
   ### VALIDATIONS ###
 
   def validate_nameserver_ips
-    nameservers.each do |ns|
+    nameservers.to_a.reject(&:marked_for_destruction?).each do |ns|
       next unless ns.hostname.end_with?(name)
       next if ns.ipv4.present?
       errors.add(:nameservers, :invalid) if errors[:nameservers].blank?
