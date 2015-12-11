@@ -16,7 +16,7 @@
             %th{class: 'col-xs-2'}
               = t(:registrar)
         %tbody
-          - @domains.each do |x|
+          - @domains.try(:each) do |x|
             %tr
               %td= x
               %td= x.registrant

@@ -48,7 +48,7 @@ class BusinessRegistryCache < ActiveRecord::Base
       cache = BusinessRegistryCache.find_by(ident: ident_code, ident_country_code: ident_cc)
       # fetch new data if cache is expired
       return cache if cache.present? && cache.retrieved_on > (Time.zone.now - Setting.days_to_keep_business_registry_cache.days)
-      cache = nil # expired data is forbidden
+      cache = [] # expired data is forbidden
       data = business_registry.associated_businesses(ident_code, ident_cc)
       unless data.nil?
         cache = BusinessRegistryCache.new(data)
