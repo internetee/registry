@@ -108,7 +108,6 @@ namespace :import do
             new_attrs[:id]         = domain.id
             new_attrs[:updated_at] = time
             p time
-            p responder.import_nameservers_history(domain, time) if responder.respond_to?(:import_nameservers_history)
 
             event = :update
             event = :create  if i == 0
@@ -121,22 +120,22 @@ namespace :import do
               if (old_val = last_changes.to_h[k]) != v then changes[k] = [old_val, v] end
             end
             next if changes.blank? && event != :destroy
-            obj_his = Legacy::ObjectHistory.find_by(historyid: responder.historyid)
+            responder.import_nameservers_history(domain, time) if responder.respond_to?(:import_nameservers_history)
 
-            p DomainVersion.new(
+            DomainVersion.create!(
                 item_type: domain.class,
                 item_id:   domain.id,
                 event:     event,
-                whodunnit: responder.user.try(:id),
+                whodunnit: responder.history_domain.user.try(:id),
                 object:    last_changes,
                 object_changes: changes,
                 created_at: time,
                 children: {
-                    admin_contacts: responder.get_admin_contact_new_ids,
-                    tech_contacts:  responder.get_tech_contact_new_ids,
+                    admin_contacts: responder.history_domain.get_admin_contact_new_ids,
+                    tech_contacts:  responder.history_domain.get_tech_contact_new_ids,
                     nameservers:    [],
                     dnskeys:        [],
-                    registrant:     [responder.new_registrant_id]
+                    registrant:     [responder.history_domain.new_registrant_id]
                 }
             )
 

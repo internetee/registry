@@ -1,6 +1,7 @@
 module Legacy
   class ObjectState < Db
     self.table_name = :object_state
+    attr_accessor :history_domain
 
     scope :valid, -> { where('valid_to IS NULL') }
 
@@ -82,6 +83,8 @@ module Legacy
 
     def get_current_domain_object(time, param)
       d_his = Legacy::DomainHistory.get_record_at(object_id, historyid)
+      @history_domain = d_his
+
       hash  = d_his.get_current_domain_object(time, param)
       hash[:statuses] = Legacy::ObjectState.states_for_domain_at(object_id, time + 1)
 

@@ -51,26 +51,33 @@ module Legacy
     end
 
     def user
-      @user ||= Registrar.find_by(legacy_id: obj_his.upid || obj_his.clid).try(:api_users).try(:first)
+      @user ||= begin
+        obj_his = Legacy::ObjectHistory.find_by(historyid: historyid)
+        Registrar.find_by(legacy_id: obj_his.upid || obj_his.clid).try(:api_users).try(:first)
+      end
+    end
+
+    def history_domain
+      self
     end
 
 
     # returns imported nameserver ids
     def import_nameservers_history(new_domain, time)
-      #removing previous nameservers
-      NameserverVersion.where("object->>legacy_domain_id").where(event: :create).where("created_at <= ?", time).each do |nv|
-        if NameserverVersion.where(item_type: nv.item_type, item_id: nv.item_id, event: :destroy).none?
-          NameserverVersion.create!(
-              item_type: nv.item_type,
-              item_id:   nv.item_id,
-              event:     :destroy,
-              whodunnit: user.try(:id),
-              object:    nv.object_changes.each_with_object({}){|(k,v),hash| hash[k] = v.last },
-              object_changes: {},
-              created_at: time
-          )
-        end
-      end
+      # #removing previous nameservers
+      # NameserverVersion.where("object_changes->>'legacy_domain_id' = '[nil,#{id}]'").where(event: :create).where("created_at <= ?", time).each do |nv|
+      #   if NameserverVersion.where(item_type: nv.item_type, item_id: nv.item_id, event: :destroy).none?
+      #     NameserverVersion.create!(
+      #         item_type: nv.item_type,
+      #         item_id:   nv.item_id,
+      #         event:     :destroy,
+      #         whodunnit: user.try(:id),
+      #         object:    nv.object_changes.each_with_object({}){|(k,v),hash| hash[k] = v.last },
+      #         object_changes: {},
+      #         created_at: time
+      #     )
+      #   end
+      # end
 
 
       if (nssets = nsset_histories.at(time).to_a).any?
