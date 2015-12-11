@@ -120,5 +120,9 @@ class Dnskey < ActiveRecord::Base
     def bin_to_hex(s)
       s.each_byte.map { |b| format('%02X', b) }.join
     end
+
+    def next_id
+      self.connection.select_value("SELECT nextval('#{self.sequence_name}')")
+    end
   end
 end
