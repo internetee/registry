@@ -201,13 +201,13 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :domains_versions do
+    resources :domain_versions do
       collection do
         get 'search'
       end
     end
 
-    resources :contacts_versions do
+    resources :contact_versions do
       collection do
         get 'search'
       end

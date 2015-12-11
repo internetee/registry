@@ -1,0 +1,40 @@
+= render 'shared/title', name: t(:contact_versions)
+
+
+%hr
+.row
+  .col-md-12
+    .table-responsive
+      %table.table.table-hover.table-bordered.table-condensed
+        %thead
+          %tr
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'name', t(:ID))
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'code', t(:item_id))
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'ident', t(:event))
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'email', t(:object))
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'registrar_name', t(:registrar))
+        %tbody
+          - @versions.each do |version|
+            %tr
+              %td= 1
+              %td= 2
+              %td= 3
+              %td= 4
+              %td= 5
+
+.row
+  .col-md-6
+    = paginate @versions
+  .col-md-6.text-right
+    .pagination
+      = t(:result_count, count: @contacts.total_count)
+
+:coffee
+  $(".js-reset-form").on "click", (e) ->
+    e.preventDefault();
+    window.location = "#{admin_contact_versions_path}"
