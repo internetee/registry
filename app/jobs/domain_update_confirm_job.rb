@@ -9,7 +9,6 @@ class DomainUpdateConfirmJob < Que::Job
         domain.apply_pending_update! do |e|
           e.instance_variable_set("@changed_attributes", e.changed_attributes.merge("statuses"=>[]))
         end
-        domain.clean_pendings!
       when RegistrantVerification::REJECTED
         DomainMailer.pending_update_rejected_notification_for_new_registrant(domain_id).deliver
         domain.poll_message!(:poll_pending_update_rejected_by_registrant)
