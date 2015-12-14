@@ -503,13 +503,12 @@ class Epp::Domain < Domain
     old_registrant_email = DomainMailer.registrant_updated_notification_for_old_registrant(id, deliver_emails)
     preclean_pendings
     user  = ApiUser.find(pending_json['current_user_id'])
-    ::PaperTrail.whodunnit = user.id_role_username # updator str should be the request originator not the approval user
     frame = Nokogiri::XML(pending_json['frame'])
     statuses.delete(DomainStatus::PENDING_UPDATE)
     yield(self) if block_given? # need to skip statuses check here
-    ::PaperTrail.whodunnit = user.id_role_username # updator str should be the request originator not the approval user
     self.save
 
+    ::PaperTrail.whodunnit = user.id_role_username # updator str should be the request originator not the approval user
     return unless update(frame, user, false)
     clean_pendings!
     self.deliver_emails = true # turn on email delivery
