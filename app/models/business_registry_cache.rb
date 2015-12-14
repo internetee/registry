@@ -39,7 +39,11 @@ class BusinessRegistryCache < ActiveRecord::Base
 
     def fetch_associated_domains(ident_code, ident_cc)
       cached = fetch_by_ident_and_cc(ident_code, ident_cc)
-      cached.associated_domains unless cached.blank?
+      if cached.blank?
+        Domain.includes(:registrar, :registrant).where(contacts: {ident: ident_code, ident_country_code: ident_cc})
+      else
+        cached.associated_domains
+      end
     end
 
     def fetch_by_ident_and_cc(ident_code, ident_cc)
