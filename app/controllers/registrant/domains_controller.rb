@@ -3,7 +3,6 @@ class Registrant::DomainsController < RegistrantController
   def index
   authorize! :view, :registrant_domains
   params[:q] ||= {}
-  domains = current_user.domains
   normalize_search_parameters do
     @q = domains.search(params[:q])
     @domains = @q.result.page(params[:page])
@@ -26,7 +25,6 @@ class Registrant::DomainsController < RegistrantController
   def download_list
     authorize! :view, :registrant_domains
     params[:q] ||= {}
-    domains = current_user.domains
     normalize_search_parameters do
       @q = domains.search(params[:q])
       @domains = @q
@@ -39,7 +37,11 @@ class Registrant::DomainsController < RegistrantController
           send_data pdf, filename: 'domains.pdf'
         end
       end
-    end
+  end
+
+  def domains
+    current_user.domains
+  end
 
   def normalize_search_parameters
     ca_cache = params[:q][:valid_to_lteq]
