@@ -29,11 +29,6 @@ class Epp::DomainsController < EppController
     handle_errors(@domain) and return if @domain.errors.any?
     handle_errors and return unless balance_ok?('create') # loads pricelist in this method
 
-    if !@domain_pricelist.try(:price)#checking if pricelist is not found
-        @domain.add_epp_error('2306', nil, nil, 'No price list for domain')
-        handle_errors(@domain) and return if @domain.errors.any?
-    end
-
     ActiveRecord::Base.transaction do
       if @domain.save # TODO: Maybe use validate: false here because we have already validated the domain?
         current_user.registrar.debit!({
@@ -107,10 +102,6 @@ class Epp::DomainsController < EppController
     period_unit = Epp::Domain.parse_period_unit_from_frame(params[:parsed_frame]) || 'y'
 
     balance_ok?('renew', period, period_unit) # loading pricelist
-    if !@domain_pricelist.try(:price)#checking if pricelist is not found
-      @domain.add_epp_error('2306', nil, nil, 'No price list for domain')
-      handle_errors(@domain) and return if @domain.errors.any?
-    end
 
     ActiveRecord::Base.transaction do
       success = @domain.renew(
@@ -258,12 +249,19 @@ class Epp::DomainsController < EppController
 
   def balance_ok?(operation, period = nil, unit = nil)
     @domain_pricelist = @domain.pricelist(operation, period.try(:to_i), unit)
-    if current_user.registrar.balance < @domain_pricelist.price.amount
+    if @domain_pricelist.try(:price) # checking if price list is not found
+      if current_user.registrar.balance < @domain_pricelist.price.amount
+        epp_errors << {
+            code: '2104',
+            msg: I18n.t('billing_failure_credit_balance_low')
+        }
+        return false
+      end
+    else
       epp_errors << {
-        code: '2104',
-        msg: I18n.t('billing_failure_credit_balance_low')
+          code: '2104',
+          msg: I18n.t(:active_price_missing_for_this_operation)
       }
-
       return false
     end
     true
