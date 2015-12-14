@@ -237,7 +237,7 @@ class Contact < ActiveRecord::Base
           errors.add(:ident, :invalid_EE_identity_format) unless Isikukood.new(ident).valid?
         when 'org'.freeze
           last_char = ident.last
-          if ident.size != 8 || !%(1 8 9).freeze.include?(last_char) || ident !=~/\A[12][0-9]{6}[189]\z/
+          if ident.size != 8 || !%w(1 8 9).freeze.include?(last_char) || ident !=~/\A[12][0-9]{6}[189]\z/
             errors.add(:ident, :invalid_EE_identity_format)
           end
       end
