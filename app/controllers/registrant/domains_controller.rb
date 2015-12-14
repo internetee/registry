@@ -12,7 +12,7 @@ class Registrant::DomainsController < RegistrantController
 
   def show
     @domain = Domain.find(params[:id])
-    if !(current_user.domains.include?(@domain) || @domain.valid?)
+    if !(domains.include?(@domain) || @domain.valid?)
       redirect_to registrant_domains_path
     end
     authorize! :read, @domain
@@ -30,13 +30,13 @@ class Registrant::DomainsController < RegistrantController
       @domains = @q
     end
 
-      respond_to do |format|
-        format.csv { render text: @domains.result.to_csv }
-        format.pdf do
-          pdf = @domains.result.pdf(render_to_string('registrant/domains/download_list', layout: false))
-          send_data pdf, filename: 'domains.pdf'
-        end
+    respond_to do |format|
+      format.csv { render text: @domains.result.to_csv }
+      format.pdf do
+        pdf = @domains.result.pdf(render_to_string('registrant/domains/download_list', layout: false))
+        send_data pdf, filename: 'domains.pdf'
       end
+    end
   end
 
   def domains
