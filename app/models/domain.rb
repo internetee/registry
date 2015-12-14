@@ -1,5 +1,6 @@
 # rubocop: disable Metrics/ClassLength
 class Domain < ActiveRecord::Base
+  include UserEvents
   include Versions # version/domain_version.rb
   include Statuses
   has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
