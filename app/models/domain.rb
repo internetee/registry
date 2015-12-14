@@ -713,6 +713,8 @@ class Domain < ActiveRecord::Base
         case s
           when DomainStatus::PENDING_DELETE
             self.delete_at = nil
+          when DomainStatus::SERVER_MANUAL_INZONE # removal causes server hold to set
+            self.outzone_at = Time.zone.now if self.force_delete_at.present?
           # Handle any other special remove cases?
           # when DomainStatus::FORCE_DELETE unset_force_delete
         end
