@@ -95,7 +95,8 @@ module Soap
         unless content.blank?
           if content[:ettevotjad].key? :item
             business_ident = items(content, :ettevotjad).map do |item|
-              #puts "#{item[:ariregistri_kood]}\t#{item[:arinimi]}\t#{item[:staatus]}  #{item[:oiguslik_vorm]}\t"
+              # debug helps users gather data for testing
+              puts "#{item[:ariregistri_kood]}\t#{item[:arinimi]}\t#{item[:staatus]}  #{item[:oiguslik_vorm]}\t" if @debug
               item[:ariregistri_kood]
             end
             {
@@ -123,6 +124,7 @@ module Soap
       @client.globals.log_level :debug
       @client.globals.log true
       @client.globals.pretty_print_xml true
+      @debug = true
       @client
     end
 
