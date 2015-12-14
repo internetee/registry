@@ -218,8 +218,8 @@ class Contact < ActiveRecord::Base
         when 'priv'.freeze
           errors.add(:ident, :invalid_EE_identity_format) unless Isikukood.new(ident).valid?
         when 'org'.freeze
-          last_char = ident.last
-          if ident.size != 8 || !%w(1 8 9).freeze.include?(last_char) || ident !=~/\A[12][0-9]{6}[189]\z/
+          # !%w(1 7 8 9).freeze.include?(ident.first) ||
+          if ident.size != 8 || ident !=~/\A[0-9]{8}\z/
             errors.add(:ident, :invalid_EE_identity_format)
           end
       end
