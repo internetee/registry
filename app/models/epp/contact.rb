@@ -161,14 +161,17 @@ class Epp::Contact < Contact
       ident_frame = frame.css('ident').first
 
       if ident_frame && ident_attr_valid?(ident_frame)
-        if  ident_country_code.blank? && ident_type.in?(%w(org priv).freeze)
-          at.merge!(ident_country_code: ident_frame.attr('cc'), ident_type: ident_type)
-        elsif ident_type == "birthday" && ident !=~ /\d{4}-\d{2}-\d{2}/
+        org_priv = %w(org priv).freeze
+        if ident_country_code.blank? && org_priv.include?(ident_type) && org_priv.in?(ident_frame.attr('type'))
+          at.merge!(ident_country_code: ident_frame.attr('cc'), ident_type: ident_frame.attr('type'))
+        elsif ident_type == "birthday" && ident !=~ /\d{4}-\d{2}-\d{2}/ && (Date.parse(ident) rescue false)
           at.merge!(ident: ident_frame.text)
           at.merge!(ident_country_code: ident_frame.attr('cc')) if ident_frame.attr('cc').present?
-        elsif ident_type.blank? && ident_type.blank?
-          at.merge!(ident_type: ident_type)
+        elsif ident_type.blank? && ident_country_code.blank?
+          at.merge!(ident_type: ident_frame.attr('type'))
           at.merge!(ident_country_code: ident_frame.attr('cc')) if ident_frame.attr('cc').present?
+        else
+          throw :epp_error, {code: '2306', msg: I18n.t(:ident_update_error)}
         end
       end
     end
