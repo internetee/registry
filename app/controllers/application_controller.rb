@@ -32,7 +32,7 @@ class ApplicationController < ActionController::Base
     if registrar_request?
       registrar_root_url
     elsif registrant_request?
-      registrant_root_url
+      registrant_login_url
     elsif admin_request?
       admin_root_url
     end
