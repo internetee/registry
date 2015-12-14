@@ -20,21 +20,19 @@ authentication using electronic ID. Association through a business organisation 
 
 class BusinessRegistryCache < ActiveRecord::Base
 
-   def associated_domains
-   domains = []
-   contact_ids = associated_businesses.map do |bic|
-     Contact.select(:id).where("ident = ? AND ident_type = 'org' AND ident_country_code = 'EE'", bic).pluck(:id)
-   end
-   contact_ids = Contact.select(:id).where("ident = ? AND ident_type = 'priv' AND ident_country_code = ?",
-                                ident, ident_country_code).pluck(:id) + contact_ids
-   contact_ids.flatten!.compact! unless contact_ids.blank?
-   contact_ids.uniq! unless contact_ids.blank?
-   unless contact_ids.blank?
-     DomainContact.select(:domain_id).distinct.where("contact_id in (?)", contact_ids).pluck(:domain_id).try(:each) do |domain_id|
-       domains << Domain.find(domain_id)
-     end
-   end
-   domains
+  def associated_domains
+    domains = []
+    contact_ids = associated_businesses.map do |bic|
+      Contact.select(:id).where("ident = ? AND ident_type = 'org' AND ident_country_code = 'EE'", bic).pluck(:id)
+    end
+    contact_ids = Contact.select(:id).where("ident = ? AND ident_type = 'priv' AND ident_country_code = ?",
+                                            ident, ident_country_code).pluck(:id) + contact_ids
+    contact_ids.flatten!.compact! unless contact_ids.blank?
+    unless contact_ids.blank?
+      contact_ids.uniq!
+      domains = DomainContact.select(:domain_id).distinct.where("contact_id in (?)", contact_ids).pluck(:domain_id)
+    end
+    Domain.includes(:registrar, :registrant).where('id in (?)', domains)
   end
 
   class << self
