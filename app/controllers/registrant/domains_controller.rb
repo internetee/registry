@@ -40,7 +40,13 @@ class Registrant::DomainsController < RegistrantController
   end
 
   def domains
-    current_user.domains
+    ident_cc, ident = @current_user.registrant_ident.split '-'
+    begin
+      BusinessRegistryCache.fetch_associated_domains ident, ident_cc
+    rescue Soap::Arireg::NotAvailableError => error
+      flash[:notice] = I18n.t(error.message[:message])
+      current_user.domains
+    end
   end
 
   def normalize_search_parameters
