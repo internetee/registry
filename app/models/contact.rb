@@ -1,6 +1,7 @@
 class Contact < ActiveRecord::Base
   include Versions # version/contact_version.rb
   include EppErrors
+  include UserEvents
 
   belongs_to :registrar
   has_many :domain_contacts
