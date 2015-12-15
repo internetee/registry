@@ -148,6 +148,7 @@ module Legacy
                 v.item.versions.where(event: :create).first_or_create!(dns.historical_data(self, new_domain))
               end
             end
+          # if no history was here
           else
             item=::Dnskey.new(id: ::Dnskey.next_id)
             DnskeyVersion.where(item_type: ::Dnskey.to_s, item_id: item.id).where(event: :create).first_or_create!(dns.historical_data(self, new_domain))
