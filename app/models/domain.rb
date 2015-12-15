@@ -439,7 +439,7 @@ class Domain < ActiveRecord::Base
   end
 
   def pending_update!
-    old_registrant_id = registrant_id
+    old_registrant_id = registrant_id_was
     return true if pending_update?
     self.epp_pending_update = true # for epp
 
