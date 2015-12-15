@@ -241,7 +241,7 @@ class Domain < ActiveRecord::Base
           DomainMailer.pending_update_expired_notification_for_new_registrant(domain.id).deliver
         end
         if domain.pending_delete? || domain.pending_delete_confirmation?
-          DomainMailer.pending_delete_expired_notification(domain.id, deliver_emails).deliver
+          DomainMailer.pending_delete_expired_notification(domain.id, true).deliver
         end
         domain.clean_pendings!
         unless Rails.env.test?
