@@ -2,7 +2,6 @@ namespace :import do
   desc 'Import all history'
   task history_all: :environment do
     Rake::Task['import:history_contacts'].invoke
-    Rake::Task['import:history_dnskeys'].invoke
     Rake::Task['import:history_domains'].invoke
   end
 
@@ -78,63 +77,6 @@ namespace :import do
   end
 
 
-  desc 'Import contact history'
-  task history_dnskeys: :environment do
-    Legacy::DnskeyHistory.uniq.pluck(:id).each do |legacy_dnskey_id|
-      Dnskey.transaction do
-        contact   = Dnskey.find_by(legacy_id: legacy_dnskey_id)
-        version_dns = DnskeytVersion.where("object->>'legacy_id' = '#{legacy_dnskey_id}'").select(:item_id).first
-        contact ||= Dnskey.new(id: version_dns.item_id, legacy_id: legacy_dnskey_id) if version_dns
-        contact ||= Dnskey.new(id: ::Contact.next_id, legacy_id: legacy_dnskey_id)
-        next if contact.versions.where(event: :create).any?
-        # add here to skip domains whith create history
-
-        last_changes = nil
-        history  = Legacy::ContactHistory.changes_dates_for(legacy_dnskey_id)
-        last_contact_action = history.sort.last[1].last # need to identify if we delete
-
-        keys = history.keys.compact.sort
-        i = 0
-        keys.each_with_index do |time|
-          history[time].each do |orig_history_klass|
-            changes   = {}
-            responder = orig_history_klass[:klass].get_record_at(legacy_dnskey_id, orig_history_klass[:id])
-            new_attrs = responder.get_current_contact_object(time, orig_history_klass[:param])
-            new_attrs[:id] = contact.id
-
-            event = :update
-            event = :create  if i == 0
-            if orig_history_klass == last_contact_action && responder.valid_to.present?
-              event = :destroy
-              new_attrs = {}
-            end
-
-            new_attrs.each do |k, v|
-              if (old_val = last_changes.to_h[k]) != v then changes[k] = [old_val, v] end
-            end
-            next if changes.blank? && event != :destroy
-            obj_his = Legacy::ObjectHistory.find_by(historyid: responder.historyid)
-            user    = Registrar.find_by(legacy_id: obj_his.upid || obj_his.clid).try(:api_users).try(:first)
-
-            hash = {
-                item_type: Dnskey.to_s,
-                item_id:   contact.id,
-                event:     event,
-                whodunnit: user.try(:id),
-                object:    last_changes,
-                object_changes: changes,
-                created_at: time
-            }
-            DnskeyVersion.create!(hash)
-
-            last_changes = new_attrs
-            i += 1
-          end
-        end
-      end
-    end
-  end
-
 
   desc 'Import domain history'
   task history_domains: :environment do
@@ -200,7 +142,7 @@ namespace :import do
                     admin_contacts: responder.history_domain.get_admin_contact_new_ids,
                     tech_contacts:  responder.history_domain.get_tech_contact_new_ids,
                     nameservers:    [],
-                    dnskeys:        [],
+                    dnskeys:        responder.history_domain.import_dnskeys_history(domain, time),
                     registrant:     [responder.history_domain.new_registrant_id]
                 }
             )

@@ -2,6 +2,7 @@ module Legacy
   class DomainHistory < Db
     self.table_name = :domain_history
     self.primary_key = :id
+    class_attribute :dnssecs
 
     belongs_to :object_registry, foreign_key: :id
     belongs_to :object, foreign_key: :id
@@ -122,6 +123,44 @@ module Legacy
         []
       end
     end
+
+    # returns imported dnskey ids
+    def import_dnskeys_history(new_domain, time)
+      self.class.dnssecs ||= {}
+      self.class.dnssecs[id] ||= {}
+      ids = []
+      Legacy::DnskeyHistory.for_at(keyset, time).each do |dns|
+        # checking if we have create history for dnskey (cache)
+        if val = self.class.dnssecs[id][dns]
+          ids << val
+        else # if not found we should check current dnssec and historical if changes were done
+          # if current object wan't changed
+          if item=::Dnskey.where(dns.new_object_mains(new_domain)).first
+            item.versions.where(event: :create).first_or_create!(dns.historical_data(self, new_domain))
+            self.class.dnssecs[id][dns] = item.id
+            ids << item.id
+          # if current object was changed
+          elsif (versions = ::DnskeyVersion.where("object->>'legacy_domain_id'='#{id}'").to_a).any?
+            versions.each do |v|
+              if v.object.slice(*dns.new_object_mains(new_domain).stringify_keys.keys) == dns.new_object_mains(new_domain).keys
+                self.class.dnssecs[id][dns] = v.item_id
+                ids << v.item_id
+                v.item.versions.where(event: :create).first_or_create!(dns.historical_data(self, new_domain))
+              end
+            end
+          else
+            item=::Dnskey.new(id: ::Dnskey.next_id)
+            DnskeyVersion.where(item_type: ::Dnskey.to_s, item_id: item.id).where(event: :create).first_or_create!(dns.historical_data(self, new_domain))
+            DnskeyVersion.where(item_type: ::Dnskey.to_s, item_id: item.id).where(event: :destroy).first_or_create!(dns.historical_data(self, new_domain), :valid_to) if dns.valid_to
+            self.class.dnssecs[id][dns] = item.id
+            ids << item.id
+          end
+        end
+      end
+
+      ids
+    end
+
 
     class << self
       def changes_dates_for domain_id
