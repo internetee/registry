@@ -99,6 +99,7 @@ class DomainMailModel
   def registrant_pending
     @params[:recipient] = format @domain.pending_json['new_registrant_email']
     @params[:new_registrant_name] = @domain.pending_json['new_registrant_name']
+    @params[:old_registrant_name] = @domain.registrant.name
   end
   
   # registrant and domain admin contacts
