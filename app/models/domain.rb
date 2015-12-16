@@ -239,7 +239,7 @@ class Domain < ActiveRecord::Base
         end
         count += 1
         if domain.pending_update?
-          DomainMailer.pending_update_expired_notification_for_new_registrant(domain.id).deliver
+          send_mail :pending_update_expired_notification_for_new_registrant
         end
         if domain.pending_delete? || domain.pending_delete_confirmation?
           DomainMailer.pending_delete_expired_notification(domain.id, true).deliver
@@ -451,8 +451,8 @@ class Domain < ActiveRecord::Base
     new_registrant_email = registrant.email
     new_registrant_name  = registrant.name
 
-    DomainMailer.pending_update_request_for_old_registrant(id, registrant_id_was, deliver_emails).deliver
-    DomainMailer.pending_update_notification_for_new_registrant(id, registrant_id_was, deliver_emails).deliver
+    send_mail :pending_update_request_for_old_registrant
+    send_mail :pending_update_notification_for_new_registrant
 
     reload # revert back to original
 
@@ -818,5 +818,10 @@ class Domain < ActiveRecord::Base
       status_notes[status] = notes[i]
     end
   end
+
+  def send_mail(action)
+    DomainMailer.send(action, DomainMailModel.new(self).send(action)).deliver
+  end
+
 end
 # rubocop: enable Metrics/ClassLength

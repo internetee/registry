@@ -1,8 +1,8 @@
 Tere,
 <br><br>
-Domeeni <%= @domain.name %> registreerija <%= @domain.registrant_name %> ei kinnitanud tähtaegselt registreerija vahetuse taotlust. Domeeni <%= @domain.name %> registreerija vahetus on sellest tulenevalt tühistatud.
+Domeeni <%= @params[:name] %> registreerija <%= @params[:registrant_name] %> ei kinnitanud tähtaegselt registreerija vahetuse taotlust. Domeeni <%= @params[:name] %> registreerija vahetus on sellest tulenevalt tühistatud.
 <br><br>
-Küsimuste korral palun võtke ühendust registripidajaga <%= @domain.registrar_name %>, kelle kontaktid leiate http://internet.ee/registripidajad/akrediteeritud-registripidajad
+Küsimuste korral palun võtke ühendust registripidajaga <%= @params[:registrar_name] %>, kelle kontaktid leiate http://internet.ee/registripidajad/akrediteeritud-registripidajad
 <br><br>
 Lugupidamisega<br>
 Eesti Interneti SA
@@ -11,9 +11,9 @@ Eesti Interneti SA
 <br><br>
 Hi,
 <br><br>
-Domain registrant change has been expired for the domain <%= @domain.name %>.
+Domain registrant change has been expired for the domain <%= @params[:name] %>.
 <br><br>
-Please contact to your registrar <%= @domain.registrar_name %> if you have any questions.
+Please contact to your registrar <%= @params[:registrar_name] %> if you have any questions.
 <br><br>
 Best Regards,<br>
 Estonian Internet Foundation

@@ -500,7 +500,6 @@ class Epp::Domain < Domain
   # rubocop: enable Metrics/CyclomaticComplexity
 
   def apply_pending_update!
-    old_registrant_email = DomainMailer.registrant_updated_notification_for_old_registrant(id, deliver_emails)
     preclean_pendings
     user  = ApiUser.find(pending_json['current_user_id'])
     frame = Nokogiri::XML(pending_json['frame'])
@@ -512,8 +511,8 @@ class Epp::Domain < Domain
     return unless update(frame, user, false)
     clean_pendings!
     self.deliver_emails = true # turn on email delivery
-    DomainMailer.registrant_updated_notification_for_new_registrant(id, deliver_emails).deliver
-    old_registrant_email.deliver
+    send_mail :registrant_updated_notification_for_old_registrant
+    send_mail :registrant_updated_notification_for_new_registrant
     true
   end
 

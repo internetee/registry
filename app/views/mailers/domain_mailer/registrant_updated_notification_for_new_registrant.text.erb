@@ -1,18 +1,18 @@
 Tere,
 
-Domeeni <%= @domain.name %> registreerija vahetuse taotlus on kinnitatud ning andmed registris uuendatud.
+Domeeni <%= @params[:name] %> registreerija vahetuse taotlus on kinnitatud ning andmed registris uuendatud.
 
 Uued registreerija andmed:
-Nimi: <%= @domain.registrant_name %>
-<% if @domain.registrant.priv? %>
-Isikukood: <%= @domain.registrant_ident %>
+Nimi: <%= @params[:registrant_name] %>
+<% if @params[:registrant_priv] %>
+Isikukood: <%= @params[:registrant_ident] %>
 <% else %>
-Äriregistrikood: <%= @domain.registrant_ident %>
+Äriregistrikood: <%= @params[:registrant_ident] %>
 <% end %>
-Epost: <%= @domain.registrant_email %>
-Tänav: <%= @domain.registrant_street %>
-Linn: <%= @domain.registrant_city %>
-Riik: <%= @domain.registrant_country %>
+Epost: <%= @params[:registrant_email] %>
+Tänav: <%= @params[:registrant_street] %>
+Linn: <%= @params[:registrant_city] %>
+Riik: <%= @params[:registrant_country] %>
 
 Lugupidamisega
 Eesti Interneti SA
@@ -21,19 +21,19 @@ Eesti Interneti SA
 
 Hi,
 
-Process for changing registrant of the domain <%= @domain.name %> has been approved and the data in the registry is updated.
+Process for changing registrant of the domain <%= @params[:name] %> has been approved and the data in the registry is updated.
 
 New registrant:
-Name: <%= @domain.registrant_name %>
-<% if @domain.registrant.priv? %>
-Personal code: <%= @domain.registrant_ident %>
+Name: <%= @params[:registrant_name] %>
+<% if @params[:registrant_priv] %>
+Personal code: <%= @params[:registrant_ident] %>
 <% else %>
-Business Registry code: <%= @domain.registrant_ident %>
+Business Registry code: <%= @params[:registrant_ident] %>
 <% end %>
-E-mail: <%= @domain.registrant_email %>
-Street: <%= @domain.registrant_street %>
-City: <%= @domain.registrant_city %>
-Country: <%= @domain.registrant_country %>
+E-mail: <%= @params[:registrant_email] %>
+Street: <%= @params[:registrant_street] %>
+City: <%= @params[:registrant_city] %>
+Country: <%= @params[:registrant_country] %>
 
 Best Regards,
 Estonian Internet Foundation

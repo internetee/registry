@@ -1,25 +1,25 @@
 Tere,
 <br><br>
-Registripidaja <%= @domain.registrar_name %> vahendusel on algatatud <%= @domain.name %> domeeni omanikuvahetuse protseduur.  
+Registripidaja <%= @params[:registrar_name] %> vahendusel on algatatud <%= @params[:name] %> domeeni omanikuvahetuse protseduur.  
 <br><br>
-Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja poole. Teie registripidaja on <%= @domain.registrar_name %>
+Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja poole. Teie registripidaja on <%= @params[:registrar_name] %>
 <br><br>
 Uued registreerija andmed:<br>
-Nimi: <%= @domain.registrant_name %><br>
-<% if @domain.registrant.priv? %>
-  Isikukood: <%= @domain.registrant_ident %><br>
+Nimi: <%= @params[:registrant_name] %><br>
+<% if @params[:registrant_priv] %>
+  Isikukood: <%= @params[:registrant_ident] %><br>
 <% else %>
-  Äriregistrikood: <%= @domain.registrant_ident %><br>
+  Äriregistrikood: <%= @params[:registrant_ident] %><br>
 <% end %>
-Tänav: <%= @domain.registrant_street %><br>
-Linn: <%= @domain.registrant_city %><br>
-Riik: <%= @domain.registrant_country %>
+Tänav: <%= @params[:registrant_street] %><br>
+Linn: <%= @params[:registrant_city] %><br>
+Riik: <%= @params[:registrant_country] %>
 <br><br>
-Juhime Teie tähelepanu asjaolule, et omanikuvahetuse protseduur viiaks lõpule vaid juhul, kui domeeni hetkel kehtiv registreerija <%= @old_registrant.name %> omanikuvahetuse tähtaegselt kinnitab.
+Juhime Teie tähelepanu asjaolule, et omanikuvahetuse protseduur viiaks lõpule vaid juhul, kui domeeni hetkel kehtiv registreerija <%= @params[:old_registrant_name] %> omanikuvahetuse tähtaegselt kinnitab.
 <br><br>
-Juhul kui <%= @old_registrant.name %> lükkab omanikuvahtuse taotluse tagasi või ei anna kinnitust enne <%= Setting.expire_pending_confirmation %> tundi, omanikuvahetuse protseduur tühistatakse.
+Juhul kui <%= @params[:old_registrant_name] %> lükkab omanikuvahtuse taotluse tagasi või ei anna kinnitust enne <%= Setting.expire_pending_confirmation %> tundi, omanikuvahetuse protseduur tühistatakse.
 <br><br>
-Küsimuste korral palun võtke ühendust registripidajaga <%= @domain.registrar_name %>, kelle kontaktid leiate http://internet.ee/registripidajad/akrediteeritud-registripidajad
+Küsimuste korral palun võtke ühendust registripidajaga <%= @params[:registrar_name] %>, kelle kontaktid leiate http://internet.ee/registripidajad/akrediteeritud-registripidajad
 <br><br>
 Lugupidamisega<br>
 Eesti Interneti SA
@@ -28,20 +28,20 @@ Eesti Interneti SA
 <br><br>
 Hi,
 <br><br>
-Registrant change process for the domain <%= @domain.name %> has been started.
+Registrant change process for the domain <%= @params[:name] %> has been started.
 <br><br>
 New registrant:<br>
-Name: <%= @domain.registrant_name %><br>
-<% if @domain.registrant.priv? %>
-Personal code: <%= @domain.registrant_ident %><br>
+Name: <%= @params[:registrant_name] %><br>
+<% if @params[:registrant_priv] %>
+Personal code: <%= @params[:registrant_ident] %><br>
 <% else %>
-Business Registry code: <%= @domain.registrant_ident %><br>
+Business Registry code: <%= @params[:registrant_ident] %><br>
 <% end %>
-Street: <%= @domain.registrant_street %><br>
-City: <%= @domain.registrant_city %><br>
-Country: <%= @domain.registrant_country %>
+Street: <%= @params[:registrant_street] %><br>
+City: <%= @params[:registrant_city] %><br>
+Country: <%= @params[:registrant_country] %>
 <br><br>
-Please contact to your registrar <%= @domain.registrar_name %> if you have any questions.
+Please contact to your registrar <%= @params[:registrar_name] %> if you have any questions.
 <br><br>
 Best Regards,<br>
 Estonian Internet Foundation

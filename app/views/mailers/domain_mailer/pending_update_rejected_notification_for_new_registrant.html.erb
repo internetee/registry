@@ -1,8 +1,8 @@
 Tere,
 <br><br>
-Domeeni <%= @domain.name %> registreerija <%= @new_registrant_name %> on domeeni registreerija vahetamise taotluse tagasi lükanud.
+Domeeni <%= @params[:name] %> registreerija <%= @params[:new_registrant_name] %> on domeeni registreerija vahetamise taotluse tagasi lükanud.
 <br><br>
-Küsimuste korral palun võtke ühendust registripidajaga <%= @domain.registrar_name %>, kelle kontaktid leiate http://internet.ee/registripidajad/akrediteeritud-registripidajad
+Küsimuste korral palun võtke ühendust registripidajaga <%= @params[:registrar_name] %>, kelle kontaktid leiate http://internet.ee/registripidajad/akrediteeritud-registripidajad
 <br><br>
 Lugupidamisega,<br>
 Eesti Interneti SA
@@ -11,9 +11,9 @@ Eesti Interneti SA
 <br><br>
 Hi,
 <br><br>
-Registrant change was declined for the domain <%= @domain.name %>.
+Registrant change was declined for the domain <%= @params[:name] %>.
 <br><br>
-Please contact to your registrar <%= @domain.registrar_name %> if you have any questions.
+Please contact to your registrar <%= @params[:registrar_name] %> if you have any questions.
 <br><br>
 Best Regards,<br>
 Estonian Internet Foundation
