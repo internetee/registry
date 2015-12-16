@@ -32,7 +32,7 @@ Registrant change process for the domain <%= @params[:name] %> has been started.
 
 New registrant:
 Name: <%= @params[:registrant_name] %>
-<% if @params[:registrant.priv?] %>
+<% if @params[:registrant_priv] %>
 Personal code: <%= @params[:registrant_ident] %>
 <% else %>
 Business Registry code: <%= @params[:registrant_ident] %>

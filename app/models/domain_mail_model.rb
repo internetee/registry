@@ -47,6 +47,7 @@ class DomainMailModel
   def pending_update_expired_notification_for_new_registrant
     registrant_pending
     subject(:pending_update_expired_notification_for_new_registrant_subject)
+    domain_info
     compose
   end
 
@@ -96,7 +97,7 @@ class DomainMailModel
   end
 
   def registrant_pending
-    @params[:new_registrant_emai] = @domain.pending_json['new_registrant_email']
+    @params[:recipient] = @domain.pending_json['new_registrant_email']
     @params[:new_registrant_name] = @domain.pending_json['new_registrant_name']
   end
   
@@ -130,8 +131,6 @@ class DomainMailModel
     @params
   end
   
-  #private
-  
   def verification_url(path)
     token = verification_token or return
     @params[:verification_url] = "#{ENV['registrant_url']}/registrant/#{path}/#{@domain.id}?token=#{token}"
@@ -151,7 +150,7 @@ class DomainMailModel
       @params.store attr, @domain.send(attr)
     end
     @params.store :registrant_priv, @domain.registrant.priv?
-    @params.store old_registrant_name, Registrant.find(@domain.registrant_id_was).name
+    @params.store :old_registrant_name, Registrant.find(@domain.registrant_id_was).name
     @params
   end
 
