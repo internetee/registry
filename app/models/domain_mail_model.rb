@@ -97,7 +97,7 @@ class DomainMailModel
   end
 
   def registrant_pending
-    @params[:recipient] = @domain.pending_json['new_registrant_email']
+    @params[:recipient] = format @domain.pending_json['new_registrant_email']
     @params[:new_registrant_name] = @domain.pending_json['new_registrant_name']
   end
   
@@ -109,6 +109,7 @@ class DomainMailModel
 
   # puny internet domain name, TODO: username<email>
   def format(email)
+    return warn_no_email if email.nil?
     user, host = email.split('@')
     host = SimpleIDN.to_ascii(host)
     "#{user}@#{host}"
@@ -154,9 +155,8 @@ class DomainMailModel
     @params
   end
 
-  def warn_no_email(item)
-    #reason = "#{item.to_s} for #{@domain.name}"
-    warn_not_delivered item #reason
+  def warn_no_email(item = 'email')
+    warn_missing item
     nil
   end
       
