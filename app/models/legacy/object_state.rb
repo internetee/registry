@@ -1,6 +1,9 @@
 module Legacy
   class ObjectState < Db
     self.table_name = :object_state
+    attr_accessor :history_domain
+
+    scope :valid, -> { where('valid_to IS NULL') }
 
     # legacy values. Just for log
     # 2 => "serverRenewProhibited",
@@ -76,6 +79,82 @@ module Legacy
       }
 
       map[state_id]
+    end
+
+    def get_current_domain_object(time, param)
+      d_his = Legacy::DomainHistory.get_record_at(object_id, historyid)
+      @history_domain = d_his
+
+      hash  = d_his.get_current_domain_object(time, param)
+      hash[:statuses] = Legacy::ObjectState.states_for_domain_at(object_id, time + 1)
+
+      hash
+    end
+
+    def get_current_contact_object(time, param)
+      d_his = Legacy::ContactHistory.get_record_at(object_id, historyid)
+      hash  = d_his.get_current_contact_object(time, param)
+      hash[:statuses] = Legacy::ObjectState.states_for_contact_at(object_id, time + 1)
+
+      hash
+    end
+
+    class << self
+       def changes_dates_for domain_id
+         sql = %Q{SELECT distinct t_2.id, state.id state_dot_id, state.*,
+                    extract(epoch from valid_from) valid_from_unix, extract(epoch from valid_to) valid_to_unix
+                    FROM object_history t_2
+                      JOIN object_state state ON (t_2.historyid >= state.ohid_from
+                                                  AND (t_2.historyid <= state.ohid_to OR state.ohid_to IS NULL))
+                                                 AND t_2.id = state.object_id
+                    WHERE state.object_id=#{domain_id};}
+         hash = {}
+         find_by_sql(sql).each do |rec|
+           hash[rec.valid_from.try(:to_time)] = [{id: rec.state_dot_id, klass: self, param: :valid_from}] if rec.valid_from
+           hash[rec.valid_to.try(:to_time)]   = [{id: rec.state_dot_id, klass: self, param: :valid_to}]   if rec.valid_to
+         end
+         hash
+       end
+
+      def get_record_at domain_id, rec_id
+        sql = %Q{SELECT distinct t_2.historyid, state.*
+                    FROM object_history t_2
+                      JOIN object_state state ON (t_2.historyid >= state.ohid_from
+                                                  AND (t_2.historyid <= state.ohid_to OR state.ohid_to IS NULL))
+                                                 AND t_2.id = state.object_id
+                    WHERE state.object_id=#{domain_id} AND  state.id = #{rec_id};}
+        find_by_sql(sql).first
+      end
+
+      def states_for_domain_at(domain_id, time)
+        sql = %Q{SELECT state.*
+          FROM object_history t_2
+            JOIN object_state state ON (t_2.historyid >= state.ohid_from
+                                        AND (t_2.historyid <= state.ohid_to OR state.ohid_to IS NULL))
+                                       AND t_2.id = state.object_id
+          WHERE state.object_id=#{domain_id}
+            AND (valid_from is null or valid_from <= '#{time.to_s}'::TIMESTAMPTZ)
+            AND (valid_to is null or valid_to >= '#{time}'::TIMESTAMPTZ)
+          }
+        arr = find_by_sql(sql).uniq
+        arr.map!(&:name) if arr.any?
+        arr.present? ? arr : [::DomainStatus::OK]
+      end
+
+
+      def states_for_contact_at(contact_id, time)
+        sql = %Q{SELECT state.*
+          FROM object_history t_2
+            JOIN object_state state ON (t_2.historyid >= state.ohid_from
+                                        AND (t_2.historyid <= state.ohid_to OR state.ohid_to IS NULL))
+                                       AND t_2.id = state.object_id
+          WHERE state.object_id=#{contact_id}
+            AND (valid_from is null or valid_from <= '#{time.to_s}'::TIMESTAMPTZ)
+            AND (valid_to is null or valid_to >= '#{time}'::TIMESTAMPTZ)
+          }
+
+        (find_by_sql(sql).uniq.to_a.map(&:name) + [::Contact::OK]).compact.uniq
+      end
     end
   end
 end
