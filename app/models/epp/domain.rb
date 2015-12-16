@@ -502,10 +502,13 @@ class Epp::Domain < Domain
   # rubocop: enable Metrics/CyclomaticComplexity
 
   def apply_pending_update!
-    old_registrant_email = DomainMailer.registrant_updated_notification_for_old_registrant(id, deliver_emails)
     preclean_pendings
     user  = ApiUser.find(pending_json['current_user_id'])
     frame = Nokogiri::XML(pending_json['frame'])
+
+    self.deliver_emails = true # turn on email delivery
+    send_mail :registrant_updated_notification_for_old_registrant
+
     statuses.delete(DomainStatus::PENDING_UPDATE)
     yield(self) if block_given? # need to skip statuses check here
     self.save
@@ -513,9 +516,8 @@ class Epp::Domain < Domain
     ::PaperTrail.whodunnit = user.id_role_username # updator str should be the request originator not the approval user
     return unless update(frame, user, false)
     clean_pendings!
-    self.deliver_emails = true # turn on email delivery
-    DomainMailer.registrant_updated_notification_for_new_registrant(id, deliver_emails).deliver
-    old_registrant_email.deliver
+
+    send_mail :registrant_updated_notification_for_new_registrant
     true
   end
 

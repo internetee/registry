@@ -1,9 +1,9 @@
 Tere,
 <br><br>
-Domeeni <%= @domain.name %> registreerija vahetuse taotlus on kinnitatud ning andmed registris uuendatud.
+Domeeni <%= @params[:name] %> registreerija vahetuse taotlus on kinnitatud ning andmed registris uuendatud.
 <br><br>
 Uued registreerija:<br>
-Nimi: <%= @domain.registrant_name %>
+Nimi: <%= @params[:new_registrant_name] %>
 <br><br>
 Lugupidamisega<br>
 Eesti Interneti SA
@@ -12,10 +12,10 @@ Eesti Interneti SA
 <br><br>
 Hi,
 <br><br>
-Process for changing registrant of the domain <%= @domain.name %> has been approved and the data in the registry is updated.
+Process for changing registrant of the domain <%= @params[:name] %> has been approved and the data in the registry is updated.
 <br><br>
 New registrant:<br>
-Name: <%= @domain.registrant_name %>
+Name: <%= @params[:new_registrant_name] %>
 <br><br>
 Best Regards,<br>
 Estonian Internet Foundation
