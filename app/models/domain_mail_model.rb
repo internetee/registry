@@ -15,8 +15,7 @@ class DomainMailModel
   end
 
   def pending_update_notification_for_new_registrant
-    # NB! new registrant at this point 
-    registrant
+    registrant     # new registrant at this point 
     subject(:pending_update_notification_for_new_registrant_subject)
     domain_info
     compose
@@ -30,16 +29,16 @@ class DomainMailModel
   end
 
   def registrant_updated_notification_for_old_registrant
+    registrant_pending
     registrant_old
     subject(:registrant_updated_notification_for_old_registrant_subject)
-    registrant_name
     compose
   end
   
   def pending_update_rejected_notification_for_new_registrant
     registrant_pending
     subject(:pending_update_rejected_notification_for_new_registrant_subject)
-    @params[:deliver_emails] = true # trigger from que
+    @params[:deliver_emails] = true # triggered from que
     @params[:registrar_name] = @domain.registrar.name
     compose
   end
@@ -90,10 +89,6 @@ class DomainMailModel
       
   def registrant
     @params[:recipient] = format @domain.registrant.email
-  end
-
-  def registrant_name
-    @params[:registrant_name] = @domain.registrant.name
   end
 
   def registrant_pending
