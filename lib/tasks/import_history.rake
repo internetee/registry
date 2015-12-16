@@ -128,7 +128,6 @@ namespace :import do
               if (old_val = last_changes.to_h[k]) != v then changes[k] = [old_val, v] end
             end
             next if changes.blank? && event != :destroy
-            responder.import_nameservers_history(domain, time) if responder.respond_to?(:import_nameservers_history)
 
             DomainVersion.create!(
                 item_type: domain.class,
@@ -141,7 +140,7 @@ namespace :import do
                 children: {
                     admin_contacts: responder.history_domain.get_admin_contact_new_ids,
                     tech_contacts:  responder.history_domain.get_tech_contact_new_ids,
-                    nameservers:    [],
+                    nameservers:    responder.history_domain.import_nameservers_history(domain, time),
                     dnskeys:        responder.history_domain.import_dnskeys_history(domain, time),
                     registrant:     [responder.history_domain.new_registrant_id]
                 }

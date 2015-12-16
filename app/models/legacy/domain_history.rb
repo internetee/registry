@@ -3,6 +3,7 @@ module Legacy
     self.table_name = :domain_history
     self.primary_key = :id
     class_attribute :dnssecs
+    class_attribute :namesrvs
 
     belongs_to :object_registry, foreign_key: :id
     belongs_to :object, foreign_key: :id
@@ -65,63 +66,104 @@ module Legacy
 
     # returns imported nameserver ids
     def import_nameservers_history(new_domain, time)
-      # #removing previous nameservers
-      # NameserverVersion.where("object_changes->>'legacy_domain_id' = '[nil,#{id}]'").where(event: :create).where("created_at <= ?", time).each do |nv|
-      #   if NameserverVersion.where(item_type: nv.item_type, item_id: nv.item_id, event: :destroy).none?
-      #     NameserverVersion.create!(
-      #         item_type: nv.item_type,
-      #         item_id:   nv.item_id,
-      #         event:     :destroy,
-      #         whodunnit: user.try(:id),
-      #         object:    nv.object_changes.each_with_object({}){|(k,v),hash| hash[k] = v.last },
-      #         object_changes: {},
-      #         created_at: time
-      #     )
-      #   end
-      # end
+      self.class.namesrvs ||= {}
+      self.class.namesrvs[id] ||= {}
+      ids = []
 
-
-      if (nssets = nsset_histories.at(time).to_a).any?
-        ids = []
-        nssets.each do |nsset|
-          nsset.host_histories.at(time).each do |host|
-            ips = {ipv4: [],ipv6: []}
-            host.host_ipaddr_map_histories.at(time).each do |ip_map|
-              next unless ip_map.ipaddr
-              ips[:ipv4] << ip_map.ipaddr.to_s.strip if ip_map.ipaddr.ipv4?
-              ips[:ipv6] << ip_map.ipaddr.to_s.strip if ip_map.ipaddr.ipv6?
-            end
-
-            server = {
-                id: Nameserver.next_id,
-                hostname: host.fqdn.try(:strip),
-                ipv4: ips[:ipv4],
-                ipv6: ips[:ipv6],
-                creator_str: object_registry.try(:registrar).try(:name),
-                updator_str: object_history.try(:registrar).try(:name) || object_registry.try(:registrar).try(:name),
-                legacy_domain_id:  id,
-                domain_id: new_domain.id,
-                created_at: nsset.object_registry.try(:crdate),
-                updated_at: nsset.object_registry.try(:object_history).read_attribute(:update) || nsset.object_registry.try(:crdate)
-            }
-
-            NameserverVersion.create!(
-                item_type: Nameserver.to_s,
-                item_id:   server[:id],
-                event:     :create,
-                whodunnit: user.try(:id),
-                object:    nil,
-                object_changes: server.each_with_object({}){|(k,v), h| h[k] = [nil, v]},
-                created_at: time
-            )
-            ids << server[:id]
+      nsset_histories.at(time).to_a.each do |nsset|
+        nsset.host_histories.at(time).each do |host|
+          ips = {ipv4: [],ipv6: []}
+          host.host_ipaddr_map_histories.where.not(ipaddr: nil).at(time).each do |ip_map|
+            ips[:ipv4] << ip_map.ipaddr.to_s.strip if ip_map.ipaddr.ipv4?
+            ips[:ipv6] << ip_map.ipaddr.to_s.strip if ip_map.ipaddr.ipv6?
           end
 
+          main_attrs = {
+              hostname: SimpleIDN.to_unicode(host.fqdn.try(:strip)),
+              ipv4: ips[:ipv4].sort,
+              ipv6: ips[:ipv6].sort,
+              legacy_domain_id:  id,
+              domain_id: new_domain.id,
+          }
+          server = main_attrs.merge(
+              creator_str: object_registry.try(:registrar).try(:name),
+              updator_str: object_history.try(:registrar).try(:name) || object_registry.try(:registrar).try(:name),
+              created_at: nsset.object_registry.try(:crdate),
+              updated_at: nsset.object_registry.try(:object_history).read_attribute(:update) || nsset.object_registry.try(:crdate)
+          )
+
+
+          if val = self.class.namesrvs[id][main_attrs]
+            ids << val
+          else # if not found we should check current dnssec and historical if changes were done
+            # firstly we need to select the first historical object to take the earliest from create or destroy
+            if version = ::NameserverVersion.where("object->>'domain_id'='#{main_attrs[:domain_id]}'").where("object->>'legacy_domain_id'='#{main_attrs[:legacy_domain_id]}'").where("object->>'hostname'='#{main_attrs[:hostname]}'").reorder("created_at ASC").first
+              server[:id] = version.item_id.to_i
+              version.item.versions.where(event: :create).first_or_create!(
+                  whodunnit: user.try(:id),
+                  object: nil,
+                  object_changes: server.each_with_object({}){|(k,v), h| h[k] = [nil, v]},
+                  created_at: time
+              )
+              if !version.ipv4.sort.eql?(main_attrs[:ipv4]) || !version.ipv6.sort.eql?(main_attrs[:ipv6])
+                object_changes = {}
+                server.stringify_keys.each{|k, v| object_changes[k] = [v, version.object[k]] if v != version.object[k] }
+                version.item.versions.where(event: :update).create!(
+                    whodunnit: user.try(:id),
+                    object: server,
+                    object_changes: object_changes,
+                    created_at: time
+                )
+              end
+
+            # if no historical data - try to load existing
+            elsif (list = ::Nameserver.where(domain_id: main_attrs[:domain_id], legacy_domain_id: main_attrs[:legacy_domain_id], hostname: main_attrs[:hostname]).to_a).any?
+              if new_no_version = list.detect{|e|e.versions.where(event: :create).none?} # no create version, so was created via import
+                server[:id] = new_no_version.id.to_i
+                new_no_version.versions.where(event: :create).first_or_create!(
+                    whodunnit: user.try(:id),
+                    object: nil,
+                    object_changes: server.each_with_object({}){|(k,v), h| h[k] = [nil, v]},
+                    created_at: time
+                )
+                if !new_no_version.ipv4.sort.eql?(main_attrs[:ipv4]) || !new_no_version.ipv6.sort.eql?(main_attrs[:ipv6])
+                  object_changes = {}
+                  server.stringify_keys.each{|k, v| object_changes[k] = [v, new_no_version.attributes[k]] if v != new_no_version.attributes[k] }
+                  new_no_version.versions.where(event: :update).create!(
+                      whodunnit: user.try(:id),
+                      object: server,
+                      object_changes: object_changes,
+                      created_at: time
+                  )
+                end
+              else
+                server[:id] = ::Nameserver.next_id
+                create_nameserver_history(server,time)
+              end
+
+            else
+              server[:id] = ::Nameserver.next_id
+              create_nameserver_history(server,time)
+            end
+            self.class.namesrvs[id][main_attrs] = server[:id]
+            ids << server[:id]
+
+          end
         end
-        ids
-      else
-        []
+
       end
+      ids
+    end
+
+    def create_nameserver_history server, time
+      ::NameserverVersion.where(item_id: server[:id], item_type: ::Nameserver.to_s).where(event: :create).first_or_create!(
+          whodunnit: user.try(:id), object: nil, created_at: time,
+          object_changes: server.each_with_object({}){|(k,v), h| h[k] = [nil, v]},
+      )
+      ::NameserverVersion.where(item_id: server[:id], item_type: ::Nameserver.to_s).where(event: :destroy).create!(
+          whodunnit: user.try(:id), object: server, created_at: Time.now + 2.days,
+          object_changes: {},
+      )
     end
 
     # returns imported dnskey ids
@@ -134,7 +176,7 @@ module Legacy
         if val = self.class.dnssecs[id][dns]
           ids << val
         else # if not found we should check current dnssec and historical if changes were done
-          # if current object wan't changed
+          # if current object wasn't changed
           if item=::Dnskey.where(dns.new_object_mains(new_domain)).first
             item.versions.where(event: :create).first_or_create!(dns.historical_data(self, new_domain))
             self.class.dnssecs[id][dns] = item.id
@@ -184,12 +226,7 @@ module Legacy
       end
 
 
-      # def last_history_action domain_id
-      #   sql = %Q{SELECT  dh.*, h.valid_from, h.valid_to
-      #       from domain_history dh JOIN history h ON dh.historyid=h.id
-      #       where dh.id=#{domain_id} order by dh.historyid desc limit 1;}
-      #   find_by_sql(sql).first
-      # end
+
     end
   end
 end

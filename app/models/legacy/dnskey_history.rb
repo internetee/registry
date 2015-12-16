@@ -43,7 +43,7 @@ module Legacy
 
     def historical_data(old_domain, new_domain, time_attr = :valid_from)
       {
-          whodunnit: old_domain.history_domain.user.try(:id),
+          whodunnit: old_domain.user.try(:id),
           object: nil,
           object_changes: new_object_hash(old_domain, new_domain).each_with_object({}){|(k,v), h| h[k] = [nil, v]},
           created_at: [try(time_attr), old_domain.try(time_attr)].max
