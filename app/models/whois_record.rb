@@ -44,7 +44,7 @@ class WhoisRecord < ActiveRecord::Base
     h[:changed]    = domain.updated_at.try(:to_s, :iso8601)
     h[:expire]     = domain.valid_to.try(:to_date).try(:to_s)
     h[:outzone]    = domain.outzone_at.try(:to_date).try(:to_s)
-    h[:delete]     = domain.delete_at.try(:to_date).try(:to_s)
+    h[:delete]     = [domain.delete_at, domain.force_delete_at].compact.min.try(:to_date).try(:to_s)
 
 
     h[:registrant]       = domain.registrant.name
