@@ -4,6 +4,7 @@ Domeeni <%= @params[:name] %> registreerija vahetuse taotlus on kinnitatud ning 
 
 Uued registreerija:
 Nimi: <%= @params[:new_registrant_name] %>
+
 <% if @params[:registrant_priv] %>
 Isikukood: <%= @params[:registrant_ident] %>
 <% else %>
@@ -25,6 +26,7 @@ Process for changing registrant of the domain <%= @params[:name] %> has been app
 
 New registrant:
 Name: <%= @params[:new_registrant_name] %>
+
 <% if @params[:registrant_priv] %>
 Personal code: <%= @params[:registrant_ident] %>
 <% else %>

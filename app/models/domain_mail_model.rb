@@ -32,7 +32,13 @@ class DomainMailModel
     registrant_pending
     registrant_old
     subject(:registrant_updated_notification_for_old_registrant_subject)
-    domain_info
+    new_registrant = Registrant.find @domain.pending_json['new_registrant_id']
+    @params[:registrant_name] = new_registrant.name
+    @params[:registrant_ident] = new_registrant.ident
+    @params[:registrant_priv] = new_registrant.priv?
+    @params[:registrant_email] = new_registrant.email
+    @params[:registrant_street] = new_registrant.street
+    @params[:registrant_city] = new_registrant.city
     compose
   end
   
