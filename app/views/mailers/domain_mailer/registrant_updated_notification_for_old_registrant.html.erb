@@ -3,7 +3,7 @@ Tere,
 Domeeni <%= @params[:name] %> registreerija vahetuse taotlus on kinnitatud ning andmed registris uuendatud.
 <br><br>
 Uued registreerija:<br>
-Nimi: <%= @params[:new_registrant_name] %>
+Nimi: <%= @params[:new_registrant_name] %><br>
 <% if @params[:registrant_priv] %>
 Isikukood: <%= @params[:registrant_ident] %><br>
 <% else %>
@@ -24,7 +24,7 @@ Hi,
 Process for changing registrant of the domain <%= @params[:name] %> has been approved and the data in the registry is updated.
 <br><br>
 New registrant:<br>
-Name: <%= @params[:new_registrant_name] %>
+Name: <%= @params[:new_registrant_name] %><br>
 <% if @params[:registrant_priv] %>
 Personal code: <%= @params[:registrant_ident] %><br>
 <% else %>
