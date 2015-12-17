@@ -39,6 +39,7 @@ class DomainMailModel
     @params[:registrant_email] = new_registrant.email
     @params[:registrant_street] = new_registrant.street
     @params[:registrant_city] = new_registrant.city
+    @params[:registrant_country] = new_registrant.country.name
     compose
   end
   
