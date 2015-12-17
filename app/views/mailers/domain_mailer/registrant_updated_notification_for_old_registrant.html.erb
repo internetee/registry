@@ -4,6 +4,15 @@ Domeeni <%= @params[:name] %> registreerija vahetuse taotlus on kinnitatud ning 
 <br><br>
 Uued registreerija:<br>
 Nimi: <%= @params[:new_registrant_name] %>
+<% if @params[:registrant_priv] %>
+Isikukood: <%= @params[:registrant_ident] %><br>
+<% else %>
+Äriregistrikood: <%= @params[:registrant_ident] %><br>
+<% end %>
+Epost: <%= @params[:registrant_email] %><br>
+Tänav: <%= @params[:registrant_street] %><br>
+Linn: <%= @params[:registrant_city] %><br>
+Riik: <%= @params[:registrant_country] %>
 <br><br>
 Lugupidamisega<br>
 Eesti Interneti SA
@@ -16,6 +25,15 @@ Process for changing registrant of the domain <%= @params[:name] %> has been app
 <br><br>
 New registrant:<br>
 Name: <%= @params[:new_registrant_name] %>
+<% if @params[:registrant_priv] %>
+Personal code: <%= @params[:registrant_ident] %><br>
+<% else %>
+Business Registry code: <%= @params[:registrant_ident] %><br>
+<% end %>
+E-mail: <%= @params[:registrant_email] %><br>
+Street: <%= @params[:registrant_street] %><br>
+City: <%= @params[:registrant_city] %><br>
+Country: <%= @params[:registrant_country] %>
 <br><br>
 Best Regards,<br>
 Estonian Internet Foundation
