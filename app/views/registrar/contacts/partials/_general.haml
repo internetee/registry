@@ -6,7 +6,7 @@
       %dt= t(:id)
       %dd= @contact.id
 
-      %dt= t(:password)
+      %dt= t(:authinfo_pw)
       %dd
         = text_field_tag :password, @contact.password, readonly: true, class: 'partially-hidden'
 
