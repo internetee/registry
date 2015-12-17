@@ -32,6 +32,7 @@ class DomainMailModel
     registrant_pending
     registrant_old
     subject(:registrant_updated_notification_for_old_registrant_subject)
+    domain_info
     compose
   end
   
