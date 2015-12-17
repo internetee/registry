@@ -113,7 +113,7 @@ class DomainMailModel
 
   def subject(subject)
     @params[:name] = @domain.name
-    @params[:subject] = I18n.t(subject, name: @domain.name)
+    @params[:subject] = "#{I18n.t(subject, name: @domain.name)}, [#{@domain.name}]"
   end
 
   def confirm_update
