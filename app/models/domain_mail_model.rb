@@ -142,10 +142,11 @@ class DomainMailModel
   def domain_info
     [:name, :registrar_name,
      :registrant_name, :registrant_ident, :registrant_email,
-     :registrant_street,:registrant_city, :registrant_country
+     :registrant_street,:registrant_city
     ].each do |attr|
       @params.store attr, @domain.send(attr)
     end
+    @params.store :registrant_country, @domain.registrant_country.name
     @params.store :registrant_priv, @domain.registrant.priv?
     @params.store :old_registrant_name, Registrant.find(@domain.registrant_id_was).name
     @params
