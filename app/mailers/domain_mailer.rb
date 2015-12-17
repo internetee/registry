@@ -1,7 +1,7 @@
 class DomainMailer < ApplicationMailer
   include Que::Mailer
 
-  def pending_update_request_for_old_registrant(domain_id, old_registrant_id, should_deliver)
+  def pending_update_request_for_old_registrant(domain_id, old_registrant_id, new_registrant_id, should_deliver)
     @domain = Domain.find_by(id: domain_id)
     @old_registrant = Registrant.find(old_registrant_id)
     return unless @domain
@@ -26,9 +26,11 @@ class DomainMailer < ApplicationMailer
          name: @domain.name)} [#{@domain.name}]")
   end
 
-  def pending_update_notification_for_new_registrant(domain_id, old_registrant_id, should_deliver)
+  def pending_update_notification_for_new_registrant(domain_id, old_registrant_id, new_registrant_id, should_deliver)
     @domain = Domain.find_by(id: domain_id)
     @old_registrant = Registrant.find(old_registrant_id)
+    @new_registrant = Registrant.find(new_registrant_id)
+
     return unless @domain
     return if delivery_off?(@domain, should_deliver)
 
@@ -42,7 +44,6 @@ class DomainMailer < ApplicationMailer
       return
     end
 
-    @new_registrant = @domain.registrant # NB! new registrant at this point
 
     return if whitelist_blocked?(@new_registrant.email)
     mail(to: format(@new_registrant.email),
