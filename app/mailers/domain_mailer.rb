@@ -25,19 +25,6 @@ class DomainMailer < ApplicationMailer
     compose_from(params)
   end
 
-  # app/models/DomainMailModel provides the data for mail that can be composed_from
-  # which ensures that values of objects are captured when they are valid, not later when this method is executed
-  def compose_from(params)
-    @params = params
-    return if delivery_off?(params, params[:deliver_emails])
-    return if whitelist_blocked?(params[:recipient])
-    params[:errors].map do |error|
-      logger.warn error
-      return
-    end
-    mail(to: params[:recipient], subject: params[:subject])
-  end
-
   def pending_deleted(domain_id, old_registrant_id, should_deliver)
     @domain = Domain.find_by(id: domain_id)
     @old_registrant = Registrant.find(old_registrant_id)
@@ -128,5 +115,19 @@ class DomainMailer < ApplicationMailer
     mail(to: formatted_emails,
          subject: "#{I18n.t(:force_delete_subject)}"
         )
+  end
+
+  private
+  # app/models/DomainMailModel provides the data for mail that can be composed_from
+  # which ensures that values of objects are captured when they are valid, not later when this method is executed
+  def compose_from(params)
+    @params = params
+    return if delivery_off?(params, params[:deliver_emails])
+    return if whitelist_blocked?(params[:recipient])
+    params[:errors].map do |error|
+      logger.warn error
+      return
+    end
+    mail(to: params[:recipient], subject: params[:subject])
   end
 end
