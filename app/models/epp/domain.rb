@@ -518,6 +518,7 @@ class Epp::Domain < Domain
     clean_pendings!
 
     send_mail :registrant_updated_notification_for_new_registrant
+    update_whois_record
     true
   end
 
