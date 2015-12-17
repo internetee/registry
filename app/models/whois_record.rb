@@ -113,6 +113,6 @@ class WhoisRecord < ActiveRecord::Base
   end
 
   def destroy_whois_record
-    Whois::Record.where(name: name).delete_all()
+    Whois::Record.where(name: name).delete_all
   end
 end
