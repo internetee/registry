@@ -81,7 +81,7 @@ namespace :import do
   desc 'Import domain history'
   task history_domains: :environment do
     Domain.transaction do
-      Legacy::DomainHistory.uniq.where(id: 294516).pluck(:id).each do |legacy_domain_id|
+      Legacy::DomainHistory.uniq.pluck(:id).each do |legacy_domain_id|
         domain   = Domain.find_by(legacy_id: legacy_domain_id)
         version_domain = DomainVersion.where("object->>'legacy_id' = '#{legacy_domain_id}'").select(:item_id).first
         domain ||= Domain.new(id: version_domain.item_id, legacy_id: legacy_domain_id) if version_domain
