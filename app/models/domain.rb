@@ -239,7 +239,7 @@ class Domain < ActiveRecord::Base
         end
         count += 1
         if domain.pending_update?
-          send_mail :pending_update_expired_notification_for_new_registrant
+          domain.send_mail :pending_update_expired_notification_for_new_registrant
         end
         if domain.pending_delete? || domain.pending_delete_confirmation?
           DomainMailer.pending_delete_expired_notification(domain.id, true).deliver
