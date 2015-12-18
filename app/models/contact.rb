@@ -58,7 +58,7 @@ class Contact < ActiveRecord::Base
   before_save :manage_statuses
   def manage_statuses
     if domain_transfer # very ugly but need better workflow
-      self.statuses = [OK, LINKED]
+      self.statuses = statuses | [OK, LINKED]
       return
     end
 
