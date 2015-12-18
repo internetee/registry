@@ -14,6 +14,7 @@ class Admin::AccountActivitiesController < AdminController
 
     @q = AccountActivity.includes(:invoice, account: :registrar).search(params[:q])
     @q.sorts = 'id desc' if @q.sorts.empty?
+    @b = AccountActivity.where.not(id: @q.result.map(&:id))
 
     respond_to do |format|
       format.html { @account_activities = @q.result.page(params[:page]) }

@@ -36,6 +36,13 @@
             &nbsp;
           %button.btn.btn-default.js-reset-form
             = t(:clear_fields)
+.row
+  .col-md-3
+  .col-md-3
+  .col-md-2
+  .col-md-4{class: 'text-right'}
+    = t(:starting_balance)  + " #{@b.sum('sum').to_f} EUR"
+
 %hr
 
 .row
