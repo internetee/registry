@@ -488,7 +488,7 @@ class Contact < ActiveRecord::Base
   end
 
  def update_related_whois_records
-   related_domain_descriptions.each{ |x, y| WhoisRecord.find_by(name: x).save}
+   related_domain_descriptions.each{ |x, y| WhoisRecord.find_by(name: x).try(:save) }
  end	 
 
 end
