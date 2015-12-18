@@ -1,23 +1,30 @@
 module UserEvents
   extend ActiveSupport::Concern
 
-  # TODO: remove old
-  # module ClassMethods
-    # def registrar_events(id)
-      # registrar = Registrar.find(id)
-      # return [] unless registrar
-      # @events = []
-      # registrar.users.each { |user| @events << user_events(user.id) }
-      # registrar.epp_users.each { |user| @events << epp_user_events(user.id) }
-      # @events
-    # end
+  included do
+    # EPP requires a server defined creator ID, which should be registrar code if we have one
+    def cr_id
+      # try this, rebuild user for registrar before searching history? really?
+      registrar = self.creator.try(:registrar)
+      if registrar.present?            # Did creator return a kind of User that has a registrar?
+        registrar.code
+      else
+        if self.versions.first.try(:object).nil?
+          changes = self.versions.first.try(:object_changes)
+          cr_registrar_id = changes['registrar_id'].second if changes.present?
+        else
+          # untested, expected never to execute
+          cr_registrar_id = self.versions.first.object['registrar_id']
+        end
 
-    # def user_events(id)
-      # where(whodunnit: id.to_s)
-    # end
+        if cr_registrar_id.present?
+          Registrar.find(cr_registrar_id).code
+        else
+          # cr_id optional for domain, but required for contact; but we want something here anyway
+          self.creator_str # Fallback if we failed, maybe we can find a string here
+        end
+      end
+    end
+  end
 
-    # def epp_user_events(id)
-      # where(whodunnit: "#{id}-EppUser")
-    # end
-  # end
 end

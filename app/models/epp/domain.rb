@@ -2,6 +2,9 @@
 class Epp::Domain < Domain
   include EppErrors
 
+  # TODO: remove this spagetti once data in production is correct.
+  attr_accessor :is_renewal
+
   before_validation :manage_permissions
   def manage_permissions
     return unless update_prohibited? || delete_prohibited?
@@ -11,6 +14,8 @@ class Epp::Domain < Domain
 
   after_validation :validate_contacts
   def validate_contacts
+    return true if is_renewal
+
     ok = true
     active_admins = admin_domain_contacts.select { |x| !x.marked_for_destruction? }
     active_techs = tech_domain_contacts.select { |x| !x.marked_for_destruction? }
@@ -495,18 +500,23 @@ class Epp::Domain < Domain
   # rubocop: enable Metrics/CyclomaticComplexity
 
   def apply_pending_update!
-    old_registrant_email = DomainMailer.registrant_updated_notification_for_old_registrant(id, deliver_emails)
     preclean_pendings
     user  = ApiUser.find(pending_json['current_user_id'])
     frame = Nokogiri::XML(pending_json['frame'])
+
+    self.deliver_emails = true # turn on email delivery
+    send_mail :registrant_updated_notification_for_old_registrant
+
     statuses.delete(DomainStatus::PENDING_UPDATE)
     yield(self) if block_given? # need to skip statuses check here
+    self.save
 
+    ::PaperTrail.whodunnit = user.id_role_username # updator str should be the request originator not the approval user
     return unless update(frame, user, false)
     clean_pendings!
-    self.deliver_emails = true # turn on email delivery
-    DomainMailer.registrant_updated_notification_for_new_registrant(id, deliver_emails).deliver
-    old_registrant_email.deliver
+
+    send_mail :registrant_updated_notification_for_new_registrant
+    update_whois_record
     true
   end
 
@@ -564,6 +574,7 @@ class Epp::Domain < Domain
   ### RENEW ###
 
   def renew(cur_exp_date, period, unit = 'y')
+    @is_renewal = true
     validate_exp_dates(cur_exp_date)
 
     add_epp_error('2105', nil, nil, I18n.t('object_is_not_eligible_for_renewal')) unless renewable?

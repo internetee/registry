@@ -14,10 +14,10 @@ delete:     <%= json['delete'].to_s.tr('T',' ').sub('+', ' +') %>
 Registrant:
 name:    <%= json['registrant'] %>
 email:   Not Disclosed - Visit www.internet.ee for webbased WHOIS
-changed: <%= json['changed'].to_s.tr('T',' ').sub('+', ' +') %>
+changed: <%= json['registrant_changed'].to_s.tr('T',' ').sub('+', ' +') %>
 
 <%- if json['admin_contacts'].present? -%>
-Administrative contact
+Administrative contact:
 <%- for contact in json['admin_contacts'] -%>
 name:       <%= contact['name'] %>
 email:      Not Disclosed - Visit www.internet.ee for webbased WHOIS

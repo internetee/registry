@@ -904,7 +904,7 @@ en:
   edit_zone: 'Edit zone'
   there_are_count_domains_in_this_zone: 'There are %{count} domains in this zone'
   poll_pending_update_confirmed_by_registrant: 'Registrant confirmed domain update'
-  poll_pending_update_rejected_by_registranti: 'Registrant rejected domain update'
+  poll_pending_update_rejected_by_registrant: 'Registrant rejected domain update'
   poll_pending_delete_rejected_by_registrant: 'Registrant rejected domain deletion'
   poll_pending_delete_confirmed_by_registrant: 'Registrant confirmed domain deletion'
   manage: Manage
@@ -925,3 +925,4 @@ en:
   list_format_is_in_yaml: 'List format is in YAML'
   if_auth_info_is_left_empty_it_will_be_auto_generated: 'If auth info is left empty, it will be auto generated.'
   each_domain_name_must_end_with_colon_sign: 'Each domain name must end with colon (:) sign.'
+  expiration_remind_subject: 'The %{name} domain has expired'

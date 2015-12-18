@@ -67,13 +67,14 @@ Rails.application.routes.draw do
       # end
     # end
 
-    resources :contacts do
+    resources :contacts, constraints: {:id => /[^\/]+(?=#{ ActionController::Renderers::RENDERERS.map{|e| "\\.#{e}\\z"}.join("|") })|[^\/]+/} do
       member do
         get 'delete'
       end
 
       collection do
         get 'check'
+        get 'download_list'
       end
     end
 

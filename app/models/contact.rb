@@ -1,6 +1,7 @@
 class Contact < ActiveRecord::Base
   include Versions # version/contact_version.rb
   include EppErrors
+  include UserEvents
 
   belongs_to :registrar
   has_many :domain_contacts
@@ -26,7 +27,7 @@ class Contact < ActiveRecord::Base
   validates :ident_country_code, presence: true, if: proc { |c| %w(org priv).include? c.ident_type }, on: :create
   validates :code,
     uniqueness: { message: :epp_id_taken },
-    format: { with: /\A[\w\-\:]*\Z/i, message: :invalid },
+    format: { with: /\A[\w\-\:\.\_]*\z/i, message: :invalid },
     length: { maximum: 100, message: :too_long_contact_code }
   validate :ident_valid_format?
   validate :uniq_statuses?
@@ -48,7 +49,7 @@ class Contact < ActiveRecord::Base
     return nil unless deliver_emails == true
     emails = []
     emails << [email, email_was]
-    emails << domains.map(&:registrant_email) if domains.present?
+    # emails << domains.map(&:registrant_email) if domains.present?
     emails = emails.flatten.uniq
     emails.each do |e|
       ContactMailer.email_updated(email_was, e, id, deliver_emails).deliver
@@ -60,6 +61,8 @@ class Contact < ActiveRecord::Base
     manage_linked
     manage_ok
   end
+
+  after_save :update_related_whois_records
 
   # for overwrite when doing children loop
   attr_writer :domains_present
@@ -201,6 +204,21 @@ class Contact < ActiveRecord::Base
         ['DeleteProhibited', SERVER_DELETE_PROHIBITED]
       ]
     end
+
+    def to_csv
+      CSV.generate do |csv|
+        csv << column_names
+        all.each do |contact|
+        csv << contact.attributes.values_at(*column_names)
+        end
+      end
+    end
+
+    def pdf(html)
+      kit = PDFKit.new(html)
+      kit.to_pdf
+    end
+
   end
 
   def roid
@@ -468,4 +486,9 @@ class Contact < ActiveRecord::Base
       PENDING_DELETE
     ]).present?
   end
+
+ def update_related_whois_records
+   related_domain_descriptions.each{ |x, y| WhoisRecord.find_by(name: x).save}
+ end	 
+
 end
