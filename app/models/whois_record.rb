@@ -23,6 +23,10 @@ class WhoisRecord < ActiveRecord::Base
     end
   end
 
+  def self.find_by_name(name)
+    WhoisRecord.where("lower(name) = ?", name.downcase)
+  end
+
   def generated_json
     @generated_json ||= generate_json
   end
