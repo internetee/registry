@@ -12,7 +12,7 @@
       %dt= t(:registrar)
       %dd= link_to(@domain.registrar, admin_registrar_path(@domain.registrar))
 
-      %dt= t(:password)
+      %dt= t(:authinfo_pw)
       %dd
         = text_field_tag :password, @domain.auth_info, readonly: true, class: 'partially-hidden'
 

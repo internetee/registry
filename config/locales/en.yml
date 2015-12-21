@@ -280,6 +280,7 @@ en:
   domain_details: 'Domain details'
   registered_at: 'Registered at'
   password: 'Password'
+  authinfo_pw: 'AuthInfo pw'
   valid_from: 'Valid from'
   general: 'General'
   contacts: 'Contacts'
@@ -554,6 +555,7 @@ en:
 
   username: 'Username'
   password: 'Password'
+  authinfo_pw: 'AuthInfo pw'
   log_in: 'Log in'
   domains: 'Domains'
   register: 'Register'

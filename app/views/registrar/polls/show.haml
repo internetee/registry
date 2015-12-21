@@ -30,7 +30,7 @@
                 %dt= t(:domain_name)
                 %dd= @data.css('name').text
 
-                %dt= t(:password)
+                %dt= t(:authinfo_pw)
                 %dd= @data.css('pw').text
 
                 - if @data.css('relative').text.present?
