@@ -7,6 +7,7 @@ class Epp::Domain < Domain
 
   before_validation :manage_permissions
   def manage_permissions
+    return if is_admin # this bad hack for 109086524, refactor later
     return true if is_transfer
     return unless update_prohibited? || delete_prohibited?
     add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
