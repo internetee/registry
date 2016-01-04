@@ -1,6 +1,7 @@
 class Contact < ActiveRecord::Base
   include Versions # version/contact_version.rb
   include EppErrors
+  include UserEvents
 
   belongs_to :registrar
   has_many :domain_contacts
@@ -57,6 +58,11 @@ class Contact < ActiveRecord::Base
 
   before_save :manage_statuses
   def manage_statuses
+    if domain_transfer # very ugly but need better workflow
+      self.statuses = statuses | [OK, LINKED]
+      return
+    end
+
     manage_linked
     manage_ok
   end
@@ -80,6 +86,7 @@ class Contact < ActiveRecord::Base
   ]
 
   attr_accessor :deliver_emails
+  attr_accessor :domain_transfer # hack but solves problem faster
 
   #
   # STATUSES
@@ -203,6 +210,21 @@ class Contact < ActiveRecord::Base
         ['DeleteProhibited', SERVER_DELETE_PROHIBITED]
       ]
     end
+
+    def to_csv
+      CSV.generate do |csv|
+        csv << column_names
+        all.each do |contact|
+        csv << contact.attributes.values_at(*column_names)
+        end
+      end
+    end
+
+    def pdf(html)
+      kit = PDFKit.new(html)
+      kit.to_pdf
+    end
+
   end
 
   def roid
@@ -472,7 +494,7 @@ class Contact < ActiveRecord::Base
   end
 
  def update_related_whois_records
-   related_domain_descriptions.each{ |x, y| WhoisRecord.find_by(name: x).save}
+   related_domain_descriptions.each{ |x, y| WhoisRecord.find_by(name: x).try(:save) }
  end	 
 
 end

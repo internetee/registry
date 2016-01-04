@@ -5,9 +5,7 @@ class Admin::PendingDeletesController < AdminController
   def update
     authorize! :update, :pending
 
-    @epp_domain = Epp::Domain.find(params[:domain_id]) # only epp domain has apply pending
-    @epp_domain.is_admin= true
-    if @epp_domain.apply_pending_delete!
+    if registrant_verification.domain_registrant_delete_confirm!
       redirect_to admin_domain_path(@domain.id), notice: t(:pending_applied)
     else
       redirect_to admin_edit_domain_path(@domain.id), alert: t(:failure)
@@ -17,7 +15,7 @@ class Admin::PendingDeletesController < AdminController
   def destroy
     authorize! :destroy, :pending
 
-    if @domain.clean_pendings!
+    if registrant_verification.domain_registrant_delete_reject!
       redirect_to admin_domain_path(@domain.id), notice: t(:pending_removed)
     else
       redirect_to admin_domain_path(@domain.id), alert: t(:failure)
@@ -25,6 +23,14 @@ class Admin::PendingDeletesController < AdminController
   end
 
   private
+
+  def registrant_verification
+    # steal token
+    token = @domain.registrant_verification_token
+    @registrant_verification = RegistrantVerification.new(domain_id: @domain.id,
+                                                          domain_name: @domain.name,
+                                                          verification_token: token)
+  end
 
   def find_domain
     @domain = Domain.find(params[:domain_id])

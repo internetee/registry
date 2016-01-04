@@ -280,6 +280,7 @@ en:
   domain_details: 'Domain details'
   registered_at: 'Registered at'
   password: 'Password'
+  authinfo_pw: 'AuthInfo pw'
   valid_from: 'Valid from'
   general: 'General'
   contacts: 'Contacts'
@@ -554,6 +555,7 @@ en:
 
   username: 'Username'
   password: 'Password'
+  authinfo_pw: 'AuthInfo pw'
   log_in: 'Log in'
   domains: 'Domains'
   register: 'Register'
@@ -904,7 +906,7 @@ en:
   edit_zone: 'Edit zone'
   there_are_count_domains_in_this_zone: 'There are %{count} domains in this zone'
   poll_pending_update_confirmed_by_registrant: 'Registrant confirmed domain update'
-  poll_pending_update_rejected_by_registranti: 'Registrant rejected domain update'
+  poll_pending_update_rejected_by_registrant: 'Registrant rejected domain update'
   poll_pending_delete_rejected_by_registrant: 'Registrant rejected domain deletion'
   poll_pending_delete_confirmed_by_registrant: 'Registrant confirmed domain deletion'
   manage: Manage

@@ -31,7 +31,7 @@ class Pricelist < ActiveRecord::Base
     def pricelist_for(zone, operation, period)
       lists = valid.where(category: zone, operation_category: operation, duration: period)
       return lists.first if lists.count == 1
-      lists.where('valid_to IS NOT NULL').order(valid_from: :desc).first
+      lists.order(valid_from: :desc).first
     end
   end
 end

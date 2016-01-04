@@ -12,7 +12,6 @@ class RegistrantVerification < ActiveRecord::Base
   belongs_to :domain
 
   validates :verification_token, :domain_name, :domain, :action, :action_type, presence: true
-  validates :domain, uniqueness: { scope: [:domain_id, :verification_token] }
 
   def domain_registrant_change_confirm!
     self.action_type = DOMAIN_REGISTRANT_CHANGE

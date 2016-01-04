@@ -1,5 +1,6 @@
 # rubocop: disable Metrics/ClassLength
 class Domain < ActiveRecord::Base
+  include UserEvents
   include Versions # version/domain_version.rb
   include Statuses
   has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
@@ -238,10 +239,10 @@ class Domain < ActiveRecord::Base
         end
         count += 1
         if domain.pending_update?
-          DomainMailer.pending_update_expired_notification_for_new_registrant(domain.id).deliver
+          domain.send_mail :pending_update_expired_notification_for_new_registrant
         end
         if domain.pending_delete? || domain.pending_delete_confirmation?
-          DomainMailer.pending_delete_expired_notification(domain.id, deliver_emails).deliver
+          DomainMailer.pending_delete_expired_notification(domain.id, true).deliver
         end
         domain.clean_pendings!
         unless Rails.env.test?
@@ -307,7 +308,7 @@ class Domain < ActiveRecord::Base
 
       c = 0
       Domain.where("statuses @> '{deleteCandidate}'::varchar[]").each do |x|
-        Whois::Record.where('domain_id = ?', x.id).try(':destroy')
+        WhoisRecord.where(domain_id: x.id).destroy_all
         destroy_with_message x
         STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by deleteCandidate ##{x.id} (#{x.name})\n" unless Rails.env.test?
 
@@ -315,7 +316,7 @@ class Domain < ActiveRecord::Base
       end
 
       Domain.where('force_delete_at <= ?', Time.zone.now).each do |x|
-        Whois::Record.where('domain_id = ?', x.id).try(':destroy')
+        WhoisRecord.where(domain_id: x.id).destroy_all
         destroy_with_message x
         STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by force delete time ##{x.id} (#{x.name})\n" unless Rails.env.test?
         c += 1
@@ -439,7 +440,6 @@ class Domain < ActiveRecord::Base
   end
 
   def pending_update!
-    old_registrant_id = registrant_id_was
     return true if pending_update?
     self.epp_pending_update = true # for epp
 
@@ -451,8 +451,8 @@ class Domain < ActiveRecord::Base
     new_registrant_email = registrant.email
     new_registrant_name  = registrant.name
 
-    DomainMailer.pending_update_request_for_old_registrant(id, old_registrant_id, deliver_emails).deliver
-    DomainMailer.pending_update_notification_for_new_registrant(id, old_registrant_id, deliver_emails).deliver
+    send_mail :pending_update_request_for_old_registrant
+    send_mail :pending_update_notification_for_new_registrant
 
     reload # revert back to original
 
@@ -818,5 +818,10 @@ class Domain < ActiveRecord::Base
       status_notes[status] = notes[i]
     end
   end
+
+  def send_mail(action)
+    DomainMailer.send(action, DomainMailModel.new(self).send(action)).deliver
+  end
+
 end
 # rubocop: enable Metrics/ClassLength

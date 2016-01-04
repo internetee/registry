@@ -10,8 +10,9 @@ class DomainUpdateConfirmJob < Que::Job
           e.instance_variable_set("@changed_attributes", e.changed_attributes.merge("statuses"=>[]))
         end
         domain.clean_pendings!
+        WhoisRecord.find_by(domain_id: domain.id).save
       when RegistrantVerification::REJECTED
-        DomainMailer.pending_update_rejected_notification_for_new_registrant(domain_id).deliver
+        domain.send_mail :pending_update_rejected_notification_for_new_registrant
         domain.poll_message!(:poll_pending_update_rejected_by_registrant)
         domain.clean_pendings!
         domain.instance_variable_set("@changed_attributes", domain.changed_attributes.merge("statuses"=>[]))
