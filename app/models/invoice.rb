@@ -17,8 +17,7 @@ class Invoice < ActiveRecord::Base
   validates :invoice_type, :due_date, :currency, :seller_name,
             :seller_iban, :buyer_name, :invoice_items, :vat_prc, presence: true
 
-  before_create :set_invoice_number
-  before_create :check_vat
+  before_create :set_invoice_number, :check_vat
 
   def set_invoice_number
     last_no = Invoice.order(number: :desc).where('number IS NOT NULL').limit(1).pluck(:number).first
@@ -37,7 +36,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def check_vat
-    if buyer.country_code = 'EE' && buyer.vat_no.present?
+    if buyer.country_code != 'EE' && buyer.vat_no.present?
       self.vat_prc = 0
     end
   end
