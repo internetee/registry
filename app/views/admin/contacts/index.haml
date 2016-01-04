@@ -37,7 +37,7 @@
         .col-md-3
           .form-group
             = label_tag t(:contact_type)
-            = select_tag '[q][domain_contacts_type_in]', options_for_select([['admin', 'AdminDomainContact'], ['tech', 'TechDomainContact']], params[:q][:domain_contacts_type_in]), { multiple: true, placeholder: t(:choose), class: 'form-control js-combobox' }
+            = select_tag '[q][domain_contacts_type_in]', options_for_select([['admin', 'AdminDomainContact'], ['tech', 'TechDomainContact'], ['registrant', 'registrant']], params[:q][:domain_contacts_type_in]), { multiple: true, placeholder: t(:choose), class: 'form-control js-combobox' }
       .row
         .col-md-3
           .form-group

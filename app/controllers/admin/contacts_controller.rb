@@ -4,7 +4,13 @@ class Admin::ContactsController < AdminController
 
   def index
     params[:q] ||= {}
-    @q = Contact.includes(:registrar).search(params[:q])
+    search_params = params[:q].deep_dup
+
+    if search_params[:domain_contacts_type_in].is_a?(Array) && search_params[:domain_contacts_type_in].delete('registrant')
+      search_params[:registrant_domains_id_not_null] = 1
+    end
+
+    @q = Contact.includes(:registrar).search(search_params)
     @contacts = @q.result.page(params[:page])
 
     if params[:statuses_contains]
@@ -16,7 +22,7 @@ class Admin::ContactsController < AdminController
     end
 
     normalize_search_parameters do
-      @q = contacts.search(params[:q])
+      @q = contacts.search(search_params)
       @contacts = @q.result.page(params[:page])
     end
 
