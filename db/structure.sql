@@ -40,106 +40,6 @@ COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs
 SET search_path = public, pg_catalog;
 
 --
--- Name: fill_ident_country(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION fill_ident_country() RETURNS boolean
-    LANGUAGE plpgsql
-    AS $_$
-      DECLARE
-        changed     BOOLEAN;
-        multiplier  INT [];
-        multiplier2 INT [];
-        multiplier3 INT [];
-        multiplier4 INT [];
-        r           RECORD;
-        control     TEXT;
-        total       INT;
-        i           INT;
-        mod         INT;
-        counter     INT;
-      BEGIN
-
-        multiplier  := ARRAY [1, 2, 3, 4, 5, 6, 7, 8, 9, 1];
-        multiplier2 := ARRAY [3, 4, 5, 6, 7, 8, 9, 1, 2, 3];
-        multiplier3 := ARRAY [1, 2, 3, 4, 5, 6, 7];
-        multiplier4 := ARRAY [3, 4, 5, 6, 7, 8, 9];
-
-        FOR r IN SELECT id, ident FROM contacts WHERE ident_type = 'priv' AND ident_country_code IS NULL
-        LOOP
-          IF (length(r.ident) = 11 AND (r.ident ~ '^[0-9]+$') AND (substring(r.ident, 1, 1) = '3' OR substring(r.ident, 1, 1) = '4' OR substring(r.ident, 1, 1) = '5' OR substring(r.ident, 1, 1) = '6'))
-          THEN
-            total := 0;
-            counter := 1;
-            FOREACH i IN ARRAY multiplier
-            LOOP
-              total := (total + (i * to_number(substring(r.ident, counter, 1), '9')));
-              counter := (counter + 1);
-            END LOOP;
-            mod := (total % 11);
-            counter := 1;
-            IF (mod >= 10)
-            THEN
-              total = 0;
-              FOREACH i IN ARRAY multiplier2
-              LOOP
-                total := (total + (i *  to_number(substring(r.ident, counter, 1), '9')));
-                counter := (counter + 1);
-              END LOOP;
-              mod := (total % 11);
-            END IF;
-            IF (mod = 10)
-              THEN
-              mod := 0;
-            END IF;
-            IF (substring(r.ident, 11, 1) = to_char(mod, 'FM999MI'))
-              THEN
-                UPDATE contacts SET ident_country_code = 'EE' WHERE id = r.id;
-            END IF;
-            total := 0;
-          END IF;
-        END LOOP;
-
-        FOR r IN SELECT id, ident FROM contacts WHERE ident_type = 'org' AND ident_country_code IS NULL
-        LOOP
-          IF (length(r.ident) = 8 AND (r.ident ~ '^[0-9]+$') AND (substring(r.ident, 1, 1) = '1' OR substring(r.ident, 1, 1) = '8' OR substring(r.ident, 1, 1) = '9'))
-          THEN
-            total := 0;
-            counter := 1;
-            FOREACH i IN ARRAY multiplier3
-            LOOP
-              total := (total + (i * to_number(substring(r.ident, counter, 1), '9')));
-              counter := (counter + 1);
-            END LOOP;
-            mod := total % 11;
-            total := 0;
-            counter := 1;
-            IF (mod >= 10)
-            THEN
-              total = 0;
-              FOREACH i IN ARRAY multiplier4
-              LOOP
-                total := (total + (i *  to_number(substring(r.ident, counter, 1), '9')));
-                counter := (counter + 1);
-              END LOOP;
-              mod := (total % 11);
-            END IF;
-            IF (mod = 10)
-            THEN
-              mod := 0;
-            END IF;
-            IF (substring(r.ident, 8, 1) = to_char(mod, 'FM999MI'))
-            THEN
-              UPDATE contacts SET ident_country_code = 'EE' WHERE id = r.id;
-            END IF;
-          END IF;
-        END LOOP;
-      RETURN changed;
-      END;
-      $_$;
-
-
---
 -- Name: generate_zonefile(character varying); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -214,7 +114,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
             AND ns.hostname LIKE '%.' || d.name
             AND d.name <> i_origin
-            AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> '{}'
+            AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> ''
             AND NOT ('{serverHold,clientHold}' && d.statuses)
           ), chr(10)
         ) INTO tmp_var;
@@ -234,7 +134,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
             AND ns.hostname LIKE '%.' || d.name
             AND d.name <> i_origin
-            AND ns.ipv6 IS NOT NULL AND ns.ipv6 <> '{}'
+            AND ns.ipv6 IS NOT NULL AND ns.ipv6 <> ''
             AND NOT ('{serverHold,clientHold}' && d.statuses)
           ), chr(10)
         ) INTO tmp_var;
@@ -245,8 +145,8 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         SELECT array_to_string(
           array(
             SELECT concat(
-              d.name_puny, '. 3600 IN DS ', dk.ds_key_tag, ' ',
-              dk.ds_alg, ' ', dk.ds_digest_type, ' ', dk.ds_digest
+              d.name_puny, '. IN DS ', dk.ds_key_tag, ' ',
+              dk.ds_alg, ' ', dk.ds_digest_type, ' ( ', dk.ds_digest, ' )'
             )
             FROM domains d
             JOIN dnskeys dk ON dk.domain_id = d.id
@@ -845,8 +745,7 @@ CREATE TABLE dnskeys (
     ds_digest character varying,
     creator_str character varying,
     updator_str character varying,
-    legacy_domain_id integer,
-    updated_at timestamp without time zone
+    legacy_domain_id integer
 );
 
 
@@ -1231,7 +1130,9 @@ CREATE TABLE legal_documents (
     documentable_id integer,
     documentable_type character varying,
     created_at timestamp without time zone,
+    updated_at timestamp without time zone,
     creator_str character varying,
+    updator_str character varying,
     path character varying
 );
 
@@ -1963,6 +1864,43 @@ ALTER SEQUENCE log_keyrelays_id_seq OWNED BY log_keyrelays.id;
 
 
 --
+-- Name: log_legal_documents; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE log_legal_documents (
+    id integer NOT NULL,
+    item_type character varying NOT NULL,
+    item_id integer NOT NULL,
+    event character varying NOT NULL,
+    whodunnit character varying,
+    object json,
+    object_changes json,
+    created_at timestamp without time zone,
+    session character varying,
+    children json
+);
+
+
+--
+-- Name: log_legal_documents_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE log_legal_documents_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: log_legal_documents_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE log_legal_documents_id_seq OWNED BY log_legal_documents.id;
+
+
+--
 -- Name: log_messages; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2375,10 +2313,10 @@ ALTER SEQUENCE messages_id_seq OWNED BY messages.id;
 CREATE TABLE nameservers (
     id integer NOT NULL,
     hostname character varying,
-    ipv4 character varying[],
+    ipv4 character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    ipv6 character varying[],
+    ipv6 character varying,
     domain_id integer,
     creator_str character varying,
     updator_str character varying,
@@ -2622,9 +2560,7 @@ CREATE TABLE reserved_domains (
     updated_at timestamp without time zone,
     creator_str character varying,
     updator_str character varying,
-    legacy_id integer,
-    name character varying,
-    password character varying
+    names hstore
 );
 
 
@@ -3194,6 +3130,13 @@ ALTER TABLE ONLY log_keyrelays ALTER COLUMN id SET DEFAULT nextval('log_keyrelay
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY log_legal_documents ALTER COLUMN id SET DEFAULT nextval('log_legal_documents_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY log_messages ALTER COLUMN id SET DEFAULT nextval('log_messages_id_seq'::regclass);
 
 
@@ -3703,6 +3646,14 @@ ALTER TABLE ONLY log_keyrelays
 
 
 --
+-- Name: log_legal_documents_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY log_legal_documents
+    ADD CONSTRAINT log_legal_documents_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: log_messages_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4032,13 +3983,6 @@ CREATE INDEX index_domain_transfers_on_domain_id ON domain_transfers USING btree
 --
 
 CREATE INDEX index_domains_on_delete_at ON domains USING btree (delete_at);
-
-
---
--- Name: index_domains_on_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX index_domains_on_name ON domains USING btree (name);
 
 
 --
@@ -4406,6 +4350,20 @@ CREATE INDEX index_log_keyrelays_on_whodunnit ON log_keyrelays USING btree (whod
 
 
 --
+-- Name: index_log_legal_documents_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_log_legal_documents_on_item_type_and_item_id ON log_legal_documents USING btree (item_type, item_id);
+
+
+--
+-- Name: index_log_legal_documents_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_log_legal_documents_on_whodunnit ON log_legal_documents USING btree (whodunnit);
+
+
+--
 -- Name: index_log_messages_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4550,13 +4508,6 @@ CREATE INDEX index_registrant_verifications_on_domain_id ON registrant_verificat
 --
 
 CREATE INDEX index_registrars_on_code ON registrars USING btree (code);
-
-
---
--- Name: index_reserved_domains_on_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_reserved_domains_on_name ON reserved_domains USING btree (name);
 
 
 --
@@ -4996,23 +4947,5 @@ INSERT INTO schema_migrations (version) VALUES ('20150921110152');
 
 INSERT INTO schema_migrations (version) VALUES ('20150921111842');
 
-INSERT INTO schema_migrations (version) VALUES ('20151028183132');
-
 INSERT INTO schema_migrations (version) VALUES ('20151029152638');
-
-INSERT INTO schema_migrations (version) VALUES ('20151112160452');
-
-INSERT INTO schema_migrations (version) VALUES ('20151117081204');
-
-INSERT INTO schema_migrations (version) VALUES ('20151120090455');
-
-INSERT INTO schema_migrations (version) VALUES ('20151124200353');
-
-INSERT INTO schema_migrations (version) VALUES ('20151125155601');
-
-INSERT INTO schema_migrations (version) VALUES ('20151127091716');
-
-INSERT INTO schema_migrations (version) VALUES ('20151130175654');
-
-INSERT INTO schema_migrations (version) VALUES ('20151202123506');
 
