@@ -12,9 +12,15 @@ class Admin::AccountActivitiesController < AdminController
       logger.warn('Invalid date')
     end
 
+    balance_params = params[:q].deep_dup
+
+    if balance_params[:created_at_gteq]
+      balance_params.delete('created_at_gteq')
+    end
+
     @q = AccountActivity.includes(:invoice, account: :registrar).search(params[:q])
     @q.sorts = 'id desc' if @q.sorts.empty?
-    @b = AccountActivity.where.not(id: @q.result.map(&:id))
+    @b = AccountActivity.search(balance_params).result.where.not(id: @q.result.map(&:id))
 
     respond_to do |format|
       format.html { @account_activities = @q.result.page(params[:page]) }
