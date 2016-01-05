@@ -19,6 +19,8 @@ class Invoice < ActiveRecord::Base
 
   before_create :set_invoice_number, :check_vat
 
+  before_save   :check_vat
+
   def set_invoice_number
     last_no = Invoice.order(number: :desc).where('number IS NOT NULL').limit(1).pluck(:number).first
 
