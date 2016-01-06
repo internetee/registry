@@ -162,7 +162,7 @@ class Epp::Contact < Contact
 
       if ident_frame && ident_attr_valid?(ident_frame)
         org_priv = %w(org priv).freeze
-        if ident_country_code.blank? && org_priv.include?(ident_type) && org_priv.in?(ident_frame.attr('type'))
+        if ident_country_code.blank? && org_priv.include?(ident_type) && org_priv.include?(ident_frame.attr('type'))
           at.merge!(ident_country_code: ident_frame.attr('cc'), ident_type: ident_frame.attr('type'))
         elsif ident_type == "birthday" && ident !=~ /\d{4}-\d{2}-\d{2}/ && (Date.parse(ident) rescue false)
           at.merge!(ident: ident_frame.text)
