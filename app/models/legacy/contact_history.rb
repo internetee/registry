@@ -28,7 +28,7 @@ module Legacy
         ident_type: ::Legacy::Contact::IDENT_TYPE_MAP[x.ssntype],
         auth_info: x.object_history.authinfopw.try(:strip),
         name: name,
-        registrar_id: ::Registrar.find_by(legacy_id: x.object_history.try(:clid)).try(:id),
+        registrar_id: ::Legacy::Domain.new_registrar_cached(x.object_history.try(:clid)).try(:id),
         creator_str: x.object_registry.try(:registrar).try(:name),
         updator_str: x.object_history.try(:registrar).try(:name) ? x.object_history.try(:registrar).try(:name) : x.object_registry.try(:registrar).try(:name),
         legacy_id: x.id,
@@ -43,13 +43,13 @@ module Legacy
 
     class << self
       def changes_dates_for domain_id
-        sql = %Q{SELECT  dh.*, valid_from
+        sql = %Q{SELECT  dh.historyid, valid_from, valid_to
               FROM contact_history dh JOIN history h ON dh.historyid=h.id where dh.id=#{domain_id};}
-        # find_by_sql(sql).map{|e| e.attributes.values_at("valid_from") }.flatten.each_with_object({}){|e,h|h[e.try(:to_f)] = [self]}
 
         hash = {}
         find_by_sql(sql).each do |rec|
           hash[rec.valid_from.try(:to_time)] = [{id: rec.historyid, klass: self, param: :valid_from}] if rec.valid_from
+          hash[rec.valid_to.try(:to_time)]   = [{id: rec.historyid, klass: self, param: :valid_to}]   if rec.valid_to
         end
         hash
       end

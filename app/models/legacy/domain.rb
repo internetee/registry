@@ -25,5 +25,10 @@ module Legacy
       # OK status is default
       domain_statuses << DomainStatus::OK if domain_statuses.empty?
     end
+
+    def self.new_registrar_cached old_id
+      @new_registrar_cache ||= {}
+      @new_registrar_cache[old_id] ||= ::Registrar.select(:id).find_by(legacy_id: old_id)
+    end
   end
 end

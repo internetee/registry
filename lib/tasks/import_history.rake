@@ -8,8 +8,10 @@ namespace :import do
 
   desc 'Import contact history'
   task history_contacts: :environment do
-    Legacy::ContactHistory.uniq.pluck(:id).each do |legacy_contact_id|
+    Legacy::ContactHistory.uniq.where("id > 4175").pluck(:id).each do |legacy_contact_id|
+      start = Time.now.to_f
       Contact.transaction do
+        data      = []
         contact   = Contact.find_by(legacy_id: legacy_contact_id)
         version_contact = ContactVersion.where("object->>'legacy_id' = '#{legacy_contact_id}'").select(:item_id).first
         contact ||= Contact.new(id: version_contact.item_id, legacy_id: legacy_contact_id) if version_contact
@@ -55,7 +57,7 @@ namespace :import do
             end
             next if changes.blank? && event != :destroy
             obj_his = Legacy::ObjectHistory.find_by(historyid: responder.historyid)
-            user    = Registrar.find_by(legacy_id: obj_his.upid || obj_his.clid).try(:api_users).try(:first)
+            user    = Legacy::Domain.new_registrar_cached(obj_his.upid || obj_his.clid).try(:api_users).try(:first)
 
             hash = {
                 item_type: Contact.to_s,
@@ -66,13 +68,15 @@ namespace :import do
                 object_changes: changes,
                 created_at: time
             }
-            ContactVersion.create!(hash)
+            data << hash
 
             last_changes = new_attrs
             i += 1
           end
         end
+        ContactVersion.import_without_validations_or_callbacks data.first.keys, data.map(&:values) if data.any?
       end
+      puts "Legacy Contact id #{legacy_contact_id} finished in #{Time.now.to_f - start}"
     end
   end
 
@@ -115,7 +119,6 @@ namespace :import do
             new_attrs = responder.get_current_domain_object(time, orig_history_klass[:param])
             new_attrs[:id]         = domain.id
             new_attrs[:updated_at] = time
-            p time
 
             event = :update
             event = :create  if i == 0

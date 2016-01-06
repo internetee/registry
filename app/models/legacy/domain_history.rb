@@ -18,7 +18,7 @@ module Legacy
       x = self
       {
           name:          SimpleIDN.to_unicode(x.object_registry.name.try(:strip)),
-          registrar_id:  ::Registrar.find_by(legacy_id: x.object_history.try(:clid)).try(:id),
+          registrar_id:  ::Legacy::Domain.new_registrar_cached(x.object_history.try(:clid)).try(:id),
           registrant_id: new_registrant_id,
           registered_at: x.object_registry.try(:crdate),
           valid_from:    x.object_registry.try(:crdate),
@@ -55,7 +55,7 @@ module Legacy
     def user
       @user ||= begin
         obj_his = Legacy::ObjectHistory.find_by(historyid: historyid)
-        Registrar.find_by(legacy_id: obj_his.upid || obj_his.clid).try(:api_users).try(:first)
+        Legacy::Domain.new_registrar_cached(obj_his.upid || obj_his.clid).try(:api_users).try(:first)
       end
     end
 
@@ -97,7 +97,10 @@ module Legacy
             ids << val
           else # if not found we should check current dnssec and historical if changes were done
             # firstly we need to select the first historical object to take the earliest from create or destroy
-            if version = ::NameserverVersion.where("object->>'domain_id'='#{main_attrs[:domain_id]}'").where("object->>'legacy_domain_id'='#{main_attrs[:legacy_domain_id]}'").where("object->>'hostname'='#{main_attrs[:hostname]}'").reorder("created_at ASC").first
+            if version = ::NameserverVersion.where("object->>'domain_id'='#{main_attrs[:domain_id]}'").
+                where("object->>'legacy_domain_id'='#{main_attrs[:legacy_domain_id]}'").
+                where("object->>'hostname'='#{main_attrs[:hostname]}'").
+                reorder("created_at ASC").first
               server[:id] = version.item_id.to_i
               version.item.versions.where(event: :create).first_or_create!(
                   whodunnit: user.try(:id),
@@ -209,11 +212,11 @@ module Legacy
       def changes_dates_for domain_id
         sql = %Q{SELECT  dh.*, valid_from
               FROM domain_history dh JOIN history h ON dh.historyid=h.id where dh.id=#{domain_id};}
-        # find_by_sql(sql).map{|e| e.attributes.values_at("valid_from") }.flatten.each_with_object({}){|e,h|h[e.try(:to_f)] = [self]}
 
         hash = {}
         find_by_sql(sql).each do |rec|
           hash[rec.valid_from.try(:to_time)] = [{id: rec.historyid, klass: self, param: :valid_from}] if rec.valid_from
+          hash[rec.valid_to.try(:to_time)]   = [{id: rec.historyid, klass: self, param: :valid_to}]   if rec.valid_to
         end
         hash
       end

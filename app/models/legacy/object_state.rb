@@ -101,7 +101,7 @@ module Legacy
 
     class << self
        def changes_dates_for domain_id
-         sql = %Q{SELECT distinct t_2.id, state.id state_dot_id, state.*,
+         sql = %Q{SELECT distinct t_2.id, state.id state_dot_id, state.valid_from, state.valid_to,
                     extract(epoch from valid_from) valid_from_unix, extract(epoch from valid_to) valid_to_unix
                     FROM object_history t_2
                       JOIN object_state state ON (t_2.historyid >= state.ohid_from
@@ -127,7 +127,7 @@ module Legacy
       end
 
       def states_for_domain_at(domain_id, time)
-        sql = %Q{SELECT state.*
+        sql = %Q{SELECT state.state_id
           FROM object_history t_2
             JOIN object_state state ON (t_2.historyid >= state.ohid_from
                                         AND (t_2.historyid <= state.ohid_to OR state.ohid_to IS NULL))
@@ -143,7 +143,7 @@ module Legacy
 
 
       def states_for_contact_at(contact_id, time)
-        sql = %Q{SELECT state.*
+        sql = %Q{SELECT state.state_id
           FROM object_history t_2
             JOIN object_state state ON (t_2.historyid >= state.ohid_from
                                         AND (t_2.historyid <= state.ohid_to OR state.ohid_to IS NULL))
