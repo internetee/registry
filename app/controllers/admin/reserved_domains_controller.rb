@@ -24,7 +24,7 @@ class Admin::ReservedDomainsController < AdminController
     ReservedDomain.transaction do
       # removing old ones
       existing = ReservedDomain.any_of_domains(names.keys).pluck(:id)
-      ReservedDomain.where.not(id: existing).delete_all
+      ReservedDomain.where.not(id: existing).destroy_all
 
       #updating and adding
       names.each do |name, psw|
