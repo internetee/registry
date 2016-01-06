@@ -8,7 +8,7 @@ namespace :import do
 
   desc 'Import contact history'
   task history_contacts: :environment do
-    Legacy::ContactHistory.uniq.where("id > 4175").pluck(:id).each do |legacy_contact_id|
+    Legacy::ContactHistory.uniq.pluck(:id).each do |legacy_contact_id|
       start = Time.now.to_f
       Contact.transaction do
         data      = []
