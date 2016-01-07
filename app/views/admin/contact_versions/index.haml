@@ -1,7 +1,6 @@
 = render 'shared/title', name: t(:contact_versions)
 
 
-%hr
 .row
   .col-md-12
     .table-responsive
@@ -9,30 +8,35 @@
         %thead
           %tr
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'name', t(:ID))
+              = sort_link(@q, 'name', t(:name))
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'code', t(:item_id))
+              = sort_link(@q, 'code', t(:id))
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'ident', t(:event))
-            %th{class: 'col-xs-2'}
-              = sort_link(@q, 'email', t(:object))
+              = sort_link(@q, 'ident', t(:ident))
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'registrar_name', t(:registrar))
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'email', t(:created_at))
+            %th{class: 'col-xs-2'}
+              = sort_link(@q, 'action', t(:action))
         %tbody
           - @versions.each do |version|
             %tr
-              %td= 1
-              %td= 2
-              %td= 3
-              %td= 4
-              %td= 5
+              %td= version.reify.name
+              %td= version.reify.code
+              %td= ident_for(version.reify)
+              %td= l(version.created_at, format: :short)
+              %td
+                - if version.reify.registrar
+                  = link_to(version.reify.registrar, admin_registrar_path(version.reify.registrar))
+
+              %td= version.event
 
 .row
   .col-md-6
     = paginate @versions
   .col-md-6.text-right
-    .pagination
-      = t(:result_count, count: @contacts.total_count)
+
 
 :coffee
   $(".js-reset-form").on "click", (e) ->
