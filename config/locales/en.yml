@@ -21,7 +21,7 @@ en:
       default: "%d. %B %Y, %H:%M"
       longer: "%a, %e. %b %Y, %H:%M"
       long: "%A, %e. %B %Y, %H:%M"
-      short: "%d.%m.%y"
+      short: "%d.%m.%y, %H:%M"
       shorts: "%d.%m.%y, %H:%M:%S"
       date: "%d.%m.%y"
       date_long: "%d. %B %Y"
