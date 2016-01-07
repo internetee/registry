@@ -236,12 +236,16 @@ class Contact < ActiveRecord::Base
   end
 
   def ident_valid_format?
-    case ident_type
-    when 'priv'
-      case ident_country_code
-      when 'EE'
-        code = Isikukood.new(ident)
-        errors.add(:ident, :invalid_EE_identity_format) unless code.valid?
+    case ident_country_code
+    when 'EE'.freeze
+      case ident_type
+        when 'priv'.freeze
+          errors.add(:ident, :invalid_EE_identity_format) unless Isikukood.new(ident).valid?
+        when 'org'.freeze
+          # !%w(1 7 8 9).freeze.include?(ident.first) ||
+          if ident.size != 8 || !(ident =~/\A[0-9]{8}\z/)
+            errors.add(:ident, :invalid_EE_identity_format)
+          end
       end
     end
   end

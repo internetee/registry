@@ -160,20 +160,20 @@ class Epp::Contact < Contact
       self.ident_updated_at ||= Time.zone.now # not in use
       ident_frame = frame.css('ident').first
 
-      if ident_frame && ident_attr_valid?(ident_frame) && ident_country_code.blank? && ident_type.in?(%w(org priv).freeze)
-        at.merge!(ident_country_code: ident_frame.attr('cc'))
+      if ident_frame && ident_attr_valid?(ident_frame)
+        org_priv = %w(org priv).freeze
+        if ident_country_code.blank? && org_priv.include?(ident_type) && org_priv.include?(ident_frame.attr('type'))
+          at.merge!(ident_country_code: ident_frame.attr('cc'), ident_type: ident_frame.attr('type'))
+        elsif ident_type == "birthday" && ident !=~ /\d{4}-\d{2}-\d{2}/ && (Date.parse(ident) rescue false)
+          at.merge!(ident: ident_frame.text)
+          at.merge!(ident_country_code: ident_frame.attr('cc')) if ident_frame.attr('cc').present?
+        elsif ident_type.blank? && ident_country_code.blank?
+          at.merge!(ident_type: ident_frame.attr('type'))
+          at.merge!(ident_country_code: ident_frame.attr('cc')) if ident_frame.attr('cc').present?
+        else
+          throw :epp_error, {code: '2306', msg: I18n.t(:ident_update_error)}
+        end
       end
-
-      # Deprecated
-      # if ident_updated_at.present?
-      #   throw :epp_error, {
-      #     code: '2306',
-      #     msg: I18n.t(:ident_update_error)
-      #   }
-      # else
-      #   at.merge!(self.class.ident_attrs(frame.css('ident').first))
-      #   self.ident_updated_at = Time.zone.now
-      # end
     end
 
     super(at)
