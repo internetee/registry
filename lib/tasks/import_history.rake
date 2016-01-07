@@ -57,7 +57,7 @@ namespace :import do
             end
             next if changes.blank? && event != :destroy
             obj_his = Legacy::ObjectHistory.find_by(historyid: responder.historyid)
-            user    = Legacy::Domain.new_registrar_cached(obj_his.upid || obj_his.clid).try(:api_users).try(:first)
+            user    = Legacy::Domain.new_api_user_cached(obj_his.upid || obj_his.clid)
 
             hash = {
                 item_type: Contact.to_s,

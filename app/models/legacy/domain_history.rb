@@ -55,7 +55,7 @@ module Legacy
     def user
       @user ||= begin
         obj_his = Legacy::ObjectHistory.find_by(historyid: historyid)
-        Legacy::Domain.new_registrar_cached(obj_his.upid || obj_his.clid).try(:api_users).try(:first)
+        Legacy::Domain.new_api_user_cached(obj_his.upid || obj_his.clid)
       end
     end
 

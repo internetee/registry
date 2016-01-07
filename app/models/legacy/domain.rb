@@ -30,5 +30,11 @@ module Legacy
       @new_registrar_cache ||= {}
       @new_registrar_cache[old_id] ||= ::Registrar.select(:id).find_by(legacy_id: old_id)
     end
+
+    def self.new_api_user_cached old_id
+      @new_api_user_cache ||= {}
+      @new_api_user_cache[old_id] ||= Legacy::Domain.new_registrar_cached(old_id).try(:api_users).try(:first)
+    end
+
   end
 end
