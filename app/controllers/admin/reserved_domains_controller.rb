@@ -2,7 +2,7 @@ class Admin::ReservedDomainsController < AdminController
   load_and_authorize_resource
 
   def index
-    names = ReservedDomain.pluck(:names).each_with_object({}){|e_h,h| h.merge!(e_h)}
+    names = ReservedDomain.pluck(:name, :password).each_with_object({}){|domain, hash| hash[domain[0]] = domain[1]}
     names.names = nil if names.blank?
     @reserved_domains = names.to_yaml.gsub(/---.?\n/, '').gsub(/\.\.\..?\n/, '')
   end
@@ -24,13 +24,12 @@ class Admin::ReservedDomainsController < AdminController
     ReservedDomain.transaction do
       # removing old ones
       existing = ReservedDomain.any_of_domains(names.keys).pluck(:id)
-      ReservedDomain.where.not(id: existing).delete_all
+      ReservedDomain.where.not(id: existing).destroy_all
 
       #updating and adding
       names.each do |name, psw|
-        rec   = ReservedDomain.by_domain(name).first
-        rec ||= ReservedDomain.new
-        rec.names = {name => psw}
+        rec = ReservedDomain.find_or_initialize_by(name: name)
+        rec.password = psw
 
         unless rec.save
           result = false
@@ -38,7 +37,6 @@ class Admin::ReservedDomainsController < AdminController
         end
       end
     end
-
 
     if result
       flash[:notice] = I18n.t('record_updated')
