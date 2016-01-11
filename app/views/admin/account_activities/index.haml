@@ -29,7 +29,11 @@
           .form-group
             = f.label t(:receipt_date_until)
             = f.search_field :created_at_lteq, value: params[:q][:created_at_lteq], class: 'form-control datepicker', placeholder: t(:receipt_date_until), autocomplete: 'off'
-        .col-md-6{style: 'padding-top: 25px;'}
+        .col-md-3
+          .form-group
+            = label_tag t(:results_per_page)
+            = text_field_tag :results_per_page, params[:results_per_page], class: 'form-control', placeholder: t(:results_per_page)
+        .col-md-3{style: 'padding-top: 25px;'}
           %button.btn.btn-default.search
             &nbsp;
             %span.glyphicon.glyphicon-search
@@ -41,7 +45,7 @@
   .col-md-3
   .col-md-2
   .col-md-4{class: 'text-right'}
-    = t(:starting_balance)  + " #{@b.sum('sum').to_f} EUR"
+    = t(:starting_balance)  + " #{@sum.to_a.map(&:sum).sum.to_f} EUR"
 
 %hr
 
@@ -62,7 +66,7 @@
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'sum')
         %tbody
-          -total = @b.sum('sum').to_f
+          -total = @sum.to_a.map(&:sum).sum.to_f
           - @account_activities.each do |x|
             %tr
               %td= link_to(x.account.registrar.try(:code), admin_registrar_path(x.account.registrar))

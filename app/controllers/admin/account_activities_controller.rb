@@ -19,11 +19,51 @@ class Admin::AccountActivitiesController < AdminController
     end
 
     @q = AccountActivity.includes(:invoice, account: :registrar).search(params[:q])
+    @b = AccountActivity.search(balance_params)
     @q.sorts = 'id desc' if @q.sorts.empty?
-    @b = AccountActivity.search(balance_params).result.where.not(id: @q.result.map(&:id))
+
+
+
+    @account_activities = @q.result.page(params[:page]).per(params[:results_per_page])
+    sort = @account_activities.orders.map(&:to_sql).join(",")
+
+
+    if params[:page] && params[:page].to_i > 1
+
+
+      @sum = @q.result.reorder(sort).limit(@account_activities.offset_value) + @b.result.where.not(id: @q.result.map(&:id))
+
+    else
+
+      @sum = @b.result.where.not(id: @q.result.map(&:id))
+
+
+    end
+
+
+
+
+
+
+    # throw "cdsfs"
+
+    # if params[:page] && params[:page].to_i > 1
+    #
+    #   @b = @q.result.page(params[:page].to_i - 1)
+    #
+    #   @b = @b.per(params[:results_per_page])
+    #
+    #
+    # else
+    #
+    #   @b = AccountActivity.search(balance_params)
+    #
+    #   @b = @b.result.where.not(id: @q.result.map(&:id))
+    #
+    # end
 
     respond_to do |format|
-      format.html { @account_activities = @q.result.page(params[:page]) }
+      format.html
       format.csv do
         send_data @q.result.to_csv, filename: "account_activities_#{Time.zone.now.to_formatted_s(:number)}.csv"
       end
