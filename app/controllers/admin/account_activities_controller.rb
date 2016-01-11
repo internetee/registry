@@ -22,45 +22,14 @@ class Admin::AccountActivitiesController < AdminController
     @b = AccountActivity.search(balance_params)
     @q.sorts = 'id desc' if @q.sorts.empty?
 
-
-
     @account_activities = @q.result.page(params[:page]).per(params[:results_per_page])
     sort = @account_activities.orders.map(&:to_sql).join(",")
 
-
     if params[:page] && params[:page].to_i > 1
-
-
       @sum = @q.result.reorder(sort).limit(@account_activities.offset_value) + @b.result.where.not(id: @q.result.map(&:id))
-
     else
-
       @sum = @b.result.where.not(id: @q.result.map(&:id))
-
-
     end
-
-
-
-
-
-
-    # throw "cdsfs"
-
-    # if params[:page] && params[:page].to_i > 1
-    #
-    #   @b = @q.result.page(params[:page].to_i - 1)
-    #
-    #   @b = @b.per(params[:results_per_page])
-    #
-    #
-    # else
-    #
-    #   @b = AccountActivity.search(balance_params)
-    #
-    #   @b = @b.result.where.not(id: @q.result.map(&:id))
-    #
-    # end
 
     respond_to do |format|
       format.html
