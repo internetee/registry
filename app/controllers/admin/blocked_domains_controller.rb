@@ -4,7 +4,7 @@ class Admin::BlockedDomainsController < AdminController
   def index
     bd = BlockedDomain.pluck(:name)
     if bd
-      @blocked_domains = bd.to_yaml.gsub("---\n", '').gsub("-", '').gsub(/\.\.\..?\n/, '')
+      @blocked_domains = bd.to_yaml.gsub("---\n", '').gsub("-", '').gsub(" ", '')
     end
   end
 
@@ -21,13 +21,12 @@ class Admin::BlockedDomainsController < AdminController
       render :index and return
     end
 
+    names = names.split(' ')
     result = true
     BlockedDomain.transaction do
-      # removing old ones
       existing = BlockedDomain.any_of_domains(names).pluck(:id)
       BlockedDomain.where.not(id: existing).destroy_all
 
-      #updating and adding
       names.each do |name|
         rec = BlockedDomain.find_or_initialize_by(name: name)
         unless rec.save
