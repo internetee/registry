@@ -244,7 +244,7 @@ class Domain < ActiveRecord::Base
         if domain.pending_delete? || domain.pending_delete_confirmation?
           DomainMailer.pending_delete_expired_notification(domain.id, true).deliver
         end
-        domain.clean_pendings!
+        domain.clean_pendings_lowlevel
         unless Rails.env.test?
           STDOUT << "#{Time.zone.now.utc} Domain.clean_expired_pendings: ##{domain.id} (#{domain.name})\n"
         end
@@ -437,6 +437,25 @@ class Domain < ActiveRecord::Base
     status_notes[DomainStatus::PENDING_UPDATE] = ''
     status_notes[DomainStatus::PENDING_DELETE] = ''
     save
+  end
+
+
+  # state change shouln't be
+  def clean_pendings_lowlevel
+    statuses.delete(DomainStatus::PENDING_DELETE_CONFIRMATION)
+    statuses.delete(DomainStatus::PENDING_UPDATE)
+    statuses.delete(DomainStatus::PENDING_DELETE)
+
+    status_notes[DomainStatus::PENDING_UPDATE] = ''
+    status_notes[DomainStatus::PENDING_DELETE] = ''
+
+    update_columns(
+        registrant_verification_token:    nil,
+        registrant_verification_asked_at: nil,
+        pending_json: {},
+        status_notes: status_notes,
+        statuses:     statuses.presence || [DomainStatus::OK]
+    )
   end
 
   def pending_update!

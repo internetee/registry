@@ -12,8 +12,7 @@ class DomainUpdateConfirmJob < Que::Job
       when RegistrantVerification::REJECTED
         domain.send_mail :pending_update_rejected_notification_for_new_registrant
         domain.poll_message!(:poll_pending_update_rejected_by_registrant)
-        domain.clean_pendings!
-        domain.save(validate: false)
+        domain.clean_pendings_lowlevel
       end
       destroy # it's best to destroy the job in the same transaction
     end
