@@ -238,7 +238,7 @@ class Contact < ActiveRecord::Base
   def ident_valid_format?
     case ident_country_code
     when 'EE'.freeze
-      err_msg = "invalid_EE_identity_format#{"__update" if id}".to_sym
+      err_msg = "invalid_EE_identity_format#{"_update" if id}".to_sym
       case ident_type
         when 'priv'.freeze
           errors.add(:ident, err_msg) unless Isikukood.new(ident).valid?
