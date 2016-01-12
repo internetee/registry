@@ -123,6 +123,7 @@ class Epp::Contact < Contact
         [:email, :invalid],
         [:ident, :invalid],
         [:ident, :invalid_EE_identity_format],
+        [:ident, :invalid_EE_identity_format_update],
         [:ident, :invalid_birthday_format],
         [:ident, :invalid_country_code],
         [:ident_type, :missing],

@@ -238,13 +238,14 @@ class Contact < ActiveRecord::Base
   def ident_valid_format?
     case ident_country_code
     when 'EE'.freeze
+      err_msg = "invalid_EE_identity_format#{"__update" if id}".to_sym
       case ident_type
         when 'priv'.freeze
-          errors.add(:ident, :invalid_EE_identity_format) unless Isikukood.new(ident).valid?
+          errors.add(:ident, err_msg) unless Isikukood.new(ident).valid?
         when 'org'.freeze
           # !%w(1 7 8 9).freeze.include?(ident.first) ||
           if ident.size != 8 || !(ident =~/\A[0-9]{8}\z/)
-            errors.add(:ident, :invalid_EE_identity_format)
+            errors.add(:ident, err_msg)
           end
       end
     end
