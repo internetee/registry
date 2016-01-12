@@ -31,7 +31,7 @@ if @cron_group == 'registry'
   # end
 
   every :day, at: '12:20am' do
-    runner 'Domain.clean_expired_pendings'
+    runner 'DomainCron.clean_expired_pendings'
   end
 
   every 3.hours do
@@ -39,19 +39,19 @@ if @cron_group == 'registry'
   end
 
   every 42.minutes do
-    runner 'Domain.destroy_delete_candidates'
+    runner 'DomainCron.destroy_delete_candidates'
   end
 
   every 45.minutes do
-    runner 'Domain.start_expire_period'
+    runner 'DomainCron.start_expire_period'
   end
 
   every 50.minutes do
-    runner 'Domain.start_delete_period'
+    runner 'DomainCron.start_delete_period'
   end
 
   every 52.minutes do
-    runner 'Domain.start_redemption_grace_period'
+    runner 'DomainCron.start_redemption_grace_period'
   end
 end
 
