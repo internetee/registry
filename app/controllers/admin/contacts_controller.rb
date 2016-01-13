@@ -11,7 +11,7 @@ class Admin::ContactsController < AdminController
     end
 
     @q = Contact.includes(:registrar).search(search_params)
-    @contacts = @q.result.page(params[:page])
+    @contacts = @q.result(distinct: :true).page(params[:page])
 
     if params[:statuses_contains]
       contacts = Contact.includes(:registrar).where(
@@ -23,7 +23,7 @@ class Admin::ContactsController < AdminController
 
     normalize_search_parameters do
       @q = contacts.search(search_params)
-      @contacts = @q.result.page(params[:page])
+      @contacts = @q.result(distinct: :true).page(params[:page])
     end
 
     @contacts = @contacts.per(params[:results_per_page]) if params[:results_per_page].to_i > 0
