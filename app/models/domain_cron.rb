@@ -15,10 +15,10 @@ class DomainCron
       end
       count += 1
       if domain.pending_update?
-        domain.send_mail :pending_update_expired_notification_for_new_registrant
+        DomainMailer.pending_update_expired_notification_for_new_registrant(domain.id).deliver
       end
       if domain.pending_delete? || domain.pending_delete_confirmation?
-        DomainMailer.pending_delete_expired_notification(domain.id, true).deliver
+        DomainMailer.pending_delete_expired_notification(domain.id, deliver_emails).deliver
       end
       domain.clean_pendings!
       unless Rails.env.test?
@@ -33,44 +33,55 @@ class DomainCron
     STDOUT << "#{Time.zone.now.utc} - Expiring domains\n" unless Rails.env.test?
 
     domains = Domain.where('valid_to <= ?', Time.zone.now)
+    marked = 0
+    real = 0
     domains.each do |domain|
       next unless domain.expirable?
+      real += 1
       domain.set_graceful_expired
-      DomainMailer.expiration_reminder(domain.id).deliver
       STDOUT << "#{Time.zone.now.utc} Domain.start_expire_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-      domain.save
+      domain.save and marked += 1
     end
 
-    STDOUT << "#{Time.zone.now.utc} - Successfully expired #{domains.count} domains\n" unless Rails.env.test?
+    STDOUT << "#{Time.zone.now.utc} - Successfully expired #{marked} of #{real} domains\n" unless Rails.env.test?
   end
 
   def self.start_redemption_grace_period
     STDOUT << "#{Time.zone.now.utc} - Setting server_hold to domains\n" unless Rails.env.test?
 
     d = Domain.where('outzone_at <= ?', Time.zone.now)
+    marked = 0
+    real = 0
     d.each do |domain|
       next unless domain.server_holdable?
+      real += 1
       domain.statuses << DomainStatus::SERVER_HOLD
       STDOUT << "#{Time.zone.now.utc} Domain.start_redemption_grace_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-      domain.save
+      domain.save and marked += 1
     end
 
-    STDOUT << "#{Time.zone.now.utc} - Successfully set server_hold to #{d.count} domains\n" unless Rails.env.test?
+    STDOUT << "#{Time.zone.now.utc} - Successfully set server_hold to #{marked} of #{real} domains\n" unless Rails.env.test?
+    marked
   end
 
   def self.start_delete_period
-    STDOUT << "#{Time.zone.now.utc} - Setting delete_candidate to domains\n" unless Rails.env.test?
+    begin
+      STDOUT << "#{Time.zone.now.utc} - Setting delete_candidate to domains\n" unless Rails.env.test?
 
-    d = Domain.where('delete_at <= ?', Time.zone.now)
-    d.each do |domain|
-      next unless domain.delete_candidateable?
-      domain.statuses << DomainStatus::DELETE_CANDIDATE
-      STDOUT << "#{Time.zone.now.utc} Domain.start_delete_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-      domain.save
+      d = Domain.where('delete_at <= ?', Time.zone.now)
+      marked = 0
+      real = 0
+      d.each do |domain|
+        next unless domain.delete_candidateable?
+        real += 1
+        domain.statuses << DomainStatus::DELETE_CANDIDATE
+        STDOUT << "#{Time.zone.now.utc} Domain.start_delete_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
+        domain.save and marked += 1
+      end
+    ensure # the operator should see what was accomplished
+      STDOUT << "#{Time.zone.now.utc} - Finished setting delete_candidate -  #{marked} out of #{real} successfully set\n" unless Rails.env.test?
     end
-
-    return if Rails.env.test?
-    STDOUT << "#{Time.zone.now.utc} - Successfully set delete_candidate to #{d.count} domains\n"
+    marked
   end
 
   def self.destroy_delete_candidates
