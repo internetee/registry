@@ -29,7 +29,7 @@ class Contact < ActiveRecord::Base
     uniqueness: { message: :epp_id_taken },
     format: { with: /\A[\w\-\:\.\_]*\z/i, message: :invalid },
     length: { maximum: 100, message: :too_long_contact_code }
-  validate :ident_valid_format?
+  validate :val_ident_valid_format?
   validate :uniq_statuses?
   validate :validate_html
 
@@ -239,16 +239,17 @@ class Contact < ActiveRecord::Base
     name || '[no name]'
   end
 
-  def ident_valid_format?
+  def val_ident_valid_format?
     case ident_country_code
     when 'EE'.freeze
+      err_msg = "invalid_EE_identity_format#{"_update" if id}".to_sym
       case ident_type
         when 'priv'.freeze
-          errors.add(:ident, :invalid_EE_identity_format) unless Isikukood.new(ident).valid?
+          errors.add(:ident, err_msg) unless Isikukood.new(ident).valid?
         when 'org'.freeze
           # !%w(1 7 8 9).freeze.include?(ident.first) ||
           if ident.size != 8 || !(ident =~/\A[0-9]{8}\z/)
-            errors.add(:ident, :invalid_EE_identity_format)
+            errors.add(:ident, err_msg)
           end
       end
     end
