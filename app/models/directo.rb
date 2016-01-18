@@ -23,7 +23,7 @@ class Directo < ActiveRecord::Base
               xml.line(
                   "ProductID"=> Setting.directo_receipt_product_name,
                   "Quantity" => 1,
-                  "UnitPriceWoVAT" =>ActionController::Base.helpers.number_with_precision(transaction.sum.to_f/1.2, precision: 2, separator: "."),
+                  "UnitPriceWoVAT" =>ActionController::Base.helpers.number_with_precision(transaction.invoice.sum_without_vat, precision: 2, separator: "."),
                   "ProductName" => transaction.description
               )
             }
