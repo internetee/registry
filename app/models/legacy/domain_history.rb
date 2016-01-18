@@ -69,6 +69,7 @@ module Legacy
       self.class.namesrvs ||= {}
       self.class.namesrvs[id] ||= {}
       ids = []
+      to_import = []
 
       nsset_histories.at(time).to_a.each do |nsset|
         nsset.host_histories.at(time).each do |host|
@@ -102,42 +103,42 @@ module Legacy
                 where("object->>'hostname'='#{main_attrs[:hostname]}'").
                 reorder("created_at ASC").first
               server[:id] = version.item_id.to_i
-              version.item.versions.where(event: :create).first_or_create!(
-                  whodunnit: user.try(:id),
-                  object: nil,
-                  object_changes: server.each_with_object({}){|(k,v), h| h[k] = [nil, v]},
-                  created_at: time
-              )
-              if !version.ipv4.sort.eql?(main_attrs[:ipv4]) || !version.ipv6.sort.eql?(main_attrs[:ipv6])
+              ::NameserverVersion.where(item_type: ::NameserverVersion, item_id: version.item_id).where(event: :create).first_or_create!(
+                    whodunnit: user.try(:id),
+                    object: nil,
+                    object_changes: server.each_with_object({}){|(k,v), h| h[k] = [nil, v]},
+                    created_at: time
+                )
+              if !version.object["ipv4"].sort.eql?(main_attrs[:ipv4]) || !version.object["ipv6"].sort.eql?(main_attrs[:ipv6])
                 object_changes = {}
                 server.stringify_keys.each{|k, v| object_changes[k] = [v, version.object[k]] if v != version.object[k] }
-                version.item.versions.where(event: :update).create!(
+                to_import << version.item.versions.where(event: :update).build(
                     whodunnit: user.try(:id),
                     object: server,
                     object_changes: object_changes,
                     created_at: time
-                )
+                ).attributes
               end
 
             # if no historical data - try to load existing
             elsif (list = ::Nameserver.where(domain_id: main_attrs[:domain_id], legacy_domain_id: main_attrs[:legacy_domain_id], hostname: main_attrs[:hostname]).to_a).any?
               if new_no_version = list.detect{|e|e.versions.where(event: :create).none?} # no create version, so was created via import
                 server[:id] = new_no_version.id.to_i
-                new_no_version.versions.where(event: :create).first_or_create!(
+                to_import << new_no_version.versions.where(event: :create).build(
                     whodunnit: user.try(:id),
                     object: nil,
                     object_changes: server.each_with_object({}){|(k,v), h| h[k] = [nil, v]},
                     created_at: time
-                )
+                ).attributes
                 if !new_no_version.ipv4.sort.eql?(main_attrs[:ipv4]) || !new_no_version.ipv6.sort.eql?(main_attrs[:ipv6])
                   object_changes = {}
                   server.stringify_keys.each{|k, v| object_changes[k] = [v, new_no_version.attributes[k]] if v != new_no_version.attributes[k] }
-                  new_no_version.versions.where(event: :update).create!(
+                  to_import << new_no_version.versions.where(event: :update).build(
                       whodunnit: user.try(:id),
                       object: server,
                       object_changes: object_changes,
                       created_at: time
-                  )
+                  ).attributes
                 end
               else
                 server[:id] = ::Nameserver.next_id
@@ -153,6 +154,7 @@ module Legacy
 
           end
         end
+        ::NameserverVersion.import_without_validations_or_callbacks to_import.first.keys, to_import.map(&:values) if to_import.any?
 
       end
       ids
@@ -197,7 +199,7 @@ module Legacy
           else
             item=::Dnskey.new(id: ::Dnskey.next_id)
             DnskeyVersion.where(item_type: ::Dnskey.to_s, item_id: item.id).where(event: :create).first_or_create!(dns.historical_data(self, new_domain))
-            DnskeyVersion.where(item_type: ::Dnskey.to_s, item_id: item.id).where(event: :destroy).first_or_create!(dns.historical_data(self, new_domain), :valid_to) if dns.valid_to
+            DnskeyVersion.where(item_type: ::Dnskey.to_s, item_id: item.id).where(event: :destroy).first_or_create!(dns.historical_data(self, new_domain, :valid_to)) if dns.valid_to
             self.class.dnssecs[id][dns] = item.id
             ids << item.id
           end

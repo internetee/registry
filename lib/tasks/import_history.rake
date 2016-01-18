@@ -118,6 +118,7 @@ namespace :import do
     parallel_import(old_ids) do |legacy_domain_id, process_idx|
       start = Time.now.to_f
       Domain.transaction do
+        data     = []
         domain   = Domain.find_by(legacy_id: legacy_domain_id)
         version_domain = DomainVersion.where("object->>'legacy_id' = '#{legacy_domain_id}'").select(:item_id).first
         domain ||= Domain.new(id: version_domain.item_id, legacy_id: legacy_domain_id) if version_domain
@@ -164,7 +165,7 @@ namespace :import do
             end
             next if changes.blank? && event != :destroy
 
-            DomainVersion.create!(
+            hash = {
                 item_type: domain.class,
                 item_id:   domain.id,
                 event:     event,
@@ -179,12 +180,14 @@ namespace :import do
                     dnskeys:        responder.history_domain.import_dnskeys_history(domain, time),
                     registrant:     [responder.history_domain.new_registrant_id]
                 }
-            )
+            }
+            data << hash
 
             last_changes = new_attrs
             i += 1
           end
         end
+        DomainVersion.import_without_validations_or_callbacks data.first.keys, data.map(&:values) if data.any?
       end
       puts "[PID: #{Process.pid}] Legacy Domain #{legacy_domain_id} (#{process_idx}/#{old_size}) finished in #{Time.now.to_f - start}"
     end
