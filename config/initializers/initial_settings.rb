@@ -35,6 +35,7 @@ if con.present? && con.table_exists?('settings')
   Setting.save_default(:minimum_deposit, 0.0)
   Setting.save_default(:directo_receipt_payment_term, "R")
   Setting.save_default(:directo_receipt_product_name, "ETTEM06")
+  Setting.save_default(:directo_sales_agent, "JAANA")
 
   Setting.save_default(:days_to_renew_domain_before_expire, 90)
   Setting.save_default(:expire_warning_period, 15)
