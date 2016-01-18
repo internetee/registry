@@ -6,8 +6,15 @@ class Registrar::ContactsController < Registrar::DeppController # EPP controller
 
     params[:q] ||= {}
     params[:q].delete_if { |_k, v| v.blank? }
-    if params[:q].length == 1 && params[:q][:name_matches].present?
-      @contacts = Contact.find_by(name: params[:q][:name_matches])
+
+    search_params = params[:q].deep_dup
+
+    if search_params[:domain_contacts_type_in].is_a?(Array) && search_params[:domain_contacts_type_in].delete('registrant')
+      search_params[:registrant_domains_id_not_null] = 1
+    end
+
+    if search_params.length == 1 && search_params[:name_matches].present?
+      @contacts = Contact.find_by(name: search_params[:name_matches])
     end
 
     if params[:statuses_contains]
@@ -19,7 +26,7 @@ class Registrar::ContactsController < Registrar::DeppController # EPP controller
     end
 
     normalize_search_parameters do
-      @q = contacts.search(params[:q])
+      @q = contacts.search(search_params)
       @contacts = @q.result.page(params[:page])
     end
 
