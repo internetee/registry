@@ -2,10 +2,42 @@ class Admin::ReservedDomainsController < AdminController
   load_and_authorize_resource
 
   def index
-    names = ReservedDomain.pluck(:name, :password).each_with_object({}){|domain, hash| hash[domain[0]] = domain[1]}
-    names.names = nil if names.blank?
-    @reserved_domains = names.to_yaml.gsub(/---.?\n/, '').gsub(/\.\.\..?\n/, '')
+
+    params[:q] ||= {}
+    domains = ReservedDomain.all
+    @q = domains.search(params[:q])
+    @domains = @q.result.page(params[:page])
+    @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i > 0
+
   end
+
+  def new
+    @domain = ReservedDomain.new
+  end
+
+  def edit
+    authorize! :update, Depp::Domain
+    @data = @domain.info(params[:domain_name])
+    @domain_params = Depp::Domain.construct_params_from_server_data(@data)
+  end
+
+  def update
+    authorize! :update, Depp::Domain
+    @domain_params = params[:domain]
+    @data = @domain.update(@domain_params)
+
+    if response_ok?
+      redirect_to info_registrar_domains_url(domain_name: @domain_params[:name])
+    else
+      params[:domain_name] = @domain_params[:name]
+      render 'new'
+    end
+  end
+
+  def delete
+    authorize! :delete, Depp::Domain
+  end
+
 
   def create
     @reserved_domains = params[:reserved_domains]
