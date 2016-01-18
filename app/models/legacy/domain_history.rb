@@ -108,7 +108,7 @@ module Legacy
                   object_changes: server.each_with_object({}){|(k,v), h| h[k] = [nil, v]},
                   created_at: time
               )
-              if !version.ipv4.sort.eql?(main_attrs[:ipv4]) || !version.ipv6.sort.eql?(main_attrs[:ipv6])
+              if !version.object["ipv4"].sort.eql?(main_attrs[:ipv4]) || !version.object["ipv6"].sort.eql?(main_attrs[:ipv6])
                 object_changes = {}
                 server.stringify_keys.each{|k, v| object_changes[k] = [v, version.object[k]] if v != version.object[k] }
                 version.item.versions.where(event: :update).create!(
