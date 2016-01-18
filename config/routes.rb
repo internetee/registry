@@ -103,6 +103,12 @@ Rails.application.routes.draw do
   namespace :registrant do
     root 'domains#index'
 
+    resources :domains do
+      collection do
+        get :download_list
+      end
+    end
+
     # resources :invoices do
       # member do
         # get 'download_pdf'
@@ -140,6 +146,16 @@ Rails.application.routes.draw do
         get 'delete'
       end
     end
+
+    resources :registrars do
+      resources :api_users
+      resources :white_ips
+      collection do
+        get :search
+      end
+    end
+
+    resources :registrants
 
     resources :whois
     # resources :contacts do
