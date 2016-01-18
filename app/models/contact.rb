@@ -504,6 +504,6 @@ class Contact < ActiveRecord::Base
 
  def update_related_whois_records
    RegenerateWhoisRecordJob.enqueue related_domain_descriptions.keys, :name
- end	 
+ end
 
 end
