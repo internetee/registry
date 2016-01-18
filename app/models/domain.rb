@@ -739,12 +739,26 @@ class Domain < ActiveRecord::Base
 
   # special handling for admin changing status
   def admin_status_update(update)
+    #check for hold status
+    if self.statuses.include?(
+        DomainStatus::SERVER_HOLD) &&
+        !update.include?(DomainStatus::SERVER_HOLD)
+
+      if self.statuses.include?(DomainStatus::EXPIRED)
+        self.outzone_at = Time.zone.now
+      else
+        self.outzone_at = nil
+      end
+    end
+
     # check for deleted status
     statuses.each do |s|
       unless update.include? s
         case s
           when DomainStatus::PENDING_DELETE
             self.delete_at = nil
+          when DomainStatus::SERVER_MANUAL_INZONE # removal causes server hold to set
+            self.outzone_at = Time.zone.now if self.force_delete_at.present?
           # Handle any other special remove cases?
           # when DomainStatus::FORCE_DELETE unset_force_delete
         end
