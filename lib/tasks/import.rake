@@ -364,16 +364,6 @@ namespace :import do
       legacy_contact_id
     )
 
-    # rubocop: disable Lint/UselessAssignment
-    domain_status_columns = %w(
-      description
-      value
-      creator_str
-      updator_str
-      legacy_domain_id
-    )
-    # rubocop: enable Lint/UselessAssignment
-
     nameserver_columns = %w(
       hostname
       ipv4
@@ -398,7 +388,6 @@ namespace :import do
 
     domains, nameservers, dnskeys, domain_contacts = [], [], [], []
     existing_domain_ids = Domain.pluck(:legacy_id)
-    user = "rake-#{`whoami`.strip} #{ARGV.join ' '}"
     count = 0
 
     Legacy::Domain.includes(
@@ -414,16 +403,6 @@ namespace :import do
       count += 1
 
       begin
-        # domain statuses
-        domain_statuses = []
-        x.object_states.each do |state|
-          next if state.name.blank?
-          domain_statuses << state.name
-        end
-
-        # OK status is default
-        domain_statuses << DomainStatus::OK if domain_statuses.empty?
-
         domains << [
           x.object_registry.name.try(:strip),
           Registrar.find_by(legacy_id: x.object.try(:clid)).try(:id),
@@ -442,7 +421,7 @@ namespace :import do
           x.id,
           x.object_registry.try(:crid),
           x.registrant,
-          domain_statuses
+          x.new_states
         ]
 
         # admin contacts
@@ -774,6 +753,7 @@ namespace :import do
 
     puts "-----> Imported zones in #{(Time.zone.now.to_f - start).round(2)} seconds"
   end
+
 end
 
 def parse_zone_ns_data(domain, zone)

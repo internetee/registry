@@ -225,6 +225,10 @@ class Contact < ActiveRecord::Base
       kit.to_pdf
     end
 
+
+    def next_id
+      self.connection.select_value("SELECT nextval('#{self.sequence_name}')")
+    end
   end
 
   def roid

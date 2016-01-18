@@ -221,6 +221,10 @@ class Domain < ActiveRecord::Base
       )
     end
 
+    def next_id
+      self.connection.select_value("SELECT nextval('#{self.sequence_name}')")
+    end
+
     # rubocop: disable Metrics/AbcSize
     # rubocop: disable Metrics/CyclomaticComplexity
     # rubocop: disable Metrics/PerceivedComplexity
@@ -821,8 +825,8 @@ class Domain < ActiveRecord::Base
     log[:admin_contacts] = admin_contact_ids
     log[:tech_contacts]  = tech_contact_ids
     log[:nameservers]    = nameserver_ids
+    log[:dnskeys]        = dnskey_ids
     log[:registrant]     = [registrant_id]
-    log[:domain_statuses] = domain_status_ids
     log
   end
 
