@@ -210,7 +210,7 @@ module Legacy
 
     class << self
       def changes_dates_for domain_id
-        sql = %Q{SELECT  dh.*, valid_from
+        sql = %Q{SELECT  dh.*, valid_from, valid_to
               FROM domain_history dh JOIN history h ON dh.historyid=h.id where dh.id=#{domain_id};}
 
         hash = {}

@@ -113,7 +113,10 @@ namespace :import do
 
   desc 'Import domain history'
   task history_domains: :environment do
-    parallel_import(Legacy::DomainHistory.uniq.pluck(:id)) do |legacy_domain_id|
+    old_ids  = Legacy::DomainHistory.uniq.pluck(:id)
+    old_size = old_ids.size
+    parallel_import(old_ids) do |legacy_domain_id, process_idx|
+      start = Time.now.to_f
       Domain.transaction do
         domain   = Domain.find_by(legacy_id: legacy_domain_id)
         version_domain = DomainVersion.where("object->>'legacy_id' = '#{legacy_domain_id}'").select(:item_id).first
@@ -183,8 +186,8 @@ namespace :import do
           end
         end
       end
+      puts "[PID: #{Process.pid}] Legacy Domain #{legacy_domain_id} (#{process_idx}/#{old_size}) finished in #{Time.now.to_f - start}"
     end
-
   end
 
 
