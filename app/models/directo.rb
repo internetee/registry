@@ -13,7 +13,7 @@ class Directo < ActiveRecord::Base
             mappers[num] = transaction
 
             xml.invoice(
-                "SalesAgent"  => transaction.invoice.seller_name,
+                "SalesAgent"  => Setting.directo_sales_agent,
                 "Number"      => num,
                 "InvoiceDate" => (transaction.paid_at||transaction.created_at).strftime("%Y-%m-%dT%H:%M:%S"),
                 "PaymentTerm" => Setting.directo_receipt_payment_term,
