@@ -8,7 +8,8 @@ class Directo < ActiveRecord::Base
       builder = Nokogiri::XML::Builder.new(encoding: "UTF-8") do |xml|
         xml.invoices {
           group.each do |invoice|
-            next if invoice.account_activity.nil? || invoice.account_activity.bank_transaction.nil? || invoice.account_activity.bank_transaction.sum.nil?
+            next if invoice.account_activity.nil? || invoice.account_activity.bank_transaction.nil?
+            next if invoice.account_activity.bank_transaction.sum.nil?
 
             num     = invoice.number
             mappers[num] = invoice
@@ -32,9 +33,8 @@ class Directo < ActiveRecord::Base
       end
 
       data = builder.to_xml.gsub("\n",'')
-      # response = RestClient::Request.execute(url: ENV['directo_invoice_url'], method: :post, payload: {put: "1", what: "invoice", xmldata: data}, verify_ssl: false).to_s
-      # dump_result_to_db(mappers, response)
-      binding.pry
+      response = RestClient::Request.execute(url: ENV['directo_invoice_url'], method: :post, payload: {put: "1", what: "invoice", xmldata: data}, verify_ssl: false).to_s
+      dump_result_to_db(mappers, response)
     end
   end
 
