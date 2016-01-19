@@ -2,7 +2,7 @@ class BankTransaction < ActiveRecord::Base
   include Versions
   belongs_to :bank_statement
   has_one :account_activity
-  has_many :directo_records, as: :item, class_name: 'Directo'
+  has_many :directo_records, as: :item, class_name: 'Directo'# Deprecated
 
   scope :unbinded, lambda {
     where('id NOT IN (SELECT bank_transaction_id FROM account_activities where bank_transaction_id IS NOT NULL)')
