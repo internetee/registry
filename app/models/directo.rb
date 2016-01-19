@@ -2,29 +2,27 @@ class Directo < ActiveRecord::Base
   belongs_to :item, polymorphic: true
 
   def self.send_receipts
-    new_trans = BankTransaction.where(in_directo: false)
+    new_trans = Invoice.where(invoice_type: "DEB", in_directo: false)
     new_trans.find_in_batches(batch_size: 10).each do |group|
-      mappers = {} # need them as no direct connection between transaction and invoice
+      mappers = {} # need them as no direct connection between invoice
       builder = Nokogiri::XML::Builder.new(encoding: "UTF-8") do |xml|
         xml.invoices {
-          group.each do |transaction|
-            next unless transaction.invoice
-            num = transaction.invoice_num
-            mappers[num] = transaction
-
+          group.each do |invoice|
+            num     = invoice.number
+            mappers[num] = invoice
             xml.invoice(
                 "SalesAgent"  => Setting.directo_sales_agent,
                 "Number"      => num,
-                "InvoiceDate" => (transaction.paid_at||transaction.created_at).strftime("%Y-%m-%dT%H:%M:%S"),
+                "InvoiceDate" => (invoice.account_activity.try(:bank_transaction).try(:paid_at) || invoice.updated_at).strftime("%Y-%m-%dT%H:%M:%S"),
                 "PaymentTerm" => Setting.directo_receipt_payment_term,
-                "Currency"    => transaction.currency,
-                "CustomerCode"=> transaction.invoice.try(:buyer).try(:directo_handle)
+                "Currency"    => invoice.currency,
+                "CustomerCode"=> invoice.buyer.try(:directo_handle)
             ){
               xml.line(
                   "ProductID"=> Setting.directo_receipt_product_name,
                   "Quantity" => 1,
-                  "UnitPriceWoVAT" =>ActionController::Base.helpers.number_with_precision(transaction.invoice.sum_without_vat, precision: 2, separator: "."),
-                  "ProductName" => transaction.description
+                  "UnitPriceWoVAT" =>ActionController::Base.helpers.number_with_precision(invoice.sum_cache/(1+invoice.vat_prc), precision: 2, separator: "."),
+                  "ProductName" => invoice.description
               )
             }
           end
