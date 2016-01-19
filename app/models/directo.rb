@@ -8,12 +8,15 @@ class Directo < ActiveRecord::Base
       builder = Nokogiri::XML::Builder.new(encoding: "UTF-8") do |xml|
         xml.invoices {
           group.each do |invoice|
+            next if invoice.account_activity.nil? || invoice.account_activity.bank_transaction.nil?
+            next if invoice.account_activity.bank_transaction.sum.nil? || invoice.account_activity.bank_transaction.sum != invoice.sum_cache
+
             num     = invoice.number
             mappers[num] = invoice
             xml.invoice(
                 "SalesAgent"  => Setting.directo_sales_agent,
                 "Number"      => num,
-                "InvoiceDate" => (invoice.account_activity.try(:bank_transaction).try(:paid_at) || invoice.updated_at).strftime("%Y-%m-%dT%H:%M:%S"),
+                "InvoiceDate" => invoice.created_at.strftime("%Y-%m-%dT%H:%M:%S"),
                 "PaymentTerm" => Setting.directo_receipt_payment_term,
                 "Currency"    => invoice.currency,
                 "CustomerCode"=> invoice.buyer.try(:directo_handle)
