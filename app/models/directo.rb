@@ -9,7 +9,7 @@ class Directo < ActiveRecord::Base
         xml.invoices {
           group.each do |invoice|
             next if invoice.account_activity.nil? || invoice.account_activity.bank_transaction.nil?
-            next if invoice.account_activity.bank_transaction.sum.nil?
+            next if invoice.account_activity.bank_transaction.sum.nil? || invoice.account_activity.bank_transaction.sum != invoice.sum_cache
 
             num     = invoice.number
             mappers[num] = invoice
