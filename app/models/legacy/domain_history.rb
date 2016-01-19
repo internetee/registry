@@ -103,7 +103,8 @@ module Legacy
                 where("object->>'hostname'='#{main_attrs[:hostname]}'").
                 reorder("created_at ASC").first
               server[:id] = version.item_id.to_i
-              ::NameserverVersion.where(item_type: ::NameserverVersion, item_id: version.item_id).where(event: :create).first_or_create!(
+              search_rel = ::NameserverVersion.where(item_type: ::NameserverVersion, item_id: version.item_id)
+              search_rel.where(event: :create).first_or_create!(
                     whodunnit: user.try(:id),
                     object: nil,
                     object_changes: server.each_with_object({}){|(k,v), h| h[k] = [nil, v]},
@@ -112,7 +113,7 @@ module Legacy
               if !version.object["ipv4"].sort.eql?(main_attrs[:ipv4]) || !version.object["ipv6"].sort.eql?(main_attrs[:ipv6])
                 object_changes = {}
                 server.stringify_keys.each{|k, v| object_changes[k] = [v, version.object[k]] if v != version.object[k] }
-                to_import << version.item.versions.where(event: :update).build(
+                to_import << search_rel.where(event: :update).build(
                     whodunnit: user.try(:id),
                     object: server,
                     object_changes: object_changes,
