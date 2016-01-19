@@ -6,7 +6,7 @@ namespace :import do
   end
 
   def parallel_import all_ids
-    thread_pool = (Parallel.processor_count rescue 4) - 1
+    thread_pool = (Parallel.processor_count rescue 4)
     threads     = []
 
     all_ids.each_with_index do |one_id, i|
