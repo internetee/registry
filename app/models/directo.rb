@@ -8,8 +8,9 @@ class Directo < ActiveRecord::Base
       builder = Nokogiri::XML::Builder.new(encoding: "UTF-8") do |xml|
         xml.invoices {
           group.each do |transaction|
-            next unless transaction.invoice
-            num = transaction.invoice_num
+            invoice = transaction.invoice
+            next unless invoice
+            num     = transaction.invoice_num
             mappers[num] = transaction
 
             xml.invoice(
@@ -18,12 +19,12 @@ class Directo < ActiveRecord::Base
                 "InvoiceDate" => (transaction.paid_at||transaction.created_at).strftime("%Y-%m-%dT%H:%M:%S"),
                 "PaymentTerm" => Setting.directo_receipt_payment_term,
                 "Currency"    => transaction.currency,
-                "CustomerCode"=> transaction.invoice.try(:buyer).try(:directo_handle)
+                "CustomerCode"=> invoice.buyer.try(:directo_handle)
             ){
               xml.line(
                   "ProductID"=> Setting.directo_receipt_product_name,
                   "Quantity" => 1,
-                  "UnitPriceWoVAT" =>ActionController::Base.helpers.number_with_precision(transaction.invoice.sum_without_vat, precision: 2, separator: "."),
+                  "UnitPriceWoVAT" =>ActionController::Base.helpers.number_with_precision(invoice.sum_cache/(1+invoice.vat_prc), precision: 2, separator: "."),
                   "ProductName" => transaction.description
               )
             }
