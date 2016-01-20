@@ -12,7 +12,7 @@ namespace :documents do
     puts '-----> Adding documets id for PaperTrail log...'
     count = 0
 
-    LegalDocument.all.each do |x|
+    LegalDocument.where(documentable_type: Domain).find_each do |x|
 
       next if x.documentable_id.blank?
 
