@@ -22,10 +22,10 @@ class Directo < ActiveRecord::Base
                 "CustomerCode"=> invoice.buyer.try(:directo_handle)
             ){
               xml.line(
-                  "ProductID"=> Setting.directo_receipt_product_name,
-                  "Quantity" => 1,
-                  "UnitPriceWoVAT" =>ActionController::Base.helpers.number_with_precision(invoice.sum_cache/(1+invoice.vat_prc), precision: 2, separator: "."),
-                  "ProductName" => invoice.description
+                  "ProductID"      => Setting.directo_receipt_product_name,
+                  "Quantity"       => 1,
+                  "UnitPriceWoVAT" => ActionController::Base.helpers.number_with_precision(invoice.sum_cache/(1+invoice.vat_prc), precision: 2, separator: "."),
+                  "ProductName"    => invoice.description
               )
             }
           end
@@ -41,7 +41,7 @@ class Directo < ActiveRecord::Base
   def self.dump_result_to_db mappers, xml
     Nokogiri::XML(xml).css("Result").each do |res|
       obj = mappers[res.attributes["docid"].value.to_i]
-      obj.directo_records.first_or_create!(response: res.as_json.to_h)
+      obj.directo_records.create!(response: res.as_json.to_h)
       obj.update_columns(in_directo: true)
     end
   end
