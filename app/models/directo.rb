@@ -2,7 +2,7 @@ class Directo < ActiveRecord::Base
   belongs_to :item, polymorphic: true
 
   def self.send_receipts
-    new_trans = Invoice.where(invoice_type: "DEB", in_directo: false)
+    new_trans = Invoice.where(invoice_type: "DEB", in_directo: false).where.not(cancelled_at: nil)
     new_trans.find_in_batches(batch_size: 10).each do |group|
       mappers = {} # need them as no direct connection between invoice
       builder = Nokogiri::XML::Builder.new(encoding: "UTF-8") do |xml|
