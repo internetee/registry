@@ -264,7 +264,7 @@ class Domain < ActiveRecord::Base
       domains.each do |domain|
         next unless domain.expirable?
         domain.set_graceful_expired
-        DomainMailer.expiration_reminder(domain.id).deliver_in(Setting.expiration_reminder_mail.days)
+        DomainMailer.expiration_reminder(domain.id).deliver_in(Setting.expiration_reminder_mail.to_i.days)
         STDOUT << "#{Time.zone.now.utc} Domain.start_expire_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
         domain.save
       end
