@@ -2,20 +2,44 @@ class Admin::BlockedDomainsController < AdminController
   load_and_authorize_resource
 
   def index
-    bd = BlockedDomain.first_or_initialize
-    @blocked_domains = bd.names.join("\n")
+    bd = BlockedDomain.pluck(:name)
+    if bd
+      @blocked_domains = bd.to_yaml.gsub("---\n", '').gsub("-", '').gsub(" ", '')
+    end
   end
 
   def create
-    names = params[:blocked_domains].split("\r\n").map(&:strip)
+    @blocked_domains = params[:blocked_domains]
 
-    bd = BlockedDomain.first_or_create
+    begin
+      params[:blocked_domains] = "---\n" if params[:blocked_domains].blank?
+      names = YAML.load(params[:blocked_domains])
+      fail if names == false
+    rescue
+      flash.now[:alert] = I18n.t('invalid_yaml')
+      logger.warn 'Invalid YAML'
+      render :index and return
+    end
 
-    if bd.update(names: names)
+    names = names.split(' ')
+    result = true
+    BlockedDomain.transaction do
+      existing = BlockedDomain.any_of_domains(names).pluck(:id)
+      BlockedDomain.where.not(id: existing).destroy_all
+
+      names.each do |name|
+        rec = BlockedDomain.find_or_initialize_by(name: name)
+        unless rec.save
+          result = false
+          raise ActiveRecord::Rollback
+        end
+      end
+    end
+
+    if result
       flash[:notice] = I18n.t('record_updated')
       redirect_to :back
     else
-      @blocked_domains = params[:blocked_domains]
       flash.now[:alert] = I18n.t('failed_to_update_record')
       render :index
     end
