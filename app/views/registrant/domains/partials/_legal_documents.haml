@@ -10,5 +10,5 @@
       %tbody
         - legal_documents.each do |x|
           %tr
-            %td= link_to(x.created_at, [:admin, x])
+            %td= link_to(x.created_at, [:registrar, x])
             %td= x.document_type
