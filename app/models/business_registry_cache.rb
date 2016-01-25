@@ -20,37 +20,28 @@ authentication using electronic ID. Association through a business organisation 
 
 class BusinessRegistryCache < ActiveRecord::Base
 
+  # 1. load domains by business
+  # 2. load domains by person
   def associated_domains
     domains = []
-    contact_ids = associated_businesses.map do |bic|
-      Contact.where("ident = ? AND ident_type = 'org' AND ident_country_code = 'EE'", bic).pluck(:id)
-    end.flatten
-    contact_ids += Contact.where("ident = ? AND ident_type = 'priv' AND ident_country_code = ?",
-                                            ident, ident_country_code).pluck(:id)
+
+    contact_ids  = Contact.where(ident_type: 'org',  ident: associated_businesses, ident_country_code: 'EE').pluck(:id)
+    contact_ids += Contact.where(ident_type: 'priv', ident: ident, ident_country_code: ident_country_code).pluck(:id)
 
     unless contact_ids.blank?
-      domains = DomainContact.select(:domain_id).distinct.where(contact_id: contact_ids).pluck(:domain_id)
+      domains = DomainContact.distinct.where(contact_id: contact_ids).pluck(:domain_id)
     end
 
     Domain.includes(:registrar, :registrant).where(id: domains)
   end
 
   class << self
-
     def fetch_associated_domains(ident_code, ident_cc)
-      cached = fetch_by_ident_and_cc(ident_code, ident_cc)
-      if cached.blank?
-        Domain.includes(:registrar, :registrant).where(contacts: {
-                                                           ident_type: 'priv',
-                                                           ident: ident_code,
-                                                           ident_country_code: ident_cc})
-      else
-        cached.associated_domains
-      end
+      fetch_by_ident_and_cc(ident_code, ident_cc).associated_domains
     end
 
     def fetch_by_ident_and_cc(ident_code, ident_cc)
-      cache = BusinessRegistryCache.first_or_initialize(ident: ident_code, ident_country_code: ident_cc)
+      cache = BusinessRegistryCache.where(ident: ident_code, ident_country_code: ident_cc).first_or_initialize
       msg_start = "[Ariregister] #{ident_cc}-#{ident_code}:"
 
       # fetch new data if cache is expired
