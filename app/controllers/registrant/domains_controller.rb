@@ -44,7 +44,8 @@ class Registrant::DomainsController < RegistrantController
     begin
       BusinessRegistryCache.fetch_associated_domains ident, ident_cc
     rescue Soap::Arireg::NotAvailableError => error
-      flash[:notice] = I18n.t(error.message[:message])
+      flash[:notice] = I18n.t(error.json[:message])
+      Rails.error.fatal("[EXCEPTION] #{error.to_s}")
       current_user.domains
     end
   end

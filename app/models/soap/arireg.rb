@@ -46,8 +46,11 @@ module Soap
   class Arireg
 
     class NotAvailableError < StandardError
+      attr_accessor :json
       def initialize(params)
         params[:message] = "#{I18n.t(:business_registry_service_not_available)}" unless params.key? :message
+        @json = params
+
         super(params)
       end
     end
