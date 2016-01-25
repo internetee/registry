@@ -95,22 +95,19 @@ module Soap
                                   'fyysilise_isiku_koodi_riik' => country_code_3(ident_cc)
                                 )
         content = extract response, :paringesindus_v4_response
-        unless content.blank?
-          if content[:ettevotjad].key? :item
-            business_ident = items(content, :ettevotjad).map do |item|
-              # debug helps users gather data for testing
-              puts "#{item[:ariregistri_kood]}\t#{item[:arinimi]}\t#{item[:staatus]}  #{item[:oiguslik_vorm]}\t" if @debug
-              item[:ariregistri_kood]
-            end
-            {
-             ident: ident,
-             ident_country_code: ident_cc,
-             # ident_type: 'priv',
-             retrieved_on: Time.now,
-             associated_businesses: business_ident
-            }
-          end
+        if content.present? && content[:ettevotjad].key?(:item)
+          business_ident = items(content, :ettevotjad).map{|item| item[:ariregistri_kood]}
+        else
+          business_ident = []
         end
+
+        {
+            ident: ident,
+            ident_country_code: ident_cc,
+            # ident_type: 'priv',
+            retrieved_on: Time.now,
+            associated_businesses: business_ident
+        }
       rescue Savon::SOAPFault => fault
         Rails.logger.error "#{fault} Äriregister arireg #{self.class.username} at #{self.class.host }"
         raise NotAvailableError.new(exception: fault)

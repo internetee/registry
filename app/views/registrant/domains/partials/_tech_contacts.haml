@@ -12,7 +12,7 @@
       %tbody
         - @domain.tech_contacts.each do |tc|
           %tr
-            %td= link_to(tc, admin_contact_path(tc))
+            %td= link_to(tc, registrant_contact_path(tc))
             %td= tc.code
             %td= tc.email
       - if @domain.errors.messages[:tech_contacts]

@@ -2,7 +2,7 @@
 
 .row
   .col-md-12
-    = search_form_for [:admin, @q], html: { style: 'margin-bottom: 0;', class: 'js-form', autocomplete: 'off' } do |f|
+    = search_form_for [:registrar, @q], html: { style: 'margin-bottom: 0;', class: 'js-form', autocomplete: 'off' } do |f|
       .row
         .col-md-3
           .form-group
@@ -91,13 +91,13 @@
         %tbody
           - @contacts.each do |contact|
             %tr
-              %td= link_to(contact, admin_contact_path(contact))
+              %td= link_to(contact, registrar_contact_path(contact))
               %td= contact.code
               %td= ident_for(contact)
               %td= l(contact.created_at, format: :short)
               %td
                 - if contact.registrar
-                  = link_to(contact.registrar, admin_registrar_path(contact.registrar))
+                  = link_to(contact.registrar, registrar_registrar_path(contact.registrar))
 
 .row
   .col-md-6
@@ -109,4 +109,4 @@
 :coffee
   $(".js-reset-form").on "click", (e) ->
     e.preventDefault();
-    window.location = "#{admin_contacts_path}"
+    window.location = "#{registrar_contacts_path}"

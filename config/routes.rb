@@ -156,6 +156,7 @@ Rails.application.routes.draw do
     end
 
     resources :registrants
+    resources :contacts
 
     resources :whois
     # resources :contacts do

@@ -20,55 +20,44 @@ authentication using electronic ID. Association through a business organisation 
 
 class BusinessRegistryCache < ActiveRecord::Base
 
+  # 1. load domains by business
+  # 2. load domains by person
   def associated_domains
     domains = []
-    contact_ids = associated_businesses.map do |bic|
-      Contact.select(:id).where("ident = ? AND ident_type = 'org' AND ident_country_code = 'EE'", bic).pluck(:id)
-    end
-    contact_ids = Contact.select(:id).where("ident = ? AND ident_type = 'priv' AND ident_country_code = ?",
-                                            ident, ident_country_code).pluck(:id) + contact_ids
-    contact_ids.flatten!.compact! unless contact_ids.blank?
+
+    contact_ids  = Contact.where(ident_type: 'org',  ident: associated_businesses, ident_country_code: 'EE').pluck(:id)
+    contact_ids += Contact.where(ident_type: 'priv', ident: ident, ident_country_code: ident_country_code).pluck(:id)
+
     unless contact_ids.blank?
-      contact_ids.uniq!
-      domains = DomainContact.select(:domain_id).distinct.where("contact_id in (?)", contact_ids).pluck(:domain_id)
+      domains = DomainContact.distinct.where(contact_id: contact_ids).pluck(:domain_id)
     end
-    Domain.includes(:registrar, :registrant).where('id in (?)', domains)
+
+    Domain.includes(:registrar, :registrant).where(id: domains)
   end
 
   class << self
-
     def fetch_associated_domains(ident_code, ident_cc)
-      cached = fetch_by_ident_and_cc(ident_code, ident_cc)
-      if cached.blank?
-        Domain.includes(:registrar, :registrant).where(contacts: {
-                                                           ident_type: 'priv',
-                                                           ident: ident_code,
-                                                           ident_country_code: ident_cc})
-      else
-        cached.associated_domains
-      end
+      fetch_by_ident_and_cc(ident_code, ident_cc).associated_domains
     end
 
     def fetch_by_ident_and_cc(ident_code, ident_cc)
-      cache = BusinessRegistryCache.find_by(ident: ident_code, ident_country_code: ident_cc)
+      cache = BusinessRegistryCache.where(ident: ident_code, ident_country_code: ident_cc).first_or_initialize
+      msg_start = "[Ariregister] #{ident_cc}-#{ident_code}:"
+
       # fetch new data if cache is expired
-      return cache if cache.present? && cache.retrieved_on > (Time.zone.now - Setting.days_to_keep_business_registry_cache.days)
-      businesses = business_registry.associated_businesses(ident_code, ident_cc)
-      unless businesses.nil?
-        if cache.blank?
-          cache = BusinessRegistryCache.new(businesses)
-        else
-          cache.update businesses
-        end
-        cache.save
-      else
-        cache = [] # expired data is forbidden
+      if cache.retrieved_on && cache.retrieved_on > (Time.zone.now - Setting.days_to_keep_business_registry_cache.days)
+        Rails.logger.info("#{msg_start} Info loaded from cache")
+        return cache
       end
+
+      cache.attributes = business_registry.associated_businesses(ident_code, ident_cc)
+      Rails.logger.info("#{msg_start} Info loaded from server")
+
+      cache.save
       cache
     end
 
     def business_registry
-      # TODO: can this be cached and shared?
       Soap::Arireg.new
     end
 

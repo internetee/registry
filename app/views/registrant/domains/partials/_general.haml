@@ -10,7 +10,7 @@
       %dd= l(@domain.registered_at)
 
       %dt= t(:registrar)
-      %dd= link_to(@domain.registrar, admin_registrar_path(@domain.registrar))
+      %dd= link_to(@domain.registrar, registrant_registrar_path(@domain.registrar))
 
       %dt= t(:authinfo_pw)
       %dd
