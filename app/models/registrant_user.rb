@@ -12,8 +12,7 @@ class RegistrantUser < User
   end
 
   def domains
-    # TODO: move data to normal columns and drop registrant_ident
-    ident_cc, ident = @current_user.registrant_ident.split '-'
+    ident_cc, ident = registrant_ident.to_s.split '-'
     Domain.includes(:registrar, :registrant).where(contacts: {
                                                        ident_type: 'priv',
                                                        ident: ident, #identity_code,
