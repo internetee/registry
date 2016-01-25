@@ -43,6 +43,7 @@ class Directo < ActiveRecord::Base
       obj = mappers[res.attributes["docid"].value.to_i]
       obj.directo_records.create!(response: res.as_json.to_h)
       obj.update_columns(in_directo: true)
+      Rails.logger.info("[DIRECTO] Invoice #{res.attributes["docid"].value} was pushed and return is #{res.as_json.to_h.inspect}")
     end
   end
 end
