@@ -12,6 +12,10 @@ namespace :whois do
         puts(@i += 10000)
         GC.start
       end
+
+      GC.start
+      UpdateWhoisRecordJob.enqueue WhoisRecord.find_each.map(&:id), 'domain'
+
     end
     puts "\n-----> all done in #{(Time.zone.now.to_f - start).round(2)} seconds"
   end
