@@ -273,7 +273,7 @@ class Domain < ActiveRecord::Base
         domain.set_graceful_expired
         DomainMailer.expiration_reminder(domain.id).deliver_in(Setting.expiration_reminder_mail.to_i.days)
         STDOUT << "#{Time.zone.now.utc} Domain.start_expire_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-        domain.save and marked += 1
+        domain.save(validate: false) and marked += 1
       end
 
       STDOUT << "#{Time.zone.now.utc} - Successfully expired #{marked} of #{real} domains\n" unless Rails.env.test?
@@ -290,7 +290,7 @@ class Domain < ActiveRecord::Base
         real += 1
         domain.statuses << DomainStatus::SERVER_HOLD
         STDOUT << "#{Time.zone.now.utc} Domain.start_redemption_grace_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-        domain.save and marked += 1
+        domain.save(validate: false) and marked += 1
       end
 
       STDOUT << "#{Time.zone.now.utc} - Successfully set server_hold to #{marked} of #{real} domains\n" unless Rails.env.test?
@@ -309,7 +309,7 @@ class Domain < ActiveRecord::Base
           real += 1
           domain.statuses << DomainStatus::DELETE_CANDIDATE
           STDOUT << "#{Time.zone.now.utc} Domain.start_delete_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-          domain.save and marked += 1
+          domain.save(validate: false) and marked += 1
         end
       ensure # the operator should see what was accomplished
         STDOUT << "#{Time.zone.now.utc} - Finished setting delete_candidate -  #{marked} out of #{real} successfully set\n" unless Rails.env.test?
