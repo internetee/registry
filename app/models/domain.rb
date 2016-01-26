@@ -7,6 +7,8 @@ class Domain < ActiveRecord::Base
 
   attr_accessor :roles
 
+  attr_accessor :legal_document_id
+
   # TODO: whois requests ip whitelist for full info for own domains and partial info for other domains
   # TODO: most inputs should be trimmed before validatation, probably some global logic?
 
@@ -852,6 +854,7 @@ class Domain < ActiveRecord::Base
     log[:tech_contacts]  = tech_contact_ids
     log[:nameservers]    = nameserver_ids
     log[:dnskeys]        = dnskey_ids
+    log[:legal_documents]= [legal_document_id]
     log[:registrant]     = [registrant_id]
     log
   end
