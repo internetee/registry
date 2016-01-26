@@ -1,6 +1,5 @@
 namespace :documents do
 
-
   desc 'Generate all'
   task all: :environment do
     Rake::Task['documents:log'].invoke
@@ -12,11 +11,16 @@ namespace :documents do
     puts '-----> Adding documets id for PaperTrail log...'
     count = 0
 
-    LegalDocument.where(documentable_type: Domain).find_each do |x|
+    LegalDocument.find_each do |x|
 
       next if x.documentable_id.blank?
 
-      dc = DomainVersion.where(item_id: x.documentable_id)
+      document_type = case x.documentable_type
+                        when 'Domain' then DomainVersion
+                        when 'Contact'then ContactVersion
+                      end
+
+      dc = document_type.where(item_id: x.documentable_id)
 
       dc.each do |y|
 
