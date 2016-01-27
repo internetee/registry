@@ -1,7 +1,7 @@
 class Registrant::ContactsController < RegistrantController
 
   def show
-    @contact = contacts.find(params[:id])
+    @contact = Contact.where(id: contacts).find(params[:id])
     authorize! :read, @contact
   end
 
@@ -12,7 +12,7 @@ class Registrant::ContactsController < RegistrantController
     rescue Soap::Arireg::NotAvailableError => error
       flash[:notice] = I18n.t(error.json[:message])
       Rails.logger.fatal("[EXCEPTION] #{error.to_s}")
-      Contact.none
+      []
     end
   end
 end
