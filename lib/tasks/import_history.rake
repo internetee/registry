@@ -96,7 +96,7 @@ namespace :import do
               path     = "#{ENV['legal_documents_dir']}/#{leg_file.path}_#{leg_file.name}"
 
               FileUtils.mkdir_p("#{ENV['legal_documents_dir']}/#{file_dir}", mode: 0775)
-              FileUtils.mv("#{ENV['legacy_legal_documents_dir']}/#{leg_file.path}_#{leg_file.name}", path)
+              FileUtils.mv("#{ENV['legacy_legal_documents_dir']}/#{leg_file.path}", path)
               LegalDocument.create!(documentable_type: ::Contact.to_s,
                                     documentable_id: contact.id,
                                     document_type: leg_file.name.to_s.split(".").last,
@@ -183,6 +183,20 @@ namespace :import do
             end
             next if changes.blank? && event != :destroy
 
+            files   = Legacy::File.for_history(responder.history_domain.all_history_ids).map do |leg_file|
+              file_dir = leg_file.path.sub(/\/[0-9]+\z/, '')
+              path     = "#{ENV['legal_documents_dir']}/#{leg_file.path}_#{leg_file.name}"
+
+              FileUtils.mkdir_p("#{ENV['legal_documents_dir']}/#{file_dir}", mode: 0775)
+              FileUtils.mv("#{ENV['legacy_legal_documents_dir']}/#{leg_file.path}", path)
+              LegalDocument.create!(documentable_type: domain.class,
+                                    documentable_id:   domain.id,
+                                    document_type: leg_file.name.to_s.split(".").last,
+                                    path: path,
+                                    created_at: leg_file.crdate,
+                                    updated_at: leg_file.crdate)
+            end
+
             hash = {
                 item_type: domain.class,
                 item_id:   domain.id,
@@ -196,7 +210,8 @@ namespace :import do
                     tech_contacts:  responder.history_domain.get_tech_contact_new_ids,
                     nameservers:    responder.history_domain.import_nameservers_history(domain, time),
                     dnskeys:        responder.history_domain.import_dnskeys_history(domain, time),
-                    registrant:     [responder.history_domain.new_registrant_id]
+                    registrant:     [responder.history_domain.new_registrant_id],
+                    legacy_documents: files.map(&:id)
                 }
             }
             data << hash

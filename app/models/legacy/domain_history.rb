@@ -14,6 +14,10 @@ module Legacy
     has_many :domain_contact_map_histories, foreign_key: :historyid, primary_key: :historyid
     has_many :nsset_contact_map_histories,  foreign_key: :historyid, primary_key: :historyid
 
+    after_initialize do
+      @other_history_ids ||= []
+    end
+
     def get_current_domain_object(time, change_param)
       x = self
       {
@@ -63,6 +67,10 @@ module Legacy
       self
     end
 
+    def all_history_ids
+      ([historyid] + @other_history_ids).uniq
+    end
+
 
     # returns imported nameserver ids
     def import_nameservers_history(new_domain, time)
@@ -72,9 +80,12 @@ module Legacy
       to_import = []
 
       nsset_histories.at(time).to_a.each do |nsset|
+        @other_history_ids << nsset.historyid
         nsset.host_histories.at(time).each do |host|
+          @other_history_ids << host.historyid
           ips = {ipv4: [],ipv6: []}
           host.host_ipaddr_map_histories.where.not(ipaddr: nil).at(time).each do |ip_map|
+            @other_history_ids << ip_map.historyid
             ips[:ipv4] << ip_map.ipaddr.to_s.strip if ip_map.ipaddr.ipv4?
             ips[:ipv6] << ip_map.ipaddr.to_s.strip if ip_map.ipaddr.ipv6?
           end
@@ -178,6 +189,7 @@ module Legacy
       self.class.dnssecs[id] ||= {}
       ids = []
       Legacy::DnskeyHistory.for_at(keyset, time).each do |dns|
+        @other_history_ids << dns.historyid
         # checking if we have create history for dnskey (cache)
         if val = self.class.dnssecs[id][dns]
           ids << val
