@@ -90,13 +90,13 @@ module Soap
     # retrieve business id codes for business that a person has a legal role
     def associated_businesses(ident, ident_cc = 'EST')
       begin
-        msg = body(
-            'fyysilise_isiku_kood' => ident,
+        msg = {
+            'fyysilise_isiku_kood'       => ident,
             'fyysilise_isiku_koodi_riik' => country_code_3(ident_cc)
-        )
+        }
         Rails.logger.info "[Ariregister] Request sent with data: #{msg.inspect}"
 
-        response = @client.call :paringesindus_v4, message: msg
+        response = @client.call :paringesindus_v4, message: body(msg)
         content = extract response, :paringesindus_v4_response
         Rails.logger.info "[Ariregister] Got response with data: #{content.inspect}"
 
