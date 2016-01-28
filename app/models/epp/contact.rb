@@ -165,7 +165,7 @@ class Epp::Contact < Contact
         org_priv = %w(org priv).freeze
         if ident_country_code.blank? && org_priv.include?(ident_type) && org_priv.include?(ident_frame.attr('type'))
           at.merge!(ident_country_code: ident_frame.attr('cc'), ident_type: ident_frame.attr('type'))
-        elsif ident_type == "birthday" && ident[/\A\d{4}-\d{2}-\d{2}\z/] && (Date.parse(ident) rescue false)
+        elsif ident_type == "birthday" && !ident[/\A\d{4}-\d{2}-\d{2}\z/] && (Date.parse(ident) rescue false)
           at.merge!(ident: ident_frame.text)
           at.merge!(ident_country_code: ident_frame.attr('cc')) if ident_frame.attr('cc').present?
         elsif ident_type.blank? && ident_country_code.blank?
