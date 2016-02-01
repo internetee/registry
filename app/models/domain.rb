@@ -361,6 +361,25 @@ class Domain < ActiveRecord::Base
     save
   end
 
+
+  # state change shouln't be
+  def clean_pendings_lowlevel
+    statuses.delete(DomainStatus::PENDING_DELETE_CONFIRMATION)
+    statuses.delete(DomainStatus::PENDING_UPDATE)
+    statuses.delete(DomainStatus::PENDING_DELETE)
+
+    status_notes[DomainStatus::PENDING_UPDATE] = ''
+    status_notes[DomainStatus::PENDING_DELETE] = ''
+
+    update_columns(
+        registrant_verification_token:    nil,
+        registrant_verification_asked_at: nil,
+        pending_json: {},
+        status_notes: status_notes,
+        statuses:     statuses.presence || [DomainStatus::OK]
+    )
+  end
+
   def pending_update!
     return true if pending_update?
     self.epp_pending_update = true # for epp

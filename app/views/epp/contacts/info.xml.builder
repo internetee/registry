@@ -51,7 +51,7 @@ xml.epp_head do
         xml.tag!('contact:crID', @contact.cr_id)
         xml.tag!('contact:crDate', @contact.created_at.try(:iso8601))
 
-        if @contact.updated_at != @contact.created_at
+        if @contact.updated_at > @contact.created_at
           upID =  @contact.updator.try(:registrar)
           upID =  upID.code if upID.present?             # Did updator return a kind of User that has a registrar?
           xml.tag!('contact:upID', upID) if upID.present? # optional upID

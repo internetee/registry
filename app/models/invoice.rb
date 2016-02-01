@@ -2,8 +2,9 @@ class Invoice < ActiveRecord::Base
   include Versions
   belongs_to :seller, class_name: 'Registrar'
   belongs_to :buyer, class_name: 'Registrar'
+  has_one  :account_activity
   has_many :invoice_items
-  has_one :account_activity
+  has_many :directo_records, as: :item, class_name: 'Directo'
 
   accepts_nested_attributes_for :invoice_items
 
@@ -18,6 +19,8 @@ class Invoice < ActiveRecord::Base
             :seller_iban, :buyer_name, :invoice_items, :vat_prc, presence: true
 
   before_create :set_invoice_number, :check_vat
+
+  before_save   :check_vat
 
   def set_invoice_number
     last_no = Invoice.order(number: :desc).where('number IS NOT NULL').limit(1).pluck(:number).first
@@ -95,6 +98,10 @@ class Invoice < ActiveRecord::Base
   def pdf(html)
     kit = PDFKit.new(html)
     kit.to_pdf
+  end
+
+  def description
+    "Order nr. #{number}"
   end
 
   def pdf_name
