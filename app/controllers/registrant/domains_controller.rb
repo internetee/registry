@@ -11,15 +11,12 @@ class Registrant::DomainsController < RegistrantController
   end
 
   def show
-    @domain = Domain.find(params[:id])
-    if !(domains.include?(@domain) || @domain.valid?)
-      redirect_to registrant_domains_path
-    end
+    @domain = domains.find(params[:id])
     authorize! :read, @domain
   end
 
   def set_domain
-    @domain = Domain.find(params[:id])
+    @domain = domains.find(params[:id])
   end
 
   def download_list
