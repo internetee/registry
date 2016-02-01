@@ -194,7 +194,10 @@ class Epp::Domain < Domain
     end
 
     at[:dnskeys_attributes] = dnskeys_attrs(dnskey_frame, action)
-    at[:legal_documents_attributes] = legal_document_from(frame)
+
+    doc = legal_document_from(frame)
+    self.legal_document_id = doc.id if doc.id
+    at[:legal_documents_attributes] = doc
     at
   end
   # rubocop: enable Metrics/PerceivedComplexity
@@ -476,7 +479,7 @@ class Epp::Domain < Domain
 
     if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
       frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
-      self.legal_document_id = doc.id
+      self.legal_document_id = doc.id if doc.id
     end
 
     at_add = attrs_from(frame.css('add'), current_user, 'add')
@@ -546,6 +549,7 @@ class Epp::Domain < Domain
 
     if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
       frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
+      self.legal_document_id = doc.id if doc.id
     end
 
     if Setting.request_confirmation_on_domain_deletion_enabled &&
@@ -699,10 +703,8 @@ class Epp::Domain < Domain
         self.registrar = current_user.registrar
       end
 
-      attach_legal_document(self.class.parse_legal_document_from_frame(frame))
-
-      # we want to transfer data to new owner at any case.
-      # We also hope that if domain is not valid, new registrar would be better.
+      doc = attach_legal_document(self.class.parse_legal_document_from_frame(frame))
+      self.legal_document_id = doc.id if doc.id
       save!(validate: false)
 
       return dt
@@ -730,7 +732,8 @@ class Epp::Domain < Domain
       generate_auth_info
       self.registrar = pt.transfer_to
 
-      attach_legal_document(self.class.parse_legal_document_from_frame(frame))
+      doc = attach_legal_document(self.class.parse_legal_document_from_frame(frame))
+      self.legal_document_id = doc.id if doc.id
       save!(validate: false)
     end
 
@@ -751,7 +754,8 @@ class Epp::Domain < Domain
         status: DomainTransfer::CLIENT_REJECTED
       )
 
-      attach_legal_document(self.class.parse_legal_document_from_frame(frame))
+      doc = attach_legal_document(self.class.parse_legal_document_from_frame(frame))
+      self.legal_document_id = doc.id if doc.id
       save!(validate: false)
     end
 
