@@ -20,7 +20,7 @@ class DomainCron
       if domain.pending_delete? || domain.pending_delete_confirmation?
         DomainMailer.pending_delete_expired_notification(domain.id, deliver_emails).deliver
       end
-      domain.clean_pendings!
+      domain.clean_pendings_lowlevel
       unless Rails.env.test?
         STDOUT << "#{Time.zone.now.utc} Domain.clean_expired_pendings: ##{domain.id} (#{domain.name})\n"
       end
@@ -40,7 +40,7 @@ class DomainCron
       real += 1
       domain.set_graceful_expired
       STDOUT << "#{Time.zone.now.utc} Domain.start_expire_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-      domain.save and marked += 1
+      domain.save(validate: false) and marked += 1
     end
 
     STDOUT << "#{Time.zone.now.utc} - Successfully expired #{marked} of #{real} domains\n" unless Rails.env.test?
@@ -57,7 +57,7 @@ class DomainCron
       real += 1
       domain.statuses << DomainStatus::SERVER_HOLD
       STDOUT << "#{Time.zone.now.utc} Domain.start_redemption_grace_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-      domain.save and marked += 1
+      domain.save(validate: false) and marked += 1
     end
 
     STDOUT << "#{Time.zone.now.utc} - Successfully set server_hold to #{marked} of #{real} domains\n" unless Rails.env.test?
@@ -76,7 +76,7 @@ class DomainCron
         real += 1
         domain.statuses << DomainStatus::DELETE_CANDIDATE
         STDOUT << "#{Time.zone.now.utc} Domain.start_delete_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-        domain.save and marked += 1
+        domain.save(validate: false) and marked += 1
       end
     ensure # the operator should see what was accomplished
       STDOUT << "#{Time.zone.now.utc} - Finished setting delete_candidate -  #{marked} out of #{real} successfully set\n" unless Rails.env.test?
@@ -104,6 +104,19 @@ class DomainCron
     end
 
     STDOUT << "#{Time.zone.now.utc} - Successfully destroyed #{c} domains\n" unless Rails.env.test?
+  end
+
+  # rubocop: enable Metrics/AbcSize
+  # rubocop:enable Rails/FindEach
+  # rubocop: enable Metrics/LineLength
+  def self.destroy_with_message(domain)
+    domain.destroy
+    bye_bye = domain.versions.last
+    domain.registrar.messages.create!(
+        body: "#{I18n.t(:domain_deleted)}: #{domain.name}",
+        attached_obj_id: bye_bye.id,
+        attached_obj_type: bye_bye.class.to_s # DomainVersion
+    )
   end
 
 end

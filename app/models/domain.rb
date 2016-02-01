@@ -245,19 +245,6 @@ class Domain < ActiveRecord::Base
         { admin_contacts: :registrar }
       )
     end
-
-    # rubocop: enable Metrics/AbcSize
-    # rubocop:enable Rails/FindEach
-    # rubocop: enable Metrics/LineLength
-    def destroy_with_message(domain)
-      domain.destroy
-      bye_bye = domain.versions.last
-      domain.registrar.messages.create!(
-          body: "#{I18n.t(:domain_deleted)}: #{domain.name}",
-          attached_obj_id: bye_bye.id,
-          attached_obj_type: bye_bye.class.to_s # DomainVersion
-      )
-    end
   end
 
   def name=(value)
