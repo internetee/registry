@@ -194,10 +194,7 @@ class Epp::Domain < Domain
     end
 
     at[:dnskeys_attributes] = dnskeys_attrs(dnskey_frame, action)
-
-    doc = legal_document_from(frame)
-    self.legal_document_id = doc.id if doc.id
-    at[:legal_documents_attributes] = doc
+    at[:legal_documents_attributes] = legal_document_from(frame)
     at
   end
   # rubocop: enable Metrics/PerceivedComplexity
