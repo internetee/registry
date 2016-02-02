@@ -17,6 +17,8 @@ class Contact < ActiveRecord::Base
 
   accepts_nested_attributes_for :legal_documents
 
+  before_save   :catch_legal_doc_id
+
   validates :name, :phone, :email, :ident, :ident_type,
    :street, :city, :zip, :country_code, :registrar, presence: true
 
@@ -509,5 +511,14 @@ class Contact < ActiveRecord::Base
     log[:legal_documents]= [legal_document_id]
     log
  end
+
+  def catch_legal_doc_id
+
+    if !legal_document_id && doc = self.legal_documents.last.new_record?
+
+      legal_document_id = doc.id
+
+    end
+end
 
 end
