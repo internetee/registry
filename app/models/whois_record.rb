@@ -106,7 +106,7 @@ class WhoisRecord < ActiveRecord::Base
     self.json = generated_json
     self.body = generated_body
     self.name = json['name']
-    self.registrar_id = domain.registrar_id # for faster registrar updates
+    self.registrar_id = domain.registrar_id if domain # for faster registrar updates
   end
 
   def update_whois_server

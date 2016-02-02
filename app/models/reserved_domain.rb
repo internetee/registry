@@ -35,6 +35,8 @@ class ReservedDomain < ActiveRecord::Base
     update_whois_server
   end
 
+  alias_method :update_whois_record, :generate_data
+
   def update_whois_server
     wr = Whois::Record.find_or_initialize_by(name: name)
     wr.body = @body
