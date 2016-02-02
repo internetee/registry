@@ -38,9 +38,7 @@ class Epp::Contact < Contact
 
       legal_frame = f.css('legalDocument').first
       if legal_frame.present?
-        doc = legal_document_attrs(legal_frame)
-        self.legal_document_id = doc.id if doc.id
-        at[:legal_documents_attributes] = doc
+        at[:legal_documents_attributes] = legal_document_attrs(legal_frame)
       end
       at.merge!(ident_attrs(f.css('ident').first)) if new_record
       at
