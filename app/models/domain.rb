@@ -204,28 +204,28 @@ class Domain < ActiveRecord::Base
   end
 
   def self.clean_expired_pendings
+    ActiveSupport::Deprecation.instance.deprecation_warning(DomainCron, __method__)
     DomainCron.send(__method__)
-    ActiveSupport::Deprecation.deprecate_methods(DomainCron, __method__)
   end
 
   def self.start_expire_period
+    ActiveSupport::Deprecation.instance.deprecation_warning(DomainCron, __method__)
     DomainCron.send(__method__)
-    ActiveSupport::Deprecation.deprecate_methods(DomainCron, __method__)
   end
 
   def self.start_redemption_grace_period
+    ActiveSupport::Deprecation.instance.deprecation_warning(DomainCron, __method__)
     DomainCron.send(__method__)
-    ActiveSupport::Deprecation.deprecate_methods(DomainCron, __method__)
   end
 
   def self.start_delete_period
+    ActiveSupport::Deprecation.instance.deprecation_warning(DomainCron, __method__)
     DomainCron.send(__method__)
-    ActiveSupport::Deprecation.deprecate_methods(DomainCron, __method__)
   end
 
   def self.destroy_delete_candidates
+    ActiveSupport::Deprecation.instance.deprecation_warning(DomainCron, __method__)
     DomainCron.send(__method__)
-    ActiveSupport::Deprecation.deprecate_methods(DomainCron, __method__)
   end
 
   class << self
