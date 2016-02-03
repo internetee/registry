@@ -8,7 +8,7 @@ end if Bundler::VERSION < '2'
 source 'https://rubygems.org'
 
 # core
-gem 'rails',        '4.2.4' # when update, all initializers eis_custom files needs check/update
+gem 'rails',        '4.2.5.1' # when update, all initializers eis_custom files needs check/update
 gem 'iso8601',      '0.8.6' # for dates and times
 gem 'hashie-forbidden_attributes', '0.1.1'
 gem 'SyslogLogger', '2.0', require: 'syslog/logger'
@@ -32,17 +32,17 @@ gem 'rails-settings-cached',     '0.4.1' # for settings
 
 # html-xml
 gem 'haml-rails', '0.9.0' # haml for views
-gem 'nokogiri',   '1.6.6.2' # For XML parsing
+gem 'nokogiri',   '1.6.7.2' # For XML parsing
 
 # style
 gem 'sass-rails',     '5.0.3'   # sass style
 gem 'bootstrap-sass', '3.3.5.1' # bootstrap style
 
 # js
-gem 'uglifier',        '2.7.1'  # minifies js
+gem 'uglifier',        '2.7.2'  # minifies js
 gem 'coffee-rails',    '4.1.0'  # coffeescript support
 gem 'turbolinks',      '2.5.3'  # faster page load
-gem 'jquery-rails',    '4.0.3'  # jquery
+gem 'jquery-rails',    '4.0.4'  # jquery
 gem 'selectize-rails', '0.12.1' # include selectize.js for select
 gem 'therubyracer',    '0.12.2', platforms: :ruby
 gem 'jquery-validation-rails', '1.13.1' # validate on client side
@@ -57,7 +57,7 @@ gem 'bootstrap-datepicker-rails', '1.3.1.1' # datepicker
 gem 'liquid',           '3.0.6'   # for email templates
 
 # rights
-gem 'devise',    '3.5.1'  # authenitcation
+gem 'devise',    '3.5.4'  # authenitcation
 gem 'cancancan', '1.11.0' # autharization
 
 # rest api
