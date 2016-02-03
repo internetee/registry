@@ -2,46 +2,54 @@ class Admin::BlockedDomainsController < AdminController
   load_and_authorize_resource
 
   def index
-    bd = BlockedDomain.pluck(:name)
-    if bd
-      @blocked_domains = bd.to_yaml.gsub("---\n", '').gsub("-", '').gsub(" ", '')
-    end
+
+    params[:q] ||= {}
+    domains = BlockedDomain.all
+    @q = domains.search(params[:q])
+    @domains = @q.result.page(params[:page])
+    @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i > 0
+
+  end
+
+  def new
+
+    @domain = BlockedDomain.new
+
   end
 
   def create
-    @blocked_domains = params[:blocked_domains]
 
-    begin
-      params[:blocked_domains] = "---\n" if params[:blocked_domains].blank?
-      names = YAML.load(params[:blocked_domains])
-      fail if names == false
-    rescue
-      flash.now[:alert] = I18n.t('invalid_yaml')
-      logger.warn 'Invalid YAML'
-      render :index and return
-    end
+    @domain = BlockedDomain.new(blocked_domain_params)
 
-    names = names.split(' ')
-    result = true
-    BlockedDomain.transaction do
-      existing = BlockedDomain.any_of_domains(names).pluck(:id)
-      BlockedDomain.where.not(id: existing).destroy_all
-
-      names.each do |name|
-        rec = BlockedDomain.find_or_initialize_by(name: name)
-        unless rec.save
-          result = false
-          raise ActiveRecord::Rollback
-        end
-      end
-    end
-
-    if result
-      flash[:notice] = I18n.t('record_updated')
-      redirect_to :back
+    if @domain.save
+      flash[:notice] = I18n.t('domain_added')
+      redirect_to admin_blocked_domains_path
     else
-      flash.now[:alert] = I18n.t('failed_to_update_record')
-      render :index
+      flash.now[:alert] = I18n.t('failed_to_add_domain')
+      render 'new'
     end
+
+  end
+
+  def delete
+
+    if BlockedDomain.find(params[:id]).destroy
+      flash[:notice] = I18n.t('domain_deleted')
+      redirect_to admin_blocked_domains_path
+    else
+      flash.now[:alert] = I18n.t('failed_to_delete_domain')
+      redirect_to admin_blocked_domains_path
+    end
+  end
+
+
+  def blocked_domain_params
+    params.require(:blocked_domain).permit(:name)
+  end
+
+  private
+
+  def set_domain
+    @domain = BlockedDomain.find(params[:id])
   end
 end

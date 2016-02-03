@@ -3,6 +3,9 @@ class ReservedDomain < ActiveRecord::Base
   before_save :fill_empty_passwords
   before_save :generate_data
   before_destroy :remove_data
+  validates :name, domain_name: true, uniqueness: true
+
+
 
 
   class << self
@@ -22,7 +25,12 @@ class ReservedDomain < ActiveRecord::Base
 
 
   def fill_empty_passwords
-    self.password =  SecureRandom.hex unless self.password
+
+    if self.password.empty?
+
+      self.password =  SecureRandom.hex
+
+    end
   end
 
   def name= val

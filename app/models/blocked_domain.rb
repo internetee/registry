@@ -2,6 +2,7 @@ class BlockedDomain < ActiveRecord::Base
   include Versions
   before_save :generate_data
   before_destroy :remove_data
+  validates :name, domain_name: true, uniqueness: true
 
 
   class << self
