@@ -30,7 +30,7 @@ class ReservedDomain < ActiveRecord::Base
   end
 
   def generate_data
-    next if Domain.where(name: name).any?
+    return if Domain.where(name: name).any?
 
     @json = generate_json
     @body = generate_body
@@ -59,7 +59,7 @@ class ReservedDomain < ActiveRecord::Base
   end
 
   def remove_data
-    next if Domain.where(name: name).any?
+    return if Domain.where(name: name).any?
 
     Whois::Record.where(name: name).delete_all
   end
