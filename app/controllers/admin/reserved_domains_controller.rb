@@ -21,7 +21,7 @@ class Admin::ReservedDomainsController < AdminController
 
   def create
 
-    @domain = ReservedDomain.new(reserved_params)
+    @domain = ReservedDomain.new(reserved_domain_params)
 
     if @domain.save
       flash[:notice] = I18n.t('domain_added')
@@ -35,7 +35,7 @@ class Admin::ReservedDomainsController < AdminController
 
   def update
 
-    if @domain.update(reserved_params)
+    if @domain.update(reserved_domain_params)
       flash[:notice] = I18n.t('domain_updated')
     else
       flash.now[:alert] = I18n.t('failed_to_update_domain')
@@ -58,7 +58,7 @@ class Admin::ReservedDomainsController < AdminController
 
   private
 
-  def reserved_params
+  def reserved_domain_params
     params.require(:reserved_domain).permit(:name, :password)
   end
 

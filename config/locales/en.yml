@@ -933,3 +933,4 @@ en:
   add_reserved_domain: 'Add domain to reserved list'
   add_blocked_domain: 'Add domain to blocked list'
   edit_pw: 'Edit Pw'
+  optional: 'Optional'

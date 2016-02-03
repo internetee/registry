@@ -19,7 +19,15 @@ class Admin::BlockedDomainsController < AdminController
 
   def create
 
-    abort
+    @domain = BlockedDomain.new(blocked_domain_params)
+
+    if @domain.save
+      flash[:notice] = I18n.t('domain_added')
+      redirect_to admin_blocked_domains_path
+    else
+      flash.now[:alert] = I18n.t('failed_to_add_domain')
+      render 'new'
+    end
 
   end
 
@@ -35,7 +43,7 @@ class Admin::BlockedDomainsController < AdminController
   end
 
 
-  def blocked_params
+  def blocked_domain_params
     params.require(:blocked_domain).permit(:name)
   end
 

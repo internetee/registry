@@ -16,7 +16,7 @@
             .col-md-4.control-label
               = f.label :password
             .col-md-7
-              = f.text_field(:password, class: 'form-control')
+              = f.text_field(:password, placeholder: t(:optional), class: 'form-control')
   .row
     .col-md-8.text-right
       = button_tag(t(:save), class: 'btn btn-primary')
