@@ -19,6 +19,8 @@ class BlockedDomain < ActiveRecord::Base
   end
 
   def generate_data
+    next if Domain.where(name: name).any?
+
     @json = generate_json
     @body = generate_body
     update_whois_server
