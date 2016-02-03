@@ -48,6 +48,8 @@ class BlockedDomain < ActiveRecord::Base
   end
 
   def remove_data
+    next if Domain.where(name: name).any?
+
     Whois::Record.where(name: name).delete_all
   end
 end
