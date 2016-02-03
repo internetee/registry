@@ -1,5 +1,6 @@
 class Admin::ReservedDomainsController < AdminController
   load_and_authorize_resource
+  before_action :set_domain, only: [:edit, :update]
 
   def index
 
@@ -16,10 +17,52 @@ class Admin::ReservedDomainsController < AdminController
   end
 
   def edit
-    authorize! :update, ReservedDomain
+  end
+
+  def create
+
+    @domain = ReservedDomain.new(reserved_params)
+
+    if @domain.save
+      flash[:notice] = I18n.t('domain_added')
+      redirect_to admin_reserved_domains_path
+    else
+      flash.now[:alert] = I18n.t('failed_to_add_domain')
+      render 'new'
+    end
+
+  end
+
+  def update
+
+    if @domain.update(reserved_params)
+      flash[:notice] = I18n.t('domain_updated')
+    else
+      flash.now[:alert] = I18n.t('failed_to_update_domain')
+    end
+    render 'edit'
+
   end
 
   def delete
-    authorize! :delete, ReservedDomain
+
+    if ReservedDomain.find(params[:id]).destroy
+      flash[:notice] = I18n.t('domain_deleted')
+      redirect_to admin_reserved_domains_path
+    else
+      flash.now[:alert] = I18n.t('failed_to_delete_domain')
+      redirect_to admin_reserved_domains_path
+    end
+
+  end
+
+  private
+
+  def reserved_params
+    params.require(:reserved_domain).permit(:name, :password)
+  end
+
+  def set_domain
+    @domain = ReservedDomain.find(params[:id])
   end
 end

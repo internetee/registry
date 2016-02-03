@@ -55,10 +55,10 @@
               %td= l(x.created_at, format: :short)
               %td= l(x.updated_at, format: :short)
               %td
-                = link_to(t(:edit), edit_admin_reserved_domain_path(id: x.id),
+                = link_to(t(:edit_pw), edit_admin_reserved_domain_path(id: x.id),
                   class: 'btn btn-primary btn-xs')
                 = link_to(t(:delete), delete_admin_reserved_domain_path(id: x.id),
-                  class: 'btn btn-primary btn-xs')
+                  data: { confirm: t(:are_you_sure) }, class: 'btn btn-danger btn-xs')
 .row
   .col-md-6
     = paginate @domains
