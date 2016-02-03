@@ -19,6 +19,8 @@ class BlockedDomain < ActiveRecord::Base
   end
 
   def generate_data
+    return if Domain.where(name: name).any?
+
     @json = generate_json
     @body = generate_body
     update_whois_server
@@ -46,6 +48,8 @@ class BlockedDomain < ActiveRecord::Base
   end
 
   def remove_data
+    return if Domain.where(name: name).any?
+
     Whois::Record.where(name: name).delete_all
   end
 end
