@@ -51,9 +51,10 @@
               %td= x.name
               %td= l(x.created_at, format: :short)
               %td= l(x.updated_at, format: :short)
-              %td{class: 'col-xs-1'}
-                = link_to(t(:delete), delete_admin_blocked_domain_path(id: x.id),
-                  data: { confirm: t(:are_you_sure) }, class: 'btn btn-danger btn-xs center-block')
+              %td
+                %div{class: 'text-center'}
+                  = link_to(t(:delete), delete_admin_blocked_domain_path(id: x.id),
+                    data: { confirm: t(:are_you_sure) }, class: 'btn btn-danger btn-xs')
 .row
   .col-md-6
     = paginate @domains
