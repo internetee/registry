@@ -37,8 +37,11 @@ namespace :import do
   task history_contacts: :environment do
     throw 'no config set ENV[legacy_legal_documents_dir]' unless ENV['legacy_legal_documents_dir']
 
-    old_ids  = Legacy::ContactHistory.uniq.pluck(:id)
+    old_ids  = Legacy::ContactHistory
+    old_ids  = old_ids.where(id: ENV['ids'].split(",")) if ENV['ids']
+    old_ids  = old_ids.uniq.pluck(:id)
     old_size = old_ids.size
+
     parallel_import(old_ids) do |legacy_contact_id, process_idx|
       start = Time.now.to_f
       Contact.transaction do
@@ -131,8 +134,12 @@ namespace :import do
 
   desc 'Import domain history'
   task history_domains: :environment do
-    old_ids  = Legacy::DomainHistory.uniq.pluck(:id)
+    old_ids  = Legacy::DomainHistory
+    old_ids  = old_ids.where(id: ENV['ids'].split(",")) if ENV['ids']
+    old_ids  = old_ids.uniq.pluck(:id)
     old_size = old_ids.size
+
+
     parallel_import(old_ids) do |legacy_domain_id, process_idx|
       start = Time.now.to_f
       Domain.transaction do
