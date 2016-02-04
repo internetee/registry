@@ -23,7 +23,7 @@ class Admin::InvoicesController < AdminController
 
   def index
     @q = Invoice.includes(:account_activity).search(params[:q])
-    @q.sorts  = 'id desc' if @q.sorts.empty?
+    @q.sorts  = 'number desc' if @q.sorts.empty?
     @invoices = @q.result.page(params[:page])
   end
 
