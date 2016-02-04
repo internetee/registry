@@ -43,7 +43,7 @@
               = sort_link(@q, 'created_at', t(:created_at))
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'updated_at', t(:updated_at))
-            %th{class: 'col-xs-2'}
+            %th{class: 'col-xs-1'}
               = t(:actions)
         %tbody
           - @domains.each do |x|
@@ -51,9 +51,9 @@
               %td= x.name
               %td= l(x.created_at, format: :short)
               %td= l(x.updated_at, format: :short)
-              %td
+              %td{class: 'col-xs-1'}
                 = link_to(t(:delete), delete_admin_blocked_domain_path(id: x.id),
-                  data: { confirm: t(:are_you_sure) }, class: 'btn btn-danger btn-xs')
+                  data: { confirm: t(:are_you_sure) }, class: 'btn btn-danger btn-xs center-block')
 .row
   .col-md-6
     = paginate @domains
