@@ -8,13 +8,13 @@
         %thead
           %tr
             %th{class: 'col-xs-3'}
-              = sort_link(@q, 'invoice')
+              = sort_link(@q, :number)
             %th{class: 'col-xs-3'}
-              = sort_link(@q, 'buyer')
+              = sort_link(@q, :buyer_name, "Buyer")
             %th{class: 'col-xs-3'}
-              = sort_link(@q, 'due_date')
+              = sort_link(@q, :due_date)
             %th{class: 'col-xs-3'}
-              = sort_link(@q, 'receipt_date')
+              = sort_link(@q, :account_activity_created_at, "Receipt date")
         %tbody
           - @invoices.each do |x|
             %tr
