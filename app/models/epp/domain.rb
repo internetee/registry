@@ -476,7 +476,7 @@ class Epp::Domain < Domain
 
     if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
       frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
-      self.legal_document_id = doc.id if doc.id
+      self.legal_document_id = doc.id
     end
 
     at_add = attrs_from(frame.css('add'), current_user, 'add')
@@ -546,7 +546,6 @@ class Epp::Domain < Domain
 
     if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
       frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
-      self.legal_document_id = doc.id if doc.id
     end
 
     if Setting.request_confirmation_on_domain_deletion_enabled &&
@@ -699,8 +698,7 @@ class Epp::Domain < Domain
         self.registrar = current_user.registrar
       end
 
-      doc = attach_legal_document(self.class.parse_legal_document_from_frame(frame))
-      self.legal_document_id = doc.id if doc.id
+      attach_legal_document(self.class.parse_legal_document_from_frame(frame))
       save!(validate: false)
 
       return dt
@@ -728,8 +726,7 @@ class Epp::Domain < Domain
       generate_auth_info
       self.registrar = pt.transfer_to
 
-      doc = attach_legal_document(self.class.parse_legal_document_from_frame(frame))
-      self.legal_document_id = doc.id if doc.id
+      attach_legal_document(self.class.parse_legal_document_from_frame(frame))
       save!(validate: false)
     end
 
@@ -750,8 +747,7 @@ class Epp::Domain < Domain
         status: DomainTransfer::CLIENT_REJECTED
       )
 
-      doc = attach_legal_document(self.class.parse_legal_document_from_frame(frame))
-      self.legal_document_id = doc.id if doc.id
+      attach_legal_document(self.class.parse_legal_document_from_frame(frame))
       save!(validate: false)
     end
 

@@ -2,7 +2,6 @@ class Contact < ActiveRecord::Base
   include Versions # version/contact_version.rb
   include EppErrors
   include UserEvents
-  has_paper_trail class_name: "ContactVersion", meta: { children: :children_log }
 
   belongs_to :registrar
   has_many :domain_contacts
@@ -10,14 +9,10 @@ class Contact < ActiveRecord::Base
   has_many :legal_documents, as: :documentable
   has_many :registrant_domains, class_name: 'Domain', foreign_key: 'registrant_id' # when contant is registrant
 
-  attr_accessor :legal_document_id
-
   # TODO: remove later
   has_many :depricated_statuses, class_name: 'DepricatedContactStatus', dependent: :destroy
 
   accepts_nested_attributes_for :legal_documents
-
-  before_save   :catch_legal_doc_id
 
   validates :name, :phone, :email, :ident, :ident_type,
    :street, :city, :zip, :country_code, :registrar, presence: true
@@ -505,20 +500,5 @@ class Contact < ActiveRecord::Base
  def update_related_whois_records
    related_domain_descriptions.each{ |x, y| WhoisRecord.find_by(name: x).try(:save) }
  end
-
- def children_log
-    log = HashWithIndifferentAccess.new
-    log[:legal_documents]= [legal_document_id]
-    log
- end
-
-  def catch_legal_doc_id
-
-    if !legal_document_id && doc = self.legal_documents.last.new_record?
-
-      legal_document_id = doc.id
-
-    end
-end
 
 end
