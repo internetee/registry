@@ -93,7 +93,7 @@ class Domain < ActiveRecord::Base
   def update_reserved_domains
     return unless in_reserved_list?
     rd = ReservedDomain.by_domain(name).first
-    rd.names[name] = SecureRandom.hex
+    rd.password = SecureRandom.hex
     rd.save
   end
 
