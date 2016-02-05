@@ -645,7 +645,7 @@ class Domain < ActiveRecord::Base
 
       if self.statuses.include?(DomainStatus::EXPIRED)
         #self.outzone_at = Time.zone.now + 1.day
-        self.outzone_at = self.valid_to
+        self.outzone_at = self.valid_to + 15.day
       else
         self.outzone_at = nil
       end
