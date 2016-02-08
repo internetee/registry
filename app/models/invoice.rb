@@ -11,6 +11,18 @@ class Invoice < ActiveRecord::Base
   scope :unbinded, lambda {
     where('id NOT IN (SELECT invoice_id FROM account_activities where invoice_id IS NOT NULL)')
   }
+  scope :all_columns,                    ->{select("invoices.*")}
+  scope :sort_due_date_column,           ->{all_columns.select("CASE WHEN invoices.cancelled_at is not null THEN
+                                                                (invoices.cancelled_at + interval '100 year') ELSE
+                                                                 invoices.due_date END AS sort_due_date")}
+  scope :sort_by_sort_due_date_asc,      ->{sort_due_date_column.order("sort_due_date ASC")}
+  scope :sort_by_sort_due_date_desc,     ->{sort_due_date_column.order("sort_due_date DESC")}
+  scope :sort_receipt_date_column,       ->{all_columns.includes(:account_activity).references(:account_activity).select(%Q{
+                                            CASE WHEN account_activities.created_at is not null THEN account_activities.created_at
+                                            WHEN invoices.cancelled_at is not null THEN invoices.cancelled_at + interval '100 year'
+                                            ELSE NULL END AS sort_receipt_date })}
+  scope :sort_by_sort_receipt_date_asc,  ->{sort_receipt_date_column.order("sort_receipt_date ASC")}
+  scope :sort_by_sort_receipt_date_desc, ->{sort_receipt_date_column.order("sort_receipt_date DESC")}
 
   attr_accessor :billing_email
   validates :billing_email, email_format: { message: :invalid }, allow_blank: true

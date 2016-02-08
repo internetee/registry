@@ -12,9 +12,9 @@
             %th{class: 'col-xs-3'}
               = sort_link(@q, :buyer_name, "Buyer")
             %th{class: 'col-xs-3'}
-              = sort_link(@q, :due_date)
+              = sort_link(@q, :sort_due_date, "Due date")
             %th{class: 'col-xs-3'}
-              = sort_link(@q, :account_activity_created_at, "Receipt date")
+              = sort_link(@q, :sort_receipt_date, "Receipt date")
         %tbody
           - @invoices.each do |x|
             %tr
