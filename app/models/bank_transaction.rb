@@ -2,6 +2,7 @@ class BankTransaction < ActiveRecord::Base
   include Versions
   belongs_to :bank_statement
   has_one :account_activity
+  has_many :directo_records, as: :item, class_name: 'Directo'# Deprecated
 
   scope :unbinded, lambda {
     where('id NOT IN (SELECT bank_transaction_id FROM account_activities where bank_transaction_id IS NOT NULL)')
@@ -16,21 +17,32 @@ class BankTransaction < ActiveRecord::Base
     account_activity.invoice
   end
 
+
+  def invoice_num
+    return @invoice_no if defined?(@invoice_no)
+
+    match = description.match(/^[^\d]*(\d+)/)
+    return unless match
+
+    @invoice_no = match[1].try(:to_i)
+  end
+
+  def invoice
+    @invoice ||= registrar.invoices.find_by(number: invoice_num) if registrar
+  end
+
+  def registrar
+    @registrar ||= Registrar.find_by(reference_no: reference_no)
+  end
+
+
   # For successful binding, reference number, invoice id and sum must match with the invoice
   # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/CyclomaticComplexity
   def autobind_invoice
     return if binded?
-    registrar = Registrar.find_by(reference_no: reference_no)
     return unless registrar
-
-    match = description.match(/^[^\d]*(\d+)/)
-    return unless match
-
-    invoice_no = match[1].to_i
-    return unless invoice_no
-
-    invoice = registrar.invoices.find_by(number: invoice_no)
+    return unless invoice_num
     return unless invoice
 
     return if invoice.binded?
