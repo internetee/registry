@@ -458,13 +458,7 @@ class Domain < ActiveRecord::Base
     p = period_i / 12 if unit == 'm'
     p = period_i if unit == 'y'
 
-    if p > 1
-      p = "#{p}years"
-    else
-      p = "#{p}year"
-    end
-
-    Pricelist.pricelist_for(zone, operation, p)
+    Pricelist.pricelist_for(zone, operation, "#{p}year".pluralize(p))
   end
 
   ### VALIDATIONS ###
