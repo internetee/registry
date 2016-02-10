@@ -1,0 +1,80 @@
+= render 'shared/title', name: t(:contacts)
+
+.row
+  .col-md-12
+    = search_form_for [:admin, @q], html: { style: 'margin-bottom: 0;', class: 'js-form', autocomplete: 'off' } do |f|
+      .row
+        .col-md-3
+          .form-group
+            = f.label :name
+            = f.search_field :name, value: params[:q][:name], class: 'form-control', placeholder: t(:name)
+        .col-md-3
+          .form-group
+            = f.label :id
+            = f.search_field :id, value: params[:q][:id], class: 'form-control', placeholder: t(:id)
+        .col-md-3
+          .form-group
+            = f.label :ident
+            = f.search_field :ident, value: params[:q][:ident], class: 'form-control', placeholder: t(:ident)
+        .col-md-3
+          .form-group
+            = f.label :phone
+            = f.search_field :phone, value: params[:q][:phone], class: 'form-control', placeholder: t(:phone)
+        .row
+        .col-md-3
+        .col-md-3
+        .col-md-3
+          .form-group
+            = label_tag t(:results_per_page)
+            = text_field_tag :results_per_page, params[:results_per_page], class: 'form-control', placeholder: t(:results_per_page)
+        .col-md-3{style: 'padding-top: 25px;'}
+          %button.btn.btn-primary
+            &nbsp;
+            %span.glyphicon.glyphicon-search
+            &nbsp;
+          %button.btn.btn-default.js-reset-form
+            = t(:clear_fields)
+%hr
+
+
+.row
+  .col-md-12
+    .table-responsive
+      %table.table.table-hover.table-bordered.table-condensed
+        %thead
+          %tr
+            %th{class: 'col-xs-2'}
+              = t(:name)
+            %th{class: 'col-xs-2'}
+              = t(:id)
+            %th{class: 'col-xs-2'}
+              = t(:ident)
+            %th{class: 'col-xs-2'}
+              = t(:phone)
+            %th{class: 'col-xs-2'}
+              = t(:registrar)
+            %th{class: 'col-xs-2'}
+              = t(:action)
+        %tbody
+          - @versions.each do |version|
+            %tr
+              %td= version.reify.name
+              %td= version.reify.code
+              %td= ident_for(version.reify)
+              %td= version.reify.phone
+              %td
+                - if version.reify.registrar
+                  = link_to(version.reify.registrar, admin_registrar_path(version.reify.registrar))
+              %td= version.event
+
+
+.row
+  .col-md-6
+    = paginate @versions
+  .col-md-6.text-right
+
+
+:coffee
+  $(".js-reset-form").on "click", (e) ->
+    e.preventDefault();
+    window.location = "#{admin_contact_versions_path}"
