@@ -12,6 +12,7 @@ gem 'rails',        '4.2.4' # when update, all initializers eis_custom files nee
 gem 'iso8601',      '0.8.6' # for dates and times
 gem 'hashie-forbidden_attributes', '0.1.1'
 gem 'SyslogLogger', '2.0', require: 'syslog/logger'
+gem 'rest-client'
 
 # load env
 gem 'figaro', '1.1.1'

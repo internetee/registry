@@ -93,7 +93,7 @@ class Domain < ActiveRecord::Base
   def update_reserved_domains
     return unless in_reserved_list?
     rd = ReservedDomain.by_domain(name).first
-    rd.names[name] = SecureRandom.hex
+    rd.password = SecureRandom.hex
     rd.save
   end
 
@@ -264,9 +264,9 @@ class Domain < ActiveRecord::Base
       domains.each do |domain|
         next unless domain.expirable?
         domain.set_graceful_expired
-        DomainMailer.expiration_reminder(domain.id).deliver_in(Setting.expiration_reminder_mail.days)
+        DomainMailer.expiration_reminder(domain.id).deliver_in(Setting.expiration_reminder_mail.to_i.days)
         STDOUT << "#{Time.zone.now.utc} Domain.start_expire_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-        domain.save
+        domain.save(validate: false)
       end
 
       STDOUT << "#{Time.zone.now.utc} - Successfully expired #{domains.count} domains\n" unless Rails.env.test?
@@ -280,7 +280,7 @@ class Domain < ActiveRecord::Base
         next unless domain.server_holdable?
         domain.statuses << DomainStatus::SERVER_HOLD
         STDOUT << "#{Time.zone.now.utc} Domain.start_redemption_grace_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-        domain.save
+        domain.save(validate: false)
       end
 
       STDOUT << "#{Time.zone.now.utc} - Successfully set server_hold to #{d.count} domains\n" unless Rails.env.test?
@@ -294,7 +294,7 @@ class Domain < ActiveRecord::Base
         next unless domain.delete_candidateable?
         domain.statuses << DomainStatus::DELETE_CANDIDATE
         STDOUT << "#{Time.zone.now.utc} Domain.start_delete_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-        domain.save
+        domain.save(validate: false)
       end
 
       return if Rails.env.test?
@@ -408,8 +408,7 @@ class Domain < ActiveRecord::Base
       end
     end
 
-    return false if statuses.include_any?(DomainStatus::DELETE_CANDIDATE, DomainStatus::SERVER_RENEW_PROHIBITED,
-                                          DomainStatus::CLIENT_RENEW_PROHIBITED, DomainStatus::PENDING_RENEW,
+    return false if statuses.include_any?(DomainStatus::DELETE_CANDIDATE, DomainStatus::PENDING_RENEW,
                                           DomainStatus::PENDING_TRANSFER, DomainStatus::PENDING_DELETE,
                                           DomainStatus::PENDING_UPDATE, DomainStatus::PENDING_DELETE_CONFIRMATION)
     true

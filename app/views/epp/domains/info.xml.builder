@@ -41,7 +41,7 @@ xml.epp_head do
         xml.tag!('domain:crID', @domain.cr_id)
         xml.tag!('domain:crDate', @domain.created_at.try(:iso8601))
 
-        if @domain.updated_at != @domain.created_at
+        if @domain.updated_at > @domain.created_at
           upID =  @domain.updator.try(:registrar)
           upID =  upID.code if upID.present?             # Did updator return a kind of User that has a registrar?
           xml.tag!('domain:upID', upID) if upID.present? # optional upID
