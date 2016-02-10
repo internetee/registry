@@ -3,15 +3,22 @@ class Epp::Domain < Domain
   include EppErrors
 
   # TODO: remove this spagetti once data in production is correct.
-  attr_accessor :is_renewal, :is_transfer
+  attr_accessor :is_renewal, :is_transfer, :current_user
 
   before_validation :manage_permissions
+  before_update :write_update_values
+
   def manage_permissions
     return if is_admin # this bad hack for 109086524, refactor later
     return true if is_transfer || is_renewal
     return unless update_prohibited? || delete_prohibited?
     add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
     false
+  end
+
+  def write_update_values
+    self.updator_str = current_user.identity_code if current_user
+    self.updated_at = Time.zone.now
   end
 
   after_validation :validate_contacts
@@ -487,6 +494,8 @@ class Epp::Domain < Domain
       statuses - domain_statuses_attrs(frame.css('rem'), 'rem') + domain_statuses_attrs(frame.css('add'), 'add')
 
     # at[:statuses] += at_add[:domain_statuses_attributes]
+
+    @current_user = current_user
 
     if errors.empty? && verify &&
        Setting.request_confrimation_on_registrant_change_enabled &&
