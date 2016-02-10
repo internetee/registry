@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160108135436) do
+ActiveRecord::Schema.define(version: 20151029152638) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -135,14 +135,12 @@ ActiveRecord::Schema.define(version: 20160108135436) do
   end
 
   create_table "blocked_domains", force: :cascade do |t|
+    t.string   "names",       array: true
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "creator_str"
     t.string   "updator_str"
-    t.string   "name"
   end
-
-  add_index "blocked_domains", ["name"], name: "index_blocked_domains_on_name", using: :btree
 
   create_table "cached_nameservers", id: false, force: :cascade do |t|
     t.string "hostname", limit: 255
@@ -242,20 +240,19 @@ ActiveRecord::Schema.define(version: 20160108135436) do
   end
 
   create_table "dnskeys", force: :cascade do |t|
-    t.integer  "domain_id"
-    t.integer  "flags"
-    t.integer  "protocol"
-    t.integer  "alg"
-    t.text     "public_key"
-    t.integer  "delegation_signer_id"
-    t.string   "ds_key_tag"
-    t.integer  "ds_alg"
-    t.integer  "ds_digest_type"
-    t.string   "ds_digest"
-    t.string   "creator_str"
-    t.string   "updator_str"
-    t.integer  "legacy_domain_id"
-    t.datetime "updated_at"
+    t.integer "domain_id"
+    t.integer "flags"
+    t.integer "protocol"
+    t.integer "alg"
+    t.text    "public_key"
+    t.integer "delegation_signer_id"
+    t.string  "ds_key_tag"
+    t.integer "ds_alg"
+    t.integer "ds_digest_type"
+    t.string  "ds_digest"
+    t.string  "creator_str"
+    t.string  "updator_str"
+    t.integer "legacy_domain_id"
   end
 
   add_index "dnskeys", ["delegation_signer_id"], name: "index_dnskeys_on_delegation_signer_id", using: :btree
@@ -339,7 +336,6 @@ ActiveRecord::Schema.define(version: 20160108135436) do
   end
 
   add_index "domains", ["delete_at"], name: "index_domains_on_delete_at", using: :btree
-  add_index "domains", ["name"], name: "index_domains_on_name", unique: true, using: :btree
   add_index "domains", ["outzone_at"], name: "index_domains_on_outzone_at", using: :btree
   add_index "domains", ["registrant_id"], name: "index_domains_on_registrant_id", using: :btree
   add_index "domains", ["registrant_verification_asked_at"], name: "index_domains_on_registrant_verification_asked_at", using: :btree
@@ -446,7 +442,9 @@ ActiveRecord::Schema.define(version: 20160108135436) do
     t.integer  "documentable_id"
     t.string   "documentable_type"
     t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "creator_str"
+    t.string   "updator_str"
     t.string   "path"
   end
 
@@ -741,6 +739,21 @@ ActiveRecord::Schema.define(version: 20160108135436) do
   add_index "log_keyrelays", ["item_type", "item_id"], name: "index_log_keyrelays_on_item_type_and_item_id", using: :btree
   add_index "log_keyrelays", ["whodunnit"], name: "index_log_keyrelays_on_whodunnit", using: :btree
 
+  create_table "log_legal_documents", force: :cascade do |t|
+    t.string   "item_type",      null: false
+    t.integer  "item_id",        null: false
+    t.string   "event",          null: false
+    t.string   "whodunnit"
+    t.json     "object"
+    t.json     "object_changes"
+    t.datetime "created_at"
+    t.string   "session"
+    t.json     "children"
+  end
+
+  add_index "log_legal_documents", ["item_type", "item_id"], name: "index_log_legal_documents_on_item_type_and_item_id", using: :btree
+  add_index "log_legal_documents", ["whodunnit"], name: "index_log_legal_documents_on_whodunnit", using: :btree
+
   create_table "log_messages", force: :cascade do |t|
     t.string   "item_type",      null: false
     t.integer  "item_id",        null: false
@@ -897,10 +910,10 @@ ActiveRecord::Schema.define(version: 20160108135436) do
 
   create_table "nameservers", force: :cascade do |t|
     t.string   "hostname"
-    t.string   "ipv4",             default: [], array: true
+    t.string   "ipv4"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "ipv6",             default: [], array: true
+    t.string   "ipv6"
     t.integer  "domain_id"
     t.string   "creator_str"
     t.string   "updator_str"
@@ -998,12 +1011,8 @@ ActiveRecord::Schema.define(version: 20160108135436) do
     t.datetime "updated_at"
     t.string   "creator_str"
     t.string   "updator_str"
-    t.integer  "legacy_id"
-    t.string   "name"
-    t.string   "password"
+    t.hstore   "names"
   end
-
-  add_index "reserved_domains", ["name"], name: "index_reserved_domains_on_name", using: :btree
 
   create_table "settings", force: :cascade do |t|
     t.string   "var",                    null: false
