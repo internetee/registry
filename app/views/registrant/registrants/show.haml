@@ -73,3 +73,8 @@
 
           %dt= t(:country)
           %dd= @contact.country
+
+.row
+  .col-md-12= render 'registrant/registrants/partials/statuses', contact: @contact
+.row
+  .col-md-12= render 'registrant/registrants/partials/domains', contact: @contact
