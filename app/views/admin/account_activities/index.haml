@@ -45,7 +45,7 @@
   .col-md-3
   .col-md-2
   .col-md-4{class: 'text-right'}
-    = t(:starting_balance)  + " #{@sum.to_a.map(&:sum).sum.to_f} EUR"
+    = t(:starting_balance)  + " #{@sum.to_f} EUR"
 
 %hr
 
@@ -66,10 +66,10 @@
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'sum')
         %tbody
-          -total = @sum.to_a.map(&:sum).sum.to_f
+          -total = @sum.to_f
           - @account_activities.each do |x|
             %tr
-              %td= link_to(x.account.registrar.try(:code), admin_registrar_path(x.account.registrar))
+              %td= x.account.registrar && link_to(x.account.registrar.try(:code), admin_registrar_path(x.account.registrar))
               %td= x.description.present? ? x.description : '-'
               %td= x.activity_type ? t(x.activity_type) : ''
               %td= l(x.created_at)
