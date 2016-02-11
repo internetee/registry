@@ -91,10 +91,7 @@ class Domain < ActiveRecord::Base
 
   after_create :update_reserved_domains
   def update_reserved_domains
-    return unless in_reserved_list?
-    rd = ReservedDomain.by_domain(name).first
-    rd.password = SecureRandom.hex
-    rd.save
+    ReservedDomain.new_password_for(name) if in_reserved_list?
   end
 
   validates :name_dirty, domain_name: true, uniqueness: true
@@ -370,7 +367,7 @@ class Domain < ActiveRecord::Base
   end
 
   def in_reserved_list?
-    ReservedDomain.pw_for(name).present?
+    @in_reserved_list ||= ReservedDomain.by_domain(name).any?
   end
 
   def pending_transfer

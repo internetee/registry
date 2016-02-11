@@ -22,15 +22,28 @@ class ReservedDomain < ActiveRecord::Base
     def any_of_domains names
       where(name: names)
     end
+
+    def new_password_for name
+      record = by_domain(name).first
+      return unless record
+
+      record.regenerate_password
+      record.save
+    end
   end
 
 
-  def fill_empty_passwords
-    self.password = SecureRandom.hex if self.password.blank?
-  end
 
   def name= val
     super SimpleIDN.to_unicode(val)
+  end
+
+  def fill_empty_passwords
+    regenerate_password if self.password.blank?
+  end
+
+  def regenerate_password
+    self.password = SecureRandom.hex
   end
 
   def generate_data
