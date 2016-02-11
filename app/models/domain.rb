@@ -826,7 +826,6 @@ class Domain < ActiveRecord::Base
   end
 
   def update_whois_record
-    p "run by transaction"
     UpdateWhoisRecordJob.enqueue name, 'domain'
   end
 
