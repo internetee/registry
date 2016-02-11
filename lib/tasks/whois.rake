@@ -8,17 +8,17 @@ namespace :whois do
 
       print "\n-----> Update domains whois_records"
       Domain.find_in_batches.each do |group|
-        UpdateWhoisRecordJob.enqueue group.map(&:id), 'domain'
+        UpdateWhoisRecordJob.enqueue group.map(&:name), 'domain'
       end
 
       print "\n-----> Update blocked domains whois_records"
       BlockedDomain.find_in_batches.each do |group|
-        UpdateWhoisRecordJob.enqueue group.map(&:id), 'blocked'
+        UpdateWhoisRecordJob.enqueue group.map(&:name), 'blocked'
       end
 
       print "\n-----> Update reserved domains whois_records"
       ReservedDomain.find_in_batches.each do |group|
-        UpdateWhoisRecordJob.enqueue group.map(&:id), 'reserved'
+        UpdateWhoisRecordJob.enqueue group.map(&:name), 'reserved'
       end
 
     end
