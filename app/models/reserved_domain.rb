@@ -2,7 +2,8 @@ class ReservedDomain < ActiveRecord::Base
   include Versions # version/reserved_domain_version.rb
   before_save :fill_empty_passwords
   before_save :generate_data
-  before_destroy :remove_data
+  after_destroy :remove_data
+
   validates :name, domain_name: true, uniqueness: true
 
 
@@ -25,12 +26,7 @@ class ReservedDomain < ActiveRecord::Base
 
 
   def fill_empty_passwords
-
-    if self.password.empty?
-
-      self.password =  SecureRandom.hex
-
-    end
+    self.password = SecureRandom.hex if self.password.blank?
   end
 
   def name= val
@@ -40,19 +36,13 @@ class ReservedDomain < ActiveRecord::Base
   def generate_data
     return if Domain.where(name: name).any?
 
-    @json = generate_json
-    @body = generate_body
-    update_whois_server
-  end
-
-  alias_method :update_whois_record, :generate_data
-
-  def update_whois_server
     wr = Whois::Record.find_or_initialize_by(name: name)
-    wr.body = @body
-    wr.json = @json
+    wr.json = @json = generate_json # we need @json to bind to class
+    wr.body = generate_body
     wr.save
   end
+  alias_method :update_whois_record, :generate_data
+
 
   def generate_body
     template = Rails.root.join("app/views/for_models/whois_other.erb".freeze)
@@ -67,9 +57,7 @@ class ReservedDomain < ActiveRecord::Base
   end
 
   def remove_data
-    return if Domain.where(name: name).any?
-
-    Whois::Record.where(name: name).delete_all
+    UpdateWhoisRecordJob.enqueue name, 'reserved'
   end
 
 end

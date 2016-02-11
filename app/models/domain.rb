@@ -43,7 +43,7 @@ class Domain < ActiveRecord::Base
   has_many :dnskeys, dependent: :destroy
 
   has_many :keyrelays
-  has_one :whois_record, dependent: :destroy
+  has_one  :whois_record # destroyment will be done in after_commit
 
   accepts_nested_attributes_for :dnskeys, allow_destroy: true
 
@@ -87,7 +87,7 @@ class Domain < ActiveRecord::Base
     true
   end
 
-  after_save :update_whois_record
+  after_commit :update_whois_record
 
   after_create :update_reserved_domains
   def update_reserved_domains
@@ -826,7 +826,8 @@ class Domain < ActiveRecord::Base
   end
 
   def update_whois_record
-    whois_record.blank? ? create_whois_record : whois_record.save
+    p "run by transaction"
+    UpdateWhoisRecordJob.enqueue name, 'domain'
   end
 
   def status_notes_array=(notes)
