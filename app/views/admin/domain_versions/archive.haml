@@ -53,7 +53,7 @@
             %tr
               %td= version.reify.name
               %td
-                - if version.reify.registrant.ident
+                - if version.reify.registrant
                   = link_to(version.reify.registrant, admin_registrant_path(version.reify.registrant))
               %td
                 - if version.reify.registrar
