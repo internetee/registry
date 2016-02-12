@@ -935,4 +935,5 @@ en:
   add_reserved_domain: 'Add domain to reserved list'
   add_blocked_domain: 'Add domain to blocked list'
   edit_pw: 'Edit Pw'
-  optional: 'Optional'
+  optional: 'Optional'  
+  contact_already_associated_with_the_domain: 'Object association prohibits operation, contact already associated with the domain'
