@@ -35,13 +35,13 @@
           %dd
             = l(@contact.created_at, format: :short)
             by
-            = creator_link(@contact)
+            = @contact.name
 
           %dt= t(:updated)
           %dd
             = l(@contact.updated_at, format: :short)
             by
-            = updator_link(@contact)
+            = @contact.name
 
           %dt= t(:registrar)
           %dd
