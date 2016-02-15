@@ -499,7 +499,8 @@ class Contact < ActiveRecord::Base
   end
 
  def update_related_whois_records
-   RegenerateWhoisRecordJob.enqueue related_domain_descriptions.keys, :name
+   ids = related_domain_descriptions.keys
+   RegenerateWhoisRecordJob.enqueue(ids, :name) if ids.present?
  end	 
 
 end
