@@ -1,21 +1,21 @@
 Tere,
 
-Registrisse laekus taotlus domeeni <%= @domain.name %> registreerija vahetuseks. Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja poole. Teie registripidaja on <%= @domain.registrar_name %>
+Registrisse laekus taotlus domeeni <%= @params[:name] %> registreerija vahetuseks. Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja poole. Teie registripidaja on <%= @params[:registrar_name] %>
 
-Uued registreerija andmed:
-Nimi: <%= @domain.registrant_name %>
-<% if @domain.registrant.priv? %>
-Isikukood: <%= @domain.registrant_ident %>
+Uue registreerija andmed:
+Nimi: <%= @params[:registrant_name] %>
+<% if @params[:registrant_priv] %>
+Isikukood: <%= @params[:registrant_ident] %>
 <% else %>
-Äriregistrikood: <%= @domain.registrant_ident %>
+Äriregistrikood: <%= @params[:registrant_ident] %>
 <% end %>
-Tänav: <%= @domain.registrant_street %>
-Linn: <%= @domain.registrant_city %>
-Riik: <%= @domain.registrant_country %>
+Tänav: <%= @params[:registrant_street] %>
+Linn: <%= @params[:registrant_city] %>
+Riik: <%= @params[:registrant_country] %>
 
 Taotlus on aktiivne <%= Setting.expire_pending_confirmation %> tundi ja lükatakse automaatselt tagasi kui te seda enne ise ei kinnita või tagasi lükka.
 Muudatuse kinnitamiseks külastage palun allolevat võrgulehekülge, kontrollige uuesti üle muudatuse andmed ning vajutage nuppu kinnitan:
-<%= @verification_url %>
+<%= @params[:verification_url] %>
 
 Lugupidamisega
 Eesti Interneti SA
@@ -24,22 +24,22 @@ Eesti Interneti SA
 
 Hi,
 
-Application for changing registrant of your domain <%= @domain.name %> has been filed. Please make sure that the update and information are correct. Incase of problems please turn to your registrar. Your registrar is <%= @domain.registrar_name %>
+Application for changing registrant of your domain <%= @params[:name] %> has been filed. Please make sure that the update and information are correct. Incase of problems please turn to your registrar. Your registrar is <%= @params[:registrar_name] %>
 
 New registrant:
-Name: <%= @domain.registrant_name %>
-<% if @domain.registrant.priv? %>
-Personal code: <%= @domain.registrant_ident %>
+Name: <%= @params[:registrant_name] %>
+<% if @params[:registrant_priv] %>
+Personal code: <%= @params[:registrant_ident] %>
 <% else %>
-Business Registry code: <%= @domain.registrant_ident %>
+Business Registry code: <%= @params[:registrant_ident] %>
 <% end %>
-Street: <%= @domain.registrant_street %>
-City: <%= @domain.registrant_city %>
-Country: <%= @domain.registrant_country %>
+Street: <%= @params[:registrant_street] %>
+City: <%= @params[:registrant_city] %>
+Country: <%= @params[:registrant_country] %>
 
 The application will remain in pending status for <%= Setting.expire_pending_confirmation %> hrs and will be automaticcally rejected if it is not approved nor rejected before.
 To confirm the update please visit this website, once again review the data and press approve:
-<%= @verification_url %>
+<%= @params[:verification_url] %>
 
 Best Regards,
 Estonian Internet Foundation

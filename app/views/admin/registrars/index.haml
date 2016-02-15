@@ -8,15 +8,18 @@
       %table.table.table-hover.table-bordered.table-condensed
         %thead
           %tr
-            %th{class: 'col-xs-6'}
+            %th{class: 'col-xs-4'}
               = sort_link(@q, 'name')
-            %th{class: 'col-xs-6'}
+            %th{class: 'col-xs-4'}
               = sort_link(@q, 'reg_no', t(:reg_no))
+            %th{class: 'col-xs-4'}
+              = t(:credit_balance)
         %tbody
           - @registrars.each do |x|
             %tr
               %td= link_to(x, [:admin, x])
               %td= x.reg_no
+              %td= "#{x.balance}"
 .row
   .col-md-12
     = paginate @registrars

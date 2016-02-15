@@ -1,5 +1,6 @@
 # rubocop: disable Metrics/ClassLength
 class Domain < ActiveRecord::Base
+  include UserEvents
   include Versions # version/domain_version.rb
   include Statuses
   has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
@@ -92,7 +93,7 @@ class Domain < ActiveRecord::Base
   def update_reserved_domains
     return unless in_reserved_list?
     rd = ReservedDomain.by_domain(name).first
-    rd.names[name] = SecureRandom.hex
+    rd.password = SecureRandom.hex
     rd.save
   end
 
@@ -238,12 +239,12 @@ class Domain < ActiveRecord::Base
         end
         count += 1
         if domain.pending_update?
-          DomainMailer.pending_update_expired_notification_for_new_registrant(domain.id).deliver
+          domain.send_mail :pending_update_expired_notification_for_new_registrant
         end
         if domain.pending_delete? || domain.pending_delete_confirmation?
-          DomainMailer.pending_delete_expired_notification(domain.id, deliver_emails).deliver
+          DomainMailer.pending_delete_expired_notification(domain.id, true).deliver
         end
-        domain.clean_pendings!
+        domain.clean_pendings_lowlevel
         unless Rails.env.test?
           STDOUT << "#{Time.zone.now.utc} Domain.clean_expired_pendings: ##{domain.id} (#{domain.name})\n"
         end
@@ -263,9 +264,9 @@ class Domain < ActiveRecord::Base
       domains.each do |domain|
         next unless domain.expirable?
         domain.set_graceful_expired
-        DomainMailer.expiration_reminder(domain.id).deliver
+        DomainMailer.expiration_reminder(domain.id).deliver_in(Setting.expiration_reminder_mail.to_i.days)
         STDOUT << "#{Time.zone.now.utc} Domain.start_expire_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-        domain.save
+        domain.save(validate: false)
       end
 
       STDOUT << "#{Time.zone.now.utc} - Successfully expired #{domains.count} domains\n" unless Rails.env.test?
@@ -279,7 +280,7 @@ class Domain < ActiveRecord::Base
         next unless domain.server_holdable?
         domain.statuses << DomainStatus::SERVER_HOLD
         STDOUT << "#{Time.zone.now.utc} Domain.start_redemption_grace_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-        domain.save
+        domain.save(validate: false)
       end
 
       STDOUT << "#{Time.zone.now.utc} - Successfully set server_hold to #{d.count} domains\n" unless Rails.env.test?
@@ -293,7 +294,7 @@ class Domain < ActiveRecord::Base
         next unless domain.delete_candidateable?
         domain.statuses << DomainStatus::DELETE_CANDIDATE
         STDOUT << "#{Time.zone.now.utc} Domain.start_delete_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-        domain.save
+        domain.save(validate: false)
       end
 
       return if Rails.env.test?
@@ -307,7 +308,7 @@ class Domain < ActiveRecord::Base
 
       c = 0
       Domain.where("statuses @> '{deleteCandidate}'::varchar[]").each do |x|
-        Whois::Record.where('domain_id = ?', x.id).try(':destroy')
+        WhoisRecord.where(domain_id: x.id).destroy_all
         destroy_with_message x
         STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by deleteCandidate ##{x.id} (#{x.name})\n" unless Rails.env.test?
 
@@ -315,7 +316,7 @@ class Domain < ActiveRecord::Base
       end
 
       Domain.where('force_delete_at <= ?', Time.zone.now).each do |x|
-        Whois::Record.where('domain_id = ?', x.id).try(':destroy')
+        WhoisRecord.where(domain_id: x.id).destroy_all
         destroy_with_message x
         STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by force delete time ##{x.id} (#{x.name})\n" unless Rails.env.test?
         c += 1
@@ -407,8 +408,7 @@ class Domain < ActiveRecord::Base
       end
     end
 
-    return false if statuses.include_any?(DomainStatus::DELETE_CANDIDATE, DomainStatus::SERVER_RENEW_PROHIBITED,
-                                          DomainStatus::CLIENT_RENEW_PROHIBITED, DomainStatus::PENDING_RENEW,
+    return false if statuses.include_any?(DomainStatus::DELETE_CANDIDATE, DomainStatus::PENDING_RENEW,
                                           DomainStatus::PENDING_TRANSFER, DomainStatus::PENDING_DELETE,
                                           DomainStatus::PENDING_UPDATE, DomainStatus::PENDING_DELETE_CONFIRMATION)
     true
@@ -438,8 +438,26 @@ class Domain < ActiveRecord::Base
     save
   end
 
+
+  # state change shouln't be
+  def clean_pendings_lowlevel
+    statuses.delete(DomainStatus::PENDING_DELETE_CONFIRMATION)
+    statuses.delete(DomainStatus::PENDING_UPDATE)
+    statuses.delete(DomainStatus::PENDING_DELETE)
+
+    status_notes[DomainStatus::PENDING_UPDATE] = ''
+    status_notes[DomainStatus::PENDING_DELETE] = ''
+
+    update_columns(
+        registrant_verification_token:    nil,
+        registrant_verification_asked_at: nil,
+        pending_json: {},
+        status_notes: status_notes,
+        statuses:     statuses.presence || [DomainStatus::OK]
+    )
+  end
+
   def pending_update!
-    old_registrant_id = registrant_id
     return true if pending_update?
     self.epp_pending_update = true # for epp
 
@@ -451,8 +469,8 @@ class Domain < ActiveRecord::Base
     new_registrant_email = registrant.email
     new_registrant_name  = registrant.name
 
-    DomainMailer.pending_update_request_for_old_registrant(id, old_registrant_id, deliver_emails).deliver
-    DomainMailer.pending_update_notification_for_new_registrant(id, old_registrant_id, deliver_emails).deliver
+    send_mail :pending_update_request_for_old_registrant
+    send_mail :pending_update_notification_for_new_registrant
 
     reload # revert back to original
 
@@ -543,8 +561,8 @@ class Domain < ActiveRecord::Base
   ### VALIDATIONS ###
 
   def validate_nameserver_ips
-    nameservers.each do |ns|
-      next unless ns.hostname.end_with?(name)
+    nameservers.to_a.reject(&:marked_for_destruction?).each do |ns|
+      next unless ns.hostname.end_with?(".#{name}")
       next if ns.ipv4.present?
       errors.add(:nameservers, :invalid) if errors[:nameservers].blank?
       ns.errors.add(:ipv4, :blank)
@@ -818,6 +836,11 @@ class Domain < ActiveRecord::Base
       status_notes[status] = notes[i]
     end
   end
+
+  def send_mail(action)
+    DomainMailer.send(action, DomainMailModel.new(self).send(action)).deliver
+  end
+
 
   def self.to_csv
     CSV.generate do |csv|

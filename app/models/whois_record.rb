@@ -23,6 +23,10 @@ class WhoisRecord < ActiveRecord::Base
     end
   end
 
+  def self.find_by_name(name)
+    WhoisRecord.where("lower(name) = ?", name.downcase)
+  end
+
   def generated_json
     @generated_json ||= generate_json
   end
@@ -44,11 +48,11 @@ class WhoisRecord < ActiveRecord::Base
     h[:changed]    = domain.updated_at.try(:to_s, :iso8601)
     h[:expire]     = domain.valid_to.try(:to_date).try(:to_s)
     h[:outzone]    = domain.outzone_at.try(:to_date).try(:to_s)
-    h[:delete]     = domain.delete_at.try(:to_date).try(:to_s)
+    h[:delete]     = [domain.delete_at, domain.force_delete_at].compact.min.try(:to_date).try(:to_s)
 
 
     h[:registrant]       = domain.registrant.name
-    h[:registrant_email] = domain.registrant.email
+    h[:email] = domain.registrant.email
     @disclosed << [:email, domain.registrant.email]
     h[:registrant_changed]          = domain.registrant.updated_at.try(:to_s, :iso8601)
 
@@ -102,7 +106,7 @@ class WhoisRecord < ActiveRecord::Base
     self.json = generated_json
     self.body = generated_body
     self.name = json['name']
-    self.registrar_id = domain.registrar_id # for faster registrar updates
+    self.registrar_id = domain.registrar_id if domain # for faster registrar updates
   end
 
   def update_whois_server
@@ -113,6 +117,6 @@ class WhoisRecord < ActiveRecord::Base
   end
 
   def destroy_whois_record
-    Whois::Record.where(name: name).delete_all()
+    Whois::Record.where(name: name).delete_all
   end
 end

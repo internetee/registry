@@ -1,9 +1,19 @@
 Tere,
 
-Domeeni <%= @domain.name %> registreerija vahetuse taotlus on kinnitatud ning andmed registris uuendatud.
+Domeeni <%= @params[:name] %> registreerija vahetuse taotlus on kinnitatud ning andmed registris uuendatud.
 
-Uued registreerija:
-Nimi: <%= @domain.registrant_name %>
+Uue registreerija andmed:
+Nimi: <%= @params[:new_registrant_name] %>
+
+<% if @params[:registrant_priv] %>
+Isikukood: <%= @params[:registrant_ident] %>
+<% else %>
+Äriregistrikood: <%= @params[:registrant_ident] %>
+<% end %>
+Epost: <%= @params[:registrant_email] %>
+Tänav: <%= @params[:registrant_street] %>
+Linn: <%= @params[:registrant_city] %>
+Riik: <%= @params[:registrant_country] %>
 
 Lugupidamisega
 Eesti Interneti SA
@@ -12,10 +22,20 @@ Eesti Interneti SA
 
 Hi,
 
-Process for changing registrant of the domain <%= @domain.name %> has been approved and the data in the registry is updated.
+Process for changing registrant of the domain <%= @params[:name] %> has been approved and the data in the registry is updated.
 
 New registrant:
-Name: <%= @domain.registrant_name %>
+Name: <%= @params[:new_registrant_name] %>
+
+<% if @params[:registrant_priv] %>
+Personal code: <%= @params[:registrant_ident] %>
+<% else %>
+Business Registry code: <%= @params[:registrant_ident] %>
+<% end %>
+E-mail: <%= @params[:registrant_email] %>
+Street: <%= @params[:registrant_street] %>
+City: <%= @params[:registrant_city] %>
+Country: <%= @params[:registrant_country] %>
 
 Best Regards,
 Estonian Internet Foundation
