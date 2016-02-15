@@ -503,8 +503,8 @@ class Contact < ActiveRecord::Base
   end
 
  def update_related_whois_records
-   ids = related_domain_descriptions.keys
-   RegenerateWhoisRecordJob.enqueue(ids, :name) if ids.present?
+   names = related_domain_descriptions.keys
+   UpdateWhoisRecordJob.enqueue(names, :domain) if names.present?
  end	 
 
 end
