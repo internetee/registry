@@ -12,11 +12,27 @@ class Admin::AccountActivitiesController < AdminController
       logger.warn('Invalid date')
     end
 
+    balance_params = params[:q].deep_dup
+
+    if balance_params[:created_at_gteq]
+      balance_params.delete('created_at_gteq')
+    end
+
     @q = AccountActivity.includes(:invoice, account: :registrar).search(params[:q])
+    @b = AccountActivity.search(balance_params)
     @q.sorts = 'id desc' if @q.sorts.empty?
 
+    @account_activities = @q.result.page(params[:page]).per(params[:results_per_page])
+    sort = @account_activities.orders.map(&:to_sql).join(",")
+
+    if params[:page] && params[:page].to_i > 1
+      @sum = @q.result.reorder(sort).limit(@account_activities.offset_value) + @b.result.where.not(id: @q.result.map(&:id))
+    else
+      @sum = @b.result.where.not(id: @q.result.map(&:id))
+    end
+
     respond_to do |format|
-      format.html { @account_activities = @q.result.page(params[:page]) }
+      format.html
       format.csv do
         send_data @q.result.to_csv, filename: "account_activities_#{Time.zone.now.to_formatted_s(:number)}.csv"
       end

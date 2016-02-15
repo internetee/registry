@@ -8,7 +8,7 @@ class Epp::Domain < Domain
   before_validation :manage_permissions
   def manage_permissions
     return if is_admin # this bad hack for 109086524, refactor later
-    return true if is_transfer
+    return true if is_transfer || is_renewal
     return unless update_prohibited? || delete_prohibited?
     add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
     false
@@ -507,18 +507,17 @@ class Epp::Domain < Domain
     frame = Nokogiri::XML(pending_json['frame'])
 
     self.deliver_emails = true # turn on email delivery
-    send_mail :registrant_updated_notification_for_old_registrant
-
-    statuses.delete(DomainStatus::PENDING_UPDATE)
-    yield(self) if block_given? # need to skip statuses check here
-    self.save
-
+    self.statuses.delete(DomainStatus::PENDING_UPDATE)
     ::PaperTrail.whodunnit = user.id_role_username # updator str should be the request originator not the approval user
+
+    send_mail :registrant_updated_notification_for_old_registrant
     return unless update(frame, user, false)
     clean_pendings!
 
     send_mail :registrant_updated_notification_for_new_registrant
-    update_whois_record
+    WhoisRecord.find_by(domain_id: id).save # need to reload model
+
+    save! # for notification if everything fails
     true
   end
 
@@ -591,6 +590,7 @@ class Epp::Domain < Domain
 
     statuses.delete(DomainStatus::SERVER_HOLD)
     statuses.delete(DomainStatus::EXPIRED)
+    statuses.delete(DomainStatus::SERVER_UPDATE_PROHIBITED)
 
     save
   end

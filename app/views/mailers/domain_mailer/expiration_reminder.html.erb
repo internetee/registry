@@ -1,7 +1,7 @@
 Domeen <%= @domain.name %> on aegunud<br>
 Lugupeetud .ee domeeni kasutaja<br>
 <br>
-Domeeninimi <%= @domain.name %>  on aegunud ja ei ole alates <%= l(@domain.outzone_at, format: :short) %> internetis kättesaadav. Alates <%= l(@domain.delete_at, format: :short) %> on domeen <%= @domain.name %> avatud registreerimiseks kõigile huvilistele.
+Domeeninimi <%= @domain.name %>  on aegunud ja ei ole alates <%= l(@domain.outzone_at, format: :date) %> internetis kättesaadav. Alates <%= l(@domain.delete_at, format: :date) %> on domeen <%= @domain.name %> avatud registreerimiseks kõigile huvilistele.
 <br><br>
 Domeeni registreeringu pikendamiseks pöörduge palun oma registripidaja <%= @domain.registrar.name %> poole. Registripidajate kontaktid leiate aadressilt www.internet.ee/registripidajad.
 <br><br>
@@ -27,7 +27,7 @@ Tel: +372 727 1000<br>
 The <%= @domain.name %> domain has expired<br>
 Dear user of .ee domain,<br>
 <br>
-The domain name <%= @domain.name %> has expired and will not be available on the Internet from <%= l(@domain.outzone_at, format: :short) %>. From <%= l(@domain.delete_at, format: :short) %>, the <%= @domain.name %> domain will be available for registration on a first come first served basis.
+The domain name <%= @domain.name %> has expired and will not be available on the Internet from <%= l(@domain.outzone_at, format: :date) %>. From <%= l(@domain.delete_at, format: :date) %>, the <%= @domain.name %> domain will be available for registration on a first come first served basis.
 <br><br>
 To renew the domain registration, please contact your registrar <%= @domain.registrar.name %>. You can find the registrar's contacts at http://www.internet.ee/en/registripidajad/.
 <br><br>
@@ -53,7 +53,7 @@ Phone: +372 727 1000<br>
 Домен <%= @domain.name %> устарел<br>
 Уважаемый пользователь домена .ee<br>
 <br>
-Доменное имя <%= @domain.name %> устарело и с <%= l(@domain.outzone_at, format: :short) %> недоступно в Интернете. С <%= l(@domain.delete_at, format: :short) %> домен <%= @domain.name %> доступен для регистрации всем желающим по принципу "first come, first served".
+Доменное имя <%= @domain.name %> устарело и с <%= l(@domain.outzone_at, format: :date) %> недоступно в Интернете. С <%= l(@domain.delete_at, format: :date) %> домен <%= @domain.name %> доступен для регистрации всем желающим по принципу "first come, first served".
 <br><br>
 Для продления регистрации домена просим обратиться к своему регистратору <%= @domain.registrar.name %>. Контактные данные регистраторов можно найти по адресу http://www.internet.ee/ru/p/.
 <br><br>
