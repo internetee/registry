@@ -35,13 +35,13 @@
           %dd
             = l(@contact.created_at, format: :short)
             by
-            = creator_link(@contact)
+            = @contact.name
 
           %dt= t(:updated)
           %dd
             = l(@contact.updated_at, format: :short)
             by
-            = updator_link(@contact)
+            = @contact.name
 
           %dt= t(:registrar)
           %dd
@@ -73,3 +73,8 @@
 
           %dt= t(:country)
           %dd= @contact.country
+
+.row
+  .col-md-12= render 'registrant/registrants/partials/statuses', contact: @contact
+.row
+  .col-md-12= render 'registrant/registrants/partials/domains', contact: @contact
