@@ -36,10 +36,7 @@ class Epp::Contact < Contact
       at[:country_code] = f.css('postalInfo addr cc').text     if f.css('postalInfo addr cc').present?
       at[:auth_info]    = f.css('authInfo pw').text            if f.css('authInfo pw').present?
 
-      legal_frame = f.css('legalDocument').first
-      if legal_frame.present?
-        at[:legal_documents_attributes] = legal_document_attrs(legal_frame)
-      end
+
       at.merge!(ident_attrs(f.css('ident').first)) if new_record
       at
     end
@@ -152,6 +149,12 @@ class Epp::Contact < Contact
 
     legal_frame = frame.css('legalDocument').first
     at[:legal_documents_attributes] = self.class.legal_document_attrs(legal_frame)
+
+    if doc = attach_legal_document(parse_legal_document_from_frame(frame))
+      frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
+      self.legal_document_id = doc.id
+    end
+
     self.deliver_emails = true # turn on email delivery for epp
 
 
@@ -213,4 +216,34 @@ class Epp::Contact < Contact
 
     status_list
   end
+
+  def attach_legal_document(legal_document_data)
+    return unless legal_document_data
+
+    legal_documents.create(
+        document_type: legal_document_data[:type],
+        body: legal_document_data[:body]
+    )
+  end
+
+  def add_legal_file_to_new frame
+    if doc = attach_legal_document(parse_legal_document_from_frame(frame))
+      raise ActiveRecord::Rollback if doc && doc.id.nil?
+
+      frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
+      self.legal_document_id = doc.id
+    end
+  end
+
+  def parse_legal_document_from_frame frame
+    ld = frame.css('legalDocument').first
+    return nil unless ld
+    return nil if ld.text.starts_with?(ENV['legal_documents_dir'])
+
+    {
+        body: ld.text,
+        type: ld['type']
+    }
+  end
+
 end
