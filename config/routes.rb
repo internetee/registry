@@ -107,6 +107,11 @@ Rails.application.routes.draw do
       collection do
         get :download_list
       end
+
+      member do
+        get 'domain_verification_url'
+      end
+
     end
 
     # resources :invoices do

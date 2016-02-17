@@ -460,7 +460,6 @@ class Contact < ActiveRecord::Base
       domains.each{|d| d.roles = domain_c[d.id].uniq}
       domains
     end
-    []
   end
 
   def set_linked
