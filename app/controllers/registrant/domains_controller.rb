@@ -19,6 +19,22 @@ class Registrant::DomainsController < RegistrantController
     @domain = domains.find(params[:id])
   end
 
+  def domain_verification_url
+    authorize! :view, :registrant_domains
+    dom = domains.find(params[:id])
+    if (dom.statuses.include?(DomainStatus::PENDING_UPDATE) || dom.statuses.include?(DomainStatus::PENDING_DELETE)) &&
+        dom.pending_json.present?
+
+        @domain = dom
+        confirm_path = "#{ENV['registrant_url']}/registrant/domain_update_confirms"
+        @verification_url = "#{confirm_path}/#{@domain.id}?token=#{@domain.registrant_verification_token}"
+
+    else
+      flash[:warning] = I18n.t('available_verification_url_not_found')
+      redirect_to registrant_domain_path(dom.id)
+    end
+  end
+
   def download_list
     authorize! :view, :registrant_domains
     params[:q] ||= {}
