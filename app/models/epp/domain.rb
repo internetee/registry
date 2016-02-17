@@ -194,8 +194,20 @@ class Epp::Domain < Domain
     end
 
     at[:dnskeys_attributes] = dnskeys_attrs(dnskey_frame, action)
-    at[:legal_documents_attributes] = legal_document_from(frame)
+
     at
+  end
+
+
+  # Adding legal doc to domain and
+  # if something goes wrong - raise Rollback error
+  def add_legal_file_to_new frame
+    if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
+      raise ActiveRecord::Rollback if doc && doc.id.nil?
+
+      frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
+      self.legal_document_id = doc.id
+    end
   end
   # rubocop: enable Metrics/PerceivedComplexity
   # rubocop: enable Metrics/CyclomaticComplexity
@@ -456,15 +468,6 @@ class Epp::Domain < Domain
     status_list
   end
 
-  def legal_document_from(frame)
-    ld = frame.css('legalDocument').first
-    return [] unless ld
-
-    [{
-      body: ld.text,
-      document_type: ld['type']
-    }]
-  end
 
   # rubocop: disable Metrics/AbcSize
   # rubocop: disable Metrics/CyclomaticComplexity
