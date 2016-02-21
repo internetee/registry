@@ -2,14 +2,20 @@ class Directo < ActiveRecord::Base
   belongs_to :item, polymorphic: true
 
   def self.send_receipts
-    new_trans = Invoice.where(invoice_type: "DEB", in_directo: false).where.not(cancelled_at: nil)
+    new_trans = Invoice.where(invoice_type: "DEB", in_directo: false).where(cancelled_at: nil)
+    Rails.logger.info("[DIRECTO] Will try to send #{new_trans.count} invoices")
+
     new_trans.find_in_batches(batch_size: 10).each do |group|
       mappers = {} # need them as no direct connection between invoice
       builder = Nokogiri::XML::Builder.new(encoding: "UTF-8") do |xml|
         xml.invoices {
           group.each do |invoice|
-            next if invoice.account_activity.nil? || invoice.account_activity.bank_transaction.nil?
-            # next if invoice.account_activity.bank_transaction.sum.nil? || invoice.account_activity.bank_transaction.sum != invoice.sum_cache
+
+            if invoice.account_activity.nil? || invoice.account_activity.bank_transaction.nil? ||
+                invoice.account_activity.bank_transaction.sum.nil? || invoice.account_activity.bank_transaction.sum != invoice.sum_cache
+              Rails.logger.info("[DIRECTO] Invoice #{invoice.number} has been skipped")
+              next
+            end
 
             num     = invoice.number
             mappers[num] = invoice
