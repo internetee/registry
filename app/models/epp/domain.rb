@@ -3,15 +3,23 @@ class Epp::Domain < Domain
   include EppErrors
 
   # TODO: remove this spagetti once data in production is correct.
-  attr_accessor :is_renewal, :is_transfer
+  attr_accessor :is_renewal, :is_transfer, :legal_doc
 
   before_validation :manage_permissions
+  before_validation :check_legal_doc_size
+
   def manage_permissions
     return if is_admin # this bad hack for 109086524, refactor later
     return true if is_transfer || is_renewal
     return unless update_prohibited? || delete_prohibited?
     add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
     false
+  end
+
+  def check_legal_doc_size
+    if @legal_doc
+      return false if @legal_doc.size < 100.kilobytes
+    end
   end
 
   after_validation :validate_contacts
@@ -195,6 +203,7 @@ class Epp::Domain < Domain
 
     at[:dnskeys_attributes] = dnskeys_attrs(dnskey_frame, action)
     at[:legal_documents_attributes] = legal_document_from(frame)
+    @legal_doc = at[:legal_documents_attributes]
     at
   end
   # rubocop: enable Metrics/PerceivedComplexity
@@ -476,6 +485,7 @@ class Epp::Domain < Domain
 
     if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
       frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
+      @legal_doc = doc
     end
 
     at_add = attrs_from(frame.css('add'), current_user, 'add')
@@ -545,6 +555,7 @@ class Epp::Domain < Domain
 
     if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
       frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
+      @legal_doc = doc
     end
 
     if Setting.request_confirmation_on_domain_deletion_enabled &&
