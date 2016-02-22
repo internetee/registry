@@ -9,6 +9,8 @@ class LegalDocument < ActiveRecord::Base
 
   belongs_to :documentable, polymorphic: true
 
+  validates :body, length: { minimum: 1.37 * 1.4 }
+
   before_create :add_creator
   before_save   :save_to_filesystem
 

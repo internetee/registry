@@ -1,24 +1,15 @@
 class Epp::Contact < Contact
   include EppErrors
 
-  attr_accessor :legal_doc
-
   # disable STI, there is type column present
   self.inheritance_column = :sti_disabled
 
   before_validation :manage_permissions
-  before_validation :check_legal_doc_size
 
   def manage_permissions
     return unless update_prohibited? || delete_prohibited?
     add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
     false
-  end
-
-  def check_legal_doc_size
-    if @legal_doc
-      return false if @legal_doc.size < 100.kilobytes
-    end
   end
 
   class << self
@@ -49,7 +40,6 @@ class Epp::Contact < Contact
       legal_frame = f.css('legalDocument').first
       if legal_frame.present?
         at[:legal_documents_attributes] = legal_document_attrs(legal_frame)
-        @legal_doc = legal_document_attrs(legal_frame)
       end
       at.merge!(ident_attrs(f.css('ident').first)) if new_record
       at
@@ -164,7 +154,6 @@ class Epp::Contact < Contact
 
     legal_frame = frame.css('legalDocument').first
     at[:legal_documents_attributes] = self.class.legal_document_attrs(legal_frame)
-    @legal_doc = at[:legal_documents_attributes]
     self.deliver_emails = true # turn on email delivery for epp
 
 
