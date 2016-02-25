@@ -150,7 +150,7 @@ class Epp::Contact < Contact
     legal_frame = frame.css('legalDocument').first
     at[:legal_documents_attributes] = self.class.legal_document_attrs(legal_frame)
 
-    if doc = attach_legal_document(parse_legal_document_from_frame(frame))
+    if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
       frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
       self.legal_document_id = doc.id
     end
@@ -227,7 +227,7 @@ class Epp::Contact < Contact
   end
 
   def add_legal_file_to_new frame
-    legal_document_data = Epp::Contact.parse_legal_document_from_frame(frame)
+    legal_document_data = Epp::Domain.parse_legal_document_from_frame(frame)
     return unless legal_document_data
 
     doc = LegalDocument.create(
@@ -240,18 +240,6 @@ class Epp::Contact < Contact
 
     frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
     self.legal_document_id = doc.id
-  end
-
-
-  def parse_legal_document_from_frame frame
-    ld = frame.css('legalDocument').first
-    return nil unless ld
-    return nil if ld.text.starts_with?(ENV['legal_documents_dir'])
-
-    {
-        body: ld.text,
-        type: ld['type']
-    }
   end
 
 end
