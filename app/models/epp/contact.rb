@@ -228,13 +228,21 @@ class Epp::Contact < Contact
   end
 
   def add_legal_file_to_new frame
-    if doc = attach_legal_document(parse_legal_document_from_frame(frame))
-      raise ActiveRecord::Rollback if doc && doc.id.nil?
+    legal_document_data = Epp::Contact.parse_legal_document_from_frame(frame)
+    return unless legal_document_data
 
-      frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
-      self.legal_document_id = doc.id
-    end
+    doc = LegalDocument.create(
+        documentable_type: Contact,
+        document_type:     legal_document_data[:type],
+        body:              legal_document_data[:body]
+    )
+    raise ActiveRecord::Rollback if doc && doc.id.nil?
+    self.legal_documents = [doc]
+
+    frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
+    self.legal_document_id = doc.id
   end
+
 
   def parse_legal_document_from_frame frame
     ld = frame.css('legalDocument').first

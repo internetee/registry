@@ -202,12 +202,19 @@ class Epp::Domain < Domain
   # Adding legal doc to domain and
   # if something goes wrong - raise Rollback error
   def add_legal_file_to_new frame
-    if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
-      raise ActiveRecord::Rollback if doc && doc.id.nil?
+    legal_document_data = Epp::Domain.parse_legal_document_from_frame(frame)
+    return unless legal_document_data
 
-      frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
-      self.legal_document_id = doc.id
-    end
+    doc = LegalDocument.create(
+        documentable_type: Domain,
+        document_type:     legal_document_data[:type],
+        body:              legal_document_data[:body]
+    )
+    raise ActiveRecord::Rollback if doc && doc.id.nil?
+    self.legal_documents = [doc]
+
+    frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
+    self.legal_document_id = doc.id
   end
   # rubocop: enable Metrics/PerceivedComplexity
   # rubocop: enable Metrics/CyclomaticComplexity
