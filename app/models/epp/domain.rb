@@ -17,7 +17,7 @@ class Epp::Domain < Domain
   end
 
   def write_update_values
-    self.updator_str = current_user.identity_code if current_user
+    self.upid = current_user.identity_code if current_user
     self.updated_at = Time.zone.now
   end
 
