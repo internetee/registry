@@ -1,18 +1,19 @@
 namespace :epp do
 
-  desc 'Import all'
+  desc 'EPP actions'
   task all: :environment do
     Rake::Task['epp:trim_documents'].invoke
   end
 
-  desc 'Import registrars'
+  desc 'Trim logs'
   task trim_documents: :environment do
     puts '-----> Running query'
     sql = <<-SQL
     UPDATE epp_logs SET request = regexp_replace(request, '<eis:legalDocument(.|\n)*?<\/eis:legalDocument>', '<eis:legalDocument>[FILTERED]<\eis:legalDocument>');
     SQL
-    ActiveRecord::Base.establish_connection
-    ActiveRecord::Base.connection.execute(sql)
+    ApiLog::EppLog.connection.execute(sql)
+
+    puts "-----> Query done"
   end
 end
 
