@@ -501,7 +501,7 @@ class Domain < ActiveRecord::Base
 
   def name_in_wire_format
     res = ''
-    parts = name.split('.')
+    parts = name_puny.split('.')
     parts.each do |x|
       res += format('%02X', x.length) # length of label in hex
       res += x.each_byte.map { |b| format('%02X', b) }.join # label
