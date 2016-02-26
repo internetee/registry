@@ -75,12 +75,11 @@ class DomainCron
       d.each do |domain|
         next unless domain.delete_candidateable?
         real += 1
-        domain.statuses << DomainStatus::DELETE_CANDIDATE
-        STDOUT << "#{Time.zone.now.utc} DomainCron.start_delete_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-        domain.save(validate: false) and marked += 1
+        STDOUT << "#{Time.zone.now.utc} DomainCron.start_delete_period: ##{domain.id} (#{domain.name})\n" unless Rails.env.test?
+        DomainSetDeleteCandidateJob.enqueue(domain.id, run_at: rand(24*60).minutes.from_now) and marked += 1
       end
     ensure # the operator should see what was accomplished
-      STDOUT << "#{Time.zone.now.utc} - Finished setting delete_candidate -  #{marked} out of #{real} successfully set\n" unless Rails.env.test?
+      STDOUT << "#{Time.zone.now.utc} - Finished setting schedule for delete_candidate -  #{marked} out of #{real} successfully added to Que schedule\n" unless Rails.env.test?
     end
     marked
   end
