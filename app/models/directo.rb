@@ -3,6 +3,7 @@ class Directo < ActiveRecord::Base
 
   def self.send_receipts
     new_trans = Invoice.where(invoice_type: "DEB", in_directo: false).where(cancelled_at: nil)
+    counter = 0
     Rails.logger.info("[DIRECTO] Will try to send #{new_trans.count} invoices")
 
     new_trans.find_in_batches(batch_size: 10).each do |group|
@@ -16,6 +17,7 @@ class Directo < ActiveRecord::Base
               Rails.logger.info("[DIRECTO] Invoice #{invoice.number} has been skipped")
               next
             end
+            counter += 1
 
             num     = invoice.number
             mappers[num] = invoice
@@ -42,6 +44,8 @@ class Directo < ActiveRecord::Base
       response = RestClient::Request.execute(url: ENV['directo_invoice_url'], method: :post, payload: {put: "1", what: "invoice", xmldata: data}, verify_ssl: false).to_s
       dump_result_to_db(mappers, response)
     end
+
+    STDOUT << "Directo receipts sending finished. #{counter} of #{new_trans.count} are sent"
   end
 
   def self.dump_result_to_db mappers, xml
