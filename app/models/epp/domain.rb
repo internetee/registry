@@ -3,7 +3,7 @@ class Epp::Domain < Domain
   include EppErrors
 
   # TODO: remove this spagetti once data in production is correct.
-  attr_accessor :is_renewal, :is_transfer, :current_user
+  attr_accessor :is_renewal, :is_transfer
 
   before_validation :manage_permissions
 

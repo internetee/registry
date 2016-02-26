@@ -1,8 +1,6 @@
 class Epp::Contact < Contact
   include EppErrors
 
-  attr_accessor :current_user
-
   # disable STI, there is type column present
   self.inheritance_column = :sti_disabled
 
