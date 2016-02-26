@@ -6,7 +6,6 @@ class Epp::Domain < Domain
   attr_accessor :is_renewal, :is_transfer, :current_user
 
   before_validation :manage_permissions
-  before_update :write_update_values
 
   def manage_permissions
     return if is_admin # this bad hack for 109086524, refactor later
@@ -14,11 +13,6 @@ class Epp::Domain < Domain
     return unless update_prohibited? || delete_prohibited?
     add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
     false
-  end
-
-  def write_update_values
-    self.upid = current_user.identity_code if current_user
-    self.updated_at = Time.zone.now
   end
 
   after_validation :validate_contacts
@@ -495,7 +489,8 @@ class Epp::Domain < Domain
 
     # at[:statuses] += at_add[:domain_statuses_attributes]
 
-    @current_user = current_user
+    self.upid = current_user.id if current_user
+    self.update = Time.zone.now
 
     if errors.empty? && verify &&
        Setting.request_confrimation_on_registrant_change_enabled &&
