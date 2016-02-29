@@ -546,7 +546,6 @@ class Epp::Domain < Domain
 
     if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
       frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
-      @legal_doc = doc
     end
 
     if Setting.request_confirmation_on_domain_deletion_enabled &&
