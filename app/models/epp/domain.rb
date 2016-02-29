@@ -6,6 +6,7 @@ class Epp::Domain < Domain
   attr_accessor :is_renewal, :is_transfer
 
   before_validation :manage_permissions
+
   def manage_permissions
     return if is_admin # this bad hack for 109086524, refactor later
     return true if is_transfer || is_renewal
