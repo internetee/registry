@@ -3,8 +3,9 @@ class Directo < ActiveRecord::Base
 
   def self.send_receipts
     new_trans = Invoice.where(invoice_type: "DEB", in_directo: false).where(cancelled_at: nil)
-    counter = 0
-    Rails.logger.info("[DIRECTO] Will try to send #{new_trans.count} invoices")
+    total     = new_trans.count
+    counter   = 0
+    Rails.logger.info("[DIRECTO] Will try to send #{total} invoices")
 
     new_trans.find_in_batches(batch_size: 10).each do |group|
       mappers = {} # need them as no direct connection between invoice
@@ -45,7 +46,7 @@ class Directo < ActiveRecord::Base
       dump_result_to_db(mappers, response)
     end
 
-    STDOUT << "Directo receipts sending finished. #{counter} of #{new_trans.count} are sent"
+    STDOUT << "#{Time.zone.now.utc} - Directo receipts sending finished. #{counter} of #{total} are sent\n"
   end
 
   def self.dump_result_to_db mappers, xml
