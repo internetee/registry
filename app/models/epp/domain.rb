@@ -490,7 +490,7 @@ class Epp::Domain < Domain
     # at[:statuses] += at_add[:domain_statuses_attributes]
 
     self.upid = current_user.id if current_user
-    self.update = Time.zone.now
+    self.up_date = Time.zone.now
 
     if errors.empty? && verify &&
        Setting.request_confrimation_on_registrant_change_enabled &&

@@ -179,7 +179,7 @@ class Epp::Contact < Contact
     end
 
     self.upid = current_user.id if current_user
-    self.update = Time.zone.now
+    self.up_date = Time.zone.now
 
     super(at)
   end
