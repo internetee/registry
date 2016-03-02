@@ -54,6 +54,8 @@
             %th{class: 'col-xs-2'}
               = t(:registrar)
             %th{class: 'col-xs-2'}
+              = t(:action_date)
+            %th{class: 'col-xs-2'}
               = t(:action)
         %tbody
           - @versions.each do |version|
@@ -65,6 +67,7 @@
               %td
                 - if version.reify.registrar
                   = link_to(version.reify.registrar, admin_registrar_path(version.reify.registrar))
+              %td= l(version.created_at, format: :short)
               %td= version.event
 
 

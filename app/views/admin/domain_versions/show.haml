@@ -1,0 +1,63 @@
+= render 'shared/title', name: @version.reify.name
+
+
+- if @version
+  - children = HashWithIndifferentAccess.new(@version.children)
+  - nameservers    = Nameserver.where(id: children[:nameservers])
+  - tech_contacts  = Contact.where(id: children[:tech_contacts])
+  - admin_contacts = Contact.where(id: children[:admin_contacts])
+  - registrant     = Contact.where(id: children[:registrant])
+  - event       = @version.event
+  - creator     = plain_username(@version.terminator)
+
+
+.row
+  .col-md-12
+    .panel.panel-default
+      .panel-heading
+        %h3.panel-title
+          = l(@version.reify.updated_at, format: :short)
+          = event
+          = creator
+      .panel-body
+        %dl.dl-horizontal
+          %dt= t(:name)
+          %dd= link_to(@version.reify.name, admin_domain_path(@version.item_id))
+          %dt= t(:statuses)
+          %dd
+            - if @version.reify.statuses.present?
+              - @version.reify.statuses.each do |s|
+                = s
+          %dt= t(:registrant)
+          %dd
+            - registrant.each do |r|
+              = r[:name]
+              = r[:phone]
+              = r[:email]
+              = r[:code]
+              %br
+          %dt= t(:admin_contacts)
+          %dd
+            - admin_contacts.each do |r|
+              = r[:name]
+              = r[:phone]
+              = r[:email]
+              = r[:code]
+              %br
+          %dt= t(:tech_contacts)
+          %dd
+            - tech_contacts.each do |r|
+              = r[:name]
+              = r[:phone]
+              = r[:email]
+              = r[:code]
+              %br
+          %dt= t(:nameservers)
+          %dd
+            - nameservers.each do |ns|
+              = ns[:hostname]
+              = ns[:ipv4]
+              = ns[:ipv6]
+              %br
+          %dt= t(:registrar)
+          %dd= @version.reify.registrar.name
