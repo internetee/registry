@@ -6,7 +6,6 @@ class Epp::Domain < Domain
   attr_accessor :is_renewal, :is_transfer
 
   before_validation :manage_permissions
-
   def manage_permissions
     return if is_admin # this bad hack for 109086524, refactor later
     return true if is_transfer || is_renewal
@@ -499,6 +498,9 @@ class Epp::Domain < Domain
       statuses - domain_statuses_attrs(frame.css('rem'), 'rem') + domain_statuses_attrs(frame.css('add'), 'add')
 
     # at[:statuses] += at_add[:domain_statuses_attributes]
+
+    self.upid = current_user.id if current_user
+    self.up_date = Time.zone.now
 
     if registrant_id && registrant.code == frame.css('registrant')
 
