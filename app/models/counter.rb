@@ -10,6 +10,10 @@ class Counter
     @value.to_s
   end
 
+  def now
+    @value
+  end
+
   # pre-increment ".+" when x not present
   def next(x = 1)
     @value += x

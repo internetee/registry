@@ -5,7 +5,7 @@ rescue ActiveRecord::NoDatabaseError => e
   Rails.logger.info "Init settings didn't find database: #{e}"
 end
 
-if con.present? && con.table_exists?('settings')
+if false && con.present? && con.table_exists?('settings')
   Setting.save_default(:admin_contacts_min_count, 1)
   Setting.save_default(:admin_contacts_max_count, 10)
   Setting.save_default(:tech_contacts_min_count, 1)

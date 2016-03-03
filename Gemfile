@@ -9,6 +9,7 @@ source 'https://rubygems.org'
 
 # core
 gem 'rails',        '4.2.4' # when update, all initializers eis_custom files needs check/update
+gem 'rails-i18n', github: 'svenfuchs/rails-i18n', branch: 'rails-4-x'
 gem 'iso8601',      '0.8.6' # for dates and times
 gem 'hashie-forbidden_attributes', '0.1.1'
 gem 'SyslogLogger', '2.0', require: 'syslog/logger'

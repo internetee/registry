@@ -452,6 +452,7 @@ class Domain < ActiveRecord::Base
     period_i ||= period
     unit ||= period_unit
 
+    # TODO: test if name.scan(/\.(.+)\z/).first.first is faster
     zone = name.split('.').drop(1).join('.')
 
     p = period_i / 365 if unit == 'd'
