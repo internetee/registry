@@ -203,6 +203,31 @@ class Domain < ActiveRecord::Base
     statuses.include? DomainStatus::SERVER_TECH_CHANGE_PROHIBITED
   end
 
+  def self.clean_expired_pendings
+    ActiveSupport::Deprecation.instance.deprecation_warning(DomainCron, __method__)
+    DomainCron.send(__method__)
+  end
+
+  def self.start_expire_period
+    ActiveSupport::Deprecation.instance.deprecation_warning(DomainCron, __method__)
+    DomainCron.send(__method__)
+  end
+
+  def self.start_redemption_grace_period
+    ActiveSupport::Deprecation.instance.deprecation_warning(DomainCron, __method__)
+    DomainCron.send(__method__)
+  end
+
+  def self.start_delete_period
+    ActiveSupport::Deprecation.instance.deprecation_warning(DomainCron, __method__)
+    DomainCron.send(__method__)
+  end
+
+  def self.destroy_delete_candidates
+    ActiveSupport::Deprecation.instance.deprecation_warning(DomainCron, __method__)
+    DomainCron.send(__method__)
+  end
+
   class << self
     def convert_period_to_time(period, unit)
       return (period.to_i / 365).years if unit == 'd'
@@ -218,122 +243,6 @@ class Domain < ActiveRecord::Base
         :whois_record,
         { tech_contacts: :registrar },
         { admin_contacts: :registrar }
-      )
-    end
-
-    # rubocop: disable Metrics/AbcSize
-    # rubocop: disable Metrics/CyclomaticComplexity
-    # rubocop: disable Metrics/PerceivedComplexity
-    def clean_expired_pendings
-      STDOUT << "#{Time.zone.now.utc} - Clean expired domain pendings\n" unless Rails.env.test?
-
-      expire_at = Setting.expire_pending_confirmation.hours.ago
-      count = 0
-      expired_pending_domains = Domain.where('registrant_verification_asked_at <= ?', expire_at)
-      expired_pending_domains.each do |domain|
-        unless domain.pending_update? || domain.pending_delete? || domain.pending_delete_confirmation?
-          msg = "#{Time.zone.now.utc} - ISSUE: DOMAIN #{domain.id}: #{domain.name} IS IN EXPIRED PENDING LIST, " \
-                "but no pendingDelete/pendingUpdate state present!\n"
-          STDOUT << msg unless Rails.env.test?
-          next
-        end
-        count += 1
-        if domain.pending_update?
-          domain.send_mail :pending_update_expired_notification_for_new_registrant
-        end
-        if domain.pending_delete? || domain.pending_delete_confirmation?
-          DomainMailer.pending_delete_expired_notification(domain.id, true).deliver
-        end
-        domain.clean_pendings_lowlevel
-        unless Rails.env.test?
-          STDOUT << "#{Time.zone.now.utc} Domain.clean_expired_pendings: ##{domain.id} (#{domain.name})\n"
-        end
-      end
-      STDOUT << "#{Time.zone.now.utc} - Successfully cancelled #{count} domain pendings\n" unless Rails.env.test?
-      count
-    end
-    # rubocop: enable Metrics/PerceivedComplexity
-    # rubocop: enable Metrics/AbcSize
-    # rubocop: enable Metrics/CyclomaticComplexity
-
-    # rubocop: disable Metrics/LineLength
-    def start_expire_period
-      STDOUT << "#{Time.zone.now.utc} - Expiring domains\n" unless Rails.env.test?
-
-      domains = Domain.where('valid_to <= ?', Time.zone.now)
-      domains.each do |domain|
-        next unless domain.expirable?
-        domain.set_graceful_expired
-        DomainMailer.expiration_reminder(domain.id).deliver_in(Setting.expiration_reminder_mail.to_i.days)
-        STDOUT << "#{Time.zone.now.utc} Domain.start_expire_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-        domain.save(validate: false)
-      end
-
-      STDOUT << "#{Time.zone.now.utc} - Successfully expired #{domains.count} domains\n" unless Rails.env.test?
-    end
-
-    def start_redemption_grace_period
-      STDOUT << "#{Time.zone.now.utc} - Setting server_hold to domains\n" unless Rails.env.test?
-
-      d = Domain.where('outzone_at <= ?', Time.zone.now)
-      d.each do |domain|
-        next unless domain.server_holdable?
-        domain.statuses << DomainStatus::SERVER_HOLD
-        STDOUT << "#{Time.zone.now.utc} Domain.start_redemption_grace_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-        domain.save(validate: false)
-      end
-
-      STDOUT << "#{Time.zone.now.utc} - Successfully set server_hold to #{d.count} domains\n" unless Rails.env.test?
-    end
-
-    def start_delete_period
-      STDOUT << "#{Time.zone.now.utc} - Setting delete_candidate to domains\n" unless Rails.env.test?
-
-      d = Domain.where('delete_at <= ?', Time.zone.now)
-      d.each do |domain|
-        next unless domain.delete_candidateable?
-        domain.statuses << DomainStatus::DELETE_CANDIDATE
-        STDOUT << "#{Time.zone.now.utc} Domain.start_delete_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-        domain.save(validate: false)
-      end
-
-      return if Rails.env.test?
-      STDOUT << "#{Time.zone.now.utc} - Successfully set delete_candidate to #{d.count} domains\n"
-    end
-
-    # rubocop:disable Rails/FindEach
-    # rubocop:disable Metrics/AbcSize
-    def destroy_delete_candidates
-      STDOUT << "#{Time.zone.now.utc} - Destroying domains\n" unless Rails.env.test?
-
-      c = 0
-      Domain.where("statuses @> '{deleteCandidate}'::varchar[]").each do |x|
-        WhoisRecord.where(domain_id: x.id).destroy_all
-        destroy_with_message x
-        STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by deleteCandidate ##{x.id} (#{x.name})\n" unless Rails.env.test?
-
-        c += 1
-      end
-
-      Domain.where('force_delete_at <= ?', Time.zone.now).each do |x|
-        WhoisRecord.where(domain_id: x.id).destroy_all
-        destroy_with_message x
-        STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by force delete time ##{x.id} (#{x.name})\n" unless Rails.env.test?
-        c += 1
-      end
-
-      STDOUT << "#{Time.zone.now.utc} - Successfully destroyed #{c} domains\n" unless Rails.env.test?
-    end
-    # rubocop: enable Metrics/AbcSize
-    # rubocop:enable Rails/FindEach
-    # rubocop: enable Metrics/LineLength
-    def destroy_with_message(domain)
-      domain.destroy
-      bye_bye = domain.versions.last
-      domain.registrar.messages.create!(
-          body: "#{I18n.t(:domain_deleted)}: #{domain.name}",
-          attached_obj_id: bye_bye.id,
-          attached_obj_type: bye_bye.class.to_s # DomainVersion
       )
     end
   end
@@ -592,7 +501,7 @@ class Domain < ActiveRecord::Base
 
   def name_in_wire_format
     res = ''
-    parts = name.split('.')
+    parts = name_puny.split('.')
     parts.each do |x|
       res += format('%02X', x.length) # length of label in hex
       res += x.each_byte.map { |b| format('%02X', b) }.join # label
@@ -728,8 +637,12 @@ class Domain < ActiveRecord::Base
         case s
           when DomainStatus::PENDING_DELETE
             self.delete_at = nil
-          # Handle any other special remove cases?
-          # when DomainStatus::FORCE_DELETE unset_force_delete
+          when DomainStatus::SERVER_MANUAL_INZONE # removal causes server hold to set
+            self.outzone_at = Time.zone.now if self.force_delete_at.present?
+          when DomainStatus::DomainStatus::EXPIRED # removal causes server hold to set
+            self.outzone_at = self.valid_to + 15.day
+          when DomainStatus::DomainStatus::SERVER_HOLD # removal causes server hold to set
+            self.outzone_at = nil
         end
       end
     end
@@ -841,5 +754,19 @@ class Domain < ActiveRecord::Base
     DomainMailer.send(action, DomainMailModel.new(self).send(action)).deliver
   end
 
+
+  def self.to_csv
+    CSV.generate do |csv|
+      csv << column_names
+      all.each do |domain|
+        csv << domain.attributes.values_at(*column_names)
+      end
+    end
+  end
+
+  def self.pdf(html)
+    kit = PDFKit.new(html)
+    kit.to_pdf
+  end
 end
 # rubocop: enable Metrics/ClassLength
