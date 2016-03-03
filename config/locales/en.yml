@@ -538,7 +538,7 @@ en:
   admin_menu: Admin
   domain_transfer_was_approved: 'Domain transfer was approved, associated contacts were: %{contacts} and registrant was %{registrant}'
   business_registry_service_not_available: "Business Registry service Ärireg is not available"
-  
+
   # DEPP
   activemodel:
     errors:
@@ -932,6 +932,7 @@ en:
   if_auth_info_is_left_empty_it_will_be_auto_generated: 'If auth info is left empty, it will be auto generated.'
   each_domain_name_must_end_with_colon_sign: 'Each domain name must end with colon (:) sign.'
   expiration_remind_subject: 'The %{name} domain has expired'
+  contact_already_associated_with_the_domain: 'Object association prohibits operation, contact already associated with the domain'
   add_reserved_domain: 'Add domain to reserved list'
   add_blocked_domain: 'Add domain to blocked list'
   edit_pw: 'Edit Pw'
