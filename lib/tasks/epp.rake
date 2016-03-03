@@ -8,12 +8,33 @@ namespace :epp do
   desc 'Trim logs'
   task trim_documents: :environment do
     puts '-----> Running query'
-    sql = <<-SQL
-    UPDATE epp_logs SET request = regexp_replace(request, '<eis:legalDocument(.|\n)*?<\/eis:legalDocument>', '<eis:legalDocument>[FILTERED]<\eis:legalDocument>');
-    SQL
-    ApiLog::EppLog.connection.execute(sql)
+    puts '-----> Selecting count of all rows'
 
-    puts "-----> Query done"
+    rows = ApiLog::EppLog.where("request ~* ?", '<eis:legalDocument(.|\n)*?<\/eis:legalDocument>')
+    count =  rows.count
+
+    puts "-----> Total rows #{count}"
+
+
+    i = 0
+    ids = []
+
+    ApiLog::EppLog.where("request ~* ?", '<eis:legalDocument(.|\n)*?<\/eis:legalDocument>').find_each(batch_size: 10000)do |x|
+
+    trimmed = x.request.gsub(/<eis:legalDocument([^>]+)>([^<])+<\/eis:legalDocument>/, "<eis:legalDocument>[FILTERED]</eis:legalDocument>")
+    x.request = trimmed
+    x.save
+
+    ids.push x.id
+    i += 1
+
+    if i = 500
+    i = 0
+      puts "500 rows updated #{ids.join(', ')}"
+    end
+
+    end
+  puts "-----> Query done"
   end
 end
 
