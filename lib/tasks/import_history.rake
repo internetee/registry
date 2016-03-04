@@ -97,9 +97,14 @@ namespace :import do
             files   = Legacy::File.for_history(responder.historyid).map do |leg_file|
               file_dir = leg_file.path.sub(/\/[0-9]+\z/, '')
               path     = "#{ENV['legal_documents_dir']}/#{leg_file.path}_#{leg_file.name}"
+              old_path = "#{ENV['legacy_legal_documents_dir']}/#{leg_file.path}"
+              unless File.exists?(old_path)
+                Rails.logger.error("No such file or directory (#{path}) (old contact id #{legacy_contact_id}")
+                next
+              end
 
               FileUtils.mkdir_p("#{ENV['legal_documents_dir']}/#{file_dir}", mode: 0775)
-              FileUtils.mv("#{ENV['legacy_legal_documents_dir']}/#{leg_file.path}", path)
+              FileUtils.mv(old_path, path)
               LegalDocument.create!(documentable_type: ::Contact.to_s,
                                     documentable_id: contact.id,
                                     document_type: leg_file.name.to_s.split(".").last,
@@ -192,9 +197,14 @@ namespace :import do
             files   = Legacy::File.for_history(responder.history_domain.all_history_ids).map do |leg_file|
               file_dir = leg_file.path.sub(/\/[0-9]+\z/, '')
               path     = "#{ENV['legal_documents_dir']}/#{leg_file.path}_#{leg_file.name}"
+              old_path = "#{ENV['legacy_legal_documents_dir']}/#{leg_file.path}"
+              unless File.exists?(old_path)
+                Rails.logger.error("No such file or directory (#{path}) (old domain id #{legacy_domain_id}")
+                next
+              end
 
               FileUtils.mkdir_p("#{ENV['legal_documents_dir']}/#{file_dir}", mode: 0775)
-              FileUtils.mv("#{ENV['legacy_legal_documents_dir']}/#{leg_file.path}", path)
+              FileUtils.mv(old_path, path)
               LegalDocument.create!(documentable_type: domain.class,
                                     documentable_id:   domain.id,
                                     document_type: leg_file.name.to_s.split(".").last,
