@@ -104,8 +104,7 @@ namespace :import do
                                     documentable_id: contact.id,
                                     document_type: leg_file.name.to_s.split(".").last,
                                     path: path,
-                                    created_at: leg_file.crdate,
-                                    updated_at: leg_file.crdate)
+                                    created_at: leg_file.crdate)
             end
 
             hash = {
@@ -200,8 +199,7 @@ namespace :import do
                                     documentable_id:   domain.id,
                                     document_type: leg_file.name.to_s.split(".").last,
                                     path: path,
-                                    created_at: leg_file.crdate,
-                                    updated_at: leg_file.crdate)
+                                    created_at: leg_file.crdate)
             end
 
             hash = {
