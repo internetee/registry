@@ -13,7 +13,7 @@ class LegalDocument < ActiveRecord::Base
   validates :body, length: { minimum: (1.37 * 1.4).ceil }, unless: :path
 
   before_create :add_creator
-  before_save   :save_to_filesystem
+  before_save   :save_to_filesystem, if: :body
 
 
 

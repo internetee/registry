@@ -12,6 +12,7 @@ gem 'rails',        '4.2.5.1' # when update, all initializers eis_custom files n
 gem 'iso8601',      '0.8.6' # for dates and times
 gem 'hashie-forbidden_attributes', '0.1.1'
 gem 'SyslogLogger', '2.0', require: 'syslog/logger'
+gem 'rest-client'
 gem 'parallel'
 gem 'rest-client'
 

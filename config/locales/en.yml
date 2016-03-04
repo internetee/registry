@@ -538,7 +538,7 @@ en:
   admin_menu: Admin
   domain_transfer_was_approved: 'Domain transfer was approved, associated contacts were: %{contacts} and registrant was %{registrant}'
   business_registry_service_not_available: "Business Registry service Ärireg is not available"
-  
+
   # DEPP
   activemodel:
     errors:
@@ -935,7 +935,7 @@ en:
   add_reserved_domain: 'Add domain to reserved list'
   add_blocked_domain: 'Add domain to blocked list'
   edit_pw: 'Edit Pw'
-  optional: 'Optional'  
+  optional: 'Optional'
   contact_already_associated_with_the_domain: 'Object association prohibits operation, contact already associated with the domain'
   personal_domain_verification_url: 'Personal domain verification url'
   available_verification_url_not_found: 'Available verification url not found, for domain.'
