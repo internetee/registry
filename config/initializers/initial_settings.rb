@@ -30,6 +30,8 @@ if false && con.present? && con.table_exists?('settings')
 
   Setting.save_default(:invoice_number_min, 131050)
   Setting.save_default(:invoice_number_max, 149999)
+  Setting.save_default(:directo_monthly_number_min, 309901)
+  Setting.save_default(:directo_monthly_number_max, 309999)
   Setting.save_default(:days_to_keep_invoices_active, 30)
   Setting.save_default(:days_to_keep_overdue_invoices_active, 30)
   Setting.save_default(:minimum_deposit, 0.0)
