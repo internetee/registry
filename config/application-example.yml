@@ -88,6 +88,16 @@ repp_url: 'https://repp.gitlab.eu/repp/v1/'
 #
 restful_whois_url: 'https://restful-whois.example.com'
 
+#
+# Estonian Business Registry
+#
+# config/secrets.yml --- arireg: {username, password}
+arireg_username: 'kasutaja'
+arireg_password: 'parool'
+# config/environments/production.rb --- Soap::Arireg.wsdl, Soap::Arireg.host
+arireg_wsdl:  'lib/schemas/testariport.wsdl' # https://demo-ariregxml.rik.ee:447/testariport/?wsdl
+#arireg_wsdl: 'lib/schemas/ariport.wsdl'    # https://ariregxml.rik.ee/ariport/?wsdl
+arireg_host: 'https://demo-ariregxml.rik.ee:447' # https://ariregxml.rik.ee/
 
 #
 # REGISTRAR AND REGISTRANT

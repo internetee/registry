@@ -496,7 +496,7 @@ class Domain < ActiveRecord::Base
 
   def name_in_wire_format
     res = ''
-    parts = name.split('.')
+    parts = name_puny.split('.')
     parts.each do |x|
       res += format('%02X', x.length) # length of label in hex
       res += x.each_byte.map { |b| format('%02X', b) }.join # label
@@ -632,8 +632,12 @@ class Domain < ActiveRecord::Base
         case s
           when DomainStatus::PENDING_DELETE
             self.delete_at = nil
-          # Handle any other special remove cases?
-          # when DomainStatus::FORCE_DELETE unset_force_delete
+          when DomainStatus::SERVER_MANUAL_INZONE # removal causes server hold to set
+            self.outzone_at = Time.zone.now if self.force_delete_at.present?
+          when DomainStatus::DomainStatus::EXPIRED # removal causes server hold to set
+            self.outzone_at = self.valid_to + 15.day
+          when DomainStatus::DomainStatus::SERVER_HOLD # removal causes server hold to set
+            self.outzone_at = nil
         end
       end
     end
@@ -745,5 +749,19 @@ class Domain < ActiveRecord::Base
     DomainMailer.send(action, DomainMailModel.new(self).send(action)).deliver
   end
 
+
+  def self.to_csv
+    CSV.generate do |csv|
+      csv << column_names
+      all.each do |domain|
+        csv << domain.attributes.values_at(*column_names)
+      end
+    end
+  end
+
+  def self.pdf(html)
+    kit = PDFKit.new(html)
+    kit.to_pdf
+  end
 end
 # rubocop: enable Metrics/ClassLength
