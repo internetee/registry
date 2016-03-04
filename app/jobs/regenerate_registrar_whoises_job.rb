@@ -4,7 +4,7 @@ class RegenerateRegistrarWhoisesJob < Que::Job
     registrar = Registrar.find(registrar_id)
 
     registrar.whois_records.select(:id).find_in_batches(batch_size: 20) do |group|
-      RegenerateWhoisRecordJob.enqueue group.map(&:id)
+      RegenerateWhoisRecordJob.enqueue group.map(&:id), :id
     end
   end
 end

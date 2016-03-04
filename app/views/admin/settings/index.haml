@@ -36,6 +36,7 @@
           = render 'setting_row', var: :days_to_renew_domain_before_expire
           = render 'setting_row', var: :expire_warning_period
           = render 'setting_row', var: :redemption_grace_period
+          = render 'setting_row', var: :expiration_reminder_mail
 
   .panel.panel-default
     .panel-heading.clearfix
@@ -50,6 +51,7 @@
           = render 'setting_row', var: :transfer_wait_time
           = render 'setting_row', var: :ds_digest_type
           = render 'setting_row', var: :client_side_status_editing_enabled
+          = render 'setting_row', var: :days_to_keep_business_registry_cache
           = render 'setting_row', var: :api_ip_whitelist_enabled
           = render 'setting_row', var: :registrar_ip_whitelist_enabled
           = render 'setting_row', var: :request_confrimation_on_registrant_change_enabled
@@ -70,6 +72,9 @@
           = render 'setting_row', var: :days_to_keep_invoices_active
           = render 'setting_row', var: :days_to_keep_overdue_invoices_active
           = render 'setting_row', var: :minimum_deposit
+          = render 'setting_row', var: :directo_receipt_payment_term
+          = render 'setting_row', var: :directo_receipt_product_name
+          = render 'setting_row', var: :directo_sales_agent
           = render 'setting_row', var: :registry_billing_email
           = render 'setting_row', var: :registry_invoice_contact
           = render 'setting_row', var: :registry_vat_no

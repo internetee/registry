@@ -29,7 +29,7 @@ class Contact < ActiveRecord::Base
     uniqueness: { message: :epp_id_taken },
     format: { with: /\A[\w\-\:\.\_]*\z/i, message: :invalid },
     length: { maximum: 100, message: :too_long_contact_code }
-  validate :ident_valid_format?
+  validate :val_ident_valid_format?
   validate :uniq_statuses?
   validate :validate_html
 
@@ -58,6 +58,11 @@ class Contact < ActiveRecord::Base
 
   before_save :manage_statuses
   def manage_statuses
+    if domain_transfer # very ugly but need better workflow
+      self.statuses = statuses | [OK, LINKED]
+      return
+    end
+
     manage_linked
     manage_ok
   end
@@ -81,6 +86,7 @@ class Contact < ActiveRecord::Base
   ]
 
   attr_accessor :deliver_emails
+  attr_accessor :domain_transfer # hack but solves problem faster
 
   #
   # STATUSES
@@ -233,13 +239,18 @@ class Contact < ActiveRecord::Base
     name || '[no name]'
   end
 
-  def ident_valid_format?
-    case ident_type
-    when 'priv'
-      case ident_country_code
-      when 'EE'
-        code = Isikukood.new(ident)
-        errors.add(:ident, :invalid_EE_identity_format) unless code.valid?
+  def val_ident_valid_format?
+    case ident_country_code
+    when 'EE'.freeze
+      err_msg = "invalid_EE_identity_format#{"_update" if id}".to_sym
+      case ident_type
+        when 'priv'.freeze
+          errors.add(:ident, err_msg) unless Isikukood.new(ident).valid?
+        when 'org'.freeze
+          # !%w(1 7 8 9).freeze.include?(ident.first) ||
+          if ident.size != 8 || !(ident =~/\A[0-9]{8}\z/)
+            errors.add(:ident, err_msg)
+          end
       end
     end
   end
@@ -492,7 +503,8 @@ class Contact < ActiveRecord::Base
   end
 
  def update_related_whois_records
-   related_domain_descriptions.each{ |x, y| WhoisRecord.find_by(name: x).save}
+   ids = related_domain_descriptions.keys
+   RegenerateWhoisRecordJob.enqueue(ids, :name) if ids.present?
  end	 
 
 end

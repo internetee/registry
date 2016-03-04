@@ -1,7 +1,7 @@
 class RegenerateWhoisRecordJob < Que::Job
-  def run(ids)
+  def run(ids, attr = :id)
     ids.each do |id|
-      record = WhoisRecord.find_by(id: id)
+      record = WhoisRecord.find_by(attr => id)
       return unless record
 
       record.save
