@@ -10,7 +10,7 @@ class LegalDocument < ActiveRecord::Base
   belongs_to :documentable, polymorphic: true
 
   before_create :add_creator
-  before_save   :save_to_filesystem
+  before_save   :save_to_filesystem, if: :body
 
 
 
