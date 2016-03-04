@@ -120,7 +120,7 @@ namespace :import do
                 object:    last_changes,
                 object_changes: changes,
                 created_at: time,
-                children: {legacy_documents: files.map(&:id)}
+                children: {legacy_documents: files.compact.map(&:id)}
             }
             data << hash
 
@@ -226,7 +226,7 @@ namespace :import do
                     nameservers:    responder.history_domain.import_nameservers_history(domain, time),
                     dnskeys:        responder.history_domain.import_dnskeys_history(domain, time),
                     registrant:     [responder.history_domain.new_registrant_id],
-                    legacy_documents: files.map(&:id)
+                    legacy_documents: files.compact.map(&:id)
                 }
             }
             data << hash
