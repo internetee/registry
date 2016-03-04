@@ -152,23 +152,17 @@ module Depp
            }
         end
 
-        data.css('dsData').each_with_index do |x, i|
-          ds = {
-            ds_key_tag: x.css('keyTag').first.try(:text),
-            ds_alg: x.css('alg').first.try(:text),
-            ds_digest_type: x.css('digestType').first.try(:text),
-            ds_digest: x.css('digest').first.try(:text)
+        data.css('keyData').each_with_index do |x, i|
+          ret[:dnskeys_attributes][i] = {
+              flags: x.css('flags').text,
+              protocol: x.css('protocol').text,
+              alg: x.css('alg').text,
+              public_key: x.css('pubKey').text,
+              ds_key_tag: x.css('keyTag').first.try(:text),
+              ds_alg: x.css('alg').first.try(:text),
+              ds_digest_type: x.css('digestType').first.try(:text),
+              ds_digest: x.css('digest').first.try(:text)
           }
-
-          kd = x.css('keyData').first
-          ds.merge!({
-            flags: kd.css('flags').first.try(:text),
-            protocol: kd.css('protocol').first.try(:text),
-            alg: kd.css('alg').first.try(:text),
-            public_key: kd.css('pubKey').first.try(:text)
-          }) if kd
-
-          ret[:dnskeys_attributes][i] = ds
         end
 
         data.css('status').each_with_index do |x, i|

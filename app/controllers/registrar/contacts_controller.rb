@@ -3,18 +3,68 @@ class Registrar::ContactsController < Registrar::DeppController # EPP controller
 
   def index
     authorize! :view, Depp::Contact
-    limit, offset = pagination_details
 
-    res = depp_current_user.repp_request('contacts', { details: true, limit: limit, offset: offset })
-    if res.code == '200'
-      @response = res.parsed_body.with_indifferent_access 
-      @contacts = @response ? @response[:contacts] : []
+    params[:q] ||= {}
+    params[:q].delete_if { |_k, v| v.blank? }
 
-      @paginatable_array = Kaminari.paginate_array(
-        [], total_count: @response[:total_number_of_records]
-      ).page(params[:page]).per(limit)
+    search_params = params[:q].deep_dup
+
+    if search_params[:domain_contacts_type_in].is_a?(Array) && search_params[:domain_contacts_type_in].delete('registrant')
+      search_params[:registrant_domains_id_not_null] = 1
     end
-    flash.now[:epp_results] = [{ 'code' => res.code, 'msg' => res.message }]
+
+    if search_params.length == 1 && search_params[:name_matches].present?
+      @contacts = Contact.find_by(name: search_params[:name_matches])
+    end
+
+    if params[:statuses_contains]
+      contacts =  current_user.registrar.contacts.includes(:registrar).where(
+          "contacts.statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
+      )
+    else
+      contacts = current_user.registrar.contacts.includes(:registrar)
+    end
+
+    normalize_search_parameters do
+      @q = contacts.search(search_params)
+      @contacts = @q.result(distinct: :true).page(params[:page])
+    end
+
+    @contacts = @contacts.per(params[:results_per_page]) if params[:results_per_page].to_i > 0
+  end
+
+  def download_list
+    authorize! :view, Depp::Contact
+
+    params[:q] ||= {}
+    params[:q].delete_if { |_k, v| v.blank? }
+    if params[:q].length == 1 && params[:q][:name_matches].present?
+      @contacts = Contact.find_by(name: params[:q][:name_matches])
+    end
+
+    if params[:statuses_contains]
+      contacts =  current_user.registrar.contacts.includes(:registrar).where(
+          "contacts.statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
+      )
+    else
+      contacts = current_user.registrar.contacts.includes(:registrar)
+    end
+
+    normalize_search_parameters do
+      @q = contacts.search(params[:q])
+      @contacts = @q.result.page(params[:page])
+    end
+
+    @contacts = @contacts.per(params[:results_per_page]) if params[:results_per_page].to_i > 0
+
+    respond_to do |format|
+        format.csv { render text: @contacts.to_csv }
+        format.pdf do
+        pdf = @contacts.pdf(render_to_string('registrar/contacts/download_list', layout: false))
+        send_data pdf, filename: 'contacts.pdf'
+      end
+    end
+
   end
 
   def new
@@ -74,5 +124,19 @@ class Registrar::ContactsController < Registrar::DeppController # EPP controller
 
   def init_epp_contact
     Depp::Contact.user = depp_current_user
+  end
+
+  def normalize_search_parameters
+    ca_cache = params[:q][:valid_to_lteq]
+    begin
+      end_time = params[:q][:valid_to_lteq].try(:to_date)
+      params[:q][:valid_to_lteq] = end_time.try(:end_of_day)
+    rescue
+      logger.warn('Invalid date')
+    end
+
+    yield
+
+    params[:q][:valid_to_lteq] = ca_cache
   end
 end

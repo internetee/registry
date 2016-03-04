@@ -36,18 +36,19 @@ xml.epp_head do
 
         ## TODO Find out what this domain:host is all about
 
-        xml.tag!('domain:clID', @domain.registrar_name)
+        xml.tag!('domain:clID', @domain.registrar.code)
 
-        xml.tag!('domain:crID', @domain.creator.try(:registrar)) if @domain.creator
-
+        xml.tag!('domain:crID', @domain.cr_id)
         xml.tag!('domain:crDate', @domain.created_at.try(:iso8601))
 
-        xml.tag!('domain:upDate', @domain.updated_at.try(:iso8601)) if @domain.updated_at != @domain.created_at
+        if @domain.updated_at > @domain.created_at
+          upID =  @domain.updator.try(:registrar)
+          upID =  upID.code if upID.present?             # Did updator return a kind of User that has a registrar?
+          xml.tag!('domain:upID', upID) if upID.present? # optional upID
+          xml.tag!('domain:upDate', @domain.updated_at.try(:iso8601))
+        end
 
         xml.tag!('domain:exDate', @domain.valid_to.try(:iso8601))
-
-        # TODO Make domain stampable
-        #xml.tag!('domain:upID', @domain.updated_by)
 
         # TODO Make domain transferrable
         #xml.tag!('domain:trDate', @domain.transferred_at) if @domain.transferred_at

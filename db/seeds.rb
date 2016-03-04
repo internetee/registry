@@ -73,7 +73,7 @@ admin3 = {
 [admin1, admin2, admin3].each do |at|
   admin = AdminUser.where(at)
   next if admin.present?
-  admin = AdminUser.new(at.merge({ password_confirmation: 'testtest' }))
+  admin = AdminUser.new(at.merge({ password_confirmation: 'testtest', password: 'testtest' }))
   admin.roles = ['admin']
   admin.save
 end

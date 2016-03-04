@@ -74,6 +74,7 @@ Rails.application.routes.draw do
 
       collection do
         get 'check'
+        get 'download_list'
       end
     end
 
@@ -225,8 +226,16 @@ Rails.application.routes.draw do
 
     resources :settings
 
-    resources :blocked_domains
-    resources :reserved_domains
+    resources :blocked_domains do
+      member do
+        get 'delete'
+      end
+    end
+    resources :reserved_domains do
+      member do
+        get 'delete'
+      end
+    end
 
     resources :registrars do
       resources :api_users

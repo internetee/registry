@@ -46,15 +46,15 @@ xml.epp_head do
           xml.tag!('contact:email', 'No access')
         end
 
-        xml.tag!('contact:clID', @contact.registrar.try(:name))
-        if @contact.creator.try(:registrar).blank? && Rails.env.test?
-          xml.tag!('contact:crID', 'TEST-CREATOR')
-        else
-          xml.tag!('contact:crID', @contact.creator.try(:registrar))
-        end
+        xml.tag!('contact:clID', @contact.registrar.try(:code))
+
+        xml.tag!('contact:crID', @contact.cr_id)
         xml.tag!('contact:crDate', @contact.created_at.try(:iso8601))
-        if @contact.updated_at != @contact.created_at
-          xml.tag!('contact:upID', @contact.updator.try(:registrar))
+
+        if @contact.updated_at > @contact.created_at
+          upID =  @contact.updator.try(:registrar)
+          upID =  upID.code if upID.present?             # Did updator return a kind of User that has a registrar?
+          xml.tag!('contact:upID', upID) if upID.present? # optional upID
           xml.tag!('contact:upDate', @contact.updated_at.try(:iso8601))
         end
         # xml.tag!('contact:trDate', '123') if false

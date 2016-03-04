@@ -90,11 +90,16 @@ module Soap
     # retrieve business id codes for business that a person has a legal role
     def associated_businesses(ident, ident_cc = 'EST')
       begin
-        response = @client.call :paringesindus_v4, message: body(
-                                  'fyysilise_isiku_kood' => ident,
-                                  'fyysilise_isiku_koodi_riik' => country_code_3(ident_cc)
-                                )
+        msg = {
+            'fyysilise_isiku_kood'       => ident,
+            'fyysilise_isiku_koodi_riik' => country_code_3(ident_cc)
+        }
+        Rails.logger.info "[Ariregister] Request sent with data: #{msg.inspect}"
+
+        response = @client.call :paringesindus_v4, message: body(msg)
         content = extract response, :paringesindus_v4_response
+        Rails.logger.info "[Ariregister] Got response with data: #{content.inspect}"
+
         if content.present? && content[:ettevotjad].key?(:item)
           business_ident = items(content, :ettevotjad).map{|item| item[:ariregistri_kood]}
         else
@@ -109,13 +114,13 @@ module Soap
             associated_businesses: business_ident
         }
       rescue Savon::SOAPFault => fault
-        Rails.logger.error "#{fault} Äriregister arireg #{self.class.username} at #{self.class.host }"
+        Rails.logger.error "[Ariregister] #{fault} Äriregister arireg #{self.class.username} at #{self.class.host }"
         raise NotAvailableError.new(exception: fault)
       rescue HTTPI::SSLError => ssl_error
-        Rails.logger.error "#{ssl_error} at #{self.class.host}"
+        Rails.logger.error "[Ariregister] #{ssl_error} at #{self.class.host}"
         raise NotAvailableError.new(exception: ssl_error)
       rescue SocketError => sock
-        Rails.logger.error "#{sock}"
+        Rails.logger.error "[Ariregister] #{sock}"
         raise NotAvailableError.new(exception: sock)
       end
     end
