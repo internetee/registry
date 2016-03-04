@@ -9,7 +9,8 @@ class LegalDocument < ActiveRecord::Base
 
   belongs_to :documentable, polymorphic: true
 
-  validates :body, length: { minimum: (1.37 * 1.4).ceil }
+
+  validates :body, length: { minimum: (1.37 * 1.4).ceil }, unless: :path
 
   before_create :add_creator
   before_save   :save_to_filesystem
