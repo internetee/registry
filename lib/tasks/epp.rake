@@ -24,12 +24,9 @@ namespace :epp do
 
       x.request = trimmed
 
-      x.save and ids.push x.id and i += 1 and ids.push x.id
+      x.save and count += 1 and i += 1 and ids.push x.id
 
-      i += 1
-      count += 1
-
-      if i == 100
+      if i == 500
         puts "-----> Total rows updated #{count}"
         puts "Last #{i} rows ids #{ids.join(', ')}"
         i = 0
