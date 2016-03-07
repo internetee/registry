@@ -99,7 +99,7 @@ namespace :import do
               path     = "#{ENV['legal_documents_dir']}/#{leg_file.path}_#{leg_file.name}"
               old_path = "#{ENV['legacy_legal_documents_dir']}/#{leg_file.path}"
               unless File.exists?(old_path)
-                Rails.logger.error("No such file or directory (#{path}) (old contact id #{legacy_contact_id}")
+                Rails.logger.error("No such file or directory (#{old_path} -> #{path}) (old contact id #{legacy_contact_id}")
                 next
               end
 
@@ -199,7 +199,7 @@ namespace :import do
               path     = "#{ENV['legal_documents_dir']}/#{leg_file.path}_#{leg_file.name}"
               old_path = "#{ENV['legacy_legal_documents_dir']}/#{leg_file.path}"
               unless File.exists?(old_path)
-                Rails.logger.error("No such file or directory (#{path}) (old domain id #{legacy_domain_id}")
+                Rails.logger.error("No such file or directory (#{old_path} -> #{path}) (old domain id #{legacy_domain_id}")
                 next
               end
 
