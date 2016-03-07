@@ -42,7 +42,11 @@ class Admin::DomainVersionsController < AdminController
   end
 
   def show
+    per_page = 7
     @version = DomainVersion.find(params[:id])
+    @q = DomainVersion.where(item_id: @version.item_id).search
+    @versions = @q.result.page(params[:page])
+    @versions = @versions.per(per_page)
   end
 
   def search

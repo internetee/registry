@@ -1,4 +1,10 @@
+- content_for :actions do
+  = link_to(t(:previous), admin_domain_path(@version.item_id), class: 'btn btn-primary')
+  = link_to(t(:next), admin_domain_path(@version.item_id), method: :get, class: 'btn btn btn-default')
+
 = render 'shared/title', name: @version.reify.name
+
+
 
 
 - if @version
@@ -12,8 +18,8 @@
 
 
 .row
-  .col-md-12
-    .panel.panel-default
+  .col-md-8
+    .panel.panel-default{:style => "min-height:400px;"}
       .panel-heading
         %h3.panel-title
           = l(@version.reify.updated_at, format: :short)
@@ -61,3 +67,19 @@
               %br
           %dt= t(:registrar)
           %dd= @version.reify.registrar.name
+  .col-md-4
+    .panel.panel-default{:style => "min-height:400px;"}
+      %ul.nav.nav-pills.nav-stacked
+        - @versions.each do |vs|
+          - if vs.id == @version.id
+            %li.active
+              = link_to admin_domain_version_path(vs.id) do
+                = l(vs.reify.updated_at, format: :short)
+                = vs.event
+          - else
+            %li
+              = link_to admin_domain_version_path(vs.id) do
+                = l(vs.reify.updated_at, format: :short)
+                = vs.event
+      %span{:style => "padding-left:10px;position: absolute; bottom: 10px;"}
+        = paginate @versions
