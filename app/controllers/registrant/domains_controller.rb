@@ -26,7 +26,7 @@ class Registrant::DomainsController < RegistrantController
         dom.pending_json.present?
 
         @domain = dom
-        confirm_path = "#{ENV['registrant_url']}/registrant/domain_update_confirms"
+        confirm_path = get_confirm_path(dom.statuses)
         @verification_url = "#{confirm_path}/#{@domain.id}?token=#{@domain.registrant_verification_token}"
 
     else
@@ -74,4 +74,13 @@ class Registrant::DomainsController < RegistrantController
     yield
     params[:q][:valid_to_lteq] = ca_cache
   end
+
+  def get_confirm_path(statuses)
+    if statuses.include?(DomainStatus::PENDING_UPDATE)
+      "#{ENV['registrant_url']}/registrant/domain_update_confirms"
+    elsif statuses.include?(DomainStatus::PENDING_DELETE)
+      "#{ENV['registrant_url']}/registrant/domain_delete_confirms"
+    end
+  end
+
 end
