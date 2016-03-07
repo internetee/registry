@@ -28,16 +28,15 @@ $(document).on 'page:change', ->
 
   $('.js-contact-form').trigger('restoreDefault')
 
-  $('[data-legal-document]').each (e)->
-    fileInput = $(e.target)
+  $('[data-legal-document]').each (i, fileInput)->
     minSize = 1 * 1024 # 100kB
     maxSize = 8 * 1024 * 1024; # 8 MB
-    fileInput.parent('form').submit (e) ->
-      if (files = fileInput.get(0).files).length
+    $(fileInput).closest('form').submit (e) ->
+      if (files = fileInput.files).length
         fileSize = files[0].size
         if fileSize < minSize
           alert 'Document size is less then 100kB bytes'
           return false
-        else if fileSize < maxSize
+        else if fileSize > maxSize
           alert 'Document size is more then 8MB bytes'
           return false
