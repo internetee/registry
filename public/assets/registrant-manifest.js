@@ -23061,19 +23061,18 @@ jQuery(function() {
       }
     });
     $('.js-contact-form').trigger('restoreDefault');
-    return $('[data-legal-document]').each(function(e) {
-      var fileInput, maxSize, minSize;
-      fileInput = $(e.target);
+    return $('[data-legal-document]').each(function(i, fileInput) {
+      var maxSize, minSize;
       minSize = 1 * 1024;
       maxSize = 8 * 1024 * 1024;
-      return fileInput.parent('form').submit(function(e) {
+      return $(fileInput).closest('form').submit(function(e) {
         var fileSize, files;
-        if ((files = fileInput.get(0).files).length) {
+        if ((files = fileInput.files).length) {
           fileSize = files[0].size;
           if (fileSize < minSize) {
             alert('Document size is less then 100kB bytes');
             return false;
-          } else if (fileSize < maxSize) {
+          } else if (fileSize > maxSize) {
             alert('Document size is more then 8MB bytes');
             return false;
           }
