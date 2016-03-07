@@ -29,7 +29,7 @@
       }
     });
     $('.js-contact-form').trigger('restoreDefault');
-    return $('[data-legal_document]').each(function(e) {
+    return $('[data-legal-document]').each(function(e) {
       var fileInput, maxSize, minSize;
       fileInput = $(e.target);
       minSize = 1 * 1024;
