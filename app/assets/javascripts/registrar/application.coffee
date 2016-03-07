@@ -28,7 +28,7 @@ $(document).on 'page:change', ->
 
   $('.js-contact-form').trigger('restoreDefault')
 
-  $('[data-legal_document]').each (e)->
+  $('[data-legal-document]').each (e)->
     fileInput = $(e.target)
     minSize = 1 * 1024 # 100kB
     maxSize = 8 * 1024 * 1024; # 8 MB
