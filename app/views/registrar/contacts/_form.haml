@@ -21,18 +21,3 @@
       = button_tag t(:save), class: 'btn btn-warning'
     - else
       = button_tag t(:create), class: 'btn btn-warning'
-
-:javascript
-  $(function(){
-    var fileInput = $('#depp_contact_legal_document');
-    var minSize = '1000';
-    $('form').submit(function(e){
-        if(fileInput.get(0).files.length){
-            var fileSize = fileInput.get(0).files[0].size;
-            if(fileSize < minSize){
-                alert('Document size is less then' + minSize + ' bytes');
-                return false;
-            }
-        }
-    })
-  })
