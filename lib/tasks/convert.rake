@@ -32,5 +32,21 @@ namespace :convert do
       d.save!
     end
   end
+
+
+  desc 'Contact Address Country Code Upcase'
+  task country_code_ucase: :environment do
+    count = 0
+    Contact.find_each do |c|
+      if c.country_code.present? && c.country_code != c.country_code.upcase
+        c.country_code = c.country_code.upcase
+        c.update_columns(country_code: c.country_code.upcase)
+        # c.send(:record_update)
+
+        count +=1
+        puts "#{count} contacts has been changed" if count % 1000 == 0
+      end
+    end
+  end
 end
 
