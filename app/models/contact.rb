@@ -39,8 +39,8 @@ class Contact < ActiveRecord::Base
     self.ident_updated_at = Time.zone.now if new_record? && ident_updated_at.blank?
   end
 
-  before_validation :set_ident_country_code
-  before_validation :prefix_code
+  before_validation :val_upcase_country_code
+  before_validation :val_prefix_code
   before_create :generate_auth_info
 
   before_update :manage_emails
@@ -298,7 +298,7 @@ class Contact < ActiveRecord::Base
   end
 
   # rubocop:disable Metrics/CyclomaticComplexity
-  def prefix_code
+  def val_prefix_code
     return nil unless new_record?
     return nil if registrar.blank?
     code = self[:code]
@@ -338,13 +338,17 @@ class Contact < ActiveRecord::Base
     destroy
   end
 
-  def set_ident_country_code
-    return true unless ident_country_code_changed? && ident_country_code.present?
-    code = Country.new(ident_country_code)
-    if code
+  def val_upcase_country_code
+    if code = Country.new(ident_country_code)
       self.ident_country_code = code.alpha2
     else
       errors.add(:ident, :invalid_country_code)
+    end if ident_country_code_changed? && ident_country_code.present?
+
+    if code = Country.new(country_code)
+      self.country_code = code.alpha2
+    else
+      errors.add(:country_code, :invalid_country_code)
     end
   end
 
