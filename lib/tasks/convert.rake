@@ -35,7 +35,7 @@ namespace :convert do
 
 
   desc 'Contact Address Country Code Upcase'
-  task country_code_ucase: :environment do
+  task country_code_upcase: :environment do
     count = 0
     Contact.find_each do |c|
       if c.country_code.present? && c.country_code != c.country_code.upcase
