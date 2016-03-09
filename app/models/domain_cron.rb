@@ -24,6 +24,7 @@ class DomainCron
       unless Rails.env.test?
         STDOUT << "#{Time.zone.now.utc} DomainCron.clean_expired_pendings: ##{domain.id} (#{domain.name})\n"
       end
+      UpdateWhoisRecordJob.enqueue domain.name, 'domain'
     end
     STDOUT << "#{Time.zone.now.utc} - Successfully cancelled #{count} domain pendings\n" unless Rails.env.test?
     count
