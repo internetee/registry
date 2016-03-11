@@ -29,7 +29,7 @@ $(document).on 'page:change', ->
   $('.js-contact-form').trigger('restoreDefault')
 
   $('[data-legal-document]').each (i, fileInput)->
-    minSize = 1 * 1024 # 100kB
+    minSize = 8 * 1024 # 8kB
     maxSize = 8 * 1024 * 1024; # 8 MB
     $(fileInput).closest('form').submit (e) ->
       if (files = fileInput.files).length
