@@ -456,19 +456,14 @@ class Domain < ActiveRecord::Base
     period_i ||= period
     unit ||= period_unit
 
+    # TODO: test if name.scan(/\.(.+)\z/).first.first is faster
     zone = name.split('.').drop(1).join('.')
 
     p = period_i / 365 if unit == 'd'
     p = period_i / 12 if unit == 'm'
     p = period_i if unit == 'y'
 
-    if p > 1
-      p = "#{p}years"
-    else
-      p = "#{p}year"
-    end
-
-    Pricelist.pricelist_for(zone, operation, p)
+    Pricelist.pricelist_for(zone, operation, "#{p}year".pluralize(p))
   end
 
   ### VALIDATIONS ###

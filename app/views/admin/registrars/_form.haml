@@ -82,6 +82,11 @@
               = f.label :code
             .col-md-7
               = f.text_field(:code, class: 'form-control', disabled: !f.object.new_record?)
+          .form-group
+            .col-md-4.control-label
+              = f.label :exclude_in_monthly_directo
+            .col-md-7
+              = f.check_box :exclude_in_monthly_directo, class: 'form-control'
 
   %hr
   .row
