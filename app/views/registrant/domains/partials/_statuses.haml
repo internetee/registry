@@ -11,7 +11,7 @@
         - @domain.statuses.each do |status|
           %tr
             %td
-              - if [DomainStatus::PENDING_UPDATE, DomainStatus::PENDING_DELETE].include?(status) && @domain.pending_json.present?
+              - if [DomainStatus::PENDING_UPDATE, DomainStatus::PENDING_DELETE_CONFIRMATION].include?(status) && @domain.pending_json.present?
                 = link_to(status, domain_verification_url_registrant_domain_url(@domain.id))
               - else
                 = status

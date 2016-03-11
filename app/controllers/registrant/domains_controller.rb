@@ -22,7 +22,7 @@ class Registrant::DomainsController < RegistrantController
   def domain_verification_url
     authorize! :view, :registrant_domains
     dom = domains.find(params[:id])
-    if (dom.statuses.include?(DomainStatus::PENDING_UPDATE) || dom.statuses.include?(DomainStatus::PENDING_DELETE)) &&
+    if (dom.statuses.include?(DomainStatus::PENDING_UPDATE) || dom.statuses.include?(DomainStatus::PENDING_DELETE_CONFIRMATION)) &&
         dom.pending_json.present?
 
         @domain = dom
@@ -78,7 +78,7 @@ class Registrant::DomainsController < RegistrantController
   def get_confirm_path(statuses)
     if statuses.include?(DomainStatus::PENDING_UPDATE)
       "#{ENV['registrant_url']}/registrant/domain_update_confirms"
-    elsif statuses.include?(DomainStatus::PENDING_DELETE)
+    elsif statuses.include?(DomainStatus::PENDING_DELETE_CONFIRMATION)
       "#{ENV['registrant_url']}/registrant/domain_delete_confirms"
     end
   end
