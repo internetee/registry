@@ -1,11 +1,4 @@
-- content_for :actions do
-  = link_to(t(:previous), admin_domain_path(@version.item_id), class: 'btn btn-primary')
-  = link_to(t(:next), admin_domain_path(@version.item_id), method: :get, class: 'btn btn btn-default')
-
 = render 'shared/title', name: @version.reify.name
-
-
-
 
 - if @version
   - children = HashWithIndifferentAccess.new(@version.children)
@@ -67,6 +60,14 @@
               %br
           %dt= t(:registrar)
           %dd= @version.reify.registrar.name
+      %span{:style => "padding-right:10px; float: right; bottom: 10px;"}
+        = link_to(t(:previous),
+                  admin_domain_path(@version.item_id),
+                  class: 'btn btn-primary')
+        = link_to(t(:next),
+                  admin_domain_path(@version.item_id),
+                  class: 'btn btn-default')
+
   .col-md-4
     .panel.panel-default{:style => "min-height:400px;"}
       %ul.nav.nav-pills.nav-stacked
@@ -81,5 +82,5 @@
               = link_to admin_domain_version_path(vs.id) do
                 = l(vs.reify.updated_at, format: :short)
                 = vs.event
-      %span{:style => "padding-left:10px;position: absolute; bottom: 10px;"}
+      %span{:style => "padding-left:10px; position: absolute; bottom: 10px;"}
         = paginate @versions
