@@ -60,13 +60,21 @@
               %br
           %dt= t(:registrar)
           %dd= @version.reify.registrar.name
-      %span{:style => "padding-right:10px; float: right; bottom: 10px;"}
-        = link_to(t(:previous),
-                  admin_domain_path(@version.item_id),
-                  class: 'btn btn-primary')
-        = link_to(t(:next),
-                  admin_domain_path(@version.item_id),
-                  class: 'btn btn-default')
+      %span{:style => "padding-right:10px; padding-top:40px; float: right; bottom: 10px;"}
+        - if @version.previous
+          = link_to(t(:previous),
+                    admin_domain_version_path(@version.previous.id),
+                    class: 'btn btn-primary')
+        - else
+          %a.btn.btn-primary.disabled{:href => "#"}
+            %span= t(:previous)
+        - if @version.next
+          = link_to(t(:next),
+                    admin_domain_version_path(@version.next.id),
+                    class: 'btn btn-default')
+        - else
+          %a.btn.btn-default.disabled{:href => "#"}
+            %span= t(:next)
 
   .col-md-4
     .panel.panel-default{:style => "min-height:400px;"}
