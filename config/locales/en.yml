@@ -281,7 +281,6 @@ en:
   domain_details: 'Domain details'
   registered_at: 'Registered at'
   password: 'Password'
-  authinfo_pw: 'AuthInfo pw'
   valid_from: 'Valid from'
   general: 'General'
   contacts: 'Contacts'
@@ -353,8 +352,6 @@ en:
   status: 'Status'
   eedirekt: 'EEDirekt'
   contact: 'Contact'
-  credit_balance: 'Credit balance'
-  starting_balance: 'Starting balance'
 
   domain_transfer_requested: 'Domain transfer requested!'
   domain_transfer_approved: 'Domain transfer approved!'
@@ -537,7 +534,6 @@ en:
   switch_to: Switch to
   admin_menu: Admin
   domain_transfer_was_approved: 'Domain transfer was approved, associated contacts were: %{contacts} and registrant was %{registrant}'
-  business_registry_service_not_available: "Business Registry service Ärireg is not available"
 
   # DEPP
   activemodel:
@@ -559,7 +555,6 @@ en:
 
   username: 'Username'
   password: 'Password'
-  authinfo_pw: 'AuthInfo pw'
   log_in: 'Log in'
   domains: 'Domains'
   register: 'Register'
@@ -910,7 +905,7 @@ en:
   edit_zone: 'Edit zone'
   there_are_count_domains_in_this_zone: 'There are %{count} domains in this zone'
   poll_pending_update_confirmed_by_registrant: 'Registrant confirmed domain update'
-  poll_pending_update_rejected_by_registrant: 'Registrant rejected domain update'
+  poll_pending_update_rejected_by_registranti: 'Registrant rejected domain update'
   poll_pending_delete_rejected_by_registrant: 'Registrant rejected domain deletion'
   poll_pending_delete_confirmed_by_registrant: 'Registrant confirmed domain deletion'
   manage: Manage
@@ -939,3 +934,5 @@ en:
   add_blocked_domain: 'Add domain to blocked list'
   edit_pw: 'Edit Pw'
   optional: 'Optional'
+  next: 'Next'
+  previous: 'Previous'

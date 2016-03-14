@@ -18,12 +18,15 @@
             = f.search_field :registrar, value: params[:q][:registrar], class: 'form-control', placeholder: t(:registrant)
         .col-md-3
           .form-group
-            = label_tag t(:results_per_page)
-            = text_field_tag :results_per_page, params[:results_per_page], class: 'form-control', placeholder: t(:results_per_page)
+            = label_tag :action
+            = select_tag '[q][event]', options_for_select([['Update', 'update'], ['Destroy', 'destroy']], params[:q][:event]), { include_blank:true, multiple: false, placeholder: t(:choose), class: 'form-control js-combobox' }
         .row
         .col-md-3
         .col-md-3
         .col-md-3
+          .form-group
+            = label_tag t(:results_per_page)
+            = text_field_tag :results_per_page, params[:results_per_page], class: 'form-control', placeholder: t(:results_per_page)
         .col-md-3{style: 'padding-top: 25px;'}
           %button.btn.btn-primary
             &nbsp;
@@ -47,17 +50,20 @@
             %th{class: 'col-xs-2'}
               = t(:registrar)
             %th{class: 'col-xs-2'}
+              = t(:action_date)
+            %th{class: 'col-xs-2'}
               = t(:action)
         %tbody
           - @versions.each do |version|
             %tr
-              %td= version.reify.name
+              %td= link_to(version.reify.name, admin_domain_version_path(version.id))
               %td
                 - if version.reify.registrant
                   = link_to(version.reify.registrant, admin_registrant_path(version.reify.registrant))
               %td
                 - if version.reify.registrar
                   = link_to(version.reify.registrar, admin_registrar_path(version.reify.registrar))
+              %td= l(version.created_at, format: :short)
               %td= version.event
 
 

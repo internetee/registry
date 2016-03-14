@@ -22,7 +22,12 @@ class Admin::DomainVersionsController < AdminController
 
     search_params.each do |key, value|
       next if value.empty?
-      whereS += create_where_string(key, value)
+      case key
+        when 'event'
+        whereS += " AND event = '#{value}'"
+      else
+        whereS += create_where_string(key, value)
+      end
     end
 
     whereS += "  AND object->>'registrant_id' ~ '#{registrant.id}'" if registrant
@@ -34,6 +39,14 @@ class Admin::DomainVersionsController < AdminController
     @versions = @versions.per(params[:results_per_page]) if params[:results_per_page].to_i > 0
     render "admin/domain_versions/archive"
 
+  end
+
+  def show
+    per_page = 7
+    @version = DomainVersion.find(params[:id])
+    @q = DomainVersion.where(item_id: @version.item_id).search
+    @versions = @q.result.page(params[:page])
+    @versions = @versions.per(per_page)
   end
 
   def search

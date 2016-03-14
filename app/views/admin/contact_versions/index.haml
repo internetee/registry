@@ -23,6 +23,9 @@
         .row
         .col-md-3
         .col-md-3
+          .form-group
+            = label_tag :action
+            = select_tag '[q][event]', options_for_select([['Update', 'update'], ['Destroy', 'destroy']], params[:q][:event]), { include_blank:true, multiple: false, placeholder: t(:choose), class: 'form-control js-combobox' }
         .col-md-3
           .form-group
             = label_tag t(:results_per_page)
@@ -54,17 +57,20 @@
             %th{class: 'col-xs-2'}
               = t(:registrar)
             %th{class: 'col-xs-2'}
+              = t(:action_date)
+            %th{class: 'col-xs-2'}
               = t(:action)
         %tbody
           - @versions.each do |version|
             %tr
-              %td= version.reify.name
+              %td= link_to(version.reify.name, admin_contact_version_path(version.id))
               %td= version.reify.code
               %td= ident_for(version.reify)
               %td= version.reify.phone
               %td
                 - if version.reify.registrar
                   = link_to(version.reify.registrar, admin_registrar_path(version.reify.registrar))
+              %td= l(version.created_at, format: :short)
               %td= version.event
 
 
