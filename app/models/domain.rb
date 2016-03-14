@@ -352,7 +352,8 @@ class Domain < ActiveRecord::Base
   end
 
 
-  # state change shouln't be
+  # state changes may be done low-level - no validation
+  # in this metod we still save PaperTrail log.
   def clean_pendings_lowlevel
     statuses.delete(DomainStatus::PENDING_DELETE_CONFIRMATION)
     statuses.delete(DomainStatus::PENDING_UPDATE)
@@ -361,13 +362,21 @@ class Domain < ActiveRecord::Base
     status_notes[DomainStatus::PENDING_UPDATE] = ''
     status_notes[DomainStatus::PENDING_DELETE] = ''
 
-    update_columns(
+    hash = {
         registrant_verification_token:    nil,
         registrant_verification_asked_at: nil,
         pending_json: {},
         status_notes: status_notes,
         statuses:     statuses.presence || [DomainStatus::OK]
-    )
+    }
+
+    # papertrail
+    self.attributes = hash
+    record_create
+    clear_version_instance!
+    reset_transaction_id
+
+    update_columns(hash)
   end
 
   def pending_update!
