@@ -35,7 +35,7 @@ $(document).on 'page:change', ->
       if (files = fileInput.files).length
         fileSize = files[0].size
         if fileSize < minSize
-          alert 'Document size is less then 100kB bytes'
+          alert 'Document size is less then 8kB bytes'
           return false
         else if fileSize > maxSize
           alert 'Document size is more then 8MB bytes'
