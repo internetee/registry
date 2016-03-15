@@ -415,7 +415,10 @@ class Contact < ActiveRecord::Base
 
 
     # fetch domains
-    domains  = Domain.where("domains.id IN (#{filter_sql})").includes(:registrar).page(page).per(per)
+    domains  = Domain.where("domains.id IN (#{filter_sql})")
+    domains = domains.where("domains.id" => params[:leave_domains]) if params[:leave_domains]
+    domains = domains.includes(:registrar).page(page).per(per)
+
     if sorts.first == "registrar_name".freeze
       # using small rails hack to generate outer join
       domains = domains.includes(:registrar).where.not(registrars: {id: nil}).order("registrars.name #{order} NULLS LAST")
