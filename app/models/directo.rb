@@ -71,7 +71,7 @@ class Directo < ActiveRecord::Base
     max_directo    = Setting.directo_monthly_number_max.presence.try(:to_i)
     last_directo   = [Setting.directo_monthly_number_last.presence.try(:to_i), min_directo].compact.max || 0
     if max_directo && max_directo <= last_directo
-      raise "Directo counter is out of period"
+      raise "Directo counter is out of period (max allowed number is smaller than last counter number)"
     end
 
     directo_next = last_directo
