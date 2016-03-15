@@ -365,7 +365,7 @@ class Domain < ActiveRecord::Base
 
     # papertrail
     self.attributes = hash
-    record_create
+    record_update
     clear_version_instance!
     reset_transaction_id
 
