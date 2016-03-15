@@ -71,9 +71,10 @@ class Directo < ActiveRecord::Base
     max_directo    = Setting.directo_monthly_number_max.presence.try(:to_i)
     last_directo   = [Setting.directo_monthly_number_last.presence.try(:to_i), min_directo].compact.max || 0
     if max_directo && max_directo <= last_directo
-      raise "Directo counter is out of period"
+      raise "Directo counter is out of period (max allowed number is smaller than last counter number)"
     end
 
+    directo_next = last_directo
     Registrar.where.not(exclude_in_monthly_directo: true).find_each do |registrar|
       unless registrar.cash_account
         Rails.logger.info("[DIRECTO] Monthly invoice for registrar #{registrar.id} has been skipped as it doesn't has cash_account")
@@ -118,7 +119,7 @@ class Directo < ActiveRecord::Base
 
       # generating XML
       if items.any?
-        directo_next = last_directo + 1
+        directo_next += 1
         invoice_counter.next
 
         builder = Nokogiri::XML::Builder.new(encoding: "UTF-8") do |xml|
