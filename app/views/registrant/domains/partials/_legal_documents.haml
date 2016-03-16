@@ -1,0 +1,14 @@
+.panel.panel-default
+  .panel-heading.clearfix
+    = t(:legal_documents)
+  .table-responsive
+    %table.table.table-hover.table-bordered.table-condensed
+      %thead
+        %tr
+          %th{class: 'col-xs-8'}= t(:created_at)
+          %th{class: 'col-xs-4'}= t(:type)
+      %tbody
+        - legal_documents.each do |x|
+          %tr
+            %td= link_to(x.created_at, [:registrar, x])
+            %td= x.document_type

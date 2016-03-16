@@ -23,7 +23,7 @@ namespace :zonefile do
           exclude_filter := '%.%.' || i_origin;
         END IF;
 
-        SELECT ROUND(extract(epoch from now() at time zone 'utc')) INTO serial_num;
+        SELECT (extract(epoch from now() at time zone 'utc'))::int INTO serial_num;
 
         -- zonefile header
         SELECT concat(

@@ -489,6 +489,15 @@ class Epp::Domain < Domain
 
     # at[:statuses] += at_add[:domain_statuses_attributes]
 
+    if registrant_id && registrant.code == frame.css('registrant')
+
+      throw :epp_error, {
+        code: '2305',
+        msg: I18n.t(:contact_already_associated_with_the_domain)
+      }
+
+    end
+
     if errors.empty? && verify &&
        Setting.request_confrimation_on_registrant_change_enabled &&
        frame.css('registrant').present? &&

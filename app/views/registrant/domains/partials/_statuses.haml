@@ -1,0 +1,18 @@
+#domain_statuses.panel.panel-default
+  .panel-heading.clearfix
+    = t(:statuses)
+  .table-responsive
+    %table.table.table-hover.table-bordered.table-condensed
+      %thead
+        %tr
+          %th{class: 'col-xs-6'}= t(:status)
+          %th{class: 'col-xs-6'}= t(:notes)
+      %tbody
+        - @domain.statuses.each do |status|
+          %tr
+            %td
+              - if @domain.pending_json.present? && [DomainStatus::PENDING_UPDATE, DomainStatus::PENDING_DELETE].include?(status)
+                = link_to status, admin_domain_domain_versions_path(@domain.id)
+              - else
+                = status
+            %td= @domain.status_notes[status]

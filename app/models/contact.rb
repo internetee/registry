@@ -499,7 +499,8 @@ class Contact < ActiveRecord::Base
   end
 
  def update_related_whois_records
-   related_domain_descriptions.each{ |x, y| WhoisRecord.find_by(name: x).try(:save) }
+   names = related_domain_descriptions.keys
+   UpdateWhoisRecordJob.enqueue(names, :domain) if names.present?
  end	 
 
 end

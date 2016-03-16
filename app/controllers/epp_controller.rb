@@ -361,9 +361,10 @@ class EppController < ApplicationController
     if request_command == 'login' && frame.present?
       frame.gsub!(/pw>.+<\//, 'pw>[FILTERED]</')
     end
+    trimmed_request = frame.gsub(/<eis:legalDocument([^>]+)>([^<])+<\/eis:legalDocument>/, "<eis:legalDocument>[FILTERED]</eis:legalDocument>")
 
     ApiLog::EppLog.create({
-      request: frame,
+      request: trimmed_request,
       request_command: request_command,
       request_successful: epp_errors.empty?,
       request_object: params[:epp_object_type],

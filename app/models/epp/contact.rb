@@ -175,6 +175,8 @@ class Epp::Contact < Contact
         else
           throw :epp_error, {code: '2306', msg: I18n.t(:ident_update_error)}
         end
+      else
+        throw :epp_error, {code: '2306', msg: I18n.t(:ident_update_error)}
       end
     end
 
