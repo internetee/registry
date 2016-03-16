@@ -75,7 +75,7 @@ class Directo < ActiveRecord::Base
     end
 
     directo_next = last_directo
-    Registrar.where.not(exclude_in_monthly_directo: true).find_each do |registrar|
+    Registrar.where.not(test_registrar: true).find_each do |registrar|
       unless registrar.cash_account
         Rails.logger.info("[DIRECTO] Monthly invoice for registrar #{registrar.id} has been skipped as it doesn't has cash_account")
         next
@@ -126,7 +126,7 @@ class Directo < ActiveRecord::Base
           xml.invoices{
             xml.invoice("Number"      =>directo_next,
                         "InvoiceDate" =>invoices_until.strftime(date_format),
-                        "PaymentTerm" =>"E",
+                        "PaymentTerm" =>Setting.directo_receipt_payment_term,
                         "CustomerCode"=>registrar.directo_handle,
                         "Language"    =>"",
                         "Currency"    =>registrar_activities.first.currency,
