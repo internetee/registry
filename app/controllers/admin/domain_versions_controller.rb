@@ -9,12 +9,12 @@ class Admin::DomainVersionsController < AdminController
     search_params = params[:q].deep_dup
 
     if search_params[:registrant]
-      registrant = Contact.find_by_name(search_params[:registrant])
+      registrant = Contact.find_by(name: search_params[:registrant])
       search_params.delete(:registrant)
     end
 
     if search_params[:registrar]
-      registrar = Registrar.find_by_name(search_params[:registrar])
+      registrar = Registrar.find_by(name: search_params[:registrar])
       search_params.delete(:registrar)
     end
 
@@ -30,8 +30,8 @@ class Admin::DomainVersionsController < AdminController
       end
     end
 
-    whereS += "  AND object->>'registrant_id' ~ '#{registrant.id}'" if registrant
-    whereS += "  AND object->>'registrar_id' ~ '#{registrar.id}'" if registrar
+    whereS += "  AND object->>'registrant_id' = '#{registrant.id}'" if registrant
+    whereS += "  AND object->>'registrar_id' = '#{registrar.id}'" if registrar
 
     versions = DomainVersion.includes(:item).where(whereS)
     @q = versions.search(params[:q])
@@ -44,7 +44,7 @@ class Admin::DomainVersionsController < AdminController
   def show
     per_page = 7
     @version = DomainVersion.find(params[:id])
-    @q = DomainVersion.where(item_id: @version.item_id).search
+    @q = DomainVersion.where(item_id: @version.item_id).order(created_at: :desc).search
     @versions = @q.result.page(params[:page])
     @versions = @versions.per(per_page)
   end

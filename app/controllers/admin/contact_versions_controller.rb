@@ -30,7 +30,7 @@ class Admin::ContactVersionsController < AdminController
   def show
     per_page = 7
     @version = ContactVersion.find(params[:id])
-    @q = ContactVersion.where(item_id: @version.item_id).search
+    @q = ContactVersion.where(item_id: @version.item_id).order(created_at: :asc).search
     @versions = @q.result.page(params[:page])
     @versions = @versions.per(per_page)
   end
