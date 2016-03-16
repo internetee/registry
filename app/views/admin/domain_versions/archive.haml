@@ -55,16 +55,17 @@
               = t(:action)
         %tbody
           - @versions.each do |version|
-            %tr
-              %td= link_to(version.reify.name, admin_domain_version_path(version.id))
-              %td
-                - if version.reify.registrant
-                  = link_to(version.reify.registrant, admin_registrant_path(version.reify.registrant))
-              %td
-                - if version.reify.registrar
-                  = link_to(version.reify.registrar, admin_registrar_path(version.reify.registrar))
-              %td= l(version.created_at, format: :short)
-              %td= version.event
+            - if version.reify
+              %tr
+                %td= link_to(version.reify.name, admin_domain_version_path(version.id))
+                %td
+                  - if version.reify.registrant
+                    = link_to(version.reify.registrant, admin_registrant_path(version.reify.registrant))
+                %td
+                  - if version.reify.registrar
+                    = link_to(version.reify.registrar, admin_registrar_path(version.reify.registrar))
+                %td= l(version.created_at, format: :short)
+                %td= version.event
 
 
 .row
