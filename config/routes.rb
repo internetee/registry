@@ -160,27 +160,10 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :registrants
     resources :contacts
-
     resources :whois
-    # resources :contacts do
-      # member do
-        # get 'delete'
-      # end
-
-      # collection do
-        # get 'check'
-      # end
-    # end
-
-    # resource :poll do
-      # collection do
-        # post 'confirm_keyrelay'
-        # post 'confirm_transfer'
-      # end
-    # end
   end
+
 
   # ADMIN ROUTES
   namespace :admin do
