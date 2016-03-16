@@ -126,7 +126,7 @@ class Directo < ActiveRecord::Base
           xml.invoices{
             xml.invoice("Number"      =>directo_next,
                         "InvoiceDate" =>invoices_until.strftime(date_format),
-                        "PaymentTerm" =>"E",
+                        "PaymentTerm" =>Setting.directo_receipt_payment_term,
                         "CustomerCode"=>registrar.directo_handle,
                         "Language"    =>"",
                         "Currency"    =>registrar_activities.first.currency,
