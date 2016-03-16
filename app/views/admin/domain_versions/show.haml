@@ -15,7 +15,7 @@
     .panel.panel-default{:style => "min-height:400px;"}
       .panel-heading
         %h3.panel-title
-          = l(@version.reify.updated_at, format: :short)
+          = l(@version.created_at, format: :short)
           = event
           = creator
       .panel-body
@@ -80,15 +80,15 @@
     .panel.panel-default{:style => "min-height:400px;"}
       %ul.nav.nav-pills.nav-stacked
         - @versions.each do |vs|
-          - if vs.id == @version.id
+          - if vs.id == @version.id and vs.reify
             %li.active
               = link_to admin_domain_version_path(vs.id) do
-                = l(vs.reify.updated_at, format: :short)
+                = l(vs.created_at, format: :short)
                 = vs.event
           - else
             %li
               = link_to admin_domain_version_path(vs.id) do
-                = l(vs.reify.updated_at, format: :short)
+                = l(vs.created_at, format: :short)
                 = vs.event
       %span{:style => "padding-left:10px; position: absolute; bottom: 10px;"}
         = paginate @versions
