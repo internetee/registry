@@ -57,7 +57,7 @@ class Admin::RegistrarsController < AdminController
   def registrar_params
     params.require(:registrar).permit(
       :name, :reg_no, :vat_no, :street, :city, :state, :zip, :billing_address,
-      :country_code, :email, :phone, :billing_email, :code, :exclude_in_monthly_directo
+      :country_code, :email, :phone, :billing_email, :code, :test_registrar
     )
   end
 end
