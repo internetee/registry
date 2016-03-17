@@ -330,10 +330,14 @@ class Contact < ActiveRecord::Base
   # TODO: refactor, it should not allow to destroy with normal destroy,
   # no need separate method
   # should use only in transaction
-  def destroy_and_clean
+  def destroy_and_clean frame
     if domains_present?
       errors.add(:domains, :exist)
       return false
+    end
+    if doc = Epp::Contact.attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
+      frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
+      self.legal_document_id = doc.id
     end
     destroy
   end
