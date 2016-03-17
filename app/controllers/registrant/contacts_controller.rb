@@ -9,7 +9,7 @@ class Registrant::ContactsController < RegistrantController
 
   def contacts
     begin
-      DomainContact.where(domain_id: domain_ids).pluck(:contact_id)
+      DomainContact.where(domain_id: domain_ids).pluck(:contact_id) | Domain.where(id: domain_ids).pluck(:registrant_id)
     rescue Soap::Arireg::NotAvailableError => error
       flash[:notice] = I18n.t(error.json[:message])
       Rails.logger.fatal("[EXCEPTION] #{error.to_s}")
