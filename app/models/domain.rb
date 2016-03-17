@@ -360,10 +360,12 @@ class Domain < ActiveRecord::Base
         registrant_verification_asked_at: nil,
         pending_json: {},
         status_notes: status_notes,
-        statuses:     statuses.presence || [DomainStatus::OK]
+        statuses:     statuses.presence || [DomainStatus::OK],
+        # need this column in order to update PaperTrail version properly
+        updated_at:   Time.now.utc
     }
 
-    # papertrail
+    # PaperTrail
     self.attributes = hash
     record_update
     clear_version_instance!
