@@ -210,7 +210,6 @@ class Epp::Domain < Domain
         document_type:     legal_document_data[:type],
         body:              legal_document_data[:body]
     )
-    raise ActiveRecord::Rollback if doc && doc.id.nil?
     self.legal_documents = [doc]
 
     frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
