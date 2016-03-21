@@ -41,7 +41,7 @@ class Epp::ContactsController < EppController
   def delete
     authorize! :delete, @contact, @password
 
-    if @contact.destroy_and_clean
+    if @contact.destroy_and_clean(params[:parsed_frame])
       render_epp_response '/epp/contacts/delete'
     else
       handle_errors(@contact)
