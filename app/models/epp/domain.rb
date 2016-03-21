@@ -511,6 +511,8 @@ class Epp::Domain < Domain
 
     self.deliver_emails = true # turn on email delivery
     self.statuses.delete(DomainStatus::PENDING_UPDATE)
+    self.upid = user.registrar.id if user.registrar
+    self.up_date = Time.zone.now
     ::PaperTrail.whodunnit = user.id_role_username # updator str should be the request originator not the approval user
 
     send_mail :registrant_updated_notification_for_old_registrant
