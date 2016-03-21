@@ -6,6 +6,9 @@
       %dt= t(:id)
       %dd= @contact.code
 
+      %dt= t(:name)
+      %dd= @contact.name
+
       %dt= t(:password)
       %dd
         = text_field_tag :auth_info, @contact.auth_info, readonly: true, class: 'partially-hidden'
