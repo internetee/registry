@@ -938,6 +938,6 @@ en:
   add_blocked_domain: 'Add domain to blocked list'
   edit_pw: 'Edit Pw'
   optional: 'Optional'
-  test_registrar: "Test registrar?"
+  test_registrar: "Test registrar"
   next: 'Next'
   previous: 'Previous'

@@ -2,6 +2,10 @@
   = link_to(t(:edit), edit_admin_registrar_path(@registrar), class: 'btn btn-primary')
   = link_to(t(:delete), admin_registrar_path(@registrar),
     method: :delete, data: { confirm: t(:are_you_sure) }, class: 'btn btn-danger')
+- content_for :page_name do
+  = @registrar.name
+  - if @registrar.test_registrar?
+    %span{style: "color: #c9302c;"} (test)
 = render 'shared/title', name: @registrar.name
 
 - if @registrar.errors.any?
