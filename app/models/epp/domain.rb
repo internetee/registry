@@ -6,6 +6,7 @@ class Epp::Domain < Domain
   attr_accessor :is_renewal, :is_transfer
 
   before_validation :manage_permissions
+
   def manage_permissions
     return if is_admin # this bad hack for 109086524, refactor later
     return true if is_transfer || is_renewal
@@ -498,9 +499,6 @@ class Epp::Domain < Domain
 
     # at[:statuses] += at_add[:domain_statuses_attributes]
 
-    self.upid = current_user.id if current_user
-    self.up_date = Time.zone.now
-
     if registrant_id && registrant.code == frame.css('registrant')
 
       throw :epp_error, {
@@ -515,6 +513,8 @@ class Epp::Domain < Domain
        frame.css('registrant').present? &&
        frame.css('registrant').attr('verified').to_s.downcase != 'yes'
       registrant_verification_asked!(frame.to_s, current_user.id)
+      self.upid = current_user.registrar.id if current_user.registrar
+      self.up_date = Time.zone.now
     end
     self.deliver_emails = true # turn on email delivery for epp
 
@@ -530,6 +530,8 @@ class Epp::Domain < Domain
 
     self.deliver_emails = true # turn on email delivery
     self.statuses.delete(DomainStatus::PENDING_UPDATE)
+    self.upid = user.registrar.id if user.registrar
+    self.up_date = Time.zone.now
     ::PaperTrail.whodunnit = user.id_role_username # updator str should be the request originator not the approval user
 
     send_mail :registrant_updated_notification_for_old_registrant
