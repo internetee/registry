@@ -4,7 +4,7 @@
 .row
   .col-sm-6
     %h1.text-center-xs
-      = truncate(name, length: 35)
+      = content_for?(:page_name) ? yield(:page_name) : truncate(name, length: 35)
   .col-sm-6
     %h1.text-right.text-center-xs
       = yield :actions
