@@ -3,6 +3,7 @@ module Versions
   extend ActiveSupport::Concern
 
   included do
+    attr_accessor :version_loader
     has_paper_trail class_name: "#{model_name}Version"
 
     # add creator and updator
@@ -65,6 +66,7 @@ module Versions
           select("distinct on (item_id) #{ver_klass.table_name}.*").
           map do |ver|
             o = new(ver.object)
+            o.version_loader = ver
             ver.object_changes.to_h.each { |k, v| o[k]=v[-1] }
             o
           end
