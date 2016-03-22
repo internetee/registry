@@ -6,11 +6,10 @@
 - if domain.present?
   - if version # normal history
     - children       = HashWithIndifferentAccess.new(version.children)
-    - nameservers    = NameserverVersion.where(item_id: children[:nameservers]).order(:item_id).preceding(version.created_at + 1, true).select("distinct on (item_id) #{NameserverVersion.table_name}.*").map{|ver| o=Nameserver.new(ver.object); ver.object_changes.to_h.each{|k,v| o[k]=v[-1] };o }
-    -#- nameservers    = children[:nameservers].map{|id| Nameserver.new(id: id).safe_version_at(version.created_at)}
-    - tech_contacts  = Contact.where(id: children[:tech_contacts]).map{|o| o.safe_version_at(version.created_at)}
-    - admin_contacts = Contact.where(id: children[:admin_contacts]).map{|o| o.safe_version_at(version.created_at)}
-    - registrant     = Contact.where(id: children[:registrant]).map{|o| o.safe_version_at(version.created_at)}
+    - nameservers    = Nameserver.all_versions_for(children[:nameservers], version.created_at)
+    - tech_contacts  = Contact.all_versions_for(children[:tech_contacts], version.created_at)
+    - admin_contacts = Contact.all_versions_for(children[:admin_contacts], version.created_at)
+    - registrant     = Contact.all_versions_for(children[:registrant], version.created_at)
     - event          = version.event
     - creator        = plain_username(version.terminator)
   - else # pending history
@@ -87,8 +86,8 @@
       - Array(nameservers).each do |ns|
         = ns[:hostname]
         %br
-        = ns[:ipv4]
-        = ns[:ipv6]
+        = ns[:ipv4].presence
+        = ns[:ipv6].presence
         %br
 
   %td
