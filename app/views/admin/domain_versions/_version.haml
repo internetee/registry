@@ -31,7 +31,7 @@
       %br
       = creator
 
-  %td
+  %td{class: version && version.object_changes.to_h["statuses"] && "warning"}
     %p
       - if domain.statuses.present?
         - domain.statuses.each do |s|
@@ -46,7 +46,7 @@
       %p
         = link_to t(:pending_epp), '#', class: 'js-pending-toggle'
 
-  %td
+  %td{class: version && version.object_changes.to_h.slice("period", "period_unit", "valid_from", "valid_to").any? && "warning"}
     %p
       = "#{domain.period}#{domain.period_unit}"
       %br
@@ -56,30 +56,33 @@
 
   %td
     - Array(registrant).each do |r|
-      %p
-        = r[:name]
-        = r[:phone]
-        = r[:email]
-      %p
-        = r[:code]
+      = link_to admin_contact_path(r.id), target: "contact_#{r.id}" do
+        %p
+          = r[:name]
+          = r[:phone]
+          = r[:email]
+        %p
+          = r[:code]
 
   %td
     - Array(admin_contacts).each do |ac|
-      %p
-        = ac[:name]
-        = ac[:phone]
-        = ac[:email]
-      %p
-        = ac[:code]
+      = link_to admin_contact_path(ac.id), target: "contact_#{ac.id}" do
+        %p
+          = ac[:name]
+          = ac[:phone]
+          = ac[:email]
+        %p
+          = ac[:code]
 
   %td
     - Array(tech_contacts).each do |tc|
-      %p
-        = tc[:name]
-        = tc[:phone]
-        = tc[:email]
-      %p
-        = tc[:code]
+      = link_to admin_contact_path(tc.id), target: "contact_#{tc.id}" do
+        %p
+          = tc[:name]
+          = tc[:phone]
+          = tc[:email]
+        %p
+          = tc[:code]
 
   %td
     %p
@@ -91,8 +94,10 @@
         %br
 
   %td
-    %p
-      = domain.registrar.name if domain.registrar
+    - if domain.registrar
+      %p
+        = link_to admin_registrar_path(domain.registrar), target: "registrar_#{domain.registrar.id}" do
+          = domain.registrar.name
 
   - if domain.pending_json.present?
     %tr.js-pending{ style: 'display: none;' }
