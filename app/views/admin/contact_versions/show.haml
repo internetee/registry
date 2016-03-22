@@ -1,0 +1,96 @@
+= render 'shared/title', name: @version.reify.name
+
+.row
+  .col-md-8
+    .panel.panel-default{:style => "min-height:420px;"}
+      .panel-heading
+        %h3.panel-title
+          = l(@version.created_at, format: :short)
+          = @version.event
+          = plain_username(@version.terminator)
+      .panel-body
+        %dl.dl-horizontal
+          %dt= t(:id)
+          %dd= @version.reify.code
+
+          %dt= t(:ident)
+          %dd= ident_for(@version.reify)
+
+          %dt= t(:email)
+          %dd= @version.reify.email
+
+          %dt= t(:phone)
+          %dd= @version.reify.phone
+
+          - if @version.reify.fax
+            %dt= t(:fax)
+            %dd= @version.reify.fax
+
+          %br
+
+          %dt= t(:created)
+          %dd
+            = l(@version.reify.created_at, format: :short)
+
+          %dt= t(:updated)
+          %dd
+            = l(@version.reify.updated_at, format: :short)
+
+          %dt= t(:registrar)
+          %dd
+            - if @version.reify.registrar.present?
+              = link_to(@version.reify.registrar, admin_registrar_path(@version.reify.registrar))
+
+        %dl.dl-horizontal
+          - if @version.reify.org_name.present?
+            %dt= t(:org_name)
+            %dd= @version.reify.org_name
+
+          %dt= t(:street)
+          %dd= @version.reify.street.to_s.gsub("\n", '<br>').html_safe
+
+          %dt= t(:city)
+          %dd= @version.reify.city
+
+          %dt= t(:zip)
+          %dd= @version.reify.zip
+
+          %dt= t(:state)
+          %dd= @version.reify.state
+
+          %dt= t(:country)
+          %dd= @version.reify.country
+
+
+      %span{:style => "padding-right:10px; float: right;"}
+        - if @version.previous
+          = link_to(t(:previous),
+                    admin_contact_version_path(@version.previous.id),
+                    class: 'btn btn-primary')
+        - else
+          %a.btn.btn-primary.disabled{:href => "#"}
+            %span= t(:previous)
+        - if @version.next
+          = link_to(t(:next),
+                    admin_contact_version_path(@version.next.id),
+                    class: 'btn btn-default')
+        - else
+          %a.btn.btn-default.disabled{:href => "#"}
+            %span= t(:next)
+
+  .col-md-4
+    .panel.panel-default{:style => "min-height:420px;"}
+      %ul.nav.nav-pills.nav-stacked
+        - @versions.each do |vs|
+          - if vs.id == @version.id
+            %li.active
+              = link_to admin_contact_version_path(vs.id) do
+                = l(vs.created_at, format: :short)
+                = vs.event
+          - else
+            %li
+              = link_to admin_contact_version_path(vs.id) do
+                = l(vs.created_at, format: :short)
+                = vs.event
+      %span{:style => "padding-left:10px; position: absolute; bottom: 10px;"}
+        = paginate @versions
