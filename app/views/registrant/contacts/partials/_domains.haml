@@ -1,4 +1,4 @@
-- domains = contact.all_domains(page: params[:domain_page], per: 20, params: params)
+- domains = contact.all_domains(page: params[:domain_page], per: 20, params: params.merge(leave_domains: domain_ids))
 #contacts.panel.panel-default
   .panel-heading
     .pull-left
@@ -18,7 +18,7 @@
           %th{class: 'col-xs-3'}=custom_sort_link t(:domain_name), :name
           %th{class: 'col-xs-3'}=custom_sort_link t(:registrar), :registrar_name
           %th{class: 'col-xs-3'}=custom_sort_link t(:valid_to), :valid_to
-          %th{class: 'col-xs-3'}= t(:roles)
+          %th{class: 'col-xs-3'}=custom_sort_link t(:roles), :roles
       %tbody
         - domains.each do |x|
           %tr
