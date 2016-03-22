@@ -24,6 +24,20 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
+-- Name: btree_gist; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS btree_gist WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION btree_gist; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION btree_gist IS 'support for indexing common datatypes in GiST';
+
+
+--
 -- Name: hstore; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -38,140 +52,6 @@ COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs
 
 
 SET search_path = public, pg_catalog;
-
---
--- Name: change_ident_country(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION change_ident_country() RETURNS boolean
-    LANGUAGE plpgsql
-    AS $_$
-DECLARE
-  changed     BOOLEAN;
-  multiplier  INT [];
-  multiplier2 INT [];
-  multiplier3 INT [];
-  multiplier4 INT [];
-  r           RECORD;
-  control     TEXT;
-  total       INT;
-  i           INT;
-  mod         INT;
-  counter     INT;
-BEGIN
-
-  multiplier  := ARRAY [1, 2, 3, 4, 5, 6, 7, 8, 9, 1];
-
-  multiplier2 := ARRAY [3, 4, 5, 6, 7, 8, 9, 1, 2, 3];
-
-  multiplier3 := ARRAY [1, 2, 3, 4, 5, 6, 7];
-
-  multiplier4 := ARRAY [3, 4, 5, 6, 7, 8, 9];
-
-  FOR r IN SELECT id, ident FROM contacts WHERE ident_type = 'priv' /*AND ident_country_code IS NULL*/
-  LOOP
-    IF (length(r.ident) = 11 AND (r.ident ~ '^[0-9]+$') AND (substring(r.ident, 1, 1) = '3' OR substring(r.ident, 1, 1) = '4' OR substring(r.ident, 1, 1) = '5' OR substring(r.ident, 1, 1) = '6'))
-    THEN
-      total := 0;
-      counter := 1;
-      FOREACH i IN ARRAY multiplier
-      LOOP
-        total := (total + (i * to_number(substring(r.ident, counter, 1), '9')));
-        counter := (counter + 1);
-      END LOOP;
-      mod := (total % 11);
-      counter := 1;
-
-      IF (mod >= 10)
-      THEN
-        total = 0;
-        FOREACH i IN ARRAY multiplier2
-        LOOP
-          total := (total + (i *  to_number(substring(r.ident, counter, 1), '9')));
-          counter := (counter + 1);
-        END LOOP;
-        mod := (total % 11);
-      END IF;
-
-      IF (mod < 10 AND substring(r.ident, 11, 1) = to_char(mod, 'FM999MI'))
-        THEN
-          UPDATE contacts SET ident_country_code = 'EE' WHERE id = r.id;
-      END IF;
-      total = 0;
-    END IF;
-  END LOOP;
-
-  FOR r IN SELECT id, ident FROM contacts WHERE ident_type = 'org'
-  LOOP
-    IF (length(r.ident) = 8 AND (r.ident ~ '^[0-9]+$') AND (substring(r.ident, 1, 1) = '1' OR substring(r.ident, 1, 1) = '8' OR substring(r.ident, 1, 1) = '9'))
-    THEN
-      total := 0;
-      counter := 1;
-      FOREACH i IN ARRAY multiplier3
-      LOOP
-        total := (total + (i * to_number(substring(r.ident, counter, 1), '9')));
-        counter := (counter + 1);
-      END LOOP;
-      mod := total % 11;
-      total = 0;
-      counter := 1;
-
-      IF (mod >= 10)
-      THEN
-        total = 0;
-        FOREACH i IN ARRAY multiplier4
-        LOOP
-          total := (total + (i *  to_number(substring(r.ident, counter, 1), '9')));
-          counter := (counter + 1);
-        END LOOP;
-        mod := (total % 11);
-      END IF;
-
-      IF (mod < 10 AND (substring(r.ident, 8, 1) = to_char(mod, 'FM999MI')))
-      THEN
-        UPDATE contacts SET ident_country_code = 'EE' WHERE id = r.id;
-      END IF;
-    END IF;
-  END LOOP;
-
-
-
- RETURN changed;
-END;
-$_$;
-
-
---
--- Name: change_ident_country(integer, text); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION change_ident_country(id integer, type text) RETURNS boolean
-    LANGUAGE plpgsql
-    AS $_$
-DECLARE
-  changed BOOLEAN;
-  multiplier  int[];
-  multiplier2 int[];
-  code int;
-BEGIN
-
-  multiplier := ARRAY[1, 2, 3, 4, 5, 6, 7, 8, 9, 1];
-
-  multiplier2 := ARRAY[3, 4, 5, 6, 7, 8, 9, 1, 2, 3];
-
-  code := (SELECT code FROM contacts WHERE id = 208 AND ident_country_code = 'EE');
-
-
-
-  UPDATE contacts
-        SET ident = ''
-        WHERE   id = $1 and ident_type = $2 AND ident_country_code = 'EE'
-        AND ident = '';
-
-        RETURN changed;
-END;
-$_$;
-
 
 --
 -- Name: fill_ident_country(); Type: FUNCTION; Schema: public; Owner: -
@@ -222,12 +102,10 @@ CREATE FUNCTION fill_ident_country() RETURNS boolean
               END LOOP;
               mod := (total % 11);
             END IF;
-
             IF (mod = 10)
               THEN
               mod := 0;
             END IF;
-
             IF (substring(r.ident, 11, 1) = to_char(mod, 'FM999MI'))
               THEN
                 UPDATE contacts SET ident_country_code = 'EE' WHERE id = r.id;
@@ -291,7 +169,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         ret text;
       BEGIN
         -- define filters
-        include_filter = '%' || i_origin;
+        include_filter = '%.' || i_origin;
 
         -- for %.%.%
         IF i_origin ~ '\.' THEN
@@ -318,6 +196,10 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
 
         ret = concat(tmp_var, chr(10), chr(10));
 
+        -- origin ns records
+        SELECT ns_records FROM zonefile_settings zf WHERE i_origin = zf.origin INTO tmp_var;
+        ret := concat(ret, '; Zone NS Records', chr(10), tmp_var, chr(10));
+
         -- ns records
         SELECT array_to_string(
           array(
@@ -325,26 +207,17 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
             FROM domains d
             JOIN nameservers ns ON ns.domain_id = d.id
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
+            AND NOT ('{serverHold,clientHold}' && d.statuses)
             ORDER BY d.name
           ),
           chr(10)
         ) INTO tmp_var;
 
-        ret := concat(ret, '; Zone NS Records', chr(10), tmp_var, chr(10), chr(10));
+        ret := concat(ret, tmp_var, chr(10), chr(10));
 
-        -- a glue records for origin nameservers
-        SELECT array_to_string(
-          array(
-            SELECT concat(ns.hostname, '. IN A ', ns.ipv4)
-            FROM nameservers ns
-            JOIN domains d ON d.id = ns.domain_id
-            WHERE d.name = i_origin
-            AND ns.hostname LIKE '%.' || d.name
-            AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> ''
-          ), chr(10)
-        ) INTO tmp_var;
-
-        ret := concat(ret, '; Zone A Records', chr(10), tmp_var);
+        -- origin a glue records
+        SELECT a_records FROM zonefile_settings zf WHERE i_origin = zf.origin INTO tmp_var;
+        ret := concat(ret, '; Zone A Records', chr(10), tmp_var, chr(10));
 
         -- a glue records for other nameservers
         SELECT array_to_string(
@@ -355,44 +228,16 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
             AND ns.hostname LIKE '%.' || d.name
             AND d.name <> i_origin
-            AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> ''
-            AND NOT EXISTS ( -- filter out glue records that already appeared in origin glue recrods
-              SELECT 1 FROM nameservers nsi
-              JOIN domains di ON nsi.domain_id = di.id
-              WHERE di.name = i_origin
-              AND nsi.hostname = ns.hostname
-            )
+            AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> '{}'
+            AND NOT ('{serverHold,clientHold}' && d.statuses)
           ), chr(10)
         ) INTO tmp_var;
 
-        -- TODO This is a possible subtitition to the previous query, stress testing is needed to see which is faster
+        ret := concat(ret, tmp_var, chr(10), chr(10));
 
-        -- SELECT ns.*
-        -- FROM nameservers ns
-        -- JOIN domains d ON d.id = ns.domain_id
-        -- WHERE d.name LIKE '%ee' AND d.name NOT LIKE '%pri.ee'
-        -- AND ns.hostname LIKE '%.' || d.name
-        -- AND d.name <> 'ee'
-        -- AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> ''
-        -- AND ns.hostname NOT IN (
-        --   SELECT ns.hostname FROM domains d JOIN nameservers ns ON d.id = ns.domain_id WHERE d.name = 'ee'
-        -- )
-
-        ret := concat(ret, chr(10), tmp_var, chr(10), chr(10));
-
-        -- aaaa glue records for origin nameservers
-        SELECT array_to_string(
-          array(
-            SELECT concat(ns.hostname, '. IN AAAA ', ns.ipv6)
-            FROM nameservers ns
-            JOIN domains d ON d.id = ns.domain_id
-            WHERE d.name = i_origin
-            AND ns.hostname LIKE '%.' || d.name
-            AND ns.ipv6 IS NOT NULL AND ns.ipv6 <> ''
-          ), chr(10)
-        ) INTO tmp_var;
-
-        ret := concat(ret, '; Zone AAAA Records', chr(10), tmp_var);
+        -- origin aaaa glue records
+        SELECT a4_records FROM zonefile_settings zf WHERE i_origin = zf.origin INTO tmp_var;
+        ret := concat(ret, '; Zone AAAA Records', chr(10), tmp_var, chr(10));
 
         -- aaaa glue records for other nameservers
         SELECT array_to_string(
@@ -403,17 +248,12 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
             AND ns.hostname LIKE '%.' || d.name
             AND d.name <> i_origin
-            AND ns.ipv6 IS NOT NULL AND ns.ipv6 <> ''
-            AND NOT EXISTS ( -- filter out glue records that already appeared in origin glue recrods
-              SELECT 1 FROM nameservers nsi
-              JOIN domains di ON nsi.domain_id = di.id
-              WHERE di.name = i_origin
-              AND nsi.hostname = ns.hostname
-            )
+            AND ns.ipv6 IS NOT NULL AND ns.ipv6 <> '{}'
+            AND NOT ('{serverHold,clientHold}' && d.statuses)
           ), chr(10)
         ) INTO tmp_var;
 
-        ret := concat(ret, chr(10), tmp_var, chr(10), chr(10));
+        ret := concat(ret, tmp_var, chr(10), chr(10));
 
         -- ds records
         SELECT array_to_string(
@@ -424,7 +264,8 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
             )
             FROM domains d
             JOIN dnskeys dk ON dk.domain_id = d.id
-            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
+            WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter AND dk.flags = 257
+            AND NOT ('{serverHold,clientHold}' && d.statuses)
             ),
           chr(10)
         ) INTO tmp_var;
@@ -652,7 +493,8 @@ CREATE TABLE bank_transactions (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     creator_str character varying,
-    updator_str character varying
+    updator_str character varying,
+    in_directo boolean DEFAULT false
 );
 
 
@@ -755,6 +597,40 @@ CREATE SEQUENCE blocked_domains_id_seq
 --
 
 ALTER SEQUENCE blocked_domains_id_seq OWNED BY blocked_domains.id;
+
+
+--
+-- Name: business_registry_caches; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE business_registry_caches (
+    id integer NOT NULL,
+    ident character varying,
+    ident_country_code character varying,
+    retrieved_on timestamp without time zone,
+    associated_businesses character varying[],
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: business_registry_caches_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE business_registry_caches_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: business_registry_caches_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE business_registry_caches_id_seq OWNED BY business_registry_caches.id;
 
 
 --
@@ -998,6 +874,40 @@ CREATE SEQUENCE depricated_versions_id_seq
 --
 
 ALTER SEQUENCE depricated_versions_id_seq OWNED BY depricated_versions.id;
+
+
+--
+-- Name: directos; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE directos (
+    id integer NOT NULL,
+    item_id integer,
+    item_type character varying,
+    response json,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    invoice_number character varying
+);
+
+
+--
+-- Name: directos_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE directos_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: directos_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE directos_id_seq OWNED BY directos.id;
 
 
 --
@@ -1328,7 +1238,8 @@ CREATE TABLE invoices (
     updator_str character varying,
     number integer,
     cancelled_at timestamp without time zone,
-    sum_cache numeric(10,2)
+    sum_cache numeric(10,2),
+    in_directo boolean DEFAULT false
 );
 
 
@@ -1771,7 +1682,7 @@ CREATE TABLE log_contacts (
     item_id integer NOT NULL,
     event character varying NOT NULL,
     whodunnit character varying,
-    object json,
+    object jsonb,
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
@@ -1846,7 +1757,7 @@ CREATE TABLE log_dnskeys (
     item_id integer NOT NULL,
     event character varying NOT NULL,
     whodunnit character varying,
-    object json,
+    object jsonb,
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
@@ -1994,7 +1905,7 @@ CREATE TABLE log_domains (
     item_id integer NOT NULL,
     event character varying NOT NULL,
     whodunnit character varying,
-    object json,
+    object jsonb,
     object_changes json,
     created_at timestamp without time zone,
     nameserver_ids text[] DEFAULT '{}'::text[],
@@ -2182,7 +2093,7 @@ CREATE TABLE log_nameservers (
     item_id integer NOT NULL,
     event character varying NOT NULL,
     whodunnit character varying,
-    object json,
+    object jsonb,
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
@@ -2548,10 +2459,10 @@ ALTER SEQUENCE messages_id_seq OWNED BY messages.id;
 CREATE TABLE nameservers (
     id integer NOT NULL,
     hostname character varying,
-    ipv4 character varying[] DEFAULT '{}'::character varying[],
+    ipv4 character varying[],
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    ipv6 character varying[] DEFAULT '{}'::character varying[],
+    ipv6 character varying[],
     domain_id integer,
     creator_str character varying,
     updator_str character varying,
@@ -3122,6 +3033,13 @@ ALTER TABLE ONLY blocked_domains ALTER COLUMN id SET DEFAULT nextval('blocked_do
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY business_registry_caches ALTER COLUMN id SET DEFAULT nextval('business_registry_caches_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY certificates ALTER COLUMN id SET DEFAULT nextval('certificates_id_seq'::regclass);
 
 
@@ -3158,6 +3076,13 @@ ALTER TABLE ONLY delegation_signers ALTER COLUMN id SET DEFAULT nextval('delegat
 --
 
 ALTER TABLE ONLY depricated_versions ALTER COLUMN id SET DEFAULT nextval('depricated_versions_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY directos ALTER COLUMN id SET DEFAULT nextval('directos_id_seq'::regclass);
 
 
 --
@@ -3596,6 +3521,14 @@ ALTER TABLE ONLY blocked_domains
 
 
 --
+-- Name: business_registry_caches_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY business_registry_caches
+    ADD CONSTRAINT business_registry_caches_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: certificates_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3641,6 +3574,14 @@ ALTER TABLE ONLY delegation_signers
 
 ALTER TABLE ONLY depricated_versions
     ADD CONSTRAINT depricated_versions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: directos_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY directos
+    ADD CONSTRAINT directos_pkey PRIMARY KEY (id);
 
 
 --
@@ -4110,6 +4051,13 @@ CREATE INDEX index_blocked_domains_on_name ON blocked_domains USING btree (name)
 
 
 --
+-- Name: index_business_registry_caches_on_ident; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_business_registry_caches_on_ident ON business_registry_caches USING btree (ident);
+
+
+--
 -- Name: index_cached_nameservers_on_hostname_and_ipv4_and_ipv6; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4156,6 +4104,13 @@ CREATE INDEX index_contacts_on_registrar_id_and_ident_type ON contacts USING btr
 --
 
 CREATE INDEX index_delegation_signers_on_domain_id ON delegation_signers USING btree (domain_id);
+
+
+--
+-- Name: index_directos_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_directos_on_item_type_and_item_id ON directos USING btree (item_type, item_id);
 
 
 --
@@ -4254,6 +4209,13 @@ CREATE INDEX index_domains_on_registrant_verification_token ON domains USING btr
 --
 
 CREATE INDEX index_domains_on_registrar_id ON domains USING btree (registrar_id);
+
+
+--
+-- Name: index_domains_on_statuses; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_domains_on_statuses ON domains USING gin (statuses);
 
 
 --
@@ -4733,6 +4695,13 @@ CREATE INDEX index_registrars_on_code ON registrars USING btree (code);
 
 
 --
+-- Name: index_registrars_on_legacy_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_registrars_on_legacy_id ON registrars USING btree (legacy_id);
+
+
+--
 -- Name: index_reserved_domains_on_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4772,6 +4741,41 @@ CREATE INDEX index_whois_records_on_domain_id ON whois_records USING btree (doma
 --
 
 CREATE INDEX index_whois_records_on_registrar_id ON whois_records USING btree (registrar_id);
+
+
+--
+-- Name: log_contacts_object_legacy_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX log_contacts_object_legacy_id ON log_contacts USING btree ((((object ->> 'legacy_id'::text))::integer));
+
+
+--
+-- Name: log_contacts_object_legacy_id1; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX log_contacts_object_legacy_id1 ON log_contacts USING btree ((((object ->> 'legacy_id'::text))::integer));
+
+
+--
+-- Name: log_dnskeys_object_legacy_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX log_dnskeys_object_legacy_id ON log_contacts USING btree ((((object ->> 'legacy_domain_id'::text))::integer));
+
+
+--
+-- Name: log_domains_object_legacy_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX log_domains_object_legacy_id ON log_contacts USING btree ((((object ->> 'legacy_id'::text))::integer));
+
+
+--
+-- Name: log_nameservers_object_legacy_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX log_nameservers_object_legacy_id ON log_contacts USING btree ((((object ->> 'legacy_domain_id'::text))::integer));
 
 
 --
@@ -5196,7 +5200,19 @@ INSERT INTO schema_migrations (version) VALUES ('20151130175654');
 
 INSERT INTO schema_migrations (version) VALUES ('20151202123506');
 
-INSERT INTO schema_migrations (version) VALUES ('20160106092052');
+INSERT INTO schema_migrations (version) VALUES ('20151209122816');
+
+INSERT INTO schema_migrations (version) VALUES ('20160106101725');
 
 INSERT INTO schema_migrations (version) VALUES ('20160108135436');
+
+INSERT INTO schema_migrations (version) VALUES ('20160113143447');
+
+INSERT INTO schema_migrations (version) VALUES ('20160118092453');
+
+INSERT INTO schema_migrations (version) VALUES ('20160118092454');
+
+INSERT INTO schema_migrations (version) VALUES ('20160218102355');
+
+INSERT INTO schema_migrations (version) VALUES ('20160304125933');
 
