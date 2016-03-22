@@ -5,20 +5,21 @@
 
 - if domain.present?
   - if version # normal history
-    - children = HashWithIndifferentAccess.new(version.children)
-    - nameservers    = Nameserver.where(id: children[:nameservers])
-    - tech_contacts  = Contact.where(id: children[:tech_contacts])
-    - admin_contacts = Contact.where(id: children[:admin_contacts])
-    - registrant     = Contact.where(id: children[:registrant])
-    - event       = version.event
-    - creator     = plain_username(version.terminator)
+    - children       = HashWithIndifferentAccess.new(version.children)
+    - nameservers    = NameserverVersion.where(item_id: children[:nameservers]).order(:item_id).preceding(version.created_at + 1, true).select("distinct on (item_id) #{NameserverVersion.table_name}.*").map{|ver| o=Nameserver.new(ver.object); ver.object_changes.to_h.each{|k,v| o[k]=v[-1] };o }
+    -#- nameservers    = children[:nameservers].map{|id| Nameserver.new(id: id).safe_version_at(version.created_at)}
+    - tech_contacts  = Contact.where(id: children[:tech_contacts]).map{|o| o.safe_version_at(version.created_at)}
+    - admin_contacts = Contact.where(id: children[:admin_contacts]).map{|o| o.safe_version_at(version.created_at)}
+    - registrant     = Contact.where(id: children[:registrant]).map{|o| o.safe_version_at(version.created_at)}
+    - event          = version.event
+    - creator        = plain_username(version.terminator)
   - else # pending history
     - nameservers    = domain.nameservers
     - tech_contacts  = domain.tech_contacts
     - admin_contacts = domain.admin_contacts
-    - registrant  = [domain.registrant]
-    - creator     = pending_user.try(:username)
-    - event       = 'pending'
+    - registrant     = [domain.registrant]
+    - creator        = pending_user.try(:username)
+    - event         = 'pending'
 
   %td
     %p.nowrap
@@ -55,43 +56,40 @@
       = "#{l(domain.valid_to, format: :date)}"
 
   %td
-    - if registrant
-      - registrant.each do |r|
-        %p
-          = r[:name]
-          = r[:phone]
-          = r[:email]
-        %p
-          = r[:code]
+    - Array(registrant).each do |r|
+      %p
+        = r[:name]
+        = r[:phone]
+        = r[:email]
+      %p
+        = r[:code]
 
   %td
-    - if admin_contacts
-      - admin_contacts.each do |ac|
-        %p
-          = ac[:name]
-          = ac[:phone]
-          = ac[:email]
-        %p
-          = ac[:code]
+    - Array(admin_contacts).each do |ac|
+      %p
+        = ac[:name]
+        = ac[:phone]
+        = ac[:email]
+      %p
+        = ac[:code]
 
   %td
-    - if tech_contacts
-      - tech_contacts.each do |tc|
-        %p
-          = tc[:name]
-          = tc[:phone]
-          = tc[:email]
-        %p
-          = tc[:code]
+    - Array(tech_contacts).each do |tc|
+      %p
+        = tc[:name]
+        = tc[:phone]
+        = tc[:email]
+      %p
+        = tc[:code]
 
   %td
     %p
-      - if nameservers
-        - nameservers.each do |ns|
-          = ns[:hostname]
-          %br
-          = ns[:ipv4]
-          = ns[:ipv6]
+      - Array(nameservers).each do |ns|
+        = ns[:hostname]
+        %br
+        = ns[:ipv4]
+        = ns[:ipv6]
+        %br
 
   %td
     %p
