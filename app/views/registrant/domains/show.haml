@@ -1,8 +1,8 @@
-- content_for :actions do
-  = render 'shared/title', name: @domain.name
+= render 'shared/title', name: @domain.name
 
 .row
   .col-md-6= render 'registrant/domains/partials/general'
+  .col-md-6= render 'registrant/domains/partials/owner'
 .row
   .col-md-12= render 'registrant/domains/partials/tech_contacts'
 .row

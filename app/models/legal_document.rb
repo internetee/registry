@@ -9,6 +9,9 @@ class LegalDocument < ActiveRecord::Base
 
   belongs_to :documentable, polymorphic: true
 
+
+  validates :body, length: { minimum: (1.37 * 8.kilobytes).ceil }, if: ->(file){ file.path.blank? && !Rails.env.staging?}
+
   before_create :add_creator
   before_save   :save_to_filesystem
 

@@ -5,6 +5,7 @@ class Epp::Contact < Contact
   self.inheritance_column = :sti_disabled
 
   before_validation :manage_permissions
+
   def manage_permissions
     return unless update_prohibited? || delete_prohibited?
     add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
@@ -174,6 +175,8 @@ class Epp::Contact < Contact
         else
           throw :epp_error, {code: '2306', msg: I18n.t(:ident_update_error)}
         end
+      else
+        throw :epp_error, {code: '2306', msg: I18n.t(:ident_update_error)}
       end
     end
 

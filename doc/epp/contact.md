@@ -7,6 +7,11 @@ More info at http://en.wikipedia.org/wiki/Extensible_Provisioning_Protocol
 
 Contact Mapping protocol short version:
 
+All values are limited to Unicode Latin characters if stricter limits are not specified. This includes unicode blocks
+Basic Latin, Latin-1 Supplement, Latin Extended-A, Latin Extended-B, Latin Extended C, Latin Extended D, 
+Latin Extended Additional, Diacritics.
+More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
+
 ### Contact create
 
     Field name                 Min-max  Field description

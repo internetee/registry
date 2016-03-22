@@ -1,0 +1,13 @@
+- content_for :actions do
+  = render 'shared/title', name: @domain.name
+
+.row
+  .col-md-12
+    .panel.panel-default
+      .panel-heading
+        %h3.panel-title= t(:personal_domain_verification_url)
+      .panel-body
+        .input-group.input-group-lg
+          %span#sizing-addon1.input-group-addon.glyphicon.glyphicon-link
+          %input.form-control{"aria-describedby" => "sizing-addon1", type: "text", value: @verification_url}
+

@@ -6,6 +6,7 @@ class Epp::Domain < Domain
   attr_accessor :is_renewal, :is_transfer
 
   before_validation :manage_permissions
+
   def manage_permissions
     return if is_admin # this bad hack for 109086524, refactor later
     return true if is_transfer || is_renewal
@@ -868,6 +869,7 @@ class Epp::Domain < Domain
       ld = parsed_frame.css('legalDocument').first
       return nil unless ld
       return nil if ld.text.starts_with?(ENV['legal_documents_dir']) # escape reloading
+      return nil if ld.text.starts_with?('/home/') # escape reloading
 
       {
         body: ld.text,

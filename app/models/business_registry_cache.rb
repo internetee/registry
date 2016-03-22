@@ -22,17 +22,26 @@ class BusinessRegistryCache < ActiveRecord::Base
 
   # 1. load domains by business
   # 2. load domains by person
-  def associated_domains
-    domains = []
-
+  def associated_contacts
     contact_ids  = Contact.where(ident_type: 'org',  ident: associated_businesses, ident_country_code: 'EE').pluck(:id)
     contact_ids += Contact.where(ident_type: 'priv', ident: ident, ident_country_code: ident_country_code).pluck(:id)
+    contact_ids
+  end
+
+  def associated_domain_ids
+    domain_ids = []
+
+    contact_ids = associated_contacts
 
     unless contact_ids.blank?
-      domains = DomainContact.distinct.where(contact_id: contact_ids).pluck(:domain_id)
+      domain_ids = DomainContact.distinct.where(contact_id: contact_ids).pluck(:domain_id)
     end
 
-    Domain.includes(:registrar, :registrant).where(id: domains)
+    domain_ids
+  end
+
+  def associated_domains
+    Domain.includes(:registrar, :registrant).where(id: associated_domain_ids)
   end
 
   class << self

@@ -43,7 +43,7 @@ class Domain < ActiveRecord::Base
   has_many :dnskeys, dependent: :destroy
 
   has_many :keyrelays
-  has_one :whois_record, dependent: :destroy
+  has_one  :whois_record # destroyment will be done in after_commit
 
   accepts_nested_attributes_for :dnskeys, allow_destroy: true
 
@@ -87,14 +87,11 @@ class Domain < ActiveRecord::Base
     true
   end
 
-  after_save :update_whois_record
+  after_commit :update_whois_record
 
   after_create :update_reserved_domains
   def update_reserved_domains
-    return unless in_reserved_list?
-    rd = ReservedDomain.by_domain(name).first
-    rd.password = SecureRandom.hex
-    rd.save
+    ReservedDomain.new_password_for(name) if in_reserved_list?
   end
 
   validates :name_dirty, domain_name: true, uniqueness: true
@@ -279,7 +276,7 @@ class Domain < ActiveRecord::Base
   end
 
   def in_reserved_list?
-    ReservedDomain.pw_for(name).present?
+    @in_reserved_list ||= ReservedDomain.by_domain(name).any?
   end
 
   def pending_transfer
@@ -734,7 +731,7 @@ class Domain < ActiveRecord::Base
   end
 
   def update_whois_record
-    whois_record.blank? ? create_whois_record : whois_record.save
+    UpdateWhoisRecordJob.enqueue name, 'domain'
   end
 
   def status_notes_array=(notes)

@@ -6,6 +6,9 @@
       %dt= t(:id)
       %dd= @contact.code
 
+      %dt= t(:name)
+      %dd= @contact.name
+
       %dt= t(:password)
       %dd
         = text_field_tag :auth_info, @contact.auth_info, readonly: true, class: 'partially-hidden'
@@ -31,13 +34,13 @@
       %dd
         = l(@contact.created_at, format: :short)
         by
-        = creator_link(@contact)
+        = @contact.name
 
       %dt= t(:updated)
       %dd
         = l(@contact.updated_at, format: :short)
         by
-        = updator_link(@contact)
+        = @contact.name
 
       %dt= t(:registrar)
       %dd

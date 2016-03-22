@@ -66,10 +66,7 @@
           - @domains.each do |x|
             %tr
               %td= link_to(x, registrant_domain_path(x))
-              %td
-                - if x.registrant
-                  = link_to(x.registrant, [:registrant, x.registrant]) if x.registrant
-
+              %td= link_to(x.registrant.name, registrant_contact_path(x.registrant)) if x.registrant
               %td= l(x.valid_to, format: :short)
               %td= link_to(x.registrar, registrant_registrar_path(x.registrar)) if x.registrar
 
