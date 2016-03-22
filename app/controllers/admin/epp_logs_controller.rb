@@ -15,7 +15,7 @@ class Admin::EppLogsController < AdminController
   def set_default_dates
     params[:q] ||= {}
 
-    if params[:q][:created_at_gteq].nil? && params[:q][:created_at_lteq].nil?
+    if params[:q][:created_at_gteq].nil? && params[:q][:created_at_lteq].nil? && params[:clear_fields].nil?
       params[:q][:created_at_gteq] = Time.now.strftime("%Y-%m-%d")
     end
 

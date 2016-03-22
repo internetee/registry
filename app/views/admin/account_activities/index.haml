@@ -91,4 +91,4 @@
 :coffee
   $(".js-reset-form").on "click", (e) ->
     e.preventDefault();
-    window.location = "#{admin_account_activities_path}"
+    window.location = "#{admin_account_activities_path(clear_fields: true)}"
