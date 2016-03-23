@@ -5,20 +5,20 @@
 
 - if domain.present?
   - if version # normal history
-    - children = HashWithIndifferentAccess.new(version.children)
-    - nameservers    = Nameserver.where(id: children[:nameservers])
-    - tech_contacts  = Contact.where(id: children[:tech_contacts])
-    - admin_contacts = Contact.where(id: children[:admin_contacts])
-    - registrant     = Contact.where(id: children[:registrant])
-    - event       = version.event
-    - creator     = plain_username(version.terminator)
+    - children       = HashWithIndifferentAccess.new(version.children)
+    - nameservers    = Nameserver.all_versions_for(children[:nameservers], version.created_at)
+    - tech_contacts  = Contact.all_versions_for(children[:tech_contacts], version.created_at)
+    - admin_contacts = Contact.all_versions_for(children[:admin_contacts], version.created_at)
+    - registrant     = Contact.all_versions_for(children[:registrant], version.created_at)
+    - event          = version.event
+    - creator        = plain_username(version.terminator)
   - else # pending history
     - nameservers    = domain.nameservers
     - tech_contacts  = domain.tech_contacts
     - admin_contacts = domain.admin_contacts
-    - registrant  = [domain.registrant]
-    - creator     = pending_user.try(:username)
-    - event       = 'pending'
+    - registrant     = [domain.registrant]
+    - creator        = pending_user.try(:username)
+    - event         = 'pending'
 
   %td
     %p.nowrap
@@ -31,7 +31,7 @@
       %br
       = creator
 
-  %td
+  %td{class: changing_css_class(version,"statuses")}
     %p
       - if domain.statuses.present?
         - domain.statuses.each do |s|
@@ -46,7 +46,7 @@
       %p
         = link_to t(:pending_epp), '#', class: 'js-pending-toggle'
 
-  %td
+  %td{class: changing_css_class(version, "period", "period_unit", "valid_from", "valid_to")}
     %p
       = "#{domain.period}#{domain.period_unit}"
       %br
@@ -55,43 +55,52 @@
       = "#{l(domain.valid_to, format: :date)}"
 
   %td
-    - registrant.each do |r|
-      %p
-        = r[:name]
-        = r[:phone]
-        = r[:email]
-      %p
-        = r[:code]
+    - Array(registrant).each do |r|
+      - link = r.version_loader ? admin_contact_version_path(r.version_loader.try(:id)) : admin_contact_path(r.id)
+      = link_to link, target: "contact_#{r.id}" do
+        %p
+          = r[:name]
+          = r[:phone]
+          = r[:email]
+        %p
+          = r[:code]
 
   %td
-    - admin_contacts.each do |ac|
-      %p
-        = ac[:name]
-        = ac[:phone]
-        = ac[:email]
-      %p
-        = ac[:code]
+    - Array(admin_contacts).each do |ac|
+      - link = ac.version_loader ? admin_contact_version_path(ac.version_loader.try(:id)) : admin_contact_path(ac.id)
+      = link_to link, target: "contact_#{ac.id}" do
+        %p
+          = ac[:name]
+          = ac[:phone]
+          = ac[:email]
+        %p
+          = ac[:code]
 
   %td
-    - tech_contacts.each do |tc|
-      %p
-        = tc[:name]
-        = tc[:phone]
-        = tc[:email]
-      %p
-        = tc[:code]
+    - Array(tech_contacts).each do |tc|
+      - link = tc.version_loader ? admin_contact_version_path(tc.version_loader.try(:id)) : admin_contact_path(tc.id)
+      = link_to link, target: "contact_#{tc.id}" do
+        %p
+          = tc[:name]
+          = tc[:phone]
+          = tc[:email]
+        %p
+          = tc[:code]
 
   %td
     %p
-      - nameservers.each do |ns|
+      - Array(nameservers).each do |ns|
         = ns[:hostname]
         %br
-        = ns[:ipv4]
-        = ns[:ipv6]
+        = ns[:ipv4].presence
+        = ns[:ipv6].presence
+        %br
 
-  %td
-    %p
-      = domain.registrar.name
+  %td{class: changing_css_class(version,"registrar_id")}
+    - if domain.registrar
+      %p
+        = link_to admin_registrar_path(domain.registrar), target: "registrar_#{domain.registrar.id}" do
+          = domain.registrar.name
 
   - if domain.pending_json.present?
     %tr.js-pending{ style: 'display: none;' }
