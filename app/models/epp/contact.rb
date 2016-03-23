@@ -101,15 +101,6 @@ class Epp::Contact < Contact
       res
     end
 
-    def attach_legal_document(legal_document_data)
-      return unless legal_document_data
-
-      legal_documents.create(
-          document_type: legal_document_data[:type],
-          body: legal_document_data[:body]
-      )
-    end
-
   end
   delegate :ident_attr_valid?, to: :class
 
@@ -225,6 +216,15 @@ class Epp::Contact < Contact
     end
 
     status_list
+  end
+
+  def attach_legal_document(legal_document_data)
+    return unless legal_document_data
+
+    legal_documents.create(
+        document_type: legal_document_data[:type],
+        body: legal_document_data[:body]
+    )
   end
 
   def add_legal_file_to_new frame
