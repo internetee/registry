@@ -1,4 +1,6 @@
 = render 'shared/title', name: @version.reify.name
+- domain = Domain.new(@version.object.to_h)
+- @version.object_changes.to_h.each{|k,v| domain[k]=v.last}
 
 - if @version
   - children = HashWithIndifferentAccess.new(@version.children)
@@ -8,7 +10,6 @@
   - registrant     = Contact.all_versions_for(children[:registrant], @version.created_at)
   - event       = @version.event
   - creator     = plain_username(@version.terminator)
-  - domain      = @version.reify
 
 
 .row
@@ -22,16 +23,16 @@
       .panel-body
         %dl.dl-horizontal
           %dt= t(:name)
-          %dd= link_to(@version.reify.name, admin_domain_path(@version.item_id))
+          %dd= link_to(domain.name, admin_domain_path(@version.item_id))
 
           %dt= t(:statuses)
-          %dd{class: @version.object_changes.to_h["statuses"] && "text-warning"}
-            - if @version.reify.statuses.present?
-              - @version.reify.statuses.each do |s|
+          %dd{class: changing_css_class(@version,"statuses")}
+            - if domain.statuses.present?
+              - domain.statuses.each do |s|
                 = s
 
           %dt= t(:registrant)
-          %dd{class: @version.object_changes.to_h["registrant_id"] && "text-warning"}
+          %dd{class: changing_css_class(@version,"registrant_id")}
             - registrant.each do |r|
               - link = r.version_loader ? admin_contact_version_path(r.version_loader.try(:id)) : admin_contact_path(r.id)
               = link_to link, target: "contact_#{r.id}" do
@@ -70,10 +71,12 @@
               = ns[:ipv4]
               = ns[:ipv6]
               %br
+
           %dt= t(:registrar)
-          %dd{class: @version.object_changes.to_h["registrar_id"] && "text-warning"}
+          %dd{class: changing_css_class(@version,"registrar_id")}
             = link_to admin_registrar_path(domain.registrar), target: "registrar_#{domain.registrar.id}" do
-              = @version.reify.registrar.name
+              = domain.registrar.name
+
       %span{:style => "padding-right:10px; padding-top:40px; float: right; bottom: 10px;"}
         - if @version.previous
           = link_to(t(:previous),

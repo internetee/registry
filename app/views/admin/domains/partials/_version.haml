@@ -31,7 +31,7 @@
       %br
       = creator
 
-  %td{class: version && version.object_changes.to_h["statuses"] && "warning"}
+  %td{class: changing_css_class(version,"statuses")}
     %p
       - if domain.statuses.present?
         - domain.statuses.each do |s|
@@ -46,7 +46,7 @@
       %p
         = link_to t(:pending_epp), '#', class: 'js-pending-toggle'
 
-  %td{class: version && version.object_changes.to_h.slice("period", "period_unit", "valid_from", "valid_to").any? && "warning"}
+  %td{class: changing_css_class(version, "period", "period_unit", "valid_from", "valid_to")}
     %p
       = "#{domain.period}#{domain.period_unit}"
       %br
@@ -96,7 +96,7 @@
         = ns[:ipv6].presence
         %br
 
-  %td
+  %td{class: changing_css_class(version,"registrar_id")}
     - if domain.registrar
       %p
         = link_to admin_registrar_path(domain.registrar), target: "registrar_#{domain.registrar.id}" do
