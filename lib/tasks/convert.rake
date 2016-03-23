@@ -41,10 +41,34 @@ namespace :convert do
       if c.country_code.present? && c.country_code != c.country_code.upcase
         c.country_code = c.country_code.upcase
         c.update_columns(country_code: c.country_code.upcase)
-        # c.send(:record_update)
 
         count +=1
         puts "#{count} contacts has been changed" if count % 1000 == 0
+      end
+    end
+    puts "Contacts change has been finished. Starting ContactVersions"
+
+    count = 0
+    ContactVersion.find_each do |c|
+      if if_object = (c.object && c.object["country_code"].present? && c.object["country_code"] != c.object["country_code"].upcase) ||
+          if_changes = (c.object_changes && c.object_changes["country_code"].present? && c.object_changes["country_code"] != c.object_changes["country_code"].map{|e|e.try(:upcase)})
+
+        if if_object
+          h = c.object
+          h["country_code"] = h["country_code"].upcase
+          c.object = h
+        end
+
+        if if_changes
+          h = c.object_changes
+          h["country_code"] = h["country_code"].map{|e|e.try(:upcase)}
+          c.object_changes = h
+          binding.pry
+        end
+        c.update_columns(object: c.object, object_changes: c.object_changes)
+
+        count +=1
+        puts "#{count} contact histories has been changed" if count % 1000 == 0
       end
     end
   end
