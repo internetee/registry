@@ -178,7 +178,7 @@ class Epp::Contact < Contact
       end
     end
 
-    self.upid = current_user.id if current_user
+    self.upid = current_user.registrar.id if current_user.registrar
     self.up_date = Time.zone.now
 
     super(at)
