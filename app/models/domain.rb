@@ -746,7 +746,6 @@ class Domain < ActiveRecord::Base
     log[:dnskeys]        = dnskey_ids
     log[:legal_documents]= [legal_document_id]
     log[:registrant]     = [registrant_id]
-    log[:dnskeys]        = dnskeys_ids
     log
   end
 
