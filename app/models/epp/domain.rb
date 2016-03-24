@@ -508,13 +508,16 @@ class Epp::Domain < Domain
 
     end
 
+    if erros.empty? && verify
+      self.upid = current_user.registrar.id if current_user.registrar
+      self.up_date = Time.zone.now
+    end
+
     if errors.empty? && verify &&
        Setting.request_confrimation_on_registrant_change_enabled &&
        frame.css('registrant').present? &&
        frame.css('registrant').attr('verified').to_s.downcase != 'yes'
       registrant_verification_asked!(frame.to_s, current_user.id)
-      self.upid = current_user.registrar.id if current_user.registrar
-      self.up_date = Time.zone.now
     end
     self.deliver_emails = true # turn on email delivery for epp
 
