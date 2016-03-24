@@ -15,8 +15,15 @@ class Admin::ReppLogsController < AdminController
   def set_default_dates
     params[:q] ||= {}
 
-    if params[:q][:created_at_gteq].nil? && params[:q][:created_at_lteq].nil? && params[:clear_fields].nil?
-      params[:q][:created_at_gteq] = Time.now.strftime("%Y-%m-%d")
+    if params[:q][:created_at_gteq].nil? && params[:q][:created_at_lteq].nil? && params[:created_after].present?
+
+      default_date = params[:created_after]
+
+      if !['today', 'tomorrow', 'yesterday'].include?(default_date)
+        default_date = 'today'
+      end
+
+      params[:q][:created_at_gteq] = Date.send(default_date).strftime("%Y-%m-%d")
     end
 
   end
