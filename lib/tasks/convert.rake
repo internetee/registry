@@ -55,7 +55,7 @@ namespace :convert do
 
         if if_object
           h = c.object
-          h["country_code"] = h["country_code"].upcase
+          h["country_code"] = h["country_code"].try(:upcase)
           c.object = h
         end
 
