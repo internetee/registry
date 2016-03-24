@@ -732,7 +732,7 @@ class Domain < ActiveRecord::Base
     log[:nameservers]    = nameserver_ids
     log[:registrant]     = [registrant_id]
     log[:domain_statuses]= domain_status_ids
-    log[:dnskeys]        = dnskeys_ids
+    log[:dnskeys]        = dnskey_ids
     log
   end
 
