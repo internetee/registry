@@ -335,9 +335,19 @@ class Contact < ActiveRecord::Base
       errors.add(:domains, :exist)
       return false
     end
-    if doc = Epp::Contact.attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
-      frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
-      self.legal_document_id = doc.id
+
+    legal_document_data = Epp::Domain.parse_legal_document_from_frame(frame)
+
+    if legal_document_data
+
+        doc = LegalDocument.create(
+            documentable_type: Contact,
+            document_type:     legal_document_data[:type],
+            body:              legal_document_data[:body]
+        )
+        self.legal_documents = [doc]
+        self.legal_document_id = doc.id
+        self.save
     end
     destroy
   end
