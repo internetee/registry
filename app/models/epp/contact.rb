@@ -157,8 +157,8 @@ class Epp::Contact < Contact
       at[:statuses] = statuses - statuses_attrs(frame.css('rem'), 'rem') + statuses_attrs(frame.css('add'), 'add')
     end
 
-    legal_frame = frame.css('legalDocument').first
-    at[:legal_documents_attributes] = self.class.legal_document_attrs(legal_frame)
+    # legal_frame = frame.css('legalDocument').first
+    # at[:legal_documents_attributes] = self.class.legal_document_attrs(legal_frame)
 
     if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
       frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
