@@ -41,7 +41,7 @@ class Contact < ActiveRecord::Base
   end
 
   before_validation :to_upcase_country_code
-  before_validation :val_prefix_code
+  before_validation :prefix_code
   before_create :generate_auth_info
 
   before_update :manage_emails
@@ -299,7 +299,7 @@ class Contact < ActiveRecord::Base
   end
 
   # rubocop:disable Metrics/CyclomaticComplexity
-  def val_prefix_code
+  def prefix_code
     return nil unless new_record?
     return nil if registrar.blank?
     code = self[:code]
