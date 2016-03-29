@@ -508,7 +508,7 @@ class Epp::Domain < Domain
 
     end
 
-    if erros.empty? && verify
+    if errors.empty? && verify
       self.upid = current_user.registrar.id if current_user.registrar
       self.up_date = Time.zone.now
     end
