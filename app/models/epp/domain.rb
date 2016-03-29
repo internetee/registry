@@ -489,7 +489,7 @@ class Epp::Domain < Domain
 
     # at[:statuses] += at_add[:domain_statuses_attributes]
 
-    if erros.empty? && verify
+    if errors.empty? && verify
       self.upid = current_user.registrar.id if current_user.registrar
       self.up_date = Time.zone.now
     end
