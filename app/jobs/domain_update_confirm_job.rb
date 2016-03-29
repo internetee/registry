@@ -14,6 +14,7 @@ class DomainUpdateConfirmJob < Que::Job
         domain.poll_message!(:poll_pending_update_rejected_by_registrant)
         domain.clean_pendings_lowlevel
       end
+      ::PaperTrail.whodunnit = "job - #{self.class.name} - #{action}"
       destroy # it's best to destroy the job in the same transaction
     end
   end

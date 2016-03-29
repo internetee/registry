@@ -25,6 +25,7 @@ class DomainCron
         STDOUT << "#{Time.zone.now.utc} DomainCron.clean_expired_pendings: ##{domain.id} (#{domain.name})\n"
       end
       UpdateWhoisRecordJob.enqueue domain.name, 'domain'
+      ::PaperTrail.whodunnit = "cron - #{__method__}"
     end
     STDOUT << "#{Time.zone.now.utc} - Successfully cancelled #{count} domain pendings\n" unless Rails.env.test?
     count
@@ -41,6 +42,7 @@ class DomainCron
       real += 1
       domain.set_graceful_expired
       STDOUT << "#{Time.zone.now.utc} DomainCron.start_expire_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
+      ::PaperTrail.whodunnit = "cron - #{__method__}"
       domain.save(validate: false) and marked += 1
     end
 
@@ -58,6 +60,7 @@ class DomainCron
       real += 1
       domain.statuses << DomainStatus::SERVER_HOLD
       STDOUT << "#{Time.zone.now.utc} DomainCron.start_redemption_grace_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
+      ::PaperTrail.whodunnit = "cron - #{__method__}"
       domain.save(validate: false) and marked += 1
     end
 
