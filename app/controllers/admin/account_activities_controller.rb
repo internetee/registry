@@ -1,8 +1,8 @@
 class Admin::AccountActivitiesController < AdminController
   load_and_authorize_resource
+  before_action :set_default_dates, only: [:index]
 
   def index # rubocop: disable Metrics/AbcSize
-    params[:q] ||= {}
 
     ca_cache = params[:q][:created_at_lteq]
     begin
@@ -40,5 +40,21 @@ class Admin::AccountActivitiesController < AdminController
     end
 
     params[:q][:created_at_lteq] = ca_cache
+  end
+
+  def set_default_dates
+    params[:q] ||= {}
+
+    if params[:q][:created_at_gteq].nil? && params[:q][:created_at_lteq].nil? && params[:created_after].present?
+
+      default_date = params[:created_after]
+
+      if !['today', 'tomorrow', 'yesterday'].include?(default_date)
+        default_date = 'today'
+      end
+
+      params[:q][:created_at_gteq] = Date.send(default_date).strftime("%Y-%m-%d")
+    end
+
   end
 end
