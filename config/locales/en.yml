@@ -356,6 +356,9 @@ en:
   status: 'Status'
   eedirekt: 'EEDirekt'
   contact: 'Contact'
+  credit_balance: 'Credit balance'
+  starting_balance: 'Starting balance'
+  destroyed: 'Destroyed'
 
   domain_transfer_requested: 'Domain transfer requested!'
   domain_transfer_approved: 'Domain transfer approved!'
