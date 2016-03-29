@@ -50,8 +50,8 @@ namespace :convert do
 
     count = 0
     ContactVersion.find_each do |c|
-      if if_object = (c.object && c.object["country_code"].present? && c.object["country_code"] != c.object["country_code"].upcase) ||
-          if_changes = (c.object_changes && c.object_changes["country_code"].present? && c.object_changes["country_code"] != c.object_changes["country_code"].map{|e|e.try(:upcase)})
+      if (if_object = (c.object && c.object["country_code"].present? && c.object["country_code"] != c.object["country_code"].upcase)) ||
+          (if_changes = (c.object_changes && c.object_changes["country_code"].present? && c.object_changes["country_code"] != c.object_changes["country_code"].map{|e|e.try(:upcase)}))
 
         if if_object
           h = c.object
@@ -63,7 +63,6 @@ namespace :convert do
           h = c.object_changes
           h["country_code"] = h["country_code"].map{|e|e.try(:upcase)}
           c.object_changes = h
-          binding.pry
         end
         c.update_columns(object: c.object, object_changes: c.object_changes)
 
