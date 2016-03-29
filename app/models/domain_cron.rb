@@ -25,6 +25,7 @@ class DomainCron
         STDOUT << "#{Time.zone.now.utc} DomainCron.clean_expired_pendings: ##{domain.id} (#{domain.name})\n"
       end
       UpdateWhoisRecordJob.enqueue domain.name, 'domain'
+      ::PaperTrail.whodunnit = "cron - #{__method__}"
     end
     STDOUT << "#{Time.zone.now.utc} - Successfully cancelled #{count} domain pendings\n" unless Rails.env.test?
     count
@@ -41,6 +42,7 @@ class DomainCron
       real += 1
       domain.set_graceful_expired
       STDOUT << "#{Time.zone.now.utc} DomainCron.start_expire_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
+      ::PaperTrail.whodunnit = "cron - #{__method__}"
       domain.save(validate: false) and marked += 1
     end
 
@@ -58,6 +60,7 @@ class DomainCron
       real += 1
       domain.statuses << DomainStatus::SERVER_HOLD
       STDOUT << "#{Time.zone.now.utc} DomainCron.start_redemption_grace_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
+      ::PaperTrail.whodunnit = "cron - #{__method__}"
       domain.save(validate: false) and marked += 1
     end
 
@@ -77,6 +80,7 @@ class DomainCron
         real += 1
         domain.statuses << DomainStatus::DELETE_CANDIDATE
         STDOUT << "#{Time.zone.now.utc} DomainCron.start_delete_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
+        ::PaperTrail.whodunnit = "cron - #{__method__}"
         domain.save(validate: false) and marked += 1
       end
     ensure # the operator should see what was accomplished
@@ -90,6 +94,7 @@ class DomainCron
 
     c = 0
     Domain.where("statuses @> '{deleteCandidate}'::varchar[]").each do |x|
+      ::PaperTrail.whodunnit = "cron - #{__method__} case statuses"
       WhoisRecord.where(domain_id: x.id).destroy_all
       destroy_with_message x
       STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by deleteCandidate ##{x.id} (#{x.name})\n" unless Rails.env.test?
@@ -98,6 +103,7 @@ class DomainCron
     end
 
     Domain.where('force_delete_at <= ?', Time.zone.now).each do |x|
+      ::PaperTrail.whodunnit = "cron - #{__method__} case force_deleted_at"
       WhoisRecord.where(domain_id: x.id).destroy_all
       destroy_with_message x
       STDOUT << "#{Time.zone.now.utc} DomainCron.destroy_delete_candidates: by force delete time ##{x.id} (#{x.name})\n" unless Rails.env.test?
