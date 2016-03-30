@@ -32,6 +32,7 @@ class Contact < ActiveRecord::Base
   validate :val_ident_valid_format?
   validate :uniq_statuses?
   validate :validate_html
+  validate :val_country_code
 
   after_initialize do
     self.statuses = [] if statuses.nil?
@@ -39,7 +40,7 @@ class Contact < ActiveRecord::Base
     self.ident_updated_at = Time.zone.now if new_record? && ident_updated_at.blank?
   end
 
-  before_validation :set_ident_country_code
+  before_validation :to_upcase_country_code
   before_validation :prefix_code
   before_create :generate_auth_info
 
@@ -352,14 +353,14 @@ class Contact < ActiveRecord::Base
     destroy
   end
 
-  def set_ident_country_code
-    return true unless ident_country_code_changed? && ident_country_code.present?
-    code = Country.new(ident_country_code)
-    if code
-      self.ident_country_code = code.alpha2
-    else
-      errors.add(:ident, :invalid_country_code)
-    end
+  def to_upcase_country_code
+    self.ident_country_code = ident_country_code.upcase if ident_country_code
+    self.country_code       = country_code.upcase if country_code
+  end
+
+  def val_country_code
+    errors.add(:ident, :invalid_country_code) unless Country.new(ident_country_code)
+    errors.add(:ident, :invalid_country_code) unless Country.new(country_code)
   end
 
   def related_domain_descriptions
