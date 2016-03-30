@@ -60,7 +60,7 @@ module Versions
   module ClassMethods
     def all_versions_for(ids, time)
       ver_klass    = paper_trail_version_class
-      from_history = ver_klass.where(item_id: ids).
+      from_history = ver_klass.where(item_id: ids.to_a).
           order(:item_id).
           preceding(time + 1, true).
           select("distinct on (item_id) #{ver_klass.table_name}.*").
@@ -70,7 +70,7 @@ module Versions
             ver.object_changes.to_h.each { |k, v| o[k]=v[-1] }
             o
           end
-      not_in_history = where(id: (ids - from_history.map(&:id)))
+      not_in_history = where(id: (ids.to_a - from_history.map(&:id)))
 
       from_history + not_in_history
     end
