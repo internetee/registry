@@ -7,6 +7,7 @@
   - if version # normal history
     - children       = HashWithIndifferentAccess.new(version.children)
     - nameservers    = Nameserver.all_versions_for(children[:nameservers], version.created_at)
+    - dnskeys        = Dnskey.all_versions_for(children[:dnskeys], version.created_at)
     - tech_contacts  = Contact.all_versions_for(children[:tech_contacts], version.created_at)
     - admin_contacts = Contact.all_versions_for(children[:admin_contacts], version.created_at)
     - registrant     = Contact.all_versions_for(children[:registrant], version.created_at)
@@ -14,6 +15,7 @@
     - creator        = plain_username(version.terminator)
   - else # pending history
     - nameservers    = domain.nameservers
+    - dnskeys        = domain.dnskeys
     - tech_contacts  = domain.tech_contacts
     - admin_contacts = domain.admin_contacts
     - registrant     = [domain.registrant]
@@ -30,6 +32,9 @@
       = event
       %br
       = creator
+    - if version
+      %p.text-right
+        = link_to "Pure history", admin_domain_version_path(version)
 
   %td{class: changing_css_class(version,"statuses")}
     %p
@@ -95,6 +100,14 @@
         = ns[:ipv4].presence
         = ns[:ipv6].presence
         %br
+  %td
+    - Array(dnskeys).each do |ns|
+      %p
+        = ns.flags
+        = ns.protocol
+        = ns.alg
+        %br
+        = ns.attributes.except("id", "domain_id", "updated_at", "legacy_domain_id")
 
   %td{class: changing_css_class(version,"registrar_id")}
     - if domain.registrar

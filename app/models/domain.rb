@@ -738,12 +738,17 @@ class Domain < ActiveRecord::Base
   # rubocop: enable Metrics/CyclomaticComplexity
   # rubocop: enable Metrics/PerceivedComplexity
 
+
+  # small optimization that we'are using to_a if it was done already
+  # otherwise just getting ids
   def children_log
-    log = HashWithIndifferentAccess.new
-    log[:admin_contacts] = admin_contact_ids
-    log[:tech_contacts]  = tech_contact_ids
-    log[:nameservers]    = nameserver_ids
-    log[:dnskeys]        = dnskey_ids
+    log   = HashWithIndifferentAccess.new
+    types = %i(admin_contacts tech_contacts nameservers dnskeys domain_statuses)
+
+    types.each do |rel|
+      ids = send(rel).loaded? ? send(rel).reject(&:marked_for_destruction?).map(&:id) : send(rel).pluck(:id)
+      log[rel] = ids
+    end
     log[:legal_documents]= [legal_document_id]
     log[:registrant]     = [registrant_id]
     log
