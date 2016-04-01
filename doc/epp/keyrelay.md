@@ -11,7 +11,7 @@ NB! Keyrelay not implemented.
       <ext:keyData>        1
         <secDNS:flags>     1        Allowed values: 0, 256, 257 
         <secDNS:protocol>  1        Allowed values: 3 
-        <secDNS:alg>       1        Allowed values: 3, 5, 6, 7, 8, 252, 253, 254, 255 
+        <secDNS:alg>       1        Allowed values: 3, 5, 6, 7, 8, 10, 13, 14 
         <secDNS:pubKey>    1        Public key 
       <ext:authInfo>       1 
         <domain:pw>        1        Domain password. Attribute: roid="String" 
