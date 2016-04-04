@@ -402,6 +402,7 @@ class Domain < ActiveRecord::Base
     self.registrant_verification_token = token
     self.registrant_verification_asked_at = asked_at
     set_pending_update
+    touch_always_version
     pending_json['new_registrant_id']    = new_registrant_id
     pending_json['new_registrant_email'] = new_registrant_email
     pending_json['new_registrant_name']  = new_registrant_name
