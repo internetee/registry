@@ -147,7 +147,7 @@ class Directo < ActiveRecord::Base
         else
           Setting.directo_monthly_number_last = directo_next
           Nokogiri::XML(response).css("Result").each do |res|
-            Directo.create!(response: res.as_json.to_h, invoice_number: directo_next)
+            Directo.create!(request: data, response: res.as_json.to_h, invoice_number: directo_next)
             Rails.logger.info("[DIRECTO] Invoice #{res.attributes["docid"].value} was pushed and return is #{res.as_json.to_h.inspect}")
           end
         end
