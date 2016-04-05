@@ -5,6 +5,7 @@
 - if @version
   - children = HashWithIndifferentAccess.new(@version.children)
   - nameservers    = Nameserver.all_versions_for(children[:nameservers], @version.created_at)
+  - dnskeys        = Dnskey.all_versions_for(children[:dnskeys], @version.created_at)
   - tech_contacts  = Contact.all_versions_for(children[:tech_contacts], @version.created_at)
   - admin_contacts = Contact.all_versions_for(children[:admin_contacts], @version.created_at)
   - registrant     = Contact.all_versions_for(children[:registrant], @version.created_at)
@@ -70,6 +71,15 @@
               = ns[:hostname]
               = ns[:ipv4]
               = ns[:ipv6]
+              %br
+
+          %dt= t(:dnskeys)
+          %dd
+            - dnskeys.each do |ns|
+              = ns[:flags]
+              = ns[:protocol]
+              = ns[:alg]
+              = ns[:public_key].to_s[-20,20]
               %br
 
           %dt= t(:registrar)
