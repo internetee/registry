@@ -7,11 +7,12 @@
         = t(:legal_document)
       .panel-body
         .form-group
-          .col-md-3.control-label
+          .col-md-4.control-label
             = label_tag :verified, t(:verified)
-          .col-md-7
+          .col-md-6
             = check_box_tag :verified, '1', params[:verified].eql?('1'), onclick: "return (confirm('#{t(:verified_confirm)}') ? true : false);"
 
+        .form-group
           .col-md-4.control-label
             = label_tag 'domain[legal_document]', t(:legal_document), class: 'required'
             %p.help-block= t(:legal_document_max_size)
