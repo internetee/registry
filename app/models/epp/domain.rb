@@ -133,7 +133,8 @@ class Epp::Domain < Domain
         [:base, :ds_data_not_allowed],
         [:base, :key_data_not_allowed],
         [:period, :not_a_number],
-        [:period, :not_an_integer]
+        [:period, :not_an_integer],
+        [:registrant, :cannot_be_missing]
       ],
       '2308' => [
         [:base, :domain_name_blocked, { value: { obj: 'name', val: name_dirty } }]
@@ -166,6 +167,8 @@ class Epp::Domain < Domain
       else
         add_epp_error('2303', 'registrant', code, [:registrant, :not_found])
       end
+    else
+        add_epp_error('2306', nil, nil, [:registrant, :cannot_be_missing])
     end
 
     at[:name] = frame.css('name').text if new_record?
