@@ -60,7 +60,8 @@ class Directo < ActiveRecord::Base
   end
 
 
-  def self.send_monthly_invoices
+  def self.send_monthly_invoices(debug: false)
+    @debug         = debug
     I18n.locale    = :et
     month          = Time.now - 1.month
     invoices_until = month.end_of_month
@@ -141,10 +142,14 @@ class Directo < ActiveRecord::Base
 
         data = builder.to_xml.gsub("\n",'')
         response = RestClient::Request.execute(url: ENV['directo_invoice_url'], method: :post, payload: {put: "1", what: "invoice", xmldata: data}, verify_ssl: false).to_s
-        Setting.directo_monthly_number_last = directo_next
-        Nokogiri::XML(response).css("Result").each do |res|
-          Directo.create!(response: res.as_json.to_h, invoice_number: directo_next)
-          Rails.logger.info("[DIRECTO] Invoice #{res.attributes["docid"].value} was pushed and return is #{res.as_json.to_h.inspect}")
+        if @debug
+          STDOUT << "#{Time.zone.now.utc} - Directo xml had to be sent #{data}\n"
+        else
+          Setting.directo_monthly_number_last = directo_next
+          Nokogiri::XML(response).css("Result").each do |res|
+            Directo.create!(response: res.as_json.to_h, invoice_number: directo_next)
+            Rails.logger.info("[DIRECTO] Invoice #{res.attributes["docid"].value} was pushed and return is #{res.as_json.to_h.inspect}")
+          end
         end
       else
         Rails.logger.info("[DIRECTO] Registrar #{registrar.id} has nothing to be sent to Directo")
