@@ -106,8 +106,7 @@
         = ns.flags
         = ns.protocol
         = ns.alg
-        %br
-        = ns.attributes.except("id", "domain_id", "updated_at", "legacy_domain_id")
+        = ns.public_key.to_s[-20,20]
 
   %td{class: changing_css_class(version,"registrar_id")}
     - if domain.registrar
