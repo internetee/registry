@@ -37,10 +37,7 @@ class Epp::Contact < Contact
       at[:country_code] = f.css('postalInfo addr cc').text     if f.css('postalInfo addr cc').present?
       at[:auth_info]    = f.css('authInfo pw').text            if f.css('authInfo pw').present?
 
-      legal_frame = f.css('legalDocument').first
-      if legal_frame.present?
-        at[:legal_documents_attributes] = legal_document_attrs(legal_frame)
-      end
+
       at.merge!(ident_attrs(f.css('ident').first)) if new_record
       at
     end
@@ -104,6 +101,7 @@ class Epp::Contact < Contact
 
       res
     end
+
   end
   delegate :ident_attr_valid?, to: :class
 
@@ -152,8 +150,14 @@ class Epp::Contact < Contact
       at[:statuses] = statuses - statuses_attrs(frame.css('rem'), 'rem') + statuses_attrs(frame.css('add'), 'add')
     end
 
-    legal_frame = frame.css('legalDocument').first
-    at[:legal_documents_attributes] = self.class.legal_document_attrs(legal_frame)
+    # legal_frame = frame.css('legalDocument').first
+    # at[:legal_documents_attributes] = self.class.legal_document_attrs(legal_frame)
+
+    if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
+      frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
+      self.legal_document_id = doc.id
+    end
+
     self.deliver_emails = true # turn on email delivery for epp
 
 
@@ -217,4 +221,29 @@ class Epp::Contact < Contact
 
     status_list
   end
+
+  def attach_legal_document(legal_document_data)
+    return unless legal_document_data
+
+    legal_documents.create(
+        document_type: legal_document_data[:type],
+        body: legal_document_data[:body]
+    )
+  end
+
+  def add_legal_file_to_new frame
+    legal_document_data = Epp::Domain.parse_legal_document_from_frame(frame)
+    return unless legal_document_data
+
+    doc = LegalDocument.create(
+        documentable_type: Contact,
+        document_type:     legal_document_data[:type],
+        body:              legal_document_data[:body]
+    )
+    self.legal_documents = [doc]
+
+    frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
+    self.legal_document_id = doc.id
+  end
+
 end

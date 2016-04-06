@@ -12,6 +12,10 @@ class Contact < ActiveRecord::Base
   # TODO: remove later
   has_many :depricated_statuses, class_name: 'DepricatedContactStatus', dependent: :destroy
 
+  has_paper_trail class_name: "ContactVersion", meta: { children: :children_log }
+
+  attr_accessor :legal_document_id
+
   accepts_nested_attributes_for :legal_documents
 
   validates :name, :phone, :email, :ident, :ident_type,
@@ -540,9 +544,15 @@ class Contact < ActiveRecord::Base
     ]).present?
   end
 
- def update_related_whois_records
-   names = related_domain_descriptions.keys
-   UpdateWhoisRecordJob.enqueue(names, :domain) if names.present?
- end	 
+  def update_related_whois_records
+    names = related_domain_descriptions.keys
+    UpdateWhoisRecordJob.enqueue(names, :domain) if names.present?
+  end
+
+  def children_log
+    log = HashWithIndifferentAccess.new
+    log[:legal_documents]= [legal_document_id]
+    log
+  end
 
 end

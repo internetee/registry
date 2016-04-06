@@ -206,6 +206,10 @@ en:
               blank: 'Algorithm is missing'
             auth_info_pw:
               blank: 'Password is missing'
+        legal_document:
+          attributes:
+            body:
+              length: 'Parameter value policy error: legalDocument size should be more than 8kB'
 
 
     attributes:

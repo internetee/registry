@@ -19,6 +19,8 @@ class Epp::ContactsController < EppController
     authorize! :create, Epp::Contact
     @contact = Epp::Contact.new(params[:parsed_frame], current_user.registrar)
 
+    @contact.add_legal_file_to_new(params[:parsed_frame])
+
     if @contact.save
       render_epp_response '/epp/contacts/create'
     else
