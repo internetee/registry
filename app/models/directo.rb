@@ -68,7 +68,7 @@ class Directo < ActiveRecord::Base
     date_format    = "%Y-%m-%d"
     invoice_counter= Counter.new
 
-    min_directo    = Setting.invoice_number_min.presence.try(:to_i)
+    min_directo    = Setting.directo_monthly_number_min.presence.try(:to_i)
     max_directo    = Setting.directo_monthly_number_max.presence.try(:to_i)
     last_directo   = [Setting.directo_monthly_number_last.presence.try(:to_i), min_directo].compact.max || 0
     if max_directo && max_directo <= last_directo
