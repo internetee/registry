@@ -31,7 +31,6 @@ class LegalDocument < ActiveRecord::Base
   end
 
 
-
   def save_to_filesystem
     loop do
       rand = SecureRandom.random_number.to_s.last(4)

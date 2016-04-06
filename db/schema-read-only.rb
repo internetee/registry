@@ -11,11 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151029152638) do
+ActiveRecord::Schema.define(version: 20160304125933) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
+  enable_extension "btree_gist"
 
   create_table "account_activities", force: :cascade do |t|
     t.integer  "account_id"
@@ -108,6 +109,7 @@ ActiveRecord::Schema.define(version: 20151029152638) do
     t.datetime "updated_at"
     t.string   "creator_str"
     t.string   "updator_str"
+    t.boolean  "in_directo",                                 default: false
   end
 
   create_table "banklink_transactions", force: :cascade do |t|
@@ -135,12 +137,25 @@ ActiveRecord::Schema.define(version: 20151029152638) do
   end
 
   create_table "blocked_domains", force: :cascade do |t|
-    t.string   "names",       array: true
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "creator_str"
     t.string   "updator_str"
+    t.string   "name"
   end
+
+  add_index "blocked_domains", ["name"], name: "index_blocked_domains_on_name", using: :btree
+
+  create_table "business_registry_caches", force: :cascade do |t|
+    t.string   "ident"
+    t.string   "ident_country_code"
+    t.datetime "retrieved_on"
+    t.string   "associated_businesses",              array: true
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+  end
+
+  add_index "business_registry_caches", ["ident"], name: "index_business_registry_caches_on_ident", using: :btree
 
   create_table "cached_nameservers", id: false, force: :cascade do |t|
     t.string "hostname", limit: 255
@@ -239,20 +254,32 @@ ActiveRecord::Schema.define(version: 20151029152638) do
     t.datetime "created_at"
   end
 
+  create_table "directos", force: :cascade do |t|
+    t.integer  "item_id"
+    t.string   "item_type"
+    t.json     "response"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.string   "invoice_number"
+  end
+
+  add_index "directos", ["item_type", "item_id"], name: "index_directos_on_item_type_and_item_id", using: :btree
+
   create_table "dnskeys", force: :cascade do |t|
-    t.integer "domain_id"
-    t.integer "flags"
-    t.integer "protocol"
-    t.integer "alg"
-    t.text    "public_key"
-    t.integer "delegation_signer_id"
-    t.string  "ds_key_tag"
-    t.integer "ds_alg"
-    t.integer "ds_digest_type"
-    t.string  "ds_digest"
-    t.string  "creator_str"
-    t.string  "updator_str"
-    t.integer "legacy_domain_id"
+    t.integer  "domain_id"
+    t.integer  "flags"
+    t.integer  "protocol"
+    t.integer  "alg"
+    t.text     "public_key"
+    t.integer  "delegation_signer_id"
+    t.string   "ds_key_tag"
+    t.integer  "ds_alg"
+    t.integer  "ds_digest_type"
+    t.string   "ds_digest"
+    t.string   "creator_str"
+    t.string   "updator_str"
+    t.integer  "legacy_domain_id"
+    t.datetime "updated_at"
   end
 
   add_index "dnskeys", ["delegation_signer_id"], name: "index_dnskeys_on_delegation_signer_id", using: :btree
@@ -336,11 +363,13 @@ ActiveRecord::Schema.define(version: 20151029152638) do
   end
 
   add_index "domains", ["delete_at"], name: "index_domains_on_delete_at", using: :btree
+  add_index "domains", ["name"], name: "index_domains_on_name", unique: true, using: :btree
   add_index "domains", ["outzone_at"], name: "index_domains_on_outzone_at", using: :btree
   add_index "domains", ["registrant_id"], name: "index_domains_on_registrant_id", using: :btree
   add_index "domains", ["registrant_verification_asked_at"], name: "index_domains_on_registrant_verification_asked_at", using: :btree
   add_index "domains", ["registrant_verification_token"], name: "index_domains_on_registrant_verification_token", using: :btree
   add_index "domains", ["registrar_id"], name: "index_domains_on_registrar_id", using: :btree
+  add_index "domains", ["statuses"], name: "index_domains_on_statuses", using: :gin
 
   create_table "epp_sessions", force: :cascade do |t|
     t.string   "session_id"
@@ -368,20 +397,20 @@ ActiveRecord::Schema.define(version: 20151029152638) do
   add_index "invoice_items", ["invoice_id"], name: "index_invoice_items_on_invoice_id", using: :btree
 
   create_table "invoices", force: :cascade do |t|
-    t.datetime "created_at",                                   null: false
-    t.datetime "updated_at",                                   null: false
-    t.string   "invoice_type",                                 null: false
-    t.datetime "due_date",                                     null: false
+    t.datetime "created_at",                                                   null: false
+    t.datetime "updated_at",                                                   null: false
+    t.string   "invoice_type",                                                 null: false
+    t.datetime "due_date",                                                     null: false
     t.string   "payment_term"
-    t.string   "currency",                                     null: false
+    t.string   "currency",                                                     null: false
     t.string   "description"
     t.string   "reference_no"
-    t.decimal  "vat_prc",             precision: 10, scale: 2, null: false
+    t.decimal  "vat_prc",             precision: 10, scale: 2,                 null: false
     t.datetime "paid_at"
     t.integer  "seller_id"
-    t.string   "seller_name",                                  null: false
+    t.string   "seller_name",                                                  null: false
     t.string   "seller_reg_no"
-    t.string   "seller_iban",                                  null: false
+    t.string   "seller_iban",                                                  null: false
     t.string   "seller_bank"
     t.string   "seller_swift"
     t.string   "seller_vat_no"
@@ -395,7 +424,7 @@ ActiveRecord::Schema.define(version: 20151029152638) do
     t.string   "seller_email"
     t.string   "seller_contact_name"
     t.integer  "buyer_id"
-    t.string   "buyer_name",                                   null: false
+    t.string   "buyer_name",                                                   null: false
     t.string   "buyer_reg_no"
     t.string   "buyer_country_code"
     t.string   "buyer_state"
@@ -410,6 +439,7 @@ ActiveRecord::Schema.define(version: 20151029152638) do
     t.integer  "number"
     t.datetime "cancelled_at"
     t.decimal  "sum_cache",           precision: 10, scale: 2
+    t.boolean  "in_directo",                                   default: false
   end
 
   add_index "invoices", ["buyer_id"], name: "index_invoices_on_buyer_id", using: :btree
@@ -442,9 +472,7 @@ ActiveRecord::Schema.define(version: 20151029152638) do
     t.integer  "documentable_id"
     t.string   "documentable_type"
     t.datetime "created_at"
-    t.datetime "updated_at"
     t.string   "creator_str"
-    t.string   "updator_str"
     t.string   "path"
   end
 
@@ -590,7 +618,7 @@ ActiveRecord::Schema.define(version: 20151029152638) do
     t.integer  "item_id",          null: false
     t.string   "event",            null: false
     t.string   "whodunnit"
-    t.json     "object"
+    t.jsonb    "object"
     t.json     "object_changes"
     t.datetime "created_at"
     t.string   "session"
@@ -621,7 +649,7 @@ ActiveRecord::Schema.define(version: 20151029152638) do
     t.integer  "item_id",        null: false
     t.string   "event",          null: false
     t.string   "whodunnit"
-    t.json     "object"
+    t.jsonb    "object"
     t.json     "object_changes"
     t.datetime "created_at"
     t.string   "session"
@@ -681,7 +709,7 @@ ActiveRecord::Schema.define(version: 20151029152638) do
     t.integer  "item_id",                        null: false
     t.string   "event",                          null: false
     t.string   "whodunnit"
-    t.json     "object"
+    t.jsonb    "object"
     t.json     "object_changes"
     t.datetime "created_at"
     t.text     "nameserver_ids",    default: [],              array: true
@@ -739,21 +767,6 @@ ActiveRecord::Schema.define(version: 20151029152638) do
   add_index "log_keyrelays", ["item_type", "item_id"], name: "index_log_keyrelays_on_item_type_and_item_id", using: :btree
   add_index "log_keyrelays", ["whodunnit"], name: "index_log_keyrelays_on_whodunnit", using: :btree
 
-  create_table "log_legal_documents", force: :cascade do |t|
-    t.string   "item_type",      null: false
-    t.integer  "item_id",        null: false
-    t.string   "event",          null: false
-    t.string   "whodunnit"
-    t.json     "object"
-    t.json     "object_changes"
-    t.datetime "created_at"
-    t.string   "session"
-    t.json     "children"
-  end
-
-  add_index "log_legal_documents", ["item_type", "item_id"], name: "index_log_legal_documents_on_item_type_and_item_id", using: :btree
-  add_index "log_legal_documents", ["whodunnit"], name: "index_log_legal_documents_on_whodunnit", using: :btree
-
   create_table "log_messages", force: :cascade do |t|
     t.string   "item_type",      null: false
     t.integer  "item_id",        null: false
@@ -774,7 +787,7 @@ ActiveRecord::Schema.define(version: 20151029152638) do
     t.integer  "item_id",        null: false
     t.string   "event",          null: false
     t.string   "whodunnit"
-    t.json     "object"
+    t.jsonb    "object"
     t.json     "object_changes"
     t.datetime "created_at"
     t.string   "session"
@@ -910,10 +923,10 @@ ActiveRecord::Schema.define(version: 20151029152638) do
 
   create_table "nameservers", force: :cascade do |t|
     t.string   "hostname"
-    t.string   "ipv4"
+    t.string   "ipv4",             array: true
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "ipv6"
+    t.string   "ipv6",             array: true
     t.integer  "domain_id"
     t.string   "creator_str"
     t.string   "updator_str"
@@ -1005,14 +1018,19 @@ ActiveRecord::Schema.define(version: 20151029152638) do
   end
 
   add_index "registrars", ["code"], name: "index_registrars_on_code", using: :btree
+  add_index "registrars", ["legacy_id"], name: "index_registrars_on_legacy_id", using: :btree
 
   create_table "reserved_domains", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "creator_str"
     t.string   "updator_str"
-    t.hstore   "names"
+    t.integer  "legacy_id"
+    t.string   "name"
+    t.string   "password"
   end
+
+  add_index "reserved_domains", ["name"], name: "index_reserved_domains_on_name", using: :btree
 
   create_table "settings", force: :cascade do |t|
     t.string   "var",                    null: false

@@ -28,11 +28,19 @@ if con.present? && con.table_exists?('settings')
 
   Setting.save_default(:client_side_status_editing_enabled, false)
 
+  Setting.save_default(:days_to_keep_business_registry_cache, 2)
+
   Setting.save_default(:invoice_number_min, 131050)
   Setting.save_default(:invoice_number_max, 149999)
+  Setting.save_default(:directo_monthly_number_min,  309901)
+  Setting.save_default(:directo_monthly_number_max,  309999)
+  Setting.save_default(:directo_monthly_number_last, 309901)
   Setting.save_default(:days_to_keep_invoices_active, 30)
   Setting.save_default(:days_to_keep_overdue_invoices_active, 30)
   Setting.save_default(:minimum_deposit, 0.0)
+  Setting.save_default(:directo_receipt_payment_term, "R")
+  Setting.save_default(:directo_receipt_product_name, "ETTEM06")
+  Setting.save_default(:directo_sales_agent, "JAANA")
 
   Setting.save_default(:days_to_renew_domain_before_expire, 90)
   Setting.save_default(:expire_warning_period, 15)

@@ -5,6 +5,7 @@ class Epp::Contact < Contact
   self.inheritance_column = :sti_disabled
 
   before_validation :manage_permissions
+
   def manage_permissions
     return unless update_prohibited? || delete_prohibited?
     add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
@@ -121,6 +122,7 @@ class Epp::Contact < Contact
         [:email, :invalid],
         [:ident, :invalid],
         [:ident, :invalid_EE_identity_format],
+        [:ident, :invalid_EE_identity_format_update],
         [:ident, :invalid_birthday_format],
         [:ident, :invalid_country_code],
         [:ident_type, :missing],
@@ -168,7 +170,7 @@ class Epp::Contact < Contact
         org_priv = %w(org priv).freeze
         if ident_country_code.blank? && org_priv.include?(ident_type) && org_priv.include?(ident_frame.attr('type'))
           at.merge!(ident_country_code: ident_frame.attr('cc'), ident_type: ident_frame.attr('type'))
-        elsif ident_type == "birthday" && ident !=~ /\d{4}-\d{2}-\d{2}/ && (Date.parse(ident) rescue false)
+        elsif ident_type == "birthday" && !ident[/\A\d{4}-\d{2}-\d{2}\z/] && (Date.parse(ident) rescue false)
           at.merge!(ident: ident_frame.text)
           at.merge!(ident_country_code: ident_frame.attr('cc')) if ident_frame.attr('cc').present?
         elsif ident_type.blank? && ident_country_code.blank?
@@ -177,6 +179,8 @@ class Epp::Contact < Contact
         else
           throw :epp_error, {code: '2306', msg: I18n.t(:ident_update_error)}
         end
+      else
+        throw :epp_error, {code: '2306', msg: I18n.t(:ident_update_error)}
       end
     end
 

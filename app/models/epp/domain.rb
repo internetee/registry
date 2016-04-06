@@ -6,9 +6,10 @@ class Epp::Domain < Domain
   attr_accessor :is_renewal, :is_transfer
 
   before_validation :manage_permissions
+
   def manage_permissions
     return if is_admin # this bad hack for 109086524, refactor later
-    return true if is_transfer
+    return true if is_transfer || is_renewal
     return unless update_prohibited? || delete_prohibited?
     add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
     false
@@ -498,6 +499,15 @@ class Epp::Domain < Domain
 
     # at[:statuses] += at_add[:domain_statuses_attributes]
 
+    if registrant_id && registrant.code == frame.css('registrant')
+
+      throw :epp_error, {
+        code: '2305',
+        msg: I18n.t(:contact_already_associated_with_the_domain)
+      }
+
+    end
+
     if errors.empty? && verify &&
        Setting.request_confrimation_on_registrant_change_enabled &&
        frame.css('registrant').present? &&
@@ -600,6 +610,7 @@ class Epp::Domain < Domain
 
     statuses.delete(DomainStatus::SERVER_HOLD)
     statuses.delete(DomainStatus::EXPIRED)
+    statuses.delete(DomainStatus::SERVER_UPDATE_PROHIBITED)
 
     save
   end
@@ -868,6 +879,7 @@ class Epp::Domain < Domain
       ld = parsed_frame.css('legalDocument').first
       return nil unless ld
       return nil if ld.text.starts_with?(ENV['legal_documents_dir']) # escape reloading
+      return nil if ld.text.starts_with?('/home/') # escape reloading
 
       {
         body: ld.text,

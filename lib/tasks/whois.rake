@@ -3,15 +3,24 @@ namespace :whois do
   task regenerate: :environment do
     start = Time.zone.now.to_f
 
-    @i = 0
     print "-----> Regenerate Registry whois_records table and sync with whois server..."
     ActiveRecord::Base.uncached do
-      puts "\n#{@i}"
-      Domain.included.find_in_batches(batch_size: 10000) do |batch|
-        batch.map(&:update_whois_record)
-        puts(@i += 10000)
-        GC.start
+
+      print "\n-----> Update domains whois_records"
+      Domain.find_in_batches.each do |group|
+        UpdateWhoisRecordJob.enqueue group.map(&:name), 'domain'
       end
+
+      print "\n-----> Update blocked domains whois_records"
+      BlockedDomain.find_in_batches.each do |group|
+        UpdateWhoisRecordJob.enqueue group.map(&:name), 'blocked'
+      end
+
+      print "\n-----> Update reserved domains whois_records"
+      ReservedDomain.find_in_batches.each do |group|
+        UpdateWhoisRecordJob.enqueue group.map(&:name), 'reserved'
+      end
+
     end
     puts "\n-----> all done in #{(Time.zone.now.to_f - start).round(2)} seconds"
   end

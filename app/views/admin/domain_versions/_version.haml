@@ -55,43 +55,47 @@
       = "#{l(domain.valid_to, format: :date)}"
 
   %td
-    - registrant.each do |r|
-      %p
-        = r[:name]
-        = r[:phone]
-        = r[:email]
-      %p
-        = r[:code]
+    - if registrant
+      - registrant.each do |r|
+        %p
+          = r[:name]
+          = r[:phone]
+          = r[:email]
+        %p
+          = r[:code]
 
   %td
-    - admin_contacts.each do |ac|
-      %p
-        = ac[:name]
-        = ac[:phone]
-        = ac[:email]
-      %p
-        = ac[:code]
+    - if admin_contacts
+      - admin_contacts.each do |ac|
+        %p
+          = ac[:name]
+          = ac[:phone]
+          = ac[:email]
+        %p
+          = ac[:code]
 
   %td
-    - tech_contacts.each do |tc|
-      %p
-        = tc[:name]
-        = tc[:phone]
-        = tc[:email]
-      %p
-        = tc[:code]
-
-  %td
-    %p
-      - nameservers.each do |ns|
-        = ns[:hostname]
-        %br
-        = ns[:ipv4]
-        = ns[:ipv6]
+    - if tech_contacts
+      - tech_contacts.each do |tc|
+        %p
+          = tc[:name]
+          = tc[:phone]
+          = tc[:email]
+        %p
+          = tc[:code]
 
   %td
     %p
-      = domain.registrar.name
+      - if nameservers
+        - nameservers.each do |ns|
+          = ns[:hostname]
+          %br
+          = ns[:ipv4]
+          = ns[:ipv6]
+
+  %td
+    %p
+      = domain.registrar.name if domain.registrar
 
   - if domain.pending_json.present?
     %tr.js-pending{ style: 'display: none;' }

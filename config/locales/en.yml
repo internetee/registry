@@ -49,6 +49,7 @@ en:
             ident:
               blank: "Required parameter missing - ident"
               invalid_EE_identity_format: "Ident not in valid Estonian identity format."
+              invalid_EE_identity_format_update: "Ident not in valid Estonian identity format. Please create new contact"
               invalid_birthday_format: "Ident not in valid birthady format, should be YYYY-MM-DD"
               invalid_country_code: "Ident country code is not valid, should be in ISO_3166-1 alpha 2 format"
             domains:
@@ -358,6 +359,7 @@ en:
   contact: 'Contact'
   credit_balance: 'Credit balance'
   starting_balance: 'Starting balance'
+  destroyed: 'Destroyed'
 
   domain_transfer_requested: 'Domain transfer requested!'
   domain_transfer_approved: 'Domain transfer approved!'
@@ -540,6 +542,7 @@ en:
   switch_to: Switch to
   admin_menu: Admin
   domain_transfer_was_approved: 'Domain transfer was approved, associated contacts were: %{contacts} and registrant was %{registrant}'
+  business_registry_service_not_available: "Business Registry service Ärireg is not available"
 
   # DEPP
   activemodel:
@@ -934,3 +937,11 @@ en:
   if_auth_info_is_left_empty_it_will_be_auto_generated: 'If auth info is left empty, it will be auto generated.'
   each_domain_name_must_end_with_colon_sign: 'Each domain name must end with colon (:) sign.'
   expiration_remind_subject: 'The %{name} domain has expired'
+  personal_domain_verification_url: 'Personal domain verification url'
+  available_verification_url_not_found: 'Available verification url not found, for domain.'
+  contact_already_associated_with_the_domain: 'Object association prohibits operation, contact already associated with the domain'
+  add_reserved_domain: 'Add domain to reserved list'
+  add_blocked_domain: 'Add domain to blocked list'
+  edit_pw: 'Edit Pw'
+  optional: 'Optional'
+  test_registrar: "Test registrar"
