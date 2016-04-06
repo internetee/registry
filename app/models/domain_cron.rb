@@ -64,25 +64,27 @@ class DomainCron
     marked
   end
 
-  def self.start_delete_period
-    begin
-      STDOUT << "#{Time.zone.now.utc} - Setting delete_candidate to domains\n" unless Rails.env.test?
+  #doing nothing, deprecated
 
-      d = Domain.where('delete_at <= ?', Time.zone.now)
-      marked = 0
-      real = 0
-      d.each do |domain|
-        next unless domain.delete_candidateable?
-        real += 1
-        domain.statuses << DomainStatus::DELETE_CANDIDATE
-        STDOUT << "#{Time.zone.now.utc} DomainCron.start_delete_period: ##{domain.id} (#{domain.name})\n" unless Rails.env.test?
-        ::PaperTrail.whodunnit = "cron - #{__method__}"
-        domain.save(validate: false) and marked += 1
-      end
-    ensure # the operator should see what was accomplished
-      STDOUT << "#{Time.zone.now.utc} - Finished setting delete_candidate -  #{marked} out of #{real} successfully set\n" unless Rails.env.test?
-    end
-    marked
+  def self.start_delete_period
+    # begin
+    #   STDOUT << "#{Time.zone.now.utc} - Setting delete_candidate to domains\n" unless Rails.env.test?
+    #
+    #   d = Domain.where('delete_at <= ?', Time.zone.now)
+    #   marked = 0
+    #   real = 0
+    #   d.each do |domain|
+    #     next unless domain.delete_candidateable?
+    #     real += 1
+    #     domain.statuses << DomainStatus::DELETE_CANDIDATE
+    #     STDOUT << "#{Time.zone.now.utc} DomainCron.start_delete_period: ##{domain.id} (#{domain.name})\n" unless Rails.env.test?
+    #     ::PaperTrail.whodunnit = "cron - #{__method__}"
+    #     domain.save(validate: false) and marked += 1
+    #   end
+    # ensure # the operator should see what was accomplished
+    #   STDOUT << "#{Time.zone.now.utc} - Finished setting delete_candidate -  #{marked} out of #{real} successfully set\n" unless Rails.env.test?
+    # end
+    # marked
   end
 
   def self.destroy_delete_candidates
@@ -90,15 +92,21 @@ class DomainCron
 
     c = 0
 
-    Domain.where("statuses @> '{deleteCandidate}'::varchar[]").each do |x|
-      WhoisRecord.where(domain_id: x.id).destroy_all
-      DomainDeleteJob.enqueue(x.id, run_at: rand(((24*60) - (DateTime.now.hour * 60  + DateTime.now.minute))).minutes.from_now)
-      STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: job added by deleteCandidate status ##{x.id} (#{x.name})\n" unless Rails.env.test?
-      c += 1
+    Domain.where('delete_at <= ?', Time.zone.now).each do |x|
+      next unless x.delete_candidateable?
+
+      x.statuses << DomainStatus::DELETE_CANDIDATE
+
+      # If domain successfully saved, add it to delete schedule
+      if x.save(validate: false)
+        ::PaperTrail.whodunnit = "cron - #{__method__}"
+        DomainDeleteJob.enqueue(x.id, run_at: rand(((24*60) - (DateTime.now.hour * 60  + DateTime.now.minute))).minutes.from_now)
+        STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: job added by deleteCandidate status ##{x.id} (#{x.name})\n" unless Rails.env.test?
+        c += 1
+      end
     end
 
     Domain.where('force_delete_at <= ?', Time.zone.now).each do |x|
-      WhoisRecord.where(domain_id: x.id).destroy_all
       DomainDeleteJob.enqueue(x.id, run_at: rand(((24*60) - (DateTime.now.hour * 60  + DateTime.now.minute))).minutes.from_now)
       STDOUT << "#{Time.zone.now.utc} DomainCron.destroy_delete_candidates: job added by force delete time ##{x.id} (#{x.name})\n" unless Rails.env.test?
       c += 1
