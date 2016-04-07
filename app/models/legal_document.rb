@@ -1,6 +1,6 @@
 class LegalDocument < ActiveRecord::Base
   include EppErrors
-  MIN_BODY_SIZE = (1.37 * 8.kilobytes).ceil
+  MIN_BODY_SIZE = (1.37 * 3.kilobytes).ceil
 
   if ENV['legal_document_types'].present?
     TYPES = ENV['legal_document_types'].split(',').map(&:strip)

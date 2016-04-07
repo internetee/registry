@@ -209,7 +209,7 @@ en:
         legal_document:
           attributes:
             body:
-              length: 'Parameter value policy error: legalDocument size should be more than 8kB'
+              length: 'Parameter value policy error: legalDocument size should be more than 3kB'
 
 
     attributes:
