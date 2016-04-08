@@ -14,6 +14,7 @@ class UpdateWhoisRecordJob < Que::Job
       else
         send "delete_#{type}", name
       end
+      ::PaperTrail.whodunnit = "job - #{self.class.name} - #{type}"
     end
   end
 
