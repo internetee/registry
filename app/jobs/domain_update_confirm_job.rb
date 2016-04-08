@@ -7,8 +7,13 @@ class DomainUpdateConfirmJob < Que::Job
       case action
       when RegistrantVerification::CONFIRMED
         domain.poll_message!(:poll_pending_update_confirmed_by_registrant)
+        raise_errors!(domain)
+
         domain.apply_pending_update!
+        raise_errors!(domain)
+
         domain.clean_pendings!
+        raise_errors!(domain)
       when RegistrantVerification::REJECTED
         domain.send_mail :pending_update_rejected_notification_for_new_registrant
         domain.poll_message!(:poll_pending_update_rejected_by_registrant)
@@ -17,5 +22,9 @@ class DomainUpdateConfirmJob < Que::Job
       ::PaperTrail.whodunnit = "job - #{self.class.name} - #{action}"
       destroy # it's best to destroy the job in the same transaction
     end
+  end
+
+  def raise_errors!(domain)
+    throw "domain #{domain.name} failed with errors #{domain.errors.full_messages}" if domain.errors.any?
   end
 end
