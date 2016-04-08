@@ -133,7 +133,8 @@ class Epp::Domain < Domain
         [:base, :ds_data_not_allowed],
         [:base, :key_data_not_allowed],
         [:period, :not_a_number],
-        [:period, :not_an_integer]
+        [:period, :not_an_integer],
+        [:registrant, :cannot_be_missing]
       ],
       '2308' => [
         [:base, :domain_name_blocked, { value: { obj: 'name', val: name_dirty } }]
@@ -155,7 +156,8 @@ class Epp::Domain < Domain
   def attrs_from(frame, current_user, action = nil)
     at = {}.with_indifferent_access
 
-    code = frame.css('registrant').first.try(:text)
+    registrant_frame = frame.css('registrant').first
+    code = registrant_frame.try(:text)
     if code.present?
       if action == 'chg' && registrant_change_prohibited?
         add_epp_error('2304', nil, DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
@@ -166,7 +168,10 @@ class Epp::Domain < Domain
       else
         add_epp_error('2303', 'registrant', code, [:registrant, :not_found])
       end
-    end
+    else
+      add_epp_error('2306', nil, nil, [:registrant, :cannot_be_missing])
+    end if registrant_frame
+
 
     at[:name] = frame.css('name').text if new_record?
     at[:registrar_id] = current_user.registrar.try(:id)
