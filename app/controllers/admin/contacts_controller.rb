@@ -20,6 +20,8 @@ class Admin::ContactsController < AdminController
     else
       contacts = Contact.includes(:registrar)
     end
+    contacts = contacts.where("ident_country_code is null or ident_country_code=''") if params[:only_no_country_code].eql?('1')
+
 
     normalize_search_parameters do
       @q = contacts.search(search_params)

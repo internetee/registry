@@ -140,20 +140,20 @@ describe Domain do
       domain.registrant_verification_asked_at = 30.days.ago
       domain.pending_delete!
 
-      Domain.clean_expired_pendings.should == 1
+      DomainCron.clean_expired_pendings.should == 1
       domain.reload.pending_delete?.should == false
       domain.pending_json.should == {}
     end
 
     it 'should expire domains' do
-      Domain.start_expire_period
+      DomainCron.start_expire_period
       @domain.statuses.include?(DomainStatus::EXPIRED).should == false
 
       old_valid_to = Time.zone.now - 10.days
       @domain.valid_to = old_valid_to
       @domain.save
 
-      Domain.start_expire_period
+      DomainCron.start_expire_period
       @domain.reload
       @domain.statuses.include?(DomainStatus::EXPIRED).should == true
       @domain.outzone_at.should be_within(5).of(old_valid_to + Setting.expire_warning_period.days)
@@ -161,7 +161,7 @@ describe Domain do
         old_valid_to + Setting.expire_warning_period.days + Setting.redemption_grace_period.days
       )
 
-      Domain.start_expire_period
+      DomainCron.start_expire_period
       @domain.reload
       @domain.statuses.include?(DomainStatus::EXPIRED).should == true
     end
@@ -173,7 +173,7 @@ describe Domain do
       @domain.outzone_at, @domain.delete_at = nil, nil
       @domain.save
 
-      Domain.start_expire_period
+      DomainCron.start_expire_period
       @domain.reload
       @domain.statuses.include?(DomainStatus::EXPIRED).should == true
       @domain.outzone_at.should be_within(5).of(old_valid_to + Setting.expire_warning_period.days)
@@ -183,7 +183,7 @@ describe Domain do
     end
 
     it 'should start redemption grace period' do
-      Domain.start_redemption_grace_period
+      DomainCron.start_redemption_grace_period
       @domain.reload
       @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
 
@@ -191,20 +191,20 @@ describe Domain do
       @domain.statuses << DomainStatus::SERVER_MANUAL_INZONE # this prohibits server_hold
       @domain.save
 
-      Domain.start_redemption_grace_period
+      DomainCron.start_redemption_grace_period
       @domain.reload
       @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
 
       @domain.statuses = []
       @domain.save
 
-      Domain.start_redemption_grace_period
+      DomainCron.start_redemption_grace_period
       @domain.reload
       @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == true
     end
 
     it 'should start delete period' do
-      Domain.start_delete_period
+      DomainCron.start_delete_period
       @domain.reload
       @domain.statuses.include?(DomainStatus::DELETE_CANDIDATE).should == false
 
@@ -212,13 +212,13 @@ describe Domain do
       @domain.statuses << DomainStatus::SERVER_DELETE_PROHIBITED # this prohibits delete_candidate
       @domain.save
 
-      Domain.start_delete_period
+      DomainCron.start_delete_period
       @domain.reload
       @domain.statuses.include?(DomainStatus::DELETE_CANDIDATE).should == false
 
       @domain.statuses = []
       @domain.save
-      Domain.start_delete_period
+      DomainCron.start_delete_period
       @domain.reload
 
       @domain.statuses.include?(DomainStatus::DELETE_CANDIDATE).should == true
@@ -234,7 +234,7 @@ describe Domain do
 
       Domain.count.should == 2
 
-      Domain.start_delete_period
+      DomainCron.start_delete_period
 
       Domain.destroy_delete_candidates
       Domain.count.should == 0
@@ -391,7 +391,7 @@ describe Domain do
     end
 
     it 'should start redemption grace period' do
-      Domain.start_redemption_grace_period
+      DomainCron.start_redemption_grace_period
       @domain.reload
       @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
 
@@ -399,14 +399,14 @@ describe Domain do
       @domain.statuses << DomainStatus::SERVER_MANUAL_INZONE # this prohibits server_hold
       @domain.save
 
-      Domain.start_redemption_grace_period
+      DomainCron.start_redemption_grace_period
       @domain.reload
       @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
 
       @domain.statuses = []
       @domain.save
 
-      Domain.start_redemption_grace_period
+      DomainCron.start_redemption_grace_period
       @domain.reload
       @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == true
     end

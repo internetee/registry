@@ -59,7 +59,13 @@
           .form-group
             = label_tag t(:results_per_page)
             = text_field_tag :results_per_page, params[:results_per_page], class: 'form-control', placeholder: t(:results_per_page)
-        .col-md-3{style: 'padding-top: 25px;'}
+        .col-md-3
+          .form-group
+            = label_tag :only_no_country_code, "Ident CC missing"
+            = check_box_tag :only_no_country_code, '1',params[:only_no_country_code].eql?('1'), style: 'width:auto;height:auto;float:right'
+
+      .row
+        .col-md-3{style: 'padding-top: 25px;float:right;'}
           %button.btn.btn-primary
             &nbsp;
             %span.glyphicon.glyphicon-search

@@ -133,7 +133,8 @@ class Epp::Domain < Domain
         [:base, :ds_data_not_allowed],
         [:base, :key_data_not_allowed],
         [:period, :not_a_number],
-        [:period, :not_an_integer]
+        [:period, :not_an_integer],
+        [:registrant, :cannot_be_missing]
       ],
       '2308' => [
         [:base, :domain_name_blocked, { value: { obj: 'name', val: name_dirty } }]
@@ -155,7 +156,8 @@ class Epp::Domain < Domain
   def attrs_from(frame, current_user, action = nil)
     at = {}.with_indifferent_access
 
-    code = frame.css('registrant').first.try(:text)
+    registrant_frame = frame.css('registrant').first
+    code = registrant_frame.try(:text)
     if code.present?
       if action == 'chg' && registrant_change_prohibited?
         add_epp_error('2304', nil, DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
@@ -166,7 +168,10 @@ class Epp::Domain < Domain
       else
         add_epp_error('2303', 'registrant', code, [:registrant, :not_found])
       end
-    end
+    else
+      add_epp_error('2306', nil, nil, [:registrant, :cannot_be_missing])
+    end if registrant_frame
+
 
     at[:name] = frame.css('name').text if new_record?
     at[:registrar_id] = current_user.registrar.try(:id)
@@ -195,8 +200,26 @@ class Epp::Domain < Domain
     end
 
     at[:dnskeys_attributes] = dnskeys_attrs(dnskey_frame, action)
-    at[:legal_documents_attributes] = legal_document_from(frame)
+
     at
+  end
+
+
+  # Adding legal doc to domain and
+  # if something goes wrong - raise Rollback error
+  def add_legal_file_to_new frame
+    legal_document_data = Epp::Domain.parse_legal_document_from_frame(frame)
+    return unless legal_document_data
+
+    doc = LegalDocument.create(
+        documentable_type: Domain,
+        document_type:     legal_document_data[:type],
+        body:              legal_document_data[:body]
+    )
+    self.legal_documents = [doc]
+
+    frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
+    self.legal_document_id = doc.id
   end
   # rubocop: enable Metrics/PerceivedComplexity
   # rubocop: enable Metrics/CyclomaticComplexity
@@ -457,15 +480,6 @@ class Epp::Domain < Domain
     status_list
   end
 
-  def legal_document_from(frame)
-    ld = frame.css('legalDocument').first
-    return [] unless ld
-
-    [{
-      body: ld.text,
-      document_type: ld['type']
-    }]
-  end
 
   # rubocop: disable Metrics/AbcSize
   # rubocop: disable Metrics/CyclomaticComplexity
@@ -477,6 +491,7 @@ class Epp::Domain < Domain
 
     if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
       frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
+      self.legal_document_id = doc.id
     end
 
     at_add = attrs_from(frame.css('add'), current_user, 'add')
@@ -492,6 +507,15 @@ class Epp::Domain < Domain
     if errors.empty? && verify
       self.upid = current_user.registrar.id if current_user.registrar
       self.up_date = Time.zone.now
+    end
+
+    if registrant_id && registrant.code == frame.css('registrant')
+
+      throw :epp_error, {
+        code: '2305',
+        msg: I18n.t(:contact_already_associated_with_the_domain)
+      }
+
     end
 
     if errors.empty? && verify &&
@@ -867,6 +891,7 @@ class Epp::Domain < Domain
       ld = parsed_frame.css('legalDocument').first
       return nil unless ld
       return nil if ld.text.starts_with?(ENV['legal_documents_dir']) # escape reloading
+      return nil if ld.text.starts_with?('/home/') # escape reloading
 
       {
         body: ld.text,

@@ -1,4 +1,7 @@
 class LegalDocument < ActiveRecord::Base
+  include EppErrors
+  MIN_BODY_SIZE = (1.37 * 3.kilobytes).ceil
+
   if ENV['legal_document_types'].present?
     TYPES = ENV['legal_document_types'].split(',').map(&:strip)
   else
@@ -9,9 +12,23 @@ class LegalDocument < ActiveRecord::Base
 
   belongs_to :documentable, polymorphic: true
 
+
+  validate :val_body_length, if: ->(file){ file.path.blank? && !Rails.env.staging?}
+
   before_create :add_creator
   before_save   :save_to_filesystem
 
+  def epp_code_map
+    {
+        '2306' => [
+            [:body, :length]
+        ]
+    }
+  end
+
+  def val_body_length
+    errors.add(:body, :length) if body.nil? || body.size < MIN_BODY_SIZE
+  end
 
 
   def save_to_filesystem

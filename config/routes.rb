@@ -103,6 +103,17 @@ Rails.application.routes.draw do
   namespace :registrant do
     root 'domains#index'
 
+    resources :domains do
+      collection do
+        get :download_list
+      end
+
+      member do
+        get 'domain_verification_url'
+      end
+
+    end
+
     # resources :invoices do
       # member do
         # get 'download_pdf'
@@ -141,24 +152,18 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :registrars do
+      resources :api_users
+      resources :white_ips
+      collection do
+        get :search
+      end
+    end
+
+    resources :contacts
     resources :whois
-    # resources :contacts do
-      # member do
-        # get 'delete'
-      # end
-
-      # collection do
-        # get 'check'
-      # end
-    # end
-
-    # resource :poll do
-      # collection do
-        # post 'confirm_keyrelay'
-        # post 'confirm_transfer'
-      # end
-    # end
   end
+
 
   # ADMIN ROUTES
   namespace :admin do
@@ -204,8 +209,16 @@ Rails.application.routes.draw do
 
     resources :settings
 
-    resources :blocked_domains
-    resources :reserved_domains
+    resources :blocked_domains do
+      member do
+        get 'delete'
+      end
+    end
+    resources :reserved_domains do
+      member do
+        get 'delete'
+      end
+    end
 
     resources :registrars do
       resources :api_users

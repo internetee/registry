@@ -6,6 +6,8 @@ class AccountActivity < ActiveRecord::Base
   belongs_to :bank_transaction
   belongs_to :invoice
 
+  attr_accessor :registrar
+
   CREATE = 'create'
   RENEW = 'renew'
   ADD_CREDIT = 'add_credit'
@@ -22,12 +24,13 @@ class AccountActivity < ActiveRecord::Base
     end
 
     def to_csv
-      attributes = %w(description activity_type created_at sum)
+      attributes = %w(registrar description activity_type created_at sum)
 
       CSV.generate(headers: true) do |csv|
-        csv << %w(description activity_type receipt_date sum)
+        csv << %w(registrar description activity_type receipt_date sum)
 
         all.each do |x| # rubocop:disable Rails/FindEach
+          x.registrar = Registrar.find(x.account_id).try(:code)
           csv << attributes.map { |attr| x.send(attr) }
         end
       end

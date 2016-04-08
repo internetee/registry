@@ -30,6 +30,8 @@ class Epp::DomainsController < EppController
     handle_errors and return unless balance_ok?('create') # loads pricelist in this method
 
     ActiveRecord::Base.transaction do
+      @domain.add_legal_file_to_new(params[:parsed_frame])
+
       if @domain.save # TODO: Maybe use validate: false here because we have already validated the domain?
         current_user.registrar.debit!({
           sum: @domain_pricelist.price.amount,

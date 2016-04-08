@@ -32,7 +32,7 @@ Domain name mapping protocol short version:
         <secDNS:keyData>       1-n     
           <secDNS:flags>       1        Allowed values: 0, 256, 257
           <secDNS:protocol>    1        Allowed values: 3
-          <secDNS:alg>         1        Allowed values: 3, 5, 6, 7, 8, 252, 253, 254, 255
+          <secDNS:alg>         1        Allowed values: 3, 5, 6, 7, 8, 10, 13, 14
           <secDNS:pubKey>      1        Public key
       <eis:extdata>            1        Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
         <eis:legalDocument>    1        Base64 encoded document. 
@@ -81,7 +81,7 @@ Domain name mapping protocol short version:
           <secDNS:keyData>       1-n      
             <secDNS:flags>       1         Allowed values: 0, 256, 257
             <secDNS:protocol>    1         Allowed values: 3
-            <secDNS:alg>         1         Allowed values: 3, 5, 6, 7, 8, 252, 253, 254, 255
+            <secDNS:alg>         1         Allowed values: 3, 5, 6, 7, 8, 10, 13, 14
             <secDNS:pubKey>      1         Public key
       <eis:extdata>              0-1       Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
         <eis:legalDocument>      0-1       Base64 encoded document. Required if registrant is changing. 
