@@ -434,6 +434,7 @@ class Domain < ActiveRecord::Base
     # TODO: if this were to ever return true, that would be wrong. EPP would report sucess pending
     return true unless registrant_verification_asked?
     pending_delete_confirmation!
+    ::PaperTrail.whodunnit = "#{self.class.name} - #{__method__}"
     save(validate: false) # should check if this did succeed
 
     DomainMailer.pending_deleted(id, registrant_id_was, deliver_emails).deliver
