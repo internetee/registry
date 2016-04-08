@@ -575,7 +575,7 @@ class Domain < ActiveRecord::Base
       statuses << DomainStatus::SERVER_MANUAL_INZONE
     end
 
-    self.force_delete_at = Time.zone.now + Setting.redemption_grace_period.days unless force_delete_at
+    self.force_delete_at = (Time.zone.now + 31.days).beginning_of_day unless force_delete_at
     transaction do
       save!(validate: false)
       registrar.messages.create!(
