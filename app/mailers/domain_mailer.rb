@@ -26,8 +26,8 @@ class DomainMailer < ApplicationMailer
 
 
   def registrant_updated_notification_for_old_registrant(domain_id, old_registrant_id, new_registrant_id, should_deliver)
-    domain = Domain.find_by(id: domain_id)
-    return unless domain
+    @domain = Domain.find_by(id: domain_id)
+    return unless @domain
     return if delivery_off?(@domain, should_deliver)
 
     @old_registrant = Registrant.find(old_registrant_id)
