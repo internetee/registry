@@ -189,7 +189,7 @@ module Depp
 
         if domain_params[:verified].present?
           custom_params[:_anonymus] << {
-              chg: { registrant_verified: 'yes' }
+            registrant_verified: { value: 'yes' }
           }
         end
 
@@ -221,11 +221,6 @@ module Depp
 
         if domain_params[:registrant] != old_domain_params[:registrant]
           chg = [{ registrant: { value: domain_params[:registrant] } }]
-        end
-
-        if domain_params[:verified].present?
-            chg.push({ registrant_verified: 'yes'}) if chg.present?
-            chg = [{ registrant_verified: 'yes'}] if chg.nil?
         end
 
         add_arr = nil if add_arr.none?
