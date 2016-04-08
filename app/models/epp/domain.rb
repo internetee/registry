@@ -537,8 +537,8 @@ class Epp::Domain < Domain
     save! # for notification if everything fails
 
     WhoisRecord.find_by(domain_id: id).save # need to reload model
-    DomainMailer.registrant_updated_notification_for_old_registrant(id, old_registrant_id, registrant_id, should_deliver)
-    DomainMailer.registrant_updated_notification_for_new_registrant(id, old_registrant_id, registrant_id, should_deliver)
+    DomainMailer.registrant_updated_notification_for_old_registrant(id, old_registrant_id, registrant_id, deliver_emails)
+    DomainMailer.registrant_updated_notification_for_new_registrant(id, old_registrant_id, registrant_id, deliver_emails)
 
     true
   end
