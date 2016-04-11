@@ -13,6 +13,7 @@ class DomainDeleteConfirmJob < Que::Job
         domain.poll_message!(:poll_pending_delete_rejected_by_registrant)
         domain.cancel_pending_delete
       end
+      domain.save(validate: false)
       destroy # it's best to destroy the job in the same transaction
     end
   end
