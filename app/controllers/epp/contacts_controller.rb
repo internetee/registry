@@ -31,7 +31,7 @@ class Epp::ContactsController < EppController
   def update
     authorize! :update, @contact, @password
 
-    if @contact.update_attributes(params[:parsed_frame])
+    if @contact.update_attributes(params[:parsed_frame], current_user)
       render_epp_response 'epp/contacts/update'
     else
       handle_errors(@contact)

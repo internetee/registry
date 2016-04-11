@@ -141,7 +141,7 @@ class Epp::Contact < Contact
   end
 
   # rubocop:disable Metrics/AbcSize
-  def update_attributes(frame)
+  def update_attributes(frame, current_user)
     return super if frame.blank?
     at = {}.with_indifferent_access
     at.deep_merge!(self.class.attrs_from(frame.css('chg'), new_record: false))
@@ -183,6 +183,9 @@ class Epp::Contact < Contact
         throw :epp_error, {code: '2306', msg: I18n.t(:ident_update_error)}
       end
     end
+
+    self.upid = current_user.registrar.id if current_user.registrar
+    self.up_date = Time.zone.now
 
     super(at)
   end

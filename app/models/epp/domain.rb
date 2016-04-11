@@ -504,6 +504,11 @@ class Epp::Domain < Domain
 
     # at[:statuses] += at_add[:domain_statuses_attributes]
 
+    if errors.empty? && verify
+      self.upid = current_user.registrar.id if current_user.registrar
+      self.up_date = Time.zone.now
+    end
+
     if registrant_id && registrant.code == frame.css('registrant')
 
       throw :epp_error, {
@@ -533,6 +538,8 @@ class Epp::Domain < Domain
 
     self.deliver_emails = true # turn on email delivery
     self.statuses.delete(DomainStatus::PENDING_UPDATE)
+    self.upid = user.registrar.id if user.registrar
+    self.up_date = Time.zone.now
     ::PaperTrail.whodunnit = user.id_role_username # updator str should be the request originator not the approval user
 
     send_mail :registrant_updated_notification_for_old_registrant
