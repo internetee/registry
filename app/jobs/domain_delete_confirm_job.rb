@@ -14,6 +14,7 @@ class DomainDeleteConfirmJob < Que::Job
         domain.cancel_pending_delete
       end
       ::PaperTrail.whodunnit = "job - #{self.class.name} - #{action}"
+      domain.save(validate: false)
       destroy # it's best to destroy the job in the same transaction
     end
   end
