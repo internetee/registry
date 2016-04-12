@@ -575,7 +575,7 @@ class Domain < ActiveRecord::Base
       statuses << DomainStatus::SERVER_MANUAL_INZONE
     end
 
-    self.force_delete_at = (Time.zone.now + (Setting.redemption_grace_period.days + 1.day)).beginning_of_day unless force_delete_at
+    self.force_delete_at = (Time.zone.now + (Setting.redemption_grace_period.days + 1.day)).beginning_of_day.utc unless force_delete_at
     transaction do
       save!(validate: false)
       registrar.messages.create!(
@@ -604,7 +604,7 @@ class Domain < ActiveRecord::Base
 
   def set_graceful_expired
     self.outzone_at = valid_to + Setting.expire_warning_period.days
-    self.delete_at = outzone_at + Setting.redemption_grace_period.days
+    self.delete_at = (outzone_at + (Setting.redemption_grace_period.days + 1.day)).beginning_of_day.utc
     self.statuses |= [DomainStatus::EXPIRED]
   end
 
@@ -612,7 +612,7 @@ class Domain < ActiveRecord::Base
     # TODO: currently valid_to attribute update logic is open
     # self.valid_to = valid_from + self.class.convert_period_to_time(period, period_unit)
     self.outzone_at = Time.zone.now + Setting.expire_warning_period.days
-    self.delete_at  = Time.zone.now + Setting.redemption_grace_period.days
+    self.delete_at  = (Time.zone.now + (Setting.redemption_grace_period.days + 1.day)).beginning_of_day.utc
     statuses << DomainStatus::EXPIRED
   end
 
