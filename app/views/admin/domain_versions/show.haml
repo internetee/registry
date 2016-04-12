@@ -1,6 +1,7 @@
-= render 'shared/title', name: @version.reify.name
 - domain = Domain.new(@version.object.to_h)
 - @version.object_changes.to_h.each{|k,v| domain[k]=v.last}
+
+= render 'shared/title', name: @version.reify.name
 
 - if @version
   - children = HashWithIndifferentAccess.new(@version.children)
