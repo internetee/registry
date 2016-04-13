@@ -217,9 +217,9 @@ module Depp
           chg = [{ registrant: { value: domain_params[:registrant] } }]
         end
 
-        if domain_params[:verified].present?
-          chg.push({ registrant_verified: 'yes'}) if chg.present?
-          chg = [{ registrant_verified: 'yes'}] if chg.nil?
+        if domain_params[:registrant] != old_domain_params[:registrant]
+          chg = [{ registrant: { value: domain_params[:registrant] } }] if !domain_params[:verified].present?
+          chg = [{ registrant: { value: domain_params[:registrant], attrs: { verified: 'yes' } } }] if domain_params[:verified]
         end
 
         add_arr = nil if add_arr.none?
