@@ -79,6 +79,8 @@
   .col-md-6
     = paginate @versions
   .col-md-6.text-right
+    .pagination
+      = t(:result_count, count: @versions.total_count)
 
 
 :coffee

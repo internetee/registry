@@ -8,6 +8,7 @@
   - registrant     = Contact.where(id: children[:registrant])
   - event       = @version.event
   - creator     = plain_username(@version.terminator)
+  - domain = @version.reify
 
 
 .row
@@ -21,11 +22,13 @@
       .panel-body
         %dl.dl-horizontal
           %dt= t(:name)
-          %dd= link_to(@version.reify.name, admin_domain_path(@version.item_id))
+          %dd= link_to(domain.name, admin_domain_path(@version.item_id))
+          %dt= t(:registered_at)
+          %dd= l(domain.registered_at, format: :short)
           %dt= t(:statuses)
           %dd
-            - if @version.reify.statuses.present?
-              - @version.reify.statuses.each do |s|
+            - if domain.statuses.present?
+              - domain.statuses.each do |s|
                 = s
           %dt= t(:registrant)
           %dd
@@ -59,7 +62,7 @@
               = ns[:ipv6]
               %br
           %dt= t(:registrar)
-          %dd= @version.reify.registrar.name
+          %dd= domain.registrar.name
       %span{:style => "padding-right:10px; padding-top:40px; float: right; bottom: 10px;"}
         - if @version.previous
           = link_to(t(:previous),
