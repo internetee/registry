@@ -1,5 +1,3 @@
-= render 'shared/title', name: @version.reify.name
-
 - if @version
   - children = HashWithIndifferentAccess.new(@version.children)
   - nameservers    = Nameserver.where(id: children[:nameservers])
@@ -8,8 +6,10 @@
   - registrant     = Contact.where(id: children[:registrant])
   - event       = @version.event
   - creator     = plain_username(@version.terminator)
-  - domain = @version.reify
+  - domain = Domain.new(@version.object.to_h)
+  - @version.object_changes.to_h.each{|k,v| domain[k]=v.last}
 
+= render 'shared/title', name: domain.name
 
 .row
   .col-md-8

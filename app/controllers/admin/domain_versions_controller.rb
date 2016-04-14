@@ -9,12 +9,12 @@ class Admin::DomainVersionsController < AdminController
     search_params = params[:q].deep_dup
 
     if search_params[:registrant]
-      registrant = Contact.find_by(name: search_params[:registrant])
+      registrant = Contact.find_by(name: search_params[:registrant].strip)
       search_params.delete(:registrant)
     end
 
     if search_params[:registrar]
-      registrar = Registrar.find_by(name: search_params[:registrar])
+      registrar = Registrar.find_by(name: search_params[:registrar].strip)
       search_params.delete(:registrar)
     end
 

@@ -1,6 +1,7 @@
-= render 'shared/title', name: @version.reify.name
+- contact = Contact.new(@version.object.to_h)
+- @version.object_changes.to_h.each{|k,v| contact[k]=v.last}
 
-- contact = @version.reify
+= render 'shared/title', name: contact.name
 
 .row
   .col-md-8
