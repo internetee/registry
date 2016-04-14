@@ -19,7 +19,7 @@
         .col-md-3
           .form-group
             = label_tag :action
-            = select_tag '[q][event]', options_for_select([['Update', 'update'], ['Destroy', 'destroy']], params[:q][:event]), { include_blank:true, multiple: false, placeholder: t(:choose), class: 'form-control js-combobox' }
+            = select_tag '[q][event]', options_for_select([['Update', 'update'], ['Destroy', 'destroy'], ['Create', 'create']], params[:q][:event]), { include_blank:true, multiple: false, placeholder: t(:choose), class: 'form-control js-combobox' }
         .row
         .col-md-3
         .col-md-3
@@ -55,15 +55,18 @@
               = t(:action)
         %tbody
           - @versions.each do |version|
-            - if version.reify
+            - if version
+            - domain = Domain.new(version.object.to_h)
+            - version.object_changes.to_h.each{|k,v| domain[k]=v.last}
+
               %tr
-                %td= link_to(version.reify.name, admin_domain_version_path(version.id))
+                %td= link_to(domain.name, admin_domain_version_path(version.id))
                 %td
-                  - if version.reify.registrant
-                    = link_to(version.reify.registrant, admin_registrant_path(version.reify.registrant))
+                  - if domain.registrant
+                    = domain.registrant
                 %td
-                  - if version.reify.registrar
-                    = link_to(version.reify.registrar, admin_registrar_path(version.reify.registrar))
+                  - if domain.registrar
+                    = link_to(domain.registrar, admin_registrar_path(domain.registrar))
                 %td= l(version.created_at, format: :short)
                 %td= version.event
 
@@ -72,6 +75,8 @@
   .col-md-6
     = paginate @versions
   .col-md-6.text-right
+    .pagination
+      = t(:result_count, count: @versions.total_count)
 
 
 :coffee
