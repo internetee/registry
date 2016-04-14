@@ -56,7 +56,7 @@ class ApplicationController < ActionController::Base
   end
 
   def info_for_paper_trail
-    { svTRID: request.svTRID }
+    { uuid: request.uuid }
   end
 
   def user_for_paper_trail

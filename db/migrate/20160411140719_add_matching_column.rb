@@ -4,7 +4,7 @@ class AddMatchingColumn < ActiveRecord::Migration
     tables = [:log_domains, :log_contacts]
 
     tables.each do |table|
-      add_column table, :svTRID, :text
+      add_column table, :uuid, :text
     end
   end
 
