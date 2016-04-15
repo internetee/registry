@@ -66,8 +66,9 @@ module Depp
 
     def delete(domain_params)
       xml = epp_xml.delete({
-        name: { value: domain_params[:name] }
-      }, Depp::Domain.construct_custom_params_hash(domain_params))
+        name: { value: domain_params[:name] }},
+        Depp::Domain.construct_custom_params_hash(domain_params),
+        (domain_params[:verified].present? && 'yes'))
 
       current_user.request(xml)
     end
