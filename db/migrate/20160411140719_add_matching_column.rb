@@ -9,7 +9,7 @@ class AddMatchingColumn < ActiveRecord::Migration
               :log_zonefile_settings]
 
     tables.each do |table|
-      add_column table, :uuid, :text
+      add_column table, :uuid, :string
     end
   end
 
