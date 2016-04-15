@@ -371,7 +371,8 @@ class EppController < ApplicationController
       response: @response,
       api_user_name: @api_user.try(:username) || current_user.try(:username) || 'api-public',
       api_user_registrar: @api_user.try(:registrar).try(:to_s) || current_user.try(:registrar).try(:to_s),
-      ip: request.ip
+      ip: request.ip,
+      uuid: request.uuid
     })
   end
   # rubocop: enable Metrics/CyclomaticComplexity
