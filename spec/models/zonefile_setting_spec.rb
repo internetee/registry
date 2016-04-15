@@ -8,8 +8,8 @@ describe ZonefileSetting do
     d = Fabricate(:domain_with_dnskeys, name: 'testpri.ee')
     d.nameservers << Nameserver.new({
       hostname: "ns.#{d.name}",
-      ipv4: '123.123.123.123',
-      ipv6: 'FE80:0000:0000:0000:0202:B3FF:FE1E:8329'
+      ipv4: ['123.123.123.123'],
+      ipv6: ['FE80:0000:0000:0000:0202:B3FF:FE1E:8329']
     })
 
     @zonefile = ActiveRecord::Base.connection.execute(
@@ -46,8 +46,8 @@ describe ZonefileSetting do
                   statuses: ['serverHold', 'serverDeleteProhibited', 'clientHold'])
     d.nameservers << Nameserver.new({
       hostname: "ns.#{d.name}",
-      ipv4: '123.123.123.123',
-      ipv6: 'FE80:0000:0000:0000:0202:B3FF:FE1E:8329'
+      ipv4: ['123.123.123.123'],
+      ipv6: ['FE80:0000:0000:0000:0202:B3FF:FE1E:8329']
     })
 
     @zonefile = ActiveRecord::Base.connection.execute(
