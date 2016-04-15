@@ -130,6 +130,10 @@ describe Registrar do
       i.sum.should == BigDecimal.new('240.0')
       i.due_date.should be_within(0.1).of((Time.zone.now + 30.days).end_of_day)
       i.description.should == 'add some money'
+
+      @registrar.issue_prepayment_invoice(200)
+      i = @registrar.invoices.last
+      i.description.should start_with "Order nr."
     end
 
     it 'should not allaw to use CID as code for leagcy reasons' do

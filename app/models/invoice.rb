@@ -113,7 +113,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def description
-    "Order nr. #{number}"
+    read_attribute(__method__).presence || "Order nr. #{number}"
   end
 
   def pdf_name
