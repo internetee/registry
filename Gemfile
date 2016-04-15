@@ -141,6 +141,7 @@ group :development, :test do
   gem 'fabrication',        '2.13.2' # Replacement for fixtures
   gem 'shoulda-matchers',   '2.8.0', require: false # Additional matchers for RSpec
   gem 'launchy',            '2.4.3' # for opening browser automatically
+  gem 'que-testing'
 
   # helper gems
   gem 'database_cleaner',    '1.4.1' # For cleaning db in feature and epp tests

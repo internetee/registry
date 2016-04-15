@@ -1,3 +1,4 @@
 Fabricator(:reserved_domain) do
-  names { { '1162.ee': 'abc' } }
+  name '1162.ee'
+  password 'abc'
 end
