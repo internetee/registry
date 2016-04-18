@@ -1,7 +1,7 @@
 class UpdateWhoisRecordJob < Que::Job
 
   def run(names, type)
-    klass = case type
+    klass = case type.to_s
       when 'reserved'then ReservedDomain
       when 'blocked' then BlockedDomain
       when 'domain'  then Domain

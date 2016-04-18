@@ -23,20 +23,21 @@ describe Contact do
 
     it 'should not be valid' do
       @contact.valid?
-      @contact.errors.full_messages.should match_array([
+      @contact.errors.full_messages.should include(
         "Name Required parameter missing - name",
         "Phone Required parameter missing - phone",
         "Phone Phone nr is invalid",
         "Email Required parameter missing - email",
         "Email Email is invalid",
         "Ident Required parameter missing - ident",
+        "Ident Ident country code is not valid, should be in ISO_3166-1 alpha 2 format",
         "Registrar is missing",
         "Ident type is missing",
         "City is missing",
         "Country code is missing",
         "Street is missing",
         "Zip is missing"
-      ])
+      )
     end
 
     it 'should not have creator' do
@@ -68,6 +69,7 @@ describe Contact do
     it 'should validate correct country code' do
       @contact.ident_type = 'org'
       @contact.ident_country_code = 'EE'
+      @contact.ident = '12345678'
       @contact.valid?
 
       @contact.errors[:ident_country_code].should == []
@@ -80,7 +82,7 @@ describe Contact do
       @contact.valid?
 
       @contact.errors[:ident].should ==
-        ['Ident country code is not valid, should be in ISO_3166-1 alpha 2 format']
+        ['Ident country code is not valid, should be in ISO_3166-1 alpha 2 format', 'Ident country code is not valid, should be in ISO_3166-1 alpha 2 format']
     end
 
     it 'should convert to alpha2 country code' do
@@ -154,7 +156,7 @@ describe Contact do
 
     it 'org should be valid' do
       @contact.ident_type = 'org'
-      @contact.ident = '1234'
+      @contact.ident = '12345678'
       @contact.valid?
       @contact.errors.full_messages.should match_array([])
     end
