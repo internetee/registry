@@ -88,7 +88,9 @@ gem 'digidoc_client', '0.2.1'
 
 # epp
 gem 'epp', '1.4.2', github: 'internetee/epp'
-gem 'epp-xml',   '1.0.4' # EIS EPP XMLs
+gem 'epp-xml',   '1.0.4',
+    github: 'internetee/epp-xml',
+    ref: '287fe8705ca2f344ea670b922dd9f08635efc7af' # EIS EPP XMLs
 gem 'uuidtools', '2.1.5' # For unique IDs (used by the epp gem)
 
 # que
