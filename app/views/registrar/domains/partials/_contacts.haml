@@ -6,11 +6,12 @@
       %thead
         %tr
           %th{class: 'col-xs-4'}= t(:type)
-          %th{class: 'col-xs-8'}= t(:id)
+          %th{class: 'col-xs-4'}= t(:name)
+          %th{class: 'col-xs-4'}= t(:id)
       %tbody
         - @data.css('contact').each do |x|
         - registrant = Contact.find_by_code(x.text)
           %tr
             %td= x['type']
-            %td= x.text
             %td= registrant.name
+            %td= x.text
