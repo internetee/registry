@@ -5,7 +5,11 @@ class Admin::ReppLogsController < AdminController
   def index
     @q = ApiLog::ReppLog.search(params[:q])
     @q.sorts = 'id desc' if @q.sorts.empty?
-    @repp_logs = @q.result.page(params[:page])
+
+    @repp_logs = @q.result
+    @repp_logs = @repp_logs.where("extract(epoch from created_at) >= extract(epoch from ?::timestamp)", Time.parse(params[:q][:created_at_gteq])) if params[:q][:created_at_gteq].present?
+    @repp_logs = @repp_logs.where("extract(epoch from created_at) <= extract(epoch from ?::timestamp)", Time.parse(params[:q][:created_at_lteq])) if params[:q][:created_at_lteq].present?
+    @repp_logs = @repp_logs.page(params[:page])
   end
 
   def show
