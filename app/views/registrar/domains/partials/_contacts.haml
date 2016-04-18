@@ -9,7 +9,8 @@
           %th{class: 'col-xs-8'}= t(:id)
       %tbody
         - @data.css('contact').each do |x|
+        - registrant = Contact.find_by_code(x.text)
           %tr
             %td= x['type']
             %td= x.text
-
+            %td= registrant.name
