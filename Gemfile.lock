@@ -17,6 +17,15 @@ GIT
       rails (>= 4.1.0)
 
 GIT
+  remote: https://github.com/internetee/epp-xml.git
+  revision: 287fe8705ca2f344ea670b922dd9f08635efc7af
+  ref: 287fe8705ca2f344ea670b922dd9f08635efc7af
+  specs:
+    epp-xml (1.0.4)
+      activesupport (~> 4.1)
+      builder (~> 3.2)
+
+GIT
   remote: https://github.com/internetee/epp.git
   revision: 505c3f2739eb1da918e54111aecfb138a822739d
   specs:
