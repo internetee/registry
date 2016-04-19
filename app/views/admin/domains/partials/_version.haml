@@ -106,7 +106,8 @@
         = ns.flags
         = ns.protocol
         = ns.alg
-        = ns.public_key.to_s[-20,20]
+        - if ns.public_key.present?
+          ...#{ns.public_key.to_s[-20,20]}
 
   %td{class: changing_css_class(version,"registrar_id")}
     - if domain.registrar
