@@ -11,7 +11,9 @@ class AddMatchingColumn < ActiveRecord::Migration
     tables.each do |table|
       add_column table, :uuid, :string
     end
+
+    ApiLog::EppLog.connection.execute("ALTER TABLE epp_logs ADD COLUMN uuid varchar;")
+    ApiLog::ReppLog.connection.execute("ALTER TABLE repp_logs ADD COLUMN uuid varchar;")
+
   end
-
-
 end
