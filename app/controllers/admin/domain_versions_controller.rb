@@ -9,12 +9,14 @@ class Admin::DomainVersionsController < AdminController
     search_params = params[:q].deep_dup
 
     if search_params[:registrant]
-      registrant = Contact.find_by(name: search_params[:registrant].strip)
+      #registrants = Contact.find_by(name: search_params[:registrant].strip)
+      registrants = Contact.where("name like ?", "%#{search_params[:registrant].strip}%")
       search_params.delete(:registrant)
     end
 
     if search_params[:registrar]
-      registrar = Registrar.find_by(name: search_params[:registrar].strip)
+      #registrar = Registrar.find_by(name: search_params[:registrar].strip)
+      registrars = Registrar.where("name like ?", "%#{search_params[:registrar].strip}%")
       search_params.delete(:registrar)
     end
 
@@ -30,8 +32,8 @@ class Admin::DomainVersionsController < AdminController
       end
     end
 
-    whereS += "  AND object->>'registrant_id' = '#{registrant.id}'" if registrant
-    whereS += "  AND object->>'registrar_id' = '#{registrar.id}'" if registrar
+    whereS += "  AND object->>'registrant_id' IN (#{registrants.map { |r| "'#{r.id.to_s}'" }.join ','})" if registrants
+    whereS += "  AND object->>'registrar_id' IN (#{registrars.map { |r| "'#{r.id.to_s}'" }.join ','})" if registrars
 
     versions = DomainVersion.includes(:item).where(whereS)
     @q = versions.search(params[:q])
