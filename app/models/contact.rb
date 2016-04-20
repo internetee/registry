@@ -560,6 +560,9 @@ class Contact < ActiveRecord::Base
   end
 
   def update_related_whois_records
+    # not doing anything if no real changes
+    return if changes.slice(*(self.class.column_names - ["updated_at", "created_at", "statuses", "status_notes"])).empty?
+
     names = related_domain_descriptions.keys
     UpdateWhoisRecordJob.enqueue(names, :domain) if names.present?
   end
