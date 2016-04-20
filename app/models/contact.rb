@@ -82,7 +82,7 @@ class Contact < ActiveRecord::Base
 
   ORG = 'org'
   PRIV = 'priv'
-  BIRTHDAY = 'birthday'
+  BIRTHDAY = 'birthday'.freeze
   PASSPORT = 'passport'
 
   IDENT_TYPES = [
@@ -257,6 +257,8 @@ class Contact < ActiveRecord::Base
           if ident.size != 8 || !(ident =~/\A[0-9]{8}\z/)
             errors.add(:ident, err_msg)
           end
+        when BIRTHDAY
+          errors.add(:ident, err_msg)
       end
     end
   end
@@ -287,6 +289,10 @@ class Contact < ActiveRecord::Base
   # it might mean priv or birthday type
   def priv?
     !org?
+  end
+
+  def birthday?
+    ident_type == BIRTHDAY
   end
 
   def generate_auth_info
