@@ -173,7 +173,7 @@ class Epp::Contact < Contact
         elsif ident_type == "birthday" && !ident[/\A\d{4}-\d{2}-\d{2}\z/] && (Date.parse(ident) rescue false)
           at.merge!(ident: ident_frame.text)
           at.merge!(ident_country_code: ident_frame.attr('cc')) if ident_frame.attr('cc').present?
-        elsif ident_type == "birthday" && ident_country_code.blank?
+        elsif ident_type == "birthday" &&  ident_country_code.blank?
           at.merge!(ident_country_code: ident_frame.attr('cc'))
         elsif ident_type.blank? && ident_country_code.blank?
           at.merge!(ident_type: ident_frame.attr('type'))
