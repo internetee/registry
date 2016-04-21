@@ -8,14 +8,12 @@ class Admin::DomainVersionsController < AdminController
     @versions = @q.result.page(params[:page])
     search_params = params[:q].deep_dup
 
-    if search_params[:registrant]
-      #registrants = Contact.find_by(name: search_params[:registrant].strip)
+    if search_params[:registrant].present?
       registrants = Contact.where("name like ?", "%#{search_params[:registrant].strip}%")
       search_params.delete(:registrant)
     end
 
-    if search_params[:registrar]
-      #registrar = Registrar.find_by(name: search_params[:registrar].strip)
+    if search_params[:registrar].present?
       registrars = Registrar.where("name like ?", "%#{search_params[:registrar].strip}%")
       search_params.delete(:registrar)
     end
