@@ -30,7 +30,7 @@ ActiveRecord::Migration.maintain_test_schema!
 # create general settings
 def create_settings
   Setting.ds_algorithm = 2
-  Setting.ds_data_allowed = true
+  Setting.ds_data_allowed = false
   Setting.ds_data_with_key_allowed = true
   Setting.key_data_allowed = true
 
