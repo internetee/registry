@@ -30,7 +30,7 @@ class Admin::ContactVersionsController < AdminController
   def show
     per_page = 7
     @version = ContactVersion.find(params[:id])
-    @q = ContactVersion.where(item_id: @version.item_id).order(created_at: :asc).search
+    @q = ContactVersion.where(item_id: @version.item_id).order(created_at: :desc).search
     @versions = @q.result.page(params[:page])
     @versions = @versions.per(per_page)
   end
@@ -40,7 +40,7 @@ class Admin::ContactVersionsController < AdminController
   end
 
   def create_where_string(key, value)
-    " AND object->>'#{key}' ~ '#{value}'"
+    " AND object->>'#{key}' LIKE '%#{value}%'"
   end
 
 end

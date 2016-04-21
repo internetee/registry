@@ -19,14 +19,15 @@
           %dt= t(:ident)
           %dd= ident_for(contact)
 
-          %dt= t(:email)
-          %dd= contact.email
+          - if contact.email.present?
+            %dt= t(:email)
+            %dd= contact.email
 
-          - if contact.phone
+          - if contact.phone.present?
             %dt= t(:phone)
             %dd= contact.phone
 
-          - if contact.fax
+          - if contact.fax.present?
             %dt= t(:fax)
             %dd= contact.fax
 
@@ -50,20 +51,25 @@
             %dt= t(:org_name)
             %dd= contact.org_name
 
-          %dt= t(:street)
-          %dd= contact.street.to_s.gsub("\n", '<br>').html_safe
+          - if contact.street.present?
+            %dt= t(:street)
+            %dd= contact.street.to_s.gsub("\n", '<br>').html_safe
 
-          %dt= t(:city)
-          %dd= contact.city
+          - if contact.city.present?
+            %dt= t(:city)
+            %dd= contact.city
 
-          %dt= t(:zip)
-          %dd= contact.zip
+          - if contact.zip.present?
+            %dt= t(:zip)
+            %dd= contact.zip
 
-          %dt= t(:state)
-          %dd= contact.state
+          - if contact.state.present?
+            %dt= t(:state)
+            %dd= contact.state
 
-          %dt= t(:country)
-          %dd= contact.country
+          - if contact.country.present?
+            %dt= t(:country)
+            %dd= contact.country
 
 
       %span{:style => "padding-right:10px; float: right;"}
