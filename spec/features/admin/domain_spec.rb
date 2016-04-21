@@ -68,10 +68,9 @@ feature 'Domain', type: :feature do
 
     click_link 'Edit statuses'
     click_button 'Save'
-    page.should have_content('Failed to update domain')
-    page.should have_content('Object status prohibits operation')
+    page.should_not have_content('Failed to update domain')
+    page.should_not have_content('Object status prohibits operation')
 
-    click_link 'Back to domain'
     click_link 'Edit statuses'
     click_link 'Unset force delete'
     page.should_not have_content('serverForceDelete')
