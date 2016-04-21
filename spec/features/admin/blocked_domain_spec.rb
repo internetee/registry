@@ -18,12 +18,15 @@ feature 'BlockedDomain', type: :feature do
     d.valid?
     d.errors.full_messages.should match_array([])
 
-    fill_in 'blocked_domains', with: "ftp.ee\ncache.ee"
-    click_button 'Save'
+    domains = %w(ftp.ee cache.ee)
+    domains.each do |domain|
+      click_link "New"
+      fill_in 'Name', with: domain
+      click_button 'Save'
+    end
 
-    page.should have_content('Record updated')
-    page.should have_content('ftp.ee')
-    page.should have_content('cache.ee')
+
+    BlockedDomain.pluck(:name).should include(*domains)
 
     d.valid?
     d.errors.full_messages.should match_array(["Data management policy violation: Domain name is blocked [name]"])
