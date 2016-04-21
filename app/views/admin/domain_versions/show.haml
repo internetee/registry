@@ -1,8 +1,6 @@
 - domain = Domain.new(@version.object.to_h)
 - @version.object_changes.to_h.each{|k,v| domain[k]=v.last}
 
-= render 'shared/title', name: domain.name
-
 - if @version
   - children = HashWithIndifferentAccess.new(@version.children)
   - nameservers    = Nameserver.all_versions_for(children[:nameservers], @version.created_at)
@@ -12,11 +10,14 @@
   - registrant     = Contact.all_versions_for(children[:registrant], @version.created_at)
   - event       = @version.event
   - creator     = plain_username(@version.terminator)
+  - domain = Domain.new(@version.object.to_h)
+  - @version.object_changes.to_h.each{|k,v| domain[k]=v.last}
 
+= render 'shared/title', name: domain.name
 
 .row
   .col-md-8
-    .panel.panel-default{:style => "min-height:400px;"}
+    .panel.panel-default{:style => "min-height:450px;"}
       .panel-heading
         %h3.panel-title
           = l(@version.created_at, format: :short)
@@ -26,6 +27,19 @@
         %dl.dl-horizontal
           %dt= t(:name)
           %dd= link_to(domain.name, admin_domain_path(@version.item_id))
+          %dt= t(:registered_at)
+          %dd
+            = l(domain.registered_at, format: :short)
+
+          %dt= t(:created)
+          %dd
+            = l(domain.created_at, format: :short)
+
+          %dt= t(:updated)
+          %dd
+            = l(domain.updated_at, format: :short)
+
+          %br
 
           %dt= t(:statuses)
           %dd{class: changing_css_class(@version,"statuses")}
@@ -105,7 +119,7 @@
             %span= t(:next)
 
   .col-md-4
-    .panel.panel-default{:style => "min-height:400px;"}
+    .panel.panel-default{:style => "min-height:450px;"}
       %ul.nav.nav-pills.nav-stacked
         - @versions.each do |vs|
           - if vs.id == @version.id and vs.reify

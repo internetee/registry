@@ -24,15 +24,17 @@
           %dd{class: changing_css_class(@version,"ident_country_code", "ident_type", "ident")}
             = ident_for(contact)
 
-          %dt= t(:email)
-          %dd{class: changing_css_class(@version,"email")}
-            = contact.email
+          - if contact.email.present?
+            %dt= t(:email)
+            %dd{class: changing_css_class(@version,"email")}
+              = contact.email
 
-          %dt= t(:phone)
-          %dd{class: changing_css_class(@version,"phone")}
-            = contact.phone
+          - if contact.phone.present?
+            %dt= t(:phone)
+            %dd{class: changing_css_class(@version,"phone")}
+              = contact.phone
 
-          - if contact.fax
+          - if contact.fax.present?
             %dt= t(:fax)
             %dd{class: changing_css_class(@version,"fax")}
               = contact.fax
@@ -57,20 +59,25 @@
             %dt= t(:org_name)
             %dd{class: changing_css_class(@version,"org_name")}= contact.org_name
 
-          %dt= t(:street)
-          %dd{class: changing_css_class(@version,"street")}= contact.street.to_s.gsub("\n", '<br>').html_safe
+          - if contact.street.present?
+            %dt= t(:street)
+            %dd{class: changing_css_class(@version,"street")}= contact.street.to_s.gsub("\n", '<br>').html_safe
 
-          %dt= t(:city)
-          %dd{class: changing_css_class(@version,"city")}= contact.city
+          - if contact.city.present?
+            %dt= t(:city)
+            %dd{class: changing_css_class(@version,"city")}= contact.city
 
-          %dt= t(:zip)
-          %dd{class: changing_css_class(@version,"zip")}= contact.zip
+          - if contact.zip.present?
+            %dt= t(:zip)
+            %dd{class: changing_css_class(@version,"zip")}= contact.zip
 
-          %dt= t(:state)
-          %dd{class: changing_css_class(@version,"state")}= contact.state
+          - if contact.state.present?
+            %dt= t(:state)
+            %dd{class: changing_css_class(@version,"state")}= contact.state
 
-          %dt= t(:country)
-          %dd{class: changing_css_class(@version,"country_code")}= contact.country
+          - if contact.country.present?
+            %dt= t(:country)
+            %dd{class: changing_css_class(@version,"country_code")}= contact.country
 
 
       %span{:style => "padding-right:10px; float: right;"}
