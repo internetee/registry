@@ -253,7 +253,7 @@ class Contact < ActiveRecord::Base
             errors.add(:ident, err_msg)
           end
         when BIRTHDAY
-          errors.add(:ident, err_msg)
+          errors.add(:ident, err_msg) if id.blank? # only for create action right now. Later for all of them
       end
     end
   end
