@@ -94,8 +94,9 @@
               = ns[:flags]
               = ns[:protocol]
               = ns[:alg]
-              = ns[:public_key].to_s[-20,20]
-              %br
+              - if ns[:public_key].present?
+                \...#{ns[:public_key].to_s[-20,20]}
+            %br
 
           %dt= t(:registrar)
           %dd{class: changing_css_class(@version,"registrar_id")}
