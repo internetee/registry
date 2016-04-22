@@ -49,7 +49,8 @@ module Repp
         response_code: status,
         api_user_name: current_user.try(:username),
         api_user_registrar: current_user.try(:registrar).try(:to_s),
-        ip: request.ip
+        ip: request.ip,
+        uuid: request.uuid
       })
     end
 
