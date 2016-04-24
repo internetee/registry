@@ -8,9 +8,9 @@
       .panel-body
         .form-group
           .col-md-4.control-label
-            = label_tag :verified, t(:verified)
+            = label_tag 'domain[verified]', t(:verified)
           .col-md-6
-            = check_box_tag :verified, '1', params[:verified].eql?('1'), onclick: "return (confirm('#{t(:verified_confirm)}') ? true : false);"
+            = check_box_tag 'domain[verified]', '1', domain[:verified].eql?('1'), onclick: "return (confirm('#{t(:verified_confirm)}') ? true : false);"
 
         .form-group
           .col-md-4.control-label
