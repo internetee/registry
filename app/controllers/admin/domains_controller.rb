@@ -9,7 +9,7 @@ class Admin::DomainsController < AdminController
     params[:q] ||= {}
     if params[:statuses_contains]
       domains = Domain.includes(:registrar, :registrant).where(
-        "statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
+        "domains.statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
       )
     else
       domains = Domain.includes(:registrar, :registrant)
