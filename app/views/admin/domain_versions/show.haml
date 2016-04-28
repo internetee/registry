@@ -76,17 +76,17 @@
               %br
           %dt= t(:registrar)
           %dd= domain.registrar.name
-      %span{:style => "padding-right:10px; float: right; bottom: 10px;"}
+      %div{:style => "margin: 20px 20px; clear:both;"}
         - if @version.previous
           = link_to(t(:previous),
-                    admin_domain_version_path(@version.previous.id),
+                    admin_domain_version_path(@version.previous.id, :page => 'default'),
                     class: 'btn btn-primary')
         - else
           %a.btn.btn-primary.disabled{:href => "#"}
             %span= t(:previous)
         - if @version.next
           = link_to(t(:next),
-                    admin_domain_version_path(@version.next.id),
+                    admin_domain_version_path(@version.next.id, :page => 'default'),
                     class: 'btn btn-default')
         - else
           %a.btn.btn-default.disabled{:href => "#"}
@@ -96,14 +96,14 @@
     .panel.panel-default{:style => "min-height:450px;"}
       %ul.nav.nav-pills.nav-stacked
         - @versions.each do |vs|
-          - if vs.id == @version.id and vs.reify
+          - if vs.id == @version.id
             %li.active
-              = link_to admin_domain_version_path(vs.id) do
+              = link_to admin_domain_version_path(vs.id, :page => 'default') do
                 = l(vs.created_at, format: :short)
                 = vs.event
           - else
             %li
-              = link_to admin_domain_version_path(vs.id) do
+              = link_to admin_domain_version_path(vs.id, :page => 'default') do
                 = l(vs.created_at, format: :short)
                 = vs.event
       %span{:style => "padding-left:10px; position: absolute; bottom: 10px;"}

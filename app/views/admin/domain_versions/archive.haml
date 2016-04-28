@@ -60,7 +60,7 @@
             - version.object_changes.to_h.each{|k,v| domain[k]=v.last}
 
               %tr
-                %td= link_to(domain.name, admin_domain_version_path(version.id))
+                %td= link_to(domain.name, admin_domain_version_path(version.id, :page => 'default'))
                 %td
                   - if domain.registrant
                     = domain.registrant
