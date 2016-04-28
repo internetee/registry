@@ -37,9 +37,9 @@
                 domain: version.reify, version: version.previous
 
 :coffee
-  $(document).on 'click', '.js-pending-toggle', (e) ->
+  $(document).on 'click', '.js-pending-toggle, .js-event', (e) ->
     e.preventDefault()
 
-  $(document).on 'mousedown', '.js-pending-toggle', (e) ->
+  $(document).on 'mousedown', '.js-pending-toggle, .js-event', (e) ->
     target = $(e.target)
-    target.parents('tr').next('tr.js-pending').toggle()
+    target.parents('tr').next('tr.js-pending, tr.js-event').toggle()
