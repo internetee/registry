@@ -123,7 +123,7 @@
       %td{colspan: 8}
         %pre
           - if version.uuid
-            = Nokogiri::XML(Epp::ApiLog::EppLog.find_by(uuid: uuid).request)
+            = Nokogiri::XML(ApiLog::EppLog.find_by(uuid: version.uuid).request)
           - else
             = t(:cant_match_version)
 
