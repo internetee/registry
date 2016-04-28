@@ -47,6 +47,13 @@ module Versions
       user
     end
 
+    def get_request_by_uuid(uuid)
+      return unless uuid
+      ApiLog::EppLog.find_by(uuid: uuid).request
+    end
+
+
+
     # callbacks
     def touch_domain_version
       domain.try(:touch_with_version)

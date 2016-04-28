@@ -29,7 +29,10 @@
         %br= link_to t(:edit_statuses), edit_admin_domain_path(params[:domain_id])
 
     %p.text-right
-      = event
+      - if (event == 'update' || event = 'create') && version
+        = link_to event, '#', class: 'js-event'
+      - else
+        = event
       %br
       = creator
     - if version
@@ -114,6 +117,15 @@
       %p
         = link_to admin_registrar_path(domain.registrar), target: "registrar_#{domain.registrar.id}" do
           = domain.registrar.name
+
+  - if (event == 'create' || event == 'update') && version
+    %tr.js-event{ style: 'display: none;' }
+      %td{colspan: 8}
+        %pre
+          - if version.uuid
+            = Nokogiri::XML(Epp::ApiLog::EppLog.find_by(uuid: uuid).request)
+          - else
+            = t(:cant_match_version)
 
   - if domain.pending_json.present?
     %tr.js-pending{ style: 'display: none;' }

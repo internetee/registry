@@ -941,3 +941,4 @@ en:
   add_blocked_domain: 'Add domain to blocked list'
   edit_pw: 'Edit Pw'
   optional: 'Optional'
+  cant_match_version: 'Impossible match version with request'
