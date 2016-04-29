@@ -43,21 +43,19 @@ class Admin::DomainVersionsController < AdminController
 
   def show
     per_page = 7
-    @version = DomainVersion.find(params[:id])
-    @q = DomainVersion.where(item_id: @version.item_id).order(created_at: :desc).search
+    @version  = DomainVersion.find(params[:id])
+    @versions = DomainVersion.where(item_id: @version.item_id).order(created_at: :desc)
 
-    if (@q.result.count > per_page) && params[:page] == 'default'
-      page = 1
-      @q.result.each_with_index do |v, i|
-        break if v.id == @version.id and page = (i / per_page) + 1
-      end
+    # what we do is calc amount of results until needed version
+    # then we cacl which page it is
+    if params[:page].blank?
+      counter = @versions.where("created_at > ?", @version.created_at).count
+      page    = counter / per_page
+      page   += 1 if (counter % per_page) != 0
       params[:page] = page
-      @versions = @q.result.page(page)
-    else
-      @versions = @q.result.page(params[:page])
     end
 
-    @versions = @versions.per(per_page)
+    @versions = @versions.page(params[:page]).per(per_page)
   end
 
   def search
