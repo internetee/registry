@@ -16,6 +16,8 @@ class Nameserver < ActiveRecord::Base
   # rubocop: enable Metrics/LineLength
 
   before_validation :normalize_attributes
+  before_validation :hostname_to_utf
+  after_validation  :add_hostname_puny
 
   delegate :name, to: :domain, prefix: true
 
@@ -39,6 +41,14 @@ class Nameserver < ActiveRecord::Base
     self.hostname = hostname.try(:strip).try(:downcase)
     self.ipv4 = Array(ipv4).reject(&:blank?).map(&:strip)
     self.ipv6 = Array(ipv6).reject(&:blank?).map(&:strip).map(&:upcase)
+  end
+
+  def hostname_to_utf
+    self.hostname = SimpleIDN.to_unicode(hostname)
+  end
+
+  def add_hostname_puny
+    self.hostname_puny = SimpleIDN.to_ascii(hostname)
   end
 
   def to_s
