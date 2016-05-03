@@ -33,6 +33,7 @@ class Contact < ActiveRecord::Base
     uniqueness: { message: :epp_id_taken },
     format: { with: /\A[\w\-\:\.\_]*\z/i, message: :invalid },
     length: { maximum: 100, message: :too_long_contact_code }
+  validates :ident_type, inclusion: {in: %w( org priv birthday)}
   validate :val_ident_valid_format?
   validate :uniq_statuses?
   validate :validate_html
