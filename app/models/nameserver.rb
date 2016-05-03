@@ -8,7 +8,7 @@ class Nameserver < ActiveRecord::Base
   # scope :owned_by_registrar, -> (registrar) { joins(:domain).where('domains.registrar_id = ?', registrar.id) }
 
   # rubocop: disable Metrics/LineLength
-  validates :hostname, format: { with: /\A(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\z/ }
+  validates :hostname, domain_name: true
   # validates :ipv4, format: { with: /\A(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\z/, allow_blank: true }
   # validates :ipv6, format: { with: /(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]).){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))/, allow_blank: true }
   validate :val_ipv4
@@ -16,6 +16,8 @@ class Nameserver < ActiveRecord::Base
   # rubocop: enable Metrics/LineLength
 
   before_validation :normalize_attributes
+  before_validation :hostname_to_utf
+  after_validation  :add_hostname_puny
 
   delegate :name, to: :domain, prefix: true
 
@@ -39,6 +41,14 @@ class Nameserver < ActiveRecord::Base
     self.hostname = hostname.try(:strip).try(:downcase)
     self.ipv4 = Array(ipv4).reject(&:blank?).map(&:strip)
     self.ipv6 = Array(ipv6).reject(&:blank?).map(&:strip).map(&:upcase)
+  end
+
+  def hostname_to_utf
+    self.hostname = SimpleIDN.to_unicode(hostname)
+  end
+
+  def add_hostname_puny
+    self.hostname_puny = SimpleIDN.to_ascii(hostname)
   end
 
   def to_s
