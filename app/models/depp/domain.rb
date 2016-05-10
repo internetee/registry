@@ -215,10 +215,6 @@ module Depp
         rem_arr << { _anonymus: rem_anon } if rem_anon.any?
 
         if domain_params[:registrant] != old_domain_params[:registrant]
-          chg = [{ registrant: { value: domain_params[:registrant] } }]
-        end
-
-        if domain_params[:registrant] != old_domain_params[:registrant]
           chg = [{ registrant: { value: domain_params[:registrant] } }] if !domain_params[:verified].present?
           chg = [{ registrant: { value: domain_params[:registrant], attrs: { verified: 'yes' } } }] if domain_params[:verified]
         end
