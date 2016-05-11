@@ -65,7 +65,7 @@ class ReservedDomain < ActiveRecord::Base
   def generate_json
     h = HashWithIndifferentAccess.new
     h[:name]       = self.name
-    h[:status]     = 'Reserved'
+    h[:status]     = ['Reserved']
     h
   end
 
