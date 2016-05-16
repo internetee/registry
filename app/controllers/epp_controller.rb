@@ -362,6 +362,7 @@ class EppController < ApplicationController
       frame.gsub!(/pw>.+<\//, 'pw>[FILTERED]</')
     end
     trimmed_request = frame.gsub(/<eis:legalDocument([^>]+)>([^<])+<\/eis:legalDocument>/, "<eis:legalDocument>[FILTERED]</eis:legalDocument>") if frame.present?
+    trimmed_request.gsub(/\s+</, "<").gsub(/>\s+/, ">")
 
     ApiLog::EppLog.create({
       request: trimmed_request,
