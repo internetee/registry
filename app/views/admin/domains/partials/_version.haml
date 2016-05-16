@@ -29,7 +29,7 @@
         %br= link_to t(:edit_statuses), edit_admin_domain_path(params[:domain_id])
 
     %p.text-right
-      - if (event == 'update' || event = 'create') && version
+      - if (event == 'update' || event = 'create') && (version && version.uuid)
         = link_to event, '#', class: 'js-event'
       - else
         = event
@@ -52,7 +52,7 @@
             %br
     - if domain.pending_json.present?
       %p
-        = link_to t(:pending_epp), '#', class: 'js-pending-toggle'
+        = link_to t(:pending_epp), '#', class: 'js-pending'
 
   %td{class: changing_css_class(version, "period", "period_unit", "valid_from", "valid_to")}
     %p
@@ -118,9 +118,9 @@
         = link_to admin_registrar_path(domain.registrar), target: "registrar_#{domain.registrar.id}" do
           = domain.registrar.name
 
-  - if (event == 'create' || event == 'update') && version
+  - if (event == 'create' || event == 'update') && (version && version.uuid)
     %tr.js-event{ style: 'display: none;' }
-      %td{colspan: 8}
+      %td{colspan: 9}
         %pre
           - if version.uuid
             - req = ApiLog::EppLog.find_by(uuid: version.uuid).try(:request)
@@ -133,7 +133,7 @@
 
   - if domain.pending_json.present?
     %tr.js-pending{ style: 'display: none;' }
-      %td{colspan: 8}
+      %td{colspan: 9}
         = preserve do
           %pre
             - formatted_req = Nokogiri::XML(domain.pending_json['frame'])
