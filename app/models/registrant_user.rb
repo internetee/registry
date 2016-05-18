@@ -30,10 +30,20 @@ class RegistrantUser < User
       return false if issuer_organization != ACCEPTED_ISSUER
 
       idc_data.force_encoding('UTF-8')
-      identity_code = idc_data.scan(/serialNumber=(\d+)/).flatten.first
-      country = idc_data.scan(/^\/C=(.{2})/).flatten.first
-      first_name = idc_data.scan(%r{/GN=(.+)/serialNumber}).flatten.first
-      last_name = idc_data.scan(%r{/SN=(.+)/GN}).flatten.first
+
+      # handling here new and old mode
+      if idc_data.starts_with?("/")
+        identity_code = idc_data.scan(/serialNumber=(\d+)/).flatten.first
+        country       = idc_data.scan(/^\/C=(.{2})/).flatten.first
+        first_name    = idc_data.scan(%r{/GN=(.+)/serialNumber}).flatten.first
+        last_name     = idc_data.scan(%r{/SN=(.+)/GN}).flatten.first
+      else
+        parse_str = "," + idc_data
+        identity_code = parse_str.scan(/,serialNumber=(\d+)/).flatten.first
+        country       = parse_str.scan(/,C=(.{2})/).flatten.first
+        first_name    = parse_str.scan(/,GN=([^,]+)/).flatten.first
+        last_name     = parse_str.scan(/,SN=([^,]+)/).flatten.first
+      end
 
       u = where(registrant_ident: "#{country}-#{identity_code}").first_or_create
       u.username = "#{first_name} #{last_name}"

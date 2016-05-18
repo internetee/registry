@@ -1,10 +1,10 @@
 Tere <%= @contact.name %>
 <br><br>
-Kontakti <%= @contact.name %> eposti aadress on muudetud<br>
+Kontakti <%= @contact.name %> e-posti aadress on muudetud<br>
 endine aadress: <%= @old_email %><br>
 uus aadress: <%= @contact.email %>
 <br><br>
-Eposti aadressile saadetakse domeenidega seotud infot seal hulgas kinnitustaotluseid omaniku vahetuse ja domeeni kustutamise korral. Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduga oma registripidaja poole. Teie registripidaja on <%= @contact.registrar.name %>
+E-posti aadressile saadetakse domeeni toimingutega seotud infot, seal hulgas kinnitustaotlused omanikuvahetuse ja domeeni kustutamise korral. Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja poole. Teie registripidaja on <%= @contact.registrar.name %>
 <br><br>
 <% if @contact.related_domain_descriptions.present? %>
 Muudatusega seotud domeenid:<br>
@@ -16,7 +16,7 @@ Muudatusega seotud domeenid:<br>
 Kontaktandmed:<br>
 Nimi: <%= @contact.name %><br>
 Isikukood: <%= @contact.ident %><br>
-Epost: <%= @contact.email %><br>
+E-post: <%= @contact.email %><br>
 Tel: <%= @contact.phone %><br>
 Tänav: <%= @contact.street %><br>
 Linn: <%= @contact.city %><br>
