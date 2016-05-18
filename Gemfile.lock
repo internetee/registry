@@ -18,10 +18,9 @@ GIT
 
 GIT
   remote: https://github.com/internetee/epp-xml.git
-  revision: 009611d78a3bebab33c04f73968f4606863f4b93
-  ref: 009611d78a3bebab33c04f73968f4606863f4b93
+  revision: 475f650951f2cf5015e00d48f408a2194ecc1662
   specs:
-    epp-xml (1.0.4)
+    epp-xml (1.0.5)
       activesupport (~> 4.1)
       builder (~> 3.2)
 
@@ -595,7 +594,7 @@ DEPENDENCIES
   devise (= 3.5.4)
   digidoc_client (= 0.2.1)
   epp (= 1.4.2)!
-  epp-xml (= 1.0.4)!
+  epp-xml (= 1.0.5)!
   fabrication (= 2.13.2)
   faker (= 1.4.3)
   figaro (= 1.1.1)
