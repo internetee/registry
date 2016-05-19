@@ -17,6 +17,14 @@ GIT
       rails (>= 4.1.0)
 
 GIT
+  remote: https://github.com/internetee/epp-xml.git
+  revision: 475f650951f2cf5015e00d48f408a2194ecc1662
+  specs:
+    epp-xml (1.0.5)
+      activesupport (~> 4.1)
+      builder (~> 3.2)
+
+GIT
   remote: https://github.com/internetee/epp.git
   revision: 505c3f2739eb1da918e54111aecfb138a822739d
   specs:
@@ -191,9 +199,6 @@ GEM
     docile (1.1.5)
     domain_name (0.5.25)
       unf (>= 0.0.5, < 1.0.0)
-    epp-xml (1.0.4)
-      activesupport (~> 4.1)
-      builder (~> 3.2)
     equalizer (0.0.11)
     erubis (2.7.0)
     execjs (2.6.0)
@@ -589,7 +594,7 @@ DEPENDENCIES
   devise (= 3.5.4)
   digidoc_client (= 0.2.1)
   epp (= 1.4.2)!
-  epp-xml (= 1.0.4)
+  epp-xml (= 1.0.5)!
   fabrication (= 2.13.2)
   faker (= 1.4.3)
   figaro (= 1.1.1)

@@ -950,3 +950,5 @@ en:
   edit_pw: 'Edit Pw'
   optional: 'Optional'
   test_registrar: "Test registrar"
+  verified_confirm: 'Verified status is for cases when current registrant is the one applying for the update. Legal document signed by the registrant is required. Are you sure this update is properly verified with the registrant?'
+  verified: 'Verified'
