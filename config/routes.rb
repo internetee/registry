@@ -7,7 +7,7 @@ Rails.application.routes.draw do
 
     post 'command/:action', controller: 'domains', constraints: EppConstraint.new(:domain)
     post 'command/:action', controller: 'contacts', constraints: EppConstraint.new(:contact)
-    post 'command/poll', to: 'polls#poll', constraints: EppConstraint.new(:poll)
+    post 'command/poll',     to: 'polls#poll', constraints: EppConstraint.new(:poll)
     post 'command/keyrelay', to: 'keyrelays#keyrelay', constraints: EppConstraint.new(:keyrelay)
 
     post 'command/:command', to: 'errors#not_found', constraints: EppConstraint.new(:not_found) # fallback route

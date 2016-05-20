@@ -13,6 +13,7 @@ class EppController < ApplicationController
   around_action :catch_epp_errors
 
   helper_method :current_user
+  helper_method :resource
 
   def validate_against_schema
     return if ['hello', 'error', 'keyrelay'].include?(params[:action])
@@ -369,7 +370,7 @@ class EppController < ApplicationController
       request: trimmed_request,
       request_command: request_command,
       request_successful: epp_errors.empty?,
-      request_object: params[:epp_object_type],
+      request_object: resource ? "#{params[:epp_object_type]}: #{resource.class} - #{resource.id} - #{resource.name}" : params[:epp_object_type],
       response: @response,
       api_user_name: @api_user.try(:username) || current_user.try(:username) || 'api-public',
       api_user_registrar: @api_user.try(:registrar).try(:to_s) || current_user.try(:registrar).try(:to_s),
@@ -384,5 +385,10 @@ class EppController < ApplicationController
     return if ENV['iptables_counter_enabled'].blank? && ENV['iptables_counter_enabled'] != 'true'
     return if current_user.blank?
     counter_update(current_user.registrar_code, ENV['iptables_server_ip'])
+  end
+
+  def resource
+    name = self.class.to_s.sub("Epp::","").sub("Controller","").underscore.singularize
+    instance_variable_get("@#{name}")
   end
 end
