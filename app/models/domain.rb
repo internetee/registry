@@ -353,7 +353,7 @@ class Domain < ActiveRecord::Base
 
     status_notes[DomainStatus::PENDING_UPDATE] = ''
     status_notes[DomainStatus::PENDING_DELETE] = ''
-    ::PaperTrail.whodunnit = "#{self.class.name} - #{__method__}"
+    ::PaperTrail.whodunnit = "Domain - #{__method__}"
 
     update_columns(
         registrant_verification_token:    nil,
