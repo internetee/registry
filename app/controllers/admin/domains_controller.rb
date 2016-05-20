@@ -77,6 +77,11 @@ class Admin::DomainsController < AdminController
     redirect_to [:admin, @domain]
   end
 
+  def versions
+    @domain = Domain.where(id: params[:domain_id]).includes({versions: :item}).first
+    @versions = @domain.versions
+  end
+
   private
 
   def set_domain

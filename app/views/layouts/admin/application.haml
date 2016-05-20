@@ -57,6 +57,10 @@
                   %li= link_to t(:invoices), admin_invoices_path
                   %li= link_to t(:account_activities), admin_account_activities_path(created_after: 'today')
                   %li.divider
+                  %li.dropdown-header= t(:archive)
+                  %li= link_to t(:domains_history), admin_domain_versions_path
+                  %li= link_to t(:contacts_history), admin_contact_versions_path
+                  %li.divider
                   %li.dropdown-header= t(:system)
                   %li= link_to t(:settings), admin_settings_path
                   %li= link_to t(:zonefile), admin_zonefile_settings_path

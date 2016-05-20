@@ -95,6 +95,7 @@ class Ability
     can :manage, ReservedDomain
     can :manage, ZonefileSetting
     can :manage, DomainVersion
+    can :manage, ContactVersion
     can :manage, Pricelist
     can :manage, User
     can :manage, ApiUser

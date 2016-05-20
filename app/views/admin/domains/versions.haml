@@ -4,8 +4,8 @@
 
 .row
   .col-md-12
-    .table-responsive
-      %table.table-hover.table-bordered.table-condensed
+    .table-responsive{data: {doublescroll: true}}
+      %table.table.table-bordered.table-condensed
         %thead
           %tr
             %th{class: 'col-xs-1'}= t(:timestap)
@@ -15,24 +15,25 @@
             %th{class: 'col-xs-2'}= t(:admin)
             %th{class: 'col-xs-2'}= t(:tech)
             %th{class: 'col-xs-2'}= t(:nameservers)
+            %th{class: 'col-xs-2'}= t(:dnskeys)
             %th{class: 'col-xs-2'}= t(:registrar)
 
         %tbody
           - if @pending_domain.present?
             %tr.small
-              = render 'admin/domain_versions/version', 
+              = render 'admin/domains/partials/version',
                 domain: @pending_domain, pending_user: @pending_user, statuses_link: true
 
           -# current version
           - if @domain.versions.present?
             %tr.small
-              = render 'admin/domain_versions/version', 
+              = render 'admin/domains/partials/version',
                 domain: @domain, version: @domain.versions.last
 
           -# all other older versions
           - @domain.versions.not_creates.reverse.each do |version|
             %tr.small
-              = render 'admin/domain_versions/version', 
+              = render 'admin/domains/partials/version',
                 domain: version.reify, version: version.previous
 
 :coffee
