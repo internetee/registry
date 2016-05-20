@@ -1,3 +1,27 @@
+20.05.2016
+
+* Portal for registrars
+  * domain details view new displays contact name in addition to ID (#117226457)
+  * added an option to set veryfied = "yes" parameter to GUI for registrant change and domain delete opertions (#116209751)
+* Admin interface
+  * BUG: fixed number of sorting issues on different views (#117350717)
+  * BUG: internal error on filtered list sorting (#115043065)
+  * BUG: account activities csv export messes up registrars (#117702653)
+  * usability fixes to history view (#115762063)
+* Registry
+  * epp-xml gem reference updated to v 1.0.5 (#116209751)
+  * epp-xml gem is now taken from local repo https://github.com/internetee/epp-xml/blob/master, the version in RubyGems is not updated any more (#116209751)
+  * BUG: domains set to force delete were deleted a day ahead of time (#117131083)
+  * BUG: QUE - undefined method `code' for nil:NilClass - if contact is removed before Que gets to it (#117612061)
+  * BUG: Que - uninitialized constant RegenerateWhoisRecordJob (#117986917)
+* EPP
+  * BUG: poll message on domain delete does not validate against .ee xml schemas (#118827261)
+  * BUG: internal error on domain delete (#118159567)
+* RestWHOIS
+  * BUG: statuses not in array for not registered reserved and blocked domains (#118911315)
+
+...
+
 21.09.2015
 * eis-1.0.xsd schema file updated without a new version, please publish a new updated schema file to public.
 

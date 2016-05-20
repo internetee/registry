@@ -741,9 +741,6 @@ class Domain < ActiveRecord::Base
   # rubocop: enable Metrics/CyclomaticComplexity
   # rubocop: enable Metrics/PerceivedComplexity
 
-
-  # small optimization that we'are using to_a if it was done already
-  # otherwise just getting ids
   def children_log
     log = HashWithIndifferentAccess.new
     log[:admin_contacts] = admin_contact_ids
