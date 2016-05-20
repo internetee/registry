@@ -126,6 +126,7 @@ class Epp::Contact < Contact
         [:ident, :invalid_birthday_format],
         [:ident, :invalid_country_code],
         [:ident_type, :missing],
+        [:ident_type, :invalid],
         [:code, :invalid],
         [:code, :too_long_contact_code]
       ],
