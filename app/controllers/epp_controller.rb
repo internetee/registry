@@ -6,8 +6,14 @@ class EppController < ApplicationController
 
   before_action :generate_svtrid
   before_action :latin_only
-
   before_action :validate_against_schema
+  before_action :validate_request
+  before_action :update_epp_session
+
+  around_action :catch_epp_errors
+
+  helper_method :current_user
+
   def validate_against_schema
     return if ['hello', 'error', 'keyrelay'].include?(params[:action])
     schema.validate(params[:nokogiri_frame]).each do |error|
@@ -20,10 +26,7 @@ class EppController < ApplicationController
     handle_errors and return if epp_errors.any?
   end
 
-  before_action :validate_request
-  before_action :update_epp_session
 
-  around_action :catch_epp_errors
   def catch_epp_errors
     err = catch(:epp_error) do
       yield
@@ -34,7 +37,6 @@ class EppController < ApplicationController
     handle_errors
   end
 
-  helper_method :current_user
 
   rescue_from StandardError do |e|
     @errors ||= []
