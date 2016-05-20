@@ -12,4 +12,8 @@ class Message < ActiveRecord::Base
     self.queued = false
     save
   end
+
+  def name
+    "-"
+  end
 end
