@@ -746,8 +746,8 @@ class Domain < ActiveRecord::Base
     log[:admin_contacts] = admin_contact_ids
     log[:tech_contacts]  = tech_contact_ids
     log[:nameservers]    = nameserver_ids
-    log[:domain_statuses]= domain_status_ids
     log[:dnskeys]        = dnskey_ids
+    log[:domain_statuses]= domain_status_ids
     log[:legal_documents]= [legal_document_id]
     log[:registrant]     = [registrant_id]
     log
