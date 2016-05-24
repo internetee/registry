@@ -13,6 +13,7 @@ class DomainCron
         STDOUT << msg unless Rails.env.test?
         next
       end
+      ::PaperTrail.whodunnit = "cron - #{__method__}"
       count += 1
       if domain.pending_update?
         DomainMailer.pending_update_expired_notification_for_new_registrant(domain.id).deliver
@@ -25,7 +26,6 @@ class DomainCron
         STDOUT << "#{Time.zone.now.utc} DomainCron.clean_expired_pendings: ##{domain.id} (#{domain.name})\n"
       end
       UpdateWhoisRecordJob.enqueue domain.name, 'domain'
-      ::PaperTrail.whodunnit = "cron - #{__method__}"
     end
     STDOUT << "#{Time.zone.now.utc} - Successfully cancelled #{count} domain pendings\n" unless Rails.env.test?
     count

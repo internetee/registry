@@ -8,13 +8,13 @@ class UpdateWhoisRecordJob < Que::Job
     end
 
     Array(names).each do |name|
+      ::PaperTrail.whodunnit = "job - #{self.class.name} - #{type}"
       record = klass.find_by(name: name)
       if record
         send "update_#{type}", record
       else
         send "delete_#{type}", name
       end
-      ::PaperTrail.whodunnit = "job - #{self.class.name} - #{type}"
     end
   end
 
