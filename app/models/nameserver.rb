@@ -16,6 +16,7 @@ class Nameserver < ActiveRecord::Base
   # rubocop: enable Metrics/LineLength
 
   before_validation :normalize_attributes
+  before_validation :check_puny_symbols
   
   delegate :name, to: :domain, prefix: true
 
@@ -39,6 +40,11 @@ class Nameserver < ActiveRecord::Base
     self.hostname = hostname.try(:strip).try(:downcase)
     self.ipv4 = Array(ipv4).reject(&:blank?).map(&:strip)
     self.ipv6 = Array(ipv6).reject(&:blank?).map(&:strip).map(&:upcase)
+  end
+
+  def check_puny_symbols
+    regexp = /(\A|\.)..--/
+    errors.add(:hostname, :invalid) if hostname =~ regexp
   end
 
   def to_s
