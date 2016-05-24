@@ -29,7 +29,7 @@
         %br= link_to t(:edit_statuses), edit_admin_domain_path(params[:domain_id])
 
     %p.text-right
-      - if (event == 'update' || event = 'create') && (version && version.uuid)
+      - if (event == 'update' || event == 'create') && (version && version.uuid)
         = link_to event, '#', class: 'js-event'
       - else
         = event
