@@ -266,6 +266,7 @@ en:
       unimplemented_command: 'Unimplemented command'
       domain_exists_but_belongs_to_other_registrar: 'Domain exists but belongs to other registrar'
       required_ident_attribute_missing: "Required ident attribute missing: %{key}"
+      ident_type_invalid: 'Ident type is invalid'
 
   code: 'Code'
   value: 'Value'

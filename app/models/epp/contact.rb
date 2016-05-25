@@ -126,12 +126,14 @@ class Epp::Contact < Contact
         [:ident, :invalid_birthday_format],
         [:ident, :invalid_country_code],
         [:ident_type, :missing],
-        [:ident_type, :invalid],
         [:code, :invalid],
         [:code, :too_long_contact_code]
       ],
       '2302' => [ # Object exists
         [:code, :epp_id_taken]
+      ],
+      '2304' => [
+        [:ident_type, :invalid, { value: { obj: 'ident_type', val: ident_type } }]
       ],
       '2305' => [ # Association exists
         [:domains, :exist]
