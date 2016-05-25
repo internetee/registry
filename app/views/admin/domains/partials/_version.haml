@@ -18,7 +18,7 @@
     - dnskeys        = domain.dnskeys
     - tech_contacts  = domain.tech_contacts
     - admin_contacts = domain.admin_contacts
-    - registrant     = [domain.registrant]
+    - registrant     = [domain.registrant ? domain.registrant : ContactVersion.where(item_id: domain.registrant_id).where(event: :destroy).last.reify]
     - creator        = pending_user.try(:username)
     - event         = 'pending'
 
