@@ -9,12 +9,12 @@ class Admin::DomainVersionsController < AdminController
     search_params = params[:q].deep_dup
 
     if search_params[:registrant].present?
-      registrants = Contact.where("name like ?", "%#{search_params[:registrant].strip}%")
+      registrants = Contact.where("name ilike ?", "%#{search_params[:registrant].strip}%")
       search_params.delete(:registrant)
     end
 
     if search_params[:registrar].present?
-      registrars = Registrar.where("name like ?", "%#{search_params[:registrar].strip}%")
+      registrars = Registrar.where("name ilike ?", "%#{search_params[:registrar].strip}%")
       search_params.delete(:registrar)
     end
 
@@ -63,7 +63,7 @@ class Admin::DomainVersionsController < AdminController
   end
 
   def create_where_string(key, value)
-    " AND object->>'#{key}' ~ '#{value}'"
+    " AND object->>'#{key}' ~* '#{value}'"
   end
 
 
