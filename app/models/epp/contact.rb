@@ -132,8 +132,8 @@ class Epp::Contact < Contact
       '2302' => [ # Object exists
         [:code, :epp_id_taken]
       ],
-      '2304' => [
-        [:ident_type, :invalid, { value: { obj: 'ident_type', val: ident_type } }]
+      '2304' => [ # Object status prohibits operation
+        [:ident_type, :epp_ident_type_invalid, { value: { obj: 'code', val: code } }]
       ],
       '2305' => [ # Association exists
         [:domains, :exist]

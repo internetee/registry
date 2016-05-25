@@ -52,6 +52,9 @@ en:
               invalid_EE_identity_format_update: "Ident not in valid Estonian identity format. Please create new contact"
               invalid_birthday_format: "Ident not in valid birthady format, should be YYYY-MM-DD"
               invalid_country_code: "Ident country code is not valid, should be in ISO_3166-1 alpha 2 format"
+            ident_type:
+              ident_type_invalid: 'Ident type is invalid'
+              epp_ident_type_invalid: 'Object status prohibits operation: ident_type of contact %{code} is invalid'
             domains:
               exist: 'Object association prohibits operation'
             statuses:
@@ -266,7 +269,6 @@ en:
       unimplemented_command: 'Unimplemented command'
       domain_exists_but_belongs_to_other_registrar: 'Domain exists but belongs to other registrar'
       required_ident_attribute_missing: "Required ident attribute missing: %{key}"
-      ident_type_invalid: 'Ident type is invalid'
 
   code: 'Code'
   value: 'Value'
