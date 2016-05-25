@@ -1,6 +1,8 @@
 class UpdateWhoisRecordJob < Que::Job
 
   def run(names, type)
+    ::PaperTrail.whodunnit = "job - #{self.class.name} - #{type}"
+
     klass = case type
       when 'reserved'then ReservedDomain
       when 'blocked' then BlockedDomain
@@ -8,7 +10,6 @@ class UpdateWhoisRecordJob < Que::Job
     end
 
     Array(names).each do |name|
-      ::PaperTrail.whodunnit = "job - #{self.class.name} - #{type}"
       record = klass.find_by(name: name)
       if record
         send "update_#{type}", record
