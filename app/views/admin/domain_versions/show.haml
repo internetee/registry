@@ -121,15 +121,9 @@
     .panel.panel-default{:style => "min-height:450px;"}
       %ul.nav.nav-pills.nav-stacked
         - @versions.each do |vs|
-          - if vs.id == @version.id
-            %li.active
-              = link_to admin_domain_version_path(vs) do
-                = l(vs.created_at, format: :short)
-                = vs.event
-          - else
-            %li
-              = link_to admin_domain_version_path(vs) do
-                = l(vs.created_at, format: :short)
-                = vs.event
+          %li{class: (vs.id == @version.id) && :active}
+            = link_to admin_domain_version_path(vs) do
+              = l(vs.created_at, format: :short)
+              = vs.event
       %span{:style => "padding-left:10px; position: absolute; bottom: 10px;"}
         = paginate @versions, theme: :admin
