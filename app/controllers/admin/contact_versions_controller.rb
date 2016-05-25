@@ -49,7 +49,7 @@ class Admin::ContactVersionsController < AdminController
   end
 
   def create_where_string(key, value)
-    " AND object->>'#{key}' LIKE '%#{value}%'"
+    " AND object->>'#{key}' ILIKE '%#{value}%'"
   end
 
 end
