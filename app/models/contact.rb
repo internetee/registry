@@ -46,6 +46,7 @@ class Contact < ActiveRecord::Base
 
   before_validation :to_upcase_country_code
   before_validation :prefix_code
+  before_validation :strip_email
   before_create :generate_auth_info
 
   before_update :manage_emails
@@ -415,6 +416,10 @@ class Contact < ActiveRecord::Base
 
   def search_name
     "#{code} #{name}"
+  end
+
+  def strip_email
+    self.email = email.to_s.strip
   end
 
 
