@@ -198,12 +198,24 @@ Rails.application.routes.draw do
     end
 
     resources :domains do
-      resources :domain_versions
+      resources :domain_versions, controller: 'domains', action: 'versions'
       resources :pending_updates
       resources :pending_deletes
       member do
         post 'set_force_delete'
         post 'unset_force_delete'
+      end
+    end
+
+    resources :domain_versions do
+      collection do
+        get 'search'
+      end
+    end
+
+    resources :contact_versions do
+      collection do
+        get 'search'
       end
     end
 

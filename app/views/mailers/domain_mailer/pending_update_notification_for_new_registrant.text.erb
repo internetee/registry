@@ -15,9 +15,9 @@ Tänav: <%= @params[:registrant_street] %>
 Linn: <%= @params[:registrant_city] %>
 Riik: <%= @params[:registrant_country] %>
 
-Juhime Teie tähelepanu asjaolule, et omanikuvahetuse protseduur viiaks lõpule vaid juhul, kui domeeni hetkel kehtiv registreerija <%= @params[:old_registrant_name] %> omanikuvahetuse tähtaegselt kinnitab.
+Juhime Teie tähelepanu asjaolule, et omanikuvahetuse protseduur viiakse lõpule vaid juhul, kui domeeni hetkel kehtiv registreerija <%= @params[:old_registrant_name] %> omanikuvahetuse tähtaegselt kinnitab.
 
-Juhul kui <%= @params[:old_registrant_name] %> lükkab omanikuvahtuse taotluse tagasi või ei anna kinnitust enne <%= Setting.expire_pending_confirmation %> tundi, omanikuvahetuse protseduur tühistatakse.
+Juhul kui <%= @params[:old_registrant_name] %> lükkab omanikuvahetuse taotluse tagasi või ei anna kinnitust enne <%= Setting.expire_pending_confirmation %> tundi, omanikuvahetuse protseduur tühistatakse.
 
 Küsimuste korral palun võtke ühendust registripidajaga <%= @params[:registrar_name] %>, kelle kontaktid leiate http://internet.ee/registripidajad/akrediteeritud-registripidajad
 
