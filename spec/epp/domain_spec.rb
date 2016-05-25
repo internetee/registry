@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'EPP Domain', epp: true do
   before(:all) do
-    @xsd = Nokogiri::XML::Schema(File.read('lib/schemas/domain-eis-1.0.xsd'))
+    @xsd = Nokogiri::XML::Schema(File.read('lib/schemas/all-ee-1.0.xsd'))
     @epp_xml = EppXml.new(cl_trid: 'ABC-12345')
 
     Fabricate(:zonefile_setting, origin: 'ee')

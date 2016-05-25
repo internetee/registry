@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'EPP Contact', epp: true do
   before :all do
-    @xsd = Nokogiri::XML::Schema(File.read('lib/schemas/contact-eis-1.0.xsd'))
+    @xsd = Nokogiri::XML::Schema(File.read('lib/schemas/all-ee-1.0.xsd'))
     Fabricate(:zonefile_setting, origin: 'ee')
     Fabricate(:zonefile_setting, origin: 'pri.ee')
     Fabricate(:zonefile_setting, origin: 'med.ee')

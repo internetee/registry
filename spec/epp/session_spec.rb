@@ -5,7 +5,7 @@ describe 'EPP Session', epp: true do
     @api_user = Fabricate(:gitlab_api_user)
     @epp_xml = EppXml.new(cl_trid: 'ABC-12345')
     @login_xml_cache = @epp_xml.session.login(clID: { value: 'gitlab' }, pw: { value: 'ghyt9e4fu' })
-    @xsd = Nokogiri::XML::Schema(File.read('lib/schemas/epp-1.0.xsd'))
+    @xsd = Nokogiri::XML::Schema(File.read('lib/schemas/all-ee-1.0.xsd'))
   end
 
   context 'when not connected' do
@@ -51,7 +51,7 @@ describe 'EPP Session', epp: true do
     end
 
     it 'prohibits further actions unless logged in' do
-      @xsd = Nokogiri::XML::Schema(File.read('lib/schemas/domain-eis-1.0.xsd'))
+      @xsd = Nokogiri::XML::Schema(File.read('lib/schemas/all-ee-1.0.xsd'))
       response = epp_plain_request(@epp_xml.domain.info(name: { value: 'test.ee' }))
       response[:msg].should == 'You need to login first.'
       response[:result_code].should == '2002'
