@@ -361,7 +361,6 @@ class Domain < ActiveRecord::Base
 
     status_notes[DomainStatus::PENDING_UPDATE] = ''
     status_notes[DomainStatus::PENDING_DELETE] = ''
-    ::PaperTrail.whodunnit = "Domain - #{__method__}"
 
     hash = {
         registrant_verification_token:    nil,
@@ -454,7 +453,6 @@ class Domain < ActiveRecord::Base
     # TODO: if this were to ever return true, that would be wrong. EPP would report sucess pending
     return true unless registrant_verification_asked?
     pending_delete_confirmation!
-    ::PaperTrail.whodunnit = "#{self.class.name} - #{__method__}"
     save(validate: false) # should check if this did succeed
 
     DomainMailer.pending_deleted(id, registrant_id_was, deliver_emails).deliver

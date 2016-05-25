@@ -3,6 +3,7 @@ class DomainCron
   def self.clean_expired_pendings
     STDOUT << "#{Time.zone.now.utc} - Clean expired domain pendings\n" unless Rails.env.test?
 
+    ::PaperTrail.whodunnit = "cron - #{__method__}"
     expire_at = Setting.expire_pending_confirmation.hours.ago
     count = 0
     expired_pending_domains = Domain.where('registrant_verification_asked_at <= ?', expire_at)
@@ -13,7 +14,6 @@ class DomainCron
         STDOUT << msg unless Rails.env.test?
         next
       end
-      ::PaperTrail.whodunnit = "cron - #{__method__}"
       count += 1
       if domain.pending_update?
         DomainMailer.pending_update_expired_notification_for_new_registrant(domain.id).deliver
@@ -34,6 +34,7 @@ class DomainCron
   def self.start_expire_period
     STDOUT << "#{Time.zone.now.utc} - Expiring domains\n" unless Rails.env.test?
 
+    ::PaperTrail.whodunnit = "cron - #{__method__}"
     domains = Domain.where('valid_to <= ?', Time.zone.now)
     marked = 0
     real = 0
@@ -42,7 +43,6 @@ class DomainCron
       real += 1
       domain.set_graceful_expired
       STDOUT << "#{Time.zone.now.utc} DomainCron.start_expire_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-      ::PaperTrail.whodunnit = "cron - #{__method__}"
       domain.save(validate: false) and marked += 1
     end
 
@@ -52,6 +52,7 @@ class DomainCron
   def self.start_redemption_grace_period
     STDOUT << "#{Time.zone.now.utc} - Setting server_hold to domains\n" unless Rails.env.test?
 
+    ::PaperTrail.whodunnit = "cron - #{__method__}"
     d = Domain.where('outzone_at <= ?', Time.zone.now)
     marked = 0
     real = 0
@@ -60,7 +61,6 @@ class DomainCron
       real += 1
       domain.statuses << DomainStatus::SERVER_HOLD
       STDOUT << "#{Time.zone.now.utc} DomainCron.start_redemption_grace_period: ##{domain.id} (#{domain.name}) #{domain.changes}\n" unless Rails.env.test?
-      ::PaperTrail.whodunnit = "cron - #{__method__}"
       domain.save(validate: false) and marked += 1
     end
 
