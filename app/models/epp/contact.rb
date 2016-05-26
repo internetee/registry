@@ -133,7 +133,7 @@ class Epp::Contact < Contact
         [:code, :epp_id_taken]
       ],
       '2304' => [ # Object status prohibits operation
-        [:ident_type, :epp_ident_type_invalid, { value: { obj: 'code', val: code } }]
+        [:ident_type, :epp_ident_type_invalid, { value: { obj: 'code', val: code}, interpolation: {code: code}}]
       ],
       '2305' => [ # Association exists
         [:domains, :exist]
