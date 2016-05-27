@@ -134,6 +134,8 @@ en:
             hostname:
               invalid: 'Hostname is invalid'
               taken: 'Nameserver already exists on this domain'
+            hostname_puny:
+              puny_to_long: 'Hostname puny is too long (maximum is 63 characters)'
             ipv4:
               blank: 'IPv4 is missing'
               invalid: 'IPv4 is invalid'
