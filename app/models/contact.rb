@@ -185,7 +185,7 @@ class Contact < ActiveRecord::Base
         %w(admin_contacts tech_contacts registrant).each do |type|
           ver_scope << "(children->'#{type}')::jsonb <@ json_build_array(#{contact.id})::jsonb"
         end
-        next if DomainVersion.where("created_at > ?", Time.now - 6.months).where(ver_scope.join(" OR ")).any?
+        next if DomainVersion.where("created_at > ?", Time.now - Setting.orphans_contacts_in_months.to_i.months).where(ver_scope.join(" OR ")).any?
         next if contact.domains_present?
 
         contact.destroy

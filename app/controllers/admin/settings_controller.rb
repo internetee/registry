@@ -51,6 +51,7 @@ class Admin::SettingsController < AdminController
       :admin_contacts_max_count,
       :tech_contacts_min_count,
       :tech_contacts_max_count,
+      :orphans_contacts_in_months,
       :ds_digest_type,
       :dnskeys_min_count,
       :dnskeys_max_count,
