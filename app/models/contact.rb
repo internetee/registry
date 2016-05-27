@@ -41,7 +41,6 @@ class Contact < ActiveRecord::Base
   validate :val_country_code
 
   after_initialize do
-    self.statuses = [] if statuses.nil?
     self.status_notes = {} if status_notes.nil?
     self.ident_updated_at = Time.zone.now if new_record? && ident_updated_at.blank?
   end
@@ -175,20 +174,28 @@ class Contact < ActiveRecord::Base
       ')
     end
 
+    # To leave only new ones we need to check
+    # if contact was at any time used in domain.
+    # This can be checked by domain history.
+    # This can be checked by saved relations in children attribute
     def destroy_orphans
       STDOUT << "#{Time.zone.now.utc} - Destroying orphaned contacts\n" unless Rails.env.test?
 
-      orphans = find_orphans
-
-      unless Rails.env.test?
-        orphans.each do |m|
-          STDOUT << "#{Time.zone.now.utc} Contact.destroy_orphans: ##{m.id} (#{m.name})\n"
+      counter = Counter.new
+      find_orphans.find_each do |contact|
+        ver_scope = []
+        %w(admin_contacts tech_contacts registrant).each do |type|
+          ver_scope << "(children->'#{type}')::jsonb <@ json_build_array(#{contact.id})::jsonb"
         end
+        next if DomainVersion.where("created_at > ?", Time.now - Setting.orphans_contacts_in_months.to_i.months).where(ver_scope.join(" OR ")).any?
+        next if contact.domains_present?
+
+        contact.destroy
+        counter.next
+        STDOUT << "#{Time.zone.now.utc} Contact.destroy_orphans: ##{contact.id} (#{contact.name})\n"
       end
 
-      count = orphans.destroy_all.count
-
-      STDOUT << "#{Time.zone.now.utc} - Successfully destroyed #{count} orphaned contacts\n" unless Rails.env.test?
+      STDOUT << "#{Time.zone.now.utc} - Successfully destroyed #{counter} orphaned contacts\n" unless Rails.env.test?
     end
 
     def privs
