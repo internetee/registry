@@ -1,19 +1,20 @@
-Tere,
+Tere
 
 Domeeni <%= @params[:name] %> registreerija <%= @params[:old_registrant_name] %> on domeeni registreerija vahetamise taotluse tagasi lükanud.
 
-Küsimuste korral palun võtke ühendust registripidajaga <%= @params[:registrar_name] %>, kelle kontaktid leiate http://internet.ee/registripidajad/akrediteeritud-registripidajad
+Küsimuste korral võtke palun ühendust oma registripidajaga <%= @params[:registrar_name] %>. Registripidajate kontaktid leiate aadressilt www.internet.ee/registripidajad.
 
 Lugupidamisega
-Eesti Interneti SA
+Eesti Interneti Sihtasutus
 
 --------------------------------------
 
 Hi,
 
-Registrant change was declined for the domain <%= @params[:name] %>.
+Registrant change for the domain <%= @params[:name] %> was rejected by the registrant <%= @params[:old_registrant_name] %>
+.
 
-Please contact to your registrar <%= @params[:registrar_name] %> if you have any questions.
+Please contact your registrar <%= @params[:registrar_name] %> if you have any questions. You can find the registrar's contacts at http://internet.ee/registrars.
 
 Best Regards,
 Estonian Internet Foundation
