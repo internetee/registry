@@ -124,10 +124,7 @@
     %tr.js-event{ style: 'display: none;' }
       %td{colspan: 9}
         %pre
-          - if req
-            = Nokogiri::XML(req)
-          - else
-            = t(:cant_match_version)
+          = Nokogiri::XML(epp_req)
 
   - if domain.pending_json.present?
     %tr.js-pending{ style: 'display: none;' }
