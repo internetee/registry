@@ -188,10 +188,9 @@ class Contact < ActiveRecord::Base
         next if DomainVersion.where("created_at > ?", Time.now - 6.months).where(ver_scope.join(" OR ")).any?
         next if contact.domains_present?
 
-        # contact.destroy
+        contact.destroy
         counter.next
         STDOUT << "#{Time.zone.now.utc} Contact.destroy_orphans: ##{contact.id} (#{contact.name})\n"
-        p "#{Time.zone.now.utc} Contact.destroy_orphans: ##{contact.id} (#{contact.name})\n"
       end
 
       STDOUT << "#{Time.zone.now.utc} - Successfully destroyed #{counter} orphaned contacts\n" unless Rails.env.test?
