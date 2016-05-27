@@ -62,16 +62,6 @@ class Contact < ActiveRecord::Base
     end
   end
 
-  before_save :manage_statuses
-  def manage_statuses
-    if domain_transfer # very ugly but need better workflow
-      self.statuses = statuses | [OK, LINKED]
-      return
-    end
-
-    manage_linked
-    manage_ok
-  end
 
   after_save :update_related_whois_records
 
@@ -174,7 +164,7 @@ class Contact < ActiveRecord::Base
     end
 
     def find_orphans
-      Contact.where('
+      where('
         NOT EXISTS(
           select 1 from domains d where d.registrant_id = contacts.id
         ) AND NOT EXISTS(
@@ -235,6 +225,18 @@ class Contact < ActiveRecord::Base
 
   def roid
     "EIS-#{id}"
+  end
+
+  # kind of decorator in order to always return statuses
+  # if we use separate decorator, then we should add it
+  # to too many places
+  def statuses
+    calculated = Array(read_attribute(:statuses))
+    calculated.delete(Contact::LINKED)
+    calculated << Contact::OK
+    calculated << Contact::LINKED if domains_present?
+
+    calculated.uniq
   end
 
   def to_s
@@ -406,13 +408,6 @@ class Contact < ActiveRecord::Base
     domain_contacts.present? || registrant_domains.present?
   end
 
-  def manage_linked
-    if domains_present?
-      set_linked
-    else
-      unset_linked
-    end
-  end
 
   def search_name
     "#{code} #{name}"
@@ -491,43 +486,6 @@ class Contact < ActiveRecord::Base
     end
   end
 
-  def set_linked
-    statuses << LINKED if statuses.detect { |s| s == LINKED }.blank?
-  end
-
-  def unset_linked
-    statuses.delete_if { |s| s == LINKED }
-  end
-
-  # rubocop:disable Metrics/CyclomaticComplexity
-  def manage_ok
-    return unset_ok unless valid?
-
-    case statuses.size
-    when 0
-      set_ok
-    when 1
-      set_ok if statuses == [LINKED]
-    when 2
-      return if statuses.sort == [LINKED, OK]
-      unset_ok
-    else
-      unset_ok
-    end
-  end
-  # rubocop:enable Metrics/CyclomaticComplexity
-
-  def unset_ok
-    statuses.delete_if { |s| s == OK }
-  end
-
-  def set_ok
-    statuses << OK if statuses.detect { |s| s == OK }.blank?
-  end
-
-  def linked?
-    statuses.include?(LINKED)
-  end
 
   def update_prohibited?
     (statuses & [
