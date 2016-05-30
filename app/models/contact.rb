@@ -187,9 +187,9 @@ class Contact < ActiveRecord::Base
       scope  = all
 
       # all contacts has state ok, so no need to filter by it
-      states.delete(OK)
+      scope = scope.where("NOT contacts.statuses && ?::varchar[]", "{#{(STATUSES - [OK, LINKED]).join(',')}}") if states.delete(OK)
       scope = scope.find_linked if states.delete(LINKED)
-      scope = scope.where( "contacts.statuses @> ?::varchar[]", "{#{states.join(',')}}") if states.any?
+      scope = scope.where("contacts.statuses @> ?::varchar[]", "{#{states.join(',')}}") if states.any?
       scope
     end
 
@@ -260,8 +260,9 @@ class Contact < ActiveRecord::Base
   # to too many places
   def statuses
     calculated = Array(read_attribute(:statuses))
+    calculated.delete(Contact::OK)
     calculated.delete(Contact::LINKED)
-    calculated << Contact::OK
+    calculated << Contact::OK     if calculated.empty? && valid?
     calculated << Contact::LINKED if domains_present?
 
     calculated.uniq
