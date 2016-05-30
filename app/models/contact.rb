@@ -174,6 +174,27 @@ class Contact < ActiveRecord::Base
       ')
     end
 
+    def find_linked
+      where('
+        EXISTS(
+          select 1 from domains d where d.registrant_id = contacts.id
+        ) OR EXISTS(
+          select 1 from domain_contacts dc where dc.contact_id = contacts.id
+        )
+      ')
+    end
+
+    def filter_by_states in_states
+      states = Array(in_states).dup
+      scope  = all
+
+      # all contacts has state ok, so no need to filter by it
+      states.delete(OK)
+      scope = scope.find_linked if states.delete(LINKED)
+      scope = scope.where( "contacts.statuses @> ?::varchar[]", "{#{states.join(',')}}") if states.any?
+      scope
+    end
+
     # To leave only new ones we need to check
     # if contact was at any time used in domain.
     # This can be checked by domain history.
