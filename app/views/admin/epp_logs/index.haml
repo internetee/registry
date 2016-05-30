@@ -12,7 +12,7 @@
         .col-md-3
           .form-group
             = f.label :request_object
-            = f.select :request_object_eq, [[t(:choose),''], 'contact', 'domain', 'poll', 'keyrelay'], {}, class: 'form-control selectize', placeholder: t(:choose)
+            = f.select :request_object_cont, [[t(:choose),''], 'contact', 'domain', 'poll', 'keyrelay'], {}, class: 'form-control selectize_create', placeholder: t(:choose)
         .col-md-3
           .form-group
             = f.label :request_successful
