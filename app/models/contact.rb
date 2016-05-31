@@ -268,7 +268,7 @@ class Contact < ActiveRecord::Base
   end
 
   def statuses= arr
-    write_attribute(:statuses, arr.uniq)
+    write_attribute(:statuses, Array(arr).uniq)
   end
 
   def to_s
