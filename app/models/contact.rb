@@ -36,7 +36,6 @@ class Contact < ActiveRecord::Base
 
   validate :val_ident_type
   validate :val_ident_valid_format?
-  validate :uniq_statuses?
   validate :validate_html
   validate :val_country_code
 
@@ -268,10 +267,14 @@ class Contact < ActiveRecord::Base
     calculated = Array(read_attribute(:statuses))
     calculated.delete(Contact::OK)
     calculated.delete(Contact::LINKED)
-    calculated << Contact::OK     if calculated.empty? && valid?
+    calculated << Contact::OK     if calculated.empty?# && valid?
     calculated << Contact::LINKED if domains_present?
 
     calculated.uniq
+  end
+
+  def statuses= arr
+    write_attribute(:statuses, Array(arr).uniq)
   end
 
   def to_s
@@ -313,11 +316,6 @@ class Contact < ActiveRecord::Base
     end
   end
 
-  def uniq_statuses?
-    return true unless statuses.detect { |s| statuses.count(s) > 1 }
-    errors.add(:statuses, :not_uniq)
-    false
-  end
 
   def org?
     ident_type == ORG
