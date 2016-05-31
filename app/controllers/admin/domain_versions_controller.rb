@@ -30,8 +30,10 @@ class Admin::DomainVersionsController < AdminController
       end
     end
 
-    whereS += "  AND object->>'registrant_id' IN (#{registrants.map { |r| "'#{r.id.to_s}'" }.join ','})" if registrants
-    whereS += "  AND object->>'registrar_id' IN (#{registrars.map { |r| "'#{r.id.to_s}'" }.join ','})" if registrars
+    whereS += "  AND object->>'registrant_id' IN (#{registrants.map { |r| "'#{r.id.to_s}'" }.join ','})" if registrants.present?
+    whereS += "  AND 1=0"                                                                                if registrants == []
+    whereS += "  AND object->>'registrar_id' IN (#{registrars.map { |r| "'#{r.id.to_s}'" }.join ','})"   if registrars.present?
+    whereS += "  AND 1=0"                                                                                if registrars == []
 
     versions = DomainVersion.includes(:item).where(whereS)
     @q = versions.search(params[:q])
