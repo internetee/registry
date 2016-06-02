@@ -14,6 +14,7 @@
     - registrant     = Contact.all_versions_for(children[:registrant], version.created_at)
     - event          = version.event
     - creator        = plain_username(version.terminator)
+    - whodunnit      = version.try(:whodunnit)
   - else # pending history
     - epp_req = false
     - nameservers    = domain.nameservers
@@ -22,7 +23,8 @@
     - admin_contacts = domain.admin_contacts
     - registrant     = [domain.registrant]
     - creator        = pending_user.try(:username)
-    - event         = 'pending'
+    - event          = 'pending'
+    - whodunnit      = false
 
   %td
     %p.nowrap
@@ -36,7 +38,10 @@
       - else
         = event
       %br
-      = creator
+      - if whodunnit
+        = whodunnit
+      - else
+        = creator
     - if version
       %p.text-right
         = link_to "Pure history", admin_domain_version_path(version)
