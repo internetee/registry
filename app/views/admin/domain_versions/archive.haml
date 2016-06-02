@@ -50,9 +50,9 @@
             %th{class: 'col-xs-2'}
               = t(:registrar)
             %th{class: 'col-xs-2'}
-              = t(:action_date)
-            %th{class: 'col-xs-2'}
               = t(:action)
+            %th{class: 'col-xs-2'}
+              = t(:created_at)
         %tbody
           - @versions.each do |version|
             - if version
@@ -67,8 +67,8 @@
                 %td
                   - if domain.registrar
                     = link_to(domain.registrar, admin_registrar_path(domain.registrar))
-                %td= l(version.created_at, format: :short)
                 %td= version.event
+                %td= l(version.created_at, format: :short)
 
 
 .row
