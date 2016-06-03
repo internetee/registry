@@ -71,5 +71,47 @@ namespace :convert do
       end
     end
   end
+
+  desc 'Convert nameservers hostname and hostname_puny'
+  task nameserves_hostname: :environment do
+
+    start = Time.zone.now.to_f
+    count = 0
+    puts '-----> Converting hostnames...'
+
+    Nameserver.find_each(:batch_size => 1000)  do |ns|
+      ns.hostname       = SimpleIDN.to_unicode(ns.hostname)
+      ns.hostname_puny  = SimpleIDN.to_ascii(ns.hostname_puny)
+      ns.save validate: false
+      count += 1
+      puts "-----> Converted #{count} nameservers" if count % 1000 == 0
+    end
+    puts "-----> Converted #{count} nameservers #{(Time.zone.now.to_f - start).round(2)} seconds"
+
+  end
+
+  desc 'Convert nameservers history hostname'
+  task nameserves_history_hostname: :environment do
+
+    start = Time.zone.now.to_f
+    count = 0
+    puts '-----> Converting hostnames history...'
+
+    NameserverVersion.find_each do |ns|
+      if obj = ns.object
+        obj["hostname"] = SimpleIDN.to_unicode(obj["hostname"])
+        ns.object = obj
+      end
+
+      if (obj_c = ns.object_changes).present?
+        obj_c["name"].map!{|e| e ? SimpleIDN.to_unicode(e) : e } if obj_c["hostname"]
+        ns.object_changes = obj_c
+      end
+      count += 1
+      ns.save!
+    end
+    puts "-----> Converted #{count} history rows #{(Time.zone.now.to_f - start).round(2)} seconds"
+  end
+
 end
 
