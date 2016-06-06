@@ -217,8 +217,7 @@ describe 'EPP Contact', epp: true do
           }
         }
         response = create_request({}, extension)
-        response[:msg].should == "Element '{https://epp.tld.ee/schema/eis-1.0.xsd}ident': The attribute "\
-          "'cc' is required but missing."
+        response[:msg].should == "Required ident attribute missing: cc"
         response[:result_code].should == '2001'
       end
 
