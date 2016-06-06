@@ -253,7 +253,7 @@ describe 'EPP Domain', epp: true do
       xml = domain_create_xml({name: { value: '1162.ee' }}, {}, {
         _anonymus: [
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           },
           reserved: {
@@ -271,7 +271,7 @@ describe 'EPP Domain', epp: true do
       xml = domain_create_xml({name: { value: '1162.ee' }}, {}, {
         _anonymus: [
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           },
           reserved: {
@@ -939,7 +939,7 @@ describe 'EPP Domain', epp: true do
       }, 'request', {
         _anonymus: [
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           }
         ]
@@ -1000,7 +1000,7 @@ describe 'EPP Domain', epp: true do
       }, 'request', {
         _anonymus: [
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           }
         ]
@@ -1048,7 +1048,7 @@ describe 'EPP Domain', epp: true do
       }, 'request', {
         _anonymus: [
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           }
         ]
@@ -1121,7 +1121,7 @@ describe 'EPP Domain', epp: true do
       }, 'request', {
         _anonymus: [
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           }
         ]
@@ -1496,7 +1496,7 @@ describe 'EPP Domain', epp: true do
       }, 'approve', {
         _anonymus: [
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           }
         ]
@@ -1532,7 +1532,7 @@ describe 'EPP Domain', epp: true do
       }, 'reject', {
         _anonymus: [
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           }
         ]
@@ -1566,7 +1566,7 @@ describe 'EPP Domain', epp: true do
       }, 'approve', {
         _anonymus: [
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           }
         ]
@@ -1587,7 +1587,7 @@ describe 'EPP Domain', epp: true do
       }, 'request', {
         _anonymus: [
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           }
         ]
@@ -1606,7 +1606,7 @@ describe 'EPP Domain', epp: true do
       }, 'request', {
         _anonymus: [
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           }
         ]
@@ -1634,7 +1634,7 @@ describe 'EPP Domain', epp: true do
       }, 'request', {
         _anonymus: [
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           }
         ]
@@ -1656,7 +1656,7 @@ describe 'EPP Domain', epp: true do
       }, 'approve', {
         _anonymus: [
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           }
         ]
@@ -1698,7 +1698,7 @@ describe 'EPP Domain', epp: true do
       }, 'request', {
         _anonymus: [
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           }
         ]
@@ -1749,7 +1749,7 @@ describe 'EPP Domain', epp: true do
       }, 'approve', {
         _anonymus: [
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           }
         ]
@@ -1833,7 +1833,7 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(domain_update_xml(xml_params, {}, {
         _anonymus: [
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           }
         ]
@@ -1862,7 +1862,7 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(domain_update_xml(xml_params, {}, {
         _anonymus: [
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           }
         ]
@@ -1921,7 +1921,7 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(domain_update_xml(xml_params, {}, {
         _anonymus: [
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           }
         ]
@@ -1956,7 +1956,7 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(domain_update_xml(xml_params, {}, {
         _anonymus: [
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           }
         ]
@@ -1989,7 +1989,7 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(domain_update_xml(xml_params, {}, {
         _anonymus: [
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           }
         ]
@@ -2018,7 +2018,7 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(domain_update_xml(xml_params, {}, {
         _anonymus: [
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           }
         ]
@@ -2202,7 +2202,7 @@ describe 'EPP Domain', epp: true do
       {
         _anonymus: [
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           }
         ]
@@ -3013,7 +3013,7 @@ describe 'EPP Domain', epp: true do
       }, {
         _anonymus: [
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           }
         ]
@@ -3034,7 +3034,7 @@ describe 'EPP Domain', epp: true do
       }, {
         _anonymus: [
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           }
         ]
@@ -3053,7 +3053,7 @@ describe 'EPP Domain', epp: true do
       }, {
         _anonymus: [
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           }
         ]
