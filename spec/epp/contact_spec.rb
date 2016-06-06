@@ -26,13 +26,13 @@ describe 'EPP Contact', epp: true do
         attrs: { type: 'priv', cc: 'EE' }
       },
       legalDocument: {
-        value: 'dGVzdCBmYWlsCg==',
+        value: Base64.encode64('S' * 4.kilobytes),
         attrs: { type: 'pdf' }
       }
     }
     @update_extension = {
       legalDocument: {
-        value: 'dGVzdCBmYWlsCg==',
+        value: Base64.encode64('S' * 4.kilobytes),
         attrs: { type: 'pdf' }
       }
     }
@@ -116,7 +116,7 @@ describe 'EPP Contact', epp: true do
             attrs: { type: 'birthday', cc: 'US' }
           },
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           }
         }
