@@ -2,41 +2,65 @@
   .panel-heading
     %h3.panel-title= t(:dnskeys)
   .panel-body{style: 'word-wrap: break-word;'}
-    - @data.css('dsData').each do |x|
-      %dl.dl-horizontal
-        - if x.css('digest').text.present?
-          %dt= t(:ds_key_tag)
-          %dd= x.css('keyTag').text
-          %dt= t(:ds_algorithm)
-          %dd= x.css('alg').first.text
-          %dt= t(:ds_digest_type)
-          %dd= x.css('digestType').text
-          %dt= t(:ds_digest)
-          %dd= x.css('digest').text
+    .table-responsive
+      %table.table.table-hover.table-condensed
+        %tbody
+        - @data.css('dsData').each do |x|
+          - if x.css('digest').text.present?
+            %tr
+              %td
+                %b= "#{t(:ds_key_tag)}:"
+                = x.css('keyTag').text
+            %tr
+              %td
+                %b= "#{t(:ds_algorithm)}:"
+                = x.css('alg').first.text
+            %tr
+              %td
+                %b= "#{t(:flag)}:"
+                = x.css('digestType').text
+            %tr
+              %td
+                %b= "#{t(:ds_digest)}:"
+                = x.css('digest').text
+
+            - @data.css('keyData').each do |x|
+              %tr
+              %td
+                %b= "#{t(:flag)}:"
+                = x.css('flags').text
+            %tr
+              %td
+                %b= "#{t(:protocol)}:"
+                = x.css('protocol').text
+            %tr
+              %td
+                %b= "#{t(:public_key)}:"
+                = x.css('alg').text
+            %tr
+              %td{:colspan => "3"}
+                %b= "#{t(:public_key)}:"
+                = x.css('pubKey').text
+            %tr
+              %td{:colspan => "3"}
+                = "&nbsp;"
+
+        - if @data.css('dsData').empty?
           - @data.css('keyData').each do |x|
-            %dl.dl-horizontal
-            %dt= t(:flag)
-            %dd= x.css('flags').text
-
-            %dt= t(:protocol)
-            %dd= x.css('protocol').text
-
-            %dt= t(:algorithm)
-            %dd= x.css('alg').text
-
-            %dt= t(:public_key)
-            %dd= x.css('pubKey').text
-    - if @data.css('dsData').empty?
-      %dl.dl-horizontal
-      - @data.css('keyData').each do |x|
-        %dt= t(:flag)
-        %dd= x.css('flags').text
-
-        %dt= t(:protocol)
-        %dd= x.css('protocol').text
-
-        %dt= t(:algorithm)
-        %dd= x.css('alg').text
-
-        %dt= t(:public_key)
-        %dd= x.css('pubKey').text
+            %tr
+              %td
+                %b= "#{t(:flag)}:"
+                = x.css('flags').text
+              %td
+                %b= "#{t(:protocol)}:"
+                = x.css('protocol').text
+              %td
+                %b= "#{t(:public_key)}:"
+                = x.css('alg').text
+            %tr
+              %td{:colspan => "3"}
+                %b= "#{t(:public_key)}:"
+                = x.css('pubKey').text
+            %tr
+              %td{:colspan => "3"}
+                = "&nbsp;"
