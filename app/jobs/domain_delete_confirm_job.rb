@@ -1,5 +1,5 @@
 class DomainDeleteConfirmJob < Que::Job
-  def run(domain_id, action)
+  def run(domain_id, action, initiator)
     ::PaperTrail.whodunnit = "job - #{self.class.name} - #{action}"
     # it's recommended to keep transaction against job table as short as possible.
     ActiveRecord::Base.transaction do

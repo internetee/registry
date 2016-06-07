@@ -1,6 +1,6 @@
 class DomainUpdateConfirmJob < Que::Job
-  def run(domain_id, action)
-    ::PaperTrail.whodunnit = "job - #{self.class.name} - #{action}"
+  def run(domain_id, action, initiator)
+    ::PaperTrail.whodunnit = "job - #{self.class.name} - #{action} by #{initiator}"
     # it's recommended to keep transaction against job table as short as possible.
     ActiveRecord::Base.transaction do
       domain = Epp::Domain.find(domain_id)
