@@ -911,9 +911,9 @@ describe 'EPP Contact', epp: true do
           response[:results].count.should == 1
 
           contact = response[:parsed].css('resData infData')
-          contact.css('postalInfo addr city').first.try(:text).should == nil
-          contact.css('email').first.try(:text).should == nil
-          contact.css('voice').first.try(:text).should == nil
+          contact.css('postalInfo addr city').first.try(:text).should == "No access"
+          contact.css('email').first.try(:text).should == "No access"
+          contact.css('voice').first.try(:text).should == "No access"
         end
       end
     end
