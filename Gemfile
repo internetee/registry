@@ -15,7 +15,6 @@ gem 'hashie-forbidden_attributes', '0.1.1'
 gem 'SyslogLogger', '2.0', require: 'syslog/logger'
 gem 'rest-client'
 gem 'parallel'
-gem 'rest-client'
 
 # load env
 gem 'figaro', '1.1.1'
@@ -34,7 +33,7 @@ gem 'rails-settings-cached',     '0.4.1' # for settings
 
 # html-xml
 gem 'haml-rails', '0.9.0' # haml for views
-gem 'nokogiri',   '1.6.7.2' # For XML parsing
+gem 'nokogiri',   '1.6.8' # For XML parsing
 
 # style
 gem 'sass-rails',     '5.0.3'   # sass style
