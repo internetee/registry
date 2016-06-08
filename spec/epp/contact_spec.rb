@@ -815,6 +815,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'return info about contact' do
+        ::PaperTrail.whodunnit = "tester"
         Fabricate(:contact, code: 'INFO-4444', name: 'Johnny Awesome')
 
         response = info_request({ id: { value: 'FIXED:INFO-4444' } })
@@ -826,6 +827,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'should add legacy CID format as append' do
+        ::PaperTrail.whodunnit = "tester"
         Fabricate(:contact, code: 'CID:FIXED:INFO-5555', name: 'Johnny Awesome')
 
         response = info_request({ id: { value: 'FIXED:CID:FIXED:INFO-5555' } })
@@ -837,6 +839,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'should return ident in extension' do
+        ::PaperTrail.whodunnit = "tester"
         @registrar1_contact = Fabricate(:contact, code: 'INFO-IDENT',
           registrar: @registrar1, name: 'Johnny Awesome')
 
@@ -860,6 +863,7 @@ describe 'EPP Contact', epp: true do
       end
 
       it 'should honor new contact code format' do
+        ::PaperTrail.whodunnit = "tester"
         @registrar1_contact = Fabricate(:contact, code: 'FIXED:test:custom:code')
         @registrar1_contact.code.should == 'FIXED:TEST:CUSTOM:CODE'
 
