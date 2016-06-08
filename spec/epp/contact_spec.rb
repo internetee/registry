@@ -218,7 +218,7 @@ describe 'EPP Contact', epp: true do
         }
         response = create_request({}, extension)
         response[:msg].should == "Required ident attribute missing: cc"
-        response[:result_code].should == '2001'
+        response[:result_code].should == '2003'
       end
 
       it 'should return country missing' do
