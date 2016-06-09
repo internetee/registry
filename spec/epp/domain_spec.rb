@@ -37,7 +37,7 @@ describe 'EPP Domain', epp: true do
   end
 
   it 'should return error if balance low' do
-    f = Fabricate(:pricelist, valid_to: Time.zone.now + 1.day, price: 100000)
+    f = Fabricate(:pricelist, valid_from: Time.now - 1, valid_to: Time.zone.now + 1.day, price: 100000)
 
     dn = next_domain_name
     response = epp_plain_request(domain_create_xml({
