@@ -459,7 +459,7 @@ describe 'EPP Contact', epp: true do
             attrs: { type: 'birthday', cc: 'US' }
           },
           legalDocument: {
-            value: 'dGVzdCBmYWlsCg==',
+            value: Base64.encode64('S' * 4.kilobytes),
             attrs: { type: 'pdf' }
           }
         }
