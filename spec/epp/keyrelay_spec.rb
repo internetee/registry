@@ -204,7 +204,7 @@ describe 'EPP Keyrelay', epp: true do
     }, {
       _anonymus: [
         legalDocument: {
-          value: 'dGVzdCBmYWlsCg==',
+          value: Base64.encode64('S' * 4.kilobytes),
           attrs: { type: 'jpg' }
         }
       ]

@@ -235,7 +235,7 @@ module Epp
     epp_xml.create(xml_params, {}, {
       _anonymus: [
         legalDocument: {
-          value: 'dGVzdCBmYWlsCg==',
+          value: Base64.encode64('S' * 4.kilobytes),
           attrs: { type: 'pdf' }
         }
       ]
@@ -320,7 +320,7 @@ module Epp
     custom_params = {
       _anonymus: [
         legalDocument: {
-          value: 'dGVzdCBmYWlsCg==',
+          value: Base64.encode64('S' * 4.kilobytes),
           attrs: { type: 'pdf' }
         }
       ]
