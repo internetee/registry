@@ -384,8 +384,8 @@ describe 'EPP Domain', epp: true do
       epp_plain_request(domain_create_with_host_attrs)
       Domain.last.nameservers.count.should == 2
       ns = Domain.last.nameservers.first
-      ns.ipv4.should == '192.0.2.2'
-      ns.ipv6.should == '1080:0:0:0:8:800:200C:417A'
+      ns.ipv4.should == ['192.0.2.2']
+      ns.ipv6.should == ['1080:0:0:0:8:800:200C:417A']
     end
 
     it 'returns error when nameserver has invalid ips' do
@@ -394,7 +394,7 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(domain_create_with_invalid_ns_ip_xml)
       response[:results][0][:result_code].should == '2005'
       response[:results][0][:msg].should == 'IPv4 is invalid [ipv4]'
-      response[:results][0][:value].should == '192.0.2.2.invalid'
+      response[:results][0][:value].should == ['192.0.2.2.invalid']
       response[:results][1][:result_code].should == '2005'
       response[:results][1][:msg].should == 'IPv6 is invalid [ipv6]'
       response[:results][1][:value].should == 'INVALID_IPV6'
