@@ -23,7 +23,7 @@ describe 'EPP Domain', epp: true do
     Fabricate(:contact, code: 'FIXED:CITIZEN_1234')
     Fabricate(:contact, code: 'FIXED:SH8013')
     Fabricate(:contact, code: 'FIXED:SH801333')
-    Fabricate(:contact, code: 'FIXED:JURIDICAL_1234', ident_type: 'org')
+    Fabricate(:contact, code: 'FIXED:JURIDICAL_1234', ident_type: 'org', ident: "12345678")
     Fabricate(:reserved_domain)
     Fabricate(:blocked_domain)
     @pricelist_reg_1_year = Fabricate(:pricelist, valid_to: nil)
