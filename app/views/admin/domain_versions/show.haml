@@ -98,7 +98,7 @@
             = link_to admin_registrar_path(domain.registrar), target: "registrar_#{domain.registrar.id}" do
               = domain.registrar.name
       %span{:style => "margin: 20px 20px; clear:both;"}
-      
+
         - if @version.previous
           = link_to(t(:previous),
                     admin_domain_version_path(@version.previous.id),
