@@ -5,7 +5,13 @@ xml.epp_head do
         xml.msg(x[:msg], 'lang' => 'en')
 
         xml.value('xmlns:obj' => 'urn:ietf:params:xml:ns:obj') do
-          xml.tag!("obj:#{x[:value][:obj]}", x[:value][:val])
+          if (val = x[:value][:val]).respond_to?(:each)
+            val.each do |el|
+              xml.tag!("obj:#{x[:value][:obj]}", el)
+            end
+          else
+            xml.tag!("obj:#{x[:value][:obj]}", val)
+          end
         end if x[:value]
 
         x[:ext_values].each do |y|
