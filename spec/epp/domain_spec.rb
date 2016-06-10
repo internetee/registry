@@ -533,7 +533,7 @@ describe 'EPP Domain', epp: true do
             keyData: {
               flags: { value: '256' },
               protocol: { value: '3' },
-              alg: { value: '254' },
+              alg: { value: '8' },
               pubKey: { value: '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0' }
             }
           }
@@ -551,14 +551,14 @@ describe 'EPP Domain', epp: true do
       ksk.ds_digest_type.should == Setting.ds_algorithm
 
       zsk = d.dnskeys.find_by(flags: 256)
-      zsk.ds_key_tag.should be_blank
+      zsk.ds_key_tag.should_not be_blank
 
       zero = d.dnskeys.find_by(flags: 0)
       zero.ds_key_tag.should be_blank
 
       d.dnskeys.pluck(:flags).should match_array([257, 0, 256])
       d.dnskeys.pluck(:protocol).should match_array([3, 3, 3])
-      d.dnskeys.pluck(:alg).should match_array([3, 5, 254])
+      d.dnskeys.pluck(:alg).should match_array([3, 5, 8])
       d.dnskeys.pluck(:public_key).should match_array(%w(
         AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8
         700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f
