@@ -19,6 +19,8 @@ class Epp::ContactsController < EppController
     authorize! :create, Epp::Contact
     @contact = Epp::Contact.new(params[:parsed_frame], current_user.registrar)
 
+    @contact.add_legal_file_to_new(params[:parsed_frame])
+
     if @contact.save
       render_epp_response '/epp/contacts/create'
     else
@@ -29,7 +31,7 @@ class Epp::ContactsController < EppController
   def update
     authorize! :update, @contact, @password
 
-    if @contact.update_attributes(params[:parsed_frame])
+    if @contact.update_attributes(params[:parsed_frame], current_user)
       render_epp_response 'epp/contacts/update'
     else
       handle_errors(@contact)
@@ -39,7 +41,7 @@ class Epp::ContactsController < EppController
   def delete
     authorize! :delete, @contact, @password
 
-    if @contact.destroy_and_clean
+    if @contact.destroy_and_clean(params[:parsed_frame])
       render_epp_response '/epp/contacts/delete'
     else
       handle_errors(@contact)

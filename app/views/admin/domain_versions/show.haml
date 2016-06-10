@@ -3,10 +3,11 @@
 
 - if @version
   - children = HashWithIndifferentAccess.new(@version.children)
-  - nameservers    = Nameserver.where(id: children[:nameservers])
-  - tech_contacts  = Contact.where(id: children[:tech_contacts])
-  - admin_contacts = Contact.where(id: children[:admin_contacts])
-  - registrant     = Contact.where(id: children[:registrant])
+  - nameservers    = Nameserver.all_versions_for(children[:nameservers], @version.created_at)
+  - dnskeys        = Dnskey.all_versions_for(children[:dnskeys], @version.created_at)
+  - tech_contacts  = Contact.all_versions_for(children[:tech_contacts], @version.created_at)
+  - admin_contacts = Contact.all_versions_for(children[:admin_contacts], @version.created_at)
+  - registrant     = Contact.all_versions_for(children[:registrant], @version.created_at)
   - event       = @version.event
   - creator     = plain_username(@version.terminator)
 
@@ -36,34 +37,44 @@
           %br
 
           %dt= t(:statuses)
-          %dd
+          %dd{class: changing_css_class(@version,"statuses")}
             - if domain.statuses.present?
               - domain.statuses.each do |s|
                 = s
+
           %dt= t(:registrant)
-          %dd
+          %dd{class: changing_css_class(@version,"registrant_id")}
             - registrant.each do |r|
-              = r[:name]
-              = r[:phone]
-              = r[:email]
-              = r[:code]
-              %br
+              - link = r.version_loader ? admin_contact_version_path(r.version_loader.try(:id)) : admin_contact_path(r.id)
+              = link_to link, target: "contact_#{r.id}" do
+                = r[:name]
+                = r[:phone]
+                = r[:email]
+                = r[:code]
+                %br
+
           %dt= t(:admin_contacts)
           %dd
             - admin_contacts.each do |r|
-              = r[:name]
-              = r[:phone]
-              = r[:email]
-              = r[:code]
-              %br
+              - link = r.version_loader ? admin_contact_version_path(r.version_loader.try(:id)) : admin_contact_path(r.id)
+              = link_to link, target: "contact_#{r.id}" do
+                = r[:name]
+                = r[:phone]
+                = r[:email]
+                = r[:code]
+                %br
+
           %dt= t(:tech_contacts)
           %dd
             - tech_contacts.each do |r|
-              = r[:name]
-              = r[:phone]
-              = r[:email]
-              = r[:code]
-              %br
+              - link = r.version_loader ? admin_contact_version_path(r.version_loader.try(:id)) : admin_contact_path(r.id)
+              = link_to link, target: "contact_#{r.id}" do
+                = r[:name]
+                = r[:phone]
+                = r[:email]
+                = r[:code]
+                %br
+
           %dt= t(:nameservers)
           %dd
             - nameservers.each do |ns|
@@ -71,9 +82,23 @@
               = ns[:ipv4]
               = ns[:ipv6]
               %br
+
+          %dt= t(:dnskeys)
+          %dd
+            - dnskeys.each do |ns|
+              = ns[:flags]
+              = ns[:protocol]
+              = ns[:alg]
+              - if ns[:public_key].present?
+                \...#{ns[:public_key].to_s[-20,20]}
+            %br
+
           %dt= t(:registrar)
-          %dd= domain.registrar.name
-      %div{:style => "margin: 20px 20px; clear:both;"}
+          %dd{class: changing_css_class(@version,"registrar_id")}
+            = link_to admin_registrar_path(domain.registrar), target: "registrar_#{domain.registrar.id}" do
+              = domain.registrar.name
+      %span{:style => "margin: 20px 20px; clear:both;"}
+
         - if @version.previous
           = link_to(t(:previous),
                     admin_domain_version_path(@version.previous.id),

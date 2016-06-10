@@ -29,13 +29,24 @@
           .form-group
             = f.label t(:receipt_date_until)
             = f.search_field :created_at_lteq, value: params[:q][:created_at_lteq], class: 'form-control datepicker', placeholder: t(:receipt_date_until), autocomplete: 'off'
-        .col-md-6{style: 'padding-top: 25px;'}
+        .col-md-3
+          .form-group
+            = label_tag t(:results_per_page)
+            = text_field_tag :results_per_page, params[:results_per_page], class: 'form-control', placeholder: t(:results_per_page)
+        .col-md-3{style: 'padding-top: 25px;'}
           %button.btn.btn-default.search
             &nbsp;
             %span.glyphicon.glyphicon-search
             &nbsp;
           %button.btn.btn-default.js-reset-form
             = t(:clear_fields)
+.row
+  .col-md-3
+  .col-md-3
+  .col-md-2
+  .col-md-4{class: 'text-right'}
+    = t(:starting_balance)  + " #{@sum.to_f} EUR"
+
 %hr
 
 .row
@@ -45,7 +56,7 @@
         %thead
           %tr
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'registrar')
+              = sort_link(@q, 'account_registrar_code', t(:registrar))
             %th{class: 'col-xs-3'}
               = sort_link(@q, 'description')
             %th{class: 'col-xs-2'}
@@ -55,15 +66,24 @@
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'sum')
         %tbody
+          -total = @sum.to_f
           - @account_activities.each do |x|
             %tr
-              %td= link_to(x.account.registrar.try(:code), admin_registrar_path(x.account.registrar))
+              %td= x.account.registrar && link_to(x.account.registrar.try(:code), admin_registrar_path(x.account.registrar))
               %td= x.description.present? ? x.description : '-'
               %td= x.activity_type ? t(x.activity_type) : ''
               %td= l(x.created_at)
               - c = x.sum > 0.0 ? 'text-success' : 'text-danger'
               - s = x.sum > 0.0 ? "+#{x.sum} #{x.currency}" : "#{x.sum} #{x.currency}"
+              -total += x.sum
               %td{class: c}= s
+        - if @account_activities.count > 0
+          %tr
+            %td
+            %td
+            %td
+            %td{class: 'text-right'}= t(:total)
+            %td{class: total > 0 ? 'text-success' : 'text-danger'}= total > 0 ? "+#{total} EUR" : "#{total} EUR"
 .row
   .col-md-12
     = paginate @account_activities

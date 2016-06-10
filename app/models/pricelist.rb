@@ -8,6 +8,8 @@ class Pricelist < ActiveRecord::Base
     )
   }
 
+  scope :valid_at, ->(time){ where("valid_from IS NULL OR valid_from <= ?", time).where("valid_to IS NULL OR valid_to >= ?", time) }
+
   monetize :price_cents
 
   validates :price_cents, :price_currency, :price,
@@ -27,11 +29,19 @@ class Pricelist < ActiveRecord::Base
     "#{operation_category} #{category}"
   end
 
+  def years_amount
+    duration.to_i
+  end
+
+  def price_decimal
+    price_cents / BigDecimal.new('100')
+  end
+
   class << self
     def pricelist_for(zone, operation, period)
       lists = valid.where(category: zone, operation_category: operation, duration: period)
       return lists.first if lists.count == 1
-      lists.where('valid_to IS NOT NULL').order(valid_from: :desc).first
+      lists.order(valid_from: :desc).first
     end
   end
 end

@@ -361,16 +361,18 @@ class EppController < ApplicationController
     if request_command == 'login' && frame.present?
       frame.gsub!(/pw>.+<\//, 'pw>[FILTERED]</')
     end
+    trimmed_request = frame.gsub(/<eis:legalDocument([^>]+)>([^<])+<\/eis:legalDocument>/, "<eis:legalDocument>[FILTERED]</eis:legalDocument>") if frame.present?
 
     ApiLog::EppLog.create({
-      request: frame,
+      request: trimmed_request,
       request_command: request_command,
       request_successful: epp_errors.empty?,
       request_object: params[:epp_object_type],
       response: @response,
       api_user_name: @api_user.try(:username) || current_user.try(:username) || 'api-public',
       api_user_registrar: @api_user.try(:registrar).try(:to_s) || current_user.try(:registrar).try(:to_s),
-      ip: request.ip
+      ip: request.ip,
+      uuid: request.uuid
     })
   end
   # rubocop: enable Metrics/CyclomaticComplexity

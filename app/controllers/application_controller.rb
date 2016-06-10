@@ -32,7 +32,7 @@ class ApplicationController < ActionController::Base
     if registrar_request?
       registrar_root_url
     elsif registrant_request?
-      registrant_root_url
+      registrant_login_url
     elsif admin_request?
       admin_root_url
     end
@@ -55,6 +55,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def info_for_paper_trail
+    { uuid: request.uuid }
+  end
+
   def user_for_paper_trail
     user_log_str(current_user)
   end
@@ -67,8 +71,7 @@ class ApplicationController < ActionController::Base
   end
 
   def user_log_str(user)
-    return 'public' if user.nil?
-    "#{user.id}-#{user.class}: #{user.username}"
+    user.nil? ? 'public' : user.id_role_username
   end
 
   def comma_support_for(parent_key, key)

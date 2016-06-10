@@ -3,10 +3,13 @@ class Epp::Domain < Domain
   include EppErrors
 
   # TODO: remove this spagetti once data in production is correct.
-  attr_accessor :is_renewal
+  attr_accessor :is_renewal, :is_transfer
 
   before_validation :manage_permissions
+
   def manage_permissions
+    return if is_admin # this bad hack for 109086524, refactor later
+    return true if is_transfer || is_renewal
     return unless update_prohibited? || delete_prohibited?
     add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
     false
@@ -14,7 +17,7 @@ class Epp::Domain < Domain
 
   after_validation :validate_contacts
   def validate_contacts
-    return true if is_renewal
+    return true if is_renewal || is_transfer
 
     ok = true
     active_admins = admin_domain_contacts.select { |x| !x.marked_for_destruction? }
@@ -130,7 +133,8 @@ class Epp::Domain < Domain
         [:base, :ds_data_not_allowed],
         [:base, :key_data_not_allowed],
         [:period, :not_a_number],
-        [:period, :not_an_integer]
+        [:period, :not_an_integer],
+        [:registrant, :cannot_be_missing]
       ],
       '2308' => [
         [:base, :domain_name_blocked, { value: { obj: 'name', val: name_dirty } }]
@@ -152,7 +156,8 @@ class Epp::Domain < Domain
   def attrs_from(frame, current_user, action = nil)
     at = {}.with_indifferent_access
 
-    code = frame.css('registrant').first.try(:text)
+    registrant_frame = frame.css('registrant').first
+    code = registrant_frame.try(:text)
     if code.present?
       if action == 'chg' && registrant_change_prohibited?
         add_epp_error('2304', nil, DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
@@ -163,7 +168,10 @@ class Epp::Domain < Domain
       else
         add_epp_error('2303', 'registrant', code, [:registrant, :not_found])
       end
-    end
+    else
+      add_epp_error('2306', nil, nil, [:registrant, :cannot_be_missing])
+    end if registrant_frame
+
 
     at[:name] = frame.css('name').text if new_record?
     at[:registrar_id] = current_user.registrar.try(:id)
@@ -192,8 +200,26 @@ class Epp::Domain < Domain
     end
 
     at[:dnskeys_attributes] = dnskeys_attrs(dnskey_frame, action)
-    at[:legal_documents_attributes] = legal_document_from(frame)
+
     at
+  end
+
+
+  # Adding legal doc to domain and
+  # if something goes wrong - raise Rollback error
+  def add_legal_file_to_new frame
+    legal_document_data = Epp::Domain.parse_legal_document_from_frame(frame)
+    return unless legal_document_data
+
+    doc = LegalDocument.create(
+        documentable_type: Domain,
+        document_type:     legal_document_data[:type],
+        body:              legal_document_data[:body]
+    )
+    self.legal_documents = [doc]
+
+    frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
+    self.legal_document_id = doc.id
   end
   # rubocop: enable Metrics/PerceivedComplexity
   # rubocop: enable Metrics/CyclomaticComplexity
@@ -454,15 +480,6 @@ class Epp::Domain < Domain
     status_list
   end
 
-  def legal_document_from(frame)
-    ld = frame.css('legalDocument').first
-    return [] unless ld
-
-    [{
-      body: ld.text,
-      document_type: ld['type']
-    }]
-  end
 
   # rubocop: disable Metrics/AbcSize
   # rubocop: disable Metrics/CyclomaticComplexity
@@ -474,6 +491,7 @@ class Epp::Domain < Domain
 
     if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
       frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
+      self.legal_document_id = doc.id
     end
 
     at_add = attrs_from(frame.css('add'), current_user, 'add')
@@ -485,6 +503,20 @@ class Epp::Domain < Domain
       statuses - domain_statuses_attrs(frame.css('rem'), 'rem') + domain_statuses_attrs(frame.css('add'), 'add')
 
     # at[:statuses] += at_add[:domain_statuses_attributes]
+
+    if errors.empty? && verify
+      self.upid = current_user.registrar.id if current_user.registrar
+      self.up_date = Time.zone.now
+    end
+
+    if registrant_id && registrant.code == frame.css('registrant')
+
+      throw :epp_error, {
+        code: '2305',
+        msg: I18n.t(:contact_already_associated_with_the_domain)
+      }
+
+    end
 
     if errors.empty? && verify &&
        Setting.request_confrimation_on_registrant_change_enabled &&
@@ -500,18 +532,26 @@ class Epp::Domain < Domain
   # rubocop: enable Metrics/CyclomaticComplexity
 
   def apply_pending_update!
-    old_registrant_email = DomainMailer.registrant_updated_notification_for_old_registrant(id, deliver_emails)
     preclean_pendings
     user  = ApiUser.find(pending_json['current_user_id'])
     frame = Nokogiri::XML(pending_json['frame'])
-    statuses.delete(DomainStatus::PENDING_UPDATE)
-    yield(self) if block_given? # need to skip statuses check here
+    old_registrant_id = registrant_id
+
+    self.deliver_emails = true # turn on email delivery
+    self.statuses.delete(DomainStatus::PENDING_UPDATE)
+    self.upid = user.registrar.id if user.registrar
+    self.up_date = Time.zone.now
+    ::PaperTrail.whodunnit = user.id_role_username # updator str should be the request originator not the approval user
 
     return unless update(frame, user, false)
     clean_pendings!
-    self.deliver_emails = true # turn on email delivery
-    DomainMailer.registrant_updated_notification_for_new_registrant(id, deliver_emails).deliver
-    old_registrant_email.deliver
+
+    save! # for notification if everything fails
+
+    WhoisRecord.find_by(domain_id: id).save # need to reload model
+    DomainMailer.registrant_updated_notification_for_old_registrant(id, old_registrant_id, registrant_id, true).deliver
+    DomainMailer.registrant_updated_notification_for_new_registrant(id, old_registrant_id, registrant_id, true).deliver
+
     true
   end
 
@@ -560,7 +600,7 @@ class Epp::Domain < Domain
       msg: I18n.t(:object_status_prohibits_operation)
     } unless pending_deletable?
 
-    self.delete_at = Time.zone.now + Setting.redemption_grace_period.days
+    self.delete_at = (Time.zone.now + (Setting.redemption_grace_period.days + 1.day)).utc.beginning_of_day
     set_pending_delete
     set_server_hold if server_holdable?
     save(validate: false)
@@ -584,6 +624,7 @@ class Epp::Domain < Domain
 
     statuses.delete(DomainStatus::SERVER_HOLD)
     statuses.delete(DomainStatus::EXPIRED)
+    statuses.delete(DomainStatus::SERVER_UPDATE_PROHIBITED)
 
     save
   end
@@ -592,6 +633,8 @@ class Epp::Domain < Domain
 
   # rubocop: disable Metrics/CyclomaticComplexity
   def transfer(frame, action, current_user)
+    @is_transfer = true
+
     case action
     when 'query'
       return domain_transfers.last if domain_transfers.any?
@@ -619,6 +662,7 @@ class Epp::Domain < Domain
     oc.registrar_id = registrar_id
     oc.copy_from_id = c.id
     oc.prefix_code
+    oc.domain_transfer = true
     oc.save!(validate: false)
     oc
   end
@@ -849,6 +893,7 @@ class Epp::Domain < Domain
       ld = parsed_frame.css('legalDocument').first
       return nil unless ld
       return nil if ld.text.starts_with?(ENV['legal_documents_dir']) # escape reloading
+      return nil if ld.text.starts_with?('/home/') # escape reloading
 
       {
         body: ld.text,

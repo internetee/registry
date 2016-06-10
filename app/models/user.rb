@@ -3,4 +3,9 @@ class User < ActiveRecord::Base
   devise :trackable, :timeoutable
 
   attr_accessor :phone
+
+  def id_role_username
+    "#{self.id}-#{self.class}: #{self.username}"
+  end
+
 end

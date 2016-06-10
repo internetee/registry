@@ -1,21 +1,22 @@
-Tere,
+Tere
 
 Domeeni <%= @domain.name %> registreerija vahetuse taotlus on kinnitatud ning andmed registris uuendatud.
 
-Uued registreerija andmed:
-Nimi: <%= @domain.registrant_name %>
-<% if @domain.registrant.priv? %>
-Isikukood: <%= @domain.registrant_ident %>
+Uue registreerija andmed:
+Nimi: <%= @new_registrant.name %>
+
+<% if @new_registrant.priv? %>
+    Isikukood: <%= @new_registrant.ident %>
 <% else %>
-Äriregistrikood: <%= @domain.registrant_ident %>
+    Äriregistrikood: <%= @new_registrant.ident %>
 <% end %>
-Epost: <%= @domain.registrant_email %>
-Tänav: <%= @domain.registrant_street %>
-Linn: <%= @domain.registrant_city %>
-Riik: <%= @domain.registrant_country %>
+Epost: <%= @new_registrant.email %>
+Tänav: <%= @new_registrant.street %>
+Linn: <%= @new_registrant.city %>
+Riik: <%= @new_registrant.country.name %>
 
 Lugupidamisega
-Eesti Interneti SA
+Eesti Interneti Sihtasutus
 
 --------------------------------------
 
@@ -24,16 +25,17 @@ Hi,
 Process for changing registrant of the domain <%= @domain.name %> has been approved and the data in the registry is updated.
 
 New registrant:
-Name: <%= @domain.registrant_name %>
-<% if @domain.registrant.priv? %>
-Personal code: <%= @domain.registrant_ident %>
+Name: <%= @new_registrant.name %>
+
+<% if @new_registrant.priv? %>
+    Personal code: <%= @new_registrant.ident %>
 <% else %>
-Business Registry code: <%= @domain.registrant_ident %>
+    Business Registry code: <%= @new_registrant.ident %>
 <% end %>
-E-mail: <%= @domain.registrant_email %>
-Street: <%= @domain.registrant_street %>
-City: <%= @domain.registrant_city %>
-Country: <%= @domain.registrant_country %>
+E-mail: <%= @new_registrant.email %>
+Street: <%= @new_registrant.street %>
+City: <%= @new_registrant.city %>
+Country: <%= @new_registrant.country.name %>
 
 Best Regards,
 Estonian Internet Foundation

@@ -8,6 +8,12 @@
       .panel-body
         .form-group
           .col-md-4.control-label
+            = label_tag 'domain[verified]', t(:verified)
+          .col-md-6
+            = check_box_tag 'domain[verified]', '1', params[:verified].eql?('1'), onclick: "return (confirm('#{t(:verified_confirm)}') ? true : false);"
+
+        .form-group
+          .col-md-4.control-label
             = label_tag 'domain[legal_document]', t(:legal_document), class: 'required'
             %p.help-block= t(:legal_document_max_size)
           .col-md-6

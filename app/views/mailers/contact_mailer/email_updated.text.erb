@@ -1,10 +1,10 @@
 Tere <%= @contact.name %>
 
-Kontakti <%= @contact.name %> eposti aadress on muudetud
+Kontakti <%= @contact.name %> e-posti aadress on muudetud
 endine aadress: <%= @old_email %>
 uus aadress: <%= @contact.email %>
 
-Eposti aadressile saadetakse domeenidega seotud infot seal hulgas kinnitustaotluseid omaniku vahetuse ja domeeni kustutamise korral. Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduga oma registripidaja poole. Teie registripidaja on <%= @contact.registrar.name %>
+E-posti aadressile saadetakse domeeni toimingutega seotud infot, sealhulgas kinnitustaotlused omanikuvahetuse ja domeeni kustutamise korral. Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja <%= @contact.registrar.name %> poole.
 
 <% if @contact.related_domain_descriptions.present? %>
 Muudatusega seotud domeenid:
@@ -16,14 +16,14 @@ Muudatusega seotud domeenid:
 Kontaktandmed:
 Nimi: <%= @contact.name %>
 Isikukood: <%= @contact.ident %>
-Epost: <%= @contact.email %>
+E-post: <%= @contact.email %>
 Tel: <%= @contact.phone %>
 Tänav: <%= @contact.street %>
 Linn: <%= @contact.city %>
 Riik: <%= @contact.country %>
 
 Lugupidamisega
-Eesti Interneti SA
+Eesti Interneti Sihtasutus
 
 ----------------------------------------------------------------------------------
 
@@ -52,4 +52,4 @@ City: <%= @contact.city %>
 Country: <%= @contact.country %>
 
 Best Regards,
-Eesti Interneti SA
+Estonian Internet Foundation

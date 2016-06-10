@@ -1,36 +1,36 @@
 Lugupeetud domeeni <%= @domain.name %> kontaktisik
 
-Eesti Interneti SA (EIS) domeeniregistrisse on domeeni <%= @domain.name %> kohta kantud järgmised andmed:
+.ee domeeniregistrisse on domeeni <%= @domain.name %> kohta kantud järgmised andmed:
 
 Registreerija nimi: <%= @domain.registrant %>
 Registrikood: <%= @domain.registrant.try(:ident) %>
 
-EIS-le on saanud teatavaks, et juriidiline isik registrikoodiga <%= @domain.registrant.try(:ident) %> on äriregistrist kustutatud.
+Eesti Interneti Sihtasutusele (EIS) on saanud teatavaks, et juriidiline isik registrikoodiga <%= @domain.registrant.try(:ident) %> on äriregistrist kustutatud.
 
 Kuivõrd äriregistrist kustutatud juriidiline isik ei saa olla domeeni registreerijaks, siis algatas EIS <%= l(Time.zone.now, format: :date) %> vastavalt Domeenireeglite (http://www.internet.ee/domeenid/) punktile 6.4 domeeni <%= @domain.name %> suhtes 30 päeva pikkuse kustutusmenetluse. Kustutamise käigus jääb domeen internetis kättesaadavaks.
 
-Domeenireeglite punktist 6.4 tulenevalt on domeeni suhtes õigust omaval registreerijal võimalus esitada domeeni <%= @domain.name %> registripidajale <%= @domain.registrar %> domeeni üleandmise taotlus Domeenireeglite p 5.3.6.2 kohaselt. Taotlusele tuleb lisada domeeni omandamist tõendavad dokumendid, mis asendavad Domeenireeglite punktis 5.3.6.3 sätestatud üleandva registreerija nõusolekut. Vastav dokumentatsioon tuleks esitada Registripidajale esimesel võimalusel.
+Domeenireeglite punktist 6.4 tulenevalt on domeeni suhtes õigust omaval registreerijal võimalus esitada domeeni <%= @domain.name %> registripidajale <%= @domain.registrar %> domeeni üleandmise taotlus Domeenireeglite p 5.3.6.2 kohaselt. Taotlusele tuleb lisada domeeni omandamist tõendavad dokumendid, mis asendavad Domeenireeglite punktis 5.3.6.3 sätestatud üleandva registreerija nõusolekut. Vastav dokumentatsioon tuleb esitada Registripidajale esimesel võimalusel.
 
-Kui üleandmine ei ole 30 päeva jooksul toimunud, kustub domeen <%= @domain.name %> 24 tunni jooksul <%= l(@domain.force_delete_at, format: :short) %> möödumisest juhuslikult valitud ajahetkel. Soovi korral on võimalik domeen pärast selle kustumist registrist "kes ees, see mees" põhimõttel uuesti registreerida.
+Kui üleandmine ei ole 30 päeva jooksul toimunud, kustub domeen <%= @domain.name %> 24 tunni jooksul <%= l(@domain.force_delete_at, format: :date) %> möödumisest juhuslikult valitud ajahetkel. Soovi korral on võimalik domeen pärast selle kustumist registrist "kes ees, see mees" põhimõttel uuesti registreerida.
 
-Lisaküsimuste korral võtke palun ühendust oma registripidajaga <%= @domain.registrar %>, kelle kontaktandmed leiate lingilt http://www.internet.ee/registripidajad/
+Lisaküsimuste korral võtke palun ühendust oma registripidajaga <%= @domain.registrar %>. Registripidajate kontaktid leiate aadressilt http://www.internet.ee/registripidajad/
 
 
 
 Dear contact of <%= @domain.name %> domain
 
-The following details for domain name <%= @domain.name %> have been entered into the Estonian Internet Foundation's (EIF) domain registry:
+The following details for domain name <%= @domain.name %> have been entered into the .ee domain registry:
 
 Registrant's name: <%= @domain.registrant %>
 Registry code: <%= @domain.registrant.try(:ident) %>
 
-EIF has learned that the legal person with registry code <%= @domain.registrant.try(:ident) %> has been deleted from the Business Registry.
+Estonian Internet Foundation (EIS) has learned that the legal person with registry code <%= @domain.registrant.try(:ident) %> has been deleted from the Business Registry.
 
-As a terminated legal person cannot be the registrant of a domain, the EIF started the deletion process of <%= @domain.name %> domain on <%= l(Time.zone.now, format: :date) %> according to the Domain Regulation (http://www.internet.ee/domains/), using the 30-day delete procedure. The domain will remain available on the Internet during the delete procedure.
+As a terminated legal person cannot be the registrant of a domain, the EIS started the deletion process of <%= @domain.name %> domain on <%= l(Time.zone.now, format: :date) %> according to the Domain Regulation (http://www.internet.ee/domains/), using the 30-day delete procedure. The domain will remain available on the Internet during the delete procedure.
 
 According to paragraph 6.4 of the Domain Regulation, the registrant holding a right to the domain name <%= @domain.name %> can submit a domain name transfer application to the registrar <%= @domain.registrar %> in accordance with paragraph 5.3.6.2 of the Domain Regulation. The application must be submitted together with documents certifying the acquisition of the domain that will replace the consent of the surrendering registrant as laid down in paragraph 5.3.6.3 of the Domain Regulation. The relevant documents should be submitted to the registrar as soon as possible.
 
-If the transfer has not been made in 30 days, the domain <%= @domain.name %> will be deleted at a randomly chosen moment within 24 hours after <%= l(@domain.force_delete_at, format: :short) %>. After deletion it is possible to reregister the domain on a "first come, first served" basis.
+If the transfer has not been made in 30 days, the domain <%= @domain.name %> will be deleted at a randomly chosen moment within 24 hours after <%= l(@domain.force_delete_at, format: :date) %>. After deletion it is possible to reregister the domain on a "first come, first served" basis.
 
 Should you have additional questions, please contact your registrar <%= @domain.registrar %>, whose contact information can be found at http://www.internet.ee/registrars/
 
@@ -49,15 +49,15 @@ EIS стало известно, что юридическое лицо с ре�
 
 Согласно пункту 6.4 Правил домена регистрант, имеющий право на домен, может подать регистратору <%= @domain.registrar %> домена <%= @domain.name %> ходатайство о передаче домена в соответствии с п. 5.3.6.2 Правил домена. К ходатайству следует приложить подтверждающие приобретение домена документы, заменяющие в соответствии с пунктом 5.3.6.3 Правил домена согласие передающего доменное имя регистранта. EIS предлагает представить соответствующую документацию  Регистратору при первой возможности, начиная с инициирования процедуры удаления.
 
-Если в течение 30 дней передача не произошла, домен <%= @domain.name %> удаляется по истечении 24 часов <%= l(@domain.force_delete_at, format: :short) %> в случайный момент времени. По желанию после удаления из регистра домен можно снова зарегистрировать по принципу "кто успел, тот и съел".
+Если в течение 30 дней передача не произошла, домен <%= @domain.name %> удаляется по истечении 24 часов <%= l(@domain.force_delete_at, format: :date) %> в случайный момент времени. По желанию после удаления из регистра домен можно снова зарегистрировать по принципу "кто успел, тот и съел".
 
 Просим обратиться к своему регистратору <%= @domain.registrar %>. Контактные данные регистраторов можно найти по адресу http://www.internet.ee/registratory
 
 
 
 Lugupidamisega,
-Yours Sincerely,
+Best Regards,
 С уважением,
 ---
-Eesti Interneti SA
+Eesti Interneti Sihtasutus
 Estonian Internet Foundation

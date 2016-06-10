@@ -1,6 +1,7 @@
 class Contact < ActiveRecord::Base
   include Versions # version/contact_version.rb
   include EppErrors
+  include UserEvents
 
   belongs_to :registrar
   has_many :domain_contacts
@@ -10,6 +11,10 @@ class Contact < ActiveRecord::Base
 
   # TODO: remove later
   has_many :depricated_statuses, class_name: 'DepricatedContactStatus', dependent: :destroy
+
+  has_paper_trail class_name: "ContactVersion", meta: { children: :children_log }
+
+  attr_accessor :legal_document_id
 
   accepts_nested_attributes_for :legal_documents
 
@@ -28,9 +33,12 @@ class Contact < ActiveRecord::Base
     uniqueness: { message: :epp_id_taken },
     format: { with: /\A[\w\-\:\.\_]*\z/i, message: :invalid },
     length: { maximum: 100, message: :too_long_contact_code }
-  validate :ident_valid_format?
+
+  validate :val_ident_type
+  validate :val_ident_valid_format?
   validate :uniq_statuses?
   validate :validate_html
+  validate :val_country_code
 
   after_initialize do
     self.statuses = [] if statuses.nil?
@@ -38,8 +46,9 @@ class Contact < ActiveRecord::Base
     self.ident_updated_at = Time.zone.now if new_record? && ident_updated_at.blank?
   end
 
-  before_validation :set_ident_country_code
+  before_validation :to_upcase_country_code
   before_validation :prefix_code
+  before_validation :strip_email
   before_create :generate_auth_info
 
   before_update :manage_emails
@@ -48,7 +57,7 @@ class Contact < ActiveRecord::Base
     return nil unless deliver_emails == true
     emails = []
     emails << [email, email_was]
-    emails << domains.map(&:registrant_email) if domains.present?
+    # emails << domains.map(&:registrant_email) if domains.present?
     emails = emails.flatten.uniq
     emails.each do |e|
       ContactMailer.email_updated(email_was, e, id, deliver_emails).deliver
@@ -57,6 +66,11 @@ class Contact < ActiveRecord::Base
 
   before_save :manage_statuses
   def manage_statuses
+    if domain_transfer # very ugly but need better workflow
+      self.statuses = statuses | [OK, LINKED]
+      return
+    end
+
     manage_linked
     manage_ok
   end
@@ -70,7 +84,7 @@ class Contact < ActiveRecord::Base
 
   ORG = 'org'
   PRIV = 'priv'
-  BIRTHDAY = 'birthday'
+  BIRTHDAY = 'birthday'.freeze
   PASSPORT = 'passport'
 
   IDENT_TYPES = [
@@ -80,6 +94,7 @@ class Contact < ActiveRecord::Base
   ]
 
   attr_accessor :deliver_emails
+  attr_accessor :domain_transfer # hack but solves problem faster
 
   #
   # STATUSES
@@ -203,6 +218,21 @@ class Contact < ActiveRecord::Base
         ['DeleteProhibited', SERVER_DELETE_PROHIBITED]
       ]
     end
+
+    def to_csv
+      CSV.generate do |csv|
+        csv << column_names
+        all.each do |contact|
+        csv << contact.attributes.values_at(*column_names)
+        end
+      end
+    end
+
+    def pdf(html)
+      kit = PDFKit.new(html)
+      kit.to_pdf
+    end
+
   end
 
   def roid
@@ -213,13 +243,24 @@ class Contact < ActiveRecord::Base
     name || '[no name]'
   end
 
-  def ident_valid_format?
-    case ident_type
-    when 'priv'
-      case ident_country_code
-      when 'EE'
-        code = Isikukood.new(ident)
-        errors.add(:ident, :invalid_EE_identity_format) unless code.valid?
+  def val_ident_type
+    errors.add(:ident_type, :epp_ident_type_invalid, code: code) if !%w(org priv birthday).include?(ident_type)
+  end
+
+  def val_ident_valid_format?
+    case ident_country_code
+    when 'EE'.freeze
+      err_msg = "invalid_EE_identity_format#{"_update" if id}".to_sym
+      case ident_type
+        when 'priv'.freeze
+          errors.add(:ident, err_msg) unless Isikukood.new(ident).valid?
+        when 'org'.freeze
+          # !%w(1 7 8 9).freeze.include?(ident.first) ||
+          if ident.size != 8 || !(ident =~/\A[0-9]{8}\z/)
+            errors.add(:ident, err_msg)
+          end
+        when BIRTHDAY
+          errors.add(:ident, err_msg) if id.blank? # only for create action right now. Later for all of them
       end
     end
   end
@@ -250,6 +291,10 @@ class Contact < ActiveRecord::Base
   # it might mean priv or birthday type
   def priv?
     !org?
+  end
+
+  def birthday?
+    ident_type == BIRTHDAY
   end
 
   def generate_auth_info
@@ -303,22 +348,36 @@ class Contact < ActiveRecord::Base
   # TODO: refactor, it should not allow to destroy with normal destroy,
   # no need separate method
   # should use only in transaction
-  def destroy_and_clean
+  def destroy_and_clean frame
     if domains_present?
       errors.add(:domains, :exist)
       return false
     end
+
+    legal_document_data = Epp::Domain.parse_legal_document_from_frame(frame)
+
+    if legal_document_data
+
+        doc = LegalDocument.create(
+            documentable_type: Contact,
+            document_type:     legal_document_data[:type],
+            body:              legal_document_data[:body]
+        )
+        self.legal_documents = [doc]
+        self.legal_document_id = doc.id
+        self.save
+    end
     destroy
   end
 
-  def set_ident_country_code
-    return true unless ident_country_code_changed? && ident_country_code.present?
-    code = Country.new(ident_country_code)
-    if code
-      self.ident_country_code = code.alpha2
-    else
-      errors.add(:ident, :invalid_country_code)
-    end
+  def to_upcase_country_code
+    self.ident_country_code = ident_country_code.upcase if ident_country_code
+    self.country_code       = country_code.upcase if country_code
+  end
+
+  def val_country_code
+    errors.add(:ident, :invalid_country_code) unless Country.new(ident_country_code)
+    errors.add(:ident, :invalid_country_code) unless Country.new(country_code)
   end
 
   def related_domain_descriptions
@@ -365,6 +424,10 @@ class Contact < ActiveRecord::Base
     "#{code} #{name}"
   end
 
+  def strip_email
+    self.email = email.to_s.strip
+  end
+
 
   # what we can do load firstly by registrant
   # if total is smaller than needed, the load more
@@ -388,7 +451,10 @@ class Contact < ActiveRecord::Base
 
 
     # fetch domains
-    domains  = Domain.where("domains.id IN (#{filter_sql})").includes(:registrar).page(page).per(per)
+    domains  = Domain.where("domains.id IN (#{filter_sql})")
+    domains = domains.where("domains.id" => params[:leave_domains]) if params[:leave_domains]
+    domains = domains.includes(:registrar).page(page).per(per)
+
     if sorts.first == "registrar_name".freeze
       # using small rails hack to generate outer join
       domains = domains.includes(:registrar).where.not(registrars: {id: nil}).order("registrars.name #{order} NULLS LAST")
@@ -405,6 +471,30 @@ class Contact < ActiveRecord::Base
     domains.each{|d| d.roles = domain_c[d.id].uniq}
 
     domains
+  end
+
+  def all_registrant_domains(page: nil, per: nil, params: {}, registrant: nil)
+
+    if registrant
+      sorts = params.fetch(:sort, {}).first || []
+      sort  = Domain.column_names.include?(sorts.first) ? sorts.first : "valid_to"
+      order = {"asc"=>"desc", "desc"=>"asc"}[sorts.second] || "desc"
+
+      domain_ids = DomainContact.distinct.where(contact_id: registrant.id).pluck(:domain_id)
+
+      domains  = Domain.where(id: domain_ids).includes(:registrar).page(page).per(per)
+      if sorts.first == "registrar_name".freeze
+        domains = domains.includes(:registrar).where.not(registrars: {id: nil}).order("registrars.name #{order} NULLS LAST")
+      else
+        domains = domains.order("#{sort} #{order} NULLS LAST")
+      end
+
+      domain_c = Hash.new([])
+      registrant_domains.where(id: domains.map(&:id)).each{|d| domain_c[d.id] |= ["Registrant".freeze] }
+      DomainContact.where(contact_id: id, domain_id: domains.map(&:id)).each{|d| domain_c[d.domain_id] |= [d.type] }
+      domains.each{|d| d.roles = domain_c[d.id].uniq}
+      domains
+    end
   end
 
   def set_linked
@@ -471,8 +561,15 @@ class Contact < ActiveRecord::Base
     ]).present?
   end
 
- def update_related_whois_records
-   related_domain_descriptions.each{ |x, y| WhoisRecord.find_by(name: x).save}
- end	 
+  def update_related_whois_records
+    names = related_domain_descriptions.keys
+    UpdateWhoisRecordJob.enqueue(names, :domain) if names.present?
+  end
+
+  def children_log
+    log = HashWithIndifferentAccess.new
+    log[:legal_documents]= [legal_document_id]
+    log
+  end
 
 end

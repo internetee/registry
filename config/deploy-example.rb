@@ -144,6 +144,7 @@ set :shared_paths, [
   'config/initializers/current_commit_hash.rb',
   'log',
   'public/system',
+  'public/assets',
   'export/zonefiles',
   'import/bank_statements',
   'import/legal_documents',
@@ -179,6 +180,9 @@ task setup: :environment do
 
   queue! %(mkdir -p "#{deploy_to}/shared/public/system")
   queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/public/system")
+
+  queue! %(mkdir -p "#{deploy_to}/shared/public/assets")
+  queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/public/assets")
 
   queue! %(mkdir -p "#{deploy_to}/shared/export/zonefiles")
   queue! %(chmod g+rx,u+rwx "#{deploy_to}/shared/export/zonefiles")
@@ -219,6 +223,7 @@ task deploy: :environment do
     invoke :'deploy:link_shared_paths'
     invoke :'bundle:install'
     invoke :'rails:db_migrate'
+    invoke :'rails:assets_precompile'
     to :launch do
       invoke :restart
       invoke :'deploy:cleanup'
@@ -230,7 +235,7 @@ end
 desc 'Loads current commit hash'
 task load_commit_hash: :environment do
   queue! %(
-    echo "CURRENT_COMMIT_HASH = '$(git --git-dir #{deploy_to}/scm rev-parse --short HEAD)'" > \
+    echo "CURRENT_COMMIT_HASH = '$(git --git-dir #{deploy_to}/scm rev-parse --short #{branch})'" > \
     #{deploy_to}/shared/config/initializers/current_commit_hash.rb
   )
 end

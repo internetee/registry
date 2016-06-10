@@ -6,7 +6,7 @@ class Admin::RegistrarsController < AdminController
   end
 
   def index
-    @q = Registrar.ordered.search(params[:q])
+    @q = Registrar.joins(:accounts).ordered.search(params[:q])
     @registrars = @q.result.page(params[:page])
   end
 
@@ -57,7 +57,7 @@ class Admin::RegistrarsController < AdminController
   def registrar_params
     params.require(:registrar).permit(
       :name, :reg_no, :vat_no, :street, :city, :state, :zip, :billing_address,
-      :country_code, :email, :phone, :billing_email, :code
+      :country_code, :email, :phone, :billing_email, :code, :test_registrar
     )
   end
 end

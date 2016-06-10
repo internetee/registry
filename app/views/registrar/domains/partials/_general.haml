@@ -3,15 +3,16 @@
     %h3.panel-title= t(:general)
   .panel-body
     %dl.dl-horizontal
-      %dt= t(:password)
+      %dt= t(:authinfo_pw)
       %dd= @data.css('pw').text.present? ? @data.css('pw').text : t('hidden')
 
       - if @data.css('pw').text.blank?
         %dt= t(:registrar)
         %dd= @data.css('clID').text
 
+      - registrant = Contact.find_by_code(@data.css('registrant').text)
       %dt= t(:registrant)
-      %dd= @data.css('registrant').text
+      %dd= "#{registrant.name} (#{@data.css('registrant').text})"
 
       %dt= t(:registered)
       %dd= @data.css('crDate').text
