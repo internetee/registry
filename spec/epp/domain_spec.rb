@@ -134,7 +134,7 @@ describe 'EPP Domain', epp: true do
 
       key = d.dnskeys.last
 
-      key.ds_alg.should == 3
+      key.ds_alg.should == 5
       key.ds_key_tag.should_not be_blank
 
       key.ds_digest_type.should == Setting.ds_algorithm
@@ -394,7 +394,7 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(domain_create_with_invalid_ns_ip_xml)
       response[:results][0][:result_code].should == '2005'
       response[:results][0][:msg].should == 'IPv4 is invalid [ipv4]'
-      response[:results][0][:value].should == ['192.0.2.2.invalid']
+      response[:results][0][:value].should == '192.0.2.2.invalid'
       response[:results][1][:result_code].should == '2005'
       response[:results][1][:msg].should == 'IPv6 is invalid [ipv6]'
       response[:results][1][:value].should == 'INVALID_IPV6'
