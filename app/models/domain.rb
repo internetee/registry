@@ -483,9 +483,11 @@ class Domain < ActiveRecord::Base
   def validate_nameserver_ips
     nameservers.to_a.reject(&:marked_for_destruction?).each do |ns|
       next unless ns.hostname.end_with?(".#{name}")
-      next if ns.ipv4.present?
+      next if ns.ipv4.present? || ns.ipv6.present?
+
       errors.add(:nameservers, :invalid) if errors[:nameservers].blank?
       ns.errors.add(:ipv4, :blank)
+      ns.errors.add(:ipv6, :blank)
     end
   end
 
