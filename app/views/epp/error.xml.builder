@@ -7,10 +7,10 @@ xml.epp_head do
         xml.value('xmlns:obj' => 'urn:ietf:params:xml:ns:obj') do
           if (val = x[:value][:val]).respond_to?(:each)
             val.each do |el|
-              xml.tag!("obj:#{x[:value][:obj]}", el)
+              xml.tag!("#{controller.controller_name}:#{x[:value][:obj]}", el)
             end
           else
-            xml.tag!("obj:#{x[:value][:obj]}", val)
+            xml.tag!("#{controller.controller_name}:#{x[:value][:obj]}", val)
           end
         end if x[:value]
 
