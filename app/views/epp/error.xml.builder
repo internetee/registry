@@ -5,12 +5,16 @@ xml.epp_head do
         xml.msg(x[:msg], 'lang' => 'en')
 
         xml.value('xmlns:obj' => 'urn:ietf:params:xml:ns:obj') do
-          if (val = x[:value][:val]).respond_to?(:each)
+          value = x[:value][:val]
+          attrs = {}
+          attrs["s"] = value if x[:value][:obj] == "status"
+
+          if (val = value).respond_to?(:each)
             val.each do |el|
-              xml.tag!("#{controller.controller_name}:#{x[:value][:obj]}", el)
+              xml.tag!("#{controller.controller_name}:#{x[:value][:obj]}", el, attrs)
             end
           else
-            xml.tag!("#{controller.controller_name}:#{x[:value][:obj]}", val)
+            xml.tag!("#{controller.controller_name}:#{x[:value][:obj]}", val, attrs)
           end
         end if x[:value]
 
