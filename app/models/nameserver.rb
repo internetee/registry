@@ -32,7 +32,7 @@ class Nameserver < ActiveRecord::Base
             [:ipv4, :invalid, { value: { obj: 'hostAddr', val: ipv4 } }],
             [:ipv6, :invalid, { value: { obj: 'hostAddr', val: ipv6 } }]
         ],
-        '2306' => [
+        '2003' => [
             [:ipv4, :blank]
         ]
     }
