@@ -482,7 +482,6 @@ class Domain < ActiveRecord::Base
 
       errors.add(:nameservers, :invalid) if errors[:nameservers].blank?
       ns.errors.add(:ipv4, :blank)
-      ns.errors.add(:ipv6, :blank)
     end
   end
 
