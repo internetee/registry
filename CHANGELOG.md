@@ -1,4 +1,4 @@
-14.06.2016
+15.06.2016
 * Portal for registrants
   * Notice on login screen on limited access to Estonian electronic IDs (#120182999)
 * Admin interface:
