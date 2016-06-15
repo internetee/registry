@@ -21,7 +21,7 @@ class Registrant::DomainDeleteConfirmsController < RegistrantController
                                                           domain_name: @domain.name,
                                                           verification_token: params[:token])
     if params[:rejected]
-      if @registrant_verification.domain_registrant_delete_reject!
+      if @registrant_verification.domain_registrant_delete_reject!("email link #{current_user.username}")
         flash[:notice] = t(:registrant_domain_verification_rejected)
         redirect_to registrant_domain_delete_confirm_path(@domain.id, rejected: true)
       else
@@ -29,7 +29,7 @@ class Registrant::DomainDeleteConfirmsController < RegistrantController
         return render 'show'
       end
     elsif params[:confirmed]
-      if @registrant_verification.domain_registrant_delete_confirm!
+      if @registrant_verification.domain_registrant_delete_confirm!("email link #{current_user.username}")
         flash[:notice] = t(:registrant_domain_verification_confirmed)
         redirect_to registrant_domain_delete_confirm_path(@domain.id, confirmed: true)
       else
