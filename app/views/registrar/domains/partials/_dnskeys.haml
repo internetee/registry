@@ -17,7 +17,7 @@
                 = x.css('alg').first.text
             %tr
               %td
-                %b= "#{t(:flag)}:"
+                %b= "#{t(:ds_digest_type)}:"
                 = x.css('digestType').text
             %tr
               %td
@@ -25,7 +25,7 @@
                 = x.css('digest').text
 
             - @data.css('keyData').each do |x|
-              %tr
+            %tr
               %td
                 %b= "#{t(:flag)}:"
                 = x.css('flags').text
@@ -43,7 +43,7 @@
                 = x.css('pubKey').text
             %tr
               %td{:colspan => "3"}
-                = "&nbsp;"
+                = "&nbsp;".html_safe
 
         - if @data.css('dsData').empty?
           - @data.css('keyData').each do |x|
@@ -63,4 +63,4 @@
                 = x.css('pubKey').text
             %tr
               %td{:colspan => "3"}
-                = "&nbsp;"
+                = "&nbsp;".html_safe
