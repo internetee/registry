@@ -25,25 +25,25 @@
                 = x.css('digest').text
 
             - @data.css('keyData').each do |x|
-            %tr
-              %td
-                %b= "#{t(:flag)}:"
-                = x.css('flags').text
-            %tr
-              %td
-                %b= "#{t(:protocol)}:"
-                = x.css('protocol').text
-            %tr
-              %td
-                %b= "#{t(:public_key)}:"
-                = x.css('alg').text
-            %tr
-              %td{:colspan => "3"}
-                %b= "#{t(:public_key)}:"
-                = x.css('pubKey').text
-            %tr
-              %td{:colspan => "3"}
-                = "&nbsp;".html_safe
+              %tr
+                %td
+                  %b= "#{t(:flag)}:"
+                  = x.css('flags').text
+              %tr
+                %td
+                  %b= "#{t(:protocol)}:"
+                  = x.css('protocol').text
+              %tr
+                %td
+                  %b= "#{t(:public_key)}:"
+                  = x.css('alg').text
+              %tr
+                %td{:colspan => "3"}
+                  %b= "#{t(:public_key)}:"
+                  = x.css('pubKey').text
+              %tr
+                %td{:colspan => "3"}
+                  = "&nbsp;".html_safe
 
         - if @data.css('dsData').empty?
           - @data.css('keyData').each do |x|
