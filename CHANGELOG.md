@@ -13,6 +13,7 @@
   * BUG: nameserver lable maximum 63 char length validation handled inproperly (#114677695) - support currently limited to Estonian IDN characters.
   * BUG: validation passes out of range ident_type values - now limited to org, priv and birthday (#111601356)
   * BUG: internal error on hello (#120828283)
+  * BUG: internal error broken incoming frame (#121580929)
 * Deploy:
   * BUG: incorrect version in commit message on deploy - config/deploy-example.rb (#120259603)
 
