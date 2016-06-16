@@ -5,7 +5,7 @@
     .table-responsive
       %table.table.table-hover.table-condensed
         %tbody
-        - @data.css('dsData').each do |x|
+        - @data.css('dsData').each_with_index do |x, index|
           - if x.css('digest').text.present?
             %tr
               %td
@@ -23,31 +23,29 @@
               %td
                 %b= "#{t(:ds_digest)}:"
                 = x.css('digest').text
-
-            - @data.css('keyData').each do |x, index|
-              %tr
-                %td
-                  %b= "#{t(:flag)}:"
-                  = x.css('flags').text
-              %tr
-                %td
-                  %b= "#{t(:protocol)}:"
-                  = x.css('protocol').text
-              %tr
-                %td
-                  %b= "#{t(:public_key)}:"
-                  = x.css('alg').text
+            %tr
+              %td
+                %b= "#{t(:flag)}:"
+                = x.css('keyData').css('flags').text
+            %tr
+              %td
+                %b= "#{t(:protocol)}:"
+                = x.css('keyData').css('protocol').text
+            %tr
+              %td
+                %b= "#{t(:public_key)}:"
+                = x.css('alg').text
+            %tr
+              %td{:colspan => "3"}
+                %b= "#{t(:public_key)}:"
+                = x.css('keyData').css('pubKey').text
+            - if index != @data.css('keyData').size - 1
               %tr
                 %td{:colspan => "3"}
-                  %b= "#{t(:public_key)}:"
-                  = x.css('pubKey').text
-              - if index != @data.css('keyData').size - 1
-                %tr
-                  %td{:colspan => "3"}
-                    = "&nbsp;".html_safe
+                  = "&nbsp;".html_safe
 
         - if @data.css('dsData').empty?
-          - @data.css('keyData').each do |x, index|
+          - @data.css('keyData').each_with_index do |x, index|
             %tr
               %td
                 %b= "#{t(:flag)}:"
