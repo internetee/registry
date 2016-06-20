@@ -8,7 +8,7 @@ class Admin::PendingDeletesController < AdminController
     if registrant_verification.domain_registrant_delete_confirm!("admin #{current_user.username}")
       redirect_to admin_domain_path(@domain.id), notice: t(:pending_applied)
     else
-      redirect_to admin_edit_domain_path(@domain.id), alert: t(:failure)
+      redirect_to admin_domain_path(@domain.id), alert: t(:failure)
     end
   end
 
