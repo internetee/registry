@@ -1,3 +1,8 @@
+16.06.2016
+* EPP
+  * BUG: XML syntax error for poll and logout if optional clTRID is missing (#121580929)
+  * support for glue records with ipv6 addresses only (#120095555)
+
 15.06.2016
 * Portal for registrants
   * Notice on login screen on limited access to Estonian electronic IDs (#120182999)
