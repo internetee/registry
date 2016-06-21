@@ -143,7 +143,7 @@ class Epp::Domain < Domain
     code = registrant_frame.try(:text)
     if code.present?
       if action == 'chg' && registrant_change_prohibited?
-        add_epp_error('2304', nil, DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
+        add_epp_error('2304', "status", DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
       end
       regt = Registrant.find_by(code: code)
       if regt
