@@ -11,9 +11,9 @@ class EppConstraint
   # creates parsed_frame, detects epp request object
   def matches?(request)
     # TODO: Maybe move this to controller to keep params clean
-    request.params[:raw_frame] = request.params[:raw_frame].gsub!(/(?<=>)(.*?)(?=<)/) { |s| s.strip}
-    request.params[:nokogiri_frame] ||= Nokogiri::XML(request.params[:raw_frame])
-    request.params[:parsed_frame] ||= request.params[:nokogiri_frame].dup.remove_namespaces!
+    request.params[:raw_frame] = request.params[:raw_frame].gsub!(/(?<=>)(.*?)(?=<)/) { |s| s.strip} if request.params[:raw_frame]
+    request.params[:nokogiri_frame] ||= Nokogiri::XML(request.params[:raw_frame] || request.params[:frame])
+    request.params[:parsed_frame]   ||= request.params[:nokogiri_frame].dup.remove_namespaces!
 
     unless [:keyrelay, :poll, :session, :not_found].include?(@type)
       element = "//#{@type}:#{request.params[:action]}"
