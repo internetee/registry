@@ -24,7 +24,11 @@
       .panel-body
         %dl.dl-horizontal
           %dt= t(:name)
-          %dd= link_to(domain.name, admin_domain_path(@version.item_id))
+          - if !domain.name
+            - domain_name = Domain.find(@version.item_id).try(:name)
+          - else
+            - domain_name = domain.name
+          %dd= link_to(domain_name, admin_domain_path(@version.item_id))
 
           %dt= t(:created)
           %dd
@@ -93,11 +97,12 @@
                 \...#{ns[:public_key].to_s[-20,20]}
             %br
 
-          %dt= t(:registrar)
-          %dd{class: changing_css_class(@version,"registrar_id")}
-            = link_to admin_registrar_path(domain.registrar), target: "registrar_#{domain.registrar.id}" do
-              = domain.registrar.name
-      %span{:style => "margin: 20px 20px; clear:both;"}
+          - if domain.registrar
+            %dt= t(:registrar)
+            %dd{class: changing_css_class(@version,"registrar_id")}
+              = link_to admin_registrar_path(domain.registrar), target: "registrar_#{domain.registrar.id}" do
+                = domain.registrar.name
+            %span{:style => "margin: 20px 20px; clear:both;"}
 
         - if @version.previous
           = link_to(t(:previous),
