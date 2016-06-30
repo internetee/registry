@@ -14,9 +14,7 @@ namespace :legal_doc do
 
     LegalDocument.where(checksum: [nil, ""]).find_each do |x|
       if File.exist?(x.path)
-        digest = Digest::SHA1.new
-        digest.update File.binread(x.path)
-        x.checksum = digest.to_s
+        x.checksum = x.calc_checksum
         x.save
         count += 1
       end
@@ -33,7 +31,7 @@ namespace :legal_doc do
     count = 0
     modified = Array.new
 
-    LegalDocument.find_each do |x|
+    LegalDocument.where.not(checksum: [nil, ""]).find_each do |x|
       if File.exist?(x.path)
 
         LegalDocument.where(checksum: x.checksum) do |y|

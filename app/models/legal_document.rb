@@ -55,6 +55,12 @@ class LegalDocument < ActiveRecord::Base
     end
   end
 
+  def calc_checksum
+    digest = Digest::SHA1.new
+    digest.update File.binread(path)
+    digest.to_s
+  end
+
   def add_creator
     self.creator_str = ::PaperTrail.whodunnit
     true
