@@ -644,11 +644,11 @@ describe 'EPP Domain', epp: true do
       response[:results][2][:msg].should == 'Valid flags are: 0, 256, 257 [flags]'
       response[:results][2][:value].should == '250'
 
-      response[:results][3][:msg].should == 'Valid algorithms are: 3, 5, 6, 7, 8, 10, 13, 14 [alg]'
-      response[:results][3][:value].should == '10'
+      response[:results][3][:msg].should == 'Valid flags are: 0, 256, 257 [flags]'
+      response[:results][3][:value].should == '1'
 
-      response[:results][4][:msg].should == 'Valid flags are: 0, 256, 257 [flags]'
-      response[:results][4][:value].should == '1'
+      response[:results][4][:msg].should == 'Valid algorithms are: 3, 5, 6, 7, 8, 10, 13, 14 [alg]'
+      response[:results][4][:value].should == '254'
 
       response[:results][5][:msg].should == 'Valid protocols are: 3 [protocol]'
       response[:results][5][:value].should == '5'
