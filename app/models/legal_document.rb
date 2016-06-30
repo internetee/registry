@@ -32,9 +32,9 @@ class LegalDocument < ActiveRecord::Base
 
 
   def save_to_filesystem
-
     digest = Digest::SHA1.new
-    ld = LegalDocument.where(checksum: digest.update(Base64.decode64(body)))
+    binary = Base64.decode64(body)
+    ld = LegalDocument.where(checksum: digest.update(binary))
 
     if !ld
       loop do
@@ -47,7 +47,7 @@ class LegalDocument < ActiveRecord::Base
         break unless File.file?(path)
       end
 
-      File.open(path, 'wb') { |f| f.write(Base64.decode64(body)) } unless Rails.env.test?
+      File.open(path, 'wb') { |f| f.write(binary) } unless Rails.env.test?
       self.path = path
     else
 
