@@ -32,19 +32,16 @@ namespace :legal_doc do
     modified = Array.new
 
     LegalDocument.where.not(checksum: [nil, ""]).find_each do |x|
-      if File.exist?(x.path)
+      next if modified.include?(x.checksum)
+      next if !File.exist?(x.path)
+      modified.push(x.checksum)
 
-        LegalDocument.where(checksum: x.checksum) do |y|
 
-          if x.id != y.id && !modified.include?(x.id)
-
-            File.delete(y.path) if File.exist?(y.path)
-            y.path = x.path
-            y.save
-            modified.push(y.id)
-            count += 1
-
-          end
+      LegalDocument.where(checksum: x.checksum).where.not(id: x.id) do |y|
+        unless modified.include?(x.id)
+          File.delete(y.path) if File.exist?(y.path)
+          y.update(path: x.path)
+          count += 1
         end
       end
     end
