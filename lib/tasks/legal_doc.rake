@@ -8,17 +8,15 @@ namespace :legal_doc do
 
   desc 'Generate hash'
   task generate_hash: :environment do
-
     start = Time.zone.now.to_f
     puts '-----> Generating unique hash for legal documents'
     count = 0
 
-    LegalDocument.find_each do |x|
-
-      if File.exist?(x.path) && x.body_hash.blank?
+    LegalDocument.where(checksum: [nil, ""]).find_each do |x|
+      if File.exist?(x.path)
         digest = Digest::SHA1.new
         digest.update File.binread(x.path)
-        x.checksum = digest.hexdigest
+        x.checksum = digest.to_s
         x.save
         count += 1
       end
