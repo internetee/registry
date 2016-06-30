@@ -635,7 +635,7 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(xml)
 
       response[:results][0][:msg].should ==
-        'Valid algorithms are: 3, 5, 6, 7, 8, 252, 253, 254, 255 [alg]'
+        'Valid algorithms are: 3, 5, 6, 7, 8, 10, 13, 14 [alg]'
       response[:results][0][:value].should == '9'
 
       response[:results][1][:msg].should == 'Valid protocols are: 3 [protocol]'
