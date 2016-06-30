@@ -34,9 +34,9 @@ class LegalDocument < ActiveRecord::Base
   def save_to_filesystem
     digest = Digest::SHA1.new
     binary = Base64.decode64(body)
-    ld = LegalDocument.where(checksum: digest.update(binary))
+    ld     = LegalDocument.find_by(checksum: digest.update(binary))
 
-    if !ld
+    if ld.nil?
       loop do
         rand = SecureRandom.random_number.to_s.last(4)
         next if rand.to_i == 0 || rand.length < 4
@@ -49,10 +49,9 @@ class LegalDocument < ActiveRecord::Base
 
       File.open(path, 'wb') { |f| f.write(binary) } unless Rails.env.test?
       self.path = path
+
     else
-
-      self.path = ld.first.path
-
+      self.path = ld.path
     end
   end
 
