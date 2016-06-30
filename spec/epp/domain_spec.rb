@@ -644,7 +644,7 @@ describe 'EPP Domain', epp: true do
       response[:results][2][:msg].should == 'Valid flags are: 0, 256, 257 [flags]'
       response[:results][2][:value].should == '250'
 
-      response[:results][3][:msg].should == 'Valid algorithms are: 3, 5, 6, 7, 8, 252, 253, 254, 255 [alg]'
+      response[:results][3][:msg].should == 'Valid algorithms are: 3, 5, 6, 7, 8, 10, 13, 14 [alg]'
       response[:results][3][:value].should == '10'
 
       response[:results][4][:msg].should == 'Valid flags are: 0, 256, 257 [flags]'
