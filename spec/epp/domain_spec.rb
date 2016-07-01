@@ -727,9 +727,9 @@ describe 'EPP Domain', epp: true do
 
       d = Domain.last
       ds = d.dnskeys.first
-      ds.ds_key_tag.should == '12345'
+      ds.ds_key_tag.should == '46443'
       ds.ds_alg.should == 3
-      ds.ds_digest_type.should == 1
+      ds.ds_digest_type.should == 2
       ds.ds_digest.should == '49FD46E6C4B45C55D4AC'
       ds.flags.should be_nil
       ds.protocol.should be_nil
@@ -759,9 +759,9 @@ describe 'EPP Domain', epp: true do
 
       d = Domain.last
       ds = d.dnskeys.first
-      ds.ds_key_tag.should == '12345'
+      ds.ds_key_tag.should == '46443'
       ds.ds_alg.should == 3
-      ds.ds_digest_type.should == 1
+      ds.ds_digest_type.should == 2
       ds.ds_digest.should == '49FD46E6C4B45C55D4AC'
       ds.flags.should == 0
       ds.protocol.should == 3
@@ -2193,7 +2193,7 @@ describe 'EPP Domain', epp: true do
             keyData: {
               flags: { value: '256' },
               protocol: { value: '3' },
-              alg: { value: '254' },
+              alg: { value: '8' },
               pubKey: { value: '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0' }
             }
           }
@@ -2290,7 +2290,7 @@ describe 'EPP Domain', epp: true do
             keyData: {
               flags: { value: '256' },
               protocol: { value: '3' },
-              alg: { value: '254' },
+              alg: { value: '8' },
               pubKey: { value: '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0' }
             }
           }
@@ -2326,7 +2326,7 @@ describe 'EPP Domain', epp: true do
           { keyData: {
               flags: { value: '256' },
               protocol: { value: '3' },
-              alg: { value: '254' },
+              alg: { value: '8' },
               pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
             }
           }
@@ -2752,7 +2752,7 @@ describe 'EPP Domain', epp: true do
       domain.delete_at = Time.zone.now
       domain.save
 
-      Domain.start_delete_period
+      DomainCron.start_delete_period
 
       exp_date = domain.valid_to.to_date
 
@@ -2776,13 +2776,13 @@ describe 'EPP Domain', epp: true do
       domain.delete_at = old_delete_at
       domain.save
 
-      Domain.start_expire_period
+      DomainCron.start_expire_period
       domain.reload
       domain.valid_to = old_valid_to
       domain.outzone_at = old_outzone_at
       domain.delete_at = old_delete_at
       domain.save
-      Domain.start_redemption_grace_period
+      DomainCron.start_redemption_grace_period
 
       domain.reload
       domain.statuses.include?(DomainStatus::EXPIRED).should == true

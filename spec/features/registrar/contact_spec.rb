@@ -62,7 +62,7 @@ feature 'Contact', type: :feature do
         visit '/registrar/contacts/new'
         current_path.should == '/registrar/contacts/new'
 
-        fill_in 'depp_contact_ident',  with: 'org-ident'
+        fill_in 'depp_contact_ident',  with: '12345678'
         fill_in 'depp_contact_name',   with: 'Business Name Ltd'
         fill_in 'depp_contact_email',  with: 'example@example.com'
         fill_in 'depp_contact_street', with: 'Example street 12'
@@ -72,7 +72,7 @@ feature 'Contact', type: :feature do
         click_button 'Create'
 
         page.should have_text('Business Name Ltd')
-        page.should have_text('org-ident [EE org]')
+        page.should have_text('12345678 [EE org]')
       end
 
       it 'should create new contact with success' do
