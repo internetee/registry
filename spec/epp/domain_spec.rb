@@ -712,6 +712,8 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'creates domain with ds data' do
+      Setting.key_data_allowed = false
+      Setting.ds_data_allowed = true
       xml = domain_create_xml({}, {
         _anonymus: [
           { dsData: {
@@ -727,9 +729,9 @@ describe 'EPP Domain', epp: true do
 
       d = Domain.last
       ds = d.dnskeys.first
-      ds.ds_key_tag.should == '46443'
+      ds.ds_key_tag.should == '12345'
       ds.ds_alg.should == 3
-      ds.ds_digest_type.should == 2
+      ds.ds_digest_type.should == 1
       ds.ds_digest.should == '49FD46E6C4B45C55D4AC'
       ds.flags.should be_nil
       ds.protocol.should be_nil
@@ -738,6 +740,8 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'creates domain with ds data with key' do
+      Setting.key_data_allowed = true
+      Setting.ds_data_allowed = true
       xml = domain_create_xml({}, {
         _anonymus: [
           { dsData: {
@@ -746,7 +750,7 @@ describe 'EPP Domain', epp: true do
               digestType: { value: '1' },
               digest: { value: '49FD46E6C4B45C55D4AC' },
               keyData: {
-                flags: { value: '0' },
+                flags: { value: '257' },
                 protocol: { value: '3' },
                 alg: { value: '5' },
                 pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
@@ -759,11 +763,11 @@ describe 'EPP Domain', epp: true do
 
       d = Domain.last
       ds = d.dnskeys.first
-      ds.ds_key_tag.should == '46443'
+      ds.ds_key_tag.should == '12345'
       ds.ds_alg.should == 3
-      ds.ds_digest_type.should == 2
+      ds.ds_digest_type.should == 1
       ds.ds_digest.should == '49FD46E6C4B45C55D4AC'
-      ds.flags.should == 0
+      ds.flags.should == 257
       ds.protocol.should == 3
       ds.alg.should == 5
       ds.public_key.should == '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
