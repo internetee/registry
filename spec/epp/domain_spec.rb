@@ -2654,7 +2654,7 @@ describe 'EPP Domain', epp: true do
 
       old_balance = @registrar1.balance
       old_activities = @registrar1.cash_account.account_activities.count
-
+      @registrar1.credit!({sum: -old_balance})
       domain.valid_to = Time.zone.now.to_date + 10.days
       domain.save
 
@@ -2668,12 +2668,12 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(xml)
       response[:results][0][:msg].should == 'Billing failure - credit balance low'
       response[:results][0][:result_code].should == '2104'
-
+      @registrar1.credit!({sum: +old_balance})
       domain.reload
       domain.valid_to.should == exp_date # ensure domain was not renewed
 
       @registrar1.balance.should == old_balance
-      @registrar1.cash_account.account_activities.count.should == old_activities
+      @registrar1.cash_account.account_activities.count.should == (old_activities + 2)
       f.delete
     end
 
@@ -2689,7 +2689,7 @@ describe 'EPP Domain', epp: true do
       response[:results][0][:msg].should == 'Given and current expire dates do not match'
     end
 
-    it 'returns an error when period is invalid' do
+    it 'returns an error when pricelist is invalid' do
       domain.valid_to = Time.zone.now.to_date + 10.days
       domain.save
       exp_date = domain.valid_to.to_date
@@ -2701,13 +2701,13 @@ describe 'EPP Domain', epp: true do
       )
 
       response = epp_plain_request(xml)
-      response[:results][0][:msg].should == 'Period must add up to 1, 2 or 3 years [period]'
-      response[:results][0][:result_code].should == '2306'
-      response[:results][0][:value].should == '4'
+      response[:results][0][:msg].should == 'Active price missing for this operation!'
+      response[:results][0][:result_code].should == '2104'
     end
 
     it 'does not renew a domain unless less than 90 days till expiration' do
       # both days are inclusive
+      Setting.days_to_renew_domain_before_expire = 89
       domain.valid_to = Time.zone.now.to_date + 90.days
       domain.save
       exp_date = domain.valid_to.to_date
@@ -2761,7 +2761,7 @@ describe 'EPP Domain', epp: true do
       domain.delete_at = Time.zone.now
       domain.save
 
-      DomainCron.start_delete_period
+      DomainCron.destroy_delete_candidates
 
       exp_date = domain.valid_to.to_date
 
