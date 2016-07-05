@@ -30,6 +30,8 @@ Hi,
 
 Registrant change process for the domain <%= @params[:name] %> has been started.
 
+Please verify the details of the following change request. In case of problems contact your registrar <%= @params[:registrar_name] %>
+
 New registrant:
 Name: <%= @params[:registrant_name] %>
 <% if @params[:registrant_priv] %>
@@ -41,7 +43,11 @@ Street: <%= @params[:registrant_street] %>
 City: <%= @params[:registrant_city] %>
 Country: <%= @params[:registrant_country] %>
 
-Please contact to your registrar <%= @params[:registrar_name] %> if you have any questions.
+The registrant change procedure will be completed only after the current registrant <%= @params[:old_registrant_name] %> has approved it.
+
+Change request will be cancelled in case <%= @params[:old_registrant_name] %> rejects or does not approve it in <%= Setting.expire_pending_confirmation %> hours.
+
+Please contact registrar <%= @params[:registrar_name] %> in case of questions. You can find the registrar's contacts at http://internet.ee/registrars.
 
 Best Regards,
 Estonian Internet Foundation
