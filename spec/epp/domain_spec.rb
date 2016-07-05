@@ -740,7 +740,7 @@ describe 'EPP Domain', epp: true do
     end
 
     it 'creates domain with ds data with key' do
-      Setting.key_data_allowed = true
+      Setting.key_data_allowed = false
       Setting.ds_data_allowed = true
       xml = domain_create_xml({}, {
         _anonymus: [
@@ -767,10 +767,10 @@ describe 'EPP Domain', epp: true do
       ds.ds_alg.should == 3
       ds.ds_digest_type.should == 1
       ds.ds_digest.should == '49FD46E6C4B45C55D4AC'
-      ds.flags.should == 257
-      ds.protocol.should == 3
-      ds.alg.should == 5
-      ds.public_key.should == '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
+      ds.flags.should be_nil
+      ds.protocol.should be_nil
+      ds.alg.should be_nil
+      ds.public_key.should be_nil
     end
 
     # it 'prohibits dsData with key' do
@@ -801,6 +801,7 @@ describe 'EPP Domain', epp: true do
     # end
 
     it 'prohibits dsData' do
+      Setting.key_data_allowed = true
       Setting.ds_data_allowed = false
 
       xml = domain_create_xml({}, {
@@ -829,6 +830,7 @@ describe 'EPP Domain', epp: true do
 
     it 'prohibits keyData' do
       Setting.key_data_allowed = false
+      Setting.ds_data_allowed = true
 
       xml = domain_create_xml({}, {
         _anonymus: [
@@ -2069,7 +2071,7 @@ describe 'EPP Domain', epp: true do
             keyData: {
               flags: { value: '256' },
               protocol: { value: '3' },
-              alg: { value: '254' },
+              alg: { value: '8' },
               pubKey: { value: '841936717ae427ace63c28d04918569a841936717ae427ace63c28d0' }
             }
           }
@@ -2308,6 +2310,9 @@ describe 'EPP Domain', epp: true do
       d = Domain.last
       d.dnskeys.count.should == 2
 
+      Setting.key_data_allowed = true
+      Setting.ds_data_allowed = false
+
       xml = domain_update_xml({
         name: { value: domain.name },
         rem: [
@@ -2328,9 +2333,9 @@ describe 'EPP Domain', epp: true do
       }, {
         rem: [
           { keyData: {
-              flags: { value: '256' },
+              flags: { value: '0' },
               protocol: { value: '3' },
-              alg: { value: '8' },
+              alg: { value: '5  ' },
               pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
             }
           }
@@ -2365,7 +2370,7 @@ describe 'EPP Domain', epp: true do
 
       response[:results][2][:result_code].should == '2303'
       response[:results][2][:msg].should == 'DS was not found'
-      response[:results][2][:value].should == '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
+      #response[:results][2][:value].should == '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
 
       response[:results][3][:result_code].should == '2303'
       response[:results][3][:msg].should == 'Status was not found'
