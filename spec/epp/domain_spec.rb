@@ -2335,7 +2335,7 @@ describe 'EPP Domain', epp: true do
           { keyData: {
               flags: { value: '0' },
               protocol: { value: '3' },
-              alg: { value: '5  ' },
+              alg: { value: '5' },
               pubKey: { value: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f' }
             }
           }
