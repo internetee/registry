@@ -2722,6 +2722,7 @@ describe 'EPP Domain', epp: true do
       response[:results][0][:msg].should == 'Object is not eligible for renewal'
       response[:results][0][:result_code].should == '2105'
 
+      Setting.days_to_renew_domain_before_expire = 0
       domain.valid_to = Time.zone.now.to_date + 89.days
       domain.save
       exp_date = domain.valid_to.to_date
