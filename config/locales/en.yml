@@ -957,3 +957,4 @@ en:
   next: 'Next'
   previous: 'Previous'
   cant_match_version: 'Impossible match version with request'
+  deleted: 'Deleted'

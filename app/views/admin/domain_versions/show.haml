@@ -104,16 +104,16 @@
                 = domain.registrar.name
             %span{:style => "margin: 20px 20px; clear:both;"}
 
-        - if @version.previous
+        - if prev = @versions_map[(@versions_map.index(@version.id) - 1)]
           = link_to(t(:previous),
-                    admin_domain_version_path(@version.previous.id),
+                    admin_domain_version_path(prev),
                     class: 'btn btn-primary')
         - else
           %a.btn.btn-primary.disabled{:href => "#"}
             %span= t(:previous)
-        - if @version.next
+        - if nxt = @versions_map[(@versions_map.index(@version.id) + 1)]
           = link_to(t(:next),
-                    admin_domain_version_path(@version.next.id),
+                    admin_domain_version_path(nxt),
                     class: 'btn btn-default')
         - else
           %a.btn.btn-default.disabled{:href => "#"}

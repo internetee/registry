@@ -25,6 +25,8 @@ class Admin::DomainVersionsController < AdminController
       case key
         when 'event'
         whereS += " AND event = '#{value}'"
+        when 'name'
+        whereS += " AND (object->>'name' ~* '#{value}' OR object_changes->>'name' ~* '#{value}')"
       else
         whereS += create_where_string(key, value)
       end
@@ -47,11 +49,12 @@ class Admin::DomainVersionsController < AdminController
     per_page = 7
     @version  = DomainVersion.find(params[:id])
     @versions = DomainVersion.where(item_id: @version.item_id).order(id: :desc)
+    @versions_map = @versions.all.map(&:id)
 
     # what we do is calc amount of results until needed version
     # then we cacl which page it is
     if params[:page].blank?
-      counter = @versions.where("id > ?", @version.id).count
+      counter = @versions_map.index(@version.id) + 1
       page    = counter / per_page
       page   += 1 if (counter % per_page) != 0
       params[:page] = page

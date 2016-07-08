@@ -69,6 +69,8 @@
                     - if contact.nil? && ver = ContactVersion.where(item_id: domain.registrant_id).last
                       - contact = Contact.new(ver.object.to_h.merge(ver.object_changes.to_h.each_with_object({}){|(k,v), o| o[k]=v.last } ))
                     = contact.try(:name)
+                    = "&#160;".html_safe
+                    = "(#{t(:deleted)})"
                 %td
                   - if domain.registrar
                     = link_to(domain.registrar, admin_registrar_path(domain.registrar))
