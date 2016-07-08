@@ -3,7 +3,7 @@ namespace :legal_doc do
   desc 'Legal documents duplicates fix'
   task all: :environment do
     Rake::Task['legal_doc:generate_hash'].invoke
-    Rake::Task['legal_doc:remove_dublicates'].invoke
+    Rake::Task['legal_doc:remove_duplicates'].invoke
   end
 
   desc 'Generate hash'
@@ -24,7 +24,7 @@ namespace :legal_doc do
   end
 
   desc 'Remove duplicates'
-  task remove_dublicates: :environment do
+  task remove_duplicates: :environment do
 
     start = Time.zone.now.to_f
     puts '-----> Removing legal documents duplicates'
