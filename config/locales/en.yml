@@ -940,3 +940,4 @@ en:
   edit_pw: 'Edit Pw'
   optional: 'Optional'
   test_registrar: "Test registrar"
+  user_not_authorized: "user not authorized"
