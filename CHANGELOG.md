@@ -1,3 +1,8 @@
+14.07.2016
+* Registry:
+  * whois records generation fix in contact.rb model (#117612931)
+  * english translation fix for pending_update_notification_for_new_registrant automated registrant message
+
 16.06.2016
 * EPP
   * BUG: XML syntax error for poll and logout if optional clTRID is missing (#121580929)
