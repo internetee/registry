@@ -33,8 +33,8 @@
                 = x.css('keyData').css('protocol').text
             %tr
               %td
-                %b= "#{t(:public_key)}:"
-                = x.css('alg').text
+                %b= "#{t(:algorithm)}:"
+                = x.css('alg').last.text
             %tr
               %td{:colspan => "3"}
                 %b= "#{t(:public_key)}:"
@@ -54,7 +54,7 @@
                 %b= "#{t(:protocol)}:"
                 = x.css('protocol').text
               %td
-                %b= "#{t(:public_key)}:"
+                %b= "#{t(:algorithm)}:"
                 = x.css('alg').text
             %tr
               %td{:colspan => "3"}
