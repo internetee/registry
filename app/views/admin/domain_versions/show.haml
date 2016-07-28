@@ -104,7 +104,7 @@
                 = domain.registrar.name
             %span{:style => "margin: 20px 20px; clear:both;"}
 
-        - if prev = @versions_map[(@versions_map.index(@version.id) - 1)]
+        - if (prev = @versions_map[(@versions_map.index(@version.id) - 1)]) && @versions_map.index(@version.id) != 0
           = link_to(t(:previous),
                     admin_domain_version_path(prev),
                     class: 'btn btn-primary')
