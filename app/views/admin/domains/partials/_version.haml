@@ -5,6 +5,7 @@
 
 - if domain.present?
   - if version # normal history
+    - epp_req = ApiLog::EppLog.find_by(uuid: version.uuid).try(:request) if version.uuid
     - children       = HashWithIndifferentAccess.new(version.children)
     - nameservers    = Nameserver.all_versions_for(children[:nameservers], version.created_at)
     - dnskeys        = Dnskey.all_versions_for(children[:dnskeys], version.created_at)
@@ -13,7 +14,9 @@
     - registrant     = Contact.all_versions_for(children[:registrant], version.created_at)
     - event          = version.event
     - creator        = plain_username(version.terminator)
+    - whodunnit      = version.try(:whodunnit)
   - else # pending history
+    - epp_req = false
     - nameservers    = domain.nameservers
     - dnskeys        = domain.dnskeys
     - tech_contacts  = domain.tech_contacts
@@ -25,7 +28,8 @@
       - registrant.version_loader = ver
     - registrant     = [registrant]
     - creator        = pending_user.try(:username)
-    - event         = 'pending'
+    - event          = 'pending'
+    - whodunnit      = false
 
   %td
     %p.nowrap
@@ -34,9 +38,15 @@
         %br= link_to t(:edit_statuses), edit_admin_domain_path(params[:domain_id])
 
     %p.text-right
-      = event
+      - if (event == 'update' || event == 'create') && epp_req
+        = link_to event, '#', class: 'js-event'
+      - else
+        = event
       %br
-      = creator
+      - if whodunnit
+        = whodunnit
+      - else
+        = creator
     - if version
       %p.text-right
         = link_to "Pure history", admin_domain_version_path(version)
@@ -54,7 +64,7 @@
             %br
     - if domain.pending_json.present?
       %p
-        = link_to t(:pending_epp), '#', class: 'js-pending-toggle'
+        = link_to t(:pending_epp), '#', class: 'js-pending'
 
   %td{class: changing_css_class(version, "period", "period_unit", "valid_from", "valid_to")}
     %p
@@ -120,9 +130,15 @@
         = link_to admin_registrar_path(domain.registrar), target: "registrar_#{domain.registrar.id}" do
           = domain.registrar.name
 
+  - if (event == 'create' || event == 'update') && epp_req
+    %tr.js-event{ style: 'display: none;' }
+      %td{colspan: 9}
+        %pre
+          = Nokogiri::XML(epp_req)
+
   - if domain.pending_json.present?
     %tr.js-pending{ style: 'display: none;' }
-      %td{colspan: 8}
+      %td{colspan: 9}
         = preserve do
           %pre
             - formatted_req = Nokogiri::XML(domain.pending_json['frame'])
