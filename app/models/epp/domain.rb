@@ -11,7 +11,8 @@ class Epp::Domain < Domain
     return if is_admin # this bad hack for 109086524, refactor later
     return true if is_transfer || is_renewal
     return unless update_prohibited? || delete_prohibited?
-    add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
+    stat = (statuses && (DomainStatus::UPDATE_PROHIBIT_STATES + DomainStatus::DELETE_PROHIBIT_STATES)).first
+    add_epp_error('2304', 'status', stat, I18n.t(:object_status_prohibits_operation))
     false
   end
 
