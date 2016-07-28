@@ -656,16 +656,7 @@ class Domain < ActiveRecord::Base
   end
 
   def pending_update_prohibited?
-    (statuses_was & [
-        DomainStatus::PENDING_DELETE_CONFIRMATION,
-        DomainStatus::CLIENT_UPDATE_PROHIBITED,
-        DomainStatus::SERVER_UPDATE_PROHIBITED,
-        DomainStatus::PENDING_CREATE,
-        DomainStatus::PENDING_UPDATE,
-        DomainStatus::PENDING_DELETE,
-        DomainStatus::PENDING_RENEW,
-        DomainStatus::PENDING_TRANSFER
-    ]).present?
+    (statuses_was & DomainStatus::UPDATE_PROHIBIT_STATES).present?
   end
 
   def set_pending_update
@@ -689,17 +680,7 @@ class Domain < ActiveRecord::Base
   end
 
   def pending_delete_prohibited?
-    (statuses_was & [
-      DomainStatus::CLIENT_DELETE_PROHIBITED,
-      DomainStatus::SERVER_DELETE_PROHIBITED,
-      DomainStatus::CLIENT_UPDATE_PROHIBITED,
-      DomainStatus::SERVER_UPDATE_PROHIBITED,
-      DomainStatus::PENDING_CREATE,
-      DomainStatus::PENDING_RENEW,
-      DomainStatus::PENDING_TRANSFER,
-      DomainStatus::PENDING_UPDATE,
-      DomainStatus::PENDING_DELETE
-    ]).present?
+    (statuses_was & DomainStatus::DELETE_PROHIBIT_STATES).present?
   end
 
   # let's use positive method names
