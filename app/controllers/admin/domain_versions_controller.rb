@@ -48,7 +48,7 @@ class Admin::DomainVersionsController < AdminController
   def show
     per_page = 7
     @version  = DomainVersion.find(params[:id])
-    @versions = DomainVersion.where(item_id: @version.item_id).order(id: :desc)
+    @versions = DomainVersion.where(item_id: @version.item_id).order(created_at: :desc, id: :desc)
     @versions_map = @versions.all.map(&:id)
 
     # what we do is calc amount of results until needed version
