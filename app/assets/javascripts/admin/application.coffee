@@ -2,6 +2,9 @@ $(document).on 'page:change', ->
   $('.selectize').selectize({
     allowEmptyOption: true
   })
+  $('.selectize_create').selectize({
+    allowEmptyOption: true, create: true
+  })
 
   $('.js-datepicker').datepicker({
     showAnim: "",

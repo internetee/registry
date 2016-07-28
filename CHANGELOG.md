@@ -1,3 +1,55 @@
+14.07.2016
+* Registry:
+  * whois records generation fix in contact.rb model (#117612931)
+  * english translation fix for pending_update_notification_for_new_registrant automated registrant message
+
+16.06.2016
+* EPP
+  * BUG: XML syntax error for poll and logout if optional clTRID is missing (#121580929)
+  * support for glue records with ipv6 addresses only (#120095555)
+
+15.06.2016
+* Portal for registrants
+  * Notice on login screen on limited access to Estonian electronic IDs (#120182999)
+* Admin interface:
+  * epp log view has now reference to the object name for better usability (#118912395)
+  * BUG: dnssec data missing from domain history view (#115762063)
+  * BUG: internal error in doamin history view in case some contact has been deleted (#118300251)
+* Registry:
+  * all values sent over epp are now trimmed of beginning and trailing spaces (#117690107)
+  * typo and form fixes for automated e-mail messages sent to domain contacts
+* EPP:
+  * BUG: error 2005 on adding IDN nameservers (#114677695)
+  * BUG: nameserver lable maximum 63 char length validation handled inproperly (#114677695) - support currently limited to Estonian IDN characters.
+  * BUG: validation passes out of range ident_type values - now limited to org, priv and birthday (#111601356)
+  * BUG: internal error on hello (#120828283)
+  * BUG: internal error broken incoming frame (#121580929)
+* Deploy:
+  * BUG: incorrect version in commit message on deploy - config/deploy-example.rb (#120259603)
+
+20.05.2016
+* Portal for registrars
+  * domain details view new displays contact name in addition to ID (#117226457)
+  * added an option to set veryfied = "yes" parameter to GUI for registrant change and domain delete opertions (#116209751)
+* Admin interface
+  * BUG: fixed number of sorting issues on different views (#117350717)
+  * BUG: internal error on filtered list sorting (#115043065)
+  * BUG: account activities csv export messes up registrars (#117702653)
+  * usability fixes to history view (#115762063)
+* Registry
+  * epp-xml gem reference updated to v 1.0.5 (#116209751)
+  * epp-xml gem is now taken from local repo https://github.com/internetee/epp-xml/blob/master, the version in RubyGems is not updated any more (#116209751)
+  * BUG: domains set to force delete were deleted a day ahead of time (#117131083)
+  * BUG: QUE - undefined method `code' for nil:NilClass - if contact is removed before Que gets to it (#117612061)
+  * BUG: Que - uninitialized constant RegenerateWhoisRecordJob (#117986917)
+* EPP
+  * BUG: poll message on domain delete does not validate against .ee xml schemas (#118827261)
+  * BUG: internal error on domain delete (#118159567)
+* RestWHOIS
+  * BUG: statuses not in array for not registered reserved and blocked domains (#118911315)
+
+...
+
 21.09.2015
 * eis-1.0.xsd schema file updated without a new version, please publish a new updated schema file to public.
 

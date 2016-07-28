@@ -1,4 +1,4 @@
-- statuses_link ||= false
+-#- statuses_link ||= false
 - version ||= false
 - domain ||= false
 - pending_user ||= false
@@ -21,7 +21,12 @@
     - dnskeys        = domain.dnskeys
     - tech_contacts  = domain.tech_contacts
     - admin_contacts = domain.admin_contacts
-    - registrant     = [domain.registrant]
+    - registrant     = domain.registrant
+    - unless registrant
+      - ver = ContactVersion.where(item_id: domain.registrant_id).where(event: :destroy).last
+      - registrant = ver.reify
+      - registrant.version_loader = ver
+    - registrant     = [registrant]
     - creator        = pending_user.try(:username)
     - event          = 'pending'
     - whodunnit      = false
@@ -29,7 +34,7 @@
   %td
     %p.nowrap
       = l(domain.updated_at, format: :shorts)
-      - if statuses_link
+      -#- if statuses_link
         %br= link_to t(:edit_statuses), edit_admin_domain_path(params[:domain_id])
 
     %p.text-right

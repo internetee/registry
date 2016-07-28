@@ -54,4 +54,8 @@ class Epp::PollsController < EppController
   def validate_poll
     requires_attribute 'poll', 'op', values: %(ack req), allow_blank: true
   end
+
+  def resource
+    @message
+  end
 end

@@ -52,6 +52,9 @@ en:
               invalid_EE_identity_format_update: "Ident not in valid Estonian identity format. Please create new contact"
               invalid_birthday_format: "Ident not in valid birthady format, should be YYYY-MM-DD"
               invalid_country_code: "Ident country code is not valid, should be in ISO_3166-1 alpha 2 format"
+            ident_type:
+              ident_type_invalid: 'Ident type is invalid'
+              epp_ident_type_invalid: 'Object status prohibits operation: ident_type of contact %{code} is invalid'
             domains:
               exist: 'Object association prohibits operation'
             statuses:
@@ -77,6 +80,7 @@ en:
             registrant:
               blank: 'Registrant is missing'
               not_found: 'Registrant not found'
+              cannot_be_missing: 'Parameter value policy error: registrant cannot be missing'
             domain_contacts:
               invalid: 'Contacts are invalid'
               not_found: 'Contact was not found'
@@ -130,8 +134,9 @@ en:
             hostname:
               invalid: 'Hostname is invalid'
               taken: 'Nameserver already exists on this domain'
+              puny_to_long: 'Hostname puny label is too long (maximum is 63 characters)'
             ipv4:
-              blank: 'IPv4 is missing'
+              blank: 'IP is missing'
               invalid: 'IPv4 is invalid'
             ipv6:
               invalid: 'IPv6 is invalid'
@@ -206,6 +211,10 @@ en:
               blank: 'Algorithm is missing'
             auth_info_pw:
               blank: 'Password is missing'
+        legal_document:
+          attributes:
+            body:
+              length: 'Parameter value policy error: legalDocument size should be more than 3kB'
 
 
     attributes:
@@ -355,6 +364,7 @@ en:
   contact: 'Contact'
   credit_balance: 'Credit balance'
   starting_balance: 'Starting balance'
+  destroyed: 'Destroyed'
 
   domain_transfer_requested: 'Domain transfer requested!'
   domain_transfer_approved: 'Domain transfer approved!'
@@ -728,13 +738,13 @@ en:
   no_invoices_were_binded: 'No invoices were binded'
   domain_general_help:
     <b>The Administrative Contact</b>
-    is an Estonian citizen or a citizen of another country in the European Union, European Economic Area or the Swiss Confederation with a registered place of residence in Estonia and an Estonian personal identification code who has the right to represent the registering entity in accordance with the current legislation of the Republic of Estonia (member of the management board) or on the basis of the written authorisation issued by a member of the management board. The Administrative Contact has the right to sign and submit in the name of the registering entity any applications connected with the domain name and also to receive and forward any information concerning the domain name(s). The Administrative Contact is responsible for the correctness and authenticity of the data and documents submitted about itself and the registering entity.
+    is a natural person who is a legal representative of the Registrant or whom the Registrant has authorised in writing (authorised representative). The Administrative Contact does not have the right to delegate the authorisation. The Administrative Contact has the right to sign and submit Domain Name-related applications on behalf of the Registrant and to receive and forward any information pertaining to the Domain Name(s). The Administrative Contact is responsible for the correctness and genuiness of the data and documents submitted by him/her about the Registrant and about himself/herself. Registrant is obliged to guarantee that the person appointed as the Administrative Contact agrees to fulfil the duties of and Administrative Contact. There may be more than one person in this role (the registry system allows of up to 10 Administrative Contacts)
   domain_admin_contact_help:
     <b>The Technical Contact</b>
-    is a person who has the right to modify only such domain name server data that is connected with it. If the domain registering entity is using a website hosting service, it is recommended to register as the Technical Contact a representative of the corresponding provider company. If the domain registering entity manages its own servers, it can register itself as the Technical Contact.
+     is a natural or legal person who, in the name of the Registrant, adds, changes or removes entries of the authoritative Name Servers for that particular domain and its DNSSEC records. The Technical Contact does not have the right to represent the Registrant in other registration services. The Registrant is obliged to guarantee that the person appointed as the Technical Contact agrees to fulfil the duties of and Technical Contact. There may be more than one person in this role (the registry system allows of up to 10 Technical Contacts)
   domain_tech_contact_help:
     <b>The domain name server</b>
-    is a computer that saves and forwards via a general-access data communications network such data that is connected with the domain name and corresponding IP addresses. Your IT helpdesk or Internet service provider will have the necessary information about the domain name servers.
+    refers to the computer that saves and forwards notices related to the Domain Names and their corresponding IP addresses in the Internet.
   account_activity: 'Account activity'
   account_activities: 'Account activities'
   receipt_date: 'Receipt date'
@@ -821,16 +831,20 @@ en:
   domain_registrant_change_confirmed_body: 'You have successfully submitted domain registrant change confirmation. You will receive email confirmation.'
   registrant_domain_verification_confirmed: 'Domain registrant change has successfully received.'
   registrant_domain_verification_confirmed_failed: 'Something went wrong.'
-  domain_registrant_change_rejected_title: 'Domain registrant change has been rejected'
-  domain_registrant_change_rejected_body: 'You have rejected domain registrant change.'
+  domain_registrant_change_rejected_title: 'Domain registrant change rejection has been received'
+  domain_registrant_change_rejected_body: 'You have rejected domain registrant change. You will receive confirmation by email.'
   registrant_domain_verification_rejected: 'Domain registrant change has been rejected successfully.'
   registrant_domain_verification_rejected_failed: 'Something went wrong.'
-  domain_delete_title: 'Please confirm or reject domain deletation'
+  domain_delete_title: 'Please confirm or reject domain deletion'
   domain_delete_body: 'There is a request to delete a domain. Before doing it we need your confirmation.'
+  registrant_domain_delete_confirmed: 'Setting the domain up for deletion...'
+  registrant_domain_delete_confirmed_failed: 'Something went wrong.'
   domain_delete_confirmed_title: 'Domain deletion has been received successfully'
   domain_delete_confirmed_body: 'You have successfully submitted delete confirmation. You will receive registry final confirmation to email.'
-  domain_delete_rejected_title: 'Domain deletion has been rejected successfully'
-  domain_delete_rejected_body: 'You have rejected domain deletion.'
+  registrant_domain_delete_rejected: 'Rejecting the domain deletion...'
+  registrant_domain_delete_rejected_failed: 'Something went wrong.'
+  domain_delete_rejected_title: 'Domain deletion rejection has been received successfully'
+  domain_delete_rejected_body: 'You have rejected pending domain deletion. You will receive confirmation by email.'
   no_permission: 'No permission'
   access_denied: 'Access denied'
   common_name: 'Common name'
@@ -941,4 +955,8 @@ en:
   add_blocked_domain: 'Add domain to blocked list'
   edit_pw: 'Edit Pw'
   optional: 'Optional'
+  test_registrar: "Test registrar"
+  verified_confirm: 'Verified status is for cases when current registrant is the one applying for the update. Legal document signed by the registrant is required. Are you sure this update is properly verified with the registrant?'
+  verified: 'Verified'
+  only_estonian_residets_can_signin: "Access currently available only to Estonian citizens and e-residents with Estonian ID-card or Mobile-ID."
   cant_match_version: 'Impossible match version with request'

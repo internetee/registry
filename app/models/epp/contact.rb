@@ -37,10 +37,7 @@ class Epp::Contact < Contact
       at[:country_code] = f.css('postalInfo addr cc').text     if f.css('postalInfo addr cc').present?
       at[:auth_info]    = f.css('authInfo pw').text            if f.css('authInfo pw').present?
 
-      legal_frame = f.css('legalDocument').first
-      if legal_frame.present?
-        at[:legal_documents_attributes] = legal_document_attrs(legal_frame)
-      end
+
       at.merge!(ident_attrs(f.css('ident').first)) if new_record
       at
     end
@@ -104,6 +101,7 @@ class Epp::Contact < Contact
 
       res
     end
+
   end
   delegate :ident_attr_valid?, to: :class
 
@@ -134,6 +132,9 @@ class Epp::Contact < Contact
       '2302' => [ # Object exists
         [:code, :epp_id_taken]
       ],
+      '2304' => [ # Object status prohibits operation
+        [:ident_type, :epp_ident_type_invalid, { value: { obj: 'code', val: code}, interpolation: {code: code}}]
+      ],
       '2305' => [ # Association exists
         [:domains, :exist]
       ],
@@ -143,7 +144,7 @@ class Epp::Contact < Contact
   end
 
   # rubocop:disable Metrics/AbcSize
-  def update_attributes(frame)
+  def update_attributes(frame, current_user)
     return super if frame.blank?
     at = {}.with_indifferent_access
     at.deep_merge!(self.class.attrs_from(frame.css('chg'), new_record: false))
@@ -152,8 +153,14 @@ class Epp::Contact < Contact
       at[:statuses] = statuses - statuses_attrs(frame.css('rem'), 'rem') + statuses_attrs(frame.css('add'), 'add')
     end
 
-    legal_frame = frame.css('legalDocument').first
-    at[:legal_documents_attributes] = self.class.legal_document_attrs(legal_frame)
+    # legal_frame = frame.css('legalDocument').first
+    # at[:legal_documents_attributes] = self.class.legal_document_attrs(legal_frame)
+
+    if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
+      frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
+      self.legal_document_id = doc.id
+    end
+
     self.deliver_emails = true # turn on email delivery for epp
 
 
@@ -169,6 +176,8 @@ class Epp::Contact < Contact
         elsif ident_type == "birthday" && !ident[/\A\d{4}-\d{2}-\d{2}\z/] && (Date.parse(ident) rescue false)
           at.merge!(ident: ident_frame.text)
           at.merge!(ident_country_code: ident_frame.attr('cc')) if ident_frame.attr('cc').present?
+        elsif ident_type == "birthday" &&  ident_country_code.blank?
+          at.merge!(ident_country_code: ident_frame.attr('cc'))
         elsif ident_type.blank? && ident_country_code.blank?
           at.merge!(ident_type: ident_frame.attr('type'))
           at.merge!(ident_country_code: ident_frame.attr('cc')) if ident_frame.attr('cc').present?
@@ -179,6 +188,9 @@ class Epp::Contact < Contact
         throw :epp_error, {code: '2306', msg: I18n.t(:ident_update_error)}
       end
     end
+
+    self.upid = current_user.registrar.id if current_user.registrar
+    self.up_date = Time.zone.now
 
     super(at)
   end
@@ -217,4 +229,29 @@ class Epp::Contact < Contact
 
     status_list
   end
+
+  def attach_legal_document(legal_document_data)
+    return unless legal_document_data
+
+    legal_documents.create(
+        document_type: legal_document_data[:type],
+        body: legal_document_data[:body]
+    )
+  end
+
+  def add_legal_file_to_new frame
+    legal_document_data = Epp::Domain.parse_legal_document_from_frame(frame)
+    return unless legal_document_data
+
+    doc = LegalDocument.create(
+        documentable_type: Contact,
+        document_type:     legal_document_data[:type],
+        body:              legal_document_data[:body]
+    )
+    self.legal_documents = [doc]
+
+    frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
+    self.legal_document_id = doc.id
+  end
+
 end

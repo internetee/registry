@@ -7,6 +7,8 @@ class Domain < ActiveRecord::Base
 
   attr_accessor :roles
 
+  attr_accessor :legal_document_id
+
   # TODO: whois requests ip whitelist for full info for own domains and partial info for other domains
   # TODO: most inputs should be trimmed before validatation, probably some global logic?
 
@@ -345,7 +347,8 @@ class Domain < ActiveRecord::Base
   end
 
 
-  # state change shouln't be
+  # state changes may be done low-level - no validation
+  # in this metod we still save PaperTrail log.
   def clean_pendings_lowlevel
     statuses.delete(DomainStatus::PENDING_DELETE_CONFIRMATION)
     statuses.delete(DomainStatus::PENDING_UPDATE)
@@ -354,13 +357,23 @@ class Domain < ActiveRecord::Base
     status_notes[DomainStatus::PENDING_UPDATE] = ''
     status_notes[DomainStatus::PENDING_DELETE] = ''
 
-    update_columns(
+    hash = {
         registrant_verification_token:    nil,
         registrant_verification_asked_at: nil,
         pending_json: {},
         status_notes: status_notes,
-        statuses:     statuses.presence || [DomainStatus::OK]
-    )
+        statuses:     statuses.presence || [DomainStatus::OK],
+        # need this column in order to update PaperTrail version properly
+        updated_at:   Time.now.utc
+    }
+
+    # PaperTrail
+    self.attributes = hash
+    record_update
+    clear_version_instance!
+    reset_transaction_id
+
+    update_columns(hash)
   end
 
   def pending_update!
@@ -384,6 +397,7 @@ class Domain < ActiveRecord::Base
     self.registrant_verification_token = token
     self.registrant_verification_asked_at = asked_at
     set_pending_update
+    touch_always_version
     pending_json['new_registrant_id']    = new_registrant_id
     pending_json['new_registrant_email'] = new_registrant_email
     pending_json['new_registrant_name']  = new_registrant_name
@@ -449,19 +463,14 @@ class Domain < ActiveRecord::Base
     period_i ||= period
     unit ||= period_unit
 
+    # TODO: test if name.scan(/\.(.+)\z/).first.first is faster
     zone = name.split('.').drop(1).join('.')
 
     p = period_i / 365 if unit == 'd'
     p = period_i / 12 if unit == 'm'
     p = period_i if unit == 'y'
 
-    if p > 1
-      p = "#{p}years"
-    else
-      p = "#{p}year"
-    end
-
-    Pricelist.pricelist_for(zone, operation, p)
+    Pricelist.pricelist_for(zone, operation, "#{p}year".pluralize(p))
   end
 
   ### VALIDATIONS ###
@@ -469,7 +478,8 @@ class Domain < ActiveRecord::Base
   def validate_nameserver_ips
     nameservers.to_a.reject(&:marked_for_destruction?).each do |ns|
       next unless ns.hostname.end_with?(".#{name}")
-      next if ns.ipv4.present?
+      next if ns.ipv4.present? || ns.ipv6.present?
+
       errors.add(:nameservers, :invalid) if errors[:nameservers].blank?
       ns.errors.add(:ipv4, :blank)
     end
@@ -566,7 +576,7 @@ class Domain < ActiveRecord::Base
       statuses << DomainStatus::SERVER_MANUAL_INZONE
     end
 
-    self.force_delete_at = Time.zone.now + Setting.redemption_grace_period.days unless force_delete_at
+    self.force_delete_at = (Time.zone.now + (Setting.redemption_grace_period.days + 1.day)).utc.beginning_of_day unless force_delete_at
     transaction do
       save!(validate: false)
       registrar.messages.create!(
@@ -595,7 +605,7 @@ class Domain < ActiveRecord::Base
 
   def set_graceful_expired
     self.outzone_at = valid_to + Setting.expire_warning_period.days
-    self.delete_at = outzone_at + Setting.redemption_grace_period.days
+    self.delete_at = (outzone_at + (Setting.redemption_grace_period.days + 1.day)).utc.beginning_of_day
     self.statuses |= [DomainStatus::EXPIRED]
   end
 
@@ -603,7 +613,7 @@ class Domain < ActiveRecord::Base
     # TODO: currently valid_to attribute update logic is open
     # self.valid_to = valid_from + self.class.convert_period_to_time(period, period_unit)
     self.outzone_at = Time.zone.now + Setting.expire_warning_period.days
-    self.delete_at  = Time.zone.now + Setting.redemption_grace_period.days
+    self.delete_at  = (Time.zone.now + (Setting.redemption_grace_period.days + 1.day)).utc.beginning_of_day
     statuses << DomainStatus::EXPIRED
   end
 
@@ -725,16 +735,14 @@ class Domain < ActiveRecord::Base
   # rubocop: enable Metrics/CyclomaticComplexity
   # rubocop: enable Metrics/PerceivedComplexity
 
-
-  # small optimization that we'are using to_a if it was done already
-  # otherwise just getting ids
   def children_log
     log = HashWithIndifferentAccess.new
     log[:admin_contacts] = admin_contact_ids
     log[:tech_contacts]  = tech_contact_ids
     log[:nameservers]    = nameserver_ids
-    log[:domain_statuses]= domain_status_ids
     log[:dnskeys]        = dnskey_ids
+    log[:domain_statuses]= domain_status_ids
+    log[:legal_documents]= [legal_document_id]
     log[:registrant]     = [registrant_id]
     log
   end

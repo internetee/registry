@@ -19,7 +19,7 @@
             %th{class: 'col-xs-2'}= t(:registrar)
 
         %tbody
-          - if @pending_domain.present?
+          -#- if @pending_domain.present?
             %tr.small
               = render 'admin/domains/partials/version',
                 domain: @pending_domain, pending_user: @pending_user, statuses_link: true
