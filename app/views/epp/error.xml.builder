@@ -12,7 +12,13 @@ xml.epp_head do
 
           if (val = value).respond_to?(:each)
             val.each do |el|
-              xml.tag!("#{model_name}:#{x[:value][:obj]}", el, attrs)
+              if el.kind_of?(Array)
+                xml.tag!("#{model_name}:#{x[:value][:obj]}") do
+                  xml.tag!("#{model_name}:#{el[0]}", el[1], attrs)
+                end
+              else
+                xml.tag!("#{model_name}:#{x[:value][:obj]}", el, attrs)
+              end
             end
           else
             xml.tag!("#{model_name}:#{x[:value][:obj]}", val, attrs)
