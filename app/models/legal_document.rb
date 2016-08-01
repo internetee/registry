@@ -33,6 +33,7 @@ class LegalDocument < ActiveRecord::Base
 
   def save_to_filesystem
     binary = Base64.decode64(body)
+    digest = Digest::SHA1.new.update(binary).to_s
 
     loop do
         rand = SecureRandom.random_number.to_s.last(4)
@@ -45,7 +46,7 @@ class LegalDocument < ActiveRecord::Base
 
     File.open(path, 'wb') { |f| f.write(binary) } unless Rails.env.test?
     self.path = path
-
+    self.checksum = digest
   end
 
   def calc_checksum
