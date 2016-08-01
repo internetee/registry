@@ -10,21 +10,13 @@ class Admin::ContactsController < AdminController
       search_params[:registrant_domains_id_not_null] = 1
     end
 
-    @q = Contact.includes(:registrar).joins(:registrar).select('contacts.*, registrars.name').search(search_params)
-    @contacts = @q.result(distinct: :true).page(params[:page])
-
-    if params[:statuses_contains]
-      contacts = Contact.includes(:registrar).joins(:registrar).select('contacts.*, registrars.name').where(
-        "contacts.statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
-      )
-    else
-      contacts = Contact.includes(:registrar).joins(:registrar).select('contacts.*, registrars.name')
-    end
+    contacts = Contact.includes(:registrar).joins(:registrar).select('contacts.*, registrars.name')
+    contacts = contacts.filter_by_states(params[:statuses_contains].join(','))       if params[:statuses_contains]
     contacts = contacts.where("ident_country_code is null or ident_country_code=''") if params[:only_no_country_code].eql?('1')
 
 
     normalize_search_parameters do
-      @q = contacts.includes(:registrar).joins(:registrar).select('contacts.*, registrars.name').search(search_params)
+      @q = contacts.search(search_params)
       @contacts = @q.result.uniq.page(params[:page])
     end
 
