@@ -37,7 +37,7 @@ class Admin::DomainVersionsController < AdminController
     whereS += "  AND object->>'registrar_id' IN (#{registrars.map { |r| "'#{r.id.to_s}'" }.join ','})"   if registrars.present?
     whereS += "  AND 1=0"                                                                                if registrars == []
 
-    versions = DomainVersion.includes(:item).where(whereS)
+    versions = DomainVersion.includes(:item).where(whereS).order(created_at: :desc, id: :desc)
     @q = versions.search(params[:q])
     @versions = @q.result.page(params[:page])
     @versions = @versions.per(params[:results_per_page]) if params[:results_per_page].to_i > 0
