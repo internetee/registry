@@ -117,5 +117,9 @@ class Nameserver < ActiveRecord::Base
       # ignoring ips
       rel
     end
+
+    def next_id
+      self.connection.select_value("SELECT nextval('#{self.sequence_name}')")
+    end
   end
 end

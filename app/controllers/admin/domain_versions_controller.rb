@@ -8,13 +8,13 @@ class Admin::DomainVersionsController < AdminController
     @versions = @q.result.page(params[:page])
     search_params = params[:q].deep_dup
 
-    if search_params[:registrant]
-      registrant = Contact.find_by(name: search_params[:registrant])
+    if search_params[:registrant].present?
+      registrants = Contact.where("name ilike ?", "%#{search_params[:registrant].strip}%")
       search_params.delete(:registrant)
     end
 
-    if search_params[:registrar]
-      registrar = Registrar.find_by(name: search_params[:registrar])
+    if search_params[:registrar].present?
+      registrars = Registrar.where("name ilike ?", "%#{search_params[:registrar].strip}%")
       search_params.delete(:registrar)
     end
 
@@ -30,8 +30,8 @@ class Admin::DomainVersionsController < AdminController
       end
     end
 
-    whereS += "  AND object->>'registrant_id' = '#{registrant.id}'" if registrant
-    whereS += "  AND object->>'registrar_id' = '#{registrar.id}'" if registrar
+    whereS += "  AND object->>'registrant_id' IN (#{registrants.map { |r| "'#{r.id.to_s}'" }.join ','})" if registrants
+    whereS += "  AND object->>'registrar_id' IN (#{registrars.map { |r| "'#{r.id.to_s}'" }.join ','})" if registrars
 
     versions = DomainVersion.includes(:item).where(whereS)
     @q = versions.search(params[:q])
@@ -43,10 +43,19 @@ class Admin::DomainVersionsController < AdminController
 
   def show
     per_page = 7
-    @version = DomainVersion.find(params[:id])
-    @q = DomainVersion.where(item_id: @version.item_id).order(created_at: :desc).search
-    @versions = @q.result.page(params[:page])
-    @versions = @versions.per(per_page)
+    @version  = DomainVersion.find(params[:id])
+    @versions = DomainVersion.where(item_id: @version.item_id).order(id: :desc)
+
+    # what we do is calc amount of results until needed version
+    # then we cacl which page it is
+    if params[:page].blank?
+      counter = @versions.where("id > ?", @version.id).count
+      page    = counter / per_page
+      page   += 1 if (counter % per_page) != 0
+      params[:page] = page
+    end
+
+    @versions = @versions.page(params[:page]).per(per_page)
   end
 
   def search
@@ -54,7 +63,7 @@ class Admin::DomainVersionsController < AdminController
   end
 
   def create_where_string(key, value)
-    " AND object->>'#{key}' ~ '#{value}'"
+    " AND object->>'#{key}' ~* '#{value}'"
   end
 
 

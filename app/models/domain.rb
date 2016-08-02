@@ -244,6 +244,11 @@ class Domain < ActiveRecord::Base
         { admin_contacts: :registrar }
       )
     end
+
+    def next_id
+      self.connection.select_value("SELECT nextval('#{self.sequence_name}')")
+    end
+
   end
 
   def name=(value)
