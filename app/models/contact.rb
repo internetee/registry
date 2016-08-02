@@ -36,12 +36,10 @@ class Contact < ActiveRecord::Base
 
   validate :val_ident_type
   validate :val_ident_valid_format?
-  validate :uniq_statuses?
   validate :validate_html
   validate :val_country_code
 
   after_initialize do
-    self.statuses = [] if statuses.nil?
     self.status_notes = {} if status_notes.nil?
     self.ident_updated_at = Time.zone.now if new_record? && ident_updated_at.blank?
   end
@@ -175,20 +173,49 @@ class Contact < ActiveRecord::Base
       ')
     end
 
+    def find_linked
+      where('
+        EXISTS(
+          select 1 from domains d where d.registrant_id = contacts.id
+        ) OR EXISTS(
+          select 1 from domain_contacts dc where dc.contact_id = contacts.id
+        )
+      ')
+    end
+
+    def filter_by_states in_states
+      states = Array(in_states).dup
+      scope  = all
+
+      # all contacts has state ok, so no need to filter by it
+      scope = scope.where("NOT contacts.statuses && ?::varchar[]", "{#{(STATUSES - [OK, LINKED]).join(',')}}") if states.delete(OK)
+      scope = scope.find_linked if states.delete(LINKED)
+      scope = scope.where("contacts.statuses @> ?::varchar[]", "{#{states.join(',')}}") if states.any?
+      scope
+    end
+
+    # To leave only new ones we need to check
+    # if contact was at any time used in domain.
+    # This can be checked by domain history.
+    # This can be checked by saved relations in children attribute
     def destroy_orphans
       STDOUT << "#{Time.zone.now.utc} - Destroying orphaned contacts\n" unless Rails.env.test?
 
-      orphans = find_orphans
-
-      unless Rails.env.test?
-        orphans.each do |m|
-          STDOUT << "#{Time.zone.now.utc} Contact.destroy_orphans: ##{m.id} (#{m.name})\n"
+      counter = Counter.new
+      find_orphans.find_each do |contact|
+        ver_scope = []
+        %w(admin_contacts tech_contacts registrant).each do |type|
+          ver_scope << "(children->'#{type}')::jsonb <@ json_build_array(#{contact.id})::jsonb"
         end
+        next if DomainVersion.where("created_at > ?", Time.now - Setting.orphans_contacts_in_months.to_i.months).where(ver_scope.join(" OR ")).any?
+        next if contact.domains_present?
+
+        contact.destroy
+        counter.next
+        STDOUT << "#{Time.zone.now.utc} Contact.destroy_orphans: ##{contact.id} (#{contact.name})\n"
       end
 
-      count = orphans.destroy_all.count
-
-      STDOUT << "#{Time.zone.now.utc} - Successfully destroyed #{count} orphaned contacts\n" unless Rails.env.test?
+      STDOUT << "#{Time.zone.now.utc} - Successfully destroyed #{counter} orphaned contacts\n" unless Rails.env.test?
     end
 
     def privs
@@ -238,11 +265,16 @@ class Contact < ActiveRecord::Base
   # to too many places
   def statuses
     calculated = Array(read_attribute(:statuses))
+    calculated.delete(Contact::OK)
     calculated.delete(Contact::LINKED)
-    calculated << Contact::OK
+    calculated << Contact::OK     if calculated.empty?# && valid?
     calculated << Contact::LINKED if domains_present?
 
     calculated.uniq
+  end
+
+  def statuses= arr
+    write_attribute(:statuses, Array(arr).uniq)
   end
 
   def to_s
@@ -284,11 +316,6 @@ class Contact < ActiveRecord::Base
     end
   end
 
-  def uniq_statuses?
-    return true unless statuses.detect { |s| statuses.count(s) > 1 }
-    errors.add(:statuses, :not_uniq)
-    false
-  end
 
   def org?
     ident_type == ORG

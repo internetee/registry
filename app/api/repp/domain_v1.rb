@@ -35,7 +35,7 @@ module Repp
         error! I18n.t('errors.messages.epp_authorization_error'), 401 unless domain.auth_info.eql? request.headers['Auth-Code']
 
         contact_repp_json = proc{|contact|
-          contact.attributes.slice("code", "name", "ident", "ident_type", "ident_country_code", "phone", "email", "street", "city", "zip","country_code", "statuses")
+          contact.as_json.slice("code", "name", "ident", "ident_type", "ident_country_code", "phone", "email", "street", "city", "zip","country_code", "statuses")
         }
 
         @response = {

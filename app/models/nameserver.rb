@@ -28,10 +28,11 @@ class Nameserver < ActiveRecord::Base
         ],
         '2005' => [
             [:hostname, :invalid, { value: { obj: 'hostAttr', val: hostname } }],
+            [:hostname, :puny_to_long, { value: { obj: 'hostAttr', val: hostname } }],
             [:ipv4, :invalid, { value: { obj: 'hostAddr', val: ipv4 } }],
             [:ipv6, :invalid, { value: { obj: 'hostAddr', val: ipv6 } }]
         ],
-        '2306' => [
+        '2003' => [
             [:ipv4, :blank]
         ]
     }
@@ -44,8 +45,8 @@ class Nameserver < ActiveRecord::Base
   end
 
   def check_label_length
-    hostname.split('.').each do |label|
-      errors.add(:hostname, :invalid) if label.length > 63
+    hostname_puny.split('.').each do |label|
+      errors.add(:hostname, :puny_to_long) if label.length > 63
     end
   end
 
