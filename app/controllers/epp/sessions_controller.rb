@@ -137,4 +137,9 @@ class Epp::SessionsController < EppController
     pw = params[:parsed_frame].css('pw').first.text
     { username: user, password: pw }
   end
+
+  private
+  def resource
+    @api_user
+  end
 end

@@ -1,5 +1,33 @@
-20.05.2016
+14.07.2016
+* Registry:
+  * whois records generation fix in contact.rb model (#117612931)
+  * english translation fix for pending_update_notification_for_new_registrant automated registrant message
 
+16.06.2016
+* EPP
+  * BUG: XML syntax error for poll and logout if optional clTRID is missing (#121580929)
+  * support for glue records with ipv6 addresses only (#120095555)
+
+15.06.2016
+* Portal for registrants
+  * Notice on login screen on limited access to Estonian electronic IDs (#120182999)
+* Admin interface:
+  * epp log view has now reference to the object name for better usability (#118912395)
+  * BUG: dnssec data missing from domain history view (#115762063)
+  * BUG: internal error in doamin history view in case some contact has been deleted (#118300251)
+* Registry:
+  * all values sent over epp are now trimmed of beginning and trailing spaces (#117690107)
+  * typo and form fixes for automated e-mail messages sent to domain contacts
+* EPP:
+  * BUG: error 2005 on adding IDN nameservers (#114677695)
+  * BUG: nameserver lable maximum 63 char length validation handled inproperly (#114677695) - support currently limited to Estonian IDN characters.
+  * BUG: validation passes out of range ident_type values - now limited to org, priv and birthday (#111601356)
+  * BUG: internal error on hello (#120828283)
+  * BUG: internal error broken incoming frame (#121580929)
+* Deploy:
+  * BUG: incorrect version in commit message on deploy - config/deploy-example.rb (#120259603)
+
+20.05.2016
 * Portal for registrars
   * domain details view new displays contact name in addition to ID (#117226457)
   * added an option to set veryfied = "yes" parameter to GUI for registrant change and domain delete opertions (#116209751)
