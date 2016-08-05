@@ -24,15 +24,17 @@
           %dd{class: changing_css_class(@version,"ident_country_code", "ident_type", "ident")}
             = ident_for(contact)
 
-          %dt= t(:email)
-          %dd{class: changing_css_class(@version,"email")}
-            = contact.email
+          - if contact.email.present?
+            %dt= t(:email)
+            %dd{class: changing_css_class(@version,"email")}
+              = contact.email
 
-          %dt= t(:phone)
-          %dd{class: changing_css_class(@version,"phone")}
-            = contact.phone
+          - if contact.phone.present?
+            %dt= t(:phone)
+            %dd{class: changing_css_class(@version,"phone")}
+              = contact.phone
 
-          - if contact.fax
+          - if contact.fax.present?
             %dt= t(:fax)
             %dd{class: changing_css_class(@version,"fax")}
               = contact.fax
@@ -57,51 +59,50 @@
             %dt= t(:org_name)
             %dd{class: changing_css_class(@version,"org_name")}= contact.org_name
 
-          %dt= t(:street)
-          %dd{class: changing_css_class(@version,"street")}= contact.street.to_s.gsub("\n", '<br>').html_safe
+          - if contact.street.present?
+            %dt= t(:street)
+            %dd{class: changing_css_class(@version,"street")}= contact.street.to_s.gsub("\n", '<br>').html_safe
 
-          %dt= t(:city)
-          %dd{class: changing_css_class(@version,"city")}= contact.city
+          - if contact.city.present?
+            %dt= t(:city)
+            %dd{class: changing_css_class(@version,"city")}= contact.city
 
-          %dt= t(:zip)
-          %dd{class: changing_css_class(@version,"zip")}= contact.zip
+          - if contact.zip.present?
+            %dt= t(:zip)
+            %dd{class: changing_css_class(@version,"zip")}= contact.zip
 
-          %dt= t(:state)
-          %dd{class: changing_css_class(@version,"state")}= contact.state
+          - if contact.state.present?
+            %dt= t(:state)
+            %dd{class: changing_css_class(@version,"state")}= contact.state
 
-          %dt= t(:country)
-          %dd{class: changing_css_class(@version,"country_code")}= contact.country
+          - if contact.country.present?
+            %dt= t(:country)
+            %dd{class: changing_css_class(@version,"country_code")}= contact.country
 
 
       %span{:style => "padding-right:10px; float: right;"}
-        - if @version.previous
+        - if (prev = @versions_map[(@versions_map.index(@version.id) - 1)]) && @versions_map.index(@version.id) != 0
           = link_to(t(:previous),
-                    admin_contact_version_path(@version.previous.id),
+                    admin_contact_version_path(prev),
                     class: 'btn btn-primary')
         - else
           %a.btn.btn-primary.disabled{:href => "#"}
             %span= t(:previous)
-        - if @version.next
+        - if nxt = @versions_map[(@versions_map.index(@version.id) + 1)]
           = link_to(t(:next),
-                    admin_contact_version_path(@version.next.id),
+                    admin_contact_version_path(nxt),
                     class: 'btn btn-default')
         - else
           %a.btn.btn-default.disabled{:href => "#"}
             %span= t(:next)
 
   .col-md-4
-    .panel.panel-default{:style => "min-height:420px;"}
+    .panel.panel-default{:style => "min-height:450px;"}
       %ul.nav.nav-pills.nav-stacked
         - @versions.each do |vs|
-          - if vs.id == @version.id
-            %li.active
-              = link_to admin_contact_version_path(vs.id) do
-                = l(vs.created_at, format: :short)
-                = vs.event
-          - else
-            %li
-              = link_to admin_contact_version_path(vs.id) do
-                = l(vs.created_at, format: :short)
-                = vs.event
+          %li{class: (vs.id == @version.id) && :active}
+            = link_to admin_contact_version_path(vs) do
+              = l(vs.created_at, format: :short)
+              = vs.event
       %span{:style => "padding-left:10px; position: absolute; bottom: 10px;"}
-        = paginate @versions
+        = paginate @versions, theme: :admin

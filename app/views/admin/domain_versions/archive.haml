@@ -19,7 +19,7 @@
         .col-md-3
           .form-group
             = label_tag :action
-            = select_tag '[q][event]', options_for_select([['Update', 'update'], ['Destroy', 'destroy']], params[:q][:event]), { include_blank:true, multiple: false, placeholder: t(:choose), class: 'form-control js-combobox' }
+            = select_tag '[q][event]', options_for_select([['Update', 'update'], ['Destroy', 'destroy'], ['Create', 'create']], params[:q][:event]), { include_blank:true, multiple: false, placeholder: t(:choose), class: 'form-control js-combobox' }
         .row
         .col-md-3
         .col-md-3
@@ -50,28 +50,40 @@
             %th{class: 'col-xs-2'}
               = t(:registrar)
             %th{class: 'col-xs-2'}
-              = t(:action_date)
-            %th{class: 'col-xs-2'}
               = t(:action)
+            %th{class: 'col-xs-2'}
+              = t(:created_at)
         %tbody
           - @versions.each do |version|
-            - if version.reify
+            - if version
+              - domain = Domain.new(version.object.to_h)
+              - version.object_changes.to_h.each{|k,v| domain[k]=v.last}
+
               %tr
-                %td= link_to(version.reify.name, admin_domain_version_path(version.id))
+                %td= link_to(domain.name, admin_domain_version_path(version.id))
                 %td
-                  - if version.reify.registrant
-                    = link_to(version.reify.registrant, admin_registrant_path(version.reify.registrant))
+                  - if domain.registrant
+                    = domain.registrant.name
+                  - else
+                    - contact = Contact.all_versions_for([domain.registrant_id], version.created_at).first
+                    - if contact.nil? && ver = ContactVersion.where(item_id: domain.registrant_id).last
+                      - contact = Contact.new(ver.object.to_h.merge(ver.object_changes.to_h.each_with_object({}){|(k,v), o| o[k]=v.last } ))
+                    = contact.try(:name)
+                    = "&#160;".html_safe
+                    = "(#{t(:deleted)})"
                 %td
-                  - if version.reify.registrar
-                    = link_to(version.reify.registrar, admin_registrar_path(version.reify.registrar))
-                %td= l(version.created_at, format: :short)
+                  - if domain.registrar
+                    = link_to(domain.registrar, admin_registrar_path(domain.registrar))
                 %td= version.event
+                %td= l(version.created_at, format: :short)
 
 
 .row
   .col-md-6
     = paginate @versions
   .col-md-6.text-right
+    .pagination
+      = t(:result_count, count: @versions.total_count)
 
 
 :coffee

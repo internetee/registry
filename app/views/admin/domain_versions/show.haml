@@ -1,8 +1,6 @@
 - domain = Domain.new(@version.object.to_h)
 - @version.object_changes.to_h.each{|k,v| domain[k]=v.last}
 
-= render 'shared/title', name: @version.reify.name
-
 - if @version
   - children = HashWithIndifferentAccess.new(@version.children)
   - nameservers    = Nameserver.all_versions_for(children[:nameservers], @version.created_at)
@@ -13,10 +11,11 @@
   - event       = @version.event
   - creator     = plain_username(@version.terminator)
 
+= render 'shared/title', name: domain.name
 
 .row
   .col-md-8
-    .panel.panel-default{:style => "min-height:400px;"}
+    .panel.panel-default{:style => "min-height:450px;"}
       .panel-heading
         %h3.panel-title
           = l(@version.created_at, format: :short)
@@ -25,7 +24,21 @@
       .panel-body
         %dl.dl-horizontal
           %dt= t(:name)
-          %dd= link_to(domain.name, admin_domain_path(@version.item_id))
+          - if !domain.name
+            - domain_name = Domain.find(@version.item_id).try(:name)
+          - else
+            - domain_name = domain.name
+          %dd= link_to(domain_name, admin_domain_path(@version.item_id))
+
+          %dt= t(:created)
+          %dd
+            = l(domain.created_at, format: :short)
+
+          %dt= t(:updated)
+          %dd
+            = l(domain.updated_at, format: :short)
+
+          %br
 
           %dt= t(:statuses)
           %dd{class: changing_css_class(@version,"statuses")}
@@ -84,40 +97,35 @@
                 \...#{ns[:public_key].to_s[-20,20]}
             %br
 
-          %dt= t(:registrar)
-          %dd{class: changing_css_class(@version,"registrar_id")}
-            = link_to admin_registrar_path(domain.registrar), target: "registrar_#{domain.registrar.id}" do
-              = domain.registrar.name
+          - if domain.registrar
+            %dt= t(:registrar)
+            %dd{class: changing_css_class(@version,"registrar_id")}
+              = link_to admin_registrar_path(domain.registrar), target: "registrar_#{domain.registrar.id}" do
+                = domain.registrar.name
+            %span{:style => "margin: 20px 20px; clear:both;"}
 
-      %span{:style => "padding-right:10px; padding-top:40px; float: right; bottom: 10px;"}
-        - if @version.previous
+        - if (prev = @versions_map[(@versions_map.index(@version.id) - 1)]) && @versions_map.index(@version.id) != 0
           = link_to(t(:previous),
-                    admin_domain_version_path(@version.previous.id),
+                    admin_domain_version_path(prev),
                     class: 'btn btn-primary')
         - else
           %a.btn.btn-primary.disabled{:href => "#"}
             %span= t(:previous)
-        - if @version.next
+        - if nxt = @versions_map[(@versions_map.index(@version.id) + 1)]
           = link_to(t(:next),
-                    admin_domain_version_path(@version.next.id),
+                    admin_domain_version_path(nxt),
                     class: 'btn btn-default')
         - else
           %a.btn.btn-default.disabled{:href => "#"}
             %span= t(:next)
 
   .col-md-4
-    .panel.panel-default{:style => "min-height:400px;"}
+    .panel.panel-default{:style => "min-height:450px;"}
       %ul.nav.nav-pills.nav-stacked
         - @versions.each do |vs|
-          - if vs.id == @version.id and vs.reify
-            %li.active
-              = link_to admin_domain_version_path(vs.id) do
-                = l(vs.created_at, format: :short)
-                = vs.event
-          - else
-            %li
-              = link_to admin_domain_version_path(vs.id) do
-                = l(vs.created_at, format: :short)
-                = vs.event
+          %li{class: (vs.id == @version.id) && :active}
+            = link_to admin_domain_version_path(vs) do
+              = l(vs.created_at, format: :short)
+              = vs.event
       %span{:style => "padding-left:10px; position: absolute; bottom: 10px;"}
-        = paginate @versions
+        = paginate @versions, theme: :admin
