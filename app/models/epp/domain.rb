@@ -11,7 +11,8 @@ class Epp::Domain < Domain
     return if is_admin # this bad hack for 109086524, refactor later
     return true if is_transfer || is_renewal
     return unless update_prohibited? || delete_prohibited?
-    add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
+    stat = (statuses & (DomainStatus::UPDATE_PROHIBIT_STATES + DomainStatus::DELETE_PROHIBIT_STATES)).first
+    add_epp_error('2304', 'status', stat, I18n.t(:object_status_prohibits_operation))
     false
   end
 
@@ -143,7 +144,7 @@ class Epp::Domain < Domain
     code = registrant_frame.try(:text)
     if code.present?
       if action == 'chg' && registrant_change_prohibited?
-        add_epp_error('2304', nil, DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
+        add_epp_error('2304', "status", DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
       end
       regt = Registrant.find_by(code: code)
       if regt
@@ -487,11 +488,6 @@ class Epp::Domain < Domain
 
     # at[:statuses] += at_add[:domain_statuses_attributes]
 
-    if errors.empty? && verify
-      self.upid = current_user.registrar.id if current_user.registrar
-      self.up_date = Time.zone.now
-    end
-
     if registrant_id && registrant.code == frame.css('registrant')
 
       throw :epp_error, {
@@ -499,6 +495,11 @@ class Epp::Domain < Domain
         msg: I18n.t(:contact_already_associated_with_the_domain)
       }
 
+    end
+
+    if errors.empty? && verify
+      self.upid = current_user.registrar.id if current_user.registrar
+      self.up_date = Time.zone.now
     end
 
     if errors.empty? && verify &&

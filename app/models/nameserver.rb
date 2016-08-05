@@ -24,7 +24,7 @@ class Nameserver < ActiveRecord::Base
   def epp_code_map
     {
         '2302' => [
-            [:hostname, :taken, { value: { obj: 'hostAttr', val: hostname } }]
+            [:hostname, :taken, { value: { obj: 'hostAttr', val: {'hostName': hostname} } }]
         ],
         '2005' => [
             [:hostname, :invalid, { value: { obj: 'hostAttr', val: hostname } }],
@@ -116,6 +116,10 @@ class Nameserver < ActiveRecord::Base
       # rel = rel.where(hostname: params[:hostname]) if params[:ipv4]
       # ignoring ips
       rel
+    end
+
+    def next_id
+      self.connection.select_value("SELECT nextval('#{self.sequence_name}')")
     end
   end
 end

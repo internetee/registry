@@ -3,6 +3,7 @@ class DomainCron
   def self.clean_expired_pendings
     STDOUT << "#{Time.zone.now.utc} - Clean expired domain pendings\n" unless Rails.env.test?
 
+    ::PaperTrail.whodunnit = "cron - #{__method__}"
     expire_at = Setting.expire_pending_confirmation.hours.ago
     count = 0
     expired_pending_domains = Domain.where('registrant_verification_asked_at <= ?', expire_at)
@@ -33,6 +34,7 @@ class DomainCron
   def self.start_expire_period
     STDOUT << "#{Time.zone.now.utc} - Expiring domains\n" unless Rails.env.test?
 
+    ::PaperTrail.whodunnit = "cron - #{__method__}"
     domains = Domain.where('valid_to <= ?', Time.zone.now)
     marked = 0
     real = 0
@@ -50,6 +52,7 @@ class DomainCron
   def self.start_redemption_grace_period
     STDOUT << "#{Time.zone.now.utc} - Setting server_hold to domains\n" unless Rails.env.test?
 
+    ::PaperTrail.whodunnit = "cron - #{__method__}"
     d = Domain.where('outzone_at <= ?', Time.zone.now)
     marked = 0
     real = 0
@@ -93,7 +96,7 @@ class DomainCron
 
     c = 0
 
-    Domain.where('delete_at <= ?', Time.zone.now).each do |x|
+    Domain.where('delete_at <= ?', Time.zone.now.end_of_day.utc).each do |x|
       next unless x.delete_candidateable?
 
       x.statuses << DomainStatus::DELETE_CANDIDATE
@@ -107,7 +110,7 @@ class DomainCron
       end
     end
 
-    Domain.where('force_delete_at <= ?', Time.zone.now).each do |x|
+    Domain.where('force_delete_at <= ?', Time.zone.now.end_of_day.utc).each do |x|
       DomainDeleteJob.enqueue(x.id, run_at: rand(((24*60) - (DateTime.now.hour * 60  + DateTime.now.minute))).minutes.from_now)
       STDOUT << "#{Time.zone.now.utc} DomainCron.destroy_delete_candidates: job added by force delete time ##{x.id} (#{x.name})\n" unless Rails.env.test?
       c += 1

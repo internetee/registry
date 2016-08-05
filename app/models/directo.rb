@@ -101,8 +101,8 @@ class Directo < ActiveRecord::Base
               "ProductName"    => ".#{pricelist.category} registreerimine: #{pricelist.years_amount} aasta",
               "UnitPriceWoVAT" => pricelist.price_decimal/pricelist.years_amount
           }
-          hash["StartDate"] = (activity.created_at + (year-1).year).end_of_month.strftime(date_format)     if year > 1
-          hash["EndDate"]   = (activity.created_at + (year-1).year + 1).end_of_month.strftime(date_format) if year > 1
+          hash["StartDate"] = (activity.created_at + year.year).strftime(date_format)     if year > 1
+          hash["EndDate"]   = (activity.created_at + year.year + 1).strftime(date_format) if year > 1
 
           if items.has_key?(hash)
             items[hash]["Quantity"] += 1
@@ -113,10 +113,8 @@ class Directo < ActiveRecord::Base
       end
 
       #adding prepaiments
-      if items.any?
-        total = 0
-        items.each{ |key, val| total += val["Quantity"] * key["UnitPriceWoVAT"] }
-        hash = {"ProductID" => Setting.directo_receipt_product_name, "Unit" => "tk", "ProductName" => "Domeenide ettemaks", "UnitPriceWoVAT"=>total}
+      registrar_activities.where(activity_type: [AccountActivity::ADD_CREDIT]).each do |activity|
+        hash = {"ProductID" => Setting.directo_receipt_product_name, "Unit" => "tk", "ProductName" => "Domeenide ettemaks", "UnitPriceWoVAT"=>activity.sum}
         items[hash] = {"RN"=>counter.next, "RR" => counter.now, "Quantity"=> -1}
       end
 
