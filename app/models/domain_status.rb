@@ -95,6 +95,29 @@ class DomainStatus < ActiveRecord::Base
     SERVER_ADMIN_CHANGE_PROHIBITED, SERVER_TECH_CHANGE_PROHIBITED
   ]
 
+  UPDATE_PROHIBIT_STATES = [
+      DomainStatus::PENDING_DELETE_CONFIRMATION,
+      DomainStatus::CLIENT_UPDATE_PROHIBITED,
+      DomainStatus::SERVER_UPDATE_PROHIBITED,
+      DomainStatus::PENDING_CREATE,
+      DomainStatus::PENDING_UPDATE,
+      DomainStatus::PENDING_DELETE,
+      DomainStatus::PENDING_RENEW,
+      DomainStatus::PENDING_TRANSFER
+  ]
+
+  DELETE_PROHIBIT_STATES = [
+      DomainStatus::CLIENT_DELETE_PROHIBITED,
+      DomainStatus::SERVER_DELETE_PROHIBITED,
+      DomainStatus::CLIENT_UPDATE_PROHIBITED,
+      DomainStatus::SERVER_UPDATE_PROHIBITED,
+      DomainStatus::PENDING_CREATE,
+      DomainStatus::PENDING_RENEW,
+      DomainStatus::PENDING_TRANSFER,
+      DomainStatus::PENDING_UPDATE,
+      DomainStatus::PENDING_DELETE
+  ]
+
   def epp_code_map
     {
       '2302' => [ # Object exists
