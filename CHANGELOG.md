@@ -1,3 +1,18 @@
+9.08.2016
+* Admin interface:
+  * actions are now clickable in domain and contact history and return the initial epp request sent to registry (117806281)
+  * access to archived domain and contact objects under settings (108869472)
+  * BUG: noaccess fixed for contacts with incomplete ident data (120093749)
+* Registry:
+  * BUG: adding contact do a domain generated unnecessary log records (116761157)
+  * linked state for a contact is now dynamic (116761157)
+* Portal for registrars:
+  * improved dnssec data presentation in ds data interface mode (118007975)
+  * BUG: now all the ident data is returned for contacts with incomplete set (120093749)
+* EPP
+  * BUG: invalid error 2304 "Object status prohibits operation" (118822101)
+  * BUG: invalid error 2302 "Nameserver already exists on this domain" (118822101)
+
 14.07.2016
 * Registry:
   * whois records generation fix in contact.rb model (#117612931)
