@@ -32,18 +32,27 @@ class LegalDocument < ActiveRecord::Base
 
 
   def save_to_filesystem
-    loop do
-      rand = SecureRandom.random_number.to_s.last(4)
-      next if rand.to_i == 0 || rand.length < 4
+    binary = Base64.decode64(body)
+    digest = Digest::SHA1.new.update(binary).to_s
 
-      dir = "#{ENV['legal_documents_dir']}/#{Time.zone.now.strftime('%Y/%m/%d')}"
-      FileUtils.mkdir_p(dir, mode: 0775)
-      self.path = "#{dir}/#{Time.zone.now.to_formatted_s(:number)}_#{rand}.#{document_type}"
-      break unless File.file?(path)
+    loop do
+        rand = SecureRandom.random_number.to_s.last(4)
+        next if rand.to_i == 0 || rand.length < 4
+        dir = "#{ENV['legal_documents_dir']}/#{Time.zone.now.strftime('%Y/%m/%d')}"
+        FileUtils.mkdir_p(dir, mode: 0775)
+        self.path = "#{dir}/#{Time.zone.now.to_formatted_s(:number)}_#{rand}.#{document_type}"
+        break unless File.file?(path)
     end
 
-    File.open(path, 'wb') { |f| f.write(Base64.decode64(body)) } unless Rails.env.test?
+    File.open(path, 'wb') { |f| f.write(binary) } unless Rails.env.test?
     self.path = path
+    self.checksum = digest
+  end
+
+  def calc_checksum
+    digest = Digest::SHA1.new
+    digest.update File.binread(path)
+    digest.to_s
   end
 
   def add_creator
