@@ -28,7 +28,7 @@ class Registrant::DomainDeleteConfirmsController < RegistrantController
         flash[:notice] = t(:registrant_domain_verification_rejected)
         redirect_to registrant_domain_delete_confirm_path(@domain.id, rejected: true)
       else
-        flash[:alert] = t(:registrant_domain_verification_rejected_failed)
+        flash[:alert] = t(:registrant_domain_delete_rejected_failed)
         return render 'show'
       end
     elsif params[:confirmed]
@@ -36,7 +36,7 @@ class Registrant::DomainDeleteConfirmsController < RegistrantController
         flash[:notice] = t(:registrant_domain_verification_confirmed)
         redirect_to registrant_domain_delete_confirm_path(@domain.id, confirmed: true)
       else
-        flash[:alert] = t(:registrant_domain_verification_confirmed_failed)
+        flash[:alert] = t(:registrant_domain_delete_confirmed_failed)
         return render 'show'
       end
     end

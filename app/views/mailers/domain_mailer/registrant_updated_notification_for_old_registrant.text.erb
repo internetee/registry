@@ -1,41 +1,41 @@
-Tere,
+Tere
 
-Domeeni <%= @params[:name] %> registreerija vahetuse taotlus on kinnitatud ning andmed registris uuendatud.
+Domeeni <%= @domain.name %> registreerija vahetuse taotlus on kinnitatud ning andmed registris uuendatud.
 
 Uue registreerija andmed:
-Nimi: <%= @params[:new_registrant_name] %>
+Nimi: <%= @new_registrant.name %>
 
-<% if @params[:registrant_priv] %>
-Isikukood: <%= @params[:registrant_ident] %>
+<% if @new_registrant.priv? %>
+Isikukood: <%= @new_registrant.ident %>
 <% else %>
-Äriregistrikood: <%= @params[:registrant_ident] %>
+Äriregistrikood: <%= @new_registrant.ident %>
 <% end %>
-Epost: <%= @params[:registrant_email] %>
-Tänav: <%= @params[:registrant_street] %>
-Linn: <%= @params[:registrant_city] %>
-Riik: <%= @params[:registrant_country] %>
+Epost: <%= @new_registrant.email %>
+Tänav: <%= @new_registrant.street %>
+Linn: <%= @new_registrant.city %>
+Riik: <%= @new_registrant.country.name %>
 
 Lugupidamisega
-Eesti Interneti SA
+Eesti Interneti Sihtasutus
 
 --------------------------------------
 
 Hi,
 
-Process for changing registrant of the domain <%= @params[:name] %> has been approved and the data in the registry is updated.
+Process for changing registrant of the domain <%= @domain.name %> has been approved and the data in the registry is updated.
 
 New registrant:
-Name: <%= @params[:new_registrant_name] %>
+Name: <%= @new_registrant.name %>
 
-<% if @params[:registrant_priv] %>
-Personal code: <%= @params[:registrant_ident] %>
+<% if @new_registrant.priv? %>
+Personal code: <%= @new_registrant.ident %>
 <% else %>
-Business Registry code: <%= @params[:registrant_ident] %>
+Business Registry code: <%= @new_registrant.ident %>
 <% end %>
-E-mail: <%= @params[:registrant_email] %>
-Street: <%= @params[:registrant_street] %>
-City: <%= @params[:registrant_city] %>
-Country: <%= @params[:registrant_country] %>
+E-mail: <%= @new_registrant.email %>
+Street: <%= @new_registrant.street %>
+City: <%= @new_registrant.city %>
+Country: <%= @new_registrant.country.name %>
 
 Best Regards,
 Estonian Internet Foundation

@@ -9,33 +9,33 @@
 
 <strong>Lugupeetud domeeni <%= @domain.name %> kontaktisik</strong>
 
-<p>Eesti Interneti SA (EIS) domeeniregistrisse on domeeni <b><%= @domain.name %></b> kohta kantud j&auml;rgmised andmed:</p>
+<p>.ee domeeniregistrisse on domeeni <b><%= @domain.name %></b> kohta kantud j&auml;rgmised andmed:</p>
 
 <p>Registreerija nimi: <b><%= @domain.registrant %></b><br />
 Registrikood: <b><%= @domain.registrant.try(:ident) %></b></p>
 
-<p>EIS-le on saanud teatavaks, et juriidiline isik registrikoodiga <b><%= @domain.registrant.try(:ident) %></b> on &auml;riregistrist kustutatud.</p>
+<p>Eesti Interneti Sihtasutusele (EIS) on saanud teatavaks, et juriidiline isik registrikoodiga <b><%= @domain.registrant.try(:ident) %></b> on &auml;riregistrist kustutatud.</p>
 
 <p>Kuiv&otilde;rd &auml;riregistrist kustutatud juriidiline isik ei saa olla domeeni registreerijaks, siis algatas EIS <b><%= l(Time.zone.now, format: :date) %></b> vastavalt Domeenireeglite (<a href="http://www.internet.ee/domeenid/" target="_blank">http://www.internet.ee/domeenid/</a>) punktile 6.4 domeeni <b><%= @domain.name %></b> suhtes 30 p&auml;eva pikkuse kustutusmenetluse. Kustutamise k&auml;igus j&auml;&auml;b domeen internetis k&auml;ttesaadavaks.</p>
 
-<p>Domeenireeglite punktist 6.4 tulenevalt on domeeni suhtes &otilde;igust omaval registreerijal v&otilde;imalus esitada domeeni <b><%= @domain.name %></b> registripidajale <b><%= @domain.registrar %></b> domeeni &uuml;leandmise taotlus Domeenireeglite p 5.3.6.2 kohaselt. Taotlusele tuleb lisada domeeni omandamist t&otilde;endavad dokumendid, mis asendavad Domeenireeglite punktis 5.3.6.3 s&auml;testatud &uuml;leandva registreerija n&otilde;usolekut. Vastav dokumentatsioon tuleks esitada Registripidajale esimesel v&otilde;imalusel.</p>
+<p>Domeenireeglite punktist 6.4 tulenevalt on domeeni suhtes &otilde;igust omaval registreerijal v&otilde;imalus esitada domeeni <b><%= @domain.name %></b> registripidajale <b><%= @domain.registrar %></b> domeeni &uuml;leandmise taotlus Domeenireeglite p 5.3.6.2 kohaselt. Taotlusele tuleb lisada domeeni omandamist t&otilde;endavad dokumendid, mis asendavad Domeenireeglite punktis 5.3.6.3 s&auml;testatud &uuml;leandva registreerija n&otilde;usolekut. Vastav dokumentatsioon tuleb esitada Registripidajale esimesel v&otilde;imalusel.</p>
 
 <p>Kui &uuml;leandmine ei ole 30 p&auml;eva jooksul toimunud, kustub domeen <b><%= @domain.name %></b> 24 tunni jooksul <b><%= l(@domain.force_delete_at, format: :date) %></b> m&ouml;&ouml;dumisest juhuslikult valitud ajahetkel. Soovi korral on v&otilde;imalik domeen p&auml;rast selle kustumist registrist “kes ees, see mees” p&otilde;him&otilde;ttel uuesti registreerida.</p>
 
-<p>Lisak&uuml;simuste korral v&otilde;tke palun &uuml;hendust oma registripidajaga <%= @domain.registrar %>, kelle kontaktandmed leiate lingilt <a href="http://www.internet.ee/registripidajad" target="_blank">http://www.internet.ee/registripidajad</a></p><br /><br />
+<p>Lisak&uuml;simuste korral v&otilde;tke palun &uuml;hendust oma registripidajaga <%= @domain.registrar %>. Registripidajate kontaktid leiate aadressilt <a href="http://www.internet.ee/registripidajad" target="_blank">http://www.internet.ee/registripidajad</a></p><br /><br />
 
 
 
 <strong>Dear contact of <%= @domain.name %> domain</strong>
 
-<p>The following details for domain name <b><%= @domain.name %></b> have been entered into the Estonian Internet Foundation's (EIF) domain registry:</p>
+<p>The following details for domain name <b><%= @domain.name %></b> have been entered into the .ee domain registry:</p>
 
 <p>Registrant's name: <b><%= @domain.registrant %></b><br />
 Registry code: <b><%= @domain.registrant.try(:ident) %></b></p>
 
-<p>EIF has learned that the legal person with registry code <b><%= @domain.registrant.try(:ident) %></b> has been deleted from the Business Registry.</p>
+<p>Estonian Internet Foundation (EIS) has learned that the legal person with registry code <b><%= @domain.registrant.try(:ident) %></b> has been deleted from the Business Registry.</p>
 
-<p>As a terminated legal person cannot be the registrant of a domain, the EIF started the deletion process of <b><%= @domain.name %></b> domain on <b><%= l(Time.zone.now, format: :date) %></b> according to the Domain Regulation (<a href="http://www.internet.ee/domains/" target="_blank">http://www.internet.ee/domains/</a>), using the 30-day delete procedure. The domain will remain available on the Internet during the delete procedure.</p>
+<p>As a terminated legal person cannot be the registrant of a domain, the EIS started the deletion process of <b><%= @domain.name %></b> domain on <b><%= l(Time.zone.now, format: :date) %></b> according to the Domain Regulation (<a href="http://www.internet.ee/domains/" target="_blank">http://www.internet.ee/domains/</a>), using the 30-day delete procedure. The domain will remain available on the Internet during the delete procedure.</p>
 
 <p>According to paragraph 6.4 of the Domain Regulation, the registrant holding a right to the domain name <b><%= @domain.name %></b> can submit a domain name transfer application to the registrar <b><%= @domain.registrar %></b> in accordance with paragraph 5.3.6.2 of the Domain Regulation. The application must be submitted together with documents certifying the acquisition of the domain that will replace the consent of the surrendering registrant as laid down in paragraph 5.3.6.3 of the Domain Regulation. The relevant documents should be submitted to the registrar as soon as possible.</p>
 
@@ -65,9 +65,9 @@ Registry code: <b><%= @domain.registrant.try(:ident) %></b></p>
       <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center" style="text-align: justify; line-height: 16px; font-size: 12px;"><tbody>
         <tr><td align="left" valign="top">
           <p><strong>Lugupidamisega,<br />
-          Yours Sincerely,<br />
+          Best Regards,<br />
           С уважением,</strong></p>
-          <p><i>Eesti Interneti SA<br />
+          <p><i>Eesti Interneti Sihtasutus<br />
           Estonian Internet Foundation</i></p>
         </td><td></td></tr>
       </tbody>

@@ -9,5 +9,6 @@
 #= require shared/jquery.validate.bootstrap
 #= require jquery-ui/datepicker
 #= require select2
+#= require jquery.doubleScroll
 #= require shared/general
 #= require admin/application

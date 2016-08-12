@@ -134,7 +134,7 @@ describe 'EPP Domain', epp: true do
 
       key = d.dnskeys.last
 
-      key.ds_alg.should == 3
+      key.ds_alg.should == 5
       key.ds_key_tag.should_not be_blank
 
       key.ds_digest_type.should == Setting.ds_algorithm

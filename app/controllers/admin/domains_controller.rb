@@ -9,7 +9,7 @@ class Admin::DomainsController < AdminController
     params[:q] ||= {}
     if params[:statuses_contains]
       domains = Domain.includes(:registrar, :registrant).where(
-        "statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
+        "domains.statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
       )
     else
       domains = Domain.includes(:registrar, :registrant)
@@ -75,6 +75,11 @@ class Admin::DomainsController < AdminController
       flash.now[:alert] = I18n.t('failed_to_update_domain')
     end
     redirect_to [:admin, @domain]
+  end
+
+  def versions
+    @domain = Domain.where(id: params[:domain_id]).includes({versions: :item}).first
+    @versions = @domain.versions
   end
 
   private

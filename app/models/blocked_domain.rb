@@ -40,7 +40,7 @@ class BlockedDomain < ActiveRecord::Base
   def generate_json
     h = HashWithIndifferentAccess.new
     h[:name]       = self.name
-    h[:status]     = 'Blocked'
+    h[:status]     = ['Blocked']
     h
   end
 

@@ -42,13 +42,8 @@ class Registrar::ContactsController < Registrar::DeppController # EPP controller
       @contacts = Contact.find_by(name: params[:q][:name_matches])
     end
 
-    if params[:statuses_contains]
-      contacts =  current_user.registrar.contacts.includes(:registrar).where(
-          "contacts.statuses @> ?::varchar[]", "{#{params[:statuses_contains].join(',')}}"
-      )
-    else
-      contacts = current_user.registrar.contacts.includes(:registrar)
-    end
+    contacts = current_user.registrar.contacts.includes(:registrar)
+    contacts = contacts.filter_by_states(params[:statuses_contains]) if params[:statuses_contains]
 
     normalize_search_parameters do
       @q = contacts.search(params[:q])

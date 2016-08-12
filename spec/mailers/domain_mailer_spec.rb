@@ -153,7 +153,7 @@ describe DomainMailer do
       @registrant = Fabricate(:registrant, email: 'test@example.com')
       @domain = Fabricate(:domain, registrant: @registrant)
       @domain.deliver_emails = true
-      @mail = DomainMailer.registrant_updated_notification_for_new_registrant(@domain.id, deliver_emails)
+      @mail = DomainMailer.registrant_updated_notification_for_new_registrant(@domain.id, @registrant.id, @registrant.id, deliver_emails)
     end
 
     it 'should render email subject' do
@@ -178,7 +178,7 @@ describe DomainMailer do
       @registrant = Fabricate(:registrant, email: 'test@example.com')
       @domain = Fabricate(:domain, registrant: @registrant)
       @domain.deliver_emails = true
-      @mail = DomainMailer.registrant_updated_notification_for_old_registrant(@domain.id, deliver_emails)
+      @mail = DomainMailer.registrant_updated_notification_for_old_registrant(@domain.id, @registrant.id, @registrant.id, deliver_emails)
     end
 
     it 'should render email subject' do

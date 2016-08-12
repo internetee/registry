@@ -66,8 +66,9 @@ module Depp
 
     def delete(domain_params)
       xml = epp_xml.delete({
-        name: { value: domain_params[:name] }
-      }, Depp::Domain.construct_custom_params_hash(domain_params))
+        name: { value: domain_params[:name] }},
+        Depp::Domain.construct_custom_params_hash(domain_params),
+        (domain_params[:verified].present? && 'yes'))
 
       current_user.request(xml)
     end
@@ -214,7 +215,8 @@ module Depp
         rem_arr << { _anonymus: rem_anon } if rem_anon.any?
 
         if domain_params[:registrant] != old_domain_params[:registrant]
-          chg = [{ registrant: { value: domain_params[:registrant] } }]
+          chg = [{ registrant: { value: domain_params[:registrant] } }] if !domain_params[:verified].present?
+          chg = [{ registrant: { value: domain_params[:registrant], attrs: { verified: 'yes' } } }] if domain_params[:verified]
         end
 
         add_arr = nil if add_arr.none?

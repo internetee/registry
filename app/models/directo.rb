@@ -60,14 +60,15 @@ class Directo < ActiveRecord::Base
   end
 
 
-  def self.send_monthly_invoices
+  def self.send_monthly_invoices(debug: false)
+    @debug         = debug
     I18n.locale    = :et
     month          = Time.now - 1.month
     invoices_until = month.end_of_month
     date_format    = "%Y-%m-%d"
     invoice_counter= Counter.new
 
-    min_directo    = Setting.invoice_number_min.presence.try(:to_i)
+    min_directo    = Setting.directo_monthly_number_min.presence.try(:to_i)
     max_directo    = Setting.directo_monthly_number_max.presence.try(:to_i)
     last_directo   = [Setting.directo_monthly_number_last.presence.try(:to_i), min_directo].compact.max || 0
     if max_directo && max_directo <= last_directo
@@ -100,8 +101,8 @@ class Directo < ActiveRecord::Base
               "ProductName"    => ".#{pricelist.category} registreerimine: #{pricelist.years_amount} aasta",
               "UnitPriceWoVAT" => pricelist.price_decimal/pricelist.years_amount
           }
-          hash["StartDate"] = (activity.created_at + year.year).strftime(date_format)     if year > 1
-          hash["EndDate"]   = (activity.created_at + year.year + 1).strftime(date_format) if year > 1
+          hash["StartDate"] = (activity.created_at + (year-1).year).end_of_month.strftime(date_format)     if year > 1
+          hash["EndDate"]   = (activity.created_at + (year-1).year + 1).end_of_month.strftime(date_format) if year > 1
 
           if items.has_key?(hash)
             items[hash]["Quantity"] += 1
@@ -112,8 +113,10 @@ class Directo < ActiveRecord::Base
       end
 
       #adding prepaiments
-      registrar_activities.where(activity_type: [AccountActivity::ADD_CREDIT]).each do |activity|
-        hash = {"ProductID" => Setting.directo_receipt_product_name, "Unit" => "tk", "ProductName" => "Domeenide ettemaks", "UnitPriceWoVAT"=>activity.sum}
+      if items.any?
+        total = 0
+        items.each{ |key, val| total += val["Quantity"] * key["UnitPriceWoVAT"] }
+        hash = {"ProductID" => Setting.directo_receipt_product_name, "Unit" => "tk", "ProductName" => "Domeenide ettemaks", "UnitPriceWoVAT"=>total}
         items[hash] = {"RN"=>counter.next, "RR" => counter.now, "Quantity"=> -1}
       end
 
@@ -141,10 +144,14 @@ class Directo < ActiveRecord::Base
 
         data = builder.to_xml.gsub("\n",'')
         response = RestClient::Request.execute(url: ENV['directo_invoice_url'], method: :post, payload: {put: "1", what: "invoice", xmldata: data}, verify_ssl: false).to_s
-        Setting.directo_monthly_number_last = directo_next
-        Nokogiri::XML(response).css("Result").each do |res|
-          Directo.create!(response: res.as_json.to_h, invoice_number: directo_next)
-          Rails.logger.info("[DIRECTO] Invoice #{res.attributes["docid"].value} was pushed and return is #{res.as_json.to_h.inspect}")
+        if @debug
+          STDOUT << "#{Time.zone.now.utc} - Directo xml had to be sent #{data}\n"
+        else
+          Setting.directo_monthly_number_last = directo_next
+          Nokogiri::XML(response).css("Result").each do |res|
+            Directo.create!(request: data, response: res.as_json.to_h, invoice_number: directo_next)
+            Rails.logger.info("[DIRECTO] Invoice #{res.attributes["docid"].value} was pushed and return is #{res.as_json.to_h.inspect}")
+          end
         end
       else
         Rails.logger.info("[DIRECTO] Registrar #{registrar.id} has nothing to be sent to Directo")

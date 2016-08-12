@@ -1,6 +1,6 @@
-Tere,
+Tere
 
-Registrisse laekus taotlus domeeni <%= @params[:name] %> registreerija vahetuseks. Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja poole. Teie registripidaja on <%= @params[:registrar_name] %>
+Registrisse laekus taotlus domeeni <%= @params[:name] %> registreerija vahetuseks. Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja <%= @params[:registrar_name] %> poole.
 
 Uue registreerija andmed:
 Nimi: <%= @params[:registrant_name] %>
@@ -13,12 +13,12 @@ Tänav: <%= @params[:registrant_street] %>
 Linn: <%= @params[:registrant_city] %>
 Riik: <%= @params[:registrant_country] %>
 
-Taotlus on aktiivne <%= Setting.expire_pending_confirmation %> tundi ja lükatakse automaatselt tagasi kui te seda enne ise ei kinnita või tagasi lükka.
-Muudatuse kinnitamiseks külastage palun allolevat võrgulehekülge, kontrollige uuesti üle muudatuse andmed ning vajutage nuppu kinnitan:
+Taotlus on aktiivne <%= Setting.expire_pending_confirmation %> tundi ja lükatakse automaatselt tagasi kui te seda enne ei kinnita või tagasi lükka.
+Muudatuse kinnitamiseks külastage palun allolevat lehekülge, kontrollige uuesti üle muudatuse andmed ning vajutage nuppu kinnitan:
 <%= @params[:verification_url] %>
 
 Lugupidamisega
-Eesti Interneti SA
+Eesti Interneti Sihtasutus
 
 --------------------------------------
 

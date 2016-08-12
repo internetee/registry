@@ -1,0 +1,86 @@
+= render 'shared/title', name: t(:contacts)
+
+.row
+  .col-md-12
+    = search_form_for [:admin, @q], html: { style: 'margin-bottom: 0;', class: 'js-form', autocomplete: 'off' } do |f|
+      .row
+        .col-md-3
+          .form-group
+            = f.label :name
+            = f.search_field :name, value: params[:q][:name], class: 'form-control', placeholder: t(:name)
+        .col-md-3
+          .form-group
+            = f.label :id
+            = f.search_field :code, value: params[:q][:code], class: 'form-control', placeholder: t(:id)
+        .col-md-3
+          .form-group
+            = f.label :ident
+            = f.search_field :ident, value: params[:q][:ident], class: 'form-control', placeholder: t(:ident)
+        .col-md-3
+          .form-group
+            = label_tag :action
+            = select_tag '[q][event]', options_for_select([['Update', 'update'], ['Destroy', 'destroy'], ['Create', 'create']], params[:q][:event]), { include_blank:true, multiple: false, placeholder: t(:choose), class: 'form-control js-combobox' }
+      .row
+        .col-md-3
+        .col-md-3
+        .col-md-3
+          .form-group
+            = label_tag t(:results_per_page)
+            = text_field_tag :results_per_page, params[:results_per_page], class: 'form-control', placeholder: t(:results_per_page)
+        .col-md-3{style: 'padding-top: 25px;'}
+          %button.btn.btn-primary
+            &nbsp;
+            %span.glyphicon.glyphicon-search
+            &nbsp;
+          %button.btn.btn-default.js-reset-form
+            = t(:clear_fields)
+%hr
+
+
+.row
+  .col-md-12
+    .table-responsive
+      %table.table.table-hover.table-bordered.table-condensed
+        %thead
+          %tr
+            %th{class: 'col-xs-2'}
+              = t(:name)
+            %th{class: 'col-xs-2'}
+              = t(:id)
+            %th{class: 'col-xs-2'}
+              = t(:ident)
+            %th{class: 'col-xs-2'}
+              = t(:registrar)
+            %th{class: 'col-xs-2'}
+              = t(:action)
+            %th{class: 'col-xs-2'}
+              = t(:created_at)
+        %tbody
+          - @versions.each do |version|
+            - if version
+            - contact = Contact.new(version.object.to_h)
+            - version.object_changes.to_h.each{|k,v| contact[k]=v.last}
+
+              %tr
+                %td= link_to(contact.name, admin_contact_version_path(version.id))
+                %td= contact.code
+                %td= ident_for(contact)
+                %td
+                  - if contact.registrar
+                    = link_to(contact.registrar, admin_registrar_path(contact.registrar))
+                %td= version.event
+                %td= l(version.created_at, format: :short)
+
+
+.row
+  .col-md-6
+    = paginate @versions
+  .col-md-6.text-right
+    .pagination
+      = t(:result_count, count: @versions.total_count)
+
+
+:coffee
+  $(".js-reset-form").on "click", (e) ->
+    e.preventDefault();
+    window.location = "#{admin_contact_versions_path}"

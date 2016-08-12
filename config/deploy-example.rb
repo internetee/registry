@@ -235,7 +235,7 @@ end
 desc 'Loads current commit hash'
 task load_commit_hash: :environment do
   queue! %(
-    echo "CURRENT_COMMIT_HASH = '$(git --git-dir #{deploy_to}/scm rev-parse --short HEAD)'" > \
+    echo "CURRENT_COMMIT_HASH = '$(git --git-dir #{deploy_to}/scm rev-parse --short #{branch})'" > \
     #{deploy_to}/shared/config/initializers/current_commit_hash.rb
   )
 end

@@ -17,6 +17,14 @@ GIT
       rails (>= 4.1.0)
 
 GIT
+  remote: https://github.com/internetee/epp-xml.git
+  revision: 475f650951f2cf5015e00d48f408a2194ecc1662
+  specs:
+    epp-xml (1.0.5)
+      activesupport (~> 4.1)
+      builder (~> 3.2)
+
+GIT
   remote: https://github.com/internetee/epp.git
   revision: 505c3f2739eb1da918e54111aecfb138a822739d
   specs:
@@ -191,9 +199,6 @@ GEM
     docile (1.1.5)
     domain_name (0.5.25)
       unf (>= 0.0.5, < 1.0.0)
-    epp-xml (1.0.4)
-      activesupport (~> 4.1)
-      builder (~> 3.2)
     equalizer (0.0.11)
     erubis (2.7.0)
     execjs (2.6.0)
@@ -311,7 +316,7 @@ GEM
     mina (0.3.1)
       open4 (~> 1.3.4)
       rake
-    mini_portile2 (2.0.0)
+    mini_portile2 (2.1.0)
     minitest (5.8.4)
     monetize (1.1.0)
       money (~> 6.5.0)
@@ -327,8 +332,9 @@ GEM
     nenv (0.2.0)
     netrc (0.11.0)
     newrelic_rpm (3.12.0.288)
-    nokogiri (1.6.7.2)
-      mini_portile2 (~> 2.0.0.rc2)
+    nokogiri (1.6.8)
+      mini_portile2 (~> 2.1.0)
+      pkg-config (~> 1.1.7)
     nori (2.6.0)
     notiffany (0.0.7)
       nenv (~> 0.1)
@@ -343,6 +349,7 @@ GEM
     phantomjs (1.9.8.0)
     phantomjs-binaries (1.9.2.4)
       sys-uname (= 0.9.0)
+    pkg-config (1.1.7)
     poltergeist (1.6.0)
       capybara (~> 2.1)
       cliver (~> 0.3.1)
@@ -589,7 +596,7 @@ DEPENDENCIES
   devise (= 3.5.4)
   digidoc_client (= 0.2.1)
   epp (= 1.4.2)!
-  epp-xml (= 1.0.4)
+  epp-xml (= 1.0.5)!
   fabrication (= 2.13.2)
   faker (= 1.4.3)
   figaro (= 1.1.1)
@@ -614,7 +621,7 @@ DEPENDENCIES
   mina (= 0.3.1)
   money-rails (= 1.4.1)
   newrelic_rpm (= 3.12.0.288)
-  nokogiri (= 1.6.7.2)
+  nokogiri (= 1.6.8)
   nprogress-rails (= 0.1.6.7)
   paper_trail!
   pdfkit (= 0.6.2)
