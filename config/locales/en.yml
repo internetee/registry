@@ -961,3 +961,4 @@ en:
   only_estonian_residets_can_signin: "Access currently available only to Estonian citizens and e-residents with Estonian ID-card or Mobile-ID."
   deleted: 'Deleted'
   cant_match_version: 'Impossible match version with request'
+  user_not_authenticated: "user not authenticated"
