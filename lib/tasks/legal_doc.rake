@@ -51,8 +51,8 @@ namespace :legal_doc do
       end
 
       contact_ids = DomainVersion.where(item_id: orig_legal.documentable_id).distinct.
-          pluck("object->>'registrar_id'", "object->'registrant_id'", "object_changes->'registrar_id'",
-                "object_changes->'registrant_id'", "children->'tech_contacts'", "children->'admin_contacts'").flatten.uniq
+          pluck("object->>'registrar_id'", "object->>'registrant_id'", "object_changes->>'registrar_id'",
+                "object_changes->>'registrant_id'", "children->>'tech_contacts'", "children->>'admin_contacts'").flatten.uniq
       contact_ids = contact_ids.map{|id| id.is_a?(Hash) ? id["id"] : id}.compact.uniq
       LegalDocument.where(documentable_type: "Contact", documentable_id: contact_ids).
           where(checksum: orig_legal.checksum).each do |new_legal|
