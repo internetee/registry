@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     post 'command/:command', to: 'errors#not_found', constraints: EppConstraint.new(:not_found) # fallback route
 
     get 'error/:command', to: 'errors#error'
+    match "*command", to: 'errors#error', via: [:post, :get, :patch, :put, :delete]
   end
 
   mount Repp::API => '/'

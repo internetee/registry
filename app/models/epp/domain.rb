@@ -525,7 +525,7 @@ class Epp::Domain < Domain
     self.statuses.delete(DomainStatus::PENDING_UPDATE)
     self.upid = user.registrar.id if user.registrar
     self.up_date = Time.zone.now
-    
+
     return unless update(frame, user, false)
     clean_pendings!
 
