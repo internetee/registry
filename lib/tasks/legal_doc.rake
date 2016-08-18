@@ -42,7 +42,7 @@ namespace :legal_doc do
 
       LegalDocument.where(documentable_type: "Domain", documentable_id: orig_legal.documentable_id).
           where(checksum: orig_legal.checksum).
-          where.not(id: orig_legal.id).each do |new_legal|
+          where.not(id: orig_legal.id).where.not(path: orig_legal.path).each do |new_legal|
             unless modified.include?(orig_legal.id)
               File.delete(new_legal.path) if File.exist?(new_legal.path)
               new_legal.update(path: orig_legal.path)
@@ -53,9 +53,9 @@ namespace :legal_doc do
       contact_ids = DomainVersion.where(item_id: orig_legal.documentable_id).distinct.
           pluck("object->>'registrar_id'", "object->>'registrant_id'", "object_changes->>'registrar_id'",
                 "object_changes->>'registrant_id'", "children->>'tech_contacts'", "children->>'admin_contacts'").flatten.uniq
-      contact_ids = contact_ids.map{|id| id.is_a?(Hash) ? id["id"] : id}.compact.uniq
+      contact_ids = contact_ids.map{|id| id.is_a?(Hash) ? id["id"] : id}.flatten.compact.uniq
       LegalDocument.where(documentable_type: "Contact", documentable_id: contact_ids).
-          where(checksum: orig_legal.checksum).each do |new_legal|
+          where(checksum: orig_legal.checksum).where.not(path: orig_legal.path).each do |new_legal|
             unless modified.include?(orig_legal.id)
               File.delete(new_legal.path) if File.exist?(new_legal.path)
               new_legal.update(path: orig_legal.path)
