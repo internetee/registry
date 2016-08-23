@@ -260,8 +260,8 @@ describe Domain do
         "serverUpdateProhibited"
       ])
 
-      fda = Time.zone.now + Setting.redemption_grace_period.days
-      @domain.force_delete_at.should be_within(20).of(fda)
+      fda = (Time.zone.now + Setting.redemption_grace_period.days + 1.day).beginning_of_day
+      @domain.force_delete_at.should == fda
 
       @domain.registrar.messages.count.should == 1
       m = @domain.registrar.messages.first
