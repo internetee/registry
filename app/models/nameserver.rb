@@ -45,7 +45,7 @@ class Nameserver < ActiveRecord::Base
   end
 
   def check_label_length
-    hostname_puny.split('.').each do |label|
+    hostname_puny.to_s.split('.').each do |label|
       errors.add(:hostname, :puny_to_long) if label.length > 63
     end
   end
