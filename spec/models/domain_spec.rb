@@ -159,9 +159,7 @@ describe Domain do
       @domain.reload
       @domain.statuses.include?(DomainStatus::EXPIRED).should == true
       @domain.outzone_at.should be_within(5).of(old_valid_to + Setting.expire_warning_period.days)
-      @domain.delete_at.should be_within(5).of(
-        old_valid_to + Setting.expire_warning_period.days + Setting.redemption_grace_period.days
-      )
+      @domain.delete_at.should == (old_valid_to + Setting.expire_warning_period.days + Setting.redemption_grace_period.days + 1.day).beginning_of_day
 
       DomainCron.start_expire_period
       @domain.reload
@@ -179,9 +177,7 @@ describe Domain do
       @domain.reload
       @domain.statuses.include?(DomainStatus::EXPIRED).should == true
       @domain.outzone_at.should be_within(5).of(old_valid_to + Setting.expire_warning_period.days)
-      @domain.delete_at.should be_within(5).of(
-        old_valid_to + Setting.expire_warning_period.days + Setting.redemption_grace_period.days
-      )
+      @domain.delete_at.should == (old_valid_to + Setting.expire_warning_period.days + Setting.redemption_grace_period.days + 1.day).beginning_of_day
     end
 
     it 'should start redemption grace period' do
@@ -229,6 +225,7 @@ describe Domain do
     end
 
     it 'should destroy delete candidates' do
+      ::PaperTrail.enabled = true
       DomainDeleteJob.jobs.clear
 
       d = Fabricate(:domain)
