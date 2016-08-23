@@ -6,8 +6,15 @@ class EppController < ApplicationController
 
   before_action :generate_svtrid
   before_action :latin_only
-
   before_action :validate_against_schema
+  before_action :validate_request
+  before_action :update_epp_session
+
+  around_action :catch_epp_errors
+
+  helper_method :current_user
+  helper_method :resource
+
   def validate_against_schema
     return if ['hello', 'error', 'keyrelay'].include?(params[:action])
     schema.validate(params[:nokogiri_frame]).each do |error|
@@ -20,10 +27,7 @@ class EppController < ApplicationController
     handle_errors and return if epp_errors.any?
   end
 
-  before_action :validate_request
-  before_action :update_epp_session
 
-  around_action :catch_epp_errors
   def catch_epp_errors
     err = catch(:epp_error) do
       yield
@@ -34,7 +38,6 @@ class EppController < ApplicationController
     handle_errors
   end
 
-  helper_method :current_user
 
   rescue_from StandardError do |e|
     @errors ||= []
@@ -361,17 +364,18 @@ class EppController < ApplicationController
     if request_command == 'login' && frame.present?
       frame.gsub!(/pw>.+<\//, 'pw>[FILTERED]</')
     end
-    trimmed_request = frame.to_s.gsub(/<eis:legalDocument([^>]+)>([^<])+<\/eis:legalDocument>/, "<eis:legalDocument>[FILTERED]</eis:legalDocument>")
+    trimmed_request = frame.gsub(/<eis:legalDocument([^>]+)>([^<])+<\/eis:legalDocument>/, "<eis:legalDocument>[FILTERED]</eis:legalDocument>") if frame.present?
 
     ApiLog::EppLog.create({
       request: trimmed_request,
       request_command: request_command,
       request_successful: epp_errors.empty?,
-      request_object: params[:epp_object_type],
+      request_object: resource ? "#{params[:epp_object_type]}: #{resource.class} - #{resource.id} - #{resource.name}" : params[:epp_object_type],
       response: @response,
       api_user_name: @api_user.try(:username) || current_user.try(:username) || 'api-public',
       api_user_registrar: @api_user.try(:registrar).try(:to_s) || current_user.try(:registrar).try(:to_s),
-      ip: request.ip
+      ip: request.ip,
+      uuid: request.uuid
     })
   end
   # rubocop: enable Metrics/CyclomaticComplexity
@@ -381,5 +385,10 @@ class EppController < ApplicationController
     return if ENV['iptables_counter_enabled'].blank? && ENV['iptables_counter_enabled'] != 'true'
     return if current_user.blank?
     counter_update(current_user.registrar_code, ENV['iptables_server_ip'])
+  end
+
+  def resource
+    name = self.class.to_s.sub("Epp::","").sub("Controller","").underscore.singularize
+    instance_variable_get("@#{name}")
   end
 end

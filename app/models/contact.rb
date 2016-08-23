@@ -33,19 +33,20 @@ class Contact < ActiveRecord::Base
     uniqueness: { message: :epp_id_taken },
     format: { with: /\A[\w\-\:\.\_]*\z/i, message: :invalid },
     length: { maximum: 100, message: :too_long_contact_code }
+
+  validate :val_ident_type
   validate :val_ident_valid_format?
-  validate :uniq_statuses?
   validate :validate_html
   validate :val_country_code
 
   after_initialize do
-    self.statuses = [] if statuses.nil?
     self.status_notes = {} if status_notes.nil?
     self.ident_updated_at = Time.zone.now if new_record? && ident_updated_at.blank?
   end
 
   before_validation :to_upcase_country_code
   before_validation :prefix_code
+  before_validation :strip_email
   before_create :generate_auth_info
 
   before_update :manage_emails
@@ -61,16 +62,6 @@ class Contact < ActiveRecord::Base
     end
   end
 
-  before_save :manage_statuses
-  def manage_statuses
-    if domain_transfer # very ugly but need better workflow
-      self.statuses = statuses | [OK, LINKED]
-      return
-    end
-
-    manage_linked
-    manage_ok
-  end
 
   after_save :update_related_whois_records
 
@@ -81,7 +72,7 @@ class Contact < ActiveRecord::Base
 
   ORG = 'org'
   PRIV = 'priv'
-  BIRTHDAY = 'birthday'
+  BIRTHDAY = 'birthday'.freeze
   PASSPORT = 'passport'
 
   IDENT_TYPES = [
@@ -173,7 +164,7 @@ class Contact < ActiveRecord::Base
     end
 
     def find_orphans
-      Contact.where('
+      where('
         NOT EXISTS(
           select 1 from domains d where d.registrant_id = contacts.id
         ) AND NOT EXISTS(
@@ -182,20 +173,49 @@ class Contact < ActiveRecord::Base
       ')
     end
 
+    def find_linked
+      where('
+        EXISTS(
+          select 1 from domains d where d.registrant_id = contacts.id
+        ) OR EXISTS(
+          select 1 from domain_contacts dc where dc.contact_id = contacts.id
+        )
+      ')
+    end
+
+    def filter_by_states in_states
+      states = Array(in_states).dup
+      scope  = all
+
+      # all contacts has state ok, so no need to filter by it
+      scope = scope.where("NOT contacts.statuses && ?::varchar[]", "{#{(STATUSES - [OK, LINKED]).join(',')}}") if states.delete(OK)
+      scope = scope.find_linked if states.delete(LINKED)
+      scope = scope.where("contacts.statuses @> ?::varchar[]", "{#{states.join(',')}}") if states.any?
+      scope
+    end
+
+    # To leave only new ones we need to check
+    # if contact was at any time used in domain.
+    # This can be checked by domain history.
+    # This can be checked by saved relations in children attribute
     def destroy_orphans
       STDOUT << "#{Time.zone.now.utc} - Destroying orphaned contacts\n" unless Rails.env.test?
 
-      orphans = find_orphans
-
-      unless Rails.env.test?
-        orphans.each do |m|
-          STDOUT << "#{Time.zone.now.utc} Contact.destroy_orphans: ##{m.id} (#{m.name})\n"
+      counter = Counter.new
+      find_orphans.find_each do |contact|
+        ver_scope = []
+        %w(admin_contacts tech_contacts registrant).each do |type|
+          ver_scope << "(children->'#{type}')::jsonb <@ json_build_array(#{contact.id})::jsonb"
         end
+        next if DomainVersion.where("created_at > ?", Time.now - Setting.orphans_contacts_in_months.to_i.months).where(ver_scope.join(" OR ")).any?
+        next if contact.domains_present?
+
+        contact.destroy
+        counter.next
+        STDOUT << "#{Time.zone.now.utc} Contact.destroy_orphans: ##{contact.id} (#{contact.name})\n"
       end
 
-      count = orphans.destroy_all.count
-
-      STDOUT << "#{Time.zone.now.utc} - Successfully destroyed #{count} orphaned contacts\n" unless Rails.env.test?
+      STDOUT << "#{Time.zone.now.utc} - Successfully destroyed #{counter} orphaned contacts\n" unless Rails.env.test?
     end
 
     def privs
@@ -236,8 +256,29 @@ class Contact < ActiveRecord::Base
     "EIS-#{id}"
   end
 
+  # kind of decorator in order to always return statuses
+  # if we use separate decorator, then we should add it
+  # to too many places
+  def statuses
+    calculated = Array(read_attribute(:statuses))
+    calculated.delete(Contact::OK)
+    calculated.delete(Contact::LINKED)
+    calculated << Contact::OK     if calculated.empty?# && valid?
+    calculated << Contact::LINKED if domains_present?
+
+    calculated.uniq
+  end
+
+  def statuses= arr
+    write_attribute(:statuses, Array(arr).uniq)
+  end
+
   def to_s
     name || '[no name]'
+  end
+
+  def val_ident_type
+    errors.add(:ident_type, :epp_ident_type_invalid, code: code) if !%w(org priv birthday).include?(ident_type)
   end
 
   def val_ident_valid_format?
@@ -252,6 +293,8 @@ class Contact < ActiveRecord::Base
           if ident.size != 8 || !(ident =~/\A[0-9]{8}\z/)
             errors.add(:ident, err_msg)
           end
+        when BIRTHDAY
+          errors.add(:ident, err_msg) if id.blank? # only for create action right now. Later for all of them
       end
     end
   end
@@ -269,11 +312,6 @@ class Contact < ActiveRecord::Base
     end
   end
 
-  def uniq_statuses?
-    return true unless statuses.detect { |s| statuses.count(s) > 1 }
-    errors.add(:statuses, :not_uniq)
-    false
-  end
 
   def org?
     ident_type == ORG
@@ -282,6 +320,10 @@ class Contact < ActiveRecord::Base
   # it might mean priv or birthday type
   def priv?
     !org?
+  end
+
+  def birthday?
+    ident_type == BIRTHDAY
   end
 
   def generate_auth_info
@@ -399,16 +441,13 @@ class Contact < ActiveRecord::Base
     domain_contacts.present? || registrant_domains.present?
   end
 
-  def manage_linked
-    if domains_present?
-      set_linked
-    else
-      unset_linked
-    end
-  end
 
   def search_name
     "#{code} #{name}"
+  end
+
+  def strip_email
+    self.email = email.to_s.strip
   end
 
 
@@ -480,43 +519,6 @@ class Contact < ActiveRecord::Base
     end
   end
 
-  def set_linked
-    statuses << LINKED if statuses.detect { |s| s == LINKED }.blank?
-  end
-
-  def unset_linked
-    statuses.delete_if { |s| s == LINKED }
-  end
-
-  # rubocop:disable Metrics/CyclomaticComplexity
-  def manage_ok
-    return unset_ok unless valid?
-
-    case statuses.size
-    when 0
-      set_ok
-    when 1
-      set_ok if statuses == [LINKED]
-    when 2
-      return if statuses.sort == [LINKED, OK]
-      unset_ok
-    else
-      unset_ok
-    end
-  end
-  # rubocop:enable Metrics/CyclomaticComplexity
-
-  def unset_ok
-    statuses.delete_if { |s| s == OK }
-  end
-
-  def set_ok
-    statuses << OK if statuses.detect { |s| s == OK }.blank?
-  end
-
-  def linked?
-    statuses.include?(LINKED)
-  end
 
   def update_prohibited?
     (statuses & [
@@ -545,6 +547,9 @@ class Contact < ActiveRecord::Base
   end
 
   def update_related_whois_records
+    # not doing anything if no real changes
+    return if changes.slice(*(self.class.column_names - ["updated_at", "created_at", "statuses", "status_notes"])).empty?
+
     names = related_domain_descriptions.keys
     UpdateWhoisRecordJob.enqueue(names, :domain) if names.present?
   end

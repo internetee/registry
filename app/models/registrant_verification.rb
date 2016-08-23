@@ -13,27 +13,27 @@ class RegistrantVerification < ActiveRecord::Base
 
   validates :verification_token, :domain_name, :domain, :action, :action_type, presence: true
 
-  def domain_registrant_change_confirm!
+  def domain_registrant_change_confirm!(initiator)
     self.action_type = DOMAIN_REGISTRANT_CHANGE
     self.action = CONFIRMED
-    DomainUpdateConfirmJob.enqueue domain.id, CONFIRMED if save
+    DomainUpdateConfirmJob.enqueue domain.id, CONFIRMED, initiator if save
   end
 
-  def domain_registrant_change_reject!
+  def domain_registrant_change_reject!(initiator)
     self.action_type = DOMAIN_REGISTRANT_CHANGE
     self.action = REJECTED
-    DomainUpdateConfirmJob.run domain.id, REJECTED if save
+    DomainUpdateConfirmJob.run domain.id, REJECTED, initiator if save
   end
 
-  def domain_registrant_delete_confirm!
+  def domain_registrant_delete_confirm!(initiator)
     self.action_type = DOMAIN_DELETE
     self.action = CONFIRMED
-    DomainDeleteConfirmJob.enqueue domain.id, CONFIRMED if save
+    DomainDeleteConfirmJob.enqueue domain.id, CONFIRMED, initiator if save
   end
 
-  def domain_registrant_delete_reject!
+  def domain_registrant_delete_reject!(initiator)
     self.action_type = DOMAIN_DELETE
     self.action = REJECTED
-    DomainDeleteConfirmJob.enqueue domain.id, REJECTED if save
+    DomainDeleteConfirmJob.enqueue domain.id, REJECTED, initiator if save
   end
 end

@@ -56,4 +56,8 @@ class Epp::KeyrelaysController < EppController
 
     # domain
   end
+
+  def resource
+    @domain
+  end
 end

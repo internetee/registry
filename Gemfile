@@ -31,7 +31,7 @@ gem 'rails-settings-cached',     '0.4.1' # for settings
 
 # html-xml
 gem 'haml-rails', '0.9.0' # haml for views
-gem 'nokogiri',   '1.6.7.2' # For XML parsing
+gem 'nokogiri',   '1.6.8' # For XML parsing
 
 # style
 gem 'sass-rails',     '5.0.3'   # sass style
@@ -88,7 +88,7 @@ gem 'digidoc_client', '0.2.1'
 
 # epp
 gem 'epp', '1.4.2', github: 'internetee/epp'
-gem 'epp-xml',   '1.0.4' # EIS EPP XMLs
+gem 'epp-xml',   '1.0.5', github: 'internetee/epp-xml' # EIS EPP XMLs
 gem 'uuidtools', '2.1.5' # For unique IDs (used by the epp gem)
 
 # que

@@ -478,7 +478,8 @@ class Domain < ActiveRecord::Base
   def validate_nameserver_ips
     nameservers.to_a.reject(&:marked_for_destruction?).each do |ns|
       next unless ns.hostname.end_with?(".#{name}")
-      next if ns.ipv4.present?
+      next if ns.ipv4.present? || ns.ipv6.present?
+
       errors.add(:nameservers, :invalid) if errors[:nameservers].blank?
       ns.errors.add(:ipv4, :blank)
     end
@@ -575,7 +576,7 @@ class Domain < ActiveRecord::Base
       statuses << DomainStatus::SERVER_MANUAL_INZONE
     end
 
-    self.force_delete_at = Time.zone.now + Setting.redemption_grace_period.days unless force_delete_at
+    self.force_delete_at = (Time.zone.now + (Setting.redemption_grace_period.days + 1.day)).utc.beginning_of_day unless force_delete_at
     transaction do
       save!(validate: false)
       registrar.messages.create!(
@@ -604,7 +605,7 @@ class Domain < ActiveRecord::Base
 
   def set_graceful_expired
     self.outzone_at = valid_to + Setting.expire_warning_period.days
-    self.delete_at = outzone_at + Setting.redemption_grace_period.days
+    self.delete_at = (outzone_at + (Setting.redemption_grace_period.days + 1.day)).utc.beginning_of_day
     self.statuses |= [DomainStatus::EXPIRED]
   end
 
@@ -612,7 +613,7 @@ class Domain < ActiveRecord::Base
     # TODO: currently valid_to attribute update logic is open
     # self.valid_to = valid_from + self.class.convert_period_to_time(period, period_unit)
     self.outzone_at = Time.zone.now + Setting.expire_warning_period.days
-    self.delete_at  = Time.zone.now + Setting.redemption_grace_period.days
+    self.delete_at  = (Time.zone.now + (Setting.redemption_grace_period.days + 1.day)).utc.beginning_of_day
     statuses << DomainStatus::EXPIRED
   end
 
@@ -655,16 +656,7 @@ class Domain < ActiveRecord::Base
   end
 
   def pending_update_prohibited?
-    (statuses_was & [
-        DomainStatus::PENDING_DELETE_CONFIRMATION,
-        DomainStatus::CLIENT_UPDATE_PROHIBITED,
-        DomainStatus::SERVER_UPDATE_PROHIBITED,
-        DomainStatus::PENDING_CREATE,
-        DomainStatus::PENDING_UPDATE,
-        DomainStatus::PENDING_DELETE,
-        DomainStatus::PENDING_RENEW,
-        DomainStatus::PENDING_TRANSFER
-    ]).present?
+    (statuses_was & DomainStatus::UPDATE_PROHIBIT_STATES).present?
   end
 
   def set_pending_update
@@ -688,17 +680,7 @@ class Domain < ActiveRecord::Base
   end
 
   def pending_delete_prohibited?
-    (statuses_was & [
-      DomainStatus::CLIENT_DELETE_PROHIBITED,
-      DomainStatus::SERVER_DELETE_PROHIBITED,
-      DomainStatus::CLIENT_UPDATE_PROHIBITED,
-      DomainStatus::SERVER_UPDATE_PROHIBITED,
-      DomainStatus::PENDING_CREATE,
-      DomainStatus::PENDING_RENEW,
-      DomainStatus::PENDING_TRANSFER,
-      DomainStatus::PENDING_UPDATE,
-      DomainStatus::PENDING_DELETE
-    ]).present?
+    (statuses_was & DomainStatus::DELETE_PROHIBIT_STATES).present?
   end
 
   # let's use positive method names
@@ -739,9 +721,10 @@ class Domain < ActiveRecord::Base
     log[:admin_contacts] = admin_contact_ids
     log[:tech_contacts]  = tech_contact_ids
     log[:nameservers]    = nameserver_ids
+    log[:dnskeys]        = dnskey_ids
+    log[:domain_statuses]= domain_status_ids
     log[:legal_documents]= [legal_document_id]
     log[:registrant]     = [registrant_id]
-    log[:domain_statuses] = domain_status_ids
     log
   end
 

@@ -22,12 +22,12 @@ module ApplicationHelper
 
     case ident_type
     when 'birthday'
-      "#{ident} [#{ident_type}]"
+      "#{ident} [#{ident_country_code} #{ident_type}]"
       else
         if ident.present?
           "#{ident} [#{ident_country_code} #{ident_type}]"
         else
-          "[No access]"
+          "[#{ident_country_code} #{ident_type}]"
         end
 
     end
@@ -71,5 +71,16 @@ module ApplicationHelper
     end
 
     link_to(title, url_for(sort: {param_name => order}), class: "sort_link #{order}")
+  end
+
+  def changing_css_class(version, *attrs)
+    return unless version
+    css_class = "text-warning"
+
+    if attrs.size == 1
+      version.object_changes.to_h[attrs.first] && css_class
+    else
+      version.object_changes.to_h.slice(*attrs).any? && css_class
+    end
   end
 end

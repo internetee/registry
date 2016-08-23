@@ -55,6 +55,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def info_for_paper_trail
+    { uuid: request.uuid }
+  end
+
   def user_for_paper_trail
     user_log_str(current_user)
   end

@@ -132,6 +132,9 @@ class Epp::Contact < Contact
       '2302' => [ # Object exists
         [:code, :epp_id_taken]
       ],
+      '2304' => [ # Object status prohibits operation
+        [:ident_type, :epp_ident_type_invalid, { value: { obj: 'code', val: code}, interpolation: {code: code}}]
+      ],
       '2305' => [ # Association exists
         [:domains, :exist]
       ],
@@ -173,6 +176,8 @@ class Epp::Contact < Contact
         elsif ident_type == "birthday" && !ident[/\A\d{4}-\d{2}-\d{2}\z/] && (Date.parse(ident) rescue false)
           at.merge!(ident: ident_frame.text)
           at.merge!(ident_country_code: ident_frame.attr('cc')) if ident_frame.attr('cc').present?
+        elsif ident_type == "birthday" &&  ident_country_code.blank?
+          at.merge!(ident_country_code: ident_frame.attr('cc'))
         elsif ident_type.blank? && ident_country_code.blank?
           at.merge!(ident_type: ident_frame.attr('type'))
           at.merge!(ident_country_code: ident_frame.attr('cc')) if ident_frame.attr('cc').present?

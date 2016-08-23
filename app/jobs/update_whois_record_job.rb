@@ -1,6 +1,8 @@
 class UpdateWhoisRecordJob < Que::Job
 
   def run(names, type)
+    ::PaperTrail.whodunnit = "job - #{self.class.name} - #{type}"
+
     klass = case type.to_s
       when 'reserved'then ReservedDomain
       when 'blocked' then BlockedDomain

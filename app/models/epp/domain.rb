@@ -11,7 +11,8 @@ class Epp::Domain < Domain
     return if is_admin # this bad hack for 109086524, refactor later
     return true if is_transfer || is_renewal
     return unless update_prohibited? || delete_prohibited?
-    add_epp_error('2304', nil, nil, I18n.t(:object_status_prohibits_operation))
+    stat = (statuses & (DomainStatus::UPDATE_PROHIBIT_STATES + DomainStatus::DELETE_PROHIBIT_STATES)).first
+    add_epp_error('2304', 'status', stat, I18n.t(:object_status_prohibits_operation))
     false
   end
 
@@ -39,29 +40,12 @@ class Epp::Domain < Domain
 
   before_save :link_contacts
   def link_contacts
-    # Based on bullet report
-    if new_record?
-      # new record does not have correct instance contacts entries thanks to epp
-      unlinked_contacts = [registrant]
-      unlinked_contacts << admin_domain_contacts.map(&:contact)
-      unlinked_contacts << tech_domain_contacts.map(&:contact)
-      unlinked_contacts.flatten!
-    else
-      unlinked_contacts = contacts.select { |c| !c.linked? } # speed up a bit
-    end
-
-    unlinked_contacts.each do |uc|
-      uc.domains_present = true # no need to fetch domains again
-      uc.save(validate: false)
-    end
+    #TODO: cleanup cache if we think to cache dynamic statuses
   end
 
   after_destroy :unlink_contacts
   def unlink_contacts
-    contacts.each do |c|
-      c.domains_present = false
-      c.save(validate: false)
-    end
+    #TODO: cleanup cache if we think to cache dynamic statuses
   end
 
   class << self
@@ -160,7 +144,7 @@ class Epp::Domain < Domain
     code = registrant_frame.try(:text)
     if code.present?
       if action == 'chg' && registrant_change_prohibited?
-        add_epp_error('2304', nil, DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
+        add_epp_error('2304', "status", DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED, I18n.t(:object_status_prohibits_operation))
       end
       regt = Registrant.find_by(code: code)
       if regt
@@ -541,7 +525,6 @@ class Epp::Domain < Domain
     self.statuses.delete(DomainStatus::PENDING_UPDATE)
     self.upid = user.registrar.id if user.registrar
     self.up_date = Time.zone.now
-    ::PaperTrail.whodunnit = user.id_role_username # updator str should be the request originator not the approval user
 
     return unless update(frame, user, false)
     clean_pendings!
@@ -600,7 +583,7 @@ class Epp::Domain < Domain
       msg: I18n.t(:object_status_prohibits_operation)
     } unless pending_deletable?
 
-    self.delete_at = Time.zone.now + Setting.redemption_grace_period.days
+    self.delete_at = (Time.zone.now + (Setting.redemption_grace_period.days + 1.day)).utc.beginning_of_day
     set_pending_delete
     set_server_hold if server_holdable?
     save(validate: false)

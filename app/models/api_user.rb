@@ -62,6 +62,10 @@ class ApiUser < User
     username
   end
 
+  def name
+    username
+  end
+
   def queued_messages
     registrar.messages.queued
   end

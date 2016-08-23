@@ -5,7 +5,7 @@ class Admin::PendingUpdatesController < AdminController
   def update
     authorize! :update, :pending
 
-    if registrant_verification.domain_registrant_change_confirm!
+    if registrant_verification.domain_registrant_change_confirm!("admin #{current_user.username}")
       redirect_to admin_domain_path(@domain.id), notice: t(:pending_applied)
     else
       redirect_to edit_admin_domain_path(@domain.id), alert: t(:failure)
@@ -14,7 +14,7 @@ class Admin::PendingUpdatesController < AdminController
 
   def destroy
     authorize! :destroy, :pending
-    if registrant_verification.domain_registrant_change_reject!
+    if registrant_verification.domain_registrant_change_reject!("admin #{current_user.username}")
       redirect_to admin_domain_path(@domain.id), notice: t(:pending_removed)
     else
       redirect_to admin_domain_path(@domain.id), alert: t(:failure)

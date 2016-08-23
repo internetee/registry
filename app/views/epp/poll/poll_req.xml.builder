@@ -9,15 +9,11 @@ xml.epp_head do
       xml.msg @message.body
     end
 
-    xml.resData do
-      case @message.attached_obj_type
-        when 'DomainTransfer'
-          xml << render('epp/domains/partials/transfer', builder: xml, dt: @object)
-        when 'DomainVersion'
-          xml << render('epp/domains/partials/delete_complete', builder: xml, bye_bye: @object)
-      end
-    end if @object
-
+    if @message.attached_obj_type == 'DomainTransfer'
+      xml.resData do
+        xml << render('epp/domains/partials/transfer', builder: xml, dt: @object)
+      end if @object
+    end
     render('epp/shared/trID', builder: xml)
   end
 end

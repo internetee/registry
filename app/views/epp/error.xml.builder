@@ -3,14 +3,25 @@ xml.epp_head do
     @errors.each do |x|
       xml.result('code' => x[:code]) do
         xml.msg(x[:msg], 'lang' => 'en')
+        model_name = resource ? resource.model_name.singular.sub('epp_','') : controller.controller_name.singularize
 
-        xml.value('xmlns:obj' => 'urn:ietf:params:xml:ns:obj') do
-          if (val = x[:value][:val]).respond_to?(:each)
+        xml.value("xmlns:#{model_name}" => "https://epp.tld.ee/schema/#{model_name}-eis-1.0.xsd") do
+          value = x[:value][:val]
+          attrs = {}
+          attrs["s"] = value if x[:value][:obj] == "status"
+
+          if (val = value).respond_to?(:each)
             val.each do |el|
-              xml.tag!("obj:#{x[:value][:obj]}", el)
+              if el.kind_of?(Array)
+                xml.tag!("#{model_name}:#{x[:value][:obj]}") do
+                  xml.tag!("#{model_name}:#{el[0]}", el[1], attrs)
+                end
+              else
+                xml.tag!("#{model_name}:#{x[:value][:obj]}", el, attrs)
+              end
             end
           else
-            xml.tag!("obj:#{x[:value][:obj]}", val)
+            xml.tag!("#{model_name}:#{x[:value][:obj]}", val, attrs)
           end
         end if x[:value]
 

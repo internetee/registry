@@ -2,6 +2,9 @@
   .form-signin.col-md-6.center-block.text-center
     %h2.form-signin-heading.text-center= t(:log_in)
     %hr
+    .row
+      =t "only_estonian_residets_can_signin"
+    %br
     = link_to '/registrant/login/mid' do
       = image_tag 'mid.gif'
     = link_to '/registrant/id', method: :post do
