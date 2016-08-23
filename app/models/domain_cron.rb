@@ -100,6 +100,7 @@ class DomainCron
       WhoisRecord.where(domain_id: x.id).destroy_all
       destroy_with_message x
       STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by deleteCandidate ##{x.id} (#{x.name})\n" unless Rails.env.test?
+    end
 
     Domain.where('delete_at <= ?', Time.zone.now).each do |x|
       next unless x.delete_candidateable?
