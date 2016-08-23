@@ -103,12 +103,6 @@ describe Contact do
       @contact.errors[:code].should == ['Contact code is too long, max 100 characters']
     end
 
-    it 'should not allow double status' do
-      @contact.statuses = ['ok', 'ok']
-      @contact.valid?
-      @contact.errors[:statuses].should == ['not uniq']
-    end
-
     it 'should have no related domain descriptions' do
       @contact.related_domain_descriptions.should == {}
     end
