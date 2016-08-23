@@ -235,11 +235,11 @@ describe Domain do
       @domain.delete_at = Time.zone.now
       @domain.save
 
+      ids = Domain.pluck(:id).sort
       Domain.count.should == 2
       DomainCron.destroy_delete_candidates
       DomainDeleteJob.jobs.count.should == 2
       DomainDeleteJob.jobs.first.run_at.should <= Time.now + 24.hours
-      ids = Domain.pluck(:id).sort
       DomainDeleteJob.jobs.map{|e| e.args.first}.sort.should == ids
 
 
