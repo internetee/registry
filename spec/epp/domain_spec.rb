@@ -215,7 +215,7 @@ describe 'EPP Domain', epp: true do
 
       response = epp_plain_request(xml)
 
-      response[:result_code].should == '2306'
+      response[:result_code].should == '2003'
       response[:msg].should == 'IPv4 is missing [ipv4]'
     end
 
@@ -2106,18 +2106,18 @@ describe 'EPP Domain', epp: true do
 
       response[:results][0][:result_code].should == '2302'
       response[:results][0][:msg].should == 'Nameserver already exists on this domain [hostname]'
-      if response[:results][0][:value] == 'ns1.example.com'
-        response[:results][0][:value].should == 'ns1.example.com'
+      if (val = response[:results][0][:value].strip) == 'ns1.example.com'
+        val.should == 'ns1.example.com'
       else
-        response[:results][0][:value].should == 'ns2.example.com'
+        val.should == 'ns2.example.com'
       end
 
       response[:results][1][:result_code].should == '2302'
       response[:results][1][:msg].should == 'Nameserver already exists on this domain [hostname]'
-      if response[:results][1][:value] == 'ns1.example.com'
-        response[:results][1][:value].should == 'ns1.example.com'
+      if (val = response[:results][1][:value]) == 'ns1.example.com'
+        val.should == 'ns1.example.com'
       else
-        response[:results][1][:value].should == 'ns2.example.com'
+        val.should == 'ns2.example.com'
       end
 
       response[:results][2][:result_code].should == '2302'
