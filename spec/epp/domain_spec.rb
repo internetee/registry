@@ -2423,11 +2423,11 @@ describe 'EPP Domain', epp: true do
 
       response[:results][0][:result_code].should == '2302'
       response[:results][0][:msg].should == 'Nameserver already exists on this domain [hostname]'
-      response[:results][0][:value].should == n.hostname
+      response[:results][0][:value].strip.should == n.hostname
 
       response[:results][1][:result_code].should == '2302'
       response[:results][1][:msg].should == 'Contact already exists on this domain [contact_code_cache]'
-      response[:results][1][:value].should == c.code
+      response[:results][1][:value].strip.should == c.code
     end
 
     it 'cannot change registrant without legal document' do
