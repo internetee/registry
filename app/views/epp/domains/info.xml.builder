@@ -38,7 +38,7 @@ xml.epp_head do
 
         xml.tag!('domain:clID', @domain.registrar.code)
 
-        xml.tag!('domain:crID', @domain.cr_id)
+        xml.tag!('domain:crID', @domain.cr_id) if @domain.cr_id.present?
         xml.tag!('domain:crDate', @domain.created_at.try(:iso8601))
 
         if @domain.updated_at > @domain.created_at
