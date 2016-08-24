@@ -2873,7 +2873,7 @@ describe 'EPP Domain', epp: true do
     ### INFO ###
     it 'returns domain info' do
       domain.statuses << DomainStatus::CLIENT_HOLD
-      domain.nameservers.build(hostname: 'ns1.example.com', ipv4: '192.168.1.1', ipv6: '1080:0:0:0:8:800:200C:417A')
+      domain.nameservers.build(hostname: 'ns1.example.com', ipv4: ['192.168.1.1'], ipv6: ['1080:0:0:0:8:800:200C:417A'])
 
       domain.dnskeys.build(
         ds_key_tag: '123',
@@ -2963,9 +2963,9 @@ describe 'EPP Domain', epp: true do
       domain.nameservers = []
       domain.save
 
-      domain.nameservers.build(hostname: "ns1.#{domain.name}", ipv4: '192.168.1.1', ipv6: '1080:0:0:0:8:800:200C:417A')
-      domain.nameservers.build(hostname: "ns2.#{domain.name}", ipv4: '192.168.1.1', ipv6: '1080:0:0:0:8:800:200C:417A')
-      domain.nameservers.build(hostname: "ns3.test.ee", ipv4: '192.168.1.1', ipv6: '1080:0:0:0:8:800:200C:417A')
+      domain.nameservers.build(hostname: "ns1.#{domain.name}", ipv4: ['192.168.1.1'], ipv6: ['1080:0:0:0:8:800:200C:417A'])
+      domain.nameservers.build(hostname: "ns2.#{domain.name}", ipv4: ['192.168.1.1'], ipv6: ['1080:0:0:0:8:800:200C:417A'])
+      domain.nameservers.build(hostname: "ns3.test.ee", ipv4: ['192.168.1.1'], ipv6: ['1080:0:0:0:8:800:200C:417A'])
       domain.save
 
       xml = domain_info_xml(name: { value: domain.name, attrs: { hosts: 'invalid' } })
