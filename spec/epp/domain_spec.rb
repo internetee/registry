@@ -2930,27 +2930,41 @@ describe 'EPP Domain', epp: true do
       inf_data.css('exDate').text.should == domain.valid_to.in_time_zone.utc.utc.iso8601
       inf_data.css('pw').text.should == domain.auth_info
 
-      ds_data_1 = response[:parsed].css('dsData')[0]
 
-      ds_data_1.css('keyTag').first.text.should == '123'
-      ds_data_1.css('alg').first.text.should == '3'
-      ds_data_1.css('digestType').first.text.should == '1'
-      ds_data_1.css('digest').first.text.should == '0D85A305D22FCB355BBE29AE9809363D697B64782B9CC73AE349350F8C2AE4BB'
 
-      dnskey_1 = ds_data_1.css('keyData')[0]
-      dnskey_1.css('flags').first.text.should == '257'
-      dnskey_1.css('protocol').first.text.should == '3'
-      dnskey_1.css('alg').first.text.should == '3'
-      dnskey_1.css('pubKey').first.text.should == 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8'
+      if Setting.ds_data_allowed
+        ds_data_1 = response[:parsed].css('dsData')[0]
+        ds_data_1.css('keyTag').first.text.should == '123'
+        ds_data_1.css('alg').first.text.should == '3'
+        ds_data_1.css('digestType').first.text.should == '1'
+        ds_data_1.css('digest').first.text.should == '0D85A305D22FCB355BBE29AE9809363D697B64782B9CC73AE349350F8C2AE4BB'
 
-      ds_data_2 = response[:parsed].css('dsData')[1]
+        dnskey_1 = ds_data_1.css('keyData')[0]
+        dnskey_1.css('flags').first.text.should == '257'
+        dnskey_1.css('protocol').first.text.should == '3'
+        dnskey_1.css('alg').first.text.should == '3'
+        dnskey_1.css('pubKey').first.text.should == 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8'
 
-      dnskey_2 = ds_data_2.css('keyData')[0]
-      dnskey_2.css('flags').first.text.should == '0'
-      dnskey_2.css('protocol').first.text.should == '3'
-      dnskey_2.css('alg').first.text.should == '5'
-      dnskey_2.css('pubKey').first.text.should == '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
+        ds_data_2 = response[:parsed].css('dsData')[1]
 
+        dnskey_2 = ds_data_2.css('keyData')[0]
+        dnskey_2.css('flags').first.text.should == '0'
+        dnskey_2.css('protocol').first.text.should == '3'
+        dnskey_2.css('alg').first.text.should == '5'
+        dnskey_2.css('pubKey').first.text.should == '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
+      else
+        key_data_1 = response[:parsed].css('keyData')[0]
+        key_data_1.css('flags').first.text.should == '257'
+        key_data_1.css('protocol').first.text.should == '3'
+        key_data_1.css('alg').first.text.should == '3'
+        key_data_1.css('pubKey').first.text.should == 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8'
+
+        key_data_1 = response[:parsed].css('keyData')[1]
+        key_data_1.css('flags').first.text.should == '0'
+        key_data_1.css('protocol').first.text.should == '3'
+        key_data_1.css('alg').first.text.should == '5'
+        key_data_1.css('pubKey').first.text.should == '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
+      end
       domain.touch
 
       response = epp_plain_request(domain_info_xml(name: { value: domain.name }))
