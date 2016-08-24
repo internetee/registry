@@ -2114,7 +2114,7 @@ describe 'EPP Domain', epp: true do
 
       response[:results][1][:result_code].should == '2302'
       response[:results][1][:msg].should == 'Nameserver already exists on this domain [hostname]'
-      if (val = response[:results][1][:value]) == 'ns1.example.com'
+      if (val = response[:results][1][:value].strip) == 'ns1.example.com'
         val.should == 'ns1.example.com'
       else
         val.should == 'ns2.example.com'
