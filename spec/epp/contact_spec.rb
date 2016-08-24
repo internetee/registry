@@ -91,7 +91,7 @@ describe 'EPP Contact', epp: true do
 
         log = ApiLog::EppLog.last
         log.request_command.should == 'create'
-        log.request_object.should == 'contact'
+        log.request_object.should start_with("contact: Epp::Contact")
         log.request_successful.should == true
         log.api_user_name.should == 'registrar1'
         log.api_user_registrar.should == 'registrar1'
