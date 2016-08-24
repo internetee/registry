@@ -149,7 +149,8 @@ describe DomainMailer do
     end
 
     it 'should render body' do
-      @mail.body.encoded.should =~ /Registrant change was declined/
+      @mail.body.encoded.should =~ /Registrant change/
+      @mail.body.encoded.should =~ /was rejected by the registran/
     end
   end
 
@@ -288,7 +289,7 @@ describe DomainMailer do
     end
 
     it 'should render body' do
-      @mail.body.encoded.should =~ /deletion rejected/
+      @mail.body.encoded.should =~ /deletion was rejected/
     end
   end
 
@@ -315,7 +316,7 @@ describe DomainMailer do
     end
 
     it 'should render body' do
-      @mail.body.encoded.should =~ /deletion cancelled/
+      @mail.body.encoded.should =~ /deletion was not approved in time/
     end
   end
 
@@ -342,7 +343,7 @@ describe DomainMailer do
     end
 
     it 'should render body' do
-      @mail.body.encoded.should =~ /confirmed and will be deleted/
+      @mail.body.encoded.should =~ /suspended and will be deleted/
     end
   end
 end
