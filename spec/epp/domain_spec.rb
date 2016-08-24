@@ -2837,7 +2837,9 @@ describe 'EPP Domain', epp: true do
       end
     end
 
-    it 'info schema is valid' do
+    it 'info schema is valid if paperTrail is working' do
+      ::PaperTrail.enabled = true
+      ::PaperTrail.whodunnit = @registrar1.name
       domain.statuses << DomainStatus::CLIENT_HOLD
       domain.nameservers.build(hostname: 'ns1.example.com', ipv4: '192.168.1.1', ipv6: '1080:0:0:0:8:800:200C:417A')
 
