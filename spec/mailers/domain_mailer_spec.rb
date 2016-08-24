@@ -150,7 +150,7 @@ describe DomainMailer do
 
     it 'should render body' do
       @mail.body.encoded.should =~ /Registrant change/
-      @mail.body.encoded.should =~ /was rejected by the registran/
+      @mail.body.encoded.should =~ /was rejected/
     end
   end
 
