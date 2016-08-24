@@ -2931,7 +2931,6 @@ describe 'EPP Domain', epp: true do
       inf_data.css('pw').text.should == domain.auth_info
 
 
-
       if Setting.ds_data_allowed
         ds_data_1 = response[:parsed].css('dsData')[0]
         ds_data_1.css('keyTag').first.text.should == '123'
