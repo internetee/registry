@@ -216,7 +216,7 @@ describe 'EPP Domain', epp: true do
       response = epp_plain_request(xml)
 
       response[:result_code].should == '2003'
-      response[:msg].should == 'IPv4 is missing [ipv4]'
+      response[:msg].should == 'IP is missing [ipv4]'
     end
 
     # it 'does not create duplicate domain' do
