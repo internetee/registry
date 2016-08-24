@@ -2837,6 +2837,37 @@ describe 'EPP Domain', epp: true do
       end
     end
 
+    it 'info schema is valid' do
+      domain.statuses << DomainStatus::CLIENT_HOLD
+      domain.nameservers.build(hostname: 'ns1.example.com', ipv4: '192.168.1.1', ipv6: '1080:0:0:0:8:800:200C:417A')
+
+      domain.dnskeys.build(
+          ds_key_tag: '123',
+          ds_alg: 3,
+          ds_digest_type: 1,
+          ds_digest: '0D85A305D22FCB355BBE29AE9809363D697B64782B9CC73AE349350F8C2AE4BB',
+          flags: 257,
+          protocol: 3,
+          alg: 3,
+          public_key: 'AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8'
+      )
+      domain.dnskeys.build(
+          ds_key_tag: '123',
+          ds_alg: 3,
+          ds_digest_type: 1,
+          ds_digest: '0D85A305D22FCB355BBE29AE9809363D697B64782B9CC73AE349350F8C2AE4BB',
+          flags: 0,
+          protocol: 3,
+          alg: 5,
+          public_key: '700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f'
+      )
+
+      domain.save
+
+      xml = domain_info_xml(name: { value: domain.name })
+      epp_plain_request(xml)
+    end
+
     ### INFO ###
     it 'returns domain info' do
       domain.statuses << DomainStatus::CLIENT_HOLD
