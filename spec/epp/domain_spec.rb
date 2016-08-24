@@ -72,7 +72,7 @@ describe 'EPP Domain', epp: true do
     log = ApiLog::EppLog.last
 
     log.request_command.should == 'create'
-    log.request_object.should == 'domain'
+    log.request_object.should start_with("domain: Epp::Domain")
     log.request_successful.should == false
     log.api_user_name.should == 'registrar1'
     log.api_user_registrar.should == 'registrar1'
@@ -1141,7 +1141,7 @@ describe 'EPP Domain', epp: true do
         log = ApiLog::EppLog.last
 
         log.request_command.should == 'transfer'
-        log.request_object.should == 'domain'
+        log.request_object.should start_with("domain: Epp::Domain")
         log.request_successful.should == true
         log.api_user_name.should == 'registrar2'
         log.api_user_registrar.should == 'registrar2'
