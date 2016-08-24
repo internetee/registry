@@ -12,7 +12,7 @@ feature 'Account activity', type: :feature do
     it 'should redirect to sign in page' do
       visit '/admin/account_activities'
       current_path.should == '/admin/login'
-      page.should have_text('You need to sign in or sign up')
+      page.should have_text('You need to sign in')
     end
   end
 
