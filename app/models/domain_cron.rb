@@ -95,12 +95,6 @@ class DomainCron
     STDOUT << "#{Time.zone.now.utc} - Destroying domains\n" unless Rails.env.test?
 
     c = 0
-    Domain.where("statuses @> '{deleteCandidate}'::varchar[]").each do |x|
-      ::PaperTrail.whodunnit = "cron - #{__method__} case statuses"
-      WhoisRecord.where(domain_id: x.id).destroy_all
-      destroy_with_message x
-      STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: by deleteCandidate ##{x.id} (#{x.name})\n" unless Rails.env.test?
-    end
 
     Domain.where('delete_at <= ?', Time.zone.now.end_of_day.utc).each do |x|
       next unless x.delete_candidateable?
@@ -119,10 +113,6 @@ class DomainCron
     Domain.where('force_delete_at <= ?', Time.zone.now.end_of_day.utc).each do |x|
       DomainDeleteJob.enqueue(x.id, run_at: rand(((24*60) - (DateTime.now.hour * 60  + DateTime.now.minute))).minutes.from_now)
       STDOUT << "#{Time.zone.now.utc} DomainCron.destroy_delete_candidates: job added by force delete time ##{x.id} (#{x.name})\n" unless Rails.env.test?
-      ::PaperTrail.whodunnit = "cron - #{__method__} case force_deleted_at"
-      WhoisRecord.where(domain_id: x.id).destroy_all
-      destroy_with_message x
-      STDOUT << "#{Time.zone.now.utc} DomainCron.destroy_delete_candidates: by force delete time ##{x.id} (#{x.name})\n" unless Rails.env.test?
       c += 1
     end
 
