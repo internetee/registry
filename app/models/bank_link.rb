@@ -32,7 +32,7 @@ class BankLink
       hash["VK_AMOUNT"]   = number_with_precision(invoice.sum_cache, :precision => 2, :separator => ".")
       hash["VK_CURR"]     = invoice.currency
       hash["VK_REF"]      = ""
-      hash["VK_MSG"]      = invoice.description
+      hash["VK_MSG"]      = invoice.order
       hash["VK_RETURN"]   = controller.registrar_return_payment_with_url(type)
       hash["VK_CANCEL"]   = controller.registrar_return_payment_with_url(type)
       hash["VK_DATETIME"] = Time.now.strftime("%Y-%m-%dT%H:%M:%S%z")
