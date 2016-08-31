@@ -112,10 +112,6 @@ class Invoice < ActiveRecord::Base
     kit.to_pdf
   end
 
-  def description
-    "Order nr. #{number}"
-  end
-
   def pdf_name
     "invoice-#{number}.pdf"
   end
