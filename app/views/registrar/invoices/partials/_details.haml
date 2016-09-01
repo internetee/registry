@@ -25,9 +25,12 @@
   %dt= t(:payment_term)
   %dd= t(@invoice.payment_term)
 
-  %dt= t(:description)
-  - @invoice.description.prepend(' - ') if @invoice.description.present?
-  %dd= "#{t('invoice_no', no: @invoice.number)}#{@invoice.description}"
+  %dt= t(:"invoice no")
+  %dd= @invoice.number
+
+  - if @invoice.description.present?
+    %dt= t(:description)
+    %dd=@invoice.description
 
   %dt= t(:reference_no)
   %dd= @invoice.reference_no

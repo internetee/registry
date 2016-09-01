@@ -107,13 +107,14 @@ class Invoice < ActiveRecord::Base
     Country.new(buyer_country_code)
   end
 
+# order is used for directo/banklink description
+  def order
+    "Order nr. #{number}"
+  end
+
   def pdf(html)
     kit = PDFKit.new(html)
     kit.to_pdf
-  end
-
-  def description
-    read_attribute(__method__).presence || "Order nr. #{number}"
   end
 
   def pdf_name
