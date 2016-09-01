@@ -47,6 +47,7 @@ namespace :legal_doc do
               File.delete(new_legal.path) if File.exist?(new_legal.path)
               new_legal.update(path: orig_legal.path)
               count += 1
+              puts "File #{new_legal.path} has been removed by Domain #{new_legal.documentable_id}. Document id: #{new_legal.id}"
             end
       end
 
@@ -60,6 +61,7 @@ namespace :legal_doc do
               File.delete(new_legal.path) if File.exist?(new_legal.path)
               new_legal.update(path: orig_legal.path)
               count += 1
+              puts "File #{new_legal.path} has been removed by Contact #{new_legal.documentable_id}. Document id: #{new_legal.id}"
             end
       end
     end
