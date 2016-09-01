@@ -133,7 +133,8 @@ describe Registrar do
 
       @registrar.issue_prepayment_invoice(200)
       i = @registrar.invoices.last
-      i.description.should start_with "Order nr."
+      i.order.should start_with "Order nr."
+      i.description.should be_nil
     end
 
     it 'should not allaw to use CID as code for leagcy reasons' do
