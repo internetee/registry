@@ -1,12 +1,3 @@
-31.08.2016
-* Admin interface:
-  * contact id supports wildcard search with '%' (129124951)
-* Registry:
-  * BUG: whodunnit filled with incorrect user reference in case of pending request confirmations and rejections (115693873)
-  * domain_cron.rb now searches for domains to be archived using the end of the day parameter allowing it to be run at any time during the day (113430903)
-* EPP:
-  * Invalid use of GET is now logged and replied with proper error message instead of internal error (128054415)
-
 9.08.2016
 * Admin interface:
   * actions are now clickable in domain and contact history and return the initial epp request sent to registry (117806281)
