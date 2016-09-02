@@ -545,7 +545,8 @@ class Domain < ActiveRecord::Base
   def set_validity_dates
     self.registered_at = Time.zone.now
     self.valid_from = Time.zone.now
-    self.valid_to = valid_from + self.class.convert_period_to_time(period, period_unit)
+    # we need + 1 day as this is more correct from juridical side
+    self.valid_to = valid_from + self.class.convert_period_to_time(period, period_unit) + 1.day
   end
 
   # rubocop:disable Metrics/AbcSize
