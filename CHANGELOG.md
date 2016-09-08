@@ -1,3 +1,7 @@
+9.09.2016
+* Registry:
+  * domains expire now at the beginning of the date followed by the date of regsitration. Expiration and redemption grace periods now follow domainregulations more correctly and delete date returned in whois matches the date the domain is actually deleted (129684535)
+
 31.08.2016
 * Admin interface:
   * contact id supports wildcard search with '%' (129124951)
@@ -6,6 +10,8 @@
   * domain_cron.rb now searches for domains to be archived using the end of the day parameter allowing it to be run at any time during the day (113430903)
 * EPP:
   * Invalid use of GET is now logged and replied with proper error message instead of internal error (128054415)
+* Portal for registrars
+  * BUG fix: invoices now dipslay description entered by registrar on invoice request
 
 9.08.2016
 * Admin interface:
