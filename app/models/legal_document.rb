@@ -86,8 +86,18 @@ class LegalDocument < ActiveRecord::Base
 
       contact_ids = DomainVersion.where(item_id: orig_legal.documentable_id).distinct.
           pluck("object->>'registrant_id'", "object_changes->>'registrant_id'",
+                "children->>'tech_contacts'", "children->>'admin_contacts'",
                 "children->>'tech_contacts'", "children->>'admin_contacts'").flatten.uniq
-      contact_ids = contact_ids.map{|id| id.is_a?(Hash) ? id["id"] : id}.flatten.compact.uniq
+      contact_ids = contact_ids.map{|id|
+        case id
+          when Hash
+            id["id"]
+          when String
+            JSON.parse(id) rescue id.to_i
+          else
+            id
+        end
+      }.flatten.compact.uniq
       LegalDocument.where(documentable_type: "Contact", documentable_id: contact_ids).
           where(checksum: orig_legal.checksum).where.not(path: orig_legal.path).each do |new_legal|
         unless modified.include?(orig_legal.id)

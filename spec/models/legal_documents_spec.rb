@@ -9,6 +9,7 @@ describe LegalDocument do
       Fabricate(:zonefile_setting, origin: 'fie.ee')
       Fabricate(:zonefile_setting, origin: 'com.ee')
       LegalDocument.explicitly_write_file = true
+      PaperTrail.enabled = true
 
       domain  = Fabricate(:domain)
       domain2 = Fabricate(:domain)
@@ -19,6 +20,15 @@ describe LegalDocument do
       domains << skipping_as_different    = domain.legal_documents.create!(body: Base64.encode64('D' * 4.kilobytes))
       domains << skipping_as_no_checksum  = domain.legal_documents.create!(checksum: nil, body: Base64.encode64('S' * 4.kilobytes))
       domains << skipping_as_no_checksum2 = domain.legal_documents.create!(checksum: "",  body: Base64.encode64('S' * 4.kilobytes))
+      domains << registrant_copy = domain.registrant.legal_documents.create!(body: Base64.encode64('S' * 4.kilobytes))
+      domains << registrant_skipping_as_different = domain.registrant.legal_documents.create!(body: Base64.encode64('Q' * 4.kilobytes))
+      domains << tech_copy = domain.tech_contacts.first.legal_documents.create!(body: Base64.encode64('S' * 4.kilobytes))
+      domains << tech_skipping_as_different = domain.tech_contacts.first.legal_documents.create!(body: Base64.encode64('W' * 4.kilobytes))
+      domains << admin_copy = domain.admin_contacts.first.legal_documents.create!(body: Base64.encode64('S' * 4.kilobytes))
+      domains << admin_skipping_as_different = domain.admin_contacts.first.legal_documents.create!(body: Base64.encode64('E' * 4.kilobytes))
+      # writing nesting to history
+      domain.update(updated_at: Time.now)
+      domain2.update(updated_at: Time.now)
 
       skipping_as_no_checksum.update_columns(checksum: nil)
       skipping_as_no_checksum2.update_columns(checksum: "")
@@ -37,8 +47,13 @@ describe LegalDocument do
       skipping_as_no_checksum.path.should_not be(skipping_as_no_checksum2.path)
       original.path.should_not == skipping_as_different.path
       original.path.should_not == skipping_as_different_domain.path
+      original.path.should_not == registrant_skipping_as_different.path
+      original.path.should_not == tech_skipping_as_different.path
+      original.path.should_not == admin_skipping_as_different.path
       original.path.should == copy.path
-
+      original.path.should == registrant_copy.path
+      original.path.should == tech_copy.path
+      original.path.should == admin_copy.path
     end
   end
 
