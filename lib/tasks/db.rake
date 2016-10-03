@@ -1,23 +1,23 @@
-Rake::Task["db:schema:load"].clear
-
-Rake::Task["db:migrate"].enhance do
-  if ActiveRecord::Base.schema_format == :sql
-    Rake::Task["db:schema:dump"].invoke
-  end
-end
-
-Rake::Task["db:rollback"].enhance do
-  if ActiveRecord::Base.schema_format == :sql
-    Rake::Task["db:schema:dump"].invoke
-  end
-end
-
-Rake::Task["db:schema:dump"].enhance do
-  if ActiveRecord::Base.schema_format == :sql
-    File.rename('db/schema.rb', 'db/schema-read-only.rb')
-    Rake::Task["db:structure:dump"].invoke # for users who do manually db:schema:dump
-  end
-end
+# Rake::Task["db:schema:load"].clear
+#
+# Rake::Task["db:migrate"].enhance do
+#   if ActiveRecord::Base.schema_format == :sql
+#     Rake::Task["db:schema:dump"].invoke
+#   end
+# end
+#
+# Rake::Task["db:rollback"].enhance do
+#   if ActiveRecord::Base.schema_format == :sql
+#     Rake::Task["db:schema:dump"].invoke
+#   end
+# end
+#
+# Rake::Task["db:schema:dump"].enhance do
+#   if ActiveRecord::Base.schema_format == :sql
+#     File.rename('db/schema.rb', 'db/schema-read-only.rb')
+#     Rake::Task["db:structure:dump"].invoke # for users who do manually db:schema:dump
+#   end
+# end
 
 namespace :db do
   namespace :schema do
@@ -125,30 +125,30 @@ namespace :db do
         end
       end
 
-      desc 'Schema dump for all databases: registry, api_log and whois'
-      task dump: [:environment, :load_config] do
-        puts "\n---------------------------- #{Rails.env} structure and schema dump--------------\n"
-        Rake::Task['db:schema:dump'].invoke # dumps both schema and structure
-
-        other_databases.each do |name|
-          begin
-            puts "\n---------------------------- #{name} ----------------------------------------\n"
-            filename = "#{Rails.root}/db/#{schema_file(name)}"
-            File.open(filename, 'w:utf-8') do |file|
-              ActiveRecord::Base.establish_connection(name)
-              ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, file)
-            end
-          rescue => e
-            puts "\n#{e}"
-          end
-        end
-      end
+      # desc 'Schema dump for all databases: registry, api_log and whois'
+      # task dump: [:environment, :load_config] do
+      #   puts "\n---------------------------- #{Rails.env} structure and schema dump--------------\n"
+      #   Rake::Task['db:schema:dump'].invoke # dumps both schema and structure
+      #
+      #   other_databases.each do |name|
+      #     begin
+      #       puts "\n---------------------------- #{name} ----------------------------------------\n"
+      #       filename = "#{Rails.root}/db/#{schema_file(name)}"
+      #       File.open(filename, 'w:utf-8') do |file|
+      #         ActiveRecord::Base.establish_connection(name)
+      #         ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, file)
+      #       end
+      #     rescue => e
+      #       puts "\n#{e}"
+      #     end
+      #   end
+      # end
       # alias names
       namespace :structure do
-        desc '(alias) Schema dump for all databases: registry, api_log and whois'
-        task :dump do
-          Rake::Task['db:all:schema:dump'].invoke
-        end
+        # desc '(alias) Schema dump for all databases: registry, api_log and whois'
+        # task :dump do
+        #   Rake::Task['db:all:schema:dump'].invoke
+        # end
         desc '(alias) Schema load for all databases: registry, api_log and whois'
         task :load do
           Rake::Task['db:all:schema:load'].invoke

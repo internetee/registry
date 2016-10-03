@@ -4,6 +4,7 @@ Testing
 Setup test databases:
 
     RAILS_ENV=test rake db:all:setup
+    RAILS_ENV=test rake db:migrate
 
 Run basic test (no EPP tests):
 
