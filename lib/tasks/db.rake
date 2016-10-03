@@ -11,13 +11,13 @@
 #     Rake::Task["db:schema:dump"].invoke
 #   end
 # end
-#
-# Rake::Task["db:schema:dump"].enhance do
+
+Rake::Task["db:schema:dump"].enhance do
 #   if ActiveRecord::Base.schema_format == :sql
 #     File.rename('db/schema.rb', 'db/schema-read-only.rb')
 #     Rake::Task["db:structure:dump"].invoke # for users who do manually db:schema:dump
 #   end
-# end
+end
 
 namespace :db do
   namespace :schema do
