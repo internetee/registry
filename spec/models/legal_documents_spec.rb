@@ -10,12 +10,15 @@ describe LegalDocument do
       Fabricate(:zonefile_setting, origin: 'com.ee')
       LegalDocument.explicitly_write_file = true
 
-      domain = Fabricate(:domain)
-      original  = domain.legal_documents.create!(body: Base64.encode64('S' * 4.kilobytes))
-      copy      = domain.legal_documents.create!(body: Base64.encode64('S' * 4.kilobytes))
-      skipping_as_different    = domain.legal_documents.create!(body: Base64.encode64('D' * 4.kilobytes))
-      skipping_as_no_checksum  = domain.legal_documents.create!(checksum: nil, body: Base64.encode64('S' * 4.kilobytes))
-      skipping_as_no_checksum2 = domain.legal_documents.create!(checksum: "",  body: Base64.encode64('S' * 4.kilobytes))
+      domain  = Fabricate(:domain)
+      domain2 = Fabricate(:domain)
+      domains = []
+      domains << original  = domain.legal_documents.create!(body: Base64.encode64('S' * 4.kilobytes))
+      domains << copy      = domain.legal_documents.create!(body: Base64.encode64('S' * 4.kilobytes))
+      domains << skipping_as_different_domain = domain2.legal_documents.create!(body: Base64.encode64('S' * 4.kilobytes))
+      domains << skipping_as_different    = domain.legal_documents.create!(body: Base64.encode64('D' * 4.kilobytes))
+      domains << skipping_as_no_checksum  = domain.legal_documents.create!(checksum: nil, body: Base64.encode64('S' * 4.kilobytes))
+      domains << skipping_as_no_checksum2 = domain.legal_documents.create!(checksum: "",  body: Base64.encode64('S' * 4.kilobytes))
 
       skipping_as_no_checksum.update_columns(checksum: nil)
       skipping_as_no_checksum2.update_columns(checksum: "")
@@ -29,8 +32,11 @@ describe LegalDocument do
       original.checksum.should_not == skipping_as_different.checksum
 
       LegalDocument.remove_duplicates
+      domains.each(&:reload)
+
       skipping_as_no_checksum.path.should_not be(skipping_as_no_checksum2.path)
-      original.path.should_not be(skipping_as_different.path)
+      original.path.should_not == skipping_as_different.path
+      original.path.should_not == skipping_as_different_domain.path
       original.path.should == copy.path
 
     end
