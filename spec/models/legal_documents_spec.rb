@@ -13,22 +13,27 @@ describe LegalDocument do
 
       domain  = Fabricate(:domain)
       domain2 = Fabricate(:domain)
-      domains = []
-      domains << original  = domain.legal_documents.create!(body: Base64.encode64('S' * 4.kilobytes))
-      domains << copy      = domain.legal_documents.create!(body: Base64.encode64('S' * 4.kilobytes))
-      domains << skipping_as_different_domain = domain2.legal_documents.create!(body: Base64.encode64('S' * 4.kilobytes))
-      domains << skipping_as_different    = domain.legal_documents.create!(body: Base64.encode64('D' * 4.kilobytes))
-      domains << skipping_as_no_checksum  = domain.legal_documents.create!(checksum: nil, body: Base64.encode64('S' * 4.kilobytes))
-      domains << skipping_as_no_checksum2 = domain.legal_documents.create!(checksum: "",  body: Base64.encode64('S' * 4.kilobytes))
-      domains << registrant_copy = domain.registrant.legal_documents.create!(body: Base64.encode64('S' * 4.kilobytes))
-      domains << registrant_skipping_as_different = domain.registrant.legal_documents.create!(body: Base64.encode64('Q' * 4.kilobytes))
-      domains << tech_copy = domain.tech_contacts.first.legal_documents.create!(body: Base64.encode64('S' * 4.kilobytes))
-      domains << tech_skipping_as_different = domain.tech_contacts.first.legal_documents.create!(body: Base64.encode64('W' * 4.kilobytes))
-      domains << admin_copy = domain.admin_contacts.first.legal_documents.create!(body: Base64.encode64('S' * 4.kilobytes))
-      domains << admin_skipping_as_different = domain.admin_contacts.first.legal_documents.create!(body: Base64.encode64('E' * 4.kilobytes))
+      legals = []
+      legals << original  = domain.legal_documents.create!(body: Base64.encode64('S' * 4.kilobytes))
+      legals << copy      = domain.legal_documents.create!(body: Base64.encode64('S' * 4.kilobytes))
+      legals << skipping_as_different_domain = domain2.legal_documents.create!(body: Base64.encode64('S' * 4.kilobytes))
+      legals << skipping_as_different    = domain.legal_documents.create!(body: Base64.encode64('D' * 4.kilobytes))
+      legals << skipping_as_no_checksum  = domain.legal_documents.create!(checksum: nil, body: Base64.encode64('S' * 4.kilobytes))
+      legals << skipping_as_no_checksum2 = domain.legal_documents.create!(checksum: "",  body: Base64.encode64('S' * 4.kilobytes))
+      legals << registrant_copy = domain.registrant.legal_documents.create!(body: Base64.encode64('S' * 4.kilobytes))
+      legals << registrant_skipping_as_different = domain.registrant.legal_documents.create!(body: Base64.encode64('Q' * 4.kilobytes))
+      legals << tech_copy = domain.tech_contacts.first.legal_documents.create!(body: Base64.encode64('S' * 4.kilobytes))
+      legals << tech_skipping_as_different = domain.tech_contacts.first.legal_documents.create!(body: Base64.encode64('W' * 4.kilobytes))
+      legals << admin_copy = domain.admin_contacts.first.legal_documents.create!(body: Base64.encode64('S' * 4.kilobytes))
+      legals << admin_skipping_as_different = domain.admin_contacts.first.legal_documents.create!(body: Base64.encode64('E' * 4.kilobytes))
+      legals << new_second_tech_contact     = domain2.tech_contacts.first.legal_documents.create!(body: Base64.encode64('S' * 4.kilobytes))
+      domain.tech_contacts << domain2.tech_contacts.first
+
+
       # writing nesting to history
       domain.update(updated_at: Time.now)
       domain2.update(updated_at: Time.now)
+      domain.reload
 
       skipping_as_no_checksum.update_columns(checksum: nil)
       skipping_as_no_checksum2.update_columns(checksum: "")
@@ -40,9 +45,12 @@ describe LegalDocument do
       skipping_as_no_checksum2.checksum.should == ""
       original.checksum.should == copy.checksum
       original.checksum.should_not == skipping_as_different.checksum
+      domain.tech_contacts.count.should == 2
 
       LegalDocument.remove_duplicates
-      domains.each(&:reload)
+      LegalDocument.remove_duplicates
+      LegalDocument.remove_duplicates
+      legals.each(&:reload)
 
       skipping_as_no_checksum.path.should_not be(skipping_as_no_checksum2.path)
       original.path.should_not == skipping_as_different.path
@@ -54,6 +62,9 @@ describe LegalDocument do
       original.path.should == registrant_copy.path
       original.path.should == tech_copy.path
       original.path.should == admin_copy.path
+
+      original.path.should == new_second_tech_contact.path
+      skipping_as_different_domain.path.should_not == new_second_tech_contact.path
     end
   end
 
