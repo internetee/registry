@@ -1,3 +1,6 @@
+19.10.2016
+* Record current time for outzone on domain:delete EPP request
+
 9.09.2016
 * Registry:
   * domains expire now at the beginning of the date followed by the date of regsitration. Expiration and redemption grace periods now follow domainregulations more correctly and delete date returned in whois matches the date the domain is actually deleted (129684535)
