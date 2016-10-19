@@ -168,3 +168,7 @@ group :development, :test do
 
   gem 'autodoc'
 end
+
+group :staging do
+  gem 'airbrake'
+end
