@@ -76,6 +76,7 @@ gem 'data_migrate',
 
 # monitors
 gem 'newrelic_rpm', '3.12.0.288'
+gem 'airbrake', '~> 5.0'
 
 # country listing
 gem 'countries', '0.11.4'
