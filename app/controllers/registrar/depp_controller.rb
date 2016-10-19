@@ -4,7 +4,6 @@ class Registrar::DeppController < RegistrarController # EPP controller
   rescue_from(Errno::ECONNRESET, Errno::ECONNREFUSED) do |exception|
     logger.error 'COULD NOT CONNECT TO REGISTRY'
     logger.error exception.backtrace.join("\n")
-    NewRelic::Agent.notice_error(exception)
     redirect_to registrar_login_url, alert: t(:no_connection_to_registry)
   end
 

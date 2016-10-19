@@ -74,9 +74,6 @@ gem 'data_migrate',
   github: 'internetee/data-migrate',
   ref: '35d22b09ff37a4e9d61ab326ad5d8eb0edf1fc81'
 
-# monitors
-gem 'newrelic_rpm', '3.12.0.288'
-
 # country listing
 gem 'countries', '0.11.4'
 
@@ -170,4 +167,8 @@ group :development, :test do
   gem 'rake'
 
   gem 'autodoc'
+end
+
+group :staging do
+  gem 'airbrake'
 end
