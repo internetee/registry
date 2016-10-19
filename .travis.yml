@@ -27,7 +27,6 @@ addons:
 notifications:
   email:
     - priit@gitlab.eu
-    - martin@gitlab.eu
 branches:
   only:
     - master
