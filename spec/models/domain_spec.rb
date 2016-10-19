@@ -940,8 +940,8 @@ RSpec.describe Domain, db: false do
       expect(domain.statuses).to include(DomainStatus::SERVER_HOLD)
     end
 
-    it 'sets :on_hold_time to now' do
-      expect(domain.on_hold_time).to eq(Time.zone.parse('05.07.2010'))
+    it 'sets :outzone_at to now' do
+      expect(domain.outzone_at).to eq(Time.zone.parse('05.07.2010'))
     end
   end
 end
