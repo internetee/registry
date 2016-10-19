@@ -1,5 +1,6 @@
 19.10.2016
-* Record current time for outzone on domain:delete EPP request
+* BUG fix: Record current time for outzone on domain:delete EPP request
+* ForceDelete automatic notice: fixed et and ee wording to reflect the date the domain is actually deleted.
 
 9.09.2016
 * Registry:
