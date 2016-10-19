@@ -66,9 +66,6 @@ class EppController < ApplicationController
       else
         logger.error "FROM-EPP-RESCUE: #{e.message}"
         logger.error e.backtrace.join("\n")
-
-        # TODO: NOITFY AIRBRAKE / ERRBIT HERE
-        NewRelic::Agent.notice_error(e)
       end
     end
 
@@ -150,7 +147,7 @@ class EppController < ApplicationController
     end
 
     @errors.uniq!
-    
+
     logger.error "\nFOLLOWING ERRORS OCCURRED ON EPP QUERY:"
     logger.error @errors.inspect
     logger.error "\n"
