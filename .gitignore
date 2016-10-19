@@ -13,24 +13,14 @@ config/initializers/secret_token.rb
 config/deploy.rb
 config/secrets.yml
 config/database.yml
+config/application.yml
+config/environments/development.rb
 misc
 /export
 /import
 /ca
-todo
-
-## Environment normalisation:
 /.bundle
 /vendor/bundle
-.idea
-# editor tmp files
-*.*~
-
-# these should all be checked in to normalise the environment:
-# Gemfile.lock, .ruby-version, .ruby-gemset
 
 # unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
 .rvmrc
-
-# Ignore application configuration
-/config/application.yml
