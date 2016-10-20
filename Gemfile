@@ -138,10 +138,6 @@ group :development, :test do
   gem 'fabrication',        '2.13.2' # Replacement for fixtures
   gem 'launchy',            '2.4.3' # for opening browser automatically
 
-  # helper gems
-  gem 'database_cleaner',    '1.4.1' # For cleaning db in feature and epp tests
-  gem 'faker',               '1.4.3' # Library to generate fake data
-
   # debug
   gem 'pry', '0.10.1'
 
@@ -161,13 +157,14 @@ group :development, :test do
 
   # dev tools
   gem 'unicorn'
-
-  # for travis
-  gem 'rake'
-
   gem 'autodoc'
 end
 
 group :staging do
   gem 'airbrake'
+end
+
+group :test do
+  gem 'database_cleaner'
+  gem 'faker'
 end
