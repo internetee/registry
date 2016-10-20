@@ -38,8 +38,7 @@ Rails.application.configure do
 
   config.time_zone = 'UTC'
 
-  # Raises error for missing translations
-  # config.action_view.raise_on_missing_translations = true
+  config.action_view.raise_on_missing_translations = true
 
   # The available log levels are: :debug, :info, :warn, :error, :fatal, and :unknown,
   # corresponding to the log level numbers from 0 up to 5 respectively
