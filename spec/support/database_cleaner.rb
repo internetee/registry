@@ -19,7 +19,7 @@ RSpec.configure do |config|
     end
   end
 
-  config.after :each do |example|
+  config.after :example do |example|
     if example.metadata[:db] || (%i(model).include?(example.metadata[:type]) && example.metadata[:db].nil?)
       db_connection_names.each do |connection_name|
         ActiveRecord::Base.establish_connection(connection_name)
