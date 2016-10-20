@@ -20,4 +20,5 @@ addons:
   postgresql: "9.4"
 branches:
   only:
+    - master
     - staging
