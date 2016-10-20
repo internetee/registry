@@ -63,7 +63,7 @@ Rails.application.configure do
     Bullet.add_whitelist type: :counter_cache, class_name: 'Contact', association: :versions
   end
 
-  # config.logger = Logger.new(STDOUT)
+  config.logger = ActiveSupport::Logger.new(nil)
 end
 
 # In this mode, any jobs you queue will be run in the same thread, synchronously
