@@ -1,7 +1,7 @@
 language: ruby
 env:
   - DB=postgresql
-bundler_args: --without development production
+bundler_args: --without development staging production
 before_script:
   - "psql -c 'create database registry_test;' -U postgres"
   - "psql -c 'create database registry_whois_test;' -U postgres"
@@ -18,9 +18,6 @@ services:
   - postgresql
 addons:
   postgresql: "9.4"
-notifications:
-  email:
-    - developers@tld.ee
 branches:
   only:
     - staging
