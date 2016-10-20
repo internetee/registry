@@ -5,8 +5,6 @@ describe Dnskey do
     Fabricate(:zonefile_setting, origin: 'ee')
   end
 
-  it { should belong_to(:domain) }
-
   context 'with invalid attribute' do
     before :all do
       @dnskey = Dnskey.new

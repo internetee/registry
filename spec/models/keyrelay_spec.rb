@@ -5,11 +5,6 @@ describe Keyrelay do
     Fabricate(:zonefile_setting, origin: 'ee')
   end
 
-  it { should belong_to(:domain) }
-  it { should belong_to(:requester) }
-  it { should belong_to(:accepter) }
-  it { should have_many(:legal_documents) }
-
   context 'with invalid attribute' do
     before :all do
       @keyrelay = Keyrelay.new

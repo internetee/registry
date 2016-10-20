@@ -1,10 +1,6 @@
 require 'rails_helper'
 
 describe Invoice do
-  it { should belong_to(:seller) }
-  it { should belong_to(:buyer) }
-  it { should have_many(:invoice_items) }
-
   context 'with invalid attribute' do
     before :all do
       @invoice = Invoice.new

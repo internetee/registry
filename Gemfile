@@ -136,7 +136,6 @@ group :development, :test do
   gem 'poltergeist',        '1.6.0'  # We are using PhantomJS instead
   gem 'phantomjs',          '1.9.8.0'
   gem 'fabrication',        '2.13.2' # Replacement for fixtures
-  gem 'shoulda-matchers',   '2.8.0', require: false # Additional matchers for RSpec
   gem 'launchy',            '2.4.3' # for opening browser automatically
 
   # helper gems

@@ -1,9 +1,6 @@
 require 'rails_helper'
 
 describe BankTransaction do
-  it { should belong_to(:bank_statement) }
-  it { should have_one(:account_activity) }
-
   context 'with invalid attribute' do
     before :all do
       @bank_transaction = BankTransaction.new

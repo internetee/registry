@@ -1,9 +1,6 @@
 require 'rails_helper'
 
 describe Account do
-  it { should belong_to(:registrar) }
-  it { should have_many(:account_activities) }
-
   context 'with invalid attribute' do
     before :all do
       @account = Account.new

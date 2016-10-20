@@ -9,15 +9,6 @@ describe Domain do
     Fabricate(:zonefile_setting, origin: 'com.ee')
   end
 
-  it { should belong_to(:registrar) }
-  it { should have_many(:nameservers) }
-  it { should belong_to(:registrant) }
-  it { should have_many(:tech_contacts) }
-  it { should have_many(:admin_contacts) }
-  it { should have_many(:domain_transfers) }
-  it { should have_many(:dnskeys) }
-  it { should have_many(:legal_documents) }
-
   context 'with invalid attribute' do
     before :all do
       @domain = Domain.new

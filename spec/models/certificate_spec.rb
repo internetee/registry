@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 describe Certificate do
-  it { should belong_to(:api_user) }
-
   context 'with invalid attribute' do
     before :all do
       @certificate = Certificate.new

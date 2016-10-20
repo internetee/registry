@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 describe BankStatement do
-  it { should have_many(:bank_transactions) }
-
   context 'with invalid attribute' do
     before :all do
       @bank_statement = BankStatement.new
