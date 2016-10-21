@@ -1,5 +1,6 @@
 Domain Registry
 ===============
+[![Build Status](https://travis-ci.org/internetee/registry.svg?branch=master)](https://travis-ci.org/internetee/registry)
 
 Full stack top-level domain (TLD) management.
 
@@ -405,6 +406,11 @@ sudo apt-get install libxext-dev libxrender1 fontconfig
 * [Testing](/doc/testing.md)
 
 
+### Travis CI
+
+Travis is configured to build against master and staging branches by default.
+
+
 ### EPP web client
 
 Please follow EPP web client readme:
@@ -417,9 +423,3 @@ Please follow EPP web client readme:
 Please follow WHOIS server readme:
 
     https://github.com/internetee/whois
-
-
-## Code Status
-
-Alpha release status, only model tests:
-[![Build Status](https://travis-ci.org/domify/registry.svg?branch=master)](https://travis-ci.org/domify/registry)
