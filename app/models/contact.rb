@@ -212,7 +212,7 @@ class Contact < ActiveRecord::Base
 
         contact.destroy
         counter.next
-        STDOUT << "#{Time.zone.now.utc} Contact.destroy_orphans: ##{contact.id} (#{contact.name})\n"
+        STDOUT << "#{Time.zone.now.utc} Contact.destroy_orphans: ##{contact.id} (#{contact.name})\n" unless Rails.env.test?
       end
 
       STDOUT << "#{Time.zone.now.utc} - Successfully destroyed #{counter} orphaned contacts\n" unless Rails.env.test?
