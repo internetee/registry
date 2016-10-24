@@ -7,7 +7,7 @@ Fabricator(:domain) do
   nameservers(count: 3)
   admin_domain_contacts(count: 1) { Fabricate(:admin_domain_contact) }
   tech_domain_contacts(count: 1) { Fabricate(:tech_domain_contact) }
-  registrar { Registrar.find_by_code('FIXED') }
+  registrar { Fabricate(:registrar) }
   auth_info '98oiewslkfkd'
 end
 

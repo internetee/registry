@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'Sessions', type: :feature do
+RSpec.feature 'Sessions' do
   context 'with invalid ip' do
     it 'should not see login page' do
       Setting.registrar_ip_whitelist_enabled = true
@@ -18,6 +18,7 @@ feature 'Sessions', type: :feature do
     end
 
     it 'should see log in' do
+      @fixed_registrar = Fabricate(:registrar, name: 'fixed registrar', code: 'FIXED')
       @fixed_registrar.white_ips = [Fabricate(:white_ip_registrar)]
       visit registrar_login_path
       page.should have_text('Log in')

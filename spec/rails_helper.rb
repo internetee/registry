@@ -45,11 +45,6 @@ def create_settings
   Setting.tech_contacts_max_count = 10
 
   Setting.client_side_status_editing_enabled = true
-
-  # speedup and easier to create fabrications
-  @fixed_registrar =
-      Registrar.find_by_name('fixed registrar') ||
-          Fabricate(:registrar, name: 'fixed registrar', code: 'FIXED')
 end
 
 RSpec.configure do |config|
