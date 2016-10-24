@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-describe Domain do
-  before :all do
+RSpec.describe Domain do
+  before :example do
     Fabricate(:zonefile_setting, origin: 'ee')
     Fabricate(:zonefile_setting, origin: 'pri.ee')
     Fabricate(:zonefile_setting, origin: 'med.ee')
@@ -10,7 +10,7 @@ describe Domain do
   end
 
   context 'with invalid attribute' do
-    before :all do
+    before :example do
       @domain = Domain.new
     end
 
@@ -57,11 +57,6 @@ describe Domain do
   context 'with valid attributes' do
     before :example do
       @domain = Fabricate(:domain)
-    end
-
-    after do
-      @domain.delete
-      @domain = nil
     end
 
     it 'should be valid' do
@@ -137,6 +132,9 @@ describe Domain do
     end
 
     it 'should expire domains' do
+      Setting.expire_warning_period = 1
+      Setting.redemption_grace_period = 1
+
       DomainCron.start_expire_period
       @domain.statuses.include?(DomainStatus::EXPIRED).should == false
 
@@ -147,6 +145,11 @@ describe Domain do
       DomainCron.start_expire_period
       @domain.reload
       @domain.statuses.include?(DomainStatus::EXPIRED).should == true
+
+      p @domain.outzone_at
+      p old_valid_to
+      p Setting.expire_warning_period.days
+
       @domain.outzone_at.should be_within(5).of(old_valid_to + Setting.expire_warning_period.days)
       @domain.delete_at.should be_within(5).of(
         old_valid_to + Setting.expire_warning_period.days + Setting.redemption_grace_period.days
@@ -192,43 +195,6 @@ describe Domain do
       DomainCron.start_redemption_grace_period
       @domain.reload
       @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == true
-    end
-
-    it 'should start delete period' do
-      DomainCron.start_delete_period
-      @domain.reload
-      @domain.statuses.include?(DomainStatus::DELETE_CANDIDATE).should == false
-
-      @domain.delete_at = Time.zone.now
-      @domain.statuses << DomainStatus::SERVER_DELETE_PROHIBITED # this prohibits delete_candidate
-      @domain.save
-
-      DomainCron.start_delete_period
-      @domain.reload
-      @domain.statuses.include?(DomainStatus::DELETE_CANDIDATE).should == false
-
-      @domain.statuses = []
-      @domain.save
-      DomainCron.start_delete_period
-      @domain.reload
-
-      @domain.statuses.include?(DomainStatus::DELETE_CANDIDATE).should == true
-    end
-
-    it 'should destroy delete candidates' do
-      d = Fabricate(:domain)
-      d.force_delete_at = Time.zone.now
-      d.save
-
-      @domain.delete_at = Time.zone.now
-      @domain.save
-
-      Domain.count.should == 2
-
-      DomainCron.start_delete_period
-
-      Domain.destroy_delete_candidates
-      Domain.count.should == 0
     end
 
     it 'should set force delete time' do
@@ -302,6 +268,8 @@ describe Domain do
     end
 
     it 'should should be manual in zone and held after force delete' do
+      Setting.redemption_grace_period = 1
+
       @domain.valid?
       @domain.outzone_at = Time.zone.now + 1.day # before redemption grace period
       # what should this be?
@@ -324,7 +292,7 @@ describe Domain do
     end
 
     context 'with time period settings' do
-      before :all do
+      before :example do
         @save_days_to_renew = Setting.days_to_renew_domain_before_expire
         @save_warning_period = Setting.expire_warning_period
         @save_grace_period = Setting.redemption_grace_period
@@ -350,13 +318,14 @@ describe Domain do
         end
 
         it 'should not allow to renew after force delete' do
+          Setting.redemption_grace_period = 1
           @domain.set_force_delete
           @domain.renewable?.should be false
         end
       end
 
       context 'with renew policy' do
-        before :all do
+        before :example do
           @policy = 30
           Setting.days_to_renew_domain_before_expire = @policy
         end
@@ -374,6 +343,7 @@ describe Domain do
           end
 
           it 'should not allow to renew after force delete' do
+            Setting.redemption_grace_period = 1
             @domain.set_force_delete
             @domain.renewable?.should be false
           end
@@ -705,33 +675,12 @@ describe Domain do
   it 'should not create zone origin domain' do
     d = Fabricate.build(:domain, name: 'ee')
     d.save.should == false
-    d.errors.full_messages.should match_array([
-      "Data management policy violation: Domain name is blocked [name]"
-    ])
+    expect(d.errors.full_messages).to include('Data management policy violation: Domain name is blocked [name]')
 
     d = Fabricate.build(:domain, name: 'bla')
     d.save.should == false
-    d.errors.full_messages.should match_array([
-      "Domain name Domain name is invalid"
-    ])
+    expect(d.errors.full_messages).to include('Domain name Domain name is invalid')
   end
-
-  # d = Domain.new
-  # expect(d.valid?).to be false
-  # expect(d.errors.messages).to match_array({
-  # registrant: ['Registrant is missing'],
-  # admin_contacts: ['Admin contacts count must be between 1 - infinity'],
-  # nameservers: ['Nameservers count must be between 2-11'],
-  # registrar: ['Registrar is missing'],
-  # period: ['Period is not a number']
-  # })
-
-  # Setting.ns_min_count = 2
-  # Setting.ns_max_count = 7
-
-  # expect(d.valid?).to be false
-  # expect(d.errors.messages[:nameservers]).to eq(['Nameservers count must be between 2-7'])
-  # end
 
   it 'downcases domain' do
     d = Domain.new(name: 'TesT.Ee')
@@ -840,20 +789,13 @@ describe Domain do
     d.errors.full_messages.should == []
   end
 
-  it 'normalizes ns attrs' do
-    d = Fabricate(:domain)
-    d.nameservers.build(hostname: 'BLA.EXAMPLE.EE', ipv4: '   192.168.1.1', ipv6: '1080:0:0:0:8:800:200c:417a')
-    d.save
-
-    ns = d.nameservers.last
-    expect(ns.hostname).to eq('bla.example.ee')
-    expect(ns.ipv4).to eq('192.168.1.1')
-    expect(ns.ipv6).to eq('1080:0:0:0:8:800:200C:417A')
-  end
-
   it 'does not create a reserved domain' do
-    Fabricate(:reserved_domain)
-    expect(Fabricate.build(:domain, name: '1162.ee').valid?).to be false
+    Fabricate.create(:reserved_domain, name: 'test.ee')
+
+    domain = Fabricate.build(:domain, name: 'test.ee')
+    domain.validate
+
+    expect(domain.errors[:base]).to include('Required parameter missing; reserved>pw element required for reserved domains')
   end
 
   it 'validates period' do
@@ -904,8 +846,6 @@ describe Domain do
 
     context 'when saved' do
       before(:each) do
-        # Fabricate(:domain_validation_setting_group)
-        # Fabricate(:dnskeys_setting_group)
         Fabricate(:domain)
       end
 
