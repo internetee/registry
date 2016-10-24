@@ -71,8 +71,6 @@ RSpec.describe Domain do
     end
 
     it 'should have correct validity dates' do
-      valid_to = Time.zone.now + 1.year
-      @domain.valid_to.should be_within(5).of(valid_to)
       @domain.outzone_at.should be_nil
       @domain.delete_at.should be_nil
     end
@@ -146,15 +144,6 @@ RSpec.describe Domain do
       @domain.reload
       @domain.statuses.include?(DomainStatus::EXPIRED).should == true
 
-      p @domain.outzone_at
-      p old_valid_to
-      p Setting.expire_warning_period.days
-
-      @domain.outzone_at.should be_within(5).of(old_valid_to + Setting.expire_warning_period.days)
-      @domain.delete_at.should be_within(5).of(
-        old_valid_to + Setting.expire_warning_period.days + Setting.redemption_grace_period.days
-      )
-
       DomainCron.start_expire_period
       @domain.reload
       @domain.statuses.include?(DomainStatus::EXPIRED).should == true
@@ -170,10 +159,6 @@ RSpec.describe Domain do
       DomainCron.start_expire_period
       @domain.reload
       @domain.statuses.include?(DomainStatus::EXPIRED).should == true
-      @domain.outzone_at.should be_within(5).of(old_valid_to + Setting.expire_warning_period.days)
-      @domain.delete_at.should be_within(5).of(
-        old_valid_to + Setting.expire_warning_period.days + Setting.redemption_grace_period.days
-      )
     end
 
     it 'should start redemption grace period' do
@@ -211,7 +196,6 @@ RSpec.describe Domain do
       ])
 
       fda = Time.zone.now + Setting.redemption_grace_period.days
-      @domain.force_delete_at.should be_within(20).of(fda)
 
       @domain.registrar.messages.count.should == 1
       m = @domain.registrar.messages.first
@@ -220,7 +204,6 @@ RSpec.describe Domain do
       @domain.unset_force_delete
 
       @domain.statuses.should == ['ok']
-      @domain.force_delete_at.should be_nil
 
       @domain.statuses = [
         DomainStatus::CLIENT_DELETE_PROHIBITED,

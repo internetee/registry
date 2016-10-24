@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 describe Dnskey do
-  before :all do
+  before :example do
     Fabricate(:zonefile_setting, origin: 'ee')
   end
 
   context 'with invalid attribute' do
-    before :all do
+    before :example do
       @dnskey = Dnskey.new
     end
 
@@ -22,7 +22,7 @@ describe Dnskey do
   end
 
   context 'with valid attributes' do
-    before :all do
+    before :example do
       @dnskey = Fabricate(:dnskey)
     end
 

@@ -1,20 +1,13 @@
 require 'rails_helper'
 
 describe Nameserver do
-  before :all do
+  before :example do
     Fabricate(:zonefile_setting, origin: 'ee')
   end
 
   context 'with invalid attribute' do
-    before :all do
+    before :example do
       @nameserver = Nameserver.new
-    end
-
-    it 'should not be valid' do
-      @nameserver.valid?
-      @nameserver.errors.full_messages.should match_array([
-        "Hostname Hostname is invalid"
-      ])
     end
 
     it 'should not have any versions' do
@@ -23,7 +16,7 @@ describe Nameserver do
   end
 
   context 'with valid attributes' do
-    before :all do
+    before :example do
       @nameserver = Fabricate(:nameserver)
     end
 
@@ -49,7 +42,7 @@ describe Nameserver do
     end
 
     context 'with many nameservers' do
-      before :all do
+      before :example do
         @api_user = Fabricate(:api_user)
         @domain_1 = Fabricate(:domain, nameservers: [
           Fabricate(:nameserver, hostname: 'ns1.ns.ee'),

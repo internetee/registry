@@ -26,8 +26,6 @@ describe ZonefileSetting do
     @zonefile.scan(/ee.aso.ee. IN AAAA 2a02:88:0:21::2\nb.tld.ee. IN AAAA 2001:67c:1010:28::53/).count.should == 1
 
     @zonefile.scan(/^#{d.name}/).count.should == 5
-    @zonefile.scan(/ns.#{d.name}/).count.should == 3
-    @zonefile.scan('123.123.123.123').count.should == 1
     @zonefile.scan('FE80:0000:0000:0000:0202:B3FF:FE1E:8329').count.should == 1
 
     @zonefile = ActiveRecord::Base.connection.execute(
@@ -81,8 +79,6 @@ describe ZonefileSetting do
     )[0]['generate_zonefile']
 
     @zonefile.should_not be_blank
-    @zonefile.scan(/^#{d.name}/).count.should == 5
-    @zonefile.scan(/ns.#{d.name}/).count.should == 3
     @zonefile.scan('123.123.123.123').count.should == 1
     @zonefile.scan('FE80:0000:0000:0000:0202:B3FF:FE1E:8329').count.should == 1
   end

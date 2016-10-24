@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 describe Keyrelay do
-  before :all do
+  before :example do
     Fabricate(:zonefile_setting, origin: 'ee')
   end
 
   context 'with invalid attribute' do
-    before :all do
+    before :example do
       @keyrelay = Keyrelay.new
     end
 
@@ -29,7 +29,7 @@ describe Keyrelay do
   end
 
   context 'with valid attributes' do
-    before :all do
+    before :example do
       @keyrelay = Fabricate(:keyrelay)
     end
 

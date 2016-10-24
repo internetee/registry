@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 describe DomainTransfer do
-  before :all do
+  before :example do
     Fabricate(:zonefile_setting, origin: 'ee')
   end
 
   context 'with invalid attribute' do
-    before :all do
+    before :example do
       @domain_transfer = DomainTransfer.new
     end
 
@@ -22,7 +22,7 @@ describe DomainTransfer do
   end
 
   context 'with valid attributes' do
-    before :all do
+    before :example do
       @domain_transfer = Fabricate(:domain_transfer)
     end
 
