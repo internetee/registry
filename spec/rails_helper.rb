@@ -15,12 +15,7 @@ require 'support/matchers/alias_attribute'
 require 'support/matchers/active_job'
 require 'support/capybara'
 require 'support/database_cleaner'
-require 'support/epp'
-require 'support/epp_doc'
-require 'support/feature'
-require 'support/registrar_helpers'
 require 'support/request'
-require 'support/autodoc'
 require 'support/paper_trail'
 
 ActiveRecord::Migration.maintain_test_schema!
