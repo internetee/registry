@@ -1,3 +1,3 @@
 Fabricator(:reserved_domain) do
-  names { { '1162.ee': 'abc' } }
+  name { sequence(:name) { |i| "domain#{i}.ee" } }
 end

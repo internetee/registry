@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 describe ApiUser do
-  it { should belong_to(:registrar) }
-
   context 'class methods' do
     before do
       Fabricate(:api_user, identity_code: '')

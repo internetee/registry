@@ -31,18 +31,16 @@ Rails.application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
 
-  # Print deprecation notices to the stderr.
-  config.active_support.deprecation = :stderr
+  ActiveSupport::Deprecation.silenced = true
 
   # For rails-settings-cached conflict
   config.cache_store = :file_store, 'tmp/cache_test'
 
   config.time_zone = 'UTC'
 
-  # Raises error for missing translations
-  # config.action_view.raise_on_missing_translations = true
+  config.action_view.raise_on_missing_translations = true
 
-  # The available log levels are: :debug, :info, :warn, :error, :fatal, and :unknown, 
+  # The available log levels are: :debug, :info, :warn, :error, :fatal, and :unknown,
   # corresponding to the log level numbers from 0 up to 5 respectively
   config.log_level = :debug
 
@@ -64,10 +62,10 @@ Rails.application.configure do
     Bullet.add_whitelist type: :counter_cache, class_name: 'Contact', association: :versions
   end
 
-  # config.logger = Logger.new(STDOUT)
+  config.logger = ActiveSupport::Logger.new(nil)
 end
 
 # In this mode, any jobs you queue will be run in the same thread, synchronously
 # (that is, MyJob.enqueue runs the job and won't return until it's completed).
 # This makes your application's behavior easier to test
-Que.mode = :sync 
+Que.mode = :sync

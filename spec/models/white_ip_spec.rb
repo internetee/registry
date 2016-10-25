@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 describe WhiteIp do
-  it { should belong_to(:registrar) }
-
   context 'with invalid attribute' do
     before :all do
       @white_ip = WhiteIp.new

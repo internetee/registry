@@ -1,10 +1,10 @@
 Fabricator(:contact) do
-  registrar { Registrar.find_by_code('FIXED') }
-  code { sequence(:code) { |i| "SH#{Faker::Number.number(8)}#{i}" } }
+  registrar { Fabricate(:registrar) }
+  code { sequence(:code) { |i| "1234#{i}#{rand(1000)}" } }
   auth_info 'password'
-  name { sequence(:name) { |i| "#{Faker::Name.name}#{i}" } }
+  name 'test name'
   phone '+372.12345678'
-  email Faker::Internet.email
+  email { sequence(:email) { |i| "test#{i}@test.com" } }
   street 'Short street 11'
   city 'Tallinn'
   zip '11111'
