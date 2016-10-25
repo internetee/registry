@@ -1,11 +1,6 @@
 require 'rails_helper'
 
 describe Registrar do
-  it { should have_many(:domains) }
-  it { should have_many(:api_users) }
-  it { should have_many(:messages) }
-  it { should have_many(:white_ips) }
-
   context 'with invalid attribute' do
     before :all do
       @registrar = Registrar.new
@@ -60,18 +55,6 @@ describe Registrar do
       @registrar = Fabricate(:registrar)
       @registrar.valid?
       @registrar.errors.full_messages.should match_array([])
-    end
-
-    it 'should have a cash account' do
-      @registrar.cash_account.should_not be_nil
-    end
-
-    it 'should validates uniqueness of code' do
-      registrar = Fabricate.build(:registrar, code: @registrar.code)
-      registrar.valid?
-      registrar.errors.full_messages.should match_array([
-        'Code has already been taken'
-      ])
     end
 
     it 'should remove blank from code' do
@@ -138,30 +121,8 @@ describe Registrar do
       registrar.errors.full_messages.should == ['Code is forbidden to use']
     end
 
-    it 'should have priv contacts' do
-      Fabricate(:contact, registrar: @registrar)
-      @registrar.reload.priv_contacts.size.should == 1
-    end
-
     it 'should not have priv contacts' do
       @registrar.priv_contacts.size.should == 0
-    end
-
-    it 'should credit and debit registrar cash account' do
-      @registrar.credit!({ sum: 13.32, description: 'Add money' })
-      @registrar.balance.should == BigDecimal.new('13.32')
-      @registrar.cash_account.account_activities.count.should == 1
-      a = @registrar.cash_account.account_activities.last
-      a.description.should == 'Add money'
-      a.sum.should == BigDecimal.new('13.32')
-      a.log_pricelist_id.should == nil
-
-      @registrar.debit!({ sum: 10.31, description: 'Remove money' })
-      @registrar.balance.should == BigDecimal.new('3.01')
-      @registrar.cash_account.account_activities.count.should == 2
-      a = @registrar.cash_account.account_activities.last
-      a.description.should == 'Remove money'
-      a.sum.should == -BigDecimal.new('10.31')
     end
   end
 end

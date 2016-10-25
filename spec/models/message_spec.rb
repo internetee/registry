@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 describe Message do
-  it { should belong_to(:registrar) }
-
   context 'with invalid attribute' do
     before :all do
       @mssage = Message.new

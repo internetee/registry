@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 describe Address do
-  it { should belong_to(:contact) }
-
   context 'about class' do
     it 'should have versioning enabled?' do
       Address.paper_trail_enabled_for_model?.should == true

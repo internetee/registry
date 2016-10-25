@@ -1,17 +1,12 @@
 require 'rails_helper'
 
 describe Keyrelay do
-  before :all do
+  before :example do
     Fabricate(:zonefile_setting, origin: 'ee')
   end
 
-  it { should belong_to(:domain) }
-  it { should belong_to(:requester) }
-  it { should belong_to(:accepter) }
-  it { should have_many(:legal_documents) }
-
   context 'with invalid attribute' do
-    before :all do
+    before :example do
       @keyrelay = Keyrelay.new
     end
 
@@ -34,7 +29,7 @@ describe Keyrelay do
   end
 
   context 'with valid attributes' do
-    before :all do
+    before :example do
       @keyrelay = Fabricate(:keyrelay)
     end
 
