@@ -1,10 +1,10 @@
 Fabricator(:registrant) do
   registrar { Fabricate(:registrar) }
-  code { sequence(:code) { |i| "REGISTRANT#{Faker::Number.number(8)}#{i}" } }
+  code { sequence(:code) { |i| "REGISTRANT#{i}#{rand(1000)}" } }
   auth_info 'password'
-  name { sequence(:name) { |i| "REGISTRANT #{Faker::Name.name}#{i}" } }
+  name 'test name'
   phone '+372.12345678'
-  email Faker::Internet.email
+  email { sequence(:email) { |i| "test#{i}@test.com" } }
   street 'Short street 11'
   city 'Tallinn'
   zip '11111'

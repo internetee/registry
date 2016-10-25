@@ -1,6 +1,6 @@
 Fabricator(:address) do
-  city Faker::Address.city
-  street Faker::Address.street_name
-  street2 Faker::Address.street_name
-  zip Faker::Address.zip
+  city 'test city'
+  street 'test street'
+  street2 'test street'
+  zip 12345
 end
