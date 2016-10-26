@@ -2,6 +2,25 @@ require 'rails_helper'
 
 describe Contact do
   before :example do
+    Setting.ds_algorithm = 2
+    Setting.ds_data_allowed = true
+    Setting.ds_data_with_key_allowed = true
+    Setting.key_data_allowed = true
+
+    Setting.dnskeys_min_count = 0
+    Setting.dnskeys_max_count = 9
+    Setting.ns_min_count = 2
+    Setting.ns_max_count = 11
+
+    Setting.transfer_wait_time = 0
+
+    Setting.admin_contacts_min_count = 1
+    Setting.admin_contacts_max_count = 10
+    Setting.tech_contacts_min_count = 0
+    Setting.tech_contacts_max_count = 10
+
+    Setting.client_side_status_editing_enabled = true
+
     Fabricate(:zonefile_setting, origin: 'ee')
     @api_user = Fabricate(:api_user)
   end
@@ -361,5 +380,27 @@ describe Contact, '.destroy_orphans' do
     Contact.find_orphans.count.should == 0
     Contact.destroy_orphans
     Contact.count.should == cc
+  end
+end
+
+RSpec.describe Contact, db: false do
+  describe '::names' do
+    before :example do
+      expect(described_class).to receive(:pluck).with(:name).and_return('names')
+    end
+
+    it 'returns names' do
+      expect(described_class.names).to eq('names')
+    end
+  end
+
+  describe '::emails' do
+    before :example do
+      expect(described_class).to receive(:pluck).with(:email).and_return('emails')
+    end
+
+    it 'returns emails' do
+      expect(described_class.emails).to eq('emails')
+    end
   end
 end

@@ -2,6 +2,25 @@ require 'rails_helper'
 
 RSpec.describe Domain do
   before :example do
+    Setting.ds_algorithm = 2
+    Setting.ds_data_allowed = true
+    Setting.ds_data_with_key_allowed = true
+    Setting.key_data_allowed = true
+
+    Setting.dnskeys_min_count = 0
+    Setting.dnskeys_max_count = 9
+    Setting.ns_min_count = 2
+    Setting.ns_max_count = 11
+
+    Setting.transfer_wait_time = 0
+
+    Setting.admin_contacts_min_count = 1
+    Setting.admin_contacts_max_count = 10
+    Setting.tech_contacts_min_count = 0
+    Setting.tech_contacts_max_count = 10
+
+    Setting.client_side_status_editing_enabled = true
+
     Fabricate(:zonefile_setting, origin: 'ee')
     Fabricate(:zonefile_setting, origin: 'pri.ee')
     Fabricate(:zonefile_setting, origin: 'med.ee')
@@ -842,6 +861,9 @@ RSpec.describe Domain do
 end
 
 RSpec.describe Domain, db: false do
+  it { is_expected.to alias_attribute(:on_hold_time, :outzone_at) }
+  it { is_expected.to alias_attribute(:delete_time, :delete_at) }
+
   describe '#set_server_hold' do
     let(:domain) { described_class.new }
 
@@ -856,6 +878,79 @@ RSpec.describe Domain, db: false do
 
     it 'sets :outzone_at to now' do
       expect(domain.outzone_at).to eq(Time.zone.parse('05.07.2010'))
+    end
+  end
+
+  describe '#admin_contact_names' do
+    let(:domain) { described_class.new }
+
+    before :example do
+      expect(Contact).to receive(:names).and_return('names')
+    end
+
+    it 'returns admin contact names' do
+      expect(domain.admin_contact_names).to eq('names')
+    end
+  end
+
+  describe '#admin_contact_emails' do
+    let(:domain) { described_class.new }
+
+    before :example do
+      expect(Contact).to receive(:emails).and_return('emails')
+    end
+
+    it 'returns admin contact emails' do
+      expect(domain.admin_contact_emails).to eq('emails')
+    end
+  end
+
+  describe '#tech_contact_names' do
+    let(:domain) { described_class.new }
+
+    before :example do
+      expect(Contact).to receive(:names).and_return('names')
+    end
+
+    it 'returns technical contact names' do
+      expect(domain.tech_contact_names).to eq('names')
+    end
+  end
+
+  describe '#nameserver_hostnames' do
+    let(:domain) { described_class.new }
+
+    before :example do
+      expect(Nameserver).to receive(:hostnames).and_return('hostnames')
+    end
+
+    it 'returns name server hostnames' do
+      expect(domain.nameserver_hostnames).to eq('hostnames')
+    end
+  end
+
+  describe '#registered?' do
+    before :example do
+      travel_to Time.zone.parse('05.07.2010 00:00:01')
+    end
+
+    context 'when :valid_to is in the future' do
+      let(:domain) { described_class.new(valid_to: Time.zone.parse('06.07.2010')) }
+
+      specify { expect(domain).to be_registered }
+    end
+
+    context 'when :valid_to is the same as current time' do
+      let(:domain) { described_class.new(valid_to: Time.zone.parse('05.07.2010 00:00:01')) }
+
+
+      specify { expect(domain).to be_registered }
+    end
+
+    context 'when :valid_to is in the past' do
+      let(:domain) { described_class.new(valid_to: Time.zone.parse('04.07.2010 23:59:59')) }
+
+      specify { expect(domain).to_not be_registered }
     end
   end
 end
