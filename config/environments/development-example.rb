@@ -10,14 +10,13 @@ Rails.application.configure do
   config.eager_load = false
 
   # Show full error reports and disable caching.
-  config.consider_all_requests_local       = true
+  config.consider_all_requests_local = true
   config.action_controller.perform_caching = false
-
-  # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
+
+  config.logger = ActiveSupport::Logger.new(nil)
 
   # Raise an error on page load if there are pending migrations.
   config.active_record.migration_error = :page_load
@@ -32,13 +31,12 @@ Rails.application.configure do
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
 
-  # Raises error for missing translations
-  # config.action_view.raise_on_missing_translations = true
+  config.action_view.raise_on_missing_translations = true
 
-  # config.log_tags = [:subdomain, :uuid, :remote_ip]
-  # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new(ENV['app_name'] || 'registry'))
-
+  config.action_mailer.raise_delivery_errors = false
   config.action_mailer.default_url_options = { host: 'localhost:8081' }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = { address: 'localhost', port: 1025 } # MailCatcher
 
   # for finding database optimization
   config.after_initialize do
@@ -54,4 +52,4 @@ end
 # In this mode, any jobs you queue will be run in the same thread, synchronously
 # (that is, MyJob.enqueue runs the job and won't return until it's completed).
 # This makes your application's behavior easier to test
-Que.mode = :sync 
+Que.mode = :sync
