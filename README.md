@@ -408,7 +408,9 @@ sudo apt-get install libxext-dev libxrender1 fontconfig
 
 ### Travis CI
 
-Travis is configured to build against master and staging branches by default.
+Travis is configured to build against master and staging branches by default.   
+Configuration file location: /.travis.yml   
+Notification emails are sent to committer by default. Modify .travis.yml to change this.
 
 
 ### EPP web client

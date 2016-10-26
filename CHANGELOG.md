@@ -1,6 +1,9 @@
 25.10.2016 
 * Outdated specs removed, failing specs fixed, rspec config improved
 
+20.10.2016
+* Travis CI integration added
+
 19.10.2016
 * BUG fix: Record current time for outzone on domain:delete EPP request
 * ForceDelete automatic notice: fixed et and ee wording to reflect the date the domain is actually deleted.
