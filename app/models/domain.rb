@@ -3,11 +3,15 @@ class Domain < ActiveRecord::Base
   include UserEvents
   include Versions # version/domain_version.rb
   include Statuses
+  include Concerns::Domain::Expirable
   has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
 
   attr_accessor :roles
 
   attr_accessor :legal_document_id
+
+  alias_attribute :on_hold_time, :outzone_at
+  alias_attribute :delete_time, :delete_at
 
   # TODO: whois requests ip whitelist for full info for own domains and partial info for other domains
   # TODO: most inputs should be trimmed before validatation, probably some global logic?
@@ -746,6 +750,21 @@ class Domain < ActiveRecord::Base
     DomainMailer.send(action, DomainMailModel.new(self).send(action)).deliver
   end
 
+  def admin_contact_names
+    admin_contacts.names
+  end
+
+  def admin_contact_emails
+    admin_contacts.emails
+  end
+
+  def tech_contact_names
+    tech_contacts.names
+  end
+
+  def nameserver_hostnames
+    nameservers.hostnames
+  end
 
   def self.to_csv
     CSV.generate do |csv|

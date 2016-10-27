@@ -1,0 +1,4 @@
+en:
+  domain_mailer:
+    expiration:
+      subject: The %{domain_name} domain has expired

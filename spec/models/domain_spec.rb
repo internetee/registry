@@ -928,29 +928,4 @@ RSpec.describe Domain, db: false do
       expect(domain.nameserver_hostnames).to eq('hostnames')
     end
   end
-
-  describe '#registered?' do
-    before :example do
-      travel_to Time.zone.parse('05.07.2010 00:00:01')
-    end
-
-    context 'when :valid_to is in the future' do
-      let(:domain) { described_class.new(valid_to: Time.zone.parse('06.07.2010')) }
-
-      specify { expect(domain).to be_registered }
-    end
-
-    context 'when :valid_to is the same as current time' do
-      let(:domain) { described_class.new(valid_to: Time.zone.parse('05.07.2010 00:00:01')) }
-
-
-      specify { expect(domain).to be_registered }
-    end
-
-    context 'when :valid_to is in the past' do
-      let(:domain) { described_class.new(valid_to: Time.zone.parse('04.07.2010 23:59:59')) }
-
-      specify { expect(domain).to_not be_registered }
-    end
-  end
 end

@@ -117,17 +117,6 @@ class DomainMailer < ApplicationMailer
          name: @domain.name)} [#{@domain.name}]")
   end
 
-  def expiration_reminder(domain_id)
-    @domain = Domain.find_by(id: domain_id)
-    return if @domain.nil? || !@domain.statuses.include?(DomainStatus::EXPIRED) || whitelist_blocked?(@domain.registrant.email)
-    return if whitelist_blocked?(@domain.registrant.email)
-
-    mail(to: format(@domain.registrant.email),
-         subject: "#{I18n.t(:expiration_remind_subject,
-                            name: @domain.name)} [#{@domain.name}]")
-  end
-
-
   def force_delete(domain_id, should_deliver)
     @domain = Domain.find_by(id: domain_id)
     return if delivery_off?(@domain, should_deliver)
@@ -138,6 +127,16 @@ class DomainMailer < ApplicationMailer
     mail(to: formatted_emails,
          subject: "#{I18n.t(:force_delete_subject)}"
         )
+  end
+
+  def expiration(domain:)
+    @domain = DomainPresenter.new(domain: domain, view: view_context)
+    @registrar = RegistrarPresenter.new(registrar: domain.registrar, view: view_context)
+
+    recipients = domain.admin_contact_emails << domain.registrant_email
+
+    subject = default_i18n_subject(domain_name: domain.name)
+    mail(to: recipients, subject: subject)
   end
 
   private
