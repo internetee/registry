@@ -77,7 +77,6 @@ class Domain < ActiveRecord::Base
   end
 
   before_create :generate_auth_info
-  before_create :set_validity_dates
   before_create -> { self.reserved = in_reserved_list?; nil }
 
   before_save :manage_automatic_statuses
@@ -545,13 +544,6 @@ class Domain < ActiveRecord::Base
     end while self.class.exists?(auth_info: auth_info)
   end
   # rubocop:enable Lint/Loop
-
-  def set_validity_dates
-    self.registered_at = Time.zone.now
-    self.valid_from = Time.zone.now
-    # we need + 1 day as this is more correct from juridical side
-    self.valid_to = valid_from.utc.beginning_of_day + self.class.convert_period_to_time(period, period_unit) + 1.day
-  end
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
