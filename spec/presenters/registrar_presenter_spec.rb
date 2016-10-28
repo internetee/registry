@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe RegistrarPresenter do
   let(:registrar) { instance_double(Registrar) }
-  let(:presenter) { described_class.new(registrar: registrar, view: nil) }
+  let(:presenter) { described_class.new(registrar: registrar, view: view) }
 
   describe '#name' do
     it 'returns name' do

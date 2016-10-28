@@ -1,11 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe DomainExpirationEmailJob do
-  it 'queues the job' do
-    expect { described_class.perform_later }.to have_enqueued_job(described_class)
-  end
-
-  describe '#perform' do
+  describe '#run' do
     let(:domain) { instance_double(Domain) }
 
     before :example do
@@ -22,7 +18,7 @@ RSpec.describe DomainExpirationEmailJob do
       it 'sends email notification' do
         expect(DomainMailer).to receive(:expiration).with(domain: domain).and_return(message)
         expect(message).to receive(:deliver!)
-        described_class.perform_now(domain_id: 1)
+        described_class.enqueue(domain_id: 1)
       end
     end
 
@@ -33,7 +29,7 @@ RSpec.describe DomainExpirationEmailJob do
 
       it 'does not send email notification' do
         expect(DomainMailer).to_not receive(:expiration)
-        described_class.perform_now(domain_id: 1)
+        described_class.enqueue(domain_id: 1)
       end
     end
   end
