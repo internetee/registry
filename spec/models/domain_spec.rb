@@ -148,38 +148,6 @@ RSpec.describe Domain do
       domain.pending_json.should == {}
     end
 
-    it 'should expire domains' do
-      Setting.expire_warning_period = 1
-      Setting.redemption_grace_period = 1
-
-      DomainCron.start_expire_period
-      @domain.statuses.include?(DomainStatus::EXPIRED).should == false
-
-      old_valid_to = Time.zone.now - 10.days
-      @domain.valid_to = old_valid_to
-      @domain.save
-
-      DomainCron.start_expire_period
-      @domain.reload
-      @domain.statuses.include?(DomainStatus::EXPIRED).should == true
-
-      DomainCron.start_expire_period
-      @domain.reload
-      @domain.statuses.include?(DomainStatus::EXPIRED).should == true
-    end
-
-    it 'should start redemption grace period' do
-      old_valid_to = Time.zone.now - 10.days
-      @domain.valid_to = old_valid_to
-      @domain.statuses = [DomainStatus::EXPIRED]
-      @domain.outzone_at, @domain.delete_at = nil, nil
-      @domain.save
-
-      DomainCron.start_expire_period
-      @domain.reload
-      @domain.statuses.include?(DomainStatus::EXPIRED).should == true
-    end
-
     it 'should start redemption grace period' do
       DomainCron.start_redemption_grace_period
       @domain.reload

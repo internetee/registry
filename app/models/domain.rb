@@ -210,11 +210,6 @@ class Domain < ActiveRecord::Base
     DomainCron.send(__method__)
   end
 
-  def self.start_expire_period
-    ActiveSupport::Deprecation.instance.deprecation_warning(DomainCron, __method__)
-    DomainCron.send(__method__)
-  end
-
   def self.start_redemption_grace_period
     ActiveSupport::Deprecation.instance.deprecation_warning(DomainCron, __method__)
     DomainCron.send(__method__)
