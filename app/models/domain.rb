@@ -283,16 +283,6 @@ class Domain < ActiveRecord::Base
     domain_transfers.find_by(status: DomainTransfer::PENDING)
   end
 
-  def expirable?
-    return false if valid_to > Time.zone.now
-
-    if statuses.include?(DomainStatus::EXPIRED) && outzone_at.present? && delete_at.present?
-      return false
-    end
-
-    true
-  end
-
   def server_holdable?
     return false if statuses.include?(DomainStatus::SERVER_HOLD)
     return false if statuses.include?(DomainStatus::SERVER_MANUAL_INZONE)

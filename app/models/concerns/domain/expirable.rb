@@ -12,17 +12,17 @@ module Concerns::Domain::Expirable
   end
 
   def registered?
-    valid_to >= Time.zone.now
+    !expired?
   end
 
   def expired?
-    statuses.include?(DomainStatus::EXPIRED)
+    expire_time <= Time.zone.now
   end
 
   def expirable?
     return false if valid_to > Time.zone.now
 
-    if expired? && outzone_at.present? && delete_at.present?
+    if statuses.include?(DomainStatus::EXPIRED) && outzone_at.present? && delete_at.present?
       return false
     end
 

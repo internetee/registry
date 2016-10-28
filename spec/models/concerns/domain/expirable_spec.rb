@@ -18,38 +18,44 @@ RSpec.describe Domain, db: false do
   end
 
   describe '#registered?' do
-    before :example do
-      travel_to Time.zone.parse('05.07.2010 00:00')
-    end
+    let(:domain) { described_class.new }
 
-    context 'when :valid_to is in the future' do
-      let(:domain) { described_class.new(expire_time: Time.zone.parse('06.07.2010 00:01')) }
+    context 'when not expired' do
+      before :example do
+        expect(domain).to receive(:expired?).and_return(false)
+      end
 
       specify { expect(domain).to be_registered }
     end
 
-    context 'when :valid_to is the same as current time' do
-      let(:domain) { described_class.new(expire_time: Time.zone.parse('05.07.2010 00:00')) }
-
-      specify { expect(domain).to_not be_registered }
-    end
-
-    context 'when :valid_to is in the past' do
-      let(:domain) { described_class.new(expire_time: Time.zone.parse('04.07.2010 23:59')) }
+    context 'when expired' do
+      before :example do
+        expect(domain).to receive(:expired?).and_return(true)
+      end
 
       specify { expect(domain).to_not be_registered }
     end
   end
 
   describe '#expired?' do
-    context 'when :statuses contains expired status' do
-      let(:domain) { described_class.new(statuses: [DomainStatus::EXPIRED]) }
+    before :example do
+      travel_to Time.zone.parse('05.07.2010 00:00')
+    end
+
+    context 'when :expire_time is in the past' do
+      let(:domain) { described_class.new(expire_time: Time.zone.parse('04.07.2010 23:59')) }
 
       specify { expect(domain).to be_expired }
     end
 
-    context 'when :statuses does not contain expired status' do
-      let(:domain) { described_class.new(statuses: [DomainStatus::CLIENT_HOLD]) }
+    context 'when :expire_time is now' do
+      let(:domain) { described_class.new(expire_time: Time.zone.parse('05.07.2010 00:00')) }
+
+      specify { expect(domain).to be_expired }
+    end
+
+    context 'when :expire_time is in the future' do
+      let(:domain) { described_class.new(expire_time: Time.zone.parse('05.07.2010 00:01')) }
 
       specify { expect(domain).to_not be_expired }
     end
