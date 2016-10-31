@@ -41,6 +41,25 @@ RSpec.describe DomainPresenter do
     end
   end
 
+  describe '#force_delete_date' do
+    subject(:force_delete_date) { presenter.force_delete_date }
+
+    context 'when present' do
+      let(:domain) { instance_double(Domain, force_delete_time: '05.07.2010') }
+
+      it 'returns localized date' do
+        expect(view).to receive(:l).with('05.07.2010', format: :date).and_return('delete date')
+        expect(force_delete_date).to eq('delete date')
+      end
+    end
+
+    context 'when absent' do
+      let(:domain) { instance_double(Domain, force_delete_time: nil) }
+
+      specify { expect(force_delete_date).to be_nil }
+    end
+  end
+
   describe '#admin_contact_names' do
     let(:domain) { instance_double(Domain) }
 

@@ -10,8 +10,14 @@ Domeeni <%= @domain.name %> kohta on registris järgmised andmed:
 Registreerija: <%= @domain.registrant_name %><br>
 Halduskontakt: <%= @domain.admin_contact_names %><br>
 Tehniline kontakt: <%= @domain.tech_contact_names %><br>
-Registripidaja: <%= @registrar.name %><br>
 Nimeserverid: <%= @domain.nameserver_names %><br>
+
+<p>Registripidaja:<br>
+<%= @registrar.name %><br>
+Email: <%= @registrar.email %><br>
+Telefon: <%= @registrar.phone %><br>
+Veebileht: <%= @registrar.url %></p>
+
 Ülevaate kõikidest endaga seotud domeenidest saate registreerija portaalist. <%= ENV['registrant_url'] %>.<br>
 <br><br>
 Lugupidamisega<br>
@@ -31,8 +37,14 @@ The following data for the <%= @domain.name %> domain have been entered into the
 Registrant: <%= @domain.registrant_name %><br>
 Administrative contact: <%= @domain.admin_contact_names %><br>
 Technical contact: <%= @domain.tech_contact_names %><br>
-Registrar: <%= @registrar.name %><br>
 Name servers: <%= @domain.nameserver_names %><br>
+
+<p>Registrar:<br>
+<%= @registrar.name %><br>
+Email: <%= @registrar.email %><br>
+Telefon: <%= @registrar.phone %><br>
+Veebileht: <%= @registrar.url %></p>
+
 You can find an overview of all your domains at the registrant's portal. <%= ENV['registrant_url'] %>.<br>
 <br><br>
 Best Regards,<br>
@@ -57,8 +69,14 @@ Estonian Internet Foundation
 Регистрант: <%= @domain.registrant_name %><br>
 Административный контакт: <%= @domain.admin_contact_names %><br>
 Технический контакт: <%= @domain.tech_contact_names %><br>
-Регистратор: <%= @registrar.name %><br>
 Серверы доменных имен: <%= @domain.nameserver_names %><br>
+
+<p>Регистратор:<br>
+<%= @registrar.name %><br>
+Электронная почта: <%= @registrar.email %><br>
+Телефон: <%= @registrar.phone %><br>
+Веб-сайт: <%= @registrar.url %></p>
+
 Обзор всех связанных с Вами доменов можете получить на портале регистранта. <%= ENV['registrant_url'] %>.<br>
 
 <br><br>

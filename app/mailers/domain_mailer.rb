@@ -117,26 +117,20 @@ class DomainMailer < ApplicationMailer
          name: @domain.name)} [#{@domain.name}]")
   end
 
-  def force_delete(domain_id, should_deliver)
-    @domain = Domain.find_by(id: domain_id)
-    return if delivery_off?(@domain, should_deliver)
-    emails = ([@domain.registrant.email] + @domain.admin_contacts.map { |x| format(x.email) }).uniq
-    return if whitelist_blocked?(emails)
+  def force_delete(domain:)
+    @domain = DomainPresenter.new(domain: domain, view: view_context)
+    @registrar = RegistrarPresenter.new(registrar: domain.registrar, view: view_context)
+    @registrant = RegistrantPresenter.new(registrant: domain.registrant, view: view_context)
 
-    formatted_emails = emails.map { |x| format(x) }
-    mail(to: formatted_emails,
-         subject: "#{I18n.t(:force_delete_subject)}"
-        )
+    mail(to: domain.primary_contact_emails)
   end
 
   def expiration(domain:)
     @domain = DomainPresenter.new(domain: domain, view: view_context)
     @registrar = RegistrarPresenter.new(registrar: domain.registrar, view: view_context)
 
-    recipients = domain.admin_contact_emails << domain.registrant_email
-
     subject = default_i18n_subject(domain_name: domain.name)
-    mail(to: recipients, subject: subject)
+    mail(to: domain.primary_contact_emails, subject: subject)
   end
 
   private

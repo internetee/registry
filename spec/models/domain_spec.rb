@@ -831,6 +831,7 @@ end
 RSpec.describe Domain, db: false do
   it { is_expected.to alias_attribute(:on_hold_time, :outzone_at) }
   it { is_expected.to alias_attribute(:delete_time, :delete_at) }
+  it { is_expected.to alias_attribute(:force_delete_time, :force_delete_at) }
 
   describe '#set_server_hold' do
     let(:domain) { described_class.new }
@@ -894,6 +895,22 @@ RSpec.describe Domain, db: false do
 
     it 'returns name server hostnames' do
       expect(domain.nameserver_hostnames).to eq('hostnames')
+    end
+  end
+
+  describe '#primary_contact_emails' do
+    let(:domain) { described_class.new }
+
+    before :example do
+      expect(domain).to receive(:registrant_email).and_return('registrant@test.com')
+      expect(domain).to receive(:admin_contact_emails).and_return(['admin.contact.email@test.com'])
+    end
+
+    it 'returns registrant and administrative contact emails' do
+      expect(domain.primary_contact_emails).to match_array(%w(
+                                                   registrant@test.com
+                                                   admin.contact.email@test.com
+                                                 ))
     end
   end
 end

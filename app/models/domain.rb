@@ -12,6 +12,7 @@ class Domain < ActiveRecord::Base
 
   alias_attribute :on_hold_time, :outzone_at
   alias_attribute :delete_time, :delete_at
+  alias_attribute :force_delete_time, :force_delete_at
 
   # TODO: whois requests ip whitelist for full info for own domains and partial info for other domains
   # TODO: most inputs should be trimmed before validatation, probably some global logic?
@@ -564,7 +565,7 @@ class Domain < ActiveRecord::Base
       registrar.messages.create!(
         body: I18n.t('force_delete_set_on_domain', domain: name)
       )
-      DomainMailer.force_delete(id, true).deliver
+      DomainMailer.force_delete(domain: self).deliver
       return true
     end
     false
@@ -741,6 +742,10 @@ class Domain < ActiveRecord::Base
 
   def nameserver_hostnames
     nameservers.hostnames
+  end
+
+  def primary_contact_emails
+    admin_contact_emails << registrant_email
   end
 
   def self.to_csv

@@ -10,8 +10,14 @@ Domeeni <%= @domain.name %> kohta on registris järgmised andmed:
 Registreerija: <%= @domain.registrant_name %>
 Halduskontakt: <%= @domain.admin_contact_names %>
 Tehniline kontakt: <%= @domain.tech_contact_names %>
-Registripidaja: <%= @registrar.name %>
 Nimeserverid: <%= @domain.nameserver_names %>
+
+Registripidaja:
+<%= @registrar.name %>
+Email: <%= @registrar.email %>
+Telefon: <%= @registrar.phone %>
+Veebileht: <%= @registrar.url %>
+
 Ülevaate kõikidest endaga seotud domeenidest saate registreerija portaalist. <%= ENV['registrant_url'] %>.
 
 Parimate soovidega
@@ -31,8 +37,14 @@ The following data for the <%= @domain.name %> domain have been entered into the
 Registrant: <%= @domain.registrant_name %>
 Administrative contact: <%= @domain.admin_contact_names %>
 Technical contact: <%= @domain.tech_contact_names %>
-Registrar: <%= @registrar.name %>
 Name servers: <%= @domain.nameserver_names %>
+
+Registrar:
+<%= @registrar.name %>
+Email: <%= @registrar.email %>
+Phone: <%= @registrar.phone %>
+Website: <%= @registrar.url %>
+
 You can find an overview of all your domains at the registrant's portal. <%= ENV['registrant_url'] %>.
 
 Best Regards,
@@ -52,8 +64,14 @@ Estonian Internet Foundation
 Регистрант: <%= @domain.registrant_name %>
 Административный контакт: <%= @domain.admin_contact_names %>
 Технический контакт: <%= @domain.tech_contact_names %>
-Регистратор: <%= @registrar.name %>
 Серверы доменных имен: <%= @domain.nameserver_names %>
+
+Регистратор:
+<%= @registrar.name %>
+Электронная почта: <%= @registrar.email %>
+Телефон: <%= @registrar.phone %>
+Веб-сайт: <%= @registrar.url %>
+
 Обзор всех связанных с Вами доменов можете получить на портале регистранта. <%= ENV['registrant_url'] %>.
 
 С наилучшими пожеланиями
