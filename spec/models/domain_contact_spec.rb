@@ -51,10 +51,12 @@ describe DomainContact do
     end
 
     it 'should have one version' do
+      @domain_contact = Fabricate.create(:domain_contact)
+
       with_versioning do
         @domain_contact.versions.reload.should == []
-        @domain_contact.updated_at = Time.zone.now # trigger new version
-        @domain_contact.save
+        @domain_contact.contact = Fabricate.create(:contact)
+        @domain_contact.save!
         @domain_contact.errors.full_messages.should match_array([])
         @domain_contact.versions.size.should == 1
       end
@@ -82,10 +84,12 @@ describe DomainContact do
     end
 
     it 'should have one version' do
+      @domain_contact = Fabricate.create(:domain_contact)
+
       with_versioning do
         @domain_contact.versions.reload.should == []
-        @domain_contact.updated_at = Time.zone.now # trigger new version
-        @domain_contact.save
+        @domain_contact.contact = Fabricate.create(:contact)
+        @domain_contact.save!
         @domain_contact.errors.full_messages.should match_array([])
         @domain_contact.versions.size.should == 1
       end
@@ -115,7 +119,7 @@ describe DomainContact do
     it 'should have one version' do
       with_versioning do
         @domain_contact.versions.reload.should == []
-        @domain_contact.updated_at = Time.zone.now # trigger new version
+        @domain_contact.contact = Fabricate.create(:contact)
         @domain_contact.save
         @domain_contact.errors.full_messages.should match_array([])
         @domain_contact.versions.size.should == 1
