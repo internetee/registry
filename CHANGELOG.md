@@ -2,7 +2,7 @@
 * Outdated specs removed, failing specs fixed, rspec config improved
 
 20.10.2016
-* Travis CI integration added
+* Travis CI integration added, New Relic removed
 
 19.10.2016
 * BUG fix: Record current time for outzone on domain:delete EPP request
