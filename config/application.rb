@@ -60,6 +60,10 @@ module Registry
       g.helper false
     end
 
+    registrant_portal_uri = URI.parse(ENV['registrant_url'])
+    config.action_mailer.default_url_options = { host: registrant_portal_uri.host,
+                                                 protocol: registrant_portal_uri.scheme }
+
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.perform_deliveries = true
     config.action_mailer.raise_delivery_errors = true
