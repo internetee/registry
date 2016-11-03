@@ -23,7 +23,7 @@ module Registry
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
-    config.time_zone = ENV['time_zone'] || 'Tallinn'  # NB! It should be defined, 
+    config.time_zone = ENV['time_zone'] || 'Tallinn'  # NB! It should be defined,
                                                       # otherwise ActiveRecord usese other class internally.
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
@@ -59,6 +59,10 @@ module Registry
       g.javascripts false
       g.helper false
     end
+
+    registrant_portal_uri = URI.parse(ENV['registrant_url'])
+    config.action_mailer.default_url_options = { host: registrant_portal_uri.host,
+                                                 protocol: registrant_portal_uri.scheme }
 
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.perform_deliveries = true
