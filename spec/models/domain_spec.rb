@@ -801,4 +801,22 @@ RSpec.describe Domain, db: false do
                                                  ))
     end
   end
+
+  describe '#pending_delete!' do
+    let(:domain) { described_class.new }
+    let(:previous_registrant) { instance_double(Registrant) }
+    let(:message) { instance_double(Mail::Message) }
+
+    before :example do
+      expect(Registrant).to receive(:find).and_return(previous_registrant)
+      allow(domain).to receive(:registrant_verification_asked?).and_return(true)
+      allow(domain).to receive(:save)
+    end
+
+    it 'sends notification email' do
+      expect(DomainMailer).to receive(:pending_deleted).with(domain: domain, registrant: previous_registrant).and_return(message)
+      expect(message).to receive(:deliver)
+      domain.pending_delete!
+    end
+  end
 end

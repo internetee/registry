@@ -47,29 +47,13 @@ class DomainMailer < ApplicationMailer
     compose_from(params)
   end
 
-  def pending_deleted(domain_id, old_registrant_id, should_deliver)
-    @domain = Domain.find_by(id: domain_id)
-    @old_registrant = Registrant.find(old_registrant_id)
-    return unless @domain
-    return if delivery_off?(@domain, should_deliver)
+  def pending_deleted(domain:, registrant:)
+    @domain = DomainPresenter.new(domain: domain, view: view_context)
+    @registrar = RegistrarPresenter.new(registrar: domain.registrar, view: view_context)
+    @verification_url = registrant_domain_delete_confirm_url(domain, token: domain.registrant_verification_token)
 
-    if @domain.registrant_verification_token.blank?
-      logger.warn "EMAIL NOT DELIVERED: registrant_verification_token is missing for #{@domain.name}"
-      return
-    end
-
-    if @domain.registrant_verification_asked_at.blank?
-      logger.warn "EMAIL NOT DELIVERED: registrant_verification_asked_at is missing for #{@domain.name}"
-      return
-    end
-
-    confirm_path = "#{ENV['registrant_url']}/registrant/domain_delete_confirms"
-    @verification_url = "#{confirm_path}/#{@domain.id}?token=#{@domain.registrant_verification_token}"
-
-    return if whitelist_blocked?(@old_registrant.email)
-    mail(to: format(@old_registrant.email),
-         subject: "#{I18n.t(:domain_pending_deleted_subject,
-         name: @domain.name)} [#{@domain.name}]")
+    subject = default_i18n_subject(domain_name: domain.name)
+    mail(to: registrant.email, subject: subject)
   end
 
   def pending_delete_rejected_notification(domain_id, should_deliver)

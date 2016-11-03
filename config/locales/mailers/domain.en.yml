@@ -4,3 +4,5 @@ en:
       subject: The %{domain_name} domain has expired
     force_delete:
       subject: Kustutusmenetluse teade
+    pending_deleted:
+      subject: Kinnitustaotlus domeeni %{domain_name} kustutamiseks .ee registrist / Application for approval for deletion of %{domain_name}

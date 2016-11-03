@@ -803,7 +803,6 @@ en:
   pending_update_expired_notification_for_new_registrant_subject: "Domeeni %{name} registreerija vahetuse taotlus on tühistatud / %{name} registrant change cancelled"
   registrant_updated_notification_for_new_registrant_subject: 'Domeeni %{name} registreerija vahetus teostatud / Registrant change of %{name} has been finished.'
   registrant_updated_notification_for_old_registrant_subject: 'Domeeni %{name} registreerija vahetus teostatud / Registrant change of %{name} has been finished.'
-  domain_pending_deleted_subject: "Kinnitustaotlus domeeni %{name} kustutamiseks .ee registrist / Application for approval for deletion of %{name}"
   pending_delete_rejected_notification_subject: "Domeeni %{name} kustutamise taotlus tagasi lükatud / %{name} deletion declined"
   pending_delete_expired_notification_subject: "Domeeni %{name} kustutamise taotlus on tühistatud / %{name} deletion cancelled"
   delete_confirmation_subject: "Domeeni %{name} kustutatud / %{name} deleted"

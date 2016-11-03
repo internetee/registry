@@ -1,11 +1,16 @@
 Tere
 
-Registrisse laekus taotlus domeeni <%= @domain.name %> kustutamiseks. Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja <%= @domain.registrar_name %> poole.
+Registrisse laekus taotlus domeeni <%= @domain.name %> kustutamiseks. Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja poole:
+
+<%= @registrar.name %>
+Email: <%= @registrar.email %>
+Telefon: <%= @registrar.phone %>
+Veebileht: <%= @registrar.url %>
 
 Muudatuse kinnitamiseks külastage palun allolevat lehekülge, kontrollige uuesti üle muudatuse andmed ning vajutage nuppu kinnitan.
 
 Taotlus on aktiivne <%= Setting.expire_pending_confirmation %> tundi ja lükatakse automaatselt tagasi kui te seda enne ise ei kinnita või tagasi lükka.
-<%= link_to @verification_url, @verification_url %>
+<%= @verification_url %>
 
 Lugupidamisega
 Eesti Interneti Sihtasutus
@@ -14,10 +19,15 @@ Eesti Interneti Sihtasutus
 
 Hi,
 
-Application for deletion of your domain <%= @domain.name %> has been filed. Please make sure that the application is correct. Incase of problems please contact your registrar <%= @domain.registrar_name %>.
+Application for deletion of your domain <%= @domain.name %> has been filed. Please make sure that the application is correct. In case of problems please contact your registrar:
+
+<%= @registrar.name %>
+Email: <%= @registrar.email %>
+Phone: <%= @registrar.phone %>
+Website: <%= @registrar.url %>
 
 To confirm the update please visit this website, once again review the data and press approve:
-<%= link_to @verification_url, @verification_url %>
+<%= @verification_url %>
 
 The application will remain in pending status for <%= Setting.expire_pending_confirmation %> hrs and will be automatically rejected if it is not approved nor rejected before.
 

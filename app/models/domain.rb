@@ -439,7 +439,8 @@ class Domain < ActiveRecord::Base
     pending_delete_confirmation!
     save(validate: false) # should check if this did succeed
 
-    DomainMailer.pending_deleted(id, registrant_id_was, deliver_emails).deliver
+    previous_registrant = Registrant.find(registrant_id_was)
+    DomainMailer.pending_deleted(domain: self, registrant: previous_registrant).deliver
   end
 
   def cancel_pending_delete
