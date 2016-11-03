@@ -22,12 +22,12 @@ smtp_enable_starttls_auto: 'true' # 'false'
 # If your mail server requires authentication, please change.
 smtp_authentication: 'plain' # 'plain', 'login', 'cram_md5'
 registrant_url: 'https:/registrant.example.com' # for valid email body registrant links
-# Staging env does not send any emails unless they are whitelisted 
+# Staging env does not send any emails unless they are whitelisted
 whitelist_emails_for_staging: >
-  test@example.org, 
+  test@example.org,
   old@example.org,
-  new@example.org, 
-  old@example.com, 
+  new@example.org,
+  old@example.com,
   new@example.com
 
 #
@@ -110,11 +110,6 @@ sk_digi_doc_service_name: 'EIS test'
 
 #
 # MISC
-#
-# New Relic app name, keep only current mode, remove other names.
-# Example: 'Admin, EPP, REPP' will have name 'Admin, EPP, REPP - production' at New Relic.
-new_relic_app_name: 'Admin, EPP, REPP, Registrar, Registrant'
-new_relic_license_key: '42d1c2ba4ed17a9cf6297c59d80e563a3dd3c4fa'
 
 # You can use `rake secret` to generate a secure secret key.
 # Your secret key is used for verifying the integrity of signed cookies.
