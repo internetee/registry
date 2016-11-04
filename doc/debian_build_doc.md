@@ -10,6 +10,7 @@ however officially Debian 7 is supported and tested.
 * Compile requried [ruby version](https://github.com/internetee/registry/blob/master/.ruby-version)
 * [Phusion passenger](https://www.phusionpassenger.com/documentation/Users%20guide%20Apache.html)
 * [Postgresql](http://www.postgresql.org/docs/) (requires postgresql-contrib package)
+* [Mailcatcher](https://mailcatcher.me/) (optional)
 
 Registry application is not tested with multi-threaded system (such as Puma) and 
 it's not officially supported. Please use multi-process system instead (Passenger, Unicorn, Mongrel)
@@ -96,4 +97,10 @@ iptables -A CHKLIMITS -p tcp --dport 700 -s $REGISTRAR2_SOURCE2 -m recent --name
 
 iptables -A INPUT -p tcp --dport 700 -j CHKLIMITS
 ````
+#### Mailcatcher for staging (optional)
+
+We recommend using mailcatcher for staging env, so that all outgoing mails are catched and not actualy sent ou.
+The mailcatcher website explains how it should be intsalled and configured.
+[Mailcatcher](https://mailcatcher.me/)
+`````
 
