@@ -602,19 +602,6 @@ class Domain < ActiveRecord::Base
     self.statuses |= [DomainStatus::EXPIRED]
   end
 
-  def set_expired
-    # TODO: currently valid_to attribute update logic is open
-    # self.valid_to = valid_from + self.class.convert_period_to_time(period, period_unit)
-    self.outzone_at = (valid_to + Setting.expire_warning_period.days).utc.beginning_of_day
-    self.delete_at = (outzone_at + Setting.redemption_grace_period.days).utc.beginning_of_day
-    statuses << DomainStatus::EXPIRED
-  end
-
-  def set_expired!
-    set_expired
-    save(validate: false)
-  end
-
   def pending_update?
     statuses.include?(DomainStatus::PENDING_UPDATE) && !statuses.include?(DomainStatus::FORCE_DELETE)
   end
