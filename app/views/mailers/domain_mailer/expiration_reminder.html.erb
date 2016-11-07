@@ -1,0 +1,60 @@
+Domeen <%= @domain.name %> on aegunud<br>
+Lugupeetud .ee domeeni kasutaja<br>
+<br>
+Domeeninimi <%= @domain.name %>  on aegunud ja ei ole alates <%= l(@domain.outzone_at, format: :date) %> internetis kättesaadav. Alates <%= l(@domain.delete_at, format: :date) %> on domeen <%= @domain.name %> avatud registreerimiseks kõigile huvilistele.
+<br><br>
+Domeeni registreeringu pikendamiseks pöörduge palun oma registripidaja <%= @domain.registrar.name %> poole. Registripidajate kontaktid leiate aadressilt www.internet.ee/registripidajad.
+<br><br>
+Domeeni <%= @domain.name %> kohta on registris järgmised andmed:
+<br><br>
+Registreerija: <%= @domain.registrant_name %><br>
+Halduskontakt: <%= @domain.admin_contacts.map(&:name).join ', ' %><br>
+Tehniline kontakt: <%= @domain.tech_contacts.map(&:name).join ', ' %><br>
+Registripidaja: <%= @domain.registrar.name %><br>
+Nimeserverid: <%= @domain.nameservers.join(', ') %><br>
+Ülevaate kõikidest endaga seotud domeenidest saate registreerija portaalist. <%= ENV['registrant_url'] %>.<br>
+<br><br>
+Lugupidamisega<br>
+Eesti Interneti Sihtasutus
+<br><br>
+<hr>
+<br><br>
+The <%= @domain.name %> domain has expired<br>
+Dear user of .ee domain,<br>
+<br>
+The domain name <%= @domain.name %> has expired and will not be available on the Internet from <%= l(@domain.outzone_at, format: :date) %>. From <%= l(@domain.delete_at, format: :date) %>, the <%= @domain.name %> domain will be available for registration on a first come first served basis.
+<br><br>
+To renew the domain registration, please contact your registrar <%= @domain.registrar.name %>. You can find the registrar's contacts at http://internet.ee/registrars.
+<br><br>
+The following data for the <%= @domain.name %> domain have been entered into the registry:
+<br><br>
+Registrant: <%= @domain.registrant_name %><br>
+Administrative contact: <%= @domain.admin_contacts.map(&:name).join ', ' %><br>
+Technical contact: <%= @domain.tech_contacts.map(&:name).join ', ' %><br>
+Registrar: <%= @domain.registrar.name %><br>
+Name servers: <%= @domain.nameservers.join(', ') %><br>
+You can find an overview of all your domains at the registrant's portal. <%= ENV['registrant_url'] %>.<br>
+<br><br>
+Best Regards,<br>
+Estonian Internet Foundation
+<br><br>
+<hr>
+<br><br>
+Домен <%= @domain.name %> устарел<br>
+Уважаемый пользователь домена .ee<br>
+<br>
+Доменное имя <%= @domain.name %> устарело и с <%= l(@domain.outzone_at, format: :date) %> недоступно в Интернете. С <%= l(@domain.delete_at, format: :date) %> домен <%= @domain.name %> доступен для регистрации всем желающим по принципу "first come, first served".
+<br><br>
+Для продления регистрации домена просим обратиться к своему регистратору <%= @domain.registrar.name %>. Контактные данные регистраторов можно найти по адресу http://internet.ee/registratory.
+<br><br>
+Относительно домена <%= @domain.name %> в реестр внесены следующие данные:
+<br><br>
+Регистрант: <%= @domain.registrant_name %><br>
+Административный контакт: <%= @domain.admin_contacts.map(&:name).join ', ' %><br>
+Технический контакт: <%= @domain.tech_contacts.map(&:name).join ', ' %><br>
+Регистратор: <%= @domain.registrar.name %><br>
+Серверы доменных имен: <%= @domain.nameservers.join(', ') %><br>
+Обзор всех связанных с Вами доменов можете получить на портале регистранта. <%= ENV['registrant_url'] %>.<br>
+<br><br>
+С наилучшими пожеланиями<br>
+Целевое учреждение Eesti Internet

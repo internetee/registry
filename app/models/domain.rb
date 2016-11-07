@@ -3,16 +3,11 @@ class Domain < ActiveRecord::Base
   include UserEvents
   include Versions # version/domain_version.rb
   include Statuses
-  include Concerns::Domain::Expirable
   has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
 
   attr_accessor :roles
 
   attr_accessor :legal_document_id
-
-  alias_attribute :on_hold_time, :outzone_at
-  alias_attribute :delete_time, :delete_at
-  alias_attribute :force_delete_time, :force_delete_at
 
   # TODO: whois requests ip whitelist for full info for own domains and partial info for other domains
   # TODO: most inputs should be trimmed before validatation, probably some global logic?
@@ -78,6 +73,7 @@ class Domain < ActiveRecord::Base
   end
 
   before_create :generate_auth_info
+  before_create :set_validity_dates
   before_create -> { self.reserved = in_reserved_list?; nil }
 
   before_save :manage_automatic_statuses
@@ -211,6 +207,11 @@ class Domain < ActiveRecord::Base
     DomainCron.send(__method__)
   end
 
+  def self.start_expire_period
+    ActiveSupport::Deprecation.instance.deprecation_warning(DomainCron, __method__)
+    DomainCron.send(__method__)
+  end
+
   def self.start_redemption_grace_period
     ActiveSupport::Deprecation.instance.deprecation_warning(DomainCron, __method__)
     DomainCron.send(__method__)
@@ -282,6 +283,16 @@ class Domain < ActiveRecord::Base
 
   def pending_transfer
     domain_transfers.find_by(status: DomainTransfer::PENDING)
+  end
+
+  def expirable?
+    return false if valid_to > Time.zone.now
+
+    if statuses.include?(DomainStatus::EXPIRED) && outzone_at.present? && delete_at.present?
+      return false
+    end
+
+    true
   end
 
   def server_holdable?
@@ -531,6 +542,13 @@ class Domain < ActiveRecord::Base
   end
   # rubocop:enable Lint/Loop
 
+  def set_validity_dates
+    self.registered_at = Time.zone.now
+    self.valid_from = Time.zone.now
+    # we need + 1 day as this is more correct from juridical side
+    self.valid_to = valid_from.utc.beginning_of_day + self.class.convert_period_to_time(period, period_unit) + 1.day
+  end
+
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def set_force_delete
@@ -565,7 +583,7 @@ class Domain < ActiveRecord::Base
       registrar.messages.create!(
         body: I18n.t('force_delete_set_on_domain', domain: name)
       )
-      DomainMailer.force_delete(domain: self).deliver
+      DomainMailer.force_delete(id, true).deliver
       return true
     end
     false
@@ -728,25 +746,6 @@ class Domain < ActiveRecord::Base
     DomainMailer.send(action, DomainMailModel.new(self).send(action)).deliver
   end
 
-  def admin_contact_names
-    admin_contacts.names
-  end
-
-  def admin_contact_emails
-    admin_contacts.emails
-  end
-
-  def tech_contact_names
-    tech_contacts.names
-  end
-
-  def nameserver_hostnames
-    nameservers.hostnames
-  end
-
-  def primary_contact_emails
-    admin_contact_emails << registrant_email
-  end
 
   def self.to_csv
     CSV.generate do |csv|

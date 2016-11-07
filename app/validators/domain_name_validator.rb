@@ -12,9 +12,9 @@ class DomainNameValidator < ActiveModel::EachValidator
       return true unless value
       value = value.mb_chars.downcase.strip
 
-      origins = ZonefileSetting.origins
+      origins = ZonefileSetting.pluck(:origin)
       # if someone tries to register an origin domain, let this validation pass
-      # the error will be caught in blocked domains validator
+      # the error will be catched in blocked domains validator
       return true if origins.include?(value)
 
       general_domains = /(#{origins.join('|')})/

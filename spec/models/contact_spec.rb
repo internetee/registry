@@ -1,8 +1,9 @@
 require 'rails_helper'
 
-RSpec.describe Contact do
+describe Contact do
   before :example do
     Fabricate(:zonefile_setting, origin: 'ee')
+    @api_user = Fabricate(:api_user)
   end
 
   context 'about class' do
@@ -360,27 +361,5 @@ describe Contact, '.destroy_orphans' do
     Contact.find_orphans.count.should == 0
     Contact.destroy_orphans
     Contact.count.should == cc
-  end
-end
-
-RSpec.describe Contact, db: false do
-  describe '::names' do
-    before :example do
-      expect(described_class).to receive(:pluck).with(:name).and_return('names')
-    end
-
-    it 'returns names' do
-      expect(described_class.names).to eq('names')
-    end
-  end
-
-  describe '::emails' do
-    before :example do
-      expect(described_class).to receive(:pluck).with(:email).and_return('emails')
-    end
-
-    it 'returns emails' do
-      expect(described_class.emails).to eq('emails')
-    end
   end
 end

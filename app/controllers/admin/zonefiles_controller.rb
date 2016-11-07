@@ -3,7 +3,7 @@ class Admin::ZonefilesController < ApplicationController
   # TODO: Refactor this
 
   def create
-    if ZonefileSetting.origins.include?(params[:origin])
+    if ZonefileSetting.pluck(:origin).include?(params[:origin])
 
       @zonefile = ActiveRecord::Base.connection.execute(
         "select generate_zonefile('#{params[:origin]}')"

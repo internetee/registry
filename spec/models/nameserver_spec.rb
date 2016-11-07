@@ -2,25 +2,6 @@ require 'rails_helper'
 
 describe Nameserver do
   before :example do
-    Setting.ds_algorithm = 2
-    Setting.ds_data_allowed = true
-    Setting.ds_data_with_key_allowed = true
-    Setting.key_data_allowed = true
-
-    Setting.dnskeys_min_count = 0
-    Setting.dnskeys_max_count = 9
-    Setting.ns_min_count = 2
-    Setting.ns_max_count = 11
-
-    Setting.transfer_wait_time = 0
-
-    Setting.admin_contacts_min_count = 1
-    Setting.admin_contacts_max_count = 10
-    Setting.tech_contacts_min_count = 0
-    Setting.tech_contacts_max_count = 10
-
-    Setting.client_side_status_editing_enabled = true
-
     Fabricate(:zonefile_setting, origin: 'ee')
   end
 
@@ -108,18 +89,6 @@ describe Nameserver do
         res = Nameserver.replace_hostname_ends(@api_user.registrar.domains, 'xcv.ee', 'test.ee')
         res.should == 'replaced_none'
       end
-    end
-  end
-end
-
-RSpec.describe Nameserver do
-  describe '::hostnames', db: false do
-    before :example do
-      expect(described_class).to receive(:pluck).with(:hostname).and_return('hostnames')
-    end
-
-    it 'returns names' do
-      expect(described_class.hostnames).to eq('hostnames')
     end
   end
 end

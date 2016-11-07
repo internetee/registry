@@ -32,10 +32,6 @@ class ZonefileSetting < ActiveRecord::Base
     STDOUT << "#{Time.zone.now.utc} - Successfully generated zonefile #{filename}\n"
   end
 
-  def self.origins
-    pluck(:origin)
-  end
-
   def to_s
     origin
   end

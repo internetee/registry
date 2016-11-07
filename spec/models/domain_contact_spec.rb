@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 describe DomainContact do
-  before :example do
+  before :all do
     @api_user = Fabricate(:domain_contact)
   end
 
   context 'with invalid attribute' do
-    before :example do
+    before :all do
       @domain_contact = DomainContact.new
     end
 
@@ -31,7 +31,7 @@ describe DomainContact do
   end
 
   context 'with valid attributes' do
-    before :example do
+    before :all do
       @domain_contact = Fabricate(:domain_contact)
     end
 
@@ -51,12 +51,10 @@ describe DomainContact do
     end
 
     it 'should have one version' do
-      @domain_contact = Fabricate.create(:domain_contact)
-
       with_versioning do
         @domain_contact.versions.reload.should == []
-        @domain_contact.contact = Fabricate.create(:contact)
-        @domain_contact.save!
+        @domain_contact.updated_at = Time.zone.now # trigger new version
+        @domain_contact.save
         @domain_contact.errors.full_messages.should match_array([])
         @domain_contact.versions.size.should == 1
       end
@@ -64,7 +62,7 @@ describe DomainContact do
   end
 
   context 'with valid attributes with tech domain contact' do
-    before :example do
+    before :all do
       @domain_contact = Fabricate(:tech_domain_contact)
     end
 
@@ -84,12 +82,10 @@ describe DomainContact do
     end
 
     it 'should have one version' do
-      @domain_contact = Fabricate.create(:domain_contact)
-
       with_versioning do
         @domain_contact.versions.reload.should == []
-        @domain_contact.contact = Fabricate.create(:contact)
-        @domain_contact.save!
+        @domain_contact.updated_at = Time.zone.now # trigger new version
+        @domain_contact.save
         @domain_contact.errors.full_messages.should match_array([])
         @domain_contact.versions.size.should == 1
       end
@@ -97,7 +93,7 @@ describe DomainContact do
   end
 
   context 'with valid attributes with admin domain contact' do
-    before :example do
+    before :all do
       @domain_contact = Fabricate(:admin_domain_contact)
     end
 
@@ -119,7 +115,7 @@ describe DomainContact do
     it 'should have one version' do
       with_versioning do
         @domain_contact.versions.reload.should == []
-        @domain_contact.contact = Fabricate.create(:contact)
+        @domain_contact.updated_at = Time.zone.now # trigger new version
         @domain_contact.save
         @domain_contact.errors.full_messages.should match_array([])
         @domain_contact.versions.size.should == 1

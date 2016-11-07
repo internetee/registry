@@ -36,6 +36,8 @@ Rails.application.configure do
   # For rails-settings-cached conflict
   config.cache_store = :file_store, 'tmp/cache_test'
 
+  config.time_zone = 'UTC'
+
   config.action_view.raise_on_missing_translations = true
 
   # The available log levels are: :debug, :info, :warn, :error, :fatal, and :unknown,
@@ -60,7 +62,6 @@ Rails.application.configure do
     Bullet.add_whitelist type: :counter_cache, class_name: 'Contact', association: :versions
   end
 
-  config.active_job.queue_adapter = :test
   config.logger = ActiveSupport::Logger.new(nil)
 end
 
