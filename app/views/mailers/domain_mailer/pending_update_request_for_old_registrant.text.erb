@@ -1,13 +1,18 @@
 Tere
 
-Registrisse laekus taotlus domeeni <%= @params[:name] %> registreerija vahetuseks. Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja <%= @params[:registrar_name] %> poole.
+Registrisse laekus taotlus domeeni <%= @domain.name %> registreerija vahetuseks. Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja poole:
+
+<%= @registrar.name %>
+Email: <%= @registrar.email %>
+Telefon: <%= @registrar.phone %>
+Veebileht: <%= @registrar.url %>
 
 Uue registreerija andmed:
-Nimi: <%= @params[:registrant_name] %>
+Nimi: <%= @registrant.name %>
 <% if @params[:registrant_priv] %>
-Isikukood: <%= @params[:registrant_ident] %>
+  Isikukood: <%= @registrant.ident %>
 <% else %>
-Äriregistrikood: <%= @params[:registrant_ident] %>
+  Äriregistrikood: <%= @registrant.ident %>
 <% end %>
 Tänav: <%= @params[:registrant_street] %>
 Linn: <%= @params[:registrant_city] %>
@@ -15,7 +20,7 @@ Riik: <%= @params[:registrant_country] %>
 
 Taotlus on aktiivne <%= Setting.expire_pending_confirmation %> tundi ja lükatakse automaatselt tagasi kui te seda enne ei kinnita või tagasi lükka.
 Muudatuse kinnitamiseks külastage palun allolevat lehekülge, kontrollige uuesti üle muudatuse andmed ning vajutage nuppu kinnitan:
-<%= @params[:verification_url] %>
+<%= @verification_url %>
 
 Lugupidamisega
 Eesti Interneti Sihtasutus
@@ -24,14 +29,19 @@ Eesti Interneti Sihtasutus
 
 Hi,
 
-Application for changing registrant of your domain <%= @params[:name] %> has been filed. Please make sure that the update and information are correct. Incase of problems please turn to your registrar. Your registrar is <%= @params[:registrar_name] %>
+Application for changing registrant of your domain <%= @domain.name %> has been filed. Please make sure that the update and information are correct. In case of problems please turn to your registrar:
+
+<%= @registrar.name %>
+Email: <%= @registrar.email %>
+Phone: <%= @registrar.phone %>
+Website: <%= @registrar.url %>
 
 New registrant:
-Name: <%= @params[:registrant_name] %>
+Name: <%= @registrant.name %>
 <% if @params[:registrant_priv] %>
-Personal code: <%= @params[:registrant_ident] %>
+  Personal code: <%= @registrant.ident %>
 <% else %>
-Business Registry code: <%= @params[:registrant_ident] %>
+  Business Registry code: <%= @registrant.ident %>
 <% end %>
 Street: <%= @params[:registrant_street] %>
 City: <%= @params[:registrant_city] %>
@@ -39,7 +49,7 @@ Country: <%= @params[:registrant_country] %>
 
 The application will remain in pending status for <%= Setting.expire_pending_confirmation %> hrs and will be automaticcally rejected if it is not approved nor rejected before.
 To confirm the update please visit this website, once again review the data and press approve:
-<%= @params[:verification_url] %>
+<%= @verification_url %>
 
 Best Regards,
 Estonian Internet Foundation

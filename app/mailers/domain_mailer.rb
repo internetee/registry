@@ -1,8 +1,14 @@
 class DomainMailer < ApplicationMailer
   include Que::Mailer
 
-  def pending_update_request_for_old_registrant(params)
-    compose_from(params)
+  def pending_update_request_for_old_registrant(domain:, registrant:)
+    @domain = DomainPresenter.new(domain: domain, view: view_context)
+    @registrar = RegistrarPresenter.new(registrar: domain.registrar, view: view_context)
+    @registrant = RegistrantPresenter.new(registrant: registrant, view: view_context)
+    @verification_url = registrant_domain_update_confirm_url(domain, token: domain.registrant_verification_token)
+
+    subject = default_i18n_subject(domain_name: domain.name)
+    mail(to: registrant.email, subject: subject)
   end
 
   def pending_update_notification_for_new_registrant(params)

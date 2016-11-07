@@ -1,15 +1,9 @@
 class RegistrantPresenter
+  delegate :name, :ident, :email, to: :registrant
+
   def initialize(registrant:, view:)
     @registrant = registrant
     @view = view
-  end
-
-  def name
-    registrant.name
-  end
-
-  def ident
-    registrant.ident
   end
 
   private

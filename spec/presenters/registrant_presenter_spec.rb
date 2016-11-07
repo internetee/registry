@@ -17,4 +17,11 @@ RSpec.describe RegistrantPresenter do
       expect(presenter.ident).to eq('test ident')
     end
   end
+
+  describe '#email' do
+    it 'returns email' do
+      expect(registrant).to receive(:email).and_return('test email')
+      expect(presenter.email).to eq('test email')
+    end
+  end
 end

@@ -339,7 +339,6 @@ en:
   contact_details: 'Contact details'
   ident: 'Ident'
   ident_type: 'Ident type'
-  address: 'Address'
   country: 'Country'
   city: 'City'
   street: 'Street'
@@ -797,7 +796,6 @@ en:
   unimplemented_object_service: 'Unimplemented object service'
   contact_email_update_subject: 'Teie domeenide kontakt epostiaadress on muutunud / Contact e-mail addresses of your domains have changed'
   object_status_prohibits_operation: 'Object status prohibits operation'
-  pending_update_request_for_old_registrant_subject: "Kinnitustaotlus domeeni %{name} registreerija vahetuseks / Application for approval for registrant change of %{name}"
   pending_update_notification_for_new_registrant_subject: "Domeeni %{name} registreerija vahetus protseduur on algatatud / %{name} registrant change"
   pending_update_rejected_notification_for_new_registrant_subject: "Domeeni %{name} registreerija vahetuse taotlus tagasi lükatud / %{name} registrant change declined"
   pending_update_expired_notification_for_new_registrant_subject: "Domeeni %{name} registreerija vahetuse taotlus on tühistatud / %{name} registrant change cancelled"
