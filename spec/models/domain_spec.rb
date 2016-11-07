@@ -70,11 +70,6 @@ RSpec.describe Domain do
       @domain.errors.full_messages.should match_array([])
     end
 
-    it 'should have correct validity dates' do
-      @domain.outzone_at.should be_nil
-      @domain.delete_at.should be_nil
-    end
-
     it 'should validate uniqueness of tech contacts' do
       same_contact = Fabricate(:contact, code: 'same_contact')
       domain = Fabricate(:domain)
@@ -353,17 +348,6 @@ RSpec.describe Domain do
       DomainCron.start_redemption_grace_period
       @domain.reload
       @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == true
-    end
-
-
-    it 'should set expired status and update outzone_at and delete_at' do
-      domain = Fabricate(:domain)
-      domain.statuses.should == ['ok']
-      domain.set_expired
-      domain.changes.keys.should == ['statuses', 'outzone_at', 'delete_at']
-      domain.save
-
-      domain.statuses.should == ['expired']
     end
 
     it 'should know its create price' do
@@ -842,6 +826,26 @@ RSpec.describe Domain do
 end
 
 RSpec.describe Domain, db: false do
+  describe '::expire_warning_period', db: true do
+    before :example do
+      Setting.expire_warning_period = 1
+    end
+
+    it 'returns expire warning period' do
+      expect(described_class.expire_warning_period).to eq(1.day)
+    end
+  end
+
+  describe '::redemption_grace_period', db: true do
+    before :example do
+      Setting.redemption_grace_period = 1
+    end
+
+    it 'returns redemption grace period' do
+      expect(described_class.redemption_grace_period).to eq(1.day)
+    end
+  end
+
   describe '#set_server_hold' do
     let(:domain) { described_class.new }
 
@@ -856,6 +860,26 @@ RSpec.describe Domain, db: false do
 
     it 'sets :outzone_at to now' do
       expect(domain.outzone_at).to eq(Time.zone.parse('05.07.2010'))
+    end
+  end
+
+  describe '#set_graceful_expired' do
+    let(:domain) { described_class.new }
+
+    before :example do
+      expect(described_class).to receive(:expire_warning_period).and_return(1.day)
+      expect(described_class).to receive(:redemption_grace_period).and_return(2.days)
+      expect(domain).to receive(:valid_to).and_return(Time.zone.parse('05.07.2010 10:30'))
+
+      domain.set_graceful_expired
+    end
+
+    it 'sets :outzone_at to :valid_to + expire warning period' do
+      expect(domain.outzone_at).to eq(Time.zone.parse('06.07.2010 10:30'))
+    end
+
+    it 'sets :delete_at to :outzone_at + redemption grace period' do
+      expect(domain.delete_at).to eq(Time.zone.parse('08.07.2010 10:30'))
     end
   end
 end

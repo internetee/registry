@@ -73,7 +73,6 @@ class Domain < ActiveRecord::Base
   end
 
   before_create :generate_auth_info
-  before_create :set_validity_dates
   before_create -> { self.reserved = in_reserved_list?; nil }
 
   before_save :manage_automatic_statuses
@@ -542,13 +541,6 @@ class Domain < ActiveRecord::Base
   end
   # rubocop:enable Lint/Loop
 
-  def set_validity_dates
-    self.registered_at = Time.zone.now
-    self.valid_from = Time.zone.now
-    # we need + 1 day as this is more correct from juridical side
-    self.valid_to = valid_from.utc.beginning_of_day + self.class.convert_period_to_time(period, period_unit) + 1.day
-  end
-
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def set_force_delete
@@ -605,22 +597,9 @@ class Domain < ActiveRecord::Base
   end
 
   def set_graceful_expired
-    self.outzone_at = (valid_to + Setting.expire_warning_period.days).utc.beginning_of_day
-    self.delete_at = (outzone_at + Setting.redemption_grace_period.days).utc.beginning_of_day
+    self.outzone_at = valid_to + self.class.expire_warning_period
+    self.delete_at = outzone_at + self.class.redemption_grace_period
     self.statuses |= [DomainStatus::EXPIRED]
-  end
-
-  def set_expired
-    # TODO: currently valid_to attribute update logic is open
-    # self.valid_to = valid_from + self.class.convert_period_to_time(period, period_unit)
-    self.outzone_at = (valid_to + Setting.expire_warning_period.days).utc.beginning_of_day
-    self.delete_at = (outzone_at + Setting.redemption_grace_period.days).utc.beginning_of_day
-    statuses << DomainStatus::EXPIRED
-  end
-
-  def set_expired!
-    set_expired
-    save(validate: false)
   end
 
   def pending_update?
@@ -759,6 +738,14 @@ class Domain < ActiveRecord::Base
   def self.pdf(html)
     kit = PDFKit.new(html)
     kit.to_pdf
+  end
+
+  def self.expire_warning_period
+    Setting.expire_warning_period.days
+  end
+
+  def self.redemption_grace_period
+    Setting.redemption_grace_period.days
   end
 end
 # rubocop: enable Metrics/ClassLength
