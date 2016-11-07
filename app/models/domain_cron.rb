@@ -35,7 +35,7 @@ class DomainCron
     STDOUT << "#{Time.zone.now.utc} - Expiring domains\n" unless Rails.env.test?
 
     ::PaperTrail.whodunnit = "cron - #{__method__}"
-    domains = Domain.where('valid_to <= ?', Time.zone.now)
+    domains = Domain.expired
     marked = 0
     real = 0
     domains.each do |domain|
