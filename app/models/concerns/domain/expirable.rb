@@ -7,7 +7,7 @@ module Concerns::Domain::Expirable
 
   class_methods do
     def expired
-      where("#{attribute_alias(:expire_time)} < ?", Time.zone.now)
+      where("#{attribute_alias(:expire_time)} <= ?", Time.zone.now)
     end
   end
 
@@ -16,7 +16,7 @@ module Concerns::Domain::Expirable
   end
 
   def expired?
-    expire_time.past?
+    expire_time <= Time.zone.now
   end
 
   def expirable?

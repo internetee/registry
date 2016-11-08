@@ -15,7 +15,7 @@ RSpec.describe Domain, db: false do
     end
 
     it 'returns expired domains' do
-      expect(described_class.expired.ids).to eq([1])
+      expect(described_class.expired.ids).to eq([1, 2])
     end
   end
 
@@ -53,7 +53,7 @@ RSpec.describe Domain, db: false do
     context 'when :expire_time is now' do
       let(:domain) { described_class.new(expire_time: Time.zone.parse('05.07.2010 00:00')) }
 
-      specify { expect(domain).to_not be_expired }
+      specify { expect(domain).to be_expired }
     end
 
     context 'when :expire_time is in the future' do
