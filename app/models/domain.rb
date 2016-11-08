@@ -11,6 +11,9 @@ class Domain < ActiveRecord::Base
 
   attr_accessor :legal_document_id
 
+  alias_attribute :outzone_time, :outzone_at
+  alias_attribute :delete_time, :delete_at
+
   # TODO: whois requests ip whitelist for full info for own domains and partial info for other domains
   # TODO: most inputs should be trimmed before validatation, probably some global logic?
 
@@ -738,6 +741,14 @@ class Domain < ActiveRecord::Base
 
   def self.redemption_grace_period
     Setting.redemption_grace_period.days
+  end
+
+  def self.outzone_candidates
+    where("#{attribute_alias(:outzone_time)} < ?", Time.zone.now)
+  end
+
+  def self.delete_candidates
+    where("#{attribute_alias(:delete_time)} < ?", Time.zone.now)
   end
 end
 # rubocop: enable Metrics/ClassLength

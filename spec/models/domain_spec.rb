@@ -826,6 +826,9 @@ RSpec.describe Domain do
 end
 
 RSpec.describe Domain, db: false do
+  it { is_expected.to alias_attribute(:outzone_time, :outzone_at) }
+  it { is_expected.to alias_attribute(:delete_time, :delete_at) }
+
   describe '::expire_warning_period', db: true do
     before :example do
       Setting.expire_warning_period = 1
@@ -880,6 +883,38 @@ RSpec.describe Domain, db: false do
 
     it 'sets :delete_at to :outzone_at + redemption grace period' do
       expect(domain.delete_at).to eq(Time.zone.parse('08.07.2010 10:30'))
+    end
+  end
+
+  describe '::outzone_candidates', db: true do
+    before :example do
+      travel_to Time.zone.parse('05.07.2010 00:00')
+
+      Fabricate(:zonefile_setting, origin: 'ee')
+
+      Fabricate.create(:domain, id: 1, outzone_time: Time.zone.parse('04.07.2010 23:59'))
+      Fabricate.create(:domain, id: 2, outzone_time: Time.zone.parse('05.07.2010 00:00'))
+      Fabricate.create(:domain, id: 3, outzone_time: Time.zone.parse('05.07.2010 00:01'))
+    end
+
+    it 'returns domains with outzone time in the past' do
+      expect(described_class.outzone_candidates.ids).to eq([1])
+    end
+  end
+
+  describe '::delete_candidates', db: true do
+    before :example do
+      travel_to Time.zone.parse('05.07.2010 00:00')
+
+      Fabricate(:zonefile_setting, origin: 'ee')
+
+      Fabricate.create(:domain, id: 1, delete_time: Time.zone.parse('04.07.2010 23:59'))
+      Fabricate.create(:domain, id: 2, delete_time: Time.zone.parse('05.07.2010 00:00'))
+      Fabricate.create(:domain, id: 3, delete_time: Time.zone.parse('05.07.2010 00:01'))
+    end
+
+    it 'returns domains with delete time in the past' do
+      expect(described_class.delete_candidates.ids).to eq([1])
     end
   end
 end
