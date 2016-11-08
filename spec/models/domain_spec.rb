@@ -350,17 +350,6 @@ RSpec.describe Domain do
       @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == true
     end
 
-
-    it 'should set expired status and update outzone_at and delete_at' do
-      domain = Fabricate(:domain)
-      domain.statuses.should == ['ok']
-      domain.set_expired
-      domain.changes.keys.should == ['statuses', 'outzone_at', 'delete_at']
-      domain.save
-
-      domain.statuses.should == ['expired']
-    end
-
     it 'should set pending update' do
       @domain.statuses = DomainStatus::OK # restore
       @domain.save
