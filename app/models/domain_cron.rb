@@ -35,11 +35,9 @@ class DomainCron
     Rails.logger.info('Expiring domains')
 
     ::PaperTrail.whodunnit = "cron - #{__method__}"
-
-    domains = Domain.expired
+    domains = Domain.where('valid_to <= ?', Time.zone.now)
     marked = 0
     real = 0
-
     domains.each do |domain|
       next unless domain.expirable?
       real += 1
