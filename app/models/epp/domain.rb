@@ -53,6 +53,9 @@ class Epp::Domain < Domain
       domain = Epp::Domain.new
       domain.attributes = domain.attrs_from(frame, current_user)
       domain.attach_default_contacts
+      domain.registered_at = Time.zone.now
+      domain.valid_from = Time.zone.now
+      domain.valid_to = domain.valid_from.beginning_of_day + convert_period_to_time(domain.period, domain.period_unit) + 1.day
       domain
     end
   end
