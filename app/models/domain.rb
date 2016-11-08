@@ -3,7 +3,6 @@ class Domain < ActiveRecord::Base
   include UserEvents
   include Versions # version/domain_version.rb
   include Statuses
-  include Concerns::Domain::Expirable
   has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
 
   attr_accessor :roles
@@ -11,7 +10,6 @@ class Domain < ActiveRecord::Base
   attr_accessor :legal_document_id
 
   alias_attribute :on_hold_time, :outzone_at
-  alias_attribute :delete_time, :delete_at
   alias_attribute :force_delete_time, :force_delete_at
 
   # TODO: whois requests ip whitelist for full info for own domains and partial info for other domains
@@ -283,6 +281,16 @@ class Domain < ActiveRecord::Base
 
   def pending_transfer
     domain_transfers.find_by(status: DomainTransfer::PENDING)
+  end
+
+  def expirable?
+    return false if valid_to > Time.zone.now
+
+    if statuses.include?(DomainStatus::EXPIRED) && outzone_at.present? && delete_at.present?
+      return false
+    end
+
+    true
   end
 
   def server_holdable?
