@@ -106,23 +106,13 @@ gem 'pdfkit', '0.6.2'
 gem 'jquery-ui-rails', '5.0.5'
 
 group :development do
-  # dev tools
   gem 'spring',                '1.3.6'
   gem 'spring-commands-rspec', '1.0.4'
-  # emits errors, needs more investigation
-  # gem 'spring-watcher-listen',   # otherwise spring polls the filesystem on every 0.2 seconds
-    # github: 'jonleighton/spring-watcher-listen',
-    # ref: '7f6003e14f8f9ca178a5194f210c07f54cfb67ec'
   gem 'guard',                 '2.12.9' # run tests automatically
   gem 'guard-rspec',           '4.5.2'
   gem 'guard-rails',           '0.7.1' # run EPP server automatically
   gem 'rubocop',               '0.32.1'
   gem 'guard-rubocop',         '1.2.0'
-
-  # improved errors
-  gem 'better_errors',     '2.1.1' # webconsole replacement
-  gem 'binding_of_caller', '0.7.2'
-  gem 'traceroute',        '0.5.0' # for finding dead routes and unused actions
 
   # deploy
   gem 'mina', '0.3.1' # for fast deployment
