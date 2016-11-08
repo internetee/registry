@@ -2,25 +2,6 @@ require 'rails_helper'
 
 RSpec.describe Domain do
   before :example do
-    Setting.ds_algorithm = 2
-    Setting.ds_data_allowed = true
-    Setting.ds_data_with_key_allowed = true
-    Setting.key_data_allowed = true
-
-    Setting.dnskeys_min_count = 0
-    Setting.dnskeys_max_count = 9
-    Setting.ns_min_count = 2
-    Setting.ns_max_count = 11
-
-    Setting.transfer_wait_time = 0
-
-    Setting.admin_contacts_min_count = 1
-    Setting.admin_contacts_max_count = 10
-    Setting.tech_contacts_min_count = 0
-    Setting.tech_contacts_max_count = 10
-
-    Setting.client_side_status_editing_enabled = true
-
     Fabricate(:zonefile_setting, origin: 'ee')
     Fabricate(:zonefile_setting, origin: 'pri.ee')
     Fabricate(:zonefile_setting, origin: 'med.ee')
@@ -141,6 +122,38 @@ RSpec.describe Domain do
       DomainCron.clean_expired_pendings.should == 1
       domain.reload.pending_delete?.should == false
       domain.pending_json.should == {}
+    end
+
+    it 'should expire domains' do
+      Setting.expire_warning_period = 1
+      Setting.redemption_grace_period = 1
+
+      DomainCron.start_expire_period
+      @domain.statuses.include?(DomainStatus::EXPIRED).should == false
+
+      old_valid_to = Time.zone.now - 10.days
+      @domain.valid_to = old_valid_to
+      @domain.save
+
+      DomainCron.start_expire_period
+      @domain.reload
+      @domain.statuses.include?(DomainStatus::EXPIRED).should == true
+
+      DomainCron.start_expire_period
+      @domain.reload
+      @domain.statuses.include?(DomainStatus::EXPIRED).should == true
+    end
+
+    it 'should start redemption grace period' do
+      old_valid_to = Time.zone.now - 10.days
+      @domain.valid_to = old_valid_to
+      @domain.statuses = [DomainStatus::EXPIRED]
+      @domain.outzone_at, @domain.delete_at = nil, nil
+      @domain.save
+
+      DomainCron.start_expire_period
+      @domain.reload
+      @domain.statuses.include?(DomainStatus::EXPIRED).should == true
     end
 
     it 'should start redemption grace period' do
@@ -715,6 +728,7 @@ RSpec.describe Domain, db: false do
   it { is_expected.to alias_attribute(:on_hold_time, :outzone_at) }
   it { is_expected.to alias_attribute(:delete_time, :delete_at) }
   it { is_expected.to alias_attribute(:force_delete_time, :force_delete_at) }
+  it { is_expected.to alias_attribute(:outzone_time, :outzone_at) }
 
   describe '::expire_warning_period', db: true do
     before :example do
@@ -852,6 +866,38 @@ RSpec.describe Domain, db: false do
 
     it 'sets :delete_at to :outzone_at + redemption grace period' do
       expect(domain.delete_at).to eq(Time.zone.parse('08.07.2010 10:30'))
+    end
+  end
+
+  describe '::outzone_candidates', db: true do
+    before :example do
+      travel_to Time.zone.parse('05.07.2010 00:00')
+
+      Fabricate(:zonefile_setting, origin: 'ee')
+
+      Fabricate.create(:domain, id: 1, outzone_time: Time.zone.parse('04.07.2010 23:59'))
+      Fabricate.create(:domain, id: 2, outzone_time: Time.zone.parse('05.07.2010 00:00'))
+      Fabricate.create(:domain, id: 3, outzone_time: Time.zone.parse('05.07.2010 00:01'))
+    end
+
+    it 'returns domains with outzone time in the past' do
+      expect(described_class.outzone_candidates.ids).to eq([1])
+    end
+  end
+
+  describe '::delete_candidates', db: true do
+    before :example do
+      travel_to Time.zone.parse('05.07.2010 00:00')
+
+      Fabricate(:zonefile_setting, origin: 'ee')
+
+      Fabricate.create(:domain, id: 1, delete_time: Time.zone.parse('04.07.2010 23:59'))
+      Fabricate.create(:domain, id: 2, delete_time: Time.zone.parse('05.07.2010 00:00'))
+      Fabricate.create(:domain, id: 3, delete_time: Time.zone.parse('05.07.2010 00:01'))
+    end
+
+    it 'returns domains with delete time in the past' do
+      expect(described_class.delete_candidates.ids).to eq([1])
     end
   end
 end

@@ -3,6 +3,8 @@ class Domain < ActiveRecord::Base
   include UserEvents
   include Versions # version/domain_version.rb
   include Statuses
+  include Concerns::Domain::Expirable
+
   has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
 
   attr_accessor :roles
@@ -11,6 +13,8 @@ class Domain < ActiveRecord::Base
 
   alias_attribute :on_hold_time, :outzone_at
   alias_attribute :force_delete_time, :force_delete_at
+  alias_attribute :outzone_time, :outzone_at
+  alias_attribute :delete_time, :delete_at
 
   # TODO: whois requests ip whitelist for full info for own domains and partial info for other domains
   # TODO: most inputs should be trimmed before validatation, probably some global logic?
@@ -282,16 +286,6 @@ class Domain < ActiveRecord::Base
     domain_transfers.find_by(status: DomainTransfer::PENDING)
   end
 
-  def expirable?
-    return false if valid_to > Time.zone.now
-
-    if statuses.include?(DomainStatus::EXPIRED) && outzone_at.present? && delete_at.present?
-      return false
-    end
-
-    true
-  end
-
   def server_holdable?
     return false if statuses.include?(DomainStatus::SERVER_HOLD)
     return false if statuses.include?(DomainStatus::SERVER_MANUAL_INZONE)
@@ -308,7 +302,7 @@ class Domain < ActiveRecord::Base
   def renewable?
     if Setting.days_to_renew_domain_before_expire != 0
       # if you can renew domain at days_to_renew before domain expiration
-      if (valid_to.to_date - Date.today) + 1 > Setting.days_to_renew_domain_before_expire
+      if (expire_time.to_date - Date.today) + 1 > Setting.days_to_renew_domain_before_expire
         return false
       end
     end
@@ -596,7 +590,7 @@ class Domain < ActiveRecord::Base
   end
 
   def set_graceful_expired
-    self.outzone_at = valid_to + self.class.expire_warning_period
+    self.outzone_at = expire_time + self.class.expire_warning_period
     self.delete_at = outzone_at + self.class.redemption_grace_period
     self.statuses |= [DomainStatus::EXPIRED]
   end
@@ -626,7 +620,7 @@ class Domain < ActiveRecord::Base
           when DomainStatus::SERVER_MANUAL_INZONE # removal causes server hold to set
             self.outzone_at = Time.zone.now if self.force_delete_at.present?
           when DomainStatus::DomainStatus::EXPIRED # removal causes server hold to set
-            self.outzone_at = self.valid_to + 15.day
+            self.outzone_at = self.expire_time + 15.day
           when DomainStatus::DomainStatus::SERVER_HOLD # removal causes server hold to set
             self.outzone_at = nil
         end
@@ -764,6 +758,14 @@ class Domain < ActiveRecord::Base
 
   def self.redemption_grace_period
     Setting.redemption_grace_period.days
+  end
+
+  def self.outzone_candidates
+    where("#{attribute_alias(:outzone_time)} < ?", Time.zone.now)
+  end
+
+  def self.delete_candidates
+    where("#{attribute_alias(:delete_time)} < ?", Time.zone.now)
   end
 end
 # rubocop: enable Metrics/ClassLength

@@ -35,7 +35,7 @@ class DomainCron
     Rails.logger.info('Expiring domains')
 
     ::PaperTrail.whodunnit = "cron - #{__method__}"
-    domains = Domain.where('valid_to <= ?', Time.zone.now)
+    domains = Domain.expired
     marked = 0
     real = 0
     domains.each do |domain|
@@ -60,10 +60,12 @@ class DomainCron
     STDOUT << "#{Time.zone.now.utc} - Setting server_hold to domains\n" unless Rails.env.test?
 
     ::PaperTrail.whodunnit = "cron - #{__method__}"
-    d = Domain.where('outzone_at <= ?', Time.zone.now)
+
+    domains = Domain.outzone_candidates
     marked = 0
     real = 0
-    d.each do |domain|
+
+    domains.each do |domain|
       next unless domain.server_holdable?
       real += 1
       domain.statuses << DomainStatus::SERVER_HOLD
@@ -103,16 +105,18 @@ class DomainCron
 
     c = 0
 
-    Domain.where('delete_at <= ?', Time.zone.now.end_of_day.utc).each do |x|
-      next unless x.delete_candidateable?
+    domains = Domain.delete_candidates
 
-      x.statuses << DomainStatus::DELETE_CANDIDATE
+    domains.each do |domain|
+      next unless domain.delete_candidateable?
+
+      domain.statuses << DomainStatus::DELETE_CANDIDATE
 
       # If domain successfully saved, add it to delete schedule
-      if x.save(validate: false)
+      if domain.save(validate: false)
         ::PaperTrail.whodunnit = "cron - #{__method__}"
-        DomainDeleteJob.enqueue(x.id, run_at: rand(((24*60) - (DateTime.now.hour * 60  + DateTime.now.minute))).minutes.from_now)
-        STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: job added by deleteCandidate status ##{x.id} (#{x.name})\n" unless Rails.env.test?
+        DomainDeleteJob.enqueue(domain.id, run_at: rand(((24*60) - (DateTime.now.hour * 60  + DateTime.now.minute))).minutes.from_now)
+        STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: job added by deleteCandidate status ##{domain.id} (#{domain.name})\n" unless Rails.env.test?
         c += 1
       end
     end
