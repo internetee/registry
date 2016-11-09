@@ -19,7 +19,7 @@ Nimi: <%= @registrant.name %><br>
 <% end %>
 Tänav: <%= @registrant.street %><br>
 Linn: <%= @registrant.city %><br>
-Riik: <%= @params[:registrant_country] %>
+Riik: <%= @registrant.country %>
 <br><br>
 Taotlus on aktiivne <%= Setting.expire_pending_confirmation %> tundi ja lükatakse automaatselt tagasi kui te seda enne ei kinnita või tagasi lükka.
 <br><br>
@@ -46,14 +46,14 @@ Application for changing registrant of your domain <%= @domain.name %> has been 
 <br><br>
 New registrant:<br>
 Name: <%= @registrant.name %><br>
-<% if @params[:registrant_priv] %>
-Personal code: <%= @registrant.ident %><br>
+<% if @registrant.priv? %>
+  Personal code: <%= @registrant.ident %><br>
 <% else %>
-Business Registry code: <%= @registrant.ident %><br>
+  Business Registry code: <%= @registrant.ident %><br>
 <% end %>
-Street: <%= @params[:registrant_street] %><br>
-City: <%= @params[:registrant_city] %><br>
-Country: <%= @params[:registrant_country] %>
+Street: <%= @registrant.street %><br>
+City: <%= @registrant.city %><br>
+Country: <%= @registrant.country %>
 <br><br>
 The application will remain in pending status for <%= Setting.expire_pending_confirmation %> hrs and will be automaticcally rejected if it is not approved nor rejected before.
 <br><br>

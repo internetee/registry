@@ -49,6 +49,9 @@ RSpec.describe 'mailers/domain_mailer/pending_update_request_for_old_registrant.
   registrant_attributes = %i(
     name
     ident
+    street
+    city
+    country
   )
 
   registrant_attributes.each do |attr_name|

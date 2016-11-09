@@ -4,31 +4,27 @@ RSpec.describe RegistrantPresenter do
   let(:registrant) { instance_double(Registrant) }
   let(:presenter) { described_class.new(registrant: registrant, view: view) }
 
-  describe '#name' do
-    it 'returns name' do
-      expect(registrant).to receive(:name).and_return('test name')
-      expect(presenter.name).to eq('test name')
+  registrant_delegate_attributes = %i(
+    name
+    ident
+    email
+    priv?
+    street
+    city
+  )
+
+  registrant_delegate_attributes.each do |attribute_name|
+    describe "##{attribute_name}" do
+      it 'delegetes to registrant' do
+        expect(registrant).to receive(attribute_name).and_return('test')
+        expect(presenter.send(attribute_name)).to eq('test')
+      end
     end
   end
 
-  describe '#ident' do
-    it 'returns ident' do
-      expect(registrant).to receive(:ident).and_return('test ident')
-      expect(presenter.ident).to eq('test ident')
-    end
-  end
-
-  describe '#email' do
-    it 'returns email' do
-      expect(registrant).to receive(:email).and_return('test email')
-      expect(presenter.email).to eq('test email')
-    end
-  end
-
-  describe '#priv?' do
-    it 'delegates to registrant' do
-      expect(registrant).to receive(:priv?).and_return('test')
-      expect(presenter.priv?).to eq('test')
+  describe '#country' do
+    it 'returns country name' do
+      expect(presenter.country).to be_nil
     end
   end
 end

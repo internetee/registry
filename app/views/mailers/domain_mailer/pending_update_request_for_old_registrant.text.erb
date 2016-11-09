@@ -16,7 +16,7 @@ Nimi: <%= @registrant.name %>
 <% end %>
 Tänav: <%= @registrant.street %>
 Linn: <%= @registrant.city %>
-Riik: <%= @params[:registrant_country] %>
+Riik: <%= @registrant.country %>
 
 Taotlus on aktiivne <%= Setting.expire_pending_confirmation %> tundi ja lükatakse automaatselt tagasi kui te seda enne ei kinnita või tagasi lükka.
 Muudatuse kinnitamiseks külastage palun allolevat lehekülge, kontrollige uuesti üle muudatuse andmed ning vajutage nuppu kinnitan:
@@ -38,14 +38,14 @@ Website: <%= @registrar.url %>
 
 New registrant:
 Name: <%= @registrant.name %>
-<% if @params[:registrant_priv] %>
+<% if @registrant.priv? %>
   Personal code: <%= @registrant.ident %>
 <% else %>
   Business Registry code: <%= @registrant.ident %>
 <% end %>
-Street: <%= @params[:registrant_street] %>
-City: <%= @params[:registrant_city] %>
-Country: <%= @params[:registrant_country] %>
+Street: <%= @registrant.street %>
+City: <%= @registrant.city %>
+Country: <%= @registrant.country %>
 
 The application will remain in pending status for <%= Setting.expire_pending_confirmation %> hrs and will be automaticcally rejected if it is not approved nor rejected before.
 To confirm the update please visit this website, once again review the data and press approve:
