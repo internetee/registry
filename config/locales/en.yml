@@ -531,7 +531,6 @@ en:
   ident_update_error: 'Parameter value policy error. Update of ident data not allowed [ident]'
   invoices: 'Invoices'
   no_such_user: 'No such user'
-  log_in: 'Log in'
   phone_no: 'Phone number'
   log_in_with_mid: 'Log in with mobile-id'
   confirmation_sms_was_sent_to_your_phone_verification_code_is: 'Confirmation sms was sent to your phone. Verification code is %{code}.'
