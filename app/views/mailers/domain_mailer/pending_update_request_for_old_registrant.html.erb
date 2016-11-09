@@ -12,13 +12,13 @@ Registrisse laekus taotlus domeeni <%= @domain.name %> registreerija vahetuseks.
 <br><br>
 Uue registreerija andmed:<br>
 Nimi: <%= @registrant.name %><br>
-<% if @params[:registrant_priv] %>
-Isikukood: <%= @registrant.ident %><br>
+<% if @registrant.priv? %>
+  Isikukood: <%= @registrant.ident %><br>
 <% else %>
-Äriregistrikood: <%= @registrant.ident %><br>
+  Äriregistrikood: <%= @registrant.ident %><br>
 <% end %>
-Tänav: <%= @params[:registrant_street] %><br>
-Linn: <%= @params[:registrant_city] %><br>
+Tänav: <%= @registrant.street %><br>
+Linn: <%= @registrant.city %><br>
 Riik: <%= @params[:registrant_country] %>
 <br><br>
 Taotlus on aktiivne <%= Setting.expire_pending_confirmation %> tundi ja lükatakse automaatselt tagasi kui te seda enne ei kinnita või tagasi lükka.

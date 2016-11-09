@@ -9,13 +9,13 @@ Veebileht: <%= @registrar.url %>
 
 Uue registreerija andmed:
 Nimi: <%= @registrant.name %>
-<% if @params[:registrant_priv] %>
+<% if @registrant.priv? %>
   Isikukood: <%= @registrant.ident %>
 <% else %>
   Äriregistrikood: <%= @registrant.ident %>
 <% end %>
-Tänav: <%= @params[:registrant_street] %>
-Linn: <%= @params[:registrant_city] %>
+Tänav: <%= @registrant.street %>
+Linn: <%= @registrant.city %>
 Riik: <%= @params[:registrant_country] %>
 
 Taotlus on aktiivne <%= Setting.expire_pending_confirmation %> tundi ja lükatakse automaatselt tagasi kui te seda enne ei kinnita või tagasi lükka.

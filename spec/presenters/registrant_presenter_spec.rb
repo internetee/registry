@@ -24,4 +24,11 @@ RSpec.describe RegistrantPresenter do
       expect(presenter.email).to eq('test email')
     end
   end
+
+  describe '#priv?' do
+    it 'delegates to registrant' do
+      expect(registrant).to receive(:priv?).and_return('test')
+      expect(presenter.priv?).to eq('test')
+    end
+  end
 end
