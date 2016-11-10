@@ -3,7 +3,9 @@ Lugupeetud .ee domeeni kasutaja
 
 Domeeninimi <%= @domain.name %> on aegunud ja ei ole alates <%= @domain.on_hold_date %> internetis kättesaadav. Alates <%= @domain.delete_date %> on domeen <%= @domain.name %> avatud registreerimiseks kõigile huvilistele.
 
-Domeeni registreeringu pikendamiseks pöörduge palun oma registripidaja <%= @registrar.name %> poole. Registripidajate kontaktid leiate aadressilt www.internet.ee/registripidajad.
+Domeeni registreeringu pikendamiseks pöörduge palun oma registripidaja:
+
+<%= render 'mailers/domain_mailer/registrar/registrar.et.text', registrar: @registrar %>
 
 Domeeni <%= @domain.name %> kohta on registris järgmised andmed:
 
@@ -11,12 +13,6 @@ Registreerija: <%= @domain.registrant_name %>
 Halduskontakt: <%= @domain.admin_contact_names %>
 Tehniline kontakt: <%= @domain.tech_contact_names %>
 Nimeserverid: <%= @domain.nameserver_names %>
-
-Registripidaja:
-<%= @registrar.name %>
-Email: <%= @registrar.email %>
-Telefon: <%= @registrar.phone %>
-Veebileht: <%= @registrar.url %>
 
 Ülevaate kõikidest endaga seotud domeenidest saate registreerija portaalist. <%= ENV['registrant_url'] %>.
 
@@ -30,7 +26,9 @@ Dear user of .ee domain,
 
 The domain name <%= @domain.name %> has expired and will not be available on the Internet from <%= @domain.on_hold_date %>. From <%= @domain.delete_date %>, the <%= @domain.name %> domain will be available for registration on a first come first served basis.
 
-To renew the domain registration, please contact your registrar <%= @registrar.name %>. You can find the registrar's contacts at http://internet.ee/registrars.
+To renew the domain registration, please contact your registrar:
+
+<%= render 'mailers/domain_mailer/registrar/registrar.en.text', registrar: @registrar %>
 
 The following data for the <%= @domain.name %> domain have been entered into the registry:
 
@@ -38,12 +36,6 @@ Registrant: <%= @domain.registrant_name %>
 Administrative contact: <%= @domain.admin_contact_names %>
 Technical contact: <%= @domain.tech_contact_names %>
 Name servers: <%= @domain.nameserver_names %>
-
-Registrar:
-<%= @registrar.name %>
-Email: <%= @registrar.email %>
-Phone: <%= @registrar.phone %>
-Website: <%= @registrar.url %>
 
 You can find an overview of all your domains at the registrant's portal. <%= ENV['registrant_url'] %>.
 
@@ -57,20 +49,16 @@ Estonian Internet Foundation
 
 Доменное имя <%= @domain.name %> устарело и с <%= @domain.on_hold_date %> недоступно в Интернете. С <%= @domain.delete_date %> домен <%= @domain.name %> доступен для регистрации всем желающим по принципу "first come, first served".
 
-Для продления регистрации домена просим обратиться к своему регистратору <%= @registrar.name %>. Контактные данные регистраторов можно найти по адресу http://internet.ee/registratory.
+Для продления регистрации домена просим обратиться к своему регистратору:
 
-Относительно домена <%= @domain %> в реестр внесены следующие данные:
+<%= render 'mailers/domain_mailer/registrar/registrar.ru.text', registrar: @registrar %>
+
+Относительно домена <%= @domain.name %> в реестр внесены следующие данные:
 
 Регистрант: <%= @domain.registrant_name %>
 Административный контакт: <%= @domain.admin_contact_names %>
 Технический контакт: <%= @domain.tech_contact_names %>
 Серверы доменных имен: <%= @domain.nameserver_names %>
-
-Регистратор:
-<%= @registrar.name %>
-Электронная почта: <%= @registrar.email %>
-Телефон: <%= @registrar.phone %>
-Веб-сайт: <%= @registrar.url %>
 
 Обзор всех связанных с Вами доменов можете получить на портале регистранта. <%= ENV['registrant_url'] %>.
 

@@ -1,0 +1,9 @@
+Nimi: <%= registrant.name %><br>
+<% if registrant.priv? %>
+    Isikukood: <%= registrant.ident %><br>
+<% else %>
+    Äriregistrikood: <%= registrant.ident %><br>
+<% end %>
+Tänav: <%= registrant.street %><br>
+Linn: <%= registrant.city %><br>
+Riik: <%= registrant.country %>

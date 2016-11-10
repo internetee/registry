@@ -2,10 +2,7 @@ Tere
 
 Registrisse laekus taotlus domeeni <%= @domain.name %> kustutamiseks. Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja poole:
 
-<%= @registrar.name %>
-Email: <%= @registrar.email %>
-Telefon: <%= @registrar.phone %>
-Veebileht: <%= @registrar.url %>
+<%= render 'mailers/domain_mailer/registrar/registrar.et.text', registrar: @registrar %>
 
 Muudatuse kinnitamiseks külastage palun allolevat lehekülge, kontrollige uuesti üle muudatuse andmed ning vajutage nuppu kinnitan.
 
@@ -21,10 +18,7 @@ Hi,
 
 Application for deletion of your domain <%= @domain.name %> has been filed. Please make sure that the application is correct. In case of problems please contact your registrar:
 
-<%= @registrar.name %>
-Email: <%= @registrar.email %>
-Phone: <%= @registrar.phone %>
-Website: <%= @registrar.url %>
+<%= render 'mailers/domain_mailer/registrar/registrar.en.text', registrar: @registrar %>
 
 To confirm the update please visit this website, once again review the data and press approve:
 <%= @verification_url %>

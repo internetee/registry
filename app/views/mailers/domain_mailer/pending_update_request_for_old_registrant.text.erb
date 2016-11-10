@@ -2,21 +2,10 @@ Tere
 
 Registrisse laekus taotlus domeeni <%= @domain.name %> registreerija vahetuseks. Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja poole:
 
-<%= @registrar.name %>
-Email: <%= @registrar.email %>
-Telefon: <%= @registrar.phone %>
-Veebileht: <%= @registrar.url %>
+<%= render 'registrar.et.text', registrar: @registrar %>
 
 Uue registreerija andmed:
-Nimi: <%= @registrant.name %>
-<% if @registrant.priv? %>
-  Isikukood: <%= @registrant.ident %>
-<% else %>
-  Äriregistrikood: <%= @registrant.ident %>
-<% end %>
-Tänav: <%= @registrant.street %>
-Linn: <%= @registrant.city %>
-Riik: <%= @registrant.country %>
+<%= render 'registrant.et.text', registrant: @registrant %>
 
 Taotlus on aktiivne <%= Setting.expire_pending_confirmation %> tundi ja lükatakse automaatselt tagasi kui te seda enne ei kinnita või tagasi lükka.
 Muudatuse kinnitamiseks külastage palun allolevat lehekülge, kontrollige uuesti üle muudatuse andmed ning vajutage nuppu kinnitan:
@@ -31,21 +20,10 @@ Hi,
 
 Application for changing registrant of your domain <%= @domain.name %> has been filed. Please make sure that the update and information are correct. In case of problems please turn to your registrar:
 
-<%= @registrar.name %>
-Email: <%= @registrar.email %>
-Phone: <%= @registrar.phone %>
-Website: <%= @registrar.url %>
+<%= render 'registrar.en.text', registrar: @registrar %>
 
 New registrant:
-Name: <%= @registrant.name %>
-<% if @registrant.priv? %>
-  Personal code: <%= @registrant.ident %>
-<% else %>
-  Business Registry code: <%= @registrant.ident %>
-<% end %>
-Street: <%= @registrant.street %>
-City: <%= @registrant.city %>
-Country: <%= @registrant.country %>
+<%= render 'registrant.en.text', registrant: @registrant %>
 
 The application will remain in pending status for <%= Setting.expire_pending_confirmation %> hrs and will be automaticcally rejected if it is not approved nor rejected before.
 To confirm the update please visit this website, once again review the data and press approve:

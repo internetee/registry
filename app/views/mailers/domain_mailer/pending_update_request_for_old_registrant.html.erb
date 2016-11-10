@@ -2,24 +2,11 @@ Tere
 <br><br>
 Registrisse laekus taotlus domeeni <%= @domain.name %> registreerija vahetuseks. Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja poole:
 
-<p>
-  <%= @registrar.name %><br>
-  Email: <%= @registrar.email %><br>
-  Telefon: <%= @registrar.phone %><br>
-  Veebileht: <%= @registrar.url %>
-</p>
+<%= render 'registrar.et.html', registrar: @registrar %>
 
 <br><br>
 Uue registreerija andmed:<br>
-Nimi: <%= @registrant.name %><br>
-<% if @registrant.priv? %>
-  Isikukood: <%= @registrant.ident %><br>
-<% else %>
-  Äriregistrikood: <%= @registrant.ident %><br>
-<% end %>
-Tänav: <%= @registrant.street %><br>
-Linn: <%= @registrant.city %><br>
-Riik: <%= @registrant.country %>
+<%= render 'registrant.et.html', registrant: @registrant %>
 <br><br>
 Taotlus on aktiivne <%= Setting.expire_pending_confirmation %> tundi ja lükatakse automaatselt tagasi kui te seda enne ei kinnita või tagasi lükka.
 <br><br>
@@ -34,26 +21,13 @@ Eesti Interneti Sihtasutus
 <br><br>
 Hi,
 <br><br>
-Application for changing registrant of your domain <%= @domain.name %> has been filed. Please make sure that the update and information are correct. Incase of problems please turn to your registrar:
+Application for changing registrant of your domain <%= @domain.name %> has been filed. Please make sure that the update and information are correct. In case of problems please turn to your registrar:
 
-<p>
-  <%= @registrar.name %><br>
-  Email: <%= @registrar.email %><br>
-  Phone: <%= @registrar.phone %><br>
-  Website: <%= @registrar.url %>
-</p>
+<%= render 'registrar.en.html', registrar: @registrar %>
 
 <br><br>
 New registrant:<br>
-Name: <%= @registrant.name %><br>
-<% if @registrant.priv? %>
-  Personal code: <%= @registrant.ident %><br>
-<% else %>
-  Business Registry code: <%= @registrant.ident %><br>
-<% end %>
-Street: <%= @registrant.street %><br>
-City: <%= @registrant.city %><br>
-Country: <%= @registrant.country %>
+<%= render 'registrant.en.html', registrant: @registrant %>
 <br><br>
 The application will remain in pending status for <%= Setting.expire_pending_confirmation %> hrs and will be automaticcally rejected if it is not approved nor rejected before.
 <br><br>

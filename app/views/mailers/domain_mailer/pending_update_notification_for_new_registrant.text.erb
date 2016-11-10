@@ -1,25 +1,17 @@
 Tere
 
-Registripidaja <%= @params[:registrar_name] %> vahendusel on algatatud <%= @params[:name] %> domeeni omanikuvahetuse protseduur.  
+Registripidaja <%= @registrar.name %> vahendusel on algatatud <%= @domain.name %> domeeni omanikuvahetuse protseduur.
 
-Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja <%= @params[:registrar_name] %> poole.
+Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja poole:
+
+<%= render 'registrar.et.text', registrar: @registrar %>
 
 Uue registreerija andmed:
-Nimi: <%= @params[:registrant_name] %>
-<% if @params[:registrant_priv] %>
-Isikukood: <%= @params[:registrant_ident] %>
-<% else %>
-Äriregistrikood: <%= @params[:registrant_ident] %>
-<% end %>
-Tänav: <%= @params[:registrant_street] %>
-Linn: <%= @params[:registrant_city] %>
-Riik: <%= @params[:registrant_country] %>
+<%= render 'registrant.et.text', registrant: @new_registrant %>
 
-Juhime Teie tähelepanu asjaolule, et omanikuvahetuse protseduur viiakse lõpule vaid juhul, kui domeeni hetkel kehtiv registreerija <%= @params[:old_registrant_name] %> omanikuvahetuse tähtaegselt kinnitab.
+Juhime Teie tähelepanu asjaolule, et omanikuvahetuse protseduur viiakse lõpule vaid juhul, kui domeeni hetkel kehtiv registreerija <%= @current_registrant.name %> omanikuvahetuse tähtaegselt kinnitab.
 
-Juhul kui <%= @params[:old_registrant_name] %> lükkab omanikuvahetuse taotluse tagasi või ei anna kinnitust enne <%= Setting.expire_pending_confirmation %> tundi, omanikuvahetuse protseduur tühistatakse.
-
-Küsimuste korral palun võtke ühendust registripidajaga <%= @params[:registrar_name] %>. Registripidajate kontaktid leiate aadressilt www.internet.ee/registripidajad.
+Juhul kui <%= @current_registrant.name %> lükkab omanikuvahetuse taotluse tagasi või ei anna kinnitust enne <%= Setting.expire_pending_confirmation %> tundi, omanikuvahetuse protseduur tühistatakse.
 
 Lugupidamisega
 Eesti Interneti Sihtasutus
@@ -28,26 +20,18 @@ Eesti Interneti Sihtasutus
 
 Hi,
 
-Registrant change process for the domain <%= @params[:name] %> has been started.
+Registrant change process for the domain <%= @domain.name %> has been started.
 
-Please verify the details of the following change request. In case of problems contact your registrar <%= @params[:registrar_name] %>
+Please verify the details of the following change request. In case of problems contact your registrar:
+
+<%= render 'registrar.en.text', registrar: @registrar %>
 
 New registrant:
-Name: <%= @params[:registrant_name] %>
-<% if @params[:registrant_priv] %>
-Personal code: <%= @params[:registrant_ident] %>
-<% else %>
-Business Registry code: <%= @params[:registrant_ident] %>
-<% end %>
-Street: <%= @params[:registrant_street] %>
-City: <%= @params[:registrant_city] %>
-Country: <%= @params[:registrant_country] %>
+<%= render 'registrant.en.text', registrant: @new_registrant %>
 
-The registrant change procedure will be completed only after the current registrant <%= @params[:old_registrant_name] %> has approved it.
+The registrant change procedure will be completed only after the current registrant <%= @current_registrant.name %> has approved it.
 
-Change request will be cancelled in case <%= @params[:old_registrant_name] %> rejects or does not approve it in <%= Setting.expire_pending_confirmation %> hours.
-
-Please contact registrar <%= @params[:registrar_name] %> in case of questions. You can find the registrar's contacts at http://internet.ee/registrars.
+Change request will be cancelled in case <%= @current_registrant.name %> rejects or does not approve it in <%= Setting.expire_pending_confirmation %> hours.
 
 Best Regards,
 Estonian Internet Foundation
