@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'mailers/domain_mailer/_registrar.et.text.erb' do
+RSpec.shared_examples 'domain mailer registrar info' do
   let(:registrar) { instance_spy(RegistrarPresenter) }
 
   before :example do

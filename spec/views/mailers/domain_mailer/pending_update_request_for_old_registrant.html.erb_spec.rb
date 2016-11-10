@@ -1,29 +1,13 @@
 require 'rails_helper'
+require_relative 'pending_update_request_for_old_registrant_shared'
 
 RSpec.describe 'mailers/domain_mailer/pending_update_request_for_old_registrant.html.erb' do
-  let(:domain) { instance_spy(DomainPresenter) }
-  let(:lang_count) { 2 }
-
   before :example do
-    assign(:domain, domain)
-    assign(:verification_url, 'test verification url')
+    stub_template 'mailers/domain_mailer/registrar/_registrar.et.html' => 'test registrar estonian'
+    stub_template 'mailers/domain_mailer/registrar/_registrar.en.html' => 'test registrar english'
+    stub_template 'mailers/domain_mailer/registrant/_registrant.et.html' => 'test new registrant estonian'
+    stub_template 'mailers/domain_mailer/registrant/_registrant.en.html' => 'test new registrant english'
   end
 
-  it 'has verification url' do
-    mention_count = 1 * lang_count
-    render
-    expect(rendered).to have_text('test verification url', count: mention_count)
-  end
-
-  domain_attributes = %i(
-    name
-  )
-
-  domain_attributes.each do |attr_name|
-    it "has :#{attr_name}" do
-      expect(domain).to receive(attr_name).exactly(lang_count).times.and_return(attr_name.to_s)
-      render
-      expect(rendered).to have_text(attr_name.to_s, count: lang_count)
-    end
-  end
+  include_examples 'domain mailer pending update request for old registrant'
 end
