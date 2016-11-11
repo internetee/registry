@@ -14,7 +14,7 @@
             = f.search_field :registrant, value: params[:q][:registrant], class: 'form-control', placeholder: t(:registrant)
         .col-md-3
           .form-group
-            = label_tag t(:registrar)
+            = label_tag t(:registrar_name)
             = f.search_field :registrar, value: params[:q][:registrar], class: 'form-control', placeholder: t(:registrant)
         .col-md-3
           .form-group
@@ -48,7 +48,7 @@
             %th{class: 'col-xs-2'}
               = t(:registrant)
             %th{class: 'col-xs-2'}
-              = t(:registrar)
+              = t(:registrar_name)
             %th{class: 'col-xs-2'}
               = t(:action)
             %th{class: 'col-xs-2'}

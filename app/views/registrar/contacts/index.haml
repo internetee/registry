@@ -38,7 +38,7 @@
       .row
         .col-md-3
           .form-group
-            = f.label t(:registrar)
+            = f.label t(:registrar_name)
             = f.select :registrar_id_eq, Registrar.all.map { |x| [x, x.id] }, { include_blank: true }, class: 'form-control selectize', placeholder: t(:choose)
         .col-md-3
           .form-group
@@ -97,7 +97,7 @@
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'email', t(:created_at))
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'registrar_name', t(:registrar))
+              = sort_link(@q, 'registrar_name', t(:registrar_name))
             %th{class: 'col-xs-2'}= t(:actions)
         %tbody
           - @contacts.each do |contact|

@@ -285,7 +285,7 @@ en:
   valid_to: 'Valid to'
   name: 'Name'
   transfer_can_be_approved_only_by_current_registrar: 'Transfer can be approved only by current domain registrar'
-  registrar: 'Registrar'
+  registrar_name: 'Registrar'
   owner: 'Registrant'
   domain_details: 'Domain details'
   registered_at: 'Registered at'
@@ -440,7 +440,6 @@ en:
 
   setting: 'Setting'
 
-  registrar: 'Registrar'
   transfer_requested: 'Transfer requested.'
   message_was_not_found: 'Message was not found'
   host_obj_is_not_allowed: 'hostObj object is not allowed'

@@ -25,7 +25,7 @@
         .col-md-3
           .form-group
             = f.label :registrar
-            = f.search_field :api_user_registrar_cont, class: 'form-control', placeholder: t(:registrar), autocomplete: 'off'
+            = f.search_field :api_user_registrar_cont, class: 'form-control', placeholder: t(:registrar_name), autocomplete: 'off'
         .col-md-3
           .form-group
             = f.label t(:created_after)
@@ -52,7 +52,7 @@
             %th{class: 'col-xs-2'}= t(:request_method)
             %th{class: 'col-xs-2'}= t(:response_code)
             %th{class: 'col-xs-2'}= t(:api_user)
-            %th{class: 'col-xs-2'}= t(:registrar)
+            %th{class: 'col-xs-2'}= t(:registrar_name)
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'created_at')
         %tbody

@@ -98,7 +98,7 @@
             %br
 
           - if domain.registrar
-            %dt= t(:registrar)
+            %dt= t(:registrar_name)
             %dd{class: changing_css_class(@version,"registrar_id")}
               = link_to admin_registrar_path(domain.registrar), target: "registrar_#{domain.registrar.id}" do
                 = domain.registrar.name

@@ -6,7 +6,7 @@
   - field_required = ''
 
 
-= form_for([:admin, @api_user], multipart: true, 
+= form_for([:admin, @api_user], multipart: true,
   html: {class: 'form-horizontal', autocomplete: 'off'}) do |f|
   = render 'shared/full_errors', object: @api_user
 
@@ -32,11 +32,11 @@
       .form-group
         .form-group.has-feedback.js-typeahead-container
           .col-md-4.control-label
-            = f.label :registrar_typeahead, t(:registrar), class: 'required'
+            = f.label :registrar_typeahead, t(:registrar_name), class: 'required'
           .col-md-7
-            = f.text_field(:registrar_typeahead, 
-              class: 'form-control js-registrar-typeahead typeahead required', 
-              placeholder: t(:registrar), autocomplete: 'off')
+            = f.text_field(:registrar_typeahead,
+              class: 'form-control js-registrar-typeahead typeahead required',
+              placeholder: t(:registrar_name), autocomplete: 'off')
             %span.glyphicon.glyphicon-ok.form-control-feedback.js-typeahead-ok.hidden
             %span.glyphicon.glyphicon-remove.form-control-feedback.js-typeahead-remove
             = f.hidden_field(:registrar_id, class: 'js-registrar-id')
@@ -45,7 +45,7 @@
         .col-md-4.control-label
           = f.label :role, class: 'required'
         .col-md-7
-          = select_tag 'api_user[roles][]', 
+          = select_tag 'api_user[roles][]',
             options_for_select(ApiUser::ROLES.map {|x| [t(x), x] }, @api_user.roles.try(:first)),
             class: 'form-control selectize'
           .checkbox
