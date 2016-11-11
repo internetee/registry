@@ -379,6 +379,9 @@ class Domain < ActiveRecord::Base
     new_registrant_email = registrant.email
     new_registrant_name  = registrant.name
 
+    current_registrant = Registrant.find(registrant_id_was)
+    RegistrantChangeMailer.confirmation(domain: self, current_registrant: current_registrant).deliver
+
     send_mail :pending_update_request_for_old_registrant
     send_mail :pending_update_notification_for_new_registrant
 
@@ -441,8 +444,8 @@ class Domain < ActiveRecord::Base
     pending_delete_confirmation!
     save(validate: false) # should check if this did succeed
 
-    previous_registrant = Registrant.find(registrant_id_was)
-    DomainMailer.pending_deleted(domain: self, registrant: previous_registrant).deliver
+    old_registrant = Registrant.find(registrant_id_was)
+    DeleteDomainMailer.pending(domain: self, old_registrant: old_registrant).deliver
   end
 
   def cancel_pending_delete

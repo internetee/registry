@@ -1,0 +1,4 @@
+en:
+  registrant_change_mailer:
+    confirmation:
+      subject: Kinnitustaotlus domeeni %{domain_name} registreerija vahetuseks / Application for approval for registrant change of %{domain_name}

@@ -1,21 +1,6 @@
 class DomainMailer < ApplicationMailer
   include Que::Mailer
 
-  def pending_update_request_for_old_registrant(domain:, registrant:)
-    @domain = DomainPresenter.new(domain: domain, view: view_context)
-    @registrar = RegistrarPresenter.new(registrar: domain.registrar, view: view_context)
-    @registrant = RegistrantPresenter.new(registrant: registrant, view: view_context)
-    @verification_url = registrant_domain_update_confirm_url(domain, token: domain.registrant_verification_token)
-
-    subject = default_i18n_subject(domain_name: domain.name)
-    mail(to: registrant.email, subject: subject)
-  end
-
-  def pending_update_notification_for_new_registrant(params)
-    compose_from(params)
-  end
-
-
   def registrant_updated_notification_for_new_registrant(domain_id, old_registrant_id, new_registrant_id, should_deliver)
     @domain = Domain.find_by(id: domain_id)
     return unless @domain
@@ -43,23 +28,6 @@ class DomainMailer < ApplicationMailer
     mail(to: format(@old_registrant.email),
          subject: "#{I18n.t(:registrant_updated_notification_for_old_registrant_subject,
                             name: @domain.name)} [#{@domain.name}]")
-  end
-
-  def pending_update_rejected_notification_for_new_registrant(params)
-    compose_from(params)
-  end
-
-  def pending_update_expired_notification_for_new_registrant(params)
-    compose_from(params)
-  end
-
-  def pending_deleted(domain:, registrant:)
-    @domain = DomainPresenter.new(domain: domain, view: view_context)
-    @registrar = RegistrarPresenter.new(registrar: domain.registrar, view: view_context)
-    @verification_url = registrant_domain_delete_confirm_url(domain, token: domain.registrant_verification_token)
-
-    subject = default_i18n_subject(domain_name: domain.name)
-    mail(to: registrant.email, subject: subject)
   end
 
   def pending_delete_rejected_notification(domain_id, should_deliver)

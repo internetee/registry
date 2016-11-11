@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.shared_examples 'domain mailer pending deleted' do
+RSpec.shared_examples 'delete domain mailer pending' do
   let(:domain) { instance_spy(DomainPresenter) }
   let(:lang_count) { 2 }
 

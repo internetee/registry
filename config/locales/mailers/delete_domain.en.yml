@@ -1,0 +1,6 @@
+en:
+  domain_mailer:
+    expiration:
+      subject: The %{domain_name} domain has expired
+    force_delete:
+      subject: Kustutusmenetluse teade
