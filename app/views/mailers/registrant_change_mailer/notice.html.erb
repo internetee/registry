@@ -4,11 +4,11 @@ Registripidaja <%= @registrar.name %> vahendusel on algatatud <%= @domain.name %
 <br><br>
 Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja poole:
 
-<%= render 'registrar.et.html', registrar: @registrar %>
+<%= render 'mailers/shared/registrar/registrar.et.html', registrar: @registrar %>
 
 <br><br>
 Uue registreerija andmed:<br>
-<%= render 'registrant.et.html', registrant: @new_registrant %>
+<%= render 'mailers/shared/registrant/registrant.et.html', registrant: @new_registrant %>
 <br><br>
 Juhime Teie tähelepanu asjaolule, et omanikuvahetuse protseduur viiakse lõpule vaid juhul, kui domeeni hetkel kehtiv registreerija <%= @current_registrant.name %> omanikuvahetuse tähtaegselt kinnitab.
 <br><br>
@@ -25,11 +25,11 @@ Registrant change process for the domain <%= @domain.name %> has been started.
 <br><br>
 Please verify the details of the following change request. In case of problems contact your registrar:
 
-<%= render 'registrar.en.html', registrar: @registrar %>
+<%= render 'mailers/shared/registrar/registrar.en.html', registrar: @registrar %>
 
 <br><br>
 New registrant:<br>
-<%= render 'registrant.en.html', registrant: @new_registrant %>
+<%= render 'mailers/shared/registrant/registrant.en.html', registrant: @new_registrant %>
 <br><br>
 The registrant change procedure will be completed only after the current registrant <%= @current_registrant.name %> has approved it.
 <br><br>

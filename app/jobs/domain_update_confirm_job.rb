@@ -16,7 +16,9 @@ class DomainUpdateConfirmJob < Que::Job
         domain.clean_pendings!
         raise_errors!(domain)
       when RegistrantVerification::REJECTED
-        domain.send_mail :pending_update_rejected_notification_for_new_registrant
+        RegistrantChangeMailer.rejected(domain: domain, registrar: domain.registrar, registrant: domain.registrant)
+          .deliver
+
         domain.poll_message!(:poll_pending_update_rejected_by_registrant)
         domain.clean_pendings_lowlevel
       end

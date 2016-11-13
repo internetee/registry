@@ -6,30 +6,6 @@ class DomainMailModel
     @params = {errors: [], deliver_emails: domain.deliver_emails, id: domain.id}
   end
 
-  def pending_update_request_for_old_registrant
-    registrant_old
-    subject(:pending_update_request_for_old_registrant_subject)
-    confirm_update
-    domain_info
-    compose
-  end
-
-  def pending_update_notification_for_new_registrant
-    registrant     # new registrant at this point
-    subject(:pending_update_notification_for_new_registrant_subject)
-    domain_info
-    compose
-  end
-
-
-  def pending_update_rejected_notification_for_new_registrant
-    registrant_pending
-    subject(:pending_update_rejected_notification_for_new_registrant_subject)
-    @params[:deliver_emails] = true # triggered from que
-    @params[:registrar_name] = @domain.registrar.name
-    compose
-  end
-
   def pending_update_expired_notification_for_new_registrant
     registrant_pending
     subject(:pending_update_expired_notification_for_new_registrant_subject)

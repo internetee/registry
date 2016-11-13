@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.shared_examples 'domain mailer pending update request for old registrant' do
+RSpec.shared_examples 'registrant change mailer confirm' do
   let(:domain) { instance_spy(DomainPresenter) }
   let(:lang_count) { 2 }
 
@@ -8,7 +8,7 @@ RSpec.shared_examples 'domain mailer pending update request for old registrant' 
     assign(:domain, domain)
     assign(:registrar, nil)
     assign(:new_registrant, nil)
-    assign(:verification_url, 'test verification url')
+    assign(:confirm_url, 'test confirm url')
   end
 
   it 'has registrar info in estonian' do
@@ -31,10 +31,10 @@ RSpec.shared_examples 'domain mailer pending update request for old registrant' 
     expect(rendered).to have_text('test new registrant english')
   end
 
-  it 'has verification url' do
+  it 'has confirm url' do
     mention_count = 1 * lang_count
     render
-    expect(rendered).to have_text('test verification url', count: mention_count)
+    expect(rendered).to have_text('test confirm url', count: mention_count)
   end
 
   domain_attributes = %i(

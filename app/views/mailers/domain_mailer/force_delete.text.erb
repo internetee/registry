@@ -15,7 +15,7 @@ Kui üleandmine ei ole 30 päeva jooksul toimunud, kustub domeen <%= @domain.nam
 
 Lisaküsimuste korral võtke palun ühendust oma registripidajaga:
 
-<%= render 'mailers/domain_mailer/registrar/registrar.et.text', registrar: @registrar %>
+<%= render 'mailers/shared/registrar/registrar.et.text', registrar: @registrar %>
 
 
 
@@ -36,7 +36,7 @@ If the transfer has not been made in 30 days, the domain <%= @domain.name %> wil
 
 Should you have additional questions, please contact your registrar:
 
-<%= render 'mailers/domain_mailer/registrar/registrar.en.text', registrar: @registrar %>
+<%= render 'mailers/shared/registrar/registrar.en.text', registrar: @registrar %>
 
 
 Уважаемое контактное лицо домена <%= @domain.name %>
@@ -56,7 +56,7 @@ EIS стало известно, что юридическое лицо с ре�
 
 Просим обратиться к своему регистратору:
 
-<%= render 'mailers/domain_mailer/registrar/registrar.ru.text', registrar: @registrar %>
+<%= render 'mailers/shared/registrar/registrar.ru.text', registrar: @registrar %>
 
 
 Lugupidamisega,

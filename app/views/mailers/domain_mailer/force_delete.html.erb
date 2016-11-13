@@ -21,7 +21,7 @@ Registrikood: <b><%= @registrant.ident %></b></p>
 
 <p>Lisak&uuml;simuste korral v&otilde;tke palun &uuml;hendust oma registripidajaga:</p>
 
-<%= render 'mailers/domain_mailer/registrar/registrar.et.html', registrar: @registrar %>
+<%= render 'mailers/shared/registrar/registrar.et.html', registrar: @registrar %>
 
 <hr>
 
@@ -42,7 +42,7 @@ Registry code: <b><%= @registrant.ident %></b></p>
 
 <p>Should you have additional questions, please contact your registrar:</p>
 
-<%= render 'mailers/domain_mailer/registrar/registrar.en.html', registrar: @registrar %>
+<%= render 'mailers/shared/registrar/registrar.en.html', registrar: @registrar %>
 
 <hr>
 
@@ -63,7 +63,7 @@ Registry code: <b><%= @registrant.ident %></b></p>
 
 <p>Просим обратиться к своему регистратору:</p>
 
-<%= render 'mailers/domain_mailer/registrar/registrar.ru.html', registrar: @registrar %>
+<%= render 'mailers/shared/registrar/registrar.ru.html', registrar: @registrar %>
 
 
         <br /><br />

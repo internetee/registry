@@ -380,12 +380,12 @@ class Domain < ActiveRecord::Base
     new_registrant_name  = registrant.name
 
     current_registrant = Registrant.find(registrant_id_was)
-    RegistrantChangeMailer.confirmation(domain: self, current_registrant: current_registrant).deliver
+    RegistrantChangeMailer.confirm(domain: self, registrar: registrar, current_registrant: current_registrant,
+                                   new_registrant: registrant).deliver
+    RegistrantChangeMailer.notice(domain: self, registrar: registrar, current_registrant: current_registrant,
+                                  new_registrant: registrant).deliver
 
-    send_mail :pending_update_request_for_old_registrant
-    send_mail :pending_update_notification_for_new_registrant
-
-    reload # revert back to original
+    reload
 
     self.pending_json = pending_json_cache
     self.registrant_verification_token = token
@@ -397,8 +397,8 @@ class Domain < ActiveRecord::Base
     pending_json['new_registrant_name']  = new_registrant_name
 
     # This pending_update! method is triggered by before_update
-    # Note, all before_save callbacks are excecuted before before_update,
-    # thus automatic statuses has already excectued by this point
+    # Note, all before_save callbacks are executed before before_update,
+    # thus automatic statuses has already executed by this point
     # and we need to trigger automatic statuses manually (second time).
     manage_automatic_statuses
   end
@@ -739,6 +739,10 @@ class Domain < ActiveRecord::Base
 
   def primary_contact_emails
     admin_contact_emails << registrant_email
+  end
+
+  def new_registrant_email
+    pending_json['new_registrant_email']
   end
 
   def self.to_csv

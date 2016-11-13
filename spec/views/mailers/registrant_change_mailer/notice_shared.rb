@@ -1,13 +1,16 @@
 require 'rails_helper'
 
-RSpec.shared_examples 'domain mailer pending update notification for new registrant' do
+RSpec.shared_examples 'registrant change mailer notice' do
   let(:domain) { instance_spy(DomainPresenter) }
   let(:registrar) { instance_spy(RegistrarPresenter) }
+  let(:registrant) { instance_spy(RegistrantPresenter) }
   let(:lang_count) { 2 }
 
   before :example do
     assign(:domain, domain)
     assign(:registrar, registrar)
+    assign(:current_registrant, registrant)
+    assign(:new_registrant, registrant)
   end
 
   it 'has registrar info in estonian' do
@@ -20,10 +23,14 @@ RSpec.shared_examples 'domain mailer pending update notification for new registr
     expect(rendered).to have_text('test registrar english')
   end
 
-  it 'has registrar name' do
-    expect(registrar).to receive(:name).and_return('test registrar name')
+  it 'has new registrant info in estonian' do
     render
-    expect(rendered).to have_text('test registrar name')
+    expect(rendered).to have_text('test new registrant estonian')
+  end
+
+  it 'has new registrant info in english' do
+    render
+    expect(rendered).to have_text('test new registrant english')
   end
 
   domain_attributes = %i(
