@@ -296,7 +296,7 @@ class Domain < ActiveRecord::Base
   end
 
   def delete_candidateable?
-    return false if delete_at.to_date > Date.today
+    return false if delete_at > Time.zone.now
     return false if statuses.include?(DomainStatus::DELETE_CANDIDATE)
     return false if statuses.include?(DomainStatus::SERVER_DELETE_PROHIBITED)
     true
