@@ -176,24 +176,11 @@ RSpec.describe Domain do
     end
 
     it 'should start redemption grace period' do
-      DomainCron.start_redemption_grace_period
-      @domain.reload
-      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
-
-      @domain.outzone_at = Time.zone.now
-      @domain.statuses << DomainStatus::SERVER_MANUAL_INZONE # this prohibits server_hold
-      @domain.save
+      domain = Fabricate(:domain)
 
       DomainCron.start_redemption_grace_period
-      @domain.reload
-      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
-
-      @domain.statuses = []
-      @domain.save
-
-      DomainCron.start_redemption_grace_period
-      @domain.reload
-      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == true
+      domain.reload
+      domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
     end
 
     it 'should set force delete time' do
@@ -346,27 +333,6 @@ RSpec.describe Domain do
           end
         end
       end
-    end
-
-    it 'should start redemption grace period' do
-      DomainCron.start_redemption_grace_period
-      @domain.reload
-      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
-
-      @domain.outzone_at = Time.zone.now
-      @domain.statuses << DomainStatus::SERVER_MANUAL_INZONE # this prohibits server_hold
-      @domain.save
-
-      DomainCron.start_redemption_grace_period
-      @domain.reload
-      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
-
-      @domain.statuses = []
-      @domain.save
-
-      DomainCron.start_redemption_grace_period
-      @domain.reload
-      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == true
     end
 
     it 'should set pending update' do
