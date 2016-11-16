@@ -5,7 +5,7 @@ Domeeninimi <%= @domain.name %> on aegunud ja ei ole alates <%= @domain.on_hold_
 
 Domeeni registreeringu pikendamiseks pöörduge palun oma registripidaja:
 
-<%= render 'mailers/domain_mailer/registrar/registrar.et.text', registrar: @registrar %>
+<%= render 'mailers/shared/registrar/registrar.et.text', registrar: @registrar %>
 
 Domeeni <%= @domain.name %> kohta on registris järgmised andmed:
 
@@ -28,7 +28,7 @@ The domain name <%= @domain.name %> has expired and will not be available on the
 
 To renew the domain registration, please contact your registrar:
 
-<%= render 'mailers/domain_mailer/registrar/registrar.en.text', registrar: @registrar %>
+<%= render 'mailers/shared/registrar/registrar.en.text', registrar: @registrar %>
 
 The following data for the <%= @domain.name %> domain have been entered into the registry:
 
@@ -51,7 +51,7 @@ Estonian Internet Foundation
 
 Для продления регистрации домена просим обратиться к своему регистратору:
 
-<%= render 'mailers/domain_mailer/registrar/registrar.ru.text', registrar: @registrar %>
+<%= render 'mailers/shared/registrar/registrar.ru.text', registrar: @registrar %>
 
 Относительно домена <%= @domain.name %> в реестр внесены следующие данные:
 

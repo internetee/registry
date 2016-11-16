@@ -4,7 +4,7 @@ Lugupeetud .ee domeeni kasutaja<br>
 Domeeninimi <%= @domain.name %>  on aegunud ja ei ole alates <%= @domain.on_hold_date %> internetis kättesaadav. Alates <%= @domain.delete_date %> on domeen <%= @domain.name %> avatud registreerimiseks kõigile huvilistele.
 <br><br>
 Domeeni registreeringu pikendamiseks pöörduge palun oma registripidaja:
-<%= render 'mailers/domain_mailer/registrar/registrar.et.html', registrar: @registrar %>
+<%= render 'mailers/shared/registrar/registrar.et.html', registrar: @registrar %>
 <br><br>
 Domeeni <%= @domain.name %> kohta on registris järgmised andmed:
 <br><br>
@@ -27,7 +27,7 @@ Dear user of .ee domain,<br>
 The domain name <%= @domain.name %> has expired and will not be available on the Internet from <%= @domain.on_hold_date %>. From <%= @domain.delete_date %>, the <%= @domain.name %> domain will be available for registration on a first come first served basis.
 <br><br>
 To renew the domain registration, please contact your registrar:
-<%= render 'mailers/domain_mailer/registrar/registrar.en.html', registrar: @registrar %>
+<%= render 'mailers/shared/registrar/registrar.en.html', registrar: @registrar %>
 <br><br>
 The following data for the <%= @domain.name %> domain have been entered into the registry:
 <br><br>
@@ -53,7 +53,7 @@ Estonian Internet Foundation
 <br><br>
 
 Для продления регистрации домена просим обратиться к своему регистратору:
-<%= render 'mailers/domain_mailer/registrar/registrar.ru.html', registrar: @registrar %>
+<%= render 'mailers/shared/registrar/registrar.ru.html', registrar: @registrar %>
 <br><br>
 
 Относительно домена <%= @domain.name %> в реестр внесены следующие данные:
