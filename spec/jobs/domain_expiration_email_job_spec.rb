@@ -12,12 +12,14 @@ RSpec.describe DomainExpirationEmailJob do
       let(:message) { instance_double(ActionMailer::MessageDelivery) }
 
       before :example do
+        allow(domain).to receive(:registrar).and_return('registrar')
         allow(domain).to receive(:registered?).and_return(false)
       end
 
       it 'sends email notification' do
-        expect(DomainMailer).to receive(:expiration).with(domain: domain).and_return(message)
-        expect(message).to receive(:deliver)
+        expect(DomainExpireMailer).to receive(:expired).with(domain: domain, registrar: 'registrar')
+                                        .and_return(message)
+        expect(message).to receive(:deliver_now)
         described_class.enqueue(domain_id: 1)
       end
     end
@@ -28,7 +30,7 @@ RSpec.describe DomainExpirationEmailJob do
       end
 
       it 'does not send email notification' do
-        expect(DomainMailer).to_not receive(:expiration)
+        expect(DomainExpireMailer).to_not receive(:expired)
         described_class.enqueue(domain_id: 1)
       end
     end
