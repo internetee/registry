@@ -1,6 +1,4 @@
 class RegistrantChangeMailer < ApplicationMailer
-  include Que::Mailer
-
   def confirm(domain:, registrar:, current_registrant:, new_registrant:)
     @domain = DomainPresenter.new(domain: domain, view: view_context)
     @registrar = RegistrarPresenter.new(registrar: registrar, view: view_context)
