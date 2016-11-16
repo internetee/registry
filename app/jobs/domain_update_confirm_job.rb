@@ -17,7 +17,7 @@ class DomainUpdateConfirmJob < Que::Job
         raise_errors!(domain)
       when RegistrantVerification::REJECTED
         RegistrantChangeMailer.rejected(domain: domain, registrar: domain.registrar, registrant: domain.registrant)
-          .deliver
+          .deliver_now
 
         domain.poll_message!(:poll_pending_update_rejected_by_registrant)
         domain.clean_pendings_lowlevel
