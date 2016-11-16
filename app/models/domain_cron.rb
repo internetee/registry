@@ -49,7 +49,7 @@ class DomainCron
       saved = domain.save(validate: false)
 
       if saved
-        DomainExpirationEmailJob.enqueue(domain_id: domain.id, run_at: send_time)
+        DomainExpirationEmailJob.enqueue(domain.id, run_at: send_time)
         marked += 1
       end
     end

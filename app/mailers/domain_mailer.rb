@@ -83,14 +83,6 @@ class DomainMailer < ApplicationMailer
     mail(to: domain.primary_contact_emails)
   end
 
-  def expiration(domain:)
-    @domain = DomainPresenter.new(domain: domain, view: view_context)
-    @registrar = RegistrarPresenter.new(registrar: domain.registrar, view: view_context)
-
-    subject = default_i18n_subject(domain_name: domain.name)
-    mail(to: domain.primary_contact_emails, subject: subject)
-  end
-
   private
   # app/models/DomainMailModel provides the data for mail that can be composed_from
   # which ensures that values of objects are captured when they are valid, not later when this method is executed

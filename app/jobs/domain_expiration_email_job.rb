@@ -1,10 +1,10 @@
 class DomainExpirationEmailJob < Que::Job
-  def run(domain_id:)
+  def run(domain_id)
     domain = Domain.find(domain_id)
 
     return if domain.registered?
 
-    DomainMailer.expiration(domain: domain).deliver
+    DomainExpireMailer.expired(domain: domain, registrar: domain.registrar).deliver_now
     destroy
   end
 end

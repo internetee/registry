@@ -1,4 +1,4 @@
 en:
-  delete_domain_mailer:
-    pending:
-      subject: Kinnitustaotlus domeeni %{domain_name} kustutamiseks .ee registrist / Application for approval for deletion of %{domain_name}
+  domain_mailer:
+    force_delete:
+      subject: Kustutusmenetluse teade
