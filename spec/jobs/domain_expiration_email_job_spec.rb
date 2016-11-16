@@ -17,7 +17,7 @@ RSpec.describe DomainExpirationEmailJob do
 
       it 'sends email notification' do
         expect(DomainMailer).to receive(:expiration).with(domain: domain).and_return(message)
-        expect(message).to receive(:deliver!)
+        expect(message).to receive(:deliver)
         described_class.enqueue(domain_id: 1)
       end
     end

@@ -4,7 +4,7 @@ Domeeni <%= @domain.name %> registreerija <%= @registrant.name %> ei kinnitanud 
 
 Küsimuste korral palun võtke ühendust oma registripidajaga:
 
-<%= render 'registrar.et.text', registrar: @registrar %>
+<%= render 'mailers/shared/registrar/registrar.et.text', registrar: @registrar %>
 
 Lugupidamisega
 Eesti Interneti Sihtasutus
@@ -17,7 +17,7 @@ Domain registrant change request has been expired for the domain <%= @domain.nam
 
 Please contact to your registrar if you have any questions:
 
-<%= render 'registrar.en.text', registrar: @registrar %>
+<%= render 'mailers/shared/registrar/registrar.en.text', registrar: @registrar %>
 
 Best Regards,
 Estonian Internet Foundation

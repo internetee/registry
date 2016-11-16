@@ -104,8 +104,8 @@ RSpec.describe RegistrantChangeMailer do
     let(:registrant_presenter) { instance_spy(RegistrantPresenter) }
 
     subject(:message) { described_class.rejected(domain: domain,
-                                               registrar: registrar,
-                                               registrant: registrant)
+                                                 registrar: registrar,
+                                                 registrant: registrant)
     }
 
     before :example do
@@ -125,6 +125,46 @@ RSpec.describe RegistrantChangeMailer do
     it 'has subject' do
       subject = 'Domeeni test.com registreerija vahetuse taotlus tagasi lükatud' \
                 ' / test.com registrant change declined'
+
+      expect(message.subject).to eq(subject)
+    end
+
+    it 'sends message' do
+      expect { message.deliver! }.to change { ActionMailer::Base.deliveries.count }.by(1)
+    end
+  end
+
+  describe '#expired' do
+    let(:domain) { instance_spy(Domain, name: 'test.com', new_registrant_email: 'new.registrant@test.com') }
+    let(:registrar) { instance_spy(Registrar) }
+    let(:registrant) { instance_spy(Registrant) }
+
+    let(:domain_presenter) { instance_spy(DomainPresenter) }
+    let(:registrar_presenter) { instance_spy(RegistrarPresenter) }
+    let(:registrant_presenter) { instance_spy(RegistrantPresenter) }
+
+    subject(:message) { described_class.expired(domain: domain,
+                                                registrar: registrar,
+                                                registrant: registrant)
+    }
+
+    before :example do
+      expect(DomainPresenter).to receive(:new).and_return(domain_presenter)
+      expect(RegistrarPresenter).to receive(:new).and_return(registrar_presenter)
+      expect(RegistrantPresenter).to receive(:new).and_return(registrant_presenter)
+    end
+
+    it 'has sender' do
+      expect(message.from).to eq(['noreply@internet.ee'])
+    end
+
+    it 'has new registrant\s email as a recipient' do
+      expect(message.to).to match_array(['new.registrant@test.com'])
+    end
+
+    it 'has subject' do
+      subject = 'Domeeni test.com registreerija vahetuse taotlus on tühistatud' \
+                ' / test.com registrant change cancelled'
 
       expect(message.subject).to eq(subject)
     end

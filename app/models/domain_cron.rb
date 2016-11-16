@@ -16,7 +16,8 @@ class DomainCron
       end
       count += 1
       if domain.pending_update?
-        DomainMailer.pending_update_expired_notification_for_new_registrant(domain.id).deliver
+        RegistrantChangeMailer.expired(domain: domain, registrar: domain.registrar, registrant: domain.registrant)
+          .deliver
       end
       if domain.pending_delete? || domain.pending_delete_confirmation?
         DomainMailer.pending_delete_expired_notification(domain.id, true).deliver

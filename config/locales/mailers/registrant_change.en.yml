@@ -6,3 +6,5 @@ en:
       subject: Domeeni %{domain_name} registreerija vahetus protseduur on algatatud / %{domain_name} registrant change
     rejected:
       subject: Domeeni %{domain_name} registreerija vahetuse taotlus tagasi lükatud / %{domain_name} registrant change declined
+    expired:
+      subject: Domeeni %{domain_name} registreerija vahetuse taotlus on tühistatud / %{domain_name} registrant change cancelled

@@ -4,6 +4,7 @@ class DomainExpirationEmailJob < Que::Job
 
     return if domain.registered?
 
-    DomainMailer.expiration(domain: domain).deliver!
+    DomainMailer.expiration(domain: domain).deliver
+    destroy
   end
 end

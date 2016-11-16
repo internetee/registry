@@ -31,8 +31,13 @@ class RegistrantChangeMailer < ApplicationMailer
     mail(to: domain.new_registrant_email, subject: subject)
   end
 
-  def pending_update_expired_notification_for_new_registrant(params)
-    compose_from(params)
+  def expired(domain:, registrar:, registrant:)
+    @domain = DomainPresenter.new(domain: domain, view: view_context)
+    @registrar = RegistrarPresenter.new(registrar: registrar, view: view_context)
+    @registrant = RegistrantPresenter.new(registrant: registrant, view: view_context)
+
+    subject = default_i18n_subject(domain_name: domain.name)
+    mail(to: domain.new_registrant_email, subject: subject)
   end
 
   private

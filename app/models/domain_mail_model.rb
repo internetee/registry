@@ -6,13 +6,6 @@ class DomainMailModel
     @params = {errors: [], deliver_emails: domain.deliver_emails, id: domain.id}
   end
 
-  def pending_update_expired_notification_for_new_registrant
-    registrant_pending
-    subject(:pending_update_expired_notification_for_new_registrant_subject)
-    domain_info
-    compose
-  end
-
   def pending_delete_rejected_notification
     registrant
     subject(:pending_delete_rejected_notification_subject)

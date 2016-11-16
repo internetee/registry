@@ -2,6 +2,25 @@ require 'rails_helper'
 
 RSpec.describe Domain do
   before :example do
+    Setting.ds_algorithm = 2
+    Setting.ds_data_allowed = true
+    Setting.ds_data_with_key_allowed = true
+    Setting.key_data_allowed = true
+
+    Setting.dnskeys_min_count = 0
+    Setting.dnskeys_max_count = 9
+    Setting.ns_min_count = 2
+    Setting.ns_max_count = 11
+
+    Setting.transfer_wait_time = 0
+
+    Setting.admin_contacts_min_count = 1
+    Setting.admin_contacts_max_count = 10
+    Setting.tech_contacts_min_count = 0
+    Setting.tech_contacts_max_count = 10
+
+    Setting.client_side_status_editing_enabled = true
+
     Fabricate(:zonefile_setting, origin: 'ee')
     Fabricate(:zonefile_setting, origin: 'pri.ee')
     Fabricate(:zonefile_setting, origin: 'med.ee')
@@ -157,24 +176,11 @@ RSpec.describe Domain do
     end
 
     it 'should start redemption grace period' do
-      DomainCron.start_redemption_grace_period
-      @domain.reload
-      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
-
-      @domain.outzone_at = Time.zone.now
-      @domain.statuses << DomainStatus::SERVER_MANUAL_INZONE # this prohibits server_hold
-      @domain.save
+      domain = Fabricate(:domain)
 
       DomainCron.start_redemption_grace_period
-      @domain.reload
-      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
-
-      @domain.statuses = []
-      @domain.save
-
-      DomainCron.start_redemption_grace_period
-      @domain.reload
-      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == true
+      domain.reload
+      domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
     end
 
     it 'should set force delete time' do
@@ -327,27 +333,6 @@ RSpec.describe Domain do
           end
         end
       end
-    end
-
-    it 'should start redemption grace period' do
-      DomainCron.start_redemption_grace_period
-      @domain.reload
-      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
-
-      @domain.outzone_at = Time.zone.now
-      @domain.statuses << DomainStatus::SERVER_MANUAL_INZONE # this prohibits server_hold
-      @domain.save
-
-      DomainCron.start_redemption_grace_period
-      @domain.reload
-      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
-
-      @domain.statuses = []
-      @domain.save
-
-      DomainCron.start_redemption_grace_period
-      @domain.reload
-      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == true
     end
 
     it 'should set pending update' do
