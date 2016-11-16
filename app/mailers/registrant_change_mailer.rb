@@ -16,7 +16,6 @@ class RegistrantChangeMailer < ApplicationMailer
     @registrar = RegistrarPresenter.new(registrar: registrar, view: view_context)
     @current_registrant = RegistrantPresenter.new(registrant: current_registrant, view: view_context)
     @new_registrant = RegistrantPresenter.new(registrant: new_registrant, view: view_context)
-    @confirm_url = confirm_url(domain)
 
     subject = default_i18n_subject(domain_name: domain.name)
     mail(to: new_registrant.email, subject: subject)
