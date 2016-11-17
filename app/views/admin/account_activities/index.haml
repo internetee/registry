@@ -9,7 +9,7 @@
       .row
         .col-md-12
           .form-group
-            = f.label t(:registrar)
+            = f.label t(:registrar_name)
             = f.select :account_registrar_id_in, Registrar.all.map { |x| [x, x.id] }, {}, class: 'form-control js-combobox', placeholder: t(:choose), multiple: true
       .row
         .col-md-6
@@ -56,7 +56,7 @@
         %thead
           %tr
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'account_registrar_code', t(:registrar))
+              = sort_link(@q, 'account_registrar_code', t(:registrar_name))
             %th{class: 'col-xs-3'}
               = sort_link(@q, 'description')
             %th{class: 'col-xs-2'}

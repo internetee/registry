@@ -285,7 +285,7 @@ en:
   valid_to: 'Valid to'
   name: 'Name'
   transfer_can_be_approved_only_by_current_registrar: 'Transfer can be approved only by current domain registrar'
-  registrar: 'Registrar'
+  registrar_name: 'Registrar'
   owner: 'Registrant'
   domain_details: 'Domain details'
   registered_at: 'Registered at'
@@ -440,7 +440,6 @@ en:
 
   setting: 'Setting'
 
-  registrar: 'Registrar'
   transfer_requested: 'Transfer requested.'
   message_was_not_found: 'Message was not found'
   host_obj_is_not_allowed: 'hostObj object is not allowed'
@@ -531,7 +530,6 @@ en:
   ident_update_error: 'Parameter value policy error. Update of ident data not allowed [ident]'
   invoices: 'Invoices'
   no_such_user: 'No such user'
-  log_in: 'Log in'
   phone_no: 'Phone number'
   log_in_with_mid: 'Log in with mobile-id'
   confirmation_sms_was_sent_to_your_phone_verification_code_is: 'Confirmation sms was sent to your phone. Verification code is %{code}.'

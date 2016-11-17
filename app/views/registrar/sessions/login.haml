@@ -8,13 +8,13 @@
       - error_class = f.object.errors.any? ? 'has-error' : ''
       %div{class: error_class}
         = f.text_field :tag, class: 'form-control', placeholder: t(:username), required: true
-        = f.password_field :password, class: 'form-control', 
+        = f.password_field :password, class: 'form-control',
           autocomplete: 'off', placeholder: t(:password), required: true
 
-      %button.btn.btn-lg.btn-primary.btn-block{:type => 'submit'}= t(:log_in)
+      %button.btn.btn-lg.btn-primary.btn-block{:type => 'submit'}= t('.login_btn')
 
     %hr
-    = link_to '/registrar/login/mid' do
+    = link_to '/registrar/login/mid', id: 'login-with-mobile-id-btn' do
       = image_tag 'mid.gif'
     = link_to '/registrar/id', method: :post do
       = image_tag 'id_card.gif'

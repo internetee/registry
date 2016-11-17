@@ -49,7 +49,7 @@
           %dd{class: changing_css_class(@version,"updated_at")}
             = l(contact.updated_at, format: :short)
 
-          %dt= t(:registrar)
+          %dt= t(:registrar_name)
           %dd{class: changing_css_class(@version,"registrar_id")}
             - if contact.registrar.present?
               = link_to(contact.registrar, admin_registrar_path(contact.registrar))

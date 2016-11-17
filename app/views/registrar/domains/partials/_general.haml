@@ -7,7 +7,7 @@
       %dd= @data.css('pw').text.present? ? @data.css('pw').text : t('hidden')
 
       - if @data.css('pw').text.blank?
-        %dt= t(:registrar)
+        %dt= t(:registrar_name)
         %dd= @data.css('clID').text
 
       - registrant = Contact.find_by_code(@data.css('registrant').text)

@@ -42,7 +42,7 @@
         by
         = @contact.name
 
-      %dt= t(:registrar)
+      %dt= t(:registrar_name)
       %dd
         - if @contact.registrar.present?
           = link_to(@contact.registrar, registrant_registrar_path(@contact.registrar))

@@ -39,7 +39,7 @@
         by
         = updator_link(@contact)
 
-      %dt= t(:registrar)
+      %dt= t(:registrar_name)
       %dd
         - if @contact.registrar.present?
           = link_to(@contact.registrar, admin_registrar_path(@contact.registrar))
