@@ -1,3 +1,7 @@
+18.11.2016 
+* Domain expiration emails are now sent out
+* Include detailed registrar's contact info in emails
+
 25.10.2016 
 * Outdated specs removed, failing specs fixed, rspec config improved
 
