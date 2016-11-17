@@ -1,3 +1,8 @@
+07.11.2016 
+* Use app time zone when calculating valid_to, outzone_at and delete_at domain attributes
+* Consider domains having current time at expire_time attribute expired
+* Improve domain's outzone and delete logic
+
 25.10.2016 
 * Outdated specs removed, failing specs fixed, rspec config improved
 
