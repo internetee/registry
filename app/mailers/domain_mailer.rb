@@ -75,14 +75,6 @@ class DomainMailer < ApplicationMailer
          name: @domain.name)} [#{@domain.name}]")
   end
 
-  def force_delete(domain:)
-    @domain = DomainPresenter.new(domain: domain, view: view_context)
-    @registrar = RegistrarPresenter.new(registrar: domain.registrar, view: view_context)
-    @registrant = RegistrantPresenter.new(registrant: domain.registrant, view: view_context)
-
-    mail(to: domain.primary_contact_emails)
-  end
-
   private
   # app/models/DomainMailModel provides the data for mail that can be composed_from
   # which ensures that values of objects are captured when they are valid, not later when this method is executed

@@ -805,26 +805,6 @@ RSpec.describe Domain, db: false do
     end
   end
 
-  describe '#pending_delete!' do
-    let(:domain) { described_class.new }
-    let(:old_registrant) { instance_double(Registrant) }
-    let(:message) { instance_double(Mail::Message) }
-
-    before :example do
-      expect(Registrant).to receive(:find).and_return(old_registrant)
-      allow(domain).to receive(:registrant_verification_asked?).and_return(true)
-      allow(domain).to receive(:save)
-    end
-
-    it 'sends notification email' do
-      expect(DeleteDomainMailer).to receive(:pending)
-                                    .with(domain: domain, old_registrant: old_registrant)
-                                    .and_return(message)
-      expect(message).to receive(:deliver)
-      domain.pending_delete!
-    end
-  end
-
   describe '#set_graceful_expired' do
     let(:domain) { described_class.new }
 
@@ -877,51 +857,19 @@ RSpec.describe Domain, db: false do
     end
   end
 
-  describe '#pending_update!', db: false do
-    let(:domain) { described_class.new }
-    let(:current_registrant) { FactoryGirl.build_stubbed(:registrant) }
-    let(:new_registrant) { FactoryGirl.build_stubbed(:registrant) }
-    let(:message) { instance_double(Mail::Message) }
-
-    before :example do
-      expect(Registrant).to receive(:find).and_return(current_registrant)
-      expect(domain).to receive_messages(
-                          reload: true,
-                          pending_update?: false,
-                          registrant_verification_asked?: true,
-                          registrar: 'registrar',
-                          registrant: new_registrant,
-                          manage_automatic_statuses: true
-                       )
-    end
-
-    it 'sends confirm and notice emails' do
-      allow(RegistrantChangeMailer).to receive(:notice).and_return(message)
-      expect(RegistrantChangeMailer).to receive(:confirm)
-                                          .with(
-                                            domain: domain,
-                                            registrar: 'registrar',
-                                            current_registrant: current_registrant,
-                                            new_registrant: new_registrant)
-                                          .and_return(message)
-
-      expect(RegistrantChangeMailer).to receive(:notice)
-                                          .with(
-                                            domain: domain,
-                                            registrar: 'registrar',
-                                            current_registrant: current_registrant,
-                                            new_registrant: new_registrant)
-                                          .and_return(message)
-      expect(message).to receive(:deliver).exactly(2).times
-      domain.pending_update!
-    end
-  end
-
   describe '#new_registrant_email' do
     let(:domain) { described_class.new(pending_json: { new_registrant_email: 'test@test.com' }) }
 
     it 'returns new registrant\'s email' do
       expect(domain.new_registrant_email).to eq('test@test.com')
+    end
+  end
+
+  describe '#new_registrant_id' do
+    let(:domain) { described_class.new(pending_json: { new_registrant_id: 1 }) }
+
+    it 'returns new registrant\'s id' do
+      expect(domain.new_registrant_id).to eq(1)
     end
   end
 end

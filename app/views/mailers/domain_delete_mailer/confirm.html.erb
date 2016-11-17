@@ -8,7 +8,7 @@ Registrisse laekus taotlus domeeni <%= @domain.name %> kustutamiseks. Palun veen
 Muudatuse kinnitamiseks külastage palun allolevat lehekülge, kontrollige uuesti üle muudatuse andmed ning vajutage nuppu kinnitan.
 <br><br>
 Taotlus on aktiivne <%= Setting.expire_pending_confirmation %> tundi ja lükatakse automaatselt tagasi kui te seda enne ise ei kinnita või tagasi lükka.<br>
-<%= link_to @verification_url, @verification_url %>
+<%= link_to @confirm_url, @confirm_url %>
 <br><br>
 Lugupidamisega<br>
 Eesti Interneti Sihtasutus
@@ -23,7 +23,7 @@ Application for deletion of your domain <%= @domain.name %> has been filed. Plea
 
 <br><br>
 To confirm the update please visit this website, once again review the data and press approve:<br>
-<%= link_to @verification_url, @verification_url %>
+<%= link_to @confirm_url, @confirm_url %>
 <br><br>
 The application will remain in pending status for <%= Setting.expire_pending_confirmation %> hrs and will be automatically rejected if it is not approved nor rejected before.
 <br><br>

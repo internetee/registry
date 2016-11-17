@@ -1,13 +1,13 @@
 require 'rails_helper'
 
-RSpec.shared_examples 'delete domain mailer pending' do
+RSpec.shared_examples 'domain delete mailer confirm' do
   let(:domain) { instance_spy(DomainPresenter) }
   let(:lang_count) { 2 }
 
   before :example do
     assign(:domain, domain)
     assign(:registrar, nil)
-    assign(:verification_url, 'test verification url')
+    assign(:confirm_url, 'test confirm url')
   end
 
   it 'has registrar info in estonian' do
@@ -27,9 +27,9 @@ RSpec.shared_examples 'delete domain mailer pending' do
     expect(rendered).to have_text('test domain name', count: mention_count)
   end
 
-  it 'has verification url' do
+  it 'has confirm url' do
     mention_count = 1 * lang_count
     render
-    expect(rendered).to have_text('test verification url', count: mention_count)
+    expect(rendered).to have_text('test confirm url', count: mention_count)
   end
 end

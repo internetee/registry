@@ -16,8 +16,7 @@ class DomainCron
       end
       count += 1
       if domain.pending_update?
-        RegistrantChangeMailer.expired(domain: domain, registrar: domain.registrar, registrant: domain.registrant)
-          .deliver
+        RegistrantChangeExpiredEmailJob.enqueue(domain.id)
       end
       if domain.pending_delete? || domain.pending_delete_confirmation?
         DomainMailer.pending_delete_expired_notification(domain.id, true).deliver
@@ -49,7 +48,7 @@ class DomainCron
       saved = domain.save(validate: false)
 
       if saved
-        DomainExpirationEmailJob.enqueue(domain.id, run_at: send_time)
+        DomainExpireEmailJob.enqueue(domain.id, run_at: send_time)
         marked += 1
       end
     end

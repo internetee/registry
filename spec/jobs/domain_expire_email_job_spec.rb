@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe DomainExpirationEmailJob do
+RSpec.describe DomainExpireEmailJob do
   describe '#run' do
     let(:domain) { instance_double(Domain) }
 

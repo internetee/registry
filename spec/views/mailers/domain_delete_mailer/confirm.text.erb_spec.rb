@@ -1,11 +1,11 @@
 require 'rails_helper'
-require_relative 'pending_shared'
+require_relative 'confirm_shared'
 
-RSpec.describe 'mailers/delete_domain_mailer/pending.text.erb' do
+RSpec.describe 'mailers/domain_delete_mailer/confirm.text.erb' do
   before :example do
     stub_template 'mailers/shared/registrar/_registrar.et.text' => 'test registrar estonian'
     stub_template 'mailers/shared/registrar/_registrar.en.text' => 'test registrar english'
   end
 
-  include_examples 'delete domain mailer pending'
+  include_examples 'domain delete mailer confirm'
 end

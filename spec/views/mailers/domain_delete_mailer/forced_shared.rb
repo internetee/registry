@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.shared_examples 'domain mailer force delete' do
+RSpec.shared_examples 'domain delete mailer forced' do
   let(:domain) { instance_spy(DomainPresenter) }
   let(:registrar) { instance_spy(RegistrarPresenter) }
   let(:registrant) { instance_spy(RegistrantPresenter) }

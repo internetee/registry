@@ -379,11 +379,8 @@ class Domain < ActiveRecord::Base
     new_registrant_email = registrant.email
     new_registrant_name  = registrant.name
 
-    current_registrant = Registrant.find(registrant_id_was)
-    RegistrantChangeMailer.confirm(domain: self, registrar: registrar, current_registrant: current_registrant,
-                                   new_registrant: registrant).deliver
-    RegistrantChangeMailer.notice(domain: self, registrar: registrar, current_registrant: current_registrant,
-                                  new_registrant: registrant).deliver
+    RegistrantChangeConfirmEmailJob.enqueue(id, new_registrant_id)
+    RegistrantChangeNoticeEmailJob.enqueue(id, new_registrant_id)
 
     reload
 
@@ -444,8 +441,7 @@ class Domain < ActiveRecord::Base
     pending_delete_confirmation!
     save(validate: false) # should check if this did succeed
 
-    old_registrant = Registrant.find(registrant_id_was)
-    DeleteDomainMailer.pending(domain: self, old_registrant: old_registrant).deliver
+    DomainDeleteConfirmEmailJob.enqueue(id)
   end
 
   def cancel_pending_delete
@@ -566,12 +562,15 @@ class Domain < ActiveRecord::Base
     end
 
     self.force_delete_at = (Time.zone.now + (Setting.redemption_grace_period.days + 1.day)).utc.beginning_of_day unless force_delete_at
+
     transaction do
       save!(validate: false)
       registrar.messages.create!(
         body: I18n.t('force_delete_set_on_domain', domain: name)
       )
-      DomainMailer.force_delete(domain: self).deliver
+
+      DomainDeleteForcedEmailJob.enqueue(id)
+
       return true
     end
     false
@@ -743,6 +742,10 @@ class Domain < ActiveRecord::Base
 
   def new_registrant_email
     pending_json['new_registrant_email']
+  end
+
+  def new_registrant_id
+    pending_json['new_registrant_id']
   end
 
   def self.to_csv
