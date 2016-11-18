@@ -1,5 +1,5 @@
 18.11.2016 
-* Domain expiration emails are now sent out
+* Domain expiration emails are now sent out to admin contacts as well. Sending bug is fixed.
 * Include detailed registrar's contact info in emails
 
 25.10.2016 
