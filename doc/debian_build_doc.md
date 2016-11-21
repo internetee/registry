@@ -99,7 +99,7 @@ iptables -A INPUT -p tcp --dport 700 -j CHKLIMITS
 ````
 #### Mailcatcher for staging (optional)
 
-We recommend using mailcatcher for staging env, so that all outgoing e-mails are catched and not actualy sent out.
+We recommend using mailcatcher for staging env, so that all outgoing e-mails are caught and not actualy sent out.
 The mailcatcher website explains how it should be intsalled and configured.
 [Mailcatcher](https://mailcatcher.me/)
 `````
