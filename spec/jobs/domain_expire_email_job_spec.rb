@@ -8,19 +8,34 @@ RSpec.describe DomainExpireEmailJob do
       expect(Domain).to receive(:find).and_return(domain)
     end
 
+    after :example do
+      described_class.enqueue(domain_id: 1)
+    end
+
     context 'when domain is expired' do
       let(:message) { instance_double(ActionMailer::MessageDelivery) }
 
       before :example do
-        allow(domain).to receive(:registrar).and_return('registrar')
-        allow(domain).to receive(:registered?).and_return(false)
+        allow(domain).to receive_messages(
+                           id: 1,
+                           registrar: 'registrar',
+                           registered?: false,
+                           primary_contact_emails: %w(test@test.com test@test.com))
+      end
+
+      it 'creates log record' do
+        log_message = 'Send DomainExpireMailer#expired email for domain #1 to test@test.com, test@test.com'
+
+        allow(DomainExpireMailer).to receive(:expired).and_return(message)
+        allow(message).to receive(:deliver_now)
+
+        expect(Rails.logger).to receive(:info).with(log_message)
       end
 
       it 'sends email notification' do
         expect(DomainExpireMailer).to receive(:expired).with(domain: domain, registrar: 'registrar')
                                         .and_return(message)
         expect(message).to receive(:deliver_now)
-        described_class.enqueue(domain_id: 1)
       end
     end
 
@@ -29,9 +44,12 @@ RSpec.describe DomainExpireEmailJob do
         allow(domain).to receive(:registered?).and_return(true)
       end
 
+      it 'does not create log record' do
+        expect(Rails.logger).to_not receive(:info)
+      end
+
       it 'does not send email notification' do
         expect(DomainExpireMailer).to_not receive(:expired)
-        described_class.enqueue(domain_id: 1)
       end
     end
   end
