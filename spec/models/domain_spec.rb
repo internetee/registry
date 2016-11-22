@@ -794,13 +794,13 @@ RSpec.describe Domain, db: false do
 
     before :example do
       expect(domain).to receive(:registrant_email).and_return('registrant@test.com')
-      expect(domain).to receive(:admin_contact_emails).and_return(['admin.contact.email@test.com'])
+      expect(domain).to receive(:admin_contact_emails).and_return(%w(admin.contact@test.com admin.contact@test.com))
     end
 
-    it 'returns registrant and administrative contact emails' do
+    it 'returns unique list of registrant and administrative contact emails' do
       expect(domain.primary_contact_emails).to match_array(%w(
                                                    registrant@test.com
-                                                   admin.contact.email@test.com
+                                                   admin.contact@test.com
                                                  ))
     end
   end

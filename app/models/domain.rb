@@ -737,7 +737,7 @@ class Domain < ActiveRecord::Base
   end
 
   def primary_contact_emails
-    admin_contact_emails << registrant_email
+    (admin_contact_emails << registrant_email).uniq
   end
 
   def new_registrant_email
