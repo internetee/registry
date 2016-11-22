@@ -11,6 +11,11 @@ class DomainExpireEmailJob < Que::Job
   private
 
   def log(domain)
-    Rails.logger.info("Send DomainExpireMailer#expired email for domain ##{domain.id} to #{domain.primary_contact_emails.join(', ')}")
+    message = "Send DomainExpireMailer#expired email for domain ##{domain.id} to #{domain.primary_contact_emails.join(', ')}"
+    logger.info(message)
+  end
+
+  def logger
+    Rails.logger
   end
 end

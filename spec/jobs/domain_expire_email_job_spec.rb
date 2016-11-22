@@ -9,7 +9,8 @@ RSpec.describe DomainExpireEmailJob do
     end
 
     after :example do
-      described_class.enqueue(domain_id: 1)
+      domain_id = 1
+      described_class.enqueue(domain_id)
     end
 
     context 'when domain is expired' do
@@ -32,7 +33,7 @@ RSpec.describe DomainExpireEmailJob do
         expect(Rails.logger).to receive(:info).with(log_message)
       end
 
-      it 'sends email notification' do
+      it 'sends email' do
         expect(DomainExpireMailer).to receive(:expired).with(domain: domain, registrar: 'registrar')
                                         .and_return(message)
         expect(message).to receive(:deliver_now)
@@ -48,7 +49,7 @@ RSpec.describe DomainExpireEmailJob do
         expect(Rails.logger).to_not receive(:info)
       end
 
-      it 'does not send email notification' do
+      it 'does not send email' do
         expect(DomainExpireMailer).to_not receive(:expired)
       end
     end
