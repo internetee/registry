@@ -42,7 +42,7 @@ RSpec.describe DomainDeleteMailer do
     end
 
     it 'sends message' do
-      expect { message.deliver! }.to change { ActionMailer::Base.deliveries.count }.by(1)
+      expect { message.deliver_now }.to change { ActionMailer::Base.deliveries.count }.by(1)
     end
   end
 
@@ -76,7 +76,7 @@ RSpec.describe DomainDeleteMailer do
     end
 
     it 'sends message' do
-      expect { message.deliver! }.to change { ActionMailer::Base.deliveries.count }.by(1)
+      expect { message.deliver_now }.to change { ActionMailer::Base.deliveries.count }.by(1)
     end
   end
 end
