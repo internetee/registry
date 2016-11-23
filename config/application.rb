@@ -23,7 +23,7 @@ module Registry
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
-    config.time_zone = ENV['time_zone'] || 'Tallinn'  # NB! It should be defined, 
+    config.time_zone = ENV['time_zone'] || 'Tallinn'  # NB! It should be defined,
                                                       # otherwise ActiveRecord usese other class internally.
 
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.yml').to_s]
@@ -35,6 +35,7 @@ module Registry
     # Autoload all model subdirs
     config.autoload_paths += Dir[Rails.root.join('app', 'models', '**/')]
     config.autoload_paths << Rails.root.join('lib')
+    config.eager_load_paths << config.root.join('lib', 'validators')
 
     # Add the fonts path
     config.assets.paths << Rails.root.join('vendor', 'assets', 'fonts')
