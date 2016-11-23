@@ -38,15 +38,4 @@ RSpec.describe DomainCron do
     @domain.reload
     @domain.statuses.include?(DomainStatus::EXPIRED).should == true
   end
-
-  describe '::start_expire_period', db: false do
-    before :example do
-      travel_to Time.zone.parse('05.07.2010')
-    end
-
-    it 'logs start time' do
-      expect(Rails.logger).to receive(:info).with('Expiring domains')
-      described_class.start_expire_period
-    end
-  end
 end
