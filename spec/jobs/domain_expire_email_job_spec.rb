@@ -18,19 +18,9 @@ RSpec.describe DomainExpireEmailJob do
 
       before :example do
         allow(domain).to receive_messages(
-                           id: 1,
                            registrar: 'registrar',
                            registered?: false,
                            primary_contact_emails: %w(test@test.com test@test.com))
-      end
-
-      it 'creates log record' do
-        log_message = 'Send DomainExpireMailer#expired email for domain #1 to test@test.com, test@test.com'
-
-        allow(DomainExpireMailer).to receive(:expired).and_return(message)
-        allow(message).to receive(:deliver_now)
-
-        expect(Rails.logger).to receive(:info).with(log_message)
       end
 
       it 'sends email' do
@@ -43,10 +33,6 @@ RSpec.describe DomainExpireEmailJob do
     context 'when domain is registered' do
       before :example do
         allow(domain).to receive(:registered?).and_return(true)
-      end
-
-      it 'does not create log record' do
-        expect(Rails.logger).to_not receive(:info)
       end
 
       it 'does not send email' do
