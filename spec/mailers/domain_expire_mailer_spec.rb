@@ -31,7 +31,7 @@ RSpec.describe DomainExpireMailer do
         expect(message.subject).to eq('The test.com domain has expired')
       end
 
-      it 'creates log record' do
+      it 'logs valid emails' do
         log_message = 'Send DomainExpireMailer#expired email for domain test.com (#1) to recipient@test.com,' \
         ' recipient@test.com'
         expect(described_class.logger).to receive(:info).with(log_message)
@@ -54,7 +54,13 @@ RSpec.describe DomainExpireMailer do
         expect(message.to).to match_array(%w[valid@test.com])
       end
 
-      it 'creates log record' do
+      it 'does not log invalid email in success message' do
+        log_message = 'Send DomainExpireMailer#expired email for domain test.com (#1) to valid@test.com'
+        expect(described_class.logger).to receive(:info).with(log_message)
+        message.deliver_now
+      end
+
+      it 'logs invalid email in error message' do
         log_message = 'Unable to send DomainExpireMailer#expired email for domain test.com (#1) to' \
         ' invalid recipient invalid_email'
         expect(described_class.logger).to receive(:info).with(log_message)

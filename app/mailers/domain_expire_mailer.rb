@@ -7,7 +7,7 @@ class DomainExpireMailer < ApplicationMailer
     subject = default_i18n_subject(domain_name: domain.name)
 
     logger.info("Send DomainExpireMailer#expired email for domain #{domain.name} (##{domain.id})" \
-    " to #{domain.primary_contact_emails.join(', ')}")
+    " to #{recipient.join(', ')}")
 
     mail(to: recipient, subject: subject)
   end
@@ -24,7 +24,7 @@ class DomainExpireMailer < ApplicationMailer
 
   # Needed because there are invalid emails in the database, which have been imported from legacy app
   def filter_invalid_emails(emails:, domain:)
-    emails.keep_if do |email|
+    emails.select do |email|
       valid = EmailValidator.new(email).valid?
 
       unless valid
