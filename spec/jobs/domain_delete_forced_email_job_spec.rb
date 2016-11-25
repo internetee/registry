@@ -9,6 +9,7 @@ RSpec.describe DomainDeleteForcedEmailJob do
       expect(Domain).to receive(:find).and_return(domain)
       allow(domain).to receive_messages(
                          id: 1,
+                         name: 'test.com',
                          registrar: 'registrar',
                          registrant: 'registrant',
                          primary_contact_emails: %w(test@test.com test@test.com))
@@ -20,7 +21,7 @@ RSpec.describe DomainDeleteForcedEmailJob do
     end
 
     it 'creates log record' do
-      log_message = 'Send DomainDeleteMailer#forced email for domain #1 to test@test.com, test@test.com'
+      log_message = 'Send DomainDeleteMailer#forced email for domain test.com (#1) to test@test.com, test@test.com'
 
       allow(DomainDeleteMailer).to receive(:forced).and_return(message)
       allow(message).to receive(:deliver_now)

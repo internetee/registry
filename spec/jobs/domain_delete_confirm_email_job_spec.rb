@@ -9,6 +9,7 @@ RSpec.describe DomainDeleteConfirmEmailJob do
       expect(Domain).to receive(:find).and_return(domain)
       allow(domain).to receive_messages(
                          id: 1,
+                         name: 'test.com',
                          registrant_email: 'registrant@test.com',
                          registrar: 'registrar',
                          registrant: 'registrant')
@@ -20,7 +21,7 @@ RSpec.describe DomainDeleteConfirmEmailJob do
     end
 
     it 'creates log record' do
-      log_message = 'Send DomainDeleteMailer#confirm email for domain #1 to registrant@test.com'
+      log_message = 'Send DomainDeleteMailer#confirm email for domain test.com (#1) to registrant@test.com'
 
       allow(DomainDeleteMailer).to receive(:confirm).and_return(message)
       allow(message).to receive(:deliver_now)

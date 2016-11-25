@@ -10,6 +10,7 @@ RSpec.describe RegistrantChangeConfirmEmailJob do
       expect(Registrant).to receive(:find).and_return('new registrant')
       allow(domain).to receive_messages(
                          id: 1,
+                         name: 'test.com',
                          registrant_email: 'registrant@test.com',
                          registrar: 'registrar',
                          registrant: 'registrant')
@@ -22,7 +23,7 @@ RSpec.describe RegistrantChangeConfirmEmailJob do
     end
 
     it 'creates log record' do
-      log_message = 'Send RegistrantChangeMailer#confirm email for domain #1 to registrant@test.com'
+      log_message = 'Send RegistrantChangeMailer#confirm email for domain test.com (#1) to registrant@test.com'
 
       allow(RegistrantChangeMailer).to receive(:confirm).and_return(message)
       allow(message).to receive(:deliver_now)

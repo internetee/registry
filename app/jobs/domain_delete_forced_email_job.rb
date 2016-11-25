@@ -11,8 +11,8 @@ class DomainDeleteForcedEmailJob < Que::Job
   private
 
   def log(domain)
-    message = "Send DomainDeleteMailer#forced email for domain ##{domain.id} to #{domain.primary_contact_emails
-                                                                                    .join(', ')}"
+    message = "Send DomainDeleteMailer#forced email for domain #{domain.name} (##{domain.id})" \
+    " to #{domain.primary_contact_emails.join(', ')}"
     logger.info(message)
   end
 

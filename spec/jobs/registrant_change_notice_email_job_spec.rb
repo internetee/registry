@@ -4,6 +4,7 @@ RSpec.describe RegistrantChangeNoticeEmailJob do
   describe '#run' do
     let(:domain) { instance_double(Domain,
                                    id: 1,
+                                   name: 'test.com',
                                    registrant_email: 'registrant@test.com',
                                    registrar: 'registrar',
                                    registrant: 'registrant')
@@ -23,7 +24,7 @@ RSpec.describe RegistrantChangeNoticeEmailJob do
     end
 
     it 'creates log record' do
-      log_message = 'Send RegistrantChangeMailer#notice email for domain #1 to new-registrant@test.com'
+      log_message = 'Send RegistrantChangeMailer#notice email for domain test.com (#1) to new-registrant@test.com'
 
       allow(RegistrantChangeMailer).to receive(:notice).and_return(message)
       allow(message).to receive(:deliver_now)
