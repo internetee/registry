@@ -6,7 +6,7 @@ class DomainExpireMailer < ApplicationMailer
     recipient = filter_invalid_emails(emails: domain.primary_contact_emails, domain: domain)
     subject = default_i18n_subject(domain_name: domain.name)
 
-    logger.info("Send DomainExpireMailer#expired email for domain ##{domain.id}" \
+    logger.info("Send DomainExpireMailer#expired email for domain #{domain.name} (##{domain.id})" \
     " to #{domain.primary_contact_emails.join(', ')}")
 
     mail(to: recipient, subject: subject)
@@ -28,7 +28,7 @@ class DomainExpireMailer < ApplicationMailer
       valid = EmailValidator.new(email).valid?
 
       unless valid
-        logger.info("Unable to send DomainExpireMailer#expired email for domain ##{domain.id}" \
+        logger.info("Unable to send DomainExpireMailer#expired email for domain #{domain.name} (##{domain.id})" \
         " to invalid recipient #{email}")
       end
 

@@ -32,7 +32,7 @@ RSpec.describe DomainExpireMailer do
       end
 
       it 'creates log record' do
-        log_message = 'Send DomainExpireMailer#expired email for domain #1 to recipient@test.com,' \
+        log_message = 'Send DomainExpireMailer#expired email for domain test.com (#1) to recipient@test.com,' \
         ' recipient@test.com'
         expect(described_class.logger).to receive(:info).with(log_message)
         message.deliver_now
@@ -55,7 +55,7 @@ RSpec.describe DomainExpireMailer do
       end
 
       it 'creates log record' do
-        log_message = 'Unable to send DomainExpireMailer#expired email for domain #1 to' \
+        log_message = 'Unable to send DomainExpireMailer#expired email for domain test.com (#1) to' \
         ' invalid recipient invalid_email'
         expect(described_class.logger).to receive(:info).with(log_message)
         message.deliver_now
