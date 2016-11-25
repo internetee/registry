@@ -1,0 +1,39 @@
+Tere
+<br><br>
+Registripidaja <%= @registrar.name %> vahendusel on algatatud <%= @domain.name %> domeeni omanikuvahetuse protseduur.
+<br><br>
+Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja poole:
+
+<%= render 'mailers/shared/registrar/registrar.et.html', registrar: @registrar %>
+
+<br><br>
+Uue registreerija andmed:<br>
+<%= render 'mailers/shared/registrant/registrant.et.html', registrant: @new_registrant %>
+<br><br>
+Juhime Teie tähelepanu asjaolule, et omanikuvahetuse protseduur viiakse lõpule vaid juhul, kui domeeni hetkel kehtiv registreerija <%= @current_registrant.name %> omanikuvahetuse tähtaegselt kinnitab.
+<br><br>
+Juhul kui <%= @current_registrant.name %> lükkab omanikuvahetuse taotluse tagasi või ei anna kinnitust enne <%= Setting.expire_pending_confirmation %> tundi, omanikuvahetuse protseduur tühistatakse.
+<br><br>
+Lugupidamisega<br>
+Eesti Interneti Sihtasutus
+<br><br>
+<hr>
+<br><br>
+Hi,
+<br><br>
+Registrant change process for the domain <%= @domain.name %> has been started.
+<br><br>
+Please verify the details of the following change request. In case of problems contact your registrar:
+
+<%= render 'mailers/shared/registrar/registrar.en.html', registrar: @registrar %>
+
+<br><br>
+New registrant:<br>
+<%= render 'mailers/shared/registrant/registrant.en.html', registrant: @new_registrant %>
+<br><br>
+The registrant change procedure will be completed only after the current registrant <%= @current_registrant.name %> has approved it.
+<br><br>
+Change request will be cancelled in case <%= @current_registrant.name %> rejects or does not approve it in <%= Setting.expire_pending_confirmation %> hours.
+<br><br>
+Best Regards,<br>
+Estonian Internet Foundation

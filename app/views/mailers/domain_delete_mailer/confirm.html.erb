@@ -1,0 +1,31 @@
+Tere
+<br><br>
+Registrisse laekus taotlus domeeni <%= @domain.name %> kustutamiseks. Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja poole:
+
+<%= render 'mailers/shared/registrar/registrar.et.html', registrar: @registrar %>
+
+<br><br>
+Muudatuse kinnitamiseks külastage palun allolevat lehekülge, kontrollige uuesti üle muudatuse andmed ning vajutage nuppu kinnitan.
+<br><br>
+Taotlus on aktiivne <%= Setting.expire_pending_confirmation %> tundi ja lükatakse automaatselt tagasi kui te seda enne ise ei kinnita või tagasi lükka.<br>
+<%= link_to @confirm_url, @confirm_url %>
+<br><br>
+Lugupidamisega<br>
+Eesti Interneti Sihtasutus
+<br><br>
+<hr>
+<br><br>
+Hi,
+<br><br>
+Application for deletion of your domain <%= @domain.name %> has been filed. Please make sure that the application is correct. Incase of problems please contact your registrar:
+
+<%= render 'mailers/shared/registrar/registrar.en.html', registrar: @registrar %>
+
+<br><br>
+To confirm the update please visit this website, once again review the data and press approve:<br>
+<%= link_to @confirm_url, @confirm_url %>
+<br><br>
+The application will remain in pending status for <%= Setting.expire_pending_confirmation %> hrs and will be automatically rejected if it is not approved nor rejected before.
+<br><br>
+Best Regards,<br>
+Estonian Internet Foundation

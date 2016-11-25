@@ -1,0 +1,33 @@
+Tere
+
+Registrisse laekus taotlus domeeni <%= @domain.name %> registreerija vahetuseks. Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja poole:
+
+<%= render 'mailers/shared/registrar/registrar.et.text', registrar: @registrar %>
+
+Uue registreerija andmed:
+<%= render 'mailers/shared/registrant/registrant.et.text', registrant: @new_registrant %>
+
+Taotlus on aktiivne <%= Setting.expire_pending_confirmation %> tundi ja lükatakse automaatselt tagasi kui te seda enne ei kinnita või tagasi lükka.
+Muudatuse kinnitamiseks külastage palun allolevat lehekülge, kontrollige uuesti üle muudatuse andmed ning vajutage nuppu kinnitan:
+<%= @confirm_url %>
+
+Lugupidamisega
+Eesti Interneti Sihtasutus
+
+--------------------------------------
+
+Hi,
+
+Application for changing registrant of your domain <%= @domain.name %> has been filed. Please make sure that the update and information are correct. In case of problems please turn to your registrar:
+
+<%= render 'mailers/shared/registrar/registrar.en.text', registrar: @registrar %>
+
+New registrant:
+<%= render 'mailers/shared/registrant/registrant.en.text', registrant: @new_registrant %>
+
+The application will remain in pending status for <%= Setting.expire_pending_confirmation %> hrs and will be automaticcally rejected if it is not approved nor rejected before.
+To confirm the update please visit this website, once again review the data and press approve:
+<%= @confirm_url %>
+
+Best Regards,
+Estonian Internet Foundation

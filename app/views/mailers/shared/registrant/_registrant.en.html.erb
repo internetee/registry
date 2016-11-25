@@ -1,0 +1,9 @@
+Name: <%= registrant.name %><br>
+<% if registrant.priv? %>
+    Personal code: <%= registrant.ident %><br>
+<% else %>
+    Business Registry code: <%= registrant.ident %><br>
+<% end %>
+Street: <%= registrant.street %><br>
+City: <%= registrant.city %><br>
+Country: <%= registrant.country %>

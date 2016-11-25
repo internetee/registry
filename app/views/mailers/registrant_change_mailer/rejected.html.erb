@@ -1,0 +1,25 @@
+Tere
+<br><br>
+Domeeni <%= @domain.name %> registreerija <%= @registrant.name %> on domeeni registreerija vahetamise taotluse tagasi lükanud.
+<br><br>
+Küsimuste korral võtke palun ühendust oma registripidajaga:
+
+<%= render 'mailers/shared/registrar/registrar.et.html', registrar: @registrar %>
+
+<br><br>
+Lugupidamisega<br>
+Eesti Interneti Sihtasutus
+<br><br>
+<hr>
+<br><br>
+Hi,
+<br><br>
+Registrant change for the domain <%= @domain.name %> was rejected by the registrant <%= @registrant.name %>.
+<br><br>
+Please contact your registrar if you have any questions:
+
+<%= render 'mailers/shared/registrar/registrar.en.html', registrar: @registrar %>
+
+<br><br>
+Best Regards,<br>
+Estonian Internet Foundation

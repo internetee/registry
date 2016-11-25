@@ -1,47 +1,9 @@
 class DomainMailModel
   # Capture current values used in app/views/mailers/domain_mailer/* and app/mailers/domain_mailer will send later
-  
+
   def initialize(domain)
     @domain = domain
     @params = {errors: [], deliver_emails: domain.deliver_emails, id: domain.id}
-  end
-
-  def pending_update_request_for_old_registrant
-    registrant_old
-    subject(:pending_update_request_for_old_registrant_subject)
-    confirm_update
-    domain_info
-    compose
-  end
-
-  def pending_update_notification_for_new_registrant
-    registrant     # new registrant at this point 
-    subject(:pending_update_notification_for_new_registrant_subject)
-    domain_info
-    compose
-  end
-
-  
-  def pending_update_rejected_notification_for_new_registrant
-    registrant_pending
-    subject(:pending_update_rejected_notification_for_new_registrant_subject)
-    @params[:deliver_emails] = true # triggered from que
-    @params[:registrar_name] = @domain.registrar.name
-    compose
-  end
-
-  def pending_update_expired_notification_for_new_registrant
-    registrant_pending
-    subject(:pending_update_expired_notification_for_new_registrant_subject)
-    domain_info
-    compose
-  end
-
-  def pending_deleted
-    registrant
-    subject(:domain_pending_deleted_subject)
-    confirm_delete
-    compose
   end
 
   def pending_delete_rejected_notification
@@ -69,11 +31,11 @@ class DomainMailModel
   end
 
   private
-  
+
   def registrant_old
     @params[:recipient] = format Registrant.find(@domain.registrant_id_was).email
   end
-      
+
   def registrant
     @params[:recipient] = format @domain.registrant.email
   end
@@ -83,7 +45,7 @@ class DomainMailModel
     @params[:new_registrant_name] = @domain.pending_json['new_registrant_name']
     @params[:old_registrant_name] = @domain.registrant.name
   end
-  
+
   # registrant and domain admin contacts
   def admins
     emails = ([@domain.registrant.email] + @domain.admin_contacts.map { |x| format(x.email) })
@@ -106,26 +68,22 @@ class DomainMailModel
   def confirm_update
     verification_url('domain_update_confirms')
   end
-  
-  def confirm_delete
-    verification_url('domain_delete_confirms')
-  end
 
   def compose
     @params
   end
-  
+
   def verification_url(path)
     token = verification_token or return
     @params[:verification_url] = "#{ENV['registrant_url']}/registrant/#{path}/#{@domain.id}?token=#{token}"
   end
-  
+
   def verification_token
     return warn_missing(:registrant_verification_token) if @domain.registrant_verification_token.blank?
     return warn_missing(:registrant_verification_asked_at) if @domain.registrant_verification_asked_at.blank?
     @domain.registrant_verification_token
   end
-  
+
   def domain_info
     [:name, :registrar_name,
      :registrant_name, :registrant_ident, :registrant_email,
@@ -143,7 +101,7 @@ class DomainMailModel
     warn_missing item
     nil
   end
-      
+
   def warn_missing(item)
     warn_not_delivered "#{item.to_s} is missing for #{@domain.name}"
   end
@@ -154,6 +112,6 @@ class DomainMailModel
 #    Rails.logger.warn message
     nil
   end
-  
+
 end
 

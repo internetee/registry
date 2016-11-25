@@ -2,6 +2,25 @@ require 'rails_helper'
 
 RSpec.describe Domain do
   before :example do
+    Setting.ds_algorithm = 2
+    Setting.ds_data_allowed = true
+    Setting.ds_data_with_key_allowed = true
+    Setting.key_data_allowed = true
+
+    Setting.dnskeys_min_count = 0
+    Setting.dnskeys_max_count = 9
+    Setting.ns_min_count = 2
+    Setting.ns_max_count = 11
+
+    Setting.transfer_wait_time = 0
+
+    Setting.admin_contacts_min_count = 1
+    Setting.admin_contacts_max_count = 10
+    Setting.tech_contacts_min_count = 0
+    Setting.tech_contacts_max_count = 10
+
+    Setting.client_side_status_editing_enabled = true
+
     Fabricate(:zonefile_setting, origin: 'ee')
     Fabricate(:zonefile_setting, origin: 'pri.ee')
     Fabricate(:zonefile_setting, origin: 'med.ee')
@@ -157,24 +176,11 @@ RSpec.describe Domain do
     end
 
     it 'should start redemption grace period' do
-      DomainCron.start_redemption_grace_period
-      @domain.reload
-      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
-
-      @domain.outzone_at = Time.zone.now
-      @domain.statuses << DomainStatus::SERVER_MANUAL_INZONE # this prohibits server_hold
-      @domain.save
+      domain = Fabricate(:domain)
 
       DomainCron.start_redemption_grace_period
-      @domain.reload
-      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
-
-      @domain.statuses = []
-      @domain.save
-
-      DomainCron.start_redemption_grace_period
-      @domain.reload
-      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == true
+      domain.reload
+      domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
     end
 
     it 'should set force delete time' do
@@ -327,139 +333,6 @@ RSpec.describe Domain do
           end
         end
       end
-    end
-
-    it 'should start redemption grace period' do
-      DomainCron.start_redemption_grace_period
-      @domain.reload
-      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
-
-      @domain.outzone_at = Time.zone.now
-      @domain.statuses << DomainStatus::SERVER_MANUAL_INZONE # this prohibits server_hold
-      @domain.save
-
-      DomainCron.start_redemption_grace_period
-      @domain.reload
-      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
-
-      @domain.statuses = []
-      @domain.save
-
-      DomainCron.start_redemption_grace_period
-      @domain.reload
-      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should == true
-    end
-
-    it 'should know its create price' do
-      Fabricate(:pricelist, {
-        category: 'ee',
-        operation_category: 'create',
-        duration: '1year',
-        price: 1.50,
-        valid_from: Time.zone.parse('2015-01-01'),
-        valid_to: nil
-      })
-
-      domain = Fabricate(:domain)
-      domain.pricelist('create').price.amount.should == 1.50
-
-      domain = Fabricate(:domain, period: 12, period_unit: 'm')
-      domain.pricelist('create').price.amount.should == 1.50
-
-      domain = Fabricate(:domain, period: 365, period_unit: 'd')
-      domain.pricelist('create').price.amount.should == 1.50
-
-      Fabricate(:pricelist, {
-        category: 'ee',
-        operation_category: 'create',
-        duration: '2years',
-        price: 3,
-        valid_from: Time.zone.parse('2015-01-01'),
-        valid_to: nil
-      })
-
-      domain = Fabricate(:domain, period: 2)
-      domain.pricelist('create').price.amount.should == 3.0
-
-      domain = Fabricate(:domain, period: 24, period_unit: 'm')
-      domain.pricelist('create').price.amount.should == 3.0
-
-      domain = Fabricate(:domain, period: 730, period_unit: 'd')
-      domain.pricelist('create').price.amount.should == 3.0
-
-      Fabricate(:pricelist, {
-        category: 'ee',
-        operation_category: 'create',
-        duration: '3years',
-        price: 6,
-        valid_from: Time.zone.parse('2015-01-01'),
-        valid_to: nil
-      })
-
-      domain = Fabricate(:domain, period: 3)
-      domain.pricelist('create').price.amount.should == 6.0
-
-      domain = Fabricate(:domain, period: 36, period_unit: 'm')
-      domain.pricelist('create').price.amount.should == 6.0
-
-      domain = Fabricate(:domain, period: 1095, period_unit: 'd')
-      domain.pricelist('create').price.amount.should == 6.0
-    end
-
-    it 'should know its renew price' do
-      Fabricate(:pricelist, {
-        category: 'ee',
-        operation_category: 'renew',
-        duration: '1year',
-        price: 1.30,
-        valid_from: Time.zone.parse('2015-01-01'),
-        valid_to: nil
-      })
-
-      domain = Fabricate(:domain)
-      domain.pricelist('renew').price.amount.should == 1.30
-
-      domain = Fabricate(:domain, period: 12, period_unit: 'm')
-      domain.pricelist('renew').price.amount.should == 1.30
-
-      domain = Fabricate(:domain, period: 365, period_unit: 'd')
-      domain.pricelist('renew').price.amount.should == 1.30
-
-      Fabricate(:pricelist, {
-        category: 'ee',
-        operation_category: 'renew',
-        duration: '2years',
-        price: 3.1,
-        valid_from: Time.zone.parse('2015-01-01'),
-        valid_to: nil
-      })
-
-      domain = Fabricate(:domain, period: 2)
-      domain.pricelist('renew').price.amount.should == 3.1
-
-      domain = Fabricate(:domain, period: 24, period_unit: 'm')
-      domain.pricelist('renew').price.amount.should == 3.1
-
-      domain = Fabricate(:domain, period: 730, period_unit: 'd')
-      domain.pricelist('renew').price.amount.should == 3.1
-
-      Fabricate(:pricelist, {
-        category: 'ee',
-        operation_category: 'renew',
-        duration: '3years',
-        price: 6.1,
-        valid_from: Time.zone.parse('2015-01-01'),
-        valid_to: nil
-      })
-
-      domain = Fabricate(:domain, period: 3)
-      domain.pricelist('renew').price.amount.should == 6.1
-
-      domain = Fabricate(:domain, period: 36, period_unit: 'm')
-      domain.pricelist('renew').price.amount.should == 6.1
-
-      domain = Fabricate(:domain, period: 1095, period_unit: 'd')
-      domain.pricelist('renew').price.amount.should == 6.1
     end
 
     it 'should set pending update' do
@@ -826,6 +699,11 @@ RSpec.describe Domain do
 end
 
 RSpec.describe Domain, db: false do
+  it { is_expected.to alias_attribute(:on_hold_time, :outzone_at) }
+  it { is_expected.to alias_attribute(:delete_time, :delete_at) }
+  it { is_expected.to alias_attribute(:force_delete_time, :force_delete_at) }
+  it { is_expected.to alias_attribute(:outzone_time, :outzone_at) }
+
   describe '::expire_warning_period', db: true do
     before :example do
       Setting.expire_warning_period = 1
@@ -863,6 +741,70 @@ RSpec.describe Domain, db: false do
     end
   end
 
+  describe '#admin_contact_names' do
+    let(:domain) { described_class.new }
+
+    before :example do
+      expect(Contact).to receive(:names).and_return('names')
+    end
+
+    it 'returns admin contact names' do
+      expect(domain.admin_contact_names).to eq('names')
+    end
+  end
+
+  describe '#admin_contact_emails' do
+    let(:domain) { described_class.new }
+
+    before :example do
+      expect(Contact).to receive(:emails).and_return('emails')
+    end
+
+    it 'returns admin contact emails' do
+      expect(domain.admin_contact_emails).to eq('emails')
+    end
+  end
+
+  describe '#tech_contact_names' do
+    let(:domain) { described_class.new }
+
+    before :example do
+      expect(Contact).to receive(:names).and_return('names')
+    end
+
+    it 'returns technical contact names' do
+      expect(domain.tech_contact_names).to eq('names')
+    end
+  end
+
+  describe '#nameserver_hostnames' do
+    let(:domain) { described_class.new }
+
+    before :example do
+      expect(Nameserver).to receive(:hostnames).and_return('hostnames')
+    end
+
+    it 'returns name server hostnames' do
+      expect(domain.nameserver_hostnames).to eq('hostnames')
+    end
+  end
+
+  describe '#primary_contact_emails' do
+    let(:domain) { described_class.new }
+
+    before :example do
+      expect(domain).to receive(:registrant_email).and_return('registrant@test.com')
+      expect(domain).to receive(:admin_contact_emails).and_return(%w(admin.contact@test.com admin.contact@test.com))
+    end
+
+    it 'returns unique list of registrant and administrative contact emails' do
+      expect(domain.primary_contact_emails).to match_array(%w(
+                                                   registrant@test.com
+                                                   admin.contact@test.com
+                                                 ))
+    end
+  end
+
   describe '#set_graceful_expired' do
     let(:domain) { described_class.new }
 
@@ -880,6 +822,54 @@ RSpec.describe Domain, db: false do
 
     it 'sets :delete_at to :outzone_at + redemption grace period' do
       expect(domain.delete_at).to eq(Time.zone.parse('08.07.2010 10:30'))
+    end
+  end
+
+  describe '::outzone_candidates', db: true do
+    before :example do
+      travel_to Time.zone.parse('05.07.2010 00:00')
+
+      Fabricate(:zonefile_setting, origin: 'ee')
+
+      Fabricate.create(:domain, id: 1, outzone_time: Time.zone.parse('04.07.2010 23:59'))
+      Fabricate.create(:domain, id: 2, outzone_time: Time.zone.parse('05.07.2010 00:00'))
+      Fabricate.create(:domain, id: 3, outzone_time: Time.zone.parse('05.07.2010 00:01'))
+    end
+
+    it 'returns domains with outzone time in the past' do
+      expect(described_class.outzone_candidates.ids).to eq([1])
+    end
+  end
+
+  describe '::delete_candidates', db: true do
+    before :example do
+      travel_to Time.zone.parse('05.07.2010 00:00')
+
+      Fabricate(:zonefile_setting, origin: 'ee')
+
+      Fabricate.create(:domain, id: 1, delete_time: Time.zone.parse('04.07.2010 23:59'))
+      Fabricate.create(:domain, id: 2, delete_time: Time.zone.parse('05.07.2010 00:00'))
+      Fabricate.create(:domain, id: 3, delete_time: Time.zone.parse('05.07.2010 00:01'))
+    end
+
+    it 'returns domains with delete time in the past' do
+      expect(described_class.delete_candidates.ids).to eq([1])
+    end
+  end
+
+  describe '#new_registrant_email' do
+    let(:domain) { described_class.new(pending_json: { new_registrant_email: 'test@test.com' }) }
+
+    it 'returns new registrant\'s email' do
+      expect(domain.new_registrant_email).to eq('test@test.com')
+    end
+  end
+
+  describe '#new_registrant_id' do
+    let(:domain) { described_class.new(pending_json: { new_registrant_id: 1 }) }
+
+    it 'returns new registrant\'s id' do
+      expect(domain.new_registrant_id).to eq(1)
     end
   end
 end

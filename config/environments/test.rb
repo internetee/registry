@@ -60,6 +60,7 @@ Rails.application.configure do
     Bullet.add_whitelist type: :counter_cache, class_name: 'Contact', association: :versions
   end
 
+  config.active_job.queue_adapter = :test
   config.logger = ActiveSupport::Logger.new(nil)
 end
 

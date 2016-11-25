@@ -18,7 +18,7 @@ class Nameserver < ActiveRecord::Base
   before_validation :normalize_attributes
   before_validation :check_puny_symbols
   before_validation :check_label_length
-  
+
   delegate :name, to: :domain, prefix: true
 
   def epp_code_map
@@ -116,6 +116,10 @@ class Nameserver < ActiveRecord::Base
       # rel = rel.where(hostname: params[:hostname]) if params[:ipv4]
       # ignoring ips
       rel
+    end
+
+    def hostnames
+      pluck(:hostname)
     end
   end
 end

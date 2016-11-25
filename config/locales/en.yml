@@ -339,7 +339,6 @@ en:
   contact_details: 'Contact details'
   ident: 'Ident'
   ident_type: 'Ident type'
-  address: 'Address'
   country: 'Country'
   city: 'City'
   street: 'Street'
@@ -795,13 +794,8 @@ en:
   unimplemented_object_service: 'Unimplemented object service'
   contact_email_update_subject: 'Teie domeenide kontakt epostiaadress on muutunud / Contact e-mail addresses of your domains have changed'
   object_status_prohibits_operation: 'Object status prohibits operation'
-  pending_update_request_for_old_registrant_subject: "Kinnitustaotlus domeeni %{name} registreerija vahetuseks / Application for approval for registrant change of %{name}"
-  pending_update_notification_for_new_registrant_subject: "Domeeni %{name} registreerija vahetus protseduur on algatatud / %{name} registrant change"
-  pending_update_rejected_notification_for_new_registrant_subject: "Domeeni %{name} registreerija vahetuse taotlus tagasi lükatud / %{name} registrant change declined"
-  pending_update_expired_notification_for_new_registrant_subject: "Domeeni %{name} registreerija vahetuse taotlus on tühistatud / %{name} registrant change cancelled"
   registrant_updated_notification_for_new_registrant_subject: 'Domeeni %{name} registreerija vahetus teostatud / Registrant change of %{name} has been finished.'
   registrant_updated_notification_for_old_registrant_subject: 'Domeeni %{name} registreerija vahetus teostatud / Registrant change of %{name} has been finished.'
-  domain_pending_deleted_subject: "Kinnitustaotlus domeeni %{name} kustutamiseks .ee registrist / Application for approval for deletion of %{name}"
   pending_delete_rejected_notification_subject: "Domeeni %{name} kustutamise taotlus tagasi lükatud / %{name} deletion declined"
   pending_delete_expired_notification_subject: "Domeeni %{name} kustutamise taotlus on tühistatud / %{name} deletion cancelled"
   delete_confirmation_subject: "Domeeni %{name} kustutatud / %{name} deleted"
@@ -937,13 +931,11 @@ en:
   new_mail_template: New mail template
   failure: "It was not saved"
   contact_is_not_valid: 'Contact %{value} is not valid, please fix the invalid contact'
-  force_delete_subject: 'Kustutusmenetluse teade'
   welcome_to_eis_registrar_portal: 'Welcome to EIS Registrar portal'
   interfaces: 'Interfaces'
   list_format_is_in_yaml: 'List format is in YAML'
   if_auth_info_is_left_empty_it_will_be_auto_generated: 'If auth info is left empty, it will be auto generated.'
   each_domain_name_must_end_with_colon_sign: 'Each domain name must end with colon (:) sign.'
-  expiration_remind_subject: 'The %{name} domain has expired'
   next: 'Next'
   previous: 'Previous'
   personal_domain_verification_url: 'Personal domain verification url'

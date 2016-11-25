@@ -1,0 +1,37 @@
+Tere
+
+Registripidaja <%= @registrar.name %> vahendusel on algatatud <%= @domain.name %> domeeni omanikuvahetuse protseduur.
+
+Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja poole:
+
+<%= render 'mailers/shared/registrar/registrar.et.text', registrar: @registrar %>
+
+Uue registreerija andmed:
+<%= render 'mailers/shared/registrant/registrant.et.text', registrant: @new_registrant %>
+
+Juhime Teie tähelepanu asjaolule, et omanikuvahetuse protseduur viiakse lõpule vaid juhul, kui domeeni hetkel kehtiv registreerija <%= @current_registrant.name %> omanikuvahetuse tähtaegselt kinnitab.
+
+Juhul kui <%= @current_registrant.name %> lükkab omanikuvahetuse taotluse tagasi või ei anna kinnitust enne <%= Setting.expire_pending_confirmation %> tundi, omanikuvahetuse protseduur tühistatakse.
+
+Lugupidamisega
+Eesti Interneti Sihtasutus
+
+--------------------------------------
+
+Hi,
+
+Registrant change process for the domain <%= @domain.name %> has been started.
+
+Please verify the details of the following change request. In case of problems contact your registrar:
+
+<%= render 'mailers/shared/registrar/registrar.en.text', registrar: @registrar %>
+
+New registrant:
+<%= render 'mailers/shared/registrant/registrant.en.text', registrant: @new_registrant %>
+
+The registrant change procedure will be completed only after the current registrant <%= @current_registrant.name %> has approved it.
+
+Change request will be cancelled in case <%= @current_registrant.name %> rejects or does not approve it in <%= Setting.expire_pending_confirmation %> hours.
+
+Best Regards,
+Estonian Internet Foundation

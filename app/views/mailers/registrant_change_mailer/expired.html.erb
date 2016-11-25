@@ -1,0 +1,25 @@
+Tere
+<br><br>
+Domeeni <%= @domain.name %> registreerija <%= @registrant.name %> ei kinnitanud tähtaegselt registreerija vahetuse taotlust. Domeeni <%= @domain.name %> registreerija vahetus on sellest tulenevalt tühistatud.
+<br><br>
+Küsimuste korral palun võtke ühendust oma registripidajaga:
+
+<%= render 'mailers/shared/registrar/registrar.et.html', registrar: @registrar %>
+
+<br><br>
+Lugupidamisega<br>
+Eesti Interneti Sihtasutus
+<br><br>
+<hr>
+<br><br>
+Hi,
+<br><br>
+Domain registrant change request has been expired for the domain <%= @domain.name %>.
+<br><br>
+Please contact to your registrar if you have any questions:
+
+<%= render 'mailers/shared/registrar/registrar.en.html', registrar: @registrar %>
+
+<br><br>
+Best Regards,<br>
+Estonian Internet Foundation
