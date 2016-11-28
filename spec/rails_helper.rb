@@ -5,6 +5,7 @@ require 'rspec/rails'
 require 'capybara/poltergeist'
 require 'paper_trail/frameworks/rspec'
 require 'money-rails/test_helpers'
+require 'support/features/session_helpers'
 
 if ENV['ROBOT']
   require 'simplecov'
@@ -23,6 +24,7 @@ ActiveRecord::Migration.maintain_test_schema!
 RSpec.configure do |config|
   config.include ActionView::TestCase::Behavior, type: :presenter
   config.include ActiveSupport::Testing::TimeHelpers
+  config.include Features::SessionHelpers, type: :feature
 
   config.define_derived_metadata(file_path: %r{/spec/presenters/}) do |metadata|
     metadata[:type] = :presenter
