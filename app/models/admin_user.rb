@@ -11,6 +11,10 @@ class AdminUser < User
 
   devise :database_authenticatable, :rememberable, :trackable, :validatable, :lockable
 
+  def self.min_password_length
+    Devise.password_length.min
+  end
+
   def to_s
     username
   end
