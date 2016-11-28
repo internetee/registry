@@ -1,0 +1,5 @@
+en:
+  registrar:
+    domains:
+      index:
+        export_csv_btn: Export CSV
