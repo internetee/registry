@@ -1,11 +1,10 @@
 FactoryGirl.define do
   factory :admin_user do
     username 'test'
-    password 'test'
-    password_confirmation password
-    sequence(:email) { |n| "test#{n}@test.com" }
-    country_code 'ee'
+    email 'test@test.com'
+    password 'a' * AdminUser.min_password_length
+    password_confirmation { password }
+    country_code 'de'
     roles ['admin']
-    identity_code ''
   end
 end
