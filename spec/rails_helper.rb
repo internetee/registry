@@ -25,6 +25,7 @@ RSpec.configure do |config|
   config.include ActionView::TestCase::Behavior, type: :presenter
   config.include ActiveSupport::Testing::TimeHelpers
   config.include Features::SessionHelpers, type: :feature
+  config.include AbstractController::Translation, type: :feature
 
   config.define_derived_metadata(file_path: %r{/spec/presenters/}) do |metadata|
     metadata[:type] = :presenter
