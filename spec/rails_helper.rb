@@ -28,8 +28,13 @@ RSpec.configure do |config|
   config.include AbstractController::Translation, type: :feature
 
   config.define_derived_metadata(file_path: %r{/spec/presenters/}) do |metadata|
-    metadata[:type] = :presenter
-    metadata[:db] = false
+    metadata[:type] = :presenter if metadata[:type].nil?
+    metadata[:db] = false if metadata[:db].nil?
+  end
+
+  config.define_derived_metadata(file_path: %r{/spec/api/}) do |metadata|
+    metadata[:type] = :request if metadata[:type].nil?
+    metadata[:db] = false if metadata[:db].nil?
   end
 
   config.use_transactional_fixtures = false
