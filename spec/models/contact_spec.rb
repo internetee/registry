@@ -383,4 +383,27 @@ RSpec.describe Contact, db: false do
       expect(described_class.emails).to eq('emails')
     end
   end
+
+  describe '::address_processing' do
+    before do
+      Setting.address_processing = 'test'
+    end
+
+    it 'returns setting value' do
+      expect(described_class.address_processing).to eq('test')
+    end
+  end
+
+  describe '::address_attributes', db: false do
+    it 'returns address attributes' do
+      attributes = %i(
+        city
+        street
+        zip
+        country_code
+        state
+      )
+      expect(described_class.address_attributes).to eq(attributes)
+    end
+  end
 end

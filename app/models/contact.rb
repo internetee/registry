@@ -257,6 +257,20 @@ class Contact < ActiveRecord::Base
     def emails
       pluck(:email)
     end
+
+    def address_processing
+      Setting.address_processing
+    end
+
+    def address_attributes
+      %i(
+        city
+        street
+        zip
+        country_code
+        state
+      )
+    end
   end
 
   def roid
