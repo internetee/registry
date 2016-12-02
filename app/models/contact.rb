@@ -262,8 +262,8 @@ class Contact < ActiveRecord::Base
       Setting.address_processing
     end
 
-    def address_attributes
-      %i(
+    def address_attribute_names
+      %w(
         city
         street
         zip

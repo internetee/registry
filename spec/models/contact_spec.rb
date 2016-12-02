@@ -394,16 +394,16 @@ RSpec.describe Contact, db: false do
     end
   end
 
-  describe '::address_attributes', db: false do
+  describe '::address_attribute_names', db: false do
     it 'returns address attributes' do
-      attributes = %i(
+      attributes = %w(
         city
         street
         zip
         country_code
         state
       )
-      expect(described_class.address_attributes).to eq(attributes)
+      expect(described_class.address_attribute_names).to eq(attributes)
     end
   end
 end
