@@ -16,6 +16,13 @@ module Repp
 
         if params[:details] == 'true'
           contacts = current_user.registrar.contacts.limit(limit).offset(offset)
+
+          unless Contact.address_processing
+            attributes = Contact.attribute_names - Contact.address_attribute_names
+            contacts = contacts.select(attributes)
+          end
+
+          contacts
         else
           contacts = current_user.registrar.contacts.limit(limit).offset(offset).pluck(:code)
         end

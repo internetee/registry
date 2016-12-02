@@ -5,7 +5,8 @@ RSpec.describe Repp::ContactV1, db: true do
   let(:registrar) { FactoryGirl.create(:registrar) }
 
   describe '/contacts' do
-    subject(:fields) { HashWithIndifferentAccess.new(JSON.parse(response.body)['contacts'].first).keys }
+    let(:returned_attributes) { HashWithIndifferentAccess.new(JSON.parse(response.body)['contacts'].first).keys }
+    subject(:address_included) { Contact.address_attribute_names.any? { |attr| returned_attributes.include?(attr.to_s) } }
 
     before do
       Grape::Endpoint.before_each do |endpoint|
@@ -13,31 +14,32 @@ RSpec.describe Repp::ContactV1, db: true do
       end
 
       registrar.contacts << FactoryGirl.create(:contact)
-
-      get '/repp/v1/contacts', { limit: 1, details: true }, { 'HTTP_AUTHORIZATION' => http_auth_key }
     end
 
     it 'responds with success' do
+      get '/repp/v1/contacts', { limit: 1, details: true }, { 'HTTP_AUTHORIZATION' => http_auth_key }
       expect(response).to have_http_status(:success)
     end
 
     context 'when address processing is enabled' do
       before do
         expect(Contact).to receive(:address_processing).and_return(true)
+        get '/repp/v1/contacts', { limit: 1, details: true }, { 'HTTP_AUTHORIZATION' => http_auth_key }
       end
 
       it 'returns contact address' do
-        expect(fields).to include(Contact.address_attributes)
+        expect(address_included).to be_truthy
       end
     end
 
     context 'when address processing is disabled' do
       before do
         expect(Contact).to receive(:address_processing).and_return(false)
+        get '/repp/v1/contacts', { limit: 1, details: true }, { 'HTTP_AUTHORIZATION' => http_auth_key }
       end
 
       it 'does not return contact address' do
-        expect(fields).to_not include(Contact.address_attributes)
+        expect(address_included).to be_falsy
       end
     end
   end
