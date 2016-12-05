@@ -2,7 +2,7 @@
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.1.xsd">
         <contact:id>sh8013</contact:id>
         <contact:chg>
           <contact:postalInfo>

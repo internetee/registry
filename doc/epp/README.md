@@ -31,6 +31,7 @@
 ### EIS-specific
 *  [domain-eis-1.0.xsd](/lib/schemas/domain-eis-1.0.xsd)
 *  [contact-eis-1.0.xsd](/lib/schemas/contact-eis-1.0.xsd)
+*  [contact-eis-1.1.xsd](/lib/schemas/contact-eis-1.1.xsd)
 *  [eis-1.0.xsd](/lib/schemas/eis-1.0.xsd)
 
 More info about The Extensible Provisioning Protocol (EPP):

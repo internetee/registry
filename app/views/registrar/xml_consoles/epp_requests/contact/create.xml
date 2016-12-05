@@ -2,7 +2,7 @@
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <create>
-      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.1.xsd">
         <contact:postalInfo>
           <contact:name>Sillius Soddus</contact:name>
           <contact:addr>

@@ -17,7 +17,7 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
     Field name                 Min-max  Field description
     -----------------------    -------  -----------------
     <create>                   1     
-      <contact:create>         1        Attribute: xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd"
+      <contact:create>         1        Attribute: xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.1.xsd"
         <contact:id>           0-1      Contact id, optional, 
                                           string: ASCII letters, numbers, ':', '-' characters, no spaces,
                                           max 100 characters,
@@ -53,7 +53,7 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
     Field name                  Min-max  Field description
     -----------------------     -------  -----------------
     <update>                    1     
-      <contact:update>          1        Attribute: xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd"
+      <contact:update>          1        Attribute: xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.1.xsd"
         <contact:id>            1        Contact id, required
         <contact:chg>           1        Change container
           <contact:postalInfo>  1        Postal information container
