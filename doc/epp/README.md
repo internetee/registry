@@ -19,9 +19,9 @@
 ## XML schemas
 
 ### Common
-* [all-ee-1.0.xsd](/lib/schemas/all-ee-1.0.xsd)
-* [contact-1.0.xsd](/lib/schemas/contact-1.0.xsd)
 * [domain-1.0.xsd](/lib/schemas/domain-1.0.xsd)
+* [contact-1.0.xsd](/lib/schemas/contact-1.0.xsd)
+* [all-ee-1.0.xsd](/lib/schemas/all-ee-1.0.xsd)
 * [epp-1.0.xsd](/lib/schemas/epp-1.0.xsd)
 * [eppcom-1.0.xsd](/lib/schemas/eppcom-1.0.xsd)
 * [host-1.0.xsd](/lib/schemas/host-1.0.xsd)
@@ -29,9 +29,9 @@
 * [secDNS-1.1.xsd](/lib/schemas/secDNS-1.1.xsd)
 
 ### EIS-specific
-*  [eis-1.0.xsd](/lib/schemas/eis-1.0.xsd)
 *  [domain-eis-1.0.xsd](/lib/schemas/domain-eis-1.0.xsd)
 *  [contact-eis-1.0.xsd](/lib/schemas/contact-eis-1.0.xsd)
+*  [eis-1.0.xsd](/lib/schemas/eis-1.0.xsd)
 
 More info about The Extensible Provisioning Protocol (EPP):
 http://en.wikipedia.org/wiki/Extensible_Provisioning_Protocol
