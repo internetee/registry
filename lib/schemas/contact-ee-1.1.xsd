@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-   <schema targetNamespace="https://epp.tld.ee/schema/contact-eis-1.1.xsd"
-          xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.1.xsd"
+   <schema targetNamespace="https://epp.tld.ee/schema/contact-ee-1.1.xsd"
+          xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd"
           xmlns:epp="urn:ietf:params:xml:ns:epp-1.0"
           xmlns:eppcom="urn:ietf:params:xml:ns:eppcom-1.0"
           xmlns="http://www.w3.org/2001/XMLSchema"
