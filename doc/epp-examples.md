@@ -1368,7 +1368,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <update>
-      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd"/>
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd"/>
     </update>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -1382,7 +1382,7 @@ RESPONSE:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2001">
-      <msg lang="en">Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}update': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id ).</msg>
+      <msg lang="en">Element '{https://epp.tld.ee/schema/contact-ee-1.1.xsd}update': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-ee-1.1.xsd}id ).</msg>
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
