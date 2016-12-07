@@ -29,14 +29,24 @@ RSpec.configure do |config|
   config.include Requests::SessionHelpers, type: :request
   config.include AbstractController::Translation, type: :feature
 
-  config.define_derived_metadata(file_path: %r{/spec/presenters/}) do |metadata|
-    metadata[:type] = :presenter if metadata[:type].nil?
-    metadata[:db] = false if metadata[:db].nil?
+  config.define_derived_metadata(file_path: %r[/spec/features/]) do |metadata|
+    metadata[:db] = true if metadata[:db].nil?
   end
 
-  config.define_derived_metadata(file_path: %r{/spec/api/}) do |metadata|
-    metadata[:type] = :request if metadata[:type].nil?
-    metadata[:db] = false if metadata[:db].nil?
+  config.define_derived_metadata(file_path: %r[/spec/models/]) do |metadata|
+    metadata[:db] = true if metadata[:db].nil?
+  end
+
+  config.define_derived_metadata(file_path: %r[/spec/presenters/]) do |metadata|
+    metadata[:type] = :presenter
+  end
+
+  config.define_derived_metadata(file_path: %r[/spec/requests/]) do |metadata|
+    metadata[:db] = true if metadata[:db].nil?
+  end
+
+  config.define_derived_metadata(file_path: %r[/spec/api/]) do |metadata|
+    metadata[:type] = :request
   end
 
   config.use_transactional_fixtures = false
