@@ -1,24 +1,9 @@
 require 'rails_helper'
-require 'cancan/matchers'
 
-describe AdminUser do
+RSpec.describe AdminUser do
   context 'with invalid attribute' do
-    before :all do
-      @admin_user = AdminUser.new
-    end
-
-    it 'should not be valid' do
-      @admin_user.valid?
-      @admin_user.errors.full_messages.should match_array([
-        "Country code is missing",
-        "Email Email is missing",
-        "Email Email is missing",
-        "Password Password is missing",
-        "Password Password is missing",
-        "Password confirmation is missing",
-        "Roles is missing",
-        "Username Username is missing"
-      ])
+    before do
+      @admin_user = described_class.new
     end
 
     it 'should not have any versions' do
@@ -27,19 +12,8 @@ describe AdminUser do
   end
 
   context 'with valid attributes' do
-    before :all do
+    before do
       @admin_user = Fabricate(:admin_user)
-    end
-
-    it 'should be valid' do
-      @admin_user.valid?
-      @admin_user.errors.full_messages.should match_array([])
-    end
-
-    it 'should be valid twice' do
-      @admin_user = Fabricate(:admin_user)
-      @admin_user.valid?
-      @admin_user.errors.full_messages.should match_array([])
     end
 
     it 'should have one version' do
@@ -56,9 +30,7 @@ describe AdminUser do
       @admin_user.valid?.should == true
       @admin_user.password = 'not confirmed'
       @admin_user.valid?
-      @admin_user.errors.full_messages.should match_array([
-        "Password confirmation doesn't match Password"
-      ])
+      @admin_user.errors.full_messages.should match_array(["Password confirmation doesn't match Password"])
     end
   end
 end
