@@ -1,9 +1,17 @@
 class DomainPresenter
-  delegate :name, :registrant_name, to: :domain
+  delegate :name, :registrant_name, :registrant_id, to: :domain
 
   def initialize(domain:, view:)
     @domain = domain
     @view = view
+  end
+
+  def expire_time
+    view.l(domain.expire_time)
+  end
+
+  def expire_date
+    view.l(domain.expire_time, format: :date)
   end
 
   def on_hold_date
