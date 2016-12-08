@@ -17,9 +17,16 @@ class Epp::ContactsController < EppController
 
   def create
     authorize! :create, Epp::Contact
-    @contact = Epp::Contact.new(params[:parsed_frame], current_user.registrar)
+    frame = params[:parsed_frame]
+    @contact = Epp::Contact.new(frame, current_user.registrar)
 
-    @contact.add_legal_file_to_new(params[:parsed_frame])
+    @contact.add_legal_file_to_new(frame)
+
+    @response_code = if Contact.address_processing
+                           1000
+                         else
+                           frame.css('postalInfo addr').size != 0 ? 1100 : 1000
+                         end
 
     if @contact.save
       render_epp_response '/epp/contacts/create'
@@ -141,7 +148,7 @@ class Epp::ContactsController < EppController
   def contact_org_disabled
     return true if ENV['contact_org_enabled'] == 'true'
     return true if params[:parsed_frame].css('postalInfo org').text.blank?
-    
+
     epp_errors << {
       code: '2306',
       msg: "#{I18n.t(:contact_org_error)}: postalInfo > org [org]"
