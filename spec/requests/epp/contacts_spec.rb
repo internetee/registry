@@ -46,7 +46,6 @@ RSpec.describe 'EPP contact' do
 
       it 'returns code of 1000' do
         post '/epp/command/create', frame: request_xml
-        p controller.path
         expect(response_code).to eq('1000')
       end
     end
