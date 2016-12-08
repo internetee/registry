@@ -27,6 +27,7 @@ RSpec.configure do |config|
   config.include ActiveSupport::Testing::TimeHelpers
   config.include Requests::SessionHelpers, type: :request
   config.include Features::SessionHelpers, type: :feature
+  config.include AbstractController::Translation, type: :feature
 
   config.define_derived_metadata(file_path: %r[/spec/features/]) do |metadata|
     metadata[:db] = true if metadata[:db].nil?
