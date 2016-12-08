@@ -24,9 +24,24 @@ RSpec.configure do |config|
   config.include ActionView::TestCase::Behavior, type: :presenter
   config.include ActiveSupport::Testing::TimeHelpers
 
-  config.define_derived_metadata(file_path: %r{/spec/presenters/}) do |metadata|
+  config.define_derived_metadata(file_path: %r[/spec/features/]) do |metadata|
+    metadata[:db] = true if metadata[:db].nil?
+  end
+
+  config.define_derived_metadata(file_path: %r[/spec/models/]) do |metadata|
+    metadata[:db] = true if metadata[:db].nil?
+  end
+
+  config.define_derived_metadata(file_path: %r[/spec/presenters/]) do |metadata|
     metadata[:type] = :presenter
-    metadata[:db] = false
+  end
+
+  config.define_derived_metadata(file_path: %r[/spec/requests/]) do |metadata|
+    metadata[:db] = true if metadata[:db].nil?
+  end
+
+  config.define_derived_metadata(file_path: %r[/spec/api/]) do |metadata|
+    metadata[:type] = :request
   end
 
   config.use_transactional_fixtures = false
