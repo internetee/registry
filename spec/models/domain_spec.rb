@@ -482,7 +482,7 @@ RSpec.describe Domain do
 
     invalid = [
       'a.ee', "#{'a' * 64}.ee", 'ab.eu', 'test.ab.ee', '-test.ee', '-test-.ee',
-      'test-.ee', 'te--st.ee', 'õ.pri.ee', 'test.com', 'www.ab.ee', 'test.eu', '  .ee', 'a b.ee',
+      'test-.ee', 'te--st.ee', 'õ.pri.ee', 'www.ab.ee', 'test.eu', '  .ee', 'a b.ee',
       'Ž .ee', 'test.edu.ee'
     ]
 
