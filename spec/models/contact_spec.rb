@@ -406,4 +406,39 @@ RSpec.describe Contact, db: false do
       expect(described_class.address_attribute_names).to eq(attributes)
     end
   end
+
+  describe 'address validation', db: false do
+    let(:contact) { described_class.new }
+    subject(:errors) { contact.errors }
+
+    required_attributes = %i(street city zip country_code)
+
+    context 'when address processing is enabled' do
+      before do
+        allow(described_class).to receive(:address_processing?).and_return(true)
+      end
+
+      required_attributes.each do |attr_name|
+        it "rejects absent #{attr_name}" do
+          contact.send("#{attr_name}=", nil)
+          contact.validate
+          expect(errors).to have_key(attr_name)
+        end
+      end
+    end
+
+    context 'when address processing is disabled' do
+      before do
+        allow(described_class).to receive(:address_processing?).and_return(false)
+      end
+
+      required_attributes.each do |attr_name|
+        it "accepts absent #{attr_name}" do
+          contact.send("#{attr_name}=", nil)
+          contact.validate
+          expect(errors).to_not have_key(attr_name)
+        end
+      end
+    end
+  end
 end

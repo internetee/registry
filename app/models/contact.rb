@@ -18,8 +18,8 @@ class Contact < ActiveRecord::Base
 
   accepts_nested_attributes_for :legal_documents
 
-  validates :name, :phone, :email, :ident, :ident_type,
-   :street, :city, :zip, :country_code, :registrar, presence: true
+  validates :name, :phone, :email, :ident, :ident_type, :registrar, presence: true
+  validates :street, :city, :zip, :country_code, presence: true, if: 'self.class.address_processing?'
 
   # Phone nr validation is very minimam in order to support legacy requirements
   validates :phone, format: /\+[0-9]{1,3}\.[0-9]{1,14}?/
