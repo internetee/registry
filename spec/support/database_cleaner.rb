@@ -11,7 +11,7 @@ RSpec.configure do |config|
   end
 
   config.before :example do |example|
-    if example.metadata[:db] || (%i(model).include?(example.metadata[:type]) && example.metadata[:db].nil?)
+    if example.metadata[:db]
       db_connection_names.each do |connection_name|
         ActiveRecord::Base.establish_connection(connection_name)
         DatabaseCleaner[:active_record, connection: connection_name].start
@@ -20,7 +20,7 @@ RSpec.configure do |config|
   end
 
   config.after :example do |example|
-    if example.metadata[:db] || (%i(model).include?(example.metadata[:type]) && example.metadata[:db].nil?)
+    if example.metadata[:db]
       db_connection_names.each do |connection_name|
         ActiveRecord::Base.establish_connection(connection_name)
         DatabaseCleaner[:active_record, connection: connection_name].clean

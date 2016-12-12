@@ -1,3 +1,5 @@
+require 'webmock/rspec'
+
 RSpec.configure do |config|
   # https://github.com/rspec/rspec-rails/issues/1076
   config.around :each, type: :view do |example|
