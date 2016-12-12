@@ -614,6 +614,7 @@ en:
   delete: 'Delete'
   are_you_sure: 'Are you sure?'
   renew: 'Renew'
+  new: New
   renew_domain: 'Renew domain'
   cur_exp_date: 'curExpDate'
   transfer: 'Transfer'
@@ -952,3 +953,4 @@ en:
   deleted: 'Deleted'
   cant_match_version: 'Impossible match version with request'
   user_not_authenticated: "user not authenticated"
+  actions: Actions
