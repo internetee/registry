@@ -384,13 +384,6 @@ class Contact < ActiveRecord::Base
   end
   # rubocop:enable Metrics/CyclomaticComplexity
 
-  # used only for contact transfer
-  def generate_new_code!
-    return nil if registrar.blank?
-    registrar.reload # for contact transfer
-    self[:code] = "#{registrar.code}:#{SecureRandom.hex(4)}".upcase
-  end
-
   def country
     Country.new(country_code)
   end
