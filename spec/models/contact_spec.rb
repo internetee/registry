@@ -164,7 +164,10 @@ RSpec.describe Contact do
 
     it 'should have code' do
       registrar = Fabricate.create(:registrar, code: 'registrarcode')
-      contact = Fabricate.create(:contact, registrar: registrar, code: 'contactcode')
+
+      contact = Fabricate.build(:contact, registrar: registrar, code: 'contactcode')
+      contact.generate_code
+      contact.save!
 
       expect(contact.code).to eq('REGISTRARCODE:CONTACTCODE')
     end
@@ -252,16 +255,6 @@ RSpec.describe Contact do
       end
 
       context 'after create' do
-        it 'should not generate a new code when code is present' do
-          @contact = Fabricate.build(:contact,
-                                     registrar: Fabricate(:registrar, code: 'FIXED'),
-                                     code: 'FIXED:new-code',
-                                     auth_info: 'qwe321')
-          @contact.code.should == 'FIXED:new-code' # still new record
-          @contact.save.should == true
-          @contact.code.should == 'FIXED:NEW-CODE'
-        end
-
         it 'should not allow to use same code' do
           registrar = Fabricate.create(:registrar, code: 'FIXED')
 
@@ -299,12 +292,15 @@ RSpec.describe Contact do
         end
 
         it 'should generate code if empty code is given' do
-          @contact = Fabricate(:contact, code: '')
+          @contact = Fabricate.build(:contact, code: '')
+          @contact.generate_code
+          @contact.save!
           @contact.code.should_not == ''
         end
 
         it 'should not ignore empty spaces as code and generate new one' do
           @contact = Fabricate.build(:contact, code: '    ', registrar: Fabricate(:registrar, code: 'FIXED'))
+          @contact.generate_code
           @contact.valid?.should == true
           @contact.code.should =~ /FIXED:..../
         end
@@ -316,6 +312,7 @@ RSpec.describe Contact do
                                      registrar: Fabricate(:registrar, code: 'FIXED'),
                                      code: '123asd',
                                      auth_info: 'qwe321')
+          @contact.generate_code
           @contact.save
           @contact.code.should == 'FIXED:123ASD'
           @auth_info = @contact.auth_info

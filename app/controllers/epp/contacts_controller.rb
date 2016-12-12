@@ -21,14 +21,15 @@ class Epp::ContactsController < EppController
     @contact = Epp::Contact.new(frame, current_user.registrar)
 
     @contact.add_legal_file_to_new(frame)
-
-    @response_code = if Contact.address_processing?
-                           1000
-                         else
-                           frame.css('postalInfo addr').size != 0 ? 1100 : 1000
-                         end
+    @contact.generate_code
 
     if @contact.save
+      @response_code = if Contact.address_processing?
+                         1000
+                       else
+                         frame.css('postalInfo addr').size != 0 ? 1100 : 1000
+                       end
+
       render_epp_response '/epp/contacts/create'
     else
       handle_errors(@contact)

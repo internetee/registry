@@ -646,7 +646,7 @@ class Epp::Domain < Domain
     oc.code = nil
     oc.registrar_id = registrar_id
     oc.copy_from_id = c.id
-    oc.prefix_code
+    oc.generate_code
     oc.domain_transfer = true
     oc.save!(validate: false)
     oc
