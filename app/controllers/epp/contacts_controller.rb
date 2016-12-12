@@ -22,7 +22,7 @@ class Epp::ContactsController < EppController
 
     @contact.add_legal_file_to_new(frame)
 
-    @response_code = if Contact.address_processing
+    @response_code = if Contact.address_processing?
                            1000
                          else
                            frame.css('postalInfo addr').size != 0 ? 1100 : 1000

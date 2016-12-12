@@ -384,13 +384,13 @@ RSpec.describe Contact, db: false do
     end
   end
 
-  describe '::address_processing' do
+  describe '::address_processing?' do
     before do
       Setting.address_processing = 'test'
     end
 
     it 'returns setting value' do
-      expect(described_class.address_processing).to eq('test')
+      expect(described_class.address_processing?).to eq('test')
     end
   end
 

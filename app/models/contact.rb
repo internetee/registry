@@ -258,7 +258,7 @@ class Contact < ActiveRecord::Base
       pluck(:email)
     end
 
-    def address_processing
+    def address_processing?
       Setting.address_processing
     end
 

@@ -23,7 +23,7 @@ RSpec.describe Repp::ContactV1, db: true do
 
     context 'when address processing is enabled' do
       before do
-        expect(Contact).to receive(:address_processing).and_return(true)
+        expect(Contact).to receive(:address_processing?).and_return(true)
         get '/repp/v1/contacts', { limit: 1, details: true }, { 'HTTP_AUTHORIZATION' => http_auth_key }
       end
 
@@ -34,7 +34,7 @@ RSpec.describe Repp::ContactV1, db: true do
 
     context 'when address processing is disabled' do
       before do
-        expect(Contact).to receive(:address_processing).and_return(false)
+        expect(Contact).to receive(:address_processing?).and_return(false)
         get '/repp/v1/contacts', { limit: 1, details: true }, { 'HTTP_AUTHORIZATION' => http_auth_key }
       end
 
