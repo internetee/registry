@@ -1,13 +1,13 @@
 # EPP integration specification
 
-Main communication specification through EPP:
+## Main communication specification through EPP
 
 [Session related functions](session.md)  
 [Contact related functions](contact.md)  
 [Domain related functions](domain.md)  
 [Keyrelay related functions](keyrelay.md)
 
-Our implementation supports following protocols:
+## Supported protocols
 
 [RFC5730 - EPP](http://tools.ietf.org/html/rfc5730)  
 [RFC5731 - Domain Mapping](http://tools.ietf.org/html/rfc5731)  
@@ -16,5 +16,22 @@ Our implementation supports following protocols:
 [RFC5910 - DNSSEC Mapping](http://tools.ietf.org/html/rfc5910)  
 [RFC3735 - Guidelines for Extending the EPP](http://tools.ietf.org/html/rfc3735)
 
-More info about The Extensible Provisioning Protocol (EPP):<br>
+## XML schemas
+
+### Common
+* [domain-1.0.xsd](/lib/schemas/domain-1.0.xsd)
+* [contact-1.0.xsd](/lib/schemas/contact-1.0.xsd)
+* [epp-1.0.xsd](/lib/schemas/epp-1.0.xsd)
+* [eppcom-1.0.xsd](/lib/schemas/eppcom-1.0.xsd)
+* [host-1.0.xsd](/lib/schemas/host-1.0.xsd)
+* [keyrelay-1.0.xsd](/lib/schemas/keyrelay-1.0.xsd)
+* [secDNS-1.1.xsd](/lib/schemas/secDNS-1.1.xsd)
+
+### .ee-specific
+* [all-ee-1.0.xsd](/lib/schemas/all-ee-1.0.xsd)
+* [domain-eis-1.0.xsd](/lib/schemas/domain-eis-1.0.xsd)
+* [contact-eis-1.0.xsd](/lib/schemas/contact-eis-1.0.xsd)
+* [eis-1.0.xsd](/lib/schemas/eis-1.0.xsd)
+
+More info about The Extensible Provisioning Protocol (EPP):
 http://en.wikipedia.org/wiki/Extensible_Provisioning_Protocol
