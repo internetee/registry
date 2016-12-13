@@ -438,4 +438,14 @@ RSpec.describe Contact, db: false do
       end
     end
   end
+
+  describe 'country code validation' do
+    let(:contact) { described_class.new(country_code: 'test') }
+
+    it 'rejects invalid' do
+      contact.country_code = 'invalid'
+      contact.validate
+      expect(contact.errors).to have_key(:country_code)
+    end
+  end
 end

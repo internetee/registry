@@ -37,7 +37,8 @@ class Contact < ActiveRecord::Base
   validate :val_ident_type
   validate :val_ident_valid_format?
   validate :validate_html
-  validate :val_country_code
+  validate :validate_country_code
+  validate :validate_ident_country_code
 
   after_initialize do
     self.status_notes = {} if status_notes.nil?
@@ -417,9 +418,13 @@ class Contact < ActiveRecord::Base
     self.country_code       = country_code.upcase if country_code
   end
 
-  def val_country_code
+  def validate_country_code
+    return unless country_code
+    errors.add(:country_code, :invalid) unless Country.new(country_code)
+  end
+
+  def validate_ident_country_code
     errors.add(:ident, :invalid_country_code) unless Country.new(ident_country_code)
-    errors.add(:ident, :invalid_country_code) unless Country.new(country_code)
   end
 
   def related_domain_descriptions

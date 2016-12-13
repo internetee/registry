@@ -30,11 +30,15 @@ class Epp::Contact < Contact
       at[:email]      = f.css('email').text                  if f.css('email').present?
       at[:fax]        = f.css('fax').text                    if f.css('fax').present?
       at[:phone]      = f.css('voice').text                  if f.css('voice').present?
-      at[:city]       = f.css('postalInfo addr city').text   if f.css('postalInfo addr city').present?
-      at[:zip]        = f.css('postalInfo addr pc').text     if f.css('postalInfo addr pc').present?
-      at[:street]     = f.css('postalInfo addr street').text if f.css('postalInfo addr street').present?
-      at[:state]      = f.css('postalInfo addr sp').text     if f.css('postalInfo addr sp').present?
-      at[:country_code] = f.css('postalInfo addr cc').text     if f.css('postalInfo addr cc').present?
+
+      if address_processing?
+        at[:city] = f.css('postalInfo addr city').text if f.css('postalInfo addr city').present?
+        at[:zip] = f.css('postalInfo addr pc').text if f.css('postalInfo addr pc').present?
+        at[:street] = f.css('postalInfo addr street').text if f.css('postalInfo addr street').present?
+        at[:state] = f.css('postalInfo addr sp').text if f.css('postalInfo addr sp').present?
+        at[:country_code] = f.css('postalInfo addr cc').text if f.css('postalInfo addr cc').present?
+      end
+
       at[:auth_info]    = f.css('authInfo pw').text            if f.css('authInfo pw').present?
 
 
@@ -125,6 +129,7 @@ class Epp::Contact < Contact
         [:ident, :invalid_EE_identity_format_update],
         [:ident, :invalid_birthday_format],
         [:ident, :invalid_country_code],
+        [:country_code, :invalid],
         [:ident_type, :missing],
         [:code, :invalid],
         [:code, :too_long_contact_code]
