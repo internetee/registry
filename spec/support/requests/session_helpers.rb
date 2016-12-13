@@ -1,6 +1,6 @@
 module Requests
   module SessionHelpers
-    def sign_in_to_epp_area(user: FactoryGirl.create(:api_user))
+    def sign_in_to_epp_area(user: FactoryGirl.create(:api_user_epp))
       login_xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>
       <epp xmlns=\"urn:ietf:params:xml:ns:epp-1.0\">
         <command>
