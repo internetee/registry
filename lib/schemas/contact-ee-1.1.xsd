@@ -80,7 +80,7 @@
       <sequence>
         <element name="id" type="eppcom:clIDType" minOccurs="0"/>
         <element name="postalInfo" type="contact:postalInfoType"
-        minOccurs="0" maxOccurs="2"/>
+         maxOccurs="2"/>
         <element name="voice" type="contact:e164Type"
          minOccurs="0"/>
         <element name="fax" type="contact:e164Type"
