@@ -20,7 +20,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -1564,7 +1564,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -1664,7 +1664,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -1712,7 +1712,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -1796,7 +1796,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -1971,7 +1971,7 @@ RESPONSE:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2001">
-      <msg lang="en">Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}id': This element is not expected.</msg>
+      <msg lang="en">Element '{https://epp.tld.ee/schema/contact-ee-1.1.xsd}id': This element is not expected.</msg>
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
@@ -2445,7 +2445,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd"/>
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd"/>
     </delete>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -2459,7 +2459,7 @@ RESPONSE:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2001">
-      <msg lang="en">Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}delete': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id ).</msg>
+      <msg lang="en">Element '{https://epp.tld.ee/schema/contact-ee-1.1.xsd}delete': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-ee-1.1.xsd}id ).</msg>
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
@@ -2478,7 +2478,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>not-exists</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -2525,7 +2525,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH159792243</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -2569,7 +2569,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH281327764</contact:id>
         <contact:authInfo>
           <contact:pw>wrong password</contact:pw>
@@ -2613,7 +2613,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH671824275</contact:id>
       </contact:delete>
     </delete>
@@ -2648,7 +2648,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH584167436</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -2700,7 +2700,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -2738,7 +2738,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH184575429</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -2788,7 +2788,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -2836,7 +2836,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -2874,7 +2874,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH5548884710</contact:id>
       </contact:delete>
     </delete>
@@ -2915,7 +2915,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -2963,7 +2963,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -3001,7 +3001,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH2027223711</contact:id>
         <contact:authInfo>
           <contact:pw>wrong password</contact:pw>
@@ -3051,7 +3051,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -3091,7 +3091,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <check>
-      <contact:check xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd"/>
+      <contact:check xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd"/>
     </check>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -3105,7 +3105,7 @@ RESPONSE:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2001">
-      <msg lang="en">Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}check': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id ).</msg>
+      <msg lang="en">Element '{https://epp.tld.ee/schema/contact-ee-1.1.xsd}check': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-ee-1.1.xsd}id ).</msg>
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
@@ -3124,7 +3124,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
       <command>
         <check>
-          <contact:check xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+          <contact:check xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
             <contact:id>FIXED:CHECK-1234</contact:id>
             <contact:id>check-4321</contact:id>
           </contact:check>
@@ -3144,7 +3144,7 @@ RESPONSE:
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:chkData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:chkData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:cd>
           <contact:id avail="0">FIXED:CHECK-1234</contact:id>
           <contact:reason>in use</contact:reason>
@@ -3171,7 +3171,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
       <command>
         <check>
-          <contact:check xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+          <contact:check xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
             <contact:id>FIXED:CHECK-LEGACY</contact:id>
             <contact:id>CID:FIXED:CHECK-LEGACY</contact:id>
           </contact:check>
@@ -3191,7 +3191,7 @@ RESPONSE:
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:chkData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:chkData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:cd>
           <contact:id avail="0">FIXED:CHECK-LEGACY</contact:id>
           <contact:reason>in use</contact:reason>
@@ -3218,7 +3218,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd"/>
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd"/>
     </info>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -3232,7 +3232,7 @@ RESPONSE:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
   <response>
     <result code="2001">
-      <msg lang="en">Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}info': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id ).</msg>
+      <msg lang="en">Element '{https://epp.tld.ee/schema/contact-ee-1.1.xsd}info': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-ee-1.1.xsd}id ).</msg>
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
@@ -3251,7 +3251,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>no-contact</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -3292,7 +3292,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIXED:INFO-4444</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -3314,7 +3314,7 @@ RESPONSE:
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIXED:INFO-4444</contact:id>
         <contact:roid>EIS-30</contact:roid>
         <contact:status s="ok"/>
@@ -3360,7 +3360,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIXED:CID:FIXED:INFO-5555</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -3382,7 +3382,7 @@ RESPONSE:
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIXED:CID:FIXED:INFO-5555</contact:id>
         <contact:roid>EIS-31</contact:roid>
         <contact:status s="ok"/>
@@ -3428,7 +3428,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:INFO-IDENT</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -3450,7 +3450,7 @@ RESPONSE:
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:INFO-IDENT</contact:id>
         <contact:roid>EIS-32</contact:roid>
         <contact:status s="ok"/>
@@ -3496,7 +3496,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH146764510</contact:id>
         <contact:authInfo>
           <contact:pw>wrong-pw</contact:pw>
@@ -3518,7 +3518,7 @@ RESPONSE:
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH146764510</contact:id>
         <contact:roid>EIS-1</contact:roid>
         <contact:status s="ok"/>
@@ -3564,7 +3564,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIXED:TEST:CUSTOM:CODE</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -3586,7 +3586,7 @@ RESPONSE:
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIXED:TEST:CUSTOM:CODE</contact:id>
         <contact:roid>EIS-33</contact:roid>
         <contact:status s="ok"/>
@@ -3640,7 +3640,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -3678,7 +3678,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH146764510</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -3700,7 +3700,7 @@ RESPONSE:
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH146764510</contact:id>
         <contact:roid>EIS-1</contact:roid>
         <contact:status s="ok"/>
@@ -3752,7 +3752,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -3800,7 +3800,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -3838,7 +3838,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH146764510</contact:id>
         <contact:authInfo>
           <contact:pw>wrong-pw</contact:pw>
@@ -3882,7 +3882,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -3930,7 +3930,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -3968,7 +3968,7 @@ REQUEST:
 <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
   <command>
     <info>
-      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH146764510</contact:id>
         <contact:authInfo>
           <contact:pw/>
@@ -3990,7 +3990,7 @@ RESPONSE:
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH146764510</contact:id>
         <contact:roid>EIS-1</contact:roid>
         <contact:status s="ok"/>
@@ -4025,7 +4025,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -4071,7 +4071,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -6786,7 +6786,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -6884,7 +6884,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7006,7 +7006,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7104,7 +7104,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7150,7 +7150,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7237,7 +7237,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7285,7 +7285,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7378,7 +7378,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7426,7 +7426,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7519,7 +7519,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7567,7 +7567,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7660,7 +7660,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7708,7 +7708,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7801,7 +7801,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7849,7 +7849,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7942,7 +7942,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7990,7 +7990,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -8083,7 +8083,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -8131,7 +8131,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -8224,7 +8224,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -8272,7 +8272,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -8365,7 +8365,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -8413,7 +8413,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -8492,7 +8492,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -8594,7 +8594,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -8681,7 +8681,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -8781,7 +8781,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -8868,7 +8868,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -9040,7 +9040,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -9179,7 +9179,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -9346,7 +9346,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -9432,7 +9432,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -11226,7 +11226,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -11307,7 +11307,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -11938,7 +11938,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -12018,7 +12018,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -12066,7 +12066,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -12171,7 +12171,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -12219,7 +12219,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -12330,7 +12330,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -12748,7 +12748,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -13087,7 +13087,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -13166,7 +13166,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -13241,7 +13241,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -13320,7 +13320,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -13398,7 +13398,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -13759,7 +13759,7 @@ RESPONSE:
       <version>1.0</version>
       <lang>en</lang>
       <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-      <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+      <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
       <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
       <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
       <svcExtension>
@@ -13805,7 +13805,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -13853,7 +13853,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -13936,7 +13936,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -13982,7 +13982,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -14030,7 +14030,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -14078,7 +14078,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -14124,7 +14124,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -14172,7 +14172,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -14250,7 +14250,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -14299,7 +14299,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>

@@ -3,7 +3,7 @@
   <command>
     <check>
       <contact:check
-       xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+       xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>sh8013</contact:id>
       </contact:check>
     </check>
