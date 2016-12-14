@@ -1,0 +1,11 @@
+en:
+  registrar:
+    domains:
+      index:
+        export_csv_btn: Export CSV
+        csv:
+          domain_name: Domain
+          registrant_name: Registrant name
+          registrant_id: Registrant ID
+          expire_time: Date of expiry
+
