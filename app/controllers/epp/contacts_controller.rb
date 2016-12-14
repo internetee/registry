@@ -1,6 +1,7 @@
 class Epp::ContactsController < EppController
   before_action :find_contact,  only: [:info, :update, :delete]
   before_action :find_password, only: [:info, :update, :delete]
+  helper_method :address_processing?
 
   def info
     authorize! :info, @contact, @password
@@ -24,7 +25,7 @@ class Epp::ContactsController < EppController
     @contact.generate_code
 
     if @contact.save
-      if !Contact.address_processing? && address_given?
+      if !address_processing? && address_given?
         @response_code = 1100
         @response_description = t('epp.contacts.completed_without_address')
       else
@@ -44,7 +45,7 @@ class Epp::ContactsController < EppController
     frame = params[:parsed_frame]
 
     if @contact.update_attributes(frame, current_user)
-      if !Contact.address_processing? && address_given?
+      if !address_processing? && address_given?
         @response_code = 1100
         @response_description = t('epp.contacts.completed_without_address')
       else
@@ -125,7 +126,7 @@ class Epp::ContactsController < EppController
       'postalInfo > addr > cc',
     ]
 
-    required_attributes.concat(address_attributes) if Contact.address_processing?
+    required_attributes.concat(address_attributes) if address_processing?
 
     requires(*required_attributes)
     ident = params[:parsed_frame].css('ident')
@@ -201,5 +202,9 @@ class Epp::ContactsController < EppController
 
   def address_given?
     params[:parsed_frame].css('postalInfo addr').size != 0
+  end
+
+  def address_processing?
+    Contact.address_processing?
   end
 end
