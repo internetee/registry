@@ -1,0 +1,5 @@
+en:
+  epp:
+    contacts:
+      completed: Command completed successfully
+      completed_without_address: Command completed successfully; Postal address data discarded

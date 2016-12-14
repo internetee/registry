@@ -3,7 +3,7 @@
   <command>
     <delete>
       <contact:delete
-       xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+       xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>sh8013</contact:id>
         <contact:authInfo>
           <contact:pw>wrong-one</contact:pw>

@@ -1,6 +1,7 @@
 class Epp::ContactsController < EppController
   before_action :find_contact,  only: [:info, :update, :delete]
   before_action :find_password, only: [:info, :update, :delete]
+  helper_method :address_processing?
 
   def info
     authorize! :info, @contact, @password
@@ -17,12 +18,22 @@ class Epp::ContactsController < EppController
 
   def create
     authorize! :create, Epp::Contact
-    @contact = Epp::Contact.new(params[:parsed_frame], current_user.registrar)
+    frame = params[:parsed_frame]
+    @contact = Epp::Contact.new(frame, current_user.registrar)
 
-    @contact.add_legal_file_to_new(params[:parsed_frame])
+    @contact.add_legal_file_to_new(frame)
+    @contact.generate_code
 
     if @contact.save
-      render_epp_response '/epp/contacts/create'
+      if !address_processing? && address_given?
+        @response_code = 1100
+        @response_description = t('epp.contacts.completed_without_address')
+      else
+        @response_code = 1000
+        @response_description = t('epp.contacts.completed')
+      end
+
+      render_epp_response '/epp/contacts/save'
     else
       handle_errors(@contact)
     end
@@ -31,8 +42,18 @@ class Epp::ContactsController < EppController
   def update
     authorize! :update, @contact, @password
 
-    if @contact.update_attributes(params[:parsed_frame], current_user)
-      render_epp_response 'epp/contacts/update'
+    frame = params[:parsed_frame]
+
+    if @contact.update_attributes(frame, current_user)
+      if !address_processing? && address_given?
+        @response_code = 1100
+        @response_description = t('epp.contacts.completed_without_address')
+      else
+        @response_code = 1000
+        @response_description = t('epp.contacts.completed')
+      end
+
+      render_epp_response 'epp/contacts/save'
     else
       handle_errors(@contact)
     end
@@ -91,10 +112,23 @@ class Epp::ContactsController < EppController
 
   def validate_create
     @prefix = 'create > create >'
-    requires(
-      'postalInfo > name', 'postalInfo > addr > street', 'postalInfo > addr > city',
-      'postalInfo > addr > pc', 'postalInfo > addr > cc', 'voice', 'email'
-    )
+
+    required_attributes = [
+      'postalInfo > name',
+      'voice',
+      'email'
+    ]
+
+    address_attributes = [
+      'postalInfo > addr > street',
+      'postalInfo > addr > city',
+      'postalInfo > addr > pc',
+      'postalInfo > addr > cc',
+    ]
+
+    required_attributes.concat(address_attributes) if address_processing?
+
+    requires(*required_attributes)
     ident = params[:parsed_frame].css('ident')
 
     if ident.present? && ident.attr('type').blank?
@@ -141,7 +175,7 @@ class Epp::ContactsController < EppController
   def contact_org_disabled
     return true if ENV['contact_org_enabled'] == 'true'
     return true if params[:parsed_frame].css('postalInfo org').text.blank?
-    
+
     epp_errors << {
       code: '2306',
       msg: "#{I18n.t(:contact_org_error)}: postalInfo > org [org]"
@@ -164,5 +198,13 @@ class Epp::ContactsController < EppController
       code: '2306',
       msg: "#{I18n.t(:client_side_status_editing_error)}: status [status]"
     }
+  end
+
+  def address_given?
+    params[:parsed_frame].css('postalInfo addr').size != 0
+  end
+
+  def address_processing?
+    Contact.address_processing?
   end
 end

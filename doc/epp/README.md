@@ -29,9 +29,12 @@
 
 ### .ee-specific
 * [all-ee-1.0.xsd](/lib/schemas/all-ee-1.0.xsd)
+* [all-ee-1.1.xsd](/lib/schemas/all-ee-1.1.xsd)
+* [eis-1.0.xsd](/lib/schemas/eis-1.0.xsd)
+* [epp-ee-1.0.xsd](/lib/schemas/epp-ee-1.0.xsd)
 * [domain-eis-1.0.xsd](/lib/schemas/domain-eis-1.0.xsd)
 * [contact-eis-1.0.xsd](/lib/schemas/contact-eis-1.0.xsd)
-* [eis-1.0.xsd](/lib/schemas/eis-1.0.xsd)
+* [contact-ee-1.1.xsd](/lib/schemas/contact-ee-1.1.xsd)
 
 More info about The Extensible Provisioning Protocol (EPP):
 http://en.wikipedia.org/wiki/Extensible_Provisioning_Protocol

@@ -39,4 +39,10 @@ RSpec.describe AdminUser do
       expect(described_class.min_password_length).to eq(8)
     end
   end
+
+  describe '#min_password_length' do
+    it 'returns minimum password length' do
+      expect(described_class.min_password_length).to eq(8)
+    end
+  end
 end

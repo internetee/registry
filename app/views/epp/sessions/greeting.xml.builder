@@ -6,7 +6,7 @@ xml.epp_head do
       xml.version '1.0'
       xml.lang 'en'
       xml.objURI 'https://epp.tld.ee/schema/domain-eis-1.0.xsd'
-      xml.objURI 'https://epp.tld.ee/schema/contact-eis-1.0.xsd'
+      xml.objURI 'https://epp.tld.ee/schema/contact-ee-1.1.xsd'
       xml.objURI 'urn:ietf:params:xml:ns:host-1.0'
       xml.objURI 'urn:ietf:params:xml:ns:keyrelay-1.0'
       xml.svcExtension do
