@@ -14,7 +14,7 @@ class Registrar::DomainsController < Registrar::DeppController # EPP controller
     if params[:q].length == 1 && params[:q][:name_matches].present?
       @domain = Domain.find_by(name: params[:q][:name_matches])
       if @domain
-        redirect_to info_registrar_domains_url(domain_name: @domain.name) and return
+        redirect_to info_registrar_domains_path(domain_name: @domain.name) and return
       end
     end
 
@@ -40,20 +40,6 @@ class Registrar::DomainsController < Registrar::DeppController # EPP controller
     end
 
     @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i > 0
-
-    respond_to do |format|
-      format.html
-      format.csv do
-        domain_presenters = []
-
-        @domains.find_each do |domain|
-          domain_presenters << ::DomainPresenter.new(domain: domain, view: view_context)
-        end
-
-        csv = Registrar::DomainListCSVPresenter.new(domains: domain_presenters, view: view_context).to_s
-        send_data(csv)
-      end
-    end
   end
   # rubocop: enable Metrics/PerceivedComplexity
   # rubocop: enable Metrics/CyclomaticComplexity
