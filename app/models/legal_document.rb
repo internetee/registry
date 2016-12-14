@@ -17,7 +17,7 @@ class LegalDocument < ActiveRecord::Base
   validate :val_body_length, if: ->(file){ file.path.blank? && !Rails.env.staging?}
 
   before_create :add_creator
-  before_save   :save_to_filesystem
+  before_save   :save_to_filesystem, if: :body
 
   def epp_code_map
     {
