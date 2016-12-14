@@ -448,4 +448,19 @@ RSpec.describe Contact, db: false do
       expect(contact.errors).to have_key(:country_code)
     end
   end
+
+  describe '#remove_address' do
+    let(:contact) { described_class.new(city: 'test',
+                                        street: 'test',
+                                        zip: 'test',
+                                        country_code: 'test',
+                                        state: 'test')
+    }
+    subject(:address_removed) { contact.attributes.slice(*described_class.address_attribute_names).compact.empty? }
+
+    it 'removes address attributes' do
+      contact.remove_address
+      expect(address_removed).to be_truthy
+    end
+  end
 end

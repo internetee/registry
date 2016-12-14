@@ -578,4 +578,9 @@ class Contact < ActiveRecord::Base
     log
   end
 
+  def remove_address
+    self.class.address_attribute_names.each do |attr_name|
+      self[attr_name.to_sym] = nil
+    end
+  end
 end

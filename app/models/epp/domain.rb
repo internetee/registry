@@ -648,6 +648,7 @@ class Epp::Domain < Domain
     oc.copy_from_id = c.id
     oc.generate_code
     oc.domain_transfer = true
+    oc.remove_address unless Contact.address_processing?
     oc.save!(validate: false)
     oc
   end
