@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'EPP contact:update' do
   let(:request_xml_with_address) { '<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-    <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+    <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
       <command>
         <update>
           <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
@@ -74,7 +74,7 @@ RSpec.describe 'EPP contact:update' do
 
     context 'without address' do
       let(:request_xml_without_address) { '<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-        <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+        <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
           <command>
             <update>
               <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
