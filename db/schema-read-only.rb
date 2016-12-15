@@ -11,12 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160304125933) do
+ActiveRecord::Schema.define(version: 20160629114503) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "hstore"
   enable_extension "btree_gist"
+  enable_extension "hstore"
 
   create_table "account_activities", force: :cascade do |t|
     t.integer  "account_id"
@@ -214,11 +214,13 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.string   "country_code"
     t.string   "state"
     t.integer  "legacy_id"
-    t.string   "statuses",           array: true
+    t.string   "statuses",           default: [], array: true
     t.hstore   "status_notes"
     t.integer  "legacy_history_id"
     t.integer  "copy_from_id"
     t.datetime "ident_updated_at"
+    t.integer  "upid"
+    t.datetime "up_date"
   end
 
   add_index "contacts", ["code"], name: "index_contacts_on_code", using: :btree
@@ -261,6 +263,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.string   "invoice_number"
+    t.text     "request"
   end
 
   add_index "directos", ["item_type", "item_id"], name: "index_directos_on_item_type_and_item_id", using: :btree
@@ -360,6 +363,8 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.boolean  "reserved",                                   default: false
     t.hstore   "status_notes"
     t.string   "statuses_backup",                            default: [],    array: true
+    t.integer  "upid"
+    t.datetime "up_date"
   end
 
   add_index "domains", ["delete_at"], name: "index_domains_on_delete_at", using: :btree
@@ -474,8 +479,10 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "creator_str"
     t.string   "path"
+    t.string   "checksum"
   end
 
+  add_index "legal_documents", ["checksum"], name: "index_legal_documents_on_checksum", using: :btree
   add_index "legal_documents", ["documentable_type", "documentable_id"], name: "index_legal_documents_on_documentable_type_and_documentable_id", using: :btree
 
   create_table "log_account_activities", force: :cascade do |t|
@@ -488,6 +495,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   add_index "log_account_activities", ["item_type", "item_id"], name: "index_log_account_activities_on_item_type_and_item_id", using: :btree
@@ -503,6 +511,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   add_index "log_accounts", ["item_type", "item_id"], name: "index_log_accounts_on_item_type_and_item_id", using: :btree
@@ -518,6 +527,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   add_index "log_addresses", ["item_type", "item_id"], name: "index_log_addresses_on_item_type_and_item_id", using: :btree
@@ -533,6 +543,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   add_index "log_api_users", ["item_type", "item_id"], name: "index_log_api_users_on_item_type_and_item_id", using: :btree
@@ -548,6 +559,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   add_index "log_bank_statements", ["item_type", "item_id"], name: "index_log_bank_statements_on_item_type_and_item_id", using: :btree
@@ -563,6 +575,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   add_index "log_bank_transactions", ["item_type", "item_id"], name: "index_log_bank_transactions_on_item_type_and_item_id", using: :btree
@@ -578,6 +591,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   add_index "log_blocked_domains", ["item_type", "item_id"], name: "index_log_blocked_domains_on_item_type_and_item_id", using: :btree
@@ -593,6 +607,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   add_index "log_certificates", ["item_type", "item_id"], name: "index_log_certificates_on_item_type_and_item_id", using: :btree
@@ -608,6 +623,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   add_index "log_contact_statuses", ["item_type", "item_id"], name: "index_log_contact_statuses_on_item_type_and_item_id", using: :btree
@@ -624,6 +640,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.string   "session"
     t.json     "children"
     t.datetime "ident_updated_at"
+    t.string   "uuid"
   end
 
   add_index "log_contacts", ["item_type", "item_id"], name: "index_log_contacts_on_item_type_and_item_id", using: :btree
@@ -639,6 +656,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   add_index "log_countries", ["item_type", "item_id"], name: "index_log_countries_on_item_type_and_item_id", using: :btree
@@ -654,6 +672,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   add_index "log_dnskeys", ["item_type", "item_id"], name: "index_log_dnskeys_on_item_type_and_item_id", using: :btree
@@ -669,6 +688,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   add_index "log_domain_contacts", ["item_type", "item_id"], name: "index_log_domain_contacts_on_item_type_and_item_id", using: :btree
@@ -684,6 +704,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   add_index "log_domain_statuses", ["item_type", "item_id"], name: "index_log_domain_statuses_on_item_type_and_item_id", using: :btree
@@ -699,6 +720,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   add_index "log_domain_transfers", ["item_type", "item_id"], name: "index_log_domain_transfers_on_item_type_and_item_id", using: :btree
@@ -717,6 +739,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.text     "admin_contact_ids", default: [],              array: true
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   add_index "log_domains", ["item_type", "item_id"], name: "index_log_domains_on_item_type_and_item_id", using: :btree
@@ -732,6 +755,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   add_index "log_invoice_items", ["item_type", "item_id"], name: "index_log_invoice_items_on_item_type_and_item_id", using: :btree
@@ -747,6 +771,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   add_index "log_invoices", ["item_type", "item_id"], name: "index_log_invoices_on_item_type_and_item_id", using: :btree
@@ -762,6 +787,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   add_index "log_keyrelays", ["item_type", "item_id"], name: "index_log_keyrelays_on_item_type_and_item_id", using: :btree
@@ -777,6 +803,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   add_index "log_messages", ["item_type", "item_id"], name: "index_log_messages_on_item_type_and_item_id", using: :btree
@@ -792,6 +819,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   add_index "log_nameservers", ["item_type", "item_id"], name: "index_log_nameservers_on_item_type_and_item_id", using: :btree
@@ -806,6 +834,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.json     "object_changes"
     t.datetime "created_at"
     t.string   "session"
+    t.string   "uuid"
   end
 
   create_table "log_registrars", force: :cascade do |t|
@@ -818,6 +847,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   add_index "log_registrars", ["item_type", "item_id"], name: "index_log_registrars_on_item_type_and_item_id", using: :btree
@@ -833,6 +863,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   add_index "log_reserved_domains", ["item_type", "item_id"], name: "index_log_reserved_domains_on_item_type_and_item_id", using: :btree
@@ -848,6 +879,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   add_index "log_settings", ["item_type", "item_id"], name: "index_log_settings_on_item_type_and_item_id", using: :btree
@@ -863,6 +895,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   add_index "log_users", ["item_type", "item_id"], name: "index_log_users_on_item_type_and_item_id", using: :btree
@@ -878,6 +911,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   create_table "log_zonefile_settings", force: :cascade do |t|
@@ -890,6 +924,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.datetime "created_at"
     t.string   "session"
     t.json     "children"
+    t.string   "uuid"
   end
 
   add_index "log_zonefile_settings", ["item_type", "item_id"], name: "index_log_zonefile_settings_on_item_type_and_item_id", using: :btree
@@ -931,6 +966,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.string   "creator_str"
     t.string   "updator_str"
     t.integer  "legacy_domain_id"
+    t.string   "hostname_puny"
   end
 
   add_index "nameservers", ["domain_id"], name: "index_nameservers_on_domain_id", using: :btree
@@ -1015,6 +1051,7 @@ ActiveRecord::Schema.define(version: 20160304125933) do
     t.boolean  "vat"
     t.integer  "legacy_id"
     t.string   "reference_no"
+    t.boolean  "test_registrar",  default: false
   end
 
   add_index "registrars", ["code"], name: "index_registrars_on_code", using: :btree
