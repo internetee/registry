@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<schema targetNamespace="urn:ietf:params:xml:ns:epp-1.0"
-        xmlns:epp="urn:ietf:params:xml:ns:epp-1.0"
+<schema targetNamespace="https://epp.tld.ee/schema/epp-ee-1.0.xsd"
+        xmlns:epp="https://epp.tld.ee/schema/epp-ee-1.0.xsd"
         xmlns:eppcom="urn:ietf:params:xml:ns:eppcom-1.0"
         xmlns="http://www.w3.org/2001/XMLSchema"
         elementFormDefault="qualified">

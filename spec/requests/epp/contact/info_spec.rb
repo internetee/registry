@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'EPP contact:update' do
   let(:request_xml) { '<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-    <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+    <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
       <command>
         <info>
           <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
