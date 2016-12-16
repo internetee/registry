@@ -18,17 +18,17 @@ GIT
 
 GIT
   remote: https://github.com/internetee/epp-xml.git
-  revision: 475f650951f2cf5015e00d48f408a2194ecc1662
+  revision: 5dd542e67ef26d58365f30e553254d6db809277d
   specs:
-    epp-xml (1.0.5)
+    epp-xml (1.1.0)
       activesupport (~> 4.1)
       builder (~> 3.2)
 
 GIT
   remote: https://github.com/internetee/epp.git
-  revision: 505c3f2739eb1da918e54111aecfb138a822739d
+  revision: 1a50f2144f15a2d975337e56fb1ccaba5d956e9d
   specs:
-    epp (1.4.2)
+    epp (1.5.0)
       hpricot
       libxml-ruby
 
@@ -299,7 +299,7 @@ GEM
     launchy (2.4.3)
       addressable (~> 2.3)
     libv8 (3.16.14.11)
-    libxml-ruby (2.8.0)
+    libxml-ruby (2.9.0)
     liquid (3.0.6)
     listen (3.0.3)
       rb-fsevent (>= 0.9.3)
@@ -593,8 +593,8 @@ DEPENDENCIES
   deep_cloneable (= 2.1.1)
   devise (= 3.5.4)
   digidoc_client (= 0.2.1)
-  epp (= 1.4.2)!
-  epp-xml (= 1.0.5)!
+  epp (= 1.5.0)!
+  epp-xml (= 1.1.0)!
   fabrication (= 2.13.2)
   factory_girl_rails
   figaro (= 1.1.1)
