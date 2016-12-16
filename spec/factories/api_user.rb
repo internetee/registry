@@ -4,5 +4,9 @@ FactoryGirl.define do
     password 'a' * 6
     roles ['super']
     registrar
+
+    factory :api_user_epp do
+      roles %w(epp static_registrant)
+    end
   end
 end

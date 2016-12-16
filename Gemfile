@@ -83,9 +83,8 @@ gem 'deep_cloneable', '2.1.1'
 # id + mid login
 gem 'digidoc_client', '0.2.1'
 
-# epp
-gem 'epp', '1.4.2', github: 'internetee/epp'
-gem 'epp-xml',   '1.0.5', github: 'internetee/epp-xml' # EIS EPP XMLs
+gem 'epp', '1.5.0', github: 'internetee/epp'
+gem 'epp-xml', '1.1.0', github: 'internetee/epp-xml'
 gem 'uuidtools', '2.1.5' # For unique IDs (used by the epp gem)
 
 # que

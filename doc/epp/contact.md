@@ -17,7 +17,7 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
     Field name                 Min-max  Field description
     -----------------------    -------  -----------------
     <create>                   1     
-      <contact:create>         1        Attribute: xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd"
+      <contact:create>         1        Attribute: xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd"
         <contact:id>           0-1      Contact id, optional, 
                                           string: ASCII letters, numbers, ':', '-' characters, no spaces,
                                           max 100 characters,
@@ -53,7 +53,7 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
     Field name                  Min-max  Field description
     -----------------------     -------  -----------------
     <update>                    1     
-      <contact:update>          1        Attribute: xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd"
+      <contact:update>          1        Attribute: xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd"
         <contact:id>            1        Contact id, required
         <contact:chg>           1        Change container
           <contact:postalInfo>  1        Postal information container
@@ -90,7 +90,7 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
     Field name                Min-max  Field description
     -----------------------   -------  -----------------
     <delete>                  1       
-      <contact:delete>        1        Attribute: xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd"
+      <contact:delete>        1        Attribute: xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd"
         <contact:id>          1        Contact id
         <contact:authInfo>    0-1      Required if registrar is not the owner of the contact.
           <contact:pw>        1        Contact password. Attribute: roid="String"
@@ -108,7 +108,7 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
     Field name               Min-max  Field description
     -----------------------  -------  -----------------
     <check>                  1       
-      <contact:check>        1        Attribute: xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd"
+      <contact:check>        1        Attribute: xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd"
         <contact:id>         1-n      Contact id 
     <clTRID>                 0-1      Client transaction id
 
@@ -120,7 +120,7 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
     Field name               Min-max  Field description
     -----------------------  -------  -----------------
     <info>                   1       
-      <contact:info>         1        Attribute: xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd"
+      <contact:info>         1        Attribute: xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd"
         <contact:id>         1-n      Contact id 
         <contact:authInfo>   0-1      Required if registrar is not the owner of the contact.
           <contact:pw>       1        Contact password. Attribute: roid="String"

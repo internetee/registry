@@ -9,7 +9,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -20,7 +20,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -38,7 +38,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -57,10 +57,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
-      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd"/>
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd"/>
     </create>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -71,10 +71,10 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2001">
-      <msg lang="en">Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}create': Missing child element(s). Expected is one of ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id, {https://epp.tld.ee/schema/contact-eis-1.0.xsd}postalInfo ).</msg>
+      <msg lang="en">Element '{https://epp.tld.ee/schema/contact-ee-1.1.xsd}create': Missing child element(s). Expected is one of ( {https://epp.tld.ee/schema/contact-ee-1.1.xsd}id, {https://epp.tld.ee/schema/contact-ee-1.1.xsd}postalInfo ).</msg>
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
@@ -90,10 +90,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
-      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
           <contact:addr>
@@ -122,13 +122,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:84FC4612</contact:id>
         <contact:crDate>2015-09-09T09:40:29Z</contact:crDate>
       </contact:creData>
@@ -147,10 +147,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
-      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
           <contact:addr>
@@ -182,13 +182,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:467382DF</contact:id>
         <contact:crDate>2015-09-09T09:40:29Z</contact:crDate>
       </contact:creData>
@@ -207,10 +207,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
-      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
           <contact:addr>
@@ -239,13 +239,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:ECE6546C</contact:id>
         <contact:crDate>2015-09-09T09:40:29Z</contact:crDate>
       </contact:creData>
@@ -264,10 +264,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
-      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
           <contact:addr>
@@ -296,13 +296,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:E5EB4D84</contact:id>
         <contact:crDate>2015-09-09T09:40:29Z</contact:crDate>
       </contact:creData>
@@ -321,10 +321,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
-      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
           <contact:addr>
@@ -353,13 +353,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:EAB46720</contact:id>
         <contact:crDate>2015-09-09T09:40:29Z</contact:crDate>
       </contact:creData>
@@ -378,10 +378,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
-      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
           <contact:addr>
@@ -410,7 +410,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2005">
       <msg lang="en">Email is invalid [email]</msg>
@@ -429,10 +429,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
-      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>abc12345</contact:id>
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
@@ -462,13 +462,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:ABC12345</contact:id>
         <contact:crDate>2015-09-09T09:40:30Z</contact:crDate>
       </contact:creData>
@@ -487,10 +487,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
-      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>abc:ABC:12345</contact:id>
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
@@ -520,13 +520,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:ABC:ABC:12345</contact:id>
         <contact:crDate>2015-09-09T09:40:30Z</contact:crDate>
       </contact:creData>
@@ -545,10 +545,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
-      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>abc 123</contact:id>
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
@@ -578,7 +578,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2005">
       <msg lang="en">is invalid [code]</msg>
@@ -597,10 +597,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
-      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>33&amp;$@@</contact:id>
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
@@ -630,7 +630,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2005">
       <msg lang="en">is invalid [code]</msg>
@@ -649,10 +649,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
-      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</contact:id>
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
@@ -682,7 +682,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2005">
       <msg lang="en">Contact code is too long, max 100 characters [code]</msg>
@@ -701,10 +701,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
-      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
           <contact:addr>
@@ -732,7 +732,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2001">
       <msg lang="en">Element '{https://epp.tld.ee/schema/eis-1.0.xsd}ident', attribute 'cc': [facet 'maxLength'] The value 'WRONG' has a length of '5'; this exceeds the allowed maximum length of '2'.</msg>
@@ -754,10 +754,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
-      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
           <contact:addr>
@@ -785,7 +785,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2001">
       <msg lang="en">Element '{https://epp.tld.ee/schema/eis-1.0.xsd}ident': The attribute 'cc' is required but missing.</msg>
@@ -804,10 +804,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
-      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
           <contact:addr>
@@ -835,7 +835,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2001">
       <msg lang="en">Element '{https://epp.tld.ee/schema/eis-1.0.xsd}ident': The attribute 'type' is required but missing.</msg>
@@ -857,10 +857,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
-      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>CID:FIRST0:abc:ABC:NEW:12345</contact:id>
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
@@ -890,13 +890,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:CID:FIRST0:ABC:ABC:NEW:12345</contact:id>
         <contact:crDate>2015-09-09T09:40:36Z</contact:crDate>
       </contact:creData>
@@ -915,10 +915,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
-      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>CID:FIRST0:abc:CID:ABC:NEW:12345</contact:id>
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
@@ -948,13 +948,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:CID:FIRST0:ABC:CID:ABC:NEW:12345</contact:id>
         <contact:crDate>2015-09-09T09:40:36Z</contact:crDate>
       </contact:creData>
@@ -973,10 +973,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
-      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:abc22</contact:id>
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
@@ -1006,13 +1006,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:ABC22</contact:id>
         <contact:crDate>2015-09-09T09:40:36Z</contact:crDate>
       </contact:creData>
@@ -1031,10 +1031,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
-      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>cid2:first0:abc:ABC:11111</contact:id>
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
@@ -1064,13 +1064,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:CID2:FIRST0:ABC:ABC:11111</contact:id>
         <contact:crDate>2015-09-09T09:40:36Z</contact:crDate>
       </contact:creData>
@@ -1089,10 +1089,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
-      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>CID:FIRST0</contact:id>
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
@@ -1122,13 +1122,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:CID:FIRST0</contact:id>
         <contact:crDate>2015-09-09T09:40:37Z</contact:crDate>
       </contact:creData>
@@ -1147,10 +1147,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
-      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
           <contact:addr>
@@ -1179,13 +1179,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:0D91E51A</contact:id>
         <contact:crDate>2015-09-09T09:40:37Z</contact:crDate>
       </contact:creData>
@@ -1204,10 +1204,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
-      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
           <contact:addr>
@@ -1236,13 +1236,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:4F138386</contact:id>
         <contact:crDate>2015-09-09T09:40:37Z</contact:crDate>
       </contact:creData>
@@ -1261,10 +1261,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
-      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
           <contact:org>should not save</contact:org>
@@ -1294,7 +1294,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2306">
       <msg lang="en">Parameter value policy error. Org must be blank: postalInfo &gt; org [org]</msg>
@@ -1313,10 +1313,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
-      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:postalInfo>
           <contact:name>John Doe</contact:name>
           <contact:addr>
@@ -1346,7 +1346,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2306">
       <msg lang="en">Parameter value policy error. Fax must be blank: fax [fax]</msg>
@@ -1365,10 +1365,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
-      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd"/>
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd"/>
     </update>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -1379,10 +1379,10 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2001">
-      <msg lang="en">Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}update': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id ).</msg>
+      <msg lang="en">Element '{https://epp.tld.ee/schema/contact-ee-1.1.xsd}update': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-ee-1.1.xsd}id ).</msg>
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
@@ -1398,10 +1398,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
-      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>not-exists</contact:id>
         <contact:chg>
           <contact:postalInfo>
@@ -1429,7 +1429,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2303">
       <msg lang="en">Object does not exist</msg>
@@ -1451,10 +1451,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
-      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:postalInfo>
@@ -1482,13 +1482,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:crDate>2015-09-09T09:40:39Z</contact:crDate>
       </contact:creData>
@@ -1507,10 +1507,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
-      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:postalInfo>
@@ -1528,13 +1528,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:crDate>2015-09-09T09:40:39Z</contact:crDate>
       </contact:creData>
@@ -1553,7 +1553,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -1564,7 +1564,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -1582,7 +1582,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -1599,10 +1599,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
-      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:postalInfo>
@@ -1630,13 +1630,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:crDate>2015-09-09T09:40:39Z</contact:crDate>
       </contact:creData>
@@ -1653,7 +1653,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -1664,7 +1664,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -1682,7 +1682,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -1701,7 +1701,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -1712,7 +1712,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -1730,7 +1730,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -1747,10 +1747,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
-      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:postalInfo>
@@ -1768,7 +1768,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2201">
       <msg lang="en">Authorization error</msg>
@@ -1785,7 +1785,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -1796,7 +1796,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -1814,7 +1814,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -1833,10 +1833,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
-      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:postalInfo>
@@ -1864,7 +1864,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2005">
       <msg lang="en">Phone nr is invalid [phone]</msg>
@@ -1886,10 +1886,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
-      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:postalInfo>
@@ -1917,7 +1917,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2005">
       <msg lang="en">Email is invalid [email]</msg>
@@ -1936,10 +1936,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
-      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:postalInfo>
@@ -1968,10 +1968,10 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2001">
-      <msg lang="en">Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}id': This element is not expected.</msg>
+      <msg lang="en">Element '{https://epp.tld.ee/schema/contact-ee-1.1.xsd}id': This element is not expected.</msg>
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
@@ -1987,10 +1987,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
-      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:postalInfo>
@@ -2019,7 +2019,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2306">
       <msg lang="en">Parameter value policy error. Update of ident data not allowed [ident]</msg>
@@ -2038,10 +2038,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
-      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:postalInfo>
@@ -2070,7 +2070,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2306">
       <msg lang="en">Parameter value policy error. Org must be blank: postalInfo &gt; org [org]</msg>
@@ -2089,10 +2089,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
-      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:postalInfo>
@@ -2121,7 +2121,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2306">
       <msg lang="en">Parameter value policy error. Fax must be blank: fax [fax]</msg>
@@ -2140,10 +2140,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
-      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:add>
           <contact:status s="clientDeleteProhibited" lang="en">Payment overdue.</contact:status>
@@ -2160,7 +2160,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2306">
       <msg lang="en">Parameter value policy error. Client-side object status management not supported: status [status]</msg>
@@ -2179,10 +2179,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
-      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:authInfo>
@@ -2200,13 +2200,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:crDate>2015-09-09T09:40:39Z</contact:crDate>
       </contact:creData>
@@ -2225,10 +2225,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
-      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:voice>+372.11111111</contact:voice>
@@ -2247,13 +2247,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:crDate>2015-09-09T09:40:39Z</contact:crDate>
       </contact:creData>
@@ -2272,10 +2272,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
-      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:voice/>
@@ -2295,7 +2295,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2003">
       <msg lang="en">Required parameter missing - phone [phone]</msg>
@@ -2317,10 +2317,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
-      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:voice/>
@@ -2339,7 +2339,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2003">
       <msg lang="en">Required parameter missing - phone [phone]</msg>
@@ -2361,10 +2361,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
-      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:chg>
           <contact:postalInfo>
@@ -2385,7 +2385,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2306">
       <msg lang="en">Parameter value policy error. Org must be blank: postalInfo &gt; org [org]</msg>
@@ -2404,10 +2404,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
-      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH8013</contact:id>
         <contact:add>
           <contact:status s="clientUpdateProhibited"/>
@@ -2423,7 +2423,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2306">
       <msg lang="en">Parameter value policy error. Client-side object status management not supported: status [status]</msg>
@@ -2442,10 +2442,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd"/>
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd"/>
     </delete>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -2456,10 +2456,10 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2001">
-      <msg lang="en">Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}delete': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id ).</msg>
+      <msg lang="en">Element '{https://epp.tld.ee/schema/contact-ee-1.1.xsd}delete': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-ee-1.1.xsd}id ).</msg>
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
@@ -2475,10 +2475,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>not-exists</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -2500,7 +2500,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2303">
       <msg lang="en">Object does not exist</msg>
@@ -2522,10 +2522,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH159792243</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -2547,7 +2547,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -2566,10 +2566,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH281327764</contact:id>
         <contact:authInfo>
           <contact:pw>wrong password</contact:pw>
@@ -2591,7 +2591,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -2610,10 +2610,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH671824275</contact:id>
       </contact:delete>
     </delete>
@@ -2626,7 +2626,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -2645,10 +2645,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH584167436</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -2670,7 +2670,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2305">
       <msg lang="en">Object association prohibits operation [domains]</msg>
@@ -2689,7 +2689,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -2700,7 +2700,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -2718,7 +2718,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -2735,10 +2735,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH184575429</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -2760,7 +2760,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -2777,7 +2777,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -2788,7 +2788,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -2806,7 +2806,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -2825,7 +2825,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -2836,7 +2836,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -2854,7 +2854,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -2871,10 +2871,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH5548884710</contact:id>
       </contact:delete>
     </delete>
@@ -2887,7 +2887,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2201">
       <msg lang="en">Authorization error</msg>
@@ -2904,7 +2904,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -2915,7 +2915,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -2933,7 +2933,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -2952,7 +2952,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -2963,7 +2963,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -2981,7 +2981,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -2998,10 +2998,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <delete>
-      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:delete xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH2027223711</contact:id>
         <contact:authInfo>
           <contact:pw>wrong password</contact:pw>
@@ -3023,7 +3023,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2201">
       <msg lang="en">Authorization error</msg>
@@ -3040,7 +3040,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -3051,7 +3051,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -3069,7 +3069,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -3088,10 +3088,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <check>
-      <contact:check xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd"/>
+      <contact:check xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd"/>
     </check>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -3102,10 +3102,10 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2001">
-      <msg lang="en">Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}check': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id ).</msg>
+      <msg lang="en">Element '{https://epp.tld.ee/schema/contact-ee-1.1.xsd}check': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-ee-1.1.xsd}id ).</msg>
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
@@ -3121,10 +3121,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
       <command>
         <check>
-          <contact:check xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+          <contact:check xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
             <contact:id>FIXED:CHECK-1234</contact:id>
             <contact:id>check-4321</contact:id>
           </contact:check>
@@ -3138,13 +3138,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:chkData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:chkData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:cd>
           <contact:id avail="0">FIXED:CHECK-1234</contact:id>
           <contact:reason>in use</contact:reason>
@@ -3168,10 +3168,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
       <command>
         <check>
-          <contact:check xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+          <contact:check xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
             <contact:id>FIXED:CHECK-LEGACY</contact:id>
             <contact:id>CID:FIXED:CHECK-LEGACY</contact:id>
           </contact:check>
@@ -3185,13 +3185,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:chkData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:chkData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:cd>
           <contact:id avail="0">FIXED:CHECK-LEGACY</contact:id>
           <contact:reason>in use</contact:reason>
@@ -3215,10 +3215,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <info>
-      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd"/>
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd"/>
     </info>
     <clTRID>ABC-12345</clTRID>
   </command>
@@ -3229,10 +3229,10 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2001">
-      <msg lang="en">Element '{https://epp.tld.ee/schema/contact-eis-1.0.xsd}info': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-eis-1.0.xsd}id ).</msg>
+      <msg lang="en">Element '{https://epp.tld.ee/schema/contact-ee-1.1.xsd}info': Missing child element(s). Expected is ( {https://epp.tld.ee/schema/contact-ee-1.1.xsd}id ).</msg>
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
@@ -3248,10 +3248,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <info>
-      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>no-contact</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -3267,7 +3267,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2303">
       <msg lang="en">Object does not exist</msg>
@@ -3289,10 +3289,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <info>
-      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIXED:INFO-4444</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -3308,13 +3308,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIXED:INFO-4444</contact:id>
         <contact:roid>EIS-30</contact:roid>
         <contact:status s="ok"/>
@@ -3357,10 +3357,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <info>
-      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIXED:CID:FIXED:INFO-5555</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -3376,13 +3376,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIXED:CID:FIXED:INFO-5555</contact:id>
         <contact:roid>EIS-31</contact:roid>
         <contact:status s="ok"/>
@@ -3425,10 +3425,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <info>
-      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:INFO-IDENT</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -3444,13 +3444,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:INFO-IDENT</contact:id>
         <contact:roid>EIS-32</contact:roid>
         <contact:status s="ok"/>
@@ -3493,10 +3493,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <info>
-      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH146764510</contact:id>
         <contact:authInfo>
           <contact:pw>wrong-pw</contact:pw>
@@ -3512,13 +3512,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH146764510</contact:id>
         <contact:roid>EIS-1</contact:roid>
         <contact:status s="ok"/>
@@ -3561,10 +3561,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <info>
-      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIXED:TEST:CUSTOM:CODE</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -3580,13 +3580,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIXED:TEST:CUSTOM:CODE</contact:id>
         <contact:roid>EIS-33</contact:roid>
         <contact:status s="ok"/>
@@ -3629,7 +3629,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -3640,7 +3640,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -3658,7 +3658,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -3675,10 +3675,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <info>
-      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH146764510</contact:id>
         <contact:authInfo>
           <contact:pw>password</contact:pw>
@@ -3694,13 +3694,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH146764510</contact:id>
         <contact:roid>EIS-1</contact:roid>
         <contact:status s="ok"/>
@@ -3741,7 +3741,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -3752,7 +3752,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -3770,7 +3770,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -3789,7 +3789,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -3800,7 +3800,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -3818,7 +3818,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -3835,10 +3835,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <info>
-      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH146764510</contact:id>
         <contact:authInfo>
           <contact:pw>wrong-pw</contact:pw>
@@ -3854,7 +3854,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2201">
       <msg lang="en">Authorization error</msg>
@@ -3871,7 +3871,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -3882,7 +3882,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -3900,7 +3900,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -3919,7 +3919,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -3930,7 +3930,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -3948,7 +3948,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -3965,10 +3965,10 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <info>
-      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:info xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH146764510</contact:id>
         <contact:authInfo>
           <contact:pw/>
@@ -3984,13 +3984,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
     </result>
     <resData>
-      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-eis-1.0.xsd">
+      <contact:infData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
         <contact:id>FIRST0:SH146764510</contact:id>
         <contact:roid>EIS-1</contact:roid>
         <contact:status s="ok"/>
@@ -4014,7 +4014,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -4025,7 +4025,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -4043,7 +4043,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -4060,7 +4060,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -4071,7 +4071,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -4089,7 +4089,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -4108,7 +4108,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -4152,7 +4152,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2104">
       <msg lang="en">Billing failure - credit balance low</msg>
@@ -4171,7 +4171,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -4215,7 +4215,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2303">
       <msg lang="en">Contact was not found</msg>
@@ -4243,7 +4243,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -4259,7 +4259,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2003">
       <msg lang="en">Required parameter missing: create &gt; create &gt; ns [ns]</msg>
@@ -4287,7 +4287,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -4331,7 +4331,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -4357,7 +4357,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -4393,7 +4393,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -4419,7 +4419,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -4466,7 +4466,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -4492,7 +4492,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -4534,7 +4534,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2306">
       <msg lang="en">IPv4 is missing [ipv4]</msg>
@@ -4553,7 +4553,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -4597,7 +4597,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2005">
       <msg lang="en">Domain name is too long (maximum is 63 characters) [puny_label]</msg>
@@ -4616,7 +4616,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -4660,7 +4660,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2003">
       <msg lang="en">Required parameter missing; reserved&gt;pw element required for reserved domains</msg>
@@ -4677,7 +4677,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -4724,7 +4724,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2202">
       <msg lang="en">Invalid authorization information; invalid reserved&gt;pw value</msg>
@@ -4743,7 +4743,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -4790,7 +4790,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -4816,7 +4816,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -4860,7 +4860,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2308">
       <msg lang="en">Data management policy violation: Domain name is blocked [name]</msg>
@@ -4882,7 +4882,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -4922,7 +4922,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2003">
       <msg lang="en">Required parameter missing: create &gt; create &gt; registrant [registrant]</msg>
@@ -4941,7 +4941,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -4975,7 +4975,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2003">
       <msg lang="en">Required parameter missing: create &gt; create &gt; ns [ns]</msg>
@@ -4997,7 +4997,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -5075,7 +5075,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2004">
       <msg lang="en">Nameservers count must be between 2-11 [nameservers]</msg>
@@ -5094,7 +5094,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -5136,7 +5136,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2005">
       <msg lang="en">Hostname is invalid [hostname]</msg>
@@ -5164,7 +5164,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -5202,7 +5202,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2003">
       <msg lang="en">Required parameter missing: create &gt; create &gt; ns &gt; hostAttr [host_attr]</msg>
@@ -5221,7 +5221,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -5260,7 +5260,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -5286,7 +5286,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -5325,7 +5325,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2005">
       <msg lang="en">IPv4 is invalid [ipv4]</msg>
@@ -5353,7 +5353,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -5397,7 +5397,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -5423,7 +5423,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -5467,7 +5467,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -5493,7 +5493,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -5537,7 +5537,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -5563,7 +5563,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -5606,7 +5606,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -5632,7 +5632,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -5676,7 +5676,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2306">
       <msg lang="en">Period must add up to 1, 2 or 3 years [period]</msg>
@@ -5698,7 +5698,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -5742,7 +5742,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2001">
       <msg lang="en">Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}period', attribute 'unit': [facet 'enumeration'] The value '' is not an element of the set {'y', 'm', 'd'}.</msg>
@@ -5762,7 +5762,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -5806,7 +5806,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2001">
       <msg lang="en">Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}period', attribute 'unit': [facet 'enumeration'] The value 'bla' is not an element of the set {'y', 'm', 'd'}.</msg>
@@ -5828,7 +5828,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -5884,7 +5884,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -5910,7 +5910,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -5966,7 +5966,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2001">
       <msg lang="en">Element '{urn:ietf:params:xml:ns:secDNS-1.1}pubKey': [facet 'minLength'] The value has a length of '0'; this underruns the allowed minimum length of '1'.</msg>
@@ -5986,7 +5986,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -6042,7 +6042,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2005">
       <msg lang="en">Valid algorithms are: 3, 5, 6, 7, 8, 252, 253, 254, 255 [alg]</msg>
@@ -6094,7 +6094,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -6144,7 +6144,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2302">
       <msg lang="en">Public key already exists [public_key]</msg>
@@ -6166,7 +6166,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -6216,7 +6216,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2004">
       <msg lang="en">DNS keys count must be between 0-1 [dnskeys]</msg>
@@ -6235,7 +6235,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -6279,7 +6279,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -6305,7 +6305,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -6355,7 +6355,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -6381,7 +6381,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -6431,7 +6431,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2306">
       <msg lang="en">dsData object is not allowed</msg>
@@ -6450,7 +6450,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -6494,7 +6494,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2306">
       <msg lang="en">keyData object is not allowed</msg>
@@ -6513,7 +6513,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -6563,7 +6563,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2001">
       <msg lang="en">Element '{urn:ietf:params:xml:ns:secDNS-1.1}keyData': This element is not expected. Expected is ( {urn:ietf:params:xml:ns:secDNS-1.1}dsData ).</msg>
@@ -6582,7 +6582,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -6624,7 +6624,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -6650,7 +6650,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -6692,7 +6692,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2004">
       <msg lang="en">Admin contacts count must be between 1-10 [admin_domain_contacts]</msg>
@@ -6711,7 +6711,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <create>
       <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -6753,7 +6753,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2306">
       <msg lang="en">Admin contact can be private person only</msg>
@@ -6775,7 +6775,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -6786,7 +6786,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -6804,7 +6804,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -6821,7 +6821,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <transfer op="request">
       <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -6845,7 +6845,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -6873,7 +6873,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -6884,7 +6884,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -6902,7 +6902,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -6919,7 +6919,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <poll op="req"/>
     <clTRID>ABC-12345</clTRID>
@@ -6931,7 +6931,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1301">
       <msg>Command completed successfully; ack to dequeue</msg>
@@ -6963,7 +6963,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <poll op="ack" msgID="1"/>
     <clTRID>ABC-12345</clTRID>
@@ -6975,7 +6975,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -6995,7 +6995,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -7006,7 +7006,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7024,7 +7024,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -7041,7 +7041,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <transfer op="request">
       <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -7065,7 +7065,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -7093,7 +7093,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -7104,7 +7104,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7122,7 +7122,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -7139,7 +7139,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -7150,7 +7150,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7168,7 +7168,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -7185,7 +7185,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <transfer op="request">
       <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -7209,7 +7209,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2201">
       <msg lang="en">Authorization error</msg>
@@ -7226,7 +7226,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -7237,7 +7237,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7255,7 +7255,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -7274,7 +7274,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -7285,7 +7285,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7303,7 +7303,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -7320,7 +7320,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <transfer op="request">
       <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -7339,7 +7339,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -7367,7 +7367,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -7378,7 +7378,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7396,7 +7396,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -7415,7 +7415,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -7426,7 +7426,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7444,7 +7444,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -7461,7 +7461,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <transfer op="request">
       <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -7480,7 +7480,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -7508,7 +7508,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -7519,7 +7519,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7537,7 +7537,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -7556,7 +7556,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -7567,7 +7567,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7585,7 +7585,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -7602,7 +7602,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <transfer op="request">
       <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -7621,7 +7621,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -7649,7 +7649,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -7660,7 +7660,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7678,7 +7678,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -7697,7 +7697,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -7708,7 +7708,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7726,7 +7726,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -7743,7 +7743,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <transfer op="request">
       <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -7762,7 +7762,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -7790,7 +7790,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -7801,7 +7801,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7819,7 +7819,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -7838,7 +7838,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -7849,7 +7849,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7867,7 +7867,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -7884,7 +7884,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <transfer op="request">
       <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -7903,7 +7903,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -7931,7 +7931,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -7942,7 +7942,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -7960,7 +7960,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -7979,7 +7979,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -7990,7 +7990,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -8008,7 +8008,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -8025,7 +8025,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <transfer op="request">
       <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -8044,7 +8044,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -8072,7 +8072,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -8083,7 +8083,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -8101,7 +8101,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -8120,7 +8120,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -8131,7 +8131,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -8149,7 +8149,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -8166,7 +8166,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <transfer op="request">
       <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -8185,7 +8185,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -8213,7 +8213,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -8224,7 +8224,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -8242,7 +8242,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -8261,7 +8261,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -8272,7 +8272,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -8290,7 +8290,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -8307,7 +8307,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <transfer op="request">
       <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -8326,7 +8326,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -8354,7 +8354,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -8365,7 +8365,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -8383,7 +8383,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -8402,7 +8402,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -8413,7 +8413,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -8431,7 +8431,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -8448,7 +8448,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <transfer op="request">
       <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -8464,7 +8464,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2201">
       <msg lang="en">Authorization error</msg>
@@ -8481,7 +8481,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -8492,7 +8492,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -8510,7 +8510,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -8529,7 +8529,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <transfer op="approve">
       <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -8553,7 +8553,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -8583,7 +8583,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -8594,7 +8594,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -8612,7 +8612,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -8629,7 +8629,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <transfer op="reject">
       <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -8653,7 +8653,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2304">
       <msg lang="en">Transfer can be rejected only by current registrar</msg>
@@ -8670,7 +8670,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -8681,7 +8681,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -8699,7 +8699,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -8716,7 +8716,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <transfer op="reject">
       <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -8740,7 +8740,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -8770,7 +8770,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -8781,7 +8781,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -8799,7 +8799,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -8816,7 +8816,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <transfer op="approve">
       <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -8840,7 +8840,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2304">
       <msg lang="en">Transfer can be approved only by current domain registrar</msg>
@@ -8857,7 +8857,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -8868,7 +8868,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -8886,7 +8886,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -8905,7 +8905,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <transfer op="request">
       <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -8929,7 +8929,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2201">
       <msg lang="en">Authorization error</msg>
@@ -8948,7 +8948,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <transfer op="request">
       <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -8972,7 +8972,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2002">
       <msg lang="en">Domain already belongs to the querying registrar</msg>
@@ -8991,7 +8991,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <transfer op="bla">
       <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -9007,13 +9007,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2001">
-      <msg lang="en">Element '{urn:ietf:params:xml:ns:epp-1.0}transfer', attribute 'op': [facet 'enumeration'] The value 'bla' is not an element of the set {'approve', 'cancel', 'query', 'reject', 'request'}.</msg>
+      <msg lang="en">Element '{https://epp.tld.ee/schema/epp-ee-1.0.xsd}transfer', attribute 'op': [facet 'enumeration'] The value 'bla' is not an element of the set {'approve', 'cancel', 'query', 'reject', 'request'}.</msg>
     </result>
     <result code="2001">
-      <msg lang="en">Element '{urn:ietf:params:xml:ns:epp-1.0}transfer', attribute 'op': 'bla' is not a valid value of the atomic type '{urn:ietf:params:xml:ns:epp-1.0}transferOpType'.</msg>
+      <msg lang="en">Element '{https://epp.tld.ee/schema/epp-ee-1.0.xsd}transfer', attribute 'op': 'bla' is not a valid value of the atomic type '{https://epp.tld.ee/schema/epp-ee-1.0.xsd}transferOpType'.</msg>
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
@@ -9029,7 +9029,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -9040,7 +9040,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -9058,7 +9058,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -9075,7 +9075,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <transfer op="request">
       <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -9099,7 +9099,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -9127,7 +9127,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <transfer op="request">
       <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -9151,7 +9151,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2201">
       <msg lang="en">Authorization error</msg>
@@ -9168,7 +9168,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -9179,7 +9179,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -9197,7 +9197,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -9216,7 +9216,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <transfer op="approve">
       <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -9240,7 +9240,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2303">
       <msg lang="en">No transfers found</msg>
@@ -9259,7 +9259,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <transfer op="query">
       <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -9278,7 +9278,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2303">
       <msg lang="en">No transfers found</msg>
@@ -9297,7 +9297,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <transfer op="cancel">
       <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -9316,7 +9316,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2303">
       <msg lang="en">No transfers found</msg>
@@ -9335,7 +9335,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -9346,7 +9346,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -9364,7 +9364,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -9381,7 +9381,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <transfer op="request">
       <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -9401,7 +9401,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2307">
       <msg lang="en">Unimplemented object service</msg>
@@ -9421,7 +9421,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -9432,7 +9432,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -9450,7 +9450,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -9469,7 +9469,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
       <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -9494,7 +9494,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -9513,7 +9513,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
       <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -9538,7 +9538,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1001">
       <msg>Command completed successfully; action pending</msg>
@@ -9557,7 +9557,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
       <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -9578,7 +9578,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -9597,7 +9597,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
       <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -9635,7 +9635,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2004">
       <msg lang="en">Nameservers count must be between 2-11 [nameservers]</msg>
@@ -9654,7 +9654,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
       <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -9679,7 +9679,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2004">
       <msg lang="en">Nameservers count must be between 2-11 [nameservers]</msg>
@@ -9698,7 +9698,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
       <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -9723,7 +9723,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2304">
       <msg lang="en">Object status prohibits operation</msg>
@@ -9742,7 +9742,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
       <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -9767,7 +9767,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2304">
       <msg lang="en">Object status prohibits operation</msg>
@@ -9786,7 +9786,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
       <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -9833,7 +9833,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2303">
       <msg lang="en">Contact was not found</msg>
@@ -9853,7 +9853,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
       <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -9900,7 +9900,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -9917,7 +9917,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
       <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -9964,7 +9964,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2302">
       <msg lang="en">Nameserver already exists on this domain [hostname]</msg>
@@ -10010,7 +10010,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
       <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -10063,7 +10063,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2303">
       <msg lang="en">Contact was not found</msg>
@@ -10083,7 +10083,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
       <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -10136,7 +10136,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1001">
       <msg>Command completed successfully; action pending</msg>
@@ -10155,7 +10155,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
       <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -10175,7 +10175,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2306">
       <msg lang="en">Parameter value policy error. Client-side object status management not supported: status [status]</msg>
@@ -10194,7 +10194,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
       <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -10241,7 +10241,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -10258,7 +10258,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
       <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -10295,7 +10295,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -10312,7 +10312,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
       <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -10349,7 +10349,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2303">
       <msg lang="en">Nameserver was not found</msg>
@@ -10389,7 +10389,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
       <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -10408,7 +10408,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2303">
       <msg lang="en">Status was not found</msg>
@@ -10430,7 +10430,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
       <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -10454,7 +10454,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -10471,7 +10471,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
       <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -10495,7 +10495,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2302">
       <msg lang="en">Nameserver already exists on this domain [hostname]</msg>
@@ -10523,7 +10523,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
       <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -10542,7 +10542,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2003">
       <msg lang="en">Required parameter missing: extension &gt; extdata &gt; legalDocument [legal_document]</msg>
@@ -10561,7 +10561,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <update>
       <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -10580,7 +10580,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2001">
       <msg lang="en">Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}status', attribute 's': [facet 'enumeration'] The value 'invalidStatus' is not an element of the set {'clientDeleteProhibited', 'clientHold', 'clientRenewProhibited', 'clientTransferProhibited', 'clientUpdateProhibited', 'inactive', 'ok', 'pendingCreate', 'pendingDelete', 'pendingRenew', 'pendingTransfer', 'pendingUpdate', 'serverDeleteProhibited', 'serverHold', 'serverRenewProhibited', 'serverTransferProhibited', 'serverUpdateProhibited'}.</msg>
@@ -10602,7 +10602,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <renew>
       <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -10620,7 +10620,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -10645,7 +10645,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <renew>
       <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -10663,7 +10663,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -10688,7 +10688,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <renew>
       <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -10705,7 +10705,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -10730,7 +10730,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <renew>
       <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -10748,7 +10748,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2001">
       <msg lang="en">Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}period', attribute 'unit': [facet 'enumeration'] The value '' is not an element of the set {'y', 'm', 'd'}.</msg>
@@ -10768,7 +10768,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <renew>
       <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -10786,7 +10786,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2001">
       <msg lang="en">Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}period', attribute 'unit': [facet 'enumeration'] The value 'bla' is not an element of the set {'y', 'm', 'd'}.</msg>
@@ -10808,7 +10808,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <renew>
       <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -10826,7 +10826,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -10851,7 +10851,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <renew>
       <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -10869,7 +10869,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -10894,7 +10894,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <renew>
       <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -10912,7 +10912,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2104">
       <msg lang="en">Billing failure - credit balance low</msg>
@@ -10931,7 +10931,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <renew>
       <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -10949,7 +10949,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2306">
       <msg lang="en">Given and current expire dates do not match</msg>
@@ -10974,7 +10974,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <renew>
       <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -10992,7 +10992,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2306">
       <msg lang="en">Period must add up to 1, 2 or 3 years [period]</msg>
@@ -11014,7 +11014,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <renew>
       <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -11032,7 +11032,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2105">
       <msg lang="en">Object is not eligible for renewal</msg>
@@ -11049,7 +11049,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <renew>
       <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -11067,7 +11067,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -11092,7 +11092,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <renew>
       <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -11110,7 +11110,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -11135,7 +11135,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <renew>
       <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -11153,7 +11153,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2105">
       <msg lang="en">Object is not eligible for renewal</msg>
@@ -11172,7 +11172,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <renew>
       <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -11190,7 +11190,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -11215,7 +11215,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -11226,7 +11226,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -11244,7 +11244,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -11261,7 +11261,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <renew>
       <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -11279,7 +11279,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2201">
       <msg lang="en">Authorization error</msg>
@@ -11296,7 +11296,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -11307,7 +11307,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -11325,7 +11325,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -11344,7 +11344,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <info>
       <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -11362,7 +11362,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -11442,7 +11442,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <info>
       <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -11460,7 +11460,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -11542,7 +11542,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <info>
       <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -11560,7 +11560,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2001">
       <msg lang="en">Element '{https://epp.tld.ee/schema/domain-eis-1.0.xsd}name', attribute 'hosts': [facet 'enumeration'] The value 'invalid' is not an element of the set {'all', 'del', 'none', 'sub'}.</msg>
@@ -11579,7 +11579,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <info>
       <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -11597,7 +11597,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -11642,7 +11642,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <info>
       <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -11660,7 +11660,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -11700,7 +11700,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <info>
       <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -11718,7 +11718,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -11751,7 +11751,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <info>
       <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -11769,7 +11769,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -11821,7 +11821,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <info>
       <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -11839,7 +11839,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2303">
       <msg lang="en">Domain not found</msg>
@@ -11860,7 +11860,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <info>
       <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -11878,7 +11878,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -11927,7 +11927,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -11938,7 +11938,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -11956,7 +11956,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -11973,7 +11973,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <info>
       <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -11991,7 +11991,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2201">
       <msg lang="en">Authorization error</msg>
@@ -12007,7 +12007,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -12018,7 +12018,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -12036,7 +12036,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -12055,7 +12055,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -12066,7 +12066,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -12084,7 +12084,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -12101,7 +12101,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <info>
       <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -12116,7 +12116,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -12160,7 +12160,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -12171,7 +12171,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -12189,7 +12189,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -12208,7 +12208,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -12219,7 +12219,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -12237,7 +12237,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -12254,7 +12254,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <info>
       <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -12272,7 +12272,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -12319,7 +12319,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -12330,7 +12330,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -12348,7 +12348,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -12367,7 +12367,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <delete>
       <domain:delete xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -12388,7 +12388,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1001">
       <msg>Command completed successfully; action pending</msg>
@@ -12407,7 +12407,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <delete>
       <domain:delete xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -12428,7 +12428,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2304">
       <msg lang="en">Domain status prohibits operation</msg>
@@ -12447,7 +12447,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <delete>
       <domain:delete xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -12468,7 +12468,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2304">
       <msg lang="en">Object status prohibits operation</msg>
@@ -12487,7 +12487,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <delete>
       <domain:delete xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -12503,7 +12503,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2003">
       <msg lang="en">Required parameter missing: extension &gt; extdata &gt; legalDocument [legal_document]</msg>
@@ -12522,7 +12522,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <check>
       <domain:check xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -12538,7 +12538,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -12562,7 +12562,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <check>
       <domain:check xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -12578,7 +12578,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -12605,7 +12605,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <check>
       <domain:check xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -12623,7 +12623,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -12655,7 +12655,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <check>
       <domain:check xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -12672,7 +12672,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -12702,7 +12702,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <poll op="req"/>
     <clTRID>ABC-12345</clTRID>
@@ -12714,7 +12714,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1301">
       <msg>Command completed successfully; ack to dequeue</msg>
@@ -12737,7 +12737,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -12748,7 +12748,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -12766,7 +12766,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -12785,7 +12785,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
   <command>
     <ext:keyrelay>
       <ext:name>domain67.ee</ext:name>
@@ -12811,7 +12811,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2307">
       <msg lang="en">Unimplemented object service</msg>
@@ -12833,7 +12833,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
   <command>
     <ext:keyrelay>
       <ext:name>domain67.ee</ext:name>
@@ -12858,7 +12858,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2003">
       <msg lang="en">Required parameter missing: keyrelay &gt; keyData &gt; flags [flags]</msg>
@@ -12883,7 +12883,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
   <command>
     <ext:keyrelay>
       <ext:name>domain67.ee</ext:name>
@@ -12909,7 +12909,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2005">
       <msg lang="en">Expiry relative must be compatible to ISO 8601</msg>
@@ -12931,7 +12931,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
   <command>
     <ext:keyrelay>
       <ext:name>domain67.ee</ext:name>
@@ -12957,7 +12957,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2005">
       <msg lang="en">Expiry absolute must be compatible to ISO 8601</msg>
@@ -12979,7 +12979,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
   <command>
     <ext:keyrelay>
       <ext:name>domain67.ee</ext:name>
@@ -13008,7 +13008,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2307">
       <msg lang="en">Unimplemented object service</msg>
@@ -13030,7 +13030,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1" xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd" xmlns:ext="urn:ietf:params:xml:ns:keyrelay-1.0">
   <command>
     <ext:keyrelay>
       <ext:name>domain67.ee</ext:name>
@@ -13059,7 +13059,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2306">
       <msg lang="en">Attribute is invalid: type</msg>
@@ -13076,7 +13076,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -13087,7 +13087,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -13105,7 +13105,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -13124,7 +13124,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <poll op="req"/>
     <clTRID>1441791745</clTRID>
@@ -13136,7 +13136,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1300">
       <msg>Command completed successfully; no messages</msg>
@@ -13155,7 +13155,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -13166,7 +13166,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -13184,7 +13184,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -13201,7 +13201,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <poll op="req"/>
     <clTRID>1441791746</clTRID>
@@ -13213,7 +13213,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1300">
       <msg>Command completed successfully; no messages</msg>
@@ -13230,7 +13230,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -13241,7 +13241,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -13259,7 +13259,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -13276,7 +13276,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <poll op="req"/>
     <clTRID>1441791746</clTRID>
@@ -13288,7 +13288,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1301">
       <msg>Command completed successfully; ack to dequeue</msg>
@@ -13309,7 +13309,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar2</clID>
@@ -13320,7 +13320,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -13338,7 +13338,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -13355,7 +13355,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <poll op="ack" msgID="1"/>
     <clTRID>1441791746</clTRID>
@@ -13367,7 +13367,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2303">
       <msg lang="en">Message was not found</msg>
@@ -13387,7 +13387,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>registrar1</clID>
@@ -13398,7 +13398,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -13416,7 +13416,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -13433,7 +13433,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <poll op="ack" msgID="1"/>
     <clTRID>1441791746</clTRID>
@@ -13445,7 +13445,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -13463,7 +13463,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <poll op="ack" msgID="1"/>
     <clTRID>1441791746</clTRID>
@@ -13475,7 +13475,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2303">
       <msg lang="en">Message was not found</msg>
@@ -13497,7 +13497,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <poll op="bla"/>
     <clTRID>1441791748</clTRID>
@@ -13509,13 +13509,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2001">
-      <msg lang="en">Element '{urn:ietf:params:xml:ns:epp-1.0}poll', attribute 'op': [facet 'enumeration'] The value 'bla' is not an element of the set {'ack', 'req'}.</msg>
+      <msg lang="en">Element '{https://epp.tld.ee/schema/epp-ee-1.0.xsd}poll', attribute 'op': [facet 'enumeration'] The value 'bla' is not an element of the set {'ack', 'req'}.</msg>
     </result>
     <result code="2001">
-      <msg lang="en">Element '{urn:ietf:params:xml:ns:epp-1.0}poll', attribute 'op': 'bla' is not a valid value of the atomic type '{urn:ietf:params:xml:ns:epp-1.0}pollOpType'.</msg>
+      <msg lang="en">Element '{https://epp.tld.ee/schema/epp-ee-1.0.xsd}poll', attribute 'op': 'bla' is not a valid value of the atomic type '{https://epp.tld.ee/schema/epp-ee-1.0.xsd}pollOpType'.</msg>
     </result>
     <trID>
       <clTRID>1441791748</clTRID>
@@ -13531,7 +13531,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <poll op="req"/>
     <clTRID>1441791749</clTRID>
@@ -13543,7 +13543,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1301">
       <msg>Command completed successfully; ack to dequeue</msg>
@@ -13564,7 +13564,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <poll op="ack" msgID="4"/>
     <clTRID>1441791749</clTRID>
@@ -13576,7 +13576,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -13594,7 +13594,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <poll op="req"/>
     <clTRID>1441791749</clTRID>
@@ -13606,7 +13606,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1301">
       <msg>Command completed successfully; ack to dequeue</msg>
@@ -13627,7 +13627,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <poll op="ack" msgID="3"/>
     <clTRID>1441791749</clTRID>
@@ -13639,7 +13639,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -13657,7 +13657,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <poll op="req"/>
     <clTRID>1441791749</clTRID>
@@ -13669,7 +13669,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1301">
       <msg>Command completed successfully; ack to dequeue</msg>
@@ -13690,7 +13690,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <poll op="ack" msgID="2"/>
     <clTRID>1441791749</clTRID>
@@ -13702,7 +13702,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -13720,7 +13720,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <poll op="req"/>
     <clTRID>1441791749</clTRID>
@@ -13732,7 +13732,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1300">
       <msg>Command completed successfully; no messages</msg>
@@ -13751,7 +13751,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <greeting>
     <svID>EPP server (EIS)</svID>
     <svDate>2015-09-09T09:42:29Z</svDate>
@@ -13759,7 +13759,7 @@ RESPONSE:
       <version>1.0</version>
       <lang>en</lang>
       <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-      <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+      <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
       <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
       <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
       <svcExtension>
@@ -13794,7 +13794,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>wrong-user</clID>
@@ -13805,7 +13805,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -13823,7 +13823,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2501">
       <msg lang="en">Authentication error; server closing connection (API user not found)</msg>
@@ -13842,7 +13842,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>inactive-user</clID>
@@ -13853,7 +13853,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -13871,7 +13871,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2501">
       <msg lang="en">Authentication error; server closing connection (API user is not active)</msg>
@@ -13890,7 +13890,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <info>
       <domain:info xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
@@ -13906,7 +13906,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2002">
       <msg lang="en">You need to login first.</msg>
@@ -13925,7 +13925,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>wrong-user</clID>
@@ -13936,7 +13936,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -13953,7 +13953,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2501">
       <msg lang="en">Authentication error; server closing connection (API user not found)</msg>
@@ -13971,7 +13971,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>你好你好</clID>
@@ -13982,7 +13982,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -14000,7 +14000,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2306">
       <msg lang="en">Parameter value policy error. Allowed only Latin characters.</msg>
@@ -14019,7 +14019,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>gitlab</clID>
@@ -14030,7 +14030,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -14048,7 +14048,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -14067,7 +14067,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>gitlab</clID>
@@ -14078,7 +14078,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -14096,7 +14096,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -14113,7 +14113,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>gitlab</clID>
@@ -14124,7 +14124,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -14142,7 +14142,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2002">
       <msg lang="en">Already logged in. Use &lt;logout&gt; first.</msg>
@@ -14161,7 +14161,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>gitlab</clID>
@@ -14172,7 +14172,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -14190,7 +14190,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -14207,7 +14207,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <logout/>
     <clTRID>ABC-12345</clTRID>
@@ -14219,7 +14219,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1500">
       <msg>Command completed successfully; ending session</msg>
@@ -14238,7 +14238,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>gitlab</clID>
@@ -14250,7 +14250,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -14268,7 +14268,7 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="1000">
       <msg>Command completed successfully</msg>
@@ -14287,7 +14287,7 @@ REQUEST:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
   <command>
     <login>
       <clID>gitlab</clID>
@@ -14299,7 +14299,7 @@ REQUEST:
       </options>
       <svcs>
         <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-        <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+        <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
         <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
@@ -14317,13 +14317,13 @@ RESPONSE:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<epp xmlns="urn:ietf:params:xml:ns:epp-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:ietf:params:xml:ns:epp-1.0 epp-1.0.xsd">
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2001">
-      <msg lang="en">Element '{urn:ietf:params:xml:ns:epp-1.0}newPW': [facet 'minLength'] The value has a length of '0'; this underruns the allowed minimum length of '6'.</msg>
+      <msg lang="en">Element '{https://epp.tld.ee/schema/epp-ee-1.0.xsd}newPW': [facet 'minLength'] The value has a length of '0'; this underruns the allowed minimum length of '6'.</msg>
     </result>
     <result code="2001">
-      <msg lang="en">Element '{urn:ietf:params:xml:ns:epp-1.0}newPW': '' is not a valid value of the atomic type '{urn:ietf:params:xml:ns:epp-1.0}pwType'.</msg>
+      <msg lang="en">Element '{https://epp.tld.ee/schema/epp-ee-1.0.xsd}newPW': '' is not a valid value of the atomic type '{https://epp.tld.ee/schema/epp-ee-1.0.xsd}pwType'.</msg>
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>

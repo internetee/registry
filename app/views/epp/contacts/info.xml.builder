@@ -5,7 +5,7 @@ xml.epp_head do
     end
 
     xml.resData do
-      xml.tag!('contact:infData', 'xmlns:contact' => 'https://epp.tld.ee/schema/contact-eis-1.0.xsd') do
+      xml.tag!('contact:infData', 'xmlns:contact' => 'https://epp.tld.ee/schema/contact-ee-1.1.xsd') do
         xml.tag!('contact:id', @contact.code)
         xml.tag!('contact:roid', @contact.roid)
 
@@ -17,22 +17,30 @@ xml.epp_head do
           xml.tag!('contact:name', @contact.name)
           if can? :view_full_info, @contact, @password
             xml.tag!('contact:org', @contact.org_name) if @contact.org_name.present?
-            xml.tag!('contact:addr') do
-              xml.tag!('contact:street', @contact.street)
-              xml.tag!('contact:city', @contact.city)
-              xml.tag!('contact:sp', @contact.state)
-              xml.tag!('contact:pc', @contact.zip)
-              xml.tag!('contact:cc', @contact.country_code)
+
+            if address_processing?
+              xml.tag!('contact:addr') do
+                xml.tag!('contact:street', @contact.street)
+                xml.tag!('contact:city', @contact.city)
+                xml.tag!('contact:sp', @contact.state)
+                xml.tag!('contact:pc', @contact.zip)
+                xml.tag!('contact:cc', @contact.country_code)
+              end
             end
+
           else
             xml.tag!('contact:org', 'No access')
-            xml.tag!('contact:addr') do
-              xml.tag!('contact:street', 'No access')
-              xml.tag!('contact:city', 'No access')
-              xml.tag!('contact:sp', 'No access')
-              xml.tag!('contact:pc', 'No access')
-              xml.tag!('contact:cc', 'No access')
+
+            if address_processing?
+              xml.tag!('contact:addr') do
+                xml.tag!('contact:street', 'No access')
+                xml.tag!('contact:city', 'No access')
+                xml.tag!('contact:sp', 'No access')
+                xml.tag!('contact:pc', 'No access')
+                xml.tag!('contact:cc', 'No access')
+              end
             end
+
           end
         end
 
