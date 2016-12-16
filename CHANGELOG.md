@@ -1,3 +1,8 @@
+16.12.2016
+* Allow contact address processing to be configurable via admin
+* EPP XML schema namespace "urn:ietf:params:xml:ns:epp-1.0" replaced with "https://epp.tld.ee/schema/epp-ee-1.0.xsd"
+* EPP XML schema contact-eis-1.0 replaced with contact-ee-1.1
+
 18.11.2016 
 * Domain expiration emails are now sent out to admin contacts as well. Sending bug is fixed.
 * Include detailed registrar's contact info in emails
