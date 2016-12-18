@@ -1,6 +1,6 @@
 xml.instruct!(:xml, standalone: 'no')
 xml.epp(
-  'xmlns' => 'urn:ietf:params:xml:ns:epp-1.0',
+  'xmlns' => 'https://epp.tld.ee/schema/epp-ee-1.0.xsd',
   'xmlns:secDNS' => 'urn:ietf:params:xml:ns:secDNS-1.1',
   'xmlns:domain' => 'https://epp.tld.ee/schema/domain-eis-1.0.xsd',
   'xmlns:keyrelay' => 'urn:ietf:params:xml:ns:keyrelay-1.0'

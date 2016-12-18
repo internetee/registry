@@ -18,8 +18,8 @@ class Contact < ActiveRecord::Base
 
   accepts_nested_attributes_for :legal_documents
 
-  validates :name, :phone, :email, :ident, :ident_type,
-   :street, :city, :zip, :country_code, :registrar, presence: true
+  validates :name, :phone, :email, :ident, :ident_type, :registrar, presence: true
+  validates :street, :city, :zip, :country_code, presence: true, if: 'self.class.address_processing?'
 
   # Phone nr validation is very minimam in order to support legacy requirements
   validates :phone, format: /\+[0-9]{1,3}\.[0-9]{1,14}?/
@@ -37,7 +37,8 @@ class Contact < ActiveRecord::Base
   validate :val_ident_type
   validate :val_ident_valid_format?
   validate :validate_html
-  validate :val_country_code
+  validate :validate_country_code
+  validate :validate_ident_country_code
 
   after_initialize do
     self.status_notes = {} if status_notes.nil?
@@ -45,7 +46,6 @@ class Contact < ActiveRecord::Base
   end
 
   before_validation :to_upcase_country_code
-  before_validation :prefix_code
   before_validation :strip_email
   before_create :generate_auth_info
 
@@ -257,6 +257,20 @@ class Contact < ActiveRecord::Base
     def emails
       pluck(:email)
     end
+
+    def address_processing?
+      Setting.address_processing
+    end
+
+    def address_attribute_names
+      %w(
+        city
+        street
+        zip
+        country_code
+        state
+      )
+    end
   end
 
   def roid
@@ -352,7 +366,7 @@ class Contact < ActiveRecord::Base
   end
 
   # rubocop:disable Metrics/CyclomaticComplexity
-  def prefix_code
+  def generate_code
     return nil unless new_record?
     return nil if registrar.blank?
     code = self[:code]
@@ -369,13 +383,6 @@ class Contact < ActiveRecord::Base
     self[:code] = "#{registrar.code}:#{code}".upcase
   end
   # rubocop:enable Metrics/CyclomaticComplexity
-
-  # used only for contact transfer
-  def generate_new_code!
-    return nil if registrar.blank?
-    registrar.reload # for contact transfer
-    self[:code] = "#{registrar.code}:#{SecureRandom.hex(4)}".upcase
-  end
 
   def country
     Country.new(country_code)
@@ -411,9 +418,13 @@ class Contact < ActiveRecord::Base
     self.country_code       = country_code.upcase if country_code
   end
 
-  def val_country_code
+  def validate_country_code
+    return unless country_code
+    errors.add(:country_code, :invalid) unless Country.new(country_code)
+  end
+
+  def validate_ident_country_code
     errors.add(:ident, :invalid_country_code) unless Country.new(ident_country_code)
-    errors.add(:ident, :invalid_country_code) unless Country.new(country_code)
   end
 
   def related_domain_descriptions
@@ -567,4 +578,9 @@ class Contact < ActiveRecord::Base
     log
   end
 
+  def remove_address
+    self.class.address_attribute_names.each do |attr_name|
+      self[attr_name.to_sym] = nil
+    end
+  end
 end

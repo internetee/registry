@@ -164,7 +164,10 @@ RSpec.describe Contact do
 
     it 'should have code' do
       registrar = Fabricate.create(:registrar, code: 'registrarcode')
-      contact = Fabricate.create(:contact, registrar: registrar, code: 'contactcode')
+
+      contact = Fabricate.build(:contact, registrar: registrar, code: 'contactcode')
+      contact.generate_code
+      contact.save!
 
       expect(contact.code).to eq('REGISTRARCODE:CONTACTCODE')
     end
@@ -252,16 +255,6 @@ RSpec.describe Contact do
       end
 
       context 'after create' do
-        it 'should not generate a new code when code is present' do
-          @contact = Fabricate.build(:contact,
-                                     registrar: Fabricate(:registrar, code: 'FIXED'),
-                                     code: 'FIXED:new-code',
-                                     auth_info: 'qwe321')
-          @contact.code.should == 'FIXED:new-code' # still new record
-          @contact.save.should == true
-          @contact.code.should == 'FIXED:NEW-CODE'
-        end
-
         it 'should not allow to use same code' do
           registrar = Fabricate.create(:registrar, code: 'FIXED')
 
@@ -299,12 +292,15 @@ RSpec.describe Contact do
         end
 
         it 'should generate code if empty code is given' do
-          @contact = Fabricate(:contact, code: '')
+          @contact = Fabricate.build(:contact, code: '')
+          @contact.generate_code
+          @contact.save!
           @contact.code.should_not == ''
         end
 
         it 'should not ignore empty spaces as code and generate new one' do
           @contact = Fabricate.build(:contact, code: '    ', registrar: Fabricate(:registrar, code: 'FIXED'))
+          @contact.generate_code
           @contact.valid?.should == true
           @contact.code.should =~ /FIXED:..../
         end
@@ -316,6 +312,7 @@ RSpec.describe Contact do
                                      registrar: Fabricate(:registrar, code: 'FIXED'),
                                      code: '123asd',
                                      auth_info: 'qwe321')
+          @contact.generate_code
           @contact.save
           @contact.code.should == 'FIXED:123ASD'
           @auth_info = @contact.auth_info
@@ -381,6 +378,89 @@ RSpec.describe Contact, db: false do
 
     it 'returns emails' do
       expect(described_class.emails).to eq('emails')
+    end
+  end
+
+  describe '::address_processing?' do
+    before do
+      Setting.address_processing = 'test'
+    end
+
+    it 'returns setting value' do
+      expect(described_class.address_processing?).to eq('test')
+    end
+  end
+
+  describe '::address_attribute_names', db: false do
+    it 'returns address attributes' do
+      attributes = %w(
+        city
+        street
+        zip
+        country_code
+        state
+      )
+      expect(described_class.address_attribute_names).to eq(attributes)
+    end
+  end
+
+  describe 'address validation', db: false do
+    let(:contact) { described_class.new }
+    subject(:errors) { contact.errors }
+
+    required_attributes = %i(street city zip country_code)
+
+    context 'when address processing is enabled' do
+      before do
+        allow(described_class).to receive(:address_processing?).and_return(true)
+      end
+
+      required_attributes.each do |attr_name|
+        it "rejects absent #{attr_name}" do
+          contact.send("#{attr_name}=", nil)
+          contact.validate
+          expect(errors).to have_key(attr_name)
+        end
+      end
+    end
+
+    context 'when address processing is disabled' do
+      before do
+        allow(described_class).to receive(:address_processing?).and_return(false)
+      end
+
+      required_attributes.each do |attr_name|
+        it "accepts absent #{attr_name}" do
+          contact.send("#{attr_name}=", nil)
+          contact.validate
+          expect(errors).to_not have_key(attr_name)
+        end
+      end
+    end
+  end
+
+  describe 'country code validation' do
+    let(:contact) { described_class.new(country_code: 'test') }
+
+    it 'rejects invalid' do
+      contact.country_code = 'invalid'
+      contact.validate
+      expect(contact.errors).to have_key(:country_code)
+    end
+  end
+
+  describe '#remove_address' do
+    let(:contact) { described_class.new(city: 'test',
+                                        street: 'test',
+                                        zip: 'test',
+                                        country_code: 'test',
+                                        state: 'test')
+    }
+    subject(:address_removed) { contact.attributes.slice(*described_class.address_attribute_names).compact.empty? }
+
+    it 'removes address attributes' do
+      contact.remove_address
+      expect(address_removed).to be_truthy
     end
   end
 end

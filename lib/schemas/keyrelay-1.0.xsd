@@ -2,7 +2,7 @@
 
 <schema targetNamespace="urn:ietf:params:xml:ns:keyrelay-1.0"
   xmlns:keyrelay="urn:ietf:params:xml:ns:keyrelay-1.0"
-  xmlns:epp="urn:ietf:params:xml:ns:epp-1.0"
+  xmlns:epp="https://epp.tld.ee/schema/epp-ee-1.0.xsd"
   xmlns:eppcom="urn:ietf:params:xml:ns:eppcom-1.0"
   xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1"
   xmlns:domain="urn:ietf:params:xml:ns:domain-1.0"
@@ -16,7 +16,7 @@
     </documentation>
   </annotation>
 
-  <import namespace="urn:ietf:params:xml:ns:epp-1.0"/>
+  <import namespace="https://epp.tld.ee/schema/epp-ee-1.0.xsd"/>
   <import namespace="urn:ietf:params:xml:ns:eppcom-1.0"/>
   <import namespace="urn:ietf:params:xml:ns:secDNS-1.1"/>
   <import namespace="urn:ietf:params:xml:ns:domain-1.0"/>

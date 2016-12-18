@@ -1,8 +1,8 @@
 module Requests
   module SessionHelpers
-    def sign_in_to_epp_area(user: FactoryGirl.create(:api_user))
+    def sign_in_to_epp_area(user: FactoryGirl.create(:api_user_epp))
       login_xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>
-      <epp xmlns=\"urn:ietf:params:xml:ns:epp-1.0\">
+      <epp xmlns=\"https://epp.tld.ee/schema/epp-ee-1.0.xsd\">
         <command>
           <login>
             <clID>#{user.username}</clID>
@@ -13,7 +13,7 @@ module Requests
             </options>
             <svcs>
               <objURI>https://epp.tld.ee/schema/domain-eis-1.0.xsd</objURI>
-              <objURI>https://epp.tld.ee/schema/contact-eis-1.0.xsd</objURI>
+              <objURI>https://epp.tld.ee/schema/contact-ee-1.1.xsd</objURI>
               <objURI>urn:ietf:params:xml:ns:host-1.0</objURI>
               <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
               <svcExtension>
