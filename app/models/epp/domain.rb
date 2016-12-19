@@ -601,7 +601,18 @@ class Epp::Domain < Domain
     return false if errors.any?
 
     p = self.class.convert_period_to_time(period, unit)
-    self.valid_to = valid_to + p
+    renewed_expire_time = valid_to + p
+
+    # Change it when Pricelist model periods change
+    max_reg_time = 4.years.from_now
+
+    if renewed_expire_time >= max_reg_time
+      add_epp_error('2105', nil, nil, I18n.t('epp.domains.object_is_not_eligible_for_renewal',
+                                             max_date: max_reg_time.to_date.to_s(:db)))
+      return false if errors.any?
+    end
+
+    self.valid_to = renewed_expire_time
     self.outzone_at = nil
     self.delete_at = nil
     self.period = period

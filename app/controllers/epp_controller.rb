@@ -97,7 +97,7 @@ class EppController < ApplicationController
     e_s = epp_session
     return if e_s.new_record?
 
-    if e_s.updated_at < Time.zone.now - 5.minutes
+    if !Rails.env.development? && (e_s.updated_at < Time.zone.now - 5.minutes)
       @api_user = current_user # cache current_user for logging
       e_s.destroy
       response.headers['X-EPP-Returncode'] = '1500'
