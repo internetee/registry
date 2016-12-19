@@ -4,21 +4,21 @@
   .panel-body
     .form-group
       .col-md-3.control-label
-        = f.label :street, t(:street) + '*'
+        = f.label :street, t(:street)
       .col-md-7
-        = f.text_field :street, class: 'form-control', required: true
+        = f.text_field :street, class: 'form-control', required: address_processing?
 
     .form-group
       .col-md-3.control-label
-        = f.label :city, t(:city) + '*'
+        = f.label :city, t(:city)
       .col-md-7
-        = f.text_field :city, class: 'form-control', required: true
+        = f.text_field :city, class: 'form-control', required: address_processing?
 
     .form-group
       .col-md-3.control-label
-        = f.label :zip, t(:zip) + '*'
+        = f.label :zip, t(:zip)
       .col-md-7
-        = f.text_field :zip, class: 'form-control', required: true
+        = f.text_field :zip, class: 'form-control', required: address_processing?
 
     .form-group
       .col-md-3.control-label
@@ -28,9 +28,10 @@
 
     .form-group
       .col-md-3.control-label
-        = f.label :country_code, t(:country) + '*'
+        = f.label :country_code, t(:country)
       .col-md-7
         - country_selected = f.object.persisted? ? f.object.country_code : 'EE'
-        = f.select(:country_code, SortedCountry.all_options(country_selected),
-          { include_blank: true }, required: true)
-
+        = f.select(:country_code,
+                  SortedCountry.all_options(country_selected),
+                  { include_blank: true },
+                  required: address_processing?)

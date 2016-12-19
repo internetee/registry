@@ -343,6 +343,7 @@ en:
   city: 'City'
   street: 'Street'
   zip: 'Postcode'
+  state: State
   org_name: 'Org name'
   failed_to_add_domain: 'Failed to add domain!'
   domain_added: 'Domain added!'

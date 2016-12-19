@@ -1,5 +1,6 @@
 class Registrar::ContactsController < Registrar::DeppController # EPP controller
   before_action :init_epp_contact
+  helper_method :address_processing?
 
   def index
     authorize! :view, Depp::Contact
@@ -133,5 +134,9 @@ class Registrar::ContactsController < Registrar::DeppController # EPP controller
     yield
 
     params[:q][:valid_to_lteq] = ca_cache
+  end
+
+  def address_processing?
+    Contact.address_processing?
   end
 end
