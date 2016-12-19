@@ -6,7 +6,7 @@
 
   .row
     .col-md-6= render 'registrar/contacts/partials/general'
-    .col-md-6= render 'registrar/contacts/partials/address'
+    .col-md-6= render 'registrar/contacts/partials/address' if Contact.address_processing?
   .row
     .col-md-12= render 'registrar/contacts/partials/statuses', statuses: @contact.statuses
   .row
