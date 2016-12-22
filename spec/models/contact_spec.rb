@@ -361,6 +361,8 @@ describe Contact, '.destroy_orphans' do
 end
 
 RSpec.describe Contact, db: false do
+  it { is_expected.to alias_attribute(:kind, :ident_type) }
+
   describe '::names' do
     before :example do
       expect(described_class).to receive(:pluck).with(:name).and_return('names')
@@ -461,6 +463,22 @@ RSpec.describe Contact, db: false do
     it 'removes address attributes' do
       contact.remove_address
       expect(address_removed).to be_truthy
+    end
+  end
+
+  describe '#reg_no' do
+    subject(:reg_no) { contact.reg_no }
+
+    context 'when contact is legal entity' do
+      let(:contact) { FactoryGirl.build_stubbed(:contact_legal_entity, ident: '1234') }
+
+      specify { expect(reg_no).to eq('1234') }
+    end
+
+    context 'when contact is private entity' do
+      let(:contact) { FactoryGirl.build_stubbed(:contact_private_entity, ident: '1234') }
+
+      specify { expect(reg_no).to be_nil }
     end
   end
 end
