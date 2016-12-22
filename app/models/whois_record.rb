@@ -41,6 +41,8 @@ class WhoisRecord < ActiveRecord::Base
         'ok' => 'ok (paid and in zone)'
     }
 
+    registrant = domain.registrant
+
     @disclosed = []
     h[:name]       = domain.name
     h[:status]     = domain.statuses.map { |x| status_map[x] || x }
@@ -50,11 +52,17 @@ class WhoisRecord < ActiveRecord::Base
     h[:outzone]    = domain.outzone_at.try(:to_date).try(:to_s)
     h[:delete]     = [domain.delete_at, domain.force_delete_at].compact.min.try(:to_date).try(:to_s)
 
+    h[:registrant] = registrant.name
+    h[:registrant_kind] = registrant.kind
 
-    h[:registrant]       = domain.registrant.name
-    h[:email] = domain.registrant.email
-    @disclosed << [:email, domain.registrant.email]
-    h[:registrant_changed]          = domain.registrant.updated_at.try(:to_s, :iso8601)
+    if registrant.org?
+      h[:registrant_reg_no] = registrant.reg_no
+      h[:registrant_ident_country_code] = registrant.ident_country_code
+    end
+
+    h[:email] = registrant.email
+    @disclosed << [:email, registrant.email]
+    h[:registrant_changed]          = registrant.updated_at.try(:to_s, :iso8601)
 
     h[:admin_contacts] = []
     domain.admin_contacts.each do |ac|
@@ -82,14 +90,14 @@ class WhoisRecord < ActiveRecord::Base
     h[:registrar_address] = domain.registrar.address
     h[:registrar_changed] = domain.registrar.updated_at.try(:to_s, :iso8601)
 
-    h[:nameservers]         = domain.nameservers.pluck(:hostname).uniq.select(&:present?)
+    h[:nameservers]         = domain.nameservers.hostnames.uniq.select(&:present?)
     h[:nameservers_changed] = domain.nameservers.pluck(:updated_at).max.try(:to_s, :iso8601)
 
     h[:dnssec_keys]    = domain.dnskeys.map{|key| "#{key.flags} #{key.protocol} #{key.alg} #{key.public_key}" }
     h[:dnssec_changed] = domain.dnskeys.pluck(:updated_at).max.try(:to_s, :iso8601) rescue nil
 
 
-    h[:disclosed] = @disclosed # later we can replace
+    h[:disclosed] = @disclosed
     h
   end
 
