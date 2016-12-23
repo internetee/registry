@@ -1,5 +1,5 @@
 22.12.2016
-* Show registrant's reg no. in WHOIS
+* Return business registry code and country for 'org' type registrants in WHOIS and Rest-WHOIS
 
 16.12.2016
 * Allow contact address processing to be configurable via admin
