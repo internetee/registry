@@ -1,3 +1,6 @@
+22.12.2016
+* Show registrant's reg no. in WHOIS
+
 16.12.2016
 * Allow contact address processing to be configurable via admin
 * EPP XML schema namespace "urn:ietf:params:xml:ns:epp-1.0" replaced with "https://epp.tld.ee/schema/epp-ee-1.0.xsd"
