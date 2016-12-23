@@ -744,11 +744,13 @@ CREATE TABLE contacts (
     country_code character varying,
     state character varying,
     legacy_id integer,
-    statuses character varying[],
+    statuses character varying[] DEFAULT '{}'::character varying[],
     status_notes hstore,
     legacy_history_id integer,
     copy_from_id integer,
-    ident_updated_at timestamp without time zone
+    ident_updated_at timestamp without time zone,
+    upid integer,
+    up_date timestamp without time zone
 );
 
 
@@ -887,7 +889,8 @@ CREATE TABLE directos (
     response json,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    invoice_number character varying
+    invoice_number character varying,
+    request text
 );
 
 
@@ -1098,7 +1101,9 @@ CREATE TABLE domains (
     statuses character varying[],
     reserved boolean DEFAULT false,
     status_notes hstore,
-    statuses_backup character varying[] DEFAULT '{}'::character varying[]
+    statuses_backup character varying[] DEFAULT '{}'::character varying[],
+    upid integer,
+    up_date timestamp without time zone
 );
 
 
@@ -1316,7 +1321,8 @@ CREATE TABLE legal_documents (
     documentable_type character varying,
     created_at timestamp without time zone,
     creator_str character varying,
-    path character varying
+    path character varying,
+    checksum character varying
 );
 
 
@@ -1353,7 +1359,8 @@ CREATE TABLE log_account_activities (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -1390,7 +1397,8 @@ CREATE TABLE log_accounts (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -1427,7 +1435,8 @@ CREATE TABLE log_addresses (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -1464,7 +1473,8 @@ CREATE TABLE log_api_users (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -1501,7 +1511,8 @@ CREATE TABLE log_bank_statements (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -1538,7 +1549,8 @@ CREATE TABLE log_bank_transactions (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -1575,7 +1587,8 @@ CREATE TABLE log_blocked_domains (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -1612,7 +1625,8 @@ CREATE TABLE log_certificates (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -1649,7 +1663,8 @@ CREATE TABLE log_contact_statuses (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -1687,7 +1702,8 @@ CREATE TABLE log_contacts (
     created_at timestamp without time zone,
     session character varying,
     children json,
-    ident_updated_at timestamp without time zone
+    ident_updated_at timestamp without time zone,
+    uuid character varying
 );
 
 
@@ -1724,7 +1740,8 @@ CREATE TABLE log_countries (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -1761,7 +1778,8 @@ CREATE TABLE log_dnskeys (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -1798,7 +1816,8 @@ CREATE TABLE log_domain_contacts (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -1835,7 +1854,8 @@ CREATE TABLE log_domain_statuses (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -1872,7 +1892,8 @@ CREATE TABLE log_domain_transfers (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -1912,7 +1933,8 @@ CREATE TABLE log_domains (
     tech_contact_ids text[] DEFAULT '{}'::text[],
     admin_contact_ids text[] DEFAULT '{}'::text[],
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -1949,7 +1971,8 @@ CREATE TABLE log_invoice_items (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -1986,7 +2009,8 @@ CREATE TABLE log_invoices (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -2023,7 +2047,8 @@ CREATE TABLE log_keyrelays (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -2060,7 +2085,8 @@ CREATE TABLE log_messages (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -2097,7 +2123,8 @@ CREATE TABLE log_nameservers (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -2133,7 +2160,8 @@ CREATE TABLE log_pricelists (
     object json,
     object_changes json,
     created_at timestamp without time zone,
-    session character varying
+    session character varying,
+    uuid character varying
 );
 
 
@@ -2170,7 +2198,8 @@ CREATE TABLE log_registrars (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -2207,7 +2236,8 @@ CREATE TABLE log_reserved_domains (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -2244,7 +2274,8 @@ CREATE TABLE log_settings (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -2281,7 +2312,8 @@ CREATE TABLE log_users (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -2318,7 +2350,8 @@ CREATE TABLE log_white_ips (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -2355,7 +2388,8 @@ CREATE TABLE log_zonefile_settings (
     object_changes json,
     created_at timestamp without time zone,
     session character varying,
-    children json
+    children json,
+    uuid character varying
 );
 
 
@@ -2466,7 +2500,8 @@ CREATE TABLE nameservers (
     domain_id integer,
     creator_str character varying,
     updator_str character varying,
-    legacy_domain_id integer
+    legacy_domain_id integer,
+    hostname_puny character varying
 );
 
 
@@ -2673,7 +2708,8 @@ CREATE TABLE registrars (
     directo_handle character varying,
     vat boolean,
     legacy_id integer,
-    reference_no character varying
+    reference_no character varying,
+    test_registrar boolean DEFAULT false
 );
 
 
@@ -4275,6 +4311,13 @@ CREATE INDEX index_keyrelays_on_requester_id ON keyrelays USING btree (requester
 
 
 --
+-- Name: index_legal_documents_on_checksum; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_legal_documents_on_checksum ON legal_documents USING btree (checksum);
+
+
+--
 -- Name: index_legal_documents_on_documentable_type_and_documentable_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -5214,5 +5257,27 @@ INSERT INTO schema_migrations (version) VALUES ('20160118092454');
 
 INSERT INTO schema_migrations (version) VALUES ('20160218102355');
 
+INSERT INTO schema_migrations (version) VALUES ('20160225113801');
+
+INSERT INTO schema_migrations (version) VALUES ('20160225113812');
+
+INSERT INTO schema_migrations (version) VALUES ('20160226132045');
+
+INSERT INTO schema_migrations (version) VALUES ('20160226132056');
+
 INSERT INTO schema_migrations (version) VALUES ('20160304125933');
+
+INSERT INTO schema_migrations (version) VALUES ('20160311085957');
+
+INSERT INTO schema_migrations (version) VALUES ('20160405131315');
+
+INSERT INTO schema_migrations (version) VALUES ('20160411140719');
+
+INSERT INTO schema_migrations (version) VALUES ('20160414110443');
+
+INSERT INTO schema_migrations (version) VALUES ('20160429114732');
+
+INSERT INTO schema_migrations (version) VALUES ('20160527110738');
+
+INSERT INTO schema_migrations (version) VALUES ('20160629114503');
 
