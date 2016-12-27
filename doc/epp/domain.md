@@ -19,7 +19,7 @@ Domain name mapping protocol short version:
                                         Must add up to 1 / 2 / 3 years.
                                         Attribute: unit="y/m/d"
                                         Default is 1 year.
-        <domain:ns>            1       
+        <domain:ns>            0-1       
           <domain:hostAttr>    2-11    
             <domain:hostName>  1        Hostname of the nameserver
             <domain:hostAddr>  0-2      Required if nameserver is under domain zone. 
