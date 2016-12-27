@@ -245,6 +245,10 @@ class Domain < ActiveRecord::Base
         { admin_contacts: :registrar }
       )
     end
+
+    def nameserver_required?
+      Setting.nameserver_required
+    end
   end
 
   def name=(value)

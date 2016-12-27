@@ -704,6 +704,16 @@ RSpec.describe Domain, db: false do
   it { is_expected.to alias_attribute(:force_delete_time, :force_delete_at) }
   it { is_expected.to alias_attribute(:outzone_time, :outzone_at) }
 
+  describe '::nameserver_required?' do
+    before do
+      Setting.nameserver_required = 'test'
+    end
+
+    it 'returns setting value' do
+      expect(described_class.nameserver_required?).to eq('test')
+    end
+  end
+
   describe '::expire_warning_period', db: true do
     before :example do
       Setting.expire_warning_period = 1
