@@ -79,6 +79,7 @@ class Admin::SettingsController < AdminController
       :api_ip_whitelist_enabled,
       :request_confrimation_on_registrant_change_enabled,
       :request_confirmation_on_domain_deletion_enabled,
+      :nameserver_required,
       :address_processing
     ]
 
