@@ -27,7 +27,10 @@ ActiveRecord::Schema.define(version: 0) do
     t.string   "ip",                 limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "uuid"
   end
+
+  add_index "epp_logs", ["uuid"], name: "epp_logs_uuid", using: :btree
 
   create_table "repp_logs", force: :cascade do |t|
     t.string   "request_path",       limit: 255
@@ -40,6 +43,9 @@ ActiveRecord::Schema.define(version: 0) do
     t.string   "ip",                 limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "uuid"
   end
+
+  add_index "repp_logs", ["uuid"], name: "repp_logs_uuid", using: :btree
 
 end
