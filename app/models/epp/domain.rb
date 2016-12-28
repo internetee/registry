@@ -71,12 +71,6 @@ class Epp::Domain < Domain
         [:base, :required_parameter_missing_reserved]
       ],
       '2004' => [ # Parameter value range error
-        [:nameservers, :out_of_range,
-         {
-           min: Setting.ns_min_count,
-           max: Setting.ns_max_count
-         }
-        ],
         [:dnskeys, :out_of_range,
          {
            min: Setting.dnskeys_min_count,
@@ -124,7 +118,13 @@ class Epp::Domain < Domain
         [:registrant, :cannot_be_missing]
       ],
       '2308' => [
-        [:base, :domain_name_blocked, { value: { obj: 'name', val: name_dirty } }]
+        [:base, :domain_name_blocked, { value: { obj: 'name', val: name_dirty } }],
+        [:nameservers, :out_of_range,
+         {
+           min: Setting.ns_min_count,
+           max: Setting.ns_max_count
+         }
+        ],
       ]
     }
   end

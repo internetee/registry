@@ -10,6 +10,8 @@ RSpec.configure do |config|
 
       Setting.dnskeys_min_count = 0
       Setting.dnskeys_max_count = 9
+
+      Setting.nameserver_required = false
       Setting.ns_min_count = 2
       Setting.ns_max_count = 11
 

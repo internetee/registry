@@ -141,7 +141,7 @@ class Domain < ActiveRecord::Base
     false
   end
 
-  validates :nameservers, object_count: {
+  validates :nameservers, domain_nameserver: {
     min: -> { Setting.ns_min_count },
     max: -> { Setting.ns_max_count }
   }
@@ -244,6 +244,10 @@ class Domain < ActiveRecord::Base
         { tech_contacts: :registrar },
         { admin_contacts: :registrar }
       )
+    end
+
+    def nameserver_required?
+      Setting.nameserver_required
     end
   end
 
@@ -688,6 +692,11 @@ class Domain < ActiveRecord::Base
     p_d = statuses.include?(DomainStatus::PENDING_DELETE)
     s_h = (statuses & [DomainStatus::SERVER_MANUAL_INZONE, DomainStatus::SERVER_HOLD]).empty?
     statuses << DomainStatus::SERVER_HOLD if p_d && s_h
+
+    if !self.class.nameserver_required?
+      statuses << DomainStatus::INACTIVE if nameservers.empty?
+      statuses.delete(DomainStatus::INACTIVE) if nameservers.size >= Setting.ns_min_count
+    end
   end
   # rubocop: enable Metrics/CyclomaticComplexity
   # rubocop: enable Metrics/PerceivedComplexity

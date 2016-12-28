@@ -17,10 +17,15 @@ class Admin::RegistrarsController < AdminController
   def create
     @registrar = Registrar.new(registrar_params)
 
-    if @registrar.save
+    begin
+      @registrar.transaction do
+        @registrar.save!
+        @registrar.accounts.create!(account_type: Account::CASH, currency: 'EUR')
+      end
+
       flash[:notice] = I18n.t('registrar_added')
       redirect_to [:admin, @registrar]
-    else
+    rescue ActiveRecord::RecordInvalid
       flash.now[:alert] = I18n.t('failed_to_add_registrar')
       render 'new'
     end

@@ -167,12 +167,12 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         exclude_filter varchar := '';
         tmp_var text;
         ret text;
-      BEGIN
+        BEGIN
         -- define filters
         include_filter = '%.' || i_origin;
 
         -- for %.%.%
-        IF i_origin ~ '\.' THEN
+        IF i_origin ~ '.' THEN
           exclude_filter := '';
         -- for %.%
         ELSE
@@ -207,7 +207,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
             FROM domains d
             JOIN nameservers ns ON ns.domain_id = d.id
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
-            AND NOT ('{serverHold,clientHold}' && d.statuses)
+            AND NOT ('{serverHold,clientHold,inactive}' && d.statuses)
             ORDER BY d.name
           ),
           chr(10)
@@ -222,14 +222,14 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         -- a glue records for other nameservers
         SELECT array_to_string(
           array(
-            SELECT concat(ns.hostname, '. IN A ', ns.ipv4)
+            SELECT concat(ns.hostname, '. IN A ', unnest(ns.ipv4))
             FROM nameservers ns
             JOIN domains d ON d.id = ns.domain_id
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
             AND ns.hostname LIKE '%.' || d.name
             AND d.name <> i_origin
             AND ns.ipv4 IS NOT NULL AND ns.ipv4 <> '{}'
-            AND NOT ('{serverHold,clientHold}' && d.statuses)
+            AND NOT ('{serverHold,clientHold,inactive}' && d.statuses)
           ), chr(10)
         ) INTO tmp_var;
 
@@ -242,14 +242,14 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         -- aaaa glue records for other nameservers
         SELECT array_to_string(
           array(
-            SELECT concat(ns.hostname, '. IN AAAA ', ns.ipv6)
+            SELECT concat(ns.hostname, '. IN AAAA ', unnest(ns.ipv6))
             FROM nameservers ns
             JOIN domains d ON d.id = ns.domain_id
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
             AND ns.hostname LIKE '%.' || d.name
             AND d.name <> i_origin
             AND ns.ipv6 IS NOT NULL AND ns.ipv6 <> '{}'
-            AND NOT ('{serverHold,clientHold}' && d.statuses)
+            AND NOT ('{serverHold,clientHold,inactive}' && d.statuses)
           ), chr(10)
         ) INTO tmp_var;
 
@@ -265,7 +265,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
             FROM domains d
             JOIN dnskeys dk ON dk.domain_id = d.id
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter AND dk.flags = 257
-            AND NOT ('{serverHold,clientHold}' && d.statuses)
+            AND NOT ('{serverHold,clientHold,inactive}' && d.statuses)
             ),
           chr(10)
         ) INTO tmp_var;
@@ -2493,10 +2493,10 @@ ALTER SEQUENCE messages_id_seq OWNED BY messages.id;
 CREATE TABLE nameservers (
     id integer NOT NULL,
     hostname character varying,
-    ipv4 character varying[],
+    ipv4 character varying[] DEFAULT '{}'::character varying[],
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    ipv6 character varying[],
+    ipv6 character varying[] DEFAULT '{}'::character varying[],
     domain_id integer,
     creator_str character varying,
     updator_str character varying,
@@ -2709,6 +2709,7 @@ CREATE TABLE registrars (
     vat boolean,
     legacy_id integer,
     reference_no character varying,
+    exclude_in_monthly_directo boolean DEFAULT false,
     test_registrar boolean DEFAULT false
 );
 
@@ -4745,13 +4746,6 @@ CREATE INDEX index_registrars_on_legacy_id ON registrars USING btree (legacy_id)
 
 
 --
--- Name: index_reserved_domains_on_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_reserved_domains_on_name ON reserved_domains USING btree (name);
-
-
---
 -- Name: index_settings_on_thing_type_and_thing_id_and_var; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4791,13 +4785,6 @@ CREATE INDEX index_whois_records_on_registrar_id ON whois_records USING btree (r
 --
 
 CREATE INDEX log_contacts_object_legacy_id ON log_contacts USING btree ((((object ->> 'legacy_id'::text))::integer));
-
-
---
--- Name: log_contacts_object_legacy_id1; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX log_contacts_object_legacy_id1 ON log_contacts USING btree ((((object ->> 'legacy_id'::text))::integer));
 
 
 --
@@ -5193,6 +5180,8 @@ INSERT INTO schema_migrations (version) VALUES ('20150706091724');
 
 INSERT INTO schema_migrations (version) VALUES ('20150707103241');
 
+INSERT INTO schema_migrations (version) VALUES ('20150707103801');
+
 INSERT INTO schema_migrations (version) VALUES ('20150707104937');
 
 INSERT INTO schema_migrations (version) VALUES ('20150707154543');
@@ -5267,6 +5256,8 @@ INSERT INTO schema_migrations (version) VALUES ('20160226132056');
 
 INSERT INTO schema_migrations (version) VALUES ('20160304125933');
 
+INSERT INTO schema_migrations (version) VALUES ('20160311085956');
+
 INSERT INTO schema_migrations (version) VALUES ('20160311085957');
 
 INSERT INTO schema_migrations (version) VALUES ('20160405131315');
@@ -5275,9 +5266,15 @@ INSERT INTO schema_migrations (version) VALUES ('20160411140719');
 
 INSERT INTO schema_migrations (version) VALUES ('20160414110443');
 
+INSERT INTO schema_migrations (version) VALUES ('20160421074023');
+
 INSERT INTO schema_migrations (version) VALUES ('20160429114732');
 
 INSERT INTO schema_migrations (version) VALUES ('20160527110738');
 
 INSERT INTO schema_migrations (version) VALUES ('20160629114503');
+
+INSERT INTO schema_migrations (version) VALUES ('20161004101419');
+
+INSERT INTO schema_migrations (version) VALUES ('20161227193500');
 

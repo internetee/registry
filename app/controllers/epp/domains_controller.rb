@@ -157,8 +157,10 @@ class Epp::DomainsController < EppController
   end
 
   def validate_create
-    @prefix = 'create > create >'
-    requires 'name', 'ns', 'registrant', 'ns > hostAttr'
+    if Domain.nameserver_required?
+      @prefix = 'create > create >'
+      requires 'name', 'ns', 'registrant', 'ns > hostAttr'
+    end
 
     @prefix = 'extension > create >'
     mutually_exclusive 'keyData', 'dsData'
