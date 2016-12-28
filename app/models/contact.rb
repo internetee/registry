@@ -15,6 +15,7 @@ class Contact < ActiveRecord::Base
   has_paper_trail class_name: "ContactVersion", meta: { children: :children_log }
 
   attr_accessor :legal_document_id
+  alias_attribute :kind, :ident_type
 
   accepts_nested_attributes_for :legal_documents
 
@@ -582,5 +583,10 @@ class Contact < ActiveRecord::Base
     self.class.address_attribute_names.each do |attr_name|
       self[attr_name.to_sym] = nil
     end
+  end
+
+  def reg_no
+    return if priv?
+    ident
   end
 end
