@@ -37,7 +37,6 @@ RSpec.describe Domain do
       @domain.valid?
       @domain.errors.full_messages.should match_array([
         "Admin domain contacts Admin contacts count must be between 1-10",
-        "Nameservers Nameservers count must be between 2-11",
         "Period Period is not a number",
         "Registrant Registrant is missing",
         "Registrar Registrar is missing"
@@ -703,6 +702,71 @@ RSpec.describe Domain, db: false do
   it { is_expected.to alias_attribute(:delete_time, :delete_at) }
   it { is_expected.to alias_attribute(:force_delete_time, :force_delete_at) }
   it { is_expected.to alias_attribute(:outzone_time, :outzone_at) }
+
+  describe 'nameserver validation', db: true do
+    let(:domain) { described_class.new }
+
+    it 'rejects less than min' do
+      Setting.ns_min_count = 2
+      domain.nameservers.build(FactoryGirl.attributes_for(:nameserver))
+      domain.validate
+      expect(domain.errors).to have_key(:nameservers)
+    end
+
+    it 'rejects more than max' do
+      Setting.ns_min_count = 1
+      Setting.ns_max_count = 1
+      domain.nameservers.build(FactoryGirl.attributes_for(:nameserver))
+      domain.nameservers.build(FactoryGirl.attributes_for(:nameserver))
+      domain.validate
+      expect(domain.errors).to have_key(:nameservers)
+    end
+
+    it 'accepts min' do
+      Setting.ns_min_count = 1
+      domain.nameservers.build(FactoryGirl.attributes_for(:nameserver))
+      domain.validate
+      expect(domain.errors).to_not have_key(:nameservers)
+    end
+
+    it 'accepts max' do
+      Setting.ns_min_count = 1
+      Setting.ns_max_count = 2
+      domain.nameservers.build(FactoryGirl.attributes_for(:nameserver))
+      domain.nameservers.build(FactoryGirl.attributes_for(:nameserver))
+      domain.validate
+      expect(domain.errors).to_not have_key(:nameservers)
+    end
+
+    context 'when nameserver is optional' do
+      before :example do
+        allow(Domain).to receive(:nameserver_required?).and_return(false)
+      end
+
+      it 'rejects less than min' do
+        Setting.ns_min_count = 2
+        domain.nameservers.build(FactoryGirl.attributes_for(:nameserver))
+        domain.validate
+        expect(domain.errors).to have_key(:nameservers)
+      end
+
+      it 'accepts absent' do
+        domain.validate
+        expect(domain.errors).to_not have_key(:nameservers)
+      end
+    end
+
+    context 'when nameserver is required' do
+      before :example do
+        allow(Domain).to receive(:nameserver_required?).and_return(true)
+      end
+
+      it 'rejects absent' do
+        domain.validate
+        expect(domain.errors).to have_key(:nameservers)
+      end
+    end
+  end
 
   describe '::nameserver_required?' do
     before do

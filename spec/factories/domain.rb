@@ -7,7 +7,6 @@ FactoryGirl.define do
     registrant
 
     after :build do |domain|
-      domain.nameservers << FactoryGirl.build_pair(:nameserver)
       domain.admin_domain_contacts << FactoryGirl.build(:admin_domain_contact)
       domain.tech_domain_contacts << FactoryGirl.build(:tech_domain_contact)
     end
