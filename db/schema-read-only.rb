@@ -479,8 +479,10 @@ ActiveRecord::Schema.define(version: 20161227193500) do
     t.datetime "created_at"
     t.string   "creator_str"
     t.string   "path"
+    t.string   "checksum"
   end
 
+  add_index "legal_documents", ["checksum"], name: "index_legal_documents_on_checksum", using: :btree
   add_index "legal_documents", ["documentable_type", "documentable_id"], name: "index_legal_documents_on_documentable_type_and_documentable_id", using: :btree
 
   create_table "log_account_activities", force: :cascade do |t|
@@ -956,10 +958,10 @@ ActiveRecord::Schema.define(version: 20161227193500) do
 
   create_table "nameservers", force: :cascade do |t|
     t.string   "hostname"
-    t.string   "ipv4",             array: true
+    t.string   "ipv4",             default: [], array: true
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "ipv6",             array: true
+    t.string   "ipv6",             default: [], array: true
     t.integer  "domain_id"
     t.string   "creator_str"
     t.string   "updator_str"
@@ -1049,7 +1051,8 @@ ActiveRecord::Schema.define(version: 20161227193500) do
     t.boolean  "vat"
     t.integer  "legacy_id"
     t.string   "reference_no"
-    t.boolean  "test_registrar",  default: false
+    t.boolean  "exclude_in_monthly_directo", default: false
+    t.boolean  "test_registrar",             default: false
   end
 
   add_index "registrars", ["code"], name: "index_registrars_on_code", using: :btree
@@ -1064,8 +1067,6 @@ ActiveRecord::Schema.define(version: 20161227193500) do
     t.string   "name"
     t.string   "password"
   end
-
-  add_index "reserved_domains", ["name"], name: "index_reserved_domains_on_name", using: :btree
 
   create_table "settings", force: :cascade do |t|
     t.string   "var",                    null: false

@@ -1321,7 +1321,8 @@ CREATE TABLE legal_documents (
     documentable_type character varying,
     created_at timestamp without time zone,
     creator_str character varying,
-    path character varying
+    path character varying,
+    checksum character varying
 );
 
 
@@ -2492,10 +2493,10 @@ ALTER SEQUENCE messages_id_seq OWNED BY messages.id;
 CREATE TABLE nameservers (
     id integer NOT NULL,
     hostname character varying,
-    ipv4 character varying[],
+    ipv4 character varying[] DEFAULT '{}'::character varying[],
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    ipv6 character varying[],
+    ipv6 character varying[] DEFAULT '{}'::character varying[],
     domain_id integer,
     creator_str character varying,
     updator_str character varying,
@@ -2708,6 +2709,7 @@ CREATE TABLE registrars (
     vat boolean,
     legacy_id integer,
     reference_no character varying,
+    exclude_in_monthly_directo boolean DEFAULT false,
     test_registrar boolean DEFAULT false
 );
 
@@ -4310,6 +4312,13 @@ CREATE INDEX index_keyrelays_on_requester_id ON keyrelays USING btree (requester
 
 
 --
+-- Name: index_legal_documents_on_checksum; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_legal_documents_on_checksum ON legal_documents USING btree (checksum);
+
+
+--
 -- Name: index_legal_documents_on_documentable_type_and_documentable_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4737,13 +4746,6 @@ CREATE INDEX index_registrars_on_legacy_id ON registrars USING btree (legacy_id)
 
 
 --
--- Name: index_reserved_domains_on_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_reserved_domains_on_name ON reserved_domains USING btree (name);
-
-
---
 -- Name: index_settings_on_thing_type_and_thing_id_and_var; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4783,13 +4785,6 @@ CREATE INDEX index_whois_records_on_registrar_id ON whois_records USING btree (r
 --
 
 CREATE INDEX log_contacts_object_legacy_id ON log_contacts USING btree ((((object ->> 'legacy_id'::text))::integer));
-
-
---
--- Name: log_contacts_object_legacy_id1; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX log_contacts_object_legacy_id1 ON log_contacts USING btree ((((object ->> 'legacy_id'::text))::integer));
 
 
 --
@@ -5185,6 +5180,8 @@ INSERT INTO schema_migrations (version) VALUES ('20150706091724');
 
 INSERT INTO schema_migrations (version) VALUES ('20150707103241');
 
+INSERT INTO schema_migrations (version) VALUES ('20150707103801');
+
 INSERT INTO schema_migrations (version) VALUES ('20150707104937');
 
 INSERT INTO schema_migrations (version) VALUES ('20150707154543');
@@ -5259,6 +5256,8 @@ INSERT INTO schema_migrations (version) VALUES ('20160226132056');
 
 INSERT INTO schema_migrations (version) VALUES ('20160304125933');
 
+INSERT INTO schema_migrations (version) VALUES ('20160311085956');
+
 INSERT INTO schema_migrations (version) VALUES ('20160311085957');
 
 INSERT INTO schema_migrations (version) VALUES ('20160405131315');
@@ -5272,6 +5271,8 @@ INSERT INTO schema_migrations (version) VALUES ('20160421074023');
 INSERT INTO schema_migrations (version) VALUES ('20160429114732');
 
 INSERT INTO schema_migrations (version) VALUES ('20160527110738');
+
+INSERT INTO schema_migrations (version) VALUES ('20160629114503');
 
 INSERT INTO schema_migrations (version) VALUES ('20161004101419');
 
