@@ -684,20 +684,20 @@ class Domain < ActiveRecord::Base
   # rubocop: disable Metrics/CyclomaticComplexity
   # rubocop: disable Metrics/PerceivedComplexity
   def manage_automatic_statuses
+    if !self.class.nameserver_required?
+      deactivate if nameservers.reject(&:marked_for_destruction?).empty?
+      activate if nameservers.reject(&:marked_for_destruction?).size >= Setting.ns_min_count
+    end
+
     if statuses.empty? && valid?
       statuses << DomainStatus::OK
-    elsif statuses.length > 1 || !valid?
+    elsif (statuses.length > 1 && active?) || !valid?
       statuses.delete(DomainStatus::OK)
     end
 
     p_d = statuses.include?(DomainStatus::PENDING_DELETE)
     s_h = (statuses & [DomainStatus::SERVER_MANUAL_INZONE, DomainStatus::SERVER_HOLD]).empty?
     statuses << DomainStatus::SERVER_HOLD if p_d && s_h
-
-    if !self.class.nameserver_required?
-      deactivate if nameservers.reject(&:marked_for_destruction?).empty?
-      activate if nameservers.reject(&:marked_for_destruction?).size >= Setting.ns_min_count
-    end
   end
   # rubocop: enable Metrics/CyclomaticComplexity
   # rubocop: enable Metrics/PerceivedComplexity
