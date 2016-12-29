@@ -31,7 +31,7 @@ RSpec.describe 'EPP domain:create' do
       allow(Domain).to receive(:nameserver_required?).and_return(false)
     end
 
-    context 'when minimum nameserver count is not satisfied' do
+    context 'when minimum nameserver count requirement is not satisfied' do
       let(:request_xml) { <<-XML
         <?xml version="1.0" encoding="UTF-8" standalone="no"?>
         <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
@@ -43,7 +43,6 @@ RSpec.describe 'EPP domain:create' do
                 <domain:ns>
                   <domain:hostAttr>
                     <domain:hostName>ns.test.com</domain:hostName>
-                    <domain:hostAddr ip="v4">192.168.1.1</domain:hostAddr>
                   </domain:hostAttr>
                 </domain:ns>
                 <domain:registrant>test</domain:registrant>
@@ -119,79 +118,6 @@ RSpec.describe 'EPP domain:create' do
           domain = Domain.find_by(name: 'test.com')
           expect(domain.statuses).to include(DomainStatus::INACTIVE)
         end
-      end
-    end
-  end
-
-  context 'when nameserver is required' do
-    before :example do
-      allow(Domain).to receive(:nameserver_required?).and_return(true)
-      Setting.ns_min_count = 1
-    end
-
-    context 'when nameserver is present' do
-      let(:request_xml) { <<-XML
-        <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-        <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
-          <command>
-            <create>
-              <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
-                <domain:name>test.com</domain:name>
-                <domain:period unit="y">1</domain:period>
-                <domain:ns>
-                  <domain:hostAttr>
-                    <domain:hostName>ns.test.com</domain:hostName>
-                    <domain:hostAddr ip="v4">192.168.1.1</domain:hostAddr>
-                  </domain:hostAttr>
-                </domain:ns>
-                <domain:registrant>test</domain:registrant>
-                <domain:contact type="admin">test</domain:contact>
-                <domain:contact type="tech">test</domain:contact>
-              </domain:create>
-            </create>
-            <extension>
-              <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
-                <eis:legalDocument type="pdf">#{Base64.encode64('a' * 5000)}</eis:legalDocument>
-              </eis:extdata>
-            </extension>
-          </command>
-        </epp>
-      XML
-      }
-
-      it 'returns epp code of 1000' do
-        post '/epp/command/create', frame: request_xml
-        expect(response_code).to eq('1000'), "Expected EPP code of 1000, got #{response_code} (#{response_description})"
-      end
-    end
-
-    context 'when nameserver is absent' do
-      let(:request_xml) { <<-XML
-        <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-        <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
-          <command>
-            <create>
-              <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
-                <domain:name>test.com</domain:name>
-                <domain:period unit="y">1</domain:period>
-                <domain:registrant>test</domain:registrant>
-                <domain:contact type="admin">test</domain:contact>
-                <domain:contact type="tech">test</domain:contact>
-              </domain:create>
-            </create>
-            <extension>
-              <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
-                <eis:legalDocument type="pdf">#{Base64.encode64('a' * 5000)}</eis:legalDocument>
-              </eis:extdata>
-            </extension>
-          </command>
-        </epp>
-      XML
-      }
-
-      it 'returns epp code of 2003' do
-        post '/epp/command/create', frame: request_xml
-        expect(response_code).to eq('2003')
       end
     end
   end

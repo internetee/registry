@@ -9,10 +9,11 @@
       .panel-body
         .form-group
           .col-md-3.control-label
-            = label_tag "domain_nameservers_attributes_#{k}_hostname", t(:hostname), class: 'required'
+            = label_tag "domain_nameservers_attributes_#{k}_hostname", t(:hostname),
+            class: Domain.nameserver_required? ? 'required' : nil
           .col-md-7
             = text_field_tag "domain[nameservers_attributes][#{k}][hostname]", v['hostname'],
-              class: 'form-control', required: true
+              class: 'form-control', required: Domain.nameserver_required?
         .form-group
           .col-md-3.control-label
             = label_tag "domain_nameservers_attributes_#{k}_ipv4", t(:ipv4)

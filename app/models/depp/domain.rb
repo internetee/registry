@@ -40,13 +40,22 @@ module Depp
       keys = Domain.create_dnskeys_hash(domain_params)
       dns_hash[:_anonymus] = keys if keys.any?
 
-      xml = epp_xml.create({
-        name: { value: domain_params[:name] },
-        period: { value: domain_params[:period].to_s[0], attrs: { unit: domain_params[:period].to_s[1] } },
-        ns: Domain.create_nameservers_hash(domain_params),
-        registrant: { value: domain_params[:registrant] },
-        _anonymus: Domain.create_contacts_hash(domain_params)
-      }, dns_hash, Domain.construct_custom_params_hash(domain_params))
+      if domain_params[:nameservers_attributes].select { |key, value| value['hostname'].present? }.any?
+        xml = epp_xml.create({
+          name: { value: domain_params[:name] },
+          period: { value: domain_params[:period].to_s[0], attrs: { unit: domain_params[:period].to_s[1] } },
+          ns: Domain.create_nameservers_hash(domain_params),
+          registrant: { value: domain_params[:registrant] },
+          _anonymus: Domain.create_contacts_hash(domain_params)
+        }, dns_hash, Domain.construct_custom_params_hash(domain_params))
+      else
+        xml = epp_xml.create({
+          name: { value: domain_params[:name] },
+          period: { value: domain_params[:period].to_s[0], attrs: { unit: domain_params[:period].to_s[1] } },
+          registrant: { value: domain_params[:registrant] },
+          _anonymus: Domain.create_contacts_hash(domain_params)
+        }, dns_hash, Domain.construct_custom_params_hash(domain_params))
+      end
 
       current_user.request(xml)
     end

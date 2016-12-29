@@ -4,6 +4,7 @@ class Domain < ActiveRecord::Base
   include Versions # version/domain_version.rb
   include Statuses
   include Concerns::Domain::Expirable
+  include Concerns::Domain::Activatable
 
   has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
 
@@ -694,8 +695,8 @@ class Domain < ActiveRecord::Base
     statuses << DomainStatus::SERVER_HOLD if p_d && s_h
 
     if !self.class.nameserver_required?
-      statuses << DomainStatus::INACTIVE if nameservers.empty?
-      statuses.delete(DomainStatus::INACTIVE) if nameservers.size >= Setting.ns_min_count
+      deactivate if nameservers.reject(&:marked_for_destruction?).empty?
+      activate if nameservers.reject(&:marked_for_destruction?).size >= Setting.ns_min_count
     end
   end
   # rubocop: enable Metrics/CyclomaticComplexity
