@@ -43,6 +43,7 @@ RSpec.describe 'EPP domain:create' do
                 <domain:ns>
                   <domain:hostAttr>
                     <domain:hostName>ns.test.com</domain:hostName>
+                    <domain:hostAddr ip="v4">192.168.1.1</domain:hostAddr>
                   </domain:hostAttr>
                 </domain:ns>
                 <domain:registrant>test</domain:registrant>
