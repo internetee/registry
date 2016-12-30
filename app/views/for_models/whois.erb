@@ -13,8 +13,10 @@ delete:     <%= json['delete'].to_s.tr('T',' ').sub('+', ' +') %>
 
 Registrant:
 name:    <%= json['registrant'] %>
+<% if json['registrant_kind'] != 'priv' -%>
 org id:  <%= json['registrant_reg_no'] %>
 country: <%= json['registrant_ident_country_code'] %>
+<% end -%>
 email:   Not Disclosed - Visit www.internet.ee for webbased WHOIS
 changed: <%= json['registrant_changed'].to_s.tr('T',' ').sub('+', ' +') %>
 
