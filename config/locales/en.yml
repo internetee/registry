@@ -97,7 +97,7 @@ en:
               out_of_range: 'Tech contacts count must be between %{min}-%{max}'
             nameservers:
               invalid: 'Nameservers are invalid'
-              out_of_range: 'Nameservers count must be between %{min}-%{max}'
+              out_of_range: Data management policy violation; Nameserver count must be between %{min}-%{max} for active domains
               not_found: 'Nameserver was not found'
               taken: 'Nameserver already exists on this domain'
               less_than_or_equal_to: 'Nameservers count must be less than or equal to %{count}'

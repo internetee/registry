@@ -47,7 +47,7 @@ Rails.application.configure do
     Bullet.enable = true
     Bullet.bullet_logger = true
     Bullet.rails_logger = true
-    Bullet.raise = true # raise an error if n+1 query occurs
+    Bullet.raise = false # raise an error if n+1 query occurs
     Bullet.unused_eager_loading_enable = false
 
     # Currenty hard to fix, it is triggered by Epp::Domain.new_from_epp for create request

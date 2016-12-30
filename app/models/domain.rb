@@ -4,6 +4,7 @@ class Domain < ActiveRecord::Base
   include Versions # version/domain_version.rb
   include Statuses
   include Concerns::Domain::Expirable
+  include Concerns::Domain::Activatable
 
   has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
 
@@ -141,7 +142,7 @@ class Domain < ActiveRecord::Base
     false
   end
 
-  validates :nameservers, object_count: {
+  validates :nameservers, domain_nameserver: {
     min: -> { Setting.ns_min_count },
     max: -> { Setting.ns_max_count }
   }
@@ -244,6 +245,10 @@ class Domain < ActiveRecord::Base
         { tech_contacts: :registrar },
         { admin_contacts: :registrar }
       )
+    end
+
+    def nameserver_required?
+      Setting.nameserver_required
     end
   end
 
@@ -679,9 +684,14 @@ class Domain < ActiveRecord::Base
   # rubocop: disable Metrics/CyclomaticComplexity
   # rubocop: disable Metrics/PerceivedComplexity
   def manage_automatic_statuses
+    if !self.class.nameserver_required?
+      deactivate if nameservers.reject(&:marked_for_destruction?).empty?
+      activate if nameservers.reject(&:marked_for_destruction?).size >= Setting.ns_min_count
+    end
+
     if statuses.empty? && valid?
       statuses << DomainStatus::OK
-    elsif statuses.length > 1 || !valid?
+    elsif (statuses.length > 1 && active?) || !valid?
       statuses.delete(DomainStatus::OK)
     end
 

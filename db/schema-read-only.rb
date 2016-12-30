@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160629114503) do
+ActiveRecord::Schema.define(version: 20161227193500) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -958,10 +958,10 @@ ActiveRecord::Schema.define(version: 20160629114503) do
 
   create_table "nameservers", force: :cascade do |t|
     t.string   "hostname"
-    t.string   "ipv4",             array: true
+    t.string   "ipv4",             default: [], array: true
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "ipv6",             array: true
+    t.string   "ipv6",             default: [], array: true
     t.integer  "domain_id"
     t.string   "creator_str"
     t.string   "updator_str"
@@ -1051,7 +1051,8 @@ ActiveRecord::Schema.define(version: 20160629114503) do
     t.boolean  "vat"
     t.integer  "legacy_id"
     t.string   "reference_no"
-    t.boolean  "test_registrar",  default: false
+    t.boolean  "exclude_in_monthly_directo", default: false
+    t.boolean  "test_registrar",             default: false
   end
 
   add_index "registrars", ["code"], name: "index_registrars_on_code", using: :btree
@@ -1066,8 +1067,6 @@ ActiveRecord::Schema.define(version: 20160629114503) do
     t.string   "name"
     t.string   "password"
   end
-
-  add_index "reserved_domains", ["name"], name: "index_reserved_domains_on_name", using: :btree
 
   create_table "settings", force: :cascade do |t|
     t.string   "var",                    null: false
