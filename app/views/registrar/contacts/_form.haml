@@ -4,9 +4,12 @@
 .row
   .col-md-8
     = render 'registrar/contacts/form_partials/general', f: f
-.row
-  .col-md-8
-    = render 'registrar/contacts/form_partials/address', f: f
+
+- if address_processing?
+  .row
+    .col-md-8
+      = render 'registrar/contacts/form_partials/address', f: f
+
 - if !@contact.persisted?
   .row
     .col-md-8
