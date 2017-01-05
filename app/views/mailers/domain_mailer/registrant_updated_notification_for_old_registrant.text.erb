@@ -13,7 +13,7 @@ Isikukood: <%= @new_registrant.ident %>
 Epost: <%= @new_registrant.email %>
 Tänav: <%= @new_registrant.street %>
 Linn: <%= @new_registrant.city %>
-Riik: <%= @new_registrant.country.name %>
+Riik: <%= @new_registrant.country.try(:name) %>
 
 Lugupidamisega
 Eesti Interneti Sihtasutus
@@ -35,7 +35,7 @@ Business Registry code: <%= @new_registrant.ident %>
 E-mail: <%= @new_registrant.email %>
 Street: <%= @new_registrant.street %>
 City: <%= @new_registrant.city %>
-Country: <%= @new_registrant.country.name %>
+Country: <%= @new_registrant.country.try(:name) %>
 
 Best Regards,
 Estonian Internet Foundation
