@@ -21,5 +21,19 @@ FactoryGirl.define do
       ident_type 'org'
       ident '12345678' # valid reg no for .ee
     end
+
+    factory :contact_with_address do
+      street 'test'
+      city 'test'
+      zip 12345
+      country_code 'EE'
+    end
+
+    factory :contact_without_address do
+      street nil
+      city nil
+      zip nil
+      country_code nil
+    end
   end
 end

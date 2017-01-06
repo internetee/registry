@@ -12,7 +12,7 @@ Nimi: <%= @new_registrant.name %><br>
 Epost: <%= @new_registrant.email %><br>
 Tänav: <%= @new_registrant.street %><br>
 Linn: <%= @new_registrant.city %><br>
-Riik: <%= @new_registrant.country.name %>
+Riik: <%= @new_registrant.country.try(:name) %>
 <br><br>
 Lugupidamisega<br>
 Eesti Interneti Sihtasutus
@@ -33,7 +33,7 @@ Name: <%= @new_registrant.name %><br>
 E-mail: <%= @new_registrant.email %><br>
 Street: <%= @new_registrant.street %><br>
 City: <%= @new_registrant.city %><br>
-Country: <%= @new_registrant.country.name %>
+Country: <%= @new_registrant.country.try(:name) %>
 <br><br>
 Best Regards,<br>
 Estonian Internet Foundation
