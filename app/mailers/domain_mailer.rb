@@ -8,6 +8,7 @@ class DomainMailer < ApplicationMailer
 
     @old_registrant = Registrant.find(old_registrant_id)
     @new_registrant = Registrant.find(new_registrant_id)
+    @address_processing = Contact.address_processing?
 
     return if whitelist_blocked?(@new_registrant.email)
     mail(to: format(@new_registrant.email),
@@ -23,6 +24,7 @@ class DomainMailer < ApplicationMailer
 
     @old_registrant = Registrant.find(old_registrant_id)
     @new_registrant = Registrant.find(new_registrant_id)
+    @address_processing = Contact.address_processing?
 
     return if whitelist_blocked?(@old_registrant.email)
     mail(to: format(@old_registrant.email),
