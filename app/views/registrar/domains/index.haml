@@ -52,6 +52,10 @@
             &nbsp;
           %button.btn.btn-default.js-reset-form
             = t(:clear_fields)
+      .row
+        .col-md-2
+          = button_tag t('.export_csv_btn'), class: 'btn btn-primary export-domains-csv-btn',
+          formaction: registrar_domains_path(format: 'csv')
 %hr
 
 .row

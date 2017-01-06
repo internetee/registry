@@ -119,6 +119,7 @@ RSpec.describe DomainPresenter do
     name
     registrant_name
     registrant_id
+    registrant_code
   )
 
   domain_delegatable_attributes.each do |attribute_name|
