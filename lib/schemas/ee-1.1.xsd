@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+ targetNamespace="https://epp.tld.ee/schema/ee-1.1.xsd"
+ xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd"
+ xmlns="http://www.w3.org/2001/XMLSchema"
+ elementFormDefault="qualified">
+
+  <annotation>
+    <documentation>
+     EIS Extensible Provisioning Protocol v1.1 extension schema.
+    </documentation>
+  </annotation>
+
+  <!--
+  Child elements found in EPP commands.
+  -->
+
+  <element name="extdata" type="eis:eisExtType"/>
+
+  <!--
+  Child elements supporting EIS specific values.
+  -->
+  <complexType name="eisExtType">
+    <sequence>
+      <element name="ident" type="eis:identType" minOccurs="0" maxOccurs="1"/>
+      <element name="legalDocument" type="eis:legalDocType" minOccurs="0" maxOccurs="1"/>
+      <element name="reserved" type="eis:reservedType" minOccurs="0" maxOccurs="1"/>
+    </sequence>
+  </complexType>
+
+  <!--
+    Child elements of extdata
+  -->
+
+  <!--
+    Reserved for providing passwords for reserved domains
+  -->
+
+  <complexType name="reservedType">
+    <sequence>
+      <element name="pw" type="eis:pwType" minOccurs="0" maxOccurs="1"/>
+    </sequence>
+  </complexType>
+
+  <simpleType name="pwType">
+     <restriction base="normalizedString">
+       <minLength value="1"/>
+       <maxLength value="255"/>
+     </restriction>
+  </simpleType>
+
+  <!--
+  Legal document, encoded in base64
+  -->
+  <complexType name="legalDocType">
+    <simpleContent>
+      <extension base="base64Binary">
+        <attribute name="type" type="eis:legalDocEnumType" use="required"/>
+      </extension>
+    </simpleContent>
+  </complexType>
+
+  <simpleType name="legalDocEnumType">
+    <restriction base="token">
+      <enumeration value="pdf"/>
+      <enumeration value="bdoc"/>
+      <enumeration value="ddoc"/>
+      <enumeration value="zip"/>
+      <enumeration value="rar"/>
+      <enumeration value="gz"/>
+      <enumeration value="tar"/>
+      <enumeration value="7z"/>
+      <enumeration value="odt"/>
+      <enumeration value="doc"/>
+      <enumeration value="docx"/>
+    </restriction>
+  </simpleType>
+
+  <!--
+  Ident with type and country code
+  -->
+  <complexType name="identType">
+    <simpleContent>
+      <extension base="normalizedString">
+        <attribute name="type" type="eis:identEnumType" use="required"/>
+        <attribute name="cc" type="eis:ccType"/>
+      </extension>
+    </simpleContent>
+  </complexType>
+
+  <simpleType name="identEnumType">
+    <restriction base="token">
+      <enumeration value="org"/>
+      <enumeration value="priv"/>
+      <enumeration value="birthday"/>
+    </restriction>
+  </simpleType>
+
+  <simpleType name="ccType">
+    <restriction base="normalizedString">
+      <minLength value="2"/>
+      <maxLength value="2"/>
+    </restriction>
+  </simpleType>
+</schema>
