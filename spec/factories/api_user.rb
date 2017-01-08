@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :api_user do
     sequence(:username) { |n| "test#{n}" }
-    password 'a' * 6
+    password 'a' * ApiUser.min_password_length
     roles ['super']
     registrar
 
