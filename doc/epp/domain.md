@@ -34,7 +34,7 @@ Domain name mapping protocol short version:
           <secDNS:protocol>    1        Allowed values: 3
           <secDNS:alg>         1        Allowed values: 3, 5, 6, 7, 8, 10, 13, 14
           <secDNS:pubKey>      1        Public key
-      <eis:extdata>            1        Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
+      <eis:extdata>            1        Attribute: xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd"
         <eis:legalDocument>    1        Base64 encoded document. 
                                           Attribute: type="pdf/bdoc/zip/rar/gz/tar/7z"
         <eis:reserved>         0-1
@@ -83,7 +83,7 @@ Domain name mapping protocol short version:
             <secDNS:protocol>    1         Allowed values: 3
             <secDNS:alg>         1         Allowed values: 3, 5, 6, 7, 8, 10, 13, 14
             <secDNS:pubKey>      1         Public key
-      <eis:extdata>              0-1       Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
+      <eis:extdata>              0-1       Attribute: xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd"
         <eis:legalDocument>      0-1       Base64 encoded document. Required if registrant is changing. 
                                              Attribute: type="pdf/bdoc/zip/rar/gz/tar/7z"
     <clTRID>                     0-1       Client transaction id
@@ -99,7 +99,7 @@ Domain name mapping protocol short version:
                                         Optional attribute: verified="yes/no"
         <domain:name>        1        Domain name. Can contain unicode characters.
     <extension>              1       
-      <eis:extdata>          1        Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
+      <eis:extdata>          1        Attribute: xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd"
         <eis:legalDocument>  1        Base64 encoded document. 
                                         Attribute: type="pdf/bdoc/zip/rar/gz/tar/7z"
     <clTRID>                 0-1      Client transaction id
@@ -132,7 +132,7 @@ Domain name mapping protocol short version:
                                       Must add up to 1 / 2 / 3 years. Attribute: unit="y/m/d"
                                       Default value is 1 year.
     <extension>              0-1     
-      <eis:extdata>          0-1      Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
+      <eis:extdata>          0-1      Attribute: xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd"
         <eis:legalDocument>  0-1      Base64 encoded document. 
                                         Attribute: type="pdf/bdoc/zip/rar/gz/tar/7z"
     <clTRID>                 0-1      Client transaction id
@@ -149,7 +149,7 @@ Domain name mapping protocol short version:
         <domain:authInfo>    1       
           <domain:pw>        1        Domain password. Attribute: roid="String"
     <extension>              0-1     
-      <eis:extdata>          0-1      Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
+      <eis:extdata>          0-1      Attribute: xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd"
         <eis:legalDocument>  0-1      Base64 encoded document.  
                                         Attribute: type="pdf/bdoc/zip/rar/gz/tar/7z"
     <clTRID>                 0-1      Client transaction id
