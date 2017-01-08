@@ -64,7 +64,6 @@
     <restriction base="token">
       <enumeration value="pdf"/>
       <enumeration value="bdoc"/>
-      <enumeration value="ddoc"/>
       <enumeration value="zip"/>
       <enumeration value="rar"/>
       <enumeration value="gz"/>

@@ -36,7 +36,7 @@ Domain name mapping protocol short version:
           <secDNS:pubKey>      1        Public key
       <eis:extdata>            1        Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
         <eis:legalDocument>    1        Base64 encoded document. 
-                                          Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
+                                          Attribute: type="pdf/bdoc/zip/rar/gz/tar/7z"
         <eis:reserved>         0-1
           <eis:pw>             0-1      Required if registering a reserved domain
     <clTRID>                   0-1      Client transaction id
@@ -85,7 +85,7 @@ Domain name mapping protocol short version:
             <secDNS:pubKey>      1         Public key
       <eis:extdata>              0-1       Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
         <eis:legalDocument>      0-1       Base64 encoded document. Required if registrant is changing. 
-                                             Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
+                                             Attribute: type="pdf/bdoc/zip/rar/gz/tar/7z"
     <clTRID>                     0-1       Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-domain-updates-domain-and-adds-objects)
@@ -101,7 +101,7 @@ Domain name mapping protocol short version:
     <extension>              1       
       <eis:extdata>          1        Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
         <eis:legalDocument>  1        Base64 encoded document. 
-                                        Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
+                                        Attribute: type="pdf/bdoc/zip/rar/gz/tar/7z"
     <clTRID>                 0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-domain-deletes-domain)
@@ -134,7 +134,7 @@ Domain name mapping protocol short version:
     <extension>              0-1     
       <eis:extdata>          0-1      Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
         <eis:legalDocument>  0-1      Base64 encoded document. 
-                                        Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
+                                        Attribute: type="pdf/bdoc/zip/rar/gz/tar/7z"
     <clTRID>                 0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-domain-renews-a-domain)
@@ -151,7 +151,7 @@ Domain name mapping protocol short version:
     <extension>              0-1     
       <eis:extdata>          0-1      Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
         <eis:legalDocument>  0-1      Base64 encoded document.  
-                                        Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
+                                        Attribute: type="pdf/bdoc/zip/rar/gz/tar/7z"
     <clTRID>                 0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-domain-transfers-a-domain)
