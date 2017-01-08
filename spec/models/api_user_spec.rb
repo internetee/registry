@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe ApiUser do
+RSpec.describe ApiUser do
   context 'class methods' do
     before do
       Fabricate(:api_user, identity_code: '')
@@ -26,7 +26,7 @@ describe ApiUser do
       @api_user.valid?
       @api_user.errors.full_messages.should match_array([
         "Password Password is missing",
-        "Password is too short (minimum is 6 characters)",
+        "Password is too short (minimum is #{ApiUser.min_password_length} characters)",
         "Registrar Registrar is missing",
         "Username Username is missing",
         "Roles is missing"
@@ -66,6 +66,12 @@ describe ApiUser do
         @api_user.errors.full_messages.should match_array([])
         @api_user.versions.size.should == 1
       end
+    end
+  end
+
+  describe '::min_password_length', db: false do
+    it 'returns minimum password length' do
+      expect(described_class.min_password_length).to eq(6)
     end
   end
 end
