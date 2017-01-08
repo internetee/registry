@@ -8,5 +8,11 @@ FactoryGirl.define do
     factory :api_user_epp do
       roles %w(epp static_registrant)
     end
+
+    factory :api_user_with_unlimited_balance do
+      after :build do |api_user|
+        api_user.registrar = create(:registrar_with_unlimited_balance)
+      end
+    end
   end
 end
