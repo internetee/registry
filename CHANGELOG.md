@@ -1,3 +1,7 @@
+08.01.2017
+* EPP XML schema "eis-1.0.xsd" replaced with "ee-1.1.xsd"
+* .ddoc legal document format support dropped
+
 22.12.2016
 * Return business registry code and country for 'org' type registrants in WHOIS and Rest-WHOIS
 
