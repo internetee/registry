@@ -594,7 +594,7 @@ DEPENDENCIES
   devise (= 3.5.4)
   digidoc_client (= 0.2.1)
   epp (= 1.5.0)!
-  epp-xml (= 1.1.0)!
+  epp-xml!
   fabrication (= 2.13.2)
   factory_girl_rails
   figaro (= 1.1.1)
