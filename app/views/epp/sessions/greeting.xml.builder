@@ -11,7 +11,7 @@ xml.epp_head do
       xml.objURI 'urn:ietf:params:xml:ns:keyrelay-1.0'
       xml.svcExtension do
         xml.extURI 'urn:ietf:params:xml:ns:secDNS-1.1'
-        xml.extURI 'https://epp.tld.ee/schema/eis-1.0.xsd'
+        xml.extURI 'https://epp.tld.ee/schema/ee-1.1.xsd'
       end
     end
 

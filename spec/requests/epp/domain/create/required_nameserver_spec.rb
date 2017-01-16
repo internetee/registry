@@ -53,7 +53,7 @@ RSpec.describe 'EPP domain:create' do
               </domain:create>
             </create>
             <extension>
-              <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
                 <eis:legalDocument type="pdf">#{Base64.encode64('a' * 5000)}</eis:legalDocument>
               </eis:extdata>
             </extension>
@@ -83,7 +83,7 @@ RSpec.describe 'EPP domain:create' do
               </domain:create>
             </create>
             <extension>
-              <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
                 <eis:legalDocument type="pdf">#{Base64.encode64('a' * 5000)}</eis:legalDocument>
               </eis:extdata>
             </extension>

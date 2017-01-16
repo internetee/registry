@@ -25,7 +25,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -108,7 +108,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -168,7 +168,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -225,7 +225,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="birthday" cc="US">1990-22-12</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -282,7 +282,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -339,7 +339,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -396,7 +396,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -448,7 +448,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -506,7 +506,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -564,7 +564,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -616,7 +616,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -668,7 +668,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -719,7 +719,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="birthday" cc="WRONG">1990-22-12</eis:ident>
       </eis:extdata>
     </extension>
@@ -735,10 +735,10 @@ RESPONSE:
 <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2001">
-      <msg lang="en">Element '{https://epp.tld.ee/schema/eis-1.0.xsd}ident', attribute 'cc': [facet 'maxLength'] The value 'WRONG' has a length of '5'; this exceeds the allowed maximum length of '2'.</msg>
+      <msg lang="en">Element '{https://epp.tld.ee/schema/ee-1.1.xsd}ident', attribute 'cc': [facet 'maxLength'] The value 'WRONG' has a length of '5'; this exceeds the allowed maximum length of '2'.</msg>
     </result>
     <result code="2001">
-      <msg lang="en">Element '{https://epp.tld.ee/schema/eis-1.0.xsd}ident', attribute 'cc': 'WRONG' is not a valid value of the atomic type '{https://epp.tld.ee/schema/eis-1.0.xsd}ccType'.</msg>
+      <msg lang="en">Element '{https://epp.tld.ee/schema/ee-1.1.xsd}ident', attribute 'cc': 'WRONG' is not a valid value of the atomic type '{https://epp.tld.ee/schema/ee-1.1.xsd}ccType'.</msg>
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
@@ -772,7 +772,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="birthday">1990-22-12</eis:ident>
       </eis:extdata>
     </extension>
@@ -788,7 +788,7 @@ RESPONSE:
 <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2001">
-      <msg lang="en">Element '{https://epp.tld.ee/schema/eis-1.0.xsd}ident': The attribute 'cc' is required but missing.</msg>
+      <msg lang="en">Element '{https://epp.tld.ee/schema/ee-1.1.xsd}ident': The attribute 'cc' is required but missing.</msg>
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
@@ -822,7 +822,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident>1990-22-12</eis:ident>
       </eis:extdata>
     </extension>
@@ -838,10 +838,10 @@ RESPONSE:
 <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
   <response>
     <result code="2001">
-      <msg lang="en">Element '{https://epp.tld.ee/schema/eis-1.0.xsd}ident': The attribute 'type' is required but missing.</msg>
+      <msg lang="en">Element '{https://epp.tld.ee/schema/ee-1.1.xsd}ident': The attribute 'type' is required but missing.</msg>
     </result>
     <result code="2001">
-      <msg lang="en">Element '{https://epp.tld.ee/schema/eis-1.0.xsd}ident': The attribute 'cc' is required but missing.</msg>
+      <msg lang="en">Element '{https://epp.tld.ee/schema/ee-1.1.xsd}ident': The attribute 'cc' is required but missing.</msg>
     </result>
     <trID>
       <clTRID>ABC-12345</clTRID>
@@ -876,7 +876,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -934,7 +934,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -992,7 +992,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -1050,7 +1050,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -1108,7 +1108,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -1165,7 +1165,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -1222,7 +1222,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -1280,7 +1280,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -1332,7 +1332,7 @@ REQUEST:
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -1416,7 +1416,7 @@ REQUEST:
       </contact:update>
     </update>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -1469,7 +1469,7 @@ REQUEST:
       </contact:update>
     </update>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -1569,7 +1569,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -1617,7 +1617,7 @@ REQUEST:
       </contact:update>
     </update>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -1669,7 +1669,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -1717,7 +1717,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -1801,7 +1801,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -1851,7 +1851,7 @@ REQUEST:
       </contact:update>
     </update>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -1904,7 +1904,7 @@ REQUEST:
       </contact:update>
     </update>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -1955,7 +1955,7 @@ REQUEST:
       </contact:update>
     </update>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -2005,7 +2005,7 @@ REQUEST:
       </contact:update>
     </update>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="birthday" cc="US">1990-22-12</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -2057,7 +2057,7 @@ REQUEST:
       </contact:update>
     </update>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -2108,7 +2108,7 @@ REQUEST:
       </contact:update>
     </update>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -2486,7 +2486,7 @@ REQUEST:
       </contact:delete>
     </delete>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -2533,7 +2533,7 @@ REQUEST:
       </contact:delete>
     </delete>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -2577,7 +2577,7 @@ REQUEST:
       </contact:delete>
     </delete>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -2656,7 +2656,7 @@ REQUEST:
       </contact:delete>
     </delete>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -2705,7 +2705,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -2746,7 +2746,7 @@ REQUEST:
       </contact:delete>
     </delete>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -2793,7 +2793,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -2841,7 +2841,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -2920,7 +2920,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -2968,7 +2968,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -3009,7 +3009,7 @@ REQUEST:
       </contact:delete>
     </delete>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
@@ -3056,7 +3056,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -3339,7 +3339,7 @@ RESPONSE:
       </contact:infData>
     </resData>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
       </eis:extdata>
     </extension>
@@ -3407,7 +3407,7 @@ RESPONSE:
       </contact:infData>
     </resData>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
       </eis:extdata>
     </extension>
@@ -3475,7 +3475,7 @@ RESPONSE:
       </contact:infData>
     </resData>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
       </eis:extdata>
     </extension>
@@ -3543,7 +3543,7 @@ RESPONSE:
       </contact:infData>
     </resData>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
       </eis:extdata>
     </extension>
@@ -3611,7 +3611,7 @@ RESPONSE:
       </contact:infData>
     </resData>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
       </eis:extdata>
     </extension>
@@ -3645,7 +3645,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -3725,7 +3725,7 @@ RESPONSE:
       </contact:infData>
     </resData>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:ident type="priv" cc="EE">37605030299</eis:ident>
       </eis:extdata>
     </extension>
@@ -3757,7 +3757,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -3805,7 +3805,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -3887,7 +3887,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -3935,7 +3935,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -4030,7 +4030,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -4076,7 +4076,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -4139,7 +4139,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -4202,7 +4202,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -4318,7 +4318,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -4380,7 +4380,7 @@ REQUEST:
       </domain:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -4453,7 +4453,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -4521,7 +4521,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -4584,7 +4584,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -4647,7 +4647,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -4708,7 +4708,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
         <eis:reserved>
           <eis:pw>wrong_pw</eis:pw>
@@ -4774,7 +4774,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
         <eis:reserved>
           <eis:pw>abc</eis:pw>
@@ -4847,7 +4847,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -4909,7 +4909,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -4962,7 +4962,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5062,7 +5062,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5123,7 +5123,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5189,7 +5189,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5247,7 +5247,7 @@ REQUEST:
       </domain:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5312,7 +5312,7 @@ REQUEST:
       </domain:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5384,7 +5384,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5454,7 +5454,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5524,7 +5524,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5593,7 +5593,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5663,7 +5663,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5729,7 +5729,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5793,7 +5793,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5871,7 +5871,7 @@ REQUEST:
           <secDNS:pubKey>841936717ae427ace63c28d04918569a841936717ae427ace63c28d0</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -5953,7 +5953,7 @@ REQUEST:
           <secDNS:pubKey/>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -6029,7 +6029,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAbuFiHS4jZL7ZQKvEPBmsbceNHTVYpEVMdxz2A6YCjlZTEoAH3qK</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -6131,7 +6131,7 @@ REQUEST:
           <secDNS:pubKey>700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -6203,7 +6203,7 @@ REQUEST:
           <secDNS:pubKey>700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -6266,7 +6266,7 @@ REQUEST:
           <secDNS:digest>49FD46E6C4B45C55D4AC</secDNS:digest>
         </secDNS:dsData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -6342,7 +6342,7 @@ REQUEST:
           </secDNS:keyData>
         </secDNS:dsData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -6418,7 +6418,7 @@ REQUEST:
           </secDNS:keyData>
         </secDNS:dsData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -6481,7 +6481,7 @@ REQUEST:
           <secDNS:pubKey>700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -6550,7 +6550,7 @@ REQUEST:
           <secDNS:pubKey>700b97b591ed27ec2590d19f06f88bba700b97b591ed27ec2590d19f</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -6611,7 +6611,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -6679,7 +6679,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -6740,7 +6740,7 @@ REQUEST:
           <secDNS:pubKey>AwEAAddt2AkLfYGKgiEZB5SmIF8EvrjxNMH6HtxWEA4RJ9Ao6LCWheg8</secDNS:pubKey>
         </secDNS:keyData>
       </secDNS:create>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -6791,7 +6791,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -6832,7 +6832,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -6889,7 +6889,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7011,7 +7011,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7052,7 +7052,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -7109,7 +7109,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7155,7 +7155,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7196,7 +7196,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -7242,7 +7242,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7290,7 +7290,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7383,7 +7383,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7431,7 +7431,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7524,7 +7524,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7572,7 +7572,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7665,7 +7665,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7713,7 +7713,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7806,7 +7806,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7854,7 +7854,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7947,7 +7947,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -7995,7 +7995,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -8088,7 +8088,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -8136,7 +8136,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -8229,7 +8229,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -8277,7 +8277,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -8370,7 +8370,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -8418,7 +8418,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -8497,7 +8497,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -8540,7 +8540,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -8599,7 +8599,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -8640,7 +8640,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -8686,7 +8686,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -8727,7 +8727,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -8786,7 +8786,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -8827,7 +8827,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -8873,7 +8873,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -8916,7 +8916,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -8959,7 +8959,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -9045,7 +9045,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -9086,7 +9086,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -9138,7 +9138,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -9184,7 +9184,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -9227,7 +9227,7 @@ REQUEST:
       </domain:transfer>
     </transfer>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -9351,7 +9351,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -9437,7 +9437,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -9481,7 +9481,7 @@ REQUEST:
     </update>
     <extension>
       <secDNS:update xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1"/>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -9525,7 +9525,7 @@ REQUEST:
     </update>
     <extension>
       <secDNS:update xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1"/>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -9622,7 +9622,7 @@ REQUEST:
     </update>
     <extension>
       <secDNS:update xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1"/>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -9666,7 +9666,7 @@ REQUEST:
     </update>
     <extension>
       <secDNS:update xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1"/>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -9710,7 +9710,7 @@ REQUEST:
     </update>
     <extension>
       <secDNS:update xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1"/>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -9754,7 +9754,7 @@ REQUEST:
     </update>
     <extension>
       <secDNS:update xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1"/>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -10050,7 +10050,7 @@ REQUEST:
           </secDNS:keyData>
         </secDNS:add>
       </secDNS:update>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -10123,7 +10123,7 @@ REQUEST:
           </secDNS:keyData>
         </secDNS:add>
       </secDNS:update>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -11231,7 +11231,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -11312,7 +11312,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -11943,7 +11943,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -12023,7 +12023,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -12071,7 +12071,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -12176,7 +12176,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -12224,7 +12224,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -12335,7 +12335,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -12375,7 +12375,7 @@ REQUEST:
       </domain:delete>
     </delete>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -12415,7 +12415,7 @@ REQUEST:
       </domain:delete>
     </delete>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -12455,7 +12455,7 @@ REQUEST:
       </domain:delete>
     </delete>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
       </eis:extdata>
     </extension>
@@ -12753,7 +12753,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -12996,7 +12996,7 @@ REQUEST:
         <ext:relative>P1D</ext:relative>
       </ext:expiry>
     </ext:keyrelay>
-    <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+    <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
       <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
     </eis:extdata>
     <ext:clTRID>1441791743</ext:clTRID>
@@ -13047,7 +13047,7 @@ REQUEST:
         <ext:relative>P1D</ext:relative>
       </ext:expiry>
     </ext:keyrelay>
-    <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+    <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
       <eis:legalDocument type="jpg">dGVzdCBmYWlsCg==</eis:legalDocument>
     </eis:extdata>
     <ext:clTRID>1441791744</ext:clTRID>
@@ -13092,7 +13092,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -13171,7 +13171,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -13246,7 +13246,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -13325,7 +13325,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -13403,7 +13403,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -13764,7 +13764,7 @@ RESPONSE:
       <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
       <svcExtension>
         <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-        <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+        <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
       </svcExtension>
     </svcMenu>
     <dcp>
@@ -13810,7 +13810,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -13858,7 +13858,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -13941,7 +13941,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -13987,7 +13987,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -14035,7 +14035,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -14083,7 +14083,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -14129,7 +14129,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -14177,7 +14177,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -14255,7 +14255,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>
@@ -14304,7 +14304,7 @@ REQUEST:
         <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
         <svcExtension>
           <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-          <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+          <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
         </svcExtension>
       </svcs>
     </login>

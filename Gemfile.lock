@@ -18,9 +18,10 @@ GIT
 
 GIT
   remote: https://github.com/internetee/epp-xml.git
-  revision: 5dd542e67ef26d58365f30e553254d6db809277d
+  revision: e483de16c06856a2d0dfe29aef74ddcbc901704b
+  branch: epp-xml-6
   specs:
-    epp-xml (1.1.0)
+    epp-xml (2.0.0)
       activesupport (~> 4.1)
       builder (~> 3.2)
 
@@ -594,7 +595,7 @@ DEPENDENCIES
   devise (= 3.5.4)
   digidoc_client (= 0.2.1)
   epp (= 1.5.0)!
-  epp-xml (= 1.1.0)!
+  epp-xml!
   fabrication (= 2.13.2)
   factory_girl_rails
   figaro (= 1.1.1)
