@@ -408,7 +408,6 @@ en:
 
   users: 'Users'
   create_new_user: 'Create new user'
-  admin: 'Admin'
   user_details: 'User details'
   edit_user: 'Edit user'
   back_to_user: 'Back to user'
@@ -459,11 +458,9 @@ en:
   ds_digest_type: 'DS digest type'
   zonefile_settings: 'Zonefile settings'
   background_jobs: Background jobs
-  domain_history: Domain history
   domains_history: Domains history
   admin_users: Admin users
   role: 'Role'
-  admin: 'Administrator'
   user: 'User'
   customer_service: 'Customer service'
   keyrelays: 'Keyrelays'
@@ -850,7 +847,6 @@ en:
   webserver_missing_client_cert_directive: 'Webserver missing client cert directive'
   webserver_client_cert_directive_should_be_required: 'Webserver client cert directive should be required'
   tech: Tech contact
-  admin: Admin contact
   pricelists: Pricelists
   new_pricelist: New Pricelist
   valid: Valid

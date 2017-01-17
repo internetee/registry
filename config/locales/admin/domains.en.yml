@@ -1,0 +1,6 @@
+en:
+  admin:
+    domains:
+      versions:
+        time: Time
+        admin_contact: Admin contact

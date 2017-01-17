@@ -14,9 +14,9 @@
           = t(:settings)
           %span.caret
         %ul.dropdown-menu{role: "menu"}
-          %li.dropdown-header= t(:users)
-          %li= link_to t(:api_users), admin_api_users_path
-          %li= link_to t(:admin_users), admin_admin_users_path
+          %li.dropdown-header= t('.users')
+          %li= link_to t('.api_users'), admin_api_users_path
+          %li= link_to t('.admin_users'), admin_admin_users_path
           %li.divider
           %li.dropdown-header= t(:billing)
           - if can? :view, Pricelist
@@ -25,9 +25,9 @@
           %li= link_to t(:invoices), admin_invoices_path
           %li= link_to t(:account_activities), admin_account_activities_path(created_after: 'today')
           %li.divider
-          %li.dropdown-header= t(:archive)
-          %li= link_to t(:domains_history), admin_domain_versions_path
-          %li= link_to t(:contacts_history), admin_contact_versions_path
+          %li.dropdown-header= t('.archive')
+          %li= link_to t('.domain_history'), admin_domain_versions_path
+          %li= link_to t('.contact_history'), admin_contact_versions_path
           %li.divider
           %li.dropdown-header= t(:system)
           %li= link_to t(:settings), admin_settings_path
@@ -37,7 +37,7 @@
           %li= link_to t(:mail_templates), admin_mail_templates_path
           %li= link_to t(:epp_logs), admin_epp_logs_path(created_after: 'today')
           %li= link_to t(:repp_logs), admin_repp_logs_path(created_after: 'today')
-          %li= link_to t(:que), '/admin/que'
+          %li= link_to t('.que'), '/admin/que'
 
   - if signed_in?
     %ul.nav.navbar-nav.navbar-right
