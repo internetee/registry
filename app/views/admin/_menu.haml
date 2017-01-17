@@ -1,0 +1,44 @@
+.navbar-collapse.collapse
+  %ul.nav.navbar-nav
+    - if can? :show, Domain
+      %li= link_to t(:domains), admin_domains_path
+    - if can? :show, Contact
+      %li= link_to t(:contacts), admin_contacts_path
+    - if can? :show, Registrar
+      %li= link_to t(:registrars), admin_registrars_path
+    - if can? :show, Keyrelay
+      %li= link_to t(:keyrelays), admin_keyrelays_path
+    - if can?(:access, :settings_menu)
+      %li.dropdown
+        %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
+          = t(:settings)
+          %span.caret
+        %ul.dropdown-menu{role: "menu"}
+          %li.dropdown-header= t(:users)
+          %li= link_to t(:api_users), admin_api_users_path
+          %li= link_to t(:admin_users), admin_admin_users_path
+          %li.divider
+          %li.dropdown-header= t(:billing)
+          - if can? :view, Pricelist
+            %li= link_to t(:pricelists), admin_pricelists_path
+          %li= link_to t(:bank_statements), admin_bank_statements_path
+          %li= link_to t(:invoices), admin_invoices_path
+          %li= link_to t(:account_activities), admin_account_activities_path(created_after: 'today')
+          %li.divider
+          %li.dropdown-header= t(:archive)
+          %li= link_to t(:domains_history), admin_domain_versions_path
+          %li= link_to t(:contacts_history), admin_contact_versions_path
+          %li.divider
+          %li.dropdown-header= t(:system)
+          %li= link_to t(:settings), admin_settings_path
+          %li= link_to t(:zonefile), admin_zonefile_settings_path
+          %li= link_to t(:blocked_domains), admin_blocked_domains_path
+          %li= link_to t(:reserved_domains), admin_reserved_domains_path
+          %li= link_to t(:mail_templates), admin_mail_templates_path
+          %li= link_to t(:epp_logs), admin_epp_logs_path(created_after: 'today')
+          %li= link_to t(:repp_logs), admin_repp_logs_path(created_after: 'today')
+          %li= link_to t(:que), '/admin/que'
+
+  - if signed_in?
+    %ul.nav.navbar-nav.navbar-right
+      %li= link_to t(:log_out, user: current_user), '/admin/logout'
