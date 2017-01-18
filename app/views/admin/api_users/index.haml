@@ -1,6 +1,6 @@
 - content_for :actions do
-  = link_to(t(:create_new_api_user), new_admin_api_user_path, class: 'btn btn-primary')
-= render 'shared/title', name: t(:api_users)
+  = link_to(t('.new_btn'), new_admin_api_user_path, class: 'btn btn-primary')
+= render 'shared/title', name: t('.title')
 
 .row
   .col-md-12
@@ -13,7 +13,7 @@
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'registrar_name', t(:registrar_name))
             %th{class: 'col-xs-2'}
-              = sort_link(@q, 'active', t(:active))
+              = sort_link(@q, 'active', t('.active'))
         %tbody
           - @api_users.each do |x|
             %tr

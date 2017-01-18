@@ -1,0 +1,15 @@
+en:
+  admin:
+    domains:
+      index:
+        reset_btn: Reset
+
+      versions:
+        time: Time
+        admin_contact: Admin contact
+
+      partials:
+        general:
+          outzone_time: Outzone time
+          delete_time: Delete time
+          force_delete_time: Force delete time

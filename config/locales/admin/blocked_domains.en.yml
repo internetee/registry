@@ -1,0 +1,7 @@
+en:
+  admin:
+    blocked_domains:
+      index:
+        title: Blocked domains
+        new_btn: New blocked domain
+        reset_btn: Reset

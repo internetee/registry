@@ -1,0 +1,6 @@
+en:
+  admin:
+    repp_logs:
+      index:
+        title: REPP log
+        reset_btn: Reset

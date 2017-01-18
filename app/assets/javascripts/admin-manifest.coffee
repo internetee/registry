@@ -1,6 +1,5 @@
 #= require jquery
 #= require jquery_ujs
-#= require turbolinks
 #= require bootstrap-sprockets
 #= require typeahead.bundle.min
 #= require admin/autocomplete
@@ -11,6 +10,7 @@
 #= require jquery-ui/dialog
 #= require select2
 #= require jquery.doubleScroll
-#= require shared/general
 #= require admin/application
+#= require admin/combobox
+#= require admin/datepicker
 #= require admin/domains/edit/init_force_delete_dialog

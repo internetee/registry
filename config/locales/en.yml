@@ -407,13 +407,10 @@ en:
   failed_to_delete_registrar: 'Failed to delete registrar'
 
   users: 'Users'
-  create_new_user: 'Create new user'
-  admin: 'Admin'
   user_details: 'User details'
   edit_user: 'Edit user'
   back_to_user: 'Back to user'
 
-  create_new_api_user: 'Create new API user'
   certificate_signing_req: 'Certificate signing request'
   csr: 'CSR'
   crt: 'CRT'
@@ -459,11 +456,8 @@ en:
   ds_digest_type: 'DS digest type'
   zonefile_settings: 'Zonefile settings'
   background_jobs: Background jobs
-  domain_history: Domain history
   domains_history: Domains history
-  admin_users: Admin users
   role: 'Role'
-  admin: 'Administrator'
   user: 'User'
   customer_service: 'Customer service'
   keyrelays: 'Keyrelays'
@@ -484,8 +478,6 @@ en:
   action_failed_due_to_server_error: 'Action failed due to server error'
   pending_transfer_was_not_found: 'Pending transfer was not found'
   transfer_can_be_rejected_only_by_current_registrar: 'Transfer can be rejected only by current registrar'
-  epp_logs: 'EPP logs'
-  epp_log: 'EPP log'
   request_command: 'Request command'
   request_object: 'Request object'
   api_user: 'API user'
@@ -497,8 +489,6 @@ en:
   request_method: 'Request method'
   response_code: 'Response code'
   request_params: 'Request params'
-  repp_log: 'REPP log'
-  repp_logs: 'REPP logs'
   could_not_determine_object_type_check_xml_format_and_namespaces: 'Could not determine object type. Check XML format and namespaces.'
   unknown_expiry_relative_pattern: 'Expiry relative must be compatible to ISO 8601'
   unknown_expiry_absolute_pattern: 'Expiry absolute must be compatible to ISO 8601'
@@ -850,7 +840,6 @@ en:
   webserver_missing_client_cert_directive: 'Webserver missing client cert directive'
   webserver_client_cert_directive_should_be_required: 'Webserver client cert directive should be required'
   tech: Tech contact
-  admin: Admin contact
   pricelists: Pricelists
   new_pricelist: New Pricelist
   valid: Valid
@@ -884,7 +873,6 @@ en:
   registry_state: 'State / Province'
   registry_zip: 'Postcode'
   registry_country_code: 'Country'
-  blocked_domains: 'Blocked domains'
   billing_failure_credit_balance_low: 'Billing failure - credit balance low'
   create: 'Create'
   activity_type: 'Activity type'
@@ -892,7 +880,6 @@ en:
   receipt_date_until: 'Receipt date until'
   add_credit: 'Add credit'
   export_csv: 'Export CSV'
-  reserved_domains: 'Reserved domains'
   invalid_yaml: 'Invalid YAML'
   reserved_pw: 'Reserved pw'
   no_transfers_found: 'No transfers found'
