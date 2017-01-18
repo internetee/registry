@@ -1,5 +1,6 @@
 class Admin::SessionsController < Devise::SessionsController
   skip_authorization_check only: :create
+  layout 'admin/application'
 
   def login
     @admin_user = AdminUser.new
