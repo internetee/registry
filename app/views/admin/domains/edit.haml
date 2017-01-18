@@ -1,5 +1,5 @@
 - content_for :actions do
-  = link_to(t(:add_new_status), '#', class: 'btn btn-primary js-add-status')
+  = link_to(t('.add_new_status_btn'), '#', class: 'btn btn-primary js-add-status')
   - if @domain.force_deletable?
     = link_to(t(:set_force_delete), set_force_delete_admin_domain_path(@domain), 
       method: :post, data: { confirm: t(:are_you_sure) }, class: 'btn btn-warning')
