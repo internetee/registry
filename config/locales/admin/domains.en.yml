@@ -4,6 +4,9 @@ en:
       index:
         reset_btn: Reset
 
+      edit:
+        add_new_status_btn: Add new status
+
       versions:
         time: Time
         admin_contact: Admin contact
