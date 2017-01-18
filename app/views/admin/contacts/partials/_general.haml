@@ -27,13 +27,13 @@
 
       %br
 
-      %dt= t(:created)
+      %dt= t('.created')
       %dd
         = l(@contact.created_at, format: :short)
         by
         = creator_link(@contact)
 
-      %dt= t(:updated)
+      %dt= t('.updated')
       %dd
         = l(@contact.updated_at, format: :short)
         by

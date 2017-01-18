@@ -1,6 +1,6 @@
 - content_for :actions do
-  = link_to(t(:create_new_user), new_admin_admin_user_path, class: 'btn btn-primary')
-= render 'shared/title', name: t(:admin_users)
+  = link_to(t('.new_btn'), new_admin_admin_user_path, class: 'btn btn-primary')
+= render 'shared/title', name: t('.title')
 
 .row
   .col-md-12
@@ -23,7 +23,7 @@
               %td= x.email
               %td= x.identity_code
               - if x.roles
-                %td= t(x.roles.first)
+                %td= x.roles.first
               - else
                 %td
 .row
