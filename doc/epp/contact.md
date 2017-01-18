@@ -25,13 +25,14 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
         <contact:postalInfo>   1        Postal information container
           <contact:name>       1        Full name of the contact
           <contact:org>        0        Org is not supported and must be blank or missing
-          <contact:addr>       1        Address container
-            <contact:street>   1-n      Street name
+          <contact:addr>       0-1      Address container, optional
+            <contact:street>   0-3      Street name
             <contact:city>     1        City name
             <contact:sp>       0-1      State or province
-            <contact:pc>       1        Postal code
+            <contact:pc>       0-1      Postal code
             <contact:cc>       1        Country code, 2 letters uppercase, in ISO_3166-1 alpha 2
         <contact:voice>        1        Phone number in format \+ddd.d+
+        <contact:fax>          0        Fax is not supported and must be blank or missing
         <contact:email>        1        E-mail
     <extension>                1       
       <eis:extdata>            1        Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
@@ -60,12 +61,13 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
             <contact:name>      0-1      Full name of the contact
             <contact:org>       0        Org is not supported and must be blank or missing
             <contact:addr>      0-1      Address container
-              <contact:street>  0-n      Street name
-              <contact:city>    0-1      City name
+              <contact:street>  0-3      Street name
+              <contact:city>    1        City name
               <contact:sp>      0-1      State or province
               <contact:pc>      0-1      Postal code
-              <contact:cc>      0-1      Country code, 2 letters uppercase, in ISO_3166-1 alpha 2
+              <contact:cc>      1        Country code, 2 letters uppercase, in ISO_3166-1 alpha 2
           <contact:voice>       0-1      Phone number in format \+ddd.d+
+          <contact:fax>         0        Fax is not supported and must be blank or missing
           <contact:email>       0-1      E-mail
           <contact:authInfo>    0-1      Required if registrar is not the owner of the contact.
             <contact:pw>        1        Contact password. Attribute: roid="String"
