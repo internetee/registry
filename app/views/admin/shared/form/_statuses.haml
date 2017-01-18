@@ -31,16 +31,22 @@
             - value = f.object.new_record? ? '' : f.object.status_notes[s]
             = text_field_tag "#{model}[status_notes_array][]", value, class: 'form-control'
 
-:coffee
-  $("#js-statuses").nestedAttributes
-    bindAddTo: $(".js-add-status")
-    afterAdd: (el) ->
-      if el.find('.js-disabled-value')
-        el.find('.js-disabled-value').remove()
-        el.find('.js-select').show()
-        el.find('.hide-when-new').hide()
-        el.find('.js-destroy-status').show()
+:javascript
+  window.addEventListener('load', function() {
+    $("#js-statuses").nestedAttributes({
+      bindAddTo: $(".js-add-status"),
+      afterAdd: function(el) {
+        if (el.find('.js-disabled-value')) {
+          el.find('.js-disabled-value').remove();
+          el.find('.js-select').show();
+          el.find('.hide-when-new').hide();
+          return el.find('.js-destroy-status').show();
+        }
+      }
+    });
 
-  $(document).on 'click', '.js-destroy-status', (e) ->
-    e.preventDefault()
-    $(this).parents('.panel').remove()
+    $(document).on('click', '.js-destroy-status', function(e) {
+      e.preventDefault();
+      return $(this).parents('.panel').remove();
+    });
+  });
