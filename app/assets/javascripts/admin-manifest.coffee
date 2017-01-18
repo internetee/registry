@@ -9,5 +9,6 @@
 #= require jquery-ui/datepicker
 #= require select2
 #= require jquery.doubleScroll
-#= require shared/general
 #= require admin/application
+#= require admin/combobox
+#= require admin/datepicker
