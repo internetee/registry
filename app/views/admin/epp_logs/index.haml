@@ -1,4 +1,4 @@
-= render 'shared/title', name: t(:epp_logs)
+= render 'shared/title', name: t('.title')
 
 .row
   .col-md-12
@@ -41,8 +41,7 @@
             &nbsp;
             %span.glyphicon.glyphicon-search
             &nbsp;
-          %button.btn.btn-default.js-reset-form
-            = t(:clear_fields)
+          = link_to(t('.reset_btn'), admin_epp_logs_path, class: 'btn btn-default')
 .row
   .col-md-12
     %hr
@@ -70,8 +69,3 @@
 .row
   .col-md-12
     = paginate @epp_logs
-
-:coffee
-  $(".js-reset-form").on "click", (e) ->
-    e.preventDefault();
-    window.location = "#{admin_epp_logs_path}"

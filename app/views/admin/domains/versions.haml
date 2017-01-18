@@ -8,11 +8,11 @@
       %table.table.table-bordered.table-condensed
         %thead
           %tr
-            %th{class: 'col-xs-1'}= t(:timestap)
+            %th{class: 'col-xs-1'}= t('.time')
             %th{class: 'col-xs-2'}= t(:statuses)
             %th{class: 'col-xs-1'}= t(:period)
             %th{class: 'col-xs-2'}= t(:registrant)
-            %th{class: 'col-xs-2'}= t(:admin)
+            %th{class: 'col-xs-2'}= t('.admin_contact')
             %th{class: 'col-xs-2'}= t(:tech)
             %th{class: 'col-xs-2'}= t(:nameservers)
             %th{class: 'col-xs-2'}= t(:dnskeys)
@@ -36,10 +36,15 @@
               = render 'admin/domains/partials/version',
                 domain: version.reify, version: version.previous
 
-:coffee
-  $(document).on 'click', '.js-pending, .js-event', (e) ->
-    e.preventDefault()
+:javascript
+  window.addEventListener('load', function() {
+    $(document).on('click', '.js-pending, .js-event', function(e) {
+      return e.preventDefault();
+    });
 
-  $(document).on 'mousedown', '.js-pending, .js-event', (e) ->
-    target = $(e.target)
-    target.parents('tr').nextUntil('tr.small' ,'tr.' + this.className).toggle()
+    $(document).on('mousedown', '.js-pending, .js-event', function(e) {
+      var target;
+      target = $(e.target);
+      return target.parents('tr').nextUntil('tr.small', 'tr.' + this.className).toggle();
+    });
+  });

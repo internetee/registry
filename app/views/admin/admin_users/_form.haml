@@ -59,7 +59,8 @@
     .col-md-8.text-right
       = button_tag(t(:save), class: 'btn btn-warning')
 
-:coffee
-  $("#admin_user_password").removeAttr('required')
-  $("#admin_user_password_confirmation").removeAttr('required')
-
+:javascript
+  window.addEventListener('load', function() {
+    $("#admin_user_password").removeAttr('required');
+    $("#admin_user_password_confirmation").removeAttr('required');
+  });

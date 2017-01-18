@@ -1,0 +1,17 @@
+en:
+  admin:
+    contacts:
+      index:
+        reset_btn: Reset
+
+      edit:
+        new_status_btn: Add new status
+        back_btn: Back to contact
+
+      partials:
+        general:
+          created: Created
+          updated: Updated
+
+        domains:
+          roles: Roles

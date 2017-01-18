@@ -1,0 +1,7 @@
+en:
+  admin:
+    registrars:
+      show:
+        new_api_use_btn: New API user
+        active: Active
+        api_users: API users
