@@ -280,7 +280,6 @@ en:
   system: 'System'
   settings: 'Settings'
   domains: 'Domains'
-  api_users: 'API users'
   registrars: 'Registrars'
   valid_to: 'Valid to'
   name: 'Name'
