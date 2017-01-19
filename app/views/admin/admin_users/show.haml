@@ -26,6 +26,6 @@
 
           %dt= t(:role)
           - if @admin_user.roles
-            %dd= t(@admin_user.roles.first)
+            %dd= @admin_user.roles.first
           - else
             %dd
