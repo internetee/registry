@@ -6,6 +6,10 @@ en:
         title: API users
         active: Active
 
+      show:
+        active: Active
+        subject: Subject
+
       new:
         title: New API user
 
