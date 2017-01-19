@@ -11,4 +11,5 @@
 #= require select2
 #= require jquery.doubleScroll
 #= require admin/application
+#= require admin/app
 #= require_tree ./admin
