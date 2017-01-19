@@ -11,6 +11,4 @@
 #= require select2
 #= require jquery.doubleScroll
 #= require admin/application
-#= require admin/combobox
-#= require admin/datepicker
-#= require admin/domains/edit/init_force_delete_dialog
+#= require_tree ./admin
