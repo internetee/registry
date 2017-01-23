@@ -64,7 +64,7 @@ class LegalDocument < ActiveRecord::Base
 
   def self.remove_duplicates
     start = Time.zone.now.to_f
-    puts '-----> Removing legal documents duplicates'
+    Rails.logger.info '-----> Removing legal documents duplicates'
     count = 0
     modified = Array.new
 
@@ -80,7 +80,7 @@ class LegalDocument < ActiveRecord::Base
           File.delete(new_legal.path) if File.exist?(new_legal.path)
           new_legal.update(path: orig_legal.path)
           count += 1
-          puts "File #{new_legal.path} has been removed by Domain #{new_legal.documentable_id}. Document id: #{new_legal.id}"
+          Rails.logger.info "File #{new_legal.path} has been removed by Domain #{new_legal.documentable_id}. Document id: #{new_legal.id}"
         end
       end
 
@@ -104,11 +104,11 @@ class LegalDocument < ActiveRecord::Base
           File.delete(new_legal.path) if File.exist?(new_legal.path)
           new_legal.update(path: orig_legal.path)
           count += 1
-          puts "File #{new_legal.path} has been removed by Contact #{new_legal.documentable_id}. Document id: #{new_legal.id}"
+          Rails.logger.info "File #{new_legal.path} has been removed by Contact #{new_legal.documentable_id}. Document id: #{new_legal.id}"
         end
       end
     end
-    puts "-----> Duplicates fixed for #{count} rows in #{(Time.zone.now.to_f - start).round(2)} seconds"
+    Rails.logger.info "-----> Duplicates fixed for #{count} rows in #{(Time.zone.now.to_f - start).round(2)} seconds"
 
   end
 end
