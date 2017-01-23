@@ -5,15 +5,11 @@ module Concerns::Domain::ForceDelete
     alias_attribute :force_delete_time, :force_delete_at
   end
 
-  def force_deletable?
-    !statuses.include?(DomainStatus::FORCE_DELETE)
-  end
-
-  def force_delete?
+  def force_delete_scheduled?
     statuses.include?(DomainStatus::FORCE_DELETE)
   end
 
-  def set_force_delete
+  def schedule_force_delete
     self.statuses_backup = statuses
     statuses.delete(DomainStatus::CLIENT_DELETE_PROHIBITED)
     statuses.delete(DomainStatus::SERVER_DELETE_PROHIBITED)
@@ -43,7 +39,7 @@ module Concerns::Domain::ForceDelete
     save!(validate: false)
   end
 
-  def unset_force_delete
+  def cancel_force_delete
     s = []
     s << DomainStatus::EXPIRED if statuses.include?(DomainStatus::EXPIRED)
     s << DomainStatus::SERVER_HOLD if statuses.include?(DomainStatus::SERVER_HOLD)

@@ -136,7 +136,7 @@ class Domain < ActiveRecord::Base
 
   validate :check_permissions, :unless => :is_admin
   def check_permissions
-    return unless force_delete?
+    return unless force_delete_scheduled?
     errors.add(:base, I18n.t(:object_status_prohibits_operation))
     false
   end

@@ -1,17 +1,20 @@
-<% content_for :actions do %>
-    <%= link_to t('.add_new_status_btn'), '#', class: 'btn btn-primary js-add-status' %>
+<% domain = DomainPresenter.new(domain: @domain, view: self) %>
 
-    <% if @domain.force_deletable? %>
-        <%= link_to(t('.force_delete_btn'), force_delete_admin_domain_path(@domain),
-                    method: :post, data: { confirm: t(:are_you_sure) }, class: 'btn btn-warning') %>
-    <% else %>
-        <%= link_to(t('.cancel_force_delete_btn'), cancel_force_delete_admin_domain_path(@domain),
-                    method: :post, data: { confirm: t(:are_you_sure) }, class: 'btn btn-warning') %>
-    <% end %>
+<div class="row">
+    <div class="col-sm-5">
+        <h1 class="text-center-xs">
+            Edit: <%= domain.name %>
+        </h1>
+    </div>
+    <div class="col-sm-7">
+        <h1 class="text-right text-center-xs">
+            <%= link_to t('.add_new_status_btn'), '#', class: 'btn btn-primary js-add-status' %>
+            <%= domain.force_delete_toggle_btn %>
+            <%= link_to t('.back_btn'), [:admin, @domain], class: 'btn btn-default' %>
+        </h1>
+    </div>
+</div>
+<hr>
 
-    <%= link_to t(:back_to_domain), [:admin, @domain], class: 'btn btn-default' %>
-<% end %>
-
-<%= render 'shared/title', name: "#{t(:edit)}: #{@domain.name}" %>
 <%= render 'form' %>
-<%= render 'force_delete_dialog' %>
+<%= render 'force_delete_dialog', templates: force_delete_templates %>

@@ -6,7 +6,7 @@ Isikukood: <%= @registrant.id_code %>
 
 Eesti Interneti Sihtasutusele (EIS) on saanud teatavaks, et füüsiline isik isikukoodiga <%= @registrant.id_code %> on surnud  ja sellest on möödunud vähemalt 6 kuud.
 
-Domeenireeglite punktist 6.6 tulenevalt on domeeni suhtes õigust omaval registreerijal võimalus esitada domeeni <%= @domain.name %> registripidajale [Registrars.name] domeeni üleandmise taotlus Domeenireeglite p 5.3.6.2 kohaselt. Taotlusele tuleb lisada pärimisõiguse tõend, mis asendavad Domeenireeglite punktis 5.3.6.3 sätestatud üleandva registreerija nõusolekut. Vastav dokumentatsioon tuleb esitada Registripidajale <%= @redemption_grace_period %> päeva jooksul.
+Domeenireeglite punktist 6.6 tulenevalt on domeeni suhtes õigust omaval registreerijal võimalus esitada domeeni <%= @domain.name %> registripidajale <%= @registrar.name %> domeeni üleandmise taotlus Domeenireeglite p 5.3.6.2 kohaselt. Taotlusele tuleb lisada pärimisõiguse tõend, mis asendavad Domeenireeglite punktis 5.3.6.3 sätestatud üleandva registreerija nõusolekut. Vastav dokumentatsioon tuleb esitada Registripidajale <%= @redemption_grace_period %> päeva jooksul.
 
 Kuna käesoleval hetkel domeenil registreerijat pole, on EIS algatanud <%= l(@force_delete_set_date, format: :date) %> vastavalt Domeenireeglite (http://www.internet.ee/domeenid/) punktile 6.6 domeeni <%= @domain.name %> suhtes <%= @redemption_grace_period %> päeva pikkuse kustutusmenetluse. Kustutamise käigus jääb domeen internetis kättesaadavaks ja selle aja jooksul on võimalik teostada domeeni üleandmine.
 
@@ -27,7 +27,7 @@ Identification code: <%= @registrant.id_code %>
 
 EIS has learned that the natural person <%= @registrant.name %> with identification code <%= @registrant.id_code %> has been deceased and 6 months have passed from death.
 
-According to paragraph 6.6 of the Domain Regulation, the registrant holding a right to the domain name <%= @domain.name %> can submit a domain name transfer application to the registrar [Registrars.name] in accordance with paragraph 5.3.6.2 of the Domain Regulation. The application must be submitted together with succession evidence certifying the acquisition of the domain that will replace the consent of the surrendering registrant as laid down in paragraph 5.3.6.3 of the Domain Regulation. The relevant documents should be submitted to the registrar within <%= @redemption_grace_period %> day(s).
+According to paragraph 6.6 of the Domain Regulation, the registrant holding a right to the domain name <%= @domain.name %> can submit a domain name transfer application to the registrar <%= @registrar.name %> in accordance with paragraph 5.3.6.2 of the Domain Regulation. The application must be submitted together with succession evidence certifying the acquisition of the domain that will replace the consent of the surrendering registrant as laid down in paragraph 5.3.6.3 of the Domain Regulation. The relevant documents should be submitted to the registrar within <%= @redemption_grace_period %> day(s).
 
 As a deceased natural person is not the registrant of a domain, the EIS started the deletion process of <%= @domain.name %> domain on <%= l(@force_delete_set_date, format: :date) %> according to the Domain Regulation (http://www.internet.ee/en/domains/), using the <%= @redemption_grace_period %>-day delete procedure. The domain will remain available on the Internet during the delete procedure and within this time can be transferred to new registrant.
 

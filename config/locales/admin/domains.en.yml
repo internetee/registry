@@ -6,6 +6,19 @@ en:
 
       edit:
         add_new_status_btn: Add new status
+        back_btn: Back to domain
+
+      force_delete_dialog:
+        title: Force delete
+        template: Template
+        close_btn: Close dialog
+        submit_btn: Force delete domain
+
+      schedule_force_delete:
+        scheduled: Force delete procedure has been scheduled
+
+      cancel_force_delete:
+        cancelled: Force delete procedure has been cancelled
 
       versions:
         time: Time
@@ -16,3 +29,8 @@ en:
           outzone_time: Outzone time
           delete_time: Delete time
           force_delete_time: Force delete time
+
+      force_delete_toggle_btn:
+        schedule: Schedule force delete
+        cancel: Cancel force delete
+        cancel_confim: Are you sure you want cancel force delete procedure?

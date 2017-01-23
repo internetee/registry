@@ -602,7 +602,6 @@ en:
   new_domain: 'New domain'
   edit: 'Edit'
   delete: 'Delete'
-  are_you_sure: 'Are you sure?'
   renew: 'Renew'
   new: New
   renew_domain: 'Renew domain'
@@ -844,8 +843,6 @@ en:
   valid: Valid
   category: Zone
   object_is_not_eligible_for_renewal: 'Object is not eligible for renewal'
-  set_force_delete: 'Set force delete'
-  unset_force_delete: 'Unset force delete'
   domain_expiring: 'Domain expiring'
   domain_validation_rules: 'Domain validation rules'
   bank_statement_desc: 'Import file row will match only when matching following attributes: <b><br>ref number<br>payment amount<br>invoice number (the first numerical value in comment field)</b>.'
@@ -914,7 +911,7 @@ en:
   created_at_from: 'Created at from'
   created_at_until: 'Created at until'
   is_registrant: 'Is registrant'
-  force_delete_set_on_domain: 'Force delete set on domain %{domain}'
+  force_delete_set_on_domain: 'Force delete set on domain %{domain_name}'
   mail_templates: Mail Templates
   new_mail_template: New mail template
   failure: "It was not saved"
