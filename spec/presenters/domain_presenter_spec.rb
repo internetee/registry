@@ -143,7 +143,7 @@ RSpec.describe DomainPresenter do
                        view.cancel_force_delete_admin_domain_path(domain),
                        method: :patch,
                        data: { confirm: 'Are you sure you want cancel force delete procedure?' },
-                       class: 'btn btn-warning')
+                       class: 'btn btn-primary')
         expect(presenter.force_delete_toggle_btn).to eq(html)
       end
     end
