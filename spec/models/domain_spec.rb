@@ -182,98 +182,6 @@ RSpec.describe Domain do
       domain.statuses.include?(DomainStatus::SERVER_HOLD).should == false
     end
 
-    it 'should set force delete time' do
-      @domain.statuses = ['ok']
-      @domain.set_force_delete
-
-      @domain.statuses.should match_array([
-        "serverForceDelete",
-        "pendingDelete",
-        "serverManualInzone",
-        "serverRenewProhibited",
-        "serverTransferProhibited",
-        "serverUpdateProhibited"
-      ])
-
-      fda = Time.zone.now + Setting.redemption_grace_period.days
-
-      @domain.registrar.messages.count.should == 1
-      m = @domain.registrar.messages.first
-      m.body.should == "Force delete set on domain #{@domain.name}"
-
-      @domain.unset_force_delete
-
-      @domain.statuses.should == ['ok']
-
-      @domain.statuses = [
-        DomainStatus::CLIENT_DELETE_PROHIBITED,
-        DomainStatus::SERVER_DELETE_PROHIBITED,
-        DomainStatus::PENDING_UPDATE,
-        DomainStatus::PENDING_TRANSFER,
-        DomainStatus::PENDING_RENEW,
-        DomainStatus::PENDING_CREATE,
-        DomainStatus::CLIENT_HOLD,
-        DomainStatus::EXPIRED,
-        DomainStatus::SERVER_HOLD,
-        DomainStatus::DELETE_CANDIDATE
-      ]
-
-      @domain.save
-
-      @domain.set_force_delete
-
-      @domain.statuses.should match_array([
-        "clientHold",
-        "deleteCandidate",
-        "expired",
-        "serverForceDelete",
-        "pendingDelete",
-        "serverHold",
-        "serverRenewProhibited",
-        "serverTransferProhibited",
-        "serverUpdateProhibited"
-      ])
-
-      @domain.unset_force_delete
-
-      @domain.statuses.should match_array([
-        "clientDeleteProhibited",
-        "clientHold",
-        "deleteCandidate",
-        "expired",
-        "pendingCreate",
-        "pendingRenew",
-        "pendingTransfer",
-        "pendingUpdate",
-        "serverDeleteProhibited",
-        "serverHold"
-      ])
-    end
-
-    it 'should should be manual in zone and held after force delete' do
-      Setting.redemption_grace_period = 1
-
-      @domain.valid?
-      @domain.outzone_at = Time.zone.now + 1.day # before redemption grace period
-      # what should this be?
-      # @domain.server_holdable?.should be true
-      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should be false
-      @domain.statuses.include?(DomainStatus::SERVER_MANUAL_INZONE).should be false
-      @domain.set_force_delete
-      @domain.server_holdable?.should be false
-      @domain.statuses.include?(DomainStatus::SERVER_MANUAL_INZONE).should be true
-      @domain.statuses.include?(DomainStatus::SERVER_HOLD).should be false
-    end
-
-    it 'should not allow update after force delete' do
-      @domain.valid?
-      @domain.pending_update_prohibited?.should be false
-      @domain.update_prohibited?.should be false
-      @domain.set_force_delete
-      @domain.pending_update_prohibited?.should be true
-      @domain.update_prohibited?.should be true
-    end
-
     context 'with time period settings' do
       before :example do
         @save_days_to_renew = Setting.days_to_renew_domain_before_expire
@@ -302,7 +210,7 @@ RSpec.describe Domain do
 
         it 'should not allow to renew after force delete' do
           Setting.redemption_grace_period = 1
-          @domain.set_force_delete
+          @domain.schedule_force_delete
           @domain.renewable?.should be false
         end
       end
@@ -327,7 +235,7 @@ RSpec.describe Domain do
 
           it 'should not allow to renew after force delete' do
             Setting.redemption_grace_period = 1
-            @domain.set_force_delete
+            @domain.schedule_force_delete
             @domain.renewable?.should be false
           end
         end
@@ -700,7 +608,6 @@ end
 RSpec.describe Domain, db: false do
   it { is_expected.to alias_attribute(:on_hold_time, :outzone_at) }
   it { is_expected.to alias_attribute(:delete_time, :delete_at) }
-  it { is_expected.to alias_attribute(:force_delete_time, :force_delete_at) }
   it { is_expected.to alias_attribute(:outzone_time, :outzone_at) }
 
   describe 'nameserver validation', db: true do

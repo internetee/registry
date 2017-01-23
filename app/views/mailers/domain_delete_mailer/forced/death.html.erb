@@ -1,0 +1,57 @@
+<table width="600" cellspacing="0" cellpadding="0" border="0" align="center"><tbody>
+  <tr><td>
+    <table cellspacing="0" cellpadding="0" border="0" align="center" style="text-align: justify; line-height: 16px; font-size: 12px;"><tbody>
+      <tr><td>
+        <br />
+
+<p><strong>Lugupeetud domeeni <%= @domain.name %> kontaktisik</strong></p>
+<p>.ee domeeniregistrisse on domeeni <strong><%= @domain.name %></strong> kohta kantud järgmised andmed:</p>
+
+<p>Registreerija nimi: <%= @registrant.name %><br>
+Isikukood: <%= @registrant.id_code %></p>
+
+<p>Eesti Interneti Sihtasutusele (EIS) on saanud teatavaks, et füüsiline isik isikukoodiga <%= @registrant.id_code %> on surnud  ja sellest on möödunud vähemalt 6 kuud.</p>
+
+<p>Domeenireeglite punktist 6.6 tulenevalt on domeeni suhtes õigust omaval registreerijal võimalus esitada domeeni <%= @domain.name %> registripidajale <%= @registrar.name %> domeeni üleandmise taotlus Domeenireeglite p 5.3.6.2 kohaselt. Taotlusele tuleb lisada pärimisõiguse tõend, mis asendavad Domeenireeglite punktis 5.3.6.3 sätestatud üleandva registreerija nõusolekut. Vastav dokumentatsioon tuleb esitada Registripidajale <%= @redemption_grace_period %> päeva jooksul.</p>
+
+<p>Kuna käesoleval hetkel domeenil registreerijat pole, on EIS algatanud <%= l(@force_delete_set_date, format: :date) %> vastavalt Domeenireeglite (http://www.internet.ee/domeenid/) punktile 6.6 domeeni <%= @domain.name %> suhtes <%= @redemption_grace_period %> päeva pikkuse kustutusmenetluse. Kustutamise käigus jääb domeen internetis kättesaadavaks ja selle aja jooksul on võimalik teostada domeeni üleandmine.</p>
+
+<p>Kui üleandmine ei ole <%= @redemption_grace_period %> päeva jooksul toimunud, kustub domeen <%= @domain.name %> 24 tunni jooksul <%= @domain.force_delete_date %> juhuslikult valitud ajahetkel. Soovi korral on võimalik domeen pärast selle kustumist registrist “kes ees, see mees” põhimõttel uuesti registreerida.</p>
+
+<p>Lisaküsimuste korral võtke palun ühendust oma registripidajaga:</p>
+
+<%= render 'mailers/shared/registrar/registrar.et.html', registrar: @registrar %>
+
+<hr>
+
+<p><strong>Dear contact of <%= @domain.name %> domain</strong><br>
+The following details for domain name <strong><%= @domain.name %></strong> have been entered into the Estonian Internet Foundation's (EIS) domain registry:</p>
+
+<p>Registrant's name: <%= @registrant.name %><br>
+Identification code: <%= @registrant.id_code %></p>
+
+<p>EIS has learned that the natural person <%= @registrant.name %> with identification code <%= @registrant.id_code %> has been deceased and 6 months have passed from death.</p>
+
+<p>According to paragraph 6.6 of the Domain Regulation, the registrant holding a right to the domain name <%= @domain.name %> can submit a domain name transfer application to the registrar <%= @registrar.name %> in accordance with paragraph 5.3.6.2 of the Domain Regulation. The application must be submitted together with succession evidence certifying the acquisition of the domain that will replace the consent of the surrendering registrant as laid down in paragraph 5.3.6.3 of the Domain Regulation. The relevant documents should be submitted to the registrar within <%= @redemption_grace_period %> day(s).</p>
+
+<p>As a deceased natural person is not the registrant of a domain, the EIS started the deletion process of <%= @domain.name %> domain on <%= l(@force_delete_set_date, format: :date) %> according to the Domain Regulation (http://www.internet.ee/en/domains/), using the <%= @redemption_grace_period %>-day delete procedure. The domain will remain available on the Internet during the delete procedure and within this time can be transferred to new registrant.</p>
+
+<p>If the transfer has not been made in <%= @redemption_grace_period %> day(s), the domain <%= @domain.name %> will be deleted at a randomly chosen moment within 24 hours on <%= @domain.force_delete_date %>. After deletion it is possible to reregister the domain on a "first come, first served" basis.</p>
+
+<p>Should you have additional questions, please contact your registrar:</p>
+
+<%= render 'mailers/shared/registrar/registrar.en.html', registrar: @registrar %>
+
+          <br /><br />
+
+        <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center" style="text-align: justify; line-height: 16px; font-size: 12px;"><tbody>
+          <tr><td align="left" valign="top">
+            <p><strong>Lugupidamisega,<br />
+            Best Regards,</strong></p>
+            <p><i>Eesti Interneti Sihtasutus<br />
+            Estonian Internet Foundation</i></p>
+          </td><td></td></tr>
+        </tbody>
+      </table>
+    </td></tr>
+  </tbody></table></table>
