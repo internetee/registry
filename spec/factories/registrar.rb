@@ -9,5 +9,11 @@ FactoryGirl.define do
     zip 'test'
     email 'test@test.com'
     country_code 'EE'
+
+    factory :registrar_with_unlimited_balance do
+      after :create do |registrar|
+        create(:account, registrar: registrar, balance: 1_000_000)
+      end
+    end
   end
 end
