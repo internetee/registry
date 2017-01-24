@@ -10,5 +10,10 @@ FactoryGirl.define do
       domain.admin_domain_contacts << FactoryGirl.build(:admin_domain_contact)
       domain.tech_domain_contacts << FactoryGirl.build(:tech_domain_contact)
     end
+
+    factory :domain_without_force_delete do
+      force_delete_time nil
+      statuses []
+    end
   end
 end

@@ -1,0 +1,8 @@
+en:
+  admin:
+    admin_users:
+      index:
+        title: Admin users
+        new_btn: New admin user
+      new:
+        title: New admin user

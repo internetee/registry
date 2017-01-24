@@ -1,0 +1,7 @@
+en:
+  admin:
+    reserved_domains:
+      index:
+        title: Reserved domains
+        new_btn: New reserved domain
+        reset_btn: Reset

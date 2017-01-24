@@ -589,4 +589,9 @@ class Contact < ActiveRecord::Base
     return if priv?
     ident
   end
+
+  def id_code
+    return unless priv?
+    ident
+  end
 end

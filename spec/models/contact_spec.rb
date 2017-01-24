@@ -481,4 +481,18 @@ RSpec.describe Contact, db: false do
       specify { expect(reg_no).to be_nil }
     end
   end
+
+  describe '#id_code' do
+    context 'when contact is private entity' do
+      let(:contact) { FactoryGirl.build_stubbed(:contact_private_entity, ident: '1234') }
+
+      specify { expect(contact.id_code).to eq('1234') }
+    end
+
+    context 'when contact is legal entity' do
+      let(:contact) { FactoryGirl.build_stubbed(:contact_legal_entity, ident: '1234') }
+
+      specify { expect(contact.id_code).to be_nil }
+    end
+  end
 end

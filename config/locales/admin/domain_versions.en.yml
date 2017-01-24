@@ -1,0 +1,5 @@
+en:
+  admin:
+    domain_versions:
+      archive:
+        reset_btn: Reset
