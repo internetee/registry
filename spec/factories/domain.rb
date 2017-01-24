@@ -15,5 +15,9 @@ FactoryGirl.define do
       force_delete_time nil
       statuses []
     end
+
+    factory :domain_discarded do
+      statuses [DomainStatus::DELETE_CANDIDATE]
+    end
   end
 end
