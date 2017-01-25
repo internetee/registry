@@ -35,7 +35,7 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
         <contact:fax>          0        Fax is not supported and must be blank or missing
         <contact:email>        1        E-mail
     <extension>                1       
-      <eis:extdata>            1        Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
+      <eis:extdata>            1        Attribute: xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd"
         <eis:ident>            1        Contact identificator 
                                           Attribute: "type"
                                             "org"          # Business registry code
@@ -44,7 +44,7 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
                                           Attribute: "cc"
                                             "EE"           # Country code in ISO_3166-1 aplha 2
         <eis:legalDocument>    0-1      Base64 encoded document 
-                                          Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
+                                          Attribute: type="pdf/bdoc/zip/rar/gz/tar/7z"
     <clTRID>                   0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-create-command-successfully-creates-a-contact)
@@ -72,7 +72,7 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
           <contact:authInfo>    0-1      Required if registrar is not the owner of the contact.
             <contact:pw>        1        Contact password. Attribute: roid="String"
     <extension>                 0-1       
-      <eis:extdata>             0-1      Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
+      <eis:extdata>             0-1      Attribute: xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd"
         <eis:ident>             0-1      Contact identificator 
                                           Attribute: "type"
                                             "org"          # Business registry code
@@ -81,7 +81,7 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
                                           Attribute: "cc"
                                             "EE"           # Country code in ISO_3166-1 aplha 2
         <eis:legalDocument>     0-1      Base64 encoded document. 
-                                           Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
+                                           Attribute: type="pdf/bdoc/zip/rar/gz/tar/7z"
     <clTRID>                    0-1      Client transaction id
 
 
@@ -97,9 +97,9 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
         <contact:authInfo>    0-1      Required if registrar is not the owner of the contact.
           <contact:pw>        1        Contact password. Attribute: roid="String"
     <extension>               0-1       
-      <eis:extdata>           0-1      Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
+      <eis:extdata>           0-1      Attribute: xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd"
         <eis:legalDocument>   0-1      Base64 encoded document. 
-                                         Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
+                                         Attribute: type="pdf/bdoc/zip/rar/gz/tar/7z"
     <clTRID>                  0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-delete-command-deletes-contact)

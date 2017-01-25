@@ -25,7 +25,7 @@
       </contact:update>
     </update>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
         <eis:legalDocument type="pdf">
           dGVzdCBmYWlsCg==
         </eis:legalDocument>

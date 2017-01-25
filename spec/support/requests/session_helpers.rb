@@ -18,7 +18,7 @@ module Requests
               <objURI>urn:ietf:params:xml:ns:keyrelay-1.0</objURI>
               <svcExtension>
                 <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
-                <extURI>https://epp.tld.ee/schema/eis-1.0.xsd</extURI>
+                <extURI>https://epp.tld.ee/schema/ee-1.1.xsd</extURI>
               </svcExtension>
             </svcs>
           </login>
