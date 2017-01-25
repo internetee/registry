@@ -472,6 +472,9 @@ class Epp::Domain < Domain
   # rubocop: disable Metrics/CyclomaticComplexity
   def update(frame, current_user, verify = true)
     return super if frame.blank?
+
+    check_discarded
+
     at = {}.with_indifferent_access
     at.deep_merge!(attrs_from(frame.css('chg'), current_user, 'chg'))
     at.deep_merge!(attrs_from(frame.css('rem'), current_user, 'rem'))
@@ -563,6 +566,8 @@ class Epp::Domain < Domain
   def epp_destroy(frame, user_id)
     return false unless valid?
 
+    check_discarded
+
     if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
       frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
     end
@@ -629,6 +634,8 @@ class Epp::Domain < Domain
 
   # rubocop: disable Metrics/CyclomaticComplexity
   def transfer(frame, action, current_user)
+    check_discarded
+
     @is_transfer = true
 
     case action
@@ -923,6 +930,17 @@ class Epp::Domain < Domain
       end
 
       res
+    end
+  end
+
+  private
+
+  def check_discarded
+    if discarded?
+      throw :epp_error, {
+        code: '2105',
+        msg: I18n.t(:object_is_not_eligible_for_renewal),
+      }
     end
   end
 end
