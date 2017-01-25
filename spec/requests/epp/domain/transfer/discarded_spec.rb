@@ -18,10 +18,6 @@ RSpec.describe 'EPP domain:transfer' do
   XML
   }
 
-  subject(:response_xml) { Nokogiri::XML(response.body) }
-  subject(:response_code) { response_xml.xpath('//xmlns:result').first['code'] }
-  subject(:response_description) { response_xml.css('result msg').text }
-
   before :example do
     sign_in_to_epp_area
   end
@@ -31,7 +27,7 @@ RSpec.describe 'EPP domain:transfer' do
 
     it 'returns epp code of 1000' do
       post '/epp/command/transfer', frame: request_xml
-      expect(response_code).to eq('1000'), "Expected EPP code of 1000, got #{response_code} (#{response_description})"
+      expect(response).to have_code_of(1000)
     end
   end
 
@@ -40,7 +36,7 @@ RSpec.describe 'EPP domain:transfer' do
 
     it 'returns epp code of 2105' do
       post '/epp/command/transfer', frame: request_xml
-      expect(response_code).to eq('2105'), "Expected EPP code of 2105, got #{response_code} (#{response_description})"
+      expect(response).to have_code_of(2105)
     end
   end
 end
