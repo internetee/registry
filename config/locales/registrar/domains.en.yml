@@ -2,7 +2,7 @@ en:
   registrar:
     domains:
       index:
-        export_csv_btn: Export CSV
+        download_btn: Download
         csv:
           domain_name: Domain
           registrant_name: Registrant name
