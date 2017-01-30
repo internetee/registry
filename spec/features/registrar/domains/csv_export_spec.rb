@@ -9,6 +9,6 @@ RSpec.feature 'CSV Export' do
 
   scenario 'exports csv' do
     visit registrar_domains_url
-    click_button t('registrar.domains.index.export_csv_btn')
+    click_link_or_button 'Download'
   end
 end
