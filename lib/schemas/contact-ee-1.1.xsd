@@ -12,7 +12,7 @@
    -->
     <import namespace="urn:ietf:params:xml:ns:eppcom-1.0"/>
     <import namespace="https://epp.tld.ee/schema/epp-ee-1.0.xsd"/>
-    <import namespace="https://epp.tld.ee/schema/ee-1.1.xsd"/>
+    <import namespace="https://epp.tld.ee/schema/eis-1.0.xsd"/>
 
     <annotation>
       <documentation>

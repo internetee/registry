@@ -20,7 +20,7 @@
       </contact:create>
     </create>
     <extension>
-      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/ee-1.1.xsd">
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
         <eis:ident type="org" cc="EE">123</eis:ident>
         <eis:legalDocument type="pdf">
           dGVzdCBmYWlsCg==

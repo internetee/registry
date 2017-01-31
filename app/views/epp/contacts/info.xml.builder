@@ -80,7 +80,7 @@ xml.epp_head do
     end
     if can? :view_full_info, @contact, @password
       xml.tag!('extension') do
-        xml.tag!('eis:extdata', 'xmlns:eis' => 'https://epp.tld.ee/schema/ee-1.1.xsd') do
+        xml.tag!('eis:extdata', 'xmlns:eis' => 'https://epp.tld.ee/schema/eis-1.0.xsd') do
           xml.tag!('eis:ident', @contact.ident,
                    type: @contact.ident_type, cc: @contact.ident_country_code)
         end
