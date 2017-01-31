@@ -11,6 +11,7 @@ RSpec.describe RegistrantPresenter do
     priv?
     street
     city
+    id_code
   )
 
   registrant_delegate_attributes.each do |attribute_name|

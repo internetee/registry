@@ -11,12 +11,16 @@ class ApiUser < User
     }
   end
 
+  def self.min_password_length # Must precede .validates
+    6
+  end
+
   # TODO: should have max request limit per day?
   belongs_to :registrar
   has_many :certificates
 
   validates :username, :password, :registrar, :roles, presence: true
-  validates :password, length: { minimum: 6 }
+  validates :password, length: { minimum: min_password_length }
   validates :username, uniqueness: true
 
   # TODO: probably cache, because it's requested on every EPP

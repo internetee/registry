@@ -34,6 +34,8 @@ RSpec.configure do |config|
   config.include AbstractController::Translation, type: :feature
   config.include Requests::EPPHelpers, epp: true
 
+  config.include Requests::EPPHelpers, epp: true
+
   config.define_derived_metadata(file_path: %r[/spec/features/]) do |metadata|
     metadata[:db] = true if metadata[:db].nil?
   end
@@ -48,6 +50,10 @@ RSpec.configure do |config|
 
   config.define_derived_metadata(file_path: %r[/spec/requests/]) do |metadata|
     metadata[:db] = true if metadata[:db].nil?
+  end
+
+  config.define_derived_metadata(file_path: %r[/spec/requests/epp/]) do |metadata|
+    metadata[:epp] = true if metadata[:epp].nil?
   end
 
   config.define_derived_metadata(file_path: %r[/spec/api/]) do |metadata|

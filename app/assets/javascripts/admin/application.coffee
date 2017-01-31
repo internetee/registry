@@ -1,4 +1,4 @@
-$(document).on 'page:change', ->
+$(window).load ->
   $('.selectize').selectize({
     allowEmptyOption: true
   })
@@ -6,22 +6,11 @@ $(document).on 'page:change', ->
     allowEmptyOption: true, create: true
   })
 
-  $('.js-datepicker').datepicker({
-    showAnim: "",
-    autoclose: true,
-    dateFormat: "dd.mm.yy",
-    changeMonth: true,
-    changeYear: true
-  })
-
   # client side validate all forms
   $('form').each ->
     $(this).validate()
-  
+
   $('[data-toggle="popover"]').popover()
-
-
-
 
   # doublescroll
   $('[data-doublescroll]').doubleScroll({
@@ -50,4 +39,3 @@ $(document).on 'page:change', ->
   $(window).scroll(positionSlider).resize positionSlider
   #due .report-table width: auto top scrollbar appears after resize so we do fake resize action
   $(window).resize()
-

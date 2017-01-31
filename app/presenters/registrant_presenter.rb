@@ -1,5 +1,5 @@
 class RegistrantPresenter
-  delegate :name, :ident, :email, :priv?, :street, :city, to: :registrant
+  delegate :name, :ident, :email, :priv?, :street, :city, :id_code, to: :registrant
 
   def initialize(registrant:, view:)
     @registrant = registrant

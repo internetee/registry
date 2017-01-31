@@ -1,0 +1,5 @@
+en:
+  admin:
+    account_activities:
+      index:
+        reset_btn: Reset

@@ -114,11 +114,46 @@ RSpec.describe DomainPresenter do
     end
   end
 
+  describe '#force_delete_toggle_btn' do
+    let(:domain) { build_stubbed(:domain) }
+
+    context 'when force delete is not scheduled' do
+      before :example do
+        expect(domain).to receive(:force_delete_scheduled?).and_return(false)
+      end
+
+      it 'returns schedule button' do
+        html = view.content_tag(:a, 'Schedule force delete',
+                                class: 'btn btn-danger',
+                                data: {
+                                  toggle: 'modal',
+                                  target: '.domain-edit-force-delete-dialog',
+                                })
+        expect(presenter.force_delete_toggle_btn).to eq(html)
+      end
+    end
+
+    context 'when force delete is scheduled' do
+      before :example do
+        expect(domain).to receive(:force_delete_scheduled?).and_return(true)
+      end
+
+      it 'returns cancel button' do
+        html = link_to('Cancel force delete',
+                       view.cancel_force_delete_admin_domain_path(domain),
+                       method: :patch,
+                       data: { confirm: 'Are you sure you want cancel force delete procedure?' },
+                       class: 'btn btn-primary')
+        expect(presenter.force_delete_toggle_btn).to eq(html)
+      end
+    end
+  end
 
   domain_delegatable_attributes = %i(
     name
     registrant_name
     registrant_id
+    registrant_code
   )
 
   domain_delegatable_attributes.each do |attribute_name|

@@ -48,12 +48,16 @@ RSpec.describe DomainDeleteMailer do
 
   describe '#forced' do
     let(:domain) { instance_spy(Domain, name: 'test.com') }
+    let(:registrant) { instance_spy(Registrant) }
+    let(:template_name) { 'removed_company' }
+
     let(:domain_presenter) { instance_spy(DomainPresenter) }
     let(:registrar_presenter) { instance_spy(RegistrarPresenter) }
     let(:registrant_presenter) { instance_spy(RegistrantPresenter) }
     subject(:message) { described_class.forced(domain: domain,
                                                registrar: 'registrar',
-                                               registrant: 'registrant')
+                                               registrant: registrant,
+                                               template_name: template_name)
     }
 
     before :example do
@@ -75,8 +79,28 @@ RSpec.describe DomainDeleteMailer do
       expect(message.subject).to eq('Kustutusmenetluse teade')
     end
 
-    it 'sends message' do
-      expect { message.deliver_now }.to change { ActionMailer::Base.deliveries.count }.by(1)
+    context 'when template is :death' do
+      let(:template_name) { 'death' }
+
+      it 'sends message' do
+        expect { message.deliver_now }.to change { ActionMailer::Base.deliveries.count }.by(1)
+      end
+    end
+
+    context 'when registrant is private entity' do
+      let(:registrant) { build_stubbed(:registrant_private_entity) }
+
+      it 'sends message' do
+        expect { message.deliver_now }.to change { ActionMailer::Base.deliveries.count }.by(1)
+      end
+    end
+
+    context 'when registrant is legal entity' do
+      let(:registrant) { build_stubbed(:registrant_legal_entity) }
+
+      it 'sends message' do
+        expect { message.deliver_now }.to change { ActionMailer::Base.deliveries.count }.by(1)
+      end
     end
   end
 end

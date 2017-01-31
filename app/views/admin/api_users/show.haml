@@ -29,7 +29,7 @@
           %dt= t(:role)
           %dd= @api_user.roles.join(', ')
 
-          %dt= t(:active)
+          %dt= t('.active')
           %dd= @api_user.active
 .row
   .col-md-12
@@ -47,7 +47,7 @@
         %table.table.table-hover.table-bordered.table-condensed
           %thead
             %tr
-              %th{class: 'col-xs-10'}= t(:subject)
+              %th{class: 'col-xs-10'}= t('.subject')
               %th{class: 'col-xs-2'}= t(:status)
           %tbody
             - @api_user.certificates.each do |x|

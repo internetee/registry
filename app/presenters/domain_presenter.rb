@@ -1,5 +1,5 @@
 class DomainPresenter
-  delegate :name, :registrant_name, :registrant_id, to: :domain
+  delegate :name, :registrant_name, :registrant_id, :registrant_code, to: :domain
 
   def initialize(domain:, view:)
     @domain = domain
@@ -36,6 +36,24 @@ class DomainPresenter
 
   def nameserver_names
     domain.nameserver_hostnames.join(', ')
+  end
+
+  def force_delete_toggle_btn
+    if !domain.force_delete_scheduled?
+      view.content_tag(:a, view.t('admin.domains.force_delete_toggle_btn.schedule'),
+                       class: 'btn btn-danger',
+                       data: {
+                         toggle: 'modal',
+                         target: '.domain-edit-force-delete-dialog',
+                       }
+      )
+    else
+      view.link_to(view.t('admin.domains.force_delete_toggle_btn.cancel'),
+                   view.cancel_force_delete_admin_domain_path(domain),
+                   method: :patch,
+                   data: { confirm: view.t('admin.domains.force_delete_toggle_btn.cancel_confim') },
+                   class: 'btn btn-primary')
+    end
   end
 
   private

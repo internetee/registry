@@ -1,0 +1,20 @@
+<% domain = DomainPresenter.new(domain: @domain, view: self) %>
+
+<div class="row">
+    <div class="col-sm-5">
+        <h1 class="text-center-xs">
+            Edit: <%= domain.name %>
+        </h1>
+    </div>
+    <div class="col-sm-7">
+        <h1 class="text-right text-center-xs">
+            <%= link_to t('.add_new_status_btn'), '#', class: 'btn btn-primary js-add-status' %>
+            <%= domain.force_delete_toggle_btn %>
+            <%= link_to t('.back_btn'), [:admin, @domain], class: 'btn btn-default' %>
+        </h1>
+    </div>
+</div>
+<hr>
+
+<%= render 'form' %>
+<%= render 'force_delete_dialog', templates: force_delete_templates %>
