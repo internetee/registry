@@ -11,11 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161227193500) do
+ActiveRecord::Schema.define(version: 20170201150000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "btree_gist"
   enable_extension "hstore"
 
   create_table "account_activities", force: :cascade do |t|
@@ -1066,6 +1065,10 @@ ActiveRecord::Schema.define(version: 20161227193500) do
     t.integer  "legacy_id"
     t.string   "name"
     t.string   "password"
+  end
+
+  create_table "serial_num", id: false, force: :cascade do |t|
+    t.float "round"
   end
 
   create_table "settings", force: :cascade do |t|
