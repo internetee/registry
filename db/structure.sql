@@ -24,20 +24,6 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
--- Name: btree_gist; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS btree_gist WITH SCHEMA public;
-
-
---
--- Name: EXTENSION btree_gist; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION btree_gist IS 'support for indexing common datatypes in GiST';
-
-
---
 -- Name: hstore; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -167,7 +153,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         exclude_filter varchar := '';
         tmp_var text;
         ret text;
-        BEGIN
+      BEGIN
         -- define filters
         include_filter = '%.' || i_origin;
 
@@ -203,7 +189,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         -- ns records
         SELECT array_to_string(
           array(
-            SELECT concat(d.name_puny, '. IN NS ', ns.hostname, '.')
+            SELECT concat(d.name_puny, '. IN NS ', coalesce(ns.hostname_puny, ns.hostname), '.')
             FROM domains d
             JOIN nameservers ns ON ns.domain_id = d.id
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
@@ -222,7 +208,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         -- a glue records for other nameservers
         SELECT array_to_string(
           array(
-            SELECT concat(ns.hostname, '. IN A ', unnest(ns.ipv4))
+            SELECT concat(coalesce(ns.hostname_puny, ns.hostname), '. IN A ', unnest(ns.ipv4))
             FROM nameservers ns
             JOIN domains d ON d.id = ns.domain_id
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
@@ -242,7 +228,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         -- aaaa glue records for other nameservers
         SELECT array_to_string(
           array(
-            SELECT concat(ns.hostname, '. IN AAAA ', unnest(ns.ipv6))
+            SELECT concat(coalesce(ns.hostname_puny, ns.hostname), '. IN AAAA ', unnest(ns.ipv6))
             FROM nameservers ns
             JOIN domains d ON d.id = ns.domain_id
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
@@ -275,6 +261,34 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         RETURN ret;
       END;
       $_$;
+
+
+--
+-- Name: btree_hstore_ops; Type: OPERATOR FAMILY; Schema: public; Owner: -
+--
+
+CREATE OPERATOR FAMILY btree_hstore_ops USING btree;
+
+
+--
+-- Name: gin_hstore_ops; Type: OPERATOR FAMILY; Schema: public; Owner: -
+--
+
+CREATE OPERATOR FAMILY gin_hstore_ops USING gin;
+
+
+--
+-- Name: gist_hstore_ops; Type: OPERATOR FAMILY; Schema: public; Owner: -
+--
+
+CREATE OPERATOR FAMILY gist_hstore_ops USING gist;
+
+
+--
+-- Name: hash_hstore_ops; Type: OPERATOR FAMILY; Schema: public; Owner: -
+--
+
+CREATE OPERATOR FAMILY hash_hstore_ops USING hash;
 
 
 SET default_tablespace = '';
@@ -2778,6 +2792,15 @@ CREATE TABLE schema_migrations (
 
 
 --
+-- Name: serial_num; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE serial_num (
+    round double precision
+);
+
+
+--
 -- Name: settings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -5277,4 +5300,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160629114503');
 INSERT INTO schema_migrations (version) VALUES ('20161004101419');
 
 INSERT INTO schema_migrations (version) VALUES ('20161227193500');
+
+INSERT INTO schema_migrations (version) VALUES ('20170201150000');
 
