@@ -17,6 +17,7 @@ end
 require 'support/matchers/alias_attribute'
 require 'support/matchers/active_job'
 require 'support/matchers/epp/code'
+
 require 'support/capybara'
 require 'support/factory_girl'
 require 'support/database_cleaner'
@@ -31,6 +32,7 @@ RSpec.configure do |config|
   config.include Requests::SessionHelpers, type: :request
   config.include Features::SessionHelpers, type: :feature
   config.include AbstractController::Translation, type: :feature
+  config.include Requests::EPPHelpers, epp: true
 
   config.include Requests::EPPHelpers, epp: true
 
@@ -56,6 +58,10 @@ RSpec.configure do |config|
 
   config.define_derived_metadata(file_path: %r[/spec/api/]) do |metadata|
     metadata[:type] = :request
+  end
+
+  config.define_derived_metadata(file_path: %r[/spec/requests/epp/]) do |metadata|
+    metadata[:epp] = true if metadata[:epp].nil?
   end
 
   config.use_transactional_fixtures = false
