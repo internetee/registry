@@ -1,7 +1,7 @@
-class UpdateGenerateZoneFileFunction < ActiveRecord::Migration
+class UpdateGenerateZoneFileFunctionIdn < ActiveRecord::Migration
   def up
     execute <<-SQL
-REATE OR REPLACE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
+CREATE OR REPLACE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
     LANGUAGE plpgsql
     AS $_$
       DECLARE
