@@ -83,4 +83,8 @@ module ApplicationHelper
       version.object_changes.to_h.slice(*attrs).any? && css_class
     end
   end
+
+  def body_css_class
+    controller_path.split('/').map!(&:dasherize).join('-') << "-#{action_name.dasherize}-page"
+  end
 end
