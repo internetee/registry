@@ -1,3 +1,6 @@
+24.01.2017
+* Disallow EPP domain:update/transfer/delete if a domain has "deleteCandidate" status
+
 22.12.2016
 * Return business registry code and country for 'org' type registrants in WHOIS and Rest-WHOIS
 

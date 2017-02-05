@@ -5,6 +5,7 @@ class Domain < ActiveRecord::Base
   include Concerns::Domain::Expirable
   include Concerns::Domain::Activatable
   include Concerns::Domain::ForceDelete
+  include Concerns::Domain::Deletable
 
   has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
 
