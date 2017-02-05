@@ -2,6 +2,7 @@ $.datepicker.setDefaults({
   changeMonth: true,
   changeYear: true,
   duration: 'fast',
+  firstDay: 1,
   dateFormat: 'yy-mm-dd',
 });
 
