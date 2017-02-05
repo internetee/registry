@@ -1,0 +1,10 @@
+<ol class="breadcrumb">
+    <%= link_to t('admin.disputes.index.title'), admin_disputes_path %>
+</ol>
+
+
+<div class="page-header">
+    <h1><%= t '.title' %></h1>
+</div>
+
+<%= render 'form', dispute: @dispute %>

@@ -1,0 +1,43 @@
+en:
+  admin:
+    disputes:
+      index:
+        new_btn: New dispute
+        title: Disputes
+        not_found: No dispute found
+
+      new:
+        title: New dispute
+
+      edit:
+        title: Edit dispute
+
+      create:
+        created: Dispute has been successfully created
+
+      update:
+        updated: Dispute has been successfully updated
+
+      destroy:
+        deleted: Dispute has been successfully deleted
+
+      dispute:
+        edit_btn: Edit
+        delete_btn: Delete
+        delete_btn_confirm: Are you sure you want to delete dispute?
+
+      form:
+        create_btn: Create dispute
+        update_btn: Update dispute
+
+  activerecord:
+    attributes:
+      dispute:
+        expire_date: Date of expiry
+
+    errors:
+      models:
+        dispute:
+          attributes:
+            expire_date:
+              past: cannot be in the past
