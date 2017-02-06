@@ -12,6 +12,8 @@ module Admin
 
     def create
       @dispute = Dispute.new(dispute_params)
+      @dispute.generate_password if dispute_params[:password].blank?
+
       created = @dispute.save
 
       if created

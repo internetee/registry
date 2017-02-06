@@ -1,4 +1,6 @@
 class Dispute < ActiveRecord::Base
+  self.auto_html5_validation = false
+
   belongs_to :domain, required: true
 
   validates :expire_date, :password, :comment, presence: true
@@ -15,6 +17,10 @@ class Dispute < ActiveRecord::Base
 
   def domain_name=(value)
     self.domain = Domain.find_by(name: value)
+  end
+
+  def generate_password
+    self.password = SecureRandom.hex
   end
 
   private

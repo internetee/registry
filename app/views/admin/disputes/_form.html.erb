@@ -1,4 +1,4 @@
-<%= form_for [:admin, dispute], html: { class: 'form-horizontal' }, auto_html5_validation: false do |f| %>
+<%= form_for [:admin, dispute], html: { class: 'form-horizontal' } do |f| %>
     <%= render 'form_errors', target: dispute %>
 
     <div class="form-group">
@@ -25,6 +25,7 @@
 
         <div class="col-sm-4">
             <%= f.text_field :password, class: 'form-control' %>
+            <p class="help-block"><%= t '.password_info' %></p>
         </div>
     </div>
 

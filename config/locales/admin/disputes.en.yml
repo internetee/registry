@@ -29,6 +29,7 @@ en:
       form:
         create_btn: Create dispute
         update_btn: Update dispute
+        password_info: It will be generated automatically if left blank
 
   activerecord:
     attributes:

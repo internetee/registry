@@ -81,4 +81,14 @@ RSpec.describe Dispute, db: false do
       expect(dispute.domain_name).to eq('test')
     end
   end
+
+  describe '#generate_password' do
+    let(:dispute) { described_class.new }
+
+    it 'generates random password' do
+      expect(SecureRandom).to receive(:hex).and_return('test')
+      dispute.generate_password
+      expect(dispute.password).to eq('test')
+    end
+  end
 end
