@@ -72,6 +72,34 @@ RSpec.describe Dispute, db: false do
     end
   end
 
+  describe '::expired', db: true do
+    before :example do
+      travel_to(Date.parse('05.07.2010'))
+
+      create(:dispute, expire_date: Date.parse('04.07.2010'))
+      create(:dispute, expire_date: Date.parse('05.07.2010'))
+    end
+
+    it 'returns records with past :expire_time' do
+      expect(described_class.expired.size).to eq(1)
+    end
+  end
+
+  describe '::delete_expired', db: true do
+    before :example do
+      travel_to(Date.parse('05.07.2010'))
+
+      create(:dispute, expire_date: Date.parse('04.07.2010'))
+      create(:dispute, expire_date: Date.parse('05.07.2010'))
+
+      described_class.delete_expired
+    end
+
+    it 'deletes expired records' do
+      expect(described_class.all.size).to eq(1)
+    end
+  end
+
   describe '#domain_name' do
     let(:dispute) { described_class.new(domain: domain) }
     let(:domain) { build_stubbed(:domain) }

@@ -57,6 +57,10 @@ if @cron_group == 'registry'
   every :day, at: '19:00pm' do
     runner 'Directo.send_receipts'
   end if @environment == 'production'
+
+  every :day, at: '12:01am' do
+    runner 'Dispute.delete_expired'
+  end
 end
 
 every 10.minutes do

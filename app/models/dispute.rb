@@ -15,6 +15,14 @@ class Dispute < ActiveRecord::Base
     order(create_time: :desc)
   end
 
+  def self.expired
+    where('expire_date < ?', Time.zone.today)
+  end
+
+  def self.delete_expired
+    expired.delete_all
+  end
+
   def domain_name=(value)
     self.domain = Domain.find_by(name: value)
   end
