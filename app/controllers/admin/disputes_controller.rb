@@ -6,6 +6,9 @@ module Admin
       @disputes = @disputes.includes(:domain).latest_on_top
     end
 
+    def show
+    end
+
     def new
       @dispute = Dispute.new
     end
