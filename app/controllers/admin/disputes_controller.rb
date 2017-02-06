@@ -47,7 +47,7 @@ module Admin
     private
 
     def dispute_params
-      params.require(:dispute).permit(:domain_name, :expire_date, :password)
+      params.require(:dispute).permit(:domain_name, :expire_date, :password, :comment)
     end
   end
 end

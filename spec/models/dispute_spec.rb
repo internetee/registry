@@ -55,6 +55,16 @@ RSpec.describe Dispute, db: false do
     end
   end
 
+  describe 'comment validation' do
+    let(:dispute) { described_class.new }
+
+    it 'rejects absent' do
+      dispute.comment = nil
+      dispute.validate
+      expect(dispute.errors).to have_key(:comment)
+    end
+  end
+
   describe '::latest_on_top' do
     it 'sorts by :create_time in descending order' do
       expect(described_class).to receive(:order).with(create_time: :desc)

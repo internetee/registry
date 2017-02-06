@@ -1,7 +1,7 @@
 class Dispute < ActiveRecord::Base
   belongs_to :domain, required: true
 
-  validates :expire_date, :password, presence: true
+  validates :expire_date, :password, :comment, presence: true
   validates :domain, uniqueness: true
   validate :validate_expire_date_past
 

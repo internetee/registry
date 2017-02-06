@@ -30,4 +30,13 @@ RSpec.describe 'admin/disputes/_form' do
       expect(field[:required]).to eq('required')
     end
   end
+
+  describe 'comment' do
+    let(:field) { page.find('[name="dispute[comment]"]') }
+
+    it 'is required' do
+      render
+      expect(field[:required]).to eq('required')
+    end
+  end
 end
