@@ -1,7 +1,9 @@
+<% dispute = DisputePresenter.new(dispute: dispute, view: self) %>
+
 <tr class="dispute">
-    <td><%= dispute.domain_name %></td>
-    <td><%= l dispute.created_at %></td>
-    <td><%= l dispute.expire_date %></td>
+    <td><%= dispute.link %></td>
+    <td><%= dispute.create_time %></td>
+    <td><%= dispute.expire_date %></td>
     <td>
         <%= link_to t('.edit_btn'), edit_admin_dispute_path(dispute), class: 'btn btn-primary btn-xs' %>
         <%= link_to t('.delete_btn'), admin_dispute_path(dispute),

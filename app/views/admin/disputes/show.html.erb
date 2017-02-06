@@ -1,0 +1,10 @@
+<% dispute = DisputePresenter.new(dispute: @dispute, view: self) %>
+
+<ol class="breadcrumb">
+    <li><%= link_to t('admin.disputes.index.title'), admin_disputes_path %></li>
+</ol>
+
+
+<div class="page-header">
+    <h1><%= dispute.name %></h1>
+</div>

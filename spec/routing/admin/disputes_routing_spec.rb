@@ -6,6 +6,10 @@ RSpec.describe Admin::DisputesController do
       expect(get: '/admin/disputes').to route_to('admin/disputes#index')
     end
 
+    it 'routes to #show' do
+      expect(get: '/admin/disputes/1').to route_to('admin/disputes#show', id: '1')
+    end
+
     it 'routes to #new' do
       expect(get: '/admin/disputes/new').to route_to('admin/disputes#new')
     end

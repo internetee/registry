@@ -14,6 +14,6 @@ RSpec.describe 'admin/disputes/new' do
 
   it 'has header' do
     render
-    expect(rendered).to have_content('New dispute')
+    expect(rendered).to have_text('New dispute')
   end
 end
