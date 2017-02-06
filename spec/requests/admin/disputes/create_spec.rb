@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Admin::DisputesController do
+RSpec.describe 'admin dispute create' do
   before :example do
     travel_to Time.zone.parse('05.07.2010')
     sign_in_to_admin_area
