@@ -6,6 +6,7 @@ class Domain < ActiveRecord::Base
   include Concerns::Domain::Activatable
   include Concerns::Domain::ForceDelete
   include Concerns::Domain::Deletable
+  include Concerns::Domain::Disputable
 
   has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
 
@@ -24,6 +25,7 @@ class Domain < ActiveRecord::Base
   belongs_to :registrant
   # TODO: should we user validates_associated :registrant here?
 
+  has_one :dispute
   has_many :admin_domain_contacts
   accepts_nested_attributes_for :admin_domain_contacts,  allow_destroy: true, reject_if: :admin_change_prohibited?
   has_many :tech_domain_contacts
