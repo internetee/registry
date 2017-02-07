@@ -18,6 +18,11 @@
         </tr>
 
         <tr>
+            <th><%= Dispute.human_attribute_name :comment %></th>
+            <td><%= dispute.comment %></td>
+        </tr>
+
+        <tr>
             <th><%= Dispute.human_attribute_name :create_time %></th>
             <td><%= dispute.create_time %></td>
         </tr>
@@ -25,11 +30,6 @@
         <tr>
             <th><%= Dispute.human_attribute_name :update_time %></th>
             <td><%= dispute.update_time %></td>
-        </tr>
-
-        <tr>
-            <th><%= Dispute.human_attribute_name :comment %></th>
-            <td><%= dispute.comment %></td>
         </tr>
     </table>
 </div>
