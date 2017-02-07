@@ -923,7 +923,8 @@ CREATE TABLE disputes (
     password character varying,
     expire_date date,
     created_at timestamp without time zone,
-    comment text NOT NULL
+    comment text NOT NULL,
+    updated_at timestamp without time zone
 );
 
 
@@ -5348,4 +5349,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170203102059');
 INSERT INTO schema_migrations (version) VALUES ('20170205135240');
 
 INSERT INTO schema_migrations (version) VALUES ('20170206052644');
+
+INSERT INTO schema_migrations (version) VALUES ('20170206214802');
 

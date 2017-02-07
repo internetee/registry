@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Dispute, db: false do
   it { is_expected.to alias_attribute(:create_time, :created_at) }
+  it { is_expected.to alias_attribute(:update_time, :updated_at) }
 
   describe 'domain validation' do
     let(:dispute) { described_class.new }

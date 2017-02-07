@@ -11,12 +11,13 @@
 </div>
 
 <% if @disputes.present? %>
-    <table class="table table-hover table-bordered disputes">
+    <table class="table table-hover table-bordered table-wrapped disputes">
         <thead>
             <tr>
-                <th><%= Domain.model_name.human %></th>
-                <th><%= Dispute.human_attribute_name :created_at %></th>
+                <th></th>
+                <th><%= Dispute.human_attribute_name :password %></th>
                 <th><%= Dispute.human_attribute_name :expire_date %></th>
+                <th><%= Dispute.human_attribute_name :update_time %></th>
                 <th></th>
             </tr>
         </thead>

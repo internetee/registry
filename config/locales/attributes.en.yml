@@ -1,0 +1,5 @@
+en:
+  attributes:
+    expire_date: Exp. Date
+    create_time: Created
+    update_time: Modified

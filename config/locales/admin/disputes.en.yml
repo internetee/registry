@@ -6,6 +6,9 @@ en:
         title: Disputes
         not_found: No dispute found
 
+      overview:
+        title: Overview
+
       new:
         title: New dispute
 
@@ -30,11 +33,6 @@ en:
         create_btn: Create dispute
         update_btn: Update dispute
         password_info: It will be generated automatically if left blank
-
-  activerecord:
-    attributes:
-      dispute:
-        expire_date: Date of expiry
 
     errors:
       models:

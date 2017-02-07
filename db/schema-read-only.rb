@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170206052644) do
+ActiveRecord::Schema.define(version: 20170206214802) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -274,6 +274,7 @@ ActiveRecord::Schema.define(version: 20170206052644) do
     t.date     "expire_date"
     t.datetime "created_at"
     t.text     "comment",     null: false
+    t.datetime "updated_at"
   end
 
   add_index "disputes", ["domain_id"], name: "index_disputes_on_domain_id", unique: true, using: :btree

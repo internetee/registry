@@ -1,0 +1,30 @@
+<div class="panel panel-default">
+    <div class="panel-heading"><%= t '.title' %></div>
+
+    <table class="table">
+        <tr>
+            <th><%= Domain.model_name.human %></th>
+            <td><%= domain.link %></td>
+        </tr>
+
+        <tr>
+            <th><%= Dispute.human_attribute_name :password %></th>
+            <td><%= dispute.password %></td>
+        </tr>
+
+        <tr>
+            <th><%= Dispute.human_attribute_name :expire_date %></th>
+            <td><%= dispute.expire_date %></td>
+        </tr>
+
+        <tr>
+            <th><%= Dispute.human_attribute_name :create_time %></th>
+            <td><%= dispute.create_time %></td>
+        </tr>
+
+        <tr>
+            <th><%= Dispute.human_attribute_name :update_time %></th>
+            <td><%= dispute.update_time %></td>
+        </tr>
+    </table>
+</div>

@@ -8,6 +8,7 @@ class Dispute < ActiveRecord::Base
   validate :validate_expire_date_past
 
   alias_attribute :create_time, :created_at
+  alias_attribute :update_time, :updated_at
 
   delegate :name, to: :domain, prefix: true, allow_nil: true
 

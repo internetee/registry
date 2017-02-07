@@ -6,6 +6,10 @@ class DomainPresenter
     @view = view
   end
 
+  def link
+    view.link_to(domain.name, view.admin_domain_path(domain))
+  end
+
   def expire_time
     view.l(domain.expire_time)
   end
