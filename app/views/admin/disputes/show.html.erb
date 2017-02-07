@@ -6,7 +6,16 @@
 </ol>
 
 <div class="page-header">
-    <h1><%= dispute.name %></h1>
+    <div class="row">
+        <div class="col-sm-6">
+            <h1><%= dispute.name %></h1>
+        </div>
+
+        <div class="col-sm-6 text-right">
+            <%= dispute.edit_btn %>
+            <%= dispute.delete_btn %>
+        </div>
+    </div>
 </div>
 
 <div class="col-sm-6">

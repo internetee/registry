@@ -34,6 +34,11 @@ en:
         update_btn: Update dispute
         password_info: It will be generated automatically if left blank
 
+      domain_dispute:
+        title: Dispute
+        view_btn: View dispute
+        no_dispute: No dispute
+
     errors:
       models:
         dispute:

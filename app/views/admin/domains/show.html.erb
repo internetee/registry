@@ -1,3 +1,6 @@
+<% domain = DomainPresenter.new(domain: @domain, view: self) %>
+<% dispute = DisputePresenter.new(dispute: @domain.dispute, view: self) %>
+
 <ol class="breadcrumb">
     <li><%= link_to t('admin.domains.index.title'), admin_domains_path %></li>
 </ol>
@@ -5,7 +8,7 @@
 <div class="page-header">
     <div class="row">
         <div class="col-sm-6">
-            <h1><%= @domain.name %></h1>
+            <h1><%= domain.name %></h1>
         </div>
 
         <div class="col-sm-6 text-right">
@@ -22,6 +25,7 @@
 
     <div class="col-sm-6">
         <%= render 'admin/domains/partials/owner' %>
+        <%= render 'admin/disputes/domain_dispute', disputed: @domain.disputed?, dispute: dispute %>
     </div>
 </div>
 
