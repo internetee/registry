@@ -12,7 +12,7 @@ RSpec.describe 'admin dispute destroy' do
     expect { request }.to change { Dispute.count }.from(1).to(0)
   end
 
-  it 'redirects to dispute list' do
+  it 'redirects to :index' do
     request
     expect(response).to redirect_to admin_disputes_path
   end
