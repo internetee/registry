@@ -77,7 +77,10 @@ RSpec.describe Dispute, db: false do
     before :example do
       travel_to(Date.parse('05.07.2010'))
 
-      create(:dispute, expire_date: Date.parse('04.07.2010'))
+      travel_to Date.parse('04.07.2010') do # Bypass past date validation
+        create(:dispute, expire_date: Date.parse('04.07.2010'))
+      end
+
       create(:dispute, expire_date: Date.parse('05.07.2010'))
     end
 
@@ -90,7 +93,10 @@ RSpec.describe Dispute, db: false do
     before :example do
       travel_to(Date.parse('05.07.2010'))
 
-      create(:dispute, expire_date: Date.parse('04.07.2010'))
+      travel_to Date.parse('04.07.2010') do # Bypass past date validation
+        create(:dispute, expire_date: Date.parse('04.07.2010'))
+      end
+
       create(:dispute, expire_date: Date.parse('05.07.2010'))
 
       described_class.delete_expired

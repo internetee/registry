@@ -39,6 +39,7 @@ en:
         view_btn: View dispute
         no_dispute: No dispute
 
+  activerecord:
     errors:
       models:
         dispute:
