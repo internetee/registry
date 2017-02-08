@@ -11,16 +11,17 @@ RSpec.describe 'admin/disputes/edit' do
   end
 
   describe 'breadcrumbs section' do
-    it 'has link to disputes' do
+    it 'has link to :index' do
       render
       expect(rendered).to have_link('Disputes', href: admin_disputes_path)
     end
 
-    it 'has current dispute name' do
-      expect(dispute_presenter).to receive(:name).and_return('test name')
+    it 'has link to :show' do
+      expect(dispute_presenter).to receive(:link).and_return('dispute link')
       render
-      expect(rendered).to have_text('test name')
+      expect(rendered).to have_text('dispute link')
     end
+
   end
 
   it 'has header' do

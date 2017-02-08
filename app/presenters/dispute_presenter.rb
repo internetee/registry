@@ -42,7 +42,7 @@ class DisputePresenter
     edit_btn(css_class: 'btn btn-primary btn-xs')
   end
 
-  def delete_btn(css_class: 'btn btn-primary')
+  def delete_btn(css_class: 'btn btn-danger')
     view.link_to view.t('admin.disputes.dispute.delete_btn'), view.admin_dispute_path(dispute),
                  method: :delete,
                  data: { confirm: view.t('admin.disputes.dispute.delete_btn_confirm') },

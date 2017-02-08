@@ -11,21 +11,21 @@
     </div>
 
     <div class="form-group">
+        <%= f.label :password, class: 'col-sm-2 control-label' %>
+
+        <div class="col-sm-4">
+            <%= f.text_field :password, class: 'form-control' %>
+            <p class="help-block"><%= t '.password_info' %></p>
+        </div>
+    </div>
+
+    <div class="form-group">
         <%= f.label :expire_date, class: 'col-sm-2 control-label' %>
 
         <div class="col-sm-4">
             <%= f.text_field :expire_date, class: 'form-control datepicker', required: true,
                              pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}',
                              placeholder: Time.zone.today.to_s %>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <%= f.label :password, class: 'col-sm-2 control-label' %>
-
-        <div class="col-sm-4">
-            <%= f.text_field :password, class: 'form-control' %>
-            <p class="help-block"><%= t '.password_info' %></p>
         </div>
     </div>
 
