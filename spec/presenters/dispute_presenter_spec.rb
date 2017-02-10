@@ -40,4 +40,19 @@ RSpec.describe DisputePresenter do
       expect(presenter.password).to eq(html)
     end
   end
+
+  dispute_delegatable_attributes = %i(
+    domain_name
+  )
+
+  dispute_delegatable_attributes.each do |attribute_name|
+    describe "##{attribute_name}" do
+      let(:dispute) { instance_spy(Dispute) }
+
+      it 'delegates to dispute' do
+        presenter.send(attribute_name)
+        expect(dispute).to have_received(attribute_name)
+      end
+    end
+  end
 end

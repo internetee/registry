@@ -924,7 +924,8 @@ CREATE TABLE disputes (
     expire_date date,
     created_at timestamp without time zone,
     comment text NOT NULL,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    domain_name character varying
 );
 
 
@@ -5351,4 +5352,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170205135240');
 INSERT INTO schema_migrations (version) VALUES ('20170206052644');
 
 INSERT INTO schema_migrations (version) VALUES ('20170206214802');
+
+INSERT INTO schema_migrations (version) VALUES ('20170209153849');
 

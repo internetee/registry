@@ -6,10 +6,21 @@ RSpec.describe 'admin dispute update' do
     sign_in_to_admin_area
   end
 
+  it 'updates domain name' do
+    dispute = create(:dispute, domain_name: 'test.com')
+
+    patch admin_dispute_path(dispute), dispute: attributes_for(:dispute,
+                                                               domain_name: 'new.com')
+    dispute.reload
+
+    expect(dispute.domain_name).to eq('new.com')
+  end
+
   it 'updates password' do
     dispute = create(:dispute, password: 'test')
 
-    patch admin_dispute_path(dispute), dispute: attributes_for(:dispute, password: 'new password')
+    patch admin_dispute_path(dispute), dispute: attributes_for(:dispute,
+                                                               password: 'new password')
     dispute.reload
 
     expect(dispute.password).to eq('new password')
@@ -28,7 +39,8 @@ RSpec.describe 'admin dispute update' do
     dispute = create(:dispute, expire_date: Time.zone.parse('05.07.2010').to_date)
 
     patch admin_dispute_path(dispute),
-          dispute: attributes_for(:dispute, expire_date: Time.zone.parse('06.07.2010').to_date.to_s)
+          dispute: attributes_for(:dispute,
+                                  expire_date: Time.zone.parse('06.07.2010').to_date.to_s)
     dispute.reload
 
     expect(dispute.expire_date).to eq(Time.zone.parse('06.07.2010').to_date)

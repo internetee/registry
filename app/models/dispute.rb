@@ -1,16 +1,14 @@
 class Dispute < ActiveRecord::Base
+  include Concerns::Dispute::Searchable
+
   self.auto_html5_validation = false
 
-  belongs_to :domain, required: true
-
-  validates :expire_date, :password, :comment, presence: true
-  validates :domain, uniqueness: true
-  validate :validate_expire_date_past
+  validates :domain_name, :password, :expire_date, :comment, presence: true
+  validates :domain_name, uniqueness: true
+  validate :validate_expire_date_past, on: :admin
 
   alias_attribute :create_time, :created_at
   alias_attribute :update_time, :updated_at
-
-  delegate :name, to: :domain, prefix: true, allow_nil: true
 
   def self.latest_on_top
     order(create_time: :desc)
@@ -22,10 +20,6 @@ class Dispute < ActiveRecord::Base
 
   def self.delete_expired
     expired.delete_all
-  end
-
-  def domain_name=(value)
-    self.domain = Domain.find_by(name: value)
   end
 
   def generate_password

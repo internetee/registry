@@ -4,25 +4,26 @@ RSpec.describe Dispute, db: false do
   it { is_expected.to alias_attribute(:create_time, :created_at) }
   it { is_expected.to alias_attribute(:update_time, :updated_at) }
 
-  describe 'domain validation' do
+  describe 'domain name validation' do
     let(:dispute) { described_class.new }
 
     it 'rejects absent' do
-      dispute.domain = nil
+      dispute.domain_name = nil
       dispute.validate
-      expect(dispute.errors).to have_key(:domain)
+
+      expect(dispute.errors).to have_key(:domain_name)
     end
 
     it 'rejects duplicate', db: true do
-      existing_domain = create(:domain, name: 'test.com')
-      create(:dispute, domain: existing_domain)
-      dispute.domain = existing_domain
+      create(:dispute, domain_name: 'test.com')
+
+      dispute.domain_name = 'test.com'
       dispute.validate
-      expect(dispute.errors).to have_key(:domain)
+      expect(dispute.errors).to have_key(:domain_name)
     end
   end
 
-  describe 'expire date validation' do
+  describe 'expiration date validation' do
     let(:dispute) { described_class.new }
 
     it 'rejects absent' do
@@ -31,18 +32,24 @@ RSpec.describe Dispute, db: false do
       expect(dispute.errors).to have_key(:expire_date)
     end
 
-    it 'rejects past' do
-      travel_to Date.parse('05.07.2010')
-      dispute.expire_date = Date.parse('04.07.2010')
-      dispute.validate
-      expect(dispute.errors).to have_key(:expire_date)
-    end
+    context 'when admin' do
+      it 'rejects past' do
+        travel_to Date.parse('05.07.2010')
 
-    it 'accepts today' do
-      travel_to Date.parse('05.07.2010')
-      dispute.expire_date = Date.parse('05.07.2010')
-      dispute.validate
-      expect(dispute.errors).to_not have_key(:expire_date)
+        dispute.expire_date = Date.parse('04.07.2010')
+        dispute.validate(:admin)
+
+        expect(dispute.errors).to have_key(:expire_date)
+      end
+
+      it 'accepts today' do
+        travel_to Date.parse('05.07.2010')
+
+        dispute.expire_date = Date.parse('05.07.2010')
+        dispute.validate(:admin)
+
+        expect(dispute.errors).to_not have_key(:expire_date)
+      end
     end
   end
 
@@ -77,10 +84,7 @@ RSpec.describe Dispute, db: false do
     before :example do
       travel_to(Date.parse('05.07.2010'))
 
-      travel_to Date.parse('04.07.2010') do # Bypass past date validation
-        create(:dispute, expire_date: Date.parse('04.07.2010'))
-      end
-
+      create(:dispute, expire_date: Date.parse('04.07.2010'))
       create(:dispute, expire_date: Date.parse('05.07.2010'))
     end
 
@@ -93,27 +97,14 @@ RSpec.describe Dispute, db: false do
     before :example do
       travel_to(Date.parse('05.07.2010'))
 
-      travel_to Date.parse('04.07.2010') do # Bypass past date validation
-        create(:dispute, expire_date: Date.parse('04.07.2010'))
-      end
-
+      create(:dispute, expire_date: Date.parse('04.07.2010'))
       create(:dispute, expire_date: Date.parse('05.07.2010'))
 
       described_class.delete_expired
     end
 
     it 'deletes expired records' do
-      expect(described_class.all.size).to eq(1)
-    end
-  end
-
-  describe '#domain_name' do
-    let(:dispute) { described_class.new(domain: domain) }
-    let(:domain) { build_stubbed(:domain) }
-
-    it 'returns domain name' do
-      expect(domain).to receive(:name).and_return('test')
-      expect(dispute.domain_name).to eq('test')
+      expect(described_class.count).to eq(1)
     end
   end
 
@@ -121,9 +112,8 @@ RSpec.describe Dispute, db: false do
     let(:dispute) { described_class.new }
 
     it 'generates random password' do
-      expect(SecureRandom).to receive(:hex).and_return('test')
       dispute.generate_password
-      expect(dispute.password).to eq('test')
+      expect(dispute.password).to_not be_empty
     end
   end
 end

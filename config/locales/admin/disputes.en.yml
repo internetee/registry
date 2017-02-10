@@ -24,6 +24,11 @@ en:
       destroy:
         deleted: Dispute has been successfully deleted
 
+      search_form:
+        expire_date_range: Exp. date range
+        btn_search: Search
+        btn_reset: Reset
+
       dispute:
         edit_btn: Edit
         delete_btn: Delete

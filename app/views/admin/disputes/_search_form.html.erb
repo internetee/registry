@@ -1,0 +1,30 @@
+<%= form_for :search, method: :get, html: { class: 'form-horizontal' } do |f| %>
+
+    <div class="form-group">
+        <%= f.label :domain, class: 'col-sm-2 control-label', for: nil %>
+
+        <div class="col-sm-4">
+            <%= f.text_field :domain_name, class: 'form-control' %>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <%= f.label nil, t('.expire_date_range'), class: 'col-sm-2 control-label', for: nil %>
+
+        <div class="col-sm-2">
+            <%= f.text_field :expire_date_start, class: 'form-control datepicker' %>
+        </div>
+
+        <div class="col-sm-2">
+            <%= f.text_field :expire_date_end, class: 'form-control datepicker' %>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-4">
+            <%= f.submit t('.btn_search'), class: 'btn btn-primary', name: nil %>
+            <%= link_to t('.btn_reset'), admin_disputes_path, class: 'btn btn-default' %>
+        </div>
+    </div>
+
+<% end %>

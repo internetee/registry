@@ -3,7 +3,8 @@ module Admin
     load_and_authorize_resource
 
     def index
-      @disputes = @disputes.includes(:domain).latest_on_top
+      @search = OpenStruct.new(search_params)
+      @disputes = @disputes.by_domain_name(search_params[:domain_name]).by_expire_date(expire_date).latest_on_top
     end
 
     def show
@@ -54,11 +55,32 @@ module Admin
     private
 
     def dispute_params
-      params.require(:dispute).permit(:domain_name, :expire_date, :password, :comment)
+      allowed_params = %i(
+        domain_name
+        expire_date
+        password
+        comment
+      )
+
+      params.require(:dispute).permit(allowed_params)
+    end
+
+    def search_params
+      allowed_params = %i(
+        domain_name
+        expire_date_start
+        expire_date_end
+      )
+      params.fetch(:search, {}).permit(allowed_params)
     end
 
     def password_not_provided
       dispute_params[:password].blank?
+    end
+
+    def expire_date
+      return if search_params[:expire_date_start].blank? || search_params[:expire_date_end].blank?
+      Date.parse(search_params[:expire_date_start])..Date.parse(search_params[:expire_date_end])
     end
   end
 end

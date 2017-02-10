@@ -1,4 +1,6 @@
 class DisputePresenter
+  delegate :domain_name, to: :dispute
+
   def initialize(dispute:, view:)
     @dispute = dispute
     @view = view

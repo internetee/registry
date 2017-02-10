@@ -1,5 +1,4 @@
 <% dispute = DisputePresenter.new(dispute: @dispute, view: self) %>
-<% domain = DomainPresenter.new(domain: @dispute.domain, view: self) %>
 
 <ol class="breadcrumb">
     <li><%= link_to t('admin.disputes.index.title'), admin_disputes_path %></li>
@@ -19,5 +18,5 @@
 </div>
 
 <div class="col-sm-6">
-    <%= render 'overview', dispute: dispute, domain: domain %>
+    <%= render 'overview', dispute: dispute %>
 </div>
