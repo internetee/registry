@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 RSpec.feature 'New dispute' do
-  given!(:domain) { create(:domain, name: 'test.com') }
-
   background do
     travel_to Time.zone.parse('05.07.2010')
   end
