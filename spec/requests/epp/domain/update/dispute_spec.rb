@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'EPP domain:update' do
+  subject(:request) { post '/epp/command/update', frame: request_xml }
   let!(:domain) { create(:domain, name: 'test.com') }
   let!(:new_registrant) { create(:registrant, code: 'test') }
 
@@ -9,7 +10,7 @@ RSpec.describe 'EPP domain:update' do
   end
 
   context 'when domain is disputed' do
-    let!(:dispute) { create(:dispute, domain: domain, password: 'test') }
+    let!(:dispute) { create(:dispute, domain_name: 'test.com', password: 'test') }
 
     context 'when password is valid' do
       let(:request_xml) { <<-XML
@@ -37,8 +38,8 @@ RSpec.describe 'EPP domain:update' do
       XML
       }
 
-      it 'returns epp code of 1001' do
-        post '/epp/command/update', frame: request_xml
+      specify do
+        request
         expect(response).to have_code_of(1001)
       end
     end
@@ -69,8 +70,8 @@ RSpec.describe 'EPP domain:update' do
       XML
       }
 
-      it 'returns epp code of 2202' do
-        post '/epp/command/update', frame: request_xml
+      specify do
+        request
         expect(response).to have_code_of(2202)
       end
     end
@@ -98,8 +99,8 @@ RSpec.describe 'EPP domain:update' do
       XML
       }
 
-      it 'returns epp code of 2003' do
-        post '/epp/command/update', frame: request_xml
+      specify do
+        request
         expect(response).to have_code_of(2003)
       end
     end
@@ -128,8 +129,8 @@ RSpec.describe 'EPP domain:update' do
     XML
     }
 
-    it 'returns epp code of 1001' do
-      post '/epp/command/update', frame: request_xml
+    specify do
+      request
       expect(response).to have_code_of(1001)
     end
   end

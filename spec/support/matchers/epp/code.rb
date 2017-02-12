@@ -15,7 +15,7 @@ module Matchers
       end
 
       def description
-        "should have EPP code of #{expected}"
+        "have EPP code of #{expected}"
       end
 
       private

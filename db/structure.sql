@@ -919,13 +919,12 @@ ALTER SEQUENCE directos_id_seq OWNED BY directos.id;
 
 CREATE TABLE disputes (
     id integer NOT NULL,
-    domain_id integer,
     password character varying,
     expire_date date,
     created_at timestamp without time zone,
     comment text NOT NULL,
     updated_at timestamp without time zone,
-    domain_name character varying
+    domain_name character varying NOT NULL
 );
 
 
@@ -4201,10 +4200,10 @@ CREATE INDEX index_directos_on_item_type_and_item_id ON directos USING btree (it
 
 
 --
--- Name: index_disputes_on_domain_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_disputes_on_domain_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE UNIQUE INDEX index_disputes_on_domain_id ON disputes USING btree (domain_id);
+CREATE UNIQUE INDEX index_disputes_on_domain_name ON disputes USING btree (domain_name);
 
 
 --
@@ -4880,14 +4879,6 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 
 --
--- Name: fk_rails_93f97c2750; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY disputes
-    ADD CONSTRAINT fk_rails_93f97c2750 FOREIGN KEY (domain_id) REFERENCES domains(id);
-
-
---
 -- PostgreSQL database dump complete
 --
 
@@ -5354,4 +5345,10 @@ INSERT INTO schema_migrations (version) VALUES ('20170206052644');
 INSERT INTO schema_migrations (version) VALUES ('20170206214802');
 
 INSERT INTO schema_migrations (version) VALUES ('20170209153849');
+
+INSERT INTO schema_migrations (version) VALUES ('20170212020532');
+
+INSERT INTO schema_migrations (version) VALUES ('20170212020841');
+
+INSERT INTO schema_migrations (version) VALUES ('20170212021349');
 

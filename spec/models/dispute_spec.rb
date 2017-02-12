@@ -108,6 +108,20 @@ RSpec.describe Dispute, db: false do
     end
   end
 
+  describe '::for_domain', db: true do
+    context 'when dispute exists' do
+      let!(:dispute) { create(:dispute, domain_name: 'test.com') }
+
+      it 'returns dispute' do
+        expect(described_class.for_domain('test.com')).to eq(dispute)
+      end
+    end
+
+    context 'when dispute does not exist' do
+      specify { expect(described_class.for_domain('test.com')).to be_nil }
+    end
+  end
+
   describe '#generate_password' do
     let(:dispute) { described_class.new }
 

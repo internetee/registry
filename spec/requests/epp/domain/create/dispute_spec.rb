@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe 'EPP domain:create' do
+  subject(:request) { post '/epp/command/create', frame: request_xml }
+
   before :example do
     travel_to Time.zone.parse('05.07.2010')
 
@@ -20,25 +22,25 @@ RSpec.describe 'EPP domain:create' do
     )
 
     sign_in_to_epp_area(user: user)
-    post '/epp/command/create', frame: request_xml
   end
 
   context 'when domain name is disputed' do
-    let!(:dispute) { create(:dispute, domain: domain, password: 'test') }
+    let!(:dispute) { create(:dispute, domain_name: 'test.com', password: 'test') }
 
     context 'when password is valid' do
       let(:request_xml) { <<-XML
         <?xml version="1.0" encoding="UTF-8" standalone="no"?>
         <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
           <command>
-            <update>
-              <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <create>
+              <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
                 <domain:name>test.com</domain:name>
-                  <domain:chg>
-                    <domain:registrant>test</domain:registrant>
-                  </domain:chg>
-              </domain:update>
-            </update>
+                <domain:period unit="y">1</domain:period>
+                <domain:registrant>test</domain:registrant>
+                <domain:contact type="admin">test</domain:contact>
+                <domain:contact type="tech">test</domain:contact>
+              </domain:create>
+            </create>
             <extension>
               <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
                 <eis:legalDocument type="pdf">#{valid_legal_document}</eis:legalDocument>
@@ -52,7 +54,10 @@ RSpec.describe 'EPP domain:create' do
       XML
       }
 
-      specify { expect(response).to have_code_of(1001) }
+      specify do
+        request
+        expect(response).to have_code_of(1000)
+      end
     end
 
     context 'when password is invalid' do
@@ -60,14 +65,15 @@ RSpec.describe 'EPP domain:create' do
         <?xml version="1.0" encoding="UTF-8" standalone="no"?>
         <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
           <command>
-            <update>
-              <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <create>
+              <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
                 <domain:name>test.com</domain:name>
-                  <domain:chg>
-                    <domain:registrant>test</domain:registrant>
-                  </domain:chg>
-              </domain:update>
-            </update>
+                <domain:period unit="y">1</domain:period>
+                <domain:registrant>test</domain:registrant>
+                <domain:contact type="admin">test</domain:contact>
+                <domain:contact type="tech">test</domain:contact>
+              </domain:create>
+            </create>
             <extension>
               <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
                 <eis:legalDocument type="pdf">#{valid_legal_document}</eis:legalDocument>
@@ -81,7 +87,10 @@ RSpec.describe 'EPP domain:create' do
       XML
       }
 
-      specify { expect(response).to have_code_of(2202) }
+      specify do
+        request
+        expect(response).to have_code_of(2202)
+      end
     end
 
     context 'when password is absent' do
@@ -89,14 +98,15 @@ RSpec.describe 'EPP domain:create' do
         <?xml version="1.0" encoding="UTF-8" standalone="no"?>
         <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
           <command>
-            <update>
-              <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
+            <create>
+              <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
                 <domain:name>test.com</domain:name>
-                  <domain:chg>
-                    <domain:registrant>test</domain:registrant>
-                  </domain:chg>
-              </domain:update>
-            </update>
+                <domain:period unit="y">1</domain:period>
+                <domain:registrant>test</domain:registrant>
+                <domain:contact type="admin">test</domain:contact>
+                <domain:contact type="tech">test</domain:contact>
+              </domain:create>
+            </create>
             <extension>
               <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
                 <eis:legalDocument type="pdf">#{valid_legal_document}</eis:legalDocument>
@@ -107,7 +117,10 @@ RSpec.describe 'EPP domain:create' do
       XML
       }
 
-      specify { expect(response).to have_code_of(2003) }
+      specify do
+        request
+        expect(response).to have_code_of(2003)
+      end
     end
   end
 
@@ -135,6 +148,9 @@ RSpec.describe 'EPP domain:create' do
     XML
     }
 
-    specify { expect(response).to have_code_of(1000) }
+    specify do
+      request
+      expect(response).to have_code_of(1000)
+    end
   end
 end

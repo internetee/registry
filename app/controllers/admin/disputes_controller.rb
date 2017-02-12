@@ -18,9 +18,16 @@ module Admin
       @dispute = Dispute.new(dispute_params)
       @dispute.generate_password if password_not_provided
 
-      created = @dispute.save
+      if @dispute.valid?(:admin)
+        @dispute.transaction do
+          @dispute.save!
 
-      if created
+          if domain
+            domain.prohibit_registrant_change
+            domain.save!
+          end
+        end
+
         flash[:notice] = t('.created')
         redirect_to admin_dispute_path(@dispute)
       else
@@ -34,9 +41,9 @@ module Admin
     def update
       @dispute.attributes = dispute_params
       @dispute.generate_password if password_not_provided
-      updated = @dispute.save
 
-      if updated
+      if @dispute.valid?(:admin)
+        @dispute.save!
         flash[:notice] = t('.updated')
         redirect_to admin_dispute_path(@dispute)
       else
@@ -81,6 +88,10 @@ module Admin
     def expire_date
       return if search_params[:expire_date_start].blank? || search_params[:expire_date_end].blank?
       Date.parse(search_params[:expire_date_start])..Date.parse(search_params[:expire_date_end])
+    end
+
+    def domain
+      Domain.find_by(name: @dispute.domain_name)
     end
   end
 end
