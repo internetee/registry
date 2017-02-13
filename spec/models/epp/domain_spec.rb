@@ -2,8 +2,17 @@ require 'rails_helper'
 
 RSpec.describe Epp::Domain, db: false do
   describe '::new_from_epp' do
+    let(:frame) do
+      frame = Object.new
+
+      def frame.css(selector)
+        OpenStruct.new(text: nil)
+      end
+
+      frame
+    end
     let(:domain_blueprint) { described_class.new }
-    subject(:domain) { described_class.new_from_epp(nil, nil) }
+    subject(:domain) { described_class.new_from_epp(frame, nil) }
 
     before :example do
       travel_to Time.zone.parse('05.07.2010')

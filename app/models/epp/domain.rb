@@ -949,7 +949,7 @@ class Epp::Domain < Domain
         }
       end
 
-      if password != dispute_password
+      if password != dispute.password
         throw :epp_error, {
           code: '2202',
           msg: I18n.t('activerecord.errors.models.epp_domain.attributes.base.invalid_auth_information_reserved'),

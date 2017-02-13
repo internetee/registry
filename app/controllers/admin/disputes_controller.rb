@@ -91,7 +91,7 @@ module Admin
     end
 
     def domain
-      Domain.find_by(name: @dispute.domain_name)
+      @domain ||= Domain.find_by(name: @dispute.domain_name)
     end
   end
 end
