@@ -35,10 +35,7 @@ RSpec.describe 'EPP domain:create' do
             <create>
               <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
                 <domain:name>test.com</domain:name>
-                <domain:period unit="y">1</domain:period>
                 <domain:registrant>test</domain:registrant>
-                <domain:contact type="admin">test</domain:contact>
-                <domain:contact type="tech">test</domain:contact>
               </domain:create>
             </create>
             <extension>
@@ -58,6 +55,14 @@ RSpec.describe 'EPP domain:create' do
         request
         expect(response).to have_code_of(1000)
       end
+
+      it 'creates domain' do
+        expect { request }.to change { Domain.count }.from(0).to(1)
+      end
+
+      it 'closes dispute' do
+        expect { request }.to change { Dispute.count }.from(1).to(0)
+      end
     end
 
     context 'when password is invalid' do
@@ -68,10 +73,7 @@ RSpec.describe 'EPP domain:create' do
             <create>
               <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
                 <domain:name>test.com</domain:name>
-                <domain:period unit="y">1</domain:period>
                 <domain:registrant>test</domain:registrant>
-                <domain:contact type="admin">test</domain:contact>
-                <domain:contact type="tech">test</domain:contact>
               </domain:create>
             </create>
             <extension>
@@ -91,6 +93,14 @@ RSpec.describe 'EPP domain:create' do
         request
         expect(response).to have_code_of(2202)
       end
+
+      it 'does not close dispute' do
+        expect { request }.to_not change { Dispute.count }
+      end
+
+      it 'does not create domain' do
+        expect { request }.to_not change { Domain.count }
+      end
     end
 
     context 'when password is absent' do
@@ -101,10 +111,7 @@ RSpec.describe 'EPP domain:create' do
             <create>
               <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
                 <domain:name>test.com</domain:name>
-                <domain:period unit="y">1</domain:period>
                 <domain:registrant>test</domain:registrant>
-                <domain:contact type="admin">test</domain:contact>
-                <domain:contact type="tech">test</domain:contact>
               </domain:create>
             </create>
             <extension>
@@ -121,6 +128,14 @@ RSpec.describe 'EPP domain:create' do
         request
         expect(response).to have_code_of(2003)
       end
+
+      it 'does not close dispute' do
+        expect { request }.to_not change { Dispute.count }
+      end
+
+      it 'does not create domain' do
+        expect { request }.to_not change { Domain.count }
+      end
     end
   end
 
@@ -132,10 +147,7 @@ RSpec.describe 'EPP domain:create' do
           <create>
             <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
               <domain:name>test.com</domain:name>
-              <domain:period unit="y">1</domain:period>
               <domain:registrant>test</domain:registrant>
-              <domain:contact type="admin">test</domain:contact>
-              <domain:contact type="tech">test</domain:contact>
             </domain:create>
           </create>
           <extension>
@@ -151,6 +163,10 @@ RSpec.describe 'EPP domain:create' do
     specify do
       request
       expect(response).to have_code_of(1000)
+    end
+
+    it 'creates domain' do
+      expect { request }.to change { Domain.count }.from(0).to(1)
     end
   end
 end

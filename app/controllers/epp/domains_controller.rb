@@ -40,6 +40,10 @@ class Epp::DomainsController < EppController
           log_pricelist_id: @domain_pricelist.id
         })
 
+        if @domain.disputed?
+          @domain.close_dispute
+        end
+
         render_epp_response '/epp/domains/create'
       else
         handle_errors(@domain)

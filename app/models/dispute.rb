@@ -30,6 +30,10 @@ class Dispute < ActiveRecord::Base
     self.password = SecureRandom.hex
   end
 
+  def close
+    destroy
+  end
+
   private
 
   def validate_expire_date_past

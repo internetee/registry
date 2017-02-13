@@ -130,4 +130,12 @@ RSpec.describe Dispute, db: false do
       expect(dispute.password).to_not be_empty
     end
   end
+
+  describe '#close', db: true do
+    let!(:dispute) { create(:dispute) }
+
+    it 'removes dispute' do
+      expect { dispute.close }.to change { described_class.count }.from(1).to(0)
+    end
+  end
 end

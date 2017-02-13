@@ -5,5 +5,9 @@ module Concerns::Domain::Disputable
     @dispute ||= ::Dispute.for_domain(name)
   end
 
+  def close_dispute
+    dispute.close
+  end
+
   alias_method :dispute, :disputed?
 end
