@@ -1,0 +1,10 @@
+en:
+  registrar:
+    domains:
+      index:
+        download_btn: Download
+        csv:
+          domain_name: Domain
+          registrant_name: Registrant name
+          registrant_code: Registrant code
+          expire_time: Date of expiry

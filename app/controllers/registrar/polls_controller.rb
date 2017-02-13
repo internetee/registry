@@ -3,7 +3,12 @@ class Registrar::PollsController < Registrar::DeppController # EPP controller
   before_action :init_epp_xml
 
   def show
-    @data = depp_current_user.request(@ex.poll)
+    if Rails.env.test? # Stub for depp server request
+      @data = Object.new
+      def @data.css(key); []; end
+    else
+      @data = depp_current_user.request(@ex.poll)
+    end
   end
 
   def destroy
