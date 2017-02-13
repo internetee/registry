@@ -94,12 +94,12 @@ RSpec.describe 'EPP domain:create' do
         expect(response).to have_code_of(2202)
       end
 
-      it 'does not close dispute' do
-        expect { request }.to_not change { Dispute.count }
-      end
-
       it 'does not create domain' do
         expect { request }.to_not change { Domain.count }
+      end
+
+      it 'does not close dispute' do
+        expect { request }.to_not change { Dispute.count }
       end
     end
 
