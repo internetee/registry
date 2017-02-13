@@ -6,11 +6,9 @@ RSpec.describe 'EPP domain:create' do
   before :example do
     travel_to Time.zone.parse('05.07.2010')
 
-    registrar = create(:registrar)
-    user = create(:api_user_epp, registrar: registrar)
-    create(:account, registrar: registrar, balance: 1.0)
+    user = create(:api_user_with_unlimited_balance)
 
-    create(:contact, code: 'test')
+    create(:registrant, code: 'test')
 
     create(:pricelist,
            category: 'com',
@@ -35,6 +33,7 @@ RSpec.describe 'EPP domain:create' do
             <create>
               <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
                 <domain:name>test.com</domain:name>
+                <domain:period unit="y">1</domain:period>
                 <domain:registrant>test</domain:registrant>
               </domain:create>
             </create>
@@ -73,6 +72,7 @@ RSpec.describe 'EPP domain:create' do
             <create>
               <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
                 <domain:name>test.com</domain:name>
+                <domain:period unit="y">1</domain:period>
                 <domain:registrant>test</domain:registrant>
               </domain:create>
             </create>
@@ -111,6 +111,7 @@ RSpec.describe 'EPP domain:create' do
             <create>
               <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
                 <domain:name>test.com</domain:name>
+                <domain:period unit="y">1</domain:period>
                 <domain:registrant>test</domain:registrant>
               </domain:create>
             </create>
@@ -147,6 +148,7 @@ RSpec.describe 'EPP domain:create' do
           <create>
             <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
               <domain:name>test.com</domain:name>
+              <domain:period unit="y">1</domain:period>
               <domain:registrant>test</domain:registrant>
             </domain:create>
           </create>
