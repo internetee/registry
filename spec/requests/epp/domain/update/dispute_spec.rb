@@ -2,11 +2,13 @@ require 'rails_helper'
 
 RSpec.describe 'EPP domain:update' do
   subject(:request) { post '/epp/command/update', frame: request_xml }
-  let!(:domain) { create(:domain, name: 'test.com') }
-  let!(:new_registrant) { create(:registrant, code: 'test') }
+  let!(:registrant) { create(:registrant, code: 'old-code') }
+  let!(:domain) { create(:domain, name: 'test.com', registrant: registrant) }
+  let!(:new_registrant) { create(:registrant, code: 'new-code') }
 
   before :example do
     sign_in_to_epp_area
+    Setting.request_confrimation_on_registrant_change_enabled = false
   end
 
   context 'when domain is disputed' do
@@ -21,7 +23,7 @@ RSpec.describe 'EPP domain:update' do
               <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
                 <domain:name>test.com</domain:name>
                   <domain:chg>
-                    <domain:registrant>test</domain:registrant>
+                    <domain:registrant>new-code</domain:registrant>
                   </domain:chg>
               </domain:update>
             </update>
@@ -40,7 +42,15 @@ RSpec.describe 'EPP domain:update' do
 
       specify do
         request
-        expect(response).to have_code_of(1001)
+        expect(response).to have_code_of(1000)
+      end
+
+      it 'changes registrant' do
+        expect { request; domain.reload }.to change { domain.registrant_code }.from('old-code').to('new-code')
+      end
+
+      it 'closes dispute' do
+        expect { request }.to change { Dispute.count }.from(1).to(0)
       end
     end
 
@@ -53,7 +63,7 @@ RSpec.describe 'EPP domain:update' do
               <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
                 <domain:name>test.com</domain:name>
                   <domain:chg>
-                    <domain:registrant>test</domain:registrant>
+                    <domain:registrant>new-code</domain:registrant>
                   </domain:chg>
               </domain:update>
             </update>
@@ -74,6 +84,14 @@ RSpec.describe 'EPP domain:update' do
         request
         expect(response).to have_code_of(2202)
       end
+
+      it 'does not change registrant' do
+        expect { request; domain.reload }.to_not change { domain.registrant_code }
+      end
+
+      it 'does not close dispute' do
+        expect { request }.to_not change { Dispute.count }
+      end
     end
 
     context 'when password is absent' do
@@ -85,7 +103,7 @@ RSpec.describe 'EPP domain:update' do
               <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
                 <domain:name>test.com</domain:name>
                   <domain:chg>
-                    <domain:registrant>test</domain:registrant>
+                    <domain:registrant>new-code</domain:registrant>
                   </domain:chg>
               </domain:update>
             </update>
@@ -103,6 +121,14 @@ RSpec.describe 'EPP domain:update' do
         request
         expect(response).to have_code_of(2003)
       end
+
+      it 'does not change registrant' do
+        expect { request; domain.reload }.to_not change { domain.registrant_code }
+      end
+
+      it 'does not close dispute' do
+        expect { request }.to_not change { Dispute.count }
+      end
     end
   end
 
@@ -115,7 +141,7 @@ RSpec.describe 'EPP domain:update' do
             <domain:update xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
               <domain:name>test.com</domain:name>
                 <domain:chg>
-                  <domain:registrant>test</domain:registrant>
+                  <domain:registrant>new-code</domain:registrant>
                 </domain:chg>
             </domain:update>
           </update>
@@ -131,7 +157,11 @@ RSpec.describe 'EPP domain:update' do
 
     specify do
       request
-      expect(response).to have_code_of(1001)
+      expect(response).to have_code_of(1000)
+    end
+
+    it 'changes registrant' do
+      expect { request; domain.reload }.to change { domain.registrant_code }.from('old-code').to('new-code')
     end
   end
 end
