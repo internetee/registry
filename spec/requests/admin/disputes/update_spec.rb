@@ -59,8 +59,7 @@ RSpec.describe 'admin dispute update' do
   it 'redirects to :show' do
     dispute = create(:dispute)
 
-    patch admin_dispute_path(dispute), dispute: { password: 'test' }
-    request
+    patch admin_dispute_path(dispute), dispute: attributes_for(:dispute)
 
     expect(response).to redirect_to admin_dispute_path(dispute)
   end
