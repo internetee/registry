@@ -9,8 +9,7 @@ RSpec.describe 'admin dispute update' do
   it 'updates domain name' do
     dispute = create(:dispute, domain_name: 'test.com')
 
-    patch admin_dispute_path(dispute), dispute: attributes_for(:dispute,
-                                                               domain_name: 'new.com')
+    patch admin_dispute_path(dispute), dispute: attributes_for(:dispute, domain_name: 'new.com')
     dispute.reload
 
     expect(dispute.domain_name).to eq('new.com')
@@ -19,11 +18,10 @@ RSpec.describe 'admin dispute update' do
   it 'updates password' do
     dispute = create(:dispute, password: 'test')
 
-    patch admin_dispute_path(dispute), dispute: attributes_for(:dispute,
-                                                               password: 'new password')
+    patch admin_dispute_path(dispute), dispute: attributes_for(:dispute, password: 'new-password')
     dispute.reload
 
-    expect(dispute.password).to eq('new password')
+    expect(dispute.password).to eq('new-password')
   end
 
   it 'generates password' do
@@ -39,8 +37,7 @@ RSpec.describe 'admin dispute update' do
     dispute = create(:dispute, expire_date: Time.zone.parse('05.07.2010').to_date)
 
     patch admin_dispute_path(dispute),
-          dispute: attributes_for(:dispute,
-                                  expire_date: Time.zone.parse('06.07.2010').to_date.to_s)
+          dispute: attributes_for(:dispute, expire_date: Time.zone.parse('06.07.2010').to_date.to_s)
     dispute.reload
 
     expect(dispute.expire_date).to eq(Time.zone.parse('06.07.2010').to_date)
@@ -49,8 +46,7 @@ RSpec.describe 'admin dispute update' do
   it 'updates comment' do
     dispute = create(:dispute, comment: 'test')
 
-    patch admin_dispute_path(dispute),
-          dispute: attributes_for(:dispute, comment: 'new comment')
+    patch admin_dispute_path(dispute), dispute: attributes_for(:dispute, comment: 'new comment')
     dispute.reload
 
     expect(dispute.comment).to eq('new comment')
@@ -62,5 +58,21 @@ RSpec.describe 'admin dispute update' do
     patch admin_dispute_path(dispute), dispute: attributes_for(:dispute)
 
     expect(response).to redirect_to admin_dispute_path(dispute)
+  end
+
+  context 'when domain name is reserved' do
+    let!(:dispute) { create(:dispute) }
+    let!(:reserved_domain) { create(:reserved_domain,
+                                    name: 'test.com',
+                                    password: 'reserved-domain-password') }
+
+    it 'replaces reserved domain password with the one from dispute' do
+      patch admin_dispute_path(dispute), dispute: attributes_for(:dispute,
+                                                                 domain_name: 'test.com',
+                                                                 password: 'dispute-password')
+      reserved_domain.reload
+
+      expect(reserved_domain.password).to eq('dispute-password')
+    end
   end
 end
