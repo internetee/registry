@@ -35,9 +35,10 @@ en:
         delete_btn_confirm: Are you sure you want to delete dispute?
 
       form:
+        domain_name_info: Prohibits registrant change if registered
+        password_info: Generated automatically if left blank; Overrides reserved domain's password
         create_btn: Create dispute
         update_btn: Update dispute
-        password_info: It will be generated automatically if left blank
 
       domain_dispute:
         title: Dispute
