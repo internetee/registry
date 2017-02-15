@@ -22,12 +22,15 @@ class Admin::ReservedDomainsController < AdminController
   def create
     @domain = ReservedDomain.new(reserved_domain_params)
 
+    if dispute
+      @domain.password = dispute.password
+    end
+
     if @domain.save
-      flash[:notice] = I18n.t('domain_added')
+      flash[:notice] = t('.created')
       redirect_to admin_reserved_domains_path
     else
-      flash.now[:alert] = I18n.t('failed_to_add_domain')
-      render 'new'
+      render :new
     end
   end
 
@@ -64,5 +67,9 @@ class Admin::ReservedDomainsController < AdminController
 
   def set_domain
     @domain = ReservedDomain.find(params[:id])
+  end
+
+  def dispute
+    @dispute ||= Dispute.find_by(domain_name: @domain.name)
   end
 end
