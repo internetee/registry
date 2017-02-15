@@ -63,4 +63,18 @@ RSpec.describe 'admin dispute create' do
       }.to change { domain.registrant_change_prohibited? }.from(false).to(true)
     end
   end
+
+  context 'when domain is reserved' do
+    let!(:reserved_domain) { create(:reserved_domain,
+                                    name: 'test.com',
+                                    password: 'reserved-domain-password') }
+
+    it 'replaces reserved domain password' do
+      post admin_disputes_path, { dispute: attributes_for(:dispute,
+                                                          domain_name: 'test.com',
+                                                          password: 'dispute-password') }
+      reserved_domain.reload
+      expect(reserved_domain.password).to eq('dispute-password')
+    end
+  end
 end

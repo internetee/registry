@@ -26,6 +26,11 @@ module Admin
             domain.prohibit_registrant_change
             domain.save!
           end
+
+          if reserved_domain
+            reserved_domain.password = @dispute.password
+            reserved_domain.save!
+          end
         end
 
         flash[:notice] = t('.created')
@@ -92,6 +97,10 @@ module Admin
 
     def domain
       @domain ||= Domain.find_by(name: @dispute.domain_name)
+    end
+
+    def reserved_domain
+      @reserved_domain ||= ReservedDomain.find_by(name: @dispute.domain_name)
     end
   end
 end
