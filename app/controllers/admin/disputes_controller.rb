@@ -16,15 +16,9 @@ module Admin
 
     def create
       @dispute = Dispute.new(dispute_params)
-      @dispute.generate_password unless password_provided
+      created = DisputeCreation.new(dispute: @dispute).create
 
-      if @dispute.valid?(:admin)
-        @dispute.transaction do
-          @dispute.save!
-          prohibit_registrant_change!
-          sync_reserved_domain!
-        end
-
+      if created
         flash[:notice] = t('.created')
         redirect_to admin_dispute_path(@dispute)
       else
@@ -37,14 +31,9 @@ module Admin
 
     def update
       @dispute.attributes = dispute_params
-      @dispute.generate_password unless password_provided
+      updated = DisputeUpdate.new(dispute: @dispute).update
 
-      if @dispute.valid?(:admin)
-        @dispute.transaction do
-          @dispute.save!
-          sync_reserved_domain!
-        end
-
+      if updated
         flash[:notice] = t('.updated')
         redirect_to admin_dispute_path(@dispute)
       else
@@ -85,28 +74,6 @@ module Admin
     def expire_date
       return if search_params[:expire_date_start].blank? || search_params[:expire_date_end].blank?
       Date.parse(search_params[:expire_date_start])..Date.parse(search_params[:expire_date_end])
-    end
-
-    def sync_reserved_domain!
-      reserved_domain = ReservedDomain.find_by(name: @dispute.domain_name)
-
-      return unless reserved_domain
-
-      reserved_domain.password = @dispute.password
-      reserved_domain.save!
-    end
-
-    def password_provided
-      dispute_params[:password].present?
-    end
-
-    def prohibit_registrant_change!
-      domain = Domain.find_by(name: @dispute.domain_name)
-
-      return unless domain
-
-      domain.prohibit_registrant_change
-      domain.save!
     end
   end
 end
