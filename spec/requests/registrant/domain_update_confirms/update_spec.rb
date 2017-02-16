@@ -21,7 +21,7 @@ RSpec.describe 'domain_update_confirms update' do
     travel_to Time.zone.parse('05.07.2010')
   end
 
-  context 'when domain is disputed' do
+  context 'when domain name is disputed' do
     let!(:dispute) { create(:dispute, domain_name: 'test.com', password: 'test') }
     let(:request_xml) { <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -60,7 +60,7 @@ RSpec.describe 'domain_update_confirms update' do
     end
   end
 
-  context 'when domain is not disputed' do
+  context 'when domain name is not disputed' do
     let(:request_xml) { <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
       <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">

@@ -35,7 +35,7 @@ RSpec.describe 'admin reserved domain create' do
     expect(response).to redirect_to admin_reserved_domains_path
   end
 
-  context 'when domain is disputed' do
+  context 'when domain name is disputed' do
     let!(:dispute) { create(:dispute,
                             domain_name: 'test.com',
                             password: 'dispute-password') }

@@ -15,7 +15,7 @@ RSpec.describe 'EPP domain:update' do
       Setting.request_confrimation_on_registrant_change_enabled = true
     end
 
-    context 'when domain is disputed' do
+    context 'when domain name is disputed' do
       let!(:dispute) { create(:dispute, domain_name: 'test.com', password: 'test') }
 
       context 'when password is valid' do
@@ -136,7 +136,7 @@ RSpec.describe 'EPP domain:update' do
       end
     end
 
-    context 'when domain is not disputed' do
+    context 'when domain name is not disputed' do
       let(:request_xml) { <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
       <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
@@ -175,7 +175,7 @@ RSpec.describe 'EPP domain:update' do
       Setting.request_confrimation_on_registrant_change_enabled = false
     end
 
-    context 'when domain is disputed' do
+    context 'when domain name is disputed' do
       let!(:dispute) { create(:dispute, domain_name: 'test.com', password: 'test') }
 
       context 'when password is valid' do
@@ -296,7 +296,7 @@ RSpec.describe 'EPP domain:update' do
       end
     end
 
-    context 'when domain is not disputed' do
+    context 'when domain name is not disputed' do
       let(:request_xml) { <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
       <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">

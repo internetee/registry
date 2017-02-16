@@ -37,6 +37,10 @@ class Admin::ReservedDomainsController < AdminController
   def update
     @domain.attributes = reserved_domain_update_params
 
+    if dispute
+      @domain.password = dispute.password
+    end
+
     if @domain.save
       flash[:notice] = t('.updated')
       redirect_to admin_reserved_domains_path
