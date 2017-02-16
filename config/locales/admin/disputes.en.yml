@@ -1,0 +1,54 @@
+en:
+  admin:
+    disputes:
+      index:
+        new_btn: New dispute
+        title: Disputes
+        not_found: No dispute found
+
+      overview:
+        title: Overview
+
+      new:
+        title: New dispute
+
+      edit:
+        title: Edit dispute
+
+      create:
+        created: Dispute has been successfully created
+
+      update:
+        updated: Dispute has been successfully updated
+
+      destroy:
+        deleted: Dispute has been successfully deleted
+
+      search_form:
+        expire_date_range: Exp. date range
+        btn_search: Search
+        btn_reset: Reset
+
+      dispute:
+        edit_btn: Edit
+        delete_btn: Delete
+        delete_btn_confirm: Are you sure you want to delete dispute?
+
+      form:
+        domain_name_info: Prohibits registrant change if registered
+        password_info: Generated automatically if left blank; Overrides reserved domain's password
+        create_btn: Create dispute
+        update_btn: Update dispute
+
+      domain_dispute:
+        title: Dispute
+        view_btn: View dispute
+        no_dispute: No dispute
+
+  activerecord:
+    errors:
+      models:
+        dispute:
+          attributes:
+            expire_date:
+              past: cannot be in the past

@@ -10,10 +10,6 @@ class BlockedDomain < ActiveRecord::Base
     def by_domain name
       where(name: name)
     end
-
-    def any_of_domains names
-      where(name: names)
-    end
   end
 
   def name= val

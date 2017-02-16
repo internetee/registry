@@ -56,6 +56,10 @@ class Epp::Domain < Domain
       domain.registered_at = Time.zone.now
       domain.valid_from = Time.zone.now
       domain.valid_to = domain.valid_from.beginning_of_day + convert_period_to_time(domain.period, domain.period_unit) + 1.day
+
+      provided_dispute_password = frame.css('reserved > pw').text
+      domain.check_disputed(password: provided_dispute_password)
+
       domain
     end
   end
@@ -474,6 +478,9 @@ class Epp::Domain < Domain
     return super if frame.blank?
 
     check_discarded
+
+    provided_dispute_password = frame.css('reserved > pw').text
+    check_disputed(password: provided_dispute_password)
 
     at = {}.with_indifferent_access
     at.deep_merge!(attrs_from(frame.css('chg'), current_user, 'chg'))
@@ -930,6 +937,24 @@ class Epp::Domain < Domain
       end
 
       res
+    end
+  end
+
+  def check_disputed(password:)
+    if disputed?
+      if password.blank?
+        throw :epp_error, {
+          code: '2003',
+          msg: I18n.t('activerecord.errors.models.epp_domain.attributes.base.required_parameter_missing_dispute_password'),
+        }
+      end
+
+      if password != dispute.password
+        throw :epp_error, {
+          code: '2202',
+          msg: I18n.t('activerecord.errors.models.epp_domain.attributes.base.invalid_auth_information_reserved'),
+        }
+      end
     end
   end
 

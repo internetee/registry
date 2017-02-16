@@ -6,6 +6,8 @@ class Domain < ActiveRecord::Base
   include Concerns::Domain::Activatable
   include Concerns::Domain::ForceDelete
   include Concerns::Domain::Deletable
+  include Concerns::Domain::Disputable
+  include Concerns::Domain::RegistrantChange
 
   has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
 
@@ -27,11 +29,6 @@ class Domain < ActiveRecord::Base
   accepts_nested_attributes_for :admin_domain_contacts,  allow_destroy: true, reject_if: :admin_change_prohibited?
   has_many :tech_domain_contacts
   accepts_nested_attributes_for :tech_domain_contacts, allow_destroy: true, reject_if: :tech_change_prohibited?
-
-  def registrant_change_prohibited?
-    statuses.include? DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED
-  end
-
 
   # NB! contacts, admin_contacts, tech_contacts are empty for a new record
   has_many :domain_contacts, dependent: :destroy

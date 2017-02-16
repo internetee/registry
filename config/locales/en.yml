@@ -70,6 +70,7 @@ en:
               ds_data_with_key_not_allowed: 'dsData object with key data is not allowed'
               key_data_not_allowed: 'keyData object is not allowed'
               required_parameter_missing_reserved: 'Required parameter missing; reserved>pw element required for reserved domains'
+              required_parameter_missing_dispute_password: Required parameter missing; reserved pw element required for dispute domains
               invalid_auth_information_reserved: 'Invalid authorization information; invalid reserved>pw value'
               domain_name_blocked: 'Data management policy violation: Domain name is blocked [name]'
             name_dirty:

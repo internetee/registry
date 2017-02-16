@@ -1,3 +1,6 @@
+13.02.2017
+* Introduce disputes
+
 24.01.2017
 * Disallow EPP domain:update/transfer/delete if a domain has "deleteCandidate" status
 

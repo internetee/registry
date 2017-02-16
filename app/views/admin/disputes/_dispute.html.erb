@@ -1,0 +1,12 @@
+<% dispute = DisputePresenter.new(dispute: dispute, view: self) %>
+
+<tr class="dispute">
+    <td><%= dispute.link %></td>
+    <td><%= dispute.password %></td>
+    <td><%= dispute.expire_date %></td>
+    <td><%= dispute.update_time %></td>
+    <td>
+        <%= dispute.list_edit_btn %>
+        <%= dispute.list_delete_btn %>
+    </td>
+</tr>

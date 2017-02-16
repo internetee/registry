@@ -5,3 +5,12 @@ en:
         title: Reserved domains
         new_btn: New reserved domain
         reset_btn: Reset
+
+      create:
+        created: Reserved domain has been successfully created
+
+      update:
+        updated: Reserved domain has been successfully updated
+
+      form:
+        password_info: Dispute's password will be used if domain is disputed.
