@@ -1,6 +1,7 @@
 class Admin::DomainsController < AdminController
   load_and_authorize_resource
   before_action :set_domain, only: [:show, :edit, :update, :zonefile]
+  helper_method :force_delete_templates
 
   # rubocop: disable Metrics/PerceivedComplexity
   # rubocop: disable Metrics/CyclomaticComplexity
@@ -59,22 +60,26 @@ class Admin::DomainsController < AdminController
     end
   end
 
-  def set_force_delete
-    if @domain.set_force_delete
-      flash[:notice] = I18n.t('domain_updated')
-    else
-      flash.now[:alert] = I18n.t('failed_to_update_domain')
+  def schedule_force_delete
+    raise 'Template param cannot be empty' if params[:template_name].blank?
+
+    @domain.transaction do
+      @domain.schedule_force_delete
+      @domain.registrar.messages.create!(body: I18n.t('force_delete_set_on_domain', domain_name: @domain.name))
+      DomainDeleteForcedEmailJob.enqueue(@domain.id, params[:template_name])
     end
-    redirect_to [:admin, @domain]
+
+    redirect_to edit_admin_domain_path(@domain), notice: t('.scheduled')
   end
 
-  def unset_force_delete
-    if @domain.unset_force_delete
-      flash[:notice] = I18n.t('domain_updated')
+  def cancel_force_delete
+    if @domain.cancel_force_delete
+      flash[:notice] = t('.cancelled')
     else
       flash.now[:alert] = I18n.t('failed_to_update_domain')
     end
-    redirect_to [:admin, @domain]
+
+    redirect_to edit_admin_domain_path(@domain)
   end
 
   def versions
@@ -121,5 +126,8 @@ class Admin::DomainsController < AdminController
 
     params[:q][:valid_to_lteq] = ca_cache
   end
-end
 
+  def force_delete_templates
+    %w(removed_company death)
+  end
+end

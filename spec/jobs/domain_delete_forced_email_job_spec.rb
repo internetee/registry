@@ -17,7 +17,8 @@ RSpec.describe DomainDeleteForcedEmailJob do
 
     after :example do
       domain_id = 1
-      described_class.enqueue(domain_id)
+      template_name = 'removed_company'
+      described_class.enqueue(domain_id, template_name)
     end
 
     it 'creates log record' do
@@ -32,7 +33,8 @@ RSpec.describe DomainDeleteForcedEmailJob do
     it 'sends email' do
       expect(DomainDeleteMailer).to receive(:forced).with(domain: domain,
                                                           registrar: 'registrar',
-                                                          registrant: 'registrant')
+                                                          registrant: 'registrant',
+                                                          template_name: 'removed_company')
                                       .and_return(message)
       expect(message).to receive(:deliver_now)
     end

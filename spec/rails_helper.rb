@@ -6,6 +6,7 @@ require 'capybara/poltergeist'
 require 'paper_trail/frameworks/rspec'
 require 'money-rails/test_helpers'
 require 'support/requests/session_helpers'
+require 'support/requests/epp_helpers'
 require 'support/features/session_helpers'
 
 if ENV['ROBOT']
@@ -15,6 +16,8 @@ end
 
 require 'support/matchers/alias_attribute'
 require 'support/matchers/active_job'
+require 'support/matchers/epp/code'
+
 require 'support/capybara'
 require 'support/factory_girl'
 require 'support/database_cleaner'
@@ -29,6 +32,9 @@ RSpec.configure do |config|
   config.include Requests::SessionHelpers, type: :request
   config.include Features::SessionHelpers, type: :feature
   config.include AbstractController::Translation, type: :feature
+  config.include Requests::EPPHelpers, epp: true
+
+  config.include Requests::EPPHelpers, epp: true
 
   config.define_derived_metadata(file_path: %r[/spec/features/]) do |metadata|
     metadata[:db] = true if metadata[:db].nil?
@@ -46,8 +52,16 @@ RSpec.configure do |config|
     metadata[:db] = true if metadata[:db].nil?
   end
 
+  config.define_derived_metadata(file_path: %r[/spec/requests/epp/]) do |metadata|
+    metadata[:epp] = true if metadata[:epp].nil?
+  end
+
   config.define_derived_metadata(file_path: %r[/spec/api/]) do |metadata|
     metadata[:type] = :request
+  end
+
+  config.define_derived_metadata(file_path: %r[/spec/requests/epp/]) do |metadata|
+    metadata[:epp] = true if metadata[:epp].nil?
   end
 
   config.use_transactional_fixtures = false

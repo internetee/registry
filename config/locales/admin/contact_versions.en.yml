@@ -1,0 +1,5 @@
+en:
+  admin:
+    contact_versions:
+      index:
+        reset_btn: Reset

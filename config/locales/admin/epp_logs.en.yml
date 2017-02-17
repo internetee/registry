@@ -1,0 +1,6 @@
+en:
+  admin:
+    epp_logs:
+      index:
+        title: EPP log
+        reset_btn: Reset

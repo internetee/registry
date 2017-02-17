@@ -68,16 +68,16 @@
     #epp-users.panel.panel-default
       .panel-heading.clearfix
         .pull-left
-          = t(:api_users)
+          = t('.api_users')
         .pull-right
-          = link_to(t(:create_new_api_user), new_admin_registrar_api_user_path(@registrar), class: 'btn btn-default btn-xs')
+          = link_to(t('.new_api_use_btn'), new_admin_registrar_api_user_path(@registrar), class: 'btn btn-default btn-xs')
 
       .table-responsive
         %table.table.table-hover.table-bordered.table-condensed
           %thead
             %tr
               %th{class: 'col-xs-6'}= t(:username)
-              %th{class: 'col-xs-6'}= t(:active)
+              %th{class: 'col-xs-6'}= t('.active')
           %tbody
             - @registrar.api_users.each do |x|
               %tr

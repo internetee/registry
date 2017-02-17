@@ -1,0 +1,14 @@
+en:
+  admin:
+    menu:
+      users: Users
+      api_users: API users
+      admin_users: Admin users
+      archive: Archive
+      domain_history: Domain history
+      contact_history: Contact history
+      blocked_domains: Blocked domains
+      reserved_domains: Reserved domains
+      epp_log: EPP log
+      repp_log: REPP log
+      que: Que

@@ -21,10 +21,10 @@
         = f.label :valid_from, t(:valid)
         .input-group
           = f.text_field(:valid_from, value: f.object.valid_from.try(:to_s, :dshort),
-            class: 'form-control js-datepicker') 
+            class: 'form-control datepicker')
           %span.input-group-addon -
           = f.text_field(:valid_to, value: f.object.valid_to.try(:to_s, :dshort),
-            class: 'form-control js-datepicker')
+            class: 'form-control datepicker')
 
   %hr
   .row
