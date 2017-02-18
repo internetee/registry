@@ -131,11 +131,14 @@ RSpec.describe Dispute, db: false do
     end
   end
 
-  describe '#close', db: true do
-    let!(:dispute) { create(:dispute) }
+  describe '#close', db: false do
+    let(:dispute) { described_class.new }
+    let(:dispute_close) { instance_double(Disputes::Close) }
 
-    it 'removes dispute' do
-      expect { dispute.close }.to change { described_class.count }.from(1).to(0)
+    it 'closes dispute' do
+      expect(Disputes::Close).to receive(:new).with(dispute: dispute).and_return(dispute_close)
+      expect(dispute_close).to receive(:close).and_return(true)
+      expect(dispute.close).to be true
     end
   end
 end

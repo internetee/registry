@@ -22,7 +22,8 @@ en:
         updated: Dispute has been successfully updated
 
       destroy:
-        deleted: Dispute has been successfully deleted
+        closed: Dispute has been successfully deleted
+        not_closed: Unable to delete dispute
 
       search_form:
         expire_date_range: Exp. date range

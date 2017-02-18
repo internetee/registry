@@ -31,7 +31,7 @@ class Dispute < ActiveRecord::Base
   end
 
   def close
-    destroy
+    Disputes::Close.new(dispute: self).close
   end
 
   private
