@@ -49,7 +49,7 @@ RSpec.describe 'admin dispute create' do
     expect(response).to redirect_to admin_dispute_path(dispute)
   end
 
-  context 'when domain is present' do
+  context 'when domain is registered' do
     let!(:domain) { create(:domain, name: 'test.com') }
 
     it 'prohibits registrant change' do
