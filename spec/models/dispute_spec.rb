@@ -93,17 +93,17 @@ RSpec.describe Dispute, db: false do
     end
   end
 
-  describe '::delete_expired', db: true do
+  describe '::close_expired', db: true do
     before :example do
       travel_to(Date.parse('05.07.2010'))
+    end
 
+    it 'closes expired disputes' do
       create(:dispute, expire_date: Date.parse('04.07.2010'))
       create(:dispute, expire_date: Date.parse('05.07.2010'))
 
-      described_class.delete_expired
-    end
+      described_class.close_expired
 
-    it 'deletes expired records' do
       expect(described_class.count).to eq(1)
     end
   end

@@ -59,7 +59,7 @@ if @cron_group == 'registry'
   end if @environment == 'production'
 
   every :day, at: '12:01am' do
-    runner 'Dispute.delete_expired'
+    runner 'Dispute.close_expired'
   end
 end
 

@@ -18,8 +18,10 @@ class Dispute < ActiveRecord::Base
     where('expire_date < ?', Time.zone.today)
   end
 
-  def self.delete_expired
-    expired.delete_all
+  def self.close_expired
+    expired.each do |dispute|
+      dispute.close
+    end
   end
 
   def self.for_domain(domain)
