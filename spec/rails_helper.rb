@@ -33,7 +33,7 @@ RSpec.configure do |config|
   config.include AbstractController::Translation, type: :request
   config.include Features::SessionHelpers, type: :feature
   config.include AbstractController::Translation, type: :feature
-  config.include Requests::EPPHelpers
+  config.include Requests::EPPHelpers, epp: true
 
   config.define_derived_metadata(file_path: %r[/spec/features/]) do |metadata|
     metadata[:db] = true if metadata[:db].nil?
