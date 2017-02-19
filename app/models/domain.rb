@@ -17,7 +17,6 @@ class Domain < ActiveRecord::Base
 
   alias_attribute :on_hold_time, :outzone_at
   alias_attribute :outzone_time, :outzone_at
-  alias_attribute :delete_time, :delete_at
 
   # TODO: whois requests ip whitelist for full info for own domains and partial info for other domains
   # TODO: most inputs should be trimmed before validatation, probably some global logic?
