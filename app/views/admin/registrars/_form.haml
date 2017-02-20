@@ -75,7 +75,7 @@
     .col-md-8
       .panel.panel-default
         .panel-heading.clearfix
-          .pull-left= t(:misc)
+          .pull-left= t('.misc')
         .panel-body
           .form-group
             .col-md-4.control-label
@@ -91,4 +91,4 @@
   %hr
   .row
     .col-md-8.text-right
-      = button_tag(t(:save), class: 'btn btn-primary')
+      = button_tag(t(".#{f.object.new_record? ? 'create' : 'update'}_btn"), class: 'btn btn-success')

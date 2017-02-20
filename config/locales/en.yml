@@ -394,14 +394,10 @@ en:
   history: 'History'
 
   new_registrar: 'New registrar'
-  registrar_added: 'Registrar added!'
-  failed_to_add_registrar: 'Failed to add registrar'
   registrar_details: 'Registrar details'
   vat_no: 'VAT no'
   edit_registrar: 'Edit registrar'
   back_to_registrar: 'Back to registrar'
-  registrar_updated: 'Registrar updated'
-  failed_to_update_registrar: 'Failed to update registrar'
   registrar_deleted: 'Registrar deleted'
   failed_to_delete_registrar: 'Failed to delete registrar'
 
