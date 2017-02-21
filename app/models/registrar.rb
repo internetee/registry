@@ -102,7 +102,7 @@ class Registrar < ActiveRecord::Base
       buyer_city: city,
       buyer_zip: zip,
       buyer_phone: phone,
-      buyer_url: url,
+      buyer_url: website,
       buyer_email: email,
       reference_no: reference_no,
       invoice_items_attributes: [
