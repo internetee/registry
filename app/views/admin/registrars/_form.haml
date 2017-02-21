@@ -29,6 +29,11 @@
               = f.text_field(:phone, class: 'form-control')
           .form-group
             .col-md-4.control-label
+              = f.label :website
+            .col-md-7
+              = f.url_field :website, class: 'form-control'
+          .form-group
+            .col-md-4.control-label
               = f.label :email
             .col-md-7
               = f.text_field(:email, class: 'form-control', lax_email: true)

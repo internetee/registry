@@ -12,7 +12,7 @@ class Registrar < ActiveRecord::Base
   has_many :priv_contacts, -> { privs }, class_name: 'Contact'
   has_many :white_ips, dependent: :destroy
 
-  delegate :balance, to: :cash_account
+  delegate :balance, to: :cash_account, allow_nil: true
 
   validates :name, :reg_no, :country_code, :email, :code, presence: true
   validates :name, :reg_no, :reference_no, :code, uniqueness: true
