@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.feature 'Edit registrar' do
-  given!(:registrar) { create(:registrar_with_unlimited_balance) }
+  given!(:registrar) { create(:registrar) }
 
   background do
     sign_in_to_admin_area
