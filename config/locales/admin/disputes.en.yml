@@ -51,8 +51,7 @@ en:
       models:
         dispute:
           attributes:
+            domain_name:
+              unsupported_zone: has unsupported zone
             expire_date:
               past: cannot be in the past
-    attributes:
-      dispute:
-        domain_name: Domain

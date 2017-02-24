@@ -6,6 +6,7 @@ class Dispute < ActiveRecord::Base
   validates :domain_name, :password, :expire_date, :comment, presence: true
   validates :domain_name, uniqueness: true
   validate :validate_expire_date_past, on: :admin
+  validate :validate_domain_name
 
   alias_attribute :create_time, :created_at
   alias_attribute :update_time, :updated_at
@@ -41,5 +42,14 @@ class Dispute < ActiveRecord::Base
   def validate_expire_date_past
     return if expire_date.nil?
     errors.add(:expire_date, :past) if expire_date.past?
+  end
+
+  def validate_domain_name
+    return unless domain_name
+
+    zone = domain_name.split('.').last
+    supported_zone = ZonefileSetting.origins.include?(zone)
+
+    errors.add(:domain_name, :unsupported_zone) unless supported_zone
   end
 end

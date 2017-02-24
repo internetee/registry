@@ -21,6 +21,24 @@ RSpec.describe Dispute, db: false do
       dispute.validate
       expect(dispute.errors).to have_key(:domain_name)
     end
+
+    it 'rejects non-existent zone', db: true do
+      ZonefileSetting.delete_all
+      create(:zonefile_setting, origin: 'com')
+
+      dispute.domain_name = 'test.org'
+      dispute.validate
+      expect(dispute.errors).to have_key(:domain_name)
+    end
+
+    it 'accepts existing zone', db: true do
+      ZonefileSetting.delete_all
+      create(:zonefile_setting, origin: 'com')
+
+      dispute.domain_name = 'test.com'
+      dispute.validate
+      expect(dispute.errors).to_not have_key(:domain_name)
+    end
   end
 
   describe 'expiration date validation' do
