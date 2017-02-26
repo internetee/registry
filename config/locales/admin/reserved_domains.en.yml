@@ -14,3 +14,7 @@ en:
 
       form:
         password_info: Dispute's password will be used if domain is disputed; Generated automatically if left blank and not disputed
+
+      reserved_domain:
+        edit_btn: Edit
+        edit_prohibited: Editing is prohibited while domain name is disputed

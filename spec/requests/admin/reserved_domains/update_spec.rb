@@ -49,13 +49,12 @@ RSpec.describe 'admin reserved domain update' do
                             domain_name: 'test.com',
                             password: 'dispute-password') }
 
-    it 'replaces password with the one from dispute' do
-      patch admin_reserved_domain_path(reserved_domain),
-            reserved_domain: attributes_for(:reserved_domain,
-                                            password: 'reserved-domain-password')
-      reserved_domain.reload
-
-      expect(reserved_domain.password).to eq('dispute-password')
+    it 'throws exception' do
+      expect {
+        patch admin_reserved_domain_path(reserved_domain),
+              reserved_domain:
+                attributes_for(:reserved_domain, password: 'reserved-domain-password') }
+        .to raise_error('Editing is prohibited while domain name is disputed')
     end
   end
 end

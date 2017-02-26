@@ -35,11 +35,9 @@ class Admin::ReservedDomainsController < AdminController
   end
 
   def update
-    @domain.attributes = reserved_domain_update_params
+    raise t('admin.reserved_domains.reserved_domain.edit_prohibited') if dispute
 
-    if dispute
-      @domain.password = dispute.password
-    end
+    @domain.attributes = reserved_domain_update_params
 
     if @domain.save
       flash[:notice] = t('.updated')
