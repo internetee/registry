@@ -38,7 +38,7 @@ Domain name mapping protocol short version:
         <eis:legalDocument>    1        Base64 encoded document. 
                                           Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
         <eis:reserved>         0-1
-          <eis:pw>             0-1      Required if registering a reserved domain
+          <eis:pw>             0-1      Required if registering a reserved or disputed domain
     <clTRID>                   0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-citizen-as-a-registrant-creates-a-domain)
@@ -86,6 +86,8 @@ Domain name mapping protocol short version:
       <eis:extdata>              0-1       Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
         <eis:legalDocument>      0-1       Base64 encoded document. Required if registrant is changing. 
                                              Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
+        <eis:reserved>           0-1
+          <eis:pw>               0-1       Required if domain name is disputed
     <clTRID>                     0-1       Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-domain-updates-domain-and-adds-objects)
