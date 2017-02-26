@@ -7,7 +7,7 @@ RSpec.feature 'Update reserved domain' do
     sign_in_to_admin_area
 
     visit admin_reserved_domains_url
-    click_link_or_button 'Edit Pw'
+    click_link_or_button 'Edit'
 
     click_link_or_button 'Save'
 
