@@ -5,8 +5,11 @@ class Dispute < ActiveRecord::Base
 
   validates :domain_name, :password, :expire_date, :comment, presence: true
   validates :domain_name, uniqueness: true
-  validate :validate_expire_date_past, on: :admin
-  validate :validate_domain_name
+
+  with_options on: :admin do
+    validate :validate_expire_date_past
+    validate :validate_domain_name
+  end
 
   alias_attribute :create_time, :created_at
   alias_attribute :update_time, :updated_at

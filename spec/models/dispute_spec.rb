@@ -27,7 +27,7 @@ RSpec.describe Dispute, db: false do
       create(:zonefile_setting, origin: 'com')
 
       dispute.domain_name = 'test.org'
-      dispute.validate
+      dispute.validate(:admin)
       expect(dispute.errors).to have_key(:domain_name)
     end
 
@@ -36,7 +36,7 @@ RSpec.describe Dispute, db: false do
       create(:zonefile_setting, origin: 'com')
 
       dispute.domain_name = 'test.com'
-      dispute.validate
+      dispute.validate(:admin)
       expect(dispute.errors).to_not have_key(:domain_name)
     end
   end
