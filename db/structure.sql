@@ -2752,7 +2752,7 @@ CREATE TABLE registrars (
     street character varying,
     zip character varying,
     code character varying,
-    url character varying,
+    website character varying,
     directo_handle character varying,
     vat boolean,
     legacy_id integer,
@@ -5376,4 +5376,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170212020532');
 INSERT INTO schema_migrations (version) VALUES ('20170212020841');
 
 INSERT INTO schema_migrations (version) VALUES ('20170212021349');
+
+INSERT INTO schema_migrations (version) VALUES ('20170221115548');
 

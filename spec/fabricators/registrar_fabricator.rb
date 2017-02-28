@@ -49,7 +49,7 @@ Fabricator(:eis, from: :registrar) do
   city 'Tallinn'
   street 'Paldiski mnt 80'
   zip '10617'
-  url 'www.internet.ee'
+  website 'www.internet.ee'
   code { sequence(:code) { |i| "EIS#{i}" } }
   accounts(count: 1) { Fabricate(:account, account_activities: []) }
 end

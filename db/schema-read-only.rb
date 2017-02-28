@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170212021349) do
+ActiveRecord::Schema.define(version: 20170221115548) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1056,7 +1056,7 @@ ActiveRecord::Schema.define(version: 20170212021349) do
     t.string   "street"
     t.string   "zip"
     t.string   "code"
-    t.string   "url"
+    t.string   "website"
     t.string   "directo_handle"
     t.boolean  "vat"
     t.integer  "legacy_id"

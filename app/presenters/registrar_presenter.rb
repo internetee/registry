@@ -16,8 +16,8 @@ class RegistrarPresenter
     registrar.phone
   end
 
-  def url
-    registrar.url
+  def website
+    registrar.website
   end
 
   private

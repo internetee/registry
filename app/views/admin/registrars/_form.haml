@@ -29,6 +29,11 @@
               = f.text_field(:phone, class: 'form-control')
           .form-group
             .col-md-4.control-label
+              = f.label :website
+            .col-md-7
+              = f.url_field :website, class: 'form-control'
+          .form-group
+            .col-md-4.control-label
               = f.label :email
             .col-md-7
               = f.text_field(:email, class: 'form-control', lax_email: true)
@@ -75,7 +80,7 @@
     .col-md-8
       .panel.panel-default
         .panel-heading.clearfix
-          .pull-left= t(:misc)
+          .pull-left= t('.misc')
         .panel-body
           .form-group
             .col-md-4.control-label
@@ -91,4 +96,4 @@
   %hr
   .row
     .col-md-8.text-right
-      = button_tag(t(:save), class: 'btn btn-primary')
+      = button_tag(t(".#{f.object.new_record? ? 'create' : 'update'}_btn"), class: 'btn btn-success')

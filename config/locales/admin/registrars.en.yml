@@ -1,7 +1,23 @@
 en:
   admin:
     registrars:
+      index:
+        new_btn: New registrar
+
       show:
         new_api_use_btn: New API user
         active: Active
         api_users: API users
+
+      create:
+        created: Registrar has been successfully created
+        not_created: Unable to create registrar
+
+      update:
+        updated: Registrar has been successfully updated
+        not_updated: Unable to update registrar
+
+      form:
+        misc: Miscellaneous
+        create_btn: Create registrar
+        update_btn: Update registrar

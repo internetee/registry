@@ -23,10 +23,10 @@ class Admin::RegistrarsController < AdminController
         @registrar.accounts.create!(account_type: Account::CASH, currency: 'EUR')
       end
 
-      flash[:notice] = I18n.t('registrar_added')
+      flash[:notice] = t('.created')
       redirect_to [:admin, @registrar]
     rescue ActiveRecord::RecordInvalid
-      flash.now[:alert] = I18n.t('failed_to_add_registrar')
+      flash.now[:alert] = t('.not_created')
       render 'new'
     end
   end
@@ -35,10 +35,10 @@ class Admin::RegistrarsController < AdminController
 
   def update
     if @registrar.update(registrar_params)
-      flash[:notice] = I18n.t('registrar_updated')
+      flash[:notice] = t('.updated')
       redirect_to [:admin, @registrar]
     else
-      flash.now[:alert] = I18n.t('failed_to_update_registrar')
+      flash.now[:alert] = t('.not_updated')
       render 'edit'
     end
   end
@@ -62,7 +62,7 @@ class Admin::RegistrarsController < AdminController
   def registrar_params
     params.require(:registrar).permit(
       :name, :reg_no, :vat_no, :street, :city, :state, :zip, :billing_address,
-      :country_code, :email, :phone, :billing_email, :code, :test_registrar
+      :country_code, :email, :phone, :website, :billing_email, :code, :test_registrar
     )
   end
 end
