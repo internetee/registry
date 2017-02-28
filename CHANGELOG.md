@@ -1,3 +1,6 @@
+28.02.2017
+* Add missing registrar's website field in UI
+
 13.02.2017
 * Introduce disputes
 
