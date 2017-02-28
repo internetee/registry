@@ -31,8 +31,9 @@ RSpec.configure do |config|
   config.include ActiveSupport::Testing::TimeHelpers
   config.include Requests::SessionHelpers, type: :request
   config.include Features::SessionHelpers, type: :feature
+  config.include AbstractController::Translation, type: :request
   config.include AbstractController::Translation, type: :feature
-  config.include Requests::EPPHelpers
+  config.include Requests::EPPHelpers, type: :request
 
   config.define_derived_metadata(file_path: %r[/spec/features/]) do |metadata|
     metadata[:db] = true if metadata[:db].nil?
@@ -56,10 +57,6 @@ RSpec.configure do |config|
 
   config.define_derived_metadata(file_path: %r[/spec/api/]) do |metadata|
     metadata[:type] = :request
-  end
-
-  config.define_derived_metadata(file_path: %r[/spec/requests/epp/]) do |metadata|
-    metadata[:epp] = true if metadata[:epp].nil?
   end
 
   config.use_transactional_fixtures = false
