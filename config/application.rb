@@ -10,6 +10,7 @@ require 'sprockets/railtie'
 require 'csv'
 require 'rails/all'
 # require "rails/test_unit/railtie"
+require_relative '../lib/registry_log_formatter'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -78,6 +79,8 @@ module Registry
       domain:               ENV['smtp_domain'],
       openssl_verify_mode:  ENV['smtp_openssl_verify_mode']
     }
+
+    config.log_formatter = RegistryLogFormatter.new # Only works if placed in application.rb
   end
 end
 
