@@ -25,10 +25,10 @@ RSpec.describe RegistrarPresenter do
     end
   end
 
-  describe '#url' do
-    it 'returns url' do
-      expect(registrar).to receive(:url).and_return('test url')
-      expect(presenter.url).to eq('test url')
+  describe '#website' do
+    it 'returns website' do
+      expect(registrar).to receive(:website).and_return('test')
+      expect(presenter.website).to eq('test')
     end
   end
 end

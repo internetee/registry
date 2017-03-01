@@ -607,7 +607,6 @@ end
 
 RSpec.describe Domain, db: false do
   it { is_expected.to alias_attribute(:on_hold_time, :outzone_at) }
-  it { is_expected.to alias_attribute(:force_delete_time, :force_delete_at) }
   it { is_expected.to alias_attribute(:outzone_time, :outzone_at) }
 
   describe 'nameserver validation', db: true do

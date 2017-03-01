@@ -39,6 +39,9 @@
           %dt= t(:credit_balance)
           %dd= @registrar.balance
 
+          %dt= Registrar.human_attribute_name :website
+          %dd= @registrar.website
+
   .col-md-6
     .panel.panel-default
       .panel-heading
