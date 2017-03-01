@@ -84,7 +84,7 @@ RESPONSE:
 </epp>
 ```
 
-### EPP Contact with valid user create command successfully creates a contact  
+### EPP Contact with valid user with address create command successfully creates a contact
 
 REQUEST:
 
@@ -102,6 +102,57 @@ REQUEST:
             <contact:pc>123456</contact:pc>
             <contact:cc>EE</contact:cc>
           </contact:addr>
+        </contact:postalInfo>
+        <contact:voice>+372.1234567</contact:voice>
+        <contact:email>test@example.example</contact:email>
+      </contact:create>
+    </create>
+    <extension>
+      <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+        <eis:ident type="priv" cc="EE">37605030299</eis:ident>
+        <eis:legalDocument type="pdf">dGVzdCBmYWlsCg==</eis:legalDocument>
+      </eis:extdata>
+    </extension>
+    <clTRID>ABC-12345</clTRID>
+  </command>
+</epp>
+```
+
+RESPONSE:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="lib/schemas/epp-ee-1.0.xsd">
+  <response>
+    <result code="1100">
+      <msg>Command completed successfully</msg>
+    </result>
+    <resData>
+      <contact:creData xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+        <contact:id>FIRST0:84FC4612</contact:id>
+        <contact:crDate>2015-09-09T09:40:29Z</contact:crDate>
+      </contact:creData>
+    </resData>
+    <trID>
+      <clTRID>ABC-12345</clTRID>
+      <svTRID>ccReg-7245575567</svTRID>
+    </trID>
+  </response>
+</epp>
+```
+
+### EPP Contact with valid user without address create command successfully creates a contact
+
+REQUEST:
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+  <command>
+    <create>
+      <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+        <contact:postalInfo>
+          <contact:name>John Doe</contact:name>
         </contact:postalInfo>
         <contact:voice>+372.1234567</contact:voice>
         <contact:email>test@example.example</contact:email>
