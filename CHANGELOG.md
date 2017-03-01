@@ -1,6 +1,5 @@
 02.03.2017
 * Domain list download (csv) functionality in the portal for registrars (#248)
-* deleteCandidate status now properly blocks all epp transform requests (#355)
 * readme updates (#273)
 * autotest improvements and updates
 
