@@ -1,3 +1,8 @@
+02.03.2017
+* Domain list download (csv) functionality in the portal for registrars (#248)
+* Readme updates (#273)
+* Autotest improvements and updates
+
 28.02.2017
 * Add missing registrar's website field in UI
 
