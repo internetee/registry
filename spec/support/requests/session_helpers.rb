@@ -28,5 +28,9 @@ module Requests
 
       post '/epp/session/login', frame: login_xml
     end
+
+    def sign_in_to_admin_area(user: FactoryGirl.create(:admin_user))
+      post admin_sessions_path, admin_user: { username: user.username, password: user.password }
+    end
   end
 end
