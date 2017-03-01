@@ -317,7 +317,8 @@ For Apache, REPP goes to port 443 in production, /etc/apache2/sites-enabled/repp
     SSLVerifyDepth 1
     SSLCACertificateFile /home/registry/registry/shared/ca/certs/ca.crt.pem
     SSLCARevocationPath /home/registry/registry/shared/ca/crl
-    SSLCARevocationCheck chain
+    # Uncomment this when upgrading to apache 2.4:
+    # SSLCARevocationCheck chain
 
     RequestHeader set SSL_CLIENT_S_DN_CN ""
     RequestHeader set SSL_CLIENT_CERT ""
@@ -340,6 +341,42 @@ For Apache, epp goes to port 700.
 Be sure to update paths to match your system configuration.  
 /etc/apache2/sites-enabled/epp.conf short example:
 ```apache
+<IfModule mod_ssl.c>
+    Listen 127.0.0.1:8080
+    <VirtualHost 127.0.0.1:8080>
+        ServerName your-epp-backend-domain
+        ServerAdmin your@example.com
+
+        PassengerEnabled on
+        PassengerMinInstances 10
+        PassengerMaxPoolSize 10
+        PassengerPoolIdleTime 0
+        PassengerMaxRequests 1000
+        PassengerRoot "/usr/lib/ruby/vendor_ruby/phusion_passenger/locations.ini"
+        PassengerRuby "/home/registry/.rbenv/shims/ruby"
+
+        RailsEnv production # or staging
+        DocumentRoot "/home/registry/registry/public"
+
+        # Possible values include: debug, info, notice, warn, error, crit,
+        LogLevel info
+        ErrorLog "/var/log/apache2/eppback.error.log"
+        CustomLog "/var/log/apache2/eppback.access.log" combined
+
+        <Directory />
+            Options +FollowSymLinks -Indexes
+            AllowOverride None
+        </Directory>
+
+        <Directory /home/registry/registry/public>
+            Order allow,deny
+            Allow from all
+            Options -MultiViews -Indexes
+            AllowOverride all
+        </Directory>
+    </VirtualHost>
+</IfModule>
+
 <IfModule mod_epp.c>
     Listen 700
     <VirtualHost *:700>
