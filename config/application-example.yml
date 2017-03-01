@@ -133,34 +133,3 @@ payments_lhv_url: 'https://www.seb.ee/cgi-bin/dv.sh/ipank.r'
 payments_lhv_bank_certificate: 'eyp_pub.pem'
 payments_lhv_seller_private: 'kaupmees_priv.pem'
 payments_lhv_seller_account: 'testvpos'
-
-#
-# AUTOTEST overwrites
-#
-test:
-  webclient_ips: '127.0.0.1' # it should match to localhost ip address
-  crl_dir:      '/var/lib/jenkins/workspace/registry/ca/crl'
-  crl_path:     '/var/lib/jenkins/workspace/registry/ca/crl/crl.pem'
-  ca_cert_path: '/var/lib/jenkins/workspace/registry/ca/certs/ca.crt.pem'
-  ca_key_path:  '/var/lib/jenkins/workspace/registry/ca/private/ca.key.pem'
-  ca_key_password: 'test'
-  cert_path:    '/var/lib/jenkins/workspace/registry/ca/certs/webclient.crt.pem'
-
-  # Registrar/DEPP
-  key_path: '/var/lib/jenkins/workspace/registry/ca/private/webclient.key.pem'
-  epp_hostname: '127.0.0.1'
-  repp_url: 'http://127.0.0.1:8989/repp/v1/'
-
-
-#
-# DEVELOPMENT overwrites
-#
-development:
-  epp_hostname: '127.0.0.1'
-  repp_url: 'http://127.0.0.1:8080/repp/v1/'
-  cert_path: 'ca/certs/webclient.cert.pem'
-  key_path: 'ca/private/webclient.key.pem'
-  crl_dir:     'ca/crl'
-  ca_cert_path: 'ca/certs/ca.crt.pem'
-  ca_key_path:  'ca/private/ca.key.pem'
-  ca_key_password: 'your-root-key-password'
