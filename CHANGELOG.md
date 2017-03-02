@@ -1,6 +1,7 @@
 02.03.2017
 * Domain list download (csv) functionality in the portal for registrars (#248)
 * Readme updates (#273)
+* Epp-examples.md update with contact create examples with postal address processing disabled (#326)
 * Autotest improvements and updates
 
 28.02.2017
