@@ -8,3 +8,9 @@ en:
           registrant_name: Registrant name
           registrant_code: Registrant code
           expire_time: Date of expiry
+
+      form:
+        save_btn: Save
+        dnskeys:
+          flags: Flags
+          alg: Algorithm
