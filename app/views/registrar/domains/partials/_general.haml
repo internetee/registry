@@ -14,14 +14,14 @@
       %dt= t(:registrant)
       %dd= "#{registrant.name} (#{@data.css('registrant').text})"
 
-      %dt= t(:registered)
+      %dt= t('.registered')
       %dd= @data.css('crDate').text
 
       %dt= t(:valid_to)
       %dd= @data.css('exDate').text
 
-      %dt= t(:created)
+      %dt= t('.created')
       %dd= @data.css('crDate').text
 
-      %dt= t(:updated)
+      %dt= t('.updated')
       %dd= @data.css('upDate').text

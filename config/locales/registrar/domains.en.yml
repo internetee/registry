@@ -14,3 +14,9 @@ en:
         dnskeys:
           flags: Flags
           alg: Algorithm
+
+      partials:
+        general:
+          registered: Registered
+          created: Created
+          updated: Updated
