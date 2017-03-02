@@ -3,20 +3,20 @@
 = f.hidden_field :password
 .row
   .col-md-8
-    = render 'registrar/contacts/form_partials/general', f: f
+    = render 'registrar/contacts/form/general', f: f
 
 - if address_processing?
   .row
     .col-md-8
-      = render 'registrar/contacts/form_partials/address', f: f
+      = render 'registrar/contacts/form/address', f: f
 
 - if !@contact.persisted?
   .row
     .col-md-8
-      = render 'registrar/contacts/form_partials/code', f: f
+      = render 'registrar/contacts/form/code', f: f
 .row
   .col-md-8
-    = render 'registrar/contacts/form_partials/legal_document', f: f
+    = render 'registrar/contacts/form/legal_document', f: f
 
 .row
   .col-md-8.text-right
