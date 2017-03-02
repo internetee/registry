@@ -84,7 +84,7 @@ RESPONSE:
 </epp>
 ```
 
-### EPP Contact with valid user with address create command successfully creates a contact
+### EPP contact create command with postal address element successfully creates the object (address processing disabled)
 
 REQUEST:
 
@@ -141,7 +141,7 @@ RESPONSE:
 </epp>
 ```
 
-### EPP Contact with valid user without address create command successfully creates a contact
+### EPP contact create command without postal address element successfully creates the object (address processing disabled)
 
 REQUEST:
 
