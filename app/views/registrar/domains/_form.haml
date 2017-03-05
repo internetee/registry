@@ -18,7 +18,7 @@
               = label_tag 'domain[legal_document]', t(:legal_document), class: c
               %p.help-block= t(:legal_document_max_size)
             .col-md-7
-              = file_field_tag 'domain[legal_document]', required: fr, data: {legal_document: true}
+              = legal_document_field_tag 'domain[legal_document]', required: fr
     .col-md-4
       %p.domain-general-help= t(:domain_general_help).html_safe
       %p.domain-admin-contact-help= t(:domain_admin_contact_help).html_safe
