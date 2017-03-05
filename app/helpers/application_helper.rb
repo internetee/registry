@@ -86,6 +86,7 @@ module ApplicationHelper
 
   def legal_document_types
     types = LegalDocument::TYPES.dup
+    types.delete('ddoc')
     ".#{types.join(',.')}"
   end
 end
