@@ -83,4 +83,9 @@ module ApplicationHelper
       version.object_changes.to_h.slice(*attrs).any? && css_class
     end
   end
+
+  def legal_document_types
+    types = LegalDocument::TYPES.dup
+    ".#{types.join(',.')}"
+  end
 end
