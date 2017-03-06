@@ -42,8 +42,10 @@ module Admin
     end
 
     def destroy
-      if @dispute.destroy
-        flash[:notice] = t('.deleted')
+      if @dispute.close
+        flash[:notice] = t('.closed')
+      else
+        flash[:alert] = t('.not_closed')
       end
 
       redirect_to admin_disputes_path

@@ -1,7 +1,7 @@
 <% if flash[:notice] %>
     <div class="alert alert-success alert-dismissible">
         <button class="close" data-dismiss="alert" type=button><span>&times;</span></button>
-        <p><%= flash[:notice] %></p>
+        <p><%= flash[:notice].html_safe %></p>
     </div>
 <% end %>
 

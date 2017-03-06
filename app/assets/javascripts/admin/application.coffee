@@ -6,8 +6,6 @@ $(window).load ->
     allowEmptyOption: true, create: true
   })
 
-  $('[data-toggle="popover"]').popover()
-
   # doublescroll
   $('[data-doublescroll]').doubleScroll({
     onlyIfScroll: false,

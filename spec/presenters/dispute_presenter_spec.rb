@@ -6,9 +6,8 @@ RSpec.describe DisputePresenter do
 
   describe '#name' do
     it 'returns dispute id with domain name' do
-      expect(dispute).to receive(:id).and_return(1)
       expect(dispute).to receive(:domain_name).and_return('test.com')
-      expect(presenter.name).to eq('#1 (test.com)')
+      expect(presenter.name).to eq('test.com')
     end
   end
 

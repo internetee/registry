@@ -21,6 +21,24 @@ RSpec.describe Dispute, db: false do
       dispute.validate
       expect(dispute.errors).to have_key(:domain_name)
     end
+
+    it 'rejects non-existent zone', db: true do
+      ZonefileSetting.delete_all
+      create(:zonefile_setting, origin: 'com')
+
+      dispute.domain_name = 'test.org'
+      dispute.validate(:admin)
+      expect(dispute.errors).to have_key(:domain_name)
+    end
+
+    it 'accepts existing zone', db: true do
+      ZonefileSetting.delete_all
+      create(:zonefile_setting, origin: 'com')
+
+      dispute.domain_name = 'test.com'
+      dispute.validate(:admin)
+      expect(dispute.errors).to_not have_key(:domain_name)
+    end
   end
 
   describe 'expiration date validation' do
@@ -93,17 +111,17 @@ RSpec.describe Dispute, db: false do
     end
   end
 
-  describe '::delete_expired', db: true do
+  describe '::close_expired', db: true do
     before :example do
       travel_to(Date.parse('05.07.2010'))
+    end
 
+    it 'closes expired disputes' do
       create(:dispute, expire_date: Date.parse('04.07.2010'))
       create(:dispute, expire_date: Date.parse('05.07.2010'))
 
-      described_class.delete_expired
-    end
+      described_class.close_expired
 
-    it 'deletes expired records' do
       expect(described_class.count).to eq(1)
     end
   end
@@ -131,11 +149,14 @@ RSpec.describe Dispute, db: false do
     end
   end
 
-  describe '#close', db: true do
-    let!(:dispute) { create(:dispute) }
+  describe '#close', db: false do
+    let(:dispute) { described_class.new }
+    let(:dispute_close) { instance_double(Disputes::Close) }
 
-    it 'removes dispute' do
-      expect { dispute.close }.to change { described_class.count }.from(1).to(0)
+    it 'closes dispute' do
+      expect(Disputes::Close).to receive(:new).with(dispute: dispute).and_return(dispute_close)
+      expect(dispute_close).to receive(:close).and_return(true)
+      expect(dispute.close).to be true
     end
   end
 end

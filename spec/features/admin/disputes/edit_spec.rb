@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.feature 'Edit dispute' do
   given!(:dispute) { create(:dispute) }
 
-  scenario 'editing dispute' do
+  it 'updates dispute' do
     sign_in_to_admin_area
 
     visit admin_disputes_url

@@ -5,7 +5,11 @@ class Dispute < ActiveRecord::Base
 
   validates :domain_name, :password, :expire_date, :comment, presence: true
   validates :domain_name, uniqueness: true
-  validate :validate_expire_date_past, on: :admin
+
+  with_options on: :admin do
+    validate :validate_expire_date_past
+    validate :validate_domain_name
+  end
 
   alias_attribute :create_time, :created_at
   alias_attribute :update_time, :updated_at
@@ -18,8 +22,10 @@ class Dispute < ActiveRecord::Base
     where('expire_date < ?', Time.zone.today)
   end
 
-  def self.delete_expired
-    expired.delete_all
+  def self.close_expired
+    expired.each do |dispute|
+      dispute.close
+    end
   end
 
   def self.for_domain(domain)
@@ -31,7 +37,7 @@ class Dispute < ActiveRecord::Base
   end
 
   def close
-    destroy
+    Disputes::Close.new(dispute: self).close
   end
 
   private
@@ -39,5 +45,14 @@ class Dispute < ActiveRecord::Base
   def validate_expire_date_past
     return if expire_date.nil?
     errors.add(:expire_date, :past) if expire_date.past?
+  end
+
+  def validate_domain_name
+    return unless domain_name
+
+    zone = domain_name.split('.').last
+    supported_zone = ZonefileSetting.origins.include?(zone)
+
+    errors.add(:domain_name, :unsupported_zone) unless supported_zone
   end
 end

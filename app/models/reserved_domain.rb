@@ -69,4 +69,7 @@ class ReservedDomain < ActiveRecord::Base
     UpdateWhoisRecordJob.enqueue name, 'reserved'
   end
 
+  def updatable?
+    !Dispute.exists?(domain_name: name)
+  end
 end
