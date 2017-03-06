@@ -7,7 +7,7 @@ class DisputePresenter
   end
 
   def name
-    "##{dispute.id} (#{dispute.domain_name})"
+    domain_name
   end
 
   def link
