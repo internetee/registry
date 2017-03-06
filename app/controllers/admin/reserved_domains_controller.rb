@@ -27,7 +27,12 @@ class Admin::ReservedDomainsController < AdminController
     end
 
     if @domain.save
-      flash[:notice] = t('.created')
+      if !created_with_dispute_password
+        flash[:notice] = t('.created')
+      else
+        flash[:notice] = t('.created_with_dispute_password_html')
+      end
+
       redirect_to admin_reserved_domains_path
     else
       render :new
@@ -73,5 +78,9 @@ class Admin::ReservedDomainsController < AdminController
 
   def dispute
     @dispute ||= Dispute.find_by(domain_name: @domain.name)
+  end
+
+  def created_with_dispute_password
+    dispute && reserved_domain_params[:password].present?
   end
 end

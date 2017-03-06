@@ -8,12 +8,16 @@ en:
 
       create:
         created: Reserved domain has been successfully created
+        created_with_dispute_password_html: >
+                                          Reserved domain has been successfully created,
+                                          but <b>the provided password has been discarded</b>
+                                          in favor of one from dispute
 
       update:
         updated: Reserved domain has been successfully updated
 
       form:
-        password_info: Dispute's password will be used if domain is disputed; Generated automatically if left blank and not disputed
+        password_info: Generated automatically if left blank and not disputed
 
       reserved_domain:
         edit_btn: Edit
