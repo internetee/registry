@@ -914,7 +914,7 @@ ALTER SEQUENCE directos_id_seq OWNED BY directos.id;
 
 
 --
--- Name: disputes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: disputes; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE disputes (
@@ -2738,7 +2738,7 @@ CREATE TABLE registrars (
     street character varying,
     zip character varying,
     code character varying,
-    url character varying,
+    website character varying,
     directo_handle character varying,
     vat boolean,
     legacy_id integer,
@@ -3663,7 +3663,7 @@ ALTER TABLE ONLY directos
 
 
 --
--- Name: disputes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: disputes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY disputes
@@ -4200,7 +4200,7 @@ CREATE INDEX index_directos_on_item_type_and_item_id ON directos USING btree (it
 
 
 --
--- Name: index_disputes_on_domain_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_disputes_on_domain_name; Type: INDEX; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE UNIQUE INDEX index_disputes_on_domain_name ON disputes USING btree (domain_name);
@@ -5351,4 +5351,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170212020532');
 INSERT INTO schema_migrations (version) VALUES ('20170212020841');
 
 INSERT INTO schema_migrations (version) VALUES ('20170212021349');
+
+INSERT INTO schema_migrations (version) VALUES ('20170221115548');
 

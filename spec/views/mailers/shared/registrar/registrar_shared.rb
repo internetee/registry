@@ -11,7 +11,7 @@ RSpec.shared_examples 'domain mailer registrar info' do
     name
     email
     phone
-    url
+    website
   )
 
   attributes.each do |attr_name|

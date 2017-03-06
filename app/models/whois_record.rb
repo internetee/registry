@@ -85,7 +85,7 @@ class WhoisRecord < ActiveRecord::Base
 
     # update registar triggers when adding new attributes
     h[:registrar]         = domain.registrar.name
-    h[:registrar_url]     = domain.registrar.url
+    h[:registrar_website] = domain.registrar.website
     h[:registrar_phone]   = domain.registrar.phone
     h[:registrar_address] = domain.registrar.address
     h[:registrar_changed] = domain.registrar.updated_at.try(:to_s, :iso8601)

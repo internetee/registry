@@ -4,3 +4,5 @@ en:
       index:
         title: EPP log
         reset_btn: Reset
+      show:
+        title: EPP log
