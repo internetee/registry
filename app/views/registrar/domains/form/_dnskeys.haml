@@ -39,7 +39,7 @@
 
         .form-group
           .col-md-3.control-label
-            = label_tag "domain_dnskeys_attributes_#{k}_flags", t(:flags)
+            = label_tag "domain_dnskeys_attributes_#{k}_flags", t('.flags')
           .col-md-7
             = select_tag "domain[dnskeys_attributes][#{k}][flags]",
               options_for_select(Depp::Dnskey::FLAGS, v['flags']),
@@ -55,7 +55,7 @@
 
         .form-group
           .col-md-3.control-label
-            = label_tag "domain_dnskeys_attributes_#{k}_alg", t(:alg)
+            = label_tag "domain_dnskeys_attributes_#{k}_alg", t('.alg')
           .col-md-7
             = select_tag "domain[dnskeys_attributes][#{k}][alg]",
               options_for_select(Depp::Dnskey::ALGORITHMS, v['alg']), { class: 'form-control' }
