@@ -55,3 +55,8 @@ en:
               unsupported_zone: has unsupported zone
             expire_date:
               past: cannot be in the past
+
+  helpers:
+    placeholder:
+      dispute:
+        domain_name: example.com
