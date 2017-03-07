@@ -28,12 +28,6 @@ RSpec.describe Contact do
       @contact.updator.should == nil
     end
 
-    it 'phone should return false' do
-      @contact.phone = '32341'
-      @contact.valid?
-      @contact.errors[:phone].should == ["Phone nr is invalid"]
-    end
-
     it 'should require country code when org' do
       @contact.ident_type = 'org'
       @contact.valid?
@@ -201,17 +195,17 @@ RSpec.describe Contact do
       it 'should have related domain descriptions hash' do
         contact = @domain.registrant
         contact.reload # somehow it registrant_domains are empty?
-        contact.related_domain_descriptions.should == {"#{@domain.name}" => [:registrant]}
+        contact.related_domain_descriptions.should == { "#{@domain.name}" => [:registrant] }
       end
 
       it 'should have related domain descriptions hash when find directly' do
         contact = @domain.registrant
-        Contact.find(contact.id).related_domain_descriptions.should == {"#{@domain.name}" => [:registrant]}
+        Contact.find(contact.id).related_domain_descriptions.should == { "#{@domain.name}" => [:registrant] }
       end
 
       it 'should have related domain descriptions hash' do
         contact = @domain.contacts.first
-        contact.related_domain_descriptions.should == {"#{@domain.name}" => [:admin]}
+        contact.related_domain_descriptions.should == { "#{@domain.name}" => [:admin] }
       end
 
       it 'should fully validate email syntax for old records' do
@@ -243,7 +237,7 @@ RSpec.describe Contact do
           @contact.ident = date
           @contact.valid?
           @contact.errors.full_messages.should ==
-              ["Ident Ident not in valid birthady format, should be YYYY-MM-DD"]
+            ["Ident Ident not in valid birthady format, should be YYYY-MM-DD"]
         end
       end
     end
@@ -448,6 +442,40 @@ RSpec.describe Contact, db: false do
       contact.country_code = 'invalid'
       contact.validate
       expect(contact.errors).to have_key(:country_code)
+    end
+  end
+
+  describe 'phone validation', db: false do
+    let(:contact) { described_class.new }
+
+    it 'rejects absent' do
+      contact.phone = nil
+      contact.validate
+      expect(contact.errors).to have_key(:phone)
+    end
+
+    it 'rejects invalid format' do
+      contact.phone = '123'
+      contact.validate
+      expect(contact.errors).to have_key(:phone)
+    end
+
+    it 'rejects all zeros in country code' do
+      contact.phone = '+000.1'
+      contact.validate
+      expect(contact.errors).to have_key(:phone)
+    end
+
+    it 'rejects all zeros in phone number' do
+      contact.phone = '+123.0'
+      contact.validate
+      expect(contact.errors).to have_key(:phone)
+    end
+
+    it 'accepts valid' do
+      contact.phone = '+123.4'
+      contact.validate
+      expect(contact.errors).to_not have_key(:phone)
     end
   end
 
