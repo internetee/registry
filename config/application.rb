@@ -78,6 +78,8 @@ module Registry
       domain:               ENV['smtp_domain'],
       openssl_verify_mode:  ENV['smtp_openssl_verify_mode']
     }
+
+    config.action_view.default_form_builder = 'DefaultFormBuilder'
   end
 end
 

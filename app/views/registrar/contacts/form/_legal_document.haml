@@ -10,4 +10,4 @@
         = f.label :legal_document, t(:legal_document)
         %p.help-block= t(:legal_document_max_size)
       .col-md-7
-        = f.file_field :legal_document, :value => '', data: {legal_document: true}
+        = f.legal_document_field :legal_document
