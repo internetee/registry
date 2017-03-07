@@ -1,82 +1,47 @@
-<table width="600" cellspacing="0" cellpadding="0" border="0" align="center"><tbody>
-  <tr><td>
-    <table cellspacing="0" cellpadding="0" border="0" align="center" style="text-align: justify; line-height: 16px; font-size: 12px;"><tbody>
-      <tr><td>
-        <br />
+<p>Lugupeetud domeeni <%= @domain.name %> registreerija/halduskontakt</p>
 
-<strong>Lugupeetud domeeni <%= @domain.name %> kontaktisik</strong>
+<p>Eesti Interneti Sihtasutusele (EIS) on saanud teatavaks, et juriidiline isik registrikoodiga <%= @registrant.reg_no %> on äriregistrist kustutatud.</p>
 
-<p>.ee domeeniregistrisse on domeeni <b><%= @domain.name %></b> kohta kantud j&auml;rgmised andmed:</p>
+<p>Kuna äriregistrist kustutatud juriidiline isik ei saa olla domeeni registreerijaks, algas domeeni <%= @domain.name %> suhtes <%= @redemption_grace_period %> päevane kustutusmenetlus. Menetluse käigus on domeen internetis kättesaadav.</p>
 
-<p>Registreerija nimi: <b><%= @registrant.name %></b><br />
-Registrikood: <b><%= @registrant.ident %></b></p>
+<p>Domeeni suhtes õigust omaval isikul on võimalus esitada domeeni <%= @domain.name %> registripidajale <%= @registrar.name %> domeeni üleandmise taotlus koos tõendava dokumendiga.</p>
 
-<p>Eesti Interneti Sihtasutusele (EIS) on saanud teatavaks, et juriidiline isik registrikoodiga <b><%= @registrant.ident %></b> on &auml;riregistrist kustutatud.</p>
+<p>Kui üleandmine ei ole <%= @redemption_grace_period %> päeva jooksul toimunud, kustub domeen <%= @domain.name %> <%= @domain.force_delete_date %> 24 tunni jooksul süsteemi poolt juhuslikult valitud ajahetkel. Soovi korral on võimalik domeen pärast selle kustumist registrist “kes ees, see mees” põhimõttel uuesti registreerida.</p>
 
-<p>Kuiv&otilde;rd &auml;riregistrist kustutatud juriidiline isik ei saa olla domeeni registreerijaks, siis algatas EIS <b><%= l(Time.zone.now, format: :date) %></b> vastavalt Domeenireeglite (<a href="http://www.internet.ee/domeenid/" target="_blank">http://www.internet.ee/domeenid/</a>) punktile 6.4 domeeni <b><%= @domain.name %></b> suhtes 30 p&auml;eva pikkuse kustutusmenetluse. Kustutamise k&auml;igus j&auml;&auml;b domeen internetis k&auml;ttesaadavaks.</p>
-
-<p>Domeenireeglite punktist 6.4 tulenevalt on domeeni suhtes &otilde;igust omaval registreerijal v&otilde;imalus esitada domeeni <b><%= @domain.name %></b> registripidajale <b><%= @registrar.name %></b> domeeni &uuml;leandmise taotlus Domeenireeglite p 5.3.6.2 kohaselt. Taotlusele tuleb lisada domeeni omandamist t&otilde;endavad dokumendid, mis asendavad Domeenireeglite punktis 5.3.6.3 s&auml;testatud &uuml;leandva registreerija n&otilde;usolekut. Vastav dokumentatsioon tuleb esitada Registripidajale esimesel v&otilde;imalusel.</p>
-
-<p>Kui &uuml;leandmine ei ole 30 p&auml;eva jooksul toimunud, kustub domeen <b><%= @domain.name %></b> 24 tunni jooksul <b><%= @domain.force_delete_date %></b> juhuslikult valitud ajahetkel. Soovi korral on v&otilde;imalik domeen p&auml;rast selle kustumist registrist “kes ees, see mees” p&otilde;him&otilde;ttel uuesti registreerida.</p>
-
-<p>Lisak&uuml;simuste korral v&otilde;tke palun &uuml;hendust oma registripidajaga:</p>
-
+<p>Lisaküsimuste korral võtke palun ühendust oma registripidajaga:</p>
 <%= render 'mailers/shared/registrar/registrar.et.html', registrar: @registrar %>
 
-<hr>
+Lugupidamisega
+Eesti Interneti Sihtasutus
+---------------------------------------------------
+<p>Dear registrant/administrative contact of .ee domain,</p>
 
-<strong>Dear contact of <%= @domain.name %> domain</strong>
+<p>Estonian Internet Foundation (EIS) has learned that the legal person with registry code <%= @registrant.reg_no %> has been deleted from the Business Registry.</p>
 
-<p>The following details for domain name <b><%= @domain.name %></b> have been entered into the .ee domain registry:</p>
+<p>As a terminated legal person cannot be the registrant of a domain, a <%= @redemption_grace_period %>-day deletion process has started on <%= l(@force_delete_set_date, format: :date) %> for the <%= @domain.name %> domain. The domain will remain available on the Internet during the deletion process.</p>
 
-<p>Registrant's name: <b><%= @registrant.name %></b><br />
-Registry code: <b><%= @registrant.ident %></b></p>
+<p>The registrant holding a right to the domain name <%= @domain.name %> can submit a domain name transfer application to the registrar <%= @registrar.name %>.</p>
 
-<p>Estonian Internet Foundation (EIS) has learned that the legal person with registry code <b><%= @registrant.ident %></b> has been deleted from the Business Registry.</p>
-
-<p>As a terminated legal person cannot be the registrant of a domain, the EIS started the deletion process of <b><%= @domain.name %></b> domain on <b><%= l(Time.zone.now, format: :date) %></b> according to the Domain Regulation (<a href="http://www.internet.ee/domains/" target="_blank">http://www.internet.ee/domains/</a>), using the 30-day delete procedure. The domain will remain available on the Internet during the delete procedure.</p>
-
-<p>According to paragraph 6.4 of the Domain Regulation, the registrant holding a right to the domain name <b><%= @domain.name %></b> can submit a domain name transfer application to the registrar <b><%= @registrar.name %></b> in accordance with paragraph 5.3.6.2 of the Domain Regulation. The application must be submitted together with documents certifying the acquisition of the domain that will replace the consent of the surrendering registrant as laid down in paragraph 5.3.6.3 of the Domain Regulation. The relevant documents should be submitted to the registrar as soon as possible.</p>
-
-<p>If the transfer has not been made in 30 days, the domain <b><%= @domain.name %></b> will be deleted at a randomly chosen moment within 24 hours on <b><%= @domain.force_delete_date %></b>. After deletion it is possible to reregister the domain on a "first come, first served" basis.</p>
+<p>If the transfer has not been made in <%= @redemption_grace_period %> days, the domain <%= @domain.name %> will be deleted at a randomly chosen moment within 24 hours on <%= @domain.force_delete_date %>. After deletion it is possible to register the domain on a "first come, first served" basis.</p>
 
 <p>Should you have additional questions, please contact your registrar:</p>
-
 <%= render 'mailers/shared/registrar/registrar.en.html', registrar: @registrar %>
 
-<hr>
+Best Regards,
+Estonian Internet Foundation
+---------------------------------------------------
+<p>Уважаемый регистрант/административный контакт домена .ee</p>
 
-<strong>Уважаемое контактное лицо домена <%= @domain.name %></strong>
+<p>Целевому учреждению Eesti Internet (EIS) стало известно, что юридическое лицо с регистрационным кодом <%= @registrant.reg_no %> удалено из коммерческого реестра.</p>
 
-<p>В регистр доменов Целевого учреждения Eesti Internet (EIS) внесены следующие данные относительно домена <b><%= @domain.name %></b>:</p>
+<p>Поскольку удаленное из коммерческого регистра юридическое лицо не может являться регистрантом домена, <%= l(@force_delete_set_date, format: :date) %> начат <%= @redemption_grace_period %>-дневный процесс удаления домена <%= @domain.name %>. До завершения процесса домен доступен в Интернете.</p>
 
-<p>Имя регистранта: <b><%= @registrant.name %></b><br />
-Регистрационный код: <b><%= @registrant.ident %></b></p>
+<p>Лицо, обладающее правом на домен, может подать регистратору <%= @registrar.name %> домена <%= @domain.name %> ходатайство о передаче домена, представив вместе с ходатайством подтверждающие документы. Документы должны быть представлены регистратору в течение <%= @redemption_grace_period %> дней.</p>
 
-<p>EIS стало известно, что юридическое лицо с регистрационным кодом <%= @registrant.ident %> удалено из коммерческого реестра.</p>
+<p>Если передача домена в течение <%= @redemption_grace_period %> дней не состоялась, домен  <%= @domain.name %> <%= @domain.force_delete_date %> удаляется в течение 24 часов в произвольно выбранный системой момент времени. При желании домен можно вновь зарегистрировать после удаления из регистра по принципу "первым пришел ‒ первым обслужен".</p>
 
-<p>Поскольку прекратившее деятельность юридическое лицо не может являться регистрантом домена, то согласно пункту 6.4 Правил домена (<a href="http://www.internet.ee/domeny/" target="_blank">http://www.internet.ee/domeny/</a>) EIS <b><%= l(Time.zone.now, format: :date) %></b> инициировало удаление домена <b><%= @domain.name %></b> с применением 30-дневной процедуры удаления. На протяжении процесса удаления домен остается доступным в Интернете.</p>
-
-<p>Согласно пункту 6.4 Правил домена регистрант, имеющий право на домен, может подать регистратору <b><%= @registrar.name %></b> домена <b><%= @domain.name %></b> ходатайство о передаче домена в соответствии с п. 5.3.6.2 Правил домена. К ходатайству следует приложить подтверждающие приобретение домена документы, заменяющие в соответствии с пунктом 5.3.6.3 Правил домена согласие передающего доменное имя регистранта. EIS предлагает представить соответствующую документацию  Регистратору при первой возможности, начиная с инициирования процедуры удаления.</p>
-
-<p>Если в течение 30 дней передача не произошла, домен <b><%= @domain.name %></b> удаляется по истечении 24 часов <b><%= @domain.force_delete_date %></b> в случайный момент времени. По желанию после удаления из регистра домен можно снова зарегистрировать по принципу "кто успел, тот и съел".</p>
-
-<p>Просим обратиться к своему регистратору:</p>
-
+<p>В случае возникновения дополнительных вопросов свяжитесь, пожалуйста, со своим регистратором:</p>
 <%= render 'mailers/shared/registrar/registrar.ru.html', registrar: @registrar %>
 
-
-        <br /><br />
-
-      <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center" style="text-align: justify; line-height: 16px; font-size: 12px;"><tbody>
-        <tr><td align="left" valign="top">
-          <p><strong>Lugupidamisega,<br />
-          Best Regards,<br />
-          С уважением,</strong></p>
-          <p><i>Eesti Interneti Sihtasutus<br />
-          Estonian Internet Foundation</i></p>
-        </td><td></td></tr>
-      </tbody>
-    </table>
-  </td></tr>
-</tbody></table></table>
+С уважением,
+Eesti Interneti Sihtasutus
