@@ -3,4 +3,7 @@ en:
     confirm:
       subject: Kinnitustaotlus domeeni %{domain_name} kustutamiseks .ee registrist / Application for approval for deletion of %{domain_name}
     forced:
-      subject: Kustutusmenetluse teade
+      subject: >-
+        Domeen %{domain_name} on kustutusmenetluses
+        / Domain %{domain_name} is in deletion process
+        / Домен %{domain_name} в процессе удаления
