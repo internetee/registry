@@ -922,7 +922,6 @@ en:
   previous: 'Previous'
   personal_domain_verification_url: 'Personal domain verification url'
   available_verification_url_not_found: 'Available verification url not found, for domain.'
-  contact_already_associated_with_the_domain: 'Object association prohibits operation, contact already associated with the domain'
   add_reserved_domain: 'Add domain to reserved list'
   add_blocked_domain: 'Add domain to blocked list'
   edit_pw: 'Edit Pw'
