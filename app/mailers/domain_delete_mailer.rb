@@ -16,7 +16,9 @@ class DomainDeleteMailer < ApplicationMailer
     @force_delete_set_date = Time.zone.now
     @redemption_grace_period = Setting.redemption_grace_period
 
+    subject = default_i18n_subject(domain_name: domain.name)
     mail(to: domain.primary_contact_emails,
+         subject: subject,
          template_path: 'mailers/domain_delete_mailer/forced',
          template_name: template_name)
   end

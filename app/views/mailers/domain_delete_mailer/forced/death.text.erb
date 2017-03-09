@@ -1,44 +1,47 @@
-Lugupeetud domeeni <%= @domain.name %> kontaktisik
-.ee domeeniregistrisse on domeeni <%= @domain.name %> kohta kantud järgmised andmed:
+Lugupeetud domeeni <%= @domain.name %> registreerija/halduskontakt
 
-Registreerija nimi: <%= @registrant.name %>
-Isikukood: <%= @registrant.id_code %>
+Eesti Interneti Sihtasutusele (EIS) on saanud teatavaks, et füüsiline isik isikukoodiga <%= @registrant.id_code %> on surnud ja sellest on möödunud vähemalt 6 kuud.
 
-Eesti Interneti Sihtasutusele (EIS) on saanud teatavaks, et füüsiline isik isikukoodiga <%= @registrant.id_code %> on surnud  ja sellest on möödunud vähemalt 6 kuud.
+Kuna surnud isik ei saa olla domeeni registreerijaks, algas domeeni <%= @domain.name %> suhtes <%= @redemption_grace_period %> päevane kustutusmenetlus. Menetluse käigus on domeen internetis kättesaadav.
 
-Domeenireeglite punktist 6.6 tulenevalt on domeeni suhtes õigust omaval registreerijal võimalus esitada domeeni <%= @domain.name %> registripidajale <%= @registrar.name %> domeeni üleandmise taotlus Domeenireeglite p 5.3.6.2 kohaselt. Taotlusele tuleb lisada pärimisõiguse tõend, mis asendavad Domeenireeglite punktis 5.3.6.3 sätestatud üleandva registreerija nõusolekut. Vastav dokumentatsioon tuleb esitada Registripidajale <%= @redemption_grace_period %> päeva jooksul.
+Domeeni suhtes õigust omaval isikul on võimalus esitada domeeni <%= @domain.name %> registripidajale <%= @registrar.name %> domeeni üleandmise taotlus, millele tuleb lisada pärimisõiguse tõend. Dokumentatsioon tuleb esitada registripidajale <%= @redemption_grace_period %> päeva jooksul.
 
-Kuna käesoleval hetkel domeenil registreerijat pole, on EIS algatanud <%= l(@force_delete_set_date, format: :date) %> vastavalt Domeenireeglite (http://www.internet.ee/domeenid/) punktile 6.6 domeeni <%= @domain.name %> suhtes <%= @redemption_grace_period %> päeva pikkuse kustutusmenetluse. Kustutamise käigus jääb domeen internetis kättesaadavaks ja selle aja jooksul on võimalik teostada domeeni üleandmine.
-
-Kui üleandmine ei ole <%= @redemption_grace_period %> päeva jooksul toimunud, kustub domeen <%= @domain.name %> 24 tunni jooksul <%= @domain.force_delete_date %> juhuslikult valitud ajahetkel. Soovi korral on võimalik domeen pärast selle kustumist registrist “kes ees, see mees” põhimõttel uuesti registreerida.
+Kui üleandmine ei ole <%= @redemption_grace_period %> päeva jooksul toimunud, kustub domeen <%= @domain.name %> 24 tunni jooksul <%= @domain.force_delete_date %> süsteemi poolt juhuslikult valitud ajahetkel. Soovi korral on võimalik domeen pärast selle kustumist “kes ees, see mees” põhimõttel uuesti registreerida.
 
 Lisaküsimuste korral võtke palun ühendust oma registripidajaga:
-
 <%= render 'mailers/shared/registrar/registrar.et.text', registrar: @registrar %>
 
+Lugupidamisega
+Eesti Interneti Sihtasutus
+---------------------------------------------------
+Dear registrant/administrative contact of .ee domain,
 
+Estonian Internet Foundation (EIF) has learned that the natural person <%= @registrant.name %> with identification code <%= @registrant.id_code %> has been deceased more than 6 months.
 
-Dear contact of <%= @domain.name %> domain
+The registrant holding a right to the domain name <%= @domain.name %> can submit a domain name transfer application to the registrar <%= @registrar.name %>.The application must be submitted together with succession evidence certifying the acquisition of the domain. The relevant documents should be submitted to the registrar within <%= @redemption_grace_period %> days.
 
-The following details for domain name <%= @domain.name %> have been entered into the Estonian Internet Foundation's (EIS) domain registry:
+As a deceased natural person can not be the registrant of a domain, a <%= @redemption_grace_period %>-day deletion process of <%= @domain.name %> domain has started on <%= l(@force_delete_set_date, format: :date) %>. The domain will remain available on the Internet during the deletion process.
 
-Registrant's name: <%= @registrant.name %>
-Identification code: <%= @registrant.id_code %>
-
-EIS has learned that the natural person <%= @registrant.name %> with identification code <%= @registrant.id_code %> has been deceased and 6 months have passed from death.
-
-According to paragraph 6.6 of the Domain Regulation, the registrant holding a right to the domain name <%= @domain.name %> can submit a domain name transfer application to the registrar <%= @registrar.name %> in accordance with paragraph 5.3.6.2 of the Domain Regulation. The application must be submitted together with succession evidence certifying the acquisition of the domain that will replace the consent of the surrendering registrant as laid down in paragraph 5.3.6.3 of the Domain Regulation. The relevant documents should be submitted to the registrar within <%= @redemption_grace_period %> day(s).
-
-As a deceased natural person is not the registrant of a domain, the EIS started the deletion process of <%= @domain.name %> domain on <%= l(@force_delete_set_date, format: :date) %> according to the Domain Regulation (http://www.internet.ee/en/domains/), using the <%= @redemption_grace_period %>-day delete procedure. The domain will remain available on the Internet during the delete procedure and within this time can be transferred to new registrant.
-
-If the transfer has not been made in <%= @redemption_grace_period %> day(s), the domain <%= @domain.name %> will be deleted at a randomly chosen moment within 24 hours on <%= @domain.force_delete_date %>. After deletion it is possible to reregister the domain on a "first come, first served" basis.
+If the transfer has not been made in <%= @redemption_grace_period %> day(s), the domain <%= @domain.name %> will be deleted at a randomly chosen moment within 24 hours on <%= @domain.force_delete_date %>. After deletion it is possible to register the domain on a "first come, first served" basis.
 
 Should you have additional questions, please contact your registrar:
-
 <%= render 'mailers/shared/registrar/registrar.en.text', registrar: @registrar %>
 
-Lugupidamisega,
 Best Regards,
-
-Eesti Interneti Sihtasutus
 Estonian Internet Foundation
+---------------------------------------------------
+Уважаемый регистрант/административный контакт домена .ee
+
+Целевому учреждению Eesti Internet (EIS) стало известно, что физическое лицо с личным кодом <%= @registrant.id_code %> умерло, и с момента смерти прошло не менее 6 месяцев.
+
+Поскольку умершее лицо не может являться регистрантом домена, начат <%= @redemption_grace_period %>-дневный процесс удаления домена <%= @domain.name %>. До завершения процесса домен доступен в Интернете.
+
+Лицо, обладающее правом на домен, может подать регистратору <%= @registrar.name %> домена <%= @domain.name %> ходатайство о передаче, представив справку о праве наследования. Документы должны быть представлены регистратору в течение <%= @redemption_grace_period %> дней.
+
+Если передача домена в течение <%= @redemption_grace_period %> дней не состоялась, домен  <%= @domain.name %> <%= @domain.force_delete_date %> удаляется в течение 24 часов в произвольно выбранный системой момент времени. При желании домен можно вновь зарегистрировать после удаления из регистра по принципу "первым пришел ‒ первым обслужен".
+
+В случае возникновения дополнительных вопросов свяжитесь, пожалуйста, со своим регистратором:
+<%= render 'mailers/shared/registrar/registrar.ru.text', registrar: @registrar %>
+
+С уважением,
+Eesti Interneti Sihtasutus
