@@ -76,7 +76,10 @@ RSpec.describe DomainDeleteMailer do
     end
 
     it 'has valid subject' do
-      expect(message.subject).to eq('Kustutusmenetluse teade')
+      subject = 'Domeen test.com on kustutusmenetluses' \
+                ' / Domain test.com is in deletion process' \
+                ' / Домен test.com в процессе удаления'
+      expect(message.subject).to eq(subject)
     end
 
     context 'when template is :death' do

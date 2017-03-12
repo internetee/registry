@@ -10,8 +10,13 @@ FactoryGirl.define do
     end
 
     factory :api_user_with_unlimited_balance do
-      after :build do |api_user|
-        api_user.registrar = create(:registrar_with_unlimited_balance)
+      transient do
+        registrar false
+      end
+
+      after :build do |api_user, evaluator|
+        registrar = (evaluator.registrar || create(:registrar_with_unlimited_balance))
+        api_user.registrar = registrar
       end
     end
   end

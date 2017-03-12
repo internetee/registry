@@ -499,28 +499,20 @@ class Epp::Domain < Domain
     at[:statuses] =
       statuses - domain_statuses_attrs(frame.css('rem'), 'rem') + domain_statuses_attrs(frame.css('add'), 'add')
 
-    # at[:statuses] += at_add[:domain_statuses_attributes]
-
     if errors.empty? && verify
       self.upid = current_user.registrar.id if current_user.registrar
       self.up_date = Time.zone.now
     end
 
-    if registrant_id && registrant.code == frame.css('registrant')
+    same_registrant_as_current = (registrant.code == frame.css('registrant').text)
 
-      throw :epp_error, {
-        code: '2305',
-        msg: I18n.t(:contact_already_associated_with_the_domain)
-      }
-
-    end
-
-    if errors.empty? && verify &&
+    if !same_registrant_as_current && errors.empty? && verify &&
        Setting.request_confrimation_on_registrant_change_enabled &&
        frame.css('registrant').present? &&
        frame.css('registrant').attr('verified').to_s.downcase != 'yes'
       registrant_verification_asked!(frame.to_s, current_user.id)
     end
+
     self.deliver_emails = true # turn on email delivery for epp
 
     errors.empty? && super(at)

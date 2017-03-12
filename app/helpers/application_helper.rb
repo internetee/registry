@@ -87,4 +87,10 @@ module ApplicationHelper
   def body_css_class
     controller_path.split('/').map!(&:dasherize).join('-') << "-#{action_name.dasherize}-page"
   end
+
+  def legal_document_types
+    types = LegalDocument::TYPES.dup
+    types.delete('ddoc')
+    ".#{types.join(',.')}"
+  end
 end
