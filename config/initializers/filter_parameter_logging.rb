@@ -1,8 +1,10 @@
-# Be sure to restart your server when you modify this file.
-
-# Configure sensitive parameters which will be filtered from the log file.
-Rails.application.config.filter_parameters += [:password]
-
-Rails.application.config.filter_parameters << lambda do |key, value|
-  value.to_s.gsub!(/pw>.+<\//, 'pw>[FILTERED]</') if key =~ /^(frame|raw_frame)$/i
+Rails.application.configure do
+  config.filter_parameters += [:password, /^frame$/, /^nokogiri_frame$/, /^parsed_frame$/]
+  config.filter_parameters << lambda do |key, value|
+    if key == 'raw_frame'
+      value.to_s.gsub!(/pw>.+<\//, 'pw>[FILTERED]</')
+      value.to_s.gsub!(/<eis:legalDocument([^>]+)>([^<])+<\/eis:legalDocument>/,
+                       "<eis:legalDocument>[FILTERED]</eis:legalDocument>")
+    end
+  end
 end
