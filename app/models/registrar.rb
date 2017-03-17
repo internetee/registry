@@ -63,7 +63,7 @@ class Registrar < ActiveRecord::Base
       res.reduce([]) { |o, v| o << { id: v[:id], display_key: "#{v[:name]} (#{v[:reg_no]})" } }
     end
 
-    def ordered
+    def alphabetically
       order(name: :asc)
     end
   end
