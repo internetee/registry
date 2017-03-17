@@ -37,7 +37,9 @@ module Admin
     end
 
     def update
-      if @registrar.update(registrar_params)
+      @registrar.attributes = registrar_params
+
+      if RegistrarUpdate.new(registrar: @registrar).update
         flash[:notice] = t('.updated')
         redirect_to [:admin, @registrar]
       else

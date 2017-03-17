@@ -8,7 +8,6 @@ class Registrar < ActiveRecord::Base
   has_many :invoices, foreign_key: 'buyer_id'
   has_many :accounts
   has_many :nameservers, through: :domains
-  has_many :whois_records
   has_many :priv_contacts, -> { privs }, class_name: 'Contact'
   has_many :white_ips, dependent: :destroy
 
@@ -48,14 +47,6 @@ class Registrar < ActiveRecord::Base
   validates :email, :billing_email,
     email_format: { message: :invalid },
     allow_blank: true, if: proc { |c| c.email_changed? }
-
-  WHOIS_TRIGGERS = %w(name email phone street city state zip)
-
-  after_commit :update_whois_records
-  def update_whois_records
-    return true unless changed? && (changes.keys & WHOIS_TRIGGERS).present?
-    RegenerateRegistrarWhoisesJob.enqueue id
-  end
 
   class << self
     def search_by_query(query)
