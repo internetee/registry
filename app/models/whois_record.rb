@@ -9,20 +9,6 @@ class WhoisRecord < ActiveRecord::Base
   after_save :update_whois_server
   after_destroy :destroy_whois_record
 
-  class << self
-    def included
-      includes(
-        domain: [
-          :registrant,
-          :registrar,
-          :nameservers,
-          { tech_contacts: :registrar },
-          { admin_contacts: :registrar }
-        ]
-      )
-    end
-  end
-
   def self.find_by_name(name)
     WhoisRecord.where("lower(name) = ?", name.downcase)
   end

@@ -232,17 +232,6 @@ class Domain < ActiveRecord::Base
       return period.to_i.years         if unit == 'y'
     end
 
-    def included
-      includes(
-        :registrant,
-        :registrar,
-        :nameservers,
-        :whois_record,
-        { tech_contacts: :registrar },
-        { admin_contacts: :registrar }
-      )
-    end
-
     def nameserver_required?
       Setting.nameserver_required
     end
