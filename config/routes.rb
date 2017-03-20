@@ -224,12 +224,7 @@ Rails.application.routes.draw do
 
     resources :settings
 
-    resources :blocked_domains do
-      member do
-        get 'delete'
-      end
-    end
-
+    resources :blocked_domains, except: %i(show edit update)
     resources :reserved_domains, except: :show
 
     resources :registrars do
