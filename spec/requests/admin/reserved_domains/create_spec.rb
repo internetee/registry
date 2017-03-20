@@ -43,12 +43,6 @@ RSpec.describe 'admin reserved domain create' do
     end
   end
 
-  it 'updates whois' do
-    expect(DNS::DomainName).to receive(:update_whois).with(domain_name: 'test.com')
-
-    post admin_reserved_domains_path, reserved_domain: attributes_for(:reserved_domain, name: 'test.com')
-  end
-
   it 'redirects to :index' do
     post admin_reserved_domains_path, reserved_domain: attributes_for(:reserved_domain)
 
