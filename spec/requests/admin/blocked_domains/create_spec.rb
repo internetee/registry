@@ -18,6 +18,12 @@ RSpec.describe 'admin blocked domain create' do
     expect(blocked_domain.name).to eq('test.com')
   end
 
+  it 'updates whois' do
+    expect(DNS::DomainName).to receive(:update_whois).with(domain_name: 'test.com')
+
+    post admin_blocked_domains_path, blocked_domain: attributes_for(:blocked_domain, name: 'test.com')
+  end
+
   it 'redirects to :index' do
     post admin_blocked_domains_path, blocked_domain: attributes_for(:blocked_domain)
 

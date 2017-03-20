@@ -1,9 +1,11 @@
 require 'rails_helper'
 
 RSpec.feature 'New blocked domain' do
-  it 'creates new blocked domain' do
+  background do
     sign_in_to_admin_area
+  end
 
+  it 'creates new blocked domain' do
     visit admin_blocked_domains_url
     click_link_or_button 'New blocked domain'
 

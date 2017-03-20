@@ -18,6 +18,7 @@ module Admin
       @domain = BlockedDomain.new(blocked_domain_params)
 
       if @domain.save
+        update_whois(domain_name: @domain.name)
         flash[:notice] = t('.created')
         redirect_to admin_blocked_domains_url
       else
@@ -29,6 +30,7 @@ module Admin
       @domain = BlockedDomain.find(params[:id])
 
       if @domain.destroy
+        update_whois(domain_name: @domain.name)
         flash[:notice] = t('.deleted')
       else
         flash.now[:alert] = t('.not_deleted')
@@ -38,6 +40,10 @@ module Admin
     end
 
     private
+
+    def update_whois(domain_name:)
+      DNS::DomainName.update_whois(domain_name: domain_name)
+    end
 
     def blocked_domain_params
       params.require(:blocked_domain).permit(:name)
