@@ -229,11 +229,8 @@ Rails.application.routes.draw do
         get 'delete'
       end
     end
-    resources :reserved_domains do
-      member do
-        get 'delete'
-      end
-    end
+
+    resources :reserved_domains, except: :show
 
     resources :registrars do
       resources :api_users

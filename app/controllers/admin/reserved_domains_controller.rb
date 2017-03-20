@@ -1,15 +1,13 @@
 class Admin::ReservedDomainsController < AdminController
   load_and_authorize_resource
-  before_action :set_domain, only: [:edit, :update]
+  before_action :set_domain, only: [:edit, :update, :destroy]
 
   def index
-
     params[:q] ||= {}
     domains = ReservedDomain.all.order(:name)
     @q = domains.search(params[:q])
     @domains = @q.result.page(params[:page])
     @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i > 0
-
   end
 
   def new
@@ -27,6 +25,8 @@ class Admin::ReservedDomainsController < AdminController
     end
 
     if @domain.save
+      update_whois(domain_name: @domain.name)
+
       if !created_with_dispute_password
         flash[:notice] = t('.created')
       else
@@ -45,6 +45,7 @@ class Admin::ReservedDomainsController < AdminController
     @domain.attributes = reserved_domain_update_params
 
     if @domain.save
+      update_whois(domain_name: @domain.name)
       flash[:notice] = t('.updated')
       redirect_to admin_reserved_domains_path
     else
@@ -52,14 +53,15 @@ class Admin::ReservedDomainsController < AdminController
     end
   end
 
-  def delete
-    if ReservedDomain.find(params[:id]).destroy
-      flash[:notice] = I18n.t('domain_deleted')
-      redirect_to admin_reserved_domains_path
+  def destroy
+    if @domain.destroy
+      update_whois(domain_name: @domain.name)
+      flash[:notice] = t('.deleted')
     else
-      flash.now[:alert] = I18n.t('failed_to_delete_domain')
-      redirect_to admin_reserved_domains_path
+      flash.now[:alert] = t('.not_deleted')
     end
+
+    redirect_to admin_reserved_domains_url
   end
 
   private
@@ -82,5 +84,9 @@ class Admin::ReservedDomainsController < AdminController
 
   def created_with_dispute_password
     dispute && reserved_domain_params[:password].present?
+  end
+
+  def update_whois(domain_name:)
+    DNS::DomainName.update_whois(domain_name: domain_name)
   end
 end
