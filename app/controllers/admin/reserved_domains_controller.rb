@@ -26,6 +26,8 @@ module Admin
       end
 
       if @domain.save
+        update_whois(domain_name: @domain.name)
+
         if !created_with_dispute_password
           flash[:notice] = t('.created')
         else
@@ -44,6 +46,7 @@ module Admin
       @domain.attributes = reserved_domain_update_params
 
       if @domain.save
+        update_whois(domain_name: @domain.name)
         flash[:notice] = t('.updated')
         redirect_to admin_reserved_domains_url
       else
@@ -53,6 +56,7 @@ module Admin
 
     def destroy
       if @domain.destroy
+        update_whois(domain_name: @domain.name)
         flash[:notice] = t('.deleted')
       else
         flash.now[:alert] = t('.not_deleted')
@@ -62,6 +66,10 @@ module Admin
     end
 
     private
+
+    def update_whois(domain_name:)
+      DNS::DomainName.update_whois(domain_name: domain_name)
+    end
 
     def reserved_domain_params
       params.require(:reserved_domain).permit(:name, :password)
