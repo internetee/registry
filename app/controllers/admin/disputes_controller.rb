@@ -20,7 +20,7 @@ module Admin
 
       if created
         flash[:notice] = t('.created')
-        redirect_to admin_dispute_path(@dispute)
+        redirect_to admin_dispute_url(@dispute)
       else
         render :new
       end
@@ -35,7 +35,7 @@ module Admin
 
       if updated
         flash[:notice] = t('.updated')
-        redirect_to admin_dispute_path(@dispute)
+        redirect_to admin_dispute_url(@dispute)
       else
         render :edit
       end
@@ -48,7 +48,7 @@ module Admin
         flash[:alert] = t('.not_closed')
       end
 
-      redirect_to admin_disputes_path
+      redirect_to admin_disputes_url
     end
 
     private
