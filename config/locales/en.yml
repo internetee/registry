@@ -334,7 +334,6 @@ en:
   new_domain_contact: 'New contact'
   domain_status_prohibits_deleting: 'Domain status prohibits deleting'
   domain_deleted: 'Domain deleted!'
-  failed_to_delete_domain: 'Failed to delete domain!'
   email: 'E-mail'
   fax: 'Fax'
   contact_details: 'Contact details'
@@ -346,8 +345,6 @@ en:
   zip: 'Postcode'
   state: State
   org_name: 'Org name'
-  failed_to_add_domain: 'Failed to add domain!'
-  domain_added: 'Domain added!'
   new_contact: 'New contact'
   add_another: 'Add another'
   domain_updated: 'Domain updated!'
