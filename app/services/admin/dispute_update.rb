@@ -1,7 +1,5 @@
 module Admin
   class DisputeUpdate
-    attr_reader :dispute
-
     def initialize(dispute:)
       @dispute = dispute
     end
@@ -14,12 +12,15 @@ module Admin
       dispute.transaction do
         dispute.save!
         sync_reserved_domain
+        update_whois
       end
 
       dispute
     end
 
     private
+
+    attr_reader :dispute
 
     def sync_reserved_domain
       reserved_domain = ReservedDomain.find_by(name: @dispute.domain_name)
@@ -28,6 +29,10 @@ module Admin
 
       reserved_domain.password = @dispute.password
       reserved_domain.save!
+    end
+
+    def update_whois
+      DNS::DomainName.update_whois(domain_name: dispute.domain_name)
     end
   end
 end

@@ -1,7 +1,5 @@
 module Admin
   class DisputeCreation
-    attr_reader :dispute
-
     def initialize(dispute:)
       @dispute = dispute
     end
@@ -15,6 +13,7 @@ module Admin
         dispute.save!
         prohibit_domain_registrant_change
         sync_reserved_domain
+        update_whois
       end
 
       dispute
@@ -22,8 +21,10 @@ module Admin
 
     private
 
+    attr_reader :dispute
+
     def prohibit_domain_registrant_change
-      domain = Domain.find_by(name: @dispute.domain_name)
+      domain = Domain.find_by(name: dispute.domain_name)
 
       return unless domain
 
@@ -32,12 +33,16 @@ module Admin
     end
 
     def sync_reserved_domain
-      reserved_domain = ReservedDomain.find_by(name: @dispute.domain_name)
+      reserved_domain = ReservedDomain.find_by(name: dispute.domain_name)
 
       return unless reserved_domain
 
       reserved_domain.password = @dispute.password
       reserved_domain.save!
+    end
+
+    def update_whois
+      DNS::DomainName.update_whois(domain_name: dispute.domain_name)
     end
   end
 end
