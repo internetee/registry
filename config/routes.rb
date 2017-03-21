@@ -162,7 +162,7 @@ Rails.application.routes.draw do
     end
 
     resources :contacts
-    resources :whois
+    resources :whois, only: :index
   end
 
 
