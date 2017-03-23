@@ -22,10 +22,12 @@ class DomainCron
         DomainMailer.pending_delete_expired_notification(domain.id, true).deliver
       end
       domain.clean_pendings_lowlevel
+
       unless Rails.env.test?
         STDOUT << "#{Time.zone.now.utc} DomainCron.clean_expired_pendings: ##{domain.id} (#{domain.name})\n"
       end
-      UpdateWhoisRecordJob.enqueue domain.name, 'domain'
+
+      DNS::DomainName.update_whois(domain_name: domain.name)
     end
     STDOUT << "#{Time.zone.now.utc} - Successfully cancelled #{count} domain pendings\n" unless Rails.env.test?
     count
