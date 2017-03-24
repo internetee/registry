@@ -1,0 +1,9 @@
+site_name: .EE Registry documentation
+site_url: https://github.com/internetee/registry/
+repo_url: https://github.com/internetee/registry/
+site_description: Documentation for .ee registry software
+site_author: Estonian Internet Foundation
+
+theme: flatly
+pages:
+  - [ 'README.md', 'Home' ]
