@@ -464,4 +464,4 @@ Please follow WHOIS server readme:
 ## Code Status
 
 Alpha release status, only model tests:
-[![Build Status](https://travis-ci.org/domify/registry.svg?branch=master)](https://travis-ci.org/domify/registry)
+[![Build Status](https://travis-ci.org/internetee/registry.svg?branch=master)](https://travis-ci.org/internetee/registry)
