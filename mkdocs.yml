@@ -6,4 +6,4 @@ site_author: Estonian Internet Foundation
 
 theme: flatly
 pages:
-  - [ 'README.md', 'Home' ]
+  - [ 'index.md', 'Home' ]
