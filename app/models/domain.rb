@@ -17,6 +17,7 @@ class Domain < ActiveRecord::Base
 
   alias_attribute :on_hold_time, :outzone_at
   alias_attribute :outzone_time, :outzone_at
+  alias_attribute :register_time, :registered_at
 
   # TODO: most inputs should be trimmed before validatation, probably some global logic?
 

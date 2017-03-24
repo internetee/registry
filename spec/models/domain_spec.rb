@@ -596,6 +596,7 @@ end
 RSpec.describe Domain do
   it { is_expected.to alias_attribute(:on_hold_time, :outzone_at) }
   it { is_expected.to alias_attribute(:outzone_time, :outzone_at) }
+  it { is_expected.to alias_attribute(:register_time, :registered_at) }
 
   describe 'nameserver validation', db: true do
     let(:domain) { described_class.new }
