@@ -1,6 +1,7 @@
 Domain Registry
 ===============
 [![Build Status](https://travis-ci.org/internetee/registry.svg?branch=master)](https://travis-ci.org/internetee/registry)
+[![Documentation Status](https://readthedocs.org/projects/eeregistry/badge/?version=latest)](http://docs.internet.ee/en/latest/?badge=latest)
 
 Full stack top-level domain (TLD) management.
 
@@ -460,8 +461,3 @@ Please follow WHOIS server readme:
 
     https://github.com/internetee/whois
 
-
-## Code Status
-
-Alpha release status, only model tests:
-[![Build Status](https://travis-ci.org/internetee/registry.svg?branch=master)](https://travis-ci.org/internetee/registry)
