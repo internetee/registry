@@ -26,7 +26,7 @@ en:
         not_closed: Unable to delete dispute
 
       search_form:
-        valid_to_range: Valid to range
+        expire_date_range: Valid to range
         btn_search: Search
         btn_reset: Reset
 
