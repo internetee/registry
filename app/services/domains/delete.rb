@@ -1,5 +1,5 @@
 module Domains
-  class DeleteService
+  class Delete
     def initialize(domain:)
       @domain = domain
     end

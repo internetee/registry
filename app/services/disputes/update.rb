@@ -1,26 +1,21 @@
-module Admin
-  class DisputeUpdate
+module Disputes
+  class Update
+    attr_reader :dispute
+
     def initialize(dispute:)
       @dispute = dispute
+      dispute.generate_password unless dispute.password?
     end
 
     def update
-      dispute.generate_password unless dispute.password?
-
-      return unless dispute.valid?(:admin)
-
       dispute.transaction do
         dispute.save!
         sync_reserved_domain
         update_whois
       end
-
-      dispute
     end
 
     private
-
-    attr_reader :dispute
 
     def sync_reserved_domain
       reserved_domain = ReservedDomain.find_by(name: @dispute.domain_name)

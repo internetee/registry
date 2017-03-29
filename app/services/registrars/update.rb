@@ -1,5 +1,5 @@
-module Admin
-  class RegistrarUpdate
+module Registrars
+  class Update
     attr_reader :registrar
 
     def initialize(registrar:)
@@ -8,11 +8,10 @@ module Admin
 
     def update
       registrar.transaction do
+        whois_update_required = whois_update_required?
         registrar.save!
-        update_whois if whois_update_required?
+        update_whois if whois_update_required
       end
-
-      registrar
     end
 
     private
@@ -28,7 +27,7 @@ module Admin
     end
 
     def whois_update_trigger_attributes
-      %w(name email phone street city state zip)
+      %w(name phone street city state zip website)
     end
   end
 end

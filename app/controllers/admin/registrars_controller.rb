@@ -33,17 +33,17 @@ module Admin
       end
     end
 
-    def edit;
+    def edit
     end
 
     def update
       @registrar.attributes = registrar_params
 
-      if RegistrarUpdate.new(registrar: @registrar).update
+      if @registrar.valid?
+        Registrars::Update.new(registrar: @registrar).update
         flash[:notice] = t('.updated')
         redirect_to [:admin, @registrar]
       else
-        flash.now[:alert] = t('.not_updated')
         render 'edit'
       end
     end

@@ -1,5 +1,7 @@
 module DNS
   class DomainName # Same class is also defined by domain_name gem, the dependency of actionmailer
+    attr_reader :name
+
     def self.update_whois(domain_name:)
       new(domain_name).update_whois
     end
@@ -8,24 +10,28 @@ module DNS
       @name = name
     end
 
-    def update_whois
-      #Whois::Record.regenerate!(domain_name: domain_name)
-    end
-
     def available?
-      domain.nil?
+      !registered?
     end
 
     def registered?
-      !available?
+      registered_domain.present?
     end
 
-    private
+    def reserved?
+      ReservedDomain.find_by(name: name)
+    end
 
-    def domain
+    def disputed?
+      Dispute.find_by(domain_name: name)
+    end
+
+    def update_whois
+      Whois::Record.regenerate(domain_name: self)
+    end
+
+    def registered_domain
       Domain.find_by(name: name)
     end
-
-    attr_reader :name
   end
 end

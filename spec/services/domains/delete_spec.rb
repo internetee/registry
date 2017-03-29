@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Domains::DeleteService, db: true, versioning: true do
+RSpec.describe Domains::Delete, db: true, versioning: true do
   describe '#delete' do
     it 'deletes domain' do
       domain = create(:domain)

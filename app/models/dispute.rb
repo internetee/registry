@@ -28,10 +28,6 @@ class Dispute < ActiveRecord::Base
     end
   end
 
-  def self.for_domain(domain)
-    find_by(domain_name: domain)
-  end
-
   def generate_password
     self.password = SecureRandom.hex
   end

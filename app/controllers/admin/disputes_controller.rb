@@ -16,9 +16,10 @@ module Admin
 
     def create
       @dispute = Dispute.new(dispute_params)
-      created = DisputeCreation.new(dispute: @dispute).create
+      @opener = Disputes::Open.new(dispute: @dispute)
 
-      if created
+      if @opener.dispute.valid?(:admin)
+        @opener.open
         flash[:notice] = t('.created')
         redirect_to admin_dispute_url(@dispute)
       else
@@ -31,9 +32,10 @@ module Admin
 
     def update
       @dispute.attributes = dispute_params
-      updated = DisputeUpdate.new(dispute: @dispute).update
+      @updater = Disputes::Update.new(dispute: @dispute)
 
-      if updated
+      if @updater.dispute.valid?(:admin)
+        @updater.update
         flash[:notice] = t('.updated')
         redirect_to admin_dispute_url(@dispute)
       else

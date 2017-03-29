@@ -27,7 +27,7 @@ class DomainCron
         STDOUT << "#{Time.zone.now.utc} DomainCron.clean_expired_pendings: ##{domain.id} (#{domain.name})\n"
       end
 
-      DNS::DomainName.update_whois(domain_name: domain.name)
+      domain.update_whois
     end
     STDOUT << "#{Time.zone.now.utc} - Successfully cancelled #{count} domain pendings\n" unless Rails.env.test?
     count

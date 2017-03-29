@@ -5,13 +5,12 @@ module Disputes
     end
 
     def close
-      closed = dispute.destroy!
-
-      if closed
+      dispute.transaction do
+        dispute.destroy!
         update_whois
       end
 
-      closed
+      dispute.destroyed?
     end
 
     private

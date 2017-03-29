@@ -842,7 +842,7 @@ RSpec.describe Domain do
     end
   end
 
-  it 'updates whois on after_commit' do
+  it 'updates whois on after_commit', db: true do
     domain = build(:domain, name: 'test.com')
 
     expect(DNS::DomainName).to receive(:update_whois).with(domain_name: 'test.com')

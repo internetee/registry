@@ -706,8 +706,6 @@ class Domain < ActiveRecord::Base
     where("#{attribute_alias(:delete_time)} < ?", Time.zone.now)
   end
 
-  private
-
   def update_whois
     DNS::DomainName.update_whois(domain_name: name)
   end
