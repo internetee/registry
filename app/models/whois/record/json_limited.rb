@@ -1,5 +1,9 @@
 module Whois
-  class Record::JSON::Limited < JSON
+  class Record::JSONLimited
+    def initialize(domain_name:)
+      @domain_name = domain_name
+    end
+
     def generate
       data = {}
 
@@ -11,6 +15,8 @@ module Whois
 
     private
 
+    attr_reader :domain_name
+
     def status
       if domain_name.reserved? && domain_name.disputed?
         %w[Reserved Disputed]
@@ -18,6 +24,8 @@ module Whois
         %w[Reserved]
       elsif domain_name.disputed?
         %w[Disputed]
+      elsif domain_name.blocked?
+        %w[Blocked]
       end
     end
   end

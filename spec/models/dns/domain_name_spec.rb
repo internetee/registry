@@ -2,7 +2,16 @@ require 'rails_helper'
 
 RSpec.describe DNS::DomainName, db: false do
   describe '::update_whois' do
-    it 'updates whois'
+    let(:domain_name) { instance_double(described_class) }
+
+    before :example do
+      allow(described_class).to receive(:new).with('test.com').and_return(domain_name)
+    end
+
+    it 'creates new object and updates whois' do
+      expect(domain_name).to receive(:update_whois)
+      described_class.update_whois(domain_name: 'test.com')
+    end
   end
 
   describe '#name' do
@@ -63,6 +72,20 @@ RSpec.describe DNS::DomainName, db: false do
 
     context 'when dispute does not exist' do
       specify { expect(domain_name).to_not be_disputed }
+    end
+  end
+
+  describe '#blocked?' do
+    subject(:domain_name) { described_class.new('test.com') }
+
+    context 'when blocked domain exists', db: true do
+      let!(:blocked_domain) { create(:blocked_domain, name: 'test.com') }
+
+      specify { expect(domain_name).to be_blocked }
+    end
+
+    context 'when blocked domain does not exist' do
+      specify { expect(domain_name).to_not be_blocked }
     end
   end
 
