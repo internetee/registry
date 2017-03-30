@@ -53,7 +53,7 @@ en:
         dispute:
           attributes:
             domain_name:
-              unsupported_zone: has unsupported zone
+              unsupported_zone: is in unsupported zone
             expire_date:
               past: cannot be in the past
 

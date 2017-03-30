@@ -27,7 +27,7 @@ RSpec.feature 'New dispute' do
       fill_in 'dispute[domain_name]', with: 'test.unsupported'
       click_link_or_button 'Create dispute'
 
-      expect(page).to have_text('Domain name has unsupported zone')
+      expect(page).to have_text('Domain name is in unsupported zone')
     end
   end
 
