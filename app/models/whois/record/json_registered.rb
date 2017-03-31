@@ -1,5 +1,9 @@
 module Whois
-  class Record::JSON::Registered < JSON
+  class Record::JSONRegistered
+    def initialize(domain_name:)
+      @domain_name = domain_name
+    end
+
     def generate
       h = HashWithIndifferentAccess.new
 
@@ -67,6 +71,8 @@ module Whois
     end
 
     private
+
+    attr_reader :domain_name
 
     def domain
       domain_name.registered_domain

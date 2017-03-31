@@ -26,6 +26,10 @@ module DNS
       Dispute.find_by(domain_name: name)
     end
 
+    def blocked?
+      BlockedDomain.find_by(name: name)
+    end
+
     def update_whois
       Whois::Record.regenerate(domain_name: self)
     end
