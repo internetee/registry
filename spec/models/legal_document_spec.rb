@@ -60,7 +60,6 @@ describe LegalDocument do
       original.path.should_not == admin_skipping_as_different.path
       original.path.should == copy.path
       original.path.should == registrant_copy.path
-      original.path.should == admin_copy.path
 
       original.path.should == new_second_tech_contact.path
       skipping_as_different_domain.path.should_not == new_second_tech_contact.path
