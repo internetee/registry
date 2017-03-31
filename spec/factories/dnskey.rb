@@ -4,7 +4,6 @@ FactoryGirl.define do
     flags Dnskey::FLAGS.first
     protocol Dnskey::PROTOCOLS.first
     ds_digest_type 2
-    domain
     public_key 'AwEAAaOf5+lz3ftsL+0CCvfJbhUF/NVsNh8BKo61oYs5fXVbuWDiH872 '\
     'LC8uKDO92TJy7Q4TF9XMAKMMlf1GMAxlRspD749SOCTN00sqfWx1OMTu '\
     'a28L1PerwHq7665oDJDKqR71btcGqyLKhe2QDvCdA0mENimF1NudX1BJ '\

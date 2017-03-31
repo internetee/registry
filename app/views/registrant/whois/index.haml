@@ -8,7 +8,7 @@
           = text_field_tag :domain_name, params[:domain_name], class: 'form-control', placeholder: t(:domain_name), autocomplete: 'off', autofocus: true
       .col-md-1.text-right.text-center-xs
         .form-group
-          %button.btn.btn-default
+          %button.btn.btn-default{id: 'registrant-whois-search-btn'}
             &nbsp;
             %span.glyphicon.glyphicon-search
             &nbsp;

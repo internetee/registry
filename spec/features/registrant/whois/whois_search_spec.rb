@@ -10,7 +10,7 @@ RSpec.feature 'Registrant whois search' do
     visit registrant_whois_url
 
     fill_in 'domain_name', with: 'test.com'
-    click_link_or_button 'Search'
+    click_link_or_button 'registrant-whois-search-btn'
 
     expect(page).to have_text('test.com whois data')
   end
