@@ -1,21 +1,17 @@
 = render 'shared/title', name: t(:whois)
 
-- if ENV['restful_whois_url'].blank?
-  %p
-    Registrant configuration issue: missing restful_whois_url
-- else
-  .row
-    .col-md-12{style: 'margin-bottom: -15px;'}
-      = form_tag registrant_whois_path, class: 'form-horizontal', method: :get do
-        .col-md-11
-          .form-group
-            = text_field_tag :domain_name, params[:domain_name], class: 'form-control', placeholder: t(:domain_name), autocomplete: 'off', autofocus: true
-        .col-md-1.text-right.text-center-xs
-          .form-group
-            %button.btn.btn-default{title: 'Search'}
-              &nbsp;
-              %span.glyphicon.glyphicon-search
-              &nbsp;
-  %hr
-  - if @domain
-    %pre= @domain.body
+.row
+  .col-md-12{style: 'margin-bottom: -15px;'}
+    = form_tag registrant_whois_path, class: 'form-horizontal', method: :get do
+      .col-md-11
+        .form-group
+          = text_field_tag :domain_name, params[:domain_name], class: 'form-control', placeholder: t(:domain_name), autocomplete: 'off', autofocus: true
+      .col-md-1.text-right.text-center-xs
+        .form-group
+          %button.btn.btn-default
+            &nbsp;
+            %span.glyphicon.glyphicon-search
+            &nbsp;
+%hr
+- if @domain
+  %pre= @domain.body
