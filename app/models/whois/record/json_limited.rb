@@ -5,10 +5,10 @@ module Whois
     end
 
     def generate
-      data = {}
+      data = HashWithIndifferentAccess.new
 
-      data['name'] = domain_name.name
-      data['status'] = status
+      data[:name] = domain_name.name
+      data[:status] = status
 
       data
     end

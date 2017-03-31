@@ -38,18 +38,19 @@ module Whois
       domain.admin_contacts.each do |ac|
         @disclosed << [:email, ac.email]
         h[:admin_contacts] << {
-          name: ac.name,
-          email: ac.email,
-          changed: ac.updated_at.try(:to_s, :iso8601)
+          'name' => ac.name,
+          'email' => ac.email,
+          'changed' => ac.updated_at.try(:to_s, :iso8601)
         }
       end
+
       h[:tech_contacts] = []
       domain.tech_contacts.each do |tc|
         @disclosed << [:email, tc.email]
         h[:tech_contacts] << {
-          name: tc.name,
-          email: tc.email,
-          changed: tc.updated_at.try(:to_s, :iso8601)
+          'name' => tc.name,
+          'email' => tc.email,
+          'changed' => tc.updated_at.try(:to_s, :iso8601)
         }
       end
 
