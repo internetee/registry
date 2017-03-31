@@ -33,8 +33,11 @@ class ReservedDomainPresenter
   end
 
   def delete_btn
-    view.link_to(view.t(:delete), view.delete_admin_reserved_domain_path(reserved_domain),
-                 data: { confirm: view.t(:are_you_sure) }, class: 'btn btn-danger btn-xs')
+    view.link_to view.t('admin.reserved_domains.reserved_domain.delete_btn'),
+                 view.admin_reserved_domain_path(reserved_domain),
+                 method: :delete,
+                 data: { confirm: view.t('admin.reserved_domains.reserved_domain.delete_btn_confirm') },
+                 class: 'btn btn-danger btn-xs'
   end
 
   private

@@ -14,15 +14,4 @@ RSpec.describe Domain do
       specify { expect(domain).to be_disputed }
     end
   end
-
-  describe '#close_dispute' do
-    let(:domain) { create(:domain, name: 'test.com') }
-    let(:dispute) { instance_double(Dispute) }
-
-    it 'delegates to dispute' do
-      expect(Dispute).to receive(:for_domain).and_return(dispute)
-      expect(dispute).to receive(:close)
-      domain.close_dispute
-    end
-  end
 end

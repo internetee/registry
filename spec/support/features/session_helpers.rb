@@ -17,5 +17,10 @@ module Features
 
       click_button 'Login'
     end
+
+    def sign_in_to_registrant_area
+      user = create(:registrant_user)
+      login_as(user, scope: :user)
+    end
   end
 end

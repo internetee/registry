@@ -16,11 +16,12 @@ module Admin
 
     def create
       @dispute = Dispute.new(dispute_params)
-      created = DisputeCreation.new(dispute: @dispute).create
+      @opener = Disputes::Open.new(dispute: @dispute)
 
-      if created
+      if @opener.dispute.valid?(:admin)
+        @opener.open
         flash[:notice] = t('.created')
-        redirect_to admin_dispute_path(@dispute)
+        redirect_to admin_dispute_url(@dispute)
       else
         render :new
       end
@@ -31,11 +32,12 @@ module Admin
 
     def update
       @dispute.attributes = dispute_params
-      updated = DisputeUpdate.new(dispute: @dispute).update
+      @updater = Disputes::Update.new(dispute: @dispute)
 
-      if updated
+      if @updater.dispute.valid?(:admin)
+        @updater.update
         flash[:notice] = t('.updated')
-        redirect_to admin_dispute_path(@dispute)
+        redirect_to admin_dispute_url(@dispute)
       else
         render :edit
       end
@@ -48,7 +50,7 @@ module Admin
         flash[:alert] = t('.not_closed')
       end
 
-      redirect_to admin_disputes_path
+      redirect_to admin_disputes_url
     end
 
     private

@@ -44,11 +44,6 @@ RSpec.describe 'admin dispute create' do
     expect(dispute.comment).to eq('test')
   end
 
-  it 'redirects to :show' do
-    post admin_disputes_path, { dispute: attributes_for(:dispute) }
-    expect(response).to redirect_to admin_dispute_path(dispute)
-  end
-
   context 'when domain is registered' do
     let!(:domain) { create(:domain, name: 'test.com') }
 
@@ -72,5 +67,17 @@ RSpec.describe 'admin dispute create' do
       reserved_domain.reload
       expect(reserved_domain.password).to eq('dispute-password')
     end
+  end
+
+  it 'updates whois' do
+    expect(DNS::DomainName).to receive(:update_whois).with(domain_name: 'test.com')
+
+    post admin_disputes_path, { dispute: attributes_for(:dispute, domain_name: 'test.com') }
+  end
+
+  it 'redirects to :show' do
+    post admin_disputes_path, { dispute: attributes_for(:dispute) }
+
+    expect(response).to redirect_to admin_dispute_url(dispute)
   end
 end

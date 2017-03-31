@@ -1,10 +1,45 @@
 require 'rails_helper'
 
-RSpec.describe Dispute, db: false do
+RSpec.describe Dispute do
   it { is_expected.to alias_attribute(:create_time, :created_at) }
   it { is_expected.to alias_attribute(:update_time, :updated_at) }
 
-  describe 'domain name validation' do
+  describe '::latest_on_top' do
+    it 'sorts by :create_time in descending order' do
+      expect(described_class).to receive(:order).with(create_time: :desc)
+      described_class.latest_on_top
+    end
+  end
+
+  describe '::expired', db: true do
+    before :example do
+      travel_to(Date.parse('05.07.2010'))
+
+      create(:dispute, expire_date: Date.parse('03.07.2010'))
+      create(:dispute, expire_date: Date.parse('04.07.2010'))
+      create(:dispute, expire_date: Date.parse('05.07.2010'))
+    end
+
+    it 'returns records with past expiration date' do
+      expect(described_class.expired.size).to eq(2)
+    end
+  end
+
+  describe '::close_expired', db: false do
+    let(:dispute) { instance_double(described_class) }
+    let(:expired_disputes) { [dispute] }
+
+    before :example do
+      allow(described_class).to receive(:expired).and_return(expired_disputes)
+    end
+
+    it 'closes expired disputes' do
+      expect(dispute).to receive(:close)
+      described_class.close_expired
+    end
+  end
+
+  describe 'domain name validation', db: false do
     let(:dispute) { described_class.new }
 
     it 'rejects absent' do
@@ -41,7 +76,7 @@ RSpec.describe Dispute, db: false do
     end
   end
 
-  describe 'expiration date validation' do
+  describe 'expiration date validation', db: false do
     let(:dispute) { described_class.new }
 
     it 'rejects absent' do
@@ -71,7 +106,7 @@ RSpec.describe Dispute, db: false do
     end
   end
 
-  describe 'password validation' do
+  describe 'password validation', db: false do
     let(:dispute) { described_class.new }
 
     it 'rejects absent' do
@@ -81,7 +116,7 @@ RSpec.describe Dispute, db: false do
     end
   end
 
-  describe 'comment validation' do
+  describe 'comment validation', db: false do
     let(:dispute) { described_class.new }
 
     it 'rejects absent' do
@@ -91,56 +126,7 @@ RSpec.describe Dispute, db: false do
     end
   end
 
-  describe '::latest_on_top' do
-    it 'sorts by :create_time in descending order' do
-      expect(described_class).to receive(:order).with(create_time: :desc)
-      described_class.latest_on_top
-    end
-  end
-
-  describe '::expired', db: true do
-    before :example do
-      travel_to(Date.parse('05.07.2010'))
-
-      create(:dispute, expire_date: Date.parse('04.07.2010'))
-      create(:dispute, expire_date: Date.parse('05.07.2010'))
-    end
-
-    it 'returns records with past :expire_time' do
-      expect(described_class.expired.size).to eq(1)
-    end
-  end
-
-  describe '::close_expired', db: true do
-    before :example do
-      travel_to(Date.parse('05.07.2010'))
-    end
-
-    it 'closes expired disputes' do
-      create(:dispute, expire_date: Date.parse('04.07.2010'))
-      create(:dispute, expire_date: Date.parse('05.07.2010'))
-
-      described_class.close_expired
-
-      expect(described_class.count).to eq(1)
-    end
-  end
-
-  describe '::for_domain', db: true do
-    context 'when dispute exists' do
-      let!(:dispute) { create(:dispute, domain_name: 'test.com') }
-
-      it 'returns dispute' do
-        expect(described_class.for_domain('test.com')).to eq(dispute)
-      end
-    end
-
-    context 'when dispute does not exist' do
-      specify { expect(described_class.for_domain('test.com')).to be_nil }
-    end
-  end
-
-  describe '#generate_password' do
+  describe '#generate_password', db: false do
     let(:dispute) { described_class.new }
 
     it 'generates random password' do
@@ -150,13 +136,16 @@ RSpec.describe Dispute, db: false do
   end
 
   describe '#close', db: false do
-    let(:dispute) { described_class.new }
-    let(:dispute_close) { instance_double(Disputes::Close) }
+    subject(:dispute) { described_class.new }
+    let(:service) { instance_double(Disputes::Close) }
+
+    before :example do
+      allow(Disputes::Close).to receive(:new).with(dispute: dispute).and_return(service)
+    end
 
     it 'closes dispute' do
-      expect(Disputes::Close).to receive(:new).with(dispute: dispute).and_return(dispute_close)
-      expect(dispute_close).to receive(:close).and_return(true)
-      expect(dispute.close).to be true
+      expect(service).to receive(:close)
+      dispute.close
     end
   end
 end

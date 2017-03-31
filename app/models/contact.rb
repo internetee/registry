@@ -64,7 +64,7 @@ class Contact < ActiveRecord::Base
   end
 
 
-  after_save :update_related_whois_records
+  after_save :update_whois
 
   # for overwrite when doing children loop
   attr_writer :domains_present
@@ -565,14 +565,6 @@ class Contact < ActiveRecord::Base
     ]).present?
   end
 
-  def update_related_whois_records
-    # not doing anything if no real changes
-    return if changes.slice(*(self.class.column_names - ["updated_at", "created_at", "statuses", "status_notes"])).empty?
-
-    names = related_domain_descriptions.keys
-    UpdateWhoisRecordJob.enqueue(names, :domain) if names.present?
-  end
-
   def children_log
     log = HashWithIndifferentAccess.new
     log[:legal_documents]= [legal_document_id]
@@ -593,5 +585,17 @@ class Contact < ActiveRecord::Base
   def id_code
     return unless priv?
     ident
+  end
+
+  private
+
+  def update_whois
+    return if changes.slice(*(self.class.column_names - ["updated_at", "created_at", "statuses", "status_notes"])).empty?
+
+    domain_names = related_domain_descriptions.keys
+
+    domain_names.each do |domain_name|
+      DNS::DomainName.update_whois(domain_name: domain_name)
+    end
   end
 end

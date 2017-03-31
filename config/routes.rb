@@ -162,7 +162,7 @@ Rails.application.routes.draw do
     end
 
     resources :contacts
-    resources :whois
+    resources :whois, only: :index
   end
 
 
@@ -224,16 +224,8 @@ Rails.application.routes.draw do
 
     resources :settings
 
-    resources :blocked_domains do
-      member do
-        get 'delete'
-      end
-    end
-    resources :reserved_domains do
-      member do
-        get 'delete'
-      end
-    end
+    resources :blocked_domains, except: %i(show edit update)
+    resources :reserved_domains, except: :show
 
     resources :registrars do
       resources :api_users

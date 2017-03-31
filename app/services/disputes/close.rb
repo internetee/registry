@@ -5,11 +5,20 @@ module Disputes
     end
 
     def close
-      dispute.destroy
+      dispute.transaction do
+        dispute.destroy!
+        update_whois
+      end
+
+      dispute.destroyed?
     end
 
     private
 
     attr_reader :dispute
+
+    def update_whois
+      DNS::DomainName.update_whois(domain_name: dispute.domain_name)
+    end
   end
 end

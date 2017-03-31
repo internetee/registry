@@ -35,14 +35,6 @@ RSpec.describe 'admin reserved domain update' do
     expect(reserved_domain.password).to_not eq('test')
   end
 
-  it 'redirects to :index' do
-    reserved_domain = create(:reserved_domain)
-
-    patch admin_reserved_domain_path(reserved_domain), reserved_domain: attributes_for(:reserved_domain)
-
-    expect(response).to redirect_to admin_reserved_domains_path
-  end
-
   context 'when domain name is disputed' do
     let!(:reserved_domain) { create(:reserved_domain, name: 'test.com') }
     let!(:dispute) { create(:dispute,
@@ -56,5 +48,22 @@ RSpec.describe 'admin reserved domain update' do
                 attributes_for(:reserved_domain, password: 'reserved-domain-password') }
         .to raise_error('Editing is prohibited while domain name is disputed')
     end
+  end
+
+  it 'updates whois' do
+    reserved_domain = create(:reserved_domain, name: 'test.com')
+
+    expect(DNS::DomainName).to receive(:update_whois).with(domain_name: 'test.com')
+
+    patch admin_reserved_domain_path(reserved_domain), reserved_domain: attributes_for(:reserved_domain)
+  end
+
+
+  it 'redirects to :index' do
+    reserved_domain = create(:reserved_domain)
+
+    patch admin_reserved_domain_path(reserved_domain), reserved_domain: attributes_for(:reserved_domain)
+
+    expect(response).to redirect_to admin_reserved_domains_url
   end
 end

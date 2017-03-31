@@ -26,7 +26,7 @@ en:
         not_closed: Unable to delete dispute
 
       search_form:
-        expire_date_range: Exp. date range
+        expire_date_range: Valid to range
         btn_search: Search
         btn_reset: Reset
 
@@ -36,8 +36,9 @@ en:
         delete_btn_confirm: Are you sure you want to delete dispute?
 
       form:
-        domain_name_info: Prohibits registrant change if registered
-        password_info: Generated automatically if left blank; Overrides reserved domain's password
+        domain_name_help: Prohibits registrant change if registered
+        password_help: Generated automatically if left blank; Overrides reserved domain's password
+        expire_date_help: Dispute is automatically closed after this date or once registrar is changed
         create_btn: Create dispute
         update_btn: Update dispute
 
@@ -52,7 +53,7 @@ en:
         dispute:
           attributes:
             domain_name:
-              unsupported_zone: has unsupported zone
+              unsupported_zone: is in unsupported zone
             expire_date:
               past: cannot be in the past
 
