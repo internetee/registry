@@ -3,6 +3,7 @@ require 'rails_helper'
 describe LegalDocument do
   context 'tasks' do
     it 'make files uniq' do
+      allow(SecureRandom).to receive(:random_number).and_return(1234)
       Fabricate(:zonefile_setting, origin: 'ee')
       Fabricate(:zonefile_setting, origin: 'pri.ee')
       Fabricate(:zonefile_setting, origin: 'med.ee')
