@@ -14,6 +14,24 @@ RSpec.describe 'admin registrar update' do
     expect(registrar.website).to eq('new-website')
   end
 
+  it 'updates email' do
+    registrar = create(:registrar, email: 'test@test.com')
+
+    patch admin_registrar_path(registrar), registrar: attributes_for(:registrar, email: 'new-test@test.com')
+    registrar.reload
+
+    expect(registrar.email).to eq('new-test@test.com')
+  end
+
+  it 'updates billing email' do
+    registrar = create(:registrar, billing_email: 'test@test.com')
+
+    patch admin_registrar_path(registrar), registrar: attributes_for(:registrar, billing_email: 'new-test@test.com')
+    registrar.reload
+
+    expect(registrar.billing_email).to eq('new-test@test.com')
+  end
+
   it 'redirects to :show' do
     registrar = create(:registrar)
 
