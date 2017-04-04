@@ -64,7 +64,7 @@ gem 'grape',    '0.12.0'
 gem 'jbuilder', '2.2.16'  # json api
 
 # registry specfic
-gem 'simpleidn', '0.0.5' # For punycode
+gem 'simpleidn', '0.0.7' # For punycode
 gem 'isikukood' # for EE-id validation
 gem 'money-rails', '1.4.1'
 
