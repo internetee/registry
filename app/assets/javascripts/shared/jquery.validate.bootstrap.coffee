@@ -17,7 +17,3 @@ $.validator.setDefaults
     else
       error.insertAfter element
     return
-
-jQuery.validator.addMethod 'lax_email', ((value, element) ->
-  @optional(element) or (value.match(new RegExp("@", "g")) || []).length == 1
-), 'Please enter a valid email address.'
