@@ -18,7 +18,7 @@ gem 'rest-client'
 gem 'figaro', '1.1.1'
 
 # model related
-gem 'pg',                        '0.18.2'
+gem 'pg',                        '0.19.0'
 gem 'ransack',                   '1.5.1' # for searching
 gem 'validates_email_format_of', '1.6.3' # validates email against RFC 2822 and RFC 3696
 
