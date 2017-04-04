@@ -1,4 +1,4 @@
-<p>Lugupeetud domeeni <%= @domain.name %> registreerija/halduskontakt</p>
+<p><strong>Lugupeetud domeeni <%= @domain.name %> registreerija/halduskontakt</strong></p>
 
 <p>Eesti Interneti Sihtasutusele (EIS) on saanud teatavaks, et juriidiline isik registrikoodiga <%= @registrant.reg_no %> on äriregistrist kustutatud.</p>
 
@@ -11,10 +11,11 @@
 <p>Lisaküsimuste korral võtke palun ühendust oma registripidajaga:</p>
 <%= render 'mailers/shared/registrar/registrar.et.html', registrar: @registrar %>
 
-Lugupidamisega
-Eesti Interneti Sihtasutus
+<p><strong>Lugupidamisega<br>
+Eesti Interneti Sihtasutus</strong>
+</p>
 <hr>
-<p>Dear registrant/administrative contact of .ee domain,</p>
+<p><strong>Dear registrant/administrative contact of .ee domain,</strong></p>
 
 <p>Estonian Internet Foundation (EIS) has learned that the legal person with registry code <%= @registrant.reg_no %> has been deleted from the Business Registry.</p>
 
@@ -27,10 +28,11 @@ Eesti Interneti Sihtasutus
 <p>Should you have additional questions, please contact your registrar:</p>
 <%= render 'mailers/shared/registrar/registrar.en.html', registrar: @registrar %>
 
-Best Regards,
-Estonian Internet Foundation
+<p><strong>Best Regards,<br>
+Estonian Internet Foundation</strong>
+</p>
 <hr>
-<p>Уважаемый регистрант/административный контакт домена .ee</p>
+<p><strong>Уважаемый регистрант/административный контакт домена .ee</strong></p>
 
 <p>Целевому учреждению Eesti Internet (EIS) стало известно, что юридическое лицо с регистрационным кодом <%= @registrant.reg_no %> удалено из коммерческого реестра.</p>
 
@@ -43,5 +45,6 @@ Estonian Internet Foundation
 <p>В случае возникновения дополнительных вопросов свяжитесь, пожалуйста, со своим регистратором:</p>
 <%= render 'mailers/shared/registrar/registrar.ru.html', registrar: @registrar %>
 
-С уважением,
-Eesti Interneti Sihtasutus
+<p><strong>С уважением,<br>
+Eesti Interneti Sihtasutus</strong>
+</p>
