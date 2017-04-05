@@ -120,7 +120,7 @@ end
 
 group :development, :test do
   # test stack
-  gem 'rspec-rails',        '3.3.2'
+  gem 'rspec-rails',        '3.5.0'
   gem 'capybara',           '2.4.4'
   gem 'phantomjs-binaries', '1.9.2.4'
   gem 'poltergeist',        '1.6.0'  # We are using PhantomJS instead
