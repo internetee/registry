@@ -31,7 +31,7 @@ gem 'rails-settings-cached',     '0.4.1' # for settings
 
 # html-xml
 gem 'haml-rails', '0.9.0' # haml for views
-gem 'nokogiri',   '1.7.1' # For XML parsing
+gem 'nokogiri'  # For XML parsing
 
 # style
 gem 'sass-rails',     '5.0.3'   # sass style
