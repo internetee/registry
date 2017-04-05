@@ -8,7 +8,7 @@ end if Bundler::VERSION < '2'
 source 'https://rubygems.org'
 
 # core
-gem 'rails',        '4.2.5.2' # when update, all initializers eis_custom files needs check/update
+gem 'rails',        '4.2.7.1' # when update, all initializers eis_custom files needs check/update
 gem 'iso8601',      '0.8.6' # for dates and times
 gem 'hashie-forbidden_attributes', '0.1.1'
 gem 'SyslogLogger', '2.0', require: 'syslog/logger'
@@ -18,7 +18,7 @@ gem 'rest-client'
 gem 'figaro', '1.1.1'
 
 # model related
-gem 'pg',                        '0.18.2'
+gem 'pg',                        '0.19.0'
 gem 'ransack',                   '1.5.1' # for searching
 gem 'validates_email_format_of', '1.6.3' # validates email against RFC 2822 and RFC 3696
 
@@ -31,7 +31,7 @@ gem 'rails-settings-cached',     '0.4.1' # for settings
 
 # html-xml
 gem 'haml-rails', '0.9.0' # haml for views
-gem 'nokogiri',   '1.6.8' # For XML parsing
+gem 'nokogiri'  # For XML parsing
 
 # style
 gem 'sass-rails',     '5.0.3'   # sass style
@@ -64,7 +64,7 @@ gem 'grape',    '0.12.0'
 gem 'jbuilder', '2.2.16'  # json api
 
 # registry specfic
-gem 'simpleidn', '0.0.5' # For punycode
+gem 'simpleidn', '0.0.7' # For punycode
 gem 'isikukood' # for EE-id validation
 gem 'money-rails', '1.4.1'
 
@@ -120,7 +120,7 @@ end
 
 group :development, :test do
   # test stack
-  gem 'rspec-rails',        '3.3.2'
+  gem 'rspec-rails',        '3.5.0'
   gem 'capybara',           '2.4.4'
   gem 'phantomjs-binaries', '1.9.2.4'
   gem 'poltergeist',        '1.6.0'  # We are using PhantomJS instead
