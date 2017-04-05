@@ -8,7 +8,7 @@ end if Bundler::VERSION < '2'
 source 'https://rubygems.org'
 
 # core
-gem 'rails',        '4.2.5.2' # when update, all initializers eis_custom files needs check/update
+gem 'rails',        '4.2.7.1' # when update, all initializers eis_custom files needs check/update
 gem 'iso8601',      '0.8.6' # for dates and times
 gem 'hashie-forbidden_attributes', '0.1.1'
 gem 'SyslogLogger', '2.0', require: 'syslog/logger'
