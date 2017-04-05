@@ -24,17 +24,17 @@
             .col-md-4.control-label
               = f.label :from
             .col-md-7
-              = f.text_field(:from, class: 'form-control', lax_email: true)
+              = f.email_field :from, class: 'form-control'
           .form-group
             .col-md-4.control-label
               = f.label :cc
             .col-md-7
-              = f.text_field(:cc, class: 'form-control', lax_email: true)
+              = f.email_field :cc, class: 'form-control'
           .form-group
             .col-md-4.control-label
               = f.label :bcc
             .col-md-7
-              = f.text_field(:bcc, class: 'form-control', lax_email: true)
+              = f.email_field :bcc, class: 'form-control'
           .form-group
             .col-md-12
               = f.label :body, t(:html_body)

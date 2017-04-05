@@ -17,6 +17,16 @@ RSpec.describe 'admin registrar create' do
     expect(registrar.website).to eq('test')
   end
 
+  it 'saves email' do
+    post admin_registrars_path, { registrar: attributes_for(:registrar, email: 'test@test.com') }
+    expect(registrar.email).to eq('test@test.com')
+  end
+
+  it 'saves billing email' do
+    post admin_registrars_path, { registrar: attributes_for(:registrar, billing_email: 'test@test.com') }
+    expect(registrar.billing_email).to eq('test@test.com')
+  end
+
   it 'redirects to :show' do
     post admin_registrars_path, { registrar: attributes_for(:registrar) }
     expect(response).to redirect_to admin_registrar_path(registrar)
