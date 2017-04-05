@@ -31,7 +31,7 @@ gem 'rails-settings-cached',     '0.4.1' # for settings
 
 # html-xml
 gem 'haml-rails', '0.9.0' # haml for views
-gem 'nokogiri'  # For XML parsing
+gem 'nokogiri', '1.7.1' # For XML parsing
 
 # style
 gem 'sass-rails',     '5.0.3'   # sass style
@@ -140,7 +140,7 @@ group :development, :test do
   gem 'brakeman',      '3.0.5', require: false # for security audit'
   # tmp, otherwise conflics with breakman
   # gem 'html2haml', github: 'haml/html2haml', ref: '6984f50bdbbd6291535027726a5697f28778ee8d'
-  gem 'html2haml',     '2.0.0'
+  gem 'html2haml',     '2.1.0'
   gem 'sdoc',          '0.4.1'  # bundle exec rake doc:rails generates the API under doc/api.
   gem 'railroady',     '1.3.0'  # to generate database diagrams
 
