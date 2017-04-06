@@ -1,7 +1,6 @@
 class Registrar
   class BaseController < ApplicationController
     before_action :authenticate_user!, :check_ip
-    layout 'registrar/application'
 
     include Registrar::ApplicationHelper
 
