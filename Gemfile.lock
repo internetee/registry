@@ -365,6 +365,7 @@ GEM
       method_source (~> 0.8.1)
       slop (~> 3.4)
     public_suffix (2.0.5)
+    puma (3.8.2)
     que (0.10.0)
     que-web (0.4.0)
       erubis
@@ -633,6 +634,7 @@ DEPENDENCIES
   phantomjs-binaries (= 1.9.2.4)
   poltergeist (= 1.6.0)
   pry (= 0.10.1)
+  puma
   que (= 0.10.0)
   que-web (= 0.4.0)
   que_mailer!
@@ -662,4 +664,4 @@ DEPENDENCIES
   whenever (= 0.9.4)
 
 BUNDLED WITH
-   1.13.6
+   1.14.6
