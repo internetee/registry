@@ -1,3 +1,13 @@
+05.04.2017
+* Fixed validation error on valid legaldocs in the portal for registrars [#432](https://github.com/internetee/registry/issues/432)
+* Updated Ruby, nokogiri and variouse other dependent gems to fix security issues
+
+14.03.2017
+* Improved phone number validation [#386](https://github.com/internetee/registry/issues/386)
+* Dropped ddoc support from legaldocs in the portal for regsitrars [#270](https://github.com/internetee/registry/issues/270)
+* Bug: Domain in exp pending list whithout the state present [#328](https://github.com/internetee/registry/issues/328)
+* Base64 of legaldocs filtered out from syslogs [#314](https://github.com/internetee/registry/issues/314)
+
 02.03.2017
 * Domain list download (csv) functionality in the portal for registrars (#248)
 * Readme updates (#273)
