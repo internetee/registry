@@ -115,6 +115,7 @@ group :development do
 
   # deploy
   gem 'mina', '0.3.1' # for fast deployment
+  gem 'puma'
 end
 
 group :development, :test do
