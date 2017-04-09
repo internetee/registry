@@ -20,7 +20,14 @@ engines:
     enabled: true
   fixme:
     enabled: true
+    config:
+      strings:
+      - FIXME
+      - TODO
+      - HACK
   rubocop:
+    enabled: true
+  reek:
     enabled: true
 ratings:
   paths:

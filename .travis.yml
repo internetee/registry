@@ -14,7 +14,8 @@ before_script:
   - "RAILS_ENV=test bundle exec rake db:migrate"
 script:
   - "RAILS_ENV=test bundle exec rspec"
-  - "CODECLIMATE_REPO_TOKEN=2fd0ab95eab718206f6732fdbd7b650da1e228f8dd491ef2082bb59d8684a054 codeclimate-test-reporter"
+after_success:
+  - "bundle exec codeclimate-test-reporter"
 services:
   - postgresql
 addons:
