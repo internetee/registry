@@ -61,13 +61,6 @@ Rails.application.routes.draw do
       end
     end
 
-    # turned off requested by client
-    # resources :nameservers do
-      # collection do
-        # match 'replace_all', via: [:post, :get]
-      # end
-    # end
-
     resources :contacts, constraints: {:id => /[^\/]+(?=#{ ActionController::Renderers::RENDERERS.map{|e| "\\.#{e}\\z"}.join("|") })|[^\/]+/} do
       member do
         get 'delete'
