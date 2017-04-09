@@ -138,12 +138,9 @@ group :development, :test do
   gem 'pry', '0.10.1'
 
   # code review
-#  gem 'simplecov',     '0.10.0', require: false
   gem 'rubycritic',    '3.2.0'
   gem 'bullet',        '4.14.7' # for finding database optimizations
-  gem 'bundler-audit',
-    github: 'rubysec/bundler-audit',
-    ref: 'f89ef7fae1090bbad825ea76812d56d72b417055' # for finding future vulnerable gems
+  gem 'bundler-audit'
   gem 'brakeman',      '3.6.1', require: false # for security audit'
   # tmp, otherwise conflics with breakman
   # gem 'html2haml', github: 'haml/html2haml', ref: '6984f50bdbbd6291535027726a5697f28778ee8d'
@@ -162,8 +159,8 @@ end
 
 group :test do
   gem 'database_cleaner'
-  gem 'factory_girl_rails'
-  gem 'webmock'
-  gem 'simplecov'
+  gem 'factory_girl_rails' 
   gem 'codeclimate-test-reporter', "~> 1.0.0"
+  gem 'simplecov'
+  gem 'webmock'
 end
