@@ -66,7 +66,7 @@ gem 'jbuilder', '2.2.16'  # json api
 # registry specfic
 gem 'simpleidn', '0.0.7' # For punycode
 gem 'isikukood' # for EE-id validation
-gem 'money-rails', '1.4.1'
+gem 'money-rails', '1.8.0'
 
 # deploy
 gem 'whenever', '0.9.4', require: false
@@ -75,13 +75,13 @@ gem 'data_migrate',
   ref: '35d22b09ff37a4e9d61ab326ad5d8eb0edf1fc81'
 
 # country listing
-gem 'countries', '0.11.4'
+gem 'countries', '2.0.8'
 
 # cloning activerecord objects
 gem 'deep_cloneable', '2.1.1'
 
 # id + mid login
-gem 'digidoc_client', '0.2.1'
+gem 'digidoc_client', '0.3.0'
 
 gem 'epp', '1.5.0', github: 'internetee/epp'
 gem 'epp-xml', '1.1.0', github: 'internetee/epp-xml'
