@@ -34,7 +34,7 @@ gem 'haml-rails', '0.9.0' # haml for views
 gem 'nokogiri', '1.7.1' # For XML parsing
 
 # style
-gem 'sass-rails',     '5.0.3'   # sass style
+gem 'sass-rails',     '5.0.6'   # sass style
 gem 'bootstrap-sass', '3.3.5.1' # bootstrap style
 
 # js
@@ -66,7 +66,7 @@ gem 'jbuilder', '2.2.16'  # json api
 # registry specfic
 gem 'simpleidn', '0.0.7' # For punycode
 gem 'isikukood' # for EE-id validation
-gem 'money-rails', '1.4.1'
+gem 'money-rails', '1.8.0'
 
 # deploy
 gem 'whenever', '0.9.4', require: false
@@ -75,13 +75,17 @@ gem 'data_migrate',
   ref: '35d22b09ff37a4e9d61ab326ad5d8eb0edf1fc81'
 
 # country listing
-gem 'countries', '0.11.4'
+gem 'countries', :require => 'countries/global'
 
 # cloning activerecord objects
 gem 'deep_cloneable', '2.1.1'
 
 # id + mid login
-gem 'digidoc_client', '0.2.1'
+#gem 'digidoc_client', '0.3.0'
+gem 'digidoc_client',
+    github: 'tarmotalu/digidoc_client',
+    branch: 'master'
+
 
 gem 'epp', '1.5.0', github: 'internetee/epp'
 gem 'epp-xml', '1.1.0', github: 'internetee/epp-xml'
@@ -110,7 +114,7 @@ group :development do
   gem 'guard',                 '2.12.9' # run tests automatically
   gem 'guard-rspec',           '4.5.2'
   gem 'guard-rails',           '0.7.1' # run EPP server automatically
-  gem 'rubocop',               '0.32.1'
+  gem 'rubocop',               '0.48.1'
   gem 'guard-rubocop',         '1.2.0'
 
   # deploy
@@ -120,7 +124,7 @@ end
 
 group :development, :test do
   # test stack
-  gem 'rspec-rails',        '3.5.0'
+  gem 'rspec-rails',        '3.5.2'
   gem 'capybara',           '2.4.4'
   gem 'phantomjs-binaries', '1.9.2.4'
   gem 'poltergeist',        '1.6.0'  # We are using PhantomJS instead
@@ -133,12 +137,12 @@ group :development, :test do
 
   # code review
   gem 'simplecov',     '0.10.0', require: false
-  gem 'rubycritic',    '1.4.0'
+  gem 'rubycritic',    '3.2.0'
   gem 'bullet',        '4.14.7' # for finding database optimizations
   gem 'bundler-audit',
     github: 'rubysec/bundler-audit',
     ref: 'f89ef7fae1090bbad825ea76812d56d72b417055' # for finding future vulnerable gems
-  gem 'brakeman',      '3.0.5', require: false # for security audit'
+  gem 'brakeman',      '3.6.1', require: false # for security audit'
   # tmp, otherwise conflics with breakman
   # gem 'html2haml', github: 'haml/html2haml', ref: '6984f50bdbbd6291535027726a5697f28778ee8d'
   gem 'html2haml',     '2.1.0'

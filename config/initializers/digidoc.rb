@@ -1,1 +1,1 @@
-Digidoc::Client.logger = Rails.application.config.logger
+#Digidoc::Client.logger = Rails.application.config.logger
