@@ -39,7 +39,7 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
         <eis:ident>            1        Contact identificator 
                                           Attribute: "type"
                                             "org"          # Business registry code
-                                            "priv"         # National idendtification number
+                                            "priv"         # National identification number
                                             "birthday"     # Birthday date in format in YYYY-MM-DD
                                           Attribute: "cc"
                                             "EE"           # Country code in ISO_3166-1 aplha 2
@@ -76,7 +76,7 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
         <eis:ident>             0-1      Contact identificator 
                                           Attribute: "type"
                                             "org"          # Business registry code
-                                            "priv"         # National idendtification number
+                                            "priv"         # National identification number
                                             "birthday"     # Birthday date in format in YYYY-MM-DD
                                           Attribute: "cc"
                                             "EE"           # Country code in ISO_3166-1 aplha 2
