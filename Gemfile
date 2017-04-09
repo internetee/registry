@@ -108,6 +108,9 @@ gem 'pdfkit', '0.6.2'
 # for datepicker
 gem 'jquery-ui-rails', '5.0.5'
 
+# codeclimate
+
+
 group :development do
   gem 'spring',                '1.3.6'
   gem 'spring-commands-rspec', '1.0.4'
@@ -135,7 +138,7 @@ group :development, :test do
   gem 'pry', '0.10.1'
 
   # code review
-  gem 'simplecov',     '0.10.0', require: false
+#  gem 'simplecov',     '0.10.0', require: false
   gem 'rubycritic',    '3.2.0'
   gem 'bullet',        '4.14.7' # for finding database optimizations
   gem 'bundler-audit',
@@ -161,4 +164,6 @@ group :test do
   gem 'database_cleaner'
   gem 'factory_girl_rails'
   gem 'webmock'
+  gem 'simplecov'
+  gem 'codeclimate-test-reporter', "~> 1.0.0"
 end

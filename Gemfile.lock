@@ -148,6 +148,8 @@ GEM
     cliver (0.3.2)
     codeclimate-engine-rb (0.4.0)
       virtus (~> 1.0)
+    codeclimate-test-reporter (1.0.8)
+      simplecov (<= 0.13)
     coderay (1.1.0)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
@@ -573,6 +575,7 @@ DEPENDENCIES
   bundler-audit!
   cancancan (= 1.11.0)
   capybara (= 2.4.4)
+  codeclimate-test-reporter (~> 1.0.0)
   coderay (= 1.1.0)
   coffee-rails (= 4.1.0)
   countries
@@ -631,7 +634,7 @@ DEPENDENCIES
   sdoc (= 0.4.1)
   select2-rails (= 3.5.9.3)
   selectize-rails (= 0.12.1)
-  simplecov (= 0.10.0)
+  simplecov
   simpleidn (= 0.0.7)
   spring (= 1.3.6)
   spring-commands-rspec (= 1.0.4)
