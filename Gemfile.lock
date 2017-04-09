@@ -45,15 +45,6 @@ GIT
       rails (>= 4.0)
 
 GIT
-  remote: https://github.com/rubysec/bundler-audit.git
-  revision: f89ef7fae1090bbad825ea76812d56d72b417055
-  ref: f89ef7fae1090bbad825ea76812d56d72b417055
-  specs:
-    bundler-audit (0.4.0)
-      bundler (~> 1.2)
-      thor (~> 0.18)
-
-GIT
   remote: https://github.com/tarmotalu/digidoc_client.git
   revision: 1645e83a5a548addce383f75703b0275c5310c32
   branch: master
@@ -137,6 +128,9 @@ GEM
     bullet (4.14.7)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.9.0)
+    bundler-audit (0.5.0)
+      bundler (~> 1.2)
+      thor (~> 0.18)
     cancancan (1.11.0)
     capybara (2.4.4)
       mime-types (>= 1.16)
@@ -148,6 +142,8 @@ GEM
     cliver (0.3.2)
     codeclimate-engine-rb (0.4.0)
       virtus (~> 1.0)
+    codeclimate-test-reporter (1.0.8)
+      simplecov (<= 0.13)
     coderay (1.1.0)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
@@ -570,9 +566,10 @@ DEPENDENCIES
   bootstrap-sass (= 3.3.5.1)
   brakeman (= 3.6.1)
   bullet (= 4.14.7)
-  bundler-audit!
+  bundler-audit
   cancancan (= 1.11.0)
   capybara (= 2.4.4)
+  codeclimate-test-reporter (~> 1.0.0)
   coderay (= 1.1.0)
   coffee-rails (= 4.1.0)
   countries
@@ -632,7 +629,7 @@ DEPENDENCIES
   sdoc (= 0.4.1)
   select2-rails (= 3.5.9.3)
   selectize-rails (= 0.12.1)
-  simplecov (= 0.10.0)
+  simplecov
   simpleidn (= 0.0.7)
   spring (= 1.3.6)
   spring-commands-rspec (= 1.0.4)
