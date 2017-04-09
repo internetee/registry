@@ -1,4 +1,7 @@
 require 'webmock/rspec'
+require 'simplecov'
+SimpleCov.start
+
 
 RSpec.configure do |config|
   # https://github.com/rspec/rspec-rails/issues/1076
