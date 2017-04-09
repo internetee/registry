@@ -56,7 +56,7 @@ GIT
 GIT
   remote: https://github.com/tarmotalu/digidoc_client.git
   revision: 1645e83a5a548addce383f75703b0275c5310c32
-  ref: 1645e83a5a548addce383f75703b0275c5310c32
+  branch: master
   specs:
     digidoc_client (0.3.0)
       crack (>= 0.1.8)
@@ -159,13 +159,12 @@ GEM
       execjs
     coffee-script-source (1.12.2)
     concurrent-ruby (1.0.5)
-    countries (2.0.8)
+    countries (1.2.5)
+      currencies (~> 0.4.2)
       i18n_data (~> 0.7.0)
-      money (~> 6.7)
-      sixarm_ruby_unaccent (~> 1.1)
-      unicode_utils (~> 1.4)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
+    currencies (0.4.2)
     daemons (1.2.4)
     daemons-rails (1.2.1)
       daemons
@@ -528,7 +527,6 @@ GEM
       unf_ext
     unf_ext (0.0.7.2)
     unicode-display_width (1.2.0)
-    unicode_utils (1.4.0)
     unicorn (5.3.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
@@ -575,7 +573,7 @@ DEPENDENCIES
   capybara (= 2.4.4)
   coderay (= 1.1.0)
   coffee-rails (= 4.1.0)
-  countries (= 2.0.8)
+  countries (= 1.2.5)
   daemons-rails (= 1.2.1)
   data_migrate!
   database_cleaner

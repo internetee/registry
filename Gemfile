@@ -75,7 +75,8 @@ gem 'data_migrate',
   ref: '35d22b09ff37a4e9d61ab326ad5d8eb0edf1fc81'
 
 # country listing
-gem 'countries', '2.0.8'
+#gem 'countries', '2.0.8'
+gem 'countries', '1.2.5'
 
 # cloning activerecord objects
 gem 'deep_cloneable', '2.1.1'
