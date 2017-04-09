@@ -606,7 +606,7 @@ DEPENDENCIES
   launchy (= 2.4.3)
   liquid (= 3.0.6)
   mina (= 0.3.1)
-  money-rails (= 1.8.0)
+  money-rails
   nokogiri (= 1.7.1)
   nprogress-rails (= 0.1.6.7)
   paper_trail!
