@@ -17,6 +17,9 @@
 28.02.2017
 * Add missing registrar's website field in UI
 
+13.02.2017
+* Introduce disputes
+
 24.01.2017
 * Disallow EPP domain:update/transfer/delete if a domain has "deleteCandidate" status
 

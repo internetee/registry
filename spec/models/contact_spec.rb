@@ -523,4 +523,17 @@ RSpec.describe Contact, db: false do
       specify { expect(contact.id_code).to be_nil }
     end
   end
+
+  it 'updates whois on after_save', db: true do
+    domain = create(:domain, name: 'test.com')
+    contact = create(:contact)
+    admin_domain_contact = create(:admin_domain_contact, domain: domain, contact: contact)
+    domain.admin_domain_contacts << admin_domain_contact
+
+    expect(DNS::DomainName).to receive(:update_whois).with(domain_name: 'test.com')
+
+    contact.reload
+    contact.name = 'new-test'
+    contact.save
+  end
 end

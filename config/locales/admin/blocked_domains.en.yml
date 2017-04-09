@@ -5,3 +5,15 @@ en:
         title: Blocked domains
         new_btn: New blocked domain
         reset_btn: Reset
+        delete_btn: Delete
+
+      create:
+        created: Blocked domain has been successfully created
+
+      destroy:
+        deleted: Blocked domain has been successfully deleted
+        not_deleted: Unable to delete blocked domain
+
+      blocked_domain:
+        delete_btn: Delete
+        delete_btn_confirm: Are you sure you want to delete blocked domain?

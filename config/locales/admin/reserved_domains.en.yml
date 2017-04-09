@@ -5,3 +5,26 @@ en:
         title: Reserved domains
         new_btn: New reserved domain
         reset_btn: Reset
+
+      create:
+        created: Reserved domain has been successfully created
+        created_with_dispute_password_html: >
+                                          Reserved domain has been successfully created,
+                                          but <b>the provided password has been discarded</b>
+                                          in favor of one from dispute
+
+      update:
+        updated: Reserved domain has been successfully updated
+
+      destroy:
+        deleted: Reserved domain has been successfully deleted
+        not_deleted: Unable to delete reserved domain
+
+      form:
+        password_info: Generated automatically if left blank and not disputed
+
+      reserved_domain:
+        edit_btn: Edit
+        edit_prohibited: Editing is prohibited while domain name is disputed
+        delete_btn: Delete
+        delete_btn_confirm: Are you sure you want to delete reserved domain?
