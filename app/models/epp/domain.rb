@@ -477,10 +477,14 @@ class Epp::Domain < Domain
   def update(frame, current_user, verify = true)
     return super if frame.blank?
 
+    registrant_change = frame.css('registrant').present?
+
     check_discarded
 
-    provided_dispute_password = frame.css('reserved > pw').text
-    check_disputed(password: provided_dispute_password)
+    if registrant_change
+      provided_dispute_password = frame.css('reserved > pw').text
+      check_disputed(password: provided_dispute_password)
+    end
 
     at = {}.with_indifferent_access
     at.deep_merge!(attrs_from(frame.css('chg'), current_user, 'chg'))
@@ -507,9 +511,9 @@ class Epp::Domain < Domain
     same_registrant_as_current = (registrant.code == frame.css('registrant').text)
 
     if !same_registrant_as_current && errors.empty? && verify &&
-       Setting.request_confrimation_on_registrant_change_enabled &&
-       frame.css('registrant').present? &&
-       frame.css('registrant').attr('verified').to_s.downcase != 'yes'
+        Setting.request_confrimation_on_registrant_change_enabled &&
+        registrant_change &&
+        frame.css('registrant').attr('verified').to_s.downcase != 'yes'
       registrant_verification_asked!(frame.to_s, current_user.id)
     end
 
