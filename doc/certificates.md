@@ -101,7 +101,7 @@ Configure registry registry/shared/config/application.yml to match the CA settin
 
 Configure registry epp registry-epp/shared/config/application.yml:
 
-    webclient_ips: '54.154.91.240'
+    webclient_ips: '127.0.0.1' # IP where webclient is running
 
 Configure EPP port 700 virtual host:
 
