@@ -6,7 +6,6 @@ Domain Registry
 [![Test Coverage](https://codeclimate.com/github/internetee/registry/badges/coverage.svg)](https://codeclimate.com/github/internetee/registry/coverage)
 [![Documentation Status](https://readthedocs.org/projects/eeregistry/badge/?version=latest)](http://docs.internet.ee/en/latest/?badge=latest)
 
-
 Full stack top-level domain (TLD) management.
 
 * [Documentation](#documentation)

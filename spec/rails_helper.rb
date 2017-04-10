@@ -8,12 +8,6 @@ require 'money-rails/test_helpers'
 require 'support/requests/session_helpers'
 require 'support/requests/epp_helpers'
 require 'support/features/session_helpers'
-
-if ENV['ROBOT']
-  require 'simplecov'
-  SimpleCov.start 'rails'
-end
-
 require 'support/matchers/alias_attribute'
 require 'support/matchers/active_job'
 require 'support/matchers/epp/code'
