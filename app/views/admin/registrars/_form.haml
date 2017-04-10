@@ -36,12 +36,12 @@
             .col-md-4.control-label
               = f.label :email
             .col-md-7
-              = f.text_field(:email, class: 'form-control', lax_email: true)
+              = f.email_field :email, class: 'form-control'
           .form-group
             .col-md-4.control-label
               = f.label :billing_email
             .col-md-7
-              = f.text_field(:billing_email, class: 'form-control', lax_email: true)
+              = f.email_field :billing_email, class: 'form-control'
 
   .row
     .col-md-8

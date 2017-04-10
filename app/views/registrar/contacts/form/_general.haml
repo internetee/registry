@@ -61,7 +61,7 @@
       .col-md-3.control-label
         = f.label :email, t(:email) + '*'
       .col-md-7
-        = f.text_field :email, class: 'form-control', required: true, lax_email: true
+        = f.email_field :email, class: 'form-control', required: true
 
     .form-group
       .col-md-3.control-label
