@@ -10,22 +10,12 @@ module Disputes
     def open
       dispute.transaction do
         dispute.save!
-        prohibit_domain_registrant_change
         sync_reserved_domain
         update_whois
       end
     end
 
     private
-
-    def prohibit_domain_registrant_change
-      domain = Domain.find_by(name: dispute.domain_name)
-
-      return unless domain
-
-      domain.prohibit_registrant_change
-      domain.save!
-    end
 
     def sync_reserved_domain
       reserved_domain = ReservedDomain.find_by(name: dispute.domain_name)

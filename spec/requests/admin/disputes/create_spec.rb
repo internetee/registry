@@ -44,17 +44,6 @@ RSpec.describe 'admin dispute create' do
     expect(dispute.comment).to eq('test')
   end
 
-  context 'when domain is registered' do
-    let!(:domain) { create(:domain, name: 'test.com') }
-
-    it 'prohibits registrant change' do
-      expect {
-        post admin_disputes_path, dispute: attributes_for(:dispute, domain_name: 'test.com')
-        domain.reload
-      }.to change { domain.registrant_change_prohibited? }.from(false).to(true)
-    end
-  end
-
   context 'when domain name is reserved' do
     let!(:reserved_domain) { create(:reserved_domain,
                                     name: 'test.com',
