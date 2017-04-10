@@ -15,9 +15,10 @@ AllCops:
     - 'spec/support/epp.rb'
     - 'spec/support/epp_contact_xml_builder.rb'
     - 'vendor/bundle/**/*'
+    - 'lib/tasks/import.rake'
 
 Metrics/LineLength:
-  Max: 120
+  Max: 120 # default 80
 
 Metrics/MethodLength:
   Max: 25 # default 10
