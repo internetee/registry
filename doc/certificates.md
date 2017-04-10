@@ -90,7 +90,7 @@ Create certificate revocation list (prompts for pass phrase):
 Configure registry registry/shared/config/application.yml to match the CA settings:
     
     openssl_config_path: '/etc/ssl/openssl.cnf'
-    crl_path:     '/home/registry/registry/shared/ca/crl/crl.pem'
+    crl_dir:     '/home/registry/registry/shared/ca/crl/crl.pem'
     ca_cert_path: '/home/registry/registry/shared/ca/certs/ca.crt.pem'
     ca_key_path:  '/home/registry/registry/shared/ca/private/ca.key.pem'
     ca_key_password: 'your-root-key-password'
