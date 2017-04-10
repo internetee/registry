@@ -1,0 +1,22 @@
+<% dispute = DisputePresenter.new(dispute: @dispute, view: self) %>
+
+<ol class="breadcrumb">
+    <li><%= link_to t('admin.disputes.index.title'), admin_disputes_path %></li>
+</ol>
+
+<div class="page-header">
+    <div class="row">
+        <div class="col-sm-6">
+            <h1><%= dispute.name %></h1>
+        </div>
+
+        <div class="col-sm-6 text-right">
+            <%= dispute.edit_btn %>
+            <%= dispute.delete_btn %>
+        </div>
+    </div>
+</div>
+
+<div class="col-sm-6">
+    <%= render 'overview', dispute: dispute %>
+</div>

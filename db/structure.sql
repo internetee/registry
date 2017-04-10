@@ -24,20 +24,6 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
--- Name: btree_gist; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS btree_gist WITH SCHEMA public;
-
-
---
--- Name: EXTENSION btree_gist; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION btree_gist IS 'support for indexing common datatypes in GiST';
-
-
---
 -- Name: hstore; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -167,7 +153,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         exclude_filter varchar := '';
         tmp_var text;
         ret text;
-        BEGIN
+      BEGIN
         -- define filters
         include_filter = '%.' || i_origin;
 
@@ -203,7 +189,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         -- ns records
         SELECT array_to_string(
           array(
-            SELECT concat(d.name_puny, '. IN NS ', ns.hostname, '.')
+            SELECT concat(d.name_puny, '. IN NS ', coalesce(ns.hostname_puny, ns.hostname), '.')
             FROM domains d
             JOIN nameservers ns ON ns.domain_id = d.id
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
@@ -222,7 +208,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         -- a glue records for other nameservers
         SELECT array_to_string(
           array(
-            SELECT concat(ns.hostname, '. IN A ', unnest(ns.ipv4))
+            SELECT concat(coalesce(ns.hostname_puny, ns.hostname), '. IN A ', unnest(ns.ipv4))
             FROM nameservers ns
             JOIN domains d ON d.id = ns.domain_id
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
@@ -242,7 +228,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         -- aaaa glue records for other nameservers
         SELECT array_to_string(
           array(
-            SELECT concat(ns.hostname, '. IN AAAA ', unnest(ns.ipv6))
+            SELECT concat(coalesce(ns.hostname_puny, ns.hostname), '. IN AAAA ', unnest(ns.ipv6))
             FROM nameservers ns
             JOIN domains d ON d.id = ns.domain_id
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
@@ -275,6 +261,34 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         RETURN ret;
       END;
       $_$;
+
+
+--
+-- Name: btree_hstore_ops; Type: OPERATOR FAMILY; Schema: public; Owner: -
+--
+
+CREATE OPERATOR FAMILY btree_hstore_ops USING btree;
+
+
+--
+-- Name: gin_hstore_ops; Type: OPERATOR FAMILY; Schema: public; Owner: -
+--
+
+CREATE OPERATOR FAMILY gin_hstore_ops USING gin;
+
+
+--
+-- Name: gist_hstore_ops; Type: OPERATOR FAMILY; Schema: public; Owner: -
+--
+
+CREATE OPERATOR FAMILY gist_hstore_ops USING gist;
+
+
+--
+-- Name: hash_hstore_ops; Type: OPERATOR FAMILY; Schema: public; Owner: -
+--
+
+CREATE OPERATOR FAMILY hash_hstore_ops USING hash;
 
 
 SET default_tablespace = '';
@@ -911,6 +925,40 @@ CREATE SEQUENCE directos_id_seq
 --
 
 ALTER SEQUENCE directos_id_seq OWNED BY directos.id;
+
+
+--
+-- Name: disputes; Type: TABLE; Schema: public; Owner: -; Tablespace:
+--
+
+CREATE TABLE disputes (
+    id integer NOT NULL,
+    password character varying,
+    expire_date date,
+    created_at timestamp without time zone,
+    comment text NOT NULL,
+    updated_at timestamp without time zone,
+    domain_name character varying NOT NULL
+);
+
+
+--
+-- Name: disputes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE disputes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: disputes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE disputes_id_seq OWNED BY disputes.id;
 
 
 --
@@ -2778,6 +2826,15 @@ CREATE TABLE schema_migrations (
 
 
 --
+-- Name: serial_num; Type: TABLE; Schema: public; Owner: -; Tablespace:
+--
+
+CREATE TABLE serial_num (
+    round double precision
+);
+
+
+--
 -- Name: settings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2933,41 +2990,6 @@ ALTER SEQUENCE white_ips_id_seq OWNED BY white_ips.id;
 
 
 --
--- Name: whois_records; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE whois_records (
-    id integer NOT NULL,
-    domain_id integer,
-    name character varying,
-    body text,
-    json json,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    registrar_id integer
-);
-
-
---
--- Name: whois_records_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE whois_records_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: whois_records_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE whois_records_id_seq OWNED BY whois_records.id;
-
-
---
 -- Name: zonefile_settings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3120,6 +3142,13 @@ ALTER TABLE ONLY depricated_versions ALTER COLUMN id SET DEFAULT nextval('depric
 --
 
 ALTER TABLE ONLY directos ALTER COLUMN id SET DEFAULT nextval('directos_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY disputes ALTER COLUMN id SET DEFAULT nextval('disputes_id_seq'::regclass);
 
 
 --
@@ -3483,13 +3512,6 @@ ALTER TABLE ONLY white_ips ALTER COLUMN id SET DEFAULT nextval('white_ips_id_seq
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY whois_records ALTER COLUMN id SET DEFAULT nextval('whois_records_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY zonefile_settings ALTER COLUMN id SET DEFAULT nextval('zonefile_settings_id_seq'::regclass);
 
 
@@ -3619,6 +3641,14 @@ ALTER TABLE ONLY depricated_versions
 
 ALTER TABLE ONLY directos
     ADD CONSTRAINT directos_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: disputes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY disputes
+    ADD CONSTRAINT disputes_pkey PRIMARY KEY (id);
 
 
 --
@@ -4030,14 +4060,6 @@ ALTER TABLE ONLY white_ips
 
 
 --
--- Name: whois_records_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY whois_records
-    ADD CONSTRAINT whois_records_pkey PRIMARY KEY (id);
-
-
---
 -- Name: zonefile_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4148,6 +4170,13 @@ CREATE INDEX index_delegation_signers_on_domain_id ON delegation_signers USING b
 --
 
 CREATE INDEX index_directos_on_item_type_and_item_id ON directos USING btree (item_type, item_id);
+
+
+--
+-- Name: index_disputes_on_domain_name; Type: INDEX; Schema: public; Owner: -; Tablespace:
+--
+
+CREATE UNIQUE INDEX index_disputes_on_domain_name ON disputes USING btree (domain_name);
 
 
 --
@@ -4767,20 +4796,6 @@ CREATE INDEX index_users_on_registrar_id ON users USING btree (registrar_id);
 
 
 --
--- Name: index_whois_records_on_domain_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_whois_records_on_domain_id ON whois_records USING btree (domain_id);
-
-
---
--- Name: index_whois_records_on_registrar_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_whois_records_on_registrar_id ON whois_records USING btree (registrar_id);
-
-
---
 -- Name: log_contacts_object_legacy_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -5278,5 +5293,27 @@ INSERT INTO schema_migrations (version) VALUES ('20161004101419');
 
 INSERT INTO schema_migrations (version) VALUES ('20161227193500');
 
+INSERT INTO schema_migrations (version) VALUES ('20170201150000');
+
+INSERT INTO schema_migrations (version) VALUES ('20170131231449');
+
+INSERT INTO schema_migrations (version) VALUES ('20170203102059');
+
+INSERT INTO schema_migrations (version) VALUES ('20170205135240');
+
+INSERT INTO schema_migrations (version) VALUES ('20170206052644');
+
+INSERT INTO schema_migrations (version) VALUES ('20170206214802');
+
+INSERT INTO schema_migrations (version) VALUES ('20170209153849');
+
+INSERT INTO schema_migrations (version) VALUES ('20170212020532');
+
+INSERT INTO schema_migrations (version) VALUES ('20170212020841');
+
+INSERT INTO schema_migrations (version) VALUES ('20170212021349');
+
 INSERT INTO schema_migrations (version) VALUES ('20170221115548');
+
+INSERT INTO schema_migrations (version) VALUES ('20170320003225');
 
