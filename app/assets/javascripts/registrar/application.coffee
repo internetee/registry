@@ -1,8 +1,4 @@
 $(document).on 'page:change', ->
-  # client side validate all forms
-  $('form').each ->
-    $(this).validate()
-
   $('.js-contact-form').on 'restoreDefault', (e) ->
     form = $(e.target)
     form.find('.js-ident-tip').hide()

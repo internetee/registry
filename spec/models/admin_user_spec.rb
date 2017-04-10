@@ -16,16 +16,6 @@ RSpec.describe AdminUser do
       @admin_user = Fabricate(:admin_user)
     end
 
-    it 'should have one version' do
-      with_versioning do
-        @admin_user.versions.should == []
-        @admin_user.updated_at = Time.zone.now
-        @admin_user.save
-        @admin_user.errors.full_messages.should match_array([])
-        @admin_user.versions.size.should == 1
-      end
-    end
-
     it 'should require password confirmation when changing password' do
       @admin_user.valid?.should == true
       @admin_user.password = 'not confirmed'
@@ -35,12 +25,6 @@ RSpec.describe AdminUser do
   end
 
   describe '::min_password_length' do
-    it 'returns minimum password length' do
-      expect(described_class.min_password_length).to eq(8)
-    end
-  end
-
-  describe '#min_password_length' do
     it 'returns minimum password length' do
       expect(described_class.min_password_length).to eq(8)
     end

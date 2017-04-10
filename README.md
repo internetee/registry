@@ -1,6 +1,10 @@
 Domain Registry
 ===============
 [![Build Status](https://travis-ci.org/internetee/registry.svg?branch=master)](https://travis-ci.org/internetee/registry)
+[![Code Climate](https://codeclimate.com/github/internetee/registry/badges/gpa.svg)](https://codeclimate.com/github/internetee/registry)
+[![Issue Count](https://codeclimate.com/github/internetee/registry/badges/issue_count.svg)](https://codeclimate.com/github/internetee/registry)
+[![Test Coverage](https://codeclimate.com/github/internetee/registry/badges/coverage.svg)](https://codeclimate.com/github/internetee/registry/coverage)
+[![Documentation Status](https://readthedocs.org/projects/eeregistry/badge/?version=latest)](http://docs.internet.ee/en/latest/?badge=latest)
 
 Full stack top-level domain (TLD) management.
 
