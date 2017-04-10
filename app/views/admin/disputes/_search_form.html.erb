@@ -9,14 +9,16 @@
     </div>
 
     <div class="form-group">
-        <%= f.label nil, t('.expire_date_range'), class: 'col-sm-2 control-label', for: nil %>
+        <%= f.label nil, Dispute.human_attribute_name(:expire_date), class: 'col-sm-2 control-label', for: nil %>
 
-        <div class="col-sm-2">
-            <%= f.text_field :expire_date_start, class: 'form-control datepicker' %>
+        <div class="col-sm-3">
+            <%= t '.expire_date_start' %>
+            <%= f.text_field :expire_date_start, class: 'form-control datepicker', style: 'display: inline-block; width: 125px;' %>
         </div>
 
-        <div class="col-sm-2">
-            <%= f.text_field :expire_date_end, class: 'form-control datepicker' %>
+        <div class="col-sm-3">
+            <%= t '.expire_date_end' %>
+            <%= f.text_field :expire_date_end, class: 'form-control datepicker', style: 'display: inline-block; width: 125px;' %>
         </div>
     </div>
 
