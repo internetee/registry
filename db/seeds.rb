@@ -35,13 +35,13 @@ ActiveRecord::Base.transaction do
   )
 
   ZonefileSetting.create!(
-    origin: 'com',
+    origin: 'tld',
     ttl: 43200,
     refresh: 3600,
     retry: 900,
     expire: 1209600,
     minimum_ttl: 3600,
-    email: 'example.com',
-    master_nameserver: 'example.com'
+    email: 'admin.domain.tld',
+    master_nameserver: 'ns.tld'
   )
 end
