@@ -9,7 +9,7 @@ ActiveRecord::Base.transaction do
     city: 'test',
     state: 'test',
     zip: '1234',
-    email: 'test@test.com',
+    email: 'test@domain.tld',
     country_code: 'US',
     code: 'US1'
   )
@@ -27,7 +27,7 @@ ActiveRecord::Base.transaction do
 
   AdminUser.create!(
     username: 'test',
-    email: 'test@test.com',
+    email: 'test@domain.tld',
     password: 'testtest',
     password_confirmation: 'testtest',
     country_code: 'US',
