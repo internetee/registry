@@ -29,7 +29,7 @@ class Registrant::SessionsController < Devise::SessionsController
     phone = params[:user][:phone]
     endpoint = "#{ENV['sk_digi_doc_service_endpoint']}"
     client = Digidoc::Client.new(endpoint)
-    client.logger = Rails.application.config.logger
+    client.logger = Rails.application.config.logger unless Rails.env.test?
 
     if Rails.env.test? && phone == "123"
       @user = ApiUser.find_by(identity_code: "14212128025")
@@ -71,7 +71,7 @@ class Registrant::SessionsController < Devise::SessionsController
   def mid_status
     endpoint = "#{ENV['sk_digi_doc_service_endpoint']}"
     client = Digidoc::Client.new(endpoint)
-    client.logger = Rails.application.config.logger
+    client.logger = Rails.application.config.logger unless Rails.env.test?
     client.session_code = session[:mid_session_code]
     auth_status = client.authentication_status
 

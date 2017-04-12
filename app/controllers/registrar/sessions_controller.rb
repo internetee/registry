@@ -100,7 +100,7 @@ class Registrar::SessionsController < Devise::SessionsController
     phone = params[:user][:phone]
     endpoint = "#{ENV['sk_digi_doc_service_endpoint']}"
     client = Digidoc::Client.new(endpoint)
-    client.logger = Rails.application.config.logger
+    client.logger = Rails.application.config.logger unless Rails.env.test?
 
     # country_codes = {'+372' => 'EST'}
     phone.gsub!('+372', '')
@@ -136,7 +136,7 @@ class Registrar::SessionsController < Devise::SessionsController
   def mid_status
     endpoint = "#{ENV['sk_digi_doc_service_endpoint']}"
     client = Digidoc::Client.new(endpoint)
-    client.logger = Rails.application.config.logger
+    client.logger = Rails.application.config.logger Rails.env.test?
     client.session_code = session[:mid_session_code]
     auth_status = client.authentication_status
 
