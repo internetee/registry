@@ -352,6 +352,7 @@ GEM
       method_source (~> 0.8.1)
       slop (~> 3.4)
     public_suffix (2.0.5)
+    puma (3.8.2)
     que (0.10.0)
     que-web (0.4.0)
       erubis
