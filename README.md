@@ -464,8 +464,3 @@ Please follow WHOIS server readme:
 
     https://github.com/internetee/whois
 
-
-## Code Status
-
-Alpha release status, only model tests:
-[![Build Status](https://travis-ci.org/domify/registry.svg?branch=master)](https://travis-ci.org/domify/registry)
