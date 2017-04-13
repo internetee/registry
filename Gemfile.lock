@@ -47,7 +47,7 @@ GIT
 GIT
   remote: https://github.com/tarmotalu/digidoc_client.git
   revision: 1645e83a5a548addce383f75703b0275c5310c32
-  branch: master
+  ref: 1645e83a5a548addce383f75703b0275c5310c32
   specs:
     digidoc_client (0.3.0)
       crack (>= 0.1.8)
