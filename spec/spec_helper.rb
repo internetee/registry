@@ -1,4 +1,9 @@
 require 'webmock/rspec'
+if ENV['TRAVIS']
+  require 'simplecov'
+  SimpleCov.start
+end
+
 
 RSpec.configure do |config|
   # https://github.com/rspec/rspec-rails/issues/1076

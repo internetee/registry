@@ -32,12 +32,12 @@ class SortedCountry
     end
 
     def all_sorted
-      @all_sorted ||= Country.all.sort_by { |name, _code| name.first }
+      @all_sorted ||= Country.all.sort_by(&:name)
     end
 
     def all_sorted_truncated
-      @all_sorted_truncated ||= 
-        all_sorted.map { |name, code| [truncate(name, length: 26), code] }
+      @all_sorted_truncated ||=
+        all_sorted.map { |country| [truncate(name, length: 26), country.alpha2] }
     end
   end
 end
