@@ -86,7 +86,7 @@ gem 'deep_cloneable', '2.1.1'
 # gem 'digidoc_client', '0.3.0'
 gem 'digidoc_client',
     github: 'tarmotalu/digidoc_client',
-    branch: 'master'
+    ref: '1645e83a5a548addce383f75703b0275c5310c32'
 
 
 gem 'epp', '1.5.0', github: 'internetee/epp'
