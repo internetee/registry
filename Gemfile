@@ -155,9 +155,6 @@ group :development, :test do
   gem 'html2haml',     '2.1.0'
   gem 'sdoc',          '0.4.1'  # bundle exec rake doc:rails generates the API under doc/api.
   gem 'railroady',     '1.3.0'  # to generate database diagrams
-
-  # dev tools
-  gem 'unicorn'
   gem 'autodoc'
 end
 
