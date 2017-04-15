@@ -43,7 +43,7 @@ RSpec.describe 'EPP domain:renew' do
     it 'renews domain' do
       request
       domain.reload
-      expect(domain.expire_time).to eq(Time.zone.parse('05.07.2011').end_of_day)
+      expect(domain.expire_time).to eq(Time.zone.parse('05.07.2011'))
     end
 
     specify do
