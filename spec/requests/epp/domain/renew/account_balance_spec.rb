@@ -3,7 +3,6 @@ require 'rails_helper'
 RSpec.describe 'EPP domain:renew' do
   let(:request) { post '/epp/command/renew', frame: request_xml }
   let!(:user) { create(:api_user_epp, registrar: registrar) }
-  let!(:registrar) { create(:registrar_with_unlimited_balance) }
   let!(:pricelist) { create(:pricelist,
                             category: 'com',
                             duration: '1year',
@@ -18,7 +17,8 @@ RSpec.describe 'EPP domain:renew' do
     sign_in_to_epp_area(user: user)
   end
 
-  context 'when given expire time and current match' do
+  context 'when account balance is sufficient' do
+    let!(:registrar) { create(:registrar_with_unlimited_balance) }
     let!(:domain) { create(:domain,
                            registrar: registrar,
                            name: 'test.com',
@@ -52,7 +52,8 @@ RSpec.describe 'EPP domain:renew' do
     end
   end
 
-  context 'when given expire time and current do not match' do
+  context 'when account balance is not sufficient' do
+    let!(:registrar) { create(:registrar_with_zero_balance) }
     let!(:domain) { create(:domain,
                            registrar: registrar,
                            name: 'test.com',
@@ -82,7 +83,7 @@ RSpec.describe 'EPP domain:renew' do
 
     specify do
       request
-      expect(response).to have_code_of(2306)
+      expect(response).to have_code_of(2104)
     end
   end
 end
