@@ -25,14 +25,6 @@ staging:
   username: registrant_read_only
   password: registrant_read_only_pwd
 
-registrant_write_staging:
-  <<: *default
-  database: registry_development # registry real database
-  host: localhost
-  username: registrant_write     # user should have write access only to registrant_verifications table
-  password: registrant_write_pwd
-
-
 #    
 # Production config for Registrant
 #
@@ -43,10 +35,3 @@ production:
   host: localhost               # registry production mirror location
   username: registrant_read_only
   password: registrant_read_only_pwd
-
-registrant_write_production:
-  <<: *default
-  database: registry_production  # registry production database name 
-  host: localhost                # registry database location
-  username: registrant_write     # user should have write access only to registrant_verifications table
-  password: registrant_write_pwd

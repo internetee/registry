@@ -6,6 +6,10 @@ RSpec.describe 'FactoryGirl', db: true do
   end
 
   it 'lints factories' do
-    FactoryGirl.lint
+    factories_to_lint = FactoryGirl.factories.reject do |factory|
+      %i(reserved_domain).include?(factory.name) || factory.name.to_s =~ /^domain/ # Ignore the ones with domain_name validator
+    end
+
+    FactoryGirl.lint factories_to_lint
   end
 end
