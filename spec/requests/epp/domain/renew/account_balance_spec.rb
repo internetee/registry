@@ -13,7 +13,7 @@ RSpec.describe 'EPP domain:renew' do
   }
 
   before :example do
-    Setting.days_to_renew_domain_before_expire = 1
+    Setting.days_to_renew_domain_before_expire = 0
     travel_to Time.zone.parse('05.07.2010')
     sign_in_to_epp_area(user: user)
   end
