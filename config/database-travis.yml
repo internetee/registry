@@ -17,7 +17,3 @@ whois_test:
 api_log_test:
   <<: *default
   database: registry_api_log_test
-
-registrant_write_test:
-  <<: *default
-  database: registry_test
