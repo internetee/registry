@@ -1,0 +1,47 @@
+<%= form_for [:admin, dispute], html: { class: 'form-horizontal' } do |f| %>
+    <%= render 'form_errors', target: dispute %>
+
+    <div class="form-group">
+        <%= f.label :domain_name, class: 'col-sm-2 control-label' %>
+
+        <div class="col-sm-4">
+            <%= f.text_field :domain_name, class: 'form-control', autofocus: true, required: true, placeholder: true %>
+            <p class="help-block"><%= t '.domain_name_help' %></p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <%= f.label :password, class: 'col-sm-2 control-label' %>
+
+        <div class="col-sm-4">
+            <%= f.text_field :password, class: 'form-control' %>
+            <p class="help-block"><%= t '.password_help' %></p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <%= f.label :expire_date, class: 'col-sm-2 control-label' %>
+
+        <div class="col-sm-4">
+            <%= f.text_field :expire_date, class: 'form-control datepicker', required: true,
+                             pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}',
+                             placeholder: Time.zone.today.to_s %>
+            <p class="help-block"><%= t '.expire_date_help' %></p>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <%= f.label :comment, class: 'col-sm-2 control-label' %>
+
+        <div class="col-sm-4">
+            <%= f.text_area :comment, class: 'form-control', required: true %>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-2">
+            <%= f.submit t(".#{dispute.new_record? ? 'create' : 'update'}_btn"), class: 'btn btn-success',
+                         name: nil %>
+        </div>
+    </div>
+<% end %>

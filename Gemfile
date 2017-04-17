@@ -35,6 +35,7 @@ gem 'haml-rails', '0.9.0' # haml for views
 gem 'nokogiri', '1.7.1' # For XML parsing
 
 # style
+
 gem 'bootstrap-sass', '3.3.5.1' # bootstrap style
 gem 'sass-rails',     '5.0.6'   # sass style
 
@@ -118,6 +119,7 @@ group :development do
   gem 'spring',                '1.3.6'
   gem 'spring-commands-rspec', '1.0.4'
   gem 'guard-rails',           '0.7.1' # run EPP server automatically
+
   gem 'guard-rspec',           '4.5.2'
   gem 'guard-rubocop',         '1.2.0'
   gem 'rubocop',               '0.48.1'
@@ -129,6 +131,7 @@ end
 
 group :development, :test do
   # test stack
+  gem 'rspec-rails',        '3.5.2'
   gem 'capybara',           '2.4.4'
   gem 'rspec-rails',        '3.5.2' 
   gem 'fabrication',        '2.13.2' # Replacement for fixtures
@@ -141,18 +144,17 @@ group :development, :test do
   gem 'pry', '0.10.1'
 
   # code review
+
   gem 'rubycritic',    '3.2.0'
   gem 'bullet',        '4.14.7' # for finding database optimizations
   gem 'bundler-audit'
+#  gem 'simplecov',     '0.10.0', require: false
   gem 'brakeman',      '3.6.1', require: false # for security audit'
   # tmp, otherwise conflics with breakman
   # gem 'html2haml', github: 'haml/html2haml', ref: '6984f50bdbbd6291535027726a5697f28778ee8d'
   gem 'html2haml',     '2.1.0'
   gem 'sdoc',          '0.4.1'  # bundle exec rake doc:rails generates the API under doc/api.
   gem 'railroady',     '1.3.0'  # to generate database diagrams
-
-  # dev tools
-  gem 'unicorn'
   gem 'autodoc'
 end
 

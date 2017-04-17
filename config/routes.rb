@@ -61,13 +61,6 @@ Rails.application.routes.draw do
       end
     end
 
-    # turned off requested by client
-    # resources :nameservers do
-      # collection do
-        # match 'replace_all', via: [:post, :get]
-      # end
-    # end
-
     resources :contacts, constraints: {:id => /[^\/]+(?=#{ ActionController::Renderers::RENDERERS.map{|e| "\\.#{e}\\z"}.join("|") })|[^\/]+/} do
       member do
         get 'delete'
@@ -162,7 +155,7 @@ Rails.application.routes.draw do
     end
 
     resources :contacts
-    resources :whois
+    resources :whois, only: :index
   end
 
 
@@ -176,6 +169,7 @@ Rails.application.routes.draw do
     resources :pricelists
     resources :mail_templates
     resources :account_activities
+    resources :disputes
 
     resources :bank_statements do
       resources :bank_transactions
@@ -223,16 +217,8 @@ Rails.application.routes.draw do
 
     resources :settings
 
-    resources :blocked_domains do
-      member do
-        get 'delete'
-      end
-    end
-    resources :reserved_domains do
-      member do
-        get 'delete'
-      end
-    end
+    resources :blocked_domains, except: %i(show edit update)
+    resources :reserved_domains, except: :show
 
     resources :registrars do
       resources :api_users

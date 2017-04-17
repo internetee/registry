@@ -11,11 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170221115548) do
+ActiveRecord::Schema.define(version: 20170320003225) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "btree_gist"
   enable_extension "hstore"
 
   create_table "account_activities", force: :cascade do |t|
@@ -267,6 +266,17 @@ ActiveRecord::Schema.define(version: 20170221115548) do
   end
 
   add_index "directos", ["item_type", "item_id"], name: "index_directos_on_item_type_and_item_id", using: :btree
+
+  create_table "disputes", force: :cascade do |t|
+    t.string   "password"
+    t.date     "expire_date"
+    t.datetime "created_at"
+    t.text     "comment",     null: false
+    t.datetime "updated_at"
+    t.string   "domain_name", null: false
+  end
+
+  add_index "disputes", ["domain_name"], name: "index_disputes_on_domain_name", unique: true, using: :btree
 
   create_table "dnskeys", force: :cascade do |t|
     t.integer  "domain_id"
@@ -1068,6 +1078,10 @@ ActiveRecord::Schema.define(version: 20170221115548) do
     t.string   "password"
   end
 
+  create_table "serial_num", id: false, force: :cascade do |t|
+    t.float "round"
+  end
+
   create_table "settings", force: :cascade do |t|
     t.string   "var",                    null: false
     t.text     "value"
@@ -1127,19 +1141,6 @@ ActiveRecord::Schema.define(version: 20170221115548) do
     t.string   "creator_str"
     t.string   "updator_str"
   end
-
-  create_table "whois_records", force: :cascade do |t|
-    t.integer  "domain_id"
-    t.string   "name"
-    t.text     "body"
-    t.json     "json"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
-    t.integer  "registrar_id"
-  end
-
-  add_index "whois_records", ["domain_id"], name: "index_whois_records_on_domain_id", using: :btree
-  add_index "whois_records", ["registrar_id"], name: "index_whois_records_on_registrar_id", using: :btree
 
   create_table "zonefile_settings", force: :cascade do |t|
     t.string   "origin"

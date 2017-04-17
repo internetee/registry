@@ -11,7 +11,7 @@
             %th{class: 'col-xs-3'}= sort_link(@q, 'name', t(:name))
             %th{class: 'col-xs-3'}= sort_link(@q, 'subject')
             %th{class: 'col-xs-3'}= sort_link(@q, 'updated_at')
-            %th{class: 'col-xs-3'}= t(:actions)
+            %th{class: 'col-xs-3'}
         %tbody
           - @mail_templates.each do |mt|
             %tr

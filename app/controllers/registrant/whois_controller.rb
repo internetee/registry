@@ -3,7 +3,7 @@ class Registrant::WhoisController < RegistrantController
     authorize! :view, :registrant_whois
 
     if params[:domain_name].present?
-      @domain = WhoisRecord.find_by(name: params[:domain_name]);
+      @domain = Whois::Record.find_by(domain_name: params[:domain_name])
     end
   end
 end

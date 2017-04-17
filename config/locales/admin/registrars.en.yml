@@ -15,7 +15,6 @@ en:
 
       update:
         updated: Registrar has been successfully updated
-        not_updated: Unable to update registrar
 
       form:
         misc: Miscellaneous
