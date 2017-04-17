@@ -7,7 +7,8 @@ RSpec.describe 'EPP domain:renew' do
   subject(:response_code) { response_xml.xpath('//xmlns:result').first['code'] }
   subject(:response_description) { response_xml.css('result msg').text }
 
-  before do
+  before :example do
+    Setting.days_to_renew_domain_before_expire = 1
     travel_to Time.zone.parse('05.07.2010')
     sign_in_to_epp_area(user: user)
     FactoryGirl.create(:account, registrar: registrar, balance: 1)
