@@ -1,5 +1,5 @@
 RSpec.configure do |config|
-  db_connection_names = %i(test whois_test api_log_test registrant_write_test)
+  db_connection_names = ActiveRecord::Base.configurations.keys.grep(/test/).map(&:to_sym).reverse
 
   config.before :suite do
     DatabaseCleaner.strategy = :truncation
