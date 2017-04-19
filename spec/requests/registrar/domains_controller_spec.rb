@@ -21,8 +21,4 @@ RSpec.describe Registrar::DomainsController, db: true do
       expect(response).to have_http_status(:success)
     end
   end
-
-  def sign_in_to_registrar_area(user: FactoryGirl.create(:api_user))
-    post registrar_sessions_path, { depp_user: { tag: user.username, password: user.password } }
-  end
 end
