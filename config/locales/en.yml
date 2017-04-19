@@ -666,6 +666,7 @@ en:
   amount: 'Amount'
   please_pay_the_following_invoice: 'Please pay the following invoice'
   invoice_no: 'Invoice no. %{no}'
+  invoice_number: Invoice no.
   seller: 'Seller'
   prepayment: 'Prepayment'
   vat: 'VAT (%{vat_prc}%)'
@@ -934,3 +935,11 @@ en:
   cant_match_version: 'Impossible match version with request'
   user_not_authenticated: "user not authenticated"
   actions: Actions
+
+  number:
+    currency:
+      format:
+        format: "%n %u"
+        delimiter: " "
+        precision: 2
+        unit: €
