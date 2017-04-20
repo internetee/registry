@@ -58,7 +58,6 @@ namespace :db do
 
       puts "\n---------------------------- Import seed ----------------------------------------\n"
       Rake::Task['db:seed'].invoke
-      # Rake::Task['zonefile:replace_procedure'].invoke # not needed any more
       puts "\n  All done!\n\n"
     end
 
