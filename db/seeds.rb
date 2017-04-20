@@ -34,7 +34,7 @@ ActiveRecord::Base.transaction do
     roles: ['admin']
   )
 
-  ZonefileSetting.create!(
+  DNS::Zone.create!(
     origin: 'tld',
     ttl: 43200,
     refresh: 3600,

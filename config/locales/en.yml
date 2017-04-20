@@ -232,14 +232,6 @@ en:
         protocol: 'Protocol'
         alg: 'Algorithm'
         public_key: 'Public key'
-
-      zonefile_setting:
-        ttl: 'TTL'
-        refresh: 'Refresh'
-        retry: 'Retry'
-        expire: 'Expire'
-        minimum_ttl: 'Minimum TTL'
-        email: 'E-Mail'
       registrar:
         billing_email: 'Billing e-mail'
         phone: 'Contact phone'
@@ -436,7 +428,6 @@ en:
   transfer_requested: 'Transfer requested.'
   message_was_not_found: 'Message was not found'
   host_obj_is_not_allowed: 'hostObj object is not allowed'
-  generate_zonefile: 'Generate zonefile'
   zonefile: 'Zonefile'
   only_one_parameter_allowed: 'Only one parameter allowed: %{param_1} or %{param_2}'
   exactly_one_parameter_required: 'Exactly one parameter required: %{params}'
@@ -450,7 +441,6 @@ en:
   ds_data_with_key_allowed: 'Allow DS data with key'
   key_data_allowed: 'Allow key data'
   ds_digest_type: 'DS digest type'
-  zonefile_settings: 'Zonefile settings'
   background_jobs: Background jobs
   domains_history: Domains history
   role: 'Role'
@@ -895,8 +885,6 @@ en:
   failed_to_generate_invoice_invoice_number_limit_reached: 'Failed to generate invoice - invoice number limit reached'
   is_too_small_minimum_deposit_is: 'is too small. Minimum deposit is %{amount} %{currency}'
   a4_records: 'AAAA records'
-  new_zone: 'New zone'
-  edit_zone: 'Edit zone'
   there_are_count_domains_in_this_zone: 'There are %{count} domains in this zone'
   poll_pending_update_confirmed_by_registrant: 'Registrant confirmed domain update'
   poll_pending_update_rejected_by_registrant: 'Registrant rejected domain update'

@@ -2375,44 +2375,6 @@ ALTER SEQUENCE log_white_ips_id_seq OWNED BY log_white_ips.id;
 
 
 --
--- Name: log_zonefile_settings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE log_zonefile_settings (
-    id integer NOT NULL,
-    item_type character varying NOT NULL,
-    item_id integer NOT NULL,
-    event character varying NOT NULL,
-    whodunnit character varying,
-    object json,
-    object_changes json,
-    created_at timestamp without time zone,
-    session character varying,
-    children json,
-    uuid character varying
-);
-
-
---
--- Name: log_zonefile_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE log_zonefile_settings_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: log_zonefile_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE log_zonefile_settings_id_seq OWNED BY log_zonefile_settings.id;
-
-
---
 -- Name: mail_templates; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2968,10 +2930,10 @@ ALTER SEQUENCE whois_records_id_seq OWNED BY whois_records.id;
 
 
 --
--- Name: zonefile_settings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: zones; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE TABLE zonefile_settings (
+CREATE TABLE zones (
     id integer NOT NULL,
     origin character varying,
     ttl integer,
@@ -2992,10 +2954,10 @@ CREATE TABLE zonefile_settings (
 
 
 --
--- Name: zonefile_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: zones_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE zonefile_settings_id_seq
+CREATE SEQUENCE zones_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3004,10 +2966,10 @@ CREATE SEQUENCE zonefile_settings_id_seq
 
 
 --
--- Name: zonefile_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: zones_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE zonefile_settings_id_seq OWNED BY zonefile_settings.id;
+ALTER SEQUENCE zones_id_seq OWNED BY zones.id;
 
 
 --
@@ -3385,13 +3347,6 @@ ALTER TABLE ONLY log_white_ips ALTER COLUMN id SET DEFAULT nextval('log_white_ip
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY log_zonefile_settings ALTER COLUMN id SET DEFAULT nextval('log_zonefile_settings_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY mail_templates ALTER COLUMN id SET DEFAULT nextval('mail_templates_id_seq'::regclass);
 
 
@@ -3490,7 +3445,7 @@ ALTER TABLE ONLY whois_records ALTER COLUMN id SET DEFAULT nextval('whois_record
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY zonefile_settings ALTER COLUMN id SET DEFAULT nextval('zonefile_settings_id_seq'::regclass);
+ALTER TABLE ONLY zones ALTER COLUMN id SET DEFAULT nextval('zones_id_seq'::regclass);
 
 
 --
@@ -3918,14 +3873,6 @@ ALTER TABLE ONLY log_white_ips
 
 
 --
--- Name: log_zonefile_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY log_zonefile_settings
-    ADD CONSTRAINT log_zonefile_settings_pkey PRIMARY KEY (id);
-
-
---
 -- Name: mail_templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4038,11 +3985,11 @@ ALTER TABLE ONLY whois_records
 
 
 --
--- Name: zonefile_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: zones_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
-ALTER TABLE ONLY zonefile_settings
-    ADD CONSTRAINT zonefile_settings_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY zones
+    ADD CONSTRAINT zones_pkey PRIMARY KEY (id);
 
 
 --
@@ -4676,20 +4623,6 @@ CREATE INDEX index_log_users_on_whodunnit ON log_users USING btree (whodunnit);
 
 
 --
--- Name: index_log_zonefile_settings_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_zonefile_settings_on_item_type_and_item_id ON log_zonefile_settings USING btree (item_type, item_id);
-
-
---
--- Name: index_log_zonefile_settings_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_zonefile_settings_on_whodunnit ON log_zonefile_settings USING btree (whodunnit);
-
-
---
 -- Name: index_messages_on_registrar_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -5279,4 +5212,8 @@ INSERT INTO schema_migrations (version) VALUES ('20161004101419');
 INSERT INTO schema_migrations (version) VALUES ('20161227193500');
 
 INSERT INTO schema_migrations (version) VALUES ('20170221115548');
+
+INSERT INTO schema_migrations (version) VALUES ('20170419120048');
+
+INSERT INTO schema_migrations (version) VALUES ('20170420125200');
 

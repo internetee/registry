@@ -1,4 +1,4 @@
-Fabricator(:zonefile_setting) do
+Fabricator(:zone, from: 'DNS::Zone') do
   origin 'ee'
   ttl 43200
   refresh 3600

@@ -4,7 +4,7 @@ RSpec.describe Domain do
   it { is_expected.to alias_attribute(:force_delete_time, :force_delete_at) }
 
   before :example do
-    Fabricate(:zonefile_setting, origin: 'ee')
+    Fabricate(:zone, origin: 'ee')
   end
 
   it 'should set force delete time' do

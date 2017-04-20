@@ -142,11 +142,6 @@
 <ellipse fill="none" stroke="black" cx="118" cy="246" rx="118.079" ry="18"/>
 <text text-anchor="middle" x="118" y="249.7" font-family="Times,serif" font-size="14.00">Admin::DashboardsController</text>
 </g>
-<!-- Admin::ZonefileSettingsController -->
-<g id="node27" class="node"><title>Admin::ZonefileSettingsController</title>
-<ellipse fill="none" stroke="black" cx="135" cy="186" rx="134.576" ry="18"/>
-<text text-anchor="middle" x="135" y="189.7" font-family="Times,serif" font-size="14.00">Admin::ZonefileSettingsController</text>
-</g>
 <!-- Admin::RegistrarsController -->
 <g id="node28" class="node"><title>Admin::RegistrarsController</title>
 <ellipse fill="none" stroke="black" cx="412" cy="186" rx="112.38" ry="18"/>

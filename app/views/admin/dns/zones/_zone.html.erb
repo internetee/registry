@@ -1,0 +1,9 @@
+<tr>
+    <td><%= zone.origin %></td>
+    <td>
+        <%= link_to t('.edit_btn'), edit_admin_zone_path(zone), class: 'btn btn-xs btn-primary' %>
+        <%= link_to t('.generate_zone_file_btn'),
+                    admin_zonefiles_path(origin: zone.origin),
+                    method: 'post', class: 'btn btn-xs btn-primary' %>
+    </td>
+</tr>

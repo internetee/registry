@@ -1,0 +1,33 @@
+en:
+  admin:
+    dns:
+      zones:
+        index:
+          title: Zones
+          new_btn: New zone
+          not_found: No zone found
+
+        new:
+          title: New zone
+
+        create:
+          created: Zone has been created
+
+        edit:
+          title: Edit zone
+          delete_btn: Delete
+          delete_btn_confirm: Are you sure you want to delete zone?
+
+        update:
+          updated: Zone has been updated
+
+        destroy:
+          destroyed: Zone has been deleted
+
+        form:
+          create_btn: Create zone
+          update_btn: Update zone
+
+        zone:
+          edit_btn: Edit
+          generate_zone_file_btn: Generate zone file

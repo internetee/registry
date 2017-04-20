@@ -1,5 +1,4 @@
-
-= form_for [:admin, @zonefile_setting], html: { class: 'form-horizontal' } do |f|
+= form_for [:admin, zone], html: { class: 'form-horizontal' } do |f|
   .row
     .col-md-8
       #domain-statuses
@@ -9,7 +8,7 @@
           .col-md-4.control-label
             = f.label :origin
           .col-md-8
-            - if @zonefile_setting.persisted?
+            - if zone.persisted?
               = f.text_field :origin, class: 'form-control', disabled: true
             - else
               = f.text_field :origin, class: 'form-control'
@@ -77,4 +76,4 @@
   %hr
   .row
     .col-md-8.text-right
-      %button.btn.btn-primary= t(:save)
+      %button.btn.btn-success= t(".#{zone.new_record? ? 'create' : 'update'}_btn")

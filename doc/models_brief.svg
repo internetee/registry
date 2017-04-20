@@ -337,17 +337,6 @@
 <ellipse fill="none" stroke="#d1286a" cx="3516.25" cy="-77.2469" rx="4.00001" ry="4.00001"/>
 <polygon fill="#d1286a" stroke="#d1286a" points="1658.36,-20.9371 1648.46,-16.2185 1653.36,-20.8273 1648.36,-20.7174 1648.36,-20.7174 1648.36,-20.7174 1653.36,-20.8273 1648.26,-25.2164 1658.36,-20.9371 1658.36,-20.9371"/>
 </g>
-<!-- ZonefileSettingVersion -->
-<g id="node31" class="node"><title>ZonefileSettingVersion</title>
-<ellipse fill="none" stroke="black" cx="3746.99" cy="-91" rx="92.8835" ry="18"/>
-<text text-anchor="middle" x="3746.99" y="-87.3" font-family="Times,serif" font-size="14.00">ZonefileSettingVersion</text>
-</g>
-<!-- ZonefileSettingVersion&#45;&gt;VersionAssociation -->
-<g id="edge29" class="edge"><title>ZonefileSettingVersion&#45;&gt;VersionAssociation</title>
-<path fill="none" stroke="#fb178f" d="M3674.74,-76.7667C3664.77,-75.2902 3654.65,-73.9712 3644.99,-73 3407.38,-49.0969 3346.71,-60.9372 3107.99,-54 2557.18,-37.9931 1895.3,-25.0664 1658.57,-20.6418"/>
-<ellipse fill="none" stroke="#fb178f" cx="3678.73" cy="-77.3767" rx="4.00001" ry="4.00001"/>
-<polygon fill="#fb178f" stroke="#fb178f" points="1658.29,-20.6367 1648.38,-15.9509 1653.29,-20.5434 1648.3,-20.4501 1648.3,-20.4501 1648.3,-20.4501 1653.29,-20.5434 1648.21,-24.9493 1658.29,-20.6367 1658.29,-20.6367"/>
-</g>
 <!-- DomainVersion -->
 <g id="node32" class="node"><title>DomainVersion</title>
 <ellipse fill="none" stroke="black" cx="1244.99" cy="-307" rx="67.6881" ry="18"/>
@@ -1218,18 +1207,6 @@
 <g id="node48" class="node"><title>RegistrantVerification</title>
 <ellipse fill="none" stroke="black" cx="4032.99" cy="-523" rx="89.0842" ry="18"/>
 <text text-anchor="middle" x="4032.99" y="-519.3" font-family="Times,serif" font-size="14.00">RegistrantVerification</text>
-</g>
-<!-- ZonefileSetting -->
-<g id="node49" class="node"><title>ZonefileSetting</title>
-<ellipse fill="none" stroke="black" cx="3746.99" cy="-199" rx="65.7887" ry="18"/>
-<text text-anchor="middle" x="3746.99" y="-195.3" font-family="Times,serif" font-size="14.00">ZonefileSetting</text>
-</g>
-<!-- ZonefileSetting&#45;&gt;ZonefileSettingVersion -->
-<g id="edge74" class="edge"><title>ZonefileSetting&#45;&gt;ZonefileSettingVersion</title>
-<path fill="none" stroke="#881b39" d="M3746.99,-172.795C3746.99,-156.735 3746.99,-135.927 3746.99,-119.45"/>
-<ellipse fill="none" stroke="#881b39" cx="3746.99" cy="-176.969" rx="4" ry="4"/>
-<polygon fill="#881b39" stroke="#881b39" points="3746.99,-119.341 3751.49,-109.341 3746.99,-114.341 3746.99,-109.341 3746.99,-109.341 3746.99,-109.341 3746.99,-114.341 3742.49,-109.341 3746.99,-119.341 3746.99,-119.341"/>
-<text text-anchor="middle" x="3769.99" y="-141.3" font-family="Times,serif" font-size="14.00">versions</text>
 </g>
 <!-- TechDomainContact&#45;&gt;DomainContactVersion -->
 <g id="edge75" class="edge"><title>TechDomainContact&#45;&gt;DomainContactVersion</title>

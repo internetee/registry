@@ -665,28 +665,6 @@
 <ellipse fill="none" stroke="#9131a9" cx="3586.29" cy="-75.9354" rx="4.00002" ry="4.00002"/>
 <polygon fill="#9131a9" stroke="#9131a9" points="1845.79,-21.5158 1835.92,-16.7338 1840.79,-21.3739 1835.79,-21.232 1835.79,-21.232 1835.79,-21.232 1840.79,-21.3739 1835.67,-25.7301 1845.79,-21.5158 1845.79,-21.5158"/>
 </g>
-<!-- ZonefileSettingVersion -->
-<g id="node31" class="node"><title>ZonefileSettingVersion</title>
-<path fill="none" stroke="black" d="M3937.5,-73.5C3937.5,-73.5 4056.5,-73.5 4056.5,-73.5 4062.5,-73.5 4068.5,-79.5 4068.5,-85.5 4068.5,-85.5 4068.5,-242.5 4068.5,-242.5 4068.5,-248.5 4062.5,-254.5 4056.5,-254.5 4056.5,-254.5 3937.5,-254.5 3937.5,-254.5 3931.5,-254.5 3925.5,-248.5 3925.5,-242.5 3925.5,-242.5 3925.5,-85.5 3925.5,-85.5 3925.5,-79.5 3931.5,-73.5 3937.5,-73.5"/>
-<text text-anchor="middle" x="3997" y="-239.3" font-family="Times,serif" font-size="14.00">ZonefileSettingVersion</text>
-<polyline fill="none" stroke="black" points="3925.5,-231.5 4068.5,-231.5 "/>
-<text text-anchor="start" x="3933.5" y="-216.3" font-family="Times,serif" font-size="14.00">id :integer</text>
-<text text-anchor="start" x="3933.5" y="-201.3" font-family="Times,serif" font-size="14.00">item_type :string</text>
-<text text-anchor="start" x="3933.5" y="-186.3" font-family="Times,serif" font-size="14.00">item_id :integer</text>
-<text text-anchor="start" x="3933.5" y="-171.3" font-family="Times,serif" font-size="14.00">event :string</text>
-<text text-anchor="start" x="3933.5" y="-156.3" font-family="Times,serif" font-size="14.00">whodunnit :string</text>
-<text text-anchor="start" x="3933.5" y="-141.3" font-family="Times,serif" font-size="14.00">object :json</text>
-<text text-anchor="start" x="3933.5" y="-126.3" font-family="Times,serif" font-size="14.00">object_changes :json</text>
-<text text-anchor="start" x="3933.5" y="-111.3" font-family="Times,serif" font-size="14.00">created_at :datetime</text>
-<text text-anchor="start" x="3933.5" y="-96.3" font-family="Times,serif" font-size="14.00">session :string</text>
-<text text-anchor="start" x="3933.5" y="-81.3" font-family="Times,serif" font-size="14.00">children :json</text>
-</g>
-<!-- ZonefileSettingVersion&#45;&gt;VersionAssociation -->
-<g id="edge29" class="edge"><title>ZonefileSettingVersion&#45;&gt;VersionAssociation</title>
-<path fill="none" stroke="#cc510c" d="M3917.83,-129.497C3865.31,-109.014 3794.29,-84.5899 3729,-73 3542.63,-39.9179 2207.66,-23.7038 1846.75,-19.8943"/>
-<ellipse fill="none" stroke="#cc510c" cx="3921.72" cy="-131.026" rx="4.00001" ry="4.00001"/>
-<polygon fill="#cc510c" stroke="#cc510c" points="1846.61,-19.8929 1836.66,-15.2881 1841.61,-19.8404 1836.61,-19.7879 1836.61,-19.7879 1836.61,-19.7879 1841.61,-19.8404 1836.57,-24.2876 1846.61,-19.8929 1846.61,-19.8929"/>
-</g>
 <!-- DomainVersion -->
 <g id="node32" class="node"><title>DomainVersion</title>
 <path fill="none" stroke="black" d="M1277.5,-1158.5C1277.5,-1158.5 1400.5,-1158.5 1400.5,-1158.5 1406.5,-1158.5 1412.5,-1164.5 1412.5,-1170.5 1412.5,-1170.5 1412.5,-1372.5 1412.5,-1372.5 1412.5,-1378.5 1406.5,-1384.5 1400.5,-1384.5 1400.5,-1384.5 1277.5,-1384.5 1277.5,-1384.5 1271.5,-1384.5 1265.5,-1378.5 1265.5,-1372.5 1265.5,-1372.5 1265.5,-1170.5 1265.5,-1170.5 1265.5,-1164.5 1271.5,-1158.5 1277.5,-1158.5"/>
@@ -1980,32 +1958,6 @@
 <text text-anchor="start" x="4134" y="-2451.8" font-family="Times,serif" font-size="14.00">action :string</text>
 <text text-anchor="start" x="4134" y="-2436.8" font-family="Times,serif" font-size="14.00">domain_id :integer</text>
 <text text-anchor="start" x="4134" y="-2421.8" font-family="Times,serif" font-size="14.00">action_type :string</text>
-</g>
-<!-- ZonefileSetting -->
-<g id="node49" class="node"><title>ZonefileSetting</title>
-<path fill="none" stroke="black" d="M4115.5,-481C4115.5,-481 4252.5,-481 4252.5,-481 4258.5,-481 4264.5,-487 4264.5,-493 4264.5,-493 4264.5,-695 4264.5,-695 4264.5,-701 4258.5,-707 4252.5,-707 4252.5,-707 4115.5,-707 4115.5,-707 4109.5,-707 4103.5,-701 4103.5,-695 4103.5,-695 4103.5,-493 4103.5,-493 4103.5,-487 4109.5,-481 4115.5,-481"/>
-<text text-anchor="middle" x="4184" y="-691.8" font-family="Times,serif" font-size="14.00">ZonefileSetting</text>
-<polyline fill="none" stroke="black" points="4103.5,-684 4264.5,-684 "/>
-<text text-anchor="start" x="4111.5" y="-668.8" font-family="Times,serif" font-size="14.00">id :integer</text>
-<text text-anchor="start" x="4111.5" y="-653.8" font-family="Times,serif" font-size="14.00">origin :string</text>
-<text text-anchor="start" x="4111.5" y="-638.8" font-family="Times,serif" font-size="14.00">ttl :integer</text>
-<text text-anchor="start" x="4111.5" y="-623.8" font-family="Times,serif" font-size="14.00">refresh :integer</text>
-<text text-anchor="start" x="4111.5" y="-608.8" font-family="Times,serif" font-size="14.00">retry :integer</text>
-<text text-anchor="start" x="4111.5" y="-593.8" font-family="Times,serif" font-size="14.00">expire :integer</text>
-<text text-anchor="start" x="4111.5" y="-578.8" font-family="Times,serif" font-size="14.00">minimum_ttl :integer</text>
-<text text-anchor="start" x="4111.5" y="-563.8" font-family="Times,serif" font-size="14.00">email :string</text>
-<text text-anchor="start" x="4111.5" y="-548.8" font-family="Times,serif" font-size="14.00">master_nameserver :string</text>
-<text text-anchor="start" x="4111.5" y="-533.8" font-family="Times,serif" font-size="14.00">created_at :datetime</text>
-<text text-anchor="start" x="4111.5" y="-518.8" font-family="Times,serif" font-size="14.00">updated_at :datetime</text>
-<text text-anchor="start" x="4111.5" y="-503.8" font-family="Times,serif" font-size="14.00">creator_str :string</text>
-<text text-anchor="start" x="4111.5" y="-488.8" font-family="Times,serif" font-size="14.00">updator_str :string</text>
-</g>
-<!-- ZonefileSetting&#45;&gt;ZonefileSettingVersion -->
-<g id="edge74" class="edge"><title>ZonefileSetting&#45;&gt;ZonefileSettingVersion</title>
-<path fill="none" stroke="#afb253" d="M4139.2,-472.941C4115.67,-412.317 4085.46,-338.025 4055,-273 4053.6,-270.013 4052.16,-266.991 4050.68,-263.95"/>
-<ellipse fill="none" stroke="#afb253" cx="4140.74" cy="-476.912" rx="4.00001" ry="4.00001"/>
-<polygon fill="#afb253" stroke="#afb253" points="4050.59,-263.757 4050.21,-252.798 4048.38,-259.272 4046.17,-254.786 4046.17,-254.786 4046.17,-254.786 4048.38,-259.272 4042.13,-256.775 4050.59,-263.757 4050.59,-263.757"/>
-<text text-anchor="middle" x="4154" y="-360.3" font-family="Times,serif" font-size="14.00">versions</text>
 </g>
 <!-- TechDomainContact&#45;&gt;DomainContactVersion -->
 <g id="edge75" class="edge"><title>TechDomainContact&#45;&gt;DomainContactVersion</title>
