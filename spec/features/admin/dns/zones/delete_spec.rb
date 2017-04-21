@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'Deleting zone in admin area' do
+RSpec.feature 'Deleting zone in admin area', settings: false do
   given!(:zone) { create(:zone) }
 
   background do

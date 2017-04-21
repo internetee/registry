@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'admin zone update' do
+RSpec.describe 'admin zone update', settings: false do
   before :example do
     sign_in_to_admin_area
   end

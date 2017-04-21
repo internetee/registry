@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'New zone in admin area' do
+RSpec.feature 'New zone in admin area', settings: false do
   background do
     sign_in_to_admin_area
   end

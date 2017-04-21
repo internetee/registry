@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'admin zone create' do
+RSpec.describe 'admin zone create', settings: false do
   subject(:zone) { DNS::Zone.first }
 
   before :example do

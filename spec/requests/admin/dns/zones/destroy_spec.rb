@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'admin zone destroy' do
+RSpec.describe 'admin zone destroy', settings: false do
   let!(:zone) { create(:zone) }
 
   before :example do
