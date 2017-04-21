@@ -1,6 +1,6 @@
 RSpec.configure do |config|
   config.before :example do |example|
-    if example.metadata[:db]
+    if example.metadata[:db] && (example.metadata[:settings] != false)
       Fabricate(:zonefile_setting, origin: 'com')
 
       Setting.ds_algorithm = 2
