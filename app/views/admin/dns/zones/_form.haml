@@ -11,49 +11,49 @@
             - if zone.persisted?
               = f.text_field :origin, class: 'form-control', disabled: true
             - else
-              = f.text_field :origin, class: 'form-control'
+              = f.text_field :origin, class: 'form-control', required: true
 
         .form-group
           .col-md-4.control-label
             = f.label :ttl
           .col-md-8
-            = f.text_field :ttl, class: 'form-control'
+            = f.number_field :ttl, class: 'form-control', required: true
 
         .form-group
           .col-md-4.control-label
             = f.label :refresh
           .col-md-8
-            = f.text_field :refresh, class: 'form-control'
+            = f.number_field :refresh, class: 'form-control', required: true
 
         .form-group
           .col-md-4.control-label
             = f.label :retry
           .col-md-8
-            = f.text_field :retry, class: 'form-control'
+            = f.number_field :retry, class: 'form-control', required: true
 
         .form-group
           .col-md-4.control-label
             = f.label :expire
           .col-md-8
-            = f.text_field :expire, class: 'form-control'
+            = f.number_field :expire, class: 'form-control', required: true
 
         .form-group
           .col-md-4.control-label
             = f.label :minimum_ttl
           .col-md-8
-            = f.text_field :minimum_ttl, class: 'form-control'
+            = f.number_field :minimum_ttl, class: 'form-control', required: true
 
         .form-group
           .col-md-4.control-label
             = f.label :email
           .col-md-8
-            = f.text_field :email, class: 'form-control'
+            = f.email_field :email, class: 'form-control', required: true
 
         .form-group
           .col-md-4.control-label
             = f.label :master_nameserver
           .col-md-8
-            = f.text_field :master_nameserver, class: 'form-control'
+            = f.text_field :master_nameserver, class: 'form-control', required: true
 
         .form-group
           .col-md-4.control-label
