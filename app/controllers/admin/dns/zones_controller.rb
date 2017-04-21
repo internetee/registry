@@ -1,8 +1,7 @@
 module Admin
   module DNS
     class ZonesController < AdminController
-      #load_and_authorize_resource(class: DNS::Zone)
-      skip_authorization_check
+      load_and_authorize_resource(class: DNS::Zone)
       before_action :load_zone, only: %i[edit update destroy]
 
       def index
