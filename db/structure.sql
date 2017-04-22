@@ -192,12 +192,12 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
           format('%-17s', ''), format('%-12s', zf.expire), '; expire, seconds', chr(10),
           format('%-17s', ''), format('%-12s', zf.minimum_ttl), '; minimum TTL, seconds', chr(10),
           format('%-17s', ''), ')'
-        ) FROM zonefile_settings zf WHERE i_origin = zf.origin INTO tmp_var;
+        ) FROM zones zf WHERE i_origin = zf.origin INTO tmp_var;
 
         ret = concat(tmp_var, chr(10), chr(10));
 
         -- origin ns records
-        SELECT ns_records FROM zonefile_settings zf WHERE i_origin = zf.origin INTO tmp_var;
+        SELECT ns_records FROM zones zf WHERE i_origin = zf.origin INTO tmp_var;
         ret := concat(ret, '; Zone NS Records', chr(10), tmp_var, chr(10));
 
         -- ns records
@@ -216,7 +216,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         ret := concat(ret, tmp_var, chr(10), chr(10));
 
         -- origin a glue records
-        SELECT a_records FROM zonefile_settings zf WHERE i_origin = zf.origin INTO tmp_var;
+        SELECT a_records FROM zones zf WHERE i_origin = zf.origin INTO tmp_var;
         ret := concat(ret, '; Zone A Records', chr(10), tmp_var, chr(10));
 
         -- a glue records for other nameservers
@@ -236,7 +236,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         ret := concat(ret, tmp_var, chr(10), chr(10));
 
         -- origin aaaa glue records
-        SELECT a4_records FROM zonefile_settings zf WHERE i_origin = zf.origin INTO tmp_var;
+        SELECT a4_records FROM zones zf WHERE i_origin = zf.origin INTO tmp_var;
         ret := concat(ret, '; Zone AAAA Records', chr(10), tmp_var, chr(10));
 
         -- aaaa glue records for other nameservers
@@ -2930,7 +2930,7 @@ ALTER SEQUENCE whois_records_id_seq OWNED BY whois_records.id;
 
 
 --
--- Name: zones; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: zones; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE zones (
@@ -3985,7 +3985,7 @@ ALTER TABLE ONLY whois_records
 
 
 --
--- Name: zones_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: zones_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY zones
@@ -5218,4 +5218,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170419120048');
 INSERT INTO schema_migrations (version) VALUES ('20170420125200');
 
 INSERT INTO schema_migrations (version) VALUES ('20170422130054');
+
+INSERT INTO schema_migrations (version) VALUES ('20170422142116');
 
