@@ -12,7 +12,7 @@ class DomainNameValidator < ActiveModel::EachValidator
       return true unless value
       value = value.mb_chars.downcase.strip
 
-      origins = ZonefileSetting.origins
+      origins = DNS::Zone.origins
       # if someone tries to register an origin domain, let this validation pass
       # the error will be caught in blocked domains validator
       return true if origins.include?(value)
@@ -38,7 +38,7 @@ class DomainNameValidator < ActiveModel::EachValidator
     def validate_blocked(value)
       return true unless value
       return false if BlockedDomain.where(name: value).count > 0
-      ZonefileSetting.where(origin: value).count.zero?
+      DNS::Zone.where(origin: value).count.zero?
     end
   end
 end

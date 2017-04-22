@@ -21,11 +21,11 @@ RSpec.describe Domain do
 
     Setting.client_side_status_editing_enabled = true
 
-    Fabricate(:zonefile_setting, origin: 'ee')
-    Fabricate(:zonefile_setting, origin: 'pri.ee')
-    Fabricate(:zonefile_setting, origin: 'med.ee')
-    Fabricate(:zonefile_setting, origin: 'fie.ee')
-    Fabricate(:zonefile_setting, origin: 'com.ee')
+    Fabricate(:zone, origin: 'ee')
+    Fabricate(:zone, origin: 'pri.ee')
+    Fabricate(:zone, origin: 'med.ee')
+    Fabricate(:zone, origin: 'fie.ee')
+    Fabricate(:zone, origin: 'com.ee')
   end
 
   context 'with invalid attribute' do
@@ -809,7 +809,7 @@ RSpec.describe Domain, db: false do
     before :example do
       travel_to Time.zone.parse('05.07.2010 00:00')
 
-      Fabricate(:zonefile_setting, origin: 'ee')
+      Fabricate(:zone, origin: 'ee')
 
       Fabricate.create(:domain, id: 1, outzone_time: Time.zone.parse('04.07.2010 23:59'))
       Fabricate.create(:domain, id: 2, outzone_time: Time.zone.parse('05.07.2010 00:00'))
@@ -825,7 +825,7 @@ RSpec.describe Domain, db: false do
     before :example do
       travel_to Time.zone.parse('05.07.2010 00:00')
 
-      Fabricate(:zonefile_setting, origin: 'ee')
+      Fabricate(:zone, origin: 'ee')
 
       Fabricate.create(:domain, id: 1, delete_time: Time.zone.parse('04.07.2010 23:59'))
       Fabricate.create(:domain, id: 2, delete_time: Time.zone.parse('05.07.2010 00:00'))

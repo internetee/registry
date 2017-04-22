@@ -14,7 +14,7 @@ set :output, 'log/cron.log'
 
 if @cron_group == 'registry'
   every 10.minutes do
-    runner 'ZonefileSetting.generate_zonefiles'
+    runner 'DNS::Zone.generate_zonefiles'
   end
 
   every 6.months, at: '12:01am' do

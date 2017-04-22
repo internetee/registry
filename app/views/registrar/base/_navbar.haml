@@ -1,0 +1,28 @@
+.navbar-collapse.collapse
+  %ul.nav.navbar-nav.public-nav
+    - if can? :view, Depp::Domain
+      - active_class = %w(registrar/domains registrar/check registrar/renew registrar/tranfer registrar/keyrelays).include?(params[:controller]) ? 'active' :nil
+      %li{class: active_class}= link_to t(:domains), registrar_domains_path
+
+    - if can? :view, Depp::Contact
+      - active_class = ['registrar/contacts'].include?(params[:controller]) ? 'active' :nil
+      %li{class: active_class}= link_to t(:contacts), registrar_contacts_path
+
+    - if can? :show, Invoice
+      - active_class = ['registrar/invoices'].include?(params[:controller]) ? 'active' :nil
+      %li{class: active_class}= link_to t(:billing), registrar_invoices_path
+
+    - if !Rails.env.production? && can?(:manage, :xml_console)
+      - active_class = ['registrar/xml_consoles'].include?(params[:controller]) ? 'active' :nil
+      %li{class: active_class}= link_to t(:xml_console), registrar_xml_console_path
+
+  %ul.nav.navbar-nav.navbar-right
+    %li.dropdown
+      %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
+        = "#{current_user} (#{current_user.roles.first}) - #{current_user.registrar}"
+        %span.caret
+      %ul.dropdown-menu{role: "menu"}
+        - ApiUser.all_by_identity_code(current_user.identity_code).each do |x|
+          %li= link_to "#{x} (#{x.roles.first}) - #{x.registrar}", "/registrar/switch_user/#{x.id}"
+        - if user_signed_in?
+          %li= link_to t(:log_out_), '/registrar/logout'

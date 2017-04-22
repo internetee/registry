@@ -7,6 +7,7 @@ en:
       archive: Archive
       domain_history: Domain history
       contact_history: Contact history
+      zones: Zones
       blocked_domains: Blocked domains
       reserved_domains: Reserved domains
       epp_log: EPP log

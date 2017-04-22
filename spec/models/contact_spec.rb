@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Contact do
   before :example do
-    Fabricate(:zonefile_setting, origin: 'ee')
+    Fabricate(:zone, origin: 'ee')
   end
 
   context 'about class' do
@@ -328,7 +328,7 @@ end
 
 describe Contact, '.destroy_orphans' do
   before do
-    Fabricate(:zonefile_setting, origin: 'ee')
+    Fabricate(:zone, origin: 'ee')
     @contact_1 = Fabricate(:contact, code: 'asd12')
     @contact_2 = Fabricate(:contact, code: 'asd13')
   end

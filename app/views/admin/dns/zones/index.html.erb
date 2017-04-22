@@ -1,0 +1,28 @@
+<div class="page-header">
+    <div class="row">
+        <div class="col-sm-10">
+            <h1><%= t '.title' %></h1>
+        </div>
+
+        <div class="col-sm-2 text-right">
+            <%= link_to t('.new_btn'), new_admin_zone_path, class: 'btn btn-primary' %>
+        </div>
+    </div>
+</div>
+
+<% if @zones.present? %>
+    <table class="table table-hover table-bordered table-wrapped">
+        <thead>
+            <tr>
+                <th><%= DNS::Zone.human_attribute_name :origin %></th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <%= render @zones %>
+        </tbody>
+    </table>
+<% else %>
+    <div class="alert alert-info"><%= t '.not_found' %></div>
+<% end %>

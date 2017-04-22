@@ -21,7 +21,7 @@ describe DomainTransfer do
 
     Setting.client_side_status_editing_enabled = true
 
-    Fabricate(:zonefile_setting, origin: 'ee')
+    Fabricate(:zone, origin: 'ee')
   end
 
   context 'with invalid attribute' do

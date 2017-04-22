@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170221115548) do
+ActiveRecord::Schema.define(version: 20170422142116) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -914,22 +914,6 @@ ActiveRecord::Schema.define(version: 20170221115548) do
     t.string   "uuid"
   end
 
-  create_table "log_zonefile_settings", force: :cascade do |t|
-    t.string   "item_type",      null: false
-    t.integer  "item_id",        null: false
-    t.string   "event",          null: false
-    t.string   "whodunnit"
-    t.json     "object"
-    t.json     "object_changes"
-    t.datetime "created_at"
-    t.string   "session"
-    t.json     "children"
-    t.string   "uuid"
-  end
-
-  add_index "log_zonefile_settings", ["item_type", "item_id"], name: "index_log_zonefile_settings_on_item_type_and_item_id", using: :btree
-  add_index "log_zonefile_settings", ["whodunnit"], name: "index_log_zonefile_settings_on_whodunnit", using: :btree
-
   create_table "mail_templates", force: :cascade do |t|
     t.string   "name",       null: false
     t.string   "subject"
@@ -1141,7 +1125,7 @@ ActiveRecord::Schema.define(version: 20170221115548) do
   add_index "whois_records", ["domain_id"], name: "index_whois_records_on_domain_id", using: :btree
   add_index "whois_records", ["registrar_id"], name: "index_whois_records_on_registrar_id", using: :btree
 
-  create_table "zonefile_settings", force: :cascade do |t|
+  create_table "zones", force: :cascade do |t|
     t.string   "origin"
     t.integer  "ttl"
     t.integer  "refresh"
