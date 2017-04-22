@@ -5,4 +5,11 @@ module FormHelper
 
     file_field(object_name, method, options)
   end
+
+  def money_field(object_name, method, options = {})
+    options[:pattern] = '^[0-9.]+$' unless options[:pattern]
+    options[:maxlength] = 255 unless options[:maxlength]
+
+    text_field(object_name, method, options)
+  end
 end
