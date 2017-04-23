@@ -2490,10 +2490,10 @@ ALTER SEQUENCE people_id_seq OWNED BY people.id;
 
 
 --
--- Name: pricelists; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: prices; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE TABLE pricelists (
+CREATE TABLE prices (
     id integer NOT NULL,
     "desc" character varying,
     category character varying,
@@ -2511,10 +2511,10 @@ CREATE TABLE pricelists (
 
 
 --
--- Name: pricelists_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: prices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE pricelists_id_seq
+CREATE SEQUENCE prices_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2523,10 +2523,10 @@ CREATE SEQUENCE pricelists_id_seq
 
 
 --
--- Name: pricelists_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: prices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE pricelists_id_seq OWNED BY pricelists.id;
+ALTER SEQUENCE prices_id_seq OWNED BY prices.id;
 
 
 --
@@ -3331,7 +3331,7 @@ ALTER TABLE ONLY people ALTER COLUMN id SET DEFAULT nextval('people_id_seq'::reg
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY pricelists ALTER COLUMN id SET DEFAULT nextval('pricelists_id_seq'::regclass);
+ALTER TABLE ONLY prices ALTER COLUMN id SET DEFAULT nextval('prices_id_seq'::regclass);
 
 
 --
@@ -3853,11 +3853,11 @@ ALTER TABLE ONLY people
 
 
 --
--- Name: pricelists_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
-ALTER TABLE ONLY pricelists
-    ADD CONSTRAINT pricelists_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY prices
+    ADD CONSTRAINT prices_pkey PRIMARY KEY (id);
 
 
 --
@@ -5172,4 +5172,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170422142116');
 INSERT INTO schema_migrations (version) VALUES ('20170422162824');
 
 INSERT INTO schema_migrations (version) VALUES ('20170423145057');
+
+INSERT INTO schema_migrations (version) VALUES ('20170423151046');
 

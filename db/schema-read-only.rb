@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170423145057) do
+ActiveRecord::Schema.define(version: 20170423151046) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -961,7 +961,7 @@ ActiveRecord::Schema.define(version: 20170423145057) do
   add_index "people", ["email"], name: "index_people_on_email", unique: true, using: :btree
   add_index "people", ["reset_password_token"], name: "index_people_on_reset_password_token", unique: true, using: :btree
 
-  create_table "pricelists", force: :cascade do |t|
+  create_table "prices", force: :cascade do |t|
     t.string   "desc"
     t.string   "category"
     t.decimal  "price_cents",        precision: 10, scale: 2, default: 0.0,   null: false
