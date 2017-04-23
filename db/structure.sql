@@ -2542,7 +2542,7 @@ CREATE TABLE pricelists (
     updator_str character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    duration character varying,
+    duration interval,
     operation_category character varying
 );
 
@@ -5220,4 +5220,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170420125200');
 INSERT INTO schema_migrations (version) VALUES ('20170422130054');
 
 INSERT INTO schema_migrations (version) VALUES ('20170422142116');
+
+INSERT INTO schema_migrations (version) VALUES ('20170422162824');
 
