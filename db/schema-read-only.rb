@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170422162824) do
+ActiveRecord::Schema.define(version: 20170423145057) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -824,18 +824,6 @@ ActiveRecord::Schema.define(version: 20170422162824) do
 
   add_index "log_nameservers", ["item_type", "item_id"], name: "index_log_nameservers_on_item_type_and_item_id", using: :btree
   add_index "log_nameservers", ["whodunnit"], name: "index_log_nameservers_on_whodunnit", using: :btree
-
-  create_table "log_pricelists", force: :cascade do |t|
-    t.string   "item_type",      null: false
-    t.integer  "item_id",        null: false
-    t.string   "event",          null: false
-    t.string   "whodunnit"
-    t.json     "object"
-    t.json     "object_changes"
-    t.datetime "created_at"
-    t.string   "session"
-    t.string   "uuid"
-  end
 
   create_table "log_registrars", force: :cascade do |t|
     t.string   "item_type",      null: false
