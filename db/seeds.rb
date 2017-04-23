@@ -33,15 +33,4 @@ ActiveRecord::Base.transaction do
     country_code: 'US',
     roles: ['admin']
   )
-
-  ZonefileSetting.create!(
-    origin: 'tld',
-    ttl: 43200,
-    refresh: 3600,
-    retry: 900,
-    expire: 1209600,
-    minimum_ttl: 3600,
-    email: 'admin.domain.tld',
-    master_nameserver: 'ns.tld'
-  )
 end
