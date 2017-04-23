@@ -2497,8 +2497,7 @@ CREATE TABLE prices (
     id integer NOT NULL,
     "desc" character varying,
     category character varying,
-    price_cents numeric(10,2) DEFAULT 0.0 NOT NULL,
-    price_currency character varying DEFAULT 'EUR'::character varying NOT NULL,
+    price_cents integer NOT NULL,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     creator_str character varying,
@@ -5174,4 +5173,10 @@ INSERT INTO schema_migrations (version) VALUES ('20170422162824');
 INSERT INTO schema_migrations (version) VALUES ('20170423145057');
 
 INSERT INTO schema_migrations (version) VALUES ('20170423151046');
+
+INSERT INTO schema_migrations (version) VALUES ('20170423210622');
+
+INSERT INTO schema_migrations (version) VALUES ('20170423214500');
+
+INSERT INTO schema_migrations (version) VALUES ('20170423222302');
 

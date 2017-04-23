@@ -2006,8 +2006,7 @@
 <text text-anchor="start" x="3606.5" y="-668.8" font-family="Times,serif" font-size="14.00">id :integer</text>
 <text text-anchor="start" x="3606.5" y="-653.8" font-family="Times,serif" font-size="14.00">desc :string</text>
 <text text-anchor="start" x="3606.5" y="-638.8" font-family="Times,serif" font-size="14.00">category :string</text>
-<text text-anchor="start" x="3606.5" y="-623.8" font-family="Times,serif" font-size="14.00">price_cents :decimal</text>
-<text text-anchor="start" x="3606.5" y="-608.8" font-family="Times,serif" font-size="14.00">price_currency :string</text>
+<text text-anchor="start" x="3606.5" y="-623.8" font-family="Times,serif" font-size="14.00">price_cents :integer</text>
 <text text-anchor="start" x="3606.5" y="-593.8" font-family="Times,serif" font-size="14.00">valid_from :datetime</text>
 <text text-anchor="start" x="3606.5" y="-578.8" font-family="Times,serif" font-size="14.00">valid_to :datetime</text>
 <text text-anchor="start" x="3606.5" y="-563.8" font-family="Times,serif" font-size="14.00">creator_str :string</text>
