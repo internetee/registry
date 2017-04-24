@@ -3953,6 +3953,14 @@ ALTER TABLE ONLY settings
 
 
 --
+-- Name: unique_zone_origin; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY zones
+    ADD CONSTRAINT unique_zone_origin UNIQUE (origin);
+
+
+--
 -- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -5220,4 +5228,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170420125200');
 INSERT INTO schema_migrations (version) VALUES ('20170422130054');
 
 INSERT INTO schema_migrations (version) VALUES ('20170422142116');
+
+INSERT INTO schema_migrations (version) VALUES ('20170424115801');
 
