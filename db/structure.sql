@@ -167,7 +167,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         exclude_filter varchar := '';
         tmp_var text;
         ret text;
-        BEGIN
+      BEGIN
         -- define filters
         include_filter = '%.' || i_origin;
 
@@ -203,7 +203,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         -- ns records
         SELECT array_to_string(
           array(
-            SELECT concat(d.name_puny, '. IN NS ', ns.hostname, '.')
+            SELECT concat(d.name_puny, '. IN NS ', coalesce(ns.hostname_puny, ns.hostname), '.')
             FROM domains d
             JOIN nameservers ns ON ns.domain_id = d.id
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
@@ -222,7 +222,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         -- a glue records for other nameservers
         SELECT array_to_string(
           array(
-            SELECT concat(ns.hostname, '. IN A ', unnest(ns.ipv4))
+            SELECT concat(coalesce(ns.hostname_puny, ns.hostname), '. IN A ', unnest(ns.ipv4))
             FROM nameservers ns
             JOIN domains d ON d.id = ns.domain_id
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
@@ -242,7 +242,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         -- aaaa glue records for other nameservers
         SELECT array_to_string(
           array(
-            SELECT concat(ns.hostname, '. IN AAAA ', unnest(ns.ipv6))
+            SELECT concat(coalesce(ns.hostname_puny, ns.hostname), '. IN AAAA ', unnest(ns.ipv6))
             FROM nameservers ns
             JOIN domains d ON d.id = ns.domain_id
             WHERE d.name LIKE include_filter AND d.name NOT LIKE exclude_filter
@@ -5279,4 +5279,6 @@ INSERT INTO schema_migrations (version) VALUES ('20161004101419');
 INSERT INTO schema_migrations (version) VALUES ('20161227193500');
 
 INSERT INTO schema_migrations (version) VALUES ('20170221115548');
+
+INSERT INTO schema_migrations (version) VALUES ('20170422130054');
 
