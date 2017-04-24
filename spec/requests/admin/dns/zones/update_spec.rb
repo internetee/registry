@@ -5,7 +5,7 @@ RSpec.describe 'admin zone update', settings: false do
     sign_in_to_admin_area
   end
 
-  text_attributes = %i[origin email master_nameserver]
+  text_attributes = %i[origin email master_nameserver ns_records a_records a4_records]
   integer_attributes = %i[ttl refresh retry expire minimum_ttl]
 
   text_attributes.each do |attr_name|

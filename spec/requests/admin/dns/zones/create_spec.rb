@@ -12,7 +12,7 @@ RSpec.describe 'admin zone create', settings: false do
       .to change { DNS::Zone.count }.from(0).to(1)
   end
 
-  text_attributes = %i[origin email master_nameserver]
+  text_attributes = %i[origin email master_nameserver ns_records a_records a4_records]
   integer_attributes = %i[ttl refresh retry expire minimum_ttl]
 
   text_attributes.each do |attr_name|

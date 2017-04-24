@@ -1,16 +1,13 @@
 module DNS
   class Zone < ActiveRecord::Base
+    self.auto_html5_validation = false
+
     validates :origin, :ttl, :refresh, :retry, :expire, :minimum_ttl, :email, :master_nameserver, presence: true
     validates :ttl, :refresh, :retry, :expire, :minimum_ttl, numericality: { only_integer: true }
     validates :origin, uniqueness: true
 
-    before_destroy :check_for_dependencies
-
-    def check_for_dependencies
-      dc = Domain.where("name ILIKE ?", "%.#{origin}").count
-      return if dc == 0
-      errors.add(:base, I18n.t('there_are_count_domains_in_this_zone', count: dc))
-      false
+    before_destroy do
+      !used?
     end
 
     def self.generate_zonefiles
@@ -35,6 +32,10 @@ module DNS
 
     def self.origins
       pluck(:origin)
+    end
+
+    def used?
+      Domain.uses_zone?(self)
     end
 
     def to_s
