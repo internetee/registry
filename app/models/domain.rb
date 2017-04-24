@@ -724,5 +724,9 @@ class Domain < ActiveRecord::Base
   def self.delete_candidates
     where("#{attribute_alias(:delete_time)} < ?", Time.zone.now)
   end
+
+  def self.uses_zone?(zone)
+    exists?(["name ILIKE ?", "%.#{zone.origin}"])
+  end
 end
 # rubocop: enable Metrics/ClassLength

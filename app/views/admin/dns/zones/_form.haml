@@ -8,10 +8,10 @@
           .col-md-4.control-label
             = f.label :origin
           .col-md-8
-            - if zone.persisted?
-              = f.text_field :origin, class: 'form-control', disabled: true
-            - else
+            - if f.object.new_record?
               = f.text_field :origin, class: 'form-control', required: true
+            - else
+              = f.text_field :origin, class: 'form-control', disabled: true
 
         .form-group
           .col-md-4.control-label
@@ -47,7 +47,7 @@
           .col-md-4.control-label
             = f.label :email
           .col-md-8
-            = f.email_field :email, class: 'form-control', required: true
+            = f.text_field :email, class: 'form-control', required: true
 
         .form-group
           .col-md-4.control-label
@@ -69,7 +69,7 @@
 
         .form-group
           .col-md-4.control-label
-            = f.label :a4_records, t(:a4_records)
+            = f.label :a4_records
           .col-md-8
             = f.text_area :a4_records, class: 'form-control', rows: 8
 

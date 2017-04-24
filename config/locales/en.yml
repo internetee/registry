@@ -884,8 +884,6 @@ en:
   result_count: '%{count} results'
   failed_to_generate_invoice_invoice_number_limit_reached: 'Failed to generate invoice - invoice number limit reached'
   is_too_small_minimum_deposit_is: 'is too small. Minimum deposit is %{amount} %{currency}'
-  a4_records: 'AAAA records'
-  there_are_count_domains_in_this_zone: 'There are %{count} domains in this zone'
   poll_pending_update_confirmed_by_registrant: 'Registrant confirmed domain update'
   poll_pending_update_rejected_by_registrant: 'Registrant rejected domain update'
   poll_pending_delete_rejected_by_registrant: 'Registrant rejected domain deletion'

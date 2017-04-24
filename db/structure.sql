@@ -2490,7 +2490,7 @@ ALTER SEQUENCE people_id_seq OWNED BY people.id;
 
 
 --
--- Name: prices; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: prices; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE prices (
@@ -3852,7 +3852,7 @@ ALTER TABLE ONLY people
 
 
 --
--- Name: prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY prices
@@ -3897,6 +3897,14 @@ ALTER TABLE ONLY reserved_domains
 
 ALTER TABLE ONLY settings
     ADD CONSTRAINT settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: unique_zone_origin; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY zones
+    ADD CONSTRAINT unique_zone_origin UNIQUE (origin);
 
 
 --
@@ -5179,4 +5187,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170423210622');
 INSERT INTO schema_migrations (version) VALUES ('20170423214500');
 
 INSERT INTO schema_migrations (version) VALUES ('20170423222302');
+
+INSERT INTO schema_migrations (version) VALUES ('20170424115801');
 

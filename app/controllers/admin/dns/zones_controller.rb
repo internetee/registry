@@ -1,7 +1,7 @@
 module Admin
   module DNS
     class ZonesController < AdminController
-      load_and_authorize_resource(class: DNS::Zone)
+      authorize_resource(class: 'DNS::Zone')
       before_action :load_zone, only: %i[edit update destroy]
 
       def index
@@ -49,10 +49,21 @@ module Admin
       end
 
       def zone_params
-        params.require(:zone).permit(
-          :origin, :ttl, :refresh, :retry, :expire, :minimum_ttl, :email,
-          :master_nameserver, :ns_records, :a_records, :a4_records
-        )
+        allowed_params = %i[
+          origin
+          ttl
+          refresh
+          retry
+          expire
+          minimum_ttl
+          email
+          master_nameserver
+          ns_records
+          a_records
+          a4_records
+        ]
+
+        params.require(:zone).permit(*allowed_params)
       end
 
       def redirect_to_index

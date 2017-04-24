@@ -837,6 +837,19 @@ RSpec.describe Domain, db: false do
     end
   end
 
+  describe '::uses_zone?', db: true do
+    let!(:zone) { create(:zone, origin: 'domain.tld') }
+
+    context 'when zone is used' do
+      let!(:domain) { create(:domain, name: 'test.domain.tld') }
+      specify { expect(described_class.uses_zone?(zone)).to be true }
+    end
+
+    context 'when zone is unused' do
+      specify { expect(described_class.uses_zone?(zone)).to be false }
+    end
+  end
+
   describe '#new_registrant_email' do
     let(:domain) { described_class.new(pending_json: { new_registrant_email: 'test@test.com' }) }
 
