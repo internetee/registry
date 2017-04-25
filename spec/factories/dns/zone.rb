@@ -6,7 +6,7 @@ FactoryGirl.define do
     add_attribute :retry, 1
     expire 1
     minimum_ttl 1
-    email 'test@test.test'
+    email 'test.test'
     master_nameserver 'test.test'
   end
 end
