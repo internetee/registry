@@ -77,11 +77,6 @@
 <ellipse fill="none" stroke="black" cx="-215" cy="306" rx="109.381" ry="18"/>
 <text text-anchor="middle" x="-215" y="309.7" font-family="Times,serif" font-size="14.00">Admin::WhiteIpsController</text>
 </g>
-<!-- Admin::PricelistsController -->
-<g id="node14" class="node"><title>Admin::PricelistsController</title>
-<ellipse fill="none" stroke="black" cx="193" cy="-354" rx="108.581" ry="18"/>
-<text text-anchor="middle" x="193" y="-350.3" font-family="Times,serif" font-size="14.00">Admin::PricelistsController</text>
-</g>
 <!-- Admin::ZonefilesController -->
 <g id="node15" class="node"><title>Admin::ZonefilesController</title>
 <ellipse fill="none" stroke="black" cx="-46" cy="-390" rx="109.681" ry="18"/>

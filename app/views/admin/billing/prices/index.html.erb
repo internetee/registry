@@ -1,0 +1,41 @@
+<div class="page-header">
+    <div class="row">
+        <div class="col-sm-10">
+            <h1><%= t '.title' %></h1>
+        </div>
+
+        <div class="col-sm-2 text-right">
+            <%= link_to t('.new_btn'), new_admin_price_path, class: 'btn btn-primary' %>
+        </div>
+    </div>
+</div>
+
+<% if @prices.present? %>
+    <table class="table table-hover table-bordered table-wrapped">
+        <thead>
+            <tr>
+                <th><%= sort_link(@q, 'zone_id', DNS::Zone.model_name.human) %></th>
+                <th><%= sort_link(@q, 'duration', ::Billing::Price.human_attribute_name(:duration)) %></th>
+                <th><%= sort_link(@q, 'operation_category', ::Billing::Price.human_attribute_name(:operation)) %></th>
+                <th><%= sort_link(@q, 'price', t(:price)) %></th>
+                <th><%= sort_link(@q, 'valid_from', t(:valid_from)) %></th>
+                <th><%= sort_link(@q, 'valid_to', t(:valid_to)) %></th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <% @prices.each do |price| %>
+                <%= render 'price', price: price %>
+            <% end %>
+        </tbody>
+    </table>
+
+    <div class="row">
+        <div class="col-md-12">
+            <%= paginate @prices %>
+        </div>
+    </div>
+<% else %>
+    <div class="alert alert-info"><%= t '.not_found' %></div>
+<% end %>

@@ -1998,24 +1998,6 @@
 <text text-anchor="start" x="4306.5" y="-2451.8" font-family="Times,serif" font-size="14.00">updated_at :datetime</text>
 <text text-anchor="start" x="4306.5" y="-2436.8" font-family="Times,serif" font-size="14.00">registrar_id :integer</text>
 </g>
-<!-- Pricelist -->
-<g id="node54" class="node"><title>Pricelist</title>
-<path fill="none" stroke="black" d="M3610.5,-481C3610.5,-481 3745.5,-481 3745.5,-481 3751.5,-481 3757.5,-487 3757.5,-493 3757.5,-493 3757.5,-695 3757.5,-695 3757.5,-701 3751.5,-707 3745.5,-707 3745.5,-707 3610.5,-707 3610.5,-707 3604.5,-707 3598.5,-701 3598.5,-695 3598.5,-695 3598.5,-493 3598.5,-493 3598.5,-487 3604.5,-481 3610.5,-481"/>
-<text text-anchor="middle" x="3678" y="-691.8" font-family="Times,serif" font-size="14.00">Pricelist</text>
-<polyline fill="none" stroke="black" points="3598.5,-684 3757.5,-684 "/>
-<text text-anchor="start" x="3606.5" y="-668.8" font-family="Times,serif" font-size="14.00">id :integer</text>
-<text text-anchor="start" x="3606.5" y="-653.8" font-family="Times,serif" font-size="14.00">desc :string</text>
-<text text-anchor="start" x="3606.5" y="-638.8" font-family="Times,serif" font-size="14.00">category :string</text>
-<text text-anchor="start" x="3606.5" y="-623.8" font-family="Times,serif" font-size="14.00">price_cents :integer</text>
-<text text-anchor="start" x="3606.5" y="-593.8" font-family="Times,serif" font-size="14.00">valid_from :datetime</text>
-<text text-anchor="start" x="3606.5" y="-578.8" font-family="Times,serif" font-size="14.00">valid_to :datetime</text>
-<text text-anchor="start" x="3606.5" y="-563.8" font-family="Times,serif" font-size="14.00">creator_str :string</text>
-<text text-anchor="start" x="3606.5" y="-548.8" font-family="Times,serif" font-size="14.00">updator_str :string</text>
-<text text-anchor="start" x="3606.5" y="-533.8" font-family="Times,serif" font-size="14.00">created_at :datetime</text>
-<text text-anchor="start" x="3606.5" y="-518.8" font-family="Times,serif" font-size="14.00">updated_at :datetime</text>
-<text text-anchor="start" x="3606.5" y="-503.8" font-family="Times,serif" font-size="14.00">duration :string</text>
-<text text-anchor="start" x="3606.5" y="-488.8" font-family="Times,serif" font-size="14.00">operation_category :string</text>
-</g>
 <!-- Pricelist&#45;&gt;PricelistVersion -->
 <g id="edge79" class="edge"><title>Pricelist&#45;&gt;PricelistVersion</title>
 <path fill="none" stroke="#7416af" d="M3665.06,-472.647C3650.73,-402.404 3620.54,-318.837 3557,-273 3516.96,-244.115 3157.21,-276.99 3113,-255 3111.44,-254.226 3109.91,-253.402 3108.39,-252.533"/>

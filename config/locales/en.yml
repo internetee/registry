@@ -297,7 +297,6 @@ en:
   description: 'Description'
   delete: 'Delete'
   are_you_sure: 'Are you sure?'
-  are_you_sure_destroy: 'You are going to delete, are you sure?'
   back: 'Back'
   new_domain: 'New domain'
   registrar_name: 'Registrar name'
@@ -826,10 +825,7 @@ en:
   webserver_missing_client_cert_directive: 'Webserver missing client cert directive'
   webserver_client_cert_directive_should_be_required: 'Webserver client cert directive should be required'
   tech: Tech contact
-  pricelists: Pricelists
-  new_pricelist: New Pricelist
   valid: Valid
-  category: Zone
   object_is_not_eligible_for_renewal: 'Object is not eligible for renewal'
   domain_expiring: 'Domain expiring'
   domain_validation_rules: 'Domain validation rules'

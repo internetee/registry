@@ -199,22 +199,6 @@
 <text text-anchor="start" x="-492" y="216.2" font-family="Times,serif" font-size="14.00">set_registrar</text>
 <text text-anchor="start" x="-492" y="231.2" font-family="Times,serif" font-size="14.00">white_ip_params</text>
 </g>
-<!-- Admin::PricelistsController -->
-<g id="node14" class="node"><title>Admin::PricelistsController</title>
-<path fill="none" stroke="black" d="M-488.5,-260.5C-488.5,-260.5 -345.5,-260.5 -345.5,-260.5 -339.5,-260.5 -333.5,-266.5 -333.5,-272.5 -333.5,-272.5 -333.5,-431.5 -333.5,-431.5 -333.5,-437.5 -339.5,-443.5 -345.5,-443.5 -345.5,-443.5 -488.5,-443.5 -488.5,-443.5 -494.5,-443.5 -500.5,-437.5 -500.5,-431.5 -500.5,-431.5 -500.5,-272.5 -500.5,-272.5 -500.5,-266.5 -494.5,-260.5 -488.5,-260.5"/>
-<text text-anchor="middle" x="-417" y="-428.3" font-family="Times,serif" font-size="14.00">Admin::PricelistsController</text>
-<polyline fill="none" stroke="black" points="-500.5,-420.5 -333.5,-420.5 "/>
-<text text-anchor="start" x="-492.5" y="-405.3" font-family="Times,serif" font-size="14.00">create</text>
-<text text-anchor="start" x="-492.5" y="-390.3" font-family="Times,serif" font-size="14.00">edit</text>
-<text text-anchor="start" x="-492.5" y="-375.3" font-family="Times,serif" font-size="14.00">index</text>
-<text text-anchor="start" x="-492.5" y="-360.3" font-family="Times,serif" font-size="14.00">new</text>
-<text text-anchor="start" x="-492.5" y="-345.3" font-family="Times,serif" font-size="14.00">update</text>
-<polyline fill="none" stroke="black" points="-500.5,-337.5 -333.5,-337.5 "/>
-<polyline fill="none" stroke="black" points="-500.5,-313.5 -333.5,-313.5 "/>
-<text text-anchor="start" x="-492.5" y="-298.3" font-family="Times,serif" font-size="14.00">_layout</text>
-<text text-anchor="start" x="-492.5" y="-283.3" font-family="Times,serif" font-size="14.00">pricelist_params</text>
-<text text-anchor="start" x="-492.5" y="-268.3" font-family="Times,serif" font-size="14.00">set_pricelist</text>
-</g>
 <!-- Admin::ZonefilesController -->
 <g id="node15" class="node"><title>Admin::ZonefilesController</title>
 <path fill="none" stroke="black" d="M-688.5,-240.5C-688.5,-240.5 -543.5,-240.5 -543.5,-240.5 -537.5,-240.5 -531.5,-246.5 -531.5,-252.5 -531.5,-252.5 -531.5,-321.5 -531.5,-321.5 -531.5,-327.5 -537.5,-333.5 -543.5,-333.5 -543.5,-333.5 -688.5,-333.5 -688.5,-333.5 -694.5,-333.5 -700.5,-327.5 -700.5,-321.5 -700.5,-321.5 -700.5,-252.5 -700.5,-252.5 -700.5,-246.5 -694.5,-240.5 -688.5,-240.5"/>

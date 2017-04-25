@@ -4,13 +4,14 @@ RSpec.describe 'EPP domain:renew' do
   let(:request) { post '/epp/command/renew', frame: request_xml }
   let!(:user) { create(:api_user_epp, registrar: registrar) }
   let!(:registrar) { create(:registrar_with_unlimited_balance) }
-  let!(:pricelist) { create(:pricelist,
-                            category: 'com',
-                            duration: '1year',
-                            price: Money.from_amount(1),
-                            operation_category: 'renew',
-                            valid_from: Time.zone.parse('05.07.2010'),
-                            valid_to: Time.zone.parse('05.07.2010'))
+  let!(:zone) { create(:zone, origin: 'test') }
+  let!(:price) { create(:price,
+                        duration: '1 year',
+                        price: Money.from_amount(1),
+                        operation_category: 'renew',
+                        valid_from: Time.zone.parse('05.07.2010'),
+                        valid_to: Time.zone.parse('05.07.2010'),
+                        zone: zone)
   }
 
   before :example do
@@ -22,7 +23,7 @@ RSpec.describe 'EPP domain:renew' do
   context 'when given expire time and current match' do
     let!(:domain) { create(:domain,
                            registrar: registrar,
-                           name: 'test.com',
+                           name: 'test.test',
                            expire_time: Time.zone.parse('05.07.2010'))
     }
     let(:request_xml) { <<-XML
@@ -31,7 +32,7 @@ RSpec.describe 'EPP domain:renew' do
         <command>
           <renew>
             <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
-              <domain:name>test.com</domain:name>
+              <domain:name>test.test</domain:name>
               <domain:curExpDate>2010-07-05</domain:curExpDate>
               <domain:period unit="y">1</domain:period>
             </domain:renew>
@@ -56,7 +57,7 @@ RSpec.describe 'EPP domain:renew' do
   context 'when given expire time and current do not match' do
     let!(:domain) { create(:domain,
                            registrar: registrar,
-                           name: 'test.com',
+                           name: 'test.test',
                            expire_time: Time.zone.parse('05.07.2010'))
     }
     let(:request_xml) { <<-XML
@@ -65,7 +66,7 @@ RSpec.describe 'EPP domain:renew' do
         <command>
           <renew>
             <domain:renew xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
-              <domain:name>test.com</domain:name>
+              <domain:name>test.test</domain:name>
               <domain:curExpDate>2010-07-04</domain:curExpDate>
               <domain:period unit="y">1</domain:period>
             </domain:renew>

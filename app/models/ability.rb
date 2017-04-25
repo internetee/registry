@@ -96,7 +96,7 @@ class Ability
     can :manage, DNS::Zone
     can :manage, DomainVersion
     can :manage, ContactVersion
-    can :manage, Pricelist
+    can :manage, Billing::Price
     can :manage, User
     can :manage, ApiUser
     can :manage, AdminUser

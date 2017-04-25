@@ -2490,13 +2490,12 @@ ALTER SEQUENCE people_id_seq OWNED BY people.id;
 
 
 --
--- Name: prices; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: prices; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE prices (
     id integer NOT NULL,
     "desc" character varying,
-    category character varying,
     price_cents integer NOT NULL,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
@@ -2505,7 +2504,8 @@ CREATE TABLE prices (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     duration interval,
-    operation_category character varying
+    operation_category character varying,
+    zone_id integer NOT NULL
 );
 
 
@@ -3852,7 +3852,7 @@ ALTER TABLE ONLY people
 
 
 --
--- Name: prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY prices
@@ -3900,7 +3900,7 @@ ALTER TABLE ONLY settings
 
 
 --
--- Name: unique_zone_origin; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: unique_zone_origin; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY zones
@@ -4606,6 +4606,13 @@ CREATE UNIQUE INDEX index_people_on_reset_password_token ON people USING btree (
 
 
 --
+-- Name: index_prices_on_zone_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_prices_on_zone_id ON prices USING btree (zone_id);
+
+
+--
 -- Name: index_registrant_verifications_on_created_at; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4708,6 +4715,14 @@ CREATE UNIQUE INDEX unique_data_migrations ON data_migrations USING btree (versi
 --
 
 CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
+
+
+--
+-- Name: fk_rails_78c376257f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY prices
+    ADD CONSTRAINT fk_rails_78c376257f FOREIGN KEY (zone_id) REFERENCES zones(id);
 
 
 --
@@ -5187,6 +5202,8 @@ INSERT INTO schema_migrations (version) VALUES ('20170423210622');
 INSERT INTO schema_migrations (version) VALUES ('20170423214500');
 
 INSERT INTO schema_migrations (version) VALUES ('20170423222302');
+
+INSERT INTO schema_migrations (version) VALUES ('20170423225333');
 
 INSERT INTO schema_migrations (version) VALUES ('20170424115801');
 

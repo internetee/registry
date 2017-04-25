@@ -963,7 +963,6 @@ ActiveRecord::Schema.define(version: 20170424115801) do
 
   create_table "prices", force: :cascade do |t|
     t.string   "desc"
-    t.string   "category"
     t.integer  "price_cents",        null: false
     t.datetime "valid_from"
     t.datetime "valid_to"
@@ -973,7 +972,10 @@ ActiveRecord::Schema.define(version: 20170424115801) do
     t.datetime "updated_at",         null: false
     t.string   "duration"
     t.string   "operation_category"
+    t.integer  "zone_id",            null: false
   end
+
+  add_index "prices", ["zone_id"], name: "index_prices_on_zone_id", using: :btree
 
   create_table "que_jobs", id: false, force: :cascade do |t|
     t.integer  "priority",    limit: 2, default: 100,                                        null: false
@@ -1132,4 +1134,5 @@ ActiveRecord::Schema.define(version: 20170424115801) do
 
   add_index "zones", ["origin"], name: "unique_zone_origin", unique: true, using: :btree
 
+  add_foreign_key "prices", "zones"
 end

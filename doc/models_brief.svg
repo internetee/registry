@@ -1240,11 +1240,6 @@
 <ellipse fill="none" stroke="black" cx="4191.99" cy="-523" rx="51.9908" ry="18"/>
 <text text-anchor="middle" x="4191.99" y="-519.3" font-family="Times,serif" font-size="14.00">EppSession</text>
 </g>
-<!-- Pricelist -->
-<g id="node54" class="node"><title>Pricelist</title>
-<ellipse fill="none" stroke="black" cx="3258.99" cy="-199" rx="39.7935" ry="18"/>
-<text text-anchor="middle" x="3258.99" y="-195.3" font-family="Times,serif" font-size="14.00">Pricelist</text>
-</g>
 <!-- Pricelist&#45;&gt;PricelistVersion -->
 <g id="edge79" class="edge"><title>Pricelist&#45;&gt;PricelistVersion</title>
 <path fill="none" stroke="#499b9a" d="M3250.87,-173.392C3244.19,-157.303 3233,-137.406 3215.99,-127 3168.48,-97.9313 3021.11,-117.025 2965.99,-109 2959.86,-108.107 2953.49,-106.998 2947.15,-105.777"/>
