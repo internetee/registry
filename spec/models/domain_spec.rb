@@ -545,12 +545,6 @@ RSpec.describe Domain do
     expect(domain.errors[:base]).to include('Required parameter missing; reserved>pw element required for reserved domains')
   end
 
-  it 'validates period' do
-    expect(Fabricate.build(:domain, period: 0).valid?).to be false
-    expect(Fabricate.build(:domain, period: 4).valid?).to be false
-    expect(Fabricate.build(:domain, period: 3).valid?).to be true
-  end
-
   it 'generates auth info' do
     d = Fabricate(:domain)
     expect(d.auth_info).to_not be_empty
