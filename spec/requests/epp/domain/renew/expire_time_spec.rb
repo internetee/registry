@@ -77,9 +77,7 @@ RSpec.describe 'EPP domain:renew' do
     }
 
     it 'does not renew domain' do
-      request
-      domain.reload
-      expect(domain.expire_time).to eq(Time.zone.parse('05.07.2010'))
+      expect { request; domain.reload }.to_not change { domain.expire_time }
     end
 
     specify do
