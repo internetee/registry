@@ -107,7 +107,6 @@ class Domain < ActiveRecord::Base
   validates :period, numericality: { only_integer: true }
   validates :registrant, :registrar, presence: true
 
-  validate :validate_period
   validate :validate_reservation
   def validate_reservation
     return if persisted? || !in_reserved_list?
@@ -229,12 +228,6 @@ class Domain < ActiveRecord::Base
   end
 
   class << self
-    def convert_period_to_time(period, unit)
-      return (period.to_i / 365).years if unit == 'd'
-      return (period.to_i / 12).years  if unit == 'm'
-      return period.to_i.years         if unit == 'y'
-    end
-
     def included
       includes(
         :registrant,
@@ -450,18 +443,16 @@ class Domain < ActiveRecord::Base
     self.delete_at = nil
   end
 
-  def pricelist(operation, period_i = nil, unit = nil)
+  def pricelist(operation_category, period_i = nil, unit = nil)
     period_i ||= period
     unit ||= period_unit
 
-    # TODO: test if name.scan(/\.(.+)\z/).first.first is faster
-    zone = name.split('.').drop(1).join('.')
+    zone_name = name.split('.').drop(1).join('.')
+    zone = DNS::Zone.find_by(origin: zone_name)
 
-    p = period_i / 365 if unit == 'd'
-    p = period_i / 12 if unit == 'm'
-    p = period_i if unit == 'y'
+    duration = "P#{period_i}#{unit.upcase}"
 
-    Pricelist.pricelist_for(zone, operation, "#{p}year".pluralize(p))
+    Billing::Price.price_for(zone, operation_category, duration)
   end
 
   ### VALIDATIONS ###
@@ -474,19 +465,6 @@ class Domain < ActiveRecord::Base
       errors.add(:nameservers, :invalid) if errors[:nameservers].blank?
       ns.errors.add(:ipv4, :blank)
     end
-  end
-
-  def validate_period
-    return unless period.present?
-    if period_unit == 'd'
-      valid_values = %w(365 730 1095)
-    elsif period_unit == 'm'
-      valid_values = %w(12 24 36)
-    else
-      valid_values = %w(1 2 3)
-    end
-
-    errors.add(:period, :out_of_range) unless valid_values.include?(period.to_s)
   end
 
   # used for highlighting form tabs

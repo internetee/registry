@@ -104,7 +104,6 @@ en:
               less_than_or_equal_to: 'Nameservers count must be less than or equal to %{count}'
               greater_than_or_equal_to: 'Nameservers count must be greater than or equal to %{count}'
             period:
-              out_of_range: 'Period must add up to 1, 2 or 3 years'
               not_a_number: 'Period is not a number'
               not_an_integer: 'Period must be an integer'
             auth_info:

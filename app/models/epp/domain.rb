@@ -55,7 +55,12 @@ class Epp::Domain < Domain
       domain.attach_default_contacts
       domain.registered_at = Time.zone.now
       domain.valid_from = Time.zone.now
-      domain.valid_to = domain.valid_from.beginning_of_day + convert_period_to_time(domain.period, domain.period_unit) + 1.day
+
+      period = domain.period.to_i
+      plural_period_unit_name = (domain.period_unit == 'm' ? 'months' : 'years').to_sym
+      expire_time = (Time.zone.now.advance(plural_period_unit_name => period) + 1.day).beginning_of_day
+      domain.expire_time = expire_time
+
       domain
     end
   end
@@ -109,7 +114,6 @@ class Epp::Domain < Domain
         [:base, :domain_status_prohibits_operation]
       ],
       '2306' => [ # Parameter policy error
-        [:period, :out_of_range, { value: { obj: 'period', val: period } }],
         [:base, :ds_data_with_key_not_allowed],
         [:base, :ds_data_not_allowed],
         [:base, :key_data_not_allowed],
@@ -588,8 +592,6 @@ class Epp::Domain < Domain
     save(validate: false)
   end
 
-  ### RENEW ###
-
   def renew(cur_exp_date, period, unit = 'y')
     @is_renewal = true
     validate_exp_dates(cur_exp_date)
@@ -597,19 +599,11 @@ class Epp::Domain < Domain
     add_epp_error('2105', nil, nil, I18n.t('object_is_not_eligible_for_renewal')) unless renewable?
     return false if errors.any?
 
-    p = self.class.convert_period_to_time(period, unit)
-    renewed_expire_time = valid_to + p
+    period = period.to_i
+    plural_period_unit_name = (unit == 'm' ? 'months' : 'years').to_sym
+    renewed_expire_time = valid_to.advance(plural_period_unit_name => period.to_i)
 
-    # Change it when Pricelist model periods change
-    max_reg_time = 4.years.from_now
-
-    if renewed_expire_time >= max_reg_time
-      add_epp_error('2105', nil, nil, I18n.t('epp.domains.object_is_not_eligible_for_renewal',
-                                             max_date: max_reg_time.to_date.to_s(:db)))
-      return false if errors.any?
-    end
-
-    self.valid_to = renewed_expire_time
+    self.expire_time = renewed_expire_time
     self.outzone_at = nil
     self.delete_at = nil
     self.period = period
