@@ -79,7 +79,8 @@ module Admin
       end
 
       def durations
-        ::Billing::Price::durations
+        durations = ::Billing::Price::durations
+        durations.collect { |duration| [duration.sub('mon', 'month'), duration] }
       end
     end
   end

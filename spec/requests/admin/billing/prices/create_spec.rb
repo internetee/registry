@@ -24,7 +24,12 @@ RSpec.describe 'admin price create', settings: false do
     expect(price.operation_category).to eq(Billing::Price.operation_categories.first)
   end
 
-  it 'saves duration' do
+  it 'saves duration in months' do
+    post admin_prices_path, price: attributes_for(:price, zone_id: '1', duration: '3 mons')
+    expect(price.duration).to eq('3 mons')
+  end
+
+  it 'saves duration in years' do
     post admin_prices_path, price: attributes_for(:price, zone_id: '1', duration: '1 year')
     expect(price.duration).to eq('1 year')
   end

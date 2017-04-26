@@ -17,9 +17,9 @@ module Billing
 
     def self.durations
       [
-        '3 months',
-        '6 months',
-        '9 months',
+        '3 mons',
+        '6 mons',
+        '9 mons',
         '1 year',
         '2 years',
         '3 years',

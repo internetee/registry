@@ -27,7 +27,7 @@ RSpec.feature 'New price in admin area', settings: false do
   def fill_form
     select 'test', from: 'price_zone_id'
     select Billing::Price.operation_categories.first, from: 'price_operation_category'
-    select Billing::Price.durations.first, from: 'price_duration'
+    select '3 months', from: 'price_duration'
     fill_in 'price_price', with: '1'
   end
 

@@ -13,9 +13,9 @@ RSpec.describe Billing::Price do
   describe '::durations', db: false do
     it 'returns available durations' do
       durations = [
-        '3 months',
-        '6 months',
-        '9 months',
+        '3 mons',
+        '6 mons',
+        '9 mons',
         '1 year',
         '2 years',
         '3 years',

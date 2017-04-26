@@ -1,10 +1,10 @@
 <tr>
     <td><%= price.zone_name %></td>
-    <td><%= price.duration %></td>
+    <td><%= price.duration.sub('mons', 'months') %></td>
     <td><%= price.operation_category %></td>
     <td><%= currency(price.price) %></td>
-    <td><%= l(price.valid_from, format: :ydate) %></td>
-    <td><%= l(price.valid_to, format: :ydate) %></td>
+    <td><%= l price.valid_from, format: :date %></td>
+    <td><%= l price.valid_to, format: :date %></td>
     <td>
         <%= link_to t('.edit_btn'), edit_admin_price_path(price), class: 'btn btn-xs btn-primary' %>
         <%= link_to(t('.delete_btn'), admin_price_path(price),

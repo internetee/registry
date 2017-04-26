@@ -25,7 +25,16 @@ RSpec.describe 'admin price update', settings: false do
     expect(price.operation_category).to eq(Billing::Price.operation_categories.second)
   end
 
-  it 'updates duration' do
+  it 'updates duration in months' do
+    price = create(:price, duration: '3 mons')
+
+    patch admin_price_path(price), price: attributes_for(:price, duration: '6 mons')
+    price.reload
+
+    expect(price.duration).to eq('6 mons')
+  end
+
+  it 'updates duration in years' do
     price = create(:price, duration: '1 year')
 
     patch admin_price_path(price), price: attributes_for(:price, duration: '2 years')
