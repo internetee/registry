@@ -14,7 +14,21 @@ module Depp
       clientUpdateProhibited
     )
 
-    PERIODS = [['1 year', '1y'], ['2 years', '2y'], ['3 years', '3y']]
+    PERIODS = [
+      ['3 months', '3m'],
+      ['6 months', '6m'],
+      ['9 months', '9m'],
+      ['1 year', '1y'],
+      ['2 years', '2y'],
+      ['3 years', '3y'],
+      ['4 years', '4y'],
+      ['5 years', '5y'],
+      ['6 years', '6y'],
+      ['7 years', '7y'],
+      ['8 years', '8y'],
+      ['9 years', '9y'],
+      ['10 years', '10y'],
+    ]
 
     def initialize(args = {})
       self.current_user = args[:current_user]
