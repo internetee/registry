@@ -2148,7 +2148,7 @@ ALTER SEQUENCE log_nameservers_id_seq OWNED BY log_nameservers.id;
 
 
 --
--- Name: log_pricelists; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: log_pricelists; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE log_pricelists (
@@ -2527,7 +2527,7 @@ ALTER SEQUENCE people_id_seq OWNED BY people.id;
 
 
 --
--- Name: prices; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: prices; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE prices (
@@ -3824,7 +3824,7 @@ ALTER TABLE ONLY log_nameservers
 
 
 --
--- Name: log_pricelists_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: log_pricelists_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY log_pricelists
@@ -3904,7 +3904,7 @@ ALTER TABLE ONLY people
 
 
 --
--- Name: prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY prices
@@ -3952,7 +3952,7 @@ ALTER TABLE ONLY settings
 
 
 --
--- Name: unique_zone_origin; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: unique_zone_origin; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY zones
@@ -4658,7 +4658,7 @@ CREATE UNIQUE INDEX index_people_on_reset_password_token ON people USING btree (
 
 
 --
--- Name: index_prices_on_zone_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_prices_on_zone_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_prices_on_zone_id ON prices USING btree (zone_id);
