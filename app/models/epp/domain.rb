@@ -603,6 +603,14 @@ class Epp::Domain < Domain
     plural_period_unit_name = (unit == 'm' ? 'months' : 'years').to_sym
     renewed_expire_time = valid_to.advance(plural_period_unit_name => period.to_i)
 
+    max_reg_time = 11.years.from_now
+
+    if renewed_expire_time >= max_reg_time
+      add_epp_error('2105', nil, nil, I18n.t('epp.domains.object_is_not_eligible_for_renewal',
+                                             max_date: max_reg_time.to_date.to_s(:db)))
+      return false if errors.any?
+    end
+
     self.expire_time = renewed_expire_time
     self.outzone_at = nil
     self.delete_at = nil
