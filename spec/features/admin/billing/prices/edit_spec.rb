@@ -15,8 +15,10 @@ RSpec.feature 'Editing price in admin area', settings: false do
     expect(page).to have_text(t('admin.billing.prices.update.updated'))
   end
 
+  private
+
   def open_form
-    click_link_or_button t('admin.billing.prices.price.edit_btn')
+    click_link_or_button 'admin-edit-price-btn'
   end
 
   def submit_form

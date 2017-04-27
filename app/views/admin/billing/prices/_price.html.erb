@@ -1,15 +1,8 @@
 <tr>
-    <td><%= price.zone_name %></td>
+    <td><%= link_to price.zone_name, edit_admin_price_path(price), id: 'admin-edit-price-btn' %></td>
     <td><%= price.duration.sub('mons', 'months') %></td>
     <td><%= price.operation_category %></td>
     <td><%= number_to_currency price.price %></td>
     <td><%= l price.valid_from, format: :date %></td>
     <td><%= l price.valid_to, format: :date %></td>
-    <td>
-        <%= link_to t('.edit_btn'), edit_admin_price_path(price), class: 'btn btn-xs btn-primary' %>
-        <%= link_to(t('.delete_btn'), admin_price_path(price),
-                    method: :delete,
-                    data: { confirm: t('.delete_btn_confirm') },
-                    class: 'btn btn-xs btn-danger') %>
-    </td>
 </tr>
