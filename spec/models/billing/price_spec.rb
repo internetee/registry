@@ -77,6 +77,18 @@ RSpec.describe Billing::Price do
       price.validate
       expect(price.errors).to_not have_key(:price)
     end
+
+    it 'accepts period as fraction separator' do
+      price.price = 1.5
+      price.validate
+      expect(price.errors).to_not have_key(:price)
+    end
+
+    it 'accepts comma as fraction separator' do
+      price.price = '1,5'
+      price.validate
+      expect(price.errors).to_not have_key(:price)
+    end
   end
 
   describe 'duration validation', db: false do
