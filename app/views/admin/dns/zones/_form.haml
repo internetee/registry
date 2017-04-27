@@ -1,0 +1,79 @@
+= form_for [:admin, zone], html: { class: 'form-horizontal' } do |f|
+  .row
+    .col-md-8
+      #domain-statuses
+        = render 'shared/full_errors', object: f.object
+
+        .form-group
+          .col-md-4.control-label
+            = f.label :origin
+          .col-md-8
+            - if f.object.new_record?
+              = f.text_field :origin, class: 'form-control', required: true
+            - else
+              = f.text_field :origin, class: 'form-control', disabled: true
+
+        .form-group
+          .col-md-4.control-label
+            = f.label :ttl
+          .col-md-8
+            = f.number_field :ttl, class: 'form-control', required: true
+
+        .form-group
+          .col-md-4.control-label
+            = f.label :refresh
+          .col-md-8
+            = f.number_field :refresh, class: 'form-control', required: true
+
+        .form-group
+          .col-md-4.control-label
+            = f.label :retry
+          .col-md-8
+            = f.number_field :retry, class: 'form-control', required: true
+
+        .form-group
+          .col-md-4.control-label
+            = f.label :expire
+          .col-md-8
+            = f.number_field :expire, class: 'form-control', required: true
+
+        .form-group
+          .col-md-4.control-label
+            = f.label :minimum_ttl
+          .col-md-8
+            = f.number_field :minimum_ttl, class: 'form-control', required: true
+
+        .form-group
+          .col-md-4.control-label
+            = f.label :email
+          .col-md-8
+            = f.text_field :email, class: 'form-control', required: true
+
+        .form-group
+          .col-md-4.control-label
+            = f.label :master_nameserver
+          .col-md-8
+            = f.text_field :master_nameserver, class: 'form-control', required: true
+
+        .form-group
+          .col-md-4.control-label
+            = f.label :ns_records
+          .col-md-8
+            = f.text_area :ns_records, class: 'form-control', rows: 8
+
+        .form-group
+          .col-md-4.control-label
+            = f.label :a_records
+          .col-md-8
+            = f.text_area :a_records, class: 'form-control', rows: 8
+
+        .form-group
+          .col-md-4.control-label
+            = f.label :a4_records
+          .col-md-8
+            = f.text_area :a4_records, class: 'form-control', rows: 8
+
+  %hr
+  .row
+    .col-md-8.text-right
+      %button.btn.btn-success= t(".#{zone.new_record? ? 'create' : 'update'}_btn")

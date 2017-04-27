@@ -93,10 +93,10 @@ class Ability
     can :manage, Setting
     can :manage, BlockedDomain
     can :manage, ReservedDomain
-    can :manage, ZonefileSetting
+    can :manage, DNS::Zone
     can :manage, DomainVersion
     can :manage, ContactVersion
-    can :manage, Pricelist
+    can :manage, Billing::Price
     can :manage, User
     can :manage, ApiUser
     can :manage, AdminUser

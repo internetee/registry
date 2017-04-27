@@ -105,29 +105,36 @@ class Epp::DomainsController < EppController
 
     balance_ok?('renew', period, period_unit) # loading pricelist
 
-    ActiveRecord::Base.transaction do
-      success = @domain.renew(
-        params[:parsed_frame].css('curExpDate').text,
-        period, period_unit
-      )
+    begin
+      ActiveRecord::Base.transaction(isolation: :serializable) do
+        @domain.reload
 
-      if success
-        unless balance_ok?('renew', period, period_unit)
-          handle_errors
-          fail ActiveRecord::Rollback
+        success = @domain.renew(
+          params[:parsed_frame].css('curExpDate').text,
+          period, period_unit
+        )
+
+        if success
+          unless balance_ok?('renew', period, period_unit)
+            handle_errors
+            fail ActiveRecord::Rollback
+          end
+
+          current_user.registrar.debit!({
+                                          sum: @domain_pricelist.price.amount,
+                                          description: "#{I18n.t('renew')} #{@domain.name}",
+                                          activity_type: AccountActivity::RENEW,
+                                          log_pricelist_id: @domain_pricelist.id
+                                        })
+
+          render_epp_response '/epp/domains/renew'
+        else
+          handle_errors(@domain)
         end
-
-        current_user.registrar.debit!({
-          sum: @domain_pricelist.price.amount,
-          description: "#{I18n.t('renew')} #{@domain.name}",
-          activity_type: AccountActivity::RENEW,
-          log_pricelist_id: @domain_pricelist.id
-        })
-
-        render_epp_response '/epp/domains/renew'
-      else
-        handle_errors(@domain)
       end
+    rescue ActiveRecord::StatementInvalid => e
+      sleep rand / 100
+      retry
     end
   end
 

@@ -192,12 +192,12 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
           format('%-17s', ''), format('%-12s', zf.expire), '; expire, seconds', chr(10),
           format('%-17s', ''), format('%-12s', zf.minimum_ttl), '; minimum TTL, seconds', chr(10),
           format('%-17s', ''), ')'
-        ) FROM zonefile_settings zf WHERE i_origin = zf.origin INTO tmp_var;
+        ) FROM zones zf WHERE i_origin = zf.origin INTO tmp_var;
 
         ret = concat(tmp_var, chr(10), chr(10));
 
         -- origin ns records
-        SELECT ns_records FROM zonefile_settings zf WHERE i_origin = zf.origin INTO tmp_var;
+        SELECT ns_records FROM zones zf WHERE i_origin = zf.origin INTO tmp_var;
         ret := concat(ret, '; Zone NS Records', chr(10), tmp_var, chr(10));
 
         -- ns records
@@ -216,7 +216,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         ret := concat(ret, tmp_var, chr(10), chr(10));
 
         -- origin a glue records
-        SELECT a_records FROM zonefile_settings zf WHERE i_origin = zf.origin INTO tmp_var;
+        SELECT a_records FROM zones zf WHERE i_origin = zf.origin INTO tmp_var;
         ret := concat(ret, '; Zone A Records', chr(10), tmp_var, chr(10));
 
         -- a glue records for other nameservers
@@ -236,7 +236,7 @@ CREATE FUNCTION generate_zonefile(i_origin character varying) RETURNS text
         ret := concat(ret, tmp_var, chr(10), chr(10));
 
         -- origin aaaa glue records
-        SELECT a4_records FROM zonefile_settings zf WHERE i_origin = zf.origin INTO tmp_var;
+        SELECT a4_records FROM zones zf WHERE i_origin = zf.origin INTO tmp_var;
         ret := concat(ret, '; Zone AAAA Records', chr(10), tmp_var, chr(10));
 
         -- aaaa glue records for other nameservers
@@ -2375,44 +2375,6 @@ ALTER SEQUENCE log_white_ips_id_seq OWNED BY log_white_ips.id;
 
 
 --
--- Name: log_zonefile_settings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE log_zonefile_settings (
-    id integer NOT NULL,
-    item_type character varying NOT NULL,
-    item_id integer NOT NULL,
-    event character varying NOT NULL,
-    whodunnit character varying,
-    object json,
-    object_changes json,
-    created_at timestamp without time zone,
-    session character varying,
-    children json,
-    uuid character varying
-);
-
-
---
--- Name: log_zonefile_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE log_zonefile_settings_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: log_zonefile_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE log_zonefile_settings_id_seq OWNED BY log_zonefile_settings.id;
-
-
---
 -- Name: mail_templates; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2565,31 +2527,30 @@ ALTER SEQUENCE people_id_seq OWNED BY people.id;
 
 
 --
--- Name: pricelists; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: prices; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE TABLE pricelists (
+CREATE TABLE prices (
     id integer NOT NULL,
     "desc" character varying,
-    category character varying,
-    price_cents numeric(10,2) DEFAULT 0.0 NOT NULL,
-    price_currency character varying DEFAULT 'EUR'::character varying NOT NULL,
+    price_cents integer NOT NULL,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     creator_str character varying,
     updator_str character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    duration character varying,
-    operation_category character varying
+    duration interval,
+    operation_category character varying,
+    zone_id integer NOT NULL
 );
 
 
 --
--- Name: pricelists_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: prices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE pricelists_id_seq
+CREATE SEQUENCE prices_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -2598,10 +2559,10 @@ CREATE SEQUENCE pricelists_id_seq
 
 
 --
--- Name: pricelists_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: prices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE pricelists_id_seq OWNED BY pricelists.id;
+ALTER SEQUENCE prices_id_seq OWNED BY prices.id;
 
 
 --
@@ -2968,10 +2929,10 @@ ALTER SEQUENCE whois_records_id_seq OWNED BY whois_records.id;
 
 
 --
--- Name: zonefile_settings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: zones; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE TABLE zonefile_settings (
+CREATE TABLE zones (
     id integer NOT NULL,
     origin character varying,
     ttl integer,
@@ -2992,10 +2953,10 @@ CREATE TABLE zonefile_settings (
 
 
 --
--- Name: zonefile_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: zones_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE zonefile_settings_id_seq
+CREATE SEQUENCE zones_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -3004,10 +2965,10 @@ CREATE SEQUENCE zonefile_settings_id_seq
 
 
 --
--- Name: zonefile_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: zones_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE zonefile_settings_id_seq OWNED BY zonefile_settings.id;
+ALTER SEQUENCE zones_id_seq OWNED BY zones.id;
 
 
 --
@@ -3385,13 +3346,6 @@ ALTER TABLE ONLY log_white_ips ALTER COLUMN id SET DEFAULT nextval('log_white_ip
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY log_zonefile_settings ALTER COLUMN id SET DEFAULT nextval('log_zonefile_settings_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY mail_templates ALTER COLUMN id SET DEFAULT nextval('mail_templates_id_seq'::regclass);
 
 
@@ -3420,7 +3374,7 @@ ALTER TABLE ONLY people ALTER COLUMN id SET DEFAULT nextval('people_id_seq'::reg
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY pricelists ALTER COLUMN id SET DEFAULT nextval('pricelists_id_seq'::regclass);
+ALTER TABLE ONLY prices ALTER COLUMN id SET DEFAULT nextval('prices_id_seq'::regclass);
 
 
 --
@@ -3490,7 +3444,7 @@ ALTER TABLE ONLY whois_records ALTER COLUMN id SET DEFAULT nextval('whois_record
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY zonefile_settings ALTER COLUMN id SET DEFAULT nextval('zonefile_settings_id_seq'::regclass);
+ALTER TABLE ONLY zones ALTER COLUMN id SET DEFAULT nextval('zones_id_seq'::regclass);
 
 
 --
@@ -3918,14 +3872,6 @@ ALTER TABLE ONLY log_white_ips
 
 
 --
--- Name: log_zonefile_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY log_zonefile_settings
-    ADD CONSTRAINT log_zonefile_settings_pkey PRIMARY KEY (id);
-
-
---
 -- Name: mail_templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3958,11 +3904,11 @@ ALTER TABLE ONLY people
 
 
 --
--- Name: pricelists_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
-ALTER TABLE ONLY pricelists
-    ADD CONSTRAINT pricelists_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY prices
+    ADD CONSTRAINT prices_pkey PRIMARY KEY (id);
 
 
 --
@@ -4006,6 +3952,14 @@ ALTER TABLE ONLY settings
 
 
 --
+-- Name: unique_zone_origin; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY zones
+    ADD CONSTRAINT unique_zone_origin UNIQUE (origin);
+
+
+--
 -- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4038,11 +3992,11 @@ ALTER TABLE ONLY whois_records
 
 
 --
--- Name: zonefile_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: zones_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
-ALTER TABLE ONLY zonefile_settings
-    ADD CONSTRAINT zonefile_settings_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY zones
+    ADD CONSTRAINT zones_pkey PRIMARY KEY (id);
 
 
 --
@@ -4676,20 +4630,6 @@ CREATE INDEX index_log_users_on_whodunnit ON log_users USING btree (whodunnit);
 
 
 --
--- Name: index_log_zonefile_settings_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_zonefile_settings_on_item_type_and_item_id ON log_zonefile_settings USING btree (item_type, item_id);
-
-
---
--- Name: index_log_zonefile_settings_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_zonefile_settings_on_whodunnit ON log_zonefile_settings USING btree (whodunnit);
-
-
---
 -- Name: index_messages_on_registrar_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4715,6 +4655,13 @@ CREATE UNIQUE INDEX index_people_on_email ON people USING btree (email);
 --
 
 CREATE UNIQUE INDEX index_people_on_reset_password_token ON people USING btree (reset_password_token);
+
+
+--
+-- Name: index_prices_on_zone_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_prices_on_zone_id ON prices USING btree (zone_id);
 
 
 --
@@ -4820,6 +4767,14 @@ CREATE UNIQUE INDEX unique_data_migrations ON data_migrations USING btree (versi
 --
 
 CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
+
+
+--
+-- Name: fk_rails_78c376257f; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY prices
+    ADD CONSTRAINT fk_rails_78c376257f FOREIGN KEY (zone_id) REFERENCES zones(id);
 
 
 --
@@ -5280,5 +5235,25 @@ INSERT INTO schema_migrations (version) VALUES ('20161227193500');
 
 INSERT INTO schema_migrations (version) VALUES ('20170221115548');
 
+INSERT INTO schema_migrations (version) VALUES ('20170419120048');
+
+INSERT INTO schema_migrations (version) VALUES ('20170420125200');
+
 INSERT INTO schema_migrations (version) VALUES ('20170422130054');
+
+INSERT INTO schema_migrations (version) VALUES ('20170422142116');
+
+INSERT INTO schema_migrations (version) VALUES ('20170422162824');
+
+INSERT INTO schema_migrations (version) VALUES ('20170423151046');
+
+INSERT INTO schema_migrations (version) VALUES ('20170423210622');
+
+INSERT INTO schema_migrations (version) VALUES ('20170423214500');
+
+INSERT INTO schema_migrations (version) VALUES ('20170423222302');
+
+INSERT INTO schema_migrations (version) VALUES ('20170423225333');
+
+INSERT INTO schema_migrations (version) VALUES ('20170424115801');
 

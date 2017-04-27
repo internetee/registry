@@ -1,0 +1,9 @@
+<ol class="breadcrumb">
+    <li><%= link_to t('admin.billing.prices.index.title'), admin_prices_path %></li>
+</ol>
+
+<div class="page-header">
+    <h1><%= t '.title' %></h1>
+</div>
+
+<%= render 'form', price: @price %>

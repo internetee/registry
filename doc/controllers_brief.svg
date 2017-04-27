@@ -77,11 +77,6 @@
 <ellipse fill="none" stroke="black" cx="-215" cy="306" rx="109.381" ry="18"/>
 <text text-anchor="middle" x="-215" y="309.7" font-family="Times,serif" font-size="14.00">Admin::WhiteIpsController</text>
 </g>
-<!-- Admin::PricelistsController -->
-<g id="node14" class="node"><title>Admin::PricelistsController</title>
-<ellipse fill="none" stroke="black" cx="193" cy="-354" rx="108.581" ry="18"/>
-<text text-anchor="middle" x="193" y="-350.3" font-family="Times,serif" font-size="14.00">Admin::PricelistsController</text>
-</g>
 <!-- Admin::ZonefilesController -->
 <g id="node15" class="node"><title>Admin::ZonefilesController</title>
 <ellipse fill="none" stroke="black" cx="-46" cy="-390" rx="109.681" ry="18"/>
@@ -141,11 +136,6 @@
 <g id="node26" class="node"><title>Admin::DashboardsController</title>
 <ellipse fill="none" stroke="black" cx="118" cy="246" rx="118.079" ry="18"/>
 <text text-anchor="middle" x="118" y="249.7" font-family="Times,serif" font-size="14.00">Admin::DashboardsController</text>
-</g>
-<!-- Admin::ZonefileSettingsController -->
-<g id="node27" class="node"><title>Admin::ZonefileSettingsController</title>
-<ellipse fill="none" stroke="black" cx="135" cy="186" rx="134.576" ry="18"/>
-<text text-anchor="middle" x="135" y="189.7" font-family="Times,serif" font-size="14.00">Admin::ZonefileSettingsController</text>
 </g>
 <!-- Admin::RegistrarsController -->
 <g id="node28" class="node"><title>Admin::RegistrarsController</title>
