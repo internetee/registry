@@ -86,7 +86,7 @@ gem 'deep_cloneable', '2.1.1'
 # gem 'digidoc_client', '0.3.0'
 gem 'digidoc_client',
     github: 'tarmotalu/digidoc_client',
-    branch: 'master'
+    ref: '1645e83a5a548addce383f75703b0275c5310c32'
 
 
 gem 'epp', '1.5.0', github: 'internetee/epp'
@@ -149,9 +149,6 @@ group :development, :test do
   gem 'html2haml',     '2.1.0'
   gem 'sdoc',          '0.4.1'  # bundle exec rake doc:rails generates the API under doc/api.
   gem 'railroady',     '1.3.0'  # to generate database diagrams
-
-  # dev tools
-  gem 'unicorn'
   gem 'autodoc'
 end
 
