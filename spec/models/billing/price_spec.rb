@@ -78,14 +78,8 @@ RSpec.describe Billing::Price do
       expect(price.errors).to_not have_key(:price)
     end
 
-    it 'accepts period as fraction separator' do
-      price.price = 1.5
-      price.validate
-      expect(price.errors).to_not have_key(:price)
-    end
-
-    it 'accepts comma as fraction separator' do
-      price.price = '1,5'
+    it 'accepts fraction' do
+      price.price = "1#{I18n.t('number.currency.format.separator')}5"
       price.validate
       expect(price.errors).to_not have_key(:price)
     end
