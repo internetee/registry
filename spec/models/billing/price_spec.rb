@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Billing::Price do
   it { is_expected.to monetize(:price) }
+  it { is_expected.to be_versioned }
 
   describe '::operation_categories', db: false do
     it 'returns available operation categories' do
