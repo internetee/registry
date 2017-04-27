@@ -916,11 +916,3 @@ en:
   cant_match_version: 'Impossible match version with request'
   user_not_authenticated: "user not authenticated"
   actions: Actions
-
-  number:
-    currency:
-      format:
-        format: "%n %u"
-        delimiter: " "
-        precision: 2
-        unit: €
