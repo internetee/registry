@@ -6,6 +6,6 @@ RSpec.shared_examples 'money form field' do
 
   it 'has money pattern' do
     render
-    expect(field[:pattern]).to eq('^[0-9.]+$')
+    expect(field[:pattern]).to eq('^[0-9.,]+$')
   end
 end
