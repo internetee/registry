@@ -1,4 +1,4 @@
-class PricelistVersion < PaperTrail::Version
+class PriceVersion < PaperTrail::Version
   self.table_name    = :log_pricelists
   self.sequence_name = :log_pricelists_id_seq
 end
