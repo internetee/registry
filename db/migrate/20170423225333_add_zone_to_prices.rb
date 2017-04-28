@@ -14,8 +14,14 @@ class AddZoneToPrices < ActiveRecord::Migration
   private
 
   def assign_zone_to_current_prices
+    p "Categories: #{Billing::Price.pluck(:category).uniq.sort}"
+    p "Zone origins: #{DNS::Zone.origins.sort}"
+    p 'Converting...'
+
     Billing::Price.all.each do |price|
-      zone = DNS::Zone.find_by!(origin: price.category)
+      p "Price: #{price.attributes}"
+      p "Price category: #{price.category}"
+      zone = DNS::Zone.find_by!(origin: price.category.strip)
       price.zone = zone
       price.save!
     end
