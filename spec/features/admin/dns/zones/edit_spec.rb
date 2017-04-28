@@ -8,7 +8,7 @@ RSpec.feature 'Editing zone in admin area', settings: false do
   end
 
   scenario 'updates zone' do
-    open_list
+    visit admin_zones_url
     open_form
     submit_form
 
@@ -20,7 +20,7 @@ RSpec.feature 'Editing zone in admin area', settings: false do
   end
 
   def open_form
-    click_link_or_button t('admin.dns.zones.zone.edit_btn')
+    click_link_or_button 'admin-edit-zone-btn'
   end
 
   def submit_form
