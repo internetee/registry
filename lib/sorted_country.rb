@@ -37,7 +37,7 @@ class SortedCountry
 
     def all_sorted_truncated
       @all_sorted_truncated ||=
-        all_sorted.map { |country| [truncate(name, length: 26), country.alpha2] }
+        all_sorted.map { |country| [country.name.truncate(26), country.alpha2] }
     end
   end
 end
