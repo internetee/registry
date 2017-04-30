@@ -29,5 +29,4 @@ en:
           update_btn: Update zone
 
         zone:
-          edit_btn: Edit
           generate_zone_file_btn: Generate zone file
