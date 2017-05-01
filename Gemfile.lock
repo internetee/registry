@@ -619,7 +619,7 @@ DEPENDENCIES
   rails-settings-cached (= 0.4.1)
   ransack (= 1.5.1)
   rest-client
-  rspec-rails (= 3.5.2)
+  rspec-rails (~> 3.5)
   rubocop (= 0.48.1)
   rubycritic (= 3.2.0)
   sass-rails (= 5.0.6)
