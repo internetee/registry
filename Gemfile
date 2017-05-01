@@ -128,8 +128,7 @@ group :development do
 end
 
 group :development, :test do
-  # test stack
-  gem 'capybara',           '2.4.4'
+  gem 'capybara'
   gem 'rspec-rails',        '3.5.2' 
   gem 'fabrication',        '2.13.2' # Replacement for fixtures
   gem 'phantomjs-binaries', '1.9.2.4' 
