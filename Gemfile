@@ -133,7 +133,7 @@ group :development, :test do
   gem 'fabrication',        '2.13.2' # Replacement for fixtures
   gem 'phantomjs-binaries'
   gem 'phantomjs'
-  gem 'poltergeist',        '1.6.0'  # We are using PhantomJS instead
+  gem 'poltergeist'
   gem 'launchy',            '2.4.3' # for opening browser automatically
 
   # debug
