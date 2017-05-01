@@ -131,8 +131,8 @@ group :development, :test do
   gem 'capybara'
   gem 'rspec-rails', '~> 3.5'
   gem 'fabrication',        '2.13.2' # Replacement for fixtures
-  gem 'phantomjs-binaries', '1.9.2.4' 
-  gem 'phantomjs',          '1.9.8.0'
+  gem 'phantomjs-binaries'
+  gem 'phantomjs'
   gem 'poltergeist',        '1.6.0'  # We are using PhantomJS instead
   gem 'launchy',            '2.4.3' # for opening browser automatically
 
