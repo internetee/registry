@@ -17,20 +17,20 @@ RSpec.describe 'admin zone create', settings: false do
 
   text_attributes.each do |attr_name|
     it "saves #{attr_name}" do
-      post admin_zones_path, { zone: attributes_for(:zone, attr_name => 'test') }
+      post admin_zones_path, zone: attributes_for(:zone, attr_name => 'test')
       expect(zone.send(attr_name)).to eq('test')
     end
   end
 
   integer_attributes.each do |attr_name|
     it "saves #{attr_name}" do
-      post admin_zones_path, { zone: attributes_for(:zone, attr_name => '1') }
+      post admin_zones_path, zone: attributes_for(:zone, attr_name => '1')
       expect(zone.send(attr_name)).to eq(1)
     end
   end
 
   it 'redirects to :index' do
-    post admin_zones_path, { zone: attributes_for(:zone) }
+    post admin_zones_path, zone: attributes_for(:zone)
     expect(response).to redirect_to admin_zones_url
   end
 end

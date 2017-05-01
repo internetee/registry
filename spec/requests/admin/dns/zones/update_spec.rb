@@ -33,7 +33,7 @@ RSpec.describe 'admin zone update', settings: false do
   it 'redirects to :index' do
     zone = create(:zone)
 
-    patch admin_zone_path(zone), { zone: attributes_for(:zone) }
+    patch admin_zone_path(zone), zone: attributes_for(:zone)
 
     expect(response).to redirect_to admin_zones_url
   end
