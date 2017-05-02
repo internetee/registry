@@ -1,6 +1,14 @@
+02.05.2017
+* Set default period value of domain create and renew operations to 1 year in the Registrar portal [#495](https://github.com/internetee/registry/issues/495)
+
+01.05.2017
+* support for short and long regsitration periods - 3m to 10y [#475](https://github.com/internetee/registry/issues/475)
+* better race condition handling on domain renew [#430](https://github.com/internetee/registry/issues/430)
+
 05.04.2017
 * Fixed validation error on valid legaldocs in the portal for registrars [#432](https://github.com/internetee/registry/issues/432)
 * Updated Ruby, nokogiri and variouse other dependent gems to fix security issues
+* Template selection for setting ForceDelete status in admin interface and new template for deceased registrant [#268](https://github.com/internetee/registry/issues/268)
 
 14.03.2017
 * Improved phone number validation [#386](https://github.com/internetee/registry/issues/386)
