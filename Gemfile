@@ -128,13 +128,12 @@ group :development do
 end
 
 group :development, :test do
-  # test stack
-  gem 'capybara',           '2.4.4'
-  gem 'rspec-rails',        '3.5.2' 
+  gem 'capybara'
+  gem 'rspec-rails', '~> 3.5'
   gem 'fabrication',        '2.13.2' # Replacement for fixtures
-  gem 'phantomjs-binaries', '1.9.2.4' 
-  gem 'phantomjs',          '1.9.8.0'
-  gem 'poltergeist',        '1.6.0'  # We are using PhantomJS instead
+  gem 'phantomjs-binaries'
+  gem 'phantomjs'
+  gem 'poltergeist'
   gem 'launchy',            '2.4.3' # for opening browser automatically
 
   # debug
