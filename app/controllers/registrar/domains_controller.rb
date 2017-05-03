@@ -85,6 +85,7 @@ class Registrar
     def new
       authorize! :create, Depp::Domain
       @domain_params = Depp::Domain.default_params
+      @domain_params[:period] = Depp::Domain.default_period
     end
 
     def create
@@ -140,6 +141,7 @@ class Registrar
         @data = @domain.renew(params)
         render 'renew_index' and return unless response_ok?
       else
+        params[:period] = Depp::Domain.default_period
         render 'renew_index'
       end
     end

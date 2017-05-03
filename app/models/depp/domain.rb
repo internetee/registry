@@ -145,6 +145,10 @@ module Depp
     end
 
     class << self
+      def default_period
+        '1y'
+      end
+
       def default_params
         ret = {}
 
