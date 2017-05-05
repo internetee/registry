@@ -55,7 +55,7 @@ namespace :db do
             puts "\n---------------------------- #{name} ----------------------------------------\n"
             filename = "#{Rails.root}/db/#{schema_file(name)}"
             File.open(filename, 'w:utf-8') do |file|
-              ActiveRecord::Base.establish_connection(name)
+              ActiveRecord::Base.establish_connection(name.to_sym)
               ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, file)
             end
           rescue => e
