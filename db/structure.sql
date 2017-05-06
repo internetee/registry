@@ -327,7 +327,7 @@ ALTER SEQUENCE account_activities_id_seq OWNED BY account_activities.id;
 
 CREATE TABLE accounts (
     id integer NOT NULL,
-    registrar_id integer,
+    registrar_id integer NOT NULL,
     account_type character varying,
     balance numeric(10,2) DEFAULT 0.0 NOT NULL,
     created_at timestamp without time zone,
@@ -4793,6 +4793,14 @@ ALTER TABLE ONLY account_activities
 
 
 --
+-- Name: fk_rails_c9f635c0b3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY accounts
+    ADD CONSTRAINT fk_rails_c9f635c0b3 FOREIGN KEY (registrar_id) REFERENCES registrars(id);
+
+
+--
 -- Name: fk_rails_ce38d749f6; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5297,4 +5305,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170506162952');
 INSERT INTO schema_migrations (version) VALUES ('20170506205356');
 
 INSERT INTO schema_migrations (version) VALUES ('20170506205946');
+
+INSERT INTO schema_migrations (version) VALUES ('20170506212014');
 
