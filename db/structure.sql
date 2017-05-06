@@ -2532,7 +2532,6 @@ ALTER SEQUENCE people_id_seq OWNED BY people.id;
 
 CREATE TABLE prices (
     id integer NOT NULL,
-    "desc" character varying,
     price_cents integer NOT NULL,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
@@ -5256,4 +5255,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170423222302');
 INSERT INTO schema_migrations (version) VALUES ('20170423225333');
 
 INSERT INTO schema_migrations (version) VALUES ('20170424115801');
+
+INSERT INTO schema_migrations (version) VALUES ('20170506144743');
 
