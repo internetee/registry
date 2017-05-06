@@ -287,7 +287,7 @@ SET default_with_oids = false;
 
 CREATE TABLE account_activities (
     id integer NOT NULL,
-    account_id integer,
+    account_id integer NOT NULL,
     invoice_id integer,
     sum numeric(10,2),
     currency character varying,
@@ -298,7 +298,7 @@ CREATE TABLE account_activities (
     creator_str character varying,
     updator_str character varying,
     activity_type character varying,
-    log_pricelist_id integer
+    price_id integer
 );
 
 
@@ -4777,6 +4777,38 @@ ALTER TABLE ONLY prices
 
 
 --
+-- Name: fk_rails_86cd2b09f5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_activities
+    ADD CONSTRAINT fk_rails_86cd2b09f5 FOREIGN KEY (account_id) REFERENCES accounts(id);
+
+
+--
+-- Name: fk_rails_b80dbb973d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_activities
+    ADD CONSTRAINT fk_rails_b80dbb973d FOREIGN KEY (bank_transaction_id) REFERENCES bank_transactions(id);
+
+
+--
+-- Name: fk_rails_ce38d749f6; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_activities
+    ADD CONSTRAINT fk_rails_ce38d749f6 FOREIGN KEY (invoice_id) REFERENCES invoices(id);
+
+
+--
+-- Name: fk_rails_d2cc3c2fa9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_activities
+    ADD CONSTRAINT fk_rails_d2cc3c2fa9 FOREIGN KEY (price_id) REFERENCES prices(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -5257,4 +5289,12 @@ INSERT INTO schema_migrations (version) VALUES ('20170423225333');
 INSERT INTO schema_migrations (version) VALUES ('20170424115801');
 
 INSERT INTO schema_migrations (version) VALUES ('20170506144743');
+
+INSERT INTO schema_migrations (version) VALUES ('20170506155009');
+
+INSERT INTO schema_migrations (version) VALUES ('20170506162952');
+
+INSERT INTO schema_migrations (version) VALUES ('20170506205356');
+
+INSERT INTO schema_migrations (version) VALUES ('20170506205946');
 
