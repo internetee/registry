@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Account do
+RSpec.describe Account do
   context 'with invalid attribute' do
     before :all do
       @account = Account.new
@@ -43,6 +43,16 @@ describe Account do
         @account.errors.full_messages.should match_array([])
         @account.versions.size.should == 1
       end
+    end
+  end
+
+  describe 'registrar validation', db: false do
+    subject(:account) { described_class.new }
+
+    it 'rejects absent' do
+      account.registrar = nil
+      account.validate
+      expect(account.errors).to have_key(:registrar)
     end
   end
 end
