@@ -6,6 +6,7 @@ module Billing
     self.auto_html5_validation = false
 
     belongs_to :zone, class_name: 'DNS::Zone', required: true
+    has_many :account_activities
 
     validates :price, :valid_from, :operation_category, :duration, presence: true
     validates :operation_category, inclusion: { in: Proc.new { |price| price.class.operation_categories } }
