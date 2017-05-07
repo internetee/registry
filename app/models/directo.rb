@@ -61,7 +61,6 @@ class Directo < ActiveRecord::Base
 
 
   def self.send_monthly_invoices(debug: false)
-    @debug         = debug
     I18n.locale    = :et
     month          = Time.now - 1.month
     invoices_until = month.end_of_month
@@ -76,51 +75,61 @@ class Directo < ActiveRecord::Base
     end
 
     directo_next = last_directo
-    Registrar.where.not(test_registrar: true).find_each do |registrar|
-      unless registrar.cash_account
-        Rails.logger.info("[DIRECTO] Monthly invoice for registrar #{registrar.id} has been skipped as it doesn't has cash_account")
-        next
-      end
+
+    Registrar.where(test_registrar: false).each do |registrar|
       counter = Counter.new(1)
       items   = {}
-      registrar_activities = AccountActivity.where(account_id: registrar.account_ids).where("created_at BETWEEN ? AND ?",month.beginning_of_month, month.end_of_month)
+      registrar_activities = AccountActivity
+                                 .where(account_id: registrar.account_ids)
+                                 .where(created_at: month.beginning_of_month..month.end_of_month)
+                                 .where(activity_type: [AccountActivity::CREATE, AccountActivity::RENEW])
 
-      # adding domains items
-      registrar_activities.where(activity_type: [AccountActivity::CREATE, AccountActivity::RENEW]).each do |activity|
-        pricelist    = load_activity_pricelist(activity)
-        unless pricelist
-          Rails.logger.error("[DIRECTO] Skipping activity #{activity.id} as pricelist not found")
-          next
+      # Adding domains items
+      registrar_activities.each do |account_activity|
+        price = load_price(account_activity)
+        quantity = price.account_activities
+                       .where(account_id: registrar.account_ids)
+                       .where(created_at: month.beginning_of_month..month.end_of_month)
+                       .where(activity_type: [AccountActivity::CREATE, AccountActivity::RENEW])
+                       .count
+
+        if price.duration.include?('years')
+          line_count = price.duration.to_i
+        else
+          line_count = 1
         end
 
-        pricelist.years_amount.times do |i|
-          year = i+1
-          hash = {
-              "ProductID"      => DOMAIN_TO_PRODUCT[pricelist.category],
-              "Unit"           => "tk",
-              "ProductName"    => ".#{pricelist.category} registreerimine: #{pricelist.years_amount} aasta",
-              "UnitPriceWoVAT" => pricelist.price_decimal/pricelist.years_amount
-          }
-          hash["StartDate"] = (activity.created_at + (year-1).year).end_of_month.strftime(date_format)     if year > 1
-          hash["EndDate"]   = (activity.created_at + (year-1).year + 1).end_of_month.strftime(date_format) if year > 1
+        localized_duration = price.duration
+        localized_duration.sub!(/mons/, 'kuud')
+        localized_duration.sub!(/years/, 'aastat')
+        localized_duration.sub!(/year/, 'aasta')
 
-          if items.has_key?(hash)
-            items[hash]["Quantity"] += 1
-          else
-            items[hash] = {"RN"=>counter.next, "RR" => counter.now - i, "Quantity"=> 1}
+        line_count.times do |i|
+          year = i + 1
+          hash = {
+              "ProductID" => DOMAIN_TO_PRODUCT[price.zone_name],
+              "Unit" => "tk",
+              "ProductName" => ".#{price.zone_name} registreerimine: #{price.duration}",
+              "UnitPriceWoVAT" => price.price,
+          }
+          hash["StartDate"] = (account_activity.created_at + (year-1).year).end_of_month.strftime(date_format)     if year > 1
+          hash["EndDate"]   = (account_activity.created_at + (year-1).year + 1).end_of_month.strftime(date_format) if year > 1
+
+          unless items.has_key?(hash)
+            items[hash] = {"RN"=>counter.next, "RR" => counter.now - i, "Quantity"=> quantity}
           end
         end
       end
 
-      #adding prepaiments
+      # Adding prepayments
       if items.any?
-        total = 0
+        total = Money.new(0)
         items.each{ |key, val| total += val["Quantity"] * key["UnitPriceWoVAT"] }
         hash = {"ProductID" => Setting.directo_receipt_product_name, "Unit" => "tk", "ProductName" => "Domeenide ettemaks", "UnitPriceWoVAT"=>total}
         items[hash] = {"RN"=>counter.next, "RR" => counter.now, "Quantity"=> -1}
       end
 
-      # generating XML
+      # Generating XML
       if items.any?
         directo_next += 1
         invoice_counter.next
@@ -136,6 +145,7 @@ class Directo < ActiveRecord::Base
                         "SalesAgent"  =>Setting.directo_sales_agent){
               xml.line("RN" => 1, "RR"=>1, "ProductName"=> "Domeenide registreerimine - #{I18n.l(invoices_until, format: "%B %Y").titleize}")
               items.each do |line, val|
+                line['UnitPriceWoVAT'] = line['UnitPriceWoVAT'].amount.to_s
                 xml.line(val.merge(line))
               end
             }
@@ -143,10 +153,11 @@ class Directo < ActiveRecord::Base
         end
 
         data = builder.to_xml.gsub("\n",'')
-        response = RestClient::Request.execute(url: ENV['directo_invoice_url'], method: :post, payload: {put: "1", what: "invoice", xmldata: data}, verify_ssl: false).to_s
-        if @debug
+
+        if debug
           STDOUT << "#{Time.zone.now.utc} - Directo xml had to be sent #{data}\n"
         else
+          response = RestClient::Request.execute(url: ENV['directo_invoice_url'], method: :post, payload: {put: "1", what: "invoice", xmldata: data}, verify_ssl: false).to_s
           Setting.directo_monthly_number_last = directo_next
           Nokogiri::XML(response).css("Result").each do |res|
             Directo.create!(request: data, response: res.as_json.to_h, invoice_number: directo_next)
@@ -161,19 +172,10 @@ class Directo < ActiveRecord::Base
     STDOUT << "#{Time.zone.now.utc} - Directo invoices sending finished. #{invoice_counter.now} are sent\n"
   end
 
-
-  def self.load_activity_pricelist activity
+  def self.load_price(account_activity)
     @pricelists ||= {}
-    return @pricelists[activity.log_pricelist_id] if @pricelists.has_key?(activity.log_pricelist_id)
-
-    pricelist = Pricelist.find_by(id: activity.log_pricelist_id) || PricelistVersion.find_by(item_id: activity.log_pricelist_id).try(:reify)
-    unless pricelist
-      @pricelists[activity.log_pricelist_id] = nil
-      Rails.logger.info("[DIRECTO] AccountActivity #{activity.id} cannot be sent as pricelist wasn't found #{activity.log_pricelist_id}")
-      return
-    end
-
-    @pricelists[activity.log_pricelist_id] = pricelist.version_at(activity.created_at) || pricelist
+    return @pricelists[account_activity.price_id] if @pricelists.has_key?(account_activity.price_id)
+    @pricelists[account_activity.price_id] = account_activity.price
   end
 end
 

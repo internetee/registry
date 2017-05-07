@@ -52,23 +52,15 @@ module Billing
       "#{operation_category} #{zone_name}"
     end
 
-    def years_amount
-      duration.to_i
-    end
-
-    def price_decimal
-      price_cents / BigDecimal.new('100')
-    end
-
     def zone_name
       zone.origin
     end
 
-    private
-
     def to_partial_path
       'price'
     end
+
+    private
 
     def init_values
       return unless new_record?
