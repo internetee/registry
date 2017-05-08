@@ -31,7 +31,7 @@ module Admin
     end
 
     def update
-      @dispute.attributes = dispute_params
+      @dispute.attributes = dispute_update_params
       @updater = Disputes::Update.new(dispute: @dispute)
 
       if @updater.dispute.valid?(:admin)
@@ -64,6 +64,10 @@ module Admin
       )
 
       params.require(:dispute).permit(allowed_params)
+    end
+
+    def dispute_update_params
+      dispute_params.except(:domain_name)
     end
 
     def search_params

@@ -20,6 +20,24 @@ RSpec.describe 'admin/disputes/_form' do
       render
       expect(field[:required]).to eq('required')
     end
+
+    context 'when dispute is new' do
+      let(:dispute) { Dispute.new }
+
+      it 'is enabled' do
+        render
+        expect(field[:disabled]).to be_nil
+      end
+    end
+
+    context 'when dispute is persisted' do
+      let(:dispute) { build_stubbed(:dispute) }
+
+      it 'is disabled' do
+        render
+        expect(field[:disabled]).to eq('disabled')
+      end
+    end
   end
 
   describe 'expire date' do

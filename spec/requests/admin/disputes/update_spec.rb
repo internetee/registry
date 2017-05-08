@@ -6,13 +6,13 @@ RSpec.describe 'admin dispute update' do
     sign_in_to_admin_area
   end
 
-  it 'updates domain name' do
+  it 'does not update domain name' do
     dispute = create(:dispute, domain_name: 'test.com')
 
     patch admin_dispute_path(dispute), dispute: attributes_for(:dispute, domain_name: 'new.com')
     dispute.reload
 
-    expect(dispute.domain_name).to eq('new.com')
+    expect(dispute.domain_name).to eq('test.com')
   end
 
   it 'updates password' do
@@ -53,14 +53,13 @@ RSpec.describe 'admin dispute update' do
   end
 
   context 'when domain name is reserved' do
-    let!(:dispute) { create(:dispute) }
+    let!(:dispute) { create(:dispute, domain_name: 'test.com') }
     let!(:reserved_domain) { create(:reserved_domain,
                                     name: 'test.com',
                                     password: 'reserved-domain-password') }
 
     it 'replaces reserved domain password with the one from dispute' do
       patch admin_dispute_path(dispute), dispute: attributes_for(:dispute,
-                                                                 domain_name: 'test.com',
                                                                  password: 'dispute-password')
       reserved_domain.reload
 
@@ -69,11 +68,11 @@ RSpec.describe 'admin dispute update' do
   end
 
   it 'updates whois' do
-    dispute = create(:dispute)
+    dispute = create(:dispute, domain_name: 'test.com')
 
     expect(DNS::DomainName).to receive(:update_whois).with(domain_name: 'test.com')
 
-    patch admin_dispute_path(dispute), dispute: attributes_for(:dispute, domain_name: 'test.com')
+    patch admin_dispute_path(dispute), dispute: attributes_for(:dispute)
   end
 
   it 'redirects to :show' do

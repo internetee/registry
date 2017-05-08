@@ -5,7 +5,8 @@
         <%= f.label :domain_name, class: 'col-sm-2 control-label' %>
 
         <div class="col-sm-4">
-            <%= f.text_field :domain_name, class: 'form-control', autofocus: true, required: true, placeholder: true %>
+            <%= f.text_field :domain_name, class: 'form-control', autofocus: true, required: true,
+                             placeholder: true, disabled: f.object.persisted? %>
             <p class="help-block"><%= t '.domain_name_help' %></p>
         </div>
     </div>
