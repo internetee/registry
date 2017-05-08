@@ -105,7 +105,6 @@ en:
               less_than_or_equal_to: 'Nameservers count must be less than or equal to %{count}'
               greater_than_or_equal_to: 'Nameservers count must be greater than or equal to %{count}'
             period:
-              out_of_range: 'Period must add up to 1, 2 or 3 years'
               not_a_number: 'Period is not a number'
               not_an_integer: 'Period must be an integer'
             auth_info:
@@ -233,14 +232,6 @@ en:
         protocol: 'Protocol'
         alg: 'Algorithm'
         public_key: 'Public key'
-
-      zonefile_setting:
-        ttl: 'TTL'
-        refresh: 'Refresh'
-        retry: 'Retry'
-        expire: 'Expire'
-        minimum_ttl: 'Minimum TTL'
-        email: 'E-Mail'
       registrar:
         billing_email: 'Billing e-mail'
         phone: 'Contact phone'
@@ -306,7 +297,6 @@ en:
   description: 'Description'
   delete: 'Delete'
   are_you_sure: 'Are you sure?'
-  are_you_sure_destroy: 'You are going to delete, are you sure?'
   back: 'Back'
   new_domain: 'New domain'
   registrar_name: 'Registrar name'
@@ -434,7 +424,6 @@ en:
   transfer_requested: 'Transfer requested.'
   message_was_not_found: 'Message was not found'
   host_obj_is_not_allowed: 'hostObj object is not allowed'
-  generate_zonefile: 'Generate zonefile'
   zonefile: 'Zonefile'
   only_one_parameter_allowed: 'Only one parameter allowed: %{param_1} or %{param_2}'
   exactly_one_parameter_required: 'Exactly one parameter required: %{params}'
@@ -448,7 +437,6 @@ en:
   ds_data_with_key_allowed: 'Allow DS data with key'
   key_data_allowed: 'Allow key data'
   ds_digest_type: 'DS digest type'
-  zonefile_settings: 'Zonefile settings'
   background_jobs: Background jobs
   domains_history: Domains history
   role: 'Role'
@@ -664,6 +652,7 @@ en:
   amount: 'Amount'
   please_pay_the_following_invoice: 'Please pay the following invoice'
   invoice_no: 'Invoice no. %{no}'
+  invoice_number: Invoice no.
   seller: 'Seller'
   prepayment: 'Prepayment'
   vat: 'VAT (%{vat_prc}%)'
@@ -765,16 +754,6 @@ en:
   due_date_until: 'Due date until'
   minimum_total: 'Minimum total'
   maximum_total: 'Maximum total'
-  hostname_end: 'Hostname end'
-  hostname_end_replacement: 'Hostname end replacement'
-  hostname_end_is_required: 'Hostname end is required'
-  hostname_end_replacement_is_required: 'Hostname end replacement is required'
-  hostnames_replaced: 'Hostnames replaced'
-  all_hostnames_replaced: 'All hostnames replaced'
-  hostnames_partially_replaced: 'Hostnames partially replaced'
-  hostnames_will_be_replaced_only_if_domain_validates_with_the_new_nameserver: 'Hostnames will be replaced only if domain validates with the new nameserver'
-  back_to_domains: 'Back to domains'
-  no_hostnames_replaced: 'No hostnames replaced'
   forbidden_code: 'is forbidden to use'
   unimplemented_object_service: 'Unimplemented object service'
   contact_email_update_subject: 'Teie domeenide kontakt epostiaadress on muutunud / Contact e-mail addresses of your domains have changed'
@@ -833,10 +812,7 @@ en:
   webserver_missing_client_cert_directive: 'Webserver missing client cert directive'
   webserver_client_cert_directive_should_be_required: 'Webserver client cert directive should be required'
   tech: Tech contact
-  pricelists: Pricelists
-  new_pricelist: New Pricelist
   valid: Valid
-  category: Zone
   object_is_not_eligible_for_renewal: 'Object is not eligible for renewal'
   domain_expiring: 'Domain expiring'
   domain_validation_rules: 'Domain validation rules'
@@ -891,10 +867,6 @@ en:
   result_count: '%{count} results'
   failed_to_generate_invoice_invoice_number_limit_reached: 'Failed to generate invoice - invoice number limit reached'
   is_too_small_minimum_deposit_is: 'is too small. Minimum deposit is %{amount} %{currency}'
-  a4_records: 'AAAA records'
-  new_zone: 'New zone'
-  edit_zone: 'Edit zone'
-  there_are_count_domains_in_this_zone: 'There are %{count} domains in this zone'
   poll_pending_update_confirmed_by_registrant: 'Registrant confirmed domain update'
   poll_pending_update_rejected_by_registrant: 'Registrant rejected domain update'
   poll_pending_delete_rejected_by_registrant: 'Registrant rejected domain deletion'
@@ -931,3 +903,12 @@ en:
   deleted: 'Deleted'
   cant_match_version: 'Impossible match version with request'
   user_not_authenticated: "user not authenticated"
+
+  number:
+    currency:
+      format:
+        format: "%n %u"
+        separator: ","
+        delimiter: " "
+        precision: 2
+        unit: €

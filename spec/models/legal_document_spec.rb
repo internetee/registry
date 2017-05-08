@@ -3,11 +3,11 @@ require 'rails_helper'
 describe LegalDocument do
   context 'tasks' do
     it 'make files uniq' do
-      Fabricate(:zonefile_setting, origin: 'ee')
-      Fabricate(:zonefile_setting, origin: 'pri.ee')
-      Fabricate(:zonefile_setting, origin: 'med.ee')
-      Fabricate(:zonefile_setting, origin: 'fie.ee')
-      Fabricate(:zonefile_setting, origin: 'com.ee')
+      Fabricate(:zone, origin: 'ee')
+      Fabricate(:zone, origin: 'pri.ee')
+      Fabricate(:zone, origin: 'med.ee')
+      Fabricate(:zone, origin: 'fie.ee')
+      Fabricate(:zone, origin: 'com.ee')
       LegalDocument.explicitly_write_file = true
       PaperTrail.enabled = true
 

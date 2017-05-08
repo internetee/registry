@@ -61,13 +61,6 @@ Rails.application.routes.draw do
       end
     end
 
-    # turned off requested by client
-    # resources :nameservers do
-      # collection do
-        # match 'replace_all', via: [:post, :get]
-      # end
-    # end
-
     resources :contacts, constraints: {:id => /[^\/]+(?=#{ ActionController::Renderers::RENDERERS.map{|e| "\\.#{e}\\z"}.join("|") })|[^\/]+/} do
       member do
         get 'delete'
@@ -170,10 +163,10 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :keyrelays
     resources :zonefiles
-    resources :zonefile_settings
+    resources :zones, controller: 'dns/zones', except: %i[show]
     resources :legal_documents
     resources :keyrelays
-    resources :pricelists
+    resources :prices, controller: 'billing/prices', except: %i[show]
     resources :mail_templates
     resources :account_activities
     resources :disputes

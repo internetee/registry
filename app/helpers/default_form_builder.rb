@@ -3,4 +3,8 @@ class DefaultFormBuilder < ActionView::Helpers::FormBuilder
     self.multipart = true
     @template.legal_document_field(@object_name, method, objectify_options(options))
   end
+
+  def money_field(method, options = {})
+    @template.money_field(@object_name, method, objectify_options(options))
+  end
 end

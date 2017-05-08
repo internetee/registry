@@ -1,0 +1,8 @@
+<tr>
+    <td><%= link_to price.zone_name, edit_admin_price_path(price), id: 'admin-edit-price-btn' %></td>
+    <td><%= price.duration.sub('mons', 'months') %></td>
+    <td><%= price.operation_category %></td>
+    <td><%= number_to_currency price.price %></td>
+    <td><%= l price.valid_from, format: :date %></td>
+    <td><%= l price.valid_to, format: :date %></td>
+</tr>

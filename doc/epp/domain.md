@@ -16,7 +16,7 @@ Domain name mapping protocol short version:
       <domain:create>          1        Attribute: xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd"
         <domain:name>          1        Domain name. Can contain unicode characters.
         <domain:period>        0-1      Registration period for domain. 
-                                        Must add up to 1 / 2 / 3 years.
+                                        Must add up to 3m, 6m, 9m, 1y, 2y, 3y, 4y, 5y, 6y, 7y, 8y, 9y, 10y.
                                         Attribute: unit="y/m/d"
                                         Default is 1 year.
         <domain:ns>            0-1       
@@ -131,7 +131,8 @@ Domain name mapping protocol short version:
         <domain:name>        1        Domain name. Can contain unicode characters. 
         <domain:curExpDate>  1        Current expiry date (ISO8601 format)
         <domain:period>      0-1      Registration period for domain. 
-                                      Must add up to 1 / 2 / 3 years. Attribute: unit="y/m/d"
+                                      Must add up to 3m, 6m, 9m, 1y, 2y, 3y, 4y, 5y, 6y, 7y, 8y, 9y, 10y.
+                                        Attribute: unit="y/m/d"
                                       Default value is 1 year.
     <extension>              0-1     
       <eis:extdata>          0-1      Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"

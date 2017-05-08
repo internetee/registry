@@ -57,7 +57,6 @@ namespace :import do
     Rake::Task['import:reserved'].invoke
     Rake::Task['import:domains'].invoke
     Rake::Task['import:zones'].invoke
-    Rake::Task['zonefile:replace_procedure'].invoke
   end
 
   desc 'Import registrars'
@@ -605,7 +604,7 @@ namespace :import do
 
     ns_records, a_records, a4_records = parse_zone_ns_data('ee', 1)
 
-    ZonefileSetting.create!({
+    DNS::Zone.create!({
       origin: 'ee',
       ttl: 43200,
       refresh: 3600,
@@ -622,7 +621,7 @@ namespace :import do
     # edu.ee
     ns_records, a_records, a4_records = parse_zone_ns_data('edu.ee', 6)
 
-    ZonefileSetting.create!({
+    DNS::Zone.create!({
       origin: 'edu.ee',
       ttl: 43200,
       refresh: 3600,
@@ -639,7 +638,7 @@ namespace :import do
     # aip.ee
     ns_records, a_records, a4_records = parse_zone_ns_data('aip.ee', 9)
 
-    ZonefileSetting.create!({
+    DNS::Zone.create!({
       origin: 'aip.ee',
       ttl: 43200,
       refresh: 3600,
@@ -656,7 +655,7 @@ namespace :import do
     # org.ee
     ns_records, a_records, a4_records = parse_zone_ns_data('org.ee', 10)
 
-    ZonefileSetting.create!({
+    DNS::Zone.create!({
       origin: 'org.ee',
       ttl: 43200,
       refresh: 3600,
@@ -673,7 +672,7 @@ namespace :import do
     # pri.ee
     ns_records, a_records, a4_records = parse_zone_ns_data('pri.ee', 2)
 
-    ZonefileSetting.create!({
+    DNS::Zone.create!({
       origin: 'pri.ee',
       ttl: 43200,
       refresh: 3600,
@@ -690,7 +689,7 @@ namespace :import do
     # med.ee
     ns_records, a_records, a4_records = parse_zone_ns_data('med.ee', 3)
 
-    ZonefileSetting.create!({
+    DNS::Zone.create!({
       origin: 'med.ee',
       ttl: 43200,
       refresh: 3600,
@@ -707,7 +706,7 @@ namespace :import do
     # fie.ee
     ns_records, a_records, a4_records = parse_zone_ns_data('fie.ee', 4)
 
-    ZonefileSetting.create!({
+    DNS::Zone.create!({
       origin: 'fie.ee',
       ttl: 43200,
       refresh: 3600,
@@ -724,7 +723,7 @@ namespace :import do
     # com.ee
     ns_records, a_records, a4_records = parse_zone_ns_data('com.ee', 5)
 
-    ZonefileSetting.create!({
+    DNS::Zone.create!({
       origin: 'com.ee',
       ttl: 43200,
       refresh: 3600,
@@ -741,7 +740,7 @@ namespace :import do
     # gov.ee
     ns_records, a_records, a4_records = parse_zone_ns_data('gov.ee', 7)
 
-    ZonefileSetting.create!({
+    DNS::Zone.create!({
       origin: 'gov.ee',
       ttl: 43200,
       refresh: 3600,
@@ -758,7 +757,7 @@ namespace :import do
     # riik.ee
     ns_records, a_records, a4_records = parse_zone_ns_data('riik.ee', 8)
 
-    ZonefileSetting.create!({
+    DNS::Zone.create!({
       origin: 'riik.ee',
       ttl: 43200,
       refresh: 3600,

@@ -7,7 +7,7 @@ RSpec.describe Domain, db: false do
     before :example do
       travel_to Time.zone.parse('05.07.2010 00:00')
 
-      Fabricate(:zonefile_setting, origin: 'ee')
+      Fabricate(:zone, origin: 'ee')
 
       Fabricate.create(:domain, id: 1, expire_time: Time.zone.parse('04.07.2010 23:59'))
       Fabricate.create(:domain, id: 2, expire_time: Time.zone.parse('05.07.2010 00:00'))

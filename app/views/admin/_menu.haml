@@ -19,8 +19,8 @@
           %li= link_to t('.admin_users'), admin_admin_users_path
           %li.divider
           %li.dropdown-header= t(:billing)
-          - if can? :view, Pricelist
-            %li= link_to t(:pricelists), admin_pricelists_path
+          - if can? :view, Billing::Price
+            %li= link_to t('.prices'), admin_prices_path
           %li= link_to t(:bank_statements), admin_bank_statements_path
           %li= link_to t(:invoices), admin_invoices_path
           %li= link_to t(:account_activities), admin_account_activities_path(created_after: 'today')
@@ -31,7 +31,7 @@
           %li.divider
           %li.dropdown-header= t(:system)
           %li= link_to t(:settings), admin_settings_path
-          %li= link_to t(:zonefile), admin_zonefile_settings_path
+          %li= link_to t('.zones'), admin_zones_path
           %li= link_to t('.blocked_domains'), admin_blocked_domains_path
           %li= link_to t('.reserved_domains'), admin_reserved_domains_path
           %li= link_to t('.disputes'), admin_disputes_path

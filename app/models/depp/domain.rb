@@ -14,7 +14,21 @@ module Depp
       clientUpdateProhibited
     )
 
-    PERIODS = [['1 year', '1y'], ['2 years', '2y'], ['3 years', '3y']]
+    PERIODS = [
+      ['3 months', '3m'],
+      ['6 months', '6m'],
+      ['9 months', '9m'],
+      ['1 year', '1y'],
+      ['2 years', '2y'],
+      ['3 years', '3y'],
+      ['4 years', '4y'],
+      ['5 years', '5y'],
+      ['6 years', '6y'],
+      ['7 years', '7y'],
+      ['8 years', '8y'],
+      ['9 years', '9y'],
+      ['10 years', '10y'],
+    ]
 
     def initialize(args = {})
       self.current_user = args[:current_user]
@@ -40,10 +54,13 @@ module Depp
       keys = Domain.create_dnskeys_hash(domain_params)
       dns_hash[:_anonymus] = keys if keys.any?
 
+      period = domain_params[:period].to_i.to_s
+      period_unit = domain_params[:period][-1].to_s
+
       if domain_params[:nameservers_attributes].select { |key, value| value['hostname'].present? }.any?
         xml = epp_xml.create({
           name: { value: domain_params[:name] },
-          period: { value: domain_params[:period].to_s[0], attrs: { unit: domain_params[:period].to_s[1] } },
+          period: { value: period, attrs: { unit: period_unit } },
           ns: Domain.create_nameservers_hash(domain_params),
           registrant: { value: domain_params[:registrant] },
           _anonymus: Domain.create_contacts_hash(domain_params)
@@ -51,7 +68,7 @@ module Depp
       else
         xml = epp_xml.create({
           name: { value: domain_params[:name] },
-          period: { value: domain_params[:period].to_s[0], attrs: { unit: domain_params[:period].to_s[1] } },
+          period: { value: period, attrs: { unit: period_unit } },
           registrant: { value: domain_params[:registrant] },
           _anonymus: Domain.create_contacts_hash(domain_params)
         }, dns_hash, Domain.construct_custom_params_hash(domain_params))
@@ -83,10 +100,13 @@ module Depp
     end
 
     def renew(params)
+      period = params[:period].to_i.to_s
+      period_unit = params[:period][-1].to_s
+
       current_user.request(epp_xml.renew(
         name: { value: params[:domain_name] },
         curExpDate: { value: params[:cur_exp_date] },
-        period: { value: params[:period].to_s[0], attrs: { unit: params[:period].to_s[1] } }
+        period: { value: period, attrs: { unit: period_unit } }
       ))
     end
 
@@ -125,6 +145,10 @@ module Depp
     end
 
     class << self
+      def default_period
+        '1y'
+      end
+
       def default_params
         ret = {}
 

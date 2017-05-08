@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170320003225) do
+ActiveRecord::Schema.define(version: 20170424115801) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -925,22 +925,6 @@ ActiveRecord::Schema.define(version: 20170320003225) do
     t.string   "uuid"
   end
 
-  create_table "log_zonefile_settings", force: :cascade do |t|
-    t.string   "item_type",      null: false
-    t.integer  "item_id",        null: false
-    t.string   "event",          null: false
-    t.string   "whodunnit"
-    t.json     "object"
-    t.json     "object_changes"
-    t.datetime "created_at"
-    t.string   "session"
-    t.json     "children"
-    t.string   "uuid"
-  end
-
-  add_index "log_zonefile_settings", ["item_type", "item_id"], name: "index_log_zonefile_settings_on_item_type_and_item_id", using: :btree
-  add_index "log_zonefile_settings", ["whodunnit"], name: "index_log_zonefile_settings_on_whodunnit", using: :btree
-
   create_table "mail_templates", force: :cascade do |t|
     t.string   "name",       null: false
     t.string   "subject"
@@ -1000,20 +984,21 @@ ActiveRecord::Schema.define(version: 20170320003225) do
   add_index "people", ["email"], name: "index_people_on_email", unique: true, using: :btree
   add_index "people", ["reset_password_token"], name: "index_people_on_reset_password_token", unique: true, using: :btree
 
-  create_table "pricelists", force: :cascade do |t|
+  create_table "prices", force: :cascade do |t|
     t.string   "desc"
-    t.string   "category"
-    t.decimal  "price_cents",        precision: 10, scale: 2, default: 0.0,   null: false
-    t.string   "price_currency",                              default: "EUR", null: false
+    t.integer  "price_cents",        null: false
     t.datetime "valid_from"
     t.datetime "valid_to"
     t.string   "creator_str"
     t.string   "updator_str"
-    t.datetime "created_at",                                                  null: false
-    t.datetime "updated_at",                                                  null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
     t.string   "duration"
     t.string   "operation_category"
+    t.integer  "zone_id",            null: false
   end
+
+  add_index "prices", ["zone_id"], name: "index_prices_on_zone_id", using: :btree
 
   create_table "que_jobs", id: false, force: :cascade do |t|
     t.integer  "priority",    limit: 2, default: 100,                                        null: false
@@ -1139,7 +1124,7 @@ ActiveRecord::Schema.define(version: 20170320003225) do
     t.string   "updator_str"
   end
 
-  create_table "zonefile_settings", force: :cascade do |t|
+  create_table "zones", force: :cascade do |t|
     t.string   "origin"
     t.integer  "ttl"
     t.integer  "refresh"
@@ -1157,4 +1142,7 @@ ActiveRecord::Schema.define(version: 20170320003225) do
     t.text     "a4_records"
   end
 
+  add_index "zones", ["origin"], name: "unique_zone_origin", unique: true, using: :btree
+
+  add_foreign_key "prices", "zones"
 end

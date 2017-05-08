@@ -90,6 +90,7 @@ Create certificate revocation list (prompts for pass phrase):
 Configure registry registry/shared/config/application.yml to match the CA settings:
     
     openssl_config_path: '/etc/ssl/openssl.cnf'
+    crl_dir:     '/home/registry/registry/shared/ca/crl/'
     crl_path:     '/home/registry/registry/shared/ca/crl/crl.pem'
     ca_cert_path: '/home/registry/registry/shared/ca/certs/ca.crt.pem'
     ca_key_path:  '/home/registry/registry/shared/ca/private/ca.key.pem'
@@ -100,7 +101,7 @@ Configure registry registry/shared/config/application.yml to match the CA settin
 
 Configure registry epp registry-epp/shared/config/application.yml:
 
-    webclient_ips: '54.154.91.240'
+    webclient_ips: '127.0.0.1' # IP where webclient is running
 
 Configure EPP port 700 virtual host:
 

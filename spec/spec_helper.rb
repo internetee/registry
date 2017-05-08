@@ -1,6 +1,10 @@
 require 'webmock/rspec'
-require 'simplecov'
-SimpleCov.start
+WebMock.disable_net_connect!(allow_localhost: true)
+
+if ENV['TRAVIS']
+  require 'simplecov'
+  SimpleCov.start
+end
 
 
 RSpec.configure do |config|
