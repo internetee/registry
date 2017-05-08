@@ -1,29 +1,28 @@
 require 'rails_helper'
 
-RSpec.describe 'EPP domain:create' do
+RSpec.describe 'EPP domain:create', settings: false do
+  let(:request) { post '/epp/command/create', frame: request_xml }
+  let!(:user) { create(:api_user_epp, registrar: registrar) }
+  let!(:zone) { create(:zone, origin: 'test') }
+  let!(:registrant) { create(:registrant, code: 'test') }
+  let!(:registrar) { create(:registrar_with_unlimited_balance) }
+  let!(:price) { create(:price,
+                        duration: '1 year',
+                        price: Money.from_amount(1),
+                        operation_category: 'create',
+                        valid_from: Time.zone.parse('05.07.2010'),
+                        valid_to: Time.zone.parse('05.07.2010'),
+                        zone: zone)
+  }
   subject(:request) { post '/epp/command/create', frame: request_xml }
 
   before :example do
     travel_to Time.zone.parse('05.07.2010')
-
-    user = create(:api_user_with_unlimited_balance)
-
-    create(:registrant, code: 'test')
-
-    create(:pricelist,
-           category: 'com',
-           duration: '1year',
-           price: 1.to_money,
-           operation_category: 'create',
-           valid_from: Time.zone.parse('05.07.2010'),
-           valid_to: Time.zone.parse('05.07.2010')
-    )
-
     sign_in_to_epp_area(user: user)
   end
 
   context 'when domain name is disputed' do
-    let!(:dispute) { create(:dispute, domain_name: 'test.com', password: 'test') }
+    let!(:dispute) { create(:dispute, domain_name: 'test.test', password: 'test') }
 
     context 'when password is valid' do
       let(:request_xml) { <<-XML
@@ -32,7 +31,7 @@ RSpec.describe 'EPP domain:create' do
           <command>
             <create>
               <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
-                <domain:name>test.com</domain:name>
+                <domain:name>test.test</domain:name>
                 <domain:period unit="y">1</domain:period>
                 <domain:registrant>test</domain:registrant>
               </domain:create>
@@ -71,7 +70,7 @@ RSpec.describe 'EPP domain:create' do
           <command>
             <create>
               <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
-                <domain:name>test.com</domain:name>
+                <domain:name>test.test</domain:name>
                 <domain:period unit="y">1</domain:period>
                 <domain:registrant>test</domain:registrant>
               </domain:create>
@@ -110,7 +109,7 @@ RSpec.describe 'EPP domain:create' do
           <command>
             <create>
               <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
-                <domain:name>test.com</domain:name>
+                <domain:name>test.test</domain:name>
                 <domain:period unit="y">1</domain:period>
                 <domain:registrant>test</domain:registrant>
               </domain:create>
@@ -147,7 +146,7 @@ RSpec.describe 'EPP domain:create' do
         <command>
           <create>
             <domain:create xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
-              <domain:name>test.com</domain:name>
+              <domain:name>test.test</domain:name>
               <domain:period unit="y">1</domain:period>
               <domain:registrant>test</domain:registrant>
             </domain:create>
