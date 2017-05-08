@@ -42,7 +42,7 @@ module Admin
     private
 
     def update_whois(domain_name:)
-      DNS::DomainName.update_whois(domain_name: domain_name)
+      ::DNS::DomainName.update_whois(domain_name: domain_name)
     end
 
     def blocked_domain_params
