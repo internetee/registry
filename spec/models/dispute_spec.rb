@@ -58,8 +58,8 @@ RSpec.describe Dispute do
     end
 
     it 'rejects non-existent zone', db: true do
-      ZonefileSetting.delete_all
-      create(:zonefile_setting, origin: 'com')
+      DNS::Zone.delete_all
+      create(:zone, origin: 'com')
 
       dispute.domain_name = 'test.org'
       dispute.validate(:admin)
@@ -67,8 +67,8 @@ RSpec.describe Dispute do
     end
 
     it 'accepts existing zone', db: true do
-      ZonefileSetting.delete_all
-      create(:zonefile_setting, origin: 'com')
+      DNS::Zone.delete_all
+      create(:zone, origin: 'com')
 
       dispute.domain_name = 'test.com'
       dispute.validate(:admin)

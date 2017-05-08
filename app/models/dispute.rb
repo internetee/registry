@@ -47,7 +47,7 @@ class Dispute < ActiveRecord::Base
     return unless domain_name
 
     zone = domain_name.split('.').last
-    supported_zone = ZonefileSetting.origins.include?(zone)
+    supported_zone = DNS::Zone.origins.include?(zone)
 
     errors.add(:domain_name, :unsupported_zone) unless supported_zone
   end
