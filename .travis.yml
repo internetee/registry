@@ -9,9 +9,7 @@ before_script:
   - "cp config/application-example.yml config/application.yml"
   - "cp config/secrets-example.yml config/secrets.yml"
   - "cp config/database-travis.yml config/database.yml"
-  - "RAILS_ENV=test bundle exec rake db:all:create"
-  - "RAILS_ENV=test bundle exec rake db:all:schema:load"
-  - "RAILS_ENV=test bundle exec rake db:migrate"
+  - "RAILS_ENV=test bundle exec rake db:setup:all"
 script:
   - "RAILS_ENV=test bundle exec rspec"
 after_success:
