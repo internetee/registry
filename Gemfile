@@ -130,6 +130,7 @@ end
 group :development, :test do
   gem 'capybara'
   gem 'rspec-rails', '~> 3.5'
+  gem 'factory_girl_rails'
   gem 'fabrication',        '2.13.2' # Replacement for fixtures
   gem 'phantomjs-binaries'
   gem 'phantomjs'
@@ -158,7 +159,6 @@ end
 
 group :test do
   gem 'database_cleaner'
-  gem 'factory_girl_rails' 
   gem 'codeclimate-test-reporter', "~> 1.0.0"
   gem 'simplecov'
   gem 'webmock'
