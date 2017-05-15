@@ -1,10 +1,10 @@
 desc 'Bootstraps production-like environment'
 task :bootstrap do
   AdminUser.create!(
-      username: 'demo',
-      email: 'demo@domain.tld',
-      password: 'demodemo',
-      password_confirmation: 'demodemo',
+      username: 'admin',
+      email: 'admin@domain.tld',
+      password: 'adminadmin',
+      password_confirmation: 'adminadmin',
       country_code: 'US',
       roles: ['admin']
   )
