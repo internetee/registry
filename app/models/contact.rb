@@ -594,4 +594,8 @@ class Contact < ActiveRecord::Base
     return unless priv?
     ident
   end
+
+  def ident_country
+    Country.new(ident_country_code)
+  end
 end

@@ -4,6 +4,12 @@ Name: <%= registrant.name %><br>
 <% else %>
     Business Registry code: <%= registrant.ident %><br>
 <% end %>
-Street: <%= registrant.street %><br>
-City: <%= registrant.city %><br>
-Country: <%= registrant.country %>
+<% if address_processing %>
+    Street: <%= registrant.street %><br>
+    City: <%= registrant.city %><br>
+    State: <%= registrant.state %><br>
+    Zip-code: <%= registrant.zip %><br>
+    Country: <%= registrant.country %>
+<% else %>
+    Country: <%= registrant.ident_country %>
+<% end %>
