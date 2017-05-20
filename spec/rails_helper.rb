@@ -28,6 +28,7 @@ RSpec.configure do |config|
   config.include Features::SessionHelpers, type: :feature
   config.include AbstractController::Translation, type: :request
   config.include AbstractController::Translation, type: :feature
+  config.include AbstractController::Translation, type: :mailer
   config.include Requests::EPPHelpers, type: :request
 
   config.define_derived_metadata(file_path: %r[/spec/features/]) do |metadata|
