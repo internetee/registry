@@ -1,3 +1,6 @@
+<%
+    contact = RegistrantPresenter.new(registrant: @contact, view: self)
+%>
 Tere <%= @contact.name %>
 <br><br>
 Kontakti <%= @contact.name %> e-posti aadress on muudetud<br>
@@ -14,13 +17,7 @@ Muudatusega seotud domeenid:<br>
 <% end %>
 <br>
 Kontaktandmed:<br>
-Nimi: <%= @contact.name %><br>
-Isikukood: <%= @contact.ident %><br>
-E-post: <%= @contact.email %><br>
-Tel: <%= @contact.phone %><br>
-Tänav: <%= @contact.street %><br>
-Linn: <%= @contact.city %><br>
-Riik: <%= @contact.country %>
+<%= render 'mailers/shared/registrant/registrant.et.html', registrant: contact %>
 <br><br>
 Lugupidamisega<br>
 Eesti Interneti Sihtasutus
@@ -43,13 +40,7 @@ Domains affected by this update:<br>
 <% end %>
 <br>
 Contact information:<br>
-Name: <%= @contact.name %><br>
-Identity Code: <%= @contact.ident %><br>
-E-mail: <%= @contact.email %><br>
-Tel: <%= @contact.phone %><br>
-Street: <%= @contact.street %><br>
-City: <%= @contact.city %><br>
-Country: <%= @contact.country %>
+<%= render 'mailers/shared/registrant/registrant.en.html', registrant: contact %>
 <br><br>
 Best Regards,<br>
 Estonian Internet Foundation
