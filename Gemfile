@@ -125,7 +125,7 @@ end
 
 group :development, :test do
   gem 'capybara'
-  gem 'rspec-rails', '~> 3.5'
+  gem 'rspec-rails', '~> 3.6'
   gem 'fabrication',        '2.13.2' # Replacement for fixtures
   gem 'phantomjs-binaries'
   gem 'phantomjs'
