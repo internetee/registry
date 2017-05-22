@@ -11,7 +11,6 @@ capybara-*.html
 **.orig
 config/initializers/secret_token.rb
 config/deploy.rb
-config/secrets.yml
 config/database.yml
 config/application.yml
 config/environments/development.rb
