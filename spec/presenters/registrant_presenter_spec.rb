@@ -43,6 +43,7 @@ RSpec.describe RegistrantPresenter do
   registrant_delegatable_attributes = %i(
     name
     ident
+    phone
     email
     priv?
     street

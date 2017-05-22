@@ -4,7 +4,10 @@ Name: <%= registrant.name %>
 <% else %>
     Business Registry code: <%= registrant.ident %>
 <% end %>
-<% if address_processing %>
+<% if local_assigns[:with_phone] -%>
+    Phone: <%= registrant.phone %>
+<% end -%>
+<% if address_processing -%>
     Street: <%= registrant.street %>
     City: <%= registrant.city %>
     State: <%= registrant.state %>
@@ -12,4 +15,4 @@ Name: <%= registrant.name %>
     Country: <%= registrant.country %>
 <% else %>
     Country: <%= registrant.ident_country %>
-<% end %>
+<% end -%>

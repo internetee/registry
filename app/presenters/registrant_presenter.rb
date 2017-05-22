@@ -1,5 +1,11 @@
 class RegistrantPresenter
-  delegate :name, :ident, :email, :priv?, :id_code, :reg_no,
+  delegate :name,
+           :ident,
+           :phone,
+           :email,
+           :priv?,
+           :id_code,
+           :reg_no,
            :street, :city, :state, :zip, :country,
            :ident_country,
            to: :registrant

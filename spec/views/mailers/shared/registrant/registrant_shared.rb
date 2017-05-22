@@ -21,6 +21,22 @@ RSpec.shared_examples 'domain mailer registrant info' do |template_path|
     expect(rendered).to have_text('test ident')
   end
 
+  context 'when :with_phone is true' do
+    it 'has phone' do
+      allow(registrant).to receive(:phone).and_return('test phone')
+      render template: template_path, locals: { with_phone: true }
+      expect(rendered).to have_text('test phone')
+    end
+  end
+
+  context 'when :with_phone is false' do
+    it 'has no phone' do
+      allow(registrant).to receive(:phone).and_return('test phone')
+      render template: template_path, locals: { with_phone: false }
+      expect(rendered).to_not have_text('test phone')
+    end
+  end
+
   address_attributes = %i[street city state zip country]
 
   context 'when address processing is enabled' do

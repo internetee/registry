@@ -17,7 +17,7 @@ Muudatusega seotud domeenid:<br>
 <% end %>
 <br>
 Kontaktandmed:<br>
-<%= render 'mailers/shared/registrant/registrant.et.html', registrant: contact %>
+<%= render 'mailers/shared/registrant/registrant.et.html', registrant: contact, with_phone: true %>
 <br><br>
 Lugupidamisega<br>
 Eesti Interneti Sihtasutus
@@ -40,7 +40,7 @@ Domains affected by this update:<br>
 <% end %>
 <br>
 Contact information:<br>
-<%= render 'mailers/shared/registrant/registrant.en.html', registrant: contact %>
+<%= render 'mailers/shared/registrant/registrant.en.html', registrant: contact, with_phone: true %>
 <br><br>
 Best Regards,<br>
 Estonian Internet Foundation
