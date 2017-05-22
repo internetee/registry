@@ -32,7 +32,7 @@ gem 'rails-settings-cached',     '0.4.1' # for settings
 
 # html-xml
 gem 'haml-rails', '0.9.0' # haml for views
-gem 'nokogiri', '1.7.1' # For XML parsing
+gem 'nokogiri', '~> 1.7'
 
 # style
 gem 'bootstrap-sass', '3.3.5.1' # bootstrap style
