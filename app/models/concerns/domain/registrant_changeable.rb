@@ -1,4 +1,4 @@
-module Concerns::Domain::RegistrantChange
+module Concerns::Domain::RegistrantChangeable
   extend ActiveSupport::Concern
 
   def registrant_change_prohibited?

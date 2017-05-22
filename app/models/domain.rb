@@ -7,7 +7,7 @@ class Domain < ActiveRecord::Base
   include Concerns::Domain::ForceDelete
   include Concerns::Domain::Deletable
   include Concerns::Domain::Disputable
-  include Concerns::Domain::RegistrantChange
+  include Concerns::Domain::RegistrantChangeable
 
   has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
 
