@@ -4,7 +4,10 @@ RSpec.describe 'registrar/contacts/_form' do
   let(:contact) { instance_spy(Depp::Contact) }
 
   before :example do
-    allow(view).to receive(:f).and_return(ActionView::Helpers::FormBuilder.new(:contact, contact, view, {}))
+    without_partial_double_verification do
+      allow(view).to receive(:f).and_return(ActionView::Helpers::FormBuilder.new(:contact, contact, view, {}))
+    end
+
     assign(:contact, contact)
 
     stub_template 'registrar/shared/_error_messages' => ''
@@ -16,7 +19,9 @@ RSpec.describe 'registrar/contacts/_form' do
 
   context 'when address processing is enabled' do
     before do
-      allow(view).to receive(:address_processing?).and_return(true)
+      without_partial_double_verification do
+        allow(view).to receive(:address_processing?).and_return(true)
+      end
     end
 
     it 'has address' do
@@ -27,7 +32,9 @@ RSpec.describe 'registrar/contacts/_form' do
 
   context 'when address processing is disabled' do
     before do
-      allow(view).to receive(:address_processing?).and_return(false)
+      without_partial_double_verification do
+        allow(view).to receive(:address_processing?).and_return(false)
+      end
     end
 
     it 'has no address' do

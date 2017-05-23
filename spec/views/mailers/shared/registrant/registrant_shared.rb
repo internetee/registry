@@ -4,7 +4,9 @@ RSpec.shared_examples 'domain mailer registrant info' do
   let(:registrant) { instance_spy(RegistrantPresenter) }
 
   before :example do
-    allow(view).to receive(:registrant).and_return(registrant)
+    without_partial_double_verification do
+      allow(view).to receive(:registrant).and_return(registrant)
+    end
   end
 
   attributes = %i(
