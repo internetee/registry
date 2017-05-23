@@ -41,12 +41,6 @@ module Admin
         end
       end
 
-      def destroy
-        @price.destroy!
-        flash[:notice] = t('.destroyed')
-        redirect_to_index
-      end
-
       private
 
       def load_price

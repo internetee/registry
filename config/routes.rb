@@ -166,7 +166,7 @@ Rails.application.routes.draw do
     resources :zones, controller: 'dns/zones', except: %i[show destroy]
     resources :legal_documents
     resources :keyrelays
-    resources :prices, controller: 'billing/prices', except: %i[show]
+    resources :prices, controller: 'billing/prices', except: %i[show destroy]
     resources :mail_templates
     resources :account_activities
 
