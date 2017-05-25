@@ -4,12 +4,16 @@ RSpec.describe 'admin/disputes/_domain_dispute' do
   let(:dispute) { instance_spy(DisputePresenter) }
 
   before :example do
-    allow(view).to receive(:dispute).and_return(dispute)
+    without_partial_double_verification do
+      allow(view).to receive(:dispute).and_return(dispute)
+    end
   end
 
   context 'when domain is disputed' do
     before :example do
-      allow(view).to receive(:disputed).and_return(true)
+      without_partial_double_verification do
+        allow(view).to receive(:disputed).and_return(true)
+      end
     end
 
     it 'shows expiration date' do
@@ -27,7 +31,9 @@ RSpec.describe 'admin/disputes/_domain_dispute' do
 
   context 'when domain is not disputed' do
     before :example do
-      allow(view).to receive(:disputed).and_return(false)
+      without_partial_double_verification do
+        allow(view).to receive(:disputed).and_return(false)
+      end
     end
 
     it 'shows text' do

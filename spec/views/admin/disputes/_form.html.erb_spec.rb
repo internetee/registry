@@ -4,7 +4,9 @@ RSpec.describe 'admin/disputes/_form' do
   let(:dispute) { build_stubbed(:dispute) }
 
   before :example do
-    allow(view).to receive(:dispute).and_return(dispute)
+    without_partial_double_verification do
+      allow(view).to receive(:dispute).and_return(dispute)
+    end
     stub_template '_form_errors.html.erb' => ''
   end
 
