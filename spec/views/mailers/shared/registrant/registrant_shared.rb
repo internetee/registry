@@ -43,7 +43,9 @@ RSpec.shared_examples 'domain mailer registrant info' do |template_path|
 
   context 'when address processing is enabled' do
     before :example do
-      allow(view).to receive(:address_processing).and_return(true)
+      without_partial_double_verification do
+        allow(view).to receive(:address_processing).and_return(true)
+      end
     end
 
     address_attributes.each do |attr_name|
@@ -63,7 +65,9 @@ RSpec.shared_examples 'domain mailer registrant info' do |template_path|
 
   context 'when address processing is disabled' do
     before :example do
-      allow(view).to receive(:address_processing).and_return(false)
+      without_partial_double_verification do
+        allow(view).to receive(:address_processing).and_return(false)
+      end
     end
 
     address_attributes.each do |attr_name|
