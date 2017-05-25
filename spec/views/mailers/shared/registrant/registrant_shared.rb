@@ -5,8 +5,10 @@ RSpec.shared_examples 'domain mailer registrant info' do |template_path|
   let(:registrant) { instance_spy(RegistrantPresenter) }
 
   before :example do
-    allow(view).to receive(:registrant).and_return(registrant)
-    allow(view).to receive(:address_processing)
+    without_partial_double_verification do
+      allow(view).to receive(:registrant).and_return(registrant)
+      allow(view).to receive(:address_processing)
+    end
   end
 
   it 'has name' do

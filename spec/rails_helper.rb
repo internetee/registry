@@ -9,7 +9,6 @@ require 'support/requests/session_helpers'
 require 'support/requests/epp_helpers'
 require 'support/features/session_helpers'
 require 'support/matchers/alias_attribute'
-require 'support/matchers/active_job'
 require 'support/matchers/epp/code'
 
 require 'support/capybara'
