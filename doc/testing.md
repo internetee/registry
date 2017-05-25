@@ -3,7 +3,7 @@ Testing
 
 Setup test databases:
 
-    RAILS_ENV=test rake db:all:setup
+    RAILS_ENV=test rake db:setup:all
 
 Run basic test (no EPP tests):
 
