@@ -6,7 +6,10 @@ RSpec.describe 'admin/domains/edit' do
 
   before :example do
     allow(DomainPresenter).to receive(:new).and_return(domain_presenter)
-    allow(view).to receive(:force_delete_templates)
+
+    without_partial_double_verification do
+      allow(view).to receive(:force_delete_templates)
+    end
 
     assign(:domain, domain)
 

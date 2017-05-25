@@ -9,7 +9,6 @@ require 'support/requests/session_helpers'
 require 'support/requests/epp_helpers'
 require 'support/features/session_helpers'
 require 'support/matchers/alias_attribute'
-require 'support/matchers/active_job'
 require 'support/matchers/epp/code'
 
 require 'support/capybara'
@@ -28,6 +27,7 @@ RSpec.configure do |config|
   config.include Features::SessionHelpers, type: :feature
   config.include AbstractController::Translation, type: :request
   config.include AbstractController::Translation, type: :feature
+  config.include AbstractController::Translation, type: :mailer
   config.include Requests::EPPHelpers, type: :request
 
   config.define_derived_metadata(file_path: %r[/spec/features/]) do |metadata|
