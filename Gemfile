@@ -135,8 +135,6 @@ group :development, :test do
   # debug
   gem 'pry', '0.10.1'
 
-  # code review
-  gem 'rubycritic',    '3.2.0'
   gem 'bullet',        '4.14.7' # for finding database optimizations
   gem 'bundler-audit'
   gem 'brakeman',      '3.6.1', require: false # for security audit'
