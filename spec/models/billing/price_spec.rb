@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe Billing::Price do
   it { is_expected.to monetize(:price) }
   it { is_expected.to be_versioned }
+  it { is_expected.to alias_attribute(:expire_time, :valid_to) }
 
   it 'should have one version' do
     with_versioning do

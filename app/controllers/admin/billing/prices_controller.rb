@@ -2,13 +2,25 @@ module Admin
   module Billing
     class PricesController < AdminController
       authorize_resource(class: 'Billing::Price')
-      before_action :load_price, only: %i[edit update destroy]
+      before_action :load_price, only: %i[edit update expire]
       helper_method :zones
       helper_method :operation_categories
       helper_method :durations
 
       def index
-        @q = ::Billing::Price.search(params[:q])
+        @search = OpenStruct.new(search_params)
+
+        unless @search.validity
+          @search.validity = 'unexpired'
+        end
+
+        prices = ::Billing::Price.all
+
+        if @search.validity.present?
+          prices = ::Billing::Price.send(@search.validity)
+        end
+
+        @q = prices.search(params[:q])
         @q.sorts = ['zone_id asc', 'duration asc', 'operation_category asc',
                     'valid_from desc', 'valid_to asc'] if @q.sorts.empty?
         @prices = @q.result.page(params[:page])
@@ -41,6 +53,13 @@ module Admin
         end
       end
 
+      def expire
+        @price.expire
+        @price.save!
+        flash[:notice] = t('.expired')
+        redirect_to_index
+      end
+
       private
 
       def load_price
@@ -58,6 +77,13 @@ module Admin
         ]
 
         params.require(:price).permit(*allowed_params)
+      end
+
+      def search_params
+        allowed_params = %i[
+          validity
+        ]
+        params.fetch(:search, {}).permit(*allowed_params)
       end
 
       def redirect_to_index

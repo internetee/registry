@@ -1,6 +1,7 @@
 module Billing
   class Price < ActiveRecord::Base
     include Versions
+    include Concerns::Billing::Price::Expirable
     has_paper_trail class_name: '::PriceVersion'
 
     self.auto_html5_validation = false
@@ -11,6 +12,7 @@ module Billing
     validates :operation_category, inclusion: { in: Proc.new { |price| price.class.operation_categories } }
     validates :duration, inclusion: { in: Proc.new { |price| price.class.durations } }
 
+    alias_attribute :expire_time, :valid_to
     monetize :price_cents, allow_nil: true, numericality: { greater_than_or_equal_to: 0 }
     after_initialize :init_values
 
