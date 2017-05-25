@@ -86,7 +86,6 @@ repp_url: 'https://repp.gitlab.eu/repp/v1/'
 #
 # Estonian Business Registry
 #
-# config/secrets.yml --- arireg: {username, password}
 arireg_username: 'kasutaja'
 arireg_password: 'parool'
 # config/environments/production.rb --- Soap::Arireg.wsdl, Soap::Arireg.host
