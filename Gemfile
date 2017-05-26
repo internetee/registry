@@ -114,12 +114,8 @@ gem 'jquery-ui-rails', '5.0.5'
 
 
 group :development do
-  gem 'guard',                 '2.12.9' # run tests automatically
   gem 'spring',                '1.3.6'
   gem 'spring-commands-rspec', '1.0.4'
-  gem 'guard-rails',           '0.7.1' # run EPP server automatically
-  gem 'guard-rspec',           '4.5.2'
-  gem 'guard-rubocop',         '1.2.0'
   gem 'rubocop',               '0.48.1'
 
   # deploy
@@ -129,7 +125,7 @@ end
 
 group :development, :test do
   gem 'capybara'
-  gem 'rspec-rails', '~> 3.5'
+  gem 'rspec-rails', '~> 3.6'
   gem 'fabrication',        '2.13.2' # Replacement for fixtures
   gem 'phantomjs-binaries'
   gem 'phantomjs'
