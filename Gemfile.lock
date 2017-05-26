@@ -165,7 +165,7 @@ GEM
     daemons-rails (1.2.1)
       daemons
       multi_json (~> 1.0)
-    database_cleaner (1.5.3)
+    database_cleaner (1.6.1)
     deep_cloneable (2.1.1)
       activerecord (>= 3.1.0, < 5.0.0)
     descendants_tracker (0.0.4)
