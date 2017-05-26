@@ -58,9 +58,6 @@ BCODE=0 # tmp
 bundle exec brakeman -q
 echo "END_OF_SECURITY_RESULTS"
 
-# update code review
-bundle exec rubycritic app lib
-
 if [ $RCODE == 0 ] && [ $TCODE == 0 ] &&[ $BCODE == 0 ]; then
   exit 0
 else
