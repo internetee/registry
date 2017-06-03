@@ -135,6 +135,16 @@ class EppController < ApplicationController
       @errors += obj.errors[:epp_errors]
     end
 
+    if params[:parsed_frame].at_css('update')
+      @errors.each_with_index do |errors, index|
+        if errors[:code] == '2304' &&
+            errors[:value][:val] == DomainStatus::SERVER_DELETE_PROHIBITED &&
+            errors[:value][:obj] == 'status'
+          @errors[index][:value][:val] = DomainStatus::PENDING_UPDATE
+        end
+      end
+    end
+
     # for debugging
     if @errors.blank?
       @errors << {
