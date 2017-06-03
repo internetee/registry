@@ -7,7 +7,7 @@ FactoryGirl.define do
     operation_category Billing::Price.operation_categories.first
     zone
 
-    factory :unexpired_price do
+    factory :effective_price do
       expire_time { Time.zone.now + 1.day }
     end
 

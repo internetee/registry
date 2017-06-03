@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.feature 'Expiring price in admin area', settings: false do
-  given!(:price) { create(:unexpired_price) }
+  given!(:price) { create(:effective_price) }
 
   background do
     sign_in_to_admin_area

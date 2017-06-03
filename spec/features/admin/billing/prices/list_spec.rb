@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.feature 'Viewing prices in admin area', settings: false do
-  given!(:unexpired_price) { create(:unexpired_price) }
+  given!(:effective_price) { create(:effective_price) }
   given!(:expired_price) { create(:expired_price) }
 
   background do
@@ -9,17 +9,17 @@ RSpec.feature 'Viewing prices in admin area', settings: false do
   end
 
   describe 'search' do
-    context 'when validity is not selected' do
-      scenario 'shows unexpired prices' do
+    context 'when status is not selected' do
+      scenario 'shows effective prices' do
         visit admin_prices_path
         expect(page).to have_css('.price', count: 1)
       end
     end
 
-    context 'when validity is given' do
-      scenario 'filters by given validity' do
+    context 'when status is given' do
+      scenario 'filters by given status' do
         visit admin_prices_path
-        select 'unexpired', from: 'search_validity'
+        select 'effective', from: 'search_status'
         submit_search_form
 
         expect(page).to have_css('.price', count: 1)

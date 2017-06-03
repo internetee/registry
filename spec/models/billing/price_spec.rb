@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe Billing::Price do
   it { is_expected.to monetize(:price) }
   it { is_expected.to be_versioned }
+  it { is_expected.to alias_attribute(:effect_time, :valid_from) }
   it { is_expected.to alias_attribute(:expire_time, :valid_to) }
 
   it 'should have one version' do
@@ -14,31 +15,65 @@ RSpec.describe Billing::Price do
   end
 
   describe '::operation_categories', db: false do
-    it 'returns available operation categories' do
+    it 'returns operation categories' do
       categories = %w[create renew]
       expect(described_class.operation_categories).to eq(categories)
     end
   end
 
   describe '::durations', db: false do
-    it 'returns available durations' do
+    it 'returns durations' do
       durations = [
-        '3 mons',
-        '6 mons',
-        '9 mons',
-        '1 year',
-        '2 years',
-        '3 years',
-        '4 years',
-        '5 years',
-        '6 years',
-        '7 years',
-        '8 years',
-        '9 years',
-        '10 years',
+          '3 mons',
+          '6 mons',
+          '9 mons',
+          '1 year',
+          '2 years',
+          '3 years',
+          '4 years',
+          '5 years',
+          '6 years',
+          '7 years',
+          '8 years',
+          '9 years',
+          '10 years',
       ]
 
       expect(described_class.durations).to eq(durations)
+    end
+  end
+
+  describe '::statuses', db: false do
+    it 'returns statuses' do
+      expect(described_class.statuses).to eq(%w[pending effective expired])
+    end
+  end
+
+  describe '::pending' do
+    before :example do
+      travel_to Time.zone.parse('05.07.2010 00:00')
+
+      create(:price, id: 1, effect_time: Time.zone.parse('05.07.2010 00:00'))
+      create(:price, id: 2, effect_time: Time.zone.parse('05.07.2010 00:01'))
+    end
+
+    it 'returns pending' do
+      expect(described_class.pending.ids).to eq([2])
+    end
+  end
+
+  describe '::effective' do
+    before :example do
+      travel_to Time.zone.parse('05.07.2010 00:00')
+
+      create(:price, id: 1, effect_time: '05.07.2010 00:01', expire_time: '05.07.2010 00:02')
+      create(:price, id: 2, effect_time: '05.07.2010 00:00', expire_time: '05.07.2010 00:01')
+      create(:price, id: 3, effect_time: '05.07.2010 00:00', expire_time: nil)
+      create(:price, id: 4, effect_time: '04.07.2010', expire_time: '04.07.2010 23:59')
+    end
+
+    it 'returns effective' do
+      expect(described_class.effective.ids).to eq([2, 3])
     end
   end
 

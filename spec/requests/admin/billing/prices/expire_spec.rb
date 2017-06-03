@@ -6,14 +6,14 @@ RSpec.describe 'admin price expire', settings: false do
   end
 
   it 'expires price' do
-    price = create(:unexpired_price)
+    price = create(:effective_price)
 
     expect { patch expire_admin_price_path(price); price.reload }
         .to change { price.expired? }.from(false).to(true)
   end
 
   it 'redirects to :index' do
-    price = create(:unexpired_price)
+    price = create(:effective_price)
 
     patch expire_admin_price_path(price)
 

@@ -6,18 +6,19 @@ module Admin
       helper_method :zones
       helper_method :operation_categories
       helper_method :durations
+      helper_method :statuses
 
       def index
         @search = OpenStruct.new(search_params)
 
-        unless @search.validity
-          @search.validity = 'unexpired'
+        unless @search.status
+          @search.status = default_status
         end
 
         prices = ::Billing::Price.all
 
-        if @search.validity.present?
-          prices = ::Billing::Price.send(@search.validity)
+        if @search.status.present?
+          prices = ::Billing::Price.send(@search.status)
         end
 
         @q = prices.search(params[:q])
@@ -81,7 +82,7 @@ module Admin
 
       def search_params
         allowed_params = %i[
-          validity
+          status
         ]
         params.fetch(:search, {}).permit(*allowed_params)
       end
@@ -101,6 +102,14 @@ module Admin
       def durations
         durations = ::Billing::Price::durations
         durations.collect { |duration| [duration.sub('mon', 'month'), duration] }
+      end
+
+      def statuses
+        ::Billing::Price.statuses
+      end
+
+      def default_status
+        'effective'
       end
     end
   end

@@ -2,10 +2,6 @@ module Concerns::Billing::Price::Expirable
   extend ActiveSupport::Concern
 
   class_methods do
-    def unexpired
-      where("#{attribute_alias(:expire_time)} >= ?", Time.zone.now)
-    end
-
     def expired
       where("#{attribute_alias(:expire_time)} < ?", Time.zone.now)
     end
