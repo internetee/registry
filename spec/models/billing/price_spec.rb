@@ -2,15 +2,6 @@ require 'rails_helper'
 
 RSpec.describe Billing::Price do
   it { is_expected.to monetize(:price) }
-  it { is_expected.to be_versioned }
-
-  it 'should have one version' do
-    with_versioning do
-      price = build(:price)
-      price.save!
-      price.versions.size.should == 1
-    end
-  end
 
   describe '::operation_categories', db: false do
     it 'returns available operation categories' do
