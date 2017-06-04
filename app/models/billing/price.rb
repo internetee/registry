@@ -23,27 +23,27 @@ module Billing
 
     def self.durations
       [
-          '3 mons',
-          '6 mons',
-          '9 mons',
-          '1 year',
-          '2 years',
-          '3 years',
-          '4 years',
-          '5 years',
-          '6 years',
-          '7 years',
-          '8 years',
-          '9 years',
-          '10 years',
+        '3 mons',
+        '6 mons',
+        '9 mons',
+        '1 year',
+        '2 years',
+        '3 years',
+        '4 years',
+        '5 years',
+        '6 years',
+        '7 years',
+        '8 years',
+        '9 years',
+        '10 years',
       ]
     end
 
     def self.statuses
-      %w[pending effective expired]
+      %w[upcoming effective expired]
     end
 
-    def self.pending
+    def self.upcoming
       where("#{attribute_alias(:effect_time)} > ?", Time.zone.now)
     end
 

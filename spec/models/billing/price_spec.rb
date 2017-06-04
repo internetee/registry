@@ -24,19 +24,19 @@ RSpec.describe Billing::Price do
   describe '::durations', db: false do
     it 'returns durations' do
       durations = [
-          '3 mons',
-          '6 mons',
-          '9 mons',
-          '1 year',
-          '2 years',
-          '3 years',
-          '4 years',
-          '5 years',
-          '6 years',
-          '7 years',
-          '8 years',
-          '9 years',
-          '10 years',
+        '3 mons',
+        '6 mons',
+        '9 mons',
+        '1 year',
+        '2 years',
+        '3 years',
+        '4 years',
+        '5 years',
+        '6 years',
+        '7 years',
+        '8 years',
+        '9 years',
+        '10 years',
       ]
 
       expect(described_class.durations).to eq(durations)
@@ -45,11 +45,11 @@ RSpec.describe Billing::Price do
 
   describe '::statuses', db: false do
     it 'returns statuses' do
-      expect(described_class.statuses).to eq(%w[pending effective expired])
+      expect(described_class.statuses).to eq(%w[upcoming effective expired])
     end
   end
 
-  describe '::pending' do
+  describe '::upcoming' do
     before :example do
       travel_to Time.zone.parse('05.07.2010 00:00')
 
@@ -57,8 +57,8 @@ RSpec.describe Billing::Price do
       create(:price, id: 2, effect_time: Time.zone.parse('05.07.2010 00:01'))
     end
 
-    it 'returns pending' do
-      expect(described_class.pending.ids).to eq([2])
+    it 'returns upcoming' do
+      expect(described_class.upcoming.ids).to eq([2])
     end
   end
 
