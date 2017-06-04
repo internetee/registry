@@ -1,7 +1,6 @@
 module Billing
   class Price < ActiveRecord::Base
     include Versions
-    has_paper_trail class_name: '::PriceVersion'
 
     self.auto_html5_validation = false
 

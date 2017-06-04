@@ -166,17 +166,6 @@
 <ellipse fill="none" stroke="#e88904" cx="349.694" cy="-125.352" rx="4.00002" ry="4.00002"/>
 <polygon fill="#e88904" stroke="#e88904" points="1479.91,-20.9262 1490.02,-25.1909 1484.91,-20.8092 1489.91,-20.6922 1489.91,-20.6922 1489.91,-20.6922 1484.91,-20.8092 1489.8,-16.1934 1479.91,-20.9262 1479.91,-20.9262"/>
 </g>
-<!-- PricelistVersion -->
-<g id="node15" class="node"><title>PricelistVersion</title>
-<ellipse fill="none" stroke="black" cx="2888.99" cy="-91" rx="67.6881" ry="18"/>
-<text text-anchor="middle" x="2888.99" y="-87.3" font-family="Times,serif" font-size="14.00">PricelistVersion</text>
-</g>
-<!-- PricelistVersion&#45;&gt;VersionAssociation -->
-<g id="edge13" class="edge"><title>PricelistVersion&#45;&gt;VersionAssociation</title>
-<path fill="none" stroke="#66b357" d="M2833.71,-76.4421C2826.77,-75.0923 2819.74,-73.8934 2812.99,-73 2589.58,-43.3999 1904.87,-26.195 1658.49,-20.8299"/>
-<ellipse fill="none" stroke="#66b357" cx="2837.87" cy="-77.2894" rx="4.00001" ry="4.00001"/>
-<polygon fill="#66b357" stroke="#66b357" points="1658.15,-20.8225 1648.25,-16.1071 1653.15,-20.7143 1648.15,-20.606 1648.15,-20.606 1648.15,-20.606 1653.15,-20.7143 1648.05,-25.105 1658.15,-20.8225 1658.15,-20.8225"/>
-</g>
 <!-- MessageVersion -->
 <g id="node16" class="node"><title>MessageVersion</title>
 <ellipse fill="none" stroke="black" cx="1093.99" cy="-253" rx="69.5877" ry="18"/>
@@ -1239,13 +1228,6 @@
 <g id="node53" class="node"><title>EppSession</title>
 <ellipse fill="none" stroke="black" cx="4191.99" cy="-523" rx="51.9908" ry="18"/>
 <text text-anchor="middle" x="4191.99" y="-519.3" font-family="Times,serif" font-size="14.00">EppSession</text>
-</g>
-<!-- Pricelist&#45;&gt;PricelistVersion -->
-<g id="edge79" class="edge"><title>Pricelist&#45;&gt;PricelistVersion</title>
-<path fill="none" stroke="#499b9a" d="M3250.87,-173.392C3244.19,-157.303 3233,-137.406 3215.99,-127 3168.48,-97.9313 3021.11,-117.025 2965.99,-109 2959.86,-108.107 2953.49,-106.998 2947.15,-105.777"/>
-<ellipse fill="none" stroke="#499b9a" cx="3252.35" cy="-177.198" rx="4.00001" ry="4.00001"/>
-<polygon fill="#499b9a" stroke="#499b9a" points="2947.07,-105.76 2938.16,-99.371 2942.17,-104.771 2937.27,-103.782 2937.27,-103.782 2937.27,-103.782 2942.17,-104.771 2936.37,-108.193 2947.07,-105.76 2947.07,-105.76"/>
-<text text-anchor="middle" x="3267.99" y="-141.3" font-family="Times,serif" font-size="14.00">versions</text>
 </g>
 <!-- InvoiceItem -->
 <g id="node55" class="node"><title>InvoiceItem</title>
