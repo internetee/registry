@@ -4,6 +4,15 @@ Nimi: <%= registrant.name %><br>
 <% else %>
     Äriregistrikood: <%= registrant.ident %><br>
 <% end %>
-Tänav: <%= registrant.street %><br>
-Linn: <%= registrant.city %><br>
-Riik: <%= registrant.country %>
+<% if local_assigns[:with_phone] -%>
+    Telefon: <%= registrant.phone %><br>
+<% end -%>
+<% if address_processing -%>
+    Tänav: <%= registrant.street %><br>
+    Linn: <%= registrant.city %><br>
+    Maakond: <%= registrant.state %><br>
+    Sihtnumber: <%= registrant.zip %><br>
+    Riik: <%= registrant.country(locale: :et) %>
+<% else %>
+    Riik: <%= registrant.ident_country(locale: :et) %>
+<% end -%>

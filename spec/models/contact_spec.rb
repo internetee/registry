@@ -523,4 +523,12 @@ RSpec.describe Contact, db: false do
       specify { expect(contact.id_code).to be_nil }
     end
   end
+
+  describe '#ident_country' do
+    let(:contact) { described_class.new(ident_country_code: 'US') }
+
+    it 'returns ident country' do
+      expect(contact.ident_country).to eq(Country.new('US'))
+    end
+  end
 end

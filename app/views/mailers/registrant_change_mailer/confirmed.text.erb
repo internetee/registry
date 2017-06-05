@@ -1,0 +1,25 @@
+<%
+    domain = DomainPresenter.new(domain: @domain, view: self)
+    new_registrant = RegistrantPresenter.new(registrant: @domain.registrant, view: self)
+%>
+Tere
+
+Domeeni <%= domain.name %> registreerija vahetuse taotlus on kinnitatud ning andmed registris uuendatud.
+
+Uue registreerija andmed:
+<%= render 'mailers/shared/registrant/registrant.et.text', registrant: new_registrant %>
+
+Lugupidamisega
+Eesti Interneti Sihtasutus
+
+--------------------------------------
+
+Hi,
+
+Process for changing registrant of the domain <%= domain.name %> has been approved and the data in the registry is updated.
+
+New registrant:
+<%= render 'mailers/shared/registrant/registrant.en.text', registrant: new_registrant %>
+
+Best Regards,
+Estonian Internet Foundation

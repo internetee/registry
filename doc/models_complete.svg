@@ -423,28 +423,6 @@
 <ellipse fill="none" stroke="#2ea726" cx="675.993" cy="-75.322" rx="4.00002" ry="4.00002"/>
 <polygon fill="#2ea726" stroke="#2ea726" points="1666.82,-18.3546 1676.8,-22.9065 1671.82,-18.3806 1676.82,-18.4066 1676.82,-18.4066 1676.82,-18.4066 1671.82,-18.3806 1676.85,-13.9066 1666.82,-18.3546 1666.82,-18.3546"/>
 </g>
-<!-- AddressVersion -->
-<g id="node20" class="node"><title>AddressVersion</title>
-<path fill="none" stroke="black" d="M3306,-73.5C3306,-73.5 3412,-73.5 3412,-73.5 3418,-73.5 3424,-79.5 3424,-85.5 3424,-85.5 3424,-242.5 3424,-242.5 3424,-248.5 3418,-254.5 3412,-254.5 3412,-254.5 3306,-254.5 3306,-254.5 3300,-254.5 3294,-248.5 3294,-242.5 3294,-242.5 3294,-85.5 3294,-85.5 3294,-79.5 3300,-73.5 3306,-73.5"/>
-<text text-anchor="middle" x="3359" y="-239.3" font-family="Times,serif" font-size="14.00">AddressVersion</text>
-<polyline fill="none" stroke="black" points="3294,-231.5 3424,-231.5 "/>
-<text text-anchor="start" x="3302" y="-216.3" font-family="Times,serif" font-size="14.00">id :integer</text>
-<text text-anchor="start" x="3302" y="-201.3" font-family="Times,serif" font-size="14.00">item_type :string</text>
-<text text-anchor="start" x="3302" y="-186.3" font-family="Times,serif" font-size="14.00">item_id :integer</text>
-<text text-anchor="start" x="3302" y="-171.3" font-family="Times,serif" font-size="14.00">event :string</text>
-<text text-anchor="start" x="3302" y="-156.3" font-family="Times,serif" font-size="14.00">whodunnit :string</text>
-<text text-anchor="start" x="3302" y="-141.3" font-family="Times,serif" font-size="14.00">object :json</text>
-<text text-anchor="start" x="3302" y="-126.3" font-family="Times,serif" font-size="14.00">object_changes :json</text>
-<text text-anchor="start" x="3302" y="-111.3" font-family="Times,serif" font-size="14.00">created_at :datetime</text>
-<text text-anchor="start" x="3302" y="-96.3" font-family="Times,serif" font-size="14.00">session :string</text>
-<text text-anchor="start" x="3302" y="-81.3" font-family="Times,serif" font-size="14.00">children :json</text>
-</g>
-<!-- AddressVersion&#45;&gt;VersionAssociation -->
-<g id="edge18" class="edge"><title>AddressVersion&#45;&gt;VersionAssociation</title>
-<path fill="none" stroke="#798c06" d="M3287.01,-74.0397C3286.34,-73.6842 3285.67,-73.3375 3285,-73 3127.13,6.24968 3064.51,-60.9544 2888,-54 2500.09,-38.7165 2037.12,-26.1729 1846.12,-21.2463"/>
-<ellipse fill="none" stroke="#798c06" cx="3290.53" cy="-76.1313" rx="4.00002" ry="4.00002"/>
-<polygon fill="#798c06" stroke="#798c06" points="1845.86,-21.2395 1835.97,-16.4836 1840.86,-21.1108 1835.86,-20.9821 1835.86,-20.9821 1835.86,-20.9821 1840.86,-21.1108 1835.74,-25.4806 1845.86,-21.2395 1845.86,-21.2395"/>
-</g>
 <!-- BankStatementVersion -->
 <g id="node21" class="node"><title>BankStatementVersion</title>
 <path fill="none" stroke="black" d="M606.5,-733.5C606.5,-733.5 725.5,-733.5 725.5,-733.5 731.5,-733.5 737.5,-739.5 737.5,-745.5 737.5,-745.5 737.5,-902.5 737.5,-902.5 737.5,-908.5 731.5,-914.5 725.5,-914.5 725.5,-914.5 606.5,-914.5 606.5,-914.5 600.5,-914.5 594.5,-908.5 594.5,-902.5 594.5,-902.5 594.5,-745.5 594.5,-745.5 594.5,-739.5 600.5,-733.5 606.5,-733.5"/>
@@ -2275,33 +2253,6 @@
 <ellipse fill="none" stroke="#3b5255" cx="1017.25" cy="-1819.83" rx="4.00002" ry="4.00002"/>
 <polygon fill="#3b5255" stroke="#3b5255" points="933.283,-1372.03 937.019,-1361.72 932.908,-1367.04 932.532,-1362.06 932.532,-1362.06 932.532,-1362.06 932.908,-1367.04 928.045,-1362.39 933.283,-1372.03 933.283,-1372.03"/>
 <text text-anchor="middle" x="1000" y="-1707.8" font-family="Times,serif" font-size="14.00">versions</text>
-</g>
-<!-- Address -->
-<g id="node68" class="node"><title>Address</title>
-<path fill="none" stroke="black" d="M3937,-473.5C3937,-473.5 4073,-473.5 4073,-473.5 4079,-473.5 4085,-479.5 4085,-485.5 4085,-485.5 4085,-702.5 4085,-702.5 4085,-708.5 4079,-714.5 4073,-714.5 4073,-714.5 3937,-714.5 3937,-714.5 3931,-714.5 3925,-708.5 3925,-702.5 3925,-702.5 3925,-485.5 3925,-485.5 3925,-479.5 3931,-473.5 3937,-473.5"/>
-<text text-anchor="middle" x="4005" y="-699.3" font-family="Times,serif" font-size="14.00">Address</text>
-<polyline fill="none" stroke="black" points="3925,-691.5 4085,-691.5 "/>
-<text text-anchor="start" x="3933" y="-676.3" font-family="Times,serif" font-size="14.00">id :integer</text>
-<text text-anchor="start" x="3933" y="-661.3" font-family="Times,serif" font-size="14.00">contact_id :integer</text>
-<text text-anchor="start" x="3933" y="-646.3" font-family="Times,serif" font-size="14.00">city :string</text>
-<text text-anchor="start" x="3933" y="-631.3" font-family="Times,serif" font-size="14.00">street :string</text>
-<text text-anchor="start" x="3933" y="-616.3" font-family="Times,serif" font-size="14.00">zip :string</text>
-<text text-anchor="start" x="3933" y="-601.3" font-family="Times,serif" font-size="14.00">created_at :datetime</text>
-<text text-anchor="start" x="3933" y="-586.3" font-family="Times,serif" font-size="14.00">updated_at :datetime</text>
-<text text-anchor="start" x="3933" y="-571.3" font-family="Times,serif" font-size="14.00">street2 :string</text>
-<text text-anchor="start" x="3933" y="-556.3" font-family="Times,serif" font-size="14.00">street3 :string</text>
-<text text-anchor="start" x="3933" y="-541.3" font-family="Times,serif" font-size="14.00">creator_str :string</text>
-<text text-anchor="start" x="3933" y="-526.3" font-family="Times,serif" font-size="14.00">updator_str :string</text>
-<text text-anchor="start" x="3933" y="-511.3" font-family="Times,serif" font-size="14.00">country_code :string</text>
-<text text-anchor="start" x="3933" y="-496.3" font-family="Times,serif" font-size="14.00">state :string</text>
-<text text-anchor="start" x="3933" y="-481.3" font-family="Times,serif" font-size="14.00">legacy_contact_id :integer</text>
-</g>
-<!-- Address&#45;&gt;AddressVersion -->
-<g id="edge174" class="edge"><title>Address&#45;&gt;AddressVersion</title>
-<path fill="none" stroke="#a84372" d="M3983.67,-465.242C3965.08,-396.369 3930.6,-316.747 3867,-273 3827.24,-245.647 3476.2,-276.515 3433,-255 3432.9,-254.952 3432.81,-254.904 3432.71,-254.856"/>
-<ellipse fill="none" stroke="#a84372" cx="3984.73" cy="-469.286" rx="4.00001" ry="4.00001"/>
-<polygon fill="#a84372" stroke="#a84372" points="3432.68,-254.84 3426.26,-245.953 3428.35,-252.347 3424.02,-249.854 3424.02,-249.854 3424.02,-249.854 3428.35,-252.347 3421.77,-253.754 3432.68,-254.84 3432.68,-254.84"/>
-<text text-anchor="middle" x="4002" y="-360.3" font-family="Times,serif" font-size="14.00">versions</text>
 </g>
 <!-- LegalDocument&#45;&gt;LegalDocumentVersion -->
 <g id="edge177" class="edge"><title>LegalDocument&#45;&gt;LegalDocumentVersion</title>

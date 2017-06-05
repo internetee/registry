@@ -521,9 +521,7 @@ class Epp::Domain < Domain
     preclean_pendings
     user  = ApiUser.find(pending_json['current_user_id'])
     frame = Nokogiri::XML(pending_json['frame'])
-    old_registrant_id = registrant_id
 
-    self.deliver_emails = true # turn on email delivery
     self.statuses.delete(DomainStatus::PENDING_UPDATE)
     self.upid = user.registrar.id if user.registrar
     self.up_date = Time.zone.now
@@ -531,11 +529,9 @@ class Epp::Domain < Domain
     return unless update(frame, user, false)
     clean_pendings!
 
-    save! # for notification if everything fails
+    save!
 
     WhoisRecord.find_by(domain_id: id).save # need to reload model
-    DomainMailer.registrant_updated_notification_for_old_registrant(id, old_registrant_id, registrant_id, true).deliver
-    DomainMailer.registrant_updated_notification_for_new_registrant(id, old_registrant_id, registrant_id, true).deliver
 
     true
   end
