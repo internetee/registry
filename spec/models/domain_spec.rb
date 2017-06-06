@@ -613,6 +613,60 @@ RSpec.describe Domain do
     end
   end
 
+  describe 'period validation', db: false do
+    let(:domain) { described_class.new }
+
+    it 'rejects absent' do
+      domain.period = nil
+      domain.validate
+      expect(domain.errors).to have_key(:period)
+    end
+
+    it 'rejects fractional' do
+      domain.period = 1.1
+      domain.validate
+      expect(domain.errors).to have_key(:period)
+    end
+
+    it 'accepts integer' do
+      domain.period = 1
+      domain.validate
+      expect(domain.errors).to_not have_key(:period)
+    end
+  end
+
+  describe 'admin contact count validation' do
+    let(:domain) { described_class.new }
+
+    before :example do
+      Setting.admin_contacts_min_count = 1
+      Setting.admin_contacts_max_count = 2
+    end
+
+    it 'rejects less than min' do
+      domain.validate
+      expect(domain.errors).to have_key(:admin_domain_contacts)
+    end
+
+    it 'rejects more than max' do
+      (Setting.admin_contacts_max_count + 1).times { domain.admin_domain_contacts << build(:admin_domain_contact) }
+      domain.validate
+      expect(domain.errors).to have_key(:admin_domain_contacts)
+    end
+
+    it 'accepts min' do
+      Setting.admin_contacts_min_count.times { domain.admin_domain_contacts << build(:admin_domain_contact) }
+      domain.validate
+      expect(domain.errors).to_not have_key(:admin_domain_contacts)
+    end
+
+    it 'accepts max' do
+      Setting.admin_contacts_max_count.times { domain.admin_domain_contacts << build(:admin_domain_contact) }
+      domain.validate
+      expect(domain.errors).to_not have_key(:admin_domain_contacts)
+    end
+  end
+
   describe 'nameserver validation', db: true do
     let(:domain) { described_class.new }
 
