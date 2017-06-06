@@ -4647,6 +4647,22 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 
 --
+-- Name: domains_registrant_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY domains
+    ADD CONSTRAINT domains_registrant_id_fk FOREIGN KEY (registrant_id) REFERENCES contacts(id);
+
+
+--
+-- Name: domains_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY domains
+    ADD CONSTRAINT domains_registrar_id_fk FOREIGN KEY (registrar_id) REFERENCES registrars(id);
+
+
+--
 -- Name: fk_rails_78c376257f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5135,4 +5151,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170423225333');
 INSERT INTO schema_migrations (version) VALUES ('20170424115801');
 
 INSERT INTO schema_migrations (version) VALUES ('20170509215614');
+
+INSERT INTO schema_migrations (version) VALUES ('20170606133501');
 
