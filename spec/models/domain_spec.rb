@@ -33,16 +33,6 @@ RSpec.describe Domain do
       @domain = Domain.new
     end
 
-    it 'should not be valid' do
-      @domain.valid?
-      @domain.errors.full_messages.should match_array([
-        "Admin domain contacts Admin contacts count must be between 1-10",
-        "Period Period is not a number",
-        "Registrant Registrant is missing",
-        "Registrar Registrar is missing"
-      ])
-    end
-
     it 'should not have any versions' do
       @domain.versions.should == []
     end
@@ -599,9 +589,29 @@ RSpec.describe Domain do
   end
 end
 
-RSpec.describe Domain, db: false do
+RSpec.describe Domain do
   it { is_expected.to alias_attribute(:on_hold_time, :outzone_at) }
   it { is_expected.to alias_attribute(:outzone_time, :outzone_at) }
+
+  describe 'registrar validation', db: false do
+    let(:domain) { described_class.new }
+
+    it 'rejects absent' do
+      domain.registrar = nil
+      domain.validate
+      expect(domain.errors).to have_key(:registrar)
+    end
+  end
+
+  describe 'registrant validation', db: false do
+    let(:domain) { described_class.new }
+
+    it 'rejects absent' do
+      domain.registrant = nil
+      domain.validate
+      expect(domain.errors).to have_key(:registrant)
+    end
+  end
 
   describe 'nameserver validation', db: true do
     let(:domain) { described_class.new }

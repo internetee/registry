@@ -1033,12 +1033,12 @@ ALTER SEQUENCE domain_transfers_id_seq OWNED BY domain_transfers.id;
 CREATE TABLE domains (
     id integer NOT NULL,
     name character varying,
-    registrar_id integer,
+    registrar_id integer NOT NULL,
     registered_at timestamp without time zone,
     status character varying,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    registrant_id integer,
+    registrant_id integer NOT NULL,
     auth_info character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -5153,4 +5153,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170424115801');
 INSERT INTO schema_migrations (version) VALUES ('20170509215614');
 
 INSERT INTO schema_migrations (version) VALUES ('20170606133501');
+
+INSERT INTO schema_migrations (version) VALUES ('20170606150352');
 
