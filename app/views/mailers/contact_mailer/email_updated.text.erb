@@ -10,10 +10,10 @@ uus aadress: <%= @contact.email %>
 E-posti aadressile saadetakse domeeni toimingutega seotud infot, sealhulgas kinnitustaotlused omanikuvahetuse ja domeeni kustutamise korral. Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja <%= @contact.registrar.name %> poole.
 
 <% if @contact.related_domain_descriptions.present? %>
-Muudatusega seotud domeenid:
-  <% @contact.related_domain_descriptions.each do |domain, desc| %>
-    <%= domain %> (<%= desc.map { |d| t(d, locale: :et) }.join(', ') %>)
-  <% end %>
+    Muudatusega seotud domeenid:
+    <% @contact.related_domain_descriptions.each do |domain, desc| %>
+        <%= domain %> (<%= desc.map { |d| t(d, locale: :et) }.join(', ') %>)
+    <% end %>
 <% end %>
 
 Kontaktandmed:
@@ -33,10 +33,10 @@ new address: <%= @contact.email %>
 E-mail addresses are used to send important information regarding your registered domains including applications for approval of registrant change and domain deletion. Please make sure that the update and contact information are correct. Incase of problems please turn to your registrar. Your registrar is <%= @contact.registrar.name %>
 
 <% if @contact.related_domain_descriptions.present? %>
-Domains affected by this update:
-  <% @contact.related_domain_descriptions.each do |domain, desc| %>
-    <%= domain %> (<%= desc.map { |d| t(d, locale: :en) }.join(', ') %>)
-  <% end %>
+    Domains affected by this update:
+    <% @contact.related_domain_descriptions.each do |domain, desc| %>
+        <%= domain %> (<%= desc.map { |d| t(d, locale: :en) }.join(', ') %>)
+    <% end %>
 <% end %>
 
 Contact information:
