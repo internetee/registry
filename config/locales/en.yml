@@ -550,7 +550,6 @@ en:
   info: 'Info'
   register: 'Register'
   send_epp_request: 'Send EPP Request'
-  registrant: 'Registrant'
   created_at: 'Created at'
   valid_to: 'Valid to'
   updated_at: 'Updated at'
