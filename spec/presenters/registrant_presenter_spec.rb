@@ -40,6 +40,21 @@ RSpec.describe RegistrantPresenter do
     end
   end
 
+  describe '#domain_names_with_roles' do
+    before :example do
+      roles = %i[registrant admin_domain_contact tech_domain_contact]
+      allow(registrant).to receive(:domain_names_with_roles)
+                               .and_return({ 'test.com' => roles,
+                                             'test.org' => %i[registrant] })
+    end
+
+    it 'returns domain names with unique roles in current locale by default' do
+      text = "test.com (Registrant, Administrative contact, Technical contact)" \
+      "\ntest.org (Registrant)"
+      expect(presenter.domain_names_with_roles).to eq(text)
+    end
+  end
+
   registrant_delegatable_attributes = %i(
     name
     ident
@@ -52,6 +67,7 @@ RSpec.describe RegistrantPresenter do
     zip
     id_code
     reg_no
+    used?
   )
 
   registrant_delegatable_attributes.each do |attr_name|

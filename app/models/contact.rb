@@ -429,6 +429,8 @@ class Contact < ActiveRecord::Base
   end
 
   def related_domain_descriptions
+    ActiveSupport::Deprecation.warn('Use #domain_names_with_roles')
+
     @desc = {}
 
     registrant_domains.each do |dom|
@@ -597,5 +599,25 @@ class Contact < ActiveRecord::Base
 
   def ident_country
     Country.new(ident_country_code)
+  end
+
+  def used?
+    registrant_domains.any? || domain_contacts.any?
+  end
+
+  def domain_names_with_roles
+    domain_names = {}
+
+    registrant_domains.pluck(:name).each do |domain_name|
+      domain_names[domain_name] ||= Set.new
+      domain_names[domain_name] << Registrant.name.underscore.to_sym
+    end
+
+    domain_contacts.each do |domain_contact|
+      domain_names[domain_contact.domain.name] ||= Set.new
+      domain_names[domain_contact.domain.name] << domain_contact.type.underscore.to_sym
+    end
+
+    domain_names
   end
 end
