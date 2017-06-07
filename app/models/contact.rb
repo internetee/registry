@@ -3,11 +3,11 @@ class Contact < ActiveRecord::Base
   include EppErrors
   include UserEvents
 
-  belongs_to :registrar
+  belongs_to :registrar, required: true
   has_many :domain_contacts
   has_many :domains, through: :domain_contacts
   has_many :legal_documents, as: :documentable
-  has_many :registrant_domains, class_name: 'Domain', foreign_key: 'registrant_id' # when contant is registrant
+  has_many :registrant_domains, class_name: 'Domain', foreign_key: 'registrant_id'
 
   # TODO: remove later
   has_many :depricated_statuses, class_name: 'DepricatedContactStatus', dependent: :destroy
@@ -19,7 +19,7 @@ class Contact < ActiveRecord::Base
 
   accepts_nested_attributes_for :legal_documents
 
-  validates :name, :phone, :email, :ident, :ident_type, :registrar, presence: true
+  validates :name, :phone, :email, :ident, :ident_type, presence: true
   validates :street, :city, :zip, :country_code, presence: true, if: 'self.class.address_processing?'
 
   validates :phone, format: /\+[0-9]{1,3}\.[0-9]{1,14}?/, phone: true

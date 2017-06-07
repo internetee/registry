@@ -354,7 +354,7 @@ describe Contact, '.destroy_orphans' do
   end
 end
 
-RSpec.describe Contact, db: false do
+RSpec.describe Contact do
   it { is_expected.to alias_attribute(:kind, :ident_type) }
 
   describe '::names' do
@@ -397,6 +397,16 @@ RSpec.describe Contact, db: false do
         state
       )
       expect(described_class.address_attribute_names).to eq(attributes)
+    end
+  end
+
+  describe 'registrar validation', db: false do
+    let(:contact) { described_class.new }
+
+    it 'rejects absent' do
+      contact.registrar = nil
+      contact.validate
+      expect(contact.errors).to have_key(:registrar)
     end
   end
 
