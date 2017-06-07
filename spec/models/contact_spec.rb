@@ -354,7 +354,7 @@ describe Contact, '.destroy_orphans' do
   end
 end
 
-RSpec.describe Contact, db: false do
+RSpec.describe Contact do
   it { is_expected.to alias_attribute(:kind, :ident_type) }
 
   describe '::names' do
@@ -397,6 +397,16 @@ RSpec.describe Contact, db: false do
         state
       )
       expect(described_class.address_attribute_names).to eq(attributes)
+    end
+  end
+
+  describe 'registrar validation', db: false do
+    let(:contact) { described_class.new }
+
+    it 'rejects absent' do
+      contact.registrar = nil
+      contact.validate
+      expect(contact.errors).to have_key(:registrar)
     end
   end
 
@@ -529,6 +539,60 @@ RSpec.describe Contact, db: false do
 
     it 'returns ident country' do
       expect(contact.ident_country).to eq(Country.new('US'))
+    end
+  end
+
+  describe '#used?' do
+    context 'when used as registrant' do
+      let(:registrant) { create(:registrant) }
+
+      before :example do
+        create(:domain, registrant: registrant)
+        registrant.reload
+      end
+
+      specify { expect(registrant).to be_used }
+    end
+
+    context 'when used as contact' do
+      let(:contact) { create(:contact) }
+
+      before :example do
+        domain = create(:domain)
+        domain.admin_domain_contacts << create(:admin_domain_contact, contact: contact)
+        contact.reload
+      end
+
+      specify { expect(contact).to be_used }
+    end
+
+    context 'when not used' do
+      let(:contact) { create(:contact) }
+      specify { expect(contact).to_not be_used }
+    end
+  end
+
+  describe '#domain_names_with_roles' do
+    let(:contact) { create(:registrant) }
+    subject(:domain_names) { contact.domain_names_with_roles }
+
+    it 'returns associated domains with roles' do
+      domain = create(:domain, registrant: contact, name: 'test.com')
+      domain.admin_domain_contacts << create(:admin_domain_contact, contact: contact)
+      domain.tech_domain_contacts << create(:tech_domain_contact, contact: contact)
+
+      contact.reload
+
+      expect(domain_names).to eq({ 'test.com' => %i[registrant admin_domain_contact tech_domain_contact].to_set })
+    end
+
+    it 'returns unique roles' do
+      domain = create(:domain, name: 'test.com')
+      2.times { domain.admin_domain_contacts << create(:admin_domain_contact, contact: contact) }
+
+      contact.reload
+
+      expect(domain_names).to eq({ 'test.com' => %i[admin_domain_contact].to_set })
     end
   end
 end

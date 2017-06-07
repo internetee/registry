@@ -693,7 +693,7 @@ CREATE TABLE contacts (
     auth_info character varying,
     name character varying,
     org_name character varying,
-    registrar_id integer,
+    registrar_id integer NOT NULL,
     creator_str character varying,
     updator_str character varying,
     ident_country_code character varying,
@@ -1033,12 +1033,12 @@ ALTER SEQUENCE domain_transfers_id_seq OWNED BY domain_transfers.id;
 CREATE TABLE domains (
     id integer NOT NULL,
     name character varying,
-    registrar_id integer,
+    registrar_id integer NOT NULL,
     registered_at timestamp without time zone,
     status character varying,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    registrant_id integer,
+    registrant_id integer NOT NULL,
     auth_info character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -4647,6 +4647,30 @@ CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (v
 
 
 --
+-- Name: contacts_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY contacts
+    ADD CONSTRAINT contacts_registrar_id_fk FOREIGN KEY (registrar_id) REFERENCES registrars(id);
+
+
+--
+-- Name: domains_registrant_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY domains
+    ADD CONSTRAINT domains_registrant_id_fk FOREIGN KEY (registrant_id) REFERENCES contacts(id);
+
+
+--
+-- Name: domains_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY domains
+    ADD CONSTRAINT domains_registrar_id_fk FOREIGN KEY (registrar_id) REFERENCES registrars(id);
+
+
+--
 -- Name: fk_rails_78c376257f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5135,4 +5159,10 @@ INSERT INTO schema_migrations (version) VALUES ('20170423225333');
 INSERT INTO schema_migrations (version) VALUES ('20170424115801');
 
 INSERT INTO schema_migrations (version) VALUES ('20170509215614');
+
+INSERT INTO schema_migrations (version) VALUES ('20170606133501');
+
+INSERT INTO schema_migrations (version) VALUES ('20170606150352');
+
+INSERT INTO schema_migrations (version) VALUES ('20170606202859');
 

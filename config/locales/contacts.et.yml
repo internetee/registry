@@ -1,0 +1,7 @@
+et:
+  activerecord:
+    models:
+      # Used in ContactMailer
+      registrant: Registreerija
+      admin_domain_contact: Halduskontakt
+      tech_domain_contact: Tehniline kontakt

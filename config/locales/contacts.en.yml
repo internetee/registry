@@ -1,5 +1,10 @@
 en:
   activerecord:
+    models:
+      # Used in ContactMailer
+      registrant: Registrant
+      admin_domain_contact: Administrative contact
+      tech_domain_contact: Technical contact
     errors:
       models:
         contact:
