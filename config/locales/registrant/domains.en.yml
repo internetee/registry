@@ -1,6 +1,9 @@
 en:
   registrant:
     domains:
+      index:
+        registrant: Registrant
+
       download_list:
         registrant: Registrant
       partials:

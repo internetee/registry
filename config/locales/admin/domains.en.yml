@@ -3,6 +3,7 @@ en:
     domains:
       index:
         reset_btn: Reset
+        registrant: Registrant
 
       edit:
         add_new_status_btn: Add new status
