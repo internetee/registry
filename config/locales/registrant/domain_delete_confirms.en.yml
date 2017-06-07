@@ -1,0 +1,5 @@
+en:
+  registrant:
+    domain_delete_confirms:
+      show:
+        registrant: Registrant

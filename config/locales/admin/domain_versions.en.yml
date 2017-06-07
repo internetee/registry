@@ -3,9 +3,12 @@ en:
     domain_versions:
       archive:
         reset_btn: Reset
+        registrant_placeholder: Registrant
+        registrant: Registrant
 
       show:
         created: Created
         updated: Updated
+        registrant: Registrant
         admin_contacts: Admin. contacts
         tech_contacts: Tech. contacts

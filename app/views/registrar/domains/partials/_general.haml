@@ -11,7 +11,7 @@
         %dd= @data.css('clID').text
 
       - registrant = Contact.find_by_code(@data.css('registrant').text)
-      %dt= t(:registrant)
+      %dt= t('.registrant')
       %dd= "#{registrant.name} (#{@data.css('registrant').text})"
 
       %dt= t('.registered')

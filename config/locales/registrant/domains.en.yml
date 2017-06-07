@@ -1,7 +1,12 @@
 en:
   registrant:
     domains:
+      download_list:
+        registrant: Registrant
       partials:
+        owner:
+          title: Registrant
+
         admin_contacts:
           title: Admin. contacts
 

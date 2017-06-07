@@ -15,8 +15,12 @@ en:
           flags: Flags
           alg: Algorithm
 
+        general:
+          registrant: registrant
+
       partials:
         general:
+          registrant: Registrant
           registered: Registered
           created: Created
           updated: Updated

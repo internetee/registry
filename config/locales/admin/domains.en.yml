@@ -22,6 +22,7 @@ en:
 
       versions:
         time: Time
+        registrant: Registrant
         admin_contact: Admin. contact
         tech_contact: Tech. contact
 
@@ -36,6 +37,9 @@ en:
 
         tech_contacts:
           title: Tech. contacts
+
+        owner:
+          title: Registrant
 
       force_delete_toggle_btn:
         schedule: Schedule force delete
