@@ -30,11 +30,11 @@
             - domain_name = domain.name
           %dd= link_to(domain_name, admin_domain_path(@version.item_id))
 
-          %dt= t(:created)
+          %dt= t('.created')
           %dd
             = l(domain.created_at, format: :short)
 
-          %dt= t(:updated)
+          %dt= t('.updated')
           %dd
             = l(domain.updated_at, format: :short)
 
@@ -57,7 +57,7 @@
                 = r[:code]
                 %br
 
-          %dt= t(:admin_contacts)
+          %dt= t('.admin_contacts')
           %dd
             - admin_contacts.each do |r|
               - link = r.version_loader ? admin_contact_version_path(r.version_loader.try(:id)) : admin_contact_path(r.id)
@@ -68,7 +68,7 @@
                 = r[:code]
                 %br
 
-          %dt= t(:tech_contacts)
+          %dt= t('.tech_contacts')
           %dd
             - tech_contacts.each do |r|
               - link = r.version_loader ? admin_contact_version_path(r.version_loader.try(:id)) : admin_contact_path(r.id)

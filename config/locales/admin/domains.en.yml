@@ -22,13 +22,20 @@ en:
 
       versions:
         time: Time
-        admin_contact: Admin contact
+        admin_contact: Admin. contact
+        tech_contact: Tech. contact
 
       partials:
         general:
           outzone_time: Outzone time
           delete_time: Delete time
           force_delete_time: Force delete time
+
+        admin_contacts:
+          title: Admin. contacts
+
+        tech_contacts:
+          title: Tech. contacts
 
       force_delete_toggle_btn:
         schedule: Schedule force delete

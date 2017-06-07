@@ -3,3 +3,9 @@ en:
     domain_versions:
       archive:
         reset_btn: Reset
+
+      show:
+        created: Created
+        updated: Updated
+        admin_contacts: Admin. contacts
+        tech_contacts: Tech. contacts

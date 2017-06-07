@@ -1,0 +1,9 @@
+en:
+  registrant:
+    domains:
+      partials:
+        admin_contacts:
+          title: Admin. contacts
+
+        tech_contacts:
+          title: Tech. contacts
