@@ -32,7 +32,7 @@ class RegistrantPresenter
                                       .join(', ')})"
     end
 
-    lines.join(line_break)
+    lines.join(line_break).html_safe
   end
 
   private
