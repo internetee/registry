@@ -287,7 +287,7 @@ SET default_with_oids = false;
 
 CREATE TABLE account_activities (
     id integer NOT NULL,
-    account_id integer,
+    account_id integer NOT NULL,
     invoice_id integer,
     sum numeric(10,2),
     currency character varying,
@@ -298,7 +298,7 @@ CREATE TABLE account_activities (
     creator_str character varying,
     updator_str character varying,
     activity_type character varying,
-    log_pricelist_id integer
+    price_id integer
 );
 
 
@@ -327,7 +327,7 @@ ALTER SEQUENCE account_activities_id_seq OWNED BY account_activities.id;
 
 CREATE TABLE accounts (
     id integer NOT NULL,
-    registrar_id integer,
+    registrar_id integer NOT NULL,
     account_type character varying,
     balance numeric(10,2) DEFAULT 0.0 NOT NULL,
     created_at timestamp without time zone,
@@ -2069,43 +2069,6 @@ ALTER SEQUENCE log_nameservers_id_seq OWNED BY log_nameservers.id;
 
 
 --
--- Name: log_pricelists; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE log_pricelists (
-    id integer NOT NULL,
-    item_type character varying NOT NULL,
-    item_id integer NOT NULL,
-    event character varying NOT NULL,
-    whodunnit character varying,
-    object json,
-    object_changes json,
-    created_at timestamp without time zone,
-    session character varying,
-    uuid character varying
-);
-
-
---
--- Name: log_pricelists_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE log_pricelists_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: log_pricelists_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE log_pricelists_id_seq OWNED BY log_pricelists.id;
-
-
---
 -- Name: log_registrars; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2453,7 +2416,6 @@ ALTER SEQUENCE people_id_seq OWNED BY people.id;
 
 CREATE TABLE prices (
     id integer NOT NULL,
-    "desc" character varying,
     price_cents integer NOT NULL,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
@@ -3211,13 +3173,6 @@ ALTER TABLE ONLY log_nameservers ALTER COLUMN id SET DEFAULT nextval('log_namese
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY log_pricelists ALTER COLUMN id SET DEFAULT nextval('log_pricelists_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY log_registrars ALTER COLUMN id SET DEFAULT nextval('log_registrars_id_seq'::regclass);
 
 
@@ -3712,14 +3667,6 @@ ALTER TABLE ONLY log_messages
 
 ALTER TABLE ONLY log_nameservers
     ADD CONSTRAINT log_nameservers_pkey PRIMARY KEY (id);
-
-
---
--- Name: log_pricelists_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY log_pricelists
-    ADD CONSTRAINT log_pricelists_pkey PRIMARY KEY (id);
 
 
 --
@@ -4679,6 +4626,46 @@ ALTER TABLE ONLY prices
 
 
 --
+-- Name: fk_rails_86cd2b09f5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_activities
+    ADD CONSTRAINT fk_rails_86cd2b09f5 FOREIGN KEY (account_id) REFERENCES accounts(id);
+
+
+--
+-- Name: fk_rails_b80dbb973d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_activities
+    ADD CONSTRAINT fk_rails_b80dbb973d FOREIGN KEY (bank_transaction_id) REFERENCES bank_transactions(id);
+
+
+--
+-- Name: fk_rails_c9f635c0b3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY accounts
+    ADD CONSTRAINT fk_rails_c9f635c0b3 FOREIGN KEY (registrar_id) REFERENCES registrars(id);
+
+
+--
+-- Name: fk_rails_ce38d749f6; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_activities
+    ADD CONSTRAINT fk_rails_ce38d749f6 FOREIGN KEY (invoice_id) REFERENCES invoices(id);
+
+
+--
+-- Name: fk_rails_d2cc3c2fa9; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY account_activities
+    ADD CONSTRAINT fk_rails_d2cc3c2fa9 FOREIGN KEY (price_id) REFERENCES prices(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -5158,7 +5145,21 @@ INSERT INTO schema_migrations (version) VALUES ('20170423225333');
 
 INSERT INTO schema_migrations (version) VALUES ('20170424115801');
 
+INSERT INTO schema_migrations (version) VALUES ('20170506144743');
+
+INSERT INTO schema_migrations (version) VALUES ('20170506155009');
+
+INSERT INTO schema_migrations (version) VALUES ('20170506162952');
+
+INSERT INTO schema_migrations (version) VALUES ('20170506205356');
+
+INSERT INTO schema_migrations (version) VALUES ('20170506205946');
+
+INSERT INTO schema_migrations (version) VALUES ('20170506212014');
+
 INSERT INTO schema_migrations (version) VALUES ('20170509215614');
+
+INSERT INTO schema_migrations (version) VALUES ('20170604182521');
 
 INSERT INTO schema_migrations (version) VALUES ('20170606133501');
 

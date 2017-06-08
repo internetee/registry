@@ -1,12 +1,11 @@
 module Billing
   class Price < ActiveRecord::Base
-    include Versions
     include Concerns::Billing::Price::Expirable
-    has_paper_trail class_name: '::PriceVersion'
 
     self.auto_html5_validation = false
 
     belongs_to :zone, class_name: 'DNS::Zone', required: true
+    has_many :account_activities
 
     validates :price, :valid_from, :operation_category, :duration, presence: true
     validates :operation_category, inclusion: { in: Proc.new { |price| price.class.operation_categories } }
@@ -69,23 +68,15 @@ module Billing
       "#{operation_category} #{zone_name}"
     end
 
-    def years_amount
-      duration.to_i
-    end
-
-    def price_decimal
-      price_cents / BigDecimal.new('100')
-    end
-
     def zone_name
       zone.origin
     end
 
-    private
-
     def to_partial_path
       'price'
     end
+
+    private
 
     def init_values
       return unless new_record?
