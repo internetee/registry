@@ -17,7 +17,7 @@ en:
           alg: Algorithm
 
         general:
-          registrant: registrant
+          registrant: Registrant
 
       partials:
         general:
