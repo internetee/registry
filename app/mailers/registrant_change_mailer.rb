@@ -1,4 +1,6 @@
 class RegistrantChangeMailer < ApplicationMailer
+  helper_method :address_processing
+
   def confirm(domain:, registrar:, current_registrant:, new_registrant:)
     @domain = DomainPresenter.new(domain: domain, view: view_context)
     @registrar = RegistrarPresenter.new(registrar: registrar, view: view_context)
@@ -17,6 +19,14 @@ class RegistrantChangeMailer < ApplicationMailer
 
     subject = default_i18n_subject(domain_name: domain.name)
     mail(to: new_registrant.email, subject: subject)
+  end
+
+  def confirmed(domain:, old_registrant:)
+    @domain = domain
+    recipients = [domain.registrant_email, old_registrant.email]
+    subject = default_i18n_subject(domain_name: domain.name)
+
+    mail(to: recipients, subject: subject)
   end
 
   def rejected(domain:, registrar:, registrant:)
@@ -41,5 +51,9 @@ class RegistrantChangeMailer < ApplicationMailer
 
   def confirm_url(domain)
     registrant_domain_update_confirm_url(domain, token: domain.registrant_verification_token)
+  end
+
+  def address_processing
+    Contact.address_processing?
   end
 end

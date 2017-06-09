@@ -11,11 +11,11 @@
         .col-md-3
           .form-group
             = label_tag :registrant
-            = f.search_field :registrant, value: params[:q][:registrant], class: 'form-control', placeholder: t(:registrant)
+            = f.search_field :registrant, value: params[:q][:registrant], class: 'form-control', placeholder: t('.registrant_placeholder')
         .col-md-3
           .form-group
             = label_tag t(:registrar_name)
-            = f.search_field :registrar, value: params[:q][:registrar], class: 'form-control', placeholder: t(:registrant)
+            = f.search_field :registrar, value: params[:q][:registrar], class: 'form-control', placeholder: t('.registrant')
         .col-md-3
           .form-group
             = label_tag :action
@@ -45,7 +45,7 @@
             %th{class: 'col-xs-2'}
               = t(:name)
             %th{class: 'col-xs-2'}
-              = t(:registrant)
+              = t('.registrant')
             %th{class: 'col-xs-2'}
               = t(:registrar_name)
             %th{class: 'col-xs-2'}
