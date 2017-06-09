@@ -2,6 +2,7 @@ en:
   registrar:
     domains:
       index:
+        registrant: Registrant
         download_btn: Download
         csv:
           domain_name: Domain
@@ -15,8 +16,12 @@ en:
           flags: Flags
           alg: Algorithm
 
+        general:
+          registrant: Registrant
+
       partials:
         general:
+          registrant: Registrant
           registered: Registered
           created: Created
           updated: Updated

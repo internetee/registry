@@ -26,7 +26,7 @@
       .col-md-12.text-center.confirmation
         .column-keys
           %p= t(:domain_name) + ':'
-          %p= t(:registrant) + ':'
+          %p= t('.registrant') + ':'
         .column-values
           %p= @domain.name
           %p= "#{@domain.registrant_name} (#{@domain.registrant.ident})"
