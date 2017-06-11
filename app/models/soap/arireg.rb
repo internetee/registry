@@ -61,18 +61,8 @@ module Soap
     
     def initialize
       if self.class.username.nil?
-        if Rails.application.secrets.key?(:arireg)
-          arireg = Rails.application.secrets[:arireg].with_indifferent_access
-          self.class.username = arireg[:username]
-          self.class.password = arireg[:password]
-          if self.class.wsdl.nil?         # no override of config/environments/* ?
-            self.class.wsdl = arireg[:wsdl]
-            self.class.host = arireg[:host]
-          end
-        else
-          self.class.username = ENV['arireg_username']
-          self.class.password = ENV['arireg_password']
-        end
+        self.class.username = ENV['arireg_username']
+        self.class.password = ENV['arireg_password']
       end
       if self.class.wsdl.nil?
         self.class.wsdl = ENV['arireg_wsdl']

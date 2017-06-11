@@ -1,55 +1,49 @@
-Tere <%= @contact.name %>
+<%
+    contact = RegistrantPresenter.new(registrant: @contact, view: self)
+    registrar = RegistrarPresenter.new(registrar: @contact.registrar, view: self)
+%>
+Tere <%= contact.name %>
 
-Kontakti <%= @contact.name %> e-posti aadress on muudetud
+Kontakti <%= contact.name %> e-posti aadress on muudetud
 endine aadress: <%= @old_email %>
-uus aadress: <%= @contact.email %>
+uus aadress: <%= contact.email %>
 
-E-posti aadressile saadetakse domeeni toimingutega seotud infot, sealhulgas kinnitustaotlused omanikuvahetuse ja domeeni kustutamise korral. Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja <%= @contact.registrar.name %> poole.
+E-posti aadressile saadetakse domeeni toimingutega seotud infot, sealhulgas kinnitustaotlused omanikuvahetuse ja domeeni kustutamise korral.
 
-<% if @contact.related_domain_descriptions.present? %>
-Muudatusega seotud domeenid:
-  <% @contact.related_domain_descriptions.each do |domain, desc| %>
-    <%= domain %> (<%= desc.map { |d| t(d, locale: :et) }.join(', ') %>)
-  <% end %>
+<% if contact.used? %>
+    Muudatusega seotud domeenid:
+    <%= contact.domain_names_with_roles(locale: :et) %>
 <% end %>
 
 Kontaktandmed:
-Nimi: <%= @contact.name %>
-Isikukood: <%= @contact.ident %>
-E-post: <%= @contact.email %>
-Tel: <%= @contact.phone %>
-Tänav: <%= @contact.street %>
-Linn: <%= @contact.city %>
-Riik: <%= @contact.country %>
+<%= render 'mailers/shared/registrant/registrant.et.text', registrant: contact, with_phone: true %>
+
+Palun veenduge, et muudatus on korrektne ning probleemide korral pöörduge oma registripidaja poole:
+<%= render 'mailers/shared/registrar/registrar.et.text', registrar: registrar %>
 
 Lugupidamisega
 Eesti Interneti Sihtasutus
 
 ----------------------------------------------------------------------------------
 
-Hi <%= @contact.name %>
+Hi <%= contact.name %>
 
-E-mail address of <%= @contact.name %> has been changed
+E-mail address of <%= contact.name %> has been changed
 previous address: <%= @old_email %>
-new address: <%= @contact.email %>
+new address: <%= contact.email %>
 
-E-mail addresses are used to send important information regarding your registered domains including applications for approval of registrant change and domain deletion. Please make sure that the update and contact information are correct. Incase of problems please turn to your registrar. Your registrar is <%= @contact.registrar.name %>
+E-mail addresses are used to send important information regarding your registered domains including applications for approval of registrant change and domain deletion. Please make sure that the update and contact information are correct.
 
-<% if @contact.related_domain_descriptions.present? %>
-Domains affected by this update:
-  <% @contact.related_domain_descriptions.each do |domain, desc| %>
-    <%= domain %> (<%= desc.map { |d| t(d, locale: :en) }.join(', ') %>)
-  <% end %>
+<% if contact.used? %>
+    Domains affected by this update:
+    <%= contact.domain_names_with_roles %>
 <% end %>
 
 Contact information:
-Name: <%= @contact.name %>
-Identity Code: <%= @contact.ident %>
-E-mail: <%= @contact.email %>
-Tel: <%= @contact.phone %>
-Street: <%= @contact.street %>
-City: <%= @contact.city %>
-Country: <%= @contact.country %>
+<%= render 'mailers/shared/registrant/registrant.en.text', registrant: contact, with_phone: true %>
+
+In case of problems please turn to your registrar:
+<%= render 'mailers/shared/registrar/registrar.en.text', registrar: registrar %>
 
 Best Regards,
 Estonian Internet Foundation

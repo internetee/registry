@@ -358,47 +358,6 @@ ALTER SEQUENCE accounts_id_seq OWNED BY accounts.id;
 
 
 --
--- Name: addresses; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE addresses (
-    id integer NOT NULL,
-    contact_id integer,
-    city character varying,
-    street character varying,
-    zip character varying,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    street2 character varying,
-    street3 character varying,
-    creator_str character varying,
-    updator_str character varying,
-    country_code character varying,
-    state character varying,
-    legacy_contact_id integer
-);
-
-
---
--- Name: addresses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE addresses_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: addresses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE addresses_id_seq OWNED BY addresses.id;
-
-
---
 -- Name: api_users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -734,7 +693,7 @@ CREATE TABLE contacts (
     auth_info character varying,
     name character varying,
     org_name character varying,
-    registrar_id integer,
+    registrar_id integer NOT NULL,
     creator_str character varying,
     updator_str character varying,
     ident_country_code character varying,
@@ -1074,12 +1033,12 @@ ALTER SEQUENCE domain_transfers_id_seq OWNED BY domain_transfers.id;
 CREATE TABLE domains (
     id integer NOT NULL,
     name character varying,
-    registrar_id integer,
+    registrar_id integer NOT NULL,
     registered_at timestamp without time zone,
     status character varying,
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
-    registrant_id integer,
+    registrant_id integer NOT NULL,
     auth_info character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -1419,44 +1378,6 @@ CREATE SEQUENCE log_accounts_id_seq
 --
 
 ALTER SEQUENCE log_accounts_id_seq OWNED BY log_accounts.id;
-
-
---
--- Name: log_addresses; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE log_addresses (
-    id integer NOT NULL,
-    item_type character varying NOT NULL,
-    item_id integer NOT NULL,
-    event character varying NOT NULL,
-    whodunnit character varying,
-    object json,
-    object_changes json,
-    created_at timestamp without time zone,
-    session character varying,
-    children json,
-    uuid character varying
-);
-
-
---
--- Name: log_addresses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE log_addresses_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: log_addresses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE log_addresses_id_seq OWNED BY log_addresses.id;
 
 
 --
@@ -2989,13 +2910,6 @@ ALTER TABLE ONLY accounts ALTER COLUMN id SET DEFAULT nextval('accounts_id_seq':
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY addresses ALTER COLUMN id SET DEFAULT nextval('addresses_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY api_users ALTER COLUMN id SET DEFAULT nextval('api_users_id_seq'::regclass);
 
 
@@ -3165,13 +3079,6 @@ ALTER TABLE ONLY log_account_activities ALTER COLUMN id SET DEFAULT nextval('log
 --
 
 ALTER TABLE ONLY log_accounts ALTER COLUMN id SET DEFAULT nextval('log_accounts_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY log_addresses ALTER COLUMN id SET DEFAULT nextval('log_addresses_id_seq'::regclass);
 
 
 --
@@ -3464,14 +3371,6 @@ ALTER TABLE ONLY accounts
 
 
 --
--- Name: addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY addresses
-    ADD CONSTRAINT addresses_pkey PRIMARY KEY (id);
-
-
---
 -- Name: api_users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3669,14 +3568,6 @@ ALTER TABLE ONLY log_account_activities
 
 ALTER TABLE ONLY log_accounts
     ADD CONSTRAINT log_accounts_pkey PRIMARY KEY (id);
-
-
---
--- Name: log_addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY log_addresses
-    ADD CONSTRAINT log_addresses_pkey PRIMARY KEY (id);
 
 
 --
@@ -4308,20 +4199,6 @@ CREATE INDEX index_log_accounts_on_whodunnit ON log_accounts USING btree (whodun
 
 
 --
--- Name: index_log_addresses_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_addresses_on_item_type_and_item_id ON log_addresses USING btree (item_type, item_id);
-
-
---
--- Name: index_log_addresses_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_addresses_on_whodunnit ON log_addresses USING btree (whodunnit);
-
-
---
 -- Name: index_log_api_users_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4767,6 +4644,30 @@ CREATE UNIQUE INDEX unique_data_migrations ON data_migrations USING btree (versi
 --
 
 CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
+
+
+--
+-- Name: contacts_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY contacts
+    ADD CONSTRAINT contacts_registrar_id_fk FOREIGN KEY (registrar_id) REFERENCES registrars(id);
+
+
+--
+-- Name: domains_registrant_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY domains
+    ADD CONSTRAINT domains_registrant_id_fk FOREIGN KEY (registrant_id) REFERENCES contacts(id);
+
+
+--
+-- Name: domains_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY domains
+    ADD CONSTRAINT domains_registrar_id_fk FOREIGN KEY (registrar_id) REFERENCES registrars(id);
 
 
 --
@@ -5256,4 +5157,12 @@ INSERT INTO schema_migrations (version) VALUES ('20170423222302');
 INSERT INTO schema_migrations (version) VALUES ('20170423225333');
 
 INSERT INTO schema_migrations (version) VALUES ('20170424115801');
+
+INSERT INTO schema_migrations (version) VALUES ('20170509215614');
+
+INSERT INTO schema_migrations (version) VALUES ('20170606133501');
+
+INSERT INTO schema_migrations (version) VALUES ('20170606150352');
+
+INSERT INTO schema_migrations (version) VALUES ('20170606202859');
 

@@ -80,6 +80,7 @@ module Registry
     }
 
     config.action_view.default_form_builder = 'DefaultFormBuilder'
+    config.secret_key_base = Figaro.env.secret_key_base
   end
 end
 

@@ -94,6 +94,40 @@ RSpec.describe RegistrantChangeMailer do
     end
   end
 
+  describe '#confirmed' do
+    let(:domain) { instance_spy(Domain, registrant_email: 'new.registrant@test.com') }
+    let(:old_registrant) { instance_spy(Registrant, email: 'old.registrant@test.com') }
+    let(:registrant_presenter) { instance_spy(RegistrantPresenter) }
+    let(:domain_presenter) { instance_spy(DomainPresenter) }
+    subject(:message) { described_class.confirmed(domain: domain, old_registrant: old_registrant) }
+
+    before :example do
+      allow(RegistrantPresenter).to receive(:new).and_return(registrant_presenter)
+      allow(DomainPresenter).to receive(:new).and_return(domain_presenter)
+    end
+
+    it 'has sender' do
+      expect(message.from).to eq(['noreply@internet.ee'])
+    end
+
+    it 'has new registrant email as a recipient' do
+      expect(message.to).to include('new.registrant@test.com')
+    end
+
+    it 'has old registrant email as a recipient' do
+      expect(message.to).to include('old.registrant@test.com')
+    end
+
+    it 'has subject' do
+      allow(domain).to receive(:name).and_return('test.com')
+      expect(message.subject).to eq(t('registrant_change_mailer.confirmed.subject', domain_name: 'test.com'))
+    end
+
+    it 'sends message' do
+      expect { message.deliver_now }.to change { ActionMailer::Base.deliveries.count }.by(1)
+    end
+  end
+
   describe '#rejected' do
     let(:domain) { instance_spy(Domain, name: 'test.com', new_registrant_email: 'new.registrant@test.com') }
     let(:registrar) { instance_spy(Registrar) }
