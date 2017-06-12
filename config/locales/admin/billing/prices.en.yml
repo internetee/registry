@@ -29,5 +29,6 @@ en:
           update_btn: Update price
 
         search_form:
+          any: Any
           search_btn: Search
           reset_btn: Reset

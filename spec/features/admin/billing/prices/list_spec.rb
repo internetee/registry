@@ -19,7 +19,7 @@ RSpec.feature 'Viewing prices in admin area', settings: false do
     context 'when status is given' do
       scenario 'filters by given status' do
         visit admin_prices_path
-        select 'effective', from: 'search_status'
+        select Admin::Billing::PricesController.default_status.capitalize, from: 'search_status'
         submit_search_form
 
         expect(page).to have_css('.price', count: 1)

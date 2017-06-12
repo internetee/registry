@@ -3,7 +3,7 @@
         <%= f.label :status, class: 'col-sm-2 control-label' %>
 
         <div class="col-sm-3">
-            <%= f.select :status, options_for_select(statuses, search.status), { include_blank: true },
+            <%= f.select :status, options_for_select(statuses, search.status), { include_blank: t('.any') },
                          class: 'form-control' %>
         </div>
     </div>
