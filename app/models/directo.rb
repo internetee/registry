@@ -75,61 +75,72 @@ class Directo < ActiveRecord::Base
     end
 
     directo_next = last_directo
-
-    Registrar.where(test_registrar: false).each do |registrar|
+    Registrar.where.not(test_registrar: true).find_each do |registrar|
+      unless registrar.cash_account
+        Rails.logger.info("[DIRECTO] Monthly invoice for registrar #{registrar.id} has been skipped as it doesn't has cash_account")
+        next
+      end
       counter = Counter.new(1)
       items   = {}
-      registrar_activities = AccountActivity
-                                 .where(account_id: registrar.account_ids)
-                                 .where(created_at: month.beginning_of_month..month.end_of_month)
-                                 .where(activity_type: [AccountActivity::CREATE, AccountActivity::RENEW])
+      registrar_activities = AccountActivity.where(account_id: registrar.account_ids).where("created_at BETWEEN ? AND ?",month.beginning_of_month, month.end_of_month)
 
-      # Adding domains items
-      registrar_activities.each do |account_activity|
-        price = load_price(account_activity)
-        quantity = price.account_activities
-                       .where(account_id: registrar.account_ids)
-                       .where(created_at: month.beginning_of_month..month.end_of_month)
-                       .where(activity_type: [AccountActivity::CREATE, AccountActivity::RENEW])
-                       .count
+      # adding domains items
+      registrar_activities.where(activity_type: [AccountActivity::CREATE, AccountActivity::RENEW]).each do |activity|
+        price = load_price(activity)
 
-        if price.duration.include?('years')
-          line_count = price.duration.to_i
+        if price.duration.include?('year')
+          price.duration.to_i.times do |i|
+            year = i+1
+            hash = {
+                "ProductID" => DOMAIN_TO_PRODUCT[price.zone_name],
+                "Unit" => "tk",
+                "ProductName" => ".#{price.zone_name} registreerimine: #{price.duration.to_i} aasta",
+                "UnitPriceWoVAT" => price.price.amount / price.duration.to_i
+            }
+            hash["StartDate"] = (activity.created_at + (year-1).year).end_of_month.strftime(date_format) if year > 1
+            hash["EndDate"] = (activity.created_at + (year-1).year + 1).end_of_month.strftime(date_format) if year > 1
+
+            if items.has_key?(hash)
+              items[hash]["Quantity"] += 1
+            else
+              items[hash] = { "RN" => counter.next, "RR" => counter.now - i, "Quantity" => 1 }
+            end
+          end
         else
-          line_count = 1
-        end
+          1.times do |i|
+            quantity = price.account_activities
+                           .where(account_id: registrar.account_ids)
+                           .where(created_at: month.beginning_of_month..month.end_of_month)
+                           .where(activity_type: [AccountActivity::CREATE, AccountActivity::RENEW])
+                           .count
 
-        localized_duration = price.duration
-        localized_duration.sub!(/mons/, 'kuud')
-        localized_duration.sub!(/years/, 'aastat')
-        localized_duration.sub!(/year/, 'aasta')
+            hash = {
+                "ProductID" => DOMAIN_TO_PRODUCT[price.zone_name],
+                "Unit" => "tk",
+                "ProductName" => ".#{price.zone_name} registreerimine: #{price.duration.to_i} kuud",
+                "UnitPriceWoVAT" => price.price.amount,
+            }
 
-        line_count.times do |i|
-          year = i + 1
-          hash = {
-              "ProductID" => DOMAIN_TO_PRODUCT[price.zone_name],
-              "Unit" => "tk",
-              "ProductName" => ".#{price.zone_name} registreerimine: #{price.duration}",
-              "UnitPriceWoVAT" => price.price,
-          }
-          hash["StartDate"] = (account_activity.created_at + (year-1).year).end_of_month.strftime(date_format)     if year > 1
-          hash["EndDate"]   = (account_activity.created_at + (year-1).year + 1).end_of_month.strftime(date_format) if year > 1
-
-          unless items.has_key?(hash)
-            items[hash] = {"RN"=>counter.next, "RR" => counter.now - i, "Quantity"=> quantity}
+            if items.has_key?(hash)
+              #items[hash]["Quantity"] += 1
+            else
+              items[hash] = { "RN" => counter.next, "RR" => counter.now - i, "Quantity" => quantity }
+            end
           end
         end
+
+
       end
 
-      # Adding prepayments
+      #adding prepaiments
       if items.any?
-        total = Money.new(0)
+        total = 0
         items.each{ |key, val| total += val["Quantity"] * key["UnitPriceWoVAT"] }
         hash = {"ProductID" => Setting.directo_receipt_product_name, "Unit" => "tk", "ProductName" => "Domeenide ettemaks", "UnitPriceWoVAT"=>total}
         items[hash] = {"RN"=>counter.next, "RR" => counter.now, "Quantity"=> -1}
       end
 
-      # Generating XML
+      # generating XML
       if items.any?
         directo_next += 1
         invoice_counter.next
@@ -145,7 +156,6 @@ class Directo < ActiveRecord::Base
                         "SalesAgent"  =>Setting.directo_sales_agent){
               xml.line("RN" => 1, "RR"=>1, "ProductName"=> "Domeenide registreerimine - #{I18n.l(invoices_until, format: "%B %Y").titleize}")
               items.each do |line, val|
-                line['UnitPriceWoVAT'] = line['UnitPriceWoVAT'].amount.to_s
                 xml.line(val.merge(line))
               end
             }
