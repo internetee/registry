@@ -8,11 +8,15 @@ module Admin
       helper_method :durations
       helper_method :statuses
 
+      def self.default_status
+        'effective'
+      end
+
       def index
         @search = OpenStruct.new(search_params)
 
         unless @search.status
-          @search.status = default_status
+          @search.status = self.class.default_status
         end
 
         prices = ::Billing::Price.all
@@ -105,11 +109,7 @@ module Admin
       end
 
       def statuses
-        ::Billing::Price.statuses
-      end
-
-      def default_status
-        'effective'
+        ::Billing::Price.statuses.map { |status| [status.capitalize, status] }
       end
     end
   end
