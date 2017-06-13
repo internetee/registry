@@ -1,6 +1,7 @@
 module Billing
   class Price < ActiveRecord::Base
     include Versions
+    include Concerns::Billing::Price::Expirable
     has_paper_trail class_name: '::PriceVersion'
 
     self.auto_html5_validation = false
@@ -11,6 +12,8 @@ module Billing
     validates :operation_category, inclusion: { in: Proc.new { |price| price.class.operation_categories } }
     validates :duration, inclusion: { in: Proc.new { |price| price.class.durations } }
 
+    alias_attribute :effect_time, :valid_from
+    alias_attribute :expire_time, :valid_to
     monetize :price_cents, allow_nil: true, numericality: { greater_than_or_equal_to: 0 }
     after_initialize :init_values
 
@@ -34,6 +37,21 @@ module Billing
         '9 years',
         '10 years',
       ]
+    end
+
+    def self.statuses
+      %w[upcoming effective expired]
+    end
+
+    def self.upcoming
+      where("#{attribute_alias(:effect_time)} > ?", Time.zone.now)
+    end
+
+    def self.effective
+      condition = "#{attribute_alias(:effect_time)} <= :now " \
+      " AND (#{attribute_alias(:expire_time)} >= :now" \
+      " OR #{attribute_alias(:expire_time)} IS NULL)"
+      where(condition, now: Time.zone.now)
     end
 
     def self.valid

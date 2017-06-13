@@ -36,12 +36,6 @@ module Admin
         end
       end
 
-      def destroy
-        @zone.destroy!
-        flash[:notice] = t('.destroyed')
-        redirect_to_index
-      end
-
       private
 
       def load_zone
