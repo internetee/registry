@@ -1,3 +1,10 @@
+15.06.2017
+* BUG: fixed incorrect error message on domain upate in case serverDeleteProhibited was set [#512](https://github.com/internetee/registry/issues/512)
+* BUG: removed references to postal addresses from last email templates in case address processing is disabled [#480](https://github.com/internetee/registry/issues/480)
+* Removed options to delete pricelist items and zones [#522](https://github.com/internetee/registry/issues/522)
+* Improved registry database setup process [#503](https://github.com/internetee/registry/issues/503)
+* Added dummy data generation rake task [#515](https://github.com/internetee/registry/issues/515)
+
 02.05.2017
 * Set default period value of domain create and renew operations to 1 year in the Registrar portal [#495](https://github.com/internetee/registry/issues/495)
 
