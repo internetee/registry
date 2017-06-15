@@ -163,10 +163,16 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :keyrelays
     resources :zonefiles
-    resources :zones, controller: 'dns/zones', except: %i[show]
+    resources :zones, controller: 'dns/zones', except: %i[show destroy]
     resources :legal_documents
     resources :keyrelays
-    resources :prices, controller: 'billing/prices', except: %i[show]
+
+    resources :prices, controller: 'billing/prices', except: %i[show destroy] do
+      member do
+        patch :expire
+      end
+    end
+
     resources :mail_templates
     resources :account_activities
 
