@@ -2,3 +2,7 @@ et:
   username: 'Kasutajanimi'
   password: 'Parool'
   log_in: 'Logi sisse'
+
+  date:
+    # Don't forget the nil at the beginning; there's no such thing as a 0th month
+    month_names: [~, Jaanuar, Veebruar, Märts, Aprill, Mai, Juuni, Juuli, August, September, Oktoober, November, Detsember]
