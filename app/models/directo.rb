@@ -89,12 +89,16 @@ class Directo < ActiveRecord::Base
         price = load_price(activity)
 
         if price.duration.include?('year')
+          localized_duration = price.duration
+          localized_duration.sub!(/years/, 'aastat')
+          localized_duration.sub!(/year/, 'aasta')
+
           price.duration.to_i.times do |i|
             year = i+1
             hash = {
                 "ProductID" => DOMAIN_TO_PRODUCT[price.zone_name],
                 "Unit" => "tk",
-                "ProductName" => ".#{price.zone_name} registreerimine: #{price.duration.to_i} aasta",
+                "ProductName" => ".#{price.zone_name} registreerimine: #{price.duration.to_i} #{localized_duration}",
                 "UnitPriceWoVAT" => price.price.amount / price.duration.to_i
             }
             hash["StartDate"] = (activity.created_at + (year-1).year).end_of_month.strftime(date_format) if year > 1
