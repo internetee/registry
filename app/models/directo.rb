@@ -94,7 +94,7 @@ class Directo < ActiveRecord::Base
             hash = {
                 "ProductID" => DOMAIN_TO_PRODUCT[price.zone_name],
                 "Unit" => "tk",
-                "ProductName" => ".#{price.zone_name} registreerimine: #{price.duration.to_i} aasta",
+                "ProductName" => ".#{price.zone_name} registreerimine: #{price.duration.to_i} aasta#{price.duration.to_i > 1 ? 't' : ''}",
                 "UnitPriceWoVAT" => price.price.amount / price.duration.to_i
             }
             hash["StartDate"] = (activity.created_at + (year-1).year).end_of_month.strftime(date_format) if year > 1
