@@ -10,5 +10,6 @@
 #= require select2
 #= require jquery.doubleScroll
 #= require admin/application
+#= require text_field_trimmer
 #= require admin/app
 #= require_tree ./admin
