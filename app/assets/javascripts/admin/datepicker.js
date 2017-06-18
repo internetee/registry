@@ -1,15 +1,17 @@
-$.datepicker.setDefaults({
-  changeMonth: true,
-  changeYear: true,
-  duration: 'fast',
-  firstDay: 1,
-  dateFormat: 'yy-mm-dd',
-});
+(function () {
+    $.datepicker.setDefaults({
+        changeMonth: true,
+        changeYear: true,
+        duration: 'fast',
+        firstDay: 1,
+        dateFormat: 'yy-mm-dd',
+    });
 
-var dateFields = $('.datepicker');
+    var dateFields = $('.datepicker');
 
-dateFields.datepicker();
+    dateFields.datepicker();
 
-dateFields.each(function () {
-  this.autocomplete = 'off';
-});
+    dateFields.each(function () {
+        this.autocomplete = 'off';
+    });
+})();
