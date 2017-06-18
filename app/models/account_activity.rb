@@ -2,10 +2,10 @@ require 'csv'
 
 class AccountActivity < ActiveRecord::Base
   include Versions
-  belongs_to :account
+  belongs_to :account, required: true
   belongs_to :bank_transaction
   belongs_to :invoice
-
+  belongs_to :price, class_name: 'Billing::Price'
 
   CREATE = 'create'
   RENEW = 'renew'

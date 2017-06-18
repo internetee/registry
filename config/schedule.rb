@@ -54,6 +54,10 @@ if @cron_group == 'registry'
     runner 'DomainCron.start_redemption_grace_period'
   end
 
+  every '0 0 1 * *' do
+    runner 'Directo.send_monthly_invoices'
+  end
+
   every :day, at: '19:00pm' do
     runner 'Directo.send_receipts'
   end if @environment == 'production'

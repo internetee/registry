@@ -61,7 +61,6 @@ class Directo < ActiveRecord::Base
 
 
   def self.send_monthly_invoices(debug: false)
-    @debug         = debug
     I18n.locale    = :et
     month          = Time.now - 1.month
     invoices_until = month.end_of_month
@@ -87,29 +86,50 @@ class Directo < ActiveRecord::Base
 
       # adding domains items
       registrar_activities.where(activity_type: [AccountActivity::CREATE, AccountActivity::RENEW]).each do |activity|
-        pricelist    = load_activity_pricelist(activity)
-        unless pricelist
-          Rails.logger.error("[DIRECTO] Skipping activity #{activity.id} as pricelist not found")
-          next
-        end
+        price = load_price(activity)
 
-        pricelist.years_amount.times do |i|
-          year = i+1
-          hash = {
-              "ProductID"      => DOMAIN_TO_PRODUCT[pricelist.category],
-              "Unit"           => "tk",
-              "ProductName"    => ".#{pricelist.category} registreerimine: #{pricelist.years_amount} aasta",
-              "UnitPriceWoVAT" => pricelist.price_decimal/pricelist.years_amount
-          }
-          hash["StartDate"] = (activity.created_at + (year-1).year).end_of_month.strftime(date_format)     if year > 1
-          hash["EndDate"]   = (activity.created_at + (year-1).year + 1).end_of_month.strftime(date_format) if year > 1
+        if price.duration.include?('year')
+          price.duration.to_i.times do |i|
+            year = i+1
+            hash = {
+                "ProductID" => DOMAIN_TO_PRODUCT[price.zone_name],
+                "Unit" => "tk",
+                "ProductName" => ".#{price.zone_name} registreerimine: #{price.duration.to_i} aasta#{price.duration.to_i > 1 ? 't' : ''}",
+                "UnitPriceWoVAT" => price.price.amount / price.duration.to_i
+            }
+            hash["StartDate"] = (activity.created_at + (year-1).year).end_of_month.strftime(date_format) if year > 1
+            hash["EndDate"] = (activity.created_at + (year-1).year + 1).end_of_month.strftime(date_format) if year > 1
 
-          if items.has_key?(hash)
-            items[hash]["Quantity"] += 1
-          else
-            items[hash] = {"RN"=>counter.next, "RR" => counter.now - i, "Quantity"=> 1}
+            if items.has_key?(hash)
+              items[hash]["Quantity"] += 1
+            else
+              items[hash] = { "RN" => counter.next, "RR" => counter.now - i, "Quantity" => 1 }
+            end
+          end
+        else
+          1.times do |i|
+            quantity = price.account_activities
+                           .where(account_id: registrar.account_ids)
+                           .where(created_at: month.beginning_of_month..month.end_of_month)
+                           .where(activity_type: [AccountActivity::CREATE, AccountActivity::RENEW])
+                           .count
+
+            hash = {
+                "ProductID" => DOMAIN_TO_PRODUCT[price.zone_name],
+                "Unit" => "tk",
+                "ProductName" => ".#{price.zone_name} registreerimine: #{price.duration.to_i} kuud",
+                "UnitPriceWoVAT" => price.price.amount,
+            }
+
+            if items.has_key?(hash)
+              #items[hash]["Quantity"] += 1
+            else
+              items[hash] = { "RN" => counter.next, "RR" => counter.now - i, "Quantity" => quantity }
+            end
           end
         end
+
+
       end
 
       #adding prepaiments
@@ -143,10 +163,11 @@ class Directo < ActiveRecord::Base
         end
 
         data = builder.to_xml.gsub("\n",'')
-        response = RestClient::Request.execute(url: ENV['directo_invoice_url'], method: :post, payload: {put: "1", what: "invoice", xmldata: data}, verify_ssl: false).to_s
-        if @debug
+
+        if debug
           STDOUT << "#{Time.zone.now.utc} - Directo xml had to be sent #{data}\n"
         else
+          response = RestClient::Request.execute(url: ENV['directo_invoice_url'], method: :post, payload: {put: "1", what: "invoice", xmldata: data}, verify_ssl: false).to_s
           Setting.directo_monthly_number_last = directo_next
           Nokogiri::XML(response).css("Result").each do |res|
             Directo.create!(request: data, response: res.as_json.to_h, invoice_number: directo_next)
@@ -161,19 +182,10 @@ class Directo < ActiveRecord::Base
     STDOUT << "#{Time.zone.now.utc} - Directo invoices sending finished. #{invoice_counter.now} are sent\n"
   end
 
-
-  def self.load_activity_pricelist activity
+  def self.load_price(account_activity)
     @pricelists ||= {}
-    return @pricelists[activity.log_pricelist_id] if @pricelists.has_key?(activity.log_pricelist_id)
-
-    pricelist = Pricelist.find_by(id: activity.log_pricelist_id) || PricelistVersion.find_by(item_id: activity.log_pricelist_id).try(:reify)
-    unless pricelist
-      @pricelists[activity.log_pricelist_id] = nil
-      Rails.logger.info("[DIRECTO] AccountActivity #{activity.id} cannot be sent as pricelist wasn't found #{activity.log_pricelist_id}")
-      return
-    end
-
-    @pricelists[activity.log_pricelist_id] = pricelist.version_at(activity.created_at) || pricelist
+    return @pricelists[account_activity.price_id] if @pricelists.has_key?(account_activity.price_id)
+    @pricelists[account_activity.price_id] = account_activity.price
   end
 end
 

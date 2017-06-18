@@ -9,9 +9,9 @@
         </div>
 
         <div class="col-sm-2 text-right">
-            <%= link_to(t('.delete_btn'), admin_price_path(@price),
-                        method: :delete,
-                        data: { confirm: t('.delete_btn_confirm') },
+            <%= link_to(t('.expire_btn'), expire_admin_price_path(@price),
+                        method: :patch,
+                        data: { confirm: t('.expire_btn_confirm') },
                         class: 'btn btn-danger') %>
         </div>
     </div>

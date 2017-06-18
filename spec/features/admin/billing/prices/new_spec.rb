@@ -16,8 +16,6 @@ RSpec.feature 'New price in admin area', settings: false do
     expect(page).to have_text(t('admin.billing.prices.create.created'))
   end
 
-  private
-
   def open_list
     click_link_or_button t('admin.menu.prices')
   end

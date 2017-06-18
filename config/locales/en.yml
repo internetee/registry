@@ -23,7 +23,7 @@ en:
       long: "%A, %e. %B %Y, %H:%M"
       short: "%d.%m.%y, %H:%M"
       shorts: "%d.%m.%y, %H:%M:%S"
-      date: "%d.%m.%y"
+      date: "%Y-%m-%d"
       date_long: "%d. %B %Y"
       ydate: "%Y.%m.%d"
   date:
@@ -286,8 +286,6 @@ en:
   valid_from: 'Valid from'
   general: 'General'
   contacts: 'Contacts'
-  tech_contacts: 'Technical contacts'
-  admin_contacts: 'Admin contacts'
   identity_code: 'Identity code'
   nameservers: 'Nameservers'
   hostname: 'Hostname'
@@ -320,7 +318,6 @@ en:
   failed_to_update_status: 'Failed to update status!'
   status_deleted: 'Status deleted!'
   failed_to_delete_status: 'Failed to delete status!'
-  tech_contact: 'Tech contact'
   new_domain_contact: 'New contact'
   domain_status_prohibits_deleting: 'Domain status prohibits deleting'
   domain_deleted: 'Domain deleted!'
@@ -551,11 +548,9 @@ en:
   info: 'Info'
   register: 'Register'
   send_epp_request: 'Send EPP Request'
-  registrant: 'Registrant'
   created_at: 'Created at'
   valid_to: 'Valid to'
   updated_at: 'Updated at'
-  tech_contacts: 'Tech contacts'
   name: 'Name'
   type: 'Type'
   code: 'Code'
@@ -758,8 +753,6 @@ en:
   unimplemented_object_service: 'Unimplemented object service'
   contact_email_update_subject: 'Teie domeenide kontakt epostiaadress on muutunud / Contact e-mail addresses of your domains have changed'
   object_status_prohibits_operation: 'Object status prohibits operation'
-  registrant_updated_notification_for_new_registrant_subject: 'Domeeni %{name} registreerija vahetus teostatud / Registrant change of %{name} has been finished.'
-  registrant_updated_notification_for_old_registrant_subject: 'Domeeni %{name} registreerija vahetus teostatud / Registrant change of %{name} has been finished.'
   pending_delete_rejected_notification_subject: "Domeeni %{name} kustutamise taotlus tagasi lükatud / %{name} deletion declined"
   pending_delete_expired_notification_subject: "Domeeni %{name} kustutamise taotlus on tühistatud / %{name} deletion cancelled"
   delete_confirmation_subject: "Domeeni %{name} kustutatud / %{name} deleted"

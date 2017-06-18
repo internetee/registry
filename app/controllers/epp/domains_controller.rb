@@ -37,7 +37,7 @@ class Epp::DomainsController < EppController
           sum: @domain_pricelist.price.amount,
           description: "#{I18n.t('create')} #{@domain.name}",
           activity_type: AccountActivity::CREATE,
-          log_pricelist_id: @domain_pricelist.id
+          price: @domain_pricelist
         })
 
         if @domain.disputed?
@@ -131,7 +131,7 @@ class Epp::DomainsController < EppController
                                           sum: @domain_pricelist.price.amount,
                                           description: "#{I18n.t('renew')} #{@domain.name}",
                                           activity_type: AccountActivity::RENEW,
-                                          log_pricelist_id: @domain_pricelist.id
+                                          price: @domain_pricelist
                                         })
 
           render_epp_response '/epp/domains/renew'

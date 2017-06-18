@@ -21,8 +21,8 @@ class Domain < ActiveRecord::Base
 
   # TODO: most inputs should be trimmed before validatation, probably some global logic?
 
-  belongs_to :registrar
-  belongs_to :registrant
+  belongs_to :registrar, required: true
+  belongs_to :registrant, required: true
   # TODO: should we user validates_associated :registrant here?
 
   has_many :admin_domain_contacts
@@ -100,8 +100,7 @@ class Domain < ActiveRecord::Base
 
   validates :name_dirty, domain_name: true, uniqueness: true
   validates :puny_label, length: { maximum: 63 }
-  validates :period, numericality: { only_integer: true }
-  validates :registrant, :registrar, presence: true
+  validates :period, presence: true, numericality: { only_integer: true }
 
   validate :validate_reservation
   def validate_reservation

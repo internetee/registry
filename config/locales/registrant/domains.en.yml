@@ -1,0 +1,17 @@
+en:
+  registrant:
+    domains:
+      index:
+        registrant: Registrant
+
+      download_list:
+        registrant: Registrant
+      partials:
+        owner:
+          title: Registrant
+
+        admin_contacts:
+          title: Admin. contacts
+
+        tech_contacts:
+          title: Tech. contacts

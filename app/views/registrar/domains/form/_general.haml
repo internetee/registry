@@ -18,7 +18,7 @@
 
     .form-group
       .col-md-3.control-label
-        = label_tag :domain_registrant, t(:registrant), class: 'required'
+        = label_tag :domain_registrant, t('.registrant'), class: 'required'
       .col-md-7
         = text_field_tag 'domain[registrant]', @domain_params[:registrant], class: "hidden"
         = text_field_tag 'domain[registrant_helper]', contacts.find_by(code: @domain_params[:registrant]).try(:search_name),

@@ -7,6 +7,7 @@ class DomainUpdateConfirmJob < Que::Job
       domain.is_admin = true
       case action
       when RegistrantVerification::CONFIRMED
+        old_registrant = domain.registrant
         domain.poll_message!(:poll_pending_update_confirmed_by_registrant)
         raise_errors!(domain)
 
@@ -15,6 +16,7 @@ class DomainUpdateConfirmJob < Que::Job
 
         domain.clean_pendings!
         raise_errors!(domain)
+        RegistrantChange.new(domain: domain, old_registrant: old_registrant).confirm
       when RegistrantVerification::REJECTED
         RegistrantChangeMailer.rejected(domain: domain,
                                         registrar: domain.registrar,

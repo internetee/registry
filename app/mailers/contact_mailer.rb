@@ -1,5 +1,6 @@
 class ContactMailer < ApplicationMailer
   include Que::Mailer
+  helper_method :address_processing
 
   def email_updated(old_email, email, contact_id, should_deliver)
     @contact   = Contact.find_by(id: contact_id)
@@ -31,5 +32,11 @@ class ContactMailer < ApplicationMailer
            OpenSSL::SSL::SSLError => e
       logger.info "EMAIL SENDING FAILED: #{email}: #{e}"
     end
+  end
+
+  private
+
+  def address_processing
+    Contact.address_processing?
   end
 end
