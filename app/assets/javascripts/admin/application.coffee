@@ -6,6 +6,10 @@ $(window).load ->
     allowEmptyOption: true, create: true
   })
 
+  # client side validate all forms
+  $('form').each ->
+    $(this).validate()
+
   # doublescroll
   $('[data-doublescroll]').doubleScroll({
     onlyIfScroll: false,
