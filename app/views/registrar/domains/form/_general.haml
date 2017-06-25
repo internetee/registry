@@ -31,9 +31,8 @@
         .col-md-7
           = check_box_tag 'domain[verified]', '1', @domain_params[:verified].eql?('1'), onclick: "return (confirm('#{t(:verified_confirm)}') ? true : false);"
 
-    - unless params[:domain_name]
-      .form-group
-        .col-md-3.control-label
-          = label_tag :domain_reserved_pw, t(:reserved_pw)
-        .col-md-7
-          = text_field_tag('domain[reserved_pw]', @domain_params[:reserved_pw], class: 'form-control')
+    .form-group
+      .col-md-3.control-label
+        = label_tag :domain_reserved_pw, t(:reserved_pw)
+      .col-md-7
+        = text_field_tag('domain[reserved_pw]', @domain_params[:reserved_pw], class: 'form-control')

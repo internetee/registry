@@ -595,4 +595,17 @@ RSpec.describe Contact do
       expect(domain_names).to eq({ 'test.com' => %i[admin_domain_contact].to_set })
     end
   end
+
+  it 'updates whois on after_save', db: true do
+    domain = create(:domain, name: 'test.com')
+    contact = create(:contact)
+    admin_domain_contact = create(:admin_domain_contact, domain: domain, contact: contact)
+    domain.admin_domain_contacts << admin_domain_contact
+
+    expect(DNS::DomainName).to receive(:update_whois).with(domain_name: 'test.com')
+
+    contact.reload
+    contact.name = 'new-test'
+    contact.save
+  end
 end

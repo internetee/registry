@@ -98,7 +98,7 @@
               = sort_link(@q, 'email', t(:created_at))
             %th{class: 'col-xs-2'}
               = sort_link(@q, 'registrar_name', t(:registrar_name))
-            %th{class: 'col-xs-2'}= t(:actions)
+            %th{class: 'col-xs-2'}
         %tbody
           - @contacts.each do |contact|
             %tr

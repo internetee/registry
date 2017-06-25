@@ -5,10 +5,10 @@
 #= require admin/autocomplete
 #= require jquery.nested_attributes
 #= require selectize
-#= require shared/jquery.validate.bootstrap
 #= require jquery-ui/datepicker
 #= require select2
 #= require jquery.doubleScroll
 #= require admin/application
+#= require text_field_trimmer
 #= require admin/app
 #= require_tree ./admin

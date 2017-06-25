@@ -6,6 +6,8 @@ class Domain < ActiveRecord::Base
   include Concerns::Domain::Activatable
   include Concerns::Domain::ForceDelete
   include Concerns::Domain::Deletable
+  include Concerns::Domain::Disputable
+  include Concerns::Domain::RegistrantChangeable
 
   has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
 
@@ -15,8 +17,8 @@ class Domain < ActiveRecord::Base
 
   alias_attribute :on_hold_time, :outzone_at
   alias_attribute :outzone_time, :outzone_at
+  alias_attribute :register_time, :registered_at
 
-  # TODO: whois requests ip whitelist for full info for own domains and partial info for other domains
   # TODO: most inputs should be trimmed before validatation, probably some global logic?
 
   belongs_to :registrar, required: true
@@ -27,11 +29,6 @@ class Domain < ActiveRecord::Base
   accepts_nested_attributes_for :admin_domain_contacts,  allow_destroy: true, reject_if: :admin_change_prohibited?
   has_many :tech_domain_contacts
   accepts_nested_attributes_for :tech_domain_contacts, allow_destroy: true, reject_if: :tech_change_prohibited?
-
-  def registrant_change_prohibited?
-    statuses.include? DomainStatus::SERVER_REGISTRANT_CHANGE_PROHIBITED
-  end
-
 
   # NB! contacts, admin_contacts, tech_contacts are empty for a new record
   has_many :domain_contacts, dependent: :destroy
@@ -52,7 +49,6 @@ class Domain < ActiveRecord::Base
   has_many :dnskeys, dependent: :destroy
 
   has_many :keyrelays
-  has_one  :whois_record # destroyment will be done in after_commit
 
   accepts_nested_attributes_for :dnskeys, allow_destroy: true
 
@@ -95,7 +91,7 @@ class Domain < ActiveRecord::Base
     true
   end
 
-  after_commit :update_whois_record
+  after_commit :update_whois
 
   after_create :update_reserved_domains
   def update_reserved_domains
@@ -227,17 +223,6 @@ class Domain < ActiveRecord::Base
   end
 
   class << self
-    def included
-      includes(
-        :registrant,
-        :registrar,
-        :nameservers,
-        :whois_record,
-        { tech_contacts: :registrar },
-        { admin_contacts: :registrar }
-      )
-    end
-
     def nameserver_required?
       Setting.nameserver_required
     end
@@ -628,10 +613,6 @@ class Domain < ActiveRecord::Base
     log
   end
 
-  def update_whois_record
-    UpdateWhoisRecordJob.enqueue name, 'domain'
-  end
-
   def status_notes_array=(notes)
     self.status_notes = {}
     notes ||= []
@@ -700,6 +681,10 @@ class Domain < ActiveRecord::Base
 
   def self.delete_candidates
     where("#{attribute_alias(:delete_time)} < ?", Time.zone.now)
+  end
+
+  def update_whois
+    DNS::DomainName.update_whois(domain_name: name)
   end
 
   def self.uses_zone?(zone)

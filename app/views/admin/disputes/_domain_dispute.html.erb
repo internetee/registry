@@ -1,0 +1,20 @@
+<div class="panel panel-default">
+    <div class="panel-heading"><%= t '.title' %></div>
+
+    <% if disputed %>
+        <table class="table">
+            <tr>
+                <th><%= Dispute.human_attribute_name :expire_date %></th>
+                <td><%= dispute.expire_date %></td>
+            </tr>
+        </table>
+
+        <div class="panel-footer text-right">
+            <%= dispute.link_from_domain %>
+        </div>
+    <% else %>
+        <div class="panel-body text-muted">
+            <%= t '.no_dispute' %>
+        </div>
+    <% end %>
+</div>

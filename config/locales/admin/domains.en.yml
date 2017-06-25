@@ -2,8 +2,13 @@ en:
   admin:
     domains:
       index:
+        title: Domains
         reset_btn: Reset
         registrant: Registrant
+
+      show:
+        edit_status_btn: Edit statuses
+        history_btn: History
 
       edit:
         add_new_status_btn: Add new status

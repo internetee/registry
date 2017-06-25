@@ -1,28 +1,7 @@
 namespace :whois do
-  desc 'Regenerate Registry whois_records table and sync with whois server (slower)'
+  desc 'Regenerate whois'
   task regenerate: :environment do
-    start = Time.zone.now.to_f
-
-    print "-----> Regenerate Registry whois_records table and sync with whois server..."
-    ActiveRecord::Base.uncached do
-
-      print "\n-----> Update domains whois_records"
-      Domain.find_in_batches.each do |group|
-        UpdateWhoisRecordJob.enqueue group.map(&:name), 'domain'
-      end
-
-      print "\n-----> Update blocked domains whois_records"
-      BlockedDomain.find_in_batches.each do |group|
-        UpdateWhoisRecordJob.enqueue group.map(&:name), 'blocked'
-      end
-
-      print "\n-----> Update reserved domains whois_records"
-      ReservedDomain.find_in_batches.each do |group|
-        UpdateWhoisRecordJob.enqueue group.map(&:name), 'reserved'
-      end
-
-    end
-    puts "\n-----> all done in #{(Time.zone.now.to_f - start).round(2)} seconds"
+    Whois::Record.regenerate_all
   end
 
   desc 'Create whois database'

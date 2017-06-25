@@ -873,6 +873,40 @@ ALTER SEQUENCE directos_id_seq OWNED BY directos.id;
 
 
 --
+-- Name: disputes; Type: TABLE; Schema: public; Owner: -; Tablespace:
+--
+
+CREATE TABLE disputes (
+    id integer NOT NULL,
+    password character varying,
+    expire_date date,
+    created_at timestamp without time zone,
+    comment text NOT NULL,
+    updated_at timestamp without time zone,
+    domain_name character varying NOT NULL
+);
+
+
+--
+-- Name: disputes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE disputes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: disputes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE disputes_id_seq OWNED BY disputes.id;
+
+
+--
 -- Name: dnskeys; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2411,7 +2445,7 @@ ALTER SEQUENCE people_id_seq OWNED BY people.id;
 
 
 --
--- Name: prices; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: prices; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE prices (
@@ -2777,42 +2811,7 @@ ALTER SEQUENCE white_ips_id_seq OWNED BY white_ips.id;
 
 
 --
--- Name: whois_records; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE whois_records (
-    id integer NOT NULL,
-    domain_id integer,
-    name character varying,
-    body text,
-    json json,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    registrar_id integer
-);
-
-
---
--- Name: whois_records_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE whois_records_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: whois_records_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE whois_records_id_seq OWNED BY whois_records.id;
-
-
---
--- Name: zones; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: zones; Type: TABLE; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE TABLE zones (
@@ -2957,6 +2956,13 @@ ALTER TABLE ONLY depricated_versions ALTER COLUMN id SET DEFAULT nextval('depric
 --
 
 ALTER TABLE ONLY directos ALTER COLUMN id SET DEFAULT nextval('directos_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY disputes ALTER COLUMN id SET DEFAULT nextval('disputes_id_seq'::regclass);
 
 
 --
@@ -3299,13 +3305,6 @@ ALTER TABLE ONLY white_ips ALTER COLUMN id SET DEFAULT nextval('white_ips_id_seq
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY whois_records ALTER COLUMN id SET DEFAULT nextval('whois_records_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY zones ALTER COLUMN id SET DEFAULT nextval('zones_id_seq'::regclass);
 
 
@@ -3427,6 +3426,14 @@ ALTER TABLE ONLY depricated_versions
 
 ALTER TABLE ONLY directos
     ADD CONSTRAINT directos_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: disputes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY disputes
+    ADD CONSTRAINT disputes_pkey PRIMARY KEY (id);
 
 
 --
@@ -3742,7 +3749,7 @@ ALTER TABLE ONLY people
 
 
 --
--- Name: prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: prices_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY prices
@@ -3790,7 +3797,7 @@ ALTER TABLE ONLY settings
 
 
 --
--- Name: unique_zone_origin; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: unique_zone_origin; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY zones
@@ -3822,15 +3829,7 @@ ALTER TABLE ONLY white_ips
 
 
 --
--- Name: whois_records_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY whois_records
-    ADD CONSTRAINT whois_records_pkey PRIMARY KEY (id);
-
-
---
--- Name: zones_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: zones_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY zones
@@ -3940,6 +3939,13 @@ CREATE INDEX index_delegation_signers_on_domain_id ON delegation_signers USING b
 --
 
 CREATE INDEX index_directos_on_item_type_and_item_id ON directos USING btree (item_type, item_id);
+
+
+--
+-- Name: index_disputes_on_domain_name; Type: INDEX; Schema: public; Owner: -; Tablespace:
+--
+
+CREATE UNIQUE INDEX index_disputes_on_domain_name ON disputes USING btree (domain_name);
 
 
 --
@@ -4482,7 +4488,7 @@ CREATE UNIQUE INDEX index_people_on_reset_password_token ON people USING btree (
 
 
 --
--- Name: index_prices_on_zone_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_prices_on_zone_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
 --
 
 CREATE INDEX index_prices_on_zone_id ON prices USING btree (zone_id);
@@ -4535,20 +4541,6 @@ CREATE INDEX index_users_on_identity_code ON users USING btree (identity_code);
 --
 
 CREATE INDEX index_users_on_registrar_id ON users USING btree (registrar_id);
-
-
---
--- Name: index_whois_records_on_domain_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_whois_records_on_domain_id ON whois_records USING btree (domain_id);
-
-
---
--- Name: index_whois_records_on_registrar_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_whois_records_on_registrar_id ON whois_records USING btree (registrar_id);
 
 
 --
@@ -5121,7 +5113,27 @@ INSERT INTO schema_migrations (version) VALUES ('20161004101419');
 
 INSERT INTO schema_migrations (version) VALUES ('20161227193500');
 
+INSERT INTO schema_migrations (version) VALUES ('20170131231449');
+
+INSERT INTO schema_migrations (version) VALUES ('20170203102059');
+
+INSERT INTO schema_migrations (version) VALUES ('20170205135240');
+
+INSERT INTO schema_migrations (version) VALUES ('20170206052644');
+
+INSERT INTO schema_migrations (version) VALUES ('20170206214802');
+
+INSERT INTO schema_migrations (version) VALUES ('20170209153849');
+
+INSERT INTO schema_migrations (version) VALUES ('20170212020532');
+
+INSERT INTO schema_migrations (version) VALUES ('20170212020841');
+
+INSERT INTO schema_migrations (version) VALUES ('20170212021349');
+
 INSERT INTO schema_migrations (version) VALUES ('20170221115548');
+
+INSERT INTO schema_migrations (version) VALUES ('20170320003225');
 
 INSERT INTO schema_migrations (version) VALUES ('20170419120048');
 

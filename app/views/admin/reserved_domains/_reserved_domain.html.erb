@@ -1,0 +1,12 @@
+<% reserved_domain = ReservedDomainPresenter.new(reserved_domain: reserved_domain, view: self) %>
+
+<tr>
+    <td><%= reserved_domain.name %></td>
+    <td><%= reserved_domain.password %></td>
+    <td><%= reserved_domain.create_time %></td>
+    <td><%= reserved_domain.update_time %></td>
+    <td>
+        <%= reserved_domain.edit_btn %>
+        <%= reserved_domain.delete_btn %>
+    </td>
+</tr>
