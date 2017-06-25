@@ -11,11 +11,7 @@ module Matchers
       end
 
       def failure_message
-        "Expected EPP code of #{expected}, got #{actual} (#{code_description})"
-      end
-
-      def description
-        "have EPP code of #{expected}"
+        "Expected EPP code of #{expected}, got #{actual} (#{description})"
       end
 
       private
@@ -27,7 +23,7 @@ module Matchers
         xml_document.xpath('//xmlns:result').first['code'].to_i
       end
 
-      def code_description
+      def description
         xml_document.css('result msg').text
       end
 
