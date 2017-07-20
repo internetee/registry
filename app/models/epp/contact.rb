@@ -174,6 +174,10 @@ class Epp::Contact < Contact
       self.ident_updated_at ||= Time.zone.now
       ident_frame = frame.css('ident').first
 
+      if ident_frame.text.present?
+        deny_ident_update
+      end
+
       if ident_frame && ident_attr_valid?(ident_frame)
         org_priv = %w(org priv).freeze
         if ident_country_code.blank? && org_priv.include?(ident_type) && org_priv.include?(ident_frame.attr('type'))
@@ -187,10 +191,10 @@ class Epp::Contact < Contact
           at.merge!(ident_type: ident_frame.attr('type'))
           at.merge!(ident_country_code: ident_frame.attr('cc')) if ident_frame.attr('cc').present?
         else
-          throw :epp_error, {code: '2306', msg: I18n.t(:ident_update_error)}
+          deny_ident_update
         end
       else
-        throw :epp_error, {code: '2306', msg: I18n.t(:ident_update_error)}
+        deny_ident_update
       end
     end
 
@@ -259,4 +263,9 @@ class Epp::Contact < Contact
     self.legal_document_id = doc.id
   end
 
+  private
+
+  def deny_ident_update
+    throw :epp_error, { code: '2306', msg: I18n.t(:ident_update_error) }
+  end
 end
