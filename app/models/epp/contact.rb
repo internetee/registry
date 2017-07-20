@@ -171,7 +171,7 @@ class Epp::Contact < Contact
 
     # allow to update ident code for legacy contacts
     if frame.css('ident').first
-      self.ident_updated_at ||= Time.zone.now # not in use
+      self.ident_updated_at ||= Time.zone.now
       ident_frame = frame.css('ident').first
 
       if ident_frame && ident_attr_valid?(ident_frame)
