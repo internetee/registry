@@ -498,7 +498,9 @@ en:
   crt_revoked: 'CRT (revoked)'
   contact_org_error: 'Parameter value policy error. Org must be blank'
   contact_fax_error: 'Parameter value policy error. Fax must be blank'
-  ident_update_error: 'Parameter value policy error. Update of ident data not allowed [ident]'
+  ident_update_error: >-
+    Data management policy violation:
+    update of ident not allowed, please consider creating new contact object
   invoices: 'Invoices'
   no_such_user: 'No such user'
   phone_no: 'Phone number'

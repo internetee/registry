@@ -18,7 +18,7 @@ RSpec.describe 'EPP contact:update' do
         </update>
         <extension>
           <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
-            <eis:ident cc="US" type="org">test</eis:ident>
+            <eis:ident cc="GB" type="priv">test</eis:ident>
           </eis:extdata>
         </extension>
       </command>
@@ -30,13 +30,45 @@ RSpec.describe 'EPP contact:update' do
     sign_in_to_epp_area
   end
 
-  context 'when :ident tag is given and a contact has been imported from legacy software' do
-    let(:contact) { build(:contact, code: 'TEST', ident: nil, ident_type: nil, ident_country_code: nil) }
+  context 'when submitted ident matches current one' do
+    let!(:contact) { create(:contact, code: 'TEST', ident: 'test', ident_type: 'org', ident_country_code: 'US') }
+
+    it 'updates :ident_type' do
+      request
+      contact.reload
+      expect(contact.ident_type).to eq('priv')
+    end
+
+    it 'updates :ident_country_code' do
+      request
+      contact.reload
+      expect(contact.ident_country_code).to eq('GB')
+    end
 
     specify do
-      contact.save(validate: false)
       request
-      expect(response).to have_code_of(2306)
+      expect(response).to have_code_of(1000)
+    end
+  end
+
+  context 'when submitted ident does not match current one' do
+    let!(:contact) { create(:contact, code: 'TEST', ident: 'some-ident', ident_type: 'org', ident_country_code: 'US') }
+
+    it 'does not update :ident_type' do
+      request
+      contact.reload
+      expect(contact.ident_type).to eq('org')
+    end
+
+    it 'does not update :ident_country_code' do
+      request
+      contact.reload
+      expect(contact.ident_country_code).to eq('US')
+    end
+
+    specify do
+      request
+      expect(response).to have_code_of(2308)
     end
   end
 end
