@@ -572,7 +572,7 @@ class Contact < ActiveRecord::Base
     return if changes.slice(*(self.class.column_names - ["updated_at", "created_at", "statuses", "status_notes"])).empty?
 
     names = related_domain_descriptions.keys
-    UpdateWhoisRecordJob.enqueue(names, :domain) if names.present?
+    UpdateWhoisRecordJob.enqueue(names, 'domain') if names.present?
   end
 
   def children_log
