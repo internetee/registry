@@ -51,7 +51,7 @@ en:
               blank: "Required parameter missing - ident"
               invalid_EE_identity_format: "Ident not in valid Estonian identity format."
               invalid_EE_identity_format_update: "Ident not in valid Estonian identity format. Please create new contact"
-              invalid_birthday_format: "Ident not in valid birthady format, should be YYYY-MM-DD"
+              invalid_birthday_format: "Ident not in valid birthday format, should be YYYY-MM-DD"
               invalid_country_code: "Ident country code is not valid, should be in ISO_3166-1 alpha 2 format"
             ident_type:
               ident_type_invalid: 'Ident type is invalid'
