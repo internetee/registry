@@ -19,10 +19,10 @@ class Contact < ActiveRecord::Base
 
   accepts_nested_attributes_for :legal_documents
 
-  validates :name, :phone, :email, :ident, :ident_type, presence: true
+  validates :name, :email, :ident, :ident_type, presence: true
   validates :street, :city, :zip, :country_code, presence: true, if: 'self.class.address_processing?'
 
-  validates :phone, format: /\+[0-9]{1,3}\.[0-9]{1,14}?/, phone: true
+  validates :phone, presence: true, format: /\+[0-9]{1,3}\.[0-9]{1,14}?/, phone: true
 
   validates :email, format: /@/
   validates :email, email_format: { message: :invalid }, if: proc { |c| c.email_changed? }
