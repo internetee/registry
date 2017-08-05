@@ -109,9 +109,7 @@ gem 'pdfkit', '0.6.2'
 
 # for datepicker
 gem 'jquery-ui-rails', '5.0.5'
-
-# codeclimate
-
+gem 'active_model-errors_details' # Backport from Rails 5, https://github.com/rails/rails/pull/18322
 
 group :development do
   gem 'spring'
