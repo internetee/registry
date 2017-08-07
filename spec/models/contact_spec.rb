@@ -237,7 +237,7 @@ RSpec.describe Contact do
           @contact.ident = date
           @contact.valid?
           @contact.errors.full_messages.should ==
-            ["Ident Ident not in valid birthady format, should be YYYY-MM-DD"]
+            ["Ident Ident not in valid birthday format, should be YYYY-MM-DD"]
         end
       end
     end
