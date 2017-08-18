@@ -1,6 +1,6 @@
 # https://en.wikipedia.org/wiki/E.164
 
-RSpec.shared_examples 'e164 phone number' do
+RSpec.shared_examples 'e164' do
   describe 'validation' do
     it 'rejects invalid format' do
       model.send("#{attribute}=", '+.1')
