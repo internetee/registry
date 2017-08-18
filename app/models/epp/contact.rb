@@ -153,26 +153,25 @@ class Epp::Contact < Contact
 
     self.deliver_emails = true # turn on email delivery for epp
 
-    if frame.css('ident').first
-      ident_frame = frame.css('ident').first
+    ident_frame = frame.css('ident').first
 
-      # https://github.com/internetee/registry/issues/576
+    # https://github.com/internetee/registry/issues/576
+    if ident_frame
       if identifier.valid?
         deny_ident_update
       else
-        if ident_frame && ident_attr_valid?(ident_frame)
-          deny_ident_update if ident_frame.text != ident
+        ident_change_disallowed = ident_frame.text.present? && (ident_frame.text != ident)
+        deny_ident_update if ident_change_disallowed
 
-          identifier = Ident.new(code: ident,
-                                 type: ident_frame.attr('type'),
-                                 country_code: ident_frame.attr('cc'),
-          )
+        identifier = Ident.new(code: ident,
+                               type: ident_frame.attr('type'),
+                               country_code: ident_frame.attr('cc'),
+        )
 
-          identifier.validate
+        identifier.validate
 
-          self.identifier = identifier
-          self.ident_updated_at ||= Time.zone.now
-        end
+        self.identifier = identifier
+        self.ident_updated_at ||= Time.zone.now
       end
     end
 
