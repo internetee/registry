@@ -28,45 +28,6 @@ RSpec.describe Contact do
       @contact.updator.should == nil
     end
 
-    it 'should require country code when org' do
-      @contact.ident_type = 'org'
-      @contact.valid?
-      @contact.errors[:ident_country_code].should == ['is missing']
-    end
-
-    it 'should require country code when priv' do
-      @contact.ident_type = 'priv'
-      @contact.valid?
-      @contact.errors[:ident_country_code].should == ['is missing']
-    end
-
-    it 'should validate correct country code' do
-      @contact.ident = 1
-      @contact.ident_type = 'org'
-      @contact.ident_country_code = 'EE'
-      @contact.valid?
-
-      @contact.errors[:ident_country_code].should == []
-    end
-
-    it 'should require valid country code' do
-      @contact.ident = '123'
-      @contact.ident_type = 'org'
-      @contact.ident_country_code = 'INVALID'
-      @contact.valid?
-
-      expect(@contact.errors).to have_key(:ident)
-    end
-
-    it 'should convert to alpha2 country code' do
-      @contact.ident = 1
-      @contact.ident_type = 'org'
-      @contact.ident_country_code = 'ee'
-      @contact.validate
-
-      @contact.ident_country_code.should == 'EE'
-    end
-
     it 'should not have any versions' do
       @contact.versions.should == []
     end
@@ -117,14 +78,6 @@ RSpec.describe Contact do
 
     it 'should not have relation with domains' do
       @contact.domains_present?.should == false
-    end
-
-    it 'org should be valid' do
-      contact = Fabricate.build(:contact, ident_type: 'org', ident: '1' * 8)
-
-      contact.validate
-
-      contact.errors.full_messages.should match_array([])
     end
 
     it 'should not overwrite code' do
@@ -214,31 +167,6 @@ RSpec.describe Contact do
         @contact.valid?
         @contact.errors[:email].should == ['Email is invalid']
         @contact.email = old
-      end
-    end
-
-    context 'as birthday' do
-      before :example do
-        @contact.ident_type = 'birthday'
-      end
-
-      it 'birthday should be valid' do
-        valid = ['2012-12-11', '1990-02-16']
-        valid.each do |date|
-          @contact.ident = date
-          @contact.valid?
-          @contact.errors.full_messages.should match_array([])
-        end
-      end
-
-      it 'birthday should be invalid' do
-        invalid = ['123' '12/12/2012', 'aaaa', '12/12/12', '02-11-1999']
-        invalid.each do |date|
-          @contact.ident = date
-          @contact.valid?
-          @contact.errors.full_messages.should ==
-            ["Ident Ident not in valid birthday format, should be YYYY-MM-DD"]
-        end
       end
     end
 
@@ -445,13 +373,35 @@ RSpec.describe Contact do
     end
   end
 
-  describe 'country code validation' do
+  describe 'country code validation', db: false do
     let(:contact) { described_class.new(country_code: 'test') }
 
     it 'rejects invalid' do
       contact.country_code = 'invalid'
       contact.validate
       expect(contact.errors).to have_key(:country_code)
+    end
+  end
+
+  describe 'identifier validation', db: false do
+    let(:contact) { described_class.new }
+
+    it 'rejects invalid' do
+      ident = Contact::Ident.new
+      ident.validate
+      contact.identifier = ident
+      contact.validate
+
+      expect(contact.errors).to be_added(:identifier, :invalid)
+    end
+
+    it 'accepts valid' do
+      ident = Contact::Ident.new(code: 'test', type: 'priv', country_code: 'US')
+      ident.validate
+      contact.identifier = ident
+      contact.validate
+
+      expect(contact.errors).to_not be_added(:identifier, :invalid)
     end
   end
 
@@ -560,5 +510,14 @@ RSpec.describe Contact do
 
       expect(domain_names).to eq({ 'test.com' => %i[admin_domain_contact].to_set })
     end
+  end
+
+  it 'normalizes ident country code', db: false do
+    contact = described_class.new
+
+    contact.ident_country_code = 'ee'
+    contact.validate
+
+    expect(contact.ident_country_code).to eq('EE')
   end
 end

@@ -109,7 +109,7 @@ class Epp::Contact < Contact
   end
   delegate :ident_attr_valid?, to: :class
 
-  def epp_code_map # rubocop:disable Metrics/MethodLength
+  def epp_code_map
     {
       '2003' => [ # Required parameter missing
         [:name,   :blank],
@@ -124,27 +124,16 @@ class Epp::Contact < Contact
         [:name, :invalid],
         [:phone, :invalid],
         [:email, :invalid],
-        [:ident, :invalid],
-        [:ident, :invalid_EE_identity_format],
-        [:ident, :invalid_EE_identity_format_update],
-        [:ident, :invalid_birthday_format],
-        [:ident, :invalid_country_code],
         [:country_code, :invalid],
-        [:ident_type, :missing],
         [:code, :invalid],
         [:code, :too_long_contact_code]
       ],
       '2302' => [ # Object exists
         [:code, :epp_id_taken]
       ],
-      '2304' => [ # Object status prohibits operation
-        [:ident_type, :epp_ident_type_invalid, { value: { obj: 'code', val: code}, interpolation: {code: code}}]
-      ],
       '2305' => [ # Association exists
         [:domains, :exist]
       ],
-      '2306' => [ # Parameter policy error
-      ]
     }
   end
 
@@ -164,36 +153,26 @@ class Epp::Contact < Contact
 
     self.deliver_emails = true # turn on email delivery for epp
 
-    # Allow ident data update for legacy contacts
     if frame.css('ident').first
-      self.ident_updated_at ||= Time.zone.now
       ident_frame = frame.css('ident').first
 
-      if ident_frame && ident_attr_valid?(ident_frame)
-        org_priv = %w(org priv).freeze
-
-        if ident_frame.text == ident
-          if ident_type.present? && ident_country_code.present?
-            at.merge!(ident_type: ident_frame.attr('type'))
-            at.merge!(ident_country_code: ident_frame.attr('cc'))
-          elsif ident_country_code.blank? && org_priv.include?(ident_type) && org_priv.include?(ident_frame.attr('type'))
-            at.merge!(ident_country_code: ident_frame.attr('cc'), ident_type: ident_frame.attr('type'))
-          elsif ident_type == 'birthday' && !ident[/\A\d{4}-\d{2}-\d{2}\z/] && (Date.parse(ident) rescue false)
-            at.merge!(ident: ident_frame.text)
-            at.merge!(ident_country_code: ident_frame.attr('cc'))
-          elsif ident_type == 'birthday' && ident_country_code.blank?
-            at.merge!(ident_country_code: ident_frame.attr('cc'))
-          elsif ident_type.blank? && ident_country_code.blank?
-            at.merge!(ident_type: ident_frame.attr('type'))
-            at.merge!(ident_country_code: ident_frame.attr('cc'))
-          else
-            deny_ident_update
-          end
-        else
-          deny_ident_update
-        end
-      else
+      # https://github.com/internetee/registry/issues/576
+      if identifier.valid?
         deny_ident_update
+      else
+        if ident_frame && ident_attr_valid?(ident_frame)
+          deny_ident_update if ident_frame.text != ident
+
+          identifier = Ident.new(code: ident,
+                                 type: ident_frame.attr('type'),
+                                 country_code: ident_frame.attr('cc'),
+          )
+
+          identifier.validate
+
+          self.identifier = identifier
+          self.ident_updated_at ||= Time.zone.now
+        end
       end
     end
 
