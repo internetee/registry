@@ -34,33 +34,6 @@ en:
   activerecord:
     errors:
       models:
-        contact:
-          attributes:
-            code:
-              blank: "Required parameter missing - code"
-              too_long_contact_code: "Contact code is too long, max 100 characters"
-            name:
-              blank: "Required parameter missing - name"
-            phone:
-              blank: "Required parameter missing - phone"
-              invalid: "Phone nr is invalid"
-            email:
-              blank: "Required parameter missing - email"
-              invalid: "Email is invalid"
-            ident:
-              blank: "Required parameter missing - ident"
-              invalid_EE_identity_format: "Ident not in valid Estonian identity format."
-              invalid_EE_identity_format_update: "Ident not in valid Estonian identity format. Please create new contact"
-              invalid_birthday_format: "Ident not in valid birthady format, should be YYYY-MM-DD"
-              invalid_country_code: "Ident country code is not valid, should be in ISO_3166-1 alpha 2 format"
-            ident_type:
-              ident_type_invalid: 'Ident type is invalid'
-              epp_ident_type_invalid: 'Object status prohibits operation: ident_type of contact %{code} is invalid'
-            domains:
-              exist: 'Object association prohibits operation'
-            statuses:
-              not_uniq: 'not uniq'
-
         epp_domain: &epp_domain_ar_attributes
           attributes:
             base:
@@ -262,6 +235,8 @@ en:
       unimplemented_command: 'Unimplemented command'
       domain_exists_but_belongs_to_other_registrar: 'Domain exists but belongs to other registrar'
       required_ident_attribute_missing: "Required ident attribute missing: %{key}"
+      invalid_iso31661_alpha2: does not conform to ISO 3166-1 alpha-2 standard
+      invalid_iso8601: does not conform to ISO 8601 standard
 
   code: 'Code'
   value: 'Value'

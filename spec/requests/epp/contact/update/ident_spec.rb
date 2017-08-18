@@ -1,6 +1,9 @@
 require 'rails_helper'
 
+# https://github.com/internetee/registry/issues/576
+
 RSpec.describe 'EPP contact:update' do
+  let(:ident) { contact.identifier }
   let(:request) { post '/epp/command/update', frame: request_xml }
   let(:request_xml) { <<-XML
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -18,7 +21,7 @@ RSpec.describe 'EPP contact:update' do
         </update>
         <extension>
           <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
-            <eis:ident cc="GB" type="priv">test</eis:ident>
+            <eis:ident cc="US" type="priv">test</eis:ident>
           </eis:extdata>
         </extension>
       </command>
@@ -30,45 +33,128 @@ RSpec.describe 'EPP contact:update' do
     sign_in_to_epp_area
   end
 
-  context 'when submitted ident matches current one' do
-    let!(:contact) { create(:contact, code: 'TEST', ident: 'test', ident_type: 'org', ident_country_code: 'US') }
+  context 'when contact ident is valid' do
+    let!(:contact) { create(:contact, code: 'TEST', ident: 'test', ident_type: 'priv', ident_country_code: 'US') }
 
-    it 'updates :ident_type' do
-      request
-      contact.reload
-      expect(contact.ident_type).to eq('priv')
+    it 'does not update code' do
+      expect { request; contact.reload }.to_not change { ident.code }
     end
 
-    it 'updates :ident_country_code' do
-      request
-      contact.reload
-      expect(contact.ident_country_code).to eq('GB')
+    it 'does not update type' do
+      expect { request; contact.reload }.to_not change { ident.type }
+    end
+
+    it 'does not update country code' do
+      expect { request; contact.reload }.to_not change { ident.country_code }
     end
 
     specify do
       request
-      expect(response).to have_code_of(1000)
+
+      message = 'Data management policy violation:' \
+                ' update of ident not allowed, please consider creating new contact object'
+      expect(epp_response).to have_result(:data_management_policy_violation, message)
     end
   end
 
-  context 'when submitted ident does not match current one' do
-    let!(:contact) { create(:contact, code: 'TEST', ident: 'some-ident', ident_type: 'org', ident_country_code: 'US') }
+  context 'when contact ident is invalid' do
+    let(:contact) { build(:contact, code: 'TEST', ident: 'test', ident_type: nil, ident_country_code: nil) }
 
-    it 'does not update :ident_type' do
-      request
-      contact.reload
-      expect(contact.ident_type).to eq('org')
+    before do
+      contact.save(validate: false)
     end
 
-    it 'does not update :ident_country_code' do
-      request
-      contact.reload
-      expect(contact.ident_country_code).to eq('US')
+    context 'when submitted ident is the same as current one' do
+      let(:request_xml) { <<-XML
+        <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+        <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+          <command>
+            <update>
+              <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+                <contact:id>TEST</contact:id>
+                <contact:chg>
+                  <contact:postalInfo>
+                    <contact:name>test</contact:name>
+                  </contact:postalInfo>
+                </contact:chg>
+              </contact:update>
+            </update>
+            <extension>
+              <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+                <eis:ident cc="US" type="priv">test</eis:ident>
+              </eis:extdata>
+            </extension>
+          </command>
+        </epp>
+      XML
+      }
+
+      it 'does not update code' do
+        expect { request; contact.reload }.to_not change { ident.code }
+      end
+
+      it 'updates type' do
+        request
+        contact.reload
+        expect(ident.type).to eq('priv')
+      end
+
+      it 'updates country code' do
+        request
+        contact.reload
+        expect(ident.country_code).to eq('US')
+      end
+
+      specify do
+        request
+        expect(epp_response).to have_result(:success)
+      end
     end
 
-    specify do
-      request
-      expect(response).to have_code_of(2308)
+    context 'when submitted ident is different from current one' do
+      let(:request_xml) { <<-XML
+        <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+        <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+          <command>
+            <update>
+              <contact:update xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+                <contact:id>TEST</contact:id>
+                <contact:chg>
+                  <contact:postalInfo>
+                    <contact:name>test</contact:name>
+                  </contact:postalInfo>
+                </contact:chg>
+              </contact:update>
+            </update>
+            <extension>
+              <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+                <eis:ident cc="US" type="priv">another-test</eis:ident>
+              </eis:extdata>
+            </extension>
+          </command>
+        </epp>
+      XML
+      }
+
+      it 'does not update code' do
+        expect { request; contact.reload }.to_not change { ident.code }
+      end
+
+      it 'does not update type' do
+        expect { request; contact.reload }.to_not change { ident.type }
+      end
+
+      it 'does not update country code' do
+        expect { request; contact.reload }.to_not change { ident.country_code }
+      end
+
+      specify do
+        request
+
+        message = 'Data management policy violation:' \
+                ' update of ident not allowed, please consider creating new contact object'
+        expect(epp_response).to have_result(:data_management_policy_violation, message)
+      end
     end
   end
 end
