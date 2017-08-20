@@ -215,10 +215,6 @@ class Contact < ActiveRecord::Base
       STDOUT << "#{Time.zone.now.utc} - Successfully destroyed #{counter} orphaned contacts\n" unless Rails.env.test?
     end
 
-    def privs
-      where("ident_type = '#{PRIV}'")
-    end
-
     def admin_statuses
       [
         SERVER_UPDATE_PROHIBITED,
