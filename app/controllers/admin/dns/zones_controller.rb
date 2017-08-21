@@ -1,6 +1,6 @@
 module Admin
   module DNS
-    class ZonesController < AdminController
+    class ZonesController < BaseController
       authorize_resource(class: 'DNS::Zone')
       before_action :load_zone, only: %i[edit update destroy]
 

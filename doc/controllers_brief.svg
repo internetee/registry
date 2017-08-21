@@ -52,11 +52,6 @@
 <ellipse fill="none" stroke="black" cx="532" cy="-462" rx="87.9851" ry="18"/>
 <text text-anchor="middle" x="532" y="-458.3" font-family="Times,serif" font-size="14.00">Epp::ErrorsController</text>
 </g>
-<!-- AdminController -->
-<g id="node9" class="node"><title>AdminController</title>
-<ellipse fill="none" stroke="black" cx="-361" cy="66" rx="71.4873" ry="18"/>
-<text text-anchor="middle" x="-361" y="69.7" font-family="Times,serif" font-size="14.00">AdminController</text>
-</g>
 <!-- RegistrarController -->
 <g id="node10" class="node"><title>RegistrarController</title>
 <ellipse fill="none" stroke="black" cx="-173" cy="-462" rx="79.0865" ry="18"/>
