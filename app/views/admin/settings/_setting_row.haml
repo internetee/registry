@@ -6,4 +6,4 @@
       = hidden_field_tag("[settings][#{var}]", '')
       = check_box_tag("[settings][#{var}]", true, value)
   - else
-    %td.col-md-6= text_field_tag("[settings][#{var}]", value)
+    %td.col-md-6= text_field_tag("[settings][#{var}]", value, class: 'form-control')
