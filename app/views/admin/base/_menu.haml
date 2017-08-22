@@ -11,7 +11,7 @@
     - if can?(:access, :settings_menu)
       %li.dropdown
         %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
-          = t(:settings)
+          = t('.settings')
           %span.caret
         %ul.dropdown-menu{role: "menu"}
           %li.dropdown-header= t('.users')
@@ -30,7 +30,7 @@
           %li= link_to t('.contact_history'), admin_contact_versions_path
           %li.divider
           %li.dropdown-header= t(:system)
-          %li= link_to t(:settings), admin_settings_path
+          %li= link_to t('.settings'), admin_settings_path
           %li= link_to t('.zones'), admin_zones_path
           %li= link_to t('.blocked_domains'), admin_blocked_domains_path
           %li= link_to t('.reserved_domains'), admin_reserved_domains_path

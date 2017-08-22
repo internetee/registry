@@ -1,6 +1,6 @@
 - value = Setting.send(var)
 %tr{class: (@errors && @errors.has_key?(var.to_s) && "danger")}
-  %td= t(var)
+  %td= var.to_s.humanize
   - if [TrueClass, FalseClass].include?(value.class)
     %td
       = hidden_field_tag("[settings][#{var}]", '')

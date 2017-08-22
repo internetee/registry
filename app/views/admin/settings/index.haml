@@ -1,15 +1,11 @@
-= render 'shared/title', name: t(:settings)
+= render 'shared/title', name: t('.title')
 
 = form_tag [:admin, :settings] do
   .panel.panel-default
-    .panel-heading.clearfix
-      = t(:domain_validation_rules)
+    .panel-heading
+      = t('.domain_validation')
     .table-responsive
       %table.table.table-hover.table-bordered.table-condensed
-        %thead
-          %tr
-            %th{class: 'col-xs-6'}= t(:setting)
-            %th{class: 'col-xs-6'}= t(:value)
         %tbody
           = render 'setting_row', var: :admin_contacts_min_count
           = render 'setting_row', var: :admin_contacts_max_count
@@ -26,14 +22,10 @@
           = render 'setting_row', var: :expire_pending_confirmation
 
   .panel.panel-default
-    .panel-heading.clearfix
-      = t(:domain_expiring)
+    .panel-heading
+      = t('.domain_expiration')
     .table-responsive
       %table.table.table-hover.table-bordered.table-condensed
-        %thead
-          %tr
-            %th{class: 'col-xs-6'}= t(:setting)
-            %th{class: 'col-xs-6'}= t(:value)
         %tbody
           = render 'setting_row', var: :days_to_renew_domain_before_expire
           = render 'setting_row', var: :expire_warning_period
@@ -41,14 +33,10 @@
           = render 'setting_row', var: :expiration_reminder_mail
 
   .panel.panel-default
-    .panel-heading.clearfix
-      = t(:other)
+    .panel-heading
+      = t('.other')
     .table-responsive
       %table.table.table-hover.table-bordered.table-condensed
-        %thead
-          %tr
-            %th{class: 'col-xs-6'}= t(:setting)
-            %th{class: 'col-xs-6'}= t(:value)
         %tbody
           = render 'setting_row', var: :transfer_wait_time
           = render 'setting_row', var: :ds_digest_type
@@ -61,14 +49,10 @@
           = render 'setting_row', var: :address_processing
 
   .panel.panel-default
-    .panel-heading.clearfix
-      = t(:billing_settings)
+    .panel-heading
+      = t('.billing')
     .table-responsive
       %table.table.table-hover.table-bordered.table-condensed
-        %thead
-          %tr
-            %th{class: 'col-xs-6'}= t(:setting)
-            %th{class: 'col-xs-6'}= t(:value)
         %tbody
           = render 'setting_row', var: :invoice_number_min
           = render 'setting_row', var: :invoice_number_max
@@ -91,14 +75,10 @@
           = render 'setting_row', var: :registry_swift
 
   .panel.panel-default
-    .panel-heading.clearfix
-      = t(:registry_settings)
+    .panel-heading
+      = t('.contacts')
     .table-responsive
       %table.table.table-hover.table-bordered.table-condensed
-        %thead
-          %tr
-            %th{class: 'col-xs-6'}= t(:setting)
-            %th{class: 'col-xs-6'}= t(:value)
         %tbody
           = render 'setting_row', var: :registry_juridical_name
           = render 'setting_row', var: :registry_reg_no
@@ -113,4 +93,4 @@
 
   .row
     .col-md-12.text-right
-      %button.btn.btn-primary=t(:save)
+      %button.btn.btn-primary=t('.submit_btn')
