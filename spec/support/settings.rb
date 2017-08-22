@@ -6,7 +6,7 @@ RSpec.configure do |config|
       Setting.ds_algorithm = 2
       Setting.ds_data_allowed = true
       Setting.ds_data_with_key_allowed = true
-      Setting.key_data_allowed = true
+      Setting.key_data_allowed = false
 
       Setting.dnskeys_min_count = 0
       Setting.dnskeys_max_count = 9
