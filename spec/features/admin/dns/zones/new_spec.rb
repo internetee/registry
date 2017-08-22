@@ -15,7 +15,7 @@ RSpec.feature 'New zone in admin area', settings: false do
   end
 
   def open_list
-    click_link_or_button t('admin.menu.zones')
+    click_link_or_button t('admin.base.menu.zones')
   end
 
   def open_form

@@ -131,16 +131,6 @@
 <polyline fill="none" stroke="black" points="740.5,56 875.5,56 "/>
 <text text-anchor="start" x="748.5" y="71.2" font-family="Times,serif" font-size="14.00">_layout</text>
 </g>
-<!-- AdminController -->
-<g id="node9" class="node"><title>AdminController</title>
-<path fill="none" stroke="black" d="M152,239.5C152,239.5 238,239.5 238,239.5 244,239.5 250,233.5 250,227.5 250,227.5 250,158.5 250,158.5 250,152.5 244,146.5 238,146.5 238,146.5 152,146.5 152,146.5 146,146.5 140,152.5 140,158.5 140,158.5 140,227.5 140,227.5 140,233.5 146,239.5 152,239.5"/>
-<text text-anchor="middle" x="195" y="161.7" font-family="Times,serif" font-size="14.00">AdminController</text>
-<polyline fill="none" stroke="black" points="140,169.5 250,169.5 "/>
-<text text-anchor="start" x="148" y="184.7" font-family="Times,serif" font-size="14.00">head_title_sufix</text>
-<polyline fill="none" stroke="black" points="140,192.5 250,192.5 "/>
-<polyline fill="none" stroke="black" points="140,216.5 250,216.5 "/>
-<text text-anchor="start" x="148" y="231.7" font-family="Times,serif" font-size="14.00">_layout</text>
-</g>
 <!-- RegistrarController -->
 <g id="node10" class="node"><title>RegistrarController</title>
 <path fill="none" stroke="black" d="M-708,539.5C-708,539.5 -610,539.5 -610,539.5 -604,539.5 -598,533.5 -598,527.5 -598,527.5 -598,428.5 -598,428.5 -598,422.5 -604,416.5 -610,416.5 -610,416.5 -708,416.5 -708,416.5 -714,416.5 -720,422.5 -720,428.5 -720,428.5 -720,527.5 -720,527.5 -720,533.5 -714,539.5 -708,539.5"/>
