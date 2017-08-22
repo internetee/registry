@@ -409,7 +409,6 @@ en:
   record_created: 'Record created'
   failed_to_create_record: 'Failed to create record'
   record_updated: 'Record updated'
-  records_updated: 'Records updated'
   failed_to_update_record: 'Failed to update record'
   record_deleted: 'Record deleted'
   failed_to_delete_record: 'Failed to delete record'

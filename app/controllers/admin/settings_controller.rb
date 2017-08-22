@@ -14,7 +14,7 @@ module Admin
           Setting[k] = v
         end
 
-        flash[:notice] = I18n.t('records_updated')
+        flash[:notice] = t('.saved')
         redirect_to [:admin, :settings]
       else
         flash[:alert] = @errors.values.uniq.join(", ")

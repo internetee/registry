@@ -8,4 +8,7 @@ en:
         domain_expiration: Domain expiration
         billing: Billing
         contacts: Contacts
-        submit_btn: Save
+        save_btn: Save
+
+      create:
+        saved: Settings have been successfully updated

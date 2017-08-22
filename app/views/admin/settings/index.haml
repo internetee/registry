@@ -1,4 +1,6 @@
-= render 'shared/title', name: t('.title')
+.page-header
+  .h1
+    = t('.title')
 
 = form_tag [:admin, :settings] do
   .panel.panel-default
@@ -93,4 +95,4 @@
 
   .row
     .col-md-12.text-right
-      %button.btn.btn-primary=t('.submit_btn')
+      = submit_tag(t('.save_btn'), class: 'btn btn-success', name: nil)
