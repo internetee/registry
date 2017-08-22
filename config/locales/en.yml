@@ -565,7 +565,6 @@ en:
   public_key: 'Public key'
   ds_key_tag: 'DS key tag'
   ds_algorithm: 'DS algorithm'
-  ds_digest_type: 'DS digest type'
   ds_digest: 'DS digest'
   statuses: 'Statuses'
   status: 'Status'
