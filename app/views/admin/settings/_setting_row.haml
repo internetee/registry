@@ -3,7 +3,7 @@
   %td.col-md-6= var.to_s.humanize
   - if [TrueClass, FalseClass].include?(value.class)
     %td.col-md-6
-      = hidden_field_tag("[settings][#{var}]", '')
+      = hidden_field_tag("[settings][#{var}]", '', id: nil)
       = check_box_tag("[settings][#{var}]", true, value)
   - else
     %td.col-md-6= text_field_tag("[settings][#{var}]", value, class: 'form-control')
