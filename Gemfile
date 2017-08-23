@@ -116,7 +116,7 @@ gem 'jquery-ui-rails', '5.0.5'
 group :development do
   gem 'spring'
   gem 'spring-commands-rspec'
-  gem 'rubocop',               '0.48.1'
+  gem 'rubocop'
 
   # deploy
   gem 'mina', '0.3.1' # for fast deployment
