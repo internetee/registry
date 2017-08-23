@@ -110,9 +110,6 @@ gem 'pdfkit', '0.6.2'
 # for datepicker
 gem 'jquery-ui-rails', '5.0.5'
 
-# codeclimate
-
-
 group :development do
   gem 'spring'
   gem 'spring-commands-rspec'
