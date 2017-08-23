@@ -114,7 +114,7 @@ gem 'active_model-errors_details' # Backport from Rails 5, https://github.com/ra
 group :development do
   gem 'spring'
   gem 'spring-commands-rspec'
-  gem 'rubocop',               '0.48.1'
+  gem 'rubocop'
 
   # deploy
   gem 'mina', '0.3.1' # for fast deployment
