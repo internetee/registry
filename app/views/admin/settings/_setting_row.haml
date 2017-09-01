@@ -1,9 +1,9 @@
 - value = Setting.send(var)
 %tr{class: (@errors && @errors.has_key?(var.to_s) && "danger")}
-  %td= t(var)
+  %td.col-md-6= var.to_s.humanize
   - if [TrueClass, FalseClass].include?(value.class)
-    %td
-      = hidden_field_tag("[settings][#{var}]", '')
+    %td.col-md-6
+      = hidden_field_tag("[settings][#{var}]", '', id: nil)
       = check_box_tag("[settings][#{var}]", true, value)
   - else
-    %td= text_field_tag("[settings][#{var}]", value)
+    %td.col-md-6= text_field_tag("[settings][#{var}]", value, class: 'form-control')

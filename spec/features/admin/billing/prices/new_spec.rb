@@ -17,7 +17,7 @@ RSpec.feature 'New price in admin area', settings: false do
   end
 
   def open_list
-    click_link_or_button t('admin.menu.prices')
+    click_link_or_button t('admin.base.menu.prices')
   end
 
   def open_form
