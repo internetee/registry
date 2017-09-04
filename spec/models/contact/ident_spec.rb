@@ -164,7 +164,7 @@ RSpec.describe Contact::Ident, db: false do
   describe '::mismatches' do
     it 'returns mismatches' do
       mismatches = [
-        Contact::Ident::Mismatch.new('birthday', Country.new('EE')),
+        Contact::Ident::Mismatch.new('birthday', Country.new('EE'))
       ]
 
       expect(described_class.mismatches).to eq(mismatches)

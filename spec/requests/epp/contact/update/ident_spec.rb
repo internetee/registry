@@ -37,15 +37,24 @@ RSpec.describe 'EPP contact:update' do
     let!(:contact) { create(:contact, code: 'TEST', ident: 'test', ident_type: 'priv', ident_country_code: 'US') }
 
     it 'does not update code' do
-      expect { request; contact.reload }.to_not change { ident.code }
+      expect do
+        request
+        contact.reload
+      end.to_not change { ident.code }
     end
 
     it 'does not update type' do
-      expect { request; contact.reload }.to_not change { ident.type }
+      expect do
+        request
+        contact.reload
+      end.to_not change { ident.type }
     end
 
     it 'does not update country code' do
-      expect { request; contact.reload }.to_not change { ident.country_code }
+      expect do
+        request
+        contact.reload
+      end.to_not change { ident.country_code }
     end
 
     specify do
@@ -90,7 +99,10 @@ RSpec.describe 'EPP contact:update' do
       }
 
       it 'does not update code' do
-        expect { request; contact.reload }.to_not change { ident.code }
+        expect do
+          request
+          contact.reload
+        end.to_not change { ident.code }
       end
 
       it 'updates type' do
@@ -137,15 +149,24 @@ RSpec.describe 'EPP contact:update' do
       }
 
       it 'does not update code' do
-        expect { request; contact.reload }.to_not change { ident.code }
+        expect do
+          request
+          contact.reload
+        end.to_not change { ident.code }
       end
 
       it 'does not update type' do
-        expect { request; contact.reload }.to_not change { ident.type }
+        expect do
+          request
+          contact.reload
+        end.to_not change { ident.type }
       end
 
       it 'does not update country code' do
-        expect { request; contact.reload }.to_not change { ident.country_code }
+        expect do
+          request
+          contact.reload
+        end.to_not change { ident.country_code }
       end
 
       specify do

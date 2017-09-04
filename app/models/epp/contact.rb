@@ -133,7 +133,7 @@ class Epp::Contact < Contact
       ],
       '2305' => [ # Association exists
         [:domains, :exist]
-      ],
+      ]
     }
   end
 
@@ -165,8 +165,7 @@ class Epp::Contact < Contact
 
         identifier = Ident.new(code: ident,
                                type: ident_frame.attr('type'),
-                               country_code: ident_frame.attr('cc')
-                              )
+                               country_code: ident_frame.attr('cc'))
 
         identifier.validate
 
