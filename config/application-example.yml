@@ -83,12 +83,6 @@ key_path: '/home/registry/registry/shared/ca/private/webclient.key.pem'
 epp_hostname: 'registry.gitlab.eu'
 repp_url: 'https://repp.gitlab.eu/repp/v1/'
 
-
-#
-# REGISTRANT configuration
-#
-restful_whois_url: 'https://restful-whois.example.com'
-
 #
 # Estonian Business Registry
 #
