@@ -4,7 +4,7 @@ module EPP
 
     def self.from_xml(xml)
       xml_doc = Nokogiri::XML(xml)
-      response = self.new
+      response = new
 
       result_elements = xml_doc.css('result')
 

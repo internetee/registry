@@ -9,7 +9,7 @@ module EPP
         '2001' => :syntax_error,
         '2003' => :required_param_missing,
         '2005' => :param_syntax_error,
-        '2308' => :data_management_policy_violation,
+        '2308' => :data_management_policy_violation
       }
 
       attr_accessor :code

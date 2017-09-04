@@ -48,9 +48,9 @@ class Contact < ActiveRecord::Base
 
   composed_of :identifier,
               class_name: 'Contact::Ident',
-              constructor: Proc.new { |code, type, country_code| Contact::Ident.new(code: code,
-                                                                                    type: type,
-                                                                                    country_code: country_code) },
+              constructor: proc { |code, type, country_code| Contact::Ident.new(code: code,
+                                                                                type: type,
+                                                                                country_code: country_code) },
               mapping: [%w[ident code], %w[ident_type type], %w[ident_country_code country_code]]
 
   def manage_emails

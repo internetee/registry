@@ -219,7 +219,7 @@ RSpec.describe 'EPP contact:create' do
 
     before do
       mismatches = [
-        Contact::Ident::Mismatch.new('priv', Country.new('DE')),
+        Contact::Ident::Mismatch.new('priv', Country.new('DE'))
       ]
       allow(Contact::Ident).to receive(:mismatches).and_return(mismatches)
     end
