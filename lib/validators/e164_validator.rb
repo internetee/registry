@@ -1,5 +1,5 @@
 class E164Validator < ActiveModel::EachValidator
-  def validate_each(record, attribute, value)
+  def validate_each(record, attribute, _value)
     validator = ActiveModel::Validations::LengthValidator.new(maximum: 17, attributes: attribute)
     validator.validate(record)
 

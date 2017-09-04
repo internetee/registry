@@ -60,16 +60,16 @@ module EppErrors
         aggregation.class.epp_code_map.each do |epp_code, attr_to_error|
           epp_code_found = attr_to_error.any? { |i| i == [attr, error_detail[:error]] }
 
-          if epp_code_found
-            message = aggregation.errors.generate_message(attr, error_detail[:error], error_detail)
-            message = aggregation.errors.full_message(attr, message)
+          next unless epp_code_found
 
-            if attr != :base
-              message = "#{aggregation.model_name.human} #{message.camelize(:lower)}"
-            end
+          message = aggregation.errors.generate_message(attr, error_detail[:error], error_detail)
+          message = aggregation.errors.full_message(attr, message)
 
-            epp_errors << { code: epp_code, msg: message }
+          if attr != :base
+            message = "#{aggregation.model_name.human} #{message.camelize(:lower)}"
           end
+
+          epp_errors << { code: epp_code, msg: message }
         end
       end
     end
