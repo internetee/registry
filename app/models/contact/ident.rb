@@ -7,7 +7,7 @@ class Contact::Ident
 
   validates :code, presence: true, code: true
   validates :code, iso8601: { date_only: true }, if: :birthday?
-  validates :type, presence: true, inclusion: { in: Proc.new { types } }
+  validates :type, presence: true, inclusion: { in: proc { types } }
   validates :country_code, presence: true, iso31661_alpha2: true
   validate :mismatched
 
@@ -16,15 +16,15 @@ class Contact::Ident
       '2003' => [
         [:code, :blank],
         [:type, :blank],
-        [:country_code, :blank],
+        [:country_code, :blank]
       ],
       '2005' => [
         [:base, :mismatch],
         [:code, :invalid_national_id],
         [:code, :invalid_reg_no],
         [:code, :invalid_iso8601],
-        [:country_code, :invalid_iso31661_alpha2],
-      ],
+        [:country_code, :invalid_iso31661_alpha2]
+      ]
     }
   end
 
@@ -36,7 +36,7 @@ class Contact::Ident
 
   def self.mismatches
     [
-      Mismatch.new('birthday', Country.new('EE')),
+      Mismatch.new('birthday', Country.new('EE'))
     ]
   end
 
@@ -63,7 +63,7 @@ class Contact::Ident
   private
 
   # https://github.com/rails/rails/issues/1513
-  def validation_context=(value); end
+  def validation_context=(_value); end
 
   def mismatched
     mismatched = self.class.mismatches.include?(Mismatch.new(type, country))
