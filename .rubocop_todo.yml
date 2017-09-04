@@ -776,7 +776,7 @@ Style/CommentAnnotation:
     - 'app/models/contact.rb'
     - 'app/views/epp/domains/info.xml.builder'
 
-# Offense count: 20
+# Offense count: 12
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles, SingleLineConditionsOnly, IncludeTernaryExpressions.
 # SupportedStyles: assign_to_condition, assign_inside_condition
@@ -793,13 +793,6 @@ Style/ConditionalAssignment:
     - 'lib/tasks/import.rake'
     - 'app/api/repp/domain_v1.rb'
     - 'app/controllers/admin/domains_controller.rb'
-    - 'app/models/depp/domain.rb'
-    - 'app/models/soap/arireg.rb'
-    - 'app/models/contact.rb'
-    - 'app/controllers/registrar/contacts_controller.rb'
-    - 'app/controllers/registrar/domains_controller.rb'
-    - 'app/controllers/admin/account_activities_controller.rb'
-    - 'app/controllers/admin/domain_versions_controller.rb'
 
 # Offense count: 472
 Style/Documentation:
@@ -1098,14 +1091,12 @@ Style/Proc:
     - 'app/models/billing/price.rb'
     - 'app/models/contact.rb'
 
-# Offense count: 5
+# Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: SupportedStyles.
 # SupportedStyles: compact, exploded
 Style/RaiseArgs:
   EnforcedStyle: compact
-  Exclude:
-    - 'app/models/soap/arireg.rb'
 
 # Offense count: 2
 # Cop supports --auto-correct.
