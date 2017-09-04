@@ -776,7 +776,7 @@ Style/CommentAnnotation:
     - 'app/models/contact.rb'
     - 'app/views/epp/domains/info.xml.builder'
 
-# Offense count: 12
+# Offense count: 9
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles, SingleLineConditionsOnly, IncludeTernaryExpressions.
 # SupportedStyles: assign_to_condition, assign_inside_condition
@@ -790,9 +790,6 @@ Style/ConditionalAssignment:
     - 'app/models/epp/domain.rb'
     - 'app/models/invoice.rb'
     - 'app/models/legal_document.rb'
-    - 'lib/tasks/import.rake'
-    - 'app/api/repp/domain_v1.rb'
-    - 'app/controllers/admin/domains_controller.rb'
 
 # Offense count: 472
 Style/Documentation:
