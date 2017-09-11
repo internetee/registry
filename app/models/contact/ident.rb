@@ -5,8 +5,11 @@ class Contact::Ident
   attr_accessor :type
   attr_accessor :country_code
 
-  validates :code, presence: true, code: true
+  validates :code, presence: true
+  validates :code, national_id: true, if: :national_id?
+  validates :code, reg_no: true, if: :reg_no?
   validates :code, iso8601: { date_only: true }, if: :birthday?
+
   validates :type, presence: true, inclusion: { in: proc { types } }
   validates :country_code, presence: true, iso31661_alpha2: true
   validate :mismatched
