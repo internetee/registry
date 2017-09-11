@@ -1,6 +1,6 @@
 module Admin
   module Billing
-    class PricesController < AdminController
+    class PricesController < BaseController
       authorize_resource(class: 'Billing::Price')
       before_action :load_price, only: %i[edit update expire]
       helper_method :zones
