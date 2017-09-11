@@ -236,7 +236,7 @@ en:
       domain_exists_but_belongs_to_other_registrar: 'Domain exists but belongs to other registrar'
       required_ident_attribute_missing: "Required ident attribute missing: %{key}"
       invalid_iso31661_alpha2: does not conform to ISO 3166-1 alpha-2 standard
-      invalid_iso8601: does not conform to ISO 8601 standard
+      invalid_iso8601_date: has invalid date format YYYY-MM-DD (ISO 8601)
 
   code: 'Code'
   value: 'Value'

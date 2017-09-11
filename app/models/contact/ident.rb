@@ -25,7 +25,7 @@ class Contact::Ident
         [:base, :mismatch],
         [:code, :invalid_national_id],
         [:code, :invalid_reg_no],
-        [:code, :invalid_iso8601],
+        [:code, :invalid_iso8601_date],
         [:country_code, :invalid_iso31661_alpha2]
       ]
     }
