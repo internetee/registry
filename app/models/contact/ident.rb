@@ -5,11 +5,14 @@ class Contact::Ident
   attr_accessor :type
   attr_accessor :country_code
 
-  validates :code, presence: true, code: true
+  validates :code, presence: true
+  validates :code, national_id: true, if: :national_id?
+  validates :code, reg_no: true, if: :reg_no?
   validates :code, iso8601: { date_only: true }, if: :birthday?
+
   validates :type, presence: true, inclusion: { in: proc { types } }
   validates :country_code, presence: true, iso31661_alpha2: true
-  validate :mismatched
+  validates_with MismatchValidator
 
   def self.epp_code_map
     {
@@ -22,7 +25,7 @@ class Contact::Ident
         [:base, :mismatch],
         [:code, :invalid_national_id],
         [:code, :invalid_reg_no],
-        [:code, :invalid_iso8601],
+        [:code, :invalid_iso8601_date],
         [:country_code, :invalid_iso31661_alpha2]
       ]
     }
@@ -30,14 +33,6 @@ class Contact::Ident
 
   def self.types
     %w[org priv birthday]
-  end
-
-  Mismatch = Struct.new(:type, :country)
-
-  def self.mismatches
-    [
-      Mismatch.new('birthday', Country.new('EE'))
-    ]
   end
 
   def marked_for_destruction?
@@ -63,10 +58,7 @@ class Contact::Ident
   private
 
   # https://github.com/rails/rails/issues/1513
-  def validation_context=(_value); end
-
-  def mismatched
-    mismatched = self.class.mismatches.include?(Mismatch.new(type, country))
-    errors.add(:base, :mismatch, type: type, country: country) if mismatched
+  def validation_context=(_value)
+    ;
   end
 end

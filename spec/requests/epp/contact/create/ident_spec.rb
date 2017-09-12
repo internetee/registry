@@ -88,7 +88,7 @@ RSpec.describe 'EPP contact:create' do
     end
   end
 
-  context 'when code is invalid' do
+  context 'when code is not valid national id' do
     let(:request_xml) { <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
       <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
@@ -104,13 +104,22 @@ RSpec.describe 'EPP contact:create' do
           </create>
           <extension>
             <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
-              <eis:ident type="priv" cc="EE">invalid</eis:ident>
+              <eis:ident type="priv" cc="DE">invalid</eis:ident>
             </eis:extdata>
           </extension>
         </command>
       </epp>
     XML
     }
+
+    before do
+      country_specific_validations = {
+        Country.new('DE') => proc { false },
+      }
+
+      allow(Contact::Ident::NationalIdValidator).to receive(:country_specific_validations)
+                                                      .and_return(country_specific_validations)
+    end
 
     it 'does not create a contact' do
       expect { request }.to_not change { Contact.count }
@@ -119,8 +128,51 @@ RSpec.describe 'EPP contact:create' do
     specify do
       request
 
-      message = 'Ident code does not conform to national identification number format of Estonia'
+      message = 'Ident code does not conform to national identification number format of Germany'
       expect(epp_response).to have_result(:param_syntax_error, message)
+    end
+  end
+
+  context 'when code is not valid registration number' do
+    let(:request_xml) { <<-XML
+      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
+        <command>
+          <create>
+            <contact:create xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd">
+              <contact:postalInfo>
+                <contact:name>test</contact:name>
+              </contact:postalInfo>
+              <contact:voice>+1.2</contact:voice>
+              <contact:email>test@test.com</contact:email>
+            </contact:create>
+          </create>
+          <extension>
+            <eis:extdata xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd">
+              <eis:ident type="org" cc="DE">invalid</eis:ident>
+            </eis:extdata>
+          </extension>
+        </command>
+      </epp>
+    XML
+    }
+
+    before do
+      country_specific_formats = {
+        Country.new('DE') => /\Avalid\z/,
+      }
+
+      allow(Contact::Ident::RegNoValidator).to receive(:country_specific_formats).and_return(country_specific_formats)
+    end
+
+    it 'does not create a contact' do
+      expect { request }.to_not change { Contact.count }
+    end
+
+    specify do
+      request
+      expect(epp_response).to have_result(:param_syntax_error,
+                                          'Ident code does not conform to registration number format of Germany')
     end
   end
 
@@ -219,9 +271,9 @@ RSpec.describe 'EPP contact:create' do
 
     before do
       mismatches = [
-        Contact::Ident::Mismatch.new('priv', Country.new('DE'))
+        Contact::Ident::MismatchValidator::Mismatch.new('priv', Country.new('DE'))
       ]
-      allow(Contact::Ident).to receive(:mismatches).and_return(mismatches)
+      allow(Contact::Ident::MismatchValidator).to receive(:mismatches).and_return(mismatches)
     end
 
     it 'does not create a contact' do

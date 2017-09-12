@@ -60,9 +60,8 @@ RSpec.describe 'EPP contact:update' do
     specify do
       request
 
-      message = 'Data management policy violation:' \
-                ' update of ident not allowed, please consider creating new contact object'
-      expect(epp_response).to have_result(:data_management_policy_violation, message)
+      expect(epp_response).to have_result(:data_management_policy_violation,
+                                          t('epp.contacts.errors.update_disallowed'))
     end
   end
 
@@ -172,9 +171,8 @@ RSpec.describe 'EPP contact:update' do
       specify do
         request
 
-        message = 'Data management policy violation:' \
-                ' update of ident not allowed, please consider creating new contact object'
-        expect(epp_response).to have_result(:data_management_policy_violation, message)
+        expect(epp_response).to have_result(:data_management_policy_violation,
+                                            t('epp.contacts.errors.wrong_ident'))
       end
     end
   end
