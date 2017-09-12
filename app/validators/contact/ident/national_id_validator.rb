@@ -1,4 +1,4 @@
-class Contact::Ident::NationalIDValidator < ActiveModel::EachValidator
+class Contact::Ident::NationalIdValidator < ActiveModel::EachValidator
   def self.country_specific_validations
     {
       Country.new('EE') => proc { |code| Isikukood.new(code).valid? },

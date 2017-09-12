@@ -12,5 +12,4 @@
 
 ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'DNS'
-  inflect.acronym 'ID'
 end

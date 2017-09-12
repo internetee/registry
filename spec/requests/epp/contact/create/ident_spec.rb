@@ -117,7 +117,7 @@ RSpec.describe 'EPP contact:create' do
         Country.new('DE') => proc { false },
       }
 
-      allow(Contact::Ident::NationalIDValidator).to receive(:country_specific_validations)
+      allow(Contact::Ident::NationalIdValidator).to receive(:country_specific_validations)
                                                       .and_return(country_specific_validations)
     end
 
