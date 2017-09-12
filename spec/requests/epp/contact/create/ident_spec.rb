@@ -271,9 +271,9 @@ RSpec.describe 'EPP contact:create' do
 
     before do
       mismatches = [
-        Contact::Ident::Mismatch.new('priv', Country.new('DE'))
+        Contact::Ident::MismatchValidator::Mismatch.new('priv', Country.new('DE'))
       ]
-      allow(Contact::Ident).to receive(:mismatches).and_return(mismatches)
+      allow(Contact::Ident::MismatchValidator).to receive(:mismatches).and_return(mismatches)
     end
 
     it 'does not create a contact' do

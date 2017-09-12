@@ -129,8 +129,8 @@ RSpec.describe Contact::Ident, db: false do
     let(:ident) { described_class.new(type: 'test', country_code: 'DE') }
 
     before do
-      mismatches = [Contact::Ident::Mismatch.new('test', Country.new('DE'))]
-      allow(described_class).to receive(:mismatches).and_return(mismatches)
+      mismatches = [Contact::Ident::MismatchValidator::Mismatch.new('test', Country.new('DE'))]
+      allow(Contact::Ident::MismatchValidator).to receive(:mismatches).and_return(mismatches)
     end
 
     it 'rejects mismatched' do
@@ -158,16 +158,6 @@ RSpec.describe Contact::Ident, db: false do
       ]
 
       expect(described_class.types).to eq(types)
-    end
-  end
-
-  describe '::mismatches' do
-    it 'returns mismatches' do
-      mismatches = [
-        Contact::Ident::Mismatch.new('birthday', Country.new('EE'))
-      ]
-
-      expect(described_class.mismatches).to eq(mismatches)
     end
   end
 
