@@ -37,7 +37,6 @@ describe BankStatement do
     end
 
     it 'should bind transactions with invoices' do
-      # pending 'Robot fails, probably we need to reset data here or some other issue'
       # sometimes it works, sometimes not
       # r = Fabricate(:registrar_with_no_account_activities, reference_no: 'RF7086666663')
       # invoice = r.issue_prepayment_invoice(200, 'add some money')
