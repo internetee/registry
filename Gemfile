@@ -105,8 +105,6 @@ gem 'activerecord-import', '0.7.0' # for inserting dummy data
 
 # for generating pdf
 gem 'pdfkit', '0.6.2'
-
-# for datepicker
 gem 'jquery-ui-rails', '5.0.5'
 
 group :development do
