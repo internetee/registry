@@ -21,10 +21,6 @@ $(document).on 'page:change', ->
   tomorrow = new Date(today)
   tomorrow.setDate(today.getDate() + 1)
 
-  $('.datepicker').datepicker(
-    dateFormat: "yy-mm-dd"
-  )
-
   if $('.js-combobox').length
     $('.js-combobox').select2
       width: "100%"

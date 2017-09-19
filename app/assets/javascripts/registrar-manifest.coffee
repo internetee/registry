@@ -6,8 +6,7 @@
 #= require jquery.nested_attributes
 #= require jquery-ui/datepicker
 #= require select2
-
+#= require datepicker
 #= require shared/general
-
 #= require registrar/autocomplete
 #= require registrar/application

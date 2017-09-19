@@ -54,7 +54,6 @@ gem 'coderay',          '1.1.0'   # xml console visualize
 gem 'html5_validators', '1.2.2'   # model requements now automatically on html form
 gem 'nprogress-rails',  '0.1.6.7' # visual loader
 gem 'select2-rails',    '3.5.9.3' # for autocomplete
-gem 'bootstrap-datepicker-rails', '1.3.1.1' # datepicker
 gem 'liquid',           '3.0.6'   # for email templates
 
 # rights
@@ -106,8 +105,6 @@ gem 'activerecord-import', '0.7.0' # for inserting dummy data
 
 # for generating pdf
 gem 'pdfkit', '0.6.2'
-
-# for datepicker
 gem 'jquery-ui-rails', '5.0.5'
 gem 'active_model-errors_details' # Backport from Rails 5, https://github.com/rails/rails/pull/18322
 
