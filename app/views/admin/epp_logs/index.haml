@@ -31,11 +31,11 @@
         .col-md-3
           .form-group
             = f.label t(:created_after)
-            = f.search_field :created_at_gteq, value: params[:q][:created_at_gteq], class: 'form-control datepicker', placeholder: t(:created_after)
+            = f.search_field :created_at_gteq, value: params[:q][:created_at_gteq], class: 'form-control js-datepicker', placeholder: t(:created_after)
         .col-md-3
           .form-group
             = f.label t(:created_before)
-            = f.search_field :created_at_lteq, value: params[:q][:created_at_lteq], class: 'form-control datepicker', placeholder: t(:created_before)
+            = f.search_field :created_at_lteq, value: params[:q][:created_at_lteq], class: 'form-control js-datepicker', placeholder: t(:created_before)
         .col-md-3{style: 'padding-top: 25px;'}
           %button.btn.btn-primary
             &nbsp;

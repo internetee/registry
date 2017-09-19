@@ -8,7 +8,7 @@
     });
 
     function attachDatePicker() {
-        var dateFields = $('.datepicker');
+        var dateFields = $('.js-datepicker');
         dateFields.datepicker();
     }
 

@@ -13,11 +13,11 @@
         .col-md-3
           .form-group
             = f.label t(:created_at_from)
-            = f.search_field :created_at_gteq, value: params[:q][:created_at_gteq], class: 'form-control datepicker', placeholder: t(:created_at_from)
+            = f.search_field :created_at_gteq, value: params[:q][:created_at_gteq], class: 'form-control js-datepicker', placeholder: t(:created_at_from)
         .col-md-3
           .form-group
             = f.label t(:created_at_until)
-            = f.search_field :created_at_lteq, value: params[:q][:created_at_lteq], class: 'form-control datepicker', placeholder: t(:created_at_until)
+            = f.search_field :created_at_lteq, value: params[:q][:created_at_lteq], class: 'form-control js-datepicker', placeholder: t(:created_at_until)
       .row
         .col-md-3
           .form-group

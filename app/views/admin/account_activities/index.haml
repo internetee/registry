@@ -24,11 +24,11 @@
         .col-md-3
           .form-group
             = f.label t(:receipt_date_from)
-            = f.search_field :created_at_gteq, value: params[:q][:created_at_gteq], class: 'form-control datepicker', placeholder: t(:receipt_date_from)
+            = f.search_field :created_at_gteq, value: params[:q][:created_at_gteq], class: 'form-control js-datepicker', placeholder: t(:receipt_date_from)
         .col-md-3
           .form-group
             = f.label t(:receipt_date_until)
-            = f.search_field :created_at_lteq, value: params[:q][:created_at_lteq], class: 'form-control datepicker', placeholder: t(:receipt_date_until)
+            = f.search_field :created_at_lteq, value: params[:q][:created_at_lteq], class: 'form-control js-datepicker', placeholder: t(:receipt_date_until)
         .col-md-3
           .form-group
             = label_tag t(:results_per_page)

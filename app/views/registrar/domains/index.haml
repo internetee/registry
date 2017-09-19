@@ -34,11 +34,11 @@
         .col-md-3
           .form-group
             = f.label t(:valid_to_from)
-            = f.search_field :valid_to_gteq, value: params[:q][:valid_to_gteq], class: 'form-control datepicker', placeholder: t(:valid_to_from)
+            = f.search_field :valid_to_gteq, value: params[:q][:valid_to_gteq], class: 'form-control js-datepicker', placeholder: t(:valid_to_from)
         .col-md-3
           .form-group
             = f.label t(:valid_to_until)
-            = f.search_field :valid_to_lteq, value: params[:q][:valid_to_lteq], class: 'form-control datepicker', placeholder: t(:valid_to_until)
+            = f.search_field :valid_to_lteq, value: params[:q][:valid_to_lteq], class: 'form-control js-datepicker', placeholder: t(:valid_to_until)
       .row
         .col-md-6
         .col-md-3

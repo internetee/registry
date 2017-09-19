@@ -24,11 +24,11 @@
         .col-md-3
           .form-group
             = f.label t(:due_date_from)
-            = f.search_field :due_date_gteq, value: params[:q][:due_date_gteq], class: 'form-control datepicker', placeholder: t(:due_date_from)
+            = f.search_field :due_date_gteq, value: params[:q][:due_date_gteq], class: 'form-control js-datepicker', placeholder: t(:due_date_from)
         .col-md-3
           .form-group
             = f.label t(:due_date_until)
-            = f.search_field :due_date_lteq, value: params[:q][:due_date_lteq], class: 'form-control datepicker', placeholder: t(:due_date_until)
+            = f.search_field :due_date_lteq, value: params[:q][:due_date_lteq], class: 'form-control js-datepicker', placeholder: t(:due_date_until)
       .row
         .col-md-3
           .form-group
