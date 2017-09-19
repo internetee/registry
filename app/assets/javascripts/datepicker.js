@@ -1,4 +1,4 @@
-(function () {
+(function() {
     $.datepicker.setDefaults({
         changeMonth: true,
         changeYear: true,
@@ -8,12 +8,12 @@
     });
 
     function attachDatePicker() {
-        var dateFields = $('.js-datepicker');
+        let dateFields = $('.js-datepicker');
         dateFields.datepicker();
     }
 
     // For turbolinks
-    document.addEventListener('page:change', function () {
+    document.addEventListener('page:change', function() {
         attachDatePicker();
     });
 
