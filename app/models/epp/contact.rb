@@ -158,10 +158,10 @@ class Epp::Contact < Contact
     # https://github.com/internetee/registry/issues/576
     if ident_frame
       if identifier.valid?
-        report_update_disallowed_error
+        report_valid_ident_error
       else
-        wrong_ident = ident_frame.text.present? && (ident_frame.text != ident)
-        report_wrong_ident_error if wrong_ident
+        ident_update_attempt = ident_frame.text.present? && (ident_frame.text != ident)
+        report_ident_update_error if ident_update_attempt
 
         identifier = Ident.new(code: ident,
                                type: ident_frame.attr('type'),
@@ -240,11 +240,11 @@ class Epp::Contact < Contact
 
   private
 
-  def report_update_disallowed_error
-    throw :epp_error, { code: '2308', msg: I18n.t('epp.contacts.errors.update_disallowed') }
+  def report_valid_ident_error
+    throw :epp_error, { code: '2308', msg: I18n.t('epp.contacts.errors.valid_ident') }
   end
 
-  def report_wrong_ident_error
-    throw :epp_error, { code: '2308', msg: I18n.t('epp.contacts.errors.wrong_ident') }
+  def report_ident_update_error
+    throw :epp_error, { code: '2308', msg: I18n.t('epp.contacts.errors.ident_update') }
   end
 end
