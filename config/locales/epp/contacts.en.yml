@@ -5,9 +5,9 @@ en:
       completed_without_address: Command completed successfully; Postal address data discarded
 
       errors:
-        update_disallowed: >-
+        valid_ident: >-
           Ident update is not allowed.
           Consider creating new contact object
-        wrong_ident: >-
-          Ident is wrong.
-          A valid ident should be provided in order to be able to update missing ident country code or type
+        ident_update: >-
+          Only ident type and country can be updated in case of invalid ident.
+          Please create new contact object to update ident code

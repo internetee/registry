@@ -61,7 +61,7 @@ RSpec.describe 'EPP contact:update' do
       request
 
       expect(epp_response).to have_result(:data_management_policy_violation,
-                                          t('epp.contacts.errors.update_disallowed'))
+                                          t('epp.contacts.errors.valid_ident'))
     end
   end
 
@@ -172,7 +172,7 @@ RSpec.describe 'EPP contact:update' do
         request
 
         expect(epp_response).to have_result(:data_management_policy_violation,
-                                            t('epp.contacts.errors.wrong_ident'))
+                                            t('epp.contacts.errors.ident_update'))
       end
     end
   end
