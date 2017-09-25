@@ -1,9 +1,11 @@
 Domeen <%= @domain.name %> on aegunud<br>
 Lugupeetud .ee domeeni kasutaja<br>
 <br>
-Domeeninimi <%= @domain.name %>  on aegunud ja ei ole alates <%= @domain.on_hold_date %> internetis kättesaadav. Alates <%= @domain.delete_date %> on domeen <%= @domain.name %> avatud registreerimiseks kõigile huvilistele.
+Domeeninimi <%= @domain.name %>  on aegunud ja ei ole alates <%= @domain.on_hold_date %> internetis kättesaadav.
+<br>
+Alates <%= @domain.delete_date %> on domeen <%= @domain.name %> avatud registreerimiseks kõigile huvilistele.
 <br><br>
-Domeeni registreeringu pikendamiseks pöörduge palun oma registripidaja:
+Domeeni registreeringu pikendamiseks pöörduge palun oma registripidaja poole:
 <%= render 'mailers/shared/registrar/registrar.et.html', registrar: @registrar %>
 <br><br>
 Domeeni <%= @domain.name %> kohta on registris järgmised andmed:
@@ -24,7 +26,9 @@ Eesti Interneti Sihtasutus
 The <%= @domain.name %> domain has expired<br>
 Dear user of .ee domain,<br>
 <br>
-The domain name <%= @domain.name %> has expired and will not be available on the Internet from <%= @domain.on_hold_date %>. From <%= @domain.delete_date %>, the <%= @domain.name %> domain will be available for registration on a first come first served basis.
+The domain name <%= @domain.name %> has expired and will not be available on the Internet from <%= @domain.on_hold_date %>.
+<br>
+From <%= @domain.delete_date %>, the <%= @domain.name %> domain will be available for registration on a first come first served basis.
 <br><br>
 To renew the domain registration, please contact your registrar:
 <%= render 'mailers/shared/registrar/registrar.en.html', registrar: @registrar %>
@@ -48,7 +52,9 @@ Estonian Internet Foundation
 Уважаемый пользователь домена .ee<br>
 <br>
 
-Доменное имя <%= @domain.name %> устарело и с <%= @domain.on_hold_date %> недоступно в Интернете. С <%= @domain.delete_date %> домен <%= @domain.name %> доступен для регистрации всем желающим по принципу "first come, first served".
+Доменное имя <%= @domain.name %> устарело и с <%= @domain.on_hold_date %> недоступно в Интернете. 
+<br>
+С <%= @domain.delete_date %> домен <%= @domain.name %> доступен для регистрации всем желающим по принципу "first come, first served".
 
 <br><br>
 
