@@ -1,4 +1,4 @@
-required = %w(
+Figaro.require_keys(%w[
   app_name
   zonefile_export_dir
   secret_key_base
@@ -11,6 +11,4 @@ required = %w(
   legal_documents_dir
   bank_statement_import_dir
   time_zone
-)
-
-Figaro.require_keys(required)
+])
