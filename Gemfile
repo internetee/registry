@@ -41,12 +41,10 @@ gem 'sass-rails',     '5.0.6'   # sass style
 # js
 
 gem 'coffee-rails',    '4.1.0'  # coffeescript support
-gem 'uglifier',        '2.7.2'  # minifies js
 gem 'jquery-rails',    '4.0.4'  # jquery
 gem 'turbolinks',      '2.5.3'  # faster page load
 gem 'selectize-rails', '0.12.1' # include selectize.js for select
 gem 'jquery-validation-rails', '1.13.1' # validate on client side
-gem 'therubyracer',    '0.12.2', platforms: :ruby
 
 # view helpers
 gem 'kaminari',         '0.16.3'  # pagination
