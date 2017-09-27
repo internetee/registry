@@ -8,7 +8,6 @@
 #= require shared/jquery.validate.bootstrap
 #= require jquery-ui/datepicker
 #= require select2
-
+#= require datepicker
 #= require shared/general
-
 #= require registrar/application

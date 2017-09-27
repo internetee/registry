@@ -9,6 +9,7 @@
 #= require jquery-ui/datepicker
 #= require select2
 #= require jquery.doubleScroll
+#= require datepicker
 #= require admin/application
 #= require admin/app
 #= require_tree ./admin

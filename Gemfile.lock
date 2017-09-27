@@ -118,8 +118,6 @@ GEM
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
     bcrypt (3.1.11)
-    bootstrap-datepicker-rails (1.3.1.1)
-      railties (>= 3.0)
     bootstrap-sass (3.3.5.1)
       autoprefixer-rails (>= 5.0.0.1)
       sass (>= 3.3.0)
@@ -255,7 +253,6 @@ GEM
       activesupport (>= 3.0.0)
     launchy (2.4.3)
       addressable (~> 2.3)
-    libv8 (3.16.14.19)
     libxml-ruby (3.0.0)
     liquid (3.0.6)
     loofah (2.0.3)
@@ -362,7 +359,6 @@ GEM
       i18n
       polyamorous (~> 1.1)
     rdoc (4.3.0)
-    ref (2.0.0)
     request_store (1.1.0)
     responders (2.3.0)
       railties (>= 4.2.0, < 5.1)
@@ -450,9 +446,6 @@ GEM
       sprockets (>= 3.0.0)
     sys-uname (0.9.0)
       ffi (>= 1.0.0)
-    therubyracer (0.12.2)
-      libv8 (~> 3.16.14.0)
-      ref
     thor (0.19.4)
     thread_safe (0.3.6)
     tilt (1.4.1)
@@ -460,9 +453,6 @@ GEM
       coffee-rails
     tzinfo (1.2.3)
       thread_safe (~> 0.1)
-    uglifier (2.7.2)
-      execjs (>= 0.3.0)
-      json (>= 1.8.0)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.2)
@@ -502,7 +492,6 @@ DEPENDENCIES
   activerecord-import (= 0.7.0)
   airbrake
   autodoc
-  bootstrap-datepicker-rails (= 1.3.1.1)
   bootstrap-sass (= 3.3.5.1)
   brakeman (= 3.6.1)
   bullet (= 4.14.7)
@@ -568,9 +557,7 @@ DEPENDENCIES
   simpleidn (= 0.0.7)
   spring
   spring-commands-rspec
-  therubyracer (= 0.12.2)
   turbolinks (= 2.5.3)
-  uglifier (= 2.7.2)
   uuidtools (= 2.1.5)
   validates_email_format_of (= 1.6.3)
   webmock
