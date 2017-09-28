@@ -32,7 +32,7 @@ gem 'rails-settings-cached',     '0.4.1' # for settings
 
 # html-xml
 gem 'haml-rails', '0.9.0' # haml for views
-gem 'nokogiri', '~> 1.7'
+gem 'nokogiri'
 
 # style
 gem 'bootstrap-sass', '3.3.5.1' # bootstrap style
@@ -41,12 +41,10 @@ gem 'sass-rails',     '5.0.6'   # sass style
 # js
 
 gem 'coffee-rails',    '4.1.0'  # coffeescript support
-gem 'uglifier',        '2.7.2'  # minifies js
 gem 'jquery-rails',    '4.0.4'  # jquery
 gem 'turbolinks',      '2.5.3'  # faster page load
 gem 'selectize-rails', '0.12.1' # include selectize.js for select
 gem 'jquery-validation-rails', '1.13.1' # validate on client side
-gem 'therubyracer',    '0.12.2', platforms: :ruby
 
 # view helpers
 gem 'kaminari',         '0.16.3'  # pagination
@@ -54,7 +52,6 @@ gem 'coderay',          '1.1.0'   # xml console visualize
 gem 'html5_validators', '1.2.2'   # model requements now automatically on html form
 gem 'nprogress-rails',  '0.1.6.7' # visual loader
 gem 'select2-rails',    '3.5.9.3' # for autocomplete
-gem 'bootstrap-datepicker-rails', '1.3.1.1' # datepicker
 gem 'liquid',           '3.0.6'   # for email templates
 
 # rights
@@ -106,8 +103,6 @@ gem 'activerecord-import', '0.7.0' # for inserting dummy data
 
 # for generating pdf
 gem 'pdfkit', '0.6.2'
-
-# for datepicker
 gem 'jquery-ui-rails', '5.0.5'
 gem 'active_model-errors_details' # Backport from Rails 5, https://github.com/rails/rails/pull/18322
 
