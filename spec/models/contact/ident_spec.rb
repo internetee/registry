@@ -204,4 +204,24 @@ RSpec.describe Contact::Ident, db: false do
       expect(ident.country).to eq(Country.new('US'))
     end
   end
+
+  describe '#==' do
+    let(:ident) { described_class.new(code: 'test', type: 'test', country_code: 'US') }
+
+    context 'when code, type and country code are the same' do
+      let(:another_ident) { described_class.new(code: 'test', type: 'test', country_code: 'US') }
+
+      it 'returns true' do
+        expect(ident).to eq(another_ident)
+      end
+    end
+
+    context 'when code, type and country code are not the same' do
+      let(:another_ident) { described_class.new(code: 'another-test', type: 'test', country_code: 'US') }
+
+      it 'returns false' do
+        expect(ident).to_not eq(another_ident)
+      end
+    end
+  end
 end

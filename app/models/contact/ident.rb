@@ -55,6 +55,16 @@ class Contact::Ident
     Country.new(country_code)
   end
 
+  def ==(other_ident)
+    if other_ident.is_a?(self.class)
+      (code == other_ident.code) &&
+        (type == other_ident.type) &&
+        (country_code == other_ident.country_code)
+    else
+      false
+    end
+  end
+
   private
 
   # https://github.com/rails/rails/issues/1513

@@ -158,7 +158,11 @@ class Epp::Contact < Contact
     # https://github.com/internetee/registry/issues/576
     if ident_frame
       if identifier.valid?
-        report_valid_ident_error
+        submitted_ident = Ident.new(code: ident_frame.text,
+                                    type: ident_frame.attr('type'),
+                                    country_code: ident_frame.attr('cc'))
+
+        report_valid_ident_error if submitted_ident != identifier
       else
         ident_update_attempt = ident_frame.text.present? && (ident_frame.text != ident)
         report_ident_update_error if ident_update_attempt

@@ -34,34 +34,51 @@ RSpec.describe 'EPP contact:update' do
   end
 
   context 'when contact ident is valid' do
-    let!(:contact) { create(:contact, code: 'TEST', ident: 'test', ident_type: 'priv', ident_country_code: 'US') }
+    context 'when submitted ident matches current one' do
+      let!(:contact) { create(:contact, code: 'TEST',
+                              ident: 'test',
+                              ident_type: 'priv',
+                              ident_country_code: 'US') }
 
-    it 'does not update code' do
-      expect do
+      specify do
         request
-        contact.reload
-      end.to_not change { ident.code }
+        expect(epp_response).to have_result(:success)
+      end
     end
 
-    it 'does not update type' do
-      expect do
+    context 'when submitted ident does not match current one' do
+      let!(:contact) { create(:contact, code: 'TEST',
+                              ident: 'another-test',
+                              ident_type: 'priv',
+                              ident_country_code: 'US') }
+
+      it 'does not update code' do
+        expect do
+          request
+          contact.reload
+        end.to_not change { ident.code }
+      end
+
+      it 'does not update type' do
+        expect do
+          request
+          contact.reload
+        end.to_not change { ident.type }
+      end
+
+      it 'does not update country code' do
+        expect do
+          request
+          contact.reload
+        end.to_not change { ident.country_code }
+      end
+
+      specify do
         request
-        contact.reload
-      end.to_not change { ident.type }
-    end
 
-    it 'does not update country code' do
-      expect do
-        request
-        contact.reload
-      end.to_not change { ident.country_code }
-    end
-
-    specify do
-      request
-
-      expect(epp_response).to have_result(:data_management_policy_violation,
-                                          t('epp.contacts.errors.valid_ident'))
+        expect(epp_response).to have_result(:data_management_policy_violation,
+                                            t('epp.contacts.errors.valid_ident'))
+      end
     end
   end
 
