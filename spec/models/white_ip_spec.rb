@@ -25,7 +25,7 @@ describe WhiteIp do
 
   context 'with valid attributes' do
     before :all do
-      @white_ip = Fabricate(:white_ip)
+      @white_ip = create(:white_ip)
     end
 
     it 'should have one version' do
