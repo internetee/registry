@@ -16,7 +16,7 @@ class Registrar
         sign_out(current_user)
         return
       end
-      return if Rails.env.development?
+
       registrar_ip_whitelisted = current_user.registrar.registrar_ip_white?(request.ip)
 
       return if registrar_ip_whitelisted

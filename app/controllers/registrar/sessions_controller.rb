@@ -186,7 +186,6 @@ class Registrar
     private
 
     def check_ip
-      return if Rails.env.development?
       return if WhiteIp.registrar_ip_white?(request.ip)
       render :denied, :layout => false, status: :forbidden, :locals => { :ip => request.ip } and return
     end
