@@ -19,11 +19,11 @@ class Registrar
       ip_restriction = Authorization::RestrictedIP.new(request.ip)
       allowed = ip_restriction.can_access_registrar_area?(current_user.registrar)
 
-      unless allowed
-        flash[:alert] = t('registrar.authorization.ip_not_allowed', ip: request.ip)
-        sign_out current_user
-        redirect_to registrar_login_url
-      end
+      return if allowed
+
+      flash[:alert] = t('registrar.authorization.ip_not_allowed', ip: request.ip)
+      sign_out current_user
+      redirect_to registrar_login_url
     end
 
     def depp_controller?

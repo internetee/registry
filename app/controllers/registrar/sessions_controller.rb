@@ -153,9 +153,9 @@ class Registrar
       ip_restriction = Authorization::RestrictedIP.new(request.ip)
       allowed = ip_restriction.can_access_registrar_area_sign_in_page?
 
-      unless allowed
-        render text: t('registrar.authorization.ip_not_allowed', ip: request.ip), status: :forbidden
-      end
+      return if allowed
+
+      render text: t('registrar.authorization.ip_not_allowed', ip: request.ip), status: :forbidden
     end
   end
 end
