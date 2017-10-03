@@ -38,4 +38,32 @@ describe WhiteIp do
       end
     end
   end
+
+  describe '#include_ip?' do
+    context 'when given ip v4 exists' do
+      before do
+        create(:white_ip, ipv4: '127.0.0.1')
+      end
+
+      specify do
+        expect(described_class.include_ip?('127.0.0.1')).to be true
+      end
+    end
+
+    context 'when given ip v6 exists' do
+      before do
+        create(:white_ip, ipv6: '::1')
+      end
+
+      specify do
+        expect(described_class.include_ip?('::1')).to be true
+      end
+    end
+
+    context 'when given ip does not exists', db: false do
+      specify do
+        expect(described_class.include_ip?('127.0.0.1')).to be false
+      end
+    end
+  end
 end

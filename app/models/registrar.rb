@@ -162,9 +162,4 @@ class Registrar < ActiveRecord::Base
     return true unless Setting.api_ip_whitelist_enabled
     white_ips.api.pluck(:ipv4, :ipv6).flatten.include?(ip)
   end
-
-  def registrar_ip_white?(ip)
-    return true unless Setting.registrar_ip_whitelist_enabled
-    white_ips.registrar.pluck(:ipv4, :ipv6).flatten.include?(ip)
-  end
 end

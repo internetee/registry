@@ -1,12 +1,7 @@
 class Registrar
   class SessionsController < Devise::SessionsController
+    before_action :check_ip_restriction
     helper_method :depp_controller?
-
-    def depp_controller?
-      false
-    end
-
-    before_action :check_ip
 
     def login
       @depp_user = Depp::User.new
@@ -157,16 +152,24 @@ class Registrar
     # rubocop: enable Metrics/CyclomaticComplexity
     # rubocop: enable Metrics/MethodLength
 
+    private
+
+    def depp_controller?
+      false
+    end
+
     def find_user_by_idc(idc)
       return User.new unless idc
       ApiUser.find_by(identity_code: idc) || User.new
     end
 
-    private
+    def check_ip_restriction
+      ip_restriction = Authorization::RestrictedIP.new(request.ip)
+      allowed = ip_restriction.can_access_registrar_area_sign_in_page?
 
-    def check_ip
-      return if WhiteIp.registrar_ip_white?(request.ip)
-      render :denied, :layout => false, status: :forbidden, :locals => { :ip => request.ip } and return
+      unless allowed
+        render text: t('registrar.authorization.ip_not_allowed', ip: request.ip), status: :forbidden
+      end
     end
   end
 end
