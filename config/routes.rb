@@ -47,6 +47,8 @@ Rails.application.routes.draw do
       get 'logout' => '/devise/sessions#destroy'
     end
 
+    get 'current_user/switch/:new_user_id', to: 'current_user#switch', as: :switch_current_user
+
     resources :domains do
       collection do
         post 'update', as: 'update'
