@@ -1,24 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe ApiUser do
-  context 'class methods' do
-    before do
-      Fabricate(:api_user, identity_code: '')
-      Fabricate(:api_user, identity_code: 14212128025)
-    end
-
-    it 'should return all api users with given identity code' do
-      ApiUser.all_by_identity_code('14212128025').size.should == 1
-      ApiUser.all_by_identity_code(14212128025).size.should == 1
-    end
-
-    it 'should not return any api user with blank identity code' do
-      ApiUser.all_by_identity_code('').size.should == 0
-    end
-  end
-
   context 'with invalid attribute' do
-    before :all do
+    before do
       @api_user = ApiUser.new
     end
 
@@ -43,7 +27,7 @@ RSpec.describe ApiUser do
   end
 
   context 'with valid attributes' do
-    before :all do
+    before do
       @api_user = Fabricate(:api_user)
     end
 
@@ -72,6 +56,41 @@ RSpec.describe ApiUser do
   describe '::min_password_length', db: false do
     it 'returns minimum password length' do
       expect(described_class.min_password_length).to eq(6)
+    end
+  end
+
+  describe '#linked_users' do
+    it 'returns users with the same identity code' do
+      api_user = create(:api_user, id: 1, identity_code: 'test')
+      create(:api_user, id: 2, identity_code: 'test')
+
+      expect(api_user.linked_users.ids).to include(2)
+    end
+
+    it 'does not return users with another identity code' do
+      api_user = create(:api_user, id: 1, identity_code: 'test')
+      create(:api_user, id: 2, identity_code: 'another')
+
+      expect(api_user.linked_users.ids).to_not include(2)
+    end
+
+    it 'does not return itself' do
+      api_user = create(:api_user)
+      expect(api_user.linked_users).to be_empty
+    end
+
+    it 'returns none if identity code is absent' do
+      api_user = create(:api_user, identity_code: nil)
+      create(:api_user, identity_code: nil)
+
+      expect(api_user.linked_users).to be_empty
+    end
+
+    it 'returns none if identity code is empty' do
+      api_user = create(:api_user, identity_code: '')
+      create(:api_user, identity_code: '')
+
+      expect(api_user.linked_users).to be_empty
     end
   end
 end

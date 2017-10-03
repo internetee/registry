@@ -136,9 +136,6 @@
 <path fill="none" stroke="black" d="M-708,539.5C-708,539.5 -610,539.5 -610,539.5 -604,539.5 -598,533.5 -598,527.5 -598,527.5 -598,428.5 -598,428.5 -598,422.5 -604,416.5 -610,416.5 -610,416.5 -708,416.5 -708,416.5 -714,416.5 -720,422.5 -720,428.5 -720,428.5 -720,527.5 -720,527.5 -720,533.5 -714,539.5 -708,539.5"/>
 <text text-anchor="middle" x="-659" y="431.7" font-family="Times,serif" font-size="14.00">RegistrarController</text>
 <polyline fill="none" stroke="black" points="-720,439.5 -598,439.5 "/>
-<text text-anchor="start" x="-712" y="454.7" font-family="Times,serif" font-size="14.00">check_ip</text>
-<text text-anchor="start" x="-712" y="469.7" font-family="Times,serif" font-size="14.00">depp_controller?</text>
-<text text-anchor="start" x="-712" y="484.7" font-family="Times,serif" font-size="14.00">head_title_sufix</text>
 <polyline fill="none" stroke="black" points="-720,492.5 -598,492.5 "/>
 <polyline fill="none" stroke="black" points="-720,516.5 -598,516.5 "/>
 <text text-anchor="start" x="-712" y="531.7" font-family="Times,serif" font-size="14.00">_layout</text>
@@ -491,8 +488,6 @@
 <text text-anchor="middle" x="-212" y="-513.8" font-family="Times,serif" font-size="14.00">Registrar::SessionsController</text>
 <polyline fill="none" stroke="black" points="-300,-506 -124,-506 "/>
 <text text-anchor="start" x="-292" y="-490.8" font-family="Times,serif" font-size="14.00">create</text>
-<text text-anchor="start" x="-292" y="-475.8" font-family="Times,serif" font-size="14.00">depp_controller?</text>
-<text text-anchor="start" x="-292" y="-460.8" font-family="Times,serif" font-size="14.00">find_user_by_idc</text>
 <text text-anchor="start" x="-292" y="-445.8" font-family="Times,serif" font-size="14.00">id</text>
 <text text-anchor="start" x="-292" y="-430.8" font-family="Times,serif" font-size="14.00">login</text>
 <text text-anchor="start" x="-292" y="-415.8" font-family="Times,serif" font-size="14.00">login_mid</text>

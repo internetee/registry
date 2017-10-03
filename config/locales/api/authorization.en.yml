@@ -1,0 +1,4 @@
+en:
+  api:
+    authorization:
+      ip_not_allowed: Access denied from IP %{ip}

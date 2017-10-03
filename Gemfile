@@ -117,6 +117,7 @@ group :development do
 end
 
 group :development, :test do
+  gem 'factory_girl_rails'
   gem 'capybara'
   gem 'rspec-rails', '~> 3.6'
   gem 'fabrication',        '2.13.2' # Replacement for fixtures
@@ -145,7 +146,6 @@ end
 
 group :test do
   gem 'database_cleaner'
-  gem 'factory_girl_rails' 
   gem 'codeclimate-test-reporter', "~> 1.0.0"
   gem 'simplecov'
   gem 'webmock'

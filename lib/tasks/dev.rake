@@ -175,6 +175,7 @@ namespace :dev do
       end
     end
 
+    Setting.registrar_ip_whitelist_enabled = false
     Setting.api_ip_whitelist_enabled = false
     Setting.address_processing = false
 
