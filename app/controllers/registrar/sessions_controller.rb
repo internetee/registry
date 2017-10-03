@@ -7,10 +7,6 @@ class Registrar
       @depp_user = Depp::User.new
     end
 
-    # rubocop:disable Metrics/PerceivedComplexity
-    # rubocop:disable Metrics/CyclomaticComplexity
-    # rubocop:disable Metrics/MethodLength
-    # rubocop:disable Metrics/AbcSize
     def create
       @depp_user = Depp::User.new(params[:depp_user].merge(pki: !(Rails.env.development? || Rails.env.test?)))
 
@@ -72,7 +68,6 @@ class Registrar
       @user = User.new
     end
 
-    # rubocop:disable Metrics/MethodLength
     def mid
       phone = params[:user][:phone]
       endpoint = "#{ENV['sk_digi_doc_service_endpoint']}"
@@ -106,11 +101,6 @@ class Registrar
       end
     end
 
-    # rubocop:enable Metrics/MethodLength
-
-    # rubocop: disable Metrics/AbcSize
-    # rubocop: disable Metrics/CyclomaticComplexity
-    # rubocop: disable Metrics/MethodLength
     def mid_status
       endpoint = "#{ENV['sk_digi_doc_service_endpoint']}"
       client = Digidoc::Client.new(endpoint)
@@ -147,10 +137,6 @@ class Registrar
           render json: { message: t(:internal_error) }, status: :bad_request
       end
     end
-
-    # rubocop: enable Metrics/AbcSize
-    # rubocop: enable Metrics/CyclomaticComplexity
-    # rubocop: enable Metrics/MethodLength
 
     private
 
