@@ -29,6 +29,9 @@ engines:
     enabled: true
   reek:
     enabled: true
+    checks:
+      IrresponsibleModule:
+        enabled: false
 ratings:
   paths:
   - Gemfile.lock
