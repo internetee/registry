@@ -24,7 +24,7 @@ class WhiteIp < ActiveRecord::Base
 
   class << self
     def include_ip?(ip)
-      where("#{table_name}.ipv4 = '#{ip}' OR #{table_name}.ipv6 = '#{ip}'").any?
+      where('ipv4 = :ip OR ipv6 = :ip', ip: ip).any?
     end
   end
 end
