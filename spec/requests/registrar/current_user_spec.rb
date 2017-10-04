@@ -19,7 +19,7 @@ RSpec.describe 'Registrar current user', db: false do
         end
 
         specify do
-          make_request
+          get '/registrar/current_user/switch/2', nil, { HTTP_REFERER: 'http://previous.url' }
           expect(response).to redirect_to('http://previous.url')
         end
       end
@@ -33,7 +33,7 @@ RSpec.describe 'Registrar current user', db: false do
         end
 
         specify do
-          make_request
+          get '/registrar/current_user/switch/2'
           expect(response).to redirect_to(registrar_login_url)
         end
       end
@@ -41,13 +41,9 @@ RSpec.describe 'Registrar current user', db: false do
 
     context 'when user is not authenticated' do
       specify do
-        make_request
+        get '/registrar/current_user/switch/2'
         expect(response).to redirect_to(registrar_login_url)
       end
-    end
-
-    def make_request
-      get '/registrar/current_user/switch/2', nil, { 'HTTP_REFERER' => 'http://previous.url' }
     end
   end
 end
