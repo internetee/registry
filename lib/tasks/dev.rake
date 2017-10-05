@@ -175,9 +175,6 @@ namespace :dev do
       end
     end
 
-    Setting.api_ip_whitelist_enabled = false
-    Setting.address_processing = false
-
     ActiveRecord::Base.transaction do
       generate_default_data
       generate_random_data if with_random_data

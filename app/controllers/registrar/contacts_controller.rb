@@ -2,7 +2,6 @@ class Registrar
   class ContactsController < DeppController
     before_action :init_epp_contact
     helper_method :address_processing?
-    helper_method :ident_types
 
     def index
       authorize! :view, Depp::Contact
@@ -140,10 +139,6 @@ class Registrar
 
     def address_processing?
       Contact.address_processing?
-    end
-
-    def ident_types
-      Contact::Ident.types
     end
   end
 end
