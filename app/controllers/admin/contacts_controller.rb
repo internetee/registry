@@ -2,7 +2,6 @@ module Admin
   class ContactsController < BaseController
     load_and_authorize_resource
     before_action :set_contact, only: [:show]
-    helper_method :ident_types
 
     def index
       params[:q] ||= {}
@@ -79,10 +78,6 @@ module Admin
       yield
 
       params[:q][:created_at_lteq] = ca_cache
-    end
-
-    def ident_types
-      Contact::Ident.types
     end
   end
 end

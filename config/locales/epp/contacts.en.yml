@@ -3,11 +3,3 @@ en:
     contacts:
       completed: Command completed successfully
       completed_without_address: Command completed successfully; Postal address data discarded
-
-      errors:
-        valid_ident: >-
-          Ident update is not allowed.
-          Consider creating new contact object
-        ident_update: >-
-          Only ident type and country can be updated in case of invalid ident.
-          Please create new contact object to update ident code

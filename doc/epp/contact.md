@@ -36,7 +36,7 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
         <contact:email>        1        E-mail
     <extension>                1       
       <eis:extdata>            1        Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
-        <eis:ident>            1        Identifier
+        <eis:ident>            1        Contact identificator 
                                           Attribute: "type"
                                             "org"          # Business registry code
                                             "priv"         # National identification number
@@ -73,7 +73,7 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
             <contact:pw>        1        Contact password. Attribute: roid="String"
     <extension>                 0-1       
       <eis:extdata>             0-1      Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
-        <eis:ident>             0-1      Identifier
+        <eis:ident>             0-1      Contact identificator 
                                           Attribute: "type"
                                             "org"          # Business registry code
                                             "priv"         # National identification number
