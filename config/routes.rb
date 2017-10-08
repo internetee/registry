@@ -222,7 +222,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :settings
+    resources :settings, only: %i[index create]
 
     resources :blocked_domains do
       member do

@@ -1,0 +1,14 @@
+en:
+  admin:
+    settings:
+      index:
+        title: Settings
+        domain_validation: Domain validation
+        other: Other
+        domain_expiration: Domain expiration
+        billing: Billing
+        contacts: Contacts
+        save_btn: Save
+
+      create:
+        saved: Settings have been successfully updated

@@ -2,6 +2,7 @@ en:
   admin:
     base:
       menu:
+        settings: Settings
         users: Users
         api_users: API users
         admin_users: Admin users
