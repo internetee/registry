@@ -44,7 +44,7 @@ Rails.application.routes.draw do
       post 'id' => 'sessions#id'
       post 'mid' => 'sessions#mid'
       get 'switch_user/:id' => 'sessions#switch_user'
-      get 'logout' => '/devise/sessions#destroy'
+      delete 'logout', to: '/devise/sessions#destroy', as: :destroy_user_session
     end
 
     get 'current_user/switch/:new_user_id', to: 'current_user#switch', as: :switch_current_user

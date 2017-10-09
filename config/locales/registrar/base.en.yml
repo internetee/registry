@@ -1,0 +1,5 @@
+en:
+  registrar:
+    base:
+      current_user:
+        sign_out: Log out
