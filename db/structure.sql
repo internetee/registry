@@ -4666,6 +4666,14 @@ ALTER TABLE ONLY account_activities
 
 
 --
+-- Name: user_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT user_registrar_id_fk FOREIGN KEY (registrar_id) REFERENCES registrars(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -5166,4 +5174,6 @@ INSERT INTO schema_migrations (version) VALUES ('20170606133501');
 INSERT INTO schema_migrations (version) VALUES ('20170606150352');
 
 INSERT INTO schema_migrations (version) VALUES ('20170606202859');
+
+INSERT INTO schema_migrations (version) VALUES ('20171009080822');
 
