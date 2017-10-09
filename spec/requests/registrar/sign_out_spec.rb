@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe 'Registrar area sign-out', settings: false do
   describe 'sign-out' do
     before do
+      Setting.registrar_ip_whitelist_enabled = false
       sign_in_to_registrar_area
     end
 
