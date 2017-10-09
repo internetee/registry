@@ -4,8 +4,6 @@
     %meta{charset: "utf-8"}/
     %meta{content: "IE=edge", "http-equiv" => "X-UA-Compatible"}/
     %meta{content: "width=device-width, initial-scale=1", name: "viewport"}/
-    %meta{content: "Full stack top-level domain (TLD) management.", name: "description"}/
-    %meta{content: "Gitlab LTD", name: "author"}/
     - if content_for? :head_title
       = yield :head_title
     - else
@@ -15,7 +13,6 @@
     = javascript_include_tag 'registrar-manifest', 'data-turbolinks-track' => true
     = favicon_link_tag 'favicon.ico'
   %body
-    / Fixed navbar
     %nav.navbar.navbar-default.navbar-fixed-top
       .container
         .navbar-header
@@ -29,8 +26,7 @@
             - if unstable_env.present?
               .text-center
                 %small{style: 'color: #0074B3;'}= unstable_env
-        - if current_user
-          = render 'navbar'
+        = render 'navbar'
 
     .container
       = render 'shared/flash'
