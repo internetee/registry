@@ -9,20 +9,5 @@ en:
       models:
         contact:
           attributes:
-            code:
-              blank: "Required parameter missing - code"
-              too_long_contact_code: "Contact code is too long, max 100 characters"
-            name:
-              blank: "Required parameter missing - name"
-            phone:
-              blank: "Required parameter missing - phone"
-              invalid: "Phone nr is invalid"
-            email:
-              blank: "Required parameter missing - email"
-              invalid: "Email is invalid"
-            domains:
-              exist: 'Object association prohibits operation'
-            statuses:
-              not_uniq: 'not uniq'
             country_code:
               invalid: Country code is not valid, should be in ISO_3166-1 alpha 2 format

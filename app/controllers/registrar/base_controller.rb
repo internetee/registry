@@ -21,8 +21,9 @@ class Registrar
 
       return if allowed
 
-      flash[:alert] = t('registrar.authorization.ip_not_allowed', ip: request.ip)
       sign_out current_user
+
+      flash[:alert] = t('registrar.authorization.ip_not_allowed', ip: request.ip)
       redirect_to registrar_login_url
     end
 

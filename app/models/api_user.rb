@@ -23,9 +23,9 @@ class ApiUser < User
   validates :password, length: { minimum: min_password_length }
   validates :username, uniqueness: true
 
-  # TODO: probably cache, because it's requested on every EPP
-  delegate :code, to: :registrar, prefix: true
+  delegate :code, :name, to: :registrar, prefix: true
 
+  alias_attribute :login, :username
   attr_accessor :registrar_typeahead
 
   SUPER = 'super'
@@ -91,7 +91,11 @@ class ApiUser < User
 
   def linked_users
     self.class.where(identity_code: identity_code)
-      .where("identity_code is NOT NULL and identity_code != ''")
+      .where("identity_code IS NOT NULL AND identity_code != ''")
       .where.not(id: id)
+  end
+
+  def linked_with?(another_api_user)
+    another_api_user.identity_code == self.identity_code
   end
 end

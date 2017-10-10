@@ -358,44 +358,6 @@ ALTER SEQUENCE accounts_id_seq OWNED BY accounts.id;
 
 
 --
--- Name: api_users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE api_users (
-    id integer NOT NULL,
-    registrar_id integer,
-    username character varying,
-    password character varying,
-    active boolean DEFAULT false,
-    csr text,
-    crt text,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    creator_str character varying,
-    updator_str character varying
-);
-
-
---
--- Name: api_users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE api_users_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: api_users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE api_users_id_seq OWNED BY api_users.id;
-
-
---
 -- Name: bank_statements; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1378,44 +1340,6 @@ CREATE SEQUENCE log_accounts_id_seq
 --
 
 ALTER SEQUENCE log_accounts_id_seq OWNED BY log_accounts.id;
-
-
---
--- Name: log_api_users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE log_api_users (
-    id integer NOT NULL,
-    item_type character varying NOT NULL,
-    item_id integer NOT NULL,
-    event character varying NOT NULL,
-    whodunnit character varying,
-    object json,
-    object_changes json,
-    created_at timestamp without time zone,
-    session character varying,
-    children json,
-    uuid character varying
-);
-
-
---
--- Name: log_api_users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE log_api_users_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: log_api_users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE log_api_users_id_seq OWNED BY log_api_users.id;
 
 
 --
@@ -2872,13 +2796,6 @@ ALTER TABLE ONLY accounts ALTER COLUMN id SET DEFAULT nextval('accounts_id_seq':
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY api_users ALTER COLUMN id SET DEFAULT nextval('api_users_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY bank_statements ALTER COLUMN id SET DEFAULT nextval('bank_statements_id_seq'::regclass);
 
 
@@ -3041,13 +2958,6 @@ ALTER TABLE ONLY log_account_activities ALTER COLUMN id SET DEFAULT nextval('log
 --
 
 ALTER TABLE ONLY log_accounts ALTER COLUMN id SET DEFAULT nextval('log_accounts_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY log_api_users ALTER COLUMN id SET DEFAULT nextval('log_api_users_id_seq'::regclass);
 
 
 --
@@ -3326,14 +3236,6 @@ ALTER TABLE ONLY accounts
 
 
 --
--- Name: api_users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY api_users
-    ADD CONSTRAINT api_users_pkey PRIMARY KEY (id);
-
-
---
 -- Name: bank_statements_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3523,14 +3425,6 @@ ALTER TABLE ONLY log_account_activities
 
 ALTER TABLE ONLY log_accounts
     ADD CONSTRAINT log_accounts_pkey PRIMARY KEY (id);
-
-
---
--- Name: log_api_users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY log_api_users
-    ADD CONSTRAINT log_api_users_pkey PRIMARY KEY (id);
 
 
 --
@@ -3866,13 +3760,6 @@ CREATE INDEX index_accounts_on_registrar_id ON accounts USING btree (registrar_i
 
 
 --
--- Name: index_api_users_on_registrar_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_api_users_on_registrar_id ON api_users USING btree (registrar_id);
-
-
---
 -- Name: index_blocked_domains_on_name; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4143,20 +4030,6 @@ CREATE INDEX index_log_accounts_on_item_type_and_item_id ON log_accounts USING b
 --
 
 CREATE INDEX index_log_accounts_on_whodunnit ON log_accounts USING btree (whodunnit);
-
-
---
--- Name: index_log_api_users_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_api_users_on_item_type_and_item_id ON log_api_users USING btree (item_type, item_id);
-
-
---
--- Name: index_log_api_users_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_api_users_on_whodunnit ON log_api_users USING btree (whodunnit);
 
 
 --
@@ -4666,6 +4539,14 @@ ALTER TABLE ONLY account_activities
 
 
 --
+-- Name: user_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT user_registrar_id_fk FOREIGN KEY (registrar_id) REFERENCES registrars(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -5166,4 +5047,8 @@ INSERT INTO schema_migrations (version) VALUES ('20170606133501');
 INSERT INTO schema_migrations (version) VALUES ('20170606150352');
 
 INSERT INTO schema_migrations (version) VALUES ('20170606202859');
+
+INSERT INTO schema_migrations (version) VALUES ('20171009080822');
+
+INSERT INTO schema_migrations (version) VALUES ('20171009082321');
 

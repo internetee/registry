@@ -600,28 +600,6 @@
 <ellipse fill="none" stroke="#c72760" cx="1492.92" cy="-1936.9" rx="4.00001" ry="4.00001"/>
 <polygon fill="#c72760" stroke="#c72760" points="1669.11,-22.7608 1679.32,-26.7787 1674.11,-22.5223 1679.1,-22.2838 1679.1,-22.2838 1679.1,-22.2838 1674.11,-22.5223 1678.89,-17.7889 1669.11,-22.7608 1669.11,-22.7608"/>
 </g>
-<!-- ApiUserVersion -->
-<g id="node30" class="node"><title>ApiUserVersion</title>
-<path fill="none" stroke="black" d="M3602,-73.5C3602,-73.5 3708,-73.5 3708,-73.5 3714,-73.5 3720,-79.5 3720,-85.5 3720,-85.5 3720,-242.5 3720,-242.5 3720,-248.5 3714,-254.5 3708,-254.5 3708,-254.5 3602,-254.5 3602,-254.5 3596,-254.5 3590,-248.5 3590,-242.5 3590,-242.5 3590,-85.5 3590,-85.5 3590,-79.5 3596,-73.5 3602,-73.5"/>
-<text text-anchor="middle" x="3655" y="-239.3" font-family="Times,serif" font-size="14.00">ApiUserVersion</text>
-<polyline fill="none" stroke="black" points="3590,-231.5 3720,-231.5 "/>
-<text text-anchor="start" x="3598" y="-216.3" font-family="Times,serif" font-size="14.00">id :integer</text>
-<text text-anchor="start" x="3598" y="-201.3" font-family="Times,serif" font-size="14.00">item_type :string</text>
-<text text-anchor="start" x="3598" y="-186.3" font-family="Times,serif" font-size="14.00">item_id :integer</text>
-<text text-anchor="start" x="3598" y="-171.3" font-family="Times,serif" font-size="14.00">event :string</text>
-<text text-anchor="start" x="3598" y="-156.3" font-family="Times,serif" font-size="14.00">whodunnit :string</text>
-<text text-anchor="start" x="3598" y="-141.3" font-family="Times,serif" font-size="14.00">object :json</text>
-<text text-anchor="start" x="3598" y="-126.3" font-family="Times,serif" font-size="14.00">object_changes :json</text>
-<text text-anchor="start" x="3598" y="-111.3" font-family="Times,serif" font-size="14.00">created_at :datetime</text>
-<text text-anchor="start" x="3598" y="-96.3" font-family="Times,serif" font-size="14.00">session :string</text>
-<text text-anchor="start" x="3598" y="-81.3" font-family="Times,serif" font-size="14.00">children :json</text>
-</g>
-<!-- ApiUserVersion&#45;&gt;VersionAssociation -->
-<g id="edge28" class="edge"><title>ApiUserVersion&#45;&gt;VersionAssociation</title>
-<path fill="none" stroke="#9131a9" d="M3582.68,-73.8472C3582.12,-73.5585 3581.56,-73.276 3581,-73 3458.08,-12.5996 3101.89,-58.0943 2965,-54 2546.29,-41.477 2045.93,-27.1989 1845.95,-21.5203"/>
-<ellipse fill="none" stroke="#9131a9" cx="3586.29" cy="-75.9354" rx="4.00002" ry="4.00002"/>
-<polygon fill="#9131a9" stroke="#9131a9" points="1845.79,-21.5158 1835.92,-16.7338 1840.79,-21.3739 1835.79,-21.232 1835.79,-21.232 1835.79,-21.232 1840.79,-21.3739 1835.67,-25.7301 1845.79,-21.5158 1845.79,-21.5158"/>
-</g>
 <!-- DomainVersion -->
 <g id="node32" class="node"><title>DomainVersion</title>
 <path fill="none" stroke="black" d="M1277.5,-1158.5C1277.5,-1158.5 1400.5,-1158.5 1400.5,-1158.5 1406.5,-1158.5 1412.5,-1164.5 1412.5,-1170.5 1412.5,-1170.5 1412.5,-1372.5 1412.5,-1372.5 1412.5,-1378.5 1406.5,-1384.5 1400.5,-1384.5 1400.5,-1384.5 1277.5,-1384.5 1277.5,-1384.5 1271.5,-1384.5 1265.5,-1378.5 1265.5,-1372.5 1265.5,-1372.5 1265.5,-1170.5 1265.5,-1170.5 1265.5,-1164.5 1271.5,-1158.5 1277.5,-1158.5"/>
@@ -1665,10 +1643,24 @@
 <polygon fill="#257f99" stroke="#257f99" points="3166.6,-1436.81 3164.86,-1425.98 3163.85,-1432.63 3161.1,-1428.45 3161.1,-1428.45 3161.1,-1428.45 3163.85,-1432.63 3157.34,-1430.93 3166.6,-1436.81 3166.6,-1436.81"/>
 </g>
 <!-- Registrar&#45;&gt;Contact -->
+<g id="edge68" class="edge"><title>Registrar&#45;&gt;Contact</title>
+<path fill="none" stroke="#625a51" d="M1737.79,-2486.74C2105.37,-2477.42 3671.93,-2427.41 3783,-2250 3886.64,-2084.47 3711.19,-1968.76 3829,-1813 3841.99,-1795.82 3861.92,-1812.84 3874,-1795 3894.81,-1764.27 3899.79,-1654.68 3874,-1628 3833.13,-1585.71 3397.45,-1636.61 3345,-1610 3270.62,-1572.26 3210.61,-1502.97 3166.63,-1436.95"/>
+<ellipse fill="none" stroke="#625a51" cx="1733.59" cy="-2486.84" rx="4" ry="4"/>
+<polygon fill="#625a51" stroke="#625a51" points="3166.57,-1436.86 3164.84,-1426.03 3163.82,-1432.68 3161.08,-1428.5 3161.08,-1428.5 3161.08,-1428.5 3163.82,-1432.68 3157.32,-1430.98 3166.57,-1436.86 3166.57,-1436.86"/>
+<text text-anchor="middle" x="3865.5" y="-2027.8" font-family="Times,serif" font-size="14.00">priv_contacts</text>
+</g>
+<!-- Registrar&#45;&gt;Contact -->
 <g id="edge105" class="edge"><title>Registrar&#45;&gt;Contact</title>
 <path fill="none" stroke="#84dd57" d="M1737.74,-2486.28C2114.24,-2474.64 3753.89,-2414.71 3902,-2250 3948.21,-2198.61 3944.87,-1676.88 3896,-1628 3852.69,-1584.68 3399.64,-1637.68 3345,-1610 3270.59,-1572.31 3210.58,-1503.03 3166.61,-1437"/>
 <ellipse fill="none" stroke="#84dd57" cx="1733.61" cy="-2486.41" rx="4" ry="4"/>
 <polygon fill="#84dd57" stroke="#84dd57" points="3166.55,-1436.91 3164.81,-1426.08 3163.8,-1432.73 3161.05,-1428.55 3161.05,-1428.55 3161.05,-1428.55 3163.8,-1432.73 3157.29,-1431.02 3166.55,-1436.91 3166.55,-1436.91"/>
+</g>
+<!-- Registrar&#45;&gt;Contact -->
+<g id="edge112" class="edge"><title>Registrar&#45;&gt;Contact</title>
+<path fill="none" stroke="#eb888a" d="M1738.05,-2484.46C2024.22,-2468.39 3023.5,-2402.27 3298,-2250 3520.54,-2126.55 3443.92,-1933.63 3668,-1813 3697.56,-1797.09 3795.72,-1820.11 3818,-1795 3842.63,-1767.24 3843.74,-1654.74 3818,-1628 3781.52,-1590.11 3391.85,-1633.89 3345,-1610 3270.7,-1572.11 3210.7,-1502.8 3166.7,-1436.81"/>
+<ellipse fill="none" stroke="#eb888a" cx="1733.79" cy="-2484.7" rx="4" ry="4"/>
+<polygon fill="#eb888a" stroke="#eb888a" points="3166.64,-1436.72 3164.91,-1425.89 3163.9,-1432.54 3161.15,-1428.37 3161.15,-1428.37 3161.15,-1428.37 3163.9,-1432.54 3157.39,-1430.84 3166.64,-1436.72 3166.64,-1436.72"/>
+<text text-anchor="middle" x="3704.5" y="-2027.8" font-family="Times,serif" font-size="14.00">priv_contacts</text>
 </g>
 <!-- Registrar&#45;&gt;Domain -->
 <g id="edge60" class="edge"><title>Registrar&#45;&gt;Domain</title>

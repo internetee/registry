@@ -93,4 +93,36 @@ RSpec.describe ApiUser do
       expect(api_user.linked_users).to be_empty
     end
   end
+
+  describe '#linked_with?', db: false do
+    it 'returns true if identity codes match' do
+      api_user = described_class.new(identity_code: 'test')
+      another_api_user = described_class.new(identity_code: 'test')
+
+      expect(api_user.linked_with?(another_api_user)).to be true
+    end
+
+    it 'returns false if identity codes do not match' do
+      api_user = described_class.new(identity_code: 'test')
+      another_api_user = described_class.new(identity_code: 'another-test')
+
+      expect(api_user.linked_with?(another_api_user)).to be false
+    end
+  end
+
+  describe '#login', db: false do
+    it 'is alias to #username' do
+      user = described_class.new(username: 'test-username')
+      expect(user.login).to eq('test-username')
+    end
+  end
+
+  describe '#registrar_name', db: false do
+    it 'delegates to registrar' do
+      registrar = Registrar.new(name: 'test name')
+      user = described_class.new(registrar: registrar)
+
+      expect(user.registrar_name).to eq('test name')
+    end
+  end
 end

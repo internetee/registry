@@ -152,6 +152,9 @@ class EppController < ApplicationController
         code: '1',
         msg: 'handle_errors was executed when there were actually no errors'
       }
+      # rubocop:disable Rails/Output
+      puts "FULL MESSAGE: #{obj.errors.full_messages} #{obj.errors.inspect}" if Rails.env.test?
+      # rubocop: enable Rails/Output
     end
 
     @errors.uniq!

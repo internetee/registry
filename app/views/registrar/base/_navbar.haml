@@ -1,5 +1,5 @@
 .navbar-collapse.collapse
-  %ul.nav.navbar-nav.public-nav
+  %ul.nav.navbar-nav
     - if can? :view, Depp::Domain
       - active_class = %w(registrar/domains registrar/check registrar/renew registrar/tranfer registrar/keyrelays).include?(params[:controller]) ? 'active' :nil
       %li{class: active_class}= link_to t(:domains), registrar_domains_path
@@ -16,14 +16,5 @@
       - active_class = ['registrar/xml_consoles'].include?(params[:controller]) ? 'active' :nil
       %li{class: active_class}= link_to t(:xml_console), registrar_xml_console_path
 
-  %ul.nav.navbar-nav.navbar-right
-    %li.dropdown
-      %a.dropdown-toggle{"data-toggle" => "dropdown", href: "#"}
-        = "#{current_user} (#{current_user.roles.first}) - #{current_user.registrar}"
-        %span.caret
-      %ul.dropdown-menu{role: "menu"}
-        - current_user.linked_users.each do |user|
-          %li= link_to "#{user} (#{user.roles.first}) - #{user.registrar}", registrar_switch_current_user_path(user),
-          id: "switch-current-user-#{user.id}-btn"
-        - if user_signed_in?
-          %li= link_to t(:log_out_), '/registrar/logout'
+  %div.navbar-text.navbar-right
+    = render 'current_user'

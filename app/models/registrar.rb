@@ -9,6 +9,7 @@ class Registrar < ActiveRecord::Base
   has_many :accounts
   has_many :nameservers, through: :domains
   has_many :whois_records
+  has_many :priv_contacts, -> { privs }, class_name: 'Contact'
   has_many :white_ips, dependent: :destroy
 
   delegate :balance, to: :cash_account, allow_nil: true
