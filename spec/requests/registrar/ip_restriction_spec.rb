@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Registrar area IP restriction', settings: false do
-  describe 'authenticated area' do
+  context 'when authenticated' do
     before do
       sign_in_to_registrar_area
     end
@@ -51,7 +51,7 @@ RSpec.describe 'Registrar area IP restriction', settings: false do
     end
   end
 
-  describe 'unauthenticated area' do
+  context 'when unauthenticated' do
     context 'when IP restriction is enabled' do
       before do
         Setting.registrar_ip_whitelist_enabled = true
