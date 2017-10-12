@@ -4,7 +4,7 @@ module Admin
     # TODO: Refactor this
 
     def create
-      if DNS::Zone.origins.include?(params[:origin])
+      if ::DNS::Zone.origins.include?(params[:origin])
 
         @zonefile = ActiveRecord::Base.connection.execute(
           "select generate_zonefile('#{params[:origin]}')"
