@@ -5,12 +5,12 @@ Rails.application.configure do
   # test suite. You never need to work with it otherwise. Remember that
   # your test database is "scratch space" for the test suite and is wiped
   # and recreated between test runs. Don't rely on the data there!
-  config.cache_classes = false
+  config.cache_classes = true
 
   # Do not eager load code on boot. This avoids loading your whole application
   # just for the purpose of running a single test. If you are using a tool that
   # preloads Rails for running tests, you may have to set it to true.
-  config.eager_load = false
+  config.eager_load = true
 
   # Configure static asset server for tests with Cache-Control for performance.
   config.serve_static_files   = true
@@ -41,25 +41,6 @@ Rails.application.configure do
   # The available log levels are: :debug, :info, :warn, :error, :fatal, and :unknown,
   # corresponding to the log level numbers from 0 up to 5 respectively
   config.log_level = :debug
-
-  # for finding database optimization
-  config.after_initialize do
-    Bullet.enable = true
-    Bullet.bullet_logger = true
-    Bullet.rails_logger = true
-    Bullet.raise = false # raise an error if n+1 query occurs
-    Bullet.unused_eager_loading_enable = false
-
-    # Currenty hard to fix, it is triggered by Epp::Domain.new_from_epp for create request
-    Bullet.add_whitelist type: :n_plus_one_query, class_name: 'Contact', association: :registrar
-
-    # when domain updates, then we need to update all contact linked status,
-    # somehow it triggers bullet counter cache for versions,
-    # there was no output indicating each version where fetched or counted
-    # thus needs more investigation
-    Bullet.add_whitelist type: :counter_cache, class_name: 'Contact', association: :versions
-  end
-
   config.active_job.queue_adapter = :test
   config.logger = ActiveSupport::Logger.new(nil)
 end
