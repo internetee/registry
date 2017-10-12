@@ -784,7 +784,6 @@ en:
   domain_delete_rejected_title: 'Domain deletion rejection has been received successfully'
   domain_delete_rejected_body: 'You have rejected pending domain deletion. You will receive confirmation by email.'
   no_permission: 'No permission'
-  access_denied: 'Access denied'
   common_name: 'Common name'
   md5: 'Md5'
   interface: 'Interface'
@@ -800,7 +799,6 @@ en:
   create_bank_statement: 'Create bank statement'
   create_bank_transaction: 'Create bank transaction'
   create_new_invoice: 'Create new invoice'
-  ip_is_not_whitelisted: 'IP is not whitelisted'
   billing_failure_credit_balance_low: 'Billing failure - credit balance low'
   create: 'Create'
   activity_type: 'Activity type'
@@ -818,7 +816,6 @@ en:
   notes: Notes
   active_price_for_this_operation_is: 'Active price for this operation is %{price}'
   active_price_missing_for_this_operation: 'Active price missing for this operation!'
-  log_out_: 'Log out'
   valid_to_from: 'Valid to from'
   valid_to_until: 'Valid to until'
   registrant_ident: 'Registrant ident'

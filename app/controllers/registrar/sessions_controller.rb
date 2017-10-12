@@ -1,21 +1,12 @@
 class Registrar
   class SessionsController < Devise::SessionsController
+    before_action :check_ip_restriction
     helper_method :depp_controller?
-
-    def depp_controller?
-      false
-    end
-
-    before_action :check_ip
 
     def login
       @depp_user = Depp::User.new
     end
 
-    # rubocop:disable Metrics/PerceivedComplexity
-    # rubocop:disable Metrics/CyclomaticComplexity
-    # rubocop:disable Metrics/MethodLength
-    # rubocop:disable Metrics/AbcSize
     def create
       @depp_user = Depp::User.new(params[:depp_user].merge(pki: !(Rails.env.development? || Rails.env.test?)))
 
@@ -61,27 +52,6 @@ class Registrar
       end
     end
 
-    # rubocop:enable Metrics/MethodLength
-    # rubocop:enable Metrics/AbcSize
-
-    def switch_user
-      @api_user = ApiUser.find(params[:id])
-
-      unless Rails.env.development?
-        unless @api_user.registrar.registrar_ip_white?(request.ip)
-          flash[:alert] = I18n.t(:ip_is_not_whitelisted)
-          redirect_to :back and return
-        end
-      end
-
-      sign_in @api_user if @api_user.identity_code == current_user.identity_code
-
-      redirect_to registrar_root_url
-    end
-
-    # rubocop:enable Metrics/CyclomaticComplexity
-    # rubocop:enable Metrics/PerceivedComplexity
-
     def id
       @user = ApiUser.find_by_idc_data(request.env['SSL_CLIENT_S_DN'])
 
@@ -98,7 +68,6 @@ class Registrar
       @user = User.new
     end
 
-    # rubocop:disable Metrics/MethodLength
     def mid
       phone = params[:user][:phone]
       endpoint = "#{ENV['sk_digi_doc_service_endpoint']}"
@@ -132,11 +101,6 @@ class Registrar
       end
     end
 
-    # rubocop:enable Metrics/MethodLength
-
-    # rubocop: disable Metrics/AbcSize
-    # rubocop: disable Metrics/CyclomaticComplexity
-    # rubocop: disable Metrics/MethodLength
     def mid_status
       endpoint = "#{ENV['sk_digi_doc_service_endpoint']}"
       client = Digidoc::Client.new(endpoint)
@@ -174,21 +138,24 @@ class Registrar
       end
     end
 
-    # rubocop: enable Metrics/AbcSize
-    # rubocop: enable Metrics/CyclomaticComplexity
-    # rubocop: enable Metrics/MethodLength
+    private
+
+    def depp_controller?
+      false
+    end
 
     def find_user_by_idc(idc)
       return User.new unless idc
       ApiUser.find_by(identity_code: idc) || User.new
     end
 
-    private
+    def check_ip_restriction
+      ip_restriction = Authorization::RestrictedIP.new(request.ip)
+      allowed = ip_restriction.can_access_registrar_area_sign_in_page?
 
-    def check_ip
-      return if Rails.env.development?
-      return if WhiteIp.registrar_ip_white?(request.ip)
-      render text: t('access_denied') and return
+      return if allowed
+
+      render text: t('registrar.authorization.ip_not_allowed', ip: request.ip), status: :forbidden
     end
   end
 end

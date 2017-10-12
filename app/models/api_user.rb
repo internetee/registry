@@ -23,9 +23,9 @@ class ApiUser < User
   validates :password, length: { minimum: min_password_length }
   validates :username, uniqueness: true
 
-  # TODO: probably cache, because it's requested on every EPP
-  delegate :code, to: :registrar, prefix: true
+  delegate :code, :name, to: :registrar, prefix: true
 
+  alias_attribute :login, :username
   attr_accessor :registrar_typeahead
 
   SUPER = 'super'
@@ -50,11 +50,6 @@ class ApiUser < User
       identity_code = idc_data.scan(/serialNumber=(\d+)/).flatten.first
 
       find_by(identity_code: identity_code)
-    end
-
-    def all_by_identity_code(identity_code)
-      ApiUser.where(identity_code: identity_code)
-        .where("identity_code is NOT NULL and identity_code != ''").includes(:registrar)
     end
   end
 
@@ -92,5 +87,15 @@ class ApiUser < User
     cert = OpenSSL::X509::Certificate.new(crt)
     md5 = OpenSSL::Digest::MD5.new(cert.to_der).to_s
     certificates.api.exists?(md5: md5, common_name: cn)
+  end
+
+  def linked_users
+    self.class.where(identity_code: identity_code)
+      .where("identity_code IS NOT NULL AND identity_code != ''")
+      .where.not(id: id)
+  end
+
+  def linked_with?(another_api_user)
+    another_api_user.identity_code == self.identity_code
   end
 end

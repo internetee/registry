@@ -600,28 +600,6 @@
 <ellipse fill="none" stroke="#c72760" cx="1492.92" cy="-1936.9" rx="4.00001" ry="4.00001"/>
 <polygon fill="#c72760" stroke="#c72760" points="1669.11,-22.7608 1679.32,-26.7787 1674.11,-22.5223 1679.1,-22.2838 1679.1,-22.2838 1679.1,-22.2838 1674.11,-22.5223 1678.89,-17.7889 1669.11,-22.7608 1669.11,-22.7608"/>
 </g>
-<!-- ApiUserVersion -->
-<g id="node30" class="node"><title>ApiUserVersion</title>
-<path fill="none" stroke="black" d="M3602,-73.5C3602,-73.5 3708,-73.5 3708,-73.5 3714,-73.5 3720,-79.5 3720,-85.5 3720,-85.5 3720,-242.5 3720,-242.5 3720,-248.5 3714,-254.5 3708,-254.5 3708,-254.5 3602,-254.5 3602,-254.5 3596,-254.5 3590,-248.5 3590,-242.5 3590,-242.5 3590,-85.5 3590,-85.5 3590,-79.5 3596,-73.5 3602,-73.5"/>
-<text text-anchor="middle" x="3655" y="-239.3" font-family="Times,serif" font-size="14.00">ApiUserVersion</text>
-<polyline fill="none" stroke="black" points="3590,-231.5 3720,-231.5 "/>
-<text text-anchor="start" x="3598" y="-216.3" font-family="Times,serif" font-size="14.00">id :integer</text>
-<text text-anchor="start" x="3598" y="-201.3" font-family="Times,serif" font-size="14.00">item_type :string</text>
-<text text-anchor="start" x="3598" y="-186.3" font-family="Times,serif" font-size="14.00">item_id :integer</text>
-<text text-anchor="start" x="3598" y="-171.3" font-family="Times,serif" font-size="14.00">event :string</text>
-<text text-anchor="start" x="3598" y="-156.3" font-family="Times,serif" font-size="14.00">whodunnit :string</text>
-<text text-anchor="start" x="3598" y="-141.3" font-family="Times,serif" font-size="14.00">object :json</text>
-<text text-anchor="start" x="3598" y="-126.3" font-family="Times,serif" font-size="14.00">object_changes :json</text>
-<text text-anchor="start" x="3598" y="-111.3" font-family="Times,serif" font-size="14.00">created_at :datetime</text>
-<text text-anchor="start" x="3598" y="-96.3" font-family="Times,serif" font-size="14.00">session :string</text>
-<text text-anchor="start" x="3598" y="-81.3" font-family="Times,serif" font-size="14.00">children :json</text>
-</g>
-<!-- ApiUserVersion&#45;&gt;VersionAssociation -->
-<g id="edge28" class="edge"><title>ApiUserVersion&#45;&gt;VersionAssociation</title>
-<path fill="none" stroke="#9131a9" d="M3582.68,-73.8472C3582.12,-73.5585 3581.56,-73.276 3581,-73 3458.08,-12.5996 3101.89,-58.0943 2965,-54 2546.29,-41.477 2045.93,-27.1989 1845.95,-21.5203"/>
-<ellipse fill="none" stroke="#9131a9" cx="3586.29" cy="-75.9354" rx="4.00002" ry="4.00002"/>
-<polygon fill="#9131a9" stroke="#9131a9" points="1845.79,-21.5158 1835.92,-16.7338 1840.79,-21.3739 1835.79,-21.232 1835.79,-21.232 1835.79,-21.232 1840.79,-21.3739 1835.67,-25.7301 1845.79,-21.5158 1845.79,-21.5158"/>
-</g>
 <!-- DomainVersion -->
 <g id="node32" class="node"><title>DomainVersion</title>
 <path fill="none" stroke="black" d="M1277.5,-1158.5C1277.5,-1158.5 1400.5,-1158.5 1400.5,-1158.5 1406.5,-1158.5 1412.5,-1164.5 1412.5,-1170.5 1412.5,-1170.5 1412.5,-1372.5 1412.5,-1372.5 1412.5,-1378.5 1406.5,-1384.5 1400.5,-1384.5 1400.5,-1384.5 1277.5,-1384.5 1277.5,-1384.5 1271.5,-1384.5 1265.5,-1378.5 1265.5,-1372.5 1265.5,-1372.5 1265.5,-1170.5 1265.5,-1170.5 1265.5,-1164.5 1271.5,-1158.5 1277.5,-1158.5"/>

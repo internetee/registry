@@ -15,7 +15,7 @@ module Repp
     before do
       webclient_request = ENV['webclient_ips'].split(',').map(&:strip).include?(request.ip)
       unless webclient_request
-        error! I18n.t('ip_is_not_whitelisted'), 401 unless @current_user.registrar.api_ip_white?(request.ip)
+        error! I18n.t('api.authorization.ip_not_allowed', ip: request.ip), 401 unless @current_user.registrar.api_ip_white?(request.ip)
       end
 
       if @current_user.cannot?(:view, :repp)

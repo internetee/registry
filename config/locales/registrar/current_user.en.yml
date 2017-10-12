@@ -1,0 +1,5 @@
+en:
+  registrar:
+    current_user:
+      switch:
+        switched: You are now signed in as a user "%{new_user}"

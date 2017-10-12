@@ -9,7 +9,6 @@ Fabricator(:registrar) do
   country_code 'EE'
   code { sequence(:code) { |i| "REGISTRAR#{i}" } }
   reference_no { sequence(:reference_no) { |i| "RF#{i}" } }
-  white_ips { [Fabricate(:white_ip), Fabricate(:white_ip, interfaces: [WhiteIp::REGISTRAR])] }
 end
 
 Fabricator(:registrar_with_no_account_activities, from: :registrar) do

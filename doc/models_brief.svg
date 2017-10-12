@@ -304,17 +304,6 @@
 <ellipse fill="none" stroke="#bd72c2" cx="1039.02" cy="-403.97" rx="4.00001" ry="4.00001"/>
 <polygon fill="#bd72c2" stroke="#bd72c2" points="1479.97,-21.3879 1490.14,-25.5002 1484.97,-21.1957 1489.96,-21.0036 1489.96,-21.0036 1489.96,-21.0036 1484.97,-21.1957 1489.79,-16.5069 1479.97,-21.3879 1479.97,-21.3879"/>
 </g>
-<!-- ApiUserVersion -->
-<g id="node30" class="node"><title>ApiUserVersion</title>
-<ellipse fill="none" stroke="black" cx="3567.99" cy="-91" rx="68.4888" ry="18"/>
-<text text-anchor="middle" x="3567.99" y="-87.3" font-family="Times,serif" font-size="14.00">ApiUserVersion</text>
-</g>
-<!-- ApiUserVersion&#45;&gt;VersionAssociation -->
-<g id="edge28" class="edge"><title>ApiUserVersion&#45;&gt;VersionAssociation</title>
-<path fill="none" stroke="#d1286a" d="M3511.98,-76.3934C3504.95,-75.0519 3497.83,-73.8683 3490.99,-73 3254.96,-43.0068 3193.81,-61.2233 2955.99,-54 2466.29,-39.126 1879.19,-25.7933 1658.59,-20.942"/>
-<ellipse fill="none" stroke="#d1286a" cx="3516.25" cy="-77.2469" rx="4.00001" ry="4.00001"/>
-<polygon fill="#d1286a" stroke="#d1286a" points="1658.36,-20.9371 1648.46,-16.2185 1653.36,-20.8273 1648.36,-20.7174 1648.36,-20.7174 1648.36,-20.7174 1653.36,-20.8273 1648.26,-25.2164 1658.36,-20.9371 1658.36,-20.9371"/>
-</g>
 <!-- DomainVersion -->
 <g id="node32" class="node"><title>DomainVersion</title>
 <ellipse fill="none" stroke="black" cx="1244.99" cy="-307" rx="67.6881" ry="18"/>

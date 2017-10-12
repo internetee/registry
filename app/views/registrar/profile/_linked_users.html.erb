@@ -1,0 +1,18 @@
+<div class="panel panel-default">
+    <div class="panel-heading"><%= t '.header' %></div>
+    <div class="panel-body">
+        <ul>
+            <% linked_users.each do |user| %>
+                <% user_presenter = UserPresenter.new(user: user, view: self) %>
+                <li><%= user_presenter.login_with_role %>
+                    <%= link_to t('.switch_btn'),
+                                registrar_switch_current_user_path(user),
+                                method: :put,
+                                id: "switch-current-user-#{user.id}-btn",
+                                class: 'btn btn-primary btn-xs' %>
+                </li>
+            <% end %>
+        </ul>
+    </div>
+</div>
+
