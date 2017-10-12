@@ -41,25 +41,6 @@ Rails.application.configure do
   # The available log levels are: :debug, :info, :warn, :error, :fatal, and :unknown,
   # corresponding to the log level numbers from 0 up to 5 respectively
   config.log_level = :debug
-
-  # for finding database optimization
-  config.after_initialize do
-    Bullet.enable = true
-    Bullet.bullet_logger = true
-    Bullet.rails_logger = true
-    Bullet.raise = false # raise an error if n+1 query occurs
-    Bullet.unused_eager_loading_enable = false
-
-    # Currenty hard to fix, it is triggered by Epp::Domain.new_from_epp for create request
-    Bullet.add_whitelist type: :n_plus_one_query, class_name: 'Contact', association: :registrar
-
-    # when domain updates, then we need to update all contact linked status,
-    # somehow it triggers bullet counter cache for versions,
-    # there was no output indicating each version where fetched or counted
-    # thus needs more investigation
-    Bullet.add_whitelist type: :counter_cache, class_name: 'Contact', association: :versions
-  end
-
   config.active_job.queue_adapter = :test
   config.logger = ActiveSupport::Logger.new(nil)
 end
