@@ -7,7 +7,6 @@ namespace :dev do
 
     require 'factory_girl'
     include FactoryGirl::Syntax::Methods
-    FactoryGirl.find_definitions
 
     PaperTrail.enabled = false
     Domain.paper_trail_on!
