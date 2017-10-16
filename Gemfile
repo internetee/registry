@@ -10,7 +10,6 @@ source 'https://rubygems.org'
 # core
 
 gem 'SyslogLogger', '2.0', require: 'syslog/logger'
-gem 'hashie-forbidden_attributes', '0.1.1'
 gem 'iso8601',      '0.8.6' # for dates and times
 gem 'rails',        '4.2.7.1' # when update, all initializers eis_custom files needs check/update
 gem 'rest-client'
@@ -60,6 +59,7 @@ gem 'devise',    '3.5.4'  # authenitcation
 
 # rest api
 gem 'grape',    '0.12.0'
+gem 'hashie-forbidden_attributes', '0.1.1' # For grape, https://github.com/ruby-grape/grape#rails
 gem 'jbuilder', '2.2.16'  # json api
 
 # registry specfic
