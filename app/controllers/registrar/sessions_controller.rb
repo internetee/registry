@@ -155,7 +155,7 @@ class Registrar
 
       return if allowed
 
-      render text: t('registrar.authorization.ip_not_allowed', ip: request.ip), status: :forbidden
+      render text: t('registrar.authorization.ip_not_allowed', ip: request.ip)
     end
   end
 end

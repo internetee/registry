@@ -71,7 +71,7 @@ RSpec.describe 'Registrar area IP restriction', settings: false do
       context 'when ip is not allowed' do
         specify do
           get registrar_login_path
-          expect(response).to be_forbidden
+          expect(response.body).to match "Access denied"
         end
       end
     end
