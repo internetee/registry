@@ -19,27 +19,22 @@ class Contact < ActiveRecord::Base
 
   accepts_nested_attributes_for :legal_documents
 
-  validates :name, :phone, :email, :ident, :ident_type, presence: true
+  validates :name, :email, presence: true
   validates :street, :city, :zip, :country_code, presence: true, if: 'self.class.address_processing?'
 
-  validates :phone, format: /\+[0-9]{1,3}\.[0-9]{1,14}?/, phone: true
+  validates :phone, presence: true, e164: true, phone: true
 
   validates :email, format: /@/
   validates :email, email_format: { message: :invalid }, if: proc { |c| c.email_changed? }
-  validates :ident,
-    format: { with: /\d{4}-\d{2}-\d{2}/, message: :invalid_birthday_format },
-    if: proc { |c| c.ident_type == 'birthday' }
-  validates :ident_country_code, presence: true, if: proc { |c| %w(org priv).include? c.ident_type }, on: :create
+
   validates :code,
     uniqueness: { message: :epp_id_taken },
     format: { with: /\A[\w\-\:\.\_]*\z/i, message: :invalid },
     length: { maximum: 100, message: :too_long_contact_code }
+  validates_associated :identifier
 
-  validate :val_ident_type
-  validate :val_ident_valid_format?
   validate :validate_html
   validate :validate_country_code
-  validate :validate_ident_country_code
 
   after_initialize do
     self.status_notes = {} if status_notes.nil?
@@ -49,8 +44,15 @@ class Contact < ActiveRecord::Base
   before_validation :to_upcase_country_code
   before_validation :strip_email
   before_create :generate_auth_info
-
   before_update :manage_emails
+
+  composed_of :identifier,
+              class_name: 'Contact::Ident',
+              constructor: proc { |code, type, country_code| Contact::Ident.new(code: code,
+                                                                                type: type,
+                                                                                country_code: country_code) },
+              mapping: [%w[ident code], %w[ident_type type], %w[ident_country_code country_code]]
+
   def manage_emails
     return nil unless email_changed?
     return nil unless deliver_emails == true
@@ -75,12 +77,6 @@ class Contact < ActiveRecord::Base
   PRIV = 'priv'
   BIRTHDAY = 'birthday'.freeze
   PASSPORT = 'passport'
-
-  IDENT_TYPES = [
-    ORG,     # Company registry code (or similar)
-    PRIV,    # National idendtification number
-    BIRTHDAY # Birthday date
-  ]
 
   attr_accessor :deliver_emails
   attr_accessor :domain_transfer # hack but solves problem faster
@@ -219,10 +215,6 @@ class Contact < ActiveRecord::Base
       STDOUT << "#{Time.zone.now.utc} - Successfully destroyed #{counter} orphaned contacts\n" unless Rails.env.test?
     end
 
-    def privs
-      where("ident_type = '#{PRIV}'")
-    end
-
     def admin_statuses
       [
         SERVER_UPDATE_PROHIBITED,
@@ -299,28 +291,6 @@ class Contact < ActiveRecord::Base
     name || '[no name]'
   end
 
-  def val_ident_type
-    errors.add(:ident_type, :epp_ident_type_invalid, code: code) if !%w(org priv birthday).include?(ident_type)
-  end
-
-  def val_ident_valid_format?
-    case ident_country_code
-    when 'EE'.freeze
-      err_msg = "invalid_EE_identity_format#{"_update" if id}".to_sym
-      case ident_type
-        when 'priv'.freeze
-          errors.add(:ident, err_msg) unless Isikukood.new(ident).valid?
-        when 'org'.freeze
-          # !%w(1 7 8 9).freeze.include?(ident.first) ||
-          if ident.size != 8 || !(ident =~/\A[0-9]{8}\z/)
-            errors.add(:ident, err_msg)
-          end
-        when BIRTHDAY
-          errors.add(:ident, err_msg) if id.blank? # only for create action right now. Later for all of them
-      end
-    end
-  end
-
   def validate_html
     self.class.columns.each do |column|
       next unless column.type == :string
@@ -334,7 +304,6 @@ class Contact < ActiveRecord::Base
     end
   end
 
-
   def org?
     ident_type == ORG
   end
@@ -342,10 +311,6 @@ class Contact < ActiveRecord::Base
   # it might mean priv or birthday type
   def priv?
     !org?
-  end
-
-  def birthday?
-    ident_type == BIRTHDAY
   end
 
   def generate_auth_info
@@ -422,10 +387,6 @@ class Contact < ActiveRecord::Base
   def validate_country_code
     return unless country_code
     errors.add(:country_code, :invalid) unless Country.new(country_code)
-  end
-
-  def validate_ident_country_code
-    errors.add(:ident, :invalid_country_code) unless Country.new(ident_country_code)
   end
 
   def related_domain_descriptions
@@ -572,7 +533,7 @@ class Contact < ActiveRecord::Base
     return if changes.slice(*(self.class.column_names - ["updated_at", "created_at", "statuses", "status_notes"])).empty?
 
     names = related_domain_descriptions.keys
-    UpdateWhoisRecordJob.enqueue(names, :domain) if names.present?
+    UpdateWhoisRecordJob.enqueue(names, 'domain') if names.present?
   end
 
   def children_log
