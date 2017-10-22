@@ -11,6 +11,12 @@ module EppErrors
         epp_errors << collect_child_errors(attr)
       end
 
+      if self.class.reflect_on_aggregation(attr)
+        aggregation = send(attr)
+        epp_errors << collect_aggregation_errors(aggregation)
+        next
+      end
+
       epp_errors << collect_parent_errors(attr, errors)
     end
 
@@ -42,6 +48,31 @@ module EppErrors
         epp_errors << x.collect_parent_errors(attribute, errors)
       end
     end if multi.include?(macro)
+
+    epp_errors
+  end
+
+  def collect_aggregation_errors(aggregation)
+    epp_errors = []
+
+    aggregation.errors.details.each do |attr, error_details|
+      error_details.each do |error_detail|
+        aggregation.class.epp_code_map.each do |epp_code, attr_to_error|
+          epp_code_found = attr_to_error.any? { |i| i == [attr, error_detail[:error]] }
+
+          next unless epp_code_found
+
+          message = aggregation.errors.generate_message(attr, error_detail[:error], error_detail)
+          message = aggregation.errors.full_message(attr, message)
+
+          if attr != :base
+            message = "#{aggregation.model_name.human} #{message.camelize(:lower)}"
+          end
+
+          epp_errors << { code: epp_code, msg: message }
+        end
+      end
+    end
 
     epp_errors
   end

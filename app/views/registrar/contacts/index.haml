@@ -21,7 +21,7 @@
         .col-md-3
           .form-group
             = label_tag t(:ident_type)
-            = select_tag '[q][ident_type_eq]', options_for_select(Contact::IDENT_TYPES, params[:q][:ident_type_eq]), { include_blank: true, placeholder: t(:choose), class: 'form-control selectize' }
+            = select_tag '[q][ident_type_eq]', options_for_select(ident_types, params[:q][:ident_type_eq]), { include_blank: true, placeholder: t(:choose), class: 'form-control selectize' }
       .row
         .col-md-3
           .form-group
@@ -85,7 +85,7 @@
 .row
   .col-md-12
     .table-responsive
-      %table.table.table-hover.table-bordered.table-condensed
+      %table.table.table-hover.table-bordered.table-condensed.contacts
         %thead
           %tr
             %th{class: 'col-xs-2'}
