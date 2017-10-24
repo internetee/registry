@@ -109,7 +109,7 @@ class Epp::Contact < Contact
   end
   delegate :ident_attr_valid?, to: :class
 
-  def epp_code_map # rubocop:disable Metrics/MethodLength
+  def epp_code_map
     {
       '2003' => [ # Required parameter missing
         [:name,   :blank],
@@ -124,31 +124,19 @@ class Epp::Contact < Contact
         [:name, :invalid],
         [:phone, :invalid],
         [:email, :invalid],
-        [:ident, :invalid],
-        [:ident, :invalid_EE_identity_format],
-        [:ident, :invalid_EE_identity_format_update],
-        [:ident, :invalid_birthday_format],
-        [:ident, :invalid_country_code],
         [:country_code, :invalid],
-        [:ident_type, :missing],
         [:code, :invalid],
         [:code, :too_long_contact_code]
       ],
       '2302' => [ # Object exists
         [:code, :epp_id_taken]
       ],
-      '2304' => [ # Object status prohibits operation
-        [:ident_type, :epp_ident_type_invalid, { value: { obj: 'code', val: code}, interpolation: {code: code}}]
-      ],
       '2305' => [ # Association exists
         [:domains, :exist]
-      ],
-      '2306' => [ # Parameter policy error
       ]
     }
   end
 
-  # rubocop:disable Metrics/AbcSize
   def update_attributes(frame, current_user)
     return super if frame.blank?
     at = {}.with_indifferent_access
@@ -158,9 +146,6 @@ class Epp::Contact < Contact
       at[:statuses] = statuses - statuses_attrs(frame.css('rem'), 'rem') + statuses_attrs(frame.css('add'), 'add')
     end
 
-    # legal_frame = frame.css('legalDocument').first
-    # at[:legal_documents_attributes] = self.class.legal_document_attrs(legal_frame)
-
     if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
       frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
       self.legal_document_id = doc.id
@@ -168,29 +153,28 @@ class Epp::Contact < Contact
 
     self.deliver_emails = true # turn on email delivery for epp
 
+    ident_frame = frame.css('ident').first
 
-    # allow to update ident code for legacy contacts
-    if frame.css('ident').first
-      self.ident_updated_at ||= Time.zone.now # not in use
-      ident_frame = frame.css('ident').first
+    # https://github.com/internetee/registry/issues/576
+    if ident_frame
+      if identifier.valid?
+        submitted_ident = Ident.new(code: ident_frame.text,
+                                    type: ident_frame.attr('type'),
+                                    country_code: ident_frame.attr('cc'))
 
-      if ident_frame && ident_attr_valid?(ident_frame)
-        org_priv = %w(org priv).freeze
-        if ident_country_code.blank? && org_priv.include?(ident_type) && org_priv.include?(ident_frame.attr('type'))
-          at.merge!(ident_country_code: ident_frame.attr('cc'), ident_type: ident_frame.attr('type'))
-        elsif ident_type == "birthday" && !ident[/\A\d{4}-\d{2}-\d{2}\z/] && (Date.parse(ident) rescue false)
-          at.merge!(ident: ident_frame.text)
-          at.merge!(ident_country_code: ident_frame.attr('cc')) if ident_frame.attr('cc').present?
-        elsif ident_type == "birthday" &&  ident_country_code.blank?
-          at.merge!(ident_country_code: ident_frame.attr('cc'))
-        elsif ident_type.blank? && ident_country_code.blank?
-          at.merge!(ident_type: ident_frame.attr('type'))
-          at.merge!(ident_country_code: ident_frame.attr('cc')) if ident_frame.attr('cc').present?
-        else
-          throw :epp_error, {code: '2306', msg: I18n.t(:ident_update_error)}
-        end
+        report_valid_ident_error if submitted_ident != identifier
       else
-        throw :epp_error, {code: '2306', msg: I18n.t(:ident_update_error)}
+        ident_update_attempt = ident_frame.text.present? && (ident_frame.text != ident)
+        report_ident_update_error if ident_update_attempt
+
+        identifier = Ident.new(code: ident,
+                               type: ident_frame.attr('type'),
+                               country_code: ident_frame.attr('cc'))
+
+        identifier.validate
+
+        self.identifier = identifier
+        self.ident_updated_at ||= Time.zone.now
       end
     end
 
@@ -199,7 +183,6 @@ class Epp::Contact < Contact
 
     super(at)
   end
-  # rubocop:enable Metrics/AbcSize
 
   def statuses_attrs(frame, action)
     status_list = status_list_from(frame)
@@ -259,4 +242,13 @@ class Epp::Contact < Contact
     self.legal_document_id = doc.id
   end
 
+  private
+
+  def report_valid_ident_error
+    throw :epp_error, { code: '2308', msg: I18n.t('epp.contacts.errors.valid_ident') }
+  end
+
+  def report_ident_update_error
+    throw :epp_error, { code: '2308', msg: I18n.t('epp.contacts.errors.ident_update') }
+  end
 end
