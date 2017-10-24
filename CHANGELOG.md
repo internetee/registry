@@ -1,3 +1,18 @@
+13.10.2017
+* BUG: week starts with Monday now in the date picker of the portal for registrars and admin interface [#590](https://github.com/internetee/registry/issues/590)
+* BUG: Fixed error on zone file generation in the admin interface [#611](https://github.com/internetee/registry/issues/611)
+* Improved expire email readability [#598](https://github.com/internetee/registry/pull/598)
+* Improved registrar portal access denied page [#599](https://github.com/internetee/registry/pull/599)
+* Admin interface uses base controller [#585](https://github.com/internetee/registry/pull/585)
+* Admin interface settings refactored [#583](https://github.com/internetee/registry/pull/583)
+* Nokogiri gem update 1.8.1 [#595](https://github.com/internetee/registry/pull/595)
+* Mail gem update 2.6.6 [#596](https://github.com/internetee/registry/pull/596)
+* Improved rubocop inspections [#579](https://github.com/internetee/registry/issues/579)
+* Removed "restful_whois_url" config key [#494](https://github.com/internetee/registry/pull/494)
+* Removed robot bin [#505](https://github.com/internetee/registry/pull/505)
+* Configurabel session timeouts for dev and test environments [#588](https://github.com/internetee/registry/pull/588)
+* Generators disabled [#606](https://github.com/internetee/registry/pull/606)
+
 15.06.2017
 * BUG: fixed incorrect error message on domain upate in case serverDeleteProhibited was set [#512](https://github.com/internetee/registry/issues/512)
 * BUG: removed references to postal addresses from last email templates in case address processing is disabled [#480](https://github.com/internetee/registry/issues/480)
