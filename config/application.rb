@@ -60,11 +60,7 @@ module Registry
       g.helper false
       g.template_engine :erb
       g.jbuilder false
-      g.test_framework :rspec,
-                       controller_specs: false,
-                       view_specs: false,
-                       request_specs: false,
-                       routing_specs: false
+      g.test_framework :minitest, fixture: false
     end
 
     registrant_portal_uri = URI.parse(ENV['registrant_url'])
