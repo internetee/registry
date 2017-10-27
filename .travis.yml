@@ -12,6 +12,7 @@ before_script:
   - "RAILS_ENV=test bundle exec rake db:setup:all"
 script:
   - "RAILS_ENV=test bundle exec rspec"
+  - "bundle exec rake test"
 after_success:
   - "bundle exec codeclimate-test-reporter"
 services:
