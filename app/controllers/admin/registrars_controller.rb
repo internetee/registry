@@ -77,7 +77,8 @@ module Admin
                                         :website,
                                         :billing_email,
                                         :code,
-                                        :test_registrar)
+                                        :test_registrar,
+                                        :accounting_customer_code)
     end
   end
 end
