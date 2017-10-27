@@ -1,12 +1,12 @@
-require 'rails_helper'
+require 'test_helper'
 
-RSpec.feature 'New registrar' do
-  background do
-    sign_in_to_admin_area
+class NewRegistrarTest < ActionDispatch::IntegrationTest
+  def setup
+    login_as create(:admin_user)
   end
 
-  it 'creates registrar' do
-    visit admin_registrars_url
+  def test_creates_registrar
+    visit admin_registrars_path
     click_link_or_button 'New registrar'
 
     fill_in 'registrar[name]', with: 'test'
@@ -15,6 +15,6 @@ RSpec.feature 'New registrar' do
     fill_in 'registrar[code]', with: 'test'
     click_link_or_button 'Create registrar'
 
-    expect(page).to have_text('Registrar has been successfully created')
+    assert_text 'Registrar has been successfully created'
   end
 end
