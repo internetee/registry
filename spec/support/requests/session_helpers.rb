@@ -1,6 +1,6 @@
 module Requests
   module SessionHelpers
-    def sign_in_to_epp_area(user: FactoryGirl.create(:api_user_epp))
+    def sign_in_to_epp_area(user: create(:api_user_epp))
       login_xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>
       <epp xmlns=\"https://epp.tld.ee/schema/epp-ee-1.0.xsd\">
         <command>
@@ -29,11 +29,11 @@ module Requests
       post '/epp/session/login', frame: login_xml
     end
 
-    def sign_in_to_admin_area(user: FactoryGirl.create(:admin_user))
+    def sign_in_to_admin_area(user: create(:admin_user))
       post admin_sessions_path, admin_user: { username: user.username, password: user.password }
     end
 
-    def sign_in_to_registrar_area(user: FactoryGirl.create(:api_user))
+    def sign_in_to_registrar_area(user: create(:api_user))
       post registrar_sessions_path, { depp_user: { tag: user.username, password: user.password } }
     end
   end

@@ -21,7 +21,7 @@ describe RegistrantVerification do
 
     Setting.client_side_status_editing_enabled = true
 
-    Fabricate(:zone, origin: 'ee')
+    create(:zone, origin: 'ee')
   end
   context 'with invalid attribute' do
     before :example do
@@ -42,7 +42,7 @@ describe RegistrantVerification do
 
   context 'with valid attributes' do
     before :example do
-      @registrant_verification = Fabricate(:registrant_verification)
+      @registrant_verification = create(:registrant_verification)
     end
 
     it 'should be valid' do
@@ -51,7 +51,7 @@ describe RegistrantVerification do
     end
 
     it 'should be valid twice' do
-      @registrant_verification = Fabricate(:registrant_verification)
+      @registrant_verification = create(:registrant_verification)
       @registrant_verification.valid?
       @registrant_verification.errors.full_messages.should match_array([])
     end
