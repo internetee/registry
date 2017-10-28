@@ -21,11 +21,11 @@ RSpec.describe Domain do
 
     Setting.client_side_status_editing_enabled = true
 
-    Fabricate(:zone, origin: 'ee')
-    Fabricate(:zone, origin: 'pri.ee')
-    Fabricate(:zone, origin: 'med.ee')
-    Fabricate(:zone, origin: 'fie.ee')
-    Fabricate(:zone, origin: 'com.ee')
+    create(:zone, origin: 'ee')
+    create(:zone, origin: 'pri.ee')
+    create(:zone, origin: 'med.ee')
+    create(:zone, origin: 'fie.ee')
+    create(:zone, origin: 'com.ee')
   end
 
   context 'with invalid attribute' do
@@ -64,7 +64,7 @@ RSpec.describe Domain do
 
   context 'with valid attributes' do
     before :example do
-      @domain = Fabricate(:domain)
+      @domain = create(:domain)
     end
 
     it 'should be valid' do
@@ -73,14 +73,14 @@ RSpec.describe Domain do
     end
 
     it 'should be valid twice' do
-      @domain = Fabricate(:domain)
+      @domain = create(:domain)
       @domain.valid?
       @domain.errors.full_messages.should match_array([])
     end
 
     it 'should validate uniqueness of tech contacts' do
-      same_contact = Fabricate(:contact, code: 'same_contact')
-      domain = Fabricate(:domain)
+      same_contact = create(:contact, code: 'same_contact')
+      domain = create(:domain)
       domain.tech_contacts << same_contact
       domain.tech_contacts << same_contact
       domain.valid?
@@ -88,8 +88,8 @@ RSpec.describe Domain do
     end
 
     it 'should validate uniqueness of tech contacts' do
-      same_contact = Fabricate(:contact, code: 'same_contact')
-      domain = Fabricate(:domain)
+      same_contact = create(:contact, code: 'same_contact')
+      domain = create(:domain)
       domain.admin_contacts << same_contact
       domain.admin_contacts << same_contact
       domain.valid?
@@ -113,7 +113,7 @@ RSpec.describe Domain do
     end
 
     it 'should not find any domains with wrong pendings' do
-      domain = Fabricate(:domain)
+      domain = create(:domain)
       domain.registrant_verification_asked!('frame-str', '1')
       domain.registrant_verification_asked_at = 30.days.ago
       domain.save
@@ -122,7 +122,7 @@ RSpec.describe Domain do
     end
 
     it 'should clean domain pendings' do
-      domain = Fabricate(:domain)
+      domain = create(:domain)
       domain.registrant_verification_asked!('frame-str', '1')
       domain.registrant_verification_asked_at = 30.days.ago
       domain.pending_delete!
@@ -165,7 +165,7 @@ RSpec.describe Domain do
     end
 
     it 'should start redemption grace period' do
-      domain = Fabricate(:domain)
+      domain = create(:domain)
 
       DomainCron.start_redemption_grace_period
       domain.reload
@@ -253,6 +253,9 @@ RSpec.describe Domain do
     end
 
     it 'should set pending delete' do
+      @domain.nameservers.build(attributes_for(:nameserver))
+      @domain.nameservers.build(attributes_for(:nameserver))
+
       @domain.statuses = DomainStatus::OK # restore
       @domain.save
       @domain.pending_delete?.should == false
@@ -281,7 +284,7 @@ RSpec.describe Domain do
     end
 
     it 'should add poll message to registrar' do
-      domain = Fabricate(:domain, name: 'testpollmessage123.ee')
+      domain = create(:domain, name: 'testpollmessage123.ee')
       domain.poll_message!(:poll_pending_update_confirmed_by_registrant)
       domain.registrar.messages.first.body.should == 'Registrant confirmed domain update: testpollmessage123.ee'
     end
@@ -341,13 +344,13 @@ RSpec.describe Domain do
 
       it 'should return api_creator when created by api user' do
         with_versioning do
-          @user = Fabricate(:admin_user)
-          @api_user = Fabricate(:api_user)
+          @user = create(:admin_user)
+          @api_user = create(:api_user)
           @user.id.should == 1
           @api_user.id.should == 2
           ::PaperTrail.whodunnit = '2-ApiUser: testuser'
 
-          @domain = Fabricate(:domain)
+          @domain = create(:domain)
           @domain.creator_str.should == '2-ApiUser: testuser'
 
           @domain.creator.should == @api_user
@@ -357,13 +360,13 @@ RSpec.describe Domain do
 
       it 'should return api_creator when created by api user' do
         with_versioning do
-          @user = Fabricate(:admin_user, id: 1000)
-          @api_user = Fabricate(:api_user, id: 2000)
+          @user = create(:admin_user, id: 1000)
+          @api_user = create(:api_user, id: 2000)
           @user.id.should == 1000
           @api_user.id.should == 2000
           ::PaperTrail.whodunnit = '1000-AdminUser: testuser'
 
-          @domain = Fabricate(:domain)
+          @domain = create(:domain)
           @domain.creator_str.should == '1000-AdminUser: testuser'
 
           @domain.creator.should == @user
@@ -374,7 +377,7 @@ RSpec.describe Domain do
   end
 
   it 'validates domain name' do
-    d = Fabricate(:domain)
+    d = create(:domain)
     expect(d.name).to_not be_nil
 
     invalid = [
@@ -384,7 +387,7 @@ RSpec.describe Domain do
     ]
 
     invalid.each do |x|
-      expect(Fabricate.build(:domain, name: x).valid?).to be false
+      expect(build(:domain, name: x).valid?).to be false
     end
 
     valid = [
@@ -393,28 +396,28 @@ RSpec.describe Domain do
     ]
 
     valid.each do |x|
-      expect(Fabricate.build(:domain, name: x).valid?).to be true
+      expect(build(:domain, name: x).valid?).to be true
     end
 
     invalid_punycode = ['xn--geaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-4we.pri.ee']
 
     invalid_punycode.each do |x|
-      expect(Fabricate.build(:domain, name: x).valid?).to be false
+      expect(build(:domain, name: x).valid?).to be false
     end
 
     valid_punycode = ['xn--ge-uia.pri.ee', 'xn--geaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa-9te.pri.ee']
 
     valid_punycode.each do |x|
-      expect(Fabricate.build(:domain, name: x).valid?).to be true
+      expect(build(:domain, name: x).valid?).to be true
     end
   end
 
   it 'should not create zone origin domain' do
-    d = Fabricate.build(:domain, name: 'ee')
+    d = build(:domain, name: 'ee')
     d.save.should == false
     expect(d.errors.full_messages).to include('Data management policy violation: Domain name is blocked [name]')
 
-    d = Fabricate.build(:domain, name: 'bla')
+    d = build(:domain, name: 'bla')
     d.save.should == false
     expect(d.errors.full_messages).to include('Domain name Domain name is invalid')
   end
@@ -427,13 +430,13 @@ RSpec.describe Domain do
   end
 
   it 'should be valid when name length is exatly 63 in characters' do
-    d = Fabricate(:domain, name: "#{'a' * 63}.ee")
+    d = create(:domain, name: "#{'a' * 63}.ee")
     d.valid?
     d.errors.full_messages.should == []
   end
 
   it 'should not be valid when name length is longer than 63 characters' do
-    d = Fabricate.build(:domain, name: "#{'a' * 64}.ee")
+    d = build(:domain, name: "#{'a' * 64}.ee")
     d.valid?
     d.errors.full_messages.should match_array([
       "Domain name Domain name is invalid",
@@ -442,7 +445,7 @@ RSpec.describe Domain do
   end
 
   it 'should not be valid when name length is longer than 63 characters' do
-    d = Fabricate.build(:domain,
+    d = build(:domain,
       name: "xn--4caaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.ee")
     d.valid?
     d.errors.full_messages.should match_array([
@@ -452,7 +455,7 @@ RSpec.describe Domain do
   end
 
   it 'should be valid when name length is 63 characters' do
-    d = Fabricate.build(:domain,
+    d = build(:domain,
                         name: "õäöüšžõäöüšžõäöüšžõäöüšžõäöüšžõäöüšžõäöüšžab123.pri.ee")
     d.valid?
     d.errors.full_messages.should match_array([
@@ -460,7 +463,7 @@ RSpec.describe Domain do
   end
 
   it 'should not be valid when name length is longer than 63 punycode characters' do
-    d = Fabricate.build(:domain, name: "#{'ä' * 63}.ee")
+    d = build(:domain, name: "#{'ä' * 63}.ee")
     d.valid?
     d.errors.full_messages.should == [
       "Puny label Domain name is too long (maximum is 63 characters)"
@@ -468,7 +471,7 @@ RSpec.describe Domain do
   end
 
   it 'should not be valid when name length is longer than 63 punycode characters' do
-    d = Fabricate.build(:domain, name: "#{'ä' * 64}.ee")
+    d = build(:domain, name: "#{'ä' * 64}.ee")
     d.valid?
     d.errors.full_messages.should match_array([
       "Domain name Domain name is invalid",
@@ -477,7 +480,7 @@ RSpec.describe Domain do
   end
 
   it 'should not be valid when name length is longer than 63 punycode characters' do
-    d = Fabricate.build(:domain, name: "#{'ä' * 63}.pri.ee")
+    d = build(:domain, name: "#{'ä' * 63}.pri.ee")
     d.valid?
     d.errors.full_messages.should match_array([
       "Puny label Domain name is too long (maximum is 63 characters)"
@@ -485,63 +488,69 @@ RSpec.describe Domain do
   end
 
   it 'should be valid when punycode name length is not longer than 63' do
-    d = Fabricate.build(:domain, name: "#{'ä' * 53}.pri.ee")
+    d = build(:domain, name: "#{'ä' * 53}.pri.ee")
     d.valid?
     d.errors.full_messages.should == []
   end
 
   it 'should be valid when punycode name length is not longer than 63' do
-    d = Fabricate.build(:domain, name: "#{'ä' * 57}.ee")
+    d = build(:domain, name: "#{'ä' * 57}.ee")
     d.valid?
     d.errors.full_messages.should == []
   end
 
   it 'should not be valid when name length is one pynicode' do
-    d = Fabricate.build(:domain, name: "xn--4ca.ee")
+    d = build(:domain, name: "xn--4ca.ee")
     d.valid?
     d.errors.full_messages.should == ["Domain name Domain name is invalid"]
   end
 
   it 'should not be valid with at character' do
-    d = Fabricate.build(:domain, name: 'dass@sf.ee')
+    d = build(:domain, name: 'dass@sf.ee')
     d.valid?
     d.errors.full_messages.should == ["Domain name Domain name is invalid"]
   end
 
   it 'should not be valid with invalid characters' do
-    d = Fabricate.build(:domain, name: '@ba)s(?ä_:-df.ee')
+    d = build(:domain, name: '@ba)s(?ä_:-df.ee')
     d.valid?
     d.errors.full_messages.should == ["Domain name Domain name is invalid"]
   end
 
   it 'should be valid when name length is two pynicodes' do
-    d = Fabricate.build(:domain, name: "xn--4caa.ee")
+    d = build(:domain, name: "xn--4caa.ee")
     d.valid?
     d.errors.full_messages.should == []
   end
 
   it 'should be valid when name length is two pynicodes' do
-    d = Fabricate.build(:domain, name: "xn--4ca0b.ee")
+    d = build(:domain, name: "xn--4ca0b.ee")
     d.valid?
     d.errors.full_messages.should == []
   end
 
   it 'does not create a reserved domain' do
-    Fabricate.create(:reserved_domain, name: 'test.ee')
+    create(:reserved_domain, name: 'test.ee')
 
-    domain = Fabricate.build(:domain, name: 'test.ee')
+    domain = build(:domain, name: 'test.ee')
     domain.validate
 
     expect(domain.errors[:base]).to include('Required parameter missing; reserved>pw element required for reserved domains')
   end
 
   it 'generates auth info' do
-    d = Fabricate(:domain)
+    d = create(:domain)
     expect(d.auth_info).to_not be_empty
   end
 
   it 'manages statuses automatically' do
-    d = Fabricate(:domain)
+    d = build(:domain)
+
+    d.nameservers.build(attributes_for(:nameserver))
+    d.nameservers.build(attributes_for(:nameserver))
+
+    d.save!
+
     expect(d.statuses.count).to eq(1)
     expect(d.statuses.first).to eq(DomainStatus::OK)
 
@@ -562,28 +571,16 @@ RSpec.describe Domain do
   end
 
   with_versioning do
-    context 'when not saved' do
-      it 'does not create domain version' do
-        Fabricate.build(:domain)
-        expect(DomainVersion.count).to eq(0)
-      end
-
-      it 'does not create child versions' do
-        Fabricate.build(:domain)
-        expect(ContactVersion.count).to eq(0)
-        expect(NameserverVersion.count).to eq(0)
-      end
-    end
-
     context 'when saved' do
       before(:each) do
-        Fabricate(:domain)
+        domain = create(:domain)
+        domain.nameservers << create(:nameserver)
       end
 
       it 'creates domain version' do
         expect(DomainVersion.count).to eq(1)
         expect(ContactVersion.count).to eq(3)
-        expect(NameserverVersion.count).to eq(3)
+        expect(NameserverVersion.count).to eq(2)
       end
     end
   end
@@ -672,7 +669,7 @@ RSpec.describe Domain do
 
     it 'rejects less than min' do
       Setting.ns_min_count = 2
-      domain.nameservers.build(FactoryGirl.attributes_for(:nameserver))
+      domain.nameservers.build(attributes_for(:nameserver))
       domain.validate
       expect(domain.errors).to have_key(:nameservers)
     end
@@ -680,15 +677,15 @@ RSpec.describe Domain do
     it 'rejects more than max' do
       Setting.ns_min_count = 1
       Setting.ns_max_count = 1
-      domain.nameservers.build(FactoryGirl.attributes_for(:nameserver))
-      domain.nameservers.build(FactoryGirl.attributes_for(:nameserver))
+      domain.nameservers.build(attributes_for(:nameserver))
+      domain.nameservers.build(attributes_for(:nameserver))
       domain.validate
       expect(domain.errors).to have_key(:nameservers)
     end
 
     it 'accepts min' do
       Setting.ns_min_count = 1
-      domain.nameservers.build(FactoryGirl.attributes_for(:nameserver))
+      domain.nameservers.build(attributes_for(:nameserver))
       domain.validate
       expect(domain.errors).to_not have_key(:nameservers)
     end
@@ -696,8 +693,8 @@ RSpec.describe Domain do
     it 'accepts max' do
       Setting.ns_min_count = 1
       Setting.ns_max_count = 2
-      domain.nameservers.build(FactoryGirl.attributes_for(:nameserver))
-      domain.nameservers.build(FactoryGirl.attributes_for(:nameserver))
+      domain.nameservers.build(attributes_for(:nameserver))
+      domain.nameservers.build(attributes_for(:nameserver))
       domain.validate
       expect(domain.errors).to_not have_key(:nameservers)
     end
@@ -709,7 +706,7 @@ RSpec.describe Domain do
 
       it 'rejects less than min' do
         Setting.ns_min_count = 2
-        domain.nameservers.build(FactoryGirl.attributes_for(:nameserver))
+        domain.nameservers.build(attributes_for(:nameserver))
         domain.validate
         expect(domain.errors).to have_key(:nameservers)
       end
@@ -867,11 +864,11 @@ RSpec.describe Domain do
     before :example do
       travel_to Time.zone.parse('05.07.2010 00:00')
 
-      Fabricate(:zone, origin: 'ee')
+      create(:zone, origin: 'ee')
 
-      Fabricate.create(:domain, id: 1, outzone_time: Time.zone.parse('04.07.2010 23:59'))
-      Fabricate.create(:domain, id: 2, outzone_time: Time.zone.parse('05.07.2010 00:00'))
-      Fabricate.create(:domain, id: 3, outzone_time: Time.zone.parse('05.07.2010 00:01'))
+      create(:domain, id: 1, outzone_time: Time.zone.parse('04.07.2010 23:59'))
+      create(:domain, id: 2, outzone_time: Time.zone.parse('05.07.2010 00:00'))
+      create(:domain, id: 3, outzone_time: Time.zone.parse('05.07.2010 00:01'))
     end
 
     it 'returns domains with outzone time in the past' do
@@ -883,11 +880,11 @@ RSpec.describe Domain do
     before :example do
       travel_to Time.zone.parse('05.07.2010 00:00')
 
-      Fabricate(:zone, origin: 'ee')
+      create(:zone, origin: 'ee')
 
-      Fabricate.create(:domain, id: 1, delete_time: Time.zone.parse('04.07.2010 23:59'))
-      Fabricate.create(:domain, id: 2, delete_time: Time.zone.parse('05.07.2010 00:00'))
-      Fabricate.create(:domain, id: 3, delete_time: Time.zone.parse('05.07.2010 00:01'))
+      create(:domain, id: 1, delete_time: Time.zone.parse('04.07.2010 23:59'))
+      create(:domain, id: 2, delete_time: Time.zone.parse('05.07.2010 00:00'))
+      create(:domain, id: 3, delete_time: Time.zone.parse('05.07.2010 00:01'))
     end
 
     it 'returns domains with delete time in the past' do

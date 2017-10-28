@@ -20,7 +20,7 @@ describe Message do
 
   context 'with valid attributes' do
     before :all do
-      @mssage = Fabricate(:message)
+      @mssage = create(:message)
     end
 
     it 'should be valid' do
@@ -29,7 +29,7 @@ describe Message do
     end
 
     it 'should be valid twice' do
-      @mssage = Fabricate(:message)
+      @mssage = create(:message)
       @mssage.valid?
       @mssage.errors.full_messages.should match_array([])
     end

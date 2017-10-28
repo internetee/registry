@@ -21,7 +21,7 @@ describe Dnskey do
 
     Setting.client_side_status_editing_enabled = true
 
-    Fabricate(:zone, origin: 'ee')
+    create(:zone, origin: 'ee')
   end
 
   context 'with invalid attribute' do
@@ -42,7 +42,17 @@ describe Dnskey do
 
   context 'with valid attributes' do
     before :example do
-      @dnskey = Fabricate(:dnskey)
+      @dnskey = create(:dnskey,
+                       alg: 8,
+                       flags: 257,
+                       protocol: 3,
+                       public_key: 'AwEAAaOf5+lz3ftsL+0CCvfJbhUF/NVsNh8BKo61oYs5fXVbuWDiH872 '\
+                                   'LC8uKDO92TJy7Q4TF9XMAKMMlf1GMAxlRspD749SOCTN00sqfWx1OMTu '\
+                                   'a28L1PerwHq7665oDJDKqR71btcGqyLKhe2QDvCdA0mENimF1NudX1BJ '\
+                                   'DDFi6oOZ0xE/0CuveB64I3ree7nCrwLwNs56kXC4LYoX3XdkOMKiJLL/ '\
+                                   'MAhcxXa60CdZLoRtTEW3z8/oBq4hEAYMCNclpbd6y/exScwBxFTdUfFk '\
+                                   'KsdNcmvai1lyk9vna0WQrtpYpHKMXvY9LFHaJxCOLR4umfeQ42RuTd82 lqfU6ClMeXs=',
+                       ds_digest_type: 2)
     end
 
     it 'should be valid' do
@@ -51,7 +61,7 @@ describe Dnskey do
     end
 
     it 'should be valid twice' do
-      @dnskey = Fabricate(:dnskey)
+      @dnskey = create(:dnskey)
       @dnskey.valid?
       @dnskey.errors.full_messages.should match_array([])
     end
@@ -66,7 +76,7 @@ describe Dnskey do
     # end
 
     it 'generates correct DS digest and DS key tag for ria.ee' do
-      d = Fabricate(:domain, name: 'ria.ee', dnskeys: [@dnskey])
+      d = create(:domain, name: 'ria.ee', dnskeys: [@dnskey])
       dk = d.dnskeys.last
 
       dk.generate_digest
@@ -75,7 +85,7 @@ describe Dnskey do
     end
 
     it 'generates correct DS digest and DS key tag for emta.ee' do
-      d = Fabricate(:domain, name: 'emta.ee', dnskeys: [@dnskey])
+      d = create(:domain, name: 'emta.ee', dnskeys: [@dnskey])
 
       dk = d.dnskeys.last
 

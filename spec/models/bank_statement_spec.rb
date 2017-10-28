@@ -20,9 +20,8 @@ describe BankStatement do
   end
 
   context 'with valid attributes' do
-    before :all do
-      @bank_statement = Fabricate(:bank_statement)
-      Fabricate(:eis)
+    before do
+      @bank_statement = create(:bank_statement)
     end
 
     it 'should be valid' do
@@ -31,67 +30,32 @@ describe BankStatement do
     end
 
     it 'should be valid twice' do
-      @bank_statement = Fabricate(:bank_statement)
+      @bank_statement = create(:bank_statement)
       @bank_statement.valid?
       @bank_statement.errors.full_messages.should match_array([])
     end
 
-    it 'should bind transactions with invoices' do
-      # sometimes it works, sometimes not
-      # r = Fabricate(:registrar_with_no_account_activities, reference_no: 'RF7086666663')
-      # invoice = r.issue_prepayment_invoice(200, 'add some money')
-
-      # bs = Fabricate(:bank_statement, bank_transactions: [
-        # Fabricate(:bank_transaction, {
-          # sum: 240.0, # with vat
-          # reference_no: 'RF7086666663',
-          # description: "Invoice no. #{invoice.number}"
-        # }),
-        # Fabricate(:bank_transaction, {
-          # sum: 240.0,
-          # reference_no: 'RF7086666663',
-          # description: "Invoice no. #{invoice.number}"
-        # })
-      # ])
-
-      # bs.bank_transactions.count.should == 2
-
-      # AccountActivity.count.should == 0
-      # bs.bind_invoices
-
-      # AccountActivity.count.should == 1
-
-      # a = AccountActivity.last
-      # a.description.should == "Invoice no. #{invoice.number}"
-      # a.sum.should == BigDecimal.new('200.0')
-      # a.activity_type = AccountActivity::ADD_CREDIT
-
-      # r.reload
-      # r.cash_account.reload
-      # r.cash_account.balance.should == 200.0
-
-      # bs.bank_transactions.unbinded.count.should == 1
-      # bs.partially_binded?.should == true
-    end
-
     it 'should not bind transactions with invalid match data' do
-      r = Fabricate(:registrar_with_no_account_activities, reference_no: 'RF7086666663')
+      r = create(:registrar, reference_no: 'RF7086666663')
+
+      create(:account, registrar: r, account_type: 'cash', balance: 0)
+
       r.issue_prepayment_invoice(200, 'add some money')
 
-      bs = Fabricate(:bank_statement, bank_transactions: [
-        Fabricate(:bank_transaction, {
+      bs = create(:bank_statement, bank_transactions: [
+        create(:bank_transaction, {
           sum: 240.0, # with vat
           reference_no: 'RF7086666662',
           description: 'Invoice no. 1'
         }),
-        Fabricate(:bank_transaction, {
+        create(:bank_transaction, {
           sum: 240.0,
           reference_no: 'RF7086666663',
           description: 'Invoice no. 4948934'
         })
       ])
 
-      bs.bank_transactions.count.should == 2
+      bs.bank_transactions.count.should == 4
 
       AccountActivity.count.should == 0
       bs.bind_invoices
@@ -100,7 +64,7 @@ describe BankStatement do
 
       r.cash_account.balance.should == 0.0
 
-      bs.bank_transactions.unbinded.count.should == 2
+      bs.bank_transactions.unbinded.count.should == 4
       bs.not_binded?.should == true
     end
 

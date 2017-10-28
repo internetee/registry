@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.feature 'Mobile ID login', db: true do
-  given!(:api_user) { Fabricate(:api_user, identity_code: 1234) }
+  given!(:api_user) { create(:api_user, identity_code: 1234) }
 
   background do
     Setting.registrar_ip_whitelist_enabled = false

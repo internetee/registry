@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe DomainCron do
   it 'should expire domains' do
-    Fabricate(:zone, origin: 'ee')
-    @domain = Fabricate(:domain)
+    create(:zone, origin: 'ee')
+    @domain = create(:domain)
 
     Setting.expire_warning_period = 1
     Setting.redemption_grace_period = 1
@@ -25,8 +25,8 @@ RSpec.describe DomainCron do
   end
 
   it 'should start redemption grace period' do
-    Fabricate(:zone, origin: 'ee')
-    @domain = Fabricate(:domain)
+    create(:zone, origin: 'ee')
+    @domain = create(:domain)
 
     old_valid_to = Time.zone.now - 10.days
     @domain.valid_to = old_valid_to

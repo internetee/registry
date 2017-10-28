@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :contact do
     name 'test'
     sequence(:code) { |n| "test#{n}" }

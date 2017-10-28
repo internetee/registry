@@ -3,16 +3,16 @@ require 'rails_helper'
 describe LegalDocument do
   context 'tasks' do
     it 'make files uniq' do
-      Fabricate(:zone, origin: 'ee')
-      Fabricate(:zone, origin: 'pri.ee')
-      Fabricate(:zone, origin: 'med.ee')
-      Fabricate(:zone, origin: 'fie.ee')
-      Fabricate(:zone, origin: 'com.ee')
+      create(:zone, origin: 'ee')
+      create(:zone, origin: 'pri.ee')
+      create(:zone, origin: 'med.ee')
+      create(:zone, origin: 'fie.ee')
+      create(:zone, origin: 'com.ee')
       LegalDocument.explicitly_write_file = true
       PaperTrail.enabled = true
 
-      domain  = Fabricate(:domain)
-      domain2 = Fabricate(:domain)
+      domain  = create(:domain)
+      domain2 = create(:domain)
       legals = []
       legals << original  = domain.legal_documents.create!(body: Base64.encode64('S' * 4.kilobytes))
       legals << copy      = domain.legal_documents.create!(body: Base64.encode64('S' * 4.kilobytes))

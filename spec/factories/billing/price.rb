@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :price, class: Billing::Price do
     price Money.from_amount(1)
     valid_from Time.zone.parse('05.07.2010')

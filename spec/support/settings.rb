@@ -1,7 +1,7 @@
 RSpec.configure do |config|
   config.before :example do |example|
     if example.metadata[:db] && (example.metadata[:settings] != false)
-      Fabricate(:zone, origin: 'com')
+      create(:zone, origin: 'com')
 
       Setting.ds_algorithm = 2
       Setting.ds_data_allowed = true

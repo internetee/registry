@@ -8,7 +8,7 @@ describe Registrar do
 
     it 'is not valid' do
       @registrar.valid?
-      @registrar.errors.full_messages.should match_array([
+      @registrar.errors.full_messages.should include(*[
         'Contact e-mail is missing',
         'Country code is missing',
         'Name is missing',
@@ -43,7 +43,7 @@ describe Registrar do
 
   context 'with valid attributes' do
     before :all do
-      @registrar = Fabricate(:registrar)
+      @registrar = create(:registrar)
     end
 
     it 'should be valid' do
@@ -52,13 +52,13 @@ describe Registrar do
     end
 
     it 'should be valid twice' do
-      @registrar = Fabricate(:registrar)
+      @registrar = create(:registrar)
       @registrar.valid?
       @registrar.errors.full_messages.should match_array([])
     end
 
     it 'should remove blank from code' do
-      registrar = Fabricate.build(:registrar, code: 'with blank')
+      registrar = build(:registrar, code: 'with blank')
       registrar.valid?
       registrar.errors.full_messages.should match_array([
       ])
@@ -66,7 +66,7 @@ describe Registrar do
     end
 
     it 'should remove colon from code' do
-      registrar = Fabricate.build(:registrar, code: 'with colon:and:blank')
+      registrar = build(:registrar, code: 'with colon:and:blank')
       registrar.valid?
       registrar.errors.full_messages.should match_array([
       ])
@@ -74,7 +74,7 @@ describe Registrar do
     end
 
     it 'should allow dot in code' do
-      registrar = Fabricate.build(:registrar, code: 'with.dot')
+      registrar = build(:registrar, code: 'with.dot')
       registrar.valid?
       registrar.errors.full_messages.should match_array([
       ])
@@ -92,21 +92,19 @@ describe Registrar do
     end
 
     it 'should return full address' do
-      @registrar.address.should == 'Street 999, Town, County, Postal'
-    end
-
-    it 'should have code' do
-      @registrar.code.should =~ /REGISTRAR/
+      registrar = described_class.new(street: 'Street 999', city: 'Town', state: 'County', zip: 'Postal')
+      registrar.address.should == 'Street 999, Town, County, Postal'
     end
 
     it 'should not be able to change code' do
-      @registrar.code = 'not-updated'
-      @registrar.code.should =~ /REGISTRAR/
+      registrar = create(:registrar, code: 'TEST')
+      registrar.code = 'new-code'
+      expect(registrar.code).to eq('TEST')
     end
 
     it 'should be able to issue a prepayment invoice' do
       Setting.days_to_keep_invoices_active = 30
-      Fabricate(:registrar, name: 'EIS', reg_no: '90010019')
+      create(:registrar, name: 'EIS', reg_no: '90010019')
       @registrar.issue_prepayment_invoice(200, 'add some money')
       @registrar.invoices.count.should == 1
       i = @registrar.invoices.first
@@ -116,7 +114,7 @@ describe Registrar do
     end
 
     it 'should not allaw to use CID as code for leagcy reasons' do
-      registrar = Fabricate.build(:registrar, code: 'CID')
+      registrar = build(:registrar, code: 'CID')
       registrar.valid?
       registrar.errors.full_messages.should == ['Code is forbidden to use']
     end
