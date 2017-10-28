@@ -182,7 +182,6 @@ GEM
     equalizer (0.0.11)
     erubis (2.7.0)
     execjs (2.7.0)
-    fabrication (2.13.2)
     factory_girl (4.8.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (4.8.0)
@@ -510,7 +509,6 @@ DEPENDENCIES
   digidoc_client!
   epp (= 1.5.0)!
   epp-xml (= 1.1.0)!
-  fabrication (= 2.13.2)
   factory_girl_rails
   figaro (= 1.1.1)
   grape (= 0.12.0)

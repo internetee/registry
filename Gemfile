@@ -119,7 +119,6 @@ group :development, :test do
   gem 'factory_girl_rails'
   gem 'capybara'
   gem 'rspec-rails', '~> 3.6'
-  gem 'fabrication',        '2.13.2' # Replacement for fixtures
   gem 'phantomjs-binaries'
   gem 'phantomjs'
   gem 'poltergeist'
