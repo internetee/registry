@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :bank_transaction do
     currency { 'EUR' }
     sum { 100.0 }

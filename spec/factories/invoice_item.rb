@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :invoice_item do
     description { 'add money' }
     unit 1

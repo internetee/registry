@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :invoice do
     buyer_name 'Registrar 1'
     currency { 'EUR' }
@@ -9,10 +9,10 @@ FactoryGirl.define do
     seller_city { 'Tallinn' }
     seller_street { 'Paldiski mnt. 123' }
     vat_prc 0.2
-    buyer { FactoryGirl.create(:registrar) }
+    buyer { FactoryBot.create(:registrar) }
 
     after :build do |invoice|
-      invoice.invoice_items << FactoryGirl.create_pair(:invoice_item)
+      invoice.invoice_items << FactoryBot.create_pair(:invoice_item)
     end
   end
 end

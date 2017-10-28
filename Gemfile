@@ -116,7 +116,7 @@ group :development do
 end
 
 group :development, :test do
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'capybara'
   gem 'rspec-rails', '~> 3.6'
   gem 'phantomjs-binaries'

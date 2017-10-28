@@ -1,7 +1,7 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :domain_transfer do
     domain
-    transfer_from { FactoryGirl.create(:registrar) }
-    transfer_to { FactoryGirl.create(:registrar) }
+    transfer_from { FactoryBot.create(:registrar) }
+    transfer_to { FactoryBot.create(:registrar) }
   end
 end

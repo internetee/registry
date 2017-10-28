@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :registrant_verification do
     sequence(:domain_name) { |i| "domain#{i}.ee" }
     domain

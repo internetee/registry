@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :keyrelay do
     pa_date { Time.zone.now }
     expiry_relative 'P1W'

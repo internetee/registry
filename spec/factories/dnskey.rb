@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :dnskey do
     alg Dnskey::ALGORITHMS.first
     flags Dnskey::FLAGS.first
