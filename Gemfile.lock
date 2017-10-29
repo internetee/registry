@@ -292,7 +292,6 @@ GEM
       ast (~> 2.2)
     pdfkit (0.6.2)
     pg (0.19.0)
-    phantomjs (1.9.8.0)
     phantomjs-binaries (2.1.1.1)
       sys-uname (= 0.9.0)
     poltergeist (1.14.0)
@@ -534,7 +533,6 @@ DEPENDENCIES
   paper_trail!
   pdfkit (= 0.6.2)
   pg (= 0.19.0)
-  phantomjs
   phantomjs-binaries
   poltergeist
   pry (= 0.10.1)
