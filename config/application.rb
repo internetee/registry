@@ -60,7 +60,7 @@ module Registry
       g.helper false
       g.template_engine :erb
       g.jbuilder false
-      g.test_framework :minitest, fixture: false
+      g.test_framework nil
     end
 
     registrant_portal_uri = URI.parse(ENV['registrant_url'])
