@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :dnskey do
     alg Dnskey::ALGORITHMS.first
     flags Dnskey::FLAGS.first
@@ -10,5 +10,6 @@ FactoryGirl.define do
     'DDFi6oOZ0xE/0CuveB64I3ree7nCrwLwNs56kXC4LYoX3XdkOMKiJLL/ '\
     'MAhcxXa60CdZLoRtTEW3z8/oBq4hEAYMCNclpbd6y/exScwBxFTdUfFk '\
     'KsdNcmvai1lyk9vna0WQrtpYpHKMXvY9LFHaJxCOLR4umfeQ42RuTd82 lqfU6ClMeXs='
+    domain
   end
 end

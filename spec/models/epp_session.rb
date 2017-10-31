@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe EppSession do
-  let(:epp_session) { Fabricate(:epp_session) }
+  let(:epp_session) { create(:epp_session) }
 
   it 'has marshalled data' do
     expect(epp_session.read_attribute(:data)).to_not be_blank

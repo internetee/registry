@@ -2,8 +2,8 @@ require 'rails_helper'
 
 describe Epp::Contact, '.check_availability' do
   before do
-    Fabricate(:contact, code: 'asd12')
-    Fabricate(:contact, code: 'asd13')
+    create(:contact, code: 'asd12')
+    create(:contact, code: 'asd13')
   end
 
   it 'should return array if argument is string' do

@@ -13,7 +13,7 @@ RSpec.describe AdminUser do
 
   context 'with valid attributes' do
     before do
-      @admin_user = Fabricate(:admin_user)
+      @admin_user = create(:admin_user)
     end
 
     it 'should require password confirmation when changing password' do

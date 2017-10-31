@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :admin_domain_contact, parent: :domain_contact, class: AdminDomainContact do
 
   end

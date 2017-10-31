@@ -5,9 +5,7 @@ namespace :dev do
   task :prime, [:random] => :environment do |t, args|
     abort 'Production environment is not supported' if Rails.env.production?
 
-    require 'factory_girl'
-    include FactoryGirl::Syntax::Methods
-    FactoryGirl.find_definitions
+    include FactoryBot::Syntax::Methods
 
     PaperTrail.enabled = false
     Domain.paper_trail_on!

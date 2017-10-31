@@ -4,11 +4,15 @@ RSpec.describe Domain do
   it { is_expected.to alias_attribute(:force_delete_time, :force_delete_at) }
 
   before :example do
-    Fabricate(:zone, origin: 'ee')
+    create(:zone, origin: 'ee')
   end
 
   it 'should set force delete time' do
-    domain = Fabricate(:domain)
+    domain = build(:domain)
+    domain.nameservers.build(attributes_for(:nameserver))
+    domain.nameservers.build(attributes_for(:nameserver))
+    domain.save!
+
     domain.statuses = ['ok']
     domain.schedule_force_delete
 
