@@ -176,8 +176,6 @@ namespace :dev do
     Setting.api_ip_whitelist_enabled = false
     Setting.address_processing = false
     Setting.registrar_ip_whitelist_enabled = false
-    Setting.api_ip_whitelist_enabled = false
-    Setting.address_processing = false
 
     ActiveRecord::Base.transaction do
       generate_default_data
