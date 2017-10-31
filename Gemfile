@@ -120,10 +120,7 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'capybara'
   gem 'rspec-rails', '~> 3.6'
-  gem 'phantomjs-binaries'
-  gem 'phantomjs'
   gem 'poltergeist'
-  gem 'launchy',            '2.4.3' # for opening browser automatically
 
   # debug
   gem 'pry', '0.10.1'
