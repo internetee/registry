@@ -5,7 +5,7 @@ require 'capybara/rails'
 require 'capybara/minitest'
 
 class ActiveSupport::TestCase
-  include FactoryBot::Syntax::Methods
+  include FactoryGirl::Syntax::Methods
 end
 
 class ActionDispatch::IntegrationTest
