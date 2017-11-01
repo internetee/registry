@@ -19,8 +19,8 @@ describe BankTransaction do
 
   context 'with valid attributes' do
     before :all do
-      @bank_transaction = Fabricate(:bank_transaction)
-      Fabricate(:eis)
+      @bank_transaction = create(:bank_transaction)
+      create(:registrar)
     end
 
     it 'should be valid' do
@@ -29,27 +29,27 @@ describe BankTransaction do
     end
 
     it 'should be valid twice' do
-      @bank_transaction = Fabricate(:bank_statement)
+      @bank_transaction = create(:bank_statement)
       @bank_transaction.valid?
       @bank_transaction.errors.full_messages.should match_array([])
     end
 
     it 'should not bind transaction with mismatching sums' do
-      r = Fabricate(:registrar_with_no_account_activities, reference_no: 'RF7086666663')
+      r = create(:registrar, reference_no: 'RF7086666663')
       invoice = r.issue_prepayment_invoice(200, 'add some money')
 
-      bt = Fabricate(:bank_transaction, { sum: 10 })
+      bt = create(:bank_transaction, { sum: 10 })
       bt.bind_invoice(invoice.number)
 
       bt.errors.full_messages.should match_array(["Invoice and transaction sums do not match"])
     end
 
     it 'should not bind transaction with cancelled invoice' do
-      r = Fabricate(:registrar_with_no_account_activities, reference_no: 'RF7086666663')
+      r = create(:registrar, reference_no: 'RF7086666663')
       invoice = r.issue_prepayment_invoice(200, 'add some money')
       invoice.cancel
 
-      bt = Fabricate(:bank_transaction, { sum: 240 })
+      bt = create(:bank_transaction, { sum: 240 })
       bt.bind_invoice(invoice.number)
 
       bt.errors.full_messages.should match_array(["Cannot bind cancelled invoice"])

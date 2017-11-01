@@ -27,7 +27,7 @@ describe Invoice do
 
   context 'with valid attributes' do
     before :all do
-      @invoice = Fabricate(:invoice)
+      @invoice = create(:invoice)
     end
 
     it 'should be valid' do
@@ -36,24 +36,24 @@ describe Invoice do
     end
 
     it 'should be valid twice' do
-      @invoice = Fabricate(:invoice)
+      @invoice = create(:invoice)
       @invoice.valid?
       @invoice.errors.full_messages.should match_array([])
     end
 
     it 'should be valid twice' do
-      @invoice = Fabricate(:invoice)
+      @invoice = create(:invoice)
       @invoice.valid?
       @invoice.errors.full_messages.should match_array([])
     end
 
     it 'should return correct addresses' do
-      @invoice = Fabricate(:invoice)
+      @invoice = create(:invoice)
       @invoice.seller_address.should == 'Paldiski mnt. 123, Tallinn'
     end
 
     it 'should calculate sums correctly' do
-      @invoice = Fabricate(:invoice)
+      @invoice = create(:invoice)
       @invoice.vat_prc.should == BigDecimal.new('0.2')
       @invoice.sum_without_vat.should == BigDecimal.new('300.0')
       @invoice.vat.should == BigDecimal.new('60.0')
@@ -67,7 +67,7 @@ describe Invoice do
     end
 
     it 'should cancel overdue invoices' do
-      Fabricate(:invoice, created_at: Time.zone.now - 35.days, due_date: Time.zone.now - 30.days)
+      create(:invoice, created_at: Time.zone.now - 35.days, due_date: Time.zone.now - 30.days)
       Invoice.cancel_overdue_invoices
       Invoice.where(cancelled_at: nil).count.should == 1
     end

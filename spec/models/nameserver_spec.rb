@@ -21,7 +21,7 @@ describe Nameserver do
 
     Setting.client_side_status_editing_enabled = true
 
-    Fabricate(:zone, origin: 'ee')
+    create(:zone, origin: 'ee')
   end
 
   context 'with invalid attribute' do
@@ -36,7 +36,7 @@ describe Nameserver do
 
   context 'with valid attributes' do
     before :example do
-      @nameserver = Fabricate(:nameserver)
+      @nameserver = create(:nameserver)
     end
 
     it 'should be valid' do
@@ -45,7 +45,7 @@ describe Nameserver do
     end
 
     it 'should be valid twice' do
-      @nameserver = Fabricate(:nameserver)
+      @nameserver = create(:nameserver)
       @nameserver.valid?
       @nameserver.errors.full_messages.should match_array([])
     end
@@ -62,23 +62,23 @@ describe Nameserver do
 
     context 'with many nameservers' do
       before :example do
-        @api_user = Fabricate(:api_user)
-        @domain_1 = Fabricate(:domain, nameservers: [
-          Fabricate(:nameserver, hostname: 'ns1.ns.ee'),
-          Fabricate(:nameserver, hostname: 'ns2.ns.ee'),
-          Fabricate(:nameserver, hostname: 'ns2.test.ee')
+        @api_user = create(:api_user)
+        @domain_1 = create(:domain, nameservers: [
+          create(:nameserver, hostname: 'ns1.ns.ee'),
+          create(:nameserver, hostname: 'ns2.ns.ee'),
+          create(:nameserver, hostname: 'ns2.test.ee')
         ], registrar: @api_user.registrar)
 
-        @domain_2 = Fabricate(:domain, nameservers: [
-          Fabricate(:nameserver, hostname: 'ns1.ns.ee'),
-          Fabricate(:nameserver, hostname: 'ns2.ns.ee'),
-          Fabricate(:nameserver, hostname: 'ns3.test.ee')
+        @domain_2 = create(:domain, nameservers: [
+          create(:nameserver, hostname: 'ns1.ns.ee'),
+          create(:nameserver, hostname: 'ns2.ns.ee'),
+          create(:nameserver, hostname: 'ns3.test.ee')
         ], registrar: @api_user.registrar)
 
-        @domain_3 = Fabricate(:domain, nameservers: [
-          Fabricate(:nameserver, hostname: 'ns1.ns.ee'),
-          Fabricate(:nameserver, hostname: 'ns2.ns.ee'),
-          Fabricate(:nameserver, hostname: 'ns3.test.ee')
+        @domain_3 = create(:domain, nameservers: [
+          create(:nameserver, hostname: 'ns1.ns.ee'),
+          create(:nameserver, hostname: 'ns2.ns.ee'),
+          create(:nameserver, hostname: 'ns3.test.ee')
         ])
       end
 

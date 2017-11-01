@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Repp::ContactV1, db: true do
-  let(:user) { FactoryGirl.create(:api_user, registrar: registrar) }
-  let(:registrar) { FactoryGirl.create(:registrar) }
+  let(:user) { create(:api_user, registrar: registrar) }
+  let(:registrar) { create(:registrar) }
 
   describe '/contacts' do
     let(:returned_attributes) { HashWithIndifferentAccess.new(JSON.parse(response.body)['contacts'].first).keys }
@@ -13,7 +13,7 @@ RSpec.describe Repp::ContactV1, db: true do
         allow(endpoint).to receive(:current_user).and_return(user)
       end
 
-      registrar.contacts << FactoryGirl.create(:contact)
+      registrar.contacts << create(:contact)
     end
 
     it 'responds with success' do

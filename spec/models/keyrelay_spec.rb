@@ -21,7 +21,7 @@ describe Keyrelay do
 
     Setting.client_side_status_editing_enabled = true
 
-    Fabricate(:zone, origin: 'ee')
+    create(:zone, origin: 'ee')
   end
 
   context 'with invalid attribute' do
@@ -49,7 +49,7 @@ describe Keyrelay do
 
   context 'with valid attributes' do
     before :example do
-      @keyrelay = Fabricate(:keyrelay)
+      @keyrelay = create(:keyrelay)
     end
 
     it 'should be valid' do
@@ -58,7 +58,7 @@ describe Keyrelay do
     end
 
     it 'should be valid twice' do
-      @keyrelay = Fabricate(:keyrelay)
+      @keyrelay = create(:keyrelay)
       @keyrelay.valid?
       @keyrelay.errors.full_messages.should match_array([])
     end
@@ -79,12 +79,12 @@ describe Keyrelay do
   end
 
   it 'is in expired status' do
-    kr = Fabricate(:keyrelay, pa_date: Time.zone.now - 2.weeks)
+    kr = create(:keyrelay, pa_date: Time.zone.now - 2.weeks)
     expect(kr.status).to eq('expired')
   end
 
   it 'does not accept invalid relative expiry' do
-    kr = Fabricate.build(:keyrelay, expiry_relative: 'adf')
+    kr = build(:keyrelay, expiry_relative: 'adf')
     expect(kr.save).to eq(false)
     expect(kr.errors[:expiry_relative].first).to eq('Expiry relative must be compatible to ISO 8601')
   end
