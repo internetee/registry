@@ -12,6 +12,7 @@ class ActionDispatch::IntegrationTest
   include Warden::Test::Helpers
   include Capybara::DSL
   include Capybara::Minitest::Assertions
+  include AbstractController::Translation
 
   def teardown
     Capybara.reset_sessions!
