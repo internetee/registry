@@ -6,6 +6,8 @@ require 'capybara/minitest'
 
 class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
+
+  fixtures :all
 end
 
 class ActionDispatch::IntegrationTest

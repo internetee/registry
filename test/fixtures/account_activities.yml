@@ -1,0 +1,7 @@
+DEFAULTS: &DEFAULTS
+  account_id: 1
+
+one:
+  <<: *DEFAULTS
+  invoice: paid
+  bank_transaction: one

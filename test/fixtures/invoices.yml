@@ -1,0 +1,32 @@
+DEFAULTS: &DEFAULTS
+  created_at: <%= Time.zone.parse '2010-07-05' %>
+  due_date: <%= Time.zone.parse '2010-08-05' %>
+  currency: EUR
+  seller_name: John Doe
+  seller_iban: 1234
+  buyer_name: Jane Doe
+  vat_rate: 1
+
+valid:
+  <<: *DEFAULTS
+
+exported:
+  <<: *DEFAULTS
+  exported: true
+
+cancelled:
+  <<: *DEFAULTS
+  cancelled_at: 2010-07-05
+
+paid:
+  <<: *DEFAULTS
+  sum_cache: 1
+
+outstanding:
+  <<: *DEFAULTS
+  due_date: <%= Time.zone.parse '2010-07-06' %>
+
+overdue:
+  <<: *DEFAULTS
+  due_date: <%= Time.zone.parse '2010-07-05' %>
+
