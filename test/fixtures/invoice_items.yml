@@ -1,0 +1,13 @@
+DEFAULTS: &DEFAULTS
+  description: Acme services
+  quantity: 2
+  unit: pc
+  price: 5
+
+valid:
+  <<: *DEFAULTS
+  invoice: valid
+
+another:
+  <<: *DEFAULTS
+  invoice: valid
