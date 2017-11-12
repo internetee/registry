@@ -1,0 +1,183 @@
+<%= form_for([:admin, @registrar], html: { class: 'form-horizontal' }) do |f| %>
+    <%= render 'shared/full_errors', object: @registrar %>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <div class="pull-left">
+                        <%= t(:general) %>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :name %>
+                        </div>
+                        <div class="col-md-7">
+                            <%= f.text_field(:name, class: 'form-control') %>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :reg_no %>
+                        </div>
+                        <div class="col-md-7">
+                            <%= f.text_field(:reg_no, class: 'form-control') %>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :vat_no %>
+                        </div>
+                        <div class="col-md-7">
+                            <%= f.text_field(:vat_no, class: 'form-control') %>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :phone %>
+                        </div>
+                        <div class="col-md-7">
+                            <%= f.text_field(:phone, class: 'form-control') %>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :website %>
+                        </div>
+                        <div class="col-md-7">
+                            <%= f.url_field :website, class: 'form-control' %>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :email %>
+                        </div>
+                        <div class="col-md-7">
+                            <%= f.email_field :email, class: 'form-control' %>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :billing_email %>
+                        </div>
+                        <div class="col-md-7">
+                            <%= f.email_field :billing_email, class: 'form-control' %>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :accounting_customer_code %>
+                        </div>
+                        <div class="col-md-7">
+                            <%= f.text_field :accounting_customer_code, class: 'form-control', required: true %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <div class="pull-left">
+                        <%= t(:address) %>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :street %>
+                        </div>
+                        <div class="col-md-7">
+                            <%= f.text_field(:street, class: 'form-control') %>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :city %>
+                        </div>
+                        <div class="col-md-7">
+                            <%= f.text_field(:city, class: 'form-control') %>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :state %>
+                        </div>
+                        <div class="col-md-7">
+                            <%= f.text_field(:state, class: 'form-control') %>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :zip %>
+                        </div>
+                        <div class="col-md-7">
+                            <%= f.text_field(:zip, class: 'form-control') %>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :country_code, t(:country) %>
+                        </div>
+                        <div class="col-md-7">
+                            <%= f.select(:country_code, SortedCountry.all_options(f.object.country_code), {}, class: 'form-control') %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading clearfix">
+                    <div class="pull-left">
+                        <%= t('.misc') %>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :code %>
+                        </div>
+                        <div class="col-md-7">
+                            <%= f.text_field(:code, class: 'form-control', disabled: !f.object.new_record?) %>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <%= f.label :test_registrar %>
+                        </div>
+                        <div class="col-md-7">
+                            <%= f.check_box :test_registrar, class: 'form-control' %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-md-8 text-right">
+            <%= button_tag(t(".#{f.object.new_record? ? 'create' : 'update'}_btn"), class: 'btn btn-success') %>
+        </div>
+    </div>
+<% end %>
