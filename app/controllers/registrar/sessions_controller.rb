@@ -87,7 +87,11 @@ class Registrar
         return
       end
 
-      @user = find_user_by_idc_and_allowed(response.user_id_code)
+      if Setting.registrar_ip_whitelist_enabled
+        @user = find_user_by_idc_and_allowed(response.user_id_code)
+      else
+        @user = find_user_by_idc(response.user_id_code)
+      end  
 
       if @user.persisted?
         session[:user_id_code] = response.user_id_code
