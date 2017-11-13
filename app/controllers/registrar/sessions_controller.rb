@@ -53,7 +53,7 @@ class Registrar
     end
 
     def id
-      @user = ApiUser.find_by_idc_data(request.env['SSL_CLIENT_S_DN'])
+      @user = ApiUser.find_by_idc_data_and_allowed(request.env['SSL_CLIENT_S_DN'],request.ip)
 
       if @user
         sign_in(@user, event: :authentication)
@@ -87,7 +87,7 @@ class Registrar
         return
       end
 
-      @user = find_user_by_idc(response.user_id_code)
+      @user = find_user_by_idc_and_allowed(response.user_id_code)
 
       if @user.persisted?
         session[:user_id_code] = response.user_id_code
@@ -112,7 +112,7 @@ class Registrar
         when 'OUTSTANDING_TRANSACTION'
           render json: { message: t(:check_your_phone_for_confirmation_code) }, status: :ok
         when 'USER_AUTHENTICATED'
-          @user = find_user_by_idc(session[:user_id_code])
+          @user = find_user_by_idc_and_allowed(session[:user_id_code])
           sign_in @user
           flash[:notice] = t(:welcome)
           flash.keep(:notice)
@@ -148,6 +148,18 @@ class Registrar
       return User.new unless idc
       ApiUser.find_by(identity_code: idc) || User.new
     end
+
+    def find_user_by_idc_and_allowed(idc)
+      return User.new unless idc
+      possible_users = ApiUser.where(identity_code: idc) || User.new
+	for i in 0..possible_users.count
+		if possible_users[i].registrar.white_ips.registrar_area.include_ip?(request.ip)
+		    break
+		end
+	end
+      possible_users[i]
+    end
+
 
     def check_ip_restriction
       ip_restriction = Authorization::RestrictedIP.new(request.ip)
