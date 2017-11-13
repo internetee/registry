@@ -34,7 +34,7 @@ RSpec.describe 'EPP contact:update' do
 
   before do
     sign_in_to_epp_area
-    FactoryGirl.create(:contact, code: 'TEST')
+    create(:contact, code: 'TEST')
   end
 
   context 'when address processing is enabled' do

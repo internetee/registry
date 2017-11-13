@@ -21,7 +21,7 @@ describe DomainTransfer do
 
     Setting.client_side_status_editing_enabled = true
 
-    Fabricate(:zone, origin: 'ee')
+    create(:zone, origin: 'ee')
   end
 
   context 'with invalid attribute' do
@@ -42,7 +42,7 @@ describe DomainTransfer do
 
   context 'with valid attributes' do
     before :example do
-      @domain_transfer = Fabricate(:domain_transfer)
+      @domain_transfer = create(:domain_transfer)
     end
 
     it 'should be valid' do
@@ -51,7 +51,7 @@ describe DomainTransfer do
     end
 
     it 'should be valid twice' do
-      @domain_transfer = Fabricate(:domain_transfer)
+      @domain_transfer = create(:domain_transfer)
       @domain_transfer.valid?
       @domain_transfer.errors.full_messages.should match_array([])
     end

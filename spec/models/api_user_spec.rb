@@ -28,7 +28,7 @@ RSpec.describe ApiUser do
 
   context 'with valid attributes' do
     before do
-      @api_user = Fabricate(:api_user)
+      @api_user = create(:api_user)
     end
 
     it 'should be valid' do
@@ -37,7 +37,7 @@ RSpec.describe ApiUser do
     end
 
     it 'should be valid twice' do
-      @api_user = Fabricate(:api_user)
+      @api_user = create(:api_user)
       @api_user.valid?
       @api_user.errors.full_messages.should match_array([])
     end

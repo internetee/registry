@@ -10,10 +10,11 @@ require 'support/requests/epp_helpers'
 require 'support/features/session_helpers'
 require 'support/matchers/alias_attribute'
 require 'support/matchers/epp/code'
+require 'support/matchers/epp/have_result'
 
 require 'support/capybara'
 require 'support/devise'
-require 'support/factory_girl'
+require 'support/factory_bot'
 require 'support/database_cleaner'
 require 'support/paper_trail'
 require 'support/settings'
@@ -28,7 +29,8 @@ RSpec.configure do |config|
   config.include AbstractController::Translation, type: :request
   config.include AbstractController::Translation, type: :feature
   config.include AbstractController::Translation, type: :mailer
-  config.include Requests::EPPHelpers, type: :request
+  config.include Requests::EPPHelpers, epp: true
+  config.include Matchers::EPP, epp: true
 
   config.define_derived_metadata(file_path: %r[/spec/features/]) do |metadata|
     metadata[:db] = true if metadata[:db].nil?
