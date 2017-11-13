@@ -1,6 +1,6 @@
 DEFAULTS: &DEFAULTS
   description: Acme services
-  quantity: 2
+  amount: 2
   unit: pc
   price: 5
 
