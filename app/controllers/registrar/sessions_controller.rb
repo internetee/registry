@@ -156,12 +156,12 @@ class Registrar
     def find_user_by_idc_and_allowed(idc)
       return User.new unless idc
       possible_users = ApiUser.where(identity_code: idc) || User.new
-	  for i in 0..possible_users.count
-	    if possible_users[i].registrar.white_ips.registrar_area.include_ip?(request.ip)
+      for selected_user in 0..possible_users.count
+        if possible_users[selected_user].registrar.white_ips.registrar_area.include_ip?(request.ip)
           break
-	    end
+        end
       end
-      possible_users[i]
+      possible_users[selected_user]
     end
 
 
