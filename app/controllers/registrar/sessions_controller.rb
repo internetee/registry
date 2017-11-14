@@ -55,6 +55,7 @@ class Registrar
     def id
       @user = ApiUser.find_by_idc_data_and_allowed(request.env['SSL_CLIENT_S_DN'], request.ip)
 
+
       if @user
         sign_in(@user, event: :authentication)
         redirect_to registrar_root_url
@@ -162,8 +163,6 @@ class Registrar
         end
       end
     end
-
-
 
     def check_ip_restriction
       ip_restriction = Authorization::RestrictedIP.new(request.ip)

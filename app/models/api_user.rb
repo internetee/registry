@@ -65,8 +65,6 @@ class ApiUser < User
       end
     end
 
-  end
-
   def registrar_typeahead
     @registrar_typeahead || registrar || nil
   end
