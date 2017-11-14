@@ -53,7 +53,8 @@ class Registrar
     end
 
     def id
-      @user = ApiUser.find_by_idc_data_and_allowed(request.env['SSL_CLIENT_S_DN'],request.ip)
+      @user = ApiUser.find_by_idc_data_and_allowed(request.env['SSL_CLIENT_S_DN'], request.ip)
+
 
       if @user
         sign_in(@user, event: :authentication)
@@ -156,14 +157,12 @@ class Registrar
     def find_user_by_idc_and_allowed(idc)
       return User.new unless idc
       possible_users = ApiUser.where(identity_code: idc) || User.new
-	for i in 0..possible_users.count
-		if possible_users[i].registrar.white_ips.registrar_area.include_ip?(request.ip)
-		    break
-		end
-	end
-      possible_users[i]
+      possible_users.each do |selected_user|
+        if selected_user.registrar.white_ips.registrar_area.include_ip?(request.ip)
+          return selected_user
+        end
+      end
     end
-
 
     def check_ip_restriction
       ip_restriction = Authorization::RestrictedIP.new(request.ip)
