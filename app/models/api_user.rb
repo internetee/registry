@@ -58,12 +58,11 @@ class ApiUser < User
 
       return false if ip.blank?
       possible_users = where(identity_code: identity_code)
-      for selected_user in 0..possible_users.count
-        if possible_users[selected_user].registrar.white_ips.registrar_area.include_ip?(ip)
-          break
+      possible_users eacho do |selected_user|
+        if selected_user.registrar.white_ips.registrar_area.include_ip?(ip)
+          return selected_user
         end
       end
-      possible_users[selected_user]
     end
 
   end
