@@ -51,6 +51,20 @@ class ApiUser < User
 
       find_by(identity_code: identity_code)
     end
+
+    def find_by_idc_data_and_allowed(idc_data, ip)
+      return false if idc_data.blank?
+      identity_code = idc_data.scan(/serialNumber=(\d+)/).flatten.first
+
+      return false if ip.blank?
+      possible_users = where(identity_code: identity_code)
+      possible_users.each do |selected_user|
+        if selected_user.registrar.white_ips.registrar_area.include_ip?(ip)
+          return selected_user
+        end
+      end
+    end
+
   end
 
   def registrar_typeahead
