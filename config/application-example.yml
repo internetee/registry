@@ -129,3 +129,5 @@ payments_lhv_seller_private: 'kaupmees_priv.pem'
 payments_lhv_seller_account: 'testvpos'
 
 user_session_timeout: '3600' # 1 hour
+secure_session_cookies: 'false' # true|false
+same_site_session_cookies: 'false' # false|strict|lax
