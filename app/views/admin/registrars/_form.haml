@@ -43,6 +43,12 @@
             .col-md-7
               = f.email_field :billing_email, class: 'form-control'
 
+          .form-group
+            .col-md-4.control-label
+              = f.label :accounting_customer_code
+            .col-md-7
+              = f.text_field :accounting_customer_code, class: 'form-control', required: true
+
   .row
     .col-md-8
       .panel.panel-default
