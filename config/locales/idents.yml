@@ -1,0 +1,11 @@
+en:
+  activemodel:
+    errors:
+      models:
+        contact/ident:
+          attributes:
+            base:
+              mismatch: Ident type "%{type}" is invalid for %{country}
+            code:
+              invalid_national_id: does not conform to national identification number format of %{country}
+              invalid_reg_no: does not conform to registration number format of %{country}

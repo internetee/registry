@@ -2,11 +2,11 @@ class PhoneValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     return if record.errors[:phone].any?
 
-    splitted_phone = value.split('.')
-    country_code = splitted_phone.first
-    phone_number = splitted_phone.second
+    phone_parts = value.split('.')
+    country_code = phone_parts.first
+    subscriber_no = phone_parts.second
 
-    if zeros_only?(country_code) || zeros_only?(phone_number)
+    if zeros_only?(country_code) || zeros_only?(subscriber_no)
       record.errors.add(attribute, :invalid)
     end
   end
