@@ -104,6 +104,7 @@ gem 'activerecord-import', '0.7.0' # for inserting dummy data
 # for generating pdf
 gem 'pdfkit', '0.6.2'
 gem 'jquery-ui-rails', '5.0.5'
+gem 'active_model-errors_details' # Backport from Rails 5, https://github.com/rails/rails/pull/18322
 
 group :development do
   gem 'spring'
@@ -120,10 +121,7 @@ group :development, :test do
   gem 'capybara'
   gem 'rspec-rails', '~> 3.6'
   gem 'fabrication',        '2.13.2' # Replacement for fixtures
-  gem 'phantomjs-binaries'
-  gem 'phantomjs'
   gem 'poltergeist'
-  gem 'launchy',            '2.4.3' # for opening browser automatically
 
   # debug
   gem 'pry', '0.10.1'

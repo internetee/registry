@@ -7,7 +7,6 @@ namespace :dev do
 
     require 'factory_girl'
     include FactoryGirl::Syntax::Methods
-    FactoryGirl.find_definitions
 
     PaperTrail.enabled = false
     Domain.paper_trail_on!
@@ -175,6 +174,8 @@ namespace :dev do
       end
     end
 
+    Setting.api_ip_whitelist_enabled = false
+    Setting.address_processing = false
     Setting.registrar_ip_whitelist_enabled = false
 
     ActiveRecord::Base.transaction do
