@@ -14,7 +14,7 @@ require 'support/matchers/epp/have_result'
 
 require 'support/capybara'
 require 'support/devise'
-require 'support/factory_girl'
+require 'support/factory_bot'
 require 'support/database_cleaner'
 require 'support/paper_trail'
 require 'support/settings'

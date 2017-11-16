@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :api_user do
     sequence(:username) { |n| "test#{n}" }
     password 'a' * ApiUser.min_password_length

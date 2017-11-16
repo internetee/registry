@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Contact do
   before :example do
-    Fabricate(:zone, origin: 'ee')
+    create(:zone, origin: 'ee')
   end
 
   context 'about class' do
@@ -63,7 +63,7 @@ RSpec.describe Contact do
 
   context 'with valid attributes' do
     before :example do
-      @contact = Fabricate(:contact)
+      @contact = create(:contact, auth_info: 'password')
     end
 
     it 'should have one version' do
@@ -102,7 +102,7 @@ RSpec.describe Contact do
     end
 
     it 'should remove ok status when other non linked status present' do
-      contact = Fabricate(:contact)
+      contact = create(:contact)
       contact.statuses = [Contact::SERVER_UPDATE_PROHIBITED]
       contact.statuses.should == [Contact::SERVER_UPDATE_PROHIBITED] # temp test
       contact.save
@@ -110,9 +110,9 @@ RSpec.describe Contact do
     end
 
     it 'should have code' do
-      registrar = Fabricate.create(:registrar, code: 'registrarcode')
+      registrar = create(:registrar, code: 'registrarcode')
 
-      contact = Fabricate.build(:contact, registrar: registrar, code: 'contactcode')
+      contact = build(:contact, registrar: registrar, code: 'contactcode')
       contact.generate_code
       contact.save!
 
@@ -120,7 +120,7 @@ RSpec.describe Contact do
     end
 
     it 'should save status notes' do
-      contact = Fabricate(:contact)
+      contact = create(:contact)
       contact.statuses = ['serverDeleteProhibited', 'serverUpdateProhibited']
       contact.status_notes_array = [nil, 'update manually turned off']
       contact.status_notes['serverDeleteProhibited'].should == nil
@@ -134,7 +134,7 @@ RSpec.describe Contact do
 
     it 'should have not update ident updated at when initializing old contact' do
       # creating a legacy contact
-      contact = Fabricate(:contact)
+      contact = create(:contact)
       contact.update_column(:ident_updated_at, nil)
 
       Contact.find(contact.id).ident_updated_at.should == nil
@@ -142,7 +142,7 @@ RSpec.describe Contact do
 
     context 'as birthday' do
       before do
-        @domain = Fabricate(:domain)
+        @domain = create(:domain)
       end
 
       it 'should have related domain descriptions hash' do
@@ -178,13 +178,13 @@ RSpec.describe Contact do
 
       context 'after create' do
         it 'should not allow to use same code' do
-          registrar = Fabricate.create(:registrar, code: 'FIXED')
+          registrar = create(:registrar, code: 'FIXED')
 
-          Fabricate.create(:contact,
+          create(:contact,
                            registrar: registrar,
                            code: 'FIXED:new-code',
                            auth_info: 'qwe321')
-          @contact = Fabricate.build(:contact,
+          @contact = build(:contact,
                                      registrar: registrar,
                                      code: 'FIXED:new-code',
                                      auth_info: 'qwe321')
@@ -195,33 +195,33 @@ RSpec.describe Contact do
         end
 
         it 'should generate a new password' do
-          @contact = Fabricate.build(:contact, code: '123asd', auth_info: nil)
+          @contact = build(:contact, code: '123asd', auth_info: nil)
           @contact.auth_info.should == nil
           @contact.save.should == true
           @contact.auth_info.should_not be_nil
         end
 
         it 'should allow supported code format' do
-          @contact = Fabricate.build(:contact, code: 'CID:REG1:12345', registrar: Fabricate(:registrar, code: 'FIXED'))
+          @contact = build(:contact, code: 'CID:REG1:12345', registrar: create(:registrar, code: 'FIXED'))
           @contact.valid?
           @contact.errors.full_messages.should == []
         end
 
         it 'should not allow unsupported characters in code' do
-          @contact = Fabricate.build(:contact, code: 'unsupported!ÄÖÜ~?', registrar: Fabricate(:registrar, code: 'FIXED'))
+          @contact = build(:contact, code: 'unsupported!ÄÖÜ~?', registrar: create(:registrar, code: 'FIXED'))
           @contact.valid?
           @contact.errors.full_messages.should == ['Code is invalid']
         end
 
         it 'should generate code if empty code is given' do
-          @contact = Fabricate.build(:contact, code: '')
+          @contact = build(:contact, code: '')
           @contact.generate_code
           @contact.save!
           @contact.code.should_not == ''
         end
 
         it 'should not ignore empty spaces as code and generate new one' do
-          @contact = Fabricate.build(:contact, code: '    ', registrar: Fabricate(:registrar, code: 'FIXED'))
+          @contact = build(:contact, code: '    ', registrar: create(:registrar, code: 'FIXED'))
           @contact.generate_code
           @contact.valid?.should == true
           @contact.code.should =~ /FIXED:..../
@@ -230,8 +230,8 @@ RSpec.describe Contact do
 
       context 'after update' do
         before :example do
-          @contact = Fabricate.build(:contact,
-                                     registrar: Fabricate(:registrar, code: 'FIXED'),
+          @contact = build(:contact,
+                                     registrar: create(:registrar, code: 'FIXED'),
                                      code: '123asd',
                                      auth_info: 'qwe321')
           @contact.generate_code
@@ -256,9 +256,9 @@ end
 
 describe Contact, '.destroy_orphans' do
   before do
-    Fabricate(:zone, origin: 'ee')
-    @contact_1 = Fabricate(:contact, code: 'asd12')
-    @contact_2 = Fabricate(:contact, code: 'asd13')
+    create(:zone, origin: 'ee')
+    @contact_1 = create(:contact, code: 'asd12')
+    @contact_2 = create(:contact, code: 'asd13')
   end
 
   it 'destroys orphans' do
@@ -268,13 +268,13 @@ describe Contact, '.destroy_orphans' do
   end
 
   it 'should find one orphan' do
-    Fabricate(:domain, registrant: Registrant.find(@contact_1.id))
+    create(:domain, registrant: Registrant.find(@contact_1.id))
     Contact.find_orphans.count.should == 1
     Contact.find_orphans.last.should == @contact_2
   end
 
   it 'should find no orphans' do
-    Fabricate(:domain, registrant: Registrant.find(@contact_1.id), admin_contacts: [@contact_2])
+    create(:domain, registrant: Registrant.find(@contact_1.id), admin_contacts: [@contact_2])
     cc = Contact.count
     Contact.find_orphans.count.should == 0
     Contact.destroy_orphans
@@ -424,13 +424,13 @@ RSpec.describe Contact do
     subject(:reg_no) { contact.reg_no }
 
     context 'when contact is legal entity' do
-      let(:contact) { FactoryGirl.build_stubbed(:contact_legal_entity, ident: '1234') }
+      let(:contact) { build_stubbed(:contact_legal_entity, ident: '1234') }
 
       specify { expect(reg_no).to eq('1234') }
     end
 
     context 'when contact is private entity' do
-      let(:contact) { FactoryGirl.build_stubbed(:contact_private_entity, ident: '1234') }
+      let(:contact) { build_stubbed(:contact_private_entity, ident: '1234') }
 
       specify { expect(reg_no).to be_nil }
     end
@@ -438,13 +438,13 @@ RSpec.describe Contact do
 
   describe '#id_code' do
     context 'when contact is private entity' do
-      let(:contact) { FactoryGirl.build_stubbed(:contact_private_entity, ident: '1234') }
+      let(:contact) { build_stubbed(:contact_private_entity, ident: '1234') }
 
       specify { expect(contact.id_code).to eq('1234') }
     end
 
     context 'when contact is legal entity' do
-      let(:contact) { FactoryGirl.build_stubbed(:contact_legal_entity, ident: '1234') }
+      let(:contact) { build_stubbed(:contact_legal_entity, ident: '1234') }
 
       specify { expect(contact.id_code).to be_nil }
     end

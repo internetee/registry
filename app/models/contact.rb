@@ -319,10 +319,6 @@ class Contact < ActiveRecord::Base
     self.auth_info = SecureRandom.hex(11)
   end
 
-  def disable_generate_auth_info! # needed for testing
-    @generate_auth_info_disabled = true
-  end
-
   # def auth_info=(pw)
   #   self[:auth_info] = pw if new_record?
   # end

@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe WhoisRecord do
   describe '::generate_json', db: false do
-    let(:registrant) { FactoryGirl.build_stubbed(:registrant) }
-    let(:domain) { FactoryGirl.build_stubbed(:domain, registrant: registrant) }
+    let(:registrant) { build_stubbed(:registrant) }
+    let(:domain) { build_stubbed(:domain, registrant: registrant) }
     let(:whois_record) { described_class.new }
     subject(:generated_json) { whois_record.generate_json }
 
@@ -24,7 +24,7 @@ RSpec.describe WhoisRecord do
       end
 
       context 'when registrant is legal entity' do
-        let(:registrant) { FactoryGirl.build_stubbed(:registrant_legal_entity) }
+        let(:registrant) { build_stubbed(:registrant_legal_entity) }
 
         it 'is present' do
           expect(reg_no).to eq('test reg no')
@@ -32,7 +32,7 @@ RSpec.describe WhoisRecord do
       end
 
       context 'when registrant is private entity' do
-        let(:registrant) { FactoryGirl.build_stubbed(:registrant_private_entity) }
+        let(:registrant) { build_stubbed(:registrant_private_entity) }
 
         it 'is absent' do
           expect(reg_no).to be_nil
@@ -48,7 +48,7 @@ RSpec.describe WhoisRecord do
       end
 
       context 'when registrant is legal entity' do
-        let(:registrant) { FactoryGirl.build_stubbed(:registrant_legal_entity) }
+        let(:registrant) { build_stubbed(:registrant_legal_entity) }
 
         it 'is present' do
           expect(country_code).to eq('test country code')
@@ -56,7 +56,7 @@ RSpec.describe WhoisRecord do
       end
 
       context 'when registrant is private entity' do
-        let(:registrant) { FactoryGirl.build_stubbed(:registrant_private_entity) }
+        let(:registrant) { build_stubbed(:registrant_private_entity) }
 
         it 'is absent' do
           expect(country_code).to be_nil

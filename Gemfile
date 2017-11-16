@@ -117,10 +117,9 @@ group :development do
 end
 
 group :development, :test do
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'capybara'
   gem 'rspec-rails', '~> 3.6'
-  gem 'fabrication',        '2.13.2' # Replacement for fixtures
   gem 'poltergeist'
 
   # debug

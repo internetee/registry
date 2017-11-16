@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :zone, class: DNS::Zone do
     sequence(:origin) { |n| "test#{n}" }
     ttl 1
