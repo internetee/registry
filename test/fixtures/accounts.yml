@@ -3,3 +3,9 @@ cash:
   balance: 100
   currency: EUR
   registrar: bestnames
+
+not_in_use_cash:
+  account_type: cash
+  balance: 0
+  currency: EUR
+  registrar: not_in_use

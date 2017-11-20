@@ -199,7 +199,6 @@ en:
         alg: 'Algorithm'
         public_key: 'Public key'
       registrar:
-        billing_email: 'Billing e-mail'
         phone: 'Contact phone'
         email: 'Contact e-mail'
         state: 'State / Province'
@@ -315,13 +314,7 @@ en:
   edit_statuses: 'Edit statuses'
   history: 'History'
 
-  new_registrar: 'New registrar'
-  registrar_details: 'Registrar details'
-  vat_no: 'VAT no'
-  edit_registrar: 'Edit registrar'
   back_to_registrar: 'Back to registrar'
-  registrar_deleted: 'Registrar deleted'
-  failed_to_delete_registrar: 'Failed to delete registrar'
 
   users: 'Users'
   user_details: 'User details'
@@ -652,7 +645,6 @@ en:
   due_date_until: 'Due date until'
   minimum_total: 'Minimum total'
   maximum_total: 'Maximum total'
-  forbidden_code: 'is forbidden to use'
   unimplemented_object_service: 'Unimplemented object service'
   contact_email_update_subject: 'Teie domeenide kontakt epostiaadress on muutunud / Contact e-mail addresses of your domains have changed'
   object_status_prohibits_operation: 'Object status prohibits operation'
@@ -780,3 +772,6 @@ en:
         delimiter: " "
         precision: 2
         unit: €
+
+  attributes:
+    vat_no: VAT number
