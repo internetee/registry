@@ -12,6 +12,9 @@ en:
         preferences:
           header: Preferences
 
+      billing:
+        header: Billing
+
       create:
         created: Registrar has been successfully created
         not_created: Unable to create registrar

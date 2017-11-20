@@ -42,12 +42,6 @@
                         <%= @registrar.reg_no %>
                     </dd>
                     <dt>
-                        <%= t(:vat_no) %>
-                    </dt>
-                    <dd>
-                        <%= @registrar.vat_no %>
-                    </dd>
-                    <dt>
                         <%= t(:reference_no) %>
                     </dt>
                     <dd>
@@ -70,12 +64,6 @@
                     </dt>
                     <dd>
                         <%= @registrar.website %>
-                    </dd>
-                    <dt>
-                        <%= Registrar.human_attribute_name :accounting_customer_code %>
-                    </dt>
-                    <dd>
-                        <%= @registrar.accounting_customer_code %>
                     </dd>
                 </dl>
             </div>
@@ -120,15 +108,10 @@
                     <dd>
                         <%= @registrar.billing_address %>
                     </dd>
-                    <dt>
-                        <%= t(:billing_email) %>
-                    </dt>
-                    <dd>
-                        <%= @registrar.billing_email %>
-                    </dd>
                 </dl>
             </div>
         </div>
+        <%= render 'billing', registrar: @registrar %>
         <%= render 'admin/registrars/show/preferences', registrar: registrar %>
     </div>
 </div>
