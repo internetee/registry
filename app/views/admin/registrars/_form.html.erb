@@ -1,5 +1,6 @@
 <%= form_for([:admin, @registrar], html: { class: 'form-horizontal' }) do |f| %>
-    <%= render 'shared/full_errors', object: @registrar %>
+    <%= render 'form_errors', target: @registrar %>
+
     <div class="row">
         <div class="col-md-8">
             <div class="panel panel-default">
@@ -133,7 +134,9 @@
                             <%= f.label :code %>
                         </div>
                         <div class="col-md-7">
-                            <%= f.text_field :code, required: f.object.new_record?, class: 'form-control', disabled: !f.object.new_record? %>
+                            <%= f.text_field :code, required: f.object.new_record?,
+                                             disabled: f.object.persisted?,
+                                             class: 'form-control' %>
                         </div>
                     </div>
 

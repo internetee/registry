@@ -19,17 +19,15 @@ module Admin
     def create
       @registrar = Registrar.new(registrar_params)
 
-      begin
+      if @registrar.valid?
         @registrar.transaction do
           @registrar.save!
           @registrar.accounts.create!(account_type: Account::CASH, currency: 'EUR')
         end
 
-        flash[:notice] = t('.created')
-        redirect_to [:admin, @registrar]
-      rescue ActiveRecord::RecordInvalid
-        flash.now[:alert] = t('.not_created')
-        render 'new'
+        redirect_to [:admin, @registrar], notice: t('.created')
+      else
+        render :new
       end
     end
 
@@ -38,21 +36,19 @@ module Admin
 
     def update
       if @registrar.update(registrar_params)
-        flash[:notice] = t('.updated')
-        redirect_to [:admin, @registrar]
+        redirect_to [:admin, @registrar], notice: t('.updated')
       else
-        flash.now[:alert] = t('.not_updated')
-        render 'edit'
+        render :edit
       end
     end
 
     def destroy
       if @registrar.destroy
-        flash[:notice] = I18n.t('registrar_deleted')
-        redirect_to admin_registrars_path
+        flash[:notice] = t('.deleted')
+        redirect_to admin_registrars_url
       else
-        flash.now[:alert] = I18n.t('failed_to_delete_registrar')
-        render 'show'
+        flash[:alert] = @registrar.errors.full_messages.first
+        redirect_to admin_registrar_url(@registrar)
       end
     end
 
