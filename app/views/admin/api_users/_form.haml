@@ -1,11 +1,3 @@
-- if @api_user.new_record?
-  - overwrite_required = ''
-  - field_required = 'required'
-- else
-  - overwrite_required = 'not-required' # otherwise automatic one adds required
-  - field_required = ''
-
-
 = form_for([:admin, @api_user], multipart: true,
   html: {class: 'form-horizontal', autocomplete: 'off'}) do |f|
   = render 'shared/full_errors', object: @api_user
@@ -14,14 +6,14 @@
     .col-md-8
       .form-group
         .col-md-4.control-label
-          = f.label :username
+          = f.label :username, nil, class: 'required'
         .col-md-7
-          = f.text_field(:username, class: 'form-control')
+          = f.text_field :username, required: true, class: 'form-control'
       .form-group
         .col-md-4.control-label
-          = f.label :password, class: overwrite_required
+          = f.label :password, nil, class: 'required'
         .col-md-7
-          = f.text_field :password, class: "form-control #{field_required}", autocomplete: 'off'
+          = f.text_field :password, required: true, class: 'form-control'
 
       .form-group
         .col-md-4.control-label
@@ -43,7 +35,7 @@
 
       .form-group
         .col-md-4.control-label
-          = f.label :role, class: 'required'
+          = f.label :role, nil, class: 'required'
         .col-md-7
           = select_tag 'api_user[roles][]',
             options_for_select(ApiUser::ROLES.map {|x| [x, x] }, @api_user.roles.try(:first)),
@@ -62,5 +54,4 @@
 :javascript
   window.addEventListener('load', function() {
     Autocomplete.bindAdminRegistrarSearch();
-    $("#api_user_password").removeAttr('required');
   });
