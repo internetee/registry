@@ -27,6 +27,7 @@ engines:
       - HACK
   rubocop:
     enabled: true
+    channel: rubocop-0-51
   reek:
     enabled: true
     checks:
