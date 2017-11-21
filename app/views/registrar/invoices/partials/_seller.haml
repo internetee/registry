@@ -16,7 +16,7 @@
   %dt= t(:swift)
   %dd= @invoice.seller_swift
 
-  %dt= t(:vat_no)
+  %dt= Registrar.human_attribute_name :vat_no
   %dd= @invoice.seller_vat_no
 
   %dt= t(:address)
