@@ -7,7 +7,7 @@
         .col-md-4.control-label
           = f.label :username, nil, class: 'required'
         .col-md-8
-          = f.text_field :username, required: true, class: 'form-control'
+          = f.text_field :username, required: true, autofocus: true, class: 'form-control'
       - if @admin_user.new_record? || can?(:update, AdminUser)
         .form-group
           .col-md-4.control-label

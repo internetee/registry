@@ -8,7 +8,7 @@
         .col-md-4.control-label
           = f.label :username, nil, class: 'required'
         .col-md-7
-          = f.text_field :username, required: true, class: 'form-control'
+          = f.text_field :username, required: true, autofocus: true, class: 'form-control'
       .form-group
         .col-md-4.control-label
           = f.label :password, nil, class: 'required'
