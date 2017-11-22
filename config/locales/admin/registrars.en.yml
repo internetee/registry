@@ -21,3 +21,6 @@ en:
         misc: Miscellaneous
         create_btn: Create registrar
         update_btn: Update registrar
+
+        billing:
+          header: Billing
