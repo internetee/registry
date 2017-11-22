@@ -1,0 +1,16 @@
+DEFAULTS: &DEFAULTS
+  username: test
+
+api:
+  <<: *DEFAULTS
+  type: ApiUser
+  registrar: valid
+  roles:
+    - super
+
+admin:
+  <<: *DEFAULTS
+  type: AdminUser
+  country_code: US
+  roles:
+    - admin

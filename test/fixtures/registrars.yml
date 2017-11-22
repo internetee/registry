@@ -1,0 +1,10 @@
+DEFAULTS: &DEFAULTS
+  name: Acme Ltd
+  reg_no: 1234
+  country_code: US
+  email: acme@example.com
+  code: 1234
+  accounting_customer_code: C1
+
+valid:
+  <<: *DEFAULTS
