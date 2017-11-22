@@ -2,7 +2,7 @@ require 'test_helper'
 
 class NewRegistrarTest < ActionDispatch::IntegrationTest
   def setup
-    login_as create(:admin_user)
+    login_as users(:admin)
   end
 
   def test_creates_registrar
