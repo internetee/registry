@@ -63,10 +63,22 @@ module Admin
     end
 
     def registrar_params
-      params.require(:registrar).permit(
-        :name, :reg_no, :vat_no, :street, :city, :state, :zip, :billing_address,
-        :country_code, :email, :phone, :website, :billing_email, :code, :test_registrar
-      )
+      params.require(:registrar).permit(:name,
+                                        :reg_no,
+                                        :vat_no,
+                                        :street,
+                                        :city,
+                                        :state,
+                                        :zip,
+                                        :billing_address,
+                                        :country_code,
+                                        :email,
+                                        :phone,
+                                        :website,
+                                        :billing_email,
+                                        :code,
+                                        :test_registrar,
+                                        :accounting_customer_code)
     end
   end
 end

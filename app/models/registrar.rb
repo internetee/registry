@@ -15,7 +15,9 @@ class Registrar < ActiveRecord::Base
 
   validates :name, :reg_no, :country_code, :email, :code, presence: true
   validates :name, :reg_no, :reference_no, :code, uniqueness: true
+  validates :accounting_customer_code, presence: true
   validate :forbidden_codes
+
   def forbidden_codes
     return true unless ['CID'].include? code
     errors.add(:code, I18n.t(:forbidden_code))
