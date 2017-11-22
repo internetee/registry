@@ -8,3 +8,13 @@ DEFAULTS: &DEFAULTS
 
 valid:
   <<: *DEFAULTS
+
+complete:
+  <<: *DEFAULTS
+  name: 2
+  reg_no: 2
+  code: 2
+  website: example.com
+  email: info@example.com
+  billing_email: billing@example.com
+  vat_no: US12345
