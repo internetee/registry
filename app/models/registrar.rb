@@ -17,9 +17,21 @@ class Registrar < ActiveRecord::Base
   validates :name, :reg_no, :reference_no, :code, uniqueness: true
   validates :accounting_customer_code, presence: true
   validates :language, presence: true
+  validates :vat_rate, :vat_no, absence: true, if: :local_vat_payer?
+  validates :vat_rate, presence: true, if: 'foreign_vat_payer? && vat_no.blank?'
+  validates :vat_rate, absence: true, if: 'foreign_vat_payer? && vat_no?'
+  validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 99 }, allow_nil: true
   validate :forbidden_codes
 
   after_initialize :set_defaults
+
+  before_save do
+    self.vat_rate = vat_rate / 100.0 if vat_rate
+  end
+
+  after_find do |registrar|
+    registrar.vat_rate = registrar.vat_rate * 100 if registrar.vat_rate
+  end
 
   def forbidden_codes
     return true unless ['CID'].include? code
@@ -162,5 +174,13 @@ class Registrar < ActiveRecord::Base
 
   def set_defaults
     self.language = Setting.default_language unless language
+  end
+
+  def local_vat_payer?
+    country == Registry.instance.legal_address_country
+  end
+
+  def foreign_vat_payer?
+    !local_vat_payer?
   end
 end

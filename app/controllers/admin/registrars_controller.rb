@@ -79,7 +79,8 @@ module Admin
                                         :code,
                                         :test_registrar,
                                         :accounting_customer_code,
-                                        :language)
+                                        :language,
+                                        :vat_rate,)
     end
   end
 end

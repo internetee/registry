@@ -38,4 +38,54 @@ class RegistrarTest < ActiveSupport::TestCase
     registrar = Registrar.new(language: 'de')
     assert_equal 'de', registrar.language
   end
+
+  def test_rejects_vat_number_when_local_vat_payer
+    Registry.instance.stub(:legal_address_country, Country.new('US')) do
+      @registrar.vat_no = 'US1'
+      @registrar.validate
+      assert @registrar.invalid?
+    end
+  end
+
+  def test_rejects_vat_rate_when_local_vat_payer
+    Registry.instance.stub(:legal_address_country, Country.new('US')) do
+      @registrar.vat_rate = 20
+      @registrar.validate
+      assert @registrar.invalid?
+    end
+  end
+
+  def test_rejects_negative_vat_rate
+    @registrar.vat_rate = -1
+    @registrar.validate
+    assert @registrar.invalid?
+  end
+
+  def test_rejects_vat_rate_greater_than_max
+    @registrar.vat_rate = 100
+    @registrar.validate
+    assert @registrar.invalid?
+  end
+
+  def test_converts_integer_vat_rate_to_fractional
+    @registrar = registrars(:foreign_vat_payer_with_rate)
+    assert_equal 20, @registrar.vat_rate
+  end
+
+  def test_requires_vat_rate_when_foreign_vat_payer_without_number
+    Registry.instance.stub(:legal_address_country, Country.new('GB')) do
+      @registrar.vat_no = nil
+      @registrar.validate
+      assert @registrar.invalid?
+    end
+  end
+
+  def test_rejects_vat_rate_when_foreign_vat_payer_with_number
+    Registry.instance.stub(:legal_address_country, Country.new('GB')) do
+      @registrar.vat_no = 'US1'
+      @registrar.vat_rate = 1
+      @registrar.validate
+      assert @registrar.invalid?
+    end
+  end
 end

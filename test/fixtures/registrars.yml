@@ -16,3 +16,10 @@ goodnames:
   country_code: US
   accounting_customer_code: goodnames
   language: en
+
+foreign_vat_payer_with_rate:
+  <<: *DEFAULTS
+  name: 3
+  reg_no: 3
+  code: 3
+  vat_rate: 0.2

@@ -14,6 +14,8 @@ require 'webmock/minitest'
 
 Setting.address_processing = false
 
+Setting.registry_country_code = 'US'
+
 class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
 
