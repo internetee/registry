@@ -2478,7 +2478,7 @@ CREATE TABLE registrars (
     legacy_id integer,
     reference_no character varying,
     test_registrar boolean DEFAULT false,
-    language character varying
+    language character varying NOT NULL
 );
 
 
@@ -5059,4 +5059,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171025113808');
 INSERT INTO schema_migrations (version) VALUES ('20171025153841');
 
 INSERT INTO schema_migrations (version) VALUES ('20171121233843');
+
+INSERT INTO schema_migrations (version) VALUES ('20171123035941');
 
