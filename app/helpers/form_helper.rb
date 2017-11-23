@@ -14,7 +14,7 @@ module FormHelper
   end
 
   def language_select(object, method, choices = nil, options = {}, html_options = {}, &block)
-    choices = options_for_select({ en: 'English', et: 'Estonian' }.invert, options[:selected])
+    choices = options_for_select(available_languages, options[:selected])
     select(object, method, choices, options, html_options, &block)
   end
 end
