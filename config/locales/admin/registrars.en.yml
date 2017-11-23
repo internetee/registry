@@ -24,3 +24,6 @@ en:
 
         billing:
           header: Billing
+
+        preferences:
+          header: Preferences

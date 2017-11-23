@@ -1,0 +1,20 @@
+<div class="row">
+    <div class="col-md-8">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <%= t '.header' %>
+            </div>
+
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-4 control-label">
+                        <%= f.label :language %>
+                    </div>
+                    <div class="col-md-7">
+                        <%= f.language_select :language, nil, {}, required: true, class: 'form-control' %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -5,6 +5,7 @@ DEFAULTS: &DEFAULTS
   email: acme@example.com
   code: 1234
   accounting_customer_code: ACCOUNT001
+  language: en
 
 valid:
   <<: *DEFAULTS

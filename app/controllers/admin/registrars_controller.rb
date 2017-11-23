@@ -78,7 +78,8 @@ module Admin
                                         :billing_email,
                                         :code,
                                         :test_registrar,
-                                        :accounting_customer_code)
+                                        :accounting_customer_code,
+                                        :language)
     end
   end
 end
