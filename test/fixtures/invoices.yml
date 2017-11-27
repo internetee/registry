@@ -30,3 +30,11 @@ outstanding:
 overdue:
   <<: *DEFAULTS
   due_date: <%= Date.parse '2010-07-03' %>
+
+with_vat:
+  <<: *DEFAULTS
+  vat_rate: 0.2
+
+without_vat:
+  <<: *DEFAULTS
+  vat_rate: null

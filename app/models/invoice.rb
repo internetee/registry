@@ -29,6 +29,7 @@ class Invoice < ActiveRecord::Base
 
   validates :invoice_type, :due_date, :currency, :seller_name,
             :seller_iban, :buyer_name, :invoice_items, :vat_rate, presence: true
+  validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 99 }, allow_nil: true
 
   before_create :set_invoice_number, :check_vat
 
@@ -106,12 +107,12 @@ class Invoice < ActiveRecord::Base
   def buyer_country
     Country.new(buyer_country_code)
   end
-  
+
 # order is used for directo/banklink description
   def order
     "Order nr. #{number}"
   end
-  
+
   def pdf(html)
     kit = PDFKit.new(html)
     kit.to_pdf
