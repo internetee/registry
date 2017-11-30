@@ -12,4 +12,8 @@ class ShowRegistrarTest < ActionDispatch::IntegrationTest
   def test_accounting_customer_code
     assert_text 'ACCOUNT001'
   end
+
+  def test_language
+    assert_text 'Language English'
+  end
 end
