@@ -16,7 +16,10 @@ class Registrar < ActiveRecord::Base
   validates :name, :reg_no, :country_code, :email, :code, presence: true
   validates :name, :reg_no, :reference_no, :code, uniqueness: true
   validates :accounting_customer_code, presence: true
+  validates :language, presence: true
   validate :forbidden_codes
+
+  after_initialize :set_defaults
 
   def forbidden_codes
     return true unless ['CID'].include? code
@@ -162,5 +165,11 @@ class Registrar < ActiveRecord::Base
   def api_ip_white?(ip)
     return true unless Setting.api_ip_whitelist_enabled
     white_ips.api.pluck(:ipv4, :ipv6).flatten.include?(ip)
+  end
+
+  private
+
+  def set_defaults
+    self.language = Setting.default_language unless language
   end
 end

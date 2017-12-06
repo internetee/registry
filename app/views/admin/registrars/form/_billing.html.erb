@@ -1,0 +1,40 @@
+<div class="row">
+    <div class="col-md-8">
+        <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+                <div class="pull-left">
+                    <%= t '.header' %>
+                </div>
+            </div>
+
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-md-4 control-label">
+                        <%= f.label :vat_no %>
+                    </div>
+                    <div class="col-md-7">
+                        <%= f.text_field :vat_no, class: 'form-control' %>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-4 control-label">
+                        <%= f.label :accounting_customer_code %>
+                    </div>
+                    <div class="col-md-7">
+                        <%= f.text_field :accounting_customer_code, class: 'form-control', required: true %>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-4 control-label">
+                        <%= f.label :billing_email %>
+                    </div>
+                    <div class="col-md-7">
+                        <%= f.email_field :billing_email, class: 'form-control' %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

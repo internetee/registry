@@ -50,6 +50,13 @@
           = render 'setting_row', var: :request_confirmation_on_domain_deletion_enabled
           = render 'setting_row', var: :address_processing
 
+          %tr
+            %td.col-md-6= label_tag :default_language
+            %td.col-md-6
+              = select_tag '[settings][default_language]',
+              options_for_select(available_languages, Setting.default_language),
+              class: 'form-control'
+
   .panel.panel-default
     .panel-heading
       = t('.billing')

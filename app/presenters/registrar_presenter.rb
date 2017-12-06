@@ -20,6 +20,10 @@ class RegistrarPresenter
     registrar.website
   end
 
+  def language
+    view.available_languages.key(registrar.language.to_sym)
+  end
+
   private
 
   attr_reader :registrar

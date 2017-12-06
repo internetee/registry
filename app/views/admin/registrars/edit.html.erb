@@ -1,0 +1,5 @@
+<% content_for :actions do %>
+    <%= link_to(t(:back_to_registrar), [:admin, @registrar], class: 'btn btn-default') %>
+<% end %>
+<%= render 'shared/title', name: "#{t(:edit)}: #{@registrar.name}" %>
+<%= render 'form' %>

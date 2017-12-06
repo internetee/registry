@@ -2,39 +2,29 @@ require 'test_helper'
 
 class RegistrarsControllerTest < ActionDispatch::IntegrationTest
   def setup
-    login_as create(:admin_user)
+    login_as users(:admin)
+    @registrar = registrars(:valid)
   end
 
   def test_updates_website
-    registrar = create(:registrar, website: 'test')
+    patch admin_registrar_path(@registrar), registrar: @registrar.attributes.merge(website: 'new.example.com')
+    @registrar.reload
 
-    patch admin_registrar_path(registrar), registrar: attributes_for(:registrar, website: 'new-website')
-    registrar.reload
-
-    assert_equal 'new-website', registrar.website
+    assert_equal 'new.example.com', @registrar.website
   end
 
   def test_updates_email
-    registrar = create(:registrar, email: 'test@test.com')
+    patch admin_registrar_path(@registrar), registrar: @registrar.attributes.merge(email: 'new@example.com')
+    @registrar.reload
 
-    patch admin_registrar_path(registrar), registrar: attributes_for(:registrar, email: 'new-test@test.com')
-    registrar.reload
-
-    assert_equal 'new-test@test.com', registrar.email
+    assert_equal 'new@example.com', @registrar.email
   end
 
   def test_updates_billing_email
-    registrar = create(:registrar, billing_email: 'test@test.com')
+    patch admin_registrar_path(@registrar),
+          registrar: @registrar.attributes.merge(billing_email: 'new-billing@example.com')
+    @registrar.reload
 
-    patch admin_registrar_path(registrar), registrar: attributes_for(:registrar, billing_email: 'new-test@test.com')
-    registrar.reload
-
-    assert_equal 'new-test@test.com', registrar.billing_email
-  end
-
-  def test_redirects_to_registrar
-    registrar = create(:registrar)
-    patch admin_registrar_path(registrar), registrar: attributes_for(:registrar)
-    assert_redirected_to admin_registrar_path(registrar)
+    assert_equal 'new-billing@example.com', @registrar.billing_email
   end
 end

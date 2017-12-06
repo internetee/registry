@@ -9,6 +9,9 @@ en:
         active: Active
         api_users: API users
 
+        preferences:
+          header: Preferences
+
       create:
         created: Registrar has been successfully created
         not_created: Unable to create registrar
@@ -21,3 +24,9 @@ en:
         misc: Miscellaneous
         create_btn: Create registrar
         update_btn: Update registrar
+
+        billing:
+          header: Billing
+
+        preferences:
+          header: Preferences

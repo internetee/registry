@@ -6,6 +6,10 @@ RSpec.describe 'admin/registrars/_form' do
   before :example do
     assign(:registrar, registrar)
     stub_template 'shared/_full_errors' => ''
+
+    without_partial_double_verification do
+      allow(view).to receive(:available_languages).and_return({})
+    end
   end
 
   it 'has website' do

@@ -16,6 +16,8 @@ class ApplicationController < ActionController::Base
   end
 
   helper_method :registrant_request?, :registrar_request?, :admin_request?, :current_root_url
+  helper_method :available_languages
+
   def registrant_request?
     request.path.match(/^\/registrant/)
   end
@@ -78,5 +80,11 @@ class ApplicationController < ActionController::Base
     return if params[parent_key].blank?
     return if params[parent_key][key].blank?
     params[parent_key][key].sub!(/,/, '.')
+  end
+
+  private
+
+  def available_languages
+    { en: 'English', et: 'Estonian' }.invert
   end
 end
