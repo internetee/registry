@@ -87,7 +87,7 @@ namespace :import do
         street: x.street1.try(:strip),
         zip: x.postalcode.try(:strip),
         url: x.url.try(:strip),
-        directo_handle: x.directo_handle.try(:strip),
+        accounting_customer_code: x.directo_handle.try(:strip),
         vat: x.vat,
         legacy_id: x.id,
         creator_str: user,

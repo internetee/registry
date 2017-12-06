@@ -1581,7 +1581,6 @@
 <text text-anchor="start" x="1600.5" y="-2399.3" font-family="Times,serif" font-size="14.00">zip :string</text>
 <text text-anchor="start" x="1600.5" y="-2384.3" font-family="Times,serif" font-size="14.00">code :string</text>
 <text text-anchor="start" x="1600.5" y="-2369.3" font-family="Times,serif" font-size="14.00">url :string</text>
-<text text-anchor="start" x="1600.5" y="-2354.3" font-family="Times,serif" font-size="14.00">directo_handle :string</text>
 <text text-anchor="start" x="1600.5" y="-2339.3" font-family="Times,serif" font-size="14.00">vat :boolean</text>
 <text text-anchor="start" x="1600.5" y="-2324.3" font-family="Times,serif" font-size="14.00">legacy_id :integer</text>
 <text text-anchor="start" x="1600.5" y="-2309.3" font-family="Times,serif" font-size="14.00">reference_no :string</text>

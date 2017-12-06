@@ -2473,11 +2473,10 @@ CREATE TABLE registrars (
     zip character varying,
     code character varying,
     website character varying,
-    directo_handle character varying,
+    accounting_customer_code character varying NOT NULL,
     vat boolean,
     legacy_id integer,
     reference_no character varying,
-    exclude_in_monthly_directo boolean DEFAULT false,
     test_registrar boolean DEFAULT false
 );
 
@@ -5051,4 +5050,10 @@ INSERT INTO schema_migrations (version) VALUES ('20170606202859');
 INSERT INTO schema_migrations (version) VALUES ('20171009080822');
 
 INSERT INTO schema_migrations (version) VALUES ('20171009082321');
+
+INSERT INTO schema_migrations (version) VALUES ('20171025110933');
+
+INSERT INTO schema_migrations (version) VALUES ('20171025113808');
+
+INSERT INTO schema_migrations (version) VALUES ('20171025153841');
 
