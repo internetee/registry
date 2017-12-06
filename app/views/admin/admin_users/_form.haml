@@ -1,10 +1,3 @@
-- if @admin_user.new_record?
-  - overwrite_required = ''
-  - field_required = 'required'
-- else
-  - overwrite_required = 'not-required' # otherwise automatic one adds required
-  - field_required = ''
-
 = form_for([:admin, @admin_user], html: { class: 'form-horizontal', autocomplete: 'off' }) do |f|
   = render 'shared/full_errors', object: @admin_user
 
@@ -12,43 +5,41 @@
     .col-md-8
       .form-group
         .col-md-4.control-label
-          = f.label :username
+          = f.label :username, nil, class: 'required'
         .col-md-8
-          = f.text_field(:username, class: 'form-control')
+          = f.text_field :username, required: true, autofocus: true, class: 'form-control'
       - if @admin_user.new_record? || can?(:update, AdminUser)
         .form-group
           .col-md-4.control-label
-            
-            = f.label :password, class: overwrite_required
+            = f.label :password
           .col-md-8
-            = f.text_field(:password, class: "form-control #{field_required}")
+            = f.text_field :password, required: f.object.new_record?, class: 'form-control'
         .form-group
           .col-md-4.control-label
-            = f.label :password_confirmation, class: overwrite_required
+            = f.label :password_confirmation
           .col-md-8
-            = f.text_field(:password_confirmation, class: "form-control #{field_required}")
+            = f.text_field :password_confirmation, required: f.object.new_record?, class: 'form-control'
 
       %hr
       .form-group
         .col-md-4.control-label
           = f.label :identity_code
         .col-md-8
-          = f.text_field(:identity_code, class: 'form-control required')
+          = f.text_field :identity_code, class: 'form-control'
       .form-group
         .col-md-4.control-label
-          = f.label :email
+          = f.label :email, nil, class: 'required'
         .col-md-8
-          = f.email_field :email, class: 'form-control'
+          = f.email_field :email, required: true, class: 'form-control'
       .form-group
         .col-md-4.control-label
-          = f.label :country_code, t(:country)
+          = f.label :country_code, t(:country), class: 'required'
         .col-md-8
-          = f.select(:country_code,
-            SortedCountry.all_options(f.object.country_code), {}, class: 'form-control required')
+          = f.select :country_code, SortedCountry.all_options(f.object.country_code), {}, required: true, class: 'form-control'
       %hr
       .form-group
         .col-md-4.control-label
-          = f.label :role, class: 'required'
+          = f.label :role, nil, class: 'required'
         .col-md-8
           = select_tag 'admin_user[roles][]', 
             options_for_select(AdminUser::ROLES.map {|x| [t(x), x] }, 
@@ -58,9 +49,3 @@
   .row
     .col-md-8.text-right
       = button_tag(t(:save), class: 'btn btn-warning')
-
-:javascript
-  window.addEventListener('load', function() {
-    $("#admin_user_password").removeAttr('required');
-    $("#admin_user_password_confirmation").removeAttr('required');
-  });
