@@ -2477,7 +2477,6 @@ CREATE TABLE registrars (
     vat boolean,
     legacy_id integer,
     reference_no character varying,
-    exclude_in_monthly_directo boolean DEFAULT false,
     test_registrar boolean DEFAULT false,
     language character varying NOT NULL
 );
