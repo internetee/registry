@@ -1,3 +1,19 @@
+11.12.2017
+* BUG: Whitelisted registrar is now automatically chosen on eID/mID login [#609](https://github.com/internetee/registry/issues/609)
+* BUG: added directo_handle to registrar profile [#343](https://github.com/internetee/registry/issues/343)
+* Refactored ident validations on contact updates [#569](https://github.com/internetee/registry/issues/569)
+* Admin: Added registrar communication language setting [#640](https://github.com/internetee/registry/issues/640)
+* Update rubocop to 0.49 [#605](https://github.com/internetee/registry/pull/605)
+* Code cleanup:
+  * remove test.rake [#376](https://github.com/internetee/registry/pull/376)
+  * remove docker remnants [#614](https://github.com/internetee/registry/pull/614)
+  * remove phantomjs, phantomjs-binaries and launchy gems [629](https://github.com/internetee/registry/pull/629)
+  * remove eis_custom_active_model.rb, eis_custom_active_record.rb, eis_custom_flash.rb [#231](https://github.com/internetee/registry/issues/231)
+  * remove autolable.rb [#407](https://github.com/internetee/registry/issues/407)
+* migration from FactoryGirl to FactoryBot [#626](https://github.com/internetee/registry/pull/626)
+  * remove FactoryGirl from dev.rake [#630](https://github.com/internetee/registry/pull/630)
+* add rake todo list [#586](https://github.com/internetee/registry/pull/586)
+
 13.10.2017
 * BUG: week starts with Monday now in the date picker of the portal for registrars and admin interface [#590](https://github.com/internetee/registry/issues/590)
 * BUG: Fixed error on zone file generation in the admin interface [#611](https://github.com/internetee/registry/issues/611)
