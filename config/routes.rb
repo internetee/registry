@@ -107,7 +107,6 @@ Rails.application.routes.draw do
       member do
         get 'domain_verification_url'
       end
-
     end
 
     # resources :invoices do
