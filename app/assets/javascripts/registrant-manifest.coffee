@@ -9,4 +9,3 @@
 #= require select2
 #= require datepicker
 #= require shared/general
-#= require registrar/application
