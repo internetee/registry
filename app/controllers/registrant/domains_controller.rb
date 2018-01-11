@@ -14,10 +14,6 @@ class Registrant::DomainsController < RegistrantController
     authorize! :read, @domain
   end
 
-  def set_domain
-    @domain = domains.find(params[:id])
-  end
-
   def domain_verification_url
     authorize! :view, :registrant_domains
     dom = domains.find(params[:id])
@@ -49,6 +45,12 @@ class Registrant::DomainsController < RegistrantController
         send_data pdf, filename: 'domains.pdf'
       end
     end
+  end
+
+  private
+
+  def set_domain
+    @domain = domains.find(params[:id])
   end
 
   def domains
