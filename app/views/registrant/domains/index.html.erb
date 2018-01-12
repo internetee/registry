@@ -94,19 +94,19 @@
                 </tr>
                 </thead>
                 <tbody>
-                <% @domains.each do |x| %>
+                <% @domains.each do |domain| %>
                     <tr>
                         <td>
-                            <%= link_to(x, registrant_domain_path(x)) %>
+                            <%= link_to domain, registrant_domain_path(domain) %>
                         </td>
                         <td>
-                            <%= link_to(x.registrant.name, registrant_contact_path(x.registrant)) if x.registrant %>
+                            <%= link_to domain.registrant.name, registrant_contact_path(domain.registrant) %>
                         </td>
                         <td>
-                            <%= l(x.valid_to, format: :short) %>
+                            <%= l domain.expire_time %>
                         </td>
                         <td>
-                            <%= link_to(x.registrar, registrant_registrar_path(x.registrar)) if x.registrar %>
+                            <%= link_to domain.registrar, registrant_registrar_path(domain.registrar) %>
                         </td>
                     </tr>
                     <div class="row"></div>
