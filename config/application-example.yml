@@ -83,23 +83,18 @@ key_path: '/home/registry/registry/shared/ca/private/webclient.key.pem'
 epp_hostname: 'registry.gitlab.eu'
 repp_url: 'https://repp.gitlab.eu/repp/v1/'
 
-#
 # Estonian Business Registry
-#
-arireg_username: 'kasutaja'
-arireg_password: 'parool'
-# config/environments/production.rb --- Soap::Arireg.wsdl, Soap::Arireg.host
-arireg_wsdl:  'lib/schemas/testariport.wsdl' # https://demo-ariregxml.rik.ee:447/testariport/?wsdl
-#arireg_wsdl: 'lib/schemas/ariport.wsdl'    # https://ariregxml.rik.ee/ariport/?wsdl
-arireg_host: 'https://demo-ariregxml.rik.ee:447' # https://ariregxml.rik.ee/
+# http://www.rik.ee/en/e-business-registry/xml-service
+arireg_username:
+arireg_password:
+arireg_wsdl:  'https://demo-ariregxml.rik.ee:447/testariport/?wsdl'
+arireg_host: 'http://demo-ariregxml.rik.ee:81/'
 
-#
-# REGISTRAR AND REGISTRANT
-#
-
-# SK DigiDocService
-sk_digi_doc_service_endpoint: 'https://openxades.org:9443/DigiDocService'
-sk_digi_doc_service_name: 'EIS test'
+# Mobile-ID and ID-card login
+# https://www.id.ee/?id=35760 General how-to
+# https://www.id.ee/?id=36381 Mobile-ID test numbers
+sk_digi_doc_service_endpoint: 'https://tsp.demo.sk.ee'
+sk_digi_doc_service_name: 'Testimine'
 
 
 #
