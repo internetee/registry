@@ -1,0 +1,14 @@
+one:
+  name: one.test
+  registrar: acme
+  registrant: john
+
+two:
+  name: two.test
+  registrar: acme
+  registrant: john
+
+three:
+  name: three.test
+  registrar: acme
+  registrant: acme_ltd

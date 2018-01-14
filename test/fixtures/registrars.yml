@@ -10,6 +10,9 @@ DEFAULTS: &DEFAULTS
 valid:
   <<: *DEFAULTS
 
+acme:
+  <<: *DEFAULTS
+
 complete:
   <<: *DEFAULTS
   name: 2
