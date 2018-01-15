@@ -4,7 +4,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <%= search_form_for [:admin, @q], html: { autocomplete: 'off' } do |f| %>
+        <%= search_form_for [:admin, @q], html: { class: 'search-form', autocomplete: 'off' } do |f| %>
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
@@ -64,7 +64,7 @@
                         <%= text_field_tag :results_per_page, params[:results_per_page], class: 'form-control', placeholder: t(:results_per_page) %>
                     </div>
                 </div>
-                <div class="col-md-3" style="padding-top: 25px;">
+                <div class="col-md-3 actions">
                     <button class="btn btn-primary">
                         &nbsp;
                         <span class="glyphicon glyphicon-search"></span>
