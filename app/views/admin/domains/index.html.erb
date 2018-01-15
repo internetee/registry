@@ -15,9 +15,9 @@
                 <thead>
                     <tr>
                         <th class="col-xs-2"><%= sort_link(@q, 'name') %></th>
-                        <th class="col-xs-2"><%= sort_link(@q, 'registrant_name', t('.registrant')) %></th>
+                        <th class="col-xs-2"><%= sort_link(@q, 'registrant_name', Registrant.model_name.human) %></th>
                         <th class="col-xs-2"><%= sort_link(@q, 'valid_to', t(:valid_to)) %></th>
-                        <th class="col-xs-2"><%= sort_link(@q, 'registrar_name', t(:registrar_name)) %></th>
+                        <th class="col-xs-2"><%= sort_link(@q, 'registrar_name', Registrar.model_name.human) %></th>
                     </tr>
                 </thead>
 
