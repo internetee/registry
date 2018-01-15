@@ -3,8 +3,10 @@ en:
     domains:
       index:
         header: Domains
-        reset_btn: Reset
         registrant: Registrant
+
+      search_form:
+        reset_btn: Reset
 
       edit:
         add_new_status_btn: Add new status
