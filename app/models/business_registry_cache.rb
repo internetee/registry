@@ -69,15 +69,5 @@ class BusinessRegistryCache < ActiveRecord::Base
     def business_registry
       Soap::Arireg.new
     end
-
-    def purge
-      STDOUT << "#{Time.zone.now.utc} - Starting Purge of old BusinessRegistry data from cache\n" unless Rails.env.test?
-      purged = 0
-      BusinessRegistryCache.where('retrieved_on < ?',
-                                  Time.zone.now < Setting.days_to_keep_business_registry_cache.days).each do |br|
-        br.destroy and purged += 1
-      end
-      STDOUT << "#{Time.zone.now.utc} - Finished purging #{purged} old BusinessRegistry cache items\n" unless Rails.env.test?
-    end
   end
 end

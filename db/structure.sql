@@ -884,7 +884,6 @@ CREATE TABLE domain_contacts (
     id integer NOT NULL,
     contact_id integer,
     domain_id integer,
-    contact_type character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     contact_code_cache character varying,
@@ -4475,6 +4474,22 @@ ALTER TABLE ONLY contacts
 
 
 --
+-- Name: domain_contacts_contact_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY domain_contacts
+    ADD CONSTRAINT domain_contacts_contact_id_fk FOREIGN KEY (contact_id) REFERENCES contacts(id);
+
+
+--
+-- Name: domain_contacts_domain_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY domain_contacts
+    ADD CONSTRAINT domain_contacts_domain_id_fk FOREIGN KEY (domain_id) REFERENCES domains(id);
+
+
+--
 -- Name: domains_registrant_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5059,4 +5074,10 @@ INSERT INTO schema_migrations (version) VALUES ('20171025153841');
 INSERT INTO schema_migrations (version) VALUES ('20171121233843');
 
 INSERT INTO schema_migrations (version) VALUES ('20171123035941');
+
+INSERT INTO schema_migrations (version) VALUES ('20180112080312');
+
+INSERT INTO schema_migrations (version) VALUES ('20180112084221');
+
+INSERT INTO schema_migrations (version) VALUES ('20180112084442');
 

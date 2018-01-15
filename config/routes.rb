@@ -99,7 +99,7 @@ Rails.application.routes.draw do
   namespace :registrant do
     root 'domains#index'
 
-    resources :domains do
+    resources :domains, only: %i[index show] do
       collection do
         get :download_list
       end
@@ -107,7 +107,6 @@ Rails.application.routes.draw do
       member do
         get 'domain_verification_url'
       end
-
     end
 
     # resources :invoices do

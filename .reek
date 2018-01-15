@@ -246,7 +246,6 @@ DuplicateMethodCall:
   - Billing::Price#self.effective
   - Billing::Price#self.valid
   - BusinessRegistryCache#fetch_by_ident_and_cc
-  - BusinessRegistryCache#purge
   - Certificate#parse_metadata
   - Certificate#reload_apache
   - Certificate#revoke!
