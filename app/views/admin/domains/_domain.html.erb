@@ -1,0 +1,16 @@
+<tr>
+    <td>
+        <%= link_to(domain, admin_domain_path(domain)) %>
+    </td>
+    <td>
+        <% if domain.registrant %>
+            <%= link_to(domain.registrant, [:admin, domain.registrant]) %>
+        <% end %>
+    </td>
+    <td>
+        <%= l(domain.valid_to, format: :short) %>
+    </td>
+    <td>
+        <%= link_to(domain.registrar, admin_registrar_path(domain.registrar)) if domain.registrar %>
+    </td>
+</tr>
