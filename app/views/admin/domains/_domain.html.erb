@@ -6,7 +6,7 @@
         <%= link_to(domain.registrant, [:admin, domain.registrant]) %>
     </td>
     <td>
-        <%= l(domain.valid_to, format: :short) %>
+        <%= l domain.expire_time %>
     </td>
     <td>
         <%= link_to(domain.registrar, admin_registrar_path(domain.registrar)) %>
