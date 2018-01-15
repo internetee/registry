@@ -2,6 +2,7 @@ en:
   admin:
     domains:
       index:
+        header: Domains
         reset_btn: Reset
         registrant: Registrant
 

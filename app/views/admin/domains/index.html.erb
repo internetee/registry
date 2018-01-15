@@ -1,4 +1,7 @@
-<%= render 'shared/title', name: t(:domains) %>
+<div class="page-header">
+    <h1><%= t '.header' %></h1>
+</div>
+
 <div class="row">
     <div class="col-md-12">
         <%= search_form_for [:admin, @q], html: { autocomplete: 'off' } do |f| %>
