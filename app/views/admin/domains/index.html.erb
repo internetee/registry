@@ -7,27 +7,20 @@
         <%= render 'search_form' %>
     </div>
 </div>
-<hr/>
+
 <div class="row">
     <div class="col-md-12">
         <div class="table-responsive">
             <table class="table table-hover table-bordered table-condensed">
                 <thead>
-                <tr>
-                    <th class="col-xs-2">
-                        <%= sort_link(@q, 'name') %>
-                    </th>
-                    <th class="col-xs-2">
-                        <%= sort_link(@q, 'registrant_name', t('.registrant')) %>
-                    </th>
-                    <th class="col-xs-2">
-                        <%= sort_link(@q, 'valid_to', t(:valid_to)) %>
-                    </th>
-                    <th class="col-xs-2">
-                        <%= sort_link(@q, 'registrar_name', t(:registrar_name)) %>
-                    </th>
-                </tr>
+                    <tr>
+                        <th class="col-xs-2"><%= sort_link(@q, 'name') %></th>
+                        <th class="col-xs-2"><%= sort_link(@q, 'registrant_name', t('.registrant')) %></th>
+                        <th class="col-xs-2"><%= sort_link(@q, 'valid_to', t(:valid_to)) %></th>
+                        <th class="col-xs-2"><%= sort_link(@q, 'registrar_name', t(:registrar_name)) %></th>
+                    </tr>
                 </thead>
+
                 <tbody>
                     <%= render @domains %>
                 </tbody>
@@ -35,10 +28,12 @@
         </div>
     </div>
 </div>
+
 <div class="row">
     <div class="col-md-6">
         <%= paginate @domains %>
     </div>
+
     <div class="col-md-6 text-right">
         <div class="pagination">
             <%= t(:result_count, count: @domains.total_count) %>
