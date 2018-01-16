@@ -2,6 +2,7 @@ en:
   registrar:
     domains:
       index:
+        header: Domains
         registrant: Registrant
         csv:
           domain_name: Domain
