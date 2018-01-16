@@ -5,7 +5,7 @@
 
 .row
   .col-md-12
-    = search_form_for [:registrar, @q], html: { style: 'margin-bottom: 0;', autocomplete: 'off' } do |f|
+    = search_form_for [:registrar, @q], html: { class: 'search-form', autocomplete: 'off' } do |f|
       .row
         .col-md-3
           .form-group
@@ -42,7 +42,7 @@
           .form-group
             = label_tag t(:results_per_page)
             = text_field_tag :results_per_page, params[:results_per_page], class: 'form-control', placeholder: t(:results_per_page)
-        .col-md-3{style: 'padding-top: 25px;'}
+        .col-md-3.actions
           %button.btn.btn-primary.search
             &nbsp;
             %span.glyphicon.glyphicon-search
