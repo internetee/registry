@@ -505,7 +505,6 @@ en:
   log_in: 'Log in'
   domains: 'Domains'
   register: 'Register'
-  check: 'Check'
   contacts: 'Contacts'
   domain_info: 'Domain info'
   domain_details: 'Domain details'
