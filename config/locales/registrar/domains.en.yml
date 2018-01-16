@@ -3,6 +3,7 @@ en:
     domains:
       index:
         registrant: Registrant
+        reset_btn: Reset
         download_btn: Download
         csv:
           domain_name: Domain
