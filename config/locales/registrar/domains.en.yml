@@ -3,13 +3,15 @@ en:
     domains:
       index:
         registrant: Registrant
-        reset_btn: Reset
-        download_btn: Download
         csv:
           domain_name: Domain
           registrant_name: Registrant name
           registrant_code: Registrant code
           expire_time: Date of expiry
+
+      search_form:
+        download_btn: Download
+        reset_btn: Reset
 
       form:
         save_btn: Save
