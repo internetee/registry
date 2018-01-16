@@ -68,19 +68,19 @@
               = sort_link(@q, 'valid_to', t(:valid_to))
             %th{class: 'col-xs-2'}= t('actions')
         %tbody
-          - @domains.each do |x|
+          - @domains.each do |domain|
             %tr
-              %td= link_to(truncate(x.name), info_registrar_domains_path(domain_name: x.name))
+              %td= link_to(truncate(domain.name), info_registrar_domains_path(domain_name: domain.name))
               %td
-                - if x.registrant
-                  = link_to(x.registrant, registrar_contact_path(id: x.registrant.code))
-              %td= l(x.valid_to, format: :date_long)
+                - if domain.registrant
+                  = link_to(domain.registrant, registrar_contact_path(id: domain.registrant.code))
+              %td= l(domain.valid_to, format: :date_long)
               %td
-                = link_to(t(:edit), edit_registrar_domains_path(domain_name: x.name),
+                = link_to(t(:edit), edit_registrar_domains_path(domain_name: domain.name),
                   class: 'btn btn-primary btn-xs')
-                = link_to(t(:renew), renew_registrar_domains_path(domain_name: x.name),
+                = link_to(t(:renew), renew_registrar_domains_path(domain_name: domain.name),
                   class: 'btn btn-default btn-xs')
-                = link_to(t(:delete), delete_registrar_domains_path(domain_name: x.name),
+                = link_to(t(:delete), delete_registrar_domains_path(domain_name: domain.name),
                     class: 'btn btn-default btn-xs')
 .row
   .col-md-6
