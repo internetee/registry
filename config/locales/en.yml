@@ -501,7 +501,6 @@ en:
 
   username: 'Username'
   password: 'Password'
-  authinfo_pw: 'AuthInfo pw'
   log_in: 'Log in'
   domains: 'Domains'
   register: 'Register'
