@@ -2,28 +2,28 @@
     <div class="row">
         <div class="col-md-3">
             <div class="form-group">
-                <%= f.label :name %>
+                <%= f.label :name, for: nil %>
                 <%= f.search_field :name_matches, value: params[:q][:name_matches], class: 'form-control', placeholder: t(:name) %>
             </div>
         </div>
 
         <div class="col-md-3">
             <div class="form-group">
-                <%= f.label :registrant_ident %>
+                <%= f.label :registrant_ident, for: nil %>
                 <%= f.search_field :registrant_ident_eq, class: 'form-control', placeholder: t(:registrant_ident) %>
             </div>
         </div>
 
         <div class="col-md-3">
             <div class="form-group">
-                <%= f.label :contact_ident %>
+                <%= f.label :contact_ident, for: nil %>
                 <%= f.search_field :contacts_ident_eq, class: 'form-control', placeholder: t(:contact_ident) %>
             </div>
         </div>
 
         <div class="col-md-3">
             <div class="form-group">
-                <%= f.label :nameserver_hostname %>
+                <%= f.label :nameserver_hostname, for: nil %>
                 <%= f.search_field :nameservers_hostname_eq, class: 'form-control', placeholder: t(:nameserver_hostname) %>
             </div>
         </div>
@@ -32,21 +32,21 @@
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
-                <%= label_tag :status %>
-                <%= select_tag :statuses_contains, options_for_select(DomainStatus::STATUSES, params[:statuses_contains]), { multiple: true, placeholder: t(:choose), class: 'form-control js-combobox' } %>
+                <%= label_tag :status, nil, for: nil %>
+                <%= select_tag :statuses_contains, options_for_select(DomainStatus::STATUSES, params[:statuses_contains]), { multiple: true, class: 'form-control js-combobox' } %>
             </div>
         </div>
 
         <div class="col-md-3">
             <div class="form-group">
-                <%= f.label :valid_to_from %>
+                <%= f.label :valid_to_from, for: nil %>
                 <%= f.search_field :valid_to_gteq, value: params[:q][:valid_to_gteq], class: 'form-control js-datepicker', placeholder: t(:valid_to_from) %>
             </div>
         </div>
 
         <div class="col-md-3">
             <div class="form-group">
-                <%= f.label :valid_to_until %>
+                <%= f.label :valid_to_until, for: nil %>
                 <%= f.search_field :valid_to_lteq, value: params[:q][:valid_to_lteq], class: 'form-control js-datepicker', placeholder: t(:valid_to_until) %>
             </div>
         </div>
@@ -56,7 +56,7 @@
         <div class="col-md-6"></div>
         <div class="col-md-3">
             <div class="form-group">
-                <%= label_tag :results_per_page %>
+                <%= label_tag :results_per_page, nil, for: nil %>
                 <%= text_field_tag :results_per_page, params[:results_per_page], class: 'form-control', placeholder: t(:results_per_page) %>
             </div>
         </div>
