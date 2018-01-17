@@ -1,0 +1,37 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            <%= t(:general) %>
+        </h3>
+    </div>
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt><%= t(:name) %></dt>
+            <dd><%= @domain.name %></dd>
+
+            <dt><%= t(:registered_at) %></dt>
+            <dd><%= l(@domain.registered_at) %></dd>
+
+            <dt><%= t(:registrar_name) %></dt>
+            <dd><%= link_to(@domain.registrar, admin_registrar_path(@domain.registrar)) %></dd>
+
+            <dt><%= t(:authinfo_pw) %></dt>
+            <dd><%= text_field_tag :password, @domain.auth_info, readonly: true, class: 'partially-hidden' %></dd>
+
+            <dt><%= t(:valid_from) %></dt>
+            <dd><%= l(@domain.valid_from) %></dd>
+
+            <dt><%= t(:valid_to) %></dt>
+            <dd><%= l(@domain.valid_to) %></dd>
+
+            <dt><%= t('.outzone_time') %></dt>
+            <dd><%= l(@domain.outzone_at) %></dd>
+
+            <dt><%= t('.delete_time') %></dt>
+            <dd><%= l(@domain.delete_at) %></dd>
+
+            <dt><%= t('.force_delete_time') %></dt>
+            <dd><%= l(@domain.force_delete_at) %></dd>
+        </dl>
+    </div>
+</div>

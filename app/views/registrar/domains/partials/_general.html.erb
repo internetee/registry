@@ -1,0 +1,35 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            <%= t(:general) %>
+        </h3>
+    </div>
+
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt><%= t(:authinfo_pw) %></dt>
+            <dd><%= @data.css('pw').text.present? ? @data.css('pw').text : t('hidden') %></dd>
+
+            <% if @data.css('pw').text.blank? %>
+                <dt><%= t(:registrar_name) %></dt>
+                <dd><%= @data.css('clID').text %></dd>
+            <% end %>
+
+            <% registrant = Contact.find_by_code(@data.css('registrant').text) %>
+            <dt><%= t('.registrant') %></dt>
+            <dd><%= "#{registrant.name} (#{@data.css('registrant').text})" %></dd>
+
+            <dt><%= t('.registered') %></dt>
+            <dd><%= @data.css('crDate').text %></dd>
+
+            <dt><%= t(:valid_to) %></dt>
+            <dd><%= @data.css('exDate').text %></dd>
+
+            <dt><%= t('.created') %></dt>
+            <dd><%= @data.css('crDate').text %></dd>
+
+            <dt><%= t('.updated') %></dt>
+            <dd><%= @data.css('upDate').text %></dd>
+        </dl>
+    </div>
+</div>
