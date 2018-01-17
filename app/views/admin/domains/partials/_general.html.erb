@@ -15,8 +15,11 @@
             <dt><%= t(:registrar_name) %></dt>
             <dd><%= link_to(@domain.registrar, admin_registrar_path(@domain.registrar)) %></dd>
 
-            <dt><%= t(:authinfo_pw) %></dt>
-            <dd><%= text_field_tag :password, @domain.auth_info, readonly: true, class: 'partially-hidden' %></dd>
+            <dt><%= Domain.human_attribute_name :auth_info %></dt>
+            <dd>
+                <%= tag :input, type: 'text', value: @domain.auth_info, readonly: true,
+                        class: 'form-control input-sm' %>
+            </dd>
 
             <dt><%= t(:valid_from) %></dt>
             <dd><%= l(@domain.valid_from) %></dd>

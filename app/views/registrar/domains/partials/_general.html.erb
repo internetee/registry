@@ -7,8 +7,14 @@
 
     <div class="panel-body">
         <dl class="dl-horizontal">
-            <dt><%= t(:authinfo_pw) %></dt>
-            <dd><%= @data.css('pw').text.present? ? @data.css('pw').text : t('hidden') %></dd>
+            <dt><%= Domain.human_attribute_name :auth_info %></dt>
+            <dd>
+                <% if @data.css('pw').text.present? %>
+                    <%= tag(:input, type: 'text', value: @data.css('pw').text, readonly: true,
+                            class: 'form-control input-sm') %>
+                <% end %>
+            </dd>
+
 
             <% if @data.css('pw').text.blank? %>
                 <dt><%= t(:registrar_name) %></dt>

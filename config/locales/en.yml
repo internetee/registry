@@ -804,7 +804,6 @@ en:
   manage: Manage
   pending_epp: Pending epp
   id: ID
-  hidden: '[hidden]'
   created_at_from: 'Created at from'
   created_at_until: 'Created at until'
   is_registrant: 'Is registrant'
