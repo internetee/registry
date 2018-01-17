@@ -1,12 +1,12 @@
 <div class="page-header">
     <div class="row">
-        <div class="col-sm-10">
+        <div class="col-sm-9">
             <h1><%= t '.header' %></h1>
         </div>
 
-        <div class="col-sm-2 text-right">
-            <%= link_to t(:new), new_registrar_domain_path, class: 'btn btn-primary' %>
-            <%= link_to t(:transfer), transfer_registrar_domains_path, class: 'btn btn-default' %>
+        <div class="col-sm-3 text-right">
+            <%= link_to t('.new_btn'), new_registrar_domain_path, class: 'btn btn-primary' %>
+            <%= link_to t('.transfer_btn'), transfer_registrar_domains_path, class: 'btn btn-default' %>
         </div>
     </div>
 </div>
@@ -27,14 +27,12 @@
                             <%= sort_link(@q, 'name') %>
                         </th>
                         <th class="col-xs-2">
-                            <%= sort_link(@q, 'registrant_name', t('.registrant')) %>
+                            <%= sort_link @q, 'registrant_name', Registrant.model_name.human %>
                         </th>
                         <th class="col-xs-2">
-                            <%= sort_link(@q, 'valid_to', t(:valid_to)) %>
+                            <%= sort_link @q, 'valid_to', Domain.human_attribute_name(:expire_time) %>
                         </th>
-                        <th class="col-xs-2">
-                            <%= t('actions') %>
-                        </th>
+                        <th class="col-xs-2"></th>
                     </tr>
                 </thead>
 

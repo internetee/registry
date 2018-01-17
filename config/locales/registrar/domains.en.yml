@@ -3,7 +3,8 @@ en:
     domains:
       index:
         header: Domains
-        registrant: Registrant
+        new_btn: New domain
+        transfer_btn: Transfer
         csv:
           domain_name: Domain
           registrant_name: Registrant name
