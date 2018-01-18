@@ -7,6 +7,7 @@ en:
         transfer_btn: Transfer
         csv:
           domain_name: Domain
+          auth_info: Auth info
           registrant_name: Registrant name
           registrant_code: Registrant code
           expire_time: Date of expiry
