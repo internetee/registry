@@ -61,29 +61,28 @@
     </div>
 
     <div class="row">
-        <div class="col-md-6"></div>
-        <div class="col-md-3">
-            <div class="form-group">
-                <%= label_tag :results_per_page, nil, for: nil %>
-                <%= text_field_tag :results_per_page, params[:results_per_page], class: 'form-control',
-                                   placeholder: t(:results_per_page) %>
-            </div>
-        </div>
-
-        <div class="col-md-3 actions">
-            <button class="btn btn-primary search">
-                &nbsp;
-                <span class="glyphicon glyphicon-search"></span>
-                &nbsp;
-            </button>
-            <%= link_to t('.reset_btn'), registrar_domains_path, class: 'btn btn-default' %>
+        <div class="col-md-2">
+            <%= label_tag :results_per_page, nil, for: nil %>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-2">
+            <div class="form-group">
+                <%= text_field_tag :results_per_page, params[:results_per_page], class: 'form-control',
+                                   placeholder: t(:results_per_page) %>
+            </div>
+        </div>
+
+        <div class="col-md-offset-6 col-md-4 text-right">
+            <button class="btn btn-primary search">
+                &nbsp;
+                <span class="glyphicon glyphicon-search"></span>
+                &nbsp;
+            </button>
             <%= button_tag t('.download_btn'), class: 'btn btn-primary export-domains-csv-btn',
                            formaction: registrar_domains_path(format: 'csv') %>
+            <%= link_to t('.reset_btn'), registrar_domains_path, class: 'btn btn-default' %>
         </div>
     </div>
 <% end %>
