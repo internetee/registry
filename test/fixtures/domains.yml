@@ -1,14 +1,20 @@
-one:
-  name: one.test
+shop:
+  name: shop.test
   registrar: valid
   registrant: john
+  auth_info: 65078d5
+  valid_to: 2010-07-05
 
-two:
-  name: two.test
+airport:
+  name: airport.test
   registrar: valid
   registrant: john
+  auth_info: 55438j5
+  valid_to: 2010-07-05
 
-three:
-  name: three.test
+library:
+  name: library.test
   registrar: valid
   registrant: acme_ltd
+  auth_info: 45118f5
+  valid_to: 2010-07-05

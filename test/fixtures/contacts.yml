@@ -4,6 +4,7 @@ john:
   ident_type: priv
   ident_country_code: US
   registrar: acme
+  code: john-001
 
 jane:
   name: Jane
@@ -11,10 +12,12 @@ jane:
   ident_type: priv
   ident_country_code: US
   registrar: acme
+  code: jane-001
 
 acme_ltd:
-  name: Acme Ltd.
+  name: Acme Ltd
   ident: 1234
   ident_type: org
   registrar: acme
   ident_country_code: US
+  code: acme-ltd-001
