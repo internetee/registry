@@ -332,7 +332,6 @@ en:
   approve: 'Approve'
   domain_already_belongs_to_the_querying_registrar: 'Domain already belongs to the querying registrar'
   other_registrar_has_already_requested_to_transfer_this_domain: 'Other registrar has already requested to transfer this domain.'
-  transfer_domain: 'Transfer domain'
   failed_to_request_domain_transfer: 'Failed to request domain transfer' #not used atm
   domain_transfer: 'Domain transfer'
   request_domain_transfer: 'Request domain transfer'
@@ -548,7 +547,6 @@ en:
   cur_exp_date: 'curExpDate'
   transfer: 'Transfer'
   query: 'Query'
-  transfer_domain: 'Transfer domain'
   reject: 'Reject'
   approve: 'Approve'
   contact_info: 'Contact info'
