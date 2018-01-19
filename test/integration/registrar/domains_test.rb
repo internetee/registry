@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class DomainsTest < ActionDispatch::IntegrationTest
+class RegistrarDomainsTest < ActionDispatch::IntegrationTest
   def setup
     login_as users(:api)
   end
