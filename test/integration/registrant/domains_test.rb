@@ -10,16 +10,16 @@ class RegistrantDomainsTest < ActionDispatch::IntegrationTest
 
   def test_shows_domains_where_current_user_is_registrant
     visit registrant_domains_url
-    assert_text 'one.test'
+    assert_text 'shop.test'
   end
 
   def test_shows_domains_where_current_user_is_contact_person
     visit registrant_domains_url
-    assert_text 'two.test'
+    assert_text 'airport.test'
   end
 
   def test_shows_domains_where_current_user_has_associated_organizations
     visit registrant_domains_url
-    assert_text 'three.test'
+    assert_text 'library.test'
   end
 end
