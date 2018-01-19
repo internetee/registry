@@ -97,11 +97,6 @@ en:
         domain:
           <<: *epp_domain_ar_attributes
 
-        domain_transfer:
-          attributes:
-            base:
-              transfer_can_be_approved_only_by_current_registrar: 'Transfer can be approved only by current domain registrar'
-
         nameserver:
           attributes:
             hostname:
@@ -326,26 +321,9 @@ en:
   starting_balance: 'Starting balance'
   destroyed: 'Destroyed'
 
-  domain_transfer_requested: 'Domain transfer requested!'
-  domain_transfer_approved: 'Domain transfer approved!'
-  failed_to_approve_domain_transfer: 'Failed to approve domain transfer'
   approve: 'Approve'
   domain_already_belongs_to_the_querying_registrar: 'Domain already belongs to the querying registrar'
-  other_registrar_has_already_requested_to_transfer_this_domain: 'Other registrar has already requested to transfer this domain.'
-  failed_to_request_domain_transfer: 'Failed to request domain transfer' #not used atm
-  domain_transfer: 'Domain transfer'
-  request_domain_transfer: 'Request domain transfer'
-  domain_valid_to: 'Domain valid to'
-  accept_time: 'Accept time'
-  transfer_from: 'Transfer from'
-  transferred_at: 'Transferred at'
-  domain_transfers_list: 'Domain transfers list'
-  domain_transfers: 'Domain transfers'
 
-  password_invalid: 'Password invalid!'
-  domain_was_not_found: 'Domain was not found!'
-  domain_list: 'Domain list'
-  create_new_domain: 'Create new domain'
   welcome: 'Welcome!'
   edit_statuses: 'Edit statuses'
   contact_list: 'Contact list'
@@ -420,7 +398,6 @@ en:
   tech_contacts_min_count: 'Tech contacts minimum count'
   tech_contacts_max_count: 'Tech contacts maximum count'
   action_failed_due_to_server_error: 'Action failed due to server error'
-  pending_transfer_was_not_found: 'Pending transfer was not found'
   transfer_can_be_rejected_only_by_current_registrar: 'Transfer can be rejected only by current registrar'
   request_command: 'Request command'
   request_object: 'Request object'
