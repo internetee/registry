@@ -13,7 +13,7 @@ en:
           expire_time: Date of expiry
 
       search_form:
-        download_btn: Download
+        download_btn: Download as CSV
         reset_btn: Reset
 
       domain:
