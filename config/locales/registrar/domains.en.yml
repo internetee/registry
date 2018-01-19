@@ -12,6 +12,9 @@ en:
           registrant_code: Registrant code
           expire_time: Date of expiry
 
+      transfer_index:
+        header: Domain transfer
+
       search_form:
         download_btn: Download as CSV
         reset_btn: Reset
