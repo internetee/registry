@@ -1,15 +1,12 @@
-DEFAULTS: &DEFAULTS
-  username: test
-
 api:
-  <<: *DEFAULTS
+  username: test
   type: ApiUser
   registrar: valid
   roles:
     - super
 
 admin:
-  <<: *DEFAULTS
+  username: test
   type: AdminUser
   country_code: US
   roles:
