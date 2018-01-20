@@ -1,5 +1,4 @@
 class DomainTransfer < ActiveRecord::Base
-  include Versions # version/domain_transfer_version.rb
   belongs_to :domain
 
   belongs_to :transfer_from, class_name: 'Registrar'

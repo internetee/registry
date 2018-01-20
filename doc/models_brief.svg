@@ -249,17 +249,6 @@
 <ellipse fill="none" stroke="#b69a48" cx="3362.88" cy="-77.2265" rx="4.00001" ry="4.00001"/>
 <polygon fill="#b69a48" stroke="#b69a48" points="1658.02,-21.3879 1648.14,-16.6196 1653.02,-21.2529 1648.02,-21.1179 1648.02,-21.1179 1648.02,-21.1179 1653.02,-21.2529 1647.9,-25.6163 1658.02,-21.3879 1658.02,-21.3879"/>
 </g>
-<!-- DomainTransferVersion -->
-<g id="node25" class="node"><title>DomainTransferVersion</title>
-<ellipse fill="none" stroke="black" cx="1568.99" cy="-145" rx="96.6831" ry="18"/>
-<text text-anchor="middle" x="1568.99" y="-141.3" font-family="Times,serif" font-size="14.00">DomainTransferVersion</text>
-</g>
-<!-- DomainTransferVersion&#45;&gt;VersionAssociation -->
-<g id="edge23" class="edge"><title>DomainTransferVersion&#45;&gt;VersionAssociation</title>
-<path fill="none" stroke="#1ab0b8" d="M1568.99,-118.759C1568.99,-97.7907 1568.99,-68.0121 1568.99,-46.4538"/>
-<ellipse fill="none" stroke="#1ab0b8" cx="1568.99" cy="-122.881" rx="4" ry="4"/>
-<polygon fill="#1ab0b8" stroke="#1ab0b8" points="1568.99,-46.313 1573.49,-36.313 1568.99,-41.313 1568.99,-36.313 1568.99,-36.313 1568.99,-36.313 1568.99,-41.313 1564.49,-36.313 1568.99,-46.313 1568.99,-46.313"/>
-</g>
 <!-- BankTransactionVersion -->
 <g id="node26" class="node"><title>BankTransactionVersion</title>
 <ellipse fill="none" stroke="black" cx="590.994" cy="-145" rx="98.5829" ry="18"/>
@@ -1141,13 +1130,6 @@
 <ellipse fill="none" stroke="#21f8a2" cx="742.17" cy="-399.782" rx="4.00002" ry="4.00002"/>
 <polygon fill="#21f8a2" stroke="#21f8a2" points="795.532,-330.958 805.846,-327.236 799.124,-327.481 802.717,-324.003 802.717,-324.003 802.717,-324.003 799.124,-327.481 799.587,-320.77 795.532,-330.958 795.532,-330.958"/>
 <text text-anchor="middle" x="807.994" y="-357.3" font-family="Times,serif" font-size="14.00">versions</text>
-</g>
-<!-- DomainTransfer&#45;&gt;DomainTransferVersion -->
-<g id="edge72" class="edge"><title>DomainTransfer&#45;&gt;DomainTransferVersion</title>
-<path fill="none" stroke="#a8b212" d="M1537.76,-281.077C1544.55,-251.693 1555.8,-203.046 1562.79,-172.849"/>
-<ellipse fill="none" stroke="#a8b212" cx="1536.86" cy="-284.98" rx="4.00001" ry="4.00001"/>
-<polygon fill="#a8b212" stroke="#a8b212" points="1562.81,-172.743 1569.45,-164.014 1563.94,-167.871 1565.06,-163 1565.06,-163 1565.06,-163 1563.94,-167.871 1560.68,-161.986 1562.81,-172.743 1562.81,-172.743"/>
-<text text-anchor="middle" x="1570.99" y="-249.3" font-family="Times,serif" font-size="14.00">versions</text>
 </g>
 <!-- ContactStatus&#45;&gt;ContactStatusVersion -->
 <g id="edge73" class="edge"><title>ContactStatus&#45;&gt;ContactStatusVersion</title>

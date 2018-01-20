@@ -962,9 +962,7 @@ CREATE TABLE domain_transfers (
     transfer_to_id integer,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    wait_until timestamp without time zone,
-    creator_str character varying,
-    updator_str character varying
+    wait_until timestamp without time zone
 );
 
 
@@ -1720,44 +1718,6 @@ CREATE SEQUENCE log_domain_statuses_id_seq
 --
 
 ALTER SEQUENCE log_domain_statuses_id_seq OWNED BY log_domain_statuses.id;
-
-
---
--- Name: log_domain_transfers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE log_domain_transfers (
-    id integer NOT NULL,
-    item_type character varying NOT NULL,
-    item_id integer NOT NULL,
-    event character varying NOT NULL,
-    whodunnit character varying,
-    object json,
-    object_changes json,
-    created_at timestamp without time zone,
-    session character varying,
-    children json,
-    uuid character varying
-);
-
-
---
--- Name: log_domain_transfers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE log_domain_transfers_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: log_domain_transfers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE log_domain_transfers_id_seq OWNED BY log_domain_transfers.id;
 
 
 --
@@ -3033,13 +2993,6 @@ ALTER TABLE ONLY log_domain_statuses ALTER COLUMN id SET DEFAULT nextval('log_do
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY log_domain_transfers ALTER COLUMN id SET DEFAULT nextval('log_domain_transfers_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY log_domains ALTER COLUMN id SET DEFAULT nextval('log_domains_id_seq'::regclass);
 
 
@@ -3504,14 +3457,6 @@ ALTER TABLE ONLY log_domain_contacts
 
 ALTER TABLE ONLY log_domain_statuses
     ADD CONSTRAINT log_domain_statuses_pkey PRIMARY KEY (id);
-
-
---
--- Name: log_domain_transfers_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY log_domain_transfers
-    ADD CONSTRAINT log_domain_transfers_pkey PRIMARY KEY (id);
 
 
 --
@@ -4169,20 +4114,6 @@ CREATE INDEX index_log_domain_statuses_on_item_type_and_item_id ON log_domain_st
 --
 
 CREATE INDEX index_log_domain_statuses_on_whodunnit ON log_domain_statuses USING btree (whodunnit);
-
-
---
--- Name: index_log_domain_transfers_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_domain_transfers_on_item_type_and_item_id ON log_domain_transfers USING btree (item_type, item_id);
-
-
---
--- Name: index_log_domain_transfers_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_domain_transfers_on_whodunnit ON log_domain_transfers USING btree (whodunnit);
 
 
 --
@@ -5110,4 +5041,8 @@ INSERT INTO schema_migrations (version) VALUES ('20180120172042');
 INSERT INTO schema_migrations (version) VALUES ('20180120172649');
 
 INSERT INTO schema_migrations (version) VALUES ('20180120172657');
+
+INSERT INTO schema_migrations (version) VALUES ('20180120182712');
+
+INSERT INTO schema_migrations (version) VALUES ('20180120183441');
 
