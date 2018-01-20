@@ -1,9 +1,18 @@
 bestnames:
-  name: Best Names Ltd
+  name: Best Names
   reg_no: 1234
   code: bestnames
-  country_code: US
   email: info@bestnames.test
-  accounting_customer_code: ACCOUNT001
+  country_code: US
+  accounting_customer_code: bestnames
   language: en
   billing_email: billing@example.com
+
+goodnames:
+  name: Good Names
+  reg_no: 12345
+  code: goodnames
+  email: info@goodnames.test
+  country_code: US
+  accounting_customer_code: goodnames
+  language: en

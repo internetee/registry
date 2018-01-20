@@ -10,7 +10,7 @@ class ShowRegistrarTest < ActionDispatch::IntegrationTest
   end
 
   def test_accounting_customer_code
-    assert_text 'ACCOUNT001'
+    assert_text 'bestnames'
   end
 
   def test_language
