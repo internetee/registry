@@ -6,10 +6,8 @@ class DomainTransfer < ActiveRecord::Base
 
   PENDING = 'pending'
   CLIENT_APPROVED = 'clientApproved'
-  CLIENT_CANCELLED = 'clientCancelled'
   CLIENT_REJECTED = 'clientRejected'
   SERVER_APPROVED = 'serverApproved'
-  SERVER_CANCELLED = 'serverCancelled'
 
   before_create :set_wait_until
   def set_wait_until
