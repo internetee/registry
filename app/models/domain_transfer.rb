@@ -38,18 +38,6 @@ class DomainTransfer < ActiveRecord::Base
     status == PENDING
   end
 
-  def approve_as_client
-    transaction do
-      self.status = DomainTransfer::CLIENT_APPROVED
-      self.transferred_at = Time.zone.now
-      save
-
-      domain.generate_auth_info
-      domain.registrar = transfer_to
-      domain.save(validate: false)
-    end
-  end
-
   def notify_losing_registrar(contacts, registrant)
     transfer_from.messages.create!(
       body: I18n.t('domain_transfer_was_approved', contacts: contacts, registrant: registrant),

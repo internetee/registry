@@ -784,7 +784,6 @@ TooManyStatements:
   - DomainCron#self.start_expire_period
   - DomainCron#self.start_redemption_grace_period
   - DomainMailModel#domain_info
-  - DomainTransfer#approve_as_client
   - Epp::Contact#add_legal_file_to_new
   - Epp::Contact#attrs_from
   - Epp::Contact#check_availability
