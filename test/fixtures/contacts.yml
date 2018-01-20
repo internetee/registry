@@ -3,7 +3,7 @@ john:
   ident: 1234
   ident_type: priv
   ident_country_code: US
-  registrar: acme
+  registrar: bestnames
   code: john-001
 
 jane:
@@ -11,13 +11,13 @@ jane:
   ident: 1234
   ident_type: priv
   ident_country_code: US
-  registrar: acme
+  registrar: bestnames
   code: jane-001
 
 acme_ltd:
   name: Acme Ltd
   ident: 1234
   ident_type: org
-  registrar: acme
+  registrar: bestnames
   ident_country_code: US
   code: acme-ltd-001

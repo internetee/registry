@@ -1,7 +1,8 @@
 api:
   username: test
+  password: test
   type: ApiUser
-  registrar: valid
+  registrar: bestnames
   roles:
     - super
 

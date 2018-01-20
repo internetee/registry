@@ -5,7 +5,7 @@ class ShowRegistrarTest < ActionDispatch::IntegrationTest
 
   def setup
     login_as users(:admin)
-    @registrar = registrars(:complete)
+    @registrar = registrars(:bestnames)
     visit admin_registrar_path(@registrar)
   end
 

@@ -1,21 +1,9 @@
-DEFAULTS: &DEFAULTS
-  name: Acme Ltd
+bestnames:
+  name: Best Names Ltd
   reg_no: 1234
+  code: bestnames
   country_code: US
-  email: acme@example.com
-  code: 1234
+  email: info@bestnames.test
   accounting_customer_code: ACCOUNT001
   language: en
-
-valid:
-  <<: *DEFAULTS
-
-complete:
-  <<: *DEFAULTS
-  name: 2
-  reg_no: 2
-  code: 2
-  website: example.com
-  email: info@example.com
   billing_email: billing@example.com
-  vat_no: US12345
