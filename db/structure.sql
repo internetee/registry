@@ -4506,6 +4506,14 @@ ALTER TABLE ONLY domains
 
 
 --
+-- Name: fk_rails_59c422f73d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY domain_transfers
+    ADD CONSTRAINT fk_rails_59c422f73d FOREIGN KEY (transfer_from_id) REFERENCES registrars(id);
+
+
+--
 -- Name: fk_rails_78c376257f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4514,11 +4522,27 @@ ALTER TABLE ONLY prices
 
 
 --
+-- Name: fk_rails_833ed7f3c0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY domain_transfers
+    ADD CONSTRAINT fk_rails_833ed7f3c0 FOREIGN KEY (transfer_to_id) REFERENCES registrars(id);
+
+
+--
 -- Name: fk_rails_86cd2b09f5; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY account_activities
     ADD CONSTRAINT fk_rails_86cd2b09f5 FOREIGN KEY (account_id) REFERENCES accounts(id);
+
+
+--
+-- Name: fk_rails_87b8e40c63; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY domain_transfers
+    ADD CONSTRAINT fk_rails_87b8e40c63 FOREIGN KEY (domain_id) REFERENCES domains(id);
 
 
 --
@@ -5080,4 +5104,10 @@ INSERT INTO schema_migrations (version) VALUES ('20180112080312');
 INSERT INTO schema_migrations (version) VALUES ('20180112084221');
 
 INSERT INTO schema_migrations (version) VALUES ('20180112084442');
+
+INSERT INTO schema_migrations (version) VALUES ('20180120172042');
+
+INSERT INTO schema_migrations (version) VALUES ('20180120172649');
+
+INSERT INTO schema_migrations (version) VALUES ('20180120172657');
 
