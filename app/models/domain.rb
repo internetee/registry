@@ -672,6 +672,11 @@ class Domain < ActiveRecord::Base
     pending_json['new_registrant_id']
   end
 
+  def transfer(new_registrar)
+    self.registrar = new_registrar
+    regenerate_auth_info
+  end
+
   def self.to_csv
     CSV.generate do |csv|
       csv << column_names
@@ -704,6 +709,12 @@ class Domain < ActiveRecord::Base
 
   def self.uses_zone?(zone)
     exists?(["name ILIKE ?", "%.#{zone.origin}"])
+  end
+
+  private
+
+  def regenerate_auth_info
+    generate_auth_info!
   end
 end
 # rubocop: enable Metrics/ClassLength
