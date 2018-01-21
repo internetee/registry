@@ -79,7 +79,7 @@ en:
             period:
               not_a_number: 'Period is not a number'
               not_an_integer: 'Period must be an integer'
-            auth_info:
+            transfer_code:
               wrong_pw: 'Authorization error'
             domain_statuses:
               invalid: 'Statuses are invalid'

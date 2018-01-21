@@ -3,7 +3,7 @@ shop:
   name_dirty: shop.test
   registrar: bestnames
   registrant: john
-  auth_info: 65078d5
+  transfer_code: 65078d5
   valid_to: 2010-07-05
   period: 1
   period_unit: m
@@ -13,7 +13,7 @@ airport:
   name_dirty: airport.test
   registrar: bestnames
   registrant: john
-  auth_info: 55438j5
+  transfer_code: 55438j5
   valid_to: 2010-07-05
   period: 1
   period_unit: m
@@ -23,7 +23,7 @@ library:
   name_dirty: library.test
   registrar: bestnames
   registrant: acme_ltd
-  auth_info: 45118f5
+  transfer_code: 45118f5
   valid_to: 2010-07-05
   period: 1
   period_unit: m

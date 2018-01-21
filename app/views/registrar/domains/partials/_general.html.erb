@@ -7,7 +7,7 @@
 
     <div class="panel-body">
         <dl class="dl-horizontal">
-            <dt><%= Domain.human_attribute_name :auth_info %></dt>
+            <dt><%= Domain.human_attribute_name :transfer_code %></dt>
             <dd>
                 <% if @data.css('pw').text.present? %>
                     <%= tag(:input, type: 'text', value: @data.css('pw').text, readonly: true,

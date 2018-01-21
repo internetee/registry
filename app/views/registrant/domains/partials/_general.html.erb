@@ -16,9 +16,9 @@
             <dt><%= t(:registrar_name) %></dt>
             <dd><%= link_to(@domain.registrar, registrant_registrar_path(@domain.registrar)) %></dd>
 
-            <dt><%= Domain.human_attribute_name :auth_info %></dt>
+            <dt><%= Domain.human_attribute_name :transfer_code %></dt>
             <dd>
-                <%= tag :input, type: 'text', value: @domain.auth_info, readonly: true,
+                <%= tag :input, type: 'text', value: @domain.transfer_code, readonly: true,
                         class: 'form-control input-sm' %>
             </dd>
 

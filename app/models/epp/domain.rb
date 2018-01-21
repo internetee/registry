@@ -100,7 +100,7 @@ class Epp::Domain < Domain
         [:puny_label, :too_long, { obj: 'name', val: name_puny }]
       ],
       '2201' => [ # Authorisation error
-        [:auth_info, :wrong_pw]
+        [:transfer_code, :wrong_pw]
       ],
       '2202' => [
         [:base, :invalid_auth_information_reserved]
@@ -182,7 +182,7 @@ class Epp::Domain < Domain
     # at[:domain_statuses_attributes] = domain_statuses_attrs(frame, action)
 
     pw = frame.css('authInfo > pw').text
-    at[:auth_info] = pw if pw.present?
+    at[:transfer_code] = pw if pw.present?
 
     if new_record?
       dnskey_frame = frame.css('extension create')
@@ -722,7 +722,7 @@ class Epp::Domain < Domain
       if dt.approved?
         transfer_contacts(current_user.registrar_id)
         dt.notify_losing_registrar(old_contact_codes, old_registrant_code)
-        generate_auth_info
+        generate_transfer_code
         self.registrar = current_user.registrar
       end
 
@@ -751,7 +751,7 @@ class Epp::Domain < Domain
       )
 
       transfer_contacts(pt.transfer_to_id)
-      generate_auth_info
+      generate_transfer_code
       self.registrar = pt.transfer_to
 
       attach_legal_document(self.class.parse_legal_document_from_frame(frame))
@@ -872,7 +872,7 @@ class Epp::Domain < Domain
 
   # For domain transfer
   def authenticate(pw)
-    errors.add(:auth_info, :wrong_pw) if pw != auth_info
+    errors.add(:transfer_code, :wrong_pw) if pw != transfer_code
     errors.empty?
   end
 

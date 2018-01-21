@@ -9,28 +9,28 @@ class DomainTest < ActiveSupport::TestCase
     assert @domain.valid?
   end
 
-  def test_generates_random_auth_info_if_new
+  def test_generates_random_transfer_code_if_new
     domain = Domain.new
     another_domain = Domain.new
 
-    refute_empty domain.auth_info
-    refute_empty another_domain.auth_info
-    refute_equal domain.auth_info, another_domain.auth_info
+    refute_empty domain.transfer_code
+    refute_empty another_domain.transfer_code
+    refute_equal domain.transfer_code, another_domain.transfer_code
   end
 
-  def test_does_not_regenerate_auth_info_if_persisted
-    original_auth_info = @domain.auth_info
+  def test_does_not_regenerate_transfer_code_if_persisted
+    original_transfer_code = @domain.transfer_code
     @domain.save!
     @domain.reload
-    assert_equal original_auth_info, @domain.auth_info
+    assert_equal original_transfer_code, @domain.transfer_code
   end
 
   def test_transfers_domain
-    old_auth_info = @domain.auth_info
+    old_transfer_code = @domain.transfer_code
     new_registrar = registrars(:goodnames)
     @domain.transfer(new_registrar)
 
     assert_equal new_registrar, @domain.registrar
-    refute_same @domain.auth_info, old_auth_info
+    refute_same @domain.transfer_code, old_transfer_code
   end
 end

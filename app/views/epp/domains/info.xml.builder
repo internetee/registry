@@ -55,7 +55,7 @@ xml.epp_head do
 
         if can? :view_password, @domain, @password
           xml.tag!('domain:authInfo') do
-            xml.tag!('domain:pw', @domain.auth_info)
+            xml.tag!('domain:pw', @domain.transfer_code)
           end
         end
       end
