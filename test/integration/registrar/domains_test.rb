@@ -2,7 +2,7 @@ require 'test_helper'
 
 class RegistrarDomainsTest < ActionDispatch::IntegrationTest
   def setup
-    login_as users(:api)
+    login_as users(:api_bestnames)
   end
 
   def test_downloads_domain_list_as_csv

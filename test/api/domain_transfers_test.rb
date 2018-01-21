@@ -14,6 +14,6 @@ class Repp::DomainTransfersTest < ActionDispatch::IntegrationTest
   private
 
   def http_auth_key
-    ActionController::HttpAuthentication::Basic.encode_credentials(users(:api).username, users(:api).password)
+    ActionController::HttpAuthentication::Basic.encode_credentials(users(:api_bestnames).username, users(:api_bestnames).password)
   end
 end
