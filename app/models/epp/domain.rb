@@ -722,7 +722,7 @@ class Epp::Domain < Domain
       if dt.approved?
         transfer_contacts(current_user.registrar_id)
         dt.notify_losing_registrar(old_contact_codes, old_registrant_code)
-        generate_auth_info!
+        generate_auth_info
         self.registrar = current_user.registrar
       end
 

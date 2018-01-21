@@ -538,11 +538,6 @@ RSpec.describe Domain do
     expect(domain.errors[:base]).to include('Required parameter missing; reserved>pw element required for reserved domains')
   end
 
-  it 'generates auth info' do
-    d = create(:domain)
-    expect(d.auth_info).to_not be_empty
-  end
-
   it 'manages statuses automatically' do
     d = build(:domain)
 

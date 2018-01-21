@@ -6,6 +6,7 @@ class Domain < ActiveRecord::Base
   include Concerns::Domain::Activatable
   include Concerns::Domain::ForceDelete
   include Concerns::Domain::Deletable
+  include Concerns::Domain::Transferable
 
   has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
 
@@ -79,9 +80,7 @@ class Domain < ActiveRecord::Base
     self.status_notes = {} if status_notes.nil?
   end
 
-  before_create :generate_auth_info
   before_create -> { self.reserved = in_reserved_list?; nil }
-
   before_save :manage_automatic_statuses
   before_save :touch_always_version
   def touch_always_version
@@ -497,19 +496,6 @@ class Domain < ActiveRecord::Base
     Registrant.find_by(id: pending_json['new_registrant_id'])
   end
 
-  def generate_auth_info
-    return if auth_info.present?
-    generate_auth_info!
-  end
-
-  # rubocop:disable Lint/Loop
-  def generate_auth_info!
-    begin
-      self.auth_info = SecureRandom.hex
-    end while self.class.exists?(auth_info: auth_info)
-  end
-  # rubocop:enable Lint/Loop
-
   def set_graceful_expired
     self.outzone_at = expire_time + self.class.expire_warning_period
     self.delete_at = outzone_at + self.class.redemption_grace_period
@@ -672,11 +658,6 @@ class Domain < ActiveRecord::Base
     pending_json['new_registrant_id']
   end
 
-  def transfer(new_registrar)
-    self.registrar = new_registrar
-    regenerate_auth_info
-  end
-
   def self.to_csv
     CSV.generate do |csv|
       csv << column_names
@@ -709,12 +690,6 @@ class Domain < ActiveRecord::Base
 
   def self.uses_zone?(zone)
     exists?(["name ILIKE ?", "%.#{zone.origin}"])
-  end
-
-  private
-
-  def regenerate_auth_info
-    generate_auth_info!
   end
 end
 # rubocop: enable Metrics/ClassLength
