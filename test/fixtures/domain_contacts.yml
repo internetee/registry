@@ -1,4 +1,14 @@
-two_jane:
-  domain: two
-  contact: jane
+shop_john:
+  domain: shop
+  contact: john
+  type: AdminDomainContact
+
+airport_john:
+  domain: airport
+  contact: john
+  type: AdminDomainContact
+
+library_john:
+  domain: library
+  contact: john
   type: AdminDomainContact
