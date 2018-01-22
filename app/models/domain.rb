@@ -104,6 +104,7 @@ class Domain < ActiveRecord::Base
   validates :name_dirty, domain_name: true, uniqueness: true
   validates :puny_label, length: { maximum: 63 }
   validates :period, presence: true, numericality: { only_integer: true }
+  validates :transfer_code, presence: true
 
   validate :validate_reservation
   def validate_reservation

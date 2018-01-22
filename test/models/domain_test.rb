@@ -9,6 +9,12 @@ class DomainTest < ActiveSupport::TestCase
     assert @domain.valid?
   end
 
+  def test_rejects_absent_transfer_code
+    @domain.transfer_code = nil
+    @domain.validate
+    assert @domain.invalid?
+  end
+
   def test_generates_random_transfer_code_if_new
     domain = Domain.new
     another_domain = Domain.new
