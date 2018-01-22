@@ -115,7 +115,7 @@ Domain name mapping protocol short version:
         <domain:name>        1        Domain name. Can contain unicode characters. 
                                       Attribute: hosts="all / del / sub / none"
         <domain:authInfo>    0-1      Required if registrar is not the owner of the domain.
-          <domain:pw>        1        Domain password. Attribute: roid="String"
+          <domain:pw>        1        Domain transfer code. Attribute: roid="String"
     <clTRID>                 0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-domain-returns-domain-info)
@@ -148,7 +148,7 @@ Domain name mapping protocol short version:
       <domain:transfer>      1        Attribute: xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd"
         <domain:name>        1        Domain name. Can contain unicode characters. 
         <domain:authInfo>    1       
-          <domain:pw>        1        Domain password. Attribute: roid="String"
+          <domain:pw>        1        Domain transfer code. Attribute: roid="String"
     <extension>              0-1     
       <eis:extdata>          0-1      Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
         <eis:legalDocument>  0-1      Base64 encoded document.  
