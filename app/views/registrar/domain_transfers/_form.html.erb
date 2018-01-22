@@ -11,10 +11,10 @@
 
     <div class="form-group">
         <div class="col-md-3 control-label">
-            <%= label_tag :password, t(:password), class: 'required' %>
+            <%= label_tag :transfer_code, nil, class: 'required' %>
         </div>
         <div class="col-md-7">
-            <%= text_field_tag :password, params[:password], class: 'form-control', autocomplete: 'off',
+            <%= text_field_tag :transfer_code, params[:transfer_code], class: 'form-control', autocomplete: 'off',
                                required: true %>
         </div>
     </div>

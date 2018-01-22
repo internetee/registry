@@ -24,7 +24,7 @@ class RegistrarDomainsTest < ActionDispatch::IntegrationTest
     visit registrar_domains_url
     click_link 'Transfer'
     fill_in 'Name', with: 'shop.test'
-    fill_in 'Password', with: '65078d5'
+    fill_in 'Transfer code', with: '65078d5'
     click_button 'Transfer'
 
     assert_text 'Transfer requested at: 2010-07-05 10:30:00'
