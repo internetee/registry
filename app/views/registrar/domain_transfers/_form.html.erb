@@ -4,8 +4,8 @@
             <%= label_tag :domain_name, nil, class: 'required' %>
         </div>
         <div class="col-md-7">
-            <%= text_field_tag :domain_name, params[:domain_name], class: 'form-control', autocomplete: 'off',
-                               autofocus: true, required: true %>
+            <%= text_field_tag :domain_name, params[:domain_name], autofocus: true, required: true,
+                               class: 'form-control' %>
         </div>
     </div>
 
