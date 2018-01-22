@@ -1,0 +1,8 @@
+en:
+  registrar:
+    domain_transfers:
+      new:
+        header: Domain transfer
+
+      create:
+        header: Domain transfer

@@ -29,4 +29,10 @@ class RegistrarDomainsTest < ActionDispatch::IntegrationTest
 
     assert_text 'Transfer requested at: 2010-07-05 10:30:00'
   end
+
+  def test_prefills_domain_transfer_form
+    visit info_registrar_domains_url(domain_name: 'airport.test')
+    click_link 'Transfer'
+    assert_field 'domain_name', with: 'airport.test'
+  end
 end

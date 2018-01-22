@@ -6,7 +6,7 @@
 
 <div class="row">
     <div class="col-md-8">
-        <%= form_tag transfer_registrar_domains_path, class: 'form-horizontal', multipart: true, autocomplete: 'off' do %>
+        <%= form_tag registrar_domain_transfers_path, class: 'form-horizontal', multipart: true, autocomplete: 'off' do %>
             <div class="form-group">
                 <div class="col-md-3 control-label">
                     <%= label_tag :domain_name, t(:name), class: 'required' %>

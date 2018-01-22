@@ -146,16 +146,6 @@ class Registrar
       end
     end
 
-    def transfer
-      authorize! :transfer, Depp::Domain
-      if request.post? && params[:domain_name]
-        @data = @domain.transfer(params)
-        render 'transfer_index' and return unless response_ok?
-      else
-        render 'transfer_index'
-      end
-    end
-
     def search_contacts
       authorize! :create, Depp::Domain
 
