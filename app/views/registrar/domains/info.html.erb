@@ -7,8 +7,8 @@
         <%= link_to(t(:delete), delete_registrar_domains_path(domain_name: params[:domain_name]),
                     class: 'btn btn-default') %>
     <% else %>
-        <%= link_to(t(:transfer), new_registrar_domain_transfer_path(domain_name: params[:domain_name]),
-                    class: 'btn btn-default') %>
+        <%= link_to t('.transfer_btn'), new_registrar_domain_transfer_path(domain_name: params[:domain_name]),
+                    class: 'btn btn-default' %>
     <% end %>
 <% end %>
 <%= render 'shared/title', name: truncate(@data.css('name').text) %>

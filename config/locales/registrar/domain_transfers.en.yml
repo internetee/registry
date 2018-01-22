@@ -3,6 +3,7 @@ en:
     domain_transfers:
       new:
         header: Domain transfer
+        transfer_btn: Transfer
 
       create:
         header: Domain transfer

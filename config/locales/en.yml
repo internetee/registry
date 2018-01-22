@@ -520,7 +520,6 @@ en:
   new: New
   renew_domain: 'Renew domain'
   cur_exp_date: 'curExpDate'
-  transfer: 'Transfer'
   query: 'Query'
   reject: 'Reject'
   approve: 'Approve'
