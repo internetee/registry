@@ -209,7 +209,6 @@ DuplicateMethodCall:
   - Registrar::DomainsController#normalize_search_parameters
   - Registrar::DomainsController#renew
   - Registrar::DomainsController#search_contacts
-  - Registrar::DomainsController#transfer
   - Registrar::DomainsController#update
   - Registrar::InvoicesController#index
   - Registrar::InvoicesController#normalize_search_parameters
