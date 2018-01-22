@@ -441,7 +441,6 @@
 <text text-anchor="start" x="-471.5" y="-625.3" font-family="Times,serif" font-size="14.00">after_sign_out_path_for</text>
 <text text-anchor="start" x="-471.5" y="-610.3" font-family="Times,serif" font-size="14.00">api_user_log_str</text>
 <text text-anchor="start" x="-471.5" y="-595.3" font-family="Times,serif" font-size="14.00">current_root_url</text>
-<text text-anchor="start" x="-471.5" y="-580.3" font-family="Times,serif" font-size="14.00">depp_current_user</text>
 <text text-anchor="start" x="-471.5" y="-565.3" font-family="Times,serif" font-size="14.00">registrant_request?</text>
 <text text-anchor="start" x="-471.5" y="-550.3" font-family="Times,serif" font-size="14.00">registrar_request?</text>
 <text text-anchor="start" x="-471.5" y="-535.3" font-family="Times,serif" font-size="14.00">user_for_paper_trail</text>
