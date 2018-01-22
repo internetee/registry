@@ -10,6 +10,7 @@ class Registrar
     def create
       domain = Depp::Domain.new(current_user: depp_current_user)
       @data = domain.transfer(params)
+      render :new unless response_ok?
     end
   end
 end
