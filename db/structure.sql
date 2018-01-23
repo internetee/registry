@@ -4485,6 +4485,14 @@ ALTER TABLE ONLY account_activities
 
 
 --
+-- Name: fk_rails_c107909cf3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY contacts
+    ADD CONSTRAINT fk_rails_c107909cf3 FOREIGN KEY (copy_from_id) REFERENCES contacts(id);
+
+
+--
 -- Name: fk_rails_c9f635c0b3; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5049,4 +5057,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180120183441');
 INSERT INTO schema_migrations (version) VALUES ('20180121165304');
 
 INSERT INTO schema_migrations (version) VALUES ('20180122105335');
+
+INSERT INTO schema_migrations (version) VALUES ('20180123124342');
 
