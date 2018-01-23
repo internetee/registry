@@ -14,7 +14,7 @@ module Concerns::Domain::Transferable
     domain_transfers.create!(
       transfer_requested_at: Time.zone.now,
       old_registrar: old_registrar,
-      transfer_to: new_registrar
+      new_registrar: new_registrar
     )
 
     transfer_contacts(new_registrar)

@@ -2,7 +2,7 @@ class DomainTransfer < ActiveRecord::Base
   belongs_to :domain
 
   belongs_to :old_registrar, class_name: 'Registrar'
-  belongs_to :transfer_to, class_name: 'Registrar'
+  belongs_to :new_registrar, class_name: 'Registrar'
 
   PENDING = 'pending'
   CLIENT_APPROVED = 'clientApproved'

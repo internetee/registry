@@ -959,7 +959,7 @@ CREATE TABLE domain_transfers (
     transfer_requested_at timestamp without time zone,
     transferred_at timestamp without time zone,
     old_registrar_id integer,
-    transfer_to_id integer,
+    new_registrar_id integer,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     wait_until timestamp without time zone
@@ -4457,7 +4457,7 @@ ALTER TABLE ONLY prices
 --
 
 ALTER TABLE ONLY domain_transfers
-    ADD CONSTRAINT fk_rails_833ed7f3c0 FOREIGN KEY (transfer_to_id) REFERENCES registrars(id);
+    ADD CONSTRAINT fk_rails_833ed7f3c0 FOREIGN KEY (new_registrar_id) REFERENCES registrars(id);
 
 
 --
@@ -5063,4 +5063,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180123124342');
 INSERT INTO schema_migrations (version) VALUES ('20180123154407');
 
 INSERT INTO schema_migrations (version) VALUES ('20180123165604');
+
+INSERT INTO schema_migrations (version) VALUES ('20180123170112');
 

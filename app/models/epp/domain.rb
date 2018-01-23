@@ -666,8 +666,8 @@ class Epp::Domain < Domain
     transaction do
       dt = domain_transfers.create!(
         transfer_requested_at: Time.zone.now,
-        transfer_to: current_user.registrar,
-        old_registrar: registrar
+        old_registrar: registrar,
+        new_registrar: current_user.registrar
       )
 
       if dt.pending?
@@ -709,9 +709,9 @@ class Epp::Domain < Domain
         transferred_at: Time.zone.now
       )
 
-      transfer_contacts(pt.transfer_to)
+      transfer_contacts(pt.new_registrar)
       regenerate_transfer_code
-      self.registrar = pt.transfer_to
+      self.registrar = pt.new_registrar
 
       attach_legal_document(self.class.parse_legal_document_from_frame(frame))
       save!(validate: false)
