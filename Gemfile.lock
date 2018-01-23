@@ -441,8 +441,6 @@ GEM
     thor (0.19.4)
     thread_safe (0.3.6)
     tilt (1.4.1)
-    turbolinks (2.5.3)
-      coffee-rails
     tzinfo (1.2.3)
       thread_safe (~> 0.1)
     unf (0.1.4)
@@ -545,7 +543,6 @@ DEPENDENCIES
   simpleidn (= 0.0.7)
   spring
   spring-commands-rspec
-  turbolinks (= 2.5.3)
   uuidtools (= 2.1.5)
   validates_email_format_of (= 1.6.3)
   webmock

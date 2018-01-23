@@ -41,7 +41,6 @@ gem 'sass-rails',     '5.0.6'   # sass style
 
 gem 'coffee-rails',    '4.1.0'  # coffeescript support
 gem 'jquery-rails',    '4.0.4'  # jquery
-gem 'turbolinks',      '2.5.3'  # faster page load
 gem 'selectize-rails', '0.12.1' # include selectize.js for select
 gem 'jquery-validation-rails', '1.13.1' # validate on client side
 
