@@ -23,7 +23,7 @@ class RegistrarDomainsTest < ActionDispatch::IntegrationTest
 
     visit registrar_domains_url
     click_link 'Transfer'
-    fill_in 'Name', with: 'shop.test'
+    fill_in 'Domain name', with: 'shop.test'
     fill_in 'Transfer code', with: '65078d5'
     click_button 'Transfer'
 

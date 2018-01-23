@@ -10,7 +10,7 @@ module Repp
           new_registrar = current_user.registrar
 
           domain = Domain.find_by(name: domain_name)
-          domain.transfer(registrar: new_registrar, transfer_code: transfer_code)
+          domain.transfer(registrar: new_registrar)
         end
       end
     end
