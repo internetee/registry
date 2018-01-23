@@ -3,9 +3,15 @@ en:
     domain_transfers:
       new:
         header: Domain transfer
+        single: One by one
+        batch: Batch
 
       create:
         header: Domain transfer
 
       form:
-        transfer_btn: Transfer
+        single:
+          transfer_btn: Transfer
+
+        batch:
+          transfer_btn: Transfer

@@ -1,0 +1,18 @@
+<%= form_tag registrar_domain_transfers_path, multipart: true, class: 'form-horizontal' do %>
+    <div class="form-group">
+        <div class="col-md-3 control-label">
+            <%= label_tag 'file' %>
+        </div>
+        <div class="col-md-7">
+            <%= file_field_tag 'file' %>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-10 text-right">
+            <button class="btn btn-warning">
+                <%= t '.transfer_btn' %>
+            </button>
+        </div>
+    </div>
+<% end %>
