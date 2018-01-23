@@ -1,5 +1,7 @@
 john:
   name: John
+  email: john@inbox.test
+  phone: '+555.555'
   ident: 1234
   ident_type: priv
   ident_country_code: US
@@ -8,6 +10,8 @@ john:
 
 jane:
   name: Jane
+  email: jane@mail.test
+  phone: '+555.555'
   ident: 1234
   ident_type: priv
   ident_country_code: US
@@ -16,6 +20,8 @@ jane:
 
 acme_ltd:
   name: Acme Ltd
+  email: acme@outlook.test
+  phone: '+555.555'
   ident: 1234
   ident_type: org
   registrar: bestnames
