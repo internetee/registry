@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="<%= I18n.locale.to_s %>">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <% if content_for? :head_title %>
+        <%= yield :head_title %>
+    <% else %>
+        <title>
+            <%= t(:registrar_head_title) %>
+        </title>
+    <% end %>
+    <%= csrf_meta_tags %>
+    <%= stylesheet_link_tag 'registrar-manifest', media: 'all' %>
+    <%= javascript_include_tag 'registrar-manifest' %>
+    <%= favicon_link_tag 'favicon.ico' %>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button aria-controls="navbar" aria-expanded="false" class="navbar-toggle collapsed" data-target="#navbar" data-toggle="collapse" type="button">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <%= link_to registrar_root_path, class: 'navbar-brand' do %>
+                <%= t(:registrar_head_title) %>
+                <% if unstable_env.present? %>
+                    <div class="text-center">
+                        <small style="color: #0074B3;">
+                            <%= unstable_env %>
+                        </small>
+                    </div>
+                <% end %>
+            <% end %>
+        </div>
+        <%= render 'navbar' %>
+    </div>
+</nav>
+<div class="container">
+    <%= render 'shared/flash' %>
+    <% if depp_controller? %>
+        <%= render 'registrar/shared/epp_results' %>
+    <% end %>
+    <%= yield %>
+</div>
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <%= image_tag 'eis-logo-et.png' %>
+            </div>
+            <div class="col-md-6 text-right">
+                Version
+                <%= CURRENT_COMMIT_HASH %>
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
