@@ -12,7 +12,6 @@
     <% end %>
     <%= csrf_meta_tags %>
     <%= stylesheet_link_tag 'registrar-manifest', media: 'all' %>
-    <%= javascript_include_tag 'registrar-manifest' %>
     <%= favicon_link_tag 'favicon.ico' %>
 </head>
 <body>
@@ -59,5 +58,6 @@
         </div>
     </div>
 </footer>
+<%= javascript_include_tag 'registrar-manifest', async: true %>
 </body>
 </html>
