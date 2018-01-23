@@ -8,6 +8,7 @@ class Registrar
     end
 
     def create
+      params[:request] = true # EPP domain:transfer "op" attribute
       domain = Depp::Domain.new(current_user: depp_current_user)
       @data = domain.transfer(params)
       render :new unless response_ok?
