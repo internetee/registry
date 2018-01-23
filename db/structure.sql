@@ -668,7 +668,7 @@ CREATE TABLE contacts (
     statuses character varying[] DEFAULT '{}'::character varying[],
     status_notes hstore,
     legacy_history_id integer,
-    copy_from_id integer,
+    original_id integer,
     ident_updated_at timestamp without time zone,
     upid integer,
     up_date timestamp without time zone
@@ -4489,7 +4489,7 @@ ALTER TABLE ONLY account_activities
 --
 
 ALTER TABLE ONLY contacts
-    ADD CONSTRAINT fk_rails_c107909cf3 FOREIGN KEY (copy_from_id) REFERENCES contacts(id);
+    ADD CONSTRAINT fk_rails_c107909cf3 FOREIGN KEY (original_id) REFERENCES contacts(id);
 
 
 --
@@ -5059,4 +5059,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180121165304');
 INSERT INTO schema_migrations (version) VALUES ('20180122105335');
 
 INSERT INTO schema_migrations (version) VALUES ('20180123124342');
+
+INSERT INTO schema_migrations (version) VALUES ('20180123154407');
 

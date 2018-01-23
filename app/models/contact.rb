@@ -3,6 +3,7 @@ class Contact < ActiveRecord::Base
   include EppErrors
   include UserEvents
 
+  belongs_to :original, class_name: self.name
   belongs_to :registrar, required: true
   has_many :domain_contacts
   has_many :domains, through: :domain_contacts

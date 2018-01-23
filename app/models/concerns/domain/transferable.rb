@@ -57,7 +57,7 @@ module Concerns::Domain::Transferable
     oc = c.deep_clone
     oc.code = nil
     oc.registrar_id = registrar_id
-    oc.copy_from_id = c.id
+    oc.original = c
     oc.generate_code
     oc.remove_address unless Contact.address_processing?
     oc.save!(validate: false)
