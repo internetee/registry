@@ -26,6 +26,8 @@ module Concerns::Domain::Transferable
     self.transfer_code = SecureRandom.hex
   end
 
+  alias_method :regenerate_transfer_code, :generate_transfer_code
+
   def transfer_contacts(new_registrar)
     transfer_registrant(new_registrar)
     transfer_domain_contacts(new_registrar)
@@ -51,6 +53,4 @@ module Concerns::Domain::Transferable
       copied_ids << c.id
     end
   end
-
-  alias_method :regenerate_transfer_code, :generate_transfer_code
 end
