@@ -76,9 +76,6 @@ gem 'whenever', '0.9.4', require: false
 # country listing
 gem 'countries', :require => 'countries/global'
 
-# cloning activerecord objects
-gem 'deep_cloneable', '2.1.1'
-
 # id + mid login
 # gem 'digidoc_client', '0.3.0'
 gem 'digidoc_client',
