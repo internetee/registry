@@ -103,13 +103,11 @@ UncommunicativeVariableName:
   - Epp::Contact#attrs_from
   - Epp::Contact#check_availability
   - Epp::Domain#check_availability
-  - Epp::Domain#copy_and_transfer_contact
   - Epp::Domain#domain_contact_attrs_from
   - Epp::Domain#domain_status_list_from
   - Epp::Domain#domain_statuses_attrs
   - Epp::Domain#nameservers_from
   - Epp::Domain#parse_period_unit_from_frame
-  - Epp::Domain#transfer_domain_contacts
   - Epp::Domain#validate_contacts
   - Invoice#cancel_overdue_invoices
   - Legacy::Db
@@ -317,7 +315,6 @@ DuplicateMethodCall:
   - Epp::Domain#parse_legal_document_from_frame
   - Epp::Domain#query_transfer
   - Epp::Domain#renew
-  - Epp::Domain#transfer_domain_contacts
   - Epp::Domain#update
   - Epp::Domain#validate_contacts
   - Epp::Domain#validate_exp_dates
@@ -795,7 +792,6 @@ TooManyStatements:
   - Epp::Domain#approve_transfer
   - Epp::Domain#attrs_from
   - Epp::Domain#check_availability
-  - Epp::Domain#copy_and_transfer_contact
   - Epp::Domain#destroy_attrs
   - Epp::Domain#dnskeys_attrs
   - Epp::Domain#domain_contact_attrs_from
@@ -811,7 +807,6 @@ TooManyStatements:
   - Epp::Domain#reject_transfer
   - Epp::Domain#renew
   - Epp::Domain#transfer
-  - Epp::Domain#transfer_domain_contacts
   - Epp::Domain#update
   - Epp::Domain#validate_contacts
   - Invoice#cancel
@@ -881,7 +876,6 @@ UtilityFunction:
   - EppErrors#construct_msg_args_and_value
   - Versions#user_from_id_role_username
   - Depp::Keyrelay#expiry
-  - Epp::Domain#copy_and_transfer_contact
   - Epp::Domain#nameservers_from
   - Epp::Domain::DnsSecKeys#mark
   - Epp::Domain::DnsSecKeys#xm_copy
@@ -956,7 +950,6 @@ FeatureEnvy:
   - Epp::Domain#destroy_attrs
   - Epp::Domain#domain_contact_attrs_from
   - Epp::Domain#domain_status_list_from
-  - Epp::Domain#transfer_domain_contacts
   - LegalDocument#calc_checksum
   - Nameserver#find_by_hash_params
   - RegistrantUser#find_or_create_by_idc_data

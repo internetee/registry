@@ -641,46 +641,6 @@ class Epp::Domain < Domain
     end
   end
 
-  # TODO: Eager load problems here. Investigate how it's possible not to query contact again
-  # Check if versioning works with update_column
-  def transfer_contacts(registrar_id)
-    transfer_registrant(registrar_id)
-    transfer_domain_contacts(registrar_id)
-  end
-
-  def copy_and_transfer_contact(contact_id, registrar_id)
-    c = Contact.find(contact_id) # n+1 workaround
-    oc = c.deep_clone
-    oc.code = nil
-    oc.registrar_id = registrar_id
-    oc.copy_from_id = c.id
-    oc.generate_code
-    oc.remove_address unless Contact.address_processing?
-    oc.save!(validate: false)
-    oc
-  end
-
-  def transfer_registrant(registrar_id)
-    return if registrant.registrar_id == registrar_id
-    self.registrant_id = copy_and_transfer_contact(registrant_id, registrar_id).id
-  end
-
-  def transfer_domain_contacts(registrar_id)
-    copied_ids = []
-    contacts.each do |c|
-      next if copied_ids.include?(c.id) || c.registrar_id == registrar_id
-
-      if registrant_id_was == c.id # registrant was copied previously, do not copy it again
-        oc = OpenStruct.new(id: registrant_id)
-      else
-        oc = copy_and_transfer_contact(c.id, registrar_id)
-      end
-
-      domain_contacts.where(contact_id: c.id).update_all({ contact_id: oc.id }) # n+1 workaround
-      copied_ids << c.id
-    end
-  end
-
   # rubocop: enable Metrics/PerceivedComplexity
   # rubocop: enable Metrics/CyclomaticComplexity
   # rubocop: disable Metrics/MethodLength

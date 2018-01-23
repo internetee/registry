@@ -39,4 +39,20 @@ class DomainTest < ActiveSupport::TestCase
     assert_equal new_registrar, @domain.registrar
     refute_same @domain.transfer_code, old_transfer_code
   end
+
+  def test_transfer_creates_domain_transfer_object
+    new_registrar = registrars(:goodnames)
+
+    assert_difference 'DomainTransfer.count' do
+      @domain.transfer(new_registrar)
+    end
+  end
+
+  def test_transfer_copies_contacts
+    new_registrar = registrars(:goodnames)
+
+    assert_difference 'Contact.count', 2 do
+      @domain.transfer(new_registrar)
+    end
+  end
 end
