@@ -1281,7 +1281,7 @@
 <text text-anchor="start" x="1671" y="-1308.8" font-family="Times,serif" font-size="14.00">status :string</text>
 <text text-anchor="start" x="1671" y="-1293.8" font-family="Times,serif" font-size="14.00">transfer_requested_at :datetime</text>
 <text text-anchor="start" x="1671" y="-1278.8" font-family="Times,serif" font-size="14.00">transferred_at :datetime</text>
-<text text-anchor="start" x="1671" y="-1263.8" font-family="Times,serif" font-size="14.00">transfer_from_id :integer</text>
+<text text-anchor="start" x="1671" y="-1263.8" font-family="Times,serif" font-size="14.00">old_registrar_id :integer</text>
 <text text-anchor="start" x="1671" y="-1248.8" font-family="Times,serif" font-size="14.00">transfer_to_id :integer</text>
 <text text-anchor="start" x="1671" y="-1233.8" font-family="Times,serif" font-size="14.00">created_at :datetime</text>
 <text text-anchor="start" x="1671" y="-1218.8" font-family="Times,serif" font-size="14.00">updated_at :datetime</text>

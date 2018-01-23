@@ -13,7 +13,7 @@ module Concerns::Domain::Transferable
 
     domain_transfers.create!(
       transfer_requested_at: Time.zone.now,
-      transfer_from: old_registrar,
+      old_registrar: old_registrar,
       transfer_to: new_registrar
     )
 

@@ -3,7 +3,7 @@ builder.tag!('domain:trnData', 'xmlns:domain' => 'https://epp.tld.ee/schema/doma
   builder.tag!('domain:trStatus', dt.status)
   builder.tag!('domain:reID', dt.transfer_to.code)
   builder.tag!('domain:reDate', dt.transfer_requested_at.try(:iso8601))
-  builder.tag!('domain:acID', dt.transfer_from.code)
+  builder.tag!('domain:acID', dt.old_registrar.code)
   builder.tag!('domain:acDate', dt.transferred_at.try(:iso8601) || dt.wait_until.try(:iso8601))
   builder.tag!('domain:exDate', dt.domain_valid_to.try(:iso8601))
 end

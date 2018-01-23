@@ -958,7 +958,7 @@ CREATE TABLE domain_transfers (
     status character varying,
     transfer_requested_at timestamp without time zone,
     transferred_at timestamp without time zone,
-    transfer_from_id integer,
+    old_registrar_id integer,
     transfer_to_id integer,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -4441,7 +4441,7 @@ ALTER TABLE ONLY domains
 --
 
 ALTER TABLE ONLY domain_transfers
-    ADD CONSTRAINT fk_rails_59c422f73d FOREIGN KEY (transfer_from_id) REFERENCES registrars(id);
+    ADD CONSTRAINT fk_rails_59c422f73d FOREIGN KEY (old_registrar_id) REFERENCES registrars(id);
 
 
 --
@@ -5061,4 +5061,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180122105335');
 INSERT INTO schema_migrations (version) VALUES ('20180123124342');
 
 INSERT INTO schema_migrations (version) VALUES ('20180123154407');
+
+INSERT INTO schema_migrations (version) VALUES ('20180123165604');
 

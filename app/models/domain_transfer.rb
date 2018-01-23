@@ -1,7 +1,7 @@
 class DomainTransfer < ActiveRecord::Base
   belongs_to :domain
 
-  belongs_to :transfer_from, class_name: 'Registrar'
+  belongs_to :old_registrar, class_name: 'Registrar'
   belongs_to :transfer_to, class_name: 'Registrar'
 
   PENDING = 'pending'
@@ -37,7 +37,7 @@ class DomainTransfer < ActiveRecord::Base
   end
 
   def notify_losing_registrar(contacts, registrant)
-    transfer_from.messages.create!(
+    old_registrar.messages.create!(
       body: I18n.t('domain_transfer_was_approved', contacts: contacts, registrant: registrant),
       attached_obj_id: id,
       attached_obj_type: self.class.to_s

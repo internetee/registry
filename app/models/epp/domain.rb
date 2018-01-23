@@ -667,7 +667,7 @@ class Epp::Domain < Domain
       dt = domain_transfers.create!(
         transfer_requested_at: Time.zone.now,
         transfer_to: current_user.registrar,
-        transfer_from: registrar
+        old_registrar: registrar
       )
 
       if dt.pending?
@@ -696,7 +696,7 @@ class Epp::Domain < Domain
 
   def approve_transfer(frame, current_user)
     pt = pending_transfer
-    if current_user.registrar != pt.transfer_from
+    if current_user.registrar != pt.old_registrar
       throw :epp_error, {
         msg: I18n.t('transfer_can_be_approved_only_by_current_registrar'),
         code: '2304'
@@ -722,7 +722,7 @@ class Epp::Domain < Domain
 
   def reject_transfer(frame, current_user)
     pt = pending_transfer
-    if current_user.registrar != pt.transfer_from
+    if current_user.registrar != pt.old_registrar
       throw :epp_error, {
         msg: I18n.t('transfer_can_be_rejected_only_by_current_registrar'),
         code: '2304'
