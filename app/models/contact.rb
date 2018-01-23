@@ -79,7 +79,6 @@ class Contact < ActiveRecord::Base
   PASSPORT = 'passport'
 
   attr_accessor :deliver_emails
-  attr_accessor :domain_transfer # hack but solves problem faster
 
   #
   # STATUSES

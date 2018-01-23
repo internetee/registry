@@ -1091,7 +1091,6 @@ Attribute:
   - BankStatement#th6_file
   - Versions#version_loader
   - Contact#deliver_emails
-  - Contact#domain_transfer
   - Contact#domains_present
   - Contact#legal_document_id
   - Counter#value
