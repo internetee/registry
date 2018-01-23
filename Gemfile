@@ -48,7 +48,6 @@ gem 'jquery-validation-rails', '1.13.1' # validate on client side
 gem 'kaminari',         '0.16.3'  # pagination
 gem 'coderay',          '1.1.0'   # xml console visualize
 gem 'html5_validators', '1.2.2'   # model requements now automatically on html form
-gem 'nprogress-rails',  '0.1.6.7' # visual loader
 gem 'select2-rails',    '3.5.9.3' # for autocomplete
 gem 'liquid',           '3.0.6'   # for email templates
 
