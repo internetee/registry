@@ -40,17 +40,17 @@ module Concerns::Domain::Transferable
 
   def transfer_domain_contacts(new_registrar)
     copied_ids = []
-    contacts.each do |c|
-      next if copied_ids.include?(c.id) || c.registrar == new_registrar
+    contacts.each do |contact|
+      next if copied_ids.include?(contact.id) || contact.registrar == new_registrar
 
-      if registrant_id_was == c.id # registrant was copied previously, do not copy it again
+      if registrant_id_was == contact.id # registrant was copied previously, do not copy it again
         oc = OpenStruct.new(id: registrant_id)
       else
-        oc = c.transfer(new_registrar)
+        oc = contact.transfer(new_registrar)
       end
 
-      domain_contacts.where(contact_id: c.id).update_all({ contact_id: oc.id }) # n+1 workaround
-      copied_ids << c.id
+      domain_contacts.where(contact_id: contact.id).update_all({ contact_id: oc.id }) # n+1 workaround
+      copied_ids << contact.id
     end
   end
 end
