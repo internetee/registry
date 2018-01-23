@@ -721,7 +721,7 @@ class Epp::Domain < Domain
       if dt.approved?
         transfer_contacts(current_user.registrar_id)
         dt.notify_losing_registrar(old_contact_codes, old_registrant_code)
-        generate_transfer_code
+        regenerate_transfer_code
         self.registrar = current_user.registrar
       end
 
@@ -750,7 +750,7 @@ class Epp::Domain < Domain
       )
 
       transfer_contacts(pt.transfer_to_id)
-      generate_transfer_code
+      regenerate_transfer_code
       self.registrar = pt.transfer_to
 
       attach_legal_document(self.class.parse_legal_document_from_frame(frame))

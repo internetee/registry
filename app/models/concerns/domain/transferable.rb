@@ -7,7 +7,7 @@ module Concerns::Domain::Transferable
 
   def transfer(new_registrar)
     self.registrar = new_registrar
-    generate_transfer_code
+    regenerate_transfer_code
   end
 
   private
@@ -15,4 +15,6 @@ module Concerns::Domain::Transferable
   def generate_transfer_code
     self.transfer_code = SecureRandom.hex
   end
+
+  alias_method :regenerate_transfer_code, :generate_transfer_code
 end
