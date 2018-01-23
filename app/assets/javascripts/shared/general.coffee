@@ -1,5 +1,4 @@
 #= require nprogress
-#= require nprogress-turbolinks
 
 NProgress.configure
   showSpinner: false
@@ -16,7 +15,7 @@ NProgress.configure
   $('#flash').find('div').html(msg)
   $('#flash').show()
 
-$(document).on 'page:change', ->
+$ ->
   today = new Date()
   tomorrow = new Date(today)
   tomorrow.setDate(today.getDate() + 1)

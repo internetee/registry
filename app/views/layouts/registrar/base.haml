@@ -9,8 +9,8 @@
     - else
       %title= t(:registrar_head_title)
     = csrf_meta_tags
-    = stylesheet_link_tag 'registrar-manifest', media: 'all', 'data-turbolinks-track' => true
-    = javascript_include_tag 'registrar-manifest', 'data-turbolinks-track' => true
+    = stylesheet_link_tag 'registrar-manifest', media: 'all'
+    = javascript_include_tag 'registrar-manifest'
     = favicon_link_tag 'favicon.ico'
   %body
     %nav.navbar.navbar-default.navbar-fixed-top
