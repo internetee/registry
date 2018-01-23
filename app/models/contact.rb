@@ -2,6 +2,7 @@ class Contact < ActiveRecord::Base
   include Versions # version/contact_version.rb
   include EppErrors
   include UserEvents
+  include Concerns::Contact::Transferable
 
   belongs_to :original, class_name: self.name
   belongs_to :registrar, required: true

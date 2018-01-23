@@ -17,7 +17,7 @@ module Concerns::Domain::Transferable
       transfer_to: new_registrar
     )
 
-    transfer_contacts(new_registrar.id)
+    transfer_contacts(new_registrar)
   end
 
   private
@@ -26,42 +26,30 @@ module Concerns::Domain::Transferable
     self.transfer_code = SecureRandom.hex
   end
 
-  def transfer_contacts(registrar_id)
-    transfer_registrant(registrar_id)
-    transfer_domain_contacts(registrar_id)
+  def transfer_contacts(new_registrar)
+    transfer_registrant(new_registrar)
+    transfer_domain_contacts(new_registrar)
   end
 
-  def transfer_registrant(registrar_id)
-    return if registrant.registrar_id == registrar_id
-    self.registrant_id = copy_and_transfer_contact(registrant_id, registrar_id).id
+  def transfer_registrant(new_registrar)
+    return if registrant.registrar == new_registrar
+    self.registrant = registrant.transfer(new_registrar)
   end
 
-  def transfer_domain_contacts(registrar_id)
+  def transfer_domain_contacts(new_registrar)
     copied_ids = []
     contacts.each do |c|
-      next if copied_ids.include?(c.id) || c.registrar_id == registrar_id
+      next if copied_ids.include?(c.id) || c.registrar == new_registrar
 
       if registrant_id_was == c.id # registrant was copied previously, do not copy it again
         oc = OpenStruct.new(id: registrant_id)
       else
-        oc = copy_and_transfer_contact(c.id, registrar_id)
+        oc = c.transfer(new_registrar)
       end
 
       domain_contacts.where(contact_id: c.id).update_all({ contact_id: oc.id }) # n+1 workaround
       copied_ids << c.id
     end
-  end
-
-  def copy_and_transfer_contact(contact_id, registrar_id)
-    c = Contact.find(contact_id) # n+1 workaround
-    oc = c.deep_clone
-    oc.code = nil
-    oc.registrar_id = registrar_id
-    oc.original = c
-    oc.generate_code
-    oc.remove_address unless Contact.address_processing?
-    oc.save!(validate: false)
-    oc
   end
 
   alias_method :regenerate_transfer_code, :generate_transfer_code

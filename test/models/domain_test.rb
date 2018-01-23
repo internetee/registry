@@ -31,12 +31,20 @@ class DomainTest < ActiveSupport::TestCase
     assert_equal original_transfer_code, @domain.transfer_code
   end
 
-  def test_transfers_domain
+  def test_changes_registrar
     old_transfer_code = @domain.transfer_code
     new_registrar = registrars(:goodnames)
     @domain.transfer(new_registrar)
 
     assert_equal new_registrar, @domain.registrar
+    refute_same @domain.transfer_code, old_transfer_code
+  end
+
+  def test_regenerates_transfer_code
+    old_transfer_code = @domain.transfer_code
+    new_registrar = registrars(:goodnames)
+    @domain.transfer(new_registrar)
+
     refute_same @domain.transfer_code, old_transfer_code
   end
 

@@ -679,7 +679,7 @@ class Epp::Domain < Domain
       end
 
       if dt.approved?
-        transfer_contacts(current_user.registrar_id)
+        transfer_contacts(current_user.registrar)
         dt.notify_losing_registrar(old_contact_codes, old_registrant_code)
         regenerate_transfer_code
         self.registrar = current_user.registrar
@@ -709,7 +709,7 @@ class Epp::Domain < Domain
         transferred_at: Time.zone.now
       )
 
-      transfer_contacts(pt.transfer_to_id)
+      transfer_contacts(pt.transfer_to)
       regenerate_transfer_code
       self.registrar = pt.transfer_to
 
