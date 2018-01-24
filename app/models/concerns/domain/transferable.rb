@@ -11,13 +11,16 @@ module Concerns::Domain::Transferable
     self.registrar = new_registrar
     regenerate_transfer_code
 
-    domain_transfers.create!(
-      transfer_requested_at: Time.zone.now,
-      old_registrar: old_registrar,
-      new_registrar: new_registrar
-    )
+    transaction do
+      domain_transfers.create!(
+        transfer_requested_at: Time.zone.now,
+        old_registrar: old_registrar,
+        new_registrar: new_registrar
+      )
 
-    transfer_contacts(new_registrar)
+      transfer_contacts(new_registrar)
+      save!
+    end
   end
 
   private
