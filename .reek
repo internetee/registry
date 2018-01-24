@@ -281,7 +281,6 @@ DuplicateMethodCall:
   - Depp::Domain#default_params
   - Depp::Domain#renew
   - Depp::Keyrelay#keyrelay
-  - Depp::User#repp_request
   - Depp::User#validate_existance_in_server
   - Directo#self.dump_result_to_db
   - Directo#self.load_price
@@ -760,7 +759,6 @@ TooManyStatements:
   - Depp::Domain#create_nameservers_hash
   - Depp::Domain#default_params
   - Depp::Domain#transfer
-  - Depp::User#repp_request
   - Depp::User#validate_existance_in_server
   - Directo#self.send_monthly_invoices
   - Directo#self.send_receipts
@@ -938,7 +936,6 @@ FeatureEnvy:
   - Depp::Domain#renew
   - Depp::Domain#transfer
   - Depp::Keyrelay#keyrelay
-  - Depp::User#repp_request
   - DomainMailModel#format
   - Epp::Contact#attach_legal_document
   - Epp::Contact#attrs_from
