@@ -63,7 +63,7 @@ RSpec.describe Contact do
 
   context 'with valid attributes' do
     before :example do
-      @contact = create(:contact, auth_info: 'password')
+      @contact = create(:contact)
     end
 
     it 'should have one version' do
@@ -85,10 +85,6 @@ RSpec.describe Contact do
       @contact.code = 'CID:REG1:should-not-overwrite-old-code-12345'
       @contact.save.should == true
       @contact.code.should == old_code
-    end
-
-    it 'should have static password' do
-      @contact.auth_info.should == 'password'
     end
 
     it 'should have ok status by default' do
@@ -177,23 +173,14 @@ RSpec.describe Contact do
 
           create(:contact,
                            registrar: registrar,
-                           code: 'FIXED:new-code',
-                           auth_info: 'qwe321')
+                           code: 'FIXED:new-code')
           @contact = build(:contact,
                                      registrar: registrar,
-                                     code: 'FIXED:new-code',
-                                     auth_info: 'qwe321')
+                                     code: 'FIXED:new-code')
 
           @contact.validate
 
           expect(@contact.errors).to have_key(:code)
-        end
-
-        it 'should generate a new password' do
-          @contact = build(:contact, code: '123asd', auth_info: nil)
-          @contact.auth_info.should == nil
-          @contact.save.should == true
-          @contact.auth_info.should_not be_nil
         end
 
         it 'should allow supported code format' do
@@ -220,29 +207,6 @@ RSpec.describe Contact do
           @contact.generate_code
           @contact.valid?.should == true
           @contact.code.should =~ /FIXED:..../
-        end
-      end
-
-      context 'after update' do
-        before :example do
-          @contact = build(:contact,
-                                     registrar: create(:registrar, code: 'FIXED'),
-                                     code: '123asd',
-                                     auth_info: 'qwe321')
-          @contact.generate_code
-          @contact.save
-          @contact.code.should == 'FIXED:123ASD'
-          @auth_info = @contact.auth_info
-        end
-
-        it 'should not generate new code' do
-          @contact.update_attributes(name: 'qevciherot23')
-          @contact.code.should == 'FIXED:123ASD'
-        end
-
-        it 'should not generate new auth_info' do
-          @contact.update_attributes(name: 'fvrsgbqevciherot23')
-          @contact.auth_info.should == @auth_info
         end
       end
     end
