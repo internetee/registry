@@ -6,18 +6,20 @@ class ContactTransferTest < ActiveSupport::TestCase
     @new_registrar = registrars(:goodnames)
   end
 
-  def test_rejects_absent_auth_info
+  def test_invalid_without_auth_info
     @contact.auth_info = nil
     @contact.validate
     assert @contact.invalid?
   end
 
-  def test_generates_unique_auth_info_if_contact_is_new
+  def test_generates_default_auth_info
+    contact = Contact.new
+    refute_empty contact.auth_info
+  end
+
+  def test_generated_auth_info_is_random
     contact = Contact.new
     another_contact = Contact.new
-
-    refute_empty contact.auth_info
-    refute_empty another_contact.auth_info
     refute_equal contact.auth_info, another_contact.auth_info
   end
 
@@ -26,6 +28,11 @@ class ContactTransferTest < ActiveSupport::TestCase
     @contact.save!
     @contact.reload
     assert_equal original_auth_info, @contact.auth_info
+  end
+
+  def test_overrides_default_auth_info
+    contact = Contact.new(auth_info: '1bad4f')
+    assert_equal '1bad4f', contact.auth_info
   end
 
   def test_keeps_original_contact_untouched
