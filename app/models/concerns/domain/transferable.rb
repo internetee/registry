@@ -11,7 +11,16 @@ module Concerns::Domain::Transferable
     self.registrar = new_registrar
     regenerate_transfer_code
 
+    contact_codes = contacts.pluck(:code).sort.uniq
+    registrant_code = registrant.code
+
     transaction do
+      old_registrar.messages.create!(
+        body: I18n.t('domain_transfer_was_approved', contacts: contact_codes, registrant: registrant_code),
+        attached_obj_id: id,
+        attached_obj_type: self.class.name
+      )
+
       domain_transfers.create!(
         transfer_requested_at: Time.zone.now,
         old_registrar: old_registrar,

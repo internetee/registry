@@ -52,8 +52,14 @@ class DomainTransferTest < ActiveSupport::TestCase
     end
   end
 
+  def test_creates_message
+    assert_difference 'Message.count' do
+      @domain.transfer(@new_registrar)
+    end
+  end
+
   def test_copies_contacts
-    assert_difference 'Contact.count' do
+    assert_difference 'Contact.count', 2 do
       @domain.transfer(@new_registrar)
     end
   end
