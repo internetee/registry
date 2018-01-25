@@ -45,7 +45,6 @@ class Contact < ActiveRecord::Base
 
   before_validation :to_upcase_country_code
   before_validation :strip_email
-  before_create :generate_auth_info
   before_update :manage_emails
 
   composed_of :identifier,
@@ -312,12 +311,6 @@ class Contact < ActiveRecord::Base
   # it might mean priv or birthday type
   def priv?
     !org?
-  end
-
-  def generate_auth_info
-    return if @generate_auth_info_disabled
-    return if auth_info.present?
-    self.auth_info = SecureRandom.hex(11)
   end
 
   # def auth_info=(pw)
