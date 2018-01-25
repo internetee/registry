@@ -72,6 +72,9 @@ Domain name mapping protocol short version:
         <domain:chg>             0-1       Attributes to change
           <domain:registrant>    0-1       Contact reference to the registrant
                                              Optional attribute: verified="yes/no"
+          <domain:authInfo>      0-1
+            <domain:pw>          1         Transfer code. Attribute: roid="String"
+          </domain:authInfo>
     <extension>                  0-1       Required if registrant is changing
       <secDNS:update>            0-1       Attribute: xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1"
         <secDNS:rem>             0-1      
