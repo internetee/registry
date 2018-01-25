@@ -43,7 +43,7 @@ class DomainTransferTest < ActiveSupport::TestCase
   def test_regenerates_transfer_code
     old_transfer_code = @domain.transfer_code
     @domain.transfer(@new_registrar)
-    refute_same @domain.transfer_code, old_transfer_code
+    refute_same old_transfer_code, @domain.transfer_code
   end
 
   def test_creates_domain_transfer
@@ -53,7 +53,7 @@ class DomainTransferTest < ActiveSupport::TestCase
   end
 
   def test_copies_contacts
-    assert_difference 'Contact.count', 2 do
+    assert_difference 'Contact.count' do
       @domain.transfer(@new_registrar)
     end
   end
