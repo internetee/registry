@@ -652,7 +652,7 @@ CREATE TABLE contacts (
     updated_at timestamp without time zone,
     ident character varying,
     ident_type character varying,
-    auth_info character varying,
+    auth_info character varying NOT NULL,
     name character varying,
     org_name character varying,
     registrar_id integer NOT NULL,
@@ -5065,4 +5065,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180123154407');
 INSERT INTO schema_migrations (version) VALUES ('20180123165604');
 
 INSERT INTO schema_migrations (version) VALUES ('20180123170112');
+
+INSERT INTO schema_migrations (version) VALUES ('20180125092422');
 
