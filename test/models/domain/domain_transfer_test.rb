@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class DomainTest < ActiveSupport::TestCase
+class DomainTransferTest < ActiveSupport::TestCase
   def setup
     @domain = domains(:shop)
   end
