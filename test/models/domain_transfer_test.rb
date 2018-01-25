@@ -5,18 +5,20 @@ class DomainTest < ActiveSupport::TestCase
     @domain = domains(:shop)
   end
 
-  def test_rejects_absent_transfer_code
+  def test_invalid_without_transfer_code
     @domain.transfer_code = nil
     @domain.validate
     assert @domain.invalid?
   end
 
-  def test_generates_random_transfer_code_if_domain_is_new
+  def test_generates_default_transfer_code
+    domain = Domain.new
+    refute_empty domain.transfer_code
+  end
+
+  def test_generated_transfer_code_is_random
     domain = Domain.new
     another_domain = Domain.new
-
-    refute_empty domain.transfer_code
-    refute_empty another_domain.transfer_code
     refute_equal domain.transfer_code, another_domain.transfer_code
   end
 
@@ -25,6 +27,11 @@ class DomainTest < ActiveSupport::TestCase
     @domain.save!
     @domain.reload
     assert_equal original_transfer_code, @domain.transfer_code
+  end
+
+  def test_overrides_default_transfer_code
+    domain = Domain.new(transfer_code: '1bad4f')
+    assert_equal '1bad4f', domain.transfer_code
   end
 
   def test_changes_registrar

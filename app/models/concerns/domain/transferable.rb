@@ -2,7 +2,7 @@ module Concerns::Domain::Transferable
   extend ActiveSupport::Concern
 
   included do
-    after_initialize :generate_transfer_code, if: :new_record?
+    after_initialize :generate_transfer_code, if: 'new_record? && transfer_code.blank?'
   end
 
   def transfer(new_registrar)
