@@ -6,6 +6,8 @@ class RegistrarDomainsTest < ActionDispatch::IntegrationTest
   end
 
   def test_downloads_domain_list_as_csv
+    travel_to Time.zone.parse('2010-07-05 10:30')
+
     expected_csv = <<-CSV.strip_heredoc
       Domain,Transfer code,Registrant name,Registrant code,Date of expiry
       library.test,45118f5,Acme Ltd,acme-ltd-001,2010-07-05
@@ -15,6 +17,7 @@ class RegistrarDomainsTest < ActionDispatch::IntegrationTest
 
     visit registrar_domains_url
     click_button 'Download as CSV'
+    assert_equal 'attachment; filename="Domains_2010-07-05_10.30.csv"', response_headers['Content-Disposition']
     assert_equal expected_csv, page.body
   end
 
