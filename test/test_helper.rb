@@ -4,6 +4,7 @@ require 'rails/test_help'
 require 'minitest/mock'
 require 'capybara/rails'
 require 'capybara/minitest'
+require 'webmock/minitest'
 
 Setting.address_processing = false
 
