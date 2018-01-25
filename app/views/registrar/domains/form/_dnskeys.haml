@@ -68,6 +68,7 @@
               class: 'form-control'
 
 :coffee
+  window.ready = ->
   $("#dnskeys").nestedAttributes
     bindAddTo: $(".add-dnskey")
     afterAdd: (item) ->
