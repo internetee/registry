@@ -3,6 +3,7 @@ require 'test_helper'
 class DomainTransferTest < ActiveSupport::TestCase
   def setup
     @domain = domains(:shop)
+    @new_registrar = registrars(:goodnames)
   end
 
   def test_invalid_without_transfer_code
@@ -16,13 +17,13 @@ class DomainTransferTest < ActiveSupport::TestCase
     refute_empty domain.transfer_code
   end
 
-  def test_generated_transfer_code_is_random
+  def test_random_transfer_code
     domain = Domain.new
     another_domain = Domain.new
     refute_equal domain.transfer_code, another_domain.transfer_code
   end
 
-  def test_does_not_regenerate_transfer_code_if_domain_is_persisted
+  def test_transfer_code_is_not_regenerated_on_update
     original_transfer_code = @domain.transfer_code
     @domain.save!
     @domain.reload
@@ -35,35 +36,26 @@ class DomainTransferTest < ActiveSupport::TestCase
   end
 
   def test_changes_registrar
-    old_transfer_code = @domain.transfer_code
-    new_registrar = registrars(:goodnames)
-    @domain.transfer(new_registrar)
-
-    assert_equal new_registrar, @domain.registrar
-    refute_same @domain.transfer_code, old_transfer_code
+    @domain.transfer(@new_registrar)
+    assert_equal @new_registrar, @domain.registrar
   end
 
   def test_regenerates_transfer_code
     old_transfer_code = @domain.transfer_code
-    new_registrar = registrars(:goodnames)
-    @domain.transfer(new_registrar)
+    @domain.transfer(@new_registrar)
 
     refute_same @domain.transfer_code, old_transfer_code
   end
 
   def test_creates_domain_transfer
-    new_registrar = registrars(:goodnames)
-
     assert_difference 'DomainTransfer.count' do
-      @domain.transfer(new_registrar)
+      @domain.transfer(@new_registrar)
     end
   end
 
   def test_copies_contacts
-    new_registrar = registrars(:goodnames)
-
     assert_difference 'Contact.count', 2 do
-      @domain.transfer(new_registrar)
+      @domain.transfer(@new_registrar)
     end
   end
 end

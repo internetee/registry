@@ -29,7 +29,6 @@ module Repp
             else
               errors << { title: "#{domain_name} transfer code is wrong" }
             end
-
           else
             errors << { title: "#{domain_name} does not exist" }
           end
