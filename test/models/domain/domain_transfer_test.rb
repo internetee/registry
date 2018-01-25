@@ -43,7 +43,6 @@ class DomainTransferTest < ActiveSupport::TestCase
   def test_regenerates_transfer_code
     old_transfer_code = @domain.transfer_code
     @domain.transfer(@new_registrar)
-
     refute_same @domain.transfer_code, old_transfer_code
   end
 
