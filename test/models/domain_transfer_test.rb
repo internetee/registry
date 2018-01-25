@@ -59,7 +59,7 @@ class DomainTest < ActiveSupport::TestCase
     end
   end
 
-  def test_oopies_contacts
+  def test_copies_contacts
     new_registrar = registrars(:goodnames)
 
     assert_difference 'Contact.count', 2 do
