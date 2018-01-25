@@ -4,7 +4,7 @@
             <%= label_tag :batch_file %>
         </div>
         <div class="col-md-7">
-            <%= file_field_tag :batch_file %>
+            <%= file_field_tag :batch_file, required: true %>
             <span class="help-block"><%= t '.batch_file_help' %></span>
         </div>
     </div>
