@@ -171,11 +171,6 @@ RSpec.describe Contact do
     end
 
     context 'with callbacks' do
-      before :example do
-        # Ensure callbacks are not taken out from other specs
-        Contact.set_callback(:create, :before, :generate_auth_info)
-      end
-
       context 'after create' do
         it 'should not allow to use same code' do
           registrar = create(:registrar, code: 'FIXED')
