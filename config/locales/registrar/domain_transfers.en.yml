@@ -8,10 +8,12 @@ en:
 
       create:
         header: Domain transfer
+        transferred: Domains have been successfully transferred
 
       form:
         single:
           transfer_btn: Transfer
 
         batch:
-          transfer_btn: Transfer
+          batch_file_help: CSV file with domain list provided by another registrar
+          transfer_btn: Transfer batch

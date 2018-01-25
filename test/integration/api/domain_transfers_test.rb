@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class Repp::DomainTransfersTest < ActionDispatch::IntegrationTest
+class APIDomainTransfersTest < ActionDispatch::IntegrationTest
   def test_transfers_domain
     request_params = { format: :json,
                        data: { domainTransfers: [{ domainName: 'shop.test', transferCode: '65078d5' }] } }
