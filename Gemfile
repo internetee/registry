@@ -57,7 +57,7 @@ gem 'devise',    '3.5.4'  # authenitcation
 
 # rest api
 gem 'grape',    '0.12.0'
-gem 'hashie-forbidden_attributes', '0.1.1' # For grape, https://github.com/ruby-grape/grape#rails
+gem 'hashie-forbidden_attributes', '0.1.1' # For grape, https://github.com/ruby-grape/grape/tree/v0.12.0#rails
 gem 'jbuilder', '2.2.16'  # json api
 
 # registry specfic
