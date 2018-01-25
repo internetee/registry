@@ -16,7 +16,6 @@ module Concerns::Contact::Transferable
   end
 
   def generate_auth_info
-    return if @generate_auth_info_disabled
     return if auth_info.present?
     self.auth_info = SecureRandom.hex(11)
   end
