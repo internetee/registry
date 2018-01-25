@@ -26,6 +26,7 @@ en:
       date: "%Y-%m-%d"
       date_long: "%d. %B %Y"
       ydate: "%Y.%m.%d"
+      filename: "%Y-%m-%d_%H.%M"
   date:
     formats:
       default: "%Y-%m-%d"
