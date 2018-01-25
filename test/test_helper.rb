@@ -5,6 +5,8 @@ require 'minitest/mock'
 require 'capybara/rails'
 require 'capybara/minitest'
 
+Setting.address_processing = false
+
 class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
 
