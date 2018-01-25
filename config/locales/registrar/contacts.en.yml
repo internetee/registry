@@ -1,6 +1,9 @@
 en:
   registrar:
     contacts:
+      index:
+        reset_btn: Reset
+
       partials:
         domains:
           roles: Roles
