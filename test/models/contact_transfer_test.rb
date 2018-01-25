@@ -6,6 +6,12 @@ class ContactTransferTest < ActiveSupport::TestCase
     @new_registrar = registrars(:goodnames)
   end
 
+  def test_rejects_absent_auth_info
+    @contact.auth_info = nil
+    @contact.validate
+    assert @contact.invalid?
+  end
+
   def test_generates_unique_auth_info_if_contact_is_new
     contact = Contact.new
     another_contact = Contact.new

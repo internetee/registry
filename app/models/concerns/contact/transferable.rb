@@ -2,6 +2,7 @@ module Concerns::Contact::Transferable
   extend ActiveSupport::Concern
 
   included do
+    validates :auth_info, presence: true
     after_initialize :generate_auth_info, if: :new_record?
   end
 
