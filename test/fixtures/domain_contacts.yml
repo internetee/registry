@@ -1,6 +1,6 @@
-shop_john:
+shop_jane:
   domain: shop
-  contact: john
+  contact: jane
   type: AdminDomainContact
 
 airport_john:
