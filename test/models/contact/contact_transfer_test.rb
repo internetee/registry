@@ -12,7 +12,7 @@ class ContactTransferTest < ActiveSupport::TestCase
     assert @contact.invalid?
   end
 
-  def test_generates_default_auth_info
+  def test_default_auth_info
     contact = Contact.new
     refute_empty contact.auth_info
   end

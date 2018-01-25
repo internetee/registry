@@ -11,7 +11,7 @@ class DomainTransferTest < ActiveSupport::TestCase
     assert @domain.invalid?
   end
 
-  def test_generates_default_transfer_code
+  def test_default_transfer_code
     domain = Domain.new
     refute_empty domain.transfer_code
   end
