@@ -659,6 +659,12 @@ class Domain < ActiveRecord::Base
     pending_json['new_registrant_id']
   end
 
+  def as_json(_options)
+    hash = super
+    hash['auth_info'] = hash.delete('transfer_code') # API v1 requirement
+    hash
+  end
+
   def self.to_csv
     CSV.generate do |csv|
       csv << column_names
