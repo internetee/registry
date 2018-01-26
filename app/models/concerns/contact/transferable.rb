@@ -10,6 +10,7 @@ module Concerns::Contact::Transferable
     new_contact = self.dup
     new_contact.registrar = new_registrar
     new_contact.original = self
+    new_contact.code = nil
     new_contact.regenerate_code
     new_contact.regenerate_auth_info
     new_contact.remove_address unless self.class.address_processing?
