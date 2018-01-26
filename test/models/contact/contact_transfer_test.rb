@@ -37,8 +37,9 @@ class ContactTransferTest < ActiveSupport::TestCase
 
   def test_keeps_original_contact_untouched
     original_hash = @contact.to_json
-    new_contact = @contact.transfer(@new_registrar)
-    refute_equal original_hash, new_contact.to_json
+    @contact.transfer(@new_registrar)
+    @contact.reload
+    assert_equal original_hash, @contact.to_json
   end
 
   def test_creates_new_contact
@@ -57,7 +58,7 @@ class ContactTransferTest < ActiveSupport::TestCase
     assert_equal @contact, new_contact.original
   end
 
-  def test_regenerates_new_code
+  def test_regenerates_code
     new_contact = @contact.transfer(@new_registrar)
     refute_equal @contact.code, new_contact.code
   end
