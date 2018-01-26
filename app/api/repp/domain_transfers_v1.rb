@@ -14,11 +14,10 @@ module Repp
         end
 
         new_registrar = current_user.registrar
-        request_domain_transfers = params['data']['domainTransfers']
-        response_domain_transfers = []
+        domain_transfers = params['data']['domainTransfers']
         errors = []
 
-        request_domain_transfers.each do |domain_transfer|
+        domain_transfers.each do |domain_transfer|
           domain_name = domain_transfer['domainName']
           transfer_code = domain_transfer['transferCode']
           domain = Domain.find_by(name: domain_name)
@@ -32,8 +31,6 @@ module Repp
           else
             errors << { title: "#{domain_name} does not exist" }
           end
-
-          response_domain_transfers << { domainName: domain_name }
         end
 
         if errors.none?
