@@ -4,9 +4,7 @@
     %hr
   .row
     .col-md-8
-      .tab-content{style:'margin-top: 20px;'}
-        #general-tab.tab-pane.active
-          = render 'admin/shared/form/statuses', f: f, 
+      = render 'admin/shared/form/statuses', f: f,
             model: 'domain',
             admin_statuses_map: DomainStatus.admin_statuses_map,
             disabled_statuses: DomainStatus::STATUSES - DomainStatus.admin_statuses,
