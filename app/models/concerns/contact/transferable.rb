@@ -9,8 +9,8 @@ module Concerns::Contact::Transferable
   def transfer(new_registrar)
     new_contact = self.dup
     new_contact.registrar = new_registrar
-    new_contact.generate_code
     new_contact.original = self
+    new_contact.regenerate_code
     new_contact.regenerate_auth_info
     new_contact.remove_address unless self.class.address_processing?
     new_contact.save!

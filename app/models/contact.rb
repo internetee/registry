@@ -336,6 +336,8 @@ class Contact < ActiveRecord::Base
   end
   # rubocop:enable Metrics/CyclomaticComplexity
 
+  alias_method :regenerate_code, :generate_code
+
   def country
     Country.new(country_code)
   end
