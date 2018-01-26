@@ -18,20 +18,27 @@ class Registrar
           domain_transfers << { 'domainName' => domain_name, 'transferCode' => transfer_code }
         end
 
-        client_cert = File.read(ENV['cert_path'])
-        client_key = File.read(ENV['key_path'])
-
         uri = URI.parse("#{ENV['repp_url']}domain_transfers")
         request = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
         request.body = { data: { domainTransfers: domain_transfers } }.to_json
         request.basic_auth(current_user.username, current_user.password)
 
-        response = Net::HTTP.start(uri.hostname, uri.port,
-                                   use_ssl: (uri.scheme == 'https'),
-                                   verify_mode: OpenSSL::SSL::VERIFY_NONE,
-                                   cert: OpenSSL::X509::Certificate.new(client_cert),
-                                   key: OpenSSL::PKey::RSA.new(client_key)) do |http|
-          http.request(request)
+
+        if Rails.env.test?
+          response = Net::HTTP.start(uri.hostname, uri.port,
+                                     use_ssl: (uri.scheme == 'https'),
+                                     verify_mode: OpenSSL::SSL::VERIFY_NONE) do |http|
+            http.request(request)
+          end
+        else
+          client_cert = File.read(ENV['cert_path'])
+          client_key = File.read(ENV['key_path'])
+          response = Net::HTTP.start(uri.hostname, uri.port,
+                                     use_ssl: (uri.scheme == 'https'),
+                                     cert: OpenSSL::X509::Certificate.new(client_cert),
+                                     key: OpenSSL::PKey::RSA.new(client_key)) do |http|
+            http.request(request)
+          end
         end
 
         if response.code == '204'
