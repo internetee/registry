@@ -644,7 +644,7 @@ ALTER SEQUENCE contact_statuses_id_seq OWNED BY contact_statuses.id;
 
 CREATE TABLE contacts (
     id integer NOT NULL,
-    code character varying,
+    code character varying NOT NULL,
     phone character varying,
     email character varying,
     fax character varying,
@@ -3628,6 +3628,14 @@ ALTER TABLE ONLY settings
 
 
 --
+-- Name: unique_contact_code; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY contacts
+    ADD CONSTRAINT unique_contact_code UNIQUE (code);
+
+
+--
 -- Name: unique_zone_origin; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -5067,4 +5075,8 @@ INSERT INTO schema_migrations (version) VALUES ('20180123165604');
 INSERT INTO schema_migrations (version) VALUES ('20180123170112');
 
 INSERT INTO schema_migrations (version) VALUES ('20180125092422');
+
+INSERT INTO schema_migrations (version) VALUES ('20180126104536');
+
+INSERT INTO schema_migrations (version) VALUES ('20180126104903');
 
