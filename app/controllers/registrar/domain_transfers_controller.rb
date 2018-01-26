@@ -30,6 +30,16 @@ class Registrar
                                      verify_mode: OpenSSL::SSL::VERIFY_NONE) do |http|
             http.request(request)
           end
+        elsif Rails.env.development?
+          client_cert = File.read(ENV['cert_path'])
+          client_key = File.read(ENV['key_path'])
+          response = Net::HTTP.start(uri.hostname, uri.port,
+                                     use_ssl: (uri.scheme == 'https'),
+                                     verify_mode: OpenSSL::SSL::VERIFY_NONE,
+                                     cert: OpenSSL::X509::Certificate.new(client_cert),
+                                     key: OpenSSL::PKey::RSA.new(client_key)) do |http|
+            http.request(request)
+          end
         else
           client_cert = File.read(ENV['cert_path'])
           client_key = File.read(ENV['key_path'])
