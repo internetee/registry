@@ -3,6 +3,7 @@ api_bestnames:
   password: testtest
   type: ApiUser
   registrar: bestnames
+  active: true
   roles:
     - super
 
@@ -11,6 +12,7 @@ api_goodnames:
   password: testtest
   type: ApiUser
   registrar: goodnames
+  active: true
   roles:
     - super
 
