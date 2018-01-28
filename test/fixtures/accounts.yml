@@ -1,0 +1,5 @@
+cash:
+  account_type: cash
+  balance: 100
+  currency: EUR
+  registrar: bestnames
