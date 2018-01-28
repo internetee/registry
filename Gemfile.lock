@@ -142,8 +142,6 @@ GEM
       xpath (~> 2.0)
     chronic (0.10.2)
     cliver (0.3.2)
-    codeclimate-test-reporter (1.0.8)
-      simplecov (<= 0.13)
     coderay (1.1.0)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
@@ -413,11 +411,11 @@ GEM
       thor (~> 0.14)
     selectize-rails (0.12.1)
     sexp_processor (4.8.0)
-    simplecov (0.10.0)
+    simplecov (0.15.1)
       docile (~> 1.1.0)
-      json (~> 1.8)
+      json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
-    simplecov-html (0.10.0)
+    simplecov-html (0.10.2)
     simpleidn (0.0.7)
     sinatra (1.4.8)
       rack (~> 1.5)
@@ -488,7 +486,6 @@ DEPENDENCIES
   bundler-audit
   cancancan (= 1.11.0)
   capybara
-  codeclimate-test-reporter (~> 1.0.0)
   coderay (= 1.1.0)
   coffee-rails (= 4.1.0)
   countries
