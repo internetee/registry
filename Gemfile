@@ -142,7 +142,6 @@ end
 
 group :test do
   gem 'database_cleaner'
-  gem 'codeclimate-test-reporter', "~> 1.0.0"
   gem 'simplecov'
   gem 'webmock'
 end
