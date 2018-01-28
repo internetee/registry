@@ -1,5 +1,6 @@
 if ENV['COVERAGE']
   require 'simplecov'
+  SimpleCov.command_name 'spec'
   SimpleCov.start 'rails'
 end
 
