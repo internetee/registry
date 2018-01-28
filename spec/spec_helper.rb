@@ -1,6 +1,6 @@
 if ENV['COVERAGE']
   require 'simplecov'
-  SimpleCov.start
+  SimpleCov.start 'rails'
 end
 
 require 'webmock/rspec'
