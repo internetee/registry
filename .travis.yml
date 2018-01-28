@@ -9,12 +9,12 @@ before_script:
   - "psql -c 'create database registry_api_log_test;' -U postgres"
   - "cp config/application-example.yml config/application.yml"
   - "cp config/database-travis.yml config/database.yml"
-  - "RAILS_ENV=test bundle exec rake db:setup:all"
+  - "bundle exec rake db:setup:all"
   - "curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter"
   - "chmod +x ./cc-test-reporter"
   - "./cc-test-reporter before-build"
 script:
-  - "RAILS_ENV=test bundle exec rspec"
+  - "bundle exec rspec"
   - "bundle exec rake test"
 after_script:
   - "./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT"
