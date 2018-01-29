@@ -5,7 +5,7 @@ Transfers domains.
 
 #### Request
 ```
-GET /repp/v1/domain_transfers
+POST /repp/v1/domain_transfers
 Accept: application/json
 Content-Type: application/json
 Authorization: Basic dGVzdDp0ZXN0dGVzdA==
