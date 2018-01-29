@@ -4539,6 +4539,14 @@ ALTER TABLE ONLY account_activities
 
 
 --
+-- Name: nameservers_domain_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY nameservers
+    ADD CONSTRAINT nameservers_domain_id_fk FOREIGN KEY (domain_id) REFERENCES domains(id);
+
+
+--
 -- Name: user_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5059,4 +5067,6 @@ INSERT INTO schema_migrations (version) VALUES ('20171025153841');
 INSERT INTO schema_migrations (version) VALUES ('20171121233843');
 
 INSERT INTO schema_migrations (version) VALUES ('20171123035941');
+
+INSERT INTO schema_migrations (version) VALUES ('20180129143538');
 
