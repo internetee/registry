@@ -27,6 +27,9 @@ Domain name mapping protocol short version:
         <domain:registrant>    1        Contact reference to the registrant
         <domain:contact>       0-n      Contact reference. Admin contact is required if registrant is
                                         a juridical person. Attribute: type="admin / tech"
+        <domain:authInfo>      0-1
+          <domain:pw>          1         Transfer code. Attribute: roid="String"
+        </domain:authInfo>
     <extension>                1       
       <secDNS:create>          0-1      Attribute: xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1"
         <secDNS:keyData>       1-n     
