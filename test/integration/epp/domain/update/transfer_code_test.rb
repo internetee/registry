@@ -5,7 +5,7 @@ class EppDomainUpdateTest < ActionDispatch::IntegrationTest
     login_as users(:api_bestnames)
   end
 
-  def test_updates_transfer_code
+  def test_overwrites_existing
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
       <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
@@ -26,7 +26,6 @@ class EppDomainUpdateTest < ActionDispatch::IntegrationTest
 
     session_id = epp_sessions(:api_bestnames).session_id
     post '/epp/command/update', { frame: request_xml }, { 'HTTP_COOKIE' => "session=#{session_id}" }
-    assert_response 200
     assert_equal 'f0ff7d17b0', domains(:shop).transfer_code
   end
 end
