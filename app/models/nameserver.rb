@@ -2,7 +2,7 @@ class Nameserver < ActiveRecord::Base
   include Versions # version/nameserver_version.rb
   include EppErrors
 
-  belongs_to :domain
+  belongs_to :domain, required: true
 
   # rubocop: disable Metrics/LineLength
   validates :hostname, format: { with: /\A(([a-zA-Z0-9]|[a-zA-ZäöüõšžÄÖÜÕŠŽ0-9][a-zA-ZäöüõšžÄÖÜÕŠŽ0-9\-]*[a-zA-ZäöüõšžÄÖÜÕŠŽ0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\z/ }

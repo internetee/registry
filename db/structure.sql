@@ -2226,7 +2226,7 @@ CREATE TABLE nameservers (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     ipv6 character varying[] DEFAULT '{}'::character varying[],
-    domain_id integer,
+    domain_id integer NOT NULL,
     creator_str character varying,
     updator_str character varying,
     legacy_domain_id integer,
@@ -3628,7 +3628,7 @@ ALTER TABLE ONLY settings
 
 
 --
--- Name: unique_contact_code; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: unique_contact_code; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY contacts
@@ -5079,4 +5079,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180126104536');
 INSERT INTO schema_migrations (version) VALUES ('20180126104903');
 
 INSERT INTO schema_migrations (version) VALUES ('20180129143538');
+
+INSERT INTO schema_migrations (version) VALUES ('20180129232054');
 
