@@ -5,7 +5,7 @@ class Nameserver < ActiveRecord::Base
   belongs_to :domain, required: true
 
   # rubocop: disable Metrics/LineLength
-  validates :hostname, format: { with: /\A(([a-zA-Z0-9]|[a-zA-ZäöüõšžÄÖÜÕŠŽ0-9][a-zA-ZäöüõšžÄÖÜÕŠŽ0-9\-]*[a-zA-ZäöüõšžÄÖÜÕŠŽ0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\z/ }
+  validates :hostname, presence: true, format: { with: /\A(([a-zA-Z0-9]|[a-zA-ZäöüõšžÄÖÜÕŠŽ0-9][a-zA-ZäöüõšžÄÖÜÕŠŽ0-9\-]*[a-zA-ZäöüõšžÄÖÜÕŠŽ0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\z/ }
   validate :val_ipv4
   validate :val_ipv6
   # rubocop: enable Metrics/LineLength
@@ -40,6 +40,8 @@ class Nameserver < ActiveRecord::Base
   end
 
   def check_label_length
+    return unless hostname
+
     hostname_puny.split('.').each do |label|
       errors.add(:hostname, :puny_to_long) if label.length > 63
     end

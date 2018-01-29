@@ -2221,7 +2221,7 @@ ALTER SEQUENCE messages_id_seq OWNED BY messages.id;
 
 CREATE TABLE nameservers (
     id integer NOT NULL,
-    hostname character varying,
+    hostname character varying NOT NULL,
     ipv4 character varying[] DEFAULT '{}'::character varying[],
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -5081,4 +5081,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180126104903');
 INSERT INTO schema_migrations (version) VALUES ('20180129143538');
 
 INSERT INTO schema_migrations (version) VALUES ('20180129232054');
+
+INSERT INTO schema_migrations (version) VALUES ('20180129233223');
 

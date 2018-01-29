@@ -14,4 +14,10 @@ class NameserverTest < ActiveSupport::TestCase
     @nameserver.validate
     assert @nameserver.invalid?
   end
+
+  def test_invalid_without_hostname
+    @nameserver.hostname = nil
+    @nameserver.validate
+    assert @nameserver.invalid?
+  end
 end
