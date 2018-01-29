@@ -73,37 +73,6 @@ class Nameserver < ActiveRecord::Base
   end
 
   class << self
-    def replace_hostname_ends(domains, old_end, new_end)
-      domains = domains.where('EXISTS(
-          select 1 from nameservers ns where ns.domain_id = domains.id AND ns.hostname LIKE ?
-        )', "%#{old_end}")
-
-      count, success_count = 0.0, 0.0
-      domains.each do |d|
-        ns_attrs = { nameservers_attributes: [] }
-
-        d.nameservers.each do |ns|
-          next unless ns.hostname.end_with?(old_end)
-
-          hn = ns.hostname.chomp(old_end)
-          ns_attrs[:nameservers_attributes] << {
-              id: ns.id,
-              hostname: "#{hn}#{new_end}"
-          }
-        end
-
-        success_count += 1 if d.update(ns_attrs)
-        count += 1
-      end
-
-      return 'replaced_none' if count == 0.0
-
-      prc = success_count / count
-
-      return 'replaced_all' if prc == 1.0
-      'replaced_some'
-    end
-
     def find_by_hash_params params
       params = params.with_indifferent_access
       rel = all

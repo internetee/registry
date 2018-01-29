@@ -81,33 +81,6 @@ describe Nameserver do
           create(:nameserver, hostname: 'ns3.test.ee')
         ])
       end
-
-      it 'should replace hostname ends' do
-        res = Nameserver.replace_hostname_ends(@api_user.registrar.domains, 'ns.ee', 'test.ee')
-        res.should == 'replaced_some'
-
-        @api_user.registrar.nameservers.where("hostname LIKE '%test.ee'").count.should == 4
-        @domain_1.nameservers.pluck(:hostname).should include('ns1.ns.ee', 'ns2.ns.ee', 'ns2.test.ee')
-        @domain_2.nameservers.pluck(:hostname).should include('ns1.test.ee', 'ns2.test.ee', 'ns3.test.ee')
-
-        res = Nameserver.replace_hostname_ends(@api_user.registrar.domains, 'test.ee', 'testing.ee')
-        res.should == 'replaced_all'
-
-        @api_user.registrar.nameservers.where("hostname LIKE '%testing.ee'").count.should == 4
-        @domain_1.nameservers.pluck(:hostname).should include('ns1.ns.ee', 'ns2.ns.ee', 'ns2.testing.ee')
-        @domain_2.nameservers.pluck(:hostname).should include('ns1.testing.ee', 'ns2.testing.ee', 'ns3.testing.ee')
-
-        res = Nameserver.replace_hostname_ends(@api_user.registrar.domains, 'ns.ee', 'test.ee')
-        res.should == 'replaced_all'
-
-        @api_user.registrar.nameservers.where("hostname LIKE '%test.ee'").count.should == 2
-        @domain_1.nameservers.pluck(:hostname).should include('ns1.test.ee', 'ns2.test.ee', 'ns2.testing.ee')
-        @domain_2.nameservers.pluck(:hostname).should include('ns1.testing.ee', 'ns2.testing.ee', 'ns3.testing.ee')
-        @domain_3.nameservers.pluck(:hostname).should include('ns1.ns.ee', 'ns2.ns.ee', 'ns3.test.ee')
-
-        res = Nameserver.replace_hostname_ends(@api_user.registrar.domains, 'xcv.ee', 'test.ee')
-        res.should == 'replaced_none'
-      end
     end
   end
 end
