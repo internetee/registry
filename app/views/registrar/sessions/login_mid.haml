@@ -12,7 +12,8 @@
     %div.text-center
       00007, 60000007, 00000766
 
-  :coffee
+:coffee
+  window.onload = ->
     $('.js-login').attr('disabled', false)
 
     status_interval = null
@@ -37,4 +38,3 @@
         flash_alert(data.responseJSON.message)
         $('.js-login').attr('disabled', false)
       )
-

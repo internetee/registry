@@ -6,6 +6,7 @@ class Domain < ActiveRecord::Base
   include Concerns::Domain::Activatable
   include Concerns::Domain::ForceDelete
   include Concerns::Domain::Deletable
+  include Concerns::Domain::Transferable
 
   has_paper_trail class_name: "DomainVersion", meta: { children: :children_log }
 
@@ -79,9 +80,7 @@ class Domain < ActiveRecord::Base
     self.status_notes = {} if status_notes.nil?
   end
 
-  before_create :generate_auth_info
   before_create -> { self.reserved = in_reserved_list?; nil }
-
   before_save :manage_automatic_statuses
   before_save :touch_always_version
   def touch_always_version
@@ -105,6 +104,7 @@ class Domain < ActiveRecord::Base
   validates :name_dirty, domain_name: true, uniqueness: true
   validates :puny_label, length: { maximum: 63 }
   validates :period, presence: true, numericality: { only_integer: true }
+  validates :transfer_code, presence: true
 
   validate :validate_reservation
   def validate_reservation
@@ -497,19 +497,6 @@ class Domain < ActiveRecord::Base
     Registrant.find_by(id: pending_json['new_registrant_id'])
   end
 
-  def generate_auth_info
-    return if auth_info.present?
-    generate_auth_info!
-  end
-
-  # rubocop:disable Lint/Loop
-  def generate_auth_info!
-    begin
-      self.auth_info = SecureRandom.hex
-    end while self.class.exists?(auth_info: auth_info)
-  end
-  # rubocop:enable Lint/Loop
-
   def set_graceful_expired
     self.outzone_at = expire_time + self.class.expire_warning_period
     self.delete_at = outzone_at + self.class.redemption_grace_period
@@ -670,6 +657,12 @@ class Domain < ActiveRecord::Base
 
   def new_registrant_id
     pending_json['new_registrant_id']
+  end
+
+  def as_json(_options)
+    hash = super
+    hash['auth_info'] = hash.delete('transfer_code') # API v1 requirement
+    hash
   end
 
   def self.to_csv

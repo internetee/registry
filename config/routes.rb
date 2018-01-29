@@ -54,7 +54,6 @@ Rails.application.routes.draw do
         post 'update', as: 'update'
         post 'destroy', as: 'destroy'
         get 'renew'
-        match 'transfer', via: [:post, :get]
         get 'edit'
         get 'info'
         get 'check'
@@ -62,6 +61,7 @@ Rails.application.routes.draw do
         get 'search_contacts'
       end
     end
+    resources :domain_transfers, only: %i[new create]
 
     resources :contacts, constraints: {:id => /[^\/]+(?=#{ ActionController::Renderers::RENDERERS.map{|e| "\\.#{e}\\z"}.join("|") })|[^\/]+/} do
       member do
@@ -99,7 +99,7 @@ Rails.application.routes.draw do
   namespace :registrant do
     root 'domains#index'
 
-    resources :domains do
+    resources :domains, only: %i[index show] do
       collection do
         get :download_list
       end
@@ -107,7 +107,6 @@ Rails.application.routes.draw do
       member do
         get 'domain_verification_url'
       end
-
     end
 
     # resources :invoices do

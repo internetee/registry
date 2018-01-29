@@ -22,21 +22,22 @@
               = text_field_tag "domain[contacts_attributes][#{k}][code_helper]", contacts.find_by(code: v['code']).try(:search_name), class: 'form-control',  data: {autocomplete: search_contacts_registrar_domains_path}, required: true
 
 :coffee
-  clone = $('.js-contact:first').clone()
-  $("#js-domain-contacts").nestedAttributes
-    bindAddTo: $(".add-domain-contact")
-    afterAdd: (item) ->
-      # preselect type
-      item.find('select.js-contact-type').each (k, v) ->
-        $(v).val($(v).find('option:last-child').val())
-      # add combobex
-      item.find('select.js-contact-code').each (k, v) ->
-        $(v).select2
-          width: "100%"
-          selectOnBlur: true
-          dropdownAutoWidth: if self==top then true else false
-      # remove link for temp 
-      item.find('a.add-domain-contact').each (k, v) ->
-        $(v).hide()
-      new Autocomplete()
-    $clone: clone
+  window.onload = ->
+    clone = $('.js-contact:first').clone()
+    $("#js-domain-contacts").nestedAttributes
+      bindAddTo: $(".add-domain-contact")
+      afterAdd: (item) ->
+        # preselect type
+        item.find('select.js-contact-type').each (k, v) ->
+          $(v).val($(v).find('option:last-child').val())
+        # add combobex
+        item.find('select.js-contact-code').each (k, v) ->
+          $(v).select2
+            width: "100%"
+            selectOnBlur: true
+            dropdownAutoWidth: if self==top then true else false
+        # remove link for temp
+        item.find('a.add-domain-contact').each (k, v) ->
+          $(v).hide()
+        new Autocomplete()
+      $clone: clone

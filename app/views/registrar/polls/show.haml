@@ -82,8 +82,9 @@
         %p.bg-info{style: 'padding: 15px;'}= t(:you_have_no_new_messages)
 
 :coffee
-  $(".js-keyrelay-confirm").on "click", ->
-    $(".js-keyrelay-form").submit()
+  window.onload = ->
+    $(".js-keyrelay-confirm").on "click", ->
+      $(".js-keyrelay-form").submit()
 
-  $(".js-transfer-confirm").on "click", ->
-    $(".js-transfer-form").submit()
+    $(".js-transfer-confirm").on "click", ->
+      $(".js-transfer-form").submit()

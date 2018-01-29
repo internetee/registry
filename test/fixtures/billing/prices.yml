@@ -1,0 +1,7 @@
+cash:
+  duration: 1 year
+  price_cents: 500
+  operation_category: create
+  valid_from: 2010-07-05
+  valid_to: 2010-07-05
+  zone: test

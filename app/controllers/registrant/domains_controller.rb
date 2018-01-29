@@ -1,13 +1,12 @@
 class Registrant::DomainsController < RegistrantController
-
   def index
-  authorize! :view, :registrant_domains
-  params[:q] ||= {}
-  normalize_search_parameters do
-    @q = domains.search(params[:q])
-    @domains = @q.result.page(params[:page])
-  end
-  @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i > 0
+    authorize! :view, :registrant_domains
+    params[:q] ||= {}
+    normalize_search_parameters do
+      @q = domains.search(params[:q])
+      @domains = @q.result.page(params[:page])
+    end
+    @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i > 0
   end
 
   def show
@@ -15,19 +14,15 @@ class Registrant::DomainsController < RegistrantController
     authorize! :read, @domain
   end
 
-  def set_domain
-    @domain = domains.find(params[:id])
-  end
-
   def domain_verification_url
     authorize! :view, :registrant_domains
     dom = domains.find(params[:id])
     if (dom.statuses.include?(DomainStatus::PENDING_UPDATE) || dom.statuses.include?(DomainStatus::PENDING_DELETE_CONFIRMATION)) &&
-        dom.pending_json.present?
+      dom.pending_json.present?
 
-        @domain = dom
-        confirm_path = get_confirm_path(dom.statuses)
-        @verification_url = "#{confirm_path}/#{@domain.id}?token=#{@domain.registrant_verification_token}"
+      @domain = dom
+      confirm_path = get_confirm_path(dom.statuses)
+      @verification_url = "#{confirm_path}/#{@domain.id}?token=#{@domain.registrant_verification_token}"
 
     else
       flash[:warning] = I18n.t('available_verification_url_not_found')
@@ -50,6 +45,12 @@ class Registrant::DomainsController < RegistrantController
         send_data pdf, filename: 'domains.pdf'
       end
     end
+  end
+
+  private
+
+  def set_domain
+    @domain = domains.find(params[:id])
   end
 
   def domains
@@ -82,5 +83,4 @@ class Registrant::DomainsController < RegistrantController
       "#{ENV['registrant_url']}/registrant/domain_delete_confirms"
     end
   end
-
 end

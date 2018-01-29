@@ -27,5 +27,6 @@
             = text_field_tag "domain[nameservers_attributes][#{k}][ipv6]", v['ipv6'],
               class: 'form-control'#, ipv6: true
 :coffee
-  $("#nameservers").nestedAttributes
-    bindAddTo: $(".add-nameserver")
+  window.onload = ->
+    $("#nameservers").nestedAttributes
+      bindAddTo: $(".add-nameserver")

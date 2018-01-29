@@ -52,7 +52,8 @@ class Registrar
           end
 
           csv = Registrar::DomainListCSVPresenter.new(domains: domain_presenters, view: view_context).to_s
-          send_data(csv)
+          filename = "Domains_#{l(Time.zone.now, format: :filename)}.csv"
+          send_data(csv, filename: filename)
         end
       end
     end
@@ -143,16 +144,6 @@ class Registrar
       else
         params[:period] = Depp::Domain.default_period
         render 'renew_index'
-      end
-    end
-
-    def transfer
-      authorize! :transfer, Depp::Domain
-      if request.post? && params[:domain_name]
-        @data = @domain.transfer(params)
-        render 'transfer_index' and return unless response_ok?
-      else
-        render 'transfer_index'
       end
     end
 

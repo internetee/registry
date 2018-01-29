@@ -3,9 +3,7 @@
     = render 'shared/errors', object: contact
   .row
     .col-md-8
-      .tab-content{style:'margin-top: 20px;'}
-        #general-tab.tab-pane.active
-          = render 'admin/shared/form/statuses', f: f, 
+      = render 'admin/shared/form/statuses', f: f,
             model: 'contact',
             admin_statuses_map: Contact.admin_statuses_map,
             disabled_statuses: Contact::STATUSES - Contact.admin_statuses,

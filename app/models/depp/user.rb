@@ -36,39 +36,6 @@ module Depp
         Nokogiri::XML(e.response_xml.to_s).remove_namespaces!
     end
 
-    # rubocop:disable Metrics/AbcSize
-    def repp_request(path, params = {})
-      client_cert = File.read(ENV['cert_path'])
-      client_key = File.read(ENV['key_path'])
-
-      repp_url = Rails.env.test? ? 'http://localhost:8989/repp/v1/' : ENV['repp_url']
-      uri = URI.parse("#{repp_url}#{path}")
-      uri.query = URI.encode_www_form(params)
-
-      req = Net::HTTP::Get.new(uri)
-      req.basic_auth tag, password
-
-      res = Net::HTTP.start(uri.hostname, uri.port,
-                            use_ssl: (uri.scheme == 'https'),
-                            verify_mode: OpenSSL::SSL::VERIFY_NONE,
-                            cert: OpenSSL::X509::Certificate.new(client_cert),
-                            key: OpenSSL::PKey::RSA.new(client_key)) do |http|
-        http.request(req)
-      end
-
-      ret = OpenStruct.new(code: res.code)
-      ret.parsed_body = JSON.parse(res.body) if res.body.present?
-
-      if ret.parsed_body && ret.parsed_body['error']
-        ret.message = ret.parsed_body['error']
-      else
-        ret.message = res.message
-      end
-
-      ret
-    end
-    # rubocop:enable Metrics/AbcSize
-
     private
 
     # rubocop:disable Metrics/AbcSize

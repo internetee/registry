@@ -118,7 +118,7 @@ module Depp
 
       current_user.request(epp_xml.transfer({
         name: { value: params[:domain_name] },
-        authInfo: { pw: { value: params[:password] } }
+        authInfo: { pw: { value: params[:transfer_code] } }
       }, op, Domain.construct_custom_params_hash(params)))
     end
 

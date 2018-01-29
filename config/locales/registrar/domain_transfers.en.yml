@@ -1,0 +1,19 @@
+en:
+  registrar:
+    domain_transfers:
+      new:
+        header: Domain transfer
+        single: One by one
+        batch: Batch
+
+      create:
+        header: Domain transfer
+        transferred: Domains have been successfully transferred
+
+      form:
+        single:
+          transfer_btn: Transfer
+
+        batch:
+          batch_file_help: CSV file with domain list provided by another registrar
+          transfer_btn: Transfer batch

@@ -39,7 +39,7 @@ Content-Type: application/json
       "valid_from": "2015-09-09T09:11:14.861Z",
       "valid_to": "2016-09-09T09:11:14.861Z",
       "registrant_id": 1,
-      "auth_info": "98oiewslkfkd",
+      "transfer_code": "98oiewslkfkd",
       "created_at": "2015-09-09T09:11:14.861Z",
       "updated_at": "2015-09-09T09:11:14.860Z",
       "name_dirty": "domain0.ee",

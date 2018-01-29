@@ -644,7 +644,7 @@ ALTER SEQUENCE contact_statuses_id_seq OWNED BY contact_statuses.id;
 
 CREATE TABLE contacts (
     id integer NOT NULL,
-    code character varying,
+    code character varying NOT NULL,
     phone character varying,
     email character varying,
     fax character varying,
@@ -652,7 +652,7 @@ CREATE TABLE contacts (
     updated_at timestamp without time zone,
     ident character varying,
     ident_type character varying,
-    auth_info character varying,
+    auth_info character varying NOT NULL,
     name character varying,
     org_name character varying,
     registrar_id integer NOT NULL,
@@ -668,7 +668,7 @@ CREATE TABLE contacts (
     statuses character varying[] DEFAULT '{}'::character varying[],
     status_notes hstore,
     legacy_history_id integer,
-    copy_from_id integer,
+    original_id integer,
     ident_updated_at timestamp without time zone,
     upid integer,
     up_date timestamp without time zone
@@ -884,7 +884,6 @@ CREATE TABLE domain_contacts (
     id integer NOT NULL,
     contact_id integer,
     domain_id integer,
-    contact_type character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     contact_code_cache character varying,
@@ -959,13 +958,11 @@ CREATE TABLE domain_transfers (
     status character varying,
     transfer_requested_at timestamp without time zone,
     transferred_at timestamp without time zone,
-    transfer_from_id integer,
-    transfer_to_id integer,
+    old_registrar_id integer,
+    new_registrar_id integer,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    wait_until timestamp without time zone,
-    creator_str character varying,
-    updator_str character varying
+    wait_until timestamp without time zone
 );
 
 
@@ -1001,7 +998,7 @@ CREATE TABLE domains (
     valid_from timestamp without time zone,
     valid_to timestamp without time zone,
     registrant_id integer NOT NULL,
-    auth_info character varying,
+    transfer_code character varying NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     name_dirty character varying,
@@ -1721,44 +1718,6 @@ CREATE SEQUENCE log_domain_statuses_id_seq
 --
 
 ALTER SEQUENCE log_domain_statuses_id_seq OWNED BY log_domain_statuses.id;
-
-
---
--- Name: log_domain_transfers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE log_domain_transfers (
-    id integer NOT NULL,
-    item_type character varying NOT NULL,
-    item_id integer NOT NULL,
-    event character varying NOT NULL,
-    whodunnit character varying,
-    object json,
-    object_changes json,
-    created_at timestamp without time zone,
-    session character varying,
-    children json,
-    uuid character varying
-);
-
-
---
--- Name: log_domain_transfers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE log_domain_transfers_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: log_domain_transfers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE log_domain_transfers_id_seq OWNED BY log_domain_transfers.id;
 
 
 --
@@ -3034,13 +2993,6 @@ ALTER TABLE ONLY log_domain_statuses ALTER COLUMN id SET DEFAULT nextval('log_do
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY log_domain_transfers ALTER COLUMN id SET DEFAULT nextval('log_domain_transfers_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY log_domains ALTER COLUMN id SET DEFAULT nextval('log_domains_id_seq'::regclass);
 
 
@@ -3508,14 +3460,6 @@ ALTER TABLE ONLY log_domain_statuses
 
 
 --
--- Name: log_domain_transfers_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY log_domain_transfers
-    ADD CONSTRAINT log_domain_transfers_pkey PRIMARY KEY (id);
-
-
---
 -- Name: log_domains_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3681,6 +3625,14 @@ ALTER TABLE ONLY reserved_domains
 
 ALTER TABLE ONLY settings
     ADD CONSTRAINT settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: unique_contact_code; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY contacts
+    ADD CONSTRAINT unique_contact_code UNIQUE (code);
 
 
 --
@@ -4173,20 +4125,6 @@ CREATE INDEX index_log_domain_statuses_on_whodunnit ON log_domain_statuses USING
 
 
 --
--- Name: index_log_domain_transfers_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_domain_transfers_on_item_type_and_item_id ON log_domain_transfers USING btree (item_type, item_id);
-
-
---
--- Name: index_log_domain_transfers_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_domain_transfers_on_whodunnit ON log_domain_transfers USING btree (whodunnit);
-
-
---
 -- Name: index_log_domains_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4475,6 +4413,22 @@ ALTER TABLE ONLY contacts
 
 
 --
+-- Name: domain_contacts_contact_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY domain_contacts
+    ADD CONSTRAINT domain_contacts_contact_id_fk FOREIGN KEY (contact_id) REFERENCES contacts(id);
+
+
+--
+-- Name: domain_contacts_domain_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY domain_contacts
+    ADD CONSTRAINT domain_contacts_domain_id_fk FOREIGN KEY (domain_id) REFERENCES domains(id);
+
+
+--
 -- Name: domains_registrant_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4491,6 +4445,14 @@ ALTER TABLE ONLY domains
 
 
 --
+-- Name: fk_rails_59c422f73d; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY domain_transfers
+    ADD CONSTRAINT fk_rails_59c422f73d FOREIGN KEY (old_registrar_id) REFERENCES registrars(id);
+
+
+--
 -- Name: fk_rails_78c376257f; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -4499,11 +4461,27 @@ ALTER TABLE ONLY prices
 
 
 --
+-- Name: fk_rails_833ed7f3c0; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY domain_transfers
+    ADD CONSTRAINT fk_rails_833ed7f3c0 FOREIGN KEY (new_registrar_id) REFERENCES registrars(id);
+
+
+--
 -- Name: fk_rails_86cd2b09f5; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY account_activities
     ADD CONSTRAINT fk_rails_86cd2b09f5 FOREIGN KEY (account_id) REFERENCES accounts(id);
+
+
+--
+-- Name: fk_rails_87b8e40c63; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY domain_transfers
+    ADD CONSTRAINT fk_rails_87b8e40c63 FOREIGN KEY (domain_id) REFERENCES domains(id);
 
 
 --
@@ -5067,6 +5045,38 @@ INSERT INTO schema_migrations (version) VALUES ('20171025153841');
 INSERT INTO schema_migrations (version) VALUES ('20171121233843');
 
 INSERT INTO schema_migrations (version) VALUES ('20171123035941');
+
+INSERT INTO schema_migrations (version) VALUES ('20180112080312');
+
+INSERT INTO schema_migrations (version) VALUES ('20180112084221');
+
+INSERT INTO schema_migrations (version) VALUES ('20180112084442');
+
+INSERT INTO schema_migrations (version) VALUES ('20180120172042');
+
+INSERT INTO schema_migrations (version) VALUES ('20180120172649');
+
+INSERT INTO schema_migrations (version) VALUES ('20180120172657');
+
+INSERT INTO schema_migrations (version) VALUES ('20180120182712');
+
+INSERT INTO schema_migrations (version) VALUES ('20180120183441');
+
+INSERT INTO schema_migrations (version) VALUES ('20180121165304');
+
+INSERT INTO schema_migrations (version) VALUES ('20180122105335');
+
+INSERT INTO schema_migrations (version) VALUES ('20180123154407');
+
+INSERT INTO schema_migrations (version) VALUES ('20180123165604');
+
+INSERT INTO schema_migrations (version) VALUES ('20180123170112');
+
+INSERT INTO schema_migrations (version) VALUES ('20180125092422');
+
+INSERT INTO schema_migrations (version) VALUES ('20180126104536');
+
+INSERT INTO schema_migrations (version) VALUES ('20180126104903');
 
 INSERT INTO schema_migrations (version) VALUES ('20180129143538');
 

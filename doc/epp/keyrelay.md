@@ -14,7 +14,7 @@ NB! Keyrelay not implemented.
         <secDNS:alg>       1        Allowed values: 3, 5, 6, 7, 8, 10, 13, 14 
         <secDNS:pubKey>    1        Public key 
       <ext:authInfo>       1 
-        <domain:pw>        1        Domain password. Attribute: roid="String" 
+        <domain:pw>        1        Domain transfer code. Attribute: roid="String" 
       <ext:expiry>         1 
         <ext:relative>     0-1      Relative expiry duration (ISO8601). 
                                     Required if ext:absolute is not specified 

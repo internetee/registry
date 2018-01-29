@@ -41,7 +41,6 @@ gem 'sass-rails',     '5.0.6'   # sass style
 
 gem 'coffee-rails',    '4.1.0'  # coffeescript support
 gem 'jquery-rails',    '4.0.4'  # jquery
-gem 'turbolinks',      '2.5.3'  # faster page load
 gem 'selectize-rails', '0.12.1' # include selectize.js for select
 gem 'jquery-validation-rails', '1.13.1' # validate on client side
 
@@ -49,7 +48,6 @@ gem 'jquery-validation-rails', '1.13.1' # validate on client side
 gem 'kaminari',         '0.16.3'  # pagination
 gem 'coderay',          '1.1.0'   # xml console visualize
 gem 'html5_validators', '1.2.2'   # model requements now automatically on html form
-gem 'nprogress-rails',  '0.1.6.7' # visual loader
 gem 'select2-rails',    '3.5.9.3' # for autocomplete
 gem 'liquid',           '3.0.6'   # for email templates
 
@@ -59,7 +57,7 @@ gem 'devise',    '3.5.4'  # authenitcation
 
 # rest api
 gem 'grape',    '0.12.0'
-gem 'hashie-forbidden_attributes', '0.1.1' # For grape, https://github.com/ruby-grape/grape#rails
+gem 'hashie-forbidden_attributes', '0.1.1' # For grape, https://github.com/ruby-grape/grape/tree/v0.12.0#rails
 gem 'jbuilder', '2.2.16'  # json api
 
 # registry specfic
@@ -75,9 +73,6 @@ gem 'whenever', '0.9.4', require: false
 
 # country listing
 gem 'countries', :require => 'countries/global'
-
-# cloning activerecord objects
-gem 'deep_cloneable', '2.1.1'
 
 # id + mid login
 # gem 'digidoc_client', '0.3.0'
@@ -142,7 +137,6 @@ end
 
 group :test do
   gem 'database_cleaner'
-  gem 'codeclimate-test-reporter', "~> 1.0.0"
-  gem 'simplecov'
+  gem 'simplecov', require: false
   gem 'webmock'
 end

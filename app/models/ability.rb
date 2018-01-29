@@ -54,14 +54,14 @@ class Ability
     # can(:create, :epp_request)
 
     # Epp::Domain
-    can(:info,     Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || pw.blank? ? true : d.auth_info == pw }
+    can(:info,     Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || pw.blank? ? true : d.transfer_code == pw }
     can(:check,    Epp::Domain)
     can(:create,   Epp::Domain)
     can(:renew,    Epp::Domain) { |d| d.registrar_id == @user.registrar_id }
-    can(:update,   Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.auth_info == pw }
-    can(:transfer, Epp::Domain) { |d, pw| d.auth_info == pw }
-    can(:view_password, Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.auth_info == pw }
-    can(:delete,   Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.auth_info == pw }
+    can(:update,   Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.transfer_code == pw }
+    can(:transfer, Epp::Domain) { |d, pw| d.transfer_code == pw }
+    can(:view_password, Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.transfer_code == pw }
+    can(:delete,   Epp::Domain) { |d, pw| d.registrar_id == @user.registrar_id || d.transfer_code == pw }
 
     # Epp::Contact
     can(:info, Epp::Contact)           { |c, pw| c.registrar_id == @user.registrar_id || pw.blank? ? true : c.auth_info == pw }

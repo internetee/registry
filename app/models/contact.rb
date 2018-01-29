@@ -2,7 +2,9 @@ class Contact < ActiveRecord::Base
   include Versions # version/contact_version.rb
   include EppErrors
   include UserEvents
+  include Concerns::Contact::Transferable
 
+  belongs_to :original, class_name: self.name
   belongs_to :registrar, required: true
   has_many :domain_contacts
   has_many :domains, through: :domain_contacts
@@ -43,7 +45,6 @@ class Contact < ActiveRecord::Base
 
   before_validation :to_upcase_country_code
   before_validation :strip_email
-  before_create :generate_auth_info
   before_update :manage_emails
 
   composed_of :identifier,
@@ -79,7 +80,6 @@ class Contact < ActiveRecord::Base
   PASSPORT = 'passport'
 
   attr_accessor :deliver_emails
-  attr_accessor :domain_transfer # hack but solves problem faster
 
   #
   # STATUSES
@@ -313,16 +313,6 @@ class Contact < ActiveRecord::Base
     !org?
   end
 
-  def generate_auth_info
-    return if @generate_auth_info_disabled
-    return if auth_info.present?
-    self.auth_info = SecureRandom.hex(11)
-  end
-
-  # def auth_info=(pw)
-  #   self[:auth_info] = pw if new_record?
-  # end
-
   def code=(code)
     self[:code] = code if new_record? # cannot change code later
   end
@@ -345,6 +335,8 @@ class Contact < ActiveRecord::Base
     self[:code] = "#{registrar.code}:#{code}".upcase
   end
   # rubocop:enable Metrics/CyclomaticComplexity
+
+  alias_method :regenerate_code, :generate_code
 
   def country
     Country.new(country_code)

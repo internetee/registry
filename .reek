@@ -103,13 +103,11 @@ UncommunicativeVariableName:
   - Epp::Contact#attrs_from
   - Epp::Contact#check_availability
   - Epp::Domain#check_availability
-  - Epp::Domain#copy_and_transfer_contact
   - Epp::Domain#domain_contact_attrs_from
   - Epp::Domain#domain_status_list_from
   - Epp::Domain#domain_statuses_attrs
   - Epp::Domain#nameservers_from
   - Epp::Domain#parse_period_unit_from_frame
-  - Epp::Domain#transfer_domain_contacts
   - Epp::Domain#validate_contacts
   - Invoice#cancel_overdue_invoices
   - Legacy::Db
@@ -208,7 +206,6 @@ DuplicateMethodCall:
   - Registrar::DomainsController#normalize_search_parameters
   - Registrar::DomainsController#renew
   - Registrar::DomainsController#search_contacts
-  - Registrar::DomainsController#transfer
   - Registrar::DomainsController#update
   - Registrar::InvoicesController#index
   - Registrar::InvoicesController#normalize_search_parameters
@@ -245,7 +242,6 @@ DuplicateMethodCall:
   - Billing::Price#self.effective
   - Billing::Price#self.valid
   - BusinessRegistryCache#fetch_by_ident_and_cc
-  - BusinessRegistryCache#purge
   - Certificate#parse_metadata
   - Certificate#reload_apache
   - Certificate#revoke!
@@ -284,7 +280,6 @@ DuplicateMethodCall:
   - Depp::Domain#default_params
   - Depp::Domain#renew
   - Depp::Keyrelay#keyrelay
-  - Depp::User#repp_request
   - Depp::User#validate_existance_in_server
   - Directo#self.dump_result_to_db
   - Directo#self.load_price
@@ -318,7 +313,6 @@ DuplicateMethodCall:
   - Epp::Domain#parse_legal_document_from_frame
   - Epp::Domain#query_transfer
   - Epp::Domain#renew
-  - Epp::Domain#transfer_domain_contacts
   - Epp::Domain#update
   - Epp::Domain#validate_contacts
   - Epp::Domain#validate_exp_dates
@@ -763,7 +757,6 @@ TooManyStatements:
   - Depp::Domain#create_nameservers_hash
   - Depp::Domain#default_params
   - Depp::Domain#transfer
-  - Depp::User#repp_request
   - Depp::User#validate_existance_in_server
   - Directo#self.send_monthly_invoices
   - Directo#self.send_receipts
@@ -783,7 +776,6 @@ TooManyStatements:
   - DomainCron#self.start_expire_period
   - DomainCron#self.start_redemption_grace_period
   - DomainMailModel#domain_info
-  - DomainTransfer#approve_as_client
   - Epp::Contact#add_legal_file_to_new
   - Epp::Contact#attrs_from
   - Epp::Contact#check_availability
@@ -796,7 +788,6 @@ TooManyStatements:
   - Epp::Domain#approve_transfer
   - Epp::Domain#attrs_from
   - Epp::Domain#check_availability
-  - Epp::Domain#copy_and_transfer_contact
   - Epp::Domain#destroy_attrs
   - Epp::Domain#dnskeys_attrs
   - Epp::Domain#domain_contact_attrs_from
@@ -812,7 +803,6 @@ TooManyStatements:
   - Epp::Domain#reject_transfer
   - Epp::Domain#renew
   - Epp::Domain#transfer
-  - Epp::Domain#transfer_domain_contacts
   - Epp::Domain#update
   - Epp::Domain#validate_contacts
   - Invoice#cancel
@@ -881,7 +871,6 @@ UtilityFunction:
   - EppErrors#construct_msg_args_and_value
   - Versions#user_from_id_role_username
   - Depp::Keyrelay#expiry
-  - Epp::Domain#copy_and_transfer_contact
   - Epp::Domain#nameservers_from
   - Epp::Domain::DnsSecKeys#mark
   - Epp::Domain::DnsSecKeys#xm_copy
@@ -944,7 +933,6 @@ FeatureEnvy:
   - Depp::Domain#renew
   - Depp::Domain#transfer
   - Depp::Keyrelay#keyrelay
-  - Depp::User#repp_request
   - DomainMailModel#format
   - Epp::Contact#attach_legal_document
   - Epp::Contact#attrs_from
@@ -956,7 +944,6 @@ FeatureEnvy:
   - Epp::Domain#destroy_attrs
   - Epp::Domain#domain_contact_attrs_from
   - Epp::Domain#domain_status_list_from
-  - Epp::Domain#transfer_domain_contacts
   - LegalDocument#calc_checksum
   - Nameserver#find_by_hash_params
   - RegistrantUser#find_or_create_by_idc_data
@@ -1090,7 +1077,6 @@ Attribute:
   - BankStatement#th6_file
   - Versions#version_loader
   - Contact#deliver_emails
-  - Contact#domain_transfer
   - Contact#domains_present
   - Contact#legal_document_id
   - Counter#value

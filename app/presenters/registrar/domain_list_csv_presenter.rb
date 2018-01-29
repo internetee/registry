@@ -19,6 +19,7 @@ class Registrar::DomainListCSVPresenter
   def header
     columns = %w(
       domain_name
+      transfer_code
       registrant_name
       registrant_code
       expire_time
@@ -32,9 +33,10 @@ class Registrar::DomainListCSVPresenter
   def domain_to_row(domain:)
     row = []
     row[0] = domain.name
-    row[1] = domain.registrant_name
-    row[2] = domain.registrant_code
-    row[3] = domain.expire_date
+    row[1] = domain.transfer_code
+    row[2] = domain.registrant_name
+    row[3] = domain.registrant_code
+    row[4] = domain.expire_date
     row
 
     CSV::Row.new([], row)
