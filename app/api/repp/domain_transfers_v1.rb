@@ -35,9 +35,11 @@ module Repp
 
         if errors.none?
           status 204
+          body false
+          @response = {}
         else
           status 400
-          { errors: errors }
+          @response = { errors: errors }
         end
       end
     end
