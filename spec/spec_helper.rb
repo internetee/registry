@@ -1,10 +1,11 @@
+if ENV['COVERAGE']
+  require 'simplecov'
+  SimpleCov.command_name 'spec'
+  SimpleCov.start 'rails'
+end
+
 require 'webmock/rspec'
 WebMock.disable_net_connect!(allow_localhost: true)
-
-if ENV['TRAVIS']
-  require 'simplecov'
-  SimpleCov.start
-end
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
