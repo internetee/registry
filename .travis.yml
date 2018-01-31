@@ -4,9 +4,6 @@ env:
   - DB=postgresql
 bundler_args: --without development staging production
 before_script:
-  - "psql -c 'create database registry_test;' -U postgres"
-  - "psql -c 'create database registry_whois_test;' -U postgres"
-  - "psql -c 'create database registry_api_log_test;' -U postgres"
   - "cp config/application-example.yml config/application.yml"
   - "cp config/database-travis.yml config/database.yml"
   - "bundle exec rake db:setup:all"

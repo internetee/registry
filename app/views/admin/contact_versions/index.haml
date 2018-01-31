@@ -58,7 +58,7 @@
           - @versions.each do |version|
             - if version
             - contact = Contact.new(version.object.to_h)
-            - version.object_changes.to_h.each{|k,v| contact[k]=v.last}
+            - version.object_changes.to_h.each { |k,v| contact.public_send("#{k}=", v.last) }
 
               %tr
                 %td= link_to(contact.name, admin_contact_version_path(version.id))

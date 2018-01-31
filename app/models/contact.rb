@@ -18,6 +18,7 @@ class Contact < ActiveRecord::Base
 
   attr_accessor :legal_document_id
   alias_attribute :kind, :ident_type
+  alias_attribute :copy_from_id, :original_id # Old attribute name; for PaperTrail
 
   accepts_nested_attributes_for :legal_documents
 
