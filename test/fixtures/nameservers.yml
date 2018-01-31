@@ -1,3 +1,15 @@
 ns1:
   hostname: ns1.bestnames.test
+  ipv4:
+    - 192.0.2.1
+  ipv6:
+    - 2001:DB8::1
+  domain: shop
+
+ns2:
+  hostname: ns2.bestnames.test
+  ipv4:
+    - 192.0.2.2
+  ipv6:
+    - 2001:DB8::2
   domain: shop

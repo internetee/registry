@@ -20,4 +20,8 @@ class NameserverTest < ActiveSupport::TestCase
     @nameserver.validate
     assert @nameserver.invalid?
   end
+
+  def test_hostnames
+    assert_equal %w[ns1.bestnames.test ns2.bestnames.test], Nameserver.hostnames
+  end
 end
