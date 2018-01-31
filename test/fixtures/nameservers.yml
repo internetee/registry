@@ -3,7 +3,7 @@ ns1:
   ipv4:
     - 192.0.2.1
   ipv6:
-    - 2001:DB8::1
+    - 2001:db8::1
   domain: shop
 
 ns2:
@@ -11,5 +11,5 @@ ns2:
   ipv4:
     - 192.0.2.2
   ipv6:
-    - 2001:DB8::2
+    - 2001:db8::2
   domain: shop
