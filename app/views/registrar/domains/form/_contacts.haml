@@ -22,7 +22,7 @@
               = text_field_tag "domain[contacts_attributes][#{k}][code_helper]", contacts.find_by(code: v['code']).try(:search_name), class: 'form-control',  data: {autocomplete: search_contacts_registrar_domains_path}, required: true
 
 :coffee
-  window.onload = ->
+  load_listener = ->
     clone = $('.js-contact:first').clone()
     $("#js-domain-contacts").nestedAttributes
       bindAddTo: $(".add-domain-contact")
@@ -41,3 +41,4 @@
           $(v).hide()
         new Autocomplete()
       $clone: clone
+  window.addEventListener 'load', load_listener

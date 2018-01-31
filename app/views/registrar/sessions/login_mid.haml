@@ -13,7 +13,7 @@
       00007, 60000007, 00000766
 
 :coffee
-  window.onload = ->
+  load_listener = ->
     $('.js-login').attr('disabled', false)
 
     status_interval = null
@@ -38,3 +38,4 @@
         flash_alert(data.responseJSON.message)
         $('.js-login').attr('disabled', false)
       )
+  window.addEventListener 'load', load_listener
