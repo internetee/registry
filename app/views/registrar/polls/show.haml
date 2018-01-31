@@ -82,9 +82,10 @@
         %p.bg-info{style: 'padding: 15px;'}= t(:you_have_no_new_messages)
 
 :coffee
-  window.onload = ->
+  load_listener = ->
     $(".js-keyrelay-confirm").on "click", ->
       $(".js-keyrelay-form").submit()
 
     $(".js-transfer-confirm").on "click", ->
       $(".js-transfer-form").submit()
+  window.addEventListener 'load', load_listener
