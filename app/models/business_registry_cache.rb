@@ -19,23 +19,16 @@ authentication using electronic ID. Association through a business organisation 
 =end
 
 class BusinessRegistryCache < ActiveRecord::Base
-
-  # 1. load domains by business
-  # 2. load domains by person
-  def associated_contacts
-    contact_ids  = Contact.where(ident_type: 'org',  ident: associated_businesses, ident_country_code: 'EE').pluck(:id)
-    contact_ids += Contact.where(ident_type: 'priv', ident: ident, ident_country_code: ident_country_code).pluck(:id)
-    contact_ids
-  end
-
   def associated_domain_ids
+    contact_ids = Contact.where(ident_type: 'org',  ident: associated_businesses, ident_country_code: ident_country_code).pluck(:id)
+    contact_ids += Contact.where(ident_type: 'priv', ident: ident, ident_country_code: ident_country_code).pluck(:id)
     domain_ids = []
-
-    contact_ids = associated_contacts
 
     unless contact_ids.blank?
       domain_ids = DomainContact.distinct.where(contact_id: contact_ids).pluck(:domain_id)
     end
+
+    domain_ids += Domain.where(registrant_id: contact_ids).pluck(:id)
 
     domain_ids
   end
@@ -68,16 +61,6 @@ class BusinessRegistryCache < ActiveRecord::Base
 
     def business_registry
       Soap::Arireg.new
-    end
-
-    def purge
-      STDOUT << "#{Time.zone.now.utc} - Starting Purge of old BusinessRegistry data from cache\n" unless Rails.env.test?
-      purged = 0
-      BusinessRegistryCache.where('retrieved_on < ?',
-                                  Time.zone.now < Setting.days_to_keep_business_registry_cache.days).each do |br|
-        br.destroy and purged += 1
-      end
-      STDOUT << "#{Time.zone.now.utc} - Finished purging #{purged} old BusinessRegistry cache items\n" unless Rails.env.test?
     end
   end
 end

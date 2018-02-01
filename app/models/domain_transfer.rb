@@ -1,16 +1,13 @@
 class DomainTransfer < ActiveRecord::Base
-  include Versions # version/domain_transfer_version.rb
   belongs_to :domain
 
-  belongs_to :transfer_from, class_name: 'Registrar'
-  belongs_to :transfer_to, class_name: 'Registrar'
+  belongs_to :old_registrar, class_name: 'Registrar'
+  belongs_to :new_registrar, class_name: 'Registrar'
 
   PENDING = 'pending'
   CLIENT_APPROVED = 'clientApproved'
-  CLIENT_CANCELLED = 'clientCancelled'
   CLIENT_REJECTED = 'clientRejected'
   SERVER_APPROVED = 'serverApproved'
-  SERVER_CANCELLED = 'serverCancelled'
 
   before_create :set_wait_until
   def set_wait_until
@@ -39,20 +36,8 @@ class DomainTransfer < ActiveRecord::Base
     status == PENDING
   end
 
-  def approve_as_client
-    transaction do
-      self.status = DomainTransfer::CLIENT_APPROVED
-      self.transferred_at = Time.zone.now
-      save
-
-      domain.generate_auth_info
-      domain.registrar = transfer_to
-      domain.save(validate: false)
-    end
-  end
-
   def notify_losing_registrar(contacts, registrant)
-    transfer_from.messages.create!(
+    old_registrar.messages.create!(
       body: I18n.t('domain_transfer_was_approved', contacts: contacts, registrant: registrant),
       attached_obj_id: id,
       attached_obj_type: self.class.to_s

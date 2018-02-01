@@ -140,8 +140,8 @@ class Registrar < ActiveRecord::Base
   def domain_transfers
     at = DomainTransfer.arel_table
     DomainTransfer.where(
-      at[:transfer_to_id].eq(id).or(
-        at[:transfer_from_id].eq(id)
+      at[:new_registrar_id].eq(id).or(
+        at[:old_registrar_id].eq(id)
       )
     )
   end

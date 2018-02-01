@@ -1,0 +1,13 @@
+<tr>
+    <td><%= link_to truncate(domain.name), info_registrar_domains_path(domain_name: domain.name) %></td>
+    <td><%= link_to domain.registrant, registrar_contact_path(id: domain.registrant.code) %></td>
+    <td><%= l domain.expire_time %></td>
+    <td>
+        <%= link_to t('.edit_btn'), edit_registrar_domains_path(domain_name: domain.name),
+                    class: 'btn btn-primary btn-xs' %>
+        <%= link_to t('.renew_btn'), renew_registrar_domains_path(domain_name: domain.name),
+                    class: 'btn btn-default btn-xs' %>
+        <%= link_to t('.delete_btn'), delete_registrar_domains_path(domain_name: domain.name),
+                    class: 'btn btn-default btn-xs' %>
+    </td>
+</tr>

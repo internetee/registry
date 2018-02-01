@@ -1,5 +1,5 @@
 - domain = Domain.new(@version.object.to_h)
-- @version.object_changes.to_h.each{|k,v| domain[k]=v.last}
+- @version.object_changes.to_h.each{|k,v| domain.public_send("#{k}=", v.last) }
 
 - if @version
   - children = HashWithIndifferentAccess.new(@version.children)

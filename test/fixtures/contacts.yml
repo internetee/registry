@@ -1,0 +1,32 @@
+john:
+  name: John
+  email: john@inbox.test
+  phone: '+555.555'
+  ident: 1234
+  ident_type: priv
+  ident_country_code: US
+  registrar: bestnames
+  code: john-001
+  auth_info: cacb5b
+
+jane:
+  name: Jane
+  email: jane@mail.test
+  phone: '+555.555'
+  ident: 1234
+  ident_type: priv
+  ident_country_code: US
+  registrar: bestnames
+  code: jane-001
+  auth_info: 0aa09f
+
+acme_ltd:
+  name: Acme Ltd
+  email: acme@outlook.test
+  phone: '+555.555'
+  ident: 1234
+  ident_type: org
+  registrar: bestnames
+  ident_country_code: US
+  code: acme-ltd-001
+  auth_info: 720b3c

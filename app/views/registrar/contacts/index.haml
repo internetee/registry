@@ -66,8 +66,7 @@
             &nbsp;
             %span.glyphicon.glyphicon-search
             &nbsp;
-          %button.btn.btn-default.js-reset-form
-            = t(:clear_fields)
+          = link_to(t('.reset_btn'), registrar_contacts_path, class: 'btn btn-default')
       .row
         .col-md-3
           .btn-group{:role => "group"}
@@ -119,8 +118,3 @@
   .col-md-6.text-right
     .pagination
       = t(:result_count, count: @contacts.total_count)
-
-:coffee
-  $(".js-reset-form").on "click", (e) ->
-    e.preventDefault();
-    window.location = "#{registrar_contacts_path}"

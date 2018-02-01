@@ -2,13 +2,27 @@ en:
   registrar:
     domains:
       index:
-        registrant: Registrant
-        download_btn: Download
+        header: Domains
+        new_btn: New domain
+        transfer_btn: Transfer
         csv:
           domain_name: Domain
+          transfer_code: Transfer code
           registrant_name: Registrant name
           registrant_code: Registrant code
           expire_time: Date of expiry
+
+      info:
+        transfer_btn: Transfer
+
+      search_form:
+        download_btn: Download as CSV
+        reset_btn: Reset
+
+      domain:
+        edit_btn: Edit
+        renew_btn: Renew
+        delete_btn: Delete
 
       form:
         save_btn: Save

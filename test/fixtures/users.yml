@@ -1,16 +1,28 @@
-DEFAULTS: &DEFAULTS
-  username: test
-
-api:
-  <<: *DEFAULTS
+api_bestnames:
+  username: test_bestnames
+  password: testtest
   type: ApiUser
-  registrar: valid
+  registrar: bestnames
+  active: true
+  roles:
+    - super
+
+api_goodnames:
+  username: test_goodnames
+  password: testtest
+  type: ApiUser
+  registrar: goodnames
+  active: true
   roles:
     - super
 
 admin:
-  <<: *DEFAULTS
+  username: test
   type: AdminUser
   country_code: US
   roles:
     - admin
+
+registrant:
+  type: RegistrantUser
+  registrant_ident: US-1234

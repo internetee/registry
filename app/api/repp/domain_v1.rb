@@ -32,7 +32,7 @@ module Repp
         domain = ident =~ /\A[0-9]+\z/ ? Domain.find_by(id: ident) : Domain.find_by_idn(ident)
 
         error! I18n.t('errors.messages.epp_domain_not_found'), 404 unless domain
-        error! I18n.t('errors.messages.epp_authorization_error'), 401 unless domain.auth_info.eql? request.headers['Auth-Code']
+        error! I18n.t('errors.messages.epp_authorization_error'), 401 unless domain.transfer_code.eql? request.headers['Auth-Code']
 
         contact_repp_json = proc{|contact|
           contact.as_json.slice("code", "name", "ident", "ident_type", "ident_country_code", "phone", "email", "street", "city", "zip","country_code", "statuses")

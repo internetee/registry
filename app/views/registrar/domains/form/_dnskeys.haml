@@ -68,10 +68,10 @@
               class: 'form-control'
 
 :coffee
-  $("#dnskeys").nestedAttributes
-    bindAddTo: $(".add-dnskey")
-    afterAdd: (item) ->
-      item.find('select').each (k, v) ->
-        $(v).val($(v).find('option:first-child').val())
-
-
+  load_listener = ->
+    $("#dnskeys").nestedAttributes
+      bindAddTo: $(".add-dnskey")
+      afterAdd: (item) ->
+        item.find('select').each (k, v) ->
+          $(v).val($(v).find('option:first-child').val())
+  window.addEventListener 'load', load_listener

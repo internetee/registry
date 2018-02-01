@@ -67,7 +67,7 @@ module Versions
           map do |ver|
             o = new(ver.object)
             o.version_loader = ver
-            ver.object_changes.to_h.each { |k, v| o[k]=v[-1] }
+            ver.object_changes.to_h.each { |k, v| o.public_send("#{k}=", v[-1]) }
             o
           end
       not_in_history = where(id: (ids.to_a - from_history.map(&:id)))

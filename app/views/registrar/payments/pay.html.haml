@@ -6,5 +6,6 @@
 
 
 :coffeescript
-  $(document).ready ->
+  load_listener = ->
     $('.payment-form form').submit()
+  window.addEventListener 'load', load_listener

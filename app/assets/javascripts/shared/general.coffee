@@ -1,9 +1,3 @@
-#= require nprogress
-#= require nprogress-turbolinks
-
-NProgress.configure
-  showSpinner: false
-
 @flash_notice = (msg) ->
   $('#flash').find('div').removeClass('bg-danger')
   $('#flash').find('div').addClass('bg-success')
@@ -16,7 +10,7 @@ NProgress.configure
   $('#flash').find('div').html(msg)
   $('#flash').show()
 
-$(document).on 'page:change', ->
+$ ->
   today = new Date()
   tomorrow = new Date(today)
   tomorrow.setDate(today.getDate() + 1)
