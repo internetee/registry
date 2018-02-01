@@ -1,6 +1,0 @@
-<tr>
-    <td><%= link_to domain, registrant_domain_path(domain) %></td>
-    <td><%= link_to domain.registrant.name, registrant_contact_path(domain.registrant) %></td>
-    <td><%= l domain.expire_time %></td>
-    <td><%= link_to domain.registrar, registrant_registrar_path(domain.registrar) %></td>
-</tr>

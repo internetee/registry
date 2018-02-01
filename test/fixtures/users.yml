@@ -14,7 +14,3 @@ admin:
   country_code: US
   roles:
     - admin
-
-registrant:
-  type: RegistrantUser
-  registrant_ident: US-1234

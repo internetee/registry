@@ -2,14 +2,17 @@
 %html{lang: I18n.locale.to_s}
   %head
     %meta{charset: "utf-8"}/
+    %meta{content: "IE=edge", "http-equiv" => "X-UA-Compatible"}/
     %meta{content: "width=device-width, initial-scale=1", name: "viewport"}/
+    %meta{content: "Full stack top-level domain (TLD) management.", name: "description"}/
+    %meta{content: "Gitlab LTD", name: "author"}/
     - if content_for? :head_title
       = yield :head_title
     - else
       %title= t(:registrant_head_title)
     = csrf_meta_tags
-    = stylesheet_link_tag 'registrant-manifest', media: 'all'
-    = javascript_include_tag 'registrant-manifest'
+    = stylesheet_link_tag 'registrant-manifest', media: 'all', 'data-turbolinks-track' => true
+    = javascript_include_tag 'registrant-manifest', 'data-turbolinks-track' => true
     = favicon_link_tag 'favicon.ico'
   %body
     / Fixed navbar
@@ -46,7 +49,7 @@
 
     %footer.footer
       .container
-        .row
+        %row
           .col-md-6
             = image_tag 'eis-logo-et.png'
           .col-md-6.text-right
