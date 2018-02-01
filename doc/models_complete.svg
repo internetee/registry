@@ -812,7 +812,6 @@
 <text text-anchor="start" x="1969" y="-1338.8" font-family="Times,serif" font-size="14.00">id :integer</text>
 <text text-anchor="start" x="1969" y="-1323.8" font-family="Times,serif" font-size="14.00">contact_id :integer</text>
 <text text-anchor="start" x="1969" y="-1308.8" font-family="Times,serif" font-size="14.00">domain_id :integer</text>
-<text text-anchor="start" x="1969" y="-1293.8" font-family="Times,serif" font-size="14.00">contact_type :string</text>
 <text text-anchor="start" x="1969" y="-1278.8" font-family="Times,serif" font-size="14.00">created_at :datetime</text>
 <text text-anchor="start" x="1969" y="-1263.8" font-family="Times,serif" font-size="14.00">updated_at :datetime</text>
 <text text-anchor="start" x="1969" y="-1248.8" font-family="Times,serif" font-size="14.00">contact_code_cache :string</text>
@@ -1066,7 +1065,6 @@
 <text text-anchor="start" x="1832" y="-661.3" font-family="Times,serif" font-size="14.00">id :integer</text>
 <text text-anchor="start" x="1832" y="-646.3" font-family="Times,serif" font-size="14.00">contact_id :integer</text>
 <text text-anchor="start" x="1832" y="-631.3" font-family="Times,serif" font-size="14.00">domain_id :integer</text>
-<text text-anchor="start" x="1832" y="-616.3" font-family="Times,serif" font-size="14.00">contact_type :string</text>
 <text text-anchor="start" x="1832" y="-601.3" font-family="Times,serif" font-size="14.00">created_at :datetime</text>
 <text text-anchor="start" x="1832" y="-586.3" font-family="Times,serif" font-size="14.00">updated_at :datetime</text>
 <text text-anchor="start" x="1832" y="-571.3" font-family="Times,serif" font-size="14.00">contact_code_cache :string</text>
@@ -1345,7 +1343,6 @@
 <text text-anchor="start" x="2151" y="-1338.8" font-family="Times,serif" font-size="14.00">id :integer</text>
 <text text-anchor="start" x="2151" y="-1323.8" font-family="Times,serif" font-size="14.00">contact_id :integer</text>
 <text text-anchor="start" x="2151" y="-1308.8" font-family="Times,serif" font-size="14.00">domain_id :integer</text>
-<text text-anchor="start" x="2151" y="-1293.8" font-family="Times,serif" font-size="14.00">contact_type :string</text>
 <text text-anchor="start" x="2151" y="-1278.8" font-family="Times,serif" font-size="14.00">created_at :datetime</text>
 <text text-anchor="start" x="2151" y="-1263.8" font-family="Times,serif" font-size="14.00">updated_at :datetime</text>
 <text text-anchor="start" x="2151" y="-1248.8" font-family="Times,serif" font-size="14.00">contact_code_cache :string</text>
