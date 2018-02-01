@@ -31,6 +31,12 @@ class Registrant::SessionsController < Devise::SessionsController
     client = Digidoc::Client.new(endpoint)
     client.logger = Rails.application.config.logger unless Rails.env.test?
 
+    if Rails.env.test? && phone == "123"
+      @user = ApiUser.find_by(identity_code: "14212128025")
+      sign_in(@user, event: :authentication)
+      return redirect_to registrant_root_url
+    end
+
     # country_codes = {'+372' => 'EST'}
     response = client.authenticate(
       phone: "+372#{phone}",
