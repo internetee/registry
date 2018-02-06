@@ -119,7 +119,7 @@ class EppController < ApplicationController
     # by default PaperTrail uses before filter and at that
     # time current_user is not yet present
     ::PaperTrail.whodunnit = user_log_str(@current_user)
-    ::PaperSession.session = epp_session.session_id if epp_session.session_id.present?
+    ::PaperSession.session = epp_session.session_id
     @current_user
   end
 
