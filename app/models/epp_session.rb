@@ -1,6 +1,8 @@
 class EppSession < ActiveRecord::Base
   before_save :marshal_data!
 
+  validates :session_id, presence: true
+
   belongs_to :registrar
   # rubocop: disable Rails/ReadWriteAttribute
   # Turned back to read_attribute, thus in Rails 4
