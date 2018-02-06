@@ -3,7 +3,7 @@ require 'test_helper'
 class EditRegistrarTest < ActionDispatch::IntegrationTest
   def setup
     login_as users(:admin)
-    @registrar = registrars(:valid)
+    @registrar = registrars(:bestnames)
   end
 
   def test_updates_registrar

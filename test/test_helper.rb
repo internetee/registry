@@ -10,6 +10,9 @@ require 'rails/test_help'
 require 'minitest/mock'
 require 'capybara/rails'
 require 'capybara/minitest'
+require 'webmock/minitest'
+
+Setting.address_processing = false
 
 class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
@@ -25,6 +28,7 @@ class ActionDispatch::IntegrationTest
   include AbstractController::Translation
 
   def teardown
+    Warden.test_reset!
     Capybara.reset_sessions!
     Capybara.use_default_driver
   end

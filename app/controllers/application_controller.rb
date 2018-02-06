@@ -65,13 +65,6 @@ class ApplicationController < ActionController::Base
     user_log_str(current_user)
   end
 
-  def depp_current_user
-    @depp_current_user ||= Depp::User.new(
-      tag: current_user.username,
-      password: current_user.password
-    )
-  end
-
   def user_log_str(user)
     user.nil? ? 'public' : user.id_role_username
   end

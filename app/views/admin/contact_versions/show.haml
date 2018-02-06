@@ -1,5 +1,5 @@
 - contact = Contact.new(@version.object.to_h)
-- @version.object_changes.to_h.each{|k,v| contact[k]=v.last}
+- @version.object_changes.to_h.each { |k,v| contact.public_send("#{k}=", v.last ) }
 = render 'shared/title', name: contact.name
 
 .row

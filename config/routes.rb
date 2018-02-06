@@ -54,7 +54,6 @@ Rails.application.routes.draw do
         post 'update', as: 'update'
         post 'destroy', as: 'destroy'
         get 'renew'
-        match 'transfer', via: [:post, :get]
         get 'edit'
         get 'info'
         get 'check'
@@ -62,6 +61,7 @@ Rails.application.routes.draw do
         get 'search_contacts'
       end
     end
+    resources :domain_transfers, only: %i[new create]
 
     resources :contacts, constraints: {:id => /[^\/]+(?=#{ ActionController::Renderers::RENDERERS.map{|e| "\\.#{e}\\z"}.join("|") })|[^\/]+/} do
       member do

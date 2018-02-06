@@ -1,0 +1,27 @@
+<div class="page-header">
+    <h1><%= t '.header' %></h1>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <%= t(:result) %>
+                </h3>
+            </div>
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt><%= t(:domain_name) %></dt>
+                    <dd><%= @data.css('name').text %></dd>
+
+                    <% @data.css('trnData').children.each do |x| %>
+                        <% next if x.blank? %>
+                        <dt><%= t(x.name) %></dt>
+                        <dd><%= x.text %></dd>
+                    <% end %>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>

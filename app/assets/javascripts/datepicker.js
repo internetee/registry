@@ -12,10 +12,5 @@
         dateFields.datepicker();
     }
 
-    // For turbolinks
-    document.addEventListener('page:change', function() {
-        attachDatePicker();
-    });
-
     attachDatePicker();
 })();

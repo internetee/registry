@@ -93,24 +93,9 @@
                     </th>
                 </tr>
                 </thead>
+
                 <tbody>
-                <% @domains.each do |x| %>
-                    <tr>
-                        <td>
-                            <%= link_to(x, registrant_domain_path(x)) %>
-                        </td>
-                        <td>
-                            <%= link_to(x.registrant.name, registrant_contact_path(x.registrant)) if x.registrant %>
-                        </td>
-                        <td>
-                            <%= l(x.valid_to, format: :short) %>
-                        </td>
-                        <td>
-                            <%= link_to(x.registrar, registrant_registrar_path(x.registrar)) if x.registrar %>
-                        </td>
-                    </tr>
-                    <div class="row"></div>
-                <% end %>
+                    <%= render @domains %>
                 </tbody>
             </table>
         </div>

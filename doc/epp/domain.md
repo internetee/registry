@@ -27,6 +27,9 @@ Domain name mapping protocol short version:
         <domain:registrant>    1        Contact reference to the registrant
         <domain:contact>       0-n      Contact reference. Admin contact is required if registrant is
                                         a juridical person. Attribute: type="admin / tech"
+        <domain:authInfo>      0-1
+          <domain:pw>          1         Transfer code. Attribute: roid="String"
+        </domain:authInfo>
     <extension>                1       
       <secDNS:create>          0-1      Attribute: xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1"
         <secDNS:keyData>       1-n     
@@ -72,6 +75,9 @@ Domain name mapping protocol short version:
         <domain:chg>             0-1       Attributes to change
           <domain:registrant>    0-1       Contact reference to the registrant
                                              Optional attribute: verified="yes/no"
+          <domain:authInfo>      0-1
+            <domain:pw>          1         Transfer code. Attribute: roid="String"
+          </domain:authInfo>
     <extension>                  0-1       Required if registrant is changing
       <secDNS:update>            0-1       Attribute: xmlns:secDNS="urn:ietf:params:xml:ns:secDNS-1.1"
         <secDNS:rem>             0-1      
@@ -115,7 +121,7 @@ Domain name mapping protocol short version:
         <domain:name>        1        Domain name. Can contain unicode characters. 
                                       Attribute: hosts="all / del / sub / none"
         <domain:authInfo>    0-1      Required if registrar is not the owner of the domain.
-          <domain:pw>        1        Domain password. Attribute: roid="String"
+          <domain:pw>        1        Domain transfer code. Attribute: roid="String"
     <clTRID>                 0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-domain-with-valid-domain-returns-domain-info)
@@ -148,7 +154,7 @@ Domain name mapping protocol short version:
       <domain:transfer>      1        Attribute: xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd"
         <domain:name>        1        Domain name. Can contain unicode characters. 
         <domain:authInfo>    1       
-          <domain:pw>        1        Domain password. Attribute: roid="String"
+          <domain:pw>        1        Domain transfer code. Attribute: roid="String"
     <extension>              0-1     
       <eis:extdata>          0-1      Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
         <eis:legalDocument>  0-1      Base64 encoded document.  

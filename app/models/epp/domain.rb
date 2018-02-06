@@ -100,7 +100,7 @@ class Epp::Domain < Domain
         [:puny_label, :too_long, { obj: 'name', val: name_puny }]
       ],
       '2201' => [ # Authorisation error
-        [:auth_info, :wrong_pw]
+        [:transfer_code, :wrong_pw]
       ],
       '2202' => [
         [:base, :invalid_auth_information_reserved]
@@ -182,7 +182,7 @@ class Epp::Domain < Domain
     # at[:domain_statuses_attributes] = domain_statuses_attrs(frame, action)
 
     pw = frame.css('authInfo > pw').text
-    at[:auth_info] = pw if pw.present?
+    at[:transfer_code] = pw if pw.present?
 
     if new_record?
       dnskey_frame = frame.css('extension create')
@@ -641,47 +641,6 @@ class Epp::Domain < Domain
     end
   end
 
-  # TODO: Eager load problems here. Investigate how it's possible not to query contact again
-  # Check if versioning works with update_column
-  def transfer_contacts(registrar_id)
-    transfer_registrant(registrar_id)
-    transfer_domain_contacts(registrar_id)
-  end
-
-  def copy_and_transfer_contact(contact_id, registrar_id)
-    c = Contact.find(contact_id) # n+1 workaround
-    oc = c.deep_clone
-    oc.code = nil
-    oc.registrar_id = registrar_id
-    oc.copy_from_id = c.id
-    oc.generate_code
-    oc.domain_transfer = true
-    oc.remove_address unless Contact.address_processing?
-    oc.save!(validate: false)
-    oc
-  end
-
-  def transfer_registrant(registrar_id)
-    return if registrant.registrar_id == registrar_id
-    self.registrant_id = copy_and_transfer_contact(registrant_id, registrar_id).id
-  end
-
-  def transfer_domain_contacts(registrar_id)
-    copied_ids = []
-    contacts.each do |c|
-      next if copied_ids.include?(c.id) || c.registrar_id == registrar_id
-
-      if registrant_id_was == c.id # registrant was copied previously, do not copy it again
-        oc = OpenStruct.new(id: registrant_id)
-      else
-        oc = copy_and_transfer_contact(c.id, registrar_id)
-      end
-
-      domain_contacts.where(contact_id: c.id).update_all({ contact_id: oc.id }) # n+1 workaround
-      copied_ids << c.id
-    end
-  end
-
   # rubocop: enable Metrics/PerceivedComplexity
   # rubocop: enable Metrics/CyclomaticComplexity
   # rubocop: disable Metrics/MethodLength
@@ -707,8 +666,8 @@ class Epp::Domain < Domain
     transaction do
       dt = domain_transfers.create!(
         transfer_requested_at: Time.zone.now,
-        transfer_to: current_user.registrar,
-        transfer_from: registrar
+        old_registrar: registrar,
+        new_registrar: current_user.registrar
       )
 
       if dt.pending?
@@ -720,9 +679,9 @@ class Epp::Domain < Domain
       end
 
       if dt.approved?
-        transfer_contacts(current_user.registrar_id)
+        transfer_contacts(current_user.registrar)
         dt.notify_losing_registrar(old_contact_codes, old_registrant_code)
-        generate_auth_info!
+        regenerate_transfer_code
         self.registrar = current_user.registrar
       end
 
@@ -737,7 +696,7 @@ class Epp::Domain < Domain
 
   def approve_transfer(frame, current_user)
     pt = pending_transfer
-    if current_user.registrar != pt.transfer_from
+    if current_user.registrar != pt.old_registrar
       throw :epp_error, {
         msg: I18n.t('transfer_can_be_approved_only_by_current_registrar'),
         code: '2304'
@@ -750,9 +709,9 @@ class Epp::Domain < Domain
         transferred_at: Time.zone.now
       )
 
-      transfer_contacts(pt.transfer_to_id)
-      generate_auth_info
-      self.registrar = pt.transfer_to
+      transfer_contacts(pt.new_registrar)
+      regenerate_transfer_code
+      self.registrar = pt.new_registrar
 
       attach_legal_document(self.class.parse_legal_document_from_frame(frame))
       save!(validate: false)
@@ -763,7 +722,7 @@ class Epp::Domain < Domain
 
   def reject_transfer(frame, current_user)
     pt = pending_transfer
-    if current_user.registrar != pt.transfer_from
+    if current_user.registrar != pt.old_registrar
       throw :epp_error, {
         msg: I18n.t('transfer_can_be_rejected_only_by_current_registrar'),
         code: '2304'
@@ -872,7 +831,7 @@ class Epp::Domain < Domain
 
   # For domain transfer
   def authenticate(pw)
-    errors.add(:auth_info, :wrong_pw) if pw != auth_info
+    errors.add(:transfer_code, :wrong_pw) if pw != transfer_code
     errors.empty?
   end
 

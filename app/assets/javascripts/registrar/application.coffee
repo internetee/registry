@@ -1,4 +1,4 @@
-$(document).on 'page:change', ->
+$ ->
   $('.js-contact-form').on 'restoreDefault', (e) ->
     form = $(e.target)
     form.find('.js-ident-tip').hide()

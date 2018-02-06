@@ -1,0 +1,29 @@
+<div class="page-header">
+    <h1><%= t '.header' %></h1>
+</div>
+
+<%= render 'registrar/domain_transfers/form/api_errors' %>
+
+<div class="row">
+    <div class="col-md-8">
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a href="#single" data-toggle="tab"><%= t '.single' %></a>
+            </li>
+
+            <li>
+                <a href="#batch" data-toggle="tab"><%= t '.batch' %></a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="single">
+                <%= render 'registrar/domain_transfers/form/single' %>
+            </div>
+
+            <div class="tab-pane" id="batch">
+                <%= render 'registrar/domain_transfers/form/batch' %>
+            </div>
+        </div>
+    </div>
+</div>

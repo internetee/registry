@@ -2,7 +2,7 @@ require 'test_helper'
 
 class RegistrarTest < ActiveSupport::TestCase
   def setup
-    @registrar = registrars(:valid)
+    @registrar = registrars(:bestnames)
   end
 
   def test_valid

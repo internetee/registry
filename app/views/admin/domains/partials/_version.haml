@@ -33,7 +33,7 @@
 
   %td
     %p.nowrap
-      = l(domain.updated_at, format: :shorts)
+      = l domain.updated_at
       -#- if statuses_link
         %br= link_to t(:edit_statuses), edit_admin_domain_path(params[:domain_id])
 
