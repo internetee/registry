@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe 'EPP contact:update' do
+  let(:registrar) { create(:registrar) }
+  let(:user) { create(:api_user_epp, registrar: registrar) }
+  let(:session_id) { create(:epp_session, user: user, registrar: registrar).session_id }
   let(:request_xml_with_address) { '<?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
       <command>
@@ -33,7 +36,7 @@ RSpec.describe 'EPP contact:update' do
   subject(:response_description) { response_xml.css('result msg').text }
 
   before do
-    sign_in_to_epp_area
+    login_as user
     create(:contact, code: 'TEST')
   end
 
@@ -44,12 +47,12 @@ RSpec.describe 'EPP contact:update' do
 
     context 'with address' do
       it 'returns epp code of 1000' do
-        post '/epp/command/update', frame: request_xml_with_address
+        post '/epp/command/update', { frame: request_xml_with_address }, 'HTTP_COOKIE' => "session=#{session_id}"
         expect(response_code).to eq('1000')
       end
 
       it 'returns epp description' do
-        post '/epp/command/update', frame: request_xml_with_address
+        post '/epp/command/update', { frame: request_xml_with_address }, 'HTTP_COOKIE' => "session=#{session_id}"
         expect(response_description).to eq('Command completed successfully')
       end
     end
@@ -62,12 +65,12 @@ RSpec.describe 'EPP contact:update' do
 
     context 'with address' do
       it 'returns epp code of 1100' do
-        post '/epp/command/update', frame: request_xml_with_address
+        post '/epp/command/update', { frame: request_xml_with_address }, 'HTTP_COOKIE' => "session=#{session_id}"
         expect(response_code).to eq('1100')
       end
 
       it 'returns epp description' do
-        post '/epp/command/update', frame: request_xml_with_address
+        post '/epp/command/update', { frame: request_xml_with_address }, 'HTTP_COOKIE' => "session=#{session_id}"
         expect(response_description).to eq('Command completed successfully; Postal address data discarded')
       end
     end
@@ -92,12 +95,12 @@ RSpec.describe 'EPP contact:update' do
       }
 
       it 'returns epp code of 1000' do
-        post '/epp/command/update', frame: request_xml_without_address
+        post '/epp/command/update', { frame: request_xml_without_address }, 'HTTP_COOKIE' => "session=#{session_id}"
         expect(response_code).to eq('1000')
       end
 
       it 'returns epp description' do
-        post '/epp/command/update', frame: request_xml_without_address
+        post '/epp/command/update', { frame: request_xml_without_address }, 'HTTP_COOKIE' => "session=#{session_id}"
         expect(response_description).to eq('Command completed successfully')
       end
     end

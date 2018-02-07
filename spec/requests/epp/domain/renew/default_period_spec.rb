@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe 'EPP domain:renew', settings: false do
-  let(:request) { post '/epp/command/renew', frame: request_xml }
+  let(:session_id) { create(:epp_session, user: user, registrar: registrar).session_id }
+  let(:request) { post '/epp/command/renew', { frame: request_xml }, 'HTTP_COOKIE' => "session=#{session_id}" }
   let!(:user) { create(:api_user_epp, registrar: registrar) }
   let!(:zone) { create(:zone, origin: 'test') }
   let!(:registrar) { create(:registrar_with_unlimited_balance) }
@@ -37,7 +38,7 @@ RSpec.describe 'EPP domain:renew', settings: false do
   before :example do
     travel_to Time.zone.parse('05.07.2010')
     Setting.days_to_renew_domain_before_expire = 0
-    sign_in_to_epp_area(user: user)
+    login_as user
   end
 
   context 'when period is absent' do
