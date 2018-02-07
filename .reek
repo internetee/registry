@@ -538,7 +538,6 @@ IrresponsibleModule:
   - DomainStatus
   - DomainTransfer
   - Epp::Contact
-  - EppSession
   - Invoice
   - InvoiceItem
   - Keyrelay
@@ -1027,7 +1026,6 @@ PrimaDonnaMethod:
   - Contact
   - Domain
   - Epp::Domain
-  - EppSession
   - RegistrantVerification
   - Registrar
 BooleanParameter:

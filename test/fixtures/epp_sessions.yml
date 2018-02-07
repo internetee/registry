@@ -1,9 +1,9 @@
 api_bestnames:
   session_id: 1
+  user: api_bestnames
   registrar: bestnames
-  data: <%= Base64.encode64(Marshal.dump({api_user_id: ActiveRecord::Fixtures.identify(:api_bestnames)})) %>
 
 api_goodnames:
   session_id: 2
+  user: api_goodnames
   registrar: goodnames
-  data: <%= Base64.encode64(Marshal.dump({api_user_id: ActiveRecord::Fixtures.identify(:api_goodnames)})) %>

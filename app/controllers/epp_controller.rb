@@ -115,7 +115,7 @@ class EppController < ApplicationController
   end
 
   def current_user
-    @current_user ||= ApiUser.find_by_id(epp_session[:api_user_id])
+    @current_user ||= epp_session.user
     # by default PaperTrail uses before filter and at that
     # time current_user is not yet present
     ::PaperTrail.whodunnit = user_log_str(@current_user)

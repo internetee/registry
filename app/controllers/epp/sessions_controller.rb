@@ -91,7 +91,7 @@ class Epp::SessionsController < EppController
         end
       end
 
-      epp_session[:api_user_id] = @api_user.id
+      epp_session.user = @api_user
       epp_session.update_column(:registrar_id, @api_user.registrar_id)
       render_epp_response('login_success')
     else
