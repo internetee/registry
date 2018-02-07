@@ -1051,7 +1051,6 @@ ALTER SEQUENCE domains_id_seq OWNED BY domains.id;
 CREATE TABLE epp_sessions (
     id integer NOT NULL,
     session_id character varying NOT NULL,
-    data text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     registrar_id integer,
@@ -5082,4 +5081,8 @@ INSERT INTO schema_migrations (version) VALUES ('20180126104903');
 INSERT INTO schema_migrations (version) VALUES ('20180206213435');
 
 INSERT INTO schema_migrations (version) VALUES ('20180206234620');
+
+INSERT INTO schema_migrations (version) VALUES ('20180207071528');
+
+INSERT INTO schema_migrations (version) VALUES ('20180207072139');
 
