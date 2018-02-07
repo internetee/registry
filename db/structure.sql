@@ -1054,7 +1054,8 @@ CREATE TABLE epp_sessions (
     data text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    registrar_id integer
+    registrar_id integer,
+    user_id integer
 );
 
 
@@ -4485,6 +4486,14 @@ ALTER TABLE ONLY domain_transfers
 
 
 --
+-- Name: fk_rails_adff2dc8e3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY epp_sessions
+    ADD CONSTRAINT fk_rails_adff2dc8e3 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
 -- Name: fk_rails_b80dbb973d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5071,4 +5080,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180126104536');
 INSERT INTO schema_migrations (version) VALUES ('20180126104903');
 
 INSERT INTO schema_migrations (version) VALUES ('20180206213435');
+
+INSERT INTO schema_migrations (version) VALUES ('20180206234620');
 
