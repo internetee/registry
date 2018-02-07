@@ -959,7 +959,6 @@ FeatureEnvy:
   - ActionDispatch::Flash#call
   - Ransack::Adapters::ActiveRecord::Context#evaluate
   - EppConstraint#matches?
-  - Requests::SessionHelpers#sign_in_to_epp_area
 TooManyMethods:
   exclude:
   - Epp::ContactsController
