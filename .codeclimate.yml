@@ -31,8 +31,8 @@ plugins:
       IrresponsibleModule:
         enabled: false
 exclude_patterns:
-- config/
-- db/
-- vendor/
-- spec/
-- test/
+- "config/"
+- "db/"
+- "vendor/"
+- "spec/"
+- "test/"
