@@ -6,6 +6,8 @@ class Epp::PollsController < EppController
     ack_poll if params[:parsed_frame].css('poll').first['op'] == 'ack'
   end
 
+  private
+
   def req_poll
     @message = current_user.queued_messages.last
 
@@ -48,8 +50,6 @@ class Epp::PollsController < EppController
     handle_errors(@message) and return unless @message.dequeue
     render_epp_response 'epp/poll/poll_ack'
   end
-
-  private
 
   def validate_poll
     requires_attribute 'poll', 'op', values: %(ack req), allow_blank: true
