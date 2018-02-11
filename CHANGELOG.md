@@ -1,3 +1,9 @@
+11.02.2018
+* BUG: Disable all object validations on domain transfer [#701](https://github.com/internetee/registry/issues/701)
+
+06.02.2018
+* BUG: EPP sessions get again unique session id preventing session mixups [#699](https://github.com/internetee/registry/pull/699)
+
 06.02.2018
 * BUG: Poral for registrants returns again domains that is associated with the user only through the role of registrant [#663](https://github.com/internetee/registry/issues/663)
 * Registrar: bulk transfer and improved csv download for use as bulk transfer input [#660](https://github.com/internetee/registry/issues/660)
