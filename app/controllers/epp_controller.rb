@@ -362,7 +362,6 @@ class EppController < ApplicationController
   # rubocop: disable Metrics/CyclomaticComplexity
   # rubocop: disable Metrics/PerceivedComplexity
   def write_to_epp_log
-    # return nil if EPP_LOG_ENABLED
     request_command = params[:command] || params[:action] # error receives :command, other methods receive :action
     frame = params[:raw_frame] || params[:frame]
 
