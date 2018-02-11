@@ -48,6 +48,14 @@ class ContactTransferTest < ActiveSupport::TestCase
     end
   end
 
+  def test_bypasses_validation
+    @contact = contacts(:invalid)
+
+    assert_difference 'Contact.count' do
+      @contact.transfer(@new_registrar)
+    end
+  end
+
   def test_changes_registrar
     new_contact = @contact.transfer(@new_registrar)
     assert_equal @new_registrar, new_contact.registrar
