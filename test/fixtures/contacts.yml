@@ -30,3 +30,9 @@ acme_ltd:
   ident_country_code: US
   code: acme-ltd-001
   auth_info: 720b3c
+
+invalid:
+  name: any
+  code: any
+  auth_info: any
+  registrar: bestnames

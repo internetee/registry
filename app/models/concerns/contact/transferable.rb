@@ -14,7 +14,7 @@ module Concerns::Contact::Transferable
     new_contact.regenerate_code
     new_contact.regenerate_auth_info
     new_contact.remove_address unless self.class.address_processing?
-    new_contact.save!
+    new_contact.save(validate: false)
     new_contact
   end
 
