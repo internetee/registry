@@ -14,4 +14,10 @@ class MessageTest < ActiveSupport::TestCase
     @message.validate
     assert @message.invalid?
   end
+
+  def test_invalid_without_registrar
+    @message.registrar = nil
+    @message.validate
+    assert @message.invalid?
+  end
 end
