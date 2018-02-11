@@ -87,9 +87,7 @@
 <path fill="none" stroke="black" d="M-288,-561C-288,-561 -184,-561 -184,-561 -178,-561 -172,-567 -172,-573 -172,-573 -172,-687 -172,-687 -172,-693 -178,-699 -184,-699 -184,-699 -288,-699 -288,-699 -294,-699 -300,-693 -300,-687 -300,-687 -300,-573 -300,-573 -300,-567 -294,-561 -288,-561"/>
 <text text-anchor="middle" x="-236" y="-683.8" font-family="Times,serif" font-size="14.00">Epp::PollsController</text>
 <polyline fill="none" stroke="black" points="-300,-676 -172,-676 "/>
-<text text-anchor="start" x="-292" y="-660.8" font-family="Times,serif" font-size="14.00">ack_poll</text>
 <text text-anchor="start" x="-292" y="-645.8" font-family="Times,serif" font-size="14.00">poll</text>
-<text text-anchor="start" x="-292" y="-630.8" font-family="Times,serif" font-size="14.00">req_poll</text>
 <polyline fill="none" stroke="black" points="-300,-623 -172,-623 "/>
 <polyline fill="none" stroke="black" points="-300,-599 -172,-599 "/>
 <text text-anchor="start" x="-292" y="-583.8" font-family="Times,serif" font-size="14.00">_layout</text>

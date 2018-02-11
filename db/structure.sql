@@ -2184,7 +2184,7 @@ ALTER SEQUENCE mail_templates_id_seq OWNED BY mail_templates.id;
 
 CREATE TABLE messages (
     id integer NOT NULL,
-    registrar_id integer,
+    registrar_id integer NOT NULL,
     body character varying,
     attached_obj_type character varying,
     attached_obj_id character varying,
@@ -4517,6 +4517,14 @@ ALTER TABLE ONLY account_activities
 
 
 --
+-- Name: messages_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY messages
+    ADD CONSTRAINT messages_registrar_id_fk FOREIGN KEY (registrar_id) REFERENCES registrars(id);
+
+
+--
 -- Name: user_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5069,4 +5077,8 @@ INSERT INTO schema_migrations (version) VALUES ('20180125092422');
 INSERT INTO schema_migrations (version) VALUES ('20180126104536');
 
 INSERT INTO schema_migrations (version) VALUES ('20180126104903');
+
+INSERT INTO schema_migrations (version) VALUES ('20180211011450');
+
+INSERT INTO schema_migrations (version) VALUES ('20180211011948');
 

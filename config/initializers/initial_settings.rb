@@ -73,6 +73,3 @@ if con.present? && con.table_exists?('settings')
   Setting.save_default(:registry_swift, 'LHVBEE22')
   Setting.save_default(:registry_invoice_contact, 'Martti Õigus')
 end
-
-# dev only setting
-EPP_LOG_ENABLED = true # !Rails.env.test?
