@@ -3635,6 +3635,14 @@ ALTER TABLE ONLY contacts
 
 
 --
+-- Name: unique_session_id; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY epp_sessions
+    ADD CONSTRAINT unique_session_id UNIQUE (session_id);
+
+
+--
 -- Name: unique_zone_origin; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3883,13 +3891,6 @@ CREATE INDEX index_domains_on_registrar_id ON domains USING btree (registrar_id)
 --
 
 CREATE INDEX index_domains_on_statuses ON domains USING gin (statuses);
-
-
---
--- Name: index_epp_sessions_on_session_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX index_epp_sessions_on_session_id ON epp_sessions USING btree (session_id);
 
 
 --
@@ -5086,4 +5087,8 @@ INSERT INTO schema_migrations (version) VALUES ('20180207071528');
 INSERT INTO schema_migrations (version) VALUES ('20180207072139');
 
 INSERT INTO schema_migrations (version) VALUES ('20180212123810');
+
+INSERT INTO schema_migrations (version) VALUES ('20180212152810');
+
+INSERT INTO schema_migrations (version) VALUES ('20180212154731');
 
