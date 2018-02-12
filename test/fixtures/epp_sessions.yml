@@ -1,7 +1,7 @@
 api_bestnames:
-  session_id: 1
+  session_id: api_bestnames
   user: api_bestnames
 
 api_goodnames:
-  session_id: 2
+  session_id: api_goodnames
   user: api_goodnames
