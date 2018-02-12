@@ -91,8 +91,11 @@ class Epp::SessionsController < EppController
         end
       end
 
+      epp_session = EppSession.new
+      epp_session.session_id = cookies[:session]
       epp_session.user = @api_user
-      epp_session.update_column(:registrar_id, @api_user.registrar_id)
+      epp_session.registrar = @api_user.registrar
+      epp_session.save!
       render_epp_response('login_success')
     else
       response.headers['X-EPP-Returncode'] = '2500'
