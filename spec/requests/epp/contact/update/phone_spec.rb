@@ -4,7 +4,7 @@ require_relative '../shared/phone'
 RSpec.describe 'EPP contact:update' do
   let(:registrar) { create(:registrar) }
   let(:user) { create(:api_user_epp, registrar: registrar) }
-  let(:session_id) { create(:epp_session, user: user, registrar: registrar).session_id }
+  let(:session_id) { create(:epp_session, user: user).session_id }
   let!(:contact) { create(:contact, code: 'TEST') }
   let(:request) { post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => "session=#{session_id}" }
   let(:request_xml) { <<-XML

@@ -94,7 +94,6 @@ class Epp::SessionsController < EppController
       epp_session = EppSession.new
       epp_session.session_id = cookies[:session]
       epp_session.user = @api_user
-      epp_session.registrar = @api_user.registrar
       epp_session.save!
       render_epp_response('login_success')
     else
@@ -117,11 +116,10 @@ class Epp::SessionsController < EppController
   end
 
   def connection_limit_ok?
-    c = EppSession.where(
-      'registrar_id = ? AND updated_at >= ?', @api_user.registrar_id, Time.zone.now - 1.second
-    ).count
+    epp_session_count = EppSession.where(user_id: @api_user.registrar.api_users.ids)
+                      .where('updated_at >= ?', Time.zone.now - 1.second).count
 
-    return false if c >= 4
+    return false if epp_session_count >= 4
     true
   end
 

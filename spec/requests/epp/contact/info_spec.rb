@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'EPP contact:update' do
   let(:registrar) { create(:registrar) }
   let(:user) { create(:api_user_epp, registrar: registrar) }
-  let(:session_id) { create(:epp_session, user: user, registrar: registrar).session_id }
+  let(:session_id) { create(:epp_session, user: user).session_id }
   let(:request_xml) { '<?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
       <command>

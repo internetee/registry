@@ -1,9 +1,7 @@
 api_bestnames:
   session_id: 1
   user: api_bestnames
-  registrar: bestnames
 
 api_goodnames:
   session_id: 2
   user: api_goodnames
-  registrar: goodnames

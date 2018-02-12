@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'EPP contact:delete' do
-  let(:session_id) { create(:epp_session, user: user, registrar: registrar).session_id }
+  let(:session_id) { create(:epp_session, user: user).session_id }
   let(:user) { create(:api_user, registrar: registrar) }
   let(:registrar) { create(:registrar) }
   let!(:registrant) { create(:registrant, registrar: registrar, code: 'TEST') }

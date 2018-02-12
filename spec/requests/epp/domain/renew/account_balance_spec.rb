@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'EPP domain:renew' do
-  let(:session_id) { create(:epp_session, user: user, registrar: registrar).session_id }
+  let(:session_id) { create(:epp_session, user: user).session_id }
   let(:request) { post '/epp/command/renew', { frame: request_xml }, 'HTTP_COOKIE' => "session=#{session_id}" }
   let!(:user) { create(:api_user_epp, registrar: registrar) }
   let!(:zone) { create(:zone, origin: 'test') }

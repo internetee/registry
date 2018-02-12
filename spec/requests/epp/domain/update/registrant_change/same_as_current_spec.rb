@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'EPP domain:update' do
   let(:registrar) { create(:registrar) }
   let(:user) { create(:api_user_epp, registrar: registrar) }
-  let(:session_id) { create(:epp_session, user: user, registrar: registrar).session_id }
+  let(:session_id) { create(:epp_session, user: user).session_id }
   let(:request) { post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => "session=#{session_id}" }
   let!(:domain) { create(:domain, name: 'test.com', registrant: registrant) }
 

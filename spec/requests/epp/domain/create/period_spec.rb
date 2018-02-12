@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'EPP domain:create', settings: false do
-  let(:session_id) { create(:epp_session, user: user, registrar: registrar).session_id }
+  let(:session_id) { create(:epp_session, user: user).session_id }
   let(:request) { post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => "session=#{session_id}" }
   let!(:user) { create(:api_user_epp, registrar: registrar) }
   let!(:contact) { create(:contact, code: 'test') }
