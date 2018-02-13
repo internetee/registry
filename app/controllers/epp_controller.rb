@@ -90,25 +90,6 @@ class EppController < ApplicationController
     EppSession.find_by(session_id: epp_session_id)
   end
 
-  def update_epp_session
-    iptables_counter_update
-
-    if !Rails.env.development? && (epp_session.updated_at < Time.zone.now - 5.minutes)
-      @api_user = current_user # cache current_user for logging
-      epp_session.destroy
-      response.headers['X-EPP-Returncode'] = '1500'
-
-      epp_errors << {
-        msg: t('session_timeout'),
-        code: '2201'
-      }
-
-      handle_errors and return
-    else
-      epp_session.update_column(:updated_at, Time.zone.now)
-    end
-  end
-
   def current_user
     return unless signed_in?
     epp_session.user
@@ -397,5 +378,24 @@ class EppController < ApplicationController
 
   def epp_session_id
     cookies[:session]
+  end
+
+  def update_epp_session
+    iptables_counter_update
+
+    if !Rails.env.development? && (epp_session.updated_at < Time.zone.now - 5.minutes)
+      @api_user = current_user # cache current_user for logging
+      epp_session.destroy
+      response.headers['X-EPP-Returncode'] = '1500'
+
+      epp_errors << {
+        msg: t('session_timeout'),
+        code: '2201'
+      }
+
+      handle_errors and return
+    else
+      epp_session.update_column(:updated_at, Time.zone.now)
+    end
   end
 end

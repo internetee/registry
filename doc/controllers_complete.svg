@@ -681,7 +681,6 @@
 <text text-anchor="start" x="-72.5" y="74.2" font-family="Times,serif" font-size="14.00">render_epp_response</text>
 <text text-anchor="start" x="-72.5" y="89.2" font-family="Times,serif" font-size="14.00">requires</text>
 <text text-anchor="start" x="-72.5" y="104.2" font-family="Times,serif" font-size="14.00">requires_attribute</text>
-<text text-anchor="start" x="-72.5" y="119.2" font-family="Times,serif" font-size="14.00">update_epp_session</text>
 <text text-anchor="start" x="-72.5" y="134.2" font-family="Times,serif" font-size="14.00">validate_request</text>
 <text text-anchor="start" x="-72.5" y="149.2" font-family="Times,serif" font-size="14.00">write_to_epp_log</text>
 <text text-anchor="start" x="-72.5" y="164.2" font-family="Times,serif" font-size="14.00">xml_attrs_present?</text>
