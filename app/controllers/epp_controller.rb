@@ -95,12 +95,11 @@ class EppController < ApplicationController
 
   def update_epp_session
     iptables_counter_update
-    e_s = epp_session
-    return if e_s.new_record?
+    return if epp_session.new_record?
 
-    if !Rails.env.development? && (e_s.updated_at < Time.zone.now - 5.minutes)
+    if !Rails.env.development? && (epp_session.updated_at < Time.zone.now - 5.minutes)
       @api_user = current_user # cache current_user for logging
-      e_s.destroy
+      epp_session.destroy
       response.headers['X-EPP-Returncode'] = '1500'
 
       epp_errors << {
@@ -110,7 +109,7 @@ class EppController < ApplicationController
 
       handle_errors and return
     else
-      e_s.update_column(:updated_at, Time.zone.now)
+      epp_session.update_column(:updated_at, Time.zone.now)
     end
   end
 
