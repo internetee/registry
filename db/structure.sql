@@ -1053,7 +1053,7 @@ CREATE TABLE epp_sessions (
     session_id character varying NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    user_id integer
+    user_id integer NOT NULL
 );
 
 
@@ -5091,4 +5091,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180212123810');
 INSERT INTO schema_migrations (version) VALUES ('20180212152810');
 
 INSERT INTO schema_migrations (version) VALUES ('20180212154731');
+
+INSERT INTO schema_migrations (version) VALUES ('20180213183818');
 
