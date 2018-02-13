@@ -92,7 +92,7 @@ class Epp::SessionsController < EppController
       end
 
       epp_session = EppSession.new
-      epp_session.session_id = cookies[:session]
+      epp_session.session_id = epp_session_id
       epp_session.user = @api_user
       epp_session.save!
       render_epp_response('login_success')
