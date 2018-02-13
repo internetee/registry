@@ -27,11 +27,20 @@ class EppSessionTest < ActiveSupport::TestCase
     assert epp_session.invalid?
   end
 
+  # Having session_id constraints at the database level is crucial
+
   def test_database_session_id_unique_constraint
     epp_session = EppSession.new(session_id: @epp_session.session_id, user: @epp_session.user)
 
     assert_raises ActiveRecord::RecordNotUnique do
       epp_session.save(validate: false)
+    end
+  end
+
+  def test_database_session_id_not_null_constraint
+    @epp_session.session_id = nil
+    assert_raises ActiveRecord::StatementInvalid do
+      @epp_session.save(validate: false)
     end
   end
 end
