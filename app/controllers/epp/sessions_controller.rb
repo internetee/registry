@@ -124,6 +124,15 @@ class Epp::SessionsController < EppController
   end
 
   def logout
+    unless signed_in?
+      epp_errors << {
+        code: 2201,
+        msg: 'Authorization error'
+      }
+      handle_errors
+      return
+    end
+
     @api_user = current_user # cache current_user for logging
     epp_session.destroy
     response.headers['X-EPP-Returncode'] = '1500'

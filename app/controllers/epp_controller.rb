@@ -397,4 +397,14 @@ class EppController < ApplicationController
     name = self.class.to_s.sub("Epp::","").sub("Controller","").underscore.singularize
     instance_variable_get("@#{name}")
   end
+
+  private
+
+  def signed_in?
+    epp_session
+  end
+
+  def epp_session_id
+    cookies[:session]
+  end
 end
