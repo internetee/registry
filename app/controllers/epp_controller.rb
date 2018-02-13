@@ -110,12 +110,8 @@ class EppController < ApplicationController
   end
 
   def current_user
-    @current_user ||= epp_session.user
-    # by default PaperTrail uses before filter and at that
-    # time current_user is not yet present
-    ::PaperTrail.whodunnit = user_log_str(@current_user)
-    ::PaperSession.session = epp_session.session_id
-    @current_user
+    return unless signed_in?
+    epp_session.user
   end
 
   # ERROR + RESPONSE HANDLING
