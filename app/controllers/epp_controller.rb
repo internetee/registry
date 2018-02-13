@@ -86,11 +86,8 @@ class EppController < ApplicationController
     @params_hash ||= Hash.from_xml(params[:frame]).with_indifferent_access
   end
 
-  # SESSION MANAGEMENT
   def epp_session
-    cookies # Probably does some initialization
-    cookie = env['rack.request.cookie_hash'] || {}
-    EppSession.find_or_initialize_by(session_id: cookie['session'])
+    EppSession.find_by(session_id: epp_session_id)
   end
 
   def update_epp_session
