@@ -8,7 +8,7 @@ class EppController < ApplicationController
   before_action :latin_only
   before_action :validate_against_schema
   before_action :validate_request
-  before_action :update_epp_session
+  before_action :update_epp_session, if: 'signed_in?'
 
   around_action :catch_epp_errors
 
@@ -92,7 +92,6 @@ class EppController < ApplicationController
 
   def update_epp_session
     iptables_counter_update
-    return if epp_session.new_record?
 
     if !Rails.env.development? && (epp_session.updated_at < Time.zone.now - 5.minutes)
       @api_user = current_user # cache current_user for logging
