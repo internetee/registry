@@ -31,6 +31,10 @@ class EppLoginTest < ActionDispatch::IntegrationTest
     assert_equal 1, Nokogiri::XML(response.body).css('result').size
   end
 
+  def test_already_logged_in
+    assert true # Handled by mod_epp
+  end
+
   def test_wrong_credentials
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
