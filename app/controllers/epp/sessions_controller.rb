@@ -74,7 +74,7 @@ class Epp::SessionsController < EppController
       success = false
     end
 
-    if success && !connection_limit_ok?
+    if success && EppSession.limit_reached?(@api_user.registrar)
       epp_errors << {
         msg: 'Authentication error; server closing connection (connection limit reached)',
         code: '2501'
@@ -142,13 +142,5 @@ class Epp::SessionsController < EppController
   private
   def resource
     @api_user
-  end
-
-  def connection_limit_ok?
-    epp_session_count = EppSession.where(user_id: @api_user.registrar.api_users.ids)
-                          .where('updated_at >= ?', Time.zone.now - 1.second).count
-
-    return false if epp_session_count >= 4
-    true
   end
 end

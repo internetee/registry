@@ -43,4 +43,21 @@ class EppSessionTest < ActiveSupport::TestCase
       @epp_session.save(validate: false)
     end
   end
+
+  def test_limit_per_registrar
+    assert_equal 4, EppSession.limit_per_registrar
+  end
+
+  def test_limit_is_per_registrar
+    travel_to Time.zone.parse('2010-07-05')
+    EppSession.delete_all
+
+    EppSession.limit_per_registrar.times do
+      EppSession.create!(session_id: SecureRandom.hex,
+                         user: users(:api_goodnames),
+                         updated_at: Time.zone.parse('2010-07-05'))
+    end
+
+    refute EppSession.limit_reached?(registrars(:bestnames))
+  end
 end
