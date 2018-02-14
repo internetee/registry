@@ -52,7 +52,7 @@ class DomainTransferTest < ActiveSupport::TestCase
     end
   end
 
-  def test_creates_message
+  def test_notifies_old_registrar
     assert_difference 'Message.count' do
       @domain.transfer(@new_registrar)
     end
