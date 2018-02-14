@@ -4,6 +4,7 @@ class EppController < ApplicationController
   protect_from_forgery with: :null_session
   skip_before_action :verify_authenticity_token
 
+  before_action :ensure_session_id_passed
   before_action :generate_svtrid
   before_action :latin_only
   before_action :validate_against_schema
@@ -377,7 +378,11 @@ class EppController < ApplicationController
   end
 
   def epp_session_id
-    cookies[:session]
+    cookies[:session] # Passed by mod_epp https://github.com/mod-epp/mod-epp#requestscript-interface
+  end
+
+  def ensure_session_id_passed
+    raise 'EPP session id is empty' unless epp_session_id.present?
   end
 
   def update_epp_session
