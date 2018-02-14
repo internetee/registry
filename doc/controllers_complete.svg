@@ -71,7 +71,6 @@
 <path fill="none" stroke="black" d="M532,-320.5C532,-320.5 656,-320.5 656,-320.5 662,-320.5 668,-326.5 668,-332.5 668,-332.5 668,-491.5 668,-491.5 668,-497.5 662,-503.5 656,-503.5 656,-503.5 532,-503.5 532,-503.5 526,-503.5 520,-497.5 520,-491.5 520,-491.5 520,-332.5 520,-332.5 520,-326.5 526,-320.5 532,-320.5"/>
 <text text-anchor="middle" x="594" y="-488.3" font-family="Times,serif" font-size="14.00">Epp::SessionsController</text>
 <polyline fill="none" stroke="black" points="520,-480.5 668,-480.5 "/>
-<text text-anchor="start" x="528" y="-465.3" font-family="Times,serif" font-size="14.00">connection_limit_ok?</text>
 <text text-anchor="start" x="528" y="-450.3" font-family="Times,serif" font-size="14.00">hello</text>
 <text text-anchor="start" x="528" y="-435.3" font-family="Times,serif" font-size="14.00">ip_white?</text>
 <text text-anchor="start" x="528" y="-420.3" font-family="Times,serif" font-size="14.00">login</text>

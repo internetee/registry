@@ -34,7 +34,6 @@ UncommunicativeVariableName:
   - Admin::SettingsController#create
   - Epp::DomainsController#renew
   - Epp::DomainsController#update
-  - Epp::SessionsController#connection_limit_ok?
   - Epp::SessionsController#login
   - EppController
   - EppController#create_full_selectors
@@ -172,7 +171,6 @@ DuplicateMethodCall:
   - Epp::PollsController#ack_poll
   - Epp::PollsController#poll
   - Epp::PollsController#req_poll
-  - Epp::SessionsController#connection_limit_ok?
   - Epp::SessionsController#ip_white?
   - Epp::SessionsController#login
   - Epp::SessionsController#login_params

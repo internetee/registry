@@ -115,14 +115,6 @@ class Epp::SessionsController < EppController
     true
   end
 
-  def connection_limit_ok?
-    epp_session_count = EppSession.where(user_id: @api_user.registrar.api_users.ids)
-                      .where('updated_at >= ?', Time.zone.now - 1.second).count
-
-    return false if epp_session_count >= 4
-    true
-  end
-
   def logout
     unless signed_in?
       epp_errors << {
@@ -150,5 +142,13 @@ class Epp::SessionsController < EppController
   private
   def resource
     @api_user
+  end
+
+  def connection_limit_ok?
+    epp_session_count = EppSession.where(user_id: @api_user.registrar.api_users.ids)
+                          .where('updated_at >= ?', Time.zone.now - 1.second).count
+
+    return false if epp_session_count >= 4
+    true
   end
 end
