@@ -954,12 +954,12 @@ ALTER SEQUENCE domain_statuses_id_seq OWNED BY domain_statuses.id;
 
 CREATE TABLE domain_transfers (
     id integer NOT NULL,
-    domain_id integer,
+    domain_id integer NOT NULL,
     status character varying,
     transfer_requested_at timestamp without time zone,
     transferred_at timestamp without time zone,
-    old_registrar_id integer,
-    new_registrar_id integer,
+    old_registrar_id integer NOT NULL,
+    new_registrar_id integer NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     wait_until timestamp without time zone
@@ -5069,4 +5069,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180125092422');
 INSERT INTO schema_migrations (version) VALUES ('20180126104536');
 
 INSERT INTO schema_migrations (version) VALUES ('20180126104903');
+
+INSERT INTO schema_migrations (version) VALUES ('20180214200224');
 
