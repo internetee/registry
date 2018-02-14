@@ -388,7 +388,7 @@ class EppController < ApplicationController
   def update_epp_session
     iptables_counter_update
 
-    if !Rails.env.development? && session_timeout_reached?
+    if session_timeout_reached?
       @api_user = current_user # cache current_user for logging
       epp_session.destroy
       response.headers['X-EPP-Returncode'] = '1500'
