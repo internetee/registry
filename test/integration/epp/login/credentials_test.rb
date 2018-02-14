@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class EppLoginTest < ActionDispatch::IntegrationTest
+class EppLoginCredentialsTest < ActionDispatch::IntegrationTest
   def test_correct_credentials
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
