@@ -2185,7 +2185,7 @@ ALTER SEQUENCE mail_templates_id_seq OWNED BY mail_templates.id;
 CREATE TABLE messages (
     id integer NOT NULL,
     registrar_id integer,
-    body character varying,
+    body character varying NOT NULL,
     attached_obj_type character varying,
     attached_obj_id character varying,
     queued boolean,
@@ -5071,4 +5071,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180126104536');
 INSERT INTO schema_migrations (version) VALUES ('20180126104903');
 
 INSERT INTO schema_migrations (version) VALUES ('20180214200224');
+
+INSERT INTO schema_migrations (version) VALUES ('20180214213743');
 
