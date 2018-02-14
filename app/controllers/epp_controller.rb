@@ -388,7 +388,7 @@ class EppController < ApplicationController
   def update_epp_session
     iptables_counter_update
 
-    if !Rails.env.development? && (epp_session.updated_at < Time.zone.now - 5.minutes)
+    if !Rails.env.development? && session_timeout_reached?
       @api_user = current_user # cache current_user for logging
       epp_session.destroy
       response.headers['X-EPP-Returncode'] = '1500'
@@ -402,5 +402,10 @@ class EppController < ApplicationController
     else
       epp_session.update_column(:updated_at, Time.zone.now)
     end
+  end
+
+  def session_timeout_reached?
+    timeout = 5.minutes
+    epp_session.updated_at < (Time.zone.now - timeout)
   end
 end
