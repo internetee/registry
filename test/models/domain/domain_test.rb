@@ -5,7 +5,7 @@ class DomainTest < ActiveSupport::TestCase
     @domain = domains(:shop)
   end
 
-  def test_validates
+  def test_valid_fixture
     assert @domain.valid?
   end
 end
