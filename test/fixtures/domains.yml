@@ -31,5 +31,6 @@ library:
 invalid:
   name: invalid.test
   transfer_code: any
+  valid_to: 2010-07-05
   registrar: bestnames
   registrant: invalid

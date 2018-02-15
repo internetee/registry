@@ -21,6 +21,7 @@ class EppDomainDeleteTest < ActionDispatch::IntegrationTest
     XML
 
     post '/epp/command/delete', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    assert_includes Domain.find_by(name: 'invalid.test').statuses, DomainStatus::PENDING_DELETE_CONFIRMATION
     assert_equal '1001', Nokogiri::XML(response.body).at_css('result')[:code]
     assert_equal 1, Nokogiri::XML(response.body).css('result').size
   end
