@@ -27,3 +27,9 @@ library:
   valid_to: 2010-07-05
   period: 1
   period_unit: m
+
+invalid:
+  name: invalid.test
+  transfer_code: any
+  registrar: bestnames
+  registrant: invalid
