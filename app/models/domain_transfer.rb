@@ -10,6 +10,7 @@ class DomainTransfer < ActiveRecord::Base
   SERVER_APPROVED = 'serverApproved'
 
   before_create :set_wait_until
+
   def set_wait_until
     wait_time = Setting.transfer_wait_time
     return if wait_time == 0
@@ -17,6 +18,7 @@ class DomainTransfer < ActiveRecord::Base
   end
 
   before_create :set_status
+
   def set_status
     if Setting.transfer_wait_time > 0
       self.status = PENDING unless status
