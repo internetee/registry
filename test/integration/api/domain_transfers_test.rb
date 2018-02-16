@@ -5,9 +5,12 @@ class APIDomainTransfersTest < ActionDispatch::IntegrationTest
     request_params = { format: :json,
                        data: { domainTransfers: [{ domainName: 'shop.test', transferCode: '65078d5' }] } }
     post '/repp/v1/domain_transfers', request_params, { 'HTTP_AUTHORIZATION' => http_auth_key }
-    assert_response 204
     assert_equal registrars(:goodnames), domains(:shop).registrar
-    assert_empty response.body
+    assert_response 200
+    assert_equal ({ data: [{
+                             type: 'domain_transfer'
+                           }] }),
+                 JSON.parse(response.body, symbolize_names: true)
   end
 
   def test_fails_if_domain_does_not_exist
