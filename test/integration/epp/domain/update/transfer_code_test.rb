@@ -1,10 +1,6 @@
 require 'test_helper'
 
 class EppDomainUpdateTest < ActionDispatch::IntegrationTest
-  def setup
-    login_as users(:api_bestnames)
-  end
-
   def test_overwrites_existing
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>

@@ -3,7 +3,6 @@ require 'test_helper'
 class EppDomainCreateTransferCodeTest < ActionDispatch::IntegrationTest
   def setup
     travel_to Time.zone.parse('2010-07-05')
-    login_as users(:api_bestnames)
   end
 
   def test_generates_default

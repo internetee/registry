@@ -1,10 +1,6 @@
 require 'test_helper'
 
 class EppDomainTransferTransferCodeTest < ActionDispatch::IntegrationTest
-  def setup
-    login_as users(:api_goodnames)
-  end
-
   def test_wrong
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
