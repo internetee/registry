@@ -3,8 +3,11 @@ require 'rails_helper'
 # https://github.com/internetee/registry/issues/576
 
 RSpec.describe 'EPP contact:update' do
+  let(:registrar) { create(:registrar) }
+  let(:user) { create(:api_user_epp, registrar: registrar) }
+  let(:session_id) { create(:epp_session, user: user).session_id }
   let(:ident) { contact.identifier }
-  let(:request) { post '/epp/command/update', frame: request_xml }
+  let(:request) { post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => "session=#{session_id}" }
   let(:request_xml) { <<-XML
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
@@ -30,7 +33,7 @@ RSpec.describe 'EPP contact:update' do
   }
 
   before do
-    sign_in_to_epp_area
+    login_as user
   end
 
   context 'when contact ident is valid' do

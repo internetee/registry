@@ -1050,11 +1050,10 @@ ALTER SEQUENCE domains_id_seq OWNED BY domains.id;
 
 CREATE TABLE epp_sessions (
     id integer NOT NULL,
-    session_id character varying,
-    data text,
+    session_id character varying NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    registrar_id integer
+    user_id integer NOT NULL
 );
 
 
@@ -3636,6 +3635,14 @@ ALTER TABLE ONLY contacts
 
 
 --
+-- Name: unique_session_id; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY epp_sessions
+    ADD CONSTRAINT unique_session_id UNIQUE (session_id);
+
+
+--
 -- Name: unique_zone_origin; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -3884,13 +3891,6 @@ CREATE INDEX index_domains_on_registrar_id ON domains USING btree (registrar_id)
 --
 
 CREATE INDEX index_domains_on_statuses ON domains USING gin (statuses);
-
-
---
--- Name: index_epp_sessions_on_session_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX index_epp_sessions_on_session_id ON epp_sessions USING btree (session_id);
 
 
 --
@@ -4485,6 +4485,14 @@ ALTER TABLE ONLY domain_transfers
 
 
 --
+-- Name: fk_rails_adff2dc8e3; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY epp_sessions
+    ADD CONSTRAINT fk_rails_adff2dc8e3 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
 -- Name: fk_rails_b80dbb973d; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5069,6 +5077,22 @@ INSERT INTO schema_migrations (version) VALUES ('20180125092422');
 INSERT INTO schema_migrations (version) VALUES ('20180126104536');
 
 INSERT INTO schema_migrations (version) VALUES ('20180126104903');
+
+INSERT INTO schema_migrations (version) VALUES ('20180206213435');
+
+INSERT INTO schema_migrations (version) VALUES ('20180206234620');
+
+INSERT INTO schema_migrations (version) VALUES ('20180207071528');
+
+INSERT INTO schema_migrations (version) VALUES ('20180207072139');
+
+INSERT INTO schema_migrations (version) VALUES ('20180212123810');
+
+INSERT INTO schema_migrations (version) VALUES ('20180212152810');
+
+INSERT INTO schema_migrations (version) VALUES ('20180212154731');
+
+INSERT INTO schema_migrations (version) VALUES ('20180213183818');
 
 INSERT INTO schema_migrations (version) VALUES ('20180214200224');
 

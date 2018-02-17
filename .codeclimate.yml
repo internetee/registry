@@ -1,5 +1,4 @@
----
-engines:
+plugins:
   brakeman:
     enabled: true
   bundler-audit:
@@ -14,8 +13,6 @@ engines:
       languages:
       - ruby
       - javascript
-      - python
-      - php
   eslint:
     enabled: true
   fixme:
@@ -33,24 +30,9 @@ engines:
     checks:
       IrresponsibleModule:
         enabled: false
-ratings:
-  paths:
-  - Gemfile.lock
-  - "**.erb"
-  - "**.haml"
-  - "**.rb"
-  - "**.rhtml"
-  - "**.slim"
-  - "**.css"
-  - "**.coffee"
-  - "**.inc"
-  - "**.js"
-  - "**.jsx"
-  - "**.module"
-  - "**.php"
-  - "**.py"
-exclude_paths:
-- config/
-- db/
-- spec/
-- vendor/
+exclude_patterns:
+- "config/"
+- "db/"
+- "vendor/"
+- "spec/"
+- "test/"
