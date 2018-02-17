@@ -20,8 +20,7 @@ class EppDomainTransferTest < ActionDispatch::IntegrationTest
       </epp>
     XML
 
-    session_id = epp_sessions(:api_goodnames).session_id
-    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => "session=#{session_id}" }
+    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
     assert_equal registrars(:goodnames), domains(:shop).registrar
     assert_equal '1000', Nokogiri::XML(response.body).at_css('result')[:code]
     assert_equal 1, Nokogiri::XML(response.body).css('result').size
@@ -44,8 +43,7 @@ class EppDomainTransferTest < ActionDispatch::IntegrationTest
       </epp>
     XML
 
-    session_id = epp_sessions(:api_goodnames).session_id
-    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => "session=#{session_id}" }
+    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
     assert Nokogiri::XML(response.body).at_css('result[code="2303"]')
   end
 end

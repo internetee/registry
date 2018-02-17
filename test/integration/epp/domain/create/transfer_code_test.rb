@@ -26,8 +26,7 @@ class EppDomainCreateTransferCodeTest < ActionDispatch::IntegrationTest
       </epp>
     XML
 
-    session_id = epp_sessions(:api_bestnames).session_id
-    post '/epp/command/create', { frame: request_xml }, { 'HTTP_COOKIE' => "session=#{session_id}" }
+    post '/epp/command/create', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
     refute_empty Domain.find_by(name: 'brandnew.test').transfer_code
   end
 
@@ -55,8 +54,7 @@ class EppDomainCreateTransferCodeTest < ActionDispatch::IntegrationTest
       </epp>
     XML
 
-    session_id = epp_sessions(:api_bestnames).session_id
-    post '/epp/command/create', { frame: request_xml }, { 'HTTP_COOKIE' => "session=#{session_id}" }
+    post '/epp/command/create', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
     assert_equal '1058ad73', Domain.find_by(name: 'brandnew.test').transfer_code
   end
 end

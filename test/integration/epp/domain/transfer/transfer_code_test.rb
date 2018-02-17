@@ -18,8 +18,7 @@ class EppDomainTransferTransferCodeTest < ActionDispatch::IntegrationTest
       </epp>
     XML
 
-    session_id = epp_sessions(:api_goodnames).session_id
-    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => "session=#{session_id}" }
+    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
     refute_equal registrars(:goodnames), domains(:shop).registrar
     assert Nokogiri::XML(response.body).at_css('result[code="2201"]')
   end

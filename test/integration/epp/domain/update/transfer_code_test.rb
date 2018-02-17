@@ -20,8 +20,7 @@ class EppDomainUpdateTest < ActionDispatch::IntegrationTest
       </epp>
     XML
 
-    session_id = epp_sessions(:api_bestnames).session_id
-    post '/epp/command/update', { frame: request_xml }, { 'HTTP_COOKIE' => "session=#{session_id}" }
+    post '/epp/command/update', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
     assert_equal 'f0ff7d17b0', domains(:shop).transfer_code
   end
 end
