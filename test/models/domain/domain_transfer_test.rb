@@ -67,6 +67,6 @@ class DomainTransferTest < ActiveSupport::TestCase
   def test_bypasses_validation
     domain = domains(:invalid)
     domain.transfer(@new_registrar)
-    assert_equal @new_registrar, @domain.registrar
+    assert_equal @new_registrar, domain.registrar
   end
 end
