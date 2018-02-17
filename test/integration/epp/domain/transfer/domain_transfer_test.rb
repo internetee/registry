@@ -1,7 +1,9 @@
 require 'test_helper'
 
 class EppDomainTransferTest < ActionDispatch::IntegrationTest
-  def test_successfully_transfers_domain
+  def test_transfers_domain_at_once_if_auto_confirm_is_enabled
+    Setting.transfer_wait_time = 0
+
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
       <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
@@ -21,7 +23,7 @@ class EppDomainTransferTest < ActionDispatch::IntegrationTest
     session_id = epp_sessions(:api_goodnames).session_id
     post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => "session=#{session_id}" }
     assert_equal registrars(:goodnames), domains(:shop).registrar
-    assert Nokogiri::XML(response.body).at_css('result[code="1000"]')
+    assert_equal '1000', Nokogiri::XML(response.body).at_css('result')[:code]
     assert_equal 1, Nokogiri::XML(response.body).css('result').size
   end
 
