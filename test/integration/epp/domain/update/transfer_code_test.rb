@@ -22,5 +22,7 @@ class EppDomainUpdateTest < ActionDispatch::IntegrationTest
 
     post '/epp/command/update', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
     assert_equal 'f0ff7d17b0', domains(:shop).transfer_code
+    assert_equal '1000', Nokogiri::XML(response.body).at_css('result')[:code]
+    assert_equal 1, Nokogiri::XML(response.body).css('result').size
   end
 end

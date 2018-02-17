@@ -20,6 +20,6 @@ class EppDomainTransferTransferCodeTest < ActionDispatch::IntegrationTest
 
     post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
     refute_equal registrars(:goodnames), domains(:shop).registrar
-    assert Nokogiri::XML(response.body).at_css('result[code="2201"]')
+    assert_equal '2201', Nokogiri::XML(response.body).at_css('result')[:code]
   end
 end

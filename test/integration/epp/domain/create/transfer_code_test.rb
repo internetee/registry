@@ -28,6 +28,8 @@ class EppDomainCreateTransferCodeTest < ActionDispatch::IntegrationTest
 
     post '/epp/command/create', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
     refute_empty Domain.find_by(name: 'brandnew.test').transfer_code
+    assert_equal '1000', Nokogiri::XML(response.body).at_css('result')[:code]
+    assert_equal 1, Nokogiri::XML(response.body).css('result').size
   end
 
   def test_honors_custom
@@ -56,5 +58,7 @@ class EppDomainCreateTransferCodeTest < ActionDispatch::IntegrationTest
 
     post '/epp/command/create', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
     assert_equal '1058ad73', Domain.find_by(name: 'brandnew.test').transfer_code
+    assert_equal '1000', Nokogiri::XML(response.body).at_css('result')[:code]
+    assert_equal 1, Nokogiri::XML(response.body).css('result').size
   end
 end
