@@ -14,9 +14,9 @@ class APIDomainTransfersTest < ActionDispatch::IntegrationTest
                  JSON.parse(response.body, symbolize_names: true)
   end
 
-  def test_approves_automatically
+  def test_approves_automatically_if_auto_approval_is_enabled
     post '/repp/v1/domain_transfers', request_params, { 'HTTP_AUTHORIZATION' => http_auth_key }
-    assert @domain.domain_transfers.last.approved?
+    assert @domain.domain_transfers(true).last.approved?
   end
 
   def test_changes_registrar
@@ -41,7 +41,7 @@ class APIDomainTransfersTest < ActionDispatch::IntegrationTest
     end
   end
 
-  def test_creates_copy_of_registrant_admin_and_tech_contacts
+  def test_duplicates_registrant_admin_and_tech_contacts
     assert_difference 'Contact.count', 3 do
       post '/repp/v1/domain_transfers', request_params, { 'HTTP_AUTHORIZATION' => http_auth_key }
     end
