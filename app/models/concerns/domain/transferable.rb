@@ -28,7 +28,7 @@ module Concerns::Domain::Transferable
       )
 
       transfer_contacts(new_registrar)
-      save!
+      save(validate: false)
     end
   end
 
