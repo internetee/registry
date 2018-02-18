@@ -2186,7 +2186,7 @@ CREATE TABLE messages (
     registrar_id integer,
     body character varying NOT NULL,
     attached_obj_type character varying,
-    attached_obj_id character varying,
+    attached_obj_id integer,
     queued boolean,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -3635,7 +3635,7 @@ ALTER TABLE ONLY contacts
 
 
 --
--- Name: unique_session_id; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: unique_session_id; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY epp_sessions
@@ -5097,4 +5097,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180213183818');
 INSERT INTO schema_migrations (version) VALUES ('20180214200224');
 
 INSERT INTO schema_migrations (version) VALUES ('20180214213743');
+
+INSERT INTO schema_migrations (version) VALUES ('20180218004148');
 
