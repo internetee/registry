@@ -46,24 +46,6 @@ class DomainTransferTest < ActiveSupport::TestCase
     refute_same old_transfer_code, @domain.transfer_code
   end
 
-  def test_creates_domain_transfer
-    assert_difference 'DomainTransfer.count' do
-      @domain.transfer(@new_registrar)
-    end
-  end
-
-  def test_notifies_old_registrar
-    assert_difference 'Message.count' do
-      @domain.transfer(@new_registrar)
-    end
-  end
-
-  def test_copies_contacts
-    assert_difference 'Contact.count', 2 do
-      @domain.transfer(@new_registrar)
-    end
-  end
-
   def test_bypasses_domain_validation
     domain = domains(:invalid)
     domain.transfer(@new_registrar)
