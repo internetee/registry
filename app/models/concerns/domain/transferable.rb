@@ -2,7 +2,7 @@ module Concerns::Domain::Transferable
   extend ActiveSupport::Concern
 
   included do
-    after_initialize :generate_transfer_code, if: 'new_record? && transfer_code.blank?'
+    after_initialize :generate_transfer_code, if: :generate_transfer_code?
   end
 
   def transfer(new_registrar)
@@ -33,6 +33,10 @@ module Concerns::Domain::Transferable
   end
 
   private
+
+  def generate_transfer_code?
+    new_record? && transfer_code.blank?
+  end
 
   def generate_transfer_code
     self.transfer_code = SecureRandom.hex
