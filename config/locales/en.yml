@@ -525,7 +525,6 @@ en:
   address: 'Address'
   street: 'Street'
   city: 'City'
-  messages: 'Messages (%{count})'
   message: 'Message'
   message_no: 'Message #%{id}'
   queue_date: 'Queue date'
