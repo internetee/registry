@@ -13,7 +13,7 @@ class EppDomainTransferRequestTest < ActionDispatch::IntegrationTest
   end
 
   def test_creates_new_domain_transfer
-    assert_difference -> { @domain.domain_transfers.size } do
+    assert_difference -> { @domain.transfers.size } do
       post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
     end
   end

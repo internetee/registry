@@ -628,7 +628,7 @@ class Epp::Domain < Domain
 
     case action
     when 'query'
-      return domain_transfers.last if domain_transfers.any?
+      return transfers.last if transfers.any?
     when 'request'
       return pending_transfer if pending_transfer
       return query_transfer(frame, current_user)
@@ -652,7 +652,7 @@ class Epp::Domain < Domain
     end
 
     transaction do
-      dt = domain_transfers.create!(
+      dt = transfers.create!(
         transfer_requested_at: Time.zone.now,
         old_registrar: registrar,
         new_registrar: current_user.registrar

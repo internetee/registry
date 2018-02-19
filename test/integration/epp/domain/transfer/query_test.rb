@@ -34,7 +34,7 @@ class EppDomainTransferQueryTest < ActionDispatch::IntegrationTest
   end
 
   def test_no_domain_transfer
-    domains(:shop).domain_transfers.delete_all
+    domains(:shop).transfers.delete_all
     post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
     assert_equal '2303', Nokogiri::XML(response.body).at_css('result')[:code]
   end

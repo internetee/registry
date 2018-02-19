@@ -16,14 +16,14 @@ class APIDomainTransfersTest < ActionDispatch::IntegrationTest
   end
 
   def test_creates_new_domain_transfer
-    assert_difference -> { @domain.domain_transfers.size } do
+    assert_difference -> { @domain.transfers.size } do
       post '/repp/v1/domain_transfers', request_params, { 'HTTP_AUTHORIZATION' => http_auth_key }
     end
   end
 
   def test_approves_automatically_if_auto_approval_is_enabled
     post '/repp/v1/domain_transfers', request_params, { 'HTTP_AUTHORIZATION' => http_auth_key }
-    assert @domain.domain_transfers(true).last.approved?
+    assert @domain.transfers.last.approved?
   end
 
   def test_changes_registrar
