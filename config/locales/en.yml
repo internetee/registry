@@ -744,7 +744,6 @@ en:
   parameter_value_range_error: 'Parameter value range error: %{key}'
   payment_received: 'Payment received'
   api_user_not_found: 'API user not found'
-  domain_already_belongs_to_the_querying_registrar: 'Domain already belongs to the querying registrar'
   notes: Notes
   active_price_for_this_operation_is: 'Active price for this operation is %{price}'
   active_price_missing_for_this_operation: 'Active price missing for this operation!'
