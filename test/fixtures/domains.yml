@@ -28,6 +28,15 @@ library:
   period: 1
   period_unit: m
 
+non_transferable:
+  name: non-transferable.test
+  transfer_code: d382682
+  valid_to: 2010-07-05
+  registrar: bestnames
+  registrant: john
+  statuses:
+    - serverTransferProhibited
+
 invalid:
   name: invalid.test
   transfer_code: any

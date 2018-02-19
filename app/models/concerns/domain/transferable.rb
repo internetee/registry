@@ -5,6 +5,10 @@ module Concerns::Domain::Transferable
     after_initialize :generate_transfer_code, if: :generate_transfer_code?
   end
 
+  def non_transferable?
+    !transferrable?
+  end
+
   def transfer(new_registrar)
     old_registrar = registrar
 

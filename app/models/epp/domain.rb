@@ -644,13 +644,6 @@ class Epp::Domain < Domain
   # rubocop: disable Metrics/MethodLength
   # rubocop: disable Metrics/AbcSize
   def query_transfer(frame, current_user)
-    unless transferrable?
-      throw :epp_error, {
-        code: '2304',
-        msg: I18n.t(:object_status_prohibits_operation)
-      }
-    end
-
     if current_user.registrar == registrar
       throw :epp_error, {
         code: '2002',
