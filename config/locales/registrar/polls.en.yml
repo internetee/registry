@@ -1,0 +1,5 @@
+en:
+  registrar:
+    polls:
+      show:
+        header: Messages (%{count})

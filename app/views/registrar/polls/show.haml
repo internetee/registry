@@ -2,7 +2,7 @@
   - msg_q = @data.css('msgQ').first
   .row
     .col-sm-12
-      %h2= t('messages', count: msg_q['count'])
+      %h2= t '.header', count: msg_q['count']
   %hr
     .row
       .col-md-12
@@ -75,7 +75,7 @@
 - else
   .row
     .col-sm-12
-      %h2= t('messages', count: 0)
+      %h2= t '.header', count: 0
   %hr
     .row
       .col-md-12
