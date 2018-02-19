@@ -56,7 +56,7 @@ RSpec.configure do |config|
     metadata[:type] = :request
   end
 
-  config.use_transactional_fixtures = true
+  config.use_transactional_fixtures = false
   config.infer_spec_type_from_file_location!
 
   config.expect_with :rspec do |c|
