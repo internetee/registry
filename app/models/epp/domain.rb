@@ -804,20 +804,6 @@ class Epp::Domain < Domain
     true
   end
 
-  def transferrable?
-    (statuses & [
-        DomainStatus::PENDING_DELETE_CONFIRMATION,
-        DomainStatus::PENDING_CREATE,
-        DomainStatus::PENDING_UPDATE,
-        DomainStatus::PENDING_DELETE,
-        DomainStatus::PENDING_RENEW,
-        DomainStatus::PENDING_TRANSFER,
-        DomainStatus::FORCE_DELETE,
-        DomainStatus::SERVER_TRANSFER_PROHIBITED,
-        DomainStatus::CLIENT_TRANSFER_PROHIBITED
-    ]).empty?
-  end
-
   ## SHARED
 
   # For domain transfer

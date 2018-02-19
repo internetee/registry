@@ -38,6 +38,20 @@ module Concerns::Domain::Transferable
 
   private
 
+  def transferrable?
+    (statuses & [
+      DomainStatus::PENDING_DELETE_CONFIRMATION,
+      DomainStatus::PENDING_CREATE,
+      DomainStatus::PENDING_UPDATE,
+      DomainStatus::PENDING_DELETE,
+      DomainStatus::PENDING_RENEW,
+      DomainStatus::PENDING_TRANSFER,
+      DomainStatus::FORCE_DELETE,
+      DomainStatus::SERVER_TRANSFER_PROHIBITED,
+      DomainStatus::CLIENT_TRANSFER_PROHIBITED
+    ]).empty?
+  end
+
   def generate_transfer_code?
     new_record? && transfer_code.blank?
   end
