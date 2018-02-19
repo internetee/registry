@@ -1,8 +1,7 @@
 en:
-  activerecord:
-    attributes:
-      message/body:
-        domain_transfer: >-
-          Domain transfer of %{domain_name} has been approved.
-          Old contacts: %{old_contacts};
-          old registrant: %{old_registrant}
+  messages:
+    texts:
+      domain_transfer: >-
+        Domain transfer of %{domain_name} has been approved.
+        Old contacts: %{old_contacts_codes};
+        old registrant: %{old_registrant_code}

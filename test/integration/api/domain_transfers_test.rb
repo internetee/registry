@@ -47,7 +47,9 @@ class APIDomainTransfersTest < ActionDispatch::IntegrationTest
       post '/repp/v1/domain_transfers', request_params, { 'HTTP_AUTHORIZATION' => http_auth_key }
     end
 
-    message = 'Domain transfer was approved, associated contacts were: ["jane-001", "william-001"] and registrant was john-001'
+    message = 'Domain transfer of shop.test has been approved.' \
+      ' Old contacts: jane-001, william-001' \
+      '; old registrant: john-001'
     assert_equal message, @old_registrar.messages.last.body
   end
 

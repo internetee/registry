@@ -57,14 +57,6 @@ class DomainTransfer < ActiveRecord::Base
     status == PENDING
   end
 
-  def notify_losing_registrar(contacts, registrant)
-    old_registrar.messages.create!(
-      body: I18n.t('domain_transfer_was_approved', contacts: contacts, registrant: registrant),
-      attached_obj_id: id,
-      attached_obj_type: self.class.to_s
-    )
-  end
-
   def approve
     transaction do
       self.status = SERVER_APPROVED
@@ -78,11 +70,14 @@ class DomainTransfer < ActiveRecord::Base
   private
 
   def notify_old_registrar
-    old_contacts_codes = domain.contacts.pluck(:code).sort.uniq
+    old_contacts_codes = domain.contacts.pluck(:code).sort.uniq.join(', ')
     old_registrant_code = domain.registrant.code
 
     old_registrar.messages.create!(
-      body: I18n.t('domain_transfer_was_approved', contacts: old_contacts_codes, registrant: old_registrant_code),
+      body: I18n.t('messages.texts.domain_transfer',
+                   domain_name: domain.name,
+                   old_contacts_codes: old_contacts_codes,
+                   old_registrant_code: old_registrant_code),
       attached_obj_id: id,
       attached_obj_type: self.class.name
     )

@@ -651,9 +651,6 @@ class Epp::Domain < Domain
       }
     end
 
-    old_contact_codes = contacts.pluck(:code).sort.uniq
-    old_registrant_code = registrant.code
-
     transaction do
       dt = domain_transfers.create!(
         transfer_requested_at: Time.zone.now,
@@ -670,8 +667,8 @@ class Epp::Domain < Domain
       end
 
       if dt.approved?
+        dt.send(:notify_old_registrar)
         transfer_contacts(current_user.registrar)
-        dt.notify_losing_registrar(old_contact_codes, old_registrant_code)
         regenerate_transfer_code
         self.registrar = current_user.registrar
       end

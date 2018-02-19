@@ -451,7 +451,6 @@ en:
   client_side_status_editing_error: 'Parameter value policy error. Client-side object status management not supported'
   switch_to: Switch to
   admin_menu: Admin
-  domain_transfer_was_approved: 'Domain transfer was approved, associated contacts were: %{contacts} and registrant was %{registrant}'
   business_registry_service_not_available: "Business Registry service Ärireg is not available"
 
   # DEPP
