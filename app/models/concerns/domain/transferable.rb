@@ -6,7 +6,7 @@ module Concerns::Domain::Transferable
   end
 
   def non_transferable?
-    !transferrable?
+    !transferable?
   end
 
   def transfer(new_registrar)
@@ -38,7 +38,7 @@ module Concerns::Domain::Transferable
 
   private
 
-  def transferrable?
+  def transferable?
     (statuses & [
       DomainStatus::PENDING_DELETE_CONFIRMATION,
       DomainStatus::PENDING_CREATE,
