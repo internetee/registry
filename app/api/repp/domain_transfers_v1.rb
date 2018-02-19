@@ -25,7 +25,7 @@ module Repp
 
           if domain
             if domain.transfer_code == transfer_code
-              domain.transfer(new_registrar)
+              DomainTransfer.request(domain, new_registrar)
               successful_domain_transfers << { type: 'domain_transfer' }
             else
               errors << { title: "#{domain_name} transfer code is wrong" }

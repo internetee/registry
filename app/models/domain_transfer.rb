@@ -11,6 +11,25 @@ class DomainTransfer < ActiveRecord::Base
 
   before_create :set_wait_until
 
+  class << self
+    def request(domain, new_registrar)
+      domain_transfer = create!(
+        transfer_requested_at: Time.zone.now,
+        domain: domain,
+        old_registrar: domain.registrar,
+        new_registrar: new_registrar
+      )
+
+      domain_transfer.approve if approve_automatically?
+    end
+
+    private
+
+    def approve_automatically?
+      Setting.transfer_wait_time.zero?
+    end
+  end
+
   def set_wait_until
     wait_time = Setting.transfer_wait_time
     return if wait_time == 0
@@ -43,6 +62,29 @@ class DomainTransfer < ActiveRecord::Base
       body: I18n.t('domain_transfer_was_approved', contacts: contacts, registrant: registrant),
       attached_obj_id: id,
       attached_obj_type: self.class.to_s
+    )
+  end
+
+  def approve
+    transaction do
+      self.status = SERVER_APPROVED
+      save!
+
+      notify_old_registrar
+      domain.transfer(new_registrar)
+    end
+  end
+
+  private
+
+  def notify_old_registrar
+    old_contacts_codes = domain.contacts.pluck(:code).sort.uniq
+    old_registrant_code = domain.registrant.code
+
+    old_registrar.messages.create!(
+      body: I18n.t('domain_transfer_was_approved', contacts: old_contacts_codes, registrant: old_registrant_code),
+      attached_obj_id: id,
+      attached_obj_type: self.class.name
     )
   end
 end
