@@ -3,6 +3,7 @@ require 'test_helper'
 class APIDomainTransfersTest < ActionDispatch::IntegrationTest
   def setup
     @domain = domains(:shop)
+    Setting.transfer_wait_time = 0 # Auto-approval
   end
 
   def test_returns_domain_transfers
@@ -12,6 +13,12 @@ class APIDomainTransfersTest < ActionDispatch::IntegrationTest
                              type: 'domain_transfer'
                            }] }),
                  JSON.parse(response.body, symbolize_names: true)
+  end
+
+  def test_creates_new_domain_transfer
+    assert_difference -> { @domain.domain_transfers.size } do
+      post '/repp/v1/domain_transfers', request_params, { 'HTTP_AUTHORIZATION' => http_auth_key }
+    end
   end
 
   def test_approves_automatically_if_auto_approval_is_enabled

@@ -12,6 +12,12 @@ class EppDomainTransferRequestTest < ActionDispatch::IntegrationTest
     assert_equal 1, Nokogiri::XML(response.body).css('result').size
   end
 
+  def test_creates_new_domain_transfer
+    assert_difference -> { @domain.domain_transfers.size } do
+      post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+    end
+  end
+
   def test_approves_automatically_if_auto_approval_is_enabled
     post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
     assert_equal 'serverApproved', Nokogiri::XML(response.body).xpath('//domain:trStatus', 'domain' =>
