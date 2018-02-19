@@ -67,7 +67,7 @@ class EppDomainTransferRequestTest < ActionDispatch::IntegrationTest
   def test_non_transferable_domain
     @domain.update!(statuses: [DomainStatus::SERVER_TRANSFER_PROHIBITED])
 
-    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
     domains(:shop).reload
 
     assert_equal registrars(:bestnames), domains(:shop).registrar
@@ -77,7 +77,7 @@ class EppDomainTransferRequestTest < ActionDispatch::IntegrationTest
   def test_discarded_domain
     @domain.update!(statuses: [DomainStatus::DELETE_CANDIDATE])
 
-    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
     @domain.reload
 
     assert_equal registrars(:bestnames), @domain.registrar
@@ -109,7 +109,7 @@ class EppDomainTransferRequestTest < ActionDispatch::IntegrationTest
       </epp>
     XML
 
-    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
     @domain.reload
     refute_equal registrars(:goodnames), @domain.registrar
     assert_equal '2201', Nokogiri::XML(response.body).at_css('result')[:code]
