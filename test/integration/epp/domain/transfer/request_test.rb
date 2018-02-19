@@ -84,6 +84,14 @@ class EppDomainTransferRequestTest < ActionDispatch::IntegrationTest
     assert_equal '2105', Nokogiri::XML(response.body).at_css('result')[:code]
   end
 
+  def test_same_registrar
+    assert_no_difference -> { @domain.transfers.size } do
+      post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    end
+
+    assert_equal '2002', Nokogiri::XML(response.body).at_css('result')[:code]
+  end
+
   def test_wrong_transfer_code
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
