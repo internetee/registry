@@ -64,25 +64,22 @@ class EppDomainTransferRequestTest < ActionDispatch::IntegrationTest
     end
   end
 
+  def test_non_transferable_domain
+    @domain.update!(statuses: [DomainStatus::SERVER_TRANSFER_PROHIBITED])
+
+    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
+    domains(:shop).reload
+
+    assert_equal registrars(:bestnames), domains(:shop).registrar
+    assert_equal '2304', Nokogiri::XML(response.body).at_css('result')[:code]
+  end
+
   def test_discarded_domain
-    request_xml = <<-XML
-      <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-      <epp xmlns="https://epp.tld.ee/schema/epp-ee-1.0.xsd">
-        <command>
-          <transfer op="request">
-            <domain:transfer xmlns:domain="https://epp.tld.ee/schema/domain-eis-1.0.xsd">
-              <domain:name>discarded.test</domain:name>
-              <domain:authInfo>
-                <domain:pw>any</domain:pw>
-              </domain:authInfo>
-            </domain:transfer>
-          </transfer>
-        </command>
-      </epp>
-    XML
+    @domain.update!(statuses: [DomainStatus::DELETE_CANDIDATE])
 
     post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
     @domain.reload
+
     assert_equal registrars(:bestnames), @domain.registrar
     assert_equal '2105', Nokogiri::XML(response.body).at_css('result')[:code]
   end
