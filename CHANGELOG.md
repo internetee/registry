@@ -1,3 +1,15 @@
+11.02.2018
+* BUG: Disable all object validations on domain transfer [#701](https://github.com/internetee/registry/issues/701)
+
+06.02.2018
+* BUG: EPP sessions get again unique session id preventing session mixups [#699](https://github.com/internetee/registry/pull/699)
+
+06.02.2018
+* BUG: Poral for registrants returns again domains that is associated with the user only through the role of registrant [#663](https://github.com/internetee/registry/issues/663)
+* Registrar: bulk transfer and improved csv download for use as bulk transfer input [#660](https://github.com/internetee/registry/issues/660)
+* Improved integration with CodeClimate, Simplecov gem update to 15.1 [#684](https://github.com/internetee/registry/pull/684)
+* Improved applycation.yml sample [#664](https://github.com/internetee/registry/pull/664)
+
 11.12.2017
 * BUG: Whitelisted registrar is now automatically chosen on eID/mID login [#609](https://github.com/internetee/registry/issues/609)
 * BUG: added directo_handle to registrar profile [#343](https://github.com/internetee/registry/issues/343)

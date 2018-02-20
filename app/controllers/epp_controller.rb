@@ -88,6 +88,7 @@ class EppController < ApplicationController
 
   # SESSION MANAGEMENT
   def epp_session
+    cookies # Probably does some initialization
     cookie = env['rack.request.cookie_hash'] || {}
     EppSession.find_or_initialize_by(session_id: cookie['session'])
   end
