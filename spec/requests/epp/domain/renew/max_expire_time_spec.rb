@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'EPP domain:renew' do
+  let(:session_id) { create(:epp_session, user: user).session_id }
   let(:user) { create(:api_user_epp, registrar: registrar) }
   let(:registrar) { create(:registrar_with_unlimited_balance) }
   let!(:zone) { create(:zone, origin: 'test') }
@@ -19,7 +20,7 @@ RSpec.describe 'EPP domain:renew' do
   before :example do
     travel_to Time.zone.parse('05.07.2010')
     Setting.days_to_renew_domain_before_expire = 0
-    sign_in_to_epp_area(user: user)
+    login_as user
   end
 
   context 'when domain can be renewed' do
@@ -45,12 +46,12 @@ RSpec.describe 'EPP domain:renew' do
     }
 
     it 'returns epp code of 1000' do
-      post '/epp/command/renew', frame: request_xml
+      post '/epp/command/renew', { frame: request_xml }, 'HTTP_COOKIE' => "session=#{session_id}"
       expect(response_code).to eq('1000')
     end
 
     it 'returns epp description' do
-      post '/epp/command/renew', frame: request_xml
+      post '/epp/command/renew', { frame: request_xml }, 'HTTP_COOKIE' => "session=#{session_id}"
       expect(response_description).to eq('Command completed successfully')
     end
   end
@@ -78,12 +79,12 @@ RSpec.describe 'EPP domain:renew' do
     }
 
     it 'returns epp code of 2105' do
-      post '/epp/command/renew', frame: request_xml
+      post '/epp/command/renew', { frame: request_xml }, 'HTTP_COOKIE' => "session=#{session_id}"
       expect(response_code).to eq('2105')
     end
 
     it 'returns epp description' do
-      post '/epp/command/renew', frame: request_xml
+      post '/epp/command/renew', { frame: request_xml }, 'HTTP_COOKIE' => "session=#{session_id}"
       expect(response_description).to eq('Object is not eligible for renewal; ' \
         'Expiration date must be before 2021-07-05')
     end

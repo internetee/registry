@@ -74,7 +74,7 @@ class Epp::SessionsController < EppController
       success = false
     end
 
-    if success && !connection_limit_ok?
+    if success && EppSession.limit_reached?(@api_user.registrar)
       epp_errors << {
         msg: 'Authentication error; server closing connection (connection limit reached)',
         code: '2501'
@@ -91,8 +91,10 @@ class Epp::SessionsController < EppController
         end
       end
 
-      epp_session[:api_user_id] = @api_user.id
-      epp_session.update_column(:registrar_id, @api_user.registrar_id)
+      epp_session = EppSession.new
+      epp_session.session_id = epp_session_id
+      epp_session.user = @api_user
+      epp_session.save!
       render_epp_response('login_success')
     else
       response.headers['X-EPP-Returncode'] = '2500'
@@ -113,17 +115,16 @@ class Epp::SessionsController < EppController
     true
   end
 
-  def connection_limit_ok?
-    return true if Rails.env.test? || Rails.env.development?
-    c = EppSession.where(
-      'registrar_id = ? AND updated_at >= ?', @api_user.registrar_id, Time.zone.now - 1.second
-    ).count
-
-    return false if c >= 4
-    true
-  end
-
   def logout
+    unless signed_in?
+      epp_errors << {
+        code: 2201,
+        msg: 'Authorization error'
+      }
+      handle_errors
+      return
+    end
+
     @api_user = current_user # cache current_user for logging
     epp_session.destroy
     response.headers['X-EPP-Returncode'] = '1500'

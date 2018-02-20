@@ -34,7 +34,6 @@ UncommunicativeVariableName:
   - Admin::SettingsController#create
   - Epp::DomainsController#renew
   - Epp::DomainsController#update
-  - Epp::SessionsController#connection_limit_ok?
   - Epp::SessionsController#login
   - EppController
   - EppController#create_full_selectors
@@ -171,7 +170,6 @@ DuplicateMethodCall:
   - Epp::PollsController#ack_poll
   - Epp::PollsController#poll
   - Epp::PollsController#req_poll
-  - Epp::SessionsController#connection_limit_ok?
   - Epp::SessionsController#ip_white?
   - Epp::SessionsController#login
   - Epp::SessionsController#login_params
@@ -536,7 +534,6 @@ IrresponsibleModule:
   - DomainStatus
   - DomainTransfer
   - Epp::Contact
-  - EppSession
   - Invoice
   - InvoiceItem
   - Keyrelay
@@ -957,7 +954,6 @@ FeatureEnvy:
   - ActionDispatch::Flash#call
   - Ransack::Adapters::ActiveRecord::Context#evaluate
   - EppConstraint#matches?
-  - Requests::SessionHelpers#sign_in_to_epp_area
 TooManyMethods:
   exclude:
   - Epp::ContactsController
@@ -1023,7 +1019,6 @@ PrimaDonnaMethod:
   - Contact
   - Domain
   - Epp::Domain
-  - EppSession
   - RegistrantVerification
   - Registrar
 BooleanParameter:
