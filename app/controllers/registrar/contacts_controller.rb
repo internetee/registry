@@ -50,10 +50,8 @@ class Registrar
 
       normalize_search_parameters do
         @q = contacts.search(params[:q])
-        @contacts = @q.result.page(params[:page])
+        @contacts = @q.result
       end
-
-      @contacts = @contacts.per(params[:results_per_page]) if params[:results_per_page].to_i > 0
 
       respond_to do |format|
         format.csv { render text: @contacts.to_csv }
