@@ -1,13 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe 'EPP domain:update' do
+  let(:registrar) { create(:registrar) }
+  let(:user) { create(:api_user_epp, registrar: registrar) }
+  let(:session_id) { create(:epp_session, user: user).session_id }
   let!(:domain) { create(:domain, name: 'test.com') }
   subject(:response_xml) { Nokogiri::XML(response.body) }
   subject(:response_code) { response_xml.xpath('//xmlns:result').first['code'] }
   subject(:response_description) { response_xml.css('result msg').text }
 
   before :example do
-    sign_in_to_epp_area
+    login_as user
 
     allow(Domain).to receive(:nameserver_required?).and_return(false)
     Setting.ns_min_count = 2
@@ -37,12 +40,12 @@ RSpec.describe 'EPP domain:update' do
     }
 
     it 'returns epp code of 2308' do
-      post '/epp/command/update', frame: request_xml
+      post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => "session=#{session_id}"
       expect(response_code).to eq('2308'), "Expected EPP code of 2308, got #{response_code} (#{response_description})"
     end
 
     it 'returns epp description' do
-      post '/epp/command/update', frame: request_xml
+      post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => "session=#{session_id}"
 
       description = 'Data management policy violation;' \
         " Nameserver count must be between #{Setting.ns_min_count}-#{Setting.ns_max_count}" \
@@ -78,12 +81,12 @@ RSpec.describe 'EPP domain:update' do
     }
 
     it 'returns epp code of 1000' do
-      post '/epp/command/update', frame: request_xml
+      post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => "session=#{session_id}"
       expect(response_code).to eq('1000'), "Expected EPP code of 1000, got #{response_code} (#{response_description})"
     end
 
     it 'removes inactive status' do
-      post '/epp/command/update', frame: request_xml
+      post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => "session=#{session_id}"
 
       domain = Domain.find_by(name: 'test.com')
       expect(domain.statuses).to_not include(DomainStatus::INACTIVE)

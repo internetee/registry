@@ -49,9 +49,9 @@ namespace :dev do
       account = create(:account, registrar: registrar, balance: 1_000_000)
       api_user = create(:api_user, username: 'test', password: 'testtest', registrar: registrar)
 
-      epp_session = build(:epp_session, registrar: registrar)
-      epp_session[:api_user_id] = api_user.id
-      epp_session.registrar_id = registrar.id
+      epp_session = EppSession.new
+      epp_session.session_id = 'test'
+      epp_session.user = api_user
       epp_session.save!
 
       domain_counter = 1.step
