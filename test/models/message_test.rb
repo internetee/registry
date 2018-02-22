@@ -11,13 +11,11 @@ class MessageTest < ActiveSupport::TestCase
 
   def test_invalid_without_body
     @message.body = nil
-    @message.validate
     assert @message.invalid?
   end
 
   def test_invalid_without_registrar
     @message.registrar = nil
-    @message.validate
     assert @message.invalid?
   end
 end
