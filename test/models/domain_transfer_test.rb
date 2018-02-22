@@ -18,9 +18,9 @@ class DomainTransferTest < ActiveSupport::TestCase
       @domain_transfer.approve
     end
 
-    body = 'Domain transfer of shop.test has been approved.' \
-      ' Old contacts: jane-001, william-001' \
-      '; old registrant: john-001'
+    body = 'Transfer of domain domain_name_here has been approved.' \
+      ' It was associated with registrant john-001' \
+      ' and contacts jane-001, william-001.'
     id = @domain_transfer.id
     class_name = @domain_transfer.class.name
 
