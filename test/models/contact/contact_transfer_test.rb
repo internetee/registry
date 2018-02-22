@@ -8,7 +8,6 @@ class ContactTransferTest < ActiveSupport::TestCase
 
   def test_invalid_without_auth_info
     @contact.auth_info = nil
-    @contact.validate
     assert @contact.invalid?
   end
 
