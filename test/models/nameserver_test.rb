@@ -22,4 +22,22 @@ class NameserverTest < ActiveSupport::TestCase
   def test_hostnames
     assert_equal %w[ns1.bestnames.test ns2.bestnames.test], Nameserver.hostnames
   end
+
+  def test_normalizes_hostname
+    @nameserver.hostname = ' ns1.bestnameS.test.'
+    @nameserver.validate
+    assert_equal 'ns1.bestnames.test', @nameserver.hostname
+  end
+
+  def test_normalizes_ipv4
+    @nameserver.ipv4 = [' 192.0.2.1']
+    @nameserver.validate
+    assert_equal ['192.0.2.1'], @nameserver.ipv4
+  end
+
+  def test_normalizes_ipv6
+    @nameserver.ipv6 = [' 2001:db8::1']
+    @nameserver.validate
+    assert_equal ['2001:DB8::1'], @nameserver.ipv6
+  end
 end
