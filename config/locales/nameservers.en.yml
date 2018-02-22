@@ -1,0 +1,8 @@
+en:
+  activemodel:
+    errors:
+      models:
+        nameserver:
+          attributes:
+            base:
+              ip_required: At least one IPv4 or IPv6 is required

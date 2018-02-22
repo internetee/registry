@@ -8,6 +8,7 @@ class Nameserver < ActiveRecord::Base
   validates :hostname, presence: true, format: { with: /\A(([a-zA-Z0-9]|[a-zA-ZäöüõšžÄÖÜÕŠŽ0-9][a-zA-ZäöüõšžÄÖÜÕŠŽ0-9\-]*[a-zA-ZäöüõšžÄÖÜÕŠŽ0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\z/ }
   validate :val_ipv4
   validate :val_ipv6
+  validate :require_ip, if: :glue_record_required?
   # rubocop: enable Metrics/LineLength
 
   before_validation :normalize_attributes
@@ -85,5 +86,16 @@ class Nameserver < ActiveRecord::Base
     def hostnames
       pluck(:hostname)
     end
+  end
+
+  private
+
+  def require_ip
+    errors.add(:base, :ip_required) if ipv4.blank? && ipv6.blank?
+  end
+
+  def glue_record_required?
+    return unless hostname? && domain
+    hostname.end_with?(domain.name)
   end
 end
