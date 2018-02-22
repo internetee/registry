@@ -8,7 +8,10 @@ class APIDomainTransfersTest < ActionDispatch::IntegrationTest
     assert_equal registrars(:goodnames), domains(:shop).registrar
     assert_response 200
     assert_equal ({ data: [{
-                             type: 'domain_transfer'
+                             type: 'domain_transfer',
+                             attributes: {
+                               domain_name: 'shop.test'
+                             },
                            }] }),
                  JSON.parse(response.body, symbolize_names: true)
   end
