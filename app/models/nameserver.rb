@@ -34,25 +34,6 @@ class Nameserver < ActiveRecord::Base
     }
   end
 
-  def normalize_attributes
-    self.hostname = hostname.try(:strip).try(:downcase)
-    self.ipv4 = Array(ipv4).reject(&:blank?).map(&:strip)
-    self.ipv6 = Array(ipv6).reject(&:blank?).map(&:strip).map(&:upcase)
-  end
-
-  def check_label_length
-    return unless hostname
-
-    hostname_puny.split('.').each do |label|
-      errors.add(:hostname, :puny_to_long) if label.length > 63
-    end
-  end
-
-  def check_puny_symbols
-    regexp = /(\A|\.)..--/
-    errors.add(:hostname, :invalid) if hostname =~ regexp
-  end
-
   def to_s
     hostname
   end
@@ -97,5 +78,24 @@ class Nameserver < ActiveRecord::Base
   def glue_record_required?
     return unless hostname? && domain
     hostname.end_with?(domain.name)
+  end
+
+  def normalize_attributes
+    self.hostname = hostname.try(:strip).try(:downcase)
+    self.ipv4 = Array(ipv4).reject(&:blank?).map(&:strip)
+    self.ipv6 = Array(ipv6).reject(&:blank?).map(&:strip).map(&:upcase)
+  end
+
+  def check_label_length
+    return unless hostname
+
+    hostname_puny.split('.').each do |label|
+      errors.add(:hostname, :puny_to_long) if label.length > 63
+    end
+  end
+
+  def check_puny_symbols
+    regexp = /(\A|\.)..--/
+    errors.add(:hostname, :invalid) if hostname =~ regexp
   end
 end
