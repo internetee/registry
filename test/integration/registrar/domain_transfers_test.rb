@@ -7,12 +7,14 @@ class RegistrarDomainTransfersTest < ActionDispatch::IntegrationTest
   end
 
   def test_batch_transfer_succeeds
-    body = { data: { domainTransfers: [{ domainName: 'shop.test', transferCode: '65078d5' }] } }
+    request_body = { data: { domainTransfers: [{ domainName: 'shop.test', transferCode: '65078d5' }] } }
     headers = { 'Content-type' => 'application/json' }
-    request_stub = stub_request(:post, /domain_transfers/).with(body: body,
+    request_stub = stub_request(:post, /domain_transfers/).with(body: request_body,
                                                                 headers: headers,
                                                                 basic_auth: ['test_goodnames', 'testtest'])
-                     .to_return(status: 204)
+                     .to_return(body: { data: [{
+                                                 type: 'domain_transfer'
+                                               }] }.to_json, status: 200)
 
     visit registrar_domains_url
     click_link 'Transfer'

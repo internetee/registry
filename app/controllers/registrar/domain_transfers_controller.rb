@@ -51,7 +51,7 @@ class Registrar
           end
         end
 
-        if response.code == '204'
+        if response.code == '200'
           flash[:notice] = t '.transferred'
           redirect_to registrar_domains_url
         else
