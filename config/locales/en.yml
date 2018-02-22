@@ -489,7 +489,6 @@ en:
   name: 'Name'
   type: 'Type'
   code: 'Code'
-  nameservers: 'Nameservers'
   dnskeys: 'DNS Keys'
   flag: 'Flag'
   protocol: 'Protocol'
