@@ -46,11 +46,6 @@ class APIDomainTransfersTest < ActionDispatch::IntegrationTest
     assert_difference -> { @old_registrar.messages.count } do
       post '/repp/v1/domain_transfers', request_params, { 'HTTP_AUTHORIZATION' => http_auth_key }
     end
-
-    message = 'Domain transfer of shop.test has been approved.' \
-      ' Old contacts: jane-001, william-001' \
-      '; old registrant: john-001'
-    assert_equal message, @old_registrar.messages.last.body
   end
 
   def test_duplicates_registrant_admin_and_tech_contacts

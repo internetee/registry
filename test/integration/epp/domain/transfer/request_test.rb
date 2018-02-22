@@ -45,11 +45,6 @@ class EppDomainTransferRequestTest < ActionDispatch::IntegrationTest
     assert_difference -> { @old_registrar.messages.count } do
       post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
     end
-
-    message = 'Domain transfer of shop.test has been approved.' \
-      ' Old contacts: jane-001, william-001' \
-      '; old registrant: john-001'
-    assert_equal message, @old_registrar.messages.last.body
   end
 
   def test_duplicates_registrant_admin_and_tech_contacts
