@@ -34,5 +34,6 @@ acme_ltd:
 invalid:
   name: any
   code: any
+  email: invalid@invalid.test
   auth_info: any
   registrar: bestnames

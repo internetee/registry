@@ -5,7 +5,7 @@ class ContactTest < ActiveSupport::TestCase
     @contact = contacts(:john)
   end
 
-  def test_validates
+  def test_valid_fixture_is_valid
     assert @contact.valid?
   end
 
