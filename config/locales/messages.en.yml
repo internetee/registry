@@ -2,6 +2,6 @@ en:
   messages:
     texts:
       domain_transfer: >-
-        Transfer of domain domain_name_here has been approved.
+        Transfer of domain %{domain_name} has been approved.
         It was associated with registrant %{old_registrant_code}
         and contacts %{old_contacts_codes}.
