@@ -628,7 +628,7 @@ class Epp::Domain < Domain
 
     case action
     when 'query'
-      return domain_transfers.last if domain_transfers.any?
+      return transfers.last if transfers.any?
     when 'request'
       return pending_transfer if pending_transfer
       return query_transfer(frame, current_user)
@@ -644,13 +644,6 @@ class Epp::Domain < Domain
   # rubocop: disable Metrics/MethodLength
   # rubocop: disable Metrics/AbcSize
   def query_transfer(frame, current_user)
-    unless transferrable?
-      throw :epp_error, {
-        code: '2304',
-        msg: I18n.t(:object_status_prohibits_operation)
-      }
-    end
-
     if current_user.registrar == registrar
       throw :epp_error, {
         code: '2002',
@@ -658,11 +651,8 @@ class Epp::Domain < Domain
       }
     end
 
-    old_contact_codes = contacts.pluck(:code).sort.uniq
-    old_registrant_code = registrant.code
-
     transaction do
-      dt = domain_transfers.create!(
+      dt = transfers.create!(
         transfer_requested_at: Time.zone.now,
         old_registrar: registrar,
         new_registrar: current_user.registrar
@@ -677,8 +667,8 @@ class Epp::Domain < Domain
       end
 
       if dt.approved?
+        dt.send(:notify_old_registrar)
         transfer_contacts(current_user.registrar)
-        dt.notify_losing_registrar(old_contact_codes, old_registrant_code)
         regenerate_transfer_code
         self.registrar = current_user.registrar
       end
@@ -809,20 +799,6 @@ class Epp::Domain < Domain
     end if (statuses & [DomainStatus::CLIENT_DELETE_PROHIBITED, DomainStatus::SERVER_DELETE_PROHIBITED]).any?
 
     true
-  end
-
-  def transferrable?
-    (statuses & [
-        DomainStatus::PENDING_DELETE_CONFIRMATION,
-        DomainStatus::PENDING_CREATE,
-        DomainStatus::PENDING_UPDATE,
-        DomainStatus::PENDING_DELETE,
-        DomainStatus::PENDING_RENEW,
-        DomainStatus::PENDING_TRANSFER,
-        DomainStatus::FORCE_DELETE,
-        DomainStatus::SERVER_TRANSFER_PROHIBITED,
-        DomainStatus::CLIENT_TRANSFER_PROHIBITED
-    ]).empty?
   end
 
   ## SHARED

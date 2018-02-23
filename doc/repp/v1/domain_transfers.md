@@ -28,8 +28,20 @@ Authorization: Basic dGVzdDp0ZXN0dGVzdA==
 
 #### Response on success
 ```
-HTTP/1.1 204
+HTTP/1.1 200
+Content-Type: application/json
+{
+   "data":[
+      {
+         "type":"domain_transfer"
+      },
+      {
+         "type":"domain_transfer"
+      }
+   ]
+}
 ```
+
 
 #### Response on failure
 ```

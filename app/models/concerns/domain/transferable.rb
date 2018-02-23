@@ -2,37 +2,42 @@ module Concerns::Domain::Transferable
   extend ActiveSupport::Concern
 
   included do
-    after_initialize :generate_transfer_code, if: 'new_record? && transfer_code.blank?'
+    after_initialize :generate_transfer_code, if: :generate_transfer_code?
+  end
+
+  def non_transferable?
+    !transferable?
   end
 
   def transfer(new_registrar)
-    old_registrar = registrar
-
     self.registrar = new_registrar
     regenerate_transfer_code
 
-    contact_codes = contacts.pluck(:code).sort.uniq
-    registrant_code = registrant.code
-
     transaction do
-      old_registrar.messages.create!(
-        body: I18n.t('domain_transfer_was_approved', contacts: contact_codes, registrant: registrant_code),
-        attached_obj_id: id,
-        attached_obj_type: self.class.name
-      )
-
-      domain_transfers.create!(
-        transfer_requested_at: Time.zone.now,
-        old_registrar: old_registrar,
-        new_registrar: new_registrar
-      )
-
       transfer_contacts(new_registrar)
       save!
     end
   end
 
   private
+
+  def transferable?
+    (statuses & [
+      DomainStatus::PENDING_DELETE_CONFIRMATION,
+      DomainStatus::PENDING_CREATE,
+      DomainStatus::PENDING_UPDATE,
+      DomainStatus::PENDING_DELETE,
+      DomainStatus::PENDING_RENEW,
+      DomainStatus::PENDING_TRANSFER,
+      DomainStatus::FORCE_DELETE,
+      DomainStatus::SERVER_TRANSFER_PROHIBITED,
+      DomainStatus::CLIENT_TRANSFER_PROHIBITED
+    ]).empty?
+  end
+
+  def generate_transfer_code?
+    new_record? && transfer_code.blank?
+  end
 
   def generate_transfer_code
     self.transfer_code = SecureRandom.hex
