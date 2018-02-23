@@ -556,8 +556,6 @@ class Epp::Domain < Domain
   end
 
   def epp_destroy(frame, user_id)
-    return false unless valid?
-
     check_discarded
 
     if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
