@@ -4,6 +4,7 @@ class AdminAreaDomainForceDeleteTest < ActionDispatch::IntegrationTest
   def setup
     login_as users(:admin)
     @domain = domains(:shop)
+    ActionMailer::Base.deliveries.clear
   end
 
   def test_schedules_domain_force_delete
