@@ -142,6 +142,13 @@ class Epp::DomainsController < EppController
     authorize! :transfer, @domain, @password
     action = params[:parsed_frame].css('transfer').first[:op]
 
+    if @domain.non_transferable?
+      throw :epp_error, {
+        code: '2304',
+        msg: I18n.t(:object_status_prohibits_operation)
+      }
+    end
+
     @domain_transfer = @domain.transfer(params[:parsed_frame], action, current_user)
 
     if @domain_transfer

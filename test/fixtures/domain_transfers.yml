@@ -1,0 +1,7 @@
+shop:
+  status: serverApproved
+  transfer_requested_at: 2010-07-05
+  transferred_at: 2010-07-05
+  domain: shop
+  old_registrar: bestnames
+  new_registrar: goodnames

@@ -1,10 +1,6 @@
 require 'test_helper'
 
 class EppDomainUpdateTest < ActionDispatch::IntegrationTest
-  def setup
-    login_as users(:api_bestnames)
-  end
-
   def test_overwrites_existing
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -24,8 +20,9 @@ class EppDomainUpdateTest < ActionDispatch::IntegrationTest
       </epp>
     XML
 
-    session_id = epp_sessions(:api_bestnames).session_id
-    post '/epp/command/update', { frame: request_xml }, { 'HTTP_COOKIE' => "session=#{session_id}" }
+    post '/epp/command/update', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
     assert_equal 'f0ff7d17b0', domains(:shop).transfer_code
+    assert_equal '1000', Nokogiri::XML(response.body).at_css('result')[:code]
+    assert_equal 1, Nokogiri::XML(response.body).css('result').size
   end
 end

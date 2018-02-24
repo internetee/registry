@@ -3,7 +3,6 @@ require 'test_helper'
 class EppDomainCreateTransferCodeTest < ActionDispatch::IntegrationTest
   def setup
     travel_to Time.zone.parse('2010-07-05')
-    login_as users(:api_bestnames)
   end
 
   def test_generates_default
@@ -27,9 +26,10 @@ class EppDomainCreateTransferCodeTest < ActionDispatch::IntegrationTest
       </epp>
     XML
 
-    session_id = epp_sessions(:api_bestnames).session_id
-    post '/epp/command/create', { frame: request_xml }, { 'HTTP_COOKIE' => "session=#{session_id}" }
+    post '/epp/command/create', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
     refute_empty Domain.find_by(name: 'brandnew.test').transfer_code
+    assert_equal '1000', Nokogiri::XML(response.body).at_css('result')[:code]
+    assert_equal 1, Nokogiri::XML(response.body).css('result').size
   end
 
   def test_honors_custom
@@ -56,8 +56,9 @@ class EppDomainCreateTransferCodeTest < ActionDispatch::IntegrationTest
       </epp>
     XML
 
-    session_id = epp_sessions(:api_bestnames).session_id
-    post '/epp/command/create', { frame: request_xml }, { 'HTTP_COOKIE' => "session=#{session_id}" }
+    post '/epp/command/create', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_bestnames' }
     assert_equal '1058ad73', Domain.find_by(name: 'brandnew.test').transfer_code
+    assert_equal '1000', Nokogiri::XML(response.body).at_css('result')[:code]
+    assert_equal 1, Nokogiri::XML(response.body).css('result').size
   end
 end
