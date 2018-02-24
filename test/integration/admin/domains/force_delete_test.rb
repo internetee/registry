@@ -13,16 +13,19 @@ class AdminAreaDomainForceDeleteTest < ActionDispatch::IntegrationTest
     refute @domain.force_delete_scheduled?
 
     visit edit_admin_domain_url(@domain)
-
-    assert_difference '@domain.registrar.messages.size' do
-      click_link_or_button 'Force delete domain'
-    end
-
+    click_link_or_button 'Force delete domain'
     @domain.reload
 
     assert @domain.force_delete_scheduled?
     assert_current_path edit_admin_domain_path(@domain)
     assert_text 'Force delete procedure has been scheduled'
+  end
+
+  def test_notifies_registrar
+    assert_difference '@domain.registrar.messages.size' do
+      visit edit_admin_domain_url(@domain)
+      click_link_or_button 'Force delete domain'
+    end
   end
 
   def test_notifies_registrant_and_admin_contacts_by_email_by_default
