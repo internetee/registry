@@ -68,7 +68,7 @@ module Admin
       @domain.transaction do
         @domain.schedule_force_delete
         @domain.registrar.messages.create!(body: I18n.t('force_delete_set_on_domain', domain_name: @domain.name))
-        DomainDeleteForcedEmailJob.enqueue(@domain.id, params[:template_name])
+        DomainDeleteForcedEmailJob.enqueue(@domain.id, params[:template_name]) if notify_by_email?
       end
 
       redirect_to edit_admin_domain_url(@domain), notice: t('.scheduled')
@@ -131,6 +131,10 @@ module Admin
 
     def force_delete_templates
       %w(removed_company death)
+    end
+
+    def notify_by_email?
+      ActiveRecord::Type::Boolean.new.type_cast_from_user(params[:notify_by_email])
     end
   end
 end
