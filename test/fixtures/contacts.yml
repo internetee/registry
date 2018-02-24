@@ -9,6 +9,17 @@ john:
   code: john-001
   auth_info: cacb5b
 
+william:
+  name: William
+  email: william@inbox.test
+  phone: '+555.555'
+  ident: 1234
+  ident_type: priv
+  ident_country_code: US
+  registrar: bestnames
+  code: william-001
+  auth_info: 6573d0
+
 jane:
   name: Jane
   email: jane@mail.test
@@ -34,5 +45,6 @@ acme_ltd:
 invalid:
   name: any
   code: any
+  email: invalid@invalid.test
   auth_info: any
   registrar: bestnames

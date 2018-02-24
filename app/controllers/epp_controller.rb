@@ -4,11 +4,12 @@ class EppController < ApplicationController
   protect_from_forgery with: :null_session
   skip_before_action :verify_authenticity_token
 
+  before_action :ensure_session_id_passed
   before_action :generate_svtrid
   before_action :latin_only
   before_action :validate_against_schema
   before_action :validate_request
-  before_action :update_epp_session
+  before_action :update_epp_session, if: 'signed_in?'
 
   around_action :catch_epp_errors
 
@@ -86,41 +87,13 @@ class EppController < ApplicationController
     @params_hash ||= Hash.from_xml(params[:frame]).with_indifferent_access
   end
 
-  # SESSION MANAGEMENT
   def epp_session
-    cookies # Probably does some initialization
-    cookie = env['rack.request.cookie_hash'] || {}
-    EppSession.find_or_initialize_by(session_id: cookie['session'])
-  end
-
-  def update_epp_session
-    iptables_counter_update
-    e_s = epp_session
-    return if e_s.new_record?
-
-    if !Rails.env.development? && (e_s.updated_at < Time.zone.now - 5.minutes)
-      @api_user = current_user # cache current_user for logging
-      e_s.destroy
-      response.headers['X-EPP-Returncode'] = '1500'
-
-      epp_errors << {
-        msg: t('session_timeout'),
-        code: '2201'
-      }
-
-      handle_errors and return
-    else
-      e_s.update_column(:updated_at, Time.zone.now)
-    end
+    EppSession.find_by(session_id: epp_session_id)
   end
 
   def current_user
-    @current_user ||= ApiUser.find_by_id(epp_session[:api_user_id])
-    # by default PaperTrail uses before filter and at that
-    # time current_user is not yet present
-    ::PaperTrail.whodunnit = user_log_str(@current_user)
-    ::PaperSession.session = epp_session.session_id if epp_session.session_id.present?
-    @current_user
+    return unless signed_in?
+    epp_session.user
   end
 
   # ERROR + RESPONSE HANDLING
@@ -362,7 +335,6 @@ class EppController < ApplicationController
   # rubocop: disable Metrics/CyclomaticComplexity
   # rubocop: disable Metrics/PerceivedComplexity
   def write_to_epp_log
-    # return nil if EPP_LOG_ENABLED
     request_command = params[:command] || params[:action] # error receives :command, other methods receive :action
     frame = params[:raw_frame] || params[:frame]
 
@@ -396,5 +368,43 @@ class EppController < ApplicationController
   def resource
     name = self.class.to_s.sub("Epp::","").sub("Controller","").underscore.singularize
     instance_variable_get("@#{name}")
+  end
+
+  private
+
+  def signed_in?
+    epp_session
+  end
+
+  def epp_session_id
+    cookies[:session] # Passed by mod_epp https://github.com/mod-epp/mod-epp#requestscript-interface
+  end
+
+  def ensure_session_id_passed
+    raise 'EPP session id is empty' unless epp_session_id.present?
+  end
+
+  def update_epp_session
+    iptables_counter_update
+
+    if session_timeout_reached?
+      @api_user = current_user # cache current_user for logging
+      epp_session.destroy
+      response.headers['X-EPP-Returncode'] = '1500'
+
+      epp_errors << {
+        msg: t('session_timeout'),
+        code: '2201'
+      }
+
+      handle_errors and return
+    else
+      epp_session.update_column(:updated_at, Time.zone.now)
+    end
+  end
+
+  def session_timeout_reached?
+    timeout = 5.minutes
+    epp_session.updated_at < (Time.zone.now - timeout)
   end
 end

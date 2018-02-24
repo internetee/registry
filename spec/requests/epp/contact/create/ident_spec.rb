@@ -1,11 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe 'EPP contact:create' do
-  let(:request) { post '/epp/command/create', frame: request_xml }
+  let(:registrar) { create(:registrar) }
+  let(:user) { create(:api_user_epp, registrar: registrar) }
+  let(:session_id) { create(:epp_session, user: user).session_id }
+  let(:request) { post '/epp/command/create', { frame: request_xml }, 'HTTP_COOKIE' => "session=#{session_id}" }
 
   before do
     Setting.address_processing = false
-    sign_in_to_epp_area
+    login_as user
   end
 
   context 'when all ident params are valid' do

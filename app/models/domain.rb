@@ -49,7 +49,7 @@ class Domain < ActiveRecord::Base
   accepts_nested_attributes_for :domain_statuses, allow_destroy: true,
                                                   reject_if: proc { |attrs| attrs[:value].blank? }
 
-  has_many :domain_transfers, dependent: :destroy
+  has_many :transfers, class_name: 'DomainTransfer', dependent: :destroy
 
   has_many :dnskeys, dependent: :destroy
 
@@ -280,7 +280,7 @@ class Domain < ActiveRecord::Base
   end
 
   def pending_transfer
-    domain_transfers.find_by(status: DomainTransfer::PENDING)
+    transfers.find_by(status: DomainTransfer::PENDING)
   end
 
   def server_holdable?

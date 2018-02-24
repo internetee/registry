@@ -1,3 +1,8 @@
+22.02.2018
+* BUG: Registrar: contact list export is not limited to 75 records any more [#721](https://github.com/internetee/registry/issues/721)
+* BUG: EPP: domain and associated objects are not validated on domain delete [#707](https://github.com/internetee/registry/issues/707)
+* EPP: improved session management (db constraints, model and db structure refactor, auto-tests) [#700](https://github.com/internetee/registry/issues/700)
+
 11.02.2018
 * BUG: Disable all object validations on domain transfer [#701](https://github.com/internetee/registry/issues/701)
 

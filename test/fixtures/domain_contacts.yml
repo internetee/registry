@@ -3,6 +3,11 @@ shop_jane:
   contact: jane
   type: AdminDomainContact
 
+shop_william:
+  domain: shop
+  contact: william
+  type: TechDomainContact
+
 airport_john:
   domain: airport
   contact: john
@@ -12,3 +17,13 @@ library_john:
   domain: library
   contact: john
   type: AdminDomainContact
+
+invalid_invalid_admin:
+  domain: invalid
+  contact: invalid
+  type: AdminDomainContact
+
+invalid_invalid_tech:
+  domain: invalid
+  contact: invalid
+  type: TechDomainContact

@@ -655,11 +655,6 @@ Performance/StringReplacement:
     - 'app/models/directo.rb'
     - 'app/models/dnskey.rb'
 
-# Offense count: 1
-Security/MarshalLoad:
-  Exclude:
-    - 'app/models/epp_session.rb'
-
 # Offense count: 4
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
