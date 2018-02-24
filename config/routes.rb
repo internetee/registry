@@ -200,6 +200,8 @@ Rails.application.routes.draw do
 
     resources :domains do
       resources :domain_versions, controller: 'domains', action: 'versions'
+      resources :pending_updates
+      resources :pending_deletes
 
       member do
         patch 'schedule_force_delete'
