@@ -51,11 +51,13 @@ class Registrar
           end
         end
 
+        parsed_response = JSON.parse(response.body, symbolize_names: true)
+
         if response.code == '200'
-          flash[:notice] = t '.transferred'
+          flash[:notice] = t '.transferred', count: parsed_response[:data].size
           redirect_to registrar_domains_url
         else
-          @api_errors = JSON.parse(response.body, symbolize_names: true)[:errors]
+          @api_errors = parsed_response[:errors]
           render :new
         end
       else

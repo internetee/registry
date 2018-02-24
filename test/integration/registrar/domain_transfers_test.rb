@@ -25,7 +25,7 @@ class RegistrarDomainTransfersTest < ActionDispatch::IntegrationTest
 
     assert_requested request_stub
     assert_current_path registrar_domains_path
-    assert_text 'Domains have been successfully transferred'
+    assert_text '1 domains have been successfully transferred'
   end
 
   def test_batch_transfer_fails_gracefully
