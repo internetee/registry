@@ -68,7 +68,13 @@ module Admin
       @domain.transaction do
         @domain.schedule_force_delete
         @domain.registrar.messages.create!(body: I18n.t('force_delete_set_on_domain', domain_name: @domain.name))
-        DomainDeleteForcedEmailJob.enqueue(@domain.id, params[:template_name]) if notify_by_email?
+
+        if notify_by_email?
+          DomainDeleteMailer.forced(domain: @domain,
+                                    registrar: @domain.registrar,
+                                    registrant: @domain.registrant,
+                                    template_name: params[:template_name]).deliver_now
+        end
       end
 
       redirect_to edit_admin_domain_url(@domain), notice: t('.scheduled')
