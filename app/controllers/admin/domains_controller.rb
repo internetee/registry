@@ -71,7 +71,7 @@ module Admin
         DomainDeleteForcedEmailJob.enqueue(@domain.id, params[:template_name])
       end
 
-      redirect_to edit_admin_domain_path(@domain), notice: t('.scheduled')
+      redirect_to edit_admin_domain_url(@domain), notice: t('.scheduled')
     end
 
     def cancel_force_delete
@@ -81,7 +81,7 @@ module Admin
         flash.now[:alert] = I18n.t('failed_to_update_domain')
       end
 
-      redirect_to edit_admin_domain_path(@domain)
+      redirect_to edit_admin_domain_url(@domain)
     end
 
     def versions

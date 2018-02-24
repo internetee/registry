@@ -16,6 +16,7 @@ class AdminAreaDomainForceDeleteTest < ActionDispatch::IntegrationTest
 
     assert @domain.force_delete_scheduled?
     assert_equal 1, ActionMailer::Base.deliveries.size
+    assert_current_path edit_admin_domain_path(@domain)
     assert_text 'Force delete procedure has been scheduled'
   end
 
@@ -28,6 +29,7 @@ class AdminAreaDomainForceDeleteTest < ActionDispatch::IntegrationTest
     @domain.reload
 
     refute @domain.force_delete_scheduled?
+    assert_current_path edit_admin_domain_path(@domain)
     assert_text 'Force delete procedure has been cancelled'
   end
 end
