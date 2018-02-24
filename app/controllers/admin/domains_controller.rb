@@ -62,34 +62,6 @@ module Admin
       end
     end
 
-    def schedule_force_delete
-      raise 'Template param cannot be empty' if params[:template_name].blank?
-
-      @domain.transaction do
-        @domain.schedule_force_delete
-        @domain.registrar.messages.create!(body: I18n.t('force_delete_set_on_domain', domain_name: @domain.name))
-
-        if notify_by_email?
-          DomainDeleteMailer.forced(domain: @domain,
-                                    registrar: @domain.registrar,
-                                    registrant: @domain.registrant,
-                                    template_name: params[:template_name]).deliver_now
-        end
-      end
-
-      redirect_to edit_admin_domain_url(@domain), notice: t('.scheduled')
-    end
-
-    def cancel_force_delete
-      if @domain.cancel_force_delete
-        flash[:notice] = t('.cancelled')
-      else
-        flash.now[:alert] = I18n.t('failed_to_update_domain')
-      end
-
-      redirect_to edit_admin_domain_url(@domain)
-    end
-
     def versions
       @domain = Domain.where(id: params[:domain_id]).includes({ versions: :item }).first
       @versions = @domain.versions
@@ -137,10 +109,6 @@ module Admin
 
     def force_delete_templates
       %w(removed_company death)
-    end
-
-    def notify_by_email?
-      ActiveRecord::Type::Boolean.new.type_cast_from_user(params[:notify_by_email])
     end
   end
 end

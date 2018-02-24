@@ -49,8 +49,8 @@ class DomainPresenter
       )
     else
       view.link_to(view.t('admin.domains.force_delete_toggle_btn.cancel'),
-                   view.cancel_force_delete_admin_domain_path(domain),
-                   method: :patch,
+                   view.admin_domain_force_delete_path(domain),
+                   method: :delete,
                    data: { confirm: view.t('admin.domains.force_delete_toggle_btn.cancel_confim') },
                    class: 'btn btn-primary')
     end

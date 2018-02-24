@@ -145,7 +145,6 @@ DuplicateMethodCall:
   - Admin::DomainsController#build_associations
   - Admin::DomainsController#index
   - Admin::DomainsController#normalize_search_parameters
-  - Admin::DomainsController#schedule_force_delete
   - Admin::EppLogsController#index
   - Admin::EppLogsController#set_default_dates
   - Admin::LegalDocumentsController#show
@@ -624,7 +623,6 @@ TooManyStatements:
   - Admin::DomainVersionsController#show
   - Admin::DomainsController#index
   - Admin::DomainsController#normalize_search_parameters
-  - Admin::DomainsController#schedule_force_delete
   - Admin::DomainsController#update
   - Admin::EppLogsController#index
   - Admin::InvoicesController#create

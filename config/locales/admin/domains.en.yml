@@ -19,12 +19,6 @@ en:
         close_btn: Close dialog
         submit_btn: Force delete domain
 
-      schedule_force_delete:
-        scheduled: Force delete procedure has been scheduled
-
-      cancel_force_delete:
-        cancelled: Force delete procedure has been cancelled
-
       versions:
         time: Time
         registrant: Registrant

@@ -10,8 +10,8 @@
 
             <div class="modal-body">
                 <div class="row">
-                    <%= form_tag schedule_force_delete_admin_domain_path, method: :patch,
-                                 id: 'domain-force-delete-form', class: 'form-horizontal' do %>
+                    <%= form_tag admin_domain_force_delete_path(domain), id: 'domain-force-delete-form',
+                                 class: 'form-horizontal' do %>
                         <div class="form-group">
                             <div class="col-sm-9 col-md-offset-2">
                                 <div class="checkbox">
