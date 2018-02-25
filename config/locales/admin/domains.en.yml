@@ -43,4 +43,4 @@ en:
       force_delete_toggle_btn:
         schedule: Schedule force delete
         cancel: Cancel force delete
-        cancel_confim: Are you sure you want cancel force delete procedure?
+        cancel_confirm: Are you sure you want cancel force delete procedure?
