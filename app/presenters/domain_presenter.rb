@@ -41,7 +41,7 @@ class DomainPresenter
   def force_delete_toggle_btn
     if !domain.force_delete_scheduled?
       view.content_tag(:a, view.t('admin.domains.force_delete_toggle_btn.schedule'),
-                       class: 'btn btn-danger',
+                       class: 'btn btn-default',
                        data: {
                          toggle: 'modal',
                          target: '.domain-edit-force-delete-dialog',
