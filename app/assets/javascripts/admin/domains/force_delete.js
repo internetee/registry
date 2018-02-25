@@ -1,12 +1,13 @@
-(function () {
-    let toggle = document.querySelector('.domain-edit-force-delete-dialog [data-dependent-content-toggle]');
-    let dependentContent = document.querySelector('.domain-edit-force-delete-dialog .email-template-row');
+(function() {
+    let container = document.querySelector('.domain-edit-force-delete-dialog');
+    let toggle = container.querySelector('[data-dependent-content-toggle]');
+    let dependentContent = container.querySelector('.email-template-row');
 
     if (!toggle) {
         return;
     }
 
-    toggle.addEventListener('change', function () {
+    toggle.addEventListener('change', function() {
         dependentContent.hidden = !this.checked;
     });
 })();
