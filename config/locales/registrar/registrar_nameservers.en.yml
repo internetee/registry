@@ -6,6 +6,7 @@ en:
         replace_btn: Replace
 
       form:
+        ip_hint: One IP per line
         replace_btn: Replace nameserver
 
       update:
