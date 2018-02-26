@@ -5,7 +5,7 @@
         </div>
 
         <div class="col-md-5">
-            <%= text_field_tag :old_hostname, nil, autofocus: true, required: true,
+            <%= text_field_tag :old_hostname, params[:old_hostname], autofocus: true, required: true,
                                class: 'form-control' %>
         </div>
     </div>
@@ -16,7 +16,7 @@
         </div>
 
         <div class="col-md-5">
-            <%= text_field_tag :new_hostname, nil, required: true, class: 'form-control' %>
+            <%= text_field_tag :new_hostname, params[:new_hostname], required: true, class: 'form-control' %>
         </div>
     </div>
 
@@ -26,7 +26,7 @@
         </div>
 
         <div class="col-md-3">
-            <%= text_area_tag :ipv4, nil, class: 'form-control' %>
+            <%= text_area_tag :ipv4, params[:ipv4], class: 'form-control' %>
         </div>
     </div>
 
@@ -36,7 +36,7 @@
         </div>
 
         <div class="col-md-3">
-            <%= text_area_tag :ipv6, nil, class: 'form-control' %>
+            <%= text_area_tag :ipv6, params[:ipv6], class: 'form-control' %>
         </div>
     </div>
 

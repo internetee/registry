@@ -42,8 +42,16 @@ class RegistrarNameserverReplacementTest < ActionDispatch::IntegrationTest
     visit registrar_domains_url
     click_link 'Replace nameserver'
 
+    fill_in 'Old hostname', with: 'old hostname'
+    fill_in 'New hostname', with: 'new hostname'
+    fill_in 'ipv4', with: 'ipv4'
+    fill_in 'ipv6', with: 'ipv6'
     click_on 'Replace nameserver'
 
     assert_text 'epic fail'
+    assert_field 'Old hostname', with: 'old hostname'
+    assert_field 'New hostname', with: 'new hostname'
+    assert_field 'ipv4', with: 'ipv4'
+    assert_field 'ipv6', with: 'ipv6'
   end
 end
