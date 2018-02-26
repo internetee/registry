@@ -202,11 +202,7 @@ Rails.application.routes.draw do
       resources :domain_versions, controller: 'domains', action: 'versions'
       resources :pending_updates
       resources :pending_deletes
-
-      member do
-        patch 'schedule_force_delete'
-        patch 'cancel_force_delete'
-      end
+      resource :force_delete, controller: 'domains/force_delete', only: %i[create destroy]
     end
 
     resources :domain_versions do

@@ -62,28 +62,6 @@ module Admin
       end
     end
 
-    def schedule_force_delete
-      raise 'Template param cannot be empty' if params[:template_name].blank?
-
-      @domain.transaction do
-        @domain.schedule_force_delete
-        @domain.registrar.messages.create!(body: I18n.t('force_delete_set_on_domain', domain_name: @domain.name))
-        DomainDeleteForcedEmailJob.enqueue(@domain.id, params[:template_name])
-      end
-
-      redirect_to edit_admin_domain_path(@domain), notice: t('.scheduled')
-    end
-
-    def cancel_force_delete
-      if @domain.cancel_force_delete
-        flash[:notice] = t('.cancelled')
-      else
-        flash.now[:alert] = I18n.t('failed_to_update_domain')
-      end
-
-      redirect_to edit_admin_domain_path(@domain)
-    end
-
     def versions
       @domain = Domain.where(id: params[:domain_id]).includes({ versions: :item }).first
       @versions = @domain.versions

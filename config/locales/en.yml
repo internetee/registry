@@ -297,16 +297,12 @@ en:
   add_another: 'Add another'
   domain_updated: 'Domain updated!'
   failed_to_update_domain: 'Failed to update domain'
-  failed_to_create_contact: 'Failed to create contact'
-  contact_deleted: 'Contact deleted'
-  failed_to_delete_contact: 'Failed to delete contact'
   edit_contact: 'Edit contact'
   failed_to_update_contact: 'Failed to update contact'
   contact_updated: 'Contact updated'
   search: 'Search'
   reg_no: 'Reg. no'
   status: 'Status'
-  eedirekt: 'EEDirekt'
   contact: 'Contact'
   credit_balance: 'Credit balance'
   starting_balance: 'Starting balance'
@@ -317,8 +313,6 @@ en:
 
   welcome: 'Welcome!'
   edit_statuses: 'Edit statuses'
-  contact_list: 'Contact list'
-  create_new_contact: 'Create new contact'
   history: 'History'
 
   new_registrar: 'New registrar'
@@ -331,14 +325,11 @@ en:
 
   users: 'Users'
   user_details: 'User details'
-  edit_user: 'Edit user'
   back_to_user: 'Back to user'
 
   certificate_signing_req: 'Certificate signing request'
   csr: 'CSR'
   crt: 'CRT'
-  api_user_details: 'API user details'
-  edit_api_user: 'Edit API user'
   back_to_api_user: 'Back to API user'
 
   dnskey: 'DNS key'
@@ -359,16 +350,12 @@ en:
 
   transfer_requested: 'Transfer requested.'
   message_was_not_found: 'Message was not found'
-  host_obj_is_not_allowed: 'hostObj object is not allowed'
   zonefile: 'Zonefile'
   only_one_parameter_allowed: 'Only one parameter allowed: %{param_1} or %{param_2}'
   exactly_one_parameter_required: 'Exactly one parameter required: %{params}'
-  required_parameter_missing_choice: 'Required parameter missing: %{param_1} or %{param_2}'
   ds_data_with_key_allowed: 'Allow DS data with key'
   key_data_allowed: 'Allow key data'
   ds_digest_type: 'DS digest type'
-  background_jobs: Background jobs
-  domains_history: Domains history
   role: 'Role'
   user: 'User'
   customer_service: 'Customer service'
@@ -387,7 +374,6 @@ en:
   admin_contacts_max_count: 'Admin contacts maximum count'
   tech_contacts_min_count: 'Tech contacts minimum count'
   tech_contacts_max_count: 'Tech contacts maximum count'
-  action_failed_due_to_server_error: 'Action failed due to server error'
   transfer_can_be_rejected_only_by_current_registrar: 'Transfer can be rejected only by current registrar'
   request_command: 'Request command'
   request_object: 'Request object'
@@ -441,8 +427,6 @@ en:
   sim_error: 'SIM application error'
   internal_error: 'Internal error'
   client_side_status_editing_error: 'Parameter value policy error. Client-side object status management not supported'
-  switch_to: Switch to
-  admin_menu: Admin
   business_registry_service_not_available: "Business Registry service Ärireg is not available"
 
   # DEPP

@@ -11,11 +11,6 @@ FactoryBot.define do
       domain.tech_domain_contacts << FactoryBot.build(:tech_domain_contact)
     end
 
-    factory :domain_without_force_delete do
-      force_delete_time nil
-      statuses []
-    end
-
     factory :domain_discarded do
       statuses [DomainStatus::DELETE_CANDIDATE]
     end

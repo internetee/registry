@@ -14,15 +14,10 @@ en:
 
       force_delete_dialog:
         title: Force delete
-        template: Template
+        notify_by_email: Notify registrant and administrative contacts by email
+        email_template: Email template
         close_btn: Close dialog
         submit_btn: Force delete domain
-
-      schedule_force_delete:
-        scheduled: Force delete procedure has been scheduled
-
-      cancel_force_delete:
-        cancelled: Force delete procedure has been cancelled
 
       versions:
         time: Time
@@ -48,4 +43,4 @@ en:
       force_delete_toggle_btn:
         schedule: Schedule force delete
         cancel: Cancel force delete
-        cancel_confim: Are you sure you want cancel force delete procedure?
+        cancel_confirm: Are you sure you want cancel force delete procedure?

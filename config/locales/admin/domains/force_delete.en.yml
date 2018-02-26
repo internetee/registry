@@ -1,0 +1,9 @@
+en:
+  admin:
+    domains:
+      force_delete:
+        create:
+          scheduled: Force delete procedure has been scheduled
+
+        destroy:
+          cancelled: Force delete procedure has been cancelled
