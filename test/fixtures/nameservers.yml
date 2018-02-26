@@ -13,3 +13,11 @@ ns2:
   ipv6:
     - 2001:db8::2
   domain: shop
+
+airport_ns1:
+  hostname: ns1.bestnames.test
+  domain: airport
+
+metro_ns1:
+  hostname: ns1.bestnames.test
+  domain: metro
