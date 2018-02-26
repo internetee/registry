@@ -144,7 +144,6 @@ DuplicateMethodCall:
   - Admin::DomainsController#build_associations
   - Admin::DomainsController#index
   - Admin::DomainsController#normalize_search_parameters
-  - Admin::DomainsController#schedule_force_delete
   - Admin::EppLogsController#index
   - Admin::EppLogsController#set_default_dates
   - Admin::LegalDocumentsController#show
@@ -474,7 +473,6 @@ IrresponsibleModule:
   - Registrar::ApplicationHelper
   - DomainDeleteConfirmEmailJob
   - DomainDeleteConfirmJob
-  - DomainDeleteForcedEmailJob
   - DomainDeleteJob
   - DomainExpireEmailJob
   - DomainUpdateConfirmJob
@@ -623,7 +621,6 @@ TooManyStatements:
   - Admin::DomainVersionsController#show
   - Admin::DomainsController#index
   - Admin::DomainsController#normalize_search_parameters
-  - Admin::DomainsController#schedule_force_delete
   - Admin::DomainsController#update
   - Admin::EppLogsController#index
   - Admin::InvoicesController#create
@@ -852,7 +849,6 @@ UtilityFunction:
   - ApplicationHelper#plain_username
   - ApplicationHelper#unstable_env
   - DomainDeleteConfirmEmailJob#logger
-  - DomainDeleteForcedEmailJob#logger
   - DomainExpireEmailJob#run
   - RegenerateRegistrarWhoisesJob#run
   - RegistrantChangeConfirmEmailJob#logger
@@ -891,8 +887,6 @@ FeatureEnvy:
   - DomainDeleteConfirmEmailJob#run
   - DomainDeleteConfirmJob#raise_errors!
   - DomainDeleteConfirmJob#run
-  - DomainDeleteForcedEmailJob#log
-  - DomainDeleteForcedEmailJob#run
   - DomainDeleteJob#run
   - DomainUpdateConfirmJob#raise_errors!
   - DomainUpdateConfirmJob#run
