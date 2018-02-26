@@ -11,7 +11,7 @@ class Registrar
       ipv6 = params[:ipv6].split("\r\n")
 
       uri = URI.parse("#{ENV['repp_url']}registrar/nameservers")
-      request = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
+      request = Net::HTTP::Put.new(uri, 'Content-Type' => 'application/json')
       request.body = { data: { type: 'nameserver', id: params[:old_hostname],
                                attributes: { hostname: params[:new_hostname],
                                              ipv4: ipv4,
