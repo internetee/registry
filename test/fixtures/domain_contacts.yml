@@ -3,6 +3,11 @@ shop_jane:
   contact: jane
   type: AdminDomainContact
 
+shop_william:
+  domain: shop
+  contact: william
+  type: TechDomainContact
+
 airport_john:
   domain: airport
   contact: john

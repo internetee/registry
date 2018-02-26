@@ -954,12 +954,12 @@ ALTER SEQUENCE domain_statuses_id_seq OWNED BY domain_statuses.id;
 
 CREATE TABLE domain_transfers (
     id integer NOT NULL,
-    domain_id integer,
+    domain_id integer NOT NULL,
     status character varying,
     transfer_requested_at timestamp without time zone,
     transferred_at timestamp without time zone,
-    old_registrar_id integer,
-    new_registrar_id integer,
+    old_registrar_id integer NOT NULL,
+    new_registrar_id integer NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     wait_until timestamp without time zone
@@ -2183,10 +2183,10 @@ ALTER SEQUENCE mail_templates_id_seq OWNED BY mail_templates.id;
 
 CREATE TABLE messages (
     id integer NOT NULL,
-    registrar_id integer,
-    body character varying,
+    registrar_id integer NOT NULL,
+    body character varying NOT NULL,
     attached_obj_type character varying,
-    attached_obj_id character varying,
+    attached_obj_id integer,
     queued boolean,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -4525,6 +4525,14 @@ ALTER TABLE ONLY account_activities
 
 
 --
+-- Name: messages_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY messages
+    ADD CONSTRAINT messages_registrar_id_fk FOREIGN KEY (registrar_id) REFERENCES registrars(id);
+
+
+--
 -- Name: nameservers_domain_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5100,6 +5108,10 @@ INSERT INTO schema_migrations (version) VALUES ('20180207071528');
 
 INSERT INTO schema_migrations (version) VALUES ('20180207072139');
 
+INSERT INTO schema_migrations (version) VALUES ('20180211011450');
+
+INSERT INTO schema_migrations (version) VALUES ('20180211011948');
+
 INSERT INTO schema_migrations (version) VALUES ('20180212123810');
 
 INSERT INTO schema_migrations (version) VALUES ('20180212152810');
@@ -5107,4 +5119,10 @@ INSERT INTO schema_migrations (version) VALUES ('20180212152810');
 INSERT INTO schema_migrations (version) VALUES ('20180212154731');
 
 INSERT INTO schema_migrations (version) VALUES ('20180213183818');
+
+INSERT INTO schema_migrations (version) VALUES ('20180214200224');
+
+INSERT INTO schema_migrations (version) VALUES ('20180214213743');
+
+INSERT INTO schema_migrations (version) VALUES ('20180218004148');
 

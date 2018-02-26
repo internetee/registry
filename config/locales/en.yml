@@ -214,20 +214,12 @@ en:
       blank: 'is missing'
       epp_domain_reserved: 'Domain name is reserved'
       epp_obj_does_not_exist: 'Object does not exist'
-      epp_command_failed: 'Command failed'
       epp_authorization_error: 'Authorization error'
-      epp_authentication_error: 'Authentication error'
       epp_id_taken: 'Contact id already exists'
       epp_domain_not_found: 'Domain not found'
       epp_exp_dates_do_not_match: 'Given and current expire dates do not match'
-      epp_registrant_not_found: 'Registrant not found'
-      epp_command_syntax_error: 'Command syntax error'
       required_parameter_missing: 'Required parameter missing: %{key}'
-      attr_missing: 'Required parameter missing: %{key}'
-      repeating_postal_info: 'Only one of each postal info types may be provided'
-      invalid_type: 'PostalInfo type is invalid'
       unimplemented_command: 'Unimplemented command'
-      domain_exists_but_belongs_to_other_registrar: 'Domain exists but belongs to other registrar'
       required_ident_attribute_missing: "Required ident attribute missing: %{key}"
       invalid_iso31661_alpha2: does not conform to ISO 3166-1 alpha-2 standard
       invalid_iso8601_date: has invalid date format YYYY-MM-DD (ISO 8601)
@@ -451,7 +443,6 @@ en:
   client_side_status_editing_error: 'Parameter value policy error. Client-side object status management not supported'
   switch_to: Switch to
   admin_menu: Admin
-  domain_transfer_was_approved: 'Domain transfer was approved, associated contacts were: %{contacts} and registrant was %{registrant}'
   business_registry_service_not_available: "Business Registry service Ärireg is not available"
 
   # DEPP
@@ -524,7 +515,6 @@ en:
   address: 'Address'
   street: 'Street'
   city: 'City'
-  messages: 'Messages (%{count})'
   message: 'Message'
   message_no: 'Message #%{id}'
   queue_date: 'Queue date'
@@ -752,7 +742,6 @@ en:
   parameter_value_range_error: 'Parameter value range error: %{key}'
   payment_received: 'Payment received'
   api_user_not_found: 'API user not found'
-  domain_already_belongs_to_the_querying_registrar: 'Domain already belongs to the querying registrar'
   notes: Notes
   active_price_for_this_operation_is: 'Active price for this operation is %{price}'
   active_price_missing_for_this_operation: 'Active price missing for this operation!'

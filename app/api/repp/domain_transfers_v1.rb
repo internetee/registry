@@ -15,6 +15,7 @@ module Repp
 
         new_registrar = current_user.registrar
         domain_transfers = params['data']['domainTransfers']
+        successful_domain_transfers = []
         errors = []
 
         domain_transfers.each do |domain_transfer|
@@ -24,7 +25,8 @@ module Repp
 
           if domain
             if domain.transfer_code == transfer_code
-              domain.transfer(new_registrar)
+              DomainTransfer.request(domain, new_registrar)
+              successful_domain_transfers << { type: 'domain_transfer' }
             else
               errors << { title: "#{domain_name} transfer code is wrong" }
             end
@@ -34,9 +36,8 @@ module Repp
         end
 
         if errors.none?
-          status 204
-          body false
-          @response = {}
+          status 200
+          @response = { data: successful_domain_transfers }
         else
           status 400
           @response = { errors: errors }
