@@ -1,11 +1,11 @@
 # Nameservers
 
-## PATCH /repp/v1/nameservers
+## PUT /repp/v1/registrar/nameservers
 Replaces all name servers of current registrar domains.
 
 #### Request
 ```
-PATCH /repp/v1/nameservers
+PUT /repp/v1/registrar/nameservers
 Accept: application/json
 Content-Type: application/json
 Authorization: Basic dGVzdDp0ZXN0dGVzdA==

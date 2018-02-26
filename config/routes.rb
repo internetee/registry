@@ -62,6 +62,8 @@ Rails.application.routes.draw do
       end
     end
     resources :domain_transfers, only: %i[new create]
+    get 'registrar/nameservers', to: 'registrar_nameservers#edit', as: :edit_registrar_nameserver
+    put 'registrar/nameservers', to: 'registrar_nameservers#update', as: :update_registrar_nameserver
 
     resources :contacts, constraints: {:id => /[^\/]+(?=#{ ActionController::Renderers::RENDERERS.map{|e| "\\.#{e}\\z"}.join("|") })|[^\/]+/} do
       member do

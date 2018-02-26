@@ -2,7 +2,7 @@ module Repp
   class NameserversV1 < Grape::API
     version 'v1', using: :path
 
-    resource :nameservers do
+    resource 'registrar/nameservers' do
       put '/' do
         params do
           requires :data, type: Hash do

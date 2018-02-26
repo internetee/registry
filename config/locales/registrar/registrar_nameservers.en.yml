@@ -1,0 +1,12 @@
+en:
+  registrar:
+    registrar_nameservers:
+      edit:
+        header: Replace nameserver
+        replace_btn: Replace
+
+      form:
+        replace_btn: Replace nameserver
+
+      update:
+        replaced: Nameserver have been successfully replaced
