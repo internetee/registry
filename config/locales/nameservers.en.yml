@@ -1,8 +1,8 @@
 en:
-  activemodel:
+  activerecord:
     errors:
       models:
         nameserver:
           attributes:
             base:
-              ip_required: At least one IPv4 or IPv6 is required
+              ip_required: Either IPv4 or IPv6 is required for glue record generation

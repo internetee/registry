@@ -9,7 +9,8 @@ class NameserverGlueRecordTest < ActiveSupport::TestCase
     @nameserver.hostname = 'ns1.shop.test'
     @nameserver.ipv4 = @nameserver.ipv6 = ''
     assert @nameserver.invalid?
-    assert @nameserver.errors.added?(:base, :ip_required)
+    assert_includes @nameserver.errors.full_messages, 'Either IPv4 or IPv6 is required' \
+    ' for glue record generation'
   end
 
   def test_valid_with_ip_if_glue_record_is_required
