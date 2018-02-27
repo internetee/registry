@@ -2,7 +2,7 @@ require 'test_helper'
 
 class NameserverTest < ActiveSupport::TestCase
   def setup
-    @nameserver = nameservers(:ns1)
+    @nameserver = nameservers(:shop_ns1)
   end
 
   def test_valid
@@ -19,8 +19,22 @@ class NameserverTest < ActiveSupport::TestCase
     assert @nameserver.invalid?
   end
 
+  def test_hostname_format_validation
+    @nameserver.hostname = 'foo_bar'
+    assert @nameserver.invalid?
+
+    @nameserver.hostname = 'foo.bar'
+    assert @nameserver.valid?
+
+    @nameserver.hostname = 'äöüõšž.ÄÖÜÕŠŽ.umlauts'
+    assert @nameserver.valid?
+  end
+
   def test_hostnames
-    assert_equal %w[ns1.bestnames.test ns2.bestnames.test], Nameserver.hostnames
+    assert_equal %w[ns1.bestnames.test
+      ns2.bestnames.test
+      ns1.bestnames.test
+      ns1.bestnames.test], Nameserver.hostnames
   end
 
   def test_normalizes_hostname

@@ -1,24 +1,14 @@
 require 'test_helper'
 
 class APINameserversPutTest < ActionDispatch::IntegrationTest
-  def setup
-    @registrar = registrars(:bestnames)
-  end
-
-  def test_deletes_old_nameservers
-    previous_nameserver_ids = @registrar.nameservers.where(hostname: 'ns1.bestnames.test').ids
-    request_params = { format: :json, data: { type: 'nameserver', id: 'ns1.bestnames.test',
-                                              attributes: { hostname: 'ns55.bestnames.test' } } }
-
-    put '/repp/v1/registrar/nameservers', request_params, { 'HTTP_AUTHORIZATION' => http_auth_key }
-    refute @registrar.nameservers(true).where(id: previous_nameserver_ids).exists?
-  end
-
-  def test_creates_new_nameservers
+  def test_replaces_registrar_nameservers
+    old_nameserver_ids = [nameservers(:shop_ns1).id,
+                          nameservers(:airport_ns1).id,
+                          nameservers(:metro_ns1).id]
     request_params = { format: :json, data: { type: 'nameserver', id: 'ns1.bestnames.test',
                                               attributes: { hostname: 'ns55.bestnames.test' } } }
     put '/repp/v1/registrar/nameservers', request_params, { 'HTTP_AUTHORIZATION' => http_auth_key }
-    assert_equal 2, @registrar.nameservers.where(hostname: 'ns55.bestnames.test').size
+    assert_empty (old_nameserver_ids & registrars(:bestnames).nameservers(true).ids)
   end
 
   def test_saves_all_attributes
@@ -33,14 +23,22 @@ class APINameserversPutTest < ActionDispatch::IntegrationTest
     assert_equal ['2001:DB8::55'], new_nameserver.ipv6
   end
 
+  def test_keeps_other_nameserver_intact
+    request_params = { format: :json, data: { type: 'nameserver', id: 'ns1.bestnames.test',
+                                              attributes: { hostname: 'ns55.bestnames.test' } } }
+
+    other_nameserver_hash = nameservers(:shop_ns2).attributes
+    put '/repp/v1/registrar/nameservers', request_params, { 'HTTP_AUTHORIZATION' => http_auth_key }
+    assert_equal other_nameserver_hash, nameservers(:shop_ns2).reload.attributes
+  end
+
   def test_keeps_other_registrar_nameservers_intact
     request_params = { format: :json, data: { type: 'nameserver', id: 'ns1.bestnames.test',
                                               attributes: { hostname: 'ns55.bestnames.test' } } }
 
-    other_registrar_nameserver_ids = registrars(:goodnames).nameservers.ids
-    assert other_registrar_nameserver_ids.any?
+    nameserver_hash = nameservers(:metro_ns1).attributes
     put '/repp/v1/registrar/nameservers', request_params, { 'HTTP_AUTHORIZATION' => http_auth_key }
-    assert_equal other_registrar_nameserver_ids, registrars(:goodnames).nameservers(true).ids
+    assert_equal nameserver_hash, nameservers(:metro_ns1).reload.attributes
   end
 
   def test_returns_new_nameserver_record

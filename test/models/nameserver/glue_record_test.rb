@@ -2,7 +2,7 @@ require 'test_helper'
 
 class NameserverGlueRecordTest < ActiveSupport::TestCase
   def setup
-    @nameserver = nameservers(:ns1)
+    @nameserver = nameservers(:shop_ns1)
   end
 
   def test_invalid_without_ip_if_glue_record_is_required
