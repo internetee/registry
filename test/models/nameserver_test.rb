@@ -20,14 +20,33 @@ class NameserverTest < ActiveSupport::TestCase
   end
 
   def test_hostname_format_validation
-    @nameserver.hostname = 'foo_bar'
-    assert @nameserver.invalid?
-
     @nameserver.hostname = 'foo.bar'
     assert @nameserver.valid?
 
     @nameserver.hostname = 'äöüõšž.ÄÖÜÕŠŽ.umlauts'
     assert @nameserver.valid?
+
+    @nameserver.hostname = 'foo_bar'
+    assert @nameserver.invalid?
+  end
+
+  def test_ipv4_format_validation
+    @nameserver.ipv4 = ['192.0.2.1']
+    assert @nameserver.valid?
+
+    @nameserver.ipv4 = ['0.0.0.256']
+    assert @nameserver.invalid?
+
+    @nameserver.ipv4 = ['192.168.0.0/24']
+    assert @nameserver.invalid?
+  end
+
+  def test_ipv6_format_validation
+    @nameserver.ipv6 = ['2001:db8::1']
+    assert @nameserver.valid?
+
+    @nameserver.ipv6 = ['3ffe:0b00:0000:0001:0000:0000:000a']
+    assert @nameserver.invalid?
   end
 
   def test_hostnames
@@ -53,5 +72,10 @@ class NameserverTest < ActiveSupport::TestCase
     @nameserver.ipv6 = [' 2001:db8::1']
     @nameserver.validate
     assert_equal ['2001:DB8::1'], @nameserver.ipv6
+  end
+
+  def test_encodes_hostname_to_punycode
+    @nameserver.hostname = 'ns1.münchen.de'
+    assert_equal 'ns1.xn--mnchen-3ya.de', @nameserver.hostname_puny
   end
 end
