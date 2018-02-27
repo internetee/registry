@@ -2,15 +2,18 @@ class Nameserver < ActiveRecord::Base
   include Versions # version/nameserver_version.rb
   include EppErrors
 
+  HOSTNAME_REGEXP = /\A(([a-zA-Z0-9]|[a-zA-ZäöüõšžÄÖÜÕŠŽ0-9][a-zA-ZäöüõšžÄÖÜÕŠŽ0-9\-]
+    *[a-zA-ZäöüõšžÄÖÜÕŠŽ0-9])\.)
+    *([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]
+    *[A-Za-z0-9])\z/x
+
   belongs_to :domain, required: true
 
-  # rubocop: disable Metrics/LineLength
-  validates :hostname, presence: true#, format: { with: /\A(([a-zA-Z0-9]|[a-zA-ZäöüõšžÄÖÜÕŠŽ0-9][a-zA-ZäöüõšžÄÖÜÕŠŽ0-9\-]*[a-zA-ZäöüõšžÄÖÜÕŠŽ0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\z/ }
-  validates :hostname, format: { with: /\A(([a-zA-Z0-9]|[a-zA-ZäöüõšžÄÖÜÕŠŽ0-9][a-zA-ZäöüõšžÄÖÜÕŠŽ0-9\-]*[a-zA-ZäöüõšžÄÖÜÕŠŽ0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\z/ }, allow_blank: true
+  validates :hostname, presence: true
+  validates :hostname, format: { with: HOSTNAME_REGEXP }, allow_blank: true
   validate :val_ipv4
   validate :val_ipv6
   validate :require_ip, if: :glue_record_required?
-  # rubocop: enable Metrics/LineLength
 
   before_validation :normalize_attributes
   before_validation :check_puny_symbols
