@@ -1136,7 +1136,5 @@ UncommunicativeParameterName:
   - Dnskey#int_to_hex
 UncommunicativeMethodName:
   exclude:
-  - Nameserver#val_ipv4
-  - Nameserver#val_ipv6
   - Soap::Arireg#country_code_3
   - WhiteIp#validate_ipv4_and_ipv6
