@@ -85,7 +85,7 @@ class RegistrarTest < ActiveSupport::TestCase
   end
 
   def test_serializes_and_deserializes_vat_rate
-    valid_attributes = registrars(:valid).attributes.except('id').merge({ name: 'uniq1',
+    valid_attributes = registrars(:bestnames).attributes.except('id').merge({ name: 'uniq1',
                                                                           reg_no: 'uniq1',
                                                                           code: 'uniq1',
                                                                           country_code: 'GB' })
