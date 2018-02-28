@@ -6,10 +6,6 @@ $(window).load ->
     allowEmptyOption: true, create: true
   })
 
-  # client side validate all forms
-  $('form').each ->
-    $(this).validate()
-
   $('[data-toggle="popover"]').popover()
 
   # doublescroll
