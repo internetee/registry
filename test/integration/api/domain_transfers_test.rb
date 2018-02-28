@@ -10,7 +10,10 @@ class APIDomainTransfersTest < ActionDispatch::IntegrationTest
     post '/repp/v1/domain_transfers', request_params, { 'HTTP_AUTHORIZATION' => http_auth_key }
     assert_response 200
     assert_equal ({ data: [{
-                             type: 'domain_transfer'
+                             type: 'domain_transfer',
+                             attributes: {
+                               domain_name: 'shop.test'
+                             },
                            }] }),
                  JSON.parse(response.body, symbolize_names: true)
   end

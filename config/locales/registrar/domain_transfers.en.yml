@@ -8,7 +8,7 @@ en:
 
       create:
         header: Domain transfer
-        transferred: Domains have been successfully transferred
+        transferred: "%{count} domains have been successfully transferred"
 
       form:
         single:

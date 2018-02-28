@@ -8,7 +8,6 @@ class DomainTransferableTest < ActiveSupport::TestCase
 
   def test_invalid_without_transfer_code
     @domain.transfer_code = nil
-    @domain.validate
     assert @domain.invalid?
   end
 
