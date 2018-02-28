@@ -10,7 +10,6 @@ describe Registrar do
       @registrar.valid?
       @registrar.errors.full_messages.should include(*[
         'Contact e-mail is missing',
-        'Country code is missing',
         'Name is missing',
         'Reg no is missing',
         'Code is missing'
