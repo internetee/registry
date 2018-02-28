@@ -1687,7 +1687,7 @@
 <text text-anchor="start" x="121.5" y="-1481.3" font-family="Times,serif" font-size="14.00">currency :string</text>
 <text text-anchor="start" x="121.5" y="-1466.3" font-family="Times,serif" font-size="14.00">description :string</text>
 <text text-anchor="start" x="121.5" y="-1451.3" font-family="Times,serif" font-size="14.00">reference_no :string</text>
-<text text-anchor="start" x="121.5" y="-1436.3" font-family="Times,serif" font-size="14.00">vat_prc :decimal</text>
+<text text-anchor="start" x="121.5" y="-1436.3" font-family="Times,serif" font-size="14.00">vat_rate :decimal</text>
 <text text-anchor="start" x="121.5" y="-1421.3" font-family="Times,serif" font-size="14.00">paid_at :datetime</text>
 <text text-anchor="start" x="121.5" y="-1406.3" font-family="Times,serif" font-size="14.00">seller_id :integer</text>
 <text text-anchor="start" x="121.5" y="-1391.3" font-family="Times,serif" font-size="14.00">seller_name :string</text>

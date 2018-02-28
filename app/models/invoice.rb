@@ -28,7 +28,7 @@ class Invoice < ActiveRecord::Base
   validates :billing_email, email_format: { message: :invalid }, allow_blank: true
 
   validates :invoice_type, :due_date, :currency, :seller_name,
-            :seller_iban, :buyer_name, :invoice_items, :vat_prc, presence: true
+            :seller_iban, :buyer_name, :invoice_items, :vat_rate, presence: true
 
   before_create :set_invoice_number, :check_vat
 
@@ -52,7 +52,7 @@ class Invoice < ActiveRecord::Base
 
   def check_vat
     if buyer.country_code != 'EE' && buyer.vat_no.present?
-      self.vat_prc = 0
+      self.vat_rate = 0
     end
   end
 
@@ -157,7 +157,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def vat
-    (sum_without_vat * vat_prc).round(2)
+    (sum_without_vat * vat_rate).round(2)
   end
 
   def sum

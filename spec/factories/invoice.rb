@@ -8,7 +8,7 @@ FactoryBot.define do
     seller_name { 'EIS' }
     seller_city { 'Tallinn' }
     seller_street { 'Paldiski mnt. 123' }
-    vat_prc 0.2
+    vat_rate 0.2
     buyer { FactoryBot.create(:registrar) }
 
     after :build do |invoice|

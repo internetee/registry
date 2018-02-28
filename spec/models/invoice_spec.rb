@@ -54,7 +54,7 @@ describe Invoice do
 
     it 'should calculate sums correctly' do
       @invoice = create(:invoice)
-      @invoice.vat_prc.should == BigDecimal.new('0.2')
+      @invoice.vat_rate.should == BigDecimal.new('0.2')
       @invoice.sum_without_vat.should == BigDecimal.new('300.0')
       @invoice.vat.should == BigDecimal.new('60.0')
       @invoice.sum.should == BigDecimal.new('360.0')

@@ -553,7 +553,7 @@ en:
   invoice_number: Invoice no.
   seller: 'Seller'
   prepayment: 'Prepayment'
-  vat: 'VAT (%{vat_prc}%)'
+  vat: 'VAT (%{rate}%)'
   unpaid: 'Unpaid'
   your_current_account_balance_is: 'Your current account balance is %{balance} %{currency}'
   billing: 'Billing'
