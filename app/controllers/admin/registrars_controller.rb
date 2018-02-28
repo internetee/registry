@@ -80,7 +80,7 @@ module Admin
                                         :test_registrar,
                                         :accounting_customer_code,
                                         :language,
-                                        :vat_rate,)
+                                        :vat_rate)
     end
   end
 end
