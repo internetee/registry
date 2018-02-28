@@ -99,7 +99,7 @@ class Registrar < ActiveRecord::Base
   # rubocop:disable Metrics/AbcSize
   def issue_prepayment_invoice(amount, description = nil)
     vat_rate = if local_vat_payer?
-                 Setting.registry_vat_prc
+                 Registry.instance.vat_rate
                else
                  if vat_no.blank?
                    self.vat_rate
@@ -114,7 +114,6 @@ class Registrar < ActiveRecord::Base
       payment_term: 'prepayment',
       description: description,
       currency: 'EUR',
-      vat_rate: Setting.registry_vat_prc,
       vat_rate: vat_rate,
       seller_name: Setting.registry_juridical_name,
       seller_reg_no: Setting.registry_reg_no,
