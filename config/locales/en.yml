@@ -314,9 +314,6 @@ en:
   edit_statuses: 'Edit statuses'
   history: 'History'
 
-  new_registrar: 'New registrar'
-  registrar_details: 'Registrar details'
-  edit_registrar: 'Edit registrar'
   back_to_registrar: 'Back to registrar'
   registrar_deleted: 'Registrar deleted'
   failed_to_delete_registrar: 'Failed to delete registrar'
