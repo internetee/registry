@@ -37,7 +37,7 @@ class Contact < ActiveRecord::Base
   validates_associated :identifier
 
   validate :validate_html
-  validate :validate_country_code
+  validate :validate_country_code, if: 'self.class.address_processing?'
 
   after_initialize do
     self.status_notes = {} if status_notes.nil?
