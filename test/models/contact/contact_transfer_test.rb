@@ -55,12 +55,12 @@ class ContactTransferTest < ActiveSupport::TestCase
     end
   end
 
-  def test_changes_registrar
+  def test_assigns_new_registrar
     new_contact = @contact.transfer(@new_registrar)
     assert_equal @new_registrar, new_contact.registrar
   end
 
-  def test_links_to_original
+  def test_links_to_original_contact
     new_contact = @contact.transfer(@new_registrar)
     assert_equal @contact, new_contact.original
   end
