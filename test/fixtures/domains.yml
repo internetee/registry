@@ -28,6 +28,16 @@ library:
   period: 1
   period_unit: m
 
+metro:
+  name: metro.test
+  name_dirty: metro.test
+  registrar: goodnames
+  registrant: jack
+  transfer_code: 1071ad
+  valid_to: 2010-07-05
+  period: 1
+  period_unit: m
+
 invalid:
   name: invalid.test
   transfer_code: any

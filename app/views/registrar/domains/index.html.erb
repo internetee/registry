@@ -1,12 +1,14 @@
 <div class="page-header">
     <div class="row">
-        <div class="col-sm-9">
+        <div class="col-sm-7">
             <h1><%= t '.header' %></h1>
         </div>
 
-        <div class="col-sm-3 text-right">
+        <div class="col-sm-5 text-right">
             <%= link_to t('.new_btn'), new_registrar_domain_path, class: 'btn btn-primary' %>
             <%= link_to t('.transfer_btn'), new_registrar_domain_transfer_path, class: 'btn btn-default' %>
+            <%= link_to t('.replace_nameserver_btn'), registrar_edit_registrar_nameserver_path,
+                        class: 'btn btn-default' %>
         </div>
     </div>
 </div>

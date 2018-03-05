@@ -568,8 +568,8 @@ RSpec.describe Domain do
   with_versioning do
     context 'when saved' do
       before(:each) do
-        domain = create(:domain)
-        domain.nameservers << create(:nameserver)
+        domain = create(:domain, nameservers_attributes: [attributes_for(:nameserver),
+                                                          attributes_for(:nameserver)])
       end
 
       it 'creates domain version' do
@@ -660,7 +660,7 @@ RSpec.describe Domain do
   end
 
   describe 'nameserver validation', db: true do
-    let(:domain) { described_class.new }
+    let(:domain) { described_class.new(name: 'whatever.test') }
 
     it 'rejects less than min' do
       Setting.ns_min_count = 2
