@@ -3,6 +3,7 @@ class Contact < ActiveRecord::Base
   include EppErrors
   include UserEvents
   include Concerns::Contact::Transferable
+  include Concerns::Contact::Identical
 
   belongs_to :original, class_name: self.name
   belongs_to :registrar, required: true

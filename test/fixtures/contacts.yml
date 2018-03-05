@@ -19,6 +19,8 @@ william:
   registrar: bestnames
   code: william-001
   auth_info: 6573d0
+  statuses:
+    - ok
 
 jane:
   name: Jane
@@ -41,6 +43,19 @@ acme_ltd:
   ident_country_code: US
   code: acme-ltd-001
   auth_info: 720b3c
+
+identical_to_william:
+  name: William
+  email: william@inbox.test
+  phone: '+555.555'
+  ident: 1234
+  ident_type: priv
+  ident_country_code: US
+  registrar: goodnames
+  code: william-002
+  auth_info: 5ab865
+  statuses:
+    - ok
 
 invalid:
   name: any
