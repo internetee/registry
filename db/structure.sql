@@ -555,17 +555,6 @@ ALTER SEQUENCE business_registry_caches_id_seq OWNED BY business_registry_caches
 
 
 --
--- Name: cached_nameservers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE cached_nameservers (
-    hostname character varying(255),
-    ipv4 character varying(255),
-    ipv6 character varying(255)
-);
-
-
---
 -- Name: certificates; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -601,41 +590,6 @@ CREATE SEQUENCE certificates_id_seq
 --
 
 ALTER SEQUENCE certificates_id_seq OWNED BY certificates.id;
-
-
---
--- Name: contact_statuses; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE contact_statuses (
-    id integer NOT NULL,
-    value character varying,
-    description character varying,
-    contact_id integer,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    creator_str character varying,
-    updator_str character varying
-);
-
-
---
--- Name: contact_statuses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE contact_statuses_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: contact_statuses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE contact_statuses_id_seq OWNED BY contact_statuses.id;
 
 
 --
@@ -692,49 +646,6 @@ CREATE SEQUENCE contacts_id_seq
 --
 
 ALTER SEQUENCE contacts_id_seq OWNED BY contacts.id;
-
-
---
--- Name: countries; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE countries (
-    id integer NOT NULL,
-    iso character varying,
-    name character varying,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    creator_str character varying,
-    updator_str character varying
-);
-
-
---
--- Name: countries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE countries_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: countries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE countries_id_seq OWNED BY countries.id;
-
-
---
--- Name: data_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE data_migrations (
-    version character varying NOT NULL
-);
 
 
 --
@@ -912,40 +823,6 @@ CREATE SEQUENCE domain_contacts_id_seq
 --
 
 ALTER SEQUENCE domain_contacts_id_seq OWNED BY domain_contacts.id;
-
-
---
--- Name: domain_statuses; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE domain_statuses (
-    id integer NOT NULL,
-    domain_id integer,
-    description character varying,
-    value character varying,
-    creator_str character varying,
-    updator_str character varying,
-    legacy_domain_id integer
-);
-
-
---
--- Name: domain_statuses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE domain_statuses_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: domain_statuses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE domain_statuses_id_seq OWNED BY domain_statuses.id;
 
 
 --
@@ -1491,44 +1368,6 @@ ALTER SEQUENCE log_certificates_id_seq OWNED BY log_certificates.id;
 
 
 --
--- Name: log_contact_statuses; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE log_contact_statuses (
-    id integer NOT NULL,
-    item_type character varying NOT NULL,
-    item_id integer NOT NULL,
-    event character varying NOT NULL,
-    whodunnit character varying,
-    object json,
-    object_changes json,
-    created_at timestamp without time zone,
-    session character varying,
-    children json,
-    uuid character varying
-);
-
-
---
--- Name: log_contact_statuses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE log_contact_statuses_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: log_contact_statuses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE log_contact_statuses_id_seq OWNED BY log_contact_statuses.id;
-
-
---
 -- Name: log_contacts; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1565,44 +1404,6 @@ CREATE SEQUENCE log_contacts_id_seq
 --
 
 ALTER SEQUENCE log_contacts_id_seq OWNED BY log_contacts.id;
-
-
---
--- Name: log_countries; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE log_countries (
-    id integer NOT NULL,
-    item_type character varying NOT NULL,
-    item_id integer NOT NULL,
-    event character varying NOT NULL,
-    whodunnit character varying,
-    object json,
-    object_changes json,
-    created_at timestamp without time zone,
-    session character varying,
-    children json,
-    uuid character varying
-);
-
-
---
--- Name: log_countries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE log_countries_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: log_countries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE log_countries_id_seq OWNED BY log_countries.id;
 
 
 --
@@ -1679,44 +1480,6 @@ CREATE SEQUENCE log_domain_contacts_id_seq
 --
 
 ALTER SEQUENCE log_domain_contacts_id_seq OWNED BY log_domain_contacts.id;
-
-
---
--- Name: log_domain_statuses; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE log_domain_statuses (
-    id integer NOT NULL,
-    item_type character varying NOT NULL,
-    item_id integer NOT NULL,
-    event character varying NOT NULL,
-    whodunnit character varying,
-    object json,
-    object_changes json,
-    created_at timestamp without time zone,
-    session character varying,
-    children json,
-    uuid character varying
-);
-
-
---
--- Name: log_domain_statuses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE log_domain_statuses_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: log_domain_statuses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE log_domain_statuses_id_seq OWNED BY log_domain_statuses.id;
 
 
 --
@@ -2253,46 +2016,6 @@ ALTER SEQUENCE nameservers_id_seq OWNED BY nameservers.id;
 
 
 --
--- Name: people; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE people (
-    id integer NOT NULL,
-    email character varying DEFAULT ''::character varying NOT NULL,
-    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
-    reset_password_token character varying,
-    reset_password_sent_at timestamp without time zone,
-    remember_created_at timestamp without time zone,
-    sign_in_count integer DEFAULT 0 NOT NULL,
-    current_sign_in_at timestamp without time zone,
-    last_sign_in_at timestamp without time zone,
-    current_sign_in_ip inet,
-    last_sign_in_ip inet,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
-);
-
-
---
--- Name: people_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE people_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: people_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE people_id_seq OWNED BY people.id;
-
-
---
 -- Name: prices; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -2796,21 +2519,7 @@ ALTER TABLE ONLY certificates ALTER COLUMN id SET DEFAULT nextval('certificates_
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY contact_statuses ALTER COLUMN id SET DEFAULT nextval('contact_statuses_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY contacts ALTER COLUMN id SET DEFAULT nextval('contacts_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY countries ALTER COLUMN id SET DEFAULT nextval('countries_id_seq'::regclass);
 
 
 --
@@ -2846,13 +2555,6 @@ ALTER TABLE ONLY dnskeys ALTER COLUMN id SET DEFAULT nextval('dnskeys_id_seq'::r
 --
 
 ALTER TABLE ONLY domain_contacts ALTER COLUMN id SET DEFAULT nextval('domain_contacts_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY domain_statuses ALTER COLUMN id SET DEFAULT nextval('domain_statuses_id_seq'::regclass);
 
 
 --
@@ -2950,21 +2652,7 @@ ALTER TABLE ONLY log_certificates ALTER COLUMN id SET DEFAULT nextval('log_certi
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY log_contact_statuses ALTER COLUMN id SET DEFAULT nextval('log_contact_statuses_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY log_contacts ALTER COLUMN id SET DEFAULT nextval('log_contacts_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY log_countries ALTER COLUMN id SET DEFAULT nextval('log_countries_id_seq'::regclass);
 
 
 --
@@ -2979,13 +2667,6 @@ ALTER TABLE ONLY log_dnskeys ALTER COLUMN id SET DEFAULT nextval('log_dnskeys_id
 --
 
 ALTER TABLE ONLY log_domain_contacts ALTER COLUMN id SET DEFAULT nextval('log_domain_contacts_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY log_domain_statuses ALTER COLUMN id SET DEFAULT nextval('log_domain_statuses_id_seq'::regclass);
 
 
 --
@@ -3084,13 +2765,6 @@ ALTER TABLE ONLY messages ALTER COLUMN id SET DEFAULT nextval('messages_id_seq':
 --
 
 ALTER TABLE ONLY nameservers ALTER COLUMN id SET DEFAULT nextval('nameservers_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY people ALTER COLUMN id SET DEFAULT nextval('people_id_seq'::regclass);
 
 
 --
@@ -3235,27 +2909,11 @@ ALTER TABLE ONLY certificates
 
 
 --
--- Name: contact_statuses_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY contact_statuses
-    ADD CONSTRAINT contact_statuses_pkey PRIMARY KEY (id);
-
-
---
 -- Name: contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY contacts
     ADD CONSTRAINT contacts_pkey PRIMARY KEY (id);
-
-
---
--- Name: countries_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY countries
-    ADD CONSTRAINT countries_pkey PRIMARY KEY (id);
 
 
 --
@@ -3296,14 +2954,6 @@ ALTER TABLE ONLY dnskeys
 
 ALTER TABLE ONLY domain_contacts
     ADD CONSTRAINT domain_contacts_pkey PRIMARY KEY (id);
-
-
---
--- Name: domain_statuses_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY domain_statuses
-    ADD CONSTRAINT domain_statuses_pkey PRIMARY KEY (id);
 
 
 --
@@ -3411,27 +3061,11 @@ ALTER TABLE ONLY log_certificates
 
 
 --
--- Name: log_contact_statuses_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY log_contact_statuses
-    ADD CONSTRAINT log_contact_statuses_pkey PRIMARY KEY (id);
-
-
---
 -- Name: log_contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY log_contacts
     ADD CONSTRAINT log_contacts_pkey PRIMARY KEY (id);
-
-
---
--- Name: log_countries_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY log_countries
-    ADD CONSTRAINT log_countries_pkey PRIMARY KEY (id);
 
 
 --
@@ -3448,14 +3082,6 @@ ALTER TABLE ONLY log_dnskeys
 
 ALTER TABLE ONLY log_domain_contacts
     ADD CONSTRAINT log_domain_contacts_pkey PRIMARY KEY (id);
-
-
---
--- Name: log_domain_statuses_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY log_domain_statuses
-    ADD CONSTRAINT log_domain_statuses_pkey PRIMARY KEY (id);
 
 
 --
@@ -3568,14 +3194,6 @@ ALTER TABLE ONLY messages
 
 ALTER TABLE ONLY nameservers
     ADD CONSTRAINT nameservers_pkey PRIMARY KEY (id);
-
-
---
--- Name: people_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY people
-    ADD CONSTRAINT people_pkey PRIMARY KEY (id);
 
 
 --
@@ -3733,24 +3351,10 @@ CREATE INDEX index_business_registry_caches_on_ident ON business_registry_caches
 
 
 --
--- Name: index_cached_nameservers_on_hostname_and_ipv4_and_ipv6; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX index_cached_nameservers_on_hostname_and_ipv4_and_ipv6 ON cached_nameservers USING btree (hostname, ipv4, ipv6);
-
-
---
 -- Name: index_certificates_on_api_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_certificates_on_api_user_id ON certificates USING btree (api_user_id);
-
-
---
--- Name: index_contact_statuses_on_contact_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_contact_statuses_on_contact_id ON contact_statuses USING btree (contact_id);
 
 
 --
@@ -3821,13 +3425,6 @@ CREATE INDEX index_domain_contacts_on_contact_id ON domain_contacts USING btree 
 --
 
 CREATE INDEX index_domain_contacts_on_domain_id ON domain_contacts USING btree (domain_id);
-
-
---
--- Name: index_domain_statuses_on_domain_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_domain_statuses_on_domain_id ON domain_statuses USING btree (domain_id);
 
 
 --
@@ -4041,20 +3638,6 @@ CREATE INDEX index_log_certificates_on_whodunnit ON log_certificates USING btree
 
 
 --
--- Name: index_log_contact_statuses_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_contact_statuses_on_item_type_and_item_id ON log_contact_statuses USING btree (item_type, item_id);
-
-
---
--- Name: index_log_contact_statuses_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_contact_statuses_on_whodunnit ON log_contact_statuses USING btree (whodunnit);
-
-
---
 -- Name: index_log_contacts_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4066,20 +3649,6 @@ CREATE INDEX index_log_contacts_on_item_type_and_item_id ON log_contacts USING b
 --
 
 CREATE INDEX index_log_contacts_on_whodunnit ON log_contacts USING btree (whodunnit);
-
-
---
--- Name: index_log_countries_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_countries_on_item_type_and_item_id ON log_countries USING btree (item_type, item_id);
-
-
---
--- Name: index_log_countries_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_countries_on_whodunnit ON log_countries USING btree (whodunnit);
 
 
 --
@@ -4108,20 +3677,6 @@ CREATE INDEX index_log_domain_contacts_on_item_type_and_item_id ON log_domain_co
 --
 
 CREATE INDEX index_log_domain_contacts_on_whodunnit ON log_domain_contacts USING btree (whodunnit);
-
-
---
--- Name: index_log_domain_statuses_on_item_type_and_item_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_domain_statuses_on_item_type_and_item_id ON log_domain_statuses USING btree (item_type, item_id);
-
-
---
--- Name: index_log_domain_statuses_on_whodunnit; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_log_domain_statuses_on_whodunnit ON log_domain_statuses USING btree (whodunnit);
 
 
 --
@@ -4279,20 +3834,6 @@ CREATE INDEX index_nameservers_on_domain_id ON nameservers USING btree (domain_i
 
 
 --
--- Name: index_people_on_email; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX index_people_on_email ON people USING btree (email);
-
-
---
--- Name: index_people_on_reset_password_token; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX index_people_on_reset_password_token ON people USING btree (reset_password_token);
-
-
---
 -- Name: index_prices_on_zone_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4388,13 +3929,6 @@ CREATE INDEX log_domains_object_legacy_id ON log_contacts USING btree ((((object
 --
 
 CREATE INDEX log_nameservers_object_legacy_id ON log_contacts USING btree ((((object ->> 'legacy_domain_id'::text))::integer));
-
-
---
--- Name: unique_data_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX unique_data_migrations ON data_migrations USING btree (version);
 
 
 --
@@ -5125,4 +4659,22 @@ INSERT INTO schema_migrations (version) VALUES ('20180214200224');
 INSERT INTO schema_migrations (version) VALUES ('20180214213743');
 
 INSERT INTO schema_migrations (version) VALUES ('20180218004148');
+
+INSERT INTO schema_migrations (version) VALUES ('20180306180401');
+
+INSERT INTO schema_migrations (version) VALUES ('20180306181538');
+
+INSERT INTO schema_migrations (version) VALUES ('20180306181554');
+
+INSERT INTO schema_migrations (version) VALUES ('20180306181911');
+
+INSERT INTO schema_migrations (version) VALUES ('20180306182456');
+
+INSERT INTO schema_migrations (version) VALUES ('20180306182758');
+
+INSERT INTO schema_migrations (version) VALUES ('20180306182941');
+
+INSERT INTO schema_migrations (version) VALUES ('20180306183540');
+
+INSERT INTO schema_migrations (version) VALUES ('20180306183549');
 

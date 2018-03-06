@@ -11,9 +11,6 @@ class Contact < ActiveRecord::Base
   has_many :legal_documents, as: :documentable
   has_many :registrant_domains, class_name: 'Domain', foreign_key: 'registrant_id'
 
-  # TODO: remove later
-  has_many :depricated_statuses, class_name: 'DepricatedContactStatus', dependent: :destroy
-
   has_paper_trail class_name: "ContactVersion", meta: { children: :children_log }
 
   attr_accessor :legal_document_id
