@@ -70,10 +70,6 @@ class Contact < ActiveRecord::Base
 
 
   after_save :update_related_whois_records
-
-  # for overwrite when doing children loop
-  attr_writer :domains_present
-
   scope :current_registrars, ->(id) { where(registrar_id: id) }
 
   ORG = 'org'
@@ -207,7 +203,7 @@ class Contact < ActiveRecord::Base
           ver_scope << "(children->'#{type}')::jsonb <@ json_build_array(#{contact.id})::jsonb"
         end
         next if DomainVersion.where("created_at > ?", Time.now - Setting.orphans_contacts_in_months.to_i.months).where(ver_scope.join(" OR ")).any?
-        next if contact.domains_present?
+        next if contact.used?
 
         contact.destroy
         counter.next
@@ -280,7 +276,7 @@ class Contact < ActiveRecord::Base
     calculated.delete(Contact::OK)
     calculated.delete(Contact::LINKED)
     calculated << Contact::OK     if calculated.empty?# && valid?
-    calculated << Contact::LINKED if domains_present?
+    calculated << Contact::LINKED if used?
 
     calculated.uniq
   end
@@ -348,7 +344,7 @@ class Contact < ActiveRecord::Base
   # no need separate method
   # should use only in transaction
   def destroy_and_clean frame
-    if domains_present?
+    if used?
       errors.add(:domains, :exist)
       return false
     end
@@ -405,14 +401,6 @@ class Contact < ActiveRecord::Base
       status_notes[status] = notes[i]
     end
   end
-
-  # optimization under children loop,
-  # otherwise bullet will not be happy
-  def domains_present?
-    return @domains_present if @domains_present
-    domain_contacts.present? || registrant_domains.present?
-  end
-
 
   def search_name
     "#{code} #{name}"

@@ -76,10 +76,6 @@ RSpec.describe Contact do
       end
     end
 
-    it 'should not have relation with domains' do
-      @contact.domains_present?.should == false
-    end
-
     it 'should not overwrite code' do
       old_code = @contact.code
       @contact.code = 'CID:REG1:should-not-overwrite-old-code-12345'
