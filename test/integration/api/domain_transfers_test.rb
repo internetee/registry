@@ -59,10 +59,6 @@ class APIDomainTransfersTest < ActionDispatch::IntegrationTest
   end
 
   def test_reuses_identical_contact
-    request_params = { format: :json,
-                       data: { domainTransfers: [{ domainName: 'shop.test', transferCode: '65078d5' },
-                                                 { domainName: 'airport.test', transferCode: '55438j5' },
-                                                 { domainName: 'library.test', transferCode: '45118f5' }] } }
     post '/repp/v1/domain_transfers', request_params, { 'HTTP_AUTHORIZATION' => http_auth_key }
     assert_equal 1, @new_registrar.contacts.where(name: 'William').size
   end

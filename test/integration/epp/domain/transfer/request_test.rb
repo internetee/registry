@@ -54,6 +54,11 @@ class EppDomainTransferRequestTest < ActionDispatch::IntegrationTest
     end
   end
 
+  def test_reuses_identical_contact
+    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+    assert_equal 1, @new_registrar.contacts.where(name: 'William').size
+  end
+
   def test_saves_legal_document
     assert_difference -> { @domain.legal_documents(true).size } do
       post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
