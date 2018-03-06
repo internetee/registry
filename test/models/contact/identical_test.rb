@@ -34,12 +34,14 @@ class ContactIdenticalTest < ActiveSupport::TestCase
   end
 
   def test_takes_address_into_account_when_processing_enabled
-    Setting.address_processing = true
-
     Contact.address_attribute_names.each do |attribute|
       previous_value = @identical.public_send(attribute)
       @identical.update_attribute(attribute, 'other')
-      assert_nil @contact.identical(@identical.registrar)
+
+      Contact.stub :address_processing?, true do
+        assert_nil @contact.identical(@identical.registrar)
+      end
+
       @identical.update_attribute(attribute, previous_value)
     end
   end
@@ -50,7 +52,11 @@ class ContactIdenticalTest < ActiveSupport::TestCase
     Contact.address_attribute_names.each do |attribute|
       previous_value = @identical.public_send(attribute)
       @identical.update_attribute(attribute, 'other')
-      assert_equal @identical, @contact.identical(@identical.registrar)
+
+      Contact.stub :address_processing?, false do
+        assert_equal @identical, @contact.identical(@identical.registrar)
+      end
+
       @identical.update_attribute(attribute, previous_value)
     end
   end
