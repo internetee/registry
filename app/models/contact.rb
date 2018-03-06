@@ -70,7 +70,6 @@ class Contact < ActiveRecord::Base
 
 
   after_save :update_related_whois_records
-  scope :current_registrars, ->(id) { where(registrar_id: id) }
 
   ORG = 'org'
   PRIV = 'priv'
