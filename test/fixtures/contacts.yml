@@ -44,6 +44,17 @@ acme_ltd:
   code: acme-ltd-001
   auth_info: 720b3c
 
+jack:
+  name: Jack
+  email: jack@inbox.test
+  phone: '+555.555'
+  ident: 1234
+  ident_type: org
+  registrar: goodnames
+  ident_country_code: US
+  code: jack-001
+  auth_info: e2c440
+
 identical_to_william:
   name: William
   email: william@inbox.test

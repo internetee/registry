@@ -464,8 +464,6 @@ en:
   name: 'Name'
   type: 'Type'
   code: 'Code'
-  nameservers: 'Nameservers'
-  hostname: 'Hostname'
   dnskeys: 'DNS Keys'
   flag: 'Flag'
   protocol: 'Protocol'

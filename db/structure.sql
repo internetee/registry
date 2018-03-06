@@ -2220,12 +2220,12 @@ ALTER SEQUENCE messages_id_seq OWNED BY messages.id;
 
 CREATE TABLE nameservers (
     id integer NOT NULL,
-    hostname character varying,
+    hostname character varying NOT NULL,
     ipv4 character varying[] DEFAULT '{}'::character varying[],
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     ipv6 character varying[] DEFAULT '{}'::character varying[],
-    domain_id integer,
+    domain_id integer NOT NULL,
     creator_str character varying,
     updator_str character varying,
     legacy_domain_id integer,
@@ -4533,6 +4533,14 @@ ALTER TABLE ONLY messages
 
 
 --
+-- Name: nameservers_domain_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY nameservers
+    ADD CONSTRAINT nameservers_domain_id_fk FOREIGN KEY (domain_id) REFERENCES domains(id);
+
+
+--
 -- Name: user_registrar_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -5085,6 +5093,12 @@ INSERT INTO schema_migrations (version) VALUES ('20180125092422');
 INSERT INTO schema_migrations (version) VALUES ('20180126104536');
 
 INSERT INTO schema_migrations (version) VALUES ('20180126104903');
+
+INSERT INTO schema_migrations (version) VALUES ('20180129143538');
+
+INSERT INTO schema_migrations (version) VALUES ('20180129232054');
+
+INSERT INTO schema_migrations (version) VALUES ('20180129233223');
 
 INSERT INTO schema_migrations (version) VALUES ('20180206213435');
 
