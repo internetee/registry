@@ -1,3 +1,12 @@
+06.03.2018
+* BUG: Transfer poll message now returns affected domain name [#694](https://github.com/internetee/registry/issues/694)
+* BUG: Successful REPP bulk transfer returns info about transfered domains [#693](https://github.com/internetee/registry/issues/693)
+* BUG: Postal address data is not validated when address processing is disabled [#731](https://github.com/internetee/registry/issues/731)
+* EPP: invalid country code message (code 2005) specifies invalid value [#733](https://github.com/internetee/registry/issues/733)
+* REPP: new bulk nameserver change feature, also available on the portal for registars [#661](https://github.com/internetee/registry/issues/661)
+* Admin: disable auto-email feature on setting force delete [#727](https://github.com/internetee/registry/issues/727)
+* jQuery validation gem removed [#744](https://github.com/internetee/registry/issues/744)
+
 22.02.2018
 * BUG: Registrar: contact list export is not limited to 75 records any more [#721](https://github.com/internetee/registry/issues/721)
 * BUG: EPP: domain and associated objects are not validated on domain delete [#707](https://github.com/internetee/registry/issues/707)
