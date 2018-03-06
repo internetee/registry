@@ -67,6 +67,13 @@ identical_to_william:
   code: william-002
   auth_info: 5ab865
 
+not_in_use:
+  name: Useless
+  email: useless@inbox.test
+  registrar: bestnames
+  code: useless-001
+  auth_info: e75a2a
+
 invalid:
   name: any
   code: any

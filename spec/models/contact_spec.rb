@@ -413,36 +413,6 @@ RSpec.describe Contact do
     end
   end
 
-  describe '#used?' do
-    context 'when used as registrant' do
-      let(:registrant) { create(:registrant) }
-
-      before :example do
-        create(:domain, registrant: registrant)
-        registrant.reload
-      end
-
-      specify { expect(registrant).to be_used }
-    end
-
-    context 'when used as contact' do
-      let(:contact) { create(:contact) }
-
-      before :example do
-        domain = create(:domain)
-        domain.admin_domain_contacts << create(:admin_domain_contact, contact: contact)
-        contact.reload
-      end
-
-      specify { expect(contact).to be_used }
-    end
-
-    context 'when not used' do
-      let(:contact) { create(:contact) }
-      specify { expect(contact).to_not be_used }
-    end
-  end
-
   describe '#domain_names_with_roles' do
     let(:contact) { create(:registrant) }
     subject(:domain_names) { contact.domain_names_with_roles }
