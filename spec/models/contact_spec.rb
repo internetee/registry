@@ -76,10 +76,6 @@ RSpec.describe Contact do
       end
     end
 
-    it 'should not have relation with domains' do
-      @contact.domains_present?.should == false
-    end
-
     it 'should not overwrite code' do
       old_code = @contact.code
       @contact.code = 'CID:REG1:should-not-overwrite-old-code-12345'
@@ -414,36 +410,6 @@ RSpec.describe Contact do
 
     it 'returns ident country' do
       expect(contact.ident_country).to eq(Country.new('US'))
-    end
-  end
-
-  describe '#used?' do
-    context 'when used as registrant' do
-      let(:registrant) { create(:registrant) }
-
-      before :example do
-        create(:domain, registrant: registrant)
-        registrant.reload
-      end
-
-      specify { expect(registrant).to be_used }
-    end
-
-    context 'when used as contact' do
-      let(:contact) { create(:contact) }
-
-      before :example do
-        domain = create(:domain)
-        domain.admin_domain_contacts << create(:admin_domain_contact, contact: contact)
-        contact.reload
-      end
-
-      specify { expect(contact).to be_used }
-    end
-
-    context 'when not used' do
-      let(:contact) { create(:contact) }
-      specify { expect(contact).to_not be_used }
     end
   end
 

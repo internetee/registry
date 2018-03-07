@@ -52,7 +52,7 @@ module Concerns::Domain::Transferable
 
   def transfer_registrant(new_registrar)
     return if registrant.registrar == new_registrar
-    self.registrant = registrant.transfer(new_registrar)
+    self.registrant = registrant.transfer(new_registrar).becomes(Registrant)
   end
 
   def transfer_domain_contacts(new_registrar)

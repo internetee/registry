@@ -34,7 +34,7 @@ class DomainTransferableTest < ActiveSupport::TestCase
     assert_equal '1bad4f', domain.transfer_code
   end
 
-  def test_changes_registrar
+  def test_assigns_new_registrar
     @domain.transfer(@new_registrar)
     assert_equal @new_registrar, @domain.registrar
   end

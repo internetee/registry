@@ -35,16 +35,21 @@ class ContactTransferTest < ActiveSupport::TestCase
   end
 
   def test_keeps_original_contact_untouched
-    original_hash = @contact.to_json
+    original_hash = @contact.attributes
     @contact.transfer(@new_registrar)
     @contact.reload
-    assert_equal original_hash, @contact.to_json
+    assert_equal original_hash, @contact.attributes
   end
 
   def test_creates_new_contact
-    assert_difference 'Contact.count' do
+    assert_difference -> { @new_registrar.contacts.count } do
       @contact.transfer(@new_registrar)
     end
+  end
+
+  def test_reuses_identical_contact
+    identical = contacts(:identical_to_william)
+    assert_equal identical, contacts(:william).transfer(@new_registrar)
   end
 
   def test_bypasses_validation
@@ -55,12 +60,12 @@ class ContactTransferTest < ActiveSupport::TestCase
     end
   end
 
-  def test_changes_registrar
+  def test_assigns_new_registrar
     new_contact = @contact.transfer(@new_registrar)
     assert_equal @new_registrar, new_contact.registrar
   end
 
-  def test_links_to_original
+  def test_links_to_original_contact
     new_contact = @contact.transfer(@new_registrar)
     assert_equal @contact, new_contact.original
   end
