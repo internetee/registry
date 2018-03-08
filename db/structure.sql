@@ -2139,7 +2139,6 @@ CREATE TABLE registrars (
     name character varying,
     reg_no character varying,
     vat_no character varying,
-    billing_address character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     creator_str character varying,
@@ -4677,4 +4676,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180306182941');
 INSERT INTO schema_migrations (version) VALUES ('20180306183540');
 
 INSERT INTO schema_migrations (version) VALUES ('20180306183549');
+
+INSERT INTO schema_migrations (version) VALUES ('20180308123240');
 
