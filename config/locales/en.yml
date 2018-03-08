@@ -315,6 +315,7 @@ en:
   edit_statuses: 'Edit statuses'
   history: 'History'
 
+  vat_no: 'VAT no'
   back_to_registrar: 'Back to registrar'
   registrar_deleted: 'Registrar deleted'
   failed_to_delete_registrar: 'Failed to delete registrar'
