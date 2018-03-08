@@ -1,31 +1,15 @@
 <% registrar = RegistrarPresenter.new(registrar: @registrar, view: self) %>
-
-<ol class="breadcrumb">
-    <li><%= link_to t('admin.registrars.index.header'), admin_registrars_path %></li>
-</ol>
-
-<div class="page-header">
-    <div class="row">
-        <div class="col-md-6">
-            <h1>
-                <%= @registrar.name %>
-                <% if @registrar.test_registrar? %>
-                    <span class="text-danger"> (test)</span>
-                <% end %>
-            </h1>
-        </div>
-
-        <div class="col-md-6 text-right">
-            <%= link_to t('.edit_btn'), edit_admin_registrar_path(@registrar),
-                        class: 'btn btn-primary' %>
-            <%= link_to t('.delete_btn'), admin_registrar_path(@registrar),
-                        method: :delete,
-                        data: { confirm: t('.delete_btn_confirm') },
-                        class: 'btn btn-default' %>
-        </div>
-    </div>
-</div>
-
+<% content_for :actions do %>
+    <%= link_to(t(:edit), edit_admin_registrar_path(@registrar), class: 'btn btn-primary') %>
+    <%= link_to(t(:delete), admin_registrar_path(@registrar), method: :delete, data: { confirm: t(:are_you_sure) }, class: 'btn btn-danger') %>
+<% end %>
+<% content_for :page_name do %>
+    <%= @registrar.name %>
+    <% if @registrar.test_registrar? %>
+        <span style="color: #c9302c;">(test)</span>
+    <% end %>
+<% end %>
+<%= render 'shared/title', name: @registrar.name %>
 <% if @registrar.errors.any? %>
     <% @registrar.errors.each do |attr, err| %>
         <%= err %>

@@ -1,10 +1,5 @@
-<ol class="breadcrumb">
-    <li><%= link_to t('admin.registrars.index.header'), admin_registrars_path %></li>
-    <li><%= link_to @registrar.name, admin_registrar_path(@registrar) %></li>
-</ol>
-
-<div class="page-header">
-    <h1><%= t '.header' %></h1>
-</div>
-
+<% content_for :actions do %>
+    <%= link_to(t(:back_to_registrar), [:admin, @registrar], class: 'btn btn-default') %>
+<% end %>
+<%= render 'shared/title', name: "#{t(:edit)}: #{@registrar.name}" %>
 <%= render 'form' %>
