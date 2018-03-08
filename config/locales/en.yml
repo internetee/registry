@@ -19,7 +19,6 @@ en:
   time:
     formats:
       default: "%Y-%m-%d %H:%M"
-      longer: "%a, %e. %b %Y, %H:%M"
       long: "%A, %e. %B %Y, %H:%M"
       short: "%d.%m.%y, %H:%M"
       date: "%Y-%m-%d"
@@ -28,7 +27,6 @@ en:
   date:
     formats:
       default: "%Y-%m-%d"
-      year_and_month: "%Y %B"
 
   activerecord:
     errors:
