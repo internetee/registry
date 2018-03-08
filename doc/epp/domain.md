@@ -22,7 +22,7 @@ Domain name mapping protocol short version:
         <domain:ns>            0-1       
           <domain:hostAttr>    2-11    
             <domain:hostName>  1        Hostname of the nameserver
-            <domain:hostAddr>  0-2      Required if nameserver is under domain zone. 
+            <domain:hostAddr>  0-2      Required if nameserver hostname is under the same domain.
                                         Attribute ip="v4 / v6"
         <domain:registrant>    1        Contact reference to the registrant
         <domain:contact>       0-n      Contact reference. Admin contact is required if registrant is
@@ -62,7 +62,7 @@ Domain name mapping protocol short version:
           <domain:ns>            0-1      
             <domain:hostAttr>    1        
               <domain:hostName>  1         Hostname of the nameserver
-              <domain:hostAddr>  0-2       Required if nameserver is under domain zone. 
+              <domain:hostAddr>  0-2       Required if nameserver hostname is under the same domain.
                                            Attribute ip="v4 / v6"
         <domain:rem>             0-1       Objects to remove
           <domain:contact>       0-n       Contact reference. Attribute: type="admin / tech"

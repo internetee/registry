@@ -5,6 +5,7 @@ en:
         header: Domains
         new_btn: New domain
         transfer_btn: Transfer
+        replace_nameserver_btn: Replace nameserver
         csv:
           domain_name: Domain
           transfer_code: Transfer code

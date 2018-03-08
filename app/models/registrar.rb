@@ -191,6 +191,20 @@ class Registrar < ActiveRecord::Base
     white_ips.api.pluck(:ipv4, :ipv6).flatten.include?(ip)
   end
 
+  # Audit log is needed, therefore no raw SQL
+  def replace_nameservers(hostname, new_attributes)
+    transaction do
+      nameservers.where(hostname: hostname).find_each do |original_nameserver|
+        new_nameserver = Nameserver.new
+        new_nameserver.domain = original_nameserver.domain
+        new_nameserver.attributes = new_attributes
+        new_nameserver.save!
+
+        original_nameserver.destroy!
+      end
+    end
+  end
+
   private
 
   def set_defaults

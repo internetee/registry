@@ -3,6 +3,7 @@ require 'test_helper'
 class APIDomainTransfersTest < ActionDispatch::IntegrationTest
   def setup
     @domain = domains(:shop)
+    @new_registrar = registrars(:goodnames)
     Setting.transfer_wait_time = 0 # Auto-approval
   end
 
@@ -10,7 +11,10 @@ class APIDomainTransfersTest < ActionDispatch::IntegrationTest
     post '/repp/v1/domain_transfers', request_params, { 'HTTP_AUTHORIZATION' => http_auth_key }
     assert_response 200
     assert_equal ({ data: [{
-                             type: 'domain_transfer'
+                             type: 'domain_transfer',
+                             attributes: {
+                               domain_name: 'shop.test'
+                             },
                            }] }),
                  JSON.parse(response.body, symbolize_names: true)
   end
@@ -26,10 +30,10 @@ class APIDomainTransfersTest < ActionDispatch::IntegrationTest
     assert @domain.transfers.last.approved?
   end
 
-  def test_changes_registrar
+  def test_assigns_new_registrar
     post '/repp/v1/domain_transfers', request_params, { 'HTTP_AUTHORIZATION' => http_auth_key }
     @domain.reload
-    assert_equal registrars(:goodnames), @domain.registrar
+    assert_equal @new_registrar, @domain.registrar
   end
 
   def test_regenerates_transfer_code
@@ -49,9 +53,14 @@ class APIDomainTransfersTest < ActionDispatch::IntegrationTest
   end
 
   def test_duplicates_registrant_admin_and_tech_contacts
-    assert_difference 'Contact.count', 3 do
+    assert_difference -> { @new_registrar.contacts.size }, 2 do
       post '/repp/v1/domain_transfers', request_params, { 'HTTP_AUTHORIZATION' => http_auth_key }
     end
+  end
+
+  def test_reuses_identical_contact
+    post '/repp/v1/domain_transfers', request_params, { 'HTTP_AUTHORIZATION' => http_auth_key }
+    assert_equal 1, @new_registrar.contacts.where(name: 'William').size
   end
 
   def test_fails_if_domain_does_not_exist
@@ -68,7 +77,7 @@ class APIDomainTransfersTest < ActionDispatch::IntegrationTest
                        data: { domainTransfers: [{ domainName: 'shop.test', transferCode: 'wrong' }] } }
     post '/repp/v1/domain_transfers', request_params, { 'HTTP_AUTHORIZATION' => http_auth_key }
     assert_response 400
-    refute_equal registrars(:goodnames), @domain.registrar
+    refute_equal @new_registrar, @domain.registrar
     assert_equal ({ errors: [{ title: 'shop.test transfer code is wrong' }] }),
                  JSON.parse(response.body, symbolize_names: true)
   end

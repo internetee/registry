@@ -3,6 +3,7 @@ class Contact < ActiveRecord::Base
   include EppErrors
   include UserEvents
   include Concerns::Contact::Transferable
+  include Concerns::Contact::Identical
 
   belongs_to :original, class_name: self.name
   belongs_to :registrar, required: true
@@ -10,9 +11,6 @@ class Contact < ActiveRecord::Base
   has_many :domains, through: :domain_contacts
   has_many :legal_documents, as: :documentable
   has_many :registrant_domains, class_name: 'Domain', foreign_key: 'registrant_id'
-
-  # TODO: remove later
-  has_many :depricated_statuses, class_name: 'DepricatedContactStatus', dependent: :destroy
 
   has_paper_trail class_name: "ContactVersion", meta: { children: :children_log }
 
@@ -37,7 +35,7 @@ class Contact < ActiveRecord::Base
   validates_associated :identifier
 
   validate :validate_html
-  validate :validate_country_code
+  validate :validate_country_code, if: 'self.class.address_processing?'
 
   after_initialize do
     self.status_notes = {} if status_notes.nil?
@@ -69,11 +67,6 @@ class Contact < ActiveRecord::Base
 
 
   after_save :update_related_whois_records
-
-  # for overwrite when doing children loop
-  attr_writer :domains_present
-
-  scope :current_registrars, ->(id) { where(registrar_id: id) }
 
   ORG = 'org'
   PRIV = 'priv'
@@ -206,7 +199,7 @@ class Contact < ActiveRecord::Base
           ver_scope << "(children->'#{type}')::jsonb <@ json_build_array(#{contact.id})::jsonb"
         end
         next if DomainVersion.where("created_at > ?", Time.now - Setting.orphans_contacts_in_months.to_i.months).where(ver_scope.join(" OR ")).any?
-        next if contact.domains_present?
+        next if contact.in_use?
 
         contact.destroy
         counter.next
@@ -279,7 +272,7 @@ class Contact < ActiveRecord::Base
     calculated.delete(Contact::OK)
     calculated.delete(Contact::LINKED)
     calculated << Contact::OK     if calculated.empty?# && valid?
-    calculated << Contact::LINKED if domains_present?
+    calculated << Contact::LINKED if in_use?
 
     calculated.uniq
   end
@@ -347,7 +340,7 @@ class Contact < ActiveRecord::Base
   # no need separate method
   # should use only in transaction
   def destroy_and_clean frame
-    if domains_present?
+    if in_use?
       errors.add(:domains, :exist)
       return false
     end
@@ -404,14 +397,6 @@ class Contact < ActiveRecord::Base
       status_notes[status] = notes[i]
     end
   end
-
-  # optimization under children loop,
-  # otherwise bullet will not be happy
-  def domains_present?
-    return @domains_present if @domains_present
-    domain_contacts.present? || registrant_domains.present?
-  end
-
 
   def search_name
     "#{code} #{name}"
@@ -551,7 +536,7 @@ class Contact < ActiveRecord::Base
     Country.new(ident_country_code)
   end
 
-  def used?
+  def in_use?
     registrant_domains.any? || domain_contacts.any?
   end
 

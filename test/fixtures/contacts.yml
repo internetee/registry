@@ -9,16 +9,24 @@ john:
   code: john-001
   auth_info: cacb5b
 
-william:
+william: &william
   name: William
   email: william@inbox.test
   phone: '+555.555'
+  fax: +555.555
   ident: 1234
   ident_type: priv
   ident_country_code: US
   registrar: bestnames
   code: william-001
   auth_info: 6573d0
+  street: Main Street
+  zip: 12345
+  city: New York
+  state: New York
+  country_code: US
+  statuses:
+    - ok
 
 jane:
   name: Jane
@@ -41,6 +49,30 @@ acme_ltd:
   ident_country_code: US
   code: acme-ltd-001
   auth_info: 720b3c
+
+jack:
+  name: Jack
+  email: jack@inbox.test
+  phone: '+555.555'
+  ident: 1234
+  ident_type: org
+  registrar: goodnames
+  ident_country_code: US
+  code: jack-001
+  auth_info: e2c440
+
+identical_to_william:
+  <<: *william
+  registrar: goodnames
+  code: william-002
+  auth_info: 5ab865
+
+not_in_use:
+  name: Useless
+  email: useless@inbox.test
+  registrar: bestnames
+  code: useless-001
+  auth_info: e75a2a
 
 invalid:
   name: any

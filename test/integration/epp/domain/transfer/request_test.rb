@@ -3,6 +3,7 @@ require 'test_helper'
 class EppDomainTransferRequestTest < ActionDispatch::IntegrationTest
   def setup
     @domain = domains(:shop)
+    @new_registrar = registrars(:goodnames)
     Setting.transfer_wait_time = 0
   end
 
@@ -24,10 +25,10 @@ class EppDomainTransferRequestTest < ActionDispatch::IntegrationTest
       'https://epp.tld.ee/schema/domain-eis-1.0.xsd').text
   end
 
-  def test_changes_registrar
+  def test_assigns_new_registrar
     post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
     @domain.reload
-    assert_equal registrars(:goodnames), @domain.registrar
+    assert_equal @new_registrar, @domain.registrar
   end
 
   def test_regenerates_transfer_code
@@ -48,9 +49,14 @@ class EppDomainTransferRequestTest < ActionDispatch::IntegrationTest
   end
 
   def test_duplicates_registrant_admin_and_tech_contacts
-    assert_difference 'Contact.count', 3 do
+    assert_difference -> { @new_registrar.contacts.size }, 2 do
       post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
     end
+  end
+
+  def test_reuses_identical_contact
+    post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
+    assert_equal 1, @new_registrar.contacts.where(name: 'William').size
   end
 
   def test_saves_legal_document
@@ -106,7 +112,7 @@ class EppDomainTransferRequestTest < ActionDispatch::IntegrationTest
 
     post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
     @domain.reload
-    refute_equal registrars(:goodnames), @domain.registrar
+    refute_equal @new_registrar, @domain.registrar
     assert_equal '2201', Nokogiri::XML(response.body).at_css('result')[:code]
   end
 

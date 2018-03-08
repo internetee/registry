@@ -179,7 +179,6 @@ class Epp::Domain < Domain
     at[:nameservers_attributes] = nameservers_attrs(frame, action)
     at[:admin_domain_contacts_attributes] = admin_domain_contacts_attrs(frame, action)
     at[:tech_domain_contacts_attributes] = tech_domain_contacts_attrs(frame, action)
-    # at[:domain_statuses_attributes] = domain_statuses_attrs(frame, action)
 
     pw = frame.css('authInfo > pw').text
     at[:transfer_code] = pw if pw.present?

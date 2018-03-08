@@ -40,14 +40,10 @@ class Domain < ActiveRecord::Base
   has_many :contacts, through: :domain_contacts, source: :contact
   has_many :admin_contacts, through: :admin_domain_contacts, source: :contact
   has_many :tech_contacts, through: :tech_domain_contacts, source: :contact
-  has_many :nameservers, dependent: :destroy
+  has_many :nameservers, dependent: :destroy, inverse_of: :domain
 
   accepts_nested_attributes_for :nameservers, allow_destroy: true,
                                               reject_if: proc { |attrs| attrs[:hostname].blank? }
-
-  has_many :domain_statuses, dependent: :destroy
-  accepts_nested_attributes_for :domain_statuses, allow_destroy: true,
-                                                  reject_if: proc { |attrs| attrs[:value].blank? }
 
   has_many :transfers, class_name: 'DomainTransfer', dependent: :destroy
 
@@ -170,10 +166,6 @@ class Domain < ActiveRecord::Base
 
   validates :admin_domain_contacts, uniqueness_multi: {
     attribute: 'contact_code_cache'
-  }
-
-  validates :domain_statuses, uniqueness_multi: {
-    attribute: 'value'
   }
 
   validates :dnskeys, uniqueness_multi: {
@@ -610,7 +602,6 @@ class Domain < ActiveRecord::Base
     log[:tech_contacts]  = tech_contact_ids
     log[:nameservers]    = nameserver_ids
     log[:dnskeys]        = dnskey_ids
-    log[:domain_statuses]= domain_status_ids
     log[:legal_documents]= [legal_document_id]
     log[:registrant]     = [registrant_id]
     log

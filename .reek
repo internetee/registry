@@ -111,7 +111,6 @@ UncommunicativeVariableName:
   - Invoice#cancel_overdue_invoices
   - Legacy::Db
   - LegalDocument#save_to_filesystem
-  - Nameserver#replace_hostname_ends
   - RegistrantUser#find_or_create_by_idc_data
   - RegistrantUser#find_or_create_by_mid_data
   - Registrar
@@ -318,7 +317,6 @@ DuplicateMethodCall:
   - Invoice#set_invoice_number
   - LegalDocument#save_to_filesystem
   - LegalDocument#self.remove_duplicates
-  - Nameserver#replace_hostname_ends
   - Setting#self.params_errors
   - Setting#self.reload_settings!
   - Soap::Arireg#associated_businesses
@@ -806,7 +804,6 @@ TooManyStatements:
   - Invoice#set_invoice_number
   - LegalDocument#save_to_filesystem
   - LegalDocument#self.remove_duplicates
-  - Nameserver#replace_hostname_ends
   - RegistrantUser#find_or_create_by_idc_data
   - Registrar#generate_iso_11649_reference_no
   - Soap::Arireg#associated_businesses
@@ -1003,7 +1000,6 @@ NestedIterators:
   - Domain#self.to_csv
   - Epp::Domain#nameservers_from
   - LegalDocument#self.remove_duplicates
-  - Nameserver#replace_hostname_ends
   - RegistrantPresenter#domain_names_with_roles
   - UniquenessMultiValidator#validate_each
 UnusedParameters:
@@ -1070,7 +1066,6 @@ Attribute:
   - BankStatement#th6_file
   - Versions#version_loader
   - Contact#deliver_emails
-  - Contact#domains_present
   - Contact#legal_document_id
   - Counter#value
   - Deposit#amount
@@ -1140,7 +1135,5 @@ UncommunicativeParameterName:
   - Dnskey#int_to_hex
 UncommunicativeMethodName:
   exclude:
-  - Nameserver#val_ipv4
-  - Nameserver#val_ipv6
   - Soap::Arireg#country_code_3
   - WhiteIp#validate_ipv4_and_ipv6

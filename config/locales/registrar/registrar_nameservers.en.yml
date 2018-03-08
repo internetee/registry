@@ -1,0 +1,13 @@
+en:
+  registrar:
+    registrar_nameservers:
+      edit:
+        header: Replace nameserver
+        replace_btn: Replace
+
+      form:
+        ip_hint: One IP per line
+        replace_btn: Replace nameserver
+
+      update:
+        replaced: Nameserver have been successfully replaced
