@@ -1,21 +1,3 @@
-class VATRateType < ActiveRecord::Type::Value
-  def type_cast_from_user(value)
-    if value.blank?
-      nil
-    else
-      super
-    end
-  end
-
-  def type_cast_from_database(value)
-    BigDecimal.new(value) * 100 if value
-  end
-
-  def type_cast_for_database(value)
-    BigDecimal.new(value) / 100 if value
-  end
-end
-
 class Registrar < ActiveRecord::Base
   include Versions # version/registrar_version.rb
 
@@ -35,13 +17,16 @@ class Registrar < ActiveRecord::Base
   validates :name, :reg_no, :reference_no, :code, uniqueness: true
   validates :accounting_customer_code, presence: true
   validates :language, presence: true
-  validates :vat_rate, :vat_no, absence: true, if: :local_vat_payer?
-  validates :vat_rate, presence: true, if: 'foreign_vat_payer? && vat_no.blank?'
+
+  validates :vat_rate, presence: true, if: :vat_rate_required?
+  validates :vat_rate, absence: true, if: :local_vat_payer?
   validates :vat_rate, absence: true, if: 'foreign_vat_payer? && vat_no?'
-  validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 99 }, allow_nil: true
+  validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 99.9 },
+            allow_nil: true
+
   validate :forbid_special_code
 
-  attribute :vat_rate, VATRateType.new
+  attribute :vat_rate, ::Type::VATRate.new
   after_initialize :set_defaults
   before_validation :generate_iso_11649_reference_no
 
@@ -215,5 +200,9 @@ class Registrar < ActiveRecord::Base
 
   def foreign_vat_payer?
     !local_vat_payer?
+  end
+
+  def vat_rate_required?
+    foreign_vat_payer? && vat_no.blank?
   end
 end

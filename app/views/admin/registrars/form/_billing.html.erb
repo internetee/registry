@@ -23,7 +23,8 @@
                     </div>
                     <div class="col-md-3">
                         <div class="input-group">
-                            <%= f.number_field :vat_rate, min: 0, max: 99, class: 'form-control' %>
+                            <%= f.number_field :vat_rate, min: 0, max: 99, step: 0.1,
+                                               class: 'form-control' %>
                             <div class="input-group-addon">%</div>
                         </div>
                     </div>
