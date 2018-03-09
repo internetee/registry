@@ -2147,7 +2147,7 @@ CREATE TABLE registrars (
     phone character varying,
     email character varying,
     billing_email character varying,
-    country_code character varying NOT NULL,
+    country_code character varying,
     state character varying,
     city character varying,
     street character varying,
@@ -4669,8 +4669,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180228070102');
 INSERT INTO schema_migrations (version) VALUES ('20180228070431');
 
 INSERT INTO schema_migrations (version) VALUES ('20180228074442');
-
-INSERT INTO schema_migrations (version) VALUES ('20180228084818');
 
 INSERT INTO schema_migrations (version) VALUES ('20180306180401');
 
