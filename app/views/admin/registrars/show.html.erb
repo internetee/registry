@@ -1,15 +1,31 @@
 <% registrar = RegistrarPresenter.new(registrar: @registrar, view: self) %>
-<% content_for :actions do %>
-    <%= link_to(t(:edit), edit_admin_registrar_path(@registrar), class: 'btn btn-primary') %>
-    <%= link_to(t(:delete), admin_registrar_path(@registrar), method: :delete, data: { confirm: t(:are_you_sure) }, class: 'btn btn-danger') %>
-<% end %>
-<% content_for :page_name do %>
-    <%= @registrar.name %>
-    <% if @registrar.test_registrar? %>
-        <span style="color: #c9302c;">(test)</span>
-    <% end %>
-<% end %>
-<%= render 'shared/title', name: @registrar.name %>
+
+<ol class="breadcrumb">
+    <li><%= link_to t('admin.registrars.index.header'), admin_registrars_path %></li>
+</ol>
+
+<div class="page-header">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>
+                <%= @registrar.name %>
+                <% if @registrar.test_registrar? %>
+                    <span class="text-danger"> (test)</span>
+                <% end %>
+            </h1>
+        </div>
+
+        <div class="col-md-6 text-right">
+            <%= link_to t('.edit_btn'), edit_admin_registrar_path(@registrar),
+                        class: 'btn btn-primary' %>
+            <%= link_to t('.delete_btn'), admin_registrar_path(@registrar),
+                        method: :delete,
+                        data: { confirm: t('.delete_btn_confirm') },
+                        class: 'btn btn-default' %>
+        </div>
+    </div>
+</div>
+
 <% if @registrar.errors.any? %>
     <% @registrar.errors.each do |attr, err| %>
         <%= err %>
@@ -42,12 +58,6 @@
                         <%= @registrar.reg_no %>
                     </dd>
                     <dt>
-                        <%= t(:vat_no) %>
-                    </dt>
-                    <dd>
-                        <%= @registrar.vat_no %>
-                    </dd>
-                    <dt>
                         <%= t(:reference_no) %>
                     </dt>
                     <dd>
@@ -70,12 +80,6 @@
                     </dt>
                     <dd>
                         <%= @registrar.website %>
-                    </dd>
-                    <dt>
-                        <%= Registrar.human_attribute_name :accounting_customer_code %>
-                    </dt>
-                    <dd>
-                        <%= @registrar.accounting_customer_code %>
                     </dd>
                 </dl>
             </div>
@@ -120,21 +124,16 @@
                     <dd>
                         <%= @registrar.billing_address %>
                     </dd>
-                    <dt>
-                        <%= t(:billing_email) %>
-                    </dt>
-                    <dd>
-                        <%= @registrar.billing_email %>
-                    </dd>
                 </dl>
             </div>
         </div>
+        <%= render 'billing', registrar: @registrar %>
         <%= render 'admin/registrars/show/preferences', registrar: registrar %>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
-        <div class="panel panel-default" id="epp-users">
+        <div class="panel panel-default">
             <div class="panel-heading clearfix">
                 <div class="pull-left">
                     <%= t('.api_users') %>
@@ -174,7 +173,7 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <div class="panel panel-default" id="epp-users">
+        <div class="panel panel-default">
             <div class="panel-heading clearfix">
                 <div class="pull-left">
                     <%= t(:white_ips) %>

@@ -2136,8 +2136,8 @@ ALTER SEQUENCE registrant_verifications_id_seq OWNED BY registrant_verifications
 
 CREATE TABLE registrars (
     id integer NOT NULL,
-    name character varying,
-    reg_no character varying,
+    name character varying NOT NULL,
+    reg_no character varying NOT NULL,
     vat_no character varying,
     billing_address character varying,
     created_at timestamp without time zone,
@@ -2145,14 +2145,14 @@ CREATE TABLE registrars (
     creator_str character varying,
     updator_str character varying,
     phone character varying,
-    email character varying,
+    email character varying NOT NULL,
     billing_email character varying,
-    country_code character varying,
+    country_code character varying NOT NULL,
     state character varying,
     city character varying,
     street character varying,
     zip character varying,
-    code character varying,
+    code character varying NOT NULL,
     website character varying,
     accounting_customer_code character varying NOT NULL,
     legacy_id integer,
@@ -3245,11 +3245,43 @@ ALTER TABLE ONLY settings
 
 
 --
+-- Name: unique_code; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY registrars
+    ADD CONSTRAINT unique_code UNIQUE (code);
+
+
+--
 -- Name: unique_contact_code; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY contacts
     ADD CONSTRAINT unique_contact_code UNIQUE (code);
+
+
+--
+-- Name: unique_name; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY registrars
+    ADD CONSTRAINT unique_name UNIQUE (name);
+
+
+--
+-- Name: unique_reference_no; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY registrars
+    ADD CONSTRAINT unique_reference_no UNIQUE (reference_no);
+
+
+--
+-- Name: unique_reg_no; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY registrars
+    ADD CONSTRAINT unique_reg_no UNIQUE (reg_no);
 
 
 --
@@ -3852,20 +3884,6 @@ CREATE INDEX index_registrant_verifications_on_created_at ON registrant_verifica
 --
 
 CREATE INDEX index_registrant_verifications_on_domain_id ON registrant_verifications USING btree (domain_id);
-
-
---
--- Name: index_registrars_on_code; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_registrars_on_code ON registrars USING btree (code);
-
-
---
--- Name: index_registrars_on_legacy_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_registrars_on_legacy_id ON registrars USING btree (legacy_id);
 
 
 --
@@ -4687,4 +4705,10 @@ INSERT INTO schema_migrations (version) VALUES ('20180306182941');
 INSERT INTO schema_migrations (version) VALUES ('20180306183540');
 
 INSERT INTO schema_migrations (version) VALUES ('20180306183549');
+
+INSERT INTO schema_migrations (version) VALUES ('20180309053424');
+
+INSERT INTO schema_migrations (version) VALUES ('20180309053921');
+
+INSERT INTO schema_migrations (version) VALUES ('20180309054510');
 
