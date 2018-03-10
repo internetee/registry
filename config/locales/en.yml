@@ -19,7 +19,6 @@ en:
   time:
     formats:
       default: "%Y-%m-%d %H:%M"
-      longer: "%a, %e. %b %Y, %H:%M"
       long: "%A, %e. %B %Y, %H:%M"
       short: "%d.%m.%y, %H:%M"
       date: "%Y-%m-%d"
@@ -28,7 +27,6 @@ en:
   date:
     formats:
       default: "%Y-%m-%d"
-      year_and_month: "%Y %B"
 
   activerecord:
     errors:
@@ -388,7 +386,6 @@ en:
   choose: 'Choose...'
   created_before: 'Created before'
   created_after: 'Created after'
-  billing_address: 'Billing address'
   billing_email: 'Billing e-mail'
   contact_phone: 'Contact phone'
   contact_email: 'Contact e-mail'

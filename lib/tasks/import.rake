@@ -77,7 +77,6 @@ namespace :import do
         name: x.organization.try(:strip).presence || x.name.try(:strip).presence || x.handle.try(:strip).presence,
         reg_no: x.ico.try(:strip),
         vat_no: x.dic.try(:strip),
-        billing_address: nil,
         phone: x.telephone.try(:strip),
         email: x.email.try(:strip),
         billing_email: x.billing_address.try(:strip),
