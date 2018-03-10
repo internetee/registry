@@ -60,7 +60,6 @@ module Admin
                                         :city,
                                         :state,
                                         :zip,
-                                        :billing_address,
                                         :country_code,
                                         :email,
                                         :phone,

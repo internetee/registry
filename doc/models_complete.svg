@@ -1475,7 +1475,6 @@
 <text text-anchor="start" x="1600.5" y="-2624.3" font-family="Times,serif" font-size="14.00">name :string</text>
 <text text-anchor="start" x="1600.5" y="-2609.3" font-family="Times,serif" font-size="14.00">reg_no :string</text>
 <text text-anchor="start" x="1600.5" y="-2594.3" font-family="Times,serif" font-size="14.00">vat_no :string</text>
-<text text-anchor="start" x="1600.5" y="-2579.3" font-family="Times,serif" font-size="14.00">billing_address :string</text>
 <text text-anchor="start" x="1600.5" y="-2564.3" font-family="Times,serif" font-size="14.00">created_at :datetime</text>
 <text text-anchor="start" x="1600.5" y="-2549.3" font-family="Times,serif" font-size="14.00">updated_at :datetime</text>
 <text text-anchor="start" x="1600.5" y="-2534.3" font-family="Times,serif" font-size="14.00">creator_str :string</text>
