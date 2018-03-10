@@ -3,7 +3,7 @@ class Directo < ActiveRecord::Base
   belongs_to :item, polymorphic: true
 
   def self.send_receipts
-    new_trans = Invoice.where(invoice_type: "DEB", in_directo: false).where(cancelled_at: nil)
+    new_trans = Invoice.where(in_directo: false).where(cancelled_at: nil)
     total     = new_trans.count
     counter   = 0
     Rails.logger.info("[DIRECTO] Will try to send #{total} invoices")

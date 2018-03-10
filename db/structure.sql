@@ -998,7 +998,6 @@ CREATE TABLE invoices (
     id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    invoice_type character varying NOT NULL,
     due_date timestamp without time zone NOT NULL,
     payment_term character varying,
     currency character varying NOT NULL,
@@ -3244,7 +3243,7 @@ ALTER TABLE ONLY settings
 
 
 --
--- Name: unique_code; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: unique_code; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY registrars
@@ -3260,7 +3259,7 @@ ALTER TABLE ONLY contacts
 
 
 --
--- Name: unique_name; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: unique_name; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY registrars
@@ -3268,7 +3267,7 @@ ALTER TABLE ONLY registrars
 
 
 --
--- Name: unique_reference_no; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: unique_reference_no; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY registrars
@@ -3276,7 +3275,7 @@ ALTER TABLE ONLY registrars
 
 
 --
--- Name: unique_reg_no; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: unique_reg_no; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
 --
 
 ALTER TABLE ONLY registrars
@@ -4712,4 +4711,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180309053424');
 INSERT INTO schema_migrations (version) VALUES ('20180309053921');
 
 INSERT INTO schema_migrations (version) VALUES ('20180309054510');
+
+INSERT INTO schema_migrations (version) VALUES ('20180310142630');
 
