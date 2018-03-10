@@ -13,7 +13,6 @@ describe Invoice do
         "Currency is missing",
         "Due date is missing",
         "Invoice items is missing",
-        "Invoice type is missing",
         "Seller iban is missing",
         "Seller name is missing",
         "Vat prc is missing"

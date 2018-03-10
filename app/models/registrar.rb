@@ -76,7 +76,6 @@ class Registrar < ActiveRecord::Base
   # rubocop:disable Metrics/AbcSize
   def issue_prepayment_invoice(amount, description = nil)
     invoices.create(
-      invoice_type: 'DEB',
       due_date: (Time.zone.now.to_date + Setting.days_to_keep_invoices_active.days).end_of_day,
       payment_term: 'prepayment',
       description: description,

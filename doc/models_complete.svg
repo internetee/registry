@@ -1614,7 +1614,6 @@
 <text text-anchor="start" x="121.5" y="-1571.3" font-family="Times,serif" font-size="14.00">id :integer</text>
 <text text-anchor="start" x="121.5" y="-1556.3" font-family="Times,serif" font-size="14.00">created_at :datetime</text>
 <text text-anchor="start" x="121.5" y="-1541.3" font-family="Times,serif" font-size="14.00">updated_at :datetime</text>
-<text text-anchor="start" x="121.5" y="-1526.3" font-family="Times,serif" font-size="14.00">invoice_type :string</text>
 <text text-anchor="start" x="121.5" y="-1511.3" font-family="Times,serif" font-size="14.00">due_date :datetime</text>
 <text text-anchor="start" x="121.5" y="-1496.3" font-family="Times,serif" font-size="14.00">payment_term :string</text>
 <text text-anchor="start" x="121.5" y="-1481.3" font-family="Times,serif" font-size="14.00">currency :string</text>

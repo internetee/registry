@@ -27,7 +27,7 @@ class Invoice < ActiveRecord::Base
   attr_accessor :billing_email
   validates :billing_email, email_format: { message: :invalid }, allow_blank: true
 
-  validates :invoice_type, :due_date, :currency, :seller_name,
+  validates :due_date, :currency, :seller_name,
             :seller_iban, :buyer_name, :invoice_items, :vat_prc, presence: true
 
   before_create :set_invoice_number, :check_vat
