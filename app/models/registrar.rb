@@ -21,7 +21,7 @@ class Registrar < ActiveRecord::Base
   validates :vat_rate, presence: true, if: :vat_rate_required?
   validates :vat_rate, absence: true, if: :local_vat_payer?
   validates :vat_rate, absence: true, if: 'foreign_vat_payer? && vat_no?'
-  validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 99.9 },
+  validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than: 100 },
             allow_nil: true
 
   validate :forbid_special_code

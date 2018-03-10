@@ -28,8 +28,9 @@ class Invoice < ActiveRecord::Base
   validates :billing_email, email_format: { message: :invalid }, allow_blank: true
 
   validates :due_date, :currency, :seller_name,
-            :seller_iban, :buyer_name, :invoice_items, :vat_rate, presence: true
-  validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 99 }, allow_nil: true
+            :seller_iban, :buyer_name, :invoice_items, presence: true
+  validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than: 100 },
+            allow_nil: true
 
   before_create :set_invoice_number, :check_vat
 
