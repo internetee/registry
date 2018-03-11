@@ -32,9 +32,11 @@ class Invoice < ActiveRecord::Base
   validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than: 100 },
             allow_nil: true
 
-  before_create :set_invoice_number, :check_vat
+  after_initialize :apply_defaults
+  before_create :set_invoice_number
 
-  before_save   :check_vat
+  attribute :vat_rate, ::Type::VATRate.new
+  attr_readonly :vat_rate
 
   def set_invoice_number
     last_no = Invoice.order(number: :desc).where('number IS NOT NULL').limit(1).pluck(:number).first
@@ -50,12 +52,6 @@ class Invoice < ActiveRecord::Base
     errors.add(:base, I18n.t('failed_to_generate_invoice_invoice_number_limit_reached'))
     logger.error('INVOICE NUMBER LIMIT REACHED, COULD NOT GENERATE INVOICE')
     false
-  end
-
-  def check_vat
-    if buyer.country_code != 'EE' && buyer.vat_no.present?
-      self.vat_rate = 0
-    end
   end
 
   before_save -> { self.sum_cache = sum }
@@ -159,10 +155,17 @@ class Invoice < ActiveRecord::Base
   end
 
   def vat
+    return 0 unless vat_rate
     (sum_without_vat * vat_rate).round(2)
   end
 
   def sum
     (sum_without_vat + vat).round(2)
+  end
+
+  private
+
+  def apply_defaults
+    self.vat_rate = buyer.effective_vat_rate unless vat_rate
   end
 end

@@ -17,7 +17,8 @@ goodnames:
   reg_no: 12345
   code: goodnames
   email: info@goodnames.test
-  country_code: US
+  country_code: DE
+  vat_no: DE123456789
   accounting_customer_code: goodnames
   language: en
 

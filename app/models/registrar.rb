@@ -18,8 +18,8 @@ class Registrar < ActiveRecord::Base
   validates :accounting_customer_code, presence: true
   validates :language, presence: true
 
-  validates :vat_rate, presence: true, if: :vat_rate_required?
-  validates :vat_rate, absence: true, if: :local_vat_payer?
+  validates :vat_rate, presence: true, if: 'foreign_vat_payer? && vat_no.blank?'
+  validates :vat_rate, absence: true, if: :home_vat_payer?
   validates :vat_rate, absence: true, if: 'foreign_vat_payer? && vat_no?'
   validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than: 100 },
             allow_nil: true
@@ -56,22 +56,11 @@ class Registrar < ActiveRecord::Base
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
   def issue_prepayment_invoice(amount, description = nil)
-    vat_rate = if local_vat_payer?
-                 Registry.instance.vat_rate
-               else
-                 if vat_no.blank?
-                   self.vat_rate
-                 else
-                   nil
-                 end
-               end
-
     invoices.create(
       due_date: (Time.zone.now.to_date + Setting.days_to_keep_invoices_active.days).end_of_day,
       payment_term: 'prepayment',
       description: description,
       currency: 'EUR',
-      vat_rate: vat_rate,
       seller_name: Setting.registry_juridical_name,
       seller_reg_no: Setting.registry_reg_no,
       seller_iban: Setting.registry_iban,
@@ -157,6 +146,14 @@ class Registrar < ActiveRecord::Base
     end
   end
 
+  def effective_vat_rate
+    if home_vat_payer?
+      Registry.instance.vat_rate
+    else
+      vat_rate
+    end
+  end
+
   private
 
   def set_defaults
@@ -188,15 +185,11 @@ class Registrar < ActiveRecord::Base
     end
   end
 
-  def local_vat_payer?
+  def home_vat_payer?
     country == Registry.instance.legal_address_country
   end
 
   def foreign_vat_payer?
-    !local_vat_payer?
-  end
-
-  def vat_rate_required?
-    foreign_vat_payer? && vat_no.blank?
+    !home_vat_payer?
   end
 end

@@ -4,6 +4,7 @@ DEFAULTS: &DEFAULTS
   currency: EUR
   seller_name: John Doe
   seller_iban: 1234
+  buyer: bestnames
   buyer_name: Jane Doe
   vat_rate: 0.2
 
