@@ -1,13 +1,13 @@
-DEFAULTS: &DEFAULTS
+one:
   description: Acme services
-  amount: 2
-  unit: pc
   price: 5
-
-valid:
-  <<: *DEFAULTS
+  amount: 1
+  unit: pc
   invoice: valid
 
-another:
-  <<: *DEFAULTS
+two:
+  description: Acme services
+  price: 5
+  amount: 2
+  unit: pc
   invoice: valid

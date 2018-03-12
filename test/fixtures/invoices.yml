@@ -6,7 +6,7 @@ DEFAULTS: &DEFAULTS
   seller_iban: 1234
   buyer: bestnames
   buyer_name: Jane Doe
-  vat_rate: 0.2
+  vat_rate: 0.1
 
 valid:
   <<: *DEFAULTS
