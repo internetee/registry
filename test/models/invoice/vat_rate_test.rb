@@ -5,7 +5,7 @@ class InvoiceVATRateTest < ActiveSupport::TestCase
     @invoice = invoices(:valid)
   end
 
-  def test_valid_without_vat_rate
+  def test_optional_vat_rate
     @invoice.vat_rate = nil
     assert @invoice.valid?
   end
