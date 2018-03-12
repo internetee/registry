@@ -15,7 +15,6 @@ describe Invoice do
         "Invoice items is missing",
         "Seller iban is missing",
         "Seller name is missing",
-        "Vat prc is missing"
       ])
     end
 
