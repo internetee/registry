@@ -76,7 +76,7 @@ class Registrar < ActiveRecord::Base
       seller_url: Setting.registry_url,
       seller_email: Setting.registry_email,
       seller_contact_name: Setting.registry_invoice_contact,
-      buyer_id: id,
+      buyer: self,
       buyer_name: name,
       buyer_reg_no: reg_no,
       buyer_country_code: country_code,
