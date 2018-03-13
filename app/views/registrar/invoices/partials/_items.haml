@@ -24,7 +24,7 @@
         %td= currency(@invoice.sum_without_vat)
       %tr
         %th.no-border{colspan: 3}
-        %th= t('vat', rate: (@invoice.vat_rate * 100).round)
+        %th= t('vat', rate: number_to_percentage(@invoice.vat_rate, precision: 1))
         %td= currency(@invoice.vat)
       %tr
         %th.no-border{colspan: 3}

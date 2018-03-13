@@ -32,8 +32,8 @@ class Invoice < ActiveRecord::Base
   validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than: 100 },
             allow_nil: true
 
-  after_initialize :apply_defaults
   before_create :set_invoice_number
+  before_create :apply_default_vat_rate, unless: :vat_rate?
 
   attribute :vat_rate, ::Type::VATRate.new
   attr_readonly :vat_rate
@@ -156,7 +156,7 @@ class Invoice < ActiveRecord::Base
 
   def vat
     return 0 unless vat_rate
-    (sum_without_vat * vat_rate).round(2)
+    sum_without_vat * vat_rate / 100
   end
 
   def sum
@@ -165,7 +165,7 @@ class Invoice < ActiveRecord::Base
 
   private
 
-  def apply_defaults
-    self.vat_rate = buyer.effective_vat_rate unless vat_rate
+  def apply_default_vat_rate
+    self.vat_rate = buyer.effective_vat_rate
   end
 end

@@ -35,17 +35,22 @@ class InvoiceVATRateTest < ActiveSupport::TestCase
 
   def test_vat_rate_defaults_to_effective_vat_rate_of_a_registrar
     registrar = registrars(:bestnames)
+    invoice = @invoice.dup
+    invoice.vat_rate = nil
+    invoice.buyer = registrar
+    invoice.invoice_items = @invoice.invoice_items
 
-    registrar.stub(:effective_vat_rate, 55) do
-      invoice = Invoice.new(buyer: registrar)
-      assert_equal 55, invoice.vat_rate
+    registrar.stub(:effective_vat_rate, BigDecimal(55)) do
+      invoice.save!
     end
+
+    assert_equal BigDecimal(55), invoice.vat_rate
   end
 
   def test_vat_rate_cannot_be_updated
-    @invoice.vat_rate = 21
+    @invoice.vat_rate = BigDecimal(21)
     @invoice.save!
     @invoice.reload
-    refute_equal 21, @invoice.vat_rate
+    refute_equal BigDecimal(21), @invoice.vat_rate
   end
 end
