@@ -8,7 +8,7 @@
             <dd><%= registrar.vat_no %></dd>
 
             <dt><%= Registrar.human_attribute_name :vat_rate %></dt>
-            <dd><%= number_to_percentage registrar.vat_rate, precision: 1 %></dd>
+            <dd><%= vat_rate registrar.vat_rate %></dd>
 
             <dt><%= Registrar.human_attribute_name :accounting_customer_code %></dt>
             <dd><%= registrar.accounting_customer_code %></dd>

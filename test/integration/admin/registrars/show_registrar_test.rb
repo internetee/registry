@@ -22,6 +22,6 @@ class ShowRegistrarTest < ActionDispatch::IntegrationTest
   end
 
   def test_vat_rate
-    assert_text number_to_percentage(@registrar.vat_rate, precision: 1)
+    assert_text vat_rate(@registrar.vat_rate)
   end
 end

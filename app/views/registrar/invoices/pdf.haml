@@ -242,7 +242,7 @@
                   %td= "#{currency(@invoice.subtotal)} #{@invoice.currency}"
                 %tr
                   %th.no-border{colspan: 3}
-                  %th= t('vat', rate: number_to_percentage(@invoice.vat_rate, precision: 1))
+                  %th= t('vat', rate: vat_rate(@invoice.vat_rate))
                   %td= "#{currency(@invoice.vat)} #{@invoice.currency}"
                 %tr
                   %th.no-border{colspan: 3}
