@@ -34,7 +34,7 @@ class Invoice < ActiveRecord::Base
 
   before_create :set_invoice_number
   before_create :apply_default_vat_rate, unless: :vat_rate?
-  before_create :save_total
+  before_create :calculate_total, unless: :total?
 
   attribute :vat_rate, ::Type::VATRate.new
   attr_readonly :vat_rate
@@ -150,12 +150,16 @@ class Invoice < ActiveRecord::Base
   end
 
   def subtotal
-    (items.map(&:item_sum_without_vat).sum).round(2)
+    invoice_items.collect { |line_item| line_item.item_sum_without_vat }.reduce(:+)
   end
 
-  def vat
+  def vat_amount
     return 0 unless vat_rate
     subtotal * vat_rate / 100
+  end
+
+  def total
+    calculate_total unless total?
   end
 
   private
@@ -165,6 +169,6 @@ class Invoice < ActiveRecord::Base
   end
 
   def calculate_total
-    # (sum_without_vat + vat).round(2)
+    self.total = subtotal + vat_amount
   end
 end
