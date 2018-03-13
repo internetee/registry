@@ -7,6 +7,7 @@ DEFAULTS: &DEFAULTS
   buyer: bestnames
   buyer_name: Jane Doe
   vat_rate: 0.1
+  total: 16.50
 
 valid:
   <<: *DEFAULTS
@@ -21,7 +22,7 @@ cancelled:
 
 paid:
   <<: *DEFAULTS
-  sum_cache: 1
+  total: 1
 
 outstanding:
   <<: *DEFAULTS

@@ -21,7 +21,7 @@
       %tr
         %th{colspan: 3}
         %th= t(:total_without_vat)
-        %td= currency(@invoice.sum_without_vat)
+        %td= currency(@invoice.subtotal)
       %tr
         %th.no-border{colspan: 3}
         %th= t('vat', rate: number_to_percentage(@invoice.vat_rate, precision: 1))
@@ -29,4 +29,4 @@
       %tr
         %th.no-border{colspan: 3}
         %th= t(:total)
-        %td= currency(@invoice.sum)
+        %td= currency(@invoice.total)

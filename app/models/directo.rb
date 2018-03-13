@@ -15,7 +15,7 @@ class Directo < ActiveRecord::Base
           group.each do |invoice|
 
             if invoice.account_activity.nil? || invoice.account_activity.bank_transaction.nil? ||
-                invoice.account_activity.bank_transaction.sum.nil? || invoice.account_activity.bank_transaction.sum != invoice.sum_cache
+                invoice.account_activity.bank_transaction.sum.nil? || invoice.account_activity.bank_transaction.sum != invoice.total
               Rails.logger.info("[DIRECTO] Invoice #{invoice.number} has been skipped")
               next
             end
@@ -34,7 +34,7 @@ class Directo < ActiveRecord::Base
               xml.line(
                   "ProductID"      => Setting.directo_receipt_product_name,
                   "Quantity"       => 1,
-                  "UnitPriceWoVAT" => ActionController::Base.helpers.number_with_precision(invoice.sum_cache/(1+invoice.vat_rate), precision: 2, separator: "."),
+                  "UnitPriceWoVAT" => ActionController::Base.helpers.number_with_precision(invoice.total/(1+invoice.vat_rate), precision: 2, separator: "."),
                   "ProductName"    => invoice.order
               )
             }

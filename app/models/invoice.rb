@@ -34,6 +34,7 @@ class Invoice < ActiveRecord::Base
 
   before_create :set_invoice_number
   before_create :apply_default_vat_rate, unless: :vat_rate?
+  before_create :save_total
 
   attribute :vat_rate, ::Type::VATRate.new
   attr_readonly :vat_rate
@@ -53,8 +54,6 @@ class Invoice < ActiveRecord::Base
     logger.error('INVOICE NUMBER LIMIT REACHED, COULD NOT GENERATE INVOICE')
     false
   end
-
-  before_save -> { self.sum_cache = sum }
 
   class << self
     def cancel_overdue_invoices
@@ -150,22 +149,22 @@ class Invoice < ActiveRecord::Base
     invoice_items
   end
 
-  def sum_without_vat
+  def subtotal
     (items.map(&:item_sum_without_vat).sum).round(2)
   end
 
   def vat
     return 0 unless vat_rate
-    sum_without_vat * vat_rate / 100
-  end
-
-  def sum
-    (sum_without_vat + vat).round(2)
+    subtotal * vat_rate / 100
   end
 
   private
 
   def apply_default_vat_rate
     self.vat_rate = buyer.effective_vat_rate
+  end
+
+  def calculate_total
+    # (sum_without_vat + vat).round(2)
   end
 end

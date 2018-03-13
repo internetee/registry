@@ -1651,7 +1651,7 @@
 <text text-anchor="start" x="121.5" y="-986.3" font-family="Times,serif" font-size="14.00">updator_str :string</text>
 <text text-anchor="start" x="121.5" y="-971.3" font-family="Times,serif" font-size="14.00">number :integer</text>
 <text text-anchor="start" x="121.5" y="-956.3" font-family="Times,serif" font-size="14.00">cancelled_at :datetime</text>
-<text text-anchor="start" x="121.5" y="-941.3" font-family="Times,serif" font-size="14.00">sum_cache :decimal</text>
+<text text-anchor="start" x="121.5" y="-941.3" font-family="Times,serif" font-size="14.00">total :decimal</text>
 </g>
 <!-- Registrar&#45;&gt;Invoice -->
 <g id="edge64" class="edge"><title>Registrar&#45;&gt;Invoice</title>

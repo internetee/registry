@@ -1036,7 +1036,7 @@ CREATE TABLE invoices (
     updator_str character varying,
     number integer,
     cancelled_at timestamp without time zone,
-    sum_cache numeric(10,2),
+    total numeric(10,2),
     in_directo boolean DEFAULT false
 );
 
@@ -4713,4 +4713,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180309053921');
 INSERT INTO schema_migrations (version) VALUES ('20180309054510');
 
 INSERT INTO schema_migrations (version) VALUES ('20180310142630');
+
+INSERT INTO schema_migrations (version) VALUES ('20180313090437');
 
