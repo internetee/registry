@@ -239,15 +239,15 @@
                 %tr
                   %th{colspan: 3}
                   %th= Invoice.human_attribute_name :subtotal
-                  %td= "#{currency(@invoice.subtotal)} #{@invoice.currency}"
+                  %td= number_to_currency @invoice.subtotal
                 %tr
                   %th.no-border{colspan: 3}
-                  %th= "VAT #{vat_rate(@invoice.vat_rate)}"
-                  %td= "#{currency(@invoice.vat)} #{@invoice.currency}"
+                  %th= "VAT #{number_to_percentage(@invoice.vat_rate, precision: 1)}"
+                  %td= number_to_currency @invoice.vat_amount
                 %tr
                   %th.no-border{colspan: 3}
                   %th= t(:total)
-                  %td= "#{currency(@invoice.total)} #{@invoice.currency}"
+                  %td= number_to_currency @invoice.total
 
       #footer
         %hr

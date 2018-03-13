@@ -89,8 +89,4 @@ module ApplicationHelper
     types.delete('ddoc')
     ".#{types.join(',.')}"
   end
-
-  def vat_rate(value)
-    number_to_percentage(value, precision: 1)
-  end
 end
