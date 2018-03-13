@@ -13,7 +13,6 @@ require 'capybara/minitest'
 require 'webmock/minitest'
 
 Setting.address_processing = false
-
 Setting.registry_country_code = 'US'
 
 class ActiveSupport::TestCase
