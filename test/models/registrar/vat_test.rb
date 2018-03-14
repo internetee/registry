@@ -13,7 +13,16 @@ class RegistrarVATTest < ActiveSupport::TestCase
     assert @registrar.valid?
   end
 
-  def test_vat_is_not_applied_when_registrar_is_local_vat_payer
+  def test_apply_vat_rate_from_registry_when_registrar_is_local_vat_payer
+    Setting.registry_country_code = 'US'
+    @registrar.country_code = 'US'
+
+    Registry.instance.stub(:vat_rate, BigDecimal('5.5')) do
+      assert_equal BigDecimal('5.5'), @registrar.effective_vat_rate
+    end
+  end
+
+  def test_require_no_vat_rate_when_registrar_is_local_vat_payer
     @registrar.vat_rate = 1
     assert @registrar.invalid?
 
@@ -21,7 +30,14 @@ class RegistrarVATTest < ActiveSupport::TestCase
     assert @registrar.valid?
   end
 
-  def test_requires_vat_rate_when_registrar_is_foreign_vat_payer_and_vat_no_is_absent
+  def test_apply_vat_rate_from_registrar_when_registrar_is_foreign_vat_payer
+    Setting.registry_country_code = 'US'
+    @registrar.country_code = 'DE'
+    @registrar.vat_rate = BigDecimal('5.6')
+    assert_equal BigDecimal('5.6'), @registrar.effective_vat_rate
+  end
+
+  def test_require_vat_rate_when_registrar_is_foreign_vat_payer_and_vat_no_is_absent
     @registrar.country_code = 'DE'
     @registrar.vat_no = ''
 
@@ -30,7 +46,7 @@ class RegistrarVATTest < ActiveSupport::TestCase
     assert @registrar.errors.added?(:vat_rate, :blank)
   end
 
-  def test_vat_is_not_applied_when_registrar_is_foreign_vat_payer_and_vat_no_is_present
+  def test_require_no_vat_rate_when_registrar_is_foreign_vat_payer_and_vat_no_is_present
     @registrar.country_code = 'DE'
     @registrar.vat_no = 'valid'
 
