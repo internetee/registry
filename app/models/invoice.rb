@@ -150,7 +150,7 @@ class Invoice < ActiveRecord::Base
   end
 
   def subtotal
-    invoice_items.collect { |line_item| line_item.item_sum_without_vat }.reduce(:+)
+    invoice_items.map(&:item_sum_without_vat).reduce(:+)
   end
 
   def vat_amount
