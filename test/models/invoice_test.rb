@@ -90,4 +90,20 @@ class InvoiceTest < ActiveSupport::TestCase
       assert_equal BigDecimal('5.50'), invoice.total
     end
   end
+
+  def test_valid_without_buyer_vat_no
+    @invoice.buyer_vat_no = ''
+    assert @invoice.valid?
+  end
+
+  def test_buyer_vat_no_is_taken_from_registrar_by_default
+    registrar = registrars(:bestnames)
+    registrar.vat_no = 'US1234'
+    invoice = @invoice.dup
+    invoice.buyer_vat_no = nil
+    invoice.buyer = registrar
+    invoice.invoice_items = @invoice.invoice_items
+    invoice.save!
+    assert_equal 'US1234', invoice.buyer_vat_no
+  end
 end

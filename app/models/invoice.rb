@@ -35,6 +35,7 @@ class Invoice < ActiveRecord::Base
   before_create :set_invoice_number
   before_create :apply_default_vat_rate, unless: :vat_rate?
   before_create :calculate_total, unless: :total?
+  before_create :apply_default_buyer_vat_no, unless: :buyer_vat_no?
 
   attribute :vat_rate, ::Type::VATRate.new
   attr_readonly :vat_rate
@@ -167,6 +168,10 @@ class Invoice < ActiveRecord::Base
 
   def apply_default_vat_rate
     self.vat_rate = buyer.effective_vat_rate
+  end
+
+  def apply_default_buyer_vat_no
+    self.buyer_vat_no = buyer.vat_no
   end
 
   def calculate_total
