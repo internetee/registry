@@ -44,6 +44,9 @@ class RegistrarVATTest < ActiveSupport::TestCase
     @registrar.vat_rate = ''
     assert @registrar.invalid?
     assert @registrar.errors.added?(:vat_rate, :blank)
+
+    @registrar.vat_rate = 5
+    assert @registrar.valid?
   end
 
   def test_require_no_vat_rate_when_registrar_is_foreign_vat_payer_and_vat_no_is_present
