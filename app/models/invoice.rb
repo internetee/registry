@@ -160,6 +160,7 @@ class Invoice < ActiveRecord::Base
 
   def total
     calculate_total unless total?
+    read_attribute(:total)
   end
 
   private

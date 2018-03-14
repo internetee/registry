@@ -76,6 +76,10 @@ class InvoiceTest < ActiveSupport::TestCase
     end
   end
 
+  def test_returns_persisted_total
+    assert_equal BigDecimal('16.50'), @invoice.total
+  end
+
   def test_calculates_total
     line_item = InvoiceItem.new
     invoice = Invoice.new
