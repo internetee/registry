@@ -14,7 +14,7 @@ class Registrar < ActiveRecord::Base
   delegate :balance, to: :cash_account, allow_nil: true
 
   validates :name, :reg_no, :country_code, :email, :code, presence: true
-  validates :name, :reg_no, :reference_no, :code, uniqueness: true
+  validates :name, :reference_no, :code, uniqueness: true
   validates :accounting_customer_code, presence: true
   validates :language, presence: true
   validate :forbidden_codes
