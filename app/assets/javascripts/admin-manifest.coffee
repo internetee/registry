@@ -9,6 +9,7 @@
 #= require select2
 #= require jquery.doubleScroll
 #= require datepicker
+#= require spell_check
 #= require admin/application
 #= require admin/app
 #= require_tree ./admin
