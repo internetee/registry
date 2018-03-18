@@ -1,9 +1,5 @@
 class Registrar
-  class RegistrarNameserversController < DeppController
-    def edit
-      authorize! :manage, :repp
-    end
-
+  class NameserversController < BulkChangeController
     def update
       authorize! :manage, :repp
 
@@ -52,7 +48,7 @@ class Registrar
         redirect_to registrar_domains_url
       else
         @api_errors = parsed_response[:errors]
-        render :edit
+        render file: 'registrar/bulk_change/new', locals: { active_tab: :nameserver }
       end
     end
   end

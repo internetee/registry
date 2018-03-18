@@ -1,8 +1,7 @@
 require 'test_helper'
 
 class RegistrarDomainTransfersTest < ActionDispatch::IntegrationTest
-  def setup
-    WebMock.reset!
+  setup do
     login_as users(:api_goodnames)
   end
 

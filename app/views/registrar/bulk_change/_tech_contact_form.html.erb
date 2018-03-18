@@ -1,0 +1,48 @@
+<%= form_tag registrar_tech_contacts_path, method: :patch, class: 'form-horizontal' do %>
+    <% if @error %>
+        <div class="alert alert-danger">
+            <%= @error[:message] %>
+        </div>
+    <% end %>
+
+    <div class="form-group">
+        <div class="col-md-2 control-label">
+            <%= label_tag :predecessor %>
+        </div>
+
+        <div class="col-md-5">
+            <%= text_field_tag :predecessor, params[:predecessor],
+                               list: :contacts,
+                               required: true,
+                               autofocus: true,
+                               class: 'form-control' %>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-2 control-label">
+            <%= label_tag :successor %>
+        </div>
+
+        <div class="col-md-5">
+            <%= text_field_tag :successor, params[:successor],
+                               list: :contacts,
+                               required: true,
+                               class: 'form-control' %>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-5 col-md-offset-2 text-right">
+            <button class="btn btn-warning">
+                <%= t '.submit_btn' %>
+            </button>
+        </div>
+    </div>
+<% end %>
+
+<datalist id="contacts">
+    <% available_contacts.each do |data| %>
+        <option value="<%= data.second %>"><%= data.first %></option>
+    <% end %>
+</datalist>

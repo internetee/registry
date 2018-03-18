@@ -1,12 +1,13 @@
-<%= form_tag registrar_update_registrar_nameserver_path, method: :put, class: 'form-horizontal' do %>
+<%= form_tag registrar_nameservers_path, method: :patch, class: 'form-horizontal' do %>
+    <%= render 'registrar/domain_transfers/form/api_errors' %>
+
     <div class="form-group">
         <div class="col-md-2 control-label">
             <%= label_tag :old_hostname %>
         </div>
 
         <div class="col-md-5">
-            <%= text_field_tag :old_hostname, params[:old_hostname], autofocus: true,
-                               required: true,
+            <%= text_field_tag :old_hostname, params[:old_hostname], required: true,
                                class: 'form-control' %>
         </div>
     </div>

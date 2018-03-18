@@ -1,0 +1,14 @@
+en:
+  registrar:
+    bulk_change:
+      new:
+        header: Bulk change
+        technical_contact: Technical contact
+        nameserver: Nameserver
+
+      tech_contact_form:
+        submit_btn: Replace technical contacts
+
+      nameserver_form:
+        ip_hint: One IP per line
+        replace_btn: Replace nameserver

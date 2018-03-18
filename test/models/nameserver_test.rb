@@ -50,9 +50,11 @@ class NameserverTest < ActiveSupport::TestCase
   end
 
   def test_hostnames
-    assert_equal %w[ns1.bestnames.test
+    assert_equal %w[
+      ns1.bestnames.test
       ns2.bestnames.test
       ns1.bestnames.test
+      ns2.bestnames.test
       ns1.bestnames.test], Nameserver.hostnames
   end
 

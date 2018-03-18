@@ -1,8 +1,7 @@
 require 'test_helper'
 
-class RegistrarNameserverReplacementTest < ActionDispatch::IntegrationTest
-  def setup
-    WebMock.reset!
+class RegistrarAreaNameserverBulkChangeTest < ActionDispatch::IntegrationTest
+  setup do
     login_as users(:api_goodnames)
   end
 
@@ -21,7 +20,8 @@ class RegistrarNameserverReplacementTest < ActionDispatch::IntegrationTest
                                                }] }.to_json, status: 200)
 
     visit registrar_domains_url
-    click_link 'Replace nameserver'
+    click_link 'Bulk change'
+    click_link 'Nameserver'
 
     fill_in 'Old hostname', with: 'ns1.bestnames.test'
     fill_in 'New hostname', with: 'new-ns.bestnames.test'
@@ -40,7 +40,8 @@ class RegistrarNameserverReplacementTest < ActionDispatch::IntegrationTest
                                                            headers: { 'Content-type' => 'application/json' })
 
     visit registrar_domains_url
-    click_link 'Replace nameserver'
+    click_link 'Bulk change'
+    click_link 'Nameserver'
 
     fill_in 'Old hostname', with: 'old hostname'
     fill_in 'New hostname', with: 'new hostname'
