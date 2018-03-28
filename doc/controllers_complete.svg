@@ -492,7 +492,6 @@
 <polyline fill="none" stroke="black" points="-300,-378 -124,-378 "/>
 <polyline fill="none" stroke="black" points="-300,-354 -124,-354 "/>
 <text text-anchor="start" x="-292" y="-338.8" font-family="Times,serif" font-size="14.00">_layout</text>
-<text text-anchor="start" x="-292" y="-323.8" font-family="Times,serif" font-size="14.00">check_ip</text>
 <text text-anchor="start" x="-292" y="-308.8" font-family="Times,serif" font-size="14.00">role_base_root_url</text>
 </g>
 <!-- Registrar::PollsController -->
