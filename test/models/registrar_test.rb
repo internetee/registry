@@ -9,21 +9,33 @@ class RegistrarTest < ActiveSupport::TestCase
     assert @registrar.valid?
   end
 
-  def test_rejects_absent_accounting_customer_code
-    @registrar.accounting_customer_code = nil
-    @registrar.validate
+  def test_invalid_without_name
+    @registrar.name = ''
+    assert @registrar.invalid?
+  end
+
+  def test_invalid_without_reg_no
+    @registrar.reg_no = ''
+    assert @registrar.invalid?
+  end
+
+  def test_invalid_without_email
+    @registrar.email = ''
+    assert @registrar.invalid?
+  end
+
+  def test_invalid_without_accounting_customer_code
+    @registrar.accounting_customer_code = ''
     assert @registrar.invalid?
   end
 
   def test_requires_country_code
-    @registrar.country_code = nil
-    @registrar.validate
+    @registrar.country_code = ''
     assert @registrar.invalid?
   end
 
-  def test_requires_language
-    @registrar.language = nil
-    @registrar.validate
+  def test_invalid_without_language
+    @registrar.language = ''
     assert @registrar.invalid?
   end
 
@@ -37,5 +49,14 @@ class RegistrarTest < ActiveSupport::TestCase
     Setting.default_language = 'en'
     registrar = Registrar.new(language: 'de')
     assert_equal 'de', registrar.language
+  end
+
+  def test_full_address
+    assert_equal 'Main Street, New York, New York, 12345', @registrar.address
+  end
+
+  def test_reference_number_generation
+    @registrar.validate
+    refute_empty @registrar.reference_no
   end
 end

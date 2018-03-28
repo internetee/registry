@@ -1,2 +1,9 @@
-<%= render 'shared/title', name: t(:new_registrar) %>
+<ol class="breadcrumb">
+    <li><%= link_to t('admin.registrars.index.header'), admin_registrars_path %></li>
+</ol>
+
+<div class="page-header">
+    <h1><%= t '.header' %></h1>
+</div>
+
 <%= render 'form' %>

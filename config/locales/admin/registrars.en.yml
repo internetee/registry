@@ -2,23 +2,31 @@ en:
   admin:
     registrars:
       index:
+        header: Registrars
         new_btn: New registrar
 
-      show:
-        new_api_use_btn: New API user
-        active: Active
-        api_users: API users
+      new:
+        header: New registrar
 
-        preferences:
-          header: Preferences
+      show:
+        edit_btn: Edit
+        delete_btn: Delete
+        delete_btn_confirm: Are you sure you want delete registrar?
+
+      edit:
+        header: Edit registrar
+
+      billing:
+        header: Billing
 
       create:
         created: Registrar has been successfully created
-        not_created: Unable to create registrar
 
       update:
         updated: Registrar has been successfully updated
-        not_updated: Unable to update registrar
+
+      destroy:
+        deleted: Registrar has been successfully deleted
 
       form:
         misc: Miscellaneous
@@ -30,3 +38,20 @@ en:
 
         preferences:
           header: Preferences
+
+      details:
+        header: Details
+
+      contacts:
+        header: Contacts
+
+      preferences:
+        header: Preferences
+
+      users:
+        header: API Users
+        new_btn: New API user
+
+      white_ips:
+        header: Whitelisted IPs
+        new_btn: New whitelisted IP
