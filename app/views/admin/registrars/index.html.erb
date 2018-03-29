@@ -20,10 +20,10 @@
                         <%= sort_link(@q, 'name') %>
                     </th>
                     <th class="col-xs-4">
-                        <%= sort_link(@q, 'reg_no', t(:reg_no)) %>
+                        <%= sort_link(@q, 'reg_no', Registrar.human_attribute_name(:reg_no)) %>
                     </th>
                     <th class="col-xs-4">
-                        <%= t(:credit_balance) %>
+                        <%= Registrar.human_attribute_name :balance %>
                     </th>
                     <th class="col-xs-4">
                         <%= t(:test_registrar) %>

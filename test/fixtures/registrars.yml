@@ -41,3 +41,12 @@ complete:
   language: en
   vat_no: US12345
   vat_rate: 0.05
+
+not_in_use:
+  name: any
+  reg_no: any
+  code: any
+  email: any@example.com
+  country_code: US
+  accounting_customer_code: any
+  language: en

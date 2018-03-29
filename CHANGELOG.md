@@ -1,3 +1,10 @@
+19.03.2018
+* EPP transfer and REPP bulk transfer reuses contact objects [#746](https://github.com/internetee/registry/issues/746)
+* Gems: Rack (1.6.9) and Rack-protection (1.5.5) update [#768](https://github.com/internetee/registry/issues/768)
+* Removal of unused database tables [#756](https://github.com/internetee/registry/issues/756)
+* Removal of unused date format [#764](https://github.com/internetee/registry/pull/764)
+* Removal of billing postal address [#747](https://github.com/internetee/registry/issues/747)
+
 06.03.2018
 * BUG: Transfer poll message now returns affected domain name [#694](https://github.com/internetee/registry/issues/694)
 * BUG: Successful REPP bulk transfer returns info about transfered domains [#693](https://github.com/internetee/registry/issues/693)

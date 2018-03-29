@@ -16,7 +16,7 @@
           %dt= t(:name)
           %dd= @registrar.name
 
-          %dt= t(:reg_no)
+          %dt= Registrar.human_attribute_name :reg_no
           %dd= @registrar.reg_no
 
           %dt= Registrar.human_attribute_name :vat_no

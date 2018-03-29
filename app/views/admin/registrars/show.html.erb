@@ -26,198 +26,25 @@
     </div>
 </div>
 
-<% if @registrar.errors.any? %>
-    <% @registrar.errors.each do |attr, err| %>
-        <%= err %>
-        <br/>
-    <% end %>
-<% end %>
-<% if @registrar.errors.any? %>
-    <hr/>
-<% end %>
 <div class="row">
     <div class="col-md-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">
-                    <%= t(:general) %>
-                </h3>
-            </div>
-            <div class="panel-body">
-                <dl class="dl-horizontal">
-                    <dt>
-                        <%= t(:name) %>
-                    </dt>
-                    <dd>
-                        <%= @registrar.name %>
-                    </dd>
-                    <dt>
-                        <%= t(:reg_no) %>
-                    </dt>
-                    <dd>
-                        <%= @registrar.reg_no %>
-                    </dd>
-                    <dt>
-                        <%= t(:reference_no) %>
-                    </dt>
-                    <dd>
-                        <%= @registrar.reference_no %>
-                    </dd>
-                    <dt>
-                        <%= t(:id) %>
-                    </dt>
-                    <dd>
-                        <%= @registrar.code %>
-                    </dd>
-                    <dt>
-                        <%= t(:credit_balance) %>
-                    </dt>
-                    <dd>
-                        <%= @registrar.balance %>
-                    </dd>
-                    <dt>
-                        <%= Registrar.human_attribute_name :website %>
-                    </dt>
-                    <dd>
-                        <%= @registrar.website %>
-                    </dd>
-                </dl>
-            </div>
-        </div>
+        <%= render 'details', registrar: @registrar %>
     </div>
     <div class="col-md-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">
-                    <%= t(:contact) %>
-                </h3>
-            </div>
-            <div class="panel-body">
-                <dl class="dl-horizontal">
-                    <dt>
-                        <%= t(:country) %>
-                    </dt>
-                    <dd>
-                        <%= @registrar.country %>
-                    </dd>
-                    <dt>
-                        <%= t(:address) %>
-                    </dt>
-                    <dd>
-                        <%= @registrar.address %>
-                    </dd>
-                    <dt>
-                        <%= t(:contact_phone) %>
-                    </dt>
-                    <dd>
-                        <%= @registrar.phone %>
-                    </dd>
-                    <dt>
-                        <%= t(:contact_email) %>
-                    </dt>
-                    <dd>
-                        <%= @registrar.email %>
-                    </dd>
-                    <dt>
-                        <%= t(:billing_email) %>
-                    </dt>
-                    <dd>
-                        <%= @registrar.billing_email %>
-                    </dd>
-                </dl>
-            </div>
-        </div>
+        <%= render 'contacts', registrar: @registrar %>
         <%= render 'billing', registrar: @registrar %>
-        <%= render 'admin/registrars/show/preferences', registrar: registrar %>
+        <%= render 'preferences', registrar: registrar %>
     </div>
 </div>
+
 <div class="row">
     <div class="col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-heading clearfix">
-                <div class="pull-left">
-                    <%= t('.api_users') %>
-                </div>
-                <div class="pull-right">
-                    <%= link_to(t('.new_api_use_btn'), new_admin_registrar_api_user_path(@registrar), class: 'btn btn-default btn-xs') %>
-                </div>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered table-condensed">
-                    <thead>
-                    <tr>
-                        <th class="col-xs-6">
-                            <%= t(:username) %>
-                        </th>
-                        <th class="col-xs-6">
-                            <%= t('.active') %>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <% @registrar.api_users.each do |x| %>
-                        <tr>
-                            <td>
-                                <%= link_to(x, [:admin, x]) %>
-                            </td>
-                            <td>
-                                <%= x.active %>
-                            </td>
-                        </tr>
-                    <% end %>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <%= render 'users', registrar: @registrar %>
     </div>
 </div>
+
 <div class="row">
     <div class="col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-heading clearfix">
-                <div class="pull-left">
-                    <%= t(:white_ips) %>
-                </div>
-                <div class="pull-right">
-                    <%= link_to(t(:create_new_white_ip), new_admin_registrar_white_ip_path(@registrar), class: 'btn btn-default btn-xs') %>
-                </div>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered table-condensed">
-                    <thead>
-                    <tr>
-                        <th class="col-xs-4">
-                            <%= t(:ipv4) %>
-                        </th>
-                        <th class="col-xs-6">
-                            <%= t(:ipv6) %>
-                        </th>
-                        <th class="col-xs-2">
-                            <%= t(:interfaces) %>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <% @registrar.white_ips.each do |x| %>
-                        <tr>
-                            <td>
-                                <% if x.ipv4.present? %>
-                                    <%= link_to(x.ipv4, [:admin, @registrar, x]) %>
-                                <% end %>
-                            </td>
-                            <td>
-                                <% if x.ipv6.present? %>
-                                    <%= link_to(x.ipv6, [:admin, @registrar, x]) %>
-                                <% end %>
-                            </td>
-                            <td>
-                                <%= x.interfaces.join(', ').upcase %>
-                            </td>
-                        </tr>
-                    <% end %>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <%= render 'white_ips', registrar: @registrar %>
     </div>
 </div>

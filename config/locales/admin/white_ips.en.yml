@@ -1,0 +1,5 @@
+en:
+  admin:
+    white_ips:
+      new:
+        header: New whitelisted IP

@@ -12,12 +12,12 @@ en:
         edit_btn: Edit
         delete_btn: Delete
         delete_btn_confirm: Are you sure you want delete registrar?
-        new_api_use_btn: New API user
-        active: Active
-        api_users: API users
 
-        preferences:
-          header: Preferences
+      edit:
+        header: Edit registrar
+
+      billing:
+        header: Billing
 
       edit:
         header: Edit registrar
@@ -44,3 +44,20 @@ en:
 
         preferences:
           header: Preferences
+
+      details:
+        header: Details
+
+      contacts:
+        header: Contacts
+
+      preferences:
+        header: Preferences
+
+      users:
+        header: API Users
+        new_btn: New API user
+
+      white_ips:
+        header: Whitelisted IPs
+        new_btn: New whitelisted IP

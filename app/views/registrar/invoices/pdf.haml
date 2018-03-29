@@ -182,7 +182,7 @@
               %dt= t(:description)
               %dd=@invoice.description
                 
-            %dt= t(:reference_no)
+            %dt= Invoice.human_attribute_name :reference_no
             %dd= @invoice.reference_no
 
         .col-md-6.right

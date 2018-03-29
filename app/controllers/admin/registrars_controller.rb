@@ -43,8 +43,13 @@ module Admin
     end
 
     def destroy
-      @registrar.destroy!
-      redirect_to admin_registrars_url, notice: t('.deleted')
+      if @registrar.destroy
+        flash[:notice] = t('.deleted')
+        redirect_to admin_registrars_url
+      else
+        flash[:alert] = @registrar.errors.full_messages.first
+        redirect_to admin_registrar_url(@registrar)
+      end
     end
 
     private
@@ -64,7 +69,6 @@ module Admin
                                         :email,
                                         :phone,
                                         :website,
-                                        :billing_email,
                                         :code,
                                         :test_registrar,
                                         :vat_no,

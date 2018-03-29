@@ -14,9 +14,10 @@ class Registrar < ActiveRecord::Base
   delegate :balance, to: :cash_account, allow_nil: true
 
   validates :name, :reg_no, :country_code, :email, :code, presence: true
-  validates :name, :reg_no, :reference_no, :code, uniqueness: true
+  validates :name, :reference_no, :code, uniqueness: true
   validates :accounting_customer_code, presence: true
   validates :language, presence: true
+  validate :forbid_special_code
 
   validates :vat_rate, presence: true, if: 'foreign_vat_payer? && vat_no.blank?'
   validates :vat_rate, absence: true, if: :home_vat_payer?

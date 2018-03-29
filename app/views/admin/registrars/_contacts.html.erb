@@ -1,0 +1,24 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <%= t '.header' %>
+    </div>
+
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt><%= t(:country) %></dt>
+            <dd><%= @registrar.country %></dd>
+
+            <dt><%= t(:address) %></dt>
+            <dd><%= @registrar.address %></dd>
+
+            <dt><%= t(:contact_phone) %></dt>
+            <dd><%= @registrar.phone %></dd>
+
+            <dt><%= t(:contact_email) %></dt>
+            <dd><%= @registrar.email %></dd>
+
+            <dt><%= Registrar.human_attribute_name :billing_email %></dt>
+            <dd><%= @registrar.billing_email %></dd>
+        </dl>
+    </div>
+</div>

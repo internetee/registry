@@ -202,9 +202,6 @@ en:
         state: 'State / Province'
       deposit:
         amount: 'Amount'
-      white_ip:
-        ipv4: 'IPv4'
-        ipv6: 'IPv6'
 
   errors:
     messages:
@@ -301,7 +298,6 @@ en:
   reg_no: 'Reg. no'
   status: 'Status'
   contact: 'Contact'
-  credit_balance: 'Credit balance'
   starting_balance: 'Starting balance'
   destroyed: 'Destroyed'
 
@@ -386,7 +382,6 @@ en:
   choose: 'Choose...'
   created_before: 'Created before'
   created_after: 'Created after'
-  billing_email: 'Billing e-mail'
   contact_phone: 'Contact phone'
   contact_email: 'Contact e-mail'
   address_help: 'Street name, house no - apartment no, city, county, country, zip'
@@ -575,7 +570,6 @@ en:
   queried_at: 'Queried at'
   import_file_path: 'Import file path'
   bank_code: 'Bank code'
-  reference_no: 'Reference no'
   currency: 'Currency'
   buyer_name: 'Buyer name'
   buyer_iban: 'Buyer IBAN'
@@ -652,8 +646,6 @@ en:
   not_valid_domain_verification_body: This could mean your verification has been expired or done already.<br><br>Please contact us if you think something is wrong.
   upload_crt: 'Upload CRT'
   crt_or_csr_must_be_present: 'CRT or CSR must be present'
-  white_ips: 'White IP-s'
-  create_new_white_ip: 'Create new white IP'
   ipv4_or_ipv6_must_be_present: 'IPv4 or IPv6 must be present'
   white_ip: 'White IP'
   edit_white_ip: 'Edit white IP'
@@ -741,7 +733,6 @@ en:
   failure: "It was not saved"
   contact_is_not_valid: 'Contact %{value} is not valid, please fix the invalid contact'
   welcome_to_eis_registrar_portal: 'Welcome to EIS Registrar portal'
-  interfaces: 'Interfaces'
   next: 'Next'
   previous: 'Previous'
   personal_domain_verification_url: 'Personal domain verification url'
@@ -771,3 +762,5 @@ en:
   attributes:
     vat_no: VAT number
     vat_rate: VAT rate
+    ipv4: IPv4
+    ipv6: IPv6

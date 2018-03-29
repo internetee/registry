@@ -160,6 +160,7 @@ GEM
       unicode_utils (~> 1.4)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
+    crass (1.0.3)
     daemons (1.2.4)
     daemons-rails (1.2.1)
       daemons
@@ -247,7 +248,8 @@ GEM
       activesupport (>= 3.0.0)
     libxml-ruby (3.0.0)
     liquid (3.0.6)
-    loofah (2.0.3)
+    loofah (2.2.2)
+      crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     mail (2.6.6)
       mime-types (>= 1.16, < 4)

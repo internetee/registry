@@ -24,13 +24,13 @@ class RegistrarTest < ActiveSupport::TestCase
     assert @registrar.invalid?
   end
 
-  def test_rejects_absent_accounting_customer_code
-    @registrar.accounting_customer_code = nil
+  def test_invalid_without_accounting_customer_code
+    @registrar.accounting_customer_code = ''
     assert @registrar.invalid?
   end
 
   def test_invalid_without_country_code
-    @registrar.country_code = nil
+    @registrar.country_code = ''
     assert @registrar.invalid?
   end
 
