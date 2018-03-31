@@ -3276,14 +3276,6 @@ ALTER TABLE ONLY registrars
 
 
 --
--- Name: unique_reg_no; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
---
-
-ALTER TABLE ONLY registrars
-    ADD CONSTRAINT unique_reg_no UNIQUE (reg_no);
-
-
---
 -- Name: unique_session_id; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
