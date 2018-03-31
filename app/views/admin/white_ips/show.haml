@@ -14,11 +14,11 @@
           %dt= t(:registrar_name)
           %dd= link_to(@registrar, [:admin, @registrar])
 
-          %dt= t(:ipv4)
+          %dt= WhiteIp.human_attribute_name :ipv4
           %dd= @white_ip.ipv4
 
-          %dt= t(:ipv6)
+          %dt= WhiteIp.human_attribute_name :ipv6
           %dd= @white_ip.ipv6
 
-          %dt= t(:interfaces)
+          %dt= WhiteIp.human_attribute_name :interfaces
           %dd= @white_ip.interfaces.join(', ').upcase

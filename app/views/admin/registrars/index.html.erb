@@ -1,7 +1,15 @@
-<% content_for :actions do %>
-    <%= link_to(t('.new_btn'), new_admin_registrar_path, class: 'btn btn-primary') %>
-<% end %>
-<%= render 'shared/title', name: t(:registrars) %>
+<div class="page-header">
+    <div class="row">
+        <div class="col-sm-10">
+            <h1><%= t '.header' %></h1>
+        </div>
+
+        <div class="col-sm-2 text-right">
+            <%= link_to t('.new_btn'), new_admin_registrar_path, class: 'btn btn-primary' %>
+        </div>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-md-12">
         <div class="table-responsive">
@@ -12,10 +20,10 @@
                         <%= sort_link(@q, 'name') %>
                     </th>
                     <th class="col-xs-4">
-                        <%= sort_link(@q, 'reg_no', t(:reg_no)) %>
+                        <%= sort_link(@q, 'reg_no', Registrar.human_attribute_name(:reg_no)) %>
                     </th>
                     <th class="col-xs-4">
-                        <%= t(:credit_balance) %>
+                        <%= Registrar.human_attribute_name :balance %>
                     </th>
                     <th class="col-xs-4">
                         <%= t(:test_registrar) %>

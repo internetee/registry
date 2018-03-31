@@ -182,7 +182,7 @@
               %dt= t(:description)
               %dd=@invoice.description
                 
-            %dt= t(:reference_no)
+            %dt= Invoice.human_attribute_name :reference_no
             %dd= @invoice.reference_no
 
         .col-md-6.right
@@ -261,7 +261,7 @@
             %br
             = "#{t('reg_no')} #{@invoice.seller_reg_no}"
             %br
-            = "#{t('vat_no')} #{@invoice.seller_vat_no}"
+            = "#{Registrar.human_attribute_name :vat_no} #{@invoice.seller_vat_no}"
 
           .col-md-3.left
             = @invoice.seller_phone

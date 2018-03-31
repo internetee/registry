@@ -7,7 +7,6 @@
         <div class="col-md-5">
             <%= text_field_tag :old_hostname, params[:old_hostname], autofocus: true,
                                required: true,
-                               spellcheck: false,
                                class: 'form-control' %>
         </div>
     </div>
@@ -19,7 +18,6 @@
 
         <div class="col-md-5">
             <%= text_field_tag :new_hostname, params[:new_hostname], required: true,
-                               spellcheck: false,
                                class: 'form-control' %>
         </div>
     </div>
@@ -30,7 +28,7 @@
         </div>
 
         <div class="col-md-3">
-            <%= text_area_tag :ipv4, params[:ipv4], spellcheck: false, class: 'form-control' %>
+            <%= text_area_tag :ipv4, params[:ipv4], class: 'form-control' %>
         </div>
     </div>
 
@@ -40,7 +38,7 @@
         </div>
 
         <div class="col-md-3">
-            <%= text_area_tag :ipv6, params[:ipv6], spellcheck: false, class: 'form-control' %>
+            <%= text_area_tag :ipv6, params[:ipv6], class: 'form-control' %>
             <span class="help-block"><%= t '.ip_hint' %></span>
         </div>
     </div>
