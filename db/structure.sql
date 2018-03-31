@@ -3244,7 +3244,7 @@ ALTER TABLE ONLY settings
 
 
 --
--- Name: unique_code; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: unique_code; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY registrars
@@ -3260,7 +3260,7 @@ ALTER TABLE ONLY contacts
 
 
 --
--- Name: unique_name; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: unique_name; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY registrars
@@ -3268,7 +3268,7 @@ ALTER TABLE ONLY registrars
 
 
 --
--- Name: unique_reference_no; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: unique_reference_no; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY registrars
