@@ -48,7 +48,7 @@ xml.epp_head do
           xml.tag!('domain:upDate', @domain.updated_at.try(:iso8601))
         end
 
-        xml.tag!('domain:exDate', @domain.valid_to.try(:iso8601))
+        xml.tag!('domain:exDate', @domain.valid_to.iso8601)
 
         # TODO Make domain transferrable
         #xml.tag!('domain:trDate', @domain.transferred_at) if @domain.transferred_at
