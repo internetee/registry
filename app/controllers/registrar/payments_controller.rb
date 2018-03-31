@@ -3,7 +3,7 @@ class Registrar
     protect_from_forgery except: :back
 
     skip_authorization_check # actually anyone can pay, no problems at all
-    skip_before_action :authenticate_user!, :check_ip, only: [:back]
+    skip_before_action :authenticate_user!, :check_ip_restriction, only: [:back]
     before_action :check_bank
 
     # to handle existing model we should

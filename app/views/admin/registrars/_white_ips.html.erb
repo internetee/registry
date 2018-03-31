@@ -1,0 +1,38 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <%= t '.header' %>
+    </div>
+
+    <table class="table table-hover table-bordered table-condensed">
+        <thead>
+            <tr>
+                <th class="col-xs-4"><%= WhiteIp.human_attribute_name :ipv4 %></th>
+                <th class="col-xs-6"><%= WhiteIp.human_attribute_name :ipv6 %></th>
+                <th class="col-xs-2"><%= WhiteIp.human_attribute_name :interfaces %></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <% registrar.white_ips.each do |white_ip| %>
+                <tr>
+                    <td>
+                        <% if white_ip.ipv4.present? %>
+                            <%= link_to(white_ip.ipv4, [:admin, registrar, white_ip]) %>
+                        <% end %>
+                    </td>
+                    <td>
+                        <% if white_ip.ipv6.present? %>
+                            <%= link_to(white_ip.ipv6, [:admin, registrar, white_ip]) %>
+                        <% end %>
+                    </td>
+                    <td><%= white_ip.interfaces.join(', ').upcase %></td>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+
+    <div class="panel-footer text-right">
+        <%= link_to t('.new_btn'), new_admin_registrar_white_ip_path(registrar),
+                    class: 'btn btn-default btn-xs' %>
+    </div>
+</div>

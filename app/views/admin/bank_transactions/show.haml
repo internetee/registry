@@ -41,7 +41,7 @@
       %dt= t(:currency)
       %dd= @bank_transaction.currency
 
-      %dt= t(:reference_no)
+      %dt= BankTransaction.human_attribute_name :reference_no
       %dd= @bank_transaction.reference_no
 
       %dt= t(:paid_at)
