@@ -654,7 +654,7 @@ class Domain < ActiveRecord::Base
   def as_json(_options)
     hash = super
     hash['auth_info'] = hash.delete('transfer_code') # API v1 requirement
-    hash['valid_from'] = hash['created_at'] # API v1 requirement
+    hash['valid_from'] = hash['registered_at'] # API v1 requirement
     hash
   end
 
