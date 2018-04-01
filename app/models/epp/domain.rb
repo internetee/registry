@@ -18,7 +18,7 @@ class Epp::Domain < Domain
 
   after_validation :validate_contacts
   def validate_contacts
-    return true if is_renewal || is_transfer
+    return true if is_transfer
 
     ok = true
     active_admins = admin_domain_contacts.select { |x| !x.marked_for_destruction? }

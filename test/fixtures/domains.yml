@@ -40,7 +40,7 @@ metro:
 
 invalid:
   name: invalid.test
-  transfer_code: any
-  valid_to: 2010-07-05
+  transfer_code: 1438d6
+  valid_to: <%= Time.zone.parse('2010-07-05').utc.to_s(:db) %>
   registrar: bestnames
   registrant: invalid
