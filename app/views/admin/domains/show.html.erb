@@ -9,8 +9,8 @@
         </div>
 
         <div class="col-sm-4 text-right">
-            <%= link_to(t(:edit_statuses), edit_admin_domain_path(@domain), class: 'btn btn-primary') %>
-            <%= link_to(t(:history), admin_domain_domain_versions_path(@domain.id), method: :get,
+            <%= link_to(t('.edit_btn'), edit_admin_domain_path(@domain), class: 'btn btn-primary') %>
+            <%= link_to(t('.history_btn'), admin_domain_domain_versions_path(@domain.id), method: :get,
                         class: 'btn btn-primary') %>
         </div>
     </div>
