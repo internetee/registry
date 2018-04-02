@@ -1,9 +1,20 @@
-<% content_for :actions do %>
-    <%= link_to(t(:edit_statuses), edit_admin_domain_path(@domain), class: 'btn btn-primary') %>
-    <%= link_to(t(:history), admin_domain_domain_versions_path(@domain.id), method: :get,
-                class: 'btn btn-primary') %>
-<% end %>
-<%= render 'shared/title', name: @domain.name %>
+<ol class="breadcrumb">
+    <li><%= link_to t('admin.domains.index.header'), admin_domains_path %></li>
+</ol>
+
+<div class="page-header">
+    <div class="row">
+        <div class="col-sm-8">
+            <h1><%= @domain %></h1>
+        </div>
+
+        <div class="col-sm-4 text-right">
+            <%= link_to(t(:edit_statuses), edit_admin_domain_path(@domain), class: 'btn btn-primary') %>
+            <%= link_to(t(:history), admin_domain_domain_versions_path(@domain.id), method: :get,
+                        class: 'btn btn-primary') %>
+        </div>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-md-6">
