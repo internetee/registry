@@ -10,9 +10,5 @@ FactoryBot.define do
       domain.admin_domain_contacts << FactoryBot.build(:admin_domain_contact)
       domain.tech_domain_contacts << FactoryBot.build(:tech_domain_contact)
     end
-
-    factory :domain_discarded do
-      statuses [DomainStatus::DELETE_CANDIDATE]
-    end
   end
 end
