@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class ContactPostalAddressTest < ActiveSupport::TestCase
-  def setup
+  setup do
     @contact = contacts(:john)
   end
 

@@ -28,7 +28,7 @@ class ActionDispatch::IntegrationTest
   include Capybara::Minitest::Assertions
   include AbstractController::Translation
 
-  def teardown
+  teardown do
     Warden.test_reset!
     Capybara.reset_sessions!
     Capybara.use_default_driver

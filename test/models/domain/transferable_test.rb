@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class DomainTransferableTest < ActiveSupport::TestCase
-  def setup
+  setup do
     @domain = domains(:shop)
     @new_registrar = registrars(:goodnames)
   end

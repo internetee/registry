@@ -3,7 +3,7 @@ require 'test_helper'
 class ShowRegistrarTest < ActionDispatch::IntegrationTest
   include ActionView::Helpers::NumberHelper
 
-  def setup
+  setup do
     login_as users(:admin)
     @registrar = registrars(:bestnames)
     visit admin_registrar_path(@registrar)

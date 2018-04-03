@@ -12,7 +12,7 @@ class ContactIdenticalTest < ActiveSupport::TestCase
     org_name
   ]
 
-  def setup
+  setup do
     @contact = contacts(:william)
     @identical = contacts(:identical_to_william)
   end
