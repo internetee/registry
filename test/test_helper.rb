@@ -20,6 +20,10 @@ class ActiveSupport::TestCase
 
   ActiveRecord::Migration.check_pending!
   fixtures :all
+
+  def teardown
+    travel_back
+  end
 end
 
 class ActionDispatch::IntegrationTest
