@@ -6,7 +6,7 @@ module Concerns::Domain::Deletable
   end
 
   def discard
-    self.statuses << DomainStatus::DELETE_CANDIDATE
+    statuses << DomainStatus::DELETE_CANDIDATE
     save
   end
 
