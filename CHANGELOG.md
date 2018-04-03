@@ -1,10 +1,10 @@
 03.04.2018
-* BUG: Fixed bug with sometimes failing banklink payments [#642](https://github.com/internetee/registry/issues/642)
-* EPP: Domain and assoviated objects are now validated on domain renew [#678](https://github.com/internetee/registry/issues/678)
+* BUG: Fixed bug with sometimes failing bank-link payments [#642](https://github.com/internetee/registry/issues/642)
+* EPP: Domain and associated objects are now validated on domain renew [#678](https://github.com/internetee/registry/issues/678)
 * Admin: drop uniqueness requirement from registrar's registry number field [#776](https://github.com/internetee/registry/issues/776)
 * Security: Loofah gem update to 2.2.2 [#783](https://github.com/internetee/registry/pull/783)
-* Disabled spellcheck for browsers to cleanuo ui [#759](https://github.com/internetee/registry/issues/759)
-* Admin: refaktoered registrar management [#770](https://github.com/internetee/registry/pull/770)
+* Disabled spellcheck for browsers to cleanup UI [#759](https://github.com/internetee/registry/issues/759)
+* Admin: refactored registrar management [#770](https://github.com/internetee/registry/pull/770)
 * Fix structure.sql [#796](https://github.com/internetee/registry/pull/796)
 
 19.03.2018
