@@ -20,6 +20,10 @@ class ActiveSupport::TestCase
 
   ActiveRecord::Migration.check_pending!
   fixtures :all
+
+  teardown do
+    travel_back
+  end
 end
 
 class ActionDispatch::IntegrationTest
@@ -28,7 +32,7 @@ class ActionDispatch::IntegrationTest
   include Capybara::Minitest::Assertions
   include AbstractController::Translation
 
-  def teardown
+  teardown do
     Warden.test_reset!
     Capybara.reset_sessions!
     Capybara.use_default_driver

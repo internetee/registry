@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class RegistrantDomainsTest < ActionDispatch::IntegrationTest
-  def setup
+  setup do
     login_as users(:registrant)
 
     Setting.days_to_keep_business_registry_cache = 1
