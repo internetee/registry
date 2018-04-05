@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class DeleteRegistrarTest < ActiveSupport::TestCase
-  def setup
+  setup do
     @registrar = registrars(:not_in_use)
   end
 
