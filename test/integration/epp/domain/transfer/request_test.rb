@@ -75,7 +75,7 @@ class EppDomainTransferRequestTest < ActionDispatch::IntegrationTest
     assert_equal '2304', Nokogiri::XML(response.body).at_css('result')[:code]
   end
 
-  def test_discarded_domain
+  def test_discarded_domain_cannot_be_transferred
     @domain.update!(statuses: [DomainStatus::DELETE_CANDIDATE])
 
     post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
