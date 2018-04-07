@@ -104,22 +104,6 @@ class DomainCron
 
     c = 0
 
-    domains = Domain.delete_candidates
-
-    domains.each do |domain|
-      next unless domain.delete_candidateable?
-
-      domain.statuses << DomainStatus::DELETE_CANDIDATE
-
-      # If domain successfully saved, add it to delete schedule
-      if domain.save(validate: false)
-        ::PaperTrail.whodunnit = "cron - #{__method__}"
-        DomainDeleteJob.enqueue(domain.id, run_at: rand(((24*60) - (DateTime.now.hour * 60  + DateTime.now.minute))).minutes.from_now)
-        STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: job added by deleteCandidate status ##{domain.id} (#{domain.name})\n" unless Rails.env.test?
-        c += 1
-      end
-    end
-
     Domain.where('force_delete_at <= ?', Time.zone.now.end_of_day.utc).each do |x|
       DomainDeleteJob.enqueue(x.id, run_at: rand(((24*60) - (DateTime.now.hour * 60  + DateTime.now.minute))).minutes.from_now)
       STDOUT << "#{Time.zone.now.utc} DomainCron.destroy_delete_candidates: job added by force delete time ##{x.id} (#{x.name})\n" unless Rails.env.test?

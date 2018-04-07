@@ -76,7 +76,7 @@ class EppDomainTransferRequestTest < ActionDispatch::IntegrationTest
   end
 
   def test_discarded_domain_cannot_be_transferred
-    @domain.update!(statuses: [DomainStatus::DELETE_CANDIDATE])
+    @domain.discard
 
     post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
     @domain.reload

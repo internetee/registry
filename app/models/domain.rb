@@ -281,13 +281,6 @@ class Domain < ActiveRecord::Base
     true
   end
 
-  def delete_candidateable?
-    return false if delete_at > Time.zone.now
-    return false if statuses.include?(DomainStatus::DELETE_CANDIDATE)
-    return false if statuses.include?(DomainStatus::SERVER_DELETE_PROHIBITED)
-    true
-  end
-
   def renewable?
     if Setting.days_to_renew_domain_before_expire != 0
       # if you can renew domain at days_to_renew before domain expiration
@@ -681,10 +674,6 @@ class Domain < ActiveRecord::Base
 
   def self.outzone_candidates
     where("#{attribute_alias(:outzone_time)} < ?", Time.zone.now)
-  end
-
-  def self.delete_candidates
-    where('delete_at < ?', Time.zone.now)
   end
 
   def self.uses_zone?(zone)
