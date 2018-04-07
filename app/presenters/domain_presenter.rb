@@ -30,7 +30,7 @@ class DomainPresenter
   end
 
   def delete_date
-    view.l(domain.delete_time, format: :date) if domain.delete_time
+    view.l(domain.delete_at, format: :date) if domain.delete_at
   end
 
   def force_delete_date

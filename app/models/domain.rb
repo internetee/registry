@@ -684,7 +684,7 @@ class Domain < ActiveRecord::Base
   end
 
   def self.delete_candidates
-    where("#{attribute_alias(:delete_time)} < ?", Time.zone.now)
+    where('delete_at < ?', Time.zone.now)
   end
 
   def self.uses_zone?(zone)

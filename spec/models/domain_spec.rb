@@ -877,9 +877,9 @@ RSpec.describe Domain do
 
       create(:zone, origin: 'ee')
 
-      create(:domain, id: 1, delete_time: Time.zone.parse('04.07.2010 23:59'))
-      create(:domain, id: 2, delete_time: Time.zone.parse('05.07.2010 00:00'))
-      create(:domain, id: 3, delete_time: Time.zone.parse('05.07.2010 00:01'))
+      create(:domain, id: 1, delete_at: Time.zone.parse('04.07.2010 23:59'))
+      create(:domain, id: 2, delete_at: Time.zone.parse('05.07.2010 00:00'))
+      create(:domain, id: 3, delete_at: Time.zone.parse('05.07.2010 00:01'))
     end
 
     it 'returns domains with delete time in the past' do
