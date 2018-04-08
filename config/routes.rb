@@ -186,7 +186,7 @@ Rails.application.routes.draw do
       match 'forward', via: [:post, :get]
     end
 
-    resources :domains do
+    resources :domains, except: %i[new create destroy] do
       resources :domain_versions, controller: 'domains', action: 'versions'
       resources :pending_updates
       resources :pending_deletes
