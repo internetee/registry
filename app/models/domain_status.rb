@@ -175,7 +175,8 @@ class DomainStatus < ActiveRecord::Base
         PENDING_RENEW,
         PENDING_TRANSFER,
         PENDING_UPDATE,
-        PENDING_DELETE_CONFIRMATION
+        PENDING_DELETE_CONFIRMATION,
+        DELETE_CANDIDATE,
       ]
     end
   end

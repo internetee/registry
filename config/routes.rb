@@ -191,6 +191,10 @@ Rails.application.routes.draw do
       resources :pending_updates
       resources :pending_deletes
       resource :force_delete, controller: 'domains/force_delete', only: %i[create destroy]
+
+      member do
+        patch :keep
+      end
     end
 
     resources :domain_versions do

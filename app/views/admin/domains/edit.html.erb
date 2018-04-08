@@ -7,12 +7,13 @@
 
 <div class="page-header">
     <div class="row">
-        <div class="col-sm-5">
+        <div class="col-sm-3">
             <h1>Edit: <%= domain.name %></h1>
         </div>
 
-        <div class="col-sm-7 text-right">
+        <div class="col-sm-9 text-right">
             <%= link_to t('.add_new_status_btn'), '#', class: 'btn btn-primary js-add-status' %>
+            <%= domain.keep_btn %>
             <%= domain.force_delete_toggle_btn %>
         </div>
     </div>
