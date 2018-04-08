@@ -37,6 +37,12 @@ class WhoisRecord < ActiveRecord::Base
     h = HashWithIndifferentAccess.new
     return h if domain.blank?
 
+    if domain.discarded?
+      h[:name] = domain.name
+      h[:status] = ['deleteCandidate']
+      return h
+    end
+
     status_map = {
         'ok' => 'ok (paid and in zone)'
     }
@@ -102,7 +108,8 @@ class WhoisRecord < ActiveRecord::Base
   end
 
   def generated_body
-    template = Rails.root.join("app/views/for_models/whois.erb".freeze)
+    template_name = domain.discarded? ? 'whois_discarded.erb' : 'whois.erb'
+    template = Rails.root.join("app/views/for_models/#{template_name}".freeze)
     ERB.new(template.read, nil, "-").result(binding)
   end
   # rubocop:enable Metrics/MethodLength
