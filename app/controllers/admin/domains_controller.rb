@@ -40,7 +40,8 @@ module Admin
     # rubocop: enable Metrics/AbcSize
 
     def show
-      @domain.valid?
+      # Validation is needed to warn users
+      @domain.validate
     end
 
     def edit
