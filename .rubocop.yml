@@ -2,3 +2,5 @@ inherit_from: .rubocop_todo.yml
 
 Style/Alias:
   EnforcedStyle: prefer_alias_method
+Style/TrailingCommaInLiteral:
+  EnforcedStyleForMultiline: consistent_comma
