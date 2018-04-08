@@ -1,7 +1,7 @@
 module Admin
   class DomainsController < BaseController
-    load_and_authorize_resource
-    before_action :set_domain, only: [:show, :edit, :update]
+    before_action :set_domain, only: %i[show edit update]
+    authorize_resource
     helper_method :force_delete_templates
 
     # rubocop: disable Metrics/PerceivedComplexity
