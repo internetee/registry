@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Domain do
-  it { is_expected.to alias_attribute(:force_delete_time, :force_delete_at) }
-
   before :example do
     create(:zone, origin: 'ee')
   end

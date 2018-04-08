@@ -1,10 +1,6 @@
 module Concerns::Domain::ForceDelete
   extend ActiveSupport::Concern
 
-  included do
-    alias_attribute :force_delete_time, :force_delete_at
-  end
-
   def force_delete_scheduled?
     statuses.include?(DomainStatus::FORCE_DELETE)
   end
