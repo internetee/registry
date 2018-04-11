@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class NameserverGlueRecordTest < ActiveSupport::TestCase
-  def setup
+  setup do
     @nameserver = nameservers(:shop_ns1)
   end
 

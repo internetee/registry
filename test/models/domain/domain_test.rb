@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class DomainTest < ActiveSupport::TestCase
-  def setup
+  setup do
     @domain = domains(:shop)
   end
 

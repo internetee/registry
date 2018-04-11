@@ -12,9 +12,14 @@ class ContactIdenticalTest < ActiveSupport::TestCase
     org_name
   ]
 
-  def setup
+  setup do
+    @original_address_processing = Setting.address_processing
     @contact = contacts(:william)
     @identical = contacts(:identical_to_william)
+  end
+
+  teardown do
+    Setting.address_processing = @original_address_processing
   end
 
   def test_returns_identical
@@ -33,30 +38,24 @@ class ContactIdenticalTest < ActiveSupport::TestCase
     assert_nil @contact.identical(@identical.registrar)
   end
 
-  def test_takes_address_into_account_when_processing_enabled
+  def test_takes_address_into_account_when_address_processing_is_on
+    Setting.address_processing = true
+
     Contact.address_attribute_names.each do |attribute|
       previous_value = @identical.public_send(attribute)
       @identical.update_attribute(attribute, 'other')
-
-      Contact.stub :address_processing?, true do
-        assert_nil @contact.identical(@identical.registrar)
-      end
-
+      assert_nil @contact.identical(@identical.registrar)
       @identical.update_attribute(attribute, previous_value)
     end
   end
 
-  def test_ignores_address_when_processing_disabled
+  def test_ignores_address_when_address_processing_is_off
     Setting.address_processing = false
 
     Contact.address_attribute_names.each do |attribute|
       previous_value = @identical.public_send(attribute)
       @identical.update_attribute(attribute, 'other')
-
-      Contact.stub :address_processing?, false do
-        assert_equal @identical, @contact.identical(@identical.registrar)
-      end
-
+      assert_equal @identical, @contact.identical(@identical.registrar)
       @identical.update_attribute(attribute, previous_value)
     end
   end
