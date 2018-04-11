@@ -94,13 +94,13 @@ class BankLink
 
     def complete_payment
       if valid?
-        transaction = BankTransaction.find_by(description: params["VK_MSG"])
-        transaction.sum  = BigDecimal.new(params["VK_AMOUNT"].to_s)
+        transaction                 = BankTransaction.find_by(description: params["VK_MSG"])
+        transaction.sum             = BigDecimal.new(params["VK_AMOUNT"].to_s)
         transaction.bank_reference  = params['VK_T_NO']
         transaction.buyer_bank_code = params["VK_SND_ID"]
-        transaction.buyer_iban = params["VK_SND_ACC"]
-        transaction.buyer_name = params["VK_SND_NAME"]
-        transaction.paid_at    = Time.parse(params["VK_T_DATETIME"])
+        transaction.buyer_iban      = params["VK_SND_ACC"]
+        transaction.buyer_name      = params["VK_SND_NAME"]
+        transaction.paid_at         = Time.parse(params["VK_T_DATETIME"])
         transaction.save!
 
         transaction.autobind_invoice

@@ -30,6 +30,7 @@ class ActionDispatch::IntegrationTest
 
   def teardown
     Warden.test_reset!
+    WebMock.reset!
     Capybara.reset_sessions!
     Capybara.use_default_driver
   end

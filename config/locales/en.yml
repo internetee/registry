@@ -543,7 +543,6 @@ en:
   your_current_account_balance_is: 'Your current account balance is %{balance} %{currency}'
   billing: 'Billing'
   your_account: 'Your account'
-  pay_by_bank_link: 'Pay by bank link'
   issue_date: 'Issue date'
   due_date: 'Due date'
   payment_term: 'Payment term'
