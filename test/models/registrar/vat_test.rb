@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class RegistrarVATTest < ActiveSupport::TestCase
-  def setup
+  setup do
     @registrar = registrars(:bestnames)
   end
 

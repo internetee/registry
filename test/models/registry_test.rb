@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class RegistryTest < ActiveSupport::TestCase
-  def setup
+  setup do
     @registry = Registry.send(:new)
   end
 

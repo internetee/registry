@@ -3,7 +3,7 @@ require 'test_helper'
 class AdminAreaRegistrarDetailsTest < ActionDispatch::IntegrationTest
   include ActionView::Helpers::NumberHelper
 
-  def setup
+  setup do
     login_as users(:admin)
     @registrar = registrars(:complete)
   end

@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class BalanceTopUpTest < ActionDispatch::IntegrationTest
-  def setup
+  setup do
     login_as users(:api_bestnames)
   end
 
