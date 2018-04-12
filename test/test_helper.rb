@@ -14,6 +14,7 @@ require 'webmock/minitest'
 require 'support/rails5_assetions' # Remove once upgraded to Rails 5
 
 Setting.address_processing = false
+Setting.registry_country_code = 'US'
 
 class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods

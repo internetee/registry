@@ -3,12 +3,6 @@ require 'test_helper'
 class AdminAreaNewRegistrarTest < ActionDispatch::IntegrationTest
   setup do
     login_as users(:admin)
-    @original_registry_country_code = Setting.registry_country_code
-    Setting.registry_country_code = 'DE'
-  end
-
-  teardown do
-    Setting.registry_country_code = @original_registry_country_code
   end
 
   def test_new_registrar_creation_with_required_params
@@ -18,7 +12,7 @@ class AdminAreaNewRegistrarTest < ActionDispatch::IntegrationTest
     fill_in 'Name', with: 'Brand new names'
     fill_in 'Reg no', with: '55555555'
     fill_in 'Contact e-mail', with: 'test@example.com'
-    select 'Germany', from: 'Country'
+    select 'United States', from: 'Country'
     fill_in 'Accounting customer code', with: 'test'
     fill_in 'Code', with: 'test'
 
