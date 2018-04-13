@@ -15,6 +15,12 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+# Add "db" to the list hosts on which you can run `rake db:setup:all`
+# Only allow that in test and development.
+if ['development', 'test'].include?(Rails.env)
+  ActiveRecord::Tasks::DatabaseTasks::LOCAL_HOSTS << "db"
+end
+
 module DomainNameRegistry
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
