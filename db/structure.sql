@@ -1003,7 +1003,7 @@ CREATE TABLE invoices (
     currency character varying NOT NULL,
     description character varying,
     reference_no character varying,
-    vat_prc numeric(10,2) NOT NULL,
+    vat_rate numeric(4,3),
     paid_at timestamp without time zone,
     seller_id integer,
     seller_name character varying NOT NULL,
@@ -1036,8 +1036,9 @@ CREATE TABLE invoices (
     updator_str character varying,
     number integer,
     cancelled_at timestamp without time zone,
-    sum_cache numeric(10,2),
-    in_directo boolean DEFAULT false
+    total numeric(10,2) NOT NULL,
+    in_directo boolean DEFAULT false,
+    buyer_vat_no character varying
 );
 
 
@@ -2153,11 +2154,11 @@ CREATE TABLE registrars (
     code character varying NOT NULL,
     website character varying,
     accounting_customer_code character varying NOT NULL,
-    vat boolean,
     legacy_id integer,
     reference_no character varying,
     test_registrar boolean DEFAULT false,
-    language character varying NOT NULL
+    language character varying NOT NULL,
+    vat_rate numeric(4,3)
 );
 
 
@@ -4668,6 +4669,16 @@ INSERT INTO schema_migrations (version) VALUES ('20180214213743');
 
 INSERT INTO schema_migrations (version) VALUES ('20180218004148');
 
+INSERT INTO schema_migrations (version) VALUES ('20180228055259');
+
+INSERT INTO schema_migrations (version) VALUES ('20180228064342');
+
+INSERT INTO schema_migrations (version) VALUES ('20180228070102');
+
+INSERT INTO schema_migrations (version) VALUES ('20180228070431');
+
+INSERT INTO schema_migrations (version) VALUES ('20180228074442');
+
 INSERT INTO schema_migrations (version) VALUES ('20180306180401');
 
 INSERT INTO schema_migrations (version) VALUES ('20180306181538');
@@ -4695,4 +4706,10 @@ INSERT INTO schema_migrations (version) VALUES ('20180309053921');
 INSERT INTO schema_migrations (version) VALUES ('20180309054510');
 
 INSERT INTO schema_migrations (version) VALUES ('20180310142630');
+
+INSERT INTO schema_migrations (version) VALUES ('20180313090437');
+
+INSERT INTO schema_migrations (version) VALUES ('20180313124751');
+
+INSERT INTO schema_migrations (version) VALUES ('20180314122722');
 

@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class ContactTransferTest < ActiveSupport::TestCase
-  def setup
+  setup do
     @contact = contacts(:john)
     @new_registrar = registrars(:goodnames)
   end

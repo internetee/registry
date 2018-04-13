@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class AdminAreaDeleteRegistrarTest < ActionDispatch::IntegrationTest
-  def setup
+  setup do
     login_as users(:admin)
   end
 

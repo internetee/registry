@@ -28,11 +28,17 @@ class Invoice < ActiveRecord::Base
   validates :billing_email, email_format: { message: :invalid }, allow_blank: true
 
   validates :due_date, :currency, :seller_name,
-            :seller_iban, :buyer_name, :invoice_items, :vat_prc, presence: true
+            :seller_iban, :buyer_name, :invoice_items, presence: true
+  validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than: 100 },
+            allow_nil: true
 
-  before_create :set_invoice_number, :check_vat
+  before_create :set_invoice_number
+  before_create :apply_default_vat_rate, unless: :vat_rate?
+  before_create :calculate_total, unless: :total?
+  before_create :apply_default_buyer_vat_no, unless: :buyer_vat_no?
 
-  before_save   :check_vat
+  attribute :vat_rate, ::Type::VATRate.new
+  attr_readonly :vat_rate
 
   def set_invoice_number
     last_no = Invoice.order(number: :desc).where('number IS NOT NULL').limit(1).pluck(:number).first
@@ -49,14 +55,6 @@ class Invoice < ActiveRecord::Base
     logger.error('INVOICE NUMBER LIMIT REACHED, COULD NOT GENERATE INVOICE')
     false
   end
-
-  def check_vat
-    if buyer.country_code != 'EE' && buyer.vat_no.present?
-      self.vat_prc = 0
-    end
-  end
-
-  before_save -> { self.sum_cache = sum }
 
   class << self
     def cancel_overdue_invoices
@@ -106,12 +104,12 @@ class Invoice < ActiveRecord::Base
   def buyer_country
     Country.new(buyer_country_code)
   end
-  
+
 # order is used for directo/banklink description
   def order
     "Order nr. #{number}"
   end
-  
+
   def pdf(html)
     kit = PDFKit.new(html)
     kit.to_pdf
@@ -152,15 +150,31 @@ class Invoice < ActiveRecord::Base
     invoice_items
   end
 
-  def sum_without_vat
-    (items.map(&:item_sum_without_vat).sum).round(2)
+  def subtotal
+    invoice_items.map(&:item_sum_without_vat).reduce(:+)
   end
 
-  def vat
-    (sum_without_vat * vat_prc).round(2)
+  def vat_amount
+    return 0 unless vat_rate
+    subtotal * vat_rate / 100
   end
 
-  def sum
-    (sum_without_vat + vat).round(2)
+  def total
+    calculate_total unless total?
+    read_attribute(:total)
+  end
+
+  private
+
+  def apply_default_vat_rate
+    self.vat_rate = buyer.effective_vat_rate
+  end
+
+  def apply_default_buyer_vat_no
+    self.buyer_vat_no = buyer.vat_no
+  end
+
+  def calculate_total
+    self.total = subtotal + vat_amount
   end
 end

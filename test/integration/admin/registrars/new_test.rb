@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class AdminAreaNewRegistrarTest < ActionDispatch::IntegrationTest
-  def setup
+  setup do
     login_as users(:admin)
   end
 
@@ -12,6 +12,7 @@ class AdminAreaNewRegistrarTest < ActionDispatch::IntegrationTest
     fill_in 'Name', with: 'Brand new names'
     fill_in 'Reg no', with: '55555555'
     fill_in 'Contact e-mail', with: 'test@example.com'
+    select 'United States', from: 'Country'
     fill_in 'Accounting customer code', with: 'test'
     fill_in 'Code', with: 'test'
 

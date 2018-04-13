@@ -19,6 +19,15 @@ class Registrar < ActiveRecord::Base
   validates :language, presence: true
   validate :forbid_special_code
 
+  validates :vat_rate, presence: true, if: 'foreign_vat_payer? && vat_no.blank?'
+  validates :vat_rate, absence: true, if: :home_vat_payer?
+  validates :vat_rate, absence: true, if: 'foreign_vat_payer? && vat_no?'
+  validates :vat_rate, numericality: { greater_than_or_equal_to: 0, less_than: 100 },
+            allow_nil: true
+
+  validate :forbid_special_code
+
+  attribute :vat_rate, ::Type::VATRate.new
   after_initialize :set_defaults
   before_validation :generate_iso_11649_reference_no
 
@@ -53,7 +62,6 @@ class Registrar < ActiveRecord::Base
       payment_term: 'prepayment',
       description: description,
       currency: 'EUR',
-      vat_prc: Setting.registry_vat_prc,
       seller_name: Setting.registry_juridical_name,
       seller_reg_no: Setting.registry_reg_no,
       seller_iban: Setting.registry_iban,
@@ -69,7 +77,7 @@ class Registrar < ActiveRecord::Base
       seller_url: Setting.registry_url,
       seller_email: Setting.registry_email,
       seller_contact_name: Setting.registry_invoice_contact,
-      buyer_id: id,
+      buyer: self,
       buyer_name: name,
       buyer_reg_no: reg_no,
       buyer_country_code: country_code,
@@ -100,11 +108,6 @@ class Registrar < ActiveRecord::Base
 
   def debit!(args)
     args[:sum] *= -1
-    args[:currency] = 'EUR'
-    cash_account.account_activities.create!(args)
-  end
-
-  def credit!(args)
     args[:currency] = 'EUR'
     cash_account.account_activities.create!(args)
   end
@@ -144,6 +147,14 @@ class Registrar < ActiveRecord::Base
     end
   end
 
+  def effective_vat_rate
+    if home_vat_payer?
+      Registry.instance.vat_rate
+    else
+      vat_rate
+    end
+  end
+
   private
 
   def set_defaults
@@ -173,5 +184,13 @@ class Registrar < ActiveRecord::Base
       self.reference_no = "RF#{check_digits}#{base}"
       break unless self.class.exists?(reference_no: reference_no)
     end
+  end
+
+  def home_vat_payer?
+    country == Registry.instance.legal_address_country
+  end
+
+  def foreign_vat_payer?
+    !home_vat_payer?
   end
 end

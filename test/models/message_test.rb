@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class MessageTest < ActiveSupport::TestCase
-  def setup
+  setup do
     @message = messages(:greeting)
   end
 
