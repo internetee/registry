@@ -29,7 +29,7 @@ class RegistrarTest < ActiveSupport::TestCase
     assert @registrar.invalid?
   end
 
-  def test_requires_country_code
+  def test_invalid_without_country_code
     @registrar.country_code = ''
     assert @registrar.invalid?
   end

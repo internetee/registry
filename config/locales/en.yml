@@ -538,7 +538,6 @@ en:
   invoice_number: Invoice no.
   seller: 'Seller'
   prepayment: 'Prepayment'
-  vat: 'VAT (%{vat_prc}%)'
   unpaid: 'Unpaid'
   your_current_account_balance_is: 'Your current account balance is %{balance} %{currency}'
   billing: 'Billing'
@@ -556,7 +555,6 @@ en:
   unit: 'Unit'
   price: 'Price'
   total: 'Total'
-  total_without_vat: 'Total without VAT'
   paid_at: 'Paid at'
   invoice: 'Invoice'
   bank_statements: 'Bank statements'
@@ -762,5 +760,6 @@ en:
 
   attributes:
     vat_no: VAT number
+    vat_rate: VAT rate
     ipv4: IPv4
     ipv6: IPv6
