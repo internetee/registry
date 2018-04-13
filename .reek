@@ -191,7 +191,6 @@ DuplicateMethodCall:
   - Registrant::SessionsController#mid_status
   - Registrant::WhoisController#index
   - Registrar::AccountActivitiesController#index
-  - Registrar::BaseController#check_ip
   - Registrar::ContactsController#download_list
   - Registrar::ContactsController#index
   - Registrar::ContactsController#normalize_search_parameters
@@ -666,7 +665,6 @@ TooManyStatements:
   - Registrant::SessionsController#mid
   - Registrant::SessionsController#mid_status
   - Registrar::AccountActivitiesController#index
-  - Registrar::BaseController#check_ip
   - Registrar::ContactsController#download_list
   - Registrar::ContactsController#index
   - Registrar::ContactsController#normalize_search_parameters

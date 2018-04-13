@@ -55,8 +55,8 @@ class Registrar
     end
 
     def normalize_search_parameters
-      params[:q][:sum_cache_gteq].gsub!(',', '.') if params[:q][:sum_cache_gteq]
-      params[:q][:sum_cache_lteq].gsub!(',', '.') if params[:q][:sum_cache_lteq]
+      params[:q][:total_gteq].gsub!(',', '.') if params[:q][:total_gteq]
+      params[:q][:total_lteq].gsub!(',', '.') if params[:q][:total_lteq]
 
       ca_cache = params[:q][:due_date_lteq]
       begin

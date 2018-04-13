@@ -3,6 +3,10 @@ bestnames:
   reg_no: 1234
   code: bestnames
   email: info@bestnames.test
+  street: Main Street
+  zip: 12345
+  city: New York
+  state: New York
   country_code: US
   accounting_customer_code: bestnames
   language: en
@@ -13,6 +17,36 @@ goodnames:
   reg_no: 12345
   code: goodnames
   email: info@goodnames.test
-  country_code: US
+  country_code: DE
+  vat_no: DE123456789
   accounting_customer_code: goodnames
+  language: en
+
+not_in_use:
+  name: any
+  reg_no: any
+  code: any
+  email: any@example.com
+  country_code: US
+  accounting_customer_code: any
+  language: en
+
+complete:
+  name: Complete Names
+  reg_no: 123456
+  code: completenames
+  email: completenames@example.com
+  country_code: US
+  accounting_customer_code: US0001
+  language: en
+  vat_no: US12345
+  vat_rate: 0.05
+
+not_in_use:
+  name: any
+  reg_no: any
+  code: any
+  email: any@example.com
+  country_code: US
+  accounting_customer_code: any
   language: en

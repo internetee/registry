@@ -1489,7 +1489,6 @@
 <text text-anchor="start" x="1600.5" y="-2399.3" font-family="Times,serif" font-size="14.00">zip :string</text>
 <text text-anchor="start" x="1600.5" y="-2384.3" font-family="Times,serif" font-size="14.00">code :string</text>
 <text text-anchor="start" x="1600.5" y="-2369.3" font-family="Times,serif" font-size="14.00">url :string</text>
-<text text-anchor="start" x="1600.5" y="-2339.3" font-family="Times,serif" font-size="14.00">vat :boolean</text>
 <text text-anchor="start" x="1600.5" y="-2324.3" font-family="Times,serif" font-size="14.00">legacy_id :integer</text>
 <text text-anchor="start" x="1600.5" y="-2309.3" font-family="Times,serif" font-size="14.00">reference_no :string</text>
 </g>
@@ -1614,13 +1613,12 @@
 <text text-anchor="start" x="121.5" y="-1571.3" font-family="Times,serif" font-size="14.00">id :integer</text>
 <text text-anchor="start" x="121.5" y="-1556.3" font-family="Times,serif" font-size="14.00">created_at :datetime</text>
 <text text-anchor="start" x="121.5" y="-1541.3" font-family="Times,serif" font-size="14.00">updated_at :datetime</text>
-<text text-anchor="start" x="121.5" y="-1526.3" font-family="Times,serif" font-size="14.00">invoice_type :string</text>
 <text text-anchor="start" x="121.5" y="-1511.3" font-family="Times,serif" font-size="14.00">due_date :datetime</text>
 <text text-anchor="start" x="121.5" y="-1496.3" font-family="Times,serif" font-size="14.00">payment_term :string</text>
 <text text-anchor="start" x="121.5" y="-1481.3" font-family="Times,serif" font-size="14.00">currency :string</text>
 <text text-anchor="start" x="121.5" y="-1466.3" font-family="Times,serif" font-size="14.00">description :string</text>
 <text text-anchor="start" x="121.5" y="-1451.3" font-family="Times,serif" font-size="14.00">reference_no :string</text>
-<text text-anchor="start" x="121.5" y="-1436.3" font-family="Times,serif" font-size="14.00">vat_prc :decimal</text>
+<text text-anchor="start" x="121.5" y="-1436.3" font-family="Times,serif" font-size="14.00">vat_rate :decimal</text>
 <text text-anchor="start" x="121.5" y="-1421.3" font-family="Times,serif" font-size="14.00">paid_at :datetime</text>
 <text text-anchor="start" x="121.5" y="-1406.3" font-family="Times,serif" font-size="14.00">seller_id :integer</text>
 <text text-anchor="start" x="121.5" y="-1391.3" font-family="Times,serif" font-size="14.00">seller_name :string</text>
@@ -1653,7 +1651,7 @@
 <text text-anchor="start" x="121.5" y="-986.3" font-family="Times,serif" font-size="14.00">updator_str :string</text>
 <text text-anchor="start" x="121.5" y="-971.3" font-family="Times,serif" font-size="14.00">number :integer</text>
 <text text-anchor="start" x="121.5" y="-956.3" font-family="Times,serif" font-size="14.00">cancelled_at :datetime</text>
-<text text-anchor="start" x="121.5" y="-941.3" font-family="Times,serif" font-size="14.00">sum_cache :decimal</text>
+<text text-anchor="start" x="121.5" y="-941.3" font-family="Times,serif" font-size="14.00">total :decimal</text>
 </g>
 <!-- Registrar&#45;&gt;Invoice -->
 <g id="edge64" class="edge"><title>Registrar&#45;&gt;Invoice</title>

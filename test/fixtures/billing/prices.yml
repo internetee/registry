@@ -1,7 +1,31 @@
-cash:
-  duration: 1 year
-  price_cents: 500
+create_one_month:
+  duration: 1 month
+  price_cents: 100
   operation_category: create
+  valid_from: 2010-07-05
+  valid_to: 2010-07-05
+  zone: test
+
+renew_one_month:
+  duration: 1 month
+  price_cents: 100
+  operation_category: renew
+  valid_from: 2010-07-05
+  valid_to: 2010-07-05
+  zone: test
+
+create_one_year:
+  duration: 1 year
+  price_cents: 1000
+  operation_category: create
+  valid_from: 2010-07-05
+  valid_to: 2010-07-05
+  zone: test
+
+renew_one_year:
+  duration: 1 year
+  price_cents: 1000
+  operation_category: renew
   valid_from: 2010-07-05
   valid_to: 2010-07-05
   zone: test

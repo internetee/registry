@@ -1,0 +1,20 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <%= t '.header' %>
+    </div>
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt><%= Registrar.human_attribute_name :vat_no %></dt>
+            <dd><%= registrar.vat_no %></dd>
+
+            <dt><%= Registrar.human_attribute_name :vat_rate %></dt>
+            <dd><%= number_to_percentage(registrar.vat_rate, precision: 1) %></dd>
+
+            <dt><%= Registrar.human_attribute_name :accounting_customer_code %></dt>
+            <dd><%= registrar.accounting_customer_code %></dd>
+
+            <dt><%= Registrar.human_attribute_name :billing_email %></dt>
+            <dd><%= registrar.billing_email %></dd>
+        </dl>
+    </div>
+</div>

@@ -998,13 +998,12 @@ CREATE TABLE invoices (
     id integer NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    invoice_type character varying NOT NULL,
     due_date timestamp without time zone NOT NULL,
     payment_term character varying,
     currency character varying NOT NULL,
     description character varying,
     reference_no character varying,
-    vat_prc numeric(10,2) NOT NULL,
+    vat_rate numeric(4,3),
     paid_at timestamp without time zone,
     seller_id integer,
     seller_name character varying NOT NULL,
@@ -1037,8 +1036,9 @@ CREATE TABLE invoices (
     updator_str character varying,
     number integer,
     cancelled_at timestamp without time zone,
-    sum_cache numeric(10,2),
-    in_directo boolean DEFAULT false
+    total numeric(10,2) NOT NULL,
+    in_directo boolean DEFAULT false,
+    buyer_vat_no character varying
 );
 
 
@@ -2136,29 +2136,29 @@ ALTER SEQUENCE registrant_verifications_id_seq OWNED BY registrant_verifications
 
 CREATE TABLE registrars (
     id integer NOT NULL,
-    name character varying,
-    reg_no character varying,
+    name character varying NOT NULL,
+    reg_no character varying NOT NULL,
     vat_no character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     creator_str character varying,
     updator_str character varying,
     phone character varying,
-    email character varying,
+    email character varying NOT NULL,
     billing_email character varying,
-    country_code character varying,
+    country_code character varying NOT NULL,
     state character varying,
     city character varying,
     street character varying,
     zip character varying,
-    code character varying,
+    code character varying NOT NULL,
     website character varying,
     accounting_customer_code character varying NOT NULL,
-    vat boolean,
     legacy_id integer,
     reference_no character varying,
     test_registrar boolean DEFAULT false,
-    language character varying NOT NULL
+    language character varying NOT NULL,
+    vat_rate numeric(4,3)
 );
 
 
@@ -3244,11 +3244,35 @@ ALTER TABLE ONLY settings
 
 
 --
+-- Name: unique_code; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY registrars
+    ADD CONSTRAINT unique_code UNIQUE (code);
+
+
+--
 -- Name: unique_contact_code; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY contacts
     ADD CONSTRAINT unique_contact_code UNIQUE (code);
+
+
+--
+-- Name: unique_name; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY registrars
+    ADD CONSTRAINT unique_name UNIQUE (name);
+
+
+--
+-- Name: unique_reference_no; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY registrars
+    ADD CONSTRAINT unique_reference_no UNIQUE (reference_no);
 
 
 --
@@ -3851,20 +3875,6 @@ CREATE INDEX index_registrant_verifications_on_created_at ON registrant_verifica
 --
 
 CREATE INDEX index_registrant_verifications_on_domain_id ON registrant_verifications USING btree (domain_id);
-
-
---
--- Name: index_registrars_on_code; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_registrars_on_code ON registrars USING btree (code);
-
-
---
--- Name: index_registrars_on_legacy_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_registrars_on_legacy_id ON registrars USING btree (legacy_id);
 
 
 --
@@ -4659,6 +4669,16 @@ INSERT INTO schema_migrations (version) VALUES ('20180214213743');
 
 INSERT INTO schema_migrations (version) VALUES ('20180218004148');
 
+INSERT INTO schema_migrations (version) VALUES ('20180228055259');
+
+INSERT INTO schema_migrations (version) VALUES ('20180228064342');
+
+INSERT INTO schema_migrations (version) VALUES ('20180228070102');
+
+INSERT INTO schema_migrations (version) VALUES ('20180228070431');
+
+INSERT INTO schema_migrations (version) VALUES ('20180228074442');
+
 INSERT INTO schema_migrations (version) VALUES ('20180306180401');
 
 INSERT INTO schema_migrations (version) VALUES ('20180306181538');
@@ -4678,4 +4698,18 @@ INSERT INTO schema_migrations (version) VALUES ('20180306183540');
 INSERT INTO schema_migrations (version) VALUES ('20180306183549');
 
 INSERT INTO schema_migrations (version) VALUES ('20180308123240');
+
+INSERT INTO schema_migrations (version) VALUES ('20180309053424');
+
+INSERT INTO schema_migrations (version) VALUES ('20180309053921');
+
+INSERT INTO schema_migrations (version) VALUES ('20180309054510');
+
+INSERT INTO schema_migrations (version) VALUES ('20180310142630');
+
+INSERT INTO schema_migrations (version) VALUES ('20180313090437');
+
+INSERT INTO schema_migrations (version) VALUES ('20180313124751');
+
+INSERT INTO schema_migrations (version) VALUES ('20180314122722');
 

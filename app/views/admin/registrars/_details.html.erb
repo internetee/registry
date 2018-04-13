@@ -1,0 +1,27 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <%= t '.header' %>
+    </div>
+
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt><%= Registrar.human_attribute_name :name %></dt>
+            <dd><%= registrar.name %></dd>
+
+            <dt><%= Registrar.human_attribute_name :reg_no %></dt>
+            <dd><%= registrar.reg_no %></dd>
+
+            <dt><%= Registrar.human_attribute_name :reference_no %></dt>
+            <dd><%= registrar.reference_no %></dd>
+
+            <dt><%= Registrar.human_attribute_name :code %></dt>
+            <dd><%= registrar.code %></dd>
+
+            <dt><%= Registrar.human_attribute_name :balance %></dt>
+            <dd><%= registrar.balance %></dd>
+
+            <dt><%= Registrar.human_attribute_name :website %></dt>
+            <dd><%= registrar.website %></dd>
+        </dl>
+    </div>
+</div>

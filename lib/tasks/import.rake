@@ -87,7 +87,6 @@ namespace :import do
         zip: x.postalcode.try(:strip),
         url: x.url.try(:strip),
         accounting_customer_code: x.directo_handle.try(:strip),
-        vat: x.vat,
         legacy_id: x.id,
         creator_str: user,
         updator_str: user,
@@ -100,7 +99,7 @@ namespace :import do
     puts "-----> Generating reference numbers"
 
     Registrar.all.each do |x|
-      x.generate_iso_11649_reference_no
+      x.send(:generate_iso_11649_reference_no)
       x.save(validate: false)
     end
 
