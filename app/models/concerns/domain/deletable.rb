@@ -38,6 +38,6 @@ module Concerns::Domain::Deletable
   end
 
   def do_not_delete_later
-    QueJob.find_by!("args->>0 = '#{id}'").delete
+    QueJob.find_by!("args->>0 = '#{id}'", job_class: DomainDeleteJob.name).delete
   end
 end
