@@ -76,29 +76,6 @@ class DomainCron
     marked
   end
 
-  #doing nothing, deprecated
-
-  def self.start_delete_period
-    # begin
-    #   STDOUT << "#{Time.zone.now.utc} - Setting delete_candidate to domains\n" unless Rails.env.test?
-    #
-    #   d = Domain.where('delete_at <= ?', Time.zone.now)
-    #   marked = 0
-    #   real = 0
-    #   d.each do |domain|
-    #     next unless domain.delete_candidateable?
-    #     real += 1
-    #     domain.statuses << DomainStatus::DELETE_CANDIDATE
-    #     STDOUT << "#{Time.zone.now.utc} DomainCron.start_delete_period: ##{domain.id} (#{domain.name})\n" unless Rails.env.test?
-    #     ::PaperTrail.whodunnit = "cron - #{__method__}"
-    #     domain.save(validate: false) and marked += 1
-    #   end
-    # ensure # the operator should see what was accomplished
-    #   STDOUT << "#{Time.zone.now.utc} - Finished setting delete_candidate -  #{marked} out of #{real} successfully set\n" unless Rails.env.test?
-    # end
-    # marked
-  end
-
   def self.destroy_delete_candidates
     STDOUT << "#{Time.zone.now.utc} - Destroying domains\n" unless Rails.env.test?
 
@@ -112,23 +89,4 @@ class DomainCron
 
     STDOUT << "#{Time.zone.now.utc} - Job destroy added for #{c} domains\n" unless Rails.env.test?
   end
-
-  # rubocop: enable Metrics/AbcSize
-  # rubocop:enable Rails/FindEach
-  # rubocop: enable Metrics/LineLength
-  def self.destroy_with_message(domain)
-    domain.destroy
-    bye_bye = domain.versions.last
-    domain.registrar.messages.create!(
-        body: "#{I18n.t(:domain_deleted)}: #{domain.name}",
-        attached_obj_id: bye_bye.id,
-        attached_obj_type: bye_bye.class.to_s # DomainVersion
-    )
-  end
-
-  def self.delete_legal_doc_duplicates
-    Rake::Task['legal_doc:remove_duplicates'].reenable
-    Rake::Task['legal_doc:remove_duplicates'].invoke
-  end
-
 end

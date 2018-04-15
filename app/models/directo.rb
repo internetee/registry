@@ -3,7 +3,7 @@ class Directo < ActiveRecord::Base
   belongs_to :item, polymorphic: true
 
   def self.send_receipts
-    new_trans = Invoice.where(invoice_type: "DEB", in_directo: false).where(cancelled_at: nil)
+    new_trans = Invoice.where(in_directo: false).where(cancelled_at: nil)
     total     = new_trans.count
     counter   = 0
     Rails.logger.info("[DIRECTO] Will try to send #{total} invoices")
@@ -15,7 +15,7 @@ class Directo < ActiveRecord::Base
           group.each do |invoice|
 
             if invoice.account_activity.nil? || invoice.account_activity.bank_transaction.nil? ||
-                invoice.account_activity.bank_transaction.sum.nil? || invoice.account_activity.bank_transaction.sum != invoice.sum_cache
+                invoice.account_activity.bank_transaction.sum.nil? || invoice.account_activity.bank_transaction.sum != invoice.total
               Rails.logger.info("[DIRECTO] Invoice #{invoice.number} has been skipped")
               next
             end
@@ -29,12 +29,14 @@ class Directo < ActiveRecord::Base
                 "InvoiceDate" => invoice.created_at.strftime("%Y-%m-%dT%H:%M:%S"),
                 "PaymentTerm" => Setting.directo_receipt_payment_term,
                 "Currency"    => invoice.currency,
-                "CustomerCode"=> invoice.buyer.accounting_customer_code
+                "CustomerCode"=> invoice.buyer.accounting_customer_code,
+                'TotalVAT' => ActionController::Base.helpers.number_with_precision(invoice.vat_amount, precision: 2, separator: '.')
             ){
               xml.line(
                   "ProductID"      => Setting.directo_receipt_product_name,
                   "Quantity"       => 1,
-                  "UnitPriceWoVAT" => ActionController::Base.helpers.number_with_precision(invoice.sum_cache/(1+invoice.vat_prc), precision: 2, separator: "."),
+                  "UnitPriceWoVAT" => ActionController::Base.helpers.number_with_precision(invoice.subtotal, precision: 2, separator: '.'),
+                  'VATCode' => invoice.buyer_vat_no,
                   "ProductName"    => invoice.order
               )
             }

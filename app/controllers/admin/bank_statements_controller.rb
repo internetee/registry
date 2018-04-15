@@ -24,7 +24,7 @@ module Admin
       @invoice = Invoice.find_by(id: params[:invoice_id])
       @bank_transaction = @bank_statement.bank_transactions.build(
         description: @invoice.to_s,
-        sum: @invoice.sum,
+        sum: @invoice.total,
         reference_no: @invoice.reference_no,
         paid_at: Time.zone.now.to_date,
         currency: 'EUR'

@@ -209,11 +209,6 @@ class Domain < ActiveRecord::Base
     DomainCron.send(__method__)
   end
 
-  def self.start_delete_period
-    ActiveSupport::Deprecation.instance.deprecation_warning(DomainCron, __method__)
-    DomainCron.send(__method__)
-  end
-
   def self.destroy_delete_candidates
     ActiveSupport::Deprecation.instance.deprecation_warning(DomainCron, __method__)
     DomainCron.send(__method__)

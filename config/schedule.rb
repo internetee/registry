@@ -46,10 +46,6 @@ if @cron_group == 'registry'
     runner 'DomainCron.start_expire_period'
   end
 
-  every 50.minutes do
-    runner 'DomainCron.start_delete_period'
-  end
-
   every 52.minutes do
     runner 'DomainCron.start_redemption_grace_period'
   end
