@@ -3,7 +3,7 @@ require 'test_helper'
 class AdminAreaDomainForceDeleteTest < ActionDispatch::IntegrationTest
   include ActionMailer::TestHelper
 
-  def setup
+  setup do
     login_as users(:admin)
     @domain = domains(:shop)
     ActionMailer::Base.deliveries.clear

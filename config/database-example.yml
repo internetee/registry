@@ -4,14 +4,14 @@
 # Registrant example is at database-example-registrant.yml file
 
 default: &default
-  host: localhost
   adapter: postgresql
   encoding: unicode
-  pool: 5
-  username: registry
-  password: registry_pwd
+  pool: <%= ENV.fetch("APP_DB_MAX_THREADS") { 5 } %>
+  host: <%= ENV.fetch("APP_DBHOST") { "localhost" } %>
+  username: <%= ENV.fetch("APP_DBUSER") { "postgres" } %>
+  password:
 
-#    
+#
 # Staging config For EPP, REPP, Admin, Registrar
 #
 
@@ -27,7 +27,7 @@ api_log_staging:
   <<: *default
   database: registry_api_log_staging
 
-#    
+#
 # Production config For EPP, REPP, Admin, Registrar
 #
 production:

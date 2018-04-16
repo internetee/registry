@@ -13,10 +13,8 @@ describe Invoice do
         "Currency is missing",
         "Due date is missing",
         "Invoice items is missing",
-        "Invoice type is missing",
         "Seller iban is missing",
         "Seller name is missing",
-        "Vat prc is missing"
       ])
     end
 
@@ -50,20 +48,6 @@ describe Invoice do
     it 'should return correct addresses' do
       @invoice = create(:invoice)
       @invoice.seller_address.should == 'Paldiski mnt. 123, Tallinn'
-    end
-
-    it 'should calculate sums correctly' do
-      @invoice = create(:invoice)
-      @invoice.vat_prc.should == BigDecimal.new('0.2')
-      @invoice.sum_without_vat.should == BigDecimal.new('300.0')
-      @invoice.vat.should == BigDecimal.new('60.0')
-      @invoice.sum.should == BigDecimal.new('360.0')
-
-      ii = @invoice.items.first
-      ii.item_sum_without_vat.should == BigDecimal.new('150.0')
-
-      ii = @invoice.items.last
-      ii.item_sum_without_vat.should == BigDecimal.new('150.0')
     end
 
     it 'should cancel overdue invoices' do
