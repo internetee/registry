@@ -23,7 +23,6 @@ namespace :dev do
              period: period,
              period_unit: period_unit,
              registered_at: reg_time,
-             valid_from: reg_time,
              expire_time: reg_time + period.send(duration.second.to_sym),
              created_at: reg_time,
              updated_at: reg_time,
@@ -151,7 +150,6 @@ namespace :dev do
                  period: period,
                  period_unit: 'y',
                  registered_at: Time.zone.now,
-                 valid_from: Time.zone.now,
                  expire_time: Time.zone.now + period.years,
                  registrar: registrar,
                  registrant: registrants.sample)
