@@ -215,17 +215,6 @@ class Domain < ActiveRecord::Base
   end
 
   class << self
-    def included
-      includes(
-        :registrant,
-        :registrar,
-        :nameservers,
-        :whois_record,
-        { tech_contacts: :registrar },
-        { admin_contacts: :registrar }
-      )
-    end
-
     def nameserver_required?
       Setting.nameserver_required
     end
