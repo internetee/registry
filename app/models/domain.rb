@@ -209,28 +209,12 @@ class Domain < ActiveRecord::Base
     DomainCron.send(__method__)
   end
 
-  def self.start_delete_period
-    ActiveSupport::Deprecation.instance.deprecation_warning(DomainCron, __method__)
-    DomainCron.send(__method__)
-  end
-
   def self.destroy_delete_candidates
     ActiveSupport::Deprecation.instance.deprecation_warning(DomainCron, __method__)
     DomainCron.send(__method__)
   end
 
   class << self
-    def included
-      includes(
-        :registrant,
-        :registrar,
-        :nameservers,
-        :whois_record,
-        { tech_contacts: :registrar },
-        { admin_contacts: :registrar }
-      )
-    end
-
     def nameserver_required?
       Setting.nameserver_required
     end

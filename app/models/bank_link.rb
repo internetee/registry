@@ -29,7 +29,7 @@ class BankLink
       hash["VK_VERSION"]  = "008"
       hash["VK_SND_ID"]   = ENV["payments_#{type}_seller_account"]
       hash["VK_STAMP"]    = invoice.number
-      hash["VK_AMOUNT"]   = number_with_precision(invoice.sum_cache, :precision => 2, :separator => ".")
+      hash["VK_AMOUNT"]   = number_with_precision(invoice.total, :precision => 2, :separator => ".")
       hash["VK_CURR"]     = invoice.currency
       hash["VK_REF"]      = ""
       hash["VK_MSG"]      = invoice.order
@@ -140,7 +140,7 @@ class BankLink
 
     def validate_amount
       source = number_with_precision(BigDecimal.new(params["VK_AMOUNT"].to_s), precision: 2, separator: ".")
-      target = number_with_precision(invoice.sum_cache, precision: 2, separator: ".")
+      target = number_with_precision(invoice.total, precision: 2, separator: ".")
 
       source == target
     end
