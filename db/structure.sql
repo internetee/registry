@@ -872,7 +872,7 @@ CREATE TABLE domains (
     registrar_id integer NOT NULL,
     registered_at timestamp without time zone,
     status character varying,
-    valid_to timestamp without time zone,
+    valid_to timestamp without time zone NOT NULL,
     registrant_id integer NOT NULL,
     transfer_code character varying NOT NULL,
     created_at timestamp without time zone,
@@ -4713,4 +4713,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180313124751');
 INSERT INTO schema_migrations (version) VALUES ('20180314122722');
 
 INSERT INTO schema_migrations (version) VALUES ('20180327151906');
+
+INSERT INTO schema_migrations (version) VALUES ('20180331200125');
 
