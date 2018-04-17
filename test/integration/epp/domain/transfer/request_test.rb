@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class EppDomainTransferRequestTest < ActionDispatch::IntegrationTest
-  def setup
+  setup do
     @domain = domains(:shop)
     @new_registrar = registrars(:goodnames)
     Setting.transfer_wait_time = 0
