@@ -66,11 +66,9 @@
       %p
         = link_to t(:pending_epp), '#', class: 'js-pending'
 
-  %td{class: changing_css_class(version, "period", "period_unit", "valid_from", "valid_to")}
+  %td{class: changing_css_class(version, "period", "period_unit", "valid_to")}
     %p
       = "#{domain.period}#{domain.period_unit}"
-      %br
-      = "#{l(domain.valid_from, format: :date)}"
       %br
       = "#{l(domain.valid_to, format: :date)}"
 
