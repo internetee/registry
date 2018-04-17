@@ -852,7 +852,6 @@
 <text text-anchor="start" x="1958.5" y="-2181.3" font-family="Times,serif" font-size="14.00">registrar_id :integer</text>
 <text text-anchor="start" x="1958.5" y="-2166.3" font-family="Times,serif" font-size="14.00">registered_at :datetime</text>
 <text text-anchor="start" x="1958.5" y="-2151.3" font-family="Times,serif" font-size="14.00">status :string</text>
-<text text-anchor="start" x="1958.5" y="-2136.3" font-family="Times,serif" font-size="14.00">valid_from :datetime</text>
 <text text-anchor="start" x="1958.5" y="-2121.3" font-family="Times,serif" font-size="14.00">valid_to :datetime</text>
 <text text-anchor="start" x="1958.5" y="-2106.3" font-family="Times,serif" font-size="14.00">registrant_id :integer</text>
 <text text-anchor="start" x="1958.5" y="-2091.3" font-family="Times,serif" font-size="14.00">transfer_code :string</text>
