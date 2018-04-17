@@ -337,7 +337,6 @@ en:
 
   transfer_requested: 'Transfer requested.'
   message_was_not_found: 'Message was not found'
-  zonefile: 'Zonefile'
   only_one_parameter_allowed: 'Only one parameter allowed: %{param_1} or %{param_2}'
   exactly_one_parameter_required: 'Exactly one parameter required: %{params}'
   ds_data_with_key_allowed: 'Allow DS data with key'
