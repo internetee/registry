@@ -91,7 +91,7 @@ class APIDomainContactsTest < ActionDispatch::IntegrationTest
           { 'HTTP_AUTHORIZATION' => http_auth_key }
     assert_response :bad_request
     assert_equal ({ error: { type: 'invalid_request_error',
-                             message: 'Successor contact must be different from predecessor' } }),
+                             message: 'New contact ID must be different from current contact ID' } }),
                  JSON.parse(response.body, symbolize_names: true)
   end
 

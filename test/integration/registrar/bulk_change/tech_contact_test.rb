@@ -16,8 +16,8 @@ class RegistrarAreaTechContactBulkChangeTest < ActionDispatch::IntegrationTest
     visit registrar_domains_url
     click_link 'Bulk change'
 
-    fill_in 'Predecessor', with: 'william-001'
-    fill_in 'Successor', with: 'john-001'
+    fill_in 'Current contact ID', with: 'william-001'
+    fill_in 'New contact ID', with: 'john-001'
     click_on 'Replace technical contacts'
 
     assert_requested request_stub
@@ -36,12 +36,12 @@ class RegistrarAreaTechContactBulkChangeTest < ActionDispatch::IntegrationTest
     visit registrar_domains_url
     click_link 'Bulk change'
 
-    fill_in 'Predecessor', with: 'william-001'
-    fill_in 'Successor', with: 'john-001'
+    fill_in 'Current contact ID', with: 'william-001'
+    fill_in 'New contact ID', with: 'john-001'
     click_on 'Replace technical contacts'
 
     assert_text 'epic fail'
-    assert_field 'Predecessor', with: 'william-001'
-    assert_field 'Successor', with: 'john-001'
+    assert_field 'Current contact ID', with: 'william-001'
+    assert_field 'New contact ID', with: 'john-001'
   end
 end

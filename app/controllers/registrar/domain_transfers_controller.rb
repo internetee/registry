@@ -1,5 +1,5 @@
 class Registrar
-  class DomainTransfersController < DeppController
+  class DomainTransfersController < BulkChangeController
     before_action do
       authorize! :transfer, Depp::Domain
     end
@@ -58,7 +58,7 @@ class Registrar
           redirect_to registrar_domains_url
         else
           @api_errors = parsed_response[:errors]
-          render :new
+          render file: 'registrar/bulk_change/new', locals: { active_tab: :bulk_transfer }
         end
       else
         params[:request] = true # EPP domain:transfer "op" attribute

@@ -22,7 +22,8 @@ module Repp
 
           if predecessor == successor
             error!({ error: { type: 'invalid_request_error',
-                              message: 'Successor contact must be different from predecessor' } },
+                              message: 'New contact ID must be different from current' \
+                                ' contact ID' } },
                    :bad_request)
           end
 

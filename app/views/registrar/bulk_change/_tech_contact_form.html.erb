@@ -7,10 +7,10 @@
 
     <div class="form-group">
         <div class="col-md-2 control-label">
-            <%= label_tag :predecessor %>
+            <%= label_tag :predecessor, t('.predecessor') %>
         </div>
 
-        <div class="col-md-5">
+        <div class="col-md-4">
             <%= text_field_tag :predecessor, params[:predecessor],
                                list: :contacts,
                                required: true,
@@ -21,10 +21,10 @@
 
     <div class="form-group">
         <div class="col-md-2 control-label">
-            <%= label_tag :successor %>
+            <%= label_tag :successor, t('.successor') %>
         </div>
 
-        <div class="col-md-5">
+        <div class="col-md-4">
             <%= text_field_tag :successor, params[:successor],
                                list: :contacts,
                                required: true,
@@ -33,10 +33,23 @@
     </div>
 
     <div class="form-group">
-        <div class="col-md-5 col-md-offset-2 text-right">
+        <div class="col-md-4 col-md-offset-2 text-right">
             <button class="btn btn-warning">
                 <%= t '.submit_btn' %>
             </button>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-6">
+            <a class="btn btn-default btn-xs" role="button" data-toggle="collapse"
+               href="#bulk_change_tech_contact_help" aria-expanded="false"
+               aria-controls="collapseExample"><%= t '.help_btn' %></a>
+            <div class="collapse" id="bulk_change_tech_contact_help">
+                <div class="well">
+                    <%= t '.help' %>
+                </div>
+            </div>
         </div>
     </div>
 <% end %>
