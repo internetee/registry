@@ -6,6 +6,17 @@ class DomainPresenter
     @view = view
   end
 
+  def name_with_status
+    html = domain.name
+
+    if domain.discarded?
+      label = view.content_tag(:span, 'deleteCandidate', class: 'label label-warning')
+      html += " #{label}"
+    end
+
+    html.html_safe
+  end
+
   def expire_time
     view.l(domain.expire_time)
   end

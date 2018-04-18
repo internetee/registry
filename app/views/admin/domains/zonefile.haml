@@ -1,8 +1,0 @@
-- content_for :actions do
-  = link_to(t(:back_to_domain), admin_domain_path(@domain), class: 'btn btn-default')
-= render 'shared/title', name: t(:zonefile)
-
-.row
-  .col-md-12
-    = preserve do
-      %pre= @zonefile
