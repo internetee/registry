@@ -27,27 +27,6 @@ class BankLinkTest < ActiveSupport::TestCase
     travel_back
   end
 
-  def test_form_fields
-    expected_response = {
-      "VK_SERVICE": "1012",
-      "VK_VERSION": "008",
-      "VK_SND_ID": "SEB",
-      "VK_STAMP": nil,
-      "VK_AMOUNT": nil,
-      "VK_CURR": "EUR",
-      "VK_REF": "",
-      "VK_MSG": "Order nr. ",
-      "VK_RETURN": "return.url",
-      "VK_CANCEL": "return.url",
-      "VK_DATETIME": "2018-04-01T00:30:00+0300",
-      "VK_MAC": "fPHKfBNwtyQI5ec1pnrlIUJI6nerGPwnoqx0K9/g40hsgUmum4QE1Eq992FR73pRXyE2+1dUuahEd3s57asM7MOD2Pb8SALA/+hi3jlqjiAAThdikDuJ+83LogSKQljLdd0BHwqe+O0WPeKaOmP2/HltOEIHpY3d399JAi1t7YA=",
-      "VK_ENCODING": "UTF-8",
-      "VK_LANG": "ENG"
-    }.with_indifferent_access
-
-    assert_equal expected_response, @bank_link.form_fields
-  end
-
   def test_is_not_valid_without_response
     assert_equal false, @bank_link.valid_response?
   end

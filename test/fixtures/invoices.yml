@@ -34,4 +34,4 @@ overdue:
 
 for_payments_test:
   <<: *DEFAULTS
-  sum_cache: 100.00
+  total: 100.00

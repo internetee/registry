@@ -113,7 +113,6 @@ end
 group :development, :test do
   gem 'factory_bot_rails'
   gem 'capybara'
-  gem 'capybara-selenium'
   gem 'rspec-rails', '~> 3.6'
   gem 'poltergeist'
 

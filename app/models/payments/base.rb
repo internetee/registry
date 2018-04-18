@@ -27,15 +27,15 @@ module Payments
     end
 
     def complete_transaction
-      fail NotImplementedError
+      raise NotImplementedError
     end
 
     def settled_payment?
-      fail NotImplementedError
+      raise NotImplementedError
     end
 
     def form_fields
-      fail NotImplementedError
+      raise NotImplementedError
     end
 
     def form_url
@@ -43,7 +43,7 @@ module Payments
     end
 
     def valid_response?
-      fail NotImplementedError
+      raise NotImplementedError
     end
   end
 end

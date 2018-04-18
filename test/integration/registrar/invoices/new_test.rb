@@ -1,9 +1,17 @@
 require 'test_helper'
 
 class NewInvoiceTest < ActionDispatch::IntegrationTest
-  def setup
-    super
-    login_as users(:api_bestnames)
+  setup do
+    @user = users(:api_bestnames)
+    login_as @user
+    @original_vat_rate = @user.registrar.vat_rate
+    @user.registrar.vat_rate = 0.2
+  end
+
+  teardown do
+    @user.registrar.vat_rate = @original_vat_rate
+    AccountActivity.destroy_all
+    Invoice.destroy_all
   end
 
   def test_show_balance
@@ -23,7 +31,7 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
 
     assert_text 'Please pay the following invoice'
     assert_text 'Invoice no. 131050'
-    assert_text 'Total without VAT 200,00'
+    assert_text 'Subtotal 200,00 €'
     assert_text 'Pay invoice'
   end
 
@@ -61,7 +69,7 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
 
     assert_text 'Please pay the following invoice'
     assert_text 'Invoice no. 131050'
-    assert_text 'Total without VAT 0,00'
+    assert_text 'Subtotal 0,00 €'
     assert_text 'Pay invoice'
   end
 end

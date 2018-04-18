@@ -96,7 +96,7 @@ Rails.application.routes.draw do
     get  'pay/return/:bank'       => 'payments#back',  as: 'return_payment_with'
     post 'pay/return/:bank'       => 'payments#back'
     put  'pay/return/:bank'       => 'payments#back'
-    post 'pay/response/:bank'     => 'payments#response', as: 'response_payment_with'
+    post 'pay/callback/:bank'     => 'payments#callback', as: 'response_payment_with'
     get  'pay/go/:bank'           => 'payments#pay',   as: 'payment_with'
   end
 

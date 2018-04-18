@@ -1,9 +1,9 @@
 class Registrar
   class PaymentsController < BaseController
-    protect_from_forgery except: :back
+    protect_from_forgery except: [:back, :callback]
 
     skip_authorization_check # actually anyone can pay, no problems at all
-    skip_before_action :authenticate_user!, :check_ip_restriction, only: [:back]
+    skip_before_action :authenticate_user!, :check_ip_restriction, only: [:back, :callback]
     # before_action :check_bank
 
     # to handle existing model we should
@@ -15,7 +15,8 @@ class Registrar
       invoice = Invoice.find(params[:invoice_id])
       opts = {
         return_url: self.registrar_return_payment_with_url(params[:bank], invoice_id: invoice.id),
-        response_url: self.registrar_return_payment_with_url(params[:bank])
+        # TODO: Add required URL
+        response_url: "https://5fd921b0.ngrok.io/registrar/pay/callback/every_pay"
       }
       @payment = ::Payments.create_with_type(params[:bank], invoice, opts)
       @payment.create_transaction
@@ -41,6 +42,20 @@ class Registrar
         flash[:alert] = t(:something_wrong)
       end
       redirect_to registrar_invoice_path(invoice)
+    end
+
+    def callback
+      invoice = Invoice.find(params[:invoice_id])
+      opts = { response: params }
+      @payment = ::Payments.create_with_type(params[:bank], invoice, opts)
+
+      if @payment.valid_response? && @payment.settled_payment?
+        @payment.complete_transaction
+
+        if invoice.binded?
+          render status: 200, json: { ok: :ok }
+        end
+      end
     end
 
     private
