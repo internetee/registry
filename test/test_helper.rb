@@ -14,12 +14,17 @@ require 'webmock/minitest'
 require 'support/rails5_assetions' # Remove once upgraded to Rails 5
 
 Setting.address_processing = false
+Setting.registry_country_code = 'US'
 
 class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
 
   ActiveRecord::Migration.check_pending!
   fixtures :all
+
+  teardown do
+    travel_back
+  end
 end
 
 class ActionDispatch::IntegrationTest
@@ -28,7 +33,7 @@ class ActionDispatch::IntegrationTest
   include Capybara::Minitest::Assertions
   include AbstractController::Translation
 
-  def teardown
+  teardown do
     Warden.test_reset!
     WebMock.reset!
     Capybara.reset_sessions!

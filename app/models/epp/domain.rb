@@ -38,23 +38,12 @@ class Epp::Domain < Domain
     ok
   end
 
-  before_save :link_contacts
-  def link_contacts
-    #TODO: cleanup cache if we think to cache dynamic statuses
-  end
-
-  after_destroy :unlink_contacts
-  def unlink_contacts
-    #TODO: cleanup cache if we think to cache dynamic statuses
-  end
-
   class << self
     def new_from_epp(frame, current_user)
       domain = Epp::Domain.new
       domain.attributes = domain.attrs_from(frame, current_user)
       domain.attach_default_contacts
       domain.registered_at = Time.zone.now
-      domain.valid_from = Time.zone.now
 
       period = domain.period.to_i
       plural_period_unit_name = (domain.period_unit == 'm' ? 'months' : 'years').to_sym

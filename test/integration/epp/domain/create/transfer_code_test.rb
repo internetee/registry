@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class EppDomainCreateTransferCodeTest < ActionDispatch::IntegrationTest
-  def setup
+  setup do
     travel_to Time.zone.parse('2010-07-05')
   end
 

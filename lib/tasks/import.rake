@@ -87,7 +87,6 @@ namespace :import do
         zip: x.postalcode.try(:strip),
         url: x.url.try(:strip),
         accounting_customer_code: x.directo_handle.try(:strip),
-        vat: x.vat,
         legacy_id: x.id,
         creator_str: user,
         updator_str: user,
@@ -337,7 +336,6 @@ namespace :import do
       name
       registrar_id
       registered_at
-      valid_from
       valid_to
       transfer_code
       created_at

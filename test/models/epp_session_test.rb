@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class EppSessionTest < ActiveSupport::TestCase
-  def setup
+  setup do
     @epp_session = epp_sessions(:api_bestnames)
   end
 

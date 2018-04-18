@@ -1,12 +1,13 @@
 DEFAULTS: &DEFAULTS
   created_at: <%= Date.parse '2010-07-05' %>
   due_date: <%= Date.parse '2010-07-06' %>
-  invoice_type: DEB
   currency: EUR
   seller_name: John Doe
   seller_iban: 1234
+  buyer: bestnames
   buyer_name: Jane Doe
-  vat_prc: 0.2
+  vat_rate: 0.1
+  total: 16.50
 
 valid:
   <<: *DEFAULTS
@@ -21,7 +22,7 @@ cancelled:
 
 paid:
   <<: *DEFAULTS
-  sum_cache: 1
+  total: 1
 
 outstanding:
   <<: *DEFAULTS

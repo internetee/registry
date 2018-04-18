@@ -37,7 +37,7 @@
               = f.email_field :bcc, class: 'form-control'
           .form-group
             .col-md-12
-              = f.label :body, t(:html_body)
+              = f.label :body, t('admin.mail_templates.html_body')
               = liquid_help
             .col-md-12
               = f.text_area(:body, class: 'form-control', size: '15x15')
@@ -48,7 +48,7 @@
             .col-md-12
               = f.text_area(:text_body, class: 'form-control', size: '15x15')
 
-  %hr 
+  %hr
   .row
     .col-md-12.text-right
       = button_tag(t(:save), class: 'btn btn-primary')

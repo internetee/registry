@@ -337,7 +337,6 @@ en:
 
   transfer_requested: 'Transfer requested.'
   message_was_not_found: 'Message was not found'
-  zonefile: 'Zonefile'
   only_one_parameter_allowed: 'Only one parameter allowed: %{param_1} or %{param_2}'
   exactly_one_parameter_required: 'Exactly one parameter required: %{params}'
   ds_data_with_key_allowed: 'Allow DS data with key'
@@ -538,7 +537,6 @@ en:
   invoice_number: Invoice no.
   seller: 'Seller'
   prepayment: 'Prepayment'
-  vat: 'VAT (%{vat_prc}%)'
   unpaid: 'Unpaid'
   your_current_account_balance_is: 'Your current account balance is %{balance} %{currency}'
   billing: 'Billing'
@@ -555,7 +553,6 @@ en:
   unit: 'Unit'
   price: 'Price'
   total: 'Total'
-  total_without_vat: 'Total without VAT'
   paid_at: 'Paid at'
   invoice: 'Invoice'
   bank_statements: 'Bank statements'
@@ -730,7 +727,6 @@ en:
   is_registrant: 'Is registrant'
   force_delete_set_on_domain: 'Force delete set on domain %{domain_name}'
   mail_templates: Mail Templates
-  new_mail_template: New mail template
   failure: "It was not saved"
   contact_is_not_valid: 'Contact %{value} is not valid, please fix the invalid contact'
   welcome_to_eis_registrar_portal: 'Welcome to EIS Registrar portal'
@@ -762,5 +758,6 @@ en:
 
   attributes:
     vat_no: VAT number
+    vat_rate: VAT rate
     ipv4: IPv4
     ipv6: IPv6

@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class RegistrarCodeTest < ActiveSupport::TestCase
-  def setup
+  setup do
     @registrar = registrars(:bestnames).dup
   end
 
