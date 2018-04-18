@@ -5,6 +5,7 @@ class Domain < ActiveRecord::Base
   include Concerns::Domain::Expirable
   include Concerns::Domain::Activatable
   include Concerns::Domain::ForceDelete
+  include Concerns::Domain::Discardable
   include Concerns::Domain::Deletable
   include Concerns::Domain::Transferable
 

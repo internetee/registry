@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class DomainDeletableTest < ActiveSupport::TestCase
+class DomainDiscardableTest < ActiveSupport::TestCase
   setup do
     @domain = domains(:shop)
   end
