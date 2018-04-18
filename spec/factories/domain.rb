@@ -3,6 +3,7 @@ FactoryBot.define do
     sequence(:name) { |n| "test#{n}.com" }
     period 1
     period_unit 'y' # Year
+    valid_to Time.zone.parse('2010-07-05')
     registrar
     registrant
 

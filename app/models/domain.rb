@@ -215,17 +215,6 @@ class Domain < ActiveRecord::Base
   end
 
   class << self
-    def included
-      includes(
-        :registrant,
-        :registrar,
-        :nameservers,
-        :whois_record,
-        { tech_contacts: :registrar },
-        { admin_contacts: :registrar }
-      )
-    end
-
     def nameserver_required?
       Setting.nameserver_required
     end
@@ -642,6 +631,7 @@ class Domain < ActiveRecord::Base
   def as_json(_options)
     hash = super
     hash['auth_info'] = hash.delete('transfer_code') # API v1 requirement
+    hash['valid_from'] = hash['registered_at'] # API v1 requirement
     hash
   end
 

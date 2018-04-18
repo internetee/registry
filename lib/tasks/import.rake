@@ -336,7 +336,6 @@ namespace :import do
       name
       registrar_id
       registered_at
-      valid_from
       valid_to
       transfer_code
       created_at
