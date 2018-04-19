@@ -2,9 +2,9 @@ module Payments
   class EveryPay < Base
 
     # TODO: Move to setting or environment
-    USER       = ENV['every_pay_api_user'].freeze
-    KEY        = ENV['every_pay_api_key'].freeze
-    ACCOUNT_ID = ENV['every_pay_seller_account'].freeze
+    USER       = ENV['payments_every_pay_api_user'].freeze
+    KEY        = ENV['payments_every_pay_api_key'].freeze
+    ACCOUNT_ID = ENV['payments_every_pay_seller_account'].freeze
     SUCCESSFUL_PAYMENT = %w(settled authorized).freeze
 
     def form_fields

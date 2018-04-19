@@ -39,7 +39,7 @@ module Payments
     end
 
     def form_url
-      ENV["#{type}_payment_url"]
+      ENV["payments_#{type}_url"]
     end
 
     def valid_response?

@@ -94,15 +94,15 @@ module Payments
     end
 
     def seller_account
-      ENV["#{type}_seller_account"]
+      ENV["payments_#{type}_seller_account"]
     end
 
     def seller_certificate
-      ENV["#{type}_seller_certificate"]
+      ENV["payments_#{type}_seller_private"]
     end
 
     def bank_certificate
-      ENV["#{type}_bank_certificate"]
+      ENV["payments_#{type}_bank_certificate"]
     end
   end
 end

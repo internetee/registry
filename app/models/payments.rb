@@ -1,6 +1,7 @@
 module Payments
-  PAYMENT_METHODS = ENV['payment_methods'].strip.split(', ').freeze
-  PAYMENT_BANKLINK_BANKS = ENV['payment_banklink_banks'].strip.split(', ').freeze
+  PAYMENT_INTERMEDIARIES = ENV['payments_intermediaries'].strip.split(', ').freeze
+  PAYMENT_BANKLINK_BANKS = ENV['payments_banks'].strip.split(', ').freeze
+  PAYMENT_METHODS = [PAYMENT_INTERMEDIARIES, PAYMENT_BANKLINK_BANKS].flatten.freeze
 
   def self.create_with_type(type, invoice, opts = {})
     fail ArgumentError unless PAYMENT_METHODS.include?(type)

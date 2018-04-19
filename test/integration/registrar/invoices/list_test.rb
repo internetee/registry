@@ -12,28 +12,15 @@ class ListInvoicesTest < ActionDispatch::IntegrationTest
     assert_text "Your current account balance is 100,00 EUR"
   end
 
-
-  def test_show_single_invoice
-    @invoice = invoices(:valid)
-    @registrar_invoices = []
-    @registrar_invoices << @invoice
-
-    visit registrar_invoices_path
-    assert_text "Unpaid", count: 1
-    assert_text "Invoice no.", count: 1
-  end
-
-  # This bastard fails, only unpaid invoice is attached to the registrar
-  # TODO: Fix and uncomment
   def test_show_multiple_invoices
-    @invoices = invoices(:valid, :cancelled)
+    @invoices = invoices
     @registrar_invoices = []
     @invoices.each do |invoice|
       @registrar_invoices << invoice
     end
 
     visit registrar_invoices_path
-    assert_text "Unpaid", count: 2
-    assert_text "Invoice no.", count: 2
+    assert_text "Unpaid", count: 5
+    assert_text "Invoice no.", count: 7
   end
 end

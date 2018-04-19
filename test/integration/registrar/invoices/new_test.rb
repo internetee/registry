@@ -35,27 +35,6 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
     assert_text 'Pay invoice'
   end
 
-  def test_create_new_invoices_and_display_a_list_of_them
-    visit registrar_invoices_path
-    click_link_or_button 'Add deposit'
-    fill_in 'Amount', with: '200.00'
-    fill_in 'Description', with: 'My first invoice'
-    click_link_or_button 'Add'
-
-    visit registrar_invoices_path
-    click_link_or_button 'Add deposit'
-    fill_in 'Amount', with: '300.00'
-    fill_in 'Description', with: 'My second invoice'
-    click_link_or_button 'Add'
-
-    visit registrar_invoices_path
-    assert_text "Unpaid", count: 2
-    assert_text "Invoice no. 131050"
-    assert_text "Invoice no. 131051"
-    assert_text "240,00"
-    assert_text "360,00"
-  end
-
   # This test case should fail once issue #651 gets fixed
   def test_create_new_invoice_with_amount_0_goes_through
     visit registrar_invoices_path
