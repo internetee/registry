@@ -4,14 +4,6 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
   setup do
     @user = users(:api_bestnames)
     login_as @user
-    @original_vat_rate = @user.registrar.vat_rate
-    @user.registrar.vat_rate = 0.2
-  end
-
-  teardown do
-    @user.registrar.vat_rate = @original_vat_rate
-    AccountActivity.destroy_all
-    Invoice.destroy_all
   end
 
   def test_show_balance

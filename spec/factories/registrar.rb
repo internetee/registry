@@ -7,7 +7,6 @@ FactoryBot.define do
     city 'test'
     state 'test'
     zip 'test'
-    vat_rate 0.1
     email 'test@test.com'
     country_code 'EE'
     accounting_customer_code 'test'

@@ -4,7 +4,7 @@ class BankLinkTest < ActiveSupport::TestCase
   def setup
     super
     @invoice = invoices(:valid)
-    params = {return_url: 'return.url', response_url: 'response_url'}
+    params = {return_url: 'return.url', response_url: 'response.url'}
     @bank_link = Payments::BankLink.new('seb', @invoice, params)
 
     travel_to '2018-04-01 00:30'

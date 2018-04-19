@@ -6,25 +6,19 @@ class Registrar
     skip_before_action :authenticate_user!, :check_ip_restriction, only: [:back, :callback]
     # before_action :check_bank
 
-    # to handle existing model we should
-    # get invoice_id and then get number
-    # build BankTransaction without connection with right reference number
-    # do not connect transaction and invoice
     # TODO: Refactor to :new
     def pay
       invoice = Invoice.find(params[:invoice_id])
       opts = {
         return_url: self.registrar_return_payment_with_url(params[:bank], invoice_id: invoice.id),
         # TODO: Add required URL
-        response_url: "https://5fd921b0.ngrok.io/registrar/pay/callback/every_pay"
+        response_url: "https://53e21cc8.ngrok.io/registrar/pay/callback/every_pay"
       }
       @payment = ::Payments.create_with_type(params[:bank], invoice, opts)
       @payment.create_transaction
     end
 
 
-    # connect invoice and transaction
-    # both back and IPN
     # TODO: Refactor to be restful
     def back
       invoice = Invoice.find(params[:invoice_id])
@@ -60,11 +54,14 @@ class Registrar
 
     private
 
-    # def banks
-    #   ENV['payments_banks'].split(",").map(&:strip)
-    # end
+    def check_supported_payment_method
+      unless supported_payment_method?
+        raise StandardError.new("Not supported payment method")
+      end
+    end
 
-    def check_bank
+
+    def supported_payment_method?
       raise StandardError.new("Not Implemented bank") unless banks.include?(params[:bank])
     end
   end

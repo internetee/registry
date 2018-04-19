@@ -1,7 +1,7 @@
 module Payments
   class BankLink < Base
     # TODO: Remove magic numbers, convert certain fields to proper constants
-    # TODO: Remove hashrockets
+    # DONE: Remove hashrockets
     def form_fields
       @fields ||= hash = {}
       hash["VK_SERVICE"]  = "1012"
@@ -35,6 +35,8 @@ module Payments
     end
 
     private
+
+    SUCCESS_FIELDS =
 
     def validate_success
       pars = %w(VK_SERVICE VK_VERSION VK_SND_ID VK_REC_ID VK_STAMP VK_T_NO VK_AMOUNT VK_CURR
