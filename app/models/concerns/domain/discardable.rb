@@ -22,7 +22,7 @@ module Concerns::Domain::Discardable
 
   def keep
     statuses.delete(DomainStatus::DELETE_CANDIDATE)
-    save
+    save(validate: false)
     do_not_delete_later
   end
 

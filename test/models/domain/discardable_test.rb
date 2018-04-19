@@ -5,25 +5,35 @@ class DomainDiscardableTest < ActiveSupport::TestCase
     @domain = domains(:shop)
   end
 
-  def test_discard_domain
+  def test_discarding_a_domain
     @domain.discard
     @domain.reload
-    assert QueJob.find_by("args->>0 = '#{@domain.id}'", job_class: DomainDeleteJob.name)
     assert @domain.discarded?
   end
 
-  def test_discard_invalid_domain
+  def test_discarding_a_domain_deletes_schedules_domain_deletion
+    @domain.discard
+    assert QueJob.find_by("args->>0 = '#{@domain.id}'", job_class: DomainDeleteJob.name)
+  end
+
+  def test_discarding_a_domain_bypasses_validation
     domain = domains(:invalid)
     domain.discard
     domain.reload
-    assert domain.discarded?, 'a domain should be discarded'
+    assert domain.discarded?
   end
 
-  def test_keep_domain
+  def test_keeping_a_domain_bypasses_validation
+    domain = domains(:invalid)
+    domain.discard
+    domain.keep
+    domain.reload
+    assert_not domain.discarded?
+  end
+
+  def test_keeping_a_domain_cancels_domain_deletion
     @domain.discard
     @domain.keep
-    @domain.reload
     assert_nil QueJob.find_by("args->>0 = '#{@domain.id}'", job_class: DomainDeleteJob.name)
-    refute @domain.discarded?
   end
 end
