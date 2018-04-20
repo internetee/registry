@@ -13,17 +13,21 @@ module Concerns::Domain::Discardable
   end
 
   def discard
+    raise 'Domain is already discarded' if discarded?
+
     statuses << DomainStatus::DELETE_CANDIDATE
-    # We don't validate deliberately since nobody is interested in fixing discarded domain
-    save(validate: false)
-    delete_later
-    logger.info "Domain #{name} (ID: #{id}) is scheduled to be deleted"
+    transaction do
+      save(validate: false)
+      delete_later
+    end
   end
 
   def keep
     statuses.delete(DomainStatus::DELETE_CANDIDATE)
-    save(validate: false)
-    do_not_delete_later
+    transaction do
+      save(validate: false)
+      do_not_delete_later
+    end
   end
 
   def discarded?

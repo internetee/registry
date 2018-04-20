@@ -1,6 +1,10 @@
 require 'test_helper'
 
 class EppDomainUpdateTest < ActionDispatch::IntegrationTest
+  def setup
+    @domain = domains(:shop)
+  end
+
   def test_update_domain
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -21,13 +25,16 @@ class EppDomainUpdateTest < ActionDispatch::IntegrationTest
     XML
 
     post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
-    assert_equal 'f0ff7d17b0', domains(:shop).transfer_code
+    @domain.reload
+    assert_equal 'f0ff7d17b0', @domain.transfer_code
     assert_equal '1000', Nokogiri::XML(response.body).at_css('result')[:code]
     assert_equal 1, Nokogiri::XML(response.body).css('result').size
   end
 
   def test_discarded_domain_cannot_be_updated
-    domains(:shop).discard
+    travel_to Time.zone.parse('2010-07-05 10:30')
+    @domain.delete_at = Time.zone.parse('2010-07-05 10:00')
+    @domain.discard
 
     request_xml = <<-XML
       <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -44,5 +51,6 @@ class EppDomainUpdateTest < ActionDispatch::IntegrationTest
 
     post '/epp/command/update', { frame: request_xml }, 'HTTP_COOKIE' => 'session=api_bestnames'
     assert_equal '2105', Nokogiri::XML(response.body).at_css('result')[:code]
+    travel_back
   end
 end
