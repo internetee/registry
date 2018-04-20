@@ -3,7 +3,7 @@ require 'test_helper'
 class EppDomainRenewTest < ActionDispatch::IntegrationTest
   self.use_transactional_fixtures = false
 
-  def setup
+  setup do
     travel_to Time.zone.parse('2010-07-05')
   end
 

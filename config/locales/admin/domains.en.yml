@@ -5,6 +5,10 @@ en:
         header: Domains
         registrant: Registrant
 
+      show:
+        edit_btn: Edit statuses
+        history_btn: History
+
       search_form:
         reset_btn: Reset
 

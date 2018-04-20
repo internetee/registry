@@ -1,0 +1,71 @@
+<% domain = DomainPresenter.new(domain: @domain, view: self) %>
+
+<ol class="breadcrumb">
+    <li><%= link_to t('admin.domains.index.header'), admin_domains_path %></li>
+</ol>
+
+<div class="page-header">
+    <div class="row">
+        <div class="col-sm-8">
+            <h1><%= domain.name_with_status %></h1>
+        </div>
+
+        <div class="col-sm-4 text-right">
+            <%= link_to t('.edit_btn'), edit_admin_domain_path(@domain), class: 'btn btn-primary' %>
+            <%= link_to t('.history_btn'), admin_domain_domain_versions_path(@domain),
+                        class: 'btn btn-primary' %>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <%= render 'admin/domains/partials/general' %>
+    </div>
+    <div class="col-md-6">
+        <%= render 'admin/domains/partials/owner' %>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <%= render 'admin/domains/partials/tech_contacts' %>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <%= render 'admin/domains/partials/admin_contacts' %>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <%= render 'admin/domains/partials/statuses' %>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <%= render 'admin/domains/partials/nameservers' %>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <%= render 'admin/domains/partials/dnskeys' %>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <%= render 'admin/domains/partials/keyrelays' %>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <%= render 'admin/domains/partials/legal_documents', legal_documents:
+            @domain.legal_documents %>
+    </div>
+</div>

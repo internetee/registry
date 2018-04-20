@@ -43,6 +43,7 @@ Rails.application.configure do
   config.log_level = :debug
   config.active_job.queue_adapter = :test
   config.logger = ActiveSupport::Logger.new(nil)
+  config.active_support.test_order = :random # :random is the default in Rails 5
 end
 
 # In this mode, any jobs you queue will be run in the same thread, synchronously
