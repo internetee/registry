@@ -1,4 +1,4 @@
-19.04.2018
+23.04.2018
 * WHOIS: domains with deleteCandidate status do not return registration details as domains waiting to be deleted [#789](https://github.com/internetee/registry/issues/789)
 * Security: Nokigiri gem update to version 1.8.2 [#823](https://github.com/internetee/registry/pull/823)
 * Bug: fixed missing translation error in admin mail templates page [#818](https://github.com/internetee/registry/pull/818)
