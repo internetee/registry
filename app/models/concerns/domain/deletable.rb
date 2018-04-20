@@ -5,7 +5,7 @@ module Concerns::Domain::Deletable
 
   def delete_later
     deletion_time = Time.zone.at(rand(deletion_time_span))
-    DomainDeleteJob.enqueue(id, run_at: deletion_time)
+    DomainDeleteJob.enqueue(id, run_at: deletion_time, priority: 1)
     logger.info "Domain #{name} is scheduled to be deleted around #{deletion_time}"
   end
 
