@@ -33,6 +33,6 @@ class NewInvoicePaymentTest < ActionDispatch::IntegrationTest
     assert_equal('https://igw-demo.every-pay.com/transactions/', form['action'])
     assert_equal('post', form['method'])
     assert_equal(expected_hmac_fields, form.find_by_id('hmac_fields', visible: false).value)
-    assert_equal('240.0', form.find_by_id('amount', visible: false).value)
+    assert_equal('240.00', form.find_by_id('amount', visible: false).value)
   end
 end

@@ -50,7 +50,6 @@ class EveryPayTest < ActiveSupport::TestCase
       account_id: "EUR3D1",
       timestamp: "1522542600",
       amount: "12.00",
-      order_reference: "Order nr. 1",
       transaction_type: "charge",
       hmac_fields: "account_id,amount,api_username,callback_url,customer_url,hmac_fields,nonce,order_reference,timestamp,transaction_type"
     }
