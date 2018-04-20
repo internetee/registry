@@ -56,7 +56,7 @@ module Payments
         timestamp: Time.now.to_i.to_s,
         callback_url: response_url,
         customer_url: return_url,
-        amount: invoice.total,
+        amount: number_with_precision(invoice.total, precision: 2),
         order_reference: SecureRandom.hex(15),
         transaction_type: 'charge',
         hmac_fields: ''

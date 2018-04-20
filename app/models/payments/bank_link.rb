@@ -36,8 +36,6 @@ module Payments
 
     private
 
-    SUCCESS_FIELDS =
-
     def validate_success
       pars = %w(VK_SERVICE VK_VERSION VK_SND_ID VK_REC_ID VK_STAMP VK_T_NO VK_AMOUNT VK_CURR
                 VK_REC_ACC VK_REC_NAME VK_SND_ACC VK_SND_NAME VK_REF VK_MSG VK_T_DATETIME).freeze

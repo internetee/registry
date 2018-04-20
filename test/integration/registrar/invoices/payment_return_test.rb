@@ -23,7 +23,7 @@ class PaymentReturnTest < ActionDispatch::IntegrationTest
       transaction_result:  "completed",
       payment_reference:   "fd5d27b59a1eb597393cd5ff77386d6cab81ae05067e18d530b10f3802e30b56",
       payment_state:       "settled",
-      amount:              "12.0",
+      amount:              "12.00",
       order_reference:     "e468a2d59a731ccc546f2165c3b1a6",
       account_id:          "EUR3D1",
       cc_type:             "master_card",
@@ -32,7 +32,7 @@ class PaymentReturnTest < ActionDispatch::IntegrationTest
       cc_year:             "2018",
       cc_holder_name:      "John Doe",
       hmac_fields:         "account_id,amount,api_username,cc_holder_name,cc_last_four_digits,cc_month,cc_type,cc_year,hmac_fields,nonce,order_reference,payment_reference,payment_state,timestamp,transaction_result",
-      hmac:                "72fc94f117389cf5d34dba18a18d20886edb2bbb",
+      hmac:                "efac1c732835668cd86023a7abc140506c692f0d",
       invoice_id:          "12900000",
     }
   end

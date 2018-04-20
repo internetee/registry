@@ -136,7 +136,7 @@ payments_intermediaries: >
 # payments_intermediary_api_user - API username, in case it's different than the seller account
 # payments_intermediary_api_key - API key given to you by intermediary
 payments_every_pay_url: 'https://igw-demo.every-pay.com/transactions/'
-payments_every_pay_seller_account: 'account'
+payments_every_pay_seller_account: 'EUR3D1'
 payments_every_pay_api_user: 'api_user'
 payments_every_pay_api_key: 'api_key'
 
