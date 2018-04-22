@@ -45,11 +45,9 @@ class Registrar
 
       if @payment.valid_response_from_intermediary? && @payment.settled_payment?
         @payment.complete_transaction
-
-        if invoice.binded?
-          render status: 200, json: { ok: :ok }
-        end
       end
+
+      render status: 200, json: { status: 'ok' }
     end
 
     private

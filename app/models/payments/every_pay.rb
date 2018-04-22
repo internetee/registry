@@ -40,9 +40,10 @@ module Payments
       transaction.sum = response[:amount]
       transaction.paid_at = DateTime.strptime(response[:timestamp], '%s')
       transaction.buyer_name = response[:cc_holder_name]
-      transaction.save!
 
-      transaction.autobind_invoice
+      transaction.save!
+      account_activity = transaction.autobind_invoice
+      account_activity
     end
 
     private
