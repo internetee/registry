@@ -9,7 +9,6 @@ module Payments
     if PAYMENT_BANKLINK_BANKS.include?(type)
       BankLink.new(type, invoice, opts)
     elsif type == 'every_pay'
-      # TODO: refactor to be variable
       EveryPay.new(type, invoice, opts)
     end
   end

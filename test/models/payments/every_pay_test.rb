@@ -59,9 +59,9 @@ class EveryPayTest < ActiveSupport::TestCase
     end
   end
 
-  def test_valid_response?
-    assert(@every_pay.valid_response?)
-    refute(@other_pay.valid_response?)
+  def test_valid_response_from_intermediary?
+    assert(@every_pay.valid_response_from_intermediary?)
+    refute(@other_pay.valid_response_from_intermediary?)
   end
 
   def test_settled_payment?
@@ -72,12 +72,8 @@ class EveryPayTest < ActiveSupport::TestCase
     refute(other_pay.settled_payment?)
   end
 
-  def test_valid_response?
-    assert(@every_pay.valid_response?)
-    refute(@other_pay.valid_response?)
-  end
-
   def test_complete_transaction_returns_account_activity_or_nil
+    # skip('Figure out what fails in Travis')
     assert_instance_of(AccountActivity, @every_pay.complete_transaction)
     refute(@other_pay.complete_transaction)
   end

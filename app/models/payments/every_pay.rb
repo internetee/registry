@@ -1,7 +1,5 @@
 module Payments
   class EveryPay < Base
-
-    # TODO: Move to setting or environment
     USER       = ENV['payments_every_pay_api_user'].freeze
     KEY        = ENV['payments_every_pay_api_key'].freeze
     ACCOUNT_ID = ENV['payments_every_pay_seller_account'].freeze
@@ -21,7 +19,7 @@ module Payments
       base_json
     end
 
-    def valid_response?
+    def valid_response_from_intermediary?
       return false unless response
       valid_hmac? && valid_amount? && valid_account?
     end
@@ -31,7 +29,7 @@ module Payments
     end
 
     def complete_transaction
-      return unless valid_response? && settled_payment?
+      return unless valid_response_from_intermediary? && settled_payment?
 
       transaction = BankTransaction.find_by(
         description: invoice.order,

@@ -4,27 +4,27 @@ class Registrar
 
     skip_authorization_check # actually anyone can pay, no problems at all
     skip_before_action :authenticate_user!, :check_ip_restriction, only: [:back, :callback]
-    # before_action :check_bank
+    before_action :check_supported_payment_method
 
-    # TODO: Refactor to :new
     def pay
       invoice = Invoice.find(params[:invoice_id])
       opts = {
-        return_url: self.registrar_return_payment_with_url(params[:bank], invoice_id: invoice.id),
-        # TODO: Add required URL
-        response_url: "https://53e21cc8.ngrok.io/registrar/pay/callback/every_pay"
+        return_url: self.registrar_return_payment_with_url(
+          params[:bank], invoice_id: invoice.id
+        ),
+        response_url: self.registrar_response_payment_with_url(
+          params[:bank], invoice_id: invoice.id
+        )
       }
       @payment = ::Payments.create_with_type(params[:bank], invoice, opts)
       @payment.create_transaction
     end
 
-
-    # TODO: Refactor to be restful
     def back
       invoice = Invoice.find(params[:invoice_id])
       opts = { response: params }
       @payment = ::Payments.create_with_type(params[:bank], invoice, opts)
-      if @payment.valid_response? && @payment.settled_payment?
+      if @payment.valid_response_from_intermediary? && @payment.settled_payment?
         @payment.complete_transaction
 
         if invoice.binded?
@@ -43,7 +43,7 @@ class Registrar
       opts = { response: params }
       @payment = ::Payments.create_with_type(params[:bank], invoice, opts)
 
-      if @payment.valid_response? && @payment.settled_payment?
+      if @payment.valid_response_from_intermediary? && @payment.settled_payment?
         @payment.complete_transaction
 
         if invoice.binded?
@@ -62,7 +62,7 @@ class Registrar
 
 
     def supported_payment_method?
-      raise StandardError.new("Not Implemented bank") unless banks.include?(params[:bank])
+      Payments::PAYMENT_METHODS.include?(params[:bank])
     end
   end
 end
