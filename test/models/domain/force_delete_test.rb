@@ -11,6 +11,7 @@ class DomainForceDeleteTest < ActiveSupport::TestCase
     travel_to Time.zone.parse('2010-07-05 00:00')
 
     @domain.schedule_force_delete
+    @domain.reload
 
     assert @domain.force_delete_scheduled?
     assert_equal Time.zone.parse('2010-08-04 03:00'), @domain.force_delete_at
@@ -25,14 +26,25 @@ class DomainForceDeleteTest < ActiveSupport::TestCase
     assert @domain.force_delete_scheduled?
   end
 
-  def test_cancel_force_delete
+  def test_cancelling_force_delete_on_discarded_domain
+    @domain.discard
+    @domain.schedule_force_delete
     @domain.cancel_force_delete
+    @domain.reload
     assert_not @domain.force_delete_scheduled?
     assert_nil @domain.force_delete_at
   end
 
+  def test_cancelling_force_delete_requires_a_domain_to_be_discarded
+    @domain.schedule_force_delete
+    assert_raises StandardError do
+      @domain.cancel_force_delete
+    end
+  end
+
   def test_cancelling_force_delete_bypasses_validation
     @domain = domains(:invalid)
+    @domain.discard
     @domain.schedule_force_delete
     @domain.cancel_force_delete
     assert_not @domain.force_delete_scheduled?

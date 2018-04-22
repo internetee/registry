@@ -23,6 +23,8 @@ module Concerns::Domain::ForceDelete
   end
 
   def cancel_force_delete
+    raise 'Domain must be discarded before cancelling force delete procedure' unless discarded?
+
     statuses.delete(DomainStatus::FORCE_DELETE)
     statuses.delete(DomainStatus::SERVER_RENEW_PROHIBITED)
     statuses.delete(DomainStatus::SERVER_TRANSFER_PROHIBITED)
