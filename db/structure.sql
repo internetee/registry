@@ -895,7 +895,7 @@ CREATE TABLE domains (
     statuses character varying[],
     reserved boolean DEFAULT false,
     status_notes hstore,
-    statuses_backup character varying[] DEFAULT '{}'::character varying[],
+    statuses_before_force_delete character varying[] DEFAULT '{}'::character varying[],
     upid integer,
     up_date timestamp without time zone
 );
@@ -4715,4 +4715,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180314122722');
 INSERT INTO schema_migrations (version) VALUES ('20180327151906');
 
 INSERT INTO schema_migrations (version) VALUES ('20180331200125');
+
+INSERT INTO schema_migrations (version) VALUES ('20180422154642');
 
