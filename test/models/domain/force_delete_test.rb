@@ -20,13 +20,50 @@ class DomainForceDeleteTest < ActiveSupport::TestCase
     Setting.redemption_grace_period = @original_redemption_grace_period
   end
 
+  def test_scheduling_force_delete_adds_corresponding_statuses
+    statuses = [
+      DomainStatus::FORCE_DELETE,
+      DomainStatus::SERVER_RENEW_PROHIBITED,
+      DomainStatus::SERVER_TRANSFER_PROHIBITED,
+      DomainStatus::SERVER_UPDATE_PROHIBITED,
+      DomainStatus::PENDING_DELETE,
+    ]
+
+    @domain.schedule_force_delete
+    @domain.reload
+    assert (@domain.statuses & statuses) == statuses
+  end
+
+  def test_scheduling_force_delete_stops_pending_actions
+    statuses = [
+      DomainStatus::CLIENT_DELETE_PROHIBITED,
+      DomainStatus::SERVER_DELETE_PROHIBITED,
+      DomainStatus::PENDING_UPDATE,
+      DomainStatus::PENDING_TRANSFER,
+      DomainStatus::PENDING_RENEW,
+      DomainStatus::PENDING_CREATE,
+    ]
+
+    @domain.statuses = statuses + %w[other-status]
+    @domain.schedule_force_delete
+    @domain.reload
+    assert_not (@domain.statuses & statuses).any?, 'Pending actions should be stopped'
+  end
+
+  def test_scheduling_force_delete_preserves_current_statuses
+    @domain.statuses = %w[test1 test2]
+    @domain.schedule_force_delete
+    @domain.reload
+    assert_equal %w[test1 test2], @domain.statuses_before_force_delete
+  end
+
   def test_scheduling_force_delete_bypasses_validation
     @domain = domains(:invalid)
     @domain.schedule_force_delete
     assert @domain.force_delete_scheduled?
   end
 
-  def test_cancelling_force_delete_on_discarded_domain
+  def test_cancelling_force_delete_on_a_discarded_domain
     @domain.discard
     @domain.schedule_force_delete
     @domain.cancel_force_delete
@@ -48,5 +85,35 @@ class DomainForceDeleteTest < ActiveSupport::TestCase
     @domain.schedule_force_delete
     @domain.cancel_force_delete
     assert_not @domain.force_delete_scheduled?
+  end
+
+  def test_cancelling_force_delete_removes_statuses_that_were_set_on_force_delete
+    statuses = [
+      DomainStatus::FORCE_DELETE,
+      DomainStatus::SERVER_RENEW_PROHIBITED,
+      DomainStatus::SERVER_TRANSFER_PROHIBITED,
+      DomainStatus::SERVER_UPDATE_PROHIBITED,
+      DomainStatus::PENDING_DELETE,
+      DomainStatus::SERVER_MANUAL_INZONE
+    ]
+    @domain.discard
+    @domain.statuses = @domain.statuses + statuses
+    @domain.schedule_force_delete
+
+    @domain.cancel_force_delete
+    @domain.reload
+
+    assert (@domain.statuses & statuses).empty?
+  end
+
+  def test_cancelling_force_delete_restores_statuses_that_a_domain_had_before_force_delete
+    @domain.discard
+    @domain.statuses_before_force_delete = ['test1', DomainStatus::DELETE_CANDIDATE]
+
+    @domain.cancel_force_delete
+    @domain.reload
+
+    assert_equal ['test1', DomainStatus::DELETE_CANDIDATE], @domain.statuses
+    assert_nil @domain.statuses_before_force_delete
   end
 end

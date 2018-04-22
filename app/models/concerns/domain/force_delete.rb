@@ -6,16 +6,8 @@ module Concerns::Domain::ForceDelete
   end
 
   def schedule_force_delete
-    statuses << DomainStatus::FORCE_DELETE
-    statuses << DomainStatus::SERVER_RENEW_PROHIBITED
-    statuses << DomainStatus::SERVER_TRANSFER_PROHIBITED
-    statuses << DomainStatus::SERVER_UPDATE_PROHIBITED
-    statuses << DomainStatus::PENDING_DELETE
-
-    if (statuses & [DomainStatus::SERVER_HOLD, DomainStatus::CLIENT_HOLD]).empty?
-      statuses << DomainStatus::SERVER_MANUAL_INZONE
-    end
-
+    preserve_current_statuses_for_force_delete
+    add_force_delete_statuses
     self.force_delete_at = (Time.zone.now + (Setting.redemption_grace_period.days + 1.day)).utc
                              .beginning_of_day
     stop_all_pending_actions
@@ -25,13 +17,8 @@ module Concerns::Domain::ForceDelete
   def cancel_force_delete
     raise 'Domain must be discarded before cancelling force delete procedure' unless discarded?
 
-    statuses.delete(DomainStatus::FORCE_DELETE)
-    statuses.delete(DomainStatus::SERVER_RENEW_PROHIBITED)
-    statuses.delete(DomainStatus::SERVER_TRANSFER_PROHIBITED)
-    statuses.delete(DomainStatus::SERVER_UPDATE_PROHIBITED)
-    statuses.delete(DomainStatus::PENDING_DELETE)
-    statuses.delete(DomainStatus::SERVER_MANUAL_INZONE)
-
+    restore_statuses_before_force_delete
+    remove_force_delete_statuses
     self.force_delete_at = nil
     save(validate: false)
   end
@@ -45,5 +32,35 @@ module Concerns::Domain::ForceDelete
     statuses.delete(DomainStatus::PENDING_TRANSFER)
     statuses.delete(DomainStatus::PENDING_RENEW)
     statuses.delete(DomainStatus::PENDING_CREATE)
+  end
+
+  def preserve_current_statuses_for_force_delete
+    self.statuses_before_force_delete = statuses
+  end
+
+  def restore_statuses_before_force_delete
+    self.statuses = statuses_before_force_delete
+    self.statuses_before_force_delete = nil
+  end
+
+  def add_force_delete_statuses
+    statuses << DomainStatus::FORCE_DELETE
+    statuses << DomainStatus::SERVER_RENEW_PROHIBITED
+    statuses << DomainStatus::SERVER_TRANSFER_PROHIBITED
+    statuses << DomainStatus::SERVER_UPDATE_PROHIBITED
+    statuses << DomainStatus::PENDING_DELETE
+
+    if (statuses & [DomainStatus::SERVER_HOLD, DomainStatus::CLIENT_HOLD]).empty?
+      statuses << DomainStatus::SERVER_MANUAL_INZONE
+    end
+  end
+
+  def remove_force_delete_statuses
+    statuses.delete(DomainStatus::FORCE_DELETE)
+    statuses.delete(DomainStatus::SERVER_RENEW_PROHIBITED)
+    statuses.delete(DomainStatus::SERVER_TRANSFER_PROHIBITED)
+    statuses.delete(DomainStatus::SERVER_UPDATE_PROHIBITED)
+    statuses.delete(DomainStatus::PENDING_DELETE)
+    statuses.delete(DomainStatus::SERVER_MANUAL_INZONE)
   end
 end
