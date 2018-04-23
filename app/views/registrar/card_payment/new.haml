@@ -1,4 +1,0 @@
-= form_tag "https://igw-demo.every-pay.com/transactions/", method: :post do
-  - @every_pay.keys.each do |k, v|
-    = hidden_field_tag(k, @every_pay[k])
-  = submit_tag t("registrar.invoices.to_card_payment")

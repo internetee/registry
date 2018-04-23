@@ -10,7 +10,6 @@ module Payments
       base_json[:nonce] = SecureRandom.hex(15)
       hmac_fields = (base_json.keys + ['hmac_fields']).sort.uniq!
 
-      # Not all requests require use of hmac_fields, add only when needed
       base_json[:hmac_fields] = hmac_fields.join(',')
       hmac_string = hmac_fields.map { |key, _v| "#{key}=#{base_json[key]}" }.join('&')
       hmac = OpenSSL::HMAC.hexdigest('sha1', KEY, hmac_string)

@@ -91,8 +91,6 @@ Rails.application.routes.draw do
       end
     end
 
-
-    # TODO: refactor routes to be restful
     get  'pay/return/:bank'       => 'payments#back',  as: 'return_payment_with'
     post 'pay/return/:bank'       => 'payments#back'
     put  'pay/return/:bank'       => 'payments#back'
