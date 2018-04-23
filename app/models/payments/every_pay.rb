@@ -12,7 +12,7 @@ module Payments
 
       # Not all requests require use of hmac_fields, add only when needed
       base_json[:hmac_fields] = hmac_fields.join(',')
-      hmac_string = hmac_fields.map { |k, _v| "#{k}=#{base_json[k]}" }.join('&')
+      hmac_string = hmac_fields.map { |key, _v| "#{key}=#{base_json[key]}" }.join('&')
       hmac = OpenSSL::HMAC.hexdigest('sha1', KEY, hmac_string)
       base_json[:hmac] = hmac
 
@@ -38,7 +38,7 @@ module Payments
       )
 
       transaction.sum = response[:amount]
-      transaction.paid_at = DateTime.strptime(response[:timestamp], '%s')
+      transaction.paid_at = Date.strptime(response[:timestamp], '%s')
       transaction.buyer_name = response[:cc_holder_name]
 
       transaction.save!
@@ -65,10 +65,11 @@ module Payments
       hmac_fields = response[:hmac_fields].split(',')
       hmac_hash = {}
       hmac_fields.map do |field|
-        hmac_hash[field.to_sym] = response[field.to_sym]
+        symbol = field.to_sym
+        hmac_hash[symbol] = response[symbol]
       end
 
-      hmac_string = hmac_hash.map { |k, _v| "#{k}=#{hmac_hash[k]}" }.join('&')
+      hmac_string = hmac_hash.map { |key, _v| "#{key}=#{hmac_hash[key]}" }.join('&')
       expected_hmac = OpenSSL::HMAC.hexdigest('sha1', KEY, hmac_string)
       expected_hmac == response[:hmac]
     end

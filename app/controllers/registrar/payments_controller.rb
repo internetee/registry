@@ -8,15 +8,16 @@ class Registrar
 
     def pay
       invoice = Invoice.find(params[:invoice_id])
+      bank = params[:bank]
       opts = {
-        return_url: self.registrar_return_payment_with_url(
-          params[:bank], invoice_id: invoice.id
+        return_url: registrar_return_payment_with_url(
+          bank, invoice_id: invoice
         ),
-        response_url: self.registrar_response_payment_with_url(
-          params[:bank], invoice_id: invoice.id
+        response_url: registrar_response_payment_with_url(
+          bank, invoice_id: invoice
         )
       }
-      @payment = ::Payments.create_with_type(params[:bank], invoice, opts)
+      @payment = ::Payments.create_with_type(bank, invoice, opts)
       @payment.create_transaction
     end
 
@@ -53,9 +54,8 @@ class Registrar
     private
 
     def check_supported_payment_method
-      unless supported_payment_method?
-        raise StandardError.new("Not supported payment method")
-      end
+      return if supported_payment_method?
+      raise StandardError.new("Not supported payment method")
     end
 
 

@@ -4,7 +4,7 @@ module Payments
   PAYMENT_METHODS = [PAYMENT_INTERMEDIARIES, PAYMENT_BANKLINK_BANKS].flatten.freeze
 
   def self.create_with_type(type, invoice, opts = {})
-    fail ArgumentError unless PAYMENT_METHODS.include?(type)
+    raise ArgumentError unless PAYMENT_METHODS.include?(type)
 
     if PAYMENT_BANKLINK_BANKS.include?(type)
       BankLink.new(type, invoice, opts)

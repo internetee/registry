@@ -75,10 +75,7 @@ module Payments
     private
 
     def valid_successful_transaction?
-      return false unless valid_success_notice?
-      return false unless valid_amount?
-      return false unless valid_currency?
-      true
+      valid_success_notice? && valid_amount? && valid_currency?
     end
 
     def valid_cancel_notice?
@@ -113,12 +110,12 @@ module Payments
 
     def calc_mac(fields)
       pars = NEW_MESSAGE_KEYS
-      data = pars.map { |e| prepend_size(fields[e]) }.join
+      data = pars.map { |element| prepend_size(fields[element]) }.join
       sign(data)
     end
 
     def valid_mac?(hash, keys)
-      data = keys.map { |e| prepend_size(hash[e]) }.join
+      data = keys.map { |element| prepend_size(hash[element]) }.join
       verify_mac(data, hash["VK_MAC"])
     end
 
