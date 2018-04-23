@@ -21,6 +21,7 @@ class BankLinkTest < ActiveSupport::TestCase
 
   def teardown
     super
+
     travel_back
   end
 

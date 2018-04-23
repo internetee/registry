@@ -1,7 +1,9 @@
 require 'test_helper'
 
 class PaymentCallbackTest < ActionDispatch::IntegrationTest
-  setup do
+  def setup
+    super
+
     @user = users(:api_bestnames)
     login_as @user
   end

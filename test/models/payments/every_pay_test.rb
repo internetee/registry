@@ -1,7 +1,9 @@
 require 'test_helper'
 
 class EveryPayTest < ActiveSupport::TestCase
-  setup do
+  def setup
+    super
+
     @invoice = invoices(:for_payments_test)
     invoice_item = invoice_items(:one)
 
@@ -40,7 +42,9 @@ class EveryPayTest < ActiveSupport::TestCase
     travel_to Time.at(1522542600)
   end
 
-  teardown do
+  def teardown
+    super
+
     travel_back
   end
 

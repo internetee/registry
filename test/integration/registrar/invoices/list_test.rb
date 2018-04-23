@@ -1,7 +1,9 @@
 require 'test_helper'
 
 class ListInvoicesTest < ActionDispatch::IntegrationTest
-  setup do
+  def setup
+    super
+
     @user = users(:api_bestnames)
     @registrar_invoices = @user.registrar.invoices
     login_as @user
