@@ -27,20 +27,20 @@ class PaymentTest < ActiveSupport::TestCase
     assert_nil @not_implemented_payment.form_url
   end
 
-  def test_that_errors_are_raised_on_not_implemented_methods
-    assert_raise NotImplementedError do
+  def test_that_errors_are_raised_on_missing_methods
+    assert_raise NoMethodError do
       @not_implemented_payment.valid_response?
     end
 
-    assert_raise NotImplementedError do
+    assert_raise NoMethodError do
       @not_implemented_payment.settled_payment?
     end
 
-    assert_raise NotImplementedError do
+    assert_raise NoMethodError do
       @not_implemented_payment.form_fields
     end
 
-    assert_raise NotImplementedError do
+    assert_raise NoMethodError do
       @not_implemented_payment.complete_transaction
     end
   end

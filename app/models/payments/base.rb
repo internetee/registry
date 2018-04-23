@@ -26,24 +26,8 @@ module Payments
       transaction.save!
     end
 
-    def complete_transaction
-      raise NotImplementedError
-    end
-
-    def settled_payment?
-      raise NotImplementedError
-    end
-
-    def form_fields
-      raise NotImplementedError
-    end
-
     def form_url
       ENV["payments_#{type}_url"]
-    end
-
-    def valid_response?
-      raise NotImplementedError
     end
   end
 end

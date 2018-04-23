@@ -38,8 +38,7 @@ class EveryPayTest < ActiveSupport::TestCase
     @every_pay = Payments::EveryPay.new('every_pay', @invoice, params)
     @other_pay = Payments::EveryPay.new('every_pay', @invoice, {})
 
-    # To avoid problems with time conversion.
-    travel_to Time.at(1522542600)
+    travel_to Time.zone.parse('2018-04-01 00:30:00 +0000')
   end
 
   def teardown
