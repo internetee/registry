@@ -65,8 +65,7 @@ module Payments
       transaction.paid_at         = Time.parse(response["VK_T_DATETIME"])
 
       transaction.save!
-      account_activity = transaction.autobind_invoice
-      account_activity
+      transaction.autobind_invoice
     end
 
     def settled_payment?

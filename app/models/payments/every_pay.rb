@@ -42,8 +42,7 @@ module Payments
       transaction.buyer_name = response[:cc_holder_name]
 
       transaction.save!
-      account_activity = transaction.autobind_invoice
-      account_activity
+      transaction.autobind_invoice
     end
 
     private

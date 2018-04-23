@@ -82,12 +82,10 @@ class PaymentReturnTest < ActionDispatch::IntegrationTest
   def test_bank_link_return_redirects_to_invoice_paths
     create_invoice_with_items
     request_params = bank_link_request_params.merge(invoice_id: @invoice.id)
-    account_activity_count = AccountActivity.count
 
     post "/registrar/pay/return/seb", request_params
     assert_equal(302, response.status)
     assert_redirected_to(registrar_invoice_path(@invoice))
-    assert_equal(account_activity_count + 1, AccountActivity.count)
   end
 
   def test_bank_link_return

@@ -26,24 +26,24 @@ class BankLinkTest < ActiveSupport::TestCase
 
   def create_completed_bank_link
     params = {
-      "VK_SERVICE": "1111",
-      "VK_VERSION": "008",
-      "VK_SND_ID": "testvpos",
-      "VK_REC_ID": "seb",
-      "VK_STAMP": 1,
-      "VK_T_NO": "1",
-      "VK_AMOUNT": "12.00",
-      "VK_CURR": "EUR",
-      "VK_REC_ACC": "1234",
-      "VK_REC_NAME": "Eesti Internet",
-      "VK_SND_ACC": "1234",
-      "VK_SND_NAME": "John Doe",
-      "VK_REF": "",
-      "VK_MSG": "Order nr 1",
-      "VK_T_DATETIME": "2018-04-01T00:30:00+0300",
-      "VK_MAC": "CZZvcptkxfuOxRR88JmT4N+Lw6Hs4xiQfhBWzVYldAcRTQbcB/lPf9MbJzBE4e1/HuslQgkdCFt5g1xW2lJwrVDBQTtP6DAHfvxU3kkw7dbk0IcwhI4whUl68/QCwlXEQTAVDv1AFnGVxXZ40vbm/aLKafBYgrirB5SUe8+g9FE=",
-      "VK_ENCODING": "UTF-8",
-      "VK_LANG": "ENG"
+      'VK_SERVICE': '1111',
+      'VK_VERSION': '008',
+      'VK_SND_ID': 'testvpos',
+      'VK_REC_ID': 'seb',
+      'VK_STAMP': 1,
+      'VK_T_NO': '1',
+      'VK_AMOUNT': '12.00',
+      'VK_CURR': 'EUR',
+      'VK_REC_ACC': '1234',
+      'VK_REC_NAME': 'Eesti Internet',
+      'VK_SND_ACC': '1234',
+      'VK_SND_NAME': 'John Doe',
+      'VK_REF': '',
+      'VK_MSG': 'Order nr 1',
+      'VK_T_DATETIME': '2018-04-01T00:30:00+0300',
+      'VK_MAC': 'CZZvcptkxfuOxRR88JmT4N+Lw6Hs4xiQfhBWzVYldAcRTQbcB/lPf9MbJzBE4e1/HuslQgkdCFt5g1xW2lJwrVDBQTtP6DAHfvxU3kkw7dbk0IcwhI4whUl68/QCwlXEQTAVDv1AFnGVxXZ40vbm/aLKafBYgrirB5SUe8+g9FE=',
+      'VK_ENCODING': 'UTF-8',
+      'VK_LANG': 'ENG'
     }.with_indifferent_access
 
     @completed_bank_link = Payments::BankLink.new(
@@ -53,16 +53,16 @@ class BankLinkTest < ActiveSupport::TestCase
 
   def create_cancelled_bank_link
     params = {
-      "VK_SERVICE": "1911",
-      "VK_VERSION": "008",
-      "VK_SND_ID": "testvpos",
-      "VK_REC_ID": "seb",
-      "VK_STAMP": 1,
-      "VK_REF": "",
-      "VK_MSG": "Order nr 1",
-      "VK_MAC": "PElE2mYXXN50q2UBvTuYU1rN0BmOQcbafPummDnWfNdm9qbaGQkGyOn0XaaFGlrdEcldXaHBbZKUS0HegIgjdDfl2NOk+wkLNNH0Iu38KzZaxHoW9ga7vqiyKHC8dcxkHiO9HsOnz77Sy/KpWCq6cz48bi3fcMgo+MUzBMauWoQ=",
-      "VK_ENCODING": "UTF-8",
-      "VK_LANG": "ENG"
+      'VK_SERVICE': '1911',
+      'VK_VERSION': '008',
+      'VK_SND_ID': 'testvpos',
+      'VK_REC_ID': 'seb',
+      'VK_STAMP': 1,
+      'VK_REF': '',
+      'VK_MSG': 'Order nr 1',
+      'VK_MAC': 'PElE2mYXXN50q2UBvTuYU1rN0BmOQcbafPummDnWfNdm9qbaGQkGyOn0XaaFGlrdEcldXaHBbZKUS0HegIgjdDfl2NOk+wkLNNH0Iu38KzZaxHoW9ga7vqiyKHC8dcxkHiO9HsOnz77Sy/KpWCq6cz48bi3fcMgo+MUzBMauWoQ=',
+      'VK_ENCODING': 'UTF-8',
+      'VK_LANG': 'ENG'
     }.with_indifferent_access
 
     @cancelled_bank_link = Payments::BankLink.new(
@@ -81,20 +81,20 @@ class BankLinkTest < ActiveSupport::TestCase
 
   def test_form_fields
     expected_response = {
-      "VK_SERVICE": "1012",
-      "VK_VERSION": "008",
-      "VK_SND_ID": "testvpos",
-      "VK_STAMP": 1,
-      "VK_AMOUNT": "12.00",
-      "VK_CURR": "EUR",
-      "VK_REF": "",
-      "VK_MSG": "Order nr. 1",
-      "VK_RETURN": "return.url",
-      "VK_CANCEL": "return.url",
-      "VK_DATETIME": "2018-04-01T00:30:00+0300",
-      "VK_MAC": "q70UNFV4ih1qYij2+CyrHaApc3OE66igy3ijuR1m9dl0Cg+lIrAUsP47JChAF7PRErwZ78vSuZwrg0Vabhlp3WoC934ik2FiE04BBxUUTndONvguaNR1wvl0FiwfXFljLncX7TOmRraywJljKC5vTnIRNT2+1HXvmv0v576PGao=",
-      "VK_ENCODING": "UTF-8",
-      "VK_LANG": "ENG"
+      'VK_SERVICE': '1012',
+      'VK_VERSION': '008',
+      'VK_SND_ID': 'testvpos',
+      'VK_STAMP': 1,
+      'VK_AMOUNT': '12.00',
+      'VK_CURR': 'EUR',
+      'VK_REF': '',
+      'VK_MSG': 'Order nr. 1',
+      'VK_RETURN': 'return.url',
+      'VK_CANCEL': 'return.url',
+      'VK_DATETIME': '2018-04-01T00:30:00+0300',
+      'VK_MAC': 'q70UNFV4ih1qYij2+CyrHaApc3OE66igy3ijuR1m9dl0Cg+lIrAUsP47JChAF7PRErwZ78vSuZwrg0Vabhlp3WoC934ik2FiE04BBxUUTndONvguaNR1wvl0FiwfXFljLncX7TOmRraywJljKC5vTnIRNT2+1HXvmv0v576PGao=',
+      'VK_ENCODING': 'UTF-8',
+      'VK_LANG': 'ENG'
     }.with_indifferent_access
 
     assert_equal(expected_response, @new_bank_link.form_fields)
@@ -113,8 +113,21 @@ class BankLinkTest < ActiveSupport::TestCase
     refute(@cancelled_bank_link.settled_payment?)
   end
 
-  def test_complete_transaction_returns_account_activity_or_nil
-    assert_instance_of(AccountActivity, @completed_bank_link.complete_transaction)
-    assert_nil(@cancelled_bank_link.complete_transaction)
+  def test_complete_transaction_calls_methods_on_transaction
+    mock_transaction = MiniTest::Mock.new
+    mock_transaction.expect(:sum= , '12.00', ['12.00'])
+    mock_transaction.expect(:bank_reference= , '1', ['1'])
+    mock_transaction.expect(:buyer_bank_code= , 'testvpos', ['testvpos'])
+    mock_transaction.expect(:buyer_iban= , '1234', ['1234'])
+    mock_transaction.expect(:paid_at= , Date.parse('2018-04-01 00:30:00 +0300'), [Time.parse('2018-04-01T00:30:00+0300')])
+    mock_transaction.expect(:buyer_name=, 'John Doe', ['John Doe'])
+    mock_transaction.expect(:save!, true)
+    mock_transaction.expect(:autobind_invoice, AccountActivity.new)
+
+    BankTransaction.stub(:find_by, mock_transaction) do
+      @completed_bank_link.complete_transaction
+    end
+
+    mock_transaction.verify
   end
 end
