@@ -32,8 +32,8 @@ class DomainVersionsTest < ActionDispatch::IntegrationTest
       object_changes, created_at, nameserver_ids, tech_contact_ids,
       admin_contact_ids, session, children)
       VALUES ('Domain', 54, 'update', '1-AdminUser',
-      '{"id": 54, "registrar_id": 54, "valid_to": "2018-07-23T12:14:05.583+03:00", "registrant_id": 54, "transfer_code": "transfer_code"}',
-      '{"valid_from": "2017-07-23T12:14:05.583+03:00", "foo": "bar", "other_made_up_field": "value"}',
+      '{"id": 54, "registrar_id": 54, "valid_to": "2018-07-23T12:14:05.583+03:00", "registrant_id": 54, "transfer_code": "transfer_code", "valid_from": "2017-07-23T12:14:05.583+03:00"}',
+      '{"foo": "bar", "other_made_up_field": "value"}',
       '2018-04-23 15:50:48.113491', '{}', '{}', '{}', '2018-04-23 12:44:56',
       '{"null_fracdmin_contacts":[108],"tech_contacts":[109],"nameservers":[],"dnskeys":[],"legal_documents":[null],"registrant":[1]}'
       )
@@ -50,6 +50,7 @@ class DomainVersionsTest < ActionDispatch::IntegrationTest
 
   def test_removed_fields_are_not_causing_errors_in_index_view
     visit admin_domain_versions_path
+
     assert_text 'test_registrar'
     assert_text 'test_registrar update 23.04.18, 18:50'
   end

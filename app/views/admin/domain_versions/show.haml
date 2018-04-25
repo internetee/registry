@@ -1,4 +1,5 @@
-- domain = Domain.new(@version.object.to_h)
+- present_fields = only_present_fields(@version, Domain)
+- domain = Domain.new(present_fields)
 - attach_existing_fields(@version, domain)
 
 - if @version

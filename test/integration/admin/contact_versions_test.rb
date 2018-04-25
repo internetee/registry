@@ -27,7 +27,7 @@ class ContactVersionsTest < ActionDispatch::IntegrationTest
       INSERT INTO log_contacts (item_type, item_id, event, whodunnit, object,
       object_changes, created_at, session, children, ident_updated_at, uuid)
       VALUES ('Contact', 75, 'update', '1-AdminUser',
-      '{"id": 75, "code": "test_code", "auth_info": "8b4d462aa04194ca78840a", "registrar_id": 75}',
+      '{"id": 75, "code": "test_code", "auth_info": "8b4d462aa04194ca78840a", "registrar_id": 75, "old_field": "value"}',
       '{"other_made_up_field": "value"}',
       '2018-04-23 15:50:48.113491', '2018-04-23 12:44:56',
       '{"legal_documents":[null]}', null, null

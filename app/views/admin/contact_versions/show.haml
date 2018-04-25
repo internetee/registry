@@ -1,4 +1,5 @@
-- contact = Contact.new(@version.object.to_h)
+- attributes = only_present_fields(@version, Contact)
+- contact = Contact.new(attributes)
 - attach_existing_fields(@version, contact)
 = render 'shared/title', name: contact.name
 
