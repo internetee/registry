@@ -36,6 +36,7 @@ class WhoisRecord < ActiveRecord::Base
     registrant = domain.registrant
 
     @disclosed = []
+    h[:disclaimer] = disclaimer_text
     h[:name]       = domain.name
     h[:status]     = domain.statuses.map { |x| status_map[x] || x }
     h[:registered] = domain.registered_at.try(:to_s, :iso8601)
@@ -119,5 +120,11 @@ class WhoisRecord < ActiveRecord::Base
 
   def destroy_whois_record
     Whois::Record.where(name: name).delete_all
+  end
+
+  private
+
+  def disclaimer_text
+    Setting.registry_whois_disclaimer
   end
 end
