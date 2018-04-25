@@ -9,7 +9,6 @@ class WhoisRecordTest < ActiveSupport::TestCase
   end
 
   def test_generated_json_has_expected_values
-
     expected_disclaimer_text = <<-TEXT.squish
     Search results may not be used for commercial, advertising, recompilation,
     repackaging, redistribution, reuse, obscuring or other similar activities.
@@ -30,5 +29,18 @@ class WhoisRecordTest < ActiveSupport::TestCase
     expected_partial_hash.each do |key, value|
       assert_equal(value, @record.generated_json[key])
     end
+  end
+
+  def test_generated_body_has_justified_disclaimer
+    expected_disclaimer_first_line = begin
+      "Search results may not be used for commercial, advertising, recompilation,"
+    end
+    expected_disclaimer_second_line = begin
+      "repackaging, redistribution, reuse, obscuring or other similar activities"
+    end
+    @record.populate
+
+    assert_match(expected_disclaimer_first_line, @record.body)
+    assert_match(expected_disclaimer_second_line, @record.body)
   end
 end
