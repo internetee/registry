@@ -32,15 +32,22 @@ class WhoisRecordTest < ActiveSupport::TestCase
   end
 
   def test_generated_body_has_justified_disclaimer
-    expected_disclaimer_first_line = begin
-      "Search results may not be used for commercial, advertising, recompilation,"
+    expected_disclaimer = begin
+      'Search results may not be used for commercial, advertising, recompilation,\n' \
+      'repackaging, redistribution, reuse, obscuring or other similar activities.'
     end
-    expected_disclaimer_second_line = begin
-      "repackaging, redistribution, reuse, obscuring or other similar activities"
+    expected_technical_contact = begin
+      'Technical contact:\n' \
+      'name:       Not Disclosed - Visit www.internet.ee for webbased WHOIS\n' \
+      'email:      Not Disclosed - Visit www.internet.ee for webbased WHOIS\n' \
+      'changed:    Not Disclosed - Visit www.internet.ee for webbased WHOIS'
     end
-    @record.populate
 
-    assert_match(expected_disclaimer_first_line, @record.body)
-    assert_match(expected_disclaimer_second_line, @record.body)
+    regexp_contact = Regexp.new(expected_technical_contact, Regexp::MULTILINE)
+    regexp_disclaimer = Regexp.new(expected_disclaimer, Regexp::MULTILINE)
+
+    @record.populate
+    assert_match(regexp_disclaimer,        @record.body)
+    assert_match(regexp_contact,           @record.body)
   end
 end
