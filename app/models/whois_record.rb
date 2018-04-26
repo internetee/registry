@@ -36,7 +36,7 @@ class WhoisRecord < ActiveRecord::Base
     registrant = domain.registrant
 
     @disclosed = []
-    h[:disclaimer] = disclaimer_text
+    h[:disclaimer] = disclaimer_text if disclaimer_text.present?
     h[:name]       = domain.name
     h[:status]     = domain.statuses.map { |x| status_map[x] || x }
     h[:registered] = domain.registered_at.try(:to_s, :iso8601)

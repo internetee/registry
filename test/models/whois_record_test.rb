@@ -6,6 +6,7 @@ class WhoisRecordTest < ActiveSupport::TestCase
 
     @domain = domains(:shop)
     @record = WhoisRecord.new(domain: @domain)
+    @record.populate
   end
 
   def test_generated_json_has_expected_values
@@ -46,8 +47,14 @@ class WhoisRecordTest < ActiveSupport::TestCase
     regexp_contact = Regexp.new(expected_technical_contact, Regexp::MULTILINE)
     regexp_disclaimer = Regexp.new(expected_disclaimer, Regexp::MULTILINE)
 
-    @record.populate
     assert_match(regexp_disclaimer,        @record.body)
     assert_match(regexp_contact,           @record.body)
+  end
+
+  def test_whois_record_has_no_disclaimer_if_Setting_is_blank
+    Setting.stubs(:registry_whois_disclaimer, '') do
+      refute(@record.json['disclaimer'])
+      refute_match(/Search results may not be used for commercial/, @record.body)
+    end
   end
 end
