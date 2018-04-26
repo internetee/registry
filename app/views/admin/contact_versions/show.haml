@@ -1,5 +1,6 @@
-- contact = Contact.new(@version.object.to_h)
-- @version.object_changes.to_h.each { |k,v| contact.public_send("#{k}=", v.last ) }
+- attributes = only_present_fields(@version, Contact)
+- contact = Contact.new(attributes)
+- attach_existing_fields(@version, contact)
 = render 'shared/title', name: contact.name
 
 .row
@@ -41,11 +42,11 @@
 
           %br
 
-          %dt= t(:created)
+          %dt= t(:created_at)
           %dd{class: changing_css_class(@version,"created_at")}
             = l(contact.created_at, format: :short)
 
-          %dt= t(:updated)
+          %dt= t(:updated_at)
           %dd{class: changing_css_class(@version,"updated_at")}
             = l(contact.updated_at, format: :short)
 
@@ -61,7 +62,7 @@
 
           - if contact.street.present?
             %dt= t(:street)
-            %dd{class: changing_css_class(@version,"street")}= contact.street.to_s.gsub("\n", '<br>').html_safe
+            %dd{class: changing_css_class(@version,"street")}= printable_street(contact.street)
 
           - if contact.city.present?
             %dt= t(:city)
