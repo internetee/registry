@@ -8,10 +8,6 @@ class AdminContactsTest < ActionDispatch::IntegrationTest
     login_as users(:admin)
   end
 
-  def teardown
-    super
-  end
-
   def test_display_list
     visit admin_contacts_path
 
