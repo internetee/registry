@@ -39,9 +39,9 @@ class WhoisRecordTest < ActiveSupport::TestCase
     end
     expected_technical_contact = begin
       'Technical contact:\n' \
-      'name:       Not Disclosed - Visit www.internet.ee for webbased WHOIS\n' \
+      'name:       Not Disclosed\n' \
       'email:      Not Disclosed - Visit www.internet.ee for webbased WHOIS\n' \
-      'changed:    Not Disclosed - Visit www.internet.ee for webbased WHOIS'
+      'changed:    Not Disclosed'
     end
 
     regexp_contact = Regexp.new(expected_technical_contact, Regexp::MULTILINE)
