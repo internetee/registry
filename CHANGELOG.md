@@ -1,3 +1,18 @@
+23.04.2018
+* WHOIS: domains with deleteCandidate status do not return registration details as domains waiting to be deleted [#789](https://github.com/internetee/registry/issues/789)
+* Security: Nokigiri gem update to version 1.8.2 [#823](https://github.com/internetee/registry/pull/823)
+* Bug: fixed missing translation error in admin mail templates page [#818](https://github.com/internetee/registry/pull/818)
+* Admin: VAT percentage info to registrar profile for setting tax rate for foreign non vat liable registrars [#623](https://github.com/internetee/registry/issues/623)
+* Admin: deleteCandidate status is now stressed in domain details view [#792](https://github.com/internetee/registry/issues/792)
+* Removed invoice_type from invoice db data as unused [#772](https://github.com/internetee/registry/issues/772)
+* Removed valid_from from domain db data as duplicated and unused [#787](https://github.com/internetee/registry/issues/787)
+* Set Not null constraint to valid_ti domain db data [#800](https://github.com/internetee/registry/issues/800)
+* Removed unused methods [#797](https://github.com/internetee/registry/issues/797)
+* Removed unused cron tasks [#782](https://github.com/internetee/registry/issues/782)
+* Removed some monkey-patching for flash message logging [#231](https://github.com/internetee/registry/issues/231)
+* Added Docker container support for dev and test environments [#821](https://github.com/internetee/registry/issues/821)
+* Fix for Travis CI random test failures [#809](https://github.com/internetee/registry/pull/809)
+
 03.04.2018
 * BUG: Fixed bug with sometimes failing bank-link payments [#642](https://github.com/internetee/registry/issues/642)
 * EPP: Domain and associated objects are now validated on domain renew [#678](https://github.com/internetee/registry/issues/678)

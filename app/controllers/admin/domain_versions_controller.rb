@@ -1,5 +1,7 @@
 module Admin
   class DomainVersionsController < BaseController
+    include ObjectVersionsHelper
+
     load_and_authorize_resource
 
     def index
