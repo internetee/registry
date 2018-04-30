@@ -35,8 +35,8 @@ class EveryPayTest < ActiveSupport::TestCase
           invoice_id:          '1',
         },
     }
-    @every_pay = Payments::EveryPay.new('every_pay', @invoice, params)
-    @other_pay = Payments::EveryPay.new('every_pay', @invoice, {})
+    @every_pay = PaymentOrders::EveryPay.new('every_pay', @invoice, params)
+    @other_pay = PaymentOrders::EveryPay.new('every_pay', @invoice, {})
 
     travel_to Time.zone.parse('2018-04-01 00:30:00 +0000')
   end
@@ -69,7 +69,7 @@ class EveryPayTest < ActiveSupport::TestCase
 
   def test_settled_payment?
     assert(@every_pay.settled_payment?)
-    other_pay = Payments::EveryPay.new(
+    other_pay = PaymentOrders::EveryPay.new(
       'every_pay', @invoice, {response: {payment_state: 'CANCELLED'}}
     )
     refute(other_pay.settled_payment?)

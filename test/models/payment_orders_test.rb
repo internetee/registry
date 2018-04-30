@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class PaymentTest < ActiveSupport::TestCase
+class PaymentOrdersTest < ActiveSupport::TestCase
   def setup
     super
 
@@ -8,7 +8,7 @@ class PaymentTest < ActiveSupport::TestCase
     @original_seb_URL = ENV['seb_payment_url']
     ENV['payment_methods'] = 'seb, swed, credit_card'
     ENV['seb_payment_url'] = nil
-    @not_implemented_payment = Payments::Base.new(
+    @not_implemented_payment = PaymentOrders::Base.new(
       'not_implemented', Invoice.new
     )
   end
@@ -47,12 +47,12 @@ class PaymentTest < ActiveSupport::TestCase
 
   def test_that_create_with_type_raises_argument_error
     assert_raise ArgumentError do
-      Payments.create_with_type("not_implemented", Invoice.new)
+      PaymentOrders.create_with_type("not_implemented", Invoice.new)
     end
   end
 
   def test_create_with_correct_subclass
-    payment = Payments.create_with_type('seb', Invoice.new)
-    assert_equal Payments::BankLink, payment.class
+    payment = PaymentOrders.create_with_type('seb', Invoice.new)
+    assert_equal PaymentOrders::BankLink, payment.class
   end
 end

@@ -17,14 +17,14 @@ class Registrar
           bank, invoice_id: invoice
         )
       }
-      @payment = ::Payments.create_with_type(bank, invoice, opts)
+      @payment = ::PaymentOrders.create_with_type(bank, invoice, opts)
       @payment.create_transaction
     end
 
     def back
       invoice = Invoice.find(params[:invoice_id])
       opts = { response: params }
-      @payment = ::Payments.create_with_type(params[:bank], invoice, opts)
+      @payment = ::PaymentOrders.create_with_type(params[:bank], invoice, opts)
       if @payment.valid_response_from_intermediary? && @payment.settled_payment?
         @payment.complete_transaction
 
@@ -42,7 +42,7 @@ class Registrar
     def callback
       invoice = Invoice.find(params[:invoice_id])
       opts = { response: params }
-      @payment = ::Payments.create_with_type(params[:bank], invoice, opts)
+      @payment = ::PaymentOrders.create_with_type(params[:bank], invoice, opts)
 
       if @payment.valid_response_from_intermediary? && @payment.settled_payment?
         @payment.complete_transaction
@@ -60,7 +60,7 @@ class Registrar
 
 
     def supported_payment_method?
-      Payments::PAYMENT_METHODS.include?(params[:bank])
+      PaymentOrders::PAYMENT_METHODS.include?(params[:bank])
     end
   end
 end

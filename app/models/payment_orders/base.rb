@@ -1,4 +1,4 @@
-module Payments
+module PaymentOrders
   class Base
     include ActionView::Helpers::NumberHelper
 

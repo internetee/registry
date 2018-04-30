@@ -1,4 +1,4 @@
-module Payments
+module PaymentOrders
   class BankLink < Base
     BANK_LINK_VERSION = '008'
 

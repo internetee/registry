@@ -47,7 +47,7 @@ class BankLinkTest < ActiveSupport::TestCase
       'VK_LANG': 'ENG'
     }.with_indifferent_access
 
-    @completed_bank_link = Payments::BankLink.new(
+    @completed_bank_link = PaymentOrders::BankLink.new(
       'seb', @invoice, { response: params }
     )
   end
@@ -66,14 +66,14 @@ class BankLinkTest < ActiveSupport::TestCase
       'VK_LANG': 'ENG'
     }.with_indifferent_access
 
-    @cancelled_bank_link = Payments::BankLink.new(
+    @cancelled_bank_link = PaymentOrders::BankLink.new(
       'seb', @invoice, { response: params }
     )
   end
 
   def create_new_bank_link
     params = { return_url: 'return.url', response_url: 'response.url' }
-    @new_bank_link = Payments::BankLink.new('seb', @invoice, params)
+    @new_bank_link = PaymentOrders::BankLink.new('seb', @invoice, params)
   end
 
   def test_response_is_not_valid_when_it_is_missing

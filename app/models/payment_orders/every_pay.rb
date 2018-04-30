@@ -1,4 +1,4 @@
-module Payments
+module PaymentOrders
   class EveryPay < Base
     USER       = ENV['payments_every_pay_api_user'].freeze
     KEY        = ENV['payments_every_pay_api_key'].freeze
