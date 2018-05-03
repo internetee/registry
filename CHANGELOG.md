@@ -1,3 +1,7 @@
+30.04.2018
+* Upgrade Ruby on Rails to version 4.2.10 [#826](https://github.com/internetee/registry/issues/826)
+* BUG: Admin - fixed internal error in domain_versions and contact_versions views caused by removed db column [#830](https://github.com/internetee/registry/issues/830)
+
 23.04.2018
 * WHOIS: domains with deleteCandidate status do not return registration details as domains waiting to be deleted [#789](https://github.com/internetee/registry/issues/789)
 * Security: Nokigiri gem update to version 1.8.2 [#823](https://github.com/internetee/registry/pull/823)
