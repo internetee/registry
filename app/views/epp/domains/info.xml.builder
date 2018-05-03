@@ -22,7 +22,7 @@ xml.epp_head do
           xml.tag!('domain:contact', ac.code, 'type' => 'admin')
         end
 
-        if @nameservers && @nameservers.any?
+        if @nameservers&.any?
           xml.tag!('domain:ns') do
             @nameservers.each do |x|
               xml.tag!('domain:hostAttr') do

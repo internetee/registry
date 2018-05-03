@@ -6,7 +6,7 @@ class Registrant::DomainsController < RegistrantController
       @q = domains.search(params[:q])
       @domains = @q.result.page(params[:page])
     end
-    @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i > 0
+    @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
   end
 
   def show

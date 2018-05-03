@@ -37,7 +37,7 @@ class DomainNameValidator < ActiveModel::EachValidator
 
     def validate_blocked(value)
       return true unless value
-      return false if BlockedDomain.where(name: value).count > 0
+      return false if BlockedDomain.where(name: value).count.positive?
       DNS::Zone.where(origin: value).count.zero?
     end
   end
