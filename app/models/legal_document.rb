@@ -6,7 +6,7 @@ class LegalDocument < ActiveRecord::Base
   if ENV['legal_document_types'].present?
     TYPES = ENV['legal_document_types'].split(',').map(&:strip)
   else
-    TYPES = %w(pdf bdoc ddoc zip rar gz tar 7z odt doc docx).freeze
+    TYPES = %w(pdf asice bdoc ddoc zip rar gz tar 7z odt doc docx).freeze
   end
 
   attr_accessor :body

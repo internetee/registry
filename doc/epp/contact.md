@@ -8,7 +8,7 @@ More info at http://en.wikipedia.org/wiki/Extensible_Provisioning_Protocol
 Contact Mapping protocol short version:
 
 All values are limited to Unicode Latin characters if stricter limits are not specified. This includes unicode blocks
-Basic Latin, Latin-1 Supplement, Latin Extended-A, Latin Extended-B, Latin Extended C, Latin Extended D, 
+Basic Latin, Latin-1 Supplement, Latin Extended-A, Latin Extended-B, Latin Extended C, Latin Extended D,
 Latin Extended Additional, Diacritics.
 More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
 
@@ -16,9 +16,9 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
 
     Field name                 Min-max  Field description
     -----------------------    -------  -----------------
-    <create>                   1     
+    <create>                   1
       <contact:create>         1        Attribute: xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd"
-        <contact:id>           0-1      Contact id, optional, 
+        <contact:id>           0-1      Contact id, optional,
                                           string: ASCII letters, numbers, ':', '-' characters, no spaces,
                                           max 100 characters,
                                           generated automatically if missing.
@@ -34,7 +34,7 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
         <contact:voice>        1        Phone number in format \+ddd.d+
         <contact:fax>          0        Fax is not supported and must be blank or missing
         <contact:email>        1        E-mail
-    <extension>                1       
+    <extension>                1
       <eis:extdata>            1        Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
         <eis:ident>            1        Identifier
                                           Attribute: "type"
@@ -43,8 +43,8 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
                                             "birthday"     # Birthday date in format in YYYY-MM-DD
                                           Attribute: "cc"
                                             "EE"           # Country code in ISO_3166-1 aplha 2
-        <eis:legalDocument>    0-1      Base64 encoded document 
-                                          Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
+        <eis:legalDocument>    0-1      Base64 encoded document
+                                          Attribute: type="pdf/asice/bdoc/ddoc/zip/rar/gz/tar/7z"
     <clTRID>                   0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-create-command-successfully-creates-a-contact)
@@ -53,7 +53,7 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
 
     Field name                  Min-max  Field description
     -----------------------     -------  -----------------
-    <update>                    1     
+    <update>                    1
       <contact:update>          1        Attribute: xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd"
         <contact:id>            1        Contact id, required
         <contact:chg>           1        Change container
@@ -71,7 +71,7 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
           <contact:email>       0-1      E-mail
           <contact:authInfo>    0-1      Required if registrar is not the owner of the contact.
             <contact:pw>        1        Contact password. Attribute: roid="String"
-    <extension>                 0-1       
+    <extension>                 0-1
       <eis:extdata>             0-1      Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
         <eis:ident>             0-1      Identifier
                                           Attribute: "type"
@@ -80,8 +80,8 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
                                             "birthday"     # Birthday date in format in YYYY-MM-DD
                                           Attribute: "cc"
                                             "EE"           # Country code in ISO_3166-1 aplha 2
-        <eis:legalDocument>     0-1      Base64 encoded document. 
-                                           Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
+        <eis:legalDocument>     0-1      Base64 encoded document.
+                                           Attribute: type="pdf/asice/bdoc/ddoc/zip/rar/gz/tar/7z"
     <clTRID>                    0-1      Client transaction id
 
 
@@ -91,15 +91,15 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
 
     Field name                Min-max  Field description
     -----------------------   -------  -----------------
-    <delete>                  1       
+    <delete>                  1
       <contact:delete>        1        Attribute: xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd"
         <contact:id>          1        Contact id
         <contact:authInfo>    0-1      Required if registrar is not the owner of the contact.
           <contact:pw>        1        Contact password. Attribute: roid="String"
-    <extension>               0-1       
+    <extension>               0-1
       <eis:extdata>           0-1      Attribute: xmlns:eis="https://epp.tld.ee/schema/eis-1.0.xsd"
-        <eis:legalDocument>   0-1      Base64 encoded document. 
-                                         Attribute: type="pdf/bdoc/ddoc/zip/rar/gz/tar/7z"
+        <eis:legalDocument>   0-1      Base64 encoded document.
+                                         Attribute: type="pdf/asice/bdoc/ddoc/zip/rar/gz/tar/7z"
     <clTRID>                  0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-delete-command-deletes-contact)
@@ -109,9 +109,9 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
 
     Field name               Min-max  Field description
     -----------------------  -------  -----------------
-    <check>                  1       
+    <check>                  1
       <contact:check>        1        Attribute: xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd"
-        <contact:id>         1-n      Contact id 
+        <contact:id>         1-n      Contact id
     <clTRID>                 0-1      Client transaction id
 
 [EXAMPLE REQUEST AND RESPONSE](/doc/epp-examples.md#epp-contact-with-valid-user-check-command-returns-info-about-contact-availability)
@@ -121,9 +121,9 @@ More info: https://en.wikipedia.org/wiki/Latin_script_in_Unicode
 
     Field name               Min-max  Field description
     -----------------------  -------  -----------------
-    <info>                   1       
+    <info>                   1
       <contact:info>         1        Attribute: xmlns:contact="https://epp.tld.ee/schema/contact-ee-1.1.xsd"
-        <contact:id>         1-n      Contact id 
+        <contact:id>         1-n      Contact id
         <contact:authInfo>   0-1      Required if registrar is not the owner of the contact.
           <contact:pw>       1        Contact password. Attribute: roid="String"
     <clTRID>                 0-1      Client transaction id

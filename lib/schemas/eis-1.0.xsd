@@ -63,6 +63,7 @@
   <simpleType name="legalDocEnumType">
     <restriction base="token">
       <enumeration value="pdf"/>
+      <enumeration value="asice"/>
       <enumeration value="bdoc"/>
       <enumeration value="ddoc"/>
       <enumeration value="zip"/>
