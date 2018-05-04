@@ -68,7 +68,7 @@ contact_org_enabled: 'false'
 
 # Custom legal document types. Changing this requires updating EPP extension schema for allowed legalDocEnumType values.
 # System default for legal document types is: pdf,asice,bdoc,ddoc,zip,rar,gz,tar,7z,odt,doc,docx
-# legal_document_types: "pdf,bdoc,ddoc,zip,rar,gz,tar,7z,odt,doc,docx"
+# legal_document_types: "pdf,asice,bdoc,ddoc,zip,rar,gz,tar,7z,odt,doc,docx"
 
 
 #
