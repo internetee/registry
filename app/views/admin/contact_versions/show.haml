@@ -62,7 +62,7 @@
 
           - if contact.street.present?
             %dt= t(:street)
-            %dd{class: changing_css_class(@version,"street")}= printable_street(contact.street)
+            %dd{class: changing_css_class(@version,"street")}= contact.street
 
           - if contact.city.present?
             %dt= t(:city)
