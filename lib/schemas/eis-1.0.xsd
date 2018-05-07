@@ -64,8 +64,12 @@
     <restriction base="token">
       <enumeration value="pdf"/>
       <enumeration value="asice"/>
+      <enumeration value="asics"/>
       <enumeration value="sce"/>
+      <enumeration value="scs"/>
+      <enumeration value="adoc"/>
       <enumeration value="bdoc"/>
+      <enumeration value="edoc"/>
       <enumeration value="ddoc"/>
       <enumeration value="zip"/>
       <enumeration value="rar"/>
