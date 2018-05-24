@@ -1,3 +1,12 @@
+25.05.2018
+* GDPR: updated whois templates with configurable disclaimer [#795](https://github.com/internetee/registry/issues/795)
+* GDPR: email forwarding solution to contact private domain registrants without revealing their email addresses [#824](https://github.com/internetee/registry/issues/824)
+* EPP: added support for additional digitally signed doc formats like asice, sce, asics, scs, edoc, adoc [#840](https://github.com/internetee/registry/issues/840)
+* Registrar: removed handling of newlines from contact form street field [#836](https://github.com/internetee/registry/issues/836)
+* Ruby upgrade to version 2.3.7 [#546](https://github.com/internetee/registry/issues/546)
+* Devise upgrade to version 4.4.3 [#847](https://github.com/internetee/registry/pull/847)
+* Added extra logging to debug Directo integration [#848](https://github.com/internetee/registry/pull/848)
+
 30.04.2018
 * Upgrade Ruby on Rails to version 4.2.10 [#826](https://github.com/internetee/registry/issues/826)
 * BUG: Admin - fixed internal error in domain_versions and contact_versions views caused by removed db column [#830](https://github.com/internetee/registry/issues/830)
