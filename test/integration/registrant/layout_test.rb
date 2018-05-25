@@ -12,6 +12,6 @@ class RegistrantLayoutTest < ActionDispatch::IntegrationTest
   def test_has_link_to_rest_whois
     visit registrant_domains_url
     assert(has_link?('Internet.ee', href: 'https://internet.ee'))
-    refute(has_link?('WHOIS', href: registrant_whois_path))
+    refute(has_link?('WHOIS', href: 'registrant/whois'))
   end
 end
