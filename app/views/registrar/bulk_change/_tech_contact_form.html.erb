@@ -7,11 +7,11 @@
 
     <div class="form-group">
         <div class="col-md-2 control-label">
-            <%= label_tag :predecessor, t('.predecessor') %>
+            <%= label_tag :current_contact_id %>
         </div>
 
         <div class="col-md-4">
-            <%= text_field_tag :predecessor, params[:predecessor],
+            <%= text_field_tag :current_contact_id, params[:current_contact_id],
                                list: :contacts,
                                required: true,
                                autofocus: true,
@@ -21,11 +21,11 @@
 
     <div class="form-group">
         <div class="col-md-2 control-label">
-            <%= label_tag :successor, t('.successor') %>
+            <%= label_tag :new_contact_id %>
         </div>
 
         <div class="col-md-4">
-            <%= text_field_tag :successor, params[:successor],
+            <%= text_field_tag :new_contact_id, params[:new_contact_id],
                                list: :contacts,
                                required: true,
                                class: 'form-control' %>

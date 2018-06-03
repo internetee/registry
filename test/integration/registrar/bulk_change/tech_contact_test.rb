@@ -7,7 +7,7 @@ class RegistrarAreaTechContactBulkChangeTest < ActionDispatch::IntegrationTest
 
   def test_replace_domain_contacts_of_current_registrar
     request_stub = stub_request(:patch, /domains\/contacts/)
-                     .with(body: { predecessor: 'william-001', successor: 'john-001' },
+                     .with(body: { current_contact_id: 'william-001', new_contact_id: 'john-001' },
                            basic_auth: ['test_bestnames', 'testtest'])
                      .to_return(body: { affected_domains: %w[foo.test bar.test],
                                         skipped_domains: %w[baz.test qux.test] }.to_json,

@@ -2,7 +2,8 @@ require 'test_helper'
 
 class APIDomainContactsTest < ActionDispatch::IntegrationTest
   def test_replace_all_tech_contacts_of_the_current_registrar
-    patch '/repp/v1/domains/contacts', { predecessor: 'william-001', successor: 'john-001' },
+    patch '/repp/v1/domains/contacts', { current_contact_id: 'william-001',
+                                         new_contact_id: 'john-001' },
           { 'HTTP_AUTHORIZATION' => http_auth_key }
 
     assert_nil domains(:shop).tech_contacts.find_by(code: 'william-001')
@@ -13,14 +14,16 @@ class APIDomainContactsTest < ActionDispatch::IntegrationTest
   def test_skip_discarded_domains
     domains(:airport).update!(statuses: [DomainStatus::DELETE_CANDIDATE])
 
-    patch '/repp/v1/domains/contacts', { predecessor: 'william-001', successor: 'john-001' },
+    patch '/repp/v1/domains/contacts', { current_contact_id: 'william-001',
+                                         new_contact_id: 'john-001' },
           { 'HTTP_AUTHORIZATION' => http_auth_key }
 
     assert domains(:airport).tech_contacts.find_by(code: 'william-001')
   end
 
   def test_return_affected_domains_in_alphabetical_order
-    patch '/repp/v1/domains/contacts', { predecessor: 'william-001', successor: 'john-001' },
+    patch '/repp/v1/domains/contacts', { current_contact_id: 'william-001',
+                                         new_contact_id: 'john-001' },
           { 'HTTP_AUTHORIZATION' => http_auth_key }
 
     assert_response :ok
@@ -33,7 +36,8 @@ class APIDomainContactsTest < ActionDispatch::IntegrationTest
     domains(:shop).update!(statuses: [DomainStatus::DELETE_CANDIDATE])
     domains(:airport).update!(statuses: [DomainStatus::DELETE_CANDIDATE])
 
-    patch '/repp/v1/domains/contacts', { predecessor: 'william-001', successor: 'john-001' },
+    patch '/repp/v1/domains/contacts', { current_contact_id: 'william-001',
+                                         new_contact_id: 'john-001' },
           { 'HTTP_AUTHORIZATION' => http_auth_key }
 
     assert_response :ok
@@ -42,52 +46,58 @@ class APIDomainContactsTest < ActionDispatch::IntegrationTest
   end
 
   def test_keep_other_tech_contacts_intact
-    patch '/repp/v1/domains/contacts', { predecessor: 'william-001', successor: 'john-001' },
+    patch '/repp/v1/domains/contacts', { current_contact_id: 'william-001',
+                                         new_contact_id: 'john-001' },
           { 'HTTP_AUTHORIZATION' => http_auth_key }
 
     assert domains(:shop).tech_contacts.find_by(code: 'acme-ltd-001')
   end
 
   def test_keep_admin_contacts_intact
-    patch '/repp/v1/domains/contacts', { predecessor: 'william-001', successor: 'john-001' },
+    patch '/repp/v1/domains/contacts', { current_contact_id: 'william-001',
+                                         new_contact_id: 'john-001' },
           { 'HTTP_AUTHORIZATION' => http_auth_key }
 
     assert domains(:airport).admin_contacts.find_by(code: 'william-001')
   end
 
   def test_restrict_contacts_to_the_current_registrar
-    patch '/repp/v1/domains/contacts', { predecessor: 'jack-001', successor: 'william-002' },
+    patch '/repp/v1/domains/contacts', { current_contact_id: 'jack-001',
+                                         new_contact_id: 'william-002' },
           { 'HTTP_AUTHORIZATION' => http_auth_key }
 
     assert_response :bad_request
     assert_equal ({ error: { type: 'invalid_request_error',
-                             param: 'predecessor',
+                             param: 'current_contact_id',
                              message: 'No such contact: jack-001' } }),
                  JSON.parse(response.body, symbolize_names: true)
   end
 
-  def test_non_existent_predecessor
-    patch '/repp/v1/domains/contacts', { predecessor: 'non-existent', successor: 'john-001' },
+  def test_non_existent_current_contact
+    patch '/repp/v1/domains/contacts', { current_contact_id: 'non-existent',
+                                         new_contact_id: 'john-001' },
           { 'HTTP_AUTHORIZATION' => http_auth_key }
     assert_response :bad_request
     assert_equal ({ error: { type: 'invalid_request_error',
-                             param: 'predecessor',
+                             param: 'current_contact_id',
                              message: 'No such contact: non-existent' } }),
                  JSON.parse(response.body, symbolize_names: true)
   end
 
-  def test_non_existent_successor
-    patch '/repp/v1/domains/contacts', { predecessor: 'william-001', successor: 'non-existent' },
+  def test_non_existent_new_contact
+    patch '/repp/v1/domains/contacts', { current_contact_id: 'william-001',
+                                         new_contact_id: 'non-existent' },
           { 'HTTP_AUTHORIZATION' => http_auth_key }
     assert_response :bad_request
     assert_equal ({ error: { type: 'invalid_request_error',
-                             param: 'successor',
+                             param: 'new_contact_id',
                              message: 'No such contact: non-existent' } }),
                  JSON.parse(response.body, symbolize_names: true)
   end
 
   def test_disallow_self_replacement
-    patch '/repp/v1/domains/contacts', { predecessor: 'william-001', successor: 'william-001' },
+    patch '/repp/v1/domains/contacts', { current_contact_id: 'william-001',
+                                         new_contact_id: 'william-001' },
           { 'HTTP_AUTHORIZATION' => http_auth_key }
     assert_response :bad_request
     assert_equal ({ error: { type: 'invalid_request_error',

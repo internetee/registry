@@ -8,8 +8,8 @@ Replaces all domain contacts of the current registrar.
 $ curl https://repp.internet.ee/v1/domains/contacts \
    -X PATCH \
    -u username:password \
-   -d predecessor=foo \
-   -d successor=bar
+   -d current_contact_id=foo \
+   -d new_contact_id=bar
 ```
 ### Example response
 ```

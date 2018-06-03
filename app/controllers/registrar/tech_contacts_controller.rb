@@ -6,7 +6,8 @@ class Registrar
       uri = URI.parse("#{ENV['repp_url']}domains/contacts")
 
       request = Net::HTTP::Patch.new(uri)
-      request.set_form_data(predecessor: params[:predecessor], successor: params[:successor])
+      request.set_form_data(current_contact_id: params[:current_contact_id],
+                            new_contact_id: params[:new_contact_id])
       request.basic_auth(current_user.username, current_user.password)
 
       if Rails.env.test?
