@@ -8,6 +8,8 @@ en:
         bulk_transfer: Bulk transfer
 
       tech_contact_form:
+        current_contact_id: Current contact ID
+        new_contact_id: New contact ID
         submit_btn: Replace technical contacts
         help_btn: Toggle help
         help: >-
