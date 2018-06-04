@@ -22,7 +22,7 @@ module Admin
         @contacts = @q.result.uniq.page(params[:page])
       end
 
-      @contacts = @contacts.per(params[:results_per_page]) if params[:results_per_page].to_i > 0
+      @contacts = @contacts.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
     end
 
     def search

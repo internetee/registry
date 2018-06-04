@@ -11,7 +11,7 @@ source 'https://rubygems.org'
 
 gem 'SyslogLogger', '2.0', require: 'syslog/logger'
 gem 'iso8601',      '0.8.6' # for dates and times
-gem 'rails',        '4.2.7.1' # when update, all initializers eis_custom files needs check/update
+gem 'rails',        '4.2.10' # when update, all initializers eis_custom files needs check/update
 gem 'rest-client'
 
 # load env
@@ -52,7 +52,7 @@ gem 'liquid',           '3.0.6'   # for email templates
 
 # rights
 gem 'cancancan', '1.11.0' # autharization
-gem 'devise',    '3.5.4'  # authenitcation
+gem 'devise',    '4.4.3'  # authenitcation
 
 # rest api
 gem 'grape',    '0.12.0'
