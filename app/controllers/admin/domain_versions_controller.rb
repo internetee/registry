@@ -43,7 +43,7 @@ module Admin
       versions = DomainVersion.includes(:item).where(whereS).order(created_at: :desc, id: :desc)
       @q = versions.search(params[:q])
       @versions = @q.result.page(params[:page])
-      @versions = @versions.per(params[:results_per_page]) if params[:results_per_page].to_i > 0
+      @versions = @versions.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
       render "admin/domain_versions/archive"
 
     end

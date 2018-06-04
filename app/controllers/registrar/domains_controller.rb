@@ -40,7 +40,7 @@ class Registrar
         end
       end
 
-      @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i > 0
+      @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
 
       respond_to do |format|
         format.html

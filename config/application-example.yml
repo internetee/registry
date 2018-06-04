@@ -67,8 +67,8 @@ contact_org_enabled: 'false'
 # iptables_server_ip: '127.0.0.1'
 
 # Custom legal document types. Changing this requires updating EPP extension schema for allowed legalDocEnumType values.
-# System default for legal document types is: pdf,bdoc,ddoc,zip,rar,gz,tar,7z,odt,doc,docx
-# legal_document_types: "pdf,bdoc,ddoc,zip,rar,gz,tar,7z,odt,doc,docx"
+# System default for legal document types is: pdf,asice,sce,asics,scs,adoc,edoc,bdoc,ddoc,zip,rar,gz,tar,7z,odt,doc,docx
+# legal_document_types: "pdf,asice,sce,asics,scs,adoc,edoc,bdoc,ddoc,zip,rar,gz,tar,7z,odt,doc,docx"
 
 
 #

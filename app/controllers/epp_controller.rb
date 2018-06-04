@@ -168,7 +168,7 @@ class EppController < ApplicationController
 
     # validate legal document's type here because it may be in most of the requests
     @prefix = nil
-    if element_count('extdata > legalDocument') > 0
+    if element_count('extdata > legalDocument').positive?
       requires_attribute('extdata > legalDocument', 'type', values: LegalDocument::TYPES, policy: true)
     end
 
@@ -279,7 +279,7 @@ class EppController < ApplicationController
   def optional(selector, *validations)
     full_selector = [@prefix, selector].compact.join(' ')
     el = params[:parsed_frame].css(full_selector).first
-    return unless el && el.text.present?
+    return unless el&.text.present?
     value = el.text
 
     validations.each do |x|

@@ -197,7 +197,7 @@ class Epp::Domain < Domain
     )
     self.legal_documents = [doc]
 
-    frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
+    frame.css("legalDocument").first.content = doc.path if doc&.persisted?
     self.legal_document_id = doc.id
   end
   # rubocop: enable Metrics/PerceivedComplexity
@@ -472,7 +472,7 @@ class Epp::Domain < Domain
     at.deep_merge!(attrs_from(frame.css('rem'), current_user, 'rem'))
 
     if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
-      frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
+      frame.css("legalDocument").first.content = doc.path if doc&.persisted?
       self.legal_document_id = doc.id
     end
 
@@ -547,7 +547,7 @@ class Epp::Domain < Domain
     check_discarded
 
     if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
-      frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
+      frame.css("legalDocument").first.content = doc.path if doc&.persisted?
     end
 
     if Setting.request_confirmation_on_domain_deletion_enabled &&

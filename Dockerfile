@@ -1,4 +1,4 @@
-FROM ruby:2.2
+FROM ruby:2.3
 MAINTAINER maciej.szlosarczyk@internet.ee
 
 RUN apt-get update > /dev/null && apt-get install -y > /dev/null \

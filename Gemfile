@@ -52,7 +52,7 @@ gem 'liquid',           '3.0.6'   # for email templates
 
 # rights
 gem 'cancancan', '1.11.0' # autharization
-gem 'devise',    '3.5.4'  # authenitcation
+gem 'devise',    '4.4.3'  # authenitcation
 
 # rest api
 gem 'grape',    '0.12.0'
