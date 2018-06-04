@@ -95,6 +95,17 @@ class APIDomainContactsTest < ActionDispatch::IntegrationTest
                  JSON.parse(response.body, symbolize_names: true)
   end
 
+  def test_disallow_invalid_new_contact
+    patch '/repp/v1/domains/contacts', { current_contact_id: 'william-001',
+                                         new_contact_id: 'invalid' },
+          { 'HTTP_AUTHORIZATION' => http_auth_key }
+    assert_response :bad_request
+    assert_equal ({ error: { type: 'invalid_request_error',
+                             param: 'new_contact_id',
+                             message: 'New contact must be valid' } }),
+                 JSON.parse(response.body, symbolize_names: true)
+  end
+
   def test_disallow_self_replacement
     patch '/repp/v1/domains/contacts', { current_contact_id: 'william-001',
                                          new_contact_id: 'william-001' },

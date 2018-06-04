@@ -23,6 +23,13 @@ module Repp
                    :bad_request)
           end
 
+          if new_contact.invalid?
+            error!({ error: { type: 'invalid_request_error',
+                              param: 'new_contact_id',
+                              message: 'New contact must be valid' } },
+                   :bad_request)
+          end
+
           if current_contact == new_contact
             error!({ error: { type: 'invalid_request_error',
                               message: 'New contact ID must be different from current' \
