@@ -10,6 +10,7 @@ FactoryBot.define do
     email 'test@test.com'
     country_code 'EE'
     accounting_customer_code 'test'
+    vat_rate 5
 
     factory :registrar_with_unlimited_balance do
       after :create do |registrar|
