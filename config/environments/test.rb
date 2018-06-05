@@ -12,7 +12,7 @@ Rails.application.configure do
   # preloads Rails for running tests, you may have to set it to true.
   config.eager_load = true
 
-  # Configure static asset server for tests with Cache-Control for performance.
+  # Configure static file server for tests with Cache-Control for performance.
   config.serve_static_files   = true
   config.static_cache_control = 'public, max-age=3600'
 
@@ -31,22 +31,16 @@ Rails.application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
 
-  ActiveSupport::Deprecation.silenced = true
+  # Randomize the order test cases are executed.
+  config.active_support.test_order = :random
 
-  # For rails-settings-cached conflict
-  config.cache_store = :file_store, 'tmp/cache_test'
+  # Print deprecation notices to the stderr.
+  config.active_support.deprecation = :raise
 
+  # Raises error for missing translations
   config.action_view.raise_on_missing_translations = true
 
-  # The available log levels are: :debug, :info, :warn, :error, :fatal, and :unknown,
-  # corresponding to the log level numbers from 0 up to 5 respectively
-  config.log_level = :debug
-  config.active_job.queue_adapter = :test
-  config.logger = ActiveSupport::Logger.new(nil)
-  config.active_support.test_order = :random # :random is the default in Rails 5
+  config.cache_store = :null_store
 end
 
-# In this mode, any jobs you queue will be run in the same thread, synchronously
-# (that is, MyJob.enqueue runs the job and won't return until it's completed).
-# This makes your application's behavior easier to test
 Que.mode = :sync
