@@ -31,3 +31,9 @@ outstanding:
 overdue:
   <<: *DEFAULTS
   due_date: <%= Date.parse '2010-07-03' %>
+
+for_payments_test:
+  <<: *DEFAULTS
+  total: 12.00
+  id: 1
+  number: 1
