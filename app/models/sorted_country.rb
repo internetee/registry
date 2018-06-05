@@ -1,6 +1,3 @@
-require 'countries'
-require 'action_view'
-
 class SortedCountry
   class << self
     include ActionView::Helpers
