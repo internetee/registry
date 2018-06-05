@@ -123,7 +123,6 @@ GEM
     bootstrap-sass (3.3.5.1)
       autoprefixer-rails (>= 5.0.0.1)
       sass (>= 3.3.0)
-    brakeman (3.6.1)
     builder (3.2.3)
     bullet (4.14.7)
       activesupport (>= 3.0.0)
@@ -477,7 +476,6 @@ DEPENDENCIES
   airbrake
   autodoc
   bootstrap-sass (= 3.3.5.1)
-  brakeman (= 3.6.1)
   bullet (= 4.14.7)
   cancancan (= 1.11.0)
   capybara
