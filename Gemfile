@@ -120,7 +120,6 @@ group :development, :test do
   gem 'pry', '0.10.1'
 
   gem 'bullet',        '4.14.7' # for finding database optimizations
-  gem 'bundler-audit'
   gem 'brakeman',      '3.6.1', require: false # for security audit'
   # tmp, otherwise conflics with breakman
   # gem 'html2haml', github: 'haml/html2haml', ref: '6984f50bdbbd6291535027726a5697f28778ee8d'
