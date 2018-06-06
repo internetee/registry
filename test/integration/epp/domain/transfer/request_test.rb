@@ -54,7 +54,7 @@ class EppDomainTransferRequestTest < ActionDispatch::IntegrationTest
   end
 
   def test_duplicates_registrant_admin_and_tech_contacts
-    assert_difference -> { @new_registrar.contacts.size }, 2 do
+    assert_difference -> { @new_registrar.contacts.size }, 3 do
       post '/epp/command/transfer', { frame: request_xml }, { 'HTTP_COOKIE' => 'session=api_goodnames' }
     end
   end

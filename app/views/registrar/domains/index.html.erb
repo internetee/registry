@@ -1,13 +1,13 @@
 <div class="page-header">
     <div class="row">
-        <div class="col-sm-7">
+        <div class="col-sm-5">
             <h1><%= t '.header' %></h1>
         </div>
 
-        <div class="col-sm-5 text-right">
+        <div class="col-sm-7 text-right">
             <%= link_to t('.new_btn'), new_registrar_domain_path, class: 'btn btn-primary' %>
             <%= link_to t('.transfer_btn'), new_registrar_domain_transfer_path, class: 'btn btn-default' %>
-            <%= link_to t('.replace_nameserver_btn'), registrar_edit_registrar_nameserver_path,
+            <%= link_to t('.bulk_change_btn'), new_registrar_bulk_change_path,
                         class: 'btn btn-default' %>
         </div>
     </div>
@@ -24,22 +24,22 @@
         <div class="table-responsive">
             <table class="table table-hover table-bordered table-condensed">
                 <thead>
-                    <tr>
-                        <th class="col-xs-2">
-                            <%= sort_link(@q, 'name') %>
-                        </th>
-                        <th class="col-xs-2">
-                            <%= sort_link @q, 'registrant_name', Registrant.model_name.human %>
-                        </th>
-                        <th class="col-xs-2">
-                            <%= sort_link @q, 'valid_to', Domain.human_attribute_name(:expire_time) %>
-                        </th>
-                        <th class="col-xs-2"></th>
-                    </tr>
+                <tr>
+                    <th class="col-xs-2">
+                        <%= sort_link(@q, 'name') %>
+                    </th>
+                    <th class="col-xs-2">
+                        <%= sort_link @q, 'registrant_name', Registrant.model_name.human %>
+                    </th>
+                    <th class="col-xs-2">
+                        <%= sort_link @q, 'valid_to', Domain.human_attribute_name(:expire_time) %>
+                    </th>
+                    <th class="col-xs-2"></th>
+                </tr>
                 </thead>
 
                 <tbody>
-                    <%= render @domains %>
+                <%= render @domains %>
                 </tbody>
             </table>
         </div>
