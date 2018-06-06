@@ -1,0 +1,60 @@
+<%= form_tag registrar_tech_contacts_path, method: :patch, class: 'form-horizontal' do %>
+    <% if @error %>
+        <div class="alert alert-danger">
+            <%= @error[:message] %>
+        </div>
+    <% end %>
+
+    <div class="form-group">
+        <div class="col-md-2 control-label">
+            <%= label_tag :current_contact_id, t('.current_contact_id') %>
+        </div>
+
+        <div class="col-md-4">
+            <%= text_field_tag :current_contact_id, params[:current_contact_id],
+                               list: :contacts,
+                               required: true,
+                               autofocus: true,
+                               class: 'form-control' %>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-2 control-label">
+            <%= label_tag :new_contact_id, t('.new_contact_id') %>
+        </div>
+
+        <div class="col-md-4">
+            <%= text_field_tag :new_contact_id, params[:new_contact_id],
+                               list: :contacts,
+                               required: true,
+                               class: 'form-control' %>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-4 col-md-offset-2 text-right">
+            <button class="btn btn-warning">
+                <%= t '.submit_btn' %>
+            </button>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-6">
+            <a class="btn btn-default btn-xs" role="button" data-toggle="collapse"
+               href="#bulk_change_tech_contact_help"><%= t '.help_btn' %></a>
+            <div class="collapse" id="bulk_change_tech_contact_help">
+                <div class="well">
+                    <%= t '.help' %>
+                </div>
+            </div>
+        </div>
+    </div>
+<% end %>
+
+<datalist id="contacts">
+    <% available_contacts.each do |data| %>
+        <option value="<%= data.second %>"><%= data.first %></option>
+    <% end %>
+</datalist>

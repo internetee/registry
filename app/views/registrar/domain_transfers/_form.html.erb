@@ -1,4 +1,6 @@
 <%= form_tag registrar_domain_transfers_path, multipart: true, class: 'form-horizontal' do %>
+    <%= render 'registrar/domain_transfers/form/api_errors' %>
+
     <div class="form-group">
         <div class="col-md-3 control-label">
             <%= label_tag :domain_name, nil, class: 'required' %>
@@ -30,7 +32,7 @@
     <div class="form-group">
         <div class="col-md-10 text-right">
             <button class="btn btn-warning">
-                <%= t '.transfer_btn' %>
+                <%= t '.submit_btn' %>
             </button>
         </div>
     </div>

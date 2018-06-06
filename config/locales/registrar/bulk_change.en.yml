@@ -1,0 +1,31 @@
+en:
+  registrar:
+    bulk_change:
+      new:
+        header: Bulk change
+        technical_contact: Technical contact
+        nameserver: Nameserver
+        bulk_transfer: Bulk transfer
+
+      tech_contact_form:
+        current_contact_id: Current contact ID
+        new_contact_id: New contact ID
+        submit_btn: Replace technical contacts
+        help_btn: Toggle help
+        help: >-
+          Replace technical contact specified in "current contact ID" with the one in "new
+          contact ID" on any domain registered under this registrar
+
+      nameserver_form:
+        ip_hint: One IP per line
+        replace_btn: Replace nameserver
+        help_btn: Toggle help
+        help: >-
+          Replace nameserver specified in the "old hostname" with the one in "new hostname" with
+          optional IPv4 and IPv6 addresses on any domain registered under this registrar
+
+      bulk_transfer_form:
+        file_field_hint: CSV file with domain list provided by another registrar
+        submit_btn: Transfer
+        help_btn: Toggle help
+        help: Transfer domains in the csv file with correct transfer code to this registrar

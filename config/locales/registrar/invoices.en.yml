@@ -1,5 +1,11 @@
 en:
   registrar:
     invoices:
+      pay_invoice: 'Pay invoice'
+      redirected_to_intermediary: 'Click the button below to redirect to payment intermediary'
+      to_card_payment: Open card payment
+      go_to_intermediary: 'Go to intermediary'
+      pay_by_credit_card: Pay by credit card
+      payment_complete: Credit Card payment Complete
       index:
         reset_btn: Reset

@@ -1,7 +1,0 @@
-inherit_from: .rubocop_todo.yml
-
-Style/Alias:
-  EnforcedStyle: prefer_alias_method
-
-Style/FrozenStringLiteralComment:
-  Enabled: false

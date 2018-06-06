@@ -1,21 +1,13 @@
 class Registrar
-  class RegistrarNameserversController < DeppController
-    def edit
-      authorize! :manage, :repp
-    end
-
+  class TechContactsController < BulkChangeController
     def update
       authorize! :manage, :repp
 
-      ipv4 = params[:ipv4].split("\r\n")
-      ipv6 = params[:ipv6].split("\r\n")
+      uri = URI.parse("#{ENV['repp_url']}domains/contacts")
 
-      uri = URI.parse("#{ENV['repp_url']}registrar/nameservers")
-      request = Net::HTTP::Put.new(uri, 'Content-Type' => 'application/json')
-      request.body = { data: { type: 'nameserver', id: params[:old_hostname],
-                               attributes: { hostname: params[:new_hostname],
-                                             ipv4: ipv4,
-                                             ipv6: ipv6 } } }.to_json
+      request = Net::HTTP::Patch.new(uri)
+      request.set_form_data(current_contact_id: params[:current_contact_id],
+                            new_contact_id: params[:new_contact_id])
       request.basic_auth(current_user.username, current_user.password)
 
       if Rails.env.test?
@@ -48,11 +40,19 @@ class Registrar
       parsed_response = JSON.parse(response.body, symbolize_names: true)
 
       if response.code == '200'
-        flash[:notice] = t '.replaced'
+        notices = [t('.replaced')]
+
+        notices << "#{t('.affected_domains')}: #{parsed_response[:affected_domains].join(', ')}"
+
+        if parsed_response[:skipped_domains]
+          notices << "#{t('.skipped_domains')}: #{parsed_response[:skipped_domains].join(', ')}"
+        end
+
+        flash[:notice] = notices
         redirect_to registrar_domains_url
       else
-        @api_errors = parsed_response[:errors]
-        render :edit
+        @error = parsed_response[:error]
+        render file: 'registrar/bulk_change/new', locals: { active_tab: :technical_contact }
       end
     end
   end
