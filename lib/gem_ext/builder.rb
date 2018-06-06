@@ -1,5 +1,3 @@
-require 'builder'
-
 class Builder::XmlMarkup
   def epp_head
     self.instruct!
