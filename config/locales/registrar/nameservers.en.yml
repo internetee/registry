@@ -1,0 +1,5 @@
+en:
+  registrar:
+    nameservers:
+      update:
+        replaced: Nameserver have been successfully replaced

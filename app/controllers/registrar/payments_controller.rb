@@ -1,30 +1,34 @@
 class Registrar
   class PaymentsController < BaseController
-    protect_from_forgery except: :back
+    protect_from_forgery except: [:back, :callback]
 
     skip_authorization_check # actually anyone can pay, no problems at all
-    skip_before_action :authenticate_user!, :check_ip_restriction, only: [:back]
-    before_action :check_bank
+    skip_before_action :authenticate_user!, :check_ip_restriction, only: [:back, :callback]
+    before_action :check_supported_payment_method
 
-    # to handle existing model we should
-    # get invoice_id and then get number
-    # build BankTransaction without connection with right reference number
-    # do not connect transaction and invoice
     def pay
       invoice = Invoice.find(params[:invoice_id])
-      @bank_link = BankLink::Request.new(params[:bank], invoice, self)
-      @bank_link.make_transaction
+      bank = params[:bank]
+      opts = {
+        return_url: registrar_return_payment_with_url(
+          bank, invoice_id: invoice
+        ),
+        response_url: registrar_response_payment_with_url(
+          bank, invoice_id: invoice
+        )
+      }
+      @payment = ::PaymentOrders.create_with_type(bank, invoice, opts)
+      @payment.create_transaction
     end
 
-
-    # connect invoice and transaction
-    # both back and IPN
     def back
-      @bank_link = BankLink::Response.new(params[:bank], params)
-      if @bank_link.valid? && @bank_link.ok?
-        @bank_link.complete_payment
+      invoice = Invoice.find(params[:invoice_id])
+      opts = { response: params }
+      @payment = ::PaymentOrders.create_with_type(params[:bank], invoice, opts)
+      if @payment.valid_response_from_intermediary? && @payment.settled_payment?
+        @payment.complete_transaction
 
-        if @bank_link.invoice.binded?
+        if invoice.binded?
           flash[:notice] = t(:pending_applied)
         else
           flash[:alert] = t(:something_wrong)
@@ -32,17 +36,31 @@ class Registrar
       else
         flash[:alert] = t(:something_wrong)
       end
-      redirect_to registrar_invoice_path(@bank_link.invoice)
+      redirect_to registrar_invoice_path(invoice)
+    end
+
+    def callback
+      invoice = Invoice.find(params[:invoice_id])
+      opts = { response: params }
+      @payment = ::PaymentOrders.create_with_type(params[:bank], invoice, opts)
+
+      if @payment.valid_response_from_intermediary? && @payment.settled_payment?
+        @payment.complete_transaction
+      end
+
+      render status: 200, json: { status: 'ok' }
     end
 
     private
 
-    def banks
-      ENV['payments_banks'].split(",").map(&:strip)
+    def check_supported_payment_method
+      return if supported_payment_method?
+      raise StandardError.new("Not supported payment method")
     end
 
-    def check_bank
-      raise StandardError.new("Not Implemented bank") unless banks.include?(params[:bank])
+
+    def supported_payment_method?
+      PaymentOrders::PAYMENT_METHODS.include?(params[:bank])
     end
   end
 end
