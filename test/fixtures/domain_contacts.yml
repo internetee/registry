@@ -8,10 +8,25 @@ shop_william:
   contact: william
   type: TechDomainContact
 
+shop_acme_ltd:
+  domain: shop
+  contact: acme_ltd
+  type: TechDomainContact
+
 airport_john:
   domain: airport
   contact: john
   type: AdminDomainContact
+
+airport_william_admin:
+  domain: airport
+  contact: william
+  type: AdminDomainContact
+
+airport_william_tech:
+  domain: airport
+  contact: william
+  type: TechDomainContact
 
 library_john:
   domain: library

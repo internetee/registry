@@ -20,6 +20,7 @@ require 'support/paper_trail'
 require 'support/settings'
 
 ActiveRecord::Migration.maintain_test_schema!
+Setting.registry_country_code = 'US'
 
 RSpec.configure do |config|
   config.include ActionView::TestCase::Behavior, type: :presenter

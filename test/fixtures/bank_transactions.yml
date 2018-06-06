@@ -1,3 +1,8 @@
 one:
   sum: 1
   currency: EUR
+
+for_payments_test:
+  description: "Order nr. 1"
+  currency: "EUR"
+  iban: "1234"
