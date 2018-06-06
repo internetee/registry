@@ -40,7 +40,9 @@ Rails.application.configure do
   # Raises error for missing translations
   config.action_view.raise_on_missing_translations = true
 
-  config.cache_store = :null_store
+  # If set to :null_store, Setting.x returns nil after first spec runs (database is emptied)
+  config.cache_store = :memory_store
+  config.logger = ActiveSupport::Logger.new(nil)
 end
 
 Que.mode = :sync
