@@ -17,4 +17,4 @@
 
 - if !@invoice.cancelled? && !@invoice.binded?
   .row.semifooter
-    .col-md-12.text-right= render 'registrar/invoices/partials/banklinks'
+    .col-md-6-offset-6.text-right= render 'registrar/invoices/partials/banklinks', locals: { payment_channels: PaymentOrders::PAYMENT_METHODS }
