@@ -7,6 +7,8 @@
 #= require select2
 #= require datepicker
 #= require spell_check
+#= require popover
+#= require text_field_trimmer
 #= require shared/general
 #= require registrar/autocomplete
 #= require registrar/application
