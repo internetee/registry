@@ -10,10 +10,10 @@ RSpec.describe 'registrar/domains/_form' do
 
     assign(:domain, domain)
 
-    stub_template 'registrar/domains/form/_general' => ''
-    stub_template 'registrar/domains/form/_contacts' => ''
-    stub_template 'registrar/domains/form/_nameservers' => ''
-    stub_template 'registrar/domains/form/_dnskeys' => ''
+    stub_template 'registrar/domains/form/_general.html.haml' => ''
+    stub_template 'registrar/domains/form/_contacts.html.haml' => ''
+    stub_template 'registrar/domains/form/_nameservers.html.haml' => ''
+    stub_template 'registrar/domains/form/_dnskeys.html.haml' => ''
   end
 
   it 'has legal document' do
