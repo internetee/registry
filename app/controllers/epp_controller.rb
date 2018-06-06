@@ -358,12 +358,6 @@ class EppController < ApplicationController
   # rubocop: enable Metrics/CyclomaticComplexity
   # rubocop: enable Metrics/PerceivedComplexity
 
-  def iptables_counter_update
-    return if ENV['iptables_counter_enabled'].blank? && ENV['iptables_counter_enabled'] != 'true'
-    return if current_user.blank?
-    counter_update(current_user.registrar_code, ENV['iptables_server_ip'])
-  end
-
   def resource
     name = self.class.to_s.sub("Epp::","").sub("Controller","").underscore.singularize
     instance_variable_get("@#{name}")
@@ -405,6 +399,12 @@ class EppController < ApplicationController
   def session_timeout_reached?
     timeout = 5.minutes
     epp_session.updated_at < (Time.zone.now - timeout)
+  end
+
+  def iptables_counter_update
+    return if ENV['iptables_counter_enabled'].blank? && ENV['iptables_counter_enabled'] != 'true'
+    return if current_user.blank?
+    counter_update(current_user.registrar_code, ENV['iptables_server_ip'])
   end
 
   def counter_update(registrar_code, ip)
