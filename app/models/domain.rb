@@ -199,21 +199,6 @@ class Domain < ActiveRecord::Base
     statuses.include? DomainStatus::SERVER_TECH_CHANGE_PROHIBITED
   end
 
-  def self.clean_expired_pendings
-    ActiveSupport::Deprecation.instance.deprecation_warning(DomainCron, __method__)
-    DomainCron.send(__method__)
-  end
-
-  def self.start_redemption_grace_period
-    ActiveSupport::Deprecation.instance.deprecation_warning(DomainCron, __method__)
-    DomainCron.send(__method__)
-  end
-
-  def self.destroy_delete_candidates
-    ActiveSupport::Deprecation.instance.deprecation_warning(DomainCron, __method__)
-    DomainCron.send(__method__)
-  end
-
   class << self
     def nameserver_required?
       Setting.nameserver_required
