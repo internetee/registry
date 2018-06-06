@@ -1,25 +1,13 @@
-*.rbc
-capybara-*.html
-.rspec
 /log
 /tmp
-/db/*.sqlite3
 /public/system
-/public/assets
 /coverage/
-/spec/tmp
-**.orig
-config/initializers/secret_token.rb
-config/deploy.rb
-config/database.yml
-config/application.yml
-config/environments/development.rb
-misc
-/export
-/import
-/ca
 /.bundle
 /vendor/bundle
+/config/database.yml
+/config/application.yml
+/config/environments/development.rb
+/config/deploy.rb
 
-# unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
-.rvmrc
+# Do not commit one. Instead, download the latest from https://github.com/internetee/style-guide.
+.rubocop.yml

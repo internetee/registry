@@ -76,7 +76,7 @@ not_in_use:
 
 invalid:
   name: any
-  code: any
+  code: invalid
   email: invalid@invalid.test
   auth_info: any
   registrar: bestnames
