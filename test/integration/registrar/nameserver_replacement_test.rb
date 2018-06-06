@@ -2,7 +2,6 @@ require 'test_helper'
 
 class RegistrarNameserverReplacementTest < ActionDispatch::IntegrationTest
   setup do
-    WebMock.reset!
     login_as users(:api_goodnames)
   end
 
