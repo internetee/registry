@@ -8,7 +8,7 @@ FactoryBot.define do
     state 'test'
     zip 'test'
     email 'test@test.com'
-    country_code 'EE'
+    country_code 'US'
     accounting_customer_code 'test'
 
     factory :registrar_with_unlimited_balance do
