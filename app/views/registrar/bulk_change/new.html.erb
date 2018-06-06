@@ -1,0 +1,37 @@
+<ol class="breadcrumb">
+    <li><%= link_to t('registrar.domains.index.header'), registrar_domains_path %></li>
+</ol>
+
+<div class="page-header">
+    <h1><%= t '.header' %></h1>
+</div>
+
+
+        <ul class="nav nav-tabs">
+            <li class="<%= 'active' if active_tab == :technical_contact %>">
+                <a href="#technical_contact" data-toggle="tab"><%= t '.technical_contact' %></a>
+            </li>
+
+            <li class="<%= 'active' if active_tab == :nameserver %>">
+                <a href="#nameserver" data-toggle="tab"><%= t '.nameserver' %></a>
+            </li>
+
+            <li class="<%= 'active' if active_tab == :bulk_transfer %>">
+                <a href="#bulk_transfer" data-toggle="tab"><%= t '.bulk_transfer' %></a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane<%= ' active' if active_tab == :technical_contact %>"
+                 id="technical_contact">
+                <%= render 'tech_contact_form', available_contacts: available_contacts %>
+            </div>
+
+            <div class="tab-pane<%= ' active' if active_tab == :nameserver %>" id="nameserver">
+                <%= render 'nameserver_form' %>
+            </div>
+
+            <div class="tab-pane<%= ' active' if active_tab == :bulk_transfer %>" id="bulk_transfer">
+                <%= render 'bulk_transfer_form' %>
+            </div>
+        </div>

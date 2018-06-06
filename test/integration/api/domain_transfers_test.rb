@@ -53,7 +53,7 @@ class APIDomainTransfersTest < ActionDispatch::IntegrationTest
   end
 
   def test_duplicates_registrant_admin_and_tech_contacts
-    assert_difference -> { @new_registrar.contacts.size }, 2 do
+    assert_difference -> { @new_registrar.contacts.size }, 3 do
       post '/repp/v1/domain_transfers', request_params, { 'HTTP_AUTHORIZATION' => http_auth_key }
     end
   end

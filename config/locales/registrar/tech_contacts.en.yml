@@ -1,0 +1,7 @@
+en:
+  registrar:
+    tech_contacts:
+      update:
+        replaced: Technical contacts have been successfully replaced.
+        affected_domains: Affected domains
+        skipped_domains: Skipped domains
