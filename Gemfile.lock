@@ -439,6 +439,8 @@ GEM
     tilt (1.4.1)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
+    uglifier (4.1.11)
+      execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.2)
@@ -536,6 +538,7 @@ DEPENDENCIES
   simpleidn (= 0.0.7)
   spring
   spring-commands-rspec
+  uglifier
   uuidtools (= 2.1.5)
   validates_email_format_of (= 1.6.3)
   webmock
