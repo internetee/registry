@@ -31,8 +31,6 @@ RSpec.feature 'Contact deletion in registrar area' do
   background do
     allow(Depp::Contact).to receive(:find_by_id).and_return(FakeDeppContact.new)
     allow(Depp::Contact).to receive(:new).and_return(FakeDeppContact.new)
-    Setting.api_ip_whitelist_enabled = false
-    Setting.registrar_ip_whitelist_enabled = false
     sign_in_to_registrar_area(user: create(:api_user_with_unlimited_balance, registrar: registrar))
   end
 

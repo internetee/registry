@@ -2,6 +2,14 @@ require 'rails_helper'
 
 RSpec.describe Authorization::RestrictedIP do
   describe '::enabled?', db: true, settings: false do
+    before do
+      @original_registrar_ip_whitelist_enabled = Setting.registrar_ip_whitelist_enabled
+    end
+
+    after do
+      Setting.registrar_ip_whitelist_enabled = @original_registrar_ip_whitelist_enabled
+    end
+
     context 'when "registrar_ip_whitelist_enabled" is true' do
       before do
         Setting.registrar_ip_whitelist_enabled = true
@@ -13,10 +21,6 @@ RSpec.describe Authorization::RestrictedIP do
     end
 
     context 'when "registrar_ip_whitelist_enabled" is false' do
-      before do
-        Setting.registrar_ip_whitelist_enabled = false
-      end
-
       specify do
         expect(described_class).to_not be_enabled
       end
