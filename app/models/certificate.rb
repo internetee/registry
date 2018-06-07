@@ -76,7 +76,6 @@ class Certificate < ActiveRecord::Base
     @cached_status = REVOKED
   end
 
-  # rubocop: disable Metrics/AbcSize
   def sign!
     csr_file = Tempfile.new('client_csr')
     csr_file.write(csr)
@@ -102,13 +101,10 @@ class Certificate < ActiveRecord::Base
         errors.add(:base, I18n.t('failed_to_create_certificate'))
       end
       logger.error(err)
-      # rubocop:disable Rails/Output
       puts "Certificate sign issue: #{err.inspect}" if Rails.env.test?
-      # rubocop:enable Rails/Output
       return false
     end
   end
-  # rubocop: enable Metrics/AbcSize
 
   def revoke!
     crt_file = Tempfile.new('client_crt')

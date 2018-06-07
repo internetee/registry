@@ -18,8 +18,6 @@ class Epp::DomainsController < EppController
     render_epp_response '/epp/domains/info'
   end
 
-  # rubocop: disable Metrics/PerceivedComplexity
-  # rubocop: disable Metrics/CyclomaticComplexity
   def create
     authorize! :create, Epp::Domain
     @domain = Epp::Domain.new_from_epp(params[:parsed_frame], current_user)
@@ -46,8 +44,6 @@ class Epp::DomainsController < EppController
       end
     end
   end
-  # rubocop: enable Metrics/PerceivedComplexity
-  # rubocop: enable Metrics/CyclomaticComplexity
 
   def update
     authorize! :update, @domain, @password

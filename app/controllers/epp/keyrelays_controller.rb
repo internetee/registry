@@ -1,7 +1,6 @@
 class Epp::KeyrelaysController < EppController
   skip_authorization_check # TODO: move authorization under ability
 
-  # rubocop: disable Metrics/CyclomaticComplexity
   def keyrelay
     # keyrelay temp turned off
     @domain = find_domain
@@ -29,7 +28,6 @@ class Epp::KeyrelaysController < EppController
 
     exactly_one_of 'expiry > relative', 'expiry > absolute'
   end
-  # rubocop: enable Metrics/CyclomaticComplexity
 
   def find_domain
     domain_name = params[:parsed_frame].css('name').text.strip.downcase

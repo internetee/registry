@@ -2,7 +2,7 @@ class Registrar
   class AccountActivitiesController < BaseController
     load_and_authorize_resource
 
-    def index # rubocop: disable Metrics/AbcSize
+    def index
       params[:q] ||= {}
       account = current_user.registrar.cash_account
 
