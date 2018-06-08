@@ -25,13 +25,13 @@
             <dt><%= t(:valid_to) %></dt>
             <dd><%= l(@domain.valid_to) %></dd>
 
-            <dt><%= t(:outzone_at) %></dt>
+            <dt><%= Domain.human_attribute_name :outzone_at %></dt>
             <dd><%= l(@domain.outzone_at) %></dd>
 
-            <dt><%= t(:delete_at) %></dt>
+            <dt><%= Domain.human_attribute_name :delete_at %></dt>
             <dd><%= l(@domain.delete_at) %></dd>
 
-            <dt><%= t(:force_delete_at) %></dt>
+            <dt><%= Domain.human_attribute_name :force_delete_at %></dt>
             <dd><%= l(@domain.force_delete_at) %></dd>
         </dl>
     </div>
