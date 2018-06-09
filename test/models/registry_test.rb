@@ -10,7 +10,11 @@ class RegistryTest < ActiveSupport::TestCase
   end
 
   def test_vat_rate
+    original_vat_prc = Setting.registry_vat_prc
     Setting.registry_vat_prc = 0.25
+
     assert_equal BigDecimal(25), @registry.vat_rate
+
+    Setting.registry_vat_prc = original_vat_prc
   end
 end
