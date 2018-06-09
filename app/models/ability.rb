@@ -13,9 +13,9 @@ class Ability
 
     case @user.class.to_s
     when 'AdminUser'
-      @user.roles.each { |role| send(role) } if @user.roles
+      @user.roles&.each { |role| send(role) }
     when 'ApiUser'
-      @user.roles.each { |role| send(role) } if @user.roles
+      @user.roles&.each { |role| send(role) }
       when 'RegistrantUser'
       static_registrant
     end

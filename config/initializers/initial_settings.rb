@@ -72,4 +72,5 @@ if con.present? && con.table_exists?('settings')
   Setting.save_default(:registry_bank_code, '689')
   Setting.save_default(:registry_swift, 'LHVBEE22')
   Setting.save_default(:registry_invoice_contact, 'Martti Õigus')
+  Setting.save_default(:registry_whois_disclaimer, 'Search results may not be used for commercial, advertising, recompilation, repackaging, redistribution, reuse, obscuring or other similar activities.')
 end

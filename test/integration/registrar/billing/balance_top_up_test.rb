@@ -6,6 +6,7 @@ class BalanceTopUpTest < ActionDispatch::IntegrationTest
   end
 
   def test_creates_new_invoice
+    original_vat_prc = Setting.registry_vat_prc
     Setting.registry_vat_prc = 0.1
 
     visit registrar_invoices_url
@@ -21,5 +22,7 @@ class BalanceTopUpTest < ActionDispatch::IntegrationTest
     assert_equal BigDecimal(10), invoice.vat_rate
     assert_equal BigDecimal('28.05'), invoice.total
     assert_text 'Please pay the following invoice'
+
+    Setting.registry_vat_prc = original_vat_prc
   end
 end

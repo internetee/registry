@@ -59,5 +59,6 @@ module Repp
     mount Repp::AccountV1
     mount Repp::DomainTransfersV1
     mount Repp::NameserversV1
+    mount Repp::DomainContactsV1
   end
 end

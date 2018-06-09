@@ -62,9 +62,9 @@ Rails.application.routes.draw do
       end
     end
     resources :domain_transfers, only: %i[new create]
-    get 'registrar/nameservers', to: 'registrar_nameservers#edit', as: :edit_registrar_nameserver
-    put 'registrar/nameservers', to: 'registrar_nameservers#update', as: :update_registrar_nameserver
-
+    resource :bulk_change, controller: :bulk_change, only: :new
+    resource :tech_contacts, only: :update
+    resource :nameservers, only: :update
     resources :contacts, constraints: {:id => /[^\/]+(?=#{ ActionController::Renderers::RENDERERS.map{|e| "\\.#{e}\\z"}.join("|") })|[^\/]+/} do
       member do
         get 'delete'
@@ -91,10 +91,11 @@ Rails.application.routes.draw do
       end
     end
 
-
-    get  'pay/return/:bank' => 'payments#back',  as: 'return_payment_with'
-    post 'pay/return/:bank' => 'payments#back'
-    get  'pay/go/:bank'     => 'payments#pay',   as: 'payment_with'
+    get  'pay/return/:bank'       => 'payments#back',  as: 'return_payment_with'
+    post 'pay/return/:bank'       => 'payments#back'
+    put  'pay/return/:bank'       => 'payments#back'
+    post 'pay/callback/:bank'     => 'payments#callback', as: 'response_payment_with'
+    get  'pay/go/:bank'           => 'payments#pay',   as: 'payment_with'
   end
 
   namespace :registrant do
@@ -144,7 +145,6 @@ Rails.application.routes.draw do
     end
 
     resources :contacts
-    resources :whois
   end
 
 

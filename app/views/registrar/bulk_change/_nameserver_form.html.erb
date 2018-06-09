@@ -1,0 +1,67 @@
+<%= form_tag registrar_nameservers_path, method: :patch, class: 'form-horizontal' do %>
+    <%= render 'registrar/domain_transfers/form/api_errors' %>
+
+    <div class="form-group">
+        <div class="col-md-2 control-label">
+            <%= label_tag :old_hostname %>
+        </div>
+
+        <div class="col-md-4">
+            <%= text_field_tag :old_hostname, params[:old_hostname], required: true,
+                               class: 'form-control' %>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-2 control-label">
+            <%= label_tag :new_hostname %>
+        </div>
+
+        <div class="col-md-4">
+            <%= text_field_tag :new_hostname, params[:new_hostname], required: true,
+                               class: 'form-control' %>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-2 control-label">
+            <%= label_tag :ipv4 %>
+        </div>
+
+        <div class="col-md-4">
+            <%= text_area_tag :ipv4, params[:ipv4], class: 'form-control' %>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-2 control-label">
+            <%= label_tag :ipv6 %>
+        </div>
+
+        <div class="col-md-4">
+            <%= text_area_tag :ipv6, params[:ipv6], class: 'form-control' %>
+            <span class="help-block"><%= t '.ip_hint' %></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-4 col-md-offset-2 text-right">
+            <button class="btn btn-warning">
+                <%= t '.replace_btn' %>
+            </button>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-6">
+            <a class="btn btn-default btn-xs" role="button" data-toggle="collapse"
+               href="#bulk_change_nameserver_help"><%= t '.help_btn' %>
+            </a>
+            <div class="collapse" id="bulk_change_nameserver_help">
+                <div class="well">
+                    <%= t '.help' %>
+                </div>
+            </div>
+        </div>
+    </div>
+<% end %>
