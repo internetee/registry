@@ -1,5 +1,5 @@
 class Array
-  def include_any? *args
+  def include_any?(*args)
     (self & args).any?
   end
 end

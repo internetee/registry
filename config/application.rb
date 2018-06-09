@@ -40,8 +40,8 @@ module DomainNameRegistry
 
     # Autoload all model subdirs
     config.autoload_paths += Dir[Rails.root.join('app', 'models', '**/')]
-    config.autoload_paths << Rails.root.join('lib')
     config.eager_load_paths << config.root.join('lib', 'validators')
+    config.watchable_dirs['lib'] = %i[rb]
 
     # Add the fonts path
     config.assets.paths << Rails.root.join('vendor', 'assets', 'fonts')

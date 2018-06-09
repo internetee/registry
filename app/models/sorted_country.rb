@@ -1,6 +1,3 @@
-require 'countries'
-require 'action_view'
-
 class SortedCountry
   class << self
     include ActionView::Helpers
@@ -21,12 +18,12 @@ class SortedCountry
     def quick_list
       @quick_list ||=
         [
-          ['Estonia', 'EE'],
-          ['Finland', 'FI'],
-          ['Latvia', 'LV'],
-          ['Lithuania', 'LT'],
+          %w[Estonia' EE],
+          %w[Finland FI],
+          %w[Latvia LV],
+          %w[Lithuania LT],
           ['Russian Federation', 'RU'],
-          ['Sweden', 'SE'],
+          %w[Sweden SE],
           ['United States', 'US']
         ]
     end

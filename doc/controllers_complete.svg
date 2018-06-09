@@ -668,7 +668,6 @@
 <text text-anchor="start" x="-72.5" y="-60.8" font-family="Times,serif" font-size="14.00">generate_svtrid</text>
 <text text-anchor="start" x="-72.5" y="-45.8" font-family="Times,serif" font-size="14.00">handle_errors</text>
 <text text-anchor="start" x="-72.5" y="-30.8" font-family="Times,serif" font-size="14.00">has_attribute</text>
-<text text-anchor="start" x="-72.5" y="-15.8" font-family="Times,serif" font-size="14.00">iptables_counter_update</text>
 <text text-anchor="start" x="-72.5" y="-0.8" font-family="Times,serif" font-size="14.00">latin_only</text>
 <text text-anchor="start" x="-72.5" y="14.2" font-family="Times,serif" font-size="14.00">mutually_exclusive</text>
 <text text-anchor="start" x="-72.5" y="29.2" font-family="Times,serif" font-size="14.00">optional</text>
