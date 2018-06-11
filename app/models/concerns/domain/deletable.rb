@@ -14,8 +14,7 @@ module Concerns::Domain::Deletable
   end
 
   def deletion_time_span
-    # 5 minutes to ensure we don't create a background job with past `run_at`
-    ((Time.zone.now + 5.minutes).to_i)..(deletion_deadline.to_i)
+    Time.zone.now.to_i..deletion_deadline.to_i
   end
 
   def deletion_deadline
