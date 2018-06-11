@@ -11,6 +11,7 @@ module Concerns::Domain::ForceDelete
     self.force_delete_at = (Time.zone.now + (Setting.redemption_grace_period.days + 1.day)).utc
                              .beginning_of_day
     stop_all_pending_actions
+    allow_deletion
     save(validate: false)
   end
 
@@ -26,8 +27,6 @@ module Concerns::Domain::ForceDelete
   private
 
   def stop_all_pending_actions
-    statuses.delete(DomainStatus::CLIENT_DELETE_PROHIBITED)
-    statuses.delete(DomainStatus::SERVER_DELETE_PROHIBITED)
     statuses.delete(DomainStatus::PENDING_UPDATE)
     statuses.delete(DomainStatus::PENDING_TRANSFER)
     statuses.delete(DomainStatus::PENDING_RENEW)
@@ -62,5 +61,10 @@ module Concerns::Domain::ForceDelete
     statuses.delete(DomainStatus::SERVER_UPDATE_PROHIBITED)
     statuses.delete(DomainStatus::PENDING_DELETE)
     statuses.delete(DomainStatus::SERVER_MANUAL_INZONE)
+  end
+
+  def allow_deletion
+    statuses.delete(DomainStatus::CLIENT_DELETE_PROHIBITED)
+    statuses.delete(DomainStatus::SERVER_DELETE_PROHIBITED)
   end
 end

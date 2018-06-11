@@ -34,10 +34,20 @@ class DomainForceDeleteTest < ActiveSupport::TestCase
     assert (@domain.statuses & statuses_to_be_added) == statuses_to_be_added
   end
 
-  def test_scheduling_force_delete_stops_pending_actions
+  def test_scheduling_force_delete_allows_domain_deletion
     statuses_to_be_removed = [
       DomainStatus::CLIENT_DELETE_PROHIBITED,
       DomainStatus::SERVER_DELETE_PROHIBITED,
+    ]
+
+    @domain.statuses = statuses_to_be_removed + %w[other-status]
+    @domain.schedule_force_delete
+    @domain.reload
+    assert_empty @domain.statuses & statuses_to_be_removed
+  end
+
+  def test_scheduling_force_delete_stops_pending_actions
+    statuses_to_be_removed = [
       DomainStatus::PENDING_UPDATE,
       DomainStatus::PENDING_TRANSFER,
       DomainStatus::PENDING_RENEW,
