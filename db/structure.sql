@@ -51,6 +51,20 @@ CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
 COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
 
 
+--
+-- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
+
+
 SET search_path = public, pg_catalog;
 
 --
@@ -4715,4 +4729,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180314122722');
 INSERT INTO schema_migrations (version) VALUES ('20180327151906');
 
 INSERT INTO schema_migrations (version) VALUES ('20180331200125');
+
+INSERT INTO schema_migrations (version) VALUES ('20180612042234');
 
