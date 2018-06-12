@@ -912,7 +912,8 @@ CREATE TABLE domains (
     status_notes hstore,
     statuses_backup character varying[] DEFAULT '{}'::character varying[],
     upid integer,
-    up_date timestamp without time zone
+    up_date timestamp without time zone,
+    uuid uuid DEFAULT gen_random_uuid()
 );
 
 
@@ -4734,4 +4735,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180331200125');
 INSERT INTO schema_migrations (version) VALUES ('20180612042234');
 
 INSERT INTO schema_migrations (version) VALUES ('20180612042625');
+
+INSERT INTO schema_migrations (version) VALUES ('20180612042953');
 
