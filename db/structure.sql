@@ -639,7 +639,8 @@ CREATE TABLE contacts (
     original_id integer,
     ident_updated_at timestamp without time zone,
     upid integer,
-    up_date timestamp without time zone
+    up_date timestamp without time zone,
+    uuid uuid DEFAULT gen_random_uuid()
 );
 
 
@@ -4731,4 +4732,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180327151906');
 INSERT INTO schema_migrations (version) VALUES ('20180331200125');
 
 INSERT INTO schema_migrations (version) VALUES ('20180612042234');
+
+INSERT INTO schema_migrations (version) VALUES ('20180612042625');
 
