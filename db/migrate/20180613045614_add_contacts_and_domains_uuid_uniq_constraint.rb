@@ -1,3 +1,4 @@
+# Unique constraint is needed to prevent accidental duplicate values in fixtures to appear in DB
 class AddContactsAndDomainsUuidUniqConstraint < ActiveRecord::Migration
   def up
     execute <<-SQL
