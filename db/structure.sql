@@ -640,7 +640,7 @@ CREATE TABLE contacts (
     ident_updated_at timestamp without time zone,
     upid integer,
     up_date timestamp without time zone,
-    uuid uuid DEFAULT gen_random_uuid()
+    uuid uuid DEFAULT gen_random_uuid() NOT NULL
 );
 
 
@@ -913,7 +913,7 @@ CREATE TABLE domains (
     statuses_backup character varying[] DEFAULT '{}'::character varying[],
     upid integer,
     up_date timestamp without time zone,
-    uuid uuid DEFAULT gen_random_uuid()
+    uuid uuid DEFAULT gen_random_uuid() NOT NULL
 );
 
 
@@ -4737,4 +4737,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180612042234');
 INSERT INTO schema_migrations (version) VALUES ('20180612042625');
 
 INSERT INTO schema_migrations (version) VALUES ('20180612042953');
+
+INSERT INTO schema_migrations (version) VALUES ('20180613030330');
 
