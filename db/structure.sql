@@ -3259,6 +3259,22 @@ ALTER TABLE ONLY settings
 
 
 --
+-- Name: uniq_contact_uuid; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY contacts
+    ADD CONSTRAINT uniq_contact_uuid UNIQUE (uuid);
+
+
+--
+-- Name: uniq_domain_uuid; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY domains
+    ADD CONSTRAINT uniq_domain_uuid UNIQUE (uuid);
+
+
+--
 -- Name: unique_code; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4739,4 +4755,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180612042625');
 INSERT INTO schema_migrations (version) VALUES ('20180612042953');
 
 INSERT INTO schema_migrations (version) VALUES ('20180613030330');
+
+INSERT INTO schema_migrations (version) VALUES ('20180613045614');
 
