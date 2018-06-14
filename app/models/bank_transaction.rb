@@ -36,8 +36,6 @@ class BankTransaction < ActiveRecord::Base
 
 
   # For successful binding, reference number, invoice id and sum must match with the invoice
-  # rubocop: disable Metrics/PerceivedComplexity
-  # rubocop: disable Metrics/CyclomaticComplexity
   def autobind_invoice
     return if binded?
     return unless registrar
@@ -50,8 +48,6 @@ class BankTransaction < ActiveRecord::Base
     return if invoice.total != sum
     create_activity(registrar, invoice)
   end
-  # rubocop: enable Metrics/PerceivedComplexity
-  # rubocop: enable Metrics/CyclomaticComplexity
 
   def bind_invoice(invoice_no)
     if binded?

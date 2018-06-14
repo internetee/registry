@@ -58,11 +58,9 @@ class EppController < ApplicationController
       end
 
       if Rails.env.test? || Rails.env.development?
-        # rubocop:disable Rails/Output
         puts e.backtrace.reverse.join("\n")
         puts "\n  BACKTRACE REVERSED!\n"
         puts "\n  FROM-EPP-RESCUE: #{e.message}\n\n\n"
-        # rubocop:enable Rails/Output
       else
         logger.error "FROM-EPP-RESCUE: #{e.message}"
         logger.error e.backtrace.join("\n")
@@ -77,9 +75,7 @@ class EppController < ApplicationController
   end
 
   def generate_svtrid
-    # rubocop: disable Style/VariableName
     @svTRID = "ccReg-#{format('%010d', rand(10**10))}"
-    # rubocop: enable Style/VariableName
   end
 
   def params_hash # TODO: THIS IS DEPRECATED AND WILL BE REMOVED IN FUTURE
@@ -323,16 +319,12 @@ class EppController < ApplicationController
     epp_errors.empty?
   end
 
-  # rubocop: disable Style/PredicateName
   def has_attribute(ph, path) # TODO: THIS IS DEPRECATED AND WILL BE REMOVED IN FUTURE
     path.reduce(ph) do |location, key|
       location.respond_to?(:keys) ? location[key] : nil
     end
   end
-  # rubocop: enable Style/PredicateName
 
-  # rubocop: disable Metrics/CyclomaticComplexity
-  # rubocop: disable Metrics/PerceivedComplexity
   def write_to_epp_log
     request_command = params[:command] || params[:action] # error receives :command, other methods receive :action
     frame = params[:raw_frame] || params[:frame]
@@ -355,8 +347,6 @@ class EppController < ApplicationController
       uuid: request.uuid
     })
   end
-  # rubocop: enable Metrics/CyclomaticComplexity
-  # rubocop: enable Metrics/PerceivedComplexity
 
   def resource
     name = self.class.to_s.sub("Epp::","").sub("Controller","").underscore.singularize
