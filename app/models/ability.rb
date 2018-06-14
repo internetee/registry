@@ -1,9 +1,5 @@
 class Ability
   include CanCan::Ability
-  # rubocop: disable Metrics/CyclomaticComplexity
-  # rubocop: disable Metrics/PerceivedComplexity
-  # rubocop: disable Metrics/LineLength
-  # rubocop: disable Metrics/AbcSize
   def initialize(user, ip = nil)
     @ip = ip
     alias_action :show, to: :view
@@ -128,8 +124,4 @@ class Ability
   def user
     can :show, :dashboard
   end
-
-  # rubocop: enable Metrics/LineLength
-  # rubocop: enable Metrics/CyclomaticComplexity
-  # rubocop: enable Metrics/PerceivedComplexity
 end

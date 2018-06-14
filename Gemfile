@@ -101,8 +101,6 @@ gem 'jquery-ui-rails', '5.0.5'
 gem 'active_model-errors_details' # Backport from Rails 5, https://github.com/rails/rails/pull/18322
 
 group :development do
-  gem 'rubocop'
-
   # deploy
   gem 'mina', '0.3.1' # for fast deployment
   gem 'puma'

@@ -5,10 +5,6 @@ class Epp::SessionsController < EppController
     render_epp_response('greeting')
   end
 
-  # rubocop: disable Metrics/PerceivedComplexity
-  # rubocop: disable Metrics/CyclomaticComplexity
-  # rubocop: disable Metrics/MethodLength
-  # rubocop: disable Metrics/AbcSize
   def login
     success = true
     @api_user = ApiUser.find_by(login_params)
@@ -101,10 +97,6 @@ class Epp::SessionsController < EppController
       handle_errors
     end
   end
-  # rubocop: enable Metrics/MethodLength
-  # rubocop: enable Metrics/AbcSize
-  # rubocop: enable Metrics/PerceivedComplexity
-  # rubocop: enable Metrics/CyclomaticComplexity
 
   def ip_white?
     webclient_request = ENV['webclient_ips'].split(',').map(&:strip).include?(request.ip)

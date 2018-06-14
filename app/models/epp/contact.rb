@@ -19,9 +19,6 @@ class Epp::Contact < Contact
       find_by(code: code)
     end
 
-    # rubocop: disable Metrics/PerceivedComplexity
-    # rubocop: disable Metrics/CyclomaticComplexity
-    # rubocop: disable Metrics/AbcSize
     def attrs_from(frame, new_record: false)
       f = frame
       at = {}.with_indifferent_access
@@ -45,9 +42,6 @@ class Epp::Contact < Contact
       at.merge!(ident_attrs(f.css('ident').first)) if new_record
       at
     end
-    # rubocop: enable Metrics/PerceivedComplexity
-    # rubocop: enable Metrics/CyclomaticComplexity
-    # rubocop: enable Metrics/AbcSize
 
     def new(frame, registrar)
       return super if frame.blank?

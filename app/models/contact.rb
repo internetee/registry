@@ -311,7 +311,6 @@ class Contact < ActiveRecord::Base
     self[:code] = code if new_record? # cannot change code later
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity
   def generate_code
     return nil unless new_record?
     return nil if registrar.blank?
@@ -328,7 +327,6 @@ class Contact < ActiveRecord::Base
 
     self[:code] = "#{registrar.code}:#{code}".upcase
   end
-  # rubocop:enable Metrics/CyclomaticComplexity
 
   alias_method :regenerate_code, :generate_code
 

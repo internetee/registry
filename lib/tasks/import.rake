@@ -1,5 +1,3 @@
-# rubocop: disable Style/SymbolProc
-# rubocop: disable Performance/Detect
 namespace :import do
   # README
   #
@@ -360,7 +358,6 @@ namespace :import do
       legacy_contact_id
     )
 
-    # rubocop: disable Lint/UselessAssignment
     domain_status_columns = %w(
       description
       value
@@ -368,7 +365,6 @@ namespace :import do
       updator_str
       legacy_domain_id
     )
-    # rubocop: enable Lint/UselessAssignment
 
     nameserver_columns = %w(
       hostname
@@ -786,5 +782,3 @@ def parse_zone_ns_data(domain, zone)
   end
   [ns_records.strip, a_records.strip, a4_records.strip]
 end
-# rubocop: enable Performance/Detect
-# rubocop: enable Style/SymbolProc
