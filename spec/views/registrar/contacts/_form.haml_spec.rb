@@ -10,11 +10,11 @@ RSpec.describe 'registrar/contacts/_form' do
 
     assign(:contact, contact)
 
-    stub_template 'registrar/shared/_error_messages' => ''
-    stub_template 'registrar/contacts/form/_general' => ''
-    stub_template 'registrar/contacts/form/_address' => 'address info'
-    stub_template 'registrar/contacts/form/_code' => ''
-    stub_template 'registrar/contacts/form/_legal_document' => ''
+    stub_template 'registrar/shared/_error_messages.haml' => ''
+    stub_template 'registrar/contacts/form/_general.html.haml' => ''
+    stub_template 'registrar/contacts/form/_address.html.haml' => 'address info'
+    stub_template 'registrar/contacts/form/_code.html.haml' => ''
+    stub_template 'registrar/contacts/form/_legal_document.html.haml' => ''
   end
 
   context 'when address processing is enabled' do

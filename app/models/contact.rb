@@ -372,8 +372,6 @@ class Contact < ActiveRecord::Base
   end
 
   def related_domain_descriptions
-    ActiveSupport::Deprecation.warn('Use #domain_names_with_roles')
-
     @desc = {}
 
     registrant_domains.each do |dom|

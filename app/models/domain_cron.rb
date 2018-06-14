@@ -92,7 +92,7 @@ class DomainCron
       if domain.save(validate: false)
         ::PaperTrail.whodunnit = "cron - #{__method__}"
         DomainDeleteJob.enqueue(domain.id, run_at: rand(((24*60) - (DateTime.now.hour * 60  + DateTime.now.minute))).minutes.from_now)
-        STDOUT << "#{Time.zone.now.utc} Domain.destroy_delete_candidates: job added by deleteCandidate status ##{domain.id} (#{domain.name})\n" unless Rails.env.test?
+        STDOUT << "#{Time.zone.now.utc} DomainCron.destroy_delete_candidates: job added by deleteCandidate status ##{domain.id} (#{domain.name})\n" unless Rails.env.test?
         c += 1
       end
     end

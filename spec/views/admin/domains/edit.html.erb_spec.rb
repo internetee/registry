@@ -13,8 +13,8 @@ RSpec.describe 'admin/domains/edit' do
 
     assign(:domain, domain)
 
-    stub_template '_form' => ''
-    stub_template '_force_delete_dialog' => ''
+    stub_template '_form.html.erb' => ''
+    stub_template '_force_delete_dialog.html.erb' => ''
   end
 
   it 'has force_delete_toggle_btn' do
