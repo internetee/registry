@@ -17,8 +17,6 @@ class WhoisRecord < ActiveRecord::Base
     @generated_json ||= generate_json
   end
 
-  # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/AbcSize
   def generate_json
     h = HashWithIndifferentAccess.new
     return h if domain.blank?
@@ -99,9 +97,6 @@ class WhoisRecord < ActiveRecord::Base
     template = Rails.root.join("app/views/for_models/#{template_name}".freeze)
     ERB.new(template.read, nil, "-").result(binding)
   end
-  # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Metrics/AbcSize
-
 
   def populate
     return if domain_id.blank?
