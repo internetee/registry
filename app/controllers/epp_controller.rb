@@ -1,5 +1,4 @@
 class EppController < ApplicationController
-  include Iptable
   layout false
   protect_from_forgery with: :null_session
   skip_before_action :verify_authenticity_token
@@ -359,12 +358,6 @@ class EppController < ApplicationController
   # rubocop: enable Metrics/CyclomaticComplexity
   # rubocop: enable Metrics/PerceivedComplexity
 
-  def iptables_counter_update
-    return if ENV['iptables_counter_enabled'].blank? && ENV['iptables_counter_enabled'] != 'true'
-    return if current_user.blank?
-    counter_update(current_user.registrar_code, ENV['iptables_server_ip'])
-  end
-
   def resource
     name = self.class.to_s.sub("Epp::","").sub("Controller","").underscore.singularize
     instance_variable_get("@#{name}")
@@ -406,5 +399,27 @@ class EppController < ApplicationController
   def session_timeout_reached?
     timeout = 5.minutes
     epp_session.updated_at < (Time.zone.now - timeout)
+  end
+
+  def iptables_counter_update
+    return if ENV['iptables_counter_enabled'].blank? && ENV['iptables_counter_enabled'] != 'true'
+    return if current_user.blank?
+    counter_update(current_user.registrar_code, ENV['iptables_server_ip'])
+  end
+
+  def counter_update(registrar_code, ip)
+    counter_proc = "/proc/net/xt_recent/#{registrar_code}"
+
+    begin
+      File.open(counter_proc, 'a') do |f|
+        f.puts "+#{ip}"
+      end
+    rescue Errno::ENOENT => e
+      logger.error "IPTABLES COUNTER UPDATE: cannot open #{counter_proc}: #{e}"
+    rescue Errno::EACCES => e
+      logger.error "IPTABLES COUNTER UPDATE: no permission #{counter_proc}: #{e}"
+    rescue IOError => e
+      logger.error "IPTABLES COUNTER UPDATE: cannot write #{ip} to #{counter_proc}: #{e}"
+    end
   end
 end

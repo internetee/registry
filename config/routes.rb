@@ -1,4 +1,4 @@
-require 'epp_constraint'
+require_dependency 'epp_constraint'
 
 Rails.application.routes.draw do
   namespace(:epp, defaults: { format: :xml }) do
