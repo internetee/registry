@@ -1,18 +1,15 @@
-require 'countries'
-require 'action_view'
-
 class SortedCountry
   class << self
     include ActionView::Helpers
 
     def all_options(selected = nil)
-      quick_options = options_for_select(quick_list, { selected: selected })  
+      quick_options = options_for_select(quick_list, selected: selected)
 
       # no double select
-      selected = quick_list.map(&:second).include?(selected) ? '' : selected 
+      selected = quick_list.map(&:second).include?(selected) ? '' : selected
 
-      all_options = options_for_select([['---', '---']] + all_sorted_truncated, 
-                                       { selected: selected, disabled: ['---'] })
+      all_options = options_for_select([['---', '---']] + all_sorted_truncated,
+                                       selected: selected, disabled: ['---'])
       quick_options + all_options
     end
 
@@ -21,12 +18,12 @@ class SortedCountry
     def quick_list
       @quick_list ||=
         [
-          ['Estonia', 'EE'],
-          ['Finland', 'FI'],
-          ['Latvia', 'LV'],
-          ['Lithuania', 'LT'],
+          %w[Estonia' EE],
+          %w[Finland FI],
+          %w[Latvia LV],
+          %w[Lithuania LT],
           ['Russian Federation', 'RU'],
-          ['Sweden', 'SE'],
+          %w[Sweden SE],
           ['United States', 'US']
         ]
     end

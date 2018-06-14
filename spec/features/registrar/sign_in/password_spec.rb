@@ -1,10 +1,6 @@
 require 'rails_helper'
 
 RSpec.feature 'Registrar area password sign-in' do
-  background do
-    Setting.registrar_ip_whitelist_enabled = false
-  end
-
   scenario 'signs in the user with valid credentials' do
     create(:api_user_with_unlimited_balance,
            active: true,

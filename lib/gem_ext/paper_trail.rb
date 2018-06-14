@@ -8,7 +8,7 @@ end
 # Store console and rake changes in versions
 if defined?(::Rails::Console)
   PaperTrail.whodunnit = "console-#{`whoami`.strip}"
-elsif File.basename($PROGRAM_NAME) == "rake"
+elsif File.basename($PROGRAM_NAME) == 'rake'
   # rake username does not work when spring enabled
   PaperTrail.whodunnit = "rake-#{`whoami`.strip} #{ARGV.join ' '}"
 end
