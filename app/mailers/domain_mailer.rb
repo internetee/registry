@@ -45,18 +45,4 @@ class DomainMailer < ApplicationMailer
          subject: "#{I18n.t(:delete_confirmation_subject,
          name: @domain.name)} [#{@domain.name}]")
   end
-
-  private
-  # app/models/DomainMailModel provides the data for mail that can be composed_from
-  # which ensures that values of objects are captured when they are valid, not later when this method is executed
-  def compose_from(params)
-    @params = params
-    return if delivery_off?(params, params[:deliver_emails])
-    return if whitelist_blocked?(params[:recipient])
-    params[:errors].map do |error|
-      logger.warn error
-      return
-    end
-    mail(to: params[:recipient], subject: params[:subject])
-  end
 end

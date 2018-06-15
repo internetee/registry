@@ -581,10 +581,6 @@ class Domain < ActiveRecord::Base
     end
   end
 
-  def send_mail(action)
-    DomainMailer.send(action, DomainMailModel.new(self).send(action)).deliver
-  end
-
   def admin_contact_names
     admin_contacts.names
   end
