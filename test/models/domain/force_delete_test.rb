@@ -21,7 +21,7 @@ class DomainForceDeleteTest < ActiveSupport::TestCase
   end
 
   def test_scheduling_force_delete_adds_corresponding_statuses
-    statuses = [
+    statuses_to_be_added = [
       DomainStatus::FORCE_DELETE,
       DomainStatus::SERVER_RENEW_PROHIBITED,
       DomainStatus::SERVER_TRANSFER_PROHIBITED,
@@ -31,23 +31,33 @@ class DomainForceDeleteTest < ActiveSupport::TestCase
 
     @domain.schedule_force_delete
     @domain.reload
-    assert (@domain.statuses & statuses) == statuses
+    assert (@domain.statuses & statuses_to_be_added) == statuses_to_be_added
+  end
+
+  def test_scheduling_force_delete_allows_domain_deletion
+    statuses_to_be_removed = [
+      DomainStatus::CLIENT_DELETE_PROHIBITED,
+      DomainStatus::SERVER_DELETE_PROHIBITED,
+    ]
+
+    @domain.statuses = statuses_to_be_removed + %w[other-status]
+    @domain.schedule_force_delete
+    @domain.reload
+    assert_empty @domain.statuses & statuses_to_be_removed
   end
 
   def test_scheduling_force_delete_stops_pending_actions
-    statuses = [
-      DomainStatus::CLIENT_DELETE_PROHIBITED,
-      DomainStatus::SERVER_DELETE_PROHIBITED,
+    statuses_to_be_removed = [
       DomainStatus::PENDING_UPDATE,
       DomainStatus::PENDING_TRANSFER,
       DomainStatus::PENDING_RENEW,
       DomainStatus::PENDING_CREATE,
     ]
 
-    @domain.statuses = statuses + %w[other-status]
+    @domain.statuses = statuses_to_be_removed + %w[other-status]
     @domain.schedule_force_delete
     @domain.reload
-    assert_not (@domain.statuses & statuses).any?, 'Pending actions should be stopped'
+    assert_empty @domain.statuses & statuses_to_be_removed, 'Pending actions should be stopped'
   end
 
   def test_scheduling_force_delete_preserves_current_statuses
@@ -103,7 +113,7 @@ class DomainForceDeleteTest < ActiveSupport::TestCase
     @domain.cancel_force_delete
     @domain.reload
 
-    assert (@domain.statuses & statuses).empty?
+    assert_empty @domain.statuses & statuses
   end
 
   def test_cancelling_force_delete_restores_statuses_that_a_domain_had_before_force_delete
