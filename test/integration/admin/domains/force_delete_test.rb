@@ -44,8 +44,8 @@ class AdminAreaDomainForceDeleteTest < ActionDispatch::IntegrationTest
   end
 
   def test_cancels_scheduled_domain_force_delete
-    @domain.update_attribute(:statuses, [DomainStatus::FORCE_DELETE])
-    assert @domain.force_delete_scheduled?
+    @domain.discard
+    @domain.schedule_force_delete
 
     visit edit_admin_domain_url(@domain)
     click_link_or_button 'Cancel force delete'
