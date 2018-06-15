@@ -1,5 +1,4 @@
 class EppController < ApplicationController
-  include Iptable
   layout false
   protect_from_forgery with: :null_session
   skip_before_action :verify_authenticity_token
@@ -59,11 +58,9 @@ class EppController < ApplicationController
       end
 
       if Rails.env.test? || Rails.env.development?
-        # rubocop:disable Rails/Output
         puts e.backtrace.reverse.join("\n")
         puts "\n  BACKTRACE REVERSED!\n"
         puts "\n  FROM-EPP-RESCUE: #{e.message}\n\n\n"
-        # rubocop:enable Rails/Output
       else
         logger.error "FROM-EPP-RESCUE: #{e.message}"
         logger.error e.backtrace.join("\n")
@@ -78,9 +75,7 @@ class EppController < ApplicationController
   end
 
   def generate_svtrid
-    # rubocop: disable Style/VariableName
     @svTRID = "ccReg-#{format('%010d', rand(10**10))}"
-    # rubocop: enable Style/VariableName
   end
 
   def params_hash # TODO: THIS IS DEPRECATED AND WILL BE REMOVED IN FUTURE
@@ -168,7 +163,7 @@ class EppController < ApplicationController
 
     # validate legal document's type here because it may be in most of the requests
     @prefix = nil
-    if element_count('extdata > legalDocument') > 0
+    if element_count('extdata > legalDocument').positive?
       requires_attribute('extdata > legalDocument', 'type', values: LegalDocument::TYPES, policy: true)
     end
 
@@ -279,7 +274,7 @@ class EppController < ApplicationController
   def optional(selector, *validations)
     full_selector = [@prefix, selector].compact.join(' ')
     el = params[:parsed_frame].css(full_selector).first
-    return unless el && el.text.present?
+    return unless el&.text.present?
     value = el.text
 
     validations.each do |x|
@@ -324,16 +319,12 @@ class EppController < ApplicationController
     epp_errors.empty?
   end
 
-  # rubocop: disable Style/PredicateName
   def has_attribute(ph, path) # TODO: THIS IS DEPRECATED AND WILL BE REMOVED IN FUTURE
     path.reduce(ph) do |location, key|
       location.respond_to?(:keys) ? location[key] : nil
     end
   end
-  # rubocop: enable Style/PredicateName
 
-  # rubocop: disable Metrics/CyclomaticComplexity
-  # rubocop: disable Metrics/PerceivedComplexity
   def write_to_epp_log
     request_command = params[:command] || params[:action] # error receives :command, other methods receive :action
     frame = params[:raw_frame] || params[:frame]
@@ -355,14 +346,6 @@ class EppController < ApplicationController
       ip: request.ip,
       uuid: request.uuid
     })
-  end
-  # rubocop: enable Metrics/CyclomaticComplexity
-  # rubocop: enable Metrics/PerceivedComplexity
-
-  def iptables_counter_update
-    return if ENV['iptables_counter_enabled'].blank? && ENV['iptables_counter_enabled'] != 'true'
-    return if current_user.blank?
-    counter_update(current_user.registrar_code, ENV['iptables_server_ip'])
   end
 
   def resource
@@ -406,5 +389,27 @@ class EppController < ApplicationController
   def session_timeout_reached?
     timeout = 5.minutes
     epp_session.updated_at < (Time.zone.now - timeout)
+  end
+
+  def iptables_counter_update
+    return if ENV['iptables_counter_enabled'].blank? && ENV['iptables_counter_enabled'] != 'true'
+    return if current_user.blank?
+    counter_update(current_user.registrar_code, ENV['iptables_server_ip'])
+  end
+
+  def counter_update(registrar_code, ip)
+    counter_proc = "/proc/net/xt_recent/#{registrar_code}"
+
+    begin
+      File.open(counter_proc, 'a') do |f|
+        f.puts "+#{ip}"
+      end
+    rescue Errno::ENOENT => e
+      logger.error "IPTABLES COUNTER UPDATE: cannot open #{counter_proc}: #{e}"
+    rescue Errno::EACCES => e
+      logger.error "IPTABLES COUNTER UPDATE: no permission #{counter_proc}: #{e}"
+    rescue IOError => e
+      logger.error "IPTABLES COUNTER UPDATE: cannot write #{ip} to #{counter_proc}: #{e}"
+    end
   end
 end

@@ -1,6 +1,7 @@
-%h4= t(:pay_by_bank_link)
+%h4= t('registrar.invoices.pay_invoice')
 %hr
-- ENV['payments_banks'].split(",").each do |meth|
+
+- locals[:payment_channels].each do |meth|
   - meth = meth.strip
   = link_to registrar_payment_with_path(meth, invoice_id: params[:id]) do
     = image_tag("#{meth}.png")

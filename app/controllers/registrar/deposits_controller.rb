@@ -10,7 +10,7 @@ class Registrar
       @deposit = Deposit.new(deposit_params.merge(registrar: current_user.registrar))
       @invoice = @deposit.issue_prepayment_invoice
 
-      if @invoice && @invoice.persisted?
+      if @invoice&.persisted?
         flash[:notice] = t(:please_pay_the_following_invoice)
         redirect_to [:registrar, @invoice]
       else

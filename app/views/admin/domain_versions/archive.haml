@@ -55,8 +55,9 @@
         %tbody
           - @versions.each do |version|
             - if version
-              - domain = Domain.new(version.object.to_h)
-              - version.object_changes.to_h.each{|k,v| domain.public_send("#{k}=", v.last) }
+              - attributes = only_present_fields(version, Domain)
+              - domain = Domain.new(attributes)
+              - attach_existing_fields(version, domain)
 
               %tr
                 %td= link_to(domain.name, admin_domain_version_path(version.id))

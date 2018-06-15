@@ -67,8 +67,8 @@ contact_org_enabled: 'false'
 # iptables_server_ip: '127.0.0.1'
 
 # Custom legal document types. Changing this requires updating EPP extension schema for allowed legalDocEnumType values.
-# System default for legal document types is: pdf,bdoc,ddoc,zip,rar,gz,tar,7z,odt,doc,docx
-# legal_document_types: "pdf,bdoc,ddoc,zip,rar,gz,tar,7z,odt,doc,docx"
+# System default for legal document types is: pdf,asice,sce,asics,scs,adoc,edoc,bdoc,ddoc,zip,rar,gz,tar,7z,odt,doc,docx
+# legal_document_types: "pdf,asice,sce,asics,scs,adoc,edoc,bdoc,ddoc,zip,rar,gz,tar,7z,odt,doc,docx"
 
 
 #
@@ -106,10 +106,13 @@ sk_digi_doc_service_name: 'Testimine'
 secret_key_base: 'please-change-it-you-can-generate-it-with-rake-secret'
 devise_secret: 'please-change-it-you-can-generate-it-with-rake-secret'
 
+# You should list only payment methods that
+# conform with the Estonian BankLink standard
 payments_banks: >
   seb,
   swed,
   lhv
+
 payments_seb_url: 'https://www.seb.ee/cgi-bin/dv.sh/ipank.r'
 payments_seb_bank_certificate: 'eyp_pub.pem'
 payments_seb_seller_private: 'kaupmees_priv.pem'
@@ -123,6 +126,26 @@ payments_lhv_bank_certificate: 'eyp_pub.pem'
 payments_lhv_seller_private: 'kaupmees_priv.pem'
 payments_lhv_seller_account: 'testvpos'
 
+# You should list other payment intermediaries here. Each one of them needs their own class in /app/models/payments/
+payments_intermediaries: >
+  every_pay
+
+# Other intermediaries should follow this naming convention:
+# payments_intermediary_url - URL to intiate payments
+# payments_intermediary_seller_account - your username in the bank system
+# payments_intermediary_api_user - API username, in case it's different than the seller account
+# payments_intermediary_api_key - API key given to you by intermediary
+payments_every_pay_url: 'https://igw-demo.every-pay.com/transactions/'
+payments_every_pay_seller_account: 'EUR3D1'
+payments_every_pay_api_user: 'api_user'
+payments_every_pay_api_key: 'api_key'
+
 user_session_timeout: '3600' # 1 hour
 secure_session_cookies: 'false' # true|false
 same_site_session_cookies: 'false' # false|strict|lax
+
+
+# Since the keys for staging are absent from the repo, we need to supply them separate for testing.
+test:
+  payments_seb_bank_certificate: 'test/fixtures/files/seb_bank_cert.pem'
+  payments_seb_seller_private: 'test/fixtures/files/seb_seller_key.pem'

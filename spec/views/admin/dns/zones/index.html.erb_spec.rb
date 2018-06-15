@@ -5,7 +5,7 @@ RSpec.describe 'admin/dns/zones/index' do
 
   before :example do
     assign(:zones, zones)
-    stub_template '_zone' => 'zone-row'
+    stub_template '_zone.html.erb' => 'zone-row'
   end
 
   it 'has title' do

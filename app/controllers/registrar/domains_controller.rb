@@ -3,10 +3,6 @@ class Registrar
     before_action :init_domain, except: :new
     helper_method :contacts
 
-    # rubocop: disable Metrics/PerceivedComplexity
-    # rubocop: disable Metrics/CyclomaticComplexity
-    # rubocop: disable Metrics/AbcSize
-    # rubocop: disable Metrics/MethodLength
     def index
       authorize! :view, Depp::Domain
 
@@ -40,7 +36,7 @@ class Registrar
         end
       end
 
-      @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i > 0
+      @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
 
       respond_to do |format|
         format.html
@@ -57,10 +53,6 @@ class Registrar
         end
       end
     end
-
-    # rubocop: enable Metrics/PerceivedComplexity
-    # rubocop: enable Metrics/CyclomaticComplexity
-    # rubocop: enable Metrics/AbcSize
 
     def info
       authorize! :info, Depp::Domain

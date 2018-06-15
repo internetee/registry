@@ -1,4 +1,3 @@
-# rubocop: disable Metrics/ClassLength
 class Epp::Domain < Domain
   include EppErrors
 
@@ -54,7 +53,7 @@ class Epp::Domain < Domain
     end
   end
 
-  def epp_code_map # rubocop:disable Metrics/MethodLength
+  def epp_code_map
     {
       '2002' => [ # Command use error
         [:base, :domain_already_belongs_to_the_querying_registrar]
@@ -129,10 +128,6 @@ class Epp::Domain < Domain
     admin_contacts << regt if admin_domain_contacts.blank? && !regt.org?
   end
 
-  # rubocop: disable Metrics/PerceivedComplexity
-  # rubocop: disable Metrics/CyclomaticComplexity
-  # rubocop: disable Metrics/MethodLength
-  # rubocop: disable Metrics/AbcSize
   def attrs_from(frame, current_user, action = nil)
     at = {}.with_indifferent_access
 
@@ -197,13 +192,9 @@ class Epp::Domain < Domain
     )
     self.legal_documents = [doc]
 
-    frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
+    frame.css("legalDocument").first.content = doc.path if doc&.persisted?
     self.legal_document_id = doc.id
   end
-  # rubocop: enable Metrics/PerceivedComplexity
-  # rubocop: enable Metrics/CyclomaticComplexity
-  # rubocop: enable Metrics/MethodLength
-  # rubocop: enable Metrics/AbcSize
 
   def nameservers_attrs(frame, action)
     ns_list = nameservers_from(frame)
@@ -321,8 +312,6 @@ class Epp::Domain < Domain
     attrs
   end
 
-  # rubocop: disable Metrics/PerceivedComplexity
-  # rubocop: disable Metrics/CyclomaticComplexity
   def dnskeys_attrs(frame, action)
     keys = []
     return keys if frame.blank?
@@ -347,8 +336,6 @@ class Epp::Domain < Domain
     end
     errors.any? ? [] : keys
   end
-  # rubocop: enable Metrics/PerceivedComplexity
-  # rubocop: enable Metrics/CyclomaticComplexity
 
   class DnsSecKeys
     def initialize(frame)
@@ -460,8 +447,6 @@ class Epp::Domain < Domain
   end
 
 
-  # rubocop: disable Metrics/AbcSize
-  # rubocop: disable Metrics/CyclomaticComplexity
   def update(frame, current_user, verify = true)
     return super if frame.blank?
 
@@ -472,7 +457,7 @@ class Epp::Domain < Domain
     at.deep_merge!(attrs_from(frame.css('rem'), current_user, 'rem'))
 
     if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
-      frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
+      frame.css("legalDocument").first.content = doc.path if doc&.persisted?
       self.legal_document_id = doc.id
     end
 
@@ -502,8 +487,6 @@ class Epp::Domain < Domain
 
     errors.empty? && super(at)
   end
-  # rubocop: enable Metrics/AbcSize
-  # rubocop: enable Metrics/CyclomaticComplexity
 
   def apply_pending_update!
     preclean_pendings
@@ -547,7 +530,7 @@ class Epp::Domain < Domain
     check_discarded
 
     if doc = attach_legal_document(Epp::Domain.parse_legal_document_from_frame(frame))
-      frame.css("legalDocument").first.content = doc.path if doc && doc.persisted?
+      frame.css("legalDocument").first.content = doc.path if doc&.persisted?
     end
 
     if Setting.request_confirmation_on_domain_deletion_enabled &&
@@ -608,7 +591,6 @@ class Epp::Domain < Domain
 
   ### TRANSFER ###
 
-  # rubocop: disable Metrics/CyclomaticComplexity
   def transfer(frame, action, current_user)
     check_discarded
 
@@ -627,10 +609,6 @@ class Epp::Domain < Domain
     end
   end
 
-  # rubocop: enable Metrics/PerceivedComplexity
-  # rubocop: enable Metrics/CyclomaticComplexity
-  # rubocop: disable Metrics/MethodLength
-  # rubocop: disable Metrics/AbcSize
   def query_transfer(frame, current_user)
     if current_user.registrar == registrar
       throw :epp_error, {
@@ -667,8 +645,6 @@ class Epp::Domain < Domain
       return dt
     end
   end
-  # rubocop: enable Metrics/AbcSize
-  # rubocop: enable Metrics/MethodLength
 
   def approve_transfer(frame, current_user)
     pt = pending_transfer
@@ -717,8 +693,6 @@ class Epp::Domain < Domain
     pt
   end
 
-  # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/AbcSize
   def keyrelay(parsed_frame, requester)
     if registrar == requester
       errors.add(:base, :domain_already_belongs_to_the_querying_registrar) and return false
@@ -762,8 +736,6 @@ class Epp::Domain < Domain
 
     true
   end
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MethodLength
 
   ### VALIDATIONS ###
 
@@ -855,4 +827,3 @@ class Epp::Domain < Domain
     end
   end
 end
-# rubocop: enable Metrics/ClassLength

@@ -17,8 +17,6 @@ class WhoisRecord < ActiveRecord::Base
     @generated_json ||= generate_json
   end
 
-  # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/AbcSize
   def generate_json
     h = HashWithIndifferentAccess.new
     return h if domain.blank?
@@ -36,6 +34,7 @@ class WhoisRecord < ActiveRecord::Base
     registrant = domain.registrant
 
     @disclosed = []
+    h[:disclaimer] = disclaimer_text if disclaimer_text.present?
     h[:name]       = domain.name
     h[:status]     = domain.statuses.map { |x| status_map[x] || x }
     h[:registered] = domain.registered_at.try(:to_s, :iso8601)
@@ -98,9 +97,6 @@ class WhoisRecord < ActiveRecord::Base
     template = Rails.root.join("app/views/for_models/#{template_name}".freeze)
     ERB.new(template.read, nil, "-").result(binding)
   end
-  # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Metrics/AbcSize
-
 
   def populate
     return if domain_id.blank?
@@ -119,5 +115,11 @@ class WhoisRecord < ActiveRecord::Base
 
   def destroy_whois_record
     Whois::Record.where(name: name).delete_all
+  end
+
+  private
+
+  def disclaimer_text
+    Setting.registry_whois_disclaimer
   end
 end

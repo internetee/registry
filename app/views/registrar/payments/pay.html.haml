@@ -1,11 +1,14 @@
+.h3
+  = t('registrar.invoices.redirected_to_intermediary')
+
 .payment-form
-  = form_tag @bank_link.url, method: :post do
-    - @bank_link.fields.each do |k, v|
+  = form_tag @payment.form_url, method: :post do
+    - @payment.form_fields.each do |k, v|
       = hidden_field_tag k, v
-    = submit_tag "Mine maksma"
+    = submit_tag t('registrar.invoices.go_to_intermediary')
 
-
-:coffeescript
-  load_listener = ->
-    $('.payment-form form').submit()
-  window.addEventListener 'load', load_listener
+:javascript
+  function load_listener() {
+      $('.payment-form form').submit();
+    }
+  window.addEventListener('load', load_listener)

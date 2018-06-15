@@ -3,17 +3,10 @@ en:
     domain_transfers:
       new:
         header: Domain transfer
-        single: One by one
-        batch: Batch
 
       create:
         header: Domain transfer
         transferred: "%{count} domains have been successfully transferred"
 
       form:
-        single:
-          transfer_btn: Transfer
-
-        batch:
-          batch_file_help: CSV file with domain list provided by another registrar
-          transfer_btn: Transfer batch
+        submit_btn: Transfer

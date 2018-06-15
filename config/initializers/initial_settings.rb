@@ -51,8 +51,8 @@ if con.present? && con.table_exists?('settings')
   Setting.save_default(:redemption_grace_period, 30)
   Setting.save_default(:expiration_reminder_mail, 2)
 
-  Setting.save_default(:registrar_ip_whitelist_enabled, true)
-  Setting.save_default(:api_ip_whitelist_enabled, true)
+  Setting.save_default(:registrar_ip_whitelist_enabled, false)
+  Setting.save_default(:api_ip_whitelist_enabled, false)
 
   Setting.save_default(:registry_juridical_name, 'Eesti Interneti SA')
   Setting.save_default(:registry_reg_no, '90010019')
@@ -72,4 +72,5 @@ if con.present? && con.table_exists?('settings')
   Setting.save_default(:registry_bank_code, '689')
   Setting.save_default(:registry_swift, 'LHVBEE22')
   Setting.save_default(:registry_invoice_contact, 'Martti Õigus')
+  Setting.save_default(:registry_whois_disclaimer, 'Search results may not be used for commercial, advertising, recompilation, repackaging, redistribution, reuse, obscuring or other similar activities.')
 end

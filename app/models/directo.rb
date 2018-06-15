@@ -29,14 +29,12 @@ class Directo < ActiveRecord::Base
                 "InvoiceDate" => invoice.created_at.strftime("%Y-%m-%dT%H:%M:%S"),
                 "PaymentTerm" => Setting.directo_receipt_payment_term,
                 "Currency"    => invoice.currency,
-                "CustomerCode"=> invoice.buyer.accounting_customer_code,
-                'TotalVAT' => ActionController::Base.helpers.number_with_precision(invoice.vat_amount, precision: 2, separator: '.')
+                "CustomerCode"=> invoice.buyer.accounting_customer_code
             ){
               xml.line(
                   "ProductID"      => Setting.directo_receipt_product_name,
                   "Quantity"       => 1,
-                  "UnitPriceWoVAT" => ActionController::Base.helpers.number_with_precision(invoice.subtotal, precision: 2, separator: '.'),
-                  'VATCode' => invoice.buyer_vat_no,
+                  "UnitPriceWoVAT" => ActionController::Base.helpers.number_with_precision(invoice.subtotal, precision: 2, separator: "."),
                   "ProductName"    => invoice.order
               )
             }
@@ -45,8 +43,10 @@ class Directo < ActiveRecord::Base
       end
 
       data = builder.to_xml.gsub("\n",'')
-      response = RestClient::Request.execute(url: ENV['directo_invoice_url'], method: :post, payload: {put: "1", what: "invoice", xmldata: data}, verify_ssl: false).to_s
-      dump_result_to_db(mappers, response)
+      Rails.logger.info("[Directo] XML request: #{data}")
+      response = RestClient::Request.execute(url: ENV['directo_invoice_url'], method: :post, payload: {put: "1", what: "invoice", xmldata: data}, verify_ssl: false)
+      Rails.logger.info("[Directo] Directo responded with code: #{response.code}, body: #{response.body}")
+      dump_result_to_db(mappers, response.to_s)
     end
 
     STDOUT << "#{Time.zone.now.utc} - Directo receipts sending finished. #{counter} of #{total} are sent\n"
@@ -165,11 +165,15 @@ class Directo < ActiveRecord::Base
         end
 
         data = builder.to_xml.gsub("\n",'')
+        Rails.logger.info("[Directo] XML request: #{data}")
 
         if debug
           STDOUT << "#{Time.zone.now.utc} - Directo xml had to be sent #{data}\n"
         else
-          response = RestClient::Request.execute(url: ENV['directo_invoice_url'], method: :post, payload: {put: "1", what: "invoice", xmldata: data}, verify_ssl: false).to_s
+          response = RestClient::Request.execute(url: ENV['directo_invoice_url'], method: :post, payload: {put: "1", what: "invoice", xmldata: data}, verify_ssl: false)
+          Rails.logger.info("[Directo] Directo responded with code: #{response.code}, body: #{response.body}")
+          response = response.to_s
+
           Setting.directo_monthly_number_last = directo_next
           Nokogiri::XML(response).css("Result").each do |res|
             Directo.create!(request: data, response: res.as_json.to_h, invoice_number: directo_next)
@@ -190,4 +194,3 @@ class Directo < ActiveRecord::Base
     @pricelists[account_activity.price_id] = account_activity.price
   end
 end
-

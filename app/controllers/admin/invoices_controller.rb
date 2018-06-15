@@ -13,7 +13,7 @@ module Admin
       @deposit = Deposit.new(deposit_params.merge(registrar: r))
       @invoice = @deposit.issue_prepayment_invoice
 
-      if @invoice && @invoice.persisted?
+      if @invoice&.persisted?
         flash[:notice] = t(:record_created)
         redirect_to [:admin, @invoice]
       else
