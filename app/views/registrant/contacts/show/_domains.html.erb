@@ -42,12 +42,12 @@
                 </tr>
             </thead>
             <tbody>
-                <% domains.each do |x| %>
+                <% domains.each do |domain| %>
                     <tr>
-                        <td><%= link_to(x.name, [:registrant, x]) %></td>
-                        <td><%= link_to(x.registrar, [:registrant, x.registrar]) %></td>
-                        <td><%= l(x.valid_to, format: :short) %></td>
-                        <td><%= x.roles.join(", ") %></td>
+                        <td><%= link_to(domain.name, [:registrant, domain]) %></td>
+                        <td><%= link_to(domain.registrar, [:registrant, domain.registrar]) %></td>
+                        <td><%= l(domain.valid_to, format: :short) %></td>
+                        <td><%= domain.roles.join(", ") %></td>
                     </tr>
                 <% end %>
             </tbody>
