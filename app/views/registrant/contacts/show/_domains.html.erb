@@ -41,24 +41,17 @@
                 </tr>
             </thead>
             <tbody>
-            <% domains.each do |x| %>
-                <tr>
-                    <td>
-                        <%= link_to(x.name, [:registrant, x]) %>
-                    </td>
-                    <td>
-                        <%= link_to(x.registrar, [:registrant, x.registrar]) %>
-                    </td>
-                    <td>
-                        <%= l(x.valid_to, format: :short) %>
-                    </td>
-                    <td>
-                        <%= x.roles.join(", ") %>
-                    </td>
-                </tr>
-            <% end %>
+                <% domains.each do |x| %>
+                    <tr>
+                        <td><%= link_to(x.name, [:registrant, x]) %></td>
+                        <td><%= link_to(x.registrar, [:registrant, x.registrar]) %></td>
+                        <td><%= l(x.valid_to, format: :short) %></td>
+                        <td><%= x.roles.join(", ") %></td>
+                    </tr>
+                <% end %>
             </tbody>
         </table>
     </div>
 </div>
+
 <%= paginate domains, param_name: :domain_page %>

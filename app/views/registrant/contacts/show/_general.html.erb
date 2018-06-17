@@ -14,8 +14,10 @@
             <dd><%= @contact.name %></dd>
 
             <dt><%= Contact.human_attribute_name :auth_info %></dt>
-            <dd><%= text_field_tag :auth_info, @contact.auth_info, readonly: true,
-                                   class: 'partially-hidden' %></dd>
+            <dd>
+                <%= text_field_tag :auth_info, @contact.auth_info, readonly: true,
+                                   class: 'partially-hidden' %>
+            </dd>
             <br/>
 
             <dt><%= Contact.human_attribute_name :ident %></dt>
