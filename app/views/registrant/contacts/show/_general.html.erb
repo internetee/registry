@@ -18,7 +18,6 @@
                 <%= text_field_tag :auth_info, @contact.auth_info, readonly: true,
                                    class: 'partially-hidden' %>
             </dd>
-            <br/>
 
             <dt><%= Contact.human_attribute_name :ident %></dt>
             <dd><%= ident_for(@contact) %></dd>
@@ -33,8 +32,6 @@
                 <dt><%= Contact.human_attribute_name :fax %></dt>
                 <dd><%= @contact.fax %></dd>
             <% end %>
-
-            <br/>
 
             <dt><%= Contact.human_attribute_name :created_at %></dt>
             <dd>
