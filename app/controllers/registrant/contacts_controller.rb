@@ -7,6 +7,8 @@ class Registrant::ContactsController < RegistrantController
     authorize! :read, @contact
   end
 
+  private
+
   def contacts
     begin
       DomainContact.where(domain_id: domain_ids).pluck(:contact_id) | Domain.where(id: domain_ids).pluck(:registrant_id)
