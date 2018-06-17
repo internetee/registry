@@ -3,23 +3,24 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <div class="pull-left">
-            <%= t '.header'%>
-        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <%= t '.header' %>
+            </div>
 
-        <div class="pull-right">
-            <%= form_tag request.path, method: :get do %>
-                <%= select_tag :domain_filter,
-                               options_for_select(%w(Registrant AdminDomainContact TechDomainContact),
-                                                  selected: params[:domain_filter]),
-                               include_blank: true,
-                               class: 'form-control2 selectize2' %>
-                <button class="btn btn-primary">
-                    <span class="glyphicon glyphicon-search"></span>
-                </button>
-            <% end %>
+            <div class="col-sm-6 text-right">
+                <%= form_tag request.path, method: :get, class: 'form-inline' do %>
+                    <%= select_tag :domain_filter,
+                                   options_for_select(%w(Registrant AdminDomainContact TechDomainContact),
+                                                      selected: params[:domain_filter]),
+                                   include_blank: t('.all'),
+                                   class: 'form-control' %>
+                    <button class="btn btn-primary">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                <% end %>
+            </div>
         </div>
-        <div class="clearfix"></div>
     </div>
 
     <div class="table-responsive">
