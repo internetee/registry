@@ -111,8 +111,8 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :domain_update_confirms
-    resources :domain_delete_confirms
+    resources :domain_update_confirms, only: %i[show update]
+    resources :domain_delete_confirms, only: %i[show update]
 
     devise_scope :user do
       get 'login' => 'sessions#login'
@@ -126,25 +126,8 @@ Rails.application.routes.draw do
       get 'logout' => '/devise/sessions#destroy'
     end
 
-    resources :domains do
-      resources :registrant_verifications
-      collection do
-        post 'update', as: 'update'
-        post 'destroy', as: 'destroy'
-        get 'renew'
-        get 'edit'
-        get 'info'
-        get 'delete'
-      end
-    end
-
-    resources :registrars do
-      collection do
-        get :search
-      end
-    end
-
-    resources :contacts
+    resources :registrars, only: :show
+    resources :contacts, only: :show
   end
 
 
