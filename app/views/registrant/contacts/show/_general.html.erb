@@ -49,9 +49,7 @@
 
             <dt><%= Registrar.model_name.human %></dt>
             <dd>
-                <% if @contact.registrar.present? %>
-                    <%= link_to @contact.registrar, registrant_registrar_path(@contact.registrar) %>
-                <% end %>
+                <%= link_to @contact.registrar, registrant_registrar_path(@contact.registrar) %>
             </dd>
         </dl>
     </div>
