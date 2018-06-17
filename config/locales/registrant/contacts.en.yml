@@ -1,0 +1,17 @@
+en:
+  registrant:
+    contacts:
+      show:
+        general:
+          header: General
+
+        address:
+          header: Address
+
+        statuses:
+          header: Statuses
+          status: Status
+          notes: Note
+
+        domains:
+          header: Domains

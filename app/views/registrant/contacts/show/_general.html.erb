@@ -1,39 +1,35 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         <h3 class="panel-title">
-            <%= t(:general) %>
+            <%= t '.header' %>
         </h3>
     </div>
 
     <div class="panel-body">
         <dl class="dl-horizontal">
-            <dt><%= t(:id) %></dt>
+            <dt><%= Contact.human_attribute_name :code %></dt>
             <dd><%= @contact.code %></dd>
 
-            <dt><%= t(:name) %></dt>
+            <dt><%= Contact.human_attribute_name :name %></dt>
             <dd><%= @contact.name %></dd>
 
-            <dt><%= t(:password) %></dt>
+            <dt><%= Contact.human_attribute_name :auth_info %></dt>
             <dd><%= text_field_tag :auth_info, @contact.auth_info, readonly: true,
                                    class: 'partially-hidden' %></dd>
             <br/>
 
-            <dt><%= t(:ident) %></dt>
+            <dt><%= Contact.human_attribute_name :ident %></dt>
             <dd><%= ident_for(@contact) %></dd>
 
-            <dt><%= t(:email) %></dt>
+            <dt><%= Contact.human_attribute_name :email %></dt>
             <dd><%= @contact.email %></dd>
 
-            <dt><%= t(:phone) %></dt>
+            <dt><%= Contact.human_attribute_name :phone %></dt>
             <dd><%= @contact.phone %></dd>
 
             <% if @contact.fax %>
-                <dt>
-                    <%= t(:fax) %>
-                </dt>
-                <dd>
-                    <%= @contact.fax %>
-                </dd>
+                <dt><%= Contact.human_attribute_name :fax %></dt>
+                <dd><%= @contact.fax %></dd>
             <% end %>
 
             <br/>
@@ -52,7 +48,7 @@
                 <%= @contact.name %>
             </dd>
 
-            <dt><%= t(:registrar_name) %></dt>
+            <dt><%= Registrar.model_name.human %></dt>
             <dd>
                 <% if @contact.registrar.present? %>
                     <%= link_to @contact.registrar, registrant_registrar_path(@contact.registrar) %>
