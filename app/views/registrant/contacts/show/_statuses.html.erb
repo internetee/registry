@@ -1,5 +1,4 @@
-<% panel_class = contact.errors.messages[:statuses] ? 'panel-danger' : 'panel-default' %>
-<div class="<%= panel_class %> panel">
+<div class="panel panel-default">
     <div class="panel-heading">
         <%= t '.header' %>
     </div>
@@ -21,16 +20,6 @@
                     </tr>
                 <% end %>
             </tbody>
-
-            <% if contact.errors.messages[:statuses] %>
-                <tfoot>
-                    <% @domain.errors.messages[:statuses].each do |s| %>
-                        <tr>
-                            <td colspan="4"><%= s %></td>
-                        </tr>
-                    <% end %>
-                </tfoot>
-            <% end %>
         </table>
     </div>
 </div>
