@@ -1,0 +1,23 @@
+<%= render 'shared/title', name: @contact.name %>
+
+<div class="row">
+    <div class="col-md-6">
+        <%= render 'registrant/contacts/partials/general' %>
+    </div>
+
+    <div class="col-md-6">
+        <%= render 'registrant/contacts/partials/address' %>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <%= render 'registrant/contacts/partials/statuses', contact: @contact %>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <%= render 'registrant/contacts/partials/domains', contact: @contact %>
+    </div>
+</div>

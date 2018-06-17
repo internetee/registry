@@ -1,0 +1,35 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            <%= t(:address) %>
+        </h3>
+    </div>
+
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <% if @contact.org_name.present? %>
+                <dt>
+                    <%= t(:org_name) %>
+                </dt>
+                <dd>
+                    <%= @contact.org_name %>
+                </dd>
+            <% end %>
+
+            <dt><%= t(:street) %></dt>
+            <dd><%= @contact.street %></dd>
+
+            <dt><%= t(:city) %></dt>
+            <dd><%= @contact.city %></dd>
+
+            <dt><%= t(:zip) %></dt>
+            <dd><%= @contact.zip %></dd>
+
+            <dt><%= t(:state) %></dt>
+            <dd><%= @contact.state %></dd>
+
+            <dt><%= t(:country) %></dt>
+            <dd><%= @contact.country %></dd>
+        </dl>
+    </div>
+</div>

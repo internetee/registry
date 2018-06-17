@@ -1,0 +1,63 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            <%= t(:general) %>
+        </h3>
+    </div>
+
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt><%= t(:id) %></dt>
+            <dd><%= @contact.code %></dd>
+
+            <dt><%= t(:name) %></dt>
+            <dd><%= @contact.name %></dd>
+
+            <dt><%= t(:password) %></dt>
+            <dd><%= text_field_tag :auth_info, @contact.auth_info, readonly: true,
+                                   class: 'partially-hidden' %></dd>
+            <br/>
+
+            <dt><%= t(:ident) %></dt>
+            <dd><%= ident_for(@contact) %></dd>
+
+            <dt><%= t(:email) %></dt>
+            <dd><%= @contact.email %></dd>
+
+            <dt><%= t(:phone) %></dt>
+            <dd><%= @contact.phone %></dd>
+
+            <% if @contact.fax %>
+                <dt>
+                    <%= t(:fax) %>
+                </dt>
+                <dd>
+                    <%= @contact.fax %>
+                </dd>
+            <% end %>
+
+            <br/>
+
+            <dt><%= Contact.human_attribute_name :created_at %></dt>
+            <dd>
+                <%= l(@contact.created_at, format: :short) %>
+                by
+                <%= @contact.name %>
+            </dd>
+
+            <dt><%= Contact.human_attribute_name :updated_at %></dt>
+            <dd>
+                <%= l(@contact.updated_at, format: :short) %>
+                by
+                <%= @contact.name %>
+            </dd>
+
+            <dt><%= t(:registrar_name) %></dt>
+            <dd>
+                <% if @contact.registrar.present? %>
+                    <%= link_to @contact.registrar, registrant_registrar_path(@contact.registrar) %>
+                <% end %>
+            </dd>
+        </dl>
+    </div>
+</div>
