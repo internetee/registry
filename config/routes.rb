@@ -101,6 +101,8 @@ Rails.application.routes.draw do
   namespace :registrant do
     root 'domains#index'
 
+    resources :registrars, only: :show
+    resources :contacts, only: :show
     resources :domains, only: %i[index show] do
       collection do
         get :download_list
@@ -125,11 +127,7 @@ Rails.application.routes.draw do
       post 'id' => 'sessions#id'
       get 'logout' => '/devise/sessions#destroy'
     end
-
-    resources :registrars, only: :show
-    resources :contacts, only: :show
   end
-
 
   # ADMIN ROUTES
   namespace :admin do
