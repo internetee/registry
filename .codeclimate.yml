@@ -20,6 +20,7 @@ plugins:
   rubocop:
     enabled: true
 exclude_patterns:
+  - "app/models/legacy/"
   - "bin/"
   - "config/"
   - "db/"
