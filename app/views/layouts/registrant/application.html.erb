@@ -42,14 +42,16 @@
             <ul class="nav navbar-nav public-nav">
               <% if can? :view, Depp::Domain %>
                 <% active_class = %w(registrant/domains registrant/check registrant/renew registrant/tranfer registrant/keyrelays).include?(params[:controller]) ? 'active' :nil %>
-                <li class="<%= active_class %>">
-                  <%= link_to t(:domains), registrant_domains_path %>
-                </li>
+                  <li class="<%= active_class %>">
+                      <%= link_to t(:domains), registrant_domains_path %>
+                  </li>
+                  <li class="<%= active_class %>">
+                      <%= link_to 'WHOIS', 'https://whois.internet.ee' %>
+                  </li>
+                  <li class="<%= active_class %>">
+                      <%= link_to 'Internet.ee', 'https://internet.ee' %>
+                  </li>
               <% end %>
-              <% active_class = %w(registrant/whois).include?(params[:controller]) ? 'active' :nil %>
-              <li class="<%= active_class %>">
-                <%= link_to 'Internet.ee', 'https://internet.ee' %>
-              </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <% if user_signed_in? %>
