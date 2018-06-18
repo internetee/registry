@@ -15,8 +15,8 @@
 
             <dt><%= Contact.human_attribute_name :auth_info %></dt>
             <dd>
-                <%= text_field_tag :auth_info, @contact.auth_info, readonly: true,
-                                   class: 'partially-hidden' %>
+                <%= tag :input, type: 'text', value: @contact.auth_info, readonly: true,
+                        class: 'form-control input-sm' %>
             </dd>
 
             <dt><%= Contact.human_attribute_name :ident %></dt>
