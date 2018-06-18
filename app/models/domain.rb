@@ -1,4 +1,3 @@
-# rubocop: disable Metrics/ClassLength
 class Domain < ActiveRecord::Base
   include UserEvents
   include Versions # version/domain_version.rb
@@ -200,21 +199,6 @@ class Domain < ActiveRecord::Base
     statuses.include? DomainStatus::SERVER_TECH_CHANGE_PROHIBITED
   end
 
-  def self.clean_expired_pendings
-    ActiveSupport::Deprecation.instance.deprecation_warning(DomainCron, __method__)
-    DomainCron.send(__method__)
-  end
-
-  def self.start_redemption_grace_period
-    ActiveSupport::Deprecation.instance.deprecation_warning(DomainCron, __method__)
-    DomainCron.send(__method__)
-  end
-
-  def self.destroy_delete_candidates
-    ActiveSupport::Deprecation.instance.deprecation_warning(DomainCron, __method__)
-    DomainCron.send(__method__)
-  end
-
   class << self
     def nameserver_required?
       Setting.nameserver_required
@@ -367,7 +351,6 @@ class Domain < ActiveRecord::Base
     manage_automatic_statuses
   end
 
-  # rubocop: disable Metrics/CyclomaticComplexity
   def registrant_update_confirmable?(token)
     return false if (statuses & [DomainStatus::FORCE_DELETE, DomainStatus::DELETE_CANDIDATE]).any?
     return false unless pending_update?
@@ -382,7 +365,6 @@ class Domain < ActiveRecord::Base
     return false unless registrant_verification_token == token
     true
   end
-  # rubocop: enable Metrics/CyclomaticComplexity
 
   def registrant_verification_asked?
     registrant_verification_asked_at.present? && registrant_verification_token.present?
@@ -553,8 +535,6 @@ class Domain < ActiveRecord::Base
     self.outzone_at = Time.current
   end
 
-  # rubocop: disable Metrics/CyclomaticComplexity
-  # rubocop: disable Metrics/PerceivedComplexity
   def manage_automatic_statuses
     if !self.class.nameserver_required?
       deactivate if nameservers.reject(&:marked_for_destruction?).empty?
@@ -571,8 +551,6 @@ class Domain < ActiveRecord::Base
     s_h = (statuses & [DomainStatus::SERVER_MANUAL_INZONE, DomainStatus::SERVER_HOLD]).empty?
     statuses << DomainStatus::SERVER_HOLD if p_d && s_h
   end
-  # rubocop: enable Metrics/CyclomaticComplexity
-  # rubocop: enable Metrics/PerceivedComplexity
 
   def children_log
     log = HashWithIndifferentAccess.new
@@ -666,4 +644,3 @@ class Domain < ActiveRecord::Base
     exists?(["name ILIKE ?", "%.#{zone.origin}"])
   end
 end
-# rubocop: enable Metrics/ClassLength

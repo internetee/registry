@@ -41,10 +41,10 @@
 
         <div class="col-sm-6">
             <div class="input-group">
-                <%= f.text_field :valid_from, value: f.object.valid_from.try(:to_s, :dshort),
+                <%= f.text_field :valid_from, value: f.object.valid_from.try(:to_date),
                                  class: 'form-control js-datepicker' %>
                 <span class="input-group-addon">-</span>
-                <%= f.text_field :valid_to, value: f.object.valid_to.try(:to_s, :dshort),
+                <%= f.text_field :valid_to, value: f.object.valid_to.try(:to_date),
                                  class: 'form-control js-datepicker' %>
             </div>
         </div>

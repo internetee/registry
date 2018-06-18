@@ -13,6 +13,7 @@ gem 'SyslogLogger', '2.0', require: 'syslog/logger'
 gem 'iso8601',      '0.8.6' # for dates and times
 gem 'rails',        '4.2.10' # when update, all initializers eis_custom files needs check/update
 gem 'rest-client'
+gem 'uglifier'
 
 # load env
 gem 'figaro', '1.1.1'
@@ -103,7 +104,6 @@ gem 'active_model-errors_details' # Backport from Rails 5, https://github.com/ra
 group :development do
   gem 'spring'
   gem 'spring-commands-rspec'
-  gem 'rubocop'
 
   # deploy
   gem 'mina', '0.3.1' # for fast deployment

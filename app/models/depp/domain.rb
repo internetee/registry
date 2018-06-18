@@ -167,8 +167,6 @@ module Depp
         ret.with_indifferent_access
       end
 
-      # rubocop:disable Metrics/MethodLength
-      # rubocop:disable Metrics/AbcSize
       def construct_params_from_server_data(data)
         ret = default_params
         ret[:name] = data.css('name').text
@@ -209,8 +207,6 @@ module Depp
 
         ret
       end
-      # rubocop:enable Metrics/MethodLength
-      # rubocop:enable Metrics/AbcSize
 
       def construct_custom_params_hash(domain_params)
         custom_params = { _anonymus: [] }
@@ -228,8 +224,6 @@ module Depp
         custom_params
       end
 
-      # rubocop: disable Metrics/PerceivedComplexity
-      # rubocop: disable Metrics/CyclomaticComplexity
       def construct_edit_hash(domain_params, old_domain_params)
         contacts = array_difference(create_contacts_hash(domain_params), create_contacts_hash(old_domain_params))
         add_anon = contacts
@@ -262,8 +256,6 @@ module Depp
           chg: chg
         }
       end
-      # rubocop: enable Metrics/PerceivedComplexity
-      # rubocop: enable Metrics/CyclomaticComplexity
 
       def construct_ext_edit_hash(domain_params, old_domain_params)
         rem_keys = create_dnskeys_hash(old_domain_params) - create_dnskeys_hash(domain_params)

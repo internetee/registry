@@ -4,7 +4,6 @@ RSpec.feature 'Mobile ID login', db: true do
   given!(:api_user) { create(:api_user, identity_code: 1234) }
 
   background do
-    Setting.registrar_ip_whitelist_enabled = false
     digidoc_client = instance_double(Digidoc::Client, authenticate: OpenStruct.new(user_id_code: 1234), session_code: 1234)
     allow(Digidoc::Client).to receive(:new).and_return(digidoc_client)
   end

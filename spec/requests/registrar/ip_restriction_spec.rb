@@ -1,6 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe 'Registrar area IP restriction', settings: false do
+  before do
+    @original_registrar_ip_whitelist_enabled = Setting.registrar_ip_whitelist_enabled
+  end
+
+  after do
+    Setting.registrar_ip_whitelist_enabled = @original_registrar_ip_whitelist_enabled
+  end
+
   context 'when authenticated' do
     before do
       sign_in_to_registrar_area
@@ -39,10 +47,6 @@ RSpec.describe 'Registrar area IP restriction', settings: false do
     end
 
     context 'when IP restriction is disabled' do
-      before do
-        Setting.registrar_ip_whitelist_enabled = false
-      end
-
       specify do
         get registrar_root_url
         follow_redirect!
@@ -77,10 +81,6 @@ RSpec.describe 'Registrar area IP restriction', settings: false do
     end
 
     context 'when IP restriction is disabled' do
-      before do
-        Setting.registrar_ip_whitelist_enabled = false
-      end
-
       specify do
         get registrar_login_path
         expect(response).to be_success

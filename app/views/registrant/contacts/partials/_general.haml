@@ -30,13 +30,13 @@
 
       %br
 
-      %dt= t(:created)
+      %dt= Contact.human_attribute_name :created_at
       %dd
         = l(@contact.created_at, format: :short)
         by
         = @contact.name
 
-      %dt= t(:updated)
+      %dt= Contact.human_attribute_name :updated_at
       %dd
         = l(@contact.updated_at, format: :short)
         by

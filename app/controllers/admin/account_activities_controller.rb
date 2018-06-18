@@ -3,8 +3,7 @@ module Admin
     load_and_authorize_resource
     before_action :set_default_dates, only: [:index]
 
-    def index # rubocop: disable Metrics/AbcSize
-
+    def index
       ca_cache = params[:q][:created_at_lteq]
       begin
         end_time = params[:q][:created_at_lteq].try(:to_date)
