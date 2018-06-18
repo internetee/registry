@@ -41,11 +41,13 @@
                     </th>
                 </tr>
             </thead>
+
             <tbody>
                 <% domains.each do |domain| %>
                     <tr>
-                        <td><%= link_to(domain.name, [:registrant, domain]) %></td>
-                        <td><%= link_to(domain.registrar, [:registrant, domain.registrar]) %></td>
+                        <td><%= link_to domain.name, registrant_domain_path(domain) %></td>
+                        <td><%= link_to domain.registrar,
+                                        registrant_registrar_path(domain.registrar) %></td>
                         <td><%= l domain.valid_to %></td>
                         <td><%= domain.roles.join(", ") %></td>
                     </tr>
