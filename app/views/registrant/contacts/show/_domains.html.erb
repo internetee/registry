@@ -46,7 +46,7 @@
                     <tr>
                         <td><%= link_to(domain.name, [:registrant, domain]) %></td>
                         <td><%= link_to(domain.registrar, [:registrant, domain.registrar]) %></td>
-                        <td><%= l(domain.valid_to, format: :short) %></td>
+                        <td><%= l domain.valid_to %></td>
                         <td><%= domain.roles.join(", ") %></td>
                     </tr>
                 <% end %>

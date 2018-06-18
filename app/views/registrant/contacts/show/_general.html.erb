@@ -34,18 +34,10 @@
             <% end %>
 
             <dt><%= Contact.human_attribute_name :created_at %></dt>
-            <dd>
-                <%= l(@contact.created_at, format: :short) %>
-                by
-                <%= @contact.name %>
-            </dd>
+            <dd><%= l @contact.created_at %> by <%= @contact.name %></dd>
 
             <dt><%= Contact.human_attribute_name :updated_at %></dt>
-            <dd>
-                <%= l(@contact.updated_at, format: :short) %>
-                by
-                <%= @contact.name %>
-            </dd>
+            <dd><%= l @contact.updated_at %> by <%= @contact.name %></dd>
 
             <dt><%= Registrar.model_name.human %></dt>
             <dd>
