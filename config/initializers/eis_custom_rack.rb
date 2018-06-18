@@ -1,5 +1,4 @@
 # EIS custom rack hack in order to enable test external interfaces EPP/REPP inside webserver network 
-# rubocop:disable Metrics/LineLength
 module Rack
   class Request
     def trusted_proxy?(ip)
@@ -11,4 +10,3 @@ module Rack
     end
   end
 end
-# rubocop:enable Metrics/LineLength

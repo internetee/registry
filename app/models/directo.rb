@@ -29,14 +29,12 @@ class Directo < ActiveRecord::Base
                 "InvoiceDate" => invoice.created_at.strftime("%Y-%m-%dT%H:%M:%S"),
                 "PaymentTerm" => Setting.directo_receipt_payment_term,
                 "Currency"    => invoice.currency,
-                "CustomerCode"=> invoice.buyer.accounting_customer_code,
-                'TotalVAT' => ActionController::Base.helpers.number_with_precision(invoice.vat_amount, precision: 2, separator: '.')
+                "CustomerCode"=> invoice.buyer.accounting_customer_code
             ){
               xml.line(
                   "ProductID"      => Setting.directo_receipt_product_name,
                   "Quantity"       => 1,
-                  "UnitPriceWoVAT" => ActionController::Base.helpers.number_with_precision(invoice.subtotal, precision: 2, separator: '.'),
-                  'VATCode' => invoice.buyer_vat_no,
+                  "UnitPriceWoVAT" => ActionController::Base.helpers.number_with_precision(invoice.subtotal, precision: 2, separator: "."),
                   "ProductName"    => invoice.order
               )
             }

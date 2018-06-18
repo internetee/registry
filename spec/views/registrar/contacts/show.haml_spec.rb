@@ -5,11 +5,11 @@ RSpec.describe 'registrar/contacts/show' do
 
   before do
     assign(:contact, contact)
-    stub_template 'shared/_title' => ''
-    stub_template 'registrar/contacts/partials/_general' => ''
-    stub_template 'registrar/contacts/partials/_statuses' => ''
-    stub_template 'registrar/contacts/partials/_domains' => ''
-    stub_template 'registrar/contacts/partials/_address' => 'address info'
+    stub_template 'shared/_title.html.haml' => ''
+    stub_template 'registrar/contacts/partials/_general.html.haml' => ''
+    stub_template 'registrar/contacts/partials/_statuses.html.haml' => ''
+    stub_template 'registrar/contacts/partials/_domains.html.haml' => ''
+    stub_template 'registrar/contacts/partials/_address.html.haml' => 'address info'
   end
 
   context 'when address processing is enabled' do

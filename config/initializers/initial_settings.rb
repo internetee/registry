@@ -51,8 +51,8 @@ if con.present? && con.table_exists?('settings')
   Setting.save_default(:redemption_grace_period, 30)
   Setting.save_default(:expiration_reminder_mail, 2)
 
-  Setting.save_default(:registrar_ip_whitelist_enabled, true)
-  Setting.save_default(:api_ip_whitelist_enabled, true)
+  Setting.save_default(:registrar_ip_whitelist_enabled, false)
+  Setting.save_default(:api_ip_whitelist_enabled, false)
 
   Setting.save_default(:registry_juridical_name, 'Eesti Interneti SA')
   Setting.save_default(:registry_reg_no, '90010019')

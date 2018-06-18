@@ -108,7 +108,6 @@ GEM
       gyoku (>= 0.4.0)
       nokogiri
     arel (6.0.4)
-    ast (2.3.0)
     autodoc (0.6.0)
       actionpack
       activesupport (>= 3.0.0)
@@ -275,9 +274,6 @@ GEM
     nori (2.6.0)
     open4 (1.3.4)
     orm_adapter (0.5.0)
-    parallel (1.12.0)
-    parser (2.4.0.0)
-      ast (~> 2.2)
     pdfkit (0.6.2)
     pg (0.19.0)
     poltergeist (1.14.0)
@@ -286,7 +282,6 @@ GEM
       websocket-driver (>= 0.2.0)
     polyamorous (1.3.1)
       activerecord (>= 3.0)
-    powerpack (0.1.1)
     pry (0.10.1)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -334,8 +329,6 @@ GEM
       activesupport (= 4.2.10)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
-    rainbow (2.2.2)
-      rake
     rake (12.3.1)
     ransack (1.5.1)
       actionpack (>= 3.0)
@@ -373,14 +366,6 @@ GEM
       rspec-mocks (~> 3.6.0)
       rspec-support (~> 3.6.0)
     rspec-support (3.6.0)
-    rubocop (0.49.1)
-      parallel (~> 1.10)
-      parser (>= 2.3.3.1, < 3.0)
-      powerpack (~> 0.1)
-      rainbow (>= 1.99.1, < 3.0)
-      ruby-progressbar (~> 1.7)
-      unicode-display_width (~> 1.0, >= 1.0.1)
-    ruby-progressbar (1.8.1)
     ruby_parser (3.8.4)
       sexp_processor (~> 4.1)
     safe_yaml (1.0.4)
@@ -435,10 +420,11 @@ GEM
     tilt (1.4.1)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
+    uglifier (4.1.11)
+      execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.2)
-    unicode-display_width (1.3.0)
     unicode_utils (1.4.0)
     uniform_notifier (1.9.0)
     uuidtools (2.1.5)
@@ -521,7 +507,6 @@ DEPENDENCIES
   ransack (= 1.5.1)
   rest-client
   rspec-rails (~> 3.6)
-  rubocop
   sass-rails (= 5.0.6)
   sdoc (= 0.4.1)
   select2-rails (= 3.5.9.3)
@@ -530,6 +515,7 @@ DEPENDENCIES
   simpleidn (= 0.0.7)
   spring
   spring-commands-rspec
+  uglifier
   uuidtools (= 2.1.5)
   validates_email_format_of (= 1.6.3)
   webmock
