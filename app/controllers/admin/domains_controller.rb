@@ -4,9 +4,6 @@ module Admin
     before_action :set_domain, only: [:show, :edit, :update, :zonefile]
     helper_method :force_delete_templates
 
-    # rubocop: disable Metrics/PerceivedComplexity
-    # rubocop: disable Metrics/CyclomaticComplexity
-    # rubocop: disable Metrics/AbcSize
     def index
       params[:q] ||= {}
       if params[:statuses_contains]
@@ -34,10 +31,6 @@ module Admin
 
       @domains = @domains.per(params[:results_per_page]) if params[:results_per_page].to_i.positive?
     end
-
-    # rubocop: enable Metrics/PerceivedComplexity
-    # rubocop: enable Metrics/CyclomaticComplexity
-    # rubocop: enable Metrics/AbcSize
 
     def show
       @domain.valid?

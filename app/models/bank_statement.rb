@@ -29,7 +29,6 @@ class BankStatement < ActiveRecord::Base
     File.open(import_file_path, 'w') { |f| f.write(th6_file.open.read) }
   end
 
-  # rubocop: disable Metrics/AbcSize
   def parse_th6_row(row)
     return parse_th6_header(row) if row[4, 3].strip == '000'
     return if row[4, 3].strip == '999' # skip footer
@@ -50,7 +49,6 @@ class BankStatement < ActiveRecord::Base
       reference_no: row[280, 35].strip
     }
   end
-  # rubocop: enable Metrics/AbcSize
 
   def parse_th6_header(row)
     self.bank_code = row[7, 3].strip

@@ -12,7 +12,7 @@ RSpec.describe 'admin/billing/prices/_form' do
       allow(view).to receive(:durations).and_return([])
     end
 
-    stub_template '_form_errors' => ''
+    stub_template '_form_errors.html.erb' => ''
   end
 
   describe 'price' do

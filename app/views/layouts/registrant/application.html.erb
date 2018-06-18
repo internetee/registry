@@ -1,84 +1,86 @@
 <!DOCTYPE html>
 <html lang="<%= I18n.locale.to_s %>">
-  <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1" name="viewport"/>
-    <% if content_for? :head_title %>
-      <%= yield :head_title %>
-    <% else %>
-      <title>
-        <%= t(:registrant_head_title) %>
-      </title>
-    <% end %>
-    <%= csrf_meta_tags %>
-    <%= stylesheet_link_tag 'registrant-manifest', media: 'all' %>
-    <%= favicon_link_tag 'favicon.ico' %>
-  </head>
-  <body>
-    <!-- Fixed navbar
-    -->
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button aria-expanded="false" class="navbar-toggle collapsed" data-target="#navbar" data-toggle="collapse" type="button">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <%= link_to registrant_root_path, class: 'navbar-brand' do %>
-            <%= t(:registrant_head_title) %>
-            <% if unstable_env.present? %>
-              <div class="text-center">
-                <small style="color: #0074B3;">
-                  <%= unstable_env %>
-                </small>
-              </div>
-            <% end %>
-          <% end %>
-        </div>
-        <% if current_user %>
-          <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav public-nav">
-              <% if can? :view, Depp::Domain %>
-                <% active_class = %w(registrant/domains registrant/check registrant/renew registrant/tranfer registrant/keyrelays).include?(params[:controller]) ? 'active' :nil %>
-                <li class="<%= active_class %>">
-                  <%= link_to t(:domains), registrant_domains_path %>
-                </li>
-              <% end %>
-              <% active_class = %w(registrant/whois).include?(params[:controller]) ? 'active' :nil %>
-              <li class="<%= active_class %>">
-                <%= link_to 'Internet.ee', 'https://internet.ee' %>
-              </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-              <% if user_signed_in? %>
-                <li>
-                  <%= link_to t(:log_out, user: current_user), '/registrant/logout' %>
-                </li>
-              <% end %>
-            </ul>
-          </div>
+    <head>
+        <meta charset="utf-8"/>
+        <meta content="width=device-width, initial-scale=1" name="viewport"/>
+        <% if content_for? :head_title %>
+            <%= yield :head_title %>
+        <% else %>
+            <title>
+                <%= t(:registrant_head_title) %>
+            </title>
         <% end %>
-      </div>
-    </nav>
-    <div class="container">
-      <%= render 'shared/flash' %>
-      <%= yield %>
-    </div>
-    <footer class="footer">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6">
-            <%= image_tag 'eis-logo-et.png' %>
-          </div>
-          <div class="col-md-6 text-right">
-            Version
-            <%= CURRENT_COMMIT_HASH %>
-          </div>
+        <%= csrf_meta_tags %>
+        <%= stylesheet_link_tag 'registrant-manifest', media: 'all' %>
+        <%= favicon_link_tag 'favicon.ico' %>
+    </head>
+    <body>
+        <!-- Fixed navbar
+        -->
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button aria-expanded="false" class="navbar-toggle collapsed" data-target="#navbar" data-toggle="collapse" type="button">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <%= link_to registrant_root_path, class: 'navbar-brand' do %>
+                        <%= t(:registrant_head_title) %>
+                        <% if unstable_env.present? %>
+                            <div class="text-center">
+                                <small style="color: #0074B3;">
+                                    <%= unstable_env %>
+                                </small>
+                            </div>
+                        <% end %>
+                    <% end %>
+                </div>
+                <% if current_user %>
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav public-nav">
+                            <% if can? :view, Depp::Domain %>
+                                <% active_class = %w(registrant/domains registrant/check registrant/renew registrant/tranfer registrant/keyrelays).include?(params[:controller]) ? 'active' :nil %>
+                                <li class="<%= active_class %>">
+                                    <%= link_to t(:domains), registrant_domains_path %>
+                                </li>
+                                <li class="<%= active_class %>">
+                                    <%= link_to 'WHOIS', 'https://whois.internet.ee' %>
+                                </li>
+                                <li class="<%= active_class %>">
+                                    <%= link_to 'Internet.ee', 'https://internet.ee' %>
+                                </li>
+                            <% end %>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <% if user_signed_in? %>
+                                <li>
+                                    <%= link_to t(:log_out, user: current_user), '/registrant/logout' %>
+                                </li>
+                            <% end %>
+                        </ul>
+                    </div>
+                <% end %>
+            </div>
+        </nav>
+        <div class="container">
+            <%= render 'shared/flash' %>
+            <%= yield %>
         </div>
-      </div>
-    </footer>
-    <%= javascript_include_tag 'registrant-manifest', async: true %>
-  </body>
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <%= image_tag 'eis-logo-et.png' %>
+                    </div>
+                    <div class="col-md-6 text-right">
+                        Version
+                        <%= CURRENT_COMMIT_HASH %>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <%= javascript_include_tag 'registrant-manifest', async: true %>
+    </body>
 </html>
