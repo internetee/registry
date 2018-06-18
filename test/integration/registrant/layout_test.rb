@@ -9,6 +9,12 @@ class RegistrantLayoutTest < ActionDispatch::IntegrationTest
     travel_to Time.zone.parse('2010-07-05')
   end
 
+  def teardown
+    super
+
+    travel_back
+  end
+
   def test_has_link_to_rest_whois_and_internet_ee
     visit registrant_domains_url
 
