@@ -447,31 +447,6 @@ class Contact < ActiveRecord::Base
     domains
   end
 
-  def all_registrant_domains(page: nil, per: nil, params: {}, registrant: nil)
-
-    if registrant
-      sorts = params.fetch(:sort, {}).first || []
-      sort  = Domain.column_names.include?(sorts.first) ? sorts.first : "valid_to"
-      order = {"asc"=>"desc", "desc"=>"asc"}[sorts.second] || "desc"
-
-      domain_ids = DomainContact.distinct.where(contact_id: registrant.id).pluck(:domain_id)
-
-      domains  = Domain.where(id: domain_ids).includes(:registrar).page(page).per(per)
-      if sorts.first == "registrar_name".freeze
-        domains = domains.includes(:registrar).where.not(registrars: {id: nil}).order("registrars.name #{order} NULLS LAST")
-      else
-        domains = domains.order("#{sort} #{order} NULLS LAST")
-      end
-
-      domain_c = Hash.new([])
-      registrant_domains.where(id: domains.map(&:id)).each{|d| domain_c[d.id] |= ["Registrant".freeze] }
-      DomainContact.where(contact_id: id, domain_id: domains.map(&:id)).each{|d| domain_c[d.domain_id] |= [d.type] }
-      domains.each{|d| d.roles = domain_c[d.id].uniq}
-      domains
-    end
-  end
-
-
   def update_prohibited?
     (statuses & [
       CLIENT_UPDATE_PROHIBITED,
