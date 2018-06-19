@@ -149,6 +149,8 @@ Rails.application.routes.draw do
 
   # ADMIN ROUTES
   namespace :admin do
+    root 'dashboard#show'
+
     resources :keyrelays
     resources :zonefiles
     resources :zones, controller: 'dns/zones', except: %i[show destroy]
@@ -258,8 +260,6 @@ Rails.application.routes.draw do
     authenticate :user do
       mount Que::Web, at: 'que'
     end
-
-    root 'dashboards#show'
   end
 
   devise_for :users
