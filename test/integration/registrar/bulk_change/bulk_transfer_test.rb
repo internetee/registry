@@ -2,7 +2,7 @@ require 'test_helper'
 
 class RegistrarAreaBulkTransferTest < ActionDispatch::IntegrationTest
   setup do
-    login_as users(:api_goodnames)
+    sign_in users(:api_goodnames)
   end
 
   def test_transfer_multiple_domains_in_bulk

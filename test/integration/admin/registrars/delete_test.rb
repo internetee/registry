@@ -2,7 +2,7 @@ require 'test_helper'
 
 class AdminAreaDeleteRegistrarTest < ActionDispatch::IntegrationTest
   setup do
-    login_as users(:admin)
+    sign_in users(:admin)
   end
 
   def test_can_be_deleted_when_not_in_use

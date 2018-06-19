@@ -22,7 +22,7 @@ RSpec.describe 'EPP contact:update' do
                               .count }
 
   before do
-    login_as user
+    sign_in user
     create(:contact, code: 'TEST')
   end
 

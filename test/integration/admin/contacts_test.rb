@@ -5,7 +5,7 @@ class AdminContactsTest < ActionDispatch::IntegrationTest
     super
 
     @contact = contacts(:william)
-    login_as users(:admin)
+    sign_in users(:admin)
   end
 
   def test_display_list

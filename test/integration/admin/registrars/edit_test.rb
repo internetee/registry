@@ -2,7 +2,7 @@ require 'test_helper'
 
 class AdminAreaEditRegistrarTest < ActionDispatch::IntegrationTest
   setup do
-    login_as users(:admin)
+    sign_in users(:admin)
     @registrar = registrars(:bestnames)
   end
 

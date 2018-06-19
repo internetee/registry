@@ -18,7 +18,7 @@ RSpec.describe 'EPP domain:create', settings: false do
 
   before :example do
     travel_to Time.zone.parse('05.07.2010')
-    login_as user
+    sign_in user
   end
 
   context 'when nameserver is optional' do

@@ -20,7 +20,7 @@ RSpec.describe 'EPP domain:update' do
   }
 
   before :example do
-    login_as user
+    sign_in user
   end
 
   context 'when domain has both SERVER_DELETE_PROHIBITED and PENDING_UPDATE statuses' do
