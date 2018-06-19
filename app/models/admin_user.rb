@@ -9,7 +9,7 @@ class AdminUser < User
 
   ROLES = %w(user customer_service admin) # should not match to api_users roles
 
-  devise :database_authenticatable, :trackable, :validatable
+  devise :database_authenticatable, :trackable, :validatable, :timeoutable
 
   def self.min_password_length
     Devise.password_length.min

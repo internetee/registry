@@ -2,6 +2,7 @@ require 'open3'
 
 class ApiUser < User
   include EppErrors
+  devise :database_authenticatable, :trackable, :timeoutable
 
   def epp_code_map
     {
