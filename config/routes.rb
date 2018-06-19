@@ -20,7 +20,6 @@ Rails.application.routes.draw do
 
   # REGISTRAR ROUTES
   namespace :registrar do
-    resource :dashboard
     root 'dashboard#show'
 
     resources :invoices do
@@ -247,9 +246,6 @@ Rails.application.routes.draw do
     end
 
     resources :delayed_jobs
-
-    resource :dashboard
-
     resources :epp_logs
     resources :repp_logs
 
