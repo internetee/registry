@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   include Versions # version/user_version.rb
-  devise :database_authenticatable, :trackable, :timeoutable
+  devise :trackable, :timeoutable
 
   attr_accessor :phone
 
