@@ -26,7 +26,7 @@ class Directo < ActiveRecord::Base
             xml.invoice(
                 "SalesAgent"  => Setting.directo_sales_agent,
                 "Number"      => num,
-                "InvoiceDate" => invoice.created_at.strftime("%Y-%m-%dT%H:%M:%S"),
+                "InvoiceDate" => invoice.created_at.strftime("%Y-%m-%d"),
                 "PaymentTerm" => Setting.directo_receipt_payment_term,
                 "Currency"    => invoice.currency,
                 "CustomerCode"=> invoice.buyer.accounting_customer_code
