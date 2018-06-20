@@ -10,7 +10,8 @@ module Concerns::Domain::Deletable
   end
 
   def do_not_delete_later
-    QueJob.find_by!("args->>0 = '#{id}'", job_class: DomainDeleteJob.name).destroy!
+    # Que job can be manually deleted in admin area UI
+    QueJob.find_by("args->>0 = '#{id}'", job_class: DomainDeleteJob.name)&.destroy
   end
 
   def deletion_time_span
