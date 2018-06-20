@@ -1,7 +1,7 @@
 module Features
   module SessionHelpers
     def sign_in_to_admin_area(user: create(:admin_user))
-      visit admin_login_url
+      visit new_admin_user_session_url
 
       fill_in 'admin_user[username]', with: user.username
       fill_in 'admin_user[password]', with: user.password
@@ -10,7 +10,7 @@ module Features
     end
 
     def sign_in_to_registrar_area(user: create(:api_user))
-      visit registrar_login_url
+      visit new_registrar_user_session_url
 
       fill_in 'depp_user_tag', with: user.username
       fill_in 'depp_user_password', with: user.password

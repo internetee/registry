@@ -22,6 +22,16 @@ Rails.application.routes.draw do
   namespace :registrar do
     root 'dashboard#show'
 
+    devise_for :users, path: '', path_names: { sign_in: 'login', sign_out: 'logout' },
+               class_name: 'ApiUser'
+    devise_scope :registrar_user do
+      get 'login/mid' => 'sessions#login_mid'
+      post 'login/mid' => 'sessions#mid'
+      post 'login/mid_status' => 'sessions#mid_status'
+      post 'id' => 'sessions#id'
+      post 'mid' => 'sessions#mid'
+    end
+
     resources :invoices do
       member do
         get 'download_pdf'
@@ -32,18 +42,6 @@ Rails.application.routes.draw do
 
     resources :deposits
     resources :account_activities
-
-    devise_scope :user do
-      get 'login' => 'sessions#login'
-      get 'login/mid' => 'sessions#login_mid'
-      post 'login/mid' => 'sessions#mid'
-      post 'login/mid_status' => 'sessions#mid_status'
-
-      post 'sessions' => 'sessions#create'
-      post 'id' => 'sessions#id'
-      post 'mid' => 'sessions#mid'
-      delete 'logout', to: '/devise/sessions#destroy', as: :destroy_user_session
-    end
 
     put 'current_user/switch/:new_user_id', to: 'current_user#switch', as: :switch_current_user
     resource :profile, controller: :profile, only: :show
@@ -100,6 +98,16 @@ Rails.application.routes.draw do
   namespace :registrant do
     root 'domains#index'
 
+    devise_for :users, path: '', path_names: { sign_in: 'login', sign_out: 'logout' },
+               class_name: 'RegistrantUser'
+    devise_scope :registrant_user do
+      get 'login/mid' => 'sessions#login_mid'
+      post 'login/mid' => 'sessions#mid'
+      post 'login/mid_status' => 'sessions#mid_status'
+      post 'mid' => 'sessions#mid'
+      post 'id' => 'sessions#id'
+    end
+
     resources :domains, only: %i[index show] do
       collection do
         get :download_list
@@ -112,19 +120,6 @@ Rails.application.routes.draw do
 
     resources :domain_update_confirms
     resources :domain_delete_confirms
-
-    devise_scope :user do
-      get 'login' => 'sessions#login'
-      get 'login/mid' => 'sessions#login_mid'
-      post 'login/mid' => 'sessions#mid'
-      post 'login/mid_status' => 'sessions#mid_status'
-
-      post 'sessions' => 'sessions#create'
-      post 'mid' => 'sessions#mid'
-      post 'id' => 'sessions#id'
-      get 'logout' => '/devise/sessions#destroy'
-    end
-
     resources :domains do
       resources :registrant_verifications
       collection do
@@ -150,6 +145,8 @@ Rails.application.routes.draw do
   # ADMIN ROUTES
   namespace :admin do
     root 'dashboard#show'
+    devise_for :users, path: '', path_names: { sign_in: 'login', sign_out: 'logout' },
+               class_name: 'AdminUser'
 
     resources :keyrelays
     resources :zonefiles
@@ -251,18 +248,10 @@ Rails.application.routes.draw do
     resources :epp_logs
     resources :repp_logs
 
-    devise_scope :user do
-      get 'login' => 'sessions#login'
-      post 'sessions' => 'sessions#create'
-      get 'logout' => '/devise/sessions#destroy'
-    end
-
-    authenticate :user do
+    authenticate :admin_user do
       mount Que::Web, at: 'que'
     end
   end
-
-  devise_for :users
 
   root to: redirect('admin/login')
 end

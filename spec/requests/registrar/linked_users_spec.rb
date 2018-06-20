@@ -6,7 +6,7 @@ RSpec.describe 'Registrar area linked users', db: false do
       let!(:current_user) { create(:api_user, id: 1, identity_code: 'code') }
 
       before do
-        sign_in_to_registrar_area(user: current_user)
+        sign_in current_user
       end
 
       context 'when ip is allowed' do
@@ -23,7 +23,7 @@ RSpec.describe 'Registrar area linked users', db: false do
           it 'signs in as a new user' do
             put '/registrar/current_user/switch/2', nil, { HTTP_REFERER: registrar_contacts_url }
             follow_redirect!
-            expect(controller.current_user.id).to eq(2)
+            expect(controller.current_registrar_user.id).to eq(2)
           end
 
           it 'redirects back' do
@@ -46,7 +46,6 @@ RSpec.describe 'Registrar area linked users', db: false do
               put '/registrar/current_user/switch/2', nil, { HTTP_REFERER: registrar_contacts_path }
             end
 
-            follow_redirect!
             expect(controller.current_user.id).to eq(1)
           end
         end
@@ -62,7 +61,7 @@ RSpec.describe 'Registrar area linked users', db: false do
 
         specify do
           put '/registrar/current_user/switch/2'
-          expect(response).to redirect_to(registrar_login_url)
+          expect(response).to redirect_to(new_registrar_user_session_url)
         end
       end
     end
@@ -70,7 +69,7 @@ RSpec.describe 'Registrar area linked users', db: false do
     context 'when user is not authenticated' do
       specify do
         put '/registrar/current_user/switch/2'
-        expect(response).to redirect_to(registrar_login_url)
+        expect(response).to redirect_to(new_registrar_user_session_url)
       end
     end
   end

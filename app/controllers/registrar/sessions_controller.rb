@@ -3,7 +3,7 @@ class Registrar
     before_action :check_ip_restriction
     helper_method :depp_controller?
 
-    def login
+    def new
       @depp_user = Depp::User.new
     end
 
@@ -30,7 +30,7 @@ class Registrar
 
       unless @api_user
         @depp_user.errors.add(:base, t(:no_such_user))
-        render 'login' and return
+        render :new and return
       end
 
       if @depp_user.pki
@@ -41,14 +41,13 @@ class Registrar
 
       if @depp_user.errors.none?
         if @api_user.active?
-          sign_in @api_user
-          redirect_to registrar_root_url
+          sign_in_and_redirect(:registrar_user, @api_user)
         else
           @depp_user.errors.add(:base, :not_active)
-          render 'login'
+          render :new
         end
       else
-        render 'login'
+        render :new
       end
     end
 
@@ -56,11 +55,10 @@ class Registrar
       @user = ApiUser.find_by_idc_data_and_allowed(request.env['SSL_CLIENT_S_DN'], request.ip)
 
       if @user
-        sign_in(@user, event: :authentication)
-        redirect_to registrar_root_url
+        sign_in_and_redirect(:registrar_user, @user, event: :authentication)
       else
         flash[:alert] = t('no_such_user')
-        redirect_to registrar_login_url
+        redirect_to new_registrar_user_session_url
       end
     end
 
@@ -91,7 +89,7 @@ class Registrar
         @user = find_user_by_idc_and_allowed(response.user_id_code)
       else
         @user = find_user_by_idc(response.user_id_code)
-      end  
+      end
 
       if @user.persisted?
         session[:user_id_code] = response.user_id_code
@@ -117,7 +115,7 @@ class Registrar
           render json: { message: t(:check_your_phone_for_confirmation_code) }, status: :ok
         when 'USER_AUTHENTICATED'
           @user = find_user_by_idc_and_allowed(session[:user_id_code])
-          sign_in @user
+          sign_in(:registrar_user, @user)
           flash[:notice] = t(:welcome)
           flash.keep(:notice)
           render js: "window.location = '#{registrar_root_url}'"
@@ -163,8 +161,6 @@ class Registrar
       end
     end
 
-
-
     def check_ip_restriction
       ip_restriction = Authorization::RestrictedIP.new(request.ip)
       allowed = ip_restriction.can_access_registrar_area_sign_in_page?
@@ -172,6 +168,14 @@ class Registrar
       return if allowed
 
       render text: t('registrar.authorization.ip_not_allowed', ip: request.ip)
+    end
+
+    def after_sign_in_path_for(resource_or_scope)
+      registrar_root_path
+    end
+
+    def after_sign_out_path_for(resource_or_scope)
+      new_registrar_user_session_path
     end
   end
 end

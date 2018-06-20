@@ -7,7 +7,7 @@ class Registrar
     end
 
     def create
-      @deposit = Deposit.new(deposit_params.merge(registrar: current_user.registrar))
+      @deposit = Deposit.new(deposit_params.merge(registrar: current_registrar_user.registrar))
       @invoice = @deposit.issue_prepayment_invoice
 
       if @invoice&.persisted?

@@ -2,7 +2,7 @@
   .form-signin.col-md-6.center-block.text-center
     %h2.form-signin-heading.text-center= t(:log_in)
     %hr
-    = form_for @depp_user, url: registrar_sessions_path, html: {class: 'form-signin'} do |f|
+    = form_for @depp_user, url: registrar_user_session_path, html: {class: 'form-signin'} do |f|
       = render 'registrar/shared/errors', object: f.object
 
       - error_class = f.object.errors.any? ? 'has-error' : ''

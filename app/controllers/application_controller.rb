@@ -12,61 +12,13 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from CanCan::AccessDenied do |exception|
-    redirect_to current_root_url, alert: exception.message
+    redirect_to root_url, alert: exception.message
   end
 
-  helper_method :registrant_request?, :registrar_request?, :admin_request?, :current_root_url
   helper_method :available_languages
-
-  def registrant_request?
-    request.path.match(/^\/registrant/)
-  end
-
-  def registrar_request?
-    request.path.match(/^\/registrar/)
-  end
-
-  def admin_request?
-    request.path.match(/^\/admin/)
-  end
-
-  def current_root_url
-    if registrar_request?
-      registrar_root_url
-    elsif registrant_request?
-      registrant_login_url
-    elsif admin_request?
-      admin_root_url
-    end
-  end
-
-  def after_sign_in_path_for(_resource)
-    rt = session[:user_return_to].to_s.presence
-    login_paths = [admin_login_path, registrar_login_path, '/login']
-    return rt if rt && !login_paths.include?(rt)
-    current_root_url
-  end
-
-  def after_sign_out_path_for(_resource)
-    if registrar_request?
-      registrar_login_url
-    elsif registrant_request?
-      registrant_login_url
-    elsif admin_request?
-      admin_login_url
-    end
-  end
 
   def info_for_paper_trail
     { uuid: request.uuid }
-  end
-
-  def user_for_paper_trail
-    user_log_str(current_user)
-  end
-
-  def user_log_str(user)
-    user.nil? ? 'public' : user.id_role_username
   end
 
   def comma_support_for(parent_key, key)
@@ -79,5 +31,9 @@ class ApplicationController < ActionController::Base
 
   def available_languages
     { en: 'English', et: 'Estonian' }.invert
+  end
+
+  def user_for_paper_trail
+    current_user.present? ? current_user.id_role_username : 'public'
   end
 end

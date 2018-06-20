@@ -2,7 +2,6 @@ class Registrant::ContactsController < RegistrantController
   helper_method :domain_ids
   def show
     @contact      = Contact.where(id: contacts).find_by(id: params[:id])
-    @current_user = current_user
 
     authorize! :read, @contact
   end
@@ -19,7 +18,7 @@ class Registrant::ContactsController < RegistrantController
 
   def domain_ids
     @domain_ids ||= begin
-      ident_cc, ident = @current_user.registrant_ident.to_s.split '-'
+      ident_cc, ident = current_registrant_user.registrant_ident.to_s.split '-'
       BusinessRegistryCache.fetch_by_ident_and_cc(ident, ident_cc).associated_domain_ids
     end
   end

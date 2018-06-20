@@ -1,7 +1,7 @@
 en:
   registrar:
     sessions:
-      login:
+      new:
         login_btn: Login
       login_mid:
         login_btn: Login

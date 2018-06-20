@@ -9,7 +9,7 @@ RSpec.feature 'Mobile ID login', db: true do
   end
 
   scenario 'login with phone number' do
-    visit registrar_login_path
+    visit new_registrar_user_session_url
     click_on 'login-with-mobile-id-btn'
 
     fill_in 'user[phone]', with: '1234'
