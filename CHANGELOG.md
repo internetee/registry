@@ -1,3 +1,20 @@
+20.06.2018
+* Bulk change function for technical contact replacement [#662](https://github.com/internetee/registry/issues/662)
+* Removed vatcode and totalvat elements from directo request in attempt to fix invoice sending issue [#844](https://github.com/internetee/registry/issues/844)
+* Regsitrar: added credit card payment option - disabled at the moment due to contractual reaons [#419](https://github.com/internetee/registry/issues/419)
+* Registrant: enabled WHOIS requests over RestWHOIS API [#852](https://github.com/internetee/registry/issues/852)
+* Fixed rspec configuration that caused test failures [#858](https://github.com/internetee/registry/issues/858)
+* Admin: refactored date selection in pricelist [#869](https://github.com/internetee/registry/issues/869)
+* Added uglifier gem for es6 compression [#864](https://github.com/internetee/registry/issues/864)
+* Removed lib folder from autoload path [#859](https://github.com/internetee/registry/issues/859)
+* test environment config improvements [#860](https://github.com/internetee/registry/issues/860)
+* translation fixes [#865](https://github.com/internetee/registry/issues/865)
+* removed obsolete .agignore [#866](https://github.com/internetee/registry/issues/866)
+* removed rubocop gem [#857](https://github.com/internetee/registry/issues/857)
+* new invoice payment test fix [#863](https://github.com/internetee/registry/issues/863)
+* get puma gem config from Rails 5 [#867](https://github.com/internetee/registry/issues/867)
+* Rails5 API controller temporary backport [#868](https://github.com/internetee/registry/issues/868)
+
 25.05.2018
 * GDPR: updated whois templates with configurable disclaimer [#795](https://github.com/internetee/registry/issues/795)
 * GDPR: email forwarding solution to contact private domain registrants without revealing their email addresses [#824](https://github.com/internetee/registry/issues/824)
