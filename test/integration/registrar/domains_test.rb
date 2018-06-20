@@ -2,7 +2,7 @@ require 'test_helper'
 
 class RegistrarDomainsTest < ActionDispatch::IntegrationTest
   def test_downloads_domain_list_as_csv
-    login_as users(:api_bestnames)
+    sign_in users(:api_bestnames)
     travel_to Time.zone.parse('2010-07-05 10:30')
 
     expected_csv = <<-CSV.strip_heredoc

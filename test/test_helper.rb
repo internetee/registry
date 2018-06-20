@@ -28,13 +28,12 @@ class ActiveSupport::TestCase
 end
 
 class ActionDispatch::IntegrationTest
-  include Warden::Test::Helpers
   include Capybara::DSL
   include Capybara::Minitest::Assertions
   include AbstractController::Translation
+  include Devise::Test::IntegrationHelpers
 
   teardown do
-    Warden.test_reset!
     WebMock.reset!
     Capybara.reset_sessions!
     Capybara.use_default_driver

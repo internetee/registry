@@ -10,7 +10,7 @@ RSpec.describe 'EPP domain:update' do
   subject(:response_description) { response_xml.css('result msg').text }
 
   before :example do
-    login_as user
+    sign_in user
 
     allow(Domain).to receive(:nameserver_required?).and_return(false)
     Setting.ns_min_count = 2

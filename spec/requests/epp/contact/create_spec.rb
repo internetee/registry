@@ -39,7 +39,7 @@ RSpec.describe 'EPP contact:create' do
   subject(:address_saved) { Contact.last.attributes.slice(*Contact.address_attribute_names).compact.any? }
 
   before do
-    login_as user
+    sign_in user
   end
 
   context 'when address processing is enabled' do

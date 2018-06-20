@@ -2,7 +2,7 @@ require 'test_helper'
 
 class BalanceTopUpTest < ActionDispatch::IntegrationTest
   setup do
-    login_as users(:api_bestnames)
+    sign_in users(:api_bestnames)
   end
 
   def test_creates_new_invoice

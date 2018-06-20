@@ -32,6 +32,8 @@ RSpec.configure do |config|
   config.include AbstractController::Translation, type: :mailer
   config.include Requests::EPPHelpers, epp: true
   config.include Matchers::EPP, epp: true
+  config.include Devise::Test::IntegrationHelpers, type: :feature
+  config.include Devise::Test::IntegrationHelpers, type: :request
 
   config.define_derived_metadata(file_path: %r[/spec/features/]) do |metadata|
     metadata[:db] = true if metadata[:db].nil?

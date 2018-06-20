@@ -7,7 +7,7 @@ class NewInvoicePaymentTest < ActionDispatch::IntegrationTest
     @original_vat_prc = Setting.registry_vat_prc
     Setting.registry_vat_prc = 0.2
     @user = users(:api_bestnames)
-    login_as @user
+    sign_in @user
   end
 
   def teardown

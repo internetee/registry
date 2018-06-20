@@ -2,7 +2,7 @@ require 'test_helper'
 
 class AdminDomainsTestTest < ActionDispatch::IntegrationTest
   def setup
-    login_as users(:admin)
+    sign_in users(:admin)
     @domain = domains(:shop)
   end
 

@@ -18,7 +18,7 @@ RSpec.describe 'EPP domain:renew' do
   before :example do
     Setting.days_to_renew_domain_before_expire = 0
     travel_to Time.zone.parse('05.07.2010')
-    login_as user
+    sign_in user
   end
 
   context 'when given expire time and current match' do
