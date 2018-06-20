@@ -21,7 +21,7 @@ RSpec.describe 'EPP contact:delete' do
   }
 
   before do
-    login_as user
+    sign_in user
   end
 
   context 'when contact is used' do

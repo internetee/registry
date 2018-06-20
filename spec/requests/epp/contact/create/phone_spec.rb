@@ -30,7 +30,7 @@ RSpec.describe 'EPP contact:create' do
   }
 
   before do
-    login_as user
+    sign_in user
     allow(Contact).to receive(:address_processing?).and_return(false)
   end
 

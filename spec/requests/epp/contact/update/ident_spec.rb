@@ -33,7 +33,7 @@ RSpec.describe 'EPP contact:update' do
   }
 
   before do
-    login_as user
+    sign_in user
   end
 
   context 'when contact ident is valid' do

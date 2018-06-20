@@ -10,7 +10,7 @@ RSpec.describe 'EPP domain:update' do
   let!(:new_registrant) { create(:registrant, code: 'new-code') }
 
   before :example do
-    login_as user
+    sign_in user
   end
 
   context 'when registrant change confirmation is enabled' do

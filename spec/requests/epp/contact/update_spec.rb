@@ -36,7 +36,7 @@ RSpec.describe 'EPP contact:update' do
   subject(:response_description) { response_xml.css('result msg').text }
 
   before do
-    login_as user
+    sign_in user
     create(:contact, code: 'TEST')
   end
 

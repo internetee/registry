@@ -6,7 +6,7 @@ class ListInvoicesTest < ActionDispatch::IntegrationTest
 
     @user = users(:api_bestnames)
     @registrar_invoices = @user.registrar.invoices
-    login_as @user
+    sign_in @user
   end
 
   def test_show_balance

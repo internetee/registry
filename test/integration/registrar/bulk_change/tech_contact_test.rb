@@ -2,7 +2,7 @@ require 'test_helper'
 
 class RegistrarAreaTechContactBulkChangeTest < ActionDispatch::IntegrationTest
   setup do
-    login_as users(:api_bestnames)
+    sign_in users(:api_bestnames)
   end
 
   def test_replace_domain_contacts_of_current_registrar

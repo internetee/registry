@@ -4,7 +4,7 @@ class AdminAreaRegistrarDetailsTest < ActionDispatch::IntegrationTest
   include ActionView::Helpers::NumberHelper
 
   setup do
-    login_as users(:admin)
+    sign_in users(:admin)
     @registrar = registrars(:complete)
   end
 

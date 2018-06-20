@@ -5,7 +5,7 @@ class PaymentReturnTest < ActionDispatch::IntegrationTest
     super
 
     @user = users(:api_bestnames)
-    login_as @user
+    sign_in @user
   end
 
   def create_invoice_with_items

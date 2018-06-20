@@ -38,7 +38,7 @@ RSpec.describe 'EPP domain:renew', settings: false do
   before :example do
     travel_to Time.zone.parse('05.07.2010')
     Setting.days_to_renew_domain_before_expire = 0
-    login_as user
+    sign_in user
   end
 
   context 'when period is absent' do

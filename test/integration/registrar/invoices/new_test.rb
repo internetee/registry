@@ -5,7 +5,7 @@ class NewInvoiceTest < ActionDispatch::IntegrationTest
     super
 
     @user = users(:api_bestnames)
-    login_as @user
+    sign_in @user
   end
 
   def test_show_balance
