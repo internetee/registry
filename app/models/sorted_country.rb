@@ -18,7 +18,7 @@ class SortedCountry
     def quick_list
       @quick_list ||=
         [
-          %w[Estonia' EE],
+          %w[Estonia EE],
           %w[Finland FI],
           %w[Latvia LV],
           %w[Lithuania LT],

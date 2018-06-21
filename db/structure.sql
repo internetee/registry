@@ -51,6 +51,20 @@ CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
 COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
 
 
+--
+-- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
+
+
 SET search_path = public, pg_catalog;
 
 --
@@ -625,7 +639,8 @@ CREATE TABLE contacts (
     original_id integer,
     ident_updated_at timestamp without time zone,
     upid integer,
-    up_date timestamp without time zone
+    up_date timestamp without time zone,
+    uuid uuid DEFAULT gen_random_uuid() NOT NULL
 );
 
 
@@ -897,7 +912,8 @@ CREATE TABLE domains (
     status_notes hstore,
     statuses_before_force_delete character varying[] DEFAULT '{}'::character varying[],
     upid integer,
-    up_date timestamp without time zone
+    up_date timestamp without time zone,
+    uuid uuid DEFAULT gen_random_uuid() NOT NULL
 );
 
 
@@ -3243,6 +3259,22 @@ ALTER TABLE ONLY settings
 
 
 --
+-- Name: uniq_contact_uuid; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY contacts
+    ADD CONSTRAINT uniq_contact_uuid UNIQUE (uuid);
+
+
+--
+-- Name: uniq_domain_uuid; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+--
+
+ALTER TABLE ONLY domains
+    ADD CONSTRAINT uniq_domain_uuid UNIQUE (uuid);
+
+
+--
 -- Name: unique_code; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -4717,4 +4749,14 @@ INSERT INTO schema_migrations (version) VALUES ('20180327151906');
 INSERT INTO schema_migrations (version) VALUES ('20180331200125');
 
 INSERT INTO schema_migrations (version) VALUES ('20180422154642');
+
+INSERT INTO schema_migrations (version) VALUES ('20180612042234');
+
+INSERT INTO schema_migrations (version) VALUES ('20180612042625');
+
+INSERT INTO schema_migrations (version) VALUES ('20180612042953');
+
+INSERT INTO schema_migrations (version) VALUES ('20180613030330');
+
+INSERT INTO schema_migrations (version) VALUES ('20180613045614');
 

@@ -102,9 +102,6 @@ gem 'jquery-ui-rails', '5.0.5'
 gem 'active_model-errors_details' # Backport from Rails 5, https://github.com/rails/rails/pull/18322
 
 group :development do
-  gem 'spring'
-  gem 'spring-commands-rspec'
-
   # deploy
   gem 'mina', '0.3.1' # for fast deployment
   gem 'puma'
@@ -120,10 +117,6 @@ group :development, :test do
   gem 'pry', '0.10.1'
 
   gem 'bullet',        '4.14.7' # for finding database optimizations
-  gem 'bundler-audit'
-  gem 'brakeman',      '3.6.1', require: false # for security audit'
-  # tmp, otherwise conflics with breakman
-  # gem 'html2haml', github: 'haml/html2haml', ref: '6984f50bdbbd6291535027726a5697f28778ee8d'
   gem 'html2haml',     '2.1.0'
   gem 'sdoc',          '0.4.1'  # bundle exec rake doc:rails generates the API under doc/api.
   gem 'railroady',     '1.3.0'  # to generate database diagrams
