@@ -3259,7 +3259,7 @@ ALTER TABLE ONLY settings
 
 
 --
--- Name: uniq_contact_uuid; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: uniq_contact_uuid; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY contacts
@@ -3267,7 +3267,7 @@ ALTER TABLE ONLY contacts
 
 
 --
--- Name: uniq_domain_uuid; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: uniq_domain_uuid; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY domains
