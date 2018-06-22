@@ -5,7 +5,7 @@ class ContactVersionsTest < ActionDispatch::IntegrationTest
     super
 
     create_contact_with_history
-    login_as users(:admin)
+    sign_in users(:admin)
   end
 
   def teardown

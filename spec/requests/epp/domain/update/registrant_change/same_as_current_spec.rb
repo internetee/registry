@@ -8,7 +8,7 @@ RSpec.describe 'EPP domain:update' do
   let!(:domain) { create(:domain, name: 'test.com', registrant: registrant) }
 
   before :example do
-    login_as user
+    sign_in user
   end
 
   context 'when registrant change confirmation is enabled' do

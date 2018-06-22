@@ -5,7 +5,7 @@ class DomainVersionsTest < ActionDispatch::IntegrationTest
     super
 
     create_domain_with_history
-    login_as users(:admin)
+    sign_in users(:admin)
   end
 
   def teardown

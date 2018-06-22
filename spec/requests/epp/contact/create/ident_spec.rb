@@ -8,7 +8,7 @@ RSpec.describe 'EPP contact:create' do
 
   before do
     Setting.address_processing = false
-    login_as user
+    sign_in user
   end
 
   context 'when all ident params are valid' do

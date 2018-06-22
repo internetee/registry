@@ -2,7 +2,7 @@ require 'test_helper'
 
 class AdminAreaNewMailTemplateTest < ActionDispatch::IntegrationTest
   setup do
-    login_as users(:admin)
+    sign_in users(:admin)
   end
 
   def test_new_mail_template_does_not_throw_template_error
