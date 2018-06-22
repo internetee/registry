@@ -1,0 +1,48 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            <%= t '.header' %>
+        </h3>
+    </div>
+
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt><%= Contact.human_attribute_name :code %></dt>
+            <dd><%= @contact.code %></dd>
+
+            <dt><%= Contact.human_attribute_name :name %></dt>
+            <dd><%= @contact.name %></dd>
+
+            <dt><%= Contact.human_attribute_name :auth_info %></dt>
+            <dd>
+                <%= tag :input, type: 'text', value: @contact.auth_info, readonly: true,
+                        class: 'form-control input-sm' %>
+            </dd>
+
+            <dt><%= Contact.human_attribute_name :ident %></dt>
+            <dd><%= ident_for(@contact) %></dd>
+
+            <dt><%= Contact.human_attribute_name :email %></dt>
+            <dd><%= @contact.email %></dd>
+
+            <dt><%= Contact.human_attribute_name :phone %></dt>
+            <dd><%= @contact.phone %></dd>
+
+            <% if @contact.fax %>
+                <dt><%= Contact.human_attribute_name :fax %></dt>
+                <dd><%= @contact.fax %></dd>
+            <% end %>
+
+            <dt><%= Contact.human_attribute_name :created_at %></dt>
+            <dd><%= l @contact.created_at %></dd>
+
+            <dt><%= Contact.human_attribute_name :updated_at %></dt>
+            <dd><%= l @contact.updated_at %></dd>
+
+            <dt><%= Registrar.model_name.human %></dt>
+            <dd>
+                <%= link_to @contact.registrar, registrant_registrar_path(@contact.registrar) %>
+            </dd>
+        </dl>
+    </div>
+</div>

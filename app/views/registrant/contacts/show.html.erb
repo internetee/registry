@@ -1,0 +1,25 @@
+<div class="page-header">
+    <h1><%= @contact.name %></h1>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <%= render 'registrant/contacts/show/general' %>
+    </div>
+
+    <div class="col-md-6">
+        <%= render 'registrant/contacts/show/address' %>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <%= render 'registrant/contacts/show/statuses', contact: @contact %>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <%= render 'registrant/contacts/show/domains', contact: @contact %>
+    </div>
+</div>

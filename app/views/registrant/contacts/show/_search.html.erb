@@ -1,0 +1,6 @@
+<%= search_form_for [:registrant, @q] do |f| %>
+    <%= f.search_field :name_cont %>
+    <%= f.submit do %>
+        <span class="glyphicon glyphicon-search"></span>
+    <% end %>
+<% end %>
