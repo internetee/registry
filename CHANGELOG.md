@@ -1,5 +1,6 @@
 26.06.2018
 * Whois data is updated now on pendingUpdate status removal [#757](https://github.com/internetee/registry/issues/757)
+* Portal for registrars displays control code for MID authentication [#893](https://github.com/internetee/registry/issues/893)
 * Changed date format in Directo invoice XML [#890](https://github.com/internetee/registry/pull/890)
 * Registrant portal UI improvements [#888](https://github.com/internetee/registry/issues/888)
 * Removed unused mailer code [#882](https://github.com/internetee/registry/pull/882)
