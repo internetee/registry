@@ -21,7 +21,10 @@ class DomainCron
       if domain.pending_delete? || domain.pending_delete_confirmation?
         DomainMailer.pending_delete_expired_notification(domain.id, true).deliver
       end
-      domain.clean_pendings_lowlevel
+
+      domain.preclean_pendings
+      domain.clean_pendings!
+
       unless Rails.env.test?
         STDOUT << "#{Time.zone.now.utc} DomainCron.clean_expired_pendings: ##{domain.id} (#{domain.name})\n"
       end

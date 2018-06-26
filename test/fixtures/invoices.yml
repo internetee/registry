@@ -35,5 +35,4 @@ overdue:
 for_payments_test:
   <<: *DEFAULTS
   total: 12.00
-  id: 1
   number: 1
