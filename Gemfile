@@ -111,7 +111,6 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'capybara'
   gem 'rspec-rails', '~> 3.6'
-  gem 'poltergeist'
 
   # debug
   gem 'pry', '0.10.1'
