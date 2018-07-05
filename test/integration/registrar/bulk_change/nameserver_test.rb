@@ -16,9 +16,8 @@ class RegistrarAreaNameserverBulkChangeTest < ActionDispatch::IntegrationTest
                                                                      basic_auth: ['test_goodnames', 'testtest'])
                      .to_return(body: { data: [{
                                                  type: 'nameserver',
-                                                 id: 'new-ns.bestnames.test',
-                                                 affected_domains: ["airport.test", "shop.test"]
-                                               }] }.to_json, status: 200)
+                                                 id: 'new-ns.bestnames.test'}],
+                                        affected_domains: ["airport.test", "shop.test"]}.to_json, status: 200)
 
     visit registrar_domains_url
     click_link 'Bulk change'
@@ -33,6 +32,7 @@ class RegistrarAreaNameserverBulkChangeTest < ActionDispatch::IntegrationTest
     assert_requested request_stub
     assert_current_path registrar_domains_path
     assert_text 'Nameserver have been successfully replaced'
+    assert_text 'Affected domains: airport.test, shop.test'
   end
 
   def test_fails_gracefully

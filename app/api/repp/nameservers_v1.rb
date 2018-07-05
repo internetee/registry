@@ -37,8 +37,8 @@ module Repp
         status 200
         @response = { data: { type: 'nameserver',
                               id: params[:data][:attributes][:hostname],
-                              attributes: params[:data][:attributes],
-                              affected_domains: affected_domains } }
+                              attributes: params[:data][:attributes]},
+                      affected_domains: affected_domains }
       end
     end
   end

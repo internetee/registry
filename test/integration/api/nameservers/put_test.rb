@@ -54,8 +54,8 @@ class APINameserversPutTest < ActionDispatch::IntegrationTest
                             id: 'ns55.bestnames.test',
                             attributes: { hostname: 'ns55.bestnames.test',
                                           ipv4: ['192.0.2.55'],
-                                          ipv6: ['2001:db8::55'] },
-                            affected_domains: ["airport.test", "shop.test"] } }),
+                                          ipv6: ['2001:db8::55'] }},
+                    affected_domains: ["airport.test", "shop.test"] }),
                  JSON.parse(response.body, symbolize_names: true)
   end
 
