@@ -16,7 +16,8 @@ class RegistrarAreaNameserverBulkChangeTest < ActionDispatch::IntegrationTest
                                                                      basic_auth: ['test_goodnames', 'testtest'])
                      .to_return(body: { data: [{
                                                  type: 'nameserver',
-                                                 id: 'new-ns.bestnames.test'
+                                                 id: 'new-ns.bestnames.test',
+                                                 affected_domains: ["airport.test", "shop.test"]
                                                }] }.to_json, status: 200)
 
     visit registrar_domains_url

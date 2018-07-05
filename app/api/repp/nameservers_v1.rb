@@ -29,7 +29,7 @@ module Repp
         }
 
         begin
-          current_user.registrar.replace_nameservers(hostname, new_attributes)
+          affected_domains = current_user.registrar.replace_nameservers(hostname, new_attributes)
         rescue ActiveRecord::RecordInvalid => e
           error!({ errors: e.record.errors.full_messages.map { |error| { title: error } } }, 400)
         end
@@ -37,7 +37,8 @@ module Repp
         status 200
         @response = { data: { type: 'nameserver',
                               id: params[:data][:attributes][:hostname],
-                              attributes: params[:data][:attributes] } }
+                              attributes: params[:data][:attributes],
+                              affected_domains: affected_domains } }
       end
     end
   end

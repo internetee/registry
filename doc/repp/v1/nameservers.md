@@ -35,6 +35,7 @@ Content-Type: application/json
             "ipv4": ["192.0.2.1", "192.0.2.2"],
             "ipv6": ["2001:db8::1", "2001:db8::2"]
         },
+        "affected_domains": ["example.com", "example.org"]
     }
 }
 ```

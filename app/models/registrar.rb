@@ -145,7 +145,7 @@ class Registrar < ActiveRecord::Base
         original_nameserver.destroy!
       end
 
-      domain_list
+      domain_list.uniq.sort
     end
   end
 

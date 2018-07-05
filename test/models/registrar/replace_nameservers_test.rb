@@ -5,7 +5,7 @@ class ReplaceNameserversTest < ActiveSupport::TestCase
     @registrar = registrars(:bestnames)
   end
 
-  def test_replace_nameservers_in_bulk_returns_domain_names
+  def test_replace_nameservers_in_bulk_returns_sorted_domain_names
     new_attributes = { hostname: 'ns-updated1.bestnames.test', ipv4: '192.0.3.1',
                        ipv6: '2001:db8::2' }
     result = @registrar.replace_nameservers('ns1.bestnames.test', new_attributes)
