@@ -3,3 +3,4 @@ en:
     nameservers:
       update:
         replaced: Nameserver have been successfully replaced
+        affected_domains: Affected domains
