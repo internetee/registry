@@ -1,6 +1,8 @@
 require 'test_helper'
 
-class SignInTest < ActionDispatch::IntegrationTest
+class RegistrarSignInTest < JavascriptIntegrationTest
+  self.use_transactional_fixtures = false
+
   def setup
     super
     WebMock.allow_net_connect!
@@ -26,7 +28,9 @@ class SignInTest < ActionDispatch::IntegrationTest
       fill_in 'user[phone]', with: '1234'
       click_button 'Login'
 
-      assert(page.has_text?('Confirmation sms was sent to your phone. Verification code is'))
+      flash_message = page.find('div.bg-success')
+      assert_equal('Confirmation sms was sent to your phone. Verification code is .',
+                   flash_message.text)
     end
   end
 end
