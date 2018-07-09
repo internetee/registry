@@ -43,6 +43,7 @@ class ActionDispatch::IntegrationTest
 end
 
 class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
+  self.use_transactional_fixtures = false
   DatabaseCleaner.strategy = :truncation
 
   Capybara.register_driver(:chrome) do |app|
