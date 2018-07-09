@@ -1,3 +1,6 @@
+10.07.2018
+* Nameserver bulk change returns list of affected doamins [#835](https://github.com/internetee/registry/issues/835)
+
 26.06.2018
 * Whois data is updated now on pendingUpdate status removal [#757](https://github.com/internetee/registry/issues/757)
 * Portal for registrars displays control code for MID authentication [#893](https://github.com/internetee/registry/issues/893)
