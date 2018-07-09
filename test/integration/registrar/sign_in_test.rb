@@ -12,7 +12,8 @@ class RegistrarSignInTest < JavascriptIntegrationTest
 
   def test_mobile_id_sign_in_page
     mock_client = Minitest::Mock.new
-    mock_client.expect(:authenticate, OpenStruct.new(user_id_code: '1234'),
+    mock_client.expect(:authenticate,
+                       OpenStruct.new(user_id_code: '1234', challenge_id: '1234'),
                        [{ phone: "+3721234",
                          message_to_display: "Authenticating",
                          service_name: "Testimine" }])
@@ -27,7 +28,7 @@ class RegistrarSignInTest < JavascriptIntegrationTest
       click_button 'Login'
 
       flash_message = page.find('div.bg-success')
-      assert_equal('Confirmation sms was sent to your phone. Verification code is .',
+      assert_equal('Confirmation sms was sent to your phone. Verification code is 1234.',
                    flash_message.text)
     end
   end
