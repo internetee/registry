@@ -13,6 +13,7 @@ require 'capybara/minitest'
 require 'webmock/minitest'
 require 'selenium/webdriver'
 require 'support/rails5_assetions' # Remove once upgraded to Rails 5
+require 'database_cleaner'
 
 Setting.address_processing = false
 Setting.registry_country_code = 'US'
@@ -42,6 +43,8 @@ class ActionDispatch::IntegrationTest
 end
 
 class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
+  DatabaseCleaner.strategy = :truncation
+
   Capybara.register_driver(:chrome) do |app|
     options = ::Selenium::WebDriver::Chrome::Options.new
 
@@ -59,9 +62,17 @@ class JavascriptIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def setup
+    DatabaseCleaner.start
+
     super
 
     Capybara.current_driver = :chrome
     Capybara.server = :silent_puma
+  end
+
+  def teardown
+    super
+
+    DatabaseCleaner.clean
   end
 end
