@@ -108,6 +108,8 @@ Rails.application.routes.draw do
       post 'id' => 'sessions#id'
     end
 
+    resources :registrars, only: :show
+    resources :contacts, only: :show
     resources :domains, only: %i[index show] do
       collection do
         get :download_list
@@ -118,29 +120,21 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :domain_update_confirms
-    resources :domain_delete_confirms
-    resources :domains do
-      resources :registrant_verifications
-      collection do
-        post 'update', as: 'update'
-        post 'destroy', as: 'destroy'
-        get 'renew'
-        get 'edit'
-        get 'info'
-        get 'delete'
-      end
-    end
+    resources :domain_update_confirms, only: %i[show update]
+    resources :domain_delete_confirms, only: %i[show update]
 
-    resources :registrars do
-      collection do
-        get :search
-      end
-    end
+    devise_scope :user do
+      get 'login' => 'sessions#login'
+      get 'login/mid' => 'sessions#login_mid'
+      post 'login/mid' => 'sessions#mid'
+      post 'login/mid_status' => 'sessions#mid_status'
 
-    resources :contacts
+      post 'sessions' => 'sessions#create'
+      post 'mid' => 'sessions#mid'
+      post 'id' => 'sessions#id'
+      get 'logout' => '/devise/sessions#destroy'
+    end
   end
-
 
   # ADMIN ROUTES
   namespace :admin do

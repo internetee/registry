@@ -2,7 +2,6 @@ Domain Registry
 ===============
 [![Build Status](https://travis-ci.org/internetee/registry.svg?branch=master)](https://travis-ci.org/internetee/registry)
 [![Code Climate](https://codeclimate.com/github/internetee/registry/badges/gpa.svg)](https://codeclimate.com/github/internetee/registry)
-[![Issue Count](https://codeclimate.com/github/internetee/registry/badges/issue_count.svg)](https://codeclimate.com/github/internetee/registry)
 [![Test Coverage](https://codeclimate.com/github/internetee/registry/badges/coverage.svg)](https://codeclimate.com/github/internetee/registry/coverage)
 [![Documentation Status](https://readthedocs.org/projects/eeregistry/badge/?version=latest)](http://docs.internet.ee/en/latest/?badge=latest)
 
@@ -31,7 +30,7 @@ Documentation
 Installation
 ------------
 
-### Registry app 
+### Registry app
 
 Registry based on Rails 4 installation (rbenv install is under Debian build doc)
 
@@ -57,7 +56,7 @@ Manual demo install and database setup:
     tar -xzvf mod_epp-1.10.tar.gz
     cd mod_epp-1.10
 
-Patch mod_epp for Rack. Beacause Rack multipart parser expects specifically 
+Patch mod_epp for Rack. Beacause Rack multipart parser expects specifically
 formatted content boundaries, the mod_epp needs to be modified before building:
 
     wget https://github.com/internetee/registry/raw/master/doc/patches/mod_epp_1.10-rack-friendly.patch
@@ -136,7 +135,7 @@ For Apache, registry admin goes to port 443 in production, /etc/apache2/sites-en
 </VirtualHost>
 ```
 
-Registrar configuration (/etc/apache2/sites-enabled/registrar.conf) is as follows: 
+Registrar configuration (/etc/apache2/sites-enabled/registrar.conf) is as follows:
 ```
 <VirtualHost *:443>
   ServerName your-registrar-domain
@@ -179,7 +178,7 @@ Registrar configuration (/etc/apache2/sites-enabled/registrar.conf) is as follow
 
       # for Apache verison 2.4 or newer
       # Require all granted
-  
+
       Options -MultiViews
   </Directory>
 
@@ -220,7 +219,7 @@ Registrar configuration (/etc/apache2/sites-enabled/registrar.conf) is as follow
 </VirtualHost>
 ```
 
-Registrant configuration (/etc/apache2/sites-enabled/registrant.conf) is as follows: 
+Registrant configuration (/etc/apache2/sites-enabled/registrant.conf) is as follows:
 ```
 <VirtualHost *:443>
     ServerName your-registrant-domain
@@ -263,7 +262,7 @@ Registrant configuration (/etc/apache2/sites-enabled/registrant.conf) is as foll
 
         # for Apache verison 2.4 or newer
         # Require all granted
-  
+
         Options -MultiViews
     </Directory>
 
@@ -271,11 +270,11 @@ Registrant configuration (/etc/apache2/sites-enabled/registrant.conf) is as foll
         Allow from none
         Deny from all
     </Location>
-  
+
     <Location /registrant>
         Allow from all
     </Location>
-  
+
     <Location /assets>
         Allow from all
     </Location>
@@ -342,8 +341,8 @@ For Apache, REPP goes to port 443 in production, /etc/apache2/sites-enabled/repp
 </VirtualHost>
 ```
 
-For Apache, epp goes to port 700.  
-Be sure to update paths to match your system configuration.  
+For Apache, epp goes to port 700.
+Be sure to update paths to match your system configuration.
 /etc/apache2/sites-enabled/epp.conf short example:
 ```apache
 <IfModule mod_ssl.c>
@@ -405,7 +404,7 @@ Be sure to update paths to match your system configuration.
       EPPSessionRoot          /proxy/session
       EPPErrorRoot            /proxy/error
       EPPRawFrame             raw_frame
-    
+
       ProxyPass /proxy/ http://localhost:8080/epp/
 
       EPPAuthURI              implicit
@@ -421,7 +420,7 @@ Enable epp_ssl and restart apache
 
 Now you should see registry admin at https://your-domain
 
-All registry demo data can be found at: 
+All registry demo data can be found at:
 
     db/seeds.rb
 
@@ -464,4 +463,3 @@ Please follow EPP web client readme:
 Please follow WHOIS server readme:
 
     https://github.com/internetee/whois
-

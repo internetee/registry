@@ -23,6 +23,7 @@ exclude_patterns:
   - "bin/"
   - "config/"
   - "db/"
+  - "lib/"
   - "vendor/"
   - "test/"
   - "spec/"

@@ -44,7 +44,10 @@ class Registrar
       parsed_response = JSON.parse(response.body, symbolize_names: true)
 
       if response.code == '200'
-        flash[:notice] = t '.replaced'
+        notices = [t('.replaced')]
+        notices << "#{t('.affected_domains')}: #{parsed_response[:affected_domains].join(', ')}"
+
+        flash[:notice] = notices
         redirect_to registrar_domains_url
       else
         @api_errors = parsed_response[:errors]

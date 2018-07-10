@@ -7,6 +7,7 @@ shop:
   valid_to: 2010-07-05
   period: 1
   period_unit: m
+  uuid: 1b3ee442-e8fe-4922-9492-8fcb9dccc69c
 
 airport:
   name: airport.test
@@ -17,6 +18,7 @@ airport:
   valid_to: 2010-07-05
   period: 1
   period_unit: m
+  uuid: 2df2c1a1-8f6a-490a-81be-8bdf29866880
 
 library:
   name: library.test
@@ -27,6 +29,7 @@ library:
   valid_to: 2010-07-05
   period: 1
   period_unit: m
+  uuid: 647bcc48-8d5e-4a04-8ce5-2a3cd17b6eab
 
 metro:
   name: metro.test
@@ -37,6 +40,7 @@ metro:
   valid_to: 2010-07-05
   period: 1
   period_unit: m
+  uuid: ef97cb80-333b-4893-b9df-163f2b452798
 
 invalid:
   name: invalid.test
@@ -44,3 +48,4 @@ invalid:
   valid_to: <%= Time.zone.parse('2010-07-05').utc.to_s(:db) %>
   registrar: bestnames
   registrant: invalid
+  uuid: 3c430ead-bb17-4b5b-aaa1-caa7dde7e138

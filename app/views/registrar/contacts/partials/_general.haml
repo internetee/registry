@@ -6,9 +6,10 @@
       %dt= t(:id)
       %dd= @contact.id
 
-      %dt= t(:authinfo_pw)
+      %dt= Contact.human_attribute_name :auth_info
       %dd
-        = text_field_tag :password, @contact.password, readonly: true, class: 'partially-hidden'
+        = tag :input, type: 'text', value: @contact.password, readonly: true,
+            class: 'form-control input-sm'
 
       %br
 
