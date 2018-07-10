@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class RegistrarSignInTest < JavascriptIntegrationTest
+class RegistrarAreaSignInTest < JavaScriptApplicationSystemTestCase
   def setup
     super
     WebMock.allow_net_connect!
