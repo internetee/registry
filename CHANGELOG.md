@@ -1,3 +1,6 @@
+12.07.2018
+* Implemented JavaScript testing framework to catch web UI problems [#900](https://github.com/internetee/registry/issues/900)
+
 10.07.2018
 * Nameserver bulk change returns list of affected doamins [#835](https://github.com/internetee/registry/issues/835)
 
