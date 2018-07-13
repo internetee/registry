@@ -36,7 +36,7 @@ class Registrar
     end
 
     def user_for_paper_trail
-      current_registrar_user.present? ? current_registrar_user.id_role_username : 'public'
+      current_registrar_user ? current_registrar_user.id_role_username : 'guest'
     end
   end
 end

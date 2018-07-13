@@ -31,5 +31,9 @@ module Admin
     def after_sign_out_path_for(resource_or_scope)
       new_admin_user_session_path
     end
+
+    def user_for_paper_trail
+      current_admin_user ? current_admin_user.id_role_username : 'guest'
+    end
   end
 end

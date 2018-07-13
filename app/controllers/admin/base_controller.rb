@@ -14,7 +14,7 @@ module Admin
     end
 
     def user_for_paper_trail
-      current_admin_user.present? ? current_admin_user.id_role_username : 'public'
+      current_admin_user ? current_admin_user.id_role_username : 'guest'
     end
   end
 end

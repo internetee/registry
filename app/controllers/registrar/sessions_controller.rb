@@ -178,5 +178,9 @@ class Registrar
     def after_sign_out_path_for(resource_or_scope)
       new_registrar_user_session_path
     end
+
+    def user_for_paper_trail
+      current_registrar_user ? current_registrar_user.id_role_username : 'guest'
+    end
   end
 end
