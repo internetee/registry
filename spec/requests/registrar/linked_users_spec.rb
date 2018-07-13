@@ -40,14 +40,6 @@ RSpec.describe 'Registrar area linked users', db: false do
               put '/registrar/current_user/switch/2', nil, { HTTP_REFERER: registrar_contacts_path }
             end.to raise_error('Cannot switch to unlinked user')
           end
-
-          it 'does not sign in as a new user' do
-            suppress StandardError do
-              put '/registrar/current_user/switch/2', nil, { HTTP_REFERER: registrar_contacts_path }
-            end
-
-            expect(controller.current_user.id).to eq(1)
-          end
         end
       end
 

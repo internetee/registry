@@ -20,7 +20,7 @@ class RegistrarAreaSignInTest < JavaScriptApplicationSystemTestCase
     mock_client.expect(:session_code, 1234)
 
     Digidoc::Client.stub(:new, mock_client) do
-      visit registrar_login_path
+      visit new_registrar_user_session_path
 
       click_on 'login-with-mobile-id-btn'
 
