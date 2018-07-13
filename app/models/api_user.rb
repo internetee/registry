@@ -7,7 +7,7 @@ class ApiUser < User
   def epp_code_map
     {
       '2306' => [ # Parameter policy error
-        [:password, :blank]
+        [:plain_text_password, :blank]
       ]
     }
   end
@@ -20,8 +20,8 @@ class ApiUser < User
   belongs_to :registrar
   has_many :certificates
 
-  validates :username, :password, :registrar, :roles, presence: true
-  validates :password, length: { minimum: min_password_length }
+  validates :username, :plain_text_password, :registrar, :roles, presence: true
+  validates :plain_text_password, length: { minimum: min_password_length }
   validates :username, uniqueness: true
 
   delegate :code, :name, to: :registrar, prefix: true

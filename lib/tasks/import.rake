@@ -145,7 +145,7 @@ namespace :import do
           if y.try(:cert) == 'idkaart'
             id_users << ApiUser.new({
               username: y.try(:password) ? y.try(:password) : y.try(:password),
-              password: ('a'..'z').to_a.shuffle.first(8).join,
+              plain_text_password: ('a'..'z').to_a.shuffle.first(8).join,
               identity_code: y.try(:password) ? y.try(:password) : y.try(:password),
               registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
               roles: ['billing'],
@@ -154,7 +154,7 @@ namespace :import do
           else
             temp << ApiUser.new({
               username: x.handle.try(:strip),
-              password: y.try(:password) ? y.try(:password) : ('a'..'z').to_a.shuffle.first(8).join,
+              plain_text_password: y.try(:password) ? y.try(:password) : ('a'..'z').to_a.shuffle.first(8).join,
               registrar_id: Registrar.find_by(legacy_id: x.try(:id)).try(:id),
               roles: ['epp'],
               legacy_id: y.try(:id)

@@ -5,7 +5,7 @@ module Requests
     end
 
     def sign_in_to_registrar_area(user: create(:api_user))
-      post registrar_user_session_path, { depp_user: { tag: user.username, password: user.password } }
+      post registrar_user_session_path, { depp_user: { tag: user.username, password: user.plain_text_password } }
     end
   end
 end

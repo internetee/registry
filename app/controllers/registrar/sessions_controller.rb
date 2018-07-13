@@ -26,7 +26,8 @@ class Registrar
         @depp_user.errors.add(:base, :webserver_client_cert_directive_should_be_required)
       end
 
-      @api_user = ApiUser.find_by(username: params[:depp_user][:tag], password: params[:depp_user][:password])
+      @api_user = ApiUser.find_by(username: params[:depp_user][:tag],
+                                  plain_text_password: params[:depp_user][:password])
 
       unless @api_user
         @depp_user.errors.add(:base, t(:no_such_user))

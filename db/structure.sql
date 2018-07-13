@@ -2282,7 +2282,7 @@ ALTER SEQUENCE public.settings_id_seq OWNED BY public.settings.id;
 CREATE TABLE public.users (
     id integer NOT NULL,
     username character varying,
-    password character varying,
+    plain_text_password character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     email character varying,
@@ -4756,4 +4756,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180612042953');
 INSERT INTO schema_migrations (version) VALUES ('20180613030330');
 
 INSERT INTO schema_migrations (version) VALUES ('20180613045614');
+
+INSERT INTO schema_migrations (version) VALUES ('20180713154915');
 

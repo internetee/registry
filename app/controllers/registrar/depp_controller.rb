@@ -22,7 +22,7 @@ class Registrar
       return nil unless current_registrar_user
       @depp_current_user ||= Depp::User.new(
         tag: current_registrar_user.username,
-        password: current_registrar_user.password
+        password: current_registrar_user.plain_text_password
       )
     end
 
