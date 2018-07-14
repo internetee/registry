@@ -135,16 +135,6 @@ en:
             registrar:
               blank: 'Registrar is missing'
 
-        api_user:
-          attributes:
-            username:
-              blank: 'Username is missing'
-              taken: 'Username already exists'
-            password:
-              blank: 'Password is missing'
-            registrar:
-              blank: 'Registrar is missing'
-
         dnskey:
           attributes:
             alg:
