@@ -55,8 +55,7 @@ gem 'liquid',           '3.0.6'   # for email templates
 gem 'cancancan', '1.11.0' # autharization
 gem 'devise',    '4.4.3'  # authenitcation
 
-# rest api
-gem 'grape',    '0.12.0'
+gem 'grape'
 gem 'hashie-forbidden_attributes', '0.1.1' # For grape, https://github.com/ruby-grape/grape/tree/v0.12.0#rails
 gem 'jbuilder', '2.2.16'  # json api
 
