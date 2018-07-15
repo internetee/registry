@@ -107,6 +107,6 @@ class Registrant::SessionsController < Devise::SessionsController
   end
 
   def user_for_paper_trail
-    current_registrant_user.present? ? current_registrant_user.id_role_username : 'guest'
+    current_registrant_user.present? ? current_registrant_user.id_role_username : 'anonymous'
   end
 end

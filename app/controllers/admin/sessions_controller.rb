@@ -33,7 +33,7 @@ module Admin
     end
 
     def user_for_paper_trail
-      current_admin_user ? current_admin_user.id_role_username : 'guest'
+      current_admin_user ? current_admin_user.id_role_username : 'anonymous'
     end
   end
 end

@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class AdminAreaProtectedAreaTest < ActionDispatch::IntegrationTest
-  def test_unauthenticated_user_is_asked_to_authenticate_when_navigating_to_protected_area
+  def test_anonymous_user_is_asked_to_authenticate_when_navigating_to_protected_area
     visit admin_domains_url
     assert_text 'You need to sign in before continuing'
     assert_current_path new_admin_user_session_path
