@@ -32,8 +32,4 @@ class ApplicationController < ActionController::Base
   def available_languages
     { en: 'English', et: 'Estonian' }.invert
   end
-
-  def user_for_paper_trail
-    current_user.present? ? current_user.id_role_username : 'public'
-  end
 end
