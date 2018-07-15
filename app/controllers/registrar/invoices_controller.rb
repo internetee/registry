@@ -6,7 +6,8 @@ class Registrar
 
     def index
       params[:q] ||= {}
-      invoices = current_registrar_user.registrar.invoices.includes(:invoice_items, :account_activity)
+      invoices = current_registrar_user.registrar.invoices
+                   .includes(:invoice_items, :account_activity)
 
       normalize_search_parameters do
         @q = invoices.search(params[:q])

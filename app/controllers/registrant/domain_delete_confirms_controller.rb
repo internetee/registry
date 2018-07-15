@@ -19,7 +19,8 @@ class Registrant::DomainDeleteConfirmsController < RegistrantController
                                                           domain_name: @domain.name,
                                                           verification_token: params[:token])
 
-    initiator = current_registrant_user ? current_registrant_user.username : t(:user_not_authenticated)
+    initiator = current_registrant_user ? current_registrant_user.username :
+                  t(:user_not_authenticated)
 
     if params[:rejected]
       if @registrant_verification.domain_registrant_delete_reject!("email link #{initiator}")

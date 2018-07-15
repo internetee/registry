@@ -7,7 +7,7 @@ class ApiUser < User
   def epp_code_map
     {
       '2306' => [ # Parameter policy error
-        [:plain_text_password, :blank]
+        %i[plain_text_password blank]
       ]
     }
   end

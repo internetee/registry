@@ -21,7 +21,8 @@ class Registrar
         uri = URI.parse("#{ENV['repp_url']}domain_transfers")
         request = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
         request.body = { data: { domainTransfers: domain_transfers } }.to_json
-        request.basic_auth(current_registrar_user.username, current_registrar_user.plain_text_password)
+        request.basic_auth(current_registrar_user.username,
+                           current_registrar_user.plain_text_password)
 
 
         if Rails.env.test?
