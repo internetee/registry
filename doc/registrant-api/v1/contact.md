@@ -61,7 +61,57 @@ Content-Type: application/json
 }
 ```
 
-## PUT/PATCH /rep/v1/registrant/contacts/$UUID
+## GET /repp/v1/registrant/contacts/$UUID
+Returns contacts of the current registrar.
+
+
+#### Request
+```
+GET /repp/v1/registrant/contacts/84c62f3d-e56f-40fa-9ca4-dc0137778949 HTTP/1.1
+Accept: application/json
+Authorization: Bearer Z2l0bGFiOmdoeXQ5ZTRmdQ==
+Content-Type: application/json
+```
+
+#### Response
+```
+HTTP/1.1 200
+Cache-Control: max-age=0, private, must-revalidate
+Content-Length: 564
+Content-Type: application/json
+
+{
+  "uuid": "84c62f3d-e56f-40fa-9ca4-dc0137778949",
+  "domain_name": "example.com"
+  "code": "REGISTRAR2:SH022086480",
+  "phone": "+372.12345678",
+  "email": "hoyt@deckowbechtelar.net",
+  "fax": null,
+  "created_at": "2015-09-09T09:11:14.130Z",
+  "updated_at": "2015-09-09T09:11:14.130Z",
+  "ident": "37605030299",
+  "ident_type": "priv",
+  "auth_info": "password",
+  "name": "Karson Kessler0",
+  "org_name": null,
+  "registrar_id": 2,
+  "creator_str": null,
+  "updator_str": null,
+  "ident_country_code": "EE",
+  "city": "Tallinn",
+  "street": "Short street 11",
+  "zip": "11111",
+  "country_code": "EE",
+  "state": null,
+  "legacy_id": null,
+  "statuses": [
+    "ok"
+  ],
+  "status_notes": {}
+}
+```
+
+## PUT/PATCH /repp/v1/registrant/contacts/$UUID
 
 Update contact details for a contact.
 
