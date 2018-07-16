@@ -28,7 +28,7 @@ Content-Type: application/json
   "contacts": [
     {
       "uuid": "84c62f3d-e56f-40fa-9ca4-dc0137778949",
-      "domain_name": "example.com"
+      "domain_names": ["example.com"],
       "code": "REGISTRAR2:SH022086480",
       "phone": "+372.12345678",
       "email": "hoyt@deckowbechtelar.net",
@@ -82,7 +82,7 @@ Content-Type: application/json
 
 {
   "uuid": "84c62f3d-e56f-40fa-9ca4-dc0137778949",
-  "domain_name": "example.com"
+  "domain_names": ["example.com"],
   "code": "REGISTRAR2:SH022086480",
   "phone": "+372.12345678",
   "email": "hoyt@deckowbechtelar.net",
@@ -156,7 +156,7 @@ Content-Type: application.json
 
 {
   "uuid": "84c62f3d-e56f-40fa-9ca4-dc0137778949",
-  "domain_name": "example.com"
+  "domain_names": ["example.com"],
   "code": "REGISTRAR2:SH022086480",
   "phone": "+372.12345671",
   "email": "foo@bar.baz",
