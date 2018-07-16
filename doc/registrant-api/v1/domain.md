@@ -1,6 +1,7 @@
 # Domain related actions
 
 ## GET /repp/v1/registrant/domains
+
 Returns domains of the current registrant.
 
 
@@ -72,6 +73,7 @@ Content-Type: application/json
 ```
 
 ## GET repp/v1/registrant/domains
+
 Returns domain names with offset.
 
 
@@ -97,7 +99,8 @@ Content-Type: application/json
 ```
 
 ## GET repp/v1/registrant/domains/$UUID
-Returns domain names with offset.
+
+Returns a single domain object.
 
 
 #### Request
