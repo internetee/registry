@@ -1,7 +1,7 @@
 # Domain related actions
 
 ## GET /repp/v1/registrant/domains
-Returns domains of the current registrar.
+Returns domains of the current registrant.
 
 
 #### Parameters
@@ -65,7 +65,6 @@ Content-Type: application/json
       "status_notes": {
       },
       "statuses_backup": [
-
       ]
     }
   ],
@@ -100,3 +99,8 @@ Content-Type: application/json
   "total_number_of_records": 2
 }
 ```
+
+#### Implementation details
+
+This endpoint is practically a copy-paste from similar endpoint used by
+registrars.
